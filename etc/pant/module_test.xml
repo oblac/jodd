@@ -1,0 +1,66 @@
+
+	<!-- test: $[moduleName] -->
+
+	<property name="$[moduleName].junit.dir" value="${output.dir}/junit/$[moduleName]"/>
+	<property name="$[moduleName].emma.dir" value="${output.dir}/emma/$[moduleName]"/>
+	<property name="$[moduleName].emma.instrument.dir" value="${$[moduleName].emma.dir}/instr"/>
+
+	<path id="$[moduleName].emma.classpath">
+		<pathelement location="${$[moduleName].emma.instrument.dir}"/>
+		<pathelement location="${$[moduleName].test.out.dir}"/>
+		<path refid="$[moduleName].test.classpath"/>
+	</path>
+
+	<target name="test-run.$[moduleName]" depends="emma-instrument.$[moduleName]">
+		<available classname="junit.framework.TestCase" property="junit.present"/>
+		<fail unless="junit.present" message="Please copy 'junit.jar' into ${env.ANT_HOME}/lib"/>
+		<mkdir dir="${$[moduleName].junit.dir}"/>
+		<junit printsummary="yes" haltonerror="no" haltonfailure="yes" fork="yes">
+			<jvmarg value="-Demma.coverage.out.file=${$[moduleName].emma.dir}/coverage.emma"/>
+			<jvmarg value="-Demma.coverage.out.merge=false"/>
+			<formatter type="plain" usefile="false"/>
+			<formatter type="xml"/>
+			<test name="%ARG1%" todir="${$[moduleName].junit.dir}"/>
+			<classpath refid="$[moduleName].emma.classpath"/>
+		</junit>
+	</target>
+
+	<target name="test-report.$[moduleName]">
+		<junitreport todir="${$[moduleName].junit.dir}">
+			<fileset dir="${$[moduleName].junit.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report todir="${$[moduleName].junit.dir}"/>
+		</junitreport>
+	</target>
+
+	<target name="test.$[moduleName]" depends="test-run.$[moduleName], test-report.$[moduleName]" description="tests module '$[moduleName]'"/>
+
+
+	<!-- emma: $[moduleName] -->
+
+	<taskdef resource="emma_ant.properties" classpathref="lib.emma"/>
+
+	<target name="emma-instrument.$[moduleName]" depends="build.$[moduleName]">
+		<emma>
+			<instr destdir="${$[moduleName].emma.dir}/instr" metadatafile="${$[moduleName].emma.dir}/metadata.emma" merge="true">
+				<instrpath>
+					<pathelement location="${$[moduleName].production.out.dir}"/>
+				</instrpath>
+			</instr>
+		</emma>
+	</target>
+
+	<target name="emma-report.$[moduleName]">
+		<emma>
+			<report sourcepath="${$[moduleName].production.src.dir}" depth="class">
+				<fileset dir="${$[moduleName].emma.dir}">
+					<include name="*.emma"/>
+				</fileset>
+				<txt outfile="${$[moduleName].emma.dir}/coverage.txt"/>
+				<html outfile="${$[moduleName].emma.dir}/coverage.html"/>
+			</report>
+		</emma>
+	</target>
+	
+	<target name="emma.$[moduleName]" depends="test.$[moduleName], emma-report.$[moduleName]" description="runs emma on test suite of module '$[moduleName]'"/>

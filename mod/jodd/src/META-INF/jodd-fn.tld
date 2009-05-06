@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+
+	<description>Jodd JSP functions library</description>
+	<display-name>jodd jsp functions</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>joddfn</short-name>
+	<uri>/joddfn</uri>
+
+
+	<!-- jsp value resolver -->
+
+	<function>
+		<name>value</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveValue(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>attribute</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveAttribute(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>property</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveProperty(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+
+	<!-- html encoder -->
+
+	<function>
+		<name>out</name>
+		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-signature>java.lang.String text(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>outblock</name>
+		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-signature>java.lang.String block(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>outstrict</name>
+		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-signature>java.lang.String strict(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>url</name>
+		<function-class>jodd.servlet.UrlEncoder</function-class>
+		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	
+	<!-- jodd fn -->
+
+	<function>
+		<name>valueEnc</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String valueEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>attributeEnc</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String attributeEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>propertyEnc</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String propertyEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+
+	<function>
+		<name>defaultValue</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.Object defaultValue(java.lang.Object,java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>defaultString</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String defaultString(java.lang.String,java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>join</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String join(java.lang.String[],java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>join2</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String join2(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>toLowerCase</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String toLowerCase(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>toUpperCase</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String toUpperCase(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>capitalize</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String capitalize(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>uncapitalize</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String uncapitalize(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>trim</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String trim(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>replace</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String replace(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>indexOf</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>int indexOf(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>contains</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean contains(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>containsIgnoreCase</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean containsIgnoreCase(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>startsWith</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean startsWith(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>startsWithIgnoreCase</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean startsWithIgnoreCase(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>endsWith</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean endsWith(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>endsWithIgnoreCase</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean endsWithIgnoreCase(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>substring</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String substring(java.lang.String,int,int)</function-signature>
+	</function>
+	<function>
+		<name>substringAfter</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String substringAfter(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>substringBefore</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String substringBefore(java.lang.String,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>length</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>int length(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>containsElement</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>boolean containsElement(java.lang.Object,java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>wildcardMatch</name>
+		<function-class>jodd.util.Wildcard</function-class>
+		<function-signature>boolean match(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<!-- bean -->
+
+	<function>
+		<name>beanProperty</name>
+		<function-class>jodd.bean.BeanUtil</function-class>
+		<function-signature>java.lang.Object getProperty(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>beanDeclaredProperty</name>
+		<function-class>jodd.bean.BeanUtil</function-class>
+		<function-signature>java.lang.Object getDeclaredProperty(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+
+</taglib>

@@ -1,0 +1,33 @@
+http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5093723
+
+The ClassCastException occurs when an @link tag appears in the first
+sentence of a doc comment, when it inherits documentation from 
+a private member, and when that tag's first argument begins with a 
+hash character '#':
+  
+  This is the first sentence {@link #myMethod}.
+  
+A workaround for the ClassCastException is to change the reference
+to include the class name:
+
+  This is the first sentence {@link Myclass#myMethod}.
+  
+------------------------------------------------------------------------------------------  
+The above workaround doesn't seem to work.  It seems necessary
+to remove *all* link tags of that form.
+
+(1) When I remove the first-sentence-occurances of {@link #...} the 
+    ClassCastException does not go away.  
+(2) When I add a first-sentence-occurance of {@link #...} to a version the 
+    JAVA source that runs properly, the ClassCastException does not arise.
+
+Nevertheless it has something to do with the {@link #...} tags, 'cause when
+I remove *all* occurances, of {@link #...} the ClassCastException does go away.
+
+------------------------------------------------------------------------------------------
+
+When a class auto-inherits methods from a parent class, there can be relative
+links that start with the '#' character.  These links will still point to the
+parent class, which is wrong.  We try to redirect the link to the right place on
+line 1338 of HtmlDocletWriter like this:
+

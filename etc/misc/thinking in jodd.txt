@@ -1,0 +1,136 @@
+
+Sistem S mora da se definiše cistom Javom i Templatima
+
+Java i Templati se mogu mesati
+
+Kesiranje parsiranog izlaza
+
+Opis definicije (najvise u Javi) da moze da parsira rezultate DbQuery-ja.
+
+
+Java i Template moraju da imaju zajednicki kontext. To znaci da
+1) ili template koristi javu u pozadini - ovo se usvaja posto je onda moguce sacuvati vise informacija, a i performantnije je, jer se ne kreira string koji ce posle biti parsiran. Dalje, moguce je u javi imati znacajno bogatiji interfejs.
+
+2) ili java pravi template - odbaceno!
+
+
+Znaci, koristeci neki api moramo da napravimo SqlGenerator koji cuva vezu izmedju entiteta i koji posle moze da izgenerise SQL upit. Najprirodnije je da to budu SQLChunkovi.
+
+Dakle, moramo da imamo osnovni API kojim je moguce napraviti:
++ svaki Chunk mora da bude posebnog tipa kako bi znali kada je recimo u upotrebi join i slicno.
++ mora da bude moguce da se parsira samo DEO template! znaci, ako kroz javu zadam koje su tabele, da se to tamo parsira ispravno. 
++ Tacnije: treba obezbediti mix jave i template-a. kada prosledim string ovom builderu on njega shvata kao template. Tako ce recimo use() biti zajednicko?
+
+SqlBuilder.select("c * from ").table(rere).where("");
+
+
+O chunkovima
+------------
+Moraju da lice na template. Imaju value za string. Da mogu da se kesiraju.
+Column chunk sluzi za kolone.
+
+
+Mapiranje u dbQuery i dalji rad:
+
+SELECT ...
+FROM table1 INNER JOIN table2
+ON table1.column1 = table2.column1
+AND table1.column2 = table2.column2,
+table3;
+
+SqlBuilder.select().from(t1).innerJoin(t2)
+
+
+
+
+q = new DbOrmQuery("select b.ID, g.*, (select count(1) from GIRL) as c from BOY b join GIRL g on b.GIRL_ID=g.ID");
+
+sada:
+DbOrmJoin j = new DbOrmJoin();
+j.map(Boy2.class).join(Girl.class).join(Integer.class, "totalGirls");
+
+sutra:
+SqlBuilder.select()
+        .table(Boy2.class)
+        .has_one("totalGirls", "select count(1) from Girl")
+                .join(Girl.class, "on $boy2.girlId=$girl.id").
+
+
+SqlBuilder
+	.build()
+	.select("$b.id")
+	.select("$g.*")
+	.select("(select count(1) from ) as c")
+		.from(Boy2.class)
+			.join(Girl.class)
+				.on("$boy2.girlId=$girl.id")
+	 .where("")
+	 
+	 
+
+Znaci, uvek mora da postoji ova varijanta, bez obzira na !!!!!!!!
+new DbOrmQuery("select b.ID, g.*, select count(1) from GIRL as c from BOY b join GIRL g on b.GIRL_ID=g.ID")
+	.map()
+	.to(Boy2.class)
+		.join(Girl.class)
+		.hasMany(Boy3.class, "boy3")
+	.to(Integer.class)
+		.belongsTo()
+
+ali da se moze napisati i ceo SQL i definicija uvezivanja!
+Tada se recimo ne radi SqlBuilder.parse() vec samo execute i primeni mapiranje.
+
+
+!!!!!!!!!!!!!!!!!!!!!!! 
+Odatle sledi da postoji template koji koristi za builder -> se pravi mapper ili se explicitno definise.
+!!!!!!!!!!!!!!!!!!!!!!!
+zadatak (1)
+Napraviti builder.
+
+
+
+
+da li da procesor uradi sve sto treba?
+
+
+
+
+
+PITANJE: da li da se pravi jedna klasa kojom se definise MAPIRANJE i QUERY u isto vreme?
+Ako bi to moglo, to bi bilo jebena ludnica. Pri tome bi mapiranje moglo da radi i kada se ne pozove parse
+vec se prosledi sql kao takav.
+
+
+
+
+
+
+Rad sa tempalte-om:
+
+select $C{b.id}, (select count(1) from GIRL) $as{b.tableCount}, $C{g}, from $T{BOY b} join $J{Girl g}
+
+
+
+pazi trip: da samo ima $T i $J a da se imena referenci automatski zamene!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+nema potrebe posebno ih oznacavati! trazi se: <non-ascii_char><ref><.> tu je problem ako se referenca zove kao druga tabela.
+problem je i kada referencu treba ispistai, ne moze da se escakpeuje --------> bolje da ima $.
+
+
+znaci, inline izracune je moguce odmah bindovati u objekat.
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------
+SQL upiti
+
+SELECT LastName,FirstName FROM Persons WHERE
+SELECT * FROM Persons
+
+INSERT INTO table_name (column1, column2,...) VALUES (value1, value2,....)
+UPDATE table_name SET column_name = new_value WHERE column_name = some_value
+DELETE FROM table_name WHERE column_name = some_value

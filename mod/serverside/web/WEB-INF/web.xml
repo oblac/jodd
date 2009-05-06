@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<!--listeners-->
+	<listener>
+		<listener-class>jodd.servlet.RequestContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>jodd.servlet.HttpSessionListenerBroadcaster</listener-class>
+	</listener>
+
+	<!-- filters -->
+	<filter>
+		<filter-name>madvoc</filter-name>
+		<filter-class>jodd.madvoc.MadvocServletFilter</filter-class>
+		<init-param>
+			<param-name>madvoc.webapp</param-name>
+			<param-value>madvoc.MyWebApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>madvoc.configurator</param-name>
+			<param-value>madvoc.MySimpleConfigurator</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>madvoc</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<!--<dispatcher>FORWARD</dispatcher>-->
+	</filter-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+</web-app>

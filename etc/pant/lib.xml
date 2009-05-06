@@ -1,0 +1,4 @@
+
+	<path id="lib.$[libName]">
+		<fileset dir="${basedir}/lib/$[libName]" includes="**/*.jar"/>
+	</path>

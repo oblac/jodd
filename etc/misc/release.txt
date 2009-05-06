@@ -1,0 +1,9 @@
++ create new release on SF
++ upload files to anonymous.sf.net
++ add distributions to release
+
++ sync web
+
++ login to sft/sforge132589
++ transfer files to root of the project /home/groups/j/jo/jodd
++ unpack javadoc/emma/junit

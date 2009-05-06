@@ -1,0 +1,28 @@
+// Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
+
+package jodd.db.type;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.Array;
+
+public class SqlArraySqlType extends SqlType<Array> {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Array get(ResultSet rs, int index) throws SQLException {
+		return rs.getArray(index);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void set(PreparedStatement st, int index, Array value) throws SQLException {
+		st.setArray(index, value);
+	}
+
+}

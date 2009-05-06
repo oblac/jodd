@@ -1,0 +1,2 @@
+
+	<target name="%ARG1%" depends="$[buildlist('%ARG2%', '%ARG1%.')]" description="invokes '%ARG1%' for project"/>

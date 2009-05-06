@@ -1,0 +1,15 @@
+
+Create distribution
+-------------------------
+ant dist
+-------------------------
+
+Create release
+-------------------------
+and clean
+ant dist
+ant javadoc
+ant emma
+a findbugs
+a pack-all
+-------------------------

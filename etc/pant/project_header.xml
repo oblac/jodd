@@ -1,0 +1,92 @@
+<project name="$[prjName]" default="help" basedir=".">
+
+	<description>$[prjDescription]</description>
+
+	<!-- Common -->
+
+	<!-- ensure that Ant 1.6.2+ is being used -->
+	<available classname="org.apache.tools.ant.DynamicAttribute" property="ant-1.6.2"/>
+	<fail unless="ant-1.6.2" message="Ant 1.6.2+ is required."/>
+
+	<!-- load enviroment variables -->
+	<property environment="env"/>
+
+	<!-- timestamp formats -->
+	<tstamp>
+		<format property="TODAY" pattern="yyyy-MM-dd"/>
+		<format property="time.now" pattern="yyyy-MM-dd hh:mm:ss"/>
+		<format property="time.year" pattern="yyyy"/>
+	</tstamp>
+
+	<!-- properties -->
+	<property file="build.user.properties"/>
+	<property name="prjName" value="$[prjName]"/>
+	<property name="prjVersion" value="$[prjVersion]"/>
+
+	<patternset id="ignored.files">
+		<exclude name="**/CVS/**"/>
+		<exclude name="**/.svn/**"/>
+	</patternset>
+	<patternset id="resources">
+		<exclude name="**/*.java"/>
+		<exclude name="**/package.html"/>
+		<patternset refid="ignored.files"/>
+	</patternset>
+
+	<property name="jdk5.bin" value="${jdk5.home}/bin"/>
+	<path id="jdk5.classpath">
+		<fileset dir="${jdk5.home}">
+			<include name="jre/lib/charsets.jar"/>
+			<include name="jre/lib/deploy.jar"/>
+			<include name="jre/lib/javaws.jar"/>
+			<include name="jre/lib/jce.jar"/>
+			<include name="jre/lib/jsse.jar"/>
+			<include name="jre/lib/plugin.jar"/>
+			<include name="jre/lib/rt.jar"/>
+			<include name="jre/lib/ext/dnsns.jar"/>
+			<include name="jre/lib/ext/localedata.jar"/>
+			<include name="jre/lib/ext/sunjce_provider.jar"/>
+			<include name="jre/lib/ext/sunpkcs11.jar"/>
+		</fileset>
+	</path>
+	<path id="jdk5.tools">
+		<fileset dir="${jdk5.home}">
+			<include name="lib/tools.jar"/>
+		</fileset>
+	</path>
+
+	<property name="jdk6.bin" value="${jdk6.home}/bin"/>
+	<path id="jdk6.classpath">
+		<fileset dir="${jdk6.home}">
+			<include name="jre/lib/charsets.jar"/>
+			<include name="jre/lib/deploy.jar"/>
+			<include name="jre/lib/javaws.jar"/>
+			<include name="jre/lib/jce.jar"/>
+			<include name="jre/lib/jsse.jar"/>
+			<include name="jre/lib/plugin.jar"/>
+			<include name="jre/lib/rt.jar"/>
+			<include name="jre/lib/ext/dnsns.jar"/>
+			<include name="jre/lib/ext/localedata.jar"/>
+			<include name="jre/lib/ext/sunjce_provider.jar"/>
+			<include name="jre/lib/ext/sunpkcs11.jar"/>
+		</fileset>
+	</path>
+	<path id="jdk6.tools">
+		<fileset dir="${jdk6.home}">
+			<include name="lib/tools.jar"/>
+		</fileset>
+	</path>
+
+	<!-- echo -->
+	<echo/>
+	<echo>${prjName} ${prjVersion}</echo>
+	<echo>$[prjDescription]</echo>
+	<echo>${TODAY}</echo>
+	<echo/>
+
+	<!-- Project paths -->
+
+	<property name="output.dir" value="out"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="etc.dir" value="etc"/>
+	<property name="tmp.dir" value="tmp"/>

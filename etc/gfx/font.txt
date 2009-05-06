@@ -1,0 +1,5 @@
+font requirements
+-----------------
+
+'j' da bude ravno, dole kriva da skrece i da crta s kojom se zavrsava bude kosa
+'d' da ima nesto svoje, da ne bude baš ravno.

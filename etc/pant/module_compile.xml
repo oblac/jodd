@@ -1,0 +1,48 @@
+
+	<!-- compile: $[modid] -->
+	
+	<path id="$[modid].bootclasspath">
+		<path refid="jdk$[moduleJdk].classpath"/>
+		<path refid="jdk$[moduleJdk].tools"/>
+	</path>
+
+	<property name="$[modid].out.dir" value="${output.dir}/$[target]/$[moduleName]"/>
+	<property name="$[modid].src.dir" value="mod/$[moduleName]/$[source(target)]"/>
+	<property name="$[modid].javadoc.dir" value="${output.dir}/javadoc/$[moduleName]"/>
+	
+	<target name="compile.$[modid]" description="compiles module '$[moduleName]'; $[target] classes">
+		<mkdir dir="${$[modid].out.dir}"/>
+		<javac destdir="${$[modid].out.dir}"
+				listfiles="on" debug="on"
+				source="1.$[moduleJdk]" target="1.$[moduleJdk]"
+				deprecation="true" encoding="UTF-8"
+				fork="true" executable="${jdk$[moduleJdk].bin}/javac">
+			<src location="${$[modid].src.dir}"/>
+			<bootclasspath refid="$[modid].bootclasspath"/>
+			<classpath refid="$[modid].classpath"/>
+		</javac>
+		<copy todir="${$[modid].out.dir}">
+			<fileset dir="${$[modid].src.dir}">
+				<patternset refid="resources"/>
+				<type type="file"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- javadoc: $[modid] -->
+
+	<target name="javadoc.$[modid]" depends="compile.$[modid]" description="generates javadoc for module '$[moduleName]'; $[target] classes">
+		<mkdir dir="${$[modid].javadoc.dir}"/>
+		<javadoc destdir="${$[modid].javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
+				windowtitle="$[moduleName]" stylesheetfile="${etc.dir}/javadoc/$[moduleName].css"
+				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
+				source="1.$[moduleJdk]"
+				executable="${jdk$[moduleJdk].bin}/javadoc">
+			<bootclasspath refid="$[modid].bootclasspath"/>
+			<classpath refid="$[modid].classpath"/>
+			<doctitle><![CDATA[$[moduleName.capitalize()] Library ${prjVersion}]]></doctitle>
+			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
+			<!--<tag name="todo" scope="all" description="To do:"/>-->
+			<packageset dir="${$[modid].src.dir}" defaultexcludes="yes"/>
+		</javadoc>
+	</target>

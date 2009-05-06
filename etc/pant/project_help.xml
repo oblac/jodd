@@ -1,0 +1,6 @@
+
+	<target name="help">
+		<echo>
+%ARG1%
+		</echo>
+	</target>
