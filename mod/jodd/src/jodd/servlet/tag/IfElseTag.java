@@ -3,6 +3,7 @@
 package jodd.servlet.tag;
 
 import jodd.typeconverter.BooleanConverter;
+import jodd.typeconverter.TypeConversionException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -16,7 +17,11 @@ public class IfElseTag extends SimpleTagSupport {
 	private boolean testValue;
 
 	public void setTest(String test) {
-		this.testValue = BooleanConverter.valueOf(test).booleanValue();
+		try {
+			this.testValue = BooleanConverter.valueOf(test).booleanValue();
+		} catch (TypeConversionException tcex) {
+			this.testValue = false;
+		}
 	}
 
 	/**

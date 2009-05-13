@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.net.URL;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -91,6 +92,8 @@ public class TypeConverterManager {
 
 		register(FileUpload.class, new FileUploadConverter());
 		register(JDateTime.class, new JDateTimeConverter());
+		register(Class.class, new ClassConverter());
+		register(URL.class, new URLConverter());
 	}
 
 	/**
