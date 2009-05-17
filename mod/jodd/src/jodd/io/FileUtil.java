@@ -138,9 +138,6 @@ public class FileUtil {
 	 * closed without modifying it, but updating the file date and time.
 	 */
 	public static void touch(File file) throws IOException {
-		if (file == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (file.exists() == false) {
 			StreamUtil.close(new FileOutputStream(file));
 		}
@@ -243,8 +240,7 @@ public class FileUtil {
 		@Override
 		public Object clone() throws CloneNotSupportedException {
 			Object clone = super.clone();
-			//noinspection RedundantStringConstructorCall
-			((Settings) clone).encoding = new String(this.encoding);
+			((Settings) clone).encoding = this.encoding;
 			return clone;
 		}
 	}
@@ -293,12 +289,6 @@ public class FileUtil {
 	}
 
 	private static void checkFileCopy(File src, File dest, Settings settings) throws IOException {
-		if (src == null) {
-			throw new IOException("Source is null.");
-		}
-		if (dest == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (src.exists() == false) {
 			throw new FileNotFoundException("Source '" + src + "' does not exist.");
 		}
@@ -388,9 +378,6 @@ public class FileUtil {
 	 * Copies a file to folder with specified copy settings.
 	 */
 	public static void copyFileToDir(File src, File destDir, Settings settings) throws IOException {
-		if (destDir == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException("Destination '" + destDir + "' is not a directory.");
 		}
@@ -422,12 +409,6 @@ public class FileUtil {
 	}
 
 	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
-		if (srcDir == null) {
-			throw new IOException("Source is null.");
-		}
-		if (destDir == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (srcDir.exists() == false) {
 			throw new FileNotFoundException("Source '" + srcDir + "' does not exist.");
 		}
@@ -537,9 +518,6 @@ public class FileUtil {
 		moveFileToDir(src, destDir, settings);
 	}
 	public static void moveFileToDir(File src, File destDir, Settings settings) throws IOException {
-		if (destDir == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException("Destination '" + destDir + "' is not a directory.");
 		}
@@ -583,9 +561,6 @@ public class FileUtil {
 	}
 
 	public static void deleteFile(File dest) throws IOException {
-		if (dest == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (dest.exists() == false) {
 			throw new FileNotFoundException("Destination '" + dest + "' doesn't exist");
 		}
@@ -637,9 +612,6 @@ public class FileUtil {
 	 * Cleans a directory without deleting it.
 	 */
 	public static void cleanDir(File dest, Settings settings) throws IOException {
-		if (dest == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (dest.exists() == false) {
 			throw new FileNotFoundException("Destination '" + dest + "' doesn't exists.");
 		}
@@ -693,9 +665,6 @@ public class FileUtil {
 	}
 
 	public static String readString(File source, String encoding) throws IOException {
-		if (source == null) {
-			throw new IOException("Source '" + source + "' is null.");
-		}
 		if (source.exists() == false) {
 			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
 		}
@@ -731,9 +700,6 @@ public class FileUtil {
 	}
 
 	public static void writeString(File dest, String data, String encoding) throws IOException {
-		if (dest == null) {
-			throw new IOException("Destination '" + dest + "' is null.");
-		}
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Destination '" + dest + "' exist, but it is not a file.");
@@ -756,9 +722,6 @@ public class FileUtil {
 	}
 
 	public static byte[] readBytes(File source) throws IOException {
-		if (source == null) {
-			throw new IOException("Source '" + source + "' is null.");
-		}
 		if (source.exists() == false) {
 			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
 		}
@@ -793,9 +756,6 @@ public class FileUtil {
 	}
 
 	public static void writeBytes(File dest, byte[] data, int off, int len) throws IOException {
-		if (dest == null) {
-			throw new IOException("Destination '" + dest + "' is null.");
-		}
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Destination '" + dest + "' exist but it is not a file.");
@@ -827,9 +787,6 @@ public class FileUtil {
 	 * Code origin: Avalon
 	 */
 	public static boolean compare(File file1, File file2) throws IOException {
-		if ((file1 == null) || (file2 == null)) {
-			throw new IOException("One of the files is null.");
-		}
 		boolean file1Exists = file1.exists();
 		if (file1Exists != file2.exists()) {
 			return false;
@@ -878,9 +835,6 @@ public class FileUtil {
 	 * 			recently than the reference <code>File</code>.
 	 */
 	public static boolean isNewer(File file, File reference) {
-		if (reference == null) {
-			throw new IllegalArgumentException("Reference file is null.");
-		}
 		if (reference.exists() == false) {
 			throw new IllegalArgumentException("The reference file '" + file + "' doesn't exist");
 		}
@@ -893,9 +847,6 @@ public class FileUtil {
 	}
 
 	public static boolean isOlder(File file, File reference) {
-		if (reference == null) {
-			throw new IllegalArgumentException("Reference file is null.");
-		}
 		if (reference.exists() == false) {
 			throw new IllegalArgumentException("The reference file '" + file + "' doesn't exist");
 		}
@@ -912,9 +863,6 @@ public class FileUtil {
 	 *         the given time reference.
 	 */
 	public static boolean isNewer(File file, long timeMillis) {
-		if (file == null) {
-			throw new IllegalArgumentException("File is null.");
-		}
 		if (!file.exists()) {
 			return false;
 		}
@@ -927,9 +875,6 @@ public class FileUtil {
 
 
 	public static boolean isOlder(File file, long timeMillis) {
-		if (file == null) {
-			throw new IllegalArgumentException("File is null.");
-		}
 		if (!file.exists()) {
 			return false;
 		}
@@ -960,12 +905,6 @@ public class FileUtil {
 	 * Otherwise, try to copy source file to destination file.
 	 */
 	public static void copy(File src, File dest, Settings settings) throws IOException {
-		if (src == null) {
-			throw new IOException("Source file is null.");
-		}
-		if (dest == null) {
-			throw new IOException("Destination file is null.");
-		}
 		if (src.isDirectory() == true) {
 			copyDir(src, dest, settings);
 			return;
@@ -996,12 +935,6 @@ public class FileUtil {
 	 * Otherwise, try to move source file to destination file.
 	 */
 	public static void move(File src, File dest, Settings settings) throws IOException {
-		if (src == null) {
-			throw new IOException("Source file is null.");
-		}
-		if (dest == null) {
-			throw new IOException("Destination file is null.");
-		}
 		if (src.isDirectory() == true) {
 			moveDir(src, dest);
 			return;
@@ -1032,9 +965,6 @@ public class FileUtil {
 	 * Smart delete of destination file or directory.
 	 */
 	public static void delete(File dest, Settings settings) throws IOException {
-		if (dest == null) {
-			throw new IOException("Destination is null.");
-		}
 		if (dest.isDirectory()) {
 			deleteDir(dest, settings);
 			return;
