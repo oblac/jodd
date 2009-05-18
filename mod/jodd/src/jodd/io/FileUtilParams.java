@@ -2,19 +2,19 @@
 
 package jodd.io;
 
-import jodd.util.StringPool;
+import jodd.JoddDefault;
 
 /**
  * {@link FileUtil File utilities} parameters.
  */
 public class FileUtilParams implements Cloneable {
 
-	protected boolean preserveDate = true;			// should destination file have the same timestamp as source
-	protected boolean overwrite = true;				// overwrite existing destination
-	protected boolean createDirs = true;			// create missing subdirectories of destination
-	protected boolean recursive = true;				// use recursive directory copying and deleting
-	protected boolean continueOnError = true;		// don't stop on error and continue job as much as possible
-	protected String encoding = StringPool.UTF_8;	// default encoding for reading/writing strings
+	protected boolean preserveDate = true;				// should destination file have the same timestamp as source
+	protected boolean overwrite = true;					// overwrite existing destination
+	protected boolean createDirs = true;				// create missing subdirectories of destination
+	protected boolean recursive = true;					// use recursive directory copying and deleting
+	protected boolean continueOnError = true;			// don't stop on error and continue job as much as possible
+	protected String encoding = JoddDefault.encoding;	// default encoding for reading/writing strings
 
 
 	public boolean isPreserveDate() {

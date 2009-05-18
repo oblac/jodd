@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.util.StringPool;
+import jodd.JoddDefault;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -197,7 +197,7 @@ public class Email {
 
 	protected String text;
 	protected String message;
-	protected String encoding = StringPool.UTF_8;
+	protected String encoding = JoddDefault.encoding;
 
 	public String getEncoding() {
 		return encoding;

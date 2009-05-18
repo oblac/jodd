@@ -2,8 +2,8 @@
 
 package jodd.servlet;
 
-import static jodd.util.StringPool.UTF_8;
 import jodd.util.StringPool;
+import jodd.JoddDefault;
 
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
@@ -29,13 +29,13 @@ public class UrlEncoder {
 	}
 
 	public static String url(String value, PageContext pageContext) {
-		return url(value, UTF_8, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+		return url(value, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
 	}
 	public static String url(String value, String encoding, PageContext pageContext) {
 		return url(value, encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
 	}
 	public static String url(String value, HttpServletRequest request, HttpServletResponse response) {
-		return url(value, UTF_8, request, response);
+		return url(value, JoddDefault.encoding, request, response);
 	}
 	public static String url(String value, String encoding, HttpServletRequest request, HttpServletResponse response) {
 		String result = ServletUtil.resolveUrl(url(value, encoding), request);
@@ -46,7 +46,7 @@ public class UrlEncoder {
 	}
 
 	public static String url(String url) {
-		return url(url, UTF_8);
+		return url(url, JoddDefault.encoding);
 	}
 
 	/**
@@ -112,21 +112,21 @@ public class UrlEncoder {
 	// ---------------------------------------------------------------- build url
 
 	public static UrlBuilder buildUrl(String url) {
-		return new UrlBuilder(url, UTF_8, null, null);
+		return new UrlBuilder(url, JoddDefault.encoding, null, null);
 	}
 	public static UrlBuilder buildUrl(String url, String encoding) {
 		return new UrlBuilder(url, encoding, null, null);
 	}
 
 	public static UrlBuilder buildUrl(String url, PageContext pageContext) {
-		return new UrlBuilder(url, UTF_8, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+		return new UrlBuilder(url, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
 	}
 	public static UrlBuilder buildUrl(String url, String encoding, PageContext pageContext) {
 		return new UrlBuilder(url, encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
 	}
 
 	public static UrlBuilder buildUrl(String url, HttpServletRequest request, HttpServletResponse response) {
-		return new UrlBuilder(url, UTF_8, request, response);
+		return new UrlBuilder(url, JoddDefault.encoding, request, response);
 	}
 	public static UrlBuilder buildUrl(String url, String encoding, HttpServletRequest request, HttpServletResponse response) {
 		return new UrlBuilder(url, encoding, request, response);

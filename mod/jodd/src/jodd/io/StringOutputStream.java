@@ -3,7 +3,7 @@
 package jodd.io;
 
 import jodd.util.CharUtil;
-import jodd.util.StringPool;
+import jodd.JoddDefault;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -25,7 +25,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	 * Creates new StringOutputStream, makes a new internal StringBuffer.
 	 */
 	public StringOutputStream() {
-		this(StringPool.UTF_8);
+		this(JoddDefault.encoding);
 	}
 	public StringOutputStream(String encoding) {
 		super();

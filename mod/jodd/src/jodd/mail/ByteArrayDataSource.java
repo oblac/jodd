@@ -3,6 +3,7 @@
 package jodd.mail;
 
 import jodd.util.StringPool;
+import jodd.JoddDefault;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,14 +19,12 @@ import javax.activation.FileTypeMap;
 
 /**
  * Implements a DataSource from an InputStream, a byte array, a String, a File.
- *
- * This class has been build upon the similar one in javamail demos, but it
- * is enhanced.
  */
 public class ByteArrayDataSource implements DataSource {
 
 	protected byte[] data;		// data
 	protected String type;		// content-type
+
 
 	/**
 	 * Create a datasource from a File. If the Content-Type parameter is null,
@@ -49,9 +48,7 @@ public class ByteArrayDataSource implements DataSource {
 	 */
 	public ByteArrayDataSource(InputStream is, String type) throws IOException {
 		this.type = type;
-
 		ByteArrayOutputStream os = new ByteArrayOutputStream(4096);
-
 		byte buf[] = new byte[4096];
 		int len;
 		while (true) {
@@ -77,16 +74,19 @@ public class ByteArrayDataSource implements DataSource {
 
 	/**
 	 * Create a datasource from a String. This method defaults to
-	 * a String encoding of UTF-8. For a different encoding,
-	 * specify a Mime "charset" in the Content-Type parameter.
+	 * a {@link JoddDefault#encoding default String encoding}.
 	 *
 	 * @param data byte array
 	 * @param type Content-Type
 	 */
 	public ByteArrayDataSource(String data, String type) {
+		this(data, type, JoddDefault.encoding);
+	}
+
+	public ByteArrayDataSource(String data, String type, String encoding) {
 		this.type = type;
 		try {
-			this.data = data.getBytes(StringPool.UTF_8);
+			this.data = data.getBytes(encoding);
 		} catch (UnsupportedEncodingException uex) {
 			// ignore
 		}
@@ -163,8 +163,7 @@ public class ByteArrayDataSource implements DataSource {
 	public int getSize() {
 		if (data == null) {
 			return -1;
-		}
-		else {
+		} else {
 			return data.length;
 		}
 	}
@@ -172,7 +171,7 @@ public class ByteArrayDataSource implements DataSource {
 	/**
 	 * Return the content as a String. The Content-Type "charset" parameter
 	 * will be used to determine the encoding, and if that's not available or
-	 * invalid, UTF-8.
+	 * invalid, default encoding.
 	 *
 	 * @return a String with the content
 	 */
@@ -181,7 +180,7 @@ public class ByteArrayDataSource implements DataSource {
 			return new String(data, type);
 		} catch (UnsupportedEncodingException uex) {
 			try {
-				return new String(data, StringPool.UTF_8);
+				return new String(data, JoddDefault.encoding);
 			} catch (UnsupportedEncodingException uex1) {
 				return null;
 			}

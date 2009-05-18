@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.io.FastCharArrayWriter;
+import jodd.JoddDefault;
 
 /**
  * A response wrapper that takes everything the client would normally output
@@ -33,7 +34,7 @@ public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * accumulate the response.
 	 */
 	public CharArrayResponseWrapper(HttpServletResponse response) {
-		this(response, StringPool.UTF_8);
+		this(response, JoddDefault.encoding);
 	}
 
 	public CharArrayResponseWrapper(HttpServletResponse response, String encoding) {
