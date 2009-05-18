@@ -3,6 +3,7 @@
 package jodd.io;
 
 import static jodd.JoddDefault.ioBufferSize;
+import jodd.JoddDefault;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -131,33 +132,25 @@ public class StreamUtil {
 	 * Copies input stream to writer using buffer.
 	 */
 	public static void copy(InputStream input, Writer output) throws IOException {
-		copy(new InputStreamReader(input), output);
+		copy(input, output, JoddDefault.encoding);
 	}
 	/**
 	 * Copies specified number of bytes from input stream to writer using buffer.
 	 */
 	public static void copy(InputStream input, Writer output, int byteCount) throws IOException {
-		copy(new InputStreamReader(input), output, byteCount);
+		copy(input, output, JoddDefault.encoding, byteCount);
 	}
 	/**
 	 * Copies input stream to writer using buffer and specified encoding.
 	 */
 	public static void copy(InputStream input, Writer output, String encoding) throws IOException {
-		if (encoding == null) {
-			copy(input, output);
-		} else {
-			copy(new InputStreamReader(input, encoding), output);
-		}
+		copy(new InputStreamReader(input, encoding), output);
 	}
 	/**
 	 * Copies specified number of bytes from input stream to writer using buffer and specified encoding.
 	 */
 	public static void copy(InputStream input, Writer output, String encoding, int byteCount) throws IOException {
-		if (encoding == null) {
-			copy(input, output, byteCount);
-		} else {
-			copy(new InputStreamReader(input, encoding), output, byteCount);
-		}
+		copy(new InputStreamReader(input, encoding), output, byteCount);
 	}
 
 
@@ -205,41 +198,29 @@ public class StreamUtil {
 	 * Copies reader to output stream using buffer.
 	 */
 	public static void copy(Reader input, OutputStream output) throws IOException {
-		Writer out = new OutputStreamWriter(output);
-		copy(input, out);
-		out.flush();
+		copy(input, output, JoddDefault.encoding);
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer.
 	 */
 	public static void copy(Reader input, OutputStream output, int charCount) throws IOException {
-		Writer out = new OutputStreamWriter(output);
-		copy(input, out, charCount);
-		out.flush();
+		copy(input, output, JoddDefault.encoding, charCount);
 	}
 	/**
 	 * Copies reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding) throws IOException {
-		if (encoding == null) {
-			copy(input, output);
-		} else {
-			Writer out = new OutputStreamWriter(output);
-			copy(input, out);
-			out.flush();
-		}
+		Writer out = new OutputStreamWriter(output, encoding);
+		copy(input, out);
+		out.flush();
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer and specified encoding.
 	 */
 	public static void copy(Reader input, OutputStream output, String encoding, int charCount) throws IOException {
-		if (encoding == null) {
-			copy(input, output, charCount);
-		} else {
-			Writer out = new OutputStreamWriter(output);
-			copy(input, out, charCount);
-			out.flush();
-		}
+		Writer out = new OutputStreamWriter(output, encoding);
+		copy(input, out, charCount);
+		out.flush();
 	}
 
 

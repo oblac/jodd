@@ -154,6 +154,4 @@ public class SystemUtil {
 		System.getProperties().put(HTTP_PROXY_PORT, port);
 	}
 
-
-
 }

@@ -7,6 +7,8 @@ import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.result.ServletDispatcherResult;
+import jodd.util.StringPool;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -19,7 +21,7 @@ public class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		encoding = "UTF-8";
+		encoding = StringPool.UTF_8;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};

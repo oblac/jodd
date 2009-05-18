@@ -2,6 +2,8 @@
 
 package jodd.servlet.filter;
 
+import jodd.JoddDefault;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -103,6 +105,9 @@ public class CharacterEncodingFilter implements Filter {
 
 		this.filterConfig = filterConfig;
 		this.encoding = filterConfig.getInitParameter("encoding");
+		if (this.encoding == null) {
+			this.encoding = JoddDefault.encoding;
+		}
 		String value = filterConfig.getInitParameter("ignore");
 		if (value == null) {
 			this.ignore = true;
@@ -124,7 +129,7 @@ public class CharacterEncodingFilter implements Filter {
 	 * @param request The servlet request we are processing
 	 */
 	protected String selectEncoding(ServletRequest request) {
-		return(this.encoding);
+		return this.encoding;
 	}
 }
 

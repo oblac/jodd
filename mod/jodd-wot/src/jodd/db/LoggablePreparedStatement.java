@@ -7,11 +7,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ParameterMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLWarning;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Ref;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.Calendar;
 import java.net.URL;
 import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
 
 /**
  * A <code>LoggablePreparedStatement</code> is a {@link PreparedStatement} with added logging capability.
@@ -41,7 +52,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	* Constructs a LoggablePreparedStatement.
 	*
 	* Creates {@link java.sql.PreparedStatement PreparedStatement} with the query string <code>sql</code> using
-	* the specified <code>conn</code> by calling {@link java.sql.Connection#prepareStatement(String)}.
+	* the specified <code>conn</code> by calling {@link Connection#prepareStatement(String)}.
 	* <p>
 	* Whenever a call is made to this <code>LoggablePreparedStatement</code> it is forwarded to the prepared statement created from
 	* <code>conn</code> after first saving relevant parameters for use in logging output.
@@ -280,7 +291,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @return the conn that produced this statement
 	 * @exception SQLException if a database access error occurs
 	 */
-	public java.sql.Connection getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {
 		return wrappedStatement.getConnection();
 	}
 	/**
@@ -351,7 +362,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @return the description of a ResultSet's columns
 	 * @exception SQLException if a database access error occurs
 	 */
-	public java.sql.ResultSetMetaData getMetaData() throws SQLException {
+	public ResultSetMetaData getMetaData() throws SQLException {
 		return wrappedStatement.getMetaData();
 	}
 	/**
@@ -438,7 +449,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @return the first SQLWarning or null
 	 * @exception SQLException if a database access error occurs
 	 */
-	public java.sql.SQLWarning getWarnings() throws SQLException {
+	public SQLWarning getWarnings() throws SQLException {
 		return wrappedStatement.getWarnings();
 	}
 	/**
@@ -450,7 +461,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x an object representing an SQL array
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setArray(int i, java.sql.Array x) throws SQLException {
+	public void setArray(int i, Array x) throws SQLException {
 		wrappedStatement.setArray(i, x);
 		saveQueryParamValue(i, x);
 
@@ -486,7 +497,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x the parameter value
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setBigDecimal(int parameterIndex, java.math.BigDecimal x) throws SQLException {
+	public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
 		wrappedStatement.setBigDecimal(parameterIndex, x);
 		saveQueryParamValue(parameterIndex, x);
 
@@ -523,7 +534,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x an object representing a BLOB
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setBlob(int i, java.sql.Blob x) throws SQLException {
+	public void setBlob(int i, Blob x) throws SQLException {
 		wrappedStatement.setBlob(i, x);
 		saveQueryParamValue(i, x);
 	}
@@ -586,7 +597,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param length the number of characters in the stream
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setCharacterStream(int parameterIndex, java.io.Reader reader, int length) throws SQLException {
+	public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
 		wrappedStatement.setCharacterStream(parameterIndex, reader, length);
 		saveQueryParamValue(parameterIndex, reader);
 
@@ -600,7 +611,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x an object representing a CLOB
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setClob(int i, java.sql.Clob x) throws SQLException {
+	public void setClob(int i, Clob x) throws SQLException {
 		wrappedStatement.setClob(i, x);
 		saveQueryParamValue(i, x);
 
@@ -660,7 +671,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 *            to construct the date
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setDate(int parameterIndex, java.sql.Date x, java.util.Calendar cal) throws SQLException {
+	public void setDate(int parameterIndex, java.sql.Date x, Calendar cal) throws SQLException {
 		wrappedStatement.setDate(parameterIndex, x, cal);
 		saveQueryParamValue(parameterIndex, x);
 	}
@@ -940,7 +951,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x an object representing data of an SQL REF Type
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setRef(int i, java.sql.Ref x) throws SQLException {
+	public void setRef(int i, Ref x) throws SQLException {
 		wrappedStatement.setRef(i, x);
 		saveQueryParamValue(i, x);
 
@@ -980,7 +991,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x the parameter value
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setTime(int parameterIndex, java.sql.Time x) throws SQLException {
+	public void setTime(int parameterIndex, Time x) throws SQLException {
 		wrappedStatement.setTime(parameterIndex, x);
 		saveQueryParamValue(parameterIndex, x);
 	}
@@ -1002,7 +1013,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 *            to construct the time
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setTime(int parameterIndex, java.sql.Time x, java.util.Calendar cal) throws SQLException {
+	public void setTime(int parameterIndex, Time x, Calendar cal) throws SQLException {
 		wrappedStatement.setTime(parameterIndex, x, cal);
 		saveQueryParamValue(parameterIndex, x);
 
@@ -1016,7 +1027,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @param x the parameter value
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setTimestamp(int parameterIndex, java.sql.Timestamp x) throws SQLException {
+	public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
 		wrappedStatement.setTimestamp(parameterIndex, x);
 		saveQueryParamValue(parameterIndex, x);
 	}
@@ -1038,7 +1049,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 *            to construct the timestamp
 	 * @exception SQLException if a database access error occurs
 	 */
-	public void setTimestamp(int parameterIndex, java.sql.Timestamp x, java.util.Calendar cal) throws SQLException {
+	public void setTimestamp(int parameterIndex, Timestamp x, Calendar cal) throws SQLException {
 		wrappedStatement.setTimestamp(parameterIndex, x, cal);
 		saveQueryParamValue(parameterIndex, x);
 	}
@@ -1064,6 +1075,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @exception SQLException if a database access error occurs
 	 * @deprecated
 	 */
+	@Deprecated
 	public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		//noinspection deprecation
 		wrappedStatement.setUnicodeStream(parameterIndex, x, length);
