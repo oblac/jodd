@@ -63,10 +63,26 @@ public class NetUtil {
 	// ---------------------------------------------------------------- download
 	
 	/**
-	 * Download resource from URL.
+	 * Downloads resource as byte array.
 	 */
-	public static byte[] download(String url) throws IOException {
+	public static byte[] downloadBytes(String url) throws IOException {
 		HttpURLConnection conection = (HttpURLConnection)((new URL(url).openConnection()));
 		return StreamUtil.readBytes(conection.getInputStream());
+	}
+
+	/**
+	 * Downloads resource as String.
+	 */
+	public static String downloadString(String url, String encoding) throws IOException {
+		HttpURLConnection conection = (HttpURLConnection)((new URL(url).openConnection()));
+		return new String(StreamUtil.readChars(conection.getInputStream(), encoding));
+	}
+
+	/**
+	 * Downloads resource as String.
+	 */
+	public static String downloadString(String url) throws IOException {
+		HttpURLConnection conection = (HttpURLConnection)((new URL(url).openConnection()));
+		return new String(StreamUtil.readChars(conection.getInputStream()));
 	}
 }

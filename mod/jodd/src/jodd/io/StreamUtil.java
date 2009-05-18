@@ -2,6 +2,8 @@
 
 package jodd.io;
 
+import static jodd.JoddDefault.ioBufferSize;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +18,6 @@ import java.io.Writer;
  * Optimized byte and character stream utilities.
  */
 public class StreamUtil {
-
-	/**
-	 * Buffer size is set to 32 KB.
-	 */
-	public static int BUFFER_SIZE = 32768;
 
 
 	// ---------------------------------------------------------------- silent close
@@ -91,11 +88,11 @@ public class StreamUtil {
 	 * Copies input stream to output stream using buffer.
 	 */
 	public static int copy(InputStream input, OutputStream output) throws IOException {
-		byte[] buffer = new byte[BUFFER_SIZE];
+		byte[] buffer = new byte[ioBufferSize];
 		int count = 0;
 		int read;
 		while (true) {
-			read = input.read(buffer, 0, BUFFER_SIZE);
+			read = input.read(buffer, 0, ioBufferSize);
 			if (read == -1) {
 				break;
 			}
@@ -108,14 +105,14 @@ public class StreamUtil {
 	 * Copies specified number of bytes from input stream to output stream using buffer.
 	 */
 	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
-		byte buffer[] = new byte[BUFFER_SIZE];
+		byte buffer[] = new byte[ioBufferSize];
 		int count = 0;
 		int read;
 		while (byteCount > 0) {
-			if (byteCount < BUFFER_SIZE) {
+			if (byteCount < ioBufferSize) {
 				read = input.read(buffer, 0, byteCount);
 			} else {
-				read = input.read(buffer, 0, BUFFER_SIZE);
+				read = input.read(buffer, 0, ioBufferSize);
 			}
 			if (read == -1) {
 				break;
@@ -169,10 +166,10 @@ public class StreamUtil {
 	 * Copies reader to writer using buffer.
 	 */
 	public static int copy(Reader input, Writer output) throws IOException {
-		char[] buffer = new char[BUFFER_SIZE];
+		char[] buffer = new char[ioBufferSize];
 		int count = 0;
 		int read;
-		while ((read = input.read(buffer, 0, BUFFER_SIZE)) >= 0) {
+		while ((read = input.read(buffer, 0, ioBufferSize)) >= 0) {
 			output.write(buffer, 0, read);
 			count += read;
 		}
@@ -183,14 +180,14 @@ public class StreamUtil {
 	 * Copies specified number of characters from reader to writer using buffer.
 	 */
 	public static int copy(Reader input, Writer output, int charCount) throws IOException {
-		char buffer[] = new char[BUFFER_SIZE];
+		char buffer[] = new char[ioBufferSize];
 		int count = 0;
 		int read;
 		while (charCount > 0) {
-			if (charCount < BUFFER_SIZE) {
+			if (charCount < ioBufferSize) {
 				read = input.read(buffer, 0, charCount);
 			} else {
-				read = input.read(buffer, 0, BUFFER_SIZE);
+				read = input.read(buffer, 0, ioBufferSize);
 			}
 			if (read == -1) {
 				break;

@@ -7,73 +7,57 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- * Extended File object that adapts {@link FileUtil}s.
+ * Extended <code>File</code> with additional {@link FileUtil} methods.
  */
 public class FileEx extends File {
+
+	protected final FileUtilParams params;
 
 	// ---------------------------------------------------------------- constructors
 
 	public FileEx(String pathname) {
-		super(pathname);
+		this(pathname, FileUtil.cloneParams());
 	}
 
 	public FileEx(String parent, String child) {
-		super(parent, child);
+		this(parent, child, FileUtil.cloneParams());
 	}
 
 	public FileEx(File parent, String child) {
-		super(parent, child);
+		this(parent, child, FileUtil.cloneParams());
 	}
 
 	public FileEx(URI uri) {
-		super(uri);
+		this(uri, FileUtil.cloneParams());
 	}
 
+	public FileEx(String pathname, FileUtilParams params) {
+		super(pathname);
+		this.params = params;
+	}
+
+	public FileEx(String parent, String child, FileUtilParams params) {
+		super(parent, child);
+		this.params = params;
+	}
+
+	public FileEx(File parent, String child, FileUtilParams params) {
+		super(parent, child);
+		this.params = params;
+	}
+
+	public FileEx(URI uri, FileUtilParams params) {
+		super(uri);
+		this.params = params;
+	}
 
 	// ---------------------------------------------------------------- settings
 
-	protected FileUtil.Settings settings = FileUtil.cloneSettings();
-
-	public void setPreserveDate(boolean value) {
-		settings.preserveDate = value;
-	}
-	public boolean isPreserveDate() {
-		return settings.preserveDate;
-	}
-
-	public void setOverwriteExisting(boolean value) {
-		settings.overwrite = value;
-	}
-	public boolean isOverwriteExisting() {
-		return settings.overwrite;
-	}
-
-	public void setCreateDirs(boolean value) {
-		settings.createDirs = value;
-	}
-	public boolean isCreateDirs() {
-		return settings.createDirs;
-	}
-
-	public void setRecursive(boolean value) {
-		settings.recursive = value;
-	}
-	public boolean isRecursive() {
-		return settings.recursive;
-	}
-
-	public boolean isContinueOnError() {
-		return settings.continueOnError;
-	}
-	public void setContinueOnError(boolean continueOnError) {
-		settings.continueOnError = continueOnError;
-	}
-
-	public String getEncoding() {
-		return settings.encoding;
-	}
-	public void setEncoding(String encoding) {
-		settings.encoding = encoding;
+	/**
+	 * Returns paramters.
+	 */
+	public FileUtilParams getParams() {
+		return params;
 	}
 
 	// ---------------------------------------------------------------- operations
@@ -83,20 +67,20 @@ public class FileEx extends File {
 	}
 
 	public void copyFile(File dest) throws IOException {
-		FileUtil.copyFile(this, dest, settings);
+		FileUtil.copyFile(this, dest, params);
 	}
 	public void copyToDir(File dest) throws IOException {
-		FileUtil.copyFileToDir(this, dest, settings);
+		FileUtil.copyFileToDir(this, dest, params);
 	}
 	public void copyDir(File dest) throws IOException {
-		FileUtil.copyDir(this, dest, settings);
+		FileUtil.copyDir(this, dest, params);
 	}
 
 	public void moveFile(File dest) throws IOException {
-		FileUtil.moveFile(this, dest, settings);
+		FileUtil.moveFile(this, dest, params);
 	}
     public void moveToDir(File dest) throws IOException {
-		FileUtil.moveFileToDir(this, dest, settings);
+		FileUtil.moveFileToDir(this, dest, params);
 	}
 	public void moveDir(File dest) throws IOException {
 		FileUtil.moveDir(this, dest);
@@ -106,20 +90,20 @@ public class FileEx extends File {
 		FileUtil.deleteFile(this);
 	}
 	public void deleteDir() throws IOException {
-		FileUtil.deleteDir(this, settings);
+		FileUtil.deleteDir(this, params);
 	}
 	public void cleanDir() throws IOException {
-		FileUtil.cleanDir(this, settings);
+		FileUtil.cleanDir(this, params);
 	}
 
 	public String readString() throws IOException {
-		return FileUtil.readString(this);
+		return FileUtil.readString(this, params.encoding);
 	}
 	public String readString(String encoding) throws IOException {
 		return FileUtil.readString(this, encoding);
 	}
 	public void writeString(String data) throws IOException {
-		FileUtil.writeString(this, data);
+		FileUtil.writeString(this, data, params.encoding);
 	}
 	public void writeString(String data, String encoding) throws IOException {
 		FileUtil.writeString(this, data, encoding);
@@ -151,13 +135,13 @@ public class FileEx extends File {
 
 
 	public void copy(File dest) throws IOException {
-		FileUtil.copy(this, dest, settings);
+		FileUtil.copy(this, dest, params);
 	}
 	public void move(File dest) throws IOException {
-		FileUtil.move(this, dest, settings);
+		FileUtil.move(this, dest, params);
 	}
-	public void delete(File dest) throws IOException {
-		FileUtil.delete(this, settings);
+	public void remove() throws IOException {
+		FileUtil.delete(this, params);
 	}
 
 }

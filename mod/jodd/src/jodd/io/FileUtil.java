@@ -2,8 +2,6 @@
 
 package jodd.io;
 
-import jodd.util.StringPool;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -145,150 +143,52 @@ public class FileUtil {
 	}
 
 
+	// ---------------------------------------------------------------- params
 
-	// ---------------------------------------------------------------- settings
-
-	/**
-	 * Inner settings describe behaviour of the FileUtil class.
-	 */
-	public static class Settings implements Cloneable {
-		private Settings() {}
-
-		// should destination file have the same timestamp as source
-		protected boolean preserveDate = true;
-		// overwrite existing destination
-		protected boolean overwrite = true;
-		// create missing subdirectories of destination
-		protected boolean createDirs = true;
-		// use recursive directory copying and deleting
-		protected boolean recursive = true;
-		// don't stop on error and continue job as much as possible
-		protected boolean continueOnError = true;
-		// default encoding for reading/writing strings
-		protected String encoding = StringPool.UTF_8;
-
-
-		public boolean isPreserveDate() {
-			return preserveDate;
-		}
-		public void setPreserveDate(boolean preserveDate) {
-			this.preserveDate = preserveDate;
-		}
-		public Settings preserveDate(boolean preserveDate) {
-			this.preserveDate = preserveDate;
-			return this;
-		}
-
-		public boolean isOverwrite() {
-			return overwrite;
-		}
-		public void setOverwrite(boolean overwrite) {
-			this.overwrite = overwrite;
-		}
-		public Settings overwrite(boolean overwrite) {
-			this.overwrite = overwrite;
-			return this;
-		}
-
-		public boolean isCreateDirs() {
-			return createDirs;
-		}
-		public void setCreateDirs(boolean createDirs) {
-			this.createDirs = createDirs;
-		}
-		public Settings createDirs(boolean createDirs) {
-			this.createDirs = createDirs;
-			return this;
-		}
-
-		public boolean isRecursive() {
-			return recursive;
-		}
-		public void setRecursive(boolean recursive) {
-			this.recursive = recursive;
-		}
-		public Settings recursive(boolean recursive) {
-			this.recursive = recursive;
-			return this;
-		}
-
-		public boolean isContinueOnError() {
-			return continueOnError;
-		}
-		public void setContinueOnError(boolean continueOnError) {
-			this.continueOnError = continueOnError;
-		}
-		public Settings continueOnError(boolean continueOnError) {
-			this.continueOnError = continueOnError;
-			return this;
-		}
-
-
-		public String getEncoding() {
-			return encoding;
-		}
-		public void setEncoding(String encoding) {
-			this.encoding = encoding;
-		}
-		public Settings encoding(String encoding) {
-			this.encoding = encoding;
-			return this;
-		}
-
-		// ------------------------------------------------------------ clone
-
-		@Override
-		public Object clone() throws CloneNotSupportedException {
-			Object clone = super.clone();
-			((Settings) clone).encoding = this.encoding;
-			return clone;
-		}
-	}
-
-	// default global settings
-	public static Settings settings = new Settings();
+	// default global FileUtilParams
+	public static FileUtilParams defaultParams = new FileUtilParams();
 
 	/**
-	 * Creates new {@link Settings} instance by cloning current default settings.
+	 * Creates new {@link FileUtilParams} instance by cloning current default params.
 	 */
-	public static Settings cloneSettings() {
+	public static FileUtilParams cloneParams() {
 		try {
-			return (Settings) settings.clone();
+			return defaultParams.clone();
 		} catch (CloneNotSupportedException cnsex) {
 			return null;
 		}
 	}
 
 	/**
-	 * Creates new {@link Settings} instance with default values.
+	 * Creates new {@link FileUtilParams} instance with default values.
 	 */
-	public static Settings newSettings() {
-		return new Settings();
+	public static FileUtilParams params() {
+		return new FileUtilParams();
 	}
 
 	// ---------------------------------------------------------------- copy file to file
 
 	public static void copyFile(String src, String dest) throws IOException {
-		copyFile(new File(src), new File(dest), settings);
+		copyFile(new File(src), new File(dest), defaultParams);
 	}
 
-	public static void copyFile(String src, String dest, Settings settings) throws IOException {
-		copyFile(new File(src), new File(dest), settings);
+	public static void copyFile(String src, String dest, FileUtilParams params) throws IOException {
+		copyFile(new File(src), new File(dest), params);
 	}
 
 	public static void copyFile(File src, File dest) throws IOException {
-		copyFile(src, dest, settings);
+		copyFile(src, dest, defaultParams);
 	}
 
 	/**
-	 * Copies a file to another file with specified copy settings.
+	 * Copies a file to another file with specified copy params.
 	 */
-	public static void copyFile(File src, File dest, Settings settings) throws IOException {
-		checkFileCopy(src, dest, settings);
-		doCopyFile(src, dest, settings);
+	public static void copyFile(File src, File dest, FileUtilParams params) throws IOException {
+		checkFileCopy(src, dest, params);
+		doCopyFile(src, dest, params);
 	}
 
-	private static void checkFileCopy(File src, File dest, Settings settings) throws IOException {
+	private static void checkFileCopy(File src, File dest, FileUtilParams params) throws IOException {
 		if (src.exists() == false) {
 			throw new FileNotFoundException("Source '" + src + "' does not exist.");
 		}
@@ -301,7 +201,7 @@ public class FileUtil {
 
 		File destParent = dest.getParentFile();
 		if (destParent != null && destParent.exists() == false) {
-			if (settings.createDirs == false) {
+			if (params.createDirs == false) {
 				throw new IOException("Destination directory '" + destParent + "' doesn't exist.");
 			}
 			if (destParent.mkdirs() == false) {
@@ -313,12 +213,12 @@ public class FileUtil {
 	/**
 	 * Internal file copy when most of the pre-checking has passed.
 	 */
-	private static void doCopyFile(File src, File dest, Settings settings) throws IOException {
+	private static void doCopyFile(File src, File dest, FileUtilParams params) throws IOException {
 		if (dest.exists()) {
 			if (dest.isDirectory()) {
 				throw new IOException("Destination '" + dest + "' is a directory.");
 			}
-			if (settings.overwrite == false) {
+			if (params.overwrite == false) {
 				throw new IOException("Destination '" + dest + "' already exists.");
 			}
 		}
@@ -328,7 +228,7 @@ public class FileUtil {
 		if (src.length() != dest.length()) {
 			throw new IOException("Copying of '" + src + "' to '" + dest + "' failed due to different sizes.");
 		}
-		if (settings.preserveDate) {
+		if (params.preserveDate) {
 			dest.setLastModified(src.lastModified());
 		}
 	}
@@ -365,23 +265,23 @@ public class FileUtil {
 	// ---------------------------------------------------------------- copy file to directory
 
 	public static void copyFileToDir(String src, String destDir) throws IOException {
-		copyFileToDir(new File(src), new File(destDir), settings);
+		copyFileToDir(new File(src), new File(destDir), defaultParams);
 	}
-	public static void copyFileToDir(String src, String destDir, Settings settings) throws IOException {
-		copyFileToDir(new File(src), new File(destDir), settings);
+	public static void copyFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
+		copyFileToDir(new File(src), new File(destDir), params);
 	}
 
 	public static void copyFileToDir(File src, File destDir) throws IOException {
-		copyFileToDir(src, destDir, settings);
+		copyFileToDir(src, destDir, defaultParams);
 	}
 	/**
-	 * Copies a file to folder with specified copy settings.
+	 * Copies a file to folder with specified copy params.
 	 */
-	public static void copyFileToDir(File src, File destDir, Settings settings) throws IOException {
+	public static void copyFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException("Destination '" + destDir + "' is not a directory.");
 		}
-		copyFile(src, new File(destDir, src.getName()), settings);
+		copyFile(src, new File(destDir, src.getName()), params);
 	}
 
 
@@ -389,23 +289,23 @@ public class FileUtil {
 
 
 	public static void copyDir(String srcDir, String destDir) throws IOException {
-		copyDir(new File(srcDir), new File(destDir), settings);
+		copyDir(new File(srcDir), new File(destDir), defaultParams);
 	}
 
-	public static void copyDir(String srcDir, String destDir, Settings settings) throws IOException {
-		copyDir(new File(srcDir), new File(destDir), settings);
+	public static void copyDir(String srcDir, String destDir, FileUtilParams params) throws IOException {
+		copyDir(new File(srcDir), new File(destDir), params);
 	}
 
 	public static void copyDir(File srcDir, File destDir) throws IOException {
-		copyDir(srcDir, destDir, settings);
+		copyDir(srcDir, destDir, defaultParams);
 	}
 
 	/**
-	 * Copies directory with specified copy settings.
+	 * Copies directory with specified copy params.
 	 */
-	public static void copyDir(File srcDir, File destDir, Settings settings) throws IOException {
+	public static void copyDir(File srcDir, File destDir, FileUtilParams params) throws IOException {
 		checkDirCopy(srcDir, destDir);
-		doCopyDirectory(srcDir, destDir, settings);
+		doCopyDirectory(srcDir, destDir, params);
 	}
 
 	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
@@ -420,19 +320,19 @@ public class FileUtil {
 		}
 	}
 
-	private static void doCopyDirectory(File srcDir, File destDir, Settings settings) throws IOException {
+	private static void doCopyDirectory(File srcDir, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists()) {
 			if (destDir.isDirectory() == false) {
 				throw new IOException("Destination '" + destDir + "' is not a directory.");
 			}
 		} else {
-			if (settings.createDirs == false) {
+			if (params.createDirs == false) {
 				throw new IOException("Destination '" + destDir + "' doesn't exists.");
 			}
 			if (destDir.mkdirs() == false) {
 				throw new IOException("Destination '" + destDir + "' directory cannot be created.");
 			}
-			if (settings.preserveDate) {
+			if (params.preserveDate) {
 				destDir.setLastModified(srcDir.lastModified());
 			}
 		}
@@ -447,14 +347,14 @@ public class FileUtil {
 			File destFile = new File(destDir, file.getName());
 			try {
 				if (file.isDirectory()) {
-					if (settings.recursive == true) {
-						doCopyDirectory(file, destFile, settings);
+					if (params.recursive == true) {
+						doCopyDirectory(file, destFile, params);
 					}
 				} else {
-					doCopyFile(file, destFile, settings);
+					doCopyFile(file, destFile, params);
 				}
 			} catch (IOException ioex) {
-				if (settings.continueOnError == true) {
+				if (params.continueOnError == true) {
 					exception = ioex;
 					continue;
 				}
@@ -472,28 +372,28 @@ public class FileUtil {
 	// ---------------------------------------------------------------- move file
 
 	public static void moveFile(String src, String dest) throws IOException {
-		moveFile(new File(src), new File(dest), settings);
+		moveFile(new File(src), new File(dest), defaultParams);
 	}
 
-	public static void moveFile(String src, String dest, Settings settings) throws IOException {
-		moveFile(new File(src), new File(dest), settings);
+	public static void moveFile(String src, String dest, FileUtilParams params) throws IOException {
+		moveFile(new File(src), new File(dest), params);
 	}
 
 	public static void moveFile(File src, File dest) throws IOException {
-		moveFile(src, dest, settings);
+		moveFile(src, dest, defaultParams);
 	}
 
-	public static void moveFile(File src, File dest, Settings settings) throws IOException {
-		checkFileCopy(src, dest, settings);
-		doMoveFile(src, dest, settings);
+	public static void moveFile(File src, File dest, FileUtilParams params) throws IOException {
+		checkFileCopy(src, dest, params);
+		doMoveFile(src, dest, params);
 	}
 
-	private static void doMoveFile(File src, File dest, Settings settings) throws IOException {
+	private static void doMoveFile(File src, File dest, FileUtilParams params) throws IOException {
 		if (dest.exists()) {
 			if (dest.isFile() == false) {
 				throw new IOException("Destination '" + dest + "' is not a file.");
 			}
-			if (settings.overwrite == false) {
+			if (params.overwrite == false) {
 				throw new IOException("Destination '" + dest + "' already exists.");
 			}
 			dest.delete();
@@ -508,20 +408,20 @@ public class FileUtil {
 
 
 	public static void moveFileToDir(String src, String destDir) throws IOException {
-		moveFileToDir(new File(src), new File(destDir), settings);
+		moveFileToDir(new File(src), new File(destDir), defaultParams);
 	}
-	public static void moveFileToDir(String src, String destDir, Settings settings) throws IOException {
-		moveFileToDir(new File(src), new File(destDir), settings);
+	public static void moveFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
+		moveFileToDir(new File(src), new File(destDir), params);
 	}
 
 	public static void moveFileToDir(File src, File destDir) throws IOException {
-		moveFileToDir(src, destDir, settings);
+		moveFileToDir(src, destDir, defaultParams);
 	}
-	public static void moveFileToDir(File src, File destDir, Settings settings) throws IOException {
+	public static void moveFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException("Destination '" + destDir + "' is not a directory.");
 		}
-		moveFile(src, new File(destDir, src.getName()), settings);
+		moveFile(src, new File(destDir, src.getName()), params);
 	}
 
 
@@ -576,19 +476,19 @@ public class FileUtil {
 	// ---------------------------------------------------------------- delete dir
 
 	public static void deleteDir(String dest) throws IOException {
-		deleteDir(new File(dest), settings);
+		deleteDir(new File(dest), defaultParams);
 	}
-	public static void deleteDir(String dest, Settings settings) throws IOException {
-		deleteDir(new File(dest), settings);
+	public static void deleteDir(String dest, FileUtilParams params) throws IOException {
+		deleteDir(new File(dest), params);
 	}
 	public static void deleteDir(File dest) throws IOException {
-		deleteDir(dest, settings);
+		deleteDir(dest, defaultParams);
 	}
 	/**
 	 * Deletes a directory.
 	 */
-	public static void deleteDir(File dest, Settings settings) throws IOException {
-		cleanDir(dest, settings);
+	public static void deleteDir(File dest, FileUtilParams params) throws IOException {
+		cleanDir(dest, params);
 		if (dest.delete() == false) {
 			throw new IOException("Unable to delete '" + dest + "'.");
 		}
@@ -597,21 +497,21 @@ public class FileUtil {
 
 
 	public static void cleanDir(String dest) throws IOException {
-		cleanDir(new File(dest), settings);
+		cleanDir(new File(dest), defaultParams);
 	}
 
-	public static void cleanDir(String dest, Settings settings) throws IOException {
-		cleanDir(new File(dest), settings);
+	public static void cleanDir(String dest, FileUtilParams params) throws IOException {
+		cleanDir(new File(dest), params);
 	}
 
 	public static void cleanDir(File dest) throws IOException {
-		cleanDir(dest, settings);
+		cleanDir(dest, defaultParams);
 	}
 
 	/**
 	 * Cleans a directory without deleting it.
 	 */
-	public static void cleanDir(File dest, Settings settings) throws IOException {
+	public static void cleanDir(File dest, FileUtilParams params) throws IOException {
 		if (dest.exists() == false) {
 			throw new FileNotFoundException("Destination '" + dest + "' doesn't exists.");
 		}
@@ -629,14 +529,14 @@ public class FileUtil {
 		for (File file : files) {
 			try {
 				if (file.isDirectory()) {
-					if (settings.recursive == true) {
-						deleteDir(file, settings);
+					if (params.recursive == true) {
+						deleteDir(file, params);
 					}
 				} else {
 					file.delete();
 				}
 			} catch (IOException ioex) {
-				if (settings.continueOnError == true) {
+				if (params.continueOnError == true) {
 					exception = ioex;
 					continue;
 				}
@@ -653,7 +553,7 @@ public class FileUtil {
 
 
 	public static String readString(String source) throws IOException {
-		return readString(new File(source), settings.encoding);
+		return readString(new File(source), defaultParams.encoding);
 	}
 
 	public static String readString(String source, String encoding) throws IOException {
@@ -661,7 +561,7 @@ public class FileUtil {
 	}
 
 	public static String readString(File source) throws IOException {
-		return readString(source, settings.encoding);
+		return readString(source, defaultParams.encoding);
 	}
 
 	public static String readString(File source, String encoding) throws IOException {
@@ -688,18 +588,39 @@ public class FileUtil {
 
 
 	public static void writeString(String dest, String data) throws IOException {
-		writeString(new File(dest), data, settings.encoding);
+		outString(new File(dest), data, defaultParams.encoding, false);
 	}
 
 	public static void writeString(String dest, String data, String encoding) throws IOException {
-		writeString(new File(dest), data, encoding);
+		outString(new File(dest), data, encoding, false);
 	}
 
 	public static void writeString(File dest, String data) throws IOException {
-		writeString(dest, data, settings.encoding);
+		outString(dest, data, defaultParams.encoding, false);
 	}
 
 	public static void writeString(File dest, String data, String encoding) throws IOException {
+		outString(dest, data, encoding, false);
+	}
+
+
+	public static void appendString(String dest, String data) throws IOException {
+		outString(new File(dest), data, defaultParams.encoding, true);
+	}
+
+	public static void appendString(String dest, String data, String encoding) throws IOException {
+		outString(new File(dest), data, encoding, true);
+	}
+
+	public static void appendString(File dest, String data) throws IOException {
+		outString(dest, data, defaultParams.encoding, true);
+	}
+
+	public static void appendString(File dest, String data, String encoding) throws IOException {
+		outString(dest, data, encoding, true);
+	}
+
+	protected static void outString(File dest, String data, String encoding, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Destination '" + dest + "' exist, but it is not a file.");
@@ -707,12 +628,13 @@ public class FileUtil {
 		}
 		FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(dest);
+			out = new FileOutputStream(dest, append);
 			out.write(data.getBytes(encoding));
 		} finally {
 			StreamUtil.close(out);
 		}
 	}
+
 
 	// ---------------------------------------------------------------- read/write bytearray
 
@@ -744,18 +666,39 @@ public class FileUtil {
 
 
 	public static void writeBytes(String dest, byte[] data) throws IOException {
-		writeBytes(new File(dest), data, 0, data.length);
+		outBytes(new File(dest), data, 0, data.length, false);
 	}
 
 	public static void writeBytes(String dest, byte[] data, int off, int len) throws IOException {
-		writeBytes(new File(dest), data, off, len);
+		outBytes(new File(dest), data, off, len, false);
 	}
 
 	public static void writeBytes(File dest, byte[] data) throws IOException {
-		writeBytes(dest, data, 0, data.length);
+		outBytes(dest, data, 0, data.length, false);
 	}
 
 	public static void writeBytes(File dest, byte[] data, int off, int len) throws IOException {
+		outBytes(dest, data, off, len, false);
+	}
+
+
+	public static void appendBytes(String dest, byte[] data) throws IOException {
+		outBytes(new File(dest), data, 0, data.length, true);
+	}
+
+	public static void appendBytes(String dest, byte[] data, int off, int len) throws IOException {
+		outBytes(new File(dest), data, off, len, true);
+	}
+
+	public static void appendBytes(File dest, byte[] data) throws IOException {
+		outBytes(dest, data, 0, data.length, true);
+	}
+
+	public static void appendBytes(File dest, byte[] data, int off, int len) throws IOException {
+		outBytes(dest, data, off, len, true);
+	}
+
+	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
 				throw new IOException("Destination '" + dest + "' exist but it is not a file.");
@@ -763,7 +706,7 @@ public class FileUtil {
 		}
 		FileOutputStream out = null;
 		try {
-			out = new FileOutputStream(dest);
+			out = new FileOutputStream(dest, append);
 			out.write(data, off, len);
 		} finally {
 			StreamUtil.close(out);
@@ -889,84 +832,84 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart copy
 
 	public static void copy(String src, String dest) throws IOException {
-		copy(new File(src), new File(dest), settings);
+		copy(new File(src), new File(dest), defaultParams);
 	}
 
-	public static void copy(String src, String dest, Settings settings) throws IOException {
-		copy(new File(src), new File(dest), settings);
+	public static void copy(String src, String dest, FileUtilParams params) throws IOException {
+		copy(new File(src), new File(dest), params);
 	}
 
 	public static void copy(File src, File dest) throws IOException {
-		copy(src, dest, settings);
+		copy(src, dest, defaultParams);
 	}
 	/**
 	 * Smart copy. If source is a directory, copy it to destination.
 	 * Otherwise, if destination is directory, copy source file to it.
 	 * Otherwise, try to copy source file to destination file.
 	 */
-	public static void copy(File src, File dest, Settings settings) throws IOException {
+	public static void copy(File src, File dest, FileUtilParams params) throws IOException {
 		if (src.isDirectory() == true) {
-			copyDir(src, dest, settings);
+			copyDir(src, dest, params);
 			return;
 		}
 		if (dest.isDirectory() == true) {
-			copyFileToDir(src, dest, settings);
+			copyFileToDir(src, dest, params);
 			return;
 		}
-		copyFile(src, dest, settings);
+		copyFile(src, dest, params);
 	}
 
 	// ---------------------------------------------------------------- smart move
 
 	public static void move(String src, String dest) throws IOException {
-		move(new File(src), new File(dest), settings);
+		move(new File(src), new File(dest), defaultParams);
 	}
 
-	public static void move(String src, String dest, Settings settings) throws IOException {
-		move(new File(src), new File(dest), settings);
+	public static void move(String src, String dest, FileUtilParams params) throws IOException {
+		move(new File(src), new File(dest), params);
 	}
 
 	public static void move(File src, File dest) throws IOException {
-		move(src, dest, settings);
+		move(src, dest, defaultParams);
 	}
 	/**
 	 * Smart move. If source is a directory, move it to destination.
 	 * Otherwise, if destination is directory, move source file to it.
 	 * Otherwise, try to move source file to destination file.
 	 */
-	public static void move(File src, File dest, Settings settings) throws IOException {
+	public static void move(File src, File dest, FileUtilParams params) throws IOException {
 		if (src.isDirectory() == true) {
 			moveDir(src, dest);
 			return;
 		}
 		if (dest.isDirectory() == true) {
-			moveFileToDir(src, dest, settings);
+			moveFileToDir(src, dest, params);
 			return;
 		}
-		moveFile(src, dest, settings);
+		moveFile(src, dest, params);
 	}
 
 
 	// ---------------------------------------------------------------- smart delete
 
 	public static void delete(String dest) throws IOException {
-		delete(new File(dest), settings);
+		delete(new File(dest), defaultParams);
 	}
 
-	public static void delete(String dest, Settings settings) throws IOException {
-		delete(new File(dest), settings);
+	public static void delete(String dest, FileUtilParams params) throws IOException {
+		delete(new File(dest), params);
 	}
 
 	public static void delete(File dest) throws IOException {
-		delete(dest, settings);
+		delete(dest, defaultParams);
 	}
 
 	/**
 	 * Smart delete of destination file or directory.
 	 */
-	public static void delete(File dest, Settings settings) throws IOException {
+	public static void delete(File dest, FileUtilParams params) throws IOException {
 		if (dest.isDirectory()) {
-			deleteDir(dest, settings);
+			deleteDir(dest, params);
 			return;
 		}
 		deleteFile(dest);

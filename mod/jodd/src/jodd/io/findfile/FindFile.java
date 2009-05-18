@@ -224,7 +224,19 @@ public class FindFile {
 
 	protected boolean listSubfilesAfterFolder = true;
 
+	/**
+	 * @see #listSubfilesAfterFolder(boolean)
+	 */
+	public boolean isListSubfilesAfterFolder() {
+		return listSubfilesAfterFolder;
+	}
 
+	/**
+	 * @see #listSubfilesAfterFolder(boolean)
+	 */
+	public void setListSubfilesAfterFolder(boolean listSubfilesAfterFolder) {
+		this.listSubfilesAfterFolder = listSubfilesAfterFolder;
+	}
 
 	/**
 	 * If set to <code>true</code> then all subfiles of a folder will be listed

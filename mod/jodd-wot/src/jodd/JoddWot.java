@@ -8,17 +8,14 @@ package jodd;
 public class JoddWot {
 
 	/**
-	 * Returns the full version string of the Jodd,
+	 * Hello from Jodd-WOT.
 	 */
-	public static String getVersion() {
-		Package pkg = JoddWot.class.getPackage();
-		return (pkg != null ? pkg.getImplementationVersion() : null);
-	}
-
 	public static void main(String[] args) {
+		Package pkg = JoddWot.class.getPackage();
+		String version = pkg.getImplementationVersion();
 		System.out.println(
 				"\n\n   -= Jodd-WOT =-\n" +
-				"        b" + getVersion() +
+				"        " + version +
 				"\n\n" +
 				"   generic purpose\n" +
 				"    java library\n" +

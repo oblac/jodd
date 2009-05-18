@@ -1,5 +1,34 @@
+-------
+General
+-------
 
-Sistem S mora da se definiše cistom Javom i Templatima
+1) Nema provere argumenata za null, osim ako postoji neki nacin da util funkcija
+pametno handluje takav argument
+
+2) Za klase koje se instanciraju, a koje imaju neka default podesavanja, se pravi
+*Default klasa koja sadrzi sva public podesavanja.
+
+Obratiti paznju da ako neki parametar zavisi od sistema, onda se mora koristiti getter metoda,
+inace se koriste fieldovi.
+
+3) Ima util klasa koje kao argument mogu da dobiju neku settings klasu sa raznim parametrima.
+One se zovu *Params.
+
+4) Za fluent interface pogledati FileUtilParams. Ideja je da se fluent metode pisu
+kao setter.
+
+
+
+
+
+
+---------------
+Random thoughts
+---------------
+
+
+
+Sistem S mora da se definise cistom Javom i Templatima
 
 Java i Templati se mogu mesati
 

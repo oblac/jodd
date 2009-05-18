@@ -2,17 +2,18 @@
 
 package jodd;
 
-import jodd.util.JoddUtil;
-
 /**
  * Jodd.
  */
 public class Jodd {
 
+	/**
+	 * Hello from Jodd.
+	 */
 	public static void main(String[] args) {
 		System.out.println(
 				"\n\n    -= Jodd =-\n" +
-				"       b" + JoddUtil.getVersion() +
+				"       " + JoddDefault.JODD_VERSION +
 				"\n\n" +
 				"   generic purpose\n" +
 				"    java library\n" +
