@@ -167,6 +167,15 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	// ---------------------------------------------------------------- get beans
 
 	/**
+	 * Returns Petite bean instance. Bean name will be resolved from provided type.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public <T> T getBean(Class<T> type) {
+		String name = PetiteUtil.resolveBeanName(type);
+		return (T) getBean(name);
+	}
+
+	/**
 	 * Returns Petite bean instance.
 	 * Petite container will find the bean in corresponding scope and all its dependencies,
 	 * either by constructor or property injection. When using constructor injection, cyclic dependencies
