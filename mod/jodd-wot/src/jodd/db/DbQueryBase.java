@@ -23,7 +23,7 @@ abstract class DbQueryBase {
 	public static final int QUERY_INITIALIZED = 2;
 	public static final int QUERY_CLOSED = 3;
 
-	protected int queryState = DbDefault.queryState;
+	protected int queryState = QUERY_CREATED;
 
 	/**
 	 * Returns query state.

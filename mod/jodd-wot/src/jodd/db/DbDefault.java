@@ -10,8 +10,6 @@ import jodd.db.connection.ConnectionProvider;
 @SuppressWarnings({"RedundantFieldInitialization"})
 public final class DbDefault {
 
-	public static int queryState = DbQuery.QUERY_CREATED;
-
 	public static boolean forcePreparedStatement = false;
 
 	public static DbSessionProvider sessionProvider = new ThreadDbSessionProvider();
