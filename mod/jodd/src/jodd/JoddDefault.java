@@ -33,7 +33,6 @@ public class JoddDefault {
 		Package pkg = Jodd.class.getPackage();
 		JODD_VERSION = pkg.getImplementationVersion();
 		JODD_PACKAGE_NAME = pkg.getName();
-		System.out.println(JODD_PACKAGE_NAME);
 	}
 
 }
