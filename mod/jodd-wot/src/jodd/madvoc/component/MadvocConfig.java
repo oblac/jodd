@@ -94,7 +94,7 @@ public class MadvocConfig {
 		return defaultActionMethodNames;
 	}
 
-	public void setDefaultActionMethodNames(String[] defaultActionMethodNames) {
+	public void setDefaultActionMethodNames(String... defaultActionMethodNames) {
 		this.defaultActionMethodNames = defaultActionMethodNames;
 	}
 
@@ -112,7 +112,7 @@ public class MadvocConfig {
 	/**
 	 * Set default interceptors.
 	 */
-	public void setDefaultInterceptors(Class<? extends ActionInterceptor>[] defaultInterceptors) {
+	public void setDefaultInterceptors(Class<? extends ActionInterceptor>... defaultInterceptors) {
 		this.defaultInterceptors = defaultInterceptors;
 	}
 
