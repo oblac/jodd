@@ -67,9 +67,13 @@ def tmpl(*args):
 	if len(args) < 1:
 		raise AttributeError("No template for filename")
 	filename = str(args[0])
-	tmpl = readFile(tmplRoot + filename + '.xml')
+	tmpl = readFile(os.path.join(tmplRoot, filename + '.xml'))
 	global result
 	result += evaltmpl(tmpl, args)
+
+# checks if template exist
+def tmplExist(filename):
+	return os.path.isfile(os.path.join(tmplRoot, filename + '.xml'))
 
 #-------------------------------------------------------------------------- vars
 
@@ -139,14 +143,21 @@ print('\n------------\n pant, pant\n------------\n')
 build = readFile('build.py')
 data = ''
 f = open('build.py', 'r')
-for line in f.readlines():
-	if line[0:1] != '\t':
-		n = line.find('(')
-		if n != -1:
-			method = line[:n]
-			try: eval(method)
-			except NameError:
-				line = "tmpl('" + method + "', " + line[n + 1:]
+for line in f:
+	start = 0
+	for c in line:			# count starting tabs
+		if c == '\t':
+			start += 1
+		else:
+			break;
+	n = line.find('(', start)
+	if n != -1:
+		method = line[start : n]
+		try:
+			eval(method)	# is defined method?
+		except:
+			if tmplExist(method):	# if not a method maybe it is a template
+				line = line[0 : start] + "tmpl('" + method + "', " + line[n + 1:]	# template
 	data = data + line
 f.close()
 exec(data)

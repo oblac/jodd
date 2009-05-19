@@ -17,7 +17,6 @@ lib('h2')
 lib('mail')
 lib('servlets')
 
-
 module('jodd')
 module_compile('production', 'jdk5', 'mail, servlets')
 module_compile('test', 		 'jdk5', '#production, mail, servlets, junit, emma')
@@ -41,7 +40,6 @@ module_compile('production', 'jdk5', '')
 module_build('production')
 module_javadoc('production')
 module_dist('jodd.JoddGfx')
-
 
 project_task('build', 'jodd, jodd-wot, jodd-gfx')
 project_task('javadoc', 'jodd, jodd-wot')
