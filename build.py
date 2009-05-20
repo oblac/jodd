@@ -10,10 +10,8 @@ prjVersion = '3.0.1'
 project_header()
 
 lib('asm')
-lib('emma')
-lib('junit')
-lib('hsqldb')
-lib('h2')
+lib('junit, emma')
+lib('hsqldb, h2')
 lib('mail')
 lib('servlets')
 

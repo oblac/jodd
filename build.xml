@@ -94,11 +94,11 @@
 	<path id="lib.asm">
 		<fileset dir="${basedir}/lib/asm" includes="**/*.jar"/>
 	</path>
-	<path id="lib.emma">
-		<fileset dir="${basedir}/lib/emma" includes="**/*.jar"/>
-	</path>
 	<path id="lib.junit">
 		<fileset dir="${basedir}/lib/junit" includes="**/*.jar"/>
+	</path>
+	<path id="lib.emma">
+		<fileset dir="${basedir}/lib/emma" includes="**/*.jar"/>
 	</path>
 	<path id="lib.hsqldb">
 		<fileset dir="${basedir}/lib/hsqldb" includes="**/*.jar"/>
