@@ -4,6 +4,7 @@ import jodd.madvoc.petite.PetiteWebApplication;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;

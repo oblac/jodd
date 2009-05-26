@@ -18,15 +18,13 @@ public class ApplicationScopeInjector extends ScopeInjector {
 		super(scopeDataManager);
 	}
 
-	public void inject(Object target, HttpServletRequest servletRequest) {
+	public void inject(Object target, ServletContext context) {
 		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.APPLICATION);
 		if (injectData == null) {
 			return;
 		}
 
-		ServletContext context = servletRequest.getSession().getServletContext();
 		Enumeration attributeNames = context.getAttributeNames();
-
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 			for (ScopeData.In ii : injectData) {
@@ -42,13 +40,12 @@ public class ApplicationScopeInjector extends ScopeInjector {
 		}
 	}
 
-	public void outject(Object target, HttpServletRequest servletRequest) {
+	public void outject(Object target, ServletContext context) {
 		ScopeData.Out[] outjectData = scopeDataManager.lookupOutData(target, ScopeType.APPLICATION);
 		if (outjectData == null) {
 			return;
 		}
 
-		ServletContext context = servletRequest.getSession().getServletContext();
 		for (ScopeData.Out oi : outjectData) {
 			Object value = getTargetProperty(target, oi);
 			context.setAttribute(oi.name, value);

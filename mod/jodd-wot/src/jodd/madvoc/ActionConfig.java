@@ -50,7 +50,7 @@ public class ActionConfig {
 		return initialized;
 	}
 
-	public void setInitialized() {
+	public void initialized() {
 		initialized = true;
 	}
 

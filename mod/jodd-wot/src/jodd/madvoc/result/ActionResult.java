@@ -48,7 +48,7 @@ public abstract class ActionResult {
 	/**
 	 * Marks that interceptor is initialized.
 	 */
-	public final void setInitialized() {
+	public final void initialized() {
 		initialized = true;
 	}
 

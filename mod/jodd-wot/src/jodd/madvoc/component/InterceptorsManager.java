@@ -65,6 +65,7 @@ public class InterceptorsManager {
 
 	/**
 	 * Resolves single interceptor. Creates new interceptor instance if not already registered.
+	 * Does not expand the interceptors.
 	 */
 	public ActionInterceptor resolve(Class<? extends ActionInterceptor> interceptorClass) {
 		ActionInterceptor interceptor = lookup(interceptorClass);

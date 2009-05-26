@@ -21,7 +21,7 @@ public abstract class ActionInterceptor {
 	/**
 	 * Marks that interceptor is initialized.
 	 */
-	public final void setInitialized() {
+	public final void initialized() {
 		initialized = true;
 	}
 

@@ -102,6 +102,25 @@ public class RequestScopeInjector extends ScopeInjector {
 		return this;
 	}
 
+
+	protected boolean trimParams;
+
+	public boolean isTrimParams() {
+		return trimParams;
+	}
+
+	/**
+	 * Specifies if parameters has to be trimmed before injection.
+	 */
+	public void setTrimParams(boolean trimParams) {
+		this.trimParams = trimParams;
+	}
+
+	public RequestScopeInjector trimParams(boolean trimParams) {
+		this.trimParams = trimParams;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- inject
 
 	/**
@@ -139,6 +158,13 @@ public class RequestScopeInjector extends ScopeInjector {
 				String name = getMatchedPropertyName(ii, paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
+
+					// trim
+					if (trimParams == true) {
+						for (int i = 0; i < paramValues.length; i++) {
+							paramValues[i] = paramValues[i].trim();
+						}
+					}
 
 					// ignore empty parameters
 					if (ignoreEmptyRequestParams == true) {

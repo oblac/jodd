@@ -69,9 +69,35 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 				BeanUtil.setDeclaredProperty(target, property, value);
 			}
 		}
-
-
 	}
+
+	public void inject(Object target, ServletContext servletContext) {
+		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.CONTEXT);
+		if (injectData == null) {
+			return;
+		}
+
+		for (ScopeData.In ii : injectData) {
+			Class fieldType = ii.type;
+			Object value;
+
+			// raw servlet types
+			if (fieldType.equals(ServletContext.class)) {
+				value = servletContext;
+			} else
+			// names
+			if (ii.name.equals(CONTEXT_MAP)) {
+				value = new HttpServletContextMap(servletContext);
+			} else {
+				value = madpc.getBean(ii.name);
+			}
+			if (value != null) {
+				String property = ii.target != null ? ii.target : ii.name;
+				BeanUtil.setDeclaredProperty(target, property, value);
+			}
+		}
+	}
+
 
 	@SuppressWarnings({"UnusedDeclaration"})
 	public void outject(Object target, HttpServletRequest servletRequest) {
@@ -79,6 +105,6 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 		if (outjectData == null) {
 			return;
 		}
-		throw new MadvocException("Unable to outject to madvoc context.");
+		throw new MadvocException("Unable to outject to Madvoc context.");
 	}
 }

@@ -11,6 +11,7 @@ import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 /**
  * Madvoc controller invokes actions for action path and renders action results.
@@ -40,6 +41,23 @@ public class MadvocController {
 	@PetiteInject
 	protected ResultMapper resultMapper;
 
+
+	protected ServletContext applicationContext;
+
+	/**
+	 * Initializes controller by providing application context.
+	 */
+	public void init(ServletContext servletContext) {
+		this.applicationContext = servletContext;
+	}
+
+	/**
+	 * Returns application context set during the initialization.
+	 */
+	public ServletContext getApplicationContext() {
+		return applicationContext;
+	}
+
 	// ---------------------------------------------------------------- invoke
 
 
@@ -60,7 +78,7 @@ public class MadvocController {
 			actionPath = actionPathRewriter.rewrite(actionPath, servletRequest, httpMethod);
 
 			// resolve action config
-			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod, servletRequest, servletResponse);
+			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
 			if (actionConfig == null) {
 				return actionPath;
 			}
@@ -123,7 +141,7 @@ public class MadvocController {
 		}
 		if (result.isInitialized() == false) {
 			contextInjector.inject(result, req.getHttpServletRequest(), req.getHttpServletResponse());
-			result.setInitialized();
+			result.initialized();
 			result.init();
 		}
 
@@ -138,11 +156,11 @@ public class MadvocController {
 	 * if action config not found. Performs initialization of founded action configig,
 	 * if necessary.
 	 */
-	protected ActionConfig resolveActionConfig(String actionPath, String httpMethod, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected ActionConfig resolveActionConfig(String actionPath, String httpMethod) {
 		ActionConfig actionConfig = actionPathMapper.resolveActionConfig(actionPath, httpMethod);
 		if (actionConfig != null) {
 			if (actionConfig.initialized == false) {
-				initializeActionConfig(actionConfig, servletRequest, servletResponse);
+				initializeActionConfig(actionConfig);
 			}
 		}
 		return actionConfig;
@@ -151,7 +169,7 @@ public class MadvocController {
 	/**
 	 * Initializes action configuration on first use. Resolves all interceptors and injects context parameters.
 	 */
-	protected void initializeActionConfig(ActionConfig cfg, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected void initializeActionConfig(ActionConfig cfg) {
 		Class<? extends ActionInterceptor>[] interceptorClasses = cfg.interceptorClasses;
 		if (interceptorClasses == null) {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
@@ -159,12 +177,12 @@ public class MadvocController {
 		cfg.interceptors = interceptorsManager.resolveAll(interceptorClasses);
 		for (ActionInterceptor interceptor : cfg.interceptors) {
 			if (interceptor.isInitialized() == false) {
-				contextInjector.inject(interceptor, servletRequest, servletResponse);
-				interceptor.setInitialized();
+				contextInjector.inject(interceptor, applicationContext);
+				interceptor.initialized();
 				interceptor.init();
 			}
 		}
-		cfg.setInitialized();
+		cfg.initialized();
 	}
 
 	/**

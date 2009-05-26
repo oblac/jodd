@@ -67,7 +67,7 @@ public class MadvocServletFilter implements Filter {
 		if (madvocController == null) {
 			throw new MadvocException("No Madvoc controller component found.");
 		}
-		webapp.getComponent(MadvocController.class);
+		madvocController.init(filterConfig.getServletContext());
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class MadvocServletFilter implements Filter {
 		webapp.destroy(madvocConfig);
 	}
 
-	// ---------------------------------------------------------------- loading config
+	// ---------------------------------------------------------------- loading configuration
 
 	/**
 	 * Loads {@link WebApplication}. If class name is <code>null</code>,
