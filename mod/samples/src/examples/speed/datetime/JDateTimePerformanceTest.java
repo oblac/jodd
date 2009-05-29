@@ -10,11 +10,10 @@ import java.util.Calendar;
 
 public class JDateTimePerformanceTest {
 
-static JStopWatch swatch = new JStopWatch();
+	static JStopWatch swatch = new JStopWatch();
 
 	public static void main(String[] args) throws Exception {
-
-		System.out.println("\ntest #1");
+		System.out.println("\ntest #1");		// first two results in excell chart
 		test1Calendar();
 		test1Jodd();
 		System.out.println("\ntest #2");
