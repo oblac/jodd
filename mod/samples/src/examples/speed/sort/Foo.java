@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 
-package examples.sort;
+package examples.speed.sort;
 
 import java.util.Random;
 
@@ -16,7 +16,7 @@ public class Foo implements Comparable{
 	public Foo() {
 		setId(new Integer(r.nextInt()));
 		int size = MIN_NAME_SIZE + r.nextInt(MAX_NAME_SIZE - MIN_NAME_SIZE);
-		StringBuffer n = new StringBuffer(size);
+		StringBuilder n = new StringBuilder(size);
 		for (int i = 0; i < size; i++) {
             n.append(randomChars.charAt(r.nextInt(randomCharsLen)));
 		}
