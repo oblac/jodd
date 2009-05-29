@@ -30,10 +30,16 @@ public class SorterPerfromanceTest {
 		test1JoddQuick();
 	}
 
+	// ---------------------------------------------------------------- test #1
+
+	static final int loop1 = 20;
+
 	public static void test1Java() {
 		Foo[] fooArray = createRandomFooObjects(TOTAL_TEST_OBJECTS);
 		swatch.start();
-		Arrays.sort(fooArray);
+		for (int i = loop1; i > 0; i--) {
+			Arrays.sort(fooArray);
+		}
 		swatch.stop();
 		System.out.println("---elapsed: " + swatch.elapsed());
 	}
@@ -42,7 +48,9 @@ public class SorterPerfromanceTest {
 		Foo[] fooArray = createRandomFooObjects(TOTAL_TEST_OBJECTS);
 		Sorter sorter = new FastMergeSort();
 		swatch.start();
-		sorter.sort(fooArray);
+		for (int i = loop1; i > 0; i--) {
+			sorter.sort(fooArray);
+		}
 		swatch.stop();
 		System.out.println("---elapsed: " + swatch.elapsed());
 	}
@@ -51,7 +59,9 @@ public class SorterPerfromanceTest {
 		Foo[] fooArray = createRandomFooObjects(TOTAL_TEST_OBJECTS);
 		Sorter sorter = new FastQuickSort();
 		swatch.start();
-		sorter.sort(fooArray);
+		for (int i = loop1; i > 0; i--) {
+			sorter.sort(fooArray);
+		}
 		swatch.stop();
 		System.out.println("---elapsed: " + swatch.elapsed());
 	}
