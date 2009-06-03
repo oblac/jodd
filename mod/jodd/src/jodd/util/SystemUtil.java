@@ -55,6 +55,14 @@ public class SystemUtil {
 	}
 
 	/**
+	 * Returns current working folder.
+	 * Just a better name for {@link #getUserDir()}.
+	 */
+	public static String getWorkingFolder() {
+		return System.getProperty(USER_DIR);
+	}
+
+	/**
 	 * Returns JRE home.
 	 */
 	public static String getJavaJreHome() {
