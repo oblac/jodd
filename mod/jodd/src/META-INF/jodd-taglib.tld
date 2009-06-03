@@ -245,7 +245,6 @@
 			<name>value</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.Object</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -256,7 +255,6 @@
 			<name>value</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.Object</type>
 		</attribute>
 	</tag>
 	<tag>

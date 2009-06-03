@@ -8,8 +8,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class CaseTag extends SimpleTagSupport {
 
-	private Object value;
-	public void setValue(Object value) {
+	private String value;
+	public void setValue(String value) {
 		this.value = value;
 	}
 

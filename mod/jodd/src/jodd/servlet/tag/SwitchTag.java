@@ -6,18 +6,18 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 /**
- * Switch tag.
+ * Switch tag provides string comparison of its value with inner {@link jodd.servlet.tag.CaseTag case} values.
  */
 public class SwitchTag extends SimpleTagSupport {
 
-	private Object value;
+	private String value;
 	private boolean valueFounded;
 
-	public Object getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 
@@ -33,6 +33,5 @@ public class SwitchTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		TagUtil.invokeBody(getJspBody());
 	}
-
 
 }
