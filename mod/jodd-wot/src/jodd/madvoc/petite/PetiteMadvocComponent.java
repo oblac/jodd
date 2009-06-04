@@ -6,7 +6,7 @@ import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 
 /**
- * Madvoc component that holds petite instance. 
+ * Madvoc component that maintains Petite instance.
  */
 public class PetiteMadvocComponent {
 

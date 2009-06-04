@@ -4,7 +4,6 @@ import jodd.madvoc.petite.PetiteWebApplication;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
@@ -17,9 +16,9 @@ import javax.servlet.ServletContext;
 public class MyWebApplication extends PetiteWebApplication {
 
 	@Override
-	protected PetiteContainer createMadvocPetiteContainer() {
+	protected PetiteContainer createInternalContainer() {
 		System.out.println("MyWebApplication.createMadvocPetiteContainer");
-		return super.createMadvocPetiteContainer();
+		return super.createInternalContainer();
 	}
 
 	@Override

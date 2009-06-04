@@ -28,13 +28,13 @@ public class WebApplication {
 	private final PetiteContainer madpc;
 
 	public WebApplication() {
-		madpc = createMadvocPetiteContainer();
+		madpc = createInternalContainer();
 	}
 
 	/**
-	 * Creates petite container that will be used by madvoc.
+	 * Creates Petite container used internally by Madvoc.
 	 */
-	protected PetiteContainer createMadvocPetiteContainer() {
+	protected PetiteContainer createInternalContainer() {
 		PetiteContainer madpc = new PetiteContainer();
 		madpc.addSelf();
 		return madpc;
