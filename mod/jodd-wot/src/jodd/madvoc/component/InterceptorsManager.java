@@ -9,7 +9,6 @@ import jodd.madvoc.interceptor.ActionInterceptorStack;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.meta.PetiteInitMethod;
-import jodd.petite.PetiteContainer;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -25,9 +24,6 @@ public class InterceptorsManager {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
-
-	@PetiteInject
-	protected PetiteContainer petiteContainer;
 
 	public InterceptorsManager() {
 		interceptors = new HashMap<Class<? extends ActionInterceptor>, ActionInterceptor>();

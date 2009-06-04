@@ -3,12 +3,32 @@
 package jodd.madvoc.petite;
 
 import jodd.madvoc.WebApplication;
+import jodd.petite.PetiteContainer;
+import jodd.petite.config.AutomagicPetiteConfigurator;
 
 /**
- * {@link jodd.madvoc.WebApplication} that uses {@link jodd.petite.PetiteContainer} for
- * retrieving all instances.
+ * {@link jodd.madvoc.WebApplication WebApplication} that uses {@link jodd.petite.PetiteContainer Petite container}
+ * for retrieving all instances.
  */
 public class PetiteWebApplication extends WebApplication {
+
+	protected final PetiteContainer pc;
+
+	public PetiteWebApplication() {
+		pc = createPetiteContainer();
+	}
+
+	/**
+	 * Creates new {@link PetiteContainer Petite container} instance and performs
+	 * {@link jodd.petite.config.AutomagicPetiteConfigurator auto-magic configuration}.
+	 */
+	protected PetiteContainer createPetiteContainer() {
+		PetiteContainer pc = new PetiteContainer();
+		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
+		configurator.configure(pc);
+		return pc;
+	}
+
 
 	/**
 	 * Registers {@link jodd.madvoc.petite.PetiteMadvocController}
@@ -16,10 +36,10 @@ public class PetiteWebApplication extends WebApplication {
 	@Override
 	public void registerMadvocComponents() {
 		super.registerMadvocComponents();
+		registerComponent("petiteContainer", pc);
 		registerComponent(PetiteMadvocController.class);
 		registerComponent(PetiteInterceptorManager.class);
 		registerComponent(PetiteResultsManager.class);
-		registerComponent(PetiteMadvocComponent.class);
 	}
 
 }

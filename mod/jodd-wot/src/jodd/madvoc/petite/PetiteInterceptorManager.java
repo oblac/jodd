@@ -5,6 +5,7 @@ package jodd.madvoc.petite;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.petite.meta.PetiteInject;
+import jodd.petite.PetiteContainer;
 
 /**
  * Petite-aware interceptors manager.
@@ -12,13 +13,13 @@ import jodd.petite.meta.PetiteInject;
 public class PetiteInterceptorManager extends InterceptorsManager {
 
 	@PetiteInject
-	protected PetiteMadvocComponent petiteMadvocComponent;
+	protected PetiteContainer petiteContainer;
 
 	/**
 	 * Acquires interceptor from Petite container.
 	 */
 	@Override
 	protected ActionInterceptor createInterceptor(Class<? extends ActionInterceptor> interceptorClass) {
-		return petiteMadvocComponent.getPetiteContainer().createBean(interceptorClass);
+		return petiteContainer.createBean(interceptorClass);
 	}
 }

@@ -36,7 +36,7 @@ public class WebApplication {
 	 */
 	protected PetiteContainer createInternalContainer() {
 		PetiteContainer madpc = new PetiteContainer();
-		madpc.addSelf();
+		madpc.addSelf("madpc");
 		return madpc;
 	}
 
@@ -59,11 +59,32 @@ public class WebApplication {
 	/**
 	 * Registers component using its {@link #resolveBaseComponentName(Class) base name}.
 	 * Previously defined component will be removed.
+	 * @see #registerComponent(Object) 
 	 */
 	public final void registerComponent(Class component) {
 		String name = resolveBaseComponentName(component);
+		registerComponent(name, component);
+	}
+
+	public final void registerComponent(String name, Class component) {
 		madpc.removeBean(name);
 		madpc.registerBean(name, component);
+	}
+
+	/**
+	 * Registers component instance using its {@link #resolveBaseComponentName(Class) base name}.
+	 * Previously defined component will be removed.
+	 * @see #registerComponent(Class)
+	 */
+	public final void registerComponent(Object componentInstance) {
+		Class component = componentInstance.getClass();
+		String name = resolveBaseComponentName(component);
+		registerComponent(name, componentInstance);
+	}
+
+	public final void registerComponent(String name, Object componentInstance) {
+		madpc.removeBean(name);
+		madpc.addBean(name, componentInstance);
 	}
 
 	/**

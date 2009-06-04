@@ -18,19 +18,18 @@ import javax.servlet.ServletContext;
 public class ContextInjector {
 
 	@PetiteInject
-	protected PetiteContainer petiteContainer;
+	protected PetiteContainer madpc;
 
 	@PetiteInject
 	protected ScopeDataManager scopeDataManager;
 
 	protected ApplicationScopeInjector applicationInjector;
 	protected MadvocContextScopeInjector madvocContextInjector;
-	
 
 	@PetiteInitMethod(order = 1)
 	void contextInjectorInit() {
 		applicationInjector = new ApplicationScopeInjector(scopeDataManager);
-		madvocContextInjector = new MadvocContextScopeInjector(scopeDataManager, petiteContainer);
+		madvocContextInjector = new MadvocContextScopeInjector(scopeDataManager, madpc);
 		init();
 	}
 
