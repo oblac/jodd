@@ -15,14 +15,15 @@ public class PetiteWebApplication extends WebApplication {
 	protected final PetiteContainer pc;
 
 	public PetiteWebApplication() {
-		pc = createPetiteContainer();
+		pc = providePetiteContainer();
 	}
 
 	/**
-	 * Creates new {@link PetiteContainer Petite container} instance and performs
+	 * Provides {@link PetiteContainer Petite container} instance that will be used as application context.
+	 * By default it creates new instance and performs
 	 * {@link jodd.petite.config.AutomagicPetiteConfigurator auto-magic configuration}.
 	 */
-	protected PetiteContainer createPetiteContainer() {
+	protected PetiteContainer providePetiteContainer() {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 		configurator.configure(pc);
