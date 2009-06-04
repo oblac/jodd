@@ -254,12 +254,17 @@ public class PetiteContainer extends PetiteContainerRegistry {
 
 	// ---------------------------------------------------------------- create
 
+	/**
+	 * Creates and wires a bean with the container. However, bean is
+	 * <b>not</b> registered.
+	 */
 	public <E> E createBean(Class<E> type) {
 		return createBean(type, null);
 	}
 
 	/**
-	 * Creates and wires a bean.
+	 * Creates and wires a bean with the container. However, bean is
+	 * <b>not</b> registered.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
