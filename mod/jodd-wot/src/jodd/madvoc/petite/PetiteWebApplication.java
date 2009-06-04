@@ -12,12 +12,6 @@ import jodd.petite.config.AutomagicPetiteConfigurator;
  */
 public class PetiteWebApplication extends WebApplication {
 
-	protected final PetiteContainer pc;
-
-	public PetiteWebApplication() {
-		pc = providePetiteContainer();
-	}
-
 	/**
 	 * Provides {@link PetiteContainer Petite container} instance that will be used as application context.
 	 * By default it creates new instance and performs
@@ -32,12 +26,12 @@ public class PetiteWebApplication extends WebApplication {
 
 
 	/**
-	 * Registers {@link jodd.madvoc.petite.PetiteMadvocController}
+	 * Registers provided Petite container and Petite-aware Madvoc components.
 	 */
 	@Override
 	public void registerMadvocComponents() {
 		super.registerMadvocComponents();
-		registerComponent("petiteContainer", pc);
+		registerComponent("petiteContainer", providePetiteContainer());
 		registerComponent(PetiteMadvocController.class);
 		registerComponent(PetiteInterceptorManager.class);
 		registerComponent(PetiteResultsManager.class);
