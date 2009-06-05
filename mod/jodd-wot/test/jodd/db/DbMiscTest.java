@@ -3,6 +3,9 @@
 package jodd.db;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.HashMap;
 
 public class DbMiscTest extends DbHsqldbTestCase {
 
@@ -112,6 +115,20 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		assertEquals(0, DbQuery.totalOpenResultSetCount);
 	
 		session1.closeSession();
+
+	}
+
+	public void testSetMap() throws SQLException {
+		DbSession session = new DbSession(cp);
+		DbQuery dbQuery = new DbQuery(session, "select * from GIRLS where ID = :id");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", Integer.valueOf(1));
+		dbQuery.setMap(map);
+
+		ResultSet rs = dbQuery.execute();
+		if (rs.next()) {
+			assertEquals(1, rs.getInt(1));
+		}
 
 	}
 }

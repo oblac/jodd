@@ -828,6 +828,7 @@ s	 */
 		if (parameters == null) {
 			return;
 		}
+		init();
 		Iterator it = query.iterateNamedParameters();
 		while (it.hasNext()) {
 			String paramName = (String) it.next();
