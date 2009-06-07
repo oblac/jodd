@@ -82,6 +82,9 @@ public class WebApplication {
 		registerComponent(name, componentInstance);
 	}
 
+	/**
+	 * Registers component instance and wires it with internal container.
+	 */
 	public final void registerComponent(String name, Object componentInstance) {
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);

@@ -226,87 +226,93 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	// ---------------------------------------------------------------- wire
 
 	/**
-	 * Wires provided bean with the container.
+	 * Wires provided bean with the container using default wiring mode and default init methods flag.
+	 * Bean is not registered. 
 	 */
-	public PetiteContainer wire(Object bean) {
-		return wire(bean, null, false);
-	}
-
-	public PetiteContainer wire(Object bean, boolean init) {
-		return wire(bean, null, init);
-	}
-
-	public PetiteContainer wire(Object bean, WiringMode wiringMode) {
-		return wire(bean, wiringMode, false);
+	public void wire(Object bean) {
+		wire(bean, null, petiteConfig.isDefaultInitMethods());
 	}
 
 	/**
 	 * Wires provided bean with the container and optionally invokes init methods.
+	 * Bean is not registered.
 	 */
-	public PetiteContainer wire(Object bean, WiringMode wiringMode, boolean init) {
-		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, petiteConfig.resolveWiringMode(wiringMode));
+	public void wire(Object bean, WiringMode wiringMode, boolean init) {
+		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
+		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
 		wireBean(bean, def, new HashMap<String, Object>());
 		if (init) {
 			invokeInitMethods(bean,  def);
 		}
-		return this;
 	}
 
 	// ---------------------------------------------------------------- create
 
 	/**
-	 * Creates and wires a bean with the container. However, bean is
-	 * <b>not</b> registered.
+	 * Creates and wires a bean within the container using default wiring mode and default init methods flag.
+	 * Bean is <b>not</b> registered.
 	 */
 	public <E> E createBean(Class<E> type) {
-		return createBean(type, null);
+		return createBean(type, null, petiteConfig.isDefaultInitMethods());
 	}
 
 	/**
-	 * Creates and wires a bean with the container. However, bean is
+	 * Creates and wires a bean within the container and optionally invokes init methods. However, bean is
 	 * <b>not</b> registered.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
+	public <E> E createBean(Class<E> type, WiringMode wiringMode, boolean init) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode);
+		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		Object bean = newBeanInstance(def, acquiredBeans);
 		wireBean(bean, def, acquiredBeans);
-		invokeInitMethods(bean, def);
+		if (init) {
+			invokeInitMethods(bean, def);
+		}
 		return (E) bean;
 	}
-
-	
 
 	// ---------------------------------------------------------------- add
 
 	/**
-	 * Adds object instance to the container as singleton.
+	 * Adds object instance to the container as singleton bean using default
+	 * wiring mode and default init method flag.
 	 */
-	public PetiteContainer addBean(String name, Object object) {
-		registerBean(name, null, SingletonScope.class, WiringMode.NONE);
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(name);
-		beanDefinition.scopeRegister(object);
-		return this;
+	public void addBean(String name, Object bean) {
+		addBean(name, bean, null, petiteConfig.isDefaultInitMethods());
+	}
+
+	/**
+	 * Adds object instance to the container as singleton bean.
+	 */
+	public void addBean(String name, Object bean, WiringMode wiringMode, boolean init) {
+		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
+		registerBean(name, bean.getClass(), SingletonScope.class, wiringMode);
+		BeanDefinition def = lookupExistingBeanDefinition(name);
+		def.scopeRegister(bean);
+		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		wireBean(bean, def, acquiredBeans);
+		if (init) {
+			invokeInitMethods(bean, def);
+		}
 	}
 
 	/**
 	 * Adds self instance to the container so internal beans may fetch
-	 * container for further usage.
+	 * container for further usage. No wiring is used and no init methods are invoked.
 	 */
-	public PetiteContainer addSelf(String name) {
-		return addBean(name, this);
+	public void addSelf(String name) {
+		addBean(name, this, WiringMode.NONE, false);
 	}
 
 	/**
 	 * Adds self instance to the container so internal beans may fetch
-	 * container for further usage.
+	 * container for further usage. No wiring is used and no init methods are invoked.
 	 */
-	public PetiteContainer addSelf() {
-		return addBean(PETITE_CONTAINER_REF_NAME, this);
+	public void addSelf() {
+		addBean(PETITE_CONTAINER_REF_NAME, this, WiringMode.NONE, false);
 	}
-
 
 	// ---------------------------------------------------------------- property
 
@@ -331,7 +337,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	}
 
 	/**
-	 * Returns petite bean proerty value.
+	 * Returns petite bean property value.
 	 */
 	public Object getBeanProperty(String name) {
 		int ndx = name.indexOf('.');

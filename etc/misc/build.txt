@@ -6,7 +6,7 @@ ant dist
 
 Create release
 -------------------------
-and clean
+ant clean
 ant dist
 ant javadoc
 ant emma

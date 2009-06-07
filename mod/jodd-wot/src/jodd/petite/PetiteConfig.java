@@ -15,6 +15,7 @@ public class PetiteConfig {
 		defaultScope = SingletonScope.class;
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
+		defaultInitMethods = true;
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -82,4 +83,18 @@ public class PetiteConfig {
 	}
 
 
+	protected boolean defaultInitMethods;
+	/**
+	 * Returns <code>true</code> if init methods should be invoked on explicit wiring, adding and creating.
+	 */
+	public boolean isDefaultInitMethods() {
+		return defaultInitMethods;
+	}
+
+	/**
+	 * Specifies is init method should be invoked on expliciti wiring, adding and creating.
+	 */
+	public void setDefaultInitMethods(boolean defaultInitMethods) {
+		this.defaultInitMethods = defaultInitMethods;
+	}
 }

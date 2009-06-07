@@ -1,3 +1,26 @@
 ----------------------
 How to build a release
 ----------------------
+
+1) build the release as written in build.txt
+
+2) site changes
++ history page
++ download page
++ index page
++ feed
+do.bat
+
+3) SYNC
+
+4) ssh to jodd.org
+cd test
+unzip test.zip
+cd ../api
+unzip api.zip
+
+5) sitemap gen (ako treba)
+
+6) reindex searcher
+
+7) send email to mailing list

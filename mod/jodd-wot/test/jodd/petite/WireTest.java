@@ -94,6 +94,7 @@ public class WireTest extends TestCase {
 		assertNotNull(boo.zoo);
 		assertNotSame(boo.zoo.boo, boo);        // not equal instances!!!
 		assertEquals(1, boo.getFoo().hello());
+		assertEquals(1, boo.getCount());
 	}
 
 	public void testCtor() {
