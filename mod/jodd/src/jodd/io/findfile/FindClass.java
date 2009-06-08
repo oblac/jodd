@@ -8,6 +8,7 @@ import jodd.util.ArraysUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.io.ZipUtil;
+import jodd.io.FileNameUtil;
 
 import java.net.URL;
 import java.util.zip.ZipFile;
@@ -17,11 +18,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileNotFoundException;
 
 /**
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
  * Jar files are also examined.
+ * @see jodd.io.findfile.ClasspathScanner
  */
 public abstract class FindClass {
 
@@ -108,14 +111,20 @@ public abstract class FindClass {
 
 
 	/**
+	 * If set to <code>true</code> all files will be scanned and not only classes.
+	 */
+	protected boolean includeResources;
+
+
+	/**
 	 * Scans several URLs. If (#ignoreExceptions} is set, exceptions
 	 * per one URL will be ignored and loops continues. 
 	 */
-	protected void scanUrls(URL... urls) throws Exception {
+	protected void scanUrls(URL... urls) throws IOException {
 		for (URL path : urls) {
 			try {
 				scanUrl(path);
-			} catch (Exception ex) {
+			} catch (IOException ex) {
 				if (ignoreExceptions == false) {
 					throw ex;
 				}
@@ -128,7 +137,7 @@ public abstract class FindClass {
 	 * Callback {@link #onClassName(String, java.io.InputStream)} is called on
 	 * each class name.
 	 */
-	protected void scanUrl(URL url) throws Exception {
+	protected void scanUrl(URL url) throws IOException {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
 			throw new IOException("URL is not a valid file: '" + url + "'.");
@@ -155,7 +164,7 @@ public abstract class FindClass {
 	 * Scans classes inside single JAR archive. Archive is scanned as a zip file.
 	 * @see #onClassName(String, java.io.InputStream)
 	 */
-	protected void scanJarFile(File file) throws Exception {
+	protected void scanJarFile(File file) throws IOException {
 		ZipFile zipFile = null;
 		try {
 			zipFile = new ZipFile(file);
@@ -164,7 +173,9 @@ public abstract class FindClass {
 				ZipEntry zipEntry = (ZipEntry) entries.nextElement();
 				String zipEntryName = zipEntry.getName();
 				if (StringUtil.endsWithIgnoreCase(zipEntryName, CLASS_FILE_EXT)) {
-					scanClassName(zipEntryName, createInputStream == true ? zipFile.getInputStream(zipEntry) : null);
+					scanClassName(zipEntryName, createInputStream == true ? zipFile.getInputStream(zipEntry) : null, true);
+				} else if (includeResources == true) {
+					scanClassName(zipEntryName, createInputStream == true ? zipFile.getInputStream(zipEntry) : null, false);
 				}
 			}
 		} finally {
@@ -176,7 +187,7 @@ public abstract class FindClass {
 	 * Scans single classpath directory.
 	 * @see #onClassName(String, java.io.InputStream)  
 	 */
-	protected void scanClassPath(File root) throws Exception {
+	protected void scanClassPath(File root) throws FileNotFoundException {
 		//noinspection NonConstantStringShouldBeStringBuffer
 		String rootPath = root.getAbsolutePath();
 		if (rootPath.endsWith(File.separator) == false) {
@@ -188,15 +199,21 @@ public abstract class FindClass {
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();
 			if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
-				if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
-					InputStream is = null;
-					try {
-						is = createInputStream == true ? new FileInputStream(file) : null;
-						scanClassName(filePath.substring(rootPath.length()), is);
-					} finally {
-						StreamUtil.close(is);
-					}
-				}
+				scanClassFile(filePath, rootPath, file, true);
+			} else if (includeResources == true) {
+				scanClassFile(filePath, rootPath, file, false);
+			}
+		}
+	}
+
+	private void scanClassFile(String filePath, String rootPath, File file, boolean isClass) throws FileNotFoundException {
+		if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
+			InputStream is = null;
+			try {
+				is = createInputStream == true ? new FileInputStream(file) : null;
+				scanClassName(filePath.substring(rootPath.length()), is, isClass);
+			} finally {
+				StreamUtil.close(is);
 			}
 		}
 	}
@@ -206,25 +223,30 @@ public abstract class FindClass {
 	 * Scans class name and calls {@link #onClassName(String, java.io.InputStream)} callback.
 	 * Strips '.class' from the end and converts all slashes to dots.
 	 */
-	protected void scanClassName(String name, InputStream inputStream) throws Exception {
-		name = name.substring(0, name.length() - 6);
-		name = StringUtil.replaceChar(name, '/', '.');
-		name = StringUtil.replaceChar(name, '\\', '.');
+	protected void scanClassName(String name, InputStream inputStream, boolean isClass) {
+		String className = name;
+		if (isClass) {
+			className = name.substring(0, name.length() - 6);		// 6 == ".class".length()
+			className = StringUtil.replaceChar(className, '/', '.');
+			className = StringUtil.replaceChar(className, '\\', '.');
+		} else {
+			className = '\\' + className;
+		}
 
 		if (includedPackages != null) {
-			if (Wildcard.matchOne(name, includedPackages) == -1) {
+			if (Wildcard.matchOne(className, includedPackages) == -1) {
 				return;
 			}
 			if (excludedPackages != null) {
-				if (Wildcard.matchOne(name, excludedPackages) != -1) {
+				if (Wildcard.matchOne(className, excludedPackages) != -1) {
 					return;
 				}
 			}
 		}
 		try {
-			onClassName(name, inputStream);
-		} catch (Throwable th) {
-			throw new Exception("Unable to scan class: '" + name + "'.", th);
+			onClassName(className, inputStream);
+		} catch (Exception ex) {
+			throw new RuntimeException("Unable to scan class: '" + name + "'.", ex);
 		}
 	}
 

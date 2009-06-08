@@ -4,6 +4,7 @@ package examples.file;
 
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
+import jodd.io.filter.WildcardFileFilter;
 import jodd.util.SystemUtil;
 
 import java.io.File;
@@ -11,6 +12,13 @@ import java.io.File;
 public class ff {
 	public static void main(String args[]) {
 		System.out.println("---start---");
+
+		File file = new File(".");
+		String[] list = file.list(new WildcardFileFilter("*"));
+		for (String l : list) {
+			System.out.println(l);
+		}
+
 		System.out.println("searching classpath");
 
 		FindFile ff = new WildcardFindFile("*").recursive(true).includeDirs(true).searchPath(SystemUtil.getClassPath());
