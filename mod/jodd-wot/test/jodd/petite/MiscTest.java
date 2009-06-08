@@ -68,7 +68,7 @@ public class MiscTest extends TestCase {
 		assertSame(foo, foo2);
 	}
 
-	public void testAdd2() {
+	public void testAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -77,14 +77,23 @@ public class MiscTest extends TestCase {
 		Foo foo = (Foo) pc.getBean("foo");
 		Boo boo = new Boo();
 		assertNull(boo.getFoo());
-		pc.addBean("boo", boo, null, false);
+
+		pc.addBean("boo", boo, null);
 		assertNotNull(boo.getFoo());
 		assertSame(foo, boo.getFoo());
+		assertNotNull(boo.zoo);
+
+		Zoo zoo = (Zoo) pc.getBean("zoo");
+		assertNotNull(zoo.boo);
+		assertSame(zoo, boo.zoo);		// circular dependecy
+		assertSame(boo, zoo.boo);
 
 		Boo boo2 = (Boo) pc.getBean("boo");
 		assertNotNull(boo2);
 		assertSame(boo, boo2);
-		assertTrue(boo.orders.isEmpty());
+		assertFalse(boo.orders.isEmpty());
+		assertEquals(6, boo.orders.size());
+		assertEquals("[first, second, third, init, beforeLast, last]", boo.orders.toString());
 		assertNotNull(boo2.getFoo());
 		assertSame(foo, boo2.getFoo());
 		assertEquals(1, boo2.getFoo().hello());
@@ -94,11 +103,40 @@ public class MiscTest extends TestCase {
 		boo2 = (Boo) pc.getBean("boo");
 		assertNotNull(boo2);
 		assertSame(boo, boo2);
-		assertEquals("[first, second, third, init, beforeLast, last]", boo.orders.toString());
 		assertNotNull(boo2.getFoo());
 		assertSame(foo, boo2.getFoo());
 		assertEquals(1, boo2.getFoo().hello());
 		assertEquals(2, boo2.getFoo().getCounter());
+		assertEquals(12, boo.orders.size());		// init methods are called again due to re-add
+	}
+
+	public void testNoAdd2WithCircDep() {
+		Foo.instanceCounter = 0;
+		PetiteContainer pc = new PetiteContainer();
+		pc.registerBean(Foo.class);
+		pc.registerBean(Zoo.class);
+		pc.registerBean(Boo.class);
+
+		Boo boo = (Boo) pc.getBean("boo");
+		Foo foo = (Foo) pc.getBean("foo");
+		Zoo zoo = (Zoo) pc.getBean("zoo");
+
+		assertNotNull(boo.getFoo());
+		assertSame(foo, boo.getFoo());
+
+		assertNotNull(zoo.boo);
+		assertSame(boo, zoo.boo);
+		assertSame(zoo, boo.zoo);
+
+		Boo boo2 = (Boo) pc.getBean("boo");
+		assertNotNull(boo2);
+		assertSame(boo, boo2);
+		assertFalse(boo.orders.isEmpty());
+		assertNotNull(boo2.getFoo());
+		assertSame(foo, boo2.getFoo());
+		assertEquals(1, boo2.getFoo().hello());
+		assertEquals(1, boo2.getFoo().getCounter());
+		assertEquals("[first, second, third, init, beforeLast, last]", boo.orders.toString());
 	}
 
 }

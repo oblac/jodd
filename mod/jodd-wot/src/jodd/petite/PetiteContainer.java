@@ -163,6 +163,25 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		}
 	}
 
+	/**
+	 * Injects all parameters.
+	 */
+	protected void injectParams(Object bean, BeanDefinition def) {
+		if (def.params == null) {
+			def.params = petiteManager.resolveBeanParams(def.name, petiteConfig.getResolveReferenceParameters());
+		}
+		int len = def.name.length() + 1;
+		for (String param : def.params) {
+			Object value = petiteManager.getParameter(param);
+			String destination = param.substring(len);
+			try {
+				BeanUtil.setDeclaredProperty(bean, destination, value);
+			} catch (Exception ex) {
+				throw new PetiteException("Unable to set parameter: '" + param + "' to bean '" + def.name + "'.");
+			}
+		}
+	}
+
 
 	// ---------------------------------------------------------------- get beans
 
@@ -217,6 +236,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 			// Create new bean in the scope
 			bean = newBeanInstance(def, acquiredBeans);
 			wireBean(bean, def, acquiredBeans);
+			injectParams(bean, def);
 			invokeInitMethods(bean, def);
 			def.scopeRegister(bean);
 		}
@@ -230,7 +250,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 * Bean is not registered. 
 	 */
 	public void wire(Object bean) {
-		wire(bean, null, petiteConfig.isDefaultInitMethods());
+		wire(bean, null, petiteConfig.getDefaultRunInitMethods());
 	}
 
 	/**
@@ -253,7 +273,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 * Bean is <b>not</b> registered.
 	 */
 	public <E> E createBean(Class<E> type) {
-		return createBean(type, null, petiteConfig.isDefaultInitMethods());
+		return createBean(type, null, petiteConfig.getDefaultRunInitMethods());
 	}
 
 	/**
@@ -280,22 +300,22 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 * wiring mode and default init method flag.
 	 */
 	public void addBean(String name, Object bean) {
-		addBean(name, bean, null, petiteConfig.isDefaultInitMethods());
+		addBean(name, bean, null);
 	}
 
 	/**
 	 * Adds object instance to the container as singleton bean.
 	 */
-	public void addBean(String name, Object bean, WiringMode wiringMode, boolean init) {
+	public void addBean(String name, Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerBean(name, bean.getClass(), SingletonScope.class, wiringMode);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
-		def.scopeRegister(bean);
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		acquiredBeans.put(name, bean);
 		wireBean(bean, def, acquiredBeans);
-		if (init) {
-			invokeInitMethods(bean, def);
-		}
+		injectParams(bean, def);
+		invokeInitMethods(bean, def);
+		def.scopeRegister(bean);
 	}
 
 	/**
@@ -303,7 +323,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 * container for further usage. No wiring is used and no init methods are invoked.
 	 */
 	public void addSelf(String name) {
-		addBean(name, this, WiringMode.NONE, false);
+		addBean(name, this, WiringMode.NONE);
 	}
 
 	/**
@@ -311,7 +331,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 * container for further usage. No wiring is used and no init methods are invoked.
 	 */
 	public void addSelf() {
-		addBean(PETITE_CONTAINER_REF_NAME, this, WiringMode.NONE, false);
+		addBean(PETITE_CONTAINER_REF_NAME, this, WiringMode.NONE);
 	}
 
 	// ---------------------------------------------------------------- property

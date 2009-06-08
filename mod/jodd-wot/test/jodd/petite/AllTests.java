@@ -14,6 +14,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(MiscTest.class);
 		addTestSuite(ManualTest.class);
 		addTestSuite(PropertyTest.class);
+		addTestSuite(ParamTest.class);
 	}
 
 	public static Test suite() {

@@ -8,6 +8,7 @@ import jodd.petite.manager.PetiteManager;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Petite register base contains registration and configuration stuff.
@@ -306,6 +307,25 @@ public abstract class PetiteContainerRegistry {
 
 
 
+	// ---------------------------------------------------------------- params
+
+	/**
+	 * Defines new parameter. Parameter with same name will be replaced.
+	 */
+	public void defineParameter(String name, Object value) {
+		petiteManager.defineParameter(name, value);
+	}
+
+	/**
+	 * Defines many parameters at once. 
+	 */
+	public void defineParameters(Map<Object, Object> properties) {
+		for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+			defineParameter(entry.getKey().toString(), entry.getValue());
+		}
+	}
+
+	
 	// ---------------------------------------------------------------- stats and misc
 
 	/**

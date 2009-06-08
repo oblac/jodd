@@ -24,4 +24,10 @@ public class Foo {
 	public int getCounter() {
 		return counter;
 	}
+
+
+	private String name;
+	public String getName() {
+		return name;
+	}
 }

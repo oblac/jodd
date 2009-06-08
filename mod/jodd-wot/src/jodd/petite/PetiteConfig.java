@@ -15,7 +15,8 @@ public class PetiteConfig {
 		defaultScope = SingletonScope.class;
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
-		defaultInitMethods = true;
+		defaultRunInitMethods = true;
+		resolveReferenceParameters = true;
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -37,7 +38,6 @@ public class PetiteConfig {
 		}
 		this.defaultScope = defaultScope;
 	}
-
 
 
 	protected WiringMode defaultWiringMode;
@@ -67,12 +67,11 @@ public class PetiteConfig {
 	}
 
 
-
 	protected boolean detectDuplicatedBeanNames;
 	/**
 	 * Returns <code>true</code> if container detects duplicated bean names.
 	 */
-	public boolean isDetectDuplicatedBeanNames() {
+	public boolean getDetectDuplicatedBeanNames() {
 		return detectDuplicatedBeanNames;
 	}
 	/**
@@ -83,18 +82,33 @@ public class PetiteConfig {
 	}
 
 
-	protected boolean defaultInitMethods;
+	protected boolean defaultRunInitMethods;
 	/**
 	 * Returns <code>true</code> if init methods should be invoked on explicit wiring, adding and creating.
 	 */
-	public boolean isDefaultInitMethods() {
-		return defaultInitMethods;
+	public boolean getDefaultRunInitMethods() {
+		return defaultRunInitMethods;
 	}
-
 	/**
 	 * Specifies is init method should be invoked on expliciti wiring, adding and creating.
 	 */
-	public void setDefaultInitMethods(boolean defaultInitMethods) {
-		this.defaultInitMethods = defaultInitMethods;
+	public void setDefaultRunInitMethods(boolean defaultRunInitMethods) {
+		this.defaultRunInitMethods = defaultRunInitMethods;
+	}
+
+
+
+	protected boolean resolveReferenceParameters;
+	/**
+	 * Returns <code>true</code> if parameter references should be resolved.
+	 */
+	public boolean getResolveReferenceParameters() {
+		return resolveReferenceParameters;
+	}
+	/**
+	 * Defines if reference parameters should be resolved.
+	 */
+	public void setResolveReferenceParameters(boolean resolveReferenceParameters) {
+		this.resolveReferenceParameters = resolveReferenceParameters;
 	}
 }

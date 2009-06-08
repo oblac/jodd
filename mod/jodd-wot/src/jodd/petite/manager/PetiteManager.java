@@ -37,6 +37,7 @@ public class PetiteManager {
 	protected final PropertyResolver propertyResolver;
 	protected final MethodResolver methodResolver;
 	protected final InitMethodResolver initMethodResolver;
+	protected final ParamResolver paramResolver;
 
 	public PetiteManager() {
 		beanManager = new BeanManager();
@@ -44,6 +45,7 @@ public class PetiteManager {
 		propertyResolver = new PropertyResolver();
 		methodResolver = new MethodResolver();
 		initMethodResolver = new InitMethodResolver();
+		paramResolver = new ParamResolver();
 	}
 
 	// ---------------------------------------------------------------- bean
@@ -79,7 +81,7 @@ public class PetiteManager {
 		}
 		BeanDefinition existing = removeBean(name);
 		if (existing != null) {
-			if (pcfg.isDetectDuplicatedBeanNames()) {
+			if (pcfg.getDetectDuplicatedBeanNames()) {
 				throw new PetiteException(
 						"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
 						existing.type.getName() + "' is already registered with the name '" + name + "'.");
@@ -238,4 +240,18 @@ public class PetiteManager {
 		return methods;
 	}
 
+
+	// ---------------------------------------------------------------- params
+
+	public void defineParameter(String name, Object value) {
+		paramResolver.put(name, value);
+	}
+
+	public Object getParameter(String name) {
+		return paramResolver.get(name);
+	}
+
+	public String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
+		return paramResolver.resolve(name, resolveReferenceParams);
+	}
 }

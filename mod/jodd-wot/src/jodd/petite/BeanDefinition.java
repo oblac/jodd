@@ -28,6 +28,7 @@ public class BeanDefinition {
 	public PropertyInjectionPoint[] properties;
 	public MethodInjectionPoint[] methods;
 	public InitMethodPoint[] initMethods;
+	public String[] params;
 
 	// ---------------------------------------------------------------- scope delegates
 

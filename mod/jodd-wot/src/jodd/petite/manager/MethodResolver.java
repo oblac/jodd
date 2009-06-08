@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Method reference resolver.
@@ -29,7 +30,7 @@ public class MethodResolver {
 
 		// lookup methods
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		ArrayList<MethodInjectionPoint> list = new ArrayList<MethodInjectionPoint>();
+		List<MethodInjectionPoint> list = new ArrayList<MethodInjectionPoint>();
 		Method[] allMethods = cd.getAllMethods(true);
 		for (Method method : allMethods) {
 			PetiteInject ref = method.getAnnotation(PetiteInject.class);

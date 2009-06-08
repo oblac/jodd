@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Resolves properties.
@@ -30,7 +31,7 @@ public class PropertyResolver {
 
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		ArrayList<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
+		List<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
 		Field[] allFields = cd.getAllFields(true);
 		for (Field field : allFields) {
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);

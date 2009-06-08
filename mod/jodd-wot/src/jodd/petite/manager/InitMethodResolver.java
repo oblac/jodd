@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Resolver for bean init methods.
@@ -48,7 +49,7 @@ public class InitMethodResolver {
 
 		// lookup methods
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		ArrayList<MethodOrder> list = new ArrayList<MethodOrder>();
+		List<MethodOrder> list = new ArrayList<MethodOrder>();
 		Method[] allMethods = cd.getAllMethods(true);
 		for (Method method : allMethods) {
 			PetiteInitMethod petiteInitMethod = method.getAnnotation(PetiteInitMethod.class);
