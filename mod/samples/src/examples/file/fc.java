@@ -9,6 +9,7 @@ import jodd.io.StreamUtil;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.IOException;
 
 public class fc {
 
@@ -17,14 +18,18 @@ public class fc {
 
 		ClasspathScanner cs = new ClasspathScanner() {
 			@Override
-			protected void onClassName(String className, InputStream inputStream) throws Exception {
-				byte[] bytes = StreamUtil.readAvailableBytes(inputStream);
+			protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+				InputStream inputStream = inputStreamProvider.get();
+				byte[] bytes = new byte[0];
+				try {
+					bytes = StreamUtil.readAvailableBytes(inputStream);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				System.out.println("---> " + className + "\t\t" + bytes.length);
 			}
 		};
-		cs.setIncludeResources(true);
-		cs.setCreateInputStream(true);
-		cs.scan(new File("d:\\Projects\\java\\apps\\jarminator\\out").toURL());
+		cs.includeResources(true).scan(new File("d:\\Projects\\java\\apps\\jarminator\\out").toURL());
 		System.out.println("end");
 	}
 

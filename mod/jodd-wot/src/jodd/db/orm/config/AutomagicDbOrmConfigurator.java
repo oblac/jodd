@@ -20,7 +20,6 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 	protected final boolean registerAsEntities;
 
 	public AutomagicDbOrmConfigurator(boolean registerAsEntities) {
-		this.createInputStream = true;
 		dbTableAnnotationBytes = getTypeSignatureBytes(DbTable.class);
 		this.registerAsEntities = registerAsEntities;
 	}
@@ -69,12 +68,18 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 	 * file content is examined.
 	 */
 	@Override
-	protected void onClassName(String className, InputStream inputStream) throws Exception {
+	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+		InputStream inputStream = inputStreamProvider.get();
 		if (isTypeSignatureInUse(inputStream, dbTableAnnotationBytes) == false) {
 			return;
 		}
 
-		Class<?> beanClass = loadClass(className);
+		Class<?> beanClass;
+		try {
+			beanClass = loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			throw new DbOrmException("Unable to load class: " + className, cnfex);
+		}
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
 			return;

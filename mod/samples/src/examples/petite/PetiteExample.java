@@ -65,8 +65,8 @@ public class PetiteExample {
 		// automagic configuration
 		PetiteContainer petite = new PetiteContainer();
 		AutomagicPetiteConfigurator petiteCfg = new AutomagicPetiteConfigurator();
-		petiteCfg.setIncludedPackages(new String[]{"examples.petite.*"});
-		petiteCfg.setExcludedPackages(new String[]{"examples.petite.news.*"});
+		petiteCfg.setIncludedEntries(new String[]{"examples.petite.*"});
+		petiteCfg.setExcludedEntries(new String[]{"examples.petite.news.*"});
 		petiteCfg.configure(petite);
 
 		System.out.println("> Get foo");

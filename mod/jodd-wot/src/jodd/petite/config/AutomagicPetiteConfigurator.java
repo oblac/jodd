@@ -23,7 +23,6 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 	protected final byte[] petiteBeanAnnotationBytes;
 
 	public AutomagicPetiteConfigurator() {
-		this.createInputStream = true;
 		petiteBeanAnnotationBytes = getTypeSignatureBytes(PetiteBean.class);
 	}
 
@@ -68,11 +67,17 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 	 * file content is examined. 
 	 */
 	@Override
-	protected void onClassName(String className, InputStream inputStream) throws Exception {
+	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+		InputStream inputStream = inputStreamProvider.get();
 		if (isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes) == false) {
 			return;
 		}
-		Class<?> beanClass = loadClass(className);
+		Class<?> beanClass;
+		try {
+			beanClass = loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			throw new PetiteException("Unable to load class: " + cnfex, cnfex);
+		}
 		PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
 		if (petiteBean == null) {
 			return;

@@ -16,7 +16,6 @@ import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
 
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 
@@ -81,11 +80,19 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * Parses class name that matches madvoc-related names.
 	 */
 	@Override
-	protected void onClassName(String className, InputStream inputStream) throws Exception{
+	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
 		if (className.endsWith(actionClassSuffix) == true) {
-			onActionClass(className);
+			try {
+				onActionClass(className);
+			} catch (ClassNotFoundException cnfex) {
+				throw new MadvocException("Unable to load Madvoc action class: " + className, cnfex);
+			}
 		} else if (className.endsWith(resultClassSuffix) == true) {
-			onResultClass(className);
+			try {
+				onResultClass(className);
+			} catch (ClassNotFoundException cnfex) {
+				throw new MadvocException("Unable to load Madvoc result class: " + className, cnfex);
+			}
 		}
 	}
 
@@ -109,7 +116,7 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
-	protected void onActionClass(String className) throws Exception {
+	protected void onActionClass(String className) throws ClassNotFoundException {
 		Class<?> actionClass = ClassLoaderUtil.loadClass(className, this.getClass());
 
 		if (checkClass(actionClass) == false) {
@@ -133,7 +140,7 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * Loads madvoc result from founded {@link jodd.madvoc.result.ActionResult} instance.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void onResultClass(String className) throws Exception {
+	protected void onResultClass(String className) throws ClassNotFoundException {
 		Class resultClass = ClassLoaderUtil.loadClass(className, this.getClass());
 		if (resultClass.equals(ActionResult.class)) {
 			return;

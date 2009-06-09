@@ -14,22 +14,6 @@ public abstract class ClasspathScanner extends FindClass {
 
 	// ---------------------------------------------------------------- missing accessors
 
-	public boolean isCreateInputStream() {
-		return createInputStream;
-	}
-
-	public void setCreateInputStream(boolean createInputStream) {
-		this.createInputStream = createInputStream;
-	}
-
-	public boolean isIgnoreExceptions() {
-		return ignoreExceptions;
-	}
-
-	public void setIgnoreExceptions(boolean ignoreExceptions) {
-		this.ignoreExceptions = ignoreExceptions;
-	}
-
 	public boolean isIncludeResources() {
 		return includeResources;
 	}
@@ -38,19 +22,47 @@ public abstract class ClasspathScanner extends FindClass {
 		this.includeResources = includeResources;
 	}
 
+	public ClasspathScanner includeResources(boolean includeResources) {
+		setIncludeResources(includeResources);
+		return this;
+	}
+
+	// ---------------------------------------------------------------- fluent interface
+
+	public ClasspathScanner includeJars(String... jars) {
+		setIncludedJars(jars);
+		return this;
+	}
+
+	public ClasspathScanner excludeJars(String... jars) {
+		setExcludedJars(jars);
+		return this;
+	}
+
+	public ClasspathScanner include(String... entries) {
+		setIncludedEntries(entries);
+		return this;
+	}
+
+	public ClasspathScanner exclude(String... entries) {
+		setExcludedEntries(entries);
+		return this;
+	}
+
+
 	// ---------------------------------------------------------------- public scanners
 
 	/**
 	 * Scans provided classpath.
 	 */
-	public void scan(URL... urls) throws IOException {
+	public void scan(URL... urls) {
 		scanUrls(urls);
 	}
 
 	/**
 	 * Scans full class path.
 	 */
-	public void scan() throws IOException {
+	public void scan() {
 		scanUrls(ClassLoaderUtil.getFullClassPath(ClasspathScanner.class));
 	}
 

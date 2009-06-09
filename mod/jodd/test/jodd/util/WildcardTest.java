@@ -59,4 +59,11 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.match("What's this?", "What*\\?"));
 	}
 
+	public void testMatchWildcard() {
+		assertTrue(Wildcard.match("app.nfo", "app*"));
+		assertFalse(Wildcard.match("\\app.nfo", "app*"));
+		assertTrue(Wildcard.match("\\app.nfo", "\\\\app*"));
+
+	}
+
 }

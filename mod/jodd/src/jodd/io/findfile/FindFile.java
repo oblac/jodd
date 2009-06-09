@@ -200,7 +200,7 @@ public class FindFile {
 	public FindFile searchPath(URL searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
-			throw new IllegalArgumentException("Argument is not a valid file URL: '" + searchPath + "'.");
+			throw new FindFileException("Search path is not a valid file URL: '" + searchPath + "'.");
 		}
 		searchPath(file);
 		return this;
