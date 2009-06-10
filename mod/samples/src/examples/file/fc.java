@@ -18,18 +18,13 @@ public class fc {
 
 		ClasspathScanner cs = new ClasspathScanner() {
 			@Override
-			protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+			protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) throws Exception {
 				InputStream inputStream = inputStreamProvider.get();
-				byte[] bytes = new byte[0];
-				try {
-					bytes = StreamUtil.readAvailableBytes(inputStream);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				System.out.println("---> " + className + "\t\t" + bytes.length);
+				byte[] bytes = StreamUtil.readAvailableBytes(inputStream);
+				System.out.println("---> " + entryName + "\t\t" + bytes.length);
 			}
 		};
-		cs.includeResources(true).scan(new File("d:\\Projects\\java\\apps\\jarminator\\out").toURL());
+		cs.includeResources(true).scan("d:\\Projects\\java\\apps\\jarminator\\out");
 		System.out.println("end");
 	}
 

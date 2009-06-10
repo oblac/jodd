@@ -5,7 +5,7 @@ package jodd.io.findfile;
 import jodd.util.ClassLoaderUtil;
 
 import java.net.URL;
-import java.io.IOException;
+import java.io.File;
 
 /**
  * Public-oriented version of {@link FindClass}, a classpath scanner.
@@ -62,8 +62,22 @@ public abstract class ClasspathScanner extends FindClass {
 	/**
 	 * Scans full class path.
 	 */
-	public void scan() {
+	public void scanFullClasspath() {
 		scanUrls(ClassLoaderUtil.getFullClassPath(ClasspathScanner.class));
+	}
+
+	/**
+	 * Scans provided paths.
+	 */
+	public void scan(File... paths) {
+		scanPaths(paths);
+	}
+
+	/**
+	 * Scans provided paths.
+	 */
+	public void scan(String... paths) {
+		scanPaths(paths);
 	}
 
 }

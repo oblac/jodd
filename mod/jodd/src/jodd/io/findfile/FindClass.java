@@ -121,7 +121,7 @@ public abstract class FindClass {
 	
 	/**
 	 * Scans single URL for classes and jar files.
-	 * Callback {@link #onClassName(String, InputStreamProvider)} is called on
+	 * Callback {@link #onEntryName(String, InputStreamProvider)} is called on
 	 * each class name.
 	 */
 	protected void scanUrl(URL url) {
@@ -129,6 +129,30 @@ public abstract class FindClass {
 		if (file == null) {
 			throw new FindFileException("URL is not a valid file: '" + url + "'.");
 		}
+		scanPath(file);
+	}
+
+
+	protected void scanPaths(File... paths) {
+		for (File path : paths) {
+			scanPath(path);
+		}
+	}
+
+	protected void scanPaths(String... paths) {
+		for (String path : paths) {
+			scanPath(path);
+		}
+	}
+	
+	protected void scanPath(String path) {
+		scanPath(new File(path));
+	}
+	
+	/**
+	 * Scans single path.
+	 */
+	protected void scanPath(File file) {
 		String pathString = file.toString();
 		if (StringUtil.endsWithIgnoreCase(pathString, JAR_FILE_EXT) == true) {
 			if (excludedJars != null) {
@@ -147,9 +171,11 @@ public abstract class FindClass {
 		}
 	}
 
+	// ---------------------------------------------------------------- internal
+
 	/**
 	 * Scans classes inside single JAR archive. Archive is scanned as a zip file.
-	 * @see #onClassName(String, InputStreamProvider)
+	 * @see #onEntryName(String, InputStreamProvider)
 	 */
 	protected void scanJarFile(File file) {
 		ZipFile zipFile = null;
@@ -161,12 +187,18 @@ public abstract class FindClass {
 				String zipEntryName = zipEntry.getName();
 				if (StringUtil.endsWithIgnoreCase(zipEntryName, CLASS_FILE_EXT)) {
 					inputStreamProvider.init(zipFile, zipEntry);
-					scanClassName(zipEntryName, true);
-					inputStreamProvider.closeInputStreamIfOpen();
+					try {
+						scanClassName(zipEntryName, true);
+					} finally {
+						inputStreamProvider.closeInputStreamIfOpen();
+					}
 				} else if (includeResources == true) {
 					inputStreamProvider.init(zipFile, zipEntry);
-					scanClassName(zipEntryName, false);
-					inputStreamProvider.closeInputStreamIfOpen();
+					try {
+						scanClassName(zipEntryName, false);
+					} finally {
+						inputStreamProvider.closeInputStreamIfOpen();
+					}
 				}
 			}
 		} catch (IOException ioex) {
@@ -178,10 +210,9 @@ public abstract class FindClass {
 
 	/**
 	 * Scans single classpath directory.
-	 * @see #onClassName(String, InputStreamProvider)
+	 * @see #onEntryName(String, InputStreamProvider)
 	 */
 	protected void scanClassPath(File root) {
-		//noinspection NonConstantStringShouldBeStringBuffer
 		String rootPath = root.getAbsolutePath();
 		if (rootPath.endsWith(File.separator) == false) {
 			rootPath += File.separatorChar;
@@ -202,14 +233,17 @@ public abstract class FindClass {
 	private void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
 		if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
 			inputStreamProvider.init(file);
-			scanClassName(filePath.substring(rootPath.length()), isClass);
-			inputStreamProvider.closeInputStreamIfOpen();
+			try {
+				scanClassName(filePath.substring(rootPath.length()), isClass);
+			} finally {
+				inputStreamProvider.closeInputStreamIfOpen();
+			}
 		}
 	}
 
 
 	/**
-	 * Scans class name and calls {@link #onClassName(String, InputStreamProvider)} callback.
+	 * Scans class name and calls {@link #onEntryName(String, InputStreamProvider)} callback.
 	 * Strips '.class' from the end and converts all slashes to dots.
 	 */
 	protected void scanClassName(String name, boolean isClass) {
@@ -233,9 +267,9 @@ public abstract class FindClass {
 			}
 		}
 		try {
-			onClassName(className, inputStreamProvider);
+			onEntryName(className, inputStreamProvider);
 		} catch (Exception ex) {
-			throw new RuntimeException("Unable to scan class: '" + name + "'.", ex);
+			throw new FindFileException("Unable to scan class: '" + name + "'.", ex);
 		}
 	}
 
@@ -250,7 +284,7 @@ public abstract class FindClass {
      * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */
-	protected abstract void onClassName(String className, InputStreamProvider inputStreamProvider);
+	protected abstract void onEntryName(String entryName, InputStreamProvider inputStreamProvider) throws Exception;
 
 	// ---------------------------------------------------------------- utilities
 

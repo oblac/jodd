@@ -80,18 +80,18 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * Parses class name that matches madvoc-related names.
 	 */
 	@Override
-	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
-		if (className.endsWith(actionClassSuffix) == true) {
+	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
+		if (entryName.endsWith(actionClassSuffix) == true) {
 			try {
-				onActionClass(className);
+				onActionClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Unable to load Madvoc action class: " + className, cnfex);
+				throw new MadvocException("Unable to load Madvoc action class: " + entryName, cnfex);
 			}
-		} else if (className.endsWith(resultClassSuffix) == true) {
+		} else if (entryName.endsWith(resultClassSuffix) == true) {
 			try {
-				onResultClass(className);
+				onResultClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Unable to load Madvoc result class: " + className, cnfex);
+				throw new MadvocException("Unable to load Madvoc result class: " + entryName, cnfex);
 			}
 		}
 	}

@@ -67,14 +67,14 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 	 * file content is examined. 
 	 */
 	@Override
-	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
 		InputStream inputStream = inputStreamProvider.get();
 		if (isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes) == false) {
 			return;
 		}
 		Class<?> beanClass;
 		try {
-			beanClass = loadClass(className);
+			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
 			throw new PetiteException("Unable to load class: " + cnfex, cnfex);
 		}

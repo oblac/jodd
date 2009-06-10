@@ -68,7 +68,7 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 	 * file content is examined.
 	 */
 	@Override
-	protected void onClassName(String className, InputStreamProvider inputStreamProvider) {
+	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
 		InputStream inputStream = inputStreamProvider.get();
 		if (isTypeSignatureInUse(inputStream, dbTableAnnotationBytes) == false) {
 			return;
@@ -76,9 +76,9 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 
 		Class<?> beanClass;
 		try {
-			beanClass = loadClass(className);
+			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbOrmException("Unable to load class: " + className, cnfex);
+			throw new DbOrmException("Unable to load class: " + entryName, cnfex);
 		}
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
