@@ -11,10 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * A class for preallocating, recycling, and managing JDBC connections.<br><br>
- *
+ * A class for preallocating, recycling, and managing JDBC connections.
+ * <p>
  * It uses threads for opening a new connextion. When no connection
- * available it will wait until a connection is released.<br><br>
+ * available it will wait until a connection is released.
  */
 public class CoreConnectionPool implements Runnable, ConnectionProvider {
 
@@ -89,9 +89,6 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	private ArrayList<Connection> availableConnections, busyConnections;
 	private boolean connectionPending;
 
-	public CoreConnectionPool() {
-	}
-
 	public void init() {
 		try {
 			Class.forName(driver);
@@ -114,6 +111,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 
 	// ---------------------------------------------------------------- get/close
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public synchronized Connection getConnection() {
 		if (availableConnections.isEmpty() == false) {
 			int lastIndex = availableConnections.size() - 1;
@@ -127,7 +127,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			try {
 				isClosed = existingConnection.isClosed();
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to check if database conn is closed.", sex);
+				throw new DbSqlException("Unable to check if database connection is closed.", sex);
 			}
 			if (isClosed) {
 				notifyAll();				 // freed up a spot for anybody waiting
@@ -199,23 +199,11 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	}
 
 
-	/**
-	 * Returns connection number statistics in the following order:
-	 * <ol>
-	 * <li>total connections</li>
-	 * <li>availiable connections</li>
-	 * <li>busy connections</li>
-	 * </ol>
-	 */
-	public synchronized int[] getConnectionsCount() {
-		return new int[] {availableConnections.size() + busyConnections.size(), availableConnections.size(), busyConnections.size()};
-	}
-
 	// ---------------------------------------------------------------- close
 
 	/**
 	 * Close all the connections. Use with caution: be sure no connections are in
-	 * use before calling. Note that you are not <I>required</I> to call this
+	 * use before calling. Note that you are not <i>required</i> to call this
 	 * when done with a ConnectionPool, since connections are guaranteed to be
 	 * closed when garbage collected. But this method gives more control
 	 * regarding when the connections are closed.
@@ -238,4 +226,50 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			// Ignore errors; garbage collect anyhow
 		}
 	}
+
+	// ---------------------------------------------------------------- stats
+
+	/**
+	 * Returns connection stats.
+	 */
+	public synchronized SizeSnapshot getConnectionsCount() {
+		return new SizeSnapshot(availableConnections.size(), busyConnections.size());
+	}
+
+	/**
+	 * Just a statistic class.
+	 */
+	public static class SizeSnapshot {
+		final int totalCount;
+		final int avaliableCount;
+		final int busyCount;
+
+		SizeSnapshot(int avaliableCount, int busyCount) {
+			this.totalCount = avaliableCount + busyCount;
+			this.avaliableCount = avaliableCount;
+			this.busyCount = busyCount;
+		}
+
+		/**
+		 * Returns total number of connections.
+		 */
+		public int getTotalCount() {
+			return totalCount;
+		}
+
+		/**
+		 * Returns number of availiable connections.
+		 */
+		public int getAvaliableCount() {
+			return avaliableCount;
+		}
+
+		/**
+		 * Returns number of busy connections.
+		 */
+		public int getBusyCount() {
+			return busyCount;
+		}
+	}
+
 }

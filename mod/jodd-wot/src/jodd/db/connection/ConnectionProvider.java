@@ -28,7 +28,7 @@ public interface ConnectionProvider {
 	/**
 	 * Dispose of a used connection.
 	 */
-	void closeConnection(Connection conn);
+	void closeConnection(Connection connection);
 
 
 	/**

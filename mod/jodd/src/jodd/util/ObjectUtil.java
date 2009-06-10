@@ -294,7 +294,7 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * Returns true if first parameter contains provided element.
+	 * Returns true if first argument contains provided element.
 s	 */
 	public static boolean containsElement(Object obj, Object element) {
 		if (obj == null) {
@@ -317,7 +317,7 @@ s	 */
 			Iterator iter = (Iterator) obj;
 			while (iter.hasNext()) {
 				Object o = iter.next();
-				if (ObjectUtil.equals(o, element)) {
+				if (equals(o, element)) {
 					return true;
 				}
 			}
@@ -327,7 +327,7 @@ s	 */
 			Enumeration enumeration = (Enumeration) obj;
 			while (enumeration.hasMoreElements()) {
 				Object o = enumeration.nextElement();
-				if (ObjectUtil.equals(o, element)) {
+				if (equals(o, element)) {
 					return true;
 				}
 			}
@@ -337,7 +337,7 @@ s	 */
 			int len = Array.getLength(obj);
 			for (int i = 0; i < len; i++) {
 				Object o = Array.get(obj, i);
-				if (ObjectUtil.equals(o, element)) {
+				if (equals(o, element)) {
 					return true;
 				}
 			}
