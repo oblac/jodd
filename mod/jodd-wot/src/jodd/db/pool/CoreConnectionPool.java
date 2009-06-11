@@ -270,6 +270,13 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		public int getBusyCount() {
 			return busyCount;
 		}
+
+		@Override
+		public String toString() {
+			return "Connections count: {total=" + totalCount +
+					", avaliable=" + avaliableCount +
+					", busy=" + busyCount + '}';
+		}
 	}
 
 }

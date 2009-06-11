@@ -9,7 +9,8 @@ import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 
 /**
- * Returns session from the transaction manager.
+ * Returns session from the db transaction manager.
+ * This session provider is made for {@link jodd.db.jtx.DbJtxTransactionManager}.
  */
 public class DbJtxSessionProvider implements DbSessionProvider {
 
@@ -33,11 +34,21 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx == null) {
 			if (defaultTxMode != null) {
-				DbJtxTransaction dbJtx = (DbJtxTransaction) jtxTxManager.requestTransaction(defaultTxMode);
-				return dbJtx.requestResource();
+				jtx = (DbJtxTransaction) jtxTxManager.requestTransaction(defaultTxMode);
+				return jtx.requestResource();
 			}
 			throw new DbSqlException("No transaction is assigned to this thread and DbSession can't be provided. It seems that transaction manager is not used to begin a transaction.");
 		}
 		return jtx.requestResource();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void closeDbSession() {
+		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
+		if (jtx != null) {
+			jtx.commit();
+		}
 	}
 }

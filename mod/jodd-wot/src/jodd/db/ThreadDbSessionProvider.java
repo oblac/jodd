@@ -38,9 +38,17 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	}
 
 	/**
-	 * Closes db session if assigned to current thread.
+	 * {@inheritDoc}
 	 */
-	public static void closeDbSession() {
+	public void closeDbSession() {
+		closeThreadDbSession();
+	}
+
+
+	/**
+	 * Closes db session
+	 */
+	public static void closeThreadDbSession() {
 		DbSession session = ThreadDbSessionHolder.get();
 		if (session != null) {
 			session.closeSession();

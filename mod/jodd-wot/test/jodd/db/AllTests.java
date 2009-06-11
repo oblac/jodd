@@ -12,6 +12,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(DbQueryTest.class);
 		addTestSuite(DbMiscTest.class);
 		addTestSuite(DbTransactionTest.class);
+		addTestSuite(DbJtxTransactionManagerTest.class);
 	}
 
 	public static Test suite() {
