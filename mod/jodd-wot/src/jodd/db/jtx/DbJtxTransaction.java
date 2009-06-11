@@ -13,8 +13,8 @@ import jodd.db.DbSession;
  */
 public class DbJtxTransaction extends JtxTransaction {
 
-	protected DbJtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode) {
-		super(txManager, mode);
+	protected DbJtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context) {
+		super(txManager, mode, context);
 	}
 
 	public DbSession requestResource() {

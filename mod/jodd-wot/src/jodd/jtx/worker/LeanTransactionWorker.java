@@ -41,12 +41,12 @@ public class LeanTransactionWorker {
 	 *
 	 * @see jodd.jtx.JtxTransactionManager#requestTransaction(jodd.jtx.JtxTransactionMode)
 	 */
-	public JtxTransaction maybeRequestTransaction(JtxTransactionMode txMode) {
+	public JtxTransaction maybeRequestTransaction(JtxTransactionMode txMode, Object context) {
 		if (txMode == null) {
 			return null;
 		}
 		JtxTransaction currentTx = txManager.getTransaction();
-		JtxTransaction requestedTx = txManager.requestTransaction(txMode);
+		JtxTransaction requestedTx = txManager.requestTransaction(txMode, context);
 		if (currentTx == requestedTx) {
 			return null;
 		}

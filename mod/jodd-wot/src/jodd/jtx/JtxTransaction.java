@@ -34,6 +34,7 @@ public class JtxTransaction {
 	protected final JtxTransactionManager txManager;
 	protected final JtxTransactionMode mode;
 	protected final Set<JtxResource> resources;
+	protected final Object context;
 	protected final long deadline;
 	protected JtxStatus status;
 	protected Throwable rollbackCause;
@@ -41,9 +42,10 @@ public class JtxTransaction {
 	/**
 	 * Creates new transaction. Should be invoked by {@link jodd.jtx.JtxTransactionManager}.
 	 */
-	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode) {
+	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context) {
 		this.txManager = txManager;
 		this.mode = mode;
+		this.context = context;
 		this.resources = new HashSet<JtxResource>();
 		this.deadline = mode.getTransactionTimeout() == DEFAULT_TIMEOUT ?
 				DEFAULT_TIMEOUT :
@@ -64,6 +66,13 @@ public class JtxTransaction {
 	 */
 	public JtxTransactionManager getTransactionManager() {
 		return txManager;
+	}
+
+	/**
+	 * Returns transaction context if exist, or <code>null</code>.
+	 */
+	public Object getContext() {
+		return context;
 	}
 
 	// ---------------------------------------------------------------- status

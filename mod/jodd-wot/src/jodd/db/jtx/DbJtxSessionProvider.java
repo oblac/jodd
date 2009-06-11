@@ -34,7 +34,7 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx == null) {
 			if (defaultTxMode != null) {
-				jtx = (DbJtxTransaction) jtxTxManager.requestTransaction(defaultTxMode);
+				jtx = (DbJtxTransaction) jtxTxManager.requestTransaction(defaultTxMode, null);
 				return jtx.requestResource();
 			}
 			throw new DbSqlException("No transaction is assigned to this thread and DbSession can't be provided. It seems that transaction manager is not used to begin a transaction.");

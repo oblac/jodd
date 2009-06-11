@@ -37,15 +37,23 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	 */
 	@Override
 	public DbJtxTransaction requestTransaction(JtxTransactionMode mode) {
-		return (DbJtxTransaction) super.requestTransaction(mode);
+		return (DbJtxTransaction) super.requestTransaction(mode, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DbJtxTransaction requestTransaction(JtxTransactionMode mode, Object context) {
+		return (DbJtxTransaction) super.requestTransaction(mode, context);
 	}
 
 	/**
 	 * Builds new transaction instance.
 	 */
 	@Override
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm) {
-		return new DbJtxTransaction(this, tm);
+	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context) {
+		return new DbJtxTransaction(this, tm, context);
 	}
 
 }
