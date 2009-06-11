@@ -39,10 +39,10 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public DbSession beginTransaction(JtxTransactionMode txMode) {
+	public DbSession beginTransaction(JtxTransactionMode jtxMode) {
 		DbSession session = new DbSession(connectionProvider);
-		if (txMode.isTransactional()) { 
-			session.beginTransaction(new DbTransactionMode(txMode));
+		if (jtxMode.isTransactional()) {
+			session.beginTransaction(new DbTransactionMode(jtxMode));
 		}
 		return session;
 	}

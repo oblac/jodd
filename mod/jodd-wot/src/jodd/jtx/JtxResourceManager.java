@@ -18,7 +18,7 @@ public interface JtxResourceManager<E> {
 	 * Creates new resource and begins new transaction if specified so by
 	 * {@link JtxTransactionMode#isNotTransactional() propagation behavior}.
 	 */
-	E beginTransaction(JtxTransactionMode mode);
+	E beginTransaction(JtxTransactionMode jtxMode);
 
 	/**
 	 * Commits resource and closes it if committing was successful.
