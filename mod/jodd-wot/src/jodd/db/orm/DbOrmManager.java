@@ -47,10 +47,10 @@ public class DbOrmManager {
 	/**
 	 * Specifies default table prefix for all tables. This prefix affect default
 	 * conversions from bean name to table name and vice-versa when no annotations
-	 * are used.
+	 * are used. Prefix is always stored in uppercase.
 	 */
 	public void setTableNamePrefix(String prefix) {
-		this.tableNamePrefix = prefix;
+		this.tableNamePrefix = prefix == null ? null : prefix.toUpperCase();
 	}
 
 	/**
@@ -70,16 +70,17 @@ public class DbOrmManager {
 	}
 
 	/**
-	 * Specifies default table name suffix.
+	 * Specifies default table name suffix. Suffix is always stored in uppercase.
 	 */
-	public void setTableNameSuffix(String tableNameSuffix) {
-		this.tableNameSuffix = tableNameSuffix;
+	public void setTableNameSuffix(String suffix) {
+		this.tableNameSuffix = suffix == null ? null : suffix.toUpperCase();
 	}
 
 	// ---------------------------------------------------------------- registration
 
 	protected String[] primitiveEntitiesPrefixes = new String[] {"java.lang.", "jodd.mutable.",
-			int.class.getName(), long.class.getName()};
+			int.class.getName(), long.class.getName(), float.class.getName(), double.class.getName(),
+			short.class.getName(), boolean.class.getName(), byte.class.getName()};
 
 	public String[] getPrimitiveEntitiesPrefixes() {
 		return primitiveEntitiesPrefixes;

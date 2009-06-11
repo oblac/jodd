@@ -20,7 +20,7 @@ public class JtxTransactionManager {
 	protected boolean validateExistingTransaction;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
-	protected final ThreadLocal<LinkedList<JtxTransaction>> TXSTACK = new ThreadLocal<LinkedList<JtxTransaction>>() {
+	protected final ThreadLocal<LinkedList<JtxTransaction>> txStack = new ThreadLocal<LinkedList<JtxTransaction>>() {
 		@Override
 		protected synchronized LinkedList<JtxTransaction> initialValue() {
 			return new LinkedList<JtxTransaction>();
@@ -86,14 +86,14 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions associated with current thread.
 	 */
 	public int totalThreadTransactions() {
-		return TXSTACK.get().size();
+		return txStack.get().size();
 	}
 
 	/**
 	 * Returns total number of transactions of the specified status associated with current thread.
 	 */
 	public int totalThreadTransactionsWithStatus(JtxStatus status) {
-		LinkedList<JtxTransaction> txlist = TXSTACK.get();
+		LinkedList<JtxTransaction> txlist = txStack.get();
 		int count = 0;
 		for (JtxTransaction tx : txlist) {
 			if (tx.getStatus() == status) {
@@ -115,7 +115,7 @@ public class JtxTransactionManager {
 	 * is associated with current thread.
 	 */
 	public boolean isAssociatedWithThread(JtxTransaction tx) {
-		return TXSTACK.get().contains(tx);
+		return txStack.get().contains(tx);
 	}
 
 	// ---------------------------------------------------------------- thread work
@@ -127,7 +127,7 @@ public class JtxTransactionManager {
 	 */
 	protected boolean removeTransaction(JtxTransaction tx) {
 		totalTransactions--;
-		return TXSTACK.get().remove(tx);
+		return txStack.get().remove(tx);
 	}
 
 
@@ -137,7 +137,7 @@ public class JtxTransactionManager {
 	 * by this transaction manager.
 	 */
 	public JtxTransaction getTransaction() {
-		LinkedList<JtxTransaction> txlist = TXSTACK.get();
+		LinkedList<JtxTransaction> txlist = txStack.get();
 		if (txlist.isEmpty() == true) {
 			return null;
 		}
@@ -149,7 +149,7 @@ public class JtxTransactionManager {
 	 */
 	protected void associateTransaction(JtxTransaction tx) {
 		totalTransactions++;
-		TXSTACK.get().addLast(tx);
+		txStack.get().addLast(tx);
 	}
 
 	protected int totalTransactions;
