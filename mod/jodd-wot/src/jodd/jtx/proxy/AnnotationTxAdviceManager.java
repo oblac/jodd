@@ -3,6 +3,7 @@
 package jodd.jtx.proxy;
 
 import jodd.jtx.JtxTransactionMode;
+import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.worker.LeanTransactionWorker;
 import jodd.introspector.ClassDescriptor;
@@ -26,8 +27,26 @@ public class AnnotationTxAdviceManager {
 
 	protected final boolean isMethodContext;
 
+	// ---------------------------------------------------------------- ctors
+
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager) {
+		this(new LeanTransactionWorker(jtxManager));
+	}
+	
 	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker) {
 		this(jtxWorker, true, null);
+	}
+
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, boolean isMethodContext) {
+		this(new LeanTransactionWorker(jtxManager), isMethodContext);
+	}
+
+	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, boolean isMethodContext) {
+		this(jtxWorker, isMethodContext, null);
+	}
+
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, boolean isMethodContext, JtxTransactionMode defaultTxMode) {
+		this(new LeanTransactionWorker(jtxManager), isMethodContext, defaultTxMode);
 	}
 
 	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, boolean isMethodContext, JtxTransactionMode defaultTxMode) {
@@ -35,6 +54,8 @@ public class AnnotationTxAdviceManager {
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.isMethodContext = isMethodContext;
 	}
+
+	// ---------------------------------------------------------------- methods
 
 	/**
 	 * Returns tx worker.
