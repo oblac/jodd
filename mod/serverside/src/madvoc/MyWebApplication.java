@@ -32,6 +32,7 @@ public class MyWebApplication extends PetiteWebApplication {
 	@Override
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		System.out.println("MyWebApplication.init (" + madvocConfig.getClass().getSimpleName() + ')');
+		super.init(madvocConfig, servletContext);
 		((AdaptiveFileUploadFactory) madvocConfig.getFileUploadFactory()).setBreakOnError(true);
 	}
 

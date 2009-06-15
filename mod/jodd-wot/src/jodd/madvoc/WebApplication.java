@@ -14,10 +14,13 @@ import jodd.madvoc.component.ScopeDataManager;
 import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.config.MadvocConfigurator;
+import jodd.madvoc.injector.ApplicationScopeInjector;
+import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteUtil;
 
 import javax.servlet.ServletContext;
+import java.lang.reflect.Modifier;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -25,6 +28,7 @@ import javax.servlet.ServletContext;
  */
 public class WebApplication {
 
+	public static final String MADVOC_CONTAINER_NAME = "madpc";
 	private final PetiteContainer madpc;
 
 	public WebApplication() {
@@ -36,18 +40,21 @@ public class WebApplication {
 	 */
 	protected PetiteContainer createInternalContainer() {
 		PetiteContainer madpc = new PetiteContainer();
-		madpc.addSelf("madpc");
+		madpc.addSelf(MADVOC_CONTAINER_NAME);
 		return madpc;
 	}
 
 	// ---------------------------------------------------------------- components
 
 	/**
-	 * Resolves the name of the base subclass for provided component.
+	 * Resolves the name of the last base non-abstract subclass for provided component.
 	 */
 	private String resolveBaseComponentName(Class component) {
 		while(true) {
 			Class superClass = component.getSuperclass();
+			if (Modifier.isAbstract(superClass.getModifiers())) {
+				break;
+			}
 			if (superClass.equals(Object.class)) {
 				break;
 			}
@@ -92,12 +99,18 @@ public class WebApplication {
 
 	/**
 	 * Returns registered component. Should be used only in special cases.
-	 * It would be wise to cache returned references.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T getComponent(Class<T> component) {
 		String name = resolveBaseComponentName(component);
 		return (T) madpc.getBean(name);
+	}
+
+	/**
+	 * Returns registered component.
+	 */
+	public Object getComponent(String componentName) {
+		return madpc.getBean(componentName);
 	}
 
 	/**
@@ -109,7 +122,11 @@ public class WebApplication {
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionsManager.class);
+
+		registerComponent(ApplicationScopeInjector.class);
+		registerComponent(MadvocContextScopeInjector.class);
 		registerComponent(ContextInjector.class);
+
 		registerComponent(InterceptorsManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);

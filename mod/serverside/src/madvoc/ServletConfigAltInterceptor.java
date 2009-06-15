@@ -1,9 +1,10 @@
 // Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.madvoc.interceptor;
+package madvoc;
 
 import jodd.madvoc.injector.SessionScopeInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
 /**
  * Alternative servlet configurator that first copies all request parameters to attributes and inject only attributes. 

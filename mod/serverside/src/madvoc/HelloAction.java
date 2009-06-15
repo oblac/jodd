@@ -4,7 +4,6 @@ package madvoc;
 
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.interceptor.ServletConfigAltInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.In;

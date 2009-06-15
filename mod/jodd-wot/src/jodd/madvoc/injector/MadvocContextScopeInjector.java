@@ -7,6 +7,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.component.ScopeDataManager;
 import jodd.bean.BeanUtil;
 import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInject;
 import jodd.servlet.HttpServletRequestMap;
 import jodd.servlet.HttpSessionMap;
 import jodd.servlet.HttpServletContextMap;
@@ -27,6 +28,7 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 	private static final String SESSION_MAP = "sessionMap";
 	private static final String CONTEXT_MAP = "contextMap";
 
+	@PetiteInject
 	public MadvocContextScopeInjector(ScopeDataManager scopeDataManager, PetiteContainer madpc) {
 		super(scopeDataManager);
 		this.madpc = madpc;
