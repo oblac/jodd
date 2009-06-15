@@ -4,12 +4,12 @@ package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
+import jodd.madvoc.injector.RequestScopeInjector;
+import jodd.madvoc.injector.ContextInjector;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.ScopeDataManager;
-import jodd.madvoc.component.ContextInjector;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
@@ -34,18 +34,17 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
-	protected ScopeDataManager scopeDataManager;
+	protected InjectorsManager injectorsManager;
 
-	@In(scope = ScopeType.CONTEXT)
+	protected RequestScopeInjector requestScopeInjector;
+	protected SessionScopeInjector sessionScopeInjector;
 	protected ContextInjector contextInjector;
-
-	protected RequestScopeInjector requestInjector;
-	protected SessionScopeInjector sessionInjector;
 
 	@Override
 	public void init() {
-		requestInjector = new RequestScopeInjector(scopeDataManager);
-		sessionInjector = new SessionScopeInjector(scopeDataManager);
+		requestScopeInjector = injectorsManager.getRequestScopeInjector();
+		sessionScopeInjector = injectorsManager.getSessionScopeInjector();
+		contextInjector = injectorsManager.getContextInjector();
 	}
 
 
@@ -88,8 +87,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	 */
 	protected void inject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		contextInjector.inject(target, servletRequest, servletResponse);
-		sessionInjector.inject(target, servletRequest);
-		requestInjector.inject(target, servletRequest);
+		sessionScopeInjector.inject(target, servletRequest);
+		requestScopeInjector.inject(target, servletRequest);
 	}
 
 	/**
@@ -97,8 +96,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	 */
 	protected void outject(Object target, HttpServletRequest servletRequest) {
 		contextInjector.outject(target, servletRequest);
-		sessionInjector.outject(target, servletRequest);
-		requestInjector.outject(target, servletRequest);
+		sessionScopeInjector.outject(target, servletRequest);
+		requestScopeInjector.outject(target, servletRequest);
 	}
 
 }

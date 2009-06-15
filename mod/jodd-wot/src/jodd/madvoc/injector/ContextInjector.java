@@ -1,26 +1,40 @@
 // Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.madvoc.component;
+package jodd.madvoc.injector;
 
-import jodd.madvoc.injector.MadvocContextScopeInjector;
-import jodd.madvoc.injector.ApplicationScopeInjector;
-import jodd.petite.meta.PetiteInject;
+import jodd.madvoc.component.ScopeDataManager;
+import jodd.petite.PetiteContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
 /**
- * Context injector inject data from application and madvoc context.
- * Adapter for {@link jodd.madvoc.injector.ApplicationScopeInjector} and {@link jodd.madvoc.injector.MadvocContextScopeInjector}
+ * Context injector injects data from application and madvoc context.
+ * It works as an adapter for {@link jodd.madvoc.injector.ApplicationScopeInjector} and {@link jodd.madvoc.injector.MadvocContextScopeInjector}
  */
 public class ContextInjector {
 
-	@PetiteInject
-	protected ApplicationScopeInjector applicationScopeInjector;
+	protected final PetiteContainer madpc;
+	protected final ScopeDataManager scopeDataManager;
 
-	@PetiteInject
+	protected ApplicationScopeInjector applicationScopeInjector;
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
+
+
+	public ContextInjector(ScopeDataManager scopeDataManager, PetiteContainer madpc) {
+		this.scopeDataManager = scopeDataManager;
+		this.madpc = madpc;
+		applicationScopeInjector = new ApplicationScopeInjector(scopeDataManager);
+		madvocContextScopeInjector = new MadvocContextScopeInjector(scopeDataManager, madpc);
+		init();
+	}
+
+	/**
+	 * Additional custom initialization, invoked after manager is ready.
+	 */
+	protected void init() {}
+
 
 	/**
 	 * Performs default injection.

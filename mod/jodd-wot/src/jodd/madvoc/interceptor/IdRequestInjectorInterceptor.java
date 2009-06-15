@@ -7,7 +7,7 @@ import jodd.madvoc.injector.ScopeData;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.component.ScopeDataManager;
+import jodd.madvoc.component.InjectorsManager;
 
 /**
  * Injects only ID request attributes and parameters that ends with '.id'.
@@ -17,13 +17,13 @@ public class IdRequestInjectorInterceptor extends ActionInterceptor {
 	protected static final String ATTR_NAME_ID_SUFFIX = ".id";
 
 	@In(scope = ScopeType.CONTEXT)
-	protected ScopeDataManager scopeDataManager;
+	protected InjectorsManager injectorsManager;
 
 	protected RequestScopeInjector requestInjector;
 
 	@Override
 	public void init() {
-		requestInjector = new RequestScopeInjector(scopeDataManager) {
+		requestInjector = new RequestScopeInjector(injectorsManager.getScopeDataManager()) {
 			@Override
 			protected String getMatchedPropertyName(ScopeData.In in, String attrName) {
 				if (attrName.endsWith(ATTR_NAME_ID_SUFFIX) == false) {
@@ -33,7 +33,6 @@ public class IdRequestInjectorInterceptor extends ActionInterceptor {
 			}
 		};
 	}
-
 
 	/**
 	 * {@inheritDoc}

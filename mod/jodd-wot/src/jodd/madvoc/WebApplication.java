@@ -11,11 +11,9 @@ import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ScopeDataManager;
-import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.component.ActionPathRewriter;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.config.MadvocConfigurator;
-import jodd.madvoc.injector.ApplicationScopeInjector;
-import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteUtil;
 
@@ -122,11 +120,7 @@ public class WebApplication {
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionsManager.class);
-
-		registerComponent(ApplicationScopeInjector.class);
-		registerComponent(MadvocContextScopeInjector.class);
-		registerComponent(ContextInjector.class);
-
+		registerComponent(InjectorsManager.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);

@@ -2,8 +2,6 @@
 
 package madvoc;
 
-import jodd.madvoc.injector.SessionScopeInjector;
-import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
 /**
@@ -14,8 +12,9 @@ public class ServletConfigAltInterceptor extends ServletConfigInterceptor {
 
 	@Override
 	public void init() {
-		requestInjector = new RequestScopeInjector(scopeDataManager).copyParamsToAttributes(true).injectParameters(false);
-		sessionInjector = new SessionScopeInjector(scopeDataManager);
+		requestScopeInjector = injectorsManager.createRequestScopeInjector();
+		requestScopeInjector.setCopyParamsToAttributes(true);
+		requestScopeInjector.setInjectParameters(false);
 	}
 
 }

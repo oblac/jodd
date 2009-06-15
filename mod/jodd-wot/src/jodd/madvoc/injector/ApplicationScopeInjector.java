@@ -4,7 +4,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataManager;
-import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.ServletContext;
 import java.util.Enumeration;
@@ -14,7 +13,6 @@ import java.util.Enumeration;
  */
 public class ApplicationScopeInjector extends ScopeInjector {
 
-	@PetiteInject
 	public ApplicationScopeInjector(ScopeDataManager scopeDataManager) {
 		super(scopeDataManager);
 	}
