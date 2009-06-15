@@ -40,12 +40,6 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
 	}
 
-	public RequestScopeInjector ignoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
-		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
-		return this;
-	}
-
-
 
 	protected boolean injectAttributes = true;
 
@@ -60,12 +54,6 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.injectAttributes = injectAttributes;
 	}
 
-	public RequestScopeInjector injectAttributes(boolean injectAttributes) {
-		this.injectAttributes = injectAttributes;
-		return this;
-	}
-
-
 
 	protected boolean injectParameters = true;
 
@@ -77,10 +65,6 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.injectParameters = injectParameters;
 	}
 
-	public RequestScopeInjector injectParameters(boolean injectParameters) {
-		this.injectParameters = injectParameters;
-		return this;
-	}
 
 	protected boolean copyParamsToAttributes;
 
@@ -97,28 +81,16 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.copyParamsToAttributes = copyParamsToAttributes;
 	}
 
-	public RequestScopeInjector copyParamsToAttributes(boolean copyParamsToAttributes) {
-		this.copyParamsToAttributes = copyParamsToAttributes;
-		return this;
-	}
-
-
 	protected boolean trimParams;
 
 	public boolean isTrimParams() {
 		return trimParams;
 	}
-
 	/**
 	 * Specifies if parameters has to be trimmed before injection.
 	 */
 	public void setTrimParams(boolean trimParams) {
 		this.trimParams = trimParams;
-	}
-
-	public RequestScopeInjector trimParams(boolean trimParams) {
-		this.trimParams = trimParams;
-		return this;
 	}
 
 	// ---------------------------------------------------------------- inject
