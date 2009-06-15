@@ -8,7 +8,6 @@ import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteInitMethod;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -28,17 +27,6 @@ public class InterceptorsManager {
 	public InterceptorsManager() {
 		interceptors = new HashMap<Class<? extends ActionInterceptor>, ActionInterceptor>();
 	}
-
-	@PetiteInitMethod(order = 1)
-	void interceptorsManagerInit() {
-		init();
-	}
-
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
 
 	// ---------------------------------------------------------------- container
 

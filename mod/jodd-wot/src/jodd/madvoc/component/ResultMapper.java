@@ -3,7 +3,6 @@
 package jodd.madvoc.component;
 
 import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteInitMethod;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.util.StringPool;
@@ -15,17 +14,6 @@ public class ResultMapper {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
-
-	@PetiteInitMethod(order = 1)
-	void resultMapperInit() {
-		init();
-	}
-
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
 
 	/**
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.

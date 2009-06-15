@@ -5,7 +5,6 @@ package jodd.io.findfile;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 import jodd.util.ArraysUtil;
-import jodd.util.Provider;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.io.ZipUtil;
@@ -30,31 +29,35 @@ public abstract class FindClass {
 
 	private static final String CLASS_FILE_EXT = ".class";
 	private static final String JAR_FILE_EXT = ".jar";
-	private final InputStreamProvider inputStreamProvider;
-
-	protected FindClass() {
-		inputStreamProvider = new InputStreamProvider();
-	}
 
 	// ---------------------------------------------------------------- excluded jars
 
 	/**
-	 * Array of jar file name patterns that are excluded from the search.
-	 * By default java runtime libraries are excluded.
+	 * Array of system jars that are excluded from the search.
+	 * It consist of java runtime libraries.
 	 */
-	protected String[] excludedJars = new String[] {
+	protected String[] systemJars = new String[] {
 			"*/jre/lib/*.jar",
 			"*/jre/lib/ext/*.jar",
 			"*/tools.jar",
 			"*/j2ee.jar"
 	};
 
+	public String[] getSystemJars() {
+		return systemJars;
+	}
+
+	public void setSystemJars(String[] systemJars) {
+		this.systemJars = systemJars;
+	}
+
+	protected String[] excludedJars;
 
 	public String[] getExcludedJars() {
 		return excludedJars;
 	}
 
-	public void setExcludedJars(String[] excludedJars) {
+	public void setExcludedJars(String... excludedJars) {
 		this.excludedJars = excludedJars;
 	}
 
@@ -68,7 +71,7 @@ public abstract class FindClass {
 		return includedJars;
 	}
 
-	public void setIncludedJars(String[] includedJars) {
+	public void setIncludedJars(String... includedJars) {
 		this.includedJars = includedJars;
 	}
 
@@ -83,7 +86,7 @@ public abstract class FindClass {
 	/**
 	 * Sets included set of names that will be considered during configuration,
 	 */
-	public void setIncludedEntries(String[] includedEntries) {
+	public void setIncludedEntries(String... includedEntries) {
 		this.includedEntries = includedEntries;
 	}
 
@@ -97,7 +100,7 @@ public abstract class FindClass {
 	/**
 	 * Sets excluded names that narrows included set of packages.
 	 */
-	public void setExcludedEntries(String[] excludedEntries) {
+	public void setExcludedEntries(String... excludedEntries) {
 		this.excludedEntries = excludedEntries;
 	}
 
@@ -108,6 +111,10 @@ public abstract class FindClass {
 	 */
 	protected boolean includeResources;
 
+	/**
+	 * If set to <code>true</code> exceptions for entry scans are ignored.
+	 */
+	protected boolean ignoreException;
 
 	/**
 	 * Scans several URLs. If (#ignoreExceptions} is set, exceptions
@@ -121,7 +128,7 @@ public abstract class FindClass {
 	
 	/**
 	 * Scans single URL for classes and jar files.
-	 * Callback {@link #onEntryName(String, InputStreamProvider)} is called on
+	 * Callback {@link #onEntry(EntryData)} is called on
 	 * each class name.
 	 */
 	protected void scanUrl(URL url) {
@@ -148,6 +155,28 @@ public abstract class FindClass {
 	protected void scanPath(String path) {
 		scanPath(new File(path));
 	}
+
+	/**
+	 * Returns <code>true</code> if some JAR file has to be accepted.
+	 */
+	protected boolean acceptJar(String path) {
+		if (systemJars != null) {
+			if (Wildcard.matchOne(path, systemJars) != -1) {
+				return false;
+			}
+		}
+		if (excludedJars != null) {
+			if (Wildcard.matchOne(path, excludedJars) != -1) {
+				return false;
+			}
+		}
+		if (includedJars != null) {
+			if (Wildcard.matchOne(path, includedJars) == -1) {
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	/**
 	 * Scans single path.
@@ -155,15 +184,8 @@ public abstract class FindClass {
 	protected void scanPath(File file) {
 		String pathString = file.toString();
 		if (StringUtil.endsWithIgnoreCase(pathString, JAR_FILE_EXT) == true) {
-			if (excludedJars != null) {
-				if (Wildcard.matchOne(pathString, excludedJars) != -1) {
-					return;
-				}
-			}
-			if (includedJars != null) {
-				if (Wildcard.matchOne(pathString, includedJars) == -1) {
-					return;
-				}
+			if (acceptJar(pathString) == false) {
+				return;
 			}
 			scanJarFile(file);
 		} else if (file.isDirectory() == true) {
@@ -175,42 +197,53 @@ public abstract class FindClass {
 
 	/**
 	 * Scans classes inside single JAR archive. Archive is scanned as a zip file.
-	 * @see #onEntryName(String, InputStreamProvider)
+	 * @see #onEntry(EntryData)
 	 */
 	protected void scanJarFile(File file) {
-		ZipFile zipFile = null;
+		ZipFile zipFile;
 		try {
 			zipFile = new ZipFile(file);
-			Enumeration entries = zipFile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry zipEntry = (ZipEntry) entries.nextElement();
-				String zipEntryName = zipEntry.getName();
+		} catch (IOException ioex) {
+			if (ignoreException == false) {
+				throw new FindFileException("Unable to work with zip file '" + file.getName() + "'.", ioex);
+			}
+			return;
+		}
+		Enumeration entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+			String zipEntryName = zipEntry.getName();
+			try {
 				if (StringUtil.endsWithIgnoreCase(zipEntryName, CLASS_FILE_EXT)) {
-					inputStreamProvider.init(zipFile, zipEntry);
+					String entryName = prepareEntryName(zipEntryName, true);
+					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
 					try {
-						scanClassName(zipEntryName, true);
+						scanEntry(entryData);
 					} finally {
-						inputStreamProvider.closeInputStreamIfOpen();
+						entryData.closeInputStreamIfOpen();
 					}
 				} else if (includeResources == true) {
-					inputStreamProvider.init(zipFile, zipEntry);
+					String entryName = prepareEntryName(zipEntryName, false);
+					EntryData entryData = new EntryData(entryName, zipFile, zipEntry);
 					try {
-						scanClassName(zipEntryName, false);
+						scanEntry(entryData);
 					} finally {
-						inputStreamProvider.closeInputStreamIfOpen();
+						entryData.closeInputStreamIfOpen();
 					}
 				}
+			} catch (RuntimeException rex) {
+				if (ignoreException == false) {
+					ZipUtil.close(zipFile);
+					throw rex;
+				}
 			}
-		} catch (IOException ioex) {
-			throw new FindFileException("Unable to work with zip file '" + file.getName() + "'.", ioex);
-		} finally {
-			ZipUtil.close(zipFile);
 		}
+		ZipUtil.close(zipFile);
 	}
 
 	/**
 	 * Scans single classpath directory.
-	 * @see #onEntryName(String, InputStreamProvider)
+	 * @see #onEntry(EntryData)
 	 */
 	protected void scanClassPath(File root) {
 		String rootPath = root.getAbsolutePath();
@@ -222,54 +255,79 @@ public abstract class FindClass {
 		File file;
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();
-			if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
-				scanClassFile(filePath, rootPath, file, true);
-			} else if (includeResources == true) {
-				scanClassFile(filePath, rootPath, file, false);
+			try {
+				if (StringUtil.endsWithIgnoreCase(filePath, CLASS_FILE_EXT)) {
+					scanClassFile(filePath, rootPath, file, true);
+				} else if (includeResources == true) {
+					scanClassFile(filePath, rootPath, file, false);
+				}
+			} catch (RuntimeException rex) {
+				if (ignoreException == false) {
+					throw rex;
+				}
 			}
 		}
 	}
 
-	private void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
+	protected void scanClassFile(String filePath, String rootPath, File file, boolean isClass) {
 		if (StringUtil.startsWithIgnoreCase(filePath, rootPath) == true) {
-			inputStreamProvider.init(file);
+			String entryName = prepareEntryName(filePath.substring(rootPath.length()), isClass);
+			EntryData entryData = new EntryData(entryName, file);
 			try {
-				scanClassName(filePath.substring(rootPath.length()), isClass);
+				scanEntry(entryData);
 			} finally {
-				inputStreamProvider.closeInputStreamIfOpen();
+				entryData.closeInputStreamIfOpen();
 			}
 		}
+	}
+
+	/**
+	 * Prepares resource and class names. For classes, it strips '.class' from the end and converts
+	 * all (back)slashes to dots. For resources, it replaces all backslashes to slashes.
+	 */
+	protected String prepareEntryName(String name, boolean isClass) {
+		String entryName = name;
+		if (isClass) {
+			entryName = name.substring(0, name.length() - 6);		// 6 == ".class".length()
+			entryName = StringUtil.replaceChar(entryName, '/', '.');
+			entryName = StringUtil.replaceChar(entryName, '\\', '.');
+		} else {
+			entryName = '/' + StringUtil.replaceChar(entryName, '\\', '/');
+		}
+		return entryName;
+	}
+
+	/**
+	 * Returns <code>true</code> if some entry name has to be accepted.
+	 * @see #prepareEntryName(String, boolean)
+	 * @see #scanEntry(EntryData) 
+	 */
+	protected boolean acceptEntry(String entryName) {
+		if (excludedEntries != null) {
+			if (Wildcard.matchOne(entryName, excludedEntries) != -1) {
+				return false;
+			}
+		}
+		if (includedEntries != null) {
+			if (Wildcard.matchOne(entryName, includedEntries) == -1) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 
 	/**
-	 * Scans class name and calls {@link #onEntryName(String, InputStreamProvider)} callback.
-	 * Strips '.class' from the end and converts all slashes to dots.
+	 * If entry name is {@link #acceptEntry(String) accepted} invokes {@link #onEntry(EntryData)} a callback}.
 	 */
-	protected void scanClassName(String name, boolean isClass) {
-		String className = name;
-		if (isClass) {
-			className = name.substring(0, name.length() - 6);		// 6 == ".class".length()
-			className = StringUtil.replaceChar(className, '/', '.');
-			className = StringUtil.replaceChar(className, '\\', '.');
-		} else {
-			className = '\\' + className;
-		}
-
-		if (excludedEntries != null) {
-			if (Wildcard.matchOne(className, excludedEntries) != -1) {
-				return;
-			}
-		}
-		if (includedEntries != null) {
-			if (Wildcard.matchOne(className, includedEntries) == -1) {
-				return;
-			}
+	protected void scanEntry(EntryData entryData) {
+		if (acceptEntry(entryData.getName()) == false) {
+			return;
 		}
 		try {
-			onEntryName(className, inputStreamProvider);
+			onEntry(entryData);
 		} catch (Exception ex) {
-			throw new FindFileException("Unable to scan class: '" + name + "'.", ex);
+			throw new FindFileException("Unable to scan entry: '" + entryData + "'.", ex);
 		}
 	}
 
@@ -284,7 +342,7 @@ public abstract class FindClass {
      * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */
-	protected abstract void onEntryName(String entryName, InputStreamProvider inputStreamProvider) throws Exception;
+	protected abstract void onEntry(EntryData entryData) throws Exception;
 
 	// ---------------------------------------------------------------- utilities
 
@@ -318,19 +376,22 @@ public abstract class FindClass {
 	/**
 	 * Provides input stream on demand. Input stream is not open until get().
 	 */
-	protected static class InputStreamProvider implements Provider<InputStream> {
+	protected static class EntryData {
 
-		private File file;
-		private ZipFile zipFile;
-		private ZipEntry zipEntry;
+		private final File file;
+		private final ZipFile zipFile;
+		private final ZipEntry zipEntry;
+		private final String name;
 
-		void init(ZipFile zipFile, ZipEntry zipEntry) {
+		EntryData(String name, ZipFile zipFile, ZipEntry zipEntry) {
+			this.name = name;
 			this.zipFile = zipFile;
 			this.zipEntry = zipEntry;
 			this.file = null;
 			inputStream = null;
 		}
-		void init(File file) {
+		EntryData(String name, File file) {
+			this.name = name;
 			this.file = file;
 			this.zipEntry = null;
 			this.zipFile = null;
@@ -340,9 +401,33 @@ public abstract class FindClass {
 		private InputStream inputStream;
 
 		/**
+		 * Returns entry name.
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * Returns <code>true</code> if archive.
+		 */
+		public boolean isArchive() {
+			return zipFile != null;
+		}
+
+		/**
+		 * Returns archive name or <code>null</code> if entry is not inside archived file.
+		 */
+		public String getArchiveName() {
+			if (zipFile != null) {
+				return zipFile.getName(); 
+			}
+			return null;
+		}
+
+		/**
 		 * Opens zip entry or plain file and returns its input stream.
 		 */
-		public InputStream get() {
+		public InputStream openInputStream() {
 			if (zipFile != null) {
 				try {
 					inputStream = zipFile.getInputStream(zipEntry);
@@ -369,6 +454,11 @@ public abstract class FindClass {
 			}
 			StreamUtil.close(inputStream);
 			inputStream = null;
+		}
+
+		@Override
+		public String toString() {
+			return "EntryData{" + name + '\'' +'}';
 		}
 	}
 }

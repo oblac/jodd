@@ -4,7 +4,6 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
-import jodd.petite.meta.PetiteInitMethod;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -17,17 +16,6 @@ public class ResultsManager {
 	public ResultsManager() {
 		this.results = new HashMap<String, ActionResult>();
 	}
-
-	@PetiteInitMethod(order = 1)
-	void resultsManagerInit() {
-		init();
-	}
-
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
 
 	// ---------------------------------------------------------------- container
 

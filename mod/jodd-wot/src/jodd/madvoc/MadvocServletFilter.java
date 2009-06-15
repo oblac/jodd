@@ -9,6 +9,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.MadvocController;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.PropertiesUtil;
 import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +21,16 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Initializes and configures Madvoc and passes requests to {@link jodd.madvoc.component.MadvocController}.
  */
 public class MadvocServletFilter implements Filter {
+
+	public static final String PARAM_MADVOC_WEBAPP = "madvoc.webapp";
+	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
+	public static final String PARAM_MADVOC_PARAMS = "madvoc.params";
 
 	protected FilterConfig filterConfig;
 	protected WebApplication webapp;
@@ -36,7 +42,7 @@ public class MadvocServletFilter implements Filter {
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.filterConfig = filterConfig;
-		webapp = loadWebApplication(filterConfig.getInitParameter("madvoc.webapp"));
+		webapp = loadWebApplication(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
 
 		// configure
 		webapp.registerMadvocComponents();
@@ -45,6 +51,11 @@ public class MadvocServletFilter implements Filter {
 			throw new MadvocException("No Madvoc configuration component found.");
 		}
 		webapp.init(madvocConfig, filterConfig.getServletContext());
+
+		// params
+		Properties params = loadMadvocParams(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
+		webapp.initParams(params);
+
 		// actions
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		if (actionsManager == null) {
@@ -59,7 +70,7 @@ public class MadvocServletFilter implements Filter {
 		webapp.initResults(resultsManager);
 
 		// configure with external configurator
-		MadvocConfigurator configurator = loadMadvocConfig(filterConfig.getInitParameter("madvoc.configurator"));
+		MadvocConfigurator configurator = loadMadvocConfig(filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR));
 		webapp.configure(configurator);
 
 		// prepare web application
@@ -94,10 +105,10 @@ public class MadvocServletFilter implements Filter {
 			webApp = (WebApplication) clazz.newInstance();
 		} catch (ClassCastException ccex) {
 			ccex.printStackTrace();
-			throw new ServletException("Class '" + className + "' is not a Madvoc web application.");
+			throw new ServletException("Class '" + className + "' is not a Madvoc web application.", ccex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ServletException("Unable to load Madvoc web application class '" + className + "': " + ex.toString());
+			throw new ServletException("Unable to load Madvoc web application class '" + className + "': " + ex.toString(), ex);
 		}
 		return webApp;
 	}
@@ -116,12 +127,27 @@ public class MadvocServletFilter implements Filter {
 			configurator = (MadvocConfigurator) clazz.newInstance();
 		} catch (ClassCastException ccex) {
 			ccex.printStackTrace();
-			throw new ServletException("Class '" + className + "' is not a Madvoc configurator.");
+			throw new ServletException("Class '" + className + "' is not a Madvoc configurator.", ccex);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ServletException("Unable to load Madvoc configurator class '" + className + "': " + ex.toString());
+			throw new ServletException("Unable to load Madvoc configurator class '" + className + "': " + ex.toString(), ex);
 		}
 		return configurator;
+	}
+
+	/**
+	 * Loads parameters from properties files.
+	 */
+	protected Properties loadMadvocParams(String pattern) throws ServletException {
+		if (pattern == null) {
+			return new Properties();
+		}
+		try {
+			return PropertiesUtil.createFromClasspath(pattern);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ServletException("Unable to load Madvoc parameters from: :" + pattern + ".properties': " + ex.toString(), ex);
+		}
 	}
 
 	// ---------------------------------------------------------------- do filter

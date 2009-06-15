@@ -3,6 +3,7 @@
 package jodd.util;
 
 import jodd.io.StreamUtil;
+import jodd.io.findfile.ClasspathScanner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -160,5 +161,36 @@ public class PropertiesUtil {
 		}
 		return result;
 	}
+
+
+	// ---------------------------------------------------------------- load from classpath
+
+	/**
+	 * Creates properties from classpath.
+	 * @see #loadFromClasspath(java.util.Properties, String)
+	 */
+	public static Properties createFromClasspath(String rootTemplate) {
+		Properties p = new Properties();
+		return loadFromClasspath(p, rootTemplate);
+	}
+
+	/**
+	 * Loads properties from classpath file(s). Properties are specified using
+	 * wildcards. 
+	 */
+	public static Properties loadFromClasspath(final Properties p, String rootTemplate) {
+		ClasspathScanner scanner = new ClasspathScanner() {
+			@Override
+			protected void onEntry(EntryData entryData) throws IOException {
+				p.load(entryData.openInputStream());
+			}
+		};
+		scanner.includeResources(true).
+				ignoreException(true).
+				include(rootTemplate).
+				scanFullClasspath();
+		return p;
+	}
+
 
 }

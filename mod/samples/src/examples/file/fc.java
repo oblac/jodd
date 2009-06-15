@@ -2,14 +2,10 @@
 
 package examples.file;
 
-import jodd.io.findfile.FindClass;
 import jodd.io.findfile.ClasspathScanner;
-import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
-import java.io.File;
 import java.io.InputStream;
-import java.io.IOException;
 
 public class fc {
 
@@ -18,13 +14,13 @@ public class fc {
 
 		ClasspathScanner cs = new ClasspathScanner() {
 			@Override
-			protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) throws Exception {
-				InputStream inputStream = inputStreamProvider.get();
+			protected void onEntry(EntryData entryData) throws Exception {
+				InputStream inputStream = entryData.openInputStream();
 				byte[] bytes = StreamUtil.readAvailableBytes(inputStream);
-				System.out.println("---> " + entryName + "\t\t" + bytes.length);
+				System.out.println("---> " + entryData.getName() + ':' + entryData.getArchiveName() + "\t\t" + bytes.length);
 			}
 		};
-		cs.includeResources(true).scan("d:\\Projects\\java\\apps\\jarminator\\out");
+		cs.includeResources(true).ignoreException(true).scan("foo.jar", "d:\\Projects\\java\\apps\\jarminator\\out");
 		System.out.println("end");
 	}
 

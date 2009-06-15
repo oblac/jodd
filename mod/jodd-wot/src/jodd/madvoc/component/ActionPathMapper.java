@@ -28,7 +28,7 @@ public class ActionPathMapper {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	@PetiteInitMethod(order = 1)
+	@PetiteInitMethod(order = 1, firstOff = true)
 	void actionPathMapperInit() {
 		String[] d = madvocConfig.getDefaultActionMethodNames();
 		String method1 = null;
@@ -43,15 +43,9 @@ public class ActionPathMapper {
 		}
 		defaultMethodName1 = method1 == null ? FALLBACK_ACTION_METHOD_NAME : method1;
 		defaultMethodName2 = method2 == null ? defaultMethodName1 : method2;
-		init();
 	}
 
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
-	// ---------------------------------------------------------------- 
+	// ----------------------------------------------------------------
 
 	/**
 	 * Lookups action configuration from action path and resolves

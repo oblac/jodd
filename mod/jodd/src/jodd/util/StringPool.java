@@ -55,9 +55,6 @@ public interface StringPool {
 	String ISO_8859_1       = "ISO-8859-1";
 	String Y                = "y";
 	String YES              = "yes";
-
-
 	String ONE 				= "1";
 	String ZERO				= "0";
-
 }

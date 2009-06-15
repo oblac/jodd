@@ -68,8 +68,9 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 	 * file content is examined.
 	 */
 	@Override
-	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
-		InputStream inputStream = inputStreamProvider.get();
+	protected void onEntry(EntryData entryData) {
+		String entryName = entryData.getName();
+		InputStream inputStream = entryData.openInputStream();
 		if (isTypeSignatureInUse(inputStream, dbTableAnnotationBytes) == false) {
 			return;
 		}

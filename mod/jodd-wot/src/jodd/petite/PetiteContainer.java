@@ -150,11 +150,14 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	/**
 	 * Invokes all init methods.
 	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def) {
+	protected void invokeInitMethods(Object bean, BeanDefinition def, Boolean fireFirstOff) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteManager.resolveInitMethods(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
+			if ((fireFirstOff != null) && (fireFirstOff.booleanValue() != initMethod.firstOff)) {
+				continue;
+			}
 			try {
 				initMethod.method.invoke(bean);
 			} catch (Exception ex) {
@@ -177,7 +180,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 			try {
 				BeanUtil.setDeclaredProperty(bean, destination, value);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to set parameter: '" + param + "' to bean '" + def.name + "'.");
+				throw new PetiteException("Unable to set parameter: '" + param + "' to bean '" + def.name + "'.", ex);
 			}
 		}
 	}
@@ -236,8 +239,9 @@ public class PetiteContainer extends PetiteContainerRegistry {
 			// Create new bean in the scope
 			bean = newBeanInstance(def, acquiredBeans);
 			wireBean(bean, def, acquiredBeans);
+			invokeInitMethods(bean, def, Boolean.TRUE);
 			injectParams(bean, def);
-			invokeInitMethods(bean, def);
+			invokeInitMethods(bean, def, Boolean.FALSE);
 			def.scopeRegister(bean);
 		}
 		return bean;
@@ -262,7 +266,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
 		wireBean(bean, def, new HashMap<String, Object>());
 		if (init) {
-			invokeInitMethods(bean,  def);
+			invokeInitMethods(bean,  def, null);
 		}
 	}
 
@@ -288,7 +292,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		Object bean = newBeanInstance(def, acquiredBeans);
 		wireBean(bean, def, acquiredBeans);
 		if (init) {
-			invokeInitMethods(bean, def);
+			invokeInitMethods(bean, def, null);
 		}
 		return (E) bean;
 	}
@@ -313,8 +317,9 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		acquiredBeans.put(name, bean);
 		wireBean(bean, def, acquiredBeans);
+		invokeInitMethods(bean, def, Boolean.TRUE);
 		injectParams(bean, def);
-		invokeInitMethods(bean, def);
+		invokeInitMethods(bean, def, Boolean.FALSE);
 		def.scopeRegister(bean);
 	}
 
@@ -352,7 +357,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		try {
 			BeanUtil.setDeclaredProperty(bean, name.substring(ndx + 1), value);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: '" + name);
+			throw new PetiteException("Unable to set bean property: '" + name, ex);
 		}
 	}
 
@@ -372,7 +377,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		try {
 			return BeanUtil.getDeclaredProperty(bean, name.substring(ndx + 1));
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: '" + name);
+			throw new PetiteException("Unable to set bean property: '" + name, ex);
 		}
 	}
 

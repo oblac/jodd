@@ -9,6 +9,7 @@ import jodd.petite.PetiteContainer;
 import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
 
 import javax.servlet.ServletContext;
+import java.util.Properties;
 
 /**
  * Custom web application.
@@ -34,6 +35,13 @@ public class MyWebApplication extends PetiteWebApplication {
 		System.out.println("MyWebApplication.init (" + madvocConfig.getClass().getSimpleName() + ')');
 		super.init(madvocConfig, servletContext);
 		((AdaptiveFileUploadFactory) madvocConfig.getFileUploadFactory()).setBreakOnError(true);
+	}
+
+
+	@Override
+	protected void initParams(Properties properties) {
+		System.out.println("MyWebApplication.initParams " + properties.size());
+		super.initParams(properties);
 	}
 
 	@Override

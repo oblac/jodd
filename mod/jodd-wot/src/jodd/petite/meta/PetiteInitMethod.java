@@ -19,8 +19,15 @@ import java.lang.annotation.ElementType;
 public @interface PetiteInitMethod {
 
 	/**
-	 * Indicates the order of init method. Order number of first methods starts from 0.
-	 * Order number of last methods starts from 0 to negatives.
+	 * Indicates the order of init method. Order number of first methods starts from 1.
+	 * Order number of last methods starts from -1 to negatives. 0 is default and
+	 * marks 'in between' methods: methods that executes after first ones and before last ones.
 	 */
 	int order() default 0;
+
+	/**
+	 * Indicates that method will be initialized right after the wiring and <b>before</b>
+	 * parameters setup.
+	 */
+	boolean firstOff() default false;
 }

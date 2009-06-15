@@ -228,14 +228,33 @@ public class PetiteManager {
 	}
 
 	public InitMethodPoint[] defineInitMethods(Class type, String[] methodNames) {
+		return defineInitMethods(type, null, methodNames);
+	}
+
+	public InitMethodPoint[] defineInitMethods(Class type, String[] beforeMethodNames, String[] afterMethodNames) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		InitMethodPoint[] methods = new InitMethodPoint[methodNames.length];
-		for (int i = 0; i < methodNames.length; i++) {
-			Method m = cd.getMethod(methodNames[i], ReflectUtil.NO_PARAMETERS, true);
+		if (beforeMethodNames == null) {
+			beforeMethodNames = new String[0];
+		}
+		if (afterMethodNames == null) {
+			afterMethodNames = new String[0];
+		}
+		int total = beforeMethodNames.length + afterMethodNames.length;
+		InitMethodPoint[] methods = new InitMethodPoint[total];
+		int i;
+		for (i = 0; i < beforeMethodNames.length; i++) {
+			Method m = cd.getMethod(beforeMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
 			if (m == null) {
-				throw new PetiteException("Init method '" + type.getName() + '#' + methodNames[i] + "()' not found.");
+				throw new PetiteException("Init method '" + type.getName() + '#' + beforeMethodNames[i] + "()' not found.");
 			}
-			methods[i] = new InitMethodPoint(m);
+			methods[i] = new InitMethodPoint(m, i, true);
+		}
+		for (int j = 0; j < afterMethodNames.length; j++) {
+			Method m = cd.getMethod(afterMethodNames[j], ReflectUtil.NO_PARAMETERS, true);
+			if (m == null) {
+				throw new PetiteException("Init method '" + type.getName() + '#' + afterMethodNames[j] + "()' not found.");
+			}
+			methods[i + j] = new InitMethodPoint(m, i + j, true);
 		}
 		return methods;
 	}

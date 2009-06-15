@@ -259,20 +259,28 @@ public abstract class PetiteContainerRegistry {
 	// ---------------------------------------------------------------- initialization methods
 
 	/**
-	 * Manually register init methods.
+	 * Manually registers init methods.
 	 */
 	public void registerInitMethods(String beanName, String... methodNames) {
-		registerPetiteInitMethods(beanName, methodNames);
+		registerPetiteInitMethods(beanName, null, methodNames);
+	}
+	/**
+	 * Manually registers init methods.
+	 */
+	public void registerInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
+		registerPetiteInitMethods(beanName, beforeMethodNames, afterMethodNames);
 	}
 
 	/**
 	 * Single point of init method registration.
 	 */
-	protected void registerPetiteInitMethods(String beanName, String... methodNames) {
+	protected void registerPetiteInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		InitMethodPoint[] methods = petiteManager.defineInitMethods(beanDefinition.type, methodNames);
+		InitMethodPoint[] methods = petiteManager.defineInitMethods(beanDefinition.type, beforeMethodNames, afterMethodNames);
 		beanDefinition.addInitMethodPoints(methods);
 	}
+
+
 
 
 	// ---------------------------------------------------------------- remove

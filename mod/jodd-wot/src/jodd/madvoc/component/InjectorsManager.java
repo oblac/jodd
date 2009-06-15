@@ -26,18 +26,19 @@ public class InjectorsManager {
 	protected ContextInjector contextInjector;
 
 
-	@PetiteInitMethod(order = 1)
+	@PetiteInitMethod(order = 1, firstOff = true)
 	void servletInjectorInit() {
-		requestScopeInjector = new RequestScopeInjector(scopeDataManager);
-		sessionScopeInjector = new SessionScopeInjector(scopeDataManager);
-		contextInjector = new ContextInjector(scopeDataManager, madpc);
-		init();
+		createInjectors();
 	}
 
 	/**
-	 * Additional custom initialization, invoked after manager is ready.
+	 * Creates all injectors.
 	 */
-	protected void init() {}
+	protected void createInjectors() {
+		requestScopeInjector = createRequestScopeInjector();
+		sessionScopeInjector = createSessionScopeInjector();
+		contextInjector = createContextInjector();
+	}
 
 	/**
 	 * Returns scope data manager used for creating injectors.
@@ -86,5 +87,12 @@ public class InjectorsManager {
 	public SessionScopeInjector createSessionScopeInjector() {
 		return new SessionScopeInjector(scopeDataManager);
 	}
-	
+
+	/**
+	 * Creates new contextinjector.
+	 */
+	public ContextInjector createContextInjector() {
+		return new ContextInjector(scopeDataManager, madpc);
+	}
+
 }

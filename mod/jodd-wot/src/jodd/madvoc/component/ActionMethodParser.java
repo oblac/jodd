@@ -10,7 +10,6 @@ import jodd.madvoc.ActionConfig;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
 import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteInitMethod;
 
 import java.lang.reflect.Method;
 
@@ -32,18 +31,6 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
-
-	@PetiteInitMethod(order = 1)
-	void actionMethodParserInit() {
-		init();
-	}
-
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
-
 
 	// ---------------------------------------------------------------- 
 

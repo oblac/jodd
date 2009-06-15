@@ -5,7 +5,6 @@ package jodd.madvoc.component;
 import jodd.util.ClassLoaderUtil;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteInitMethod;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocException;
 
@@ -29,17 +28,6 @@ public class ActionsManager {
 	public ActionsManager() {
 		this.configs = new HashMap<String, ActionConfig>();
 	}
-
-	@PetiteInitMethod(order = 1)
-	void actionsManagerInit() {
-		init();
-	}
-
-	/**
-	 * Additional custom initialization, invoked after manager is ready.
-	 */
-	protected void init() {}
-
 
 	/**
 	 * Returns all registered action configurations. Should be used with care and

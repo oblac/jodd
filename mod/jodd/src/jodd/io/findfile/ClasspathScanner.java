@@ -27,7 +27,26 @@ public abstract class ClasspathScanner extends FindClass {
 		return this;
 	}
 
+	public boolean isIgnoreException() {
+		return ignoreException;
+	}
+
+	public void setIgnoreException(boolean ignoreException) {
+		this.ignoreException = ignoreException;
+	}
+
+	public ClasspathScanner ignoreException(boolean ignoreException) {
+		setIgnoreException(ignoreException);
+		return this;
+	}
+
+
 	// ---------------------------------------------------------------- fluent interface
+
+	public ClasspathScanner systemJars(String... jars) {
+		setSystemJars(jars);
+		return this;
+	}
 
 	public ClasspathScanner includeJars(String... jars) {
 		setIncludedJars(jars);

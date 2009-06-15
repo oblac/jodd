@@ -24,6 +24,10 @@
 			<param-name>madvoc.configurator</param-name>
 			<param-value>madvoc.MySimpleConfigurator</param-value>
 		</init-param>
+		<init-param>
+			<param-name>madvoc.params</param-name>
+			<param-value>/madvoc*.properties</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>madvoc</filter-name>

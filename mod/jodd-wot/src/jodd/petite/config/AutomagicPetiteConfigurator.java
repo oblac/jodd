@@ -67,8 +67,9 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 	 * file content is examined. 
 	 */
 	@Override
-	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
-		InputStream inputStream = inputStreamProvider.get();
+	protected void onEntry(EntryData entryData) {
+		String entryName = entryData.getName();
+		InputStream inputStream = entryData.openInputStream();
 		if (isTypeSignatureInUse(inputStream, petiteBeanAnnotationBytes) == false) {
 			return;
 		}

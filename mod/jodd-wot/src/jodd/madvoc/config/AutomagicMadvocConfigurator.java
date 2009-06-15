@@ -80,7 +80,8 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * Parses class name that matches madvoc-related names.
 	 */
 	@Override
-	protected void onEntryName(String entryName, InputStreamProvider inputStreamProvider) {
+	protected void onEntry(EntryData entryData) {
+		String entryName = entryData.getName();
 		if (entryName.endsWith(actionClassSuffix) == true) {
 			try {
 				onActionClass(entryName);

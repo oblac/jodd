@@ -19,6 +19,7 @@ import jodd.petite.PetiteUtil;
 
 import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;
+import java.util.Properties;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -27,7 +28,8 @@ import java.lang.reflect.Modifier;
 public class WebApplication {
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
-	private final PetiteContainer madpc;
+
+	protected final PetiteContainer madpc;
 
 	public WebApplication() {
 		madpc = createInternalContainer();
@@ -137,6 +139,14 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
+	}
+
+	/**
+	 * Initialized web application parameters. Provided properties object is always non-<code>null</code>.
+	 * Simple defines parameters for internal container.
+	 */
+	protected void initParams(Properties properties) {
+		madpc.defineParameters(properties);
 	}
 
 	/**
