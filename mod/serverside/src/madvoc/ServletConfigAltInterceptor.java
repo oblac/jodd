@@ -12,6 +12,7 @@ public class ServletConfigAltInterceptor extends ServletConfigInterceptor {
 
 	@Override
 	public void init() {
+		super.init();
 		requestScopeInjector = injectorsManager.createRequestScopeInjector();
 		requestScopeInjector.setCopyParamsToAttributes(true);
 		requestScopeInjector.setInjectParameters(false);
