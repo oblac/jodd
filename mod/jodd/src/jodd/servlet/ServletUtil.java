@@ -396,6 +396,10 @@ public class ServletUtil {
 			int total = paramValues.length;
 			for (int i = 0; i < paramValues.length; i++) {
 				String paramValue = paramValues[i];
+				if (paramValue == null) {
+					emptyCount++;
+					continue;
+				}
 				if (trimParams) {
 					paramValue = paramValue.trim();
 				}

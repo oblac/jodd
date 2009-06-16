@@ -11,6 +11,7 @@ public class AllTests extends TestSuite {
 		super("jodd.servlet test suite");
 		addTestSuite(HtmlEncoderTest.class);
 		addTestSuite(HtmlTagTest.class);
+		addTestSuite(ServletUtilTest.class);
 	}
 
 	public static Test suite() {

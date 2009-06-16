@@ -131,6 +131,10 @@ public class StringUtilTest extends TestCase {
 		assertEquals("55225544", src);
 		src = StringUtil.replaceFirst(src, "11", "55");
 		assertEquals("55225544", src);
+		String src2 = StringUtil.replaceFirst(src, '5', 'a');
+		assertEquals("a5225544", src2);
+		src2 = StringUtil.replaceLast(src2, '5', 'x');
+		assertEquals("a5225x44", src2);
 
 		src = StringUtil.replaceLast(src, "55", "11");
 		assertEquals("55221144", src);
