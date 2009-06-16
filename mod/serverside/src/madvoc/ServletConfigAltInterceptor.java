@@ -16,7 +16,7 @@ public class ServletConfigAltInterceptor extends ServletConfigInterceptor {
 		requestScopeInjector = injectorsManager.createRequestScopeInjector();
 		requestScopeInjector.setCopyParamsToAttributes(true);
 		requestScopeInjector.setInjectParameters(false);
-//		requestScopeInjector.setTreatEmptyParamsAsNull(true);
+		requestScopeInjector.setTreatEmptyParamsAsNull(true);
 	}
 
 }
