@@ -3,7 +3,7 @@
 
 prjName = 'Jodd'
 prjDescription = 'Jodd - generic purpose open-source Java library and frameworks.'
-prjVersion = '3.0.2'
+prjVersion = '3.0.3'
 
 # ant
 
