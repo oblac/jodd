@@ -5,8 +5,8 @@ import jodd.servlet.HtmlEncoder;
 import jodd.servlet.HtmlTag;
 import jodd.servlet.JspValueResolver;
 import jodd.util.StringUtil;
+import jodd.util.Closure;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -15,6 +15,23 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * Magic form tag populates a HTML form.
  */
 public class FormTag extends BodyTagSupport {
+
+	private static final String INPUT = "input";
+	private static final String TYPE = "type";
+	private static final String VALUE = "value";
+	private static final String TEXT = "text";
+	private static final String SELECT = "select";
+	private static final String HIDDEN = "hidden";
+	private static final String IMAGE = "image";
+	private static final String PASSWORD = "password";
+	private static final String CHECKBOX = "checkbox";
+	private static final String TRUE = "true";
+	private static final String CHECKED = "checked";
+	private static final String RADIO = "radio";
+	private static final String TEXTAREA = "textarea";
+	private static final String NAME = "name";
+	private static final String OPTION = "option";
+	private static final String SELECTED = "selected";
 
 	// ---------------------------------------------------------------- tag
 
@@ -38,15 +55,14 @@ public class FormTag extends BodyTagSupport {
 	@Override
 	public int doAfterBody() {
 		BodyContent body = getBodyContent();
-		//final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		try {
 			JspWriter out = body.getEnclosingWriter();
-			String bodytext = populateForm(body.getString(), new ValueResolver() {
-				public Object resolveName(String name) {
+			String bodytext = populateForm(body.getString(), new Closure<String, Object>() {
+				public Object execute(String input) {
 					if (source != null) {
-						name = source + '.' + name;
+						input = source + '.' + input;
 					}
-					return JspValueResolver.resolveProperty(name, pageContext);
+					return JspValueResolver.resolveProperty(input, pageContext);
 				}
 			});
 			out.print(bodytext);
@@ -67,14 +83,10 @@ public class FormTag extends BodyTagSupport {
 
 	// ---------------------------------------------------------------- populate
 
-	public static interface ValueResolver {
-	    Object resolveName(String name);
-	}
-
 	/**
 	 * Populates HTML form.
 	 */
-	protected String populateForm(String html, ValueResolver resolver) {
+	protected String populateForm(String html, Closure<String, Object> resolver) {
 		int s = 0;
 		StringBuilder result = new StringBuilder((int) (html.length() * 1.2));
 		String currentSelectName = null;
@@ -93,68 +105,68 @@ public class FormTag extends BodyTagSupport {
 
 			String tagName = tag.getTagName();
 			if (tag.isEndTag()) {
-				if (tagName.equals("select")) {
+				if (tagName.equals(SELECT)) {
 					currentSelectName = null;
 				}
 				continue;
 			}
 
-			if (tagName.equals("input") == true) {
+			if (tagName.equals(INPUT) == true) {
 				// INPUT
-				String tagType = tag.getAttribute("type");
+				String tagType = tag.getAttribute(TYPE);
 				if (tagType == null) {
 					continue;
 				}
-				String name = tag.getAttribute("name");
+				String name = tag.getAttribute(NAME);
 				if (name == null) {
 					continue;
 				}
-				Object valueObject = resolver.resolveName(name);
+				Object valueObject = resolver.execute(name);
 				if (valueObject == null) {
 					continue;
 				}
 				String value = valueObject.toString();
 				tagType = tagType.toLowerCase();
 
-				if (tagType.equals("text")) {
-					tag.setAttribute("value", value);
-				} else if (tagType.equals("hidden")) {
-					tag.setAttribute("value", value);
-				} else if (tagType.equals("image")) {
-					tag.setAttribute("value", value);
-				} else if (tagType.equals("password")) {
-					tag.setAttribute("value", value);
-				} else if (tagType.equals("checkbox")) {
-					String tagValue = tag.getAttribute("value");
+				if (tagType.equals(TEXT)) {
+					tag.setAttribute(VALUE, value);
+				} else if (tagType.equals(HIDDEN)) {
+					tag.setAttribute(VALUE, value);
+				} else if (tagType.equals(IMAGE)) {
+					tag.setAttribute(VALUE, value);
+				} else if (tagType.equals(PASSWORD)) {
+					tag.setAttribute(VALUE, value);
+				} else if (tagType.equals(CHECKBOX)) {
+					String tagValue = tag.getAttribute(VALUE);
 					if (tagValue == null) {
-						tagValue = "true";
+						tagValue = TRUE;
 					}
 					if (tagValue.equals(value)) {
-						tag.setAttribute("checked");
+						tag.setAttribute(CHECKED);
 					}
-				} else if (tagType.equals("radio")) {
-					String tagValue = tag.getAttribute("value");
+				} else if (tagType.equals(RADIO)) {
+					String tagValue = tag.getAttribute(VALUE);
 					if (tagValue != null) {
 						if (tagValue.equals(value)) {
-							tag.setAttribute("checked");
+							tag.setAttribute(CHECKED);
 						}
 					}
 				}
-			} else if (tagName.equals("textarea")) {
-				String name = tag.getAttribute("name");
-				Object valueObject = resolver.resolveName(name);
+			} else if (tagName.equals(TEXTAREA)) {
+				String name = tag.getAttribute(NAME);
+				Object valueObject = resolver.execute(name);
 				if (valueObject != null) {
 					tag.setSuffixText(HtmlEncoder.text(valueObject.toString()));
 				}
-			} else if (tagName.equals("select")) {
-				currentSelectName = tag.getAttribute("name");
-			} else if (tagName.equals("option")) {
+			} else if (tagName.equals(SELECT)) {
+				currentSelectName = tag.getAttribute(NAME);
+			} else if (tagName.equals(OPTION)) {
 				if (currentSelectName == null) {
 					continue;
 				}
-				String tagValue = tag.getAttribute("value");
+				String tagValue = tag.getAttribute(VALUE);
 				if (tagValue != null) {
-					Object vals = resolver.resolveName(currentSelectName);
+					Object vals = resolver.execute(currentSelectName);
 					if (vals == null) {
 						continue;
 					}
@@ -162,13 +174,13 @@ public class FormTag extends BodyTagSupport {
 						String vs[] = StringUtil.toStringArray(vals);
 						for (String vsk : vs) {
 							if ((vsk != null) && (vsk.equals(tagValue))) {
-								tag.setAttribute("selected");
+								tag.setAttribute(SELECTED);
 							}
 						}
 					} else {
 						String value = StringUtil.toString(vals);
 						if (value.equals(tagValue)) {
-							tag.setAttribute("selected");
+							tag.setAttribute(SELECTED);
 						}
 					}
 				}

@@ -4,6 +4,7 @@ package jodd.servlet;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import jodd.servlet.tag.FormTagTest;
 
 public class AllTests extends TestSuite {
 
@@ -12,6 +13,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(HtmlEncoderTest.class);
 		addTestSuite(HtmlTagTest.class);
 		addTestSuite(ServletUtilTest.class);
+		addTestSuite(FormTagTest.class);
 	}
 
 	public static Test suite() {
