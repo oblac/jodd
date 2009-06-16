@@ -27,51 +27,56 @@ public class RequestScopeInjector extends ScopeInjector {
 
 	// ---------------------------------------------------------------- configuration
 
-	protected boolean ignoreEmptyRequestParams = true;
+	protected boolean ignoreEmptyRequestParams;
+	protected boolean treatEmptyParamsAsNull;
+	protected boolean injectAttributes = true;
+	protected boolean injectParameters = true;
+	protected boolean copyParamsToAttributes;
+	protected boolean trimParams;
 
 	public boolean isIgnoreEmptyRequestParams() {
 		return ignoreEmptyRequestParams;
 	}
-
 	/**
-	 * Specifies if empty request parameters should be ignored.
+	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
 	 */
 	public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
 		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
 	}
 
-
-	protected boolean injectAttributes = true;
+	public boolean isTreatEmptyParamsAsNull() {
+		return treatEmptyParamsAsNull;
+	}
+	/**
+	 * Specifies if empty parameters will be injected as <code>null</code> value.
+	 */
+	public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
+		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
+	}
 
 	public boolean isInjectAttributes() {
 		return injectAttributes;
 	}
-
 	/**
-	 * Specifies if attributes should be set.
+	 * Specifies if attributes will be injected.
 	 */
 	public void setInjectAttributes(boolean injectAttributes) {
 		this.injectAttributes = injectAttributes;
 	}
 
-
-	protected boolean injectParameters = true;
-
 	public boolean isInjectParameters() {
 		return injectParameters;
 	}
-
+	/**
+	 * Specifies if parameters will be injected.
+	 */
 	public void setInjectParameters(boolean injectParameters) {
 		this.injectParameters = injectParameters;
 	}
 
-
-	protected boolean copyParamsToAttributes;
-
 	public boolean isCopyParamsToAttributes() {
 		return copyParamsToAttributes;
 	}
-
 	/**
 	 * Specifies if request parameters will to be copied to attributes.
 	 * Usually, when this flag is set to <code>true</code>, {@link #setInjectAttributes(boolean) injectOnlyAttributes}
@@ -81,13 +86,11 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.copyParamsToAttributes = copyParamsToAttributes;
 	}
 
-	protected boolean trimParams;
-
 	public boolean isTrimParams() {
 		return trimParams;
 	}
 	/**
-	 * Specifies if parameters has to be trimmed before injection.
+	 * Specifies if parameters will be trimmed before injection.
 	 */
 	public void setTrimParams(boolean trimParams) {
 		this.trimParams = trimParams;
@@ -131,24 +134,24 @@ public class RequestScopeInjector extends ScopeInjector {
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
 
-					// trim
-					if (trimParams == true) {
+					if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
+						int emptyCount = 0;
+						int total = paramValues.length;
 						for (int i = 0; i < paramValues.length; i++) {
-							paramValues[i] = paramValues[i].trim();
-						}
-					}
-
-					// ignore empty parameters
-					if (ignoreEmptyRequestParams == true) {
-						int ignoreCount = 0;
-						for (int i = 0; i < paramValues.length; i++) {
-							if (paramValues[i].length() == 0) {
-								paramValues[i] = null;
-								ignoreCount++;
+							String paramValue = paramValues[i];
+							if (trimParams) {
+								paramValue = paramValue.trim();
 							}
+							if (paramValue.length() == 0) {
+								emptyCount++;
+								if (treatEmptyParamsAsNull) {
+									paramValue = null;
+								}
+							}
+							paramValues[i] = paramValue;
 						}
-						if (ignoreCount == paramValues.length) {
-							continue;	// ignore null parameters
+						if ((ignoreEmptyRequestParams == true) && (emptyCount == total)) {
+							continue;
 						}
 					}
 					setTargetProperty(target, name, paramValues, ii.create);
