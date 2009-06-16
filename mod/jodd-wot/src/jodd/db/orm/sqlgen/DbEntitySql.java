@@ -183,6 +183,14 @@ public class DbEntitySql {
 		return sql()._(SELECT_COUNT_1_FROM).table(entity, tableRef)._(WHERE).match(tableRef, entity);
 	}
 
+	/**
+	 * Creates SELECT COUNT all query.
+	 */
+	public static DbSqlBuilder count(Class entityType) {
+		String tableRef = createTableRefName(entityType);
+		return sql()._(SELECT_COUNT_1_FROM).table(entityType, tableRef);
+	}
+
 
 	/**
 	 * Creates SELECT COUNT criteria for the entity matched by all values.

@@ -4,6 +4,7 @@ package jodd.db.orm;
 
 import junit.framework.TestSuite;
 import junit.framework.Test;
+import jodd.db.orm.sqlgen.DbEntitySqlTest;
 
 public class AllTests extends TestSuite {
 
@@ -15,6 +16,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(DbSqlTemplateTest.class);
 		addTestSuite(DbSlqBuilderTest.class);
 		addTestSuite(JointHintResolverTest.class);
+		addTestSuite(DbEntitySqlTest.class);
 	}
 
 	public static Test suite() {
