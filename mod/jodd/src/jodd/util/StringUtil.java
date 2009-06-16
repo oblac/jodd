@@ -3,6 +3,7 @@
 package jodd.util;
 
 import jodd.typeconverter.StringArrayConverter;
+import jodd.typeconverter.StringConverter;
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
@@ -198,9 +199,9 @@ public class StringUtil {
 	 * Removes set of characters from string.
 	 *
 	 * @param src    string
-	 * @param chars  character to remove
+	 * @param chars  characters to remove
 	 */
-	public static String removeChars(String src, char[] chars) {
+	public static String removeChars(String src, char... chars) {
 		int i = src.length();
 		StringBuilder stringbuffer = new StringBuilder(i);
 		mainloop:
@@ -258,6 +259,19 @@ public class StringUtil {
 	}
 
 	/**
+	 * Determines if string array contains empty strings.
+	 * @see #isEmpty(String) 
+	 */
+	public static boolean isAllEmpty(String... strings) {
+		for (String string : strings) {
+			if (isEmpty(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(String)}).
 	 */
 	public static boolean isBlank(String string) {
@@ -265,7 +279,20 @@ public class StringUtil {
 	}
 
 	/**
-	 * Returns <code>true</code> if string contains only spaces.
+	 * Determines if string array contains just blank strings.
+	 */
+	public static boolean isAllBlank(String... strings) {
+		for (String string : strings) {
+			if (isBlank(string)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Returns <code>true</code> if string contains only white spaces.
 	 */
 	public static boolean containsOnlyWhitespaces(String string) {
 		int size = string.length();
@@ -289,27 +316,30 @@ public class StringUtil {
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> it will be
 	 * not converted.
+	 * @see jodd.typeconverter.StringConverter
 	 */
 	public static String toString(Object obj) {
 		if (obj == null) {
 			return null;
 		}
-		return obj.toString();
+		return StringConverter.valueOf(obj);
 	}
 
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> an empty
 	 * string is returned.
+	 * @see jodd.typeconverter.StringConverter 
 	 */
 	public static String toNotNullString(Object obj) {
 		if (obj == null) {
 			return EMPTY;
 		}
-		return obj.toString();
+		return StringConverter.valueOf(obj);
 	}
 
 	/**
 	 * Converts an object to a String Array.
+	 * @see jodd.typeconverter.StringArrayConverter
 	 */
 	public static String[] toStringArray(Object obj) {
 		return StringArrayConverter.valueOf(obj);
@@ -1406,7 +1436,7 @@ public class StringUtil {
 
 
 
-	// ---------------------------------------------------------------- strip
+	// ---------------------------------------------------------------- strip, trim
 
 	/**
 	 * Strips leading char if string starts with one.
@@ -1432,48 +1462,66 @@ public class StringUtil {
 		return string;
 	}
 
-	// ---------------------------------------------------------------- trim
-
 
 	/**
-	 * Trims array of strings. Null elements of the array are ignored.
+	 * Trims array of strings. <code>null</code> array elements are ignored.
 	 */
-	public static void trim(String[] strings) {
+	public static void trimAll(String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
 				strings[i] = string.trim();
 			}
-
 		}
 	}
 
 	/**
-	 * Trims array of strings where empty strings are nulled.
-	 * Null elements of the array are ignored.
-	 * @see #trimNonEmpty(String)
+	 * Trims array of strings where empty strings are set to <code>null</code>.
+	 * <code>null</code> elements of the array are ignored.
+	 * @see #trimDown(String)
 	 */
-	public static void trimNonEmpty(String[] strings) {
+	public static void trimDownAll(String... strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
-				strings[i] = trimNonEmpty(strings[i]);
+				strings[i] = trimDown(string);
 			}
 		}
 	}
 
 
 	/**
-	 * Trims string where empty strings are returned as a <code>null</code>.
+	 * Trims string and sets to <code>null</code> if trimmed string is empty.
 	 */
-	public static String trimNonEmpty(String string) {
-		if (string != null) {
-			string = string.trim();
-			if (string.length() == 0) {
-				string = null;
-			}
+	public static String trimDown(String string) {
+		string = string.trim();
+		if (string.length() == 0) {
+			string = null;
 		}
 		return string;
+	}
+
+	/**
+	 * Crops string by setting empty strings to <code>null</code>.
+	 */
+	public static String crop(String string) {
+		if (string.length() == 0) {
+			return null;
+		}
+		return string;
+	}
+
+	/**
+	 * Crops all elements of string array.
+	 */
+	public static void cropAll(String... strings) {
+		for (int i = 0; i < strings.length; i++) {
+			String string = strings[i];
+			if (string != null) {
+				string = crop(strings[i]);
+			}
+			strings[i] = string;
+		}
 	}
 
 

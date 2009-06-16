@@ -381,12 +381,46 @@ public class ServletUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- params
+
+	/**
+	 * Prepares parameters for further processing.
+	 * @param paramValues	string array of param values
+	 * @param trimParams	trim parameters
+	 * @param treatEmptyParamsAsNull	empty parameters should be treated as <code>null</code>
+	 * @param ignoreEmptyRequestParams	if all parameters are empty, return <code>null</code>
+	 */
+	public static String[] prepareParameters(String[] paramValues, boolean trimParams, boolean treatEmptyParamsAsNull, boolean ignoreEmptyRequestParams) {
+		if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
+			int emptyCount = 0;
+			int total = paramValues.length;
+			for (int i = 0; i < paramValues.length; i++) {
+				String paramValue = paramValues[i];
+				if (trimParams) {
+					paramValue = paramValue.trim();
+				}
+				if (paramValue.length() == 0) {
+					emptyCount++;
+					if (treatEmptyParamsAsNull) {
+						paramValue = null;
+					}
+				}
+				paramValues[i] = paramValue;
+			}
+			if ((ignoreEmptyRequestParams == true) && (emptyCount == total)) {
+				return null;
+			}
+		}
+		return paramValues;
+	}
+
+
 	// ---------------------------------------------------------------- copy
 
 	/**
 	 * Copies all request parameters to attributes.
 	 */
-	public static void copyParamsToAttributes(HttpServletRequest servletRequest, boolean ignoreEmptyRequestParams) {
+	public static void copyParamsToAttributes(HttpServletRequest servletRequest, boolean trimParams, boolean treatEmptyParamsAsNull, boolean ignoreEmptyRequestParams) {
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
@@ -395,18 +429,9 @@ public class ServletUtil {
 			}
 
 			String[] paramValues = servletRequest.getParameterValues(paramName);
-			// ignore empty parameters
-			if (ignoreEmptyRequestParams == true) {
-				int ignoreCount = 0;
-				for (int i = 0; i < paramValues.length; i++) {
-					if (paramValues[i].length() == 0) {
-						paramValues[i] = null;
-						ignoreCount++;
-					}
-				}
-				if (ignoreCount == paramValues.length) {
-					continue;	// ignore null parameters
-				}
+			paramValues = prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+			if (paramValues == null) {
+				continue;
 			}
 			servletRequest.setAttribute(paramName, paramValues.length == 1 ? paramValues[0] : paramValues);
 		}

@@ -160,9 +160,13 @@ public class HelloAction {
 	public void defint1() {
 
 	}
+
+	@In
+	String foo2;
 	@InterceptedBy({EchoInterceptor.class, ServletConfigAltInterceptor.class})
 	@Action
 	public String defint2() {
+		System.out.println("foo2 " + foo2);
 		return "#defint1";
 	}
 }

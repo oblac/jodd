@@ -9,28 +9,14 @@ import jodd.util.collection.PrimitivearraysTest;
 import jodd.util.collection.CompositeIteratorTest;
 import jodd.util.ref.ReferenceCollectionsTest;
 
-public class AllTests extends TestSuite {
+public class AllTests extends AllTestsFast {
 
 	public AllTests() {
-		super("jodd.util test suite");
-		addTestSuite(IntHashMapTest.class);
-		addTestSuite(StringUtilTest.class);
-		addTestSuite(StackQueueTest.class);
+		super();
 		addTestSuite(MutexTest.class);
-		addTestSuite(ReflectUtilTest.class);
-		addTestSuite(ObjectUtilTest.class);
-		addTestSuite(ArraysUtilTest.class);
-		addTestSuite(WildcardTest.class);
-		addTestSuite(ReferenceCollectionsTest.class);
-		addTestSuite(PrimitivearraysTest.class);
-		addTestSuite(ClassLoaderUtilTest.class);
-		addTestSuite(LocaleUtilTest.class);
-		addTestSuite(CompositeIteratorTest.class);
-		addTestSuite(CharUtilTest.class);
-		addTestSuite(LoopIteratorTest.class);
-		addTestSuite(CsvUtilTest.class);
 	}
 
+	@SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass"})
 	public static Test suite() {
 		return new AllTests();
 	}

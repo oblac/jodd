@@ -33,7 +33,7 @@
 <a href="mapped.txt">mapped.txt</a> | <a href="mapped">mapped</a><br>
 <br>
 <a href="hello.defint1.html?foo=173">default interceptors</a><br>
-<a href="hello.defint2.html?foo=173">parameters are copied</a><br>
+<a href="hello.defint2.html?foo=173&foo2=">parameters are copied</a><br>
 <a href="misc.html">misc</a><br>
 <a href="misc.post.html?girl.id=1&girl.name=requestName">inject id, prepare and execute</a><br>
 </p>

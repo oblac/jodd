@@ -133,32 +133,17 @@ public class RequestScopeInjector extends ScopeInjector {
 				String name = getMatchedPropertyName(ii, paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
-
-					if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
-						int emptyCount = 0;
-						int total = paramValues.length;
-						for (int i = 0; i < paramValues.length; i++) {
-							String paramValue = paramValues[i];
-							if (trimParams) {
-								paramValue = paramValue.trim();
-							}
-							if (paramValue.length() == 0) {
-								emptyCount++;
-								if (treatEmptyParamsAsNull) {
-									paramValue = null;
-								}
-							}
-							paramValues[i] = paramValue;
-						}
-						if ((ignoreEmptyRequestParams == true) && (emptyCount == total)) {
-							continue;
-						}
+					paramValues = ServletUtil.prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+					if (paramValues == null) {
+						continue;
 					}
 					setTargetProperty(target, name, paramValues, ii.create);
 				}
 			}
 		}
 	}
+
+
 
 	/**
 	 * Inject uploaded files from multipart request parameters.
@@ -206,7 +191,7 @@ public class RequestScopeInjector extends ScopeInjector {
 
 	public void inject(Object target, HttpServletRequest servletRequest) {
 		if (copyParamsToAttributes == true) {
-			ServletUtil.copyParamsToAttributes(servletRequest, ignoreEmptyRequestParams);
+			ServletUtil.copyParamsToAttributes(servletRequest, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 		}
 		outjectMoveSource(servletRequest);
 		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.REQUEST);

@@ -465,10 +465,10 @@ public class StringUtilTest extends TestCase {
 
 
 	public void testTrim() {
-		assertEquals("123", StringUtil.trimNonEmpty(" 123 "));
-		assertEquals("123", StringUtil.trimNonEmpty("123"));
-		assertNull(StringUtil.trimNonEmpty(""));
-		assertNull(StringUtil.trimNonEmpty("     "));
+		assertEquals("123", StringUtil.trimDown(" 123 "));
+		assertEquals("123", StringUtil.trimDown("123"));
+		assertNull(StringUtil.trimDown(""));
+		assertNull(StringUtil.trimDown("     "));
 	}
 
 

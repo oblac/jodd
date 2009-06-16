@@ -11,14 +11,8 @@ import junit.framework.TestSuite;
 public class TestJodd {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Jodd Java Library Test Suite");
-		suite.addTest(jodd.bean.AllTests.suite());
-		suite.addTest(jodd.cache.AllTests.suite());
-		suite.addTest(jodd.introspector.AllTests.suite());
-		suite.addTest(jodd.io.AllTests.suite());
-		suite.addTest(jodd.format.AllTests.suite());
+		TestSuite suite = TestJoddFast.suite();
 		suite.addTest(jodd.datetime.AllTests.suite());
-		suite.addTest(jodd.servlet.AllTests.suite());
 		suite.addTest(jodd.util.AllTests.suite());
 		return suite;
 	}

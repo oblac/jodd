@@ -5,10 +5,10 @@ package jodd.util;
 /**
  * Defines a functor interface implemented by classes that do something.
  */
-public interface Closure<T> {
+public interface Closure<IN, RESULT> {
 
     /**
-     * Performs an action on the specified input object.
+     * Performs an action on the specified input object, returning the result.
      */
-    void execute(T input);	
+    RESULT execute(IN input);
 }

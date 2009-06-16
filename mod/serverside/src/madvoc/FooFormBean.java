@@ -55,7 +55,7 @@ public class FooFormBean {
 	// ---------------------------------------------------------------- accessors (not required)
 
 	public void setTextarea(String value) {
-		textarea = StringUtil.trimNonEmpty(value);
+		textarea = StringUtil.trimDown(value);
 	}
 
 
