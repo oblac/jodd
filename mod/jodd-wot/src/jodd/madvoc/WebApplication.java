@@ -135,18 +135,18 @@ public class WebApplication {
 	// ---------------------------------------------------------------- lifecycle
 
 	/**
+	 * Initialized web application parameters. Provided properties object is always non-<code>null</code>.
+	 * Simple defines parameters for internal container.
+	 */
+	protected void defineParams(Properties properties) {
+		madpc.defineParameters(properties);
+	}
+
+	/**
 	 * Initializes web application custom configuration.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
-	}
-
-	/**
-	 * Initialized web application parameters. Provided properties object is always non-<code>null</code>.
-	 * Simple defines parameters for internal container.
-	 */
-	protected void initParams(Properties properties) {
-		madpc.defineParameters(properties);
 	}
 
 	/**

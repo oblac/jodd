@@ -39,9 +39,9 @@ public class MyWebApplication extends PetiteWebApplication {
 
 
 	@Override
-	protected void initParams(Properties properties) {
+	protected void defineParams(Properties properties) {
 		System.out.println("MyWebApplication.initParams " + properties.size());
-		super.initParams(properties);
+		super.defineParams(properties);
 	}
 
 	@Override

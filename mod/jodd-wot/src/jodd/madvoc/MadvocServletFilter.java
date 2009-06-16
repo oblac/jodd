@@ -44,6 +44,10 @@ public class MadvocServletFilter implements Filter {
 		this.filterConfig = filterConfig;
 		webapp = loadWebApplication(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
 
+		// params
+		Properties params = loadMadvocParams(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
+		webapp.defineParams(params);
+		
 		// configure
 		webapp.registerMadvocComponents();
 		madvocConfig = webapp.getComponent(MadvocConfig.class);
@@ -51,10 +55,6 @@ public class MadvocServletFilter implements Filter {
 			throw new MadvocException("No Madvoc configuration component found.");
 		}
 		webapp.init(madvocConfig, filterConfig.getServletContext());
-
-		// params
-		Properties params = loadMadvocParams(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
-		webapp.initParams(params);
 
 		// actions
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
