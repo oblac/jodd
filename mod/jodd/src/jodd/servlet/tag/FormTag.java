@@ -8,8 +8,10 @@ import jodd.util.StringUtil;
 import jodd.util.Closure;
 
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.io.IOException;
 
 /**
  * Magic form tag populates a HTML form.
@@ -47,18 +49,18 @@ public class FormTag extends BodyTagSupport {
 	 * Performs smart form population.
 	 */
 	@Override
-	public int doAfterBody() {
+	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
+		JspWriter out = body.getEnclosingWriter();
+		String bodytext = populateForm(body.getString(), new Closure<String, Object>() {
+			public Object execute(String input) {
+				return JspValueResolver.resolveProperty(input, pageContext);
+			}
+		});
 		try {
-			JspWriter out = body.getEnclosingWriter();
-			String bodytext = populateForm(body.getString(), new Closure<String, Object>() {
-				public Object execute(String input) {
-					return JspValueResolver.resolveProperty(input, pageContext);
-				}
-			});
 			out.print(bodytext);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (IOException ioex) {
+			throw new JspException(ioex);
 		}
 		return SKIP_BODY;
 	}
