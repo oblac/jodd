@@ -16,10 +16,6 @@
 		<name>form</name>
 		<tag-class>jodd.servlet.tag.FormTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<name>source</name>
-			<required>false</required>
-		</attribute>
 	</tag>
 
 	<tag>

@@ -35,12 +35,6 @@ public class FormTag extends BodyTagSupport {
 
 	// ---------------------------------------------------------------- tag
 
-	protected String source;
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
 	/**
 	 * Starts the tag.
 	 */
@@ -59,9 +53,6 @@ public class FormTag extends BodyTagSupport {
 			JspWriter out = body.getEnclosingWriter();
 			String bodytext = populateForm(body.getString(), new Closure<String, Object>() {
 				public Object execute(String input) {
-					if (source != null) {
-						input = source + '.' + input;
-					}
 					return JspValueResolver.resolveProperty(input, pageContext);
 				}
 			});
