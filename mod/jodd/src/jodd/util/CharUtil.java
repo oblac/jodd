@@ -211,7 +211,7 @@ public class CharUtil {
 
 	/**
 	 * Returns <code>true</code> if character is a white space.
-	 * White space definition is taken from String class (see: <code>trim()</code>
+	 * White space definition is taken from String class (see: <code>trim()</code>).
 	 */
 	public static boolean isWhitespace(char c) {
 		return c <= ' ';

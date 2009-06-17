@@ -893,7 +893,7 @@ public class StringUtil {
 		return -1;
 	}
 
-
+	// ---------------------------------------------------------------- starts and ends
 
 	/**
 	 * Tests if this string starts with the specified prefix with ignored case.
@@ -965,6 +965,16 @@ public class StringUtil {
 			j++; i++;
 		}
 		return true;
+	}
+
+	/**
+	 * Returns if string starts with given character.
+	 */
+	public static boolean startsWithChar(String s, char c) {
+		if (s.length() == 0) {
+			return false;
+		}
+		return s.charAt(0) == c;
 	}
 
 
@@ -1524,6 +1534,30 @@ public class StringUtil {
 		}
 	}
 
+	/**
+	 * Trim whitespaces from the left.
+	 */
+	public static String trimLeft(String src) {
+		int len = src.length();
+		int st = 0;
+		while ((st < len) && (CharUtil.isWhitespace(src.charAt(st)))) {
+			st++;
+		}
+		return st > 0 ? src.substring(st) : src;
+	}
+
+	/**
+	 * Trim whitespaces from the right.
+	 */
+	public static String trimRight(String src) {
+		int len = src.length();
+		int count = len;
+		while ((len > 0) && (CharUtil.isWhitespace(src.charAt(len - 1)))) {
+			len--;
+		}
+		return (len < count) ? src.substring(0, len) : src;
+	}
+
 
 	// ---------------------------------------------------------------- regions
 
@@ -1807,5 +1841,46 @@ public class StringUtil {
 		return string;
 	}
 
+
+	// ---------------------------------------------------------------- escaped
+
+	/**
+	 * Returns <code>true</code> if character at provided index position is escaped
+	 * by escape character.
+	 */
+	public static boolean isCharAtEscaped(String src, int ndx, char escapeChar) {
+		if (ndx == 0) {
+			return false;
+		}
+		ndx--;
+		return src.charAt(ndx) == escapeChar;
+	}
+
+	public static int indexOfUnescapedChar(String src, char sub, char escapeChar) {
+		return indexOfUnescapedChar(src, sub, escapeChar, 0);
+	}
+
+	public static int indexOfUnescapedChar(String src, char sub, char escapeChar, int startIndex) {
+		if (startIndex < 0) {
+			startIndex = 0;
+		}
+		int srclen = src.length();
+		char previous = 0;
+		char c = 0;
+		for (int i = startIndex; i < srclen; i++) {
+			previous = c;
+			c = src.charAt(i);
+			if (c == sub) {
+				if (i > startIndex) {
+					if (previous == escapeChar) {
+						continue;
+					}
+				}
+				return i;
+			}
+		}
+		return -1;
+
+	}
 
 }

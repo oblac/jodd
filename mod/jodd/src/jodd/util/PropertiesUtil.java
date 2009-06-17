@@ -3,12 +3,14 @@
 package jodd.util;
 
 import jodd.io.StreamUtil;
+import jodd.io.AsciiInputStream;
 import jodd.io.findfile.ClasspathScanner;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -130,6 +132,24 @@ public class PropertiesUtil {
 			StreamUtil.close(fos);
 		}
 	}
+
+	// ---------------------------------------------------------------- to/from string
+
+	public static Properties createFromString(String data) throws IOException {
+		Properties p = new Properties();
+		loadFromString(p, data);
+		return p;
+	}
+	
+	public static void loadFromString(Properties p, String data) throws IOException {
+		InputStream is = new AsciiInputStream(data);
+		try {
+			p.load(is);
+		} finally {
+			is.close();
+		}
+	}
+
 
 
 	// ---------------------------------------------------------------- subsets
