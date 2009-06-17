@@ -18,7 +18,7 @@ public class ClassConverter implements TypeConverter<Class> {
 			return (Class) value;
 		}
 		try {
-			return ClassLoaderUtil.loadClass(value.toString(), ClassConverter.class);
+			return ClassLoaderUtil.loadClass(value.toString().trim(), ClassConverter.class);
 		} catch (ClassNotFoundException cnfex) {
 			throw new TypeConversionException(value, cnfex);
 		}

@@ -93,6 +93,7 @@ public class TypeConverterManager {
 		register(FileUpload.class, new FileUploadConverter());
 		register(JDateTime.class, new JDateTimeConverter());
 		register(Class.class, new ClassConverter());
+		register(Class[].class, new ClassArrayConverter());
 		register(URL.class, new URLConverter());
 	}
 
