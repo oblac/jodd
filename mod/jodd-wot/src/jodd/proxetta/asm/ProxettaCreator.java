@@ -204,9 +204,8 @@ public class ProxettaCreator extends EmptyVisitor {
 			MethodVisitor mv = dest.visitMethod(access, name, desc, msign.getSignature(), null);
 			return new ConstructorBuilder(mv, msign);
 		}
-		// destination static block
+		// ignore destination static block
 		if (name.equals(CLINIT) == true) {
-			//MethodVisitor mv = dest.visitMethod(access, name, desc, msign.getSignature(), null);
 			return null;
 		}
 		topMethodSignatures.add(msign.getSignature());

@@ -9,8 +9,14 @@ import jodd.proxetta.data.StatCounterAdvice;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
+import jodd.bean.BeanUtil;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
+import jodd.madvoc.meta.Action;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 
 public class BigClassTest extends TestCase {
 
@@ -29,16 +35,31 @@ public class BigClassTest extends TestCase {
 
 		assertEquals("jodd.proxetta.data.BigFatJoe$Proxetta", bigFatJoe.getClass().getName());
 
-		assertEquals(2, StatCounter.counter);		// 2 x static
+		// test invocation
+
+		assertEquals(3, StatCounter.counter);		// 2 x static + 1 x instance
 		bigFatJoe.publicMethod();
-		assertEquals(3, StatCounter.counter);
+		assertEquals(4, StatCounter.counter);
 		bigFatJoe.callInnerMethods();
-		assertEquals(6, StatCounter.counter);		// private method is not overriden
+		assertEquals(7, StatCounter.counter);		// private method is not overriden
 
 		bigFatJoe.superPublicMethod();
-		assertEquals(7, StatCounter.counter);
+		assertEquals(8, StatCounter.counter);
 		bigFatJoe.callInnerMethods2();
-		assertEquals(8, StatCounter.counter);		// only public super methods are overriden
+		assertEquals(9, StatCounter.counter);		// only public super methods are overriden
+
+		// test annotation
+		ClassDescriptor cd = ClassIntrospector.lookup(clazz);
+		Method m = cd.getMethod("publicMethod");
+		assertNotNull(m);
+		Annotation[] ad = m.getAnnotations();
+		assertEquals(1, ad.length);
+		Action a = (Action) ad[0];
+		assertEquals("alias", a.alias());
+		assertEquals("extension", a.extension());
+		assertEquals("method", a.method());
+		assertTrue(a.notInPath());
+		assertEquals("value", a.value());
 
 		
 	}

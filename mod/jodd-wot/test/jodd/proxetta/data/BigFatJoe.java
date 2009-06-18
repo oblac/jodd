@@ -2,6 +2,8 @@
 
 package jodd.proxetta.data;
 
+import jodd.madvoc.meta.Action;
+
 public class BigFatJoe extends SmallSkinnyZoe {
 
 	static {
@@ -12,6 +14,11 @@ public class BigFatJoe extends SmallSkinnyZoe {
 		StatCounter.counter++;
 	}
 
+	{
+		StatCounter.counter++;
+	}
+
+	@Action(method = "method", extension = "extension", alias = "alias", notInPath = true, value = "value")
 	public void publicMethod() {
 		System.out.println("BigFatJoe.publicMethod");
 	}
