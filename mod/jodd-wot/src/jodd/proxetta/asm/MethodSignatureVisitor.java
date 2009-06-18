@@ -177,10 +177,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	/**
-	 * @param i 1-base index
+	 * @param index 1-base index
 	 */
-	public int getArgumentOpcodeType(int i) {
-		return argumentsOpcodeType.get(i);
+	public int getArgumentOpcodeType(int index) {
+		return argumentsOpcodeType.get(index);
 	}
 
 	protected String getArgumentTypeName(int i) {
@@ -220,9 +220,12 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	/**
-	 * Returns declared class name or <code>null</code> for top-level methods.
+	 * Returns declared class name for inner methods or {@link #getClassname() classname} for top-level methods.
 	 */
 	public String getDeclaredClassName() {
+		if (declaredClassName == null) {
+			return classname;
+		}
 		return declaredClassName;
 	}
 

@@ -128,10 +128,11 @@ public class ExceptionUtil {
 	}
 
 	/**
-	 * Build a message for the given base message and root cause.
+	 * Build a message for the given base message and its cause.
 	 */
 	public static String buildMessage(String message, Throwable cause) {
 		if (cause != null) {
+			cause = getRootCause(cause);
 			StringBuilder buf = new StringBuilder();
 			if (message != null) {
 				buf.append(message).append("; ");
@@ -161,6 +162,21 @@ public class ExceptionUtil {
 			}
 		}
 		return cause;
+	}
+
+	/**
+	 * Finds throwing cause in exception stack. Returns throwable object if cause class is matched.
+	 * Otherwise, returns <code>null</code>.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T extends Throwable> T findCause(Throwable throwable, Class<T> cause) {
+		while (throwable != null) {
+			if (throwable.getClass().equals(cause)) {
+				return (T) throwable;
+			}
+			throwable = throwable.getCause();
+		}
+		return null;
 	}
 
 

@@ -8,6 +8,7 @@ import java.io.PrintStream;
 /**
  * Unchecked exception and also a wrapper for checked exceptions.
  */
+@SuppressWarnings({"SynchronizationOnLocalVariableOrMethodParameter"})
 public class UncheckedException extends RuntimeException {
 
 	protected final Throwable cause;
@@ -73,7 +74,8 @@ public class UncheckedException extends RuntimeException {
 			super.printStackTrace(ps);
 			if ((cause != null) && showCauseDetails) {
 				ps.println(CAUSE_DIV);
-				cause.printStackTrace(ps);
+				Throwable rootCause = ExceptionUtil.getRootCause(cause);
+				rootCause.printStackTrace(ps);
 			}
 		}
 	}
@@ -84,7 +86,8 @@ public class UncheckedException extends RuntimeException {
 			super.printStackTrace(pw);
 			if ((cause != null) && showCauseDetails) {
 				pw.println(CAUSE_DIV);
-				cause.printStackTrace(pw);
+				Throwable rootCause = ExceptionUtil.getRootCause(cause);
+				rootCause.printStackTrace(pw);
 			}
 		}
 	}

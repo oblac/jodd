@@ -110,7 +110,6 @@ public class ClassLoaderUtil {
 			return (Class) ReflectUtil.invokeDeclared(ClassLoader.class, classLoader, "defineClass",
 					new Class[]{String.class, byte[].class, int.class, int.class},
 					new Object[]{className, classData, new Integer(0), new Integer(classData.length)});
-
 		} catch (Throwable th) {
 			throw new RuntimeException("Unable to define class '" + className + "'.", th);
 		}

@@ -24,7 +24,7 @@ public class SubclassTest extends TestCase {
 		try {
 			FileUtil.writeBytes("d:\\Foo.class", b);
 		} catch (IOException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			e.printStackTrace();
 		}
 */
 		Foo foo = Proxetta.withAspects(a1).createProxyInstance(Foo.class);

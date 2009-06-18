@@ -46,5 +46,4 @@ class DestinationData {
 		adviceInits.add(name);
 	}
 
-
 }

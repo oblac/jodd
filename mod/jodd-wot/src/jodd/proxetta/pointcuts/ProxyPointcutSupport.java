@@ -14,6 +14,8 @@ import java.util.List;
  */
 public abstract class ProxyPointcutSupport implements ProxyPointcut {
 
+	protected static final String SIGNATURE_OBJECT_CLASS = "java/lang/Object";
+
 	/**
 	 * Returns <code>true</code> if method is public.
 	 */
@@ -48,11 +50,20 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 		return msign.getArgumentsCount() == 1;
 	}
 
+	// ---------------------------------------------------------------- methods level
+
 	/**
 	 * Returns <code>true</code> if method is a top-level method.
 	 */
 	public boolean isTopLevelMethod(MethodSignature msign) {
 		return msign.isTopLevelMethod();
+	}
+
+	/**
+	 * Returns <code>true</code> if method is declared in <code>Object</code> class (root class).
+	 */
+	public boolean isRootMethod(MethodSignature msign) {
+		return SIGNATURE_OBJECT_CLASS.equals(msign.getDeclaredClassName());
 	}
 
 

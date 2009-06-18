@@ -5,6 +5,7 @@ package jodd.proxetta;
 import java.io.InputStream;
 import jodd.util.ClassLoaderUtil;
 import jodd.proxetta.asm.ProxettaCreator;
+import jodd.exception.ExceptionUtil;
 
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
@@ -141,10 +142,19 @@ public class Proxetta {
 		if ((forced == false) && (pc.isProxyApplied() == false)) {
 			return target;
 		}
-		if (classLoader == null) {
-			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+		try {
+			if (classLoader == null) {
+				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+			}
+			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
+		} catch (RuntimeException rex) {
+			ClassFormatError cause = ExceptionUtil.findCause(rex, ClassFormatError.class);
+			if (cause == null) {
+				throw rex;
+			} else {
+				throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", rex);
+			}
 		}
-		return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
 	}
 
 	/**

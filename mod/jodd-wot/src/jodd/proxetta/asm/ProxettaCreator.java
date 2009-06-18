@@ -23,12 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
 
 /**
  * Creates the proxy subclass using ASM library.
  */
+@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 public class ProxettaCreator extends EmptyVisitor {
 
 	static final String TARGET_CLASS_NAME = ProxyTarget.class.getSimpleName();        // extract ProxyTarget name for recognition
@@ -188,22 +190,27 @@ public class ProxettaCreator extends EmptyVisitor {
 	/**
 	 * Creates methods and constructors.
 	 * <p>
-	 * Destination proxy will have all constructors as a target class, using {@link jodd.proxetta.asm.ProxettaCreator.ConstructorBuilder}.
+	 * Destination proxy will have all constructors as a target class, using {@link ConstructorBuilder}.
 	 * <p>
-	 * For a method, {@link jodd.proxetta.asm.ProxettaCreator.MethodBuilder} first determines if method matches
+	 * For a method, {@link ProxyMethodBuilder} first determines if method matches
 	 * pointcut. If so, method will be proxified.
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, superReference);
 
-		// constructors [A1]
+		// destination constructors [A1]
 		if (name.equals(INIT) == true) {
 			MethodVisitor mv = dest.visitMethod(access, name, desc, msign.getSignature(), null);
 			return new ConstructorBuilder(mv, msign);
 		}
+		// destination static block
+		if (name.equals(CLINIT) == true) {
+			//MethodVisitor mv = dest.visitMethod(access, name, desc, msign.getSignature(), null);
+			return null;
+		}
 		topMethodSignatures.add(msign.getSignature());
-		return new MethodBuilder(msign);
+		return new ProxyMethodBuilder(msign);
 	}
 
 
@@ -282,7 +289,7 @@ public class ProxettaCreator extends EmptyVisitor {
 							return null;
 						}
 						msign.setDeclaredClassName(declaredClassName);
-						return new MethodBuilder(msign);
+						return new ProxyMethodBuilder(msign);
 					}
 				}, 0);
 			} catch (IOException ioex) {
@@ -352,11 +359,11 @@ public class ProxettaCreator extends EmptyVisitor {
 	/**
 	 * Proxy method builder.
 	 */
-	class MethodBuilder extends EmptyVisitor {
+	class ProxyMethodBuilder extends EmptyVisitor {
 
 		final MethodSignatureVisitor msign;
 
-		MethodBuilder(MethodSignatureVisitor msign) {
+		ProxyMethodBuilder(MethodSignatureVisitor msign) {
 			this.msign = msign;
 		}
 
@@ -430,8 +437,8 @@ public class ProxettaCreator extends EmptyVisitor {
 		void writeAnnotations(MethodVisitor dest, List<AnnotationData> annotations) {
 			for (AnnotationData ann : annotations) {
 				AnnotationVisitor av = dest.visitAnnotation(ann.signature, ann.isVisible);
-				for (String name : ann.values.keySet()) {
-					av.visit(name, ann.values.get(name));
+				for (Map.Entry<String, Object> entry : ann.values.entrySet()) {
+					av.visit(entry.getKey(), entry.getValue());
 				}
 			}
 		}

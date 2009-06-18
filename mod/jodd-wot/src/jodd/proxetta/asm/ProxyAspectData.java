@@ -30,6 +30,7 @@ import java.util.HashMap;
 /**
  * Data of single aspect.
  */
+@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 class ProxyAspectData {
 
 	final ClassReader adviceClassReader;
@@ -143,7 +144,6 @@ class ProxyAspectData {
 
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-
 				if (name.equals(CLINIT) == true) {              // [A6]
 					if (desc.equals(DESC_VOID) == false) {
 						throw new ProxettaException("Invalid static initialization block description for advice: '" + advice.getName() + "'.");

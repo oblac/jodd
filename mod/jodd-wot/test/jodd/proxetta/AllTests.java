@@ -10,6 +10,7 @@ public class AllTests extends TestSuite {
 	public AllTests() {
 		super("jodd.proxetta test suite");
 		addTestSuite(SubclassTest.class);
+		addTestSuite(BigClassTest.class);
 	}
 
 	public static Test suite() {
