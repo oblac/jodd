@@ -268,7 +268,8 @@ final class ProxyAspectData {
 				}
 
 				// Parse EXECUTE method, just to gather some info, real parsing will come later
-				return new MethodAdapter(new EmptyMethodVisitor()) {		// todo da li moze null? da li moze samo visitor?
+				//return new MethodAdapter(new EmptyMethodVisitor()) {		// moze li se zameniti ovim dole?
+				return new EmptyMethodVisitor() {
 					@Override
 					public void visitVarInsn(int opcode, int var) {
 						if (isStoreOpcode(opcode)) {
