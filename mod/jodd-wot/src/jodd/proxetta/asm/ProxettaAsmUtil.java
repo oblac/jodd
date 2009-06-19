@@ -4,17 +4,12 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.signature.SignatureReader;
 import static org.objectweb.asm.Opcodes.*;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
-import jodd.proxetta.AnnotationData;
 import static jodd.proxetta.asm.ProxettaNaming.*;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Various ASM utilities used by {@link jodd.proxetta.Proxetta}.
