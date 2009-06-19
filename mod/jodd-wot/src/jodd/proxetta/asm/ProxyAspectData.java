@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * Data of single aspect.
  */
-@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter", "AnonymousClassVariableHidesContainingMethodVariable"})
+@SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 final class ProxyAspectData {
 
 	final ClassReader adviceClassReader;
@@ -114,15 +114,15 @@ final class ProxyAspectData {
 			return;
 		}
 
-		adviceClassReader.accept(new EmptyVisitor() {
+		adviceClassReader.accept(new EmptyClassVisitor() {
 
 			/**
 			 * Stores advice reference.
 			 */
 			@Override
-			public void visit(int version, int access, String name, String signature, String supername, String[] interfaces) {
+			public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 				adviceReference = name;
-				super.visit(version, access, name, signature, supername, interfaces);
+				super.visit(version, access, name, signature, superName, interfaces);
 			}
 
 			/**
@@ -268,7 +268,7 @@ final class ProxyAspectData {
 				}
 
 				// Parse EXECUTE method, just to gather some info, real parsing will come later
-				return new MethodAdapter(this) {
+				return new MethodAdapter(new EmptyMethodVisitor()) {		// todo da li moze null? da li moze samo visitor?
 					@Override
 					public void visitVarInsn(int opcode, int var) {
 						if (isStoreOpcode(opcode)) {

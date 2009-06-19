@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
-@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
+@SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 
 	public static final String TARGET_CLASS_NAME = ProxyTarget.class.getSimpleName();        // extract ProxyTarget name for recognition
@@ -132,10 +132,10 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 		mv.visitCode();
 
 		//*** VISIT ADVICE - called for each aspect and each method
-		aspectData.getAdviceClassReader().accept(new EmptyVisitor() {
+		aspectData.getAdviceClassReader().accept(new EmptyClassVisitor() {
 
 			@Override
-			public MethodVisitor visitMethod(int methodAccess, String name, String desc, String signature, String[] exceptions) {
+			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
 				if (name.equals(EXECUTE_METHOD_NAME) == false) {
 					return null;
@@ -144,25 +144,25 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 				return new IntArgHistoryMethodAdapter(mv) {
 
 					@Override
-					public void visitFieldInsn(int opcode, String owner, String fieldName, String fieldDesc) {
-						if (owner.equals(aspectData.adviceReference)) {
-							owner = wd.thisReference;              // [F5]
-							fieldName = adviceFieldName(fieldName, aspectData.aspectIndex);
+					public void visitFieldInsn(int opcode, String string, String string1, String string2) {
+						if (string.equals(aspectData.adviceReference)) {
+							string = wd.thisReference;              // [F5]
+							string1 = adviceFieldName(string1, aspectData.aspectIndex);
 						}
-						super.visitFieldInsn(opcode, owner, fieldName, fieldDesc);
+						super.visitFieldInsn(opcode, string, string1, string2);
 					}
 
 
 					@Override
-					public void visitVarInsn(int opcode, int var) {
-						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
-						super.visitVarInsn(opcode, var);   // [F1]
+					public void visitVarInsn(int opcode, int i1) {
+						i1 += (i1 == 0 ? 0 : td.msign.getAllArgumentsSize());
+						super.visitVarInsn(opcode, i1);   // [F1]
 					}
 
 					@Override
-					public void visitIincInsn(int var, int increment) {
+					public void visitIincInsn(int var, int i1) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
-						super.visitIincInsn(var, increment);  // [F1]
+						super.visitIincInsn(var, i1);  // [F1]
 					}
 
 					@Override
@@ -180,23 +180,23 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 					}
 
 					@Override
-					public void visitMethodInsn(int opcode, String owner, String methodName, String methodDesc) {
+					public void visitMethodInsn(int opcode, String string, String string1, String string2) {
 						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE)) {
-							if (owner.equals(aspectData.adviceReference)) {
-								owner = wd.thisReference;
-								methodName = adviceMethodName(methodName, aspectData.aspectIndex);
+							if (string.equals(aspectData.adviceReference)) {
+								string = wd.thisReference;
+								string1 = adviceMethodName(string1, aspectData.aspectIndex);
 							}
 						} else
 
 						if (opcode == INVOKESTATIC) {
-							if (owner.equals(aspectData.adviceReference)) {
-								owner = wd.thisReference;
-								methodName = adviceMethodName(methodName, aspectData.aspectIndex);
+							if (string.equals(aspectData.adviceReference)) {
+								string = wd.thisReference;
+								string1 = adviceMethodName(string1, aspectData.aspectIndex);
 							} else
 
-							if (owner.endsWith('/' + TARGET_CLASS_NAME) == true) {
+							if (string.endsWith('/' + TARGET_CLASS_NAME) == true) {
 
-								if (isInvokeMethod(methodName, methodDesc)) {           // [R7]
+								if (isInvokeMethod(string1, string2)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 										loadMethodArguments(mv, td.msign);
 										mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
@@ -211,13 +211,13 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isArgumentsCountMethod(methodName, methodDesc)) {        // [R2]
+								if (isArgumentsCountMethod(string1, string2)) {        // [R2]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									return;
 								} else
 
-								if (isArgumentTypeMethod(methodName, methodDesc)) {      // [R3]
+								if (isArgumentTypeMethod(string1, string2)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -225,7 +225,7 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isArgumentMethod(methodName, methodDesc)) {           // [R4]
+								if (isArgumentMethod(string1, string2)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -233,7 +233,7 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isSetArgumentMethod(methodName, methodDesc)) {           // [R5]
+								if (isSetArgumentMethod(string1, string2)) {           // [R5]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -241,7 +241,7 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isCreateArgumentsArrayMethod(methodName, methodDesc)) {  // [R6]
+								if (isCreateArgumentsArrayMethod(string1, string2)) {  // [R6]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
@@ -254,7 +254,7 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isCreateArgumentsClassArrayMethod(methodName, methodDesc)) {     // [R11]
+								if (isCreateArgumentsClassArrayMethod(string1, string2)) {     // [R11]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									mv.visitTypeInsn(ANEWARRAY, "java/lang/Class");
@@ -267,28 +267,28 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 									return;
 								} else
 
-								if (isTargetMethod(methodName, methodDesc)) {       // [R9.1]
+								if (isTargetMethod(string1, string2)) {       // [R9.1]
 									mv.visitVarInsn(ALOAD, 0);
 									return;
 								} else
 
-								if (isTargetClassMethod(methodName, methodDesc)) {       // [R9]
+								if (isTargetClassMethod(string1, string2)) {       // [R9]
 									mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
 									return;
 								} else
 
-								if (isTargetMethodNameMethod(methodName, methodDesc)) {  // [R10]
+								if (isTargetMethodNameMethod(string1, string2)) {  // [R10]
 									mv.visitLdcInsn(td.msign.getMethodName());
 									return;
 								}
 
-								if (isReturnTypeMethod(methodName, methodDesc)) {        // [R11]
+								if (isReturnTypeMethod(string1, string2)) {        // [R11]
 									loadMethodReturnClass(mv, td.msign);
 									return;
 								}
 							}
 						}
-						super.visitMethodInsn(opcode, owner, methodName, methodDesc);
+						super.visitMethodInsn(opcode, string, string1, string2);
 					}
 
 				};
