@@ -57,9 +57,9 @@ public class BigClassTest extends TestCase {
 		MadvocAction ma = (MadvocAction) clazz.getAnnotation(MadvocAction.class);
 		assertEquals("madvocAction", ma.value());
 
-//		InterceptedBy ib = (InterceptedBy) clazz.getAnnotation(InterceptedBy.class);
-//		assertNotNull(ib.value());
-//		assertEquals(2, ib.value().length);
+		InterceptedBy ib = (InterceptedBy) clazz.getAnnotation(InterceptedBy.class);
+		assertNotNull(ib.value());
+		assertEquals(2, ib.value().length);
 
 
 		// test method annotation

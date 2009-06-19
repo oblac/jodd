@@ -12,7 +12,7 @@ import jodd.jtx.meta.Transaction;
 import jodd.jtx.JtxPropagationBehavior;
 
 @MadvocAction(value = "madvocAction")
-//@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
+@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
 public class BigFatJoe extends SmallSkinnyZoe {
 
 	@PetiteInject

@@ -4,7 +4,7 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.AnnotationVisitor;
 
-public class AnnotationVisitorAdapter implements AnnotationVisitor {
+public class AnnotationVisitorAdapter extends EmptyAnnotationVisitor {
 
 	protected final AnnotationVisitor dest;
 
@@ -12,24 +12,29 @@ public class AnnotationVisitorAdapter implements AnnotationVisitor {
 		this.dest = dest;
 	}
 
-	public void visit(String s, Object o) {
-		dest.visit(s, o);
+	@Override
+	public void visit(String name, Object value) {
+		dest.visit(name, value);
 	}
 
-	public void visitEnum(String s, String s1, String s2) {
-		dest.visitEnum(s, s1, s2);
+	@Override
+	public void visitEnum(String name, String desc, String value) {
+		dest.visitEnum(name, desc, value);
 	}
 
-	public AnnotationVisitor visitAnnotation(String s, String s1) {
-		dest.visitAnnotation(s, s1);
+	@Override
+	public AnnotationVisitor visitAnnotation(String name, String desc) {
+		dest.visitAnnotation(name, desc);
 		return this;
 	}
 
-	public AnnotationVisitor visitArray(String s) {
-		dest.visitArray(s);
+	@Override
+	public AnnotationVisitor visitArray(String name) {
+		dest.visitArray(name);
 		return this;
 	}
 
+	@Override
 	public void visitEnd() {
 		dest.visitEnd();
 	}
