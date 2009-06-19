@@ -25,7 +25,6 @@ import static jodd.proxetta.asm.ProxettaNaming.EXECUTE_METHOD_NAME;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class ProxyMethodBuilder extends EmptyMethodVisitor  {
@@ -104,17 +103,6 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 	}
 
 
-	/**
-	 * Write all proxy method annotations.
-	 */
-	void writeAnnotations(MethodVisitor dest, List<AnnotationData> annotations) {
-		for (AnnotationData ann : annotations) {
-			AnnotationVisitor av = dest.visitAnnotation(ann.signature, ann.isVisible);
-			for (Map.Entry<String, Object> entry : ann.values.entrySet()) {
-				av.visit(entry.getKey(), entry.getValue());
-			}
-		}
-	}
 
 	/**
 	 * Creates proxy methods over target method, For each matched proxy, new proxy method is created
