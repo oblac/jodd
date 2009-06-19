@@ -16,7 +16,6 @@ import static org.objectweb.asm.Opcodes.ANEWARRAY;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ALOAD;
-import jodd.proxetta.AnnotationData;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
@@ -24,7 +23,6 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.*;
 import static jodd.proxetta.asm.ProxettaNaming.EXECUTE_METHOD_NAME;
 
 import java.util.List;
-import java.util.ArrayList;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class ProxyMethodBuilder extends EmptyMethodVisitor  {
@@ -33,42 +31,61 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 
 	protected final MethodSignatureVisitor msign;
 	protected final WorkData wd;
+	protected final List<ProxyAspectData> aspectList;
 
-	public ProxyMethodBuilder(MethodSignatureVisitor msign, WorkData wd) {
+	public ProxyMethodBuilder(MethodSignatureVisitor msign, WorkData wd, List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.wd = wd;
+		this.aspectList = aspectList;
+		createFirstChainDelegate_Start();
 	}
 
+	// ---------------------------------------------------------------- visits
+
 	/**
-	 * Stores target method annotation data in method signature.
+	 * Copies target method annotations
 	 */
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		AnnotationData ad = new AnnotationData(desc, visible);
-		msign.annotations.add(ad);
-		return new AnnotationReader(ad);
+		AnnotationVisitor destAnn = mv.visitAnnotation(desc, visible); // [A4]
+		return new AnnotationVisitorAdapter(destAnn);
 	}
+
+	@Override
+	public AnnotationVisitor visitAnnotationDefault() {
+		AnnotationVisitor destAnn = mv.visitAnnotationDefault();
+		return new AnnotationVisitorAdapter(destAnn);
+	}
+
+	@Override
+	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+		AnnotationVisitor destAnn = mv.visitParameterAnnotation(parameter, desc, visible);
+		return new AnnotationVisitorAdapter(destAnn);
+	}
+
 
 	/**
 	 * Finally, builds proxy methods if applied to current method.
 	 */
 	@Override
 	public void visitEnd() {
-		// match method to all proxy aspects
-
-		List<ProxyAspectData> aspectList = null;
-		for (ProxyAspectData aspectData : wd.proxyAspects) {
-			if (aspectData.apply(msign) == true) {
-				if (aspectList == null) {
-					aspectList = new ArrayList<ProxyAspectData>(wd.proxyAspects.length);
-				}
-				aspectList.add(aspectData);
-			}
+		createFirstChainDelegate_Continue(tmd);
+		for (int p = 0; p < tmd.proxyData.length; p++) {
+			tmd.selectCurrentProxy(p);
+			createProxyMethod(tmd);
 		}
-		if (aspectList == null) {
-			return; // no pointcut on this method, return
-		}
+	}
 
+
+	// ---------------------------------------------------------------- creating
+
+	protected TargetMethodData tmd;
+	protected MethodVisitor mv;
+
+	/**
+	 * Starts creation of first chain delegate.
+	 */
+	protected void createFirstChainDelegate_Start() {
 		// check invalid access flags
 		int access = msign.getAccessFlags();
 		if ((access & MethodInfo.ACC_FINAL) != 0) {   // detect final
@@ -76,30 +93,23 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 		}
 
 		// create proxy methods
-		TargetMethodData tmd = new TargetMethodData(msign, aspectList);
-		createFirstChainDelegate(tmd);
-		for (int p = 0; p < tmd.proxyData.length; p++) {
-			tmd.selectCurrentProxy(p);
-			createProxyMethod(tmd);
-		}
-		wd.proxyApplied = true;
+		tmd = new TargetMethodData(msign, aspectList);
+
+		access = ProxettaAsmUtil.makeNonNative(access);
+		mv = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
 	}
 
 	/**
-	 * Creates the very first method in calling chain that simply delegates invocation to the first proxy method.
+	 * Continues the creation of the very first method in calling chain that simply delegates invocation to the first proxy method.
 	 * This method mirrors the target method.
 	 */
-	protected void createFirstChainDelegate(TargetMethodData td) {
-		int access = td.msign.getAccessFlags();
-		access = ProxettaAsmUtil.makeNonNative(access);
-		MethodVisitor mv = wd.dest.visitMethod(access, td.msign.getMethodName(), td.msign.getDescription(), td.msign.getSignature(), null);
+	protected void createFirstChainDelegate_Continue(TargetMethodData td) {
 		mv.visitCode();
 		loadMethodArguments(mv, td.msign);
 		mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.firstMethodName(), td.msign.getDescription());
 		visitReturn(mv, td.msign, false);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
-		writeAnnotations(mv, td.msign.getAnnotations());      // [A4]
 	}
 
 

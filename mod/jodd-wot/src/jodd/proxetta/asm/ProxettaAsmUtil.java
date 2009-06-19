@@ -573,20 +573,4 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
-
-	// ---------------------------------------------------------------- annotation
-
-	/**
-	 * Write all proxy method annotations.
-	 */
-	public static void writeAnnotations(MethodVisitor dest, List<AnnotationData> annotations) {
-		for (AnnotationData ann : annotations) {
-			AnnotationVisitor av = dest.visitAnnotation(ann.signature, ann.isVisible);
-			for (Map.Entry<String, Object> entry : ann.values.entrySet()) {
-				av.visit(entry.getKey(), entry.getValue());
-			}
-		}
-	}
-
-
 }

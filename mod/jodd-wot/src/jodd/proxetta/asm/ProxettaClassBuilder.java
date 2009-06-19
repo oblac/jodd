@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Proxetta class builder.
@@ -103,7 +105,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			return null;
 		}
 		topMethodSignatures.add(msign.getSignature());
-		return new ProxyMethodBuilder(msign, wd);
+		return applyProxy(msign);
 	}
 
 
@@ -195,7 +197,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 							return null;
 						}
 						msign.setDeclaredClassName(declaredClassName);
-						return new ProxyMethodBuilder(msign, wd);
+						return applyProxy(msign);
 					}
 				}, 0);
 			} catch (IOException ioex) {
@@ -242,6 +244,32 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
 		throw new ProxettaException("Inner classes are not supported: " + outerName + ' ' + innerName);		// todo da li ovo moze da se ignroise
+	}
+
+
+
+	// ---------------------------------------------------------------- create proxy method builder if needed
+
+
+	/**
+	 * Check if proxy should be applied on method and return proxy method builder if so.
+	 * Otherwise, returns <code>null</code>.
+	 */
+	protected ProxyMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+		List<ProxyAspectData> aspectList = null;
+		for (ProxyAspectData aspectData : wd.proxyAspects) {
+			if (aspectData.apply(msign) == true) {
+				if (aspectList == null) {
+					aspectList = new ArrayList<ProxyAspectData>(wd.proxyAspects.length);
+				}
+				aspectList.add(aspectData);
+			}
+		}
+		if (aspectList == null) {
+			return null; // no pointcut on this method, return
+		}
+		wd.proxyApplied = true;
+		return new ProxyMethodBuilder(msign, wd, aspectList);
 	}
 
 }
