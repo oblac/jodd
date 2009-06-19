@@ -2,7 +2,7 @@
 
 package examples.proxetta.n.proxy;
 
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxyPointcut;
 
@@ -12,7 +12,7 @@ import examples.proxetta.n.proxy.advice.TxAdvice;
 
 public class TxPointcut implements ProxyPointcut {
 
-	public boolean apply(MethodSignature msign) {
+	public boolean apply(MethodInfo msign) {
 		List<AnnotationData> anns = msign.getAnnotations();
 		String txProxyName = TxAdvice.class.getName();
 		for (AnnotationData a : anns) {

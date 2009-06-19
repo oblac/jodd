@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Holds data for target method that should be wrapped.
  */
-class TargetMethodData {
+final class TargetMethodData {
 
 	final MethodSignatureVisitor msign;
 	final String methodName;

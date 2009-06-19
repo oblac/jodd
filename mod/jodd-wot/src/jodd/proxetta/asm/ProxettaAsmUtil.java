@@ -6,7 +6,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
 import static org.objectweb.asm.Opcodes.*;
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
 import static jodd.proxetta.asm.ProxettaNaming.*;
@@ -14,8 +14,11 @@ import static jodd.proxetta.asm.ProxettaNaming.*;
 /**
  * Various ASM utilities used by {@link jodd.proxetta.Proxetta}.
  */
-class ProxettaAsmUtil {
+public class ProxettaAsmUtil {
 
+	public static final String INIT = "<init>";
+	public static final String CLINIT = "<clinit>";
+	public static final String DESC_VOID = "()V";
 
 	// ---------------------------------------------------------------- misc
 
@@ -36,14 +39,14 @@ class ProxettaAsmUtil {
 	 * Changes method access to private and final.
 	 */
 	public static int makePrivateFinalAccess(int access) {
-		return (access & 0xFFFFFFF0) | MethodSignature.ACC_PRIVATE | MethodSignature.ACC_FINAL;
+		return (access & 0xFFFFFFF0) | MethodInfo.ACC_PRIVATE | MethodInfo.ACC_FINAL;
 	}
 
 	/**
 	 * Removes native method access flag.
 	 */
 	public static int makeNonNative(int access) {
-		return (access & ~MethodSignature.ACC_NATIVE);
+		return (access & ~MethodInfo.ACC_NATIVE);
 	}
 
 	/**

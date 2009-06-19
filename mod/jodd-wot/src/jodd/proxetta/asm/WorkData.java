@@ -8,24 +8,35 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Holds some various information about the destination.
+ * Holds various information about the current process of making proxy.
  */
-class DestinationData {
+final class WorkData {
 
 	final ClassVisitor dest;
 
-	DestinationData(ClassVisitor dest) {
+	WorkData(ClassVisitor dest) {
 		this.dest = dest;
 	}
 
+	// ---------------------------------------------------------------- data
+
+	String targetPackage;
+	String targetClassname;
+	boolean proxyApplied;
+	String nextSupername;
+	String thisReference;
+	String superReference;
+	int hierarchyLevel;
+	ProxyAspectData[] proxyAspects;
+
 	// ---------------------------------------------------------------- advice clinits
 
-	protected List<String> adviceClinits;
+	List<String> adviceClinits;
 
 	/**
 	 * Saves used static initialization blocks (clinit) of advices.
 	 */
-	protected void addClinitMethod(String name) {
+	void addAdviceClinitMethod(String name) {
 		if (adviceClinits == null) {
 			adviceClinits = new ArrayList<String>();
 		}
@@ -34,12 +45,12 @@ class DestinationData {
 
 	// ---------------------------------------------------------------- advice inits
 
-	protected List<String> adviceInits;
+	List<String> adviceInits;
 
 	/**
 	 * Saves used constructors of advices.
 	 */
-	protected void addInitMethod(String name) {
+	void addAdviceInitMethod(String name) {
 		if (adviceInits == null) {
 			adviceInits = new ArrayList<String>();
 		}

@@ -3,8 +3,22 @@
 package jodd.proxetta.data;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.InterceptedBy;
+import jodd.madvoc.interceptor.EchoInterceptor;
+import jodd.madvoc.interceptor.ServletConfigInterceptor;
+import jodd.petite.meta.PetiteInject;
+import jodd.jtx.meta.Transaction;
+import jodd.jtx.JtxPropagationBehavior;
 
+@MadvocAction(value = "madvocAction")
+//@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
 public class BigFatJoe extends SmallSkinnyZoe {
+
+	@PetiteInject
+	public BigFatJoe() {
+		System.out.println("BigFatJoe.BigFatJoe");
+	}
 
 	static {
 		System.out.println("BigFatJoe.static intializer");
@@ -19,6 +33,8 @@ public class BigFatJoe extends SmallSkinnyZoe {
 	}
 
 	@Action(method = "method", extension = "extension", alias = "alias", notInPath = true, value = "value")
+	@PetiteInject
+	@Transaction(readOnly = true, propagation = JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW)
 	public void publicMethod() {
 		System.out.println("BigFatJoe.publicMethod");
 	}

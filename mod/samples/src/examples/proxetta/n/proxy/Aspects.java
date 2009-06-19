@@ -2,7 +2,7 @@
 
 package examples.proxetta.n.proxy;
 
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
 import examples.proxetta.n.proxy.advice.TxAdvice;
@@ -24,7 +24,7 @@ public class Aspects {
 	private ProxyAspect createTxAspect() {
 		return new ProxyAspect(TxAdvice.class,
 				new ProxyPointcut() {
-					public boolean apply(MethodSignature msign) {
+					public boolean apply(MethodInfo msign) {
 						return msign.getClassname().endsWith("Service") && msign.getMethodName().startsWith("z");
 					}
 				});
@@ -33,9 +33,9 @@ public class Aspects {
 	private ProxyAspect createJoAspect() {
 		return new ProxyAspect(JoAdvice.class,
 				new ProxyPointcut() {
-					public boolean apply(MethodSignature msign) {
+					public boolean apply(MethodInfo msign) {
 						System.out.println("$$$$$$$$$$ " + msign);
-						System.out.println("rrrrrrrrrr " + (msign.getReturnOpcodeType() == MethodSignature.TYPE_VOID));
+						System.out.println("rrrrrrrrrr " + (msign.getReturnOpcodeType() == MethodInfo.TYPE_VOID));
 						return msign.getClassname().endsWith("Service");
 					}
 				});

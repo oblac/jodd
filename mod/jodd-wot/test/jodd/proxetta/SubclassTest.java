@@ -14,7 +14,7 @@ public class SubclassTest extends TestCase {
 	public void test1() {
 
 		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodSignature msign) {
+			public boolean apply(MethodInfo msign) {
 				return true;
 			}
 		});

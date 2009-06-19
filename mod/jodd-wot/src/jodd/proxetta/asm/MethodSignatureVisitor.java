@@ -6,7 +6,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.Opcodes;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxettaException;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * MethodSignature = ( visitFormalTypeParameter visitClassBound? visitInterfaceBound* )* ( visitParameterType* visitReturnType visitExceptionType* )
  * </pre>
  */
-public class MethodSignatureVisitor extends TraceSignatureVisitor implements MethodSignature {
+public class MethodSignatureVisitor extends TraceSignatureVisitor implements MethodInfo {
 
 	protected int access;
 	protected String methodName;

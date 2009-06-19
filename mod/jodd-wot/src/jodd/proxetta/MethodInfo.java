@@ -5,10 +5,10 @@ package jodd.proxetta;
 import java.util.List;
 
 /**
- * Method signature provides various information about the method.
+ * Method info provides various information about the method.
  * Used in {@link jodd.proxetta.ProxyPointcut pointcut} definitions.
  */
-public interface MethodSignature {
+public interface MethodInfo {
 
 	// types
 	int TYPE_BYTE           = 'B';

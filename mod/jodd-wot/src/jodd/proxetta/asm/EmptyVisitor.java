@@ -10,9 +10,15 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
 /**
- * Empty field, method and class visitor.
+ * Empty field, method and class visitor. Returns <code>null</code> instead of <code>this</code>
  */
-public class EmptyVisitor implements MethodVisitor, ClassVisitor, FieldVisitor {
+public class EmptyVisitor implements MethodVisitor, ClassVisitor, FieldVisitor, AnnotationVisitor {
+
+	protected boolean returnThis;
+
+	protected EmptyVisitor nullOrThis() {
+		return returnThis ? this : null;
+	}
 
 	// ---------------------------------------------------------------- class visitor add-ons
 
@@ -30,25 +36,25 @@ public class EmptyVisitor implements MethodVisitor, ClassVisitor, FieldVisitor {
 	}
 
 	public FieldVisitor visitField(int i, String string, String string1, String string2, Object object) {
-		return null;
+		return nullOrThis();
 	}
 
 	public MethodVisitor visitMethod(int i, String string, String string1, String string2, String[] strings) {
-		return null;
+		return nullOrThis();
 	}
 
 	// ---------------------------------------------------------------- method visitor only
 
 	public AnnotationVisitor visitAnnotationDefault() {
-		return null;
+		return nullOrThis();
 	}
 
 	public AnnotationVisitor visitAnnotation(String string, boolean b) {
-		return null;
+		return nullOrThis();
 	}
 
 	public AnnotationVisitor visitParameterAnnotation(int i, String string, boolean b) {
-		return null;
+		return nullOrThis();
 	}
 
 	public void visitAttribute(Attribute attribute) {
@@ -112,5 +118,21 @@ public class EmptyVisitor implements MethodVisitor, ClassVisitor, FieldVisitor {
 	}
 
 	public void visitEnd() {
+	}
+
+	// ---------------------------------------------------------------- annotation visitors
+
+	public void visit(String s, Object o) {
+	}
+
+	public void visitEnum(String s, String s1, String s2) {
+	}
+
+	public AnnotationVisitor visitAnnotation(String s, String s1) {
+		return nullOrThis();
+	}
+
+	public AnnotationVisitor visitArray(String s) {
+		return nullOrThis();
 	}
 }

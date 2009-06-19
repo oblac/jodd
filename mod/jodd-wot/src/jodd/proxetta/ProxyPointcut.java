@@ -12,6 +12,6 @@ public interface ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method signature should be wrapped with the proxy.
 	 */
-	boolean apply(MethodSignature msign);
+	boolean apply(MethodInfo msign);
 
 }

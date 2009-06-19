@@ -88,7 +88,7 @@ public class Proxetta {
 	 */
 	protected ProxettaCreator createProxettaCreator() {
 		ProxettaCreator pc = new ProxettaCreator(this.aspects);
-		pc.setVariableClassName(variableClassName);
+		pc.setUseVariableClassName(variableClassName);
 		return pc;
 	}
 

@@ -7,7 +7,7 @@ import jodd.petite.BeanDefinition;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyPointcut;
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import examples.petite.Foo;
@@ -22,7 +22,7 @@ public class Petite {
 	}
 
 	static ProxyAspect pd4log = new ProxyAspect(LogProxyAdvice.class, new ProxyPointcut() {
-		public boolean apply(MethodSignature msign) {
+		public boolean apply(MethodInfo msign) {
 			return true;
 		}
 	});

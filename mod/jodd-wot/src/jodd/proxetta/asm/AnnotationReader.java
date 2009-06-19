@@ -16,18 +16,31 @@ class AnnotationReader implements AnnotationVisitor {
 		this.annData = annData;
 	}
 
-	public void visit(String string, Object object) {
-		annData.values.put(string, object);
+	/**
+	 * Visits a primitive value of the annotation.
+	 */
+	public void visit(String name, Object value) {
+		annData.values.put(name, value);
 	}
 
-	public void visitEnum(String string, String string1, String string2) {
+	/**
+	 * Visits an enumeration value of the annotation.
+	 */
+	public void visitEnum(String name, String desc, String value) {
+		System.out.println("cdcccccccccccccccc " + name  + desc + value);		
 	}
 
-	public AnnotationVisitor visitAnnotation(String string, String string1) {
+	/**
+	 * Visits a nested annotation value of the annotation.
+	 */
+	public AnnotationVisitor visitAnnotation(String name, String desc) {
 		return this;
 	}
 
-	public AnnotationVisitor visitArray(String string) {
+	/**
+	 * Visits an array value of the annotation.
+	 */
+	public AnnotationVisitor visitArray(String name) {
 		return this;
 	}
 

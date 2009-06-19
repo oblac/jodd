@@ -3,7 +3,7 @@
 package examples.proxetta;
 
 import jodd.proxetta.ProxyPointcut;
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxyAspect;
@@ -22,7 +22,7 @@ import examples.proxetta.log.CustomProxyAdvice;
 public class ProxettaExample {
 
 	static ProxyAspect pd1 = new ProxyAspect(LogProxyAdvice.class, new ProxyPointcut() {
-		public boolean apply(MethodSignature msign) {
+		public boolean apply(MethodInfo msign) {
 			System.out.println("#test " + msign);
 			List<AnnotationData> anns = msign.getAnnotations();
 			for (AnnotationData a : anns) {
@@ -35,7 +35,7 @@ public class ProxettaExample {
 	});
 
 	static ProxyAspect pd2 = new ProxyAspect(CustomProxyAdvice.class, new ProxyPointcut() { 
-		public boolean apply(MethodSignature msign) {
+		public boolean apply(MethodInfo msign) {
 			List<AnnotationData> anns = msign.getAnnotations();
 			for (AnnotationData a : anns) {
 				if (a.declaration.equals(Custom.class.getName())) {

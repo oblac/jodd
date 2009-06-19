@@ -2,7 +2,7 @@
 
 package jodd.proxetta.pointcuts;
 
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 
 /**
@@ -19,7 +19,7 @@ public class MethodAnnotationPointcut extends ProxyPointcutSupport {
 		this.annotationName = annotationClass.getName();
 	}
 
-	public boolean apply(MethodSignature msign) {
+	public boolean apply(MethodInfo msign) {
 		return hasAnnotation(msign, annotationName);
 	}
 }

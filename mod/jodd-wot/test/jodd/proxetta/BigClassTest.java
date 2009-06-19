@@ -9,10 +9,14 @@ import jodd.proxetta.data.StatCounterAdvice;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
-import jodd.bean.BeanUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.InterceptedBy;
+import jodd.petite.meta.PetiteInject;
+import jodd.jtx.meta.Transaction;
+import jodd.jtx.JtxPropagationBehavior;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -22,7 +26,7 @@ public class BigClassTest extends TestCase {
 
 	public void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {
 		ProxyAspect aspect = new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodSignature msign) {
+			public boolean apply(MethodInfo msign) {
 				System.out.println(!isRootMethod(msign) + " " + msign.getDeclaredClassName() + '#' + msign.getMethodName());
 				return !isRootMethod(msign);
 			}
@@ -48,19 +52,37 @@ public class BigClassTest extends TestCase {
 		bigFatJoe.callInnerMethods2();
 		assertEquals(9, StatCounter.counter);		// only public super methods are overriden
 
-		// test annotation
+
+		// test class annotation
+		MadvocAction ma = (MadvocAction) clazz.getAnnotation(MadvocAction.class);
+		assertEquals("madvocAction", ma.value());
+
+//		InterceptedBy ib = (InterceptedBy) clazz.getAnnotation(InterceptedBy.class);
+//		assertNotNull(ib.value());
+//		assertEquals(2, ib.value().length);
+
+
+		// test method annotation
 		ClassDescriptor cd = ClassIntrospector.lookup(clazz);
 		Method m = cd.getMethod("publicMethod");
 		assertNotNull(m);
-		Annotation[] ad = m.getAnnotations();
-		assertEquals(1, ad.length);
-		Action a = (Action) ad[0];
+		Annotation[] aa = m.getAnnotations();
+		assertEquals(3, aa.length);
+		Action a = (Action) aa[0];
 		assertEquals("alias", a.alias());
 		assertEquals("extension", a.extension());
 		assertEquals("method", a.method());
 		assertTrue(a.notInPath());
 		assertEquals("value", a.value());
 
-		
+		PetiteInject pi = (PetiteInject) aa[1];
+		assertEquals("", pi.value());
+
+		Transaction tx = (Transaction) aa[2];
+		assertTrue(tx.readOnly());
+		assertEquals(-1, tx.timeout());
+		assertEquals(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, tx.propagation());
+
+
 	}
 }

@@ -2,14 +2,14 @@
 
 package jodd.proxetta.pointcuts;
 
-import jodd.proxetta.MethodSignature;
+import jodd.proxetta.MethodInfo;
 
 /**
  * Pointcut on all public getters methods.
  */
 public class AllGettersPointcut extends ProxyPointcutSupport {
 
-	public boolean apply(MethodSignature msign) {
+	public boolean apply(MethodInfo msign) {
 		return
 				isPublic(msign)
 				&& hasReturnValue(msign)
