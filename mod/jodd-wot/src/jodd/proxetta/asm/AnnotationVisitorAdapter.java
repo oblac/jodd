@@ -4,6 +4,9 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.AnnotationVisitor;
 
+/**
+ * Annotation visitor adapter.
+ */
 public class AnnotationVisitorAdapter extends EmptyAnnotationVisitor {
 
 	protected final AnnotationVisitor dest;
@@ -24,14 +27,12 @@ public class AnnotationVisitorAdapter extends EmptyAnnotationVisitor {
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String name, String desc) {
-		dest.visitAnnotation(name, desc);
-		return this;
+		return new AnnotationVisitorAdapter(dest.visitAnnotation(name, desc));
 	}
 
 	@Override
 	public AnnotationVisitor visitArray(String name) {
-		dest.visitArray(name);
-		return this;
+		return new AnnotationVisitorAdapter(dest.visitArray(name));
 	}
 
 	@Override

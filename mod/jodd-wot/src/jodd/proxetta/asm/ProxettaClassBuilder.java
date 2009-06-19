@@ -124,15 +124,10 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 		AnnotationVisitor destAnn = wd.dest.visitAnnotation(desc, visible); // [A3]
-		if (destAnn == null) {
-			return null;
-		}
 		return new AnnotationVisitorAdapter(destAnn);
 	}
 
-
 	// ---------------------------------------------------------------- end
-
 
 	/**
 	 * Finalizes creation of destination proxy class.
@@ -229,8 +224,9 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public void visitOuterClass(String owner, String name, String desc) {
-		throw new ProxettaException("Outer classes are not supported: " + owner + ' ' + wd.dest);
+		throw new ProxettaException("Outer classes are not supported: " + owner + ' ' + wd.dest);		// todo da li ovo moze da se ignorise?
 	}
+
     /**
      * Visits a non standard attribute of the class (not used).
      */
@@ -245,7 +241,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-		throw new ProxettaException("Inner classes are not supported: " + outerName + ' ' + innerName);
+		throw new ProxettaException("Inner classes are not supported: " + outerName + ' ' + innerName);		// todo da li ovo moze da se ignroise
 	}
 
 }
