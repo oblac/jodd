@@ -14,21 +14,14 @@ import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static jodd.proxetta.asm.ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
 import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
-import static jodd.proxetta.asm.ProxettaAsmUtil.createMethodSignature;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
-import jodd.util.ClassLoaderUtil;
-import jodd.io.StreamUtil;
 import jodd.mutable.MutableInteger;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -39,15 +32,15 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	protected final ProxyAspect[] aspects;
 	protected final MutableInteger suffix;
-	protected final Set<String> topMethodSignatures;      // set of all top methods
+	protected final TargetClassInfoReader targetClassInfo;
 
 	protected final WorkData wd;
 
-	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, MutableInteger suffix) {
+	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, MutableInteger suffix, TargetClassInfoReader targetClassInfoReader) {
 		this.wd = new WorkData(dest);
 		this.aspects = aspects;
 		this.suffix = suffix;
-		this.topMethodSignatures = new HashSet<String>();
+		this.targetClassInfo = targetClassInfoReader;
 	}
 
 
@@ -79,7 +72,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		for (int i = 0; i < aspects.length; i++) {
 			wd.proxyAspects[i] = new ProxyAspectData(wd, aspects[i], i);
 		}
-
 	}
 
 
@@ -93,7 +85,10 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, wd.superReference);
+		MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
+		if (msign == null) {
+			return null;
+		}
 
 		// destination constructors [A1]
 		if (name.equals(INIT) == true) {
@@ -104,7 +99,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		if (name.equals(CLINIT) == true) {
 			return null;
 		}
-		topMethodSignatures.add(msign.getSignature());
 		return applyProxy(msign);
 	}
 
@@ -164,47 +158,24 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		mv.visitEnd();
 
 		// check all public super methods that are not overriden in superclass
-		while (wd.nextSupername != null) {
-			InputStream inputStream = null;
-			try {
-				inputStream = ClassLoaderUtil.getClassAsStream(wd.nextSupername);
-				ClassReader cr = new ClassReader(inputStream);
-				cr.accept(new EmptyClassVisitor() {
+		for (ClassReader cr : targetClassInfo.superClassReaders) {
+			cr.accept(new EmptyClassVisitor() {
 
-					String declaredClassName;
-
-					@Override
-					public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-	                    wd.nextSupername = superName;
-						wd.hierarchyLevel++;
-						declaredClassName = name;
+				@Override
+				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+					if (name.equals(INIT) || name.equals(CLINIT)) {
+						return null;
+					}					
+					MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
+					if (msign == null) {
+						return null;
 					}
-
-					@Override
-					public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-						if (name.equals(INIT) || name.equals(CLINIT)) {
-							return null;
-						}
-						MethodSignatureVisitor msign = createMethodSignature(access, name, desc, wd.superReference);
-						int acc = msign.getAccessFlags();
-						if ((acc & MethodInfo.ACC_PUBLIC) == 0) {   // skip non-public
-						    return null;
-						}
-						if ((acc & MethodInfo.ACC_FINAL) != 0) {    // skip finals
-							return null;
-						}
-						if (topMethodSignatures.contains(msign.getSignature())) {
-							return null;
-						}
-						msign.setDeclaredClassName(declaredClassName);
-						return applyProxy(msign);
+					if (targetClassInfo.isTopLevelMethod(msign)) {
+						return null;
 					}
-				}, 0);
-			} catch (IOException ioex) {
-				throw new ProxettaException("Unable to inspect super class: " + wd.nextSupername, ioex);
-			} finally {
-				StreamUtil.close(inputStream);
-			}
+					return applyProxy(msign);
+				}
+			}, 0);
 		}
 		wd.dest.visitEnd();
 	}

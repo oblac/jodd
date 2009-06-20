@@ -54,8 +54,12 @@ public class ProxettaCreator {
 	 * Single point of class reader acceptance. Reads the target and creates destination class.
 	 */
 	protected ProxettaCreator accept(ClassReader cr) {
+		// reads information
+		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader();
+		cr.accept(targetClassInfoReader, 0);
+		// add proxy
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, suffix);
+		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, suffix, targetClassInfoReader);
 		cr.accept(pcb, 0);
 		proxyApplied = pcb.wd.proxyApplied;
 		proxyClassName = pcb.wd.thisReference.replace('/', '.');

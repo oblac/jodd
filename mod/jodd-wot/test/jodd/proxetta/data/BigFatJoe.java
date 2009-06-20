@@ -11,6 +11,8 @@ import jodd.petite.meta.PetiteInject;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.JtxPropagationBehavior;
 
+import java.util.Map;
+
 @MadvocAction(value = "madvocAction")
 @InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
 public class BigFatJoe extends SmallSkinnyZoe {
@@ -32,11 +34,18 @@ public class BigFatJoe extends SmallSkinnyZoe {
 		StatCounter.counter++;
 	}
 
+	@Override
 	@Action(method = "method", extension = "extension", alias = "alias", notInPath = true, value = "value")
 	@PetiteInject
 	@Transaction(readOnly = true, propagation = JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW)
 	public void publicMethod() {
 		System.out.println("BigFatJoe.publicMethod");
+		super.publicMethod();
+	}
+
+	@SuppressWarnings({"UnusedDeclaration"})
+	public <T> Map<String, T> fullDescription(int i1, String s2, Map<String, T> m3, Class[] arr4) throws RuntimeException {
+		return null;
 	}
 
 	public void callInnerMethods() {

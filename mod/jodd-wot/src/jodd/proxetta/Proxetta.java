@@ -5,7 +5,6 @@ package jodd.proxetta;
 import java.io.InputStream;
 import jodd.util.ClassLoaderUtil;
 import jodd.proxetta.asm.ProxettaCreator;
-import jodd.exception.ExceptionUtil;
 
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
@@ -147,13 +146,8 @@ public class Proxetta {
 				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
 			}
 			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
-		} catch (RuntimeException rex) {
-			ClassFormatError cause = ExceptionUtil.findCause(rex, ClassFormatError.class);
-			if (cause == null) {
-				throw rex;
-			} else {
-				throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", rex);
-			}
+		} catch (ClassFormatError cferr) {
+			throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", cferr);
 		}
 	}
 
@@ -170,10 +164,14 @@ public class Proxetta {
 				throw new ProxettaException(cnfex);
 			}
 		}
-		if (classLoader == null) {
-			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+		try {
+			if (classLoader == null) {
+				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+			}
+			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
+		} catch (ClassFormatError cferr) {
+			throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", cferr);
 		}
-		return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
 	}
 
 	// ---------------------------------------------------------------- instance
@@ -184,7 +182,7 @@ public class Proxetta {
 		try {
 			return c.newInstance();
 		} catch (Exception ex) {
-			throw new ProxettaException("Unable to create proxy instance.", ex);
+			throw new ProxettaException("Unable to create new proxy instance.", ex);
 		}
 	}
 
@@ -193,7 +191,7 @@ public class Proxetta {
 		try {
 			return c.newInstance();
 		} catch (Exception ex) {
-			throw new ProxettaException("Unable to create proxy instance.", ex);
+			throw new ProxettaException("Unable to create new proxy instance.", ex);
 		}
 	}
 

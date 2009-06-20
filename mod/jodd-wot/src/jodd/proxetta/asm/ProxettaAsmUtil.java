@@ -4,12 +4,13 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.signature.SignatureReader;
 import static org.objectweb.asm.Opcodes.*;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
 import static jodd.proxetta.asm.ProxettaNaming.*;
+import jodd.util.StringPool;
+import static jodd.util.StringPool.COLON;
 
 /**
  * Various ASM utilities used by {@link jodd.proxetta.Proxetta}.
@@ -459,14 +460,18 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- method signature
 
+
 	/**
-	 * Creates method signature from method name.
+	 * Creates unique key for mathod signatures map.
 	 */
-	public static MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String classname) {
-		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description);
-		new SignatureReader(description).accept(v);
-		return v;
+	public static String createMethodSignaturesKey(int access, String methodName, String description, String className) {
+		return new StringBuilder(100).append(access).append(COLON).append(description).append('_').
+				append(className).append(StringPool.HASH).append(methodName).
+				toString();
 	}
+
+
+	// ---------------------------------------------------------------- detect advice macros
 
 	public static boolean isInvokeMethod(String name, String desc) {
 		if (name.equals("invoke")) {

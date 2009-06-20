@@ -5,6 +5,10 @@ package jodd.proxetta.data;
 public class SmallSkinnyZoe {
 
 
+	public void publicMethod() {
+		System.out.println("SmallSkinnyZoe.publicMethod");
+	}
+
 	public void superPublicMethod() {
 		System.out.println("SmallSkinnyZoe.superPublicMethod");
 	}

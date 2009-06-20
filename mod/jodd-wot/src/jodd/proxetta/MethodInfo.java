@@ -76,4 +76,6 @@ public interface MethodInfo {
 	String getDeclaredClassName();
 
 	boolean isTopLevelMethod();
+
+	ClassInfo getClassInfo();
 }

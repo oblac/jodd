@@ -9,6 +9,7 @@ import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ClassInfo;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	protected String declaredClassName;
 
+	protected ClassInfo targetClassInfo;
+
 	// ---------------------------------------------------------------- ctors
 
 	public MethodSignatureVisitor(String description) {
@@ -47,7 +50,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.description = description;
 	}
 
-	MethodSignatureVisitor(String methodName, final int access, String classname, String description) {
+	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, ClassInfo targetClassInfo) {
 		this();
 		isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.methodName = methodName;
@@ -55,17 +58,17 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.classname = classname;
 		this.description = description;
 		this.annotations = new ArrayList<AnnotationData>();
+		this.targetClassInfo = targetClassInfo;
 	}
 
 
-	MethodSignatureVisitor() {
+	private MethodSignatureVisitor() {
         super(new StringBuffer());
     }
 
-	MethodSignatureVisitor(final StringBuffer declaration) {
+	private MethodSignatureVisitor(final StringBuffer declaration) {
         super(declaration);
     }
-
 
 	private MethodSignatureVisitor(final StringBuffer buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
 		this(buf);
@@ -238,6 +241,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 */
 	public boolean isTopLevelMethod() {
 		return declaredClassName == null;
+	}
+
+	public ClassInfo getClassInfo() {
+		return targetClassInfo;
 	}
 
 	// ---------------------------------------------------------------- utilities
