@@ -32,7 +32,7 @@ public interface MethodInfo extends AsmConsts {
 
 	String getDescription();
 
-	List<AnnotationData> getAnnotations();
+	AnnotationInfo[] getAnnotations();
 
 	/**
 	 * Returns declared class name for inner methods or {@link #getClassname() classname} for top-level methods.

@@ -64,8 +64,52 @@ public class BigClassTest extends TestCase {
 					assertTrue(ai.getElement("value") instanceof Object[]);
 					assertFalse(ai.getElement("value") instanceof String[]);
 					Object c1 = ((Object[]) ai.getElement("value"))[0];
-					System.out.println(c1.getClass());
 					assertEquals("Ljodd/madvoc/interceptor/EchoInterceptor;", ((Type) c1).getDescriptor());
+				}
+				if (mi.getMethodName().equals("publicMethod")) {
+					AnnotationInfo[] anns = mi.getAnnotations();
+					assertNotNull(anns);
+					assertEquals(3, anns.length);
+
+					AnnotationInfo ai = anns[0];
+					assertSame(ai, lookupAnnotation(mi, Action.class));
+					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
+					assertEquals("value", ai.getElement("value"));
+					assertEquals(Boolean.TRUE, ai.getElement("notInPath"));
+					assertEquals("alias", ai.getElement("alias"));
+
+					ai = anns[1];
+					assertSame(ai, lookupAnnotation(mi, PetiteInject.class));
+					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
+					assertEquals(0, ai.getElementNames().size());
+
+					ai = anns[2];
+					assertSame(ai, lookupAnnotation(mi, Transaction.class));
+					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
+					assertEquals(2, ai.getElementNames().size());
+					String[] s = (String[]) ai.getElement("propagation");
+					assertEquals("Ljodd/jtx/JtxPropagationBehavior;", s[0]);
+					assertEquals("PROPAGATION_REQUIRES_NEW", s[1]);
+				}
+				if (mi.getMethodName().equals("superPublicMethod")) {
+					AnnotationInfo[] anns = mi.getAnnotations();
+					assertNotNull(anns);
+					assertEquals(3, anns.length);
+
+					AnnotationInfo ai = anns[0];
+					assertSame(ai, lookupAnnotation(mi, Action.class));
+					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
+					assertEquals(0, ai.getElementNames().size());
+
+					ai = anns[1];
+					assertSame(ai, lookupAnnotation(mi, PetiteInject.class));
+					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
+					assertEquals(0, ai.getElementNames().size());
+
+					ai = anns[2];
+					assertSame(ai, lookupAnnotation(mi, Transaction.class));
+					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
+					assertEquals(0, ai.getElementNames().size());
 				}
 				System.out.println(!isRootMethod(mi) + " " + mi.getDeclaredClassName() + '#' + mi.getMethodName());
 				return !isRootMethod(mi);

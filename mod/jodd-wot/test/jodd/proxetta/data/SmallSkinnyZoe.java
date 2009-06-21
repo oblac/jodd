@@ -2,13 +2,19 @@
 
 package jodd.proxetta.data;
 
-public class SmallSkinnyZoe {
+import jodd.madvoc.meta.Action;
+import jodd.petite.meta.PetiteInject;
+import jodd.jtx.meta.Transaction;
 
+public class SmallSkinnyZoe {
 
 	public void publicMethod() {
 		System.out.println("SmallSkinnyZoe.publicMethod");
 	}
 
+	@Action
+	@PetiteInject
+	@Transaction
 	public void superPublicMethod() {
 		System.out.println("SmallSkinnyZoe.superPublicMethod");
 	}

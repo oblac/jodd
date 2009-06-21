@@ -29,6 +29,7 @@ import jodd.io.StreamUtil;
  * Reads info from target class.
  * todo ovo ce da implementira target class info
  */
+@SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInfo {
 
 	//protected ClassInfo classInfo;
@@ -126,11 +127,11 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
+		final MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
 		topMethodSignatures.add(msign.getSignature());
-		return null;// todo return visitor to read annotation data for method
+		return new MethodAnnotationReader(msign);
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 					msign.setDeclaredClassName(declaredClassName);
 					String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 					methodSignatures.put(key, msign);
-					return null;
+					return new MethodAnnotationReader(msign);
 				}
 			}, 0);
 		}
@@ -209,5 +210,37 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		new SignatureReader(description).accept(v);
 		return v;
 	}
+
+
+
+	// ---------------------------------------------------------------- util class
+
+	/**
+	 * Reads method annotations and stores to method info.
+	 */
+	static class MethodAnnotationReader extends EmptyMethodVisitor {
+
+		final List<AnnotationInfo> methodAnns = new ArrayList<AnnotationInfo>();
+		final MethodSignatureVisitor msign;
+
+		MethodAnnotationReader(MethodSignatureVisitor msign) {
+			this.msign = msign;
+		}
+
+		@Override
+		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+			AnnotationReader ar = new AnnotationReader(desc, visible);
+			methodAnns.add(ar);
+			return ar;
+		}
+
+		@Override
+		public void visitEnd() {
+			if (methodAnns.isEmpty() == false) {
+				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
+			}
+		}
+	}
+
 
 }

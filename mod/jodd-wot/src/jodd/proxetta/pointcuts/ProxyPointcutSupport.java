@@ -4,12 +4,10 @@ package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.AnnotationData;
 import jodd.proxetta.AnnotationInfo;
 import jodd.proxetta.ClassInfo;
 import jodd.util.Wildcard;
 
-import java.util.List;
 import java.lang.annotation.Annotation;
 
 /**
@@ -29,18 +27,22 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method is annotated with provided annotation.
 	 */
-	public boolean hasAnnotation(MethodInfo msign, String annotationName) {
-		List<AnnotationData> anns = msign.getAnnotations();
-		for (AnnotationData a : anns) {
-			if (annotationName.equals(a.declaration)) {
-				return true;
+	public AnnotationInfo lookupAnnotation(MethodInfo mi, Class<? extends Annotation> an) {
+		AnnotationInfo[] anns = mi.getAnnotations();
+		if (anns == null) {
+			return null;
+		}
+		String anName = an.getName();
+		for (AnnotationInfo ann : anns) {
+			if (ann.getAnnotationClassname().equals(anName)) {
+				return ann;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
-	 * Locates annotation in class info.
+	 * Locates annotation in class info. Returns <code>null</code> if annotation doesn't exist.
 	 */
 	public AnnotationInfo lookupAnnotation(ClassInfo ci, Class<? extends Annotation> an) {
 		AnnotationInfo[] anns = ci.getAnnotations();

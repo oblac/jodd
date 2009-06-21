@@ -5,12 +5,11 @@ package examples.proxetta;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
-import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.AnnotationInfo;
 import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
 
-import java.util.List;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,11 +21,12 @@ import examples.proxetta.log.CustomProxyAdvice;
 public class ProxettaExample {
 
 	static ProxyAspect pd1 = new ProxyAspect(LogProxyAdvice.class, new ProxyPointcut() {
-		public boolean apply(MethodInfo msign) {
-			System.out.println("#test " + msign);
-			List<AnnotationData> anns = msign.getAnnotations();
-			for (AnnotationData a : anns) {
-				if (a.declaration.equals(Log.class.getName())) {
+
+		public boolean apply(MethodInfo methodInfo) {
+			System.out.println("#test " + methodInfo);
+			AnnotationInfo[] anns = methodInfo.getAnnotations();
+			for (AnnotationInfo a : anns) {
+				if (a.getAnnotationClassname().equals(Log.class.getName())) {
 					return true;
 				}
 			}
@@ -35,10 +35,10 @@ public class ProxettaExample {
 	});
 
 	static ProxyAspect pd2 = new ProxyAspect(CustomProxyAdvice.class, new ProxyPointcut() { 
-		public boolean apply(MethodInfo msign) {
-			List<AnnotationData> anns = msign.getAnnotations();
-			for (AnnotationData a : anns) {
-				if (a.declaration.equals(Custom.class.getName())) {
+		public boolean apply(MethodInfo methodInfo) {
+			AnnotationInfo[] anns = methodInfo.getAnnotations();
+			for (AnnotationInfo a : anns) {
+				if (a.getAnnotationClassname().equals(Custom.class.getName())) {
 					return true;
 				}
 			}

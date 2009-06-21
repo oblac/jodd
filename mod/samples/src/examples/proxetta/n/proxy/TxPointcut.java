@@ -3,20 +3,18 @@
 package examples.proxetta.n.proxy;
 
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxyPointcut;
-
-import java.util.List;
+import jodd.proxetta.AnnotationInfo;
 
 import examples.proxetta.n.proxy.advice.TxAdvice;
 
 public class TxPointcut implements ProxyPointcut {
 
-	public boolean apply(MethodInfo msign) {
-		List<AnnotationData> anns = msign.getAnnotations();
+	public boolean apply(MethodInfo methodInfo) {
+		AnnotationInfo[] anns = methodInfo.getAnnotations();
 		String txProxyName = TxAdvice.class.getName();
-		for (AnnotationData a : anns) {
-			if (a.declaration.equals(txProxyName)) {
+		for (AnnotationInfo a : anns) {
+			if (a.getAnnotationClassname().equals(txProxyName)) {
 				return true;
 			}
 		}

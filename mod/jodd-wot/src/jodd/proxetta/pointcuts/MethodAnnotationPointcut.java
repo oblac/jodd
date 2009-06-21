@@ -3,23 +3,21 @@
 package jodd.proxetta.pointcuts;
 
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.ProxettaException;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Pointcut on method with given annotation.
  */
 public class MethodAnnotationPointcut extends ProxyPointcutSupport {
 
-	protected final String annotationName;
+	protected final Class<? extends Annotation> annotationClass;
 
-	public MethodAnnotationPointcut(Class annotationClass) {
-		if (annotationClass.isAnnotation() == false) {
-			throw new ProxettaException(this.getClass().getSimpleName() + " works only with annotation classes: " + annotationClass.getName());
-		}
-		this.annotationName = annotationClass.getName();
+	public MethodAnnotationPointcut(Class<? extends Annotation> annotationClass) {
+		this.annotationClass = annotationClass;
 	}
 
 	public boolean apply(MethodInfo methodInfo) {
-		return hasAnnotation(methodInfo, annotationName);
+		return lookupAnnotation(methodInfo, annotationClass) != null;
 	}
 }

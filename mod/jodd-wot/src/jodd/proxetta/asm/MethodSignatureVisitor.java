@@ -7,9 +7,9 @@ import org.objectweb.asm.Opcodes;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.AnnotationData;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ClassInfo;
+import jodd.proxetta.AnnotationInfo;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected StringBuilder returnTypeName;
 	protected String classname;
 	protected String description;
-	protected List<AnnotationData> annotations;
+	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
 	protected IntArrayList argumentsOpcodeType;
@@ -58,7 +58,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.access = access;
 		this.classname = classname;
 		this.description = description;
-		this.annotations = new ArrayList<AnnotationData>();
 		this.targetClassInfo = targetClassInfo;
 	}
 
@@ -219,7 +218,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return description;
 	}
 
-	public List<AnnotationData> getAnnotations() {
+	public AnnotationInfo[] getAnnotations() {
 		return annotations;
 	}
 
