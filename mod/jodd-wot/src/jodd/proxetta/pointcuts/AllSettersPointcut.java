@@ -9,11 +9,11 @@ import jodd.proxetta.MethodInfo;
  */
 public class AllSettersPointcut extends ProxyPointcutSupport {
 
-	public boolean apply(MethodInfo msign) {
+	public boolean apply(MethodInfo methodInfo) {
 		return
-				isPublic(msign)
-				&& matchMethodName(msign, "set*")
-				&& hasOneArgument(msign)
+				isPublic(methodInfo)
+				&& matchMethodName(methodInfo, "set*")
+				&& hasOneArgument(methodInfo)
 				;
 	}
 }

@@ -9,12 +9,12 @@ import jodd.proxetta.MethodInfo;
  */
 public class AllGettersPointcut extends ProxyPointcutSupport {
 
-	public boolean apply(MethodInfo msign) {
+	public boolean apply(MethodInfo methodInfo) {
 		return
-				isPublic(msign)
-				&& hasReturnValue(msign)
-				&& (matchMethodName(msign, "get*") || (matchMethodName(msign, "is*")))
-				&& hasNoArguments(msign)
+				isPublic(methodInfo)
+				&& hasReturnValue(methodInfo)
+				&& (matchMethodName(methodInfo, "get*") || (matchMethodName(methodInfo, "is*")))
+				&& hasNoArguments(methodInfo)
 				;
 	}
 }

@@ -8,6 +8,7 @@ import static org.objectweb.asm.Opcodes.*;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.AsmConsts;
 import static jodd.proxetta.asm.ProxettaNaming.*;
 import jodd.util.StringPool;
 import static jodd.util.StringPool.COLON;
@@ -573,4 +574,16 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
+	// ---------------------------------------------------------------- converters
+
+	/**
+	 * Converts type reference to java-name.
+	 */
+	public static String typeref2Name(String desc) {
+		if (desc.charAt(0) != AsmConsts.TYPE_REFERENCE) {
+			throw new ProxettaException("Invalid type description/reference.");
+		}
+		String name = desc.substring(1, desc.length() - 1);
+		return name.replace('/', '.');
+	}
 }

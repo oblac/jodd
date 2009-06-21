@@ -5,9 +5,12 @@ package jodd.proxetta.pointcuts;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationData;
+import jodd.proxetta.AnnotationInfo;
+import jodd.proxetta.ClassInfo;
 import jodd.util.Wildcard;
 
 import java.util.List;
+import java.lang.annotation.Annotation;
 
 /**
  * {@link jodd.proxetta.ProxyPointcut} support methods.
@@ -35,6 +38,24 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 		}
 		return false;
 	}
+
+	/**
+	 * Locates annotation in class info.
+	 */
+	public AnnotationInfo lookupAnnotation(ClassInfo ci, Class<? extends Annotation> an) {
+		AnnotationInfo[] anns = ci.getAnnotations();
+		if (anns == null) {
+			return null;
+		}
+		String anName = an.getName();
+		for (AnnotationInfo ann : anns) {
+			if (ann.getAnnotationClassname().equals(anName)) {
+				return ann;
+			}
+		}
+		return null;
+	}
+
 
 	/**
 	 * Returns <code>true</code> if method has no arguments.
@@ -118,6 +139,5 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	public boolean or(MethodInfo msign, ProxyPointcut p1, ProxyPointcut p2) {
 		return p1.apply(msign) || p2.apply(msign);
 	}
-
 
 }

@@ -9,7 +9,7 @@ import jodd.proxetta.MethodInfo;
  */
 public class AllMethodsPointcut extends ProxyPointcutSupport {
 
-	public boolean apply(MethodInfo msign) {
-		return isPublic(msign);
+	public boolean apply(MethodInfo methodInfo) {
+		return isPublic(methodInfo);
 	}
 }

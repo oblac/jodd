@@ -19,7 +19,7 @@ public class MethodAnnotationPointcut extends ProxyPointcutSupport {
 		this.annotationName = annotationClass.getName();
 	}
 
-	public boolean apply(MethodInfo msign) {
-		return hasAnnotation(msign, annotationName);
+	public boolean apply(MethodInfo methodInfo) {
+		return hasAnnotation(methodInfo, annotationName);
 	}
 }

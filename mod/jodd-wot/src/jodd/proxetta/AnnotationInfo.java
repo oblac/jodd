@@ -9,7 +9,9 @@ import java.util.Set;
  */
 public interface AnnotationInfo {
 
-	String getAnnotationClass();
+	String getAnnotationClassname();
+
+	String getAnnotationSignature();
 
 	boolean isVisible();
 
