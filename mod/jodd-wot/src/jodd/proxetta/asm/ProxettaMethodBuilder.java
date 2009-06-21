@@ -25,7 +25,7 @@ import static jodd.proxetta.asm.ProxettaNaming.EXECUTE_METHOD_NAME;
 import java.util.List;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
-public class ProxyMethodBuilder extends EmptyMethodVisitor  {
+public class ProxettaMethodBuilder extends EmptyMethodVisitor  {
 
 	public static final String TARGET_CLASS_NAME = ProxyTarget.class.getSimpleName();        // extract ProxyTarget name for recognition
 
@@ -33,7 +33,7 @@ public class ProxyMethodBuilder extends EmptyMethodVisitor  {
 	protected final WorkData wd;
 	protected final List<ProxyAspectData> aspectList;
 
-	public ProxyMethodBuilder(MethodSignatureVisitor msign, WorkData wd, List<ProxyAspectData> aspectList) {
+	public ProxettaMethodBuilder(MethodSignatureVisitor msign, WorkData wd, List<ProxyAspectData> aspectList) {
 		this.msign = msign;
 		this.wd = wd;
 		this.aspectList = aspectList;

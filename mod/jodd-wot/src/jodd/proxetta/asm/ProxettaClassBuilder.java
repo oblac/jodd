@@ -80,7 +80,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Creates proxified methods and constructors.
 	 * Destination proxy will have all constructors as a target class, using {@link jodd.proxetta.asm.ProxettaCtorBuilder}.
 	 * Static initializers are removed, since they will be execute in target anyway.
-	 * For each method, {@link ProxyMethodBuilder} determines if method matches pointcut. If so, method will be proxified.
+	 * For each method, {@link ProxettaMethodBuilder} determines if method matches pointcut. If so, method will be proxified.
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
@@ -225,7 +225,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Check if proxy should be applied on method and return proxy method builder if so.
 	 * Otherwise, returns <code>null</code>.
 	 */
-	protected ProxyMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+	protected ProxettaMethodBuilder applyProxy(MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = null;
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
 			if (aspectData.apply(msign) == true) {
@@ -239,7 +239,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			return null; // no pointcut on this method, return
 		}
 		wd.proxyApplied = true;
-		return new ProxyMethodBuilder(msign, wd, aspectList);
+		return new ProxettaMethodBuilder(msign, wd, aspectList);
 	}
 
 }
