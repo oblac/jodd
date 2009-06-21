@@ -17,18 +17,51 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.petite.meta.PetiteInject;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.JtxPropagationBehavior;
+import jodd.mutable.MutableBoolean;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.annotation.Annotation;
 
+import org.objectweb.asm.Type;
+
 public class BigClassTest extends TestCase {
 
 	public void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {
+
+		final MutableBoolean firstTime = new MutableBoolean(true);
+
 		ProxyAspect aspect = new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
-			public boolean apply(MethodInfo msign) {
-				System.out.println(!isRootMethod(msign) + " " + msign.getDeclaredClassName() + '#' + msign.getMethodName());
-				return !isRootMethod(msign);
+			public boolean apply(MethodInfo mi) {
+				if (firstTime.value) {
+					firstTime.value = false;
+					ClassInfo ci = mi.getClassInfo();
+					assertEquals("BigFatJoe", ci.getClassname());
+					assertEquals(BigFatJoe.class.getPackage().getName(), ci.getPackage());
+					assertEquals("jodd/proxetta/data/BigFatJoe", ci.getReference());
+					assertEquals("jodd/proxetta/data/SmallSkinnyZoe", ci.getSuperName());
+					AnnotationInfo[] anns = ci.getAnnotations();
+					assertNotNull(anns);
+					assertEquals(3, anns.length);
+					AnnotationInfo ai = anns[0];
+					assertEquals("Ljodd/madvoc/meta/MadvocAction;", ai.getAnnotationClass());
+					assertEquals("madvocAction", ai.getElement("value"));
+					ai = anns[1];
+					assertEquals("Ljodd/petite/meta/PetiteBean;", ai.getAnnotationClass());
+					assertTrue(ai.getElement("wiring") instanceof String[]);
+					String[] w = (String[]) ai.getElement("wiring");
+					assertEquals("Ljodd/petite/WiringMode;", w[0]);
+					assertEquals("OPTIONAL", w[1]);
+					ai = anns[2];
+					assertEquals("Ljodd/madvoc/meta/InterceptedBy;", ai.getAnnotationClass());
+					assertTrue(ai.getElement("value") instanceof Object[]);
+					assertFalse(ai.getElement("value") instanceof String[]);
+					Object c1 = ((Object[]) ai.getElement("value"))[0];
+					System.out.println(c1.getClass());
+					assertEquals("Ljodd/madvoc/interceptor/EchoInterceptor;", ((Type) c1).getDescriptor());
+				}
+				System.out.println(!isRootMethod(mi) + " " + mi.getDeclaredClassName() + '#' + mi.getMethodName());
+				return !isRootMethod(mi);
 			}
 		});
 

@@ -8,12 +8,15 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.petite.meta.PetiteInject;
+import jodd.petite.meta.PetiteBean;
+import jodd.petite.WiringMode;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.JtxPropagationBehavior;
 
 import java.util.Map;
 
 @MadvocAction(value = "madvocAction")
+@PetiteBean(value = "petiteBean", wiring = WiringMode.OPTIONAL)
 @InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
 public class BigFatJoe extends SmallSkinnyZoe {
 

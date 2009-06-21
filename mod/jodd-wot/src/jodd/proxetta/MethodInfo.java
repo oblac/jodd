@@ -73,9 +73,23 @@ public interface MethodInfo {
 
 	List<AnnotationData> getAnnotations();
 
+	/**
+	 * Returns declared class name for inner methods or {@link #getClassname() classname} for top-level methods.
+	 */
 	String getDeclaredClassName();
 
+	/**
+	 * Returns <code>true</code> if method is declared in top-level class.
+	 */
 	boolean isTopLevelMethod();
 
+	/**
+	 * Returns target {@link jodd.proxetta.ClassInfo class informations}.
+	 */
 	ClassInfo getClassInfo();
+
+	/**
+	 * Returns hierarchy level, starting from top class as 1.
+	 */
+	int getHierarchyLevel();
 }

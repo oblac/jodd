@@ -10,8 +10,8 @@ package jodd.proxetta;
 public interface ProxyPointcut {
 
 	/**
-	 * Returns <code>true</code> if method signature should be wrapped with the proxy.
+	 * Returns <code>true</code> if method should be wrapped with the proxy.
 	 */
-	boolean apply(MethodInfo msign);
+	boolean apply(MethodInfo methodInfo);
 
 }

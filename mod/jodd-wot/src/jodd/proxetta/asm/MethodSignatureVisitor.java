@@ -42,6 +42,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected String declaredClassName;
 
 	protected ClassInfo targetClassInfo;
+	protected int hierarchyLevel;
 
 	// ---------------------------------------------------------------- ctors
 
@@ -222,9 +223,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return annotations;
 	}
 
-	/**
-	 * Returns declared class name for inner methods or {@link #getClassname() classname} for top-level methods.
-	 */
 	public String getDeclaredClassName() {
 		if (declaredClassName == null) {
 			return classname;
@@ -236,9 +234,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		this.declaredClassName = declaredClassName;
 	}
 
-	/**
-	 * Returns <code>true</code> if method is declared in top-level class.
-	 */
 	public boolean isTopLevelMethod() {
 		return declaredClassName == null;
 	}
@@ -246,6 +241,11 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	public ClassInfo getClassInfo() {
 		return targetClassInfo;
 	}
+
+	public int getHierarchyLevel() {
+		return hierarchyLevel;
+	}
+
 
 	// ---------------------------------------------------------------- utilities
 

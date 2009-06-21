@@ -3,7 +3,7 @@
 package jodd.proxetta;
 
 /**
- * Various target type informations
+ * Various target class information.
  */
 public interface ClassInfo {
 
@@ -26,5 +26,10 @@ public interface ClassInfo {
 	 * Returns class reference.
 	 */
 	String getReference();
+
+	/**
+	 * Returns annotation information or <code>null</code> if target class has no annotations.
+	 */
+	AnnotationInfo[] getAnnotations();
 
 }

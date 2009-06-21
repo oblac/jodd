@@ -26,7 +26,6 @@ final class WorkData {
 	String nextSupername;
 	String thisReference;
 	String superReference;
-	int hierarchyLevel;
 	ProxyAspectData[] proxyAspects;
 
 	// ---------------------------------------------------------------- advice clinits

@@ -57,7 +57,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.targetPackage = name.substring(0, lastSlash).replace('/', '.');
 		wd.targetClassname = name.substring(lastSlash + 1);
 		wd.nextSupername = superName;
-		wd.hierarchyLevel = 0;
 		superName = name;
 		name += PROXY_CLASS_NAME_SUFFIX;
 		if (suffix != null) {

@@ -4,6 +4,7 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.signature.SignatureReader;
 
 import java.util.Set;
@@ -20,6 +21,7 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ClassInfo;
+import jodd.proxetta.AnnotationInfo;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 
@@ -64,6 +66,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected String superName;
 	protected String thisReference;
 	protected String nextSupername;
+	protected String[] superClasses;
+	protected int hierarchyLevel;
+	protected AnnotationInfo[] annotations;
+	protected List<AnnotationInfo> classAnnotations;
 
 	// ---------------------------------------------------------------- class interface
 
@@ -83,7 +89,13 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		return thisReference;
 	}
 
-	// todo dodaj listu svih supera.
+	public String[] getSuperClasses() {
+		return superClasses;
+	}
+
+	public AnnotationInfo[] getAnnotations() {
+		return annotations;
+	}
 
 	// ---------------------------------------------------------------- visits
 
@@ -96,7 +108,17 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.nextSupername = superName;
 		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
+		this.hierarchyLevel = 1;
+	}
 
+	@Override
+	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+		AnnotationReader ar = new AnnotationReader(desc, visible);
+		if (classAnnotations == null) {
+			classAnnotations = new ArrayList<AnnotationInfo>();
+		}
+		classAnnotations.add(ar);
+		return ar;
 	}
 
 	/**
@@ -117,6 +139,15 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public void visitEnd() {
+
+		// prepare class annotations
+		if (classAnnotations != null) {
+			annotations = classAnnotations.toArray(new AnnotationInfo[classAnnotations.size()]);
+			classAnnotations = null;
+		}
+
+
+		List<String> superList = new ArrayList<String>();
 		// check all public super methods that are not overriden in superclass
 		while (nextSupername != null) {
 			InputStream inputStream = null;
@@ -129,8 +160,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			} finally {
 				StreamUtil.close(inputStream);
 			}
-
-
+			hierarchyLevel++;
+			superList.add(nextSupername);
 			superClassReaders.add(cr);	// remember the super class reader
 			cr.accept(new EmptyClassVisitor() {
 
@@ -165,6 +196,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				}
 			}, 0);
 		}
+		superClasses = superList.toArray(new String[superList.size()]);
 	}
 
 
@@ -173,6 +205,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String classname) {
 		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, this);
+		v.hierarchyLevel = this.hierarchyLevel;
 		new SignatureReader(description).accept(v);
 		return v;
 	}
