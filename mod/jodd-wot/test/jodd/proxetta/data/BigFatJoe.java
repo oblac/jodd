@@ -78,9 +78,10 @@ public class BigFatJoe extends SmallSkinnyZoe {
 
 
 	public void runInnerClass() {
+		final int counter = StatCounter.counter; 
 		new Runnable() {
 			public void run() {
-				StatCounter.counter++;
+				StatCounter.counter = counter + 1;
 			}
 		}.run();
 	}
