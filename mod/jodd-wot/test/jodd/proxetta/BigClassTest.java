@@ -167,6 +167,8 @@ public class BigClassTest extends TestCase {
 		assertEquals(-1, tx.timeout());
 		assertEquals(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, tx.propagation());
 
+		bigFatJoe.runInnerClass();
+		assertEquals(11, StatCounter.counter);		// proxy + call
 
 	}
 }

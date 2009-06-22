@@ -76,4 +76,13 @@ public class BigFatJoe extends SmallSkinnyZoe {
 		System.out.println("BigFatJoe.privateMethod");
 	}
 
+
+	public void runInnerClass() {
+		new Runnable() {
+			public void run() {
+				StatCounter.counter++;
+			}
+		}.run();
+	}
+
 }

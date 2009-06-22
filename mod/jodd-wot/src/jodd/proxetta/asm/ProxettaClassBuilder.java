@@ -192,11 +192,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	}
 
 	/**
-     * Visits the enclosing class of the class (not supported).
+     * Visits the enclosing class of the class (not used).
 	 */
 	@Override
 	public void visitOuterClass(String owner, String name, String desc) {
-		throw new ProxettaException("Outer classes are not supported: " + owner + ' ' + wd.dest);		// todo da li ovo moze da se ignorise?
+		// not used
 	}
 
     /**
@@ -208,12 +208,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	}
 
 	/**
-     * Visits information about an inner class (not supported). This inner class is not
-     * necessarily a member of the class being visited.
+     * Visits information about an inner class (not used).
 	 */
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-		throw new ProxettaException("Inner classes are not supported: " + outerName + ' ' + innerName);		// todo da li ovo moze da se ignroise
+		// not used
 	}
 
 
