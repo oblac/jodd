@@ -117,7 +117,7 @@ public class BigClassTest extends TestCase {
 		});
 
 		byte[] classBytes = Proxetta.withAspects(aspect).createProxy(BigFatJoe.class);
-		FileUtil.writeBytes("d://joe.class", classBytes);
+		//FileUtil.writeBytes("d://joe.class", classBytes);
 		Class clazz = ClassLoaderUtil.defineClass(classBytes);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
