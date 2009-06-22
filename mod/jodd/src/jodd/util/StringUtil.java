@@ -264,11 +264,11 @@ public class StringUtil {
 	 */
 	public static boolean isAllEmpty(String... strings) {
 		for (String string : strings) {
-			if (isEmpty(string)) {
-				return true;
+			if (isEmpty(string) == false) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -283,11 +283,11 @@ public class StringUtil {
 	 */
 	public static boolean isAllBlank(String... strings) {
 		for (String string : strings) {
-			if (isBlank(string)) {
-				return true;
+			if (isBlank(string) == false) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 
@@ -1343,7 +1343,11 @@ public class StringUtil {
 	 */
 	public static int startsWithOne(String src, String[] dest) {
 		for (int i = 0; i < dest.length; i++) {
-			if (src.startsWith(dest[i])) {
+			String m = dest[i];
+			if (m == null) {
+				continue;
+			}
+			if (src.startsWith(m)) {
 				return i;
 			}
 		}
@@ -1357,7 +1361,11 @@ public class StringUtil {
 	 */
 	public static int startsWithOneIgnoreCase(String src, String[] dest) {
 		for (int i = 0; i < dest.length; i++) {
-			if (startsWithIgnoreCase(src, dest[i])) {
+			String m = dest[i];
+			if (m == null) {
+				continue;
+			}
+			if (startsWithIgnoreCase(src, m)) {
 				return i;
 			}
 		}
@@ -1372,7 +1380,11 @@ public class StringUtil {
 	 */
 	public static int endsWithOne(String src, String[] dest) {
 		for (int i = 0; i < dest.length; i++) {
-			if (src.endsWith(dest[i])) {
+			String m = dest[i];
+			if (m == null) {
+				continue;
+			}
+			if (src.endsWith(m)) {
 				return i;
 			}
 		}
@@ -1386,7 +1398,11 @@ public class StringUtil {
 	 */
 	public static int endsWithOneIgnoreCase(String src, String[] dest) {
 		for (int i = 0; i < dest.length; i++) {
-			if (endsWithIgnoreCase(src, dest[i])) {
+			String m = dest[i];
+			if (m == null) {
+				continue;
+			}
+			if (endsWithIgnoreCase(src, m)) {
 				return i;
 			}
 		}
@@ -1463,7 +1479,7 @@ public class StringUtil {
 	/**
 	 * Strips trailing char if string ends with one.
 	 */
-	protected String stripTrailingChar(String string, char c) {
+	public static String stripTrailingChar(String string, char c) {
 		if (string.length() > 0) {
 			if (string.charAt(string.length() - 1) == c) {
 				return string.substring(0, string.length() - 1);
@@ -1476,7 +1492,7 @@ public class StringUtil {
 	/**
 	 * Trims array of strings. <code>null</code> array elements are ignored.
 	 */
-	public static void trimAll(String... strings) {
+	public static void trimAll(String[] strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -1490,7 +1506,7 @@ public class StringUtil {
 	 * <code>null</code> elements of the array are ignored.
 	 * @see #trimDown(String)
 	 */
-	public static void trimDownAll(String... strings) {
+	public static void trimDownAll(String[] strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -1524,7 +1540,7 @@ public class StringUtil {
 	/**
 	 * Crops all elements of string array.
 	 */
-	public static void cropAll(String... strings) {
+	public static void cropAll(String[] strings) {
 		for (int i = 0; i < strings.length; i++) {
 			String string = strings[i];
 			if (string != null) {
@@ -1656,7 +1672,7 @@ public class StringUtil {
 	/**
 	 * Joins array of strings into one string.
 	 */
-	public String join(String... parts) {
+	public static String join(String... parts) {
 		StringBuilder sb = new StringBuilder();
 		for (String part : parts) {
 			sb.append(part);
@@ -1865,7 +1881,7 @@ public class StringUtil {
 			startIndex = 0;
 		}
 		int srclen = src.length();
-		char previous = 0;
+		char previous;
 		char c = 0;
 		for (int i = startIndex; i < srclen; i++) {
 			previous = c;
