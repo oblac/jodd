@@ -25,10 +25,7 @@ public class AnnotationTxAdvice implements ProxyAdvice {
 		// request transaction
 		JtxTransaction tx = null;
 		try {
-			String context = type.getName();
-			if (manager.isMethodContext()) {
-				context += '#' + methodName;
-			}
+			String context = manager.resolveContext(type, methodName);
 			tx = manager.getJtxWorker().maybeRequestTransaction(txMode, context);
 			Object result = invoke();
 			manager.getJtxWorker().maybeCommitTransaction(tx);

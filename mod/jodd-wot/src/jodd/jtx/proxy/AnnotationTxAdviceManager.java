@@ -9,6 +9,7 @@ import jodd.jtx.worker.LeanTransactionWorker;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.ProxettaException;
+import jodd.util.StringUtil;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -19,13 +20,16 @@ import java.lang.reflect.Method;
  */
 public class AnnotationTxAdviceManager {
 
+	protected  static final String JTXCTX_PATTERN_CLASS = "$class";
+	protected static final String JTXCTX_PATTERN_METHOD = "$method";
+
 	protected final Map<String, JtxTransactionMode> txmap = new HashMap<String, JtxTransactionMode>();
 
 	protected final LeanTransactionWorker jtxWorker;
 
 	protected final JtxTransactionMode defaultTransactionMode;
 
-	protected final boolean isMethodContext;
+	protected final String contextPattern;
 
 	// ---------------------------------------------------------------- ctors
 
@@ -34,25 +38,25 @@ public class AnnotationTxAdviceManager {
 	}
 	
 	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker) {
-		this(jtxWorker, true, null);
+		this(jtxWorker, JTXCTX_PATTERN_CLASS + '#' + JTXCTX_PATTERN_METHOD, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, boolean isMethodContext) {
-		this(new LeanTransactionWorker(jtxManager), isMethodContext);
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern) {
+		this(new LeanTransactionWorker(jtxManager), contextPattern);
 	}
 
-	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, boolean isMethodContext) {
-		this(jtxWorker, isMethodContext, null);
+	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, String contextPattern) {
+		this(jtxWorker, contextPattern, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, boolean isMethodContext, JtxTransactionMode defaultTxMode) {
-		this(new LeanTransactionWorker(jtxManager), isMethodContext, defaultTxMode);
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern, JtxTransactionMode defaultTxMode) {
+		this(new LeanTransactionWorker(jtxManager), contextPattern, defaultTxMode);
 	}
 
-	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, boolean isMethodContext, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, String contextPattern, JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
-		this.isMethodContext = isMethodContext;
+		this.contextPattern = contextPattern;
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -72,10 +76,16 @@ public class AnnotationTxAdviceManager {
 	}
 
 	/**
-	 * Returns <code>true</code> if annotated method is transaction context.
+	 * Resolves tx context from context pattern.
 	 */
-	public boolean isMethodContext() {
-		return isMethodContext;
+	public String resolveContext(Class type, String methodName) {
+		if (contextPattern == null) {
+			return null;
+		}
+		String ctx = contextPattern;
+		ctx = StringUtil.replace(ctx, JTXCTX_PATTERN_CLASS, type.getName());
+		ctx = StringUtil.replace(ctx, JTXCTX_PATTERN_METHOD, methodName);
+		return ctx;
 	}
 
 	/**
