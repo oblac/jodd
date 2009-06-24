@@ -12,10 +12,15 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Manages all Madvoc action registrations.
  */
 public class ActionsManager {
+
+	protected static final Logger log = LoggerFactory.getLogger(ActionsManager.class);
 
 	@PetiteInject
 	protected ActionMethodParser actionMethodParser;
@@ -102,6 +107,10 @@ public class ActionsManager {
 		ActionConfig cfg = actionMethodParser.parse(actionClass, actionMethod, actionPath);
 		if (cfg == null) {
 			return;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Registering Madvoc action: " + cfg.actionPath + " to: " +
+					cfg.actionClass.getName() + '#' + cfg.actionMethod.getName());
 		}
 		boolean isDuplicate = configs.put(cfg.actionPath, cfg) != null;
 		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
