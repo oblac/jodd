@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
  * May start and work with transactions, after commiting/rolling back
@@ -22,6 +25,8 @@ import java.util.ArrayList;
  * For managed transaction see {@link jodd.db.jtx.DbJtxTransactionManager}.
  */
 public class DbSession {
+
+	protected static final Logger log = LoggerFactory.getLogger(DbSession.class);
 
 	// ---------------------------------------------------------------- init & close
 
@@ -39,6 +44,7 @@ public class DbSession {
 	 * Creates new database session with default transaction mode and in autocommit mode.
 	 */
 	public DbSession(ConnectionProvider connectionProvider) {
+		log.debug("Creating new db session");
 		if (connectionProvider == null) {
 			throw new DbSqlException("Connection provider is not availiable.");
 		}
@@ -56,6 +62,7 @@ public class DbSession {
 	 * Closed session is no longer available for usage.
 	 */
 	public void closeSession() {
+		log.debug("Closing db session");
 		List<SQLException> allsexs = null;
 		for (DbQueryBase query : queries) {
             List<SQLException> sexs = query.closeQuery();
@@ -128,7 +135,7 @@ public class DbSession {
 
 
 	/**
-	 * Opens connection in autoc-ommit mode, if already not opened.
+	 * Opens connection in auto-commit mode, if already not opened.
 	 */
 	protected void openConnectionForQuery() {
 		if (connection == null) {
@@ -192,6 +199,7 @@ public class DbSession {
 	 * Starts a transaction.
 	 */
 	public void beginTransaction(DbTransactionMode mode) {
+		log.debug("Beginning transaction");
 		checkClosedTx();
 		this.txMode = mode;
 		openTx();
@@ -209,6 +217,7 @@ public class DbSession {
 	 * Transaction mode is closed.
 	 */
 	public void commitTransaction() {
+		log.debug("Committing transaction");
 		checkActiveTx();
 		try {
 			connection.commit();
@@ -223,6 +232,7 @@ public class DbSession {
 	 * Roll back the current transaction. Transaction mode is closed.
 	 */
 	public void rollbackTransaction() {
+		log.debug("Rolling-back transaction");
 		checkActiveTx();
 		try {
 			connection.rollback();

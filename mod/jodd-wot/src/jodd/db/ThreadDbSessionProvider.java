@@ -2,6 +2,9 @@
 
 package jodd.db;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Returns {@link DbSession} assigned to current thread.
  * If session is not assigned to current thread, an exception is thrown, or,
@@ -12,6 +15,8 @@ package jodd.db;
  * @see jodd.db.ThreadDbSessionHolder
  */
 public class ThreadDbSessionProvider implements DbSessionProvider {
+
+	protected static final Logger log = LoggerFactory.getLogger(ThreadDbSessionProvider.class);
 
 	protected final boolean createIfMissing;
 
@@ -27,6 +32,7 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public DbSession getDbSession() {
+		log.debug("Requesting thread session");
 		DbSession session = ThreadDbSessionHolder.get();
 		if (session == null) {
 			if (createIfMissing) {
@@ -46,9 +52,10 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 
 
 	/**
-	 * Closes db session
+	 * Closes db session.
 	 */
 	public static void closeThreadDbSession() {
+		log.debug("Closing thread session");
 		DbSession session = ThreadDbSessionHolder.get();
 		if (session != null) {
 			session.closeSession();

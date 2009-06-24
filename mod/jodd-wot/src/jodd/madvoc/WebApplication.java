@@ -21,11 +21,16 @@ import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
  * Custom implementations may override this class to enhance several different functionality.
  */
 public class WebApplication {
+
+	protected static final Logger log = LoggerFactory.getLogger(WebApplication.class);
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
 
@@ -74,6 +79,9 @@ public class WebApplication {
 	}
 
 	public final void registerComponent(String name, Class component) {
+		if (log.isDebugEnabled()) {
+			log.debug("Registering component '{}' of type {}", name, component.getName());
+		}
 		madpc.removeBean(name);
 		madpc.registerBean(name, component);
 	}
@@ -93,6 +101,9 @@ public class WebApplication {
 	 * Registers component instance and wires it with internal container.
 	 */
 	public final void registerComponent(String name, Object componentInstance) {
+		if (log.isDebugEnabled()) {
+			log.debug("Registering component '{}' instace of {}", name, componentInstance.getClass().getName());
+		}
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);
 	}
@@ -118,6 +129,7 @@ public class WebApplication {
 	 * Invoked before {@link #init(MadvocConfig , ServletContext) madvoc initialization}.
 	 */
 	public void registerMadvocComponents() {
+		log.debug("Registering all Madvoc components");
 		registerComponent(ActionMethodParser.class);
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
@@ -139,6 +151,7 @@ public class WebApplication {
 	 * Simple defines parameters for internal container.
 	 */
 	protected void defineParams(Properties properties) {
+		log.debug("Defining Madvoc parameters");
 		madpc.defineParameters(properties);
 	}
 
@@ -147,6 +160,7 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
+		log.debug("Initializing Madvoc");
 	}
 
 	/**
@@ -154,6 +168,7 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initActions(ActionsManager actionManager) {
+		log.debug("Initializing Madvoc actions");
 	}
 
 	/**
@@ -161,6 +176,7 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initResults(ResultsManager actionManager) {
+		log.debug("Initializing Madvoc results");
 	}
 
 	/**
@@ -168,6 +184,7 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void destroy(MadvocConfig madvocConfig) {
+		log.debug("Destroying Madvoc");
 	}
 
 
@@ -177,6 +194,7 @@ public class WebApplication {
 	 * Wires configurator in the the madvoc container and invokes configuration.
 	 */
 	public void configure(MadvocConfigurator configurator) {
+		log.debug("Configuring Madvoc");
 		madpc.wire(configurator);
 		configurator.configure();
 	}

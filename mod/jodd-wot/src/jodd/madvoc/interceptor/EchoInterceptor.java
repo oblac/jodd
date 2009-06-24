@@ -40,9 +40,8 @@ public class EchoInterceptor extends ActionInterceptor {
 	protected void printBefore(ActionRequest request) {
 		StringBuilder message = new StringBuilder("----->");
 		message.append(request.getActionPath()).append("   [").append(request.getActionConfig().getActionString()).append(']');
-		System.out.println(message.toString());
+		out(message.toString());
 	}
-
 
 	/**
 	 * Prints out the message. User can override this method and modify the way
@@ -52,6 +51,14 @@ public class EchoInterceptor extends ActionInterceptor {
 		StringBuilder message = new StringBuilder("<----- ");
 		message.append(request.getActionPath()).append("  (").append(result);
 		message.append(") in ").append(executionTime).append("ms.");
-		System.out.println(message.toString());
+		out(message.toString());
 	}
+
+	/**
+	 * Outputs info message. By default, it outputs it to console.
+	 */
+	protected void out(String message) {
+		System.out.println(message);
+	}
+
 }

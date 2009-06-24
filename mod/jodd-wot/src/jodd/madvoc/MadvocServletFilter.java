@@ -23,10 +23,15 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Initializes and configures Madvoc and passes requests to {@link jodd.madvoc.component.MadvocController}.
  */
 public class MadvocServletFilter implements Filter {
+
+	protected static final Logger log = LoggerFactory.getLogger(MadvocServletFilter.class);
 
 	public static final String PARAM_MADVOC_WEBAPP = "madvoc.webapp";
 	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
@@ -41,6 +46,7 @@ public class MadvocServletFilter implements Filter {
 	 * Filter initialization.
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
+		log.info("Madvoc servlet filter initialization");
 		this.filterConfig = filterConfig;
 		webapp = loadWebApplication(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
 
@@ -96,9 +102,10 @@ public class MadvocServletFilter implements Filter {
 	 */
 	protected WebApplication loadWebApplication(String className) throws ServletException {
 		if (className == null) {
+			log.info("Loading default web application");
 			return new WebApplication();
 		}
-
+		log.info("Loading web application: {}", className);
 		WebApplication webApp;
 		try {
 			Class clazz = ClassLoaderUtil.loadClass(className, this.getClass());
@@ -119,8 +126,10 @@ public class MadvocServletFilter implements Filter {
 	 */
 	protected MadvocConfigurator loadMadvocConfig(String className) throws ServletException {
 		if (className == null) {
+			log.info("Configuring Madvoc using default automagic configurator");
 			return new AutomagicMadvocConfigurator();
 		}
+		log.info("Configuring Madvoc using configurator: {}", className);
 		MadvocConfigurator configurator;
 		try {
 			Class clazz = ClassLoaderUtil.loadClass(className, this.getClass());
@@ -142,6 +151,7 @@ public class MadvocServletFilter implements Filter {
 		if (pattern == null) {
 			return new Properties();
 		}
+		log.info("Loading Madvoc parameters from: {}", pattern);
 		try {
 			return PropertiesUtil.createFromClasspath(pattern);
 		} catch (Exception ex) {

@@ -4,6 +4,8 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxettaException;
 import jodd.util.ClassLoaderUtil;
@@ -17,6 +19,8 @@ import java.io.IOException;
  * Creates the proxy subclass using ASM library.
  */
 public class ProxettaCreator {
+
+	protected static final Logger log = LoggerFactory.getLogger(ProxettaCreator.class);
 
 	// ---------------------------------------------------------------- ctor
 
@@ -54,10 +58,13 @@ public class ProxettaCreator {
 	 * Single point of class reader acceptance. Reads the target and creates destination class.
 	 */
 	protected ProxettaCreator accept(ClassReader cr) {
+		if (log.isDebugEnabled()) {
+			log.debug("Creating proxy for " + cr.getClassName());
+		}
 		// reads information
 		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader();
 		cr.accept(targetClassInfoReader, 0);
-		// add proxy
+		// create proxy
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, suffix, targetClassInfoReader);
 		cr.accept(pcb, 0);

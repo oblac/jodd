@@ -36,7 +36,6 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		}
 	}
 
-
 	// ---------------------------------------------------------------- core
 
 	/**

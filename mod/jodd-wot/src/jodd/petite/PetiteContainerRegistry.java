@@ -37,8 +37,6 @@ public abstract class PetiteContainerRegistry {
 		return petiteConfig;
 	}
 
-
-
 	// ---------------------------------------------------------------- bean
 
 	/**

@@ -13,12 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Madvoc controller invokes actions for action path and renders action results.
  * It also builds action objects and result paths. It handles intialization of
  * interceptors and results.
  */
 public class MadvocController {
+
+	protected static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -73,6 +78,8 @@ public class MadvocController {
 		ActionRequest request = null;
 
 		while (actionPath != null) {
+			log.debug("Action path: {}", actionPath);
+
 			// build action path
 			String httpMethod = servletRequest.getMethod().toUpperCase();
 			actionPath = actionPathRewriter.rewrite(actionPath, servletRequest, httpMethod);
@@ -80,7 +87,11 @@ public class MadvocController {
 			// resolve action config
 			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
 			if (actionConfig == null) {
+				log.debug("Action path not mapped: {}", actionPath);
 				return actionPath;
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("Invoking action path {} using {}", actionPath, actionConfig.actionClass.getSimpleName());
 			}
 
 			// create action object
@@ -123,7 +134,6 @@ public class MadvocController {
 	 * @see ActionResult#execute(jodd.madvoc.ActionRequest, Object, String, String)
 	 */
 	public void render(ActionRequest req, Object resultObject) throws Exception {
-
 		String resultValue = resultObject != null ? resultObject.toString() : null;
 
 		String resultType = madvocConfig.getDefaultResultType();

@@ -9,11 +9,16 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Simple {@link JtxTransaction} manager is responsible for transactions propagation and resource managers.
  * It also holds various configuration data. It can be considered that all work is done global-wide.
  */
 public class JtxTransactionManager {
+
+	protected static final Logger log = LoggerFactory.getLogger(JtxTransactionManager.class);
 
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;
@@ -190,6 +195,7 @@ public class JtxTransactionManager {
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
 	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object context) {
+		log.debug("Requesting TX");
 		JtxTransaction currentTx = getTransaction();
 		if (checkValidTxContext(currentTx, context) == false) {
 			return currentTx;

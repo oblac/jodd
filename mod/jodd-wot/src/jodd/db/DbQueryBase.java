@@ -2,6 +2,9 @@
 
 package jodd.db;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +19,8 @@ import java.util.HashSet;
  * Support for {@link DbQuery} holds all configuration, initialization and the execution code.
  */
 abstract class DbQueryBase {
+
+	protected static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
 
 	// ---------------------------------------------------------------- query states
 
@@ -532,6 +537,9 @@ abstract class DbQueryBase {
 	public ResultSet execute() {
 		init();
 		ResultSet rs = null;
+		if (log.isDebugEnabled()) {
+			log.debug("Executing statement: " + getQueryString());
+		}
 		try {
 			if (preparedStatement == null) {
 				rs = statement.executeQuery(query.sql);
@@ -571,6 +579,9 @@ abstract class DbQueryBase {
 	protected int executeUpdate(boolean closeQuery) {
 		init();
 		int result;
+		if (log.isDebugEnabled()) {
+			log.debug("Executing update: " + getQueryString());
+		}
 		try {
 			if (preparedStatement == null) {
 				if (generatedColumns != null) {
@@ -616,6 +627,9 @@ abstract class DbQueryBase {
 	protected long executeCount(boolean close) {
 		init();
 		ResultSet rs = null;
+		if (log.isDebugEnabled()) {
+			log.debug("Executing prepared count: " + getQueryString());
+		}
 		try {
 			if (preparedStatement == null) {
 				rs = statement.executeQuery(query.sql);

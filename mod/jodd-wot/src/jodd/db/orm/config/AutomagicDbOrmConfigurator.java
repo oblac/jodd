@@ -11,10 +11,15 @@ import jodd.util.ClassLoaderUtil;
 import java.net.URL;
 import java.io.InputStream;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Auto-magically reads classpath for domain objects annotated
  */
 public class AutomagicDbOrmConfigurator extends FindClass {
+
+	protected static final Logger log = LoggerFactory.getLogger(AutomagicDbOrmConfigurator.class);
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
@@ -51,7 +56,7 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 			throw new DbOrmException("Unable to scan classpath.", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		System.out.println("DbOrmManager configured in " + elapsed + " ms. Total entities: " + dbOrmManager.getTotalNames());
+		log.info("DbOrmManager configured in " + elapsed + " ms. Total entities: " + dbOrmManager.getTotalNames());
 	}
 
 	/**

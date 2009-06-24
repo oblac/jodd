@@ -112,6 +112,9 @@
 	<path id="lib.servlets">
 		<fileset dir="${basedir}/lib/servlets" includes="**/*.jar"/>
 	</path>
+	<path id="lib.slf4j">
+		<fileset dir="${basedir}/lib/slf4j" includes="**/*.jar"/>
+	</path>
 
 
 	<!-- MODULE : jodd -->
@@ -341,6 +344,7 @@
 		<path path="${jodd.production.out.dir}"/>
 		<path refid="lib.servlets"/>
 		<path refid="lib.asm"/>
+		<path refid="lib.slf4j"/>
 	</path>
 
 	<!-- compile: jodd-wot.production -->
@@ -394,6 +398,7 @@
 		<path path="${jodd.production.out.dir}"/>
 		<path path="${jodd-wot.production.out.dir}"/>
 		<path refid="lib.asm"/>
+		<path refid="lib.slf4j"/>
 		<path refid="lib.hsqldb"/>
 		<path refid="lib.h2"/>
 		<path refid="lib.junit"/>

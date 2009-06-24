@@ -19,6 +19,9 @@ import jodd.petite.meta.PetiteInject;
 import java.lang.reflect.Method;
 import java.net.URL;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Default Madvoc configurator uses auto-magic to configure {@link WebApplication}.
  * It searches the class path for all classes which names ends with 'Action' and 'Result'
@@ -29,6 +32,8 @@ import java.net.URL;
  * are registered as Madvoc actions.
  */
 public class AutomagicMadvocConfigurator extends FindClass implements MadvocConfigurator {
+
+	protected static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -72,7 +77,7 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 			throw new MadvocException("Unable to scan classpath.", ex); 
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		System.out.println("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getAllActionConfigurations().size());
+		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getAllActionConfigurations().size());
 	}
 
 

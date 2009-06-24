@@ -11,6 +11,9 @@ import jodd.util.ClassLoaderUtil;
 import java.net.URL;
 import java.io.InputStream;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Auto-magically configures Petite container by analyzing the classpath.
  * <p>
@@ -19,6 +22,8 @@ import java.io.InputStream;
  * registered as Petite bean.
  */
 public class AutomagicPetiteConfigurator extends FindClass implements PetiteConfigurator {
+
+	protected static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
 
 	protected final byte[] petiteBeanAnnotationBytes;
 
@@ -50,7 +55,7 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 			throw new PetiteException("Unable to scan classpath.", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		System.out.println("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getManager().getTotalBeans());
+		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getManager().getTotalBeans());
 	}
 
 	/**

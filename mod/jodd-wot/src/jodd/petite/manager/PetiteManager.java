@@ -23,6 +23,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Petite manager holds configuration and deals with registration.
  * <p>
@@ -31,6 +34,8 @@ import java.util.Iterator;
  * <li> if reference names doesn't exist, resolve it from parameter types. 
  */
 public class PetiteManager {
+
+	protected static final Logger log = LoggerFactory.getLogger(PetiteManager.class);
 
 	protected final BeanManager beanManager;
 	protected final CtorResolver ctorResolver;
@@ -86,6 +91,12 @@ public class PetiteManager {
 						"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
 						existing.type.getName() + "' is already registered with the name '" + name + "'.");
 			}
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("Registering bean: " + name +
+					" of type: " + type.getSimpleName() +
+					" in: " + scopeType.getSimpleName() +
+					" using wiring mode: " + wiringMode.toString());
 		}
 		return beanManager.register(name, type, scopeType, wiringMode);
 	}

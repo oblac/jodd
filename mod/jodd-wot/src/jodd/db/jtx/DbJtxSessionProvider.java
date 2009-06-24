@@ -7,6 +7,8 @@ import jodd.db.DbSession;
 import jodd.db.DbSqlException;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * Returns session from the db transaction manager.
@@ -14,8 +16,9 @@ import jodd.jtx.JtxTransactionMode;
  */
 public class DbJtxSessionProvider implements DbSessionProvider {
 
-	protected final JtxTransactionManager jtxTxManager;
+	protected static final Logger log = LoggerFactory.getLogger(DbJtxSessionProvider.class);
 
+	protected final JtxTransactionManager jtxTxManager;
 	protected final JtxTransactionMode defaultTxMode;
 
 	public DbJtxSessionProvider(JtxTransactionManager txManager) {
@@ -31,6 +34,7 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public DbSession getDbSession() {
+		log.debug("Requesting db TX manager session");
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx == null) {
 			if (defaultTxMode != null) {
@@ -46,6 +50,7 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public void closeDbSession() {
+		log.debug("Closing db TX manager session");
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx != null) {
 			jtx.commit();
