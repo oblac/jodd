@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Various String utilities.
+ * @see jodd.util.TextUtil
  */
 public class StringUtil {
 
@@ -893,6 +894,65 @@ public class StringUtil {
 		return -1;
 	}
 
+	public static int lastIndexOfWhitespace(String src) {
+		return lastIndexOfWhitespace(src, src.length(), 0);
+	}
+
+	/**
+	 * Returns last index of a whitespace.
+	 */
+	public static int lastIndexOfWhitespace(String src, int startIndex) {
+		return lastIndexOfWhitespace(src, startIndex, 0);
+	}
+
+	/**
+	 * Returns last index of a whitespace.
+	 */
+	public static int lastIndexOfWhitespace(String src, int startIndex, int endIndex) {
+		int total = src.length() - 1;
+		if (total < 0) {
+			return -1;
+		}
+		if (startIndex >= total) {
+			startIndex = total;
+		}
+		if (endIndex < 0) {
+			endIndex = 0;
+		}
+		for (int i = startIndex; i >= endIndex; i--) {
+			if (Character.isWhitespace(src.charAt(i))) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+	public static int lastIndexOfNonWhitespace(String src) {
+		return lastIndexOfNonWhitespace(src, src.length(), 0);
+	}
+	public static int lastIndexOfNonWhitespace(String src, int startIndex) {
+		return lastIndexOfNonWhitespace(src, startIndex, 0);
+	}
+	public static int lastIndexOfNonWhitespace(String src, int startIndex, int endIndex) {
+		int total = src.length() - 1;
+		if (total < 0) {
+			return -1;
+		}
+		if (startIndex >= total) {
+			startIndex = total;
+		}
+		if (endIndex < 0) {
+			endIndex = 0;
+		}
+		for (int i = startIndex; i >= endIndex; i--) {
+			if (Character.isWhitespace(src.charAt(i)) == false) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	// ---------------------------------------------------------------- starts and ends
 
 	/**
@@ -1460,6 +1520,43 @@ public class StringUtil {
 		return -1;
 	}
 
+	/**
+	 * Returns first index of a whitespace character.
+	 */
+	public static int indexOfWhitespace(String string) {
+		return indexOfWhitespace(string, 0, string.length());
+	}
+
+	public static int indexOfWhitespace(String string, int startindex) {
+		return indexOfWhitespace(string, startindex, string.length());
+	}
+
+	/**
+	 * Returns first index of a whitespace character, starting from specified index offset.
+	 */
+	public static int indexOfWhitespace(String string, int startindex, int endindex) {
+		for (int i = startindex; i < endindex; i++) {
+			if (CharUtil.isWhitespace(string.charAt(i))) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static int indexOfNonWhitespace(String string) {
+		return indexOfNonWhitespace(string, 0, string.length());
+	}
+	public static int indexOfNonWhitespace(String string, int startindex) {
+		return indexOfNonWhitespace(string, startindex, string.length());
+	}
+	public static int indexOfNonWhitespace(String string, int startindex, int endindex) {
+		for (int i = startindex; i < endindex; i++) {
+			if (CharUtil.isWhitespace(string.charAt(i)) == false) {
+				return i;
+			}
+		}
+		return -1;
+	}
 
 
 	// ---------------------------------------------------------------- strip, trim

@@ -17,9 +17,6 @@ public class PrettyStringBuilder {
 	protected int deep;
 	protected String nullValue = "<null>";
 
-	public PrettyStringBuilder() {
-	}
-
 	public int getMaxArrayLen() {
 		return maxArrayLen;
 	}

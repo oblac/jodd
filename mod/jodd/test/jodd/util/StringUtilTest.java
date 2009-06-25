@@ -472,6 +472,24 @@ public class StringUtilTest extends TestCase {
 		assertEquals(1, s.indexOf("", 1));
 
 		assertEquals(4, StringUtil.lastIndexOf(s, "", 4, 0));
+
+		assertEquals(-1, StringUtil.indexOfWhitespace("123"));
+		assertEquals(0, StringUtil.indexOfNonWhitespace("123"));
+		assertEquals(-1, StringUtil.indexOfWhitespace(""));
+		assertEquals(-1, StringUtil.indexOfNonWhitespace(""));
+		assertEquals(2, StringUtil.indexOfWhitespace("12 123"));
+		assertEquals(2, StringUtil.indexOfNonWhitespace("  12 123"));
+		assertEquals(5, StringUtil.indexOfNonWhitespace("  12 123", 4));
+		assertEquals(0, StringUtil.indexOfNonWhitespace("12 123"));
+		assertEquals(2, StringUtil.lastIndexOfWhitespace("12 123"));
+		assertEquals(5, StringUtil.indexOfWhitespace("12 12 3", 4));
+		assertEquals(2, StringUtil.lastIndexOfWhitespace("12 12 3", 4));
+		assertEquals(-1, StringUtil.lastIndexOfWhitespace("12 12 3", 4, 3));
+		assertEquals(6, StringUtil.lastIndexOfNonWhitespace("12 12 3"));
+		assertEquals(4, StringUtil.lastIndexOfNonWhitespace("12 12  "));
+		assertEquals(-1, StringUtil.lastIndexOfNonWhitespace("       "));
+		assertEquals(4, StringUtil.lastIndexOfNonWhitespace("12 12  ", 6, 3));
+		assertEquals(4, StringUtil.lastIndexOfNonWhitespace("12 12  ", 6, 4));
 	}
 
 
