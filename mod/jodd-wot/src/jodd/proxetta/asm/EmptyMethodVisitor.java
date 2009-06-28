@@ -10,7 +10,6 @@ import org.objectweb.asm.Label;
 /**
  * Empty method visitor.
  */
-@SuppressWarnings({"JavadocReference"})
 public class EmptyMethodVisitor implements MethodVisitor {
 
 	// -------------------------------------------------------------------------
@@ -21,7 +20,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * Visits the default value of this annotation interface method.
 	 * 
 	 * @return a visitor to the visit the actual default value of this
-	 *         annotation interface method, or <tt>null</tt> if this visitor
+	 *         annotation interface method, or <code>null</code> if this visitor
 	 *         is not interested in visiting this default value. The 'name'
 	 *         parameters passed to the methods of this annotation visitor are
 	 *         ignored. Moreover, exacly one visit method must be called on this
@@ -33,8 +32,8 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * Visits an annotation of this method.
 	 * 
 	 * @param desc the class descriptor of the annotation class.
-	 * @param visible <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 * @param visible <code>true</code> if the annotation is visible at runtime.
+	 * @return a visitor to visit the annotation values, or <code>null</code> if
 	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {return null;}
@@ -44,8 +43,8 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * 
 	 * @param parameter the parameter index.
 	 * @param desc the class descriptor of the annotation class.
-	 * @param visible <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 * @param visible <code>true</code> if the annotation is visible at runtime.
+	 * @return a visitor to visit the annotation values, or <code>null</code> if
 	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {return null;}
@@ -71,37 +70,37 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * values of the local variables and of the operand stack elements <i>just
 	 * before</i> <b>i</b> is executed. <br> <br> (*) this is mandatory only
 	 * for classes whose version is greater than or equal to
-	 * {@link Opcodes#V1_6 V1_6}. <br> <br> Packed frames are basically
+	 * V1_6. <br> <br> Packed frames are basically
 	 * "deltas" from the state of the previous frame (very first frame is
 	 * implicitly defined by the method's parameters and access flags): <ul>
-	 * <li>{@link Opcodes#F_SAME} representing frame with exactly the same
-	 * locals as the previous frame and with the empty stack.</li> <li>{@link Opcodes#F_SAME1}
+	 * <liOpcodes#F_SAME representing frame with exactly the same
+	 * locals as the previous frame and with the empty stack.</li> <li>Opcodes#F_SAME1
 	 * representing frame with exactly the same locals as the previous frame and
 	 * with single value on the stack (<code>nStack</code> is 1 and
 	 * <code>stack[0]</code> contains value for the type of the stack item).</li>
-	 * <li>{@link Opcodes#F_APPEND} representing frame with current locals are
+	 * <li>Opcodes#F_APPEND representing frame with current locals are
 	 * the same as the locals in the previous frame, except that additional
 	 * locals are defined (<code>nLocal</code> is 1, 2 or 3 and
 	 * <code>local</code> elements contains values representing added types).</li>
-	 * <li>{@link Opcodes#F_CHOP} representing frame with current locals are
+	 * <li>Opcodes#F_CHOP representing frame with current locals are
 	 * the same as the locals in the previous frame, except that the last 1-3
 	 * locals are absent and with the empty stack (<code>nLocals</code> is 1,
-	 * 2 or 3). </li> <li>{@link Opcodes#F_FULL} representing complete frame
+	 * 2 or 3). </li> <li>Opcodes#F_FULL representing complete frame
 	 * data.</li> </li> </ul>
 	 * 
 	 * @param type the type of this stack map frame. Must be
-	 *        {@link Opcodes#F_NEW} for expanded frames, or
-	 *        {@link Opcodes#F_FULL}, {@link Opcodes#F_APPEND},
-	 *        {@link Opcodes#F_CHOP}, {@link Opcodes#F_SAME} or
-	 *        {@link Opcodes#F_APPEND}, {@link Opcodes#F_SAME1} for compressed
+	 *        Opcodes#F_NEW for expanded frames, or
+	 *        Opcodes#F_FULL, Opcodes#F_APPEND,
+	 *        Opcodes#F_CHOP, Opcodes#F_SAME or
+	 *        Opcodes#F_APPEND, Opcodes#F_SAME1 for compressed
 	 *        frames.
 	 * @param nLocal the number of local variables in the visited frame.
 	 * @param local the local variable types in this frame. This array must not
 	 *        be modified. Primitive types are represented by
-	 *        {@link Opcodes#TOP}, {@link Opcodes#INTEGER},
-	 *        {@link Opcodes#FLOAT}, {@link Opcodes#LONG},
-	 *        {@link Opcodes#DOUBLE},{@link Opcodes#NULL} or
-	 *        {@link Opcodes#UNINITIALIZED_THIS} (long and double are
+	 *        Opcodes#TOP, Opcodes#INTEGER,
+	 *        Opcodes#FLOAT, Opcodes#LONG,
+	 *        Opcodes#DOUBLE,Opcodes#NULL or
+	 *        Opcodes#UNINITIALIZED_THIS (long and double are
 	 *        represented by a single element). Reference types are represented
 	 *        by String objects (representing internal names), and uninitialized 
 	 *        types by Label objects (this label designates the NEW instruction 
@@ -146,10 +145,10 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 *        and Byte.MAX_VALUE.<br> When opcode is SIPUSH, operand value
 	 *        should be between Short.MIN_VALUE and Short.MAX_VALUE.<br> When
 	 *        opcode is NEWARRAY, operand value should be one of
-	 *        {@link Opcodes#T_BOOLEAN}, {@link Opcodes#T_CHAR},
-	 *        {@link Opcodes#T_FLOAT}, {@link Opcodes#T_DOUBLE},
-	 *        {@link Opcodes#T_BYTE}, {@link Opcodes#T_SHORT},
-	 *        {@link Opcodes#T_INT} or {@link Opcodes#T_LONG}.
+	 *        Opcodes#T_BOOLEAN}, Opcodes#T_CHAR},
+	 *        Opcodes#T_FLOAT}, Opcodes#T_DOUBLE},
+	 *        Opcodes#T_BYTE}, Opcodes#T_SHORT},
+	 *        Opcodes#T_INT} or Opcodes#T_LONG}.
 	 */
 	public void visitIntInsn(int opcode, int operand) {}
 
@@ -172,8 +171,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param opcode the opcode of the type instruction to be visited. This
 	 *        opcode is either NEW, ANEWARRAY, CHECKCAST or INSTANCEOF.
 	 * @param type the operand of the instruction to be visited. This operand
-	 *        must be the internal name of an object or array class (see {@link 
-	 *        Type#getInternalName() getInternalName}).
+	 *        must be the internal name of an object or array class.
 	 */
 	public void visitTypeInsn(int opcode, String type) {}
 
@@ -183,10 +181,9 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * 
 	 * @param opcode the opcode of the type instruction to be visited. This
 	 *        opcode is either GETSTATIC, PUTSTATIC, GETFIELD or PUTFIELD.
-	 * @param owner the internal name of the field's owner class (see {@link
-	 *        Type#getInternalName() getInternalName}).
+	 * @param owner the internal name of the field's owner class.
 	 * @param name the field's name.
-	 * @param desc the field's descriptor (see {@link Type Type}).
+	 * @param desc the field's descriptor.
 	 */
 	public void visitFieldInsn(int opcode, String owner, String name, String desc) {}
 
@@ -197,11 +194,9 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param opcode the opcode of the type instruction to be visited. This
 	 *        opcode is either INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC,
 	 *        INVOKEINTERFACE or INVOKEDYNAMIC.
-	 * @param owner the internal name of the method's owner class (see {@link
-	 *        Type#getInternalName() getInternalName})
-	 *        or {@link org.objectweb.asm.Opcodes#INVOKEDYNAMIC_OWNER}.
+	 * @param owner the internal name of the method's owner class.
 	 * @param name the method's name.
-	 * @param desc the method's descriptor (see {@link Type Type}).
+	 * @param desc the method's descriptor.
 	 */
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {}
 
@@ -236,8 +231,8 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * 
 	 * @param cst the constant to be loaded on the stack. This parameter must be
 	 *        a non null {@link Integer}, a {@link Float}, a {@link Long}, a
-	 *        {@link Double} a {@link String} (or a {@link Type} for
-	 *        <tt>.class</tt> constants, for classes whose version is 49.0 or
+	 *        {@link Double} a {@link String} (or a Type for
+	 *        <code>.class</code> constants, for classes whose version is 49.0 or
 	 *        more).
 	 */
 	public void visitLdcInsn(Object cst) {}
@@ -256,8 +251,8 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param min the minimum key value.
 	 * @param max the maximum key value.
 	 * @param dflt beginning of the default handler block.
-	 * @param labels beginnings of the handler blocks. <tt>labels[i]</tt> is
-	 *        the beginning of the handler block for the <tt>min + i</tt> key.
+	 * @param labels beginnings of the handler blocks. <code>labels[i]</code> is
+	 *        the beginning of the handler block for the <code>min + i</code> key.
 	 */
 	public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {}
 
@@ -266,15 +261,15 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * 
 	 * @param dflt beginning of the default handler block.
 	 * @param keys the values of the keys.
-	 * @param labels beginnings of the handler blocks. <tt>labels[i]</tt> is
-	 *        the beginning of the handler block for the <tt>keys[i]</tt> key.
+	 * @param labels beginnings of the handler blocks. <code>labels[i]</code> is
+	 *        the beginning of the handler block for the <code>keys[i]</code> key.
 	 */
 	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {}
 
 	/**
 	 * Visits a MULTIANEWARRAY instruction.
 	 * 
-	 * @param desc an array type descriptor (see {@link Type Type}).
+	 * @param desc an array type descriptor.
 	 * @param dims number of dimensions of the array to allocate.
 	 */
 	public void visitMultiANewArrayInsn(String desc, int dims) {}
@@ -290,7 +285,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param end end of the exception handler's scope (exclusive).
 	 * @param handler beginning of the exception handler's code.
 	 * @param type internal name of the type of exceptions handled by the
-	 *        handler, or <tt>null</tt> to catch any exceptions (for "finally"
+	 *        handler, or <code>null</code> to catch any exceptions (for "finally"
 	 *        blocks).
 	 * @throws IllegalArgumentException if one of the labels has already been
 	 *         visited by this visitor (by the {@link #visitLabel visitLabel}
@@ -304,7 +299,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param name the name of a local variable.
 	 * @param desc the type descriptor of this local variable.
 	 * @param signature the type signature of this local variable. May be
-	 *        <tt>null</tt> if the local variable type does not use generic
+	 *        <code>null</code> if the local variable type does not use generic
 	 *        types.
 	 * @param start the first instruction corresponding to the scope of this
 	 *        local variable (inclusive).
@@ -323,7 +318,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * @param line a line number. This number refers to the source file from
 	 *        which the class was compiled.
 	 * @param start the first instruction corresponding to this line number.
-	 * @throws IllegalArgumentException if <tt>start</tt> has not already been
+	 * @throws IllegalArgumentException if <code>start</code> has not already been
 	 *         visited by this visitor (by the {@link #visitLabel visitLabel}
 	 *         method).
 	 */
