@@ -14,7 +14,7 @@ public class SubclassTest extends TestCase {
 	public void test1() {
 
 		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
-			public boolean apply(MethodInfo msign) {
+			public boolean apply(MethodInfo methodInfo) {
 				return true;
 			}
 		});
@@ -52,7 +52,7 @@ public class SubclassTest extends TestCase {
 
 	}
 
-	public void test2() {
+	public void testVariableClassNames() {
 		Foo foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
 				.variableClassName()
 				.createProxyInstance(Foo.class);

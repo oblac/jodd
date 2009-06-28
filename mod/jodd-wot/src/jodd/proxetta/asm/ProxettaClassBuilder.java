@@ -18,9 +18,7 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
-import jodd.mutable.MutableInteger;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -31,12 +29,12 @@ import java.util.ArrayList;
 public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	protected final ProxyAspect[] aspects;
-	protected final MutableInteger suffix;
+	protected final String suffix;
 	protected final TargetClassInfoReader targetClassInfo;
 
 	protected final WorkData wd;
 
-	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, MutableInteger suffix, TargetClassInfoReader targetClassInfoReader) {
+	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, String suffix, TargetClassInfoReader targetClassInfoReader) {
 		this.wd = new WorkData(dest);
 		this.aspects = aspects;
 		this.suffix = suffix;
@@ -60,8 +58,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		superName = name;
 		name += PROXY_CLASS_NAME_SUFFIX;
 		if (suffix != null) {
-			name += suffix.value;
-			suffix.value++;
+			name += suffix;
 		}
 		wd.thisReference = name;
 		wd.superReference = superName;

@@ -10,7 +10,6 @@ import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxettaException;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
-import jodd.mutable.MutableInteger;
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -34,17 +33,30 @@ public class ProxettaCreator {
 
 	/**
 	 * Number appended to proxy class name, incremented on each use to make classnames unique
-	 * in the system (e.g. classloader). If set to <code>-1</code> it will be not used.
+	 * in the system (e.g. classloader).
 	 * @see #setUseVariableClassName(boolean)
  	 */
-	protected static MutableInteger suffix;
+	protected static int suffixCounter;
+
+	protected boolean useSuffix;
 
 	/**
 	 * Specifies class name will vary on each creation. This prevents
 	 * <code>java.lang.LinkageError: duplicate class definition.</code>
 	 */
-	public void setUseVariableClassName(boolean varname) {
-		suffix = varname ? new MutableInteger(1) : null;
+	public void setUseVariableClassName(boolean useVariableClassName) {
+		useSuffix = useVariableClassName;
+	}
+
+	/**
+	 * Returns new suffix or <code>null</code> if suffix is not in use.
+	 */
+	protected String getNewSuffix() {
+		if (useSuffix == false) {
+			return null;
+		}
+		suffixCounter++;
+		return String.valueOf(suffixCounter);
 	}
 
 
@@ -66,7 +78,7 @@ public class ProxettaCreator {
 		cr.accept(targetClassInfoReader, 0);
 		// create proxy
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, suffix, targetClassInfoReader);
+		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, getNewSuffix(), targetClassInfoReader);
 		cr.accept(pcb, 0);
 		proxyApplied = pcb.wd.proxyApplied;
 		proxyClassName = pcb.wd.thisReference.replace('/', '.');
@@ -142,7 +154,6 @@ public class ProxettaCreator {
 		checkAccepted();
 		return proxyClassName;
 	}
-
 
 
 }
