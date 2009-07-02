@@ -15,7 +15,6 @@ import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.madvoc.MadvocException;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
@@ -193,7 +192,7 @@ public class PetiteManager {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Field field = cd.getField(property, true);
 		if (field == null) {
-			throw new MadvocException("Property '" + type.getName() + '#' + property + "' doesn't exist");
+			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
 		}
 		return new PropertyInjectionPoint(field, reference, true);
 	}
