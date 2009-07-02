@@ -8,10 +8,26 @@ import jodd.datetime.format.DefaultFormatter;
 import jodd.datetime.format.JdtFormat;
 
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class FormatterTest extends TestCase {
+
+	Locale originalLocale;
+
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+		originalLocale = Locale.getDefault();
+		Locale.setDefault(Locale.ENGLISH);
+	}
+
+	@Override
+	public void tearDown() throws Exception {
+		super.tearDown();
+		Locale.setDefault(originalLocale);
+	}
 
 	public void testStringConversion() {
 		JDateTime jdt = new JDateTime(1975, 1, 1);

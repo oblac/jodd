@@ -2,12 +2,12 @@
 
 package jodd.db;
 
-import jodd.jtx.db.DbJtxResourceManager;
-import jodd.jtx.db.DbJtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxException;
+import jodd.jtx.db.DbJtxResourceManager;
+import jodd.jtx.db.DbJtxTransaction;
 import jodd.util.ThreadUtil;
 
 import java.sql.ResultSet;
@@ -32,26 +32,27 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 		assertNotSame(session1, session2);
 		assertTotals(manager, 2, 1);
 
-		DbQuery query = new DbQuery(session1, "insert into GIRLS values(4, 'Jeniffer', 'fighting')");
+		DbQuery query = new DbQuery(session1, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
 		assertEquals(1, query.executeUpdate());
 		query.close();
 
-		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRLS");
+		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
 		ResultSet rs = query2.execute();
 		if (rs.next()) {
-			assertEquals(4, rs.getInt(1));
+			assertEquals(1, rs.getInt(1));
 		}
 
 		session1.rollbackTransaction();
 
 		rs = query2.execute();
 		if (rs.next()) {
-			assertEquals(3, rs.getInt(1));
+			assertEquals(0, rs.getInt(1));
 		}
 		rs.close();
-
+		
 		tx2.commit();
 		tx1.commit();
+		
 		assertTotals(manager, 0, 0);
 	}
 
@@ -164,14 +165,14 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 		JtxTransaction tx1 = manager.requestTransaction(new JtxTransactionMode().propagationRequired().transactionTimeout(1));
 		DbSession session1 = tx1.requestResource(DbSession.class);
 		assertNotNull(session1);
-		executeCount(session1, "select count(*) from GIRLS");
+		executeCount(session1, "select count(*) from GIRL");
 
 		ThreadUtil.sleep(2000);
 		try {
 			DbSession session2 = tx1.requestResource(DbSession.class);
 			assertNotNull(session2);
 			assertSame(session1, session2);
-			executeCount(session1, "select count(*) from GIRLS");
+			executeCount(session1, "select count(*) from GIRL");
 			fail();
 		} catch (JtxException jtxex) {
 			
@@ -215,5 +216,4 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 			}
 		}.start();
 	}
-
 }

@@ -23,43 +23,24 @@ import java.util.Set;
 
 public class DbOrmTest extends DbHsqldbTestCase {
 
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		DbOrmManager dbOrm = DbOrmManager.getInstance();
+		dbOrm.registerEntity(Girl.class);
+		dbOrm.registerEntity(BadBoy.class);
+	}	
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		DbOrmManager dbOrm = DbOrmManager.getInstance();
+		dbOrm.reset();
+	}
+	
 	public void testOrm() {
-		DbOrmManager.getInstance().registerEntity(Girl.class);
-		DbOrmManager.getInstance().registerEntity(BadBoy.class);
-
-
-
 		DbSession session = new DbThreadSession(cp);
-
-		executeUpdate(session, "drop table BOY if exists");
-		executeUpdate(session, "drop table GIRL if exists");
-
-		String sql = "create table GIRL (" +
-						   "ID			integer		not null," +
-						   "NAME		varchar(20)	not null," +
-						   "SPECIALITY	varchar(20)	null," +
-						   "primary key (ID)" +
-							')';
-
-
-		DbQuery query = new DbQuery(sql);
-		query.executeUpdateAndClose();
-		assertTrue(query.isClosed());
-
-		sql = "create table BOY (" +
-						   "ID			integer	not null," +
-						   "GIRL_ID		integer	null," +
-						   "NAME	varchar(20)	null," +
-						   "primary key (ID)," +
-							"FOREIGN KEY (GIRL_ID) REFERENCES GIRL (ID)" +
-							')';
-		executeUpdate(sql);
-		session.closeSession();
-		assertTrue(session.isSessionClosed());
-
-
-		// prepare
-		session = new DbThreadSession(cp);
 
 		// ---------------------------------------------------------------- insert
 

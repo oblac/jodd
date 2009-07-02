@@ -18,18 +18,21 @@ public class DbSqlTemplateTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
 		DbOrmManager dbOrm = DbOrmManager.getInstance();
 		dbOrm.reset();
-		if (dbOrm.isRegistered(Girl.class) == false) {
-			dbOrm.registerType(Boy.class);
-			dbOrm.registerType(BadBoy.class);
-			dbOrm.registerType(BadGirl.class);
-			dbOrm.registerType(Girl.class);
-		}
+		dbOrm.registerType(Boy.class);
+		dbOrm.registerType(BadBoy.class);
+		dbOrm.registerType(BadGirl.class);
+		dbOrm.registerType(Girl.class);
 	}
 	
-
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		DbOrmManager dbOrm = DbOrmManager.getInstance();
+		dbOrm.reset();
+	}
+		
 	protected void assertContains(String string, String... chunks) {
 		for (String chunk : chunks) {
 			//noinspection SimplifiableJUnitAssertion
