@@ -2,10 +2,8 @@
 
 package jodd.db;
 
-import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.jtx.db.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
-
-import java.net.URL;
 
 import junit.framework.TestCase;
 

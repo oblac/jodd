@@ -22,7 +22,7 @@ import org.slf4j.Logger;
  * All invoked queries are stored within one session and closed implicitly
  * on session closing.
  * <p>
- * For managed transaction see {@link jodd.db.jtx.DbJtxTransactionManager}.
+ * For managed transaction see {@link jodd.jtx.db.DbJtxTransactionManager}.
  */
 public class DbSession {
 

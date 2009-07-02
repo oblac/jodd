@@ -2,8 +2,8 @@
 
 package jodd.db;
 
-import jodd.db.jtx.DbJtxTransactionManager;
-import jodd.db.jtx.DbJtxSessionProvider;
+import jodd.jtx.db.DbJtxTransactionManager;
+import jodd.jtx.db.DbJtxSessionProvider;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 

@@ -4,7 +4,6 @@ package jodd.db;
 
 import jodd.util.HashCode;
 import static jodd.util.HashCode.hash;
-import jodd.jtx.JtxTransactionMode;
 
 import java.sql.Connection;
 
@@ -16,22 +15,6 @@ public class DbTransactionMode {
 	public DbTransactionMode() {
 		this.isolation = ISOLATION_DEFAULT;
 		this.readOnlyMode = READ_ONLY;
-	}
-
-
-	/**
-	 * Created db transaction mode from general {@link jodd.jtx.JtxTransactionMode}.
-	 */
-	public DbTransactionMode(JtxTransactionMode txMode) {
-		switch (txMode.getIsolationLevel()) {
-			case ISOLATION_DEFAULT: isolation = ISOLATION_DEFAULT; break;
-			case ISOLATION_NONE: isolation = ISOLATION_NONE; break;
-			case ISOLATION_READ_COMMITTED: isolation = ISOLATION_READ_COMMITTED; break;
-			case ISOLATION_READ_UNCOMMITTED: isolation = ISOLATION_READ_UNCOMMITTED; break;
-			case ISOLATION_REPEATABLE_READ: isolation = ISOLATION_REPEATABLE_READ; break;
-			case ISOLATION_SERIALIZABLE: isolation = ISOLATION_SERIALIZABLE; break;
-		}
-		readOnlyMode = txMode.isReadOnly();
 	}
 
 	// ---------------------------------------------------------------- isolation
