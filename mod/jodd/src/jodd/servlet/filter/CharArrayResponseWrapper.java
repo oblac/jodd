@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -33,12 +34,12 @@ public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * Second, this constructor creates a CharArrayWriter that will be used to
 	 * accumulate the response.
 	 */
-	public CharArrayResponseWrapper(HttpServletResponse response) {
+	public CharArrayResponseWrapper(ServletResponse response) {
 		this(response, JoddDefault.encoding);
 	}
 
-	public CharArrayResponseWrapper(HttpServletResponse response, String encoding) {
-		super(response);
+	public CharArrayResponseWrapper(ServletResponse response, String encoding) {
+		super((HttpServletResponse) response);
 		writer = new FastCharArrayWriter();
 		this.encoding = encoding;
 	}

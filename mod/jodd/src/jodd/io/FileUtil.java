@@ -9,7 +9,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * File utilities.
@@ -564,6 +568,9 @@ public class FileUtil {
 		return readString(source, defaultParams.encoding);
 	}
 
+	/**
+	 * Reads file content as string.
+	 */
 	public static String readString(File source, String encoding) throws IOException {
 		if (source.exists() == false) {
 			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
@@ -634,6 +641,46 @@ public class FileUtil {
 			StreamUtil.close(out);
 		}
 	}
+
+
+	// ---------------------------------------------------------------- read/write string lines
+
+
+	public static String[] readLines(String source) throws IOException {
+		return readLines(new File(source), defaultParams.encoding);
+	}
+	public static String[] readLines(String source, String encoding) throws IOException {
+		return readLines(new File(source), encoding);
+	}
+	public static String[] readLines(File source) throws IOException {
+		return readLines(source, defaultParams.encoding);
+	}
+
+	/**
+	 * Reads lines from source files.
+	 */
+	public static String[] readLines(File source, String encoding) throws IOException {
+		if (source.exists() == false) {
+			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
+		}
+		if (source.isFile() == false) {
+			throw new IOException("Source '" + source + "' is not a file.");
+		}
+		List<String> list = new ArrayList<String>();
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(source);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in, encoding));
+			String strLine;
+			while ((strLine = br.readLine()) != null)   {
+				list.add(strLine);
+			}
+		} finally {
+			StreamUtil.close(in);
+		}
+		return list.toArray(new String[list.size()]);
+	}
+
 
 
 	// ---------------------------------------------------------------- read/write bytearray

@@ -36,7 +36,7 @@ public class WildcardFindFile extends FindFile {
 	}
 
 	@Override
-	protected boolean onFileEntry(File currentFile) {
+	protected boolean acceptFile(File currentFile) {
 		return Wildcard.match(currentFile.getName(), wildcard);
 	}
 }

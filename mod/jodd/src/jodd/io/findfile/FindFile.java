@@ -271,7 +271,7 @@ public class FindFile {
 					listFiles(currentFile);
 				}
 				if (includeDirs == true) {
-					if (onFileEntry(currentFile) == true) {
+					if (acceptFile(currentFile) == true) {
 						return currentFile;
 					}
 				}
@@ -303,7 +303,7 @@ public class FindFile {
 		}
 		for (File currentFile : list) {
 			if (currentFile.isFile() == true) {
-				if ((includeFiles == true) && (onFileEntry(currentFile) == true)) {
+				if ((includeFiles == true) && (acceptFile(currentFile) == true)) {
 					subFiles.addLast(currentFile);
 				}
 			} else if (currentFile.isDirectory() == true) {
@@ -326,7 +326,7 @@ public class FindFile {
 	 * Called on each file entry (file or directory) and returns <code>true</code>
 	 * if file passes search criteria.
 	 */
-	protected boolean onFileEntry(File currentFile) {
+	protected boolean acceptFile(File currentFile) {
 		return true;
 	}
 }

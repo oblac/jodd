@@ -33,7 +33,7 @@ public class RegExpFindFile extends FindFile {
 	}
 
 	@Override
-	protected boolean onFileEntry(File currentFile) {
+	protected boolean acceptFile(File currentFile) {
 		return regexpPattern.matcher(currentFile.getName()).matches();
 	}
 }

@@ -2,11 +2,15 @@
 
 package jodd.servlet.tag;
 
+import jodd.io.FastCharArrayWriter;
+
 import javax.servlet.jsp.tagext.JspFragment;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Various tag utilities.
@@ -19,7 +23,7 @@ public class TagUtil {
 	private static final String SCOPE_PAGE = "page";
 
 	/**
-	 * Invokes body.
+	 * Invokes tag body.
 	 */
 	public static void invokeBody(JspFragment body) throws JspException {
 		if (body == null) {
@@ -30,6 +34,39 @@ public class TagUtil {
 		} catch (IOException ioex) {
 			throw new JspException("Unable to invoke tag body.", ioex);
 		}
+	}
+
+	/**
+	 * Invokes tag body to provided writer.
+	 */
+	public static void invokeBody(JspFragment body, Writer writer) throws JspException {
+		if (body == null) {
+			return;
+		}
+		try {
+			body.invoke(writer);
+		} catch (IOException ioex) {
+			throw new JspException("Unable to invoke tag body.", ioex);
+		}
+	}
+
+	/**
+	 * Renders tag body to char array.
+	 */
+	public static char[] renderBody(JspFragment body) throws JspException {
+		FastCharArrayWriter writer = new FastCharArrayWriter();
+		invokeBody(body, writer);
+		return writer.toCharArray();
+	}
+
+
+	/**
+	 * Renders tag body to string.
+	 * @see #renderBody(javax.servlet.jsp.tagext.JspFragment)
+	 */
+	public static String renderBodyToString(JspFragment body) throws JspException {
+		char[] result = renderBody(body);
+		return new String(result);
 	}
 
 	/**

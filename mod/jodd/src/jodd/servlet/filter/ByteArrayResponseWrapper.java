@@ -3,6 +3,7 @@
 package jodd.servlet.filter;
 
 import java.io.PrintWriter;
+import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
@@ -14,23 +15,23 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
-	private PrintWriter tpWriter;
-	private ByteArrayOutputStreamWrapper tpStream;
+	private PrintWriter writer;
+	private ByteArrayOutputStreamWrapper out;
 
-	public ByteArrayResponseWrapper(ServletResponse inResp) throws java.io.IOException {
-		super((HttpServletResponse) inResp);
-		tpStream = new ByteArrayOutputStreamWrapper(inResp.getOutputStream());
-		tpWriter = new PrintWriter(tpStream);
+	public ByteArrayResponseWrapper(ServletResponse response) throws IOException {
+		super((HttpServletResponse) response);
+		out = new ByteArrayOutputStreamWrapper(response.getOutputStream());
+		writer = new PrintWriter(out);
 	}
 
 	@Override
-	public ServletOutputStream getOutputStream() throws java.io.IOException {
-		return tpStream;
+	public ServletOutputStream getOutputStream() throws IOException {
+		return out;
 	}
 
 	@Override
-	public PrintWriter getWriter() throws java.io.IOException {
-		return tpWriter;
+	public PrintWriter getWriter() throws IOException {
+		return writer;
 	}
 
 	/**
@@ -38,26 +39,26 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public String toString() {
-		return tpStream.getByteArrayStream().toString();
+		return out.getByteArrayStream().toString();
 	}
 
 	/**
 	 * Get the underlying character array.
 	 */
 	public char[] toCharArray() {
-		return tpStream.getByteArrayStream().toString().toCharArray();
+		return out.getByteArrayStream().toString().toCharArray();
 	}
 
 	/**
 	 * Get the underlying byte array.
 	 */
 	public byte[] toByteArray() {
-		return tpStream.getByteArrayStream().toByteArray();
+		return out.getByteArrayStream().toByteArray();
 	}
 
 	@Override
 	public void reset() {
-		tpStream.reset();
+		out.reset();
 	}
 }
 

@@ -59,7 +59,7 @@ public class FilterFindFile extends FindFile {
 	 * if file passes search criteria.
 	 */
 	@Override
-	protected boolean onFileEntry(File currentFile) {
+	protected boolean acceptFile(File currentFile) {
 		if (ffilters != null) {
 			for (FileFilter ff : ffilters) {
 				if (ff.accept(currentFile) == false) {

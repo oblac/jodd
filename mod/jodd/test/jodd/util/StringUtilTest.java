@@ -739,6 +739,10 @@ public class StringUtilTest extends TestCase {
 		assertFalse(StringUtil.startsWithChar("asd", 's'));
 		assertFalse(StringUtil.startsWithChar("", 'a'));
 
+		assertTrue(StringUtil.endsWithChar("asd", 'd'));
+		assertFalse(StringUtil.endsWithChar("asd", 's'));
+		assertFalse(StringUtil.endsWithChar("", 'd'));
+
 		assertEquals(3, StringUtil.startsWithOne("qwe123", new String[] {"Qwe", null, ".", "qwe"}));
 		assertEquals(-1, StringUtil.startsWithOne("qwe123", new String[] {"Qwe", null, ".", "we"}));
 		assertEquals(0, StringUtil.startsWithOneIgnoreCase("qwe123", new String[] {"Qwe", null, ".", "qwe"}));

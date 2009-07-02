@@ -2,25 +2,42 @@
 How to build a release
 ----------------------
 
-1) build the release as written in build.txt
+[1] build the release as written in build.txt
 
-2) site changes
+
+[2] site changes
 + history page
 + download page
 + index page
 + feed
 do.bat
 
-3) SYNC
 
-4) ssh to jodd.org
+[3] SYNC
+
+
+[4] ssh to jodd.org
 cd test
 unzip test.zip
 cd ../api
 unzip api.zip
 
-5) sitemap gen (ako treba)
 
-6) reindex searcher
+[5] A1 Sitemap Generator (ako treba, posto traje oko 10 min)
+Start Scan...
+Build sitemap
+clean sitemap (jodd.py)
+Upload sitemap.xml
+login to google/Custom search, refresh index
 
-7) send email to mailing list
+
+[6] reindex site searcher
+http://jodd.org/sphider/admin/admin.php
+Reindex
+
+
+[7] send email to mailing list
+http://www.jodd.org/mail-list/mail.cgi/admin/
+
+
+[8] increment project version (build.py)

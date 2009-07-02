@@ -73,7 +73,7 @@ public class XmlUtil {
 	/**
 	 * Filters node list by keeping nodes of specified type.
 	 */
-	public static List filterNodeList(NodeList nodeList, short keepNodeType) {
+	public static List<Node> filterNodeList(NodeList nodeList, short keepNodeType) {
 		return filterNodeList(nodeList, keepNodeType, null);
 	}
 
@@ -98,7 +98,7 @@ public class XmlUtil {
 	/**
 	 * Filter node list for all Element nodes.
 	 */
-	public static List filterNodeListElements(NodeList nodeList) {
+	public static List<Node> filterNodeListElements(NodeList nodeList) {
 		return filterNodeListElements(nodeList, null);
 	}
 

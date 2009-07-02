@@ -5,6 +5,7 @@ package jodd.util;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
@@ -177,7 +178,7 @@ public class ClassLoaderUtil {
 	// ---------------------------------------------------------------- get resource
 
 	/**
-	 * Loads a give resource.
+	 * Retrieves given resource as URL.
 	 * @see #getResourceUrl(String, Class)
 	 */
 	public static URL getResourceUrl(String resourceName) {
@@ -185,7 +186,7 @@ public class ClassLoaderUtil {
 	}
 
 	/**
-	 * Loads a given resource.
+	 * Retrieves given resource as URL.
 	 * <p>
 	 * Resource will be loaded using class loaders in the following order:
 	 * <ul>
@@ -206,6 +207,28 @@ public class ClassLoaderUtil {
 			}
 		}
 		return url;
+	}
+
+	// ---------------------------------------------------------------- get resource file
+
+	/**
+	 * Retrieves resource as file.
+	 * @see #getResourceFile(String) 
+	 */
+	public static File getResourceFile(String resourceName) {
+		return getResourceFile(resourceName, null);
+	}
+
+	/**
+	 * Retrieves resource as file. Resource is retrieved as {@link #getResourceUrl(String, Class) URL},
+	 * than it is converted to URI so it can be used by File constructor.
+	 */
+	public static File getResourceFile(String resourceName, Class callingClass) {
+		try {
+			return new File(getResourceUrl(resourceName, callingClass).toURI());
+		} catch (URISyntaxException usex) {
+			return null;
+		}
 	}
 
 	// ---------------------------------------------------------------- get resource stream
