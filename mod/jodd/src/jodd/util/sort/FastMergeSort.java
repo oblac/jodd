@@ -55,9 +55,9 @@ public class FastMergeSort implements Sorter {
 		}
 	}
 
-	public void sort(Object[] a, Comparator c) {
+	public void sort(Object[] a, Comparator comparator) {
 		Object aux[] = a.clone(); 
-		mergeSort(aux, a, 0, a.length, 0, c);
+		mergeSort(aux, a, 0, a.length, 0, comparator);
 	}
 
 	public void sort(Comparable[] a) {
