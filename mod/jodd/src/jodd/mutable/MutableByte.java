@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableByte extends Number implements Comparable<MutableByte>, Cloneable {
 
-
 	public MutableByte() {
-		super();
 	}
 
 	public MutableByte(byte value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableByte(String value) {
-		this(Byte.parseByte(value));
+		this.value = Byte.parseByte(value);
+	}
+
+	public MutableByte(Number number) {
+		this.value = number.byteValue();
 	}
 
 	// ---------------------------------------------------------------- value

@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableShort extends Number implements Comparable<MutableShort>, Cloneable {
 
-
 	public MutableShort() {
-		super();
 	}
 
 	public MutableShort(short value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableShort(String value) {
-		this(Short.parseShort(value));
+		this.value = Short.parseShort(value);
+	}
+
+	public MutableShort(Number number) {
+		this.value = number.shortValue();
 	}
 
 	// ---------------------------------------------------------------- value

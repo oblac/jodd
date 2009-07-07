@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableDouble extends Number implements Comparable<MutableDouble>, Cloneable {
 
-
 	public MutableDouble() {
-		super();
 	}
 
 	public MutableDouble(double value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableDouble(String value) {
-		this(Double.parseDouble(value));
+		this.value = Double.parseDouble(value);
+	}
+
+	public MutableDouble(Number number) {
+		this.value = number.doubleValue();
 	}
 
 	// ---------------------------------------------------------------- value

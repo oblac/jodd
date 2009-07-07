@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableInteger extends Number implements Comparable<MutableInteger>, Cloneable {
 
-
 	public MutableInteger() {
-		super();
 	}
 
 	public MutableInteger(int value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableInteger(String value) {
-		this(Integer.parseInt(value));
+		this.value = Integer.parseInt(value);
+	}
+
+	public MutableInteger(Number number) {
+		this.value = number.intValue();
 	}
 
 	// ---------------------------------------------------------------- value
@@ -139,5 +140,4 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
 	public MutableInteger clone() {
 		return new MutableInteger(value);
 	}
-	
 }

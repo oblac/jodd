@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableLong extends Number implements Comparable<MutableLong>, Cloneable {
 
-
 	public MutableLong() {
-		super();
 	}
 
 	public MutableLong(long value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableLong(String value) {
-		this(Long.parseLong(value));
+		this.value = Long.parseLong(value);
+	}
+
+	public MutableLong(Number number) {
+		this.value = number.longValue();
 	}
 
 	// ---------------------------------------------------------------- value

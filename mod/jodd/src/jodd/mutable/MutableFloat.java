@@ -7,18 +7,19 @@ package jodd.mutable;
  */
 public final class MutableFloat extends Number implements Comparable<MutableFloat>, Cloneable {
 
-
 	public MutableFloat() {
-		super();
 	}
 
 	public MutableFloat(float value) {
-		super();
 		this.value = value;
 	}
 
 	public MutableFloat(String value) {
-		this(Float.parseFloat(value));
+		this.value = Float.parseFloat(value);
+	}
+
+	public MutableFloat(Number number) {
+		this.value = number.floatValue();
 	}
 
 	// ---------------------------------------------------------------- value

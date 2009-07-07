@@ -22,6 +22,10 @@ public final class MutableBoolean implements Comparable<MutableBoolean>, Cloneab
 		this.value = value.booleanValue();
 	}
 
+	public MutableBoolean(Number number) {
+		this.value = number.intValue() != 0;
+	}
+
 
 	// ---------------------------------------------------------------- value
 
