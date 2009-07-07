@@ -53,19 +53,23 @@ public class WebApplication {
 
 	/**
 	 * Resolves the name of the last base non-abstract subclass for provided component.
+	 * It iterates all subclasses up to the <code>Object</cde> and declares the last
+	 * non-abstract class as base component. Component name will be resolved from the
+	 * founded base component.
 	 */
 	private String resolveBaseComponentName(Class component) {
-		while(true) {
+		Class lastComponent = component;
+		while (true) {
 			Class superClass = component.getSuperclass();
-			if (Modifier.isAbstract(superClass.getModifiers())) {
-				break;
-			}
 			if (superClass.equals(Object.class)) {
 				break;
 			}
 			component = superClass;
+			if (Modifier.isAbstract(component.getModifiers()) == false) {
+				lastComponent = component;
+			}
 		}
-		return PetiteUtil.resolveBeanName(component);
+		return PetiteUtil.resolveBeanName(lastComponent);
 	}
 
 	/**
