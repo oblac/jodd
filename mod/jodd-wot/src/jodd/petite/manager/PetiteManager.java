@@ -43,6 +43,9 @@ public class PetiteManager {
 	protected final InitMethodResolver initMethodResolver;
 	protected final ParamResolver paramResolver;
 
+	/**
+	 * Creates all Petite managers.
+	 */
 	public PetiteManager() {
 		beanManager = new BeanManager();
 		ctorResolver = new CtorResolver();
@@ -140,6 +143,20 @@ public class PetiteManager {
 	public Iterator<BeanDefinition> beansIterator() {
 		return beanManager.beans.values().iterator();
 	}
+
+	// ---------------------------------------------------------------- scopes
+
+	/**
+	 * Registers new scope. It is not necessary to manually register scopes,
+	 * since they become registered on first scope resolving.
+	 * However, it is possible to pre-register some scopes, or to replace one scope
+	 * type with another. This may be important for testing purposes when
+	 * using container-depended scopes. 
+	 */
+	public void registerScope(Class<? extends Scope> scopeType, Scope scope) {
+		beanManager.registerScope(scopeType, scope);
+	}
+
 
 	// ---------------------------------------------------------------- constructors
 

@@ -34,12 +34,20 @@ public class BeanManager {
 		if (scope == null) {
 			try {
 				scope = scopeType.newInstance();
+				registerScope(scopeType, scope);
 				scopes.put(scopeType, scope);
 			} catch (Exception ex) {
 				throw new PetiteException("Unable to create Petite scope: '" + scopeType.getName(), ex);
 			}
 		}
 		return scope;
+	}
+
+	/**
+	 * Registers scope.
+	 */
+	public void registerScope(Class<? extends Scope> scopeType, Scope scope) {
+		scopes.put(scopeType, scope);
 	}
 
 
