@@ -10,12 +10,17 @@ import jodd.petite.scope.SingletonScope;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 /**
  * Petite IOC container. Generally, it is composed of two parts: {@link PetiteManager manager} and
  * container. Manager deals with binding information regarding registration and configuration.
  * Container itself is used during runtime for acquiring bean instances.
  */
 public class PetiteContainer extends PetiteContainerRegistry {
+
+	protected static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
 
@@ -25,6 +30,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 
 	public PetiteContainer(PetiteManager pm, PetiteConfig pcfg) {
 		super(pm, pcfg);
+		log.debug("Petite container created.");
 	}
 
 	/**
