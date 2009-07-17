@@ -17,9 +17,9 @@ import java.util.Properties;
 public class MyWebApplication extends PetiteWebApplication {
 
 	@Override
-	protected PetiteContainer createInternalContainer() {
-		System.out.println("MyWebApplication.createMadvocPetiteContainer");
-		return super.createInternalContainer();
+	protected void initWebApplication() {
+		System.out.println("MyWebApplication.initWebApplication");
+		super.initWebApplication();
 	}
 
 	@Override

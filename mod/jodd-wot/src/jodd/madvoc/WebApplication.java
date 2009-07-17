@@ -30,23 +30,22 @@ import org.slf4j.Logger;
  */
 public class WebApplication {
 
-	protected static final Logger log = LoggerFactory.getLogger(WebApplication.class);
+	protected static Logger log;
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
 
-	protected final PetiteContainer madpc;
-
-	public WebApplication() {
-		madpc = createInternalContainer();
-	}
+	protected PetiteContainer madpc;
 
 	/**
-	 * Creates Petite container used internally by Madvoc.
+	 * Initializes web application. Invoked very first.
+	 * By default, it creates a Logger and creates internal Petite container.
+	 * Also adds itself into it.
 	 */
-	protected PetiteContainer createInternalContainer() {
-		PetiteContainer madpc = new PetiteContainer();
+	protected void initWebApplication() {
+		log = LoggerFactory.getLogger(WebApplication.class);
+		log.debug("Initializing Madvoc web application");
+		madpc = new PetiteContainer();
 		madpc.addSelf(MADVOC_CONTAINER_NAME);
-		return madpc;
 	}
 
 	// ---------------------------------------------------------------- components
@@ -163,7 +162,7 @@ public class WebApplication {
 	 * Initializes web application custom configuration.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
+	protected void init(MadvocConfig madvocConfig, ServletContext context) {
 		log.debug("Initializing Madvoc");
 	}
 

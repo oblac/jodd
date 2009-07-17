@@ -46,7 +46,6 @@ public class MadvocController {
 	@PetiteInject
 	protected ResultMapper resultMapper;
 
-
 	protected ServletContext applicationContext;
 
 	/**

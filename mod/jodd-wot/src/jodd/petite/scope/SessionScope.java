@@ -29,7 +29,7 @@ public class SessionScope implements Scope {
 	public SessionScope() {
 		sessionListeners = HttpSessionListenerBroadcaster.getInstance();
 		if (sessionListeners == null) {
-			throw new PetiteException("HttpSessionListenerBroadcaster not availiable.");
+			throw new PetiteException(HttpSessionListenerBroadcaster.class.getSimpleName() + " not availiable.");
 		}
 		sessionListeners.registerListener(new HttpSessionListener() {
 			public void sessionCreated(HttpSessionEvent httpSessionEvent) {

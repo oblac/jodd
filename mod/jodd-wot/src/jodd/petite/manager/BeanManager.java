@@ -36,7 +36,7 @@ public class BeanManager {
 				scope = scopeType.newInstance();
 				scopes.put(scopeType, scope);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to create Petite scope: '" + scopeType, ex);
+				throw new PetiteException("Unable to create Petite scope: '" + scopeType.getName(), ex);
 			}
 		}
 		return scope;
