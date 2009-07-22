@@ -8,8 +8,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JEditorPane;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.Font;
 
 /**
  * Some common swing utilities.
@@ -86,6 +89,16 @@ public class SwingUtil {
 		Dimension dialogSize = dialog.getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		dialog.setLocation((screenSize.width - dialogSize.width) >> 1, (screenSize.height - dialogSize.height) >> 1);
+	}
+
+	/**
+	 * Enforeces JEditorPane font.
+	 * Once the content type of a JEditorPane is set to text/html the font on the Pane starts to be managed by Swing.
+	 * This method forces using provided font.
+	 */
+	public static void enforceJEditorPaneFont(JEditorPane jEditorPane, Font font) {
+		jEditorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+		jEditorPane.setFont(font);
 	}
 
 

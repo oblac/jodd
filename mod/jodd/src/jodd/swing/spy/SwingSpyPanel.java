@@ -2,9 +2,9 @@
 
 package jodd.swing.spy;
 
-import jodd.bean.BeanUtil;
 import jodd.bean.BeanTool;
 import jodd.swing.SwingUtil;
+import jodd.servlet.HtmlEncoder;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.net.URL;
 
 /**
@@ -60,6 +61,8 @@ public class SwingSpyPanel extends JPanel {
 	private static final int INITIAL_WIDTH = 600;
 	private static final int INITIAL_HEIGHT = 500;
 
+	private Font font = new Font("Arial", Font.PLAIN,  12);
+
 	/**
 	 * Initialization.
 	 */
@@ -75,12 +78,13 @@ public class SwingSpyPanel extends JPanel {
 //		add(new JScrollPane(componentTree), BorderLayout.CENTER);
 
 		detailsData = new JEditorPane();
-		detailsData.setBackground(new Color(244, 255, 244));
-		detailsData.setForeground(new Color(66, 255, 66));
+		detailsData.setBackground(new Color(250, 250, 250));
+		detailsData.setForeground(new Color(33, 33, 33));
 		detailsData.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 244), 1));
 		detailsData.setPreferredSize(new Dimension(150, INITIAL_HEIGHT));
 		detailsData.setEditable(false);
 		detailsData.setContentType("text/html");
+		SwingUtil.enforceJEditorPaneFont(detailsData, font);
 		detailsScrollPane = new JScrollPane(detailsData);
 //		add(detailsScrollPane, BorderLayout.EAST);
 
@@ -91,12 +95,13 @@ public class SwingSpyPanel extends JPanel {
 		add(hPane, BorderLayout.CENTER);
 
 		componentData = new JEditorPane();
-		componentData.setBackground(new Color(244, 244, 255));
-		componentData.setForeground(new Color(66, 66, 255));
+		componentData.setBackground(new Color(250, 250, 250));
+		componentData.setForeground(new Color(33, 33, 33));
 		componentData.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 244), 1));
-		componentData.setPreferredSize(new Dimension(INITIAL_WIDTH, 50));
+		componentData.setPreferredSize(new Dimension(INITIAL_WIDTH, 36));
 		componentData.setEditable(false);
 		componentData.setContentType("text/html");
+		SwingUtil.enforceJEditorPaneFont(componentData, font);
 		add(componentData, BorderLayout.SOUTH);
 
 	}
@@ -151,7 +156,7 @@ public class SwingSpyPanel extends JPanel {
 		}
 
 		public String toHtmlString() {
-			StringBuilder str = new StringBuilder("<html><font face=\"tahoma\" size=\"3\">");
+			StringBuilder str = new StringBuilder("<html>");
 			str.append("&nbsp;name: ").append("<b>").append(component.getName()).append("</b><br>");
 			str.append("&nbsp;class: ").append("<b>").append(component.getClass().getName()).append("</b><br>");
 			return str.toString();
@@ -159,7 +164,7 @@ public class SwingSpyPanel extends JPanel {
 
 		public String toDetailedString() {
 			StringBuilder str = new StringBuilder("<html>");
-			str.append("<pre><font size=\"3\">").append(BeanTool.attributesToString(component)).append("</font></pre>");
+			str.append(HtmlEncoder.block(BeanTool.attributesToString(component)));
 			return str.toString();
 		}
 	}
