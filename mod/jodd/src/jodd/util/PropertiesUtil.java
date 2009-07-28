@@ -5,6 +5,9 @@ package jodd.util;
 import jodd.io.StreamUtil;
 import jodd.io.AsciiInputStream;
 import jodd.io.findfile.ClasspathScanner;
+import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
+import static jodd.util.StringPool.RIGHT_BRACE;
+import static jodd.util.StringPool.DOLLAR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +20,7 @@ import java.util.Properties;
  * Misc java.util.Properties utils.
  */
 public class PropertiesUtil {
+	private static final String SLASH_DOLLAR = "\\$";
 
 	// ---------------------------------------------------------------- to/from files
 
@@ -135,12 +139,18 @@ public class PropertiesUtil {
 
 	// ---------------------------------------------------------------- to/from string
 
+	/**
+	 * Creates properties from string.
+	 */
 	public static Properties createFromString(String data) throws IOException {
 		Properties p = new Properties();
 		loadFromString(p, data);
 		return p;
 	}
-	
+
+	/**
+	 * Loads properties from string.
+	 */
 	public static void loadFromString(Properties p, String data) throws IOException {
 		InputStream is = new AsciiInputStream(data);
 		try {
@@ -212,5 +222,43 @@ public class PropertiesUtil {
 		return p;
 	}
 
+
+	// ---------------------------------------------------------------- variables
+
+	/**
+	 * Resolves all variables.
+	 */
+	public static void resolveAllVariables(Properties prop) {
+		for (Object o : prop.keySet()) {
+			String key = (String) o;
+			String value = resolveProperty(prop, key);
+			prop.setProperty(key, value);
+		}
+	}
+
+	/**
+	 * Returns property with resolved variables.
+	 */
+	public static String resolveProperty(Properties p, String key) {
+		String value = p.getProperty(key);
+		if (value == null) {
+			return null;
+		}
+		while (true) {
+			int[] ndx = StringUtil.indexOfRegion(value, DOLLAR_LEFT_BRACE, RIGHT_BRACE, '\\');
+			if (ndx == null) {
+				break;
+			}
+			int innerNdx = StringUtil.lastIndexOf(value, DOLLAR_LEFT_BRACE, ndx[2], ndx[0]);
+			if (innerNdx != ndx[0]) {
+				ndx[0] = innerNdx;
+				ndx[1] = innerNdx + DOLLAR_LEFT_BRACE.length();
+			}
+			key = value.substring(ndx[1], ndx[2]);
+			String inner = p.getProperty(key);
+			value = value.substring(0, ndx[0]) + inner + value.substring(ndx[3]);
+		}
+		return StringUtil.replace(value, SLASH_DOLLAR, DOLLAR);
+	}
 
 }

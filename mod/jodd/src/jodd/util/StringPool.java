@@ -57,4 +57,5 @@ public interface StringPool {
 	String YES              = "yes";
 	String ONE 				= "1";
 	String ZERO				= "0";
+	String DOLLAR_LEFT_BRACE= "${";
 }

@@ -32,6 +32,7 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(LoopIteratorTest.class);
 		addTestSuite(CsvUtilTest.class);
 		addTestSuite(TextUtilTest.class);
+		addTestSuite(PropertiesUtilTest.class);
 	}
 
 	public static Test suite() {
