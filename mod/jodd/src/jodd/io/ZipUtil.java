@@ -17,6 +17,12 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipUtil {
 
+	private static final String ZIP_EXT = ".zip";
+
+	public static InputStream createFirstEntryInputStream(String zipFileName) throws IOException {
+		return createFirstEntryInputStream(new File(zipFileName));
+	}
+
 	/**
 	 * Creates an InputStream of first entry on a given zip file.
 	 */
@@ -30,13 +36,33 @@ public class ZipUtil {
 		return null;
 	}
 
+	public static OutputStream createSingleEntryOutputStream(String zipEntryFileName) throws IOException {
+		return createSingleEntryOutputStream(new File(zipEntryFileName));
+	}
+
+	public static OutputStream createSingleEntryOutputStream(File zipEntryFile) throws IOException {
+		String entryName = zipEntryFile.getName();
+		if (entryName.endsWith(ZIP_EXT)) {
+			entryName = entryName.substring(0, entryName.length() - ZIP_EXT.length());
+		}
+		return createSingleEntryOutputStream(entryName, zipEntryFile);
+	}
+
+	public static OutputStream createSingleEntryOutputStream(String entryName, String zipEntryFileName) throws IOException {
+		return createSingleEntryOutputStream(entryName, new File(zipEntryFileName));
+	}
+
 	/**
 	 * Creates an OutputStream to zip file with single entry.
 	 */
-	public static OutputStream createSingleEntryOutputStream(File zipFile) throws IOException {
-		FileOutputStream fos = new FileOutputStream(zipFile);
+	public static OutputStream createSingleEntryOutputStream(String entryName, File zipEntryFile) throws IOException {
+		String zipFileName = zipEntryFile.getAbsolutePath();
+		if (zipFileName.endsWith(ZIP_EXT) == false) {
+			zipFileName += ZIP_EXT;
+		}
+		FileOutputStream fos = new FileOutputStream(new File(zipFileName));
 		ZipOutputStream zos = new ZipOutputStream(fos);
-		ZipEntry ze = new ZipEntry(zipFile.getName());
+		ZipEntry ze = new ZipEntry(entryName);
 		try {
 			zos.putNextEntry(ze);
 		} catch (IOException ioex) {
@@ -49,13 +75,15 @@ public class ZipUtil {
 
 	// ---------------------------------------------------------------- unzip
 
+	public static void unzip(String zipFile, String destDir) throws IOException {
+		unzip(new File(zipFile), new File(destDir));
+	}
+
 	/**
-	 * Unpacks a zip file to the target directory.
+	 * Extracts zip file content to the target directory.
 	 *
 	 * @param zipFile zip file
 	 * @param destDir destination directory
-	 *
-	 * @throws IOException
 	 */
 	public static void unzip(File zipFile, File destDir) throws IOException {
 		ZipFile zip = new ZipFile(zipFile);
@@ -92,7 +120,6 @@ public class ZipUtil {
 			}
 		}
 	}
-
 
 	// ---------------------------------------------------------------- close
 
