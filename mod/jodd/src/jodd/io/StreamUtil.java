@@ -86,7 +86,8 @@ public class StreamUtil {
 	// ---------------------------------------------------------------- copy
 
 	/**
-	 * Copies input stream to output stream using buffer.
+	 * Copies input stream to output stream using buffer. Streams dont have
+	 * to be wrapped to buffered, since copying is already optimizied.
 	 */
 	public static int copy(InputStream input, OutputStream output) throws IOException {
 		byte[] buffer = new byte[ioBufferSize];
@@ -153,10 +154,9 @@ public class StreamUtil {
 		copy(new InputStreamReader(input, encoding), output, byteCount);
 	}
 
-
-
     /**
 	 * Copies reader to writer using buffer.
+	 * Streams dont have to be wrapped to buffered, since copying is already optimized.
 	 */
 	public static int copy(Reader input, Writer output) throws IOException {
 		char[] buffer = new char[ioBufferSize];

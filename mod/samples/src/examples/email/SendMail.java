@@ -36,7 +36,7 @@ public class SendMail {
 
 		email.subject("test4")
 				.text("text 4")
-				.attachFile("d:\\starman.jpeg")
+				.attachFile("d:\\love_music.jpg")
 				.priority(PRIORITY_HIGHEST);
 		session.sendMail(email);
 

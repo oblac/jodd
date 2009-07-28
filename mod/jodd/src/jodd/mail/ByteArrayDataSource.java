@@ -4,9 +4,10 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 import jodd.JoddDefault;
+import jodd.io.FastByteArrayOutputStream;
+import jodd.io.StreamUtil;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +26,6 @@ public class ByteArrayDataSource implements DataSource {
 	protected byte[] data;		// data
 	protected String type;		// content-type
 
-
 	/**
 	 * Create a datasource from a File. If the Content-Type parameter is null,
 	 * the type will be derived from the filename extension.
@@ -34,10 +34,15 @@ public class ByteArrayDataSource implements DataSource {
 	 * @param type Content-Type
 	 */
 	public ByteArrayDataSource(File f, String type) throws IOException {
-		this(new FileInputStream(f), type);
-		if (this.type == null) {
-			this.type = FileTypeMap.getDefaultFileTypeMap().getContentType(f);
+		if (type == null) {
+			type = FileTypeMap.getDefaultFileTypeMap().getContentType(f);
 		}
+		this.type = type;
+		InputStream in = new FileInputStream(f);
+		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		StreamUtil.copy(in, out);
+		data = out.toByteArray();
+		StreamUtil.close(in);
 	}
 
 	/**
@@ -48,17 +53,9 @@ public class ByteArrayDataSource implements DataSource {
 	 */
 	public ByteArrayDataSource(InputStream is, String type) throws IOException {
 		this.type = type;
-		ByteArrayOutputStream os = new ByteArrayOutputStream(4096);
-		byte buf[] = new byte[4096];
-		int len;
-		while (true) {
-			len = is.read(buf);
-			if (len < 0) {
-				break;
-			}
-			os.write(buf, 0, len);
-		}
-		data = os.toByteArray();
+		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		StreamUtil.copy(is, out);
+		data = out.toByteArray();
 	}
 
 	/**

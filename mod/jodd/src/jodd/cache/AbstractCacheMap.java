@@ -15,10 +15,10 @@ import java.util.Map;
 public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	class CacheObject {
-		CacheObject(K key, V object, long timeout) {
+		CacheObject(K key, V object, long ttl) {
 			this.key = key;
 			this.cachedObject = object;
-			this.timeout = timeout;
+			this.ttl = ttl;
 			this.lastAccess = System.currentTimeMillis();
 		}
 
@@ -26,13 +26,13 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		final V cachedObject;
 		long lastAccess;        // time of last access
 		int accessCount;        // number of accesses
-		long timeout;           // objects timeout, 0 = no timeout
+		long ttl; 				// objects timeout (time-to-live), 0 = no timeout
 
 		boolean isExpired() {
-			if (timeout == 0) {
+			if (ttl == 0) {
 				return false;
 			}
-			return lastAccess + timeout < System.currentTimeMillis();
+			return lastAccess + ttl < System.currentTimeMillis();
 		}
 		V getObject() {
 			lastAccess = System.currentTimeMillis();
