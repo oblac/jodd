@@ -280,6 +280,13 @@ public class StringUtil {
 	}
 
 	/**
+	 * Determines if string is not blank.
+	 */
+	public static boolean isNotBlank(String string) {
+		return ((string != null) && !containsOnlyWhitespaces(string));
+	}
+
+	/**
 	 * Determines if string array contains just blank strings.
 	 */
 	public static boolean isAllBlank(String... strings) {
