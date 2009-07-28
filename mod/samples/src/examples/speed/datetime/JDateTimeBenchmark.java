@@ -8,7 +8,7 @@ import jodd.datetime.JDateTime;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 
-public class JDateTimePerformanceTest {
+public class JDateTimeBenchmark {
 
 	static JStopWatch swatch = new JStopWatch();
 

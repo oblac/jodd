@@ -9,7 +9,7 @@ import jodd.util.sort.Sorter;
 import jodd.util.sort.FastQuickSort;
 import jodd.datetime.JStopWatch;
 
-public class SorterPerfromanceTest {
+public class SorterBenchmark {
 
 	static final int TOTAL_TEST_OBJECTS = 100000;
 

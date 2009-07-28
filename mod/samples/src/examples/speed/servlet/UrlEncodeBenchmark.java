@@ -8,7 +8,7 @@ import jodd.datetime.JStopWatch;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class UrlEncodePerformanceTest {
+public class UrlEncodeBenchmark {
 
 	static JStopWatch swatch = new JStopWatch();
 
@@ -28,7 +28,7 @@ public class UrlEncodePerformanceTest {
 			URLEncoder.encode("/qwe?name=  dada", "UTF-8");
 		}
 		swatch.stop();
-		System.out.println("---elapsed: " + swatch.elapsed());
+		System.out.println("---elapsed: " + swatch.elapsed());			// 4922
 	}
 
 	private static void test1Jodd() {
@@ -37,6 +37,6 @@ public class UrlEncodePerformanceTest {
 			UrlEncoder.url("/qwe?name=  dada");
 		}
 		swatch.stop();
-		System.out.println("---elapsed: " + swatch.elapsed());
+		System.out.println("---elapsed: " + swatch.elapsed());			// 2344
 	}
 }

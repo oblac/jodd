@@ -10,16 +10,44 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Performs zip/unzip operations on files and directories.
  */
 public class ZipUtil {
 
-	// ---------------------------------------------------------------- zip
+	/**
+	 * Creates an InputStream of first entry on a given zip file.
+	 */
+	public static InputStream createFirstEntryInputStream(File zipFile) throws IOException {
+		ZipFile zf = new ZipFile(zipFile);
+		Enumeration entries = zf.entries();
+		if (entries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) entries.nextElement();
+			return zf.getInputStream(entry);
+		}
+		return null;
+	}
+
+	/**
+	 * Creates an OutputStream to zip file with single entry.
+	 */
+	public static OutputStream createSingleEntryOutputStream(File zipFile) throws IOException {
+		FileOutputStream fos = new FileOutputStream(zipFile);
+		ZipOutputStream zos = new ZipOutputStream(fos);
+		ZipEntry ze = new ZipEntry(zipFile.getName());
+		try {
+			zos.putNextEntry(ze);
+		} catch (IOException ioex) {
+			StreamUtil.close(fos);
+			throw ioex;
+		}
+		return zos;
+	}
+
 
 	// ---------------------------------------------------------------- unzip
-
 
 	/**
 	 * Unpacks a zip file to the target directory.

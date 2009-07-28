@@ -5,7 +5,7 @@ package examples.speed.mutable;
 import jodd.datetime.JStopWatch;
 import jodd.mutable.MutableInteger;
 
-public class MutablePerformanceTest {
+public class MutableBenchmark {
 
 	static JStopWatch swatch = new JStopWatch();
 
