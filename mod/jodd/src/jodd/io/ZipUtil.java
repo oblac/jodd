@@ -75,6 +75,9 @@ public class ZipUtil {
 
 	// ---------------------------------------------------------------- unzip
 
+	/**
+	 * Extracts zip file content to the target directory.
+	 */
 	public static void unzip(String zipFile, String destDir) throws IOException {
 		unzip(new File(zipFile), new File(destDir));
 	}
