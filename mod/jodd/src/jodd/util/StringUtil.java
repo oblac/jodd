@@ -1742,6 +1742,8 @@ public class StringUtil {
 	 * </ul>
 	 * <p>
 	 * Escape character may be used to prefix boundaries so they can be ignored.
+	 * Double escaped region will be found, and first index of the result will be
+	 * decreased to include one escape character. 
 	 * If region is not founded, <code>null</code> is returned. 
 	 */
 	public static int[] indexOfRegion(String string, String leftBoundary, String rightBoundary, char escape, int offset) {
@@ -1752,17 +1754,28 @@ public class StringUtil {
 			if (ndx == -1) {
 				return null;
 			}
+			int leftBoundaryLen = leftBoundary.length();
 			if (ndx > 0) {
-				if (string.charAt(ndx - 1) == escape) {
-					ndx += leftBoundary.length();
-					continue;
+				if (string.charAt(ndx - 1) == escape) {				// check previous char
+					boolean cont = true;
+					if (ndx > 1) {
+						if (string.charAt(ndx - 2) == escape) {		// check double escapes
+							ndx--;
+							leftBoundaryLen++;
+							cont = false;
+						}
+					}
+					if (cont) {
+						ndx += leftBoundaryLen;
+						continue;
+					}
 				}
 			}
 			res[0] = ndx;
-			ndx += leftBoundary.length();
+			ndx += leftBoundaryLen;
 			res[1] = ndx;
 
-			while (true) {
+			while (true) {		// find right boundary
 				ndx = string.indexOf(rightBoundary, ndx);
 				if (ndx == -1) {
 					return null;

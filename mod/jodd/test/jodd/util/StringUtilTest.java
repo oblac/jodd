@@ -154,28 +154,6 @@ public class StringUtilTest extends TestCase {
 	}
 
 
-/*
-	public static void main(String[] args) {
-		String s = "123";
-		System.out.println(s.indexOf("", -1));			//0
-		System.out.println(s.indexOf("", 1));			//1
-		System.out.println(s.indexOf("", 10));			//3
-		System.out.println(s.lastIndexOf("", 10));		//3
-		System.out.println(s.lastIndexOf("", 2));		//2
-		System.out.println(s.lastIndexOf("", -1));		//-1
-		System.out.println(s.lastIndexOf("", -10));		//-1
-
-		System.out.println(s.indexOf("1", -1));			//0
-		System.out.println(s.lastIndexOf("1", 10));		//0
-
-		System.out.println(s.lastIndexOf("x", 10));
-		System.out.println(s.indexOf("x", -1));
-		System.out.println(s.lastIndexOf('x', 10));
-		System.out.println(s.indexOf('x', -1));
-	}
-*/
-
-
 	public void testIndexOf() {
 		String src = "1234567890qWeRtY";
 
@@ -530,10 +508,10 @@ public class StringUtilTest extends TestCase {
 
 	void checkInts(int x, int y, int z, int w, int[] arr) {
 		assertNotNull(arr);
-		assertEquals(x, arr[0]);
-		assertEquals(y, arr[1]);
-		assertEquals(z, arr[2]);
-		assertEquals(w, arr[3]);
+		assertEquals("1.arg", x, arr[0]);
+		assertEquals("2.arg", y, arr[1]);
+		assertEquals("3.arg", z, arr[2]);
+		assertEquals("4.arg", w, arr[3]);
 	}
 
 	public void testRegion() {
@@ -568,6 +546,34 @@ public class StringUtilTest extends TestCase {
 		res = StringUtil.indexOfRegion(string, "${", "}", '\\', 100);
 		assertNull(res);
 
+
+		string = "xx${123www";
+		res = StringUtil.indexOfRegion(string, "${", "}", '\\');
+		assertNull(res);
+
+		string = "xx${123}ww";
+		res = StringUtil.indexOfRegion(string, "${", "}", '\\');
+		checkInts(2, 4, 7, 8, res);
+
+		string = "xx\\${123}ww";
+		res = StringUtil.indexOfRegion(string, "${", "}", '\\');
+		assertNull(res);
+
+		string = "xx\\\\${123}ww";
+		res = StringUtil.indexOfRegion(string, "${", "}", '\\');
+		assertNotNull(res);
+		checkInts(3, 6, 9, 10, res);
+		assertEquals("\\${", string.substring(res[0], res[1]));
+		assertEquals("123", string.substring(res[1], res[2]));
+		assertEquals("}", string.substring(res[2], res[3]));
+
+		string = "xx\\\\\\${123}ww";
+		res = StringUtil.indexOfRegion(string, "${", "}", '\\');
+		assertNotNull(res);
+		checkInts(4, 7, 10, 11, res);
+		assertEquals("\\${", string.substring(res[0], res[1]));
+		assertEquals("123", string.substring(res[1], res[2]));
+		assertEquals("}", string.substring(res[2], res[3]));
 
 	}
 
@@ -683,10 +689,15 @@ public class StringUtilTest extends TestCase {
 
 	public void testEmpty() {
 		assertFalse(StringUtil.isBlank("foo"));
+		assertTrue(StringUtil.isNotBlank("foo"));
 		assertTrue(StringUtil.isBlank(""));
+		assertFalse(StringUtil.isNotBlank(""));
 		assertTrue(StringUtil.isBlank("  "));
+		assertFalse(StringUtil.isNotBlank("  "));
 		assertTrue(StringUtil.isBlank("  \t \t"));
+		assertFalse(StringUtil.isNotBlank("  \t \t"));
 		assertTrue(StringUtil.isBlank(null));
+		assertFalse(StringUtil.isNotBlank(null));
 
 		assertFalse(StringUtil.isEmpty("foo"));
 		assertTrue(StringUtil.isNotEmpty("foo"));

@@ -38,18 +38,21 @@ public class PropertiesUtilTest extends TestCase {
 		Properties p = PropertiesUtil.createFromString(
 				"foo=foo\n" +
 				"boo.foo=*\\\\${foo}*\n" +
-				"zoo=\\\\${boo.\\\\${foo}}");
-		assertEquals(3, p.size());
+				"zoo=\\\\${boo.\\\\${foo}}\n" +
+				"doo=\\\\\\\\${foo}");
+		assertEquals(4, p.size());
 
 		assertNull(p.getProperty("xxx"));
 		assertEquals("foo", p.getProperty("foo"));
 		assertEquals("*\\${foo}*", p.getProperty("boo.foo"));
 		assertEquals("\\${boo.\\${foo}}", p.getProperty("zoo"));
+		assertEquals("\\\\${foo}", p.getProperty("doo"));
 
 		assertNull(resolveProperty(p, "xxx"));
 		assertEquals("foo", resolveProperty(p, "foo"));
 		assertEquals("*${foo}*", resolveProperty(p, "boo.foo"));
 		assertEquals("${boo.${foo}}", resolveProperty(p, "zoo"));
+		assertEquals("\\foo", resolveProperty(p, "doo"));
 	}
 
 }

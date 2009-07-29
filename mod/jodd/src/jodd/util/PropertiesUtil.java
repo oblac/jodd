@@ -20,6 +20,7 @@ import java.util.Properties;
  * Misc java.util.Properties utils.
  */
 public class PropertiesUtil {
+
 	private static final String SLASH_DOLLAR = "\\$";
 
 	// ---------------------------------------------------------------- to/from files
@@ -244,15 +245,16 @@ public class PropertiesUtil {
 		if (value == null) {
 			return null;
 		}
+		int leftLen = DOLLAR_LEFT_BRACE.length();
 		while (true) {
 			int[] ndx = StringUtil.indexOfRegion(value, DOLLAR_LEFT_BRACE, RIGHT_BRACE, '\\');
 			if (ndx == null) {
 				break;
 			}
 			int innerNdx = StringUtil.lastIndexOf(value, DOLLAR_LEFT_BRACE, ndx[2], ndx[0]);
-			if (innerNdx != ndx[0]) {
+			if (innerNdx > ndx[0] + leftLen) {
 				ndx[0] = innerNdx;
-				ndx[1] = innerNdx + DOLLAR_LEFT_BRACE.length();
+				ndx[1] = innerNdx + leftLen;
 			}
 			key = value.substring(ndx[1], ndx[2]);
 			String inner = p.getProperty(key);
