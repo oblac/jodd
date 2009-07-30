@@ -5,13 +5,14 @@ package jodd.proxetta.pointcuts;
 import jodd.proxetta.MethodInfo;
 
 /**
- * Pointcut on all public getters methods.
+ * Pointcut on all public non final getters methods.
  */
 public class AllGettersPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
 		return
 				isPublic(methodInfo)
+				&& isNonFinal(methodInfo)
 				&& hasReturnValue(methodInfo)
 				&& (matchMethodName(methodInfo, "get*") || (matchMethodName(methodInfo, "is*")))
 				&& hasNoArguments(methodInfo)

@@ -8,6 +8,10 @@ import jodd.proxetta.data.Foo;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Date;
 
 public class SubclassTest extends TestCase {
 
@@ -52,17 +56,60 @@ public class SubclassTest extends TestCase {
 
 	}
 
-	public void testVariableClassNames() {
+	public void testProxyClassNames() {
 		Foo foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
 				.variableClassName()
 				.createProxyInstance(Foo.class);
-	    assertNotNull(foo);
+		assertNotNull(foo);
+		assertEquals(Foo.class.getName() + "$Proxetta1", foo.getClass().getName());
 
 		foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
 				.variableClassName()
 				.createProxyInstance(Foo.class);
-	    assertNotNull(foo);
+		assertNotNull(foo);
+		assertEquals(Foo.class.getName() + "$Proxetta2", foo.getClass().getName());
 
+		foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.variableClassName()
+				.useClassNameSuffix("$Ppp")
+				.createProxyInstance(Foo.class);
+		assertNotNull(foo);
+		assertEquals(Foo.class.getName() + "$Ppp3", foo.getClass().getName());
+
+
+		foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(Foo.class, ".Too");
+		assertNotNull(foo);
+		assertEquals(Foo.class.getPackage().getName() + ".Too$Proxetta", foo.getClass().getName());
+
+		foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(Foo.class, "foo.");
+		assertNotNull(foo);
+		assertEquals("foo.Foo$Proxetta", foo.getClass().getName());
+
+		foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.dontUseClassNameSuffix()
+				.createProxyInstance(Foo.class, "foo.Fff");
+		assertNotNull(foo);
+		assertEquals("foo.Fff", foo.getClass().getName());
+
+	}
+
+
+	public void testJdk() {
+		try {
+			Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+					.variableClassName()
+					.createProxyInstance(Object.class);
+			fail("Default class loader should not load java.*");
+		} catch (RuntimeException rex) {
+			// ignore
+		}
+
+		Object foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(Object.class, "foo.");
+		assertNotNull(foo);
+		assertEquals("foo.Object$Proxetta", foo.getClass().getName());
 
 	}
 }

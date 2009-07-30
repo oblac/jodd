@@ -12,13 +12,13 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static jodd.proxetta.asm.ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
 import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
+import static jodd.util.StringPool.DOT;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -30,14 +30,24 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	protected final ProxyAspect[] aspects;
 	protected final String suffix;
+	protected final String reqProxyClassName;
 	protected final TargetClassInfoReader targetClassInfo;
 
 	protected final WorkData wd;
 
-	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, String suffix, TargetClassInfoReader targetClassInfoReader) {
+	/**
+	 * Constructs new Proxetta class builder.
+	 * @param dest			destination visitor
+	 * @param aspects		set of asspects to apply
+	 * @param suffix		proxy class name suffix, may be <code>null</code>
+	 * @param reqProxyClassName		requested proxy class name, may be <code>null</code>s
+	 * @param targetClassInfoReader	target info reader, already invoked.
+	 */
+	public ProxettaClassBuilder(ClassVisitor dest, ProxyAspect[] aspects, String suffix, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
 		this.wd = new WorkData(dest);
 		this.aspects = aspects;
 		this.suffix = suffix;
+		this.reqProxyClassName = reqProxyClassName;
 		this.targetClassInfo = targetClassInfoReader;
 	}
 
@@ -56,7 +66,18 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.targetClassname = name.substring(lastSlash + 1);
 		wd.nextSupername = superName;
 		superName = name;
-		name += PROXY_CLASS_NAME_SUFFIX;
+
+		// create proxy name
+		if (this.reqProxyClassName != null) {
+			if (reqProxyClassName.startsWith(DOT)) {
+				name = name.substring(0, lastSlash) + '/' + reqProxyClassName.substring(1);
+			} else if (reqProxyClassName.endsWith(DOT)) {
+				name = reqProxyClassName.replace('.', '/') + wd.targetClassname;
+			} else {
+				name = reqProxyClassName.replace('.', '/');
+			}
+		}
+		// add optional suffix
 		if (suffix != null) {
 			name += suffix;
 		}

@@ -5,13 +5,14 @@ package jodd.proxetta.pointcuts;
 import jodd.proxetta.MethodInfo;
 
 /**
- * Pointcut on all public setters methods.
+ * Pointcut on all public non final setters methods.
  */
 public class AllSettersPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
 		return
 				isPublic(methodInfo)
+				&& isNonFinal(methodInfo)
 				&& matchMethodName(methodInfo, "set*")
 				&& hasOneArgument(methodInfo)
 				;

@@ -5,11 +5,11 @@ package jodd.proxetta.pointcuts;
 import jodd.proxetta.MethodInfo;
 
 /**
- * Pointcut on all <b>public</b> methods.
+ * Pointcut on all <b>public</b> and <b>non final</b> methods.
  */
 public class AllMethodsPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
-		return isPublic(methodInfo);
+		return isPublic(methodInfo) && isNonFinal(methodInfo);
 	}
 }

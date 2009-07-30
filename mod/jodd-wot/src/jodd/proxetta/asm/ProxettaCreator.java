@@ -40,6 +40,8 @@ public class ProxettaCreator {
 
 	protected boolean useSuffix;
 
+	protected String classNameSuffix;
+
 	/**
 	 * Specifies class name will vary on each creation. This prevents
 	 * <code>java.lang.LinkageError: duplicate class definition.</code>
@@ -49,14 +51,22 @@ public class ProxettaCreator {
 	}
 
 	/**
+	 * Specifies class name suffix for created class. If set to <code>null</code>
+	 * suffix is not used.
+	 */
+	public void setClassNameSuffix(String classNameSuffix) {
+		this.classNameSuffix = classNameSuffix;
+	}
+
+	/**
 	 * Returns new suffix or <code>null</code> if suffix is not in use.
 	 */
-	protected String getNewSuffix() {
+	protected String classNameSuffix() {
 		if (useSuffix == false) {
-			return null;
+			return classNameSuffix;
 		}
 		suffixCounter++;
-		return String.valueOf(suffixCounter);
+		return classNameSuffix + suffixCounter;
 	}
 
 
@@ -69,7 +79,7 @@ public class ProxettaCreator {
 	/**
 	 * Single point of class reader acceptance. Reads the target and creates destination class.
 	 */
-	protected ProxettaCreator accept(ClassReader cr) {
+	protected ProxettaCreator accept(ClassReader cr, String reqProxyClassName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Creating proxy for " + cr.getClassName());
 		}
@@ -78,28 +88,28 @@ public class ProxettaCreator {
 		cr.accept(targetClassInfoReader, 0);
 		// create proxy
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, getNewSuffix(), targetClassInfoReader);
+		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, classNameSuffix(), reqProxyClassName, targetClassInfoReader);
 		cr.accept(pcb, 0);
 		proxyApplied = pcb.wd.proxyApplied;
 		proxyClassName = pcb.wd.thisReference.replace('/', '.');
 		return this;
 	}
 
-	public ProxettaCreator accept(InputStream in) {
+	public ProxettaCreator accept(InputStream in, String reqProxyClassName) {
 		ClassReader cr;
 		try {
 			cr = new ClassReader(in);
 		} catch (IOException ioex) {
 			throw new ProxettaException("Error reading class input stream.", ioex);
 		}
-		return accept(cr);
+		return accept(cr, reqProxyClassName);
 	}
 
-	public ProxettaCreator accept(String targetName) {
+	public ProxettaCreator accept(String targetName, String reqProxyClassName) {
 		InputStream inputStream = null;
 		try {
 			inputStream = ClassLoaderUtil.getClassAsStream(targetName);
-			return accept(inputStream);
+			return accept(inputStream, reqProxyClassName);
 		} catch (IOException ioex) {
 			throw new ProxettaException("Unable to open stream for class name: " + targetName, ioex);
 		} finally {
@@ -107,11 +117,11 @@ public class ProxettaCreator {
 		}
 	}
 
-	public ProxettaCreator accept(Class target) {
+	public ProxettaCreator accept(Class target, String reqProxyClassName) {
 		InputStream inputStream = null;
 		try {
 			inputStream = ClassLoaderUtil.getClassAsStream(target);
-			return accept(inputStream);
+			return accept(inputStream, reqProxyClassName);
 		} catch (IOException ioex) {
 			throw new ProxettaException("Unable to open stream for: " + target.getName(), ioex);
 		} finally {

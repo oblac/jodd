@@ -5,6 +5,7 @@ package jodd.proxetta;
 import java.io.InputStream;
 import jodd.util.ClassLoaderUtil;
 import jodd.proxetta.asm.ProxettaCreator;
+import jodd.proxetta.asm.ProxettaNaming;
 
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
@@ -80,6 +81,37 @@ public class Proxetta {
 		return this;
 	}
 
+
+	// ---------------------------------------------------------------- suffix
+
+	protected String classNameSuffix = ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
+
+	/**
+	 * Specifies custom classname suffix to be added to the class name of created proxy.
+	 */
+	public Proxetta useClassNameSuffix(String suffix) {
+		this.classNameSuffix = suffix;
+		return this;
+	}
+
+	/**
+	 * Specifies usage of default classname suffix.
+	 */
+	public Proxetta useDefaultClassNameSuffix() {
+		this.classNameSuffix = ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
+		return this;
+	}
+
+	/**
+	 * Specifies not to append class name suffix when creating proxy class.
+	 * Warning: when class name suffix is not used, full classname has to be
+	 * specified that differs from target class name.
+	 */
+	public Proxetta dontUseClassNameSuffix() {
+		this.classNameSuffix = null;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- ProxyCreator
 
 	/**
@@ -88,6 +120,7 @@ public class Proxetta {
 	protected ProxettaCreator createProxettaCreator() {
 		ProxettaCreator pc = new ProxettaCreator(this.aspects);
 		pc.setUseVariableClassName(variableClassName);
+		pc.setClassNameSuffix(classNameSuffix);
 		return pc;
 	}
 
@@ -98,7 +131,11 @@ public class Proxetta {
 	 * there was no matching pointcuts and forced mode is off.
 	 */
 	public byte[] createProxy(Class target) {
-		return createProxy(createProxettaCreator().accept(target));
+		return createProxy(target, null);
+	}
+
+	public byte[] createProxy(Class target, String proxyClassName) {
+		return createProxy(createProxettaCreator().accept(target, proxyClassName));
 	}
 
 	/**
@@ -106,7 +143,11 @@ public class Proxetta {
 	 * there was no matching pointcuts and forced mode is off.
 	 */
 	public byte[] createProxy(String targetName) {
-		return createProxy(createProxettaCreator().accept(targetName));
+		return createProxy(targetName, null);
+	}
+
+	public byte[] createProxy(String targetName, String proxyClassName) {
+		return createProxy(createProxettaCreator().accept(targetName, proxyClassName));
 	}
 
 
@@ -115,7 +156,11 @@ public class Proxetta {
 	 * there was no matching pointcuts and forced mode is off.
 	 */
 	public byte[] createProxy(InputStream in) {
-		return createProxy(createProxettaCreator().accept(in));
+		return createProxy(in, null);
+	}
+
+	public byte[] createProxy(InputStream in, String proxyClassName) {
+		return createProxy(createProxettaCreator().accept(in, proxyClassName));
 	}
 
 	/**
@@ -136,8 +181,12 @@ public class Proxetta {
 	 * Defines new proxy class.
 	 */
 	public Class defineProxy(Class target) {
+		return defineProxy(target, null);
+	}
+
+	public Class defineProxy(Class target, String proxyClassName) {
 		ProxettaCreator pc = createProxettaCreator();
-		pc.accept(target);
+		pc.accept(target, proxyClassName);
 		if ((forced == false) && (pc.isProxyApplied() == false)) {
 			return target;
 		}
@@ -155,8 +204,12 @@ public class Proxetta {
 	 * Defines new proxy class.
 	 */
 	public Class defineProxy(String targetName) {
+	    return defineProxy(targetName, null);
+	}
+
+	public Class defineProxy(String targetName, String proxyClassName) {
 		ProxettaCreator pc = createProxettaCreator();
-		pc.accept(targetName);
+		pc.accept(targetName, proxyClassName);
 		if ((forced == false) && (pc.isProxyApplied() == false)) {
 			try {
 				return ClassLoaderUtil.loadClass(targetName, Proxetta.class);
@@ -176,9 +229,13 @@ public class Proxetta {
 
 	// ---------------------------------------------------------------- instance
 
-	@SuppressWarnings({"unchecked"})
 	public <T> T createProxyInstance(Class<T> target) {
-		Class<T> c = defineProxy(target);
+		return createProxyInstance(target, null);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	public <T> T createProxyInstance(Class<T> target, String proxyClassName) {
+		Class<T> c = defineProxy(target, proxyClassName);
 		try {
 			return c.newInstance();
 		} catch (Exception ex) {
@@ -187,7 +244,10 @@ public class Proxetta {
 	}
 
 	public Object createProxyInstance(String targetName) {
-		Class c = defineProxy(targetName);
+		return createProxyInstance(targetName, null);
+	}
+	public Object createProxyInstance(String targetName, String proxyClassName) {
+		Class c = defineProxy(targetName, proxyClassName);
 		try {
 			return c.newInstance();
 		} catch (Exception ex) {

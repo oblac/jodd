@@ -73,8 +73,8 @@ public class UncheckedException extends RuntimeException {
 		synchronized (ps) {
 			super.printStackTrace(ps);
 			if ((cause != null) && showCauseDetails) {
-				ps.println(CAUSE_DIV);
 				Throwable rootCause = ExceptionUtil.getRootCause(cause);
+				ps.println(CAUSE_DIV);
 				rootCause.printStackTrace(ps);
 			}
 		}
@@ -85,8 +85,8 @@ public class UncheckedException extends RuntimeException {
 		synchronized (pw) {
 			super.printStackTrace(pw);
 			if ((cause != null) && showCauseDetails) {
-				pw.println(CAUSE_DIV);
 				Throwable rootCause = ExceptionUtil.getRootCause(cause);
+				pw.println(CAUSE_DIV);
 				rootCause.printStackTrace(pw);
 			}
 		}

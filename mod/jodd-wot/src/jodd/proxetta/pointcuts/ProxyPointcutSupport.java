@@ -25,6 +25,14 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	}
 
 	/**
+	 * Returns <code>true</code> if method is not final
+	 * and therefore can be proxified.
+	 */
+	public boolean isNonFinal(MethodInfo msign) {
+		return (msign.getAccessFlags() & MethodInfo.ACC_FINAL) == 0;
+	}
+
+	/**
 	 * Returns <code>true</code> if method is annotated with provided annotation.
 	 */
 	public AnnotationInfo lookupAnnotation(MethodInfo mi, Class<? extends Annotation> an) {

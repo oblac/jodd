@@ -151,15 +151,16 @@ public class ExceptionUtil {
 	 * <p>
 	 * This method walks through the exception chain to the last element,
 	 * "root" of the tree, and returns that exception. If no root cause found
-	 * returns <code>null</code>.
+	 * returns provided throwable.
 	 */
 	public static Throwable getRootCause(Throwable throwable) {
 		Throwable cause = throwable.getCause();
-		if (cause != null) {
-			throwable = cause;
-			while ((throwable = throwable.getCause()) != null) {
-				cause = throwable;
-			}
+		if (cause == null) {
+			return throwable;
+		}
+		throwable = cause;
+		while ((throwable = throwable.getCause()) != null) {
+			cause = throwable;
 		}
 		return cause;
 	}
