@@ -10,8 +10,6 @@ import jodd.proxetta.pointcuts.AllMethodsPointcut;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Date;
 
 public class SubclassTest extends TestCase {
 
@@ -106,10 +104,15 @@ public class SubclassTest extends TestCase {
 			// ignore
 		}
 
-		Object foo = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+		Object object = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
 				.createProxyInstance(Object.class, "foo.");
-		assertNotNull(foo);
-		assertEquals("foo.Object$Proxetta", foo.getClass().getName());
+		assertNotNull(object);
+		assertEquals("foo.Object$Proxetta", object.getClass().getName());
+
+//		List list = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+//				.createProxyInstance(ArrayList.class, "foo.");
+//		assertNotNull(list);
+//		assertEquals("foo.ArrayList$Proxetta", list.getClass().getName());
 
 	}
 }

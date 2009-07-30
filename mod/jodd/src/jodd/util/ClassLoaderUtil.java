@@ -49,7 +49,7 @@ public class ClassLoaderUtil {
 		try {
 			addUrlToClassPath(path.toURL(), classLoader);
 		} catch (MalformedURLException muex) {
-			throw new RuntimeException("Unable to convert path to URL: '" + path + "'.", muex);
+			throw new IllegalArgumentException("Unable to convert path to URL: '" + path + "'.", muex);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class ClassLoaderUtil {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
-			throw new RuntimeException("Unable to extend classpath with URL: '" + url + "'.", ex);
+			throw new IllegalArgumentException("Unable to extend classpath with URL: '" + url + "'.", ex);
 		}
 	}
 
