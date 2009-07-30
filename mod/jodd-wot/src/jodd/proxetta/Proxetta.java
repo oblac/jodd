@@ -17,6 +17,17 @@ import jodd.proxetta.asm.ProxettaNaming;
  * <p>
  * If no matching method founded, Proxetta may or may not create an empty proxy class.
  * This behaviour is defined by <b>forced</b> mode during creation.
+ * <p>
+ * There are several options that describes how proxy class will be named. By default,
+ * proxy class name is created from target class name by adding default suffix. Suffix
+ * can be changed, also, name can be variable, so each time class is created it will have a new name.
+ * <p>
+ * It is also possible to set proxy simple class name and/or package name. This is useful when
+ * proxyfing JDK classes or any other that can't be loaded by some classloader. Requested proxy name
+ * can be in the following forms:
+ * <li> .Foo (starting with a dot) - proxy package name is equal to target package, just proxy simple class name is set.
+ * <li> foo. (ending with a dot) - proxy package is set to, proxy simple name is create from target simple class name.
+ * <li> foo.Foo - full proxy class name is specified. 
  */
 public class Proxetta {
 
