@@ -6,11 +6,15 @@ import junit.framework.TestCase;
 import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Foo;
 import jodd.proxetta.data.Two;
+import jodd.proxetta.data.StatCounter;
+import jodd.proxetta.data.StatCounterAdvice;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class SubclassTest extends TestCase {
 
@@ -120,10 +124,26 @@ public class SubclassTest extends TestCase {
 
 		System.out.println("----------list");
 
-		List list = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+		StatCounter.counter = 0;
+		List list = Proxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()))
 				.createProxyInstance(ArrayList.class, "foo.");
 		assertNotNull(list);
 		assertEquals("foo.ArrayList$Proxetta", list.getClass().getName());
+
+		assertEquals(1, StatCounter.counter);
+		list.add(new Integer(1));
+		assertEquals(3, StatCounter.counter);
+
+		System.out.println("----------set");
+
+		Set set = Proxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(HashSet.class, "foo.");
+		assertNotNull(set);
+		assertEquals("foo.HashSet$Proxetta", set.getClass().getName());
+
+		assertEquals(4, StatCounter.counter);
+		set.add(new Integer(1));
+		assertEquals(5, StatCounter.counter);
 
 	}
 }
