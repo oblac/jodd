@@ -12,7 +12,7 @@ public class AllSettersPointcut extends ProxyPointcutSupport {
 	public boolean apply(MethodInfo methodInfo) {
 		return
 				isPublic(methodInfo)
-				&& isNonFinal(methodInfo)
+				&& isAcceptable(methodInfo)
 				&& matchMethodName(methodInfo, "set*")
 				&& hasOneArgument(methodInfo)
 				;

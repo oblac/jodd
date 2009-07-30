@@ -27,7 +27,6 @@ import jodd.io.StreamUtil;
 
 /**
  * Reads info from target class.
- * todo ovo ce da implementira target class info
  */
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
 public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInfo {
@@ -36,28 +35,31 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 	protected final Map<String, MethodSignatureVisitor> methodSignatures;
 	protected final List<ClassReader> superClassReaders;					// list of all super class readers
-	protected final Set<String> topMethodSignatures;						// set of all top methods
+	protected final Set<String> allMethodSignatures;
 
 	public TargetClassInfoReader() {
 		this.methodSignatures = new HashMap<String, MethodSignatureVisitor>();
 		this.superClassReaders = new ArrayList<ClassReader>();
-		this.topMethodSignatures = new HashSet<String>();
+		this.allMethodSignatures = new HashSet<String>();
 	}
 
 
 	// ---------------------------------------------------------------- some getters
 
 	/**
-	 * Returns method signature for some method. If signature is not found, returns <code>null</code>
+	 * Returns method signature for some method. If signature is not found, returns <code>null</code>.
+	 * Founded signatures means that those method can be proxyfied.
 	 */
 	public MethodSignatureVisitor lookupMethodSignatureVisitor(int access, String name, String desc, String className) {
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, className);
-		MethodSignatureVisitor msv = methodSignatures.get(key);
-		return msv == null ? null : msv;
+		return methodSignatures.get(key);
 	}
 
-	public boolean isTopLevelMethod(MethodSignatureVisitor msgin) {
-		return topMethodSignatures.contains(msgin.getSignature());
+	/**
+	 * Returns <code>true</code> if method is marked for proxy.
+	 */
+	public boolean isMarkedForProxy(MethodSignatureVisitor msgin) {
+		return allMethodSignatures.contains(msgin.getSignature());
 	}
 
 	// ---------------------------------------------------------------- information
@@ -130,7 +132,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		final MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
-		topMethodSignatures.add(msign.getSignature());
+		allMethodSignatures.add(msign.getSignature());
 		return new MethodAnnotationReader(msign);
 	}
 
@@ -187,12 +189,14 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 					if ((acc & MethodInfo.ACC_FINAL) != 0) {    // skip finals
 						return null;
 					}
-					if (isTopLevelMethod(msign)) {				// skip overriden
+					if (allMethodSignatures.contains(msign.getSignature())) {		// skip overriden method by some in above classes
 						return null;
 					}
-					msign.setDeclaredClassName(declaredClassName);
-					String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
+
+					msign.setDeclaredClassName(declaredClassName);		// indicates it is not a top level class
+					String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, declaredClassName);
 					methodSignatures.put(key, msign);
+					allMethodSignatures.add(msign.getSignature());
 					return new MethodAnnotationReader(msign);
 				}
 			}, 0);
@@ -210,7 +214,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		new SignatureReader(description).accept(v);
 		return v;
 	}
-
 
 
 	// ---------------------------------------------------------------- util class

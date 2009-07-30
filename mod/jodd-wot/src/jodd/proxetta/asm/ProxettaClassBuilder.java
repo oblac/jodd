@@ -174,20 +174,25 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
 
-		// check all public super methods that are not overriden in superclass
+		// check all public super methods that are not overriden
 		for (ClassReader cr : targetClassInfo.superClassReaders) {
 			cr.accept(new EmptyClassVisitor() {
+
+				String declaredClassName;
+
+				@Override
+				public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+					declaredClassName = name;
+				}
+
 
 				@Override
 				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 					if (name.equals(INIT) || name.equals(CLINIT)) {
 						return null;
 					}					
-					MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, wd.superReference);
+					MethodSignatureVisitor msign = targetClassInfo.lookupMethodSignatureVisitor(access, name, desc, declaredClassName);
 					if (msign == null) {
-						return null;
-					}
-					if (targetClassInfo.isTopLevelMethod(msign)) {
 						return null;
 					}
 					return applyProxy(msign);

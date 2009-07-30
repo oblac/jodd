@@ -10,6 +10,6 @@ import jodd.proxetta.MethodInfo;
 public class AllMethodsPointcut extends ProxyPointcutSupport {
 
 	public boolean apply(MethodInfo methodInfo) {
-		return isPublic(methodInfo) && isNonFinal(methodInfo);
+		return isPublic(methodInfo) && isAcceptable(methodInfo);
 	}
 }

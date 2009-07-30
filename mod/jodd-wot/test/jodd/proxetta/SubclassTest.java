@@ -5,6 +5,7 @@ package jodd.proxetta;
 import junit.framework.TestCase;
 import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Foo;
+import jodd.proxetta.data.Two;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 import java.lang.reflect.Method;
@@ -93,6 +94,14 @@ public class SubclassTest extends TestCase {
 
 	}
 
+	public void testInnerOverride() {
+		Two two = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(Two.class, "foo.");
+		assertNotNull(two);
+		assertEquals("foo.Two$Proxetta", two.getClass().getName());
+
+	}
+
 
 	public void testJdk() {
 		try {
@@ -109,10 +118,12 @@ public class SubclassTest extends TestCase {
 		assertNotNull(object);
 		assertEquals("foo.Object$Proxetta", object.getClass().getName());
 
-//		List list = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
-//				.createProxyInstance(ArrayList.class, "foo.");
-//		assertNotNull(list);
-//		assertEquals("foo.ArrayList$Proxetta", list.getClass().getName());
+		System.out.println("----------list");
+
+		List list = Proxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()))
+				.createProxyInstance(ArrayList.class, "foo.");
+		assertNotNull(list);
+		assertEquals("foo.ArrayList$Proxetta", list.getClass().getName());
 
 	}
 }

@@ -25,11 +25,11 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	}
 
 	/**
-	 * Returns <code>true</code> if method is not final
-	 * and therefore can be proxified.
+	 * Returns <code>true</code> if method is acceptable for proxyfication.
+	 * This means that method is not final, abstract or native.
 	 */
-	public boolean isNonFinal(MethodInfo msign) {
-		return (msign.getAccessFlags() & MethodInfo.ACC_FINAL) == 0;
+	public boolean isAcceptable(MethodInfo msign) {
+		return (msign.getAccessFlags() & (MethodInfo.ACC_FINAL | MethodInfo.ACC_ABSTRACT | MethodInfo.ACC_NATIVE)) == 0;
 	}
 
 	/**

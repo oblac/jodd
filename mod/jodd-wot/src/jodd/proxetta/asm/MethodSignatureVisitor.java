@@ -304,6 +304,25 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	// ---------------------------------------------------------------- toString
 
+/*
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		MethodSignatureVisitor that = (MethodSignatureVisitor) o;
+		return getSignature().equals(that.getSignature());
+	}
+
+	@Override
+	public int hashCode() {
+		return getSignature().hashCode();
+	}
+
+*/
 	@Override
 	public String toString() {
 		return "MethodSignature: " + classname + "  " + getSignature();
