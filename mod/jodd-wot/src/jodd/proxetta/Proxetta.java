@@ -206,8 +206,8 @@ public class Proxetta {
 				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
 			}
 			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
-		} catch (ClassFormatError cferr) {
-			throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", cferr);
+		} catch (Exception ex) {
+			throw new ProxettaException("Proxy class definition was unsuccessful.", ex);
 		}
 	}
 
@@ -233,8 +233,8 @@ public class Proxetta {
 				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
 			}
 			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
-		} catch (ClassFormatError cferr) {
-			throw new ProxettaException("Proxy creation was unsuccessful due to possible bug in Proxetta.", cferr);
+		} catch (Exception ex) {
+			throw new ProxettaException("Proxy class definition was unsuccessful.", ex);
 		}
 	}
 

@@ -11,6 +11,7 @@ public class AllTests extends TestSuite {
 		super("jodd.proxetta test suite");
 		addTestSuite(SubclassTest.class);
 		addTestSuite(BigClassTest.class);
+		addTestSuite(AbstractsTest.class);
 	}
 
 	public static Test suite() {

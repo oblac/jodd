@@ -29,7 +29,7 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * This means that method is not final, abstract or native.
 	 */
 	public boolean isAcceptable(MethodInfo msign) {
-		return (msign.getAccessFlags() & (MethodInfo.ACC_FINAL | MethodInfo.ACC_ABSTRACT | MethodInfo.ACC_NATIVE)) == 0;
+		return true;//(msign.getAccessFlags() & (MethodInfo.ACC_FINAL | MethodInfo.ACC_ABSTRACT | MethodInfo.ACC_NATIVE)) == 0;
 	}
 
 	/**

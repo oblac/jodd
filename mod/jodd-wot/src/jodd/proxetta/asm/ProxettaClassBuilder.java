@@ -83,6 +83,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		}
 		wd.thisReference = name;
 		wd.superReference = superName;
+
+		// change access of destination
+		access &= ~MethodInfo.ACC_ABSTRACT;
+
+		// write destination class
 		wd.dest.visit(version, access, name, signature, superName, null);
 
 		wd.proxyAspects = new ProxyAspectData[aspects.length];
