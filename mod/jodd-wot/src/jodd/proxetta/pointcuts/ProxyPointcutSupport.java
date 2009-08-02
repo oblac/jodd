@@ -25,14 +25,6 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	}
 
 	/**
-	 * Returns <code>true</code> if method is acceptable for proxyfication.
-	 * This means that method is not final, abstract or native.
-	 */
-	public boolean isAcceptable(MethodInfo msign) {
-		return true;//(msign.getAccessFlags() & (MethodInfo.ACC_FINAL | MethodInfo.ACC_ABSTRACT | MethodInfo.ACC_NATIVE)) == 0;
-	}
-
-	/**
 	 * Returns <code>true</code> if method is annotated with provided annotation.
 	 */
 	public AnnotationInfo lookupAnnotation(MethodInfo mi, Class<? extends Annotation> an) {

@@ -190,7 +190,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 					declaredClassName = name;
 				}
 
-
 				@Override
 				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 					if (name.equals(INIT) || name.equals(CLINIT)) {

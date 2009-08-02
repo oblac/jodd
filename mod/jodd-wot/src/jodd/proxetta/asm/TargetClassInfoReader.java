@@ -129,7 +129,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		final MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
+		if ((access & MethodInfo.ACC_FINAL) != 0) {
+			return null;	// skip finals
+		}
+		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
 		String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, thisReference);
 		methodSignatures.put(key, msign);
 		allMethodSignatures.add(msign.getSignature());
@@ -183,10 +186,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 					}
 					MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
 					int acc = msign.getAccessFlags();
-					if ((acc & MethodInfo.ACC_PUBLIC) == 0) {   // skip non-public
+					if ((acc & MethodInfo.ACC_PUBLIC) == 0) {   	// skip non-public
 						return null;
 					}
-					if ((acc & MethodInfo.ACC_FINAL) != 0) {    // skip finals
+					if ((access & MethodInfo.ACC_FINAL) != 0) {		// skip finals
 						return null;
 					}
 					if (allMethodSignatures.contains(msign.getSignature())) {		// skip overriden method by some in above classes

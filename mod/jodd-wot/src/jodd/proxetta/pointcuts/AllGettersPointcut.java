@@ -12,7 +12,6 @@ public class AllGettersPointcut extends ProxyPointcutSupport {
 	public boolean apply(MethodInfo methodInfo) {
 		return
 				isPublic(methodInfo)
-				&& isAcceptable(methodInfo)
 				&& hasReturnValue(methodInfo)
 				&& (matchMethodName(methodInfo, "get*") || (matchMethodName(methodInfo, "is*")))
 				&& hasNoArguments(methodInfo)
