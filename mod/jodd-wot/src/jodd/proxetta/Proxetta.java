@@ -26,7 +26,7 @@ import jodd.proxetta.asm.ProxettaNaming;
  * proxyfing JDK classes or any other that can't be loaded by some classloader. Requested proxy name
  * can be in the following forms:
  * <li> .Foo (starting with a dot) - proxy package name is equal to target package, just proxy simple class name is set.
- * <li> foo. (ending with a dot) - proxy package is set to, proxy simple name is create from target simple class name.
+ * <li> foo. (ending with a dot) - proxy package is set, proxy simple name is create from target simple class name.
  * <li> foo.Foo - full proxy class name is specified. 
  */
 public class Proxetta {
