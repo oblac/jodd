@@ -2,7 +2,7 @@
 
 package jodd.petite.manager;
 
-import jodd.util.StringPool;
+import jodd.util.PropertiesUtil;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -30,36 +30,45 @@ public class ParamResolver {
 		return params.get(name);
 	}
 
+	/**
+	 * Returns an array of param keys that belongs to provided bean.
+	 */
 	public String[] resolve(String beanName, boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 		List<String> list = new ArrayList<String>();
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
-			if (entry.getKey().startsWith(beanName)) {
-				list.add(entry.getKey());
-				Object value = entry.getValue();
-				if (resolveReferenceParams == false) {
-					continue;
-				}
-				// resolve all references
-				String name;
-				while (true) {
-					if ((value != null) && (value instanceof String)) {		// inspect only strings
-						String strValue = ((String) value).trim();
-						if (strValue.startsWith(StringPool.DOLLAR)) {
-							name = strValue.substring(1);
-							if (name.startsWith(StringPool.DOLLAR)) {		// escaped with double $
-								value = name;
-								entry.setValue(value);
-								break;
-							}
-							value = params.get(name);
-							entry.setValue(value);
-							continue;
-						}
-					}
-					break;
-				}
+			String key = entry.getKey();
+			if (key.startsWith(beanName) == false) {
+				continue;
 			}
+			list.add(key);
+			if (resolveReferenceParams == false) {
+				continue;
+			}
+			// resolve all references
+			String value = PropertiesUtil.resolveProperty(params, key);
+			entry.setValue(value);
+/*
+			Object value = entry.getValue();
+			String name;
+			while (true) {
+				if ((value != null) && (value instanceof String)) {		// inspect only strings
+					String strValue = ((String) value).trim();
+					if (strValue.startsWith(StringPool.DOLLAR)) {
+						name = strValue.substring(1);
+						if (name.startsWith(StringPool.DOLLAR)) {		// escaped with double $
+							value = name;
+							entry.setValue(value);
+							break;
+						}
+						value = params.get(name);
+						entry.setValue(value);
+						continue;
+					}
+				}
+				break;
+			}
+*/
 		}
 		if (list.isEmpty()) {
 			return EMPTY_PARAMS;

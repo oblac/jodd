@@ -297,6 +297,9 @@ public class PetiteManager {
 		return paramResolver.get(name);
 	}
 
+	/**
+	 * Prepares list of all bean parameters and optioanlly resolve inner references.
+	 */
 	public String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
 		return paramResolver.resolve(name, resolveReferenceParams);
 	}

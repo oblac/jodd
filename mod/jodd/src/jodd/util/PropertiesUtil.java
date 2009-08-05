@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Map;
 
 /**
  * Misc java.util.Properties utils.
@@ -227,6 +228,23 @@ public class PropertiesUtil {
 	// ---------------------------------------------------------------- variables
 
 	/**
+	 * Returns String property from a map. If key is not found, or if value is not a String, returns <code>null</code>.
+	 * Mimics <code>Property.getProperty</code> but on map.
+	 */
+	public static String getProperty(Map map, String key) {
+		return getProperty(map, key, null);
+	}
+
+	/**
+	 * Returns Stirng property from a map.
+	 * @see #getProperty(java.util.Map, String) 
+	 */
+	public static String getProperty(Map map, String key, String defaultValue) {
+		Object val = map.get(key);
+		return (val instanceof String) ? (String) val : defaultValue;
+	}
+
+	/**
 	 * Resolves all variables.
 	 */
 	public static void resolveAllVariables(Properties prop) {
@@ -240,8 +258,8 @@ public class PropertiesUtil {
 	/**
 	 * Returns property with resolved variables.
 	 */
-	public static String resolveProperty(Properties p, String key) {
-		String value = p.getProperty(key);
+	public static String resolveProperty(Map map, String key) {
+		String value = getProperty(map, key);
 		if (value == null) {
 			return null;
 		}
@@ -257,7 +275,7 @@ public class PropertiesUtil {
 				ndx[1] = innerNdx + leftLen;
 			}
 			key = value.substring(ndx[1], ndx[2]);
-			String inner = p.getProperty(key);
+			String inner = getProperty(map, key);
 			value = value.substring(0, ndx[0]) + inner + value.substring(ndx[3]);
 		}
 		return StringUtil.replace(value, SLASH_DOLLAR, DOLLAR);

@@ -24,24 +24,25 @@ public class ParamTest extends TestCase {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
 
-		pc.defineParameter("foo.name", "$name");
-		pc.defineParameter("name", "$name2");
+		pc.defineParameter("foo.name", "$${name}");
+		pc.defineParameter("name", "${name${num}}");
+		pc.defineParameter("num", "2");
 		pc.defineParameter("name2", "FOONAME");
 
 		Foo foo = (Foo) pc.getBean("foo");
 		assertNotNull(foo);
-		assertEquals("FOONAME", foo.getName());
+		assertEquals("$FOONAME", foo.getName());
 	}
 
 	public void testRefParamsEscape() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
 
-		pc.defineParameter("foo.name", "$$name");
+		pc.defineParameter("foo.name", "\\${name}");
 
 		Foo foo = (Foo) pc.getBean("foo");
 		assertNotNull(foo);
-		assertEquals("$name", foo.getName());
+		assertEquals("${name}", foo.getName());
 	}
 
 	public void testRefParamsNoResolve() {
@@ -63,8 +64,8 @@ public class ParamTest extends TestCase {
 		pc.registerBean(Foo.class);
 
 		Properties p = new Properties();
-		p.setProperty("foo.name", "$name");
-		p.setProperty("name", "$name2");
+		p.setProperty("foo.name", "${name}");
+		p.setProperty("name", "${name2}");
 		p.setProperty("name2", "FOONAME");
 		pc.defineParameters(p);
 
