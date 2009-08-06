@@ -5,7 +5,7 @@
 
 	<property name="$[moduleName].findbugs.dir" value="${output.dir}/findbugs/$[moduleName]"/>
 
-	<target name="findbugs.$[moduleName]" depends="build.$[moduleName]" description="creates findbugs report for module '$[moduleName]'">
+	<target name="findbugs.$[moduleName]" depends="build.$[moduleName]" description="creates findbugs report for module: $[moduleName]">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
 		<mkdir dir="${$[moduleName].findbugs.dir}"/> 

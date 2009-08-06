@@ -1,4 +1,6 @@
-
+#tokens = '%ARG1%'.split(',')
+#for token in tokens:
+#	libName = token.strip()
 	<path id="lib.$[libName]">
 		<fileset dir="${basedir}/lib/$[libName]" includes="**/*.jar"/>
 	</path>

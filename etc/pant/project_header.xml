@@ -21,6 +21,7 @@
 	<!-- properties -->
 	<property file="build.user.properties"/>
 	<property name="prjName" value="$[prjName]"/>
+	<property name="prjId" value="$[prjId]"/>
 	<property name="prjVersion" value="$[prjVersion]"/>
 
 	<patternset id="ignored.files">

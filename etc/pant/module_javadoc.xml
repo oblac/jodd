@@ -1,2 +1,2 @@
 
-	<target name="javadoc.$[moduleName]" depends="$[buildlist('%ARG1%', 'javadoc.' + moduleName + '.')]" description="generates javadoc for module '$[moduleName]'"/>
+	<target name="javadoc.$[moduleName]" depends="$[buildlist('%ARG1%', 'javadoc.' + moduleName + '.')]" description="generates javadoc for module: $[moduleName]"/>

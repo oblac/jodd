@@ -34,7 +34,7 @@
 		</junitreport>
 	</target>
 
-	<target name="test.$[moduleName]" depends="test-run.$[moduleName], test-report.$[moduleName]" description="tests module '$[moduleName]'"/>
+	<target name="test.$[moduleName]" depends="test-run.$[moduleName], test-report.$[moduleName]" description="tests module: $[moduleName]"/>
 
 
 	<!-- emma: $[moduleName] -->
