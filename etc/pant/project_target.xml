@@ -1,2 +1,0 @@
-
-	<target name="%ARG1%" depends="%ARG2%" description="%ARG3%"/>

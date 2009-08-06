@@ -1,9 +1,0 @@
-
-	<!-- PROJECT targets -->
-
-	<target name="clean" description="cleans all">
-		<delete dir="${output.dir}"/>
-		<mkdir dir="${output.dir}"/>
-		<delete dir="${dist.dir}"/>
-		<mkdir dir="${dist.dir}"/>
-	</target>

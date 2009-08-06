@@ -1,5 +1,0 @@
-
-	<target name="pack-%ARG1%" depends="%ARG3%" description="packs distribution jars">
-		<delete file="${dist.dir}/%ARG2%-${prjVersion}.zip"/>
-		<zip destfile="${dist.dir}/%ARG2%-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="%ARG4%" excludes="%ARG5%"/>
-	</target>

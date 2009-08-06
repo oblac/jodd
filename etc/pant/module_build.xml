@@ -1,2 +1,0 @@
-
-	<target name="build.$[moduleName]" depends="$[buildlist('%ARG1%', 'compile.' + moduleName + '.')]" description="builds module: $[moduleName]"/>
