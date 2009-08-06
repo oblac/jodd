@@ -50,13 +50,13 @@ public class ParamTest extends TestCase {
 		pc.getConfig().setResolveReferenceParameters(false);
 		pc.registerBean(Foo.class);
 
-		pc.defineParameter("foo.name", "$name");
-		pc.defineParameter("name", "$name2");
+		pc.defineParameter("foo.name", "${name}");
+		pc.defineParameter("name", "${name2}");
 		pc.defineParameter("name2", "FOONAME");
 
 		Foo foo = (Foo) pc.getBean("foo");
 		assertNotNull(foo);
-		assertEquals("$name", foo.getName());
+		assertEquals("${name}", foo.getName());
 	}
 
 	public void testProperties() {

@@ -8,7 +8,7 @@ import jodd.madvoc.WebApplication;
 public class ActionPathMapperTest extends MadvocTestCase {
 
 	public void testMapping() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionPathMapper mapper = webapp.getComponent(ActionPathMapper.class);
 

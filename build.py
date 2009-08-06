@@ -1,12 +1,14 @@
 
 # settings
-
 prjName = 'Jodd'
+prjId = 'jodd'
 prjDescription = 'Jodd - generic purpose open-source Java library and frameworks.'
 prjVersion = '3.0.4'
 
-# ant
+# vars
+copyright = 'Copyright &#169; 2003-2009 Jodd Team'
 
+# ant
 project_header()
 
 lib('asm')
@@ -18,6 +20,7 @@ lib('slf4j')
 
 module('jodd')
 module_compile('production', 'jdk5', 'mail, servlets')
+module_compile_javadoc(prjName + ' ' + moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_compile('test', 		 'jdk5', '#production, mail, servlets, junit, emma')
 module_build('production, test')
 module_javadoc('production')
@@ -27,6 +30,7 @@ module_findbugs()
 
 module('jodd-wot')
 module_compile('production', 'jdk5', '>jodd.production, servlets, asm, slf4j')
+module_compile_javadoc(prjName + ' ' + moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_compile('test', 		 'jdk5', '>jodd.production, #production, asm, slf4j, hsqldb, h2, junit, emma')
 module_build('production, test')
 module_javadoc('production')
@@ -37,7 +41,6 @@ module_findbugs()
 module('jodd-gfx')
 module_compile('production', 'jdk5', '')
 module_build('production')
-module_javadoc('production')
 module_dist('jodd.JoddGfx')
 
 project_task('build', 'jodd, jodd-wot, jodd-gfx')
@@ -46,6 +49,7 @@ project_task('emma', 'jodd, jodd-wot')
 project_task('dist', 'jodd, jodd-wot, jodd-gfx')
 project_task('findbugs', 'jodd, jodd-wot')
 project_clean()
+
 project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')
 
 

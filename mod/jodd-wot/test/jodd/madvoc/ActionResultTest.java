@@ -12,7 +12,7 @@ public class ActionResultTest extends MadvocTestCase {
 
 
 	public void testMethod() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -108,7 +108,7 @@ public class ActionResultTest extends MadvocTestCase {
 
 
 	public void testAlias() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);

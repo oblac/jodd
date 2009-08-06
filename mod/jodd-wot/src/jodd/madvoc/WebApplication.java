@@ -37,6 +37,22 @@ public class WebApplication {
 	protected PetiteContainer madpc;
 
 	/**
+	 * Creates web application. Application is not initialized.
+	 * @see #WebApplication(boolean)
+	 */
+	public WebApplication() {
+	}
+
+	/**
+	 * Creates web application and optionally {@link #initWebApplication() initializes} it.
+	 */
+	public WebApplication(boolean init) {
+		if (init) {
+			initWebApplication();
+		}
+	}
+
+	/**
 	 * Initializes web application. Invoked very first.
 	 * By default, it creates a Logger and creates internal Petite container.
 	 * Also adds itself into it.

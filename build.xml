@@ -21,6 +21,7 @@
 	<!-- properties -->
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
+	<property name="prjId" value="jodd"/>
 	<property name="prjVersion" value="3.0.4"/>
 
 	<patternset id="ignored.files">
@@ -90,7 +91,6 @@
 	<property name="dist.dir" value="dist"/>
 	<property name="etc.dir" value="etc"/>
 	<property name="tmp.dir" value="tmp"/>
-
 	<path id="lib.asm">
 		<fileset dir="${basedir}/lib/asm" includes="**/*.jar"/>
 	</path>
@@ -118,6 +118,7 @@
 
 
 	<!-- MODULE : jodd -->
+
 	<path id="jodd.production.classpath">
 		<path refid="lib.mail"/>
 		<path refid="lib.servlets"/>
@@ -132,9 +133,8 @@
 
 	<property name="jodd.production.out.dir" value="${output.dir}/production/jodd"/>
 	<property name="jodd.production.src.dir" value="mod/jodd/src"/>
-	<property name="jodd.production.javadoc.dir" value="${output.dir}/javadoc/jodd"/>
 	
-	<target name="compile.jodd.production" description="compiles module 'jodd'; production classes">
+	<target name="compile.jodd.production" description="compiles module: jodd; production classes">
 		<mkdir dir="${jodd.production.out.dir}"/>
 		<javac destdir="${jodd.production.out.dir}"
 				listfiles="on" debug="on"
@@ -152,10 +152,12 @@
 			</fileset>
 		</copy>
 	</target>
+
+	<property name="jodd.production.javadoc.dir" value="${output.dir}/javadoc/jodd"/>
 	
 	<!-- javadoc: jodd.production -->
 
-	<target name="javadoc.jodd.production" depends="compile.jodd.production" description="generates javadoc for module 'jodd'; production classes">
+	<target name="javadoc.jodd.production" depends="compile.jodd.production" description="generates javadoc for module jodd; production classes">
 		<mkdir dir="${jodd.production.javadoc.dir}"/>
 		<javadoc destdir="${jodd.production.javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
 				windowtitle="jodd" stylesheetfile="${etc.dir}/javadoc/jodd.css"
@@ -164,12 +166,12 @@
 				executable="${jdk5.bin}/javadoc">
 			<bootclasspath refid="jodd.production.bootclasspath"/>
 			<classpath refid="jodd.production.classpath"/>
-			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
+			<doctitle><![CDATA[Jodd Jodd Library ${prjVersion}]]></doctitle>
 			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:"/>-->
 			<packageset dir="${jodd.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
+
 	<path id="jodd.test.classpath">
 		<path path="${jodd.production.out.dir}"/>
 		<path refid="lib.mail"/>
@@ -187,9 +189,8 @@
 
 	<property name="jodd.test.out.dir" value="${output.dir}/test/jodd"/>
 	<property name="jodd.test.src.dir" value="mod/jodd/test"/>
-	<property name="jodd.test.javadoc.dir" value="${output.dir}/javadoc/jodd"/>
 	
-	<target name="compile.jodd.test" description="compiles module 'jodd'; test classes">
+	<target name="compile.jodd.test" description="compiles module: jodd; test classes">
 		<mkdir dir="${jodd.test.out.dir}"/>
 		<javac destdir="${jodd.test.out.dir}"
 				listfiles="on" debug="on"
@@ -207,28 +208,10 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<!-- javadoc: jodd.test -->
 
-	<target name="javadoc.jodd.test" depends="compile.jodd.test" description="generates javadoc for module 'jodd'; test classes">
-		<mkdir dir="${jodd.test.javadoc.dir}"/>
-		<javadoc destdir="${jodd.test.javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
-				windowtitle="jodd" stylesheetfile="${etc.dir}/javadoc/jodd.css"
-				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
-				source="1.5"
-				executable="${jdk5.bin}/javadoc">
-			<bootclasspath refid="jodd.test.bootclasspath"/>
-			<classpath refid="jodd.test.classpath"/>
-			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:"/>-->
-			<packageset dir="${jodd.test.src.dir}" defaultexcludes="yes"/>
-		</javadoc>
-	</target>
+	<target name="build.jodd" depends="compile.jodd.production, compile.jodd.test" description="builds module: jodd"/>
 
-	<target name="build.jodd" depends="compile.jodd.production, compile.jodd.test" description="builds module 'jodd'"/>
-
-	<target name="javadoc.jodd" depends="javadoc.jodd.production" description="generates javadoc for module 'jodd'"/>
+	<target name="javadoc.jodd" depends="javadoc.jodd.production" description="generates javadoc for module: jodd"/>
 
 	<!-- test: jodd -->
 
@@ -265,7 +248,7 @@
 		</junitreport>
 	</target>
 
-	<target name="test.jodd" depends="test-run.jodd, test-report.jodd" description="tests module 'jodd'"/>
+	<target name="test.jodd" depends="test-run.jodd, test-report.jodd" description="tests module: jodd"/>
 
 
 	<!-- emma: jodd -->
@@ -294,19 +277,19 @@
 		</emma>
 	</target>
 	
-	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module 'jodd'"/>
+	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module  + moduleName + "/>
 
 	<!-- distribution: jodd -->
 
-	<property name="jodd.jar" value="${dist.dir}/jodd-${prjVersion}.jar"/>
+	<property name="jodd.jar" value="${dist.dir}/jodd-jodd-${prjVersion}.jar"/>
 
-	<target name="dist.jodd" depends="build.jodd" description="creates distribution for module 'jodd'">
+	<target name="dist.jodd" depends="build.jodd" description="creates distribution for module: jodd">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd.jar}" compress="true">
 			<manifest>
 				<attribute name="Debug-Info" value="on"/>
 				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName}-jodd"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd"/>
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 				<attribute name="Main-Class" value="jodd.Jodd"/>
 			</manifest>
@@ -320,7 +303,7 @@
 
 	<property name="jodd.findbugs.dir" value="${output.dir}/findbugs/jodd"/>
 
-	<target name="findbugs.jodd" depends="build.jodd" description="creates findbugs report for module 'jodd'">
+	<target name="findbugs.jodd" depends="build.jodd" description="creates findbugs report for module: jodd">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
 		<mkdir dir="${jodd.findbugs.dir}"/> 
@@ -338,8 +321,8 @@
 	</target>
 
 
-
 	<!-- MODULE : jodd-wot -->
+
 	<path id="jodd-wot.production.classpath">
 		<path path="${jodd.production.out.dir}"/>
 		<path refid="lib.servlets"/>
@@ -356,9 +339,8 @@
 
 	<property name="jodd-wot.production.out.dir" value="${output.dir}/production/jodd-wot"/>
 	<property name="jodd-wot.production.src.dir" value="mod/jodd-wot/src"/>
-	<property name="jodd-wot.production.javadoc.dir" value="${output.dir}/javadoc/jodd-wot"/>
 	
-	<target name="compile.jodd-wot.production" description="compiles module 'jodd-wot'; production classes">
+	<target name="compile.jodd-wot.production" description="compiles module: jodd-wot; production classes">
 		<mkdir dir="${jodd-wot.production.out.dir}"/>
 		<javac destdir="${jodd-wot.production.out.dir}"
 				listfiles="on" debug="on"
@@ -376,10 +358,12 @@
 			</fileset>
 		</copy>
 	</target>
+
+	<property name="jodd-wot.production.javadoc.dir" value="${output.dir}/javadoc/jodd-wot"/>
 	
 	<!-- javadoc: jodd-wot.production -->
 
-	<target name="javadoc.jodd-wot.production" depends="compile.jodd-wot.production" description="generates javadoc for module 'jodd-wot'; production classes">
+	<target name="javadoc.jodd-wot.production" depends="compile.jodd-wot.production" description="generates javadoc for module jodd-wot; production classes">
 		<mkdir dir="${jodd-wot.production.javadoc.dir}"/>
 		<javadoc destdir="${jodd-wot.production.javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
 				windowtitle="jodd-wot" stylesheetfile="${etc.dir}/javadoc/jodd-wot.css"
@@ -388,12 +372,12 @@
 				executable="${jdk5.bin}/javadoc">
 			<bootclasspath refid="jodd-wot.production.bootclasspath"/>
 			<classpath refid="jodd-wot.production.classpath"/>
-			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
+			<doctitle><![CDATA[Jodd Jodd-wot Library ${prjVersion}]]></doctitle>
 			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:"/>-->
 			<packageset dir="${jodd-wot.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
+
 	<path id="jodd-wot.test.classpath">
 		<path path="${jodd.production.out.dir}"/>
 		<path path="${jodd-wot.production.out.dir}"/>
@@ -414,9 +398,8 @@
 
 	<property name="jodd-wot.test.out.dir" value="${output.dir}/test/jodd-wot"/>
 	<property name="jodd-wot.test.src.dir" value="mod/jodd-wot/test"/>
-	<property name="jodd-wot.test.javadoc.dir" value="${output.dir}/javadoc/jodd-wot"/>
 	
-	<target name="compile.jodd-wot.test" description="compiles module 'jodd-wot'; test classes">
+	<target name="compile.jodd-wot.test" description="compiles module: jodd-wot; test classes">
 		<mkdir dir="${jodd-wot.test.out.dir}"/>
 		<javac destdir="${jodd-wot.test.out.dir}"
 				listfiles="on" debug="on"
@@ -434,28 +417,10 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<!-- javadoc: jodd-wot.test -->
 
-	<target name="javadoc.jodd-wot.test" depends="compile.jodd-wot.test" description="generates javadoc for module 'jodd-wot'; test classes">
-		<mkdir dir="${jodd-wot.test.javadoc.dir}"/>
-		<javadoc destdir="${jodd-wot.test.javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
-				windowtitle="jodd-wot" stylesheetfile="${etc.dir}/javadoc/jodd-wot.css"
-				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
-				source="1.5"
-				executable="${jdk5.bin}/javadoc">
-			<bootclasspath refid="jodd-wot.test.bootclasspath"/>
-			<classpath refid="jodd-wot.test.classpath"/>
-			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:"/>-->
-			<packageset dir="${jodd-wot.test.src.dir}" defaultexcludes="yes"/>
-		</javadoc>
-	</target>
+	<target name="build.jodd-wot" depends="compile.jodd-wot.production, compile.jodd-wot.test" description="builds module: jodd-wot"/>
 
-	<target name="build.jodd-wot" depends="compile.jodd-wot.production, compile.jodd-wot.test" description="builds module 'jodd-wot'"/>
-
-	<target name="javadoc.jodd-wot" depends="javadoc.jodd-wot.production" description="generates javadoc for module 'jodd-wot'"/>
+	<target name="javadoc.jodd-wot" depends="javadoc.jodd-wot.production" description="generates javadoc for module: jodd-wot"/>
 
 	<!-- test: jodd-wot -->
 
@@ -492,7 +457,7 @@
 		</junitreport>
 	</target>
 
-	<target name="test.jodd-wot" depends="test-run.jodd-wot, test-report.jodd-wot" description="tests module 'jodd-wot'"/>
+	<target name="test.jodd-wot" depends="test-run.jodd-wot, test-report.jodd-wot" description="tests module: jodd-wot"/>
 
 
 	<!-- emma: jodd-wot -->
@@ -521,19 +486,19 @@
 		</emma>
 	</target>
 	
-	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module 'jodd-wot'"/>
+	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module  + moduleName + "/>
 
 	<!-- distribution: jodd-wot -->
 
-	<property name="jodd-wot.jar" value="${dist.dir}/jodd-wot-${prjVersion}.jar"/>
+	<property name="jodd-wot.jar" value="${dist.dir}/jodd-jodd-wot-${prjVersion}.jar"/>
 
-	<target name="dist.jodd-wot" depends="build.jodd-wot" description="creates distribution for module 'jodd-wot'">
+	<target name="dist.jodd-wot" depends="build.jodd-wot" description="creates distribution for module: jodd-wot">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-wot.jar}" compress="true">
 			<manifest>
 				<attribute name="Debug-Info" value="on"/>
 				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName}-jodd-wot"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd-wot"/>
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 				<attribute name="Main-Class" value="jodd.JoddWot"/>
 			</manifest>
@@ -547,7 +512,7 @@
 
 	<property name="jodd-wot.findbugs.dir" value="${output.dir}/findbugs/jodd-wot"/>
 
-	<target name="findbugs.jodd-wot" depends="build.jodd-wot" description="creates findbugs report for module 'jodd-wot'">
+	<target name="findbugs.jodd-wot" depends="build.jodd-wot" description="creates findbugs report for module: jodd-wot">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
 		<mkdir dir="${jodd-wot.findbugs.dir}"/> 
@@ -565,8 +530,8 @@
 	</target>
 
 
-
 	<!-- MODULE : jodd-gfx -->
+
 	<path id="jodd-gfx.production.classpath">
 	</path>
 
@@ -579,9 +544,8 @@
 
 	<property name="jodd-gfx.production.out.dir" value="${output.dir}/production/jodd-gfx"/>
 	<property name="jodd-gfx.production.src.dir" value="mod/jodd-gfx/src"/>
-	<property name="jodd-gfx.production.javadoc.dir" value="${output.dir}/javadoc/jodd-gfx"/>
 	
-	<target name="compile.jodd-gfx.production" description="compiles module 'jodd-gfx'; production classes">
+	<target name="compile.jodd-gfx.production" description="compiles module: jodd-gfx; production classes">
 		<mkdir dir="${jodd-gfx.production.out.dir}"/>
 		<javac destdir="${jodd-gfx.production.out.dir}"
 				listfiles="on" debug="on"
@@ -599,40 +563,20 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<!-- javadoc: jodd-gfx.production -->
 
-	<target name="javadoc.jodd-gfx.production" depends="compile.jodd-gfx.production" description="generates javadoc for module 'jodd-gfx'; production classes">
-		<mkdir dir="${jodd-gfx.production.javadoc.dir}"/>
-		<javadoc destdir="${jodd-gfx.production.javadoc.dir}" version="false" author="false" additionalparam="-J-Xmx32m"
-				windowtitle="jodd-gfx" stylesheetfile="${etc.dir}/javadoc/jodd-gfx.css"
-				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
-				source="1.5"
-				executable="${jdk5.bin}/javadoc">
-			<bootclasspath refid="jodd-gfx.production.bootclasspath"/>
-			<classpath refid="jodd-gfx.production.classpath"/>
-			<doctitle><![CDATA[Jodd-gfx Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
-			<!--<tag name="todo" scope="all" description="To do:"/>-->
-			<packageset dir="${jodd-gfx.production.src.dir}" defaultexcludes="yes"/>
-		</javadoc>
-	</target>
-
-	<target name="build.jodd-gfx" depends="compile.jodd-gfx.production" description="builds module 'jodd-gfx'"/>
-
-	<target name="javadoc.jodd-gfx" depends="javadoc.jodd-gfx.production" description="generates javadoc for module 'jodd-gfx'"/>
+	<target name="build.jodd-gfx" depends="compile.jodd-gfx.production" description="builds module: jodd-gfx"/>
 
 	<!-- distribution: jodd-gfx -->
 
-	<property name="jodd-gfx.jar" value="${dist.dir}/jodd-gfx-${prjVersion}.jar"/>
+	<property name="jodd-gfx.jar" value="${dist.dir}/jodd-jodd-gfx-${prjVersion}.jar"/>
 
-	<target name="dist.jodd-gfx" depends="build.jodd-gfx" description="creates distribution for module 'jodd-gfx'">
+	<target name="dist.jodd-gfx" depends="build.jodd-gfx" description="creates distribution for module: jodd-gfx">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-gfx.jar}" compress="true">
 			<manifest>
 				<attribute name="Debug-Info" value="on"/>
 				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName}-jodd-gfx"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd-gfx"/>
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 				<attribute name="Main-Class" value="jodd.JoddGfx"/>
 			</manifest>

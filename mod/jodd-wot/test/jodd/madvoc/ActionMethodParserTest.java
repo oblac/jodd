@@ -14,7 +14,7 @@ import jodd.madvoc.test2.Boo5Action;
 public class ActionMethodParserTest extends MadvocTestCase {
 
 	public void testDefaultMethods() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
@@ -30,7 +30,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	public void testMethod() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
@@ -59,7 +59,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	public void testMethodWithPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
@@ -97,7 +97,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 
 	public void testClasses() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
@@ -123,7 +123,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	public void testClassesWithPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
@@ -151,7 +151,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	public void testClassesWithoutPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
@@ -175,7 +175,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 
 	public void testPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
@@ -198,7 +198,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 	public void testNoPackage() {
-		WebApplication webapp = new WebApplication();
+		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);

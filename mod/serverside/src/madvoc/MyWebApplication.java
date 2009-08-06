@@ -5,7 +5,6 @@ import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.MadvocConfigurator;
-import jodd.petite.PetiteContainer;
 import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
 
 import javax.servlet.ServletContext;
@@ -31,9 +30,9 @@ public class MyWebApplication extends PetiteWebApplication {
 	}
 
 	@Override
-	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
+	protected void init(MadvocConfig madvocConfig, ServletContext context) {
 		System.out.println("MyWebApplication.init (" + madvocConfig.getClass().getSimpleName() + ')');
-		super.init(madvocConfig, servletContext);
+		super.init(madvocConfig, context);
 		((AdaptiveFileUploadFactory) madvocConfig.getFileUploadFactory()).setBreakOnError(true);
 	}
 
