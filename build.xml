@@ -172,6 +172,41 @@
 		</javadoc>
 	</target>
 
+	<!-- distribution: jodd -->
+	<property name="jodd.jar" value="${dist.dir}/jodd-${prjVersion}.jar"/>
+	<property name="jodd-source.jar" value="${dist.dir}/jodd-${prjVersion}-source.jar"/>
+	<property name="jodd-javadoc.jar" value="${dist.dir}/jodd-${prjVersion}-javadoc.jar"/>
+
+	<!-- distribution JAR: jodd -->
+
+	<target name="dist.jodd" depends="compile.jodd.production" description="creates JAR distribution for module: jodd">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd.jar}" compress="true">
+			<manifest>
+				<attribute name="Debug-Info" value="on"/>
+				<attribute name="Release-Date" value="${TODAY}"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd"/>
+				<attribute name="Implementation-Version" value="${prjVersion}"/>
+				<attribute name="Main-Class" value="jodd.Jodd"/>
+			</manifest>
+			<fileset dir="${jodd.production.out.dir}"/>
+		</jar>
+	</target>
+
+	<!-- distribution SRC: jodd -->
+
+	<target name="dist.jodd.src" depends="compile.jodd.production" description="creates SOURCE distribution for module: jodd">
+		<mkdir dir="${dist.dir}"/>
+		<zip destfile="${jodd-source.jar}" basedir='${jodd.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
+	</target>
+
+	<!-- distribution SRC: jodd -->
+
+	<target name="dist.jodd.doc" depends="javadoc.jodd.production" description="creates DOC distribution for module: jodd">
+		<mkdir dir="${dist.dir}"/>
+		<zip destfile="${jodd-javadoc.jar}" basedir='${jodd.production.javadoc.dir}' level="9" encoding="utf8" />
+	</target>
+
 	<path id="jodd.test.classpath">
 		<path path="${jodd.production.out.dir}"/>
 		<path refid="lib.mail"/>
@@ -279,24 +314,6 @@
 	
 	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module  + moduleName + "/>
 
-	<!-- distribution: jodd -->
-
-	<property name="jodd.jar" value="${dist.dir}/jodd-jodd-${prjVersion}.jar"/>
-
-	<target name="dist.jodd" depends="build.jodd" description="creates distribution for module: jodd">
-		<mkdir dir="${dist.dir}"/>
-		<jar jarfile="${jodd.jar}" compress="true">
-			<manifest>
-				<attribute name="Debug-Info" value="on"/>
-				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName} jodd"/>
-				<attribute name="Implementation-Version" value="${prjVersion}"/>
-				<attribute name="Main-Class" value="jodd.Jodd"/>
-			</manifest>
-			<fileset dir="${jodd.production.out.dir}"/>
-		</jar>
-	</target>
-
 	<!-- findbugs: jodd -->
 
 	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
@@ -376,6 +393,41 @@
 			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd-wot.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
+	</target>
+
+	<!-- distribution: jodd-wot -->
+	<property name="jodd-wot.jar" value="${dist.dir}/jodd-wot-${prjVersion}.jar"/>
+	<property name="jodd-wot-source.jar" value="${dist.dir}/jodd-wot-${prjVersion}-source.jar"/>
+	<property name="jodd-wot-javadoc.jar" value="${dist.dir}/jodd-wot-${prjVersion}-javadoc.jar"/>
+
+	<!-- distribution JAR: jodd-wot -->
+
+	<target name="dist.jodd-wot" depends="compile.jodd-wot.production" description="creates JAR distribution for module: jodd-wot">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-wot.jar}" compress="true">
+			<manifest>
+				<attribute name="Debug-Info" value="on"/>
+				<attribute name="Release-Date" value="${TODAY}"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd-wot"/>
+				<attribute name="Implementation-Version" value="${prjVersion}"/>
+				<attribute name="Main-Class" value="jodd.JoddWot"/>
+			</manifest>
+			<fileset dir="${jodd-wot.production.out.dir}"/>
+		</jar>
+	</target>
+
+	<!-- distribution SRC: jodd-wot -->
+
+	<target name="dist.jodd-wot.src" depends="compile.jodd-wot.production" description="creates SOURCE distribution for module: jodd-wot">
+		<mkdir dir="${dist.dir}"/>
+		<zip destfile="${jodd-wot-source.jar}" basedir='${jodd-wot.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
+	</target>
+
+	<!-- distribution SRC: jodd-wot -->
+
+	<target name="dist.jodd-wot.doc" depends="javadoc.jodd-wot.production" description="creates DOC distribution for module: jodd-wot">
+		<mkdir dir="${dist.dir}"/>
+		<zip destfile="${jodd-wot-javadoc.jar}" basedir='${jodd-wot.production.javadoc.dir}' level="9" encoding="utf8" />
 	</target>
 
 	<path id="jodd-wot.test.classpath">
@@ -488,24 +540,6 @@
 	
 	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module  + moduleName + "/>
 
-	<!-- distribution: jodd-wot -->
-
-	<property name="jodd-wot.jar" value="${dist.dir}/jodd-jodd-wot-${prjVersion}.jar"/>
-
-	<target name="dist.jodd-wot" depends="build.jodd-wot" description="creates distribution for module: jodd-wot">
-		<mkdir dir="${dist.dir}"/>
-		<jar jarfile="${jodd-wot.jar}" compress="true">
-			<manifest>
-				<attribute name="Debug-Info" value="on"/>
-				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName} jodd-wot"/>
-				<attribute name="Implementation-Version" value="${prjVersion}"/>
-				<attribute name="Main-Class" value="jodd.JoddWot"/>
-			</manifest>
-			<fileset dir="${jodd-wot.production.out.dir}"/>
-		</jar>
-	</target>
-
 	<!-- findbugs: jodd-wot -->
 
 	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
@@ -566,23 +600,7 @@
 
 	<target name="build.jodd-gfx" depends="compile.jodd-gfx.production" description="builds module: jodd-gfx"/>
 
-	<!-- distribution: jodd-gfx -->
-
-	<property name="jodd-gfx.jar" value="${dist.dir}/jodd-jodd-gfx-${prjVersion}.jar"/>
-
-	<target name="dist.jodd-gfx" depends="build.jodd-gfx" description="creates distribution for module: jodd-gfx">
-		<mkdir dir="${dist.dir}"/>
-		<jar jarfile="${jodd-gfx.jar}" compress="true">
-			<manifest>
-				<attribute name="Debug-Info" value="on"/>
-				<attribute name="Release-Date" value="${TODAY}"/>
-				<attribute name="Implementation-Title" value="${prjName} jodd-gfx"/>
-				<attribute name="Implementation-Version" value="${prjVersion}"/>
-				<attribute name="Main-Class" value="jodd.JoddGfx"/>
-			</manifest>
-			<fileset dir="${jodd-gfx.production.out.dir}"/>
-		</jar>
-	</target>
+	<!-- PROJECT targets -->
 
 	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-gfx" description="invokes 'build' for project"/>
 
@@ -590,11 +608,9 @@
 
 	<target name="emma" depends="emma.jodd, emma.jodd-wot" description="invokes 'emma' for project"/>
 
-	<target name="dist" depends="dist.jodd, dist.jodd-wot, dist.jodd-gfx" description="invokes 'dist' for project"/>
+	<target name="dist" depends="dist.jodd, dist.jodd.src, dist.jodd.doc, dist.jodd-wot, dist.jodd-wot.src, dist.jodd-wot.doc" description="invokes 'dist' for project"/>
 
 	<target name="findbugs" depends="findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' for project"/>
-
-	<!-- PROJECT targets -->
 
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>
