@@ -1,5 +1,6 @@
 font requirements
 -----------------
 
-'j' da bude ravno, dole kriva da skrece i da crta s kojom se zavrsava bude kosa
-'d' da ima nesto svoje, da ne bude baš ravno.
+'j' straight line that is rounded at the bottom; rounding should end with a not-parallel line; dot to be rounded square.
+'o' circle, not an ellipse
+'d' should be soft, not striaght
