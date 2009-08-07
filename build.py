@@ -3,7 +3,7 @@
 prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - generic purpose open-source Java library and frameworks.'
-prjVersion = '3.0.4'
+prjVersion = '3.0.5'
 
 # vars
 copyright = 'Copyright &#169; 2003-2009 Jodd Team'
@@ -59,34 +59,33 @@ project_clean()
 project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')
 
 
-pack('dist', 'jodd',     'dist', '''
+pack('dist', 'jodd',     '', '''
 	${jodd.jar}
 	${jodd-wot.jar}
 	file_id.diz
 ''', '')
-pack('all',  'jodd-all', 'pack-dist', '''
+pack('dist-srcdoc',  'jodd-all', 'pack-dist', '''
 	${jodd.jar}
+	${jodd-source.jar}
+	${jodd-javadoc.jar}
 	${jodd-wot.jar}
+	${jodd-wot-source.jar}
+	${jodd-wot-javadoc.jar}
 	file_id.diz
-	etc/javadoc/**
-	etc/pant/**
+''', '')
+pack('all',  'jodd-all-with-dependencies', 'pack-dist-srcdoc', '''
+	${jodd.jar}
+	${jodd-source.jar}
+	${jodd-javadoc.jar}
+	${jodd-wot.jar}
+	${jodd-wot-source.jar}
+	${jodd-wot-javadoc.jar}
+	file_id.diz
 	lib/**
 	build*
 	pant.py
-	${jodd.production.src.dir}/**
-	${jodd.production.javadoc.dir}/**
-	${jodd.test.src.dir}/**
-	${jodd.junit.dir}/**
-	${jodd.emma.dir}/**
-	${jodd-wot.production.src.dir}/**
-	${jodd-wot.production.javadoc.dir}/**
-	${jodd-wot.test.src.dir}/**
-	${jodd-wot.junit.dir}/**
-	${jodd-wot.emma.dir}/**
 ''', '''
 	lib/oracle/*
-	${jodd.emma.dir}/instr/**
-	${jodd-wot.emma.dir}/instr/**
 ''')
 
 
@@ -111,7 +110,7 @@ dist: builds jars
 
 Pack
 ----
-pack-dist: pack distribution jars
+pack-dist: pack just distribution jars
 pack-all: pack all
 ''')
 project_footer()

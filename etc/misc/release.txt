@@ -2,7 +2,14 @@
 How to build a release
 ----------------------
 
-[1] build the release as written in build.txt
+[1] build the release
+ant clean
+ant build
+ant javadoc
+ant emma
+ant findbugs
+ant dist
+ant pack-all
 
 
 [2] site changes
@@ -31,7 +38,7 @@ Upload sitemap.xml
 login to google/Custom search, refresh index
 
 
-[6] reindex site searcher
+[6] reindex site searcher (ako treba)
 http://jodd.org/sphider/admin/admin.php
 Reindex
 

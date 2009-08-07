@@ -620,7 +620,7 @@
 	</target>
 	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist" description="creates full release"/>
 
-	<target name="pack-dist" depends="dist" description="packs distribution jars">
+	<target name="pack-dist" depends="" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
@@ -628,31 +628,33 @@
 	file_id.diz
 " excludes=""/>
 	</target>
-	<target name="pack-all" depends="pack-dist" description="packs distribution jars">
+	<target name="pack-dist-srcdoc" depends="pack-dist" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-all-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-all-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
+	${jodd-source.jar}
+	${jodd-javadoc.jar}
 	${jodd-wot.jar}
+	${jodd-wot-source.jar}
+	${jodd-wot-javadoc.jar}
 	file_id.diz
-	etc/javadoc/**
-	etc/pant/**
+" excludes=""/>
+	</target>
+	<target name="pack-all" depends="pack-dist-srcdoc" description="packs distribution jars">
+		<delete file="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip"/>
+		<zip destfile="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
+	${jodd.jar}
+	${jodd-source.jar}
+	${jodd-javadoc.jar}
+	${jodd-wot.jar}
+	${jodd-wot-source.jar}
+	${jodd-wot-javadoc.jar}
+	file_id.diz
 	lib/**
 	build*
 	pant.py
-	${jodd.production.src.dir}/**
-	${jodd.production.javadoc.dir}/**
-	${jodd.test.src.dir}/**
-	${jodd.junit.dir}/**
-	${jodd.emma.dir}/**
-	${jodd-wot.production.src.dir}/**
-	${jodd-wot.production.javadoc.dir}/**
-	${jodd-wot.test.src.dir}/**
-	${jodd-wot.junit.dir}/**
-	${jodd-wot.emma.dir}/**
 " excludes="
 	lib/oracle/*
-	${jodd.emma.dir}/instr/**
-	${jodd-wot.emma.dir}/instr/**
 "/>
 	</target>
 	<target name="help">
@@ -678,7 +680,7 @@ dist: builds jars
 
 Pack
 ----
-pack-dist: pack distribution jars
+pack-dist: pack just distribution jars
 pack-all: pack all
 
 		</echo>
