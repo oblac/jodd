@@ -22,7 +22,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.0.4"/>
+	<property name="prjVersion" value="3.0.5"/>
 
 	<patternset id="ignored.files">
 		<exclude name="**/CVS/**"/>
@@ -312,7 +312,7 @@
 		</emma>
 	</target>
 	
-	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module  + moduleName + "/>
+	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module: jodd"/>
 
 	<!-- findbugs: jodd -->
 
@@ -538,7 +538,7 @@
 		</emma>
 	</target>
 	
-	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module  + moduleName + "/>
+	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module: jodd-wot"/>
 
 	<!-- findbugs: jodd-wot -->
 
@@ -602,15 +602,17 @@
 
 	<!-- PROJECT targets -->
 
-	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-gfx" description="invokes 'build' for project"/>
+	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-gfx" description="invokes 'build' on project"/>
 
-	<target name="javadoc" depends="javadoc.jodd, javadoc.jodd-wot" description="invokes 'javadoc' for project"/>
+	<target name="javadoc" depends="javadoc.jodd, javadoc.jodd-wot" description="invokes 'javadoc' on project"/>
 
-	<target name="emma" depends="emma.jodd, emma.jodd-wot" description="invokes 'emma' for project"/>
+	<target name="emma" depends="emma.jodd, emma.jodd-wot" description="invokes 'emma' on project"/>
 
-	<target name="dist" depends="dist.jodd, dist.jodd.src, dist.jodd.doc, dist.jodd-wot, dist.jodd-wot.src, dist.jodd-wot.doc" description="invokes 'dist' for project"/>
+	<target name="dist" depends="dist.jodd, dist.jodd-wot" description="invokes 'dist' on project"/>
 
-	<target name="findbugs" depends="findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' for project"/>
+	<target name="all" depends="dist.jodd, dist.jodd.src, dist.jodd.doc, dist.jodd-wot, dist.jodd-wot.src, dist.jodd-wot.doc" description="invokes 'all' on project"/>
+
+	<target name="findbugs" depends="findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' on project"/>
 
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>
@@ -618,7 +620,7 @@
 		<delete dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
-	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist" description="creates full release"/>
+	<target name="release" depends="clean, build, javadoc, emma, findbugs, all" description="creates full release"/>
 
 	<target name="pack-dist" depends="" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>
@@ -662,26 +664,28 @@
 
 Module targets
 --------------
-build - builds all modules
-javadoc - generates javadocs
-dist - creates all distribution jars
-findbugs - generates findbugs report
-clean - cleans out folders
+build:	builds all modules
+javadoc:	generates javadocs
+dist:	creates distribution jars
+findbugs:	generates findbugs report
+clean:	cleans out folders
 
 
 Project targets
 ---------------
-clean: cleans all outputs
-build: compile all
-javadoc: generates javadoc
-emma: runs all tests
-findbugs: find bugs
-dist: builds jars
+clean: 	cleans all outputs
+build:	compile all
+javadoc:	generates javadoc
+emma:	runs all tests
+findbugs:	finds bugs
+dist:	builds distribution jars
+all:	builds all jars
+
 
 Pack
 ----
-pack-dist: pack just distribution jars
-pack-all: pack all
+pack-dist:	pack just distribution jars
+pack-all:	pack all
 
 		</echo>
 	</target>
