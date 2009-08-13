@@ -30,7 +30,7 @@ public abstract class ActionInterceptorStack extends ActionInterceptor {
 	 */
 	@Override
 	public final String intercept(ActionRequest actionRequest) throws Exception {
-		return null;
+		throw new MadvocException("Interceptor stack can not be invoked as an interceptor.");
 	}
 
 	/**

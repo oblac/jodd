@@ -174,7 +174,7 @@
 
 	<!-- distribution: jodd -->
 	<property name="jodd.jar" value="${dist.dir}/jodd-${prjVersion}.jar"/>
-	<property name="jodd-source.jar" value="${dist.dir}/jodd-${prjVersion}-source.jar"/>
+	<property name="jodd-sources.jar" value="${dist.dir}/jodd-${prjVersion}-sources.jar"/>
 	<property name="jodd-javadoc.jar" value="${dist.dir}/jodd-${prjVersion}-javadoc.jar"/>
 
 	<!-- distribution JAR: jodd -->
@@ -197,7 +197,7 @@
 
 	<target name="dist.jodd.src" depends="compile.jodd.production" description="creates SOURCE distribution for module: jodd">
 		<mkdir dir="${dist.dir}"/>
-		<zip destfile="${jodd-source.jar}" basedir='${jodd.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
+		<zip destfile="${jodd-sources.jar}" basedir='${jodd.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
 	</target>
 
 	<!-- distribution SRC: jodd -->
@@ -397,7 +397,7 @@
 
 	<!-- distribution: jodd-wot -->
 	<property name="jodd-wot.jar" value="${dist.dir}/jodd-wot-${prjVersion}.jar"/>
-	<property name="jodd-wot-source.jar" value="${dist.dir}/jodd-wot-${prjVersion}-source.jar"/>
+	<property name="jodd-wot-sources.jar" value="${dist.dir}/jodd-wot-${prjVersion}-sources.jar"/>
 	<property name="jodd-wot-javadoc.jar" value="${dist.dir}/jodd-wot-${prjVersion}-javadoc.jar"/>
 
 	<!-- distribution JAR: jodd-wot -->
@@ -420,7 +420,7 @@
 
 	<target name="dist.jodd-wot.src" depends="compile.jodd-wot.production" description="creates SOURCE distribution for module: jodd-wot">
 		<mkdir dir="${dist.dir}"/>
-		<zip destfile="${jodd-wot-source.jar}" basedir='${jodd-wot.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
+		<zip destfile="${jodd-wot-sources.jar}" basedir='${jodd-wot.production.src.dir}' level="9" encoding="utf8" excludes=".svn"/>
 	</target>
 
 	<!-- distribution SRC: jodd-wot -->
