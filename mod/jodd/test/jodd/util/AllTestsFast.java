@@ -33,6 +33,7 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(CsvUtilTest.class);
 		addTestSuite(TextUtilTest.class);
 		addTestSuite(PropertiesUtilTest.class);
+		addTestSuite(Base64Test.class);
 	}
 
 	public static Test suite() {

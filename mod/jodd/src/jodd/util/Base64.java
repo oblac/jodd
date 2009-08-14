@@ -11,7 +11,8 @@ import java.io.Writer;
  * Jakarta and others are slower.
  */
 public class Base64 {
-	private static final char[] S_BASE64CHAR = {
+
+	public static final char[] BASE64_CHARS = {
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 		'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
@@ -20,30 +21,33 @@ public class Base64 {
 		'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7',
 		'8', '9', '+', '/'
 	};
-	private static final char S_BASE64PAD = '=';
-	private static final byte[] S_DECODETABLE = new byte[128];
+
+	private static final char BASE64_PAD = '=';
+
+	private static final byte[] DECODETABLE = new byte[128];
+
 	static {
-		for (int i = 0;  i < S_DECODETABLE.length;  i ++) {
-			S_DECODETABLE[i] = Byte.MAX_VALUE;					// 127
+		for (int i = 0;  i < DECODETABLE.length;  i ++) {
+			DECODETABLE[i] = Byte.MAX_VALUE;					// 127
 		}
-		for (int i = 0;  i < S_BASE64CHAR.length;  i ++)		// 0 to 63
+		for (int i = 0;  i < BASE64_CHARS.length;  i ++)		// 0 to 63
 		{
-			S_DECODETABLE[S_BASE64CHAR[i]] = (byte) i;
+			DECODETABLE[BASE64_CHARS[i]] = (byte) i;
 		}
 	}
 
 	private static int decode0(char[] ibuf, byte[] obuf, int wp) {
 		int outlen = 3;
-		if (ibuf[3] == S_BASE64PAD) {
+		if (ibuf[3] == BASE64_PAD) {
 			outlen = 2;
 		}
-		if (ibuf[2] == S_BASE64PAD) {
+		if (ibuf[2] == BASE64_PAD) {
 			outlen = 1;
 		}
-		int b0 = S_DECODETABLE[ibuf[0]];
-		int b1 = S_DECODETABLE[ibuf[1]];
-		int b2 = S_DECODETABLE[ibuf[2]];
-		int b3 = S_DECODETABLE[ibuf[3]];
+		int b0 = DECODETABLE[ibuf[0]];
+		int b1 = DECODETABLE[ibuf[1]];
+		int b2 = DECODETABLE[ibuf[2]];
+		int b3 = DECODETABLE[ibuf[3]];
 		switch (outlen) {
 		  case 1:
 			obuf[wp] = (byte) (b0 << 2 & 0xfc | b1 >> 4 & 0x3);
@@ -76,7 +80,7 @@ public class Base64 {
 		int obufcount = 0;
 		for (int i = off;  i < off+len;  i ++) {
 			char ch = data[i];
-			if (ch == S_BASE64PAD || ch < S_DECODETABLE.length && S_DECODETABLE[ch] != Byte.MAX_VALUE) {
+			if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
 				ibuf[ibufcount++] = ch;
 				if (ibufcount == ibuf.length) {
 					ibufcount = 0;
@@ -118,7 +122,7 @@ public class Base64 {
 	
 			for (int j=ibufcount; j<blen; j++) {
 				char ch = ibuf[j];
-				if (ch == S_BASE64PAD || ch < S_DECODETABLE.length && S_DECODETABLE[ch] != Byte.MAX_VALUE) {
+				if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
 					ibuf[ibufcount++] = ch;
 					// as soon as we have 4 chars process them
 					if (ibufcount == 4) {
@@ -150,7 +154,7 @@ public class Base64 {
 		byte[] obuf = new byte[3];
 		for (int i = off;  i < off+len;  i ++) {
 			char ch = data[i];
-			if (ch == S_BASE64PAD || ch < S_DECODETABLE.length && S_DECODETABLE[ch] != Byte.MAX_VALUE) {
+			if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
 				ibuf[ibufcount++] = ch;
 				if (ibufcount == ibuf.length) {
 					ibufcount = 0;
@@ -186,7 +190,7 @@ public class Base64 {
 	
 			for (int j=ibufcount; j<blen; j++) {
 				char ch = ibuf[j];
-				if (ch == S_BASE64PAD || ch < S_DECODETABLE.length && S_DECODETABLE[ch] != Byte.MAX_VALUE) {
+				if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
 					ibuf[ibufcount++] = ch;
 					
 					// as sson as we have 4 chars process them
@@ -232,25 +236,25 @@ public class Base64 {
 			int i = ((data[rindex]&0xff)<<16)
 				+((data[rindex+1]&0xff)<<8)
 				+(data[rindex+2]&0xff);
-			out[windex++] = S_BASE64CHAR[i>>18];
-			out[windex++] = S_BASE64CHAR[(i>>12)&0x3f];
-			out[windex++] = S_BASE64CHAR[(i>>6)&0x3f];
-			out[windex++] = S_BASE64CHAR[i&0x3f];
+			out[windex++] = BASE64_CHARS[i>>18];
+			out[windex++] = BASE64_CHARS[(i>>12)&0x3f];
+			out[windex++] = BASE64_CHARS[(i>>6)&0x3f];
+			out[windex++] = BASE64_CHARS[i&0x3f];
 			rindex += 3;
 			rest -= 3;
 		}
 		if (rest == 1) {
 			int i = data[rindex]&0xff;
-			out[windex++] = S_BASE64CHAR[i>>2];
-			out[windex++] = S_BASE64CHAR[(i<<4)&0x3f];
-			out[windex++] = S_BASE64PAD;
-			out[windex++] = S_BASE64PAD;
+			out[windex++] = BASE64_CHARS[i>>2];
+			out[windex++] = BASE64_CHARS[(i<<4)&0x3f];
+			out[windex++] = BASE64_PAD;
+			out[windex++] = BASE64_PAD;
 		} else if (rest == 2) {
 			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[windex++] = S_BASE64CHAR[i>>10];
-			out[windex++] = S_BASE64CHAR[(i>>4)&0x3f];
-			out[windex++] = S_BASE64CHAR[(i<<2)&0x3f];
-			out[windex++] = S_BASE64PAD;
+			out[windex++] = BASE64_CHARS[i>>10];
+			out[windex++] = BASE64_CHARS[(i>>4)&0x3f];
+			out[windex++] = BASE64_CHARS[(i<<2)&0x3f];
+			out[windex++] = BASE64_PAD;
 		}
 		return new String(out, 0, windex);
 	}
@@ -274,27 +278,27 @@ public class Base64 {
 			int i = ((data[rindex]&0xff)<<16)
 				+((data[rindex+1]&0xff)<<8)
 				+(data[rindex+2]&0xff);
-			out[0] = (byte)S_BASE64CHAR[i>>18];
-			out[1] = (byte)S_BASE64CHAR[(i>>12)&0x3f];
-			out[2] = (byte)S_BASE64CHAR[(i>>6)&0x3f];
-			out[3] = (byte)S_BASE64CHAR[i&0x3f];
+			out[0] = (byte) BASE64_CHARS[i>>18];
+			out[1] = (byte) BASE64_CHARS[(i>>12)&0x3f];
+			out[2] = (byte) BASE64_CHARS[(i>>6)&0x3f];
+			out[3] = (byte) BASE64_CHARS[i&0x3f];
 			ostream.write(out, 0, 4);
 			rindex += 3;
 			rest -= 3;
 		}
 		if (rest == 1) {
 			int i = data[rindex]&0xff;
-			out[0] = (byte)S_BASE64CHAR[i>>2];
-			out[1] = (byte)S_BASE64CHAR[(i<<4)&0x3f];
-			out[2] = (byte)S_BASE64PAD;
-			out[3] = (byte)S_BASE64PAD;
+			out[0] = (byte) BASE64_CHARS[i>>2];
+			out[1] = (byte) BASE64_CHARS[(i<<4)&0x3f];
+			out[2] = (byte) BASE64_PAD;
+			out[3] = (byte) BASE64_PAD;
 			ostream.write(out, 0, 4);
 		} else if (rest == 2) {
 			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[0] = (byte)S_BASE64CHAR[i>>10];
-			out[1] = (byte)S_BASE64CHAR[(i>>4)&0x3f];
-			out[2] = (byte)S_BASE64CHAR[(i<<2)&0x3f];
-			out[3] = (byte)S_BASE64PAD;
+			out[0] = (byte) BASE64_CHARS[i>>10];
+			out[1] = (byte) BASE64_CHARS[(i>>4)&0x3f];
+			out[2] = (byte) BASE64_CHARS[(i<<2)&0x3f];
+			out[3] = (byte) BASE64_PAD;
 			ostream.write(out, 0, 4);
 		}
 	}
@@ -317,10 +321,10 @@ public class Base64 {
 		int output = 0;
 		while (rest >= 3) {
 			int i = ((data[rindex]&0xff)<<16) +((data[rindex+1]&0xff)<<8) +(data[rindex+2]&0xff);
-			out[0] = S_BASE64CHAR[i>>18];
-			out[1] = S_BASE64CHAR[(i>>12)&0x3f];
-			out[2] = S_BASE64CHAR[(i>>6)&0x3f];
-			out[3] = S_BASE64CHAR[i&0x3f];
+			out[0] = BASE64_CHARS[i>>18];
+			out[1] = BASE64_CHARS[(i>>12)&0x3f];
+			out[2] = BASE64_CHARS[(i>>6)&0x3f];
+			out[3] = BASE64_CHARS[i&0x3f];
 			writer.write(out, 0, 4);
 			rindex += 3;
 			rest -= 3;
@@ -331,17 +335,17 @@ public class Base64 {
 		}
 		if (rest == 1) {
 			int i = data[rindex]&0xff;
-			out[0] = S_BASE64CHAR[i>>2];
-			out[1] = S_BASE64CHAR[(i<<4)&0x3f];
-			out[2] = S_BASE64PAD;
-			out[3] = S_BASE64PAD;
+			out[0] = BASE64_CHARS[i>>2];
+			out[1] = BASE64_CHARS[(i<<4)&0x3f];
+			out[2] = BASE64_PAD;
+			out[3] = BASE64_PAD;
 			writer.write(out, 0, 4);
 		} else if (rest == 2) {
 			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[0] = S_BASE64CHAR[i>>10];
-			out[1] = S_BASE64CHAR[(i>>4)&0x3f];
-			out[2] = S_BASE64CHAR[(i<<2)&0x3f];
-			out[3] = S_BASE64PAD;
+			out[0] = BASE64_CHARS[i>>10];
+			out[1] = BASE64_CHARS[(i>>4)&0x3f];
+			out[2] = BASE64_CHARS[(i<<2)&0x3f];
+			out[3] = BASE64_PAD;
 			writer.write(out, 0, 4);
 		}
 	}

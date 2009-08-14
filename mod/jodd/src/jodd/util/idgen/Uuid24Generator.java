@@ -3,6 +3,7 @@
 package jodd.util.idgen;
 
 import jodd.util.MathUtil;
+import jodd.util.Base64;
 
 /**
  * UUID generator of 24 bytes long values. Generated UUIDs are not sequential.
@@ -35,7 +36,7 @@ public class Uuid24Generator {
 		return unisgnedValueOf(id1) + unisgnedValueOf(id3);
 	}
 
-	private static final char[] chars64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+	private static final char[] chars64 = Base64.BASE64_CHARS;
 	
 	private static String unisgnedValueOf(long l) {
 		char[] buf = new char[64];
