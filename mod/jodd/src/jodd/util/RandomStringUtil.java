@@ -81,10 +81,11 @@ public class RandomStringUtil {
 		}
 		int i = 0;
 		int len = 0;
+		int lens[] = new int[ranges.length];
 		while (i < ranges.length) {
 			int gap = ranges[i + 1] - ranges[i] + 1;
 			len += gap;
-			ranges[i + 1] = (char) len;
+			lens[i] = len;
 			i += 2;
 		}
 
@@ -93,10 +94,10 @@ public class RandomStringUtil {
 			char c = 0;
 			int r = rnd.nextInt(len);
 			for (i = 0; i < ranges.length; i += 2) {
-				if (r < ranges[i + 1]) {
+				if (r < lens[i]) {
 					r += ranges[i];
 					if (i != 0) {
-						r -= ranges[i - 1];
+						r -= lens[i - 2];
 					}
 					c = (char) r;
 					break;
@@ -107,10 +108,8 @@ public class RandomStringUtil {
 		return new String(result);
 	}
 
-
 	protected static char[] alphaRange = new char[] {'A', 'Z', 'a', 'z'};
 	protected static char[] alphaNumericRange = new char[] {'0', '9', 'A', 'Z', 'a', 'z'};
-
 
 	/**
 	 * Creates random string of characters.
