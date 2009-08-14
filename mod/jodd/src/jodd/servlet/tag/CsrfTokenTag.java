@@ -18,6 +18,14 @@ import java.io.IOException;
  */
 public class CsrfTokenTag extends SimpleTagSupport {
 
+	protected String name;
+	/**
+	 * Specifies token name.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public void doTag() throws IOException {
 		JspContext jspContext = this.getJspContext();
@@ -26,6 +34,9 @@ public class CsrfTokenTag extends SimpleTagSupport {
 		HttpServletRequest request = (HttpServletRequest) ((PageContext) jspContext).getRequest();
 		HttpSession session = request.getSession();
 		String value = CsrfShield.prepareCsrfToken(session);
-		jspContext.getOut().write("<input type=\"hidden\" name=\"" + CsrfShield.CSRF_TOKEN_NAME + "\" value=\"" + value + "\"/>");
+		if (name == null) {
+			name = CsrfShield.CSRF_TOKEN_NAME;
+		}
+		jspContext.getOut().write("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value + "\"/>");
 	}
 }

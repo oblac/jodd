@@ -2,6 +2,8 @@
 
 package jodd.util.idgen;
 
+import jodd.util.MathUtil;
+
 /**
  * UUID generator of 24 bytes long values. Generated UUIDs are not sequential.
  */
@@ -24,7 +26,7 @@ public class Uuid24Generator {
 	public String generate() {
 		long id1 = System.currentTimeMillis() & 0xFFFFFFFFL;
 		long id2 = System.identityHashCode(this);
-		long id3 = jodd.util.MathUtil.randomLong(-0x80000000L, 0x80000000L) & 0xFFFFFFFFL;
+		long id3 = MathUtil.randomLong(-0x80000000L, 0x80000000L) & 0xFFFFFFFFL;
 
 		id1 <<= 16;
 		id1 += (id2 & 0xFFFF0000L) >> 16;
