@@ -5,9 +5,9 @@ package jodd.madvoc.result;
 import jodd.madvoc.ActionRequest;
 import jodd.servlet.UrlEncoder;
 import jodd.servlet.DispatcherUtil;
+import jodd.util.RandomStringUtil;
 
 import javax.servlet.http.HttpSession;
-import java.util.Random;
 
 /**
  * Process move results.
@@ -18,16 +18,13 @@ public class MoveResult extends ActionResult {
 
 	public MoveResult() {
 		super(NAME);
-		random = new Random(System.currentTimeMillis());
 	}
-
-	protected Random random;
 
 	/**
 	 * Returns unique id, random long value.
 	 */
 	protected String generateUniqueId() {
-		return String.valueOf(random.nextLong());
+		return RandomStringUtil.randomAlphaNumeric(32);
 	}
 
 	/**

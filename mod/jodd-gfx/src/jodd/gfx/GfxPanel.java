@@ -179,7 +179,7 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 		delayer.sleep(nanos);
 	}
 
-	protected Random rnd = new Random(System.currentTimeMillis());
+	protected Random rnd = new Random();
 
 	/**
 	 * Returns random int from range [0, max).

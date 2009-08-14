@@ -11,7 +11,6 @@ public class CharUtil {
 
 	// ---------------------------------------------------------------- to byte array
 
-
 	/**
 	 * Converts char array into byte array by stripping high byte.
 	 */

@@ -14,7 +14,7 @@ public class RefCompare {
 	private static final int TOTAL_GETS = TOTAL_ELEMENTS * 1000;
 
 	public static void main(String[] args) {
-		Random r = new Random(System.currentTimeMillis());
+		Random r = new Random();
 
 //		Map m = new jodd.util.collection.ReferenceMap();
 		Map m = new jodd.util.ref.ReferenceMap(STRONG, SOFT);

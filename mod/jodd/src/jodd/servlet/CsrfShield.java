@@ -2,7 +2,7 @@
 
 package jodd.servlet;
 
-import jodd.util.idgen.Uuid24Generator;
+import jodd.util.RandomStringUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +51,7 @@ public class CsrfShield {
 		String value;
 		boolean unique;
 		do {
-			value = Uuid24Generator.generateUUID();
+			value = RandomStringUtil.randomAlphaNumeric(32);
 			unique = tokenSet.add(new Token(value, timeToLive));
 		} while (!unique);
 		return value;
