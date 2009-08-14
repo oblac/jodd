@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.io.Serializable;
 
 /**
  * Shields agains CSRF attacks.
@@ -109,7 +110,8 @@ C	 */
 	/**
 	 * Csrf Token.
 	 */
-	public static class Token {
+	public static class Token implements Serializable {
+
 		protected final String value;
 		protected final long validUntil;
 
@@ -134,6 +136,24 @@ C	 */
 		 */
 		public String getValue() {
 			return value;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+			Token token = (Token) o;
+			return value.equals(token.value);
+
+		}
+
+		@Override
+		public int hashCode() {
+			return value.hashCode();
 		}
 	}
 
