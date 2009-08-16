@@ -45,35 +45,43 @@ public class TypeConverterManager {
 		register(String.class, new StringConverter());
 		register(String[].class, new StringArrayConverter());
 
-		register(Integer.class, new IntegerConverter());
-		register(int.class, new IntegerConverter());
+		IntegerConverter integerConverter = new IntegerConverter();
+		register(Integer.class, integerConverter);
+		register(int.class, integerConverter);
 		register(MutableInteger.class, new MutableIntegerConverter());
 
-		register(Short.class, new ShortConverter());
-		register(short.class, new ShortConverter());
+		ShortConverter shortConverter = new ShortConverter();
+		register(Short.class, shortConverter);
+		register(short.class, shortConverter);
 		register(MutableShort.class, new MutableShortConverter());
 
-		register(Long.class, new LongConverter());
-		register(long.class, new LongConverter());
+		LongConverter longConverter = new LongConverter();
+		register(Long.class, longConverter);
+		register(long.class, longConverter);
 		register(MutableLong.class, new MutableLongConverter());
 
-		register(Byte.class, new ByteConverter());
-		register(byte.class, new ByteConverter());
+		ByteConverter byteConverter = new ByteConverter();
+		register(Byte.class, byteConverter);
+		register(byte.class, byteConverter);
 		register(MutableByte.class, new MutableByteConverter());
 
-		register(Float.class, new FloatConverter());
-		register(float.class, new FloatConverter());
+		FloatConverter floatConverter = new FloatConverter();
+		register(Float.class, floatConverter);
+		register(float.class, floatConverter);
 		register(MutableFloat.class, new MutableFloatConverter());
 
-		register(Double.class, new DoubleConverter());
-		register(double.class, new DoubleConverter());
+		DoubleConverter doubleConverter = new DoubleConverter();
+		register(Double.class, doubleConverter);
+		register(double.class, doubleConverter);
 		register(MutableDouble.class, new MutableDoubleConverter());
 
-		register(Boolean.class, new BooleanConverter());
-		register(boolean.class, new BooleanConverter());
+		BooleanConverter booleanConverter = new BooleanConverter();
+		register(Boolean.class, booleanConverter);
+		register(boolean.class, booleanConverter);
 
-		register(Character.class, new CharacterConverter());
-		register(char.class, new CharacterConverter());
+		CharacterConverter characterConverter = new CharacterConverter();
+		register(Character.class, characterConverter);
+		register(char.class, characterConverter);
 
 		register(byte[].class, new ByteArrayConverter());
 		register(short[].class, new ShortArrayConverter());
