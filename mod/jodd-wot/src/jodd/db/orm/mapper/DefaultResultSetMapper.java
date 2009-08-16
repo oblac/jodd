@@ -71,8 +71,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	// ---------------------------------------------------------------- ctor
 
-	public DefaultResultSetMapper(ResultSet rs, DbOrmManager ormManager) {
-		this(rs, null, ormManager);
+	public DefaultResultSetMapper(ResultSet rs, DbOrmManager dbOrmManager) {
+		this(rs, null, dbOrmManager);
 	}
 
 	/**
@@ -309,7 +309,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			}
 			if ((tableName == null) || (resultTableName.equals(tableName) == true)) {
 				if (resultColumns.contains(columnName) == false) {
-					String propertyName = dbOrmManager.lookupType(currentType).getPropertyName(columnName);
+					DbEntityDescriptor ded = dbOrmManager.lookupType(currentType);
+					String propertyName = ded.getPropertyName(columnName);
 					if (propertyName != null) {
 						if (result[currentResult] == null) {
 							result[currentResult] = newInstance(currentType);
