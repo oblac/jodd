@@ -247,7 +247,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	/**
 	 * Reads column value from result set. Since this method may be called more then once for
-	 * the same column, it caches column value.
+	 * the same column, it caches column values.
 	 */
 	protected Object readColumnValue(int colNdx, Class destinationType) {
 		if (colNdx != cachedColumnNdx) {
@@ -296,7 +296,6 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				continue;
 			}
 
-			//Object value = readColumnValue(colNdx);   // SqlTypeManager added
 			String columnName = columnNames[colNdx];
 			String tableName = tableNames[colNdx];
 			String resultTableName = typesTableNames[currentResult];			
@@ -304,7 +303,6 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			if (resultTableName == null) {
 				// match: simple type
 				result[currentResult] = readColumnValue(colNdx, currentType);
-				//result[currentResult] = ReflectUtil.castType(value, currentType); // SqlTypeManager added
 				resultUsage[currentResult] = true;
 				colNdx++;
 				currentResult++; resultColumns.clear();
@@ -322,7 +320,6 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 										BeanUtil.setDeclaredPropertySilent(result[currentResult], propertyName, value) :
 										BeanUtil.hasDeclaredProperty(result[currentResult], propertyName);
 */
-						//if (BeanUtil.hasDeclaredProperty(result[currentResult], propertyName) == true) {   // SqlTypeManager added
 						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
