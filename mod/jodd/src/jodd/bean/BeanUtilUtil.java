@@ -21,6 +21,7 @@ public class BeanUtilUtil {
 	 * Invokes <code>setXxx()</code> method with appropriate conversion if available.
 	 * It is assumed that all provided arguments are valid.
 	 */
+	@SuppressWarnings({"unchecked"})
 	protected static void invokeSetter(Object bean, Method m, Object value) {
 		try {
 			Class[] paramTypes = m.getParameterTypes();
@@ -46,6 +47,7 @@ public class BeanUtilUtil {
 	/**
 	 * Sets field value.
 	 */
+	@SuppressWarnings({"unchecked"})
 	protected static void setField(Object bean, Field f, Object value) {
 		try {
 			Class type = f.getType();
@@ -94,6 +96,7 @@ public class BeanUtilUtil {
 	 * Sets the array element forced. If index is greater then arrays length, array will be expanded to the index.
 	 * If speed is critical, it is better to allocate an array with proper size before using this method. 
 	 */
+	@SuppressWarnings({"unchecked"})
 	protected static void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
 		Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
