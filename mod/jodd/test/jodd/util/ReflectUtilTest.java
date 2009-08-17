@@ -12,6 +12,8 @@ import jodd.util.testdata.B;
 import jodd.util.testdata.C;
 import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
+import jodd.mutable.MutableInteger;
+import jodd.typeconverter.JDateTimeConverter;
 
 public class ReflectUtilTest extends TestCase {
 
@@ -312,4 +314,23 @@ public class ReflectUtilTest extends TestCase {
 		fs = ReflectUtil.getSupportedFields(E.class);
 		assertEquals(5, fs.length);
 	}
+
+
+	public void testCast() {
+
+		String s = "123";
+		Integer d = ReflectUtil.castType(s, Integer.class);
+		assertEquals(123, d.intValue());
+
+		s = ReflectUtil.castType(d, String.class);
+		assertEquals("123", s);
+
+		MutableInteger md = ReflectUtil.castType(s, MutableInteger.class);
+		assertEquals(123, md.intValue());
+
+		B b = new B();
+		A a = ReflectUtil.castType(b, A.class);
+		assertEquals(a, b);
+	}
+
 }

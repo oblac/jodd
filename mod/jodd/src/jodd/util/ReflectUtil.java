@@ -4,6 +4,7 @@ package jodd.util;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
+import jodd.typeconverter.TypeConversionException;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
@@ -284,17 +285,25 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Casts an object to destination type using type conversion if available.
+	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
 	 */
-	public static Object castType(Object value, Class destinationType) {
-		if ((value != null) && (isInstanceOf(value, destinationType) == false)) {
-			TypeConverter converter = TypeConverterManager.lookup(destinationType);
-			if (converter == null) {
-				throw new ClassCastException("Unable to cast value '" + value + "' to type: '" + destinationType + "'.");
-			}
-			return converter.convert(value);
+	@SuppressWarnings({"unchecked"})
+	public static <T> T castType(Object value, Class<T> destinationType) {
+		if (value == null) {
+			return null;
 		}
-		return value;
+		TypeConverter converter = TypeConverterManager.lookup(destinationType);
+		if (converter == null) {
+			if (isInstanceOf(value, destinationType) == true) {
+				return (T) value;
+			}
+			throw new ClassCastException("Unable to cast value to type: '" + destinationType + "'.");
+		}
+		try {
+			return (T) converter.convert(value);
+		} catch (TypeConversionException tcex) {
+			throw new ClassCastException("Unable to convert value to type: '" + destinationType + "'.:" + tcex.toString());
+		}
 	}
 
 
@@ -864,7 +873,7 @@ public class ReflectUtil {
 	 * <table border="1">
 	 * <tr>
 	 * <th><code>type</code></th>
-	 * <th><code>{@link #toClass(Type) getSimpleType}(type)</code></th>
+	 * <th><code>getSimpleType(type)</code></th>
 	 * </tr>
 	 * <tr>
 	 * <td><code>String</code></td>
