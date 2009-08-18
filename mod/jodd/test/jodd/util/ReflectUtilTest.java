@@ -12,8 +12,14 @@ import jodd.util.testdata.B;
 import jodd.util.testdata.C;
 import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
+import jodd.util.subclass.SBase;
+import jodd.util.subclass.SOne;
+import jodd.util.subclass.IOne;
+import jodd.util.subclass.STwo;
+import jodd.util.subclass.ITwo;
+import jodd.util.subclass.IBase;
+import jodd.util.subclass.IExtra;
 import jodd.mutable.MutableInteger;
-import jodd.typeconverter.JDateTimeConverter;
 
 public class ReflectUtilTest extends TestCase {
 
@@ -331,6 +337,32 @@ public class ReflectUtilTest extends TestCase {
 		B b = new B();
 		A a = ReflectUtil.castType(b, A.class);
 		assertEquals(a, b);
+	}
+
+
+	public void testIsSubclassAndInterface() {
+		assertTrue(ReflectUtil.isSubclass(SBase.class, SBase.class));
+
+		assertTrue(ReflectUtil.isSubclass(SOne.class, SBase.class));
+		assertTrue(ReflectUtil.isSubclass(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isSubclass(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isSubclass(SOne.class, SOne.class));
+
+		assertTrue(ReflectUtil.isSubclass(STwo.class, SBase.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isSubclass(STwo.class, STwo.class));
+		assertFalse(ReflectUtil.isInterfaceImpl(STwo.class, STwo.class));
 	}
 
 }

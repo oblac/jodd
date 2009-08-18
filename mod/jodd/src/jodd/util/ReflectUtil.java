@@ -41,7 +41,6 @@ public class ReflectUtil {
 	/** an empty object array */
 	public static final Type[] NO_TYPES = new Type[0];
 
-
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
 	public static final String METHOD_SET_PREFIX = "set";
@@ -250,22 +249,29 @@ public class ReflectUtil {
 	 * are examined against second class. Method is not symmetric.
 	 */
 	public static boolean isSubclass(Class thisClass, Class target) {
-		if (thisClass == target) {
-			return true;
-		}
-		if ((thisClass == null) || (target == null)){
-			return false;
+		if (target.isInterface() != false) {
+			return isInterfaceImpl(thisClass, target);
 		}
 		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
 			if (x == target) {
 				return true;
 			}
-			if (target.isInterface() == true) {
-				Class[] interfaces = x.getInterfaces();
-				for (Class anInterface : interfaces) {
-					if (isSubclass(anInterface, target)) {
-						return true;
-					}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if provided class is interface implementation.
+	 */
+	public static boolean isInterfaceImpl(Class thisClass, Class targetInterface) {
+		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
+			Class[] interfaces = x.getInterfaces();
+			for (Class i : interfaces) {
+				if (i == targetInterface) {
+					return true;
+				}
+				if (isInterfaceImpl(i, targetInterface)) {
+					return true;
 				}
 			}
 		}
@@ -292,17 +298,27 @@ public class ReflectUtil {
 		if (value == null) {
 			return null;
 		}
+		if (destinationType.isEnum()) {
+			Object[] enums = destinationType.getEnumConstants();
+			String valStr = value.toString();
+			for (Object e : enums) {
+				if (e.toString().equals(valStr)) {
+					return (T) e;
+				}
+			}
+			throw new ClassCastException("Unable to cast enumeration: '" + destinationType.getName() + "'.");
+		}
 		TypeConverter converter = TypeConverterManager.lookup(destinationType);
 		if (converter == null) {
 			if (isInstanceOf(value, destinationType) == true) {
 				return (T) value;
 			}
-			throw new ClassCastException("Unable to cast value to type: '" + destinationType + "'.");
+			throw new ClassCastException("Unable to cast value to type: '" + destinationType.getName() + "'.");
 		}
 		try {
 			return (T) converter.convert(value);
 		} catch (TypeConversionException tcex) {
-			throw new ClassCastException("Unable to convert value to type: '" + destinationType + "'.:" + tcex.toString());
+			throw new ClassCastException("Unable to convert value to type: '" + destinationType.getName() + "'.:" + tcex.toString());
 		}
 	}
 
@@ -606,13 +622,6 @@ public class ReflectUtil {
 
 
 	/**
-	 * Instantiates a new class.
-	 */
-	public static <T> T instantiate(Class<T> clazz) throws IllegalAccessException, InstantiationException {
-		return clazz.newInstance();
-	}
-
-	/**
 	 * Creates new intances including for common mutable classes that do not have a default constructor. 
 	 * more user-friendly. It examines if class is a map, list,
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
@@ -656,6 +665,10 @@ public class ReflectUtil {
 		}
 		if (type == Character.class) {
 			return Character.valueOf((char) 0);
+		}
+
+		if (type.isEnum() == true) {
+			return type.getEnumConstants()[0];
 		}
 
 		if (type.isArray() == true) {

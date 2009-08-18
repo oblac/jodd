@@ -232,4 +232,12 @@ public class JDateTimeMoreTest extends TestCase {
 		assertEquals(123, jdt.getMillisecond());
 	}
 
+
+	public void testMillis0() {
+		JDateTime jdt = new JDateTime(0);
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTimeInMillis(0);
+		assertEquals(gc.get(Calendar.HOUR), jdt.getHour());
+	}
+
 }
