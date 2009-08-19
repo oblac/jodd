@@ -96,6 +96,18 @@ public class DbEntitySqlTest extends TestCase {
 		checkBadGirl2(b);
 	}
 
+	public void testUpdateColumn() {
+		BadGirl bg = new BadGirl(Integer.valueOf(1), "sanja", "c++");
+		DbSqlBuilder b = DbEntitySql.updateColumn(bg, "fooname", "Anja");
+		assertEquals(
+				"update GIRL BadGirl set BadGirl.NAME=:p0 where (BadGirl.ID=:badGirl.fooid)",
+				b.generateQuery());
+		Map<String, ParameterValue> params = b.getQueryParameters();
+		assertEquals(2, params.entrySet().size());
+		assertEquals(Integer.valueOf(1), params.get("badGirl.fooid").getValue());
+		assertEquals("Anja", params.get("p0").getValue());
+	}
+
 	public void testDelete() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.delete(g);

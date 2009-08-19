@@ -23,6 +23,7 @@ public class DbEntitySql {
 	private static final String UPDATE = "update ";
 	private static final String SELECT = "select ";
 	private static final String FROM = " from ";
+	private static final String SET = " set ";
 	private static final String SELECT_COUNT_1_FROM = "select count(1) from ";
 
 	// ---------------------------------------------------------------- insert
@@ -60,6 +61,15 @@ public class DbEntitySql {
 		String tableRef = createTableRefName(entity);
 		return sql()._(UPDATE).table(entity, tableRef).setAll(tableRef, entity)._(WHERE).matchIds(tableRef, entity);
 	}
+
+	/**
+	 * Creates UPDATE query for single column of an entity that is matched by id.
+	 */
+	public static DbSqlBuilder updateColumn(Object entity, String columnRef, Object value) {
+		String tableRef = createTableRefName(entity);
+		return sql()._(UPDATE).table(entity, tableRef)._(SET).column(tableRef, columnRef)._(EQUALS).value(value)._(WHERE).matchIds(tableRef, entity);
+	}
+
 
 
 	// ---------------------------------------------------------------- delete
