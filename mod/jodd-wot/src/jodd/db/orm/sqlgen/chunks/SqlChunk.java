@@ -3,6 +3,7 @@
 package jodd.db.orm.sqlgen.chunks;
 
 import jodd.db.orm.DbEntityDescriptor;
+import jodd.db.orm.DbEntityColumnDescriptor;
 import jodd.db.orm.sqlgen.DbSqlBuilderException;
 import jodd.db.orm.sqlgen.TemplateData;
 import jodd.util.CharUtil;
@@ -173,12 +174,12 @@ public abstract class SqlChunk implements Cloneable {
 	/**
 	 * Defines parameter with name and its value.
 	 */
-	protected void defineParameter(StringBuilder query, String name, Object value) {
+	protected void defineParameter(StringBuilder query, String name, Object value, DbEntityColumnDescriptor dec) {
 		if (name == null) {
 			name = templateData.getNextParameterName();
 		}
 		query.append(':').append(name);
-		templateData.addParameter(name, value);
+		templateData.addParameter(name, value, dec);
 	}
 
 	/**

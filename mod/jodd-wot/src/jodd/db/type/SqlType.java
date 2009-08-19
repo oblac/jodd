@@ -13,17 +13,11 @@ import java.sql.ResultSet;
  */
 public abstract class SqlType<T> {
 
-	private Class sqlType;
+	private Class<T> sqlType;
 
+	@SuppressWarnings({"unchecked"})
 	protected SqlType() {
 		this.sqlType = ReflectUtil.getGenericSupertype(this.getClass(), 0);
-	}
-
-	/**
-	 * Returns sql type for current implementation.
-	 */
-	public final Class getSqlType() {
-		return sqlType;
 	}
 
 	/**
@@ -35,4 +29,24 @@ public abstract class SqlType<T> {
 	 * Returns value from result set.
 	 */
 	public abstract T get(ResultSet rs, int index) throws SQLException;
+
+	/**
+	 * Stores value in database. Value is casted to sql type.
+	 */
+	public void storeValue(PreparedStatement st, int index, Object value) throws SQLException {
+		T t = ReflectUtil.castType(value, sqlType);
+		set(st, index, t);
+	}
+
+	/**
+	 * Reads value from database. Value is casted to destination type.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType) throws SQLException {
+		T t = get(rs, index);
+		if (destinationType == null) {
+			return (E) t;
+		}
+		return ReflectUtil.castType(t, destinationType);
+	}
 }

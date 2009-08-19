@@ -100,6 +100,9 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
 	protected static int cacheThreshold = 3;
 
+	/**
+	 * Sets the minimal number of sql chunks that query must contains so to be cached. 
+	 */
 	public static void setCacheThreshold(int ct) {
 		if (ct < 1) {
 			throw new DbSqlBuilderException("Cache threshold can't be less then 1 (" + ct + ").");
@@ -249,11 +252,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return columnData;
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map<String, Object> getQueryParameters() {
+	public Map<String, ParameterValue> getQueryParameters() {
 		return parameters;
 	}
 

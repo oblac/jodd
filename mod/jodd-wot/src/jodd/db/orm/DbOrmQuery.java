@@ -6,6 +6,7 @@ import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.orm.mapper.DefaultResultSetMapper;
 import jodd.db.orm.mapper.ResultSetMapper;
+import jodd.db.orm.sqlgen.ParameterValue;
 import jodd.util.StringUtil;
 
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * A simple ORM extension for {@link DbQuery}.
@@ -24,9 +26,6 @@ import java.util.Set;
  * <li><i>auto</i> mode - when result set is mapped to provided types, and</li>
  * <li><i>mapped</i> mode - requires explicit mapping definitions.</li>
  * </ul>
- *
- * <p>
- * By default, after invocation of listXxx() methods, query are not closed.
  *
  */
 public class DbOrmQuery extends DbQuery {
@@ -104,12 +103,23 @@ public class DbOrmQuery extends DbQuery {
 	@Override
 	protected void prepareQuery() {
 		super.prepareQuery();
-		if (sqlgen != null) {
-			String[] joinHints = sqlgen.getJoinHints();
-			if (joinHints != null) {
-				withHints(sqlgen.getJoinHints());
-			}
-			setMap(sqlgen.getQueryParameters());
+		if (sqlgen == null) {
+			return;
+		}
+		String[] joinHints = sqlgen.getJoinHints();
+		if (joinHints != null) {
+			withHints(joinHints);
+		}
+		// insert parameters
+		Map<String, ParameterValue> parameters = sqlgen.getQueryParameters();
+		if (parameters == null) {
+			return;
+		}
+		for (Map.Entry<String, ParameterValue> entry : parameters.entrySet()) {
+			String paramName = entry.getKey();
+			ParameterValue param = entry.getValue();
+			DbEntityColumnDescriptor dec = param.getColumnDescriptor();
+			setObject(paramName, param.getValue(), dec == null ?  null : dec.getSqlTypeClass());
 		}
 	}
 

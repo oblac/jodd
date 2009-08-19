@@ -67,10 +67,6 @@ public class DbQuery extends DbQueryBase {
 		this(DbDefault.sessionProvider.getDbSession(), sqlString);
 	}
 
-
-
-
-
 	// ---------------------------------------------------------------- additional statement parameters
 
 	/**
@@ -85,7 +81,7 @@ s	 */
 	public void clearParameters() {
 		init();
 		if (preparedStatement == null) {
-			return;     // ignore
+			return;		// ignore
 		}
 		try {
 			preparedStatement.clearParameters();
@@ -905,18 +901,37 @@ s	 */
 
 	// ---------------------------------------------------------------- object ex
 
-	@SuppressWarnings({"unchecked"})
+	/**
+	 * @see #setObject(String, Object, Class)
+	 */
 	public void setObject(int index, Object value) {
+		setObject(index, value, null);
+	}
+
+	/**
+	 * Sets object parameter in an advanced way.
+	 * <p>
+	 * First, it checks if object is <code>null</code> and invokes <code>setNull</code> if so.
+	 * If object is not <code>null</code>, it tries to resolve {@link SqlType sql type} (by looking up
+	 * or using provided class) and use it for setting data.
+	 * If sql type is not found, default <code>setObject</code> is invoked.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public void setObject(int index, Object value, Class<? extends SqlType> sqlTypeClass) {
 		init();
 		if (value == null) {
 			setNull(index, Types.NULL);
 			return;
 		}
-		Class type = value.getClass();
-		SqlType sqlType = SqlTypeManager.lookup(type);
+		SqlType sqlType;
+		if (sqlTypeClass != null) {
+			sqlType = SqlTypeManager.lookupSqlType(sqlTypeClass);
+		} else {
+			sqlType = SqlTypeManager.lookup(value.getClass());
+		}
 		try {
 			if (sqlType != null) {
-				sqlType.set(preparedStatement, index, value);
+				sqlType.storeValue(preparedStatement, index, value);
 			} else {
 				preparedStatement.setObject(index, value);
 			}
@@ -925,15 +940,21 @@ s	 */
 		}
 	}
 
+	/**
+	 * @see #setObject(String, Object, Class)
+	 */
 	public void setObject(String param, Object value) {
+		setObject(param, value, null);
+	}
+
+	/**
+	 * @see #setObject(String, Object, Class) 
+	 */
+	public void setObject(String param, Object value, Class<? extends SqlType> sqlTypeClass) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
-		try {
-			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setObject(positions.get(i), value);
-			}
-		} catch (SQLException sex) {
-			throwSetParamError(param, sex);
+		for (int i = 0; i < positions.size(); i++) {
+			setObject(positions.get(i), value, sqlTypeClass);
 		}
 	}
 

@@ -9,6 +9,7 @@ import jodd.db.orm.test.BadBoy;
 import jodd.db.orm.test.BadGirl;
 import jodd.db.orm.test.Girl;
 import jodd.db.orm.sqlgen.DbSqlBuilder;
+import jodd.db.orm.sqlgen.ParameterValue;
 import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
 
 import java.util.Map;
@@ -219,10 +220,10 @@ public class DbSqlTemplateTest extends TestCase {
 		boy.girlId = 3;
 		st = sql("$T{boy} where $M{boy=boy}").use("boy", boy);
 		assertEquals("BOY boy where (boy.GIRL_ID=:boy.girlId and boy.ID=:boy.id)", st.generateQuery());
-		Map map = st.getQueryParameters();
+		Map<String, ParameterValue> map = st.getQueryParameters();
 		assertEquals(2, map.size());
-		assertEquals(Integer.valueOf(1), map.get("boy.id"));
-		assertEquals(Integer.valueOf(3), map.get("boy.girlId"));
+		assertEquals(Integer.valueOf(1), map.get("boy.id").getValue());
+		assertEquals(Integer.valueOf(3), map.get("boy.girlId").getValue());
 
 
 		boy.id = 4;
@@ -231,8 +232,8 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY b where (b.GIRL_ID=:boy.girlId and b.ID=:boy.id)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertEquals(2, map.size());
-		assertEquals(Integer.valueOf(4), map.get("boy.id"));
-		assertEquals(Integer.valueOf(1), map.get("boy.girlId"));
+		assertEquals(Integer.valueOf(4), map.get("boy.id").getValue());
+		assertEquals(Integer.valueOf(1), map.get("boy.girlId").getValue());
 
 		BadBoy badBoy = new BadBoy();
 		st = sql("$T{boy b} where $M{b=boy}").use("boy", badBoy);
@@ -252,15 +253,15 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY b where (b.ID=:badBoy.ajdi and b.GIRL_ID=:badBoy.girlId)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertEquals(2, map.size());
-		assertEquals(Integer.valueOf(4), map.get("badBoy.ajdi"));
-		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId"));
+		assertEquals(Integer.valueOf(4), map.get("badBoy.ajdi").getValue());
+		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId").getValue());
 
 		badBoy.ajdi = null;
 		st = sql("$T{boy b} where $M{b=boy.*}").use("boy", badBoy);
 		assertEquals("BOY b where (b.ID=:badBoy.ajdi and b.GIRL_ID=:badBoy.girlId and b.NAME=:badBoy.nejm)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertEquals(3, map.size());
-		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId"));
+		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId").getValue());
 	}
 
 

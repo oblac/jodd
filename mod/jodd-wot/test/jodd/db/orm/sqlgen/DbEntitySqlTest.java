@@ -27,39 +27,39 @@ public class DbEntitySqlTest extends TestCase {
 	}
 
 	protected void checkGirl(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(3, params.entrySet().size());
-		assertEquals(Integer.valueOf(1), params.get("girl.id"));
-		assertEquals("sanja", params.get("girl.name"));
-		assertEquals("c++", params.get("girl.speciality"));
+		assertEquals(Integer.valueOf(1), params.get("girl.id").getValue());
+		assertEquals("sanja", params.get("girl.name").getValue());
+		assertEquals("c++", params.get("girl.speciality").getValue());
 	}
 	protected void checkBadGirl1(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(2, params.entrySet().size());
-		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid"));
-		assertEquals(".net", params.get("badGirl.foospeciality"));
+		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid").getValue());
+		assertEquals(".net", params.get("badGirl.foospeciality").getValue());
 	}
 	protected void checkBadGirl2(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(3, params.entrySet().size());
-		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid"));
-		assertEquals(".net", params.get("badGirl.foospeciality"));
-		assertNull(params.get("badGirl.fooname"));
+		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid").getValue());
+		assertEquals(".net", params.get("badGirl.foospeciality").getValue());
+		assertNull(params.get("badGirl.fooname").getValue());
 	}
 	protected void checkBadGirl3(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(1, params.entrySet().size());
-		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid"));
+		assertEquals(Integer.valueOf(2), params.get("badGirl.fooid").getValue());
 	}
 	protected void checkBadGirl4(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(1, params.entrySet().size());
-		assertEquals(Integer.valueOf(2), params.get("p0"));
+		assertEquals(Integer.valueOf(2), params.get("p0").getValue());
 	}
 	protected void checkGirl1(DbSqlBuilder b) {
-		Map<String, Object> params = b.getQueryParameters();
+		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(1, params.entrySet().size());
-		assertEquals("sanja", params.get("p0"));
+		assertEquals("sanja", params.get("p0").getValue());
 	}
 
 	public void testInsert() {

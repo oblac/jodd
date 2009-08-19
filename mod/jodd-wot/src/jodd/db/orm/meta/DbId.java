@@ -2,6 +2,8 @@
 
 package jodd.db.orm.meta;
 
+import jodd.db.type.SqlType;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,5 +22,10 @@ public @interface DbId {
 	 * Name of bean to inject.
 	 */
 	String value() default "";
+
+	/**
+	 * SqlType class.
+	 */
+	Class<SqlType> sqlType() default SqlType.class;
 
 }

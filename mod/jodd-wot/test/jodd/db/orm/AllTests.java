@@ -17,6 +17,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(DbSlqBuilderTest.class);
 		addTestSuite(JointHintResolverTest.class);
 		addTestSuite(DbEntitySqlTest.class);
+		addTestSuite(MappingTest.class);
 	}
 
 	public static Test suite() {

@@ -7,6 +7,7 @@ import jodd.db.orm.ColumnData;
 import jodd.db.orm.DbEntityDescriptor;
 import jodd.db.orm.DbOrmManager;
 import jodd.db.orm.DbSqlGenerator;
+import jodd.db.orm.DbEntityColumnDescriptor;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 
@@ -25,26 +26,26 @@ public class DbEntitySearcher implements DbSqlGenerator {
 	protected final Object entity;
 	protected final ClassDescriptor entityClassDescriptor;
 	protected final DbOrmManager dbOrmManager;
-	protected final DbEntityDescriptor descriptor;
+	protected final DbEntityDescriptor ded;
 
 	public DbEntitySearcher(Object entity) {
 		this.entity = entity;
 		this.dbOrmManager = DbOrmManager.getInstance();
-		this.descriptor = dbOrmManager.lookupType(entity.getClass());
-		if (descriptor == null) {
+		this.ded = dbOrmManager.lookupType(entity.getClass());
+		if (ded == null) {
 			throw new DbSqlException("Type '" + entity.getClass() + "' is not an database entity.");
 		}
 		entityClassDescriptor = ClassIntrospector.lookup(entity.getClass());
 	}
 
-	protected Map<String, Object> queryParameters = new HashMap<String, Object>();
+	protected Map<String, ParameterValue> queryParameters = new HashMap<String, ParameterValue>();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String generateQuery() {
 		StringBuilder query = new StringBuilder("select * from ");
-		query.append(descriptor.getTableName());
+		query.append(ded.getTableName());
 
 		Field[] fields = entityClassDescriptor.getAllFields(true);
 		boolean firstCondition = true;
@@ -77,11 +78,14 @@ public class DbEntitySearcher implements DbSqlGenerator {
 	 * @return <code>true</code> if condition query is generated, <code>false</code> otherwise.
 	 */
 	protected boolean forEachField(StringBuilder query, Field field, Object value) {
-		String columnName = descriptor.getColumnName(field.getName());
+		String columnName = ded.getColumnName(field.getName());
+		DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
 		if (value instanceof String) {
 			query.append(columnName).append(" like :").append(columnName);
-			queryParameters.put(columnName, '%' + ((String) value) + '%');
-		} else if (value instanceof Collection) {
+			queryParameters.put(columnName, new ParameterValue('%' + ((String) value) + '%', dec));
+			return true;
+		}
+		if (value instanceof Collection) {
 			Collection collection = (Collection) value;
 			if (collection.isEmpty() == true) {
 				return false;
@@ -96,21 +100,21 @@ public class DbEntitySearcher implements DbSqlGenerator {
 				}
 				String name = columnName + c;
 				query.append(':').append(name);
-				queryParameters.put(name, value);
+				queryParameters.put(name, new ParameterValue(value, dec));
 				c++;
 			}
 			query.append(')');
-		} else {
-			query.append(columnName).append("=:").append(columnName);
-			queryParameters.put(columnName, value);
+			return true;
 		}
+		query.append(columnName).append("=:").append(columnName);
+		queryParameters.put(columnName, new ParameterValue(value, dec));
 		return true;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, Object> getQueryParameters() {
+	public Map<String, ParameterValue> getQueryParameters() {
 		return queryParameters;
 	}
 

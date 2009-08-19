@@ -7,6 +7,7 @@ import jodd.db.orm.ColumnData;
 import jodd.db.orm.DbEntityDescriptor;
 import jodd.db.orm.DbOrmManager;
 import jodd.db.orm.DbOrmException;
+import jodd.db.orm.DbEntityColumnDescriptor;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
 import jodd.util.ReflectUtil;
@@ -249,18 +250,24 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	 * Reads column value from result set. Since this method may be called more then once for
 	 * the same column, it caches column values.
 	 */
-	protected Object readColumnValue(int colNdx, Class destinationType) {
+	@SuppressWarnings({"unchecked"})
+	protected Object readColumnValue(int colNdx, Class destinationType, Class<? extends SqlType> sqlTypeClass) {
 		if (colNdx != cachedColumnNdx) {
 			try {
-				SqlType sqlType = SqlTypeManager.lookup(destinationType);
+				SqlType sqlType;
+				if (sqlTypeClass != null) {
+					sqlType = SqlTypeManager.lookupSqlType(sqlTypeClass);
+				} else {
+					sqlType = SqlTypeManager.lookup(destinationType);
+				}
 				if (sqlType != null) {
-					cachedColumnValue = sqlType.get(rs, colNdx + 1);
+					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType);
 				} else {
 					cachedColumnValue = rs.getObject(colNdx + 1);
 					cachedColumnValue = ReflectUtil.castType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
-				throw new DbOrmException("Unable to read value for column #" + (colNdx + 1) + '.');
+				throw new DbOrmException("Unable to read value for column #" + (colNdx + 1) + '.', sex);
 			}
 			cachedColumnNdx = colNdx;
 		}
@@ -301,7 +308,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 			if (resultTableName == null) {
 				// match: simple type
-				result[currentResult] = readColumnValue(colNdx, currentType);
+				result[currentResult] = readColumnValue(colNdx, currentType, null);
 				resultUsage[currentResult] = true;
 				colNdx++;
 				currentResult++; resultColumns.clear();
@@ -310,7 +317,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			if ((tableName == null) || (resultTableName.equals(tableName) == true)) {
 				if (resultColumns.contains(columnName) == false) {
 					DbEntityDescriptor ded = dbOrmManager.lookupType(currentType);
-					String propertyName = ded.getPropertyName(columnName);
+					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
+					String propertyName = (dec == null ? null : dec.getPropertyName());
 					if (propertyName != null) {
 						if (result[currentResult] == null) {
 							result[currentResult] = newInstance(currentType);
@@ -323,7 +331,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
-							Object value = readColumnValue(colNdx, type);
+							Class<? extends SqlType> sqlTypeClass = (dec == null ?  null : dec.getSqlTypeClass());
+							Object value = readColumnValue(colNdx, type, sqlTypeClass);
 							if (value != null) {
 								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
@@ -348,7 +357,6 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 		}
 		return result;
 	}
-
 
 	
 	/**

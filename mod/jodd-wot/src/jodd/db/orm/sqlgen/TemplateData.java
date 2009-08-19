@@ -6,6 +6,7 @@ import jodd.db.orm.DbOrmManager;
 import jodd.db.orm.DbEntityDescriptor;
 import jodd.db.orm.ColumnData;
 import jodd.db.orm.ColumnAliasType;
+import jodd.db.orm.DbEntityColumnDescriptor;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -196,7 +197,7 @@ public abstract class TemplateData {
 
 	// ---------------------------------------------------------------- parameters
 
-	protected Map<String, Object> parameters;
+	protected Map<String, ParameterValue> parameters;
 
 	protected int paramCount;
 
@@ -210,11 +211,11 @@ public abstract class TemplateData {
 	/**
 	 * Adds query parameter.
 	 */
-	public void addParameter(String name, Object value) {
+	public void addParameter(String name, Object value, DbEntityColumnDescriptor dec) {
 		if (parameters == null) {
-			parameters = new HashMap<String, Object>();
+			parameters = new HashMap<String, ParameterValue>();
 		}
-		parameters.put(name, value);
+		parameters.put(name, new ParameterValue(value, dec));
 	}
 
 
@@ -264,7 +265,7 @@ public abstract class TemplateData {
 			name = getNextParameterName();
 		}
 		query.append(':').append(name);
-		addParameter(name, value);
+		addParameter(name, value, null);
 	}
 
 

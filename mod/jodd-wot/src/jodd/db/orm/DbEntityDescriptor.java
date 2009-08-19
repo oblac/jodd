@@ -210,5 +210,4 @@ public class DbEntityDescriptor {
 		return idColumnDescriptors[0].getPropertyName();
 	}
 
-
 }

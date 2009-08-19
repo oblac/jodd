@@ -90,7 +90,7 @@ public class MatchChunk extends SqlChunk {
 			count++;
 			out.append(table).append('.').append(dec.getColumnName()).append('=');
 			String propertyName = typeName + '.' + property;
-			defineParameter(out, propertyName, value);
+			defineParameter(out, propertyName, value, dec);
 		}
 		if (count == 0) {
 			out.append(DEFAULT);

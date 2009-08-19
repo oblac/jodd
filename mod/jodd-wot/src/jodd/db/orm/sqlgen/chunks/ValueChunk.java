@@ -43,13 +43,13 @@ public class ValueChunk extends SqlChunk {
 					if (counter > 0) {
 						out.append(',').append(' ');
 					}
-					defineParameter(out, name + counter, obj);
+					defineParameter(out, name + counter, obj, null);
 					counter++;
 				}
 				return;
 			}
 		}
-		defineParameter(out, name, value);
+		defineParameter(out, name, value, null);
 	}
 
 	// ---------------------------------------------------------------- clone

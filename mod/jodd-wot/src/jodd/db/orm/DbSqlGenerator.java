@@ -2,6 +2,8 @@
 
 package jodd.db.orm;
 
+import jodd.db.orm.sqlgen.ParameterValue;
+
 import java.util.Map;
 
 /**
@@ -19,7 +21,7 @@ public interface DbSqlGenerator {
 	 * Must be invoked only <b>after</b> the {@link #generateQuery()}.
 	 * May be <code>null</code>
 	 */
-	Map<String, Object> getQueryParameters();
+	Map<String, ParameterValue> getQueryParameters();
 
 	/**
 	 * Returns an optional map of table and column names, used by {@link jodd.db.orm.mapper.ResultSetMapper}.
@@ -28,7 +30,8 @@ public interface DbSqlGenerator {
 	Map<String, ColumnData> getColumnData();
 
 	/**
-	 * Returns join hints. May be <code>null</code>. 
+	 * Returns join hints. May be <code>null</code>.
 	 */
 	String[] getJoinHints();
+
 }

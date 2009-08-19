@@ -5,6 +5,7 @@ package jodd.db.orm;
 import jodd.db.orm.meta.DbTable;
 import jodd.db.orm.meta.DbId;
 import jodd.db.orm.meta.DbColumn;
+import jodd.db.type.SqlType;
 
 import java.lang.reflect.Field;
 
@@ -44,14 +45,17 @@ public class DbMetaUtil {
 	public static DbEntityColumnDescriptor resolveColumnDescriptors(Field field, boolean isAnnotated) {
 		String columnName = null;
 		boolean isId = false;
+		Class<? extends SqlType> sqlTypeClass = null;
 		DbId dbId = field.getAnnotation(DbId.class);
 		if (dbId != null) {
 			columnName = dbId.value().trim();
+			sqlTypeClass = dbId.sqlType();
 			isId = true;
 		} else {
 			DbColumn dbColumn = field.getAnnotation(DbColumn.class);
 			if (dbColumn != null) {
 				columnName = dbColumn.value().trim();
+				sqlTypeClass = dbColumn.sqlType();
 			} else {
 				if (isAnnotated == true) {
 					return null;
@@ -62,9 +66,10 @@ public class DbMetaUtil {
 		if ((columnName == null) || (columnName.length() == 0)) {
 			columnName = DbNameUtil.convertPropertyNameToColumnName(field.getName());
 		}
-	    return new DbEntityColumnDescriptor(columnName, field.getName(), field.getType(), isId);
+		if (sqlTypeClass == SqlType.class) {
+			sqlTypeClass = null;
+		}
+	    return new DbEntityColumnDescriptor(columnName, field.getName(), field.getType(), isId, sqlTypeClass);
 	}
-
-
 
 }

@@ -57,7 +57,7 @@ public class InsertChunk extends SqlChunk {
 			col.append(dec.getColumnName());
 
 			String propertyName = typeName + '.' + property;
-			defineParameter(val, propertyName, value);
+			defineParameter(val, propertyName, value, dec);
 		}
 
 		out.append("insert into ").append(ded.getTableName()).append(" (")

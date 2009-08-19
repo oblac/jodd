@@ -154,20 +154,20 @@ public class DbSlqBuilderTest extends TestCase {
 		DbSqlBuilder dbc = sql().insert("Boy", b);
 		assertEquals("insert into BOY (GIRL_ID, ID) values (:boy.girlId, :boy.id)", dbc.generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId"));
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id"));
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId").getValue());
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id").getValue());
 
 		dbc = sql().insert(Boy.class, b);
 		assertEquals("insert into BOY (GIRL_ID, ID) values (:boy.girlId, :boy.id)", dbc.generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId"));
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id"));
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId").getValue());
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id").getValue());
 
 		dbc = sql().insert(b);
 		assertEquals("insert into BOY (GIRL_ID, ID) values (:boy.girlId, :boy.id)", dbc.generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId"));
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id"));
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.girlId").getValue());
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("boy.id").getValue());
 
 	}
 
@@ -177,24 +177,24 @@ public class DbSlqBuilderTest extends TestCase {
 		DbSqlBuilder dbc = new DbSqlBuilder();
 		assertEquals(":zzz", dbc.value("zzz", Integer.valueOf(b.girlId)).generateQuery());
 		assertEquals(1, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("zzz"));
+		assertEquals(Integer.valueOf(0), dbc.getQueryParameters().get("zzz").getValue());
 
 		assertEquals(":zzz :p0", dbc._().value(Integer.valueOf(3)).generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0"));
+		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0").getValue());
 
 		assertEquals(":zzz :p0 :p1", dbc._().valueRef("val").use("val", Integer.valueOf(7)).generateQuery());
 		assertEquals(3, dbc.getQueryParameters().size());
-		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0"));		
-		assertEquals(Integer.valueOf(7), dbc.getQueryParameters().get("p1"));
+		assertEquals(Integer.valueOf(3), dbc.getQueryParameters().get("p0").getValue());
+		assertEquals(Integer.valueOf(7), dbc.getQueryParameters().get("p1").getValue());
 
 		dbc = new DbSqlBuilder();
 		List l = new ArrayList();
 		l.add("v1");
 		l.add(Integer.valueOf(2));
 		assertEquals(":zzz0, :zzz1", dbc.value("zzz",l).generateQuery());
-		assertEquals("v1", dbc.getQueryParameters().get("zzz0"));
-		assertEquals(Integer.valueOf(2), dbc.getQueryParameters().get("zzz1"));
+		assertEquals("v1", dbc.getQueryParameters().get("zzz0").getValue());
+		assertEquals(Integer.valueOf(2), dbc.getQueryParameters().get("zzz1").getValue());
 
 	}
 
