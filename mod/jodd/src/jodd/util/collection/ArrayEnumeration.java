@@ -11,35 +11,32 @@ import java.util.NoSuchElementException;
  */
 public class ArrayEnumeration implements Enumeration, Serializable {
 
-	private Object mArray[];
-	private int mCurrentElement;
-	private int mArrayLength;
-	private int mOffset;	
-	
-	public ArrayEnumeration(Object aobj[]) {
-		mArray = aobj;
-		mCurrentElement = 0;
-		mOffset = 0;
-		mArrayLength = mArray.length;
+	private Object array[];
+	private int ndx;
+	private int to;
+
+	public ArrayEnumeration(Object arr[]) {
+		this(arr, 0, arr.length);
 	}
 
-	public ArrayEnumeration(Object aobj[], int i, int j) {
-		mArray = aobj;
-		mCurrentElement = i;
-		mOffset = i;
-		mArrayLength = (j - i) + 1;
+	public ArrayEnumeration(Object arr[], int from) {
+		this(arr, from, arr.length);
+	}
+
+	public ArrayEnumeration(Object arr[], int from, int to) {
+		array = arr;
+		ndx = from;
+		this.to = to;
 	}
 
 	public boolean hasMoreElements() {
-		return mCurrentElement < mArrayLength + mOffset;
+		return ndx < to;
 	}
 
 	public Object nextElement()	throws NoSuchElementException {
-		try {
-			mCurrentElement++;
-			return mArray[mCurrentElement - 1];
-		} catch (ArrayIndexOutOfBoundsException aiofbex) {
-			throw new NoSuchElementException();
+		if (ndx < to) {
+			return array[ndx++];
 		}
+		throw new NoSuchElementException();
 	}
 }

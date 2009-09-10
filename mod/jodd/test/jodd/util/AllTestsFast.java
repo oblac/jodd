@@ -7,6 +7,7 @@ import junit.framework.Test;
 import jodd.util.collection.IntHashMapTest;
 import jodd.util.collection.PrimitivearraysTest;
 import jodd.util.collection.CompositeIteratorTest;
+import jodd.util.collection.ArrayEnumerationTest;
 import jodd.util.ref.ReferenceCollectionsTest;
 
 /**
@@ -34,6 +35,7 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(TextUtilTest.class);
 		addTestSuite(PropertiesUtilTest.class);
 		addTestSuite(Base64Test.class);
+		addTestSuite(ArrayEnumerationTest.class);
 	}
 
 	public static Test suite() {

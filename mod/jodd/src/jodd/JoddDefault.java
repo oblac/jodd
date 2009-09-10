@@ -5,7 +5,7 @@ package jodd;
 import jodd.util.StringPool;
 
 /**
- * List of Jodd library defaults. They are used in more then one place (class, package).
+ * Jodd library global defaults. They are used in more then one place (class, package).
  */
 public class JoddDefault {
 
