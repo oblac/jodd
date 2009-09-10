@@ -20,7 +20,7 @@ lib('slf4j')
 
 module('jodd')
 module_compile('production', 'jdk5', 'mail, servlets')
-module_javadoc(prjName + ' ' + moduleName.capitalize() + ' Library ${prjVersion}', copyright)
+module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_dist(moduleName)
 module_dist_jar('jodd.Jodd')
 module_dist_src()
@@ -33,7 +33,7 @@ module_do_findbugs()
 
 module('jodd-wot')
 module_compile('production', 'jdk5', '>jodd.production, servlets, asm, slf4j')
-module_javadoc(prjName + ' ' + moduleName.capitalize() + ' Library ${prjVersion}', copyright)
+module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_dist(moduleName)
 module_dist_jar('jodd.JoddWot')
 module_dist_src()
@@ -67,19 +67,19 @@ pack('dist', 'jodd',     '', '''
 ''', '')
 pack('dist-srcdoc',  'jodd-all', 'pack-dist', '''
 	${jodd.jar}
-	${jodd-source.jar}
+	${jodd-sources.jar}
 	${jodd-javadoc.jar}
 	${jodd-wot.jar}
-	${jodd-wot-source.jar}
+	${jodd-wot-sources.jar}
 	${jodd-wot-javadoc.jar}
 	file_id.diz
 ''', '')
 pack('all',  'jodd-all-with-dependencies', 'pack-dist-srcdoc', '''
 	${jodd.jar}
-	${jodd-source.jar}
+	${jodd-sources.jar}
 	${jodd-javadoc.jar}
 	${jodd-wot.jar}
-	${jodd-wot-source.jar}
+	${jodd-wot-sources.jar}
 	${jodd-wot-javadoc.jar}
 	file_id.diz
 	lib/**

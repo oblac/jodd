@@ -166,7 +166,7 @@
 				executable="${jdk5.bin}/javadoc">
 			<bootclasspath refid="jodd.production.bootclasspath"/>
 			<classpath refid="jodd.production.classpath"/>
-			<doctitle><![CDATA[Jodd Jodd Library ${prjVersion}]]></doctitle>
+			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
 			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
@@ -389,7 +389,7 @@
 				executable="${jdk5.bin}/javadoc">
 			<bootclasspath refid="jodd-wot.production.bootclasspath"/>
 			<classpath refid="jodd-wot.production.classpath"/>
-			<doctitle><![CDATA[Jodd Jodd-wot Library ${prjVersion}]]></doctitle>
+			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
 			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd-wot.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
@@ -634,10 +634,10 @@
 		<delete file="${dist.dir}/jodd-all-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-all-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
-	${jodd-source.jar}
+	${jodd-sources.jar}
 	${jodd-javadoc.jar}
 	${jodd-wot.jar}
-	${jodd-wot-source.jar}
+	${jodd-wot-sources.jar}
 	${jodd-wot-javadoc.jar}
 	file_id.diz
 " excludes=""/>
@@ -646,10 +646,10 @@
 		<delete file="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
-	${jodd-source.jar}
+	${jodd-sources.jar}
 	${jodd-javadoc.jar}
 	${jodd-wot.jar}
-	${jodd-wot-source.jar}
+	${jodd-wot-sources.jar}
 	${jodd-wot-javadoc.jar}
 	file_id.diz
 	lib/**

@@ -9,6 +9,7 @@ ant javadoc
 ant emma
 ant findbugs
 ant dist
+ant all
 ant pack-all
 
 
@@ -40,7 +41,7 @@ login to google/Custom search, refresh index
 
 [6] reindex site searcher (ako treba)
 http://jodd.org/sphider/admin/admin.php
-Reindex
+Options > Reindex > Start Indexing
 
 
 [7] send email to mailing list
@@ -48,3 +49,11 @@ http://www.jodd.org/mail-list/mail.cgi/admin/
 
 
 [8] increment project version (build.py)
+
+
+[9] Edit sourceforge
+https://sourceforge.net/projects/jodd/
+
+
+[10] Edit freshmeat
+http://freshmeat.net/projects/jodd
