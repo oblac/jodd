@@ -2,6 +2,8 @@
 
 package jodd.io;
 
+import jodd.util.StringPool;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +13,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.FileFilter;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
@@ -961,6 +964,121 @@ public class FileUtil {
 		}
 		deleteFile(dest);
 	}
+
+	// ---------------------------------------------------------------- misc
+
+	/**
+	 * Check if one file is an ancestor of second one.
+	 *
+	 * @param ancestor the file
+	 * @param file	 the file
+	 * @param strict   if {@code false} then this method returns {@code true} if {@code ancestor}
+	 *                 and {@code file} are equal
+	 * @return {@code true} if {@code ancestor} is parent of {@code file}; {@code false} otherwise
+	 */
+	public static boolean isAncestor(File ancestor, File file, boolean strict) {
+		File parent = strict ? getParentFile(file) : file;
+		while (true) {
+			if (parent == null) {
+				return false;
+			}
+			if (parent.equals(ancestor)) {
+				return true;
+			}
+			parent = getParentFile(parent);
+		}
+	}
+
+	/**
+	 * Returns parent for the file. The method correctly
+	 * processes "." and ".." in file names. The name
+	 * remains relative if was relative before.
+	 * Returns <code>null</code> if the file has no parent.
+	 */
+	public static File getParentFile(final File file) {
+		int skipCount = 0;
+		File parentFile = file;
+		while (true) {
+			parentFile = parentFile.getParentFile();
+			if (parentFile == null) {
+				return null;
+			}
+			if (StringPool.DOT.equals(parentFile.getName())) {
+				continue;
+			}
+			if (StringPool.DOTDOT.equals(parentFile.getName())) {
+				skipCount++;
+				continue;
+			}
+			if (skipCount > 0) {
+				skipCount--;
+				continue;
+			}
+			return parentFile;
+		}
+	}
+
+	public static boolean isFilePathAcceptable(File file, FileFilter fileFilter) {
+		do {
+			if (fileFilter != null && !fileFilter.accept(file)) {
+				return false;
+			}
+			file = file.getParentFile();
+		} while (file != null);
+		return true;
+	}
+
+	// ---------------------------------------------------------------- temp
+
+	/**
+	 * Creates temp directory.
+	 */
+	public static File createTempDirectory(String prefix, String suffix) throws IOException {
+		File file = doCreateTempFile(prefix, suffix, null);
+		file.delete();
+		file.mkdir();
+		return file;
+	}
+
+	/**
+	 * Creates temp file.
+	 */
+	public static File createTempFile(final File dir, String prefix, String suffix, final boolean create) throws IOException {
+		File file = doCreateTempFile(prefix, suffix, dir);
+		file.delete();
+		if (create) {
+			file.createNewFile();
+		}
+		return file;
+	}
+
+	/**
+	 * Creates temp file.
+	 */
+	public static File createTempFile(String prefix, String suffix) throws IOException {
+		File file = doCreateTempFile(prefix, suffix, null);
+		file.delete();
+		file.createNewFile();
+		return file;
+	}
+
+	private static File doCreateTempFile(String prefix, String suffix, final File dir) throws IOException {
+		if (prefix.length() < 3) {
+			prefix = (prefix + "___").substring(0, 3);
+		}
+		int exceptionsCount = 0;
+		while (true) {
+			try {
+				return File.createTempFile(prefix, suffix, dir).getCanonicalFile();
+			} catch (IOException ioex) {	// Win32 createFileExclusively access denied
+				if (++exceptionsCount >= 100) {
+					throw ioex;
+				}
+			}
+		}
+	}
+
+
 }
 
 

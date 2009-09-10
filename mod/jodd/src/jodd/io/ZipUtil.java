@@ -2,11 +2,16 @@
 
 package jodd.io;
 
+import jodd.util.StringUtil;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -36,11 +41,11 @@ public class ZipUtil {
 		return null;
 	}
 
-	public static OutputStream createSingleEntryOutputStream(String zipEntryFileName) throws IOException {
+	public static ZipOutputStream createSingleEntryOutputStream(String zipEntryFileName) throws IOException {
 		return createSingleEntryOutputStream(new File(zipEntryFileName));
 	}
 
-	public static OutputStream createSingleEntryOutputStream(File zipEntryFile) throws IOException {
+	public static ZipOutputStream createSingleEntryOutputStream(File zipEntryFile) throws IOException {
 		String entryName = zipEntryFile.getName();
 		if (entryName.endsWith(ZIP_EXT)) {
 			entryName = entryName.substring(0, entryName.length() - ZIP_EXT.length());
@@ -48,14 +53,14 @@ public class ZipUtil {
 		return createSingleEntryOutputStream(entryName, zipEntryFile);
 	}
 
-	public static OutputStream createSingleEntryOutputStream(String entryName, String zipEntryFileName) throws IOException {
+	public static ZipOutputStream createSingleEntryOutputStream(String entryName, String zipEntryFileName) throws IOException {
 		return createSingleEntryOutputStream(entryName, new File(zipEntryFileName));
 	}
 
 	/**
-	 * Creates an OutputStream to zip file with single entry.
+	 * Creates an <code>ZipOutputStream</zip> to zip file with single entry.
 	 */
-	public static OutputStream createSingleEntryOutputStream(String entryName, File zipEntryFile) throws IOException {
+	public static ZipOutputStream createSingleEntryOutputStream(String entryName, File zipEntryFile) throws IOException {
 		String zipFileName = zipEntryFile.getAbsolutePath();
 		if (zipFileName.endsWith(ZIP_EXT) == false) {
 			zipFileName += ZIP_EXT;
@@ -70,6 +75,16 @@ public class ZipUtil {
 			throw ioex;
 		}
 		return zos;
+	}
+
+	/**
+	 * Opens zip output stream of existing zip file.
+	 */
+	public static ZipOutputStream openZip(File zip) throws FileNotFoundException {
+		return new ZipOutputStream(new FileOutputStream(zip));
+	}
+	public static ZipOutputStream openZip(String zipFile) throws FileNotFoundException {
+		return openZip(new File(zipFile));
 	}
 
 
@@ -123,6 +138,69 @@ public class ZipUtil {
 			}
 		}
 	}
+
+	// ---------------------------------------------------------------- zip
+
+	/*
+	 * Adds a new file entry to the ZIP output stream.
+	 */
+	public static boolean addFileToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
+		while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
+			relativeName = relativeName.substring(1);
+		}
+
+		boolean isDir = file.isDirectory();
+		if (isDir && !StringUtil.endsWithChar(relativeName, '/')) {
+			relativeName += "/";
+		}
+
+		long size = isDir ? 0 : file.length();
+		ZipEntry e = new ZipEntry(relativeName);
+		e.setTime(file.lastModified());
+		if (size == 0) {
+			e.setMethod(ZipEntry.STORED);
+			e.setSize(0);
+			e.setCrc(0);
+		}
+		zos.putNextEntry(e);
+		if (!isDir) {
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			try {
+				StreamUtil.copy(is, zos);
+			} finally {
+				StreamUtil.close(is);
+			}
+		}
+		zos.closeEntry();
+		return true;
+	}
+
+
+	public static boolean addFileOrDirRecursively(ZipOutputStream jarOutputStream, File jarFile, File file, String relativePath) throws IOException {
+		if (file.isDirectory()) {
+			return addDirToZipRecursively(jarOutputStream, jarFile, file, relativePath);
+		}
+		addFileToZip(jarOutputStream, file, relativePath);
+		return true;
+	}
+
+	public static boolean addDirToZipRecursively(ZipOutputStream outputStream, File jarFile, File dir, String relativePath) throws IOException {
+		if (FileUtil.isAncestor(dir, jarFile, false)) {
+			return false;
+		}
+		if (relativePath.length() != 0) {
+			addFileToZip(outputStream, dir, relativePath);
+		}
+		final File[] children = dir.listFiles();
+		if (children != null) {
+			for (File child : children) {
+				final String childRelativePath = (relativePath.length() == 0 ? "" : relativePath + '/') + child.getName();
+				addFileOrDirRecursively(outputStream, jarFile, child, childRelativePath);
+			}
+		}
+		return true;
+	}
+
 
 	// ---------------------------------------------------------------- close
 
