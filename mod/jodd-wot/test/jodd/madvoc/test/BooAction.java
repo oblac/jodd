@@ -34,4 +34,8 @@ public class BooAction {
 
 	@Action(value = "/${method}.${ext}")
 	public void foo7() {}
+
+	@Action(extension = Action.NO_EXTENSION)
+	public void foo8() {}
+
 }

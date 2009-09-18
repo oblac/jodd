@@ -62,7 +62,7 @@ public class ResultMapper {
 	 * Resolves result path from action configuration and result value.
 	 * By default, the result value is appended to the class action path and method action path.
 	 * If result value starts with path prefix, it represent complete path.
-	 * Although result value may be null, result is never null.
+	 * Although result value may be <code>null</code>, result is never <code>null</code>.
 	 */
 	public String resolveResultPath(ActionConfig cfg, String resultValue) {
 
