@@ -6,6 +6,7 @@ import jodd.petite.meta.PetiteInject;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Maps action results to result path. Invoked just before the result itself.
@@ -76,9 +77,18 @@ public class ResultMapper {
 		String resultPath = MadvocUtil.stripHttpMethodFromActionPath(cfg.actionPath);
 
 		// strip extension part
-		int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(resultPath);
-		if (dotNdx != -1) {
-			resultPath = resultPath.substring(0, dotNdx);
+		boolean strip = true;
+		if (resultValue != null) {
+			if (StringUtil.startsWithChar(resultValue, '.')) {
+				resultValue = resultValue.substring(1);
+				strip = false;
+			}
+		}
+		if (strip) {
+			int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(resultPath);
+			if (dotNdx != -1) {
+				resultPath = resultPath.substring(0, dotNdx);
+			}
 		}
 
 		// method
@@ -89,7 +99,7 @@ public class ResultMapper {
 				if (resultValue.charAt(i) != '#') {
 					break;
 				}
-				dotNdx = MadvocUtil.lastIndexOfSlashDot(resultPath);
+				int dotNdx = MadvocUtil.lastIndexOfSlashDot(resultPath);
 				if (dotNdx != -1) {
 					resultPath = resultPath.substring(0, dotNdx);
 					if (resultPath.charAt(dotNdx - 1) == '/') {
