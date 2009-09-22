@@ -564,7 +564,7 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- cache
 
 	/**
-	 * Prevent HTTP cache.
+	 * Prevents HTTP cache. Usually used in <i>prelude.jspf</i>.
 	 */
 	public static void preventCaching(HttpServletResponse response) {
 		response.setHeader("Cache-Control", "max-age=0, must-revalidate, no-cache, no-store, private");  // HTTP 1.1

@@ -475,12 +475,12 @@ public class JDateTime implements Comparable, Cloneable {
 
 	/**
 	 * Adds time to current time. The main add method - all other add() methods
-	 * must use this one. <p>
-	 *
-	 * There are 2 different kind of addings, when months are added:
+	 * must use this one.
+	 * <p>
+	 * There are 2 different kinds of addings, when months are added:
 	 * <ul>
-	 * <li>when months are not specially concern, and month is approximated as 31
-	 * days. example: 2003-01-31 + 0-01-0 = 2003-03-03</li>
+	 * <li>when months are not specially concern. All remaining days will be
+	 * added to the next month. Example: 2003-01-31 + 0-01-0 = 2003-03-03</li>
 	 * <li>when months addition is fixed, and month is not approximated.
 	 * example: 2003-01-31 + 0-01-0 = 2003-02-28</li>
 	 * </ul>
