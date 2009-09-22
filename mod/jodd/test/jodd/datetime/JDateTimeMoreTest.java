@@ -240,4 +240,66 @@ public class JDateTimeMoreTest extends TestCase {
 		assertEquals(gc.get(Calendar.HOUR), jdt.getHour());
 	}
 
+	// ---------------------------------------------------------------- additional
+
+	public void testAddMonthNoFix() {
+		JDateTime jdt;
+
+		// January, no fix
+
+		jdt = new JDateTime("2010-01-31");
+        jdt.addMonth(1, false);
+		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
+		jdt.subMonth(1, false);
+		assertEquals("2010-02-03", jdt.toString("YYYY-MM-DD"));
+
+		// January, fix
+
+		jdt = new JDateTime("2010-01-31");
+        jdt.addMonth(1);
+		assertEquals("2010-02-28", jdt.toString("YYYY-MM-DD"));
+		jdt.subMonth(1);
+		assertEquals("2010-01-28", jdt.toString("YYYY-MM-DD"));
+
+		// January, fix, Gregorian calendar
+		GregorianCalendar gc = new GregorianCalendar(2010, 0, 31);
+		gc.add(Calendar.MONTH, 1);
+		assertEquals(1, gc.get(Calendar.MONTH));
+		assertEquals(28, gc.get(Calendar.DAY_OF_MONTH));
+
+		gc.add(Calendar.MONTH, -1);
+		assertEquals(0, gc.get(Calendar.MONTH));
+		assertEquals(28, gc.get(Calendar.DAY_OF_MONTH));
+
+
+		// days, no month fix
+
+		jdt = new JDateTime("2010-01-31");
+        jdt.addDay(31, false);
+		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
+		jdt.subDay(31, false);
+		assertEquals("2010-01-31", jdt.toString("YYYY-MM-DD"));
+
+		jdt = new JDateTime("2010-01-31");
+        jdt.addDay(31);
+		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
+		jdt.subDay(31);
+		assertEquals("2010-01-31", jdt.toString("YYYY-MM-DD"));
+
+		// March
+
+		jdt = new JDateTime("2010-03-31");
+        jdt.addMonth(1, false);
+		assertEquals("2010-05-01", jdt.toString("YYYY-MM-DD"));
+		jdt.subMonth(1, false);
+		assertEquals("2010-04-01", jdt.toString("YYYY-MM-DD"));
+
+		jdt = new JDateTime("2010-03-31");
+        jdt.addMonth(1);
+		assertEquals("2010-04-30", jdt.toString("YYYY-MM-DD"));
+		jdt.subMonth(1);
+		assertEquals("2010-03-30", jdt.toString("YYYY-MM-DD"));
+
+	}
+
 }
