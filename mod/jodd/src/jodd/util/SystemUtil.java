@@ -38,6 +38,7 @@ public class SystemUtil {
 	public static final String OS_NAME = "os.name";
 	public static final String OS_VERSION = "os.version";
 	public static final String JAVA_VERSION = "java.version";
+	public static final String JAVA_SPECIFICATION_VERSION = "java.specification.version";
 	public static final String JAVA_VENDOR = "java.vendor";
 	public static final String JAVA_CLASSPATH = "java.class.path";
 	public static final String PATH_SEPARATOR = "path.separator";
@@ -109,9 +110,17 @@ public class SystemUtil {
 
 	/**
 	 * Returns Java version.
+	 * @see #getJavaSpecificationVersion()
 	 */
 	public static String getJavaVersion() {
 		return System.getProperty(JAVA_VERSION);
+	}
+
+	/**
+	 * Retrieves the version of the currently running JVM.
+	 */
+	public static double getJavaSpecificationVersion() {
+		return Double.parseDouble(System.getProperty(JAVA_SPECIFICATION_VERSION));
 	}
 
 	/**
@@ -140,6 +149,20 @@ public class SystemUtil {
 	 */
 	public static String getFileEncoding() {
 		return System.getProperty(FILE_ENCODING);
+	}
+
+	/**
+	 * Checks if the currently running JVM is at least complient with JDK 1.5.
+	 */
+	public static boolean isAtLeastJdk15() {
+		return getJavaSpecificationVersion() >= 1.5;
+	}
+
+	/**
+	 * Checks if the currently running JVM is at least complient with JDK 1.6.
+	 */
+	public static boolean isAtLeastJdk16() {
+		return getJavaSpecificationVersion() >= 1.6;
 	}
 
 	// ---------------------------------------------------------------- set
