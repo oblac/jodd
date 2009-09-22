@@ -22,6 +22,7 @@ import jodd.util.MimeTypes;
 import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.servlet.upload.FileUpload;
+import com.sun.mail.iap.Response;
 
 /**
  * Miscellaneous servlet utilities.
@@ -558,6 +559,17 @@ public class ServletUtil {
 			}
 		}
 		return result.toString();
+	}
+
+	// ---------------------------------------------------------------- cache
+
+	/**
+	 * Prevent HTTP cache.
+	 */
+	public static void preventCaching(HttpServletResponse response) {
+		response.setHeader("Cache-Control", "max-age=0, must-revalidate, no-cache, no-store, private");  // HTTP 1.1
+		response.setHeader("Pragma","no-cache");        // HTTP 1.0
+		response.setDateHeader ("Expires", 1);          // prevents caching at the proxy server
 	}
 
 }
