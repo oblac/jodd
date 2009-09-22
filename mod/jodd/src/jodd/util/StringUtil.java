@@ -1953,38 +1953,6 @@ public class StringUtil {
 	}
 
 
-	/**
-	 * Cuts the last word from the string.
-	 */
-	public static String cutLastWord(String string) {
-		return cutLastWord(string, false);
-	}
-
-	/**
-	 * Cuts the last word from the string, but not if it is a first.
-	 */
-	public static String cutLastWordNotFirst(String string) {
-		return cutLastWord(string, true);
-	}
-
-	private static String cutLastWord(String string, boolean preserveFirst) {
-		int ndx = string.length() - 1;
-		while (ndx >= 0) {
-			if (Character.isUpperCase(string.charAt(ndx)) == true) {
-				break;
-			}
-			ndx--;
-		}
-		if (ndx >= 0) {
-			if ((ndx == 0) && (preserveFirst == true)) {
-				return string;
-			}
-			string = string.substring(0, ndx);
-		}
-		return string;
-	}
-
-
 	// ---------------------------------------------------------------- escaped
 
 	/**

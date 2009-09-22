@@ -226,10 +226,7 @@ public class ActionMethodParser {
 			classActionPath = null;
 		}
 
-		// build class action path from the class name
-		String name = actionClass.getSimpleName();
-		name = StringUtil.uncapitalize(name);
-		name = StringUtil.cutLastWord(name);
+		String name = convertClassNameToActionName(actionClass.getSimpleName());
 
 		// decide
 		if (classActionPath == null) {
@@ -238,6 +235,25 @@ public class ActionMethodParser {
 			classActionPath = StringUtil.replace(classActionPath, MACRO_CLASS, name);
 		}
 		return classActionPath;
+	}
+
+	/**
+	 * Builds class action path from the class name.
+	 */
+	protected String convertClassNameToActionName(String name) {
+		name = StringUtil.uncapitalize(name);
+
+		int ndx = name.length() - 1;
+		while (ndx >= 0) {
+			if (Character.isUpperCase(name.charAt(ndx)) == true) {
+				break;
+			}
+			ndx--;
+		}
+		if (ndx >= 0) {
+			name = name.substring(0, ndx);
+		}
+		return name;
 	}
 
 

@@ -627,17 +627,6 @@ public class StringUtilTest extends TestCase {
 		assertEquals("qwe", StringUtil.cutSurrounding("qwe", "pre", "suf"));
 
 		assertEquals("qwe", StringUtil.cutSurrounding("preqwepre", "pre"));
-
-
-		assertEquals("qwe", StringUtil.cutLastWord("qwe"));
-		assertEquals("qwe", StringUtil.cutLastWord("qweWord"));
-		assertEquals("qweWord", StringUtil.cutLastWord("qweWordWord2"));
-		assertEquals("", StringUtil.cutLastWord("Qwe"));
-		assertEquals("qwe", StringUtil.cutLastWordNotFirst("qwe"));
-		assertEquals("qwe", StringUtil.cutLastWordNotFirst("qweWord"));
-		assertEquals("qweWord", StringUtil.cutLastWordNotFirst("qweWordWord2"));
-		assertEquals("Qwe", StringUtil.cutLastWordNotFirst("Qwe"));
-
 	}
 
 
