@@ -71,7 +71,7 @@ pack_src = pack_dist + '''
 pack_all = pack_src + '''
 	lib/**
 '''
-pack('dist', 'jodd', '', pack_dist, '')
+pack('dist', 'jodd', 'all', pack_dist, '')
 pack('src',  'jodd-all', 'pack-dist', pack_src, '')
 pack('all',  'jodd-all-with-dependencies', 'pack-src', pack_all, 'lib/oracle/*')
 

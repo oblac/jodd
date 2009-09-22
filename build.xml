@@ -585,7 +585,7 @@
 	</target>
 	<target name="release" depends="clean, build, javadoc, emma, findbugs, all" description="creates full release"/>
 
-	<target name="pack-dist" depends="" description="packs distribution jars">
+	<target name="pack-dist" depends="all" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
