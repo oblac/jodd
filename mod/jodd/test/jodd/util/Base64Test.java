@@ -17,10 +17,16 @@ public class Base64Test extends TestCase {
 			"ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
 	public void testEncoding() {
-		assertEquals(enc, Base64.encode(text));
+		assertEquals(enc, Base64.encodeToString(text));
+		assertEquals("TQ==", Base64.encodeToString("M"));
+		assertEquals("TWE=", Base64.encodeToString("Ma"));
+		assertEquals("TWFu", Base64.encodeToString("Man"));
 	}
 
 	public void testDecode() {
-		assertEquals(text, new String(Base64.decode(enc)));
+		assertEquals(text, Base64.decodeToString(enc));
+		assertEquals("M", Base64.decodeToString("TQ=="));
+		assertEquals("Ma", Base64.decodeToString("TWE="));
+		assertEquals("Man", Base64.decodeToString("TWFu"));
 	}
 }

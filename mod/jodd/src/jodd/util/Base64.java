@@ -2,352 +2,294 @@
 
 package jodd.util;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
+import jodd.JoddDefault;
+
+import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
 
 /**
- * One of the fastest implementation of the Base64 encoding.
- * Jakarta and others are slower.
+ * One of the <b>fastest</b> Base64 encoder/decoder implementations.
+ * Base64 encoding is defined in RFC 2045.
  */
 public class Base64 {
 
-	public static final char[] BASE64_CHARS = {
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
-		'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-		'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-		'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7',
-		'8', '9', '+', '/'
-	};
-
-	private static final char BASE64_PAD = '=';
-
-	private static final byte[] DECODETABLE = new byte[128];
+	public static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+	private static final int[] INV = new int[256];
 
 	static {
-		for (int i = 0;  i < DECODETABLE.length;  i ++) {
-			DECODETABLE[i] = Byte.MAX_VALUE;					// 127
+		Arrays.fill(INV, -1);
+		for (int i = 0, iS = CHARS.length; i < iS; i++) {
+			INV[CHARS[i]] = i;
 		}
-		for (int i = 0;  i < BASE64_CHARS.length;  i ++)		// 0 to 63
-		{
-			DECODETABLE[BASE64_CHARS[i]] = (byte) i;
+		INV['='] = 0;
+	}
+
+	// ---------------------------------------------------------------- char[]
+
+	public static char[] encodeToChar(String s) {
+		try {
+			return encodeToChar(s.getBytes(JoddDefault.encoding), false);
+		} catch (UnsupportedEncodingException unex) {
+			return null;
 		}
 	}
 
-	private static int decode0(char[] ibuf, byte[] obuf, int wp) {
-		int outlen = 3;
-		if (ibuf[3] == BASE64_PAD) {
-			outlen = 2;
-		}
-		if (ibuf[2] == BASE64_PAD) {
-			outlen = 1;
-		}
-		int b0 = DECODETABLE[ibuf[0]];
-		int b1 = DECODETABLE[ibuf[1]];
-		int b2 = DECODETABLE[ibuf[2]];
-		int b3 = DECODETABLE[ibuf[3]];
-		switch (outlen) {
-		  case 1:
-			obuf[wp] = (byte) (b0 << 2 & 0xfc | b1 >> 4 & 0x3);
-			return 1;
-		  case 2:
-			obuf[wp++] = (byte) (b0 << 2 & 0xfc | b1 >> 4 & 0x3);
-			obuf[wp] = (byte) (b1 << 4 & 0xf0 | b2 >> 2 & 0xf);
-			return 2;
-		  case 3:
-			obuf[wp++] = (byte) (b0 << 2 & 0xfc | b1 >> 4 & 0x3);
-			obuf[wp++] = (byte) (b1 << 4 & 0xf0 | b2 >> 2 & 0xf);
-			obuf[wp] = (byte) (b2 << 6 & 0xc0 | b3 & 0x3f);
-			return 3;
-		  default:
-			throw new IllegalStateException("Internal error, invalid state");
-		}
-	}
-	
-	/**
-	 * Decode the base64 data.
-	 * @param data The base64 encoded data to be decoded
-	 * @param off The offset within the encoded data at which to start decoding
-	 * @param len The length of data to decode
-	 * @return The decoded data
-	 */
-	public static byte[] decode(char[] data, int off, int len) {
-		char[] ibuf = new char[4];
-		int ibufcount = 0;
-		byte[] obuf = new byte[(len >> 2) * 3 + 3];
-		int obufcount = 0;
-		for (int i = off;  i < off+len;  i ++) {
-			char ch = data[i];
-			if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
-				ibuf[ibufcount++] = ch;
-				if (ibufcount == ibuf.length) {
-					ibufcount = 0;
-					obufcount += decode0(ibuf, obuf, obufcount);
-				}
-			}
-		}
-		if (obufcount == obuf.length) {
-			return obuf;
-		}
-		byte[] ret = new byte[obufcount];
-		System.arraycopy(obuf, 0, ret, 0, obufcount);
-		return ret;
-	}
-
-	public static final int BUF_SIZE =  256;
-	/**
-	 * Decode the base64 data.
-	 * @param data The base64 encoded data to be decoded
-	 * @return The decoded data
-	 */
-	public static byte[] decode(String data) {
-		int ibufcount = 0;
-		int slen = data.length();
-		char[] ibuf = new char[slen < BUF_SIZE +3 ? slen : BUF_SIZE + 3];
-		byte[] obuf = new byte[(slen >> 2) *3+3];
-		int obufcount = 0;
-		int blen;
-	
-		for (int i = 0;  i < slen;  i +=BUF_SIZE ) {
-			// buffer may contain unprocessed characters from previous step
-			if (i + BUF_SIZE  <= slen)  {
-				data.getChars(i, i+BUF_SIZE , ibuf, ibufcount);
-				blen = BUF_SIZE + ibufcount;
-			} else {
-				data.getChars(i, slen, ibuf, ibufcount);
-				blen = slen - i+ibufcount;
-			}
-	
-			for (int j=ibufcount; j<blen; j++) {
-				char ch = ibuf[j];
-				if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
-					ibuf[ibufcount++] = ch;
-					// as soon as we have 4 chars process them
-					if (ibufcount == 4) {
-						ibufcount = 0;
-						obufcount += decode0(ibuf, obuf, obufcount);
-					}
-				}
-			}
-		}
-		if (obufcount == obuf.length) {
-			return obuf;
-		}
-		byte[] ret = new byte[obufcount];
-		System.arraycopy(obuf, 0, ret, 0, obufcount);
-		return ret;
+	public static char[] encodeToChar(byte[] arr) {
+		return encodeToChar(arr, false);
 	}
 
 	/**
-	 * Decode the base64 data.
-	 * @param data The base64 encoded data to be decoded
-	 * @param off The offset within the encoded data at which to start decoding
-	 * @param len The length of data to decode
-	 * @param ostream The OutputStream to which the decoded data should be
-	 *                written
+	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
 	 */
-	public static void decode(char[] data, int off, int len, OutputStream ostream) throws IOException {
-		char[] ibuf = new char[4];
-		int ibufcount = 0;
-		byte[] obuf = new byte[3];
-		for (int i = off;  i < off+len;  i ++) {
-			char ch = data[i];
-			if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
-				ibuf[ibufcount++] = ch;
-				if (ibufcount == ibuf.length) {
-					ibufcount = 0;
-					int obufcount = decode0(ibuf, obuf, 0);
-					ostream.write(obuf, 0, obufcount);
-				}
+	public static char[] encodeToChar(byte[] arr, boolean lineSeparator) {
+		int len = arr != null ? arr.length : 0;
+		if (len == 0) {
+			return new char[0];
+		}
+
+		int evenlen = (len / 3) * 3;
+		int cnt = ((len - 1) / 3 + 1) << 2;
+		int destLen = cnt + (lineSeparator ? (cnt - 1) / 76 << 1 : 0);
+		char[] dest = new char[destLen];
+
+		for (int s = 0, d = 0, cc = 0; s < evenlen;) {
+			int i = (arr[s++] & 0xff) << 16 | (arr[s++] & 0xff) << 8 | (arr[s++] & 0xff);
+
+			dest[d++] = CHARS[(i >>> 18) & 0x3f];
+			dest[d++] = CHARS[(i >>> 12) & 0x3f];
+			dest[d++] = CHARS[(i >>> 6) & 0x3f];
+			dest[d++] = CHARS[i & 0x3f];
+
+			if (lineSeparator && (++cc == 19) && (d < (destLen - 2))) {
+				dest[d++] = '\r';
+				dest[d++] = '\n';
+				cc = 0;
 			}
 		}
-	}
-	
-	/**
-	 * Decode the base64 data.
-	 * @param data The base64 encoded data to be decoded
-	 * @param ostream The OutputStream to which the decoded data should be
-	 *                written
-	 */
-	public static void decode(String data, OutputStream ostream) throws IOException {
-		char[] ibuf = new char[BUF_SIZE + 4];
-		byte[] obuf = new byte[3];
-		int slen = data.length();
-		int blen;
-		int ibufcount = 0;
-	
-		for (int i = 0;  i < slen;  i +=BUF_SIZE ) {
-			// buffer may contain unprocessed characters from previous step
-			if (i + BUF_SIZE  <= slen)  {
-				data.getChars(i, i + BUF_SIZE , ibuf, ibufcount);
-				blen = BUF_SIZE+ibufcount;
-			} else {
-				data.getChars(i, slen, ibuf, ibufcount);
-				blen = slen - i+ibufcount;
-			}
-	
-			for (int j=ibufcount; j<blen; j++) {
-				char ch = ibuf[j];
-				if (ch == BASE64_PAD || ch < DECODETABLE.length && DECODETABLE[ch] != Byte.MAX_VALUE) {
-					ibuf[ibufcount++] = ch;
-					
-					// as sson as we have 4 chars process them
-					if (ibufcount == 4) {
-						ibufcount = 0;
-						int obufcount = decode0(ibuf, obuf, 0);
-						ostream.write(obuf, 0, obufcount);
-					}
-				}
-			}
+
+		int left = len - evenlen; // 0 - 2.
+		if (left > 0) {
+			int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
+
+			dest[destLen - 4] = CHARS[i >> 12];
+			dest[destLen - 3] = CHARS[(i >>> 6) & 0x3f];
+			dest[destLen - 2] = left == 2 ? CHARS[i & 0x3f] : '=';
+			dest[destLen - 1] = '=';
 		}
+		return dest;
 	}
 
 	/**
-	 * Returns base64 representation of specified byte array.
-	 * @param data The data to be encoded
-	 * @return The base64 encoded data
+	 * Decodes a BASE64 encoded char array.
 	 */
-	public static String encode(byte[] data) {
-		return encode(data, 0, data.length);
-	}
+	public byte[] decode(char[] arr) {
+		int length = arr.length;
+		if (length == 0) {
+			return new byte[0];
+		}
 
-	public static String encode(String s) {
-		return encode(s.getBytes(), 0, s.length());
-	}
+		int sndx = 0, endx = length - 1;
+		int pad = arr[endx] == '=' ? (arr[endx - 1] == '=' ? 2 : 1) : 0;
+		int cnt = endx - sndx + 1;
+		int sepCnt = length > 76 ? (arr[76] == '\r' ? cnt / 78 : 0) << 1 : 0;
+		int len = ((cnt - sepCnt) * 6 >> 3) - pad;
+		byte[] dest = new byte[len];
 
-	/**
-	 * Returns base64 representation of specified byte array.
-	 * @param data The data to be encoded
-	 * @param off The offset within the data at which to start encoding
-	 * @param len The length of the data to encode
-	 * @return The base64 encoded data
-	 */
-	public static String encode(byte[] data, int off, int len) {
-		if (len <= 0) {
-			return "";
-		}
-		char[] out = new char[(len / 3 << 2) +4];
-		int rindex = off;
-		int windex = 0;
-		int rest = len;
-		while (rest >= 3) {
-			int i = ((data[rindex]&0xff)<<16)
-				+((data[rindex+1]&0xff)<<8)
-				+(data[rindex+2]&0xff);
-			out[windex++] = BASE64_CHARS[i>>18];
-			out[windex++] = BASE64_CHARS[(i>>12)&0x3f];
-			out[windex++] = BASE64_CHARS[(i>>6)&0x3f];
-			out[windex++] = BASE64_CHARS[i&0x3f];
-			rindex += 3;
-			rest -= 3;
-		}
-		if (rest == 1) {
-			int i = data[rindex]&0xff;
-			out[windex++] = BASE64_CHARS[i>>2];
-			out[windex++] = BASE64_CHARS[(i<<4)&0x3f];
-			out[windex++] = BASE64_PAD;
-			out[windex++] = BASE64_PAD;
-		} else if (rest == 2) {
-			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[windex++] = BASE64_CHARS[i>>10];
-			out[windex++] = BASE64_CHARS[(i>>4)&0x3f];
-			out[windex++] = BASE64_CHARS[(i<<2)&0x3f];
-			out[windex++] = BASE64_PAD;
-		}
-		return new String(out, 0, windex);
-	}
+		int d = 0;
+		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
+			int i = INV[arr[sndx++]] << 18 | INV[arr[sndx++]] << 12 | INV[arr[sndx++]] << 6 | INV[arr[sndx++]];
 
-	/**
-	 * Outputs base64 representation of the specified byte array to a byte stream.
-	 * @param data The data to be encoded
-	 * @param off The offset within the data at which to start encoding
-	 * @param len The length of the data to encode
-	 * @param ostream The OutputStream to which the encoded data should be
-	 *                written
-	 */
-	public static void encode(byte[] data, int off, int len, OutputStream ostream) throws IOException {
-		if (len <= 0) {
-			return;
-		}
-		byte[] out = new byte[4];
-		int rindex = off;
-		int rest = len;
-		while (rest >= 3) {
-			int i = ((data[rindex]&0xff)<<16)
-				+((data[rindex+1]&0xff)<<8)
-				+(data[rindex+2]&0xff);
-			out[0] = (byte) BASE64_CHARS[i>>18];
-			out[1] = (byte) BASE64_CHARS[(i>>12)&0x3f];
-			out[2] = (byte) BASE64_CHARS[(i>>6)&0x3f];
-			out[3] = (byte) BASE64_CHARS[i&0x3f];
-			ostream.write(out, 0, 4);
-			rindex += 3;
-			rest -= 3;
-		}
-		if (rest == 1) {
-			int i = data[rindex]&0xff;
-			out[0] = (byte) BASE64_CHARS[i>>2];
-			out[1] = (byte) BASE64_CHARS[(i<<4)&0x3f];
-			out[2] = (byte) BASE64_PAD;
-			out[3] = (byte) BASE64_PAD;
-			ostream.write(out, 0, 4);
-		} else if (rest == 2) {
-			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[0] = (byte) BASE64_CHARS[i>>10];
-			out[1] = (byte) BASE64_CHARS[(i>>4)&0x3f];
-			out[2] = (byte) BASE64_CHARS[(i<<2)&0x3f];
-			out[3] = (byte) BASE64_PAD;
-			ostream.write(out, 0, 4);
-		}
-	}
-	
-	/**
-	 * Outputs base64 representation of the specified byte array to a character stream.
-	 * @param data The data to be encoded
-	 * @param off The offset within the data at which to start encoding
-	 * @param len The length of the data to encode
-	 * @param writer The Writer to which the encoded data should be
-	 *               written
-	 */
-	public static void encode(byte[] data, int off, int len, Writer writer) throws IOException {
-		if (len <= 0) {
-			return;
-		}
-		char[] out = new char[4];
-		int rindex = off;
-		int rest = len;
-		int output = 0;
-		while (rest >= 3) {
-			int i = ((data[rindex]&0xff)<<16) +((data[rindex+1]&0xff)<<8) +(data[rindex+2]&0xff);
-			out[0] = BASE64_CHARS[i>>18];
-			out[1] = BASE64_CHARS[(i>>12)&0x3f];
-			out[2] = BASE64_CHARS[(i>>6)&0x3f];
-			out[3] = BASE64_CHARS[i&0x3f];
-			writer.write(out, 0, 4);
-			rindex += 3;
-			rest -= 3;
-			output += 4;
-			if (output % 76 == 0) {
-				writer.write("\n");
+			dest[d++] = (byte) (i >> 16);
+			dest[d++] = (byte) (i >> 8);
+			dest[d++] = (byte) i;
+
+			if (sepCnt > 0 && ++cc == 19) {
+				sndx += 2;
+				cc = 0;
 			}
 		}
-		if (rest == 1) {
-			int i = data[rindex]&0xff;
-			out[0] = BASE64_CHARS[i>>2];
-			out[1] = BASE64_CHARS[(i<<4)&0x3f];
-			out[2] = BASE64_PAD;
-			out[3] = BASE64_PAD;
-			writer.write(out, 0, 4);
-		} else if (rest == 2) {
-			int i = ((data[rindex]&0xff)<<8)+(data[rindex+1]&0xff);
-			out[0] = BASE64_CHARS[i>>10];
-			out[1] = BASE64_CHARS[(i>>4)&0x3f];
-			out[2] = BASE64_CHARS[(i<<2)&0x3f];
-			out[3] = BASE64_PAD;
-			writer.write(out, 0, 4);
+
+		if (d < len) {
+			int i = 0;
+			for (int j = 0; sndx <= endx - pad; j++) {
+				i |= INV[arr[sndx++]] << (18 - j * 6);
+			}
+			for (int r = 16; d < len; r -= 8) {
+				dest[d++] = (byte) (i >> r);
+			}
+		}
+
+		return dest;
+	}
+
+	// ---------------------------------------------------------------- byte
+
+	public static byte[] encodeToByte(String s) {
+		try {
+			return encodeToByte(s.getBytes(JoddDefault.encoding), false);
+		} catch (UnsupportedEncodingException unex) {
+			return null;
 		}
 	}
+
+	public static byte[] encodeToByte(byte[] arr) {
+		return encodeToByte(arr, false);
+	}
+
+	/** Encodes a raw byte array into a BASE64 <code>byte[]</code>.
+	 */
+	public static byte[] encodeToByte(byte[] arr, boolean lineSep) {
+		int len = arr != null ? arr.length : 0;
+		if (len == 0) {
+			return new byte[0];
+		}
+
+		int evenlen = (len / 3) * 3;
+		int cnt = ((len - 1) / 3 + 1) << 2;
+		int destlen = cnt + (lineSep ? (cnt - 1) / 76 << 1 : 0);
+		byte[] dest = new byte[destlen];
+
+		for (int s = 0, d = 0, cc = 0; s < evenlen;) {
+			int i = (arr[s++] & 0xff) << 16 | (arr[s++] & 0xff) << 8 | (arr[s++] & 0xff);
+
+			dest[d++] = (byte) CHARS[(i >>> 18) & 0x3f];
+			dest[d++] = (byte) CHARS[(i >>> 12) & 0x3f];
+			dest[d++] = (byte) CHARS[(i >>> 6) & 0x3f];
+			dest[d++] = (byte) CHARS[i & 0x3f];
+
+			if (lineSep && ++cc == 19 && d < destlen - 2) {
+				dest[d++] = '\r';
+				dest[d++] = '\n';
+				cc = 0;
+			}
+		}
+
+		int left = len - evenlen;
+		if (left > 0) {
+			int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
+
+			dest[destlen - 4] = (byte) CHARS[i >> 12];
+			dest[destlen - 3] = (byte) CHARS[(i >>> 6) & 0x3f];
+			dest[destlen - 2] = left == 2 ? (byte) CHARS[i & 0x3f] : (byte) '=';
+			dest[destlen - 1] = '=';
+		}
+		return dest;
+	}
+
+	/**
+	 * Decodes a BASE64 encoded byte array.
+	 */
+	public static byte[] decode(byte[] arr) {
+		int length = arr.length;
+		if (length == 0) {
+			return new byte[0];
+		}
+
+		int sndx = 0, endx = length - 1;
+		int pad = arr[endx] == '=' ? (arr[endx - 1] == '=' ? 2 : 1) : 0;
+		int cnt = endx - sndx + 1;
+		int sepCnt = length > 76 ? (arr[76] == '\r' ? cnt / 78 : 0) << 1 : 0;
+		int len = ((cnt - sepCnt) * 6 >> 3) - pad;
+		byte[] dest = new byte[len];
+
+		int d = 0;
+		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
+			int i = INV[arr[sndx++]] << 18 | INV[arr[sndx++]] << 12 | INV[arr[sndx++]] << 6 | INV[arr[sndx++]];
+
+			dest[d++] = (byte) (i >> 16);
+			dest[d++] = (byte) (i >> 8);
+			dest[d++] = (byte) i;
+
+			if (sepCnt > 0 && ++cc == 19) {
+				sndx += 2;
+				cc = 0;
+			}
+		}
+
+		if (d < len) {
+			int i = 0;
+			for (int j = 0; sndx <= endx - pad; j++) {
+				i |= INV[arr[sndx++]] << (18 - j * 6);
+			}
+			for (int r = 16; d < len; r -= 8) {
+				dest[d++] = (byte) (i >> r);
+			}
+		}
+
+		return dest;
+	}
+
+	// ---------------------------------------------------------------- string
+
+	public static String encodeToString(String s) {
+		try {
+			return new String(encodeToChar(s.getBytes(JoddDefault.encoding), false));
+		} catch (UnsupportedEncodingException unex) {
+			return null;
+		}
+	}
+	public static String decodeToString(String s) {
+		try {
+			return new String(decode(s), JoddDefault.encoding);
+		} catch (UnsupportedEncodingException unex) {
+			return null;
+		}
+	}
+
+
+	public static String encodeToString(byte[] arr) {
+		return new String(encodeToChar(arr, false));
+	}
+
+	/**
+	 * Encodes a raw byte array into a BASE64 <code>String</code>.
+	 */
+	public static String encodeToString(byte[] arr, boolean lineSep) {
+		return new String(encodeToChar(arr, lineSep));
+	}
+
+	/**
+	 * Decodes a BASE64 encoded string.
+	 */
+	public static byte[] decode(String s) {
+		int length = s.length();
+		if (length == 0) {
+			return new byte[0];
+		}
+
+		int sndx = 0, endx = length - 1;
+		int pad = s.charAt(endx) == '=' ? (s.charAt(endx - 1) == '=' ? 2 : 1) : 0;
+		int cnt = endx - sndx + 1;
+		int sepCnt = length > 76 ? (s.charAt(76) == '\r' ? cnt / 78 : 0) << 1 : 0;
+		int len = ((cnt - sepCnt) * 6 >> 3) - pad;
+		byte[] dest = new byte[len];
+
+		int d = 0;
+		for (int cc = 0, eLen = (len / 3) * 3; d < eLen;) {
+			int i = INV[s.charAt(sndx++)] << 18 | INV[s.charAt(sndx++)] << 12 | INV[s.charAt(sndx++)] << 6 | INV[s.charAt(sndx++)];
+
+			dest[d++] = (byte) (i >> 16);
+			dest[d++] = (byte) (i >> 8);
+			dest[d++] = (byte) i;
+
+			if (sepCnt > 0 && ++cc == 19) {
+				sndx += 2;
+				cc = 0;
+			}
+		}
+
+		if (d < len) {
+			int i = 0;
+			for (int j = 0; sndx <= endx - pad; j++) {
+				i |= INV[s.charAt(sndx++)] << (18 - j * 6);
+			}
+			for (int r = 16; d < len; r -= 8) {
+				dest[d++] = (byte) (i >> r);
+			}
+		}
+
+		return dest;
+	}
+
 }
 
