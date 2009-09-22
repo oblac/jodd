@@ -21,28 +21,23 @@ lib('slf4j')
 module('jodd')
 module_compile('production', 'jdk5', 'mail, servlets')
 module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
-module_dist(moduleName)
-module_dist_jar('jodd.Jodd')
-module_dist_src()
-module_dist_doc()
 module_compile('test', 		 'jdk5', '#production, mail, servlets, junit, emma')
 module_do_build('production, test')
 module_do_doc('production')
 module_do_test('jodd.TestJodd')
 module_do_findbugs()
+module_dist(moduleName)
+#module_dist_jar('jodd.Jodd')
 
 module('jodd-wot')
 module_compile('production', 'jdk5', '>jodd.production, servlets, asm, slf4j')
 module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
-module_dist(moduleName)
-module_dist_jar('jodd.JoddWot')
-module_dist_src()
-module_dist_doc()
 module_compile('test', 		 'jdk5', '>jodd.production, #production, asm, slf4j, hsqldb, h2, junit, emma')
 module_do_build('production, test')
 module_do_doc('production')
 module_do_test('jodd.TestJoddWot')
 module_do_findbugs()
+module_dist(moduleName, 'jodd.JoddWot')
 
 module('jodd-gfx')
 module_compile('production', 'jdk5', '')
@@ -52,42 +47,33 @@ project()
 project_task('build', 'jodd, jodd-wot, jodd-gfx')
 project_task('javadoc', 'jodd, jodd-wot')
 project_task('emma', 'jodd, jodd-wot')
-project_task('dist', 'jodd, jodd-wot')
-project_task2('all', 'dist', 'jodd, jodd.src, jodd.doc, jodd-wot, jodd-wot.src, jodd-wot.doc')
+project_task2('all', 'dist', 'jodd, jodd-wot')
 project_task('findbugs', 'jodd, jodd-wot')
 project_clean()
 
 project_target('release', 'clean, build, javadoc, emma, findbugs, all', 'creates full release')
 
 
-pack('dist', 'jodd',     '', '''
+pack_dist = '''
 	${jodd.jar}
 	${jodd-wot.jar}
 	file_id.diz
-''', '')
-pack('dist-srcdoc',  'jodd-all', 'pack-dist', '''
-	${jodd.jar}
-	${jodd-sources.jar}
-	${jodd-javadoc.jar}
-	${jodd-wot.jar}
-	${jodd-wot-sources.jar}
-	${jodd-wot-javadoc.jar}
-	file_id.diz
-''', '')
-pack('all',  'jodd-all-with-dependencies', 'pack-dist-srcdoc', '''
-	${jodd.jar}
-	${jodd-sources.jar}
-	${jodd-javadoc.jar}
-	${jodd-wot.jar}
-	${jodd-wot-sources.jar}
-	${jodd-wot-javadoc.jar}
-	file_id.diz
-	lib/**
+'''
+pack_src = pack_dist + '''
+	${jodd.production.src.dir}/**
+	${jodd.production.javadoc.dir}/**
+	${jodd.test.src.dir}/**
+	${jodd-wot.production.src.dir}/**
+	${jodd-wot.production.javadoc.dir}/**
+	${jodd-wot.test.src.dir}/**
 	build*
-	pant.py
-''', '''
-	lib/oracle/*
-''')
+'''
+pack_all = pack_src + '''
+	lib/**
+'''
+pack('dist', 'jodd', '', pack_dist, '')
+pack('src',  'jodd-all', 'pack-dist', pack_src, '')
+pack('all',  'jodd-all-with-dependencies', 'pack-src', pack_all, 'lib/oracle/*')
 
 
 project_help('''
@@ -107,13 +93,13 @@ build:	compile all
 javadoc:	generates javadoc
 emma:	runs all tests
 findbugs:	finds bugs
-dist:	builds distribution jars
-all:	builds all jars
+all:	builds distribution jars
 
 
 Pack
 ----
 pack-dist:	pack just distribution jars
+pack-src:	pack sources and documents
 pack-all:	pack all
 ''')
 project_footer()
