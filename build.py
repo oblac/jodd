@@ -3,7 +3,7 @@
 prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - generic purpose open-source Java library and frameworks.'
-prjVersion = '3.0.6'
+prjVersion = '3.0.7'
 
 # vars
 copyright = 'Copyright &#169; 2003-2009 Jodd Team'
@@ -66,6 +66,7 @@ pack_src = pack_dist + '''
 	${jodd-wot.production.src.dir}/**
 	${jodd-wot.production.javadoc.dir}/**
 	${jodd-wot.test.src.dir}/**
+	etc/javadoc/**
 	build*
 '''
 pack_all = pack_src + '''

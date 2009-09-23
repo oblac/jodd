@@ -8,7 +8,6 @@ ant build
 ant javadoc
 ant emma
 ant findbugs
-ant dist
 ant all
 ant pack-all
 

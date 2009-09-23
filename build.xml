@@ -606,6 +606,7 @@
 	${jodd-wot.production.src.dir}/**
 	${jodd-wot.production.javadoc.dir}/**
 	${jodd-wot.test.src.dir}/**
+	etc/javadoc/**
 	build*
 " excludes=""/>
 	</target>
@@ -622,6 +623,7 @@
 	${jodd-wot.production.src.dir}/**
 	${jodd-wot.production.javadoc.dir}/**
 	${jodd-wot.test.src.dir}/**
+	etc/javadoc/**
 	build*
 
 	lib/**
