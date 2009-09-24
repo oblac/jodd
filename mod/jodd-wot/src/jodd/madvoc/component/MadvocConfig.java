@@ -32,6 +32,7 @@ public class MadvocConfig {
 		rootPackage = null;
 		detectDuplicatePathsEnabled = true;
 		actionPathMappingEnabled = false;
+		preventCaching = true;
 	}
 
 	// ---------------------------------------------------------------- encoding
@@ -238,4 +239,18 @@ public class MadvocConfig {
 		this.actionPathMappingEnabled = actionPathMappingEnabled;
 	}
 
+	// ---------------------------------------------------------------- caching
+
+	protected boolean preventCaching;
+
+	public boolean isPreventCaching() {
+		return preventCaching;
+	}
+
+	/**
+	 * Specifies if Madvoc should add response params to prevent browser caching.
+	 */
+	public void setPreventCaching(boolean preventCaching) {
+		this.preventCaching = preventCaching;
+	}
 }

@@ -36,7 +36,7 @@ public class MoveResult extends ActionResult {
 	 * Saves action in the session under some id that is added as request parameter.
 	 */
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpSession session = actionRequest.getHttpServletRequest().getSession();
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);

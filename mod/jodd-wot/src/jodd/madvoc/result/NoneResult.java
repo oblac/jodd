@@ -19,7 +19,7 @@ public class NoneResult extends ActionResult {
 	 * Executes result on given action result value.
 	 */
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		// none, direct output
 	}
 }

@@ -564,12 +564,12 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- cache
 
 	/**
-	 * Prevents HTTP cache. Usually used in <i>prelude.jspf</i>.
+	 * Prevents HTTP cache.
 	 */
 	public static void preventCaching(HttpServletResponse response) {
-		response.setHeader("Cache-Control", "max-age=0, must-revalidate, no-cache, no-store, private");  // HTTP 1.1
+		response.setHeader("Cache-Control", "max-age=0, must-revalidate, no-cache, no-store, private, post-check=0, pre-check=0");  // HTTP 1.1
 		response.setHeader("Pragma","no-cache");        // HTTP 1.0
-		response.setDateHeader ("Expires", 1);          // prevents caching at the proxy server
+		response.setDateHeader ("Expires", 0);          // prevents caching at the proxy server
 	}
 
 }

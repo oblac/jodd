@@ -27,7 +27,7 @@ public class RawResult extends ActionResult {
 	protected MadvocConfig madvocConfig;
 
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws IOException {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws IOException {
 		if (resultObject == null) {
 			return;
 		}

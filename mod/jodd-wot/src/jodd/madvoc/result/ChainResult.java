@@ -22,7 +22,7 @@ public class ChainResult extends ActionResult {
 	 * Simply sets the next action request for the chain.
 	 */
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		actionRequest.setNextActionPath(resultPath);
 	}
 }

@@ -27,7 +27,7 @@ public class ServletRedirectResult extends ActionResult {
 	 * Redirects to the given location. Does its redirection via a RequestDispatcher.
 	 */
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 		resultPath = BeanTool.parseTemplate(resultPath, actionRequest.getAction());

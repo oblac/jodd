@@ -8,6 +8,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
+import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -130,7 +131,7 @@ public class MadvocController {
 	 * Result value is first checked against aliased values. Then, it is resolved and then passed
 	 * to the founded {@link ActionResult}.
 	 *
-	 * @see ActionResult#execute(jodd.madvoc.ActionRequest, Object, String, String)
+	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object, String, String)
 	 */
 	public void render(ActionRequest req, Object resultObject) throws Exception {
 		String resultValue = resultObject != null ? resultObject.toString() : null;
@@ -153,9 +154,11 @@ public class MadvocController {
 			result.initialized();
 			result.init();
 		}
-
+		if (madvocConfig.preventCaching) {
+			ServletUtil.preventCaching(req.getHttpServletResponse());
+		}
 		String resultPath = resultMapper.resolveResultPath(req.getActionConfig(), resultValue);
-		result.execute(req, resultObject, resultValue, resultPath);
+		result.render(req, resultObject, resultValue, resultPath);
 	}
 
 	// ---------------------------------------------------------------- create

@@ -33,7 +33,7 @@ public abstract class ActionResult {
 	 * @param resultValue string representation of result, may be null
 	 * @param resultPath result path
 	 */
-	public abstract void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception;
+	public abstract void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception;
 
 
 	protected boolean initialized;

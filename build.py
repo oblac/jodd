@@ -26,8 +26,7 @@ module_do_build('production, test')
 module_do_doc('production')
 module_do_test('jodd.TestJodd')
 module_do_findbugs()
-module_dist(moduleName)
-#module_dist_jar('jodd.Jodd')
+module_dist(moduleName, 'jodd.Jodd')
 
 module('jodd-wot')
 module_compile('production', 'jdk5', '>jodd.production, servlets, asm, slf4j')
@@ -44,14 +43,14 @@ module_compile('production', 'jdk5', '')
 module_do_build('production')
 
 project()
-project_task('build', 'jodd, jodd-wot, jodd-gfx')
-project_task('javadoc', 'jodd, jodd-wot')
-project_task('emma', 'jodd, jodd-wot')
-project_task2('all', 'dist', 'jodd, jodd-wot')
-project_task('findbugs', 'jodd, jodd-wot')
+project_task('build', '.jodd, .jodd-wot, .jodd-gfx')
+project_task('javadoc', 'build, .jodd, .jodd-wot')
+project_task('emma', 'build, .jodd, .jodd-wot')
+project_task('findbugs', 'build, .jodd, .jodd-wot')
+project_task('dist', 'build, .jodd, .jodd-wot, build')
 project_clean()
 
-project_target('release', 'clean, build, javadoc, emma, findbugs, all', 'creates full release')
+project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')
 
 
 pack_dist = '''
@@ -72,7 +71,7 @@ pack_src = pack_dist + '''
 pack_all = pack_src + '''
 	lib/**
 '''
-pack('dist', 'jodd', 'all', pack_dist, '')
+pack('dist', 'jodd', 'dist', pack_dist, '')
 pack('src',  'jodd-all', 'pack-dist', pack_src, '')
 pack('all',  'jodd-all-with-dependencies', 'pack-src', pack_all, 'lib/oracle/*')
 
@@ -94,7 +93,7 @@ build:	compile all
 javadoc:	generates javadoc
 emma:	runs all tests
 findbugs:	finds bugs
-all:	builds distribution jars
+dist:	builds distribution jars
 
 
 Pack

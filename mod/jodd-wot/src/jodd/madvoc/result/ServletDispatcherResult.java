@@ -34,7 +34,7 @@ public class ServletDispatcherResult extends ActionResult {
 	 * will be sent back in the http response, what will produce error 500.
 	 */
 	@Override
-	public void execute(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 

@@ -22,7 +22,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.0.6"/>
+	<property name="prjVersion" value="3.0.7"/>
 
 	<patternset id="ignored.files">
 		<exclude name="**/CVS/**"/>
@@ -314,6 +314,7 @@
 				<attribute name="Release-Date" value="${TODAY}"/>
 				<attribute name="Implementation-Title" value="${prjName} jodd"/>
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
+				<attribute name="Main-Class" value="jodd.Jodd"/>
 			</manifest>
 			<fileset dir="${jodd.production.out.dir}"/>
 		</jar>
@@ -569,13 +570,13 @@
 
 	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-gfx" description="invokes 'build' on project"/>
 
-	<target name="javadoc" depends="javadoc.jodd, javadoc.jodd-wot" description="invokes 'javadoc' on project"/>
+	<target name="javadoc" depends="build, javadoc.jodd, javadoc.jodd-wot" description="invokes 'javadoc' on project"/>
 
-	<target name="emma" depends="emma.jodd, emma.jodd-wot" description="invokes 'emma' on project"/>
+	<target name="emma" depends="build, emma.jodd, emma.jodd-wot" description="invokes 'emma' on project"/>
 
-	<target name="all" depends="dist.jodd, dist.jodd-wot" description="invokes 'all' on project"/>
+	<target name="findbugs" depends="build, findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' on project"/>
 
-	<target name="findbugs" depends="findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' on project"/>
+	<target name="dist" depends="build, dist.jodd, dist.jodd-wot, build" description="invokes 'dist' on project"/>
 
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>
@@ -583,9 +584,9 @@
 		<delete dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
-	<target name="release" depends="clean, build, javadoc, emma, findbugs, all" description="creates full release"/>
+	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist" description="creates full release"/>
 
-	<target name="pack-dist" depends="all" description="packs distribution jars">
+	<target name="pack-dist" depends="dist" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
@@ -648,7 +649,7 @@ build:	compile all
 javadoc:	generates javadoc
 emma:	runs all tests
 findbugs:	finds bugs
-all:	builds distribution jars
+dist:	builds distribution jars
 
 
 Pack
