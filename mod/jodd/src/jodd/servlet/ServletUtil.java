@@ -22,7 +22,6 @@ import jodd.util.MimeTypes;
 import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.servlet.upload.FileUpload;
-import com.sun.mail.iap.Response;
 
 /**
  * Miscellaneous servlet utilities.
