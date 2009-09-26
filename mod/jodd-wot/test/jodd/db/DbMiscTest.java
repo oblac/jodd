@@ -116,4 +116,16 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		}
 
 	}
+
+	public void testSetObjects() throws SQLException {
+		DbSession session = new DbSession(cp);
+		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = ?");
+		Object[] o = {Integer.valueOf(1)};
+		dbQuery.setObjects(o);
+		ResultSet rs = dbQuery.execute();
+		if (rs.next()) {
+			assertEquals(1, rs.getInt(1));
+		}
+	}
+
 }

@@ -965,9 +965,9 @@ s	 */
 	 * Sets an array of objects parameters in given order.
 	 */
 	public void setObjects(Object... objects) {
-		int index = 0;
-		while (index < objects.length) {
-			setObject(index, objects[index++]);
+		int index = 1;
+		for (Object object : objects) {
+			setObject(index++, object);
 		}
 	}
 
