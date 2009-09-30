@@ -16,6 +16,7 @@ public class PrettyStringBuilder {
 	protected int maxDeep = 3;
 	protected int deep;
 	protected String nullValue = "<null>";
+	protected String moreValue = ",...";
 
 	public int getMaxItemsToShow() {
 		return maxItemsToShow;
@@ -50,6 +51,17 @@ public class PrettyStringBuilder {
 		this.nullValue = nullValue;
 	}
 
+	public String getMoreValue() {
+		return moreValue;
+	}
+
+	/**
+	 * Sets string for 'more'.
+	 */
+	public void setMoreValue(String moreValue) {
+		this.moreValue = moreValue;
+	}
+
 	/**
 	 * Returns pretty value from object value.
 	 */
@@ -76,7 +88,7 @@ public class PrettyStringBuilder {
 				}
 			}
 			if (len < arrayLen) {
-				s.append("...");
+				s.append(moreValue);
 			}
 			s.append(']');
 		} else if (obj instanceof Collection) {
@@ -93,7 +105,7 @@ public class PrettyStringBuilder {
 				i++;
 			}
 			if (i < coll.size()) {
-				s.append("...");
+				s.append(moreValue);
 			}
 			s.append(')');
 		} else if (obj instanceof Map) {
@@ -112,7 +124,7 @@ public class PrettyStringBuilder {
 				i++;
 			}
 			if (i < map.size()) {
-				s.append("...");
+				s.append(moreValue);
 			}
 			s.append('}');
 		} else {
