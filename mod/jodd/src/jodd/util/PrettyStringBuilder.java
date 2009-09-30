@@ -12,23 +12,29 @@ import java.util.Map;
  */
 public class PrettyStringBuilder {
 
-	protected int maxArrayLen = 10;
+	protected int maxItemsToShow = 10;
 	protected int maxDeep = 3;
 	protected int deep;
 	protected String nullValue = "<null>";
 
-	public int getMaxArrayLen() {
-		return maxArrayLen;
+	public int getMaxItemsToShow() {
+		return maxItemsToShow;
 	}
 
-	public void setMaxArrayLen(int maxArrayLen) {
-		this.maxArrayLen = maxArrayLen;
+	/**
+	 * Sets the max number of items of arrays, collections and maps to show.
+	 */
+	public void setMaxItemsToShow(int maxItemsToShow) {
+		this.maxItemsToShow = maxItemsToShow;
 	}
 
 	public int getMaxDeep() {
 		return maxDeep;
 	}
 
+	/**
+	 * Sets how deep to examine inner objects.
+	 */
 	public void setMaxDeep(int maxDeep) {
 		this.maxDeep = maxDeep;
 	}
@@ -37,6 +43,9 @@ public class PrettyStringBuilder {
 		return nullValue;
 	}
 
+	/**
+	 * Sets <code>null</code> value representation.
+	 */
 	public void setNullValue(String nullValue) {
 		this.nullValue = nullValue;
 	}
@@ -58,7 +67,7 @@ public class PrettyStringBuilder {
 		Class c = obj.getClass();
 		if (c.isArray()) {
 			int arrayLen = Array.getLength(obj);
-			int len = Math.min(arrayLen, maxArrayLen);
+			int len = Math.min(arrayLen, maxItemsToShow);
 			s.append('[');
 			for (int i = 0; i < len; i++) {
 				s.append(toPrettyString(Array.get(obj, i)));
@@ -72,11 +81,15 @@ public class PrettyStringBuilder {
 			s.append(']');
 		} else if (obj instanceof Collection) {
 			Collection coll = (Collection) obj;
+			int len = Math.min(coll.size(), maxItemsToShow);
 			Iterator it = coll.iterator();
 			int i = 0;
 			s.append('(');
-			while ((it.hasNext() && (i < maxArrayLen))) {
+			while ((it.hasNext() && (i < maxItemsToShow))) {
 				s.append(toPrettyString(it.next()));
+				if (i != len - 1) {
+					s.append(',');
+				}
 				i++;
 			}
 			if (i < coll.size()) {
@@ -85,13 +98,17 @@ public class PrettyStringBuilder {
 			s.append(')');
 		} else if (obj instanceof Map) {
 			Map map = (Map) obj;
+			int len = Math.min(map.size(), maxItemsToShow);
 			Iterator it = map.keySet().iterator();
 			int i = 0;
 			s.append('{');
-			while ((it.hasNext() && (i < maxArrayLen))) {
+			while ((it.hasNext() && (i < maxItemsToShow))) {
 				Object key = it.next();
 				s.append(key).append(':');
 				s.append(toPrettyString(map.get(key)));
+				if (i != len - 1) {
+					s.append(',');
+				}
 				i++;
 			}
 			if (i < map.size()) {
