@@ -8,7 +8,7 @@ import jodd.util.ThreadUtil;
 public class LFUCacheTest extends TestCase {
 
 	public void testCache() {
-		Cache cache = new LFUCache(3);
+		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertFalse(cache.isFull());
@@ -27,7 +27,7 @@ public class LFUCacheTest extends TestCase {
 	}
 
 	public void testCacheTime() {
-		Cache cache = new LFUCache(3);
+		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1", 50);
 		assertNotNull(cache.get("1"));
 		assertNotNull(cache.get("1"));  // boost usage
@@ -52,6 +52,21 @@ public class LFUCacheTest extends TestCase {
 		assertNotNull(cache.get("2"));
 		assertNotNull(cache.get("4"));
 		assertNull(cache.get("1"));
+	}
+
+	public void testPrune() {
+		Cache<String, String> cache = new LFUCache<String, String>(3);
+		cache.put("1", "1");
+		cache.put("2", "2");
+		cache.put("3", "3");
+
+		assertEquals(3, cache.size());
+		assertEquals(3, cache.prune());
+		assertEquals(0, cache.size());
+
+		cache.put("4", "4");
+		assertEquals(0, cache.prune());
+		assertEquals(1, cache.size());
 	}
 
 }

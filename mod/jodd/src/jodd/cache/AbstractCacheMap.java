@@ -48,7 +48,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	protected int cacheSize;      // max cache size, 0 = no limit
 
 	/**
-	 * Returns cache size or <code>0</code> if there is no size limit.
+	 * {@inheritDoc}
 	 */
 	public int getCacheSize() {
 		return cacheSize;
@@ -83,8 +83,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 
 	/**
-	 * Adds an object to the cache with default timeout.
-	 * @see AbstractCacheMap#put(Object, Object, long)
+	 * {@inheritDoc}
 	 */
 	public void put(K key, V object) {
 		put(key, object, timeout);
@@ -92,8 +91,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 
 	/**
-	 * Adds an object to the cache with specified timeout after which it becomes expired.
-	 * If cache is full, prune is invoked to make room for new object.
+	 * {@inheritDoc}
 	 */
 	public void put(K key, V object, long timeout) {
 		CacheObject co = new CacheObject(key, object, timeout);
@@ -110,8 +108,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	// ---------------------------------------------------------------- get
 
 	/**
-	 * Retrieves an object from the cache. Returns <code>null</code> if object
-	 * is not longer in cache or if it is expired.
+	 * {@inheritDoc}
 	 */
 	public V get(K key) {
 		CacheObject co = cacheMap.get(key);
@@ -128,17 +125,14 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	// ---------------------------------------------------------------- prune
 
 	/**
-	 * Prunes objects from cache and returns the number of removed objects.
-	 * Which strategy is used depends on cache implementation. 
+	 * {@inheritDoc}
 	 */
 	public abstract int prune();
-
 
 	// ---------------------------------------------------------------- common
 
 	/**
-	 * Returns <code>true</code> if max cache capacity has been reached
-	 * only if cache is size limited.
+	 * {@inheritDoc}
 	 */
 	public boolean isFull() {
 		if (cacheSize == 0) {
@@ -148,14 +142,14 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	}
 
 	/**
-	 * Removes an object from the cache.
+	 * {@inheritDoc}
 	 */
 	public void remove(K key) {
 		cacheMap.remove(key);
 	}
 
 	/**
-	 * Clears current cache.
+	 * {@inheritDoc}
 	 */
 	public void clear() {
 		cacheMap.clear();
@@ -163,9 +157,16 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 
 	/**
-	 * Returns current cache size.
+	 * {@inheritDoc}
 	 */
 	public int size() {
 		return cacheMap.size();
-	}	
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isEmpty() {
+		return size() == 0;
+	}
 }

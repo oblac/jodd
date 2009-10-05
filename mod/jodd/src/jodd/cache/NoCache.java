@@ -48,4 +48,8 @@ public class NoCache<K, V> implements Cache<K, V> {
 	public int size() {
 		return 0;
 	}
+
+	public boolean isEmpty() {
+		return true;
+	}
 }

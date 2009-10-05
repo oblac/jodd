@@ -32,7 +32,7 @@ public class LFUCache<K, V> extends AbstractCacheMap<K, V> {
 	// ---------------------------------------------------------------- prune
 
 	/**
-	 * Prunes expired and, if cache is still full, the LFU element from the cache.
+	 * Prunes expired and, if cache is still full, the LFU element(s) from the cache.
 	 * On LFU removal, access count is normalized to value which had removed object.
 	 * Returns the number of removed objects.
 	 */

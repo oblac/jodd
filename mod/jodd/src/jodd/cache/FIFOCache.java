@@ -14,7 +14,7 @@ import java.util.Iterator;
  * added. Cache access overhead is constant time regardless of the size of the cache. The advantage of this algorithm
  * is that it's simple and fast; it can be implemented using a simple array and an index. The disadvantage is that
  * it's not very smart; it doesn't make any effort to keep more commonly used items in cache.<br>
- * Summary for FIFO: fast, not adaptive, not scan resistant
+ * Summary for FIFO: fast, not adaptive, not scan resistant.
  */
 public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 
@@ -55,6 +55,7 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 		if (isFull()) {
 			if (first != null) {
 				cacheMap.remove(first.key);
+				count++;
 			}
 		}
 		return count;

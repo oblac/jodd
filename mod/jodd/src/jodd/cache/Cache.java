@@ -25,7 +25,7 @@ public interface Cache<K, V> {
 
 	/**
 	 * Adds an object to the cache with specified timeout after which it becomes expired.
-	 * If cache is full, prune is invoked to make room for new object.
+	 * If cache is full, {@link #prune()} is invoked to make room for new object.
 	 */
 	void put(K key, V object, long timeout);
 
@@ -37,7 +37,7 @@ public interface Cache<K, V> {
 
 	/**
 	 * Prunes objects from cache and returns the number of removed objects.
-	 * Which strategy is used depends on cache implementation.
+	 * Used strategy depends on cache implementation.
 	 */
 	int prune();
 
@@ -61,4 +61,9 @@ public interface Cache<K, V> {
 	 * Returns current cache size.
 	 */
 	int size();
+
+	/**
+	 * Returns <code>true</code> if cache is empty.
+	 */
+	boolean isEmpty();
 }

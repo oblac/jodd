@@ -8,7 +8,7 @@ import jodd.util.ThreadUtil;
 public class LRUCacheTest extends TestCase {
 
 	public void testCache() {
-		Cache cache = new LRUCache(3);
+		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertFalse(cache.isFull());
@@ -26,7 +26,7 @@ public class LRUCacheTest extends TestCase {
 	}
 
 	public void testCache2() {
-		Cache cache = new LRUCache(3);
+		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertFalse(cache.isFull());
@@ -49,7 +49,7 @@ public class LRUCacheTest extends TestCase {
 
 
 	public void testCacheTime() {
-		Cache cache = new LRUCache(3);
+		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("3", "3");
 		cache.put("2", "2");
 		assertNotNull(cache.get("2"));
@@ -61,5 +61,20 @@ public class LRUCacheTest extends TestCase {
 		assertNull(cache.get("1"));     // expired
 		assertFalse(cache.isFull());
 	}
+	
+	public void testPrune() {
+		Cache<String, String> cache = new LRUCache<String, String>(3);
+		cache.put("1", "1");
+		cache.put("2", "2");
+		cache.put("3", "3");
+
+		assertEquals(0, cache.prune());
+		assertEquals(3, cache.size());
+
+		cache.put("4", "4");
+		assertEquals(0, cache.prune());
+		assertEquals(3, cache.size());
+	}
+
 
 }
