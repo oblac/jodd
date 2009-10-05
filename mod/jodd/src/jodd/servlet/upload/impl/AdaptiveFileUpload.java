@@ -5,6 +5,7 @@ package jodd.servlet.upload.impl;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
+import jodd.io.StreamUtil;
 import jodd.servlet.upload.FileUpload;
 import jodd.servlet.upload.MultipartRequestInputStream;
 
@@ -24,18 +25,19 @@ import java.io.FileInputStream;
  */
 public class AdaptiveFileUpload extends FileUpload {
 
+	protected static final String TMP_FILE_PREFIX = "upload";
+	protected static final String TMP_FILE_SUFFIX = ".jodd";
+
 	protected final int memoryThreshold;
 	protected final File uploadPath;
-	protected final int maxFileSize;
 	protected final boolean breakOnError;
 	protected final String[] fileExtensions;
 	protected final boolean allowFileExtensions;
 
 	AdaptiveFileUpload(MultipartRequestInputStream input, int memoryThreshold, File uploadPath, int maxFileSize, boolean breakOnError, String[] extensions, boolean allowed) {
-		super(input);
+		super(input, maxFileSize);
 		this.memoryThreshold = memoryThreshold;
 		this.uploadPath = uploadPath;
-		this.maxFileSize = maxFileSize;
 		this.breakOnError = breakOnError;
 		this.fileExtensions = extensions;
 		this.allowFileExtensions = allowed;
@@ -49,10 +51,6 @@ public class AdaptiveFileUpload extends FileUpload {
 
 	public File getUploadPath() {
 		return uploadPath;
-	}
-
-	public int getMaxFileSize() {
-		return maxFileSize;
 	}
 
 	public boolean isBreakOnError() {
@@ -71,14 +69,6 @@ public class AdaptiveFileUpload extends FileUpload {
 
 	protected File tempFile;
 	protected byte[] data;
-	protected boolean valid;
-
-	/**
-	 * Returns <code>true</code> if file is valid and passes all the rules.
-	 */
-	public boolean isValid() {
-		return valid;
-	}
 
 	/**
 	 * Returns <code>true</code> if file upload resides in memory.
@@ -100,9 +90,8 @@ public class AdaptiveFileUpload extends FileUpload {
 					}
 					size = input.skipToBoundary();
 					return false;
-				} else {
-					return true;			// extension matched and it is allowed.
 				}
+				return true;		// extension matched and it is allowed.
 			}
 		}
 		if (allowFileExtensions == true) {	// extension is not one of the allowed ones.
@@ -139,11 +128,12 @@ public class AdaptiveFileUpload extends FileUpload {
 			data = fbaos.toByteArray();
 			if (written <= memoryThreshold) {
 				size = data.length;
+				valid = true;
 				return;
 			}
 		}
 
-		tempFile = File.createTempFile("upload", ".jodd", uploadPath);
+		tempFile = File.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;
@@ -158,26 +148,23 @@ public class AdaptiveFileUpload extends FileUpload {
 				size += input.copyMax(out, maxFileSize - size + 1);		// one more byte to detect larger files
 				if (size > maxFileSize) {
 					deleteTempFile = true;
+					fileTooBig = true;
 					valid = false;
 					if (breakOnError == true) {
-						throw new IOException("File upload (" + header.getFileName() + ") too big.");
+						throw new IOException("File upload (" + header.getFileName() + ") too big, > " + maxFileSize);
 					}
 					input.skipToBoundary();
 					return;
 				}
 			}
+			valid = true;
 		} finally {
-			try {
-				out.close();
-			} finally {
-				if (deleteTempFile) {
-					tempFile.delete();
-					tempFile = null;
-				}
+			StreamUtil.close(out);
+			if (deleteTempFile) {
+				tempFile.delete();
+				tempFile = null;
 			}
 		}
-
-		valid = true;
 	}
 
 	// ---------------------------------------------------------------- operations

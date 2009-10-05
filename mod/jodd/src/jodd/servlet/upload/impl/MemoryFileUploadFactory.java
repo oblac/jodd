@@ -11,11 +11,30 @@ import jodd.servlet.upload.MultipartRequestInputStream;
  */
 public class MemoryFileUploadFactory implements FileUploadFactory {
 
+	protected int maxFileSize = 102400;
+
+	public int getMaxFileSize() {
+		return maxFileSize;
+	}
+
+	public void setMaxFileSize(int maxFileSize) {
+		this.maxFileSize = maxFileSize;
+	}
+
+	/**
+	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
+	 */
+	public MemoryFileUploadFactory maxFileSize(int maxFileSize) {
+		this.maxFileSize = maxFileSize;
+		return this;
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public FileUpload create(MultipartRequestInputStream input) {
-		return new MemoryFileUpload(input);
+		return new MemoryFileUpload(input, maxFileSize);
 	}
 
 }

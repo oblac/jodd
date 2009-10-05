@@ -14,6 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
+import java.io.OutputStream;
 
 /**
  * {@link FileUpload} that saves uploaded files directly to destination folder.
@@ -22,8 +23,8 @@ public class DiskFileUpload extends FileUpload {
 
 	protected final File destFolder;
 
-	DiskFileUpload(MultipartRequestInputStream input, File destinationFolder) {
-		super(input);
+	DiskFileUpload(MultipartRequestInputStream input, File destinationFolder, int maxFileSize) {
+		super(input, maxFileSize);
 		this.destFolder = destinationFolder;
 	}
 
@@ -65,12 +66,23 @@ public class DiskFileUpload extends FileUpload {
 	@Override
 	protected void processStream() throws IOException {
 		file = new File(destFolder, header.getFileName());
-		FileOutputStream fos = new FileOutputStream(file);
-		size = -1;
+		OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+		size = 0;
 		try {
-			size = input.copyAll(new BufferedOutputStream(fos));
+			if (maxFileSize == -1) {
+				size = input.copyAll(out);
+			} else {
+				size = input.copyMax(out, maxFileSize + 1);		// one more byte to detect larger files
+				if (size > maxFileSize) {
+					fileTooBig = true;
+					valid = false;
+					input.skipToBoundary();
+					return;
+				}
+			}
+			valid = true;
 		} finally {
-			StreamUtil.close(fos);
+			StreamUtil.close(out);
 		}
 	}
 

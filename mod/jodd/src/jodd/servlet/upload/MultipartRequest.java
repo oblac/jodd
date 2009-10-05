@@ -4,6 +4,7 @@ package jodd.servlet.upload;
 
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.impl.MemoryFileUploadFactory;
+import jodd.io.FastByteArrayOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -325,32 +326,27 @@ public class MultipartRequest {
 				break;
 			}
 
-			if (header.isFile && (header.fileName.length() > 0)) {
-				if (header.contentType.indexOf("application/x-macbinary") > 0) {
-					input.skipBytes(128);
+			if (header.isFile == true) {
+				String fileName = header.fileName;
+				if (fileName.length() > 0) {
+					if (header.contentType.indexOf("application/x-macbinary") > 0) {
+						input.skipBytes(128);
+					}
 				}
 				FileUpload newFile = fileUploadFactory.create(input);
 				newFile.processStream();
+				if (fileName.length() == 0) {
+					// file was specified, but no name was provided, therefore it was not uploaded. todo when this happens?
+				}
 				putFile(reqFiles, header.formFieldName, newFile);
 			} else {
-				//MemoryFileUpload newFile = new MemoryFileUpload(input);
-				FileUpload newFile = fileUploadFactory.create(input);
-				newFile.processStream();
-				if (header.isFile == true) {
-					// file was specified, but no name was provided, therefore it was not uploaded.
-					newFile.uploaded = false;
-					putFile(reqFiles, header.formFieldName, newFile);
-				} else {
-					// no file, therefore it is regular form parameter.
-					String value = null;
-					try {
-						value = new String(newFile.getFileContent(), encoding);
-					} catch (IOException ioex) {
-						value = null;
-					}
-					putString(reqParam, header.formFieldName, value);
-				}
+				// no file, therefore it is regular form parameter.
+				FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
+				input.copyAll(fbos);
+				String value = new String(fbos.toByteArray(), encoding);
+				putString(reqParam, header.formFieldName, value);
 			}
+
 			input.skipBytes(1);
 			input.mark(1);
 			if (input.readByte() == '-') {

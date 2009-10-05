@@ -9,15 +9,14 @@ import jodd.servlet.upload.MultipartRequestInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
-import java.io.BufferedInputStream;
 
 /**
  * {@link FileUpload} that stores uploaded files in memory byte array.
  */
 public class MemoryFileUpload extends FileUpload {
 
-	MemoryFileUpload(MultipartRequestInputStream input) {
-		super(input);
+	MemoryFileUpload(MultipartRequestInputStream input, int maxFileSize) {
+		super(input, maxFileSize);
 	}
 
 	// ---------------------------------------------------------------- logic
@@ -33,23 +32,34 @@ public class MemoryFileUpload extends FileUpload {
 	}
 
 	/**
-	 * Returns buffered byte array stream.
+	 * Returns byte array input stream.
 	 */
 	@Override
 	public InputStream getFileInputStream() throws IOException {
-		return new BufferedInputStream(new ByteArrayInputStream(data));
+		return new ByteArrayInputStream(data);
 	}
-
 
 	/**
 	 * Reads data from input stream into byte array and stores file size.
 	 */
 	@Override
 	public void processStream() throws IOException {
-		FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
-		input.copyAll(fbos);
-		data = fbos.toByteArray();
-		this.size = data.length;
+		FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+		size = 0;
+		if (maxFileSize == -1) {
+			size += input.copyAll(out);
+		} else {
+			size += input.copyMax(out, maxFileSize + 1);		// one more byte to detect larger files
+			if (size > maxFileSize) {
+				fileTooBig = true;
+				valid = false;
+				input.skipToBoundary();
+				return;
+			}
+		}
+		data = out.toByteArray();
+		size = data.length;
+		valid = true;
 	}
 
 }

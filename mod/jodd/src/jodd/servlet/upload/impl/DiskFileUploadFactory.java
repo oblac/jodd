@@ -17,11 +17,24 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 
 	protected File destFolder;
 
+	protected int maxFileSize = 102400; 
+
 	public DiskFileUploadFactory() throws IOException {
 		this(SystemUtil.getTempDir());
 	}
 
 	public DiskFileUploadFactory(String destFolder) throws IOException {
+		this(destFolder, 102400);
+
+	}
+
+	public DiskFileUploadFactory(String destFolder, int maxFileSize) throws IOException {
+		setUploadDir(destFolder);
+		this.maxFileSize = maxFileSize;
+	}
+
+
+	public void setUploadDir(String destFolder) throws IOException {
 		if (destFolder == null) {
 			destFolder = SystemUtil.getTempDir();
 		}
@@ -35,11 +48,33 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 		this.destFolder = destination;
 	}
 
+	public DiskFileUploadFactory uploadDir(String destFolder) throws IOException {
+		setUploadDir(destFolder);
+		return this;
+	}
+
+
+	public int getMaxFileSize() {
+		return maxFileSize;
+	}
+
+	public void setMaxFileSize(int maxFileSize) {
+		this.maxFileSize = maxFileSize;
+	}
+
+	/**
+	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
+	 */
+	public DiskFileUploadFactory maxFileSize(int maxFileSize) {
+		this.maxFileSize = maxFileSize;
+		return this;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public FileUpload create(MultipartRequestInputStream input) {
-		return new DiskFileUpload(input, destFolder);
+		return new DiskFileUpload(input, destFolder, maxFileSize);
 	}
 
 }

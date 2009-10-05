@@ -14,12 +14,14 @@ import java.io.InputStream;
  */
 public abstract class FileUpload {
 
-	protected MultipartRequestInputStream input;
-	protected FileUploadHeader header;
+	protected final MultipartRequestInputStream input;
+	protected final int maxFileSize;
+	protected final FileUploadHeader header;
 
-	protected FileUpload(MultipartRequestInputStream input) {
+	protected FileUpload(MultipartRequestInputStream input, int maxFileSize) {
 		this.input = input;
 		this.header = input.lastHeader;
+		this.maxFileSize = maxFileSize;
 	}
 
 	// ----------------------------------------------------------------  header
@@ -45,11 +47,14 @@ public abstract class FileUpload {
 
 	// ---------------------------------------------------------------- size and validity
 
-	protected boolean uploaded = true;
+	protected boolean valid;
+
 	protected int size = -1;
 
+	protected boolean fileTooBig;
+
 	/**
-	 * Returns the file upload size.
+	 * Returns the file upload size or <code>-1</code>.
 	 */
 	public int getSize() {
 		return size;
@@ -58,17 +63,32 @@ public abstract class FileUpload {
 	/**
 	 * Returns <code>true</code> if file was uploaded correctly.
 	 */
-	public boolean isUploaded() {
-		return uploaded;
+	public boolean isValid() {
+		return valid;
+	}
+
+	/**
+	 * Returns max file size or <code>-1</code> if there is no max file size. 
+	 */
+	public int getMaxFileSize() {
+		return maxFileSize;
+	}
+
+	/**
+	 * Returns <code>true</code> if file is too big. File will be marked as invalid.
+	 */
+	public boolean isFileTooBig() {
+		return fileTooBig;
 	}
 
 	// ---------------------------------------------------------------- process
 
 	/**
 	 * Process request input stream. Note that file size is unknown at this point.
-	 * Therefore, the implementation <b>should</b> set the <b>size</b> attribute
-	 * after successful processing.
-	 *
+	 * Therefore, the implementation <b>should</b> set the {@link #getSize() size}
+	 * attribute after successful processing. This method also must set the
+	 * {@link #isValid() valid} attribute.
+	 * 
 	 * @see MultipartRequestInputStream
 	 */
 	protected abstract void processStream() throws IOException;
@@ -80,7 +100,7 @@ public abstract class FileUpload {
 	 */
 	@Override
 	public String toString() {
-		return "FileUpload: uploaded=[" + uploaded + "] field=[" + header.getFormFieldName() +
+		return "FileUpload: valid=[" + valid + "] field=[" + header.getFormFieldName() +
 				"] name=[" + header.getFileName() + "] size=[" + size + ']';
 	}
 }
