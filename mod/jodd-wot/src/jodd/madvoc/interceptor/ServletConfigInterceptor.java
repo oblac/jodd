@@ -15,13 +15,11 @@ import jodd.servlet.upload.MultipartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Configures actions and applies some servlet configuration prior action execution.
  * This interceptor does the following:
  * <ul>
- * <li>sets character encoding
  * <li>uses multi-part request if needed
  * <li>performs the injection (using either default or specified injector)
  * <li>invokes the action
@@ -56,7 +54,11 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse serlvetResponse = actionRequest.getHttpServletResponse();
 
-		servletRequest = prepare(actionRequest, servletRequest, serlvetResponse);
+		// detect multipart request
+		if (ServletUtil.isMultipartRequest(servletRequest)) {
+			servletRequest = new MultipartRequestWrapper(servletRequest, madvocConfig.getFileUploadFactory(), madvocConfig.getEncoding());
+			actionRequest.setHttpServletRequest(servletRequest);
+		}
 
 		// get injector
 		Object target = actionRequest.getAction();
@@ -64,22 +66,6 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		Object result = actionRequest.invoke();
 		outject(target, servletRequest);
 		return result;
-	}
-
-	/**
-	 * Prepares servlet request and response. Returns HTTP servlet request that might be wrapped for multiparts.
-	 */
-	protected HttpServletRequest prepare(ActionRequest actionRequest, HttpServletRequest servletRequest, HttpServletResponse serlvetResponse) throws IOException {
-		// set character encoding
-		servletRequest.setCharacterEncoding(madvocConfig.getEncoding());
-		serlvetResponse.setCharacterEncoding(madvocConfig.getEncoding());
-
-		// multi-part
-		if (ServletUtil.isMultipartRequest(servletRequest)) {
-			servletRequest = new MultipartRequestWrapper(servletRequest, madvocConfig.getFileUploadFactory(), madvocConfig.getEncoding());
-			actionRequest.setHttpServletRequest(servletRequest);
-		}
-		return servletRequest;
 	}
 
 	/**

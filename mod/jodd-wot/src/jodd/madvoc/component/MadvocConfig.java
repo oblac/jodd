@@ -47,7 +47,7 @@ public class MadvocConfig {
 	}
 
 	/**
-	 * Sets web application character encoding.
+	 * Sets web application character encoding. If set to <code>null</code> encoding will be not applied.
 	 */
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;

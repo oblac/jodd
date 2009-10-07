@@ -77,6 +77,12 @@ public class MadvocController {
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 		ActionRequest request = null;
 
+		String encoding = madvocConfig.getEncoding();
+		if (encoding != null) {
+			servletRequest.setCharacterEncoding(madvocConfig.getEncoding());
+			servletResponse.setCharacterEncoding(madvocConfig.getEncoding());
+		}
+
 		while (actionPath != null) {
 			log.debug("Action path: {}", actionPath);
 
@@ -154,7 +160,7 @@ public class MadvocController {
 			result.initialized();
 			result.init();
 		}
-		if (madvocConfig.preventCaching) {
+		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(req.getHttpServletResponse());
 		}
 		String resultPath = resultMapper.resolveResultPath(req.getActionConfig(), resultValue);

@@ -36,6 +36,9 @@
 <a href="hello.defint2.html?foo=173&foo2=">parameters are copied</a><br>
 <a href="misc.html">misc</a><br>
 <a href="misc.post.html?girl.id=1&girl.name=requestName">inject id, prepare and execute</a><br>
+
+<br>
+<a href="search?query=%C5%A1aran">URI encoded link</a>
 </p>
 
 
