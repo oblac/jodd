@@ -2,11 +2,10 @@
 
 package jodd.petite.manager;
 
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.petite.PetiteException;
 import jodd.petite.InitMethodPoint;
+import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -30,9 +29,10 @@ public class InitMethodResolver {
 		}
 
 		// lookup methods
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
-		Method[] allMethods = cd.getAllMethods(true);
+//		ClassDescriptor cd = ClassIntrospector.lookup(type);
+//		Method[] allMethods = cd.getAllMethods(true);
+		Method[] allMethods = ReflectUtil.getSupportedMethods(type);
 		for (Method method : allMethods) {
 			PetiteInitMethod petiteInitMethod = method.getAnnotation(PetiteInitMethod.class);
 			if (petiteInitMethod == null) {
@@ -42,6 +42,7 @@ public class InitMethodResolver {
 				throw new PetiteException("Arguments are not allowed for Petite init method: " + type.getName() + '#' + method.getName() + "().");
 			}
 			int order = petiteInitMethod.order();
+			ReflectUtil.forceAccess(method);
 			list.add(new InitMethodPoint(method, order, petiteInitMethod.firstOff()));
 		}
 		if (list.isEmpty()) {
