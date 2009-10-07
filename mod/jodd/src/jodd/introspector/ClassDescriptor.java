@@ -16,7 +16,7 @@ import java.util.Collection;
 /**
  * A descriptor class for all methods/fields/constructors of a class.
  * Static methods/fields are ignored.
- * Hash table are pre-built to speed up query.
+ * Hash table is pre-built to speed up query.
  * <p>
  * Descriptors are 'lazy': various internal caches are created only on request.
  * <p>
@@ -33,16 +33,18 @@ import java.util.Collection;
  */
 public class ClassDescriptor {
 
-	private final Class type;
-	private int usageCount;
+	protected final Class type;
+	protected final boolean accessibleOnly;
+	protected int usageCount;
 
-	protected ClassDescriptor(Class type) {
+	public ClassDescriptor(Class type, boolean accessibleOnly) {
 		this.type = type;
 		isArray = type.isArray();
 		isMap = ReflectUtil.isSubclass(type, Map.class);
 		isList = ReflectUtil.isSubclass(type, List.class);
 		isSet = ReflectUtil.isSubclass(type, Set.class);
 		isCollection = ReflectUtil.isSubclass(type, Collection.class);
+		this.accessibleOnly = accessibleOnly;
 	}
 
 	/**
@@ -113,8 +115,6 @@ public class ClassDescriptor {
 
 	/**
 	 * Inspect class fields and create fields cache.
-	 * Default implementation uses {@link ReflectUtil#getAccessibleFields(Class)} for retrieving
-	 * only accessible fields.
 	 */
 	protected void inspectFields() {
 		if (allFields != null) {
@@ -123,7 +123,7 @@ public class ClassDescriptor {
 		Fields publicFields = new Fields();
 		Fields allFields = new Fields();
 
-		Field[] fields = ReflectUtil.getAccessibleFields(type);
+		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
 		for (Field field : fields) {
 			String fName = field.getName();
 			if (ReflectUtil.isPublic(field)) {
@@ -209,8 +209,6 @@ public class ClassDescriptor {
 
 	/**
 	 * Inspect methods and create methods cache.
-	 * Default implementation uses {@link ReflectUtil#getAccessibleMethods(Class)} for retrieving
-	 * only accessible methods.
 	 */
 	protected void inspectMethods() {
 		if (allMethods != null) {
@@ -219,7 +217,7 @@ public class ClassDescriptor {
 		Methods publicMethods = new Methods();
 		Methods allMethods = new Methods();
 
-		Method[] methods = ReflectUtil.getAccessibleMethods(type);
+		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (ReflectUtil.isPublic(method)) {
@@ -331,7 +329,7 @@ public class ClassDescriptor {
 		Properties publicProperties = new Properties();
 		Properties allProperties = new Properties();
 
-		Method[] methods = ReflectUtil.getAccessibleMethods(type);
+		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 		for (Method method : methods) {
 			if (Modifier.isStatic(method.getModifiers())) {
 				continue;			// ignore static
@@ -485,8 +483,6 @@ public class ClassDescriptor {
 
 	/**
 	 * Inspect class ctors and create ctors cache.
-	 * Default implementation uses {@link ReflectUtil#getAccessibleFields(Class)} for retrieving
-	 * only accessible fields.
 	 */
 	protected void inspectCtors() {
 		if (allCtors != null) {

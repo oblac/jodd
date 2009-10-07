@@ -4,21 +4,23 @@ package jodd.introspector;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
- * Simple {@link jodd.introspector.Introspector} caches all class descriptors.
+ * Default {@link jodd.introspector.Introspector introspector} caches all class descriptors.
+ * Only <b>accessible</b> methods and fields are examined.
+ * <p>
  * It does not provide any more subtle logic behind, therefore, it should not be used
  * in environments with dynamic class re-loading.
  *
- * todo: add optional max value for total number of class descriptors stored in cache 
+ * todo: add optional max value for total number of class descriptors stored in cache
+ * @see jodd.introspector.SupportedInterceptor 
  */
-public class SimpleIntrospector implements Introspector {
+public class AccessibleIntrospector implements Introspector {
 
-	protected Map<Class, ClassDescriptor> cache = new HashMap<Class, ClassDescriptor>();
+	protected final Map<Class, ClassDescriptor> cache = new HashMap<Class, ClassDescriptor>();
 
 	/**
-	 * Returns the {@link ClassDescriptor} object for specified class.
+	 * {@inheritDoc}
 	 */
 	public ClassDescriptor lookup(Class type) {
 		ClassDescriptor cd = cache.get(type);
@@ -32,8 +34,7 @@ public class SimpleIntrospector implements Introspector {
 	}
 
 	/**
-	 * Registers new class type. If type already registered, it will be
-	 * reseted and registered again with new class descriptor.
+	 * {@inheritDoc}
 	 */
 	public ClassDescriptor register(Class type) {
 		ClassDescriptor cd = describeClass(type);
@@ -42,28 +43,29 @@ public class SimpleIntrospector implements Introspector {
 	}
 
 	/**
-	 * Describes a class by creating a new instance of {@link ClassDescriptor}.
+	 * Describes a class by creating a new instance of {@link ClassDescriptor}
+	 * that examines all accessible methods and fields.
 	 */
 	protected ClassDescriptor describeClass(Class type) {
-		return new ClassDescriptor(type);
+		return new ClassDescriptor(type, true);
 	}
 
 	/**
-	 * Resets current cache.
+	 * {@inheritDoc}
 	 */
 	public void reset() {
-		cache = new WeakHashMap<Class, ClassDescriptor>();
+		cache.clear();
 	}
 
 	/**
-	 * Returns simple statistics information about all cached descriptors and their usage.
+	 * {@inheritDoc}
 	 */
 	public String getStatistics() {
 		StringBuilder stat = new StringBuilder();
 		stat.append("Total classes: ").append(cache.size()).append('\n');
-		for (Class clazz : cache.keySet()) {
-			ClassDescriptor bcd = cache.get(clazz);
-			stat.append('\t').append(clazz.getName()).append(" (");
+		for (Map.Entry<Class, ClassDescriptor> entry : cache.entrySet()) {
+			ClassDescriptor bcd = entry.getValue();
+			stat.append('\t').append(entry.getKey().getName()).append(" (");
 			stat.append(bcd.getUsageCount()).append(" uses)").append('\n');
 		}
 		return stat.toString();

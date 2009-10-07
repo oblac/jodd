@@ -6,8 +6,9 @@ package jodd.introspector;
 /**
  * Provides introspection analysis against any java class.
  * Implementations may cache {@link ClassDescriptor} objects to improve performance.
- * @see jodd.introspector.SimpleIntrospector
- * @see jodd.introspector.WeakIntrospector
+ * @see AccessibleIntrospector
+ * @see SupportedInterceptor
+ * @see WeakIntrospector
  */
 public interface Introspector {
 	/**

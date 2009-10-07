@@ -34,7 +34,7 @@ public class WeakIntrospector implements Introspector {
 	}
 
 	/**
-	 * Returns the {@link ClassDescriptor} object for specified class.
+	 * {@inheritDoc}
 	 */
 	public ClassDescriptor lookup(Class type) {
 		Map<String, ClassDescriptor> map = getClassDescriptorMap(type);
@@ -48,8 +48,7 @@ public class WeakIntrospector implements Introspector {
 	}
 
 	/**
-	 * Registers new class type. If type already registered, it will be
-	 * reseted and registered again with new class descriptor.
+	 * {@inheritDoc}
 	 */
 	public ClassDescriptor register(Class type) {
 		Map<String, ClassDescriptor> map = getClassDescriptorMap(type);
@@ -62,18 +61,18 @@ public class WeakIntrospector implements Introspector {
 	 * Describes a class by creating a new instance of {@link ClassDescriptor}.
 	 */
 	protected ClassDescriptor describeClass(Class type) {
-		return new ClassDescriptor(type);
+		return new ClassDescriptor(type, true);
 	}
 
 	/**
-	 * Resets current cache.
+	 * {@inheritDoc}
 	 */
 	public void reset() {
-		cache = new WeakHashMap<ClassLoader, Map<String, ClassDescriptor>>();
+		cache.clear();
 	}
 
 	/**
-	 * Returns simple statistics information about all cached descriptors and their usage.
+	 * {@inheritDoc}
 	 */
 	public String getStatistics() {
 		StringBuilder stat = new StringBuilder();
