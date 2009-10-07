@@ -39,6 +39,7 @@
 
 <br>
 <a href="search?query=%C5%A1aran">URI encoded link</a>
+<form action="search" method="post"><input type="text" name="query"><input type="submit"></form>
 </p>
 
 

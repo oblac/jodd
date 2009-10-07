@@ -27,6 +27,7 @@ public class MyWebApplication extends PetiteWebApplication {
 		super.registerMadvocComponents();
 		registerComponent(MyMadvocConfig.class);
 		registerComponent(MyRewriter.class);
+		registerComponent(MyInjectorsManager.class);
 	}
 
 	@Override

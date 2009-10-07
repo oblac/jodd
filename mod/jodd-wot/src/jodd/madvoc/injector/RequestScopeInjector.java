@@ -9,10 +9,13 @@ import jodd.madvoc.result.MoveResult;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.servlet.upload.FileUpload;
 import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -20,8 +23,13 @@ import java.util.Enumeration;
  */
 public class RequestScopeInjector extends ScopeInjector {
 
+	private static final String REQ_METHOD_GET = "GET";
+
+	protected final String encoding;
+
 	public RequestScopeInjector(ScopeDataManager scopeDataManager) {
 		super(scopeDataManager);
+		this.encoding = scopeDataManager.getMadvocConfig().getEncoding();
 	}
 
 
@@ -33,6 +41,7 @@ public class RequestScopeInjector extends ScopeInjector {
 	protected boolean injectParameters = true;
 	protected boolean copyParamsToAttributes;
 	protected boolean trimParams;
+	protected boolean encodeGetParams;
 
 	public boolean isIgnoreEmptyRequestParams() {
 		return ignoreEmptyRequestParams;
@@ -96,6 +105,23 @@ public class RequestScopeInjector extends ScopeInjector {
 		this.trimParams = trimParams;
 	}
 
+	public boolean isEncodeGetParams() {
+		return encodeGetParams;
+	}
+
+	/**
+	 * Specifies if GET parameters should be encoded. Alternativly, this can be set in container as well.
+	 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
+	 * file communicates the character-encoding choice to the web server,
+	 * and the Tomcat server correctly reads the URL GET parameters correctly.
+	 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
+	 * can be included in the sun-web.xml file.
+	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
+	 */
+	public void setEncodeGetParams(boolean encodeGetParams) {
+		this.encodeGetParams = encodeGetParams;
+	}
+
 	// ---------------------------------------------------------------- inject
 
 	/**
@@ -123,6 +149,7 @@ public class RequestScopeInjector extends ScopeInjector {
 	 * are simply ignored.
 	 */
 	protected void injectParameters(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
+		boolean encode = encodeGetParams && servletRequest.getMethod().equals(REQ_METHOD_GET);
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
@@ -136,6 +163,18 @@ public class RequestScopeInjector extends ScopeInjector {
 					paramValues = ServletUtil.prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 					if (paramValues == null) {
 						continue;
+					}
+					if (encode) {
+						for (int i = 0; i < paramValues.length; i++) {
+							String p = paramValues[i];
+							if (p != null) {
+								try {
+									paramValues[i] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
+								} catch (UnsupportedEncodingException unex) {
+									//ignore
+								}
+							}
+						}
 					}
 					setTargetProperty(target, name, paramValues, ii.create);
 				}

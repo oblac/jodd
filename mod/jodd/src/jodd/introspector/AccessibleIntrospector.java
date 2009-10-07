@@ -13,7 +13,7 @@ import java.util.Map;
  * in environments with dynamic class re-loading.
  *
  * todo: add optional max value for total number of class descriptors stored in cache
- * @see jodd.introspector.SupportedInterceptor 
+ * @see SupportedIntrospector
  */
 public class AccessibleIntrospector implements Introspector {
 

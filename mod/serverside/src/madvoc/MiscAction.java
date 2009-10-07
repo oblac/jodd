@@ -46,7 +46,7 @@ public class MiscAction implements Preparable {
 	public void prepare() {
 		System.out.println("MiscAction.prepare");
 		if (girl != null) {
-			girl.setName("database from name");
+			girl.setName("database name");
 		}
 		System.out.println(girl);
 	}

@@ -11,7 +11,7 @@ import jodd.petite.PetiteContainer;
 
 /**
  * Injectors manager component for all injectors.
- * It stores default implementations of all injectors si they can be configured from the outside.
+ * It stores default implementations of all injectors so they can be configured from the outside.
  */
 public class InjectorsManager {
 
@@ -26,15 +26,11 @@ public class InjectorsManager {
 	protected ContextInjector contextInjector;
 
 
-	@PetiteInitMethod(order = 1, firstOff = true)
-	void servletInjectorInit() {
-		createInjectors();
-	}
-
 	/**
-	 * Creates all injectors.
+	 * Creates all injectors, after class creation.
 	 */
-	protected void createInjectors() {
+	@PetiteInitMethod(order = 1, firstOff = true)
+	void createInjectors() {
 		requestScopeInjector = createRequestScopeInjector();
 		sessionScopeInjector = createSessionScopeInjector();
 		contextInjector = createContextInjector();

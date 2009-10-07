@@ -12,6 +12,7 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
+import jodd.petite.meta.PetiteInject;
 
 import java.util.Map;
 import java.util.List;
@@ -27,12 +28,24 @@ import java.lang.annotation.Annotation;
  */
 public class ScopeDataManager {
 
+	@PetiteInject
+	protected MadvocConfig madvocConfig;
+
 	protected final Map<ScopeType, Map<Class, ScopeData>> scopeDataMap;
 	protected final Map<ScopeType, Map<Method, ScopeData>> methodDataMap;
 
 	public ScopeDataManager() {
 		this.scopeDataMap = new EnumMap<ScopeType, Map<Class, ScopeData>>(ScopeType.class);
 		this.methodDataMap = new EnumMap<ScopeType, Map<Method, ScopeData>>(ScopeType.class);
+	}
+
+	// ---------------------------------------------------------------- misc
+
+	/**
+	 * Returns Madvoc configuration instance. Usually needed for the injectors.
+	 */
+	public MadvocConfig getMadvocConfig() {
+		return madvocConfig;
 	}
 
 	// ---------------------------------------------------------------- method data

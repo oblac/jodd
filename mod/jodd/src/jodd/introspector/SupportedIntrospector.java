@@ -8,7 +8,7 @@ package jodd.introspector;
  * 
  * @see AccessibleIntrospector
  */
-public class SupportedInterceptor extends AccessibleIntrospector {
+public class SupportedIntrospector extends AccessibleIntrospector {
 
 	/**
 	 * Describes a class by creating a new instance of {@link ClassDescriptor}
