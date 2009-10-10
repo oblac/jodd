@@ -16,7 +16,7 @@ import org.slf4j.Logger;
  */
 public class ThreadDbSessionProvider implements DbSessionProvider {
 
-	protected static final Logger log = LoggerFactory.getLogger(ThreadDbSessionProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(ThreadDbSessionProvider.class);
 
 	protected final boolean createIfMissing;
 

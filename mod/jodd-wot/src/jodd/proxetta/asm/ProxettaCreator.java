@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 public class ProxettaCreator {
 
-	protected static final Logger log = LoggerFactory.getLogger(ProxettaCreator.class);
+	private static final Logger log = LoggerFactory.getLogger(ProxettaCreator.class);
 
 	// ---------------------------------------------------------------- ctor
 

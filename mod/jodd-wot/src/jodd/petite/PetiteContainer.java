@@ -20,7 +20,7 @@ import org.slf4j.Logger;
  */
 public class PetiteContainer extends PetiteContainerRegistry {
 
-	protected static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
+	private static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
 

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
  */
 public class MadvocController {
 
-	protected static final Logger log = LoggerFactory.getLogger(MadvocController.class);
+	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;

@@ -20,7 +20,7 @@ import org.slf4j.Logger;
  */
 public class ActionsManager {
 
-	protected static final Logger log = LoggerFactory.getLogger(ActionsManager.class);
+	private static final Logger log = LoggerFactory.getLogger(ActionsManager.class);
 
 	@PetiteInject
 	protected ActionMethodParser actionMethodParser;

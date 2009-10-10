@@ -16,7 +16,7 @@ import org.slf4j.Logger;
  */
 public class DbJtxSessionProvider implements DbSessionProvider {
 
-	protected static final Logger log = LoggerFactory.getLogger(DbJtxSessionProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(DbJtxSessionProvider.class);
 
 	protected final JtxTransactionManager jtxTxManager;
 	protected final JtxTransactionMode defaultTxMode;

@@ -18,7 +18,7 @@ import org.slf4j.Logger;
  */
 public class JtxTransactionManager {
 
-	protected static final Logger log = LoggerFactory.getLogger(JtxTransactionManager.class);
+	private static final Logger log = LoggerFactory.getLogger(JtxTransactionManager.class);
 
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;

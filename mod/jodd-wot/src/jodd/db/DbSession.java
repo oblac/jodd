@@ -26,7 +26,7 @@ import org.slf4j.Logger;
  */
 public class DbSession {
 
-	protected static final Logger log = LoggerFactory.getLogger(DbSession.class);
+	private static final Logger log = LoggerFactory.getLogger(DbSession.class);
 
 	// ---------------------------------------------------------------- init & close
 

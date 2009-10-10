@@ -23,7 +23,7 @@ import org.slf4j.Logger;
  */
 public class AutomagicPetiteConfigurator extends FindClass implements PetiteConfigurator {
 
-	protected static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
+	private static final Logger log = LoggerFactory.getLogger(AutomagicPetiteConfigurator.class);
 
 	protected final byte[] petiteBeanAnnotationBytes;
 

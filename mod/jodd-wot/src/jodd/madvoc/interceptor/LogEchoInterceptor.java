@@ -10,7 +10,7 @@ import org.slf4j.Logger;
  */
 public class LogEchoInterceptor extends EchoInterceptor {
 
-	protected static final Logger log = LoggerFactory.getLogger(LogEchoInterceptor.class);
+	private static final Logger log = LoggerFactory.getLogger(LogEchoInterceptor.class);
 
 	@Override
 	protected void out(String message) {

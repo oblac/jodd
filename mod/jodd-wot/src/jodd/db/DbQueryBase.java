@@ -20,7 +20,7 @@ import java.util.HashSet;
  */
 abstract class DbQueryBase {
 
-	protected static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
+	private static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
 
 	// ---------------------------------------------------------------- query states
 

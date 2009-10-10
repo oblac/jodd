@@ -33,7 +33,7 @@ import org.slf4j.Logger;
  */
 public class AutomagicMadvocConfigurator extends FindClass implements MadvocConfigurator {
 
-	protected static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
+	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 
 	@PetiteInject
 	protected ActionsManager actionsManager;

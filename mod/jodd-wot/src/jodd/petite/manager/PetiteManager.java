@@ -34,7 +34,7 @@ import org.slf4j.Logger;
  */
 public class PetiteManager {
 
-	protected static final Logger log = LoggerFactory.getLogger(PetiteManager.class);
+	private static final Logger log = LoggerFactory.getLogger(PetiteManager.class);
 
 	protected final BeanManager beanManager;
 	protected final CtorResolver ctorResolver;

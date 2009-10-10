@@ -19,7 +19,7 @@ import org.slf4j.Logger;
  */
 public class AutomagicDbOrmConfigurator extends FindClass {
 
-	protected static final Logger log = LoggerFactory.getLogger(AutomagicDbOrmConfigurator.class);
+	private static final Logger log = LoggerFactory.getLogger(AutomagicDbOrmConfigurator.class);
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
