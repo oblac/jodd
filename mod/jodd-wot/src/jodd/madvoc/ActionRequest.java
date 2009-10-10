@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 
+
 /**
  * Encapsulates single action invocation and acts as an action proxy.
  * It invokes all assigned action interceptors during action invocation and
@@ -22,7 +23,7 @@ public class ActionRequest {
 
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
-	protected final Object action;
+	protected Object action;
 
 	protected boolean executed;
 
@@ -108,7 +109,7 @@ public class ActionRequest {
 	 */
 	public Object invoke() throws Exception {
 		if (executed == true) {
-			throw new MadvocException("Action '" + config.actionPath + "' has already been executed.");
+			throw new MadvocException("Action '" + config.actionPath + "' has already been invoked.");
 		}
 		// interceptors
 		if (interceptorIndex < totalInterceptors) {
@@ -116,15 +117,23 @@ public class ActionRequest {
 			interceptorIndex++;
 			return interceptor.intercept(this);
 		}
+
 		// action
-		Object actionInvocationResult;
+		Object actionInvocationResult = invokeAction();
+		executed = true;
+		return actionInvocationResult;
+	}
+
+	/**
+	 * Invokes action method after starting all interceptors.
+	 * After method invocation, all interceptors will finish, in opposite order. 
+	 */
+	protected Object invokeAction() throws Exception {
 		try {
-			actionInvocationResult = config.actionMethod.invoke(action);
+			return config.actionMethod.invoke(action);
 		} catch(InvocationTargetException itex) {
 			throw ExceptionUtil.exctractTargetException(itex);
 		}
-		executed = true;
-		return actionInvocationResult;
 	}
 
 

@@ -105,23 +105,16 @@ public class MadvocController {
 
 			// create action request
 			ActionRequest previousRequest = request;
-			request = new ActionRequest(actionConfig, action, servletRequest, servletResponse);
+			request = createActionRequest(actionConfig, action, servletRequest, servletResponse);
 			request.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			invokeAndRender(request);
+			Object resultValueObject = request.invoke();
+			render(request, resultValueObject);
 
 			actionPath = request.getNextActionPath();
 		}
 		return null;
-	}
-
-	/**
-	 * Invokes and render action request. By default:
-	 */
-	protected void invokeAndRender(ActionRequest request) throws Exception {
-		Object resultValueObject = request.invoke();
-		render(request, resultValueObject);
 	}
 
 
@@ -204,7 +197,7 @@ public class MadvocController {
 	}
 
 	/**
-	 * Creates a new action object from {@link ActionConfig}.
+	 * Creates new action object from {@link ActionConfig}.
 	 */
 	protected Object createAction(Class actionClass) {
 		try {
@@ -215,5 +208,18 @@ public class MadvocController {
 			throw new MadvocException("Not enough rights to create Madvoc action.", iaex);
 		}
 	}
+
+	/**
+	 * Creates new action request.
+	 * @param actionConfig		action configuration
+	 * @param action			action object
+	 * @param servletRequest	http request
+	 * @param servletResponse	http response
+	 * @return action request
+	 */
+	protected ActionRequest createActionRequest(ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		return new ActionRequest(actionConfig, action, servletRequest, servletResponse);
+	}
+
 
 }
