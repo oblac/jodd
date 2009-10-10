@@ -23,7 +23,7 @@ import javax.servlet.ServletContext;
  */
 public class WebApplicationStarter {
 
-	protected static Logger log;
+	private static Logger log;
 
 	// ---------------------------------------------------------------- params
 

@@ -30,7 +30,7 @@ import org.slf4j.Logger;
  */
 public class WebApplication {
 
-	protected static Logger log;
+	private static Logger log;
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
 

@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 public class MadvocServletFilter implements Filter {
 
-	protected static Logger log;
+	private static Logger log;
 
 	public static final String PARAM_MADVOC_WEBAPP = "madvoc.webapp";
 	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
