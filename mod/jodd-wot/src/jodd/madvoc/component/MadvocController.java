@@ -109,12 +109,19 @@ public class MadvocController {
 			request.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			Object resultValueObject = request.invoke();
-			render(request, resultValueObject);
+			invokeAndRender(request);
 
 			actionPath = request.getNextActionPath();
 		}
 		return null;
+	}
+
+	/**
+	 * Invokes action request (interceptors and action method) and renders result.
+	 */
+	protected void invokeAndRender(ActionRequest request) throws Exception {
+		Object resultValueObject = request.invoke();
+		render(request, resultValueObject);
 	}
 
 
