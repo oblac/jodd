@@ -7,13 +7,12 @@ import jodd.servlet.JspValueResolver;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 import static jodd.util.StringPool.EMPTY;
-import jodd.bean.BeanUtil;
 
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspTagException;
 
 /**
- * Nice JSP functions.
+ * Nice big set of JSP functions.
  */
 public class JoddJspFunctions {
 
@@ -276,6 +275,10 @@ public class JoddJspFunctions {
 
 	// ---------------------------------------------------------------- collections
 
+	/**
+	 * Returns the lenght of provided object (collection, array and so on).
+* If object doesn't have a length, exception is thrown.
+	 */
 	public static int length(Object obj) throws JspTagException {
 		int result = ObjectUtil.length(obj);
 		if (result == -1) {
@@ -286,6 +289,16 @@ public class JoddJspFunctions {
 
 	public static boolean containsElement(Object obj, Object element) {
 		return ObjectUtil.containsElement(obj, element);
+	}
+
+	// ---------------------------------------------------------------- test
+
+	/**
+	 * Tests condition and returns <code>true</code> of <code>false</code> value.
+	 * Works like ternanry operator.
+	 */
+	public static Object test(boolean condition, Object trueValue, Object falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 

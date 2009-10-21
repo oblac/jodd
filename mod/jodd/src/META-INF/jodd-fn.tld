@@ -196,11 +196,19 @@
 		<function-class>jodd.bean.BeanUtil</function-class>
 		<function-signature>java.lang.Object getProperty(java.lang.Object,java.lang.String)</function-signature>
 	</function>
-
 	<function>
 		<name>beanDeclaredProperty</name>
 		<function-class>jodd.bean.BeanUtil</function-class>
 		<function-signature>java.lang.Object getDeclaredProperty(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+
+
+	<!-- test -->
+	
+	<function>
+		<name>test</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.Object test(boolean,java.lang.Object,java.lang.Object)</function-signature>
 	</function>
 
 </taglib>
