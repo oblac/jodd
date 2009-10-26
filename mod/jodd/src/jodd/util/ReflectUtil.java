@@ -937,40 +937,4 @@ public class ReflectUtil {
 	}
 
 
-	// ---------------------------------------------------------------- names
-
-	/**
-	 * Returns simple class name of type that can be either class or an array.
-	 */
-	public static String extractName(Class<?> type) {
-		if (type.isArray()) {
-			return type.getComponentType().getSimpleName();
-		}
-		return type.getSimpleName();
-	}
-
-	/**
-	 * Extracts name from parametrized type.
-	 */
-	public static String extractName(ParameterizedType type) {
-		Type raw = type.getRawType();
-		String name = extractName((Class<?>) raw) + "Of";
-		Type[] types = type.getActualTypeArguments();
-		for (Type t : types) {
-			name += extractName((Class<?>) t);
-		}
-		return name;
-	}
-
-	/**
-	 * Extracts name of a type.
-	 */
-	public static String extractName(Type type) {
-		if (type instanceof ParameterizedType) {
-			return extractName((ParameterizedType) type);
-		}
-		return extractName((Class<?>) type);
-	}
-
-
 }
