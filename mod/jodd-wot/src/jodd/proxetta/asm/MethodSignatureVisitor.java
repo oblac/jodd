@@ -10,12 +10,13 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.AnnotationInfo;
+import jodd.asm.TraceSignatureVisitor;
 
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Resolves method signature and holds all information. Uses {@link TraceSignatureVisitor} from ASM library.
+ * Resolves method signature and holds all information. Uses {@link jodd.asm.TraceSignatureVisitor} from ASM library.
  * <pre>
  * MethodSignature = ( visitFormalTypeParameter visitClassBound? visitInterfaceBound* )* ( visitParameterType* visitReturnType visitExceptionType* )
  * </pre>

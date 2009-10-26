@@ -19,6 +19,8 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import static jodd.util.StringPool.DOT;
+import jodd.asm.AnnotationVisitorAdapter;
+import jodd.asm.EmptyClassVisitor;
 
 import java.util.List;
 import java.util.ArrayList;

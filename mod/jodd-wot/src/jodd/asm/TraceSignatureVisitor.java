@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.asm;
+package jodd.asm;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.signature.SignatureVisitor;

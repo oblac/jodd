@@ -24,6 +24,8 @@ import jodd.proxetta.ClassInfo;
 import jodd.proxetta.AnnotationInfo;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
+import jodd.asm.EmptyClassVisitor;
+import jodd.asm.EmptyMethodVisitor;
 
 /**
  * Reads info from target class.

@@ -20,6 +20,8 @@ import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
+import jodd.asm.EmptyClassVisitor;
+import jodd.asm.EmptyMethodVisitor;
 
 import java.io.InputStream;
 import java.io.IOException;

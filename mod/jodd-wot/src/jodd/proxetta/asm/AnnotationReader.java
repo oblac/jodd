@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import jodd.proxetta.AnnotationInfo;
+import jodd.asm.EmptyAnnotationVisitor;
 
 
 /**

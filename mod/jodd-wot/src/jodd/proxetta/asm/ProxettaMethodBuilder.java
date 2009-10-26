@@ -21,11 +21,14 @@ import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
 import static jodd.proxetta.asm.ProxettaNaming.EXECUTE_METHOD_NAME;
+import jodd.asm.AnnotationVisitorAdapter;
+import jodd.asm.EmptyClassVisitor;
+import jodd.asm.EmptyMethodVisitor;
 
 import java.util.List;
 
 @SuppressWarnings({"AnonymousClassVariableHidesContainingMethodVariable"})
-public class ProxettaMethodBuilder extends EmptyMethodVisitor  {
+public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 	public static final String TARGET_CLASS_NAME = ProxyTarget.class.getSimpleName();        // extract ProxyTarget name for recognition
 

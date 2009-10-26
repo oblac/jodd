@@ -10,6 +10,7 @@ import static org.objectweb.asm.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
+import jodd.asm.EmptyMethodVisitor;
 
 /**
  * Destination ctor builder
