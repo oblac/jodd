@@ -17,6 +17,7 @@ public class TestJoddWot {
 		suite.addTest(jodd.petite.AllTests.suite());
 		suite.addTest(jodd.madvoc.AllTests.suite());
 		suite.addTest(jodd.proxetta.AllTests.suite());
+		suite.addTest(jodd.paramo.AllTests.suite());
 		return suite;
 	}
 }
