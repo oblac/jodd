@@ -628,6 +628,33 @@ public class ReflectUtil {
 	 * Arrays are also created with no elements. Note that this bunch of ifs is faster then a hashmap.
 	 */
 	public static Object newInstance(Class type) throws IllegalAccessException, InstantiationException {
+		if (type.isPrimitive()) {
+			if (type == int.class) {
+				return Integer.valueOf(0);
+			}
+			if (type == long.class) {
+				return Long.valueOf(0);
+			}
+			if (type == boolean.class) {
+				return Boolean.FALSE;
+			}
+			if (type == float.class) {
+				return Float.valueOf(0);
+			}
+			if (type == double.class) {
+				return Double.valueOf(0);
+			}
+			if (type == byte.class) {
+				return Byte.valueOf((byte) 0);
+			}
+			if (type == short.class) {
+				return Short.valueOf((short) 0);
+			}
+			if (type == char.class) {
+				return Character.valueOf((char) 0);
+			}
+			throw new IllegalArgumentException("Invalid primitive type: " + type);
+		}
 		if (type == Integer.class) {
 			return Integer.valueOf(0);
 		}
@@ -636,6 +663,9 @@ public class ReflectUtil {
 		}
 		if (type == Long.class) {
 			return Long.valueOf(0);
+		}
+		if (type == Boolean.class) {
+			return Boolean.FALSE;
 		}
 		if (type == Float.class) {
 			Float.valueOf(0);
@@ -681,6 +711,9 @@ public class ReflectUtil {
 
 	// ---------------------------------------------------------------- misc
 
+	/**
+	 * Returns <code>true</code> if the first member is accessable from second one.
+	 */
 	public static boolean isAssignableFrom(Member member1, Member member2) {
 		return member1.getDeclaringClass().isAssignableFrom(member2.getDeclaringClass());
 	}
