@@ -10,6 +10,7 @@ import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
+import jodd.madvoc.meta.InOut;
 import jodd.mutable.MutableInteger;
 import jodd.petite.meta.PetiteInject;
 
@@ -29,7 +30,7 @@ public class HelloAction {
 
 	// ---------------------------------------------------------------- 1
 
-	@In
+	@InOut
 	private String name;
 	public void setName(String name) {
 		this.name = name + "xxx";
@@ -59,7 +60,7 @@ public class HelloAction {
 
 	// ---------------------------------------------------------------- 2
 
-	@In("p")
+	@InOut("p")
 	Person person;      // Due to create == true, person will be instanced on first access.
 
 	/**
@@ -73,14 +74,6 @@ public class HelloAction {
 
 	// ---------------------------------------------------------------- 3
 
-	@In("ppp")
-	List<Person> plist;
-
-	@In("ppp")
-	Person[] parray;
-
-	@In("ppp")
-	Map<String, Person> pmap;
 
 	@In(scope=ScopeType.CONTEXT)
 	HttpServletResponse servletResponse;
@@ -92,29 +85,6 @@ public class HelloAction {
 	@Action
 	public String again() throws IOException {
 		System.out.println(">HelloAction.again");
-
-		if (plist == null) {
-			System.out.println("-");
-		} else {
-			for (int i = 0; i < plist.size(); i++) {
-				System.out.println(i + " " + plist.get(i));
-			}
-		}
-
-		if (parray == null) {
-			System.out.println("-");
-		} else {
-			for (int i = 0; i < parray.length; i++) {
-				System.out.println(i + " " + parray[i]);
-			}
-		}
-
-		if (pmap == null) {
-			System.out.println("-");
-		} else {
-			System.out.println(pmap);
-		}
-
 		servletResponse.getWriter().print("Direct stream output...");
 		return "none:";
 	}
@@ -134,22 +104,27 @@ public class HelloAction {
 
 	@Action
 	public String bigchange() {
-		return "##default.ok";
+		return "##default.big";
 	}
 
 	@Action
 	public void noresult() {
 	}
 
+	@In
+	@Out
+	int chain;
+
 	@Action
 	public String chain() {
-		System.out.println("HelloAction.chain");
+		System.out.println("HelloAction.chain " + chain);
+		chain = 137;
 		return "chain:/hello.link.html";
 	}
 
 	@Action
 	public void link() {
-		System.out.println("HelloAction.link");
+		System.out.println("HelloAction.link " + chain);
 	}
 
 

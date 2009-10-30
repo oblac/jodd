@@ -12,7 +12,6 @@ public class Mapped {
 		System.out.println("Mapped.fooTxt");
 	}
 
-
 	public void view() {
 		System.out.println("Mapped.view");
 	}

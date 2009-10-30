@@ -4,10 +4,10 @@
 <%@ page import="static jodd.servlet.HtmlEncoder.*" %>
 <%@ page import="jodd.servlet.JspValueResolver" %>
 <%@ taglib prefix="jodd" uri="/jodd" %>
-
 <html>
 <head>
 	<title>Big Form test</title>
+	<link rel="stylesheet" type="text/css" href="jss.css">
 </head>
 
 <body>
@@ -24,6 +24,7 @@
 
 
 <div style="float:left">
+<h2>Manual values set using scriptlets</h2>
 <form name="form" method="post" action="form.post.html">
 
 <table border=1 cellpadding=3 cellspacing=0>
@@ -126,18 +127,18 @@
 	<tr><td>
 		Multiple Texts <small><i>(List&lt;String&gt;)</i></small>
 	</td><td>
-		<input type="text" name="foo.slist[0]" value="<%=text(list(ffb.slist, 0))%>">
-		<input type="text" name="foo.slist[1]" value="<%=text(list(ffb.slist, 1))%>">
-		<input type="text" name="foo.slist[2]" value="<%=text(list(ffb.slist, 2))%>">
+		<input type="text" name="foo.slist[0]" value="<%=text(list(ffb.slist, 0))%>" size="10">
+		<input type="text" name="foo.slist[1]" value="<%=text(list(ffb.slist, 1))%>" size="10">
+		<input type="text" name="foo.slist[2]" value="<%=text(list(ffb.slist, 2))%>" size="10">
 	</td></tr>
 
 
 	<tr><td>
 		Multiple Texts <small><i>(Map&lt;String, String&gt;)</i></small>
 	</td><td>
-		<input type="text" name="foo.smap[one]" value="<%=text(map(ffb.smap, "one"))%>">
-		<input type="text" name="foo.smap[two]" value="<%=text(map(ffb.smap, "two"))%>">
-		<input type="text" name="foo.smap[tree]" value="<%=text(map(ffb.smap, "tree"))%>">
+		<input type="text" name="foo.smap[one]" value="<%=text(map(ffb.smap, "one"))%>" size="10">
+		<input type="text" name="foo.smap[two]" value="<%=text(map(ffb.smap, "two"))%>" size="10">
+		<input type="text" name="foo.smap[tree]" value="<%=text(map(ffb.smap, "tree"))%>" size="10">
 	</td></tr>
 
 
@@ -172,7 +173,8 @@
 
 
 
-<div style="float:right">
+<div style="float:left; margin-left:20px;">
+<h2>Automagic values set using jodd:form tag</h2>
 <jodd:form>
 <form name="form2" method="post" action="form.post.html">
 
@@ -276,18 +278,18 @@
 	<tr><td>
 		Multiple Texts <small><i>(List&lt;String&gt;)</i></small>
 	</td><td>
-		<input type="text" name="foo.slist[0]">
-		<input type="text" name="foo.slist[1]">
-		<input type="text" name="foo.slist[2]">
+		<input type="text" name="foo.slist[0]" size="10">
+		<input type="text" name="foo.slist[1]" size="10">
+		<input type="text" name="foo.slist[2]" size="10">
 	</td></tr>
 
 
 	<tr><td>
 		Multiple Texts <small><i>(Map&lt;String, String&gt;)</i></small>
 	</td><td>
-		<input type="text" name="foo.smap[one]">
-		<input type="text" name="foo.smap[two]">
-		<input type="text" name="foo.smap[tree]">
+		<input type="text" name="foo.smap[one]" size="10">
+		<input type="text" name="foo.smap[two]" size="10">
+		<input type="text" name="foo.smap[tree]" size="10">
 	</td></tr>
 
 
@@ -312,8 +314,9 @@
 </div>
 </jodd:form>
 
-<hr style="width:75%; clear:both">
+<br clear="all">
 
+<hr>
 <pre>
 <%= jodd.servlet.ServletUtil.debug(pageContext) %>
 </pre>

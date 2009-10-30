@@ -20,6 +20,7 @@ public class ActionRequest {
 	protected final ActionConfig config;
 	protected HttpServletRequest serlvetRequest;
 	protected HttpServletResponse servletResponse;
+	protected Object[] params;
 
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
@@ -32,34 +33,58 @@ public class ActionRequest {
 
 	// ---------------------------------------------------------------- accessors
 
+	/**
+	 * Returns servlet request.
+	 */
 	public HttpServletRequest getHttpServletRequest() {
 		return serlvetRequest;
 	}
 
+	/**
+	 * Specifies new servlet request, in case of wrapping it.
+	 */
 	public void setHttpServletRequest(HttpServletRequest request) {
 		this.serlvetRequest = request;
 	}
 
+	/**
+	 * Returns servlet response.
+	 */
 	public HttpServletResponse getHttpServletResponse() {
 		return servletResponse;
 	}
 
+	/**
+	 * Specifies new servlet response, in case of wrapping it.
+	 */
 	public void setHttpServletResponse(HttpServletResponse response) {
 		this.servletResponse = response;
 	}
 
+	/**
+	 * Returns {@link ActionConfig action configuration}.
+	 */
 	public ActionConfig getActionConfig() {
 		return config;
 	}
 
+	/**
+	 * Returns action object.
+	 */
 	public Object getAction() {
 		return action;
 	}
 
+	/**
+	 * Returns action path.
+	 */
 	public String getActionPath() {
 		return config.actionPath;
 	}
 
+	/**
+	 * Returns <code>true</code> if action request was already executed.
+	 */
 	public boolean isExecuted() {
 		return executed;
 	}
@@ -78,14 +103,26 @@ public class ActionRequest {
 		this.nextActionPath = nextActionPath;
 	}
 
+	/**
+	 * Returns previous action request in chain, if there was one.
+	 */
 	public ActionRequest getPreviousActionRequest() {
 		return previousActionRequest;
 	}
 
+	/**
+	 * Sets previous action request in chain.
+	 */
 	public void setPreviousActionRequest(ActionRequest previousActionRequest) {
 		this.previousActionRequest = previousActionRequest;
 	}
 
+	/**
+	 * Sets values for action method parameters.
+	 */
+	public void setActionParams(Object[] params) {
+		this.params = params;
+	}
 	// ---------------------------------------------------------------- ctor
 
 	/**
@@ -130,7 +167,7 @@ public class ActionRequest {
 	 */
 	protected Object invokeAction() throws Exception {
 		try {
-			return config.actionMethod.invoke(action);
+			return config.actionMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw ExceptionUtil.exctractTargetException(itex);
 		}

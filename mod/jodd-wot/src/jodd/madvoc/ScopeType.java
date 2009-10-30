@@ -7,10 +7,10 @@ package jodd.madvoc;
  */
 public enum ScopeType {
 
-	REQUEST(1),
-	SESSION(2),
-	APPLICATION(3),
-	CONTEXT(4);
+	REQUEST(0),
+	SESSION(1),
+	APPLICATION(2),
+	CONTEXT(3);
 
 	private int value;
 
@@ -25,10 +25,10 @@ public enum ScopeType {
 	@Override
 	public String toString() {
 		switch(value) {
-			case 1: return "Request";
-			case 2: return "Session";
-			case 3: return "Application";
-			case 4: return "Context";
+			case 0: return "Request";
+			case 1: return "Session";
+			case 2: return "Application";
+			case 3: return "Context";
 			default: return "Undefined";
 		}
 	}

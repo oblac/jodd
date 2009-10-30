@@ -2,9 +2,10 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ScopeType;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.component.ScopeDataManager;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.MadvocException;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.result.MoveResult;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.servlet.upload.FileUpload;
@@ -21,105 +22,130 @@ import java.io.UnsupportedEncodingException;
 /**
  * Request scope injector. Perfroms {@link MoveResult moving} as well.
  */
-public class RequestScopeInjector extends ScopeInjector {
+public class RequestScopeInjector extends BaseScopeInjector {
 
 	private static final String REQ_METHOD_GET = "GET";
 
-	protected final String encoding;
-
-	public RequestScopeInjector(ScopeDataManager scopeDataManager) {
-		super(scopeDataManager);
-		this.encoding = scopeDataManager.getMadvocConfig().getEncoding();
+	public RequestScopeInjector(MadvocConfig madvocConfig) {
+		super(ScopeType.REQUEST);
+		this.encoding = madvocConfig.getEncoding();
+		try {
+			this.config = madvocConfig.getDefaultRequestScopeInjectorConfig().clone();
+		} catch (CloneNotSupportedException cnspex) {
+			throw new MadvocException(cnspex);
+		}
 	}
-
 
 	// ---------------------------------------------------------------- configuration
 
-	protected boolean ignoreEmptyRequestParams;
-	protected boolean treatEmptyParamsAsNull;
-	protected boolean injectAttributes = true;
-	protected boolean injectParameters = true;
-	protected boolean copyParamsToAttributes;
-	protected boolean trimParams;
-	protected boolean encodeGetParams;
+	protected final String encoding;
+	protected final Config config;
 
-	public boolean isIgnoreEmptyRequestParams() {
-		return ignoreEmptyRequestParams;
-	}
-	/**
-	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
-	 */
-	public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
-		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
-	}
-
-	public boolean isTreatEmptyParamsAsNull() {
-		return treatEmptyParamsAsNull;
-	}
-	/**
-	 * Specifies if empty parameters will be injected as <code>null</code> value.
-	 */
-	public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
-		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
-	}
-
-	public boolean isInjectAttributes() {
-		return injectAttributes;
-	}
-	/**
-	 * Specifies if attributes will be injected.
-	 */
-	public void setInjectAttributes(boolean injectAttributes) {
-		this.injectAttributes = injectAttributes;
-	}
-
-	public boolean isInjectParameters() {
-		return injectParameters;
-	}
-	/**
-	 * Specifies if parameters will be injected.
-	 */
-	public void setInjectParameters(boolean injectParameters) {
-		this.injectParameters = injectParameters;
-	}
-
-	public boolean isCopyParamsToAttributes() {
-		return copyParamsToAttributes;
-	}
-	/**
-	 * Specifies if request parameters will to be copied to attributes.
-	 * Usually, when this flag is set to <code>true</code>, {@link #setInjectAttributes(boolean) injectOnlyAttributes}
-	 * is also set to <code>true</code>. 
-	 */
-	public void setCopyParamsToAttributes(boolean copyParamsToAttributes) {
-		this.copyParamsToAttributes = copyParamsToAttributes;
-	}
-
-	public boolean isTrimParams() {
-		return trimParams;
-	}
-	/**
-	 * Specifies if parameters will be trimmed before injection.
-	 */
-	public void setTrimParams(boolean trimParams) {
-		this.trimParams = trimParams;
-	}
-
-	public boolean isEncodeGetParams() {
-		return encodeGetParams;
+	public String getEncoding() {
+		return encoding;
 	}
 
 	/**
-	 * Specifies if GET parameters should be encoded. Alternativly, this can be set in container as well.
-	 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
-	 * file communicates the character-encoding choice to the web server,
-	 * and the Tomcat server correctly reads the URL GET parameters correctly.
-	 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
-	 * can be included in the sun-web.xml file.
-	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
+	 * Returns request scope configuration.
 	 */
-	public void setEncodeGetParams(boolean encodeGetParams) {
-		this.encodeGetParams = encodeGetParams;
+	public Config getConfig() {
+		return config;
+	}
+
+	public static class Config implements Cloneable {
+		protected boolean ignoreEmptyRequestParams;
+		protected boolean treatEmptyParamsAsNull;
+		protected boolean injectAttributes = true;
+		protected boolean injectParameters = true;
+		protected boolean copyParamsToAttributes;
+		protected boolean trimParams;
+		protected boolean encodeGetParams;
+
+		public boolean isIgnoreEmptyRequestParams() {
+			return ignoreEmptyRequestParams;
+		}
+		/**
+		 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
+		 */
+		public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
+			this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
+		}
+
+
+		public boolean isTreatEmptyParamsAsNull() {
+			return treatEmptyParamsAsNull;
+		}
+		/**
+		 * Specifies if empty parameters will be injected as <code>null</code> value.
+		 */
+		public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
+			this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
+		}
+
+		public boolean isInjectAttributes() {
+			return injectAttributes;
+		}
+		/**
+		 * Specifies if attributes will be injected.
+		 */
+		public void setInjectAttributes(boolean injectAttributes) {
+			this.injectAttributes = injectAttributes;
+		}
+
+		public boolean isInjectParameters() {
+			return injectParameters;
+		}
+		/**
+		 * Specifies if parameters will be injected.
+		 */
+		public void setInjectParameters(boolean injectParameters) {
+			this.injectParameters = injectParameters;
+		}
+
+		public boolean isCopyParamsToAttributes() {
+			return copyParamsToAttributes;
+		}
+		/**
+		 * Specifies if request parameters will to be copied to attributes.
+		 * Usually, when this flag is set to <code>true</code>, {@link #setInjectAttributes(boolean) injectOnlyAttributes}
+		 * is also set to <code>true</code>.
+		 */
+		public void setCopyParamsToAttributes(boolean copyParamsToAttributes) {
+			this.copyParamsToAttributes = copyParamsToAttributes;
+		}
+
+
+		public boolean isTrimParams() {
+			return trimParams;
+		}
+		/**
+		 * Specifies if parameters will be trimmed before injection.
+		 */
+		public void setTrimParams(boolean trimParams) {
+			this.trimParams = trimParams;
+		}
+
+		public boolean isEncodeGetParams() {
+			return encodeGetParams;
+		}
+
+		/**
+		 * Specifies if GET parameters should be encoded. Alternativly, this can be set in container as well.
+		 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
+		 * file communicates the character-encoding choice to the web server,
+		 * and the Tomcat server correctly reads the URL GET parameters correctly.
+		 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
+		 * can be included in the sun-web.xml file.
+		 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
+		 */
+		public void setEncodeGetParams(boolean encodeGetParams) {
+			this.encodeGetParams = encodeGetParams;
+		}
+
+		@Override
+		public Config clone() throws CloneNotSupportedException {
+			return (Config) super.clone();
+		}
 	}
 
 	// ---------------------------------------------------------------- inject
@@ -131,12 +157,12 @@ public class RequestScopeInjector extends ScopeInjector {
 		Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
-			for (ScopeData.In ii : injectData) {
-				String name = getMatchedPropertyName(ii, attrName);
+			for (ScopeData.In in : injectData) {
+				String name = getMatchedPropertyName(in, attrName);
 				if (name != null) {
 					Object attrValue = servletRequest.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue, ii.create);
-					if (ii.remove) {
+					setTargetProperty(target, name, attrValue, in.create);
+					if (in.remove) {
 						servletRequest.removeAttribute(attrName);
 					}
 				}
@@ -149,18 +175,18 @@ public class RequestScopeInjector extends ScopeInjector {
 	 * are simply ignored.
 	 */
 	protected void injectParameters(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
-		boolean encode = encodeGetParams && servletRequest.getMethod().equals(REQ_METHOD_GET);
+		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals(REQ_METHOD_GET);
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
-			for (ScopeData.In ii : injectData) {
-				String name = getMatchedPropertyName(ii, paramName);
+			for (ScopeData.In in : injectData) {
+				String name = getMatchedPropertyName(in, paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
-					paramValues = ServletUtil.prepareParameters(paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+					paramValues = ServletUtil.prepareParameters(paramValues, config.trimParams, config.treatEmptyParamsAsNull, config.ignoreEmptyRequestParams);
 					if (paramValues == null) {
 						continue;
 					}
@@ -176,7 +202,8 @@ public class RequestScopeInjector extends ScopeInjector {
 							}
 						}
 					}
-					setTargetProperty(target, name, paramValues, ii.create);
+					Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
+					setTargetProperty(target, name, value, in.create);
 				}
 			}
 		}
@@ -201,11 +228,12 @@ public class RequestScopeInjector extends ScopeInjector {
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
-			for (ScopeData.In ii : injectData) {
-				String name = getMatchedPropertyName(ii, paramName);
+			for (ScopeData.In in : injectData) {
+				String name = getMatchedPropertyName(in, paramName);
 				if (name != null) {
 					FileUpload[] paramValues = multipartRequest.getFiles(paramName);
-					setTargetProperty(target, name, paramValues, ii.create);
+					Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
+					setTargetProperty(target, name, value, in.create);
 				}
 			}
 		}
@@ -227,20 +255,19 @@ public class RequestScopeInjector extends ScopeInjector {
 		}
 	}
 
-
 	public void inject(Object target, HttpServletRequest servletRequest) {
-		if (copyParamsToAttributes == true) {
-			ServletUtil.copyParamsToAttributes(servletRequest, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
+		if (config.copyParamsToAttributes == true) {
+			ServletUtil.copyParamsToAttributes(servletRequest, config.trimParams, config.treatEmptyParamsAsNull, config.ignoreEmptyRequestParams);
 		}
 		outjectMoveSource(servletRequest);
-		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.REQUEST);
+		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
 		}
-		if (injectAttributes == true) {
+		if (config.injectAttributes == true) {
 			injectAttributes(target, injectData, servletRequest);
 		}
-		if (injectParameters == true) {
+		if (config.injectParameters == true) {
 			injectParameters(target, injectData, servletRequest);
 			injectUploadedFiles(target, injectData, servletRequest);
 		}
@@ -249,14 +276,13 @@ public class RequestScopeInjector extends ScopeInjector {
 	// ---------------------------------------------------------------- outject
 
 	public void outject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = scopeDataManager.lookupOutData(target, ScopeType.REQUEST);
+		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
 		if (outjectData == null) {
 			return;
 		}
-
-		for (ScopeData.Out oi : outjectData) {
-			Object value = getTargetProperty(target, oi);
-			servletRequest.setAttribute(oi.name, value);
+		for (ScopeData.Out out : outjectData) {
+			Object value = getTargetProperty(target, out);
+			servletRequest.setAttribute(out.name, value);
 		}
 	}
 }

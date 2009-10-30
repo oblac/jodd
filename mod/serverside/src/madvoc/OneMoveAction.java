@@ -9,7 +9,7 @@ import jodd.madvoc.meta.Out;
 
 @MadvocAction
 @InterceptedBy(MyInterceptorStack.class)
-public class OneAction {
+public class OneMoveAction {
 
 	// move example
 	@Out
@@ -17,21 +17,9 @@ public class OneAction {
 
 	@Action
 	public String execute() {
-		System.out.println("OneAction.invoke");
+		System.out.println("move");
 		value = "173";
 		return "move:/%two%";
 	}
 
-
-/*
-	// redirect example
-	String value;
-
-	@Action
-	public String execute() {
-		System.out.println("OneAction.invoke");
-		value = "173";
-		return "redirect:/%two%?value=${value}";
-	}
-*/
 }

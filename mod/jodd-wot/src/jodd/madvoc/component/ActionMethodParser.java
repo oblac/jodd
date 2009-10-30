@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
  * Reads all annotations and builds action path (i.e. configuration).
  * <p>
  * Invoked only during registration, therefore performance is not most important.
- *
  * 
  * @see ActionPathMapper
  */

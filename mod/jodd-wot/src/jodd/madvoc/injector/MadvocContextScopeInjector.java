@@ -4,7 +4,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.component.ScopeDataManager;
 import jodd.bean.BeanUtil;
 import jodd.petite.PetiteContainer;
 import jodd.servlet.HttpServletRequestMap;
@@ -19,28 +18,27 @@ import javax.servlet.ServletContext;
 /**
  * Madvoc context injector.
  */
-public class MadvocContextScopeInjector extends ScopeInjector {
-
-	protected final PetiteContainer madpc;
+public class MadvocContextScopeInjector extends BaseScopeInjector {
 
 	private static final String REQUEST_MAP = "requestMap";
 	private static final String SESSION_MAP = "sessionMap";
 	private static final String CONTEXT_MAP = "contextMap";
 
-	public MadvocContextScopeInjector(ScopeDataManager scopeDataManager, PetiteContainer madpc) {
-		super(scopeDataManager);
+	protected final PetiteContainer madpc;
+
+	public MadvocContextScopeInjector(PetiteContainer madpc) {
+		super(ScopeType.CONTEXT);
 		this.madpc = madpc;
 	}
 
 	@SuppressWarnings({"ConstantConditions"})
 	public void inject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.CONTEXT);
+		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
 		}
-
-		for (ScopeData.In ii : injectData) {
-			Class fieldType = ii.type;
+		for (ScopeData.In in : injectData) {
+			Class fieldType = in.type;
 			Object value;
 
 			// raw servlet types
@@ -55,30 +53,30 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 			} else
 
 			// names
-			if (ii.name.equals(REQUEST_MAP)) {
+			if (in.name.equals(REQUEST_MAP)) {
 				value = new HttpServletRequestMap(servletRequest);
-			} else if (ii.name.equals(SESSION_MAP)) {
+			} else if (in.name.equals(SESSION_MAP)) {
 				value = new HttpSessionMap(servletRequest);
-			} else if (ii.name.equals(CONTEXT_MAP)) {
+			} else if (in.name.equals(CONTEXT_MAP)) {
 				value = new HttpServletContextMap(servletRequest);
 			} else {
-				value = madpc.getBean(ii.name);
+				value = madpc.getBean(in.name);
 			}
 			if (value != null) {
-				String property = ii.target != null ? ii.target : ii.name;
+				String property = in.target != null ? in.target : in.name;
 				BeanUtil.setDeclaredProperty(target, property, value);
 			}
 		}
 	}
 
 	public void inject(Object target, ServletContext servletContext) {
-		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.CONTEXT);
+		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
 		}
 
-		for (ScopeData.In ii : injectData) {
-			Class fieldType = ii.type;
+		for (ScopeData.In in : injectData) {
+			Class fieldType = in.type;
 			Object value;
 
 			// raw servlet types
@@ -86,13 +84,13 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 				value = servletContext;
 			} else
 			// names
-			if (ii.name.equals(CONTEXT_MAP)) {
+			if (in.name.equals(CONTEXT_MAP)) {
 				value = new HttpServletContextMap(servletContext);
 			} else {
-				value = madpc.getBean(ii.name);
+				value = madpc.getBean(in.name);
 			}
 			if (value != null) {
-				String property = ii.target != null ? ii.target : ii.name;
+				String property = in.target != null ? in.target : in.name;
 				BeanUtil.setDeclaredProperty(target, property, value);
 			}
 		}
@@ -101,10 +99,10 @@ public class MadvocContextScopeInjector extends ScopeInjector {
 
 	@SuppressWarnings({"UnusedDeclaration"})
 	public void outject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = scopeDataManager.lookupOutData(target, ScopeType.CONTEXT);
+		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
 		if (outjectData == null) {
 			return;
 		}
-		throw new MadvocException("Unable to outject to Madvoc context.");
+		throw new MadvocException("Madvoc context can't be outjected.");
 	}
 }

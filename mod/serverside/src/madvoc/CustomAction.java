@@ -23,6 +23,7 @@ public class CustomAction {
 	}
 
 	/**
+	 * 
 	 * Action mapped to '/foo/boo.zoo/again.exec.html'
 	 * Result mapped to '/foo/boo.zoo/again.exec'.jsp
 	 */

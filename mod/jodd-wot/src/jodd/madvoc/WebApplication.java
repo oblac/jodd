@@ -10,9 +10,8 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.component.ScopeDataManager;
 import jodd.madvoc.component.ActionPathRewriter;
-import jodd.madvoc.component.InjectorsManager;
+import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteUtil;
@@ -148,18 +147,17 @@ public class WebApplication {
 	 * Invoked before {@link #init(MadvocConfig , ServletContext) madvoc initialization}.
 	 */
 	public void registerMadvocComponents() {
-		log.debug("Registering all Madvoc components");
+		log.debug("Registering Madvoc components");
 		registerComponent(ActionMethodParser.class);
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionsManager.class);
-		registerComponent(InjectorsManager.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);
 		registerComponent(ResultsManager.class);
 		registerComponent(ResultMapper.class);
-		registerComponent(ScopeDataManager.class);
+		registerComponent(ContextInjector.class);
 	}
 
 

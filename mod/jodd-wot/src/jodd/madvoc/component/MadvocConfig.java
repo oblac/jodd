@@ -7,6 +7,7 @@ import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.result.ServletDispatcherResult;
+import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.util.StringPool;
 
 import java.util.Map;
@@ -33,6 +34,7 @@ public class MadvocConfig {
 		detectDuplicatePathsEnabled = true;
 		actionPathMappingEnabled = false;
 		preventCaching = true;
+		defaultRequestScopeInjectorConfig = new RequestScopeInjector.Config();
 	}
 
 	// ---------------------------------------------------------------- encoding
@@ -252,5 +254,21 @@ public class MadvocConfig {
 	 */
 	public void setPreventCaching(boolean preventCaching) {
 		this.preventCaching = preventCaching;
+	}
+
+	// ---------------------------------------------------------------- request
+
+	protected RequestScopeInjector.Config defaultRequestScopeInjectorConfig;
+
+	public RequestScopeInjector.Config getDefaultRequestScopeInjectorConfig() {
+		return defaultRequestScopeInjectorConfig;
+	}
+
+	/**
+	 * Specifies default {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration
+	 * that will be used on injector creation.
+	 */
+	public void setDefaultRequestScopeInjectorConfig(RequestScopeInjector.Config defaultRequestScopeInjectorConfig) {
+		this.defaultRequestScopeInjectorConfig = defaultRequestScopeInjectorConfig;
 	}
 }

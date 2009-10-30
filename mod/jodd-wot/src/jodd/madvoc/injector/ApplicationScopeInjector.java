@@ -3,7 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.ScopeDataManager;
 
 import javax.servlet.ServletContext;
 import java.util.Enumeration;
@@ -11,27 +10,26 @@ import java.util.Enumeration;
 /**
  * Servlet context injector.
  */
-public class ApplicationScopeInjector extends ScopeInjector {
+public class ApplicationScopeInjector extends BaseScopeInjector {
 
-	public ApplicationScopeInjector(ScopeDataManager scopeDataManager) {
-		super(scopeDataManager);
+	public ApplicationScopeInjector() {
+		super(ScopeType.APPLICATION);
 	}
 
 	public void inject(Object target, ServletContext context) {
-		ScopeData.In[] injectData = scopeDataManager.lookupInData(target, ScopeType.APPLICATION);
+		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
 		}
-
 		Enumeration attributeNames = context.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
-			for (ScopeData.In ii : injectData) {
-				String name = getMatchedPropertyName(ii, attrName);
+			for (ScopeData.In in : injectData) {
+				String name = getMatchedPropertyName(in, attrName);
 				if (name != null) {
 					Object attrValue = context.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue, ii.create);
-					if (ii.remove) {
+					setTargetProperty(target, name, attrValue, in.create);
+					if (in.remove) {
 						context.removeAttribute(attrName);
 					}
 				}
@@ -40,14 +38,13 @@ public class ApplicationScopeInjector extends ScopeInjector {
 	}
 
 	public void outject(Object target, ServletContext context) {
-		ScopeData.Out[] outjectData = scopeDataManager.lookupOutData(target, ScopeType.APPLICATION);
+		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
 		if (outjectData == null) {
 			return;
 		}
-
-		for (ScopeData.Out oi : outjectData) {
-			Object value = getTargetProperty(target, oi);
-			context.setAttribute(oi.name, value);
+		for (ScopeData.Out out : outjectData) {
+			Object value = getTargetProperty(target, out);
+			context.setAttribute(out.name, value);
 		}
 	}
 }

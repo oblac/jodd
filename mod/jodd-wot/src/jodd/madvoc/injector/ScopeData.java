@@ -2,22 +2,11 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ScopeType;
-
 /**
  * Holds action data for a scope.
  */
 public class ScopeData {
 
-	public ScopeData(ScopeType scope) {
-		this.scope = scope;
-	}
-
-	public ScopeType getScopeType() {
-		return scope;
-	}
-
-	final ScopeType scope;
 	public In[] in;
 	public Out[] out;
 

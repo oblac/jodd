@@ -1,10 +1,16 @@
 <%@ page import="jodd.servlet.ServletUtil" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>Hello world</head>
 <body>
 
-Hello world ${retv}.<br>
+Hello world ${retv} and ${name}.<br>
+<pre style="color:white; background-color:green;">
+Hello world and Universe and JohnDoexxx.
+
+PARAMETERS
+----------
+data=173
+name=JohnDoe
+</pre>
 
 <pre>
 	<%=ServletUtil.debug(pageContext)%>

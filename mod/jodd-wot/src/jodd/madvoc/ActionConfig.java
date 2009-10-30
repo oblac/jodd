@@ -3,7 +3,6 @@
 package jodd.madvoc;
 
 import jodd.madvoc.interceptor.ActionInterceptor;
-
 import java.lang.reflect.Method;
 
 /**
@@ -16,12 +15,15 @@ public class ActionConfig {
 	public final Method actionMethod;
 	public final String actionPath;
 	public final Class<? extends ActionInterceptor>[] interceptorClasses;
+	public final Class<?>[] actionParamTypes;
 
 	public ActionConfig(Class actionClass, Method actionMethod, Class<? extends ActionInterceptor>[] interceptors, String actionPath) {
 		this.actionClass = actionClass;
 		this.actionMethod = actionMethod;
 		this.actionPath = actionPath;
 		this.interceptorClasses = interceptors;
+		Class<?>[] paramTypes = actionMethod.getParameterTypes();
+		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
 	}
 
 	// run-time data
@@ -56,6 +58,10 @@ public class ActionConfig {
 
 	public ActionInterceptor[] getInterceptors() {
 		return interceptors;
+	}
+
+	public Class<?>[] getActionParamTypes() {
+		return actionParamTypes;
 	}
 
 	// ---------------------------------------------------------------- to string

@@ -39,7 +39,7 @@ public class MadvocController {
 	protected InterceptorsManager interceptorsManager;
 
 	@PetiteInject
-	protected InjectorsManager injectorsManager;
+	protected ContextInjector contextInjector;
 
 	@PetiteInject
 	protected ResultsManager resultsManager;
@@ -156,7 +156,7 @@ public class MadvocController {
 			throw new MadvocException("Unable to find action result type '" + resultType + "'.");
 		}
 		if (result.isInitialized() == false) {
-			injectorsManager.getContextInjector().inject(result, req.getHttpServletRequest(), req.getHttpServletResponse());
+			contextInjector.injectContext(result, req.getHttpServletRequest(), req.getHttpServletResponse());
 			result.initialized();
 			result.init();
 		}
@@ -195,7 +195,7 @@ public class MadvocController {
 		cfg.interceptors = interceptorsManager.resolveAll(interceptorClasses);
 		for (ActionInterceptor interceptor : cfg.interceptors) {
 			if (interceptor.isInitialized() == false) {
-				injectorsManager.getContextInjector().inject(interceptor, applicationContext);
+				contextInjector.injectContext(interceptor, applicationContext);
 				interceptor.initialized();
 				interceptor.init();
 			}

@@ -4,11 +4,10 @@ package madvoc;
 
 import jodd.madvoc.interceptor.ActionInterceptorStack;
 import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 
 public class MyInterceptorStack extends ActionInterceptorStack {
 
 	public MyInterceptorStack() {
-		super(EchoInterceptor.class, DefaultWebAppInterceptors.class);
+		super(EchoInterceptor.class, MyServletConfigInterceptor.class);
 	}
 }

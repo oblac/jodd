@@ -1,5 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head><title>Simple jsp page</title></head>
-  <body>hello all (on hi-all.jsp)</body>
+  <body>
+  hello all (on hi-all.jsp) ${p.name} ${p.data}
+<pre style="color:white; background-color:green;">
+hello all (on hi-all.jsp) JohnDoe 13</pre>
+</body>
 </html>

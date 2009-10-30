@@ -12,13 +12,13 @@ public class RawAction {
 
 	@Action
 	public RawResultData view() {
-		String result = "this is some direct result";
+		String result = "this is some raw direct result";
 		byte[] bytes = CharUtil.toAsciiArray(result.toCharArray());
 		return new RawResultData(bytes);
 	}
 
 	@Action
 	public String text() {
-		return "raw:some txt";
+		return "raw:some raw txt";
 	}
 }

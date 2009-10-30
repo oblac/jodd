@@ -2,23 +2,35 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.component.ScopeDataManager;
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.MadvocException;
+import jodd.util.ReflectUtil;
+import jodd.typeconverter.TypeConverterManager;
+import jodd.typeconverter.TypeConverter;
+
+import java.lang.reflect.Method;
 
 /**
- * Helper class for HTTP scopes injection.
+ * Abstract base class for HTTP scopes injection.
  */
-public abstract class ScopeInjector {
+public abstract class BaseScopeInjector {
 
-	protected final ScopeDataManager scopeDataManager;
+	protected static final ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-	protected ScopeInjector(ScopeDataManager scopeDataManager) {
-		this.scopeDataManager = scopeDataManager;
-	}
-
+	protected final ScopeType scopeType;
 
 	/**
-	 * Sets target property, optionally creates instance if doesn't exist.
+	 * Creates scope injector for provided {@link jodd.madvoc.ScopeType}.
+	 */
+	protected BaseScopeInjector(ScopeType scopeType) {
+		this.scopeType = scopeType;
+	}
+
+	// ---------------------------------------------------------------- beanutil
+
+	/**
+	 * Sets target bean property, optionally creates instance if doesn't exist.
 	 */
 	protected void setTargetProperty(Object target, String name, Object attrValue, boolean create) {
 		if (create == true) {
@@ -28,17 +40,8 @@ public abstract class ScopeInjector {
 		}
 	}
 
-	protected void setTargetProperty(Object target, String name, Object[] paramValues, boolean create) {
-		Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
-		if (create == true) {
-			BeanUtil.setDeclaredPropertyForcedSilent(target, name, value);
-		} else {
-			BeanUtil.setDeclaredPropertySilent(target, name, value);
-		}
-	}
-
 	/**
-	 * Reads target ptoperty.
+	 * Reads target property.
 	 */
 	protected Object getTargetProperty(Object target, ScopeData.Out out) {
 		if (out.target == null) {
@@ -47,6 +50,8 @@ public abstract class ScopeInjector {
 			return BeanUtil.getDeclaredProperty(target, out.target);
 		}
 	}
+
+	// ---------------------------------------------------------------- matched property
 
 	/**
 	 * Returns matched property name or <code>null</code> if name is not matched.
@@ -66,7 +71,8 @@ public abstract class ScopeInjector {
 		}
 		int requiredLen = in.name.length();
 		if (attrName.length() >= requiredLen + 1) {
-			if ((attrName.charAt(requiredLen) != '.') && (attrName.charAt(requiredLen) != '[')) {
+			char c = attrName.charAt(requiredLen);
+			if ((c != '.') && (c != '[')) {
 				return null;
 			}
 		}
@@ -76,6 +82,23 @@ public abstract class ScopeInjector {
 			return attrName;
 		}
 		return in.target + attrName.substring(in.name.length());
+	}
+
+
+	// ---------------------------------------------------------------- delegates
+
+	/**
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}
+	 */
+	public ScopeData.In[] lookupInData(Class actionClass) {
+		return scopeDataResolver.lookupInData(actionClass, scopeType);
+	}
+
+	/**
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)} 
+	 */
+	public ScopeData.Out[] lookupOutData(Class actionClass) {
+		return scopeDataResolver.lookupOutData(actionClass, scopeType);
 	}
 
 }

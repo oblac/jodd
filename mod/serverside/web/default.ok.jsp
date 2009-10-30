@@ -5,7 +5,19 @@
 </head>
 <body>
 
-default action name.
+Console:
+<pre style="color:white; background-color:green;">
+	default action name
+	0 Person{name='Aaa', data=1}
+	1 Person{name='Bbb', data=2}
+	2 Person{name='Ccc', data=3}
+	0 Person{name='Aaa', data=1}
+	1 Person{name='Bbb', data=2}
+	2 Person{name='Ccc', data=3}
+	{2=Person{name='Ccc', data=3}, 0=Person{name='Aaa', data=1}, 1=Person{name='Bbb', data=2}}
+</pre>
+
+
 
 </body>
 </html>
