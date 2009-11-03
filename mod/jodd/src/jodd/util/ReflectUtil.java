@@ -580,8 +580,12 @@ public class ReflectUtil {
 
 	/**
 	 * Suppress access check against a reflection object. SecurityException is silently ignored.
+	 * Checks first if the object is already accessible.
 	 */
 	public static void forceAccess(AccessibleObject accObject){
+		if (accObject.isAccessible() == true) {
+			return;
+		}
 		try {
 			accObject.setAccessible(true);
 		} catch (SecurityException sex) {
