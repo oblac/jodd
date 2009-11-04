@@ -10,9 +10,6 @@ import jodd.madvoc.test.Boo3Action;
 import jodd.madvoc.test.BooAction;
 import jodd.madvoc.test2.Boo4Action;
 import jodd.madvoc.test2.Boo5Action;
-import jodd.madvoc.MadvocTestCase;
-import jodd.madvoc.WebApplication;
-import jodd.madvoc.ActionConfig;
 
 public class ActionMethodParserTest extends MadvocTestCase {
 

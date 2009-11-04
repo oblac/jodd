@@ -43,9 +43,12 @@ public class ActionMethodParser {
 	 */
 	public ActionConfig parse(Class<?> actionClass, Method actionMethod, String actionPath) {
 
-		Class superClass = null;
+		Class<?> superClass = null;
 		if (actionClass.getAnnotation(MadvocAction.class) == null) {
 			superClass = actionClass.getSuperclass();
+			if ((superClass == Object.class) || (superClass.getAnnotation(MadvocAction.class) == null)) {
+				superClass = null;
+			}
 		}
 
 		// interceptors
