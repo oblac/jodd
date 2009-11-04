@@ -32,6 +32,7 @@ public class IdRequestInjectorInterceptor extends ActionInterceptor {
 				return super.getMatchedPropertyName(in, attrName);
 			}
 		};
+		requestInjector.getConfig().setInjectAttributes(false);
 	}
 
 	/**
