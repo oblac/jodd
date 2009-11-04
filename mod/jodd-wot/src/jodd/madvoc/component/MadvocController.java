@@ -90,7 +90,7 @@ public class MadvocController {
 			String httpMethod = servletRequest.getMethod().toUpperCase();
 			actionPath = actionPathRewriter.rewrite(actionPath, servletRequest, httpMethod);
 
-			// resolve action config
+			// resolve action configuration
 			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
 			if (actionConfig == null) {
 				log.debug("Action path not mapped: {}", actionPath);
@@ -203,8 +203,10 @@ public class MadvocController {
 		cfg.initialized();
 	}
 
+	// ---------------------------------------------------------------- create
+
 	/**
-	 * Creates new action object from {@link ActionConfig}.
+	 * Creates new action object from {@link ActionConfig} using default contructor.
 	 */
 	protected Object createAction(Class actionClass) {
 		try {

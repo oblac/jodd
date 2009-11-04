@@ -33,20 +33,25 @@ public class ActionMethodParser {
 
 	// ---------------------------------------------------------------- 
 
-	public ActionConfig parse(Class actionClass, Method actionMethod) {
+	public ActionConfig parse(Class<?> actionClass, Method actionMethod) {
 		return parse(actionClass, actionMethod, null);
 	}
 
 	/**
 	 * Parses java action method annotations and returns its action configuration.
-	 * Returns <code>null</code> if method is not madvoc action.
+	 * Returns <code>null</code> if method is not a madvoc action.
 	 */
-	public ActionConfig parse(Class actionClass, Method actionMethod, String actionPath) {
+	public ActionConfig parse(Class<?> actionClass, Method actionMethod, String actionPath) {
+
+		Class superClass = null;
+		if (actionClass.getAnnotation(MadvocAction.class) == null) {
+			superClass = actionClass.getSuperclass();
+		}
 
 		// interceptors
 		Class<? extends ActionInterceptor>[] interceptorClasses = readMethodInterceptors(actionMethod);
 		if (interceptorClasses == null) {
-			interceptorClasses = readClassInterceptors(actionClass);
+			interceptorClasses = readClassInterceptors(superClass != null ?  superClass : actionClass);
 		}
 
 		// action path is already specified explicitly
@@ -55,10 +60,10 @@ public class ActionMethodParser {
 		}
 
 		// action path not specified, build it
-		String packageActionPath = readPackageActionPath(actionClass);
+		String packageActionPath = readPackageActionPath(superClass != null ?  superClass : actionClass);
 
 		// class annotation: class action path
-		String classActionPath = readClassActionPath(actionClass);
+		String classActionPath = readClassActionPath(superClass != null ?  superClass : actionClass);
 		if (classActionPath == null) {
 			return null;
 		}

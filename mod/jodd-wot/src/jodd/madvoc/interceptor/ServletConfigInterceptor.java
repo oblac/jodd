@@ -77,6 +77,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		madvocContextScopeInjector.inject(target, servletRequest, servletResponse);
 		applicationScopeInjector.inject(target, servletRequest.getSession().getServletContext());
 		sessionScopeInjector.inject(target, servletRequest);
+		requestScopeInjector.prepare(servletRequest);
 		requestScopeInjector.inject(target, servletRequest);
 	}
 
