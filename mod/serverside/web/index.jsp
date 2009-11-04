@@ -37,7 +37,7 @@
 <a href="hello.defint1.html?foo=173">default interceptors</a> - intercepted by default set of interceptors; using default ServletConfigInterceptor<br>
 <a href="hello.defint2.html?foo=173&foo2=">parameters are copied</a> - different setting of ServletConfigInterceptor, where:
 	1) all parameters are copied to attributes, 2) parameters are not injected and 3) empty params are treated as null.<br>
-<a href="misc.html">misc scopes</a> - access different scopes throught their map adapters.<br>
+<a href="misc.html">misc scopes</a> (invoke twice!) - access different scopes throught their map adapters.<br>
 <a href="misc.post.html?girl.id=1&girl.name=requestName">inject id, prepare and execute</a> - prebarable action first injects only id parameters,
 	then prepares it and executes the action method at the end.<br>
 
@@ -45,7 +45,9 @@
 <a href="search?query=%C5%A1aran">URI encoded link</a> - URI links can be decoded (if not set so in Tomcat), 
 <form action="search" method="post"><input type="text" name="query"  value="šaran"><input type="submit"> - forms are encoded/decoded correctly.</form> 
 
-
+<br>
+<a href="super.html?girl.id=173">Super</a> method.<br>
+<a href="super.simple.html?id=22">Super member</a> non-static class.<br>
 </p>
 
 <h2>More</h2>
