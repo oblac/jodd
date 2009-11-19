@@ -45,10 +45,7 @@ public class RawResult extends ActionResult {
 		response.setContentLength(data.length);
 
 		OutputStream os = response.getOutputStream();
-		try {
-			os.write(data);
-		} finally {
-			os.close();
-		}
+		os.write(data);
+		os.flush();
 	}
 }
