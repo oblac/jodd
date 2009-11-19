@@ -14,6 +14,7 @@ import java.io.IOException;
 
 /**
  * Raw results directly writes byte context to the output.
+ * Output is closed after writing.
  */
 public class RawResult extends ActionResult {
 
@@ -44,6 +45,10 @@ public class RawResult extends ActionResult {
 		response.setContentLength(data.length);
 
 		OutputStream os = response.getOutputStream();
-		os.write(data);
+		try {
+			os.write(data);
+		} finally {
+			os.close();
+		}
 	}
 }
