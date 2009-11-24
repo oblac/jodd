@@ -66,7 +66,7 @@ public class JoddJspFunctions {
 		}
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
-			if (i != 0) {
+			if (i > 0) {
 				result.append(separator);
 			}
 			String value = array[i];

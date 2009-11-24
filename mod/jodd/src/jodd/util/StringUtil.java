@@ -1797,7 +1797,7 @@ public class StringUtil {
 	// ---------------------------------------------------------------- join
 
 	/**
-	 * Joins array of strings into one string.
+	 * Joins an array of strings into one string.
 	 */
 	public static String join(String... parts) {
 		StringBuilder sb = new StringBuilder();
@@ -1805,6 +1805,26 @@ public class StringUtil {
 			sb.append(part);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Joins list of iterable elements.
+	 */
+	public static String join(Iterable<?> elements, String separator) {
+		if (elements == null) {
+			return EMPTY;
+		}
+		StringBuilder buf = new StringBuilder();
+		if (separator == null) {
+			separator = EMPTY;
+		}
+		for (Object o : elements) {
+			if (buf.length() > 0) {
+				buf.append(separator);
+			}
+			buf.append(o);
+		}
+		return buf.toString();
 	}
 
 	// ---------------------------------------------------------------- charset
