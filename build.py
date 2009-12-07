@@ -47,7 +47,7 @@ project_task('build', '.jodd, .jodd-wot, .jodd-gfx')
 project_task('javadoc', 'build, .jodd, .jodd-wot')
 project_task('emma', 'build, .jodd, .jodd-wot')
 project_task('findbugs', 'build, .jodd, .jodd-wot')
-project_task('dist', 'build, .jodd, .jodd-wot, build')
+project_task('dist', 'build, .jodd, .jodd-wot')
 project_clean()
 
 project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')

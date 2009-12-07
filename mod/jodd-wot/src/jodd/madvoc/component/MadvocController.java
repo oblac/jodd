@@ -93,7 +93,6 @@ public class MadvocController {
 			// resolve action configuration
 			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
 			if (actionConfig == null) {
-				log.debug("Action path not mapped: {}", actionPath);
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {

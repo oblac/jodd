@@ -22,7 +22,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.0.7"/>
+	<property name="prjVersion" value="3.0.8"/>
 
 	<patternset id="ignored.files">
 		<exclude name="**/CVS/**"/>
