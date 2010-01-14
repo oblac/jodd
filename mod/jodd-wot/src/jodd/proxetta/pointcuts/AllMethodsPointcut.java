@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.proxetta.pointcuts;
 
