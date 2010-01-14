@@ -4,6 +4,7 @@
 <%@ page import="static jodd.servlet.HtmlEncoder.*" %>
 <%@ page import="jodd.servlet.JspValueResolver" %>
 <%@ taglib prefix="jodd" uri="/jodd" %>
+<%@ taglib prefix="joddfn" uri="/joddfn" %>
 <html>
 <head>
 	<title>Big Form test</title>
@@ -175,8 +176,8 @@
 
 <div style="float:left; margin-left:20px;">
 <h2>Automagic values set using jodd:form tag</h2>
-<jodd:form>
-<form name="form2" method="post" action="form.post.html">
+<jodd:form addIds="true">
+<form ${joddfn:nameAndId("form2")} method="post" action="form.post.html">
 
 <table border=1 cellpadding=3 cellspacing=0>
 

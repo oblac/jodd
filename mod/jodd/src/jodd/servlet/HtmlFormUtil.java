@@ -23,7 +23,7 @@ public class HtmlFormUtil {
 	private static final String ENDQUOTE	= "\" ";
 	private static final String SELECTED	= "selected";
 	private static final String NAME_QUOTE = "name=\"";
-	private static final String ID_QUOTE 	= "id=\"";
+	private static final String ENDQUOTE_ID_QUOTE 	= "\" id=\"";
 
 	// ---------------------------------------------------------------- checked
 
@@ -227,6 +227,6 @@ public class HtmlFormUtil {
 	 * Build name and id at once. Usually used for forms.
 	 */
 	public static String nameAndId(String name) {
-		return NAME_QUOTE + name + ENDQUOTE + ID_QUOTE + QUOTE + name2id(name) + ENDQUOTE;
+		return NAME_QUOTE + name + ENDQUOTE_ID_QUOTE + name2id(name) + ENDQUOTE;
 	}
 }

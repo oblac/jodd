@@ -2,6 +2,7 @@
 package jodd.servlet.tag;
 
 import jodd.servlet.HtmlEncoder;
+import jodd.servlet.HtmlFormUtil;
 import jodd.servlet.HtmlTag;
 import jodd.servlet.JspValueResolver;
 import jodd.util.StringUtil;
@@ -113,7 +114,7 @@ public class FormTag extends BodyTagSupport {
 		if (id != null) {
 			return;
 		}
-		tag.setAttribute(ID, formId + name);
+		tag.setAttribute(ID, formId + HtmlFormUtil.name2id(name));
 	}
 
 

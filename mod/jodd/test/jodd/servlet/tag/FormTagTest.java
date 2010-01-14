@@ -91,4 +91,9 @@ public class FormTagTest extends TestCase {
 		String mrof = form1(form);
 		assertEquals("<form id=\"foo\"><input name=\"in\" type=\"text\" id=\"foo_in\" value=\"*in*\"><textarea name=\"te\" id=\"foo_te\">*te*<select name=\"se\" id=\"foo_se\"></form>", mrof);
 	}
+	public void testWithForm2() {
+		String form = "<form id=\"fo_o\"><input name=\"i.n\" type=\"text\"><textarea name=\"te\"><select name=\"se\"></form>";
+		String mrof = form1(form);
+		assertEquals("<form id=\"fo_o\"><input name=\"i.n\" type=\"text\" id=\"fo_o_i_n\" value=\"*i.n*\"><textarea name=\"te\" id=\"fo_o_te\">*te*<select name=\"se\" id=\"fo_o_se\"></form>", mrof);
+	}
 }
