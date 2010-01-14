@@ -3,8 +3,11 @@
 package jodd.servlet;
 
 import jodd.typeconverter.BooleanConverter;
+import jodd.util.CharUtil;
 
 import java.util.List;
+
+import static jodd.util.StringPool.QUOTE;
 
 
 /**
@@ -19,6 +22,8 @@ public class HtmlFormUtil {
 	private static final String TRUE		= "true";
 	private static final String ENDQUOTE	= "\" ";
 	private static final String SELECTED	= "selected";
+	private static final String NAME_QUOTE = "name=\"";
+	private static final String ID_QUOTE 	= "id=\"";
 
 	// ---------------------------------------------------------------- checked
 
@@ -200,5 +205,28 @@ public class HtmlFormUtil {
 	}
 	public static String multiSelectedValue(List data, String value) {
 		return value + ENDQUOTE + multiSelected(data, value) + IGNORE;
+	}
+
+	// ---------------------------------------------------------------- id
+
+	/**
+	 * Converts name to safe id value by replacing all non-letter and non-digits characters to '_'.
+	 */
+	public static String name2id(String name) {
+		char[] str = name.toCharArray();
+		for (int i = 0; i < str.length; i++) {
+			char c = str[i];
+			if (CharUtil.isLetterOrDigit(str[i]) == false) {
+				str[i] = '_';
+			}
+		}
+		return new String(str);
+	}
+
+	/**
+	 * Build name and id at once. Usually used for forms.
+	 */
+	public static String nameAndId(String name) {
+		return NAME_QUOTE + name + ENDQUOTE + ID_QUOTE + QUOTE + name2id(name) + ENDQUOTE;
 	}
 }

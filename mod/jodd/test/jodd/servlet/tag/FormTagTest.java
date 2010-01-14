@@ -3,27 +3,30 @@
 package jodd.servlet.tag;
 
 import junit.framework.TestCase;
-import jodd.util.Closure;
 
 public class FormTagTest extends TestCase {
 
-
-	static Closure<String, Object> foo = new Closure<String, Object>() {
-		public Object execute(String input) {
-			return '*' + input + '*';
+	static FormTag.FieldResolver foo = new FormTag.FieldResolver() {
+		public Object value(String name) {
+			return '*' + name+ '*';
 		}
 	};
-	static Closure<String, Object> foo2 = new Closure<String, Object>() {
-		public Object execute(String input) {
-			return "*\"" + input + '*';
+	static FormTag.FieldResolver foo2 = new FormTag.FieldResolver() {
+		public Object value(String name) {
+			return "*\"" + name + '*';
 		}
 	};
 
 	static String form(String form) {
-		return new FormTag().populateForm(form, foo);
+		String result = new FormTag().populateForm(form, false, foo);
+		assertEquals(result, form1(form));
+		return result;
+	}
+	static String form1(String form) {
+		return new FormTag().populateForm(form, true, foo);
 	}
 	static String form2(String form) {
-		return new FormTag().populateForm(form, foo2);
+		return new FormTag().populateForm(form, false, foo2);
 	}
 
 	public void testSimple() {
@@ -81,5 +84,11 @@ public class FormTagTest extends TestCase {
 
 	public void testSelect() {
 		assertEquals("<select name='foo'><option value='1'/><option value='2'></option><option value=\"*foo*\" selected/></select>", form("<select name='foo'><option value='1'/><option value='2'></option><option value='*foo*'/></select>"));
+	}
+
+	public void testWithForm() {
+		String form = "<form id=\"foo\"><input name=\"in\" type=\"text\"><textarea name=\"te\"><select name=\"se\"></form>";
+		String mrof = form1(form);
+		assertEquals("<form id=\"foo\"><input name=\"in\" type=\"text\" id=\"foo_in\" value=\"*in*\"><textarea name=\"te\" id=\"foo_te\">*te*<select name=\"se\" id=\"foo_se\"></form>", mrof);
 	}
 }

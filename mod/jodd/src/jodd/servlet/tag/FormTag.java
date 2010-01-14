@@ -5,7 +5,6 @@ import jodd.servlet.HtmlEncoder;
 import jodd.servlet.HtmlTag;
 import jodd.servlet.JspValueResolver;
 import jodd.util.StringUtil;
-import jodd.util.Closure;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
@@ -18,6 +17,8 @@ import java.io.IOException;
  */
 public class FormTag extends BodyTagSupport {
 
+	private static final String FORM = "form";
+	private static final String ID = "id";
 	private static final String INPUT = "input";
 	private static final String TYPE = "type";
 	private static final String VALUE = "value";
@@ -34,6 +35,29 @@ public class FormTag extends BodyTagSupport {
 	private static final String NAME = "name";
 	private static final String OPTION = "option";
 	private static final String SELECTED = "selected";
+
+	// ---------------------------------------------------------------- options
+
+	private boolean addIds;
+
+	/**
+	 * Specify if field IDs should be added based on form id.
+	 */
+	public void setAddIds(boolean addIds) {
+		this.addIds = addIds;
+	}
+
+	// ---------------------------------------------------------------- interface
+
+	/**
+	 * Resolve form fields.
+	 */
+	public interface FieldResolver {
+		/**
+		 * Resolves form field value.
+		 */
+		Object value(String name);
+	}
 
 	// ---------------------------------------------------------------- tag
 
@@ -52,9 +76,9 @@ public class FormTag extends BodyTagSupport {
 	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
-		String bodytext = populateForm(body.getString(), new Closure<String, Object>() {
-			public Object execute(String input) {
-				return JspValueResolver.resolveProperty(input, pageContext);
+		String bodytext = populateForm(body.getString(), addIds, new FieldResolver() {
+			public Object value(String name) {
+				return JspValueResolver.resolveProperty(name, pageContext);
 			}
 		});
 		try {
@@ -64,7 +88,6 @@ public class FormTag extends BodyTagSupport {
 		}
 		return SKIP_BODY;
 	}
-
 
 	/**
 	 * Ends the tag.
@@ -77,13 +100,32 @@ public class FormTag extends BodyTagSupport {
 	// ---------------------------------------------------------------- populate
 
 	/**
+	 * Builds tag id if it is missing.
+	 */
+	private void makeId(HtmlTag tag, String formId, String name) {
+		if (formId == null) {
+			return;
+		}
+		if (name == null) {
+			return;
+		}
+		String id = tag.getAttribute(ID);
+		if (id != null) {
+			return;
+		}
+		tag.setAttribute(ID, formId + name);
+	}
+
+
+	/**
 	 * Populates HTML form.
 	 */
-	protected String populateForm(String html, Closure<String, Object> resolver) {
+	protected String populateForm(String html, boolean addIds, FieldResolver resolver) {
 		int s = 0;
 		StringBuilder result = new StringBuilder((int) (html.length() * 1.2));
 		String currentSelectName = null;
 		HtmlTag tag = null;
+		String formId = null;
 		while (true) {
 			if (tag != null) {
 				result.append(tag);
@@ -100,10 +142,22 @@ public class FormTag extends BodyTagSupport {
 			if (tag.isEndTag()) {
 				if (tagName.equals(SELECT)) {
 					currentSelectName = null;
+				} else if (tagName.equals(FORM)) {
+					formId = null;
 				}
 				continue;
 			}
 
+			// find form id
+			if (addIds == true) {
+				if (tagName.equals(FORM) && formId == null) {
+					formId = tag.getAttribute(ID);
+					if (formId != null) {
+						 formId += '_';
+					}
+					continue;
+				}
+			}
 			if (tagName.equals(INPUT) == true) {
 				// INPUT
 				String tagType = tag.getAttribute(TYPE);
@@ -114,7 +168,8 @@ public class FormTag extends BodyTagSupport {
 				if (name == null) {
 					continue;
 				}
-				Object valueObject = resolver.execute(name);
+				makeId(tag, formId, name);
+				Object valueObject = resolver.value(name);
 				if (valueObject == null) {
 					continue;
 				}
@@ -147,19 +202,21 @@ public class FormTag extends BodyTagSupport {
 				}
 			} else if (tagName.equals(TEXTAREA)) {
 				String name = tag.getAttribute(NAME);
-				Object valueObject = resolver.execute(name);
+				Object valueObject = resolver.value(name);
 				if (valueObject != null) {
 					tag.setSuffixText(HtmlEncoder.text(valueObject.toString()));
+					makeId(tag, formId, name);
 				}
 			} else if (tagName.equals(SELECT)) {
 				currentSelectName = tag.getAttribute(NAME);
+				makeId(tag, formId, currentSelectName);
 			} else if (tagName.equals(OPTION)) {
 				if (currentSelectName == null) {
 					continue;
 				}
 				String tagValue = tag.getAttribute(VALUE);
 				if (tagValue != null) {
-					Object vals = resolver.execute(currentSelectName);
+					Object vals = resolver.value(currentSelectName);
 					if (vals == null) {
 						continue;
 					}

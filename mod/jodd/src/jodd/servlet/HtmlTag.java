@@ -161,7 +161,8 @@ public class HtmlTag {
 	protected boolean changed;
 
 	/**
-	 * Returns attribute value.
+	 * Returns attribute value or <code>null</code> if
+	 * attribute value doesn't exist.
 	 */
 	public String getAttribute(String attrName) {
 		if (attributes == null) {
@@ -340,9 +341,9 @@ public class HtmlTag {
 			t.append('/');
 		}
 		t.append(getTagName()).append(' ');
-		for (String attrName : attributes.keySet()) {
-			t.append(attrName);
-			String value = attributes.get(attrName);
+		for (Map.Entry<String, String> entry : attributes.entrySet()) {
+			t.append(entry.getKey());
+			String value = entry.getValue();
 			if (value != null) {
 				t.append('=').append('\"').append(value).append('\"');
 			}

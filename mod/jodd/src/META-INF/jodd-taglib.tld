@@ -16,6 +16,11 @@
 		<name>form</name>
 		<tag-class>jodd.servlet.tag.FormTag</tag-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<name>addIds</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>

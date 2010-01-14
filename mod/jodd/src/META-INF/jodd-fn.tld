@@ -53,7 +53,18 @@
 		<function-class>jodd.servlet.UrlEncoder</function-class>
 		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
-	
+
+	<function>
+		<name>name2id</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String name2id(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>nameAndId</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String nameAndId(java.lang.String)</function-signature>
+	</function>
+
 	<!-- jodd fn -->
 
 	<function>
