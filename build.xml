@@ -576,7 +576,7 @@
 
 	<target name="findbugs" depends="build, findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' on project"/>
 
-	<target name="dist" depends="build, dist.jodd, dist.jodd-wot, build" description="invokes 'dist' on project"/>
+	<target name="dist" depends="build, dist.jodd, dist.jodd-wot" description="invokes 'dist' on project"/>
 
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>

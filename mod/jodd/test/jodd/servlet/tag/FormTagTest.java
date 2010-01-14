@@ -32,6 +32,8 @@ public class FormTagTest extends TestCase {
 	public void testSimple() {
 		assertEquals("", form(""));
 		assertEquals("<form></form>", form("<form></form>"));
+		assertEquals("<form name=\"foo\" id=\"foo\"></form>", form1("<form name=\"foo\"></form>"));
+		assertEquals("<form name=\"fo.o\" id=\"fo_o\"></form>", form1("<form name=\"fo.o\"></form>"));
 	}
 	public void testVariants() {
 		assertEquals("<input type='text'/>", form("<input type='text'/>"));

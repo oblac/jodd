@@ -42,7 +42,7 @@ public class FormTag extends BodyTagSupport {
 	private boolean addIds;
 
 	/**
-	 * Specify if field IDs should be added based on form id.
+	 * Specify if form and fields IDs should be added based on form id.
 	 */
 	public void setAddIds(boolean addIds) {
 		this.addIds = addIds;
@@ -153,6 +153,13 @@ public class FormTag extends BodyTagSupport {
 			if (addIds == true) {
 				if (tagName.equals(FORM) && formId == null) {
 					formId = tag.getAttribute(ID);
+					if (formId == null) {
+						String name = tag.getAttribute(NAME);
+						if (name != null) {
+							formId = HtmlFormUtil.name2id(name);
+							tag.setAttribute(ID, formId);
+						}
+					}
 					if (formId != null) {
 						 formId += '_';
 					}
