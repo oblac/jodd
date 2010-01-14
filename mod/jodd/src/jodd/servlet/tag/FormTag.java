@@ -39,13 +39,13 @@ public class FormTag extends BodyTagSupport {
 
 	// ---------------------------------------------------------------- options
 
-	private boolean addIds;
+	private boolean ids;
 
 	/**
 	 * Specify if form and fields IDs should be added based on form id.
 	 */
-	public void setAddIds(boolean addIds) {
-		this.addIds = addIds;
+	public void setIds(boolean ids) {
+		this.ids = ids;
 	}
 
 	// ---------------------------------------------------------------- interface
@@ -77,7 +77,7 @@ public class FormTag extends BodyTagSupport {
 	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
-		String bodytext = populateForm(body.getString(), addIds, new FieldResolver() {
+		String bodytext = populateForm(body.getString(), ids, new FieldResolver() {
 			public Object value(String name) {
 				return JspValueResolver.resolveProperty(name, pageContext);
 			}
