@@ -176,8 +176,8 @@
 
 <div style="float:left; margin-left:20px;">
 <h2>Automagic values set using jodd:form tag</h2>
-<jodd:form addIds="true">
-<form ${joddfn:nameAndId("form2")} method="post" action="form.post.html">
+<jodd:form ids="true">
+<form id="form2" method="post" action="form.post.html">
 
 <table border=1 cellpadding=3 cellspacing=0>
 

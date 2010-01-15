@@ -20,6 +20,7 @@ public class FormTag extends BodyTagSupport {
 
 	private static final String FORM = "form";
 	private static final String ID = "id";
+	private static final String FOR = "for";
 	private static final String INPUT = "input";
 	private static final String TYPE = "type";
 	private static final String VALUE = "value";
@@ -36,16 +37,28 @@ public class FormTag extends BodyTagSupport {
 	private static final String NAME = "name";
 	private static final String OPTION = "option";
 	private static final String SELECTED = "selected";
+	private static final String IDREF = "@id(";
 
 	// ---------------------------------------------------------------- options
 
 	private boolean ids;
 
+
 	/**
-	 * Specify if form and fields IDs should be added based on form id.
+	 * Specifies if form and fields IDs should be added based on form id.
 	 */
 	public void setIds(boolean ids) {
 		this.ids = ids;
+	}
+
+	private boolean refs;
+
+	/**
+	 * Specifies if id references in 'id' and 'for' attributes should be resolved.
+	 * Available only if {@link #setIds(boolean) ids are also generated}.
+	 */
+	public void setRefs(boolean refs) {
+		this.refs = refs;
 	}
 
 	// ---------------------------------------------------------------- interface
@@ -77,7 +90,7 @@ public class FormTag extends BodyTagSupport {
 	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
-		String bodytext = populateForm(body.getString(), ids, new FieldResolver() {
+		String bodytext = populateForm(body.getString(), new FieldResolver() {
 			public Object value(String name) {
 				return JspValueResolver.resolveProperty(name, pageContext);
 			}
@@ -103,7 +116,7 @@ public class FormTag extends BodyTagSupport {
 	/**
 	 * Builds tag id if it is missing.
 	 */
-	private void makeId(HtmlTag tag, String formId, String name) {
+	protected void makeId(HtmlTag tag, String formId, String name) {
 		if (formId == null) {
 			return;
 		}
@@ -121,7 +134,7 @@ public class FormTag extends BodyTagSupport {
 	/**
 	 * Populates HTML form.
 	 */
-	protected String populateForm(String html, boolean addIds, FieldResolver resolver) {
+	protected String populateForm(String html, FieldResolver resolver) {
 		int s = 0;
 		StringBuilder result = new StringBuilder((int) (html.length() * 1.2));
 		String currentSelectName = null;
@@ -140,6 +153,7 @@ public class FormTag extends BodyTagSupport {
 			s = tag.getNextIndex();
 
 			String tagName = tag.getTagName();
+			// process end tags
 			if (tag.isEndTag()) {
 				if (tagName.equals(SELECT)) {
 					currentSelectName = null;
@@ -150,7 +164,7 @@ public class FormTag extends BodyTagSupport {
 			}
 
 			// find form id
-			if (addIds == true) {
+			if (ids == true) {
 				if (tagName.equals(FORM) && formId == null) {
 					formId = tag.getAttribute(ID);
 					if (formId != null) {
@@ -235,9 +249,41 @@ public class FormTag extends BodyTagSupport {
 						}
 					}
 				}
+			} else {	// all other tags
+				if (refs && formId != null) {
+					String id = tag.getAttribute(ID);
+					if (id != null) {
+						id = replaceReference(formId, id);
+						if (id != null) {
+							tag.setAttribute(ID, id);
+						}
+					}
+					String afor = tag.getAttribute(FOR);
+					if (afor != null) {
+						afor = replaceReference(formId, afor);
+						if (afor != null) {
+							tag.setAttribute(FOR, afor);
+						}
+					}
+				}
 			}
 		}
 		return result.toString();
 	}
 
+	/**
+	 * Replaces the reference if found, otherwise returns <code>null</code>.
+	 */
+	protected static String replaceReference(String formId, String value) {
+		int ndx = value.indexOf(IDREF);
+		if (ndx == -1) {
+			return null;
+		}
+		int ndx2 = value.indexOf(')', ndx);
+		if (ndx2 == -1) {
+			throw new IllegalArgumentException("ID reference not closed: '" + value + "'.");
+		}
+		String ref = value.substring(ndx + IDREF.length(), ndx2);
+		return value.substring(0, ndx) + formId + HtmlFormUtil.name2id(ref) + value.substring(ndx2 + 1);
+	}
 }

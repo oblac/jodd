@@ -18,15 +18,24 @@ public class FormTagTest extends TestCase {
 	};
 
 	static String form(String form) {
-		String result = new FormTag().populateForm(form, false, foo);
+		String result = new FormTag().populateForm(form, foo);
 		assertEquals(result, form1(form));
 		return result;
 	}
 	static String form1(String form) {
-		return new FormTag().populateForm(form, true, foo);
+		FormTag ft = new FormTag();
+		ft.setIds(true);
+		return ft.populateForm(form, foo);
 	}
+
 	static String form2(String form) {
-		return new FormTag().populateForm(form, false, foo2);
+		return new FormTag().populateForm(form, foo2);
+	}
+	static String form3(String form) {
+		FormTag ft = new FormTag();
+		ft.setIds(true);
+		ft.setRefs(true);
+		return ft.populateForm(form, foo);
 	}
 
 	public void testSimple() {
@@ -95,5 +104,16 @@ public class FormTagTest extends TestCase {
 		String form = "<form id=\"fo_o\"><input name=\"i.n\" type=\"text\"><textarea name=\"te\"><select name=\"se\"></form>";
 		String mrof = form1(form);
 		assertEquals("<form id=\"fo_o\"><input name=\"i.n\" type=\"text\" id=\"fo_o_i_n\" value=\"*i.n*\"><textarea name=\"te\" id=\"fo_o_te\">*te*<select name=\"se\" id=\"fo_o_se\"></form>", mrof);
+	}
+
+	public void testWithFormAndRef() {
+		String form = "<form id=\"foo\"><label for=\"@id(i.n)\"><input name=\"i.n\" type=\"text\"></form>";
+		String mrof = form3(form);
+		assertEquals("<form id=\"foo\"><label for=\"foo_i_n\"><input name=\"i.n\" type=\"text\" id=\"foo_i_n\" value=\"*i.n*\"></form>", mrof);
+	}
+
+	public void testRef() {
+		assertEquals("aaaxxxuser_name_err", FormTag.replaceReference("xxx", "aaa@id(user.name)_err"));
+		assertEquals("xxxuser_name", FormTag.replaceReference("xxx", "@id(user.name)"));
 	}
 }

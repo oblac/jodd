@@ -7,9 +7,6 @@ import jodd.util.CharUtil;
 
 import java.util.List;
 
-import static jodd.util.StringPool.QUOTE;
-
-
 /**
  * Various utilities for raw population of HTML forms.
  * Text encoding is provided by {@link HtmlEncoder} class.
@@ -22,8 +19,6 @@ public class HtmlFormUtil {
 	private static final String TRUE		= "true";
 	private static final String ENDQUOTE	= "\" ";
 	private static final String SELECTED	= "selected";
-	private static final String NAME_QUOTE = "name=\"";
-	private static final String ENDQUOTE_ID_QUOTE 	= "\" id=\"";
 
 	// ---------------------------------------------------------------- checked
 
@@ -215,7 +210,6 @@ public class HtmlFormUtil {
 	public static String name2id(String name) {
 		char[] str = name.toCharArray();
 		for (int i = 0; i < str.length; i++) {
-			char c = str[i];
 			if (CharUtil.isLetterOrDigit(str[i]) == false) {
 				str[i] = '_';
 			}
@@ -223,10 +217,4 @@ public class HtmlFormUtil {
 		return new String(str);
 	}
 
-	/**
-	 * Build name and id at once. Usually used for forms.
-	 */
-	public static String nameAndId(String name) {
-		return NAME_QUOTE + name + ENDQUOTE_ID_QUOTE + name2id(name) + ENDQUOTE;
-	}
 }
