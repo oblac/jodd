@@ -153,13 +153,6 @@ public class FormTag extends BodyTagSupport {
 			if (addIds == true) {
 				if (tagName.equals(FORM) && formId == null) {
 					formId = tag.getAttribute(ID);
-					if (formId == null) {
-						String name = tag.getAttribute(NAME);
-						if (name != null) {
-							formId = HtmlFormUtil.name2id(name);
-							tag.setAttribute(ID, formId);
-						}
-					}
 					if (formId != null) {
 						 formId += '_';
 					}
