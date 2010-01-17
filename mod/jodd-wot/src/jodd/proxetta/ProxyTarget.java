@@ -84,6 +84,10 @@ public final class ProxyTarget {
 		throw new UnsupportedOperationException();
 	}
 
+	public static void pushDefaultResultValue() {
+		throw new UnsupportedOperationException();
+	}
+
 	// ---------------------------------------------------------------- target
 
 	/**

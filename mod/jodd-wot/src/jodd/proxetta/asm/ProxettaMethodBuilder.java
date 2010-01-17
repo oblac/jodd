@@ -5,6 +5,7 @@ package jodd.proxetta.asm;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Type;
+
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.POP;
@@ -166,10 +167,12 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 						super.visitIincInsn(var, i1);  // [F1]
 					}
 
+					protected boolean returnDefault;
+
 					@Override
 					public void visitInsn(int opcode) {
 						if (opcode == ARETURN) {
-							visitReturn(mv, td.msign, true);
+							visitReturn(mv, td.msign, true, returnDefault);
 							return;
 						}
 						if (traceNext == true) {
@@ -180,24 +183,25 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 						super.visitInsn(opcode);
 					}
 
+					@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 					@Override
-					public void visitMethodInsn(int opcode, String string, String string1, String string2) {
+					public void visitMethodInsn(int opcode, String string, String mname, String mdesc) {
 						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE)) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;
-								string1 = adviceMethodName(string1, aspectData.aspectIndex);
+								mname = adviceMethodName(mname, aspectData.aspectIndex);
 							}
 						} else
 
 						if (opcode == INVOKESTATIC) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;
-								string1 = adviceMethodName(string1, aspectData.aspectIndex);
+								mname = adviceMethodName(mname, aspectData.aspectIndex);
 							} else
 
 							if (string.endsWith('/' + TARGET_CLASS_NAME) == true) {
 
-								if (isInvokeMethod(string1, string2)) {           // [R7]
+								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 										loadMethodArguments(mv, td.msign);
 										mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
@@ -212,13 +216,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isArgumentsCountMethod(string1, string2)) {        // [R2]
+								if (isArgumentsCountMethod(mname, mdesc)) {        // [R2]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									return;
 								} else
 
-								if (isArgumentTypeMethod(string1, string2)) {      // [R3]
+								if (isArgumentTypeMethod(mname, mdesc)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -226,7 +230,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isArgumentMethod(string1, string2)) {           // [R4]
+								if (isArgumentMethod(mname, mdesc)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -234,7 +238,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isSetArgumentMethod(string1, string2)) {           // [R5]
+								if (isSetArgumentMethod(mname, mdesc)) {           // [R5]
 									int argIndex = this.getArgumentIndex();
 									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
 									mv.visitInsn(POP);
@@ -242,7 +246,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isCreateArgumentsArrayMethod(string1, string2)) {  // [R6]
+								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
@@ -255,7 +259,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isCreateArgumentsClassArrayMethod(string1, string2)) {     // [R11]
+								if (isCreateArgumentsClassArrayMethod(mname, mdesc)) {     // [R11]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
 									mv.visitTypeInsn(ANEWARRAY, "java/lang/Class");
@@ -268,28 +272,38 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isTargetMethod(string1, string2)) {       // [R9.1]
+								if (isTargetMethod(mname, mdesc)) {       // [R9.1]
 									mv.visitVarInsn(ALOAD, 0);
 									return;
 								} else
 
-								if (isTargetClassMethod(string1, string2)) {       // [R9]
+								if (isTargetClassMethod(mname, mdesc)) {       // [R9]
 									mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
 									return;
 								} else
 
-								if (isTargetMethodNameMethod(string1, string2)) {  // [R10]
+								if (isTargetMethodNameMethod(mname, mdesc)) {  // [R10]
 									mv.visitLdcInsn(td.msign.getMethodName());
 									return;
-								}
+								} else
 
-								if (isReturnTypeMethod(string1, string2)) {        // [R11]
+								if (isReturnTypeMethod(mname, mdesc)) {        // [R11]
 									loadMethodReturnClass(mv, td.msign);
+									return;
+								} else
+
+								if (isPushDefaultResultValueMethod(mname, mdesc)) {
+//									String returnType = td.msign.getReturnType();
+									returnDefault = true;
+//									System.out.println("--------------> " + returnType);
+//									if (returnType.equals("int")) {
+//										mv.visitInsn(ICONST_0);
+//									}
 									return;
 								}
 							}
 						}
-						super.visitMethodInsn(opcode, string, string1, string2);
+						super.visitMethodInsn(opcode, string, mname, mdesc);
 					}
 
 				};

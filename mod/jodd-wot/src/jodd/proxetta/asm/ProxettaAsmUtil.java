@@ -324,9 +324,11 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- return
 
-
-
 	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast) {
+		visitReturn(mv, msign, isLast, false);
+	}
+
+	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast, boolean returnDefault) {
 		switch (msign.getReturnOpcodeType()) {
 			case 'V':
 				if (isLast == true) {
@@ -336,57 +338,97 @@ public class ProxettaAsmUtil {
 				break;
 			case 'B':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B");
+					}
 				}
 				mv.visitInsn(IRETURN);
 				break;
 			case 'C':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C");
+					}
 				}
 				mv.visitInsn(IRETURN);
 				break;
 			case 'S':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S");
+					}
 				}
 				mv.visitInsn(IRETURN);
 				break;
 			case 'I':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I");
+					}
 				}
 				mv.visitInsn(IRETURN);
 				break;
 			case 'Z':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
+					}
 				}
 				mv.visitInsn(IRETURN);
 				break;
 			case 'J':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(LCONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J");
+					}
 				}
 				mv.visitInsn(LRETURN);
 				break;
 			case 'F':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(FCONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F");
+					}
 				}
 				mv.visitInsn(FRETURN);
 				break;
 			case 'D':
 				if (isLast == true) {
-					mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
-					mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D");
+					if (returnDefault) {
+						mv.visitInsn(POP);
+						mv.visitInsn(DCONST_0);
+					} else {
+						mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
+						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D");
+					}
 				}
 				mv.visitInsn(DRETURN);
 				break;
@@ -573,6 +615,16 @@ public class ProxettaAsmUtil {
 		}
 		return false;
 	}
+
+	public static boolean isPushDefaultResultValueMethod(String name, String desc) {
+		if (name.equals("pushDefaultResultValue")) {
+			if (desc.equals("()V")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	// ---------------------------------------------------------------- converters
 
