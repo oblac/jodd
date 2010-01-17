@@ -2,13 +2,10 @@
 
 package jodd.proxetta.methref;
 
-import jodd.io.FileUtil;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
-
-import java.io.IOException;
 
 /**
  * Methref Proxetta builder and holder and facade.
@@ -43,12 +40,6 @@ public class MethrefProxetta {
 	 * Simply delegates to {@link jodd.proxetta.Proxetta#defineProxy(Class)}.
 	 */
 	public Class defineProxy(Class target) {
-		byte[] klazz = proxetta.createProxy(target);
-		try {
-			FileUtil.writeBytes("d:\\temp\\temp\\X.class", klazz);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return proxetta.defineProxy(target);
 	}
 }
