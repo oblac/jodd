@@ -144,7 +144,7 @@ class TemplateParser {
 	}
 
 	protected void onValue(DbSqlBuilder sqlBuilder, String expression) {
-		sqlBuilder.value(expression);
+		sqlBuilder.colvalue(expression);
 	}
 
 
