@@ -126,11 +126,15 @@ public class ColumnsSelectChunk extends SqlChunk {
 				if (count > 0) {
 					out.append(',').append(' ');
 				}
+				templateData.lastColumnDec = dec;
 				appendColumnName(out, ded, dec.getColumnName());
 				count++;
 			}
 		} else {
-			String columnName = ded.getColumnName(columnRef);
+			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
+			templateData.lastColumnDec = dec;
+			String columnName = dec == null ? null : dec.getColumnName();
+			//String columnName = ded.getColumnName(columnRef);
 			if (columnName == null) {
 				throw new DbSqlBuilderException("Unable to resolve column reference: '" + tableRef + '.' + columnRef + "'.");
 			}

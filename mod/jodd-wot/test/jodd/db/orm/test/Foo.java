@@ -6,10 +6,7 @@ import jodd.db.orm.meta.DbTable;
 import jodd.db.orm.meta.DbId;
 import jodd.db.orm.meta.DbColumn;
 import jodd.db.type.IntegerSqlType;
-import jodd.db.type.ClobSqlType;
-import jodd.db.type.BlobSqlType;
-import jodd.db.type.DoubleSqlType;
-import jodd.mutable.MutableFloat;
+import jodd.db.type.TimestampSqlType;
 import jodd.mutable.MutableInteger;
 import jodd.datetime.JDateTime;
 
@@ -44,6 +41,9 @@ public class Foo {
 
 	@DbColumn
 	public Timestamp timestamp;
+
+	@DbColumn(sqlType = TimestampSqlType.class)
+	public JDateTime timestamp2;
 
 	@DbColumn
 	public Clob clob;

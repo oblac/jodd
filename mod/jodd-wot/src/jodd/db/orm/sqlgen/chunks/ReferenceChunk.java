@@ -2,6 +2,7 @@
 
 package jodd.db.orm.sqlgen.chunks;
 
+import jodd.db.orm.DbEntityColumnDescriptor;
 import jodd.db.orm.DbEntityDescriptor;
 import jodd.db.orm.sqlgen.DbSqlBuilderException;
 import jodd.util.StringPool;
@@ -52,7 +53,10 @@ public class ReferenceChunk extends SqlChunk {
 		if (onlyId == true) {
 			out.append('.').append(ded.getIdColumnName());
 		} else if (columnRef != null) {
-			String column = ded.getColumnName(columnRef);
+			DbEntityColumnDescriptor dec = ded.findByPropertyName(columnRef);
+			templateData.lastColumnDec = dec;
+			String column = dec == null ? null : dec.getColumnName();
+			//String column = ded.getColumnName(columnRef);
 			if (column == null) {
 				throw new DbSqlBuilderException("Unable to resolve column reference: '" + tableRef + '.' + columnRef + "'.");
 			}

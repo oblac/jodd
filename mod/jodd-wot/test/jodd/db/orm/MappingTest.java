@@ -2,6 +2,7 @@
 
 package jodd.db.orm;
 
+import jodd.datetime.JDateTime;
 import jodd.db.orm.test.Foo;
 import jodd.db.orm.test.BooSqlType;
 import jodd.db.orm.test.Boo;
@@ -42,6 +43,7 @@ public class MappingTest extends DbHsqldbTestCase {
 							"COLOR		varchar		not null," +
 							"WEIGHT		integer		not null," +
 							"TIMESTAMP	timestamp	not null," +
+							"TIMESTAMP2	timestamp	not null," +
 							"CLOB		longvarchar	not null," +
 							"BLOB		longvarbinary not null," +
 							"DECIMAL	decimal		not null," +
@@ -52,7 +54,7 @@ public class MappingTest extends DbHsqldbTestCase {
 							')';
 		executeUpdate(session, sql);
 
-		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
+		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
 		executeUpdate(session, sql);
 
 		DbOrmManager dbOrm = DbOrmManager.getInstance();
@@ -74,6 +76,10 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals(109, foo.timestamp.getYear());
 		assertEquals(6, foo.timestamp.getHours());
 		assertEquals(5, foo.timestamp.getMinutes());
+		assertNotNull(foo.timestamp2);
+		assertEquals(2010, foo.timestamp2.getYear());
+		assertEquals(1, foo.timestamp2.getHour());
+		assertEquals(2, foo.timestamp2.getMinute());
 		assertNotNull(foo.clob);
 		assertEquals(4, foo.clob.length());
 		assertEquals("W173", foo.clob.getSubString(1, 4));
@@ -102,6 +108,10 @@ public class MappingTest extends DbHsqldbTestCase {
 		foo.jdt2.setYear(2900);
 		doq.executeUpdateAndClose();
 
+
+		doq = new DbOrmQuery(DbEntitySql.updateColumn(foo, "timestamp2", new JDateTime("2010-02-02 20:20:20.222")));
+		doq.executeUpdateAndClose();
+
 		foos = new DbOrmQuery("select * from FOO").listAndClose(Foo.class);
 		assertEquals(1, foos.size());
 		foo = foos.get(0);
@@ -113,6 +123,9 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals(FooColor.yellow, foo.color);
 		assertEquals(FooWeight.heavy, foo.weight);
 		assertEquals(108, foo.timestamp.getYear());
+		assertEquals(2010, foo.timestamp2.getYear());
+		assertEquals(20, foo.timestamp2.getHour());
+		assertEquals(20, foo.timestamp2.getMinute());
 		assertEquals(4, foo.clob.length());
 		assertEquals("W173", foo.clob.getSubString(1, 4));
 		assertEquals(3, foo.blob.length());

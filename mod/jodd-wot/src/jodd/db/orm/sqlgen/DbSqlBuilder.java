@@ -6,6 +6,7 @@ import jodd.db.orm.ColumnData;
 import jodd.db.orm.ColumnAliasType;
 import jodd.db.orm.DbSqlGenerator;
 import jodd.db.orm.DbOrmQuery;
+import jodd.db.orm.sqlgen.chunks.ColumnValueChunk;
 import jodd.db.orm.sqlgen.chunks.SqlChunk;
 import jodd.db.orm.sqlgen.chunks.RawSqlChunk;
 import jodd.db.orm.sqlgen.chunks.TableChunk;
@@ -370,6 +371,18 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 
 	public DbSqlBuilder valueRef(String objectReference) {
 		return addChunk(new ValueChunk(objectReference));
+	}
+
+	public DbSqlBuilder colvalue(String name, Object value) {
+		return addChunk(new ColumnValueChunk(name, value));
+	}
+
+	public DbSqlBuilder colvalue(Object value) {
+		return addChunk(new ColumnValueChunk(null, value));
+	}
+
+	public DbSqlBuilder colvalueRef(String objectReference) {
+		return addChunk(new ColumnValueChunk(objectReference));
 	}
 
 	// ---------------------------------------------------------------- insert

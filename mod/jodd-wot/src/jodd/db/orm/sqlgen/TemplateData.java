@@ -286,4 +286,8 @@ public abstract class TemplateData {
 	}
 
 
+	// ---------------------------------------------------------------- last column
+
+	public DbEntityColumnDescriptor lastColumnDec;
+
 }
