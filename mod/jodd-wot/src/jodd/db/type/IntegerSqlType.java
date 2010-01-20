@@ -12,7 +12,7 @@ public class IntegerSqlType extends SqlType<Integer> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Integer get(ResultSet rs, int index) throws SQLException {
+	public Integer get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Integer.valueOf(rs.getInt(index));
 	}
 

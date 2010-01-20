@@ -7,6 +7,7 @@ import jodd.datetime.JDateTime;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Types;
 
 /**
  * JDateTime sql type stores JDateTime data as number of milliseconds passed from 1970.
@@ -19,7 +20,10 @@ public class JDateTimeSqlType extends SqlType<JDateTime> {
 	}
 
 	@Override
-	public JDateTime get(ResultSet rs, int index) throws SQLException {
+	public JDateTime get(ResultSet rs, int index, int dbSqlType) throws SQLException {
+		if (dbSqlType == Types.TIMESTAMP) {
+			return new JDateTime(rs.getTimestamp(index));
+		}
 		return new JDateTime(rs.getLong(index));
 	}
 }

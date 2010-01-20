@@ -12,7 +12,7 @@ public class BigIntegerSqlType extends SqlType<BigInteger> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BigInteger get(ResultSet rs, int index) throws SQLException {
+	public BigInteger get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return BigInteger.valueOf(rs.getLong(index));
 	}
 

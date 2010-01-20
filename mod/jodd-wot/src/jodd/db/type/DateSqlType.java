@@ -14,7 +14,7 @@ public class DateSqlType extends SqlType<Date> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Date get(ResultSet rs, int index) throws SQLException {
+	public Date get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getDate(index);
 	}
 

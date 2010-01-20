@@ -12,7 +12,7 @@ public class LongSqlType extends SqlType<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Long get(ResultSet rs, int index) throws SQLException {
+	public Long get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Long.valueOf(rs.getLong(index));
 	}
 

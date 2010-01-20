@@ -12,7 +12,7 @@ public class ByteSqlType extends SqlType<Byte> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Byte get(ResultSet rs, int index) throws SQLException {
+	public Byte get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Byte.valueOf(rs.getByte(index));
 	}
 

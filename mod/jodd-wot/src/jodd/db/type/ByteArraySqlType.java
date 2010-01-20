@@ -11,7 +11,7 @@ public class ByteArraySqlType extends SqlType<byte[]> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] get(ResultSet rs, int index) throws SQLException {
+	public byte[] get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getBytes(index);
 	}
 

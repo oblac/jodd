@@ -12,7 +12,7 @@ public class BooleanSqlType extends SqlType<Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Boolean get(ResultSet rs, int index) throws SQLException {
+	public Boolean get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Boolean.valueOf(rs.getBoolean(index));
 	}
 

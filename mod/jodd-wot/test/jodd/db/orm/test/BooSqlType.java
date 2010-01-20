@@ -16,7 +16,7 @@ public class BooSqlType extends SqlType<Boo> {
 	}
 
 	@Override
-	public Boo get(ResultSet rs, int index) throws SQLException {
+	public Boo get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		Boo boo = new Boo();
 		boo.value = rs.getInt(index);
 		return boo;

@@ -13,7 +13,7 @@ public class ClobSqlType extends SqlType<Clob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Clob get(ResultSet rs, int index) throws SQLException {
+	public Clob get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getClob(index);
 	}
 

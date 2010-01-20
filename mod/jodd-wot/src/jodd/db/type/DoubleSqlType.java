@@ -12,7 +12,7 @@ public class DoubleSqlType extends SqlType<Double> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Double get(ResultSet rs, int index) throws SQLException {
+	public Double get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Double.valueOf(rs.getDouble(index));
 	}
 

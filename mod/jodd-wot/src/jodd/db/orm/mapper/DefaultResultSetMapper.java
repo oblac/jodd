@@ -64,11 +64,12 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	protected final DbOrmManager dbOrmManager;
 	protected final ResultSet rs;
 
-	protected final int totalColumns;         // total number of columns
-	protected final String[] columnNames;     // list of all column names
-	protected final String[] tableNames;      // list of table names for each column, table name may be null
+	protected final int totalColumns;			// total number of columns
+	protected final String[] columnNames;		// list of all column names
+	protected final int[] columnDbSqlTypes;		// list of all column db types
+	protected final String[] tableNames;		// list of table names for each column, table name may be null
 
-	private final Set<String> resultColumns;   // internal columns per entity cache
+	private final Set<String> resultColumns;	// internal columns per entity cache
 
 	// ---------------------------------------------------------------- ctor
 
@@ -90,6 +91,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			}
 			totalColumns = rsMetaData.getColumnCount();
 			columnNames = new String[totalColumns];
+			columnDbSqlTypes = new int[totalColumns];
 			tableNames = new String[totalColumns];
 
 			for (int i = 0; i < totalColumns; i++) {
@@ -141,6 +143,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					tableName = tableName.trim().toUpperCase();
 				}
 				tableNames[i] = tableName;
+				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
 			}
 		} catch (SQLException sex) {
 			throw new DbOrmException("Unable to read ResultSet meta-data.", sex);
@@ -251,7 +254,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	 * the same column, it caches column values.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected Object readColumnValue(int colNdx, Class destinationType, Class<? extends SqlType> sqlTypeClass) {
+	protected Object readColumnValue(int colNdx, Class destinationType, Class<? extends SqlType> sqlTypeClass, int columnDbSqlType) {
 		if (colNdx != cachedColumnNdx) {
 			try {
 				SqlType sqlType;
@@ -261,7 +264,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					sqlType = SqlTypeManager.lookup(destinationType);
 				}
 				if (sqlType != null) {
-					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType);
+					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
 					cachedColumnValue = rs.getObject(colNdx + 1);
 					cachedColumnValue = ReflectUtil.castType(cachedColumnValue, destinationType);
@@ -303,12 +306,13 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			}
 
 			String columnName = columnNames[colNdx];
+			int columnDbSqlType = columnDbSqlTypes[colNdx];
 			String tableName = tableNames[colNdx];
 			String resultTableName = typesTableNames[currentResult];			
 
 			if (resultTableName == null) {
 				// match: simple type
-				result[currentResult] = readColumnValue(colNdx, currentType, null);
+				result[currentResult] = readColumnValue(colNdx, currentType, null, columnDbSqlType);
 				resultUsage[currentResult] = true;
 				colNdx++;
 				currentResult++; resultColumns.clear();
@@ -332,7 +336,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 						if (type != null) {
 							// match: entity
 							Class<? extends SqlType> sqlTypeClass = (dec == null ?  null : dec.getSqlTypeClass());
-							Object value = readColumnValue(colNdx, type, sqlTypeClass);
+							Object value = readColumnValue(colNdx, type, sqlTypeClass, columnDbSqlType);
 							if (value != null) {
 								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;

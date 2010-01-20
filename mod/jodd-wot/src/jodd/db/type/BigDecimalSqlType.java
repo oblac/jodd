@@ -12,7 +12,7 @@ public class BigDecimalSqlType extends SqlType<BigDecimal> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BigDecimal get(ResultSet rs, int index) throws SQLException {
+	public BigDecimal get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getBigDecimal(index);
 	}
 

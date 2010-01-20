@@ -12,7 +12,7 @@ public class ShortSqlType extends SqlType<Short> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Short get(ResultSet rs, int index) throws SQLException {
+	public Short get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Short.valueOf(rs.getShort(index));
 	}
 

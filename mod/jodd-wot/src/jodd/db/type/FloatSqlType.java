@@ -12,7 +12,7 @@ public class FloatSqlType extends SqlType<Float> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Float get(ResultSet rs, int index) throws SQLException {
+	public Float get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return Float.valueOf(rs.getFloat(index));
 	}
 

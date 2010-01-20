@@ -12,7 +12,7 @@ public class StringSqlType extends SqlType<String> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String get(ResultSet rs, int index) throws SQLException {
+	public String get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getString(index);
 	}
 

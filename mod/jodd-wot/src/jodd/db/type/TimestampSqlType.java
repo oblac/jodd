@@ -13,7 +13,7 @@ public class TimestampSqlType extends SqlType<Timestamp> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Timestamp get(ResultSet rs, int index) throws SQLException {
+	public Timestamp get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getTimestamp(index);
 	}
 

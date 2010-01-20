@@ -42,7 +42,7 @@ public class Foo {
 	@DbColumn
 	public Timestamp timestamp;
 
-	@DbColumn(sqlType = TimestampSqlType.class)
+	@DbColumn
 	public JDateTime timestamp2;
 
 	@DbColumn

@@ -13,7 +13,7 @@ public class TimeSqlType extends SqlType<Time> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Time get(ResultSet rs, int index) throws SQLException {
+	public Time get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getTime(index);
 	}
 

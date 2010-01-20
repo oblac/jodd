@@ -16,7 +16,7 @@ public class FooWeigthSqlType extends SqlType<FooWeight> {
 	}
 
 	@Override
-	public FooWeight get(ResultSet rs, int index) throws SQLException {
+	public FooWeight get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return FooWeight.valueOf(rs.getInt(index));
 	}
 }

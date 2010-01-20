@@ -13,7 +13,7 @@ public class URLSqlType extends SqlType<URL> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public URL get(ResultSet rs, int index) throws SQLException {
+	public URL get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getURL(index);
 	}
 

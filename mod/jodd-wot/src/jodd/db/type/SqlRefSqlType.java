@@ -13,7 +13,7 @@ public class SqlRefSqlType extends SqlType<Ref> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Ref get(ResultSet rs, int index) throws SQLException {
+	public Ref get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getRef(index);
 	}
 

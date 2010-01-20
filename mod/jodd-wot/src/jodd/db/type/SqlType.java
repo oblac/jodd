@@ -27,8 +27,12 @@ public abstract class SqlType<T> {
 
 	/**
 	 * Returns value from result set.
+	 * @param rs result set
+	 * @param index column index
+	 * @param dbSqlType java.sql.Types hint
 	 */
-	public abstract T get(ResultSet rs, int index) throws SQLException;
+	public abstract T get(ResultSet rs, int index, int dbSqlType) throws SQLException;
+
 
 	/**
 	 * Stores value in database. Value is casted to sql type.
@@ -40,10 +44,14 @@ public abstract class SqlType<T> {
 
 	/**
 	 * Reads value from database. Value is casted to destination type.
+	 * @param rs result set
+	 * @param index database column index
+	 * @param destinationType property type
+	 * @param dbSqlType hint for column sql type value
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType) throws SQLException {
-		T t = get(rs, index);
+	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType, int dbSqlType) throws SQLException {
+		T t = get(rs, index, dbSqlType);
 		if (destinationType == null) {
 			return (E) t;
 		}

@@ -13,7 +13,7 @@ public class SqlArraySqlType extends SqlType<Array> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Array get(ResultSet rs, int index) throws SQLException {
+	public Array get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getArray(index);
 	}
 

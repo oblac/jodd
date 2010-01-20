@@ -13,7 +13,7 @@ public class BlobSqlType extends SqlType<Blob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Blob get(ResultSet rs, int index) throws SQLException {
+	public Blob get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		return rs.getBlob(index);
 	}
 
