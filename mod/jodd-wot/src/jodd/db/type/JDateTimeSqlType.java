@@ -15,7 +15,11 @@ import java.sql.Types;
 public class JDateTimeSqlType extends SqlType<JDateTime> {
 
 	@Override
-	public void set(PreparedStatement st, int index, JDateTime value) throws SQLException {
+	public void set(PreparedStatement st, int index, JDateTime value, int dbSqlType) throws SQLException {
+		if (dbSqlType == Types.TIMESTAMP) {
+			st.setTimestamp(index, value.convertToSqlTimestamp());
+			return;
+		}
 		st.setLong(index, value.getTimeInMillis());
 	}
 

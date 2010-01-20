@@ -23,7 +23,7 @@ public abstract class SqlType<T> {
 	/**
 	 * Sets prepared statement value.
 	 */
-	public abstract void set(PreparedStatement st, int index, T value) throws SQLException;
+	public abstract void set(PreparedStatement st, int index, T value, int dbSqlType) throws SQLException;
 
 	/**
 	 * Returns value from result set.
@@ -37,9 +37,9 @@ public abstract class SqlType<T> {
 	/**
 	 * Stores value in database. Value is casted to sql type.
 	 */
-	public void storeValue(PreparedStatement st, int index, Object value) throws SQLException {
+	public void storeValue(PreparedStatement st, int index, Object value, int dbSqlType) throws SQLException {
 		T t = ReflectUtil.castType(value, sqlType);
-		set(st, index, t);
+		set(st, index, t, dbSqlType);
 	}
 
 	/**

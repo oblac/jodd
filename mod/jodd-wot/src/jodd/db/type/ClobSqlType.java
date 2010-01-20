@@ -21,7 +21,7 @@ public class ClobSqlType extends SqlType<Clob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Clob value) throws SQLException {
+	public void set(PreparedStatement st, int index, Clob value, int dbSqlType) throws SQLException {
 		st.setClob(index, value);
 	}
 

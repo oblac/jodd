@@ -21,7 +21,7 @@ public class SqlDateSqlType extends SqlType<Date>{
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Date value) throws SQLException {
+	public void set(PreparedStatement st, int index, Date value, int dbSqlType) throws SQLException {
 		st.setDate(index, value);
 	}
 

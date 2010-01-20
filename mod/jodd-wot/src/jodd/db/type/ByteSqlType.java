@@ -20,7 +20,7 @@ public class ByteSqlType extends SqlType<Byte> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Byte value) throws SQLException {
+	public void set(PreparedStatement st, int index, Byte value, int dbSqlType) throws SQLException {
 		st.setByte(index, value.byteValue());
 	}
 }

@@ -20,7 +20,7 @@ public class ShortSqlType extends SqlType<Short> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Short value) throws SQLException {
+	public void set(PreparedStatement st, int index, Short value, int dbSqlType) throws SQLException {
 		st.setShort(index, value.shortValue());
 	}
 

@@ -21,7 +21,7 @@ public class BlobSqlType extends SqlType<Blob> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Blob value) throws SQLException {
+	public void set(PreparedStatement st, int index, Blob value, int dbSqlType) throws SQLException {
 		st.setBlob(index, value);
 	}
 

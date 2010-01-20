@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 public class BooSqlType extends SqlType<Boo> {
 
 	@Override
-	public void set(PreparedStatement st, int index, Boo value) throws SQLException {
+	public void set(PreparedStatement st, int index, Boo value, int dbSqlType) throws SQLException {
 		st.setInt(index, value.value);
 	}
 

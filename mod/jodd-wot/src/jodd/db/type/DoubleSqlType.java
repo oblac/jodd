@@ -20,7 +20,7 @@ public class DoubleSqlType extends SqlType<Double> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Double value) throws SQLException {
+	public void set(PreparedStatement st, int index, Double value, int dbSqlType) throws SQLException {
 		st.setDouble(index, value.doubleValue());
 	}
 }

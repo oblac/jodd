@@ -20,7 +20,7 @@ public class FloatSqlType extends SqlType<Float> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Float value) throws SQLException {
+	public void set(PreparedStatement st, int index, Float value, int dbSqlType) throws SQLException {
 		st.setFloat(index, value.floatValue());
 	}
 

@@ -21,7 +21,7 @@ public class SqlRefSqlType extends SqlType<Ref> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Ref value) throws SQLException {
+	public void set(PreparedStatement st, int index, Ref value, int dbSqlType) throws SQLException {
 		st.setRef(index, value);
 	}
 }

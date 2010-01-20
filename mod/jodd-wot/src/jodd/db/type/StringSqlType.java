@@ -20,7 +20,7 @@ public class StringSqlType extends SqlType<String> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, String value) throws SQLException {
+	public void set(PreparedStatement st, int index, String value, int dbSqlType) throws SQLException {
 		st.setString(index, value);
 	}
 

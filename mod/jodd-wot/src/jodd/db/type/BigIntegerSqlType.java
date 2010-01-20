@@ -20,7 +20,7 @@ public class BigIntegerSqlType extends SqlType<BigInteger> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, BigInteger value) throws SQLException {
+	public void set(PreparedStatement st, int index, BigInteger value, int dbSqlType) throws SQLException {
 		st.setLong(index, value.longValue());
 	}
 

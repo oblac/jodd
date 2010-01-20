@@ -905,7 +905,7 @@ s	 */
 	 * @see #setObject(String, Object, Class)
 	 */
 	public void setObject(int index, Object value) {
-		setObject(index, value, null);
+		setObject(index, value, null, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -917,7 +917,7 @@ s	 */
 	 * If sql type is not found, default <code>setObject</code> is invoked.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public void setObject(int index, Object value, Class<? extends SqlType> sqlTypeClass) {
+	public void setObject(int index, Object value, Class<? extends SqlType> sqlTypeClass, int dbSqlType) {
 		init();
 		if (value == null) {
 			setNull(index, Types.NULL);
@@ -931,7 +931,7 @@ s	 */
 		}
 		try {
 			if (sqlType != null) {
-				sqlType.storeValue(preparedStatement, index, value);
+				sqlType.storeValue(preparedStatement, index, value, dbSqlType);
 			} else {
 				preparedStatement.setObject(index, value);
 			}
@@ -944,17 +944,17 @@ s	 */
 	 * @see #setObject(String, Object, Class)
 	 */
 	public void setObject(String param, Object value) {
-		setObject(param, value, null);
+		setObject(param, value, null, Integer.MAX_VALUE);
 	}
 
 	/**
 	 * @see #setObject(String, Object, Class) 
 	 */
-	public void setObject(String param, Object value, Class<? extends SqlType> sqlTypeClass) {
+	public void setObject(String param, Object value, Class<? extends SqlType> sqlTypeClass, int dbSqlType) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		for (int i = 0; i < positions.size(); i++) {
-			setObject(positions.get(i), value, sqlTypeClass);
+			setObject(positions.get(i), value, sqlTypeClass, dbSqlType);
 		}
 	}
 

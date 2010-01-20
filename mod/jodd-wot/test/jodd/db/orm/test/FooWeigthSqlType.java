@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 public class FooWeigthSqlType extends SqlType<FooWeight> {
 
 	@Override
-	public void set(PreparedStatement st, int index, FooWeight value) throws SQLException {
+	public void set(PreparedStatement st, int index, FooWeight value, int dbSqlType) throws SQLException {
 		st.setInt(index, value.getValue());
 	}
 

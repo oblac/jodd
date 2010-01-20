@@ -19,7 +19,7 @@ public class ByteArraySqlType extends SqlType<byte[]> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, byte[] value) throws SQLException {
+	public void set(PreparedStatement st, int index, byte[] value, int dbSqlType) throws SQLException {
 		st.setBytes(index, value);
 	}
 

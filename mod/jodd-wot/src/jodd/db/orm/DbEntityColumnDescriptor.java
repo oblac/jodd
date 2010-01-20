@@ -15,6 +15,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 	protected final Class propertyType;
 	protected final boolean isId;
 	protected final Class<? extends SqlType> sqlTypeClass;
+	protected int dbSqlType = Integer.MAX_VALUE;
 
 	public DbEntityColumnDescriptor(DbEntityDescriptor ded, String columnName, String fieldName, Class fieldType, boolean isId, Class<? extends SqlType> sqlTypeClass) {
 		this.dbEntityDescriptor = ded;
@@ -65,6 +66,14 @@ public class DbEntityColumnDescriptor implements Comparable {
 	 */
 	public Class<? extends SqlType> getSqlTypeClass() {
 		return sqlTypeClass;
+	}
+
+	/**
+	 * Returns db sql type. Important: available only after first saving of column value
+	 * to database! 
+	 */
+	public int getDbSqlType() {
+		return dbSqlType;
 	}
 
 	// ---------------------------------------------------------------- comparable

@@ -20,7 +20,7 @@ public class LongSqlType extends SqlType<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Long value) throws SQLException {
+	public void set(PreparedStatement st, int index, Long value, int dbSqlType) throws SQLException {
 		st.setLong(index, value.longValue());
 	}
 

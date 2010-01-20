@@ -21,7 +21,7 @@ public class SqlArraySqlType extends SqlType<Array> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Array value) throws SQLException {
+	public void set(PreparedStatement st, int index, Array value, int dbSqlType) throws SQLException {
 		st.setArray(index, value);
 	}
 

@@ -2,17 +2,24 @@
 
 package jodd.db.orm;
 
+import jodd.db.ResultSetUtil;
 import jodd.db.orm.meta.DbTable;
 import jodd.db.orm.meta.DbId;
 import jodd.db.orm.meta.DbColumn;
 import jodd.db.type.SqlType;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Few meta resolving utils.
  */
 public class DbMetaUtil {
+
+	private static final String DATA_TYPE = "DATA_TYPE";
 
 	/**
 	 * Resolves table name from a type. If type is annotated, table name
@@ -72,4 +79,26 @@ public class DbMetaUtil {
 	    return new DbEntityColumnDescriptor(ded, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
 	}
 
+	/**
+	 * Resolves column db sql type and populates it in column descriptor if missing.
+	 */
+	public static void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
+		if (dec.dbSqlType != Integer.MAX_VALUE) {
+			return;
+		}
+		ResultSet rs = null;
+		try {
+			DatabaseMetaData dmd = connection.getMetaData();
+			rs = dmd.getColumns(null, null, dec.getDbEntityDescriptor().getTableName(), dec.getColumnName());	// todo add schema name!
+			if (rs.next()) {
+				dec.dbSqlType = rs.getInt(DATA_TYPE);
+			} else {
+				dec.dbSqlType = Integer.MIN_VALUE;
+			}
+		} catch (SQLException sex) {
+			dec.dbSqlType = Integer.MIN_VALUE;
+		} finally {
+			ResultSetUtil.close(rs);
+		}
+	}
 }

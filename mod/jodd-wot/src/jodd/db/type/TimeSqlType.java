@@ -21,7 +21,7 @@ public class TimeSqlType extends SqlType<Time> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Time value) throws SQLException {
+	public void set(PreparedStatement st, int index, Time value, int dbSqlType) throws SQLException {
 		st.setTime(index, value);
 	}
 

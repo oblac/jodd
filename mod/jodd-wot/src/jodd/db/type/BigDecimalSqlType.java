@@ -20,7 +20,7 @@ public class BigDecimalSqlType extends SqlType<BigDecimal> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, BigDecimal value) throws SQLException {
+	public void set(PreparedStatement st, int index, BigDecimal value, int dbSqlType) throws SQLException {
 		st.setBigDecimal(index, value);
 	}
 

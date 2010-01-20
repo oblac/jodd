@@ -21,7 +21,7 @@ public class URLSqlType extends SqlType<URL> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, URL value) throws SQLException {
+	public void set(PreparedStatement st, int index, URL value, int dbSqlType) throws SQLException {
 		st.setURL(index, value);
 	}
 

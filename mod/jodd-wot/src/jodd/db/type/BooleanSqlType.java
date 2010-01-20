@@ -20,7 +20,7 @@ public class BooleanSqlType extends SqlType<Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Boolean value) throws SQLException {
+	public void set(PreparedStatement st, int index, Boolean value, int dbSqlType) throws SQLException {
 		st.setBoolean(index, value.booleanValue());
 	}
 

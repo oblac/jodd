@@ -21,7 +21,7 @@ public class TimestampSqlType extends SqlType<Timestamp> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Timestamp value) throws SQLException {
+	public void set(PreparedStatement st, int index, Timestamp value, int dbSqlType) throws SQLException {
 		st.setTimestamp(index, value);
 	}
 

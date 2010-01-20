@@ -20,7 +20,7 @@ public class IntegerSqlType extends SqlType<Integer> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void set(PreparedStatement st, int index, Integer value) throws SQLException {
+	public void set(PreparedStatement st, int index, Integer value, int dbSqlType) throws SQLException {
 		st.setInt(index, value.intValue());
 	}
 }

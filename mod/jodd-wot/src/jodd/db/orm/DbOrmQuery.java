@@ -119,7 +119,12 @@ public class DbOrmQuery extends DbQuery {
 			String paramName = entry.getKey();
 			ParameterValue param = entry.getValue();
 			DbEntityColumnDescriptor dec = param.getColumnDescriptor();
-			setObject(paramName, param.getValue(), dec == null ?  null : dec.getSqlTypeClass());
+			if (dec == null) {
+				setObject(paramName, param.getValue());
+			} else {
+				DbMetaUtil.resolveColumnDbSqlType(connection, dec);
+				setObject(paramName, param.getValue(), dec.getSqlTypeClass(), dec.getDbSqlType());
+			}
 		}
 	}
 
