@@ -88,7 +88,7 @@ public class DbEntityDescriptor {
 		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
 		int idcount = 0;
 		for (Field field : fields) {
-			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(field, isAnnotated);
+			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated);
 			if (dec != null) {
 				decList.add(dec);
 				if (dec.isId) {

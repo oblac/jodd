@@ -9,18 +9,27 @@ import jodd.db.type.SqlType;
  */
 public class DbEntityColumnDescriptor implements Comparable {
 
+	protected final DbEntityDescriptor dbEntityDescriptor;
 	protected final String columnName;
 	protected final String propertyName;
 	protected final Class propertyType;
 	protected final boolean isId;
 	protected final Class<? extends SqlType> sqlTypeClass;
 
-	public DbEntityColumnDescriptor(String columnName, String fieldName, Class fieldType, boolean isId, Class<? extends SqlType> sqlTypeClass) {
+	public DbEntityColumnDescriptor(DbEntityDescriptor ded, String columnName, String fieldName, Class fieldType, boolean isId, Class<? extends SqlType> sqlTypeClass) {
+		this.dbEntityDescriptor = ded;
 		this.columnName = columnName;
 		this.propertyName = fieldName;
 		this.propertyType = fieldType;
 		this.isId = isId;
 		this.sqlTypeClass = sqlTypeClass;
+	}
+
+	/**
+	 * Returns {@link jodd.db.orm.DbEntityDescriptor} that this column description belongs to.
+	 */
+	public DbEntityDescriptor getDbEntityDescriptor() {
+		return dbEntityDescriptor;
 	}
 
 	/**

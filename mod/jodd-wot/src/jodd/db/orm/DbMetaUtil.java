@@ -42,7 +42,7 @@ public class DbMetaUtil {
 	 * from annotation. If field is not annotated, then field will be ignored
 	 * if entity is annotated. Otherwise, column name is generated from the field name.
 	 */
-	public static DbEntityColumnDescriptor resolveColumnDescriptors(Field field, boolean isAnnotated) {
+	public static DbEntityColumnDescriptor resolveColumnDescriptors(DbEntityDescriptor ded, Field field, boolean isAnnotated) {
 		String columnName = null;
 		boolean isId = false;
 		Class<? extends SqlType> sqlTypeClass = null;
@@ -69,7 +69,7 @@ public class DbMetaUtil {
 		if (sqlTypeClass == SqlType.class) {
 			sqlTypeClass = null;
 		}
-	    return new DbEntityColumnDescriptor(columnName, field.getName(), field.getType(), isId, sqlTypeClass);
+	    return new DbEntityColumnDescriptor(ded, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
 	}
 
 }
