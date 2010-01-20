@@ -39,6 +39,22 @@ public class DbMetaUtil {
 		return tableName;
 	}
 
+	/**
+	 * Resolves schema name. Uses default schema name if not specified.
+	 */
+	public static String resolveSchemaName(Class<?> type, String defaultSchemaName) {
+		String schemaName = null;
+		DbTable dbTable = type.getAnnotation(DbTable.class);
+		if (dbTable != null) {
+			schemaName = dbTable.schema().trim();
+		}
+		if ((schemaName == null) || (schemaName.length() == 0)) {
+			schemaName = defaultSchemaName;
+		}
+		return schemaName;
+	}
+
+
 	public static boolean resolveIsAnnotated(Class<?> type) {
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		return dbTable != null;
@@ -88,8 +104,9 @@ public class DbMetaUtil {
 		}
 		ResultSet rs = null;
 		try {
+			DbEntityDescriptor ded = dec.getDbEntityDescriptor();
 			DatabaseMetaData dmd = connection.getMetaData();
-			rs = dmd.getColumns(null, null, dec.getDbEntityDescriptor().getTableName(), dec.getColumnName());	// todo add schema name!
+			rs = dmd.getColumns(null, ded.getSchemaName(), ded.getTableName(), dec.getColumnName());
 			if (rs.next()) {
 				dec.dbSqlType = rs.getInt(DATA_TYPE);
 			} else {

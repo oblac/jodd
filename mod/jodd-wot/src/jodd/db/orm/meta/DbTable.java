@@ -21,4 +21,9 @@ public @interface DbTable {
 	 */
 	String value() default "";
 
+	/**
+	 * Schema name.
+	 */
+	String schema() default "";
+
 }

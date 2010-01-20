@@ -14,10 +14,11 @@ import java.util.List;
  */
 public class DbEntityDescriptor {
 
-	public DbEntityDescriptor(Class type, String tableNamePrefix, String tableNameSuffix) {
+	public DbEntityDescriptor(Class type, String schemaName, String tableNamePrefix, String tableNameSuffix) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
+		this.schemaName = DbMetaUtil.resolveSchemaName(type, schemaName);
 		this.tableName = DbMetaUtil.resolveTableName(type, tableNamePrefix, tableNameSuffix);
 	}
 
@@ -27,6 +28,7 @@ public class DbEntityDescriptor {
 	private final String entityName;
 	private final boolean isAnnotated;
 	private final String tableName;
+	private final String schemaName;
 
 	/**
 	 * Returns entity type.
@@ -54,6 +56,13 @@ public class DbEntityDescriptor {
 	 */
 	public String getEntityName() {
 		return entityName;
+	}
+
+	/**
+	 * Returns schema name or <code>null</code> if not available.
+	 */
+	public String getSchemaName() {
+		return schemaName;
 	}
 
 	// ---------------------------------------------------------------- columns and fields

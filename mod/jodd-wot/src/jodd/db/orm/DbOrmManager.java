@@ -76,6 +76,21 @@ public class DbOrmManager {
 		this.tableNameSuffix = suffix == null ? null : suffix.toUpperCase();
 	}
 
+
+	protected String schemaName;
+	/**
+	 * Returns default schema name.
+	 */
+	public String getSchemaName() {
+		return schemaName;
+	}
+	/**
+	 * Specifies default schema name.
+	 */
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
+	}
+
 	// ---------------------------------------------------------------- registration
 
 	protected String[] primitiveEntitiesPrefixes = new String[] {"java.lang.", "jodd.mutable.",
@@ -144,7 +159,7 @@ public class DbOrmManager {
 	 * Registers just type and entity names. Enough for most usages.
 	 */
 	public DbEntityDescriptor registerType(Class type) {
-		DbEntityDescriptor ded = new DbEntityDescriptor(type, tableNamePrefix, tableNameSuffix);
+		DbEntityDescriptor ded = new DbEntityDescriptor(type, schemaName, tableNamePrefix, tableNameSuffix);
 		DbEntityDescriptor existing = descriptors.put(type, ded);
 		if (existing != null) {
 			throw new DbOrmException("Type registration failed! Type '" + existing.getType() + "' already registered.");
@@ -185,7 +200,7 @@ public class DbOrmManager {
 	public DbEntityDescriptor removeEntity(Class type) {
 		DbEntityDescriptor ded = descriptors.remove(type);
 		if (ded == null) {
-			ded = new DbEntityDescriptor(type, tableNamePrefix, tableNameSuffix);
+			ded = new DbEntityDescriptor(type, schemaName, tableNamePrefix, tableNameSuffix);
 		}
 		entityNames.remove(ded.getEntityName());
 		tableNames.remove(ded.getTableName());
