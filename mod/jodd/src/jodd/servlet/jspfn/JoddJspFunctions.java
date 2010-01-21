@@ -2,6 +2,7 @@
 
 package jodd.servlet.jspfn;
 
+import jodd.datetime.JDateTime;
 import jodd.servlet.HtmlEncoder;
 import jodd.servlet.JspValueResolver;
 import jodd.util.StringUtil;
@@ -276,7 +277,7 @@ public class JoddJspFunctions {
 	// ---------------------------------------------------------------- collections
 
 	/**
-	 * Returns the lenght of provided object (collection, array and so on).
+	 * Returns the length of provided object (collection, array and so on).
 * If object doesn't have a length, exception is thrown.
 	 */
 	public static int length(Object obj) throws JspTagException {
@@ -295,10 +296,20 @@ public class JoddJspFunctions {
 
 	/**
 	 * Tests condition and returns <code>true</code> of <code>false</code> value.
-	 * Works like ternanry operator.
+	 * Works like ternary operator.
 	 */
 	public static Object test(boolean condition, Object trueValue, Object falseValue) {
 		return condition ? trueValue : falseValue;
+	}
+
+
+	// ---------------------------------------------------------------- datetime
+
+	/**
+	 * Formats jdatetime.
+	 */
+	public static String fmtTime(JDateTime jdt, String format) {
+		return jdt.toString(format);
 	}
 
 

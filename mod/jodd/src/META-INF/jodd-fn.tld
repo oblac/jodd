@@ -217,4 +217,12 @@
 		<function-signature>java.lang.Object test(boolean,java.lang.Object,java.lang.Object)</function-signature>
 	</function>
 
+	<!-- time -->
+
+	<function>
+		<name>fmtTime</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String fmtTime(jodd.datetime.JDateTime,java.lang.String)</function-signature>
+	</function>
+
 </taglib>
