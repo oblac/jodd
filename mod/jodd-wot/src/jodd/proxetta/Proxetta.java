@@ -203,7 +203,7 @@ public class Proxetta {
 		}
 		try {
 			if (classLoader == null) {
-				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), target.getClassLoader());
 			}
 			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
 		} catch (Exception ex) {

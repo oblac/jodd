@@ -2,6 +2,8 @@
 
 package jodd.util;
 
+import jodd.JoddDefault;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
@@ -22,7 +24,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
 	public static void addFileToClassPath(String path) {
-		addFileToClassPath(path, (URLClassLoader) ClassLoader.getSystemClassLoader());
+		addFileToClassPath(path, (URLClassLoader) JoddDefault.classLoader);
 	}
 
 	/**
@@ -38,7 +40,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
 	public static void addFileToClassPath(File path) {
-			addFileToClassPath(path, (URLClassLoader) ClassLoader.getSystemClassLoader());
+			addFileToClassPath(path, (URLClassLoader) JoddDefault.classLoader);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader) 
 	 */
 	public static void addUrlToClassPath(URL url) {
-		addUrlToClassPath(url, (URLClassLoader) ClassLoader.getSystemClassLoader());
+		addUrlToClassPath(url, (URLClassLoader) JoddDefault.classLoader);
 	}
 
 	/**
@@ -83,7 +85,7 @@ public class ClassLoaderUtil {
 	 * @see #defineClass(String, byte[], ClassLoader) 
 	 */
 	public static Class defineClass(byte[] classData) {
-		return defineClass(null, classData, ClassLoader.getSystemClassLoader());
+		return defineClass(null, classData, JoddDefault.classLoader);
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class ClassLoaderUtil {
 	 * @see #defineClass(String, byte[], ClassLoader)
 	 */
 	public static Class defineClass(String className, byte[] classData) {
-		return defineClass(className, classData, ClassLoader.getSystemClassLoader());
+		return defineClass(className, classData, JoddDefault.classLoader);
 	}
 
 	/**

@@ -14,6 +14,8 @@ public class MethrefProxetta {
 
 	protected final Proxetta proxetta;
 
+	public static final String METHREF_CLASSNAME_SUFFIX = "$Methref";
+
 	public MethrefProxetta() {
 		ProxyAspect aspectAll = new ProxyAspect(MethrefAdvice.class, new AllMethodsPointcut() {
 			@Override
@@ -33,7 +35,7 @@ public class MethrefProxetta {
 				return super.apply(methodInfo);
 			}
 		});
-		proxetta = Proxetta.withAspects(aspectAll, aspectStr);
+		proxetta = Proxetta.withAspects(aspectAll, aspectStr).useClassNameSuffix(METHREF_CLASSNAME_SUFFIX);
 	}
 
 	/**
