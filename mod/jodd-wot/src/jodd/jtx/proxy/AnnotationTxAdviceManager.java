@@ -89,15 +89,18 @@ public class AnnotationTxAdviceManager {
 	}
 
 	/**
-	 * Reads transaction mode from method annotation. Annotations are cached for better performances.
+	 * Reads transaction mode from method annotation. Annotations are cached for better performances
+	 * @param type target class
+	 * @param methodName target method name over which the transaction should be wrapped
+	 * @param methodArgTypes types of arguments, used to find the method
+	 * @param description method description (bytecode-like) or any other unique method signature, used as key for caching annotations 
 	 */
-	public synchronized JtxTransactionMode getTxMode(Class type, String methodName) {
-		String signature = type.getName() + '#' + methodName;
-		JtxTransactionMode txMode = txmap.get(signature);
+	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String description) {
+		JtxTransactionMode txMode = txmap.get(description);
 		if (txMode == null) {
-			if (txmap.containsKey(signature) == false) {
+			if (txmap.containsKey(description) == false) {
 				ClassDescriptor cd = ClassIntrospector.lookup(type);
-				Method m = cd.getMethod(methodName);
+				Method m = cd.getMethod(methodName, methodArgTypes);
 				if (m == null) {
 					throw new ProxettaException("Method '" + methodName + "'not found in class: " + type.getName());
 				}
@@ -110,7 +113,7 @@ public class AnnotationTxAdviceManager {
 				} else {
 					txMode = defaultTransactionMode;
 				}
-				txmap.put(signature, txMode);
+				txmap.put(description, txMode);
 			}
 		}
 		return txMode;
