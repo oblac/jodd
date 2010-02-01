@@ -167,7 +167,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 						super.visitIincInsn(var, i1);  // [F1]
 					}
 
-					protected boolean returnDefault;
+					boolean returnDefault;
 
 					@Override
 					public void visitInsn(int opcode) {
@@ -284,6 +284,16 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isTargetMethodNameMethod(mname, mdesc)) {  // [R10]
 									mv.visitLdcInsn(td.msign.getMethodName());
+									return;
+								} else
+
+								if (isTargetMethodSignatureMethod(mname, mdesc)) {
+									mv.visitLdcInsn(td.msign.getSignature());
+									return;
+								} else
+
+								if (isTargetMethodDescriptionMethod(mname, mdesc)) {
+									mv.visitLdcInsn(td.msign.getDescription());
 									return;
 								} else
 

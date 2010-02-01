@@ -616,6 +616,24 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
+	public static boolean isTargetMethodSignatureMethod(String name, String desc) {
+		if (name.equals("targetMethodSignature")) {
+			if (desc.equals("()Ljava/lang/String;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isTargetMethodDescriptionMethod(String name, String desc) {
+		if (name.equals("targetMethodDescription")) {
+			if (desc.equals("()Ljava/lang/String;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static boolean isPushDefaultResultValueMethod(String name, String desc) {
 		if (name.equals("pushDefaultResultValue")) {
 			if (desc.equals("()V")) {

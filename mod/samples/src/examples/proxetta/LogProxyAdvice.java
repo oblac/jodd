@@ -21,8 +21,10 @@ public class LogProxyAdvice implements ProxyAdvice {
 		int totalArgs = ProxyTarget.argumentsCount();
 		Class target = ProxyTarget.targetClass();
 		String methodName = ProxyTarget.targetMethodName();
+		String methodSignature = ProxyTarget.targetMethodSignature();
+		String methodDescription = ProxyTarget.targetMethodDescription();
 		Class[] args = ProxyTarget.createArgumentsClassArray();
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + target.getSimpleName() + '#' + methodName + ':' + totalArgs);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + target.getSimpleName() + '#' + methodName + ':' + totalArgs + " ... " + methodSignature + " | " + methodDescription);
 		for (Class arg : args) {
 			System.out.println("\t\t" + arg.getSimpleName());
 		}

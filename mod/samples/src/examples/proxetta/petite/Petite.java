@@ -43,7 +43,6 @@ public class Petite {
 		petite.registerBean("foo", FooImpl.class);
 		petite.registerBean(Boo.class);
 
-
 		Foo foo = (Foo) petite.getBean("foo");
 		foo.foo();
 	}

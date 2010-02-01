@@ -84,6 +84,9 @@ public final class ProxyTarget {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Push default result value, so the following <code>return</code> instruction returns it.
+	 */
 	public static void pushDefaultResultValue() {
 		throw new UnsupportedOperationException();
 	}
@@ -108,6 +111,22 @@ public final class ProxyTarget {
 	 * Inserts target method name. Useful for reflection.
 	 */
 	public static String targetMethodName() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Inserts target method signature (java like). Useful for identifying the method, since it is unique for class.
+	 * @see #targetMethodDescription()
+	 */
+	public static String targetMethodSignature() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Inserts target method description (bytecode alike). Useful for identifying the method, since it is unique for class.
+	 * @see #targetMethodSignature() 
+	 */
+	public static String targetMethodDescription() {
 		throw new UnsupportedOperationException();
 	}
 
