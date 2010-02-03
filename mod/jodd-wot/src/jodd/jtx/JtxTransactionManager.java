@@ -195,7 +195,9 @@ public class JtxTransactionManager {
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
 	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object context) {
-		log.debug("Requesting TX");
+		if (log.isDebugEnabled()) {
+			log.debug("Requesting TX " + mode.toString());
+		}
 		JtxTransaction currentTx = getTransaction();
 		if (checkValidTxContext(currentTx, context) == false) {
 			return currentTx;

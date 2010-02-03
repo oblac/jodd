@@ -89,16 +89,17 @@ public class AnnotationTxAdviceManager {
 	}
 
 	/**
-	 * Reads transaction mode from method annotation. Annotations are cached for better performances
+	 * Reads transaction mode from method annotation. Annotations are cached for better performances.
 	 * @param type target class
 	 * @param methodName target method name over which the transaction should be wrapped
 	 * @param methodArgTypes types of arguments, used to find the method
-	 * @param description method description (bytecode-like) or any other unique method signature, used as key for caching annotations 
+	 * @param unique unique method fingerprint that contains return and arguments type information
 	 */
-	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String description) {
-		JtxTransactionMode txMode = txmap.get(description);
+	public synchronized JtxTransactionMode getTxMode(Class type, String methodName, Class[] methodArgTypes, String unique) {
+		String signature = type.getName() + '#' + methodName + '%' + unique;
+		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
-			if (txmap.containsKey(description) == false) {
+			if (txmap.containsKey(signature) == false) {
 				ClassDescriptor cd = ClassIntrospector.lookup(type);
 				Method m = cd.getMethod(methodName, methodArgTypes);
 				if (m == null) {
@@ -113,7 +114,7 @@ public class AnnotationTxAdviceManager {
 				} else {
 					txMode = defaultTransactionMode;
 				}
-				txmap.put(description, txMode);
+				txmap.put(signature, txMode);
 			}
 		}
 		return txMode;

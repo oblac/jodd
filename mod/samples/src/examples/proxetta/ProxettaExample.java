@@ -25,9 +25,11 @@ public class ProxettaExample {
 		public boolean apply(MethodInfo methodInfo) {
 			System.out.println("#test " + methodInfo);
 			AnnotationInfo[] anns = methodInfo.getAnnotations();
-			for (AnnotationInfo a : anns) {
-				if (a.getAnnotationClassname().equals(Log.class.getName())) {
-					return true;
+			if (anns != null) {
+				for (AnnotationInfo a : anns) {
+					if (a.getAnnotationClassname().equals(Log.class.getName())) {
+						return true;
+					}
 				}
 			}
 			return false;
@@ -37,9 +39,11 @@ public class ProxettaExample {
 	static ProxyAspect pd2 = new ProxyAspect(CustomProxyAdvice.class, new ProxyPointcut() { 
 		public boolean apply(MethodInfo methodInfo) {
 			AnnotationInfo[] anns = methodInfo.getAnnotations();
-			for (AnnotationInfo a : anns) {
-				if (a.getAnnotationClassname().equals(Custom.class.getName())) {
-					return true;
+			if (anns != null) {
+				for (AnnotationInfo a : anns) {
+					if (a.getAnnotationClassname().equals(Custom.class.getName())) {
+						return true;
+					}
 				}
 			}
 			return false;

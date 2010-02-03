@@ -234,4 +234,19 @@ s	 */
 	}
 
 
+	// ---------------------------------------------------------------- to string
+
+	/**
+	 * Returns tx description for debugging purposes.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("jtx{");
+		sb.append(propagationBehavior.toString());
+		sb.append(',').append(readOnlyMode ? "readonly" : "readwrite");
+		sb.append(',').append(isolationLevel.toString());
+		sb.append(',').append(timeout).append('}');
+		return sb.toString();
+	}
 }

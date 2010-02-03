@@ -115,7 +115,8 @@ public final class ProxyTarget {
 	}
 
 	/**
-	 * Inserts target method signature (java like). Useful for identifying the method, since it is unique for class.
+	 * Inserts target method signature, java alike, including the method name.
+	 * Useful for identifying the method, since it is unique for class.
 	 * @see #targetMethodDescription()
 	 */
 	public static String targetMethodSignature() {
@@ -123,7 +124,8 @@ public final class ProxyTarget {
 	}
 
 	/**
-	 * Inserts target method description (bytecode alike). Useful for identifying the method, since it is unique for class.
+	 * Inserts target method description, bytecode alike, <b>without</b> method name.
+	 * May be used for identifying the method.
 	 * @see #targetMethodSignature() 
 	 */
 	public static String targetMethodDescription() {
