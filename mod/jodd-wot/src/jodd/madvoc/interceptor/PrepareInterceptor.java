@@ -12,6 +12,7 @@ import jodd.madvoc.ActionRequest;
  * Provided that the params interceptor is called twice (once before and once after this interceptor), you can load the
  * User object using the id property, and then when the second params interceptor is called the parameter user.name will
  * be set, as desired, on the actual object loaded from the database.
+ * @see PrepareAndIdInjectorInterceptor
  */
 public class PrepareInterceptor extends ActionInterceptor {
 

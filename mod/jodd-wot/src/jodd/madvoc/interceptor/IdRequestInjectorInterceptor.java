@@ -11,6 +11,7 @@ import jodd.madvoc.meta.In;
 
 /**
  * Injects only ID request attributes and parameters that ends with '.id'.
+ * @see PrepareAndIdInjectorInterceptor
  */
 public class IdRequestInjectorInterceptor extends ActionInterceptor {
 
