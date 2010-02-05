@@ -18,9 +18,6 @@ import java.io.IOException;
  */
 public class FormTag extends BodyTagSupport {
 
-	private static final String FORM = "form";
-	private static final String ID = "id";
-	private static final String FOR = "for";
 	private static final String INPUT = "input";
 	private static final String TYPE = "type";
 	private static final String VALUE = "value";
@@ -38,28 +35,6 @@ public class FormTag extends BodyTagSupport {
 	private static final String OPTION = "option";
 	private static final String SELECTED = "selected";
 	private static final String IDREF = "@id(";
-
-	// ---------------------------------------------------------------- options
-
-	private boolean ids;
-
-
-	/**
-	 * Specifies if form and fields IDs should be added based on form id.
-	 */
-	public void setIds(boolean ids) {
-		this.ids = ids;
-	}
-
-	private boolean refs;
-
-	/**
-	 * Specifies if id references in 'id' and 'for' attributes should be resolved.
-	 * Available only if {@link #setIds(boolean) ids are also generated}.
-	 */
-	public void setRefs(boolean refs) {
-		this.refs = refs;
-	}
 
 	// ---------------------------------------------------------------- interface
 
@@ -113,23 +88,6 @@ public class FormTag extends BodyTagSupport {
 
 	// ---------------------------------------------------------------- populate
 
-	/**
-	 * Builds tag id if it is missing.
-	 */
-	protected void makeId(HtmlTag tag, String formId, String name) {
-		if (formId == null) {
-			return;
-		}
-		if (name == null) {
-			return;
-		}
-		String id = tag.getAttribute(ID);
-		if (id != null) {
-			return;
-		}
-		tag.setAttribute(ID, formId + HtmlFormUtil.name2id(name));
-	}
-
 
 	/**
 	 * Populates HTML form.
@@ -139,7 +97,6 @@ public class FormTag extends BodyTagSupport {
 		StringBuilder result = new StringBuilder((int) (html.length() * 1.2));
 		String currentSelectName = null;
 		HtmlTag tag = null;
-		String formId = null;
 		while (true) {
 			if (tag != null) {
 				result.append(tag);
@@ -157,22 +114,10 @@ public class FormTag extends BodyTagSupport {
 			if (tag.isEndTag()) {
 				if (tagName.equals(SELECT)) {
 					currentSelectName = null;
-				} else if (tagName.equals(FORM)) {
-					formId = null;
 				}
 				continue;
 			}
 
-			// find form id
-			if (ids == true) {
-				if (tagName.equals(FORM) && formId == null) {
-					formId = tag.getAttribute(ID);
-					if (formId != null) {
-						 formId += '_';
-					}
-					continue;
-				}
-			}
 			if (tagName.equals(INPUT) == true) {
 				// INPUT
 				String tagType = tag.getAttribute(TYPE);
@@ -183,7 +128,6 @@ public class FormTag extends BodyTagSupport {
 				if (name == null) {
 					continue;
 				}
-				makeId(tag, formId, name);
 				Object valueObject = resolver.value(name);
 				if (valueObject == null) {
 					continue;
@@ -220,11 +164,9 @@ public class FormTag extends BodyTagSupport {
 				Object valueObject = resolver.value(name);
 				if (valueObject != null) {
 					tag.setSuffixText(HtmlEncoder.text(valueObject.toString()));
-					makeId(tag, formId, name);
 				}
 			} else if (tagName.equals(SELECT)) {
 				currentSelectName = tag.getAttribute(NAME);
-				makeId(tag, formId, currentSelectName);
 			} else if (tagName.equals(OPTION)) {
 				if (currentSelectName == null) {
 					continue;
@@ -246,23 +188,6 @@ public class FormTag extends BodyTagSupport {
 						String value = StringUtil.toString(vals);
 						if (value.equals(tagValue)) {
 							tag.setAttribute(SELECTED);
-						}
-					}
-				}
-			} else {	// all other tags
-				if (refs && formId != null) {
-					String id = tag.getAttribute(ID);
-					if (id != null) {
-						id = replaceReference(formId, id);
-						if (id != null) {
-							tag.setAttribute(ID, id);
-						}
-					}
-					String afor = tag.getAttribute(FOR);
-					if (afor != null) {
-						afor = replaceReference(formId, afor);
-						if (afor != null) {
-							tag.setAttribute(FOR, afor);
 						}
 					}
 				}

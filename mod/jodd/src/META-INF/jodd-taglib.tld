@@ -16,16 +16,6 @@
 		<name>form</name>
 		<tag-class>jodd.servlet.tag.FormTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<name>ids</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>refs</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 	</tag>
 
 	<tag>
