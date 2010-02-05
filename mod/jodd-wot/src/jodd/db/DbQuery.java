@@ -902,7 +902,7 @@ s	 */
 	// ---------------------------------------------------------------- object ex
 
 	/**
-	 * @see #setObject(String, Object, Class)
+	 * @see #setObject(String, Object, Class, int)
 	 */
 	public void setObject(int index, Object value) {
 		setObject(index, value, null, Integer.MAX_VALUE);
@@ -941,14 +941,14 @@ s	 */
 	}
 
 	/**
-	 * @see #setObject(String, Object, Class)
+	 * @see #setObject(String, Object, Class, int)
 	 */
 	public void setObject(String param, Object value) {
 		setObject(param, value, null, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * @see #setObject(String, Object, Class) 
+	 * @see #setObject(String, Object, Class, int) 
 	 */
 	public void setObject(String param, Object value, Class<? extends SqlType> sqlTypeClass, int dbSqlType) {
 		init();
@@ -971,4 +971,16 @@ s	 */
 		}
 	}
 
+	/**
+	 * Sets sql parameters from two arrays: names and values.
+	 */
+	public void setObjects(String[] names, Object[] values) {
+		init();
+		if (names.length != values.length) {
+			throw new DbSqlException("Different number of parameter names and values.");
+		}
+		for (int i = 0; i < names.length; i++) {
+			setObject(names[i], values[i]);
+		}
+	}
 }
