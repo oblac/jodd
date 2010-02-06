@@ -6,14 +6,14 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 
 /**
- * Performs simple authentication when the SMTP server requires it.
+ * Performs simple authentication when the server requires it.
  */
-public class SimpleSmtpAuthenticator extends Authenticator {
+public class SimpleAuthenticator extends Authenticator {
 
 	protected final String username;
 	protected final String password;
 
-	public SimpleSmtpAuthenticator(String username, String password) {
+	public SimpleAuthenticator(String username, String password) {
 		super();
 		this.username = username;
 		this.password = password;

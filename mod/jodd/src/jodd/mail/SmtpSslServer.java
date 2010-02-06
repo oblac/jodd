@@ -21,7 +21,7 @@ public class SmtpSslServer extends SmtpServer {
 	}
 
 	public SmtpSslServer(String host, String username, String password) {
-		this(host, DEFAULT_SSL_PORT, new SimpleSmtpAuthenticator(username, password));
+		this(host, DEFAULT_SSL_PORT, new SimpleAuthenticator(username, password));
 	}
 
 	public SmtpSslServer(String host, int port, Authenticator authenticator) {
@@ -29,7 +29,7 @@ public class SmtpSslServer extends SmtpServer {
 	}
 
 	public SmtpSslServer(String host, int port, String username, String password) {
-		this(host, port, new SimpleSmtpAuthenticator(username, password));
+		this(host, port, new SimpleAuthenticator(username, password));
 	}
 
 	@Override
