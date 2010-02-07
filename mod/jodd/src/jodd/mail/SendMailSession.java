@@ -32,7 +32,7 @@ public class SendMailSession {
 		try {
 			mailTransport = mailSession.getTransport();
 		} catch (NoSuchProviderException nspex) {
-			throw new EmailException(nspex);
+			throw new MailException(nspex);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class SendMailSession {
 		try {
 			mailTransport.connect();
 		} catch (MessagingException msex) {
-			throw new EmailException("Unable to connect.", msex);
+			throw new MailException("Unable to connect.", msex);
 		}
 	}
 
@@ -55,12 +55,12 @@ public class SendMailSession {
 		try {
 			msg = adapt(mail, mailSession);
 		} catch (MessagingException mex) {
-			throw new EmailException("Unable to prepare email message: " + mail, mex);
+			throw new MailException("Unable to prepare email message: " + mail, mex);
 		}
 		try {
 			mailTransport.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
 		} catch (MessagingException mex) {
-			throw new EmailException("Unable to send email message: " + mail, mex);
+			throw new MailException("Unable to send email message: " + mail, mex);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SendMailSession {
 		try {
 			mailTransport.close();
 		} catch (MessagingException mex) {
-			throw new EmailException("Unable to close session. ", mex);
+			throw new MailException("Unable to close session. ", mex);
 		}
 	}
 

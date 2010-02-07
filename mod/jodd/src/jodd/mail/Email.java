@@ -132,7 +132,7 @@ public class Email extends CommonEmail {
 			attBodyPart.setFileName(fileName);
 			attBodyPart.setDataHandler(dataHandler);
 		} catch (MessagingException mex) {
-			throw new EmailException("Unable to prepare attachment: '" + fileName + "'.");
+			throw new MailException("Unable to prepare attachment: '" + fileName + "'.");
 		}
 		attachments.add(attBodyPart);
 	}

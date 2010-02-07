@@ -78,7 +78,7 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 		try {
 			store = getStore(session);
 		} catch (NoSuchProviderException nspex) {
-			throw new EmailException("Unable to create POP3 session", nspex);
+			throw new MailException("Unable to create POP3 session", nspex);
 		}
 		return new ReceiveMailSession(session, store);
 	}
