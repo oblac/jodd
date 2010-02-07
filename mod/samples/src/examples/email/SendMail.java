@@ -21,24 +21,34 @@ public class SendMail {
 				.subject("test1")
 				.text("a plain text message čtf");
 		session.sendMail(email);
+		System.out.println("email #1 sent");
 
-
-		email.text(null)
+		email = Email.create()
+				.from("weird@beotel.rs")
+				.to("weird@beotel.rs")
 				.subject("test2")
-				.message("a <b>test 2</b> message");
+				.html("a <b>test 2</b> message");
 		session.sendMail(email);
+		System.out.println("email #2 sent");
 
-		email.text("and text3 message!")
+		email = Email.create()
+				.from("weird@beotel.rs")
+				.to("weird@beotel.rs")
+				.text("and text3 message!")
 				.subject("test3")
-				.message("a <b>test 3</b> message");
+				.html("a <b>test 3</b> message");
 		session.sendMail(email);
+		System.out.println("email #3 sent");
 
-
-		email.subject("test4")
+		email = Email.create()
+				.from("weird@beotel.rs")
+				.to("weird@beotel.rs")
+				.subject("test4")
 				.text("text 4")
-				.attachFile("d:\\love_music.jpg")
+				.attachFile("d:\\huh2.jpg")
 				.priority(PRIORITY_HIGHEST);
 		session.sendMail(email);
+		System.out.println("email #4 sent");
 
 		session.close();
 

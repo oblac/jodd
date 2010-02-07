@@ -40,6 +40,10 @@ public class SmtpServer implements SendMailSessionProvider {
 		this(host, DEFAULT_SMTP_PORT, authenticator);
 	}
 
+	public SmtpServer(String host, int port, String username, String password) {
+		this(host, port, new SimpleAuthenticator(username, password));
+	}
+
 	/**
 	 * SMTP server defined with its host and authenitification.
 	 */
@@ -56,11 +60,11 @@ public class SmtpServer implements SendMailSessionProvider {
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
 		props.setProperty(MAIL_TRANSPORT_PROTOCOL, "smtp");
-		props.put(MAIL_HOST, host);
-		props.put(MAIL_SMTP_HOST, host);
-		props.put(MAIL_SMTP_PORT, String.valueOf(port));
+		props.setProperty(MAIL_HOST, host);
+		props.setProperty(MAIL_SMTP_HOST, host);
+		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
 		if (authenticator != null) {
-			props.put(MAIL_SMTP_AUTH, "true");
+			props.setProperty(MAIL_SMTP_AUTH, "true");
 		}
 		return props;
 	}

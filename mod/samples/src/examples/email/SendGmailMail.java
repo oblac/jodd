@@ -10,7 +10,7 @@ import jodd.mail.SmtpSslServer;
 public class SendGmailMail {
 
 	public static void main(String[] args) {
-		SmtpServer smtpServer = new SmtpSslServer("smtp.gmail.com", "igor.spasic@gmail.com", "....");
+		SmtpServer smtpServer = new SmtpSslServer("smtp.gmail.com", "igor.spasic@gmail.com", "...");
 		SendMailSession session = smtpServer.createSession();
 
 		session.open();

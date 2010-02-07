@@ -13,6 +13,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -74,8 +75,7 @@ public class SendMailSession {
 		}
 	}
 
-
-
+	
 	// ---------------------------------------------------------------- adapter
 
 	/**
@@ -122,7 +122,7 @@ public class SendMailSession {
 		msg.setSentDate(date);
 
 		// headers
-		Map<String, String> headers = email.getHeaders();
+		Map<String, String> headers = email.getAllHeaders();
 		if (headers != null) {
 			for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
 				String value = stringStringEntry.getValue();
@@ -131,33 +131,18 @@ public class SendMailSession {
 		}
 
 		// message data and attachments
-		String text = email.getText();
-		String message = email.getMessage();
+		LinkedList<EmailMessage> messages = email.getAllMessages();
 		MimeBodyPart[] attachments = email.getAttachments();
-		boolean isMultipart = false;
-		if (attachments != null) {
-			isMultipart = true;
-		} else if ((text != null) && (message != null)) {
-			isMultipart = true;
-		}
+		int totalMessages = messages.size();
 
-
-		if (isMultipart == false) {
-			if (message != null) {
-				msg.setContent(message, "text/html;charset=\"" + email.getEncoding() + '\"');
-			} else {
-				msg.setContent(text, "text/plain;charset=\"" + email.getEncoding() + '\"');
-			}
+		if ((attachments == null) && (totalMessages == 1)) {
+			EmailMessage emailMessage = messages.get(0);
+			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=\"" + emailMessage.getEncoding() + '\"');
 		} else {
 			Multipart multipart = new MimeMultipart();
-			if (text != null) {
+			for (EmailMessage emailMessage : messages) {
 				MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(text, "text/plain;charset=\"" + email.getEncoding() + '\"');
-				multipart.addBodyPart(messageData);
-			}
-			if (message != null) {
-				MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(message, "text/html;charset=\"" + email.getEncoding() + '\"');
+				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=\"" + emailMessage.getEncoding() + '\"');
 				multipart.addBodyPart(messageData);
 			}
 			if (attachments != null) {

@@ -2,6 +2,8 @@
 
 package jodd.mail;
 
+import jodd.util.StringPool;
+
 import javax.mail.Authenticator;
 import java.util.Properties;
 
@@ -17,11 +19,11 @@ public class SmtpSslServer extends SmtpServer {
 	protected static final int DEFAULT_SSL_PORT = 465;
 
 	public SmtpSslServer(String host, Authenticator authenticator) {
-		this(host, DEFAULT_SSL_PORT, authenticator);
+		super(host, DEFAULT_SSL_PORT, authenticator);
 	}
 
 	public SmtpSslServer(String host, String username, String password) {
-		this(host, DEFAULT_SSL_PORT, new SimpleAuthenticator(username, password));
+		super(host, DEFAULT_SSL_PORT, username, password);
 	}
 
 	public SmtpSslServer(String host, int port, Authenticator authenticator) {
@@ -29,17 +31,18 @@ public class SmtpSslServer extends SmtpServer {
 	}
 
 	public SmtpSslServer(String host, int port, String username, String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
+		super(host, port, username, password);
 	}
 
 	@Override
 	protected Properties createSessionProperties() {
 		Properties props = super.createSessionProperties();
-		props.put(MAIL_SMTP_STARTTLS_ENABLE, "true");
-		props.put(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(port));
-		props.put(MAIL_SMTP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
-		props.put(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, "false");
-		props.setProperty("mail.host", host);
+		props.setProperty(MAIL_SMTP_STARTTLS_ENABLE, StringPool.TRUE);
+		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_PORT, String.valueOf(port));
+		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
+		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
+		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
+		props.setProperty(MAIL_HOST, host);
 		return props;
 	}
 }
