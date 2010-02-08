@@ -4,10 +4,10 @@ package jodd.mail;
 
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
+import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
 import javax.mail.Address;
-import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
@@ -28,7 +28,7 @@ import java.util.Enumeration;
 public class ReceiveMailSession {
 
 	protected static final String DEFAULT_FOLDER = "INBOX";
-	protected static final String STR_CHARSET = "charset=\"";
+	protected static final String STR_CHARSET = "charset=";
 
 	protected final Session session;
 	protected final Store store;
@@ -198,40 +198,64 @@ public class ReceiveMailSession {
 		}
 
 		// content
-		Object c = msg.getContent();
-		if (c instanceof String) {
-			email.addMessage(parseStringPart(msg));
-		} else if (c instanceof Multipart) {
-			Multipart mp = (Multipart) c;
-			int count = mp.getCount();
-			for (int i = 0; i < count; i++) {
-				BodyPart bp = mp.getBodyPart(i);
-				c = bp.getContent();
-				if (c instanceof String) {
-					email.addMessage(parseStringPart(bp));
-				} else if (c instanceof InputStream) {
-					InputStream is = (InputStream) c;
-					FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
-					StreamUtil.copy(is, fbaos);
-					email.addAttachment(bp.getFileName(), fbaos.toByteArray());
-				}
-			}
-		} else if (c instanceof InputStream) {
+		processPart(email, msg);
 
-		}
 		return email;
 	}
 
 
+	/**
+	 * Process single part of received message. All parts are simple added to the message, i.e. hierarchy is not saved.
+	 */
+	protected void processPart(ReceivedEmail email, Part p) throws IOException, MessagingException {
+		Object c = p.getContent();
+		if (c instanceof String) {
+			email.addMessage(parseStringPart(p));
+		} else if (c instanceof Multipart) {
+			Multipart mp = (Multipart) c;
+			int count = mp.getCount();
+			for (int i = 0; i < count; i++) {
+				Part innerPart = mp.getBodyPart(i);
+				processPart(email, innerPart);
+			}
+		} else if (c instanceof InputStream) {
+			InputStream is = (InputStream) c;
+			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
+			StreamUtil.copy(is, fbaos);
+			email.addAttachment(p.getFileName(), fbaos.toByteArray());
+		}
+	}
+
+
+	/**
+	 * Parses string parts.
+	 */
 	protected EmailMessage parseStringPart(Part part) throws IOException, MessagingException {
 		String contentType = part.getContentType();
+		System.out.println("----------------------------> 8888888888888888888888888888 " + contentType);
 		int ndx = contentType.indexOf(';');
 		String mime = ndx != -1 ? contentType.substring(0, ndx) : contentType;
 		String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
 		String encoding = null;
-		if (charset.startsWith(STR_CHARSET)) {
-			int l = charset.lastIndexOf('"');
-			encoding = charset.substring(STR_CHARSET.length(), l);
+
+		ndx = charset.indexOf(STR_CHARSET);
+		if (ndx != -1) {
+			ndx += STR_CHARSET.length();
+			int len = charset.length();
+
+			if (charset.charAt(ndx) == '"') {
+				ndx++;
+			}
+			int start = ndx;
+
+			while (ndx < len) {
+				char c = charset.charAt(ndx);
+				if ((c == '"') || (CharUtil.isWhitespace(c) == true)) {
+					break;
+				}
+				ndx++;
+			}
+			encoding = charset.substring(start, ndx);
 		}
 		return new EmailMessage((String) part.getContent(), mime, encoding);
 	}

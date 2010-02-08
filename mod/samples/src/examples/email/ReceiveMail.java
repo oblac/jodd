@@ -21,7 +21,7 @@ public class ReceiveMail {
 		Pop3Server popServer = new Pop3Server("pop3.beotel.yu", new SimpleAuthenticator("weird", "..."));
 		ReceiveMailSession session = popServer.createSession();
 		session.open();
-		System.out.println(session.getNewMessageCount() + " / " + session.getMessageCount());
+		System.out.println(session.getMessageCount());
 		ReceivedEmail[] emails = session.receiveEmail(false);
 		if (emails != null) {
 			for (ReceivedEmail email : emails) {
