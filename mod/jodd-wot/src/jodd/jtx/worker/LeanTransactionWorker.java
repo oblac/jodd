@@ -5,6 +5,8 @@ package jodd.jtx.worker;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Lean transaction worker helps dealing transactions when they were requested
@@ -12,6 +14,8 @@ import jodd.jtx.JtxTransactionMode;
  * the same as current one, or completely new. It might be useful for aspects.
  */
 public class LeanTransactionWorker {
+
+	private static final Logger log = LoggerFactory.getLogger(LeanTransactionWorker.class);
 
 	protected final JtxTransactionManager txManager;
 
@@ -63,6 +67,7 @@ public class LeanTransactionWorker {
 		if (tx == null) {
 			return false;
 		}
+		log.error("commit tx");
 		tx.commit();
 		return true;
 	}
@@ -73,6 +78,7 @@ public class LeanTransactionWorker {
 	 * Returns <code>true</code> if transaction was actually roll backed.
 	 */
 	public boolean markOrRollbackTransaction(JtxTransaction tx, Throwable cause) {
+		log.error("rollback tx", cause);
 		if (tx == null) {
 			tx = getCurrentTransaction();
 			if (tx == null) {
