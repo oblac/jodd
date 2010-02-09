@@ -9,7 +9,6 @@ public class DbNameUtil {
 
 	// ---------------------------------------------------------------- tables
 
-
 	public static String convertClassNameToTableName(Class clazz) {
 		return convertClassNameToTableName(clazz, null, null);
 	}
@@ -45,25 +44,27 @@ public class DbNameUtil {
 		return tableName.toString();
 	}
 
-	public static String convertTableNameToClassName(String tableName) {
-		return convertTableNameToClassName(tableName, null);
-	}
-
 	/**
 	 * Converts table name to class name. All characters after '_' are converted to upper ones.
 	 * Other characters are converted to lower. Therefore, table name <code>FOO_BOO_ZOO</code>
 	 * will be converted to <code>FooBooZoo</code>.
 	 */
-	public static String convertTableNameToClassName(String tableName, String tablePrefix) {
+	public static String convertTableNameToClassName(String tableName, String tablePrefix, String tableSuffix) {
 		StringBuilder className = new StringBuilder(tableName.length());
 		int i = 0;
+		int len = tableName.length();
 		if (tablePrefix != null) {
 			if (tableName.startsWith(tablePrefix) == true) {
 				i = tablePrefix.length();
 			}
 		}
+		if (tableSuffix != null) {
+			if (tableName.endsWith(tableSuffix) == true) {
+				len -= tableSuffix.length();
+			}
+		}
 		boolean toUpper = true;
-		for (; i < tableName.length(); i++) {
+		for (; i < len; i++) {
 			char c = tableName.charAt(i);
 			if (c == '_') {
 				toUpper = true;

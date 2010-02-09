@@ -23,16 +23,22 @@ public class DbNameUtilTest extends TestCase {
 	}
 
 	public void testTableNameToClassName() {
-		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("FOO_BOO_ZOO"));
-		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("FOO_BOO_ZOO_"));
-		assertEquals("Foo", DbNameUtil.convertTableNameToClassName("FOO"));
-		assertEquals("", DbNameUtil.convertTableNameToClassName(""));
+		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("FOO_BOO_ZOO", null, null));
+		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("FOO_BOO_ZOO_", null, null));
+		assertEquals("Foo", DbNameUtil.convertTableNameToClassName("FOO", null, null));
+		assertEquals("", DbNameUtil.convertTableNameToClassName("", null, null));
 
-		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO", "QWE_"));
-		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO_", "QWE_"));
-		assertEquals("Foo", DbNameUtil.convertTableNameToClassName("QWE_FOO", "QWE_"));
-		assertEquals("Boo", DbNameUtil.convertTableNameToClassName("BOO", "QWE_"));
-		assertEquals("", DbNameUtil.convertTableNameToClassName("", "QWE_"));
+		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO", "QWE_", null));
+		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO_", "QWE_", null));
+		assertEquals("Foo", DbNameUtil.convertTableNameToClassName("QWE_FOO", "QWE_", null));
+		assertEquals("Boo", DbNameUtil.convertTableNameToClassName("BOO", "QWE_", null));
+		assertEquals("", DbNameUtil.convertTableNameToClassName("", "QWE_", null));
+
+		assertEquals("FooBoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO", "QWE_", "_ZOO"));
+		assertEquals("QweFooBoo", DbNameUtil.convertTableNameToClassName("QWE_FOO_BOO_ZOO_", null, "_ZOO_"));
+		assertEquals("Qwe", DbNameUtil.convertTableNameToClassName("QWE_FOO", null, "_FOO"));
+		assertEquals("Boo", DbNameUtil.convertTableNameToClassName("BOO", "QWE_", "_XXX"));
+		assertEquals("", DbNameUtil.convertTableNameToClassName("", "QWE_", "_XXX"));
 	}
 
 	public void testColumnNameToPropertyName() {

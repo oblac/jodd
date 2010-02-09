@@ -159,7 +159,7 @@ public class DbEntitySql {
 		DbEntityDescriptor dedFk = dbOrmManager.lookupType(value.getClass());
 
 		String fkColum =
-				uncapitalize(convertTableNameToClassName(dedFk.getTableName())) +
+				uncapitalize(convertTableNameToClassName(dedFk.getTableName(), dbOrmManager.getTableNamePrefix(), dbOrmManager.getTableNameSuffix())) +
 				capitalize(convertColumnNameToPropertyName(dedFk.getIdColumnName()));
 		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColum)._(EQUALS).colvalue(idValue);
