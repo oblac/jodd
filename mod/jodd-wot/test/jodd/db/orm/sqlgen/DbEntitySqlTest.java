@@ -111,32 +111,32 @@ public class DbEntitySqlTest extends TestCase {
 	public void testDelete() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.delete(g);
-		assertEquals("delete from GIRL Girl where (Girl.ID=:girl.id and Girl.NAME=:girl.name and Girl.SPECIALITY=:girl.speciality)",
+		assertEquals("delete from GIRL where (GIRL.ID=:girl.id and GIRL.NAME=:girl.name and GIRL.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl(Integer.valueOf(2), null, ".net");
 		b = DbEntitySql.delete(bg);
 		assertEquals(
-				"delete from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.SPECIALITY=:badGirl.foospeciality)",
+				"delete from GIRL where (GIRL.ID=:badGirl.fooid and GIRL.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
 		b = DbEntitySql.deleteByAll(bg);
 		assertEquals(
-				"delete from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.NAME=:badGirl.fooname and BadGirl.SPECIALITY=:badGirl.foospeciality)",
+				"delete from GIRL where (GIRL.ID=:badGirl.fooid and GIRL.NAME=:badGirl.fooname and GIRL.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl2(b);
 
 		b = DbEntitySql.deleteById(bg);
 		assertEquals(
-				"delete from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid)",
+				"delete from GIRL where (GIRL.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl3(b);
 
 		b = DbEntitySql.deleteById(bg, Integer.valueOf(2));
 		assertEquals(
-				"delete from GIRL BadGirl where BadGirl.ID=:p0",
+				"delete from GIRL where GIRL.ID=:p0",
 				b.generateQuery());
 		checkBadGirl4(b);
 	}

@@ -9,7 +9,7 @@ import jodd.util.StringPool;
 
 /**
  * Resolves column and table references. Reference is given in format: <code>tableRef.propertyName</code>.
- * Property name may be '+', indicating the identity columns. If property name is omitted, only table bame
+ * Property name may be '+', indicating the identity columns. If property name is omitted, only table name
  * will be rendered.
  */
 public class ReferenceChunk extends SqlChunk {
