@@ -8,6 +8,8 @@ import javax.mail.Session;
 import javax.mail.Store;
 import java.util.Properties;
 
+import static jodd.util.StringPool.TRUE;
+
 /**
  * Represents simple plain POP server for sending emails.
  */
@@ -16,6 +18,8 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 	protected static final String MAIL_POP3_PORT = "mail.pop3.port";
 	protected static final String MAIL_POP3_HOST = "mail.pop3.host";
 	protected static final String MAIL_POP3_AUTH = "mail.pop3.auth";
+
+	protected static final String PROTOCOL_POP3 = "pop3";
 
 	protected static final int DEFAULT_POP3_PORT = 110;
 
@@ -63,7 +67,7 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 		props.setProperty(MAIL_POP3_HOST, host);
 		props.setProperty(MAIL_POP3_PORT, String.valueOf(port));
 		if (authenticator != null) {
-			props.setProperty(MAIL_POP3_AUTH, "true");
+			props.setProperty(MAIL_POP3_AUTH, TRUE);
 		}
 		return props;
 	}
@@ -83,8 +87,11 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 		return new ReceiveMailSession(session, store);
 	}
 
+	/**
+	 * Returns email store.
+	 */
 	protected Store getStore(Session session) throws NoSuchProviderException {
-		return session.getStore("pop3");
+		return session.getStore(PROTOCOL_POP3);
 	}
 
 	// ---------------------------------------------------------------- getters

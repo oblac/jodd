@@ -2,9 +2,15 @@
 
 package jodd.mail;
 
+import jodd.util.StringPool;
+
 import javax.mail.Authenticator;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
+import javax.mail.Transport;
 import java.util.Properties;
+
+import static jodd.util.StringPool.TRUE;
 
 /**
  * Represents simple plain SMTP server for sending emails.
@@ -16,6 +22,9 @@ public class SmtpServer implements SendMailSessionProvider {
 	protected static final String MAIL_SMTP_PORT = "mail.smtp.port";
 	protected static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	protected static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
+
+	protected static final String PROTOCOL_SMTP = "smtp";
+
 	protected static final int DEFAULT_SMTP_PORT = 25;
 
 	protected final String host;
@@ -59,12 +68,12 @@ public class SmtpServer implements SendMailSessionProvider {
 	 */
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
-		props.setProperty(MAIL_TRANSPORT_PROTOCOL, "smtp");
+		props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
 		props.setProperty(MAIL_HOST, host);
 		props.setProperty(MAIL_SMTP_HOST, host);
 		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
 		if (authenticator != null) {
-			props.setProperty(MAIL_SMTP_AUTH, "true");
+			props.setProperty(MAIL_SMTP_AUTH, TRUE);
 		}
 		return props;
 	}
@@ -74,7 +83,21 @@ public class SmtpServer implements SendMailSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public SendMailSession createSession() {
-		return new SendMailSession(Session.getDefaultInstance(sessionProperties, authenticator));
+		Session mailSession = Session.getDefaultInstance(sessionProperties, authenticator);
+		Transport mailTransport;
+		try {
+			mailTransport = mailSession.getTransport();
+		} catch (NoSuchProviderException nspex) {
+			throw new MailException(nspex);
+		}
+		return new SendMailSession(mailSession, mailTransport);
+	}
+
+	/**
+	 * Returns mail transport.
+	 */
+	protected Transport getTransport(Session session) throws NoSuchProviderException {
+		return session.getTransport(PROTOCOL_SMTP);
 	}
 
 	// ---------------------------------------------------------------- getters

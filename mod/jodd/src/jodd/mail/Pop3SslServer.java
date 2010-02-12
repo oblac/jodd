@@ -47,7 +47,7 @@ public class Pop3SslServer extends Pop3Server {
 
 	@Override
 	protected Store getStore(Session session) throws NoSuchProviderException {
-		URLName url = new URLName("pop3", host, port, "", username, password);
+		URLName url = new URLName(PROTOCOL_POP3, host, port, "", username, password);
 		return new POP3SSLStore(session, url);
 	}
 }

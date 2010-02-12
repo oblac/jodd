@@ -4,7 +4,6 @@ package jodd.mail;
 
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.NoSuchProviderException;
 import javax.mail.MessagingException;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -27,13 +26,9 @@ public class SendMailSession {
 	/**
 	 * Creates new mail session.
 	 */
-	public SendMailSession(Session session) {
-		mailSession = session;
-		try {
-			mailTransport = mailSession.getTransport();
-		} catch (NoSuchProviderException nspex) {
-			throw new MailException(nspex);
-		}
+	public SendMailSession(Session session, Transport transport) {
+		this.mailSession = session;
+		this.mailTransport = transport;
 	}
 
 	/**
