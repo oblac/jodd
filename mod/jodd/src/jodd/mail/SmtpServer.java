@@ -2,8 +2,6 @@
 
 package jodd.mail;
 
-import jodd.util.StringPool;
-
 import javax.mail.Authenticator;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
