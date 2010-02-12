@@ -86,7 +86,7 @@ public class SmtpServer implements SendMailSessionProvider {
 		Session mailSession = Session.getDefaultInstance(sessionProperties, authenticator);
 		Transport mailTransport;
 		try {
-			mailTransport = mailSession.getTransport();
+			mailTransport = getTransport(mailSession);
 		} catch (NoSuchProviderException nspex) {
 			throw new MailException(nspex);
 		}
