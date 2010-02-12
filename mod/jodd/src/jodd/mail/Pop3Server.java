@@ -77,7 +77,7 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public ReceiveMailSession createSession() {
-		Session session = Session.getDefaultInstance(sessionProperties, authenticator);
+		Session session = Session.getInstance(sessionProperties, authenticator);
 		Store store;
 		try {
 			store = getStore(session);

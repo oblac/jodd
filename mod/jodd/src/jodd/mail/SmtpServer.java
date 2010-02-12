@@ -81,7 +81,7 @@ public class SmtpServer implements SendMailSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public SendMailSession createSession() {
-		Session mailSession = Session.getDefaultInstance(sessionProperties, authenticator);
+		Session mailSession = Session.getInstance(sessionProperties, authenticator);
 		Transport mailTransport;
 		try {
 			mailTransport = getTransport(mailSession);
