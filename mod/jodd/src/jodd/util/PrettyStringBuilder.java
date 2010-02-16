@@ -140,4 +140,12 @@ public class PrettyStringBuilder {
 	public String toString(Object value) {
 		return toPrettyString(value);
 	}
+
+	/**
+	 * Static version for quick access.
+	 */
+	public static String str(Object value) {
+		return new PrettyStringBuilder().toPrettyString(value);
+	}
+
 }

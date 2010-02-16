@@ -226,10 +226,17 @@
 	</function>
 
 	<!-- print -->
+
 	<function>
 		<name>printf</name>
 		<function-class>jodd.format.Printf</function-class>
 		<function-signature>java.lang.String str(java.lang.String,java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<name>prettystr</name>
+		<function-class>jodd.util.PrettyStringBuilder</function-class>
+		<function-signature>java.lang.String str(java.lang.Object)</function-signature>
 	</function>
 
 </taglib>
