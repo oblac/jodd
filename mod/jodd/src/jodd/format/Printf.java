@@ -353,28 +353,45 @@ public class Printf {
 
 	// ---------------------------------------------------------------- object array
 
+	public static void out(String format, Object... params) {
+		System.out.println(str(format, params));
+	}
+
 	public static String str(String format, Object... params) {
 		PrintfFormat pf = new PrintfFormat();
 		for (Object param : params) {
-			pf.reinit(format);
+			format = form(pf, format, param);
+		}
+		return format;
+	}
+
+	public static String str(String format, Object param) {
+		PrintfFormat pf = new PrintfFormat();
+		format = form(pf, format, param);
+		return format;
+	}
+
+	private static String form(PrintfFormat pf, String format, Object param) {
+		pf.reinit(format);
+		if (param instanceof Number) {
 			if (param instanceof Integer) {
 				format = pf.form(((Integer) param).intValue());
 			} else if (param instanceof Long) {
 				format = pf.form(((Long) param).longValue());
-			} else if (param instanceof Character) {
-				format = pf.form(((Character) param).charValue());
 			} else if (param instanceof Double) {
 				format = pf.form(((Double) param).doubleValue());
 			} else if (param instanceof Float) {
 				format = pf.form(((Float) param).floatValue());
 			} else {
-				format = pf.form(param.toString());
+				format = pf.form(((Number)param).intValue());
 			}
+
+		} else if (param instanceof Character) {
+				format = pf.form(((Character) param).charValue());
+		} else {
+			format = pf.form(param.toString());
 		}
 		return format;
-	}
-	public static void out(String format, Object... params) {
-		System.out.println(str(format, params));
 	}
 
 }

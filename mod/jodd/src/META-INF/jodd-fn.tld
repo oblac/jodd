@@ -225,4 +225,11 @@
 		<function-signature>java.lang.String fmtTime(jodd.datetime.JDateTime,java.lang.String)</function-signature>
 	</function>
 
+	<!-- print -->
+	<function>
+		<name>printf</name>
+		<function-class>jodd.format.Printf</function-class>
+		<function-signature>java.lang.String str(java.lang.String,java.lang.Object)</function-signature>
+	</function>
+
 </taglib>

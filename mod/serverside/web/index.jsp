@@ -1,3 +1,4 @@
+<%@ taglib prefix="jfn" uri="/joddfn" %>
 <html>
 <head>
 	<title>Jodd Madvoc</title>
@@ -61,7 +62,6 @@
 <p>
 List of all <a href="madvoc-listAllActions.html">Action configurations</a>.<br>
 </p>
-
 
 </body>
 </html>
