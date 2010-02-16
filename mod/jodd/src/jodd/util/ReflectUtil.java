@@ -6,6 +6,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConversionException;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -973,5 +974,20 @@ public class ReflectUtil {
 		return null;
 	}
 
+
+	// ---------------------------------------------------------------- annotations
+
+
+	/**
+	 * Read annotation value. Returns <code>null</code> on error.
+	 */
+	public static Object readAnnotationValue(Annotation annotation, String name) {
+		try {
+			Method method  = annotation.annotationType().getDeclaredMethod(name);
+			return method.invoke(annotation);
+		} catch (Exception ignore) {
+			return null;
+		}
+	}
 
 }
