@@ -18,6 +18,11 @@ public class PrepareAndIdInjectorInterceptor extends ActionInterceptor {
 		idInjector = new IdRequestInjectorInterceptor();
 	}
 
+	@Override
+	public void init() {
+		idInjector.init();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
