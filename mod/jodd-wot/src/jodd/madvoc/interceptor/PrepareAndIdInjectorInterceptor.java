@@ -3,6 +3,9 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.meta.In;
 
 /**
  * This is a simple join of {@link IdRequestInjectorInterceptor} and {@link PrepareInterceptor}.
@@ -12,10 +15,14 @@ import jodd.madvoc.ActionRequest;
  */
 public class PrepareAndIdInjectorInterceptor extends ActionInterceptor {
 
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
+
 	private final IdRequestInjectorInterceptor idInjector;
 
 	public PrepareAndIdInjectorInterceptor() {
 		idInjector = new IdRequestInjectorInterceptor();
+		idInjector.madvocConfig = madvocConfig;
 	}
 
 	@Override
