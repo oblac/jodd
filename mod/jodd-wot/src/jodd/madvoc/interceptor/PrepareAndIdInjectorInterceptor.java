@@ -22,11 +22,11 @@ public class PrepareAndIdInjectorInterceptor extends ActionInterceptor {
 
 	public PrepareAndIdInjectorInterceptor() {
 		idInjector = new IdRequestInjectorInterceptor();
-		idInjector.madvocConfig = madvocConfig;
 	}
 
 	@Override
 	public void init() {
+		idInjector.madvocConfig = madvocConfig;
 		idInjector.init();
 	}
 
