@@ -3,9 +3,6 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.meta.In;
 
 /**
  * This is a simple join of {@link IdRequestInjectorInterceptor} and {@link PrepareInterceptor}.
@@ -13,31 +10,16 @@ import jodd.madvoc.meta.In;
  * This join is a bit more efficient, since ids will be injected only if action is
  * {@link Preparable}. 
  */
-public class PrepareAndIdInjectorInterceptor extends ActionInterceptor {
-
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
-
-	private final IdRequestInjectorInterceptor idInjector;
-
-	public PrepareAndIdInjectorInterceptor() {
-		idInjector = new IdRequestInjectorInterceptor();
-	}
-
-	@Override
-	public void init() {
-		idInjector.madvocConfig = madvocConfig;
-		idInjector.init();
-	}
+public class PrepareAndIdInjectorInterceptor extends IdRequestInjectorInterceptor {
 
 	/**
-	 * {@inheritDoc}
+	 * If action is preparable, injects ids from request and invokes <code>prepare()</code>.
 	 */
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.getAction();
 		if (action instanceof Preparable) {
-			idInjector.intercept(actionRequest);
+			injectIdsFromRequest(actionRequest);
 			((Preparable) action).prepare();
 		}
 		return actionRequest.invoke();

@@ -41,8 +41,15 @@ public class IdRequestInjectorInterceptor extends ActionInterceptor {
 	 */
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
-		requestInjector.inject(actionRequest.getAction(), actionRequest.getHttpServletRequest());
+		injectIdsFromRequest(actionRequest);
 		return actionRequest.invoke();
+	}
+
+	/**
+	 * Injects IDs from request. Invoked before action request is invoked.
+	 */
+	protected void injectIdsFromRequest(ActionRequest actionRequest) {
+		requestInjector.inject(actionRequest.getAction(), actionRequest.getHttpServletRequest());
 	}
 
 }
