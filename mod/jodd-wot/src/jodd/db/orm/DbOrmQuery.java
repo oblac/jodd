@@ -213,24 +213,48 @@ public class DbOrmQuery extends DbQuery {
 	// ---------------------------------------------------------------- list
 
 	public <T> List<T> listOne(Class<T> type) {
-		return listOne(type, false);
+		return listOne(type, 0, false);
 	}
 	public <T> List<T> listOneAndClose(Class<T> type) {
-		return listOne(type, true);
+		return listOne(type, 0, true);
 	}
 	public <T> List<T> listOne() {
-		return listOne(null, false);
+		return listOne(null, 0, false);
 	}
 	public <T> List<T> listOneAndClose() {
-		return listOne(null, true);
+		return listOne(null, 0, true);
 	}
+	public <T> List<T> listOne(int max, Class<T> type) {
+		return listOne(type, max, false);
+	}
+	public <T> List<T> listOneAndClose(int max, Class<T> type) {
+		return listOne(type, max, true);
+	}
+	public <T> List<T> listOne(int max) {
+		return listOne(null, max, false);
+	}
+	public <T> List<T> listOneAndClose(int max) {
+		return listOne(null, max, true);
+	}
+
+	/**
+	 * Iterates results set, maps rows to just one class and populates the array list.
+	 * @param type target type
+	 * @param max max number of rows to collect, <code>0</code> for all
+	 * @param close <code>true</code> if query is closed at the end, otherwise <code> false
+	 * @return list of mapped entities
+	 */
 	@SuppressWarnings({"unchecked"})
-	protected <T> List<T> listOne(Class<T> type, boolean close) {
+	protected <T> List<T> listOne(Class<T> type, int max, boolean close) {
 		List<T> result = new ArrayList<T>();
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
 		while (rsm.next()) {
 			result.add((T) rsm.parseOneObject(types));
+			max--;
+			if (max == 0) {
+				break;
+			}
 		}
 		close(rsm, close);
 		return result;
@@ -238,19 +262,38 @@ public class DbOrmQuery extends DbQuery {
 
 
 	public <T> List<T> list(Class... types) {
-		return list(types, false);
+		return list(types, 0, false);
 	}
 	public <T> List<T> listAndClose(Class... types) {
-		return list(types, true);
+		return list(types, 0, true);
 	}
 	public <T> List<T> list() {
-		return list(null, false);
+		return list(null, 0, false);
 	}
 	public <T> List<T> listAndClose() {
-		return list(null, true);
+		return list(null, 0, true);
 	}
+	public <T> List<T> list(int max, Class... types) {
+		return list(types, max, false);
+	}
+	public <T> List<T> listAndClose(int max, Class... types) {
+		return list(types, max, true);
+	}
+	public <T> List<T> list(int max) {
+		return list(null, max, false);
+	}
+	public <T> List<T> listAndClose(int max) {
+		return list(null, max, true);
+	}
+	/**
+	 * Iterates result set, maps rows to classes and populates the array list.
+	 * @param types mapping types
+	 * @param max max number of rows to collect, <code>0</code> for all
+	 * @param close <code>true</code> if query is closed at the end, otherwise <code> false
+	 * @return list of mapped entities
+	 */
 	@SuppressWarnings({"unchecked"})
-	protected <T> List<T> list(Class[] types, boolean close) {
+	protected <T> List<T> list(Class[] types, int max, boolean close) {
 		List<Object> result = new ArrayList<Object>();
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -258,6 +301,10 @@ public class DbOrmQuery extends DbQuery {
 		}
 		while (rsm.next()) {
 			result.add(prepareRow(rsm.parseObjects(types)));
+			max--;
+			if (max == 0) {
+				break;
+			}
 		}
 		close(rsm, close);
 		return (List<T>) result;
@@ -266,43 +313,71 @@ public class DbOrmQuery extends DbQuery {
 	// ---------------------------------------------------------------- set
 
 	public <T> Set<T> listSetOne(Class<T> type) {
-		return listSetOne(type, false);
+		return listSetOne(type, 0, false);
 	}
 	public <T> Set<T> listSetOneAndClose(Class<T> type) {
-		return listSetOne(type, true);
+		return listSetOne(type, 0, true);
 	}
 	public <T> Set<T> listSetOne() {
-		return listSetOne(null, false);
+		return listSetOne(null, 0, false);
 	}
 	public <T> Set<T> listSetOneAndClose() {
-		return listSetOne(null, true);
+		return listSetOne(null, 0, true);
+	}
+	public <T> Set<T> listSetOne(int max, Class<T> type) {
+		return listSetOne(type, max, false);
+	}
+	public <T> Set<T> listSetOneAndClose(int max, Class<T> type) {
+		return listSetOne(type, max, true);
+	}
+	public <T> Set<T> listSetOne(int max) {
+		return listSetOne(null, max, false);
+	}
+	public <T> Set<T> listSetOneAndClose(int max) {
+		return listSetOne(null, max, true);
 	}
 	@SuppressWarnings({"unchecked"})
-	protected <T> Set<T> listSetOne(Class<T> type, boolean close) {
+	protected <T> Set<T> listSetOne(Class<T> type, int max, boolean close) {
 		Set<T> result = new LinkedHashSet<T>();
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
 		while (rsm.next()) {
 			result.add((T) rsm.parseOneObject(types));
+			max--;
+			if (max == 0) {
+				break;
+			}
 		}
 		close(rsm, close);
 		return result;
 	}
 
 	public <T> Set<T> listSet(Class... types) {
-		return listSet(types, false);
+		return listSet(types, 0, false);
 	}
 	public <T> Set<T> listSetAndClose(Class... types) {
-		return listSet(types, true);
+		return listSet(types, 0, true);
 	}
 	public <T> Set<T> listSet() {
-		return listSet(null, false);
+		return listSet(null, 0, false);
 	}
 	public <T> Set<T> listSetAndClose() {
-		return listSet(null, true);
+		return listSet(null, 0, true);
+	}
+	public <T> Set<T> listSet(int max, Class... types) {
+		return listSet(types, max, false);
+	}
+	public <T> Set<T> listSetAndClose(int max, Class... types) {
+		return listSet(types, max, true);
+	}
+	public <T> Set<T> listSet(int max) {
+		return listSet(null, max, false);
+	}
+	public <T> Set<T> listSetAndClose(int max) {
+		return listSet(null, max, true);
 	}
 	@SuppressWarnings({"unchecked"})
-	protected <T> Set<T> listSet(Class[] types, boolean close) {
+	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
 		Set<Object> result = new LinkedHashSet<Object>();
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -310,6 +385,10 @@ public class DbOrmQuery extends DbQuery {
 		}
 		while (rsm.next()) {
 			result.add(prepareRow(rsm.parseObjects(types)));
+			max--;
+			if (max == 0) {
+				break;
+			}
 		}
 		close(rsm, close);
 		return (Set<T>) result;
