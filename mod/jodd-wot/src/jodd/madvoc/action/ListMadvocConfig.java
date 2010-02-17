@@ -22,7 +22,7 @@ import java.util.List;
  * Helper action that returns sorted list of all registered action configurations,
  * action results and interceptors. It can be subclasses or used independently.
  */
-public class ListAllMadvocActions {
+public class ListMadvocConfig {
 
 	@In(scope = ScopeType.CONTEXT)
 	protected ActionsManager actionsManager;
