@@ -2,69 +2,47 @@
 
 package jodd.madvoc.action;
 
-import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.ActionConfig;
-import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.component.InterceptorsManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Collection;
 
 /**
- * Helper action that returns sorted list of all registered action configurations
- * and action results.
+ * Helper action that returns sorted list of all registered action configurations,
+ * action results and interceptors. It can be subclasses or used independently.
  */
-@MadvocAction
-public class ListAllMadvocActionsAction {
+public class ListAllMadvocActions {
 
 	@In(scope = ScopeType.CONTEXT)
-	ActionsManager actionsManager;
+	protected ActionsManager actionsManager;
 
 	@In(scope = ScopeType.CONTEXT)
-	InterceptorsManager interceptorsManager;
+	protected InterceptorsManager interceptorsManager;
 	
 	@In(scope = ScopeType.CONTEXT)
-	ResultsManager resultsManager;
+	protected ResultsManager resultsManager;
 
 	@Out
-	List<ActionConfig> actions;
+	protected List<ActionConfig> actions;
 
 	@Out
-	List<ActionResult> results;
+	protected List<ActionResult> results;
 
 	@Out
-	List<ActionInterceptor> interceptors;
+	protected List<ActionInterceptor> interceptors;
 
-	@Action("/madvoc-listAllActions.${ext}")
-	public void view() {
-		Collection<ActionConfig> values = actionsManager.getAllActionConfigurations().values();
-		actions = new ArrayList<ActionConfig>(values.size());
-		actions.addAll(values);
-		Collections.sort(actions, new Comparator<ActionConfig>() {
-			public int compare(ActionConfig a1, ActionConfig a2) {
-				return a1.actionPath.compareTo(a2.actionPath);
-			}
-		});
-
-		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults().values();
-		results = new ArrayList<ActionResult>();
-		results.addAll(resultsValues);
-		Collections.sort(results, new Comparator<ActionResult>() {
-			public int compare(ActionResult a1, ActionResult a2) {
-				return a1.getType().compareTo(a2.getType());
-			}
-		});
-
+	protected void collectActionInterceptors() {
 		Collection<ActionInterceptor> interceptorValues = interceptorsManager.getAllActionInterceptors().values();
 		interceptors = new ArrayList<ActionInterceptor>();
 		interceptors.addAll(interceptorValues);
@@ -75,9 +53,30 @@ public class ListAllMadvocActionsAction {
 		});
 	}
 
-	@Action(value = "/madvoc-listAllActions.out")
-	public String viewToSystemOut() {
-		view();
+	protected void collectActionResults() {
+		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults().values();
+		results = new ArrayList<ActionResult>();
+		results.addAll(resultsValues);
+		Collections.sort(results, new Comparator<ActionResult>() {
+			public int compare(ActionResult a1, ActionResult a2) {
+				return a1.getType().compareTo(a2.getType());
+			}
+		});
+	}
+
+	protected void collectActionConfigs() {
+		Collection<ActionConfig> values = actionsManager.getAllActionConfigurations().values();
+		actions = new ArrayList<ActionConfig>(values.size());
+		actions.addAll(values);
+		Collections.sort(actions, new Comparator<ActionConfig>() {
+			public int compare(ActionConfig a1, ActionConfig a2) {
+				return a1.actionPath.compareTo(a2.actionPath);
+			}
+		});
+	}
+
+
+	protected String toSystemOut() {
 		System.out.println("ACTIONS");
 		System.out.println("-------");
 		for (ActionConfig ac : actions) {
