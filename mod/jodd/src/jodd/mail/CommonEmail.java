@@ -196,7 +196,6 @@ public abstract class CommonEmail {
 	}
 
 	
-
 	/**
 	 * Sets email priority.
 	 * Values of 1 through 5 are acceptable, with 1 being the highest priority, 3 = normal

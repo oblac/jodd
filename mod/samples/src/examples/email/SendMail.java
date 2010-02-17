@@ -17,7 +17,7 @@ public class SendMail {
 
 		Email email;
 
-/*		email = Email.create()
+		email = Email.create()
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
 				.subject("test1")
@@ -50,16 +50,17 @@ public class SendMail {
 				.attachFile("d:\\huh2.jpg")
 				.priority(PRIORITY_HIGHEST);
 		session.sendMail(email);
-		System.out.println("email #4 sent");*/
+		System.out.println("email #4 sent");
 
 		email = Email.create()
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
-				.subject("test4")
+				.subject("test5")
 				.addText("Здраво!")
 				.addHtml("<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><body><h1>Здраво!</h1><img src='cid:huh2.jpg'></body></html>")
 				.embedFile("d:\\huh2.jpg")
-				//.attachFile("d:\\cover.jpg")
+				.attachText("foo", "Neki Text")
+				.attachFile("d:\\cover.jpg")
 		;
 		session.sendMail(email);
 		System.out.println("email #5 sent");

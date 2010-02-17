@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import javax.activation.DataHandler;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.MessagingException;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class SendMailSession {
 
 	private static final String ALTERNATIVE = "alternative";
+	private static final String CHARSET = ";charset=";
+	private static final String INLINE = "inline";
 	
 	protected final Session mailSession;
 	protected final Transport mailTransport;
@@ -129,12 +132,12 @@ public class SendMailSession {
 
 		// message data and attachments
 		LinkedList<EmailMessage> messages = email.getAllMessages();
-		MimeBodyPart[] attachments = email.getAttachments();
+		LinkedList<EmailAttachment> attachments = email.getAttachments();
 		int totalMessages = messages.size();
 
 		if ((attachments == null) && (totalMessages == 1)) {
 			EmailMessage emailMessage = messages.get(0);
-			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=" + emailMessage.getEncoding());
+			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
 		} else {
 			Multipart multipart = new MimeMultipart();
 			Multipart msgMultipart = multipart;
@@ -146,12 +149,19 @@ public class SendMailSession {
 			}
 			for (EmailMessage emailMessage : messages) {
 				MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=" + emailMessage.getEncoding());
+				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
 				msgMultipart.addBodyPart(messageData);
 			}
 			if (attachments != null) {
-				for (MimeBodyPart attachment : attachments) {
-					multipart.addBodyPart(attachment);
+				for (EmailAttachment att : attachments) {
+					MimeBodyPart attBodyPart = new MimeBodyPart();
+					attBodyPart.setFileName(att.getName());
+					attBodyPart.setDataHandler(new DataHandler(att.getDataSource()));
+					if (att.isInline()) {
+						attBodyPart.setContentID(att.getContentId());
+						attBodyPart.setDisposition(INLINE);
+					}
+					multipart.addBodyPart(attBodyPart);
 				}
 			}
 			msg.setContent(multipart);

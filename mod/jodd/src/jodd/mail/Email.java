@@ -4,10 +4,6 @@ package jodd.mail;
 
 import jodd.util.MimeTypes;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
 import java.io.File;
 import java.util.Date;
 import java.util.LinkedList;
@@ -101,65 +97,46 @@ public class Email extends CommonEmail {
 
 	// ---------------------------------------------------------------- attachments
 
-	protected LinkedList<MimeBodyPart> attachments;
+	protected LinkedList<EmailAttachment> attachments;
 
 	/**
-	 * Returns an array of attachments as body parts.
+	 * Returns an array of attachments or <code>null</code> if no attachment enclosed with this email. 
 	 */
-	public MimeBodyPart[] getAttachments() {
+	public LinkedList<EmailAttachment> getAttachments() {
 		if (attachments == null) {
 			return null;
 		}
-		return attachments.toArray(new MimeBodyPart[attachments.size()]);
-	}
-
-	/**
-	 * Adds a generic attachment.
-	 * @see #addAttachment(String, javax.activation.DataHandler, String) 
-	 */
-	public Email addAttachment(String fileName, DataHandler dataHandler) {
-		addAttachment(fileName, dataHandler, null);
-		return this;
-	}
-
-	public Email embedAttachment(String fileName, DataHandler dataHandler, String contentId) {
-		addAttachment(fileName, dataHandler, contentId);
-		return this;
+		return attachments;
 	}
 
 	/**
 	 * Adds generic attachment.
-	 * @param fileName 		file name of attachment
-	 * @param dataHandler	DataHandler
-	 * @param contentId		optional content id for embedded attachments (inline)
 	 */
-	public Email addAttachment(String fileName, DataHandler dataHandler, String contentId) {
+	public Email addAttachment(EmailAttachment emailAttachment) {
 		if (attachments == null) {
-			attachments = new LinkedList<MimeBodyPart>();
+			attachments = new LinkedList<EmailAttachment>();
 		}
-		MimeBodyPart attBodyPart = new MimeBodyPart();
-		try {
-			attBodyPart.setFileName(fileName);
-			attBodyPart.setDataHandler(dataHandler);
-			if (contentId != null) {
-				attBodyPart.setContentID(contentId);
-				attBodyPart.setDisposition("inline");
-			}
-		} catch (MessagingException mex) {
-			throw new MailException("Unable to prepare attachment: '" + fileName + "'.");
-		}
-		attachments.add(attBodyPart);
+		attachments.add(emailAttachment);
 		return this;
 	}
 
 
 	/**
 	 * Adds a HTML text as an attachment.
-	 * @param fileName attachment file name
-	 * @param data     HTML data
+	 * @param name	attachment name
+	 * @param data	HTML data
 	 */
-	public Email attachHtml(String fileName, String data) {
-		addAttachment(fileName, new DataHandler(new ByteArrayDataSource(data, MimeTypes.MIME_TEXT_HTML)));
+	public Email attachHtml(String name, String data) {
+		addAttachment(new StringAttachment(data, MimeTypes.MIME_TEXT_HTML, name));
+		return this;
+	}
+	/**
+	 * Adds plain text as an attachment.
+	 * @param name	attachment name
+	 * @param data	text data
+	 */
+	public Email attachText(String name, String data) {
+		addAttachment(new StringAttachment(data, MimeTypes.MIME_TEXT_PLAIN, name));
 		return this;
 	}
 
@@ -167,35 +144,28 @@ public class Email extends CommonEmail {
 	 * Adds an existing file as attachment.
 	 */
 	public Email attachFile(String fileName) {
-		FileDataSource fileDataSource = new FileDataSource(fileName);
-		addAttachment(fileDataSource.getName(), new DataHandler(fileDataSource));
+		addAttachment(new FileAttachment(new File(fileName)));
 		return this;
 	}
 	public Email attachFile(File file) {
-		FileDataSource fileDataSource = new FileDataSource(file);
-		addAttachment(fileDataSource.getName(), new DataHandler(fileDataSource));
+		addAttachment(new FileAttachment(file));
 		return this;
 	}
 	public Email embedFile(String fileName, String contentId) {
-		FileDataSource fileDataSource = new FileDataSource(fileName);
-		addAttachment(fileDataSource.getName(), new DataHandler(fileDataSource), contentId);
+		File f = new File(fileName);
+		addAttachment(new FileAttachment(f, f.getName(), contentId));
 		return this;
 	}
 	public Email embedFile(File file, String contentId) {
-		FileDataSource fileDataSource = new FileDataSource(file);
-		addAttachment(fileDataSource.getName(), new DataHandler(fileDataSource), contentId);
+		addAttachment(new FileAttachment(file, file.getName(), contentId));
 		return this;
 	}
 	public Email embedFile(String fileName) {
-		FileDataSource fileDataSource = new FileDataSource(fileName);
-		String name = fileDataSource.getName();
-		addAttachment(name, new DataHandler(fileDataSource), name);
+		addAttachment(new FileAttachment(new File(fileName), true));
 		return this;
 	}
 	public Email embedFile(File file) {
-		FileDataSource fileDataSource = new FileDataSource(file);
-		String name = fileDataSource.getName();
-		addAttachment(name, new DataHandler(fileDataSource), name);
+		addAttachment(new FileAttachment(file, true));
 		return this;
 	}
 
