@@ -19,7 +19,7 @@ public class SendGmailMail {
 				.from("igor.spasic@gmail.com")
 				.to("info@jodd.org")
 				.subject("send from gmail")
-				.text("a plain text message");
+				.addText("a plain text message");
 		session.sendMail(email);
 
 		session.close();

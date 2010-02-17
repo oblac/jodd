@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public class SendMailSession {
 
+	private static final String ALTERNATIVE = "alternative";
+	
 	protected final Session mailSession;
 	protected final Transport mailTransport;
 
@@ -132,13 +134,20 @@ public class SendMailSession {
 
 		if ((attachments == null) && (totalMessages == 1)) {
 			EmailMessage emailMessage = messages.get(0);
-			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=\"" + emailMessage.getEncoding() + '\"');
+			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=" + emailMessage.getEncoding());
 		} else {
 			Multipart multipart = new MimeMultipart();
+			Multipart msgMultipart = multipart;
+			if (totalMessages > 1) {
+				MimeBodyPart body = new MimeBodyPart();
+				msgMultipart = new MimeMultipart(ALTERNATIVE);
+				body.setContent(msgMultipart);
+				multipart.addBodyPart(body);
+			}
 			for (EmailMessage emailMessage : messages) {
 				MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=\"" + emailMessage.getEncoding() + '\"');
-				multipart.addBodyPart(messageData);
+				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + ";charset=" + emailMessage.getEncoding());
+				msgMultipart.addBodyPart(messageData);
 			}
 			if (attachments != null) {
 				for (MimeBodyPart attachment : attachments) {

@@ -15,11 +15,13 @@ public class SendMail {
 
 		session.open();
 
-		Email email = Email.create()
+		Email email;
+
+/*		email = Email.create()
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
 				.subject("test1")
-				.text("a plain text message čtf");
+				.addText("a plain text message čtf");
 		session.sendMail(email);
 		System.out.println("email #1 sent");
 
@@ -27,16 +29,16 @@ public class SendMail {
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
 				.subject("test2")
-				.html("a <b>test 2</b> message");
+				.addHtml("a <b>test 2</b> message");
 		session.sendMail(email);
 		System.out.println("email #2 sent");
 
 		email = Email.create()
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
-				.text("and text3 message!")
+				.addText("and text3 message!")
 				.subject("test3")
-				.html("a <b>test 3</b> message");
+				.addHtml("a <b>test 3</b> message");
 		session.sendMail(email);
 		System.out.println("email #3 sent");
 
@@ -44,11 +46,23 @@ public class SendMail {
 				.from("weird@beotel.rs")
 				.to("weird@beotel.rs")
 				.subject("test4")
-				.text("text 4")
+				.addText("text 4")
 				.attachFile("d:\\huh2.jpg")
 				.priority(PRIORITY_HIGHEST);
 		session.sendMail(email);
-		System.out.println("email #4 sent");
+		System.out.println("email #4 sent");*/
+
+		email = Email.create()
+				.from("weird@beotel.rs")
+				.to("weird@beotel.rs")
+				.subject("test4")
+				.addText("Здраво!")
+				.addHtml("<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><body><h1>Здраво!</h1><img src='cid:huh2.jpg'></body></html>")
+				.embedFile("d:\\huh2.jpg")
+				//.attachFile("d:\\cover.jpg")
+		;
+		session.sendMail(email);
+		System.out.println("email #5 sent");
 
 		session.close();
 
