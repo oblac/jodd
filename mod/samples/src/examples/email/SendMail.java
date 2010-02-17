@@ -59,7 +59,6 @@ public class SendMail {
 				.addText("Здраво!")
 				.addHtml("<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><body><h1>Здраво!</h1><img src='cid:huh2.jpg'></body></html>")
 				.embedFile("d:\\huh2.jpg")
-				.attachText("foo", "Neki Text")
 				.attachFile("d:\\cover.jpg")
 		;
 		session.sendMail(email);

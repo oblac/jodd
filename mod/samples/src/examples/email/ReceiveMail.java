@@ -18,7 +18,7 @@ import java.util.Map;
 public class ReceiveMail {
 
 	public static void main(String[] args) throws IOException {
-		Pop3Server popServer = new Pop3Server("pop3.beotel.yu", new SimpleAuthenticator("weird", "..."));
+		Pop3Server popServer = new Pop3Server("pop3.beotel.yu", new SimpleAuthenticator("weird", "be0netweird1"));
 		ReceiveMailSession session = popServer.createSession();
 		session.open();
 		System.out.println(session.getMessageCount());

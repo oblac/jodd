@@ -232,7 +232,6 @@ public class ReceiveMailSession {
 	 */
 	protected EmailMessage parseStringPart(Part part) throws IOException, MessagingException {
 		String contentType = part.getContentType();
-		System.out.println("----------------------------> 8888888888888888888888888888 " + contentType);
 		int ndx = contentType.indexOf(';');
 		String mime = ndx != -1 ? contentType.substring(0, ndx) : contentType;
 		String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;

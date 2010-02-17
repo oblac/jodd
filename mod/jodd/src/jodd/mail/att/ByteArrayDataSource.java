@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.mail;
+package jodd.mail.att;
 
 import jodd.util.StringPool;
 import jodd.JoddDefault;

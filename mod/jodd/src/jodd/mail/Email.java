@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import jodd.mail.att.FileAttachment;
 import jodd.util.MimeTypes;
 
 import java.io.File;
@@ -117,26 +118,6 @@ public class Email extends CommonEmail {
 			attachments = new LinkedList<EmailAttachment>();
 		}
 		attachments.add(emailAttachment);
-		return this;
-	}
-
-
-	/**
-	 * Adds a HTML text as an attachment.
-	 * @param name	attachment name
-	 * @param data	HTML data
-	 */
-	public Email attachHtml(String name, String data) {
-		addAttachment(new StringAttachment(data, MimeTypes.MIME_TEXT_HTML, name));
-		return this;
-	}
-	/**
-	 * Adds plain text as an attachment.
-	 * @param name	attachment name
-	 * @param data	text data
-	 */
-	public Email attachText(String name, String data) {
-		addAttachment(new StringAttachment(data, MimeTypes.MIME_TEXT_PLAIN, name));
 		return this;
 	}
 
