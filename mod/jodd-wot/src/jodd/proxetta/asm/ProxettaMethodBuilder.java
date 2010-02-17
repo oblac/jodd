@@ -303,12 +303,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								} else
 
 								if (isPushDefaultResultValueMethod(mname, mdesc)) {
-//									String returnType = td.msign.getReturnType();
 									returnDefault = true;
-//									System.out.println("--------------> " + returnType);
-//									if (returnType.equals("int")) {
-//										mv.visitInsn(ICONST_0);
-//									}
 									return;
 								}
 							}
