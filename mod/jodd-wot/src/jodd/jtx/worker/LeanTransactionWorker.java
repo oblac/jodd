@@ -67,7 +67,7 @@ public class LeanTransactionWorker {
 		if (tx == null) {
 			return false;
 		}
-		log.error("commit tx");
+		log.info("commit tx");
 		tx.commit();
 		return true;
 	}
