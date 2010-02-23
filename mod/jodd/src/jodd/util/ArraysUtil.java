@@ -1,5 +1,5 @@
 
-// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2010, Jodd Team (jodd.sf.net). All Rights Reserved.
 
 package jodd.util;
 
@@ -10,6 +10,8 @@ import java.lang.reflect.Array;
  * <b>DO NOT MODIFY: this source is generated.</b> 
  */
 public class ArraysUtil {
+
+	private static final String NULL = "null";
 
 
 
@@ -1072,6 +1074,9 @@ public class ArraysUtil {
 		}
 		return -1;
 	}
+	public static boolean contains(byte[] array, byte value) {
+		return indexOf(array, value) != -1;
+	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
 	 */
@@ -1105,6 +1110,9 @@ public class ArraysUtil {
 			}
 		}
 		return -1;
+	}
+	public static boolean contains(char[] array, char value) {
+		return indexOf(array, value) != -1;
 	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1140,6 +1148,9 @@ public class ArraysUtil {
 		}
 		return -1;
 	}
+	public static boolean contains(short[] array, short value) {
+		return indexOf(array, value) != -1;
+	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
 	 */
@@ -1173,6 +1184,9 @@ public class ArraysUtil {
 			}
 		}
 		return -1;
+	}
+	public static boolean contains(int[] array, int value) {
+		return indexOf(array, value) != -1;
 	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1208,6 +1222,9 @@ public class ArraysUtil {
 		}
 		return -1;
 	}
+	public static boolean contains(long[] array, long value) {
+		return indexOf(array, value) != -1;
+	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
 	 */
@@ -1241,6 +1258,9 @@ public class ArraysUtil {
 			}
 		}
 		return -1;
+	}
+	public static boolean contains(boolean[] array, boolean value) {
+		return indexOf(array, value) != -1;
 	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1276,6 +1296,9 @@ public class ArraysUtil {
 		}
 		return -1;
 	}
+	public static boolean contains(float[] array, float value) {
+		return indexOf(array, value) != -1;
+	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
 	 */
@@ -1310,6 +1333,9 @@ public class ArraysUtil {
 		}
 		return -1;
 	}
+	public static boolean contains(double[] array, double value) {
+		return indexOf(array, value) != -1;
+	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
 	 */
@@ -1343,6 +1369,10 @@ public class ArraysUtil {
 	public static int indexOf(byte[] array, byte[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(byte[] array, byte[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1385,6 +1415,10 @@ public class ArraysUtil {
 	public static int indexOf(char[] array, char[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(char[] array, char[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1427,6 +1461,10 @@ public class ArraysUtil {
 	public static int indexOf(short[] array, short[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(short[] array, short[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1469,6 +1507,10 @@ public class ArraysUtil {
 	public static int indexOf(int[] array, int[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(int[] array, int[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1511,6 +1553,10 @@ public class ArraysUtil {
 	public static int indexOf(long[] array, long[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(long[] array, long[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1553,6 +1599,10 @@ public class ArraysUtil {
 	public static int indexOf(boolean[] array, boolean[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(boolean[] array, boolean[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1595,6 +1645,10 @@ public class ArraysUtil {
 	public static int indexOf(float[] array, float[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(float[] array, float[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1637,6 +1691,10 @@ public class ArraysUtil {
 	public static int indexOf(double[] array, double[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains(double[] array, double[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -1671,5 +1729,178 @@ public class ArraysUtil {
 			return i;
 		}
 		return -1;
+	}
+
+
+	// ---------------------------------------------------------------- toString
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(Object[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(String[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(byte[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(char[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(short[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(int[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(long[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(float[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(double[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(boolean[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
 	}
 }

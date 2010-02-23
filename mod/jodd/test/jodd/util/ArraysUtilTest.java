@@ -102,6 +102,21 @@ public class ArraysUtilTest extends TestCase {
 		assertEquals(4, ArraysUtil.indexOf(x, new int[] {5}));
 	}
 
+	public void testContains() {
+		assertTrue(ArraysUtil.contains(x, 1));
+		assertTrue(ArraysUtil.contains(x, 2));
+		assertTrue(ArraysUtil.contains(x, 5));
+		assertFalse(ArraysUtil.contains(x, 6));
+	}
+	public void testContains2() {
+		assertTrue(ArraysUtil.contains(x, new int[] {}));
+		assertTrue(ArraysUtil.contains(x, new int[] {1,2,3}));
+		assertFalse(ArraysUtil.contains(x, new int[] {1,2,3,7}));
+
+		assertTrue(ArraysUtil.contains(x, new int[] {2,3}));
+		assertTrue(ArraysUtil.contains(x, new int[] {5}));
+	}
+
 
 	public void testConvert() {
 		Integer[] src = new Integer[] {Integer.valueOf(1), null, Integer.valueOf(3)};
@@ -117,6 +132,12 @@ public class ArraysUtilTest extends TestCase {
 		assertEquals(0, src[1].intValue());
 		assertEquals(3, src[2].intValue());
 
+	}
+
+	public void testToString() {
+		assertEquals("1, 2, 3", ArraysUtil.toString(new int[] {1,2,3}));
+		assertEquals("1, null, 3.1", ArraysUtil.toString(new Object[] {1,null,3.1}));
+		assertEquals("null", ArraysUtil.toString((long[]) null));
 	}
 
 }

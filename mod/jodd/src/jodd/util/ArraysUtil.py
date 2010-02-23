@@ -1,8 +1,8 @@
 import string;
 
-f = open('ArraysUtil.java', 'w');
+f = open('ArraysUtil.java', 'w')
 f.write('''
-// Copyright (c) 2003-2006, Jodd Team (jodd.sf.net). All Rights Reserved.
+// Copyright (c) 2003-2010, Jodd Team (jodd.sf.net). All Rights Reserved.
 
 package jodd.util;
 
@@ -14,15 +14,17 @@ import java.lang.reflect.Array;
  */
 public class ArraysUtil {
 
-''');
+	private static final String NULL = "null";
 
-types = ['String', 'byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean'];
-prim_types = ['byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean'];
-big_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double', 'Boolean'];
-prim_types_safe = ['byte', 'char', 'short', 'int', 'long', 'boolean'];
+''')
+
+types = ['String', 'byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean']
+prim_types = ['byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean']
+big_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double', 'Boolean']
+prim_types_safe = ['byte', 'char', 'short', 'int', 'long', 'boolean']
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- merge');
+f.write('\n\n\t// ---------------------------------------------------------------- merge')
 f.write('''
 
 	/**
@@ -45,7 +47,7 @@ f.write('''
 		return result;
 	}
 
-''');
+''')
 template = '''
 	/**
 	 * Merge arrays.
@@ -65,12 +67,12 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- join');
+f.write('\n\n\t// ---------------------------------------------------------------- join')
 f.write('''
 
 	/**
@@ -94,7 +96,7 @@ f.write('''
 		return temp;
 	}
 
-''');
+''')
 template = '''
 	/**
 	 * Joins two arrays.
@@ -107,12 +109,12 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- resize');
+f.write('\n\n\t// ---------------------------------------------------------------- resize')
 f.write('''
 
 	/**
@@ -135,7 +137,7 @@ f.write('''
 		return temp;
 	}
 '''
-);
+)
 template = '''
 	/**
 	 * Resizes an array.
@@ -147,11 +149,11 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- append');
+f.write('\n\n\t// ---------------------------------------------------------------- append')
 f.write('''
 
 	/**
@@ -163,7 +165,7 @@ f.write('''
 		return t;
 	}
 '''
-);
+)
 template = '''
 	/**
 	 * Appends an element to array.
@@ -175,13 +177,13 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- subarray');
+f.write('\n\n\t// ---------------------------------------------------------------- subarray')
 f.write('''
 
 	/**
@@ -203,7 +205,7 @@ f.write('''
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
 	}
-''');
+''')
 template = '''
 	/**
 	 * Returns subarray.
@@ -215,12 +217,12 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- insert');
+f.write('\n\n\t// ---------------------------------------------------------------- insert')
 f.write('''
 
 	/**
@@ -244,7 +246,7 @@ f.write('''
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
 		return temp;
 	}
-''');
+''')
 template = '''
 	/**
 	 * Inserts one array into another.
@@ -258,12 +260,10 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
-
-
-f.write('\n\n\t// ---------------------------------------------------------------- insertAt');
+f.write('\n\n\t// ---------------------------------------------------------------- insertAt')
 f.write('''
 
 	/**
@@ -287,7 +287,7 @@ f.write('''
 		System.arraycopy(dest, offset + 1, temp, src.length + offset, dest.length - offset - 1);
 		return temp;
 	}
-''');
+''')
 template = '''
 	/**
 	 * Inserts one array into another by replacing specified offset.
@@ -301,14 +301,13 @@ template = '''
 	}
 '''
 for type in types:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
-
-f.write('\n\n\t// ---------------------------------------------------------------- convert');
+f.write('\n\n\t// ---------------------------------------------------------------- convert')
 f.write('''
 
-''');
+''')
 
 template = '''
 	/**
@@ -337,15 +336,14 @@ template = '''
 
 '''
 for i in range(len(prim_types)):
-	data = template.replace('$t', prim_types[i]);
-	data = data.replace('$T', big_types[i]);
-	f.write(data);
+	data = template.replace('$t', prim_types[i])
+	data = data.replace('$T', big_types[i])
+	f.write(data)
 
-
-f.write('\n\n\t// ---------------------------------------------------------------- indexof');
+f.write('\n\n\t// ---------------------------------------------------------------- indexof')
 f.write('''
 
-''');
+''')
 template = '''
 	/**
 	 * Finds the first occurrence in an array.
@@ -357,6 +355,9 @@ template = '''
 			}
 		}
 		return -1;
+	}
+	public static boolean contains($T[] array, $T value) {
+		return indexOf(array, value) != -1;
 	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -382,8 +383,8 @@ template = '''
 	}
 '''
 for type in prim_types_safe:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 template = '''
 	/**
@@ -396,6 +397,9 @@ template = '''
 			}
 		}
 		return -1;
+	}
+	public static boolean contains($T[] array, $T value) {
+		return indexOf(array, value) != -1;
 	}
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -421,19 +425,17 @@ template = '''
 	}
 '''
 
-data = template.replace('$T', 'float');
-data = data.replace('$B', 'Float');
-f.write(data);
-data = template.replace('$T', 'double');
-data = data.replace('$B', 'Double');
-f.write(data);
+data = template.replace('$T', 'float')
+data = data.replace('$B', 'Float')
+f.write(data)
+data = template.replace('$T', 'double')
+data = data.replace('$B', 'Double')
+f.write(data)
 
-
-
-f.write('\n\n\t// ---------------------------------------------------------------- indexof 2');
+f.write('\n\n\t// ---------------------------------------------------------------- indexof 2')
 f.write('''
 
-''');
+''')
 template = '''
 	/**
 	 * Finds the first occurrence in an array.
@@ -441,6 +443,10 @@ template = '''
 	public static int indexOf($T[] array, $T[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains($T[] array, $T[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -478,8 +484,8 @@ template = '''
 	}
 '''
 for type in prim_types_safe:
-	data = template.replace('$T', type);
-	f.write(data);
+	data = template.replace('$T', type)
+	f.write(data)
 
 template = '''
 	/**
@@ -488,6 +494,10 @@ template = '''
 	public static int indexOf($T[] array, $T[] sub) {
 		return indexOf(array, sub, 0, array.length);
 	}
+	public static boolean contains($T[] array, $T[] sub) {
+		return indexOf(array, sub) != -1;
+	}
+
 
 	/**
 	 * Finds the first occurrence in an array from specified given position.
@@ -525,13 +535,58 @@ template = '''
 	}
 '''
 
-data = template.replace('$T', 'float');
-data = data.replace('$B', 'Float');
-f.write(data);
-data = template.replace('$T', 'double');
-data = data.replace('$B', 'Double');
-f.write(data);
+data = template.replace('$T', 'float')
+data = data.replace('$B', 'Float')
+f.write(data)
+data = template.replace('$T', 'double')
+data = data.replace('$B', 'Double')
+f.write(data)
 
-    
-f.write('}');
-f.close();
+
+f.write('\n\n\t// ---------------------------------------------------------------- toString')
+f.write('''
+
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString(Object[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+'''
+)
+template = '''
+	/**
+	 * Converts an array to string. Return string contains no brackets.
+	 */
+	public static String toString($T[] array) {
+		if (array == null) {
+			return NULL;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(',').append(' ');
+			}
+			sb.append(array[i]);
+		}
+		return sb.toString();
+	}
+'''
+for type in types:
+	data = template.replace('$T', type)
+	f.write(data)
+
+
+
+f.write('}')
+f.close()
