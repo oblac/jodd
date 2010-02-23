@@ -4,6 +4,7 @@ package jodd.servlet;
 
 import jodd.typeconverter.BooleanConverter;
 import jodd.util.CharUtil;
+import jodd.util.StringUtil;
 
 import java.util.List;
 
@@ -58,8 +59,18 @@ public class HtmlFormUtil {
 		if (data == null) {
 			return EMPTY;
 		}
-		if (data.toString().equals(value)) {
-			return CHECKED;
+		if (data.getClass().isArray()) {
+			// checkbox group
+			String vs[] = StringUtil.toStringArray(data);
+			for (String vsk : vs) {
+				if ((vsk != null) && (vsk.equals(value))) {
+					return CHECKED;
+				}
+			}
+		} else {
+			if (data.toString().equals(value)) {
+				return CHECKED;
+			}
 		}
 		return EMPTY;
 	}

@@ -512,8 +512,11 @@ public class ServletUtil {
 				result.append(value[0]).append('\n');
 			} else {
 				result.append('[');
-				for (Object v : value) {
-					result.append(v).append(',');
+				for (int i = 0, valueLength = value.length; i < valueLength; i++) {
+					if (i == 0) {
+						result.append(',');
+					}
+					result.append(value[i]);
 				}
 				result.append("]\n");
 			}

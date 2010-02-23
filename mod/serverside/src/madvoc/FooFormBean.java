@@ -15,6 +15,7 @@ public class FooFormBean {
 	public boolean check1;
 	public Boolean[] check2;
 	public MutableInteger[] check3 = new MutableInteger[3];
+	public int[] check4;
 	public String hidden;
 	public String text;
 	public int text1;
@@ -37,6 +38,7 @@ public class FooFormBean {
 		result.append("\ncheck1 = ").append(check1);
 		result.append("\ncheck2 = ").append(Arrays.toString(check2));
 		result.append("\ncheck3 = ").append(Arrays.toString(check3));
+		result.append("\ncheck4 = ").append(Arrays.toString(check4));
 		result.append("\nhidden = ").append(hidden);
 		result.append("\nsarr = ").append(Arrays.toString(sarr));
 		result.append("\npassword = ").append(password);
@@ -57,6 +59,5 @@ public class FooFormBean {
 	public void setTextarea(String value) {
 		textarea = StringUtil.trimDown(value);
 	}
-
 
 }

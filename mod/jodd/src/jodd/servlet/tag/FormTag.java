@@ -148,7 +148,15 @@ public class FormTag extends BodyTagSupport {
 					if (tagValue == null) {
 						tagValue = TRUE;
 					}
-					if (tagValue.equals(value)) {
+					if (valueObject.getClass().isArray()) {
+						// checkbox group
+						String vs[] = StringUtil.toStringArray(valueObject);
+						for (String vsk : vs) {
+							if ((vsk != null) && (vsk.equals(tagValue))) {
+								tag.setAttribute(CHECKED);
+							}
+						}
+					} else if (tagValue.equals(value)) {
 						tag.setAttribute(CHECKED);
 					}
 				} else if (tagType.equals(RADIO)) {

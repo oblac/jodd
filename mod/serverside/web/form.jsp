@@ -63,6 +63,16 @@
 
 
 	<tr><td>
+		Checkbox group <small><i>(int[], unknown size)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check4" value="1" <%=checked(ffb.check4, "1")%>>
+		<input type="checkbox" name="foo.check4" value="7" <%=checked($.property("foo.check4"), "7")%>>
+		<input type="checkbox" name="foo.check4" value="3" <%=checked(ffb.check4, "3")%>>
+	</td></tr>
+
+
+
+	<tr><td>
 		Hidden field <small><i>(String)</i></small>
 	</td><td>
 		&nbsp;<input type="hidden" name="foo.hidden" value="<%=text(ffb.hidden)%>">
@@ -210,6 +220,15 @@
 		<input type="checkbox" name="foo.check3[1]" value="7">
 		<input type="checkbox" name="foo.check3[2]" value="3">
 	</td></tr>
+
+	<tr><td>
+		Checkbox group <small><i>(int[], unknown size)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check4" value="1">
+		<input type="checkbox" name="foo.check4" value="7">
+		<input type="checkbox" name="foo.check4" value="3">
+	</td></tr>
+
 
 
 
