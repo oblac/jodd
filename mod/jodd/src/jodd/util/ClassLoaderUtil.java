@@ -312,27 +312,6 @@ public class ClassLoaderUtil {
 		}
 	}
 
-	// ---------------------------------------------------------------- classloader
-
-	/**
-	 * Retrieves current class loader for the given class.
-	 */
-	public static ClassLoader getClassLoader(Class clazz) {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		if (loader == null) {
-			loader = clazz.getClassLoader();
-		}
-		return loader;
-	}
-
-	/**
-	 * Retrieves current class loader.
-	 * @see #getClassLoader(Class)
-	 */
-	public static ClassLoader getClassLoader() {
-		return getClassLoader(ClassLoaderUtil.class);
-	}
-
 	// ---------------------------------------------------------------- misc
 
 

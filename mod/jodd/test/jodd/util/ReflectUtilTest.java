@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
+import jodd.util.testdata2.En;
 import junit.framework.TestCase;
 import jodd.util.testdata.A;
 import jodd.util.testdata.B;
@@ -337,6 +338,14 @@ public class ReflectUtilTest extends TestCase {
 		B b = new B();
 		A a = ReflectUtil.castType(b, A.class);
 		assertEquals(a, b);
+	}
+
+	public void testCastEnums() {
+
+		En en = ReflectUtil.castType("ONE", En.class);
+		assertEquals(En.ONE, en);
+		en = ReflectUtil.castType("TWO", En.class);
+		assertEquals(En.TWO, en);
 	}
 
 

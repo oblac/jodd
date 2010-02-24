@@ -299,20 +299,20 @@ public class ReflectUtil {
 		if (value == null) {
 			return null;
 		}
-		if (destinationType.isEnum()) {
-			Object[] enums = destinationType.getEnumConstants();
-			String valStr = value.toString();
-			for (Object e : enums) {
-				if (e.toString().equals(valStr)) {
-					return (T) e;
-				}
-			}
-			throw new ClassCastException("Unable to cast enumeration: '" + destinationType.getName() + "'.");
-		}
 		TypeConverter converter = TypeConverterManager.lookup(destinationType);
 		if (converter == null) {
+			// no converter available, try to cast manually
 			if (isInstanceOf(value, destinationType) == true) {
 				return (T) value;
+			}
+			if (destinationType.isEnum()) {
+				Object[] enums = destinationType.getEnumConstants();
+				String valStr = value.toString();
+				for (Object e : enums) {
+					if (e.toString().equals(valStr)) {
+						return (T) e;
+					}
+				}
 			}
 			throw new ClassCastException("Unable to cast value to type: '" + destinationType.getName() + "'.");
 		}

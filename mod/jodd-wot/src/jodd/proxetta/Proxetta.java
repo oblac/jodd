@@ -3,6 +3,8 @@
 package jodd.proxetta;
 
 import java.io.InputStream;
+
+import jodd.JoddDefault;
 import jodd.util.ClassLoaderUtil;
 import jodd.proxetta.asm.ProxettaCreator;
 import jodd.proxetta.asm.ProxettaNaming;
@@ -203,7 +205,11 @@ public class Proxetta {
 		}
 		try {
 			if (classLoader == null) {
-				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), target.getClassLoader());
+				ClassLoader cl = target.getClassLoader();
+				if (cl == null) {
+					cl = JoddDefault.classLoader;
+				}
+				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), cl);
 			}
 			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
 		} catch (Exception ex) {
