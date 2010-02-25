@@ -4,12 +4,6 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.MadvocException;
-import jodd.util.ReflectUtil;
-import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConverter;
-
-import java.lang.reflect.Method;
 
 /**
  * Abstract base class for HTTP scopes injection.
