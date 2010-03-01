@@ -335,7 +335,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
-							Class<? extends SqlType> sqlTypeClass = (dec == null ?  null : dec.getSqlTypeClass());
+//							Class<? extends SqlType> sqlTypeClass = (dec == null ?  null : dec.getSqlTypeClass());
+							Class<? extends SqlType> sqlTypeClass = dec.getSqlTypeClass();
 							Object value = readColumnValue(colNdx, type, sqlTypeClass, columnDbSqlType);
 							if (value != null) {
 								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
