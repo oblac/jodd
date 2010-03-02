@@ -16,6 +16,7 @@ public class CsvUtilTest extends TestCase {
 		assertEquals("1997,Ford,E350,\"Super, luxurious truck\"", CsvUtil.toCsvString("1997", "Ford", "E350", "Super, luxurious truck"));
 		assertEquals("1997,Ford,E350,\"Super \"\"luxurious\"\" truck\"", CsvUtil.toCsvString("1997", "Ford", "E350", "Super \"luxurious\" truck"));
 		assertEquals("1,,2", CsvUtil.toCsvString(Integer.valueOf(1), null, Integer.valueOf(2)));
+		assertEquals("\"a\nb\"", CsvUtil.toCsvString("a\nb"));
 	}
 
 	public void testFromCsv() {
@@ -28,6 +29,7 @@ public class CsvUtilTest extends TestCase {
 		assertStringArray(CsvUtil.toStringArray("a,b,\"\"\"some\"\"r\""), "a","b", "\"some\"r");
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super, luxurious truck\""), "1997", "Ford", "E350", "Super, luxurious truck");
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super \"\"luxurious\"\" truck\""), "1997", "Ford", "E350", "Super \"luxurious\" truck");
+		assertStringArray(CsvUtil.toStringArray("\"a\nb\""), "a\nb");
 	}
 
 

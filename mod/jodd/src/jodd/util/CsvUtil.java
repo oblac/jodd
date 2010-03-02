@@ -12,7 +12,9 @@ import java.util.List;
 public class CsvUtil {
 
 	protected static final char FIELD_SEPARATOR = ',';
-    protected static final char FIELD_QUOTE = '"';
+	protected static final char FIELD_QUOTE = '"';
+	protected static final String DOUBLE_QUOTE = "\"\"";
+	protected static final String SPECIAL_CHARS = "\r\n";
 
 	/**
 	 * Parse fields as csv string,
@@ -39,12 +41,15 @@ public class CsvUtil {
 					ndx = 1;
 				}
 			}
+			if (ndx == -1) {
+				ndx = StringUtil.indexOfChars(field, SPECIAL_CHARS);
+			}
 
 			// add field
 			if (ndx != -1) {
 				line.append(FIELD_QUOTE);
 			}
-			field = StringUtil.replace(field,  "\"", "\"\"");
+			field = StringUtil.replace(field, StringPool.QUOTE, DOUBLE_QUOTE);
 			line.append(field);
 			if (ndx != -1) {
 				line.append(FIELD_QUOTE);
@@ -100,7 +105,7 @@ public class CsvUtil {
 	private static void addField(List<String> row, String line, int startIndex, int endIndex, boolean inQuoted) {
         String field = line.substring(startIndex, endIndex);
 		if (inQuoted) {
-			field = StringUtil.replace(field, "\"\"", "\"");
+			field = StringUtil.replace(field, DOUBLE_QUOTE, "\"");
 		}
         row.add(field);
     }

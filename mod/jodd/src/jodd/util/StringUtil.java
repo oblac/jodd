@@ -1490,6 +1490,9 @@ public class StringUtil {
 	// ---------------------------------------------------------------- char based
 
 
+	/**
+	 * @see #indexOfChars(String, String, int)
+	 */
 	public static int indexOfChars(String string, String chars) {
 		return indexOfChars(string, chars, 0);
 	}
