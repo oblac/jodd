@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.jodd</groupId>
+	<artifactId>jodd</artifactId>
+	<packaging>jar</packaging>
+	<name>Jodd</name>
+	<version>3.0.4</version>
+	<description>Jodd Library</description>
+	<url>http://jodd.org</url>
+	<licenses>
+		<license>
+			<name>The New BSD License</name>
+			<url>http://jodd.org/license.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://jodd.googlecode.com/svn/</url>
+	</scm>
+	<organization>
+		<name>Jodd</name>
+		<url>http://jodd.org/</url>
+	</organization>
+	<dependencies>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+</project>
