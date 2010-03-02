@@ -49,25 +49,35 @@ public class SqlTypeManager {
 	 */
 	public static void registerDefaults() {
 		register(Integer.class, IntegerSqlType.class);
+		register(int.class, IntegerSqlType.class);
 		register(MutableInteger.class, IntegerSqlType.class);
 		
 		register(Float.class, FloatSqlType.class);
+		register(float.class, FloatSqlType.class);
 		register(MutableFloat.class, FloatSqlType.class);
 
 		register(Double.class, DoubleSqlType.class);
+		register(double.class, DoubleSqlType.class);
 		register(MutableDouble.class, DoubleSqlType.class);
 
 		register(Byte.class, ByteSqlType.class);
+		register(byte.class, ByteSqlType.class);
 		register(MutableByte.class, ByteSqlType.class);
 
 		register(Boolean.class, BooleanSqlType.class);
+		register(boolean.class, BooleanSqlType.class);
 		register(MutableBoolean.class, BooleanSqlType.class);
 
 		register(Long.class, LongSqlType.class);
+		register(long.class, LongSqlType.class);
 		register(MutableLong.class, LongSqlType.class);
 
 		register(Short.class, ShortSqlType.class);
+		register(short.class, ShortSqlType.class);
 		register(MutableShort.class, ShortSqlType.class);
+
+		register(Character.class, CharacterSqlType.class);
+		register(char.class, CharacterSqlType.class);
 
 		register(BigDecimal.class, BigDecimalSqlType.class);
 		register(BigInteger.class, BigIntegerSqlType.class);
@@ -89,11 +99,16 @@ public class SqlTypeManager {
 		register(Ref.class, SqlRefSqlType.class);
 	}
 
+	/**
+	 * Registers sql type for provided type.
+	 */
 	public static void register(Class type, Class<? extends SqlType> sqlTypeClass) {
 		types.put(type, lookupSqlType(sqlTypeClass));
 	}
 
-
+	/**
+	 * Unregisters some sql type.
+	 */
 	public static void unregister(Class type) {
 		types.remove(type);
 	}

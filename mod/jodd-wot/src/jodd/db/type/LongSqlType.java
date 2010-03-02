@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class LongSqlType extends SqlType<Long> {
+public class LongSqlType extends NullAwareSqlType<Long> {
 
 	/**
 	 * {@inheritDoc}

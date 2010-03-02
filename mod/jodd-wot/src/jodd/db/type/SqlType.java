@@ -13,7 +13,7 @@ import java.sql.ResultSet;
  */
 public abstract class SqlType<T> {
 
-	private Class<T> sqlType;
+	protected Class<T> sqlType;
 
 	@SuppressWarnings({"unchecked"})
 	protected SqlType() {
@@ -49,12 +49,26 @@ public abstract class SqlType<T> {
 	 * @param destinationType property type
 	 * @param dbSqlType hint for column sql type value
 	 */
-	@SuppressWarnings({"unchecked"})
 	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType, int dbSqlType) throws SQLException {
 		T t = get(rs, index, dbSqlType);
+		return prepareGetValue(t, destinationType);
+	}
+
+	/**
+	 * Once when value is read from result set, prepare it to match destination type.
+	 * @param t get value
+	 * @param destinationType destination type
+	 */
+	@SuppressWarnings({"unchecked"})
+	protected <E> E prepareGetValue(T t, Class<E> destinationType) {
+		if (t == null) {
+			return null;
+		}
 		if (destinationType == null) {
 			return (E) t;
 		}
 		return ReflectUtil.castType(t, destinationType);
 	}
+
+
 }

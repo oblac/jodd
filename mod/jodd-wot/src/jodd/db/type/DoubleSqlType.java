@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class DoubleSqlType extends SqlType<Double> {
+public class DoubleSqlType extends NullAwareSqlType<Double> {
 
 	/**
 	 * {@inheritDoc}

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class IntegerSqlType extends SqlType<Integer> {
+public class IntegerSqlType extends NullAwareSqlType<Integer> {
 
 	/**
 	 * {@inheritDoc}

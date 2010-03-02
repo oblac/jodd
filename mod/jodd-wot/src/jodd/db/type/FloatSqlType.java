@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class FloatSqlType extends SqlType<Float> {
+public class FloatSqlType extends NullAwareSqlType<Float> {
 
 	/**
 	 * {@inheritDoc}

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class BooleanSqlType extends SqlType<Boolean> {
+public class BooleanSqlType extends NullAwareSqlType<Boolean> {
 
 	/**
 	 * {@inheritDoc}

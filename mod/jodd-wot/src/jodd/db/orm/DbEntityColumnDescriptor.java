@@ -76,6 +76,15 @@ public class DbEntityColumnDescriptor implements Comparable {
 		return dbSqlType;
 	}
 
+	/**
+	 * Updates db sql type if not already set.
+	 */
+	public void updateDbSqlType(int dbSqlType) {
+		if (dbSqlType == Integer.MAX_VALUE) {
+			this.dbSqlType = dbSqlType;
+		}
+	}
+
 	// ---------------------------------------------------------------- comparable
 
 	/**

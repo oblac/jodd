@@ -103,6 +103,14 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- content disposition
 
 	/**
+	 * Prepares response for file download when file size is not known.
+	 * @see #prepareDownload(javax.servlet.http.HttpServletResponse, String, int) 
+	 */
+	public static void prepareDownload(HttpServletResponse response, String fileName) {
+		prepareDownload(response, fileName, -1);
+	}
+
+	/**
 	 * Prepares response for file download. Sets correct mime type, file name and file size.
 	 */
 	public static void prepareDownload(HttpServletResponse response, String fileName, int fileSize) {

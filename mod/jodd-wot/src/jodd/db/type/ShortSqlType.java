@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 
-public class ShortSqlType extends SqlType<Short> {
+public class ShortSqlType extends NullAwareSqlType<Short> {
 
 	/**
 	 * {@inheritDoc}

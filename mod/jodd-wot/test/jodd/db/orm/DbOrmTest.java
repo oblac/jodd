@@ -13,6 +13,7 @@ import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
 import jodd.db.orm.test.BadBoy;
 import jodd.db.orm.test.BadGirl;
 import jodd.db.orm.test.Boy;
+import jodd.db.orm.test.Boy3;
 import jodd.db.orm.test.Girl;
 import jodd.db.orm.test.IdName;
 import static jodd.db.orm.DbOrmQuery.query;
@@ -335,10 +336,24 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		q = new DbOrmQuery("select * from GIRL left join BOY on GIRL.ID=BOY.GIRL_ID order by GIRL.ID");
 
+		list = q.list(Girl.class, Boy3.class);
+		assertEquals(3, list.size());
+
+		checkGirl1((Girl) ((Object[])list.get(0))[0]);
+		assertNull(((Object[])list.get(0))[1]);
+
+		checkGirl2((Girl) ((Object[])list.get(1))[0]);
+		assertNull(((Object[])list.get(1))[1]);
+
+		checkGirl3((Girl) ((Object[])list.get(2))[0]);
+		assertNotNull(((Object[])list.get(2))[1]);			// BOY is set here
+
+
+		// 
 		list = q.list(Girl.class, Boy.class);
 		assertEquals(3, list.size());
 		checkGirl1((Girl) ((Object[])list.get(0))[0]);
-		assertNull(((Object[])list.get(0))[1]);
+		assertNull(((Object[])list.get(0))[1]);				// empty boy is set here, since ID type is primitive int and it can't be null!!!
 
 		checkGirl2((Girl) ((Object[])list.get(1))[0]);
 		assertNull(((Object[])list.get(1))[1]);
