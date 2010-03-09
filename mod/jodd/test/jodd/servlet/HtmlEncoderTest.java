@@ -24,7 +24,7 @@ public class HtmlEncoderTest extends TestCase {
 	public void testEncodeText() {
 		String html = "< & \" ' > \r\n \n  \t";
 
-		assertEquals("&lt; &amp; &quot; &#039; &gt; <br> <br>  \t", HtmlEncoder.block(html));
+		assertEquals("&lt; &amp; &quot; &#039; &gt; <br/> <br/>  \t", HtmlEncoder.block(html));
 
 		html = "";
 		assertEquals("", HtmlEncoder.block(html));
@@ -36,20 +36,20 @@ public class HtmlEncoderTest extends TestCase {
 		assertEquals(html, HtmlEncoder.block(html));
 
 		html = "\r\n\n\r";
-		assertEquals("<br><br><br>", HtmlEncoder.block(html));
+		assertEquals("<br/><br/><br/>", HtmlEncoder.block(html));
 
 		html = "\r\n\r\n";
-		assertEquals("<br><br>", HtmlEncoder.block(html));
+		assertEquals("<br/><br/>", HtmlEncoder.block(html));
 
 		html = "\n\r";
-		assertEquals("<br><br>", HtmlEncoder.block(html));
+		assertEquals("<br/><br/>", HtmlEncoder.block(html));
 	}
 
 
 	public void testEncodeTextStrict() {
 		String html = "< & \" ' > \r\n \n  \t";
 
-		assertEquals("&lt; &amp; &quot; &#039; &gt; <br> <br> &nbsp;\t", HtmlEncoder.strict(html));
+		assertEquals("&lt; &amp; &quot; &#039; &gt; <br/> <br/> &nbsp;\t", HtmlEncoder.strict(html));
 
 		html = "";
 		assertEquals("", HtmlEncoder.strict(html));
@@ -61,13 +61,13 @@ public class HtmlEncoderTest extends TestCase {
 		assertEquals(html, HtmlEncoder.strict(html));
 
 		html = "\r\n\n\r";
-		assertEquals("<br><br><br>", HtmlEncoder.strict(html));
+		assertEquals("<br/><br/><br/>", HtmlEncoder.strict(html));
 
 		html = "\r\n\r\n";
-		assertEquals("<br><br>", HtmlEncoder.strict(html));
+		assertEquals("<br/><br/>", HtmlEncoder.strict(html));
 
 		html = "\n\r";
-		assertEquals("<br><br>", HtmlEncoder.strict(html));
+		assertEquals("<br/><br/>", HtmlEncoder.strict(html));
 
 
 		html = " ";

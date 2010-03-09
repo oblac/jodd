@@ -12,6 +12,7 @@ public class HtmlEncoder {
 
 	protected static final char[][] TEXT = new char[64][];
 	protected static final char[][] BLOCK = new char[64][];
+	private static final String NBSP = "&nbsp;";
 
 	/**
 	 * Creates HTML lookup tables for faster encoding.
@@ -30,8 +31,8 @@ public class HtmlEncoder {
 
 		// text table
 		System.arraycopy(TEXT, 0, BLOCK, 0, 64);
-		BLOCK['\n']	= "<br>".toCharArray();     // ascii 10, new line
-		BLOCK['\r']	= "<br>".toCharArray();     // ascii 13, carriage return
+		BLOCK['\n']	= "<br/>".toCharArray();     // ascii 10, new line
+		BLOCK['\r']	= "<br/>".toCharArray();     // ascii 13, carriage return
 	}
 
 	// ---------------------------------------------------------------- encode
@@ -154,7 +155,7 @@ public class HtmlEncoder {
 				if (prevSpace == false) {
 					buffer.append(' ');
 				} else {
-					buffer.append("&nbsp;");
+					buffer.append(NBSP);
 				}
 				prevSpace = !prevSpace;
 				continue;
