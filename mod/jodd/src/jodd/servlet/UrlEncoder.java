@@ -109,6 +109,23 @@ public class UrlEncoder {
 		}
 	}
 
+	// ---------------------------------------------------------------- simple
+
+	/**
+	 * Encodes simple value.
+	 */
+	public static String encode(String value, String encoding) {
+		StringBuilder sb = new StringBuilder(value.length());
+		appendUrl(sb, value, encoding);
+		return sb.toString();
+	}
+
+	public static String encode(String value) {
+		return encode(value, JoddDefault.encoding);
+	}
+
+
+
 	// ---------------------------------------------------------------- build url
 
 	public static UrlBuilder buildUrl(String url) {

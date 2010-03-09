@@ -14,6 +14,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(HtmlTagTest.class);
 		addTestSuite(ServletUtilTest.class);
 		addTestSuite(FormTagTest.class);
+		addTestSuite(UrlEncoderTest.class);
 	}
 
 	public static Test suite() {
