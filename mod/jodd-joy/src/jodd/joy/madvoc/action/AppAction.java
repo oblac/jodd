@@ -1,0 +1,119 @@
+package jodd.joy.madvoc.action;
+
+import jodd.joy.page.PageRequest;
+import jodd.vtor.Vtor;
+import jodd.vtor.Violation;
+
+import java.util.List;
+
+/**
+ * Abstract base application action.
+ */
+public abstract class AppAction {
+
+	public static final String BACK = "#";
+	public static final String OK = "OK";
+
+	public static final String METHOD_POST = "POST";
+	public static final String METHOD_GET = "GET";
+	public static final String METHOD_PUT = "PUT";
+	public static final String METHOD_HEAD = "HEAD";
+	public static final String METHOD_DELETE = "DELETE";
+	public static final String METHOD_TRACE = "TRACE";
+
+	public static final String REDIRECT = "redirect:";
+	public static final String DISPATCH = "dispatch:";
+	public static final String CHAIN = "chain:";
+	public static final String JSON = "json:";
+	public static final String MOVE = "move:";
+	public static final String RAW = "raw:";
+	public static final String NONE = "none:";
+	public static final String VTOR_JSON = "vtor-json:";
+
+	public static final String ALIAS_INDEX = "/%index%";
+	public static final String ALIAS_INDEX_NAME = "index";
+	public static final String ALIAS_LOGIN = "/%login%";
+	public static final String ALIAS_LOGIN_NAME = "login";
+	public static final String ALIAS_ACCESS_DENIED = "/%accessDenied%";
+	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
+
+	public static final String EXT_JSON = "json";
+
+
+	/**
+	 * Creates alias. 
+	 */
+	protected String toAlias(String target) {
+		return "/%" + target + '%';
+	}
+
+
+	// ---------------------------------------------------------------- validation
+
+	protected Vtor vtor;
+
+	/**
+	 * Returns validation violations or <code>null</code> if validation was successful.
+	 */
+	public List<Violation> getViolations() {
+		if (vtor == null) {
+			return null;
+		}
+		return vtor.getViolations();
+	}
+
+	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
+	protected boolean validateAction() {
+		return validateAction(null);
+	}
+
+	/**
+	 * Validates action. Profiles are reset after the invocation.
+	 * @return <code>true</code> if validation is successful, otherwise returns <code>false</code>
+	 */
+	protected boolean validateAction(String... profiles) {
+		prepareValidator();
+		vtor.useProfiles(profiles);
+		vtor.validate(this);
+		vtor.resetProfiles();
+		List<Violation> violations = vtor.getViolations();
+		return violations == null;
+	}
+
+	/**
+	 * Adds action violation.
+	 */
+	protected void addViolation(String name, Object invalidValue) {
+		prepareValidator();
+		vtor.addViolation(new Violation(name, this, invalidValue));
+	}
+
+	/**
+	 * Adds action violation.
+	 */
+	protected void addViolation(String name) {
+		addViolation(name, null);
+	}
+
+	protected void prepareValidator() {
+		if (vtor == null) {
+			vtor = new Vtor();
+		}
+	}
+
+	// ---------------------------------------------------------------- paging
+
+	/**
+	 * Applies page size on given page request.
+	 */
+	protected PageRequest applyPageSize(PageRequest pageRequest, int pageSize) {
+		if (pageSize != 0) {
+			if (pageRequest == null) {
+				pageRequest = new PageRequest();
+				pageRequest.setSize(pageSize);
+			}
+		}
+		return pageRequest;
+	}
+
+}
