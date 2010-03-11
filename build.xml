@@ -167,7 +167,7 @@
 			<bootclasspath refid="jodd.production.bootclasspath"/>
 			<classpath refid="jodd.production.classpath"/>
 			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
+			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2010 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
@@ -373,7 +373,7 @@
 			<bootclasspath refid="jodd-wot.production.bootclasspath"/>
 			<classpath refid="jodd-wot.production.classpath"/>
 			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2009 Jodd Team</i></center>]]></bottom>
+			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2010 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd-wot.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
@@ -530,6 +530,64 @@
 	</target>
 
 
+	<!-- MODULE : jodd-joy -->
+
+	<path id="jodd-joy.production.classpath">
+		<path path="${jodd.production.out.dir}"/>
+		<path path="${jodd-wot.production.out.dir}"/>
+		<path refid="lib.servlets"/>
+		<path refid="lib.slf4j"/>
+	</path>
+
+	<!-- compile: jodd-joy.production -->
+	
+	<path id="jodd-joy.production.bootclasspath">
+		<path refid="jdk5.classpath"/>
+		<path refid="jdk5.tools"/>
+	</path>
+
+	<property name="jodd-joy.production.out.dir" value="${output.dir}/production/jodd-joy"/>
+	<property name="jodd-joy.production.src.dir" value="mod/jodd-joy/src"/>
+	
+	<target name="compile.jodd-joy.production" description="compiles module: jodd-joy; production classes">
+		<mkdir dir="${jodd-joy.production.out.dir}"/>
+		<javac destdir="${jodd-joy.production.out.dir}"
+				listfiles="on" debug="on"
+				source="1.5" target="1.5"
+				deprecation="true" encoding="UTF-8"
+				fork="true" executable="${jdk5.bin}/javac">
+			<src location="${jodd-joy.production.src.dir}"/>
+			<bootclasspath refid="jodd-joy.production.bootclasspath"/>
+			<classpath refid="jodd-joy.production.classpath"/>
+		</javac>
+		<copy todir="${jodd-joy.production.out.dir}">
+			<fileset dir="${jodd-joy.production.src.dir}">
+				<patternset refid="resources"/>
+				<type type="file"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jodd-joy" depends="compile.jodd-joy.production" description="builds module: jodd-joy"/>
+
+	<!-- distribution: jodd-joy -->
+	<property name="jodd-joy.jar" value="${dist.dir}/jodd-joy-${prjVersion}.jar"/>
+
+
+	<target name="dist.jodd-joy" depends="compile.jodd-joy.production" description="creates JAR distribution for module: jodd-joy">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-joy.jar}" compress="true">
+			<manifest>
+				<attribute name="Debug-Info" value="on"/>
+				<attribute name="Release-Date" value="${TODAY}"/>
+				<attribute name="Implementation-Title" value="${prjName} jodd-joy"/>
+				<attribute name="Implementation-Version" value="${prjVersion}"/>
+			</manifest>
+			<fileset dir="${jodd-joy.production.out.dir}"/>
+		</jar>
+	</target>
+
+
 	<!-- MODULE : jodd-gfx -->
 
 	<path id="jodd-gfx.production.classpath">
@@ -568,7 +626,7 @@
 
 	<!-- PROJECT targets -->
 
-	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-gfx" description="invokes 'build' on project"/>
+	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-joy, build.jodd-gfx" description="invokes 'build' on project"/>
 
 	<target name="javadoc" depends="build, javadoc.jodd, javadoc.jodd-wot" description="invokes 'javadoc' on project"/>
 
@@ -576,7 +634,7 @@
 
 	<target name="findbugs" depends="build, findbugs.jodd, findbugs.jodd-wot" description="invokes 'findbugs' on project"/>
 
-	<target name="dist" depends="build, dist.jodd, dist.jodd-wot" description="invokes 'dist' on project"/>
+	<target name="dist" depends="build, dist.jodd, dist.jodd-wot, dist.jodd-joy" description="invokes 'dist' on project"/>
 
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>

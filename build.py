@@ -6,7 +6,7 @@ prjDescription = 'Jodd - generic purpose open-source Java library and frameworks
 prjVersion = '3.0.8'
 
 # vars
-copyright = 'Copyright &#169; 2003-2009 Jodd Team'
+copyright = 'Copyright &#169; 2003-2010 Jodd Team'
 
 # ant
 project_header()
@@ -38,16 +38,21 @@ module_do_test('jodd.TestJoddWot')
 module_do_findbugs()
 module_dist(moduleName, 'jodd.JoddWot')
 
+module('jodd-joy')
+module_compile('production', 'jdk5', '>jodd.production, >jodd-wot.production, servlets, slf4j')
+module_do_build('production')
+module_dist(moduleName)
+
 module('jodd-gfx')
 module_compile('production', 'jdk5', '')
 module_do_build('production')
 
 project()
-project_task('build', '.jodd, .jodd-wot, .jodd-gfx')
+project_task('build', '.jodd, .jodd-wot, .jodd-joy, .jodd-gfx')
 project_task('javadoc', 'build, .jodd, .jodd-wot')
 project_task('emma', 'build, .jodd, .jodd-wot')
 project_task('findbugs', 'build, .jodd, .jodd-wot')
-project_task('dist', 'build, .jodd, .jodd-wot')
+project_task('dist', 'build, .jodd, .jodd-wot, .jodd-joy')
 project_clean()
 
 project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')
