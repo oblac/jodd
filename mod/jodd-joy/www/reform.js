@@ -13,9 +13,9 @@ ReForm.prototype.defaults = {
 	validationUrl:					undefined,			// validation url, if not specified will be built from forms action path and validationUrlSuffix
 	validationUrlSuffix:			'Validate.json',	// live validation suffix
 	liveValidation: 				false,				// enable live form validation, on blur
-	ajaxValidation:					false,				// use ajax validation of whole form before *regular* submit
+	ajaxValidationOnSubmit:			false,				// use ajax validation of form before the submit
 	ajaxPost:						false,				// use ajax post instead of regular submit
-	activateOnAjaxSubmitSuccess:	true,				// if true, form div selector will be reloaded with returned content and form will be reactivated 
+	activateOnAjaxSubmitSuccess:	true,				// if true, form div selector will be reloaded with returned content and form will be reactivated
 	onAjaxSubmitSuccess:			undefined,			// callback invoked on successful ajax submit, after the form was re-activated
 	formDivSelector:				'div.form',			// form's (inner) div selector of element that will be reloaded on ajax submit with returned context; should not contain buttons, just fields
 	submitClass:					'submit',			// class of submit button or link
@@ -107,8 +107,6 @@ ReForm.prototype.activate = function() {
 			});
 		}
 	}
-	//$('label', this.form).disableTextSelect();
-	//$('button', this.form).disableTextSelect();
 };
 
 /**
@@ -182,29 +180,35 @@ ReForm.prototype.validateForm = function(onlyVisited, onValidCallback) {
  */
 ReForm.prototype.submitForm = function() {
 	if (this.enabled === false) {
-		return true;
+		return;
 	}
-	var _this = this;
-	if (this.opts.ajaxValidation) {
-		// ajax validation before regular submit; whole form is submitted
+	if (this.opts.ajaxValidationOnSubmit) {
+		var _this = this;
+		// ajax validation before submit; whole form is submitted
 		this.visitAllFields();
-		this.validateForm(false, function() {
-			_this.setFormParameter(_this.opts.usedFieldsParamName, _this.allFields);
-			_this.form.submit();
+		this.validateForm(true, function() {
+			_this._submitFormNow(_this);
 		});
 		return;
 	}
-	this.disableForm();
-	if (!this.opts.ajaxPost) {
+	this._submitFormNow(this);
+};
+
+/**
+ * Submits form. Private method, should not be called directly.
+ */
+ReForm.prototype._submitFormNow = function(_this) {
+	_this.disableForm();
+	if (!_this.opts.ajaxPost) {
 		// regular submit
-		this.setFormParameter(this.opts.usedFieldsParamName, this.allFields);
-		this.form.submit();
+		_this.setFormParameter(this.opts.usedFieldsParamName, this.allFields);
+		_this.form.submit();
 		return;
 	}
 	// ajax submit
-	this.visited = [];
+	_this.visited = [];
 	var submitData = {};
-	submitData[this.opts.usedFieldsParamName] = this.allFields;
+	submitData[this.opts.usedFieldsParamName] = _this.allFields;
 	var options = {
 		data:	submitData,
 		success:
@@ -224,7 +228,7 @@ ReForm.prototype.submitForm = function() {
 					_this.enableForm();
 				}
 	};
-	this.form.ajaxSubmit(options);
+	_this.form.ajaxSubmit(options);
 };
 
 // form utilities
