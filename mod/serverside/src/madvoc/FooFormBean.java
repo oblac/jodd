@@ -60,4 +60,76 @@ public class FooFormBean {
 		textarea = StringUtil.trimDown(value);
 	}
 
+
+	// ---------------------------------------------------------------- getters
+
+	// Getters are necessary for using FooFormBean in JSP!
+
+	public String getCheck() {
+		return check;
+	}
+
+	public boolean isCheck1() {
+		return check1;
+	}
+
+	public Boolean[] getCheck2() {
+		return check2;
+	}
+
+	public MutableInteger[] getCheck3() {
+		return check3;
+	}
+
+	public int[] getCheck4() {
+		return check4;
+	}
+
+	public String getHidden() {
+		return hidden;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public int getText1() {
+		return text1;
+	}
+
+	public Long getText2() {
+		return text2;
+	}
+
+	public String getTextarea() {
+		return textarea;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getRadio() {
+		return radio;
+	}
+
+	public String getSelect() {
+		return select;
+	}
+
+	public String[] getSarr() {
+		return sarr;
+	}
+
+	public List<String> getSlist() {
+		return slist;
+	}
+
+	public Map<String, String> getSmap() {
+		return smap;
+	}
+
+	public int[] getIarr() {
+		return iarr;
+	}
 }

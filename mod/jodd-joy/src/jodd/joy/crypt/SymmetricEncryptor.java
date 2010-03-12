@@ -14,7 +14,7 @@ import java.security.spec.KeySpec;
 import static jodd.util.StringPool.UTF_8;
 
 /**
- * Simple symmetric de/encryptor.
+ * Simple symmetric de/encryptor that uses PBE With MD5 And Triple DES.
  */
 public class SymmetricEncryptor {
 

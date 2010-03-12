@@ -239,4 +239,52 @@
 		<function-signature>java.lang.String str(java.lang.Object)</function-signature>
 	</function>
 
+
+	<!-- form -->
+	<function>
+		<name>formCheckedValue</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String checkedValue(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>formChecked</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String checked(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>formCheckedAs</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String checked(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>formCheckedExist</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String checkedExist(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>formText</name>
+		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-signature>java.lang.String text(java.lang.Object)</function-signature>
+	</function>
+	<function>
+		<name>formSelected</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String selected(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>formSelectedValue</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String selectedValue(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>formMultiSelected</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String multiSelected(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>formMultiSelectedValue</name>
+		<function-class>jodd.servlet.HtmlFormUtil</function-class>
+		<function-signature>java.lang.String multiSelectedValue(java.lang.Object,java.lang.String)</function-signature>
+	</function>
+
 </taglib>

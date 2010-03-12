@@ -3,8 +3,8 @@
 <%@ page import="static jodd.util.ValueLookup.*" %>
 <%@ page import="static jodd.servlet.HtmlEncoder.*" %>
 <%@ page import="jodd.servlet.JspValueResolver" %>
-<%@ taglib prefix="jodd" uri="/jodd" %>
-<%@ taglib prefix="joddfn" uri="/joddfn" %>
+<%@ taglib prefix="j" uri="/jodd" %>
+<%@ taglib prefix="jfn" uri="/joddfn" %>
 <html>
 <head>
 	<title>Big Form test</title>
@@ -24,8 +24,11 @@
 <small><a href="index.html">back</a></small><br>
 
 
+
+<!---------------------------------------------------------------------------------------------------------------------->
+
 <div style="float:left">
-<h2>Manual values set using scriptlets</h2>
+<h2>1. Manual values set using scriptlets</h2>
 <form name="form" method="post" action="form.post.html">
 
 <table border=1 cellpadding=3 cellspacing=0>
@@ -180,13 +183,11 @@
 
 
 
-
-
-
+<!---------------------------------------------------------------------------------------------------------------------->
 
 <div style="float:left; margin-left:20px;">
-<h2>Automagic values set using jodd:form tag</h2>
-<jodd:form>
+<h2>2. Automagic values set using j:form tag</h2>
+<j:form>
 <form id="form2" method="post" action="form.post.html">
 
 <table border=1 cellpadding=3 cellspacing=0>
@@ -332,7 +333,165 @@
 </table>
 </form>
 </div>
-</jodd:form>
+</j:form>
+
+
+
+
+
+
+<!---------------------------------------------------------------------------------------------------------------------->
+
+<div style="float:left">
+<h2>3. Manual values set using JSP functions</h2>
+<form name="form" method="post" action="form.post.html">
+
+<table border=1 cellpadding=3 cellspacing=0>
+
+	<!-- CHECKBOXES -->
+	<tr><td>
+		Checkbox <small><i>(has value, String)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check" value="${jfn:formCheckedValue(foo.check, "check_value")}">
+	</td></tr>
+
+	<tr><td>
+		Checkbox <small><i>(no value, boolean)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check1" value="true" ${jfn:formChecked(foo.check1)}>
+	</td></tr>
+
+	<tr><td>
+		Checkboxes <small><i>(Boolean[], unknown size)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check2[0]" value="true" ${jfn:formChecked(foo.check2[0])}>
+		<input type="checkbox" name="foo.check2[1]" value="true" ${jfn:formChecked(foo.check2[1])}>
+		<input type="checkbox" name="foo.check2[2]" value="true" ${jfn:formChecked(foo.check2[2])}>
+	</td></tr>
+
+
+	<tr><td>
+		Checkboxes <small><i>(MutableInteger[], known size)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check3[0]" value="1" ${jfn:formCheckedExist(foo.check3[0])}>
+		<input type="checkbox" name="foo.check3[1]" value="7" ${jfn:formCheckedExist(foo.check3[1])}>
+		<input type="checkbox" name="foo.check3[2]" value="3" ${jfn:formCheckedExist(foo.check3[2])}>
+	</td></tr>
+
+
+
+	<tr><td>
+		Checkbox group <small><i>(int[], unknown size)</i></small>
+	</td><td>
+		<input type="checkbox" name="foo.check4" value="1" ${jfn:formCheckedAs(foo.check4, 1)}>
+		<input type="checkbox" name="foo.check4" value="7" ${jfn:formCheckedAs(foo.check4, 7)}>
+		<input type="checkbox" name="foo.check4" value="3" ${jfn:formCheckedAs(foo.check4, 3)}>
+	</td></tr>
+
+
+
+	<tr><td>
+		Hidden field <small><i>(String)</i></small>
+	</td><td>
+		<input type="hidden" name="foo.hidden" value="${jfn:formText(foo.hidden)}">
+	</td></tr>
+
+	<tr><td>
+		Password field <small><i>(String)</i></small>
+	</td><td>
+		<input type="password" name="foo.password" value="${jfn:formText(foo.password)}">
+	</td></tr>
+
+	<tr><td>
+		Radio buttons <small><i>(String)</i></small>
+	</td><td>
+		<input type="radio" name="foo.radio" value="${jfn:formCheckedValue(foo.radio, 'radio_value1')}"><br>
+		<input type="radio" name="foo.radio" value="radio_value2" ${jfn:formCheckedAs(foo.radio, 'radio_value2')}>
+	</td></tr>
+
+	<tr><td>
+		Text field <small><i>(String)</i></small>
+	</td><td>
+		<input type="text" name="foo.text" value="${jfn:formText(foo.text)}">
+	</td></tr>
+
+	<tr><td>
+		Text field <small><i>(int)</i></small>
+	</td><td>
+		<input type="text" name="foo.text1" value="${foo.text1}">
+	</td></tr>
+
+	<tr><td>
+		Text field <small><i>(Long)</i></small>
+	</td><td>
+		<input type="text" name="foo.text2" value="${jfn:formText(foo.text2)}">
+	</td></tr>
+
+	<tr><td>
+		Textarea <small><i>(String, trimmed)</i></small>
+	</td><td>
+		<textarea cols="30" name="foo.textarea" rows="10">${jfn:formText(foo.textarea)}</textarea>
+	</td></tr>
+
+	<tr><td>
+		Select menu <small><i>(String)</i></small>
+	</td><td>
+		<select name="foo.select">
+			<option value="option1" ${jfn:formSelected(foo.select, 'option1')}>option #1</option>
+			<option value="${jfn:formSelectedValue(foo.select, 'option2')}">option #2</option>
+			<option value="${jfn:formSelectedValue(foo.select, 'option3')}">option #3</option>
+		</select>
+	</td></tr>
+
+	<tr><td>
+		Multiple select list <small><i>(String[])</i></small>
+	</td><td>
+		<select name="foo.sarr" size="3" multiple>
+			<option value="option1" ${jfn:formMultiSelected(foo.sarr, 'option1')}>option #1</option>
+			<option value="${jfn:formMultiSelectedValue(foo.sarr, 'option2')}">option #2</option>
+			<option value="option3" ${jfn:formMultiSelected(foo.sarr, 'option3')}>option #3</option>
+		</select>
+	</td></tr>
+
+	<tr><td>
+		Multiple Texts <small><i>(List&lt;String&gt;)</i></small>
+	</td><td>
+		<input type="text" name="foo.slist[0]" value="${jfn:formText(foo.slist[0])}" size="10">
+		<input type="text" name="foo.slist[1]" value="${jfn:formText(foo.slist[1])}" size="10">
+		<input type="text" name="foo.slist[2]" value="${jfn:formText(foo.slist[2])}" size="10">
+	</td></tr>
+
+
+	<tr><td>
+		Multiple Texts <small><i>(Map&lt;String, String&gt;)</i></small>
+	</td><td>
+		<input type="text" name="foo.smap[one]" value="${jfn:formText(foo.smap['one'])}" size="10">
+		<input type="text" name="foo.smap[two]" value="${jfn:formText(foo.smap['two'])}" size="10">
+		<input type="text" name="foo.smap[tree]" value="${jfn:formText(foo.smap['tree'])}" size="10">
+	</td></tr>
+
+
+	<tr><td>
+		Multiple select list <small><i>(int[])</i></small>
+	</td><td>
+		<select name="foo.iarr" size="3" multiple>
+			<option value="1" ${jfn:formMultiSelected(foo.iarr, '1')}>option #1</option>
+			<option value="${jfn:formMultiSelectedValue(foo.iarr, '2')}">option #2</option>
+			<option value="3" ${jfn:formMultiSelected(foo.iarr, '3')}>option #3</option>
+		</select>
+	</td></tr>
+
+
+	<tr><td>
+		<b>Submit</b>
+	</td><td>
+		<input type="submit" value="submit_value">
+	</td></tr>
+</table>
+</form>
+</div>
+
+
 
 <br clear="all">
 

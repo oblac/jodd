@@ -154,6 +154,26 @@ public class HtmlFormUtil {
 
 	// ---------------------------------------------------------------- multiple selected
 
+	public static String multiSelected(Object data, String value) {
+		if (data == null) {
+			return EMPTY;
+		}
+		Class arrayType = data.getClass().getComponentType();
+		if (arrayType != null) {
+			if (arrayType.equals(int.class)) {
+				return multiSelected((int[]) data, value);
+			}
+			if (arrayType.equals(long.class)) {
+				return multiSelected((long[]) data, value);
+			}
+			return multiSelected((Object[]) data, value);
+		}
+		if (data instanceof List) {
+			return multiSelected((List) data, value);
+		}
+		throw new IllegalArgumentException("Invalid data type for multi-selected field.");
+	}
+
 	public static String multiSelected(Object[] data, String value) {
 		if (data == null) {
 			return EMPTY;
@@ -200,6 +220,9 @@ public class HtmlFormUtil {
 
 	// ---------------------------------------------------------------- multiple selected value
 
+	public static String multiSelectedValue(Object data, String value) {
+		return value + ENDQUOTE + multiSelected(data, value) + IGNORE;
+	}
 	public static String multiSelectedValue(Object[] data, String value) {
 		return value + ENDQUOTE + multiSelected(data, value) + IGNORE;
 	}
