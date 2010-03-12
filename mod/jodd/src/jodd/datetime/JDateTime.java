@@ -1750,4 +1750,27 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 
+	// ---------------------------------------------------------------- some checks
+
+	/**
+	 * Returns <code>true</code> if two dates are equal.
+	 * Time component is ignored.
+	 */
+	public boolean isEqualDate(JDateTime date) {
+		return date.time.day == this.time.day
+				&& date.time.month == this.time.month
+				&& date.time.year == this.time.year;
+	}
+
+	/**
+	 * Returns <code>true</code> if two times are equal.
+	 * Date component is ignored.
+	 */
+	public boolean isEqualTime(JDateTime date) {
+		return date.time.hour == this.time.hour
+				&& date.time.minute == this.time.minute
+				&& date.time.second == this.time.second
+				&& date.time.millisecond == this.time.millisecond;
+	}
+
 }
