@@ -1670,6 +1670,13 @@ public class JDateTime implements Comparable, Cloneable {
 		return time.compareTo(((JDateTime) o).getDateTimeStamp());
 	}
 
+	/**
+	 * Compares current JDateTime date with another date. Time component is ignored.
+	 */
+	public int compareDateTo(Object o) {
+		return time.compareDateTo(((JDateTime) o).getDateTimeStamp());
+	}
+
 
 	// ---------------------------------------------------------------- difference
 
@@ -1757,9 +1764,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 * Time component is ignored.
 	 */
 	public boolean isEqualDate(JDateTime date) {
-		return date.time.day == this.time.day
-				&& date.time.month == this.time.month
-				&& date.time.year == this.time.year;
+		return time.isEqualDate(date.time);
 	}
 
 	/**
@@ -1767,10 +1772,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 * Date component is ignored.
 	 */
 	public boolean isEqualTime(JDateTime date) {
-		return date.time.hour == this.time.hour
-				&& date.time.minute == this.time.minute
-				&& date.time.second == this.time.second
-				&& date.time.millisecond == this.time.millisecond;
+		return time.isEqualTime(date.time);
 	}
 
 }

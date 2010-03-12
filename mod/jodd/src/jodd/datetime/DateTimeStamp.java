@@ -153,10 +153,10 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 	 *         from being compared to this Object.
 	 */
 	public int compareTo(Object o) {
-		DateTimeStamp gts = (DateTimeStamp) o;
+		DateTimeStamp dts = (DateTimeStamp) o;
 
 		int date1 = year * 10000 + month * 100 + day;
-		int date2 = gts.year * 10000 + gts.month * 100 + gts.day;
+		int date2 = dts.year * 10000 + dts.month * 100 + dts.day;
 
 		if (date1 < date2) {
 			return -1;
@@ -166,7 +166,25 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		}
 
 		date1 = (hour * 10000000) + (minute * 100000) + (second * 1000) + millisecond;
-		date2 = (gts.hour * 10000000) + (gts.minute * 100000) + (gts.second * 1000) + gts.millisecond;
+		date2 = (dts.hour * 10000000) + (dts.minute * 100000) + (dts.second * 1000) + dts.millisecond;
+
+		if (date1 < date2) {
+			return -1;
+		}
+		if (date1 > date2) {
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * Compares just date component of two date time stamps.
+	 */
+	public int compareDateTo(Object o) {
+		DateTimeStamp dts = (DateTimeStamp) o;
+
+		int date1 = year * 10000 + month * 100 + day;
+		int date2 = dts.year * 10000 + dts.month * 100 + dts.day;
 
 		if (date1 < date2) {
 			return -1;
@@ -241,4 +259,21 @@ public class DateTimeStamp implements Comparable, Serializable, Cloneable {
 		dts.millisecond = this.millisecond;
 		return dts;
 	}
+
+	// ---------------------------------------------------------------- equals
+
+	public boolean isEqualDate(DateTimeStamp date) {
+		return date.day == this.day
+				&& date.month == this.month
+				&& date.year == this.year;
+	}
+
+	public boolean isEqualTime(DateTimeStamp time) {
+		return time.hour == this.hour
+				&& time.minute == this.minute
+				&& time.second == this.second
+				&& time.millisecond == this.millisecond;
+	}
+
+
 }
