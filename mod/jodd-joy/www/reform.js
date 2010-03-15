@@ -1,11 +1,10 @@
 /**
- * Re:Form - jodd form tool.
+ * Re:Form - Jodd form tool.
  *
  * Features:
  * + live ajax validation
  * + ajax form submission
- * + disables label text selection
- * + disables submit button on submit
+ * + ajax validation before submission
  */
 
 // default options
