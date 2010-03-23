@@ -93,6 +93,16 @@ public class SendMailSession {
 		}
 		msg.setRecipients(Message.RecipientType.TO, address);
 
+		// replyTo
+		if (email.getReplyTo() != null) {
+			int totalReplyTo = email.getReplyTo().length;
+			address = new InternetAddress[totalReplyTo];
+			for (int i = 0; i < totalTo; i++) {
+				address[i] = new InternetAddress(email.getReplyTo()[i]);
+			}
+			msg.setReplyTo(address);
+		}
+
 		// cc
 		if (email.getCc() != null) {
 			int totalCc = email.getCc().length;

@@ -34,6 +34,15 @@ public class Email extends CommonEmail {
 		return this;
 	}
 
+	public Email replyTo(String replyTo) {
+		setReplyTo(replyTo);
+		return this;
+	}
+	public Email replyTo(String... replyTos) {
+		setTo(replyTos);
+		return this;
+	}
+
 	public Email cc(String cc) {
 		setCc(cc);
 		return this;

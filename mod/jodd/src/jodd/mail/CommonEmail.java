@@ -69,6 +69,35 @@ public abstract class CommonEmail {
 		return to;
 	}
 
+	// ---------------------------------------------------------------- reply-to
+
+	protected String[] replyTo = NONE;
+
+	public void setReplyTo(String replyTo) {
+		if (replyTo == null) {
+			return;
+		}
+		this.replyTo = new String[] {replyTo};
+	}
+
+
+	/**
+	 * Sets reply to addresses.
+	 */
+	public void setReplyTo(String[] replyTo) {
+		if (replyTo == null) {
+			return;
+		}
+		this.replyTo = replyTo;
+	}
+
+	/**
+	 * Returns array of ReplyTo addresses.
+	 */
+	public String[] getReplyTo() {
+		return replyTo;
+	}
+
 	// ---------------------------------------------------------------- cc
 
 	protected String[] cc = NONE;
