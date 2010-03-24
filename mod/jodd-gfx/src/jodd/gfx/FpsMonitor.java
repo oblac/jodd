@@ -4,27 +4,28 @@ package jodd.gfx;
 
 /**
  * Calculates current FPS.
+ * todo add array with last XX value for average fps
  */
 public class FpsMonitor {
 
-	private long time = System.currentTimeMillis();
-	private int fps;
-	private int fpssum;
-	private int fpscount = -5;
+	protected long time = System.currentTimeMillis();
+	protected int fps;
+	protected int fpsSum;
+	protected int fpsCount = -5;
 
 	/**
 	 * Returns current FPS.
 	 */
-	public int get() {
+	public int getFps() {
 		return fps;
 	}
 
 	/**
 	 * Returns average FPS.
 	 */
-	public float getAverage() {
-		if (fpscount > 0) {
-			return (float) fpssum / fpscount;
+	public float getAverageFps() {
+		if (fpsCount > 0) {
+			return (float) fpsSum / fpsCount;
 		} else {
 			return 0;
 		}
@@ -33,8 +34,9 @@ public class FpsMonitor {
 	private int frames;
 
 	/**
-	 * Monitors current fps and average fps. It is usualy used in the paint()
-	 * method, or inside the game loop.
+	 * Monitors current fps and average fps. Usually used in the <code>paint()</code>
+	 * method or inside the game loop.
+	 * Returns <code>true</code> when fps value is available.
 	 */
 	public boolean monitor() {
 		frames++;
@@ -43,20 +45,22 @@ public class FpsMonitor {
 			fps = frames;
 			frames = 0;
 
-			fpscount++;
-			if (fpscount > 0) {
-				fpssum += fps;
+			fpsCount++;
+			if (fpsCount > 0) {
+				fpsSum += fps;
 			}
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Prints out FPS.
+	 */
 	public void print() {
 		if (monitor()) {
-			System.out.println("fps: " + get() + "     av/fps: " + getAverage());
+			System.out.println("fps: " + getFps() + "     av: " + getAverageFps());
 		}
 	}
-
 
 }

@@ -11,7 +11,7 @@ import java.awt.Container;
 /**
  * Applet runner for GfxPanel.
  */
-public abstract class AppletRunner extends JApplet {
+public abstract class GfxAppletRunner extends JApplet {
 
 	public GfxPanel gfxPanel;
 
@@ -20,7 +20,7 @@ public abstract class AppletRunner extends JApplet {
 	@Override
 	public void init() {
 		gfxPanel = createGfxPanel();
-		gfxPanel.doInit();
+		gfxPanel.initialize();
 		initGUI();
 		gfxPanel.start();
 	}

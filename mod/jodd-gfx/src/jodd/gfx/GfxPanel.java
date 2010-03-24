@@ -3,8 +3,9 @@
 package jodd.gfx;
 
 import jodd.gfx.delay.Delayer;
-import jodd.gfx.delay.DefaultDelayer;
-import jodd.gfx.delay.DelayerFactory;
+import jodd.gfx.delay.MillisDelayer;
+import jodd.gfx.delay.NanoDelayer;
+import jodd.gfx.delay.PerfDelayer;
 
 import javax.swing.JPanel;
 import java.util.Random;
@@ -35,9 +36,9 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 
 
 	/**
-	 * {#Delayer}.
+	 * {#Delayer delayer}.
 	 */
-	public Delayer delayer = DelayerFactory.getBestAvailable();
+	public Delayer delayer = new PerfDelayer();
 
 	// ---------------------------------------------------------------- init
 
@@ -53,32 +54,32 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	 * <li>calls the init() method</li>
 	 * <p>
 	 * This method should never be called directly from client code, but by some
-	 * of {@link jodd.gfx.runners.AppletRunner runners}).
+	 * of {@link jodd.gfx.runners.GfxAppletRunner runners}).
 	 *
-	 * @see #setup()
 	 * @see #init()
+	 * @see #ready()
 	 */
-	public void doInit() {
-		setup();
+	public final void initialize() {
+		init();
 		setPreferredSize(new Dimension(width, height));
 		setFocusable(true);
 		requestFocus();
 		setDoubleBuffered(true);
 		screen = new Sprite(width, height);
-		init();
+		ready();
 	}
 
 	/**
 	 * Setups the application. Must be implemented by gfx application
 	 * to specify the name, width, height and desired framerate.
 	 */
-	public abstract void setup();
+	public abstract void init();
 
 	/**
 	 * Optional callback invoked immediately after the initialization.
 	 * Often used for creating various objects etc.
 	 */
-	public void init() {}
+	public void ready() {}
 
 
 	// ---------------------------------------------------------------- run

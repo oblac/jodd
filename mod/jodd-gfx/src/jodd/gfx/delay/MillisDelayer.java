@@ -3,11 +3,10 @@
 package jodd.gfx.delay;
 
 /**
- * Default delayer, using <code>Thread.sleep()</code>
- * and <code>System.currentTimeMillis()</code>. This is the most
- * unprecise delayer, especially on Windows platforms.
+ * Delayer that uses <code>Thread.sleep()</code> and <code>System.currentTimeMillis()</code>.
+ * This is the most un-precise delayer, especially on Windows platforms.
  */
-public class DefaultDelayer extends Delayer {
+public class MillisDelayer extends Delayer {
 
 	@Override
 	public void start() {

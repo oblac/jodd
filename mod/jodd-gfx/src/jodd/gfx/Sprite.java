@@ -49,9 +49,9 @@ public class Sprite {
 	 */
 	public int size;
 	/**
-	 * Sprite pixels.
+	 * Sprite buffer (i.e. pixels).
 	 */
-	public int pixels[];
+	public int buf[];
 	/**
 	 * Sprite BufferedImage.
 	 */
@@ -169,7 +169,7 @@ public class Sprite {
 		currentImage = i;
 		img = images[currentImage];
 		g2d = imagesGraphics[currentImage];
-		pixels = imagesPixels[currentImage];
+		buf = imagesPixels[currentImage];
 	}
 
 	public void selectNext() {
@@ -198,7 +198,7 @@ public class Sprite {
 		img = new BufferedImage(width, height, colorType);
 		//g2d = img.createGraphics();
 		g2d = (Graphics2D) img.getGraphics();
-		pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
+		buf = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 	}
 
 }

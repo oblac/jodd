@@ -4,10 +4,9 @@ package jodd.gfx.delay;
 
 import sun.misc.Perf;
 /**
- * Uses undocumented Sun timings that is available only in SDK v1.4.2 and newer.
+ * Uses <i>undocumented</i> Suns timer. Available in SDK v1.4.2 and newer.
  * <p>
- *
- * This updater locks CPU to 100%.
+ * This updater locks CPU to 100%, since loop is used for sleeping.
  */
 public class PerfDelayer extends Delayer {
 

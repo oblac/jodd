@@ -15,7 +15,7 @@ import javax.swing.JFrame;
  * Runs GfxPanel as stand-alone application.
  * Also, communication to other controls should goes through this class.
  */
-public abstract class FrameRunner extends JFrame implements WindowListener {
+public abstract class GfxFrameRunner extends JFrame implements WindowListener {
 
 	// ---------------------------------------------------------------- WindowsListener
 
@@ -56,7 +56,7 @@ public abstract class FrameRunner extends JFrame implements WindowListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addWindowListener(this);
 		initGUI();
-		gfxPanel.doInit();
+		gfxPanel.initialize();
 		setTitle(gfxPanel.name);
 		setSize(gfxPanel.width, gfxPanel.height);
 		pack();

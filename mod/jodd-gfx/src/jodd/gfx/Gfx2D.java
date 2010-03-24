@@ -27,7 +27,7 @@ public class Gfx2D {
 		if ((y < 0) || (y >= sprite.height)) {
 			return;
 		}
-		sprite.pixels[sprite.rows[y] + x] = c;
+		sprite.buf[sprite.rows[y] + x] = c;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class Gfx2D {
 	 * @param c		new color
 	 */
 	public static void setf(Sprite sprite, int x, int y, int c) {
-		sprite.pixels[sprite.rows[y] + x] = c;
+		sprite.buf[sprite.rows[y] + x] = c;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Gfx2D {
 		if ((y < 0) || (y >= sprite.height)) {
 			return 0;
 		}
-		return sprite.pixels[sprite.rows[y] + x];
+		return sprite.buf[sprite.rows[y] + x];
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class Gfx2D {
 	 * @return pixel color
 	 */
 	public static int getf(Sprite sprite, int x, int y) {
-		return sprite.pixels[sprite.rows[y] + x];
+		return sprite.buf[sprite.rows[y] + x];
 	}
 
 	// ----------------------------------------------------------------	fill methods
@@ -83,7 +83,7 @@ public class Gfx2D {
 		int i = 0;
 		int left = s.size % 16;
 		int total = s.size - left;
-		int[] pixels = s.pixels;
+		int[] pixels = s.buf;
 
 		while (i < total) {
 			pixels[i++] = col;
