@@ -18,7 +18,7 @@ public class Plasma extends GfxPanel implements KeyListener {
 	FpsMonitor fpsMonitor = new FpsMonitor();
 	Palette pal = new Palette(256);
 	Font logoFont = new Font("Tahoma", Font.PLAIN, 10);
-	Sprite panel = new Sprite(50, 240, Sprite.COLOR_ARGB);
+	Sprite panel = new Sprite(260, 50, Sprite.COLOR_ARGB);
 	Font panelFont = new Font("Arial", Font.BOLD, 40);
 	FontMetrics panelfm = getFontMetrics(panelFont);
 
@@ -26,7 +26,7 @@ public class Plasma extends GfxPanel implements KeyListener {
 	public void init() {
 		this.width = 320;
 		this.height = 240;
-		this.framerate = 40;
+		this.framerate = 30;
 		this.name = "Jodd Plasma";
 	}
 
@@ -43,21 +43,23 @@ public class Plasma extends GfxPanel implements KeyListener {
 
 	// ---------------------------------------------------------------- update
 
-	int starty = 400;			// starting y offset of the panel txt
-	int panely = 360; 
+	int startx = 320;	// starting X offset of the panel txt
+	int panelx = 400; 
 
 	@Override
 	public void update() {
-		starty--;
-		if (starty < -550) {
-			panely++;
-			if (panely == 500) {
-				starty = 400;
-				panely = 360;
+		if (startx < - 200) {
+			if (panelx < 320) {
+				panelx += 4;
 			}
+
 		} else {
-			if (panely > 250) {
-				panely--;
+			// income
+			if (panelx > 60) {
+				panelx -= 4;
+			}
+			if (panelx < 320) {
+				startx -= 2;
 			}
 		}
 	}
@@ -69,15 +71,15 @@ public class Plasma extends GfxPanel implements KeyListener {
 		plasmaDraw(screen.buf);
 		screen.g2d.drawString("jodd gfx", 3, 236);
 		drawPanel();
-		screen.g2d.drawImage(panel.img, panely, 0, null);
+		if (panelx < 320) {
+			screen.g2d.drawImage(panel.img, panelx, 60, null);
+		}
 		fpsMonitor.print();
 	}
 
 	// ---------------------------------------------------------------- draw panel
 
-	char[] message = "enjoy fast plasma".toCharArray();
-
-	int gap = 32;
+	char[] message = "enjoy jodd plasma :)".toCharArray();
 
 	void drawPanel() {
 		for (int i = 0; i < panel.size; i++) {
@@ -86,13 +88,13 @@ public class Plasma extends GfxPanel implements KeyListener {
 		Graphics2D g2d = panel.g2d;
 
 		// letters
-		int y = starty;
-		if ((y < 300) && (y > -550)) {
+		int x = startx;
+		if (panelx <= 60) {
 			g2d.setColor(Color.WHITE);
 			for (char msg : message) {
 				int lw = panelfm.charWidth(msg);
-				g2d.drawString(String.valueOf(msg), 25 - lw / 2, y);
-				y += gap;
+				g2d.drawString(String.valueOf(msg), x, 35);
+				x += lw;
 			}
 		}
 		// rect
@@ -107,7 +109,6 @@ public class Plasma extends GfxPanel implements KeyListener {
 		switch (k) {
 			case '1': palOne(); break;
 			case '2': palReds(); break;
-			case '3': palBW(); break;
 		}
 	}
 
@@ -125,15 +126,6 @@ public class Plasma extends GfxPanel implements KeyListener {
 	void palReds() {
 		pal.gradientFill(0, 128, 0xCC0000, 0x550000);
 		pal.gradientFill(128, 255, 0x550000, 0xCC0000);
-	}
-
-	void palBW() {
-		for (int i = 0; i < 256; i++) {
-			pal.setColor(i, 0);
-		}
-		for (int i = 0; i < 10; i++) {
-			pal.setColor(i, 0xFFFFFF);
-		}
 	}
 
 	// ---------------------------------------------------------------- plasma engine
@@ -194,10 +186,10 @@ public class Plasma extends GfxPanel implements KeyListener {
 
 		for (i = 0; i < 120; i++) {
 			for (j = 0; j < 160; j++) {
-				c = (int) (tab1[320 * (i + y1) + j + x1] +
-						tab1[320 * (i + y2) + j + x2] +
-						tab2[320 * (i + y3) + j + x3] +
-						tab2[320 * (i + y4) + j + x4] + roll);
+				c = tab1[320 * (i + y1) + j + x1] +
+					tab1[320 * (i + y2) + j + x2] +
+					tab2[320 * (i + y3) + j + x3] +
+					tab2[320 * (i + y4) + j + x4] + roll;
 				c = pal.getColor(c & 0xFF);
 				dest[k + 2 * j] = c;
 				dest[k + 2 * j + 1] = c;

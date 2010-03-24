@@ -8,6 +8,8 @@ package jodd.gfx.delay;
  */
 public class MillisDelayer extends Delayer {
 
+	protected long start;
+
 	@Override
 	public void start() {
 		start = System.currentTimeMillis();
@@ -15,9 +17,9 @@ public class MillisDelayer extends Delayer {
 
 	@Override
 	public boolean end() {
-		diff = (System.currentTimeMillis() - start);
+		long diff = (System.currentTimeMillis() - start);
 		diff *= 1000000L;
-		return endAndWait();
+		return waitFor(diff);
 	}
 
 	@Override

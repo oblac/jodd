@@ -10,8 +10,9 @@ import sun.misc.Perf;
  */
 public class PerfDelayer extends Delayer {
 
-	private Perf perf;
-	private long invCountFreq;
+	protected Perf perf;
+	protected long invCountFreq;
+	protected long start;
 
 	public PerfDelayer() {
 		perf = Perf.getPerf();
@@ -26,8 +27,8 @@ public class PerfDelayer extends Delayer {
 
 	@Override
 	public boolean end() {
-		diff = (perf.highResCounter() - start) * invCountFreq; //1000000000L / countFreq;
-		return endAndWait();
+		long diff = (perf.highResCounter() - start) * invCountFreq; //1000000000L / countFreq;
+		return waitFor(diff);
 	}
 
 	@Override

@@ -3,14 +3,12 @@
 package jodd.gfx;
 
 import jodd.gfx.delay.Delayer;
-import jodd.gfx.delay.MillisDelayer;
 import jodd.gfx.delay.NanoDelayer;
-import jodd.gfx.delay.PerfDelayer;
 
 import javax.swing.JPanel;
-import java.util.Random;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.Random;
 
 /**
  * The base panel of gfx applications, bundled with some utility methods.
@@ -38,7 +36,7 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	/**
 	 * {#Delayer delayer}.
 	 */
-	public Delayer delayer = new PerfDelayer();
+	public Delayer delayer = new NanoDelayer();
 
 	// ---------------------------------------------------------------- init
 

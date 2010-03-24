@@ -14,15 +14,11 @@ public abstract class Delayer {
 		defaultDelay = nanos;
 	}
 
-	protected long start;
-
 	/**
 	 * Indicates the beginning of the loop. Must store
 	 * any kind of time data in <code>start</code> attribute.
 	 */
 	public abstract void start();
-
-	protected long diff;
 
 	/**
 	 * Indicates the end of the loop. Performs all necessary waiting.
@@ -38,9 +34,9 @@ public abstract class Delayer {
 	private long excess;
 
 	/**
-	 * Internal logic waiting logic.
+	 * Main waiting logic.
 	 */
-	protected final boolean endAndWait() {
+	protected final boolean waitFor(long diff) {
 		long delta = defaultDelay - diff - excess;
 		if (delta > 0) {
 			sleep(delta);

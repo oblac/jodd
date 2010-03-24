@@ -7,6 +7,8 @@ package jodd.gfx.delay;
  */
 public class NanoDelayer extends Delayer {
 
+	protected long start;
+
 	@Override
 	public void start() {
 		start = System.nanoTime();
@@ -14,8 +16,7 @@ public class NanoDelayer extends Delayer {
 
 	@Override
 	public boolean end() {
-		diff = (System.nanoTime() - start);
-		return endAndWait();
+		return waitFor(System.nanoTime() - start);
 	}
 
 	@Override
