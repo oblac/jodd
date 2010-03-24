@@ -83,13 +83,13 @@ var pwt;
 function pleaseWait(show) {
 	if (show === false) {
 		if (pwt != undefined) {
-			$.clearTimer(pwt);
+			clearTimer(pwt);
 			pwt = undefined;
 		}
 		$("#wait").hide();
 	} else {
 		if (pwt == undefined) {
-			pwt = $.timer(500, function() {
+			pwt = setTimer(500, function() {
 				$("#wait").show();
 			});
 		}
@@ -114,14 +114,17 @@ function showReload(target, show) {
 /**
  * Creates timer.
  */
-jQuery.timer = function(time,func,callback){
-	var a = {timer:setTimeout(func, time),callback:null};
+function setTimer(time, func, callback) {
+	var a = {timer:setTimeout(func, time), callback:null};
 	if (callback) {a.callback = callback;}
 	return a;
-};
+}
 
-jQuery.clearTimer = function(a){
+/**
+ * Clears timer.
+ */
+function clearTimer(a) {
 	clearTimeout(a.timer);
 	if (a.callback) {a.callback();}
 	return this;
-};
+}
