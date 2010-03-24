@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.gfx;
 
@@ -10,6 +10,9 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+/**
+ * Some utilities.
+ */
 public class GfxUtil {
 
 	public static Dimension getScreenSize() {

@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx;
 
 import javax.imageio.ImageIO;
@@ -7,7 +9,7 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 
 /**
- * A single sprite. Sprite is special since it can be accessed
+ * Single sprite. Sprite is special since it can be accessed
  * as pixel buffer as well as through Graphics2D. This makes
  * sprite usage very efficient.
  *
@@ -59,9 +61,9 @@ public class Sprite {
 	 */
 	public Graphics2D g2d;
 
-	// ----------------------------------------------------------------	constructors
+	// ----------------------------------------------------------------	ctors
 	
-	int[] rows;						// cached row offsets
+	protected int[] rows;					// cached row offsets
 
 	/**
 	 * Empty constructor.

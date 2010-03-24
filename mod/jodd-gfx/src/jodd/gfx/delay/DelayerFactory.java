@@ -1,12 +1,15 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx.delay;
 
 /**
  * Returns one delayer according to system environment and
- * application needs.
+ * application needs. available
  */
 public class DelayerFactory {
 
-	public Delayer getBestAvailiable() {
+
+	public static Delayer getBestAvailable() {
 		Delayer result = null;
 
 		// Try SDK 1.4.2

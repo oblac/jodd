@@ -1,10 +1,12 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx;
 
 import java.awt.Color;
 
 /**
- * Various 2D methods. They should be combined with Graphics2D methods, for optimal
- * performances.
+ * Various 2D methods. They should be combined with <code>Graphics2D</code> methods,
+ * for optimal performances.
  */
 public class Gfx2D {
 
@@ -73,7 +75,7 @@ public class Gfx2D {
 
 	/**
 	 * Fills sprite with the same color (i.e. clears it).
-	 * It is <b>not</b> faster then fillRect(), but it is aware of Alpha channel.
+	 * It is <b>not</b> faster then fillRect(), but it is aware of alpha channel.
 	 *
 	 * @param col	fill color
 	 */
@@ -129,7 +131,7 @@ public class Gfx2D {
 
 	/**
 	 * Optimized Bresenham line algorithm. However, it is still a bit slower then
-	 * <code>Graphics2D.drawLine()</code>, but it is aware of Alpha channel.
+	 * <code>Graphics2D.drawLine()</code>, but it is aware of alpha channel.
 	 *
 	 * @param s		destination sprite
 	 * @param x0	line start

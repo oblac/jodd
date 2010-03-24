@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx.runners;
 
 import jodd.gfx.GfxPanel;
@@ -24,7 +26,7 @@ public abstract class AppletRunner extends JApplet {
 	}
 
 	/**
-	 * Defines default GUI: just GfxPanel in the ceter.
+	 * Defines default GUI: just GfxPanel in the center.
 	 */
 	public void initGUI() {
 		Container c = getContentPane();    // default BorderLayout used

@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx.runners;
 
 import jodd.gfx.GfxPanel;
@@ -8,7 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
-
 
 /**
  * Runs GfxPanel as stand-alone application.
@@ -48,7 +49,7 @@ public abstract class FrameRunner extends JFrame implements WindowListener {
 	public GfxPanel gfxPanel;
 
 	/**
-	 * Runs GfxPanel. It calles <code>initGui()</code> for defining main frame GUI.
+	 * Runs GfxPanel. It calls <code>initGui()</code> for defining main frame GUI.
 	 */
 	public final void run(GfxPanel gfxPanel) {
 		this.gfxPanel = gfxPanel;
@@ -67,7 +68,7 @@ public abstract class FrameRunner extends JFrame implements WindowListener {
 	}
 
 	/**
-	 * Defines default GUI: just GfxPanel in the ceter.
+	 * Defines default GUI: just GfxPanel in the center.
 	 */
 	public void initGUI() {
 		Container c = getContentPane();    // default BorderLayout used

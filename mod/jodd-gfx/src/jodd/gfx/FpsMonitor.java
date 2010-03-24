@@ -1,9 +1,9 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx;
 
-
 /**
- *
- * TODO: add array of last 'n' times, for average calculations
+ * Calculates current FPS.
  */
 public class FpsMonitor {
 

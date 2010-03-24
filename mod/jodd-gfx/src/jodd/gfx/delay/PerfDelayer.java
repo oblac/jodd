@@ -1,8 +1,10 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx.delay;
 
 import sun.misc.Perf;
 /**
- * Uses undocument Sun timings that are availiable only in SDK v1.4.2 and newer.
+ * Uses undocumented Sun timings that is available only in SDK v1.4.2 and newer.
  * <p>
  *
  * This updater locks CPU to 100%.
@@ -25,7 +27,7 @@ public class PerfDelayer extends Delayer {
 
 	@Override
 	public boolean end() {
-		long diff = (perf.highResCounter() - start) * invCountFreq; //1000000000L / countFreq;
+		diff = (perf.highResCounter() - start) * invCountFreq; //1000000000L / countFreq;
 		return endAndWait();
 	}
 

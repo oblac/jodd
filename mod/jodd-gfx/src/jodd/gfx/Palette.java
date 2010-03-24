@@ -1,10 +1,12 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx;
 
 /**
- * Pallette represents alternate way of coloring pixels.
- * Instead of storing the exact RBG colors, pallette may be used
+ * Palette represents alternate way of coloring pixels.
+ * Instead of storing the exact RBG colors, palette may be used
  * for holding values of colors and then using them from the
- * pallette.
+ * palette.
  */
 public class Palette {
 

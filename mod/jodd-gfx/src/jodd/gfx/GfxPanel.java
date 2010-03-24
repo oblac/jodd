@@ -1,7 +1,10 @@
+// Copyright (c) 2003-2010, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.gfx;
 
 import jodd.gfx.delay.Delayer;
 import jodd.gfx.delay.DefaultDelayer;
+import jodd.gfx.delay.DelayerFactory;
 
 import javax.swing.JPanel;
 import java.util.Random;
@@ -9,36 +12,37 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 
 /**
- * The core of the gfx applications, bundled with some utilility methods.
+ * The base panel of gfx applications, bundled with some utility methods.
  */
 public abstract class GfxPanel extends JPanel implements Runnable {
 
 	// ---------------------------------------------------------------- major settings
 
 	/**
-	 * Setting: name.
+	 * Panel name.
 	 */
 	public String name;
 
 	/**
-	 * Setting: dimensions.
+	 * Panel dimensions.
 	 */
 	public int width, height;
 
 	/**
-	 * Setting: desired frame rate. If set to 0, there will be no animation loop.
+	 * Desired frame rate. If <code>0</code>, there will be no animation loop.
 	 */
 	public int framerate;
 
 
-	// ---------------------------------------------------------------- other settings
-
-	public Delayer delayer = new DefaultDelayer();
+	/**
+	 * {#Delayer}.
+	 */
+	public Delayer delayer = DelayerFactory.getBestAvailable();
 
 	// ---------------------------------------------------------------- init
 
 	/**
-	 * Main sprite used as a screen, i.e. backgorund.
+	 * Main sprite used as a screen, i.e. background.
 	 */
 	public Sprite screen;
 
@@ -48,9 +52,8 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	 * <li>performs internal initialization, such as creates screen sprite etc.</li>
 	 * <li>calls the init() method</li>
 	 * <p>
-	 *
 	 * This method should never be called directly from client code, but by some
-	 * of <i>runners</i>.
+	 * of {@link jodd.gfx.runners.AppletRunner runners}).
 	 *
 	 * @see #setup()
 	 * @see #init()
@@ -66,20 +69,19 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Setups the application. Must be implemented by gfx application.
-	 * It must set the name, width, height and framerate properties.
+	 * Setups the application. Must be implemented by gfx application
+	 * to specify the name, width, height and desired framerate.
 	 */
 	public abstract void setup();
 
 	/**
-	 * Optional callback invoked immediatly after the initialization.
+	 * Optional callback invoked immediately after the initialization.
 	 * Often used for creating various objects etc.
 	 */
 	public void init() {}
 
 
 	// ---------------------------------------------------------------- run
-
 
 	/**
 	 * Runs the gfx application.
@@ -96,14 +98,14 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 
 	/**
 	 * Indicates that gfx application should update, but not render.
-	 * Also, when renedring takes too long, updates will be
+	 * Also, when rendering takes too long, updates will be
 	 * still called at constant framerate.
 	 */
 	public void update() {}
 
 
 	/**
-	 * Indicates that frame should be renedered to screen. It is called by
+	 * Indicates that frame should be rendered to screen. It is called by
 	 * GfxAppRunner at constant framerate. However, if frame drawing
 	 * takes long, framerate will drop.
 	 */
@@ -131,8 +133,8 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	public static final int MAX_SKIPPED_FRAMES = 16;
 
 	/**
-	 * Animator thread runs at specified framerate and invokes <code>loop()</code>
-	 * in every cycle.
+	 * Animator thread runs at specified framerate and invokes
+	 * <code>loop()</code> in every cycle.
 	 */
 	public void run() {
 		Graphics g = this.getGraphics();
