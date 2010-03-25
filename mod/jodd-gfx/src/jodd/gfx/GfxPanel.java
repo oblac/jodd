@@ -2,13 +2,9 @@
 
 package jodd.gfx;
 
-import jodd.gfx.delay.Delayer;
-import jodd.gfx.delay.NanoDelayer;
-
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.Random;
 
 /**
  * The base panel of gfx applications, bundled with some utility methods.
@@ -31,12 +27,6 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	 * Desired frame rate. If <code>0</code>, there will be no animation loop.
 	 */
 	public int framerate;
-
-
-	/**
-	 * {#Delayer delayer}.
-	 */
-	public Delayer delayer = new NanoDelayer();
 
 	// ---------------------------------------------------------------- init
 
@@ -129,64 +119,41 @@ public abstract class GfxPanel extends JPanel implements Runnable {
 	private boolean running;
 	private boolean paused;
 
-	public static final int MAX_SKIPPED_FRAMES = 16;
-
 	/**
 	 * Animator thread runs at specified framerate and invokes
 	 * <code>loop()</code> in every cycle.
 	 */
 	public void run() {
 		Graphics g = this.getGraphics();
-		delayer.setDefaultDelay(1000000000L / framerate);
+		long framePeriod = 1000000000L / framerate;
 		running = true;
 		paused = false;
-		boolean paint = true;
-		int skipped = 0;
+		long nextFrameStart = System.nanoTime();
 		while (running) {
-			delayer.start();
 			if (paused == false) {
-				update();
-				if (skipped > MAX_SKIPPED_FRAMES) {
-					skipped = 0;
-					paint = true;
+				long remaining = nextFrameStart - System.nanoTime();
+				if (remaining > 0) {
+					try {
+						Thread.sleep(remaining / 1000000);
+					} catch (Throwable ignore) {
+					}
 				}
-				if (paint) {
-					paint();
-				} else {
-					skipped++;
-				}
+				do {
+					update();
+					nextFrameStart += framePeriod;
+				} while (nextFrameStart < System.nanoTime());
 			}
+			paint();
 			g.drawImage(screen.img, 0, 0, null);		// active rendering
-			paint = delayer.end();
 		}
 	}
 
-
 	@Override
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
 		if (framerate == 0) {
 			paint();
 			g.drawImage(screen.img, 0, 0, null);
 		}
     }
-
-	// ---------------------------------------------------------------- various engine methods
-
-	/**
-	 * Delays execution by specified number of nanoseconds.
-	 */
-	public void sleep(long nanos) {
-		delayer.sleep(nanos);
-	}
-
-	protected Random rnd = new Random();
-
-	/**
-	 * Returns random int from range [0, max).
-	 */
-	public int random(int max) {
-		return rnd.nextInt(max);
-	}
 
 }

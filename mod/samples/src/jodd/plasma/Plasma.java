@@ -43,38 +43,39 @@ public class Plasma extends GfxPanel implements KeyListener {
 
 	// ---------------------------------------------------------------- update
 
-	int startx = 320;	// starting X offset of the panel txt
+	int txtx = 400;
 	int panelx = 400; 
 
 	@Override
 	public void update() {
-		if (startx < - 200) {
+		if (txtx < -380) {
+			// out
 			if (panelx < 320) {
-				panelx += 4;
+				panelx += 8;
 			}
 
 		} else {
-			// income
+			// in
 			if (panelx > 60) {
 				panelx -= 4;
 			}
 			if (panelx < 320) {
-				startx -= 2;
+				txtx -= 2;
 			}
 		}
+		plasmaDraw(screen.buf);
 	}
 
 	// ---------------------------------------------------------------- paint
 
 	@Override
 	public void paint() {
-		plasmaDraw(screen.buf);
-		screen.g2d.drawString("jodd gfx", 3, 236);
+		fpsMonitor.monitor();
+		screen.g2d.drawString("jodd gfx " + fpsMonitor.getFps(), 3, 236);
 		drawPanel();
 		if (panelx < 320) {
 			screen.g2d.drawImage(panel.img, panelx, 60, null);
 		}
-		fpsMonitor.print();
 	}
 
 	// ---------------------------------------------------------------- draw panel
@@ -88,17 +89,17 @@ public class Plasma extends GfxPanel implements KeyListener {
 		Graphics2D g2d = panel.g2d;
 
 		// letters
-		int x = startx;
+		int x = txtx;
 		if (panelx <= 60) {
 			g2d.setColor(Color.WHITE);
 			for (char msg : message) {
 				int lw = panelfm.charWidth(msg);
-				g2d.drawString(String.valueOf(msg), x, 35);
+				g2d.drawString(String.valueOf(msg), x, 37);
 				x += lw;
 			}
 		}
 		// rect
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(new Color(0xFF990000));
 		g2d.drawRect(0, 0, panel.width - 1, panel.height - 1);
 	}
 

@@ -10,8 +10,6 @@ public class FpsMonitor {
 
 	protected long time = System.currentTimeMillis();
 	protected int fps;
-	protected int fpsSum;
-	protected int fpsCount = -5;
 
 	/**
 	 * Returns current FPS.
@@ -20,16 +18,6 @@ public class FpsMonitor {
 		return fps;
 	}
 
-	/**
-	 * Returns average FPS.
-	 */
-	public float getAverageFps() {
-		if (fpsCount > 0) {
-			return (float) fpsSum / fpsCount;
-		} else {
-			return 0;
-		}
-	}
 
 	private int frames;
 
@@ -44,11 +32,6 @@ public class FpsMonitor {
 			time = System.currentTimeMillis();
 			fps = frames;
 			frames = 0;
-
-			fpsCount++;
-			if (fpsCount > 0) {
-				fpsSum += fps;
-			}
 			return true;
 		}
 		return false;
@@ -59,7 +42,7 @@ public class FpsMonitor {
 	 */
 	public void print() {
 		if (monitor()) {
-			System.out.println("fps: " + getFps() + "     av: " + getAverageFps());
+			System.out.println("fps: " + getFps());
 		}
 	}
 
