@@ -60,7 +60,7 @@
 
 <h2>Info</h2>
 <p>
-List of all <a href="madvoc-listAllActions.html">Action configurations</a>.<br>
+List of all <a href="madvocInfo.html">Madvoc configurations...</a>.<br>
 </p>
 
 </body>
