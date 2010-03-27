@@ -84,16 +84,21 @@ public class MadvocServletFilter implements Filter {
 			throw new ServletException(ex);
 		}
 		if (actionPath != null) {	// action path is not consumed
-			processUnhandledPath(actionPath, req, res,  chain);
+			actionPath = processUnhandledPath(actionPath, req, res);
+			if (actionPath != null) {
+				chain.doFilter(request, response);
+			}
 		}
 	}
 
 	/**
-	 * Process unconsumed action paths.
+	 * Process unconsumed action paths. Returns <code>null</code> if action path is consumed, otherwise
+	 * it returns action path to be consumed by filter chain.
+	 * By default it just returns action path.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected void processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		chain.doFilter(request, response);
+	protected String processUnhandledPath(String actionPath, ServletRequest request, ServletResponse response) throws IOException, ServletException {
+		return actionPath;
 	}
 
 }

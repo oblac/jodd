@@ -6,7 +6,7 @@
 <html>
 	<head><title>Simple jsp page</title></head>
 <body>
-<small><a href="index.jsp">back</a></small>
+<small><a href="index.html">back</a></small>
 All girls:<br>
 
 <%
