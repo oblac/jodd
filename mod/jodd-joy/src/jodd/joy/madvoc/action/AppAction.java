@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AppAction {
 
 	public static final String BACK = "#";
-	public static final String OK = "OK";
+	public static final String OK = "ok";
 
 	public static final String METHOD_POST = "POST";
 	public static final String METHOD_GET = "GET";
@@ -20,6 +20,7 @@ public abstract class AppAction {
 	public static final String METHOD_HEAD = "HEAD";
 	public static final String METHOD_DELETE = "DELETE";
 	public static final String METHOD_TRACE = "TRACE";
+	public static final String METHOD_OPTIONS = "OPTIONS";
 
 	public static final String REDIRECT = "redirect:";
 	public static final String DISPATCH = "dispatch:";
