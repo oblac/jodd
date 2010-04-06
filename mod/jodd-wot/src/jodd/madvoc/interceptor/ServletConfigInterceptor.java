@@ -5,6 +5,7 @@ package jodd.madvoc.interceptor;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.injector.RequestScopeInjector;
+import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
 import jodd.madvoc.injector.ApplicationScopeInjector;
 import jodd.madvoc.injector.MadvocContextScopeInjector;
@@ -39,6 +40,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	protected SessionScopeInjector sessionScopeInjector;
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
+	protected ServletContextScopeInjector servletContextScopeInjector;
 
 	@Override
 	public void init() {
@@ -46,6 +48,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		sessionScopeInjector = new SessionScopeInjector();
 		applicationScopeInjector = contextInjector.getApplicationScopeInjector();
 		madvocContextScopeInjector = contextInjector.getMadvocContextScopeInjector();
+		servletContextScopeInjector = contextInjector.getServletContextScopeInjector();
 	}
 
 	/**
@@ -74,7 +77,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	 * Performs injection.
 	 */
 	protected void inject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		madvocContextScopeInjector.inject(target, servletRequest, servletResponse);
+		servletContextScopeInjector.inject(target, servletRequest, servletResponse);
+		madvocContextScopeInjector.inject(target);
 		applicationScopeInjector.inject(target, servletRequest.getSession().getServletContext());
 		sessionScopeInjector.inject(target, servletRequest);
 		requestScopeInjector.prepare(servletRequest);
@@ -85,7 +89,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	 * Performs outjection.
 	 */
 	protected void outject(Object target, HttpServletRequest servletRequest) {
-		madvocContextScopeInjector.outject(target, servletRequest);
+		servletContextScopeInjector.outject(target);
+		madvocContextScopeInjector.outject(target);
 		applicationScopeInjector.outject(target, servletRequest.getSession().getServletContext());
 		sessionScopeInjector.outject(target, servletRequest);
 		requestScopeInjector.outject(target, servletRequest);

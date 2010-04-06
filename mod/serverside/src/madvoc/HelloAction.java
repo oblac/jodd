@@ -75,7 +75,7 @@ public class HelloAction {
 	// ---------------------------------------------------------------- 3
 
 
-	@In(scope=ScopeType.CONTEXT)
+	@In(scope=ScopeType.SERVLET)
 	HttpServletResponse servletResponse;
 
 	/**

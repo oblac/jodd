@@ -15,7 +15,7 @@
 <j:iter items="${actions}" var="cfg">
 	<tr>
 		<td><j:if test="${cfg.initialized}">init</j:if></td>
-		<td>${cfg.actionPath}</td>
+		<td><a href="${cfg.actionPath}">${cfg.actionPath}</a></td>
 		<td>${cfg.actionString}</td>
 	</tr>
 </j:iter>

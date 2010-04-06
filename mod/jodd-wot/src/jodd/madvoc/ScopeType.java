@@ -10,7 +10,8 @@ public enum ScopeType {
 	REQUEST(0),
 	SESSION(1),
 	APPLICATION(2),
-	CONTEXT(3);
+	CONTEXT(3),
+	SERVLET(4);
 
 	private int value;
 
@@ -28,7 +29,8 @@ public enum ScopeType {
 			case 0: return "Request";
 			case 1: return "Session";
 			case 2: return "Application";
-			case 3: return "Context";
+			case 3: return "MadvocContext";
+			case 4: return "Servlet";
 			default: return "Undefined";
 		}
 	}

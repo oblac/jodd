@@ -20,13 +20,13 @@ import madvoc.girl.Girl;
 @MadvocAction
 public class MiscAction implements Preparable {
 
-	@In(scope = ScopeType.CONTEXT)
+	@In(scope = ScopeType.SERVLET)
 	Map<String, Object> sessionMap;
 
-	@In(value="requestMap", scope = ScopeType.CONTEXT)
+	@In(value="requestMap", scope = ScopeType.SERVLET)
 	Map<String, Object> rmap;
 
-	@In(scope = ScopeType.CONTEXT)
+	@In(scope = ScopeType.SERVLET)
 	Map<String, Object> contextMap;
 
 
@@ -60,5 +60,31 @@ public class MiscAction implements Preparable {
 	public void post() {
 		System.out.println("MiscAction.post");
 		System.out.println(girl);
+	}
+
+	// ----------------------------------------------------------------
+
+	@In(scope = ScopeType.SERVLET)
+	int contextMajorVersion;
+
+	@In(scope = ScopeType.SERVLET)
+	String requestRequestURI;
+
+	@In(scope = ScopeType.SERVLET)
+	String requestQueryString;
+
+	@In(scope = ScopeType.SERVLET)
+	String requestLocalAddr;
+
+	@In(scope = ScopeType.SERVLET)
+	String requestRemoteAddr;
+
+	@Action
+	public void raw() {
+		System.out.println("major version: " + contextMajorVersion);
+		System.out.println("requestRequestURI = " + requestRequestURI);
+		System.out.println("requestQueryString = " + requestQueryString);
+		System.out.println("requestLocalAddr = " + requestLocalAddr);
+		System.out.println("requestRemoteAddr = " + requestRemoteAddr);
 	}
 }
