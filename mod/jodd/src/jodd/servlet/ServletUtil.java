@@ -4,6 +4,7 @@ package jodd.servlet;
 
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,8 +141,9 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- cookie
 
 	/**
-	 * Returns cookie value from client.
-	 *
+	 * Finds and returns cookie from client by its name.
+	 * Only the first cookie is returned.
+	 * @see #getAllCookies(javax.servlet.http.HttpServletRequest, String)
 	 * @return cookie value or <code>null</code> if cookie with specified name doesn't exist.
 	 */
 	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
@@ -154,6 +156,27 @@ public class ServletUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns all cookies from client that matches provided name.
+	 * @see #getCookie(javax.servlet.http.HttpServletRequest, String) 
+	 */
+	public static Cookie[] getAllCookies(HttpServletRequest request, String cookieName) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies == null) {
+			return null;
+		}
+		ArrayList<Cookie> list = new ArrayList<Cookie>(cookies.length);
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(cookieName)) {
+				list.add(cookie);
+			}
+		}
+		if (list.isEmpty()) {
+			return null;
+		}
+		return list.toArray(new Cookie[list.size()]);
 	}
 
 
