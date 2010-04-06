@@ -3,6 +3,7 @@
 package jodd.servlet.tag;
 
 /**
+ * Status of iteration of some looping tag.
  * The {@link LoopTag iterator tag} can export an IteratorStatus object so that
  * one can get information about the status of the iteration, such as:
  * <ul>
