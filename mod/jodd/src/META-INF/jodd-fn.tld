@@ -287,4 +287,12 @@
 		<function-signature>java.lang.String multiSelectedValue(java.lang.Object,java.lang.String)</function-signature>
 	</function>
 
+
+	<!-- csrf -->
+	<function>
+		<name>prepareCsrfToken</name>
+		<function-class>jodd.servlet.CsrfShield</function-class>
+		<function-signature>java.lang.String prepareCsrfToken(javax.servlet.http.HttpSession)</function-signature>
+	</function>
+
 </taglib>

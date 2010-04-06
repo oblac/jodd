@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.io.Serializable;
 
 /**
- * Shields agains CSRF attacks.
+ * Shields against CSRF attacks.
  */
 public class CsrfShield {
 
@@ -108,7 +108,7 @@ C	 */
 	}
 
 	/**
-	 * Csrf Token.
+	 * CSRF Token.
 	 */
 	public static class Token implements Serializable {
 
