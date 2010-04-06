@@ -292,7 +292,7 @@
 	<function>
 		<name>prepareCsrfToken</name>
 		<function-class>jodd.servlet.CsrfShield</function-class>
-		<function-signature>java.lang.String prepareCsrfToken(javax.servlet.http.HttpSession)</function-signature>
+		<function-signature>java.lang.String prepareCsrfToken(javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 
 </taglib>

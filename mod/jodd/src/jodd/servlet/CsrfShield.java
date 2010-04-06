@@ -6,6 +6,7 @@ import jodd.util.RandomStringUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ public class CsrfShield {
 	public static final String CSRF_TOKEN_SET = "_csrf_token_set";
 
 	protected static int timeToLive = 600;
+	protected static int maxTokensPerSession = 20;
 
 	/**
 	 * Sets time to live for tokens in seconds.
@@ -30,7 +32,23 @@ public class CsrfShield {
 		timeToLive = periodInSeconds;
 	}
 
+	/**
+	 * Sets max number of tokens that will be stored for single session.
+	 * It is actually the number of CSRF validation that may occur in the
+	 * same time. Limit prevents from malicious growing of the set.
+	 */
+	public static void setMaxTokensPerSession(int maxTokensPerSession) {
+		CsrfShield.maxTokensPerSession = maxTokensPerSession;
+	}
+
 	// ---------------------------------------------------------------- prepare
+
+	/**
+	 * @see #prepareCsrfToken(javax.servlet.http.HttpSession, int)
+	 */
+	public static String prepareCsrfToken(PageContext pageContext) {
+		return prepareCsrfToken(pageContext.getSession());
+	}
 
 	/**
 	 * @see #prepareCsrfToken(javax.servlet.http.HttpSession, int)
@@ -43,7 +61,7 @@ public class CsrfShield {
 	 * Generates new CSRF token and puts it in the session. Returns generated token value.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static String prepareCsrfToken(HttpSession session, int timeToLive) {
+	public static synchronized String prepareCsrfToken(HttpSession session, int timeToLive) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if (tokenSet == null) {
 			tokenSet = new HashSet<Token>();
@@ -53,9 +71,38 @@ public class CsrfShield {
 		boolean unique;
 		do {
 			value = RandomStringUtil.randomAlphaNumeric(32);
+			assureSize(tokenSet);
 			unique = tokenSet.add(new Token(value, timeToLive));
 		} while (!unique);
 		return value;
+	}
+
+
+	/**
+	 * Removes expired tokens if token set is full.
+	 * @see #setMaxTokensPerSession(int)  
+	 */
+	protected static void assureSize(Set<Token> tokenSet) {
+		if (tokenSet.size() < maxTokensPerSession) {
+			return;
+		}
+		long validUntilMin = Long.MAX_VALUE;
+		Token tokenToRemove = null;
+		Iterator<Token> iterator = tokenSet.iterator();
+		while (iterator.hasNext()) {
+			Token token = iterator.next();
+			if (token.isExpired()) {
+				iterator.remove();
+				continue;
+			}
+			if (token.validUntil < validUntilMin) {
+				validUntilMin = token.validUntil;
+				tokenToRemove = token;
+			}
+		}
+		if ((tokenToRemove != null) && (tokenSet.size() >= maxTokensPerSession)) {
+			tokenSet.remove(tokenToRemove);
+		}
 	}
 
 
@@ -83,7 +130,7 @@ public class CsrfShield {
 	 * Checks token value.
 C	 */
 	@SuppressWarnings({"unchecked"})
-	public static boolean checkCsrfToken(HttpSession session, String tokenValue) {
+	public static synchronized boolean checkCsrfToken(HttpSession session, String tokenValue) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if ((tokenSet == null) && (tokenValue == null)) {
 			return true;
