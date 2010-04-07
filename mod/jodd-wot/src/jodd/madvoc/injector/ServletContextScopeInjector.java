@@ -3,14 +3,16 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeType;
+import jodd.servlet.CsrfShield;
 import jodd.servlet.HttpServletContextMap;
 import jodd.servlet.HttpServletRequestMap;
 import jodd.servlet.HttpSessionMap;
+import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpSession;
  * <p>raw servlet objects (request, session...)
  * <p>map adapters
  * <p>various values from servlet objects
+ * <p>cookies
  */
 public class ServletContextScopeInjector extends BaseScopeInjector {
 
@@ -30,6 +33,10 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 	public static final String REQUEST_MAP = "requestMap";
 	public static final String SESSION_MAP = "sessionMap";
 	public static final String CONTEXT_MAP = "contextMap";
+
+	public static final String COOKIE_NAME = "cookie";
+
+	public static final String CSRF_NAME = "csrfTokenValid";
 
 	public ServletContextScopeInjector() {
 		super(ScopeType.SERVLET);
@@ -72,6 +79,27 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 				value = BeanUtil.getDeclaredProperty(servletRequest.getSession(), StringUtil.uncapitalize(in.name.substring(SESSION_NAME.length())));
 			} else if (in.name.startsWith(CONTEXT_NAME)) {
 				value = BeanUtil.getDeclaredProperty(servletRequest.getSession().getServletContext(), StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
+			} else
+
+			// csrf
+			if (in.name.equals(CSRF_NAME)) {
+				value = Boolean.valueOf(CsrfShield.checkCsrfToken(servletRequest));
+			}
+
+			// cookies
+			if (in.name.startsWith(COOKIE_NAME)) {
+				String cookieName = StringUtil.uncapitalize(in.name.substring(COOKIE_NAME.length()));
+				if (fieldType.isArray()) {
+					if (fieldType.getComponentType().equals(Cookie.class)) {
+						if (StringUtil.isEmpty(cookieName)) {
+							value = servletRequest.getCookies();		// get all cookies
+						} else {
+							value = ServletUtil.getAllCookies(servletRequest, cookieName);	// get all cookies by name
+						}
+					}
+				} else {
+					value = ServletUtil.getCookie(servletRequest, cookieName);	// get single cookie
+				}
 			}
 
 			if (value != null) {
@@ -108,11 +136,23 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-	public void outject(Object target) {
+
+	public void outject(Object target, HttpServletResponse servletResponse) {
 		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
 		if (outjectData == null) {
 			return;
 		}
-		throw new MadvocException("Servlet context can't be outjected.");
+
+		for (ScopeData.Out out : outjectData) {
+			if (out.name.startsWith(COOKIE_NAME)) {
+				Cookie cookie = (Cookie) BeanUtil.getDeclaredProperty(target, out.name);
+				if (cookie != null) {
+					servletResponse.addCookie(cookie);
+				}
+			}
+		}
+
+
+
 	}
 }

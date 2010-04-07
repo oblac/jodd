@@ -69,7 +69,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		Object target = actionRequest.getAction();
 		inject(target, servletRequest, serlvetResponse);
 		Object result = actionRequest.invoke();
-		outject(target, servletRequest);
+		outject(target, servletRequest, serlvetResponse);
 		return result;
 	}
 
@@ -88,8 +88,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	/**
 	 * Performs outjection.
 	 */
-	protected void outject(Object target, HttpServletRequest servletRequest) {
-		servletContextScopeInjector.outject(target);
+	protected void outject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		servletContextScopeInjector.outject(target, servletResponse);
 		madvocContextScopeInjector.outject(target);
 		applicationScopeInjector.outject(target, servletRequest.getSession().getServletContext());
 		sessionScopeInjector.outject(target, servletRequest);

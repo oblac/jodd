@@ -34,7 +34,7 @@ public class MadvocConfig {
 		detectDuplicatePathsEnabled = true;
 		actionPathMappingEnabled = false;
 		preventCaching = true;
-		defaultRequestScopeInjectorConfig = new RequestScopeInjector.Config();
+		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 	}
 
 	// ---------------------------------------------------------------- encoding
@@ -258,17 +258,16 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- request
 
-	protected RequestScopeInjector.Config defaultRequestScopeInjectorConfig;
+	protected RequestScopeInjector.Config requestScopeInjectorConfig;
 
-	public RequestScopeInjector.Config getDefaultRequestScopeInjectorConfig() {
-		return defaultRequestScopeInjectorConfig;
+	public RequestScopeInjector.Config getRequestScopeInjectorConfig() {
+		return requestScopeInjectorConfig;
 	}
 
 	/**
-	 * Specifies default {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration
-	 * that will be used on injector creation.
+	 * Specifies {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration.
 	 */
-	public void setDefaultRequestScopeInjectorConfig(RequestScopeInjector.Config defaultRequestScopeInjectorConfig) {
-		this.defaultRequestScopeInjectorConfig = defaultRequestScopeInjectorConfig;
+	public void setRequestScopeInjectorConfig(RequestScopeInjector.Config requestScopeInjectorConfig) {
+		this.requestScopeInjectorConfig = requestScopeInjectorConfig;
 	}
 }

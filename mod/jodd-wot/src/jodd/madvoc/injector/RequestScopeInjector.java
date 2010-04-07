@@ -4,7 +4,6 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.result.MoveResult;
 import jodd.servlet.upload.MultipartRequestWrapper;
@@ -20,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 
 
 /**
- * Request scope injector. Perfroms {@link MoveResult moving} as well.
+ * Request scope injector. Performs {@link MoveResult moving} as well.
  */
 public class RequestScopeInjector extends BaseScopeInjector {
 
@@ -29,11 +28,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	public RequestScopeInjector(MadvocConfig madvocConfig) {
 		super(ScopeType.REQUEST);
 		this.encoding = madvocConfig.getEncoding();
-		try {
-			this.config = madvocConfig.getDefaultRequestScopeInjectorConfig().clone();
-		} catch (CloneNotSupportedException cnspex) {
-			throw new MadvocException(cnspex);
-		}
+		this.config = madvocConfig.getRequestScopeInjectorConfig();
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -41,6 +36,9 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	protected final String encoding;
 	protected final Config config;
 
+	/**
+	 * Returns encoding used inside. The same as Madvoc encoding.
+	 */
 	public String getEncoding() {
 		return encoding;
 	}
@@ -52,7 +50,10 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		return config;
 	}
 
-	public static class Config implements Cloneable {
+	/**
+	 * Request scope configuration.
+	 */
+	public static class Config {
 		protected boolean ignoreEmptyRequestParams;
 		protected boolean treatEmptyParamsAsNull;
 		protected boolean injectAttributes = true;
@@ -140,11 +141,6 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		 */
 		public void setEncodeGetParams(boolean encodeGetParams) {
 			this.encodeGetParams = encodeGetParams;
-		}
-
-		@Override
-		public Config clone() throws CloneNotSupportedException {
-			return (Config) super.clone();
 		}
 	}
 
