@@ -42,7 +42,40 @@ public class DbOrmManager {
 
 	// ---------------------------------------------------------------- prefix & suffix
 
+	protected boolean tableNameUppercase = true;
+	protected boolean columnNameUppercase = true;
 	protected String tableNamePrefix;
+	protected String tableNameSuffix;
+	protected String schemaName;
+
+
+	/**
+	 * Specifies if table names are in upper case.
+	 */
+	public void setTableNameUppercase(boolean tableNameUppercase) {
+		this.tableNameUppercase = tableNameUppercase;
+	}
+
+	/**
+	 * Returns <code>true</code> if table names are uppercase.
+	 */
+	public boolean isTableNameUppercase() {
+		return tableNameUppercase;
+	}
+
+	/**
+	 * Specifies if column names are in upper case.
+	 */
+	public void setColumnNameUppercase(boolean columnNameUppercase) {
+		this.columnNameUppercase = columnNameUppercase;
+	}
+
+	/**
+	 * Returns <code>true</code> if column names are uppercase.
+	 */
+	public boolean isColumnNameUppercase() {
+		return columnNameUppercase;
+	}
 
 	/**
 	 * Specifies default table prefix for all tables. This prefix affect default
@@ -60,8 +93,6 @@ public class DbOrmManager {
 		return tableNamePrefix;
 	}
 
-	protected String tableNameSuffix;
-
 	/**
 	 * Returns table name suffix.
 	 */
@@ -76,8 +107,6 @@ public class DbOrmManager {
 		this.tableNameSuffix = suffix == null ? null : suffix.toUpperCase();
 	}
 
-
-	protected String schemaName;
 	/**
 	 * Returns default schema name.
 	 */
@@ -159,7 +188,7 @@ public class DbOrmManager {
 	 * Registers just type and entity names. Enough for most usages.
 	 */
 	public DbEntityDescriptor registerType(Class type) {
-		DbEntityDescriptor ded = new DbEntityDescriptor(type, schemaName, tableNamePrefix, tableNameSuffix);
+		DbEntityDescriptor ded = createDbEntityDescriptor(type);
 		DbEntityDescriptor existing = descriptors.put(type, ded);
 		if (existing != null) {
 			throw new DbOrmException("Type registration failed! Type '" + existing.getType() + "' already registered.");
@@ -200,12 +229,21 @@ public class DbOrmManager {
 	public DbEntityDescriptor removeEntity(Class type) {
 		DbEntityDescriptor ded = descriptors.remove(type);
 		if (ded == null) {
-			ded = new DbEntityDescriptor(type, schemaName, tableNamePrefix, tableNameSuffix);
+			ded = createDbEntityDescriptor(type);
 		}
 		entityNames.remove(ded.getEntityName());
 		tableNames.remove(ded.getTableName());
 		return ded;
 	}
+
+
+	/**
+	 * Creates {@link DbEntityDescriptor}.
+	 */
+	protected DbEntityDescriptor createDbEntityDescriptor(Class type) {
+		return new DbEntityDescriptor(type, schemaName, tableNamePrefix, tableNameSuffix, tableNameUppercase, columnNameUppercase);
+	}
+
 
 	// ---------------------------------------------------------------- stats
 

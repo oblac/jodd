@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class DbEntityDescriptor {
 
-	public DbEntityDescriptor(Class type, String schemaName, String tableNamePrefix, String tableNameSuffix) {
+	public DbEntityDescriptor(Class type, String schemaName, String tableNamePrefix, String tableNameSuffix, boolean tableNameUppercase, boolean columnNameUppercase) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
 		this.schemaName = DbMetaUtil.resolveSchemaName(type, schemaName);
-		this.tableName = DbMetaUtil.resolveTableName(type, tableNamePrefix, tableNameSuffix);
+		this.tableName = DbMetaUtil.resolveTableName(type, tableNamePrefix, tableNameSuffix, tableNameUppercase);
+		this.columnNameUppercase = columnNameUppercase;
+		this.tableNameUppercase = tableNameUppercase;
 	}
 
 	// ---------------------------------------------------------------- type and table
@@ -29,6 +31,8 @@ public class DbEntityDescriptor {
 	private final boolean isAnnotated;
 	private final String tableName;
 	private final String schemaName;
+	private final boolean columnNameUppercase;
+	private final boolean tableNameUppercase;
 
 	/**
 	 * Returns entity type.
@@ -65,6 +69,14 @@ public class DbEntityDescriptor {
 		return schemaName;
 	}
 
+	public boolean isColumnNameUppercase() {
+		return columnNameUppercase;
+	}
+
+	public boolean isTableNameUppercase() {
+		return tableNameUppercase;
+	}
+
 	// ---------------------------------------------------------------- columns and fields
 
 	private DbEntityColumnDescriptor[] columnDescriptors;
@@ -97,7 +109,7 @@ public class DbEntityDescriptor {
 		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
 		int idcount = 0;
 		for (Field field : fields) {
-			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated);
+			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated, columnNameUppercase);
 			if (dec != null) {
 				decList.add(dec);
 				if (dec.isId) {

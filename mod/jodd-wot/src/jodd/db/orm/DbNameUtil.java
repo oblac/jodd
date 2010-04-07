@@ -9,15 +9,15 @@ public class DbNameUtil {
 
 	// ---------------------------------------------------------------- tables
 
-	public static String convertClassNameToTableName(Class clazz) {
-		return convertClassNameToTableName(clazz, null, null);
+	public static String convertClassNameToTableName(Class clazz, boolean toUpperCase) {
+		return convertClassNameToTableName(clazz, null, null, toUpperCase);
 	}
-	public static String convertClassNameToTableName(Class clazz, String tablePrefix, String tableSuffix) {
-		return convertClassNameToTableName(clazz.getSimpleName(), tablePrefix, tableSuffix);
+	public static String convertClassNameToTableName(Class clazz, String tablePrefix, String tableSuffix, boolean toUpperCase) {
+		return convertClassNameToTableName(clazz.getSimpleName(), tablePrefix, tableSuffix, toUpperCase);
 	}
 
-	public static String convertClassNameToTableName(String className) {
-		return convertClassNameToTableName(className, null, null);
+	public static String convertClassNameToTableName(String className, boolean toUpperCase) {
+		return convertClassNameToTableName(className, null, null, toUpperCase);
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class DbNameUtil {
 	 * upper ones. All upper characters are prefixed with '_'. Therefore, class name
 	 * <code>FooBooZoo</code> will be converted to <code>FOO_BOO_ZOO</code>.
 	 */
-	public static String convertClassNameToTableName(String className, String tablePrefix, String tableSuffix) {
+	public static String convertClassNameToTableName(String className, String tablePrefix, String tableSuffix, boolean toUpperCase) {
 		StringBuilder tableName = new StringBuilder(className.length() + 10);
 		if (tablePrefix != null) {
 			tableName.append(tablePrefix);
@@ -33,9 +33,12 @@ public class DbNameUtil {
 		for (int i = 0; i < className.length(); i++) {
 			char c = className.charAt(i);
 			if ((i != 0) && (Character.isUpperCase(c) == true)) {
-				tableName.append('_').append(c);
-			} else {
+				tableName.append('_');
+			}
+			if (toUpperCase) {
 				tableName.append(Character.toUpperCase(c));
+			} else {
+				tableName.append(Character.toLowerCase(c));
 			}
 		}
 		if (tableSuffix != null) {
@@ -86,14 +89,17 @@ public class DbNameUtil {
 	/**
 	 * Converts property name to column name.
 	 */
-	public static String convertPropertyNameToColumnName(String propertyName) {
+	public static String convertPropertyNameToColumnName(String propertyName, boolean toUpperCase) {
 		StringBuilder tableName = new StringBuilder(propertyName.length() + 10);
 		for (int i = 0; i < propertyName.length(); i++) {
 			char c = propertyName.charAt(i);
 			if ((i != 0) && (Character.isUpperCase(c) == true)) {
-				tableName.append('_').append(c);
-			} else {
+				tableName.append('_');
+			}
+			if (toUpperCase) {
 				tableName.append(Character.toUpperCase(c));
+			} else {
+				tableName.append(Character.toLowerCase(c));
 			}
 		}
 		return tableName.toString();

@@ -27,14 +27,14 @@ public class DbMetaUtil {
 	 * type is not annotated, table name will be set to wildcard pattern '*'
 	 * (to match all tables).
 	 */
-	public static String resolveTableName(Class<?> type, String tableNamePrefix, String tableNameSuffix) {
+	public static String resolveTableName(Class<?> type, String tableNamePrefix, String tableNameSuffix, boolean toUpperCase) {
 		String tableName = null;
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		if (dbTable != null) {
 			tableName = dbTable.value().trim();
 		}
 		if ((tableName == null) || (tableName.length() == 0)) {
-			tableName = DbNameUtil.convertClassNameToTableName(type, tableNamePrefix, tableNameSuffix);
+			tableName = DbNameUtil.convertClassNameToTableName(type, tableNamePrefix, tableNameSuffix, toUpperCase);
 		}
 		return tableName;
 	}
@@ -65,7 +65,7 @@ public class DbMetaUtil {
 	 * from annotation. If field is not annotated, then field will be ignored
 	 * if entity is annotated. Otherwise, column name is generated from the field name.
 	 */
-	public static DbEntityColumnDescriptor resolveColumnDescriptors(DbEntityDescriptor ded, Field field, boolean isAnnotated) {
+	public static DbEntityColumnDescriptor resolveColumnDescriptors(DbEntityDescriptor ded, Field field, boolean isAnnotated, boolean toUpperCase) {
 		String columnName = null;
 		boolean isId = false;
 		Class<? extends SqlType> sqlTypeClass = null;
@@ -87,7 +87,7 @@ public class DbMetaUtil {
 		}
 
 		if ((columnName == null) || (columnName.length() == 0)) {
-			columnName = DbNameUtil.convertPropertyNameToColumnName(field.getName());
+			columnName = DbNameUtil.convertPropertyNameToColumnName(field.getName(), toUpperCase);
 		}
 		if (sqlTypeClass == SqlType.class) {
 			sqlTypeClass = null;
