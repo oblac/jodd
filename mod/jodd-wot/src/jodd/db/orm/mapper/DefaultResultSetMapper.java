@@ -136,11 +136,11 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					columnName = null;
 				}
 				if (columnName != null) {
-					columnName = columnName.trim().toUpperCase();
+					columnName = columnName.trim();//.toUpperCase();
 				}
 				columnNames[i] = columnName;
 				if (tableName != null) {
-					tableName = tableName.trim().toUpperCase();
+					tableName = tableName.trim();//.toUpperCase();
 				}
 				tableNames[i] = tableName;
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
@@ -237,7 +237,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				}
 				DbEntityDescriptor ded = dbOrmManager.lookupType(types[i]);
 				if (ded != null) {
-					cachedTypesTableNames[i] = ded.getTableName();
+					cachedTypesTableNames[i] = ded.getTableName();//.toUpperCase();
 				}
 			}
 			cachedUsedTypes = types;			
