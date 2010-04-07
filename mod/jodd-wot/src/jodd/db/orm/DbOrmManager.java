@@ -80,10 +80,10 @@ public class DbOrmManager {
 	/**
 	 * Specifies default table prefix for all tables. This prefix affect default
 	 * conversions from bean name to table name and vice-versa when no annotations
-	 * are used. Prefix is always stored in uppercase.
+	 * are used.
 	 */
 	public void setTableNamePrefix(String prefix) {
-		this.tableNamePrefix = prefix == null ? null : prefix.toUpperCase();
+		this.tableNamePrefix = prefix;
 	}
 
 	/**
@@ -101,10 +101,10 @@ public class DbOrmManager {
 	}
 
 	/**
-	 * Specifies default table name suffix. Suffix is always stored in uppercase.
+	 * Specifies default table name suffix.
 	 */
 	public void setTableNameSuffix(String suffix) {
-		this.tableNameSuffix = suffix == null ? null : suffix.toUpperCase();
+		this.tableNameSuffix = suffix;
 	}
 
 	/**
