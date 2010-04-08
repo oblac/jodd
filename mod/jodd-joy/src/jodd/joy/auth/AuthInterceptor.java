@@ -16,6 +16,15 @@ import javax.servlet.http.HttpSession;
 /**
  * Authentication checking interceptor, the core of Jodd auth system.
  * Performs authentication and authorization.
+ * <p>
+ * <b>Authentication</b> pertains to the question “Who are you?”. Usually a user
+ * authenticates himself by successfully associating his “principal”
+ * (often a username) with his “credentials” (often a password).
+ * <p>
+ * <b>Authorization</b> pertains to the question “What may you do?”. In JEE applications,
+ * this is achieved by making secured resources accessible (“requestable” in web applications)
+ * to particular “roles”. Principals (i.e. users) who are associated with one or more of
+ * these roles will have access to those resources.
  */
 public abstract class AuthInterceptor extends ActionInterceptor {
 
@@ -44,10 +53,12 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			return AppAction.REDIRECT + AppAction.ALIAS_LOGIN;
 		}
 
-		// ANY OTHER PAGE
+		// any other page then logout
 		Object sessionObject = AuthUtil.getActiveSession(session);
 		if (sessionObject != null) {
+			// USER IS LOGGED IN
 			if (actionPath.equals(loginActionPath)) {
+				// never visit login path while user is logged in
 				return AppAction.REDIRECT + AppAction.ALIAS_INDEX;
 			}
 			if (authorize(actionRequest, sessionObject) == false) {
@@ -69,18 +80,24 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 				}
 				return actionRequest.invoke();
 			}
+			// no session, invalid cookie
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 		}
 
+		// ANY PAGE BUT LOGIN
 		if (actionPath.equals(loginActionPath) == false) {
-			log.debug("session is not active, chain to login page");
-			// session is not active, redirect to login
-			servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getActionPath(servletRequest));
-			actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return AppAction.CHAIN + AppAction.ALIAS_LOGIN;
+			if (authorize(actionRequest, null) == false) {
+				// session is not active, redirect to login
+				log.debug("authentication required");
+				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getActionPath(servletRequest));
+				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return AppAction.CHAIN + AppAction.ALIAS_LOGIN;
+			}
+			// public page
+			return actionRequest.invoke();
 		}
 
-		// LOGIN
+		// LOGIN PAGE
 		// session is not active, but user wants to login
 		String path = loginSuccessPath != null ? servletRequest.getParameter(loginSuccessPath) : null;
 		if (StringUtil.isEmpty(path)) {
@@ -131,8 +148,11 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 
 	/**
-	 * Performs authorization once when user session is authenticated and active.
-	 * Default implementation returns <code>true</code>. 
+	 * Performs authorization of a request. User may or may not be
+	 * authenticated. Default implementation returns <code>true</code>.
+	 * <p>
+	 * For user that is not authenticated, <code>sessionObject</code> is <code>null</code>.
+	 * Authenticated users will have their session.
 	 */
 	protected abstract boolean authorize(ActionRequest request, Object sessionObject);
 
