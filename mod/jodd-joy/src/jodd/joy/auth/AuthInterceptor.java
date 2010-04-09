@@ -30,8 +30,27 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthInterceptor.class);
 
+	/**
+	 * Action path that performs user login.
+	 */
 	protected String loginActionPath = AuthAction.LOGIN_ACTION_PATH;
+
+	/**
+	 * Action path that performs user logout.
+	 */
 	protected String logoutActionPath = AuthAction.LOGOUT_ACTION_PATH;
+	
+	/**
+	 * Action path to redirect to after successful login, if no success path is
+	 * defined as request parameters.
+	 */
+	protected String loginSuccessActionPath = AuthAction.ALIAS_INDEX;
+
+	/**
+	 * Action path to redirect to after successful logout.
+	 */
+	protected String logoutSuccessActionPath = AuthAction.ALIAS_LOGIN;
+
 	protected String loginUsername = "j_username";
 	protected String loginPassword = "j_password";
 	protected String loginSuccessPath = "j_path";
@@ -50,7 +69,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			log.debug("logout user");
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 			removeSessionObject(session);
-			return AppAction.REDIRECT + AppAction.ALIAS_LOGIN;
+			return AppAction.REDIRECT + logoutSuccessActionPath;
 		}
 
 		// any other page then logout
@@ -58,7 +77,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		if (sessionObject != null) {
 			// USER IS LOGGED IN
 			if (actionPath.equals(loginActionPath)) {
-				// never visit login path while user is logged in
+				// never access login path while user is logged in
 				return AppAction.REDIRECT + AppAction.ALIAS_INDEX;
 			}
 			if (authorize(actionRequest, sessionObject) == false) {
@@ -99,11 +118,6 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 		// LOGIN PAGE
 		// session is not active, but user wants to login
-		String path = loginSuccessPath != null ? servletRequest.getParameter(loginSuccessPath) : null;
-		if (StringUtil.isEmpty(path)) {
-			path = AppAction.ALIAS_INDEX;
-		}
-
 		if (loginToken != null) {
 			String token = servletRequest.getParameter(loginToken);
 			// check token
@@ -126,6 +140,12 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		log.info("login {} ok", username);
 		if (authorize(actionRequest, sessionObject) == false) {
 			return AppAction.REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+		}
+
+		// LOGGED IN
+		String path = loginSuccessPath != null ? servletRequest.getParameter(loginSuccessPath) : null;
+		if (StringUtil.isEmpty(path)) {
+			path = loginSuccessActionPath;
 		}
 		return AppAction.REDIRECT + path;
 	}
