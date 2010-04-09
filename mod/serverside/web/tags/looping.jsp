@@ -37,6 +37,15 @@
 <j:iter items="1,2,3" var="i" from="2" status="s">${i} ${s} | </j:iter>
 <j:iter items="1,2,3" var="i" from="3" status="s">${i} ${s} | </j:iter>(no iteration)
 
+<j:iter items="1,2,3" var="i" status="s" count="0">${i} ${s} | </j:iter>(no iteration)	
+<j:iter items="1,2,3" var="i" status="s" count="1">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="2">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="3">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="4">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="4" from="1">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="4" from="2">${i} ${s} | </j:iter>	
+<j:iter items="1,2,3" var="i" status="s" count="10" from="10">${i} ${s} | </j:iter>(no iteration)	
+
 </pre>
 </body>
 </html>

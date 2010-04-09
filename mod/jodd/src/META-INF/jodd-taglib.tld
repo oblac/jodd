@@ -112,6 +112,12 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
+			<name>count</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
+		<attribute>
 			<name>modulus</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

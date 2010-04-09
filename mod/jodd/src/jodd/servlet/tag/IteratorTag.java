@@ -24,6 +24,7 @@ public class IteratorTag extends SimpleTagSupport {
 	protected int modulus = 2;
 	protected String scope;
 	protected int from;
+	protected int count = -1;
 
 	protected IteratorStatus iteratorStatus;
 
@@ -69,6 +70,13 @@ public class IteratorTag extends SimpleTagSupport {
 		this.from = from;
 	}
 
+	/**
+	 * Sets count as total number of items to iterate.
+	 */
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	@Override
 	public void doTag() throws JspException {
 		if (items == null) {
@@ -87,13 +95,13 @@ public class IteratorTag extends SimpleTagSupport {
 		}
 
 		if (items instanceof Collection) {
-			iterateCollection((Collection) items, from, pageContext);
+			iterateCollection((Collection) items, from, count, pageContext);
 		} else if (items.getClass().isArray()) {
-			iterateArray((Object[]) items, from, pageContext);
+			iterateArray((Object[]) items, from, count, pageContext);
 		} else if (items instanceof String) {
-			iterateArray(StringArrayConverter.valueOf(items), from, pageContext);
+			iterateArray(StringArrayConverter.valueOf(items), from, count, pageContext);
 		} else {
-			throw new JspException("Provided items are not iterable (neither java.util.Collection, Objects array...).");
+			throw new JspException("Provided items are not iterable (neither Collection, Objects array...).");
 		}
 
 		// cleanup
@@ -104,13 +112,28 @@ public class IteratorTag extends SimpleTagSupport {
 	}
 
 	/**
+	 * Calculates 'TO'.
+	 */
+	protected int calculateTo(int from, int count, int size) {
+		int to = size;
+		if (count != -1) {
+			to = from + count;
+			if (to > size) {
+				to = size;
+			}
+		}
+		return to;
+	}
+
+	/**
 	 * Iterates collection.
 	 */
-	protected void iterateCollection(Collection collection, int from, PageContext pageContext) throws JspException {
+	protected void iterateCollection(Collection collection, int from, int count, PageContext pageContext) throws JspException {
 		JspFragment body = getJspBody();
 		Iterator iter = collection.iterator();
 		int i = 0;
-		while (iter.hasNext()) {
+		int to = calculateTo(from, count, collection.size());
+		while (i < to) {
 			Object item = iter.next();
 			if (i >= from) {
 				if (status != null) {
@@ -126,11 +149,12 @@ public class IteratorTag extends SimpleTagSupport {
 	/**
 	 * Iterates arrays.
 	 */
-	protected void iterateArray(Object[] array, int from, PageContext pageContext) throws JspException {
+	protected void iterateArray(Object[] array, int from, int count, PageContext pageContext) throws JspException {
 		JspFragment body = getJspBody();
 		int len = array.length;
-		int last = len - 1;
-		for (int i = from; i < len; i++) {
+		int to = calculateTo(from, count, len);
+		int last = to - 1;
+		for (int i = from; i < to; i++) {
 			Object item = array[i];
 			if (status != null) {
 				iteratorStatus.next(i == last);
