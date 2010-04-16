@@ -28,7 +28,7 @@ public class CharacterSqlType extends NullAwareSqlType<Character> {
 		if (s.length() > 1) {
 			throw new DbSqlException("Char column size too long, should be 1.");
 		}
-		return Character.valueOf(s.charAt(1));
+		return Character.valueOf(s.charAt(0));
 	}
 
 	/**
