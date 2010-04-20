@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.result.MoveResult;
@@ -20,6 +21,9 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Request scope injector. Performs {@link MoveResult moving} as well.
+ * Request injector should be independent and therefore more then one
+ * instance can be used in the Madvoc application. That's why
+ * configuration is being cloned on injector creation.
  */
 public class RequestScopeInjector extends BaseScopeInjector {
 
@@ -28,7 +32,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	public RequestScopeInjector(MadvocConfig madvocConfig) {
 		super(ScopeType.REQUEST);
 		this.encoding = madvocConfig.getEncoding();
-		this.config = madvocConfig.getRequestScopeInjectorConfig();
+		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -53,7 +57,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	/**
 	 * Request scope configuration.
 	 */
-	public static class Config {
+	public static class Config implements Cloneable {
 		protected boolean ignoreEmptyRequestParams;
 		protected boolean treatEmptyParamsAsNull;
 		protected boolean injectAttributes = true;
@@ -141,6 +145,15 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		 */
 		public void setEncodeGetParams(boolean encodeGetParams) {
 			this.encodeGetParams = encodeGetParams;
+		}
+
+		@Override
+		public Config clone() {
+			try {
+				return (Config) super.clone();
+			} catch (CloneNotSupportedException cnsex) {
+				throw new MadvocException(cnsex);
+			}
 		}
 	}
 
