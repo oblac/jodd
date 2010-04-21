@@ -1627,18 +1627,6 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 
-
-	// ---------------------------------------------------------------- custom equals
-
-	/**
-	 * Returns <code>true</code> if provided date is equal to current one.
-	 * May be used for date validation test.
-	 */
-	public boolean isEqualDate(int year, int month, int day) {
-		return (time.year == year) && (time.month == month) && (time.day == day);
-	}
-
-
 	// ---------------------------------------------------------------- clone
 
 	@Override
@@ -1669,12 +1657,43 @@ public class JDateTime implements Comparable, Cloneable {
 	public int compareTo(Object o) {
 		return time.compareTo(((JDateTime) o).getDateTimeStamp());
 	}
+	public int compareTo(JDateTime jd) {
+		return time.compareTo(jd.getDateTimeStamp());
+	}
 
 	/**
 	 * Compares current JDateTime date with another date. Time component is ignored.
 	 */
-	public int compareDateTo(Object o) {
-		return time.compareDateTo(((JDateTime) o).getDateTimeStamp());
+	public int compareDateTo(JDateTime jd) {
+		return time.compareDateTo(jd.getDateTimeStamp());
+	}
+
+	/**
+	 * Returns <code>true</code> if current time is after then provided time.
+	 */
+	public boolean isAfter(JDateTime then) {
+		return time.compareTo((then).getDateTimeStamp()) > 0;
+	}
+	/**
+	 * Returns <code>true</code> if current time is before then provided time.
+	 */
+	public boolean isBefore(JDateTime then) {
+		return time.compareTo((then).getDateTimeStamp()) < 0;
+	}
+
+	/**
+	 * Returns <code>true</code> if current date is after then provided date.
+	 * Time component is ignored.
+	 */
+	public boolean isAfterDate(JDateTime then) {
+		return time.compareDateTo((then).getDateTimeStamp()) > 0;
+	}
+	/**
+	 * Returns <code>true</code> if current date is before then provided date.
+	 * Time component is ignored.
+	 */
+	public boolean isBeforeDate(JDateTime then) {
+		return time.compareDateTo((then).getDateTimeStamp()) < 0;
 	}
 
 
@@ -1757,13 +1776,21 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 
-	// ---------------------------------------------------------------- some checks
+	// ---------------------------------------------------------------- custom equals
+
+	/**
+	 * Returns <code>true</code> if provided date is equal to current one.
+	 * May be used for date validation test.
+	 */
+	public boolean equalsDate(int year, int month, int day) {
+		return (time.year == year) && (time.month == month) && (time.day == day);
+	}
 
 	/**
 	 * Returns <code>true</code> if two dates are equal.
 	 * Time component is ignored.
 	 */
-	public boolean isEqualDate(JDateTime date) {
+	public boolean equalsDate(JDateTime date) {
 		return time.isEqualDate(date.time);
 	}
 
@@ -1771,7 +1798,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 * Returns <code>true</code> if two times are equal.
 	 * Date component is ignored.
 	 */
-	public boolean isEqualTime(JDateTime date) {
+	public boolean equalsTime(JDateTime date) {
 		return time.isEqualTime(date.time);
 	}
 

@@ -19,6 +19,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(FormatterTest.class);
 		addTestSuite(DstTest.class);
 		addTestSuite(TimeZoneTest.class);
+		addTestSuite(BeforeAfterTest.class);
 	}
 
 	public static Test suite() {
