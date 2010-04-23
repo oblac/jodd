@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static jodd.joy.auth.AuthUtil.AUTH_SESSION_NAME;
+import static jodd.joy.madvoc.action.AppAction.CHAIN;
+import static jodd.joy.madvoc.action.AppAction.REDIRECT;
+
 /**
  * Authentication checking interceptor, the core of Jodd auth system.
  * Performs authentication and authorization.
@@ -39,22 +43,63 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 	 * Action path that performs user logout.
 	 */
 	protected String logoutActionPath = AuthAction.LOGOUT_ACTION_PATH;
+
+	/**
+	 * Action path that performs registration of new users.
+	 */
+	protected String registerActionPath = AuthAction.REGISTER_ACTION_PATH;
 	
 	/**
-	 * Action path to redirect to after successful login, if no success path is
-	 * defined as request parameters.
+	 * Page to redirect to after successful login, if no success path is
+	 * defined as request parameter.
 	 */
-	protected String loginSuccessActionPath = AuthAction.ALIAS_INDEX;
+	protected String loginSuccessPage = AuthAction.ALIAS_INDEX;
+
+	/**
+	 * Page for failed logins.
+	 */
+	protected String loginFailedPage = AppAction.ALIAS_LOGIN;
+
+	/**
+	 * Access denied page.
+	 */
+	protected String accessDeniedPage = AppAction.ALIAS_ACCESS_DENIED;
 
 	/**
 	 * Action path to redirect to after successful logout.
 	 */
-	protected String logoutSuccessActionPath = AuthAction.ALIAS_LOGIN;
+	protected String logoutSuccessPage = AuthAction.ALIAS_INDEX;
+
+
+	/**
+	 * Welcome page when new user is registered.
+	 */
+	protected String registrationSuccessPage = AuthAction.ALIAS_INDEX;
+
 
 	protected String loginUsername = "j_username";
 	protected String loginPassword = "j_password";
 	protected String loginSuccessPath = "j_path";
 	protected String loginToken = "j_token";
+
+
+	/**
+	 * If <code>true</code>, cookie will be created for keeping user sessions.
+	 */
+	protected boolean useCookie = true;
+
+	/**
+	 * Cookie max age, when cookies are used.
+	 * By default set to 14 days.
+	 */
+	protected int cookieMaxAge = 14 * 24 * 60 * 60;
+
+	/**
+	 * When user just logs in with cookie, should we recreate the cookie
+	 * (and therefore prolong cookie valid time) or leave it as it is.
+	 */
+	protected boolean recreateCookieOnLogin;
+
 
 
 	@Override
@@ -69,7 +114,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			log.debug("logout user");
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 			removeSessionObject(session);
-			return AppAction.REDIRECT + logoutSuccessActionPath;
+			return REDIRECT + logoutSuccessPage;
 		}
 
 		// any other page then logout
@@ -78,24 +123,25 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			// USER IS LOGGED IN
 			if (actionPath.equals(loginActionPath)) {
 				// never access login path while user is logged in
-				return AppAction.REDIRECT + AppAction.ALIAS_INDEX;
+				return REDIRECT + loginSuccessPage;
 			}
 			if (authorize(actionRequest, sessionObject) == false) {
-				return AppAction.REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+				return REDIRECT + accessDeniedPage;
 			}
+			// PRIVATE PAGE, LOGGED IN
 			return actionRequest.invoke();
 		}
 
 		// COOKIE
 		// session is not active, check the cookie
-		String[] cookieData = AuthUtil.readAuthCookie(servletRequest);
+		String[] cookieData = useCookie ? AuthUtil.readAuthCookie(servletRequest) : null;
 		if (cookieData != null) {
 			sessionObject = loginCookie(cookieData);
 			if (sessionObject != null) {
 				log.debug("login with cookie");
-				saveSessionObject(session, sessionObject);
+				startSession(session, recreateCookieOnLogin ? servletResponse : null, sessionObject);
 				if (authorize(actionRequest, sessionObject) == false) {
-					return AppAction.REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+					return REDIRECT + accessDeniedPage;
 				}
 				return actionRequest.invoke();
 			}
@@ -103,16 +149,26 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 		}
 
+		if (actionPath.equals(registerActionPath)) {
+			Object newSessionObject = servletRequest.getAttribute(AUTH_SESSION_NAME);
+			if (newSessionObject != null) {
+				log.debug("new user session created");
+				servletRequest.removeAttribute(AUTH_SESSION_NAME);
+				startSession(session, servletResponse, newSessionObject);
+				return REDIRECT + registrationSuccessPage;
+			}
+		}
+
 		// ANY PAGE BUT LOGIN
 		if (actionPath.equals(loginActionPath) == false) {
 			if (authorize(actionRequest, null) == false) {
-				// session is not active, redirect to login
+				// session is not active, chain to login
 				log.debug("authentication required");
 				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getActionPath(servletRequest));
 				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return AppAction.CHAIN + AppAction.ALIAS_LOGIN;
+				return CHAIN + AppAction.ALIAS_LOGIN;
 			}
-			// public page
+			// PUBLIC PAGE, NOT LOGGED IN
 			return actionRequest.invoke();
 		}
 
@@ -123,7 +179,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			// check token
 			if (CsrfShield.checkCsrfToken(session, token) == false) {
 				log.warn("csrf token validation failed.");
-				return AppAction.REDIRECT + AppAction.ALIAS_LOGIN + "?err=2";
+				return REDIRECT + loginFailedPage + "?err=2";
 			}
 		}
 
@@ -132,40 +188,42 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		sessionObject = loginUser(username, password);
 		if (sessionObject == null) {
 			log.warn("login failed for {}.", username);
-			return AppAction.REDIRECT + AppAction.ALIAS_LOGIN + "?err=1";
+			return REDIRECT + loginFailedPage + "?err=1";
 		}
-		saveSessionObject(session, sessionObject);
-		cookieData = createCookieData(sessionObject);
-		AuthUtil.storeAuthCookie(servletResponse, cookieData[0], cookieData[1]);
+		startSession(session, servletResponse, sessionObject);
 		log.info("login {} ok", username);
 		if (authorize(actionRequest, sessionObject) == false) {
-			return AppAction.REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+			return REDIRECT + accessDeniedPage;
 		}
 
 		// LOGGED IN
 		String path = loginSuccessPath != null ? servletRequest.getParameter(loginSuccessPath) : null;
 		if (StringUtil.isEmpty(path)) {
-			path = loginSuccessActionPath;
+			path = loginSuccessPage;
 		}
-		return AppAction.REDIRECT + path;
+		return REDIRECT + path;
 	}
 
 	/**
-	 * Saves session object into the user session.
+	 * Starts user session by saving session object and optionally creating cookie.
 	 */
-	protected void saveSessionObject(HttpSession session, Object sessionObject) {
-		session.setAttribute(AuthUtil.AUTH_SESSION_NAME, sessionObject);
+	protected void startSession(HttpSession session, HttpServletResponse servletResponse, Object sessionObject) {
+		session.setAttribute(AUTH_SESSION_NAME, sessionObject);
+		if (servletResponse != null && useCookie == true) {
+			String[] cookieData = createCookieData(sessionObject);
+			AuthUtil.storeAuthCookie(servletResponse, cookieMaxAge, cookieData[0], cookieData[1]);
+		}
 	}
+
 
 	/**
 	 * Removes session object.
 	 */
 	protected void removeSessionObject(HttpSession session) {
-		session.removeAttribute(AuthUtil.AUTH_SESSION_NAME);
+		session.removeAttribute(AUTH_SESSION_NAME);
 	}
 
 	// ---------------------------------------------------------------- authorization
-
 
 	/**
 	 * Performs authorization of a request. User may or may not be

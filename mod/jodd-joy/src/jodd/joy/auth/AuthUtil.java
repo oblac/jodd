@@ -52,7 +52,7 @@ public class AuthUtil {
 	/**
 	 * Stores string array into the cookie.
 	 */
-	public static void storeAuthCookie(HttpServletResponse response, String... values) {
+	public static void storeAuthCookie(HttpServletResponse response, int cookieMaxAge, String... values) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < values.length; i++) {
 			if (i > 0) {
@@ -63,7 +63,7 @@ public class AuthUtil {
 
 		Cookie cookie = new Cookie(AUTH_COOKIE_NAME, sb.toString());
 		//cookie.setDomain(SSORealm.SSO_DOMAIN);
-		cookie.setMaxAge(14*24*60*60);
+		cookie.setMaxAge(cookieMaxAge);
 		cookie.setPath("/");
 		response.addCookie(cookie);
 	}
