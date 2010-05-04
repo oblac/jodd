@@ -2017,4 +2017,25 @@ public class StringUtil {
 
 	}
 
+	// ---------------------------------------------------------------- insert
+
+	public static String insert(String src, String insert) {
+		return insert(src, insert, 0);
+	}
+
+	/**
+	 * Inserts a string on provided offset.
+	 */
+	public static String insert(String src, String insert, int offset) {
+		if (offset < 0) {
+			offset = 0;
+		}
+		if (offset > src.length()) {
+			offset = src.length();
+		}
+		StringBuilder sb = new StringBuilder(src);
+		sb.insert(offset, insert);
+		return sb.toString();
+	}
+
 }

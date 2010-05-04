@@ -42,6 +42,7 @@ public interface StringPool {
 	String EXCLAMATION_MARK = "!";
 	String QUOTE            = "\"";
 	String RETURN           = "\r";
+	String TAB              = "\t";
 	String RIGHT_BRACE      = "}";
 	String RIGHT_BRACKET    = ")";
 	String RIGHT_CHEV       = ">";
