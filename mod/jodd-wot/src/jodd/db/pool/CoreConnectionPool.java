@@ -208,7 +208,8 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			// If conn on available list is closed (e.g., it timed out), then remove it from available list
 			// and repeat the process of obtaining a conn. Also wake up threads that were waiting for a
 			// conn because maxConnection limit was reached.
-			boolean isValid = isConnectionValid(existingConnection);
+			long now = System.currentTimeMillis();
+			boolean isValid = isConnectionValid(existingConnection, now);
 			if (isValid == false) {
 				log.debug("pooled connection is not valid, resetting");
 				notifyAll();				 // freed up a spot for anybody waiting
@@ -216,6 +217,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			} else {
 				log.debug("returning valid pooled connection");
 				busyConnections.add(existingConnection);
+				existingConnection.lastUsed = now;
 				return existingConnection.connection;
 			}
 		}
@@ -242,13 +244,12 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * that if connection is not used for a while it becomes inactive,
 	 * although not technically closed.
 	 */
-	private boolean isConnectionValid(ConnectionData connectionData) {
+	private boolean isConnectionValid(ConnectionData connectionData, long now) {
 		if (validateConnection == false) {
 			return true;
 		}
 		
-		long now = System.currentTimeMillis();
-		if (now < connectionData.validUntil) {
+		if (now < connectionData.lastUsed + validationTimeout) {
 			return true;
 		}
 
@@ -347,15 +348,15 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	// ---------------------------------------------------------------- conn data
 
 	/**
-	 * Connection data.
+	 * Connection data with last used timestamp.
 	 */
 	class ConnectionData {
 		final Connection connection;
-		final long validUntil;
+		long lastUsed;
 
 		ConnectionData(Connection connection) {
 			this.connection = connection;
-			this.validUntil = System.currentTimeMillis() + validationTimeout;
+			this.lastUsed = System.currentTimeMillis();
 		}
 
 		@Override
