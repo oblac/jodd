@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.InterceptorManagerTest;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 import jodd.madvoc.component.ActionPathMapperTest;
@@ -16,6 +17,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(ActionResultTest.class);
 		addTestSuite(ActionPathMapperTest.class);
 		addTestSuite(MadvocUtilTest.class);
+		addTestSuite(InterceptorManagerTest.class);
 	}
 
 	public static Test suite() {

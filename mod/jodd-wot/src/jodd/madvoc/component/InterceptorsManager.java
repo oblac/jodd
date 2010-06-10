@@ -91,15 +91,24 @@ public class InterceptorsManager {
 		List<Class<? extends ActionInterceptor>> list = new ArrayList<Class<? extends ActionInterceptor>>(actionInterceptors.length);
 		list.addAll(Arrays.asList(actionInterceptors));
 
-		for (int i = 0; i < list.size(); i++) {
+		int i = 0;
+		while (i < list.size()) {
 			Class<? extends ActionInterceptor> interceptorClass = list.get(i);
 			if (interceptorClass == null) {
 				continue;
 			}
-			if (ReflectUtil.isSubclass(interceptorClass, DefaultWebAppInterceptors.class)) {
+			if (interceptorClass.equals(DefaultWebAppInterceptors.class)) {
 				list.remove(i);
-				if (madvocConfig.getDefaultInterceptors() != null) {
-					list.addAll(i, Arrays.asList(madvocConfig.getDefaultInterceptors()));
+				// add default interceptors list
+				Class<? extends ActionInterceptor>[] defaultInterceptors = madvocConfig.getDefaultInterceptors();
+				if (defaultInterceptors != null) {
+					for (Class<? extends ActionInterceptor> defaultInterceptor : defaultInterceptors) {
+						// can't add default list stack to default list
+						if (defaultInterceptor.equals(DefaultWebAppInterceptors.class)) {
+							throw new MadvocException("Default interceptor list is self-contained (cyclic dependency)");
+						}
+						list.add(i, defaultInterceptor);
+					}
 				}
 				i--;
 				continue;
@@ -114,6 +123,7 @@ public class InterceptorsManager {
 				i--;
 				//continue;
 			}
+			i++;
 		}
 		return list.toArray(new Class[list.size()]);
 	}
