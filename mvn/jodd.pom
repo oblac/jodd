@@ -9,7 +9,7 @@
 	<artifactId>jodd</artifactId>
 	<packaging>jar</packaging>
 	<name>Jodd</name>
-	<version>3.0.4</version>
+	<version>3.0.9</version>
 	<description>Jodd Library</description>
 	<url>http://jodd.org</url>
 	<licenses>
@@ -31,17 +31,20 @@
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 			<version>1.1</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.4</version>
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

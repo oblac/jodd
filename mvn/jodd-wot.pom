@@ -9,8 +9,8 @@
 	<artifactId>jodd-wot</artifactId>
 	<packaging>jar</packaging>
 	<name>Jodd WOT</name>
-	<version>3.0.4</version>
-	<description>Jodd framework</description>
+	<version>3.0.9</version>
+	<description>Jodd App Frameworks</description>
 	<url>http://jodd.org</url>
 	<licenses>
 		<license>
