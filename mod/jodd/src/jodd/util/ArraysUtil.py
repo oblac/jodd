@@ -432,6 +432,41 @@ data = template.replace('$T', 'double')
 data = data.replace('$B', 'Double')
 f.write(data)
 
+f.write('''
+	/**
+	 * Finds the first occurrence in an array.
+	 */
+	public static int indexOf(Object[] array, Object value) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i].equals(value)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	public static boolean contains(Object[] array, Object value) {
+		return indexOf(array, value) != -1;
+	}
+
+	/**
+	 * Finds the first occurrence in an array from specified given position.
+	 */
+	public static int indexOf(Object[] array, Object value, int startIndex) {
+		for (int i = startIndex; i < array.length; i++) {
+			if (array[i].equals(value)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	public static boolean contains(Object[] array, Object value, int startIndex) {
+		return indexOf(array, value, startIndex) != -1;
+	}
+
+
+''')
+
+
 f.write('\n\n\t// ---------------------------------------------------------------- indexof 2')
 f.write('''
 

@@ -91,6 +91,10 @@ public class ArraysUtilTest extends TestCase {
 		assertEquals(1, ArraysUtil.indexOf(x, 2));
 		assertEquals(4, ArraysUtil.indexOf(x, 5));
 		assertEquals(-1, ArraysUtil.indexOf(x, 6));
+		assertEquals(1, ArraysUtil.indexOf(xx, Long.valueOf(2)));
+		assertEquals(-1, ArraysUtil.indexOf(xx, Long.valueOf(12)));
+		assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12)));
+		assertEquals(-1, ArraysUtil.indexOf(yy, Long.valueOf(12), 2));
 	}
 
 	public void testIndexOf2() {
@@ -107,6 +111,10 @@ public class ArraysUtilTest extends TestCase {
 		assertTrue(ArraysUtil.contains(x, 2));
 		assertTrue(ArraysUtil.contains(x, 5));
 		assertFalse(ArraysUtil.contains(x, 6));
+		assertTrue(ArraysUtil.contains(xx, Long.valueOf(3)));
+		assertFalse(ArraysUtil.contains(xx, Long.valueOf(13)));
+		assertTrue(ArraysUtil.contains(yy, Long.valueOf(13)));
+		assertFalse(ArraysUtil.contains(yy, Long.valueOf(13), 3));
 	}
 	public void testContains2() {
 		assertTrue(ArraysUtil.contains(x, new int[] {}));
