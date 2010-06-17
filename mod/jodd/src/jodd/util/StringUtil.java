@@ -2038,4 +2038,27 @@ public class StringUtil {
 		return sb.toString();
 	}
 
+	// ---------------------------------------------------------------- repeat
+
+	/**
+	 * Creates a new string that contains the provided string a number of times.
+	 */
+	public static String repeat(String source, int count) {
+		StringBuilder result = new StringBuilder(count * source.length());
+		while (count > 0) {
+			result.append(source);
+			count --;
+		}
+		return result.toString();
+	}
+
+	public static String repeat(char c, int count) {
+		StringBuilder result = new StringBuilder(count);
+		while (count > 0) {
+			result.append(c);
+			count --;
+		}
+		return result.toString();
+	}
+
 }

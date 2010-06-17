@@ -809,4 +809,9 @@ public class StringUtilTest extends TestCase {
 		assertEquals(-1, StringUtil.indexOfUnescapedChar("1\\23244", '2', '\\', 6));
 		assertEquals(-1, StringUtil.indexOfUnescapedChar("1\\23", '2', '\\'));
 	}
+
+	public void testRepeat() {
+		assertEquals("1212", StringUtil.repeat("12", 2));
+		assertEquals("xxxx", StringUtil.repeat('x', 4));
+	}
 }

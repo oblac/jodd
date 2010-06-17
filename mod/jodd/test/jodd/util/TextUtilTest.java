@@ -37,4 +37,9 @@ public class TextUtilTest extends TestCase {
 
 	}
 
+	public void testTabsToSpaces() {
+		String s = TextUtil.convertTabsToSpaces("q\tqa\t", 3);
+		assertEquals("q  qa ", s);
+	}
+
 }
