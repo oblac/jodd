@@ -1,6 +1,6 @@
 <project name="Jodd" default="help" basedir=".">
 
-	<description>Jodd - generic purpose open-source Java library and frameworks.</description>
+	<description>Jodd - open-source Java utility library and web application frameworks.</description>
 
 	<!-- Common -->
 
@@ -81,7 +81,7 @@
 	<!-- echo -->
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
-	<echo>Jodd - generic purpose open-source Java library and frameworks.</echo>
+	<echo>Jodd - open-source Java utility library and web application frameworks.</echo>
 	<echo>${TODAY}</echo>
 	<echo/>
 
@@ -154,7 +154,7 @@
 	</target>
 
 	<property name="jodd.production.javadoc.dir" value="${output.dir}/javadoc/jodd"/>
-	
+
 	<!-- javadoc: jodd.production -->
 
 	<target name="javadoc.jodd.production" depends="compile.jodd.production" description="generates javadoc for module jodd; production classes">
@@ -306,7 +306,7 @@
 	<property name="jodd.jar" value="${dist.dir}/jodd-${prjVersion}.jar"/>
 
 
-	<target name="dist.jodd" depends="compile.jodd.test" description="creates JAR distribution for module: jodd">
+	<target name="dist.jodd" depends="build.jodd" description="creates JAR distribution for module: jodd">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd.jar}" compress="true">
 			<manifest>
@@ -317,6 +317,26 @@
 				<attribute name="Main-Class" value="jodd.Jodd"/>
 			</manifest>
 			<fileset dir="${jodd.production.out.dir}"/>
+		</jar>
+	</target>
+
+	<!-- sources distribution: jodd -->
+	<property name="jodd-sources.jar" value="${dist.dir}/jodd-${prjVersion}-sources.jar"/>
+
+	<target name="dist-sources.jodd" depends="build.jodd" description="creates sources JAR distribution for module jodd">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-sources.jar}" compress="true">
+		<fileset dir="${jodd.production.src.dir}"/>
+		</jar>
+	</target>
+
+	<!-- javadoc distribution: jodd -->
+	<property name="jodd-javadoc.jar" value="${dist.dir}/jodd-${prjVersion}-javadoc.jar"/>
+
+	<target name="dist-javadoc.jodd" depends="build.jodd" description="creates javadoc JAR distribution for module jodd">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-javadoc.jar}" compress="true">
+		<fileset dir="${jodd.production.javadoc.dir}"/>
 		</jar>
 	</target>
 
@@ -360,7 +380,7 @@
 	</target>
 
 	<property name="jodd-wot.production.javadoc.dir" value="${output.dir}/javadoc/jodd-wot"/>
-	
+
 	<!-- javadoc: jodd-wot.production -->
 
 	<target name="javadoc.jodd-wot.production" depends="compile.jodd-wot.production" description="generates javadoc for module jodd-wot; production classes">
@@ -515,7 +535,7 @@
 	<property name="jodd-wot.jar" value="${dist.dir}/jodd-wot-${prjVersion}.jar"/>
 
 
-	<target name="dist.jodd-wot" depends="compile.jodd-wot.test" description="creates JAR distribution for module: jodd-wot">
+	<target name="dist.jodd-wot" depends="build.jodd-wot" description="creates JAR distribution for module: jodd-wot">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-wot.jar}" compress="true">
 			<manifest>
@@ -526,6 +546,26 @@
 				<attribute name="Main-Class" value="jodd.JoddWot"/>
 			</manifest>
 			<fileset dir="${jodd-wot.production.out.dir}"/>
+		</jar>
+	</target>
+
+	<!-- sources distribution: jodd-wot -->
+	<property name="jodd-wot-sources.jar" value="${dist.dir}/jodd-wot-${prjVersion}-sources.jar"/>
+
+	<target name="dist-sources.jodd-wot" depends="build.jodd-wot" description="creates sources JAR distribution for module jodd-wot">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-wot-sources.jar}" compress="true">
+		<fileset dir="${jodd-wot.production.src.dir}"/>
+		</jar>
+	</target>
+
+	<!-- javadoc distribution: jodd-wot -->
+	<property name="jodd-wot-javadoc.jar" value="${dist.dir}/jodd-wot-${prjVersion}-javadoc.jar"/>
+
+	<target name="dist-javadoc.jodd-wot" depends="build.jodd-wot" description="creates javadoc JAR distribution for module jodd-wot">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${jodd-wot-javadoc.jar}" compress="true">
+		<fileset dir="${jodd-wot.production.javadoc.dir}"/>
 		</jar>
 	</target>
 
@@ -574,7 +614,7 @@
 	<property name="jodd-joy.jar" value="${dist.dir}/jodd-joy-${prjVersion}.jar"/>
 
 
-	<target name="dist.jodd-joy" depends="compile.jodd-joy.production" description="creates JAR distribution for module: jodd-joy">
+	<target name="dist.jodd-joy" depends="build.jodd-joy" description="creates JAR distribution for module: jodd-joy">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-joy.jar}" compress="true">
 			<manifest>
@@ -636,6 +676,8 @@
 
 	<target name="dist" depends="build, dist.jodd, dist.jodd-wot, dist.jodd-joy" description="invokes 'dist' on project"/>
 
+	<target name="dist-all" depends="dist, dist-sources.jodd, dist-javadoc.jodd, dist-sources.jodd-wot, dist-javadoc.jodd-wot" description="invokes 'dist-all' on project"/>
+
 	<target name="clean" description="cleans all">
 		<delete dir="${output.dir}"/>
 		<mkdir dir="${output.dir}"/>
@@ -650,6 +692,20 @@
 	${jodd.jar}
 	${jodd-wot.jar}
 	file_id.diz
+" excludes=""/>
+	</target>
+	<target name="pack-mvn" depends="dist" description="packs distribution jars">
+		<delete file="${dist.dir}/jodd-mvn-${prjVersion}.zip"/>
+		<zip destfile="${dist.dir}/jodd-mvn-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
+	${jodd.jar}
+	${jodd-wot.jar}
+	file_id.diz
+
+	${jodd-sources.jar}
+	${jodd-javadoc.jar}
+	${jodd-wot-sources.jar}
+	${jodd-wot-javadoc.jar}
+	pom/**
 " excludes=""/>
 	</target>
 	<target name="pack-src" depends="pack-dist" description="packs distribution jars">
@@ -669,7 +725,7 @@
 	build*
 " excludes=""/>
 	</target>
-	<target name="pack-all" depends="pack-src" description="packs distribution jars">
+	<target name="pack-all" depends="pack-src, pack-mvn" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
@@ -702,17 +758,19 @@ clean:	cleans out folders
 
 Project targets
 ---------------
-clean: 	cleans all outputs
+clean:	cleans all outputs
 build:	compile all
 javadoc:	generates javadoc
 emma:	runs all tests
 findbugs:	finds bugs
 dist:	builds distribution jars
+dist-all:	build all distribution jars
 
 
 Pack
 ----
 pack-dist:	pack just distribution jars
+pack-mvn:	pack distribution, sources and javadoc jars
 pack-src:	pack sources and documents
 pack-all:	pack all
 

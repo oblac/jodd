@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 	<name>Jodd</name>
 	<version>3.0.9</version>
-	<description>Jodd Library</description>
+	<description>Jodd utility library</description>
 	<url>http://jodd.org</url>
 	<licenses>
 		<license>
@@ -20,7 +20,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://jodd.googlecode.com/svn/</url>
+		<connection>scm:svn:http://jodd.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:http://jodd.googlecode.com/svn/trunk</developerConnection>
+		<url>http://jodd.googlecode.com/svn/trunk</url>
 	</scm>
 	<organization>
 		<name>Jodd</name>
