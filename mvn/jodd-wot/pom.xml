@@ -8,10 +8,27 @@
 	<groupId>org.jodd</groupId>
 	<artifactId>jodd-wot</artifactId>
 	<packaging>jar</packaging>
+
 	<name>Jodd WOT</name>
-	<version>3.0.9</version>
-	<description>Jodd App Frameworks</description>
+	<version>3.1.0</version>
+	<description>Jodd application frameworks</description>
 	<url>http://jodd.org</url>
+	<organization>
+		<name>Jodd</name>
+		<url>http://jodd.org/</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>igor</id>
+			<name>Igor Spasic</name>
+			<email>igor.spasic@gmail.com</email>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	<licenses>
 		<license>
 			<name>The New BSD License</name>
@@ -19,10 +36,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<organization>
-		<name>Jodd</name>
-		<url>http://jodd.org/</url>
-	</organization>
+
+	<scm>
+		<connection>scm:svn:http://jodd.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:http://jodd.googlecode.com/svn/trunk</developerConnection>
+		<url>http://jodd.googlecode.com/svn/trunk</url>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
