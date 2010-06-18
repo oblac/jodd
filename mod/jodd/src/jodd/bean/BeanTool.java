@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.util.ArraysUtil;
 import jodd.util.PrettyStringBuilder;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -64,6 +65,50 @@ public class BeanTool {
 				BeanUtil.setPropertySilent(destination, name, value);
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------- copy properties
+
+	/**
+	 * Copies the property values of the given source bean into the target bean.
+	 * The same as {@link #copy(Object, Object)}, but from different angle.
+	 */
+	public static void copyProperties(Object source, Object destination) {
+		copyProperties(source, destination, null, true);
+	}
+
+	/**
+	 * Copies the property values of the given source bean into the given target bean,
+	 * ignoring or including only the given "properties".
+	 */
+	public static void copyProperties(Object source, Object destination, String[] properties, boolean include) {
+		ClassDescriptor cdSrc = ClassIntrospector.lookup(source.getClass());
+		ClassDescriptor cdDest = ClassIntrospector.lookup(destination.getClass());
+
+		String[] mdata = cdSrc.getAllBeanGetterNames();
+		for (String name : mdata) {
+			if (properties != null) {
+				if (include)  {
+					if (ArraysUtil.contains(properties, name) == false) {
+						continue;
+					}
+				} else {
+					if (ArraysUtil.contains(properties, name) == true) {
+						continue;
+					}
+				}
+			}
+			if (cdDest.getBeanSetter(name) != null) {
+				Object value = BeanUtil.getProperty(source, name);
+				BeanUtil.setPropertySilent(destination, name, value);
+			}
+		}
+	}
+
+	public static void copyProperties(Object source, Object destination, Class editable) {
+		ClassDescriptor cd = ClassIntrospector.lookup(editable);
+		String[] properties = cd.getAllBeanGetterNames();
+		copyProperties(source, destination, properties, true);
 	}
 
 	// ---------------------------------------------------------------- copy and apply fields
