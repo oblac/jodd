@@ -814,4 +814,20 @@ public class StringUtilTest extends TestCase {
 		assertEquals("1212", StringUtil.repeat("12", 2));
 		assertEquals("xxxx", StringUtil.repeat('x', 4));
 	}
+
+	public void testReverse() {
+		assertEquals("12345", StringUtil.reverse("54321"));
+	}
+
+	public void testMaxCommonPrefix() {
+		assertEquals("", StringUtil.maxCommonPrefix("qwe", "asd"));
+		assertEquals("1", StringUtil.maxCommonPrefix("1qwe", "1asd"));
+		assertEquals("123", StringUtil.maxCommonPrefix("123", "123"));
+		assertEquals("123", StringUtil.maxCommonPrefix("123456", "123"));
+	}
+
+	public void testCamelCase() {
+		assertEquals("oneTwoThree", StringUtil.wordsToCamelCase("one two   three"));
+		assertEquals("One two three", StringUtil.camelCaseToWords("OneTwoThree"));
+	}
 }

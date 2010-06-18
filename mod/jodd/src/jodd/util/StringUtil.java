@@ -2038,7 +2038,7 @@ public class StringUtil {
 		return sb.toString();
 	}
 
-	// ---------------------------------------------------------------- repeat
+	// ---------------------------------------------------------------- misc
 
 	/**
 	 * Creates a new string that contains the provided string a number of times.
@@ -2059,6 +2059,79 @@ public class StringUtil {
 			count --;
 		}
 		return result.toString();
+	}
+
+	/**
+	 * Reverse a string.
+	 */
+	public static String reverse(String s) {
+		StringBuilder result = new StringBuilder(s.length());
+		for (int i = s.length() -1; i >= 0; i--) {
+			result.append(s.charAt(i));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Returns max common prefix of two strings.
+	 */
+	public static String maxCommonPrefix(String one, String two) {
+        final int minLength = Math.min(one.length(), two.length());
+
+        final StringBuilder sb = new StringBuilder(minLength);
+        for (int pos = 0; pos < minLength; pos++) {
+            final char currentChar = one.charAt(pos);
+            if (currentChar != two.charAt(pos)) {
+                break;
+            }
+            sb.append(currentChar);
+        }
+
+		return sb.toString();
+	}
+
+	/**
+	 * Changes a camelCase string value to space separated
+	 */
+	public static String camelCaseToWords(String input) {
+		StringBuilder s = new StringBuilder();
+		int length = input.length();
+		for (int i = 0; i < length; i++) {
+			char ch = input.charAt(i);
+			if (Character.isUpperCase(ch) && (i > 0)) {
+				s.append(' ');
+				ch = Character.toLowerCase(ch);
+			} else if ((i == 0) && !Character.isUpperCase(ch)) {
+				ch = Character.toUpperCase(ch);
+			}
+			if (ch == '.') {
+				s.append(' ');
+			}
+			s.append(ch);
+		}
+		return s.toString();
+	}
+
+	/**
+	 * Changes a space separated string value to camelCase
+	 */
+	public static String wordsToCamelCase(String input) {
+		StringBuilder s = new StringBuilder();
+		int length = input.length();
+		boolean upperCase = false;
+
+		for (int i = 0; i < length; i++) {
+			char ch = input.charAt(i);
+			if (ch == ' ') {
+				upperCase = true;
+			} else if (upperCase) {
+				s.append(Character.toUpperCase(ch));
+				upperCase = false;
+			} else {
+				s.append(ch);
+			}
+		}
+		return s.toString();
 	}
 
 }
