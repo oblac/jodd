@@ -5,6 +5,10 @@ package jodd.introspector;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
+import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
+import static jodd.util.ReflectUtil.NO_PARAMETERS;
+
 /**
  * Bean properties.
  */
@@ -21,6 +25,25 @@ class Properties {
 	void addMethod(String name, Method method) {
 		if (name.charAt(0) == '-') {
 			name = name.substring(1);
+
+			// check for special case of double get/is
+			Method existingMethod = getters.lookupMethod(name, NO_PARAMETERS);
+			if (existingMethod != null) {
+				// getter with the same name already exist
+				String methodName = method.getName();
+				String existingMethodName = existingMethod.getName();
+				if (
+						existingMethodName.startsWith(METHOD_GET_PREFIX) &&
+						methodName.startsWith(METHOD_IS_PREFIX)) {
+					getters.removeAllMethodsForName(name);	// remove getter to use ister instead of it
+					getterNameList.remove(name);
+				} else if (
+						existingMethodName.startsWith(METHOD_IS_PREFIX) &&
+						methodName.startsWith(METHOD_GET_PREFIX)) {
+					return;		// ignore getter when ister exist
+				}
+			}
+
 			getters.addMethod(name, method);
 			if (getterNameList == null) {
 				getterNameList = new ArrayList<String>();

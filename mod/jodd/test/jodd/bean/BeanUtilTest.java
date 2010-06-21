@@ -9,8 +9,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.lang.reflect.Method;
 
+import jodd.bean.data.GetIsBool;
+import jodd.bean.data.IsGetBool;
 import jodd.bean.modifier.TrimStringsBeanModifier;
 import jodd.bean.data.Abean;
 import jodd.bean.data.Bbean;
@@ -23,7 +24,6 @@ import jodd.bean.data.FooBeanSlim;
 import jodd.bean.data.Gig;
 import jodd.bean.data.XBean;
 import jodd.bean.data.ZBean;
-import jodd.bean.data.Woof;
 import jodd.mutable.MutableInteger;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -1160,7 +1160,7 @@ public class BeanUtilTest extends TestCase {
 	/**
 	 * All exceptions.
 	 */
-	public static void testExceptions() {
+	public void testExceptions() {
 		Map map = new HashMap();
 		Gig gig = new Gig();
 
@@ -1284,6 +1284,36 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("foo", BeanUtil.extractThisReference("foo.aaa"));
 		assertEquals("foo", BeanUtil.extractThisReference("foo[1].aaa"));
 		assertEquals("foo", BeanUtil.extractThisReference("foo"));
+	}
+
+	public void testIsGetBoolean() {
+		IsGetBool i = new IsGetBool();
+		Object value = BeanUtil.getProperty(i, "flag");
+		assertNotNull(value);
+		assertTrue(((Boolean) value).booleanValue());
+
+		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
+		assertEquals(1, cd.getAllBeanGetterNames().length);
+		assertEquals(1, cd.getAllBeanGetters().length);
+		assertEquals("isFlag", cd.getAllBeanGetters()[0].getName());
+		assertEquals("isFlag", cd.getBeanGetter("flag").getName());
+		assertEquals(1, cd.getAllBeanSetterNames().length);
+		assertEquals(1, cd.getAllBeanSetters().length);
+		assertEquals(3, cd.getAllMethods().length);
+
+		GetIsBool i2 = new GetIsBool();
+		value = BeanUtil.getProperty(i2, "flag");
+		assertNotNull(value);
+		assertTrue(((Boolean) value).booleanValue());
+
+		cd = ClassIntrospector.lookup(GetIsBool.class);
+		assertEquals(1, cd.getAllBeanGetterNames().length);
+		assertEquals(1, cd.getAllBeanGetters().length);
+		assertEquals("isFlag", cd.getAllBeanGetters()[0].getName());
+		assertEquals("isFlag", cd.getBeanGetter("flag").getName());
+		assertEquals(1, cd.getAllBeanSetterNames().length);
+		assertEquals(1, cd.getAllBeanSetters().length);
+		assertEquals(3, cd.getAllMethods().length);
 	}
 
 }

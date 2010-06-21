@@ -18,12 +18,16 @@ class Methods {
 	HashMap<String, MethodEntry> mMap = new HashMap<String, MethodEntry>();
 	Method[] allMethods;
 	boolean locked;
-
 	int count;
-	void addMethod(String name, Method method) {
+
+	void checkLocked() {
 		if (locked == true) {
 			throw new IllegalStateException("Methods introspection is already finished.");
 		}
+	}
+
+	void addMethod(String name, Method method) {
+		checkLocked();
 		count++;
 		List<MethodDescriptor> paramList = mMapTemp.get(name);
 		if (paramList == null) {
@@ -40,6 +44,9 @@ class Methods {
 		int k = 0;
 		for (String name : mMapTemp.keySet()) {
 			List<MethodDescriptor> list = mMapTemp.get(name);
+			if (list.isEmpty()) {
+				continue;
+			}
 			MethodEntry entry = new MethodEntry();
 			entry.size = list.size();
 			entry.methodsList = new Method[entry.size];
@@ -93,5 +100,29 @@ class Methods {
 
 	Method[] getAllMethods() {
 		return allMethods;
+	}
+
+	// ---------------------------------------------------------------- introspection time
+
+	Method lookupMethod(String name, Class[] paramTypes) {
+		checkLocked();
+		List<MethodDescriptor> list = mMapTemp.get(name);
+		if (list == null) {
+			return null;
+		}
+		for (MethodDescriptor md : list) {
+			if (ReflectUtil.compareParameteres(md.parameterTypes, paramTypes) == true) {
+				return md.method;
+			}
+		}
+		return null;
+	}
+
+	public void removeAllMethodsForName(String name) {
+		checkLocked();
+		List<MethodDescriptor> paramList = mMapTemp.remove(name);
+		if (paramList != null) {
+			count -= paramList.size();
+		}
 	}
 }
