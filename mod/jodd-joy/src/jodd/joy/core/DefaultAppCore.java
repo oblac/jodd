@@ -136,6 +136,13 @@ public abstract class DefaultAppCore {
 	protected Proxetta proxetta;
 
 	/**
+	 * Returns proxetta.
+	 */
+	public Proxetta getProxetta() {
+		return proxetta;
+	}
+
+	/**
 	 * Creates Proxetta with all aspects. The following aspects are created:
 	 *
 	 * <li>Transaction proxy - applied on all classes that contains public top-level methods
@@ -228,14 +235,37 @@ public abstract class DefaultAppCore {
 	 * Database debug mode will print out sql statements.
 	 */
 	protected boolean debugMode;
+
+	/**
+	 * Returns <code>true</code> if debug mode is on.
+	 */
+	public boolean isDebugMode() {
+		return debugMode;
+	}
+
 	/**
 	 * JTX manager.
 	 */
 	protected JtxTransactionManager jtxManager;
+
+	/**
+	 * Returns JTX transaction manager.
+	 */
+	public JtxTransactionManager getJtxManager() {
+		return jtxManager;
+	}
+
 	/**
 	 * Database connection provider.
 	 */
 	protected ConnectionProvider connectionProvider;
+
+	/**
+	 * Returns connection provider.
+	 */
+	public ConnectionProvider getConnectionProvider() {
+		return connectionProvider;
+	}
 
 	/**
 	 * Initializes database. First, creates connection pool.
@@ -311,7 +341,6 @@ public abstract class DefaultAppCore {
 	 * Initializes types for beanutil and db conversions and other usages.
 	 */
 	protected void initTypes() {
-
 	}
 
 }
