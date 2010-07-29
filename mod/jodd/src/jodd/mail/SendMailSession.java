@@ -97,7 +97,7 @@ public class SendMailSession {
 		if (email.getReplyTo() != null) {
 			int totalReplyTo = email.getReplyTo().length;
 			address = new InternetAddress[totalReplyTo];
-			for (int i = 0; i < totalTo; i++) {
+			for (int i = 0; i < totalReplyTo; i++) {
 				address[i] = new InternetAddress(email.getReplyTo()[i]);
 			}
 			msg.setReplyTo(address);
