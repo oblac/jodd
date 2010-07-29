@@ -14,8 +14,10 @@ import java.util.zip.ZipOutputStream;
 public class zip {
 
 	public static void main(String[] args) throws IOException {
-		ZipOutputStream zos = ZipUtil.openZip("d:\\test.zip");
-		ZipUtil.addFileToZip(zos, new File("d:\\g.jpg"), "xxx");
+		ZipOutputStream zos = ZipUtil.createZip("d:\\test.zip");
+		ZipUtil.addFileToZip(zos, "d:\\g.jpg", "xxx1.jpg", "first");
+		ZipUtil.addFileToZip(zos, "d:\\a.jpg", "xxx2.jpg");
+		ZipUtil.addDirToZip(zos, "d:\\npp");
 		StreamUtil.close(zos);
 
 	}

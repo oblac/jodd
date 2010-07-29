@@ -2,6 +2,7 @@
 
 package jodd.io;
 
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.io.File;
@@ -78,13 +79,17 @@ public class ZipUtil {
 	}
 
 	/**
-	 * Opens zip output stream of existing zip file.
+	 * Creates and opens zip output stream of a zip file. If zip file exist it will be recreated.
 	 */
-	public static ZipOutputStream openZip(File zip) throws FileNotFoundException {
+	public static ZipOutputStream createZip(File zip) throws FileNotFoundException {
 		return new ZipOutputStream(new FileOutputStream(zip));
 	}
-	public static ZipOutputStream openZip(String zipFile) throws FileNotFoundException {
-		return openZip(new File(zipFile));
+
+	/**
+	 * @see #createZip(java.io.File)
+	 */
+	public static ZipOutputStream createZip(String zipFile) throws FileNotFoundException {
+		return createZip(new File(zipFile));
 	}
 
 
@@ -144,7 +149,16 @@ public class ZipUtil {
 	/*
 	 * Adds a new file entry to the ZIP output stream.
 	 */
-	public static boolean addFileToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
+	public static void addFileToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
+		addFileToZip(zos, file, relativeName, null);
+	}
+	public static void addFileToZip(ZipOutputStream zos, String fileName, String relativeName) throws IOException {
+		addFileToZip(zos, new File(fileName), relativeName, null);
+	}
+	public static void addFileToZip(ZipOutputStream zos, String fileName, String relativeName, String comment) throws IOException {
+		addFileToZip(zos, new File(fileName), relativeName, comment);
+	}
+	public static void addFileToZip(ZipOutputStream zos, File file, String relativeName, String comment) throws IOException {
 		while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
 			relativeName = relativeName.substring(1);
 		}
@@ -157,6 +171,7 @@ public class ZipUtil {
 		long size = isDir ? 0 : file.length();
 		ZipEntry e = new ZipEntry(relativeName);
 		e.setTime(file.lastModified());
+		e.setComment(comment);
 		if (size == 0) {
 			e.setMethod(ZipEntry.STORED);
 			e.setSize(0);
@@ -172,33 +187,44 @@ public class ZipUtil {
 			}
 		}
 		zos.closeEntry();
-		return true;
 	}
 
-
-	public static boolean addFileOrDirRecursively(ZipOutputStream jarOutputStream, File jarFile, File file, String relativePath) throws IOException {
-		if (file.isDirectory()) {
-			return addDirToZipRecursively(jarOutputStream, jarFile, file, relativePath);
-		}
-		addFileToZip(jarOutputStream, file, relativePath);
-		return true;
+	public static void addDirToZip(ZipOutputStream out, String dirName) throws IOException {
+		String path = FileNameUtil.getName(dirName);
+		addDirToZip(out, new File(dirName), path);
 	}
 
-	public static boolean addDirToZipRecursively(ZipOutputStream outputStream, File jarFile, File dir, String relativePath) throws IOException {
-		if (FileUtil.isAncestor(dir, jarFile, false)) {
-			return false;
-		}
-		if (relativePath.length() != 0) {
-			addFileToZip(outputStream, dir, relativePath);
+	public static void addDirToZip(ZipOutputStream out, String dirName, String relativePath) throws IOException {
+		addDirToZip(out, new File(dirName), relativePath);
+	}
+
+	/**
+	 * Adds a folder to the zip recursively using its name as relative zip path.
+	 */
+	public static void addDirToZip(ZipOutputStream out, File dir) throws IOException {
+		String path = FileNameUtil.getName(dir.getAbsolutePath());
+		addDirToZip(out, dir, path);
+	}
+
+	/**
+	 * Adds a folder to the zip recursively.
+	 */
+	public static void addDirToZip(ZipOutputStream out, File dir, String relativePath) throws IOException {
+		boolean noRelativePath = StringUtil.isEmpty(relativePath);
+		if (noRelativePath == false) {
+			addFileToZip(out, dir, relativePath);
 		}
 		final File[] children = dir.listFiles();
 		if (children != null) {
 			for (File child : children) {
-				final String childRelativePath = (relativePath.length() == 0 ? "" : relativePath + '/') + child.getName();
-				addFileOrDirRecursively(outputStream, jarFile, child, childRelativePath);
+				final String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativePath + '/') + child.getName();
+				if (child.isDirectory()) {
+					addDirToZip(out, child, childRelativePath);
+				} else {
+					addFileToZip(out, child, childRelativePath);
+				}
 			}
 		}
-		return true;
 	}
 
 
