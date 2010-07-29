@@ -970,11 +970,9 @@ public class FileUtil {
 	/**
 	 * Check if one file is an ancestor of second one.
 	 *
-	 * @param ancestor the file
-	 * @param file	 the file
-	 * @param strict   if {@code false} then this method returns {@code true} if {@code ancestor}
-	 *                 and {@code file} are equal
-	 * @return {@code true} if {@code ancestor} is parent of {@code file}; {@code false} otherwise
+	 * @param strict   if <code>false</code> then this method returns <code>true</code> if ancestor
+	 *                 and file are equal
+	 * @return <code>true</code> if ancestor is parent of file; <code>false</code> otherwise
 	 */
 	public static boolean isAncestor(File ancestor, File file, boolean strict) {
 		File parent = strict ? getParentFile(file) : file;
