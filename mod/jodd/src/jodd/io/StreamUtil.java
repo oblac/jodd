@@ -44,6 +44,11 @@ public class StreamUtil {
 	public static void close(OutputStream out) {
 		if (out != null) {
 			try {
+				out.flush();
+			} catch (IOException ioex) {
+				// ignore
+			}
+			try {
 				out.close();
 			} catch (IOException ioe) {
 				// ignore
@@ -73,6 +78,11 @@ public class StreamUtil {
 	 */
 	public static void close(Writer out) {
 		if (out != null) {
+			try {
+				out.flush();
+			} catch (IOException ioex) {
+				// ignore
+			}
 			try {
 				out.close();
 			} catch (IOException ioe) {
