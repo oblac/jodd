@@ -21,7 +21,7 @@ public class MapBeanLoader implements BeanLoader {
 				String propertyName = (String) o;
 				Object propertyValue = ((Map) map).get(propertyName);
 				if (propertyValue == null) {
-					return;
+					continue;
 				}
 				BeanUtil.setPropertyForcedSilent(bean, propertyName, propertyValue);
 			}
