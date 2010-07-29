@@ -3,6 +3,7 @@
 package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
+import jodd.util.StringUtil;
 
 /**
  * Simple interceptor that measures time and prints out information about invoked actions.
@@ -49,7 +50,12 @@ public class EchoInterceptor extends ActionInterceptor {
 	 */
 	protected void printAfter(ActionRequest request, long executionTime, Object result) {
 		StringBuilder message = new StringBuilder("<----- ");
-		message.append(request.getActionPath()).append("  (").append(result);
+		String resultString = StringUtil.toString(result);
+		if (resultString.length() > 50) {
+			resultString = resultString.substring(0, 50);
+			resultString += "...";
+		}
+		message.append(request.getActionPath()).append("  (").append(resultString);
 		message.append(") in ").append(executionTime).append("ms.");
 		out(message.toString());
 	}
