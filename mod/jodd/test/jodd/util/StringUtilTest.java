@@ -830,4 +830,12 @@ public class StringUtilTest extends TestCase {
 		assertEquals("oneTwoThree", StringUtil.wordsToCamelCase("one two   three"));
 		assertEquals("One two three", StringUtil.camelCaseToWords("OneTwoThree"));
 	}
+
+	public void testJavaEscapes() {
+		String from = "\r\t\b\f\n\\\"asd\u0111q\u0173aa\u0ABC\u0abc";
+		String to = "\\r\\t\\b\\f\\n\\\\\\\"asd\\u0111q\\u0173aa\\u0abc\\u0abc";
+
+		assertEquals(to, StringUtil.escapeJava(from));
+		assertEquals(from, StringUtil.unescapeJava(to));
+	}
 }

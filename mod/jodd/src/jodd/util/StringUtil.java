@@ -454,7 +454,7 @@ public class StringUtil {
 
 	/**
 	 * Splits a string in several parts (tokens) that are separated by delimiter
-	 * characters. Delimiter may contains any number of character, and it is
+	 * characters. Delimiter may contains any number of character and it is
 	 * always surrounded by two strings.
 	 *
 	 * @param src    source to examine
@@ -514,8 +514,7 @@ public class StringUtil {
 
 	/**
 	 * Splits a string in several parts (tokens) that are separated by single delimiter
-	 * characters. Delimiter may contains any number of character, and it is
-	 * always surrounded by two strings.
+	 * characters. Delimiter is always surrounded by two strings.
 	 *
 	 * @param src           source to examine
 	 * @param delimiter     delimiter character
@@ -1833,10 +1832,81 @@ public class StringUtil {
 	// ---------------------------------------------------------------- charset
 
 	/**
-	 * Converts string charsets.
+	 * Converts string charset.
 	 */
 	public static String convertCharset(String source, String srcCharsetName, String newCharsetName) throws UnsupportedEncodingException {
 		return new String(source.getBytes(srcCharsetName), newCharsetName);
+	}
+
+	/**
+	 * Escapes a string using java rules.
+	 */
+	public static String escapeJava(String str) {
+		char[] chars = str.toCharArray();
+
+		StringBuilder sb = new StringBuilder(str.length());
+		for (char c : chars) {
+			switch (c) {
+				case '\b' : sb.append("\\b"); break;
+				case '\t' : sb.append("\\t"); break;
+				case '\n' : sb.append("\\n"); break;
+				case '\f' : sb.append("\\f"); break;
+				case '\r' : sb.append("\\r"); break;
+				case '\"' : sb.append("\\\""); break;
+				case '\\' : sb.append("\\\\"); break;
+				default:
+					if ((c < 32) || (c > 127)) {
+						String hex = Integer.toHexString(c);
+						sb.append("\\u");
+						for (int k = hex.length(); k < 4; k++) {
+							sb.append('0');
+						}
+						sb.append(hex);
+					} else {
+						sb.append(c);
+					}
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Unescapes a string using java rules.
+	 */
+	public static String unescapeJava(String str) {
+		char[] chars = str.toCharArray();
+
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0; i < chars.length; i++) {
+			char c = chars[i];
+			if (c != '\\') {
+				sb.append(c);
+				continue;
+			}
+			i++;
+			c = chars[i];
+			switch (c) {
+				case 'b': sb.append('\b'); break;
+				case 't': sb.append('\t'); break;
+				case 'n': sb.append('\n'); break;
+				case 'f': sb.append('\f'); break;
+				case 'r': sb.append('\r'); break;
+				case '"': sb.append('\"'); break;
+				case '\\': sb.append('\\'); break;
+				case 'u' :
+					char hex = (char) Integer.parseInt(new String(chars, i + 1, 4), 16);
+					sb.append(hex);
+					i += 4;
+					break;
+				default:
+					throw new IllegalArgumentException("Invalid escaping character: " + c);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(escapeJava("\\u\tđavo"));
 	}
 
 
