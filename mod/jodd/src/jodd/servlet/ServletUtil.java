@@ -23,6 +23,7 @@ import jodd.util.MimeTypes;
 import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.servlet.upload.FileUpload;
+import jodd.util.StringUtil;
 
 /**
  * Miscellaneous servlet utilities.
@@ -413,6 +414,21 @@ public class ServletUtil {
 	}
 
 	// ---------------------------------------------------------------- params
+
+	/**
+	 * Checks if some parameter is in GET parameters.
+	 */
+	public boolean isGetParameter(HttpServletRequest request, String key) {
+		key = UrlEncoder.encode(key) + '=';
+		String query = request.getQueryString();
+		String[] nameValuePairs = StringUtil.splitc(query, '&');
+		for (String nameValuePair : nameValuePairs) {
+			if (nameValuePair.startsWith(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Prepares parameters for further processing.
