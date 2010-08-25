@@ -43,7 +43,7 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 	private List<String[]> params = new ArrayList<String[]>();
 
 	public void setDynamicAttribute(String uri, String localName, Object value) {
-		params.add(new String[] {localName, StringUtil.toNotNullString(value)});
+		params.add(new String[] {localName, StringUtil.toSafeString(value)});
 	}
 
 	@Override

@@ -709,8 +709,8 @@ public class StringUtilTest extends TestCase {
 		assertEquals("aaa", StringUtil.toString("aaa"));
 		assertEquals("173", StringUtil.toString(Integer.valueOf(173)));
 		assertNull(StringUtil.toString(null));
-		assertEquals("", StringUtil.toNotNullString(null));
-		assertEquals("3", StringUtil.toNotNullString(Long.valueOf(3)));
+		assertEquals("", StringUtil.toSafeString(null));
+		assertEquals("3", StringUtil.toSafeString(Long.valueOf(3)));
 
 		String[] arr = StringUtil.toStringArray("123, 234");
 		assertEquals("123", arr[0]);

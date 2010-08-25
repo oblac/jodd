@@ -338,7 +338,7 @@ public class StringUtil {
 	 * string is returned.
 	 * @see jodd.typeconverter.StringConverter 
 	 */
-	public static String toNotNullString(Object obj) {
+	public static String toSafeString(Object obj) {
 		if (obj == null) {
 			return EMPTY;
 		}

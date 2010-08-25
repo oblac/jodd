@@ -50,9 +50,9 @@ public class EchoInterceptor extends ActionInterceptor {
 	 */
 	protected void printAfter(ActionRequest request, long executionTime, Object result) {
 		StringBuilder message = new StringBuilder("<----- ");
-		String resultString = StringUtil.toString(result);
-		if (resultString.length() > 50) {
-			resultString = resultString.substring(0, 50);
+		String resultString = StringUtil.toSafeString(result);
+		if (resultString.length() > 70) {
+			resultString = resultString.substring(0, 70);
 			resultString += "...";
 		}
 		message.append(request.getActionPath()).append("  (").append(resultString);
