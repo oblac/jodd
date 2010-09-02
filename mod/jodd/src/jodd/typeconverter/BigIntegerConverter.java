@@ -16,6 +16,9 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 		if (value instanceof BigInteger) {
 			return (BigInteger) value;
 		}
+		if (value instanceof Number) {
+			return new BigInteger(String.valueOf(((Number)value).longValue()));
+		}
 		try {
 			return (new BigInteger(value.toString()));
 		} catch (NumberFormatException nfex) {

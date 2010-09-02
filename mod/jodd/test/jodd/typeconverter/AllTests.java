@@ -8,8 +8,13 @@ import junit.framework.TestSuite;
 public class AllTests extends TestSuite {
 	public AllTests() {
 		super("jodd.typeconverter test suite");
+		addTestSuite(BigDecimalConverterTest.class);
+		addTestSuite(BigIntegerConverterTest.class);
+		addTestSuite(BooleanArrayConverterTest.class);
+		addTestSuite(BooleanConverterTest.class);
 		addTestSuite(IntegerConverterTest.class);
-		addTestSuite(MutableIntegerTest.class);
+		addTestSuite(MutableIntegerConverterTest.class);
+		addTestSuite(StringConverterTest.class);
 	}
 
 	public static Test suite() {

@@ -5,9 +5,9 @@ package jodd.typeconverter;
 import junit.framework.TestCase;
 import jodd.mutable.MutableInteger;
 
-public class MutableIntegerTest extends TestCase {
+public class MutableIntegerConverterTest extends TestCase {
 
-	public void testConvert() {
+	public void testConversion() {
 		assertNull(MutableIntegerConverter.valueOf(null));
 		assertEquals(new MutableInteger(1), MutableIntegerConverter.valueOf(new MutableInteger(1)));
 		assertEquals(new MutableInteger(1), MutableIntegerConverter.valueOf(Integer.valueOf(1)));

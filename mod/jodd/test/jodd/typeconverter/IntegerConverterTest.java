@@ -6,8 +6,9 @@ import junit.framework.TestCase;
 
 public class IntegerConverterTest extends TestCase {
 
-	public void testConvert() {
+	public void testConversion() {
 		assertNull(IntegerConverter.valueOf(null));
+
 		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(Integer.valueOf(1)));
 		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(Short.valueOf((short) 1)));
 		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(Double.valueOf(1.0D)));
@@ -16,7 +17,7 @@ public class IntegerConverterTest extends TestCase {
 		try {
 			IntegerConverter.valueOf("a");
 			fail();
-		} catch (TypeConversionException tcex) {
+		} catch (TypeConversionException ignore) {
 		}
 	}
 }
