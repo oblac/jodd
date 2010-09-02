@@ -5,7 +5,7 @@ package jodd.typeconverter;
 /**
  * Converts given object to a Long.
  */
-public class LongConverter implements TypeConverter {
+public class LongConverter implements TypeConverter<Long> {
 
 	public static Long valueOf(Object value) {
 		
@@ -25,7 +25,7 @@ public class LongConverter implements TypeConverter {
 		}
 	}
 
-	public Object convert(Object value) {
+	public Long convert(Object value) {
 		return valueOf(value);
 	}
 	
