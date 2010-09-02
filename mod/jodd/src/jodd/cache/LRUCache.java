@@ -33,7 +33,7 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 	public LRUCache(int cacheSize, long timeout) {
 		this.cacheSize = cacheSize;
 		this.timeout = timeout;
-		cacheMap = new LinkedHashMap<K, CacheObject>(cacheSize + 1, 1.0f, true) {
+		cacheMap = new LinkedHashMap<K, CacheObject<K,V>>(cacheSize + 1, 1.0f, true) {
 			@Override
 			protected boolean removeEldestEntry(Map.Entry eldest) {
 				return size() > LRUCache.this.cacheSize;
@@ -53,7 +53,7 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 			return 0;
 		}
         int count = 0;
-		Iterator<CacheObject> values = cacheMap.values().iterator();
+		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject co = values.next();
 			if (co.isExpired() == true) {

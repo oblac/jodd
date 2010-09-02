@@ -28,7 +28,7 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 	public FIFOCache(int cacheSize, long timeout) {
 		this.cacheSize = cacheSize;
 		this.timeout = timeout;
-		cacheMap = new LinkedHashMap<K, CacheObject>(cacheSize + 1, 1.0f, false);
+		cacheMap = new LinkedHashMap<K,CacheObject<K,V>>(cacheSize + 1, 1.0f, false);
 	}
 
 
@@ -40,10 +40,10 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 	@Override
 	public int prune() {
         int count = 0;
-		CacheObject first = null;
-		Iterator<CacheObject> values = cacheMap.values().iterator();
+		CacheObject<K,V> first = null;
+		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
-			CacheObject co = values.next();
+			CacheObject<K,V> co = values.next();
 			if (co.isExpired() == true) {
 				values.remove();
 				count++;

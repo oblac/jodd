@@ -16,7 +16,7 @@ import java.util.Iterator;
  * usage patterns, and in particular doesn't help with temporally clustered accesses.<br>
  * Summary for LFU: not fast, captures frequency of use, scan resistant.
  */
-public class LFUCache<K, V> extends AbstractCacheMap<K, V> {
+public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 
 	public LFUCache(int maxSize) {
 		this(maxSize, 0);
@@ -25,7 +25,7 @@ public class LFUCache<K, V> extends AbstractCacheMap<K, V> {
 	public LFUCache(int maxSize, long timeout) {
 		this.cacheSize = maxSize;
 		this.timeout = timeout;
-		cacheMap = new HashMap<K, CacheObject>(maxSize + 1);
+		cacheMap = new HashMap<K, CacheObject<K,V>>(maxSize + 1);
 	}
 
 
@@ -39,10 +39,10 @@ public class LFUCache<K, V> extends AbstractCacheMap<K, V> {
 	@Override
 	public int prune() {
         int count = 0;
-		CacheObject comin = null;
-		Iterator<CacheObject> values = cacheMap.values().iterator();
+		CacheObject<K,V> comin = null;
+		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
-			CacheObject co = values.next();
+			CacheObject<K,V> co = values.next();
 			if (co.isExpired() == true) {
 				values.remove();
 				count++;

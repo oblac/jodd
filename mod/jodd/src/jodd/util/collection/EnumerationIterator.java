@@ -8,11 +8,11 @@ import java.util.Iterator;
 /**
  * Iterator adapter for enumeration.
  */
-public class EnumerationIterator implements Iterator {
+public class EnumerationIterator<E> implements Iterator<E> {
 
-	private final Enumeration enumeration;
+	private final Enumeration<E> enumeration;
 
-	public EnumerationIterator(Enumeration enumeration) {
+	public EnumerationIterator(Enumeration<E> enumeration) {
 		this.enumeration = enumeration;
 	}
 
@@ -20,7 +20,7 @@ public class EnumerationIterator implements Iterator {
 		return enumeration.hasMoreElements();
 	}
 
-	public Object next() {
+	public E next() {
 		return enumeration.nextElement();
 	}
 

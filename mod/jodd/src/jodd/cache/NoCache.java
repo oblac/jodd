@@ -2,6 +2,8 @@
 
 package jodd.cache;
 
+import java.util.Iterator;
+
 /**
  * Simple no-cache implementations of {@link Cache} for situation when cache
  * needs to be quickly turned-off.
@@ -26,6 +28,10 @@ public class NoCache<K, V> implements Cache<K, V> {
 	}
 
 	public V get(K key) {
+		return null;
+	}
+
+	public Iterator<V> iterator() {
 		return null;
 	}
 

@@ -17,7 +17,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	public TimedCache(long timeout) {
 		this.cacheSize = 0;
 		this.timeout = timeout;
-		cacheMap = new HashMap<K, CacheObject>();
+		cacheMap = new HashMap<K, CacheObject<K,V>>();
 	}
 
 	// ---------------------------------------------------------------- prune
@@ -28,7 +28,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	@Override
 	public int prune() {
         int count = 0;
-		Iterator<CacheObject> values = cacheMap.values().iterator();
+		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject co = values.next();
 			if (co.isExpired() == true) {
@@ -40,7 +40,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	}
 
 
-	// ---------------------------------------------------------------- autoprune
+	// ---------------------------------------------------------------- auto prune
 
 	protected Timer pruneTimer;
 

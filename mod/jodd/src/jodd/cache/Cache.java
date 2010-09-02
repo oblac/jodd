@@ -2,6 +2,8 @@
 
 package jodd.cache;
 
+import java.util.Iterator;
+
 /**
  * Cache interface.
  */
@@ -34,6 +36,11 @@ public interface Cache<K, V> {
 	 * is not longer in cache or if it is expired.
 	 */
 	V get(K key);
+
+	/**
+	 * Returns iterator over non-expired values.
+	 */
+	Iterator<V> iterator();
 
 	/**
 	 * Prunes objects from cache and returns the number of removed objects.

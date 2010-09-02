@@ -2,6 +2,7 @@
 
 package jodd.cache;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -14,16 +15,16 @@ import java.util.Map;
  */
 public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
-	class CacheObject {
-		CacheObject(K key, V object, long ttl) {
+	class CacheObject<K2,V2> {
+		CacheObject(K2 key, V2 object, long ttl) {
 			this.key = key;
 			this.cachedObject = object;
 			this.ttl = ttl;
 			this.lastAccess = System.currentTimeMillis();
 		}
 
-		final K key;
-		final V cachedObject;
+		final K2 key;
+		final V2 cachedObject;
 		long lastAccess;        // time of last access
 		int accessCount;        // number of accesses
 		long ttl; 				// objects timeout (time-to-live), 0 = no timeout
@@ -34,14 +35,14 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			}
 			return lastAccess + ttl < System.currentTimeMillis();
 		}
-		V getObject() {
+		V2 getObject() {
 			lastAccess = System.currentTimeMillis();
 			accessCount++;
 			return cachedObject;
 		}
     }
 
-	protected Map<K, CacheObject> cacheMap;
+	protected Map<K,CacheObject<K,V>> cacheMap;
 
 	// ---------------------------------------------------------------- properties
 
@@ -94,7 +95,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void put(K key, V object, long timeout) {
-		CacheObject co = new CacheObject(key, object, timeout);
+		CacheObject<K,V> co = new CacheObject<K,V>(key, object, timeout);
 		if (timeout != 0) {
 			existCustomTimeout = true;
 		}
@@ -111,7 +112,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public V get(K key) {
-		CacheObject co = cacheMap.get(key);
+		CacheObject<K,V> co = cacheMap.get(key);
 		if (co == null) {
 			return null;
 		}
@@ -120,6 +121,13 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			return null;
 		}
 		return co.getObject();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterator<V> iterator() {
+		return new CacheValuesIterator<V>(this);
 	}
 
 	// ---------------------------------------------------------------- prune
