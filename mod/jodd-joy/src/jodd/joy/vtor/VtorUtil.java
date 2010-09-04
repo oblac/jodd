@@ -1,6 +1,6 @@
 package jodd.joy.vtor;
 
-import jodd.bean.BeanTool;
+import jodd.bean.BeanTemplate;
 import jodd.joy.i18n.LocalizationUtil;
 import jodd.util.StringPool;
 import jodd.vtor.ValidationConstraint;
@@ -44,7 +44,7 @@ public class VtorUtil {
 		String key = vc != null ? vc.getClass().getName() : violation.getName();
 		String msg = LocalizationUtil.findMessage(request, key);
 		if (msg != null) {
-			return BeanTool.parseTemplate(msg, violation);
+			return BeanTemplate.parse(msg, violation);
 		}
 		return null;
 	}

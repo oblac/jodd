@@ -5,9 +5,9 @@ package jodd.madvoc.result;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jodd.bean.BeanTemplate;
 import jodd.madvoc.ActionRequest;
 import jodd.servlet.DispatcherUtil;
-import jodd.bean.BeanTool;
 
 
 /**
@@ -30,7 +30,7 @@ public class ServletRedirectResult extends ActionResult {
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
-		resultPath = BeanTool.parseTemplate(resultPath, actionRequest.getAction());
+		resultPath = BeanTemplate.parse(resultPath, actionRequest.getAction());
 		DispatcherUtil.redirect(request, response, resultPath);
 	}
 }

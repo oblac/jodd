@@ -12,7 +12,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(BeanUtilTest.class);
 		addTestSuite(BeanUtilGenericsTest.class);
 		addTestSuite(BeanCopyTest.class);
-		addTestSuite(BeanToolTest.class);
+		addTestSuite(BeanTemplateTest.class);
 	}
 
 	public static Test suite() {
