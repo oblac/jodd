@@ -12,6 +12,13 @@ public class AllTests extends TestSuite {
 		addTestSuite(BigIntegerConverterTest.class);
 		addTestSuite(BooleanArrayConverterTest.class);
 		addTestSuite(BooleanConverterTest.class);
+		addTestSuite(ByteArrayConverterTest.class);
+		addTestSuite(ByteConverterTest.class);
+		addTestSuite(CharacterConverterTest.class);
+		addTestSuite(ClassConverterTest.class);
+		addTestSuite(ClassArrayConverterTest.class);
+		addTestSuite(DoubleConverterTest.class);
+		addTestSuite(DoubleArrayConverterTest.class);
 		addTestSuite(IntegerConverterTest.class);
 		addTestSuite(MutableIntegerConverterTest.class);
 		addTestSuite(StringConverterTest.class);

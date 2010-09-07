@@ -7,7 +7,9 @@ import jodd.util.CsvUtil;
 /**
  * Converts given object to String[].
  * If object is an array than it is converted to String[] array.
- * If object is not an array, new String[] array will be created from CSV reprenstation of toString.
+ * If object is not an array, new String[] array will be created from CSV representation of <code>toString</code>.
+ * It handles special cases when <code>toString()</code> representation is not quite useful
+ * (such of <code>Class</code>, when <code>toString</code> is replaced with <code>getName</code>.).
  */
 public class StringArrayConverter implements TypeConverter<String[]> {
 
@@ -18,6 +20,10 @@ public class StringArrayConverter implements TypeConverter<String[]> {
 		}
 		Class type = value.getClass();
 		if (type.isArray() == false) {
+			// special case #1
+			if (value instanceof Class) {
+				return new String[] {((Class)value).getName()};
+			}
 			return CsvUtil.toStringArray(value.toString());
 		}
 
@@ -86,8 +92,13 @@ public class StringArrayConverter implements TypeConverter<String[]> {
 		Object[] values = (Object[]) value;
 		String[] result = new String[values.length];
 		for (int i = 0; i < values.length; i++) {
-			if (values[i] != null) {
-				result[i] = values[i].toString();
+			Object v = values[i];
+			if (v != null) {
+				// special case #1
+				if (v instanceof Class) {
+					result[i] = ((Class)v).getName();
+				}
+				result[i] = v.toString();
 			}
 		}
 		return result;

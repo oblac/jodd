@@ -17,6 +17,9 @@ public class ClassArrayConverter implements TypeConverter<Class[]>{
 		if (value instanceof Class[]) {
 			return (Class[]) value;
 		}
+		if (value instanceof Class) {
+			return new Class[] {(Class) value};
+		}
 		String[] allClassNames = StringArrayConverter.valueOf(value);
 		int total = allClassNames.length;
 		Class[] result = new Class[total];

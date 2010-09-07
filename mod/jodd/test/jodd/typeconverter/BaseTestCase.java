@@ -9,13 +9,31 @@ public abstract class BaseTestCase extends TestCase {
 	protected boolean[] arr(boolean... v) {
 		return v;
 	}
-	protected String[] arr(String... v) {
+	protected Object[] arr(Object... v) {
+		return v;
+	}
+	protected String[] arrs(String... v) {
+		return v;
+	}
+	protected Class[] arr(Class... v) {
 		return v;
 	}
 	protected int[] arri(int... v) {
 		return v;
 	}
+	protected long[] arril(long... v) {
+		return v;
+	}
+	protected byte[] arrb(byte... v) {
+		return v;
+	}
+	protected short[] arrs(short... v) {
+		return v;
+	}
 	protected double[] arrd(double... v) {
+		return v;
+	}
+	protected float[] arrd(float... v) {
 		return v;
 	}
 
