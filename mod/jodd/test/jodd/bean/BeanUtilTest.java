@@ -668,19 +668,19 @@ public class BeanUtilTest extends TestCase {
 		propName = "fooCharacter";
 		BeanUtil.setProperty(fb, propName, new Character('a'));
 		assertEquals('a', fb.getFooCharacter().charValue());
-		BeanUtil.setProperty(fb, propName, "123");
+		BeanUtil.setProperty(fb, propName, "1");
 		assertEquals('1', fb.getFooCharacter().charValue());
 		BeanUtil.setProperty(fb, propName, new Integer(789));
-		assertEquals('7', fb.getFooCharacter().charValue());
+		assertEquals(789, fb.getFooCharacter().charValue());
 
 		// char
 		propName = "foochar";
 		BeanUtil.setProperty(fb, propName, new Character('a'));
 		assertEquals('a', fb.getFoochar());
-		BeanUtil.setProperty(fb, propName, "123");
+		BeanUtil.setProperty(fb, propName, "1");
 		assertEquals('1', fb.getFoochar());
 		BeanUtil.setProperty(fb, propName, new Integer(789));
-		assertEquals('7', fb.getFoochar());
+		assertEquals(789, fb.getFoochar());
 	}
 
 
