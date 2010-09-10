@@ -33,7 +33,7 @@ public abstract class BaseTestCase extends TestCase {
 	protected double[] arrd(double... v) {
 		return v;
 	}
-	protected float[] arrd(float... v) {
+	protected float[] arrf(float... v) {
 		return v;
 	}
 

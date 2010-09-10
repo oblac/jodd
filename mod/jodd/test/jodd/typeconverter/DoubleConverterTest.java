@@ -2,11 +2,9 @@
 
 package jodd.typeconverter;
 
-import junit.framework.TestCase;
-
 import java.math.BigDecimal;
 
-public class DoubleConverterTest extends TestCase {
+public class DoubleConverterTest extends BaseTestCase {
 
 	public void testConversion() {
 		assertNull(DoubleConverter.valueOf(null));

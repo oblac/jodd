@@ -6,6 +6,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests extends TestSuite {
+
 	public AllTests() {
 		super("jodd.typeconverter test suite");
 		addTestSuite(BigDecimalConverterTest.class);
@@ -19,7 +20,10 @@ public class AllTests extends TestSuite {
 		addTestSuite(ClassArrayConverterTest.class);
 		addTestSuite(DoubleConverterTest.class);
 		addTestSuite(DoubleArrayConverterTest.class);
+		addTestSuite(FloatConverterTest.class);
+		addTestSuite(FloatArrayConverterTest.class);
 		addTestSuite(IntegerConverterTest.class);
+		addTestSuite(IntegerArrayConverterTest.class);
 		addTestSuite(MutableIntegerConverterTest.class);
 		addTestSuite(StringConverterTest.class);
 	}
