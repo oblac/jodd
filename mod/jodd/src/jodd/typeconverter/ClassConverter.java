@@ -10,11 +10,11 @@ import jodd.util.ClassLoaderUtil;
 public class ClassConverter implements TypeConverter<Class> {
 
 	public static Class valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Class) {
+
+		if (value.getClass() == Class.class) {
 			return (Class) value;
 		}
 		try {

@@ -10,13 +10,12 @@ import jodd.mutable.MutableByte;
  */
 public class MutableByteConverter implements TypeConverter<MutableByte> {
 
-
 	public static MutableByte valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableByte) {
+
+		if (value.getClass() == MutableByte.class) {
 			return (MutableByte) value;
 		}
 		if (value instanceof Number) {

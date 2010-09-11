@@ -8,19 +8,18 @@ package jodd.typeconverter;
 public class IntegerConverter implements TypeConverter<Integer> {
 
 	public static Integer valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
 
-		if (value instanceof Integer) {
+		if (value.getClass() == Integer.class) {
 			return (Integer) value;
 		}
 		if (value instanceof Number) {
-			return new Integer(((Number)value).intValue());
+			return Integer.valueOf(((Number)value).intValue());
 		}
 		try {
-			return new Integer(value.toString());
+			return Integer.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

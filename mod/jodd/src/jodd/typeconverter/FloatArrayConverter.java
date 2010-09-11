@@ -8,7 +8,6 @@ package jodd.typeconverter;
 public class FloatArrayConverter implements TypeConverter<float[]> {
 
 	public static float[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}

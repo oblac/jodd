@@ -14,7 +14,7 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Boolean) {
+		if (value.getClass() == Boolean.class) {
 			return (Boolean) value;
 		}
 		String stringValue = value.toString();

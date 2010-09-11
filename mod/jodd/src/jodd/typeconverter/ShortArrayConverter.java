@@ -8,7 +8,6 @@ package jodd.typeconverter;
 public class ShortArrayConverter implements TypeConverter<short[]> {
 
 	public static short[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}

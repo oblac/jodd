@@ -8,10 +8,10 @@ public class ClassArrayConverterTest extends BaseTestCase {
 	public void testConversion() {
 		assertNull(ClassArrayConverter.valueOf(null));
 
-		assertEq(arr(String.class), ClassArrayConverter.valueOf(String.class));
-		assertEq(arr(String.class, Integer.class), ClassArrayConverter.valueOf(arr(String.class, Integer.class)));
-		assertEq(arr(Integer.class), ClassArrayConverter.valueOf("java.lang.Integer"));
-		assertEq(arr(Integer.class, String.class), ClassArrayConverter.valueOf("java.lang.Integer,    java.lang.String"));
+		assertEq(arrc(String.class), ClassArrayConverter.valueOf(String.class));
+		assertEq(arrc(String.class, Integer.class), ClassArrayConverter.valueOf(arrc(String.class, Integer.class)));
+		assertEq(arrc(Integer.class), ClassArrayConverter.valueOf("java.lang.Integer"));
+		assertEq(arrc(Integer.class, String.class), ClassArrayConverter.valueOf("java.lang.Integer,    java.lang.String"));
 
 		try {
 			ClassArrayConverter.valueOf("foo.Klass");

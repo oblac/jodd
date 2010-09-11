@@ -14,6 +14,7 @@ public class URLConverter implements TypeConverter<URL> {
 		if (value == null) {
 			return null;
 		}
+		
 		if (value instanceof URL) {
 			return (URL) value;
 		}
@@ -27,4 +28,5 @@ public class URLConverter implements TypeConverter<URL> {
 	public URL convert(Object value) {
 		return valueOf(value);
 	}
+
 }

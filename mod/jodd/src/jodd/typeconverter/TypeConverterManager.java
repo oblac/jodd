@@ -11,6 +11,7 @@ import jodd.mutable.MutableShort;
 import jodd.servlet.upload.FileUpload;
 import jodd.datetime.JDateTime;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -102,6 +103,8 @@ public class TypeConverterManager {
 		register(JDateTime.class, new JDateTimeConverter());
 		register(Class.class, new ClassConverter());
 		register(Class[].class, new ClassArrayConverter());
+
+		register(URI.class, new URIConverter());
 		register(URL.class, new URLConverter());
 	}
 

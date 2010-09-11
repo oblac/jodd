@@ -9,6 +9,7 @@ public class MutableIntegerConverterTest extends TestCase {
 
 	public void testConversion() {
 		assertNull(MutableIntegerConverter.valueOf(null));
+		
 		assertEquals(new MutableInteger(1), MutableIntegerConverter.valueOf(new MutableInteger(1)));
 		assertEquals(new MutableInteger(1), MutableIntegerConverter.valueOf(Integer.valueOf(1)));
 		assertEquals(new MutableInteger(1), MutableIntegerConverter.valueOf(Short.valueOf((short) 1)));
@@ -18,7 +19,7 @@ public class MutableIntegerConverterTest extends TestCase {
 		try {
 			MutableIntegerConverter.valueOf("a");
 			fail();
-		} catch (TypeConversionException tcex) {
+		} catch (TypeConversionException ignore) {
 		}
 	}
 }

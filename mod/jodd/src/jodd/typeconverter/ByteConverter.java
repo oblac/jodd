@@ -12,14 +12,14 @@ public class ByteConverter implements TypeConverter<Byte> {
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Byte) {
+		if (value.getClass() == Byte.class) {
 			return (Byte) value;
 		}
 		if (value instanceof Number) {
-			return new Byte(((Number)value).byteValue());
+			return Byte.valueOf(((Number)value).byteValue());
 		}
 		try {
-			return (new Byte(value.toString()));
+			return Byte.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

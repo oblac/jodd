@@ -8,19 +8,19 @@ package jodd.typeconverter;
 public class DoubleConverter implements TypeConverter<Double> {
 
 	public static Double valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Double) {
+
+		if (value.getClass() == Double.class) {
 			return (Double) value;
 		}
 		if (value instanceof Number) {
-			return new Double(((Number)value).doubleValue());
+			return Double.valueOf(((Number)value).doubleValue());
 		}
 
 		try {
-			return (new Double(value.toString()));
+			return Double.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

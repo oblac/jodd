@@ -8,7 +8,6 @@ package jodd.typeconverter;
 public class DoubleArrayConverter implements TypeConverter<double[]> {
 
 	public static double[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
@@ -23,7 +22,6 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
-
 		}
 
 		if (type == double[].class) {

@@ -13,16 +13,16 @@ public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 		if (value == null) {
 			return null;
 		}
+		
 		if (value instanceof BigDecimal) {
 			return (BigDecimal) value;
 		}
 		try {
-			return (new BigDecimal(value.toString()));
+			return new BigDecimal(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex); 
 		}
 	}
-
 
 	public BigDecimal convert(Object value) {
 		return valueOf(value);

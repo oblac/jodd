@@ -9,7 +9,6 @@ import java.sql.Timestamp;
  */
 public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 
-
 	public static Timestamp valueOf(Object value) {
 		if (value == null) {
 			return null;

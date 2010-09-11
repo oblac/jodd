@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.util.CsvUtil;
+
 import java.sql.Clob;
 import java.sql.SQLException;
 
@@ -14,10 +16,24 @@ public class StringConverter implements TypeConverter<String> {
 		if (value == null) {
 			return null;
 		}
+		
+		if (value instanceof CharSequence) {	// for speed
+			return value.toString();
+		}
 		Class type = value.getClass();
-		if (type == byte[].class) {
-			byte[] valueArray = (byte[]) value;
-			return new String(valueArray, 0, valueArray.length);
+		if (type == Class.class) {
+			return ((Class) value).getName();
+		}
+		if (type.isArray()) {
+			if (type == byte[].class) {
+				byte[] valueArray = (byte[]) value;
+				return new String(valueArray, 0, valueArray.length);
+			}
+			if (type == char[].class) {
+				char[] charArray = (char[]) value;
+				return new String(charArray);
+			}
+			return CsvUtil.toCsvString((Object[])value);
 		}
 		if (value instanceof Clob) {
 			Clob clob = (Clob) value;

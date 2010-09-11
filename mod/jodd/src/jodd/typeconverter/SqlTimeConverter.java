@@ -10,10 +10,10 @@ import java.sql.Time;
 public class SqlTimeConverter implements TypeConverter<Time> {
 
 	public static Time valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
+		
 		if (value instanceof Time) {
 			return (Time) value;
 		}

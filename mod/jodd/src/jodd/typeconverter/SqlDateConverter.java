@@ -11,7 +11,6 @@ import java.sql.Date;
 public class SqlDateConverter implements TypeConverter<Date> {
 
 	public static Date valueOf(Object value) {
-	
 		if (value == null) {
 			return null;
 		}

@@ -638,7 +638,7 @@ public class BeanUtilTest extends TestCase {
 		FooBean2 fb = new FooBean2();
 		String propName = "fooBigDecimal";
 		assertEquals(BigDecimal.class, BeanUtil.getPropertyType(fb, propName));
-		BeanUtil.setProperty(fb, propName, new BigDecimal(1.2));
+		BeanUtil.setProperty(fb, propName, new BigDecimal("1.2"));
 		assertEquals(1.2, fb.getFooBigDecimal().doubleValue(), 0.0005);
 	}
 

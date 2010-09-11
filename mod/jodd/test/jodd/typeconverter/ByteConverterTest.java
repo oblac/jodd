@@ -11,8 +11,15 @@ public class ByteConverterTest extends TestCase {
 
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Integer.valueOf(1)));
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Short.valueOf((short) 1)));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Double.valueOf(1.0D)));
+		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Double.valueOf(1.5D)));
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("1"));
+		assertEquals(Byte.valueOf((byte) (300-256)), ByteConverter.valueOf(Integer.valueOf(300)));
+
+		try {
+			assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("1.5"));
+			fail();
+		} catch (TypeConversionException ignore) {
+		}
 
 		try {
 			ByteConverter.valueOf("a");

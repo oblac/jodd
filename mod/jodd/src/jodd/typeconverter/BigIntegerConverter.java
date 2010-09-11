@@ -13,6 +13,7 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 		if (value == null) {
 			return null;
 		}
+
 		if (value instanceof BigInteger) {
 			return (BigInteger) value;
 		}
@@ -20,7 +21,7 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 			return new BigInteger(String.valueOf(((Number)value).longValue()));
 		}
 		try {
-			return (new BigInteger(value.toString()));
+			return new BigInteger(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

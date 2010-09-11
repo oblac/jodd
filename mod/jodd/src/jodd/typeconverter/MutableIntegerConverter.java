@@ -10,11 +10,11 @@ import jodd.mutable.MutableInteger;
 public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 
 	public static MutableInteger valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableInteger) {
+
+		if (value.getClass() == MutableInteger.class) {
 			return (MutableInteger) value;
 		}
 		if (value instanceof Number) {

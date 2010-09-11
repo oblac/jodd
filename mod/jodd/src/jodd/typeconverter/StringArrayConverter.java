@@ -14,14 +14,14 @@ import jodd.util.CsvUtil;
 public class StringArrayConverter implements TypeConverter<String[]> {
 
 	public static String[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
+		
 		Class type = value.getClass();
 		if (type.isArray() == false) {
 			// special case #1
-			if (value instanceof Class) {
+			if (type == Class.class) {
 				return new String[] {((Class)value).getName()};
 			}
 			return CsvUtil.toStringArray(value.toString());
@@ -95,8 +95,9 @@ public class StringArrayConverter implements TypeConverter<String[]> {
 			Object v = values[i];
 			if (v != null) {
 				// special case #1
-				if (v instanceof Class) {
+				if (v.getClass() == Class.class) {
 					result[i] = ((Class)v).getName();
+					continue;
 				}
 				result[i] = v.toString();
 			}

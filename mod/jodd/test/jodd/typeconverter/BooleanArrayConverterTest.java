@@ -7,11 +7,12 @@ public class BooleanArrayConverterTest extends BaseTestCase {
 	public void testConversion() {
 		assertNull(BooleanArrayConverter.valueOf(null));
 
-		assertEq(arr(true), BooleanArrayConverter.valueOf(Boolean.TRUE));
-		assertEq(arr(true), BooleanArrayConverter.valueOf("true"));
-		assertEq(arr(true, false, true), BooleanArrayConverter.valueOf(arr(true, false, true)));
-		assertEq(arr(true, false, true), BooleanArrayConverter.valueOf(arri(7, 0, 3)));
-		assertEq(arr(true, false, true), BooleanArrayConverter.valueOf(arrs("true", "0", "yes")));
+		assertEq(arrl(true), BooleanArrayConverter.valueOf(Boolean.TRUE));
+		assertEq(arrl(true), BooleanArrayConverter.valueOf("true"));
+		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrl(true, false, true)));
+		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arri(-7, 0, 3)));
+		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrf(-7.0f, 0.0f, 3.0f)));
+		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrs("true", "0", "yes")));
 	}
 
 

@@ -13,7 +13,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		}
 		Class type = value.getClass();
 		if (type.isArray() == false) {
-			if (value instanceof Boolean) {
+			if (type == Boolean.class) {
 				return new boolean[] {((Boolean) value).booleanValue()};
 			}
 			return new boolean[] {BooleanConverter.valueOf(value.toString()).booleanValue()};

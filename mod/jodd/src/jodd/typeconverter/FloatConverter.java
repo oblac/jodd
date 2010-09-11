@@ -8,20 +8,19 @@ package jodd.typeconverter;
 public class FloatConverter implements TypeConverter<Float> {
 
 	public static Float valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
 
-		if (value instanceof Float) {
+		if (value.getClass() == Float.class) {
 			return (Float) value;
 		}
 		if (value instanceof Number) {
-			return new Float(((Number)value).floatValue());
+			return Float.valueOf(((Number)value).floatValue());
 		}
 
 		try {
-			return (new Float(value.toString()));
+			return Float.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

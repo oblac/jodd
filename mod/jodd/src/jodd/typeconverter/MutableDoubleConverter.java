@@ -10,11 +10,11 @@ import jodd.mutable.MutableDouble;
 public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 
 	public static MutableDouble valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableDouble) {
+
+		if (value.getClass() == MutableDouble.class) {
 			return (MutableDouble) value;
 		}
 		if (value instanceof Number) {

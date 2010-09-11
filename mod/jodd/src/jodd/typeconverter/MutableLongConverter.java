@@ -10,11 +10,11 @@ import jodd.mutable.MutableLong;
 public class MutableLongConverter implements TypeConverter<MutableLong> {
 
 	public static MutableLong valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableLong) {
+
+		if (value.getClass() == MutableLong.class) {
 			return (MutableLong) value;
 		}
 		if (value instanceof Number) {

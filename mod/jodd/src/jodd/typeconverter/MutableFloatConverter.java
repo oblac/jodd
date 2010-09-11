@@ -10,11 +10,11 @@ import jodd.mutable.MutableFloat;
 public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 
 	public static MutableFloat valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableFloat) {
+		
+		if (value.getClass() == MutableFloat.class) {
 			return (MutableFloat) value;
 		}
 		if (value instanceof Number) {

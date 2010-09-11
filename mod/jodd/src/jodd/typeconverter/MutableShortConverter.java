@@ -11,13 +11,12 @@ import jodd.mutable.MutableShort;
  */
 public class MutableShortConverter implements TypeConverter<MutableShort> {
 
-
 	public static MutableShort valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof MutableShort) {
+
+		if (value.getClass() == MutableShort.class) {
 			return (MutableShort) value;
 		}
 		if (value instanceof Number) {

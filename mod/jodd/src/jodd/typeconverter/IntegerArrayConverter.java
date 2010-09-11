@@ -2,13 +2,14 @@
 
 package jodd.typeconverter;
 
+import jodd.util.CsvUtil;
+
 /**
  *  Converts given object to int[].
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 
 	public static int[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
@@ -18,11 +19,17 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 			if (value instanceof Number) {
 				return new int[] {((Number) value).intValue()};
 			}
+			
+			String[] values = CsvUtil.toStringArray(value.toString());
+			int[] result = new int[values.length];
 			try {
-				return new int[] {Integer.parseInt(value.toString())};
+				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
+					result[i] = Integer.parseInt(values[i].trim());
+				}
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
+			return result;
 		}
 
 		if (type == int[].class) {

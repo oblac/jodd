@@ -8,7 +8,6 @@ package jodd.typeconverter;
 public class LongArrayConverter implements TypeConverter<long[]> {
 
 	public static long[] valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
@@ -76,7 +75,6 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 			}
 			return results;
 		}
-
 
 		Object[] values = (Object[]) value;
 		long[] results = new long[values.length];

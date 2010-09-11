@@ -16,16 +16,30 @@ public class AllTests extends TestSuite {
 		addTestSuite(ByteArrayConverterTest.class);
 		addTestSuite(ByteConverterTest.class);
 		addTestSuite(CharacterConverterTest.class);
-		addTestSuite(ClassConverterTest.class);
 		addTestSuite(ClassArrayConverterTest.class);
-		addTestSuite(DoubleConverterTest.class);
+		addTestSuite(ClassConverterTest.class);
 		addTestSuite(DoubleArrayConverterTest.class);
-		addTestSuite(FloatConverterTest.class);
+		addTestSuite(DoubleConverterTest.class);
 		addTestSuite(FloatArrayConverterTest.class);
-		addTestSuite(IntegerConverterTest.class);
+		addTestSuite(FloatConverterTest.class);
 		addTestSuite(IntegerArrayConverterTest.class);
+		addTestSuite(IntegerConverterTest.class);
+		addTestSuite(JDateTimeConverterTest.class);
+		addTestSuite(LongConverterTest.class);
+		addTestSuite(LongArrayConverterTest.class);
+		addTestSuite(MutableByteConverterTest.class);
+		addTestSuite(MutableDoubleConverterTest.class);
+		addTestSuite(MutableFloatConverterTest.class);
 		addTestSuite(MutableIntegerConverterTest.class);
+		addTestSuite(MutableLongConverterTest.class);
+		addTestSuite(MutableShortConverterTest.class);
+		addTestSuite(ShortArrayConverterTest.class);
+		addTestSuite(ShortConverterTest.class);
+		addTestSuite(SqlDateConverterTest.class);
+		addTestSuite(SqlTimeConverterTest.class);
+		addTestSuite(SqlTimestampConverterTest.class);
 		addTestSuite(StringConverterTest.class);
+		addTestSuite(StringArrayConverterTest.class);
 	}
 
 	public static Test suite() {

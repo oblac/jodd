@@ -8,11 +8,10 @@ package jodd.typeconverter;
 public class CharacterConverter implements TypeConverter<Character> {
 
 	public static Character valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Character) {
+		if (value.getClass() == Character.class) {
 			return (Character) value;
 		}
 		if (value instanceof Number) {
@@ -24,7 +23,7 @@ public class CharacterConverter implements TypeConverter<Character> {
 			if (s.length() != 1) {
 				throw new TypeConversionException(value);
 			}
-			return new Character(s.charAt(0));
+			return Character.valueOf(s.charAt(0));
 		} catch (IndexOutOfBoundsException ioobex) {
 			throw new TypeConversionException(value, ioobex);
 		}

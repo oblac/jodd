@@ -8,20 +8,19 @@ package jodd.typeconverter;
  */
 public class ShortConverter implements TypeConverter<Short> {
 
-
 	public static Short valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Short) {
+
+		if (value.getClass() == Short.class) {
 			return (Short) value;
 		}
 		if (value instanceof Number) {
-			return new Short(((Number)value).shortValue());
+			return Short.valueOf(((Number)value).shortValue());
 		}
 		try {
-			return (new Short(value.toString()));
+			return Short.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

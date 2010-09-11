@@ -12,7 +12,6 @@ import jodd.datetime.JulianDateStamp;
 public class JDateTimeConverter implements TypeConverter<JDateTime> {
 
 	public static JDateTime valueOf(Object value) {
-
 		if (value == null) {
 			return null;
 		}
@@ -23,8 +22,8 @@ public class JDateTimeConverter implements TypeConverter<JDateTime> {
 		if (value instanceof Number) {
 			return new JDateTime(((Number) value).longValue());
 		}
-		if (value instanceof DateTimeStamp) {
-			return new JDateTime((DateTimeStamp) value);
+		if (value instanceof String) {
+			return new JDateTime((String) value);
 		}
 		if (value instanceof JulianDateStamp) {
 			return new JDateTime((JulianDateStamp) value);

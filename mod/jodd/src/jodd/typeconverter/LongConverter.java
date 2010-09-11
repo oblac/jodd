@@ -8,18 +8,18 @@ package jodd.typeconverter;
 public class LongConverter implements TypeConverter<Long> {
 
 	public static Long valueOf(Object value) {
-		
 		if (value == null) {
 			return null;
 		}
-		if (value instanceof Long) {
+
+		if (value.getClass() == Long.class) {
 			return (Long) value;
 		}
 		if (value instanceof Number) {
-			return new Long(((Number)value).longValue());
+			return Long.valueOf(((Number)value).longValue());
 		}
 		try {
-			return (new Long(value.toString()));
+			return Long.valueOf(value.toString());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
