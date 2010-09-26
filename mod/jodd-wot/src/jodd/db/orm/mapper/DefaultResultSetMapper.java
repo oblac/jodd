@@ -210,11 +210,11 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	/**
 	 * Creates new instances of a types.
 	 */
-	protected Object newInstance(Class types) {
+	protected Object newEntityInstance(Class type) {
 		try {
-			return types.newInstance();
+			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOrmException("Unable to create new entity instance using default constructor for type '" + types + "'.", ex);
+			throw new DbOrmException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
 		}
 	}
 
@@ -325,7 +325,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					String propertyName = (dec == null ? null : dec.getPropertyName());
 					if (propertyName != null) {
 						if (result[currentResult] == null) {
-							result[currentResult] = newInstance(currentType);
+							result[currentResult] = newEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?

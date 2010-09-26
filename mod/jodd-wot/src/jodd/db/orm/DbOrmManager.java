@@ -2,8 +2,11 @@
 
 package jodd.db.orm;
 
+import jodd.db.orm.mapper.DefaultResultSetMapper;
+import jodd.db.orm.mapper.ResultSetMapper;
 import jodd.util.StringUtil;
 
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,14 +27,14 @@ public class DbOrmManager {
 	private static DbOrmManager dbOrmManager = new DbOrmManager();
 
 	/**
-	 * Returns current DB-ORM instance.
+	 * Returns current DB-ORM manager instance.
 	 */
 	public static DbOrmManager getInstance() {
 		return dbOrmManager;
 	}
 
 	/**
-	 * Sets new default instance for DB-ORM mapper.
+	 * Sets new instance for DB-ORM manager.
 	 */
 	public static void setInstance(DbOrmManager ormManager) {
 		dbOrmManager = ormManager;
@@ -321,5 +324,15 @@ public class DbOrmManager {
 
 	public void setDefaultColumnAliasType(ColumnAliasType defaultColumnAliasType) {
 		this.defaultColumnAliasType = defaultColumnAliasType;
+	}
+
+
+	// ---------------------------------------------------------------- result set mapper
+
+	/**
+	 * Creates a new instance of {@link jodd.db.orm.mapper.ResultSetMapper}.
+	 */
+	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases) {
+		return new DefaultResultSetMapper(resultSet, columnAliases, this);
 	}
 }

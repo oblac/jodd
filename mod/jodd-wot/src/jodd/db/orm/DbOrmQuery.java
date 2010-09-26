@@ -4,7 +4,6 @@ package jodd.db.orm;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import jodd.db.orm.mapper.DefaultResultSetMapper;
 import jodd.db.orm.mapper.ResultSetMapper;
 import jodd.db.orm.sqlgen.ParameterValue;
 import jodd.util.StringUtil;
@@ -162,17 +161,17 @@ public class DbOrmQuery extends DbQuery {
 	// ---------------------------------------------------------------- result set
 
 	/**
-	 * Executes the query and returns {@link #buildResultSetMapper(java.sql.ResultSet) builded ResultSet mapper}.
+	 * Executes the query and returns {@link #createResultSetMapper(java.sql.ResultSet) builded ResultSet mapper}.
 	 */
 	protected ResultSetMapper executeAndBuildResultSetMapper() {
-		return buildResultSetMapper(execute());
+		return createResultSetMapper(execute());
 	}
 
 	/**
 	 * Factory for result sets mapper.
 	 */
-	protected ResultSetMapper buildResultSetMapper(ResultSet resultSet) {
-		return new DefaultResultSetMapper(resultSet, sqlgen != null ? sqlgen.getColumnData() : null, dbOrmManager);
+	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
+		return dbOrmManager.createResultSetMapper(resultSet, sqlgen != null ? sqlgen.getColumnData() : null);
 	}
 
 
@@ -414,7 +413,7 @@ public class DbOrmQuery extends DbQuery {
 		if (resultSet == null) {
 			resultSet = execute();
 		}
-		ResultSetMapper rsm = buildResultSetMapper(resultSet);
+		ResultSetMapper rsm = createResultSetMapper(resultSet);
 		if (rsm.next() == false) {
 			return null;
 		}
@@ -441,7 +440,7 @@ public class DbOrmQuery extends DbQuery {
 		if (resultSet == null) {
 			resultSet = execute();
 		}
-		ResultSetMapper rsm = buildResultSetMapper(resultSet);
+		ResultSetMapper rsm = createResultSetMapper(resultSet);
 		if (rsm.next() == false) {
 			return null;
 		}
