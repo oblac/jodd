@@ -342,7 +342,7 @@ public class DbOrmManager {
 	/**
 	 * Creates new entity instances.
 	 */
-	public Object createEntityInstance(Class type) {
+	public <E> E createEntityInstance(Class<E> type) {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
