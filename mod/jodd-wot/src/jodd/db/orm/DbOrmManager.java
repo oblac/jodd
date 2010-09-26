@@ -21,22 +21,20 @@ public class DbOrmManager {
 
 	// ---------------------------------------------------------------- singleton
 
-	private static class LazyHolder {
-		private static DbOrmManager dbOrmManager = new DbOrmManager();
-	}
+	private static DbOrmManager dbOrmManager = new DbOrmManager();
 
 	/**
 	 * Returns current DB-ORM instance.
 	 */
 	public static DbOrmManager getInstance() {
-		return LazyHolder.dbOrmManager;
+		return dbOrmManager;
 	}
 
 	/**
 	 * Sets new default instance for DB-ORM mapper.
 	 */
 	public static void setInstance(DbOrmManager ormManager) {
-		LazyHolder.dbOrmManager = ormManager;
+		dbOrmManager = ormManager;
 	}
 
 
