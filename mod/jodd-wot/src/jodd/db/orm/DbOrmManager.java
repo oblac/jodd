@@ -335,4 +335,19 @@ public class DbOrmManager {
 	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases) {
 		return new DefaultResultSetMapper(resultSet, columnAliases, this);
 	}
+
+
+	// ---------------------------------------------------------------- create entity
+
+	/**
+	 * Creates new entity instances.
+	 */
+	public Object createEntityInstance(Class type) {
+		try {
+			return type.newInstance();
+		} catch (Exception ex) {
+			throw new DbOrmException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
+		}
+	}
+
 }

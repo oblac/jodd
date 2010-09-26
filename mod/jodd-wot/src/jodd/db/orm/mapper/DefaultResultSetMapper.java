@@ -207,17 +207,6 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	// ---------------------------------------------------------------- parse objects
 
-	/**
-	 * Creates new instances of a types.
-	 */
-	protected Object newEntityInstance(Class type) {
-		try {
-			return type.newInstance();
-		} catch (Exception ex) {
-			throw new DbOrmException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
-		}
-	}
-
 	protected Class[] cachedUsedTypes;
 	protected String[] cachedTypesTableNames;
 
@@ -325,7 +314,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					String propertyName = (dec == null ? null : dec.getPropertyName());
 					if (propertyName != null) {
 						if (result[currentResult] == null) {
-							result[currentResult] = newEntityInstance(currentType);
+							result[currentResult] = dbOrmManager.createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?
