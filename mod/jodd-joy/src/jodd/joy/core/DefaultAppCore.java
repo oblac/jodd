@@ -282,7 +282,7 @@ public abstract class DefaultAppCore {
 		connectionProvider.init();
 
 		// transactions manager
-		jtxManager = new DbJtxTransactionManager(connectionProvider);
+		jtxManager = createJtxTransactionManager(connectionProvider);
 		jtxManager.setValidateExistingTransaction(true);
 		AnnotationTxAdviceSupport.manager = new AnnotationTxAdviceManager(jtxManager, "$class");
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
@@ -292,13 +292,28 @@ public abstract class DefaultAppCore {
 		DbDefault.connectionProvider = connectionProvider;
 		DbDefault.sessionProvider = sessionProvider;
 
-		DbOrmManager dbOrmManager = DbOrmManager.getInstance();
+		DbOrmManager dbOrmManager = createDbOrmManager();
+		DbOrmManager.setInstance(dbOrmManager);
 		petite.addBean(PETITE_DBORM, dbOrmManager);
 
 		// automatic configuration
 		AutomagicDbOrmConfigurator dbcfg = new AutomagicDbOrmConfigurator();
 		dbcfg.setIncludedEntries(scanningPath);
 		dbcfg.configure(dbOrmManager);
+	}
+
+	/**
+	 * Creates JTX transaction manager.
+	 */
+	protected JtxTransactionManager createJtxTransactionManager(ConnectionProvider connectionProvider) {
+		return new DbJtxTransactionManager(connectionProvider);
+	}
+
+	/**
+	 * Creates DbOrmManager.
+	 */
+	protected DbOrmManager createDbOrmManager() {
+		return DbOrmManager.getInstance();
 	}
 
 	/**
