@@ -123,6 +123,14 @@ public class DbEntitySql {
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(SPACE);
 	}
 
+	public static DbSqlBuilder from(Class entityType) {
+		return from(entityType, createTableRefName(entityType));
+	}
+
+	public static DbSqlBuilder from(Class entityType, String tableRef) {
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entityType, tableRef)._(SPACE);
+	}
+
 	// ---------------------------------------------------------------- find
 
 	/**

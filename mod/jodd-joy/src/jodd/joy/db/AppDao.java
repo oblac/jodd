@@ -111,6 +111,8 @@ public class AppDao {
 		return (List<E>) query(DbEntitySql.find(criteria)).listOneAndClose(criteria.getClass());
 	}
 
+	// ---------------------------------------------------------------- delete
+
 	/**
 	 * Deleted single entity by its id.
 	 */
@@ -140,8 +142,20 @@ public class AppDao {
 
 	// ---------------------------------------------------------------- related
 
+	/**
+	 * Finds related entity.
+	 */
 	public <E extends Entity> List<E> findRelated(Class<E> target, Entity source) {
 		return query(DbEntitySql.findForeign(target, source)).listAndClose();
+	}
+
+	// ---------------------------------------------------------------- list
+
+	/**
+	 * List all entities. 
+	 */
+	public <E extends Entity> List<E> list(Class<E> target) {
+		return query(DbEntitySql.from(target)).list(target);
 	}
 
 }
