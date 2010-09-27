@@ -34,6 +34,13 @@ public class DbNameUtilTest extends TestCase {
 		assertEquals("QWE_db_name_util_test", DbNameUtil.convertClassNameToTableName(this.getClass(), "QWE_", null, false));
 	}
 
+	public void testClassNameToTableName2() {
+		assertEquals("FOO_BOO_ZOO", DbNameUtil.convertClassNameToTableName("FooBooZoo$xxx", true));
+		assertEquals("foo_boo_zoo", DbNameUtil.convertClassNameToTableName("FooBooZoo$xxx", false));
+		assertEquals("QWE_foo_boo_zoo_XXX", DbNameUtil.convertClassNameToTableName("FooBooZoo$xxx", "QWE_", "_XXX", false));
+	}
+
+
 	public void testTableNameToClassName() {
 		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("FOO_BOO_ZOO", null, null));
 		assertEquals("FooBooZoo", DbNameUtil.convertTableNameToClassName("foo_boo_zoo", null, null));

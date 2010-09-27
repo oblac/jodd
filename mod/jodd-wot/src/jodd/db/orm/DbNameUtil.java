@@ -24,6 +24,10 @@ public class DbNameUtil {
 	 * Converts class name to table name. All lower characters are converted to
 	 * upper ones. All upper characters are prefixed with '_'. Therefore, class name
 	 * <code>FooBooZoo</code> will be converted to <code>FOO_BOO_ZOO</code>.
+	 * <p>
+	 * Important note: if class name contains a '$' character, all letters after it
+	 * will be ignored. This is useful when entities are proxified and a '$' sign is
+	 * a common marker used in naming such classes.
 	 */
 	public static String convertClassNameToTableName(String className, String tablePrefix, String tableSuffix, boolean toUpperCase) {
 		StringBuilder tableName = new StringBuilder(className.length() + 10);
@@ -32,6 +36,9 @@ public class DbNameUtil {
 		}
 		for (int i = 0; i < className.length(); i++) {
 			char c = className.charAt(i);
+			if (c == '$') {
+				break;
+			}
 			if ((i != 0) && (Character.isUpperCase(c) == true)) {
 				tableName.append('_');
 			}
