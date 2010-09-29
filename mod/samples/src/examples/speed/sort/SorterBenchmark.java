@@ -11,7 +11,7 @@ import jodd.datetime.JStopWatch;
 
 public class SorterBenchmark {
 
-	static final int TOTAL_TEST_OBJECTS = 100000;
+	static final int TOTAL_TEST_OBJECTS = 200000;
 
 	private static Foo[] createRandomFooObjects(int total) {
 		Foo[] result = new Foo[total];

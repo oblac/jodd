@@ -33,6 +33,7 @@ public interface StringPool {
 	String NEWLINE          = "\n";
 	String N                = "n";
 	String NO               = "no";
+	String NULL             = "null";
 	String OFF              = "off";
 	String ON               = "on";
 	String PERCENT          = "%";
