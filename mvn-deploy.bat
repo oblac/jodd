@@ -1,6 +1,8 @@
 @echo off
 
-set v=3.1.0
+setlocal
+
+set v=3.1.1
 set repo=-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2 -DrepositoryId=sonatype-nexus-staging -DgeneratePom=false
 set repo_jodd=%repo% -DpomFile=mvn\jodd.pom.xml
 set repo_jodd_wot=%repo% -DpomFile=mvn\jodd-wot.pom.xml
@@ -24,6 +26,8 @@ gpg --batch --passphrase-file .pass --armor --detach-sign dist/jodd-wot-%v%-sour
 gpg --batch --passphrase-file .pass --armor --detach-sign dist/jodd-wot-%v%-javadoc.jar
 gpg --batch --passphrase-file .pass --armor --detach-sign mvn/jodd-wot.pom.xml
 
+pause.
+
 
 
 echo.
@@ -41,7 +45,6 @@ call mvn deploy:deploy-file %repo_jodd% -Dclassifier=javadoc -Dpackaging=jar.asc
 
 call mvn deploy:deploy-file %repo_jodd%						 -Dpackaging=pom	 -Dfile=mvn\jodd.pom.xml
 call mvn deploy:deploy-file %repo_jodd% 	 				 -Dpackaging=pom.asc -Dfile=mvn\jodd.pom.xml.asc
-
 
 
 echo.
@@ -62,10 +65,7 @@ call mvn deploy:deploy-file %repo_jodd_wot%  				 	 -Dpackaging=pom.asc -Dfile=m
 
 
 
-set v=
-set repo=
-set repo_jodd=
-set repo_jodd_wot=
+endlocal
 
 echo.
 echo Done!
