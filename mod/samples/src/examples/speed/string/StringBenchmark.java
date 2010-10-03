@@ -11,7 +11,6 @@ public class StringBenchmark {
 
 	public static void main(String[] args) throws Exception {
 
-/*
 		loop1 = 10000;
 		for (int i = 0; i < 5; i++) {
 			System.out.println("===" + loop1);
@@ -20,7 +19,6 @@ public class StringBenchmark {
 			test1StringJodd();
 			loop1 *= 10;
 		}
-*/
 
 		System.out.println("\n\n\n");
 
