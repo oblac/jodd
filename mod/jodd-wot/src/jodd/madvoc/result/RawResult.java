@@ -6,7 +6,6 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.util.CharUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
@@ -33,8 +32,7 @@ public class RawResult extends ActionResult {
 			return;
 		}
 		if (resultObject instanceof RawResultData != true) {
-			char[] chars = resultValue.toCharArray();
-			resultObject = new RawResultData(CharUtil.toByteArray(chars), madvocConfig.getEncoding());
+			resultObject = new RawResultData(resultValue.getBytes(madvocConfig.getEncoding()));
 		}
 
 		RawResultData result = (RawResultData) resultObject;

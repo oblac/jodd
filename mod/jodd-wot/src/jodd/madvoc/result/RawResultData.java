@@ -21,14 +21,13 @@ public class RawResultData {
 
 	protected final String mime;
 
-	public RawResultData(byte[] bytes, String type) {
+	public RawResultData(byte[] bytes, String mimeType) {
 		this.bytes = bytes;
-		this.mime = MimeTypes.getMimeType(type);
+		this.mime = mimeType;
 	}
 
 	public RawResultData(byte[] bytes) {
-		this.bytes = bytes;
-		this.mime = MimeTypes.MIME_APPLICATION_OCTET_STREAM;
+		this(bytes, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
 	}
 
 	public RawResultData(File file) {
