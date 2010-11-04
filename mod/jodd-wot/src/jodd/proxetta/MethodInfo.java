@@ -8,16 +8,31 @@ package jodd.proxetta;
  */
 public interface MethodInfo extends AsmConsts {
 
+	/**
+	 * Returns java-like method arguments declaration.
+	 */
 	String getDeclaration();
 
+	/**
+	 * Returns java-like return type.
+	 */
 	String getReturnType();
 
 	String getExceptions();
 
+	/**
+	 * Returns java-like method signature.
+	 */
 	String getSignature();
 
+	/**
+	 * Returns method name.
+	 */
 	String getMethodName();
 
+	/**
+	 * Returns number of method arguments.
+	 */
 	int getArgumentsCount();
 
 	int getArgumentOpcodeType(int index);
@@ -26,10 +41,19 @@ public interface MethodInfo extends AsmConsts {
 
 	int getAccessFlags();
 
+	/**
+	 * Returns bytecode-like class name.
+	 */
 	String getClassname();
 
+	/**
+	 * Returns bytecode-like method description.
+	 */
 	String getDescription();
 
+	/**
+	 * Returns annotation infos, if there is any.
+	 */
 	AnnotationInfo[] getAnnotations();
 
 	/**
