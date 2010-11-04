@@ -2,8 +2,6 @@
 
 package jodd.proxetta;
 
-import java.util.List;
-
 /**
  * Method info provides various information about the method.
  * Used in {@link jodd.proxetta.ProxyPointcut pointcut} definitions.
