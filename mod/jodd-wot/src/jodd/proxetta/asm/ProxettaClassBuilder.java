@@ -40,7 +40,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	/**
 	 * Constructs new Proxetta class builder.
 	 * @param dest			destination visitor
-	 * @param aspects		set of asspects to apply
+	 * @param aspects		set of aspects to apply
 	 * @param suffix		proxy class name suffix, may be <code>null</code>
 	 * @param reqProxyClassName		requested proxy class name, may be <code>null</code>s
 	 * @param targetClassInfoReader	target info reader, already invoked.
@@ -59,7 +59,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	/**
 	 * Creates destination subclass header from current target class. Destination name is created from targets by
-	 * adding a suffix and, optionaly, a number. Destination extends the target.
+	 * adding a suffix and, optionally, a number. Destination extends the target.
 	 */
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
