@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.HashSet;
@@ -16,25 +17,39 @@ import java.util.HashSet;
  */
 public class FileMonitor {
 
-	protected Timer timer;
 	protected final HashMap<File, Long> files;
 	protected final Collection<FileChangeListener> listeners;
+	protected final long pollingInterval;
+	protected Timer timer;
 
 	/**
 	 * Creates a file monitor instance with specified polling interval in ms.
 	 */
 	public FileMonitor(long pollingInterval) {
+		this.pollingInterval = pollingInterval;
 		files = new HashMap<File, Long>();
 		listeners = new HashSet<FileChangeListener>();
-		timer = new Timer(true);
-		timer.schedule(new FileMonitorNotifier(), 0, pollingInterval);
+		start();
+	}
+
+	/**
+	 * Starts the file monitoring polling, after it was stopped.
+	 */
+	public void start() {
+		if (timer == null) {
+			timer = new Timer(true);
+			timer.schedule(new FileMonitorNotifier(), 0, pollingInterval);
+		}
 	}
 
 	/**
 	 * Stops the file monitor polling.
 	 */
 	public void stop() {
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 
@@ -100,8 +115,9 @@ public class FileMonitor {
 
 		@Override
 		public void run() {
-			for (File file : files.keySet()) {
-				long lastModifiedTime = files.get(file).longValue();
+			for (Map.Entry<File, Long> entry : files.entrySet()) {
+				File file = entry.getKey();
+				long lastModifiedTime = entry.getValue().longValue();
 				long newModifiedTime = file.exists() ? file.lastModified() : -1;
 
 				// check if file has been changed
