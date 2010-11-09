@@ -63,41 +63,19 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		int lastSlash = name.lastIndexOf('/');
-		wd.targetPackage = name.substring(0, lastSlash).replace('/', '.');
-		wd.targetClassname = name.substring(lastSlash + 1);
-		wd.nextSupername = superName;
-		superName = name;
-
-		// create proxy name
-		if (this.reqProxyClassName != null) {
-			if (reqProxyClassName.startsWith(DOT)) {
-				name = name.substring(0, lastSlash) + '/' + reqProxyClassName.substring(1);
-			} else if (reqProxyClassName.endsWith(DOT)) {
-				name = reqProxyClassName.replace('.', '/') + wd.targetClassname;
-			} else {
-				name = reqProxyClassName.replace('.', '/');
-			}
-		}
-		// add optional suffix
-		if (suffix != null) {
-			name += suffix;
-		}
-		wd.thisReference = name;
-		wd.superReference = superName;
+		name = wd.init(name, superName, suffix, reqProxyClassName);
 
 		// change access of destination
 		access &= ~MethodInfo.ACC_ABSTRACT;
 
 		// write destination class
-		wd.dest.visit(version, access, name, signature, superName, null);
+		wd.dest.visit(version, access, name, signature, wd.superName, null);
 
 		wd.proxyAspects = new ProxyAspectData[aspects.length];
 		for (int i = 0; i < aspects.length; i++) {
 			wd.proxyAspects[i] = new ProxyAspectData(wd, aspects[i], i);
 		}
 	}
-
 
 	// ---------------------------------------------------------------- methods and fields
 

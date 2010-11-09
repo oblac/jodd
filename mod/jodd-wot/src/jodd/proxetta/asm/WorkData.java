@@ -7,6 +7,8 @@ import org.objectweb.asm.ClassVisitor;
 import java.util.List;
 import java.util.ArrayList;
 
+import static jodd.util.StringPool.DOT;
+
 /**
  * Holds various information about the current process of making proxy.
  */
@@ -24,9 +26,42 @@ final class WorkData {
 	String targetClassname;
 	boolean proxyApplied;
 	String nextSupername;
+	String superName;
 	String thisReference;
 	String superReference;
 	ProxyAspectData[] proxyAspects;
+
+	// ---------------------------------------------------------------- init
+
+	/**
+	 * Work data initialization.
+	 */
+	public String init(String name, String superName, String suffix, String reqProxyClassName) {
+		int lastSlash = name.lastIndexOf('/');
+		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
+		this.targetClassname = name.substring(lastSlash + 1);
+		this.nextSupername = superName;
+		this.superName = name;
+
+		// create proxy name
+		if (reqProxyClassName != null) {
+			if (reqProxyClassName.startsWith(DOT)) {
+				name = name.substring(0, lastSlash) + '/' + reqProxyClassName.substring(1);
+			} else if (reqProxyClassName.endsWith(DOT)) {
+				name = reqProxyClassName.replace('.', '/') + this.targetClassname;
+			} else {
+				name = reqProxyClassName.replace('.', '/');
+			}
+		}
+		// add optional suffix
+		if (suffix != null) {
+			name += suffix;
+		}
+		this.thisReference = name;
+		this.superReference = superName;
+		return name;
+	}
+
 
 	// ---------------------------------------------------------------- advice clinits
 
