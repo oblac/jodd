@@ -2,10 +2,10 @@
 package jodd.io;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.HashSet;
@@ -17,10 +17,11 @@ import java.util.HashSet;
  */
 public class FileMonitor {
 
-	protected final HashMap<File, Long> files;
-	protected final Collection<FileChangeListener> listeners;
+	protected final Map<File, Long> files;
+	protected final Set<FileChangeListener> listeners;
 	protected final long pollingInterval;
 	protected Timer timer;
+	protected final Object lock = new Object();
 
 	/**
 	 * Creates a file monitor instance with specified polling interval in ms.
@@ -59,9 +60,11 @@ public class FileMonitor {
 	 * creating of the file is to be trapped.
 	 */
 	public void monitorFile(File file) {
-		if (files.containsKey(file) == false) {
-			long modifiedTime = file.exists() ? file.lastModified() : -1;
-			files.put(file, new Long(modifiedTime));
+		synchronized (lock) {
+			if (files.containsKey(file) == false) {
+				long modifiedTime = file.exists() ? file.lastModified() : -1;
+				files.put(file, new Long(modifiedTime));
+			}
 		}
 	}
 
@@ -69,7 +72,9 @@ public class FileMonitor {
 	 * Removes specified file for listening.
 	 */
 	public void releaseFile(File file) {
-		files.remove(file);
+		synchronized (lock) {
+			files.remove(file);
+		}
 	}
 
 
@@ -77,12 +82,14 @@ public class FileMonitor {
 	 * Adds listener to this file monitor.
 	 */
 	public void registerListener(FileChangeListener fileChangeListener) {
-		for (FileChangeListener listener : listeners) {
-			if (listener == fileChangeListener) {
-				return;
+		synchronized (lock) {
+			for (FileChangeListener listener : listeners) {
+				if (listener == fileChangeListener) {
+					return;
+				}
 			}
+			listeners.add(fileChangeListener);
 		}
-		listeners.add(fileChangeListener);
 	}
 
 
@@ -90,12 +97,14 @@ public class FileMonitor {
 	 * Removes listener from this file monitor.
 	 */
 	public void removeListener(FileChangeListener fileChangeListener) {
-		Iterator<FileChangeListener> i = listeners.iterator();
-		while(i.hasNext()) {
-			FileChangeListener listener = i.next();
-			if (listener == fileChangeListener) {
-				i.remove();
-				break;
+		synchronized (lock) {
+			Iterator<FileChangeListener> i = listeners.iterator();
+			while(i.hasNext()) {
+				FileChangeListener listener = i.next();
+				if (listener == fileChangeListener) {
+					i.remove();
+					break;
+				}
 			}
 		}
 	}
@@ -104,7 +113,9 @@ public class FileMonitor {
 	 * Removes all file listeners/
 	 */
 	public void removeAllListeners() {
-		listeners.clear();
+		synchronized (lock) {
+			listeners.clear();
+		}
 	}
 
 
@@ -115,25 +126,26 @@ public class FileMonitor {
 
 		@Override
 		public void run() {
-			for (Map.Entry<File, Long> entry : files.entrySet()) {
-				File file = entry.getKey();
-				long lastModifiedTime = entry.getValue().longValue();
-				long newModifiedTime = file.exists() ? file.lastModified() : -1;
+			synchronized (lock) {
+				for (Map.Entry<File, Long> entry : files.entrySet()) {
+					File file = entry.getKey();
+					long lastModifiedTime = entry.getValue().longValue();
+					long newModifiedTime = file.exists() ? file.lastModified() : -1;
 
-				// check if file has been changed
-				if (newModifiedTime != lastModifiedTime) {
+					// check if file has been changed
+					if (newModifiedTime != lastModifiedTime) {
 
-					// store new modified time
-					files.put(file, new Long(newModifiedTime));
+						// store new modified time
+						entry.setValue(new Long(newModifiedTime));
 
-					// notify listeners
-					for (FileChangeListener listener : listeners) {
-						listener.onFileChange(file);
+						// notify listeners
+						for (FileChangeListener listener : listeners) {
+							listener.onFileChange(file);
+						}
 					}
 				}
 			}
 		}
 	}
-
 
 }
