@@ -63,19 +63,20 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		name = wd.init(name, superName, suffix, reqProxyClassName);
+		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
 		access &= ~MethodInfo.ACC_ABSTRACT;
 
 		// write destination class
-		wd.dest.visit(version, access, name, signature, wd.superName, null);
+		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);
 
 		wd.proxyAspects = new ProxyAspectData[aspects.length];
 		for (int i = 0; i < aspects.length; i++) {
 			wd.proxyAspects[i] = new ProxyAspectData(wd, aspects[i], i);
 		}
 	}
+
 
 	// ---------------------------------------------------------------- methods and fields
 

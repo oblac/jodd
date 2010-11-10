@@ -36,7 +36,7 @@ final class WorkData {
 	/**
 	 * Work data initialization.
 	 */
-	public String init(String name, String superName, String suffix, String reqProxyClassName) {
+	public void init(String name, String superName, String suffix, String reqProxyClassName) {
 		int lastSlash = name.lastIndexOf('/');
 		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
@@ -53,14 +53,15 @@ final class WorkData {
 				name = reqProxyClassName.replace('.', '/');
 			}
 		}
+
 		// add optional suffix
 		if (suffix != null) {
 			name += suffix;
 		}
 		this.thisReference = name;
-		this.superReference = superName;
-		return name;
+		this.superReference = this.superName;
 	}
+
 
 
 	// ---------------------------------------------------------------- advice clinits
