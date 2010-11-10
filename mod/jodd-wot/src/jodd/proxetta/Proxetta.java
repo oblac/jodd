@@ -5,6 +5,7 @@ package jodd.proxetta;
 import java.io.InputStream;
 
 import jodd.JoddDefault;
+import jodd.proxetta.asm.ClassProcessor;
 import jodd.util.ClassLoaderUtil;
 import jodd.proxetta.asm.ProxettaCreator;
 import jodd.proxetta.asm.ProxettaNaming;
@@ -130,11 +131,11 @@ public class Proxetta {
 	/**
 	 * Creates {@link jodd.proxetta.asm.ProxettaCreator} with current options.
 	 */
-	protected ProxettaCreator createProxettaCreator() {
-		ProxettaCreator pc = new ProxettaCreator(this.aspects);
-		pc.setUseVariableClassName(variableClassName);
-		pc.setClassNameSuffix(classNameSuffix);
-		return pc;
+	protected ClassProcessor createClassProcessor() {
+		ProxettaCreator cp = new ProxettaCreator(this.aspects);
+		cp.setUseVariableClassName(variableClassName);
+		cp.setClassNameSuffix(classNameSuffix);
+		return cp;
 	}
 
 	// ----------------------------------------------------------------  create
@@ -148,7 +149,7 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(Class target, String proxyClassName) {
-		return createProxy(createProxettaCreator().accept(target, proxyClassName));
+		return createProxy(createClassProcessor().accept(target, proxyClassName));
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(String targetName, String proxyClassName) {
-		return createProxy(createProxettaCreator().accept(targetName, proxyClassName));
+		return createProxy(createClassProcessor().accept(targetName, proxyClassName));
 	}
 
 
@@ -173,15 +174,15 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(InputStream in, String proxyClassName) {
-		return createProxy(createProxettaCreator().accept(in, proxyClassName));
+		return createProxy(createClassProcessor().accept(in, proxyClassName));
 	}
 
 	/**
 	 * Returns byte array of invoked proxetta creator.
 	 */
-	protected byte[] createProxy(ProxettaCreator pc) {
-		byte[] result = pc.toByteArray();
-		if ((forced == false) && (pc.isProxyApplied() == false)) {
+	protected byte[] createProxy(ClassProcessor cp) {
+		byte[] result = cp.toByteArray();
+		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			return null;
 		}
 		return result;
@@ -198,9 +199,9 @@ public class Proxetta {
 	}
 
 	public Class defineProxy(Class target, String proxyClassName) {
-		ProxettaCreator pc = createProxettaCreator();
-		pc.accept(target, proxyClassName);
-		if ((forced == false) && (pc.isProxyApplied() == false)) {
+		ClassProcessor cp = createClassProcessor();
+		cp.accept(target, proxyClassName);
+		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			return target;
 		}
 		try {
@@ -209,9 +210,9 @@ public class Proxetta {
 				if (cl == null) {
 					cl = JoddDefault.classLoader;
 				}
-				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), cl);
+				return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray(), cl);
 			}
-			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
+			return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray(), classLoader);
 		} catch (Exception ex) {
 			throw new ProxettaException("Proxy class definition was unsuccessful.", ex);
 		}
@@ -225,9 +226,9 @@ public class Proxetta {
 	}
 
 	public Class defineProxy(String targetName, String proxyClassName) {
-		ProxettaCreator pc = createProxettaCreator();
-		pc.accept(targetName, proxyClassName);
-		if ((forced == false) && (pc.isProxyApplied() == false)) {
+		ClassProcessor cp = createClassProcessor();
+		cp.accept(targetName, proxyClassName);
+		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			try {
 				return ClassLoaderUtil.loadClass(targetName, Proxetta.class);
 			} catch (ClassNotFoundException cnfex) {
@@ -236,9 +237,9 @@ public class Proxetta {
 		}
 		try {
 			if (classLoader == null) {
-				return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray());
+				return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray());
 			}
-			return ClassLoaderUtil.defineClass(pc.getProxyClassName(), pc.toByteArray(), classLoader);
+			return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray(), classLoader);
 		} catch (Exception ex) {
 			throw new ProxettaException("Proxy class definition was unsuccessful.", ex);
 		}
