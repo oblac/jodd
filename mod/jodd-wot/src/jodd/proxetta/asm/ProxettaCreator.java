@@ -20,7 +20,9 @@ public class ProxettaCreator extends ClassProcessor {
 		this.aspects = aspects;
 	}
 
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected WorkData process(ClassReader cr, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
 		if (log.isDebugEnabled()) {
