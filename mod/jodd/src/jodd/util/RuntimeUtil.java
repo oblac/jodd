@@ -21,6 +21,20 @@ public class RuntimeUtil {
 	// ---------------------------------------------------------------- memory
 
 	/**
+	 * Returns number of available processors in the system.
+	 */
+	public static int availableProcessors() {
+		return Runtime.getRuntime().availableProcessors();
+	}
+
+	/**
+	 * Returns max amount of memory in bytes.
+	 */
+	public static long maxMemory() {
+		return Runtime.getRuntime().maxMemory();
+	}
+
+	/**
 	 * Returns amount of total memory in bytes.
 	 */
 	public static long totalMemory() {
@@ -35,7 +49,7 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * Returns percents of free memory.
+	 * Returns percents of free memory over total memory.
 	 */
 	public static double freeMemoryPercents() {
 		Runtime runtime = Runtime.getRuntime();
