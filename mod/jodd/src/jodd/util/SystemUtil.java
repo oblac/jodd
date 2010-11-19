@@ -33,6 +33,7 @@ public class SystemUtil {
 	// ---------------------------------------------------------------- properties
 
 	public static final String USER_DIR = "user.dir";
+	public static final String USER_NAME = "user.name";
 	public static final String JAVA_HOME = "java.home";
 	public static final String TEMP_DIR = "java.io.tmpdir";
 	public static final String OS_NAME = "os.name";
@@ -53,6 +54,13 @@ public class SystemUtil {
 	 */
 	public static String getUserDir() {
 		return System.getProperty(USER_DIR);
+	}
+
+	/**
+	 * Returns current user.
+	 */
+	public static String getUserName() {
+		return System.getProperty(USER_NAME);
 	}
 
 	/**
@@ -163,6 +171,35 @@ public class SystemUtil {
 	 */
 	public static boolean isAtLeastJdk16() {
 		return getJavaSpecificationVersion() >= 1.6;
+	}
+
+
+	/**
+	 * Returns <code>true</code> if host is Windows.
+	 */
+	public static boolean isHostWindows() {
+		return getOsName().toUpperCase().startsWith("WINDOWS");
+	}
+
+	/**
+	 * Returns <code>true</code> if host is Linux.
+	 */
+	public static boolean isHostLinux() {
+		return getOsName().toUpperCase().startsWith("LINUX");
+	}
+
+	/**
+	 * Returns <code>true</code> if host is Mac.
+	 */
+	public static boolean isHostMac() {
+		return getOsName().toUpperCase().startsWith("MAC OS X");
+	}
+
+	/**
+	 * Returns <code>true</code> if host is Solaris.
+	 */
+	public static boolean isHostSolaris() {
+		return getOsName().toUpperCase().startsWith("SUNOS");
 	}
 
 	// ---------------------------------------------------------------- set
