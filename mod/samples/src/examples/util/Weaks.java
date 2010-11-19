@@ -35,7 +35,7 @@ public class Weaks {
 	static void keyExample() {
 		ReferenceMap<String, String> rm = new ReferenceMap<String, String>(WEAK, STRONG);   // true
 		//ReferenceMap rm = new ReferenceMap(STRONG, STRONG);   // false
-		String key = "key";
+		String key = new String("key");
 		rm.put(key, "value");
 		System.out.println(rm.isEmpty());
 
@@ -47,7 +47,7 @@ public class Weaks {
 	}
 
 	static void setExample() {
-		ReferenceSet rs = new ReferenceSet(WEAK);   // true
+		ReferenceSet<String> rs = new ReferenceSet<String>(WEAK);   // true
 		String value = new String("value");
 		rs.add(value);
 		System.out.println(rs.isEmpty());
