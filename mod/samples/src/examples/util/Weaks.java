@@ -33,9 +33,9 @@ public class Weaks {
 	}
 
 	static void keyExample() {
-		ReferenceMap rm = new ReferenceMap(WEAK, STRONG);   // true
+		ReferenceMap<String, String> rm = new ReferenceMap<String, String>(WEAK, STRONG);   // true
 		//ReferenceMap rm = new ReferenceMap(STRONG, STRONG);   // false
-		String key = new String("key");
+		String key = "key";
 		rm.put(key, "value");
 		System.out.println(rm.isEmpty());
 
