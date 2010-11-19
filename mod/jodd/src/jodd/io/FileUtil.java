@@ -271,24 +271,34 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- copy file to directory
 
-	public static void copyFileToDir(String src, String destDir) throws IOException {
-		copyFileToDir(new File(src), new File(destDir), defaultParams);
-	}
-	public static void copyFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
-		copyFileToDir(new File(src), new File(destDir), params);
-	}
-
-	public static void copyFileToDir(File src, File destDir) throws IOException {
-		copyFileToDir(src, destDir, defaultParams);
+	/**
+	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
+	 */
+	public static File copyFileToDir(String src, String destDir) throws IOException {
+		return copyFileToDir(new File(src), new File(destDir), defaultParams);
 	}
 	/**
-	 * Copies a file to folder with specified copy params.
+	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
 	 */
-	public static void copyFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
+	public static File copyFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
+		return copyFileToDir(new File(src), new File(destDir), params);
+	}
+	/**
+	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
+	 */
+	public static File copyFileToDir(File src, File destDir) throws IOException {
+		return copyFileToDir(src, destDir, defaultParams);
+	}
+	/**
+	 * Copies a file to folder with specified copy params and returns copied destination.
+	 */
+	public static File copyFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException("Destination '" + destDir + "' is not a directory.");
 		}
-		copyFile(src, new File(destDir, src.getName()), params);
+		File dest = new File(destDir, src.getName());
+		copyFile(src, dest, params);
+		return dest;
 	}
 
 
