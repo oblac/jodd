@@ -4,14 +4,13 @@
 package jodd.util;
 
 import java.lang.reflect.Array;
+import static jodd.util.StringPool.NULL;
 
 /**
  * More array utilities.
  * <b>DO NOT MODIFY: this source is generated.</b> 
  */
 public class ArraysUtil {
-
-	private static final String NULL = "null";
 
 
 
