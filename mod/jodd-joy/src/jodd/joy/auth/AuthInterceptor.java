@@ -114,7 +114,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			log.debug("logout user");
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 			removeSessionObject(session);
-			return resultLoginSuccess();
+			return resultLogoutSuccess();
 		}
 
 		// any other page then logout
@@ -227,10 +227,17 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 
 	/**
+	 * Prepares result for logout success page.
+	 */
+	protected Object resultLogoutSuccess() {
+		return REDIRECT + logoutSuccessPage;
+	}
+
+	/**
 	 * Prepares result for login success page.
 	 */
 	protected Object resultLoginSuccess() {
-		return REDIRECT + logoutSuccessPage;
+		return REDIRECT + loginSuccessPage;
 	}
 
 	/**
