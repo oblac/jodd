@@ -5,7 +5,7 @@ import jodd.madvoc.meta.Action;
 
 /**
  * Authentication action, usually extended by login action.
- * Defines three actions: login, logout and regiter.
+ * Defines three actions: login, logout and register.
  * These actions are just 'hooks', so Madvoc can catch them, but
  * methods will not be executed since {@link AuthInterceptor} will
  * consume them. 

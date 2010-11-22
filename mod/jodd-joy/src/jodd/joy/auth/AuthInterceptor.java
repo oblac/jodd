@@ -114,7 +114,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			log.debug("logout user");
 			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 			removeSessionObject(session);
-			return REDIRECT + logoutSuccessPage;
+			return resultLoginSuccess();
 		}
 
 		// any other page then logout
@@ -123,10 +123,10 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			// USER IS LOGGED IN
 			if (actionPath.equals(loginActionPath)) {
 				// never access login path while user is logged in
-				return REDIRECT + loginSuccessPage;
+				return resultLoginSuccess();
 			}
 			if (authorize(actionRequest, sessionObject) == false) {
-				return REDIRECT + accessDeniedPage;
+				return resultAccessDenied();
 			}
 			// PRIVATE PAGE, LOGGED IN
 			return actionRequest.invoke();
@@ -141,7 +141,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 				log.debug("login with cookie");
 				startSession(session, recreateCookieOnLogin ? servletResponse : null, sessionObject);
 				if (authorize(actionRequest, sessionObject) == false) {
-					return REDIRECT + accessDeniedPage;
+					return resultAccessDenied();
 				}
 				return actionRequest.invoke();
 			}
@@ -155,7 +155,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 				log.debug("new user session created");
 				servletRequest.removeAttribute(AUTH_SESSION_NAME);
 				startSession(session, servletResponse, newSessionObject);
-				return REDIRECT + registrationSuccessPage;
+				return resultRegistrationSuccess();
 			}
 		}
 
@@ -166,7 +166,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 				log.debug("authentication required");
 				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getActionPath(servletRequest));
 				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return CHAIN + AppAction.ALIAS_LOGIN;
+				return resultLogin();
 			}
 			// PUBLIC PAGE, NOT LOGGED IN
 			return actionRequest.invoke();
@@ -179,7 +179,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			// check token
 			if (CsrfShield.checkCsrfToken(session, token) == false) {
 				log.warn("csrf token validation failed.");
-				return REDIRECT + loginFailedPage + "?err=2";
+				return resultLoginFailed(2);
 			}
 		}
 
@@ -188,12 +188,12 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		sessionObject = loginUser(username, password);
 		if (sessionObject == null) {
 			log.warn("login failed for {}.", username);
-			return REDIRECT + loginFailedPage + "?err=1";
+			return resultLoginFailed(1);
 		}
 		startSession(session, servletResponse, sessionObject);
 		log.info("login {} ok", username);
 		if (authorize(actionRequest, sessionObject) == false) {
-			return REDIRECT + accessDeniedPage;
+			return resultAccessDenied();
 		}
 
 		// LOGGED IN
@@ -201,7 +201,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		if (StringUtil.isEmpty(path)) {
 			path = loginSuccessPage;
 		}
-		return REDIRECT + path;
+		return resultContinue(path);
 	}
 
 	/**
@@ -215,13 +215,60 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		}
 	}
 
-
 	/**
 	 * Removes session object.
 	 */
 	protected void removeSessionObject(HttpSession session) {
 		session.removeAttribute(AUTH_SESSION_NAME);
 	}
+
+
+	// ---------------------------------------------------------------- redirects
+
+
+	/**
+	 * Prepares result for login success page.
+	 */
+	protected Object resultLoginSuccess() {
+		return REDIRECT + logoutSuccessPage;
+	}
+
+	/**
+	 * Prepares result for registration success page.
+	 */
+	protected Object resultRegistrationSuccess() {
+		return REDIRECT + registrationSuccessPage;
+	}
+
+	/**
+	 * Prepares result for access denied page.
+	 */
+	protected Object resultAccessDenied() {
+		return REDIRECT + accessDeniedPage;
+	}
+
+	/**
+	 * Prepares result for login page.
+	 */
+	protected Object resultLogin() { 
+		return CHAIN + AppAction.ALIAS_LOGIN;
+	}
+
+	/**
+	 * Prepares result for login failed page.
+	 */
+	protected Object resultLoginFailed(int type) {
+		return REDIRECT + loginFailedPage + "?err=" + type;
+	}
+
+	/**
+	 * Prepares result to continue.
+	 */
+	protected Object resultContinue(String path) {
+		return REDIRECT + path;
+	}
+
+
 
 	// ---------------------------------------------------------------- authorization
 
