@@ -2,7 +2,7 @@
 
 package jodd.servlet;
 
-import jodd.typeconverter.BooleanConverter;
+import jodd.typeconverter.Convert;
 import jodd.util.CharUtil;
 import jodd.util.StringUtil;
 
@@ -37,7 +37,7 @@ public class HtmlFormUtil {
 		if (data == null) {
 			return EMPTY;
 		}
-		if (BooleanConverter.valueOf(data).booleanValue()) {
+		if (Convert.toBoolean(data)) {
 			return CHECKED;
 		}
 		return EMPTY;

@@ -2,7 +2,7 @@
 
 package examples.typeconvert;
 
-import jodd.typeconverter.ByteArrayConverter;
+import jodd.typeconverter.impl.ByteArrayConverter;
 
 public class Tc {
 

@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.BooleanConverter;
 import junit.framework.TestCase;
 
 public class BooleanConverterTest extends TestCase {

@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.CharacterConverter;
+
 public class CharacterConverterTest extends BaseTestCase {
 
 	public void testConversion() {

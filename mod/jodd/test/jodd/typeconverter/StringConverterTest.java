@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.StringConverter;
+
 public class StringConverterTest extends BaseTestCase {
 
 	public void testManager() {

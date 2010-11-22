@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.ShortArrayConverter;
+
 public class ShortArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {

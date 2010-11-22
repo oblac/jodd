@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.SqlTimestampConverter;
 import junit.framework.TestCase;
 
 import java.sql.Timestamp;

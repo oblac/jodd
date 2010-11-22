@@ -2,8 +2,8 @@
 
 package jodd.util;
 
-import jodd.typeconverter.StringArrayConverter;
-import jodd.typeconverter.StringConverter;
+import jodd.typeconverter.Convert;
+
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
@@ -324,33 +324,24 @@ public class StringUtil {
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> it will be
 	 * not converted.
-	 * @see jodd.typeconverter.StringConverter
 	 */
 	public static String toString(Object obj) {
-		if (obj == null) {
-			return null;
-		}
-		return StringConverter.valueOf(obj);
+		return Convert.toString(obj, null);
 	}
 
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> an empty
 	 * string is returned.
-	 * @see jodd.typeconverter.StringConverter 
 	 */
 	public static String toSafeString(Object obj) {
-		if (obj == null) {
-			return EMPTY;
-		}
-		return StringConverter.valueOf(obj);
+		return Convert.toString(obj, EMPTY);
 	}
 
 	/**
 	 * Converts an object to a String Array.
-	 * @see jodd.typeconverter.StringArrayConverter
 	 */
 	public static String[] toStringArray(Object obj) {
-		return StringArrayConverter.valueOf(obj);
+		return Convert.toStringArray(obj);
 	}
 
 	// ---------------------------------------------------------------- captialize

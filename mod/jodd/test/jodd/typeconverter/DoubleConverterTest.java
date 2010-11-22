@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.DoubleConverter;
+
 import java.math.BigDecimal;
 
 public class DoubleConverterTest extends BaseTestCase {

@@ -2,7 +2,7 @@
 
 package jodd.servlet.tag;
 
-import jodd.typeconverter.BooleanConverter;
+import jodd.typeconverter.Convert;
 import jodd.typeconverter.TypeConversionException;
 
 import javax.servlet.jsp.JspException;
@@ -11,8 +11,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 /**
  * If tag execute body if test condition is <code>true</code>.
  *<p>
- * Test variable is a string, since {@link jodd.typeconverter.BooleanConverter} is used to
- * perform the conversation and it offers more friendly conversation then jsp. 
+ * Test variable is a string. 
  */
 public class IfTag extends SimpleTagSupport {
 
@@ -25,8 +24,8 @@ public class IfTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		boolean testValue;
 		try {
-			testValue = BooleanConverter.valueOf(test).booleanValue();
-		} catch (TypeConversionException tcex) {
+			testValue = Convert.toBoolean(test);
+		} catch (TypeConversionException ignore) {
 			testValue = false;
 		}
 		if (testValue == true) {

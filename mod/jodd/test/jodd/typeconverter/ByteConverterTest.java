@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.ByteConverter;
 import junit.framework.TestCase;
 
 public class ByteConverterTest extends TestCase {

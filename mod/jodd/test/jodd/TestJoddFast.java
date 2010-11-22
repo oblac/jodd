@@ -16,6 +16,7 @@ public class TestJoddFast {
 		suite.addTest(jodd.introspector.AllTests.suite());
 		suite.addTest(jodd.io.AllTests.suite());
 		suite.addTest(jodd.format.AllTests.suite());
+		suite.addTest(jodd.props.AllTests.suite());
 		suite.addTest(jodd.servlet.AllTests.suite());
 		suite.addTest(jodd.util.AllTestsFast.suite());
 		suite.addTest(jodd.typeconverter.AllTests.suite());

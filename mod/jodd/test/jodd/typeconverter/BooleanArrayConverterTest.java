@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.BooleanArrayConverter;
+
 public class BooleanArrayConverterTest extends BaseTestCase {
 
 	public void testConversion() {

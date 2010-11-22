@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.ClassArrayConverter;
+
 public class ClassArrayConverterTest extends BaseTestCase {
 
 	@SuppressWarnings({"unchecked"})

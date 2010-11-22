@@ -2,7 +2,7 @@
 
 package jodd.servlet.tag;
 
-import jodd.typeconverter.StringArrayConverter;
+import jodd.typeconverter.Convert;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -99,7 +99,7 @@ public class IteratorTag extends SimpleTagSupport {
 		} else if (items.getClass().isArray()) {
 			iterateArray((Object[]) items, from, count, pageContext);
 		} else if (items instanceof String) {
-			iterateArray(StringArrayConverter.valueOf(items), from, count, pageContext);
+			iterateArray(Convert.toStringArray(items), from, count, pageContext);
 		} else {
 			throw new JspException("Provided items are not iterable (neither Collection, Objects array...).");
 		}

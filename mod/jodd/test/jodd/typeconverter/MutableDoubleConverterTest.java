@@ -3,6 +3,7 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableDouble;
+import jodd.typeconverter.impl.MutableDoubleConverter;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;

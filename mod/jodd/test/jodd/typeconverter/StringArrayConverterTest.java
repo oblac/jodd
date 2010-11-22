@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.StringArrayConverter;
+
 public class StringArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {

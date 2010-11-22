@@ -3,6 +3,7 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableLong;
+import jodd.typeconverter.impl.MutableLongConverter;
 import junit.framework.TestCase;
 
 public class MutableLongConverterTest extends TestCase {

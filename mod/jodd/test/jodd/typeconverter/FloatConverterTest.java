@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.FloatConverter;
+
 import java.math.BigDecimal;
 
 public class FloatConverterTest extends BaseTestCase {

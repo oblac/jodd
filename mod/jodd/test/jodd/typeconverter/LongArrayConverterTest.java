@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.LongArrayConverter;
+
 public class LongArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {

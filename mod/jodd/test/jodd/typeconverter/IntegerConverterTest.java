@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.IntegerConverter;
 import junit.framework.TestCase;
 
 public class IntegerConverterTest extends TestCase {

@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.LongConverter;
 import junit.framework.TestCase;
 
 public class LongConverterTest extends TestCase {

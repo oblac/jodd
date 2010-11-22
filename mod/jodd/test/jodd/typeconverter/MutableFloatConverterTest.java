@@ -3,6 +3,7 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableFloat;
+import jodd.typeconverter.impl.MutableFloatConverter;
 import junit.framework.TestCase;
 
 import java.math.BigDecimal;

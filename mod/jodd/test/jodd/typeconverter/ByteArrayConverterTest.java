@@ -1,5 +1,7 @@
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.ByteArrayConverter;
+
 public class ByteArrayConverterTest extends BaseTestCase {
 
 	public void testArrayConversion() {

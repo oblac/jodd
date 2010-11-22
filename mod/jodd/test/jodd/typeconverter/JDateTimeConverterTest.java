@@ -3,6 +3,7 @@
 package jodd.typeconverter;
 
 import jodd.datetime.JDateTime;
+import jodd.typeconverter.impl.JDateTimeConverter;
 
 public class JDateTimeConverterTest extends BaseTestCase {
 

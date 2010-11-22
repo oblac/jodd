@@ -3,6 +3,7 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableByte;
+import jodd.typeconverter.impl.MutableByteConverter;
 import junit.framework.TestCase;
 
 public class MutableByteConverterTest extends TestCase {

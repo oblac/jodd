@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.FloatArrayConverter;
+
 public class FloatArrayConverterTest extends BaseTestCase {
 
 	public void testConversion() {

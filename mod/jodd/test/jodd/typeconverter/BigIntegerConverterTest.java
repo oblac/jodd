@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.typeconverter.impl.BigIntegerConverter;
 import junit.framework.TestCase;
 
 import java.math.BigInteger;

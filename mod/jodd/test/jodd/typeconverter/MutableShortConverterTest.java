@@ -3,8 +3,8 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableShort;
+import jodd.typeconverter.impl.MutableShortConverter;
 import junit.framework.TestCase;
-import jodd.mutable.MutableInteger;
 
 public class MutableShortConverterTest extends TestCase {
 
