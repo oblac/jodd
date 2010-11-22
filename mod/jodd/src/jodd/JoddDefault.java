@@ -32,7 +32,7 @@ public class JoddDefault {
 	/**
 	 * Default class loader (of this class) used when class loader is not explicitly specified.
 	 * Warning: be careful when using <code>ClassLoader.getSystemClassLoader()</code>,
-	 * especially in web applications, since user classes are loaded with container
+	 * especially in web applications, since user classes are loaded with containers
 	 * classloader.
 	 */
 	public static ClassLoader classLoader = JoddDefault.class.getClassLoader();
