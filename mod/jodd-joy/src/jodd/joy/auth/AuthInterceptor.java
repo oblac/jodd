@@ -112,8 +112,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		// LOGOUT
 		if (actionPath.equals(logoutActionPath) == true) {
 			log.debug("logout user");
-			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
-			removeSessionObject(session);
+			closeAuthSession(servletRequest, servletResponse);
 			return resultLogoutSuccess();
 		}
 
@@ -136,17 +135,17 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		// session is not active, check the cookie
 		String[] cookieData = useCookie ? AuthUtil.readAuthCookie(servletRequest) : null;
 		if (cookieData != null) {
-			sessionObject = loginCookie(cookieData);
+			sessionObject = loginViaCookie(cookieData);
 			if (sessionObject != null) {
 				log.debug("login with cookie");
-				startSession(session, recreateCookieOnLogin ? servletResponse : null, sessionObject);
+				startAuthSession(servletRequest, servletResponse, sessionObject, false);
 				if (authorize(actionRequest, sessionObject) == false) {
 					return resultAccessDenied();
 				}
 				return actionRequest.invoke();
 			}
-			// no session, invalid cookie
-			AuthUtil.removeAuthCookie(servletRequest, servletResponse);
+			// no session, invalidate cookie
+			closeAuthSession(servletRequest, servletResponse);
 		}
 
 		if (actionPath.equals(registerActionPath)) {
@@ -154,7 +153,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			if (newSessionObject != null) {
 				log.debug("new user session created");
 				servletRequest.removeAttribute(AUTH_SESSION_NAME);
-				startSession(session, servletResponse, newSessionObject);
+				startAuthSession(servletRequest, servletResponse, newSessionObject, true);
 				return resultRegistrationSuccess();
 			}
 		}
@@ -183,15 +182,13 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			}
 		}
 
-		String username = servletRequest.getParameter(loginUsername);
-		String password = servletRequest.getParameter(loginPassword);
-		sessionObject = loginUser(username, password);
+		sessionObject = loginViaRequest(servletRequest);
 		if (sessionObject == null) {
-			log.warn("login failed for {}.", username);
+			log.warn("login failed.");
 			return resultLoginFailed(1);
 		}
-		startSession(session, servletResponse, sessionObject);
-		log.info("login {} ok", username);
+		startAuthSession(servletRequest, servletResponse, sessionObject, true);
+		log.info("login ok");
 		if (authorize(actionRequest, sessionObject) == false) {
 			return resultAccessDenied();
 		}
@@ -204,22 +201,34 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		return resultContinue(path);
 	}
 
+	// ---------------------------------------------------------------- main auth hooks
+
 	/**
-	 * Starts user session by saving session object and optionally creating cookie.
+	 * Starts auth session by saving session auth object and optionally creating an auth cookie.
+	 * Auth cookie is created for new auth sessions and for old ones if recreation is enabled.
+	 * @param servletRequest http request
+	 * @param servletResponse http response
+	 * @param sessionObject created session object
+	 * @param isNew if <code>true</code> indicated the session is new (i.e. user is either registered or signed in), if <code>false</code> means that session is continued (i.e. user is signed in via cookie).
 	 */
-	protected void startSession(HttpSession session, HttpServletResponse servletResponse, Object sessionObject) {
-		session.setAttribute(AUTH_SESSION_NAME, sessionObject);
-		if (servletResponse != null && useCookie == true) {
+	protected void startAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Object sessionObject, boolean isNew) {
+		servletRequest.getSession().setAttribute(AUTH_SESSION_NAME, sessionObject);
+		if (useCookie == false) {
+			return;
+		}
+		if (isNew == true || recreateCookieOnLogin == true) {
 			String[] cookieData = createCookieData(sessionObject);
 			AuthUtil.storeAuthCookie(servletResponse, cookieMaxAge, cookieData[0], cookieData[1]);
 		}
 	}
 
 	/**
-	 * Removes session object.
+	 * Closes auth session by removing auth session object from the http session
+	 * and clearing the auth cookie.
 	 */
-	protected void removeSessionObject(HttpSession session) {
-		session.removeAttribute(AUTH_SESSION_NAME);
+	protected void closeAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		servletRequest.getSession().removeAttribute(AUTH_SESSION_NAME);
+		AuthUtil.removeAuthCookie(servletRequest, servletResponse);
 	}
 
 
@@ -293,15 +302,28 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 	/**
 	 * Tries to login user with cookie data. Returns session object, otherwise returns <code>null</code>.
 	 */
-	protected abstract Object loginCookie(String[] cookieData);
+	protected abstract Object loginViaCookie(String[] cookieData);
+
 
 	/**
-	 * Tries to login a user. Returns <code>true</code> if login is successful, otherwise it returns <code>false</code>.
+	 * Tires to login user with form data. Returns session object, otherwise returns <code>null</code>.
+	 * By default, calls {@link #loginUsernamePassword(String, String)}.
+	 */
+	protected Object loginViaRequest(HttpServletRequest servletRequest) {
+		String username = servletRequest.getParameter(loginUsername);
+		String password = servletRequest.getParameter(loginPassword);
+		log.info("login {}.", username);
+		return loginUsernamePassword(username, password);
+	}
+
+	/**
+	 * Tries to login a user using username and password.
+	 * Returns <code>true</code> if login is successful, otherwise returns <code>false</code>.
 	 *
 	 * @param username entered user name from login form
 	 * @param password entered raw password
 	 */
-	protected abstract Object loginUser(String username, String password);
+	protected abstract Object loginUsernamePassword(String username, String password);
 
 	/**
 	 * Prepares cookie data from session object.
