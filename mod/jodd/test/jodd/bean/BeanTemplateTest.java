@@ -65,4 +65,14 @@ public class BeanTemplateTest extends TestCase {
 
 		assertEquals("---value---", BeanTemplate.parse("---${key${key${key0}}}---", map));
 	}
+
+	public void testResolver() {
+		BeanTemplateResolver btr = new BeanTemplateResolver() {
+			public Object resolve(String name) {
+				return name.toUpperCase();
+			}
+		};
+
+		assertEquals("xxxSMALLxxx", BeanTemplate.parse("xxx${small}xxx", btr));
+	}
 }

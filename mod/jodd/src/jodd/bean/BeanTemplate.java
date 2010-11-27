@@ -13,22 +13,40 @@ import jodd.util.StringUtil;
 public class BeanTemplate {
 
 	private static final String MACRO_START = "${";
+	private static final String MACRO_END = "}";
 
 	/**
 	 * Replaces named macros with context values.
-	 * Throws exception if key is missing.
+	 * Throws exception if macro name is missing.
 	 */
 	public static String parse(String template, Object context) {
 		return parse(template, context, null);
 	}
 
+	public static String parse(String template, BeanTemplateResolver resolver) {
+		return parse(template, resolver, null);
+	}
+
 	/**
 	 * Replaces named macros with context values.
 	 * Declared properties are considered during value lookup.
-	 * If some key is missing, exception may be throw or the
+	 * If some macro name is missing, exception may be throw or the
 	 * provided string will be used instead.
 	 */
 	public static String parse(String template, Object context, String missingKeyReplacement) {
+		return parse(template, context, missingKeyReplacement, false);
+	}
+
+	public static String parse(String template, BeanTemplateResolver resolver, String missingKeyReplacement) {
+		return parse(template, resolver, missingKeyReplacement, true);
+	}
+
+	protected static String parse(String template, Object context, String missingKeyReplacement, boolean isResolver) {
+		BeanTemplateResolver resolver = null;
+		if (isResolver) {
+			resolver = (BeanTemplateResolver) context;
+		}
+
 		StringBuilder result = new StringBuilder(template.length());
 		int i = 0;
 		int len = template.length();
@@ -57,7 +75,7 @@ public class BeanTemplate {
 
 			// find macros end
 			ndx += 2;
-			int ndx2 = template.indexOf('}', ndx);
+			int ndx2 = template.indexOf(MACRO_END, ndx);
 			if (ndx2 == -1) {
 				throw new BeanException("Bad bean template format - unclosed macro at: " + (ndx - 2));
 			}
@@ -77,12 +95,24 @@ public class BeanTemplate {
 			// find value and append
 			Object value;
 			if (missingKeyReplacement == null) {
-				value = BeanUtil.getDeclaredProperty(context, name);
+				if (resolver != null) {
+					value = resolver.resolve(name);
+				} else {
+					value = BeanUtil.getDeclaredProperty(context, name);
+				}
 				if (value == null) {
 					value = StringPool.EMPTY;
 				}
 			} else {
-				value = BeanUtil.getDeclaredPropertySilently(context, name);
+				if (resolver != null) {
+					try {
+						value = resolver.resolve(name);
+					} catch (Exception ignore) {
+						value = null;
+					}
+				} else {
+					value = BeanUtil.getDeclaredPropertySilently(context, name);
+				}
 				if (value == null) {
 					value = missingKeyReplacement;
 				}
