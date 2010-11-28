@@ -12,8 +12,8 @@ import jodd.util.StringUtil;
  */
 public class BeanTemplate {
 
-	private static final String MACRO_START = "${";
-	private static final String MACRO_END = "}";
+	public static final String MACRO_START = "${";
+	public static final String MACRO_END = "}";
 
 	/**
 	 * Replaces named macros with context values.

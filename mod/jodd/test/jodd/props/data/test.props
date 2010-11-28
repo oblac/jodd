@@ -1,0 +1,34 @@
+# Global properties
+story = Snow White and the Seven Dwarfs
+year = 1937
+url = www.imdb.com/title/tt0029583/
+; A backslash at the end of the line escapes the new line
+; character, the property value continues to the next line.
+; Since the ; character (after Dwarfs) starts a comment
+; (either at the beginning or middle of the line, we have
+; to escape it with a backslash.
+plot = Snow White, pursued by a jealous queen, hides with the Dwarfs\; \
+		the queen feeds her a poison apple, but Prince Charming \
+		awakens her with a kiss. # this is a comment
+
+# This is also a comment line
+# The first : can also be used as assignment operator
+Tagline: Walt Disney's New characters in his first full-length production!
+file = C:\\local\\snowwhite.mpg
+
+; Bashful
+[bashful]
+weight = 45.7
+height = 98.8
+age = 67
+homePage = http://snowwhite.tale/~bashful
+
+; Doc
+[doc]
+weight = 49.5
+height = 87.7
+age = 63
+homePage = http://doc.dwarfs
+
+[]
+comment=Čađavi Žar utf8

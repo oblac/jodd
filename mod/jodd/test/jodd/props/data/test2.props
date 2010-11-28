@@ -1,0 +1,12 @@
+
+data.path=${root}/data
+
+root=/app
+
+data.path(@prof1)=${root}/data2
+
+data.path(@prof2)=${root}/data3
+root(@prof2)=/foo
+
+data.path(@p1)(@p2)=${root}/re
+root(@p1)=/roo
