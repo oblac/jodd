@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile {
 
-	private Pattern regexpPattern;
+	private final Pattern regexpPattern;
 
 	public RegExpFindFile(String pattern) {
 		regexpPattern = Pattern.compile(pattern);

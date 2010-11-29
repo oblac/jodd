@@ -63,7 +63,30 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.match("app.nfo", "app*"));
 		assertFalse(Wildcard.match("\\app.nfo", "app*"));
 		assertTrue(Wildcard.match("\\app.nfo", "\\\\app*"));
-
 	}
 
+	public void testMatchPath() {
+		assertTrue(Wildcard.matchPath("/foo", "/fo*"));
+		assertTrue(Wildcard.matchPath("/foo", "/**"));
+		assertTrue(Wildcard.matchPath("/foo", "**"));
+
+		assertFalse(Wildcard.matchPath("/foo", "**/"));
+		assertFalse(Wildcard.matchPath("/foo", "/**/"));
+		assertTrue(Wildcard.matchPath("/foo/", "/**/"));
+
+		assertTrue(Wildcard.matchPath("/foo/boo", "/**/bo*"));
+		assertTrue(Wildcard.matchPath("/foo/boo", "/**/**/bo*"));
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/**/bo*"));
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/**/**/bo*"));
+
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/one/**"));
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/two/**"));
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "**/two/**"));
+		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "**/t?o/**"));
+
+		assertTrue(Wildcard.matchPath("sys/java/bin", "sys/**/bin"));
+		assertTrue(Wildcard.matchPath("sys/java/bin", "?ys/**/bin"));
+		assertTrue(Wildcard.matchPath("c:\\Users\\najgor", "?:\\**\\najgor"));
+		assertTrue(Wildcard.matchPath("c:\\najgor", "?:\\**\\naj**r"));
+	}
 }

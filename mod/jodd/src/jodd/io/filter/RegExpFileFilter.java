@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class RegExpFileFilter extends FileFilterBase {
 
-	private Pattern regexpPattern;
+	private final Pattern regexpPattern;
 
 	public RegExpFileFilter(String pattern) {
 		regexpPattern = Pattern.compile(pattern);

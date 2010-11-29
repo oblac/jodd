@@ -7,11 +7,11 @@ import java.io.File;
 import jodd.util.Wildcard;
 
 /**
- * FileFilter that matches file names against wildcard pattern (* and ?).
+ * <code>FileFilter</code> that matches file names against {@link Wildcard wildcard} pattern (* and ?).
  */
 public class WildcardFileFilter extends FileFilterBase {
 
-	private String pattern;
+	private final String pattern;
 
 	/**
 	 * Wildcard file filter.

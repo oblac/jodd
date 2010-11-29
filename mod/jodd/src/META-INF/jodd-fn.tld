@@ -194,6 +194,11 @@
 		<function-class>jodd.util.Wildcard</function-class>
 		<function-signature>boolean match(java.lang.String, java.lang.String)</function-signature>
 	</function>
+	<function>
+		<name>wildcardMatchPath</name>
+		<function-class>jodd.util.Wildcard</function-class>
+		<function-signature>boolean matchPath(java.lang.String,java.lang.String)</function-signature>
+	</function>
 
 	<!-- bean -->
 

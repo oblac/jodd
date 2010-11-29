@@ -7,16 +7,15 @@ import jodd.util.Wildcard;
 import java.io.File;
 
 /**
- * Simple {@link FindFile} that matches file names using wildcards.
+ * Simple {@link FindFile} that matches file names using * and ? wildcards.
  * @see jodd.io.findfile.RegExpFindFile
  */
 public class WildcardFindFile extends FindFile {
 
-	protected String wildcard;
+	protected final String wildcard;
 
 	public WildcardFindFile(String wildcard) {
 		this.wildcard = wildcard;
-
 	}
 
 	public WildcardFindFile(String searchPath, String wildcard) {
@@ -28,7 +27,6 @@ public class WildcardFindFile extends FindFile {
 		this.wildcard = wildcard;
 		searchPath(searchPath);
 	}
-
 
 	public WildcardFindFile(String[] searchPath, String wildcard) {
 		this.wildcard = wildcard;
