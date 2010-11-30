@@ -2,6 +2,7 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.data.Inter;
 import junit.framework.TestCase;
 import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Abstra;
@@ -31,7 +32,22 @@ public class AbstractsTest extends TestCase {
 		try {
 			Proxetta.withAspects(proxyAspect).createProxyInstance(Abstra2.class);
 			fail();
-		} catch (ProxettaException pex) {
+		} catch (ProxettaException ignore) {
 		}
+	}
+
+	public void testInterface() {
+		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
+			public boolean apply(MethodInfo methodInfo) {
+				return true;
+			}
+		});
+
+		try {
+			Proxetta.withAspects(proxyAspect).createProxyInstance(Inter.class);
+			fail();
+		} catch (ProxettaException ignore) {
+		}
+
 	}
 }
