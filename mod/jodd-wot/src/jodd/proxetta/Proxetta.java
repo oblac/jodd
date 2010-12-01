@@ -6,9 +6,9 @@ import java.io.InputStream;
 
 import jodd.JoddDefault;
 import jodd.proxetta.asm.ClassProcessor;
+import jodd.proxetta.impl.InvokeProxetta;
+import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassLoaderUtil;
-import jodd.proxetta.asm.ProxettaCreator;
-import jodd.proxetta.asm.ProxettaNaming;
 
 /**
  * Proxetta creates dynamic proxy classes in the run-time.
@@ -32,19 +32,20 @@ import jodd.proxetta.asm.ProxettaNaming;
  * <li> foo. (ending with a dot) - proxy package is set, proxy simple name is create from target simple class name.
  * <li> foo.Foo - full proxy class name is specified. 
  */
-public class Proxetta {
-
-	protected final ProxyAspect[] aspects;
-
-	public Proxetta(ProxyAspect... aspects) {
-		this.aspects = aspects;
-	}
+public abstract class Proxetta {
 
 	/**
 	 * Specifies aspects for the target and creates Proxetta instance.
 	 */
 	public static Proxetta withAspects(ProxyAspect... aspects) {
-		return new Proxetta(aspects);
+		return new ProxyProxetta(aspects);
+	}
+
+	/**
+	 * Specifies invoke replacement aspects and creates Proxetta instance.
+	 */
+	public static Proxetta withAspects(InvokeAspect... aspects) {
+		return new InvokeProxetta(aspects);
 	}
 
 	// ---------------------------------------------------------------- forced
@@ -98,21 +99,13 @@ public class Proxetta {
 
 	// ---------------------------------------------------------------- suffix
 
-	protected String classNameSuffix = ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
+	protected String classNameSuffix;
 
 	/**
 	 * Specifies custom classname suffix to be added to the class name of created proxy.
 	 */
 	public Proxetta useClassNameSuffix(String suffix) {
 		this.classNameSuffix = suffix;
-		return this;
-	}
-
-	/**
-	 * Specifies usage of default classname suffix.
-	 */
-	public Proxetta useDefaultClassNameSuffix() {
-		this.classNameSuffix = ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
 		return this;
 	}
 
@@ -131,8 +124,13 @@ public class Proxetta {
 	/**
 	 * Creates {@link jodd.proxetta.asm.ProxettaCreator} with current options.
 	 */
-	protected ClassProcessor createClassProcessor() {
-		ProxettaCreator cp = new ProxettaCreator(this.aspects);
+	protected abstract ClassProcessor createClassProcessor();
+
+	/**
+	 * {@link #createClassProcessor() Creates} and prepares class processor.
+	 */
+	protected ClassProcessor prepareClassProcessor() {
+		ClassProcessor cp = createClassProcessor();
 		cp.setUseVariableClassName(variableClassName);
 		cp.setClassNameSuffix(classNameSuffix);
 		return cp;
@@ -149,7 +147,7 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(Class target, String proxyClassName) {
-		return createProxy(createClassProcessor().accept(target, proxyClassName));
+		return createProxy(prepareClassProcessor().accept(target, proxyClassName));
 	}
 
 	/**
@@ -161,7 +159,7 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(String targetName, String proxyClassName) {
-		return createProxy(createClassProcessor().accept(targetName, proxyClassName));
+		return createProxy(prepareClassProcessor().accept(targetName, proxyClassName));
 	}
 
 
@@ -174,7 +172,7 @@ public class Proxetta {
 	}
 
 	public byte[] createProxy(InputStream in, String proxyClassName) {
-		return createProxy(createClassProcessor().accept(in, proxyClassName));
+		return createProxy(prepareClassProcessor().accept(in, proxyClassName));
 	}
 
 	/**
@@ -199,7 +197,7 @@ public class Proxetta {
 	}
 
 	public Class defineProxy(Class target, String proxyClassName) {
-		ClassProcessor cp = createClassProcessor();
+		ClassProcessor cp = prepareClassProcessor();
 		cp.accept(target, proxyClassName);
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			return target;
@@ -226,7 +224,7 @@ public class Proxetta {
 	}
 
 	public Class defineProxy(String targetName, String proxyClassName) {
-		ClassProcessor cp = createClassProcessor();
+		ClassProcessor cp = prepareClassProcessor();
 		cp.accept(targetName, proxyClassName);
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			try {

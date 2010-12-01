@@ -13,6 +13,7 @@ public class AllTests extends TestSuite {
 		addTestSuite(BigClassTest.class);
 		addTestSuite(AbstractsTest.class);
 		addTestSuite(MethrefTest.class);
+		addTestSuite(InvReplTest.class);
 	}
 
 	public static Test suite() {
