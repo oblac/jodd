@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class PropsParser {
 
-	protected static final String PROFILE_LEFT = "(";
-	protected static final String PROFILE_RIGHT = ")";
+	protected static final String PROFILE_LEFT = "<";
+	protected static final String PROFILE_RIGHT = ">";
 
 	/**
 	 * Value that will be inserted when escaping the new line.

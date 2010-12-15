@@ -41,7 +41,7 @@ import java.util.Properties;
  *
  * <p>
  * Profiles rules:
- * <li> Profile names are enclosed between ( and ) in property key.
+ * <li> Profile names are enclosed between &lt; and &gt; in property key.
  * <li> Each property key may contain zero, one or more profile definitions.
  *
  * <p>
@@ -84,7 +84,7 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Clones props by creating new instance using
+	 * Clones props by creating new instance and copying current configuration.
 	 */
 	@Override
 	protected Props clone() {

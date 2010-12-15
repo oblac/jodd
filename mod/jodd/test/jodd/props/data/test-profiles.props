@@ -1,14 +1,14 @@
 foo=one
-bar(qwe)=two
-bar(zzz)=four
+bar<qwe>=two
+bar<zzz>=four
 bar=ten
 
-vi(aaa)tami(bbb)ne(ccc)=12345
+vi<aaa>tami<bbb>ne<ccc>=12345
 
-[db(develop)]
+[db<develop>]
 url=localhost
 username=root
 
-[db(deploy)]
+[db<deploy>]
 url=192.168.1.102
 username=user
