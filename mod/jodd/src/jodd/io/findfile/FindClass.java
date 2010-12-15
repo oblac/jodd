@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 /**
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
- * Jar files are also examined.
+ * Content of Jar files is also examined.
  * @see jodd.io.findfile.ClasspathScanner
  */
 public abstract class FindClass {
@@ -34,7 +34,7 @@ public abstract class FindClass {
 
 	/**
 	 * Array of system jars that are excluded from the search.
-	 * It consist of java runtime libraries.
+	 * By default it consists of java runtime libraries.
 	 */
 	protected String[] systemJars = new String[] {
 			"*/jre/lib/*.jar",
@@ -51,6 +51,9 @@ public abstract class FindClass {
 		this.systemJars = systemJars;
 	}
 
+	/**
+	 * Array of excluded jars.
+	 */
 	protected String[] excludedJars;
 
 	public String[] getExcludedJars() {
@@ -73,6 +76,19 @@ public abstract class FindClass {
 
 	public void setIncludedJars(String... includedJars) {
 		this.includedJars = includedJars;
+	}
+
+	/**
+	 * If set to <code>true</code> jars will be scanned using path wildcards.
+	 */
+	protected boolean pathWildcardsForJars;
+
+	public boolean isPathWildcardsForJars() {
+		return pathWildcardsForJars;
+	}
+
+	public void setPathWildcardsForJars(boolean pathWildcardsForJars) {
+		this.pathWildcardsForJars = pathWildcardsForJars;
 	}
 
 	// ---------------------------------------------------------------- included packages
@@ -111,10 +127,28 @@ public abstract class FindClass {
 	 */
 	protected boolean includeResources;
 
+	public boolean isIncludeResources() {
+		return includeResources;
+	}
+
+	public void setIncludeResources(boolean includeResources) {
+		this.includeResources = includeResources;
+	}
+
 	/**
 	 * If set to <code>true</code> exceptions for entry scans are ignored.
 	 */
 	protected boolean ignoreException;
+
+	public boolean isIgnoreException() {
+		return ignoreException;
+	}
+
+	public void setIgnoreException(boolean ignoreException) {
+		this.ignoreException = ignoreException;
+	}
+
+	// ---------------------------------------------------------------- scan
 
 	/**
 	 * Scans several URLs. If (#ignoreExceptions} is set, exceptions
@@ -161,17 +195,26 @@ public abstract class FindClass {
 	 */
 	protected boolean acceptJar(String path) {
 		if (systemJars != null) {
-			if (Wildcard.matchOne(path, systemJars) != -1) {
+			int ndx = pathWildcardsForJars ?
+					Wildcard.matchPathOne(path, systemJars) :
+					Wildcard.matchOne(path, systemJars);
+			if (ndx != -1) {
 				return false;
 			}
 		}
 		if (excludedJars != null) {
-			if (Wildcard.matchOne(path, excludedJars) != -1) {
+			int ndx = pathWildcardsForJars ?
+					Wildcard.matchPathOne(path, excludedJars) :
+					Wildcard.matchOne(path, excludedJars);
+			if (ndx != -1) {
 				return false;
 			}
 		}
 		if (includedJars != null) {
-			if (Wildcard.matchOne(path, includedJars) == -1) {
+			int ndx = pathWildcardsForJars ?
+					Wildcard.matchPathOne(path, includedJars) :
+					Wildcard.matchOne(path, includedJars);
+			if (ndx == -1) {
 				return false;
 			}
 		}
@@ -338,7 +381,7 @@ public abstract class FindClass {
 	 * Called during classpath scanning when class or resource is found.
 	 * <li>Class name is java-alike class name (pk1.pk2.class) that may be immediately used
 	 * for dynamic loading.
-	 * <li>Resouce name starts with '\' and represents either jar path (\pk1/pk2/res) or relative file path (\pk1\pk2\res).
+	 * <li>Resource name starts with '\' and represents either jar path (\pk1/pk2/res) or relative file path (\pk1\pk2\res).
      * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */

@@ -8,40 +8,21 @@ import java.net.URL;
 import java.io.File;
 
 /**
- * Public-oriented version of {@link FindClass}, a classpath scanner.
+ * Developer-friendly version of {@link FindClass}, a classpath scanner.
  */
 public abstract class ClasspathScanner extends FindClass {
 
-	// ---------------------------------------------------------------- missing accessors
-
-	public boolean isIncludeResources() {
-		return includeResources;
-	}
-
-	public void setIncludeResources(boolean includeResources) {
-		this.includeResources = includeResources;
-	}
+	// ---------------------------------------------------------------- fluent interface
 
 	public ClasspathScanner includeResources(boolean includeResources) {
 		setIncludeResources(includeResources);
 		return this;
 	}
 
-	public boolean isIgnoreException() {
-		return ignoreException;
-	}
-
-	public void setIgnoreException(boolean ignoreException) {
-		this.ignoreException = ignoreException;
-	}
-
 	public ClasspathScanner ignoreException(boolean ignoreException) {
 		setIgnoreException(ignoreException);
 		return this;
 	}
-
-
-	// ---------------------------------------------------------------- fluent interface
 
 	public ClasspathScanner systemJars(String... jars) {
 		setSystemJars(jars);
@@ -68,6 +49,10 @@ public abstract class ClasspathScanner extends FindClass {
 		return this;
 	}
 
+	public ClasspathScanner pathWildcardsForJars(boolean value) {
+		setPathWildcardsForJars(value);
+		return this;
+	}
 
 	// ---------------------------------------------------------------- public scanners
 
