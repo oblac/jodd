@@ -81,14 +81,14 @@ public abstract class FindClass {
 	/**
 	 * If set to <code>true</code> jars will be scanned using path wildcards.
 	 */
-	protected boolean pathWildcardsForJars;
+	protected boolean usePathWildcards;
 
-	public boolean isPathWildcardsForJars() {
-		return pathWildcardsForJars;
+	public boolean isUsePathWildcards() {
+		return usePathWildcards;
 	}
 
-	public void setPathWildcardsForJars(boolean pathWildcardsForJars) {
-		this.pathWildcardsForJars = pathWildcardsForJars;
+	public void setUsePathWildcards(boolean usePathWildcards) {
+		this.usePathWildcards = usePathWildcards;
 	}
 
 	// ---------------------------------------------------------------- included packages
@@ -195,7 +195,7 @@ public abstract class FindClass {
 	 */
 	protected boolean acceptJar(String path) {
 		if (systemJars != null) {
-			int ndx = pathWildcardsForJars ?
+			int ndx = usePathWildcards ?
 					Wildcard.matchPathOne(path, systemJars) :
 					Wildcard.matchOne(path, systemJars);
 			if (ndx != -1) {
@@ -203,7 +203,7 @@ public abstract class FindClass {
 			}
 		}
 		if (excludedJars != null) {
-			int ndx = pathWildcardsForJars ?
+			int ndx = usePathWildcards ?
 					Wildcard.matchPathOne(path, excludedJars) :
 					Wildcard.matchOne(path, excludedJars);
 			if (ndx != -1) {
@@ -211,7 +211,7 @@ public abstract class FindClass {
 			}
 		}
 		if (includedJars != null) {
-			int ndx = pathWildcardsForJars ?
+			int ndx = usePathWildcards ?
 					Wildcard.matchPathOne(path, includedJars) :
 					Wildcard.matchOne(path, includedJars);
 			if (ndx == -1) {

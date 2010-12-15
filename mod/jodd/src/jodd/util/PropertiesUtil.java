@@ -206,11 +206,23 @@ public class PropertiesUtil {
 		return loadFromClasspath(p, rootTemplate);
 	}
 
+	public static Properties createFromClasspath(String rootTemplate, boolean pathWildcards) {
+		Properties p = new Properties();
+		return loadFromClasspath(p, rootTemplate, pathWildcards);
+	}
+
 	/**
 	 * Loads properties from classpath file(s). Properties are specified using
 	 * wildcards. 
 	 */
 	public static Properties loadFromClasspath(final Properties p, String rootTemplate) {
+		return loadFromClasspath(p, rootTemplate, false);
+	}
+
+	/**
+	 * Loads properties from classpath.
+	 */
+	public static Properties loadFromClasspath(final Properties p, String rootTemplate, boolean pathWildcards) {
 		ClasspathScanner scanner = new ClasspathScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
@@ -220,6 +232,7 @@ public class PropertiesUtil {
 		scanner.includeResources(true).
 				ignoreException(true).
 				include(rootTemplate).
+				usePathWildcards(pathWildcards).
 				scanFullClasspath();
 		return p;
 	}

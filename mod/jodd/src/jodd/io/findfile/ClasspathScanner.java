@@ -49,8 +49,8 @@ public abstract class ClasspathScanner extends FindClass {
 		return this;
 	}
 
-	public ClasspathScanner pathWildcardsForJars(boolean value) {
-		setPathWildcardsForJars(value);
+	public ClasspathScanner usePathWildcards(boolean value) {
+		setUsePathWildcards(value);
 		return this;
 	}
 
