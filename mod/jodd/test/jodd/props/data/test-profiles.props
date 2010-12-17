@@ -12,3 +12,10 @@ username=root
 [db<deploy>]
 url=192.168.1.102
 username=user
+
+[]
+key1=hello
+key1<one>=Hi!
+key1<one.two>=Hola!
+key2<one.two>=world
+key3<one>=Grazias

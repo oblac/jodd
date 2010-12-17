@@ -1,0 +1,7 @@
+
+key1=hello
+key1<one>=Hi!
+key1<one.two>=Hola!
+key2<one>=world
+
+@profiles=one.two

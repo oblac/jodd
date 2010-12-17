@@ -63,13 +63,24 @@ public class PropsTest extends TestCase {
 
 		assertEquals("12345", p.getValue("vitamine", "aaa"));
 
-		assertEquals(5, p.countTotalProperties());
+		assertEquals(8, p.countTotalProperties());
 
 		assertNull(p.getValue("db.url"));
 		assertEquals("localhost", p.getValue("db.url", "develop"));
 		assertEquals("localhost", p.getValue("db.url", "develop", "deploy"));
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy", "develop"));
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy"));
+
+
+
+		assertEquals("hello", p.getBaseValue("key1"));
+		assertEquals("hello", p.getValue("key1"));
+		assertEquals("Hi!", p.getValue("key1", "one"));
+		assertEquals("Hola!", p.getValue("key1", "one.two"));
+		assertEquals("world", p.getValue("key2", "one.two"));
+		assertNull(p.getValue("key2", "one"));
+		assertEquals("Grazias", p.getValue("key3", "one.two"));
+		assertEquals("Grazias", p.getValue("key3", "one"));
 
 
 
@@ -135,6 +146,16 @@ public class PropsTest extends TestCase {
 		assertEquals(2, p.countTotalProperties());
 		assertEquals("good", p.getValue("ok"));
 		assertEquals("", p.getValue("empty"));
+	}
+
+	public void testActiveProfiles() throws IOException {
+		Props p = new Props();
+		p.setSkipEmptyProps(false);
+		p.load(readDataFile("test-actp.props"));
+
+		assertEquals("hello", p.getBaseValue("key1"));
+		assertEquals("Hola!", p.getValue("key1"));
+		assertEquals("world", p.getValue("key2"));
 	}
 
 

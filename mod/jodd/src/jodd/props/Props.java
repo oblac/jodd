@@ -7,7 +7,9 @@ import jodd.bean.BeanTemplateResolver;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.typeconverter.Convert;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,11 +54,14 @@ import java.util.Properties;
  */
 public class Props implements Cloneable {
 
+	private static final String DEFAULT_PROFILES_PROP = "@profiles";
 	private static final int MAX_INNER_MACROS = 100;
 
 	protected final Map<String, String> properties;					// base properties
 	protected final Map<String, Map<String, String>> profiles;		// profile properties
 	protected final PropsParser parser;								// parser
+	protected String activeProfilesProp = DEFAULT_PROFILES_PROP;	// active profiles property
+	protected String[] activeProfiles;
 
 	/**
 	 * Creates new props.
@@ -209,8 +214,13 @@ public class Props implements Cloneable {
 	 * Returns <code>null</code> if property doesn't exist.
 	 */
 	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
-	public String getValue(String key) {
+	public String getBaseValue(String key) {
 		return getValue(key, null);
+	}
+
+
+	public String getValue(String key) {
+		return getValue(key, activeProfiles);
 	}
 
 	/**
@@ -228,14 +238,22 @@ public class Props implements Cloneable {
 	 */
 	protected String lookupValue(String key, String... profiles) {
 		if (profiles != null) {
+			nextprofile:
 			for (String profile : profiles) {
-				Map<String, String> profileMap = this.profiles.get(profile);
-				if (profileMap == null) {
-					continue;
-				}
-				String value = profileMap.get(key);
-				if (value != null) {
-					return value;
+				while (true) {
+					Map<String, String> profileMap = this.profiles.get(profile);
+					if (profileMap == null) {
+						continue nextprofile;
+					}
+					String value = profileMap.get(key);
+					if (value != null) {
+						return value;
+					}
+					int ndx = profile.lastIndexOf('.');
+					if (ndx == -1) {
+						break;
+					}
+					profile = profile.substring(0, ndx);
 				}
 			}
 		}
@@ -308,6 +326,8 @@ public class Props implements Cloneable {
 						}
 					}
 
+					resolveActiveProfiles();
+
 					initialized = true;
 				}
 			}
@@ -330,6 +350,24 @@ public class Props implements Cloneable {
 			}
 		}
 		return replaced;
+	}
+
+	/**
+	 * Resolves active profiles from property.
+	 */
+	protected void resolveActiveProfiles() {
+		if (activeProfilesProp == null) {
+			activeProfiles = null;
+			return;
+		}
+		String value = properties.get(activeProfilesProp);
+		if (StringUtil.isBlank(value)) {
+			activeProfiles = null;
+			return;
+		}
+
+		activeProfiles = Convert.toStringArray(value);
+		StringUtil.trimAll(activeProfiles);
 	}
 
 }
