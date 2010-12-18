@@ -287,9 +287,17 @@ s	 */
 		Properties properties = new Properties();
 		if (profiles != null) {
 			for (String profile : profiles) {
-				Map<String, String> map = this.profiles.get(profile);
-				if (map != null) {
-					extract(properties, map);
+				while (true) {
+					Map<String, String> map = this.profiles.get(profile);
+					if (map != null) {
+						extract(properties, map);
+					}
+
+					int ndx = profile.indexOf('.');
+					if (ndx == -1) {
+						break;
+					}
+					profile = profile.substring(0, ndx);
 				}
 			}
 		}

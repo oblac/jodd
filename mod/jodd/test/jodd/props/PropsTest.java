@@ -59,6 +59,7 @@ public class PropsTest extends TestCase {
 
 		assertEquals("one", p.getValue("foo"));
 		assertEquals("one", p.getValue("foo", "non_existing_profile"));
+		assertEquals("one", p.getValue("foo", "qwe"));
 		assertEquals("ten", p.getValue("bar"));
 
 		assertEquals("12345", p.getValue("vitamine", "aaa"));
@@ -70,19 +71,6 @@ public class PropsTest extends TestCase {
 		assertEquals("localhost", p.getValue("db.url", "develop", "deploy"));
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy", "develop"));
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy"));
-
-
-
-		assertEquals("hello", p.getBaseValue("key1"));
-		assertEquals("hello", p.getValue("key1"));
-		assertEquals("Hi!", p.getValue("key1", "one"));
-		assertEquals("Hola!", p.getValue("key1", "one.two"));
-		assertEquals("world", p.getValue("key2", "one.two"));
-		assertNull(p.getValue("key2", "one"));
-		assertEquals("Grazias", p.getValue("key3", "one.two"));
-		assertEquals("Grazias", p.getValue("key3", "one"));
-
-
 
 		Properties prop = p.extractBaseProperties();
 		assertEquals("one", prop.getProperty("foo"));
@@ -105,6 +93,35 @@ public class PropsTest extends TestCase {
 		prop = p.extractProperties("deploy");
 		assertEquals("192.168.1.102", prop.getProperty("db.url"));
 		assertEquals("one", prop.getProperty("foo"));
+	}
+
+	public void testNestedProfiles() throws IOException {
+		Props p = new Props();
+		p.load(readDataFile("test-profiles.props"));
+
+		assertEquals("hello", p.getBaseValue("key1"));
+		assertEquals("hello", p.getValue("key1"));
+		assertEquals("Hi!", p.getValue("key1", "one"));
+		assertEquals("Hola!", p.getValue("key1", "one.two"));
+		assertEquals("world", p.getValue("key2", "one.two"));
+		assertNull(p.getValue("key2", "one"));
+		assertEquals("Grazias", p.getValue("key3", "one.two"));
+		assertEquals("Grazias", p.getValue("key3", "one"));
+
+		Properties prop = p.extractProperties();
+		assertEquals(3, prop.size());
+		assertEquals("hello", prop.getProperty("key1"));
+
+		prop = p.extractProperties("one");
+		assertEquals(3 + 1, prop.size());
+		assertEquals("Hi!", prop.getProperty("key1"));
+		assertEquals("Grazias", prop.getProperty("key3"));
+
+		prop = p.extractProperties("one.two");
+		assertEquals(3 + 2, prop.size());
+		assertEquals("Hola!", prop.getProperty("key1"));
+		assertEquals("world", prop.getProperty("key2"));
+		assertEquals("Grazias", prop.getProperty("key3"));
 	}
 
 	public void testMacros() throws IOException {
