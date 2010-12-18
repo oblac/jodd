@@ -72,7 +72,7 @@ public class Props implements Cloneable {
 		parser = new PropsParser(properties, profiles);
 	}
 
-	protected Props(Map<String, String> properties, Map<String, Map<String, String>> profiles, PropsParser parser) {
+	protected Props(Map<String, String> properties, Map<String, Map<String, String>> profiles, PropsParser parser, String activeProflesProp) {
 		this();
 		this.properties.putAll(properties);
 		for (Map.Entry<String, Map<String, String>> entry : profiles.entrySet()) {
@@ -80,6 +80,8 @@ public class Props implements Cloneable {
 			map.putAll(entry.getValue());
 			this.profiles.put(entry.getKey(), map);
 		}
+
+		this.activeProfilesProp = this.activeProfilesProp;
 
 		this.parser.escapeNewLineValue = parser.escapeNewLineValue;
 		this.parser.valueTrimLeft = parser.valueTrimLeft;
@@ -93,7 +95,7 @@ public class Props implements Cloneable {
 	 */
 	@Override
 	protected Props clone() {
-		return new Props(properties, profiles, parser);
+		return new Props(properties, profiles, parser, activeProfilesProp);
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -266,8 +268,15 @@ public class Props implements Cloneable {
 	 * Extract base props to properties.
 	 */
 	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
-	public Properties extractProperties() {
+	public Properties extractBaseProperties() {
 		return extractProperties(null);
+	}
+
+	/**
+	 * Extracts properties belonging to active profiles.
+s	 */
+	public Properties extractProperties() {
+		return extractProperties(activeProfiles);
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class PropsTest extends TestCase {
 		assertNull(p.getValue("non existing"));
 
 
-		Properties prop = p.extractProperties();
+		Properties prop = p.extractBaseProperties();
 		assertEquals("1937", prop.getProperty("year"));
 		assertEquals("49.5", prop.getProperty("doc.weight"));
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
@@ -84,7 +84,7 @@ public class PropsTest extends TestCase {
 
 
 
-		Properties prop = p.extractProperties();
+		Properties prop = p.extractBaseProperties();
 		assertEquals("one", prop.getProperty("foo"));
 
 		prop = p.extractProperties("non_existing");
