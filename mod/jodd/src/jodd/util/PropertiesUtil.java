@@ -201,28 +201,16 @@ public class PropertiesUtil {
 	 * Creates properties from classpath.
 	 * @see #loadFromClasspath(java.util.Properties, String)
 	 */
-	public static Properties createFromClasspath(String rootTemplate) {
+	public static Properties createFromClasspath(String... rootTemplate) {
 		Properties p = new Properties();
 		return loadFromClasspath(p, rootTemplate);
-	}
-
-	public static Properties createFromClasspath(String rootTemplate, boolean pathWildcards) {
-		Properties p = new Properties();
-		return loadFromClasspath(p, rootTemplate, pathWildcards);
 	}
 
 	/**
 	 * Loads properties from classpath file(s). Properties are specified using
 	 * wildcards. 
 	 */
-	public static Properties loadFromClasspath(final Properties p, String rootTemplate) {
-		return loadFromClasspath(p, rootTemplate, false);
-	}
-
-	/**
-	 * Loads properties from classpath.
-	 */
-	public static Properties loadFromClasspath(final Properties p, String rootTemplate, boolean pathWildcards) {
+	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
 		ClasspathScanner scanner = new ClasspathScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
@@ -232,7 +220,6 @@ public class PropertiesUtil {
 		scanner.includeResources(true).
 				ignoreException(true).
 				include(rootTemplate).
-				usePathWildcards(pathWildcards).
 				scanFullClasspath();
 		return p;
 	}
@@ -249,7 +236,7 @@ public class PropertiesUtil {
 	}
 
 	/**
-	 * Returns Stirng property from a map.
+	 * Returns String property from a map.
 	 * @see #getProperty(java.util.Map, String) 
 	 */
 	public static String getProperty(Map map, String key, String defaultValue) {
