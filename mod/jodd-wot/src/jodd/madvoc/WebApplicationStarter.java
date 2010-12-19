@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.PropertiesUtil;
 import jodd.madvoc.component.MadvocController;
@@ -28,15 +29,15 @@ public class WebApplicationStarter {
 	// ---------------------------------------------------------------- params
 
 	protected String webAppClass;
-	protected String paramsFile;
+	protected String[] paramsFiles;
 	protected String madvocConfigurator;
 
 	public void setWebAppClass(String webAppClass) {
 		this.webAppClass = webAppClass;
 	}
 
-	public void setParamsFile(String paramsFile) {
-		this.paramsFile = paramsFile;
+	public void setParamsFiles(String[] paramsFiles) {
+		this.paramsFiles = paramsFiles;
 	}
 
 	public void setMadvocConfigurator(String madvocConfigurator) {
@@ -80,7 +81,7 @@ public class WebApplicationStarter {
 		webapp.initWebApplication();
 
 		// params
-		Properties params = loadMadvocParams(paramsFile);
+		Properties params = loadMadvocParams(paramsFiles);
 		webapp.defineParams(params);
 
 		// configure
@@ -145,16 +146,16 @@ public class WebApplicationStarter {
 	/**
 	 * Loads Madvoc parameters.
 	 */
-	protected Properties loadMadvocParams(String pattern) {
-		if (pattern == null) {
+	protected Properties loadMadvocParams(String[] patterns) {
+		if (patterns == null) {
 			return new Properties();
 		}
-		log.info("Loading Madvoc parameters from: {}", pattern);
+		log.info("Loading Madvoc parameters from: {}", patterns);
 		try {
-			return PropertiesUtil.createFromClasspath(pattern);
+			return PropertiesUtil.createFromClasspath(patterns);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new MadvocException("Unable to load Madvoc parameters from: :" + pattern + ".properties': " + ex.toString(), ex);
+			throw new MadvocException("Unable to load Madvoc parameters from: :" + Convert.toString(patterns) + ".properties': " + ex.toString(), ex);
 		}
 	}
 

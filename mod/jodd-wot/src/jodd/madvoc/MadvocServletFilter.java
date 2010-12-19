@@ -5,6 +5,7 @@ package jodd.madvoc;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
+import jodd.typeconverter.Convert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,17 @@ public class MadvocServletFilter implements Filter {
 
 	private static Logger log;
 
+	/**
+	 * Web application.
+	 */
 	public static final String PARAM_MADVOC_WEBAPP = "madvoc.webapp";
+	/**
+	 * Madvoc configurator.
+	 */
 	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
+	/**
+	 * List of Madvoc properties files.
+	 */
 	public static final String PARAM_MADVOC_PARAMS = "madvoc.params";
 
 	protected FilterConfig filterConfig;
@@ -43,7 +53,7 @@ public class MadvocServletFilter implements Filter {
 
 		WebApplicationStarter starter = new WebApplicationStarter();
 		starter.setWebAppClass(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
-		starter.setParamsFile(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS));
+		starter.setParamsFiles(Convert.toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS)));
 		starter.setMadvocConfigurator(filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR));
 
 		try {

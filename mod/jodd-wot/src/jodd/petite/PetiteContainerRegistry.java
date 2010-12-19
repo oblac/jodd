@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.petite.scope.Scope;
 import jodd.petite.manager.PetiteManager;
+import jodd.props.Props;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -329,6 +330,13 @@ public abstract class PetiteContainerRegistry {
 		for (Map.Entry<Object, Object> entry : properties.entrySet()) {
 			defineParameter(entry.getKey().toString(), entry.getValue());
 		}
+	}
+
+	/**
+	 * Defines many parameters at once from {@link Props}.
+	 */
+	public void defineParameters(Props props) {
+		defineParameters(props.extractProperties());
 	}
 
 	

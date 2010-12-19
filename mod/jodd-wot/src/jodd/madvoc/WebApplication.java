@@ -20,6 +20,7 @@ import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
 
+import jodd.props.Props;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -172,6 +173,11 @@ public class WebApplication {
 		madpc.defineParameters(properties);
 	}
 
+	protected void defineParams(Props props) {
+		log.debug("Defining Madvoc parameters");
+		madpc.defineParameters(props);
+	}
+
 	/**
 	 * Initializes web application custom configuration.
 	 */
@@ -208,7 +214,7 @@ public class WebApplication {
 	// ---------------------------------------------------------------- configurator
 
 	/**
-	 * Wires configurator in the the madvoc container and invokes configuration.
+	 * Wires configurator in the the Madvoc container and invokes configuration.
 	 */
 	public void configure(MadvocConfigurator configurator) {
 		log.debug("Configuring Madvoc");
