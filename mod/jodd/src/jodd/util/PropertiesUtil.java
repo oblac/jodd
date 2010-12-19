@@ -207,8 +207,7 @@ public class PropertiesUtil {
 	}
 
 	/**
-	 * Loads properties from classpath file(s). Properties are specified using
-	 * wildcards. 
+	 * Loads properties from classpath file(s). Properties are specified using wildcards.
 	 */
 	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
 		ClasspathScanner scanner = new ClasspathScanner() {

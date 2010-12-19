@@ -144,7 +144,7 @@ public class Props implements Cloneable {
 	// ---------------------------------------------------------------- load
 
 	/**
-	 * Parses input string and loads provided properties map..
+	 * Parses input string and loads provided properties map.
 	 */
 	protected synchronized void parse(String data) {
 		initialized = false;
@@ -190,6 +190,16 @@ public class Props implements Cloneable {
 	}
 
 	/**
+	 * Loads properties from input stream and provided encoding.
+	 * Stream is not closed at the end.
+	 */
+	public void load(InputStream in, String encoding) throws IOException {
+		Writer out = new FastCharArrayWriter();
+		StreamUtil.copy(in, out, encoding);
+		parse(out.toString());
+	}
+
+	/**
 	 * Loads base properties from the provided java properties.
 	 */
 	@SuppressWarnings({"unchecked"})
@@ -231,7 +241,9 @@ public class Props implements Cloneable {
 		return getValue(key, null);
 	}
 
-
+	/**
+	 * Returns value of property, using active profiles.
+	 */
 	public String getValue(String key) {
 		return getValue(key, activeProfiles);
 	}

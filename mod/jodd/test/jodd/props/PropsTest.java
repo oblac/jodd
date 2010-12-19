@@ -168,8 +168,7 @@ public class PropsTest extends TestCase {
 	}
 
 	public void testActiveProfiles() throws IOException {
-		Props p = new Props();
-		p.load(readDataFile("test-actp.props"));
+		Props p = loadProps("test-actp.props");
 
 		assertEquals("hello", p.getBaseValue("key1"));
 		assertEquals("Hola!", p.getValue("key1"));
@@ -177,8 +176,7 @@ public class PropsTest extends TestCase {
 	}
 
 	public void testProperties() throws IOException {
-		Props p = new Props();
-		p.load(readDataFile("test.properties"));
+		Props p = loadProps("test.properties");
 
 		assertEquals("value", p.getValue("one"));
 		assertEquals("long valuein two lines", p.getValue("two"));
@@ -198,6 +196,20 @@ public class PropsTest extends TestCase {
 		StreamUtil.copy(is, out, encoding);
 		StreamUtil.close(is);
 		return out.toString();
+	}
+
+	private Props loadProps(String fileName) throws IOException {
+		Props p = new Props();
+		String dataFolder = this.getClass().getPackage().getName() + ".data.";
+		dataFolder = dataFolder.replace('.', '/');
+
+		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
+		String encoding = "UTF-8";
+		if (fileName.endsWith(".properties")) {
+			encoding = "ISO-8859-1";
+		}
+		p.load(is, encoding);
+		return p;
 	}
 
 
