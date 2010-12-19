@@ -39,7 +39,7 @@ public class FileUtil {
 		try {
 			file1 = file1.getCanonicalFile();
 			file2 = file2.getCanonicalFile();
-		} catch (IOException ioex) {
+		} catch (IOException ignore) {
 			return false;
 		}
 		return file1.equals(file2);
@@ -161,7 +161,7 @@ public class FileUtil {
 	public static FileUtilParams cloneParams() {
 		try {
 			return defaultParams.clone();
-		} catch (CloneNotSupportedException cnsex) {
+		} catch (CloneNotSupportedException ignore) {
 			return null;
 		}
 	}

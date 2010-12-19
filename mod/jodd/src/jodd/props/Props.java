@@ -5,6 +5,7 @@ package jodd.props;
 import jodd.bean.BeanTemplate;
 import jodd.bean.BeanTemplateResolver;
 import jodd.io.FastCharArrayWriter;
+import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.typeconverter.Convert;
@@ -27,13 +28,15 @@ import java.util.Properties;
  *
  * <p>
  * Basic parsing rules:
- * <li> By default, props files are UTF8 encoded .
+ * <li> By default, props files are UTF8 encoded.
  * <li> Leading and trailing spaces will be trimmed from section names and property names.
  * <li> Leading and/or trailing spaces may be trimmed from property values.
  * <li> You can use either equal sign (=) or colon (:) to assign property values
  * <li> Comments begin with either a semicolon (;), or a sharp sign (#) and extend to the end of line. It doesn't have to be the first character.
  * <li> A backslash (\) escapes the next character (e.g., \# is a literal #, \\ is a literal \).
  * <li> If the last character of a line is backslash (\), the value is continued on the next line with new line character included.
+ * <li> \\uXXXX is encoded as character
+ * <li> \t, \r and \f are encoded as characters
  *
  * <p>
  * Sections rules:
@@ -156,10 +159,18 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Loads props from the file assuming UTF8 encoding.
+	 * Loads props from the file. Assumes UTF8 encoding unless
+	 * the file ends with '.properties', than it uses ISO 8859-1.
 	 */
 	public void load(File file) throws IOException {
-		parse(FileUtil.readString(file));
+		String extension = FileNameUtil.getExtension(file.getAbsolutePath());
+		String data;
+		if (extension.equalsIgnoreCase("properties")) {
+			data = FileUtil.readString(file, StringPool.ISO_8859_1);
+		} else {
+			data = FileUtil.readString(file);
+		}
+		parse(data);
 	}
 
 	/**

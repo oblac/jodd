@@ -2,6 +2,7 @@
 
 package jodd.props;
 
+import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -89,11 +90,48 @@ public class PropsParser {
 			}
 
 			if (state == ParseState.ESCAPE) {
-				if ((c == '\r') || (c == '\n')) {
-					state = ParseState.ESCAPE_NEWLINE;	// if the EOL is \n or \r\n, escapes both chars
-				} else {
-					sb.append(c);
-					state = ParseState.TEXT;
+				switch (c) {
+					case '\r':
+					case '\n':
+						state = ParseState.ESCAPE_NEWLINE;	// if the EOL is \n or \r\n, escapes both chars
+						break;
+					case 'u':		// encode UTF character
+						int value = 0;
+
+						for (int i = 0; i < 4; i++) {
+							char hexChar = in.charAt(ndx++);
+							if (CharUtil.isDigit(hexChar)) {
+								value = (value << 4) + hexChar - '0';
+							} else if (hexChar >= 'a' && hexChar <= 'f') {
+								value = (value << 4) + 10 + hexChar - 'a';
+							} else if (hexChar >= 'A' && hexChar <= 'F') {
+								value = (value << 4) + 10 + hexChar - 'A';
+							} else {
+								throw new IllegalArgumentException("Malformed \\uXXXX encoding.");
+							}
+						}
+						sb.append((char) value);
+						state = ParseState.TEXT;
+						break;
+					case 't':
+						sb.append('\t');
+						state = PropsParser.ParseState.TEXT;
+						break;
+					case 'n':
+						sb.append('\n');
+						state = PropsParser.ParseState.TEXT;
+						break;
+					case 'r':
+						sb.append('\r');
+						state = PropsParser.ParseState.TEXT;
+						break;
+					case 'f':
+						sb.append('\f');
+						state = PropsParser.ParseState.TEXT;
+						break;
+					default:
+						sb.append(c);
+						state = ParseState.TEXT;
 				}
 				continue;
 			}

@@ -32,3 +32,4 @@ homePage = http://doc.dwarfs
 
 []
 comment=Čađavi Žar utf8
+special-chars=foo\tboo\rzoo\nxxx\ftoo

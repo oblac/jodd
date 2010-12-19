@@ -18,7 +18,7 @@ public class PropsTest extends TestCase {
 		Props p = new Props();
 		p.load(readDataFile("test.props"));
 
-		assertEquals(15, p.countTotalProperties());
+		assertEquals(16, p.countTotalProperties());
 
 		assertEquals("Snow White and the Seven Dwarfs", p.getValue("story"));
 		assertEquals("Walt Disney's New characters in his first full-length production!", p.getValue("Tagline"));
@@ -29,6 +29,8 @@ public class PropsTest extends TestCase {
 		assertEquals("49.5", p.getValue("doc.weight"));
 
 		assertEquals("Čađavi Žar utf8", p.getValue("comment"));
+
+		assertEquals("foo\tboo\rzoo\nxxx\ftoo", p.getValue("special-chars"));
 
 		assertNull(p.getValue("non existing"));
 
@@ -148,7 +150,7 @@ public class PropsTest extends TestCase {
 		p2.load(readDataFile("test.props"));
 
 		assertEquals(2, p.countTotalProperties());
-		assertEquals(17, p2.countTotalProperties());
+		assertEquals(18, p2.countTotalProperties());
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
@@ -167,7 +169,6 @@ public class PropsTest extends TestCase {
 
 	public void testActiveProfiles() throws IOException {
 		Props p = new Props();
-		p.setSkipEmptyProps(false);
 		p.load(readDataFile("test-actp.props"));
 
 		assertEquals("hello", p.getBaseValue("key1"));
@@ -175,6 +176,14 @@ public class PropsTest extends TestCase {
 		assertEquals("world", p.getValue("key2"));
 	}
 
+	public void testProperties() throws IOException {
+		Props p = new Props();
+		p.load(readDataFile("test.properties"));
+
+		assertEquals("value", p.getValue("one"));
+		assertEquals("long valuein two lines", p.getValue("two"));
+		assertEquals("some utf8 šđžčć", p.getValue("three"));
+	}
 
 	private String readDataFile(String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
@@ -182,7 +191,11 @@ public class PropsTest extends TestCase {
 
 		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
 		Writer out = new FastCharArrayWriter();
-		StreamUtil.copy(is, out);
+		String encoding = "UTF-8";
+		if (fileName.endsWith(".properties")) {
+			encoding = "ISO-8859-1";
+		}
+		StreamUtil.copy(is, out, encoding);
 		StreamUtil.close(is);
 		return out.toString();
 	}
