@@ -72,7 +72,7 @@ public class Props implements Cloneable {
 		parser = new PropsParser(properties, profiles);
 	}
 
-	protected Props(Map<String, String> properties, Map<String, Map<String, String>> profiles, PropsParser parser, String activeProflesProp) {
+	protected Props(Map<String, String> properties, Map<String, Map<String, String>> profiles, PropsParser parser, String activeProfilesProp) {
 		this();
 		this.properties.putAll(properties);
 		for (Map.Entry<String, Map<String, String>> entry : profiles.entrySet()) {
@@ -81,7 +81,7 @@ public class Props implements Cloneable {
 			this.profiles.put(entry.getKey(), map);
 		}
 
-		this.activeProfilesProp = this.activeProfilesProp;
+		this.activeProfilesProp = activeProfilesProp;
 
 		this.parser.escapeNewLineValue = parser.escapeNewLineValue;
 		this.parser.valueTrimLeft = parser.valueTrimLeft;
