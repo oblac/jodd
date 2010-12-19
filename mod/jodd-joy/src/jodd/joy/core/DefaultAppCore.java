@@ -21,15 +21,14 @@ import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
+import jodd.props.Props;
+import jodd.props.PropsUtil;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
-import jodd.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Properties;
 
 import static jodd.joy.AppUtil.prepareAppLogDir;
 import static jodd.joy.AppUtil.resolveAppDirs;
@@ -214,8 +213,8 @@ public abstract class DefaultAppCore {
 		pcfg.configure(petite);
 
 		// load parameters from properties files
-		Properties appProperties = PropertiesUtil.createFromClasspath("/app*.properties");
-		petite.defineParameters(appProperties);
+		Props appProps = PropsUtil.createFromClasspath("/app*.prop*");
+		petite.defineParameters(appProps);
 
 		// add AppCore instance to Petite
 		petite.addBean(PETITE_APPCORE, this);

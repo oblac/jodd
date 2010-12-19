@@ -35,7 +35,7 @@ public class MadvocServletFilter implements Filter {
 	 */
 	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
 	/**
-	 * List of Madvoc properties files to be found on classpath.
+	 * List of Madvoc params and properties files to be found on classpath.
 	 */
 	public static final String PARAM_MADVOC_PARAMS = "madvoc.params";
 

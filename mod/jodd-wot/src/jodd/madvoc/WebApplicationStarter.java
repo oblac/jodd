@@ -2,17 +2,16 @@
 
 package jodd.madvoc;
 
+import jodd.props.Props;
+import jodd.props.PropsUtil;
 import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.PropertiesUtil;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
-
-import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -81,8 +80,10 @@ public class WebApplicationStarter {
 		webapp.initWebApplication();
 
 		// params
-		Properties params = loadMadvocParams(paramsFiles);
-		webapp.defineParams(params);
+		if (paramsFiles != null) {
+			Props params = loadMadvocParams(paramsFiles);
+			webapp.defineParams(params);
+		}
 
 		// configure
 		webapp.registerMadvocComponents();
@@ -98,6 +99,7 @@ public class WebApplicationStarter {
 			throw new MadvocException("No Madvoc actions manager component found.");
 		}
 		webapp.initActions(actionsManager);
+
 		// results
 		ResultsManager resultsManager = webapp.getComponent(ResultsManager.class);
 		if (resultsManager == null) {
@@ -146,13 +148,10 @@ public class WebApplicationStarter {
 	/**
 	 * Loads Madvoc parameters.
 	 */
-	protected Properties loadMadvocParams(String[] patterns) {
-		if (patterns == null) {
-			return new Properties();
-		}
+	protected Props loadMadvocParams(String[] patterns) {
 		log.info("Loading Madvoc parameters from: {}", patterns);
 		try {
-			return PropertiesUtil.createFromClasspath(patterns);
+			return PropsUtil.createFromClasspath(patterns);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new MadvocException("Unable to load Madvoc parameters from: :" + Convert.toString(patterns) + ".properties': " + ex.toString(), ex);
