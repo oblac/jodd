@@ -60,8 +60,8 @@ public class Props implements Cloneable {
 	private static final String DEFAULT_PROFILES_PROP = "@profiles";
 	private static final int MAX_INNER_MACROS = 100;
 
-	protected final Map<String, String> properties;					// base properties
-	protected final Map<String, Map<String, String>> profiles;		// profile properties
+	protected final Map<String, PropsValue> properties;					// base properties
+	protected final Map<String, Map<String, PropsValue>> profiles;		// profile properties
 	protected final PropsParser parser;								// parser
 	protected String activeProfilesProp = DEFAULT_PROFILES_PROP;	// active profiles property
 	protected String[] activeProfiles;
@@ -70,16 +70,16 @@ public class Props implements Cloneable {
 	 * Creates new props.
 	 */
 	public Props() {
-		properties = new HashMap<String, String>();
-		profiles = new HashMap<String, Map<String, String>>();
+		properties = new HashMap<String, PropsValue>();
+		profiles = new HashMap<String, Map<String, PropsValue>>();
 		parser = new PropsParser(properties, profiles);
 	}
 
-	protected Props(Map<String, String> properties, Map<String, Map<String, String>> profiles, PropsParser parser, String activeProfilesProp) {
+	protected Props(Map<String, PropsValue> properties, Map<String, Map<String, PropsValue>> profiles, PropsParser parser, String activeProfilesProp) {
 		this();
 		this.properties.putAll(properties);
-		for (Map.Entry<String, Map<String, String>> entry : profiles.entrySet()) {
-			Map<String, String> map = new HashMap<String, String>(entry.getValue().size());
+		for (Map.Entry<String, Map<String, PropsValue>> entry : profiles.entrySet()) {
+			Map<String, PropsValue> map = new HashMap<String, PropsValue>(entry.getValue().size());
 			map.putAll(entry.getValue());
 			this.profiles.put(entry.getKey(), map);
 		}
@@ -207,7 +207,7 @@ public class Props implements Cloneable {
 		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
-			properties.put(name, p.getProperty(name));
+			properties.put(name, new PropsValue(p.getProperty(name)));
 		}
 	}
 
@@ -221,7 +221,7 @@ public class Props implements Cloneable {
 	public int countTotalProperties() {
 		HashSet<String> profileKeys = new HashSet<String>();
 
-		for (Map<String, String> map : profiles.values()) {
+		for (Map<String, PropsValue> map : profiles.values()) {
 			for (String key : map.keySet()) {
 				if (properties.containsKey(key) == false) {
 					profileKeys.add(key);
@@ -266,13 +266,13 @@ public class Props implements Cloneable {
 			nextprofile:
 			for (String profile : profiles) {
 				while (true) {
-					Map<String, String> profileMap = this.profiles.get(profile);
+					Map<String, PropsValue> profileMap = this.profiles.get(profile);
 					if (profileMap == null) {
 						continue nextprofile;
 					}
-					String value = profileMap.get(key);
+					PropsValue value = profileMap.get(key);
 					if (value != null) {
-						return value;
+						return value.getValue();
 					}
 					int ndx = profile.lastIndexOf('.');
 					if (ndx == -1) {
@@ -282,7 +282,34 @@ public class Props implements Cloneable {
 				}
 			}
 		}
-		return properties.get(key);
+		PropsValue value = properties.get(key);
+		return value == null ?  null : value.getValue();
+	}
+
+	// ---------------------------------------------------------------- put
+
+	/**
+	 * Sets default value.
+	 */
+	public void setValue(String key, String value) {
+		setValue(key, value, null);
+	}
+
+	/**
+	 * Sets value on some profile..
+	 */
+	public void setValue(String key, String value, String profile) {
+		if (profile == null) {
+			properties.put(key, new PropsValue(value));
+		} else {
+			Map<String, PropsValue> p = profiles.get(profile);
+			if (p == null) {
+				p = new HashMap<String, PropsValue>();
+				profiles.put(profile, p);
+			}
+			p.put(key, new PropsValue(value));
+		}
+		initialized = false;
 	}
 
 	// ---------------------------------------------------------------- extract
@@ -311,7 +338,7 @@ s	 */
 		if (profiles != null) {
 			for (String profile : profiles) {
 				while (true) {
-					Map<String, String> map = this.profiles.get(profile);
+					Map<String, PropsValue> map = this.profiles.get(profile);
 					if (map != null) {
 						extract(properties, map);
 					}
@@ -328,12 +355,12 @@ s	 */
 		return properties;
 	}
 
-	protected void extract(Properties properties, Map<String, String> map) {
-		for (Map.Entry<String, String> entry : map.entrySet()) {
+	protected void extract(Properties properties, Map<String, PropsValue> map) {
+		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			String key = entry.getKey();
 			String existingValue = properties.getProperty(key);
 			if (existingValue == null) {
-				properties.setProperty(key, entry.getValue());
+				properties.setProperty(key, entry.getValue().getValue());
 			}
 		}
 	}
@@ -355,10 +382,10 @@ s	 */
 					while (loopCount++ < MAX_INNER_MACROS) {
 						boolean replaced = resolveMacros(properties, null);
 
-						for (Map.Entry<String, Map<String, String>> entry : profiles.entrySet()) {
+						for (Map.Entry<String, Map<String, PropsValue>> entry : profiles.entrySet()) {
 							String profile = entry.getKey();
-							Map<String, String> map = entry.getValue();
-							replaced = replaced || resolveMacros(map, profile);
+							Map<String, PropsValue> map = entry.getValue();
+							replaced = resolveMacros(map, profile) || replaced;
 						}
 
 						if (replaced == false) {
@@ -374,19 +401,21 @@ s	 */
 		}
 	}
 
-	protected boolean resolveMacros(Map<String, String> map, final String profile) {
+	protected boolean resolveMacros(Map<String, PropsValue> map, final String profile) {
 		boolean replaced = false;
 		BeanTemplateResolver resolver = new BeanTemplateResolver() {
 			public Object resolve(String name) {
 				return lookupValue(name, profile);
 			}
 		};
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			String value = entry.getValue();
-			String newValue = BeanTemplate.parse(value, resolver, StringPool.EMPTY);
-			if (newValue.equals(value) == false) {
-				entry.setValue(newValue);
+		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
+			PropsValue pv = entry.getValue();
+			String newValue = BeanTemplate.parse(pv.value, resolver, StringPool.EMPTY);
+			if (newValue.equals(pv.value) == false) {
+				pv.resolved = newValue;
 				replaced = true;
+			} else {
+				pv.resolved = null;
 			}
 		}
 		return replaced;
@@ -400,7 +429,12 @@ s	 */
 			activeProfiles = null;
 			return;
 		}
-		String value = properties.get(activeProfilesProp);
+		PropsValue pv = properties.get(activeProfilesProp);
+		if (pv == null) {
+			activeProfiles = null;
+			return;
+		}
+		String value = pv.getValue();
 		if (StringUtil.isBlank(value)) {
 			activeProfiles = null;
 			return;

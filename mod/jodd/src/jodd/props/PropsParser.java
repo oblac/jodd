@@ -47,10 +47,10 @@ public class PropsParser {
 
 
 
-	protected final Map<String, String> properties;
-	protected final Map<String, Map<String, String>> profiles;
+	protected final Map<String, PropsValue> properties;
+	protected final Map<String, Map<String, PropsValue>> profiles;
 
-	public PropsParser(Map<String, String> properties, Map<String, Map<String, String>> profiles) {
+	public PropsParser(Map<String, PropsValue> properties, Map<String, Map<String, PropsValue>> profiles) {
 		this.properties = properties;
 		this.profiles = profiles;
 	}
@@ -235,7 +235,7 @@ public class PropsParser {
 	protected void add(String key, String value) {
 		int ndx = key.indexOf(PROFILE_LEFT);
 		if (ndx == -1) {
-			properties.put(key, value);
+			properties.put(key, new PropsValue(value));
 			return;
 		}
 
@@ -266,12 +266,12 @@ public class PropsParser {
 
 		// add value to extracted profiles
 		for (String p : keyProfiles) {
-			Map<String, String> map = profiles.get(p);
+			Map<String, PropsValue> map = profiles.get(p);
 			if (map == null) {
-				map = new HashMap<String, String>();
+				map = new HashMap<String, PropsValue>();
 				profiles.put(p, map);
 			}
-			map.put(key, value);
+			map.put(key, new PropsValue(value));
 		}
 	}
 

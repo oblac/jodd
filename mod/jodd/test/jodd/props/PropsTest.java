@@ -183,6 +183,17 @@ public class PropsTest extends TestCase {
 		assertEquals("some utf8 šđžčć", p.getValue("three"));
 	}
 
+	public void testAdd() {
+		Props p = new Props();
+		p.setValue("key1", "val${key2}");
+
+		assertEquals("val", p.getValue("key1"));
+
+		p.setValue("key2", "hurrey\tme!");
+
+		assertEquals("valhurrey\tme!", p.getValue("key1"));
+	}
+
 	private String readDataFile(String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
