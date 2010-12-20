@@ -48,27 +48,6 @@ public class ParamResolver {
 			// resolve all references
 			String value = PropertiesUtil.resolveProperty(params, key);
 			entry.setValue(value);
-/*
-			Object value = entry.getValue();
-			String name;
-			while (true) {
-				if ((value != null) && (value instanceof String)) {		// inspect only strings
-					String strValue = ((String) value).trim();
-					if (strValue.startsWith(StringPool.DOLLAR)) {
-						name = strValue.substring(1);
-						if (name.startsWith(StringPool.DOLLAR)) {		// escaped with double $
-							value = name;
-							entry.setValue(value);
-							break;
-						}
-						value = params.get(name);
-						entry.setValue(value);
-						continue;
-					}
-				}
-				break;
-			}
-*/
 		}
 		if (list.isEmpty()) {
 			return EMPTY_PARAMS;
