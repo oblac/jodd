@@ -86,7 +86,7 @@ public abstract class DefaultAppCore {
 	 * Starts the application and performs all initialization.
 	 */
 	public synchronized void start() {
-		resolveAppDirs("app.properties");		// app directories are resolved from location of 'app.properties'.
+		resolveAppDirs("app.props");			// app directories are resolved from location of 'app.props'.
 		prepareAppLogDir("log");				// creates log folder, depending of application type
 		initLogger();							// logger becomes available after this point
 		log.info("app dir: {}", AppUtil.getAppDir());
@@ -192,7 +192,7 @@ public abstract class DefaultAppCore {
 	/**
 	 * Creates and initializes Petite container.
 	 * It will be auto-magically configured by scanning the classpath.
-	 * Also, all 'app*.properties' will be loaded and values will
+	 * Also, all 'app*.prop*' will be loaded and values will
 	 * be injected in the matched beans. At the end it registers
 	 * this instance of core into the container.
 	 */
