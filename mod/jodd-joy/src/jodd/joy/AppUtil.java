@@ -1,6 +1,7 @@
 package jodd.joy;
 
 import jodd.io.FileNameUtil;
+import jodd.joy.exception.AppException;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 
@@ -30,6 +31,9 @@ public class AppUtil {
 	 */
 	public static boolean resolveAppDirs(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, AppUtil.class);
+		if (url == null) {
+			throw new AppException("File not found on classpath: '" + classPathFileName + "'.");
+		}
 		String root = url.getFile();
 		String classpath = root.substring(0, root.length() - classPathFileName.length());
 		int ndx = root.indexOf("WEB-INF");
