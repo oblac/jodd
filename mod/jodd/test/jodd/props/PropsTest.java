@@ -142,6 +142,15 @@ public class PropsTest extends TestCase {
 		assertEquals("/foo/data3", prop.getProperty("data.path"));
 	}
 
+	public void testMacros2() throws IOException {
+		Props p = new Props();
+		p.setValue("key1", "**${key${key3}}**");
+		p.setValue("key3", "2");
+		p.setValue("key2", "++++");
+
+		assertEquals("**++++**", p.getValue("key1"));
+	}
+
 	public void testClone() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
