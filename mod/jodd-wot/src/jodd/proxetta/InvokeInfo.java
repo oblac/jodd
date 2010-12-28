@@ -15,6 +15,7 @@ public class InvokeInfo {
 
 	private final String owner;
 	private final String className;
+	private final String classShortName;
 	private final String methodName;
 	private final String description;
 	private final String returnType;
@@ -26,6 +27,10 @@ public class InvokeInfo {
 		this.className = owner.replace('/', '.');
 		this.methodName = methodName;
 		this.description = description;
+
+		// short name
+		int ndx = className.lastIndexOf('.');
+		classShortName = ndx == -1 ? className : className.substring(ndx + 1);
 
 		// arguments
 		List<String> args = new ArrayList<String>();
@@ -73,6 +78,13 @@ public class InvokeInfo {
 	 */
 	public String getClassName() {
 		return className;
+	}
+
+	/**
+	 * Returns class short name, without a package.
+	 */
+	public String getClassShortName() {
+		return classShortName;
 	}
 
 	/**
