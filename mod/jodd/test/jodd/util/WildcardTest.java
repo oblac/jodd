@@ -75,6 +75,7 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.matchPath("/foo/", "/**/"));
 
 		assertTrue(Wildcard.matchPath("/foo/boo", "/**/bo*"));
+		assertTrue(Wildcard.matchPath("/foo/soo/doo/boo", "/**/bo*"));
 		assertTrue(Wildcard.matchPath("/foo/boo", "/**/**/bo*"));
 		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/**/bo*"));
 		assertTrue(Wildcard.matchPath("/foo/one/two/three/boo", "/**/**/**/bo*"));
