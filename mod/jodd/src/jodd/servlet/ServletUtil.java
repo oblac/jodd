@@ -603,7 +603,13 @@ public class ServletUtil {
 				if (value == null) {
 					result.append("<null>\n");
 				} else {
-					result.append(value).append('\n');
+					String stringValue;
+					try {
+						stringValue = value.toString();
+					} catch (Exception ignore) {
+						stringValue = "<" + value.getClass() + ">\n";
+					}
+					result.append(stringValue).append('\n');
 				}
 			}
 		}
