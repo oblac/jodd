@@ -1,5 +1,5 @@
 
-// Copyright (c) 2003-2010, Jodd Team (jodd.sf.net). All Rights Reserved.
+// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.typeconverter;
 
