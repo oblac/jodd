@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.joy.madvoc.interceptor;
 
 import jodd.joy.i18n.I18nInterceptor;

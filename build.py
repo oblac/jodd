@@ -6,7 +6,7 @@ prjDescription = 'Jodd - open-source Java utility library and web application fr
 prjVersion = '3.2'
 
 # vars
-copyright = 'Copyright &#169; 2003-2010 Jodd Team'
+copyright = 'Copyright &#169; 2003-2011 Jodd Team'
 
 # ant
 project_header()

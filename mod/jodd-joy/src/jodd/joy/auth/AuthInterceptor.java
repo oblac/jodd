@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.joy.auth;
 
 import jodd.joy.madvoc.action.AppAction;

@@ -167,7 +167,7 @@
 			<bootclasspath refid="jodd.production.bootclasspath"/>
 			<classpath refid="jodd.production.classpath"/>
 			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2010 Jodd Team</i></center>]]></bottom>
+			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2011 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
@@ -393,7 +393,7 @@
 			<bootclasspath refid="jodd-wot.production.bootclasspath"/>
 			<classpath refid="jodd-wot.production.classpath"/>
 			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
-			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2010 Jodd Team</i></center>]]></bottom>
+			<bottom><![CDATA[<center><i>Copyright &#169; 2003-2011 Jodd Team</i></center>]]></bottom>
 			<packageset dir="${jodd-wot.production.src.dir}" defaultexcludes="yes"/>
 		</javadoc>
 	</target>
