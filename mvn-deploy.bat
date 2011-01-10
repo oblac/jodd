@@ -2,7 +2,7 @@
 
 setlocal
 
-set v=3.1.1
+set v=3.2
 set repo=-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2 -DrepositoryId=sonatype-nexus-staging -DgeneratePom=false
 set repo_jodd=%repo% -DpomFile=mvn\jodd.pom.xml
 set repo_jodd_wot=%repo% -DpomFile=mvn\jodd-wot.pom.xml
