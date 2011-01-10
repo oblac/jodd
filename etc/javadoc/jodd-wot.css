@@ -17,15 +17,15 @@ body {
 	font-weight: bold;
 	font-size: 12px;
 	font-family: Verdana,serif;
-	border: 1px solid #93C894;
+	border: 1px solid #D97319;
 	padding-left: 10px;
 	padding-right: 10px;
 	margin-top: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;	
 	line-height: 30px;
-	background-color: #E4FFDD;
-	color:#006600;
+	background-color: #FF881D;
+	color:#fff;
 }
 .FrameItemFont    { font-size: 12px; font-family: Verdana,serif }
 
@@ -47,7 +47,9 @@ body {
 code {
 	font: "Andale Mono", sans-serif;
 	background-color: transparent;
-	color: #009900;
+	color: #38693D;
+	font-size: 14px;
+	font-weight: bold;
 }
 pre {
 	font: "Andale Mono", sans-serif;
@@ -71,21 +73,20 @@ a code {
 }
 a:hover code {
 	text-decoration: none;
-	border: 0;	
+	border: 0;
+	color: #FF6600;
 }
 
 a, a:visited, a:active {
 	color: #2E53AB;
 	background-color: transparent;	
 	text-decoration: underline;
-	font-weight: normal;
 }
 a:hover	{
 	color: #FF6600;
 	background-color: transparent;	
 	text-decoration: none;
 	border-bottom: 1px dashed;
-	font-weight: normal;
 }
 
 /* table */
@@ -93,8 +94,8 @@ table {
 	border: none;
 }
 .TableHeadingColor th {
-	background-color: #DDE4FF;
-	color: #000066;
+	background-color: #7E8AA2;
+	color: #E3E3E3;
 	font-family: "Trebuchet MS",serif;
 	border: 1px solid #AAAAAA;
 }
@@ -102,7 +103,9 @@ table {
 	font-size: 18px;
 }
 .TableSubHeadingColor th {
-	background-color: #DDE4FF;
+	background-color: #f1f4f8;
+	color: #7E8AA2;
+	border: 1px solid #AAAAAA;
 }
 .TableRowColor td {
 	background: #FFFFFF;
@@ -113,6 +116,10 @@ table {
 	border-left: 1px solid #AAAAAA;
 	border-right: 1px solid #AAAAAA;
 }
+.TableRowColor td code {
+	font-weight: bold;
+}
+
 
 
 /* headers */
@@ -127,20 +134,20 @@ h1 {
 	text-align: center;
 	padding: 10px;
 	margin-bottom: 30px;
-	background-color: #FFE7DD;
-	border: solid 1px #C47B7B;
+	background-color: #FF881D;
+	border: solid 2px #D97319;
 	letter-spacing: -1px;
-	color: #990000; 
+	color: #fff; 
 
 }
 h2 {
-	font-size: 22px;
+	font-size: 24px;
 	margin-bottom: 12px;
 	margin-top: 30px;
-	background-color: #FFE7DD;
-	padding: 5px;
-	border: solid 1px #C47B7B;
-	color: #990000; 
+	background-color: #263248;
+	padding: 5px 5px 5px 10px;
+	border-left: 10px solid #0A111F;
+	color: #fff; 
 }
 h3 {
 	font-size: 17px;
@@ -148,7 +155,7 @@ h3 {
 	margin-top: 20px;
 	padding: 2px;
 	padding-left: 5px;
-	background-color: #FFF8DD;
-	border: solid 1px #C4C47B;
-	color:#333333;
+	background-color: #263248;
+	border: none;
+	color: #E3E3E3;
 }
