@@ -8,7 +8,7 @@
 	<available classname="org.apache.tools.ant.DynamicAttribute" property="ant-1.6.2"/>
 	<fail unless="ant-1.6.2" message="Ant 1.6.2+ is required."/>
 
-	<!-- load enviroment variables -->
+	<!-- load environment variables -->
 	<property environment="env"/>
 
 	<!-- timestamp formats -->
@@ -125,7 +125,7 @@
 	</path>
 
 	<!-- compile: jodd.production -->
-	
+
 	<path id="jodd.production.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -133,13 +133,13 @@
 
 	<property name="jodd.production.out.dir" value="${output.dir}/production/jodd"/>
 	<property name="jodd.production.src.dir" value="mod/jodd/src"/>
-	
+
 	<target name="compile.jodd.production" description="compiles module: jodd; production classes">
 		<mkdir dir="${jodd.production.out.dir}"/>
 		<javac destdir="${jodd.production.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd.production.src.dir}"/>
 			<bootclasspath refid="jodd.production.bootclasspath"/>
@@ -181,7 +181,7 @@
 	</path>
 
 	<!-- compile: jodd.test -->
-	
+
 	<path id="jodd.test.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -189,13 +189,13 @@
 
 	<property name="jodd.test.out.dir" value="${output.dir}/test/jodd"/>
 	<property name="jodd.test.src.dir" value="mod/jodd/test"/>
-	
+
 	<target name="compile.jodd.test" description="compiles module: jodd; test classes">
 		<mkdir dir="${jodd.test.out.dir}"/>
 		<javac destdir="${jodd.test.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd.test.src.dir}"/>
 			<bootclasspath refid="jodd.test.bootclasspath"/>
@@ -351,7 +351,7 @@
 	</path>
 
 	<!-- compile: jodd-wot.production -->
-	
+
 	<path id="jodd-wot.production.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -359,13 +359,13 @@
 
 	<property name="jodd-wot.production.out.dir" value="${output.dir}/production/jodd-wot"/>
 	<property name="jodd-wot.production.src.dir" value="mod/jodd-wot/src"/>
-	
+
 	<target name="compile.jodd-wot.production" description="compiles module: jodd-wot; production classes">
 		<mkdir dir="${jodd-wot.production.out.dir}"/>
 		<javac destdir="${jodd-wot.production.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd-wot.production.src.dir}"/>
 			<bootclasspath refid="jodd-wot.production.bootclasspath"/>
@@ -410,7 +410,7 @@
 	</path>
 
 	<!-- compile: jodd-wot.test -->
-	
+
 	<path id="jodd-wot.test.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -418,13 +418,13 @@
 
 	<property name="jodd-wot.test.out.dir" value="${output.dir}/test/jodd-wot"/>
 	<property name="jodd-wot.test.src.dir" value="mod/jodd-wot/test"/>
-	
+
 	<target name="compile.jodd-wot.test" description="compiles module: jodd-wot; test classes">
 		<mkdir dir="${jodd-wot.test.out.dir}"/>
 		<javac destdir="${jodd-wot.test.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd-wot.test.src.dir}"/>
 			<bootclasspath refid="jodd-wot.test.bootclasspath"/>
@@ -580,7 +580,7 @@
 	</path>
 
 	<!-- compile: jodd-joy.production -->
-	
+
 	<path id="jodd-joy.production.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -588,13 +588,13 @@
 
 	<property name="jodd-joy.production.out.dir" value="${output.dir}/production/jodd-joy"/>
 	<property name="jodd-joy.production.src.dir" value="mod/jodd-joy/src"/>
-	
+
 	<target name="compile.jodd-joy.production" description="compiles module: jodd-joy; production classes">
 		<mkdir dir="${jodd-joy.production.out.dir}"/>
 		<javac destdir="${jodd-joy.production.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd-joy.production.src.dir}"/>
 			<bootclasspath refid="jodd-joy.production.bootclasspath"/>
@@ -634,7 +634,7 @@
 	</path>
 
 	<!-- compile: jodd-gfx.production -->
-	
+
 	<path id="jodd-gfx.production.bootclasspath">
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
@@ -642,13 +642,13 @@
 
 	<property name="jodd-gfx.production.out.dir" value="${output.dir}/production/jodd-gfx"/>
 	<property name="jodd-gfx.production.src.dir" value="mod/jodd-gfx/src"/>
-	
+
 	<target name="compile.jodd-gfx.production" description="compiles module: jodd-gfx; production classes">
 		<mkdir dir="${jodd-gfx.production.out.dir}"/>
 		<javac destdir="${jodd-gfx.production.out.dir}"
 				listfiles="on" debug="on"
 				source="1.5" target="1.5"
-				deprecation="true" encoding="UTF-8"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
 				fork="true" executable="${jdk5.bin}/javac">
 			<src location="${jodd-gfx.production.src.dir}"/>
 			<bootclasspath refid="jodd-gfx.production.bootclasspath"/>
