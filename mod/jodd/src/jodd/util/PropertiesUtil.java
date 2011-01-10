@@ -199,7 +199,6 @@ public class PropertiesUtil {
 
 	/**
 	 * Creates properties from classpath.
-	 * @see #loadFromClasspath(java.util.Properties, String)
 	 */
 	public static Properties createFromClasspath(String... rootTemplate) {
 		Properties p = new Properties();
