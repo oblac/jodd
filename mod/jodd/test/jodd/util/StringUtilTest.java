@@ -838,4 +838,13 @@ public class StringUtilTest extends TestCase {
 		assertEquals(to, StringUtil.escapeJava(from));
 		assertEquals(from, StringUtil.unescapeJava(to));
 	}
+
+	public void testFindCommonPrefix() {
+		assertEquals("", StringUtil.findCommonPrefix("123", "234"));
+		assertEquals("123", StringUtil.findCommonPrefix("123"));
+		assertEquals("12", StringUtil.findCommonPrefix("123xxx", "125", "12xxxxx"));
+		assertEquals("1", StringUtil.findCommonPrefix("123xxx", "1", "12xxxxx"));
+		assertEquals("", StringUtil.findCommonPrefix("", "1", "12xxxxx"));
+		assertEquals("123", StringUtil.findCommonPrefix("123", "123", "123"));
+	}
 }
