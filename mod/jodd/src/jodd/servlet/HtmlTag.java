@@ -84,6 +84,13 @@ public class HtmlTag {
 	}
 
 	/**
+	 * Returns unchanged tag content.
+	 */
+	public String getTag() {
+		return tag;
+	}
+
+	/**
 	 * Returns next index for location start.
 	 */
 	public int getNextIndex() {
@@ -165,9 +172,7 @@ public class HtmlTag {
 	 * attribute value doesn't exist.
 	 */
 	public String getAttribute(String attrName) {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		return attributes.get(attrName);
 	}
 
@@ -175,9 +180,7 @@ public class HtmlTag {
 	 * Returns <code>true</code> if attribute is included in the tag.
 	 */
 	public boolean hasAttribute(String attrName) {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		return attributes.containsKey(attrName);
 	}
 
@@ -185,9 +188,7 @@ public class HtmlTag {
 	 * Removes attribute from the tag.
 	 */
 	public void removeAttribute(String attrName) {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		changed = true;
 		attributes.remove(attrName);
 	}
@@ -199,9 +200,7 @@ public class HtmlTag {
 	 * be added. If value is not specified, it will be set to an empty string.
 	 */
 	public void setAttribute(String name, String value) {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		changed = true;
 		attributes.put(name.toLowerCase(), HtmlEncoder.text(value));
 	}
@@ -212,9 +211,7 @@ public class HtmlTag {
 	 * will be added.
 	 */
 	public void setAttribute(String name) {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		changed = true;
 		attributes.put(name.toLowerCase(), null);
 	}
@@ -223,9 +220,7 @@ public class HtmlTag {
 	 * Returns total number of attributes.
 	 */
 	public int totalAttributes() {
-		if (attributes == null) {
-			resolveAttributes();
-		}
+		resolveAttributes();
 		return attributes.size();
 	}
 
@@ -234,6 +229,10 @@ public class HtmlTag {
 	 * Resolves attributes from tag's body.
 	 */
 	protected void resolveAttributes() {
+		if (attributes != null) {
+			return;
+		}
+
 		attributes = new LinkedHashMap<String, String>();
 		if (attrStartIndex == 0) {
 			resolveTagName();
@@ -322,7 +321,7 @@ public class HtmlTag {
 	protected String suffix = StringPool.EMPTY;
 
 	/**
-	 * Adds suffix text that will be appended to the end.
+	 * Adds suffix text that will be appended after the tags end.
 	 */
 	public void setSuffixText(String suffix) {
 		this.suffix = suffix;
@@ -330,8 +329,10 @@ public class HtmlTag {
 
 	// ---------------------------------------------------------------- public parse
 
-	@Override
-	public String toString() {
+	/**
+	 * Resolves tag.
+	 */
+	public String resolveTag() {
 		if (changed == false) {
 			return tag + suffix;
 		}
@@ -349,12 +350,17 @@ public class HtmlTag {
 			}
 			t.append(' ');
 		}
-		t.setLength(t.length() - 1); 
+		t.setLength(t.length() - 1);
 		if (isClosedTag) {
 			t.append('/');
 		}
 		t.append(TAG_END).append(suffix);
 		return t.toString();
+	}
+
+	@Override
+	public String toString() {
+		return resolveTag();
 	}
 
 }

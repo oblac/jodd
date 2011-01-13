@@ -13,6 +13,7 @@ public class HtmlTagTest extends TestCase {
 		assertFalse(tag.isClosedTag());
 		assertEquals("html", tag.getTagName());
 		assertEquals(0, tag.totalAttributes());
+		assertEquals("<html>", tag.getTag());
 
 		body = "<   TaG atr='val'>";
 		tag = new HtmlTag(body);
@@ -95,6 +96,8 @@ public class HtmlTagTest extends TestCase {
 
 		tag.removeAttribute("name");
 		assertEquals("<input>", tag.toString());
+
+		assertEquals("<input name=\"xxx\">", tag.getTag());
 
 	}
 
