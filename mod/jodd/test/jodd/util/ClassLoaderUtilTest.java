@@ -31,7 +31,6 @@ public class ClassLoaderUtilTest extends TestCase {
 		is.close();
 	}
 
-
 	public void testClassFileName() {
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class));
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest[].class));
@@ -45,5 +44,20 @@ public class ClassLoaderUtilTest extends TestCase {
 		int v;
 	}
 
+	public void testClassLoaderUtil() {
+		try {
+			ClassLoaderUtil.loadClass("not.existing.class");
+		} catch (ClassNotFoundException cnfex) {
+			assertEquals("Class not found: 'not.existing.class'", cnfex.getMessage());
+		}
+
+		try {
+			Class joddClass = ClassLoaderUtil.loadClass("jodd.Jodd");
+			assertNotNull(joddClass);
+		} catch (ClassNotFoundException ignore) {
+			fail();
+		}
+
+	}
 
 }

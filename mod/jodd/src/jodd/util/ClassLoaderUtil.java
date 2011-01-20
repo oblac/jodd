@@ -294,22 +294,40 @@ public class ClassLoaderUtil {
 	 * </ul>
 	 */
 	public static Class loadClass(String className, Class callingClass) throws ClassNotFoundException {
+
+		// try #1
 		try {
-			return Thread.currentThread().getContextClassLoader().loadClass(className);
-		} catch (ClassNotFoundException cnfex1) {
-			try {
-				return Class.forName(className);
-			} catch (ClassNotFoundException cnfex2) {
-				try {
-					return ClassLoaderUtil.class.getClassLoader().loadClass(className);
-				} catch (ClassNotFoundException cnfex3) {
-					if (callingClass != null) {
-						return callingClass.getClassLoader().loadClass(className);
-					}
-					throw cnfex3;
-				}
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			if (classLoader != null) {
+				return classLoader.loadClass(className);
+			}
+		} catch (ClassNotFoundException ignore) {
+		}
+
+		// try #2
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException ignore) {
+		}
+
+		// try #3
+		try {
+			ClassLoader classLoader = ClassLoaderUtil.class.getClassLoader();
+			if (classLoader != null) {
+				return classLoader.loadClass(className);
+			}
+		} catch (ClassNotFoundException ignore) {
+		}
+
+		// try #4
+		if (callingClass != null) {
+			ClassLoader classLoader = callingClass.getClassLoader();
+			if (classLoader != null) {
+				return classLoader.loadClass(className);
 			}
 		}
+
+		throw new ClassNotFoundException("Class not found: '" + className + '\'');
 	}
 
 	// ---------------------------------------------------------------- misc
