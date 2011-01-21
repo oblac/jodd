@@ -10,6 +10,7 @@ import jodd.jtx.JtxTransactionManager;
 
 /**
  * Various helpers for WebApplication runner.
+ * @see WebStarter
  */
 public abstract class WebStarter {
 
