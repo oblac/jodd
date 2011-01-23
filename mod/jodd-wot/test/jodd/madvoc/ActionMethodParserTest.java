@@ -56,6 +56,9 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 		cfg = parse(actionMethodParser, "test.BooAction#foo5");
 		assertEquals("/xxx.html", cfg.actionPath);
+
+	    MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		assertEquals("/xxx.html", madvocConfig.lookupPathAlias("dude"));
 	}
 
 	public void testMethodWithPackage() {

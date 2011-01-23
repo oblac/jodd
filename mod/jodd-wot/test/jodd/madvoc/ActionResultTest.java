@@ -128,8 +128,8 @@ public class ActionResultTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
-		config.registerResultAlias("ok", "xxx.jsp");
-		config.registerResultAlias("sok", "zzz");
+		config.registerPathAlias("ok", "xxx.jsp");
+		config.registerPathAlias("sok", "zzz");
 
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo5");
@@ -149,7 +149,7 @@ public class ActionResultTest extends MadvocTestCase {
 		resultPath = resultMapper.resolveResultPath(cfg, "#%sok%");
 		assertEquals("/boo.zzz", resultPath);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "/%dude%?foo=1");
+		resultPath = resultMapper.resolveResultPath(cfg, "%dude%?foo=1");
 		assertEquals("/xxx.html?foo=1", resultPath);
 
 	}

@@ -28,7 +28,6 @@ public class BooAction {
 	@Action(value = "/xxx.${ext}", alias = "dude")
 	public void foo5() {}
 
-
 	@Action(value = "q${method}2")
 	public void foo6() {}
 

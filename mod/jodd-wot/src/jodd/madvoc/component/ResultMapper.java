@@ -28,7 +28,7 @@ public class ResultMapper {
 			if (ndx == -1) {
 				// alias markers not found
 				resultValue = (i == 0 ? resultValue : resultValue.substring(i));
-				String alias = madvocConfig.getResultAlias(resultValue);
+				String alias = madvocConfig.lookupPathAlias(resultValue);
 				result.append(alias != null ? alias : resultValue);
 				break;
 			}
@@ -38,7 +38,7 @@ public class ResultMapper {
 			String alias = (ndx2 == -1 ? resultValue.substring(ndx) : resultValue.substring(ndx, ndx2));
 
 			// process alias
-			alias = madvocConfig.getResultAlias(alias);
+			alias = madvocConfig.lookupPathAlias(alias);
 			if (alias != null) {
 				result.append(alias);
 			}
@@ -67,10 +67,13 @@ public class ResultMapper {
 	 */
 	public String resolveResultPath(ActionConfig cfg, String resultValue) {
 
-		// absolute paths
 		if (resultValue != null) {
+
+			resultValue = resolveAlias(resultValue);
+
+			// absolute paths
 			if (resultValue.startsWith(StringPool.SLASH)) {
-				return resolveAlias(resultValue);
+				return resultValue;
 			}
 		}
 
@@ -120,7 +123,7 @@ public class ResultMapper {
 			}
 			resultPath += resultValue;
 		}
-		return resolveAlias(resultPath); 
+		return resultPath;
 	}
 
 

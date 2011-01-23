@@ -27,7 +27,7 @@ public class MadvocConfig {
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		resultAliases = new HashMap<String, String>();
+		pathAliases = new HashMap<String, String>();
 		defaultExtension = "html";
 		supplementAction = null;//DefaultActionSupplement.class;
 		rootPackage = null;
@@ -137,32 +137,32 @@ public class MadvocConfig {
 		return defaultResultType;
 	}
 
-	// ---------------------------------------------------------------- result aliases
+	// ---------------------------------------------------------------- path aliases
 
-	protected Map<String, String> resultAliases;
+	protected Map<String, String> pathAliases;
 
 	/**
-	 * Registers new result alias.
+	 * Registers new path alias.
 	 */
-	public void registerResultAlias(String alias, String path) {
-		resultAliases.put(alias, path);
+	public void registerPathAlias(String alias, String path) {
+		pathAliases.put(alias, path);
 	}
 
 	/**
-	 * Returns result alias.
+	 * Returns path alias.
 	 */
-	public String getResultAlias(String alias) {
-		if (resultAliases.isEmpty()) {
+	public String lookupPathAlias(String alias) {
+		if (pathAliases.isEmpty()) {
 			return null;
 		}
-		return resultAliases.get(alias);
+		return pathAliases.get(alias);
 	}
 
 	/**
 	 * Reset all aliases.
 	 */
-	public void resetResultAliases() {
-		resultAliases.clear();
+	public void resetPathAliases() {
+		pathAliases.clear();
 	}
 
 	// ---------------------------------------------------------------- supplement action
