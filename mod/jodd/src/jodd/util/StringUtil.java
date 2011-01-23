@@ -1961,15 +1961,17 @@ public class StringUtil {
 	/**
 	 * Cuts the string from beginning to the first index of provided substring.
 	 */
-	public static String cutFromIndexOf(String string, String substring) {
+	public static String cutToIndexOf(String string, String substring) {
 		int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(0, i);
 		}
 		return string;
 	}
-
-	public static String cutFromIndexOf(String string, char c) {
+	/**
+	 * Cuts the string from beginning to the first index of provided char.
+	 */
+	public static String cutToIndexOf(String string, char c) {
 		int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(0, i);
@@ -1977,15 +1979,20 @@ public class StringUtil {
 		return string;
 	}
 
-	public static String cutToIndexOf(String string, String substring) {
+	/**
+	 * Cuts the string from the first index of provided substring to the end.
+	 */
+	public static String cutFromIndexOf(String string, String substring) {
 		int i = string.indexOf(substring);
 		if (i != -1) {
 			string = string.substring(i);
 		}
 		return string;
 	}
-
-	public static String cutToIndexOf(String string, char c) {
+	/**
+	 * Cuts the string from the first index of provided char to the end.
+	 */
+	public static String cutFromIndexOf(String string, char c) {
 		int i = string.indexOf(c);
 		if (i != -1) {
 			string = string.substring(i);
@@ -1996,7 +2003,7 @@ public class StringUtil {
 	/**
 	 * Cuts prefix if exists.
 	 */
-	public static String cutPreffix(String string, String prefix) {
+	public static String cutPrefix(String string, String prefix) {
 		if (string.startsWith(prefix)) {
 			string = string.substring(prefix.length());
 		}

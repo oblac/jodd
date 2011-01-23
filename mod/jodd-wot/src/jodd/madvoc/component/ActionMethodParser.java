@@ -96,7 +96,7 @@ public class ActionMethodParser {
 		 
 		// register alias
 		if (alias != null) {
-			String aliasPath = StringUtil.cutFromIndexOf(actionPath, StringPool.HASH);
+			String aliasPath = StringUtil.cutToIndexOf(actionPath, StringPool.HASH);
 			madvocConfig.registerPathAlias(alias, aliasPath);
 		} else if (madvocConfig.isCreateDefaultAliases()) {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
@@ -205,9 +205,9 @@ public class ActionMethodParser {
 		// build name from package
 		String packagePath = actionClass.getPackage().getName();
 		if (packagePath.length() > packageRoot.length()) {
-			packagePath = StringUtil.cutPreffix(packagePath, packageRoot + '.');
+			packagePath = StringUtil.cutPrefix(packagePath, packageRoot + '.');
 		} else {
-			packagePath = StringUtil.cutPreffix(packagePath, packageRoot);
+			packagePath = StringUtil.cutPrefix(packagePath, packageRoot);
 		}
 		packagePath = packagePath.replace('.', '/');
 

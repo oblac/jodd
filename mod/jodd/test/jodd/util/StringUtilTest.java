@@ -601,25 +601,25 @@ public class StringUtilTest extends TestCase {
 	}
 
 	public void testCuts() {
-		assertEquals("1", StringUtil.cutFromIndexOf("123", "2"));
-		assertEquals("1", StringUtil.cutFromIndexOf("123", '2'));
-		assertEquals("123", StringUtil.cutFromIndexOf("123", "4"));
-		assertEquals("123", StringUtil.cutFromIndexOf("123", '4'));
-		assertEquals("", StringUtil.cutFromIndexOf("123", "1"));
-
-		assertEquals("23", StringUtil.cutToIndexOf("123", "2"));
-		assertEquals("23", StringUtil.cutToIndexOf("123", '2'));
-		assertEquals("3", StringUtil.cutToIndexOf("123", "3"));
-		assertEquals("3", StringUtil.cutToIndexOf("123", '3'));
+		assertEquals("1", StringUtil.cutToIndexOf("123", "2"));
+		assertEquals("1", StringUtil.cutToIndexOf("123", '2'));
 		assertEquals("123", StringUtil.cutToIndexOf("123", "4"));
 		assertEquals("123", StringUtil.cutToIndexOf("123", '4'));
-		assertEquals("123", StringUtil.cutToIndexOf("123", "1"));
+		assertEquals("", StringUtil.cutToIndexOf("123", "1"));
 
-		assertEquals("qwe", StringUtil.cutPreffix("preqwe", "pre"));
-		assertEquals("preqwe", StringUtil.cutPreffix("preqwe", "pre2"));
+		assertEquals("23", StringUtil.cutFromIndexOf("123", "2"));
+		assertEquals("23", StringUtil.cutFromIndexOf("123", '2'));
+		assertEquals("3", StringUtil.cutFromIndexOf("123", "3"));
+		assertEquals("3", StringUtil.cutFromIndexOf("123", '3'));
+		assertEquals("123", StringUtil.cutFromIndexOf("123", "4"));
+		assertEquals("123", StringUtil.cutFromIndexOf("123", '4'));
+		assertEquals("123", StringUtil.cutFromIndexOf("123", "1"));
+
+		assertEquals("qwe", StringUtil.cutPrefix("preqwe", "pre"));
+		assertEquals("preqwe", StringUtil.cutPrefix("preqwe", "pre2"));
 
 		assertEquals("qwe", StringUtil.cutSuffix("qwesuf", "suf"));
-		assertEquals("qwesuf", StringUtil.cutPreffix("qwesuf", "suf2"));
+		assertEquals("qwesuf", StringUtil.cutPrefix("qwesuf", "suf2"));
 
 		assertEquals("qwe", StringUtil.cutSurrounding("preqwesuf", "pre", "suf"));
 		assertEquals("qwe", StringUtil.cutSurrounding("qwesuf", "pre", "suf"));
