@@ -6,6 +6,7 @@ import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
@@ -23,6 +24,10 @@ import java.util.List;
  * action results and interceptors. It can be subclasses or used independently.
  */
 public class ListMadvocConfig {
+
+	@In(scope = ScopeType.CONTEXT)
+	@Out
+	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
 	protected ActionsManager actionsManager;

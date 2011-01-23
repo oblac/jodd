@@ -174,4 +174,19 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/aliased", resultPath);
 
 	}
+
+	public void testAlias3() {
+
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
+		config.setCreateDefaultAliases(true);
+
+		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		actionsManager.register(BooAction.class, "foo2");
+
+		assertEquals("/boo.foo2.xxx", config.lookupPathAlias(BooAction.class.getName() + "#foo2"));
+
+	}
 }

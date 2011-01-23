@@ -98,6 +98,9 @@ public class ActionMethodParser {
 		if (alias != null) {
 			String aliasPath = StringUtil.cutFromIndexOf(actionPath, StringPool.HASH);
 			madvocConfig.registerPathAlias(alias, aliasPath);
+		} else if (madvocConfig.isCreateDefaultAliases()) {
+			alias = actionClass.getName() + '#' + actionMethod.getName();
+			madvocConfig.registerPathAlias(alias, actionPath);
 		}
 		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath);
 	}

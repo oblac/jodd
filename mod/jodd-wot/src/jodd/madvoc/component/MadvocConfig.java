@@ -28,6 +28,7 @@ public class MadvocConfig {
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultActionMethodNames = new String[] {"view", "execute"};
 		pathAliases = new HashMap<String, String>();
+		createDefaultAliases = false;
 		defaultExtension = "html";
 		supplementAction = null;//DefaultActionSupplement.class;
 		rootPackage = null;
@@ -140,6 +141,7 @@ public class MadvocConfig {
 	// ---------------------------------------------------------------- path aliases
 
 	protected Map<String, String> pathAliases;
+	protected boolean createDefaultAliases;
 
 	/**
 	 * Registers new path alias.
@@ -163,6 +165,18 @@ public class MadvocConfig {
 	 */
 	public void resetPathAliases() {
 		pathAliases.clear();
+	}
+
+	public boolean isCreateDefaultAliases() {
+		return createDefaultAliases;
+	}
+
+	/**
+	 * Specifies if default aliases should be created for all
+	 * action paths.
+	 */
+	public void setCreateDefaultAliases(boolean createDefaultAliases) {
+		this.createDefaultAliases = createDefaultAliases;
 	}
 
 	// ---------------------------------------------------------------- supplement action

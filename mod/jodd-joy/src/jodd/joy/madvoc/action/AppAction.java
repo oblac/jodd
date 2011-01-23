@@ -42,12 +42,18 @@ public abstract class AppAction {
 
 	public static final String EXT_JSON = "json";
 
-
 	/**
 	 * Creates alias. 
 	 */
 	protected String alias(String target) {
-		return "/%" + target + '%';
+		return '%' + target + '%';
+	}
+
+	/**
+	 * Creates alias from target class and target method name.
+	 */
+	protected String alias(Class targetClass, String targetMethodName) {
+		return '%' + targetClass.getName() + '#' + targetMethodName + '%';
 	}
 
 
