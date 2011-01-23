@@ -46,7 +46,7 @@ public abstract class AppAction {
 	/**
 	 * Creates alias. 
 	 */
-	protected String toAlias(String target) {
+	protected String alias(String target) {
 		return "/%" + target + '%';
 	}
 
