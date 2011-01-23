@@ -25,7 +25,7 @@ public class BooAction {
 	@Action(value = "/xxx", extension = "not used!", method = "DELETE")
 	public void foo41() {}
 
-	@Action(value = "/xxx.${ext}", alias = "dude")
+	@Action(value = "/xxx.${ext}", alias = "dude", method = "POST")
 	public void foo5() {}
 
 	@Action(value = "q${method}2")

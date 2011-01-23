@@ -67,9 +67,13 @@ public class ResultMapper {
 	 */
 	public String resolveResultPath(ActionConfig cfg, String resultValue) {
 
+		boolean aliasResolved = false;
+
 		if (resultValue != null) {
 
 			resultValue = resolveAlias(resultValue);
+
+			aliasResolved = true;
 
 			// absolute paths
 			if (resultValue.startsWith(StringPool.SLASH)) {
@@ -123,6 +127,11 @@ public class ResultMapper {
 			}
 			resultPath += resultValue;
 		}
+
+		if (aliasResolved == false) {
+			resultPath = resolveAlias(resultPath);
+		}
+
 		return resultPath;
 	}
 

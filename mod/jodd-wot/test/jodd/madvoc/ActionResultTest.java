@@ -153,4 +153,25 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/xxx.html?foo=1", resultPath);
 
 	}
+
+	public void testAlias2() {
+
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
+		config.registerPathAlias("/boo.foo2", "/aliased");
+
+		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		actionsManager.register(BooAction.class, "foo2");
+
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo2");
+
+		String resultPath = resultMapper.resolveResultPath(cfg, null);
+		assertEquals("/aliased", resultPath);
+
+	}
 }
