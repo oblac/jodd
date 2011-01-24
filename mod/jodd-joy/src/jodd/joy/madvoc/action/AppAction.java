@@ -3,6 +3,7 @@
 package jodd.joy.madvoc.action;
 
 import jodd.joy.page.PageRequest;
+import jodd.util.StringUtil;
 import jodd.vtor.Vtor;
 import jodd.vtor.Violation;
 
@@ -33,11 +34,11 @@ public abstract class AppAction {
 	public static final String NONE = "none:";
 	public static final String VTOR_JSON = "vtor-json:";
 
-	public static final String ALIAS_INDEX = "/%index%";
+	public static final String ALIAS_INDEX = "%index%";
 	public static final String ALIAS_INDEX_NAME = "index";
-	public static final String ALIAS_LOGIN = "/%login%";
+	public static final String ALIAS_LOGIN = "%login%";
 	public static final String ALIAS_LOGIN_NAME = "login";
-	public static final String ALIAS_ACCESS_DENIED = "/%accessDenied%";
+	public static final String ALIAS_ACCESS_DENIED = "%accessDenied%";
 	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
 	public static final String EXT_JSON = "json";
@@ -54,6 +55,17 @@ public abstract class AppAction {
 	 */
 	protected String alias(Class targetClass, String targetMethodName) {
 		return '%' + targetClass.getName() + '#' + targetMethodName + '%';
+	}
+
+	/**
+	 * Creates alias from target object and target method name.
+	 * If classname contains a '$' sign, everything will be stripped
+	 * after it (to get the real name, if action class is proxified).
+	 */
+	protected String alias(Object target, String targetMethodName) {
+		String targetClassName = target.getClass().getName();
+		targetClassName = StringUtil.cutToIndexOf(targetClassName, '$');
+		return '%' + targetClassName + '#' + targetMethodName + '%';
 	}
 
 
