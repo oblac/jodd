@@ -58,6 +58,7 @@
 <a href="form.html">Form</a> example.<br>
 <a href="girl.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br>
 <a href="uploadfiles.html">Upload</a> example.<br>
+<a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.custom">custom annotation</a>
 </p>
 
 <p>
