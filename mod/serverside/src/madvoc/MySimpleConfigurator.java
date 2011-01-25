@@ -3,16 +3,11 @@
 package madvoc;
 
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.petite.meta.PetiteInject;
 
 /**
  * Simple manual configuration.
  */
 public class MySimpleConfigurator extends AutomagicMadvocConfigurator {
-
-	@PetiteInject
-	MadvocConfig madvocConfig;
 
 	@Override
 	public void configure() {

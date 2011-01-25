@@ -3,7 +3,7 @@
 <body>
 	hello link<br>
 Console for chain:
-<pre style="color:white; background-color:green;">
+<pre style="color:white; background-color:darkblue;">
 	----->/hello.chain.html   [madvoc.HelloAction#chain]
 	HelloAction.chain 173
 	<----- /hello.chain.html  (chain:/hello.link.html) in 0ms.

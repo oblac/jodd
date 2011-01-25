@@ -12,7 +12,7 @@ data:
 </pre>
 
 Console:
-<pre style="color:white; background-color:green;">
+<pre style="color:white; background-color:darkblue;">
 MiscAction.view
 sessionMap = {s=100}
 contextMap = {org.apache.....}

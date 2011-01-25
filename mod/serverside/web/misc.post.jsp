@@ -2,7 +2,7 @@
 <body>
 prepare
 
-<pre style="color:white; background-color:green;">
+<pre style="color:white; background-color:darkblue;">
 ----->/misc.post.html   [madvoc.MiscAction#post]
 MiscAction.prepare
 Girl{id=1, name='database name'}

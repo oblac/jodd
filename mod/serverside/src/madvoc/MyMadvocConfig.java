@@ -8,7 +8,7 @@ import jodd.madvoc.action.DefaultActionSupplement;
 public class MyMadvocConfig extends MadvocConfig {
 
 	public MyMadvocConfig() {
-//		supplementAction = DefaultActionSupplement.class;		 if this is tuner on, then index.html has to be renamed to index.jsp
+		supplementAction = DefaultActionSupplement.class;
 		actionPathMappingEnabled = true;
 		setRootPackageOf(HelloAction.class);
 	}

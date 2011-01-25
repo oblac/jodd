@@ -21,7 +21,7 @@
 %>
 
 <h1>Form</h1>
-<small><a href="index.html">back</a></small><br>
+<small><a href="index.jsp">back</a></small><br>
 
 
 

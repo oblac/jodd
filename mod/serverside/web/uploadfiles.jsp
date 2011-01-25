@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Upload Example</h2>
-<a href="index.html">back</a><br><br>
+<a href="index.jsp">back</a><br><br>
 
 This is a multipart request example.<br>
 

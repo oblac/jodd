@@ -8,12 +8,14 @@
 <body>
 
 <img src="gfx/duke.png" align="left">
+<img src="gfx/jodd.png" align="left">
+<img src="gfx/madvoc.png" align="left">
 <h1 style="padding-top:50px;padding-left:30px;">Some <span style="color:crimson;">Jodd Madvoc</span> quick-and-dirty examples</h1>
 
 <p style="clear:both;">
-<a href="hello.world.html?name=JohnDoe&data=173">Hello world</a> - injects simple params, prepare out data and forward.<br>
+<a href="hello.world.html?name=JohnDoe&data=173">Hello world</a> - injects parameter, prepare out data and forwards.<br>
 <a href="hello.all.html?p.name=JohnDoe&p.data=13">Hello all</a> - injects bean params (also creates the target bean); then forwards to manually aliased page.<br>
-<a href="hello.again.html">Hello again</a> - no results and direct stream output.<br>
+<a href="hello.again.html">Hello again</a> - no result and direct stream output.<br>
 <br>
 
 <a href="default.html?ppp[0].name=Aaa&ppp[0].data=1&ppp[1].name=Bbb&ppp[1].data=2&ppp[2].name=Ccc&ppp[2].data=3">Default action name</a> - performs injections of the same params into list, array and map; uses default action method name that is not part of the action path.<br>
@@ -28,7 +30,7 @@
 <a href="incognito.html">Manual</a> - manual configuration, done in custom configurator.<br>
 <a href="oneRedirect.html">redirect</a> or <a href="oneMove.html">move</a> - true redirection and move: similar, but not equals.<br>
 <br>
-<a href="i_n_d_e_x.html">Url rewrite</a> - shows how urls can be rewritten in Madvoc.<br>
+<a href="r_e_w_r_i_t_e.html">Url rewrite</a> - shows how urls can be rewritten in Madvoc.<br>
 <br>
 <a href="mapped.foo.html">mapped.foo.html</a> | <a href="mapped.foo.txt">mapped.foo.txt</a> | <a href="mapped.html">mapped.html</a> |
 <a href="mapped.txt">mapped.txt</a> | <a href="mapped">mapped</a> - all action paths are automatically mapped to the existing action methods (actionPathMappingEnabled = true);
@@ -56,6 +58,10 @@
 <a href="form.html">Form</a> example.<br>
 <a href="girl.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br>
 <a href="uploadfiles.html">Upload</a> example.<br>
+</p>
+
+<p>
+this page is also an example of suplement action: it does not have an registered action method,
 </p>
 
 <h2>Info</h2>

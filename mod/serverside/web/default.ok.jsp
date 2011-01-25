@@ -6,7 +6,7 @@
 <body>
 
 Console:
-<pre style="color:white; background-color:green;">
+<pre style="color:white; background-color:darkblue;">
 	default action name
 	0 Person{name='Aaa', data=1}
 	1 Person{name='Bbb', data=2}

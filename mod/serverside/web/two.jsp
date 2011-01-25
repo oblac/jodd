@@ -5,6 +5,8 @@ value = ${value}
 Redirect:
 <pre style="color:white; background-color:green;">
 value =
+</pre>
+<pre style="color:white; background-color:darkblue;">
 
 	----->/oneRedirect.html   [madvoc.OneRedirectAction#execute]
 	redirect
@@ -20,7 +22,8 @@ value =
 Move:
 <pre style="color:white; background-color:green;">
 value = 173
-
+</pre>
+<pre style="color:white; background-color:darkblue;">
 	----->/oneMove.html   [madvoc.OneMoveAction#execute]
 	move
 	<----- /oneMove.html  (move:/%two%) in 15ms.
