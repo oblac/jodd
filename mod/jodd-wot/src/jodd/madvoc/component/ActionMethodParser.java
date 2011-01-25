@@ -3,6 +3,8 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.meta.ActionAnnotationData;
+import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
@@ -71,13 +73,21 @@ public class ActionMethodParser {
 			return null;
 		}
 
-		// method annotation: action
-		String methodActionPath = readMethodActionPath(actionMethod);
+		// method annotation: detect
+		ActionAnnotationData annotationData = null;
+		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
+			annotationData = actionAnnotation.readAnnotationData(actionMethod);
+			if (annotationData != null) {
+				break;
+			}
+		}
 
-		// read other method annotation values
-		String extension = readMethodExtension(actionMethod);
-		String alias = readMethodAlias(actionMethod);
-		String httpMethod = readMethodHttpMethod(actionMethod);
+		// read method annotation values
+		String actionMethodName = actionMethod.getName();
+		String methodActionPath = readMethodActionPath(actionMethodName, annotationData);
+		String extension = readMethodExtension(annotationData);
+		String alias = readMethodAlias(annotationData);
+		String httpMethod = readMethodHttpMethod(annotationData);
 
 		if (methodActionPath != null) {
 			// additional changes
@@ -270,16 +280,9 @@ public class ActionMethodParser {
 	/**
 	 * Reads action method.
 	 */
-	protected String readMethodActionPath(Method actionMethod) {
+	protected String readMethodActionPath(String methodName, ActionAnnotationData annotationData) {
 		// read annotation
-		Action methodAnnotation = actionMethod.getAnnotation(Action.class);
-		String methodActionPath = methodAnnotation != null ? methodAnnotation.value().trim() : null;
-		if (StringUtil.isEmpty(methodActionPath)) {
-			methodActionPath = null;
-		}
-
-		// build name
-		String methodName = actionMethod.getName();
+		String methodActionPath = annotationData != null ? annotationData.getValue() : null;
 
 		// decide
 		if (methodActionPath == null) {
@@ -289,7 +292,7 @@ public class ActionMethodParser {
 		}
 
 		// not in path
-		if (methodAnnotation != null && methodAnnotation.notInPath() == true) {
+		if (annotationData != null && annotationData.isNotInPath() == true) {
 			methodActionPath = null;
 		}
 		return methodActionPath;
@@ -298,15 +301,16 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's extension.
 	 */
-	protected String readMethodExtension(Method actionMethod) {
+	protected String readMethodExtension(ActionAnnotationData annotationData) {
 		String extension = madvocConfig.getDefaultExtension();
-		Action methodAnnotation = actionMethod.getAnnotation(Action.class);
-		if (methodAnnotation != null) {
-			String annExtension = methodAnnotation.extension().trim();
-			if (annExtension.equals(Action.NO_EXTENSION)) {
-				extension = null;
-			} else if (annExtension.length() != 0) {
-				extension = StringUtil.replace(annExtension, MACRO_EXTENSION, extension);
+		if (annotationData != null) {
+			String annExtension = annotationData.getExtension();
+			if (annExtension != null) {
+				if (annExtension.equals(Action.NO_EXTENSION)) {
+					extension = null;
+				} else {
+					extension = StringUtil.replace(annExtension, MACRO_EXTENSION, extension);
+				}
 			}
 		}
 		return extension;
@@ -315,14 +319,10 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's alias value.
 	 */
-	protected String readMethodAlias(Method actionMethod) {
+	protected String readMethodAlias(ActionAnnotationData annotationData) {
 		String alias = null;
-		Action methodAnnotation = actionMethod.getAnnotation(Action.class);
-		if (methodAnnotation != null) {
-			alias = methodAnnotation.alias().trim();
-			if (alias.length() == 0) {
-				alias = null;
-			}
+		if (annotationData != null) {
+			alias = annotationData.getAlias();
 		}
 		return alias;
 	}
@@ -330,14 +330,10 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's http method.
 	 */
-	private String readMethodHttpMethod(Method actionMethod) {
+	private String readMethodHttpMethod(ActionAnnotationData annotationData) {
 		String method = null;
-		Action methodAnnotation = actionMethod.getAnnotation(Action.class);
-		if (methodAnnotation != null) {
-			method = methodAnnotation.method().trim();
-			if (method.length() == 0) {
-				method = null;
-			}
+		if (annotationData != null) {
+			method = annotationData.getMethod();
 		}
 		return method;
 	}

@@ -8,7 +8,9 @@ import jodd.io.findfile.FindClass;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
@@ -35,6 +37,9 @@ import org.slf4j.Logger;
 public class AutomagicMadvocConfigurator extends FindClass implements MadvocConfigurator {
 
 	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
+
+	@PetiteInject
+	protected MadvocConfig madvocConfig;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -107,7 +112,7 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 
 	/**
 	 * Determines if class should be examined for Madvoc annotations.
-	 * Array, anonymouse, primitive, interfaces and so on should be
+	 * Array, anonymous, primitive, interfaces and so on should be
 	 * ignored. 
 	 */
 	public boolean checkClass(Class clazz) {
@@ -143,7 +148,14 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 		Method[] allPublicMethods = cd.getAllMethods();
 		for (Method method : allPublicMethods) {
-			if (method.getAnnotation(Action.class) == null) {
+			boolean hasAnnotation = false;
+			for (ActionAnnotation<?> actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
+				if (actionAnnotation.hasAnnotation(method)) {
+					hasAnnotation = true;
+					break;
+				}
+			}
+			if (hasAnnotation == false) {
 				continue;
 			}
 			actionsManager.register(actionClass, method);

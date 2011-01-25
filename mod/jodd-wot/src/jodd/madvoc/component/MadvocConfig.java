@@ -2,6 +2,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.ActionAnnotation;
 import jodd.servlet.upload.FileUploadFactory;
 import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -10,6 +12,7 @@ import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.util.StringPool;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -22,6 +25,7 @@ public class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
+		actionAnnotations = new Class[] {Action.class};
 		encoding = StringPool.UTF_8;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
 		defaultResultType = ServletDispatcherResult.NAME;
@@ -36,6 +40,35 @@ public class MadvocConfig {
 		actionPathMappingEnabled = false;
 		preventCaching = true;
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
+	}
+
+	// ---------------------------------------------------------------- action method annotations
+
+	protected Class<? extends Annotation>[] actionAnnotations;
+	private ActionAnnotation<?>[] actionAnnotationInstances;
+
+	public Class<? extends Annotation>[] getActionAnnotations() {
+		return actionAnnotations;
+	}
+
+	public void setActionAnnotations(Class<? extends Annotation>... actionAnnotations) {
+		this.actionAnnotations = actionAnnotations;
+		this.actionAnnotationInstances = null;
+	}
+
+	/**
+	 * Returns instances of action method annotation readers.
+	 */
+	@SuppressWarnings( {"unchecked"})
+	public ActionAnnotation<?>[] getActionAnnotationInstances() {
+		if (actionAnnotationInstances == null) {
+			actionAnnotationInstances = new ActionAnnotation<?>[actionAnnotations.length];
+			for (int i = 0; i < actionAnnotations.length; i++) {
+				Class<? extends Annotation> annotationClass = actionAnnotations[i];
+				actionAnnotationInstances[i] = new ActionAnnotation(annotationClass);
+			}
+		}
+		return actionAnnotationInstances;
 	}
 
 	// ---------------------------------------------------------------- encoding
@@ -158,13 +191,6 @@ public class MadvocConfig {
 			return null;
 		}
 		return pathAliases.get(alias);
-	}
-
-	/**
-	 * Reset all aliases.
-	 */
-	public void resetPathAliases() {
-		pathAliases.clear();
 	}
 
 	public boolean isCreateDefaultAliases() {
