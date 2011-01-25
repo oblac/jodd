@@ -4,7 +4,6 @@ package jodd.madvoc.meta;
 
 import jodd.typeconverter.Convert;
 import jodd.util.ReflectUtil;
-import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
