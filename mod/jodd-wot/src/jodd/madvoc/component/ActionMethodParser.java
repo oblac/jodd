@@ -33,7 +33,7 @@ public class ActionMethodParser {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	// ---------------------------------------------------------------- 
+	// ---------------------------------------------------------------- parse
 
 	public ActionConfig parse(Class<?> actionClass, Method actionMethod) {
 		return parse(actionClass, actionMethod, null);
