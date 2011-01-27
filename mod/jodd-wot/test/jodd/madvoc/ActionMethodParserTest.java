@@ -10,6 +10,7 @@ import jodd.madvoc.test.Boo3Action;
 import jodd.madvoc.test.BooAction;
 import jodd.madvoc.test2.Boo4Action;
 import jodd.madvoc.test2.Boo5Action;
+import jodd.madvoc.test2.ReAction;
 
 public class ActionMethodParserTest extends MadvocTestCase {
 
@@ -221,6 +222,19 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		cfg = parse(actionMethodParser, "test2.Boo5Action#foo3");
 		assertEquals("/www.html", cfg.actionPath);
 
+	}
+
+	public void testEndSlashClassName() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		madvocConfig.setRootPackageOf(this.getClass());
+
+		ActionConfig cfg = parse(actionMethodParser, "test2.ReAction#hello");
+		assertNotNull(cfg);
+		assertEquals(ReAction.class, cfg.actionClass);
+		assertEquals("/re/hello.html", cfg.actionPath);
 	}
 
 }

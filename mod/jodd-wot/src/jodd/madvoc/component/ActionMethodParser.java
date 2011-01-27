@@ -135,7 +135,10 @@ public class ActionMethodParser {
 			if (extension != null) {		// add extension
 				methodActionPath += '.' + extension;
 			}
-			actionPath += StringPool.DOT + methodActionPath; // method separator
+			if (classActionPath.endsWith(pathSeparator) == false) {
+				actionPath += StringPool.DOT;
+			}
+			actionPath += methodActionPath; // method separator
 		} else {
 			if (extension != null) {
 				actionPath += '.' + extension;
@@ -161,7 +164,7 @@ public class ActionMethodParser {
 	// ---------------------------------------------------------------- interceptors
 
 	/**
-	 * Reads class interceptors when method interceptors are not availiable.
+	 * Reads class interceptors when method interceptors are not available.
 	 */
 	protected Class<? extends ActionInterceptor>[] readClassInterceptors(Class actionClass) {
 		Class<? extends ActionInterceptor>[] result = null;
