@@ -2,13 +2,14 @@
 
 package jodd.util;
 
-import junit.framework.TestSuite;
-import junit.framework.Test;
+import jodd.util.collection.ArrayEnumerationTest;
+import jodd.util.collection.CompositeIteratorTest;
 import jodd.util.collection.IntHashMapTest;
 import jodd.util.collection.PrimitivearraysTest;
-import jodd.util.collection.CompositeIteratorTest;
-import jodd.util.collection.ArrayEnumerationTest;
+import jodd.util.collection.SortedArrayListTest;
 import jodd.util.ref.ReferenceCollectionsTest;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Faster test version for
@@ -39,6 +40,7 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(PrettyStringBuilderTest.class);
 		addTestSuite(StringBandTest.class);
 		addTestSuite(BinarySearchTest.class);
+		addTestSuite(SortedArrayListTest.class);
 	}
 
 	public static Test suite() {
