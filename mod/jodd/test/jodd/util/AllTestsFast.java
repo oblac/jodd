@@ -38,6 +38,7 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(ArrayEnumerationTest.class);
 		addTestSuite(PrettyStringBuilderTest.class);
 		addTestSuite(StringBandTest.class);
+		addTestSuite(BinarySearchTest.class);
 	}
 
 	public static Test suite() {
