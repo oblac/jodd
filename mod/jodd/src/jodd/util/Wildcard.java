@@ -38,9 +38,7 @@ public class Wildcard {
 	/**
 	 * Internal matching recursive function.
 	 */
-	private static boolean match(String string, String pattern, int stringStartNdx, int patternStartNdx) {
-		int pNdx = patternStartNdx;
-		int sNdx = stringStartNdx;
+	private static boolean match(String string, String pattern, int sNdx, int pNdx) {
 		int pLen = pattern.length();
 		if (pLen == 1) {
 			if (pattern.charAt(0) == '*') {     // speed-up
@@ -77,11 +75,11 @@ public class Wildcard {
 					continue;
 				}
 				if (p == '*') {
-					char pnext = 0;						// next pattern char
+					char pNext = 0;						// next pattern char
 					if (pNdx + 1 < pLen) {
-						pnext = pattern.charAt(pNdx + 1);
+						pNext = pattern.charAt(pNdx + 1);
 					}
-					if (pnext == '*') {					// double '*' have the same effect as one '*'
+					if (pNext == '*') {					// double '*' have the same effect as one '*'
 						pNdx++;
 						continue;
 					}
