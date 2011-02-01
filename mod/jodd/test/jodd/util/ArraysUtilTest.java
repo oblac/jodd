@@ -77,6 +77,10 @@ public class ArraysUtilTest extends TestCase {
 		assertEquals(new int[] {1,2,3,11,12,13,4,5}, ArraysUtil.insert(x, y, 3));
 		assertEquals(new int[] {11,12,13,1,2,3,4,5}, ArraysUtil.insert(x, y, 0));
 		assertEquals(new int[] {1,2,3,4,5,11,12,13}, ArraysUtil.insert(x, y, 5));
+
+		assertEquals(new int[] {1,2,3,173,4,5}, ArraysUtil.insert(x, 173, 3));
+		assertEquals(new int[] {173,1,2,3,4,5}, ArraysUtil.insert(x, 173, 0));
+		assertEquals(new int[] {1,2,3,4,5,173}, ArraysUtil.insert(x, 173, 5));
 	}
 
 	public void testInsertAt() {

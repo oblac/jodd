@@ -231,6 +231,10 @@ f.write('''
 		return insert(dest, src, offset, null);
 	}
 
+	public static <T> T[] insert(T[] dest, T src, int offset) {
+		return insert(dest, src, offset, null);
+	}
+
 	/**
 	 * Inserts one array into another.
 	 */
@@ -245,6 +249,18 @@ f.write('''
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
 		return temp;
 	}
+
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] insert(T[] dest, T src, int offset, Class componentType) {
+		if (componentType == null) {
+			componentType = dest.getClass().getComponentType();
+		}
+		T[] temp = (T[]) Array.newInstance(componentType, dest.length + 1);
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
 ''')
 template = '''
 	/**
@@ -255,6 +271,17 @@ template = '''
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static $T[] insert($T[] dest, $T src, int offset) {
+		$T[] temp = new $T[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 '''

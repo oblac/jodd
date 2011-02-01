@@ -1,5 +1,5 @@
 
-// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2011, Jodd Team (jodd.sf.net). All Rights Reserved.
 
 package jodd.util;
 
@@ -616,6 +616,10 @@ public class ArraysUtil {
 		return insert(dest, src, offset, null);
 	}
 
+	public static <T> T[] insert(T[] dest, T src, int offset) {
+		return insert(dest, src, offset, null);
+	}
+
 	/**
 	 * Inserts one array into another.
 	 */
@@ -631,6 +635,18 @@ public class ArraysUtil {
 		return temp;
 	}
 
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] insert(T[] dest, T src, int offset, Class componentType) {
+		if (componentType == null) {
+			componentType = dest.getClass().getComponentType();
+		}
+		T[] temp = (T[]) Array.newInstance(componentType, dest.length + 1);
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
+
 	/**
 	 * Inserts one array into another.
 	 */
@@ -639,6 +655,17 @@ public class ArraysUtil {
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static String[] insert(String[] dest, String src, int offset) {
+		String[] temp = new String[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 
@@ -654,6 +681,17 @@ public class ArraysUtil {
 	}
 
 	/**
+	 * Inserts one element into array.
+	 */
+	public static byte[] insert(byte[] dest, byte src, int offset) {
+		byte[] temp = new byte[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
+
+	/**
 	 * Inserts one array into another.
 	 */
 	public static char[] insert(char[] dest, char[] src, int offset) {
@@ -661,6 +699,17 @@ public class ArraysUtil {
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static char[] insert(char[] dest, char src, int offset) {
+		char[] temp = new char[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 
@@ -676,6 +725,17 @@ public class ArraysUtil {
 	}
 
 	/**
+	 * Inserts one element into array.
+	 */
+	public static short[] insert(short[] dest, short src, int offset) {
+		short[] temp = new short[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
+
+	/**
 	 * Inserts one array into another.
 	 */
 	public static int[] insert(int[] dest, int[] src, int offset) {
@@ -683,6 +743,17 @@ public class ArraysUtil {
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static int[] insert(int[] dest, int src, int offset) {
+		int[] temp = new int[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 
@@ -698,6 +769,17 @@ public class ArraysUtil {
 	}
 
 	/**
+	 * Inserts one element into array.
+	 */
+	public static long[] insert(long[] dest, long src, int offset) {
+		long[] temp = new long[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
+
+	/**
 	 * Inserts one array into another.
 	 */
 	public static float[] insert(float[] dest, float[] src, int offset) {
@@ -705,6 +787,17 @@ public class ArraysUtil {
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static float[] insert(float[] dest, float src, int offset) {
+		float[] temp = new float[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 
@@ -720,6 +813,17 @@ public class ArraysUtil {
 	}
 
 	/**
+	 * Inserts one element into array.
+	 */
+	public static double[] insert(double[] dest, double src, int offset) {
+		double[] temp = new double[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
+		return temp;
+	}
+
+	/**
 	 * Inserts one array into another.
 	 */
 	public static boolean[] insert(boolean[] dest, boolean[] src, int offset) {
@@ -727,6 +831,17 @@ public class ArraysUtil {
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
+		return temp;
+	}
+
+	/**
+	 * Inserts one element into array.
+	 */
+	public static boolean[] insert(boolean[] dest, boolean src, int offset) {
+		boolean[] temp = new boolean[dest.length + 1];
+		System.arraycopy(dest, 0, temp, 0, offset);
+		temp[offset] = src;
+		System.arraycopy(dest, offset, temp, offset + 1, dest.length - offset);
 		return temp;
 	}
 
