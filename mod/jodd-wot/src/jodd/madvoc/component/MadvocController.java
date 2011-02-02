@@ -88,7 +88,7 @@ public class MadvocController {
 
 			// build action path
 			String httpMethod = servletRequest.getMethod().toUpperCase();
-			actionPath = actionPathRewriter.rewrite(actionPath, servletRequest, httpMethod);
+			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
 			// resolve action configuration
 			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
@@ -104,7 +104,7 @@ public class MadvocController {
 
 			// create action request
 			ActionRequest previousRequest = request;
-			request = createActionRequest(actionConfig, action, servletRequest, servletResponse);
+			request = createActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
 			request.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
@@ -170,7 +170,7 @@ public class MadvocController {
 
 	/**
 	 * Resolves action config from action path and http method. Returns <code>null</code>
-	 * if action config not found. Performs initialization of founded action configig,
+	 * if action config not found. Performs initialization of founded action config,
 	 * if necessary.
 	 */
 	protected ActionConfig resolveActionConfig(String actionPath, String httpMethod) {
@@ -225,8 +225,8 @@ public class MadvocController {
 	 * @param servletResponse	http response
 	 * @return action request
 	 */
-	protected ActionRequest createActionRequest(ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		return new ActionRequest(actionConfig, action, servletRequest, servletResponse);
+	protected ActionRequest createActionRequest(String actionPath, ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		return new ActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
 	}
 
 

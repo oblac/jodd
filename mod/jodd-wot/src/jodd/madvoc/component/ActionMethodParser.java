@@ -2,6 +2,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionAnnotation;
@@ -25,10 +26,10 @@ import java.lang.reflect.Method;
  */
 public class ActionMethodParser {
 
-	protected static final String MACRO_PACKAGE = "${package}";
-	protected static final String MACRO_CLASS = "${class}";
-	protected static final String MACRO_METHOD = "${method}";
-	protected static final String MACRO_EXTENSION = "${ext}";
+	protected static final String REPL_PACKAGE = "[package]";
+	protected static final String REPL_CLASS = "[class]";
+	protected static final String REPL_METHOD = "[method]";
+	protected static final String REPL_EXTENSION = "[ext]";
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -59,11 +60,6 @@ public class ActionMethodParser {
 			interceptorClasses = readClassInterceptors(superClass != null ?  superClass : actionClass);
 		}
 
-		// action path is already specified explicitly
-		if (actionPath != null) {
-			return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath);
-		}
-
 		// action path not specified, build it
 		String packageActionPath = readPackageActionPath(superClass != null ?  superClass : actionClass);
 
@@ -91,7 +87,7 @@ public class ActionMethodParser {
 
 		if (methodActionPath != null) {
 			// additional changes
-			methodActionPath = StringUtil.replace(methodActionPath, MACRO_EXTENSION, extension);
+			methodActionPath = StringUtil.replace(methodActionPath, REPL_EXTENSION, extension);
 			// check for defaults
 			for (String path : madvocConfig.getDefaultActionMethodNames()) {
 				if (methodActionPath.equals(path)) {
@@ -101,8 +97,10 @@ public class ActionMethodParser {
 			}
 		}
 
-		// finally, build the action configuration
-		actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension, httpMethod);
+		if (actionPath == null) {
+			// finally, build the action pat if it is not already specified
+			actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension);
+		}
 		 
 		// register alias
 		if (alias != null) {
@@ -112,7 +110,7 @@ public class ActionMethodParser {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
 			madvocConfig.registerPathAlias(alias, actionPath);
 		}
-		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath);
+		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod);
 	}
 
 	/**
@@ -121,9 +119,8 @@ public class ActionMethodParser {
 	 * @param classActionPath action path from class
 	 * @param methodActionPath action path from method (optional)
 	 * @param extension extension (optional)
-	 * @param httpMethod (optional)
 	 */
-	protected String buildActionPath(String packageActionPath, String classActionPath, String methodActionPath, String extension, String httpMethod) {
+	protected String buildActionPath(String packageActionPath, String classActionPath, String methodActionPath, String extension) {
 		String pathSeparator = StringPool.SLASH;
 
 		String actionPath = classActionPath;
@@ -155,9 +152,6 @@ public class ActionMethodParser {
 			actionPath = pathSeparator + actionPath;
 		}
 
-		if (httpMethod != null) {
-			actionPath += StringPool.HASH + httpMethod;
-		}
 		return actionPath;
 	}
 
@@ -228,7 +222,7 @@ public class ActionMethodParser {
 		if (packageActionPath == null) {
 			packageActionPath = packagePath;
 		} else {
-			packageActionPath = StringUtil.replace(packageActionPath, MACRO_PACKAGE, packagePath);
+			packageActionPath = StringUtil.replace(packageActionPath, REPL_PACKAGE, packagePath);
 		}
 		return StringUtil.surround(packageActionPath, StringPool.SLASH);
 	}
@@ -249,36 +243,18 @@ public class ActionMethodParser {
 			classActionPath = null;
 		}
 
-		String name = convertClassNameToActionName(actionClass.getSimpleName());
+		String name = actionClass.getSimpleName();
+		name = StringUtil.uncapitalize(name);
+		name = MadvocUtil.stripLastCamelWord(name);
 
 		// decide
 		if (classActionPath == null) {
 			classActionPath = name;
 		} else {
-			classActionPath = StringUtil.replace(classActionPath, MACRO_CLASS, name);
+			classActionPath = StringUtil.replace(classActionPath, REPL_CLASS, name);
 		}
 		return classActionPath;
 	}
-
-	/**
-	 * Builds class action path from the class name.
-	 */
-	protected String convertClassNameToActionName(String name) {
-		name = StringUtil.uncapitalize(name);
-
-		int ndx = name.length() - 1;
-		while (ndx >= 0) {
-			if (Character.isUpperCase(name.charAt(ndx)) == true) {
-				break;
-			}
-			ndx--;
-		}
-		if (ndx >= 0) {
-			name = name.substring(0, ndx);
-		}
-		return name;
-	}
-
 
 	/**
 	 * Reads action method.
@@ -291,7 +267,7 @@ public class ActionMethodParser {
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
 		} else {
-			methodActionPath = StringUtil.replace(methodActionPath, MACRO_METHOD, methodName);
+			methodActionPath = StringUtil.replace(methodActionPath, REPL_METHOD, methodName);
 		}
 
 		// not in path
@@ -312,7 +288,7 @@ public class ActionMethodParser {
 				if (annExtension.equals(Action.NO_EXTENSION)) {
 					extension = null;
 				} else {
-					extension = StringUtil.replace(annExtension, MACRO_EXTENSION, extension);
+					extension = StringUtil.replace(annExtension, REPL_EXTENSION, extension);
 				}
 			}
 		}
@@ -346,8 +322,13 @@ public class ActionMethodParser {
 	/**
 	 * Creates new instance of action configuration.
 	 */
-	protected ActionConfig createActionConfig(Class actionClass, Method actionMethod, Class<? extends ActionInterceptor>[] interceptorClasses, String actionPath) {
-		return new ActionConfig(actionClass, actionMethod, interceptorClasses, actionPath);
+	protected ActionConfig createActionConfig(
+			Class actionClass,
+			Method actionClassMethod,
+			Class<? extends ActionInterceptor>[] interceptorClasses,
+			String actionPath,
+			String actionMethod) {
+		return new ActionConfig(actionClass, actionClassMethod, interceptorClasses, actionPath, actionMethod);
 	}
 
 }

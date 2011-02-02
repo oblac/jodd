@@ -13,6 +13,9 @@ import jodd.util.StringUtil;
  */
 public class ResultMapper {
 
+	protected static final String REPL_CLASS = "[class]";
+	protected static final String REPL_METHOD = "[method]";
+
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
@@ -71,6 +74,16 @@ public class ResultMapper {
 
 		if (resultValue != null) {
 
+			if (resultValue.indexOf('[') != -1) {
+
+				String name = cfg.actionClass.getSimpleName();
+				name = StringUtil.uncapitalize(name);
+				name = MadvocUtil.stripLastCamelWord(name);
+				resultValue = StringUtil.replace(resultValue, REPL_CLASS, name);
+
+				resultValue = StringUtil.replace(resultValue, REPL_METHOD, cfg.actionClassMethod.getName());
+			}
+
 			resultValue = resolveAlias(resultValue);
 
 			aliasResolved = true;
@@ -81,7 +94,7 @@ public class ResultMapper {
 			}
 		}
 
-		String resultPath = MadvocUtil.stripHttpMethodFromActionPath(cfg.actionPath);
+		String resultPath = cfg.actionPath;
 
 		// strip extension part
 		boolean strip = true;

@@ -3,6 +3,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.interceptor.ActionInterceptor;
+
 import java.lang.reflect.Method;
 
 /**
@@ -12,56 +13,92 @@ public class ActionConfig {
 
 	// configuration
 	public final Class actionClass;
-	public final Method actionMethod;
+	public final Method actionClassMethod;
 	public final String actionPath;
+	public final String actionMethod;
 	public final Class<? extends ActionInterceptor>[] interceptorClasses;
-	public final Class<?>[] actionParamTypes;
-
-	public ActionConfig(Class actionClass, Method actionMethod, Class<? extends ActionInterceptor>[] interceptors, String actionPath) {
-		this.actionClass = actionClass;
-		this.actionMethod = actionMethod;
-		this.actionPath = actionPath;
-		this.interceptorClasses = interceptors;
-		Class<?>[] paramTypes = actionMethod.getParameterTypes();
-		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
-	}
+	//public final Class<?>[] actionParamTypes;
 
 	// run-time data
+	protected ActionConfigSet actionConfigSet;
 	public boolean initialized;
 	public ActionInterceptor[] interceptors;
 
+	public ActionConfig(Class actionClass, Method actionClassMethod, Class<? extends ActionInterceptor>[] interceptors, String actionPath, String actionMethod) {
+		this.actionClass = actionClass;
+		this.actionClassMethod = actionClassMethod;
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.interceptorClasses = interceptors;
+//		Class<?>[] paramTypes = actionMethod.getParameterTypes();
+//		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
+	}
+
+
 	// ---------------------------------------------------------------- getters
 
+	/**
+	 * Returns action class.
+	 */
 	public Class getActionClass() {
 		return actionClass;
 	}
 
-	public Method getActionMethod() {
-		return actionMethod;
+	/**
+	 * Returns action class method.
+	 */
+	public Method getActionClassMethod() {
+		return actionClassMethod;
 	}
 
+	/**
+	 * Returns action path.
+	 */
 	public String getActionPath() {
 		return actionPath;
 	}
 
+	/**
+	 * Returns action method.
+	 */
+	public String getActionMethod() {
+		return actionMethod;
+	}
+
+	/**
+	 * Returns interceptors classes.
+	 */
 	public Class<? extends ActionInterceptor>[] getInterceptorClasses() {
 		return interceptorClasses;
 	}
 
+	/**
+	 * Returns <code>true</code> if class is initialized.
+	 */
 	public boolean isInitialized() {
 		return initialized;
 	}
 
+	/**
+	 * Marks configuration as initialized.
+	 */
 	public void initialized() {
 		initialized = true;
 	}
 
+	/**
+	 * Returns interceptor instances.
+	 */
 	public ActionInterceptor[] getInterceptors() {
 		return interceptors;
 	}
 
-	public Class<?>[] getActionParamTypes() {
-		return actionParamTypes;
+//	public Class<?>[] getActionParamTypes() {
+//		return actionParamTypes;
+//	}
+
+	public ActionConfigSet getActionConfigSet() {
+		return actionConfigSet;
 	}
 
 	// ---------------------------------------------------------------- to string
@@ -70,11 +107,12 @@ public class ActionConfig {
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
 	public String getActionString() {
-		return actionClass.getName() + '#' + actionMethod.getName();
+		return actionClass.getName() + '#' + actionClassMethod.getName();
 	}
 
 	@Override
 	public String toString() {
-		return "action: " + actionPath + "  ->  " + getActionString();
+		return "action: " + actionPath + (actionMethod == null ? "" : '#' + actionMethod) + "  -->  " + getActionString();
 	}
+
 }

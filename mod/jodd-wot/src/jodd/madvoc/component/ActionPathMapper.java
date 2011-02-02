@@ -48,48 +48,39 @@ public class ActionPathMapper {
 	// ----------------------------------------------------------------
 
 	/**
+	 * Performs action config lookup from action path and http request method.
 	 * Lookups action configuration from action path and resolves
 	 * unregistered paths. Lookup may be optionally disabled if mapping is not used.
 	 */
-	protected ActionConfig lookupActionConfig(String actionPath) {
-		ActionConfig cfg = actionsManager.lookup(actionPath);
+	public ActionConfig resolveActionConfig(String actionPath, String method) {
+
+		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+
+		ActionConfig cfg = actionsManager.lookup(actionPath, actionPathChunks, method);
+
 		if ((cfg == null) && madvocConfig.isActionPathMappingEnabled()) {
 			String packageRoot = madvocConfig.getRootPackage();
 			if (packageRoot != null) {
-				registerActionPath(actionPath, packageRoot);
-				cfg = actionsManager.lookup(actionPath);
+				cfg = registerActionPath(actionPath, packageRoot);
+//				cfg = actionsManager.lookup(actionPath, actionPathChunks);
 			}
 		}
 		if ((cfg == null) && madvocConfig.getSupplementAction() != null) {
-			registerSupplementAction(actionPath);
-			cfg = actionsManager.lookup(actionPath);
+			cfg = registerSupplementAction(actionPath);
+//			cfg = actionsManager.lookup(actionPath, actionPathChunks);
 		}
 		return cfg;
 	}
 
 	/**
-	 * Performs action config lookup from action path and http request method.
-	 */
-	public ActionConfig resolveActionConfig(String actionPath, String method) {
-		ActionConfig actionConfig = null;
-		if (method != null) {
-			actionConfig = lookupActionConfig(actionPath + StringPool.HASH + method);
-		}
-		if (actionConfig == null) {
-			actionConfig = lookupActionConfig(actionPath);
-		}
-		return actionConfig;
-	}
-
-	/**
 	 * Tries to registers action path using {@link #mapActionPathToSignature(String, String) CoC mapping}. 
 	 */
-	protected void registerActionPath(String actionPath, String packageRoot) {
+	protected ActionConfig registerActionPath(String actionPath, String packageRoot) {
 		String signature = mapActionPathToSignature(actionPath, packageRoot);
 		try {
-			actionsManager.register(signature, actionPath);
-		} catch(MadvocException mex) {
-			//ignore
+			return actionsManager.register(signature, actionPath);
+		} catch(MadvocException ignore) {
+			return null;
 		}
 	}
 
@@ -98,11 +89,6 @@ public class ActionPathMapper {
 	 * calls the {@link #buildSignature(String, String, String, String, String)}.
 	 */
 	protected String mapActionPathToSignature(String actionPath, String packageRoot) {
-
-		String httpMethod = MadvocUtil.extractHttpMethodFromActionPath(actionPath);
-		if (httpMethod != null) {
-			actionPath = actionPath.substring(0, actionPath.length() - httpMethod.length() - 1);
-		}
 
 		// package
 		int slashNdx = actionPath.lastIndexOf('/');
@@ -129,7 +115,7 @@ public class ActionPathMapper {
 			className = actionPath.substring(slashNdx + 1);
 		}
 
-		return buildSignature(packageRoot, className, methodName, extension, httpMethod);
+		return buildSignature(packageRoot, className, methodName, extension, null);
 	}
 
 	/**
@@ -155,12 +141,13 @@ public class ActionPathMapper {
 	/**
 	 * Registers supplement action for all actions that ends with default extension.
 	 */
-	protected void registerSupplementAction(String actionPath) {
+	protected ActionConfig registerSupplementAction(String actionPath) {
 		if (madvocConfig.getSupplementAction() != null) {
 			if (actionPath.endsWith('.' + madvocConfig.getDefaultExtension())) {
-				actionsManager.register(madvocConfig.getSupplementAction(), defaultMethodName1, actionPath);
+				return actionsManager.register(madvocConfig.getSupplementAction(), defaultMethodName1, actionPath);
 			}
 		}
+		return null;
 	}
 
 }

@@ -4,6 +4,7 @@ package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
@@ -41,6 +42,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
 	protected ServletContextScopeInjector servletContextScopeInjector;
+	protected ActionPathMacroInjector actionPathMacroInjector;
 
 	@Override
 	public void init() {
@@ -49,6 +51,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		applicationScopeInjector = contextInjector.getApplicationScopeInjector();
 		madvocContextScopeInjector = contextInjector.getMadvocContextScopeInjector();
 		servletContextScopeInjector = contextInjector.getServletContextScopeInjector();
+		actionPathMacroInjector = new ActionPathMacroInjector();
 	}
 
 	/**
@@ -57,7 +60,6 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse serlvetResponse = actionRequest.getHttpServletResponse();
 
 		// detect multipart request
 		if (ServletUtil.isMultipartRequest(servletRequest)) {
@@ -66,29 +68,37 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		}
 
 		// do it
-		Object target = actionRequest.getAction();
-		inject(target, servletRequest, serlvetResponse);
+		inject(actionRequest);
 		Object result = actionRequest.invoke();
-		outject(target, servletRequest, serlvetResponse);
+		outject(actionRequest);
 		return result;
 	}
 
 	/**
 	 * Performs injection.
 	 */
-	protected void inject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected void inject(ActionRequest actionRequest) {
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+
 		servletContextScopeInjector.inject(target, servletRequest, servletResponse);
 		madvocContextScopeInjector.inject(target);
 		applicationScopeInjector.inject(target, servletRequest.getSession().getServletContext());
 		sessionScopeInjector.inject(target, servletRequest);
 		requestScopeInjector.prepare(servletRequest);
 		requestScopeInjector.inject(target, servletRequest);
+		actionPathMacroInjector.inject(target, actionRequest);
 	}
 
 	/**
 	 * Performs outjection.
 	 */
-	protected void outject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected void outject(ActionRequest actionRequest) {
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+
 		servletContextScopeInjector.outject(target, servletResponse);
 		madvocContextScopeInjector.outject(target);
 		applicationScopeInjector.outject(target, servletRequest.getSession().getServletContext());

@@ -2,6 +2,8 @@
 
 package jodd.madvoc;
 
+import java.util.Arrays;
+
 public class MadvocUtilTest extends MadvocTestCase {
 
 
@@ -84,10 +86,17 @@ public class MadvocUtilTest extends MadvocTestCase {
 
 	}
 
-
-	public void testExtract() {
-		assertEquals("foo", MadvocUtil.extractHttpMethodFromActionPath("/hello#foo"));
-		assertEquals("", MadvocUtil.extractHttpMethodFromActionPath("/hello#"));
-		assertNull(MadvocUtil.extractHttpMethodFromActionPath("/hello"));
+	public void testSplitActionPath() {
+		assertTrue(Arrays.equals(new String[] {"qqq"}, MadvocUtil.splitActionPath("/qqq")));
+		assertTrue(Arrays.equals(new String[] {"qqq", "www"}, MadvocUtil.splitActionPath("/qqq/www")));
+		assertTrue(Arrays.equals(new String[] {"qqq", "www", "eee"}, MadvocUtil.splitActionPath("/qqq/www/eee")));
 	}
+
+	public void testActionName() {
+		assertEquals("foo", MadvocUtil.stripLastCamelWord("fooAction"));
+		assertEquals("foo", MadvocUtil.stripLastCamelWord("foo"));
+		assertEquals("fooBoo", MadvocUtil.stripLastCamelWord("fooBooAction"));
+		assertEquals("fooBoo", MadvocUtil.stripLastCamelWord("fooBooZoooo"));
+	}
+
 }

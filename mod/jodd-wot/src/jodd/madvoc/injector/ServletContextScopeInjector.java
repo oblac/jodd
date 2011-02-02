@@ -20,10 +20,10 @@ import javax.servlet.http.HttpSession;
 /**
  * Injects values from various Servlet contexts.
  * It may inject:
- * <p>raw servlet objects (request, session...)
- * <p>map adapters
- * <p>various values from servlet objects
- * <p>cookies
+ * <li>raw servlet objects (request, session...)
+ * <li>map adapters
+ * <li>various values from servlet objects
+ * <li>cookies
  */
 public class ServletContextScopeInjector extends BaseScopeInjector {
 

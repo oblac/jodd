@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.util.CharUtil;
 import jodd.util.StringUtil;
 
 /**
@@ -51,27 +52,28 @@ public class MadvocUtil {
 
 
 	/**
-	 * Extracts http method from action path. Returns <code>null</code>
-	 * if no http method is specified.
+	 * Removes last CamelWord
 	 */
-	public static String extractHttpMethodFromActionPath(String actionPath) {
-		int hashNdx = actionPath.indexOf('#');
-		if (hashNdx == -1) {
-			return null;
+	public static String stripLastCamelWord(String name) {
+
+		int ndx = name.length() - 1;
+		while (ndx >= 0) {
+			if (CharUtil.isUppercaseLetter(name.charAt(ndx)) == true) {
+				break;
+			}
+			ndx--;
 		}
-		return actionPath.substring(hashNdx + 1);
+		if (ndx >= 0) {
+			name = name.substring(0, ndx);
+		}
+		return name;
 	}
+
 
 	/**
-	 * Strips http method from action path.
+	 * Splits action path to chunks.
 	 */
-	public static String stripHttpMethodFromActionPath(String actionPath) {
-		int hashNdx = actionPath.indexOf('#');
-		if (hashNdx == -1) {
-			return actionPath;
-		}
-		return actionPath.substring(0, hashNdx);
+	public static String[] splitActionPath(String actionPath) {
+		return StringUtil.splitc(actionPath.substring(1), '/');
 	}
-
-
 }

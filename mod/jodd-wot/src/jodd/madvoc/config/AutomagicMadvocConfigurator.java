@@ -83,7 +83,7 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 			throw new MadvocException("Unable to scan classpath.", ex); 
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getAllActionConfigurations().size());
+		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
 	}
 
 

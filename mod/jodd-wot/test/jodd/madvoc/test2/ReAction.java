@@ -10,6 +10,37 @@ public class ReAction {
 
 	@Action
 	public void hello() {
-
 	}
+
+	@Action("user/${id}/[method]")
+	public void macro() {
+	}
+
+	@Action("user/image/${id}/${fmt}/[method]")
+	public void macro2() {
+	}
+
+	@Action(value = "users/${id}/[method]", extension = Action.NO_EXTENSION, method = "POST")
+	public void macro3() {
+	}
+
+
+	@Action("wild${id}cat")
+	public void wild1() {
+	}
+	@Action(value = "wild${id}dog", method = "POST")
+	public void wild2() {
+	}
+
+
+
+	@Action(value = "duplo/${id:^[0-9]+}", extension = Action.NO_EXTENSION)
+//	@Action(value = "duplo/${id}", extension = Action.NO_EXTENSION)
+	public void duplo2() {
+	}
+
+	@Action(value = "duplo/${sid}", extension = Action.NO_EXTENSION)
+	public void duplo1() {
+	}
+
 }

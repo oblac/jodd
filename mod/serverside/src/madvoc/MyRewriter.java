@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MyRewriter extends ActionPathRewriter {
 
 	@Override
-	public String rewrite(String actionPath, HttpServletRequest servletRequest, String httpMethod) {
+	public String rewrite(HttpServletRequest servletRequest, String actionPath, String httpMethod) {
 		return StringUtil.remove(actionPath, '_');
 	}
 

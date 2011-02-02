@@ -17,7 +17,6 @@ public abstract class MadvocTestCase extends TestCase {
 		return actionMethodParser.parse((Class) data[0], (Method) data[1]);
 	}
 
-
 	protected Object[] resolveSignature(String signature) {
 		String[] data = StringUtil.splitc(signature, '#');
 		try {

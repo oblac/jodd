@@ -18,16 +18,18 @@ import java.lang.reflect.InvocationTargetException;
 public class ActionRequest {
 
 	protected final ActionConfig config;
+	protected final String actionPath;
+	protected final String[] actionPathChunks;
 	protected HttpServletRequest serlvetRequest;
 	protected HttpServletResponse servletResponse;
-	protected Object[] params;
 
+	protected Object[] params;
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
+
 	protected Object action;
 
 	protected boolean executed;
-
 	protected String nextActionPath;
 	protected ActionRequest previousActionRequest;
 
@@ -79,7 +81,14 @@ public class ActionRequest {
 	 * Returns action path.
 	 */
 	public String getActionPath() {
-		return config.actionPath;
+		return actionPath;
+	}
+
+	/**
+	 * Returns action path chunks.
+	 */
+	public String[] getActionPathChunks() {
+		return actionPathChunks;
 	}
 
 	/**
@@ -128,7 +137,9 @@ public class ActionRequest {
 	/**
 	 * Creates new action request and action object.
 	 */
-	public ActionRequest(ActionConfig config, Object action, HttpServletRequest serlvetRequest, HttpServletResponse servletResponse) {
+	public ActionRequest(String actionPath, ActionConfig config, Object action, HttpServletRequest serlvetRequest, HttpServletResponse servletResponse) {
+		this.actionPath = actionPath;
+		this.actionPathChunks = MadvocUtil.splitActionPath(actionPath);
 		this.config = config;
 		this.serlvetRequest = serlvetRequest;
 		this.servletResponse = servletResponse;
@@ -167,7 +178,7 @@ public class ActionRequest {
 	 */
 	protected Object invokeAction() throws Exception {
 		try {
-			return config.actionMethod.invoke(action, params);
+			return config.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw ExceptionUtil.exctractTargetException(itex);
 		}

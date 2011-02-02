@@ -30,7 +30,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	 * Registers actions and applies proxeta on actions that are not already registered.
 	 */
 	@Override
-	protected synchronized void registerAction(Class actionClass, Method actionMethod, String actionPath) {
+	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, String actionPath) {
 		if (proxetta != null) {
 			// create action path from existing class (if not already exist)
 			if (actionPath == null) {
@@ -45,6 +45,6 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 			}
 			actionClass = existing;
 		}
-		super.registerAction(actionClass, actionMethod, actionPath);
+		return super.registerAction(actionClass, actionMethod, actionPath);
 	}
 }

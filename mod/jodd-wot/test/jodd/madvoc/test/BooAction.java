@@ -25,13 +25,13 @@ public class BooAction {
 	@Action(value = "/xxx", extension = "not used!", method = "DELETE")
 	public void foo41() {}
 
-	@Action(value = "/xxx.${ext}", alias = "dude", method = "POST")
+	@Action(value = "/xxx.[ext]", alias = "dude", method = "POST")
 	public void foo5() {}
 
-	@Action(value = "q${method}2")
+	@Action(value = "q[method]2")
 	public void foo6() {}
 
-	@Action(value = "/${method}.${ext}")
+	@Action(value = "/[method].[ext]")
 	public void foo7() {}
 
 	@Action(extension = Action.NO_EXTENSION)

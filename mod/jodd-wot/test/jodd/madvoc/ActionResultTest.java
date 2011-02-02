@@ -79,6 +79,7 @@ public class ActionResultTest extends MadvocTestCase {
 
 		cfg = parse(actionMethodParser, "test.BooAction#foo4");
 		assertEquals("/xxx", cfg.actionPath);
+		assertNull(cfg.actionMethod);
 
 		resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/xxx.ok", resultPath);
@@ -95,6 +96,7 @@ public class ActionResultTest extends MadvocTestCase {
 		
 		cfg = parse(actionMethodParser, "test.BooAction#foo5");
 		assertEquals("/xxx.html", cfg.actionPath);
+		assertEquals("POST", cfg.actionMethod);
 
 		resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/xxx.ok", resultPath);
@@ -189,4 +191,25 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/boo.foo2.xxx", config.lookupPathAlias(BooAction.class.getName() + "#foo2"));
 
 	}
+
+	public void testBack() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo");
+		assertEquals("/boo.foo.html", cfg.actionPath);
+
+		String resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+		assertEquals("/boo.ok", resultPath);
+
+		resultPath = resultMapper.resolveResultPath(cfg, "#[method].ok");
+		assertEquals("/boo.foo.ok", resultPath);
+
+		resultPath = resultMapper.resolveResultPath(cfg, "##[class].[method].ok");
+		assertEquals("/boo.foo.ok", resultPath);
+
+	}
+
 }

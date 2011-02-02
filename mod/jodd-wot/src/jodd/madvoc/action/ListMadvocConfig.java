@@ -70,9 +70,8 @@ public class ListMadvocConfig {
 	}
 
 	protected void collectActionConfigs() {
-		Collection<ActionConfig> values = actionsManager.getAllActionConfigurations().values();
-		actions = new ArrayList<ActionConfig>(values.size());
-		actions.addAll(values);
+		actions = actionsManager.getAllActionConfigurations();
+
 		Collections.sort(actions, new Comparator<ActionConfig>() {
 			public int compare(ActionConfig a1, ActionConfig a2) {
 				return a1.actionPath.compareTo(a2.actionPath);

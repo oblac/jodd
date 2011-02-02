@@ -13,7 +13,7 @@ public class ActionPathRewriter {
 	 * Rewrites action path.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	public String rewrite(String actionPath, HttpServletRequest servletRequest, String httpMethod) {
+	public String rewrite(HttpServletRequest servletRequest, String actionPath, String httpMethod) {
 		return actionPath;
 	}
 }
