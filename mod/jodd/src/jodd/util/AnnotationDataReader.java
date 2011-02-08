@@ -67,7 +67,6 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 		}
 
 		return createAnnotationData(annotation);
-
 	}
 
 	/**

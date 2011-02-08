@@ -5,12 +5,15 @@ package jodd.jtx.proxy;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.meta.Transaction;
+import jodd.jtx.meta.TransactionAnnotation;
+import jodd.jtx.meta.TransactionAnnotationData;
 import jodd.jtx.worker.LeanTransactionWorker;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Method;
@@ -20,7 +23,7 @@ import java.lang.reflect.Method;
  */
 public class AnnotationTxAdviceManager {
 
-	protected  static final String JTXCTX_PATTERN_CLASS = "$class";
+	protected static final String JTXCTX_PATTERN_CLASS = "$class";
 	protected static final String JTXCTX_PATTERN_METHOD = "$method";
 
 	protected final Map<String, JtxTransactionMode> txmap = new HashMap<String, JtxTransactionMode>();
@@ -30,6 +33,9 @@ public class AnnotationTxAdviceManager {
 	protected final JtxTransactionMode defaultTransactionMode;
 
 	protected final String contextPattern;
+
+	protected Class<? extends Annotation>[] annotations;
+	protected TransactionAnnotation[] annotationInstances;
 
 	// ---------------------------------------------------------------- ctors
 
@@ -53,10 +59,12 @@ public class AnnotationTxAdviceManager {
 		this(new LeanTransactionWorker(jtxManager), contextPattern, defaultTxMode);
 	}
 
+	@SuppressWarnings( {"unchecked"})
 	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, String contextPattern, JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.contextPattern = contextPattern;
+		registerAnnotations(new Class[] {Transaction.class});
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -105,12 +113,13 @@ public class AnnotationTxAdviceManager {
 				if (m == null) {
 					throw new ProxettaException("Method '" + methodName + "'not found in class: " + type.getName());
 				}
-				Transaction txAnn = m.getAnnotation(Transaction.class);
+				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
 				if (txAnn != null) {
 					txMode = new JtxTransactionMode();
-					txMode.setPropagationBehaviour(txAnn.propagation());
-					txMode.setIsolationLevel(txAnn.isolation());
-					txMode.setReadOnly(txAnn.readOnly());
+					txMode.setPropagationBehaviour(txAnn.getPropagation());
+					txMode.setIsolationLevel(txAnn.getIsolation());
+					txMode.setReadOnly(txAnn.isReadOnly());
+					txMode.setTransactionTimeout(txAnn.getTimeout());
 				} else {
 					txMode = defaultTransactionMode;
 				}
@@ -118,6 +127,36 @@ public class AnnotationTxAdviceManager {
 			}
 		}
 		return txMode;
+	}
+
+	// ---------------------------------------------------------------- tx annotations
+
+	/**
+	 * Registers tx annotations.
+	 */
+	@SuppressWarnings( {"unchecked"})
+	public void registerAnnotations(Class<? extends Annotation>... txAnnotations) {
+		this.annotations = txAnnotations;
+
+		this.annotationInstances = new TransactionAnnotation<?>[annotations.length];
+		for (int i = 0; i < annotations.length; i++) {
+			Class<? extends Annotation> annotationClass = annotations[i];
+			annotationInstances[i] = new TransactionAnnotation(annotationClass);
+		}
+
+	}
+
+	/**
+	 * Finds TX annotation.
+	 */
+	protected TransactionAnnotationData getTransactionAnnotation(Method method) {
+		for (TransactionAnnotation annotationInstance : annotationInstances) {
+			TransactionAnnotationData tad = annotationInstance.readAnnotationData(method);
+			if (tad != null) {
+				return tad;
+			}
+		}
+		return null;
 	}
 
 }
