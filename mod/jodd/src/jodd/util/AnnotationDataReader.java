@@ -56,21 +56,6 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	}
 
 	/**
-	 * Reads non-empty, trimmed, annotation element value. If annotation value is
-	 * an empty string, returns <code>null</code>.
-	 */
-	protected String readElementValue(A annotation, String name) {
-		String value = Convert.toString(ReflectUtil.readAnnotationValue(annotation, name));
-		if (value != null) {
-			value = value.trim();
-			if (value.length() == 0) {
-				value = null;
-			}
-		}
-		return value;
-	}
-
-	/**
 	 * Reads {@link AnnotationData annotation data} on provided accessible object.
 	 * If annotation is not presented, <code>null</code> is returned.
 	 */
@@ -89,6 +74,31 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * Creates annotation data from given annotation.
 	 */
 	protected abstract D createAnnotationData(A annotation);
+
+	// ---------------------------------------------------------------- read
+
+	/**
+	 * Reads non-empty, trimmed, annotation element value. If annotation value is
+	 * an empty string, returns <code>null</code>.
+	 */
+	protected String readStringElement(A annotation, String name) {
+		String value = Convert.toString(ReflectUtil.readAnnotationValue(annotation, name));
+		if (value != null) {
+			value = value.trim();
+			if (value.length() == 0) {
+				value = null;
+			}
+		}
+		return value;
+	}
+
+	/**
+	 * Reads annotation element as an object.
+	 */
+	protected Object readElement(A annotation, String name) {
+		return ReflectUtil.readAnnotationValue(annotation, name);
+	}
+
 
 	// ---------------------------------------------------------------- annotation data
 
