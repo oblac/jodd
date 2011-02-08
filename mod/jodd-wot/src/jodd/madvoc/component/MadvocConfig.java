@@ -25,7 +25,7 @@ public class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		actionAnnotations = new Class[] {Action.class};
+		setActionAnnotations(Action.class);
 		encoding = StringPool.UTF_8;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
 		defaultResultType = ServletDispatcherResult.NAME;
