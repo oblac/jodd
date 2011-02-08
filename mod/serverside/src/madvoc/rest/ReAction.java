@@ -6,7 +6,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
 
-import static jodd.madvoc.meta.Action.NO_EXTENSION;
+import static jodd.madvoc.meta.Action.IGNORE;
 
 @MadvocAction("/re/")
 public class ReAction {
@@ -14,7 +14,7 @@ public class ReAction {
 	@InOut
 	long girlId;
 
-	@Action(value = "view/${girlId}", extension = NO_EXTENSION)
+	@Action(value = "view/${girlId}", extension = IGNORE)
 	public void viewGirl() {
 		System.out.println("<1>" +girlId);
 	}
@@ -25,7 +25,7 @@ public class ReAction {
 		return "redirect:/re/view/${girlId}";
 	}
 
-	@Action(value = "view3/${girlId:^[0-9]+}", extension = NO_EXTENSION)
+	@Action(value = "view3/${girlId:^[0-9]+}", extension = IGNORE)
 	public String viewGirl3() {
 		System.out.println("<3>" + girlId);
 		return "#[method].OK";

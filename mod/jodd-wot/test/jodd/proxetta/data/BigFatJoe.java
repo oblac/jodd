@@ -38,7 +38,7 @@ public class BigFatJoe extends SmallSkinnyZoe {
 	}
 
 	@Override
-	@Action(method = "method", extension = "extension", alias = "alias", notInPath = true, value = "value")
+	@Action(method = "method", extension = "extension", alias = "alias", value = "value")
 	@PetiteInject
 	@Transaction(readOnly = true, propagation = JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW)
 	public void publicMethod() {

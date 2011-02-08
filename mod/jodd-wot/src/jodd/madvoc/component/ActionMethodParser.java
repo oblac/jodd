@@ -267,13 +267,14 @@ public class ActionMethodParser {
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
 		} else {
+
+			if (methodActionPath.equals(Action.IGNORE)) {
+				return null;
+
+			}
 			methodActionPath = StringUtil.replace(methodActionPath, REPL_METHOD, methodName);
 		}
 
-		// not in path
-		if (annotationData != null && annotationData.isNotInPath() == true) {
-			methodActionPath = null;
-		}
 		return methodActionPath;
 	}
 
@@ -285,7 +286,7 @@ public class ActionMethodParser {
 		if (annotationData != null) {
 			String annExtension = annotationData.getExtension();
 			if (annExtension != null) {
-				if (annExtension.equals(Action.NO_EXTENSION)) {
+				if (annExtension.equals(Action.IGNORE)) {
 					extension = null;
 				} else {
 					extension = StringUtil.replace(annExtension, REPL_EXTENSION, extension);

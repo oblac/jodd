@@ -55,8 +55,6 @@ public class ActionAnnotation<A extends Annotation> {
 
 		ad.extension = readElementValue(ad.annotation, "extension");
 
-		ad.notInPath = Convert.toBoolean(ReflectUtil.readAnnotationValue(ad.annotation, "notInPath"));
-
 		ad.alias = readElementValue(ad.annotation, "alias");
 
 		ad.method = readElementValue(ad.annotation, "method");

@@ -16,7 +16,7 @@ public class BooAction {
 	@Action(extension = "xxx")
 	public void foo2() {}
 
-	@Action(notInPath = true)
+	@Action(value = Action.IGNORE)
 	public void foo3() {}
 
 	@Action("/xxx")
@@ -34,7 +34,7 @@ public class BooAction {
 	@Action(value = "/[method].[ext]")
 	public void foo7() {}
 
-	@Action(extension = Action.NO_EXTENSION)
+	@Action(extension = Action.IGNORE)
 	public void foo8() {}
 
 }

@@ -20,7 +20,7 @@ public class ReAction {
 	public void macro2() {
 	}
 
-	@Action(value = "users/${id}/[method]", extension = Action.NO_EXTENSION, method = "POST")
+	@Action(value = "users/${id}/[method]", extension = Action.IGNORE, method = "POST")
 	public void macro3() {
 	}
 
@@ -34,12 +34,12 @@ public class ReAction {
 
 
 
-	@Action(value = "duplo/${id:^[0-9]+}", extension = Action.NO_EXTENSION)
+	@Action(value = "duplo/${id:^[0-9]+}", extension = Action.IGNORE)
 //	@Action(value = "duplo/${id}", extension = Action.NO_EXTENSION)
 	public void duplo2() {
 	}
 
-	@Action(value = "duplo/${sid}", extension = Action.NO_EXTENSION)
+	@Action(value = "duplo/${sid}", extension = Action.IGNORE)
 	public void duplo1() {
 	}
 

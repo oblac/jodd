@@ -12,7 +12,6 @@ public class ActionAnnotationData<A extends Annotation> {
 	protected A annotation;
 	protected String value;
 	protected String extension;
-	protected boolean notInPath;
 	protected String alias;
 	protected String method;
 
@@ -38,14 +37,6 @@ public class ActionAnnotationData<A extends Annotation> {
 
 	public void setExtension(String extension) {
 		this.extension = extension;
-	}
-
-	public boolean isNotInPath() {
-		return notInPath;
-	}
-
-	public void setNotInPath(boolean notInPath) {
-		this.notInPath = notInPath;
 	}
 
 	public String getAlias() {

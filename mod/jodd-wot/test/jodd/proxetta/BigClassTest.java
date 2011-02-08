@@ -156,7 +156,6 @@ public class BigClassTest extends TestCase {
 		assertEquals("alias", a.alias());
 		assertEquals("extension", a.extension());
 		assertEquals("method", a.method());
-		assertTrue(a.notInPath());
 		assertEquals("value", a.value());
 
 		PetiteInject pi = (PetiteInject) aa[1];

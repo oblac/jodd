@@ -20,24 +20,21 @@ import java.lang.annotation.Target;
 public @interface Action {
 
 	/**
-	 * Marker for empty action extension.
+	 * Marker for empty action method or extension.
 	 */
-	String NO_EXTENSION = StringPool.HASH;
+	String IGNORE = StringPool.HASH;
 
 	/**
-	 * Action path value.
+	 * Action path value. If equals to {@link #IGNORE} action method name
+	 * will not be part of the created action path.
 	 */
 	String value() default "";
 
 	/**
-	 * Different path extension.
+	 * Action path extension. If equals to {@link #IGNORE} extension will be not
+	 * part of created action path.
 	 */
 	String extension() default "";
-
-	/**
-	 * Specifies if action method name should be excluded from the the action path.
-	 */
-	boolean notInPath() default false;
 
 	/**
 	 * Defines alias.
