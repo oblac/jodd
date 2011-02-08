@@ -9,6 +9,7 @@ import jodd.db.orm.DbOrmManager;
 import jodd.db.orm.config.AutomagicDbOrmConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.AppUtil;
+import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.joy.petite.ProxettaAwarePetiteContainer;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.db.DbJtxSessionProvider;
@@ -167,7 +168,8 @@ public abstract class DefaultAppCore {
 	 * with <code>@Transaction</code>.
 	 */
 	protected ProxyAspect createTxProxyAspects() {
-		return new ProxyAspect(AnnotationTxAdvice.class, new MethodAnnotationPointcut(Transaction.class) {
+		return new ProxyAspect(AnnotationTxAdvice.class,
+				new MethodAnnotationPointcut(Transaction.class, ReadWriteTransaction.class) {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return
