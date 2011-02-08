@@ -51,23 +51,24 @@ public class MadvocConfig {
 		return actionAnnotations;
 	}
 
+	/**
+	 * Sets action annotations.
+	 */
+	@SuppressWarnings( {"unchecked"})
 	public void setActionAnnotations(Class<? extends Annotation>... actionAnnotations) {
 		this.actionAnnotations = actionAnnotations;
-		this.actionAnnotationInstances = null;
+
+		this.actionAnnotationInstances = new ActionAnnotation<?>[actionAnnotations.length];
+		for (int i = 0; i < actionAnnotations.length; i++) {
+			Class<? extends Annotation> annotationClass = actionAnnotations[i];
+			actionAnnotationInstances[i] = new ActionAnnotation(annotationClass);
+		}
 	}
 
 	/**
 	 * Returns instances of action method annotation readers.
 	 */
-	@SuppressWarnings( {"unchecked"})
 	public ActionAnnotation<?>[] getActionAnnotationInstances() {
-		if (actionAnnotationInstances == null) {
-			actionAnnotationInstances = new ActionAnnotation<?>[actionAnnotations.length];
-			for (int i = 0; i < actionAnnotations.length; i++) {
-				Class<? extends Annotation> annotationClass = actionAnnotations[i];
-				actionAnnotationInstances[i] = new ActionAnnotation(annotationClass);
-			}
-		}
 		return actionAnnotationInstances;
 	}
 
