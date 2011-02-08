@@ -19,7 +19,9 @@ public class Paramo {
 	protected static final String CTOR_METHOD = "<init>";
 
 	/**
-	 * Resolves parameter names from method or constructor.
+	 * Resolves parameter names from method or constructor. Returns an empty
+	 * string when target does not contain any parameter.
+	 * No caching is involved in this process, i.e. class bytecode is examined every time.
 	 */
 	public static String[] resolveParameterNames(AccessibleObject methodOrCtor) {
 		Class[] paramTypes;
@@ -36,9 +38,11 @@ public class Paramo {
 			declaringClass = constructor.getDeclaringClass();
 			name = CTOR_METHOD;
 		}
+
 		if (paramTypes.length == 0) {
 			return MethodFinder.EMPTY_NAMES;
 		}
+
 		InputStream stream;
 		try {
 			stream = ClassLoaderUtil.getClassAsStream(declaringClass);
