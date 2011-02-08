@@ -43,7 +43,7 @@ public class Paramo {
 		try {
 			stream = ClassLoaderUtil.getClassAsStream(declaringClass);
 		} catch (IOException ioex) {
-			throw new ParamoException("Unable to read class bytes.");
+			throw new ParamoException("Unable to read class bytes.", ioex);
 		}
 		try {
 			ClassReader reader = new ClassReader(stream);
