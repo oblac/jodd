@@ -2,25 +2,22 @@
 
 package jodd.madvoc.meta;
 
+import jodd.util.AnnotationDataReader;
+
 import java.lang.annotation.Annotation;
 
 /**
  * Holds action annotation values.
  */
-public class ActionAnnotationData<A extends Annotation> {
+public class ActionAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
 
-	protected A annotation;
 	protected String value;
 	protected String extension;
 	protected String alias;
 	protected String method;
 
-	public A getAnnotation() {
-		return annotation;
-	}
-
-	public void setAnnotation(A annotation) {
-		this.annotation = annotation;
+	protected ActionAnnotationData(A annotation) {
+		super(annotation);
 	}
 
 	public String getValue() {

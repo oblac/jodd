@@ -2,87 +2,48 @@
 
 package jodd.madvoc.meta;
 
-import jodd.typeconverter.Convert;
-import jodd.util.ReflectUtil;
+import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.lang.reflect.AccessibleObject;
 
 /**
  * Action method annotation reader.
  */
-public class ActionAnnotation<A extends Annotation> {
+public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader<A, ActionAnnotationData<A>> {
 
-	protected final Class<A> annotationClass;
-
-	@SuppressWarnings( {"unchecked"})
 	public ActionAnnotation() {
-		annotationClass = ReflectUtil.getGenericSupertype(this.getClass());
 	}
 
 	public ActionAnnotation(Class<A> annotationClass) {
-		this.annotationClass = annotationClass;
+		super(annotationClass);
 	}
 
 	/**
-	 * Returns annotation class.
+	 * Need to override to make java compiler happy.
 	 */
-	public Class<A> getAnnotationClass() {
-		return annotationClass;
+	@Override
+	public ActionAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
+		return super.readAnnotationData(accessibleObject);
 	}
 
 	/**
-	 * Returns <code>true</code> if annotation is present on given method.
+	 * {@inheritDoc}
 	 */
-	public boolean hasAnnotation(Method method) {
-		return method.isAnnotationPresent(annotationClass);
-	}
+	@Override
+	protected ActionAnnotationData<A> createAnnotationData(A annotation) {
 
-	/**
-	 * Reads {@link ActionAnnotationData annotation data} on provided action method.
-	 * If annotation is not presented, <code>null</code> is returned.
-	 */
-	public ActionAnnotationData<A> readAnnotationData(Method actionMethod) {
+		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
 
-		ActionAnnotationData<A> ad = createAnnotationData();
+		ad.value = readElementValue(annotation, "value");
 
-		ad.annotation = actionMethod.getAnnotation(annotationClass);
-		if (ad.annotation == null) {
-			return null;
-		}
+		ad.extension = readElementValue(annotation, "extension");
 
-		ad.value = readElementValue(ad.annotation, "value");
+		ad.alias = readElementValue(annotation, "alias");
 
-		ad.extension = readElementValue(ad.annotation, "extension");
-
-		ad.alias = readElementValue(ad.annotation, "alias");
-
-		ad.method = readElementValue(ad.annotation, "method");
+		ad.method = readElementValue(annotation, "method");
 
 		return ad;
-	}
-
-
-	/**
-	 * Creates new annotation data with optional default values.
-	 */
-	protected ActionAnnotationData<A> createAnnotationData() {
-	    return new ActionAnnotationData<A>();
-	}
-
-	/**
-	 * Reads non empty annotation element value. If annotation value is
-	 * an empty string, returns <code>null</code>.
-	 */
-	protected String readElementValue(A annotation, String name) {
-		String value = Convert.toString(ReflectUtil.readAnnotationValue(annotation, name));
-		if (value != null) {
-			value = value.trim();
-			if (value.length() == 0) {
-				value = null;
-			}
-		}
-		return value;
 	}
 
 }
