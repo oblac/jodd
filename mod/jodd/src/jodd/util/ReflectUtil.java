@@ -53,10 +53,10 @@ public class ReflectUtil {
 		try {
 			_getMethod0 = Class.class.getDeclaredMethod("getMethod0", String.class, Class[].class);
 			_getMethod0.setAccessible(true);
-		} catch (Exception e) {
+		} catch (Exception ignore) {
 			try {
 				_getMethod0 = Class.class.getMethod("getMethod", String.class, Class[].class);
-			} catch (Exception ex) {
+			} catch (Exception ignored) {
 				_getMethod0 =  null;
 			}
 		}
@@ -74,7 +74,7 @@ public class ReflectUtil {
 	public static Method getMethod0(Class c, String name, Class... parameterTypes) {
 		try {
 			return (Method) _getMethod0.invoke(c, name, parameterTypes);
-		} catch (Exception ex) {
+		} catch (Exception ignore) {
 			return null;
 		}
 	}
@@ -91,7 +91,7 @@ public class ReflectUtil {
 	public static Method getMethod0(Object o, String name, Class... parameterTypes) {
 		try {
 			return (Method) _getMethod0.invoke(o.getClass(), name, parameterTypes);
-		} catch (Exception ex) {
+		} catch (Exception ignore) {
 			return null;
 		}
 	}
