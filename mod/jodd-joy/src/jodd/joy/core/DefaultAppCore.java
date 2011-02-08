@@ -285,7 +285,9 @@ public abstract class DefaultAppCore {
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
 		jtxManager.setValidateExistingTransaction(true);
-		AnnotationTxAdviceSupport.manager = new AnnotationTxAdviceManager(jtxManager, "$class");
+		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, "$class");
+		annTxAdviceManager.registerAnnotations(Transaction.class, ReadWriteTransaction.class);
+		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
