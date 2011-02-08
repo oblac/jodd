@@ -7,7 +7,7 @@ import jodd.util.AnnotationDataReader;
 import java.lang.annotation.Annotation;
 
 /**
- * Holds action annotation values.
+ * {@link Action} annotation elements.
  */
 public class ActionAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
 
@@ -24,31 +24,16 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 		return value;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-
 	public String getExtension() {
 		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
 	}
 
 	public String getAlias() {
 		return alias;
 	}
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-
 	public String getMethod() {
 		return method;
 	}
 
-	public void setMethod(String method) {
-		this.method = method;
-	}
 }

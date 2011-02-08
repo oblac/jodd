@@ -35,13 +35,13 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
 
-		ad.value = readElementValue(annotation, "value");
+		ad.value = readStringElement(annotation, "value");
 
-		ad.extension = readElementValue(annotation, "extension");
+		ad.extension = readStringElement(annotation, "extension");
 
-		ad.alias = readElementValue(annotation, "alias");
+		ad.alias = readStringElement(annotation, "alias");
 
-		ad.method = readElementValue(annotation, "method");
+		ad.method = readStringElement(annotation, "method");
 
 		return ad;
 	}
