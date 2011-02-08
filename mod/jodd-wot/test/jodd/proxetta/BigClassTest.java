@@ -75,7 +75,6 @@ public class BigClassTest extends TestCase {
 					assertSame(ai, lookupAnnotation(mi, Action.class));
 					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
 					assertEquals("value", ai.getElement("value"));
-					assertEquals(Boolean.TRUE, ai.getElement("notInPath"));
 					assertEquals("alias", ai.getElement("alias"));
 
 					ai = anns[1];
