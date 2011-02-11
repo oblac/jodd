@@ -215,11 +215,20 @@ public abstract class DefaultAppCore {
 		pcfg.configure(petite);
 
 		// load parameters from properties files
-		Props appProps = PropsUtil.createFromClasspath("/app*.prop*");
+		Props appProps = createPetiteProps();
+		PropsUtil.loadFromClasspath(appProps, "/app*.prop*");
 		petite.defineParameters(appProps);
 
 		// add AppCore instance to Petite
 		petite.addBean(PETITE_APPCORE, this);
+	}
+
+	/**
+	 * Creates application {@link Props}. May be overridden to
+	 * configure the props features.
+	 */
+	protected Props createPetiteProps() {
+		return new Props();
 	}
 
 	/**

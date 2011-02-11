@@ -15,10 +15,9 @@ import java.io.IOException;
 public class PropsUtil {
 
 	/**
-	 * Loads props and properties from the classpath.
+	 * Loads props from classpath.
 	 */
-	public static Props createFromClasspath(String... patterns) {
-		final Props p = new Props();
+	public static void loadFromClasspath(final Props p, String... patterns) {
 		ClasspathScanner scanner = new ClasspathScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
@@ -33,7 +32,14 @@ public class PropsUtil {
 				ignoreException(true).
 				include(patterns).
 				scanFullClasspath();
-		return p;
+	}
 
+	/**
+	 * Creates new props and {@link #loadFromClasspath(Props, String...) loads from classpath}.
+	 */
+	public static Props createFromClasspath(String... patterns) {
+		final Props p = new Props();
+		loadFromClasspath(p, patterns);
+		return p;
 	}
 }

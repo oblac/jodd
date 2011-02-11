@@ -146,7 +146,7 @@ public class WebApplicationStarter {
 	}
 
 	/**
-	 * Loads Madvoc parameters.
+	 * Loads Madvoc parameters. New {@link Props} is created from the classpath.
 	 */
 	protected Props loadMadvocParams(String[] patterns) {
 		log.info("Loading Madvoc parameters from: {}", patterns);
