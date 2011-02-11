@@ -203,6 +203,15 @@ public class PropsTest extends TestCase {
 		assertEquals("valhurrey\tme!", p.getValue("key1"));
 	}
 
+	public void testDuplicate() throws IOException {
+		Props p = new Props();
+		loadProps(p, "test-dupl.props");
+
+		assertEquals("three", p.getValue("foo"));
+
+
+	}
+
 	private String readDataFile(String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
@@ -218,8 +227,7 @@ public class PropsTest extends TestCase {
 		return out.toString();
 	}
 
-	private Props loadProps(String fileName) throws IOException {
-		Props p = new Props();
+	private Props loadProps(Props p, String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";
 		dataFolder = dataFolder.replace('.', '/');
 
@@ -230,6 +238,11 @@ public class PropsTest extends TestCase {
 		}
 		p.load(is, encoding);
 		return p;
+	}
+
+	private Props loadProps(String fileName) throws IOException {
+		Props p = new Props();
+		return loadProps(p, fileName);
 	}
 
 

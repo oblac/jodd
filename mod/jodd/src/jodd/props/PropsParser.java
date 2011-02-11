@@ -7,14 +7,11 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * {@link Props} parser.
  */
-public class PropsParser {
+public class PropsParser implements Cloneable {
 
 	protected static final String PROFILE_LEFT = "<";
 	protected static final String PROFILE_RIGHT = ">";
@@ -46,13 +43,31 @@ public class PropsParser {
 	protected boolean skipEmptyProps = true;
 
 
+	protected final PropsData propsData;
 
-	protected final Map<String, PropsValue> properties;
-	protected final Map<String, Map<String, PropsValue>> profiles;
+	public PropsParser() {
+		this.propsData = new PropsData();
+	}
 
-	public PropsParser(Map<String, PropsValue> properties, Map<String, Map<String, PropsValue>> profiles) {
-		this.properties = properties;
-		this.profiles = profiles;
+	public PropsParser(PropsData propsData) {
+		this.propsData = propsData;
+	}
+
+	public PropsData getPropsData() {
+		return propsData;
+	}
+
+	@Override
+	public PropsParser clone() {
+		PropsParser pp = new PropsParser(this.propsData.clone());
+
+		pp.escapeNewLineValue = escapeNewLineValue;
+		pp.valueTrimLeft = valueTrimLeft;
+		pp.valueTrimRight = valueTrimRight;
+		pp.ignorePrefixWhitespacesOnNewLine = ignorePrefixWhitespacesOnNewLine;
+		pp.skipEmptyProps = skipEmptyProps;
+
+		return pp;
 	}
 
 	/**
@@ -235,12 +250,12 @@ public class PropsParser {
 	protected void add(String key, String value) {
 		int ndx = key.indexOf(PROFILE_LEFT);
 		if (ndx == -1) {
-			properties.put(key, new PropsValue(value));
+			propsData.putBaseProperty(key, value);
 			return;
 		}
 
 		// extract profiles
-		List<String> keyProfiles = new ArrayList<String>();
+		ArrayList<String> keyProfiles = new ArrayList<String>();
 		while (true) {
 			ndx = key.indexOf(PROFILE_LEFT);
 			if (ndx == -1) {
@@ -266,13 +281,10 @@ public class PropsParser {
 
 		// add value to extracted profiles
 		for (String p : keyProfiles) {
-			Map<String, PropsValue> map = profiles.get(p);
-			if (map == null) {
-				map = new HashMap<String, PropsValue>();
-				profiles.put(p, map);
-			}
-			map.put(key, new PropsValue(value));
+			propsData.putProfileProperty(key, value, p);
 		}
 	}
+
+
 
 }
