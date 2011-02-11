@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 
 /**
