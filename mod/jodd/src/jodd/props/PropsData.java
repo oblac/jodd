@@ -2,7 +2,9 @@
 
 package jodd.props;
 
+import jodd.bean.BeanTemplate;
 import jodd.bean.BeanTemplateResolver;
+import jodd.util.StringPool;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,9 +20,16 @@ public class PropsData implements Cloneable {
 
 	private static final int MAX_INNER_MACROS = 100;
 
+	private static final String APPEND_SEPARATOR = ",";
+
 	protected final HashMap<String, PropsValue> properties;					// base properties
 
 	protected final HashMap<String, Map<String, PropsValue>> profiles;		// profile properties
+
+	/**
+	 * If set, duplicate props will be appended to the end, separated by comma.
+	 */
+	protected boolean appendDuplicateProps;
 
 	public PropsData() {
 		this.properties = new HashMap<String, PropsValue>();
@@ -34,17 +43,36 @@ public class PropsData implements Cloneable {
 
 	@Override
 	public PropsData clone() {
-		HashMap<String, PropsValue>  newProperties = new HashMap<String, PropsValue>();
+		HashMap<String, PropsValue> newBase = new HashMap<String, PropsValue>();
 		HashMap<String, Map<String, PropsValue>> newProfiles = new HashMap<String, Map<String, PropsValue>>();
 
-		newProperties.putAll(properties);
+		newBase.putAll(properties);
 		for (Map.Entry<String, Map<String, PropsValue>> entry : profiles.entrySet()) {
 			Map<String, PropsValue> map = new HashMap<String, PropsValue>(entry.getValue().size());
 			map.putAll(entry.getValue());
 			newProfiles.put(entry.getKey(), map);
 		}
 
-		return new PropsData(newProperties, newProfiles);
+		PropsData pd = new PropsData(newBase, newProfiles);
+
+		pd.appendDuplicateProps = appendDuplicateProps;
+
+		return pd;
+	}
+
+	// ---------------------------------------------------------------- misc
+
+	/**
+	 * Puts key-value pair into the map, with respect of appending duplicate properties
+	 */
+	protected void put(Map<String, PropsValue> map, String key, String value) {
+		if (appendDuplicateProps) {
+			PropsValue pv = map.get(key);
+			if (pv != null) {
+				value = pv.value + APPEND_SEPARATOR + value;
+			}
+		}
+		map.put(key, new PropsValue(value));
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -60,7 +88,7 @@ public class PropsData implements Cloneable {
 	 * Adds base property.
 	 */
 	public void putBaseProperty(String key, String value) {
-		properties.put(key, new PropsValue(value));
+		put(properties, key, value);
 	}
 
 	/**
@@ -99,7 +127,7 @@ public class PropsData implements Cloneable {
 			map = new HashMap<String, PropsValue>();
 			profiles.put(profile, map);
 		}
-		map.put(key, new PropsValue(value));
+		put(map, key, value);
 	}
 
 	/**
@@ -165,20 +193,25 @@ public class PropsData implements Cloneable {
 				break;
 			}
 		}
-
 	}
 
 	protected boolean resolveMacros(Map<String, PropsValue> map, final String profile) {
 		boolean replaced = false;
+
 		BeanTemplateResolver resolver = new BeanTemplateResolver() {
 			public Object resolve(String name) {
 				return lookupValue(name, profile);
 			}
 		};
+
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			PropsValue pv = entry.getValue();
-			if (pv.resolveValue(resolver)) {
+			String newValue = BeanTemplate.parse(pv.value, resolver, StringPool.EMPTY);
+			if (newValue.equals(pv.value) == false) {
+				pv.resolved = newValue;
 				replaced = true;
+			} else {
+				pv.resolved = null;
 			}
 		}
 		return replaced;

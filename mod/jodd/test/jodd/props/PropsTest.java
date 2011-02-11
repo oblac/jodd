@@ -208,7 +208,14 @@ public class PropsTest extends TestCase {
 		loadProps(p, "test-dupl.props");
 
 		assertEquals("three", p.getValue("foo"));
+		assertEquals("everywhere", p.getValue("bar", "prof"));
 
+		p = new Props();
+		p.setAppendDuplicateProps(true);
+		loadProps(p, "test-dupl.props");
+
+		assertEquals("one,two,three", p.getValue("foo"));
+		assertEquals("here,there,everywhere", p.getValue("bar", "prof"));
 
 	}
 

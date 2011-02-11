@@ -122,10 +122,17 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Skip empty properties.
+	 * Skips empty properties.
 	 */
 	public void setSkipEmptyProps(boolean skipEmptyProps) {
 		parser.skipEmptyProps = skipEmptyProps;
+	}
+
+	/**
+	 * Appends duplicate props.
+	 */
+	public void setAppendDuplicateProps(boolean appendDuplicateProps) {
+		data.appendDuplicateProps = appendDuplicateProps;
 	}
 
 	// ---------------------------------------------------------------- load

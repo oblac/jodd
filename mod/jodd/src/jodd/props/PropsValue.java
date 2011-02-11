@@ -2,16 +2,12 @@
 
 package jodd.props;
 
-import jodd.bean.BeanTemplate;
-import jodd.bean.BeanTemplateResolver;
-import jodd.util.StringPool;
-
 /**
  * Holds original props value and generated one.
  */
 public class PropsValue {
 
-	PropsValue(String value) {
+	public PropsValue(String value) {
 		this.value = value;
 	}
 
@@ -31,20 +27,6 @@ public class PropsValue {
 	 */
 	public String getValue() {
 		return resolved != null ? resolved : value;
-	}
-
-	/**
-	 * Resolve value for macros. Returns <code>true</code> if
-	 * value is resolved.
-	 */
-	public boolean resolveValue(BeanTemplateResolver resolver) {
-		String newValue = BeanTemplate.parse(value, resolver, StringPool.EMPTY);
-		if (newValue.equals(value) == false) {
-			resolved = newValue;
-			return true;
-		}
-		resolved = null;
-		return false;
 	}
 
 
