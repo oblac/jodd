@@ -5,7 +5,6 @@ package jodd.servlet.tag;
 import jodd.io.FastCharArrayWriter;
 
 import javax.servlet.jsp.tagext.JspFragment;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;

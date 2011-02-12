@@ -3,7 +3,6 @@
 package jodd.datetime;
 
 import jodd.util.HashCode;
-import jodd.util.StringPool;
 import static jodd.util.HashCode.hash;
 
 import java.io.Serializable;

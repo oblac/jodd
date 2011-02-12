@@ -8,7 +8,6 @@ import jodd.util.StringPool;
 import javax.servlet.ServletContext;
 import java.util.Set;
 import java.io.InputStream;
-import java.io.IOException;
 
 /**
  * Web resources scanner.
