@@ -29,14 +29,14 @@ final class JtxResource<E> {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.jtx.JtxResource#commitTransaction()}.
+	 * Delegates to {@link jodd.jtx.JtxResourceManager#commitTransaction(Object)}.
 	 */
 	void commitTransaction() {
 		resourceManager.commitTransaction(resource);
 	}
 
 	/**
-	 * Delegates to {@link JtxResource#rollbackTransaction()}}.
+	 * Delegates to {@link JtxResourceManager#rollbackTransaction(Object)}}.
 	 */
 	void rollbackTransaction() {
 		resourceManager.rollbackTransaction(resource);

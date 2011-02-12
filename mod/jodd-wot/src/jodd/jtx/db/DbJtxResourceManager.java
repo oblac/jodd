@@ -7,7 +7,6 @@ import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxException;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.DbSession;
-import jodd.db.DbTransactionMode;
 
 /**
  * Database {@link jodd.jtx.JtxResourceManager} manages life-cycle of {@link jodd.db.DbSession} resources.
