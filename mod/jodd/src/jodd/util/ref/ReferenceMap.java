@@ -437,7 +437,7 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 	// ---------------------------------------------------------------- put strategy
 
 	protected interface Strategy {
-		public Object execute(ReferenceMap map, Object keyReference, Object valueReference);
+		Object execute(ReferenceMap map, Object keyReference, Object valueReference);
 	}
 
 	private enum PutStrategy implements Strategy {

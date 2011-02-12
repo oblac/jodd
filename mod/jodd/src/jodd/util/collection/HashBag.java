@@ -17,9 +17,9 @@ import java.util.Set;
  */
 public class HashBag<E> implements Bag<E> {
 
-	protected transient Map<E, MutableInteger> map; // map for storing data
+	protected Map<E, MutableInteger> map; // map for storing data
 	protected int size;								// current bag size
-	private transient int modCount;					// modification count for fail fast iterators
+	private int modCount;					// modification count for fail fast iterators
 
 	public HashBag() {
 		super();
@@ -123,7 +123,7 @@ public class HashBag<E> implements Bag<E> {
 	 */
 	class BagIterator<E> implements Iterator<E> {
 		private HashBag<E> parent;
-		private Iterator<java.util.Map.Entry<E, MutableInteger>> entryIterator;
+		private Iterator<Map.Entry<E, MutableInteger>> entryIterator;
 		private Map.Entry<E, MutableInteger> current;
 		private int itemCount;
 		private final int mods;
@@ -187,18 +187,18 @@ public class HashBag<E> implements Bag<E> {
 
 	 * @return <code>true</code> if the object was not already in the bag
 	 */
-	public boolean add(E object, int copies) {
-		if (copies <= 0) {
-			throw new IllegalArgumentException("Invalid number of bag element copies (" + copies + ')');
+	public boolean add(E object, int nCopies) {
+		if (nCopies <= 0) {
+			throw new IllegalArgumentException("Invalid number of bag element copies (" + nCopies + ')');
 		}
 		modCount++;
 		MutableInteger mut = map.get(object);
-		size += copies;
+		size += nCopies;
 		if (mut == null) {
-			map.put(object, new MutableInteger(copies));
+			map.put(object, new MutableInteger(nCopies));
 			return true;
 		} else {
-			mut.value += copies;
+			mut.value += nCopies;
 			return false;
 		}
 	}
@@ -254,18 +254,18 @@ public class HashBag<E> implements Bag<E> {
 	 * @return <code>true</code> if the bag changed
 	 */
 	@SuppressWarnings({"SuspiciousMethodCalls"})
-	public boolean remove(Object object, int copies) {
-		if (copies <= 0) {
-			throw new IllegalArgumentException("Invalid number of bag element copies (" + copies + ')');
+	public boolean remove(Object object, int nCopies) {
+		if (nCopies <= 0) {
+			throw new IllegalArgumentException("Invalid number of bag element copies (" + nCopies + ')');
 		}
 		MutableInteger mut = map.get(object);
 		if (mut == null) {
 			return false;
 		}
 		modCount++;
-		if (copies < mut.value) {
-			mut.value -= copies;
-			size -= copies;
+		if (nCopies < mut.value) {
+			mut.value -= nCopies;
+			size -= nCopies;
 		} else {
 			map.remove(object);
 			size -= mut.value;
