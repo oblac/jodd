@@ -687,8 +687,8 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	private static final int ENTRIES = 2;
 
 	private class IntHashIterator implements Iterator {
-		Entry[] table = IntHashMap.this.table;
-		int index = table.length;
+		Entry[] _table = IntHashMap.this.table;
+		int index = _table.length;
 		Entry entry;
 		Entry lastReturned;
 		int type;
@@ -706,7 +706,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 
 		public boolean hasNext() {
 			while (entry == null && index > 0) {
-				entry = table[--index];
+				entry = _table[--index];
 			}
 
 			return entry != null;
@@ -718,7 +718,7 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 			}
 
 			while (entry == null && index > 0) {
-				entry = table[--index];
+				entry = _table[--index];
 			}
 
 			if (entry != null) {
