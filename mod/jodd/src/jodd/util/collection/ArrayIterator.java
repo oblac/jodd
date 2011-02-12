@@ -39,7 +39,7 @@ public class ArrayIterator implements Iterator, Serializable {
 		try {
 			mCurrentElement++;
 			return mArray[mCurrentElement - 1];
-		} catch (ArrayIndexOutOfBoundsException _ex) {
+		} catch (ArrayIndexOutOfBoundsException ignored) {
 			throw new NoSuchElementException();
 		}
 	}

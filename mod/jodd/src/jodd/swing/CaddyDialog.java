@@ -79,7 +79,7 @@ public class CaddyDialog extends JDialog {
 
 	// ---------------------------------------------------------------- funcs
 
-	private void jbInit() throws Exception {
+	private void jbInit() {
 		panel1.setLayout(borderLayout1);
 		getContentPane().add(panel1);
 	}
