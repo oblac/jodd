@@ -7,11 +7,34 @@ package jodd.jtx;
  */
 public enum JtxPropagationBehavior {
 
+	/**
+	 * Support a current transaction, create a new one if none exists.
+	 */
 	PROPAGATION_REQUIRED(1),
+
+	/**
+	 * Support a current transaction, execute non-transactionally if none exists.
+	 */
 	PROPAGATION_SUPPORTS(2),
+
+	/**
+	 * Support a current transaction, throw an exception if none exists.
+	 */
 	PROPAGATION_MANDATORY(3),
+
+	/**
+	 * Create a new transaction, suspend the current transaction if one exists.
+	 */
 	PROPAGATION_REQUIRES_NEW(4),
+
+	/**
+	 * Execute non-transactionally, suspend the current transaction if one exists.
+	 */
 	PROPAGATION_NOT_SUPPORTED(5),
+
+	/**
+	 * Execute non-transactionally, throw an exception if a transaction exists.
+	 */
 	PROPAGATION_NEVER(6);
 
 	private int value;
