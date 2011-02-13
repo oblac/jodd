@@ -26,7 +26,7 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	}
 
 	/**
-	 * Creates db jtx manager and registeres new {@link DbJtxResourceManager}.
+	 * Creates db jtx manager and registers new {@link DbJtxResourceManager}.
 	 */
 	public DbJtxTransactionManager(ConnectionProvider connectionProvider) {
 		this(new DbJtxResourceManager(connectionProvider));

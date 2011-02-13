@@ -70,8 +70,8 @@ public abstract class DbHsqldbTestCase extends TestCase {
 		new DbQuery(sql).executeUpdateAndClose();
 	}
 
-	protected void executeCount(DbSession session, String s) {
-		new DbQuery(session, s).executeCountAndClose();
+	protected long executeCount(DbSession session, String s) {
+		return new DbQuery(session, s).executeCountAndClose();
 	}
 
 

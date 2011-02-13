@@ -174,7 +174,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 			assertSame(session1, session2);
 			executeCount(session1, "select count(*) from GIRL");
 			fail();
-		} catch (JtxException jtxex) {
+		} catch (JtxException ignore) {
 			
 		}
 		tx1.rollback();

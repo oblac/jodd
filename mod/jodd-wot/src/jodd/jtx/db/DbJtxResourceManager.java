@@ -7,6 +7,8 @@ import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxException;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.DbSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Database {@link jodd.jtx.JtxResourceManager} manages life-cycle of {@link jodd.db.DbSession} resources.
@@ -16,6 +18,8 @@ import jodd.db.DbSession;
  * aware of its transactional state - is it in no-transactional mode (i.e. auto-commit), or under the transaction.
  */
 public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
+
+	private static final Logger log = LoggerFactory.getLogger(DbJtxResourceManager.class);
 
 	protected final ConnectionProvider connectionProvider;
 
@@ -41,6 +45,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	public DbSession beginTransaction(JtxTransactionMode jtxMode) {
 		DbSession session = new DbSession(connectionProvider);
 		if (jtxMode.isTransactional()) {
+			log.debug("begin jtx");
 			session.beginTransaction(JtxDbUtil.convertToDbMode(jtxMode));
 		}
 		return session;
@@ -51,6 +56,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	 */
 	public void commitTransaction(DbSession resource) {
 		if (resource.isTransactionActive()) {
+			log.debug("commit jtx");
 			resource.commitTransaction();
 		}
 		resource.closeSession();
@@ -62,6 +68,7 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	public void rollbackTransaction(DbSession resource) {
 		try {
 			if (resource.isTransactionActive()) {
+				log.debug("rollback tx");
 				resource.rollbackTransaction();
 			}
 		} catch (Exception ex) {

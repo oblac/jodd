@@ -41,6 +41,9 @@ public class JtxTransaction {
 
 	/**
 	 * Creates new transaction. Should be invoked by {@link jodd.jtx.JtxTransactionManager}.
+	 * @param txManager jtx manager
+	 * @param mode transaction mode
+	 * @param context transaction context within transaction works
 	 */
 	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context) {
 		this.txManager = txManager;
@@ -93,7 +96,7 @@ public class JtxTransaction {
 
 	/**
 	 * Returns <code>true</code> if transaction is explicitly forbidden, i.e.
-	 * session is in auto-commit mode, or not started yet.
+	 * session is in <b>auto-commit</b> mode or not started yet.
 	 */
 	public boolean isNoTransaction() {
 		return status == STATUS_NO_TRANSACTION;
@@ -207,7 +210,7 @@ public class JtxTransaction {
 		if (doCommit == true) {
 			commitAllResources();
 		} else {
-			rolbackAllResources(forcedRollback);
+			rollbackAllResources(forcedRollback);
 		}
 	}
 
@@ -247,7 +250,7 @@ public class JtxTransaction {
 	 * Rollbacks all attached resources. Resource will be closed. and detached from this transaction.
 	 * If exception occurs, it will be rethrown at the end.
 	 */
-	protected void rolbackAllResources(boolean wasForced) {
+	protected void rollbackAllResources(boolean wasForced) {
 		status = STATUS_ROLLING_BACK;
 		Exception lastException = null;
 		Iterator<JtxResource> it = resources.iterator();
