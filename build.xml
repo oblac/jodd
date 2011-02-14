@@ -278,11 +278,12 @@
 	<target name="findbugs.jodd" depends="build.jodd" description="creates findbugs report for module: jodd">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
-		<mkdir dir="${jodd.findbugs.dir}"/> 
+		<mkdir dir="${jodd.findbugs.dir}"/>
 		<findbugs home="${findbugs.home}"
 				  output="html"
 				  outputFile="${jodd.findbugs.dir}/findbugs.html"
 				  effort="max"
+				  excludeFilter="etc/findbugs-exclude.xml"
 				  jvmargs="-Xmx256m">
 			<auxClasspath>
 				<path refid="jodd.production.classpath"/>
@@ -504,11 +505,12 @@
 	<target name="findbugs.jodd-wot" depends="build.jodd-wot" description="creates findbugs report for module: jodd-wot">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
-		<mkdir dir="${jodd-wot.findbugs.dir}"/> 
+		<mkdir dir="${jodd-wot.findbugs.dir}"/>
 		<findbugs home="${findbugs.home}"
 				  output="html"
 				  outputFile="${jodd-wot.findbugs.dir}/findbugs.html"
 				  effort="max"
+				  excludeFilter="etc/findbugs-exclude.xml"
 				  jvmargs="-Xmx256m">
 			<auxClasspath>
 				<path refid="jodd-wot.production.classpath"/>

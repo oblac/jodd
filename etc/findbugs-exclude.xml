@@ -1,0 +1,88 @@
+<FindBugsFilter>
+
+	<Match>
+		<Class name="jodd.util.collection.StringKeyedMapAdapter$1"/>
+		<Method name="equals"/>
+		<Bug pattern="BC_EQUALS_METHOD_SHOULD_WORK_FOR_ALL_OBJECTS"/>
+		<!--
+		Locally used, will never be used outside.
+		-->
+	</Match>
+
+
+	<Match>
+		<Class name="jodd.props.PropsData"/>
+		<Method name="clone"/>
+		<Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
+		<!--
+		Can't call clone because of final fields.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.props.PropsParser"/>
+		<Method name="clone"/>
+		<Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
+		<!--
+		Can't call clone because of final fields.
+		-->
+	</Match>
+
+
+	<Match>
+		<Class name="jodd.mutable.MutableBoolean"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableByte"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableDouble"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableFloat"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableInteger"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableLong"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.mutable.MutableShort"/>
+		<Method name="equals"/>
+		<Bug pattern="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS"/>
+		<!--
+		Done by purpose, since mutable *value* should be equal to non-mutable.
+		-->
+	</Match>
+
+</FindBugsFilter>
