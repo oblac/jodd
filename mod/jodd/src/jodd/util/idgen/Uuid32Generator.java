@@ -32,7 +32,7 @@ public class Uuid32Generator {
 			InetAddress addr = InetAddress.getLocalHost();
 			byte[] ipaddr = addr.getAddress();
 			for (byte anIpaddr : ipaddr) {
-				Byte b = new Byte(anIpaddr);
+				Byte b = Byte.valueOf(anIpaddr);
 				strTemp = Integer.toHexString(b.intValue() & 0x000000ff);
 				strRetVal.append(ZEROS.substring(0, 2 - strTemp.length()));
 				strRetVal.append(strTemp);

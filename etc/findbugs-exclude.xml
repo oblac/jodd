@@ -85,4 +85,24 @@
 		-->
 	</Match>
 
+
+	<Match>
+		<Class name="jodd.io.FileMonitor"/>
+		<Method name="monitorFile"/>
+		<Bug pattern="DM_NUMBER_CTOR"/>
+		<!--
+		Here we create a long from System.currentTimeMillis, and that will be
+		more efficient than Long.valueOf().
+		-->
+	</Match>
+	<Match>
+		<Class name="jodd.io.FileMonitor$FileMonitorNotifier"/>
+		<Method name="run"/>
+		<Bug pattern="DM_NUMBER_CTOR"/>
+		<!--
+		Here we create a long from System.currentTimeMillis, and that will be
+		more efficient than Long.valueOf().
+		-->
+	</Match>
+
 </FindBugsFilter>

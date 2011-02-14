@@ -2,8 +2,6 @@
 
 package jodd.format;
 
-import jodd.util.StringPool;
-
 /**
  * Works with roman numbers.
  */
@@ -16,15 +14,15 @@ public class RomanNumber {
 	 * Converts to roman number.
 	 */
 	public static String romanize(int value) {
-		String roman = StringPool.EMPTY;
+		StringBuilder roman = new StringBuilder();
 		int n = value;
 		for (int i = 0; i < LETTERS.length; i++) {
 			while (n >= VALUES[i]) {
-				roman += LETTERS[i];
+				roman.append(LETTERS[i]);
 				n -= VALUES[i];
 			}
 		}
-		return roman;
+		return roman.toString();
 	}
 
 	/**
