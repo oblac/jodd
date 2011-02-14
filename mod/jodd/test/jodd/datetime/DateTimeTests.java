@@ -5,9 +5,9 @@ package jodd.datetime;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class DateTimeTests extends TestSuite {
 
-	public AllTests() {
+	public DateTimeTests() {
 		super("jodd.datetime test suite");
 		addTestSuite(TimeUtilTest.class);
 		addTestSuite(JDateTimeTest.class);
@@ -23,6 +23,6 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new DateTimeTests();
 	}
 }

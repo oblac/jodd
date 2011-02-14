@@ -5,15 +5,15 @@ package jodd.introspector;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class IntrospectorTests extends TestSuite {
 
-	public AllTests() {
+	public IntrospectorTests() {
 		super("jodd.introspector test suite");
 		addTestSuite(IntrospectorTest.class);
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new IntrospectorTests();
 	}
 
 }

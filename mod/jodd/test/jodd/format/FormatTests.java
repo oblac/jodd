@@ -5,15 +5,15 @@ package jodd.format;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class FormatTests extends TestSuite {
 
-	public AllTests() {
+	public FormatTests() {
 		super("jodd.format test suite");
 		addTestSuite(FormatTest.class);
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new FormatTests();
 	}
 
 }

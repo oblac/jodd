@@ -5,15 +5,15 @@ package jodd.props;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class PropsTests extends TestSuite {
 
-	public AllTests() {
+	public PropsTests() {
 		super("jodd.props test suite");
 		addTestSuite(PropsTest.class);
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new PropsTests();
 	}
 
 }

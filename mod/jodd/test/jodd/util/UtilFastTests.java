@@ -6,17 +6,16 @@ import jodd.util.collection.ArrayEnumerationTest;
 import jodd.util.collection.CompositeIteratorTest;
 import jodd.util.collection.IntHashMapTest;
 import jodd.util.collection.PrimitivearraysTest;
-import jodd.util.collection.SortedArrayListTest;
 import jodd.util.ref.ReferenceCollectionsTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
- * Faster test version for
+ * Faster test version for util package.
  */
-public class AllTestsFast extends TestSuite {
+public class UtilFastTests extends TestSuite {
 
-	public AllTestsFast() {
+	public UtilFastTests() {
 		super("jodd.util test suite");
 		addTestSuite(IntHashMapTest.class);
 		addTestSuite(StringUtilTest.class);
@@ -40,10 +39,9 @@ public class AllTestsFast extends TestSuite {
 		addTestSuite(PrettyStringBuilderTest.class);
 		addTestSuite(StringBandTest.class);
 		addTestSuite(BinarySearchTest.class);
-		addTestSuite(SortedArrayListTest.class);
 	}
 
 	public static Test suite() {
-		return new AllTestsFast();
+		return new UtilFastTests();
 	}
 }

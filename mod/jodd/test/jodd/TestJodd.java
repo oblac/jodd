@@ -2,6 +2,8 @@
 
 package jodd;
 
+import jodd.datetime.DateTimeTests;
+import jodd.util.UtilTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -12,8 +14,8 @@ public class TestJodd {
 
 	public static Test suite() {
 		TestSuite suite = TestJoddFast.suite();
-		suite.addTest(jodd.datetime.AllTests.suite());
-		suite.addTest(jodd.util.AllTests.suite());
+		suite.addTest(DateTimeTests.suite());
+		suite.addTest(UtilTests.suite());
 		return suite;
 	}
 }

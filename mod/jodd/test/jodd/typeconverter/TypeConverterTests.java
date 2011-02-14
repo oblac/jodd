@@ -5,9 +5,9 @@ package jodd.typeconverter;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class TypeConverterTests extends TestSuite {
 
-	public AllTests() {
+	public TypeConverterTests() {
 		super("jodd.typeconverter test suite");
 		addTestSuite(BigDecimalConverterTest.class);
 		addTestSuite(BigIntegerConverterTest.class);
@@ -43,7 +43,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new TypeConverterTests();
 	}
 	
 }

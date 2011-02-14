@@ -2,25 +2,35 @@
 
 package jodd;
 
+import jodd.bean.BeanTests;
+import jodd.cache.CacheTests;
+import jodd.format.FormatTests;
+import jodd.introspector.IntrospectorTests;
+import jodd.io.IoTests;
+import jodd.props.PropsTests;
+import jodd.servlet.ServletTests;
+import jodd.typeconverter.TypeConverterTests;
+import jodd.util.UtilFastTests;
 import junit.framework.TestSuite;
 
 /**
- * Faster test suite test.
+ * Faster test suite test. Convenient for quick tests in IntelliJ
+ * with code-coverage turned on.
  */
 public class TestJoddFast {
 
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Jodd Java Library Test Suite");
-		suite.addTest(jodd.bean.AllTests.suite());
-		suite.addTest(jodd.cache.AllTests.suite());
-		suite.addTest(jodd.introspector.AllTests.suite());
-		suite.addTest(jodd.io.AllTests.suite());
-		suite.addTest(jodd.format.AllTests.suite());
-		suite.addTest(jodd.props.AllTests.suite());
-		suite.addTest(jodd.servlet.AllTests.suite());
-		suite.addTest(jodd.util.AllTestsFast.suite());
-		suite.addTest(jodd.typeconverter.AllTests.suite());
-		suite.addTest(jodd.props.AllTests.suite());
+		suite.addTest(BeanTests.suite());
+		suite.addTest(CacheTests.suite());
+		suite.addTest(IntrospectorTests.suite());
+		suite.addTest(IoTests.suite());
+		suite.addTest(FormatTests.suite());
+		suite.addTest(PropsTests.suite());
+		suite.addTest(ServletTests.suite());
+		suite.addTest(UtilFastTests.suite());
+		suite.addTest(TypeConverterTests.suite());
+		suite.addTest(PropsTests.suite());
 		return suite;
 	}
 }

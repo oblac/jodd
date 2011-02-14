@@ -5,9 +5,9 @@ package jodd.cache;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 
-public class AllTests extends TestSuite {
+public class CacheTests extends TestSuite {
 
-	public AllTests() {
+	public CacheTests() {
 		super("jodd.cache test suite");
 		addTestSuite(LFUCacheTest.class);
 		addTestSuite(LRUCacheTest.class);
@@ -15,7 +15,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new CacheTests();
 	}
 
 }
