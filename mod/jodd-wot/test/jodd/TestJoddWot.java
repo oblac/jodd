@@ -14,6 +14,7 @@ public class TestJoddWot {
 		TestSuite suite = new TestSuite("Jodd WOT Java Library Test Suite");
 		suite.addTest(jodd.db.AllTests.suite());
 		suite.addTest(jodd.db.orm.AllTests.suite());
+		suite.addTest(jodd.jtx.AllTests.suite());
 		suite.addTest(jodd.petite.AllTests.suite());
 		suite.addTest(jodd.madvoc.AllTests.suite());
 		suite.addTest(jodd.proxetta.AllTests.suite());
