@@ -8,6 +8,14 @@
 		Locally used, will never be used outside.
 		-->
 	</Match>
+	<Match>
+		<Class name="jodd.util.collection.StringKeyedMapAdapter$1"/>
+		<Method name="equals"/>
+		<Bug pattern="NP_EQUALS_SHOULD_HANDLE_NULL_ARGUMENT"/>
+		<!--
+		Locally used, it's never null.
+		-->
+	</Match>
 
 
 	<Match>
