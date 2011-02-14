@@ -94,18 +94,6 @@
 	<path id="lib.asm">
 		<fileset dir="${basedir}/lib/asm" includes="**/*.jar"/>
 	</path>
-	<path id="lib.junit">
-		<fileset dir="${basedir}/lib/junit" includes="**/*.jar"/>
-	</path>
-	<path id="lib.emma">
-		<fileset dir="${basedir}/lib/emma" includes="**/*.jar"/>
-	</path>
-	<path id="lib.hsqldb">
-		<fileset dir="${basedir}/lib/hsqldb" includes="**/*.jar"/>
-	</path>
-	<path id="lib.h2">
-		<fileset dir="${basedir}/lib/h2" includes="**/*.jar"/>
-	</path>
 	<path id="lib.mail">
 		<fileset dir="${basedir}/lib/mail" includes="**/*.jar"/>
 	</path>
@@ -114,6 +102,9 @@
 	</path>
 	<path id="lib.slf4j">
 		<fileset dir="${basedir}/lib/slf4j" includes="**/*.jar"/>
+	</path>
+	<path id="lib.test">
+		<fileset dir="${basedir}/lib/test" includes="**/*.jar"/>
 	</path>
 
 
@@ -176,8 +167,7 @@
 		<path path="${jodd.production.out.dir}"/>
 		<path refid="lib.mail"/>
 		<path refid="lib.servlets"/>
-		<path refid="lib.junit"/>
-		<path refid="lib.emma"/>
+		<path refid="lib.test"/>
 	</path>
 
 	<!-- compile: jodd.test -->
@@ -253,7 +243,7 @@
 
 	<!-- emma: jodd -->
 
-	<taskdef resource="emma_ant.properties" classpathref="lib.emma"/>
+	<taskdef resource="emma_ant.properties" classpathref="lib.test"/>
 
 	<target name="emma-instrument.jodd" depends="build.jodd">
 		<emma>
@@ -276,7 +266,7 @@
 			</report>
 		</emma>
 	</target>
-	
+
 	<target name="emma.jodd" depends="test.jodd, emma-report.jodd" description="runs emma on test suite of module: jodd"/>
 
 	<!-- findbugs: jodd -->
@@ -403,10 +393,7 @@
 		<path path="${jodd-wot.production.out.dir}"/>
 		<path refid="lib.asm"/>
 		<path refid="lib.slf4j"/>
-		<path refid="lib.hsqldb"/>
-		<path refid="lib.h2"/>
-		<path refid="lib.junit"/>
-		<path refid="lib.emma"/>
+		<path refid="lib.test"/>
 	</path>
 
 	<!-- compile: jodd-wot.test -->
@@ -482,7 +469,7 @@
 
 	<!-- emma: jodd-wot -->
 
-	<taskdef resource="emma_ant.properties" classpathref="lib.emma"/>
+	<taskdef resource="emma_ant.properties" classpathref="lib.test"/>
 
 	<target name="emma-instrument.jodd-wot" depends="build.jodd-wot">
 		<emma>
@@ -505,7 +492,7 @@
 			</report>
 		</emma>
 	</target>
-	
+
 	<target name="emma.jodd-wot" depends="test.jodd-wot, emma-report.jodd-wot" description="runs emma on test suite of module: jodd-wot"/>
 
 	<!-- findbugs: jodd-wot -->
