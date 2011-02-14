@@ -2,17 +2,18 @@
 
 package jodd.jtx;
 
+import jodd.db.DbTests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class JtxTests extends TestSuite {
 
-	public AllTests() {
+	public JtxTests() {
 		super("jodd.jtx test suite");
 		addTestSuite(JtxManagerTest.class);
 	}
 
 	public static Test suite() {
-		return new jodd.db.AllTests();
+		return new DbTests();
 	}
 }

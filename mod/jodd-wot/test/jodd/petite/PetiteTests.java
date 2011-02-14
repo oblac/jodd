@@ -5,9 +5,9 @@ package jodd.petite;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 
-public class AllTests extends TestSuite {
+public class PetiteTests extends TestSuite {
 
-	public AllTests() {
+	public PetiteTests() {
 		super("jodd.petite test suite");
 		addTestSuite(WireTest.class);
 		addTestSuite(ScopeTest.class);
@@ -18,7 +18,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new PetiteTests();
 	}
 
 }

@@ -5,15 +5,15 @@ package jodd.paramo;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 
-public class AllTests extends TestSuite {
+public class ParamoTests extends TestSuite {
 
-	public AllTests() {
+	public ParamoTests() {
 		super("jodd.paramo test suite");
 		addTestSuite(ParamoTest.class);
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new ParamoTests();
 	}
 
 }

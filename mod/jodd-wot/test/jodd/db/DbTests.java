@@ -5,9 +5,9 @@ package jodd.db;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 
-public class AllTests extends TestSuite {
+public class DbTests extends TestSuite {
 
-	public AllTests() {
+	public DbTests() {
 		super("jodd.db test suite");
 		addTestSuite(DbQueryTest.class);
 		addTestSuite(DbMiscTest.class);
@@ -17,7 +17,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new jodd.db.AllTests();
+		return new DbTests();
 	}
 
 }

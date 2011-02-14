@@ -7,9 +7,9 @@ import junit.framework.TestSuite;
 import junit.framework.Test;
 import jodd.madvoc.component.ActionPathMapperTest;
 
-public class AllTests extends TestSuite {
+public class MadvocTests extends TestSuite {
 
-	public AllTests() {
+	public MadvocTests() {
 		super("jodd.madvoc test suite");
 		addTestSuite(ActionMethodParserTest.class);
 		addTestSuite(ActionResultTest.class);
@@ -19,7 +19,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new MadvocTests();
 	}
 
 

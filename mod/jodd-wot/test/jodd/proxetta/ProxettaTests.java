@@ -5,9 +5,9 @@ package jodd.proxetta;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 
-public class AllTests extends TestSuite {
+public class ProxettaTests extends TestSuite {
 
-	public AllTests() {
+	public ProxettaTests() {
 		super("jodd.proxetta test suite");
 		addTestSuite(SubclassTest.class);
 		addTestSuite(BigClassTest.class);
@@ -17,7 +17,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new ProxettaTests();
 	}
 
 }

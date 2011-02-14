@@ -5,9 +5,9 @@ package jodd.vtor;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests extends TestSuite {
+public class VtorTests extends TestSuite {
 
-	public AllTests() {
+	public VtorTests() {
 		super("jodd.vtor test suite");
 		addTestSuite(AnnotationTest.class);
 		addTestSuite(ManualTest.class);
@@ -15,7 +15,7 @@ public class AllTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new AllTests();
+		return new VtorTests();
 	}
 
 }
