@@ -78,7 +78,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 
 	void service0() {
 		assertTotals(0, 0);
-		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode());
+		DbJtxTransaction tx = dbtxm.requestTransaction(new JtxTransactionMode().propagationRequired());
 		assertTotals(1, 1);
 		s0 = tx.requestResource();
 		service0_1(tx);

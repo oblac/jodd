@@ -36,16 +36,18 @@ public class JtxTransaction {
 	protected final Set<JtxResource> resources;
 	protected final Object context;
 	protected final long deadline;
-	protected JtxStatus status;
+	protected final boolean startAsActive;
 	protected Throwable rollbackCause;
+	protected JtxStatus status;
 
 	/**
 	 * Creates new transaction. Should be invoked by {@link jodd.jtx.JtxTransactionManager}.
 	 * @param txManager jtx manager
 	 * @param mode transaction mode
 	 * @param context transaction context within transaction works
+	 * @param active if <code>true</code> it is an active transaction, otherwise it's not
 	 */
-	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context) {
+	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context, boolean active) {
 		this.txManager = txManager;
 		this.mode = mode;
 		this.context = context;
@@ -53,7 +55,8 @@ public class JtxTransaction {
 		this.deadline = mode.getTransactionTimeout() == DEFAULT_TIMEOUT ?
 				DEFAULT_TIMEOUT :
 				System.currentTimeMillis() + (mode.getTransactionTimeout() * 1000L);
-		this.status = mode.isNotTransactional() ? STATUS_NO_TRANSACTION : STATUS_ACTIVE;
+		this.status = active ? STATUS_ACTIVE : STATUS_NO_TRANSACTION;
+		this.startAsActive = active;
 		txManager.associateTransaction(this);
 	}
 
@@ -88,7 +91,17 @@ public class JtxTransaction {
 	}
 
 	/**
+	 * Returns <code>true</code> if transaction started as active one.
+	 * This value is never changed, while {@link #getStatus() status}
+	 * changes during the execution.
+	 */
+	public boolean isStartAsActive() {
+		return startAsActive;
+	}
+
+	/**
 	 * Returns <code>true</code> if transaction is active.
+	 * This status changes during the transaction flow.
 	 */
 	public boolean isActive() {
 		return status == STATUS_ACTIVE;
@@ -144,7 +157,6 @@ public class JtxTransaction {
 		rollbackCause = th;
 		status = STATUS_MARKED_ROLLBACK;
 	}
-
 
 	/**
 	 * Returns <code>true</code> if transaction is marked as rollback only.
@@ -299,7 +311,7 @@ public class JtxTransaction {
 				throw new JtxException("Transaction already has attached max. number of resources.");
 			}
 			JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
-			resource = resourceManager.beginTransaction(mode);
+			resource = resourceManager.beginTransaction(mode, isActive());
 			resources.add(new JtxResource<E>(this, resourceManager, resource));
 		}
 		return resource;

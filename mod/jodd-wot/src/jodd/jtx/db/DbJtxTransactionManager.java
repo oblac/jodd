@@ -52,8 +52,8 @@ public class DbJtxTransactionManager extends JtxTransactionManager {
 	 * Builds new transaction instance.
 	 */
 	@Override
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context) {
-		return new DbJtxTransaction(this, tm, context);
+	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context, boolean active) {
+		return new DbJtxTransaction(this, tm, context, active);
 	}
 
 }

@@ -29,22 +29,6 @@ public class JtxTransactionMode {
 	}
 
 	/**
-	 * Returns <code>true</code> if propagation does not requires a transaction
-	 * (PROPAGATION_NOT_SUPPORTED || PROPAGATION_NEVER).
-	 */
-	public boolean isNotTransactional() {
-		return (propagationBehavior == PROPAGATION_NOT_SUPPORTED) || (propagationBehavior == PROPAGATION_NEVER);
-	}
-
-	/**
-	 * Returns <code>true</code> if propagation requires a transaction.
-	 */
-	public boolean isTransactional() {
-		return (propagationBehavior != PROPAGATION_NOT_SUPPORTED) && (propagationBehavior != PROPAGATION_NEVER);
-	}
-
-
-	/**
 	 * Specifies new propagation behaviour.
 s	 */
 	public void setPropagationBehaviour(JtxPropagationBehavior propagation) {

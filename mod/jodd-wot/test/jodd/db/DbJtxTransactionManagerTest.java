@@ -18,7 +18,6 @@ public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 		DbSession dbSession = sessionProvider.getDbSession();
 		assertNotNull(dbSession);
 		assertEquals(1, jtxManager.totalTransactions());
-		assertEquals(1, cp.getConnectionsCount().getBusyCount());
 
 		// transaction is committed and closed
 		jtxManager.getTransaction().commit();

@@ -16,9 +16,11 @@ public interface JtxResourceManager<E> {
 
 	/**
 	 * Creates new resource and begins new transaction if specified so by
-	 * {@link JtxTransactionMode#isNotTransactional() propagation behavior}.
+	 * active flag, usually determined by propagation behavior.
+	 * Propagation behavior and timeout may be handled by the Jtx framework,
+	 * leaving resource manager to handle isolation and read only flag.
 	 */
-	E beginTransaction(JtxTransactionMode jtxMode);
+	E beginTransaction(JtxTransactionMode jtxMode, boolean active);
 
 	/**
 	 * Commits resource and closes it if committing was successful.

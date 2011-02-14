@@ -23,6 +23,7 @@ public class JtxTransactionManager {
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;
 	protected boolean validateExistingTransaction;
+	protected boolean ignoreContext;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
 	protected final ThreadLocal<LinkedList<JtxTransaction>> txStack = new ThreadLocal<LinkedList<JtxTransaction>>() {
@@ -88,6 +89,22 @@ public class JtxTransactionManager {
 	 */
 	public void setSingleResourceManager(boolean oneResourceManager) {
 		this.oneResourceManager = oneResourceManager;
+	}
+
+	/**
+	 * Returns if transaction context should be ignored.
+	 */
+	public boolean isIgnoreContext() {
+		return ignoreContext;
+	}
+
+	/**
+	 * Sets if transaction context should be ignored. If ignored,
+	 * there may be more then one transaction over one context.
+	 * Context also may be ignored if set to <code>null</code>
+	 */
+	public void setIgnoreContext(boolean ignoreContext) {
+		this.ignoreContext = ignoreContext;
 	}
 
 	// ---------------------------------------------------------------- count
@@ -178,8 +195,8 @@ public class JtxTransactionManager {
 	 * Custom implementations of manager may override this method for
 	 * creating custom transaction instances.
 	 */
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context) {
-		return new JtxTransaction(this, tm, context);
+	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context, boolean active) {
+		return new JtxTransaction(this, tm, context, active);
 	}
 
 
@@ -191,7 +208,8 @@ public class JtxTransactionManager {
 
 	/**
 	 * Requests transaction with specified {@link JtxTransactionMode mode}.
-	 * Depending on propagation behavior, it will return either existing or new transaction.
+	 * Depending on propagation behavior, it will return either <b>existing<b> or <b>new</b> transaction.
+	 * Only one transaction can be opened over one context.
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
 	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object context) {
@@ -217,6 +235,9 @@ public class JtxTransactionManager {
 	 * Returns <code>true</code> if context is specified and it is different then of existing transaction.
 	 */
 	protected boolean checkValidTxContext(JtxTransaction currentTx, Object destContext) {
+		if (ignoreContext == true) {
+			return true;
+		}
 		if (currentTx == null) {
 			return true;
 		}
@@ -261,7 +282,7 @@ public class JtxTransactionManager {
 	 */
 	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
 		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
-			currentTx = createNewTransaction(mode, context);
+			currentTx = createNewTransaction(mode, context, true);
 		} else {
 			continueTx(currentTx, mode);
 		}
@@ -277,7 +298,7 @@ public class JtxTransactionManager {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected JtxTransaction propRequiresNew(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
-		return createNewTransaction(mode, context);
+		return createNewTransaction(mode, context, true);
 	}
 
 	/**
@@ -292,7 +313,7 @@ public class JtxTransactionManager {
 			continueTx(currentTx, mode);
 		}
 		if (currentTx == null) {
-			currentTx = createNewTransaction(mode, context);
+			currentTx = createNewTransaction(mode, context, false);
 		}
 		return currentTx;
 	}
@@ -322,12 +343,12 @@ public class JtxTransactionManager {
 	 */
 	protected JtxTransaction propNotSupported(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
 		if (currentTx == null) {
-			return createNewTransaction(mode, context);
+			return createNewTransaction(mode, context, false);
 		}
 		if (currentTx.isNoTransaction() == true) {
 			return currentTx;
 		}
-		return createNewTransaction(mode, context);
+		return createNewTransaction(mode, context, false);
 	}
 
 	/**
@@ -342,7 +363,7 @@ public class JtxTransactionManager {
 			throw new JtxException("Existing transaction found for transaction marked with propagation 'never'.");
 		}
 		if (currentTx == null) {
-			currentTx = createNewTransaction(mode, context);
+			currentTx = createNewTransaction(mode, context, false);
 		}
 		return currentTx;
 	}

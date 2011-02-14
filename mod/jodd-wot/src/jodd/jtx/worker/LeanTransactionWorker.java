@@ -67,7 +67,9 @@ public class LeanTransactionWorker {
 		if (tx == null) {
 			return false;
 		}
-		log.info("commit tx");
+		if (log.isDebugEnabled()) {
+			log.debug("commit tx");
+		}
 		tx.commit();
 		return true;
 	}
@@ -78,14 +80,19 @@ public class LeanTransactionWorker {
 	 * Returns <code>true</code> if transaction was actually roll backed.
 	 */
 	public boolean markOrRollbackTransaction(JtxTransaction tx, Throwable cause) {
-		log.error("rollback tx", cause);
 		if (tx == null) {
 			tx = getCurrentTransaction();
 			if (tx == null) {
 				return false;
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("set rollback only tx");
+			}
 			tx.setRollbackOnly(cause);
 			return false;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("rollback tx");
 		}
 		tx.rollback();
 		return true;

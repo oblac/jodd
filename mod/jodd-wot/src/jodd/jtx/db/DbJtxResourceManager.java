@@ -42,9 +42,9 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public DbSession beginTransaction(JtxTransactionMode jtxMode) {
+	public DbSession beginTransaction(JtxTransactionMode jtxMode, boolean active) {
 		DbSession session = new DbSession(connectionProvider);
-		if (jtxMode.isTransactional()) {
+		if (active) {
 			log.debug("begin jtx");
 			session.beginTransaction(JtxDbUtil.convertToDbMode(jtxMode));
 		}
