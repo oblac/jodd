@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class Base64 {
 
-	public static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+	private static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 	private static final int[] INV = new int[256];
 
 	static {
@@ -24,12 +24,19 @@ public class Base64 {
 		INV['='] = 0;
 	}
 
+	/**
+	 * Returns Base64 characters, a clone of used array.
+	 */
+	public static char[] getBase64Chars() {
+		return CHARS.clone();
+	}
+
 	// ---------------------------------------------------------------- char[]
 
 	public static char[] encodeToChar(String s) {
 		try {
 			return encodeToChar(s.getBytes(JoddDefault.encoding), false);
-		} catch (UnsupportedEncodingException unex) {
+		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
@@ -127,7 +134,7 @@ public class Base64 {
 	public static byte[] encodeToByte(String s) {
 		try {
 			return encodeToByte(s.getBytes(JoddDefault.encoding), false);
-		} catch (UnsupportedEncodingException unex) {
+		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
@@ -224,14 +231,14 @@ public class Base64 {
 	public static String encodeToString(String s) {
 		try {
 			return new String(encodeToChar(s.getBytes(JoddDefault.encoding), false));
-		} catch (UnsupportedEncodingException unex) {
+		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
 	public static String decodeToString(String s) {
 		try {
 			return new String(decode(s), JoddDefault.encoding);
-		} catch (UnsupportedEncodingException unex) {
+		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}

@@ -36,7 +36,7 @@ public class Uuid24Generator {
 		return unisgnedValueOf(id1) + unisgnedValueOf(id3);
 	}
 
-	private static final char[] chars64 = Base64.CHARS;
+	private static final char[] CHARS64 = Base64.getBase64Chars();
 	
 	private static String unisgnedValueOf(long l) {
 		char[] buf = new char[64];
@@ -44,7 +44,7 @@ public class Uuid24Generator {
 		int radix = 1 << 6;
 		long mask = radix - 1;
 		do {
-			buf[--charNdx] = chars64[(int)(l & mask)];
+			buf[--charNdx] = CHARS64[(int)(l & mask)];
 			l >>>= 6;
 		} while (l != 0);
 		return new String(buf, charNdx, (64 - charNdx));

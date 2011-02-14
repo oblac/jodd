@@ -105,4 +105,14 @@
 		-->
 	</Match>
 
+
+	<Match>
+		<Class name="jodd.typeconverter.impl.BooleanConverter"/>
+		<Method name="valueOf"/>
+		<Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
+		<!--
+		Returns null by purpose.
+		-->
+	</Match>
+
 </FindBugsFilter>
