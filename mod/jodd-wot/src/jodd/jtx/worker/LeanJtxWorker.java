@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
  * in several places, usually in separated methods. This worker knows when requested transaction is
  * the same as current one, or completely new. It might be useful for aspects.
  */
-public class LeanTransactionWorker {
+public class LeanJtxWorker {
 
-	private static final Logger log = LoggerFactory.getLogger(LeanTransactionWorker.class);
+	private static final Logger log = LoggerFactory.getLogger(LeanJtxWorker.class);
 
 	protected final JtxTransactionManager txManager;
 
-	public LeanTransactionWorker(JtxTransactionManager txManager) {
+	public LeanJtxWorker(JtxTransactionManager txManager) {
 		this.txManager = txManager;
 	}
 

@@ -7,7 +7,7 @@ import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.meta.TransactionAnnotation;
 import jodd.jtx.meta.TransactionAnnotationData;
-import jodd.jtx.worker.LeanTransactionWorker;
+import jodd.jtx.worker.LeanJtxWorker;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.ProxettaException;
@@ -28,7 +28,7 @@ public class AnnotationTxAdviceManager {
 
 	protected final Map<String, JtxTransactionMode> txmap = new HashMap<String, JtxTransactionMode>();
 
-	protected final LeanTransactionWorker jtxWorker;
+	protected final LeanJtxWorker jtxWorker;
 
 	protected final JtxTransactionMode defaultTransactionMode;
 
@@ -40,27 +40,27 @@ public class AnnotationTxAdviceManager {
 	// ---------------------------------------------------------------- ctors
 
 	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager) {
-		this(new LeanTransactionWorker(jtxManager));
+		this(new LeanJtxWorker(jtxManager));
 	}
 	
-	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker) {
+	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker) {
 		this(jtxWorker, JTXCTX_PATTERN_CLASS + '#' + JTXCTX_PATTERN_METHOD, null);
 	}
 
 	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern) {
-		this(new LeanTransactionWorker(jtxManager), contextPattern);
+		this(new LeanJtxWorker(jtxManager), contextPattern);
 	}
 
-	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, String contextPattern) {
+	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String contextPattern) {
 		this(jtxWorker, contextPattern, null);
 	}
 
 	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern, JtxTransactionMode defaultTxMode) {
-		this(new LeanTransactionWorker(jtxManager), contextPattern, defaultTxMode);
+		this(new LeanJtxWorker(jtxManager), contextPattern, defaultTxMode);
 	}
 
 	@SuppressWarnings( {"unchecked"})
-	public AnnotationTxAdviceManager(LeanTransactionWorker jtxWorker, String contextPattern, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String contextPattern, JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
 		this.contextPattern = contextPattern;
@@ -72,7 +72,7 @@ public class AnnotationTxAdviceManager {
 	/**
 	 * Returns tx worker.
 	 */
-	public LeanTransactionWorker getJtxWorker() {
+	public LeanJtxWorker getJtxWorker() {
 		return jtxWorker;
 	}
 

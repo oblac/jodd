@@ -6,7 +6,7 @@ import jodd.jtx.JtxException;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.db.DbJtxSessionProvider;
-import jodd.jtx.worker.LeanTransactionWorker;
+import jodd.jtx.worker.LeanJtxWorker;
 
 public class DbPropagationTest extends DbHsqldbTestCase {
 
@@ -20,7 +20,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequired() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required - commit
@@ -53,7 +53,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToRequiredCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -89,7 +89,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToRequiredRollback() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -128,7 +128,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testSupportsToRequiredCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports
@@ -172,7 +172,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testSupportsNone() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports - commit
@@ -203,7 +203,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToSupportsCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -240,7 +240,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testSupportsToSupportsCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports
@@ -283,7 +283,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testNotSupported() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: not supported - commit
@@ -315,7 +315,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToNotSupported() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -364,7 +364,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testRequiredToNever() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -388,7 +388,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testSupportsToNeverCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports
@@ -432,7 +432,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToRequiredNewCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -470,7 +470,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 	}
 
 	public void testRequiredToRequiredNewRollback() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -511,7 +511,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testSupportsToRequiresNewCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports
@@ -556,7 +556,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testRequiredToMandatoryCommit() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: required
@@ -593,7 +593,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 
 
 	public void testSupportsToMandatory() {
-		LeanTransactionWorker worker = new LeanTransactionWorker(dbtxm);
+		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
 
 		// session #1: supports

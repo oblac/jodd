@@ -5,7 +5,7 @@ package jodd.jtx;
 import jodd.exception.UncheckedException;
 import jodd.jtx.data.WorkResourceManager;
 import jodd.jtx.data.WorkSession;
-import jodd.jtx.worker.LeanTransactionWorker;
+import jodd.jtx.worker.LeanJtxWorker;
 import junit.framework.TestCase;
 
 public class JtxManagerTest extends TestCase {
@@ -16,8 +16,8 @@ public class JtxManagerTest extends TestCase {
 		return jtxManager;
 	}
 
-	private LeanTransactionWorker createWorker() {
-		return new LeanTransactionWorker(createManager());
+	private LeanJtxWorker createWorker() {
+		return new LeanJtxWorker(createManager());
 	}
 
 	// ---------------------------------------------------------------- ro
@@ -26,6 +26,9 @@ public class JtxManagerTest extends TestCase {
 		JtxTransactionManager manager = createManager();
 		JtxTransaction jtx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(true));
 		WorkSession work = jtx.requestResource(WorkSession.class);
+
+		WorkSession work2 = jtx.requestResource(WorkSession.class);
+		assertSame(work2, work);
 
 		try {
 			work.writeValue("new value");
@@ -85,7 +88,7 @@ public class JtxManagerTest extends TestCase {
 
 	public void testPropagationRequiredWithWorker() {
 
-		LeanTransactionWorker worker = createWorker();
+		LeanJtxWorker worker = createWorker();
 
 		JtxTransaction jtx1 = worker.maybeRequestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false), null);
 		WorkSession work1 = jtx1.requestResource(WorkSession.class);
