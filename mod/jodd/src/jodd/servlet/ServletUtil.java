@@ -193,10 +193,8 @@ public class ServletUtil {
 	 */
 	public static String getContextPath(HttpServletRequest request) {
 		String contextPath = request.getContextPath();
-		if (contextPath == null) {
+		if (contextPath == null || contextPath.equals(StringPool.SLASH)) {
 			contextPath = StringPool.EMPTY;
-		} else if (contextPath.startsWith(StringPool.SLASH)) {
-			contextPath = contextPath.substring(1);
 		}
 		return contextPath;
 	}
