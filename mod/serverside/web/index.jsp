@@ -11,6 +11,7 @@
 <img src="gfx/jodd.png" align="left">
 <img src="gfx/madvoc.png" align="left">
 <h1 style="padding-top:50px;padding-left:30px;">Some <span style="color:crimson;">Jodd Madvoc</span> quick-and-dirty examples</h1>
+<span style="font-size:11px">ctx path: [<%=request.getContextPath()%>]</span>
 
 <p style="clear:both;">
 <a href="hello.world.html?name=JohnDoe&data=173">Hello world</a> - injects parameter, prepare out data and forwards.<br/>

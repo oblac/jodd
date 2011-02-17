@@ -170,7 +170,7 @@ public class DispatcherUtil {
 	 */
 	public static void redirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
 		if (url.startsWith(StringPool.SLASH) == true) {
-			url = request.getContextPath() + url;
+			url = ServletUtil.getContextPath(request) + url;
 		}
 		response.sendRedirect(response.encodeRedirectURL(url));
 	}
@@ -296,14 +296,14 @@ public class DispatcherUtil {
 	public static String getBaseContextPath(HttpServletRequest request) {
 		String result = getForwardContextPath(request);
 		if (result == null) {
-			result = request.getContextPath();
+			result = ServletUtil.getContextPath(request);
 		}
 		return result;
 	}
 	public static String getContextPath(HttpServletRequest request) {
 		String result = getIncludeContextPath(request);
 		if (result == null) {
-			result = request.getContextPath();
+			result = ServletUtil.getContextPath(request);
 		}
 		return result;
 	}

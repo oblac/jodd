@@ -183,6 +183,24 @@ public class ServletUtil {
 
 	// ---------------------------------------------------------------- request/session
 
+	/**
+	 * Returns correct context path, as by Servlet definition. Different
+	 * application servers return all variants: "", null, "/".
+	 * <p>
+	 * The context path always comes first in a request URI. The path
+	 * starts with a "/" character but does not end with a "/" character.
+	 * For servlets in the default (root) context, this method returns "".
+	 */
+	public static String getContextPath(HttpServletRequest request) {
+		String contextPath = request.getContextPath();
+		if (contextPath == null) {
+			contextPath = StringPool.EMPTY;
+		} else if (contextPath.startsWith(StringPool.SLASH)) {
+			contextPath = contextPath.substring(1);
+		}
+		return contextPath;
+	}
+
 
 	/**
 	 * Returns HTTP request parameter as String or String[].
@@ -393,7 +411,7 @@ public class ServletUtil {
 			return url;
 		}
 		if (url.startsWith(StringPool.SLASH)) {
-			return (request.getContextPath() + url);
+			return getContextPath(request) + url;
 		} else {
 			return url;
 		}
