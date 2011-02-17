@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * Simple {@link JtxTransaction} manager is responsible for transactions propagation and resource managers.
- * It also holds various configuration data. It can be considered that all work is done global-wide.
+ * {@link JtxTransaction} manager is responsible for handling transaction
+ * propagation and resource managers. It also holds various configuration data. .
  */
 public class JtxTransactionManager {
 
