@@ -72,7 +72,7 @@ public class MadvocController {
 	 * the action path string is returned (it might be different than original one, provided in arguments).
 	 * On first invoke, initializes the action configuration before further proceeding.
 	 *
-	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String, String)
+	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String)
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 		ActionRequest request = null;
