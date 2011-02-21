@@ -102,15 +102,16 @@ public class InterceptorsManager {
 				// add default interceptors list
 				Class<? extends ActionInterceptor>[] defaultInterceptors = madvocConfig.getDefaultInterceptors();
 				if (defaultInterceptors != null) {
+					int ndx = i;
 					for (Class<? extends ActionInterceptor> defaultInterceptor : defaultInterceptors) {
 						// can't add default list stack to default list
 						if (defaultInterceptor.equals(DefaultWebAppInterceptors.class)) {
-							throw new MadvocException("Default interceptor list is self-contained (cyclic dependency)");
+							throw new MadvocException("Default interceptor list is self-contained (cyclic dependency)!");
 						}
-						list.add(i, defaultInterceptor);
+						list.add(ndx, defaultInterceptor);
+						ndx++;
 					}
 				}
-				i--;
 				continue;
 			}
 			if (ReflectUtil.isSubclass(interceptorClass, ActionInterceptorStack.class)) {
