@@ -73,7 +73,7 @@ public class RandomStringUtil {
 	/**
 	 * Creates random string whose length is the number of characters specified.
 	 * Characters are chosen from the multiple sets defined by range pairs.
-	 * All ranges must be in accedenting order.
+	 * All ranges must be in acceding order.
 	 */
 	public static String randomRanges(int count, char... ranges) {
 		if (count == 0) {
@@ -108,21 +108,21 @@ public class RandomStringUtil {
 		return new String(result);
 	}
 
-	protected static char[] alphaRange = new char[] {'A', 'Z', 'a', 'z'};
-	protected static char[] alphaNumericRange = new char[] {'0', '9', 'A', 'Z', 'a', 'z'};
+	protected static final char[] ALPHA_RANGE = new char[] {'A', 'Z', 'a', 'z'};
+	protected static final char[] ALPHA_NUMERIC_RANGE = new char[] {'0', '9', 'A', 'Z', 'a', 'z'};
 
 	/**
 	 * Creates random string of characters.
 	 */
 	public static String randomAlpha(int count) {
-		return randomRanges(count, alphaRange);
+		return randomRanges(count, ALPHA_RANGE);
 	}
 
 	/**
 	 * Creates random string of characters and digits. 
 	 */
 	public static String randomAlphaNumeric(int count) {
-		return randomRanges(count, alphaNumericRange);
+		return randomRanges(count, ALPHA_NUMERIC_RANGE);
 	}
 
 }
