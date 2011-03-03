@@ -1,0 +1,29 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin version="2" url="http://jodd.org/doc/props.html">
+
+	<id>org.jodd.idea.props</id>
+	<name>Props Support</name>
+	<depends>com.intellij.modules.xml</depends>
+	<description>
+		Enables smart editing of Jodd props files.
+	</description>
+	<category>Custom Languages</category>
+	<vendor logo="/gfx/jodd.png" url="http://jodd.org">Jodd Team</vendor>
+	<version>0.4</version>
+	<idea-version since-build="103.72"/>
+
+	<extensions defaultExtensionNs="com.intellij">
+
+		<fileTypeFactory implementation="org.jodd.idea.props.PropsFileTypeFactory"/>
+		<syntaxHighlighter key="Props" factoryClass="org.jodd.idea.props.PropsSyntaxHighlighterProvider"/>
+		<lang.parserDefinition language="Props" implementationClass="org.jodd.idea.props.parser.PropsParserDefinition"/>
+		<colorSettingsPage implementation="org.jodd.idea.props.PropsColorsPage"/>
+
+	</extensions>
+
+	<application-components>
+		<component>
+			<implementation-class>org.jodd.idea.props.PropsAppComponent</implementation-class>
+		</component>
+	</application-components>
+</idea-plugin>
