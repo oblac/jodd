@@ -293,6 +293,7 @@ public class ReflectUtil {
 
 	/**
 	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
+	 * If destination type is one of common type, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T castType(Object value, Class<T> destinationType) {
