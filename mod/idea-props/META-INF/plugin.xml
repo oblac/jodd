@@ -14,16 +14,16 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 
-		<fileTypeFactory implementation="org.jodd.idea.props.PropsFileTypeFactory"/>
-		<syntaxHighlighter key="Props" factoryClass="org.jodd.idea.props.PropsSyntaxHighlighterProvider"/>
-		<lang.parserDefinition language="Props" implementationClass="org.jodd.idea.props.parser.PropsParserDefinition"/>
-		<colorSettingsPage implementation="org.jodd.idea.props.PropsColorsPage"/>
+		<fileTypeFactory implementation="jodd.idea.props.PropsFileTypeFactory"/>
+		<syntaxHighlighter key="Props" factoryClass="jodd.idea.props.PropsSyntaxHighlighterProvider"/>
+		<lang.parserDefinition language="Props" implementationClass="jodd.idea.props.parser.PropsParserDefinition"/>
+		<colorSettingsPage implementation="jodd.idea.props.PropsColorsPage"/>
 
 	</extensions>
 
 	<application-components>
 		<component>
-			<implementation-class>org.jodd.idea.props.PropsAppComponent</implementation-class>
+			<implementation-class>jodd.idea.props.PropsAppComponent</implementation-class>
 		</component>
 	</application-components>
 </idea-plugin>
