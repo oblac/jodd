@@ -19,8 +19,10 @@ import jodd.idea.props.psi.PropsElementTypes;
  */
 public class PropsParser implements PsiParser {
 
+	private static final String EMPTY_SECTION = "[]";
+
 	/**
-	 * PSI parser for lexer tokens. It detects top level tokens
+	 * PSI parser for lexer tokens. It deals with top level tokens
 	 * and continue with each separately.
 	 */
 	@NotNull
@@ -28,16 +30,36 @@ public class PropsParser implements PsiParser {
 
 		final PsiBuilder.Marker rootMarker = builder.mark();
 
+		PsiBuilder.Marker sectionMarker = null;
+
 		while (!builder.eof()) {
 			IElementType tokenType = builder.getTokenType();
 			if (tokenType == PropsTokenTypes.TOKEN_KEY) {
 				parseProperty(builder);
 			} else if (tokenType == PropsTokenTypes.TOKEN_SECTION) {
+				String text = builder.getTokenText();
+				if (sectionMarker == null) {
+					if (EMPTY_SECTION.equals(text) == false) {
+						sectionMarker = builder.mark();
+					}
+				} else {
+					sectionMarker.done(PropsElementTypes.SECTION);
+					sectionMarker = null;
+					if (EMPTY_SECTION.equals(text) == false) {
+						// start new section
+						sectionMarker = builder.mark();
+					}
+				}
 				parseSection(builder);
 			} else {
 				builder.advanceLexer();
 				builder.error("Parsing error!");
 			}
+		}
+
+		// close section if exist
+		if (sectionMarker != null) {
+			sectionMarker.done(PropsElementTypes.SECTION);
 		}
 
 		rootMarker.done(root);
@@ -64,20 +86,6 @@ public class PropsParser implements PsiParser {
 			// done with prop psi element, this will invoke
 			// PropsParserDefinition#createElement()
 			propMarker.done(PropsElementTypes.PROP);
-		}
-	}
-
-	/**
-	 * Parses and creates Psi section. Psi section is simply
-	 * built over section token.
-	 */
-	private static void parseSection(final PsiBuilder builder) {
-		if (builder.getTokenType() == PropsTokenTypes.TOKEN_SECTION) {
-			final PsiBuilder.Marker sectionMarker = builder.mark();
-
-			builder.advanceLexer();
-
-			sectionMarker.done(PropsElementTypes.SECTION);
 		}
 	}
 
@@ -128,5 +136,13 @@ public class PropsParser implements PsiParser {
 		}
 	}
 
+	/**
+	 * Just consumes section token and continues.
+	 */
+	private static void parseSection(final PsiBuilder builder) {
+		if (builder.getTokenType() == PropsTokenTypes.TOKEN_SECTION) {
+			builder.advanceLexer();
+		}
+	}
 
 }

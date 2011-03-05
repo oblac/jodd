@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.idea.props;
+package jodd.idea.props.highlighter;
 
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.lexer.Lexer;
@@ -63,7 +63,7 @@ public class PropsSyntaxHighlighter extends SyntaxHighlighterBase {
 	);
 	public static final TextAttributesKey PROP_MACRO = TextAttributesKey.createTextAttributesKey(
 			"PROPS.MACRO",
-			new TextAttributes(new Color(0x993300), null, null, null, Font.BOLD)
+			new TextAttributes(new Color(0x003366), null, null, null, Font.BOLD)
 	);
 
 	static {
