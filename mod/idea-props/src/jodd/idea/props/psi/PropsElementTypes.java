@@ -8,7 +8,7 @@ import com.intellij.psi.tree.TokenSet;
 import jodd.idea.props.Props;
 
 /**
- * PSI elements
+ * PSI elements.
  */
 public interface PropsElementTypes {
 

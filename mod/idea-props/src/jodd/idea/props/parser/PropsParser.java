@@ -16,6 +16,18 @@ import jodd.idea.props.psi.PropsElementTypes;
  * marks certain set of tokens to build PSI structure.
  * Therefore, PSI structure is build over emitted lexer
  * tokens.
+ * <p>
+ * Having PSI structure build on top of tokens give us
+ * flexibility to create PSI structure easier, without
+ * having complicated grammar. Instead of having 1-1
+ * relation between tokens and psi elements, we can
+ * have different PSI structure build on top of token
+ * stream.
+ * <p>
+ * That is the case here. Section token is just a section
+ * definition, For Section PSI element, however, we
+ * have it contains all inner properties.
+ *
  */
 public class PropsParser implements PsiParser {
 

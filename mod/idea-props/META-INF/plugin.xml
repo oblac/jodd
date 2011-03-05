@@ -20,7 +20,7 @@
 
 		<colorSettingsPage implementation="jodd.idea.props.PropsColorsPage"/>
 
-		<!--<lang.foldingBuilder language="Props" implementationClass="jodd.idea.props.folding.PropsFoldingBuilder"/>-->
+		<lang.foldingBuilder language="Props" implementationClass="jodd.idea.props.folding.PropsFoldingBuilder"/>
 
 	</extensions>
 

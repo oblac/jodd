@@ -55,7 +55,7 @@ MACRO="${" {WORD} "}"
 <IN_VALUE> {
 	{VALUE}*								{ return TOKEN_VALUE; }
 	{MACRO}*								{ return TOKEN_MACRO; }
-	{CRLF}									{ yybegin(YYINITIAL); }
+	{CRLF}									{ yybegin(YYINITIAL); return WHITE_SPACE; }
 }
 
 // special cases
