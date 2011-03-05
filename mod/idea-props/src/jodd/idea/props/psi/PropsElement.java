@@ -7,16 +7,16 @@ import org.jetbrains.annotations.NonNls;
 import jodd.idea.props.Props;
 
 /**
- * Props base element.
+ * Base PSI element.
  */
-public class PropsElementType extends IElementType {
+public class PropsElement extends IElementType {
 
-	public PropsElementType(@NonNls String debugName) {
+	public PropsElement(@NonNls String debugName) {
 		super(debugName, Props.LANGUAGE);
 	}
 
 	public String toString() {
-		return "Props: " + super.toString();
+		return "Element: " + super.toString();
 	}
 }
 

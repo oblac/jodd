@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import jodd.idea.props.psi.element.PropsValue;
 import org.jetbrains.annotations.NotNull;
 import jodd.idea.props.lexer.PropsLexer;
 import jodd.idea.props.lexer.PropsTokenTypes;
@@ -67,6 +68,9 @@ public class PropsParserDefinition implements ParserDefinition {
 		return new PropsFile(viewProvider);
 	}
 
+	/**
+	 * Factory for PSI elements. Invoked implicitly by {@link PropsParser}.
+	 */
 	@NotNull
 	public PsiElement createElement(ASTNode node) {
 		final IElementType type = node.getElementType();
@@ -74,11 +78,12 @@ public class PropsParserDefinition implements ParserDefinition {
 			return new PropElement(node);
 		} else if (type == PropsElementTypes.SECTION) {
 			return new PropSection(node);
+		} else if (type == PropsElementTypes.VALUE) {
+			return new PropsValue(node);
 		}
 
-		LOG.error("Alien element type [" + type + "]. Can't create Property PsiElement for that.");
+		LOG.error("Invalid PSI element: [" + type + "].");
 
 		return new ASTWrapperPsiElement(node);
-
 	}
 }

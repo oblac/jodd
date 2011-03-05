@@ -2,7 +2,7 @@ package jodd.idea.props.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import static org.jodd.idea.props.lexer.PropsTokenTypes.*;
+import static jodd.idea.props.lexer.PropsTokenTypes.*;
 
 %%
 
@@ -13,37 +13,55 @@ import static org.jodd.idea.props.lexer.PropsTokenTypes.*;
 %function advance
 %type IElementType
 
-// custom user code
-%eof{  return;
+// custom user code, executed only once
+// when the end of file is reached
+%eof{
+	return;
 %eof}
 
 // macros
-CRLF= \n | \r | \r\n
-WHITE_SPACE_CHAR=[\ \n\r\t\f]
-VALUE_CHARACTER=[^\n\r\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT=("#"|";")[^\r\n]*
-SECTION_START="["
-SECTION_CHARACTER=[^:=\ \n\r\t\f\\\[\]]
-SECTION_END=("]")[^\r\n]*
-KEY_SEPARATOR=[\ \t]*[:=][\ \t]* | [\ \t]+
-KEY_CHARACTER=[^:=\ \n\r\t\f\\] | "\\"{CRLF} | "\\".
+CRLF = \n | \r | \r\n
+LINE = [^\n\r]
+SPACE = [\ \t]
+WHITE_SPACE = {CRLF} | {SPACE} | \f
+WORD=[^\n\r\ \t\f]*
 
+// rules
+END_OF_LINE_COMMENT = ("#" | ";") {LINE}*
+
+SECTION = "[" {WORD} "]"
+
+KEY = [^:=\n\r\ \t\f\\] | "\\"{CRLF} | "\\".
+KEY_SEPARATOR = {SPACE}* [:=] {SPACE}* | {SPACE}+
+VALUE = [^\n\r\f\\"${"] | "\\"{CRLF} | "\\${" | "\\".
+
+MACRO="${" {WORD} "}"
+
+// states
 %state IN_VALUE
 %state IN_KEY_VALUE_SEPARATOR
 
 %%
 
-// definition
+// end of line
+<YYINITIAL> {END_OF_LINE_COMMENT}			{ yybegin(YYINITIAL); return TOKEN_EOL_COMMENT; }
 
-<YYINITIAL> {END_OF_LINE_COMMENT}        { yybegin(YYINITIAL); return END_OF_LINE_COMMENT; }
+// section
+<YYINITIAL> {SECTION} {WHITE_SPACE}*		{yybegin(YYINITIAL); return TOKEN_SECTION; }
 
-<YYINITIAL> {SECTION_START}{SECTION_CHARACTER}*{SECTION_END}	{yybegin(YYINITIAL); return SECTION_CHARACTERS; }
+// property
+<YYINITIAL> {KEY}+							{ yybegin(IN_KEY_VALUE_SEPARATOR); return TOKEN_KEY; }
+<IN_KEY_VALUE_SEPARATOR> {KEY_SEPARATOR}	{ yybegin(IN_VALUE); return TOKEN_KEY_VALUE_SEPARATOR; }
+<IN_VALUE> {
+	{VALUE}*								{ return TOKEN_VALUE; }
+	{MACRO}*								{ return TOKEN_MACRO; }
+	{CRLF}									{ yybegin(YYINITIAL); }
+}
 
-<YYINITIAL> {KEY_CHARACTER}+             { yybegin(IN_KEY_VALUE_SEPARATOR); return KEY_CHARACTERS; }
-<IN_KEY_VALUE_SEPARATOR> {KEY_SEPARATOR} { yybegin(IN_VALUE); return KEY_VALUE_SEPARATOR; }
-<IN_VALUE> {VALUE_CHARACTER}+            { yybegin(YYINITIAL); return VALUE_CHARACTERS; }
+// special cases
+<IN_KEY_VALUE_SEPARATOR> {CRLF}{WHITE_SPACE}* 	{ yybegin(YYINITIAL); return WHITE_SPACE; }
+<IN_VALUE> {CRLF}{WHITE_SPACE}*					{ yybegin(YYINITIAL); return WHITE_SPACE; }
 
-<IN_KEY_VALUE_SEPARATOR> {CRLF}{WHITE_SPACE_CHAR}*  { yybegin(YYINITIAL); return WHITE_SPACE; }
-<IN_VALUE> {CRLF}{WHITE_SPACE_CHAR}*     { yybegin(YYINITIAL); return WHITE_SPACE; }
-{WHITE_SPACE_CHAR}+                      { return WHITE_SPACE; }
-.                                        { return BAD_CHARACTER; }
+// general
+{WHITE_SPACE}+								{ return WHITE_SPACE; }
+.											{ return BAD_CHARACTER; }

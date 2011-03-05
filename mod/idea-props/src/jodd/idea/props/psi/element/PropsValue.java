@@ -6,12 +6,12 @@ import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Prop PSI element.
+ * Props PSI value.
  */
-public class PropElement extends BasePsiElement {
+public class PropsValue extends BasePsiElement {
 
-	public PropElement(@NotNull final ASTNode node) {
-		super(node, "Prop");
+	public PropsValue(@NotNull final ASTNode node) {
+		super(node, "Value");
 	}
 
 }

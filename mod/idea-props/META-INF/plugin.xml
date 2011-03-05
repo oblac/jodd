@@ -2,14 +2,14 @@
 <idea-plugin version="2" url="http://jodd.org/doc/props.html">
 
 	<id>org.jodd.idea.props</id>
-	<name>Props Support</name>
+	<name>Jodd Props Support</name>
 	<depends>com.intellij.modules.xml</depends>
 	<description>
-		Enables smart editing of Jodd props files.
+		Enables editing of Jodd props files.
 	</description>
 	<category>Custom Languages</category>
 	<vendor logo="/gfx/jodd.png" url="http://jodd.org">Jodd Team</vendor>
-	<version>0.4</version>
+	<version>0.5</version>
 	<idea-version since-build="103.72"/>
 
 	<extensions defaultExtensionNs="com.intellij">
@@ -17,6 +17,7 @@
 		<fileTypeFactory implementation="jodd.idea.props.PropsFileTypeFactory"/>
 		<syntaxHighlighter key="Props" factoryClass="jodd.idea.props.PropsSyntaxHighlighterProvider"/>
 		<lang.parserDefinition language="Props" implementationClass="jodd.idea.props.parser.PropsParserDefinition"/>
+
 		<colorSettingsPage implementation="jodd.idea.props.PropsColorsPage"/>
 
 	</extensions>

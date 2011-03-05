@@ -58,8 +58,9 @@ public class PropsColorsPage implements ColorSettingsPage {
 
 	@NotNull
 	public String getDemoText() {
-		return "# Comment on keys and values\n" +
+		return "# Comment \n" +
 				"key1=value1\n" +
+				"key2:value${macro}\n" +
 				"[section]\n"+
 				"; other values:\n" +
 				"a\\=\\fb : x\\ty\\n\\x\\uzzzz\n"

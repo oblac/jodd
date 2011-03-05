@@ -14,12 +14,15 @@ import jodd.idea.props.Props;
 import javax.swing.Icon;
 
 /**
- * Base AST element for shared properties.
+ * Base PSI element for all prop psi elements.
  */
-public abstract class BaseElement extends ASTWrapperPsiElement {
+public abstract class BasePsiElement extends ASTWrapperPsiElement {
 
-	protected BaseElement(@NotNull final ASTNode node) {
+	private final String name;
+
+	protected BasePsiElement(@NotNull final ASTNode node, String name) {
 		super(node);
+		this.name = name;
 	}
 
 	@Override
@@ -47,6 +50,10 @@ public abstract class BaseElement extends ASTWrapperPsiElement {
 	@Override
 	public Icon getIcon(int flags) {
 		return null;
+	}
+
+	public String toString() {
+		return "PsiElement: " + name;
 	}
 
 	protected boolean isEmpty(ASTNode[] children) {

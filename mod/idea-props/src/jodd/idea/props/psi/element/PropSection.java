@@ -5,10 +5,13 @@ package jodd.idea.props.psi.element;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
-public class PropSection extends BaseElement {
+/**
+ * Prop section element.
+ */
+public class PropSection extends BasePsiElement {
 
 	public PropSection(@NotNull final ASTNode node) {
-		super(node);
+		super(node, "Section");
 	}
 
 }

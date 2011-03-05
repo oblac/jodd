@@ -7,13 +7,18 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import jodd.idea.props.Props;
 
+/**
+ * PSI elements
+ */
 public interface PropsElementTypes {
 
 	IFileElementType FILE = new IFileElementType(Props.LANGUAGE);
 
-	IElementType PROP = new PropsElementType("property");
+	IElementType PROP = new PropsElement("prop");
 
-	IElementType SECTION = new PropsElementType("section");
+	IElementType SECTION = new PropsElement("section");
+
+	IElementType VALUE = new PropsElement("value");
 
 	TokenSet TOKENS_PROPS = TokenSet.create(PROP);
 }
