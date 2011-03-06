@@ -1,21 +1,30 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
-<idea-plugin version="2" url="http://jodd.org/doc/props.html">
+<idea-plugin version="3" url="http://jodd.org/doc/props.html">
 
 	<id>org.jodd.idea.props</id>
 	<name>Jodd Props Support</name>
 	<depends>com.intellij.modules.xml</depends>
 	<description><![CDATA[
 <p>
-Enables editing of <a href="http://jodd.org">Jodd</> props files.
+Enables editing of <a href="http://jodd.org">Jodd</a> props files.<br/>
+<b>Features</b>:
+<ul>
+	<li>Highlighting keys and values</li>
+	<li>Highlight profiles in keys</li>
+	<li>Highlight macros in values</li>
+	<li>Customizable highlighting colors</li>
+	<li>Code folding for section blocks</li>
+</ul>
 </p>
 	]]>
 	</description>
 	<category>Custom Languages</category>
-	<version>0.5</version>
+	<version>0.51</version>
 	<idea-version since-build="103.72"/>
 	<vendor logo="/gfx/jodd.png" url="http://jodd.org" email="info@jodd.org">Jodd Team</vendor>
 	<change-notes><![CDATA[
 <ul>
+	<li>0.51: Fixed plugin.xml unclosed tag</li>
 	<li>0.5: Public release</li>
 	<li>0.4: Profiles support added</li>
 	<li>0.3: Macros support added</li>
