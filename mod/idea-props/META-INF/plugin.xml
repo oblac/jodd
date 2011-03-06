@@ -4,13 +4,25 @@
 	<id>org.jodd.idea.props</id>
 	<name>Jodd Props Support</name>
 	<depends>com.intellij.modules.xml</depends>
-	<description>
-		Enables editing of Jodd props files.
+	<description><![CDATA[
+<p>
+Enables editing of <a href="http://jodd.org">Jodd</> props files.
+</p>
+	]]>
 	</description>
 	<category>Custom Languages</category>
-	<vendor logo="/gfx/jodd.png" url="http://jodd.org">Jodd Team</vendor>
 	<version>0.5</version>
 	<idea-version since-build="103.72"/>
+	<vendor logo="/gfx/jodd.png" url="http://jodd.org" email="info@jodd.org">Jodd Team</vendor>
+	<change-notes><![CDATA[
+<ul>
+	<li>0.5: Public release</li>
+	<li>0.4: Profiles support added</li>
+	<li>0.3: Macros support added</li>
+	<li>0.1: Initial release</li>
+</ul>
+	]]>
+	</change-notes>
 
 	<extensions defaultExtensionNs="com.intellij">
 
