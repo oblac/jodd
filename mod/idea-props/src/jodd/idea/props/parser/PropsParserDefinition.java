@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import jodd.idea.props.psi.element.PropKey;
 import jodd.idea.props.psi.element.PropsValue;
 import org.jetbrains.annotations.NotNull;
 import jodd.idea.props.lexer.PropsLexer;
@@ -80,6 +81,8 @@ public class PropsParserDefinition implements ParserDefinition {
 			return new PropSection(node);
 		} else if (type == PropsElementTypes.VALUE) {
 			return new PropsValue(node);
+		} else if (type == PropsElementTypes.KEY) {
+			return new PropKey(node);
 		}
 
 		LOG.error("Invalid PSI element: [" + type + "].");

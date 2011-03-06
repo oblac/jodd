@@ -29,17 +29,21 @@ WORD=[^\n\r\ \t\f]*
 // rules
 END_OF_LINE_COMMENT = ("#" | ";") {LINE}*
 
-SECTION = "[" {WORD} "]"
+SECTION_NAME = [^\n\r\ \t\f\]]*
+SECTION = "[" {SECTION_NAME} "]"
 
-KEY = [^:=\n\r\ \t\f\\] | "\\"{CRLF} | "\\".
+PROFILE_NAME = [^\n\r\ \t\f\>]*
+PROFILE = "<" {PROFILE_NAME} ">"
+
+KEY = [^:=\n\r\ \t\f\\<] | "\\"{CRLF} | "\\".
 KEY_SEPARATOR = {SPACE}* [:=] {SPACE}* | {SPACE}+
 VALUE = [^\n\r\f\\"${"] | "\\"{CRLF} | "\\${" | "\\".
 
-MACRO="${" {WORD} "}"
+MACRO_NAME = [^\n\r\ \t\f\}]*
+MACRO="${" {MACRO_NAME} "}"
 
 // states
 %state IN_VALUE
-%state IN_KEY_VALUE_SEPARATOR
 
 %%
 
@@ -50,8 +54,11 @@ MACRO="${" {WORD} "}"
 <YYINITIAL> {SECTION} {WHITE_SPACE}*		{yybegin(YYINITIAL); return TOKEN_SECTION; }
 
 // property
-<YYINITIAL> {KEY}+							{ yybegin(IN_KEY_VALUE_SEPARATOR); return TOKEN_KEY; }
-<IN_KEY_VALUE_SEPARATOR> {KEY_SEPARATOR}	{ yybegin(IN_VALUE); return TOKEN_KEY_VALUE_SEPARATOR; }
+<YYINITIAL> {
+	{KEY}*									{ return TOKEN_KEY; }
+	{PROFILE}*								{ return TOKEN_PROFILE; }
+	{KEY_SEPARATOR}							{ yybegin(IN_VALUE); return TOKEN_KEY_VALUE_SEPARATOR;}
+}
 <IN_VALUE> {
 	{VALUE}*								{ return TOKEN_VALUE; }
 	{MACRO}*								{ return TOKEN_MACRO; }
@@ -59,8 +66,8 @@ MACRO="${" {WORD} "}"
 }
 
 // special cases
-<IN_KEY_VALUE_SEPARATOR> {CRLF}{WHITE_SPACE}* 	{ yybegin(YYINITIAL); return WHITE_SPACE; }
-<IN_VALUE> {CRLF}{WHITE_SPACE}*					{ yybegin(YYINITIAL); return WHITE_SPACE; }
+<YYINITIAL>{KEY_SEPARATOR} {CRLF} {WHITE_SPACE}* 	{ return WHITE_SPACE; }
+<IN_VALUE> {CRLF}{WHITE_SPACE}*						{ yybegin(YYINITIAL); return WHITE_SPACE; }
 
 // general
 {WHITE_SPACE}+								{ return WHITE_SPACE; }

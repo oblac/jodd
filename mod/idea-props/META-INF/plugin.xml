@@ -18,7 +18,7 @@
 		<syntaxHighlighter key="Props" factoryClass="jodd.idea.props.highlighter.PropsSyntaxHighlighterProvider"/>
 		<lang.parserDefinition language="Props" implementationClass="jodd.idea.props.parser.PropsParserDefinition"/>
 
-		<colorSettingsPage implementation="jodd.idea.props.PropsColorsPage"/>
+		<colorSettingsPage implementation="jodd.idea.props.highlighter.PropsColorsPage"/>
 
 		<lang.foldingBuilder language="Props" implementationClass="jodd.idea.props.folding.PropsFoldingBuilder"/>
 

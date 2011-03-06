@@ -1,13 +1,13 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.idea.props;
+package jodd.idea.props.highlighter;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
-import jodd.idea.props.highlighter.PropsSyntaxHighlighter;
+import jodd.idea.props.Props;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.Icon;
@@ -63,7 +63,8 @@ public class PropsColorsPage implements ColorSettingsPage {
 				"key1=value1\n" +
 				"key2:value${macro}\n" +
 				"[section]\n"+
-				"; other values:\n" +
+				"key<profile>=value3\n"+
+				"; more values:\n" +
 				"a\\=\\fb : x\\ty\\n\\x\\uzzzz\n"
 				;
 	}

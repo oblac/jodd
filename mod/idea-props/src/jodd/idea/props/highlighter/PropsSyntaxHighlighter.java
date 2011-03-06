@@ -63,7 +63,11 @@ public class PropsSyntaxHighlighter extends SyntaxHighlighterBase {
 	);
 	public static final TextAttributesKey PROP_MACRO = TextAttributesKey.createTextAttributesKey(
 			"PROPS.MACRO",
-			new TextAttributes(new Color(0x003366), null, null, null, Font.BOLD)
+			new TextAttributes(new Color(0x0055BB), null, null, null, Font.BOLD)
+	);
+	public static final TextAttributesKey PROP_PROFILE = TextAttributesKey.createTextAttributesKey(
+			"PROPS.PROFILE",
+			new TextAttributes(new Color(0x0000FF), null, null, null, Font.BOLD)
 	);
 
 	static {
@@ -76,6 +80,7 @@ public class PropsSyntaxHighlighter extends SyntaxHighlighterBase {
 		keys1.put(PropsTokenTypes.TOKEN_KEY_VALUE_SEPARATOR, PROP_KEY_VALUE_SEPARATOR);
 		keys1.put(PropsTokenTypes.TOKEN_SECTION, PROP_SECTION);
 		keys1.put(PropsTokenTypes.TOKEN_MACRO, PROP_MACRO);
+		keys1.put(PropsTokenTypes.TOKEN_PROFILE, PROP_PROFILE);
 
 		keys1.put(StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN, PROP_VALID_STRING_ESCAPE);
 
@@ -100,6 +105,7 @@ public class PropsSyntaxHighlighter extends SyntaxHighlighterBase {
 		DISPLAY_NAMES.put(PROP_INVALID_STRING_ESCAPE, new Pair<String, HighlightSeverity>("String escape (invalid)", HighlightSeverity.WARNING));
 		DISPLAY_NAMES.put(PROP_SECTION, new Pair<String, HighlightSeverity>("Section", null));
 		DISPLAY_NAMES.put(PROP_MACRO, new Pair<String, HighlightSeverity>("Macro", null));
+		DISPLAY_NAMES.put(PROP_PROFILE, new Pair<String, HighlightSeverity>("Profile", null));
 	}
 }
 

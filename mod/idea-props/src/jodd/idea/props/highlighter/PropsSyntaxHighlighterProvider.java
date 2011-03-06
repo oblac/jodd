@@ -9,6 +9,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Syntax provider is a simple factory for {@link PropsSyntaxHighlighter}.
+ */
 public class PropsSyntaxHighlighterProvider implements SyntaxHighlighterProvider {
 	public SyntaxHighlighter create(FileType fileType, @Nullable Project project, @Nullable VirtualFile file) {
 		return new PropsSyntaxHighlighter();

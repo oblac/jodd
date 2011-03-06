@@ -20,5 +20,7 @@ public interface PropsElementTypes {
 
 	IElementType VALUE = new PropsElement("value");
 
+	IElementType KEY = new PropsElement("key");
+
 	TokenSet TOKENS_PROPS = TokenSet.create(PROP);
 }

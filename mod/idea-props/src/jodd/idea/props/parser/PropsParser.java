@@ -48,6 +48,8 @@ public class PropsParser implements PsiParser {
 			IElementType tokenType = builder.getTokenType();
 			if (tokenType == PropsTokenTypes.TOKEN_KEY) {
 				parseProperty(builder);
+			} else if (tokenType == PropsTokenTypes.TOKEN_PROFILE) {
+				parseProperty(builder);
 			} else if (tokenType == PropsTokenTypes.TOKEN_SECTION) {
 				String text = builder.getTokenText();
 				if (sectionMarker == null) {
@@ -82,10 +84,10 @@ public class PropsParser implements PsiParser {
 
 	/**
 	 * Parses a property token and creates property psi element. Property psi
-	 * element contain inner elements, like key, value etc.
+	 * element contain inner elements: key, separator, value etc.
 	 */
-	private static void parseProperty(PsiBuilder builder) {
-		if (builder.getTokenType() == PropsTokenTypes.TOKEN_KEY) {
+	private void parseProperty(PsiBuilder builder) {
+		if ((builder.getTokenType() == PropsTokenTypes.TOKEN_KEY || builder.getTokenType() == PropsTokenTypes.TOKEN_PROFILE)) {
 			final PsiBuilder.Marker propMarker = builder.mark();
 
 			parseKey(builder);
@@ -128,30 +130,40 @@ public class PropsParser implements PsiParser {
 		}
 	}
 
+	/**
+	 * Key consist of consumes key token and continues.
+	 */
+	private void parseKey(final PsiBuilder builder) {
+		final PsiBuilder.Marker keyMarker = builder.mark();
+		while (!builder.eof()) {
+			if (builder.getTokenType() == PropsTokenTypes.TOKEN_KEY) {
+				builder.advanceLexer();
+			} else if (builder.getTokenType() == PropsTokenTypes.TOKEN_PROFILE) {
+				builder.advanceLexer();
+			} else {
+				break;
+			}
+		}
+		keyMarker.done(PropsElementTypes.KEY);
+	}
+
 	// ---------------------------------------------------------------- advance
 
 	/**
-	 * Just consumes key token and continues.
-	 */
-	private static void parseKey(final PsiBuilder builder) {
-		if (builder.getTokenType() == PropsTokenTypes.TOKEN_KEY) {
-			builder.advanceLexer();
-		}
-	}
-
-	/**
 	 * Just consumes key-value-separator token and continues.
+	 * Default psi element will be created over this token (not handled by us).
 	 */
-	private static void parseKeyValueSeparator(final PsiBuilder builder) {
+	private void parseKeyValueSeparator(final PsiBuilder builder) {
 		if (builder.getTokenType() == PropsTokenTypes.TOKEN_KEY_VALUE_SEPARATOR) {
 			builder.advanceLexer();
 		}
 	}
 
 	/**
-	 * Just consumes section token and continues.
+	 * Just consumes section token and continues. We will not create PSI
+	 * element over this token, but over the whole logical section.
 	 */
-	private static void parseSection(final PsiBuilder builder) {
+	private void parseSection(final PsiBuilder builder) {
 		if (builder.getTokenType() == PropsTokenTypes.TOKEN_SECTION) {
 			builder.advanceLexer();
 		}

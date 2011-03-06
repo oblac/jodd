@@ -20,6 +20,7 @@ public interface PropsTokenTypes {
 	IElementType TOKEN_VALUE = new PropsToken("VALUE");
 	IElementType TOKEN_KEY_VALUE_SEPARATOR = new PropsToken("KEY_VALUE_SEPARATOR");
 	IElementType TOKEN_MACRO = new PropsToken("MACRO");
+	IElementType TOKEN_PROFILE = new PropsToken("PROFILE");
 
 	TokenSet COMMENTS = TokenSet.create(TOKEN_EOL_COMMENT);
 	TokenSet WHITESPACES = TokenSet.create(WHITE_SPACE);
