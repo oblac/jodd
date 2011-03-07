@@ -11,6 +11,8 @@ public class IoTests extends TestSuite {
 		super("jodd.io test suite");
 		addTestSuite(StreamUtilTest.class);
 		addTestSuite(FileUtilTest.class);
+		addTestSuite(FilepathScannerTest.class);
+		addTestSuite(FindFileTest.class);
 	}
 
 	public static Test suite() {

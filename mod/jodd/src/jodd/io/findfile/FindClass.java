@@ -2,6 +2,7 @@
 
 package jodd.io.findfile;
 
+import jodd.io.FileNameUtil;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 import jodd.util.ArraysUtil;
@@ -193,7 +194,10 @@ public abstract class FindClass {
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
 	 */
-	protected boolean acceptJar(String path) {
+	protected boolean acceptJar(File jarFile) {
+		String path = jarFile.getAbsolutePath();
+		path = FileNameUtil.separatorsToUnix(path);
+
 		if (systemJars != null) {
 			int ndx = usePathWildcards ?
 					Wildcard.matchPathOne(path, systemJars) :
@@ -225,9 +229,11 @@ public abstract class FindClass {
 	 * Scans single path.
 	 */
 	protected void scanPath(File file) {
-		String pathString = file.toString();
-		if (StringUtil.endsWithIgnoreCase(pathString, JAR_FILE_EXT) == true) {
-			if (acceptJar(pathString) == false) {
+		String path = file.getAbsolutePath();
+
+		if (StringUtil.endsWithIgnoreCase(path, JAR_FILE_EXT) == true) {
+
+			if (acceptJar(file) == false) {
 				return;
 			}
 			scanJarFile(file);
@@ -484,7 +490,7 @@ public abstract class FindClass {
 				inputStream = new FileInputStream(file);
 				return inputStream;
 			} catch (FileNotFoundException fnfex) {
-				throw new FindFileException("Unable to open file: '" + file.getName() + "'.", fnfex);
+				throw new FindFileException("Unable to open file: '" + file.getAbsolutePath() + "'.", fnfex);
 			}
 		}
 

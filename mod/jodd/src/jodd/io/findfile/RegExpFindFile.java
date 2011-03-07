@@ -2,6 +2,8 @@
 
 package jodd.io.findfile;
 
+import jodd.io.FileNameUtil;
+
 import java.io.File;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,9 @@ public class RegExpFindFile extends FindFile {
 
 	@Override
 	protected boolean acceptFile(File currentFile) {
-		return regexpPattern.matcher(currentFile.getName()).matches();
+		String path = currentFile.getAbsolutePath();
+		path = FileNameUtil.separatorsToUnix(path);
+
+		return regexpPattern.matcher(path).matches();
 	}
 }
