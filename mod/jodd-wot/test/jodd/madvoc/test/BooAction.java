@@ -16,7 +16,7 @@ public class BooAction {
 	@Action(extension = "xxx")
 	public void foo2() {}
 
-	@Action(value = Action.IGNORE)
+	@Action(value = Action.NONE)
 	public void foo3() {}
 
 	@Action("/xxx")
@@ -34,7 +34,7 @@ public class BooAction {
 	@Action(value = "/[method].[ext]")
 	public void foo7() {}
 
-	@Action(extension = Action.IGNORE)
+	@Action(extension = Action.NONE)
 	public void foo8() {}
 
 }

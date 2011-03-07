@@ -14,7 +14,7 @@ public class SearchAction {
 	@InOut
 	String query;
 
-	@Action(extension = Action.IGNORE)
+	@Action(extension = Action.NONE)
 	public void execute() {
 		System.out.println("SearchAction.execute");
 		System.out.println("query = " + query);

@@ -22,16 +22,16 @@ public @interface Action {
 	/**
 	 * Marker for empty action method or extension.
 	 */
-	String IGNORE = StringPool.HASH;
+	String NONE = StringPool.HASH;
 
 	/**
-	 * Action path value. If equals to {@link #IGNORE} action method name
+	 * Action path value. If equals to {@link #NONE} action method name
 	 * will not be part of the created action path.
 	 */
 	String value() default "";
 
 	/**
-	 * Action path extension. If equals to {@link #IGNORE} extension will be not
+	 * Action path extension. If equals to {@link #NONE} extension will be not
 	 * part of created action path.
 	 */
 	String extension() default "";

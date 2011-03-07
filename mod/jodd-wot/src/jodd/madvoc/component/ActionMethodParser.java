@@ -268,7 +268,7 @@ public class ActionMethodParser {
 			methodActionPath = methodName;
 		} else {
 
-			if (methodActionPath.equals(Action.IGNORE)) {
+			if (methodActionPath.equals(Action.NONE)) {
 				return null;
 
 			}
@@ -286,7 +286,7 @@ public class ActionMethodParser {
 		if (annotationData != null) {
 			String annExtension = annotationData.getExtension();
 			if (annExtension != null) {
-				if (annExtension.equals(Action.IGNORE)) {
+				if (annExtension.equals(Action.NONE)) {
 					extension = null;
 				} else {
 					extension = StringUtil.replace(annExtension, REPL_EXTENSION, extension);
