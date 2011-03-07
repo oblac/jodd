@@ -13,6 +13,7 @@ public class IoTests extends TestSuite {
 		addTestSuite(FileUtilTest.class);
 		addTestSuite(FilepathScannerTest.class);
 		addTestSuite(FindFileTest.class);
+		addTestSuite(FileNameUtilTest.class);
 	}
 
 	public static Test suite() {

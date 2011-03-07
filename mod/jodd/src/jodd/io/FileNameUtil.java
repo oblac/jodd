@@ -101,6 +101,11 @@ public class FileNameUtil {
 	}
 
 	// ---------------------------------------------------------------- normalization
+
+	public static String normalize(String filename) {
+		return doNormalize(filename, SYSTEM_SEPARATOR, true);
+	}
+
 	/**
 	 * Normalizes a path, removing double and single dot path steps.
 	 * <p>
@@ -123,7 +128,7 @@ public class FileNameUtil {
 	 * /foo/../bar          -->   /bar
 	 * /foo/../bar/         -->   /bar/
 	 * /foo/../bar/../baz   -->   /baz
-	 * //foo//./bar         -->   /foo/bar
+	 * /foo//./bar          -->   /foo/bar
 	 * /../                 -->   null
 	 * ../foo               -->   null
 	 * foo/bar/..           -->   foo/
@@ -141,11 +146,14 @@ public class FileNameUtil {
 	 * @param filename  the filename to normalize, null returns null
 	 * @return the normalized filename, or null if invalid
 	 */
-	public static String normalize(String filename) {
-		return doNormalize(filename, true);
+	public static String normalize(String filename, boolean unixSeparator) {
+		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
+		return doNormalize(filename, separator, true);
 	}
 
-
+	public static String normalizeNoEndSeparator(String filename) {
+		return doNormalize(filename, SYSTEM_SEPARATOR, false);
+	}
 
 	/**
 	 * Normalizes a path, removing double and single dot path steps,
@@ -170,7 +178,7 @@ public class FileNameUtil {
 	 * /foo/../bar          -->   /bar
 	 * /foo/../bar/         -->   /bar
 	 * /foo/../bar/../baz   -->   /baz
-	 * //foo//./bar         -->   /foo/bar
+	 * /foo//./bar          -->   /foo/bar
 	 * /../                 -->   null
 	 * ../foo               -->   null
 	 * foo/bar/..           -->   foo
@@ -188,18 +196,20 @@ public class FileNameUtil {
 	 * @param filename  the filename to normalize, null returns null
 	 * @return the normalized filename, or null if invalid
 	 */
-	public static String normalizeNoEndSeparator(String filename) {
-		return doNormalize(filename, false);
+	public static String normalizeNoEndSeparator(String filename, boolean unixSeparator) {
+		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
+		return doNormalize(filename, separator, false);
 	}
 
 	/**
 	 * Internal method to perform the normalization.
 	 *
-	 * @param filename  the filename
-	 * @param keepSeparator  true to keep the final separator
-	 * @return the normalized filename
+	 * @param filename file name
+	 * @param separator separator character to use
+	 * @param keepSeparator <code>true</code> to keep the final separator
+	 * @return normalized filename
 	 */
-	private static String doNormalize(String filename, boolean keepSeparator) {
+	private static String doNormalize(String filename, char separator, boolean keepSeparator) {
 		if (filename == null) {
 			return null;
 		}
@@ -216,23 +226,24 @@ public class FileNameUtil {
 		filename.getChars(0, filename.length(), array, 0);
 
 		// fix separators throughout
+		char otherSeparator = (separator == SYSTEM_SEPARATOR ? OTHER_SEPARATOR : SYSTEM_SEPARATOR);
 		for (int i = 0; i < array.length; i++) {
-			if (array[i] == OTHER_SEPARATOR) {
-				array[i] = SYSTEM_SEPARATOR;
+			if (array[i] == otherSeparator) {
+				array[i] = separator;
 			}
 		}
 
 		// add extra separator on the end to simplify code below
 		boolean lastIsDirectory = true;
-		if (array[size - 1] != SYSTEM_SEPARATOR) {
-			array[size] = SYSTEM_SEPARATOR;
+		if (array[size - 1] != separator) {
+			array[size] = separator;
 			size++;
 			lastIsDirectory = false;
 		}
 
 		// adjoining slashes
 		for (int i = prefix + 1; i < size; i++) {
-			if (array[i] == SYSTEM_SEPARATOR && array[i - 1] == SYSTEM_SEPARATOR) {
+			if (array[i] == separator && array[i - 1] == separator) {
 				System.arraycopy(array, i, array, i - 1, size - i);
 				size--;
 				i--;
@@ -241,13 +252,13 @@ public class FileNameUtil {
 
 		// dot slash
 		for (int i = prefix + 1; i < size; i++) {
-			if (array[i] == SYSTEM_SEPARATOR && array[i - 1] == '.' &&
-					(i == prefix + 1 || array[i - 2] == SYSTEM_SEPARATOR)) {
+			if (array[i] == separator && array[i - 1] == '.' &&
+					(i == prefix + 1 || array[i - 2] == separator)) {
 				if (i == size - 1) {
 					lastIsDirectory = true;
 				}
 				System.arraycopy(array, i + 1, array, i - 1, size - i);
-				size -=2;
+				size -= 2;
 				i--;
 			}
 		}
@@ -255,8 +266,8 @@ public class FileNameUtil {
 		// double dot slash
 		outer:
 		for (int i = prefix + 2; i < size; i++) {
-			if (array[i] == SYSTEM_SEPARATOR && array[i - 1] == '.' && array[i - 2] == '.' &&
-					(i == prefix + 2 || array[i - 3] == SYSTEM_SEPARATOR)) {
+			if (array[i] == separator && array[i - 1] == '.' && array[i - 2] == '.' &&
+					(i == prefix + 2 || array[i - 3] == separator)) {
 				if (i == prefix + 2) {
 					return null;
 				}
@@ -265,7 +276,7 @@ public class FileNameUtil {
 				}
 				int j;
 				for (j = i - 4 ; j >= prefix; j--) {
-					if (array[j] == SYSTEM_SEPARATOR) {
+					if (array[j] == separator) {
 						// remove b/../ from a/b/../c
 						System.arraycopy(array, i + 1, array, j + 1, size - i);
 						size -= (i - j);
@@ -281,7 +292,7 @@ public class FileNameUtil {
 		}
 
 		if (size <= 0) {  // should never be less than 0
-			return "";
+			return StringPool.EMPTY;
 		}
 		if (size <= prefix) {  // should never be less than prefix
 			return new String(array, 0, size);
@@ -334,25 +345,32 @@ public class FileNameUtil {
 	 * @return the concatenated path, or null if invalid
 	 */
 	public static String concat(String basePath, String fullFilenameToAdd) {
+		return doConcat(basePath, fullFilenameToAdd, SYSTEM_SEPARATOR);
+	}
+	public static String concat(String basePath, String fullFilenameToAdd, boolean unixSeparator) {
+		char separator = (unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR);
+		return doConcat(basePath, fullFilenameToAdd, separator);
+	}
+	public static String doConcat(String basePath, String fullFilenameToAdd, char separator) {
 		int prefix = getPrefixLength(fullFilenameToAdd);
 		if (prefix < 0) {
 			return null;
 		}
 		if (prefix > 0) {
-			return normalize(fullFilenameToAdd);
+			return doNormalize(fullFilenameToAdd, separator, true);
 		}
 		if (basePath == null) {
 			return null;
 		}
 		int len = basePath.length();
 		if (len == 0) {
-			return normalize(fullFilenameToAdd);
+			return doNormalize(fullFilenameToAdd, separator, true);
 		}
 		char ch = basePath.charAt(len - 1);
 		if (isSeparator(ch)) {
-			return normalize(basePath + fullFilenameToAdd);
+			return doNormalize(basePath + fullFilenameToAdd, separator, true);
 		} else {
-			return normalize(basePath + '/' + fullFilenameToAdd);
+			return doNormalize(basePath + '/' + fullFilenameToAdd, separator, true);
 		}
 	}
 
