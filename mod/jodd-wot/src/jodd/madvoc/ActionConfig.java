@@ -15,6 +15,7 @@ public class ActionConfig {
 	public final Class actionClass;
 	public final Method actionClassMethod;
 	public final String actionPath;
+	public final String actionPathExtension;
 	public final String actionMethod;
 	public final Class<? extends ActionInterceptor>[] interceptorClasses;
 	//public final Class<?>[] actionParamTypes;
@@ -24,16 +25,23 @@ public class ActionConfig {
 	public boolean initialized;
 	public ActionInterceptor[] interceptors;
 
-	public ActionConfig(Class actionClass, Method actionClassMethod, Class<? extends ActionInterceptor>[] interceptors, String actionPath, String actionMethod) {
+	public ActionConfig(
+			Class actionClass,
+			Method actionClassMethod,
+			Class<? extends ActionInterceptor>[] interceptors,
+			String actionPath,
+			String actionMethod,
+			String actionPathExtension) {
+
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
+		this.actionPathExtension = actionPathExtension;
 		this.interceptorClasses = interceptors;
 //		Class<?>[] paramTypes = actionMethod.getParameterTypes();
 //		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
 	}
-
 
 	// ---------------------------------------------------------------- getters
 
@@ -56,6 +64,13 @@ public class ActionConfig {
 	 */
 	public String getActionPath() {
 		return actionPath;
+	}
+
+	/**
+	 * Returns action path extension.
+	 */
+	public String getActionPathExtension() {
+		return actionPathExtension;
 	}
 
 	/**

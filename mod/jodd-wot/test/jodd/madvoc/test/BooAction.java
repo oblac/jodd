@@ -36,5 +36,7 @@ public class BooAction {
 
 	@Action(extension = Action.NONE)
 	public void foo8() {}
+	@Action(value = "/boo.foo81")
+	public void foo81() {}
 
 }

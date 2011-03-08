@@ -110,7 +110,7 @@ public class ActionMethodParser {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
 			madvocConfig.registerPathAlias(alias, actionPath);
 		}
-		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod);
+		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod, extension);
 	}
 
 	/**
@@ -328,8 +328,16 @@ public class ActionMethodParser {
 			Method actionClassMethod,
 			Class<? extends ActionInterceptor>[] interceptorClasses,
 			String actionPath,
-			String actionMethod) {
-		return new ActionConfig(actionClass, actionClassMethod, interceptorClasses, actionPath, actionMethod);
+			String actionMethod,
+			String actionPathExtension) {
+
+		return new ActionConfig(
+				actionClass,
+				actionClassMethod,
+				interceptorClasses,
+				actionPath,
+				actionMethod,
+				actionPathExtension);
 	}
 
 }

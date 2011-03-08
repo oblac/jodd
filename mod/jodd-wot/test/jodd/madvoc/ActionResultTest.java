@@ -115,9 +115,23 @@ public class ActionResultTest extends MadvocTestCase {
 		resultPath = resultMapper.resolveResultPath(cfg, ".ok");
 		assertEquals("/boo.foo8.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "ok");
-		assertEquals("/boo.ok", resultPath);
+		assertEquals("/boo.foo8.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, ".");
 		assertEquals("/boo.foo8", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, null);
+		assertEquals("/boo.foo8", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+		assertEquals("/boo.ok", resultPath);
+
+		cfg = parse(actionMethodParser, "test.BooAction#foo81");
+		assertEquals("/boo.foo81", cfg.actionPath);
+
+		resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+		assertEquals("/boo.foo81.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		assertEquals("/boo.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, ".");
+		assertEquals("/boo.foo81", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/boo", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "#ok");

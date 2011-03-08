@@ -97,7 +97,7 @@ public class ResultMapper {
 		String resultPath = cfg.actionPath;
 
 		// strip extension part
-		boolean strip = true;
+		boolean strip = cfg.getActionPathExtension() != null;
 		if (resultValue != null) {
 			if (StringUtil.startsWithChar(resultValue, '.')) {
 				resultValue = resultValue.substring(1);
