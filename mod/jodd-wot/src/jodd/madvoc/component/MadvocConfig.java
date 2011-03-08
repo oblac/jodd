@@ -40,6 +40,7 @@ public class MadvocConfig {
 		actionPathMappingEnabled = false;
 		preventCaching = true;
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
+		strictExtensionStripForResultPath = false;
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -310,5 +311,21 @@ public class MadvocConfig {
 	 */
 	public void setRequestScopeInjectorConfig(RequestScopeInjector.Config requestScopeInjectorConfig) {
 		this.requestScopeInjectorConfig = requestScopeInjectorConfig;
+	}
+
+	// ---------------------------------------------------------------- result
+
+	protected boolean strictExtensionStripForResultPath;
+
+	public boolean isStrictExtensionStripForResultPath() {
+		return strictExtensionStripForResultPath;
+	}
+
+	/**
+	 * Specifies if action path extension should be stripped only if it is equal
+	 * to defined one, during result path creation.
+	 */
+	public void setStrictExtensionStripForResultPath(boolean strictExtensionStripForResultPath) {
+		this.strictExtensionStripForResultPath = strictExtensionStripForResultPath;
 	}
 }

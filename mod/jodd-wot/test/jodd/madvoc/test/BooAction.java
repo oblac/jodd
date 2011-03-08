@@ -38,5 +38,9 @@ public class BooAction {
 	public void foo8() {}
 	@Action(value = "/boo.foo81")
 	public void foo81() {}
+	@Action
+	public void foo82() {}
+	@Action(extension = "json")
+	public void foo83() {}
 
 }

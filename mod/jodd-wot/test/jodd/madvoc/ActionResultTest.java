@@ -10,7 +10,6 @@ import jodd.madvoc.test.BooAction;
 
 public class ActionResultTest extends MadvocTestCase {
 
-
 	public void testMethod() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -36,35 +35,52 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/xxx", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "/xxx.ext");
 		assertEquals("/xxx.ext", resultPath);
+	}
 
+	public void testMethod1() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-
-		cfg = parse(actionMethodParser, "test.BooAction#foo1");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo1");
 		assertEquals("/boo.xxx.html", cfg.actionPath);
 		
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/boo.xxx.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/boo.xxx", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "/xxx.ext");
 		assertEquals("/xxx.ext", resultPath);
 
+	}
 
+	public void testMethod2() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		cfg = parse(actionMethodParser, "test.BooAction#foo2");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo2");
 		assertEquals("/boo.foo2.xxx", cfg.actionPath);
+		assertTrue(cfg.isPathEndsWithExtension());
 
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/boo.foo2.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/boo.foo2", resultPath);
-		
+	}
 
+	public void testMethod3() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		cfg = parse(actionMethodParser, "test.BooAction#foo3");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo3");
 		assertEquals("/boo.html", cfg.actionPath);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/boo.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/boo", resultPath);
@@ -74,14 +90,19 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "#doo.ok");
 		assertEquals("/doo.ok", resultPath);
+	}
 
+	public void testMethod4() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-
-		cfg = parse(actionMethodParser, "test.BooAction#foo4");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo4");
 		assertEquals("/xxx", cfg.actionPath);
 		assertNull(cfg.actionMethod);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/xxx.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/xxx", resultPath);
@@ -91,14 +112,19 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "#doo.ok");
 		assertEquals("/doo.ok", resultPath);
+	}
 
+	public void testMethod5() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		
-		cfg = parse(actionMethodParser, "test.BooAction#foo5");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo5");
 		assertEquals("/xxx.html", cfg.actionPath);
 		assertEquals("POST", cfg.actionMethod);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/xxx.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/xxx", resultPath);
@@ -106,27 +132,55 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "#doo.ok");
 		assertEquals("/doo.ok", resultPath);
+	}
 
+	public void testMethod8() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
 
-
-		cfg = parse(actionMethodParser, "test.BooAction#foo8");
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo8");
 		assertEquals("/boo.foo8", cfg.actionPath);
+		assertNull(cfg.actionPathExtension);
+		assertFalse(cfg.isPathEndsWithExtension());
 
-		resultPath = resultMapper.resolveResultPath(cfg, ".ok");
-		assertEquals("/boo.foo8.ok", resultPath);
-		resultPath = resultMapper.resolveResultPath(cfg, "ok");
-		assertEquals("/boo.foo8.ok", resultPath);
-		resultPath = resultMapper.resolveResultPath(cfg, ".");
-		assertEquals("/boo.foo8", resultPath);
-		resultPath = resultMapper.resolveResultPath(cfg, null);
-		assertEquals("/boo.foo8", resultPath);
-		resultPath = resultMapper.resolveResultPath(cfg, "#ok");
-		assertEquals("/boo.ok", resultPath);
+		for (int i = 0; i < 2; i++) {
 
-		cfg = parse(actionMethodParser, "test.BooAction#foo81");
+			config.setStrictExtensionStripForResultPath(i != 0);
+
+			// extension is null, no stripping!
+			String resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+			assertEquals("/boo.foo8.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "ok");
+			assertEquals("/boo.foo8.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, ".");
+			assertEquals("/boo.foo8", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, null);
+			assertEquals("/boo.foo8", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+			assertEquals("/boo.ok", resultPath);
+		}
+
+	}
+
+	public void testMethod81() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
+
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo81");
 		assertEquals("/boo.foo81", cfg.actionPath);
+		assertEquals("html", cfg.actionPathExtension);
+		assertFalse(cfg.isPathEndsWithExtension());
 
-		resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+		config.setStrictExtensionStripForResultPath(false);
+
+		// different extension, stripping
+		String resultPath = resultMapper.resolveResultPath(cfg, ".ok");
 		assertEquals("/boo.foo81.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/boo.ok", resultPath);
@@ -136,6 +190,82 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/boo", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "#ok");
 		assertEquals("/ok", resultPath);
+
+		config.setStrictExtensionStripForResultPath(true);
+
+		// different extension!!! NO stripping (like it is NULL!)
+		resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+		assertEquals("/boo.foo81.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		assertEquals("/boo.foo81.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, ".");
+		assertEquals("/boo.foo81", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, null);
+		assertEquals("/boo.foo81", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+		assertEquals("/boo.ok", resultPath);
+	}
+
+	public void testMethod82() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
+
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo82");
+		assertEquals("/boo.foo82.html", cfg.actionPath);
+		assertEquals("html", cfg.actionPathExtension);
+		assertTrue(cfg.isPathEndsWithExtension());
+
+		for (int i = 0; i < 2; i++) {
+
+			config.setStrictExtensionStripForResultPath(i != 0);
+
+			// default, same extension stripping
+			String resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+			assertEquals("/boo.foo82.html.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "ok");
+			assertEquals("/boo.foo82.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, ".");
+			assertEquals("/boo.foo82.html", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, null);
+			assertEquals("/boo.foo82", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+			assertEquals("/boo.ok", resultPath);
+
+		}
+	}
+
+	public void testMethod83() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
+
+		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo83");
+		assertEquals("/boo.foo83.json", cfg.actionPath);
+		assertEquals("json", cfg.actionPathExtension);
+		assertTrue(cfg.isPathEndsWithExtension());
+
+		for (int i = 0; i < 2; i++) {
+
+			config.setStrictExtensionStripForResultPath(i != 0);
+
+			// default, same extension stripping
+			String resultPath = resultMapper.resolveResultPath(cfg, ".ok");
+			assertEquals("/boo.foo83.json.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "ok");
+			assertEquals("/boo.foo83.ok", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, ".");
+			assertEquals("/boo.foo83.json", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, null);
+			assertEquals("/boo.foo83", resultPath);
+			resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+			assertEquals("/boo.ok", resultPath);
+		}
+
 	}
 
 

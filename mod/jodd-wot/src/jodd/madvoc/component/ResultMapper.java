@@ -97,11 +97,18 @@ public class ResultMapper {
 		String resultPath = cfg.actionPath;
 
 		// strip extension part
-		boolean strip = cfg.getActionPathExtension() != null;
-		if (resultValue != null) {
-			if (StringUtil.startsWithChar(resultValue, '.')) {
-				resultValue = resultValue.substring(1);
+		boolean strip = cfg.getActionPathExtension() != null;		// don't strip if ext == null
+		if ((strip == true) && madvocConfig.strictExtensionStripForResultPath) {
+			if (cfg.isPathEndsWithExtension() == false) {			// don't strip if ext is not eq defined
 				strip = false;
+			}
+		}
+		if (strip == true) {
+			if (resultValue != null) {
+				if (StringUtil.startsWithChar(resultValue, '.')) {	// don't strip if result value starts with a dot
+					//resultValue = resultValue.substring(1);	handle this later for all resultValues
+					strip = false;
+				}
 			}
 		}
 		if (strip) {
@@ -130,6 +137,15 @@ public class ResultMapper {
 			}
 			if (i > 0) {
 				resultValue = resultValue.substring(i);
+			}
+
+			// special case
+			if (StringUtil.startsWithChar(resultValue, '.')) {
+				if (resultValue.length() > 1) {
+					addDot = false;
+				} else {
+					resultValue = StringPool.EMPTY;
+				}
 			}
 		}
 

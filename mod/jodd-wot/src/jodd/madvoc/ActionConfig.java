@@ -15,8 +15,9 @@ public class ActionConfig {
 	public final Class actionClass;
 	public final Method actionClassMethod;
 	public final String actionPath;
-	public final String actionPathExtension;
 	public final String actionMethod;
+	public final String actionPathExtension;
+	public final boolean pathEndsWithExtension;
 	public final Class<? extends ActionInterceptor>[] interceptorClasses;
 	//public final Class<?>[] actionParamTypes;
 
@@ -39,6 +40,8 @@ public class ActionConfig {
 		this.actionMethod = actionMethod;
 		this.actionPathExtension = actionPathExtension;
 		this.interceptorClasses = interceptors;
+
+		this.pathEndsWithExtension = actionPathExtension != null && actionPath.endsWith('.' + actionPathExtension);
 //		Class<?>[] paramTypes = actionMethod.getParameterTypes();
 //		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
 	}
@@ -71,6 +74,15 @@ public class ActionConfig {
 	 */
 	public String getActionPathExtension() {
 		return actionPathExtension;
+	}
+
+	/**
+	 * Returns <code>true</code> if {@link #getActionPath() action path}
+	 * ends with {@link #getActionPathExtension() ac}
+	 * @return
+	 */
+	public boolean isPathEndsWithExtension() {
+		return pathEndsWithExtension;
 	}
 
 	/**
