@@ -11,6 +11,7 @@
 ReForm.prototype.defaults = {
 	validationUrl:					undefined,			// validation url, if not specified will be built from forms action path and validationUrlSuffix
 	validationUrlSuffix:			'Validate.json',	// live validation suffix
+	validationUrlAppend:			true,				// if true, validation url will be appended; otherwise extension will be replaced
 	liveValidation: 				false,				// enable live form validation, on blur
 	ajaxValidationOnSubmit:			false,				// use ajax validation of form before the submit
 	ajaxPost:						false,				// use ajax post instead of regular submit
@@ -47,9 +48,11 @@ function ReForm(formid, options) {
 	// validation url
 	if (!this.opts.validationUrl) {
 		var url = this.formAction;
-		var ndx = url.lastIndexOf('.');
-		if (ndx != -1) {
-			url = url.substring(0, ndx);
+		if (!this.opts.validationUrlAppend) {
+			var ndx = url.lastIndexOf('.');
+			if (ndx != -1) {
+				url = url.substring(0, ndx);
+			}
 		}
 		this.opts.validationUrl = url + this.opts.validationUrlSuffix;
 	}
