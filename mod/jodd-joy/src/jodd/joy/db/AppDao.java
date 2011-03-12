@@ -39,7 +39,8 @@ public class AppDao {
 	// ---------------------------------------------------------------- store
 
 	/**
-	 * Saves or updates entity.
+	 * Saves or updates entity. If ID is not <code>null</code>, entity will be updated.
+	 * Otherwise, entity will be inserted into the database.
 	 * todo add support for sequences when autogeneretedKey == false; use sequences named from table name for fetching id, instead of autoincrement field
 	 */
 	public <E extends Entity> E store(E entity) {
@@ -58,6 +59,14 @@ public class AppDao {
 			query(updateAll(entity)).executeUpdateAndClose();
 		}
 		return entity;
+	}
+
+	/**
+	 * Simply saves entity into the database.
+	 */
+	public <E extends Entity> void save(E entity) {
+		DbQuery q = query(insert(entity));
+		q.executeUpdateAndClose();
 	}
 
 	// ---------------------------------------------------------------- update
