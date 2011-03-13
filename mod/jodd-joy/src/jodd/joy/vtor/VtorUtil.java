@@ -41,7 +41,7 @@ public class VtorUtil {
 	 * Prepares validation messages.
 	 * Key is either validation constraint class name or violation name.
 	 */
-	protected static String resolveValidationMessage(HttpServletRequest request, Violation violation) {
+	public static String resolveValidationMessage(HttpServletRequest request, Violation violation) {
 		ValidationConstraint vc = violation.getConstraint();
 		String key = vc != null ? vc.getClass().getName() : violation.getName();
 		String msg = LocalizationUtil.findMessage(request, key);
