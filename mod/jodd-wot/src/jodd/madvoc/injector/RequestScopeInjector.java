@@ -33,12 +33,14 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		super(ScopeType.REQUEST);
 		this.encoding = madvocConfig.getEncoding();
 		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
+		this.attrNames = madvocConfig.getAttrNames();
 	}
 
 	// ---------------------------------------------------------------- configuration
 
 	protected final String encoding;
 	protected final Config config;
+	protected final MadvocConfig.AttrNames attrNames;
 
 	/**
 	 * Returns encoding used inside. The same as Madvoc encoding.
@@ -135,7 +137,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		}
 
 		/**
-		 * Specifies if GET parameters should be encoded. Alternativly, this can be set in container as well.
+		 * Specifies if GET parameters should be encoded. Alternatively, this can be set in container as well.
 		 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
 		 * file communicates the character-encoding choice to the web server,
 		 * and the Tomcat server correctly reads the URL GET parameters correctly.
@@ -253,7 +255,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	 * Outjects all request data from move result source, if exist.
 	 */
 	protected void outjectMoveSource(HttpServletRequest servletRequest) {
-		String moveId = servletRequest.getParameter(MoveResult.MOVE_ID);
+		String moveId = servletRequest.getParameter(attrNames.moveId);
 		if (moveId != null) {
 			HttpSession session = servletRequest.getSession();
 			ActionRequest sourceRequest = (ActionRequest) session.getAttribute(moveId);

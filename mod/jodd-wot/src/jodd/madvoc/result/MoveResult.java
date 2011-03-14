@@ -3,6 +3,9 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.meta.In;
 import jodd.servlet.UrlEncoder;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomStringUtil;
@@ -20,17 +23,15 @@ public class MoveResult extends ActionResult {
 		super(NAME);
 	}
 
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
+
 	/**
 	 * Returns unique id, random long value.
 	 */
 	protected String generateUniqueId() {
 		return RandomStringUtil.randomAlphaNumeric(32);
 	}
-
-	/**
-	 * Session parameter name. 
-	 */
-	public static final String MOVE_ID = MoveResult.class.getName() + ".id";
 
 	/**
 	 * Saves action in the session under some id that is added as request parameter.
@@ -40,7 +41,7 @@ public class MoveResult extends ActionResult {
 		HttpSession session = actionRequest.getHttpServletRequest().getSession();
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);
-		resultPath = UrlEncoder.buildUrl(resultPath).param(MOVE_ID, id).toString();
+		resultPath = UrlEncoder.buildUrl(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
 		DispatcherUtil.redirect(actionRequest.getHttpServletRequest(), actionRequest.getHttpServletResponse(), resultPath);
 	}
 
