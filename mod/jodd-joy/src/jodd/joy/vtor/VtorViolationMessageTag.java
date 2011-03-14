@@ -3,34 +3,32 @@
 package jodd.joy.vtor;
 
 import jodd.vtor.Violation;
-import jodd.vtor.VtorException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
-import java.util.List;
 
-public class VtorViolationsTag extends SimpleTagSupport {
+/**
+ * Tag that renders message of single message.
+ */
+public class VtorViolationMessageTag extends SimpleTagSupport {
 
-	protected List<Violation> violations;
+	protected Violation violation;
 
-	public void setViolations(List<Violation> violations) {
-		this.violations = violations;
+	public void setViolation(Violation violation) {
+		this.violation = violation;
 	}
 
 	@Override
-	public void doTag() throws JspException {
+	public void doTag() throws JspException, IOException {
 		PageContext pageContext = ((PageContext) getJspContext());
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-		String output = VtorUtil.createViolationsJsonString(request, violations);
-		try {
-			pageContext.getOut().write(output);
-		} catch (IOException ioex) {
-			throw new VtorException(ioex);
-		}
+		String output = VtorUtil.resolveValidationMessage(request, violation);
+
+		pageContext.getOut().write(output);
 	}
 
 }

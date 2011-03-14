@@ -40,8 +40,8 @@
 	</tag>
 
 	<tag>
-		<name>violations</name>
-		<tag-class>jodd.joy.vtor.VtorViolationsTag</tag-class>
+		<name>violations-json</name>
+		<tag-class>jodd.joy.vtor.VtorViolationsJsonMessagesTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<name>violations</name>
@@ -50,6 +50,16 @@
 		</attribute>
 	</tag>
 
-
+	<tag>
+		<name>violation-msg</name>
+		<tag-class>jodd.joy.vtor.VtorViolationMessageTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>violation</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>jodd.vtor.Violation</type>
+		</attribute>
+	</tag>
 
 </taglib>
