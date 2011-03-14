@@ -31,7 +31,7 @@ public class I18nInterceptor extends ActionInterceptor {
 		Object action = actionRequest.getAction();
 		if (action instanceof AppAction) {
 			AppAction appAction = (AppAction) action;
-			List<Violation> violations = appAction.getViolations();
+			List<Violation> violations = appAction.violations();
 			String data = VtorUtil.createViolationsJsonString(request, violations);
 			request.setAttribute(ATTR_NAME_VIOLATIONS, data);
 		}

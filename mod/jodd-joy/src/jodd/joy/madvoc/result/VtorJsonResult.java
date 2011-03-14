@@ -42,7 +42,7 @@ public class VtorJsonResult extends ActionResult {
 		}
 		AppAction appAction = (AppAction) action;
 
-		List<Violation> list = appAction.getViolations();
+		List<Violation> list = appAction.violations();
 
 		String result = VtorUtil.createViolationsJsonString(actionRequest.getHttpServletRequest(), list);
 		char[] chars = result.toCharArray();

@@ -76,7 +76,7 @@ public abstract class AppAction {
 	/**
 	 * Returns validation violations or <code>null</code> if validation was successful.
 	 */
-	public List<Violation> getViolations() {
+	public List<Violation> violations() {
 		if (vtor == null) {
 			return null;
 		}
