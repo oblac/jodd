@@ -24,7 +24,7 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 			return new BigInteger(String.valueOf(((Number)value).longValue()));
 		}
 		try {
-			return new BigInteger(value.toString());
+			return new BigInteger(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

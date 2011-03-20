@@ -21,7 +21,7 @@ public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 			return (BigDecimal) value;
 		}
 		try {
-			return new BigDecimal(value.toString());
+			return new BigDecimal(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
