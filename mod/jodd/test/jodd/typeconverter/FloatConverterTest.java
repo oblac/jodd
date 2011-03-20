@@ -14,6 +14,7 @@ public class FloatConverterTest extends BaseTestCase {
 		assertEquals(Float.valueOf(1), FloatConverter.valueOf(Integer.valueOf(1)));
 		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(Double.valueOf(1.73D)));
 		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf("1.73"));
+		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(" 1.73 "));
 		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(new BigDecimal("1.73")));
 
 		try {

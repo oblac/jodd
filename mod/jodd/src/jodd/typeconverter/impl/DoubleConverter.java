@@ -23,7 +23,7 @@ public class DoubleConverter implements TypeConverter<Double> {
 		}
 
 		try {
-			return Double.valueOf(value.toString());
+			return Double.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

@@ -21,7 +21,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 				return new double[] {((Number) value).doubleValue()};
 			}
 			try {
-				return new double[] {Double.parseDouble(value.toString())};
+				return new double[] {Double.parseDouble(value.toString().trim())};
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
@@ -88,7 +88,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 					if (values[i] instanceof Number) {
 						results[i] = ((Number) values[i]).doubleValue();
 					} else {
-						results[i] = Double.parseDouble(values[i].toString());
+						results[i] = Double.parseDouble(values[i].toString().trim());
 					}
 				}
 			}

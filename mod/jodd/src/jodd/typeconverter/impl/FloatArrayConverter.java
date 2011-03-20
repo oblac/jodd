@@ -21,7 +21,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 				return new float[] {((Number) value).floatValue()};
 			}
 			try {
-				return new float[] {Float.parseFloat(value.toString())};
+				return new float[] {Float.parseFloat(value.toString().trim())};
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
@@ -88,7 +88,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 					if (values[i] instanceof Number) {
 						results[i] = ((Number) values[i]).floatValue();
 					} else {
-						results[i] = Float.parseFloat(values[i].toString());
+						results[i] = Float.parseFloat(values[i].toString().trim());
 					}
 				}
 			}

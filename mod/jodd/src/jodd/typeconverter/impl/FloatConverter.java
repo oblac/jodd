@@ -23,7 +23,7 @@ public class FloatConverter implements TypeConverter<Float> {
 		}
 
 		try {
-			return Float.valueOf(value.toString());
+			return Float.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
