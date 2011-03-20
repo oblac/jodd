@@ -17,6 +17,7 @@ public class LongConverterTest extends TestCase {
         assertEquals(Long.valueOf(173), LongConverter.valueOf(Double.valueOf(173.0D)));
         assertEquals(Long.valueOf(173), LongConverter.valueOf(Float.valueOf(173.0F)));
         assertEquals(Long.valueOf(173), LongConverter.valueOf("173"));
+        assertEquals(Long.valueOf(173), LongConverter.valueOf(" 173 "));
 
         try {
             LongConverter.valueOf("a");

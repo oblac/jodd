@@ -18,6 +18,7 @@ public class MutableLongConverterTest extends TestCase {
         assertEquals(new MutableLong(173), MutableLongConverter.valueOf(Double.valueOf(173.0D)));
         assertEquals(new MutableLong(173), MutableLongConverter.valueOf(Float.valueOf(173.0F)));
         assertEquals(new MutableLong(173), MutableLongConverter.valueOf("173"));
+        assertEquals(new MutableLong(173), MutableLongConverter.valueOf(" 173 "));
 
         try {
             MutableLongConverter.valueOf("a");

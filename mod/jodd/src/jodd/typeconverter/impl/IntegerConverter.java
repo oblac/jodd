@@ -22,7 +22,7 @@ public class IntegerConverter implements TypeConverter<Integer> {
 			return Integer.valueOf(((Number)value).intValue());
 		}
 		try {
-			return Integer.valueOf(value.toString());
+			return Integer.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

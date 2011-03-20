@@ -16,6 +16,7 @@ public class MutableShortConverterTest extends TestCase {
         assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(Short.valueOf((short) 1)));
 		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(Double.valueOf(1.0D)));
 		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf("1"));
+		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(" 1 "));
 
 		try {
 			MutableShortConverter.valueOf("a");

@@ -24,7 +24,7 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 			return new MutableShort(((Number)value).byteValue());
 		}
 		try {
-			return new MutableShort(value.toString());
+			return new MutableShort(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

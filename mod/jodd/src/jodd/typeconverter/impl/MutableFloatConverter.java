@@ -23,7 +23,7 @@ public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 			return new MutableFloat(((Number)value).floatValue());
 		}
 		try {
-			return new MutableFloat(value.toString());
+			return new MutableFloat(value.toString().trim());
 		} catch (Exception ex) {
 			throw new TypeConversionException(value, ex);
 		}

@@ -23,7 +23,7 @@ public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 			return new MutableDouble(((Number)value).doubleValue());
 		}
 		try {
-			return new MutableDouble(value.toString());
+			return new MutableDouble(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

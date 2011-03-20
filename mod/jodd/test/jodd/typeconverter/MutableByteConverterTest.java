@@ -16,6 +16,7 @@ public class MutableByteConverterTest extends TestCase {
         assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(Short.valueOf((short) 1)));
         assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(Double.valueOf(1.0D)));
         assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf("1"));
+        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(" 1 "));
 
         try {
             MutableByteConverter.valueOf("a");

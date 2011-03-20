@@ -22,7 +22,7 @@ public class LongConverter implements TypeConverter<Long> {
 			return Long.valueOf(((Number)value).longValue());
 		}
 		try {
-			return Long.valueOf(value.toString());
+			return Long.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

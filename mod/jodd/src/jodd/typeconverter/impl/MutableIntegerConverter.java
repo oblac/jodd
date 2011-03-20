@@ -23,7 +23,7 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 			return new MutableInteger(((Number)value).intValue());
 		}
 		try {
-			return new MutableInteger(value.toString());
+			return new MutableInteger(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

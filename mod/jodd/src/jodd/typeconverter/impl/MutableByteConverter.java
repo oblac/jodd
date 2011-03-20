@@ -23,7 +23,7 @@ public class MutableByteConverter implements TypeConverter<MutableByte> {
 			return new MutableByte(((Number)value).byteValue());
 		}
 		try {
-			return new MutableByte(value.toString());
+			return new MutableByte(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

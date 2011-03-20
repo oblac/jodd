@@ -23,7 +23,7 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 			return new MutableLong(((Number)value).longValue());
 		}
 		try {
-			return (new MutableLong(value.toString()));
+			return (new MutableLong(value.toString().trim()));
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

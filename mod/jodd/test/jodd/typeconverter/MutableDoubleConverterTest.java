@@ -17,6 +17,7 @@ public class MutableDoubleConverterTest extends TestCase {
         assertEquals(new MutableDouble(1), MutableDoubleConverter.valueOf(Integer.valueOf(1)));
         assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(Double.valueOf(1.73D)));
         assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf("1.73"));
+        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(" 1.73 "));
         assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(new BigDecimal("1.73")));
 
         try {
