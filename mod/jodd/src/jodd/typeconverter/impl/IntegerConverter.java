@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to an Integer.
+ * Converts given object to an <code>Integer</code>.
  */
 public class IntegerConverter implements TypeConverter<Integer> {
 

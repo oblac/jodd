@@ -6,8 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to Short. Given object (if not already instance of
- * Short) is first converted to String and then analyzed.
+ * Converts given object to <code>Short</code>.
  */
 public class ShortConverter implements TypeConverter<Short> {
 

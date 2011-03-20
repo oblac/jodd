@@ -7,7 +7,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to jodd.servlet.upload.FileUpload.
+ * Converts given object to {@link FileUpload}
  */
 public class FileUploadConverter implements TypeConverter<FileUpload> {
 

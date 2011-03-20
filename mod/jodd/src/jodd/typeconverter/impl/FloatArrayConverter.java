@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- *  Converts given object to float[].
+ *  Converts given object to <code>float[]</code>.
  */
 public class FloatArrayConverter implements TypeConverter<float[]> {
 

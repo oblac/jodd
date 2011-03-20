@@ -7,7 +7,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.ClassLoaderUtil;
 
 /**
- * Converts given object to Class array.
+ * Converts given object to <code>Class</code> array.
  */
 public class ClassArrayConverter implements TypeConverter<Class[]> {
 

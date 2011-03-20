@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- *  Converts given object to double[].
+ *  Converts given object to <code>double[]</code>.
  */
 public class DoubleArrayConverter implements TypeConverter<double[]> {
 

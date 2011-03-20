@@ -8,8 +8,8 @@ import jodd.typeconverter.TypeConverter;
 import static jodd.util.StringPool.*;
 
 /**
- * Converts given object to Boolean. Given object (if not already instance of
- * Boolean) is first converted to String and then analyzed.
+ * Converts given object to <code>Boolean</code>. Given object (if not already instance of
+ * <code>Boolean</code>) is first converted to <code>String</code> and then analyzed.
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 

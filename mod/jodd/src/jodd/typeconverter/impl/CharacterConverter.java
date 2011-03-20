@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to Character.
+ * Converts given object to <code>Character</code>.
  */
 public class CharacterConverter implements TypeConverter<Character> {
 

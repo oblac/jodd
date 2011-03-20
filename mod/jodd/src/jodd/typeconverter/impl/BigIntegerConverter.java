@@ -8,7 +8,7 @@ import jodd.typeconverter.TypeConverter;
 import java.math.BigInteger;
 
 /**
- * Converts given object to BigInteger.
+ * Converts given object to <code>BigInteger</code>.
  */
 public class BigIntegerConverter implements TypeConverter<BigInteger> {
 

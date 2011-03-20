@@ -9,7 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Convert given object to URI.
+ * Convert given object to <code>URI</code>.
  */
 public class URIConverter implements TypeConverter<URI> {
 

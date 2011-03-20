@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to a Long.
+ * Converts given object to a <code>Long</code>.
  */
 public class LongConverter implements TypeConverter<Long> {
 

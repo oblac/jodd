@@ -10,7 +10,7 @@ import java.sql.Clob;
 import java.sql.SQLException;
 
 /**
- * Converts given object to String.
+ * Converts given object to <code>String</code>.
  */
 public class StringConverter implements TypeConverter<String> {
 

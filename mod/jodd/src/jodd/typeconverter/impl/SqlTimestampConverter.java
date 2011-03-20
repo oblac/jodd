@@ -8,7 +8,7 @@ import jodd.typeconverter.TypeConverter;
 import java.sql.Timestamp;
 
 /**
- * Converts given object to java.sql.Timestamp.
+ * Converts given object to <code>java.sql.Timestamp</code>.
  */
 public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 

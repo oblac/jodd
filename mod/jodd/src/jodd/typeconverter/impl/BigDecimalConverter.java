@@ -8,7 +8,7 @@ import jodd.typeconverter.TypeConverter;
 import java.math.BigDecimal;
 
 /**
- * Converts given object to BigDecimal.
+ * Converts given object to <code>BigDecimal</code>.
  */
 public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 

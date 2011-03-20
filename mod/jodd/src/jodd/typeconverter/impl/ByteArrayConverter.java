@@ -9,7 +9,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 /**
- *  Converts given object to byte[].
+ *  Converts given object to <code>byte[]</code>.
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 

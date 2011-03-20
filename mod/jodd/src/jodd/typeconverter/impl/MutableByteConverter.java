@@ -7,8 +7,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to {@link MutableByte}. Given object (if not already instance of
- * MutableByte) is first converted to String and then analyzed.
+ * Converts given object to {@link MutableByte}.
  */
 public class MutableByteConverter implements TypeConverter<MutableByte> {
 

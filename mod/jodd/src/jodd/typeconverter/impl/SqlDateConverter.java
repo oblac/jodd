@@ -9,7 +9,7 @@ import java.sql.Date;
 
 
 /**
- * Converts given object to java.sql.Date.
+ * Converts given object to <code>java.sql.Date</code>.
  */
 public class SqlDateConverter implements TypeConverter<Date> {
 

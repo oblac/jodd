@@ -7,7 +7,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
 /**
- *  Converts given object to int[].
+ *  Converts given object to <code>int[]</code>.
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 

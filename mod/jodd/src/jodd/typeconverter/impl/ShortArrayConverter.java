@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- *  Converts given object to short[].
+ *  Converts given object to <code>short[]</code>.
  */
 public class ShortArrayConverter implements TypeConverter<short[]> {
 

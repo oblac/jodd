@@ -8,7 +8,7 @@ import jodd.typeconverter.TypeConverter;
 import java.sql.Time;
 
 /**
- * Converts given object to java.sql.Time.
+ * Converts given object to <code>java.sql.Time</code>.
  */
 public class SqlTimeConverter implements TypeConverter<Time> {
 

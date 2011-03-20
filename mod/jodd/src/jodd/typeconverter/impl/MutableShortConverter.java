@@ -8,8 +8,7 @@ import jodd.typeconverter.TypeConverter;
 
 
 /**
- * Converts given object to {@link MutableShort}. Given object (if not already instance of
- * MutableShort) is first converted to String and then analyzed.
+ * Converts given object to {@link MutableShort}.
  */
 public class MutableShortConverter implements TypeConverter<MutableShort> {
 

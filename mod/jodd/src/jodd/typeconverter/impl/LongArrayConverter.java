@@ -7,7 +7,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
 /**
- *  Converts given object to long[].
+ *  Converts given object to <code>long[]</code>.
  */
 public class LongArrayConverter implements TypeConverter<long[]> {
 

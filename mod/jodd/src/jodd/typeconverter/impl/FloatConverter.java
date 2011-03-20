@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to Float.
+ * Converts given object to <code>Float</code>.
  */
 public class FloatConverter implements TypeConverter<Float> {
 

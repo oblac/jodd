@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 /**
- * Converts given object to URL.
+ * Converts given object to <code>URL</code>.
  */
 public class URLConverter implements TypeConverter<URL> {
 

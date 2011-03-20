@@ -6,7 +6,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to Double.
+ * Converts given object to <code>Double</code>.
  */
 public class DoubleConverter implements TypeConverter<Double> {
 

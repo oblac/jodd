@@ -7,7 +7,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.ClassLoaderUtil;
 
 /**
- * Converts given object to Class.
+ * Converts given object to <code>Class</code>.
  */
 public class ClassConverter implements TypeConverter<Class> {
 

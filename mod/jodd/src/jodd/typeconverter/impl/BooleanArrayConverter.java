@@ -5,7 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 
 /**
- *  Converts given object to boolean[].
+ *  Converts given object to <code>boolean[]</code>.
  */
 public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 

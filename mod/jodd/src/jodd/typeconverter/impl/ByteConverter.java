@@ -6,8 +6,8 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to Byte. Given object (if not already instance of
- * Byte) is first converted to String and then analyzed.
+ * Converts given object to <code>Byte</code>. Given object (if not already instance of
+ * <code>Byte</code>) is first converted to <code>String</code> and then analyzed.
  */
 public class ByteConverter implements TypeConverter<Byte> {
 
