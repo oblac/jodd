@@ -40,6 +40,8 @@ public class TypeConverterTests extends TestSuite {
 		addTestSuite(SqlTimestampConverterTest.class);
 		addTestSuite(StringConverterTest.class);
 		addTestSuite(StringArrayConverterTest.class);
+		addTestSuite(URLConverterTest.class);
+		addTestSuite(URIConverterTest.class);
 	}
 
 	public static Test suite() {

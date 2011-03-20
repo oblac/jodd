@@ -5,6 +5,8 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
+import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.net.MalformedURLException;
 
@@ -21,6 +23,26 @@ public class URLConverter implements TypeConverter<URL> {
 		if (value instanceof URL) {
 			return (URL) value;
 		}
+
+		if (value instanceof File) {
+			File file = (File) value;
+			try {
+				return file.toURL();
+			} catch (MalformedURLException muex) {
+				throw new TypeConversionException(value, muex);
+			}
+		}
+
+		if (value instanceof URI) {
+			URI uri = (URI) value;
+			try {
+				return uri.toURL();
+			} catch (MalformedURLException muex) {
+				throw new TypeConversionException(value, muex);
+			}
+		}
+
+
 		try {
 			return new URL(value.toString());
 		} catch (MalformedURLException muex) {
