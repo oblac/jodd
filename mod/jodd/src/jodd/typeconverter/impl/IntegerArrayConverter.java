@@ -95,7 +95,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 					if (values[i] instanceof Number) {
 						results[i] = ((Number) values[i]).intValue();
 					} else {
-						results[i] = Integer.parseInt(values[i].toString());
+						results[i] = Integer.parseInt(values[i].toString().trim());
 					}
 				}
 			}

@@ -17,6 +17,10 @@ public class IntegerArrayConverterTest extends BaseTestCase {
 		assertEq(arri(1, 7, 3), IntegerArrayConverter.valueOf(arrd(1.1, 7.99, 3)));
 		assertEq(arri(173, 1022), IntegerArrayConverter.valueOf(arrs("173", "1022")));
 		assertEq(arri(173, 10), IntegerArrayConverter.valueOf(arro("173", Integer.valueOf(10))));
+
+		assertEq(arri(111, 777, 333), IntegerArrayConverter.valueOf(arrs("111", "   777     ", "333")));
+		assertEq(arri(111, 777, 333), IntegerArrayConverter.valueOf("111,  777,  333"));
+
 	}
 
 	private void assertEq(int[] arr1, int[] arr2) {

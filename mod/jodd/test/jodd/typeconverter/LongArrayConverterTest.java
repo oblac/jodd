@@ -16,6 +16,9 @@ public class LongArrayConverterTest extends BaseTestCase {
         assertEq(arrl(173, 1022, 29929), LongArrayConverter.valueOf(arrl(173, 1022, 29929)));
         assertEq(arrl(173, 1022), LongArrayConverter.valueOf(arrs("173", "1022")));
         assertEq(arrl(173, 1022), LongArrayConverter.valueOf(arro("173", Long.valueOf(1022))));
+
+		assertEq(arrl(111, 777, 333), LongArrayConverter.valueOf(arrs("111", "   777     ", "333")));
+		assertEq(arrl(111, 777, 333), LongArrayConverter.valueOf("111,  777,  333"));
     }
 
     private void assertEq(long[] arr1, long[] arr2) {

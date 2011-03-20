@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.CsvUtil;
 
 /**
  *  Converts given object to long[].
@@ -20,11 +21,17 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 			if (value instanceof Number) {
 				return new long[] {((Number) value).longValue()};
 			}
+
+			String[] values = CsvUtil.toStringArray(value.toString());
+			long[] result = new long[values.length];
 			try {
-				return new long[] {Long.parseLong(value.toString())};
+				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
+					result[i] = Long.parseLong(values[i].trim());
+				}
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
+			return result;
 		}
 
 		if (type == long[].class) {
@@ -87,7 +94,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 					if (values[i] instanceof Number) {
 						results[i] = ((Number) values[i]).longValue();
 					} else {
-						results[i] = Long.parseLong(values[i].toString());
+						results[i] = Long.parseLong(values[i].toString().trim());
 					}
 				}
 			}
