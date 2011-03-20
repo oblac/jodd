@@ -17,6 +17,8 @@ public class ByteArrayConverterTest extends BaseTestCase {
 		assertEq(arrb((byte)1, (byte)7, (byte)3), ByteArrayConverter.valueOf(arrf(1.99f, 7.99f, 3.22f)));
 		assertEq(arrb((byte)1, (byte)7, (byte)3), ByteArrayConverter.valueOf(arrd(1.99, 7.99, 3.22)));
 		assertEq(arrb((byte)1, (byte)7, (byte)3), ByteArrayConverter.valueOf(arrs("1", "7", "3")));
+		assertEq(arrb((byte)1, (byte)7, (byte)3), ByteArrayConverter.valueOf(arrs(" 1 ", " 7 ", " 3 ")));
+		assertEq(arrb((byte)1, (byte)7, (byte)3), ByteArrayConverter.valueOf(" 1 ,  7 ,  3 "));
 	}
 
 	public void testNonArrayConversion() {

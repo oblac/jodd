@@ -2,7 +2,9 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.CsvUtil;
 
 /**
  *  Converts given object to <code>boolean[]</code>.
@@ -13,12 +15,23 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		if (value == null) {
 			return null;
 		}
+
 		Class type = value.getClass();
 		if (type.isArray() == false) {
 			if (type == Boolean.class) {
 				return new boolean[] {((Boolean) value).booleanValue()};
 			}
-			return new boolean[] {BooleanConverter.valueOf(value.toString()).booleanValue()};
+
+			String[] values = CsvUtil.toStringArray(value.toString());
+			boolean[] result = new boolean[values.length];
+			try {
+				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
+					result[i] = BooleanConverter.valueOf(values[i]).booleanValue();
+				}
+			} catch (NumberFormatException nfex) {
+				throw new TypeConversionException(value, nfex);
+			}
+			return result;
 		}
 
 		if (type == boolean[].class) {

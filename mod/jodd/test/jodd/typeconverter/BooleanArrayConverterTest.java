@@ -15,6 +15,7 @@ public class BooleanArrayConverterTest extends BaseTestCase {
 		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arri(-7, 0, 3)));
 		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrf(-7.0f, 0.0f, 3.0f)));
 		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrs("true", "0", "yes")));
+		assertEq(arrl(true, false, true), BooleanArrayConverter.valueOf(arrs(" true ", "0", " yes ")));
 	}
 
 

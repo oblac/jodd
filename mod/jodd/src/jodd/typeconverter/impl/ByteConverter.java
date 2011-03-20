@@ -22,7 +22,7 @@ public class ByteConverter implements TypeConverter<Byte> {
 			return Byte.valueOf(((Number)value).byteValue());
 		}
 		try {
-			return Byte.valueOf(value.toString());
+			return Byte.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

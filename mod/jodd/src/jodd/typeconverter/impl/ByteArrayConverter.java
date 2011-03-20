@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.CsvUtil;
 
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -34,11 +35,17 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 					throw new TypeConversionException(value, sex);
 				}
 			}
+
+			String[] values = CsvUtil.toStringArray(value.toString());
+			byte[] result = new byte[values.length];
 			try {
-				return new byte[] {Byte.parseByte(value.toString())};
+				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
+					result[i] = Byte.parseByte(values[i].trim());
+				}
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
 			}
+			return result;
 		}
 
 		if (type == byte[].class) {
@@ -101,7 +108,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 				if (values[i] instanceof Number) {
 					results[i] = ((Number) values[i]).byteValue();
 				} else {
-					results[i] = Byte.parseByte(values[i].toString());
+					results[i] = Byte.parseByte(values[i].toString().trim());
 				}
 			}
 		} catch (NumberFormatException nfex) {

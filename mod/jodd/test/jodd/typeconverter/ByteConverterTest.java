@@ -14,6 +14,7 @@ public class ByteConverterTest extends TestCase {
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Short.valueOf((short) 1)));
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Double.valueOf(1.5D)));
 		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("1"));
+		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("  1  "));
 		assertEquals(Byte.valueOf((byte) (300-256)), ByteConverter.valueOf(Integer.valueOf(300)));
 
 		try {
