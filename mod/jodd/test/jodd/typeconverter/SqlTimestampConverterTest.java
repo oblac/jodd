@@ -15,6 +15,7 @@ public class SqlTimestampConverterTest extends TestCase {
         assertEquals(Timestamp.valueOf("2011-01-01 00:01:02"), SqlTimestampConverter.valueOf(Timestamp.valueOf("2011-01-01 00:01:02")));
         assertEquals(new Timestamp(60), SqlTimestampConverter.valueOf(Integer.valueOf(60)));
         assertEquals(Timestamp.valueOf("2011-01-01 00:01:02"), SqlTimestampConverter.valueOf("2011-01-01 00:01:02"));
+        assertEquals(Timestamp.valueOf("2011-01-01 00:01:02"), SqlTimestampConverter.valueOf("     2011-01-01 00:01:02       "));
 
         try {
             SqlTimestampConverter.valueOf("00:01");

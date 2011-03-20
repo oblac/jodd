@@ -15,6 +15,7 @@ public class SqlDateConverterTest extends TestCase {
         assertEquals(Date.valueOf("2011-01-01"), SqlDateConverter.valueOf(Date.valueOf("2011-01-01")));
         assertEquals(new Date(1111111), SqlDateConverter.valueOf(Integer.valueOf(1111111)));
         assertEquals(Date.valueOf("2011-01-01"), SqlDateConverter.valueOf("2011-01-01"));
+        assertEquals(Date.valueOf("2011-01-01"), SqlDateConverter.valueOf("      2011-01-01       "));
 
         try {
             SqlDateConverter.valueOf("2011.01.01");

@@ -15,6 +15,7 @@ public class SqlTimeConverterTest extends TestCase {
         assertEquals(Time.valueOf("00:01:02"), SqlTimeConverter.valueOf(Time.valueOf("00:01:02")));
         assertEquals(new Time(60), SqlTimeConverter.valueOf(Integer.valueOf(60)));
         assertEquals(Time.valueOf("00:01:02"), SqlTimeConverter.valueOf("00:01:02"));
+        assertEquals(Time.valueOf("00:01:02"), SqlTimeConverter.valueOf("       00:01:02    "));
 
         try {
             SqlTimeConverter.valueOf("00:01");
