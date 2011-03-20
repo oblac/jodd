@@ -30,6 +30,7 @@ public class CsvUtilTest extends TestCase {
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super, luxurious truck\""), "1997", "Ford", "E350", "Super, luxurious truck");
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super \"\"luxurious\"\" truck\""), "1997", "Ford", "E350", "Super \"luxurious\" truck");
 		assertStringArray(CsvUtil.toStringArray("\"a\nb\""), "a\nb");
+		assertStringArray(CsvUtil.toStringArray("a,,b"), "a","", "b");
 	}
 
 
