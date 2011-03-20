@@ -26,7 +26,7 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		}
 	
 		try {
-			return (Date.valueOf(value.toString()));
+			return (Date.valueOf(value.toString().trim()));
 		} catch (IllegalArgumentException iaex) {
 			throw new TypeConversionException(value, iaex);
 		}

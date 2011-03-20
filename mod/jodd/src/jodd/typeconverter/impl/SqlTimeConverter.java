@@ -25,7 +25,7 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		}
 
 		try {
-			return (Time.valueOf(value.toString()));
+			return (Time.valueOf(value.toString().trim()));
 		} catch (IllegalArgumentException iaex) {
 			throw new TypeConversionException(value, iaex);
 		}

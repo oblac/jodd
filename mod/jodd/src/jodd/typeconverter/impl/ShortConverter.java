@@ -22,7 +22,7 @@ public class ShortConverter implements TypeConverter<Short> {
 			return Short.valueOf(((Number)value).shortValue());
 		}
 		try {
-			return Short.valueOf(value.toString());
+			return Short.valueOf(value.toString().trim());
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

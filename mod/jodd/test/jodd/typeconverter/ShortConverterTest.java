@@ -14,6 +14,7 @@ public class ShortConverterTest extends TestCase {
         assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(Integer.valueOf(1)));
         assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(Double.valueOf(1.0D)));
         assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf("1"));
+        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(" 1 "));
 
         try {
             ShortConverter.valueOf("a");

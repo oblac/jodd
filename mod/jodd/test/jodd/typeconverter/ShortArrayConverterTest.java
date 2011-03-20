@@ -14,6 +14,7 @@ public class ShortArrayConverterTest extends BaseTestCase {
         assertEq(arrs((short) 1, (short) 7, (short) 3), ShortArrayConverter.valueOf(arrb((byte) 1, (byte) 7, (byte) 3)));
         assertEq(arrs((short) 1, (short) 7, (short) 3), ShortArrayConverter.valueOf(arri(1, 7, 3)));
         assertEq(arrs((short) 173, (short) 1022), ShortArrayConverter.valueOf(arrs("173", "1022")));
+        assertEq(arrs((short) 173, (short) 1022), ShortArrayConverter.valueOf(arrs(" 173 ", " 1022 ")));
         assertEq(arrs((short) 173, (short) 10), ShortArrayConverter.valueOf(arro("173", Integer.valueOf(10))));
     }
 

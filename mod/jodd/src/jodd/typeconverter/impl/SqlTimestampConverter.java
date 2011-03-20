@@ -23,7 +23,7 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 			return new Timestamp(((Number)value).longValue()); 
 		}
 		try {
-			return (Timestamp.valueOf(value.toString()));
+			return (Timestamp.valueOf(value.toString().trim()));
 		} catch (IllegalArgumentException iaex) {
 			throw new TypeConversionException(value, iaex);
 		}
