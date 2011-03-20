@@ -20,7 +20,7 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 		if (value.getClass() == Boolean.class) {
 			return (Boolean) value;
 		}
-		String stringValue = value.toString();
+		String stringValue = value.toString().trim();
 		if (stringValue.equalsIgnoreCase(YES) ||
 				stringValue.equalsIgnoreCase(Y) ||
 				stringValue.equalsIgnoreCase(TRUE) ||

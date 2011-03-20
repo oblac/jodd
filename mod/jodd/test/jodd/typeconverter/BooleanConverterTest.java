@@ -13,6 +13,7 @@ public class BooleanConverterTest extends TestCase {
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf(Boolean.TRUE));
 
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("yes"));
+		assertEquals(Boolean.TRUE, BooleanConverter.valueOf(" yes "));
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("YES"));
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("y"));
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("Y"));
@@ -21,6 +22,7 @@ public class BooleanConverterTest extends TestCase {
 		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("1"));
 
 		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("no"));
+		assertEquals(Boolean.FALSE, BooleanConverter.valueOf(" no "));
 		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("NO"));
 		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("n"));
 		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("N"));
