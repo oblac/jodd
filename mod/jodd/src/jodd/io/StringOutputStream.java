@@ -10,15 +10,15 @@ import java.io.Serializable;
 import java.io.IOException;
 
 /**
- * Provides an OutputStream to an internal String. Internally converts bytes
- * to a Strings and stores them in an internal StringBuffer.
+ * Provides an <code>OutputStream</code> to an internal String. Internally converts bytes
+ * to a Strings and stores them in an internal <code>StringBuilder</code>.
  */
 public class StringOutputStream extends OutputStream implements Serializable {
 	
 	/**
 	 * The internal destination StringBuffer.
 	 */
-	protected final StringBuffer buf;
+	protected final StringBuilder sb;
 	protected final String encoding;
 
 	/**
@@ -29,7 +29,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	}
 	public StringOutputStream(String encoding) {
 		super();
-		buf = new StringBuffer();
+		sb = new StringBuilder();
 		this.encoding = encoding;
 	}
 
@@ -41,7 +41,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return buf.toString();
+		return sb.toString();
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	*/
 	@Override
 	public void close() {
-		buf.setLength(0);
+		sb.setLength(0);
 
 	}
 
@@ -60,7 +60,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	 */
 	@Override
 	public void write(byte[] b) throws IOException {
-		buf.append(CharUtil.toCharArray(b, encoding));
+		sb.append(CharUtil.toCharArray(b, encoding));
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 			bytes[i] = b[off];
 			off++;
 		}
-		buf.append(CharUtil.toCharArray(bytes, encoding));
+		sb.append(CharUtil.toCharArray(bytes, encoding));
 	}
 
 	/**
@@ -90,6 +90,6 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	 */
 	@Override
 	public void write(int b) {
-		buf.append((char)b);
+		sb.append((char)b);
 	}
 }

@@ -2,8 +2,10 @@
 
 package jodd.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jodd.io.StreamUtil;
 import jodd.util.Base64;
 import jodd.util.StringPool;
 import jodd.util.MimeTypes;
@@ -178,6 +181,19 @@ public class ServletUtil {
 			return null;
 		}
 		return list.toArray(new Cookie[list.size()]);
+	}
+
+	// ---------------------------------------------------------------- request body
+
+	/**
+	 * Reads HTTP request body. Useful only with POST requests. Once body is read,
+	 * it cannot be read again!
+	 */
+	public static String readRequestBody(HttpServletRequest request) throws IOException {
+		BufferedReader buff = request.getReader();
+		StringWriter out = new StringWriter();
+		StreamUtil.copy(buff, out);
+		return out.toString();
 	}
 
 
