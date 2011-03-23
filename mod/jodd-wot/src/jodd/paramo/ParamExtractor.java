@@ -11,10 +11,10 @@ import org.objectweb.asm.Label;
  */
 final class ParamExtractor extends EmptyMethodVisitor {
 
-	final int paramCount;
-	final int ignoreCount;
-	final StringBuilder result;
-	int currentParam;
+	private final int paramCount;
+	private final int ignoreCount;
+	private final StringBuilder result;
+	private int currentParam;
 	boolean debugInfoPresent;
 
 	ParamExtractor(int ignoreCount, int paramCount) {

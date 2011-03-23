@@ -2,6 +2,7 @@
 
 package jodd.paramo;
 
+import jodd.paramo.data.Foo;
 import jodd.util.ReflectUtil;
 import junit.framework.TestCase;
 
@@ -9,15 +10,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 public class ParamoTest extends TestCase {
-
-	public static class Foo {
-		public Foo(String something) {}
-		public void hello() {}
-		public void one(String foo) {}
-		public void two(String username, String password) {}
-		public void array(String foo, Integer[] ints, float[] floats) {}
-		public void primitives(int i, long l, float f, double d, short s, boolean b, char c, byte y) {}
-	}
 
 	public void testConstructor() throws NoSuchMethodException {
 		Constructor c = Foo.class.getConstructor(String.class);
@@ -56,7 +48,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("floats", s[2]);
 	}
 
-	public void testTwoPrimitives() throws NoSuchMethodException {
+	public void testPrimitives() throws NoSuchMethodException {
 		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primitives");
 		String[] s = Paramo.resolveParameterNames(m);
 		assertEquals(8, s.length);
@@ -68,6 +60,35 @@ public class ParamoTest extends TestCase {
 		assertEquals("b", s[5]);
 		assertEquals("c", s[6]);
 		assertEquals("y", s[7]);
+	}
+
+	public void testPrimitivesArrays1() throws NoSuchMethodException {
+		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr1");
+		String[] s = Paramo.resolveParameterNames(m);
+		assertEquals(2, s.length);
+		assertEquals("one", s[0]);
+		assertEquals("two", s[1]);
+	}
+
+	public void testPrimitivesArrays2() throws NoSuchMethodException {
+		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr2");
+		String[] s = Paramo.resolveParameterNames(m);
+		assertEquals(6, s.length);
+		assertEquals("i", s[0]);
+		assertEquals("l", s[1]);
+		assertEquals("f", s[2]);
+		assertEquals("d", s[3]);
+		assertEquals("b", s[4]);
+		assertEquals("c", s[5]);
+	}
+
+	public void testPrimitivesArrays3() throws NoSuchMethodException {
+		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
+		String[] s = Paramo.resolveParameterNames(m);
+		assertEquals(3, s.length);
+		assertEquals("s", s[0]);
+		assertEquals("y", s[1]);
+		assertEquals("somethingElse", s[2]);
 	}
 
 }

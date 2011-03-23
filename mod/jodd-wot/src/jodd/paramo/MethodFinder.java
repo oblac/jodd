@@ -19,10 +19,11 @@ final class MethodFinder extends EmptyClassVisitor {
 
 	public static final String[] EMPTY_NAMES = new String[0];
 
-	private static final Map<String, String> primitives = new HashMap<String, String>(7);
+	private static final Map<String, String> primitives = new HashMap<String, String>(8);
 
 	private static final String TYPE_INT = "int";
 	private static final String TYPE_BOOLEAN = "boolean";
+	private static final String TYPE_BYTE = "byte";
 	private static final String TYPE_CHAR = "char";
 	private static final String TYPE_SHORT = "short";
 	private static final String TYPE_FLOAT = "float";
@@ -34,17 +35,20 @@ final class MethodFinder extends EmptyClassVisitor {
 		primitives.put(TYPE_INT, "I");
 		primitives.put(TYPE_BOOLEAN, "Z");
 		primitives.put(TYPE_CHAR, "C");
-		primitives.put(TYPE_SHORT, "B");
+		primitives.put(TYPE_BYTE, "B");
 		primitives.put(TYPE_FLOAT, "F");
 		primitives.put(TYPE_LONG, "J");
 		primitives.put(TYPE_DOUBLE, "D");
+		primitives.put(TYPE_SHORT, "S");
 	}
 
-	final String methodName;
-	final Class[] parameterTypes;
-	ParamExtractor paramExtractor;
+	private final Class declaringClass;
+	private final String methodName;
+	private final Class[] parameterTypes;
+	private ParamExtractor paramExtractor;
 
-	MethodFinder(String methodName, Class[] parameterTypes) {
+	MethodFinder(Class declaringClass, String methodName, Class[] parameterTypes) {
+		this.declaringClass = declaringClass;
 		this.methodName = methodName;
 		this.parameterTypes = parameterTypes;
 		this.paramExtractor = null;
@@ -107,7 +111,8 @@ final class MethodFinder extends EmptyClassVisitor {
 			return EMPTY_NAMES;
 		}
 		if (paramExtractor.debugInfoPresent == false) {
-			throw new ParamoException("Parameter names not available for '" + methodName + "'.");
+			throw new ParamoException("Parameter names not available for method: '"
+					+ declaringClass.getName() + '#' + methodName + "'.");
 		}
 		return StringUtil.splitc(paramExtractor.getResult(), ',');
 	}
