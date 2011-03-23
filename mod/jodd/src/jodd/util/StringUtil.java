@@ -2162,18 +2162,17 @@ public class StringUtil {
 	 * Changes a camelCase string value to space separated
 	 */
 	public static String camelCaseToWords(String input) {
+		return camelCaseToWords(input, ' ');
+	}
+
+	public static String camelCaseToWords(String input, char separator) {
 		StringBuilder s = new StringBuilder();
 		int length = input.length();
 		for (int i = 0; i < length; i++) {
 			char ch = input.charAt(i);
 			if (Character.isUpperCase(ch) && (i > 0)) {
-				s.append(' ');
+				s.append(separator);
 				ch = Character.toLowerCase(ch);
-			} else if ((i == 0) && !Character.isUpperCase(ch)) {
-				ch = Character.toUpperCase(ch);
-			}
-			if (ch == '.') {
-				s.append(' ');
 			}
 			s.append(ch);
 		}
@@ -2184,13 +2183,17 @@ public class StringUtil {
 	 * Changes a space separated string value to camelCase
 	 */
 	public static String wordsToCamelCase(String input) {
+		return wordsToCamelCase(input, ' ');
+	}
+
+	public static String wordsToCamelCase(String input, char separator) {
 		StringBuilder s = new StringBuilder();
 		int length = input.length();
 		boolean upperCase = false;
 
 		for (int i = 0; i < length; i++) {
 			char ch = input.charAt(i);
-			if (ch == ' ') {
+			if (ch == separator) {
 				upperCase = true;
 			} else if (upperCase) {
 				s.append(Character.toUpperCase(ch));

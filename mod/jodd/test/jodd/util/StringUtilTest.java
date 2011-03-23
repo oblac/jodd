@@ -828,7 +828,14 @@ public class StringUtilTest extends TestCase {
 
 	public void testCamelCase() {
 		assertEquals("oneTwoThree", StringUtil.wordsToCamelCase("one two   three"));
+		assertEquals("OneTwoThree", StringUtil.wordsToCamelCase("One two three"));
+		assertEquals("oneTwo.Three", StringUtil.wordsToCamelCase("one two. three"));
+		assertEquals("OneTwoThree", StringUtil.wordsToCamelCase("One-two-three", '-'));
+
 		assertEquals("One two three", StringUtil.camelCaseToWords("OneTwoThree"));
+		assertEquals("one two three", StringUtil.camelCaseToWords("oneTwoThree"));
+		assertEquals("one-two-three", StringUtil.camelCaseToWords("oneTwoThree", '-'));
+		assertEquals("one. two. three", StringUtil.camelCaseToWords("one.Two.Three"));
 	}
 
 	public void testJavaEscapes() {
