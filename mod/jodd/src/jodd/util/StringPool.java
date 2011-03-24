@@ -20,6 +20,7 @@ package jodd.util;
  */
 public interface StringPool {
 
+	String JODD        		= "jodd";
 	String AMPERSAND        = "&";
 	String AND              = "and";
 	String AT               = "@";
