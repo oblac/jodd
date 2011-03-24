@@ -21,6 +21,7 @@ import jodd.typeconverter.impl.ClassArrayConverter;
 import jodd.typeconverter.impl.ClassConverter;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import jodd.typeconverter.impl.DoubleConverter;
+import jodd.typeconverter.impl.FileConverter;
 import jodd.typeconverter.impl.FileUploadConverter;
 import jodd.typeconverter.impl.FloatArrayConverter;
 import jodd.typeconverter.impl.FloatConverter;
@@ -45,6 +46,7 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
 
+import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
 import java.math.BigDecimal;
@@ -134,6 +136,8 @@ public class TypeConverterManager {
 		register(Timestamp.class, new SqlTimestampConverter());
 
 		register(FileUpload.class, new FileUploadConverter());
+		register(File.class, new FileConverter());
+
 		register(JDateTime.class, new JDateTimeConverter());
 		register(Class.class, new ClassConverter());
 		register(Class[].class, new ClassArrayConverter());
