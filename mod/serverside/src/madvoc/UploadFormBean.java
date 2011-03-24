@@ -51,12 +51,13 @@ public class UploadFormBean {
 
 	@Override
 	public String toString() {
-		String result = "";
+		String result = "UploadFormBean";
 		result += "data1 " + data1;
 		result += "\ndata2 "  + data2;
 		result += "\ndata3 "  + data3;
 		result += "\nfile1 "  + file1;
 		result += "\nfile2 "  + file2;
+		result += "\n";
 		return result;
 	}
 

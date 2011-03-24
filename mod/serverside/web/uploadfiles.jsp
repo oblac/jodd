@@ -23,9 +23,10 @@ For example purposes, form also contains standard input fields.<br><br>
 		<input type="text" name="boo">
 
 		<input type="text" name="foo.data1" size="40"><br>
-		<input type="file" name="foo.file1" size="40"><br>
-		<input type="file" name="foo.file2" size="40"><br>
-		<input type="file" name="file3" size="40"> (file #3)<br>
+		<input type="file" name="foo.file1" size="40"> (#1)<br>
+		<input type="file" name="foo.file2" size="40"> (#2)<br>
+		<input type="file" name="file3" size="40"> (#3)<br>
+		<input type="file" name="file4" size="40"> (#4)<br>
 		<input type="text" name="foo.data2" size="40"><br>
 		<select name="foo.data3" multiple size="3">
 			<option value="1">one</option>
