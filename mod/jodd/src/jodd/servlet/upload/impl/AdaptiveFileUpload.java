@@ -133,7 +133,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = File.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;
