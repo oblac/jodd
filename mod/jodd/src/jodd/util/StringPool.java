@@ -3,7 +3,20 @@
 package jodd.util;
 
 /**
- * Pool of String constants.
+ * Pool of <code>String</code> constants to prevent repeating of
+ * hard-coded <code>String</code> literals in the code.
+ * Due to fact that these are <code>public static final</code>
+ * they will be inlined by java compiler and
+ * reference to this class will be dropped.
+ * There is <b>no</b> performance gain of using this pool.
+ * Read: http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.10.5
+ * <ul>
+ *     <li>Literal strings within the same class in the same package represent references to the same <code>String</code> object.
+ *     <li>Literal strings within different classes in the same package represent references to the same <code>String</code> object.
+ *     <li>Literal strings within different classes in different packages likewise represent references to the same <code>String</code> object.
+ *     <li>Strings computed by constant expressions are computed at compile time and then treated as if they were literals.
+ *     <li>Strings computed by concatenation at run time are newly created and therefore distinct.
+ * </ul>
  */
 public interface StringPool {
 
@@ -50,7 +63,7 @@ public interface StringPool {
 	String SEMICOLON        = ";";
 	String SINGLE_QUOTE     = "'";
 	String SPACE            = " ";
-	String LEFT_SQ_BRACKET = "[";
+	String LEFT_SQ_BRACKET  = "[";
 	String RIGHT_SQ_BRACKET = "]";
 	String TRUE             = "true";
 	String UNDERSCORE       = "_";
