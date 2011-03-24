@@ -1054,6 +1054,12 @@ public class FileUtil {
 		return file;
 	}
 
+	public static File createTempFile() throws IOException {
+		return createTempFile(true);
+	}
+	public static File createTempFile(boolean create) throws IOException {
+		return createTempFile("jodd-", ".tmp", (File) null, create);
+	}
 	public static File createTempFile(String prefix, String suffix) throws IOException {
 		return createTempFile(prefix, suffix, (File) null, true);
 	}
@@ -1071,6 +1077,9 @@ public class FileUtil {
 	}
 	/**
 	 * Creates temporary file.
+	 * If <code>create</code> is set to <code>true</code> file will be
+	 * physically created on the file system. Otherwise, it will be created and then
+	 * deleted - trick that will make temp file exist only if they are used.
 	 */
 	public static File createTempFile(String prefix, String suffix, File tempDir, boolean create) throws IOException {
 		File file = doCreateTempFile(prefix, suffix, tempDir);
@@ -1083,9 +1092,6 @@ public class FileUtil {
 
 
 	private static File doCreateTempFile(String prefix, String suffix, File dir) throws IOException {
-		if (prefix.length() < 3) {
-			prefix = (prefix + "___").substring(0, 3);
-		}
 		int exceptionsCount = 0;
 		while (true) {
 			try {
@@ -1096,5 +1102,10 @@ public class FileUtil {
 				}
 			}
 		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		File file = createTempFile();
+		System.out.println(file);
 	}
 }

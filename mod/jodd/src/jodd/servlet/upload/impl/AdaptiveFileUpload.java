@@ -25,8 +25,8 @@ import java.io.FileInputStream;
  */
 public class AdaptiveFileUpload extends FileUpload {
 
-	protected static final String TMP_FILE_PREFIX = "upload";
-	protected static final String TMP_FILE_SUFFIX = ".jodd";
+	protected static final String TMP_FILE_PREFIX = "jodd";
+	protected static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
 	protected final int memoryThreshold;
 	protected final File uploadPath;
