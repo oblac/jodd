@@ -1038,21 +1038,42 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- temp
 
-	/**
-	 * Creates temp directory.
-	 */
 	public static File createTempDirectory(String prefix, String suffix) throws IOException {
-		File file = doCreateTempFile(prefix, suffix, null);
+		return createTempDirectory(prefix, suffix, (File) null);
+	}
+	public static File createTempDirectory(String prefix, String suffix, String tempDirName) throws IOException {
+		return createTempDirectory(prefix, suffix, new File(tempDirName));
+	}
+	/**
+	 * Creates temporary directory.
+	 */
+	public static File createTempDirectory(String prefix, String suffix, File tempDir) throws IOException {
+		File file = doCreateTempFile(prefix, suffix, tempDir);
 		file.delete();
 		file.mkdir();
 		return file;
 	}
 
+	public static File createTempFile(String prefix, String suffix) throws IOException {
+		return createTempFile(prefix, suffix, (File) null, true);
+	}
+	public static File createTempFile(String prefix, String suffix, boolean create) throws IOException {
+		return createTempFile(prefix, suffix, (File) null, create);
+	}
+	public static File createTempFile(String prefix, String suffix, String tempDirName) throws IOException {
+		return createTempFile(prefix, suffix, new File(tempDirName), true);
+	}
+	public static File createTempFile(String prefix, String suffix, File tempDir) throws IOException {
+		return createTempFile(prefix, suffix, tempDir, true);
+	}
+	public static File createTempFile(String prefix, String suffix, String tempDirName, boolean create) throws IOException {
+		return createTempFile(prefix, suffix, new File(tempDirName), create);
+	}
 	/**
-	 * Creates temp file.
+	 * Creates temporary file.
 	 */
-	public static File createTempFile(final File dir, String prefix, String suffix, final boolean create) throws IOException {
-		File file = doCreateTempFile(prefix, suffix, dir);
+	public static File createTempFile(String prefix, String suffix, File tempDir, boolean create) throws IOException {
+		File file = doCreateTempFile(prefix, suffix, tempDir);
 		file.delete();
 		if (create) {
 			file.createNewFile();
@@ -1060,17 +1081,8 @@ public class FileUtil {
 		return file;
 	}
 
-	/**
-	 * Creates temp file.
-	 */
-	public static File createTempFile(String prefix, String suffix) throws IOException {
-		File file = doCreateTempFile(prefix, suffix, null);
-		file.delete();
-		file.createNewFile();
-		return file;
-	}
 
-	private static File doCreateTempFile(String prefix, String suffix, final File dir) throws IOException {
+	private static File doCreateTempFile(String prefix, String suffix, File dir) throws IOException {
 		if (prefix.length() < 3) {
 			prefix = (prefix + "___").substring(0, 3);
 		}
@@ -1078,15 +1090,11 @@ public class FileUtil {
 		while (true) {
 			try {
 				return File.createTempFile(prefix, suffix, dir).getCanonicalFile();
-			} catch (IOException ioex) {	// Win32 createFileExclusively access denied
+			} catch (IOException ioex) {	// fixes java.io.WinNTFileSystem.createFileExclusively access denied
 				if (++exceptionsCount >= 100) {
 					throw ioex;
 				}
 			}
 		}
 	}
-
-
 }
-
-
