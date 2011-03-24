@@ -20,6 +20,11 @@ public class JoddDefault {
 	public static final String JODD_PACKAGE_NAME;
 
 	/**
+	 * Default temp file prefix.
+	 */
+	public static String JODD_TMP_FILE_PREFIX = "jodd-";
+
+	/**
 	 * Default file encoding (UTF8).
 	 */
 	public static String encoding = StringPool.UTF_8;

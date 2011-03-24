@@ -2,6 +2,7 @@
 
 package jodd.io;
 
+import jodd.JoddDefault;
 import jodd.util.StringPool;
 
 import java.io.File;
@@ -655,6 +656,28 @@ public class FileUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- stream
+
+	public static void writeStream(File dest, InputStream in) throws IOException {
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(dest);
+			StreamUtil.copy(in, out);
+		} finally {
+			StreamUtil.close(out);
+		}
+
+	}
+	public static void writeStream(String dest, InputStream in) throws IOException {
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(dest);
+			StreamUtil.copy(in, out);
+		} finally {
+			StreamUtil.close(out);
+		}
+	}
+
 
 	// ---------------------------------------------------------------- read/write string lines
 
@@ -1058,7 +1081,7 @@ public class FileUtil {
 		return createTempFile(true);
 	}
 	public static File createTempFile(boolean create) throws IOException {
-		return createTempFile("jodd-", ".tmp", (File) null, create);
+		return createTempFile(JoddDefault.JODD_TMP_FILE_PREFIX, ".tmp", (File) null, create);
 	}
 	public static File createTempFile(String prefix, String suffix) throws IOException {
 		return createTempFile(prefix, suffix, (File) null, true);
@@ -1090,7 +1113,6 @@ public class FileUtil {
 		return file;
 	}
 
-
 	private static File doCreateTempFile(String prefix, String suffix, File dir) throws IOException {
 		int exceptionsCount = 0;
 		while (true) {
@@ -1104,8 +1126,4 @@ public class FileUtil {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		File file = createTempFile();
-		System.out.println(file);
-	}
 }

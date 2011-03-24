@@ -2,6 +2,7 @@
 
 package jodd.servlet.upload.impl;
 
+import jodd.JoddDefault;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
@@ -25,7 +26,6 @@ import java.io.FileInputStream;
  */
 public class AdaptiveFileUpload extends FileUpload {
 
-	protected static final String TMP_FILE_PREFIX = "jodd";
 	protected static final String TMP_FILE_SUFFIX = ".upload.tmp";
 
 	protected final int memoryThreshold;
@@ -133,7 +133,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = FileUtil.createTempFile(TMP_FILE_PREFIX, TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(JoddDefault.JODD_TMP_FILE_PREFIX, TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;
