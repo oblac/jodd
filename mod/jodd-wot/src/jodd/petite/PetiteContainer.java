@@ -36,7 +36,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	/**
 	 * Configures this instance of container.
 	 */
-	public void confgure(PetiteConfigurator... petiteConfigurators) {
+	public void configure(PetiteConfigurator... petiteConfigurators) {
 		for (PetiteConfigurator petiteConfigurator : petiteConfigurators) {
 			petiteConfigurator.configure(this);
 		}
