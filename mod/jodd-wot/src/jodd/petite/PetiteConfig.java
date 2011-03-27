@@ -90,7 +90,7 @@ public class PetiteConfig {
 		return defaultRunInitMethods;
 	}
 	/**
-	 * Specifies is init method should be invoked on expliciti wiring, adding and creating.
+	 * Specifies is init method should be invoked on explicit wiring, adding and creating.
 	 */
 	public void setDefaultRunInitMethods(boolean defaultRunInitMethods) {
 		this.defaultRunInitMethods = defaultRunInitMethods;
