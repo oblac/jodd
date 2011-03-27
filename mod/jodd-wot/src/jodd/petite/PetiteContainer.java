@@ -28,8 +28,16 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		this(new PetiteManager(), new PetiteConfig());
 	}
 
-	public PetiteContainer(PetiteManager pm, PetiteConfig pcfg) {
-		super(pm, pcfg);
+	public PetiteContainer(PetiteConfig config) {
+		this(new PetiteManager(), config);
+	}
+
+	public PetiteContainer(PetiteManager manager) {
+		this(manager, new PetiteConfig());
+	}
+
+	public PetiteContainer(PetiteManager manager, PetiteConfig config) {
+		super(manager, config);
 		log.debug("Petite container created.");
 	}
 
