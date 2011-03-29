@@ -2,6 +2,7 @@
 
 package jodd.servlet.upload;
 
+import jodd.JoddDefault;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.impl.MemoryFileUploadFactory;
 import jodd.io.FastByteArrayOutputStream;
@@ -98,7 +99,8 @@ public class MultipartRequest {
 	 * {@link #parseRequest()} to parse before further usage.
 	 *
 	 * <p>
-	 * If not specified, character encoding is read from the request.
+	 * If not specified, character encoding is read from the request. If not specified there,
+	 * default Jodd encoding is used.
 	 *
 	 * <p>
 	 * Multiple instantiation doesn't work, since input stream can be parsed just once.
@@ -115,6 +117,9 @@ public class MultipartRequest {
 			this.characterEncoding = encoding;
 		} else {
 			this.characterEncoding = request.getCharacterEncoding();
+		}
+		if (this.characterEncoding == null) {
+			this.characterEncoding = JoddDefault.encoding;
 		}
 		this.fileUploadFactory = (fileUploadFactory == null ? new MemoryFileUploadFactory() : fileUploadFactory);
 	}
@@ -343,7 +348,7 @@ public class MultipartRequest {
 				// no file, therefore it is regular form parameter.
 				FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
 				input.copyAll(fbos);
-				String value = new String(fbos.toByteArray(), encoding);
+				String value = encoding != null ? new String(fbos.toByteArray(), encoding) : new String(fbos.toByteArray());
 				putString(reqParam, header.formFieldName, value);
 			}
 
