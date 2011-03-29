@@ -34,7 +34,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 	}
 
 
-	public void setUploadDir(String destFolder) throws IOException {
+	public DiskFileUploadFactory setUploadDir(String destFolder) throws IOException {
 		if (destFolder == null) {
 			destFolder = SystemUtil.getTempDir();
 		}
@@ -46,26 +46,17 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 			throw new IOException("Destination folder is invalid: '" + destFolder + "'.");
 		}
 		this.destFolder = destination;
-	}
-
-	public DiskFileUploadFactory uploadDir(String destFolder) throws IOException {
-		setUploadDir(destFolder);
 		return this;
 	}
-
 
 	public int getMaxFileSize() {
 		return maxFileSize;
 	}
 
-	public void setMaxFileSize(int maxFileSize) {
-		this.maxFileSize = maxFileSize;
-	}
-
 	/**
 	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
 	 */
-	public DiskFileUploadFactory maxFileSize(int maxFileSize) {
+	public DiskFileUploadFactory setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}

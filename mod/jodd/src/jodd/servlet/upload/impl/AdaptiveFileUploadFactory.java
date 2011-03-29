@@ -28,7 +28,7 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 		return new AdaptiveFileUpload(input, memoryThreshold, uploadPath, maxFileSize, breakOnError, fileExtensions, allowFileExtensions);
 	}
 
-	// ---------------------------------------------------------------- setters
+	// ---------------------------------------------------------------- properties
 
 	public int getMemoryThreshold() {
 		return memoryThreshold;
@@ -36,59 +36,46 @@ public class AdaptiveFileUploadFactory implements FileUploadFactory {
 	/**
 	 * Specifies per file memory limit for keeping uploaded files in the memory.
 	 */
-	public void setMemoryThreshold(int memoryThreshold) {
+	public AdaptiveFileUploadFactory setMemoryThreshold(int memoryThreshold) {
 		if (memoryThreshold >= 0) {
 			this.memoryThreshold = memoryThreshold;
 		}
-	}
-
-	public AdaptiveFileUploadFactory memoryThreshold(int memoryThreshold) {
-		setMemoryThreshold(memoryThreshold);
 		return this;
 	}
-
-
 
 	public File getUploadPath() {
 		return uploadPath;
 	}
 
-	public void setUploadPath(File uploadPath) {
-		this.uploadPath = uploadPath;
-	}
-
 	/**
-	 * Specifies upload path.
+	 * Specifies the upload path. If set to <code>null</code> default
+	 * system TEMP path will be used.
 	 */
-	public AdaptiveFileUploadFactory uploadPath(File uploadPath) {
+	public AdaptiveFileUploadFactory  setUploadPath(File uploadPath) {
 		this.uploadPath = uploadPath;
 		return this;
 	}
-
 
 	public int getMaxFileSize() {
 		return maxFileSize;
 	}
 
-	public void setMaxFileSize(int maxFileSize) {
-		this.maxFileSize = maxFileSize;
-	}
-
 	/**
-	 * Sets maximum file upload size. Setting to -1 will disable this constraint.
+	 * Sets maximum file upload size. Setting to <code>-1</code>
+	 * disables this constraint.
 	 */
-	public AdaptiveFileUploadFactory maxFileSize(int maxFileSize) {
+	public AdaptiveFileUploadFactory setMaxFileSize(int maxFileSize) {
 		this.maxFileSize = maxFileSize;
 		return this;
 	}
-
 
 	public boolean isBreakOnError() {
 		return breakOnError;
 	}
 
-	public void setBreakOnError(boolean breakOnError) {
+	public AdaptiveFileUploadFactory setBreakOnError(boolean breakOnError) {
 		this.breakOnError = breakOnError;
+		return this;
 	}
 
 	/**
