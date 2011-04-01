@@ -13,7 +13,7 @@ public enum WiringMode {
 	OPTIONAL(2),	// ignores unsuccessful injections
 	AUTOWIRE(3);	// auto-wire
 
-	private int value;
+	private final int value;
 
 	WiringMode(int value) {
 		this.value = value;

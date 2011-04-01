@@ -4,6 +4,7 @@ package jodd.petite.manager;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.petite.PetiteUtil;
 import jodd.petite.PropertyInjectionPoint;
 import jodd.petite.meta.PetiteInject;
 
@@ -35,18 +36,22 @@ public class PropertyResolver {
 		Field[] allFields = cd.getAllFields(true);
 		for (Field field : allFields) {
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);
-			String refName;
-			boolean hasAnnotation;
-			if (ref == null) {
-				hasAnnotation = false;
-				refName = field.getName();
-			} else {
+			String[] refName = null;
+			boolean hasAnnotation = false;
+
+			if (ref != null) {
 				hasAnnotation = true;
-				refName = ref.value().trim();
-				if (refName.length() == 0) {
-					refName = field.getName();
+
+				String name = ref.value().trim();
+				if (name.length() != 0) {
+					refName = new String[] {name};
 				}
 			}
+
+			if (refName == null) {
+				refName = PetiteUtil.fieldDefaultReferences(field);
+			}
+
 			list.add(new PropertyInjectionPoint(field, refName, hasAnnotation));
 		}
 		if (list.isEmpty()) {

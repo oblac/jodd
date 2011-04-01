@@ -14,7 +14,6 @@ import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
-import jodd.petite.PetiteUtil;
 
 import javax.servlet.ServletContext;
 import java.lang.reflect.Modifier;
@@ -84,7 +83,7 @@ public class WebApplication {
 				lastComponent = component;
 			}
 		}
-		return PetiteUtil.resolveBeanName(lastComponent);
+		return madpc.resolveBeanName(lastComponent);
 	}
 
 	/**

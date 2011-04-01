@@ -15,6 +15,7 @@ public class PetiteTests extends TestSuite {
 		addTestSuite(ManualTest.class);
 		addTestSuite(PropertyTest.class);
 		addTestSuite(ParamTest.class);
+		addTestSuite(FullTypeTest.class);
 	}
 
 	public static Test suite() {

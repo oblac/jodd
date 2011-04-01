@@ -2,28 +2,19 @@
 
 package jodd.petite.manager;
 
-import jodd.petite.BeanDefinition;
-import jodd.petite.CtorInjectionPoint;
-import jodd.petite.PropertyInjectionPoint;
-import jodd.petite.MethodInjectionPoint;
-import jodd.petite.WiringMode;
-import jodd.petite.PetiteUtil;
-import jodd.petite.PetiteException;
-import jodd.petite.InitMethodPoint;
-import jodd.petite.PetiteConfig;
-import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.petite.CtorInjectionPoint;
+import jodd.petite.InitMethodPoint;
+import jodd.petite.MethodInjectionPoint;
+import jodd.petite.PetiteException;
+import jodd.petite.PetiteUtil;
+import jodd.petite.PropertyInjectionPoint;
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
-import java.util.Iterator;
-
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Petite manager holds configuration and deals with registration.
@@ -34,9 +25,6 @@ import org.slf4j.Logger;
  */
 public class PetiteManager {
 
-	private static final Logger log = LoggerFactory.getLogger(PetiteManager.class);
-
-	protected final BeanManager beanManager;
 	protected final CtorResolver ctorResolver;
 	protected final PropertyResolver propertyResolver;
 	protected final MethodResolver methodResolver;
@@ -47,7 +35,6 @@ public class PetiteManager {
 	 * Creates all Petite managers.
 	 */
 	public PetiteManager() {
-		beanManager = new BeanManager();
 		ctorResolver = new CtorResolver();
 		propertyResolver = new PropertyResolver();
 		methodResolver = new MethodResolver();
@@ -55,108 +42,16 @@ public class PetiteManager {
 		paramResolver = new ParamResolver();
 	}
 
-	// ---------------------------------------------------------------- bean
 
 	/**
-	 * Returns {@link BeanDefinition} for given bean name.
+	 * Removes resolvers references for given bean type.
 	 */
-	public BeanDefinition lookupBeanDefinition(String name) {
-		return beanManager.beans.get(name);
+	public void removeResolvers(Class type) {
+		ctorResolver.ctors.remove(type);
+		propertyResolver.properties.remove(type);
+		methodResolver.methodRefs.remove(type);
+		initMethodResolver.initMethods.remove(type);
 	}
-
-	/**
-	 * Registers bean. The following rules are applied:
-	 * <li>if name is missing, it will be resolved from the class (name or annotation)
-	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)
-	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)
-	 */
-	public BeanDefinition registerBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode, PetiteConfig pcfg) {
-		if (name == null) {
-			name = PetiteUtil.resolveBeanName(type);
-		}
-		if (wiringMode == null) {
-			wiringMode = PetiteUtil.resolveBeanWiringMode(type);
-		}
-		if (wiringMode == WiringMode.DEFAULT) {
-			wiringMode = pcfg.getDefaultWiringMode();
-		}
-		if (scopeType == null) {
-			scopeType = PetiteUtil.resolveBeanScopeType(type);
-		}
-		if (scopeType == DefaultScope.class) {
-			scopeType = pcfg.getDefaultScope();
-		}
-		BeanDefinition existing = removeBean(name);
-		if (existing != null) {
-			if (pcfg.getDetectDuplicatedBeanNames()) {
-				throw new PetiteException(
-						"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
-						existing.type.getName() + "' is already registered with the name '" + name + "'.");
-			}
-		}
-		if (log.isDebugEnabled()) {
-			log.debug("Registering bean: " + name +
-					" of type: " + type.getSimpleName() +
-					" in: " + scopeType.getSimpleName() +
-					" using wiring mode: " + wiringMode.toString());
-		}
-		return beanManager.register(name, type, scopeType, wiringMode);
-	}
-
-	/**
-	 * Removes bean and returns definition of removed bean.
-	 * Removes references of existing old bean type, just in case. Existing type may be still in use
-	 * by some other bean name, so the references will be re-created if needed.
-	 */
-	public BeanDefinition removeBean(String name) {
-		BeanDefinition bd = beanManager.beans.remove(name);
-		if (bd == null) {
-			return null;
-		}
-		// remove references
-		ctorResolver.ctors.remove(bd.type);
-		propertyResolver.properties.remove(bd.type);
-		methodResolver.methodRefs.remove(bd.type);
-		initMethodResolver.initMethods.remove(bd.type);
-		bd.scopeRemove();
-
-		return bd;
-	}
-
-	/**
-	 * Returns total number of registered beans.
-	 */
-	public int getTotalBeans() {
-		return beanManager.beans.size();
-	}
-
-	/**
-	 * Return total number of used scopes.
-	 */
-	public int getTotalScopes() {
-		return beanManager.scopes.size();
-	}
-
-	/**
-	 * Returns iterator over all registered beans.
-	 */
-	public Iterator<BeanDefinition> beansIterator() {
-		return beanManager.beans.values().iterator();
-	}
-
-	// ---------------------------------------------------------------- scopes
-
-	/**
-	 * Registers new scope. It is not necessary to manually register scopes,
-	 * since they become registered on first scope resolving.
-	 * However, it is possible to pre-register some scopes, or to replace one scope
-	 * type with another. This may be important for testing purposes when
-	 * using container-depended scopes. 
-	 */
-	public void registerScope(Class<? extends Scope> scopeType, Scope scope) {
-		beanManager.registerScope(scopeType, scope);
-	}
-
 
 	// ---------------------------------------------------------------- constructors
 
@@ -202,16 +97,16 @@ public class PetiteManager {
 		return propertyResolver.resolve(type);
 	}
 
-	public PropertyInjectionPoint definePropertyInjectionPoint(Class type, String property, String reference) {
-		if (reference == null) {
-			reference = property;
-		}
+	public PropertyInjectionPoint definePropertyInjectionPoint(Class type, String property, String[] references) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Field field = cd.getField(property, true);
 		if (field == null) {
 			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
 		}
-		return new PropertyInjectionPoint(field, reference, true);
+		if (references == null || references.length == 0) {
+			references = PetiteUtil.fieldDefaultReferences(field);
+		}
+		return new PropertyInjectionPoint(field, references, true);
 	}
 
 	// ---------------------------------------------------------------- methods

@@ -7,8 +7,10 @@ import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.util.StringUtil;
 
+import java.lang.reflect.Field;
+
 /**
- * Few Petite utilities, used internal.
+ * Few Petite utilities, used internally.
  */
 public class PetiteUtil {
 
@@ -38,7 +40,6 @@ public class PetiteUtil {
 		return refNames;
 	}
 
-
 	/**
 	 * Resolves bean's auto-wire flag from the annotation. Returns default auto-wire if annotation doesn't exist.
 	 */
@@ -55,21 +56,35 @@ public class PetiteUtil {
 		return petiteBean != null ? petiteBean.scope() : DefaultScope.class;
 	}
 
-
 	/**
 	 * Resolves bean's name from bean annotation or type name. May be used for resolving bean name
 	 * of base type during registration of bean subclass.
 	 */
-	public static String resolveBeanName(Class type) {
+	public static String resolveBeanName(Class type, boolean useLongTypeName) {
 		PetiteBean petiteBean = ((Class<?>)type).getAnnotation(PetiteBean.class);
 		String name = null;
 		if (petiteBean != null) {
 			name = petiteBean.value().trim();
 		}
 		if ((name == null) || (name.length() == 0)) {
-			name = StringUtil.uncapitalize(type.getSimpleName());
+			if (useLongTypeName) {
+				name = type.getName();
+			} else {
+				name = StringUtil.uncapitalize(type.getSimpleName());
+			}
 		}
 		return name;
+	}
+
+	/**
+	 * Builds default field references.
+	 */
+	public static String[] fieldDefaultReferences(Field field) {
+		String[] references = new String[3];
+		references[0] = field.getName();
+		references[1] = StringUtil.uncapitalize(field.getType().getSimpleName());
+		references[2] = field.getType().getName();
+		return references;
 	}
 
 }

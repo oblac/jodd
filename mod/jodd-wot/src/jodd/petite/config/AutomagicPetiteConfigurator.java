@@ -55,7 +55,7 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 			throw new PetiteException("Unable to scan classpath.", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getManager().getTotalBeans());
+		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getTotalBeans());
 	}
 
 	/**

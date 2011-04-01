@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Petite register base contains registration and configuration stuff.
  */
-public abstract class PetiteContainerRegistry {
+public abstract class PetiteContainerRegistry extends PetiteBeans {
 
 	protected final PetiteManager petiteManager;
 	protected final PetiteConfig petiteConfig;
@@ -87,34 +87,9 @@ public abstract class PetiteContainerRegistry {
 	 * Single point of bean registration.
 	 */
 	protected BeanDefinition registerPetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
-		return petiteManager.registerBean(name, type, scopeType, wiringMode, petiteConfig);
+		return registerPetiteBean(name, type, scopeType, wiringMode, petiteConfig);// todo move down?
 	}
 
-
-	/**
-	 * Lookup for bean definition. Returns <code>null</code> if bean name doesn't exist.
-	 */
-	public BeanDefinition lookupBeanDefinition(String name) {
-		return petiteManager.lookupBeanDefinition(name);
-	}
-
-	/**
-	 * Lookups for existing bean. Throws exception if bean is not found.
-	 */
-	public BeanDefinition lookupExistingBeanDefinition(String name) {
-		BeanDefinition beanDefinition = lookupBeanDefinition(name);
-		if (beanDefinition == null) {
-			throw new PetiteException("Bean: '" + name + "' not registered.");
-		}
-		return beanDefinition;
-	}
-
-	/**
-	 * Returns <code>true</code> if bean name is registered.
-	 */
-	public boolean isBeanNameRegistered(String name) {
-		return lookupBeanDefinition(name) != null;
-	}
 
 	// ---------------------------------------------------------------- define
 
@@ -191,7 +166,6 @@ public abstract class PetiteContainerRegistry {
 
 	// ---------------------------------------------------------------- property
 
-
 	/**
 	 * Registers property injection point.
 	 */
@@ -211,7 +185,10 @@ public abstract class PetiteContainerRegistry {
 	 */
 	protected void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		PropertyInjectionPoint pip = petiteManager.definePropertyInjectionPoint(beanDefinition.type, property, reference);
+		PropertyInjectionPoint pip = petiteManager.definePropertyInjectionPoint(
+				beanDefinition.type,
+				property,
+				reference == null ? null : new String[] {reference});
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
 
@@ -280,12 +257,11 @@ public abstract class PetiteContainerRegistry {
 	}
 
 
-
-
 	// ---------------------------------------------------------------- remove
 
 	/**
-	 * Removes all petite beans of provided type.
+	 * Removes all petite beans of provided type. Type is not resolved for name!
+	 * Instead, all beans are iterated and only beans with equal types are removed.
 	 * @see #removeBean(String)
 	 */
 	public void removeBean(Class type) {
@@ -305,11 +281,14 @@ public abstract class PetiteContainerRegistry {
 	}
 
 	/**
-	 * Removes bean definition from the container.
+	 * Removes bean definition from the container, including all references.
 	 * @see #removeBean(Class)
 	 */
 	public void removeBean(String name) {
-		petiteManager.removeBean(name);
+		BeanDefinition removedBean = removeBeanDefinition(name);
+		if (removedBean != null) {
+			petiteManager.removeResolvers(removedBean.type);
+		}
 	}
 
 
@@ -337,30 +316,6 @@ public abstract class PetiteContainerRegistry {
 	 */
 	public void defineParameters(Props props) {
 		defineParameters(props.extractProperties());
-	}
-
-	
-	// ---------------------------------------------------------------- stats and misc
-
-	/**
-	 * Returns total number of registered beans.
-	 */
-	public int getTotalBeans() {
-		return petiteManager.getTotalBeans();
-	}
-
-	/**
-	 * Returns total number of used scopes.
-	 */
-	public int getTotalScopes() {
-		return petiteManager.getTotalScopes();
-	}
-
-	/**
-	 * Returns iterator over all bean definitions.
-	 */
-	public Iterator<BeanDefinition> beansIterator() {
-		return petiteManager.beansIterator();
 	}
 
 }

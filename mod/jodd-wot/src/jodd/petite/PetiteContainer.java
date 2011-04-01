@@ -10,13 +10,12 @@ import jodd.petite.scope.SingletonScope;
 import java.util.HashMap;
 import java.util.Map;
 
+import jodd.typeconverter.Convert;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * Petite IOC container. Generally, it is composed of two parts: {@link PetiteManager manager} and
- * container. Manager deals with binding information regarding registration and configuration.
- * Container itself is used during runtime for acquiring bean instances.
+ * Petite IOC container.
  */
 public class PetiteContainer extends PetiteContainerRegistry {
 
@@ -119,12 +118,12 @@ public class PetiteContainer extends PetiteContainerRegistry {
 			if ((def.wiringMode != WiringMode.AUTOWIRE) && (pip.hasAnnotation == false)) {
 				continue;
 			}
-			String refName = pip.reference;
+			String[] refName = pip.reference;
 
 			Object value = getBean(refName, acquiredBeans);
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Reference '" + refName + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
+					throw new PetiteException("Wiring failed. Bean '" + Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
 				}
 				continue;
 			}
@@ -206,7 +205,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T getBean(Class<T> type) {
-		String name = PetiteUtil.resolveBeanName(type);
+		String name = resolveBeanName(type);
 		return (T) getBean(name);
 	}
 
@@ -223,7 +222,20 @@ public class PetiteContainer extends PetiteContainerRegistry {
 	}
 
 	/**
-	 * Returns petite bean instance.
+	 * Returns Petite bean instance named as one of the provided names.
+	 */
+	protected Object getBean(String[] names, Map<String, Object> acquiredBeans) {
+		for (String name : names) {
+			Object bean = getBean(name, acquiredBeans);
+			if (bean != null) {
+				return bean;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns Petite bean instance.
 	 * @see PetiteContainer#createBean(Class)
 	 */
 	protected Object getBean(String name, Map<String, Object> acquiredBeans) {
@@ -241,7 +253,7 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		}
 
 		// Lookup for registered bean definition.
-		BeanDefinition def = petiteManager.lookupBeanDefinition(name);
+		BeanDefinition def = lookupBeanDefinition(name);
 		if (def == null) {
 			return null;
 		}
@@ -394,4 +406,14 @@ public class PetiteContainer extends PetiteContainerRegistry {
 		}
 	}
 
+
+	// ---------------------------------------------------------------- resolve bean name
+
+	/**
+	 * Resolves bean's name from bean annotation or type name. May be used for resolving bean name
+	 * of base type during registration of bean subclass.
+	 */
+	public String resolveBeanName(Class type) {
+		return PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
+	}
 }

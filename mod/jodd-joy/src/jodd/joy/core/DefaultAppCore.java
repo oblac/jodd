@@ -206,7 +206,7 @@ public abstract class DefaultAppCore {
 		if (isWebApplication == false) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).
-			petite.getManager().registerScope(SessionScope.class, new SingletonScope());
+			petite.registerScope(SessionScope.class, new SingletonScope());
 		}
 
 		// automagic configuration

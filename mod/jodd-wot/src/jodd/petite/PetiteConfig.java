@@ -16,7 +16,8 @@ public class PetiteConfig {
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
 		defaultRunInitMethods = true;
-		resolveReferenceParameters = true;
+		resolveReferenceParameters = true;	// todo add Paramo!
+		useFullTypeNames = false;
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -110,5 +111,19 @@ public class PetiteConfig {
 	 */
 	public void setResolveReferenceParameters(boolean resolveReferenceParameters) {
 		this.resolveReferenceParameters = resolveReferenceParameters;
+	}
+
+
+	protected boolean useFullTypeNames;
+
+	public boolean getUseFullTypeNames() {
+		return useFullTypeNames;
+	}
+
+	/**
+	 * Specifies if type names should be full or short.
+	 */
+	public void setUseFullTypeNames(boolean useFullTypeNames) {
+		this.useFullTypeNames = useFullTypeNames;
 	}
 }
