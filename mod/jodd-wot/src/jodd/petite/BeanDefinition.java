@@ -90,4 +90,15 @@ public class BeanDefinition {
 			initMethods = ArraysUtil.join(initMethods, methods);
 		}
 	}
+
+	// ---------------------------------------------------------------- toString
+
+	@Override
+	public String toString() {
+		return "BeanDefinition{" +
+				"name='" + name + '\'' +
+				", type=" + type +
+				", scope=" + scope +
+				'}';
+	}
 }
