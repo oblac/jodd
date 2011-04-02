@@ -106,7 +106,7 @@ public class PetiteManager {
 		if (references == null || references.length == 0) {
 			references = PetiteUtil.fieldDefaultReferences(field);
 		}
-		return new PropertyInjectionPoint(field, references, true);
+		return new PropertyInjectionPoint(field, references, true);	// todo extract this call in 1 place where config is availiable
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -193,7 +193,7 @@ public class PetiteManager {
 	}
 
 	/**
-	 * Prepares list of all bean parameters and optioanlly resolve inner references.
+	 * Prepares list of all bean parameters and optionally resolves inner references.
 	 */
 	public String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
 		return paramResolver.resolve(name, resolveReferenceParams);

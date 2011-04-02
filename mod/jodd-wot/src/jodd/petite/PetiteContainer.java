@@ -15,9 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * Petite IOC container.
+ * Petite IOC container. Consist of following layers:
+ * <li>PetiteContainer - top layer that provides business usage
+ * <li>{@link PetiteRegistry}
+ * <li>{@link PetiteBeans}
  */
-public class PetiteContainer extends PetiteContainerRegistry {
+public class PetiteContainer extends PetiteRegistry {
 
 	private static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 

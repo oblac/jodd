@@ -24,7 +24,7 @@ public class PropertyResolver {
 	/**
 	 * Resolves all fields for given type.
 	 */
-	public PropertyInjectionPoint[] resolve(Class type) {
+	public PropertyInjectionPoint[] resolve(Class type) {		// todo pass wire information
 		PropertyInjectionPoint[] fields = properties.get(type);
 		if (fields != null) {
 			return fields;

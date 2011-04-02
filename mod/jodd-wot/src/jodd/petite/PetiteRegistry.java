@@ -12,30 +12,13 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Petite register base contains registration and configuration stuff.
+ * Petite container layer that provides various mods for registering all kind
+ * of stuff needed for Petite container.
  */
-public abstract class PetiteContainerRegistry extends PetiteBeans {
+public abstract class PetiteRegistry extends PetiteBeans {
 
-	protected final PetiteManager petiteManager;
-	protected final PetiteConfig petiteConfig;
-
-	protected PetiteContainerRegistry(PetiteManager petiteManager, PetiteConfig petiteConfig) {
-		this.petiteManager = petiteManager;
-		this.petiteConfig = petiteConfig;
-	}
-
-	/**
-	 * Returns Petite manager.
-	 */
-	public PetiteManager getManager() {
-		return petiteManager;
-	}
-
-	/**
-	 * Returns Petite config.
-	 */
-	public PetiteConfig getConfig() {
-		return petiteConfig;
+	protected PetiteRegistry(PetiteManager petiteManager, PetiteConfig petiteConfig) {
+		super(petiteManager, petiteConfig);
 	}
 
 	// ---------------------------------------------------------------- bean
@@ -83,12 +66,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 		registerPetiteBean(name, type, scopeType, wiringMode);
 	}
 
-	/**
-	 * Single point of bean registration.
-	 */
-	protected BeanDefinition registerPetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
-		return registerPetiteBean(name, type, scopeType, wiringMode, petiteConfig);// todo move down?
-	}
 
 
 	// ---------------------------------------------------------------- define
@@ -116,15 +93,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 	public void defineBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		definePetiteBean(name, type, scopeType, wiringMode);
 	}
-
-	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
-		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
-		def.ctor = petiteManager.resolveCtorInjectionPoint(type);
-		def.properties = PropertyInjectionPoint.EMPTY;
-		def.methods = MethodInjectionPoint.EMPTY;
-		def.initMethods = InitMethodPoint.EMPTY;
-	}
-
 
 	// ---------------------------------------------------------------- ctor
 
@@ -156,14 +124,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 		registerPetiteCtorInjectionPoint(beanName, paramTypes, references);
 	}
 
-	/**
-	 * Single point of constructor injection point registration.
-	 */
-	protected void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		beanDefinition.ctor = petiteManager.defineCtorInjectionPoint(beanDefinition.type, paramTypes, references);
-	}
-
 	// ---------------------------------------------------------------- property
 
 	/**
@@ -178,18 +138,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 	 */
 	public void registerPropertyInjectionPoint(String beanName, String property, String reference) {
 		registerPetitePropertyInjectionPoint(beanName, property, reference);
-	}
-
-	/**
-	 * Single point of property injection point registration.
-	 */
-	protected void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		PropertyInjectionPoint pip = petiteManager.definePropertyInjectionPoint(
-				beanDefinition.type,
-				property,
-				reference == null ? null : new String[] {reference});
-		beanDefinition.addPropertyInjectionPoint(pip);
 	}
 
 	// ---------------------------------------------------------------- method
@@ -222,16 +170,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 		registerPetiteMethodInjectionPoint(beanName, methodName, arguments, references);
 	}
 
-	/**
-	 * Single point of method injection point registration.
-	 */
-	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		MethodInjectionPoint mip = petiteManager.defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, references);
-		beanDefinition.addMethodInjectionPoint(mip);
-	}
-
-
 	// ---------------------------------------------------------------- initialization methods
 
 	/**
@@ -246,16 +184,6 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 	public void registerInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
 		registerPetiteInitMethods(beanName, beforeMethodNames, afterMethodNames);
 	}
-
-	/**
-	 * Single point of init method registration.
-	 */
-	protected void registerPetiteInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
-		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		InitMethodPoint[] methods = petiteManager.defineInitMethods(beanDefinition.type, beforeMethodNames, afterMethodNames);
-		beanDefinition.addInitMethodPoints(methods);
-	}
-
 
 	// ---------------------------------------------------------------- remove
 
@@ -285,10 +213,7 @@ public abstract class PetiteContainerRegistry extends PetiteBeans {
 	 * @see #removeBean(Class)
 	 */
 	public void removeBean(String name) {
-		BeanDefinition removedBean = removeBeanDefinition(name);
-		if (removedBean != null) {
-			petiteManager.removeResolvers(removedBean.type);
-		}
+		removeBeanDefinition(name);
 	}
 
 
