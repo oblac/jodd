@@ -4,7 +4,7 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.petite.PetiteUtil;
+import jodd.petite.InjectionPointFactory;
 import jodd.petite.PropertyInjectionPoint;
 import jodd.petite.meta.PetiteInject;
 
@@ -20,6 +20,12 @@ import java.util.List;
 public class PropertyResolver {
 
 	protected final Map<Class, PropertyInjectionPoint[]> properties = new HashMap<Class, PropertyInjectionPoint[]>();
+
+	protected final InjectionPointFactory injectionPointFactory;
+
+	public PropertyResolver(InjectionPointFactory injectionPointFactory) {
+		this.injectionPointFactory = injectionPointFactory;
+	}
 
 	/**
 	 * Resolves all fields for given type.
@@ -49,11 +55,7 @@ public class PropertyResolver {
 				}
 			}
 
-			if (refName == null) {
-				refName = PetiteUtil.fieldDefaultReferences(field);
-			}
-
-			list.add(new PropertyInjectionPoint(field, refName));
+			list.add(injectionPointFactory.createPropertyInjectionPoint(field, refName));
 		}
 		if (list.isEmpty()) {
 			fields = PropertyInjectionPoint.EMPTY;

@@ -41,13 +41,19 @@ public abstract class PetiteBeans {
 	protected final PetiteConfig petiteConfig;
 
 	/**
+	 * {@link InjectionPointFactory Injection point factory}.
+	 */
+	protected final InjectionPointFactory injectionPointFactory;
+
+	/**
 	 * {@link PetiteResolvers Petite resolvers}.
 	 */
 	protected final PetiteResolvers petiteResolvers;
 
 	protected PetiteBeans(PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
-		this.petiteResolvers = new PetiteResolvers();
+		this.injectionPointFactory = new InjectionPointFactory(petiteConfig);
+		this.petiteResolvers = new PetiteResolvers(injectionPointFactory);
 	}
 
 	/**
@@ -251,7 +257,6 @@ public abstract class PetiteBeans {
 		return new CtorInjectionPoint(constructor, references);
 	}
 
-
 	/**
 	 * Single point of property injection point registration.
 	 */
@@ -270,10 +275,7 @@ public abstract class PetiteBeans {
 		if (field == null) {
 			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
 		}
-		if (references == null || references.length == 0) {
-			references = PetiteUtil.fieldDefaultReferences(field);
-		}
-		return new PropertyInjectionPoint(field, references);	// todo extract this call in 1 place where config is available
+		return injectionPointFactory.createPropertyInjectionPoint(field, references);
 	}
 
 	/**
