@@ -4,7 +4,7 @@ package jodd.petite;
 
 import jodd.bean.BeanUtil;
 import jodd.petite.config.PetiteConfigurator;
-import jodd.petite.manager.PetiteManager;
+import jodd.petite.resolver.PetiteManager;
 import jodd.petite.scope.SingletonScope;
 
 import java.util.HashMap;

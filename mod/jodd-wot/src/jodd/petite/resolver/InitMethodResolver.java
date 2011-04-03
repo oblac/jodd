@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.petite.manager;
+package jodd.petite.resolver;
 
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.petite.PetiteException;

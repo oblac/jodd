@@ -1,12 +1,11 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.petite.manager;
+package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.PetiteUtil;
 import jodd.petite.PropertyInjectionPoint;
-import jodd.petite.WiringMode;
 import jodd.petite.meta.PetiteInject;
 
 import java.lang.reflect.Field;

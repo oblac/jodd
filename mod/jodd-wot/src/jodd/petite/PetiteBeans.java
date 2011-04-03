@@ -2,7 +2,7 @@
 
 package jodd.petite;
 
-import jodd.petite.manager.PetiteManager;
+import jodd.petite.resolver.PetiteManager;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import org.slf4j.Logger;

@@ -3,7 +3,7 @@
 package jodd.petite;
 
 import jodd.petite.scope.Scope;
-import jodd.petite.manager.PetiteManager;
+import jodd.petite.resolver.PetiteManager;
 import jodd.props.Props;
 
 import java.util.Iterator;
