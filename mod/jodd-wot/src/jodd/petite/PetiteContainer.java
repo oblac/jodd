@@ -115,7 +115,7 @@ public class PetiteContainer extends PetiteRegistry {
 
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Beans: '" +
+					throw new PetiteException("Wiring failed. Beans references: '" +
 							Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
 				}
 				continue;
@@ -132,14 +132,15 @@ public class PetiteContainer extends PetiteRegistry {
 			def.methods = resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
-			String[] refNames = methodRef.references;
+			String[][] refNames = methodRef.references;
 			Object[] args = new Object[refNames.length];
 			for (int i = 0; i < refNames.length; i++) {
-				String refName = refNames[i];
+				String[] refName = refNames[i];
 				args[i] = getBean(refName, acquiredBeans);
 				if (args[i] == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException("Wiring failed. Reference '" + refName + "' not found for method '" + def.type.getName() + '#' + methodRef.method.getName() + "()'.");
+						throw new PetiteException("Wiring failed. Beans references: '" +
+								Convert.toString(refName) + "' not found for method '" + def.type.getName() + '#' + methodRef.method.getName() + "()'.");
 					}
 				}
 			}
@@ -219,6 +220,9 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected Object getBean(String[] names, Map<String, Object> acquiredBeans) {
 		for (String name : names) {
+			if (name == null) {
+				continue;
+			}
 			Object bean = getBean(name, acquiredBeans);
 			if (bean != null) {
 				return bean;

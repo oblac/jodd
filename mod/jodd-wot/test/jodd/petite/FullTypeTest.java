@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 public class FullTypeTest extends TestCase {
 
-	public void testFullType() {
+	public void testFullTypeProperty() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
@@ -36,11 +36,29 @@ public class FullTypeTest extends TestCase {
 		assertEquals(joo, koo.someNoJooName);
 	}
 
+	public void testFullTypeMethod() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.getConfig().setUseFullTypeNames(true);
+
+		pc.registerBean(Koo.class);
+		pc.registerBean(Joo.class);
+
+		Koo koo = (Koo) pc.getBean(Koo.class.getName());
+		assertNotNull(koo);
+		Joo joo = (Joo) pc.getBean(Joo.class.getName());
+		assertNotNull(joo);
+
+		assertNotNull(koo.joo);
+		assertNotNull(koo.someNoJooName);
+		assertNotNull(koo.mjoo);
+		assertNotNull(koo.mjoo2);
+	}
+
 	public void testOptionalAndNotAllReferences() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setDefaultWiringMode(WiringMode.OPTIONAL);
 		pc.getConfig().setUseFullTypeNames(false);
-		pc.getConfig().setDefaultReferences(PetiteReference.NAME);
+		pc.getConfig().setLookupReferences(PetiteReference.NAME);
 
 		pc.registerBean(Koo.class);
 		pc.registerBean(Joo.class);

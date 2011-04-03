@@ -22,7 +22,7 @@ public class PetiteResolvers {
 	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
 		ctorResolver = new CtorResolver();
 		propertyResolver = new PropertyResolver(injectionPointFactory);
-		methodResolver = new MethodResolver();
+		methodResolver = new MethodResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();
 		paramResolver = new ParamResolver();
 	}

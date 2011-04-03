@@ -4,10 +4,10 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.petite.PetiteException;
-import jodd.petite.PetiteUtil;
+import jodd.petite.InjectionPointFactory;
 import jodd.petite.MethodInjectionPoint;
 import jodd.petite.meta.PetiteInject;
+import jodd.typeconverter.Convert;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,6 +21,12 @@ import java.util.List;
 public class MethodResolver {
 
 	protected final Map<Class, MethodInjectionPoint[]> methodRefs = new HashMap<Class, MethodInjectionPoint[]>();
+
+	protected final InjectionPointFactory injectionPointFactory;
+
+	public MethodResolver(InjectionPointFactory injectionPointFactory) {
+		this.injectionPointFactory = injectionPointFactory;
+	}
 
 	public MethodInjectionPoint[] resolve(Class type) {
 		MethodInjectionPoint[] methods = methodRefs.get(type);
@@ -37,12 +43,20 @@ public class MethodResolver {
 			if (ref == null) {
 				continue;
 			}
-			Class<?>[] paramTypes = method.getParameterTypes();
-			String[] refNames = PetiteUtil.resolveParamReferences(ref.value(), paramTypes);
-			if (refNames.length != paramTypes.length) {
-				throw new PetiteException("Invalid number of method argument reference names for '" + type.getName() + '#' + method.getName() + '\'');
+			String refValues = ref.value().trim();
+			String[][] references = null;
+
+			if (refValues.length() != 0) {
+				String[] refNames = Convert.toStringArray(ref.value());
+
+				// convert to double str array
+				references = new String[refNames.length][];
+				for (int i = 0; i < refNames.length; i++) {
+					references[i] = new String[] {refNames[i]};
+				}
 			}
-			list.add(new MethodInjectionPoint(method, refNames));
+
+			list.add(injectionPointFactory.createMethodInjectionPoint(method, references));
 		}
 		if (list.isEmpty()) {
 			methods = MethodInjectionPoint.EMPTY;

@@ -283,11 +283,18 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, references);
+		String[][] ref = null;
+		if (references != null) {
+			ref = new String[references.length][];
+			for (int i = 0; i < references.length; i++) {
+				ref[i] = new String[] {references[i]};
+			}
+		}
+		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, ref);
 		beanDefinition.addMethodInjectionPoint(mip);
 	}
 
-	private MethodInjectionPoint defineMethodInjectionPoint(Class type, String methodName, Class[] paramTypes, String[] references) {
+	private MethodInjectionPoint defineMethodInjectionPoint(Class type, String methodName, Class[] paramTypes, String[][] references) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Method method = null;
 		if (paramTypes == null) {
@@ -297,7 +304,6 @@ public abstract class PetiteBeans {
 					throw new PetiteException(methods.length + " suitable methods found as injection points for '" + type.getName() + '#' + methodName + "()'.");
 				}
 				method = methods[0];
-				paramTypes = method.getParameterTypes();
 			}
 		} else {
 			method = cd.getMethod(methodName, paramTypes, true);
@@ -305,14 +311,7 @@ public abstract class PetiteBeans {
 		if (method == null) {
 			throw new PetiteException("Method '" + type.getName() + '#' + methodName + "()' not found.");
 		}
-		if (references == null) {
-			references = PetiteUtil.resolveParamReferences(paramTypes);
-		} else {
-			if (paramTypes.length != references.length) {
-				throw new PetiteException("Different number of method parameters and references for: '" + type.getName() + '#' + methodName + "()'.");
-			}
-		}
-		return new MethodInjectionPoint(method, references);
+		return injectionPointFactory.createMethodInjectionPoint(method, references);
 	}
 
 	/**

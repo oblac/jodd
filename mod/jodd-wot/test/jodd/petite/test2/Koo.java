@@ -11,12 +11,14 @@ public class Koo {
 //		this.joo = joo;
 //	}
 
-//	@PetiteInject()
-//	public void injectMee(Joo joo) {
-//		mjoo = joo;
-//	}
+	@PetiteInject
+	public void injectMee(Joo joo, Joo joo2) {
+		mjoo = joo;
+		mjoo2 = joo2;
+	}
 
 	public Joo mjoo;
+	public Joo mjoo2;
 
 
 	@PetiteInject

@@ -12,9 +12,9 @@ public class MethodInjectionPoint {
 	public static final MethodInjectionPoint[] EMPTY = new MethodInjectionPoint[0]; 
 
 	public final Method method;
-	public final String[] references;
+	public final String[][] references;
 
-	public MethodInjectionPoint(Method method, String[] references) {
+	MethodInjectionPoint(Method method, String[][] references) {
 		this.method = method;
 		this.references = references;
 	}

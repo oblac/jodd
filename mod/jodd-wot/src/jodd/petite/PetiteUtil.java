@@ -7,8 +7,6 @@ import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.util.StringUtil;
 
-import java.lang.reflect.Field;
-
 /**
  * Few Petite utilities, used internally.
  */
@@ -18,6 +16,7 @@ public class PetiteUtil {
 
 	/**
 	 * Resolves method or ctor parameter names either from annotation of from type names.
+	 * // todo remove!
 	 */
 	public static String[] resolveParamReferences(String refValue, Class<?>[] paramTypes) {
 		refValue = refValue.trim();

@@ -16,13 +16,14 @@ public class PetiteConfig {
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
 		defaultRunInitMethods = true;
-		resolveReferenceParameters = true;	// todo add Paramo!
+		resolveReferenceParameters = true;
 		useFullTypeNames = false;
-		defaultReferences = new PetiteReference[] {
+		lookupReferences = new PetiteReference[] {
 				PetiteReference.NAME,
 		        PetiteReference.TYPE_SHORT_NAME,
 				PetiteReference.TYPE_FULL_NAME
 		};
+		useParamo = true;
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -134,17 +135,31 @@ public class PetiteConfig {
 
 	// ---------------------------------------------------------------- references
 
-	protected PetiteReference[] defaultReferences;
+	protected PetiteReference[] lookupReferences;
 
-	public PetiteReference[] getDefaultReferences() {
-		return defaultReferences;
+	public PetiteReference[] getLookupReferences() {
+		return lookupReferences;
 	}
 
 	/**
 	 * Specifies references for bean name lookup, when name
 	 * is not specified, in given order.
 	 */
-	public void setDefaultReferences(PetiteReference... defaultReferences) {
-		this.defaultReferences = defaultReferences;
+	public void setLookupReferences(PetiteReference... lookupReferences) {
+		this.lookupReferences = lookupReferences;
+	}
+
+	protected boolean useParamo;
+
+	public boolean getUseParamo() {
+		return useParamo;
+	}
+
+	/**
+	 * Specifies if <b>Paramo</b> tool should be used to resolve
+	 * method and ctor argument names.
+	 */
+	public void setUseParamo(boolean useParamo) {
+		this.useParamo = useParamo;
 	}
 }
