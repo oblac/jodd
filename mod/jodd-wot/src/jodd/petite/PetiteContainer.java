@@ -121,9 +121,11 @@ public class PetiteContainer extends PetiteRegistry {
 			String[] refName = pip.reference;
 
 			Object value = getBean(refName, acquiredBeans);
+
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Beans: '" + Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
+					throw new PetiteException("Wiring failed. Beans: '" +
+							Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
 				}
 				continue;
 			}
