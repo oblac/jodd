@@ -5,6 +5,8 @@ package jodd.petite;
 import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -21,11 +23,25 @@ public class InjectionPointFactory {
 	}
 
 	/**
+	 * Creates new ctor injection point.
+	 */
+	public CtorInjectionPoint createCtorInjectionPoint(Constructor constructor, String[][] references) {
+		if (references == null || references.length == 0) {
+			references = methodOrCtorDefaultReferences(constructor, constructor.getParameterTypes());
+		}
+		if (constructor.getParameterTypes().length != references.length) {
+			throw new PetiteException("Different number of constructor parameters and references for: '"
+					+ constructor.getName() + "'.");
+		}
+		return new CtorInjectionPoint(constructor, references);
+	}
+
+	/**
 	 * Creates new method injection point.
 	 */
 	public MethodInjectionPoint createMethodInjectionPoint(Method method, String[][] references) {
 		if (references == null || references.length == 0) {
-			references = methodDefaultReferences(method);
+			references = methodOrCtorDefaultReferences(method, method.getParameterTypes());
 		}
 		if (method.getParameterTypes().length != references.length) {
 			throw new PetiteException("Different number of method parameters and references for: '" +
@@ -66,12 +82,11 @@ public class InjectionPointFactory {
 	/**
 	 * Builds default method references.
 	 */
-	protected String[][] methodDefaultReferences(Method method) {
+	protected String[][] methodOrCtorDefaultReferences(AccessibleObject accobj, Class[] paramTypes) {
 		PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
-		Class[] paramTypes = method.getParameterTypes();
 		String[] paramNames = null;
 		if (petiteConfig.getUseParamo()) {
-			paramNames = Paramo.resolveParameterNames(method);
+			paramNames = Paramo.resolveParameterNames(accobj);
 		}
 
 		String[][] references = new String[paramTypes.length][];

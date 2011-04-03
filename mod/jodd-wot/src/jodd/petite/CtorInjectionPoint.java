@@ -10,9 +10,9 @@ import java.lang.reflect.Constructor;
 public class CtorInjectionPoint {
 
 	public final Constructor constructor;
-	public final String[] references;
+	public final String[][] references;
 
-	public CtorInjectionPoint(Constructor constructor, String[] references) {
+	CtorInjectionPoint(Constructor constructor, String[][] references) {
 		this.constructor = constructor;
 		this.references = references;
 	}

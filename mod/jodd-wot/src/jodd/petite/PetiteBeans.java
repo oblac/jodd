@@ -226,10 +226,11 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		beanDefinition.ctor = defineCtorInjectionPoint(beanDefinition.type, paramTypes, references);
+		String[][] ref = PetiteUtil.convertRefToReferences(references);
+		beanDefinition.ctor = defineCtorInjectionPoint(beanDefinition.type, paramTypes, ref);
 	}
 
-	private CtorInjectionPoint defineCtorInjectionPoint(Class type, Class[] paramTypes, String[] references) {
+	private CtorInjectionPoint defineCtorInjectionPoint(Class type, Class[] paramTypes, String[][] references) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Constructor constructor = null;
 		if (paramTypes == null) {
@@ -239,7 +240,6 @@ public abstract class PetiteBeans {
 					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: '" + type.getName() + "'.");
 				}
 				constructor = ctors[0];
-				paramTypes = constructor.getParameterTypes();
 			}
 		} else {
 			constructor = cd.getCtor(paramTypes, true);
@@ -247,14 +247,7 @@ public abstract class PetiteBeans {
 		if (constructor == null) {
 			throw new PetiteException("Constructor '" + type.getName() + "()' not found.");
 		}
-		if (references == null) {
-			references = PetiteUtil.resolveParamReferences(paramTypes);
-		} else {
-			if (paramTypes.length != references.length) {
-				throw new PetiteException("Different number of ctor parameters and references for: '" + constructor.getName() + "'.");
-			}
-		}
-		return new CtorInjectionPoint(constructor, references);
+		return injectionPointFactory.createCtorInjectionPoint(constructor, references);
 	}
 
 	/**
@@ -283,13 +276,7 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		String[][] ref = null;
-		if (references != null) {
-			ref = new String[references.length][];
-			for (int i = 0; i < references.length; i++) {
-				ref[i] = new String[] {references[i]};
-			}
-		}
+		String[][] ref = PetiteUtil.convertRefToReferences(references);
 		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, ref);
 		beanDefinition.addMethodInjectionPoint(mip);
 	}

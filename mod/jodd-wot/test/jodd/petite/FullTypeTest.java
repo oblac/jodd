@@ -36,7 +36,7 @@ public class FullTypeTest extends TestCase {
 		assertEquals(joo, koo.someNoJooName);
 	}
 
-	public void testFullTypeMethod() {
+	public void testFullTypeMethodCtor() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
@@ -52,6 +52,7 @@ public class FullTypeTest extends TestCase {
 		assertNotNull(koo.someNoJooName);
 		assertNotNull(koo.mjoo);
 		assertNotNull(koo.mjoo2);
+		assertNotNull(koo.joojoo);
 	}
 
 	public void testOptionalAndNotAllReferences() {

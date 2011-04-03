@@ -6,8 +6,8 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.MethodInjectionPoint;
+import jodd.petite.PetiteUtil;
 import jodd.petite.meta.PetiteInject;
-import jodd.typeconverter.Convert;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -43,19 +43,7 @@ public class MethodResolver {
 			if (ref == null) {
 				continue;
 			}
-			String refValues = ref.value().trim();
-			String[][] references = null;
-
-			if (refValues.length() != 0) {
-				String[] refNames = Convert.toStringArray(ref.value());
-
-				// convert to double str array
-				references = new String[refNames.length][];
-				for (int i = 0; i < refNames.length; i++) {
-					references[i] = new String[] {refNames[i]};
-				}
-			}
-
+			String[][] references = PetiteUtil.convertAnnValueToReferences(ref.value());
 			list.add(injectionPointFactory.createMethodInjectionPoint(method, references));
 		}
 		if (list.isEmpty()) {

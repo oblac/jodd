@@ -6,10 +6,11 @@ import jodd.petite.meta.PetiteInject;
 
 public class Koo {
 
-//	@PetiteInject
-//	public Koo(Joo joo) {
-//		this.joo = joo;
-//	}
+	@PetiteInject
+	public Koo(Joo joo) {
+		this.joojoo = joo;
+	}
+	public Joo joojoo;
 
 	@PetiteInject
 	public void injectMee(Joo joo, Joo joo2) {

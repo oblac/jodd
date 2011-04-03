@@ -20,7 +20,7 @@ public class PetiteResolvers {
 	protected ParamResolver paramResolver;
 
 	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
-		ctorResolver = new CtorResolver();
+		ctorResolver = new CtorResolver(injectionPointFactory);
 		propertyResolver = new PropertyResolver(injectionPointFactory);
 		methodResolver = new MethodResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();

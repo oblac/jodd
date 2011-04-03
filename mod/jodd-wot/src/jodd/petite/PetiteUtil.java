@@ -5,6 +5,7 @@ package jodd.petite;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
+import jodd.typeconverter.Convert;
 import jodd.util.StringUtil;
 
 /**
@@ -12,31 +13,40 @@ import jodd.util.StringUtil;
  */
 public class PetiteUtil {
 
-	private static final String NAMES_DELIMITER = ", ";
+	/**
+	 * Converts comma-separated string into double string array.
+	 */
+	public static String[][] convertAnnValueToReferences(String value) {
+		if (value == null) {
+			return null;
+		}
+		value = value.trim();
+		if (value.length() == 0) {
+			return null;
+		}
+
+		String[] refNames = Convert.toStringArray(value);
+
+		// convert to double str array
+		String[][] references = new String[refNames.length][];
+		for (int i = 0; i < refNames.length; i++) {
+			references[i] = new String[] {refNames[i].trim()};
+		}
+		return references;
+	}
 
 	/**
-	 * Resolves method or ctor parameter names either from annotation of from type names.
-	 * // todo remove!
+	 * Converts single string array to double string array.
 	 */
-	public static String[] resolveParamReferences(String refValue, Class<?>[] paramTypes) {
-		refValue = refValue.trim();
-		String[] refNames;
-		if (refValue.length() == 0) {
-			refNames = resolveParamReferences(paramTypes);
-		} else {
-			refNames = StringUtil.splitc(refValue, NAMES_DELIMITER);
+	public static String[][] convertRefToReferences(String[] references) {
+		if (references == null) {
+			return null;
 		}
-		return refNames;
-	}
-	/**
-	 * Resolves parameter names from type names.
-	 */
-	public static String[] resolveParamReferences(Class<?>[] paramTypes) {
-		String[] refNames = new String[paramTypes.length];
-		for (int i = 0; i < paramTypes.length; i++) {
-			refNames[i] = StringUtil.uncapitalize(paramTypes[i].getSimpleName());
+		String[][] ref = new String[references.length][];
+		for (int i = 0; i < references.length; i++) {
+			ref[i] = new String[] {references[i]};
 		}
-		return refNames;
+		return ref;
 	}
 
 	/**
