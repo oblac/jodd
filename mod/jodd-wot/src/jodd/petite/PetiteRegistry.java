@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Petite container layer that provides various mods for registering all kind
- * of stuff needed for Petite container.
+ * of user stuff.
  */
 public abstract class PetiteRegistry extends PetiteBeans {
 
