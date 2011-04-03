@@ -6,6 +6,10 @@ import jodd.util.StringUtil;
 
 import java.lang.reflect.Field;
 
+/**
+ * Factory for injection points. Responsible also for
+ * resolving default references when none specified.
+ */
 public class InjectionPointFactory {
 
 	protected final PetiteConfig petiteConfig;
