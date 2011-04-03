@@ -3,7 +3,6 @@
 package jodd.petite;
 
 import jodd.petite.scope.Scope;
-import jodd.petite.resolver.PetiteManager;
 import jodd.props.Props;
 
 import java.util.Iterator;
@@ -17,8 +16,8 @@ import java.util.Map;
  */
 public abstract class PetiteRegistry extends PetiteBeans {
 
-	protected PetiteRegistry(PetiteManager petiteManager, PetiteConfig petiteConfig) {
-		super(petiteManager, petiteConfig);
+	protected PetiteRegistry(PetiteConfig petiteConfig) {
+		super(petiteConfig);
 	}
 
 	// ---------------------------------------------------------------- bean
@@ -65,8 +64,6 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	public void registerBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		registerPetiteBean(name, type, scopeType, wiringMode);
 	}
-
-
 
 	// ---------------------------------------------------------------- define
 
@@ -216,16 +213,7 @@ public abstract class PetiteRegistry extends PetiteBeans {
 		removeBeanDefinition(name);
 	}
 
-
-
 	// ---------------------------------------------------------------- params
-
-	/**
-	 * Defines new parameter. Parameter with same name will be replaced.
-	 */
-	public void defineParameter(String name, Object value) {
-		petiteManager.defineParameter(name, value);
-	}
 
 	/**
 	 * Defines many parameters at once. 

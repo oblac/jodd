@@ -2,12 +2,17 @@
 
 package jodd.petite;
 
-import jodd.petite.resolver.PetiteManager;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
+import jodd.util.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,25 +36,25 @@ public abstract class PetiteBeans {
 	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<Class<? extends Scope>, Scope>();
 
 	/**
-	 * Petite manager.
-	 */
-	protected final PetiteManager petiteManager;
-
-	/**
-	 * Petite configuration.
+	 * {@link PetiteConfig Petite configuration}.
 	 */
 	protected final PetiteConfig petiteConfig;
 
-	protected PetiteBeans(PetiteManager petiteManager, PetiteConfig petiteConfig) {
-		this.petiteManager = petiteManager;
+	/**
+	 * {@link PetiteResolvers Petite resolvers}.
+	 */
+	protected final PetiteResolvers petiteResolvers;
+
+	protected PetiteBeans(PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
+		this.petiteResolvers = new PetiteResolvers();
 	}
 
 	/**
-	 * Returns Petite manager.
+	 * Returns Petite resolvers.
 	 */
-	public PetiteManager getManager() {
-		return petiteManager;
+	public PetiteResolvers getResolvers() {
+		return petiteResolvers;
 	}
 
 	/**
@@ -179,9 +184,12 @@ public abstract class PetiteBeans {
 		return beanDefinition;
 	}
 
+	/**
+	 * Single point of bean definition.
+	 */
 	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
-		def.ctor = petiteManager.resolveCtorInjectionPoint(type);
+		def.ctor = resolveCtorInjectionPoint(type);
 		def.properties = PropertyInjectionPoint.EMPTY;
 		def.methods = MethodInjectionPoint.EMPTY;
 		def.initMethods = InitMethodPoint.EMPTY;
@@ -190,13 +198,17 @@ public abstract class PetiteBeans {
 	/**
 	 * Removes bean and returns definition of removed bean.
 	 * All resolvers references are deleted, too.
+	 * Returns bean definition of removed bean or <code>null</code>.
 	 */
 	protected BeanDefinition removeBeanDefinition(String name) {
 		BeanDefinition bd = beans.remove(name);
 		if (bd == null) {
 			return null;
 		}
-		petiteManager.removeResolvers(bd.type);
+		petiteResolvers.getCtorResolver().remove(bd.type);
+		petiteResolvers.getPropertyResolver().remove(bd.type);
+		petiteResolvers.getMethodResolver().remove(bd.type);
+		petiteResolvers.getInitMethodResolver().remove(bd.type);
 		bd.scopeRemove();
 		return bd;
 	}
@@ -208,19 +220,60 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		beanDefinition.ctor = petiteManager.defineCtorInjectionPoint(beanDefinition.type, paramTypes, references);
+		beanDefinition.ctor = defineCtorInjectionPoint(beanDefinition.type, paramTypes, references);
 	}
+
+	private CtorInjectionPoint defineCtorInjectionPoint(Class type, Class[] paramTypes, String[] references) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		Constructor constructor = null;
+		if (paramTypes == null) {
+			Constructor[] ctors = cd.getAllCtors(true);
+			if (ctors.length > 0) {
+				if (ctors.length > 1) {
+					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: '" + type.getName() + "'.");
+				}
+				constructor = ctors[0];
+				paramTypes = constructor.getParameterTypes();
+			}
+		} else {
+			constructor = cd.getCtor(paramTypes, true);
+		}
+		if (constructor == null) {
+			throw new PetiteException("Constructor '" + type.getName() + "()' not found.");
+		}
+		if (references == null) {
+			references = PetiteUtil.resolveParamReferences(paramTypes);
+		} else {
+			if (paramTypes.length != references.length) {
+				throw new PetiteException("Different number of ctor parameters and references for: '" + constructor.getName() + "'.");
+			}
+		}
+		return new CtorInjectionPoint(constructor, references);
+	}
+
 
 	/**
 	 * Single point of property injection point registration.
 	 */
 	protected void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		PropertyInjectionPoint pip = petiteManager.definePropertyInjectionPoint(
+		PropertyInjectionPoint pip = definePropertyInjectionPoint(
 				beanDefinition.type,
 				property,
 				reference == null ? null : new String[] {reference});
 		beanDefinition.addPropertyInjectionPoint(pip);
+	}
+
+	private PropertyInjectionPoint definePropertyInjectionPoint(Class type, String property, String[] references) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		Field field = cd.getField(property, true);
+		if (field == null) {
+			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
+		}
+		if (references == null || references.length == 0) {
+			references = PetiteUtil.fieldDefaultReferences(field);
+		}
+		return new PropertyInjectionPoint(field, references);	// todo extract this call in 1 place where config is available
 	}
 
 	/**
@@ -228,8 +281,36 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		MethodInjectionPoint mip = petiteManager.defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, references);
+		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, references);
 		beanDefinition.addMethodInjectionPoint(mip);
+	}
+
+	private MethodInjectionPoint defineMethodInjectionPoint(Class type, String methodName, Class[] paramTypes, String[] references) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		Method method = null;
+		if (paramTypes == null) {
+			Method[] methods = cd.getAllMethods(methodName, true);
+			if (methods.length > 0) {
+				if (methods.length > 1) {
+					throw new PetiteException(methods.length + " suitable methods found as injection points for '" + type.getName() + '#' + methodName + "()'.");
+				}
+				method = methods[0];
+				paramTypes = method.getParameterTypes();
+			}
+		} else {
+			method = cd.getMethod(methodName, paramTypes, true);
+		}
+		if (method == null) {
+			throw new PetiteException("Method '" + type.getName() + '#' + methodName + "()' not found.");
+		}
+		if (references == null) {
+			references = PetiteUtil.resolveParamReferences(paramTypes);
+		} else {
+			if (paramTypes.length != references.length) {
+				throw new PetiteException("Different number of method parameters and references for: '" + type.getName() + '#' + methodName + "()'.");
+			}
+		}
+		return new MethodInjectionPoint(method, references);
 	}
 
 	/**
@@ -237,8 +318,36 @@ public abstract class PetiteBeans {
 	 */
 	protected void registerPetiteInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		InitMethodPoint[] methods = petiteManager.defineInitMethods(beanDefinition.type, beforeMethodNames, afterMethodNames);
+		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, beforeMethodNames, afterMethodNames);
 		beanDefinition.addInitMethodPoints(methods);
+	}
+
+	private InitMethodPoint[] defineInitMethods(Class type, String[] beforeMethodNames, String[] afterMethodNames) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		if (beforeMethodNames == null) {
+			beforeMethodNames = new String[0];
+		}
+		if (afterMethodNames == null) {
+			afterMethodNames = new String[0];
+		}
+		int total = beforeMethodNames.length + afterMethodNames.length;
+		InitMethodPoint[] methods = new InitMethodPoint[total];
+		int i;
+		for (i = 0; i < beforeMethodNames.length; i++) {
+			Method m = cd.getMethod(beforeMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+			if (m == null) {
+				throw new PetiteException("Init method '" + type.getName() + '#' + beforeMethodNames[i] + "()' not found.");
+			}
+			methods[i] = new InitMethodPoint(m, i, true);
+		}
+		for (int j = 0; j < afterMethodNames.length; j++) {
+			Method m = cd.getMethod(afterMethodNames[j], ReflectUtil.NO_PARAMETERS, true);
+			if (m == null) {
+				throw new PetiteException("Init method '" + type.getName() + '#' + afterMethodNames[j] + "()' not found.");
+			}
+			methods[i + j] = new InitMethodPoint(m, i + j, true);
+		}
+		return methods;
 	}
 
 	// ---------------------------------------------------------------- statistics
@@ -262,6 +371,51 @@ public abstract class PetiteBeans {
 	 */
 	public Iterator<BeanDefinition> beansIterator() {
 		return beans.values().iterator();
+	}
+
+	// ---------------------------------------------------------------- resolvers
+
+	protected CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
+		return petiteResolvers.getCtorResolver().resolve(type);
+	}
+
+	protected CtorInjectionPoint resolveDefaultCtorInjectionPoint(Class type) {
+		return petiteResolvers.getCtorResolver().resolveDefault(type);
+	}
+
+	protected PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
+		return petiteResolvers.getPropertyResolver().resolve(type, autowire);
+	}
+
+	protected MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
+		return petiteResolvers.getMethodResolver().resolve(type);
+	}
+
+	protected InitMethodPoint[] resolveInitMethods(Object bean) {
+		return petiteResolvers.getInitMethodResolver().resolve(bean);
+	}
+
+	// ---------------------------------------------------------------- params
+
+	/**
+	 * Defines new parameter. Parameters with same name will be replaced.
+	 */
+	public void defineParameter(String name, Object value) {
+		petiteResolvers.getParamResolver().put(name, value);
+	}
+
+	/**
+	 * Returns defined parameter.
+	 */
+	public Object getParameter(String name) {
+		return petiteResolvers.getParamResolver().get(name);
+	}
+
+	/**
+	 * Prepares list of all bean parameters and optionally resolves inner references.
+	 */
+	protected String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
+		return petiteResolvers.getParamResolver().resolve(name, resolveReferenceParams);
 	}
 
 }

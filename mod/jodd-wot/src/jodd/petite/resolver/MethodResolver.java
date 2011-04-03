@@ -53,4 +53,8 @@ public class MethodResolver {
 		return methods;
 	}
 
+	public void remove(Class type) {
+		methodRefs.remove(type);
+	}
+
 }

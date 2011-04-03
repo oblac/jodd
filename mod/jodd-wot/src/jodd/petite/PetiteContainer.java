@@ -4,7 +4,6 @@ package jodd.petite;
 
 import jodd.bean.BeanUtil;
 import jodd.petite.config.PetiteConfigurator;
-import jodd.petite.resolver.PetiteManager;
 import jodd.petite.scope.SingletonScope;
 
 import java.util.HashMap;
@@ -27,19 +26,11 @@ public class PetiteContainer extends PetiteRegistry {
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
 
 	public PetiteContainer() {
-		this(new PetiteManager(), new PetiteConfig());
+		this(new PetiteConfig());
 	}
 
 	public PetiteContainer(PetiteConfig config) {
-		this(new PetiteManager(), config);
-	}
-
-	public PetiteContainer(PetiteManager manager) {
-		this(manager, new PetiteConfig());
-	}
-
-	public PetiteContainer(PetiteManager manager, PetiteConfig config) {
-		super(manager, config);
+		super(config);
 		log.debug("Petite container created.");
 	}
 
@@ -59,7 +50,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected Object newBeanInstance(BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.ctor == null) {
-			def.ctor = petiteManager.resolveCtorInjectionPoint(def.type);
+			def.ctor = resolveCtorInjectionPoint(def.type);
 		}
 
 		// other ctors
@@ -115,7 +106,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
-			def.properties = petiteManager.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+			def.properties = resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (PropertyInjectionPoint pip : def.properties) {
 			String[] refName = pip.reference;
@@ -138,7 +129,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireMethods(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.methods == null) {
-			def.methods = petiteManager.resolveMethodInjectionPoint(def.type);
+			def.methods = resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
 			String[] refNames = methodRef.references;
@@ -166,7 +157,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void invokeInitMethods(Object bean, BeanDefinition def, Boolean fireFirstOff) {
 		if (def.initMethods == null) {
-			def.initMethods = petiteManager.resolveInitMethods(bean);
+			def.initMethods = resolveInitMethods(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if ((fireFirstOff != null) && (fireFirstOff.booleanValue() != initMethod.firstOff)) {
@@ -185,11 +176,11 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void injectParams(Object bean, BeanDefinition def) {
 		if (def.params == null) {
-			def.params = petiteManager.resolveBeanParams(def.name, petiteConfig.getResolveReferenceParameters());
+			def.params = resolveBeanParams(def.name, petiteConfig.getResolveReferenceParameters());
 		}
 		int len = def.name.length() + 1;
 		for (String param : def.params) {
-			Object value = petiteManager.getParameter(param);
+			Object value = getParameter(param);
 			String destination = param.substring(len);
 			try {
 				BeanUtil.setDeclaredProperty(bean, destination, value);

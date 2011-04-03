@@ -53,4 +53,8 @@ public class InitMethodResolver {
 		return methods;
 	}
 
+	public void remove(Class type) {
+		initMethods.remove(type);
+	}
+
 }

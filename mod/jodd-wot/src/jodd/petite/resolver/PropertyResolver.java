@@ -64,4 +64,8 @@ public class PropertyResolver {
 		return fields;
 	}
 
+	public void remove(Class type) {
+		properties.remove(type);
+	}
+
 }

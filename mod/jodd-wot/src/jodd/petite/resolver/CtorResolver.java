@@ -20,8 +20,6 @@ public class CtorResolver {
 
 	protected Map<Class, CtorInjectionPoint> ctors = new HashMap<Class, CtorInjectionPoint>();
 
-	protected static final String[] EMPTY_STRING = new String[0];
-
 	/**
 	 * Resolves constructor injection point from type. Looks for single annotated constructor.
 	 * If no annotated constructors found, the total number of constructors will be checked.
@@ -35,7 +33,6 @@ public class CtorResolver {
 	public CtorInjectionPoint resolveDefault(Class type) {
 		return resolve(type, false);
 	}
-
 
 	protected CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
 		CtorInjectionPoint cip = ctors.get(type);
@@ -84,6 +81,10 @@ public class CtorResolver {
 		cip = new CtorInjectionPoint(foundedCtor, refNames);
 		ctors.put(type, cip);
 		return cip;
+	}
+
+	public void remove(Class type) {
+		ctors.remove(type);
 	}
 
 }
