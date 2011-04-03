@@ -33,6 +33,7 @@ public class InjectionPointFactory {
 			throw new PetiteException("Different number of constructor parameters and references for: '"
 					+ constructor.getName() + "'.");
 		}
+		removeDuplicateNames(references);
 		return new CtorInjectionPoint(constructor, references);
 	}
 
@@ -47,6 +48,7 @@ public class InjectionPointFactory {
 			throw new PetiteException("Different number of method parameters and references for: '" +
 					method.getDeclaringClass().getName() + '#' + method.getName()+ "()'.");
 		}
+		removeDuplicateNames(references);
 		return new MethodInjectionPoint(method, references);
 	}
 
@@ -57,6 +59,7 @@ public class InjectionPointFactory {
 		if (references == null || references.length == 0) {
 			references = fieldDefaultReferences(field);
 		}
+		removeDuplicateNames(references);
 		return new PropertyInjectionPoint(field, references);
 	}
 
@@ -106,6 +109,38 @@ public class InjectionPointFactory {
 		}
 
 		return references;
+	}
+
+	protected void removeDuplicateNames(String[][] referencesArr) {
+		for (String[] references : referencesArr) {
+			removeDuplicateNames(references);
+		}
+	}
+
+	/**
+	 * Removes later duplicated references.
+	 */
+	protected void removeDuplicateNames(String[] references) {
+		if (references.length < 2) {
+			return;
+		}
+
+		for (int i = 1; i < references.length; i++) {
+			String thisRef = references[i];
+			if (thisRef == null) {
+				continue;
+			}
+
+			for (int j = 0; j < i; j++) {
+				if (references[j] == null) {
+					continue;
+				}
+				if (thisRef.equals(references[j])) {
+					references[i] = null;
+					break;
+				}
+			}
+		}
 	}
 
 }
