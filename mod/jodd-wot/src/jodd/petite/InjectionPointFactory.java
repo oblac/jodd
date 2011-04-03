@@ -2,6 +2,8 @@
 
 package jodd.petite;
 
+import jodd.util.StringUtil;
+
 import java.lang.reflect.Field;
 
 public class InjectionPointFactory {
@@ -17,8 +19,22 @@ public class InjectionPointFactory {
 	 */
 	public PropertyInjectionPoint createPropertyInjectionPoint(Field field, String[] references) {
 		if (references == null || references.length == 0) {
-			references = PetiteUtil.fieldDefaultReferences(field);
+			references = fieldDefaultReferences(field);
 		}
 		return new PropertyInjectionPoint(field, references);
 	}
+
+	// ---------------------------------------------------------------- utils
+
+	/**
+	 * Builds default field references.
+	 */
+	protected String[] fieldDefaultReferences(Field field) {
+		String[] references = new String[3];
+		references[0] = field.getName();
+		references[1] = StringUtil.uncapitalize(field.getType().getSimpleName());
+		references[2] = field.getType().getName();
+		return references;
+	}
+
 }

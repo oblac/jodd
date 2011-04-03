@@ -76,15 +76,4 @@ public class PetiteUtil {
 		return name;
 	}
 
-	/**
-	 * Builds default field references.
-	 */
-	public static String[] fieldDefaultReferences(Field field) {
-		String[] references = new String[3];
-		references[0] = field.getName();
-		references[1] = StringUtil.uncapitalize(field.getType().getSimpleName());
-		references[2] = field.getType().getName();
-		return references;
-	}
-
 }
