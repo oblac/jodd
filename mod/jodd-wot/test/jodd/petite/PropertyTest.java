@@ -2,6 +2,8 @@
 
 package jodd.petite;
 
+import jodd.petite.test2.Joo;
+import jodd.petite.test2.Moo;
 import junit.framework.TestCase;
 import jodd.petite.data.PojoBean2;
 
@@ -34,6 +36,31 @@ public class PropertyTest extends TestCase {
 
 		assertEquals("value", pc.getBeanProperty("pojoBean2.val1"));
 		assertEquals(Integer.valueOf(173), pc.getBeanProperty("pojoBean2.val2"));
+	}
 
+	public void testCount() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.registerBean(Moo.class);
+		pc.registerBean(Joo.class);
+		Moo moo = pc.getBean(Moo.class);
+		assertNotNull(moo.joo);
+		assertNull(moo.jooNo);
+
+		BeanDefinition bd = pc.lookupBeanDefinition("moo");
+		assertEquals(1, bd.properties.length);
+
+
+		pc = new PetiteContainer();
+		pc.getConfig().setDefaultWiringMode(WiringMode.AUTOWIRE);
+		pc.registerBean(Moo.class);
+		pc.registerBean(Joo.class);
+
+		moo = pc.getBean(Moo.class);
+		assertNotNull(moo.joo);
+		assertNotNull(moo.jooNo);
+		assertEquals(moo.joo, moo.jooNo);
+
+		bd = pc.lookupBeanDefinition("moo");
+		assertEquals(2, bd.properties.length);
 	}
 }

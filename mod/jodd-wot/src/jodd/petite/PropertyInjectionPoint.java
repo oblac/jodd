@@ -13,12 +13,10 @@ public class PropertyInjectionPoint {
 
 	public final Field field;
 	public final String[] reference;
-	public final boolean hasAnnotation;
 
-	public PropertyInjectionPoint(Field field, String[] reference, boolean hasAnnotation) {
+	public PropertyInjectionPoint(Field field, String[] reference) {
 		this.field = field;
 		this.reference = reference;
-		this.hasAnnotation = hasAnnotation;
 	}
 
 }

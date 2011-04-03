@@ -6,6 +6,7 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.PetiteUtil;
 import jodd.petite.PropertyInjectionPoint;
+import jodd.petite.WiringMode;
 import jodd.petite.meta.PetiteInject;
 
 import java.lang.reflect.Field;
@@ -24,7 +25,7 @@ public class PropertyResolver {
 	/**
 	 * Resolves all fields for given type.
 	 */
-	public PropertyInjectionPoint[] resolve(Class type) {		// todo pass wire information
+	public PropertyInjectionPoint[] resolve(Class type, boolean autowire) {
 		PropertyInjectionPoint[] fields = properties.get(type);
 		if (fields != null) {
 			return fields;
@@ -36,12 +37,13 @@ public class PropertyResolver {
 		Field[] allFields = cd.getAllFields(true);
 		for (Field field : allFields) {
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);
+			if ((autowire == false) && (ref == null)) {
+				continue;
+			}
+
 			String[] refName = null;
-			boolean hasAnnotation = false;
 
 			if (ref != null) {
-				hasAnnotation = true;
-
 				String name = ref.value().trim();
 				if (name.length() != 0) {
 					refName = new String[] {name};
@@ -52,7 +54,7 @@ public class PropertyResolver {
 				refName = PetiteUtil.fieldDefaultReferences(field);
 			}
 
-			list.add(new PropertyInjectionPoint(field, refName, hasAnnotation));
+			list.add(new PropertyInjectionPoint(field, refName));
 		}
 		if (list.isEmpty()) {
 			fields = PropertyInjectionPoint.EMPTY;

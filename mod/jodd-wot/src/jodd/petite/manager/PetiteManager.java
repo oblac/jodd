@@ -93,8 +93,8 @@ public class PetiteManager {
 
 	// ---------------------------------------------------------------- property
 
-	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type) {
-		return propertyResolver.resolve(type);
+	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
+		return propertyResolver.resolve(type, autowire);
 	}
 
 	public PropertyInjectionPoint definePropertyInjectionPoint(Class type, String property, String[] references) {
@@ -106,7 +106,7 @@ public class PetiteManager {
 		if (references == null || references.length == 0) {
 			references = PetiteUtil.fieldDefaultReferences(field);
 		}
-		return new PropertyInjectionPoint(field, references, true);	// todo extract this call in 1 place where config is availiable
+		return new PropertyInjectionPoint(field, references);	// todo extract this call in 1 place where config is available
 	}
 
 	// ---------------------------------------------------------------- methods

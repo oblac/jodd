@@ -115,18 +115,15 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
-			def.properties = petiteManager.resolvePropertyInjectionPoint(def.type);
+			def.properties = petiteManager.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (PropertyInjectionPoint pip : def.properties) {
-			if ((def.wiringMode != WiringMode.AUTOWIRE) && (pip.hasAnnotation == false)) {
-				continue;
-			}
 			String[] refName = pip.reference;
 
 			Object value = getBean(refName, acquiredBeans);
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
-					throw new PetiteException("Wiring failed. Bean '" + Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
+					throw new PetiteException("Wiring failed. Beans: '" + Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
 				}
 				continue;
 			}
