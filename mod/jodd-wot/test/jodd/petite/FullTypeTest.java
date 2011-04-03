@@ -31,6 +31,34 @@ public class FullTypeTest extends TestCase {
 		assertNotNull(joo);
 
 		assertNotNull(koo.joo);
+		assertNotNull(koo.someNoJooName);
 		assertEquals(joo, koo.joo);
+		assertEquals(joo, koo.someNoJooName);
+	}
+
+	public void testOptionalAndNotAllReferences() {
+		PetiteContainer pc = new PetiteContainer();
+		pc.getConfig().setDefaultWiringMode(WiringMode.OPTIONAL);
+		pc.getConfig().setUseFullTypeNames(false);
+		pc.getConfig().setDefaultReferences(PetiteReference.NAME);
+
+		pc.registerBean(Koo.class);
+		pc.registerBean(Joo.class);
+
+		assertEquals(2, pc.getTotalBeans());
+
+		Koo koo = pc.getBean(Koo.class);
+		assertNotNull(koo);
+		Joo joo = pc.getBean(Joo.class);
+		assertNotNull(joo);
+
+		assertNull(koo.someNoJooName);
+		assertNotNull(koo.joo);
+
+		koo = (Koo) pc.getBean(Koo.class.getName());
+		assertNull(koo);
+		joo = (Joo) pc.getBean(Joo.class.getName());
+		assertNull(joo);
+
 	}
 }

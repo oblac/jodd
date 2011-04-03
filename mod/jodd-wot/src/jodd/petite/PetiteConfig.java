@@ -18,6 +18,11 @@ public class PetiteConfig {
 		defaultRunInitMethods = true;
 		resolveReferenceParameters = true;	// todo add Paramo!
 		useFullTypeNames = false;
+		defaultReferences = new PetiteReference[] {
+				PetiteReference.NAME,
+		        PetiteReference.TYPE_SHORT_NAME,
+				PetiteReference.TYPE_FULL_NAME
+		};
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -125,5 +130,21 @@ public class PetiteConfig {
 	 */
 	public void setUseFullTypeNames(boolean useFullTypeNames) {
 		this.useFullTypeNames = useFullTypeNames;
+	}
+
+	// ---------------------------------------------------------------- references
+
+	protected PetiteReference[] defaultReferences;
+
+	public PetiteReference[] getDefaultReferences() {
+		return defaultReferences;
+	}
+
+	/**
+	 * Specifies references for bean name lookup, when name
+	 * is not specified, in given order.
+	 */
+	public void setDefaultReferences(PetiteReference... defaultReferences) {
+		this.defaultReferences = defaultReferences;
 	}
 }

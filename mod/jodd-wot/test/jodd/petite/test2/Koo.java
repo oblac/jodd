@@ -22,4 +22,7 @@ public class Koo {
 	@PetiteInject
 	public Joo joo;
 
+	@PetiteInject
+	public Joo someNoJooName;
+
 }

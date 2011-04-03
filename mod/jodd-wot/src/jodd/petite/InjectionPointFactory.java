@@ -34,10 +34,16 @@ public class InjectionPointFactory {
 	 * Builds default field references.
 	 */
 	protected String[] fieldDefaultReferences(Field field) {
-		String[] references = new String[3];
-		references[0] = field.getName();
-		references[1] = StringUtil.uncapitalize(field.getType().getSimpleName());
-		references[2] = field.getType().getName();
+		PetiteReference[] referencesToUse = petiteConfig.getDefaultReferences();
+		String[] references = new String[referencesToUse.length];
+
+		for (int i = 0; i < references.length; i++) {
+			switch (referencesToUse[i]) {
+				case NAME:				references[i] = field.getName(); break;
+				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(field.getType().getSimpleName()); break;
+				case TYPE_FULL_NAME:	references[i] = field.getType().getName(); break;
+			}
+		}
 		return references;
 	}
 
