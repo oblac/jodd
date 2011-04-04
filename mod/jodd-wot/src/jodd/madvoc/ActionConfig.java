@@ -78,8 +78,7 @@ public class ActionConfig {
 
 	/**
 	 * Returns <code>true</code> if {@link #getActionPath() action path}
-	 * ends with {@link #getActionPathExtension() ac}
-	 * @return
+	 * ends with {@link #getActionPathExtension() action path extension}.
 	 */
 	public boolean isPathEndsWithExtension() {
 		return pathEndsWithExtension;
