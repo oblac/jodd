@@ -3,17 +3,17 @@
 package jodd.format;
 
 /**
- * Works with roman numbers.
+ * Conversion to and from Roman numbers.
  */
 public class RomanNumber {
 
-	public static final int[] VALUES = new int[] {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-	public static final String[] LETTERS = new String[] {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+	private static final int[] VALUES = new int[] {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+	private static final String[] LETTERS = new String[] {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 
 	/**
-	 * Converts to roman number.
+	 * Converts to Roman number.
 	 */
-	public static String romanize(int value) {
+	public static String convertToRoman(int value) {
 		StringBuilder roman = new StringBuilder();
 		int n = value;
 		for (int i = 0; i < LETTERS.length; i++) {
@@ -26,9 +26,9 @@ public class RomanNumber {
 	}
 
 	/**
-	 * Converts to arab numbers.
+	 * Converts to Arabic numbers.
 	 */
-	public static int numberize(String roman) {
+	public static int convertToArabic(String roman) {
 		int start = 0, value = 0;
 		for (int i = 0; i < LETTERS.length; i++) {
 			while (roman.startsWith(LETTERS[i], start)) {
@@ -42,7 +42,7 @@ public class RomanNumber {
 	/**
 	 * Checks if some string is valid roman number.
 	 */
-	public static boolean isRoman(String roman) {
-		return roman.equals(romanize(numberize(roman)));
+	public static boolean isValidRomanNumber(String roman) {
+		return roman.equals(convertToRoman(convertToArabic(roman)));
 	}
 }
