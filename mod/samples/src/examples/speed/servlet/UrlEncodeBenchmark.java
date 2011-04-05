@@ -2,7 +2,7 @@
 
 package examples.speed.servlet;
 
-import jodd.servlet.UrlEncoder;
+import jodd.servlet.URLCoder;
 import jodd.datetime.JStopWatch;
 
 import java.io.UnsupportedEncodingException;
@@ -28,15 +28,15 @@ public class UrlEncodeBenchmark {
 			URLEncoder.encode("/qwe?name=  dada", "UTF-8");
 		}
 		swatch.stop();
-		System.out.println("---elapsed: " + swatch.elapsed());			// 4922
+		System.out.println("---elapsed: " + swatch.elapsed());			// 3188
 	}
 
 	private static void test1Jodd() {
 		swatch.start();
 		for (int i = 1; i < loop1; i++) {
-			UrlEncoder.url("/qwe?name=  dada");
+			URLCoder.url("/qwe?name=  dada");
 		}
 		swatch.stop();
-		System.out.println("---elapsed: " + swatch.elapsed());			// 2344
+		System.out.println("---elapsed: " + swatch.elapsed());			// 1420
 	}
 }

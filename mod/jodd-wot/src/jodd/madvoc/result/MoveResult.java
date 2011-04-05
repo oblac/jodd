@@ -6,7 +6,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.servlet.UrlEncoder;
+import jodd.servlet.URLCoder;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomStringUtil;
 
@@ -41,7 +41,7 @@ public class MoveResult extends ActionResult {
 		HttpSession session = actionRequest.getHttpServletRequest().getSession();
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);
-		resultPath = UrlEncoder.buildUrl(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
+		resultPath = URLCoder.build().base(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
 		DispatcherUtil.redirect(actionRequest.getHttpServletRequest(), actionRequest.getHttpServletResponse(), resultPath);
 	}
 

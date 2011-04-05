@@ -2,8 +2,8 @@
 
 package jodd.servlet.tag;
 
-import jodd.servlet.UrlEncoder;
-import jodd.servlet.UrlBuilder;
+import jodd.servlet.URLCoder;
+import jodd.servlet.URLBuilder;
 import jodd.util.StringPool;
 
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -45,7 +45,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	@Override
 	public void doTag() throws JspException {
 		PageContext pageContext = (PageContext) getJspContext();
-		UrlBuilder urlBuilder = UrlEncoder.buildUrl(baseUrl, pageContext);
+		URLBuilder urlBuilder = URLCoder.build(pageContext).base(baseUrl);
 		for (int i = 0; i < attrs.size(); i += 2) {
 			urlBuilder.param(attrs.get(i), attrs.get(i + 1));
 		}

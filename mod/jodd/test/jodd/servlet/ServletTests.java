@@ -14,7 +14,7 @@ public class ServletTests extends TestSuite {
 		addTestSuite(HtmlTagTest.class);
 		addTestSuite(ServletUtilTest.class);
 		addTestSuite(FormTagTest.class);
-		addTestSuite(UrlEncoderTest.class);
+		addTestSuite(URLCoderTest.class);
 	}
 
 	public static Test suite() {

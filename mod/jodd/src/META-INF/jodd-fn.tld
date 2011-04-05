@@ -50,7 +50,7 @@
 
 	<function>
 		<name>url</name>
-		<function-class>jodd.servlet.UrlEncoder</function-class>
+		<function-class>jodd.servlet.URLCoder</function-class>
 		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 

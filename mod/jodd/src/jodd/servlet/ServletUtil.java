@@ -466,7 +466,7 @@ public class ServletUtil {
 	 * Checks if some parameter is in GET parameters.
 	 */
 	public boolean isGetParameter(HttpServletRequest request, String key) {
-		key = UrlEncoder.encode(key) + '=';
+		key = URLCoder.encodeQuery(key) + '=';
 		String query = request.getQueryString();
 		String[] nameValuePairs = StringUtil.splitc(query, '&');
 		for (String nameValuePair : nameValuePairs) {
