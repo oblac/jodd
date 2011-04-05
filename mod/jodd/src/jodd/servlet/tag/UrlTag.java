@@ -45,7 +45,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	@Override
 	public void doTag() throws JspException {
 		PageContext pageContext = (PageContext) getJspContext();
-		URLBuilder urlBuilder = URLCoder.build(pageContext).base(baseUrl);
+		URLBuilder urlBuilder = URLCoder.build(pageContext).path(baseUrl);
 		for (int i = 0; i < attrs.size(); i += 2) {
 			urlBuilder.param(attrs.get(i), attrs.get(i + 1));
 		}

@@ -15,6 +15,8 @@ public class URLCoderTest extends TestCase {
 		assertEquals(URLEncoder.encode("d a d a", "UTF-8"), URLCoder.encodeQuery("d a d a"));
 		assertEquals(URLEncoder.encode("dšačdža", "UTF-8"), URLCoder.encodeQuery("dšačdža"));
 		assertEquals(URLEncoder.encode("I love", "UTF-8"), URLCoder.encodeQuery("I love"));
+		assertEquals(URLEncoder.encode("v+al ue", "UTF-8"), URLCoder.encodeQuery("v+al ue"));
+		assertEquals("v%2Bal+ue", URLCoder.encodeQuery("v+al ue"));
 		assertEquals("I+love", URLCoder.encodeQuery("I love"));
 		assertEquals("%3A%2F%3F%23%5B%5D%40", URLCoder.encodeQuery(":/?#[]@"));
 		assertEquals("%C5%BD%C4%8C%C4%86", URLCoder.encodeQuery("ŽČĆ"));	// utf8
@@ -37,15 +39,28 @@ public class URLCoderTest extends TestCase {
 	}
 
 	public void testUrlBuilder() {
-		assertEquals("http://jodd.org", URLCoder.build().base("http://jodd.org").toString());
-		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build().base("http://jodd.org").param("param", "jodd&java").toString());
-		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build().base("http://jodd.org").param("param=jodd&java").toString());
-		assertEquals("http://jodd.org?pa+ram=jodd+%2B+java", URLCoder.build().base("http://jodd.org").param("pa ram", "jodd + java").toString());
+		assertEquals("http://jodd.org", URLCoder.build().path("http://jodd.org").toString());
+		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build().path("http://jodd.org").param("param", "jodd&java").toString());
+		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build().path("http://jodd.org").param("param=jodd&java").toString());
+		assertEquals("http://jodd.org?pa+ram=jodd+%2B+java", URLCoder.build().path("http://jodd.org").param("pa ram", "jodd + java").toString());
 	}
 
 	public void testUriSpecialChar() throws URISyntaxException {
 		assertEquals("http://user:pass@jodd.org/good%20stuff+funÀ/foo%C2%80À", URLCoder.url("http://user:pass@jodd.org/good stuff+funÀ/foo\u0080\u00C0"));
 		assertEquals("http://user:pass@jodd.org/good%20stuff+funÀ/foo%C2%80À", new URI("http", "user:pass@jodd.org", "/good stuff+funÀ/foo\u0080\u00C0", null, null).toString());
+	}
+
+	public void testAll() throws UnsupportedEncodingException, URISyntaxException {
+		assertEquals(
+				new URI("http", null, "jodd.org", 80, "/f o+o.html", null, null).toString() + "?name=" + URLEncoder.encode("v+al ue", "UTF-8"),
+				URLCoder.url("http://jodd.org:80/f o+o.html?name=v+al ue")
+		);
+		assertEquals(
+				new URI("http", null, "jodd.org", 80, "/f o+o.html", null, null).toString() + "?name=" + URLEncoder.encode("v+al ue", "UTF-8"),
+				URLCoder.url("http://jodd.org:80/f o+o.html?name=v+al ue")
+
+		);
+
 	}
 
 }

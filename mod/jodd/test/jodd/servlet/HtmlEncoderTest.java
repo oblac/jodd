@@ -131,24 +131,24 @@ public class HtmlEncoderTest extends TestCase {
 	}
 
 	public void testEncodeBaseUrl() {
-		assertEquals("/aaa", URLCoder.build().base("/aaa").toString());
-		assertEquals("/aaa?", URLCoder.build().base("/aaa").param("").toString());
-		assertEquals("/aaa?b", URLCoder.build().base("/aaa").param("b").toString());
-		assertEquals("/aaa?b", URLCoder.build().base("/aaa").param("b", null).toString());
-		assertEquals("/aaa?b=c", URLCoder.build().base("/aaa").param("b", "c").toString());
-		assertEquals("/aaa?b=c", URLCoder.build().base("/aaa").param("b=c").toString());
-		assertEquals("/aaa?b=+c", URLCoder.build().base("/aaa").param("b", " c").toString());
-		assertEquals("/aaa?b=+c", URLCoder.build().base("/aaa").param("b= c").toString());
-		assertEquals("/aaa?b=+c&", URLCoder.build().base("/aaa").param("b", " c").param("").toString());
-		assertEquals("/aaa?b=+c&dd", URLCoder.build().base("/aaa").param("b", " c").param("dd").toString());
-		assertEquals("/aaa?b=+c&dd", URLCoder.build().base("/aaa").param("b", " c").param("dd", null).toString());
-		assertEquals("/aaa?b=+c&dd=%3D", URLCoder.build().base("/aaa").param("b", " c").param("dd==").toString());
-		assertEquals("/aaa?b=+c&dd=%3D", URLCoder.build().base("/aaa").param("b", " c").param("dd","=").toString());
-		assertEquals("?data=The+string+%C3%BC%40foo-bar", URLCoder.build().base("").param("data", "The string ü@foo-bar").toString());
+		assertEquals("/aaa", URLCoder.build().path("/aaa").toString());
+		assertEquals("/aaa?", URLCoder.build().path("/aaa").param("").toString());
+		assertEquals("/aaa?b", URLCoder.build().path("/aaa").param("b").toString());
+		assertEquals("/aaa?b", URLCoder.build().path("/aaa").param("b", null).toString());
+		assertEquals("/aaa?b=c", URLCoder.build().path("/aaa").param("b", "c").toString());
+		assertEquals("/aaa?b=c", URLCoder.build().path("/aaa").param("b=c").toString());
+		assertEquals("/aaa?b=+c", URLCoder.build().path("/aaa").param("b", " c").toString());
+		assertEquals("/aaa?b=+c", URLCoder.build().path("/aaa").param("b= c").toString());
+		assertEquals("/aaa?b=+c&", URLCoder.build().path("/aaa").param("b", " c").param("").toString());
+		assertEquals("/aaa?b=+c&dd", URLCoder.build().path("/aaa").param("b", " c").param("dd").toString());
+		assertEquals("/aaa?b=+c&dd", URLCoder.build().path("/aaa").param("b", " c").param("dd", null).toString());
+		assertEquals("/aaa?b=+c&dd=%3D", URLCoder.build().path("/aaa").param("b", " c").param("dd==").toString());
+		assertEquals("/aaa?b=+c&dd=%3D", URLCoder.build().path("/aaa").param("b", " c").param("dd","=").toString());
+		assertEquals("?data=The+string+%C3%BC%40foo-bar", URLCoder.build().path("").param("data", "The string ü@foo-bar").toString());
 
-		assertEquals("/aaa", URLCoder.build().base("/aaa").toString());
-		assertEquals("/aaa?p=1", URLCoder.build().base("/aaa").param("p=1").toString());
-		assertEquals("/aaa?p=1&b=2", URLCoder.build().base("/aaa").param("p=1").param("b", "2").toString());
+		assertEquals("/aaa", URLCoder.build().path("/aaa").toString());
+		assertEquals("/aaa?p=1", URLCoder.build().path("/aaa").param("p=1").toString());
+		assertEquals("/aaa?p=1&b=2", URLCoder.build().path("/aaa").param("p=1").param("b", "2").toString());
 	}
 	
 

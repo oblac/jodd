@@ -18,6 +18,7 @@ public class URLBuilder {
 	protected final HttpServletRequest request;
 	protected final HttpServletResponse response;
 	protected boolean hasParams;
+	protected boolean firstpath;
 
 	public URLBuilder(HttpServletRequest request, HttpServletResponse response, String encoding) {
 		url = new StringBuilder();
@@ -25,20 +26,22 @@ public class URLBuilder {
 		this.encoding = encoding;
 		this.request = request;
 		this.response = response;
-	}
-
-	public URLBuilder base(String value) {
-		if (request != null) {
-			value = ServletUtil.resolveUrl(value, request);
-		}
-		appendPath(url, value);
-		return this;
+		this.firstpath = true;
 	}
 
 	/**
-	 * Appends part of path.
+	 * Defines path.
 	 */
 	public URLBuilder path(String value) {
+		if (hasParams) {
+			throw new IllegalArgumentException("Path element can't come after query parameters.");
+		}
+		if (firstpath == true) {
+			if (request != null) {
+				value = ServletUtil.resolveUrl(value, request);
+			}
+			firstpath = false;
+		}
 		appendPath(url, value);
 		return this;
 	}

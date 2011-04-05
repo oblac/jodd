@@ -14,7 +14,9 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 /**
- * Encodes URLs.
+ * Encodes URLs significantly faster and more convenient.
+ * This encoder handles path and queries differently, as
+ * supposed by specification!
  */
 public class URLCoder {
 
@@ -52,7 +54,6 @@ public class URLCoder {
 		String result = ServletUtil.resolveUrl(url(value, encoding), request);
 		if (ServletUtil.isAbsoluteUrl(result) == false) {
 			result = response.encodeURL(result);        // rewrite relative URLs
-			result = response.encodeURL(result);        // rewrite relative URLs
 		}
 		return result;
 	}
@@ -77,6 +78,7 @@ public class URLCoder {
 		appendPath(result, url.substring(0, paramNdx));
 		result.append('?');
 		paramNdx++;
+
 		while (true) {
 			int ampNdx = url.indexOf('&', paramNdx);
 			String q;
@@ -167,6 +169,10 @@ public class URLCoder {
 
 	public static URLBuilder build() {
 		return new URLBuilder(null, null, JoddDefault.encoding);
+	}
+
+	public static URLBuilder build(String path) {
+		return build().path(path);
 	}
 
 	public static URLBuilder build(PageContext pageContext) {

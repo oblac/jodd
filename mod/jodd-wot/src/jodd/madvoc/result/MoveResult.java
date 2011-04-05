@@ -41,7 +41,7 @@ public class MoveResult extends ActionResult {
 		HttpSession session = actionRequest.getHttpServletRequest().getSession();
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);
-		resultPath = URLCoder.build().base(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
+		resultPath = URLCoder.build(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
 		DispatcherUtil.redirect(actionRequest.getHttpServletRequest(), actionRequest.getHttpServletResponse(), resultPath);
 	}
 
