@@ -5,7 +5,9 @@ package jodd.util;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
+import jodd.util.testdata.W;
 import jodd.util.testdata2.En;
 import junit.framework.TestCase;
 import jodd.util.testdata.A;
@@ -373,5 +375,50 @@ public class ReflectUtilTest extends TestCase {
 		assertTrue(ReflectUtil.isSubclass(STwo.class, STwo.class));
 		assertFalse(ReflectUtil.isInterfaceImpl(STwo.class, STwo.class));
 	}
+
+	public static void testUnsetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
+		Field f = W.class.getDeclaredField("constant");
+		f.setAccessible(true);
+
+		ReflectUtil.unsetFieldModifiers(f, Modifier.FINAL);
+
+		try {
+			f.set(null, Integer.valueOf(173));
+		} catch (IllegalAccessException ignore) {
+			fail();
+		}
+
+		Integer i = (Integer) f.get(null);
+		assertEquals(173, i.intValue());
+	}
+
+	public static void testUnsetFieldModifiers2() throws NoSuchFieldException, IllegalAccessException {
+		Field f = W.class.getDeclaredField("priv");
+		f.setAccessible(true);
+
+		ReflectUtil.unsetFieldModifiers(f, Modifier.FINAL);
+
+		try {
+			f.set(null, Integer.valueOf(173));
+		} catch (IllegalAccessException ignore) {
+			fail();
+		}
+
+		Integer i = (Integer) f.get(null);
+		assertEquals(173, i.intValue());
+	}
+
+	public static void testSetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
+		Field f = W.class.getDeclaredField("regular");
+
+		ReflectUtil.setFieldModifiers(f, Modifier.FINAL);
+
+		try {
+			f.set(null, Integer.valueOf(173));
+			fail();
+		} catch (IllegalAccessException ignore) {
+		}
+	}
+
 
 }
