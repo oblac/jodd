@@ -182,6 +182,18 @@ public class ClassLoaderUtil {
 	private static final String[] MANIFESTS = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
 	/**
+	 * Finds <b>tools.jar</b>. Returns <code>null</code> if not exist.
+	 */
+	public static File findToolsJar() {
+		String tools = new File(SystemUtil.getJavaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
+		File toolsFile = new File(tools);
+		if (toolsFile.exists()) {
+			return toolsFile;
+		}
+		return null;
+	}
+
+	/**
 	 * Returns classpath item manifest or <code>null</code> if not found.
 	 */
 	public static Manifest getClasspathItemManifest(File classpathItem) {
