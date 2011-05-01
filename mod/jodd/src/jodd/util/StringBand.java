@@ -97,6 +97,15 @@ public class StringBand {
 	}
 
 	/**
+	 * Appends a character. This is not so
+	 * efficient as in <code>StringBuilder</code>,
+	 * since new string is created.
+	 */
+	public StringBand append(char c) {
+		return append(String.valueOf(c));
+	}
+
+	/**
 	 * Appends byte value.
 	 */
 	public StringBand append(byte b) {
