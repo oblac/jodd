@@ -70,7 +70,7 @@ import static jodd.util.HashCode.hash;
  * By default, monthFix is turned on and set to <code>true</code>.
  * </li>
  *
- * <li>locale - current locale, used for getting names during formating the
+ * <li>locale - current locale, used for getting names during formatting the
  * output string.
  * </li>
  *
@@ -927,7 +927,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 * Due to possible huge values calculation is divided in two steps:
 	 * first for fractional difference, and then for integer parts.
 	 * 
-	 * @return milis  time in milliseconds, from the midnight, January 1, 1970 UTC
+	 * @return time in milliseconds, from the midnight, January 1, 1970 UTC
 	 */
 	public long getTimeInMillis() {
 		double then = (jdate.fraction - JD_1970.fraction) * TimeUtil.MILLIS_IN_DAY;
@@ -1264,7 +1264,7 @@ public class JDateTime implements Comparable, Cloneable {
 	// ---------------------------------------------------------------- ctors from conversions
 
 	/**
-	 * Contructs <code>JDateTime</code> from a objects.
+	 * Constructs <code>JDateTime</code> from a objects.
 	 * @see #loadFrom(Object) 
 	 */
 	public JDateTime(Object o) {
@@ -1272,7 +1272,7 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Contructs <code>JDateTime</code> from <code>DateTimeStamp</code>.
+	 * Constructs <code>JDateTime</code> from <code>DateTimeStamp</code>.
 	 */
 	public JDateTime(DateTimeStamp dts) {
 		setDateTimeStamp(dts);
@@ -1280,14 +1280,14 @@ public class JDateTime implements Comparable, Cloneable {
 
 
 	/**
-	 * Contructs <code>JDateTime</code> from <code>JulianDateStamp</code>.
+	 * Constructs <code>JDateTime</code> from <code>JulianDateStamp</code>.
 	 */
 	public JDateTime(JulianDateStamp jds) {
 		setJulianDate(jds);
 	}
 
 	/**
-	 * Contructs <code>JDateTime</code> from <code>double</code> that represents JD.
+	 * Constructs <code>JDateTime</code> from <code>double</code> that represents JD.
 	 */
 	public JDateTime(double jd) {
 		setJulianDate(new JulianDateStamp(jd));
@@ -1503,7 +1503,7 @@ public class JDateTime implements Comparable, Cloneable {
 		DateTimeStamp dtsOriginal;
 		try {
 			dtsOriginal = jdtFormatter.parse(s, template);
-		} catch (Exception ex) {
+		} catch (Exception ignore) {
 			return false;
 		}
 		if (dtsOriginal == null) {
