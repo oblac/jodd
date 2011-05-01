@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 public @interface DbId {
 
 	/**
-	 * Name of bean to inject.
+	 * ID column name.
 	 */
 	String value() default "";
 
