@@ -9,8 +9,8 @@ import jodd.datetime.JDateTime;
 public class CalendarConverter implements JdtConverter<Calendar> {
 
 	public void loadFrom(JDateTime jdt, Calendar source) {
-		jdt.setTimeZone(source.getTimeZone());
 		jdt.setTimeInMillis(source.getTimeInMillis());
+		jdt.setTimeZone(source.getTimeZone());
 	}
 
 	public Calendar convertTo(JDateTime jdt) {

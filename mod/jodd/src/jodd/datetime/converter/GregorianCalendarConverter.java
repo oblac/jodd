@@ -9,8 +9,8 @@ import jodd.datetime.JDateTime;
 public class GregorianCalendarConverter implements JdtConverter<GregorianCalendar> {
 
 	public void loadFrom(JDateTime jdt, GregorianCalendar source) {
-		jdt.setTimeZone(source.getTimeZone());
 		jdt.setTimeInMillis(source.getTimeInMillis());
+		jdt.setTimeZone(source.getTimeZone());
 	}
 
 	public GregorianCalendar convertTo(JDateTime jdt) {
