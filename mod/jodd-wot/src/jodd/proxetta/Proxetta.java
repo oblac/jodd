@@ -205,10 +205,7 @@ public abstract class Proxetta {
 			if (classLoader == null) {
 				ClassLoader cl = target.getClassLoader();
 				if (cl == null) {
-					cl = Thread.currentThread().getContextClassLoader();
-					if (cl == null) {
-						cl = Proxetta.class.getClassLoader();
-					}
+					cl = ClassLoaderUtil.getDefaultClassLoader();
 				}
 				return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray(), cl);
 			}

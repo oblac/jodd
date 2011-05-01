@@ -2,8 +2,10 @@
 
 package jodd.util;
 
-import jodd.JoddDefault;
+import jodd.io.FileUtil;
+import jodd.io.StreamUtil;
 
+import java.io.FileInputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
@@ -11,11 +13,28 @@ import java.net.URISyntaxException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 public class ClassLoaderUtil {
+
+	// ---------------------------------------------------------------- default class loader
+
+	/**
+	 * Returns default class loader. By default, it is thread context class loader.
+	 * If this one is <code>null</code> then class loader of this class is
+	 * returned.
+	 */
+	public static ClassLoader getDefaultClassLoader() {
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		if (cl == null) {
+			cl = ClassLoaderUtil.class.getClassLoader();
+		}
+		return cl;
+	}
 
 	// ---------------------------------------------------------------- add class path
 
@@ -24,7 +43,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
 	public static void addFileToClassPath(String path) {
-		addFileToClassPath(path, (URLClassLoader) JoddDefault.classLoader);
+		addFileToClassPath(path, (URLClassLoader) getDefaultClassLoader());
 	}
 
 	/**
@@ -40,7 +59,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
 	public static void addFileToClassPath(File path) {
-			addFileToClassPath(path, (URLClassLoader) JoddDefault.classLoader);
+			addFileToClassPath(path, (URLClassLoader) getDefaultClassLoader());
 	}
 
 	/**
@@ -60,7 +79,7 @@ public class ClassLoaderUtil {
 	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader) 
 	 */
 	public static void addUrlToClassPath(URL url) {
-		addUrlToClassPath(url, (URLClassLoader) JoddDefault.classLoader);
+		addUrlToClassPath(url, (URLClassLoader) getDefaultClassLoader());
 	}
 
 	/**
@@ -85,7 +104,7 @@ public class ClassLoaderUtil {
 	 * @see #defineClass(String, byte[], ClassLoader) 
 	 */
 	public static Class defineClass(byte[] classData) {
-		return defineClass(null, classData, JoddDefault.classLoader);
+		return defineClass(null, classData, getDefaultClassLoader());
 	}
 
 	/**
@@ -93,7 +112,7 @@ public class ClassLoaderUtil {
 	 * @see #defineClass(String, byte[], ClassLoader)
 	 */
 	public static Class defineClass(String className, byte[] classData) {
-		return defineClass(className, classData, JoddDefault.classLoader);
+		return defineClass(className, classData, getDefaultClassLoader());
 	}
 
 	/**
@@ -106,7 +125,10 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Defines a class from byte array into the specified class loader.
-	 * @see #defineClass(String, byte[], ClassLoader)
+	 * Warning: this is a <b>hack</b>!
+	 * @param className optional class name, may be <code>null</code>
+	 * @param classData bytecode data
+	 * @param classLoader classloader that will load class
 	 */
 	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
 		try {
@@ -120,15 +142,22 @@ public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- find class
 
-
-	public static Class findClass(String className) {
-		return findClass(className, getFullClassPath(ClassLoaderUtil.class), null);
+	public static Class findClass(String className, File[] classPath) {
+		URL[] urls = new URL[classPath.length];
+		for (int i = 0; i < classPath.length; i++) {
+			File file = classPath[i];
+			try {
+				urls[i] = file.toURL();
+			} catch (MalformedURLException ignore) {
+			}
+		}
+		return findClass(className, urls, null);
 	}
 
-	public static Class findClass(String className, ClassLoader parent) {
-		return findClass(className, getFullClassPath(ClassLoaderUtil.class), parent);
-	}
 
+	/**
+	 * @see #findClass(String, java.net.URL[], ClassLoader)
+	 */
 	public static Class findClass(String className, URL[] classPath) {
 		return findClass(className, classPath, null);
 	}
@@ -150,30 +179,143 @@ public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- classpath
 
+	private static final String[] MANIFESTS = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
 	/**
-	 * Returns complete class path from all available <code>URLClassLoaders</code>
-	 * starting from class loader that has loaded the specified class. 
+	 * Returns classpath entry manifest or <code>null</code> if not found.
 	 */
-	public static URL[] getFullClassPath(Class clazz) {
-		return getFullClassPath(clazz.getClassLoader());
+	public static Manifest getClasspathEntryManifest(File classpathEntry) {
+		Manifest manifest = null;
+
+		if (classpathEntry.isFile()) {
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(classpathEntry);
+				JarFile jar = new JarFile(classpathEntry);
+				manifest = jar.getManifest();
+			} catch (IOException ignore) {
+			}
+			finally {
+				StreamUtil.close(fis);
+			}
+		} else {
+			File metaDir = new File(classpathEntry, "META-INF");
+			File manifestFile = null;
+			if (metaDir.isDirectory()) {
+				for (String m : MANIFESTS) {
+					File mFile = new File(metaDir, m);
+					if (mFile.isFile() == true) {
+						manifestFile = mFile;
+						break;
+					}
+				}
+			}
+			if (manifestFile != null) {
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(manifestFile);
+					manifest = new Manifest(fis);
+				} catch (IOException ignore) {
+				}
+				finally {
+					StreamUtil.close(fis);
+				}
+			}
+		}
+
+		return manifest;
 	}
 
 	/**
-	 * Returns complete class path from all available <code>URLClassLoader</code>s.
+	 * Returns base folder for classpath entry. If entry is a (jar) file,
+	 * its parent is returned. If entry is a directory, its name is returned.
 	 */
-	public static URL[] getFullClassPath(ClassLoader classLoader) {
-		List<URL> list = new ArrayList<URL>();
+	public static String getClasspathEntryBaseDir(File classpathEntry) {
+		String base;
+		if (classpathEntry.isFile()) {
+			base = classpathEntry.getParent();
+		} else {
+			base = classpathEntry.toString();
+		}
+		return base;
+	}
+
+	/**
+	 * Returns default classpath using
+	 * {@link #getDefaultClassLoader() default classloader}.
+	 */
+	public static File[] getDefaultClasspath() {
+		return getDefaultClasspath(getDefaultClassLoader());
+	}
+
+	/**
+	 * Returns default class path from all available <code>URLClassLoader</code>
+	 * in classloader hierarchy. The following is added to the classpath list:
+	 * <li>file URLs from <code>URLClassLoader</code> (other URL protocols are ignored)
+	 * <li>inner entries from containing <b>manifest</b> files (if exist)
+	 * <li>bootstrap classpath
+	 */
+	public static File[] getDefaultClasspath(ClassLoader classLoader) {
+		Set<File> classpaths = new HashSet<File>();
+
 		while (classLoader != null) {
 			if (classLoader instanceof URLClassLoader) {
 				URL[] urls = ((URLClassLoader) classLoader).getURLs();
-				list.addAll(Arrays.asList(urls));
+				for (URL u : urls) {
+					File f = FileUtil.toFile(u);
+					if (f != null) {
+						try {
+							f = f.getCanonicalFile();
+							classpaths.add(f);
+							addInnerClasspathEntries(classpaths, f);
+						} catch (IOException ignore) {
+						}
+					}
+				}
 			}
 			classLoader = classLoader.getParent();
 		}
 
-		URL[] result = new URL[list.size()];
-		return list.toArray(result);
+		String bootstrap = SystemUtil.getSunBoothClassPath();
+		if (bootstrap != null) {
+			classpaths.add(new File(bootstrap));
+		}
+
+		File[] result = new File[classpaths.size()];
+		return classpaths.toArray(result);
+	}
+
+	private static void addInnerClasspathEntries(Set<File> classpaths, File entry) {
+
+		Manifest manifest = getClasspathEntryManifest(entry);
+		if (manifest == null) {
+			return;
+		}
+
+		Attributes attributes = manifest.getMainAttributes();
+		if (attributes == null) {
+			return;
+		}
+
+		String s = attributes.getValue(Attributes.Name.CLASS_PATH);
+		if (s == null) {
+			return;
+		}
+
+		String base = getClasspathEntryBaseDir(entry);
+
+		String[] tokens = StringUtil.splitc(s, ' ');
+		for (String t : tokens) {
+			try {
+				File file = new File(base, t);
+				file = file.getCanonicalFile();
+
+				if (file.exists()) {
+					classpaths.add(file);
+				}
+			} catch (IOException ignore) {
+			}
+		}
 	}
 
 
@@ -228,7 +370,7 @@ public class ClassLoaderUtil {
 	public static File getResourceFile(String resourceName, Class callingClass) {
 		try {
 			return new File(getResourceUrl(resourceName, callingClass).toURI());
-		} catch (URISyntaxException usex) {
+		} catch (URISyntaxException ignore) {
 			return null;
 		}
 	}

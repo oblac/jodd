@@ -18,9 +18,9 @@ import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -59,10 +59,10 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 
 	/**
 	 * Configures web application from system classpath
-	 * @see #configure(java.net.URL[])
+	 * @see #configure(java.io.File[])
 	 */
 	public void configure() {
-		configure(ClassLoaderUtil.getFullClassPath(AutomagicMadvocConfigurator.class));
+		configure(ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
@@ -74,11 +74,11 @@ public class AutomagicMadvocConfigurator extends FindClass implements MadvocConf
 	 * </ol>
 	 * @see #configure()
 	 */
-	public void configure(URL[] classpath) {
+	public void configure(File[] classpath) {
 		elapsed = System.currentTimeMillis();
 
 		try {
-			scanUrls(classpath);
+			scanPaths(classpath);
 		} catch (Exception ex) {
 			throw new MadvocException("Unable to scan classpath.", ex); 
 		}

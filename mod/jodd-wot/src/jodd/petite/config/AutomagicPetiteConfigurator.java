@@ -8,7 +8,7 @@ import jodd.petite.meta.PetiteBean;
 import jodd.io.findfile.FindClass;
 import jodd.util.ClassLoaderUtil;
 
-import java.net.URL;
+import java.io.File;
 import java.io.InputStream;
 
 import org.slf4j.LoggerFactory;
@@ -46,11 +46,11 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
 	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer)
 	 */
-	public void configure(PetiteContainer petiteContainer, URL[] classpath) {
+	public void configure(PetiteContainer petiteContainer, File[] classpath) {
 		this.container = petiteContainer;
 		elapsed = System.currentTimeMillis();
 		try {
-			scanUrls(classpath);
+			scanPaths(classpath);
 		} catch (Exception ex) {
 			throw new PetiteException("Unable to scan classpath.", ex);
 		}
@@ -60,10 +60,10 @@ public class AutomagicPetiteConfigurator extends FindClass implements PetiteConf
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
-	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.net.URL[])
+	 * @see AutomagicPetiteConfigurator#configure(jodd.petite.PetiteContainer, java.io.File[])
 	 */
 	public void configure(PetiteContainer petiteContainer) {
-		configure(petiteContainer, ClassLoaderUtil.getFullClassPath(AutomagicPetiteConfigurator.class));
+		configure(petiteContainer, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**

@@ -1081,7 +1081,7 @@ public class FileUtil {
 		return createTempFile(true);
 	}
 	public static File createTempFile(boolean create) throws IOException {
-		return createTempFile(JoddDefault.JODD_TMP_FILE_PREFIX, ".tmp", (File) null, create);
+		return createTempFile(JoddDefault.tempFilePrefix, ".tmp", (File) null, create);
 	}
 	public static File createTempFile(String prefix, String suffix) throws IOException {
 		return createTempFile(prefix, suffix, (File) null, true);

@@ -64,10 +64,10 @@ public abstract class ClasspathScanner extends FindClass {
 	}
 
 	/**
-	 * Scans full class path.
+	 * Scans default class path.
 	 */
-	public void scanFullClasspath() {
-		scanUrls(ClassLoaderUtil.getFullClassPath(ClasspathScanner.class));
+	public void scanDefaultClasspath() {
+		scan(ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**

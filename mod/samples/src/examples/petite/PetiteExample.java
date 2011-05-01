@@ -122,7 +122,7 @@ public class PetiteExample {
 		System.out.println("\n\n============ CHANGE FOOIMPL or ZOO and COMPILE IN 10 SEC FROM NOW!\n\n");
 		ThreadUtil.sleep(1000);
 
-		Class a = ClassLoaderUtil.findClass("examples.petite.Zoo", ClassLoaderUtil.getFullClassPath(PetiteExample.class));
+		Class a = ClassLoaderUtil.findClass("examples.petite.Zoo", ClassLoaderUtil.getDefaultClasspath());
 		System.out.println(a);
 		System.out.println(a.getClassLoader());
 

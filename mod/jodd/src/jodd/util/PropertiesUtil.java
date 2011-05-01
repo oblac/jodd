@@ -218,7 +218,7 @@ public class PropertiesUtil {
 		scanner.includeResources(true).
 				ignoreException(true).
 				include(rootTemplate).
-				scanFullClasspath();
+				scanDefaultClasspath();
 		return p;
 	}
 

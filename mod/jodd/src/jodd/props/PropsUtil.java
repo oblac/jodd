@@ -31,7 +31,7 @@ public class PropsUtil {
 		scanner.includeResources(true).
 				ignoreException(true).
 				include(patterns).
-				scanFullClasspath();
+				scanDefaultClasspath();
 	}
 
 	/**

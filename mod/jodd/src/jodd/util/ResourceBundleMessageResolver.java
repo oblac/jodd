@@ -169,8 +169,8 @@ public class ResourceBundleMessageResolver {
 		}
 		if (cacheResourceBundles == false) {
 			try {
-				return getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
-			} catch (MissingResourceException mrex) {
+				return getBundle(bundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
+			} catch (MissingResourceException ignore) {
 				return null;
 			}
 		}
@@ -179,12 +179,12 @@ public class ResourceBundleMessageResolver {
 			if (misses.contains(key) == false) {
 				ResourceBundle bundle = notmisses.get(key);
 				if (bundle == null) {
-					bundle = getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
+					bundle = getBundle(bundleName, locale, ClassLoaderUtil.getDefaultClassLoader());
 					notmisses.put(key, bundle);
 				}
 				return bundle;
 			}
-		} catch (MissingResourceException mrex) {
+		} catch (MissingResourceException ignore) {
 			misses.add(key);
 		}
 		return null;

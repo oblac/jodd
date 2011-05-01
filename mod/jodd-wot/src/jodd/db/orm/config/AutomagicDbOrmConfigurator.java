@@ -8,7 +8,7 @@ import jodd.db.orm.DbOrmException;
 import jodd.db.orm.meta.DbTable;
 import jodd.util.ClassLoaderUtil;
 
-import java.net.URL;
+import java.io.File;
 import java.io.InputStream;
 
 import org.slf4j.LoggerFactory;
@@ -47,11 +47,11 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
 	 * @see AutomagicDbOrmConfigurator#configure(jodd.db.orm.DbOrmManager)
 	 */
-	public void configure(DbOrmManager dbOrmManager, URL[] classpath) {
+	public void configure(DbOrmManager dbOrmManager, File[] classpath) {
 		this.dbOrmManager = dbOrmManager;
 		elapsed = System.currentTimeMillis();
 		try {
-			scanUrls(classpath);
+			scanPaths(classpath);
 		} catch (Exception ex) {
 			throw new DbOrmException("Unable to scan classpath.", ex);
 		}
@@ -61,10 +61,10 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
-	 * @see AutomagicDbOrmConfigurator#configure(jodd.db.orm.DbOrmManager , java.net.URL[])
+	 * @see AutomagicDbOrmConfigurator#configure(jodd.db.orm.DbOrmManager, java.io.File[])
 	 */
 	public void configure(DbOrmManager dbOrmManager) {
-		configure(dbOrmManager, ClassLoaderUtil.getFullClassPath(AutomagicDbOrmConfigurator.class));
+		configure(dbOrmManager, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
