@@ -12,6 +12,7 @@ public class VtorTests extends TestSuite {
 		addTestSuite(AnnotationTest.class);
 		addTestSuite(ManualTest.class);
 		addTestSuite(ProfileTest.class);
+		addTestSuite(ConstraintTest.class);
 	}
 
 	public static Test suite() {

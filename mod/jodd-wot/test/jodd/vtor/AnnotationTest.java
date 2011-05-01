@@ -2,6 +2,8 @@
 
 package jodd.vtor;
 
+import jodd.vtor.constraint.TimeAfterConstraint;
+import jodd.vtor.data.Tad;
 import jodd.vtor.data.Woo;
 import junit.framework.TestCase;
 
@@ -26,5 +28,17 @@ public class AnnotationTest extends TestCase {
 		vtor.validate(new Woo());
 		v = vtor.getViolations();
 		assertEquals(3, v.size());
+	}
+
+	public void testTime() {
+		Vtor vtor = new Vtor();
+		vtor.validate(new Tad());
+
+		assertTrue(vtor.hasViolations());
+		List<Violation> v = vtor.getViolations();
+
+		assertEquals(3, v.size());
+
+		assertEquals(TimeAfterConstraint.class, v.get(0).getConstraint().getClass());
 	}
 }

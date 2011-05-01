@@ -20,6 +20,7 @@ public class ManualTest extends TestCase {
 		Vtor vtor = new Vtor();
 		vtor.validate(vctx, new Foo());
 
+		assertTrue(vtor.hasViolations());
 		List<Violation> vlist = vtor.getViolations();
 		assertFalse(vlist.isEmpty());
 		assertEquals(1, vlist.size());
