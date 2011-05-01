@@ -2,7 +2,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.util.ReflectUtil;
+import jodd.typeconverter.Convert;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -43,14 +43,8 @@ public class MaxConstraint implements ValidationConstraint<Max> {
 		if (value == null) {
 			return true;
 		}
-
-		Double val;
-		try {
-			val = ReflectUtil.castType(value, Double.class);
-		} catch (ClassCastException ignore) {
-			return false;
-		}
-		return val.doubleValue() < max;
+		double val = Convert.toDouble(value);
+		return val < max;
 	}
 
 }

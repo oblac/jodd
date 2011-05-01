@@ -2,6 +2,7 @@
 
 package jodd.vtor.constraint;
 
+import jodd.util.StringUtil;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -55,7 +56,7 @@ public class HasSubstringConstraint implements ValidationConstraint<HasSubstring
 			return true;
 		}
 		if (ignoreCase) {
-			return value.toString().toLowerCase().indexOf(substring.toLowerCase()) > -1;
+			return StringUtil.indexOfIgnoreCase(value.toString(), substring) > -1;
 		}
 		return value.toString().indexOf(substring) > -1;
 	}

@@ -2,7 +2,7 @@
 
 package jodd.vtor.constraint;
 
-import jodd.util.ReflectUtil;
+import jodd.typeconverter.Convert;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
@@ -20,10 +20,7 @@ public class AssertTrueConstraint implements ValidationConstraint<AssertTrue>  {
 	}
 
 	public static boolean validate(Object value) {
-		if (value == null) {
-			return true;
-		}
-		return ReflectUtil.castType(value, Boolean.class).booleanValue() == true;
+		return Convert.toBoolean(value, true) == true;
 	}
 
 }
