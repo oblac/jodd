@@ -182,16 +182,16 @@ public class ClassLoaderUtil {
 	private static final String[] MANIFESTS = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
 	/**
-	 * Returns classpath entry manifest or <code>null</code> if not found.
+	 * Returns classpath item manifest or <code>null</code> if not found.
 	 */
-	public static Manifest getClasspathEntryManifest(File classpathEntry) {
+	public static Manifest getClasspathItemManifest(File classpathItem) {
 		Manifest manifest = null;
 
-		if (classpathEntry.isFile()) {
+		if (classpathItem.isFile()) {
 			FileInputStream fis = null;
 			try {
-				fis = new FileInputStream(classpathEntry);
-				JarFile jar = new JarFile(classpathEntry);
+				fis = new FileInputStream(classpathItem);
+				JarFile jar = new JarFile(classpathItem);
 				manifest = jar.getManifest();
 			} catch (IOException ignore) {
 			}
@@ -199,7 +199,7 @@ public class ClassLoaderUtil {
 				StreamUtil.close(fis);
 			}
 		} else {
-			File metaDir = new File(classpathEntry, "META-INF");
+			File metaDir = new File(classpathItem, "META-INF");
 			File manifestFile = null;
 			if (metaDir.isDirectory()) {
 				for (String m : MANIFESTS) {
@@ -227,15 +227,15 @@ public class ClassLoaderUtil {
 	}
 
 	/**
-	 * Returns base folder for classpath entry. If entry is a (jar) file,
-	 * its parent is returned. If entry is a directory, its name is returned.
+	 * Returns base folder for classpath item. If item is a (jar) file,
+	 * its parent is returned. If item is a directory, its name is returned.
 	 */
-	public static String getClasspathEntryBaseDir(File classpathEntry) {
+	public static String getClasspathItemBaseDir(File classpathItem) {
 		String base;
-		if (classpathEntry.isFile()) {
-			base = classpathEntry.getParent();
+		if (classpathItem.isFile()) {
+			base = classpathItem.getParent();
 		} else {
-			base = classpathEntry.toString();
+			base = classpathItem.toString();
 		}
 		return base;
 	}
@@ -267,7 +267,7 @@ public class ClassLoaderUtil {
 						try {
 							f = f.getCanonicalFile();
 							classpaths.add(f);
-							addInnerClasspathEntries(classpaths, f);
+							addInnerClasspathItems(classpaths, f);
 						} catch (IOException ignore) {
 						}
 					}
@@ -285,9 +285,9 @@ public class ClassLoaderUtil {
 		return classpaths.toArray(result);
 	}
 
-	private static void addInnerClasspathEntries(Set<File> classpaths, File entry) {
+	private static void addInnerClasspathItems(Set<File> classpaths, File item) {
 
-		Manifest manifest = getClasspathEntryManifest(entry);
+		Manifest manifest = getClasspathItemManifest(item);
 		if (manifest == null) {
 			return;
 		}
@@ -302,7 +302,7 @@ public class ClassLoaderUtil {
 			return;
 		}
 
-		String base = getClasspathEntryBaseDir(entry);
+		String base = getClasspathItemBaseDir(item);
 
 		String[] tokens = StringUtil.splitc(s, ' ');
 		for (String t : tokens) {
