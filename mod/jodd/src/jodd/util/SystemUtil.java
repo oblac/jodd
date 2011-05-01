@@ -48,6 +48,7 @@ public class SystemUtil {
 	public static final String HTTP_PROXY_USER = "http.proxyUser";
 	public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
 	public static final String FILE_ENCODING = "file.encoding";
+	public static final String SUN_BOOT_CLASS_PATH = "sun.boot.class.path";
 
 	/**
 	 * Returns current working folder.
@@ -200,6 +201,13 @@ public class SystemUtil {
 	 */
 	public static boolean isHostSolaris() {
 		return getOsName().toUpperCase().startsWith("SUNOS");
+	}
+
+	/**
+	 * Returns sun bootstrap class path.
+	 */
+	public static String getSunBoothClassPath() {
+		return System.getProperty(SUN_BOOT_CLASS_PATH);
 	}
 
 	// ---------------------------------------------------------------- set
