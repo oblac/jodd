@@ -4,7 +4,6 @@ package jodd.proxetta;
 
 import java.io.InputStream;
 
-import jodd.JoddDefault;
 import jodd.proxetta.asm.ClassProcessor;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -206,7 +205,10 @@ public abstract class Proxetta {
 			if (classLoader == null) {
 				ClassLoader cl = target.getClassLoader();
 				if (cl == null) {
-					cl = JoddDefault.classLoader;
+					cl = Thread.currentThread().getContextClassLoader();
+					if (cl == null) {
+						cl = Proxetta.class.getClassLoader();
+					}
 				}
 				return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray(), cl);
 			}
