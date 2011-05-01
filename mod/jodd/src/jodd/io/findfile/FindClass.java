@@ -169,7 +169,9 @@ public abstract class FindClass {
 	protected void scanUrl(URL url) {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
-			throw new FindFileException("URL is not a valid file: '" + url + "'.");
+			if (ignoreException == false) {
+				throw new FindFileException("URL is not a valid file: '" + url + "'.");
+			}
 		}
 		scanPath(file);
 	}
