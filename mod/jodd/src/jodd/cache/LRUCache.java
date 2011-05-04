@@ -48,7 +48,7 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 	 * Prune only expired objects, <code>LinkedHashMap</code> will take care of LRU if needed.
 	 */
 	@Override
-	public int prune() {
+	protected int pruneCache() {
 		if (isPruneExpiredActive() == false) {
 			return 0;
 		}

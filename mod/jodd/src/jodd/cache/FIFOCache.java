@@ -38,7 +38,7 @@ public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {
 	 * Prune expired objects and, if cache is still full, the first one.
 	 */
 	@Override
-	public int prune() {
+	protected int pruneCache() {
         int count = 0;
 		CacheObject<K,V> first = null;
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();

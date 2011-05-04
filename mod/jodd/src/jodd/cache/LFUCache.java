@@ -37,7 +37,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 	 * Returns the number of removed objects.
 	 */
 	@Override
-	public int prune() {
+	protected int pruneCache() {
         int count = 0;
 		CacheObject<K,V> comin = null;
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();

@@ -44,6 +44,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	protected Map<K,CacheObject<K,V>> cacheMap;
 
+	protected final Object cacheLock = new Object();
+
 	// ---------------------------------------------------------------- properties
 
 	protected int cacheSize;      // max cache size, 0 = no limit
@@ -95,14 +97,16 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void put(K key, V object, long timeout) {
-		CacheObject<K,V> co = new CacheObject<K,V>(key, object, timeout);
-		if (timeout != 0) {
-			existCustomTimeout = true;
+		synchronized (cacheLock) {
+			CacheObject<K,V> co = new CacheObject<K,V>(key, object, timeout);
+			if (timeout != 0) {
+				existCustomTimeout = true;
+			}
+			if (isFull()) {
+				pruneCache();
+			}
+			cacheMap.put(key, co);
 		}
-		if (isFull()) {
-			prune();
-		}
-		cacheMap.put(key, co);
 	}
 
 
@@ -112,15 +116,17 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public V get(K key) {
-		CacheObject<K,V> co = cacheMap.get(key);
-		if (co == null) {
-			return null;
+		synchronized (cacheLock) {
+			CacheObject<K,V> co = cacheMap.get(key);
+			if (co == null) {
+				return null;
+			}
+			if (co.isExpired() == true) {
+				remove(key);
+				return null;
+			}
+			return co.getObject();
 		}
-		if (co.isExpired() == true) {
-			remove(key);
-			return null;
-		}
-		return co.getObject();
 	}
 
 	/**
@@ -133,9 +139,18 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	// ---------------------------------------------------------------- prune
 
 	/**
+	 * Prune implementation.
+	 */
+	protected abstract int pruneCache();
+
+	/**
 	 * {@inheritDoc}
 	 */
-	public abstract int prune();
+	public final int prune() {
+		synchronized (cacheLock) {
+			return pruneCache();
+		}
+	}
 
 	// ---------------------------------------------------------------- common
 
@@ -153,14 +168,18 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void remove(K key) {
-		cacheMap.remove(key);
+		synchronized (cacheLock) {
+			cacheMap.remove(key);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void clear() {
-		cacheMap.clear();
+		synchronized (cacheLock) {
+			cacheMap.clear();
+		}
 	}
 
 

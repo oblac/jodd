@@ -26,7 +26,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	 * Prunes expired elements from the cache. Returns the number of removed objects.
 	 */
 	@Override
-	public int prune() {
+	protected int pruneCache() {
         int count = 0;
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
