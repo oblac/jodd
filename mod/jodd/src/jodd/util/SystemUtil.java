@@ -161,14 +161,14 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Checks if the currently running JVM is at least complient with JDK 1.5.
+	 * Checks if the currently running JVM is at least compliant with JDK 1.5.
 	 */
 	public static boolean isAtLeastJdk15() {
 		return getJavaSpecificationVersion() >= 1.5;
 	}
 
 	/**
-	 * Checks if the currently running JVM is at least complient with JDK 1.6.
+	 * Checks if the currently running JVM is at least compliant with JDK 1.6.
 	 */
 	public static boolean isAtLeastJdk16() {
 		return getJavaSpecificationVersion() >= 1.6;

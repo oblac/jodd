@@ -7,6 +7,8 @@ package jodd.util;
  */
 public class RuntimeUtil {
 
+	public static final Runtime RUNTIME = Runtime.getRuntime();
+
 	// ---------------------------------------------------------------- execution
 
 	/**
@@ -21,55 +23,31 @@ public class RuntimeUtil {
 	// ---------------------------------------------------------------- memory
 
 	/**
-	 * Returns number of available processors in the system.
+	 * Returns the amount of available memory (free memory plus never allocated memory).
 	 */
-	public static int availableProcessors() {
-		return Runtime.getRuntime().availableProcessors();
+	public static long availableMemory() {
+		return RUNTIME.freeMemory() + (RUNTIME.maxMemory() - RUNTIME.totalMemory());
 	}
 
 	/**
-	 * Returns max amount of memory in bytes.
+	 * Returns the amount of available memory in percents.
 	 */
-	public static long maxMemory() {
-		return Runtime.getRuntime().maxMemory();
+	public static float availableMemoryPercent() {
+		return availableMemory() * 100.0f / RUNTIME.maxMemory();
 	}
 
 	/**
-	 * Returns amount of total memory in bytes.
+	 * Compacts memory as much as possible by forcing garbage collection.
 	 */
-	public static long totalMemory() {
-		return Runtime.getRuntime().totalMemory();
+	public static void compactMemory() {
+		try {
+			final byte[][] unused = new byte[128][];
+			for(int i = unused.length; i-- != 0;) {
+				unused[i] = new byte[2000000000];
+			}
+		} catch(OutOfMemoryError ignore) {
+		}
+		System.gc();
 	}
 
-	/**
-	 * Returns amount of free memory in bytes.
-	 */
-	public static long freeMemory() {
-		return Runtime.getRuntime().freeMemory();
-	}
-
-	/**
-	 * Returns percents of free memory over total memory.
-	 */
-	public static double freeMemoryPercents() {
-		Runtime runtime = Runtime.getRuntime();
-		return ((double) runtime.freeMemory() / runtime.totalMemory()) * 100.0;
-	}
-
-	/**
-	 * Returns amount of used memory in bytes.
-	 */
-	public static long usedMemory() {
-		return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-	}
-
-	/**
-	 * Returns percents of used memory.
-	 */
-	public static double usedMemoryPercents() {
-		Runtime runtime = Runtime.getRuntime();
-		long totalMemory = runtime.totalMemory();
-		return ((double) (totalMemory - runtime.freeMemory()) / totalMemory) * 100.0;
-	}
-	
 }
