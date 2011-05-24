@@ -8,6 +8,8 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.bean.loader.BeanLoader;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -52,19 +54,40 @@ public class BeanTool {
 	}
 
 	public static void copy(Object source, Object destination, boolean copyNulls, boolean suppressSecurity) {
-		ClassDescriptor cdSrc = ClassIntrospector.lookup(source.getClass());
-		ClassDescriptor cdDest = ClassIntrospector.lookup(destination.getClass());
+		String[] properties = resolveProperties(source, suppressSecurity);
 
-		String[] mdata = cdSrc.getAllBeanGetterNames(suppressSecurity);
-		for (String name : mdata) {
-			if (cdDest.getBeanSetter(name, suppressSecurity) != null) {
-				Object value = BeanUtil.getProperty(source, name);
-				if ((copyNulls == false) && (value == null)) {
-					continue;
-				}
-				BeanUtil.setPropertySilent(destination, name, value);
+		for (String name : properties) {
+			Object value = BeanUtil.getProperty(source, name);
+			if ((copyNulls == false) && (value == null)) {
+				continue;
 			}
+			BeanUtil.setPropertySilent(destination, name, value);
 		}
+	}
+
+	// ---------------------------------------------------------------- properties
+
+	/**
+	 * Returns an array of bean properties. If bean is a map, all its
+	 * keys will be returned.
+	 */
+	public static String[] resolveProperties(Object bean, boolean suppressSecurity) {
+		String[] properties;
+		if (bean instanceof Map) {
+			Set key = ((Map) bean).keySet();
+			String[] mdata = new String[key.size()];
+			int ndx = 0;
+			for (Object o : key) {
+				mdata[ndx] = o.toString();
+				ndx++;
+			}
+			properties = mdata;
+		} else {
+			ClassDescriptor cdSrc = ClassIntrospector.lookup(bean.getClass());
+			properties = cdSrc.getAllBeanGetterNames(suppressSecurity);
+		}
+
+		return properties;
 	}
 
 	// ---------------------------------------------------------------- copy properties
@@ -82,11 +105,8 @@ public class BeanTool {
 	 * ignoring or including only the given "properties".
 	 */
 	public static void copyProperties(Object source, Object destination, String[] properties, boolean include) {
-		ClassDescriptor cdSrc = ClassIntrospector.lookup(source.getClass());
-		ClassDescriptor cdDest = ClassIntrospector.lookup(destination.getClass());
-
-		String[] mdata = cdSrc.getAllBeanGetterNames();
-		for (String name : mdata) {
+		String[] p = resolveProperties(source, false);
+		for (String name : p) {
 			if (properties != null) {
 				if (include)  {
 					if (ArraysUtil.contains(properties, name) == false) {
@@ -98,10 +118,8 @@ public class BeanTool {
 					}
 				}
 			}
-			if (cdDest.getBeanSetter(name) != null) {
-				Object value = BeanUtil.getProperty(source, name);
-				BeanUtil.setPropertySilent(destination, name, value);
-			}
+			Object value = BeanUtil.getProperty(source, name);
+			BeanUtil.setPropertySilent(destination, name, value);
 		}
 	}
 

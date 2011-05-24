@@ -34,6 +34,7 @@ public class SystemUtil {
 
 	public static final String USER_DIR = "user.dir";
 	public static final String USER_NAME = "user.name";
+	public static final String USER_HOME = "user.home";
 	public static final String JAVA_HOME = "java.home";
 	public static final String TEMP_DIR = "java.io.tmpdir";
 	public static final String OS_NAME = "os.name";
@@ -62,6 +63,13 @@ public class SystemUtil {
 	 */
 	public static String getUserName() {
 		return System.getProperty(USER_NAME);
+	}
+
+	/**
+	 * Returns user home folder.
+	 */
+	public static String getUserHome() {
+		return System.getProperty(USER_HOME);
 	}
 
 	/**

@@ -6,6 +6,9 @@ import jodd.bean.data.FooBeanString;
 import junit.framework.TestCase;
 import jodd.bean.data.FooBean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BeanCopyTest extends TestCase {
 
 	public void testCopy() {
@@ -360,6 +363,23 @@ public class BeanCopyTest extends TestCase {
 		BeanTool.copy(more, less, true);
 		assertEquals("tij", less.data);
 		assertEquals(17, less.number.intValue());
+	}
+
+	public void testCopyMap() {
+		Map map = new HashMap();
+		map.put("fooint", Integer.valueOf(102));
+		map.put("fooString", "mao");
+
+		FooBean dest = new FooBean();
+		BeanTool.copy(map, dest);
+		assertEquals(102, dest.getFooint());
+		assertEquals("mao", dest.getFooString());
+
+		Map destMap = new HashMap();
+		BeanTool.copy(map, destMap);
+		assertEquals(2, destMap.size());
+		assertEquals(Integer.valueOf(102), destMap.get("fooint"));
+		assertEquals("mao", destMap.get("fooString"));
 	}
 
 	private FooBean createFooBean() {
