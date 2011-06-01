@@ -1896,11 +1896,6 @@ public class StringUtil {
 		return sb.toString();
 	}
 
-	public static void main(String[] args) {
-		System.out.println(escapeJava("\\u\tđavo"));
-	}
-
-
 	// ---------------------------------------------------------------- chars
 
 	/**
