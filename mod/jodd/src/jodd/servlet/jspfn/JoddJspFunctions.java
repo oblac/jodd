@@ -292,7 +292,7 @@ public class JoddJspFunctions {
 
 	/**
 	 * Returns the length of provided object (collection, array and so on).
-* If object doesn't have a length, exception is thrown.
+	 * If object doesn't have a length, exception is thrown.
 	 */
 	public static int length(Object obj) throws JspTagException {
 		int result = ObjectUtil.length(obj);
