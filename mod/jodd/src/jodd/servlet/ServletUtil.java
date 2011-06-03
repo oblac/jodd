@@ -232,6 +232,20 @@ public class ServletUtil {
 	}
 
 	/**
+	 * @see #getContextPath(javax.servlet.ServletContext)
+	 */
+	public static String getContextPath(PageContext pageContext) {
+		return getContextPath(pageContext.getServletContext());
+	}
+
+	/**
+	 * @see #getContextPath(javax.servlet.ServletContext)
+	 */
+	public static String getContextPath() {
+		return getContextPath(PageContextThreadLocal.get());
+	}
+
+	/**
 	 * Returns HTTP request parameter as String or String[].
 	 */
 	public static Object getRequestParameter(ServletRequest request, String name) {

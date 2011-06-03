@@ -53,6 +53,14 @@
 		<function-signature>java.lang.Object resolveProperty(java.lang.String)</function-signature>
 	</function>
 
+	<!-- errors -->
+
+	<function>
+		<name>servletError</name>
+		<function-class>jodd.servlet.ServletUtil</function-class>
+		<function-signature>java.lang.Throwable getServletError(javax.servlet.ServletRequest)</function-signature>
+	</function>
+
 	<!-- html encoder -->
 
 	<function>
@@ -86,6 +94,12 @@
 		<name>name2id</name>
 		<function-class>jodd.servlet.HtmlFormUtil</function-class>
 		<function-signature>java.lang.String name2id(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>ctx</name>
+		<function-class>jodd.servlet.ServletUtil</function-class>
+		<function-signature>java.lang.String getContextPath()</function-signature>
 	</function>
 
 	<!-- jodd fn -->
