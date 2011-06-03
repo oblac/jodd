@@ -5,6 +5,7 @@ package jodd.servlet.jspfn;
 import jodd.datetime.JDateTime;
 import jodd.servlet.HtmlEncoder;
 import jodd.servlet.JspValueResolver;
+import jodd.servlet.PageContextThreadLocal;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 import static jodd.util.StringPool.EMPTY;
@@ -21,12 +22,24 @@ public class JoddJspFunctions {
 		return HtmlEncoder.text(JspValueResolver.resolveValue(name, pageContext));
 	}
 
+	public static String valueEnc(String name) {
+		return valueEnc(name, PageContextThreadLocal.get());
+	}
+
 	public static String attributeEnc(String name, PageContext pageContext) {
 		return HtmlEncoder.text(JspValueResolver.resolveAttribute(name, pageContext));
 	}
 
+	public static String attributeEnc(String name) {
+		return attributeEnc(name, PageContextThreadLocal.get());
+	}
+
 	public static String propertyEnc(String name, PageContext pageContext) {
 		return HtmlEncoder.text(JspValueResolver.resolveProperty(name, pageContext));
+	}
+
+	public static String propertyEnc(String name) {
+		return propertyEnc(name, PageContextThreadLocal.get());
 	}
 
 	/**

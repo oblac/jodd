@@ -49,6 +49,10 @@ public class JspValueResolver {
 		return ServletUtil.value(page, valueName);
 	}
 
+	public static Object resolveValue(String valueName) {
+		return resolveValue(valueName, PageContextThreadLocal.get());
+	}
+
 
 	// ---------------------------------------------------------------- resolves attributes
 
@@ -73,6 +77,10 @@ public class JspValueResolver {
 
 	public static Object resolveAttribute(String attributeName, PageContext page) {
 		return ServletUtil.attrValue(page, attributeName);
+	}
+
+	public static Object resolveAttribute(String attributeName) {
+		return resolveAttribute(attributeName, PageContextThreadLocal.get());
 	}
 
 	// ---------------------------------------------------------------- reflection
@@ -124,6 +132,10 @@ public class JspValueResolver {
 		}
 		name = BeanUtil.THIS_REF + name.substring(thisRef.length());
 		return BeanUtil.getDeclaredPropertySilently(value, name);
+	}
+
+	public static Object resolveProperty(String name) {
+		return resolveProperty(name, PageContextThreadLocal.get());
 	}
 
 }

@@ -12,6 +12,14 @@
 	<uri>/joddfn</uri>
 
 
+	<!-- page context -->
+
+	<function>
+		<name>storePageContext</name>
+		<function-class>jodd.servlet.PageContextThreadLocal</function-class>
+		<function-signature>void set(javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+
 	<!-- jsp value resolver -->
 
 	<function>
@@ -20,14 +28,29 @@
 		<function-signature>java.lang.Object resolveValue(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 	<function>
+		<name>value1</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveValue(java.lang.String)</function-signature>
+	</function>
+	<function>
 		<name>attribute</name>
 		<function-class>jodd.servlet.JspValueResolver</function-class>
 		<function-signature>java.lang.Object resolveAttribute(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 	<function>
+		<name>attribute1</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveAttribute(java.lang.String)</function-signature>
+	</function>
+	<function>
 		<name>property</name>
 		<function-class>jodd.servlet.JspValueResolver</function-class>
 		<function-signature>java.lang.Object resolveProperty(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>property1</name>
+		<function-class>jodd.servlet.JspValueResolver</function-class>
+		<function-signature>java.lang.Object resolveProperty(java.lang.String)</function-signature>
 	</function>
 
 	<!-- html encoder -->
@@ -53,6 +76,11 @@
 		<function-class>jodd.servlet.URLCoder</function-class>
 		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
+	<function>
+		<name>url1</name>
+		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-signature>java.lang.String url1(java.lang.String)</function-signature>
+	</function>
 
 	<function>
 		<name>name2id</name>
@@ -68,14 +96,29 @@
 		<function-signature>java.lang.String valueEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 	<function>
+		<name>valueEnc1</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String valueEnc(java.lang.String)</function-signature>
+	</function>
+	<function>
 		<name>attributeEnc</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String attributeEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 	<function>
+		<name>attributeEnc1</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String attributeEnc(java.lang.String)</function-signature>
+	</function>
+	<function>
 		<name>propertyEnc</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String propertyEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>propertyEnc1</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>java.lang.String propertyEnc(java.lang.String)</function-signature>
 	</function>
 
 	<function>
@@ -298,6 +341,11 @@
 		<name>prepareCsrfToken</name>
 		<function-class>jodd.servlet.CsrfShield</function-class>
 		<function-signature>java.lang.String prepareCsrfToken(javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+	<function>
+		<name>prepareCsrfToken1</name>
+		<function-class>jodd.servlet.CsrfShield</function-class>
+		<function-signature>java.lang.String prepareCsrfToken()</function-signature>
 	</function>
 
 </taglib>
