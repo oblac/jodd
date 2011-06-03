@@ -176,23 +176,30 @@ public class DispatcherUtil {
 	}
 
 
-	// ---------------------------------------------------------------- action path
+	// ---------------------------------------------------------------- full urls
 
 	/**
-	 * Returns full action path: uri + query string.
+	 * Returns full URL: uri + query string, including the context path.
 	 */
-	public static String getActionPath(HttpServletRequest request) {
-		return makeActionPath(request.getRequestURI(), request.getQueryString());
+	public static String getFullUrl(HttpServletRequest request) {
+		String url = request.getRequestURI();
+		String query = request.getQueryString();
+		if ((query != null) && (query.length() != 0)) {
+			url += '?' + query;
+		}
+		return url;
 	}
 
 	/**
-	 * Builds action path from uri and query.
+	 * Returns url, without context path, convenient for request dispatcher.
 	 */
-	public static String makeActionPath(String uri, String query) {
+	public static String getUrl(HttpServletRequest request) {
+		String servletPath = request.getServletPath();
+		String query = request.getQueryString();
 		if ((query != null) && (query.length() != 0)) {
-			uri += '?' + query;
+			servletPath += '?' + query;
 		}
-		return uri;
+		return servletPath;
 	}
 
 

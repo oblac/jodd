@@ -165,7 +165,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 			if (authorize(actionRequest, null) == false) {
 				// session is not active, chain to login
 				log.debug("authentication required");
-				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getActionPath(servletRequest));
+				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getUrl(servletRequest));
 				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return resultLogin();
 			}
