@@ -14,7 +14,8 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspTagException;
 
 /**
- * Nice big set of JSP functions.
+ * Nice big set of JSP functions. Mainly delegates to other utilities,
+ * just performs some user-input checking.
  */
 public class JoddJspFunctions {
 
