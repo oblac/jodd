@@ -5,9 +5,11 @@
 <body>
 
 ${jfn:storePageContext(pageContext)}
+${jfn:setContextPathVariable(pageContext, "page", "CTX")}
 
 <j:url _="/hello.jsp"/> 6 sec
 ${jfn:url("/hello.jsp", pageContext)} 0.9s
+${jfn:url1("/hello.jsp")}
 
 <%
 	long l = 100000;
@@ -15,7 +17,7 @@ ${jfn:url("/hello.jsp", pageContext)} 0.9s
 	while (l-- > 0) {
 %>
 
-${jfn:url1("/hello.jsp")}
+${CTX}/hello.jsp
 
 <%
 	}

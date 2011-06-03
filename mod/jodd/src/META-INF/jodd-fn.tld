@@ -12,12 +12,34 @@
 	<uri>/joddfn</uri>
 
 
-	<!-- page context -->
+	<!-- page -->
 
 	<function>
+		<description>
+			Saves page context into thread local variable. Required for all jsp functions
+			that doesn't have PageContext in arguments.
+		</description>
 		<name>storePageContext</name>
 		<function-class>jodd.servlet.PageContextThreadLocal</function-class>
 		<function-signature>void set(javax.servlet.jsp.PageContext)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Sets scope variable that contains context path value.
+		</description>
+		<name>setContextPathVariable</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>void setContextPathVariable(javax.servlet.jsp.PageContext,java.lang.String,java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Renders context path. See storePageContext().
+		</description>
+		<name>ctx</name>
+		<function-class>jodd.servlet.ServletUtil</function-class>
+		<function-signature>java.lang.String getContextPath()</function-signature>
 	</function>
 
 	<!-- jsp value resolver -->
@@ -56,6 +78,9 @@
 	<!-- errors -->
 
 	<function>
+		<description>
+			Returns servlet error throwable.
+		</description>
 		<name>servletError</name>
 		<function-class>jodd.servlet.ServletUtil</function-class>
 		<function-signature>java.lang.Throwable getServletError(javax.servlet.ServletRequest)</function-signature>
@@ -94,12 +119,6 @@
 		<name>name2id</name>
 		<function-class>jodd.servlet.HtmlFormUtil</function-class>
 		<function-signature>java.lang.String name2id(java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>ctx</name>
-		<function-class>jodd.servlet.ServletUtil</function-class>
-		<function-signature>java.lang.String getContextPath()</function-signature>
 	</function>
 
 	<!-- jodd fn -->

@@ -2,12 +2,13 @@
 
 package jodd.servlet.tag;
 
+import jodd.exception.UncheckedException;
 import jodd.io.FastCharArrayWriter;
+import jodd.servlet.ServletUtil;
 
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -15,11 +16,6 @@ import java.io.Writer;
  * Various tag utilities.
  */
 public class TagUtil {
-
-	private static final String SCOPE_APPLICATION = "application";
-	private static final String SCOPE_SESSION = "session";
-	private static final String SCOPE_REQUEST = "request";
-	private static final String SCOPE_PAGE = "page";
 
 	/**
 	 * Invokes tag body.
@@ -72,18 +68,10 @@ public class TagUtil {
 	 * Sets scope attribute.
 	 */
 	public static void setScopeAttribute(String name, Object value, String scope, PageContext pageContext) throws JspException {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
-		if (scopeValue.equals(SCOPE_PAGE)) {
-			pageContext.setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_REQUEST)) {
-			request.setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_SESSION)) {
-			request.getSession().setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().setAttribute(name, value);
-        } else {
-			throw new JspException("Invalid scope: '" + scope + "'.");
+		try {
+			ServletUtil.setScopeAttribute(name, value, scope, pageContext);
+		} catch (UncheckedException uex) {
+			throw new JspException(uex);
         }
 	}
 
@@ -91,18 +79,10 @@ public class TagUtil {
 	 * Removes scope attribute.
 	 */
 	public static void removeScopeAttribute(String name, String scope, PageContext pageContext) throws JspException {
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
-		if (scopeValue.equals(SCOPE_PAGE)) {
-			pageContext.removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_REQUEST)) {
-			request.removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_SESSION)) {
-			request.getSession().removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
-            request.getSession().getServletContext().removeAttribute(name);
-        } else {
-			throw new JspException("Invalid scope: '" + scope + "'.");
+		try {
+			ServletUtil.removeScopeAttribute(name, scope, pageContext);
+		} catch (UncheckedException uex) {
+			throw new JspException(uex);
         }
 	}
 

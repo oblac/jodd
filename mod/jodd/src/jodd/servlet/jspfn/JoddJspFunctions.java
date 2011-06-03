@@ -6,6 +6,7 @@ import jodd.datetime.JDateTime;
 import jodd.servlet.HtmlEncoder;
 import jodd.servlet.JspValueResolver;
 import jodd.servlet.PageContextThreadLocal;
+import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 import static jodd.util.StringPool.EMPTY;
@@ -326,5 +327,15 @@ public class JoddJspFunctions {
 		return jdt.toString(format);
 	}
 
+
+	// ---------------------------------------------------------------- ctx
+
+	/**
+	 * Stores current context path in page context scope.
+	 */
+	public static void setContextPathVariable(PageContext pageContext, String scope, String contextPathVariableName) {
+		String ctxPath = ServletUtil.getContextPath(pageContext);
+		ServletUtil.setScopeAttribute(contextPathVariableName, ctxPath, scope, pageContext);
+	}
 
 }

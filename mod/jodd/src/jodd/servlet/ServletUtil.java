@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.util.Base64;
 import jodd.util.StringPool;
@@ -48,6 +49,11 @@ public class ServletUtil {
 	public static final String METHOD_OPTIONS 	= "OPTIONS";
 	public static final String METHOD_TRACE 	= "TRACE";
 	public static final String METHOD_CONNECT 	= "CONNECT";
+
+	private static final String SCOPE_APPLICATION = "application";
+	private static final String SCOPE_SESSION = "session";
+	private static final String SCOPE_REQUEST = "request";
+	private static final String SCOPE_PAGE = "page";
 
 	// ---------------------------------------------------------------- multi-part
 
@@ -394,6 +400,44 @@ public class ServletUtil {
 		return request.getSession().getServletContext().getAttribute(name);
 	}
 
+	/**
+	 * Sets scope attribute.
+	 */
+	public static void setScopeAttribute(String name, Object value, String scope, PageContext pageContext) {
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
+		if (scopeValue.equals(SCOPE_PAGE)) {
+			pageContext.setAttribute(name, value);
+		} else if (scopeValue.equals(SCOPE_REQUEST)) {
+			request.setAttribute(name, value);
+		} else if (scopeValue.equals(SCOPE_SESSION)) {
+			request.getSession().setAttribute(name, value);
+		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
+            request.getSession().getServletContext().setAttribute(name, value);
+        } else {
+			throw new UncheckedException("Invalid scope: '" + scope + "'.");
+        }
+	}
+
+	/**
+	 * Removes scope attribute.
+	 */
+	public static void removeScopeAttribute(String name, String scope, PageContext pageContext) {
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
+		if (scopeValue.equals(SCOPE_PAGE)) {
+			pageContext.removeAttribute(name);
+		} else if (scopeValue.equals(SCOPE_REQUEST)) {
+			request.removeAttribute(name);
+		} else if (scopeValue.equals(SCOPE_SESSION)) {
+			request.getSession().removeAttribute(name);
+		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
+            request.getSession().getServletContext().removeAttribute(name);
+        } else {
+			throw new UncheckedException("Invalid scope: '" + scope + "'.");
+        }
+	}
+
 	// ---------------------------------------------------------------- resolve URL
 
 	/**
@@ -604,7 +648,7 @@ public class ServletUtil {
 	}
 
 	/**
-	 * Returns a string with debug info from all servlet objects, including pageScope.
+	 * Returns a string with debug info from all servlet objects, including the page context.
 	 */
 	protected static String debug(HttpServletRequest request, PageContext pageContext) {
 		StringBuilder result = new StringBuilder();
@@ -687,5 +731,6 @@ public class ServletUtil {
 		response.setHeader("Pragma","no-cache");        // HTTP 1.0
 		response.setDateHeader ("Expires", 0);          // prevents caching at the proxy server
 	}
+
 
 }
