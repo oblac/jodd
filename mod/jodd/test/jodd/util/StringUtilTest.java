@@ -854,4 +854,9 @@ public class StringUtilTest extends TestCase {
 		assertEquals("", StringUtil.findCommonPrefix("", "1", "12xxxxx"));
 		assertEquals("123", StringUtil.findCommonPrefix("123", "123", "123"));
 	}
+
+	public void testShorten() {
+		assertEquals("Long...", StringUtil.shorten("Long long sentence", 8, "..."));
+		assertEquals("Longl...", StringUtil.shorten("Longlong sentence", 8, "..."));
+	}
 }

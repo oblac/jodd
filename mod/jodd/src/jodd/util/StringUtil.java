@@ -2237,4 +2237,27 @@ public class StringUtil {
 	}
 
 
+	// ---------------------------------------------------------------- shorten
+
+	/**
+	 * Shorten string to given length.
+	 */
+	public static String shorten(String s, int length, String suffix) {
+		length -= suffix.length();
+
+		if (s.length() > length) {
+			for (int j = length; j >= 0; j--) {
+				if (CharUtil.isWhitespace(s.charAt(j))) {
+					length = j;
+					break;
+				}
+			}
+			String temp = s.substring(0, length);
+			s = temp.concat(suffix);
+		}
+
+		return s;
+	}
+
+
 }
