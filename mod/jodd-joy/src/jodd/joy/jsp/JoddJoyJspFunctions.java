@@ -3,7 +3,7 @@
 package jodd.joy.jsp;
 
 import jodd.servlet.PageContextThreadLocal;
-import jodd.servlet.jspfn.JoddJspFunctions;
+import jodd.servlet.ServletUtil;
 
 import javax.servlet.jsp.PageContext;
 
@@ -12,13 +12,18 @@ import javax.servlet.jsp.PageContext;
  */
 public class JoddJoyJspFunctions {
 
+	private static final String CTX_VAR_NAME = "CTX";
+
 	/**
 	 * Performs page initialization. The following is done:
 	 * <ul>PageContextThreadLocal is set</ul>
-	 * <ul>CTX page variable is set with context path value</ul>
+	 * <ul>CTX page attribute is set with context path value</ul>
+	 * <ul>CTX request attribute is set with context path value</ul>
 	 */
 	public static void initPage(PageContext pageContext) {
 		PageContextThreadLocal.set(pageContext);
-		JoddJspFunctions.setContextPathVariable(pageContext, "page", "CTX");
+		String ctxPath = ServletUtil.getContextPath(pageContext);
+		pageContext.setAttribute(CTX_VAR_NAME, ctxPath);
+		pageContext.getRequest().setAttribute(CTX_VAR_NAME, ctxPath);
 	}
 }
