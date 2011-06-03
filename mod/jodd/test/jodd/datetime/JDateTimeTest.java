@@ -276,7 +276,12 @@ public class JDateTimeTest extends TestCase {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt = new JDateTime();
 
-		long now = System.currentTimeMillis();
+		long delta = 0;
+		if (jdt.getHour() == 1) {
+			delta = 60 * 60 * 1000;
+		}
+
+		long now = System.currentTimeMillis() + delta;
 		gc.setTimeInMillis(now);
 		jdt.setTimeInMillis(now);
 		assertEquals(now, jdt.getTimeInMillis());
