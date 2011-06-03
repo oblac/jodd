@@ -99,7 +99,7 @@ public class ActionMethodParser {
 
 		if (actionPath == null) {
 			// finally, build the action pat if it is not already specified
-			actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension);
+			actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension, httpMethod);
 		}
 		 
 		// register alias
@@ -119,8 +119,9 @@ public class ActionMethodParser {
 	 * @param classActionPath action path from class
 	 * @param methodActionPath action path from method (optional)
 	 * @param extension extension (optional)
+	 * @param httpMethod HTTP method name (not used by default)
 	 */
-	protected String buildActionPath(String packageActionPath, String classActionPath, String methodActionPath, String extension) {
+	protected String buildActionPath(String packageActionPath, String classActionPath, String methodActionPath, String extension, String httpMethod) {
 		String pathSeparator = StringPool.SLASH;
 
 		String actionPath = classActionPath;

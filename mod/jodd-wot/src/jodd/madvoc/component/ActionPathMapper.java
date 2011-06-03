@@ -120,7 +120,7 @@ public class ActionPathMapper {
 
 	/**
 	 * Builds action method signature based on provided names.
-	 * Http method is ignored.
+	 * Http method is ignored by default.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected String buildSignature(String packageName, String className, String methodName, String extension, String httpMethod) {
