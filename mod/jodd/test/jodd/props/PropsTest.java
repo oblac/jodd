@@ -36,7 +36,7 @@ public class PropsTest extends TestCase {
 
 
 		Properties prop = p.extractBaseProperties();
-		assertEquals("1937", prop.getProperty("year"));
+		assertEquals("1937{c}", prop.getProperty("year"));
 		assertEquals("49.5", prop.getProperty("doc.weight"));
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
 	}

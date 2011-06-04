@@ -1,6 +1,6 @@
 # Global properties
 story = Snow White and the Seven Dwarfs
-year = 1937
+year = 1937{c}
 url = www.imdb.com/title/tt0029583/
 ; A backslash at the end of the line escapes the new line
 ; character, the property value continues to the next line.
