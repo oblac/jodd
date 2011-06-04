@@ -37,7 +37,7 @@ PROFILE = "<" {PROFILE_NAME} ">"
 
 KEY = [^:=\n\r\ \t\f\\<] | "\\"{CRLF} | "\\".
 KEY_SEPARATOR = {SPACE}* [:=] {SPACE}* | {SPACE}+
-VALUE = [^\n\r\f\\"${"] | "\\"{CRLF} | "\\${" | "\\".
+VALUE = [^\n\r\f\\$] | "\\"{CRLF} | "\\${" | "\\".
 
 MACRO_NAME = [^\n\r\ \t\f\}]*
 MACRO="${" {MACRO_NAME} "}"
@@ -51,7 +51,7 @@ MACRO="${" {MACRO_NAME} "}"
 <YYINITIAL> {END_OF_LINE_COMMENT}			{ yybegin(YYINITIAL); return TOKEN_EOL_COMMENT; }
 
 // section
-<YYINITIAL> {SECTION} {WHITE_SPACE}*		{yybegin(YYINITIAL); return TOKEN_SECTION; }
+<YYINITIAL> {SECTION} {WHITE_SPACE}*		{ yybegin(YYINITIAL); return TOKEN_SECTION; }
 
 // property
 <YYINITIAL> {
