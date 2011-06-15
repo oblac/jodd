@@ -28,7 +28,10 @@ public class JavaCompiler {
 
 	protected String classpath;
 	protected String compilerSpec;
-	protected String debugArg;
+	protected String argDebug;
+	protected String argEncoding;
+	protected String argSource;
+	protected String argTarget;
 	protected boolean haveToolsJar;
 	protected boolean useJikes;
 
@@ -37,8 +40,8 @@ public class JavaCompiler {
 	 */
 	public JavaCompiler() {
 		compilerSpec = "-nowarn -sourcepath %s -d %d %f";
-		debugArg = StringPool.EMPTY;
-		this.useJikes = false;
+		argDebug = argEncoding = argSource = argTarget = StringPool.EMPTY;
+		useJikes = false;
 
 		File[] classPath = ClassLoaderUtil.getDefaultClasspath();
 		StringBand sb = new StringBand(classPath.length + 1);
@@ -55,8 +58,12 @@ public class JavaCompiler {
 
 	/**
 	 * Specifies new java compiler specification.
+	 * By default it is set to <code>-nowarn -sourcepath %s -d %d %f</code>.
+	 * <p>
+	 * The whole command line can be set in here, but it also can be set
+	 * via properties of this class.
 	 */
-	public void setCompiler(String compiler) {
+	public void setCompilerSpec(String compiler) {
 		compilerSpec = compiler;
 	}
 
@@ -74,9 +81,9 @@ public class JavaCompiler {
 		for (String classpathItem : classpathItems) {
 			try {
 				File file = new File(classpathItem);
-				String cannonicalPath = file.getCanonicalPath();
-				if (classpath.indexOf(cannonicalPath) == -1) {
-					classpath = classpath + File.pathSeparatorChar + cannonicalPath;
+				String canonicalPath = file.getCanonicalPath();
+				if (!classpath.contains(canonicalPath)) {
+					classpath = classpath + File.pathSeparatorChar + canonicalPath;
 				}
 			} catch (IOException ignore) {
 			}
@@ -84,17 +91,25 @@ public class JavaCompiler {
 	}
 
 	/**
-	 * Returns <code>true</code> if debug argument is set.
-	 */
-	public boolean isDebug() {
-		return debugArg.length() != 0;
-	}
-
-	/**
 	 * Sets debug argument.
 	 */
 	public void setDebug(boolean debug) {
-		debugArg = debug ? "-g" : "";
+		argDebug = debug ? "-g" : "";
+	}
+
+	/**
+	 * Sets encoding. Not available on jikes.
+	 */
+	public void setEncoding(String encoding) {
+		argEncoding = "-encoding " + encoding;
+	}
+
+	public void setSourceVersion(String source) {
+		argSource = "-source " + source;
+	}
+
+	public void setTargetVersion(String target) {
+		argTarget = "-target " + target;
 	}
 
 	// ---------------------------------------------------------------- compile
@@ -119,7 +134,7 @@ public class JavaCompiler {
 
 		// ensure class name
 		if (className == null) {
-			className = source.substring(sourceDirectory.length());
+			className = source.substring(sourceDirectory.length() + 1);
 			className = className.replace('/', '.');
 			className = className.replace('\\', '.');
 			className = FileNameUtil.removeExtension(className);
@@ -135,7 +150,7 @@ public class JavaCompiler {
 		String outputDirectory = outputDirectoryFile.getCanonicalPath();
 
 		// add output dir to the classpath
-		if (classpath.indexOf(outputDirectory) == -1) {
+		if (!classpath.contains(outputDirectory)) {
 			classpath = classpath + File.pathSeparatorChar + outputDirectory;
 		}
 
@@ -167,7 +182,14 @@ public class JavaCompiler {
 		}
 		while(true) {
 			try {
-				String compSpec = COMPILERS[compilerIndex] + ' ' + debugArg + ' ' + compilerSpec;
+				String compSpec = COMPILERS[compilerIndex];
+				compSpec += ' ' + argDebug;
+				compSpec += ' ' + argSource;
+				compSpec += ' ' + argTarget;
+				if (useJikes == false) {
+					compSpec += ' ' + argEncoding;
+				}
+				compSpec += ' ' + compilerSpec;
 				String command = parseCompileArgs(compSpec, source, sourceDir, resultDir, classpath);
 				p = runtime.exec(command, envs);
 				break;
