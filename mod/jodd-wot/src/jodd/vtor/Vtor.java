@@ -187,17 +187,26 @@ public class Vtor {
 		boolean result = false;
 		for (String profile : checkProfiles) {
 			boolean b = true;
+			boolean must = false;
 			if (StringUtil.isEmpty(profile)) {
 				profile = DEFAULT_PROFILE;
 			} else if (profile.charAt(0) == '-') {
 				profile = profile.substring(1);
 				b = false;
+			} else if (profile.charAt(0) == '+') {
+				profile = profile.substring(1);
+				must = true;
 			}
+
 			if (enabledProfiles.contains(profile)) {
 				if (b == false) {
 					return false;
 				}
 				result = true;
+			} else {
+				if (must == true) {
+					return false;
+				}
 			}
 		}
 		return result;

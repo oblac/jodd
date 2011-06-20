@@ -2,6 +2,7 @@
 
 package jodd.vtor;
 
+import jodd.vtor.constraint.MinLengthConstraint;
 import jodd.vtor.data.Too;
 import jodd.vtor.data.Zoo;
 import junit.framework.TestCase;
@@ -79,7 +80,7 @@ public class ProfileTest extends TestCase {
 	}
 
 
-	public void testMinusProfiles() {
+	public void testMinusPlusProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
 		vtor.useProfile("default");
@@ -87,7 +88,9 @@ public class ProfileTest extends TestCase {
 
 		vtor.validate(too);
 		List<Violation> vlist = vtor.getViolations();
-		assertNull(vlist);
+		assertEquals(1, vlist.size());
+		Violation v = vlist.get(0);
+		assertEquals(MinLengthConstraint.class, v.getConstraint().getClass());
 
 		vtor.resetViolations();
 		vtor.resetProfiles();
@@ -105,12 +108,33 @@ public class ProfileTest extends TestCase {
 
 		vtor.resetViolations();
 		vtor.resetProfiles();
+		vtor.useProfile("p3");
+		vtor.validate(too);
+		vlist = vtor.getViolations();
+		assertNull(vlist);
+
+		vtor.resetViolations();
+		vtor.resetProfiles();
 		vtor.useProfiles("p1", "p2");
 		vtor.validate(too);
 		vlist = vtor.getViolations();
 		assertEquals(1, vlist.size());
 
+		vtor.resetViolations();
+		vtor.resetProfiles();
+		vtor.useProfiles("p1", "p2", "p3");
+		vtor.validate(too);
+		vlist = vtor.getViolations();
+		assertEquals(2, vlist.size());
+	}
 
+	public void testAsJoyAction() {
+		Vtor vtor = new Vtor();
+		vtor.useProfiles(Vtor.DEFAULT_PROFILE, "register");
+		vtor.validate(new Too());
+		List<Violation> violations = vtor.getViolations();
+
+		assertNull(violations);
 	}
 
 }
