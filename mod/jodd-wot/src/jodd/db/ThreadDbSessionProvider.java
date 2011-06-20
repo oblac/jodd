@@ -32,7 +32,9 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public DbSession getDbSession() {
-		log.debug("Requesting thread session");
+		if (log.isDebugEnabled()) {
+			log.debug("Requesting thread session");
+		}
 		DbSession session = ThreadDbSessionHolder.get();
 		if (session == null) {
 			if (createIfMissing) {
@@ -55,7 +57,9 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	 * Closes db session.
 	 */
 	public static void closeThreadDbSession() {
-		log.debug("Closing thread session");
+		if (log.isDebugEnabled()) {
+			log.debug("Closing thread session");
+		}
 		DbSession session = ThreadDbSessionHolder.get();
 		if (session != null) {
 			session.closeSession();

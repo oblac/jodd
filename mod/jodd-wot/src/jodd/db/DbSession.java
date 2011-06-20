@@ -44,7 +44,9 @@ public class DbSession {
 	 * Creates new database session with default transaction mode and in autocommit mode.
 	 */
 	public DbSession(ConnectionProvider connectionProvider) {
-		log.debug("Creating new db session");
+		if (log.isDebugEnabled()) {
+			log.debug("Creating new db session");
+		}
 		if (connectionProvider == null) {
 			throw new DbSqlException("Connection provider is not availiable.");
 		}
@@ -62,7 +64,9 @@ public class DbSession {
 	 * Closed session is no longer available for usage.
 	 */
 	public void closeSession() {
-		log.debug("Closing db session");
+		if (log.isDebugEnabled()) {
+			log.debug("Closing db session");
+		}
 		List<SQLException> allsexs = null;
 		for (DbQueryBase query : queries) {
             List<SQLException> sexs = query.closeQuery();
@@ -199,7 +203,9 @@ public class DbSession {
 	 * Starts a transaction.
 	 */
 	public void beginTransaction(DbTransactionMode mode) {
-		log.debug("Beginning transaction");
+		if (log.isDebugEnabled()) {
+			log.debug("Beginning transaction");
+		}
 		checkClosedTx();
 		this.txMode = mode;
 		openTx();
@@ -217,12 +223,14 @@ public class DbSession {
 	 * Transaction mode is closed.
 	 */
 	public void commitTransaction() {
-		log.debug("Committing transaction");
+		if (log.isDebugEnabled()) {
+			log.debug("Committing transaction");
+		}
 		checkActiveTx();
 		try {
 			connection.commit();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to commit transaction regulary.", sex);
+			throw new DbSqlException("Unable to commit transaction.", sex);
 		} finally {
 			closeTx();
 		}
@@ -232,12 +240,14 @@ public class DbSession {
 	 * Roll back the current transaction. Transaction mode is closed.
 	 */
 	public void rollbackTransaction() {
-		log.debug("Rolling-back transaction");
+		if (log.isDebugEnabled()) {
+			log.debug("Rolling-back transaction");
+		}
 		checkActiveTx();
 		try {
 			connection.rollback();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to rollback transaction regulary.", sex);
+			throw new DbSqlException("Unable to rollback transaction.", sex);
 		} finally {
 			closeTx();
 		}

@@ -211,17 +211,23 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			long now = System.currentTimeMillis();
 			boolean isValid = isConnectionValid(existingConnection, now);
 			if (isValid == false) {
-				log.debug("pooled connection is not valid, resetting");
+				if (log.isDebugEnabled()) {
+					log.debug("pooled connection is not valid, resetting");
+				}
 				notifyAll();				 // freed up a spot for anybody waiting
 				return getConnection();
 			} else {
-				log.debug("returning valid pooled connection");
+				if (log.isDebugEnabled()) {
+					log.debug("returning valid pooled connection");
+				}
 				busyConnections.add(existingConnection);
 				existingConnection.lastUsed = now;
 				return existingConnection.connection;
 			}
 		}
-		log.debug("no more available connections");
+		if (log.isDebugEnabled()) {
+			log.debug("no more available connections");
+		}
 		// no available connections
 		if (((availableConnections.size() + busyConnections.size()) < maxConnections) && !connectionPending) {
 			makeBackgroundConnection();

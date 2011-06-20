@@ -34,7 +34,9 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public DbSession getDbSession() {
-		log.debug("Requesting db TX manager session");
+		if (log.isDebugEnabled()) {
+			log.debug("Requesting db TX manager session");
+		}
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx == null) {
 			if (defaultTxMode != null) {
@@ -50,7 +52,9 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public void closeDbSession() {
-		log.debug("Closing db TX manager session");
+		if (log.isDebugEnabled()) {
+			log.debug("Closing db TX manager session");
+		}
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 		if (jtx != null) {
 			jtx.commit();
