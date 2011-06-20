@@ -113,7 +113,9 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 		// LOGOUT
 		if (actionPath.equals(logoutActionPath) == true) {
-			log.debug("logout user");
+			if (log.isDebugEnabled()) {
+				log.debug("logout user");
+			}
 			closeAuthSession(servletRequest, servletResponse);
 			return resultLogoutSuccess();
 		}
@@ -139,7 +141,9 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		if (cookieData != null) {
 			sessionObject = loginViaCookie(cookieData);
 			if (sessionObject != null) {
-				log.debug("login with cookie");
+				if (log.isDebugEnabled()) {
+					log.debug("login with cookie");
+				}
 				startAuthSession(servletRequest, servletResponse, sessionObject, false);
 				if (authorize(actionRequest, sessionObject) == false) {
 					return resultAccessDenied();
@@ -153,7 +157,9 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		if (actionPath.equals(registerActionPath)) {
 			Object newSessionObject = servletRequest.getAttribute(AUTH_SESSION_NAME);
 			if (newSessionObject != null) {
-				log.debug("new user session created");
+				if (log.isDebugEnabled()) {
+					log.debug("new user session created");
+				}
 				servletRequest.removeAttribute(AUTH_SESSION_NAME);
 				startAuthSession(servletRequest, servletResponse, newSessionObject, true);
 				return resultRegistrationSuccess();
@@ -164,7 +170,9 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		if (actionPath.equals(loginActionPath) == false) {
 			if (authorize(actionRequest, null) == false) {
 				// session is not active, chain to login
-				log.debug("authentication required");
+				if (log.isDebugEnabled()) {
+					log.debug("authentication required");
+				}
 				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getUrl(servletRequest));
 				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return resultLogin();

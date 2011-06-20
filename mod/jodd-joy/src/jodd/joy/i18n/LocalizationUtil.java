@@ -48,12 +48,16 @@ public class LocalizationUtil {
 	public static final String SESSION_LOCALE_ATTR = ResourceBundleMessageResolver.class.getName() + ".locale";
 
 	public static void setRequestBundleName(ServletRequest request, String bundleName) {
-		log.debug("Bundle name for this request: {}", bundleName);
+		if (log.isDebugEnabled()) {
+			log.debug("Bundle name for this request: {}", bundleName);
+		}
 		request.setAttribute(REQUEST_BUNDLE_NAME_ATTR, bundleName);
 	}
 
 	public static void setSessionLocale(HttpSession session, String localeCode) {
-		log.debug("Locale stored to session: {}", localeCode);
+		if (log.isDebugEnabled()) {
+			log.debug("Locale stored to session: {}", localeCode);
+		}
 		Locale locale = LocaleUtil.getLocale(localeCode);
 		session.setAttribute(SESSION_LOCALE_ATTR, locale);
 	}
@@ -107,10 +111,14 @@ s	 */
 			if ("org.apache.catalina.loader.WebappClassLoader".equals(cl.getName())) {
 				clearMap(cl, loader, "resourceEntries");
 			} else {
-				log.debug("Class loader {} is not a Tomcat loader.", cl.getName());
+				if (log.isDebugEnabled()) {
+					log.debug("Class loader {} is not a Tomcat loader.", cl.getName());
+				}
 			}
 		} catch (Exception ex) {
-			log.warn("Unable to clear Tomcat cache.", ex);
+			if (log.isWarnEnabled()) {
+				log.warn("Unable to clear Tomcat cache.", ex);
+			}
 		}
 	}
 
