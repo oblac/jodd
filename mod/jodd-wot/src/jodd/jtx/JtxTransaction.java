@@ -2,6 +2,9 @@
 
 package jodd.jtx;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static jodd.jtx.JtxStatus.*;
 import static jodd.jtx.JtxTransactionMode.DEFAULT_TIMEOUT;
 
@@ -28,6 +31,8 @@ import java.util.HashSet;
  * work is scoped to associated thread.
  */
 public class JtxTransaction {
+
+	private static final Logger log = LoggerFactory.getLogger(JtxTransaction.class);
 
 	// ---------------------------------------------------------------- init
 
@@ -58,6 +63,9 @@ public class JtxTransaction {
 		this.status = active ? STATUS_ACTIVE : STATUS_NO_TRANSACTION;
 		this.startAsActive = active;
 		txManager.associateTransaction(this);
+		if (log.isDebugEnabled()) {
+			log.debug("New JTX {status:" + this.status + " mode:" + this.mode + '}');
+		}
 	}
 
 	/**
@@ -109,7 +117,7 @@ public class JtxTransaction {
 
 	/**
 	 * Returns <code>true</code> if transaction is explicitly forbidden, i.e.
-	 * session is in <b>auto-commit</b> mode or not started yet.
+	 * session is in <b>auto-commit</b> mode.
 	 */
 	public boolean isNoTransaction() {
 		return status == STATUS_NO_TRANSACTION;
@@ -151,8 +159,10 @@ public class JtxTransaction {
 	 * of the transaction is to roll back the transaction.
 	 */
 	public void setRollbackOnly(Throwable th) {
-		if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
-			throw new JtxException("There is no active transaction that can be marked as rollback only.");
+		if (isNoTransaction() == false) {
+			if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
+				throw new JtxException("There is no active transaction that can be marked as rollback only.");
+			}
 		}
 		rollbackCause = th;
 		status = STATUS_MARKED_ROLLBACK;
@@ -205,6 +215,13 @@ public class JtxTransaction {
 	 * Performs either commit or rollback on all transaction resources.
 	 */
 	protected void commitOrRollback(boolean doCommit) {
+		if (log.isDebugEnabled()) {
+			if (doCommit) {
+				log.debug("Commit JTX");
+			} else {
+				log.debug("Rollback JTX");
+			}
+		}
 		boolean forcedRollback = false;
 		if (isNoTransaction() == false) {
 			if (isRollbackOnly()) {

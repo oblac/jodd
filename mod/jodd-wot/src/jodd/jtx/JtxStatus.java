@@ -39,8 +39,7 @@ public enum JtxStatus {
 	STATUS_UNKNOWN(5),
 
 	/**
-	 * No transaction is currently associated with the target object. The auto-commit mode or the transaction
-	 * has been completed.
+	 * No transaction is currently associated with the target object. Indicates the auto-commit mode.
 	 */
 	STATUS_NO_TRANSACTION(6),
 

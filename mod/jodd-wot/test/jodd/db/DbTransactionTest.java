@@ -216,4 +216,45 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 			}
 		}.start();
 	}
+
+	// ---------------------------------------------------------------- notx
+
+	public void testNoTx() {
+
+		final JtxTransactionManager manager = new JtxTransactionManager();
+		manager.registerResourceManager(new DbJtxResourceManager(cp));
+
+		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+		assertTrue(tx.isNoTransaction());
+
+		try {
+			tx.commit();
+		} catch (Exception ignore) {
+			fail();
+		}
+
+		assertTrue(tx.isCommitted());
+
+		try {
+			tx.rollback();
+			fail("exception is already committed!");
+		} catch (Exception ignore) {
+		}
+
+		tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+
+		try {
+			tx.rollback();
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+
+		tx = manager.requestTransaction(new JtxTransactionMode().propagationSupports());
+
+		try {
+			tx.setRollbackOnly();
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+	}
 }
