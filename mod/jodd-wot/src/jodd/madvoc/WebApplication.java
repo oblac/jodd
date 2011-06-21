@@ -58,7 +58,9 @@ public class WebApplication {
 	 */
 	protected void initWebApplication() {
 		log = LoggerFactory.getLogger(WebApplication.class);
-		log.debug("Initializing Madvoc web application");
+		if (log.isDebugEnabled()) {
+			log.debug("Initializing Madvoc web application");
+		}
 		madpc = new PetiteContainer();
 		madpc.addSelf(MADVOC_CONTAINER_NAME);
 	}
@@ -147,7 +149,9 @@ public class WebApplication {
 	 * Invoked before {@link #init(MadvocConfig , ServletContext) madvoc initialization}.
 	 */
 	public void registerMadvocComponents() {
-		log.debug("Registering Madvoc components");
+		if (log.isDebugEnabled()) {
+			log.debug("Registering Madvoc components");
+		}
 		registerComponent(ActionMethodParser.class);
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
@@ -168,12 +172,16 @@ public class WebApplication {
 	 * Simple defines parameters for internal container.
 	 */
 	protected void defineParams(Properties properties) {
-		log.debug("Defining Madvoc parameters");
+		if (log.isDebugEnabled()) {
+			log.debug("Defining Madvoc parameters");
+		}
 		madpc.defineParameters(properties);
 	}
 
 	protected void defineParams(Props props) {
-		log.debug("Defining Madvoc parameters");
+		if (log.isDebugEnabled()) {
+			log.debug("Defining Madvoc parameters");
+		}
 		madpc.defineParameters(props);
 	}
 
@@ -182,7 +190,9 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void init(MadvocConfig madvocConfig, ServletContext context) {
-		log.debug("Initializing Madvoc");
+		if (log.isDebugEnabled()) {
+			log.debug("Initializing Madvoc");
+		}
 	}
 
 	/**
@@ -190,7 +200,9 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initActions(ActionsManager actionManager) {
-		log.debug("Initializing Madvoc actions");
+		if (log.isDebugEnabled()) {
+			log.debug("Initializing Madvoc actions");
+		}
 	}
 
 	/**
@@ -206,7 +218,9 @@ public class WebApplication {
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected void destroy(MadvocConfig madvocConfig) {
-		log.debug("Destroying Madvoc");
+		if (log.isDebugEnabled()) {
+			log.debug("Destroying Madvoc");
+		}
 	}
 
 
@@ -216,7 +230,9 @@ public class WebApplication {
 	 * Wires configurator in the the Madvoc container and invokes configuration.
 	 */
 	public void configure(MadvocConfigurator configurator) {
-		log.debug("Configuring Madvoc");
+		if (log.isDebugEnabled()) {
+			log.debug("Configuring Madvoc");
+		}
 		madpc.wire(configurator);
 		configurator.configure();
 	}

@@ -31,7 +31,9 @@ public class PetiteContainer extends PetiteRegistry {
 
 	public PetiteContainer(PetiteConfig config) {
 		super(config);
-		log.debug("Petite container created.");
+		if (log.isDebugEnabled()) {
+			log.debug("Petite container created.");
+		}
 	}
 
 	/**

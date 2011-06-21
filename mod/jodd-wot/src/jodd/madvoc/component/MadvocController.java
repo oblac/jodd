@@ -84,7 +84,9 @@ public class MadvocController {
 		}
 
 		while (actionPath != null) {
-			log.debug("Action path: {}", actionPath);
+			if (log.isDebugEnabled()) {
+				log.debug("Action path: {}", actionPath);
+			}
 
 			// build action path
 			String httpMethod = servletRequest.getMethod().toUpperCase();
