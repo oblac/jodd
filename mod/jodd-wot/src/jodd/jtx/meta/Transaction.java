@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 /**
- * Transaction method annotation  for external use.
+ * Transaction method annotation for external use.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -21,17 +21,17 @@ import java.lang.annotation.ElementType;
 public @interface Transaction {
 
 	/**
-	 * Transaction propagation mode.
+	 * Transaction propagation mode. Default value: <code>PROPAGATION_SUPPORTS</code>.
 	 */
 	JtxPropagationBehavior propagation() default JtxPropagationBehavior.PROPAGATION_SUPPORTS;
 
 	/**
-	 * Transaction isolation mode.
+	 * Transaction isolation mode. Default value: <code>ISOLATION_DEFAULT</code>.
 	 */
 	JtxIsolationLevel isolation() default JtxIsolationLevel.ISOLATION_DEFAULT;
 
 	/**
-	 * Transaction read-only mode.
+	 * Transaction read-only mode. Default value: <code>true</code>
 	 */
 	boolean readOnly() default true;
 
