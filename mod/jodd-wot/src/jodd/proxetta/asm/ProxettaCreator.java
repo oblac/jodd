@@ -2,9 +2,8 @@
 
 package jodd.proxetta.asm;
 
+import jodd.log.Log;
 import org.objectweb.asm.ClassReader;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import jodd.proxetta.ProxyAspect;
 
 /**
@@ -12,7 +11,7 @@ import jodd.proxetta.ProxyAspect;
  */
 public class ProxettaCreator extends ClassProcessor {
 
-	private static final Logger log = LoggerFactory.getLogger(ProxettaCreator.class);
+	private static final Log log = Log.getLogger(ProxettaCreator.class);
 
 	protected final ProxyAspect[] aspects;
 

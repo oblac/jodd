@@ -6,20 +6,18 @@ import jodd.io.findfile.FindClass;
 import jodd.db.orm.DbOrmManager;
 import jodd.db.orm.DbOrmException;
 import jodd.db.orm.meta.DbTable;
+import jodd.log.Log;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.File;
 import java.io.InputStream;
-
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 /**
  * Auto-magically reads classpath for domain objects annotated
  */
 public class AutomagicDbOrmConfigurator extends FindClass {
 
-	private static final Logger log = LoggerFactory.getLogger(AutomagicDbOrmConfigurator.class);
+	private static final Log log = Log.getLogger(AutomagicDbOrmConfigurator.class);
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;

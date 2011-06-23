@@ -2,17 +2,16 @@
 
 package jodd.proxetta.asm;
 
+import jodd.log.Log;
 import jodd.proxetta.InvokeAspect;
 import org.objectweb.asm.ClassReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Invocation replacer class processor.
  */
 public class InvokeCreator extends ClassProcessor {
 
-	private static final Logger log = LoggerFactory.getLogger(InvokeCreator.class);
+	private static final Log log = Log.getLogger(InvokeCreator.class);
 
 	protected final InvokeAspect[] aspects;
 

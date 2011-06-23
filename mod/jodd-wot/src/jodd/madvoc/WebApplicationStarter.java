@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.log.Log;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Convert;
@@ -13,9 +14,6 @@ import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 import javax.servlet.ServletContext;
 
 /**
@@ -23,7 +21,7 @@ import javax.servlet.ServletContext;
  */
 public class WebApplicationStarter {
 
-	private static Logger log;
+	private static Log log;
 
 	// ---------------------------------------------------------------- params
 
@@ -68,11 +66,11 @@ public class WebApplicationStarter {
 	 */
 	public WebApplication startNewWebApplication(ServletContext context) {
 		webapp = createWebApplication(webAppClass);
-		log = LoggerFactory.getLogger(WebApplicationStarter.class);
+		log = Log.getLogger(WebApplicationStarter.class);
 		if (webAppClass == null) {
 			log.info("Default web application created.");
 		} else {
-			log.info("Created web application: {}", webAppClass);
+			log.info("Created web application: " + webAppClass);
 		}
 
 
@@ -149,7 +147,7 @@ public class WebApplicationStarter {
 	 * Loads Madvoc parameters. New {@link Props} is created from the classpath.
 	 */
 	protected Props loadMadvocParams(String[] patterns) {
-		log.info("Loading Madvoc parameters from: {}", patterns);
+		log.info("Loading Madvoc parameters from: " + Convert.toString(patterns));
 		try {
 			return PropsUtil.createFromClasspath(patterns);
 		} catch (Exception ex) {
@@ -168,7 +166,7 @@ public class WebApplicationStarter {
 			log.info("Configuring Madvoc using default automagic configurator");
 			return new AutomagicMadvocConfigurator();
 		}
-		log.info("Configuring Madvoc using configurator: {}", className);
+		log.info("Configuring Madvoc using configurator: " + className);
 		MadvocConfigurator configurator;
 		try {
 			Class clazz = ClassLoaderUtil.loadClass(className, this.getClass());

@@ -2,8 +2,7 @@
 
 package jodd.db;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import jodd.log.Log;
 
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -20,7 +19,7 @@ import java.util.HashSet;
  */
 abstract class DbQueryBase {
 
-	private static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
+	private static final Log log = Log.getLogger(DbQueryBase.class);
 
 	// ---------------------------------------------------------------- query states
 

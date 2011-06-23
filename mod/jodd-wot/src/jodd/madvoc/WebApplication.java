@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.log.Log;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
@@ -20,8 +21,6 @@ import java.lang.reflect.Modifier;
 import java.util.Properties;
 
 import jodd.props.Props;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -29,7 +28,7 @@ import org.slf4j.Logger;
  */
 public class WebApplication {
 
-	private static Logger log;
+	private static Log log;
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
 
@@ -57,7 +56,7 @@ public class WebApplication {
 	 * Also adds itself into it.
 	 */
 	protected void initWebApplication() {
-		log = LoggerFactory.getLogger(WebApplication.class);
+		log = Log.getLogger(WebApplication.class);
 		if (log.isDebugEnabled()) {
 			log.debug("Initializing Madvoc web application");
 		}
@@ -100,7 +99,7 @@ public class WebApplication {
 
 	public final void registerComponent(String name, Class component) {
 		if (log.isDebugEnabled()) {
-			log.debug("Registering component '{}' of type {}", name, component.getName());
+			log.debug("Registering component '" + name + "' of type " + component.getName());
 		}
 		madpc.removeBean(name);
 		madpc.registerBean(name, component);
@@ -122,7 +121,7 @@ public class WebApplication {
 	 */
 	public final void registerComponent(String name, Object componentInstance) {
 		if (log.isDebugEnabled()) {
-			log.debug("Registering component '{}' instace of {}", name, componentInstance.getClass().getName());
+			log.debug("Registering component '" + name + "' instance of " + componentInstance.getClass().getName());
 		}
 		madpc.removeBean(name);
 		madpc.addBean(name, componentInstance);

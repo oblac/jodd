@@ -3,6 +3,7 @@
 package jodd.madvoc.component;
 
 import jodd.introspector.ClassIntrospector;
+import jodd.log.Log;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
@@ -10,8 +11,6 @@ import jodd.petite.meta.PetiteInject;
 import jodd.util.BinarySearch;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.collection.SortedArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class ActionsManager {
 
-	private static final Logger log = LoggerFactory.getLogger(ActionsManager.class);
+	private static final Log log = Log.getLogger(ActionsManager.class);
 
 	@PetiteInject
 	protected ActionMethodParser actionMethodParser;

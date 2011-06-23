@@ -4,11 +4,10 @@ package jodd.petite;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.log.Log;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import jodd.util.ReflectUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,7 +22,7 @@ import java.util.Map;
  */
 public abstract class PetiteBeans {
 
-	private static final Logger log = LoggerFactory.getLogger(PetiteBeans.class);
+	private static final Log log = Log.getLogger(PetiteBeans.class);
 
 	/**
 	 * Map of all beans definitions.

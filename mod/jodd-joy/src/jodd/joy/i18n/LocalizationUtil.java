@@ -2,6 +2,7 @@
 
 package jodd.joy.i18n;
 
+import jodd.log.Log;
 import jodd.util.ResourceBundleMessageResolver;
 import jodd.util.LocaleUtil;
 
@@ -14,15 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 /**
  * Finds localized text.
  */
 public class LocalizationUtil {
 
-	private static final Logger log = LoggerFactory.getLogger(LocalizationUtil.class);
+	private static final Log log = Log.getLogger(LocalizationUtil.class);
 
 	public static final ResourceBundleMessageResolver MESSAGE_RESOLVER = new ResourceBundleMessageResolver() {
 		@Override
@@ -49,14 +47,14 @@ public class LocalizationUtil {
 
 	public static void setRequestBundleName(ServletRequest request, String bundleName) {
 		if (log.isDebugEnabled()) {
-			log.debug("Bundle name for this request: {}", bundleName);
+			log.debug("Bundle name for this request: " + bundleName);
 		}
 		request.setAttribute(REQUEST_BUNDLE_NAME_ATTR, bundleName);
 	}
 
 	public static void setSessionLocale(HttpSession session, String localeCode) {
 		if (log.isDebugEnabled()) {
-			log.debug("Locale stored to session: {}", localeCode);
+			log.debug("Locale stored to session: " + localeCode);
 		}
 		Locale locale = LocaleUtil.getLocale(localeCode);
 		session.setAttribute(SESSION_LOCALE_ATTR, locale);
@@ -112,7 +110,7 @@ s	 */
 				clearMap(cl, loader, "resourceEntries");
 			} else {
 				if (log.isDebugEnabled()) {
-					log.debug("Class loader {} is not a Tomcat loader.", cl.getName());
+					log.debug("Class loader " + cl.getName() + " is not a Tomcat loader.");
 				}
 			}
 		} catch (Exception ex) {

@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import jodd.log.Log;
 
 /**
  * {@link JtxTransaction} manager is responsible for handling transaction
@@ -18,7 +17,7 @@ import org.slf4j.Logger;
  */
 public class JtxTransactionManager {
 
-	private static final Logger log = LoggerFactory.getLogger(JtxTransactionManager.class);
+	private static final Log log = Log.getLogger(JtxTransactionManager.class);
 
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;

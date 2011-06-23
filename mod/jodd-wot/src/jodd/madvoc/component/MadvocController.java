@@ -2,6 +2,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.log.Log;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
@@ -14,17 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 /**
  * Madvoc controller invokes actions for action path and renders action results.
- * It also builds action objects and result paths. It handles intialization of
+ * It also builds action objects and result paths. It handles initialization of
  * interceptors and results.
  */
 public class MadvocController {
 
-	private static final Logger log = LoggerFactory.getLogger(MadvocController.class);
+	private static final Log log = Log.getLogger(MadvocController.class);
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -72,7 +70,7 @@ public class MadvocController {
 	 * the action path string is returned (it might be different than original one, provided in arguments).
 	 * On first invoke, initializes the action configuration before further proceeding.
 	 *
-	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String)
+	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String, String)
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 		ActionRequest request = null;
@@ -85,7 +83,7 @@ public class MadvocController {
 
 		while (actionPath != null) {
 			if (log.isDebugEnabled()) {
-				log.debug("Action path: {}", actionPath);
+				log.debug("Action path: " + actionPath);
 			}
 
 			// build action path
@@ -98,7 +96,7 @@ public class MadvocController {
 				return actionPath;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Invoking action path {} using {}", actionPath, actionConfig.actionClass.getSimpleName());
+				log.debug("Invoking action path '" + actionPath + "' using " + actionConfig.actionClass.getSimpleName());
 			}
 
 			// create action object

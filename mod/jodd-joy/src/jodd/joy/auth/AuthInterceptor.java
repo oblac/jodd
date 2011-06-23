@@ -3,13 +3,12 @@
 package jodd.joy.auth;
 
 import jodd.joy.madvoc.action.AppAction;
+import jodd.log.Log;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,7 @@ import static jodd.joy.madvoc.action.AppAction.REDIRECT;
  */
 public abstract class AuthInterceptor extends ActionInterceptor {
 
-	private static final Logger log = LoggerFactory.getLogger(AuthInterceptor.class);
+	private static final Log log = Log.getLogger(AuthInterceptor.class);
 
 	/**
 	 * Action path that performs user login.
@@ -322,7 +321,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 	protected Object loginViaRequest(HttpServletRequest servletRequest) {
 		String username = servletRequest.getParameter(loginUsername);
 		String password = servletRequest.getParameter(loginPassword);
-		log.info("login {}.", username);
+		log.info("login " + username);
 		return loginUsernamePassword(username, password);
 	}
 

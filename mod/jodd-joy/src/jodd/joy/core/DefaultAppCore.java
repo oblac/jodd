@@ -18,6 +18,7 @@ import jodd.jtx.meta.Transaction;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
+import jodd.log.Log;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.scope.SessionScope;
@@ -28,8 +29,6 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static jodd.joy.AppUtil.prepareAppLogDir;
 import static jodd.joy.AppUtil.resolveAppDirs;
@@ -50,7 +49,7 @@ public abstract class DefaultAppCore {
 	/**
 	 * Logger.
 	 */
-	protected static Logger log;
+	protected static Log log;
 
 	/**
 	 * Default scanning path that will be examined by various
@@ -90,9 +89,9 @@ public abstract class DefaultAppCore {
 		resolveAppDirs("app.props");			// app directories are resolved from location of 'app.props'.
 		prepareAppLogDir("log");				// creates log folder, depending of application type
 		initLogger();							// logger becomes available after this point
-		log.info("app dir: {}", AppUtil.getAppDir());
-		log.info("log dir: {}", AppUtil.getLogDir());
-		log.info("classpath: {}", AppUtil.getClasspathDir());
+		log.info("app dir: " + AppUtil.getAppDir());
+		log.info("log dir: " + AppUtil.getLogDir());
+		log.info("classpath: " + AppUtil.getClasspathDir());
 		try {
 			initTypes();
 			initProxetta();
@@ -127,7 +126,7 @@ public abstract class DefaultAppCore {
 	 * log path is defined.
 	 */
 	protected void initLogger() {
-		log = LoggerFactory.getLogger(DefaultAppCore.class);
+		log = Log.getLogger(DefaultAppCore.class);
 	}
 
 	
@@ -202,7 +201,7 @@ public abstract class DefaultAppCore {
 		log.info("petite initialization");
 		petite = createPetiteContainer();
 		boolean isWebApplication = AppUtil.isWebApplication();
-		log.info("app in web: {}", Boolean.valueOf(isWebApplication));
+		log.info("app in web: " + Boolean.valueOf(isWebApplication));
 		if (isWebApplication == false) {
 			// make session scope to act as singleton scope
 			// if this is not a web application (and http session is not available).

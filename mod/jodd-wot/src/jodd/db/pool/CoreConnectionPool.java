@@ -4,8 +4,7 @@ package jodd.db.pool;
 
 import jodd.db.DbSqlException;
 import jodd.db.connection.ConnectionProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  */
 public class CoreConnectionPool implements Runnable, ConnectionProvider {
 
-	private static final Logger log = LoggerFactory.getLogger(CoreConnectionPool.class);
+	private static final Log log = Log.getLogger(CoreConnectionPool.class);
 
 	// ---------------------------------------------------------------- properties
 

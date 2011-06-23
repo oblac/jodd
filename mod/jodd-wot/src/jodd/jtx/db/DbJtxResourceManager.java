@@ -7,8 +7,7 @@ import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxException;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.DbSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Log;
 
 /**
  * Database {@link jodd.jtx.JtxResourceManager} manages life-cycle of {@link jodd.db.DbSession} resources.
@@ -19,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 
-	private static final Logger log = LoggerFactory.getLogger(DbJtxResourceManager.class);
+	private static final Log log = Log.getLogger(DbJtxResourceManager.class);
 
 	protected final ConnectionProvider connectionProvider;
 

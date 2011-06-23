@@ -2,12 +2,11 @@
 
 package jodd.madvoc;
 
+import jodd.log.Log;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
 import jodd.typeconverter.Convert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,7 +23,7 @@ import java.io.IOException;
  */
 public class MadvocServletFilter implements Filter {
 
-	private static Logger log;
+	private static Log log;
 
 	/**
 	 * Web application.
@@ -62,7 +61,7 @@ public class MadvocServletFilter implements Filter {
 			ex.printStackTrace();
 			throw new ServletException("Unable to start Madvoc web application.", ex);
 		}
-		log = LoggerFactory.getLogger(MadvocServletFilter.class);
+		log = Log.getLogger(MadvocServletFilter.class);
 		madvocController = starter.getMadvocController();
 		madvocConfig = starter.getMadvocConfig();
 		log.info("Madvoc application started.");

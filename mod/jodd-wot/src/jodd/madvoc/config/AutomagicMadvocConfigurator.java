@@ -5,6 +5,7 @@ package jodd.madvoc.config;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.io.findfile.FindClass;
+import jodd.log.Log;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.ActionsManager;
@@ -22,9 +23,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 /**
  * Default Madvoc configurator uses auto-magic to configure {@link WebApplication}.
  * It searches the class path for all classes which names ends with 'Action' and 'Result'
@@ -36,7 +34,7 @@ import org.slf4j.Logger;
  */
 public class AutomagicMadvocConfigurator extends FindClass implements MadvocConfigurator {
 
-	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
+	private static final Log log = Log.getLogger(AutomagicMadvocConfigurator.class);
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
