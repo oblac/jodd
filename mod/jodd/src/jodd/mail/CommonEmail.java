@@ -44,26 +44,17 @@ public abstract class CommonEmail {
 	protected String[] to = NONE;
 
 	/**
-	 * Sets TO address.
-	 */
-	public void setTo(String to) {
-		if (to == null) {
-			return;
-		}
-		this.to = new String[] {to};
-	}
-	/**
-	 * Sets multiple TO addresses.
+	 * Sets TO addresses.
 	 */
 	public void setTo(String... tos) {
 		if (tos == null) {
-			return;
+			tos = NONE;
 		}
 		to = tos;
 	}
 
 	/**
-	 * Returns array of To addresses.
+	 * Returns TO addresses.
 	 */
 	public String[] getTo() {
 		return to;
@@ -73,26 +64,18 @@ public abstract class CommonEmail {
 
 	protected String[] replyTo = NONE;
 
-	public void setReplyTo(String replyTo) {
-		if (replyTo == null) {
-			return;
-		}
-		this.replyTo = new String[] {replyTo};
-	}
-
-
 	/**
-	 * Sets reply to addresses.
+	 * Sets REPLY-TO addresses.
 	 */
-	public void setReplyTo(String[] replyTo) {
+	public void setReplyTo(String... replyTo) {
 		if (replyTo == null) {
-			return;
+			replyTo = NONE;
 		}
 		this.replyTo = replyTo;
 	}
 
 	/**
-	 * Returns array of ReplyTo addresses.
+	 * Returns REPLY-TO addresses.
 	 */
 	public String[] getReplyTo() {
 		return replyTo;
@@ -103,26 +86,17 @@ public abstract class CommonEmail {
 	protected String[] cc = NONE;
 
 	/**
-	 * Sets CC address.
-	 */
-	public void setCc(String cc) {
-		if (cc == null) {
-			return;
-		}
-		this.cc = new String[] {cc};
-	}
-	/**
-	 * Sets multiple CC addresses.
+	 * Sets CC addresses.
 	 */
 	public void setCc(String... ccs) {
 		if (ccs == null) {
-			return;
+			ccs = NONE;
 		}
 		cc = ccs;
 	}
 
 	/**
-	 * Returns array of CC addresses.
+	 * Returns CC addresses.
 	 */
 	public String[] getCc() {
 		return cc;
@@ -133,26 +107,17 @@ public abstract class CommonEmail {
 	protected String[] bcc = NONE;
 
 	/**
-	 * Sets BCC address.
-	 */
-	public void setBcc(String bcc) {
-		if (bcc == null) {
-			return;
-		}
-		this.bcc = new String[] {bcc};
-	}
-	/**
-	 * Sets multiple BCC addresses.
+	 * Sets BCC addresses.
 	 */
 	public void setBcc(String... bccs) {
 		if (bccs == null) {
-			return;
+			bccs = NONE;
 		}
 		bcc = bccs;
 	}
 
 	/**
-	 * Returns array of BCC addresses.
+	 * Returns BCC addresses.
 	 */
 	public String[] getBcc() {
 		return bcc;
@@ -235,7 +200,7 @@ public abstract class CommonEmail {
 	}
 
 	/**
-	 * Returns emails priority (1 - 5) or <code>-1</code> if priority not availiable.
+	 * Returns emails priority (1 - 5) or <code>-1</code> if priority not available.
 	 * @see #setPriority(int)
 	 */
 	public int getPriority() {
@@ -244,7 +209,7 @@ public abstract class CommonEmail {
 		}
 		try {
 			return Integer.parseInt(headers.get(X_PRIORITY));
-		} catch (NumberFormatException nfex) {
+		} catch (NumberFormatException ignore) {
 			return -1;
 		}
 	}
