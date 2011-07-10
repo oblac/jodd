@@ -58,7 +58,7 @@ public class SendMailSession {
 			throw new MailException("Unable to prepare email message: " + mail, mex);
 		}
 		try {
-			mailTransport.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
+			mailTransport.sendMessage(msg, msg.getAllRecipients());
 		} catch (MessagingException mex) {
 			throw new MailException("Unable to send email message: " + mail, mex);
 		}
