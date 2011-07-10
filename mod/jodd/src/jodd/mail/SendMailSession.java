@@ -53,7 +53,7 @@ public class SendMailSession {
 	public void sendMail(Email mail) {
 		Message msg;
 		try {
-			msg = adapt(mail, mailSession);
+			msg = createMessage(mail, mailSession);
 		} catch (MessagingException mex) {
 			throw new MailException("Unable to prepare email message: " + mail, mex);
 		}
@@ -79,9 +79,9 @@ public class SendMailSession {
 	// ---------------------------------------------------------------- adapter
 
 	/**
-	 * Creates new message.
+	 * Creates new JavaX message from {@link Email email}.
 	 */
-	protected Message adapt(Email email, Session session) throws MessagingException {
+	protected Message createMessage(Email email, Session session) throws MessagingException {
 		Message msg = new MimeMessage(session);
 		msg.setFrom(new InternetAddress(email.getFrom()));
 
