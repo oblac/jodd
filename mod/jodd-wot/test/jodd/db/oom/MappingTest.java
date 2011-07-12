@@ -1,14 +1,14 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.orm.test.Foo;
-import jodd.db.orm.test.BooSqlType;
-import jodd.db.orm.test.Boo;
-import jodd.db.orm.test.FooColor;
-import jodd.db.orm.test.FooWeight;
-import jodd.db.orm.sqlgen.DbEntitySql;
+import jodd.db.oom.test.Foo;
+import jodd.db.oom.test.BooSqlType;
+import jodd.db.oom.test.Boo;
+import jodd.db.oom.test.FooColor;
+import jodd.db.oom.test.FooWeight;
+import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;

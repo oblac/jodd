@@ -1,16 +1,16 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.DbQuery;
 import jodd.db.DbH2TestCase;
-import jodd.db.orm.test.Girl;
-import jodd.db.orm.test.IdName;
-import jodd.db.orm.test.Girl2;
-import jodd.db.orm.sqlgen.DbEntitySql;
-import jodd.db.orm.sqlgen.DbSqlBuilder;
+import jodd.db.oom.test.Girl;
+import jodd.db.oom.test.IdName;
+import jodd.db.oom.test.Girl2;
+import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

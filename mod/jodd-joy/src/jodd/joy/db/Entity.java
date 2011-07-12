@@ -2,7 +2,7 @@
 
 package jodd.joy.db;
 
-import jodd.db.orm.meta.DbId;
+import jodd.db.oom.meta.DbId;
 
 /**
  * Abstract entity.

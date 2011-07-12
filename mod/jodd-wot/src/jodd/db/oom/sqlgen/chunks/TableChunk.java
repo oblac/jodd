@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen.chunks;
+package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.sqlgen.TemplateData;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.sqlgen.TemplateData;
 
 /**
  * Table chunk resolves table name, optional table alias and defines table references.

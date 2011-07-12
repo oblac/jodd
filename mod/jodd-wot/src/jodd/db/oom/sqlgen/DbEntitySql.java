@@ -1,17 +1,18 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
-import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.DbEntityDescriptor;
-import static jodd.db.orm.DbNameUtil.convertTableNameToClassName;
-import static jodd.db.orm.DbNameUtil.convertColumnNameToPropertyName;
+import jodd.bean.BeanUtil;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbOrmManager;
+
+import static jodd.db.oom.DbNameUtil.convertColumnNameToPropertyName;
+import static jodd.db.oom.DbNameUtil.convertTableNameToClassName;
+import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static jodd.util.StringPool.EQUALS;
 import static jodd.util.StringPool.SPACE;
-import static jodd.util.StringUtil.uncapitalize;
 import static jodd.util.StringUtil.capitalize;
-import jodd.bean.BeanUtil;
+import static jodd.util.StringUtil.uncapitalize;
 
 /**
  * Useful {@link DbSqlBuilder} generators.

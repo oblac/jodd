@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen.chunks;
+package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.bean.BeanUtil;
 import jodd.util.StringUtil;
 

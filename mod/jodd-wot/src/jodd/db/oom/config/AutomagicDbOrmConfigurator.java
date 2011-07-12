@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.config;
+package jodd.db.oom.config;
 
 import jodd.io.findfile.FindClass;
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.DbOrmException;
-import jodd.db.orm.meta.DbTable;
+import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbOrmException;
+import jodd.db.oom.meta.DbTable;
 import jodd.log.Log;
 import jodd.util.ClassLoaderUtil;
 

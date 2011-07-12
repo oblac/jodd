@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityColumnDescriptor;
 
 /**
  * {@link TemplateData Template parameter} value.

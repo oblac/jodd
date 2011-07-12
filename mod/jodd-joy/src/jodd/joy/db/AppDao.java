@@ -2,11 +2,11 @@
 
 package jodd.joy.db;
 
-import jodd.db.orm.sqlgen.DbEntitySql;
-import static jodd.db.orm.sqlgen.DbEntitySql.insert;
-import static jodd.db.orm.sqlgen.DbEntitySql.updateAll;
-import static jodd.db.orm.sqlgen.DbEntitySql.findByColumn;
-import static jodd.db.orm.DbOrmQuery.query;
+import jodd.db.oom.sqlgen.DbEntitySql;
+import static jodd.db.oom.sqlgen.DbEntitySql.insert;
+import static jodd.db.oom.sqlgen.DbEntitySql.updateAll;
+import static jodd.db.oom.sqlgen.DbEntitySql.findByColumn;
+import static jodd.db.oom.DbOrmQuery.query;
 import jodd.db.DbQuery;
 import jodd.petite.meta.PetiteBean;
 

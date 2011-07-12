@@ -1,13 +1,13 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.mapper;
+package jodd.db.oom.mapper;
 
 import jodd.bean.BeanUtil;
-import jodd.db.orm.ColumnData;
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.DbOrmException;
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.ColumnData;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbOrmException;
+import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
 import jodd.util.ReflectUtil;

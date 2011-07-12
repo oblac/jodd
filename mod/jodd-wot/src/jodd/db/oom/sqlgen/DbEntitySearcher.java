@@ -1,13 +1,13 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
 import jodd.db.DbSqlException;
-import jodd.db.orm.ColumnData;
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.DbSqlGenerator;
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.ColumnData;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbSqlGenerator;
+import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 

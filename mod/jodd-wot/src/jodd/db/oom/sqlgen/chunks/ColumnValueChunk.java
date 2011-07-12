@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen.chunks;
+package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.DbEntityColumnDescriptor;
 
 /**
  * {@link jodd.db.orm.sqlgen.chunks.ValueChunk Value} for the last column.

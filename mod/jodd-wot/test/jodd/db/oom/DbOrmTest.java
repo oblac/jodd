@@ -1,22 +1,22 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.DbHsqldbTestCase;
-import static jodd.db.orm.ColumnAliasType.COLUMN_CODE;
-import jodd.db.orm.sqlgen.DbEntitySql;
-import jodd.db.orm.sqlgen.DbSqlBuilder;
-import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
-import jodd.db.orm.test.BadBoy;
-import jodd.db.orm.test.BadGirl;
-import jodd.db.orm.test.Boy;
-import jodd.db.orm.test.Boy3;
-import jodd.db.orm.test.Girl;
-import jodd.db.orm.test.IdName;
-import static jodd.db.orm.DbOrmQuery.query;
+import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
+import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
+import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
+import jodd.db.oom.test.BadBoy;
+import jodd.db.oom.test.BadGirl;
+import jodd.db.oom.test.Boy;
+import jodd.db.oom.test.Boy3;
+import jodd.db.oom.test.Girl;
+import jodd.db.oom.test.IdName;
+import static jodd.db.oom.DbOrmQuery.query;
 
 import java.util.Iterator;
 import java.util.List;

@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import jodd.db.ResultSetUtil;
-import jodd.db.orm.meta.DbTable;
-import jodd.db.orm.meta.DbId;
-import jodd.db.orm.meta.DbColumn;
+import jodd.db.oom.meta.DbTable;
+import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbColumn;
 import jodd.db.type.SqlType;
 
 import java.lang.reflect.Field;

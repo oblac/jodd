@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen.chunks;
+package jodd.db.oom.sqlgen.chunks;
 
 /**
  * Simply holds hard-coded SQL string that will be appended to the result.

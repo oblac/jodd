@@ -1,21 +1,21 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
-import jodd.db.orm.ColumnData;
-import jodd.db.orm.ColumnAliasType;
-import jodd.db.orm.DbSqlGenerator;
-import jodd.db.orm.DbOrmQuery;
-import jodd.db.orm.sqlgen.chunks.ColumnValueChunk;
-import jodd.db.orm.sqlgen.chunks.SqlChunk;
-import jodd.db.orm.sqlgen.chunks.RawSqlChunk;
-import jodd.db.orm.sqlgen.chunks.TableChunk;
-import jodd.db.orm.sqlgen.chunks.ColumnsSelectChunk;
-import jodd.db.orm.sqlgen.chunks.InsertChunk;
-import jodd.db.orm.sqlgen.chunks.ReferenceChunk;
-import jodd.db.orm.sqlgen.chunks.ValueChunk;
-import jodd.db.orm.sqlgen.chunks.UpdateSetChunk;
-import jodd.db.orm.sqlgen.chunks.MatchChunk;
+import jodd.db.oom.ColumnData;
+import jodd.db.oom.ColumnAliasType;
+import jodd.db.oom.DbSqlGenerator;
+import jodd.db.oom.DbOrmQuery;
+import jodd.db.oom.sqlgen.chunks.ColumnValueChunk;
+import jodd.db.oom.sqlgen.chunks.SqlChunk;
+import jodd.db.oom.sqlgen.chunks.RawSqlChunk;
+import jodd.db.oom.sqlgen.chunks.TableChunk;
+import jodd.db.oom.sqlgen.chunks.ColumnsSelectChunk;
+import jodd.db.oom.sqlgen.chunks.InsertChunk;
+import jodd.db.oom.sqlgen.chunks.ReferenceChunk;
+import jodd.db.oom.sqlgen.chunks.ValueChunk;
+import jodd.db.oom.sqlgen.chunks.UpdateSetChunk;
+import jodd.db.oom.sqlgen.chunks.MatchChunk;
 import jodd.db.DbSession;
 import jodd.util.StringPool;
 import jodd.cache.Cache;

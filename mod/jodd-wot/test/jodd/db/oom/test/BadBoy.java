@@ -1,10 +1,10 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.test;
+package jodd.db.oom.test;
 
-import jodd.db.orm.meta.DbTable;
-import jodd.db.orm.meta.DbColumn;
-import jodd.db.orm.meta.DbId;
+import jodd.db.oom.meta.DbTable;
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
 
 @DbTable("BOY")
 public class BadBoy {

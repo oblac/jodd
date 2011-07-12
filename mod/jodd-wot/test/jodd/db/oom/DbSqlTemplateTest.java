@@ -1,16 +1,16 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
-import static jodd.db.orm.ColumnAliasType.*;
+import static jodd.db.oom.ColumnAliasType.*;
 import junit.framework.TestCase;
-import jodd.db.orm.test.Boy;
-import jodd.db.orm.test.BadBoy;
-import jodd.db.orm.test.BadGirl;
-import jodd.db.orm.test.Girl;
-import jodd.db.orm.sqlgen.DbSqlBuilder;
-import jodd.db.orm.sqlgen.ParameterValue;
-import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
+import jodd.db.oom.test.Boy;
+import jodd.db.oom.test.BadBoy;
+import jodd.db.oom.test.BadGirl;
+import jodd.db.oom.test.Girl;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
+import jodd.db.oom.sqlgen.ParameterValue;
+import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 
 import java.util.Map;
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import junit.framework.TestCase;
-import jodd.db.orm.test.Girl;
-import jodd.db.orm.test.BadBoy;
+import jodd.db.oom.test.Girl;
+import jodd.db.oom.test.BadBoy;
 
 public class JointHintResolverTest extends TestCase {
 

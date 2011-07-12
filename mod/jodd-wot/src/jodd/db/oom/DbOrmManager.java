@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
-import jodd.db.orm.mapper.DefaultResultSetMapper;
-import jodd.db.orm.mapper.ResultSetMapper;
+import jodd.db.oom.mapper.DefaultResultSetMapper;
+import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.util.StringUtil;
 
 import java.sql.ResultSet;

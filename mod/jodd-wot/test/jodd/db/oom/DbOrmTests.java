@@ -1,10 +1,10 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
 import junit.framework.TestSuite;
 import junit.framework.Test;
-import jodd.db.orm.sqlgen.DbEntitySqlTest;
+import jodd.db.oom.sqlgen.DbEntitySqlTest;
 
 public class DbOrmTests extends TestSuite {
 

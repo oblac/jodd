@@ -1,12 +1,12 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.ColumnData;
-import jodd.db.orm.ColumnAliasType;
-import jodd.db.orm.DbEntityColumnDescriptor;
+import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.ColumnData;
+import jodd.db.oom.ColumnAliasType;
+import jodd.db.oom.DbEntityColumnDescriptor;
 
 import java.util.Map;
 import java.util.HashMap;

@@ -3,7 +3,7 @@
 package jodd;
 
 import jodd.db.DbTests;
-import jodd.db.orm.DbOrmTests;
+import jodd.db.oom.DbOrmTests;
 import jodd.jtx.JtxTests;
 import jodd.madvoc.MadvocTests;
 import jodd.paramo.ParamoTests;

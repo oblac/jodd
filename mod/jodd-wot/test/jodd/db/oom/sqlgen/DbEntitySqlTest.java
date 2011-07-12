@@ -1,13 +1,13 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen;
+package jodd.db.oom.sqlgen;
 
 import junit.framework.TestCase;
-import jodd.db.orm.DbOrmManager;
-import jodd.db.orm.test.Girl;
-import jodd.db.orm.test.Boy;
-import jodd.db.orm.test.BadBoy;
-import jodd.db.orm.test.BadGirl;
+import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.test.Girl;
+import jodd.db.oom.test.Boy;
+import jodd.db.oom.test.BadBoy;
+import jodd.db.oom.test.BadGirl;
 
 import java.util.Map;
 

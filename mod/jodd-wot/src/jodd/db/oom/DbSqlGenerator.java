@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm;
+package jodd.db.oom;
 
-import jodd.db.orm.sqlgen.ParameterValue;
+import jodd.db.oom.sqlgen.ParameterValue;
 
 import java.util.Map;
 

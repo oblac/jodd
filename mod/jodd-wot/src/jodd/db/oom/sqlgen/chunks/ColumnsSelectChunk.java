@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.sqlgen.chunks;
+package jodd.db.oom.sqlgen.chunks;
 
-import jodd.db.orm.DbEntityDescriptor;
-import jodd.db.orm.DbEntityColumnDescriptor;
-import jodd.db.orm.sqlgen.DbSqlBuilderException;
-import jodd.db.orm.sqlgen.TemplateData;
+import jodd.db.oom.DbEntityDescriptor;
+import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.sqlgen.DbSqlBuilderException;
+import jodd.db.oom.sqlgen.TemplateData;
 import jodd.util.StringPool;
 
 /**

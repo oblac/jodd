@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.db.orm.meta;
+package jodd.db.oom.meta;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

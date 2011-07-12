@@ -2,14 +2,14 @@
 
 package jodd.joy.page;
 
-import jodd.db.orm.DbOrmQuery;
-import jodd.db.orm.sqlgen.DbSqlBuilder;
+import jodd.db.oom.DbOrmQuery;
+import jodd.db.oom.sqlgen.DbSqlBuilder;
 
 import java.util.List;
 import java.util.Map;
 
-import static jodd.db.orm.DbOrmQuery.query;
-import static jodd.db.orm.sqlgen.DbSqlBuilder.sql;
+import static jodd.db.oom.DbOrmQuery.query;
+import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 
 public class MySqlPager {
 
