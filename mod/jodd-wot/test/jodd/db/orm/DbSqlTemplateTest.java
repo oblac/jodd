@@ -36,9 +36,18 @@ public class DbSqlTemplateTest extends TestCase {
 		
 	protected void assertContains(String string, String... chunks) {
 		for (String chunk : chunks) {
-			//noinspection SimplifiableJUnitAssertion
-			assertTrue(string.indexOf(chunk) != -1);
+			assertTrue(string.contains(chunk));
 		}
+	}
+
+	public void testAliasNoAlias() {
+		DbSqlBuilder st;
+
+		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
+		assertEquals("BOY BOY.ID BOY.ID", st.generateQuery());
+
+		st = sql("$T{Boy b} $b.id $C{b.id}");
+		assertEquals("BOY b b.ID b.ID", st.generateQuery());
 	}
 
 
@@ -47,10 +56,10 @@ public class DbSqlTemplateTest extends TestCase {
 
 		// 1
 		st = sql("$T{Boy}");
-		assertEquals("BOY Boy", st.generateQuery());
+		assertEquals("BOY", st.generateQuery());
 
 		st = sql("$T{BadBoy}");
-		assertEquals("BOY BadBoy", st.generateQuery());
+		assertEquals("BOY", st.generateQuery());
 
 		st = sql("$T{Boy b}");
 		assertEquals("BOY b", st.generateQuery());
@@ -60,25 +69,25 @@ public class DbSqlTemplateTest extends TestCase {
 
 		// 2
 		st = sql("$T{b}").use("b", new Boy());
+		assertEquals("BOY", st.generateQuery());
+		st = sql("$T{b b}").use("b", new Boy());
 		assertEquals("BOY b", st.generateQuery());
-		st = sql("$T{b bx}").use("b", new Boy());
-		assertEquals("BOY bx", st.generateQuery());
 
 		st = sql("$T{b}").use("b", new BadBoy());
-		assertEquals("BOY b", st.generateQuery());
+		assertEquals("BOY", st.generateQuery());
 
 		// 3
 		st = sql("$T{b}").use("b", Boy.class);
-		assertEquals("BOY b", st.generateQuery());
+		assertEquals("BOY", st.generateQuery());
 
 		st = sql("$T{b}").use("b", BadBoy.class);
-		assertEquals("BOY b", st.generateQuery());
+		assertEquals("BOY", st.generateQuery());
 	}
 
 
 	public void testManyTables() {
 		DbSqlBuilder st = sql("$T{Boy, Girl girl}");
-		assertEquals("BOY Boy, GIRL girl", st.generateQuery());
+		assertEquals("BOY, GIRL girl", st.generateQuery());
 	}
 
 	public void testColumns1() {
@@ -86,10 +95,10 @@ public class DbSqlTemplateTest extends TestCase {
 
 		// 1
 		st = sql("$T{Boy} | $C{Boy.id} | $C{Boy.*}");
-		assertEquals("BOY Boy | Boy.ID | Boy.GIRL_ID, Boy.ID, Boy.NAME", st.generateQuery());
+		assertEquals("BOY | BOY.ID | BOY.GIRL_ID, BOY.ID, BOY.NAME", st.generateQuery());
 
 		st = sql("$T{BadBoy} | $C{BadBoy.ajdi} | $C{BadBoy.*} | $C{BadBoy.+}");
-		assertEquals("BOY BadBoy | BadBoy.ID | BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME | BadBoy.ID", st.generateQuery());
+		assertEquals("BOY | BOY.ID | BOY.ID, BOY.GIRL_ID, BOY.NAME | BOY.ID", st.generateQuery());
 
 		// 2
 		st = sql("$T{b b} | $C{b.id}").use("b", new Boy());
@@ -122,14 +131,14 @@ public class DbSqlTemplateTest extends TestCase {
 
 		// 1
 		st = sql("$T{Boy} | $C{Boy.id} | $C{Boy.*}");
-		assertEquals("BOY Boy | Boy.ID as BOY$ID | Boy.GIRL_ID as BOY$GIRL_ID, Boy.ID as BOY$ID, Boy.NAME as BOY$NAME",
+		assertEquals("BOY | BOY.ID as BOY$ID | BOY.GIRL_ID as BOY$GIRL_ID, BOY.ID as BOY$ID, BOY.NAME as BOY$NAME",
 				st.aliasColumnsAs(TABLE_NAME).generateQuery());
-		assertEquals("BOY Boy | Boy.ID as Boy$ID | Boy.GIRL_ID as Boy$GIRL_ID, Boy.ID as Boy$ID, Boy.NAME as Boy$NAME",
+		assertEquals("BOY | BOY.ID as Boy$ID | BOY.GIRL_ID as Boy$GIRL_ID, BOY.ID as Boy$ID, BOY.NAME as Boy$NAME",
 				st.reset().aliasColumnsAs(TABLE_REFERENCE).generateQuery());
-		assertEquals("BOY Boy | Boy.ID as col_0_ | Boy.GIRL_ID as col_1_, Boy.ID as col_2_, Boy.NAME as col_3_",
+		assertEquals("BOY | BOY.ID as col_0_ | BOY.GIRL_ID as col_1_, BOY.ID as col_2_, BOY.NAME as col_3_",
 				st.reset().aliasColumnsAs(COLUMN_CODE).generateQuery());
 
-		st = sql("$T{BadBoy} | $C{BadBoy.ajdi} | $C{BadBoy.*}");
+		st = sql("$T{BadBoy BadBoy} | $C{BadBoy.ajdi} | $C{BadBoy.*}");
 		assertEquals("BOY BadBoy | BadBoy.ID as BOY$ID | BadBoy.ID as BOY$ID, BadBoy.GIRL_ID as BOY$GIRL_ID, BadBoy.NAME as BOY$NAME",
 				st.aliasColumnsAs(TABLE_NAME).generateQuery());
 		assertEquals("BOY BadBoy | BadBoy.ID as BadBoy$ID | BadBoy.ID as BadBoy$ID, BadBoy.GIRL_ID as BadBoy$GIRL_ID, BadBoy.NAME as BadBoy$NAME",
@@ -156,20 +165,22 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("a.ID as BOY$ID, a.NAME as BOY$NAME from BOY a", st.aliasColumnsAs(TABLE_NAME).generateQuery());
 
 
-		st = sql("$b.id as d, $C{b.name} from $T{b}").use("b", Boy.class).aliasColumnsAs(TABLE_NAME);
+		st = sql("$b.id as d, $C{b.name} from $T{b b}").use("b", Boy.class).aliasColumnsAs(TABLE_NAME);
 		assertEquals("b.ID as d, b.NAME as BOY$NAME from BOY b", st.generateQuery());
 		st = sql("$a.ajdi as d, $C{    a.nejm     } from $T{b a}").use("b", BadBoy.class).aliasColumnsAs(TABLE_NAME);
 		assertEquals("a.ID as d, a.NAME as BOY$NAME from BOY a", st.generateQuery());
 
-		st = sql("$C{b.*} from $T{b}").use("b", Boy.class).aliasColumnsAs(TABLE_NAME);
+		st = sql("$C{b.*} from $T{b b}").use("b", Boy.class).aliasColumnsAs(TABLE_NAME);
 		assertEquals("b.GIRL_ID as BOY$GIRL_ID, b.ID as BOY$ID, b.NAME as BOY$NAME from BOY b", st.generateQuery());
 		st = sql("$C{a.*} from $T{b a}").use("b", BadBoy.class);
 		assertEquals("a.ID, a.GIRL_ID, a.NAME from BOY a", st.generateQuery());
 
 		st = sql("$C{a.*} from $T{BadBoy a}");
 		assertEquals("a.ID, a.GIRL_ID, a.NAME from BOY a", st.generateQuery());
-		st = sql("$C{BadBoy.ajdi} from $T{BadBoy}");
+		st = sql("$C{BadBoy.ajdi} from $T{BadBoy BadBoy}");
 		assertEquals("BadBoy.ID from BOY BadBoy", st.generateQuery());
+		st = sql("$C{BadBoy.ajdi} from $T{BadBoy}");
+		assertEquals("BOY.ID from BOY", st.generateQuery());
 	}
 
 	public void testReferencesAndEscapes() {
@@ -189,21 +200,21 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY b b.ID+2", st.generateQuery());
 
 		st = sql("$T{Boy, BadBoy b} - \\$$Boy.id $b.ajdi");
-		assertEquals("BOY Boy, BOY b - $Boy.ID b.ID", st.generateQuery());
+		assertEquals("BOY, BOY b - $BOY.ID b.ID", st.generateQuery());
 
 		st = sql("$T{Boy}, $T{BadBoy b} - \\$$Boy.id $b.ajdi");
-		assertEquals("BOY Boy, BOY b - $Boy.ID b.ID", st.generateQuery());
+		assertEquals("BOY, BOY b - $BOY.ID b.ID", st.generateQuery());
 
-		st = sql("$C{b.ajdi} $T{Boy, BadBoy b} - \\$$Boy.id $b.ajdi").aliasColumnsAs(TABLE_NAME);
+		st = sql("$C{b.ajdi} $T{Boy Boy, BadBoy b} - \\$$Boy.id $b.ajdi").aliasColumnsAs(TABLE_NAME);
 		assertEquals("b.ID as BOY$ID BOY Boy, BOY b - $Boy.ID b.ID", st.generateQuery());
 
 		st = sql("\\$C{b.ajdi} $T{Boy, BadBoy b} - \\$$Boy.id $b.ajdi");
-		assertEquals("$C{b.ajdi} BOY Boy, BOY b - $Boy.ID b.ID", st.generateQuery());
+		assertEquals("$C{b.ajdi} BOY, BOY b - $BOY.ID b.ID", st.generateQuery());
 
 		st = sql("\\$C{b.*} $T{Boy, BadBoy b} - $Boy.id");
-		assertEquals("$C{b.*} BOY Boy, BOY b - Boy.ID", st.generateQuery());
+		assertEquals("$C{b.*} BOY, BOY b - BOY.ID", st.generateQuery());
 
-		st = sql("$C{b.*} $T{Boy, BadBoy  b} - $b.ajdi 'foo\\$'").aliasColumnsAs(TABLE_NAME);
+		st = sql("$C{b.*} $T{Boy Boy, BadBoy  b} - $b.ajdi 'foo\\$'").aliasColumnsAs(TABLE_NAME);
 		assertEquals("b.ID as BOY$ID, b.GIRL_ID as BOY$GIRL_ID, b.NAME as BOY$NAME BOY Boy, BOY b - b.ID 'foo$'", st.generateQuery());
 
 		st = sql("$T{BadBoy  b} - $b.ajdi=2,$b.ajdi<$b.ajdi").aliasColumnsAs(TABLE_NAME);
@@ -218,7 +229,7 @@ public class DbSqlTemplateTest extends TestCase {
 		Boy boy = new Boy();
 		boy.id = 1;
 		boy.girlId = 3;
-		st = sql("$T{boy} where $M{boy=boy}").use("boy", boy);
+		st = sql("$T{boy boy} where $M{boy=boy}").use("boy", boy);
 		assertEquals("BOY boy where (boy.GIRL_ID=:boy.girlId and boy.ID=:boy.id)", st.generateQuery());
 		Map<String, ParameterValue> map = st.getQueryParameters();
 		assertEquals(2, map.size());

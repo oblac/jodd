@@ -39,7 +39,7 @@ public class DbSlqBuilderTest extends TestCase {
 
 		// [1]
 		s = sql().table("Boy");
-		assertEquals("BOY Boy", s.generateQuery());
+		assertEquals("BOY", s.generateQuery());
 		assertNotNull(s.getTableDescriptor("Boy"));
 
 		s = sql().table("Boy", null);
@@ -53,7 +53,7 @@ public class DbSlqBuilderTest extends TestCase {
 
 		// [2]
 		s = sql().table("BadBoy");
-		assertEquals("BOY BadBoy", s.generateQuery());
+		assertEquals("BOY", s.generateQuery());
 		assertNotNull(s.getTableDescriptor("BadBoy"));
 
 		s = sql().table("BadBoy", null);
@@ -95,7 +95,7 @@ public class DbSlqBuilderTest extends TestCase {
 
 		// [5]
 		s = sql().table("bbb").use("bbb", Boy.class);
-		assertEquals("BOY bbb", s.generateQuery());
+		assertEquals("BOY", s.generateQuery());
 		assertNotNull(s.getTableDescriptor("bbb"));
 
 		s = sql().table("bbb", null).use("bbb", Boy.class);
@@ -119,7 +119,7 @@ public class DbSlqBuilderTest extends TestCase {
 
 	public void testColumn() {
 		assertEquals("BOY.ID BOY", sql().column("Boy.id").table("Boy", null).generateQuery());
-		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table("Boy").generateQuery());
+		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table("Boy", "Boy").generateQuery());
 		assertEquals("b.ID BOY b", sql().column("b.id").table("Boy", "b").generateQuery());
 		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table(Boy.class).generateQuery());
 
@@ -136,14 +136,14 @@ public class DbSlqBuilderTest extends TestCase {
 		assertEquals("b.ID BOY b", sql().ref("b.+")._(" ").table("BadBoy", "b").generateQuery());
 		assertEquals("b BOY b", sql().ref("b").table("Boy", "b").generateQuery());
 		assertEquals("BOY BOY", sql().ref("Boy").table("Boy", null).generateQuery());
-		assertEquals("Boy BOY Boy", sql().ref("Boy").table("Boy").generateQuery());
+		assertEquals("Boy BOY Boy", sql().ref("Boy").table("Boy", "Boy").generateQuery());
 
 		assertEquals("b.ID BOY b", sql().ref("b.id")._(" ").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(TABLE_REFERENCE).generateQuery());
 		assertEquals("b.ID BOY b", sql().ref("b.id").table("Boy", "b").aliasColumnsAs(TABLE_NAME).generateQuery());
 
-		assertEquals("b.ID from BOY b", sql("$b.id from $T{b}").use("b", Boy.class).generateQuery());
+		assertEquals("b.ID from BOY b", sql("$b.id from $T{b b}").use("b", Boy.class).generateQuery());
 
 		assertEquals("BOY.ID BOY", sql().ref("Boy.id")._(" ").table("Boy", null).aliasColumnsAs(COLUMN_CODE).generateQuery());
 	}

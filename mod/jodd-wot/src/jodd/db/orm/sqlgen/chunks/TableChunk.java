@@ -55,7 +55,7 @@ public class TableChunk extends SqlChunk {
 			tableAlias = alias.length() == 0 ? null : alias;
 		} else {
 			this.entityName = tableRef;
-			this.tableAlias = tableRef;
+			this.tableAlias = null;
 		}
 	}
 

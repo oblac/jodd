@@ -166,11 +166,11 @@ public class DbEntitySql {
 		DbOrmManager dbOrmManager = DbOrmManager.getInstance();
 		DbEntityDescriptor dedFk = dbOrmManager.lookupType(value.getClass());
 
-		String fkColum =
+		String fkColumn =
 				uncapitalize(convertTableNameToClassName(dedFk.getTableName(), dbOrmManager.getTableNamePrefix(), dbOrmManager.getTableNameSuffix())) +
 				capitalize(convertColumnNameToPropertyName(dedFk.getIdColumnName()));
 		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
-		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColum)._(EQUALS).colvalue(idValue);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).colvalue(idValue);
 	}
 
 	// ---------------------------------------------------------------- find by Id

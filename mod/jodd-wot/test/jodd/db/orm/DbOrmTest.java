@@ -366,17 +366,17 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
-		DbSqlBuilder dt = sql("select g.*, b.* from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
+		DbSqlBuilder dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
-		dt = sql("select g.*, b.* from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
-		dt = sql("select g.*, b.* from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select g.*, b.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
@@ -385,19 +385,19 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 
 		badGirl.fooname = "Sandra";
-		dt = sql("select g.*, b.* from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		Object[] result = (Object[]) q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
-		dt = sql("select g.*, b.* from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		result = (Object[]) q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
-		dt = sql("select b.*, g.* from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
@@ -407,19 +407,19 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		badBoy.ajdi = Integer.valueOf(1);
 		badBoy.nejm = "Johny";
-		dt = sql("select b.*, g.* from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
-		dt = sql("select b.*, g.* from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
-		dt = sql("select b.*, g.* from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
+		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOrmQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
