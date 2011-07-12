@@ -204,7 +204,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 */
 	public void setJulianDate(JulianDateStamp jds) {
 		setJdOnly(jds.clone());
-		setParams();
+		calculateAdditionalData();
 	}
 
 	/**
@@ -223,14 +223,14 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Internal method for setting various parameters other then date/time.
+	 * Internal method for calculating various data other then date/time.
 	 */
-	private void setParams() {
+	private void calculateAdditionalData() {
 		this.leap = TimeUtil.isLeapYear(time.year);
 		this.dayofweek = calcDayOfWeek();
 		this.dayofyear = calcDayOfYear();
 		this.weekofyear = calcWeekOfYear(firstDayOfWeek, mustHaveDayOfFirstWeek);
-		this.weekofmonth = weekNumber(time.day, this.dayofweek);
+		this.weekofmonth = calcWeekNumber(time.day, this.dayofweek);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class JDateTime implements Comparable, Cloneable {
 			time.year = year; time.month = month; time.day = day;
 			time.hour = hour; time.minute = minute; time.second = second;
 			time.millisecond = millisecond;
-			setParams();
+			calculateAdditionalData();
 		} else {
 			setJulianDate(jdate);
 		}
@@ -447,7 +447,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 *         month before the first week, when there are days before the first
 	 *         week because the minimum days in the first week is more than one.
 	 */
-	private int weekNumber(int dayOfPeriod, int dayOfWeek) {
+	private int calcWeekNumber(int dayOfPeriod, int dayOfWeek) {
 		// Determine the day of the week of the first day of the period
 		// in question (either a year or a month).  Zero represents the
 		// first day of the week on this calendar.
@@ -529,7 +529,7 @@ public class JDateTime implements Comparable, Cloneable {
 			if (time.day < from) {
 				set(time.year, time.month, 0, time.hour, time.minute, time.second, time.millisecond);
 			} else {
-				setParams();
+				calculateAdditionalData();
 			}
 
 			/*

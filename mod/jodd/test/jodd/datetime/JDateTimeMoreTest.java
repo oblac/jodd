@@ -302,4 +302,50 @@ public class JDateTimeMoreTest extends TestCase {
 
 	}
 
+	public void testWeeks() {
+		JDateTime jdt = new JDateTime(2011, 1, 1);
+		assertEquals(0, jdt.getWeekOfMonth());	// in previous year!
+		assertEquals(52, jdt.getWeekOfYear());	// in previous year!
+
+		jdt.setDate(2011, 1, 2);
+		assertEquals(0, jdt.getWeekOfMonth());	// in previous year!
+		assertEquals(52, jdt.getWeekOfYear());	// in previous year!
+
+		jdt.setDate(2011, 1, 3);
+		assertEquals(JDateTime.MONDAY, jdt.getDayOfWeek());
+		assertEquals(1, jdt.getWeekOfMonth());
+		assertEquals(1, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 1, 9);
+		assertEquals(1, jdt.getWeekOfMonth());
+		assertEquals(1, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 1, 10);
+		assertEquals(2, jdt.getWeekOfMonth());
+		assertEquals(2, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 1, 30);
+		assertEquals(4, jdt.getWeekOfMonth());
+		assertEquals(4, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 1, 31);
+		assertEquals(5, jdt.getWeekOfMonth());	// ?
+		assertEquals(5, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 2, 1);
+		assertEquals(1, jdt.getWeekOfMonth());
+		assertEquals(5, jdt.getWeekOfYear());
+
+		jdt.setDate(2011, 3, 27);
+		assertEquals(4, jdt.getWeekOfMonth());
+		assertEquals(12, jdt.getWeekOfYear());
+
+
+		jdt.setDate(2011, 12, 31);
+		assertEquals(52, jdt.getWeekOfYear());
+		jdt.setDate(2012, 1, 1);
+		assertEquals(52, jdt.getWeekOfYear());
+
+	}
+
 }

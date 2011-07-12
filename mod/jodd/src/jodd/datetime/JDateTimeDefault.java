@@ -24,7 +24,7 @@ public class JDateTimeDefault {
 
 	public static JdtFormatter formatter = new DefaultFormatter();
 
-	public static int firstDayOfWeek = 1;
+	public static int firstDayOfWeek = JDateTime.MONDAY;
 
 	public static int mustHaveDayOfFirstWeek = 4;
 
