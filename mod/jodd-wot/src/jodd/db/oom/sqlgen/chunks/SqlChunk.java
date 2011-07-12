@@ -110,7 +110,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected TemplateData templateData;      // working template context
 
 	/**
-	 * Initializes chunk. Assigns {@link jodd.db.orm.sqlgen.TemplateData} to chunk.
+	 * Initializes chunk. Assigns {@link jodd.db.oom.sqlgen.TemplateData} to chunk.
 	 * If chunk needs some pre-processing, they should be done here.
 	 */
 	public void init(TemplateData templateData) {
@@ -129,9 +129,9 @@ public abstract class SqlChunk implements Cloneable {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(String entityName) {
-		DbEntityDescriptor ded = templateData.getDbOrmManager().lookupName(entityName);
+		DbEntityDescriptor ded = templateData.getDbOomManager().lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOrmManager.");
+			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
 		}
 		return ded;
 	}
@@ -140,7 +140,7 @@ public abstract class SqlChunk implements Cloneable {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(Class entity) {
-		DbEntityDescriptor ded = templateData.getDbOrmManager().lookupType(entity);
+		DbEntityDescriptor ded = templateData.getDbOomManager().lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: '" + entity.getName() + "'.");
 		}

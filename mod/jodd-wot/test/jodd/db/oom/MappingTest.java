@@ -57,12 +57,12 @@ public class MappingTest extends DbHsqldbTestCase {
 		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
 		executeUpdate(session, sql);
 
-		DbOrmManager dbOrm = DbOrmManager.getInstance();
-		dbOrm.registerEntity(Foo.class);
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.registerEntity(Foo.class);
 		SqlTypeManager.register(Boo.class, BooSqlType.class);
 		//SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);		// it is not required to register!
 
-		List<Foo> foos = new DbOrmQuery("select * from FOO").listAndClose(Foo.class);
+		List<Foo> foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);
 		assertEquals(1, foos.size());
 		Foo foo = foos.get(0);
 		assertEquals(1, foo.id);
@@ -101,7 +101,7 @@ public class MappingTest extends DbHsqldbTestCase {
 		foo.timestamp.setYear(108);
 		foo.decimal = new BigDecimal("34.12");
 		foo.decimal2 = new BigDecimal("1.099");
-		DbOrmQuery doq = new DbOrmQuery(DbEntitySql.update(foo));
+		DbOomQuery doq = new DbOomQuery(DbEntitySql.update(foo));
 		foo.jdt1.setDay(2);
 		foo.jdt1.setYear(3000);
 		foo.jdt2.setDay(3);
@@ -109,10 +109,10 @@ public class MappingTest extends DbHsqldbTestCase {
 		doq.executeUpdateAndClose();
 
 
-		doq = new DbOrmQuery(DbEntitySql.updateColumn(foo, "timestamp2", new JDateTime("2010-02-02 20:20:20.222")));
+		doq = new DbOomQuery(DbEntitySql.updateColumn(foo, "timestamp2", new JDateTime("2010-02-02 20:20:20.222")));
 		doq.executeUpdateAndClose();
 
-		foos = new DbOrmQuery("select * from FOO").listAndClose(Foo.class);
+		foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);
 		assertEquals(1, foos.size());
 		foo = foos.get(0);
 		assertEquals(1, foo.id);

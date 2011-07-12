@@ -11,7 +11,7 @@ import java.util.Iterator;
  */
 class DbListOneIterator<T> implements Iterator<T> {
 
-	protected DbOrmQuery query;
+	protected DbOomQuery query;
 	protected ResultSetMapper resultSetMapper;
 	protected boolean closeOnEnd;
 	protected Class type;
@@ -20,11 +20,11 @@ class DbListOneIterator<T> implements Iterator<T> {
 	// ---------------------------------------------------------------- ctors
 
 
-	DbListOneIterator(DbOrmQuery query, Class<T> type) {
+	DbListOneIterator(DbOomQuery query, Class<T> type) {
 		this(query, type, true);
 	}
 
-	DbListOneIterator(DbOrmQuery query, Class<T> type, boolean closeOnEnd) {
+	DbListOneIterator(DbOomQuery query, Class<T> type, boolean closeOnEnd) {
 		this.query = query;
 		this.resultSetMapper = query.executeAndBuildResultSetMapper();
 		this.type = (type == null ? resultSetMapper.resolveTables()[0] : type);

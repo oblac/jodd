@@ -2,13 +2,13 @@
 
 package jodd.joy.page;
 
-import jodd.db.oom.DbOrmQuery;
+import jodd.db.oom.DbOomQuery;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 
 import java.util.List;
 import java.util.Map;
 
-import static jodd.db.oom.DbOrmQuery.query;
+import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 
 public class MySqlPager {
@@ -42,7 +42,7 @@ public class MySqlPager {
 
 		int from = (page - 1) * pageSize;
 		DbSqlBuilder dbsql = sql("select SQL_CALC_FOUND_ROWS " + sql + " limit " + from + ", " + pageSize);
-		DbOrmQuery query = query(dbsql);
+		DbOomQuery query = query(dbsql);
 		query.setMaxRows(pageSize);
 		query.setFetchSize(pageSize);
 		query.setMap(params);

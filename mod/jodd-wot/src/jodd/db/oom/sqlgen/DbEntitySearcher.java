@@ -5,7 +5,7 @@ package jodd.db.oom.sqlgen;
 import jodd.db.DbSqlException;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbSqlGenerator;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.introspector.ClassDescriptor;
@@ -25,13 +25,13 @@ public class DbEntitySearcher implements DbSqlGenerator {
 
 	protected final Object entity;
 	protected final ClassDescriptor entityClassDescriptor;
-	protected final DbOrmManager dbOrmManager;
+	protected final DbOomManager dbOomManager;
 	protected final DbEntityDescriptor ded;
 
 	public DbEntitySearcher(Object entity) {
 		this.entity = entity;
-		this.dbOrmManager = DbOrmManager.getInstance();
-		this.ded = dbOrmManager.lookupType(entity.getClass());
+		this.dbOomManager = DbOomManager.getInstance();
+		this.ded = dbOomManager.lookupType(entity.getClass());
 		if (ded == null) {
 			throw new DbSqlException("Type '" + entity.getClass() + "' is not an database entity.");
 		}

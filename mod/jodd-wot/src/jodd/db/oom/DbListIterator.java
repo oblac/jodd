@@ -8,11 +8,11 @@ import java.util.Iterator;
 
 /**
  * Internal database iterator.
- * @see jodd.db.orm.DbListOneIterator
+ * @see jodd.db.oom.DbListOneIterator
  */
 class DbListIterator<T> implements Iterator<T> {
 
-	protected DbOrmQuery query;
+	protected DbOomQuery query;
 	protected ResultSetMapper resultSetMapper;
 	protected boolean closeOnEnd;
 	protected Class[] types;
@@ -21,10 +21,10 @@ class DbListIterator<T> implements Iterator<T> {
 	// ---------------------------------------------------------------- ctors
 
 
-	DbListIterator(DbOrmQuery query, Class[] types) {
+	DbListIterator(DbOomQuery query, Class[] types) {
 		this(query, types, true);
 	}
-	DbListIterator(DbOrmQuery query, Class[] types, boolean closeOnEnd) {
+	DbListIterator(DbOomQuery query, Class[] types, boolean closeOnEnd) {
 		this.query = query;
 		this.resultSetMapper = query.executeAndBuildResultSetMapper();
 		this.types = (types == null ? resultSetMapper.resolveTables() : types);

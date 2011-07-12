@@ -20,18 +20,18 @@ public class DbSlqBuilderTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOrmManager dbOrm = DbOrmManager.getInstance();
-		dbOrm.reset();
-		dbOrm.registerType(Girl.class);
-		dbOrm.registerType(BadGirl.class);
-		dbOrm.registerType(Boy.class);
-		dbOrm.registerType(BadBoy.class);
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.reset();
+		dbOom.registerType(Girl.class);
+		dbOom.registerType(BadGirl.class);
+		dbOom.registerType(Boy.class);
+		dbOom.registerType(BadBoy.class);
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		DbOrmManager dbOrm = DbOrmManager.getInstance();		
-		dbOrm.reset();
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.reset();
 	}
 	
 	public void testTable() {

@@ -2,9 +2,9 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.DbOrmException;
+import jodd.db.oom.DbOomException;
 
-public class DbSqlBuilderException extends DbOrmException {
+public class DbSqlBuilderException extends DbOomException {
 
 	public DbSqlBuilderException(Throwable t) {
 		super(t);

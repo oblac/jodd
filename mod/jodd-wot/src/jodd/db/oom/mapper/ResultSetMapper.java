@@ -8,7 +8,7 @@ import java.sql.ResultSet;
  * ResultSet mapper which implementations parse objects from one result set row.
  * There are two ways of mapping. The basic way is mapping against provided
  * entity types. The second, extended, way is auto-mapping, where no types
- * are provided. Instead, they are mapped by {@link jodd.db.orm.DbOrmManager} or
+ * are provided. Instead, they are mapped by {@link jodd.db.oom.DbOomManager} or
  * similar external class.
  * <p>
  * This interface also specifies some simple and most used ResultSet wrapper methods.

@@ -153,11 +153,11 @@ public class ColumnsSelectChunk extends SqlChunk {
 			query.append(AS);
 			switch (templateData.getColumnAliasType()) {
 				case TABLE_NAME:
-					query.append(tableName).append(templateData.getDbOrmManager().getColumnAliasSeparator()).append(column);
+					query.append(tableName).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
 					break;
 				case TABLE_REFERENCE:
 					templateData.registerColumnDataForTableRef(tableRef, tableName);
-					query.append(tableRef).append(templateData.getDbOrmManager().getColumnAliasSeparator()).append(column);
+					query.append(tableRef).append(templateData.getDbOomManager().getColumnAliasSeparator()).append(column);
 					break;
 				case COLUMN_CODE:
 					String code = templateData.registerColumnDataForColumnCode(tableName, column);

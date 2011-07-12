@@ -27,70 +27,70 @@ import java.util.Map;
  * </ul>
  *
  */
-public class DbOrmQuery extends DbQuery {
+public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- default ctors
 
-	public DbOrmQuery(Connection conn, String sqlString) {
+	public DbOomQuery(Connection conn, String sqlString) {
 		super(conn, sqlString);
 	}
-	public static DbOrmQuery query(Connection conn, String sqlString) {
-		return new DbOrmQuery(conn, sqlString);
+	public static DbOomQuery query(Connection conn, String sqlString) {
+		return new DbOomQuery(conn, sqlString);
 	}
 
 
-	public DbOrmQuery(DbSession session, String sqlString) {
+	public DbOomQuery(DbSession session, String sqlString) {
 		super(session, sqlString);
 	}
-	public static DbOrmQuery query(DbSession session, String sqlString) {
-		return new DbOrmQuery(session, sqlString);
+	public static DbOomQuery query(DbSession session, String sqlString) {
+		return new DbOomQuery(session, sqlString);
 	}
 
 
-	public DbOrmQuery(String sqlString) {
+	public DbOomQuery(String sqlString) {
 		super(sqlString);
 	}
-	public static DbOrmQuery query(String sqlString) {
-		return new DbOrmQuery(sqlString);
+	public static DbOomQuery query(String sqlString) {
+		return new DbOomQuery(sqlString);
 	}
 
 	// ---------------------------------------------------------------- sqlgen ctors
 
 	protected DbSqlGenerator sqlgen;
 
-	public DbOrmQuery(Connection conn, DbSqlGenerator sqlgen) {
+	public DbOomQuery(Connection conn, DbSqlGenerator sqlgen) {
 		super(conn, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOrmQuery query(Connection conn, DbSqlGenerator sqlgen) {
-		return new DbOrmQuery(conn, sqlgen);
+	public static DbOomQuery query(Connection conn, DbSqlGenerator sqlgen) {
+		return new DbOomQuery(conn, sqlgen);
 	}
 
-	public DbOrmQuery(DbSession session, DbSqlGenerator sqlgen) {
+	public DbOomQuery(DbSession session, DbSqlGenerator sqlgen) {
 		super(session, sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOrmQuery query(DbSession session, DbSqlGenerator sqlgen) {
-		return new DbOrmQuery(session, sqlgen);
+	public static DbOomQuery query(DbSession session, DbSqlGenerator sqlgen) {
+		return new DbOomQuery(session, sqlgen);
 	}
 
-	public DbOrmQuery(DbSqlGenerator sqlgen) {
+	public DbOomQuery(DbSqlGenerator sqlgen) {
 		super(sqlgen.generateQuery());
 		this.sqlgen = sqlgen;
 	}
-	public static DbOrmQuery query(DbSqlGenerator sqlgen) {
-		return new DbOrmQuery(sqlgen);
+	public static DbOomQuery query(DbSqlGenerator sqlgen) {
+		return new DbOomQuery(sqlgen);
 	}
 
 	// ---------------------------------------------------------------- initialization
 
-	protected DbOrmManager dbOrmManager = DbOrmManager.getInstance();
+	protected DbOomManager dbOomManager = DbOomManager.getInstance();
 
 	/**
 	 * Returns used ORM manager.
 	 */
-	public DbOrmManager getManager() {
-		return dbOrmManager;
+	public DbOomManager getManager() {
+		return dbOomManager;
 	}
 
 	/**
@@ -131,12 +131,12 @@ public class DbOrmQuery extends DbQuery {
 
 	protected String[] hints;
 
-	protected JoinHintResolver hintResolver = dbOrmManager.getHintResolver();
+	protected JoinHintResolver hintResolver = dbOomManager.getHintResolver();
 
 	/**
 	 * Specifies hints for the query.
 	 */
-	public DbOrmQuery withHints(String hint) {
+	public DbOomQuery withHints(String hint) {
 		this.hints = StringUtil.splitc(hint, ',');
 		return this;
 	}
@@ -144,7 +144,7 @@ public class DbOrmQuery extends DbQuery {
 	/**
 	 * Specifies multiple hints for the query.
 	 */
-	public DbOrmQuery withHints(String[] hints) {
+	public DbOomQuery withHints(String[] hints) {
 		this.hints = hints;
 		return this;
 	}
@@ -171,7 +171,7 @@ public class DbOrmQuery extends DbQuery {
 	 * Factory for result sets mapper.
 	 */
 	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
-		return dbOrmManager.createResultSetMapper(resultSet, sqlgen != null ? sqlgen.getColumnData() : null);
+		return dbOomManager.createResultSetMapper(resultSet, sqlgen != null ? sqlgen.getColumnData() : null);
 	}
 
 

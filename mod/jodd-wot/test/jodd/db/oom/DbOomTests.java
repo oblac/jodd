@@ -6,13 +6,13 @@ import junit.framework.TestSuite;
 import junit.framework.Test;
 import jodd.db.oom.sqlgen.DbEntitySqlTest;
 
-public class DbOrmTests extends TestSuite {
+public class DbOomTests extends TestSuite {
 
-	public DbOrmTests() {
+	public DbOomTests() {
 		super("jodd.db.orm test suite");
 		addTestSuite(DbNameUtilTest.class);
-		addTestSuite(DbOrmTest.class);
-		addTestSuite(DbOrm2Test.class);
+		addTestSuite(DbOomTest.class);
+		addTestSuite(DbOom2Test.class);
 		addTestSuite(DbSqlTemplateTest.class);
 		addTestSuite(DbSlqBuilderTest.class);
 		addTestSuite(JointHintResolverTest.class);
@@ -21,7 +21,7 @@ public class DbOrmTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new DbOrmTests();
+		return new DbOomTests();
 	}
 
 }

@@ -7,12 +7,12 @@ import jodd.bean.BeanUtil;
 /**
  * Some utilities.
  */
-public class DbOrmUtil {
+public class DbOomUtil {
 
 	/**
 	 * Populates entity with generated column values from executed query.
 	 */
-	public static void populateGeneratedKeys(Object entity, DbOrmQuery query) {
+	public static void populateGeneratedKeys(Object entity, DbOomQuery query) {
 		String[] generatedColumns = query.getGeneratedColumnNames();
 		if (generatedColumns == null) {
 			return;

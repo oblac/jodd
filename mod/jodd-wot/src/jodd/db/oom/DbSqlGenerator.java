@@ -24,7 +24,7 @@ public interface DbSqlGenerator {
 	Map<String, ParameterValue> getQueryParameters();
 
 	/**
-	 * Returns an optional map of table and column names, used by {@link jodd.db.orm.mapper.ResultSetMapper}.
+	 * Returns an optional map of table and column names, used by {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 * May be <code>null</code>.
 	 */
 	Map<String, ColumnData> getColumnData();

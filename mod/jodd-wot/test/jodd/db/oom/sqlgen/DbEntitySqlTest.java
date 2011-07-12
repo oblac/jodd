@@ -2,8 +2,8 @@
 
 package jodd.db.oom.sqlgen;
 
+import jodd.db.oom.DbOomManager;
 import junit.framework.TestCase;
-import jodd.db.oom.DbOrmManager;
 import jodd.db.oom.test.Girl;
 import jodd.db.oom.test.Boy;
 import jodd.db.oom.test.BadBoy;
@@ -17,12 +17,12 @@ public class DbEntitySqlTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOrmManager dbOrm = DbOrmManager.getInstance();
-		if (dbOrm.isRegistered(Girl.class) == false) {
-			dbOrm.registerType(Boy.class);
-			dbOrm.registerType(BadBoy.class);
-			dbOrm.registerType(BadGirl.class);
-			dbOrm.registerType(Girl.class);
+		DbOomManager dbOom = DbOomManager.getInstance();
+		if (dbOom.isRegistered(Girl.class) == false) {
+			dbOom.registerType(Boy.class);
+			dbOom.registerType(BadBoy.class);
+			dbOom.registerType(BadGirl.class);
+			dbOom.registerType(Girl.class);
 		}
 	}
 

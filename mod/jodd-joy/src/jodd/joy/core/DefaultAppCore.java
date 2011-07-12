@@ -5,8 +5,8 @@ package jodd.joy.core;
 import jodd.db.DbDefault;
 import jodd.db.DbSessionProvider;
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.oom.DbOrmManager;
-import jodd.db.oom.config.AutomagicDbOrmConfigurator;
+import jodd.db.oom.DbOomManager;
+import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.AppUtil;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
@@ -43,7 +43,7 @@ public abstract class DefaultAppCore {
 	 */
 	public static final String PETITE_APPCORE = "app";		// AppCore
 	public static final String PETITE_DBPOOL = "dbpool";	// database pool
-	public static final String PETITE_DBORM = "dbOrm";		// DbOrm instance
+	public static final String PETITE_DBOOM = "dboom";		// DbOom instance
 	public static final String PETITE_APPINIT = "appInit";	// init bean
 
 	/**
@@ -278,7 +278,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Initializes database. First, creates connection pool.
-	 * and transaction manager. Then, Jodds DbOrmManager is
+	 * and transaction manager. Then, Jodds DbOomManager is
 	 * configured. It is also configured automagically, by scanning
 	 * the class path for entities.
 	 */
@@ -303,14 +303,14 @@ public abstract class DefaultAppCore {
 		DbDefault.connectionProvider = connectionProvider;
 		DbDefault.sessionProvider = sessionProvider;
 
-		DbOrmManager dbOrmManager = createDbOrmManager();
-		DbOrmManager.setInstance(dbOrmManager);
-		petite.addBean(PETITE_DBORM, dbOrmManager);
+		DbOomManager dbOomManager = createDbOomManager();
+		DbOomManager.setInstance(dbOomManager);
+		petite.addBean(PETITE_DBOOM, dbOomManager);
 
 		// automatic configuration
-		AutomagicDbOrmConfigurator dbcfg = new AutomagicDbOrmConfigurator();
+		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 		dbcfg.setIncludedEntries(scanningPath);
-		dbcfg.configure(dbOrmManager);
+		dbcfg.configure(dbOomManager);
 	}
 
 	/**
@@ -321,10 +321,10 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Creates DbOrmManager.
+	 * Creates DbOomManager.
 	 */
-	protected DbOrmManager createDbOrmManager() {
-		return DbOrmManager.getInstance();
+	protected DbOomManager createDbOomManager() {
+		return DbOomManager.getInstance();
 	}
 
 	/**

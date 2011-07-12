@@ -3,7 +3,7 @@
 package jodd;
 
 import jodd.db.DbTests;
-import jodd.db.oom.DbOrmTests;
+import jodd.db.oom.DbOomTests;
 import jodd.jtx.JtxTests;
 import jodd.madvoc.MadvocTests;
 import jodd.paramo.ParamoTests;
@@ -21,7 +21,7 @@ public class TestJoddWot {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Jodd WOT Java Library Test Suite");
 		suite.addTest(DbTests.suite());
-		suite.addTest(DbOrmTests.suite());
+		suite.addTest(DbOomTests.suite());
 		suite.addTest(JtxTests.suite());
 		suite.addTest(PetiteTests.suite());
 		suite.addTest(MadvocTests.suite());

@@ -16,28 +16,28 @@ import jodd.db.oom.test.Boy;
 import jodd.db.oom.test.Boy3;
 import jodd.db.oom.test.Girl;
 import jodd.db.oom.test.IdName;
-import static jodd.db.oom.DbOrmQuery.query;
+import static jodd.db.oom.DbOomQuery.query;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class DbOrmTest extends DbHsqldbTestCase {
+public class DbOomTest extends DbHsqldbTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		DbOrmManager dbOrm = DbOrmManager.getInstance();
-		dbOrm.registerEntity(Girl.class);
-		dbOrm.registerEntity(BadBoy.class);
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.registerEntity(Girl.class);
+		dbOom.registerEntity(BadBoy.class);
 	}	
 	
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DbOrmManager dbOrm = DbOrmManager.getInstance();
-		dbOrm.reset();
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.reset();
 	}
 	
 	public void testOrm() {
@@ -49,7 +49,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().executeUpdateAndClose());
 		assertEquals(0, session.getTotalQueries());
 
-		DbOrmQuery q2 = new DbOrmQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
+		DbOomQuery q2 = new DbOomQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
 		q2.setDebugMode();
 		assertEquals("insert into GIRL (ID, NAME) values (:girl.id, :girl.name)", q2.getQueryString());
 		q2.init();
@@ -74,7 +74,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- girl
 
-		DbOrmQuery q = new DbOrmQuery("select * from GIRL order by ID");
+		DbOomQuery q = new DbOomQuery("select * from GIRL order by ID");
 
 		Girl girl = q.findOne(Girl.class);
 		checkGirl1(girl);
@@ -165,7 +165,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- girl2
 
-		q = new DbOrmQuery("select girl.*, girl.* from GIRL girl order by girl.ID");
+		q = new DbOomQuery("select girl.*, girl.* from GIRL girl order by girl.ID");
 		list = q.list(Girl.class, Girl.class);
 		assertEquals(3, list.size());
 		assertEquals(2, ((Object[])list.get(2)).length);
@@ -189,7 +189,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- boy
 
-		q = new DbOrmQuery("select * from BOY order by ID");
+		q = new DbOomQuery("select * from BOY order by ID");
 
 		BadBoy badBoy = q.findOne(BadBoy.class);
 		checkBoy(badBoy);
@@ -246,7 +246,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- join
 
 		
-		q = new DbOrmQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
+		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
 		girl = q.findOne(Girl.class);
 		checkGirl3(girl);
@@ -270,14 +270,14 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 
 
-		q = new DbOrmQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
+		q = new DbOomQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
 		badBoy = (BadBoy) q.withHints("BadBoy.girl, BadBoy").find();
 		girl = badBoy.girl;
 		checkGirl3(girl);
 		checkBoy(badBoy);
 		q.close();
 
-		q = new DbOrmQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
+		q = new DbOomQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
 		List<BadBoy> boys1 = q.withHints("BadBoy.girl, BadBoy").list(Girl.class, BadBoy.class);
 		assertEquals(1, boys1.size());
 		badBoy = boys1.get(0);
@@ -298,8 +298,8 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- join
 
-		//q = new DbOrmQuery("select * from GIRL, BOY where BOY.GIRL_ID=GIRL.ID");
-		q = new DbOrmQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
+		//q = new DbOomQuery("select * from GIRL, BOY where BOY.GIRL_ID=GIRL.ID");
+		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
 		badBoy = q.findOne(BadBoy.class);
 		assertNull(badBoy);         // wrong mapping order, girl is first!
@@ -334,7 +334,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- left join
 
-		q = new DbOrmQuery("select * from GIRL left join BOY on GIRL.ID=BOY.GIRL_ID order by GIRL.ID");
+		q = new DbOomQuery("select * from GIRL left join BOY on GIRL.ID=BOY.GIRL_ID order by GIRL.ID");
 
 		list = q.list(Girl.class, Boy3.class);
 		assertEquals(3, list.size());
@@ -367,17 +367,17 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 		DbSqlBuilder dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
 		dt = sql("select g.*, b.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		list = q.list(BadBoy.class, BadGirl.class);
 		assertEquals(3, list.size());
 
@@ -386,19 +386,19 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		badGirl.fooname = "Sandra";
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		Object[] result = (Object[]) q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
@@ -408,26 +408,26 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		badBoy.ajdi = Integer.valueOf(1);
 		badBoy.nejm = "Johny";
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 
 		dt = sql("select $C{g.fooid}, $C{b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		result = (Object[]) q.find(BadGirl.class, BadBoy.class);
 		badGirl = (BadGirl) result[0];
 		checkBoy((BadBoy) result[1]);
@@ -439,7 +439,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- special
 
 		dt = sql("select $g.fooid * 2 as did, $C{g.+} from $T{g} order by $g.fooid").aliasColumnsAs(COLUMN_CODE).use("g", BadGirl.class);
-		q = new DbOrmQuery(dt);
+		q = new DbOomQuery(dt);
 		list = q.list(null, BadGirl.class); // explicitly ignore the first column 'did'
 		assertEquals(3, list.size());
 		assertEquals(1, ((BadGirl)((Object[])list.get(0))[1]).fooid.intValue());
@@ -456,7 +456,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		assertEquals(3, ((BadGirl)((Object[])list.get(2))[1]).fooid.intValue());
 
 
-		q = new DbOrmQuery("select g.ID * 2 as did, g.ID from Girl g order by g.ID");
+		q = new DbOomQuery("select g.ID * 2 as did, g.ID from Girl g order by g.ID");
 		list = q.list(Integer.class, BadGirl.class);
 		assertEquals(3, list.size());
 		assertEquals(2, ((Integer)((Object[])list.get(0))[0]).intValue());
@@ -467,7 +467,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		assertEquals(3, ((BadGirl)((Object[])list.get(2))[1]).fooid.intValue());
 
 
-		q = new DbOrmQuery(sql("select $g.id+$b.id as total, $C{g.*}, $g.id*2 as gdub, $C{b.*}, $g.id/3.0, $g.name from $T{g}, $T{b} where $b.girlId=$g.id").
+		q = new DbOomQuery(sql("select $g.id+$b.id as total, $C{g.*}, $g.id*2 as gdub, $C{b.*}, $g.id/3.0, $g.name from $T{g}, $T{b} where $b.girlId=$g.id").
 				aliasColumnsAs(COLUMN_CODE).use("b", Boy.class).use("g", Girl.class));
 		list = q.list(Integer.class, Girl.class, Long.class, Boy.class, Float.class, String.class);
 		assertEquals(1, list.size());
@@ -482,21 +482,21 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		assertEquals("Monica", (String) result[5]);
 
 
-		q = new DbOrmQuery(sql("select $C{g.*}, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = new DbOomQuery(sql("select $C{g.*}, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(Girl.class, Girl.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
 		checkGirl3((Girl) result[0]);
 		checkGirl3((Girl) result[1]);
 
-		q = new DbOrmQuery(sql("select $C{g.*}, $g.name from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = new DbOomQuery(sql("select $C{g.*}, $g.name from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(Girl.class, String.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
 		checkGirl3((Girl) result[0]);
 		assertEquals("Monica", result[1]);
 
-		q = new DbOrmQuery(sql("select $g.name, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
+		q = new DbOomQuery(sql("select $g.name, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
 		list = q.list(String.class, Girl.class);
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
@@ -517,7 +517,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 
-		DbOrmQuery f = DbEntitySql.find(girl).aliasColumnsAs(null).query();
+		DbOomQuery f = DbEntitySql.find(girl).aliasColumnsAs(null).query();
 		f.setDebugMode();
 		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=:girl.id)", f.toString());
 		f.init();
@@ -566,7 +566,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 
 		DbSqlGenerator g = DbEntitySql.deleteById(badGirl);
-		f = new DbOrmQuery(g);
+		f = new DbOomQuery(g);
 		f.executeUpdateAndClose();
 		assertTrue(f.isClosed());
 
@@ -584,7 +584,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		girl = new Girl();
 		girl.id = 1;
 		girl.name = "A%";
-		f = new DbOrmQuery("select * from GIRL where id >= :girl.id and name like :girl.name");
+		f = new DbOomQuery("select * from GIRL where id >= :girl.id and name like :girl.name");
 		f.setDebugMode();
 		f.setBean("girl", girl);
 		assertEquals("select * from GIRL where id >= 1 and name like 'A%'", f.toString());
@@ -656,7 +656,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- double table names
 		
-		q = new DbOrmQuery("select g.*, g.* from GIRL g order by g.ID");
+		q = new DbOomQuery("select g.*, g.* from GIRL g order by g.ID");
 		//noinspection unchecked
 		List<Object[]> g2 = q.list(Girl.class, Girl.class);
 		assertEquals(2, g2.size());
@@ -666,7 +666,7 @@ public class DbOrmTest extends DbHsqldbTestCase {
 		checkGirl1Alt((Girl) g2o[1]);
 		q.close();
 
-		q = new DbOrmQuery("select g.*, g2.* from GIRL g, GIRL g2 where g.ID=1 and g2.ID=3");
+		q = new DbOomQuery("select g.*, g2.* from GIRL g, GIRL g2 where g.ID=1 and g2.ID=3");
 		//noinspection unchecked
 		g2 = q.list(Girl.class, Girl.class);
 		assertEquals(1, g2.size());

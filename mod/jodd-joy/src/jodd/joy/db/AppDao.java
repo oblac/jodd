@@ -6,7 +6,7 @@ import jodd.db.oom.sqlgen.DbEntitySql;
 import static jodd.db.oom.sqlgen.DbEntitySql.insert;
 import static jodd.db.oom.sqlgen.DbEntitySql.updateAll;
 import static jodd.db.oom.sqlgen.DbEntitySql.findByColumn;
-import static jodd.db.oom.DbOrmQuery.query;
+import static jodd.db.oom.DbOomQuery.query;
 import jodd.db.DbQuery;
 import jodd.petite.meta.PetiteBean;
 

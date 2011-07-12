@@ -2,7 +2,7 @@
 
 package jodd.db.oom.sqlgen;
 
-import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.ColumnAliasType;
@@ -21,18 +21,18 @@ public abstract class TemplateData {
 
 	private static final String COL_CODE_PREFIX = "col_";
 	
-	public final DbOrmManager dbOrmManager;
+	public final DbOomManager dbOomManager;
 
 	protected TemplateData() {
-		dbOrmManager = DbOrmManager.getInstance();
-		columnAliasType = dbOrmManager.getDefaultColumnAliasType();
+		dbOomManager = DbOomManager.getInstance();
+		columnAliasType = dbOomManager.getDefaultColumnAliasType();
 	}
 
 	/**
-	 * Returns associated {@link jodd.db.orm.DbOrmManager}.
+	 * Returns associated {@link jodd.db.oom.DbOomManager}.
 	 */
-	public DbOrmManager getDbOrmManager() {
-		return dbOrmManager;
+	public DbOomManager getDbOomManager() {
+		return dbOomManager;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class TemplateData {
 		if (hints != null) {
 			hints.clear();
 		}
-		columnAliasType = dbOrmManager.getDefaultColumnAliasType();
+		columnAliasType = dbOomManager.getDefaultColumnAliasType();
 	}
 
 
@@ -226,9 +226,9 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws exception if entity name not found.
 	 */
 	protected DbEntityDescriptor lookupName(String entityName) {
-		DbEntityDescriptor ded = dbOrmManager.lookupName(entityName);
+		DbEntityDescriptor ded = dbOomManager.lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOrmManager.");
+			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
 		}
 		return ded;
 	}
@@ -237,7 +237,7 @@ public abstract class TemplateData {
 	 * Lookups for entity name and throws an exception if entity type is invalid.
 	 */
 	protected DbEntityDescriptor lookupType(Class entity) {
-		DbEntityDescriptor ded = dbOrmManager.lookupType(entity);
+		DbEntityDescriptor ded = dbOomManager.lookupType(entity);
 		if (ded == null) {
 			throw new DbSqlBuilderException("Invalid or not-persistent entity type: '" + entity.getName() + "'.");
 		}

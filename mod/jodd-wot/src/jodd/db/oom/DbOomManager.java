@@ -13,31 +13,31 @@ import java.util.Map;
 /**
  * Global DB-ORM mapping definitions, prefixes and cache.
  * <p>
- * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.orm.mapper.ResultSetMapper}
+ * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper}
  * to lookup for an entity from table name. Table names are read from result-set meta data, for example.
  * Moreover, it is not needed to use mappings at all: in that case just provide entity types during result set to
  * objects conversion.
  */
-public class DbOrmManager {
+public class DbOomManager {
 
-	protected DbOrmManager() {}
+	protected DbOomManager() {}
 
 	// ---------------------------------------------------------------- singleton
 
-	private static DbOrmManager dbOrmManager = new DbOrmManager();
+	private static DbOomManager dbOomManager = new DbOomManager();
 
 	/**
 	 * Returns current DB-ORM manager instance.
 	 */
-	public static DbOrmManager getInstance() {
-		return dbOrmManager;
+	public static DbOomManager getInstance() {
+		return dbOomManager;
 	}
 
 	/**
 	 * Sets new instance for DB-ORM manager.
 	 */
-	public static void setInstance(DbOrmManager ormManager) {
-		dbOrmManager = ormManager;
+	public static void setInstance(DbOomManager oomManager) {
+		dbOomManager = oomManager;
 	}
 
 
@@ -170,7 +170,7 @@ public class DbOrmManager {
 
 
 	/**
-	 * Lookups for {@link jodd.db.orm.DbEntityDescriptor} that was registered with this manager.
+	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
 	 * Returns <code>null</code> if name not found.
 	 */
 	public DbEntityDescriptor lookupName(String typeName) {
@@ -178,7 +178,7 @@ public class DbOrmManager {
 	}
 
 	/**
-	 * Lookups for {@link jodd.db.orm.DbEntityDescriptor} that was registered with this manager.
+	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
 	 * Returns <code>null</code> if table name not found.
 	 */
 	public DbEntityDescriptor lookupTableName(String typeName) {
@@ -192,11 +192,11 @@ public class DbOrmManager {
 		DbEntityDescriptor ded = createDbEntityDescriptor(type);
 		DbEntityDescriptor existing = descriptors.put(type, ded);
 		if (existing != null) {
-			throw new DbOrmException("Type registration failed! Type '" + existing.getType() + "' already registered.");
+			throw new DbOomException("Type registration failed! Type '" + existing.getType() + "' already registered.");
 		}
 		existing = entityNames.put(ded.getEntityName(), ded);
 		if (existing != null) {
-			throw new DbOrmException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity class: " + existing.getType());
+			throw new DbOomException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity class: " + existing.getType());
 		}
 		return ded;
 	}
@@ -209,7 +209,7 @@ public class DbOrmManager {
 		DbEntityDescriptor ded = registerType(type);
 		DbEntityDescriptor existing = tableNames.put(ded.getTableName(), ded);
 		if (existing != null) {
-			throw new DbOrmException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity class: " + existing.getType());
+			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity class: " + existing.getType());
 		}
 		return ded;
 	}
@@ -330,7 +330,7 @@ public class DbOrmManager {
 	// ---------------------------------------------------------------- result set mapper
 
 	/**
-	 * Creates a new instance of {@link jodd.db.orm.mapper.ResultSetMapper}.
+	 * Creates a new instance of {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 */
 	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases) {
 		return new DefaultResultSetMapper(resultSet, columnAliases, this);
@@ -346,7 +346,7 @@ public class DbOrmManager {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOrmException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
+			throw new DbOomException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
 		}
 	}
 

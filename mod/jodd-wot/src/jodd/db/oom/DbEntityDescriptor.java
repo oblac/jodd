@@ -42,7 +42,7 @@ public class DbEntityDescriptor {
 	}
 
 	/**
-	 * Returns <code>true</code> if type is annotated with {@link jodd.db.orm.meta.DbTable}.
+	 * Returns <code>true</code> if type is annotated with {@link jodd.db.oom.meta.DbTable}.
 	 */
 	public boolean isAnnotated() {
 		return isAnnotated;
@@ -118,7 +118,7 @@ public class DbEntityDescriptor {
 			}
 		}
 		if (decList.isEmpty()) {
-			throw new DbOrmException("Entity '" + type + "' doesn't have any column mappings.");
+			throw new DbOomException("Entity '" + type + "' doesn't have any column mappings.");
 		}
 		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
 		FastMergeSort.doSort(columnDescriptors);
@@ -206,9 +206,9 @@ public class DbEntityDescriptor {
 	private void ensureSingleIdColumn() {
 		init();
 		if (idColumnDescriptors == null) {
-			throw new DbOrmException("Entity '" + entityName + "' has no identity column.");
+			throw new DbOomException("Entity '" + entityName + "' has no identity column.");
 		} else if (idColumnDescriptors.length > 1) {
-			throw new DbOrmException("Entity '" + entityName + "' has more then one (" + idColumnDescriptors.length + ") identity columns.");
+			throw new DbOomException("Entity '" + entityName + "' has more then one (" + idColumnDescriptors.length + ") identity columns.");
 		}
 
 	}

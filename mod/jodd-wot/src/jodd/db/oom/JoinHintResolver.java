@@ -53,7 +53,7 @@ public class JoinHintResolver {
 				String key = hint.substring(0, ndx);
 				Object value = context.get(key);
 				if (value == null) {
-					throw new DbOrmException("Context key '" + key + "' doesn't exist.");
+					throw new DbOomException("Context key '" + key + "' doesn't exist.");
 				}
 				BeanUtil.setDeclaredPropertySilent(value, hint.substring(ndx + 1), data[i]);
 			} else {

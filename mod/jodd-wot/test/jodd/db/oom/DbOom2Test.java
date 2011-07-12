@@ -16,11 +16,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DbOrm2Test extends DbH2TestCase {
+public class DbOom2Test extends DbH2TestCase {
 
 
 	public void testOrm() {
-		DbOrmManager.getInstance().reset();
+		DbOomManager.getInstance().reset();
 
 		DbSession session = new DbThreadSession(cp);
 
@@ -53,7 +53,7 @@ public class DbOrm2Test extends DbH2TestCase {
 
 		// ---------------------------------------------------------------- girls
 
-		DbOrmQuery q = new DbOrmQuery("select * from GIRL where ID=1");
+		DbOomQuery q = new DbOomQuery("select * from GIRL where ID=1");
 
 		Girl girl = q.findOne(Girl.class);
 		checkGirl1(girl);
@@ -67,21 +67,21 @@ public class DbOrm2Test extends DbH2TestCase {
 		try {
 			q.findOne();		// this will fail since no entity is registered!
 			fail();
-		} catch (DbOrmException doex) {
+		} catch (DbOomException doex) {
 			// ignore
 		}
 
-		assertEquals(2, DbOrmManager.getInstance().getTotalTypes());
-		assertEquals(0, DbOrmManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOrmManager.getInstance().getTotalNames());
+		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
+		assertEquals(0, DbOomManager.getInstance().getTotalTableNames());
+		assertEquals(2, DbOomManager.getInstance().getTotalNames());
 
-		DbOrmManager.getInstance().registerEntity(Girl.class, true);
+		DbOomManager.getInstance().registerEntity(Girl.class, true);
 		girl = (Girl) q.findOne();
 		checkGirl1(girl);
 
-		assertEquals(2, DbOrmManager.getInstance().getTotalTypes());
-		assertEquals(1, DbOrmManager.getInstance().getTotalTableNames());
-		assertEquals(2, DbOrmManager.getInstance().getTotalNames());
+		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
+		assertEquals(1, DbOomManager.getInstance().getTotalTableNames());
+		assertEquals(2, DbOomManager.getInstance().getTotalNames());
 
 		q.close();
 
@@ -96,21 +96,21 @@ public class DbOrm2Test extends DbH2TestCase {
 
 		DbSession session = new DbThreadSession(cp);
 
-		DbOrmQuery q = new DbOrmQuery("insert into GIRL (NAME) values('Janna')");
+		DbOomQuery q = new DbOomQuery("insert into GIRL (NAME) values('Janna')");
 		q.setGeneratedColumns();
 		q.executeUpdate();
 		long key = q.getGeneratedKey();
 		assertEquals(4, key);
 		q.close();
 
-		q = new DbOrmQuery("insert into GIRL (NAME) values('Janna2')");
+		q = new DbOomQuery("insert into GIRL (NAME) values('Janna2')");
 		q.setGeneratedColumns("ID", "TIME");
 		q.executeUpdate();
 		Long Key = q.findGeneratedKey(Long.class);
 		assertEquals(5, Key.longValue());
 		q.close();
 
-		q = new DbOrmQuery("insert into GIRL (NAME) values('Sasha')");
+		q = new DbOomQuery("insert into GIRL (NAME) values('Sasha')");
 		q.setGeneratedColumns("ID, TIME");
 		q.executeUpdate();
 		ResultSet rs = q.getGeneratedColumns();
@@ -138,13 +138,13 @@ public class DbOrm2Test extends DbH2TestCase {
 
 	public void testGeneratedValue() {
 		DbSession session = new DbThreadSession(cp);
-		DbOrmManager.getInstance().registerEntity(Girl2.class, true);
+		DbOomManager.getInstance().registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
-		DbOrmQuery q = DbEntitySql.insert(g2).query();
+		DbOomQuery q = DbEntitySql.insert(g2).query();
 		assertEquals("insert into GIRL (NAME) values (:girl2.name)", q.getQueryString());
 		q.setGeneratedColumns("ID");
 		q.executeUpdate();
-		DbOrmUtil.populateGeneratedKeys(g2, q);
+		DbOomUtil.populateGeneratedKeys(g2, q);
 		//g2.id = Integer.valueOf((int) q.getGeneratedKey());
 		q.close();
 		assertEquals(7, g2.id.intValue());
@@ -163,7 +163,7 @@ public class DbOrm2Test extends DbH2TestCase {
 	public void testLike() {
 		DbSession session = new DbThreadSession(cp);
 
-		DbOrmQuery q = DbSqlBuilder.sql("select * from $T{Girl g} where $g.name like :what order by $g.id").query();
+		DbOomQuery q = DbSqlBuilder.sql("select * from $T{Girl g} where $g.name like :what order by $g.id").query();
 		q.setString("what", "%anna%");
 		List<Girl2> girls = q.list(Girl2.class);
 		assertEquals(2, girls.size());

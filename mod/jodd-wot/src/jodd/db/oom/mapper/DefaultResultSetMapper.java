@@ -5,8 +5,8 @@ package jodd.db.oom.mapper;
 import jodd.bean.BeanUtil;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOrmManager;
-import jodd.db.oom.DbOrmException;
+import jodd.db.oom.DbOomManager;
+import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * <b>Preparation</b><br>
  * Default mapper reads RS column and table names from RS meta-data and external maps, if provided.
  * Since column name is always available in RS meta-data, it may be used to hold table name information.
- * Column names may contain table code separator ({@link jodd.db.orm.DbOrmManager#getColumnAliasSeparator()} that
+ * Column names may contain table code separator ({@link jodd.db.oom.DbOomManager#getColumnAliasSeparator()} that
  * divides column name to table reference and column name. Here, table reference may be either table name or
  * table alias. When it is table alias, external alias-to-name map must be provided.
  * Hence, this defines the table name, and there is no need to read it from RS meta-data.
@@ -61,7 +61,7 @@ import java.util.ArrayList;
  */
 public class DefaultResultSetMapper implements ResultSetMapper {
 
-	protected final DbOrmManager dbOrmManager;
+	protected final DbOomManager dbOomManager;
 	protected final ResultSet rs;
 
 	protected final int totalColumns;			// total number of columns
@@ -73,21 +73,21 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	// ---------------------------------------------------------------- ctor
 
-	public DefaultResultSetMapper(ResultSet rs, DbOrmManager dbOrmManager) {
-		this(rs, null, dbOrmManager);
+	public DefaultResultSetMapper(ResultSet rs, DbOomManager dbOomManager) {
+		this(rs, null, dbOomManager);
 	}
 
 	/**
 	 * Reads RS meta-data for column and table names.
 	 */
-	public DefaultResultSetMapper(ResultSet rs, Map<String, ColumnData> columnAliases, DbOrmManager ormManager) {
-		this.dbOrmManager = ormManager;
+	public DefaultResultSetMapper(ResultSet rs, Map<String, ColumnData> columnAliases, DbOomManager oomManager) {
+		this.dbOomManager = oomManager;
 		this.rs = rs;
 		this.resultColumns = new HashSet<String>();
 		try {
 			ResultSetMetaData rsMetaData = rs.getMetaData();
 			if (rsMetaData == null) {
-				throw new DbOrmException("JDBC driver does not provide meta-data.");
+				throw new DbOomException("JDBC driver does not provide meta-data.");
 			}
 			totalColumns = rsMetaData.getColumnCount();
 			columnNames = new String[totalColumns];
@@ -99,7 +99,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				String tableName = null;
 
 				// resolve column and table name
-				int sepNdx = columnName.indexOf(dbOrmManager.getColumnAliasSeparator());
+				int sepNdx = columnName.indexOf(dbOomManager.getColumnAliasSeparator());
 				if (sepNdx != -1) {
 					// column alias exist, result set is ignored and columnAliases contains table data.
 					tableName = columnName.substring(0, sepNdx);
@@ -146,7 +146,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
 			}
 		} catch (SQLException sex) {
-			throw new DbOrmException("Unable to read ResultSet meta-data.", sex);
+			throw new DbOomException("Unable to read ResultSet meta-data.", sex);
 		}
 	}
 
@@ -159,7 +159,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 		try {
 			return rs.next();
 		} catch (SQLException sex) {
-			throw new DbOrmException("Unable to move ResultSet cursor to next position.", sex);
+			throw new DbOomException("Unable to move ResultSet cursor to next position.", sex);
 		}
 	}
 
@@ -194,9 +194,9 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
 				resultColumns.clear();
 				lastTableName = tableName;
-				DbEntityDescriptor ded = dbOrmManager.lookupTableName(tableName);
+				DbEntityDescriptor ded = dbOomManager.lookupTableName(tableName);
 				if (ded == null) {
-					throw new DbOrmException("Table name '" + tableName + "' not registered.");
+					throw new DbOomException("Table name '" + tableName + "' not registered.");
 				}
 				classes.add(ded.getType());
 			}
@@ -214,7 +214,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	 * Creates table names for all specified types.
 	 * Since this is usually done once per result set, these names are cached.
 	 * Type name will be <code>null</code> for simple names, i.e. for all those
-	 * types that returns <code>null</code> when used by {@link jodd.db.orm.DbOrmManager#lookupType(Class)}.
+	 * types that returns <code>null</code> when used by {@link jodd.db.oom.DbOomManager#lookupType(Class)}.
 	 */
 	protected String[] createTypesTableNames(Class[] types) {
 		if (types != cachedUsedTypes) {
@@ -224,7 +224,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					cachedTypesTableNames[i] = null;
 					continue;
 				}
-				DbEntityDescriptor ded = dbOrmManager.lookupType(types[i]);
+				DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
 				if (ded != null) {
 					cachedTypesTableNames[i] = ded.getTableName();//.toUpperCase();
 				}
@@ -259,7 +259,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					cachedColumnValue = ReflectUtil.castType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
-				throw new DbOrmException("Unable to read value for column #" + (colNdx + 1) + '.', sex);
+				throw new DbOomException("Unable to read value for column #" + (colNdx + 1) + '.', sex);
 			}
 			cachedColumnNdx = colNdx;
 		}
@@ -309,12 +309,12 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 			}
 			if ((tableName == null) || (resultTableName.equals(tableName) == true)) {
 				if (resultColumns.contains(columnName) == false) {
-					DbEntityDescriptor ded = dbOrmManager.lookupType(currentType);
+					DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
 					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
 					String propertyName = (dec == null ? null : dec.getPropertyName());
 					if (propertyName != null) {
 						if (result[currentResult] == null) {
-							result[currentResult] = dbOrmManager.createEntityInstance(currentType);
+							result[currentResult] = dbOomManager.createEntityInstance(currentType);
 						}
 /*
 						boolean success = value != null ?

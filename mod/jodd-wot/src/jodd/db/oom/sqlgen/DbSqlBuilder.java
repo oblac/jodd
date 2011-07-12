@@ -5,7 +5,7 @@ package jodd.db.oom.sqlgen;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.DbSqlGenerator;
-import jodd.db.oom.DbOrmQuery;
+import jodd.db.oom.DbOomQuery;
 import jodd.db.oom.sqlgen.chunks.ColumnValueChunk;
 import jodd.db.oom.sqlgen.chunks.SqlChunk;
 import jodd.db.oom.sqlgen.chunks.RawSqlChunk;
@@ -31,7 +31,7 @@ import java.util.Map;
  * chunks that auto-generate part of the query based on provided domain object. They can be
  * used to easily create some most common queries in an efficient way.
  * <p>
- * Although it is not necessary, use of {@link jodd.db.orm.meta.DbId} annotation boost the functionality
+ * Although it is not necessary, use of {@link jodd.db.oom.meta.DbId} annotation boost the functionality
  * of this query builder.
  * <p>
  * Some chunks deals with relations between tables, so they must be aware of foreign key names. Here the
@@ -412,15 +412,15 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	// ---------------------------------------------------------------- query factories
 
 	/**
-	 * Returns {@link jodd.db.orm.DbOrmQuery} instance for more fluent interface.
+	 * Returns {@link jodd.db.oom.DbOomQuery} instance for more fluent interface.
 	 *
 	 */
-	public DbOrmQuery query() {
-		return new DbOrmQuery(this);
+	public DbOomQuery query() {
+		return new DbOomQuery(this);
 	}
 
-	public DbOrmQuery query(DbSession session) {
-		return new DbOrmQuery(session, this);
+	public DbOomQuery query(DbSession session) {
+		return new DbOomQuery(session, this);
 	}
 
 }

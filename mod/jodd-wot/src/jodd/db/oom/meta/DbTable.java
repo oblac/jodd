@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link jodd.db.orm.DbOrmManager} table name.
+ * {@link jodd.db.oom.DbOomManager} table name.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

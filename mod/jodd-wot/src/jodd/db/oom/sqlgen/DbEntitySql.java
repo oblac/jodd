@@ -4,7 +4,7 @@ package jodd.db.oom.sqlgen;
 
 import jodd.bean.BeanUtil;
 import jodd.db.oom.DbEntityDescriptor;
-import jodd.db.oom.DbOrmManager;
+import jodd.db.oom.DbOomManager;
 
 import static jodd.db.oom.DbNameUtil.convertColumnNameToPropertyName;
 import static jodd.db.oom.DbNameUtil.convertTableNameToClassName;
@@ -164,11 +164,11 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder findForeign(Class entity, Object value) {
 		String tableRef = createTableRefName(entity);
-		DbOrmManager dbOrmManager = DbOrmManager.getInstance();
-		DbEntityDescriptor dedFk = dbOrmManager.lookupType(value.getClass());
+		DbOomManager dbOomManager = DbOomManager.getInstance();
+		DbEntityDescriptor dedFk = dbOomManager.lookupType(value.getClass());
 
 		String fkColumn =
-				uncapitalize(convertTableNameToClassName(dedFk.getTableName(), dbOrmManager.getTableNamePrefix(), dbOrmManager.getTableNameSuffix())) +
+				uncapitalize(convertTableNameToClassName(dedFk.getTableName(), dbOomManager.getTableNamePrefix(), dbOomManager.getTableNameSuffix())) +
 				capitalize(convertColumnNameToPropertyName(dedFk.getIdColumnName()));
 		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).colvalue(idValue);

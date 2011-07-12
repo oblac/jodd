@@ -2,9 +2,9 @@
 
 package jodd.db.oom.config;
 
+import jodd.db.oom.DbOomManager;
 import jodd.io.findfile.FindClass;
-import jodd.db.oom.DbOrmManager;
-import jodd.db.oom.DbOrmException;
+import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
 import jodd.log.Log;
 import jodd.util.ClassLoaderUtil;
@@ -15,22 +15,22 @@ import java.io.InputStream;
 /**
  * Auto-magically reads classpath for domain objects annotated
  */
-public class AutomagicDbOrmConfigurator extends FindClass {
+public class AutomagicDbOomConfigurator extends FindClass {
 
-	private static final Log log = Log.getLogger(AutomagicDbOrmConfigurator.class);
+	private static final Log log = Log.getLogger(AutomagicDbOomConfigurator.class);
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
 
-	public AutomagicDbOrmConfigurator(boolean registerAsEntities) {
+	public AutomagicDbOomConfigurator(boolean registerAsEntities) {
 		dbTableAnnotationBytes = getTypeSignatureBytes(DbTable.class);
 		this.registerAsEntities = registerAsEntities;
 	}
-	public AutomagicDbOrmConfigurator() {
+	public AutomagicDbOomConfigurator() {
 		this(true);
 	}
 
-	protected DbOrmManager dbOrmManager;
+	protected DbOomManager dbOomManager;
 
 	protected long elapsed;
 
@@ -43,26 +43,26 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
-	 * @see AutomagicDbOrmConfigurator#configure(jodd.db.orm.DbOrmManager)
+	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager)
 	 */
-	public void configure(DbOrmManager dbOrmManager, File[] classpath) {
-		this.dbOrmManager = dbOrmManager;
+	public void configure(DbOomManager dbOomManager, File[] classpath) {
+		this.dbOomManager = dbOomManager;
 		elapsed = System.currentTimeMillis();
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {
-			throw new DbOrmException("Unable to scan classpath.", ex);
+			throw new DbOomException("Unable to scan classpath.", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("DbOrmManager configured in " + elapsed + " ms. Total entities: " + dbOrmManager.getTotalNames());
+		log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
 	}
 
 	/**
 	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
-	 * @see AutomagicDbOrmConfigurator#configure(jodd.db.orm.DbOrmManager, java.io.File[])
+	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager, java.io.File[])
 	 */
-	public void configure(DbOrmManager dbOrmManager) {
-		configure(dbOrmManager, ClassLoaderUtil.getDefaultClasspath());
+	public void configure(DbOomManager dbOomManager) {
+		configure(dbOomManager, ClassLoaderUtil.getDefaultClasspath());
 	}
 
 	/**
@@ -82,16 +82,16 @@ public class AutomagicDbOrmConfigurator extends FindClass {
 		try {
 			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbOrmException("Unable to load class: " + entryName, cnfex);
+			throw new DbOomException("Unable to load class: " + entryName, cnfex);
 		}
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
 			return;
 		}
 		if (registerAsEntities == true) {
-			dbOrmManager.registerEntity(beanClass);
+			dbOomManager.registerEntity(beanClass);
 		} else {
-			dbOrmManager.registerType(beanClass);
+			dbOomManager.registerType(beanClass);
 		}
 	}
 

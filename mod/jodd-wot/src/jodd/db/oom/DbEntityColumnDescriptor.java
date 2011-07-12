@@ -27,7 +27,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 	}
 
 	/**
-	 * Returns {@link jodd.db.orm.DbEntityDescriptor} that this column description belongs to.
+	 * Returns {@link jodd.db.oom.DbEntityDescriptor} that this column description belongs to.
 	 */
 	public DbEntityDescriptor getDbEntityDescriptor() {
 		return dbEntityDescriptor;
