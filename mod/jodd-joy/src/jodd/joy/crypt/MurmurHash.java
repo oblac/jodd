@@ -4,7 +4,7 @@ package jodd.joy.crypt;
 
 /**
  * Fast Murmur hash. Strings are hashed faster than in usual
- * implementation, since it uses chars and not bytes.
+ * implementation, as here we use chars and not bytes.
  */
 public class MurmurHash {
 
