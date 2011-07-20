@@ -611,7 +611,24 @@ public class ServletUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- version
 
+	private static boolean isVersion2_5;
+
+	static {
+		try {
+			ServletContext.class.getMethod("getContextPath");
+			isVersion2_5 = true;
+		} catch (Exception ignore) {
+		}
+	}
+
+	/**
+	 * Returns <code>true</code> if current servlets version is 2.5 or higher.
+	 */
+	public static boolean isServletsVersion2_5() {
+		return isVersion2_5;
+	}
 
 	// ---------------------------------------------------------------- errors
 
