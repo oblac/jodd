@@ -9,6 +9,9 @@ import java.util.List;
 import java.sql.SQLException;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Few exception utilities.
+ */
 public class ExceptionUtil {
 
 	/**
