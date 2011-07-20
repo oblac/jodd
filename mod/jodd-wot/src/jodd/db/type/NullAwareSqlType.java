@@ -12,7 +12,9 @@ import java.sql.SQLException;
 public abstract class NullAwareSqlType<T> extends SqlType<T> {
 
 	/**
-	 * Detects if there was a <code>null</code> reading, never less the real value.
+	 * Detects if there was a <code>null</code> reading and returns <code>null</code> if it was.
+	 * Result set returns default value (e.g. 0) for many getters, therefore it detects if it was
+	 * a null reading or it is a real value.
 	 */
 	@Override
 	public <E> E readValue(ResultSet rs, int index, Class<E> destinationType, int dbSqlType) throws SQLException {
@@ -24,7 +26,7 @@ public abstract class NullAwareSqlType<T> extends SqlType<T> {
 	}
 
 	/**
-	 * Detects <code>null</code> while storing value into the database.
+	 * Detects <code>null</code> before storing the value into the database.
 	 */
 	@Override
 	public void storeValue(PreparedStatement st, int index, Object value, int dbSqlType) throws SQLException {
