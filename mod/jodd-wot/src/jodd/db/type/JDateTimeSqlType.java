@@ -7,6 +7,7 @@ import jodd.datetime.JDateTime;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 /**
@@ -16,6 +17,10 @@ public class JDateTimeSqlType extends SqlType<JDateTime> {
 
 	@Override
 	public void set(PreparedStatement st, int index, JDateTime value, int dbSqlType) throws SQLException {
+		if (value == null) {
+			st.setNull(index, dbSqlType);
+			return;
+		}
 		if (dbSqlType == Types.TIMESTAMP) {
 			st.setTimestamp(index, value.convertToSqlTimestamp());
 			return;
@@ -26,8 +31,17 @@ public class JDateTimeSqlType extends SqlType<JDateTime> {
 	@Override
 	public JDateTime get(ResultSet rs, int index, int dbSqlType) throws SQLException {
 		if (dbSqlType == Types.TIMESTAMP) {
-			return new JDateTime(rs.getTimestamp(index));
+			Timestamp timestamp = rs.getTimestamp(index);
+			if (timestamp == null) {
+				return null;
+			}
+			return new JDateTime(timestamp);
 		}
-		return new JDateTime(rs.getLong(index));
+		long time = rs.getLong(index);
+
+		if (time == 0 && rs.wasNull()) {
+			return null;
+		}
+		return new JDateTime(time);
 	}
 }
