@@ -2,6 +2,8 @@
 
 package jodd.util;
 
+import java.io.File;
+
 /**
  * Various system utilities.
  */
@@ -198,6 +200,13 @@ public class SystemUtil {
 	}
 
 	/**
+	 * Returns <code>true</code> if host is a general unix.
+	 */
+	public static boolean isHostUnix() {
+		return File.pathSeparator.equals(StringPool.COLON);
+	}
+
+	/**
 	 * Returns <code>true</code> if host is Mac.
 	 */
 	public static boolean isHostMac() {
@@ -209,6 +218,13 @@ public class SystemUtil {
 	 */
 	public static boolean isHostSolaris() {
 		return getOsName().toUpperCase().startsWith("SUNOS");
+	}
+
+	/**
+	 * Returns <code>true<</code> if host is AIX.
+	 */
+	public static boolean isHostAix() {
+		return getOsName().toUpperCase().equals("AIX");
 	}
 
 	/**
