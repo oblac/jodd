@@ -1,5 +1,5 @@
 
-// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2011, Jodd Team (jodd.sf.net). All Rights Reserved.
 
 package jodd.typeconverter;
 
@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * One class for simplifier and direct conversions to destination types.
@@ -674,6 +675,25 @@ public class Convert {
 			return defaultValue;
 		}
 		return URLConverter.valueOf(value);
+	}
+
+
+	/**
+	 * Converts value to <code>Date</code>.
+	 */
+	public static Date toDate(Object value) {
+		return toDate(value, null);
+	}
+
+	/**
+	 * Converts value to <code>Date</code>. Returns default value
+	 * when value is <code>null</code>.
+	 */
+	public static Date toDate(Object value, Date defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		return DateConverter.valueOf(value);
 	}
 
 

@@ -19,6 +19,7 @@ import jodd.typeconverter.impl.ByteConverter;
 import jodd.typeconverter.impl.CharacterConverter;
 import jodd.typeconverter.impl.ClassArrayConverter;
 import jodd.typeconverter.impl.ClassConverter;
+import jodd.typeconverter.impl.DateConverter;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import jodd.typeconverter.impl.DoubleConverter;
 import jodd.typeconverter.impl.FileConverter;
@@ -51,7 +52,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.net.URL;
@@ -78,6 +78,7 @@ public class TypeConverterManager {
 	/**
 	 * Registers default set of converters.
 	 */
+	@SuppressWarnings( {"UnnecessaryFullyQualifiedName"})
 	public static void registerDefaults() {
 		register(String.class, new StringConverter());
 		register(String[].class, new StringArrayConverter());
@@ -131,7 +132,8 @@ public class TypeConverterManager {
 
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
-		register(Date.class, new SqlDateConverter());
+		register(java.util.Date.class, new DateConverter());
+		register(java.sql.Date.class, new SqlDateConverter());
 		register(Time.class, new SqlTimeConverter());
 		register(Timestamp.class, new SqlTimestampConverter());
 

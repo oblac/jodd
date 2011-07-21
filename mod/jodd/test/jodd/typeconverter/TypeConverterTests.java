@@ -18,6 +18,7 @@ public class TypeConverterTests extends TestSuite {
 		addTestSuite(CharacterConverterTest.class);
 		addTestSuite(ClassArrayConverterTest.class);
 		addTestSuite(ClassConverterTest.class);
+		addTestSuite(DateConverterTest.class);
 		addTestSuite(DoubleArrayConverterTest.class);
 		addTestSuite(DoubleConverterTest.class);
 		addTestSuite(FloatArrayConverterTest.class);

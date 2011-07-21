@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
 
 /**
  * One class for simplifier and direct conversions to destination types.
@@ -53,6 +54,7 @@ types = [
 	['String[]', 'StringArray'],
 	['URI', 'null'],
 	['URL', 'null'],
+	['Date', 'null']
 
 ]
 

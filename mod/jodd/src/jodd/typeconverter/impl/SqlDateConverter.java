@@ -24,11 +24,24 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());
 		}
-	
+
+		String stringValue = value.toString().trim();
+
+		// try yyyy-mm-dd for valueOf
+		if (stringValue.indexOf('-') != -1) {
+			try {
+				return (Date.valueOf(stringValue));
+			} catch (IllegalArgumentException iaex) {
+				throw new TypeConversionException(value, iaex);
+			}
+		}
+
+		// assume string to be a number
 		try {
-			return (Date.valueOf(value.toString().trim()));
-		} catch (IllegalArgumentException iaex) {
-			throw new TypeConversionException(value, iaex);
+			long milliseconds = Long.parseLong(stringValue);
+			return new Date(milliseconds);
+		} catch (NumberFormatException nfex) {
+			throw new TypeConversionException(value, nfex);
 		}
 	}
 
