@@ -107,6 +107,8 @@ import static jodd.util.HashCode.hash;
  */
 public class JDateTime implements Comparable, Cloneable {
 
+	public static final String DEFAULT_FORMAT = "YYYY-MM-DD hh:mm:ss.mss";
+
 	// day of week names
 	public static final int MONDAY 		= 1;
 	public static final int TUESDAY 	= 2;

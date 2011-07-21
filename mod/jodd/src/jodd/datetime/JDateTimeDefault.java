@@ -20,7 +20,7 @@ public class JDateTimeDefault {
 
 	public static Locale locale = null;			// system default
 
-	public static String format = "YYYY-MM-DD hh:mm:ss.mss";
+	public static String format = JDateTime.DEFAULT_FORMAT;
 
 	public static JdtFormatter formatter = new DefaultFormatter();
 
