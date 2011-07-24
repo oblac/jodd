@@ -14,9 +14,9 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 /**
- * Encodes URLs significantly faster and more convenient.
+ * Encodes URLs better, significantly faster and more convenient.
  * This encoder handles path and queries differently, as
- * supposed by specification!
+ * defined by specification!
  */
 public class URLCoder {
 

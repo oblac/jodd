@@ -124,6 +124,9 @@ public class MadvocConfig {
 		return defaultExtension;
 	}
 
+	/**
+	 * Sets default action extension that will be appended when omitted.
+	 */
 	public void setDefaultExtension(String defaultExtension) {
 		this.defaultExtension = defaultExtension;
 	}
@@ -135,6 +138,9 @@ public class MadvocConfig {
 		return defaultActionMethodNames;
 	}
 
+	/**
+	 * Specifies default action names that do not have method paths.
+	 */
 	public void setDefaultActionMethodNames(String... defaultActionMethodNames) {
 		this.defaultActionMethodNames = defaultActionMethodNames;
 	}
@@ -269,6 +275,10 @@ public class MadvocConfig {
 		return detectDuplicatePathsEnabled;
 	}
 
+	/**
+	 * Defines if duplicate paths should be detected and if an exception should
+	 * be thrown on duplication.
+	 */
 	public void setDetectDuplicatePathsEnabled(boolean detectDuplicatePathsEnabled) {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
@@ -309,7 +319,7 @@ public class MadvocConfig {
 	}
 
 	/**
-	 * Specifies {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration.
+	 * Sets {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration.
 	 */
 	public void setRequestScopeInjectorConfig(RequestScopeInjector.Config requestScopeInjectorConfig) {
 		this.requestScopeInjectorConfig = requestScopeInjectorConfig;

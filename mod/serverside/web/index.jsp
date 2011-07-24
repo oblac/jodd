@@ -53,10 +53,12 @@
 <a href="misc.raw.html?q=2">misc scopes (2)</a> (check console).<br/>
 
 <br/>
-<a href="search?query=%C5%A1aran">URI encoded link</a> - URI links can be decoded (if not set so in Tomcat), 
-<form action="search" method="post"><input type="text" name="query"  value="šaran"><input type="submit"> - forms are encoded/decoded correctly.</form> 
+<a href="search?query=%C5%A1aran">URI encoded link</a> - URI links can be decoded (if not set so in Tomcat),<br/>
+<a href="${jfn:url("search?query=šaran", pageContext)}">URI encoded link II</a> - this time with jfn method,<br/>
+</p>
+<form action="search" method="post"><input type="text" name="query"  value="šaran"><input type="submit"> - forms are encoded/decoded correctly.</form>
 
-<br/>
+<p>
 <a href="super.html?girl.id=173">Super</a> method.<br/>
 <a href="super.simple.html?id=22">Super member</a> non-static class.<br/>
 </p>

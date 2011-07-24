@@ -114,6 +114,16 @@
 		<function-class>jodd.servlet.URLCoder</function-class>
 		<function-signature>java.lang.String url1(java.lang.String)</function-signature>
 	</function>
+	<function>
+		<name>urlPath</name>
+		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-signature>java.lang.String encodePath(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<name>urlQuery</name>
+		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-signature>java.lang.String encodeQuery(java.lang.String)</function-signature>
+	</function>
 
 	<function>
 		<name>name2id</name>
