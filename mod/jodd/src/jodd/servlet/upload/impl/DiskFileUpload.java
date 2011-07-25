@@ -29,12 +29,19 @@ public class DiskFileUpload extends FileUpload {
 	}
 
 	/**
+	 * Returns <code>false</code> as uploaded file is stored on disk.
+	 */
+	@Override
+	public boolean isInMemory() {
+		return false;
+	}
+
+	/**
 	 * Returns destination folder.
 	 */
 	public File getDestinationFolder() {
 		return destFolder;
 	}
-
 
 	/**
 	 * Returns uploaded and saved file.

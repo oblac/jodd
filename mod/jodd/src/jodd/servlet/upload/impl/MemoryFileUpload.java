@@ -32,6 +32,14 @@ public class MemoryFileUpload extends FileUpload {
 	}
 
 	/**
+	 * Returns <code>true</code> as uploaded file is stored in memory.
+	 */
+	@Override
+	public boolean isInMemory() {
+		return true;
+	}
+
+	/**
 	 * Returns byte array input stream.
 	 */
 	@Override

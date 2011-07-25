@@ -90,6 +90,13 @@ public abstract class FileUpload {
 		return fileTooBig;
 	}
 
+	// ---------------------------------------------------------------- status
+
+	/**
+	 * Returns <code>true</code> if uploaded file content is stored in memory.
+	 */
+	public abstract boolean isInMemory();
+
 	// ---------------------------------------------------------------- process
 
 	/**
