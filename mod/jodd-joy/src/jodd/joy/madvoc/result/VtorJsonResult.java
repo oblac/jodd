@@ -11,6 +11,7 @@ import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.CharUtil;
+import jodd.util.MimeTypes;
 import jodd.vtor.Violation;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,8 @@ public class VtorJsonResult extends ActionResult {
 		String result = VtorUtil.createViolationsJsonString(actionRequest.getHttpServletRequest(), list);
 		char[] chars = result.toCharArray();
 		byte[] data = CharUtil.toByteArray(chars, madvocConfig.getEncoding());
+
+		response.setContentType(MimeTypes.MIME_APPLICATION_JSON);
 
 		OutputStream os = response.getOutputStream();
 		os.write(data);
