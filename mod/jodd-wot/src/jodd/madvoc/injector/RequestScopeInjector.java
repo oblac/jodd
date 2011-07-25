@@ -27,8 +27,6 @@ import java.io.UnsupportedEncodingException;
  */
 public class RequestScopeInjector extends BaseScopeInjector {
 
-	private static final String REQ_METHOD_GET = "GET";
-
 	public RequestScopeInjector(MadvocConfig madvocConfig) {
 		super(ScopeType.REQUEST);
 		this.encoding = madvocConfig.getEncoding();
@@ -67,6 +65,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		protected boolean copyParamsToAttributes;
 		protected boolean trimParams;
 		protected boolean encodeGetParams;
+		protected boolean ignoreInvalidUploadFiles = true;
 
 		public boolean isIgnoreEmptyRequestParams() {
 			return ignoreEmptyRequestParams;
@@ -149,6 +148,20 @@ public class RequestScopeInjector extends BaseScopeInjector {
 			this.encodeGetParams = encodeGetParams;
 		}
 
+		/**
+		 * Returns <code>true</code> if invalid and non-existing upload files are ignored.
+		 */
+		public boolean isIgnoreInvalidUploadFiles() {
+			return ignoreInvalidUploadFiles;
+		}
+
+		/**
+		 * Specifies if invalid and non-existing upload files should be <code>null</code>.
+		 */
+		public void setIgnoreInvalidUploadFiles(boolean ignoreInvalidUploadFiles) {
+			this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
+		}
+
 		@Override
 		public Config clone() {
 			try {
@@ -186,7 +199,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	 * are simply ignored.
 	 */
 	protected void injectParameters(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
-		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals(REQ_METHOD_GET);
+		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
@@ -197,7 +210,12 @@ public class RequestScopeInjector extends BaseScopeInjector {
 				String name = getMatchedPropertyName(in, paramName);
 				if (name != null) {
 					String[] paramValues = servletRequest.getParameterValues(paramName);
-					paramValues = ServletUtil.prepareParameters(paramValues, config.trimParams, config.treatEmptyParamsAsNull, config.ignoreEmptyRequestParams);
+					paramValues = ServletUtil.prepareParameters(
+							paramValues,
+							config.trimParams,
+							config.treatEmptyParamsAsNull,
+							config.ignoreEmptyRequestParams);
+
 					if (paramValues == null) {
 						continue;
 					}
@@ -243,6 +261,17 @@ public class RequestScopeInjector extends BaseScopeInjector {
 				String name = getMatchedPropertyName(in, paramName);
 				if (name != null) {
 					FileUpload[] paramValues = multipartRequest.getFiles(paramName);
+
+					if (config.ignoreInvalidUploadFiles) {
+						for (int i = 0; i < paramValues.length; i++) {
+							FileUpload paramValue = paramValues[i];
+
+							if ((paramValue.isValid() == false) || (paramValue.isUploaded() == false)) {
+								paramValues[i] = null;
+							}
+						}
+					}
+
 					Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
 					setTargetProperty(target, name, value, in.create);
 				}

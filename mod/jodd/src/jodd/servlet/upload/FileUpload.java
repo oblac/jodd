@@ -54,14 +54,23 @@ public abstract class FileUpload {
 	protected boolean fileTooBig;
 
 	/**
-	 * Returns the file upload size or <code>-1</code>.
+	 * Returns the file upload size or <code>-1</code> if file was not uploaded.
 	 */
 	public int getSize() {
 		return size;
 	}
 
 	/**
-	 * Returns <code>true</code> if file was uploaded correctly.
+	 * Returns <code>true</code> if file was uploaded.
+	 */
+	public boolean isUploaded() {
+		return size != -1;
+	}
+
+	/**
+	 * Returns <code>true</code> if upload process went correctly.
+	 * This still does not mean that file is uploaded, e.g. when file
+	 * was not specified on the form.
 	 */
 	public boolean isValid() {
 		return valid;
@@ -100,7 +109,7 @@ public abstract class FileUpload {
 	 */
 	@Override
 	public String toString() {
-		return "FileUpload: valid=[" + valid + "] field=[" + header.getFormFieldName() +
-				"] name=[" + header.getFileName() + "] size=[" + size + ']';
+		return "FileUpload: uploaded=[" + isUploaded() + "] valid=[" + valid + "] field=[" +
+				header.getFormFieldName() + "] name=[" + header.getFileName() + "] size=[" + size + ']';
 	}
 }
