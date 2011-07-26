@@ -165,6 +165,7 @@ ReForm.prototype.validateForm = function(onlyVisited, onValidCallback) {
 	}
 	var _this = this;
 	var options = {
+		iframe:		false,
 		url:		_this.opts.validationUrl,
 		success:	function(response) {
 						if (_this.activateErrors(response, onlyVisited) === false) {
