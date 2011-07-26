@@ -128,3 +128,21 @@ function clearTimer(a) {
 	if (a.callback) {a.callback();}
 	return this;
 }
+
+/**
+ * Unwraps tags in given text string.
+ */
+function unwrapTag(text) {
+
+	if (text.startsWith('<')) {
+		var ndx = text.indexOf('>');
+		text = text.substr(ndx + 1);
+	}
+
+	if (text.endsWith('>')) {
+		ndx = text.lastIndexOf("</");
+		text = text.substr(0, ndx);
+	}
+
+	return text;
+}
