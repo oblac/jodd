@@ -3,7 +3,7 @@
 package jodd.props;
 
 import jodd.JoddDefault;
-import jodd.io.findfile.ClasspathScanner;
+import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -18,7 +18,7 @@ public class PropsUtil {
 	 * Loads props from classpath.
 	 */
 	public static void loadFromClasspath(final Props p, String... patterns) {
-		ClasspathScanner scanner = new ClasspathScanner() {
+		ClassScanner scanner = new ClassScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
 				String encoding = JoddDefault.encoding;
@@ -28,10 +28,10 @@ public class PropsUtil {
 				p.load(entryData.openInputStream(), encoding);
 			}
 		};
-		scanner.includeResources(true).
-				ignoreException(true).
-				include(patterns).
-				scanDefaultClasspath();
+		scanner.setIncludeResources(true);
+		scanner.setIgnoreException(true);
+		scanner.setIncludedEntries(patterns);
+		scanner.scanDefaultClasspath();
 	}
 
 	/**

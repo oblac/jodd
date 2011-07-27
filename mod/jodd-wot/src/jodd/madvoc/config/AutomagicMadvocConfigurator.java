@@ -4,7 +4,7 @@ package jodd.madvoc.config;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.io.findfile.FindClass;
+import jodd.io.findfile.ClassFinder;
 import jodd.log.Log;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
@@ -32,7 +32,7 @@ import java.lang.reflect.Modifier;
  * Action class is scanned for the {@link MadvocAction}. All public methods with {@link Action}
  * are registered as Madvoc actions.
  */
-public class AutomagicMadvocConfigurator extends FindClass implements MadvocConfigurator {
+public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocConfigurator {
 
 	private static final Log log = Log.getLogger(AutomagicMadvocConfigurator.class);
 

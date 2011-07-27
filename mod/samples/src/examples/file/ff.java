@@ -4,7 +4,7 @@ package examples.file;
 
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
-import jodd.io.findfile.FilepathScanner;
+import jodd.io.findfile.FileScanner;
 import jodd.io.filter.WildcardFileFilter;
 import jodd.util.SystemUtil;
 
@@ -22,17 +22,20 @@ public class ff {
 
 		System.out.println("\n\n\nsearching classpath");
 
-		FilepathScanner fs = new FilepathScanner() {
+		FileScanner fs = new FileScanner() {
 			@Override
 			protected void onFile(File file) {
 				System.out.println("***" + file.getName());
 			}
-		}.includeDirs(true).recursive(true).includeFiles(false);
+		};
+		fs.setIncludeDirs(true);
+		fs.setRecursive(true);
+		fs.setIncludeFiles(false);
 		fs.scan("d:\\temp\\temp\\");
 
 		System.out.println("\n\n\nsearching classpath");
 
-		FindFile ff = new WildcardFindFile("*").recursive(true).includeDirs(true).searchPath(SystemUtil.getClassPath());
+		FindFile ff = new WildcardFindFile("*").setRecursive(true).setIncludeDirs(true).searchPath(SystemUtil.getClassPath());
 //		FindFile ff = new WildcardFindFile("c:/temp/temp","*").includeDirs().recursive();
 
 		int i = 1;

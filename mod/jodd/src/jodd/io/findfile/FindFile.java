@@ -30,14 +30,10 @@ public class FindFile {
 		return recursive;
 	}
 
-	public void setRecursive(boolean recursive) {
-		this.recursive = recursive;
-	}
-
 	/**
 	 * Activates recursive search.
 	 */
-	public FindFile recursive(boolean recursive) {
+	public FindFile setRecursive(boolean recursive) {
 		this.recursive = recursive;
 		return this;
 	}
@@ -49,18 +45,13 @@ public class FindFile {
 		return includeDirs;
 	}
 
-	public void setIncludeDirs(boolean includeDirs) {
-		this.includeDirs = includeDirs;
-	}
-
 	/**
 	 * Include directories in search.
 	 */
-	public FindFile includeDirs(boolean includeDirs) {
+	public FindFile setIncludeDirs(boolean includeDirs) {
 		this.includeDirs = includeDirs;
 		return this;
 	}
-
 
 
 	protected boolean includeFiles = true;
@@ -69,28 +60,14 @@ public class FindFile {
 		return includeFiles;
 	}
 
-	public void setIncludeFiles(boolean includeFiles) {
-		this.includeFiles = includeFiles;
-	}
-
 	/**
 	 * Include files in search.
 	 */
-	public FindFile includeFiles(boolean includeFiles) {
+	public FindFile setIncludeFiles(boolean includeFiles) {
 		this.includeFiles = includeFiles;
 		return this;
 	}
 
-
-
-	/**
-	 * Include files and folders.
-	 */
-	public FindFile includeFilesAndFolders() {
-		includeDirs = true;
-		includeFiles = true;
-		return this;
-	}
 
 	// ---------------------------------------------------------------- search path
 
@@ -217,25 +194,12 @@ public class FindFile {
 		return this;
 	}
 
-
-	
-
 	// ---------------------------------------------------------------- types
 
 	protected boolean listSubfilesAfterFolder = true;
 
-	/**
-	 * @see #listSubfilesAfterFolder(boolean)
-	 */
 	public boolean isListSubfilesAfterFolder() {
 		return listSubfilesAfterFolder;
-	}
-
-	/**
-	 * @see #listSubfilesAfterFolder(boolean)
-	 */
-	public void setListSubfilesAfterFolder(boolean listSubfilesAfterFolder) {
-		this.listSubfilesAfterFolder = listSubfilesAfterFolder;
 	}
 
 	/**
@@ -243,11 +207,10 @@ public class FindFile {
 	 * directly after the folder, while folder will be listed first. Otherwise,
 	 * sub files will be listed after the all files of current folder.
 	 */
-	public FindFile listSubfilesAfterFolder(boolean value) {
-		listSubfilesAfterFolder = value;
+	public FindFile setListSubfilesAfterFolder(boolean listSubfilesAfterFolder) {
+		this.listSubfilesAfterFolder = listSubfilesAfterFolder;
 		return this;
 	}
-
 
 	// ---------------------------------------------------------------- next file
 

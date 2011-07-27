@@ -8,30 +8,35 @@ import jodd.util.Wildcard;
 import java.io.File;
 
 /**
- * Simple {@link FindFile} that matches file names using * and ? wildcards.
+ * {@link FindFile} that matches file names using <code>*</code>, <code>?</code>
+ * and, optionally, <code>**</code> wildcards.
+ *
  * @see jodd.io.findfile.RegExpFindFile
  */
 public class WildcardFindFile extends FindFile {
 
 	protected final String wildcard;
+	protected boolean usePathWildcards;
 
 	public WildcardFindFile(String wildcard) {
 		this.wildcard = wildcard;
 	}
 
-	public WildcardFindFile(String searchPath, String wildcard) {
+	public WildcardFindFile(String wildcard, boolean usePathWildcards) {
 		this.wildcard = wildcard;
-		searchPath(searchPath);
+		this.usePathWildcards = usePathWildcards;
 	}
 
-	public WildcardFindFile(File searchPath, String wildcard) {
-		this.wildcard = wildcard;
-		searchPath(searchPath);
+
+	public boolean isUsePathWildcards() {
+		return usePathWildcards;
 	}
 
-	public WildcardFindFile(String[] searchPath, String wildcard) {
-		this.wildcard = wildcard;
-		searchPath(searchPath);
+	/**
+	 * Set path wildcard matching algorithm.
+	 */
+	public void setUsePathWildcards(boolean usePathWildcards) {
+		this.usePathWildcards = usePathWildcards;
 	}
 
 	@Override
@@ -39,6 +44,8 @@ public class WildcardFindFile extends FindFile {
 		String path = currentFile.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
-		return Wildcard.match(path, wildcard);
+		return usePathWildcards ?
+				Wildcard.matchPath(path, wildcard) :
+				Wildcard.match(path, wildcard) ;
 	}
 }

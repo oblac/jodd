@@ -24,9 +24,9 @@ import java.io.FileNotFoundException;
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
  * Content of Jar files is also examined.
- * @see jodd.io.findfile.ClasspathScanner
+ * @see ClassScanner
  */
-public abstract class FindClass {
+public abstract class ClassFinder {
 
 	private static final String CLASS_FILE_EXT = ".class";
 	private static final String JAR_FILE_EXT = ".jar";
@@ -43,6 +43,20 @@ public abstract class FindClass {
 			"*/tools.jar",
 			"*/j2ee.jar"
 	};
+	/**
+	 * Array of excluded jars.
+	 */
+	protected String[] excludedJars;
+	/**
+	 * Array of jar file name patterns that are included in the search.
+	 * This rule is applied after the excluded rule.
+	 */
+	protected String[] includedJars;
+	/**
+	 * If set to <code>true</code> jars will be scanned using path wildcards.
+	 */
+	protected boolean usePathWildcards;
+
 
 	public String[] getSystemJars() {
 		return systemJars;
@@ -52,11 +66,6 @@ public abstract class FindClass {
 		this.systemJars = systemJars;
 	}
 
-	/**
-	 * Array of excluded jars.
-	 */
-	protected String[] excludedJars;
-
 	public String[] getExcludedJars() {
 		return excludedJars;
 	}
@@ -65,12 +74,6 @@ public abstract class FindClass {
 		this.excludedJars = excludedJars;
 	}
 
-	/**
-	 * Array of jar file name patterns that are included in the search.
-	 * This rule is applied after the excluded rule.
-	 */
-	protected String[] includedJars;
-
 	public String[] getIncludedJars() {
 		return includedJars;
 	}
@@ -78,11 +81,6 @@ public abstract class FindClass {
 	public void setIncludedJars(String... includedJars) {
 		this.includedJars = includedJars;
 	}
-
-	/**
-	 * If set to <code>true</code> jars will be scanned using path wildcards.
-	 */
-	protected boolean usePathWildcards;
 
 	public boolean isUsePathWildcards() {
 		return usePathWildcards;
@@ -95,6 +93,7 @@ public abstract class FindClass {
 	// ---------------------------------------------------------------- included packages
 
 	protected String[] includedEntries;    // array of included name patterns
+	protected String[] excludedEntries;    // array of excluded name patterns
 
 	public String[] getIncludedEntries() {
 		return includedEntries;
@@ -106,9 +105,6 @@ public abstract class FindClass {
 	public void setIncludedEntries(String... includedEntries) {
 		this.includedEntries = includedEntries;
 	}
-
-
-	protected String[] excludedEntries;    // array of excluded name patterns
 
 	public String[] getExcludedEntries() {
 		return excludedEntries;
@@ -127,6 +123,11 @@ public abstract class FindClass {
 	 * If set to <code>true</code> all files will be scanned and not only classes.
 	 */
 	protected boolean includeResources;
+	/**
+	 * If set to <code>true</code> exceptions for entry scans are ignored.
+	 */
+	protected boolean ignoreException;
+
 
 	public boolean isIncludeResources() {
 		return includeResources;
@@ -136,10 +137,6 @@ public abstract class FindClass {
 		this.includeResources = includeResources;
 	}
 
-	/**
-	 * If set to <code>true</code> exceptions for entry scans are ignored.
-	 */
-	protected boolean ignoreException;
 
 	public boolean isIgnoreException() {
 		return ignoreException;
@@ -302,7 +299,7 @@ public abstract class FindClass {
 			rootPath += File.separatorChar;
 		}
 
-		FindFile ff = new FindFile().includeDirs(false).recursive(true).searchPath(rootPath);
+		FindFile ff = new FindFile().setIncludeDirs(false).setRecursive(true).searchPath(rootPath);
 		File file;
 		while ((file = ff.nextFile()) != null) {
 			String filePath = file.getAbsolutePath();

@@ -3,7 +3,7 @@
 package jodd.db.oom.config;
 
 import jodd.db.oom.DbOomManager;
-import jodd.io.findfile.FindClass;
+import jodd.io.findfile.ClassFinder;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
 import jodd.log.Log;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 /**
  * Auto-magically reads classpath for domain objects annotated
  */
-public class AutomagicDbOomConfigurator extends FindClass {
+public class AutomagicDbOomConfigurator extends ClassFinder {
 
 	private static final Log log = Log.getLogger(AutomagicDbOomConfigurator.class);
 

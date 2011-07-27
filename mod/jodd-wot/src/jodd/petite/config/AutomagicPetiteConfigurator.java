@@ -6,7 +6,7 @@ import jodd.log.Log;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.petite.meta.PetiteBean;
-import jodd.io.findfile.FindClass;
+import jodd.io.findfile.ClassFinder;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import java.io.InputStream;
  * annotation (not by loading the class!). If annotation is founded, class will be loaded and
  * registered as Petite bean.
  */
-public class AutomagicPetiteConfigurator extends FindClass implements PetiteConfigurator {
+public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteConfigurator {
 
 	private static final Log log = Log.getLogger(AutomagicPetiteConfigurator.class);
 

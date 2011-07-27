@@ -4,12 +4,13 @@ package jodd.io;
 
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.RegExpFindFile;
+import jodd.io.findfile.WildcardFileScanner;
 import jodd.io.findfile.WildcardFindFile;
-import jodd.io.findfile.WildcardFindPath;
 import junit.framework.TestCase;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 
 public class FindFileTest extends TestCase {
 
@@ -27,8 +28,8 @@ public class FindFileTest extends TestCase {
 
 	public void testWildcardFile() {
 		FindFile ff = new WildcardFindFile("*file/a*")
-				.recursive(true)
-				.includeDirs(true)
+				.setRecursive(true)
+				.setIncludeDirs(true)
 				.searchPath(dataRoot);
 
 		int countDirs = 0;
@@ -56,9 +57,9 @@ public class FindFileTest extends TestCase {
 	}
 
 	public void testWildcardPath() {
-		FindFile ff = new WildcardFindPath("**/file/*")
-				.recursive(true)
-				.includeDirs(true)
+		FindFile ff = new WildcardFindFile("**/file/*", true)
+				.setRecursive(true)
+				.setIncludeDirs(true)
 				.searchPath(dataRoot);
 
 		int countDirs = 0;
@@ -85,10 +86,30 @@ public class FindFileTest extends TestCase {
 		assertEquals(2, countFiles);
 	}
 
+	public void testWildcardFileScanner() {
+		WildcardFileScanner wfs = new WildcardFileScanner("**/file/**", true);
+
+		List<File> files = wfs.list(dataRoot);
+		assertEquals(1, files.size());
+
+		wfs.setRecursive(true);
+
+		wfs.setIncludeDirs(true);
+		files = wfs.list(dataRoot);
+		assertEquals(3, files.size());
+
+		wfs.setIncludeDirs(false);
+		files = wfs.list(dataRoot);
+		assertEquals(2, files.size());
+
+		assertTrue(files.contains(new File(dataRoot + "/file/a.png")));
+		assertTrue(files.contains(new File(dataRoot + "/file/a.txt")));
+	}
+
 	public void testRegexp() {
 		FindFile ff = new RegExpFindFile(".*/a[.].*")
-				.recursive(true)
-				.includeDirs(true)
+				.setRecursive(true)
+				.setIncludeDirs(true)
 				.searchPath(dataRoot);
 
 		int countDirs = 0;

@@ -5,83 +5,56 @@ package jodd.io.findfile;
 import java.io.File;
 
 /**
- * File path scanner.
+ * File scanner is a 'callback' type of files scanner.
+ * For each founded file, method {@link #onFile(java.io.File)}
+ * is invoked.
  */
-public abstract class FilepathScanner {
+public abstract class FileScanner {
 
 	// ---------------------------------------------------------------- config
 
 	protected boolean recursive;
+	protected boolean includeDirs = true;
+	protected boolean includeFiles = true;
 
 	public boolean isRecursive() {
 		return recursive;
 	}
 
-	public void setRecursive(boolean recursive) {
-		this.recursive = recursive;
-	}
-
 	/**
 	 * Activates recursive search.
 	 */
-	public FilepathScanner recursive(boolean recursive) {
+	public void setRecursive(boolean recursive) {
 		this.recursive = recursive;
-		return this;
 	}
-
-
-	protected boolean includeDirs = true;
 
 	public boolean isIncludeDirs() {
 		return includeDirs;
 	}
 
+	/**
+	 * Include directories in search.
+	 */
 	public void setIncludeDirs(boolean includeDirs) {
 		this.includeDirs = includeDirs;
 	}
 
-	/**
-	 * Include directories in search.
-	 */
-	public FilepathScanner includeDirs(boolean includeDirs) {
-		this.includeDirs = includeDirs;
-		return this;
-	}
-
-
-
-	protected boolean includeFiles = true;
 
 	public boolean isIncludeFiles() {
 		return includeFiles;
 	}
 
+	/**
+	 * Include files in search.
+	 */
 	public void setIncludeFiles(boolean includeFiles) {
 		this.includeFiles = includeFiles;
 	}
 
-	/**
-	 * Include files in search.
-	 */
-	public FilepathScanner includeFiles(boolean includeFiles) {
-		this.includeFiles = includeFiles;
-		return this;
-	}
-
-	/**
-	 * Include files and folders.
-	 */
-	public FilepathScanner includeFilesAndFolders() {
-		includeDirs = true;
-		includeFiles = true;
-		return this;
-	}
-
-
 	// ---------------------------------------------------------------- scan
 
 	/**
-	 * Starts resource scanning.
+	 * Starts files scanning for given destination root.
 	 */
 	public void scan(File root) {
 		File[] allFiles = root.listFiles();
@@ -93,6 +66,9 @@ public abstract class FilepathScanner {
 		}
 	}
 
+	/**
+	 * Starts files scanning for given destination root.
+	 */
 	public void scan(String string) {
 		scan(new File(string));
 	}
@@ -127,7 +103,7 @@ public abstract class FilepathScanner {
 	}
 
 	/**
-	 * Invoked on some resource.
+	 * Invoked on founded file.
 	 */
 	protected abstract void onFile(File file);
 

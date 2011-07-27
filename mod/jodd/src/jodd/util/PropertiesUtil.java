@@ -4,7 +4,7 @@ package jodd.util;
 
 import jodd.io.StreamUtil;
 import jodd.io.AsciiInputStream;
-import jodd.io.findfile.ClasspathScanner;
+import jodd.io.findfile.ClassScanner;
 import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
 import static jodd.util.StringPool.RIGHT_BRACE;
 import static jodd.util.StringPool.DOLLAR;
@@ -30,8 +30,6 @@ public class PropertiesUtil {
 	 * Create properties from the file.
 	 *
 	 * @param fileName properties file name to load
-	 *
-	 * @exception IOException
 	 */
 	public static Properties createFromFile(String fileName) throws IOException {
 		return createFromFile(new File(fileName));
@@ -41,8 +39,6 @@ public class PropertiesUtil {
 	 * Create properties from the file.
 	 *
 	 * @param file properties file to load
-	 *
-	 * @exception IOException
 	 */
 	public static Properties createFromFile(File file) throws IOException {
 		Properties prop = new Properties();
@@ -56,8 +52,6 @@ public class PropertiesUtil {
 	 *
 	 * @param p        properties to fill in
 	 * @param fileName properties file name to load
-	 *
-	 * @exception IOException
 	 */
 	public static void loadFromFile(Properties p, String fileName) throws IOException {
 		loadFromFile(p, new File(fileName));
@@ -69,8 +63,6 @@ public class PropertiesUtil {
 	 *
 	 * @param p      properties to fill in
 	 * @param file   file to read properties from
-	 *
-	 * @exception IOException
 	 */
 	public static void loadFromFile(Properties p, File file) throws IOException {
 		FileInputStream fis = null;
@@ -88,8 +80,6 @@ public class PropertiesUtil {
 	 *
 	 * @param p        properties to write to file
 	 * @param fileName destination file name
-	 *
-	 * @exception IOException
 	 */
 	public static void writeToFile(Properties p, String fileName) throws IOException {
 		writeToFile(p, new File(fileName), null);
@@ -101,8 +91,6 @@ public class PropertiesUtil {
 	 * @param p        properties to write to file
 	 * @param fileName destination file name
 	 * @param header   optional header
-	 *
-	 * @exception IOException
 	 */
 	public static void writeToFile(Properties p, String fileName, String header) throws IOException {
 		writeToFile(p, new File(fileName), header);
@@ -113,8 +101,6 @@ public class PropertiesUtil {
 	 *
 	 * @param p      properties to write to file
 	 * @param file   destination file
-	 *
-	 * @exception IOException
 	 */
 	public static void writeToFile(Properties p, File file) throws IOException {
 		writeToFile(p, file, null);
@@ -126,8 +112,6 @@ public class PropertiesUtil {
 	 * @param p      properties to write to file
 	 * @param file   destination file
 	 * @param header optional header
-	 *
-	 * @exception IOException
 	 */
 	public static void writeToFile(Properties p, File file, String header) throws IOException {
 		FileOutputStream fos = null;
@@ -209,16 +193,16 @@ public class PropertiesUtil {
 	 * Loads properties from classpath file(s). Properties are specified using wildcards.
 	 */
 	public static Properties loadFromClasspath(final Properties p, String... rootTemplate) {
-		ClasspathScanner scanner = new ClasspathScanner() {
+		ClassScanner scanner = new ClassScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
 				p.load(entryData.openInputStream());
 			}
 		};
-		scanner.includeResources(true).
-				ignoreException(true).
-				include(rootTemplate).
-				scanDefaultClasspath();
+		scanner.setIncludeResources(true);
+		scanner.setIgnoreException(true);
+		scanner.setIncludedEntries(rootTemplate);
+		scanner.scanDefaultClasspath();
 		return p;
 	}
 

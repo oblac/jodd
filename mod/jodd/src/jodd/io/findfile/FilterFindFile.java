@@ -37,7 +37,7 @@ public class FilterFindFile extends FindFile {
 	 */
 	public FindFile addFilters(FileFilter[] ff) {
 		if (ffilters == null) {
-			ffilters = new ArrayList<FileFilter>();
+			ffilters = new ArrayList<FileFilter>(ff.length);
 		}
 		ffilters.addAll(Arrays.asList(ff));
 		return this;
@@ -69,6 +69,5 @@ public class FilterFindFile extends FindFile {
 		}
 		return true;
 	}
-
 
 }

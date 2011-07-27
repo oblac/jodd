@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.io.findfile.FilepathScanner;
+import jodd.io.findfile.FileScanner;
 import jodd.mutable.MutableInteger;
 import junit.framework.TestCase;
 
@@ -25,7 +25,7 @@ public class FilepathScannerTest extends TestCase {
 
 	public void testFileScanner() {
 		final MutableInteger count = new MutableInteger(0);
-		FilepathScanner fs = new FilepathScanner() {
+		FileScanner fs = new FileScanner() {
 			@Override
 			protected void onFile(File file) {
 				count.value++;
@@ -38,7 +38,10 @@ public class FilepathScannerTest extends TestCase {
 
 				assertTrue(matched);
 			}
-		}.includeDirs(false).recursive(true).includeFiles(true);
+		};
+		fs.setIncludeDirs(false);
+		fs.setRecursive(true);
+		fs.setIncludeFiles(true);
 		fs.scan(dataRoot);
 
 		assertEquals(3, count.value);
@@ -46,7 +49,7 @@ public class FilepathScannerTest extends TestCase {
 
 	public void testFolderScanner() {
 		final MutableInteger count = new MutableInteger(0);
-		FilepathScanner fs = new FilepathScanner() {
+		FileScanner fs = new FileScanner() {
 			@Override
 			protected void onFile(File file) {
 				count.value++;
@@ -57,7 +60,10 @@ public class FilepathScannerTest extends TestCase {
 
 				assertTrue(matched);
 			}
-		}.includeDirs(true).recursive(true).includeFiles(false);
+		};
+		fs.setIncludeDirs(true);
+		fs.setRecursive(true);
+		fs.setIncludeFiles(false);
 		fs.scan(dataRoot);
 
 		assertEquals(1, count.value);
