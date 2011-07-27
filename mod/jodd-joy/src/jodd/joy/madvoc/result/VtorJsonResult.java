@@ -10,10 +10,12 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.result.ActionResult;
+import jodd.servlet.ServletUtil;
 import jodd.util.CharUtil;
 import jodd.util.MimeTypes;
 import jodd.vtor.Violation;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.List;
@@ -48,6 +50,7 @@ public class VtorJsonResult extends ActionResult {
 
 	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		Object action = actionRequest.getAction();
@@ -58,14 +61,14 @@ public class VtorJsonResult extends ActionResult {
 
 		List<Violation> list = appAction.violations();
 
-		String result = VtorUtil.createViolationsJsonString(actionRequest.getHttpServletRequest(), list);
-
-		char[] chars = result.toCharArray();
-		byte[] data = CharUtil.toByteArray(chars, madvocConfig.getEncoding());
+		String result = VtorUtil.createViolationsJsonString(request, list);
 
 		if (jsonResponseContentType != null) {
 			response.setContentType(jsonResponseContentType);
 		}
+
+		char[] chars = result.toCharArray();
+		byte[] data = CharUtil.toByteArray(chars, madvocConfig.getEncoding());
 
 		OutputStream os = response.getOutputStream();
 		os.write(data);
