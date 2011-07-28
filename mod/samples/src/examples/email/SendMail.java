@@ -10,7 +10,7 @@ import static jodd.mail.Email.PRIORITY_HIGHEST;
 public class SendMail {
 
 	public static void main(String[] args) {
-		SmtpServer smtpServer = new SmtpServer("mail.beotel.rs");
+		SmtpServer smtpServer = new SmtpServer("mail.beotel.rs", "weird", "...");
 		SendMailSession session = smtpServer.createSession();
 
 		session.open();
@@ -19,7 +19,7 @@ public class SendMail {
 
 		email = Email.create()
 				.from("weird@beotel.rs")
-				.to("weird@beotel.rs")
+				.to("info@jodd.org")
 				.subject("test1")
 				.addText("a plain text message čtf");
 		session.sendMail(email);
@@ -27,7 +27,7 @@ public class SendMail {
 
 		email = Email.create()
 				.from("weird@beotel.rs")
-				.to("weird@beotel.rs")
+				.to("info@jodd.org")
 				.subject("test2")
 				.addHtml("a <b>test 2</b> message");
 		session.sendMail(email);
@@ -35,7 +35,7 @@ public class SendMail {
 
 		email = Email.create()
 				.from("weird@beotel.rs")
-				.to("weird@beotel.rs")
+				.to("info@jodd.org")
 				.addText("and text3 message!")
 				.subject("test3")
 				.addHtml("a <b>test 3</b> message");
@@ -44,7 +44,7 @@ public class SendMail {
 
 		email = Email.create()
 				.from("weird@beotel.rs")
-				.to("weird@beotel.rs")
+				.to("info@jodd.org")
 				.subject("test4")
 				.addText("text 4")
 				.attachFile("d:\\huh2.jpg")
@@ -54,7 +54,7 @@ public class SendMail {
 
 		email = Email.create()
 				.from("weird@beotel.rs")
-				.to("weird@beotel.rs")
+				.to("info@jodd.org")
 				.subject("test5")
 				.addText("Здраво!")
 				.addHtml("<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><body><h1>Здраво!</h1><img src='cid:huh2.jpg'></body></html>")

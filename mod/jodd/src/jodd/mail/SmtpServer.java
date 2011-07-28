@@ -51,6 +51,10 @@ public class SmtpServer implements SendMailSessionProvider {
 		this(host, port, new SimpleAuthenticator(username, password));
 	}
 
+	public SmtpServer(String host, String username, String password) {
+		this(host, DEFAULT_SMTP_PORT, new SimpleAuthenticator(username, password));
+	}
+
 	/**
 	 * SMTP server defined with its host and authenitification.
 	 */
