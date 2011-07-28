@@ -2,6 +2,7 @@
 
 package jodd.mail.att;
 
+import jodd.JoddDefault;
 import jodd.mail.EmailAttachment;
 import jodd.util.MimeTypes;
 
@@ -15,6 +16,10 @@ public class StringAttachment extends EmailAttachment {
 	protected final String content;
 	protected final String mime;
 	protected final String encoding;
+
+	public StringAttachment(String content, String mime, String name) {
+		this(content, mime, JoddDefault.encoding, name);
+	}
 
 	public StringAttachment(String content, String mime, String encoding, String name) {
 		super(name, null);
@@ -32,6 +37,6 @@ public class StringAttachment extends EmailAttachment {
 
 	@Override
 	public DataSource getDataSource() {
-		return new ByteArrayDataSource(content, MimeTypes.MIME_TEXT_HTML, encoding);
+		return new StreamDataSource(content, MimeTypes.MIME_TEXT_HTML, encoding);
 	}
 }

@@ -22,6 +22,6 @@ public class ByteArrayAttachment extends EmailAttachment {
 
 	@Override
 	public DataSource getDataSource() {
-		return new ByteArrayDataSource(content, contentType);
+		return new StreamDataSource(content, contentType);
 	}
 }

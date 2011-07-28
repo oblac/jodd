@@ -3,10 +3,8 @@
 package jodd.mail.att;
 
 import jodd.mail.EmailAttachment;
-import jodd.mail.MailException;
 
 import javax.activation.DataSource;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -25,11 +23,7 @@ public class InputStreamAttachment extends EmailAttachment {
 
 	@Override
 	public DataSource getDataSource() {
-		try {
-			return new ByteArrayDataSource(inputStream, contentType);
-		} catch (IOException ioex) {
-			throw new MailException("Unable to create data source", ioex);
-		}
+		return new StreamDataSource(inputStream, contentType);
 	}
 
 }
