@@ -14,7 +14,7 @@ public class ByteArrayAttachment extends EmailAttachment {
 	protected final byte[] content;
 	protected final String contentType;
 
-	protected ByteArrayAttachment(byte[] content, String contentType, String name, String contentId) {
+	public ByteArrayAttachment(byte[] content, String contentType, String name, String contentId) {
 		super(name, contentId);
 		this.content = content;
 		this.contentType = contentType;

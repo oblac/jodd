@@ -17,7 +17,7 @@ public class InputStreamAttachment extends EmailAttachment {
 	protected final InputStream inputStream;
 	protected final String contentType;
 
-	protected InputStreamAttachment(InputStream inputStream, String contentType, String name, String contentId) {
+	public InputStreamAttachment(InputStream inputStream, String contentType, String name, String contentId) {
 		super(name, contentId);
 		this.inputStream = inputStream;
 		this.contentType = contentType;
