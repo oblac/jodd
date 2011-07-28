@@ -56,7 +56,7 @@ public class SmtpServer implements SendMailSessionProvider {
 	}
 
 	/**
-	 * SMTP server defined with its host and authenitification.
+	 * SMTP server defined with its host and authentication.
 	 */
 	public SmtpServer(String host, int port, Authenticator authenticator) {
 		this.host = host;
