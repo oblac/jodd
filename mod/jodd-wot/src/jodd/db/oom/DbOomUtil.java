@@ -40,5 +40,13 @@ public class DbOomUtil {
 			}
 		}
 	}
-	
+
+
+	/**
+	 * Returns initial collection size when max is provided.
+	 */
+	public static int initialCollectionSize(int max) {
+		return max != 0 ? max : 10;
+	}
+
 }

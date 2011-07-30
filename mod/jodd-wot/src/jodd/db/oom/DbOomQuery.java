@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map;
 
+import static jodd.db.oom.DbOomUtil.initialCollectionSize;
+
 /**
  * A simple ORM extension for {@link DbQuery}.
  * <p>
@@ -245,7 +247,7 @@ public class DbOomQuery extends DbQuery {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> listOne(Class<T> type, int max, boolean close) {
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<T>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
 		while (rsm.next()) {
@@ -293,7 +295,7 @@ public class DbOomQuery extends DbQuery {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
-		List<Object> result = new ArrayList<Object>();
+		List<Object> result = new ArrayList<Object>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
@@ -306,7 +308,7 @@ public class DbOomQuery extends DbQuery {
 			}
 		}
 		close(rsm, close);
-		return (List<T>) result;
+		return result;
 	}
 
 	// ---------------------------------------------------------------- set
@@ -337,7 +339,7 @@ public class DbOomQuery extends DbQuery {
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSetOne(Class<T> type, int max, boolean close) {
-		Set<T> result = new LinkedHashSet<T>();
+		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
 		while (rsm.next()) {
@@ -377,7 +379,7 @@ public class DbOomQuery extends DbQuery {
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
-		Set<Object> result = new LinkedHashSet<Object>();
+		Set<Object> result = new LinkedHashSet<Object>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
@@ -390,7 +392,7 @@ public class DbOomQuery extends DbQuery {
 			}
 		}
 		close(rsm, close);
-		return (Set<T>) result;
+		return result;
 	}
 
 	// ---------------------------------------------------------------- find
