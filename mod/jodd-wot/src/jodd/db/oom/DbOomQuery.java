@@ -155,7 +155,7 @@ public class DbOomQuery extends DbQuery {
 	 * Prepares a row (array of rows mapped object) using hints.
 	 * Returns either single object or objects array.
 	 */
-	protected Object prepareRow(Object[] row) {
+	protected Object resolveRowHints(Object[] row) {
 		row = hintResolver.join(row, hints);
 		return row.length == 1 ? row[0] : row;
 	}
@@ -295,13 +295,15 @@ public class DbOomQuery extends DbQuery {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
-		List<Object> result = new ArrayList<Object>(initialCollectionSize(max));
+		List<T> result = new ArrayList<T>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
 		while (rsm.next()) {
-			result.add(prepareRow(rsm.parseObjects(types)));
+			Object row = resolveRowHints(rsm.parseObjects(types));
+			result.add((T) row);
+
 			max--;
 			if (max == 0) {
 				break;
@@ -379,13 +381,14 @@ public class DbOomQuery extends DbQuery {
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
-		Set<Object> result = new LinkedHashSet<Object>(initialCollectionSize(max));
+		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
 		while (rsm.next()) {
-			result.add(prepareRow(rsm.parseObjects(types)));
+			Object row = resolveRowHints(rsm.parseObjects(types));
+			result.add((T) row);
 			max--;
 			if (max == 0) {
 				break;
@@ -449,7 +452,7 @@ public class DbOomQuery extends DbQuery {
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
-		Object result = prepareRow(rsm.parseObjects(types));
+		Object result = resolveRowHints(rsm.parseObjects(types));
 		close(rsm, close);
 		return result;
 	}

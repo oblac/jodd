@@ -51,7 +51,7 @@ class DbListIterator<T> implements Iterator<T> {
 
 	@SuppressWarnings({"unchecked"})
 	public T next() {
-		return (T) query.prepareRow(resultSetMapper.parseObjects(types));
+		return (T) query.resolveRowHints(resultSetMapper.parseObjects(types));
 	}
 
 }
