@@ -6,9 +6,11 @@ import jodd.util.StringUtil;
 import jodd.io.FileUtil;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.net.URI;
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 /**
  * Generic and helpful file finder. Searches all files on specified search path.
@@ -17,8 +19,7 @@ import java.net.URL;
  * @see RegExpFindFile
  * @see FilterFindFile
  *
- * todo: Add method for storing results in files lists and trees
- * todo: Add sorting and comparators 
+ * todo: Add sorting and comparators
  */
 public class FindFile {
 
@@ -242,6 +243,31 @@ public class FindFile {
 			}
 			return currentFile;
 		}
+	}
+
+	/**
+	 * Returns file walker iterator.
+	 */
+	public Iterator<File> iterator() {
+
+		return new Iterator<File>() {
+			private File nextFile;
+			public boolean hasNext() {
+				nextFile = nextFile();
+				return nextFile != null;
+			}
+
+			public File next() {
+				if (nextFile == null) {
+					throw new NoSuchElementException();
+				}
+				return nextFile;
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 
 

@@ -20,11 +20,11 @@ public class WildcardFileScanner extends FileScanner {
 	protected List<File> files;
 
 	public WildcardFileScanner(String wildcard) {
-		files = new ArrayList<File>();
-		this.wildcard = wildcard;
+		this(wildcard, false);
 	}
 
 	public WildcardFileScanner(String wildcard, boolean usePathWildcards) {
+		files = new ArrayList<File>();
 		this.wildcard = wildcard;
 		this.usePathWildcards = usePathWildcards;
 	}

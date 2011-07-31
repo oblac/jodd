@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 public class FindFileTest extends TestCase {
@@ -54,7 +55,36 @@ public class FindFileTest extends TestCase {
 
 		assertEquals(0, countDirs);
 		assertEquals(2, countFiles);
+
+		ff.searchPath(dataRoot);
+
+		countDirs = 0;
+		countFiles = 0;
+
+		Iterator<File> iterator = ff.iterator();
+
+		while (iterator.hasNext()) {
+			f = iterator.next();
+
+			if (f.isDirectory() == true) {
+				countDirs++;
+			} else {
+				countFiles++;
+				String path = f.getAbsolutePath();
+				path = FileNameUtil.separatorsToUnix(path);
+				boolean matched =
+						path.equals(dataRoot + "/file/a.png") ||
+						path.equals(dataRoot + "/file/a.txt");
+
+				assertTrue(matched);
+			}
+		}
+
+		assertEquals(0, countDirs);
+		assertEquals(2, countFiles);
+
 	}
+
 
 	public void testWildcardPath() {
 		FindFile ff = new WildcardFindFile("**/file/*", true)

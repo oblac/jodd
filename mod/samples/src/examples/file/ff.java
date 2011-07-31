@@ -9,6 +9,7 @@ import jodd.io.filter.WildcardFileFilter;
 import jodd.util.SystemUtil;
 
 import java.io.File;
+import java.util.Iterator;
 
 public class ff {
 	public static void main(String args[]) {
@@ -35,6 +36,8 @@ public class ff {
 
 		System.out.println("\n\n\nsearching classpath");
 
+		// ----------------------------------------------------------------
+
 		FindFile ff = new WildcardFindFile("*").setRecursive(true).setIncludeDirs(true).searchPath(SystemUtil.getClassPath());
 //		FindFile ff = new WildcardFindFile("c:/temp/temp","*").includeDirs().recursive();
 
@@ -48,6 +51,23 @@ public class ff {
 			}
 			i++;
 		}
+		// ----------------------------------------------------------------
+
+		ff = new WildcardFindFile("*").setRecursive(true).setIncludeDirs(true).searchPath(SystemUtil.getClassPath());
+		Iterator<File> iterator = ff.iterator();
+		i = 1;
+
+		while (iterator.hasNext()) {
+			f = iterator.next();
+			if (f.isDirectory() == true) {
+				System.out.println(i + ". >" + f.getName());
+			} else {
+				System.out.println(i + ". " + f.getName());
+			}
+			i++;
+		}
+
+
 		System.out.println("---end---");
 	}
 }
