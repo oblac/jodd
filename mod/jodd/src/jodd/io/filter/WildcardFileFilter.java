@@ -7,11 +7,12 @@ import java.io.File;
 import jodd.util.Wildcard;
 
 /**
- * <code>FileFilter</code> that matches file names against {@link Wildcard wildcard} pattern (* and ?).
+ * <code>FileFilter</code> that matches file names against {@link Wildcard wildcard} pattern (*, ? and **).
  */
 public class WildcardFileFilter extends FileFilterBase {
 
 	private final String pattern;
+	protected boolean usePathWildcards;
 
 	/**
 	 * Wildcard file filter.
@@ -20,9 +21,20 @@ public class WildcardFileFilter extends FileFilterBase {
 		this.pattern = pattern;
 	}
 
+	/**
+	 * Wildcard file filter.
+	 */
+	public WildcardFileFilter(String pattern, boolean usePathWildcards) {
+		this.pattern = pattern;
+		this.usePathWildcards = usePathWildcards;
+	}
+
 	@Override
 	public boolean accept(File dir, String name) {
-		return Wildcard.match(name, pattern);
+
+		return usePathWildcards ?
+				Wildcard.matchPath(name, pattern) :
+				Wildcard.match(name, pattern) ;
 	}
 }
 
