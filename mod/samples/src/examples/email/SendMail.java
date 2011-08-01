@@ -2,14 +2,23 @@
 
 package examples.email;
 
+import jodd.io.FileUtil;
 import jodd.mail.SmtpServer;
 import jodd.mail.Email;
 import jodd.mail.SendMailSession;
+import jodd.mail.att.ByteArrayAttachment;
+
+import javax.activation.DataSource;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import static jodd.mail.Email.PRIORITY_HIGHEST;
 
 public class SendMail {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		SmtpServer smtpServer = new SmtpServer("mail.beotel.rs", "weird", "...");
 		SendMailSession session = smtpServer.createSession();
 
@@ -52,6 +61,12 @@ public class SendMail {
 		session.sendMail(email);
 		System.out.println("email #4 sent");
 
+
+		byte[] bytes = FileUtil.readBytes("d:\\summer.jpg");
+
+		FileInputStream fis = new FileInputStream("d:\\summer.jpg");
+		ByteArrayAttachment isa = new ByteArrayAttachment(fis, "image/jpeg", "summer2.jpg", null);
+
 		email = Email.create()
 				.from("weird@beotel.rs")
 				.to("info@jodd.org")
@@ -60,6 +75,8 @@ public class SendMail {
 				.addHtml("<html><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><body><h1>Здраво!</h1><img src='cid:huh2.jpg'></body></html>")
 				.embedFile("d:\\huh2.jpg")
 				.attachFile("d:\\cover.jpg")
+				.attachBytes(bytes, "image/jpeg", "sum.jpg")
+				.attach(isa)
 		;
 		session.sendMail(email);
 		System.out.println("email #5 sent");

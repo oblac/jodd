@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import jodd.mail.att.ByteArrayAttachment;
 import jodd.mail.att.FileAttachment;
 import jodd.util.MimeTypes;
 
@@ -122,7 +123,7 @@ public class Email extends CommonEmail {
 	/**
 	 * Adds generic attachment.
 	 */
-	public Email addAttachment(EmailAttachment emailAttachment) {
+	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
 			attachments = new LinkedList<EmailAttachment>();
 		}
@@ -131,31 +132,39 @@ public class Email extends CommonEmail {
 	}
 
 	/**
+	 * Attach bytes;
+	 */
+	public Email attachBytes(byte[] bytes, String contentType, String name) {
+		attach(new ByteArrayAttachment(bytes, contentType, name));
+		return this;
+	}
+
+	/**
 	 * Adds an existing file as attachment.
 	 */
 	public Email attachFile(String fileName) {
-		addAttachment(new FileAttachment(new File(fileName)));
+		attach(new FileAttachment(new File(fileName)));
 		return this;
 	}
 	public Email attachFile(File file) {
-		addAttachment(new FileAttachment(file));
+		attach(new FileAttachment(file));
 		return this;
 	}
 	public Email embedFile(String fileName, String contentId) {
 		File f = new File(fileName);
-		addAttachment(new FileAttachment(f, f.getName(), contentId));
+		attach(new FileAttachment(f, f.getName(), contentId));
 		return this;
 	}
 	public Email embedFile(File file, String contentId) {
-		addAttachment(new FileAttachment(file, file.getName(), contentId));
+		attach(new FileAttachment(file, file.getName(), contentId));
 		return this;
 	}
 	public Email embedFile(String fileName) {
-		addAttachment(new FileAttachment(new File(fileName), true));
+		attach(new FileAttachment(new File(fileName), true));
 		return this;
 	}
 	public Email embedFile(File file) {
-		addAttachment(new FileAttachment(file, true));
+		attach(new FileAttachment(file, true));
 		return this;
 	}
 
