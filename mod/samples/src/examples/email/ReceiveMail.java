@@ -23,6 +23,8 @@ public class ReceiveMail {
 		session.open();
 		System.out.println(session.getMessageCount());
 		ReceivedEmail[] emails = session.receiveEmail(false);
+		session.close();
+
 		if (emails != null) {
 			for (ReceivedEmail email : emails) {
 				System.out.println("\n\n===[" + email.getMessageNumber() + "]==================================");
@@ -51,7 +53,7 @@ public class ReceiveMail {
 				
 			}
 		}
-		session.close();
+
 		
 	}
 }
