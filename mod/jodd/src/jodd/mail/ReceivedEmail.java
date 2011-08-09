@@ -2,8 +2,11 @@
 
 package jodd.mail;
 
+import jodd.mail.att.ByteArrayAttachment;
+
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Received email.
@@ -73,16 +76,25 @@ public class ReceivedEmail extends CommonEmail {
 
 	// ---------------------------------------------------------------- attachments
 
-	protected HashMap<String, byte[]> attachments;
+	protected List<EmailAttachment> attachments;
 
-	public void addAttachment(String filename, byte[] content) {
+	/**
+	 * Adds received attachment.
+	 */
+	public void addAttachment(String filename, String mimeType, String contentId, byte[] content) {
 		if (attachments == null) {
-			attachments = new HashMap<String,byte[]>();
+			attachments = new ArrayList<EmailAttachment>();
 		}
-		attachments.put(filename, content);
+		EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename, contentId);
+		emailAttachment.setSize(content.length);
+		attachments.add(emailAttachment);
 	}
 
-	public HashMap<String, byte[]> getAttachments() {
+	/**
+	 * Returns the list of all attachments.
+	 * If no attachment is available, returns <code>null</code>.
+	 */
+	public List<EmailAttachment> getAttachments() {
 		return attachments;
 	}
 }

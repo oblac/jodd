@@ -43,15 +43,23 @@ public class EmailMessage {
 
 	// ---------------------------------------------------------------- getters
 
-
+	/**
+	 * Returns message content.
+	 */
 	public String getContent() {
 		return content;
 	}
 
+	/**
+	 * Returns message mime type.
+	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 
+	/**
+	 * Returns message encoding.
+	 */
 	public String getEncoding() {
 		return encoding;
 	}

@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import jodd.JoddDefault;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
@@ -17,6 +18,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.MimePart;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -207,33 +209,62 @@ public class ReceiveMailSession {
 	/**
 	 * Process single part of received message. All parts are simple added to the message, i.e. hierarchy is not saved.
 	 */
-	protected void processPart(ReceivedEmail email, Part p) throws IOException, MessagingException {
-		Object c = p.getContent();
-		if (c instanceof String) {
-			email.addMessage(parseStringPart(p));
-		} else if (c instanceof Multipart) {
-			Multipart mp = (Multipart) c;
+	protected void processPart(ReceivedEmail email, Part part) throws IOException, MessagingException {
+		Object content = part.getContent();
+
+		if (content instanceof String) {
+			String stringContent = (String) content;
+
+			String disposition = part.getDisposition();
+			if (disposition != null && disposition.equals(Part.ATTACHMENT)) {
+				String mimeType = extractMimeType(part.getContentType());
+				String fileName = part.getFileName();
+				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
+
+				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(JoddDefault.encoding));
+			} else {
+				String contentType = part.getContentType();
+				email.addMessage(stringContent, extractMimeType(contentType), extractEncoding(contentType));
+			}
+		} else if (content instanceof Multipart) {
+			Multipart mp = (Multipart) content;
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part innerPart = mp.getBodyPart(i);
 				processPart(email, innerPart);
 			}
-		} else if (c instanceof InputStream) {
-			InputStream is = (InputStream) c;
+		} else if (content instanceof InputStream) {
+			String fileName = part.getFileName();
+			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
+			String mimeType = extractMimeType(part.getContentType());
+
+			InputStream is = (InputStream) content;
 			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 			StreamUtil.copy(is, fbaos);
-			email.addAttachment(p.getFileName(), fbaos.toByteArray());
+
+			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
 	}
 
+	/**
+	 * Extracts mime type from parts content type.
+	 */
+	protected String extractMimeType(String contentType) {
+		int ndx = contentType.indexOf(';');
+		String mime;
+		if (ndx != -1) {
+			mime = contentType.substring(0, ndx);
+		} else {
+			mime = contentType;
+		}
+		return mime;
+	}
 
 	/**
-	 * Parses string parts.
+	 * Parses content type for encoding.
 	 */
-	protected EmailMessage parseStringPart(Part part) throws IOException, MessagingException {
-		String contentType = part.getContentType();
+	protected String extractEncoding(String contentType) {
 		int ndx = contentType.indexOf(';');
-		String mime = ndx != -1 ? contentType.substring(0, ndx) : contentType;
 		String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
 		String encoding = null;
 
@@ -256,7 +287,7 @@ public class ReceiveMailSession {
 			}
 			encoding = charset.substring(start, ndx);
 		}
-		return new EmailMessage((String) part.getContent(), mime, encoding);
+		return encoding;
 	}
 
 	/**

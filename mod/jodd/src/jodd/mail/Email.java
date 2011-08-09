@@ -132,7 +132,7 @@ public class Email extends CommonEmail {
 	}
 
 	/**
-	 * Attach bytes;
+	 * Attach bytes.
 	 */
 	public Email attachBytes(byte[] bytes, String contentType, String name) {
 		attach(new ByteArrayAttachment(bytes, contentType, name));

@@ -2,7 +2,14 @@
 
 package jodd.mail;
 
+import jodd.io.FastByteArrayOutputStream;
+import jodd.io.FileUtil;
+import jodd.io.StreamUtil;
+
 import javax.activation.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Email attachment.
@@ -39,4 +46,53 @@ public abstract class EmailAttachment {
 	}
 
 	public abstract DataSource getDataSource();
+
+	// ---------------------------------------------------------------- size
+
+	protected int size = -1;
+
+	/**
+	 * Returns size of <b>received</b> attachment,
+	 */
+	public int getSize() {
+		return size;
+	}
+
+	protected void setSize(int size) {
+		this.size = size;
+	}
+
+	// ---------------------------------------------------------------- content methods
+
+	/**
+	 * Returns byte content of the attachment.
+	 */
+	public byte[] toByteArray() {
+		InputStream in = null;
+		try {
+			in = getDataSource().getInputStream();
+			FastByteArrayOutputStream out = new FastByteArrayOutputStream();
+			StreamUtil.copy(in, out);
+			return out.toByteArray();
+		} catch (IOException ioex) {
+			throw new MailException(ioex);
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
+	/**
+	 * Saves attachment to a file.
+	 */
+	public void writeToFile(File destination) {
+		InputStream in = null;
+		try {
+			in = getDataSource().getInputStream();
+			FileUtil.writeStream(destination, in);
+		} catch (IOException ioex) {
+			throw new MailException(ioex);
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
 }
