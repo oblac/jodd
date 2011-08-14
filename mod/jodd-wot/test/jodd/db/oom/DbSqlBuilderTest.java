@@ -14,7 +14,7 @@ import static jodd.db.oom.ColumnAliasType.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class DbSlqBuilderTest extends TestCase {
+public class DbSqlBuilderTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {

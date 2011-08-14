@@ -15,7 +15,7 @@ public class DbOomTests extends TestSuite {
 		addTestSuite(DbOom2Test.class);
 		addTestSuite(DbSqlTemplateTest.class);
 		addTestSuite(DbSqlTemplateWithPrefixTest.class);
-		addTestSuite(DbSlqBuilderTest.class);
+		addTestSuite(DbSqlBuilderTest.class);
 		addTestSuite(JointHintResolverTest.class);
 		addTestSuite(DbEntitySqlTest.class);
 		addTestSuite(MappingTest.class);
