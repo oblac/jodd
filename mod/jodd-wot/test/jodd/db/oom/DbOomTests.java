@@ -19,6 +19,7 @@ public class DbOomTests extends TestSuite {
 		addTestSuite(JointHintResolverTest.class);
 		addTestSuite(DbEntitySqlTest.class);
 		addTestSuite(MappingTest.class);
+		addTestSuite(DbNoTableTest.class);
 	}
 
 	public static Test suite() {
