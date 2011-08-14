@@ -2,6 +2,7 @@
 
 package jodd.db.oom.sqlgen.chunks;
 
+import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
@@ -21,13 +22,14 @@ import jodd.util.StringPool;
  * <p>
  * If previous chunk is also a column chunk, comma separator will be added in between.
  * <p>
- * Note that column alias are appended to the column name ('as' construct).
+ * Note that column alias are appended to the column name (using 'as' construct).
  * <p>
  * Macro rules:
  * <li><code>$C{tableRef}</code> is rendered as FOO.col1, FOO.col2,...
  * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns
  * <li><code>$C{tableRef.+}</code> renders to only identity columns
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column
+ * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
  */
 public class ColumnsSelectChunk extends SqlChunk {
 
@@ -102,20 +104,27 @@ public class ColumnsSelectChunk extends SqlChunk {
 	public void init(TemplateData templateData) {
 		super.init(templateData);
 		if (hint != null) {
-			templateData.hintCount++;
+			templateData.incrementHintsCount();
 		}
 	}
 
 	@Override
 	public void process(StringBuilder out) {
 		// hints
-		if (templateData.hintCount > 0) {
+		if (templateData.hasHints()) {
 			templateData.registerHint(hint == null ? tableRef : hint);
 		}
 
 		// columns
 		separateByCommaOrSpace(out);
-		DbEntityDescriptor ded = lookupTableRef(tableRef);
+
+		boolean useTableReference = true;
+		DbEntityDescriptor ded = lookupTableRef(tableRef, false);
+		if (ded == null) {
+			useTableReference = false;
+			ded = lookupName(tableRef);
+		}
+
 		if (columnRef == null) {
 			DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 			int count = 0;
@@ -127,7 +136,12 @@ public class ColumnsSelectChunk extends SqlChunk {
 					out.append(',').append(' ');
 				}
 				templateData.lastColumnDec = dec;
-				appendColumnName(out, ded, dec.getColumnName());
+
+				if (useTableReference) {
+					appendColumnName(out, ded, dec.getColumnName());
+				} else {
+					appendAlias(out, ded, dec.getColumnName());
+				}
 				count++;
 			}
 		} else {
@@ -138,7 +152,33 @@ public class ColumnsSelectChunk extends SqlChunk {
 			if (columnName == null) {
 				throw new DbSqlBuilderException("Unable to resolve column reference: '" + tableRef + '.' + columnRef + "'.");
 			}
-			appendColumnName(out, ded, columnName);
+			if (useTableReference) {
+				appendColumnName(out, ded, columnName);
+			} else {
+				appendAlias(out, ded, columnName);
+			}
+		}
+	}
+
+	/**
+	 * Appends alias.
+	 */
+	protected void appendAlias(StringBuilder query, DbEntityDescriptor ded, String column) {
+		String tableName = ded.getTableName();
+
+		ColumnAliasType columnAliasType = templateData.getColumnAliasType();
+		String columnAliasSeparator = templateData.getDbOomManager().getColumnAliasSeparator();
+
+		if (columnAliasType == null || columnAliasType == ColumnAliasType.TABLE_REFERENCE) {
+			templateData.registerColumnDataForTableRef(tableRef, tableName);
+			query.append(tableRef).append(columnAliasSeparator).append(column);
+		} else
+		if (columnAliasType == ColumnAliasType.COLUMN_CODE) {
+			String code = templateData.registerColumnDataForColumnCode(tableName, column);
+			query.append(code);
+		} else
+		if (columnAliasType == ColumnAliasType.TABLE_NAME) {
+			query.append(tableName).append(columnAliasSeparator).append(column);
 		}
 	}
 
