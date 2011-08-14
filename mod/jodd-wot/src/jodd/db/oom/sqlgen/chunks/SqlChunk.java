@@ -151,9 +151,18 @@ public abstract class SqlChunk implements Cloneable {
 	 * Lookups for table reference and throws an exception if table reference not found.
 	 */
 	protected DbEntityDescriptor lookupTableRef(String tableRef) {
+		return lookupTableRef(tableRef, true);
+	}
+
+	/**
+	 * Lookups for table reference and optionally throws an exception if table reference not found.
+	 */
+	protected DbEntityDescriptor lookupTableRef(String tableRef, boolean throwExceptionIfNotFound) {
 		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "'.");
+			if (throwExceptionIfNotFound) {
+				throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "'.");
+			}
 		}
 		return ded;
 	}
