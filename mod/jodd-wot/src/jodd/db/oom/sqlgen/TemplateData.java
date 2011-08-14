@@ -21,7 +21,7 @@ public abstract class TemplateData {
 
 	private static final String COL_CODE_PREFIX = "col_";
 	
-	public final DbOomManager dbOomManager;
+	protected final DbOomManager dbOomManager;
 
 	protected TemplateData() {
 		dbOomManager = DbOomManager.getInstance();
@@ -36,7 +36,7 @@ public abstract class TemplateData {
 	}
 
 	/**
-	 * Resets the builde before initializing and processing.
+	 * Resets the build before initializing and processing.
 	 */
 	protected void resetOnPreInit() {
 		columnCount = 0;
@@ -271,7 +271,7 @@ public abstract class TemplateData {
 
 	// ---------------------------------------------------------------- hints
 
-	public int hintCount;
+	protected int hintCount;
 
 	protected List<String> hints;
 
@@ -283,6 +283,20 @@ public abstract class TemplateData {
 			hints = new ArrayList<String>(hintCount);
 		}
 		hints.add(hint);
+	}
+
+	/**
+	 * Increments hints count.
+	 */
+	public void incrementHintsCount() {
+		hintCount++;
+	}
+
+	/**
+	 * Returns <code>true</code> if there are hints.
+	 */
+	public boolean hasHints() {
+		return hintCount > 0;
 	}
 
 
