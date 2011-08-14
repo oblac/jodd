@@ -153,7 +153,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupTableRef(String tableRef) {
 		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "', not defined in the query.");
+			throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "'.");
 		}
 		return ded;
 	}
