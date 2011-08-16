@@ -27,7 +27,11 @@ public class WildcardFindFile extends FindFile {
 		this.usePathWildcards = usePathWildcards;
 	}
 
+	// ---------------------------------------------------------------- properties
 
+	/**
+	 * Returns <code>true</code> if path wildcards are in use.
+	 */
 	public boolean isUsePathWildcards() {
 		return usePathWildcards;
 	}
@@ -35,9 +39,12 @@ public class WildcardFindFile extends FindFile {
 	/**
 	 * Set path wildcard matching algorithm.
 	 */
-	public void setUsePathWildcards(boolean usePathWildcards) {
+	public WildcardFindFile setUsePathWildcards(boolean usePathWildcards) {
 		this.usePathWildcards = usePathWildcards;
+		return this;
 	}
+
+	// ---------------------------------------------------------------- accept
 
 	@Override
 	protected boolean acceptFile(File currentFile) {

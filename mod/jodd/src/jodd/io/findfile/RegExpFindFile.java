@@ -19,21 +19,6 @@ public class RegExpFindFile extends FindFile {
 		regexpPattern = Pattern.compile(pattern);
 	}
 
-	public RegExpFindFile(String searchPath, String pattern) {
-		regexpPattern = Pattern.compile(pattern);
-		searchPath(searchPath);
-	}
-
-	public RegExpFindFile(File searchPath, String pattern) {
-		regexpPattern = Pattern.compile(pattern);
-		searchPath(searchPath);
-	}
-
-	public RegExpFindFile(String[] searchPath, String pattern) {
-		regexpPattern = Pattern.compile(pattern);
-		searchPath(searchPath);
-	}
-
 	@Override
 	protected boolean acceptFile(File currentFile) {
 		String path = currentFile.getAbsolutePath();

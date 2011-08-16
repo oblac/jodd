@@ -13,22 +13,6 @@ import java.util.Arrays;
  */
 public class FilterFindFile extends FindFile {
 
-	public FilterFindFile() {
-	}
-
-	public FilterFindFile(String searchPath) {
-		super(searchPath);
-	}
-
-	public FilterFindFile(File searchPath) {
-		super(searchPath);
-	}
-
-	public FilterFindFile(String[] searchPath) {
-		super(searchPath);
-	}
-
-	// ---------------------------------------------------------------- filters
 
 	protected List<FileFilter> ffilters;
 

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 
 /**
- * Generic and helpful file finder. Searches all files on specified search path.
+ * Generic iterative file finder. Searches all files on specified search path.
  *
  * @see WildcardFindFile
  * @see RegExpFindFile
@@ -72,40 +72,43 @@ public class FindFile {
 
 	// ---------------------------------------------------------------- search path
 
-
-	public FindFile() {
-	}
-
-	public FindFile(String searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(String[] searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(File searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(URI searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(URI[] searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(URL searchPath) {
-		searchPath(searchPath);
-	}
-
-	public FindFile(URL[] searchPath) {
-		searchPath(searchPath);
-	}
-
-
 	protected LinkedList<File> fileList;
+
+	/**
+	 * Adds existing search path to the file list.
+	 * If path is a folder, it will be scanned for all files.
+	 */
+	protected void addSearchPath(File searchPath) {
+		if (searchPath.exists() == false) {
+			return;
+		}
+		if (fileList == null) {
+			fileList = new LinkedList<File>();
+		}
+		if (searchPath.isDirectory() == false) {
+			fileList.add(searchPath);
+			return;
+		}
+		listFiles(searchPath);
+	}
+
+	/**
+	 * Specifies single search path.
+	 */
+	public FindFile searchPath(File searchPath) {
+		addSearchPath(searchPath);
+		return this;
+	}
+
+	/**
+	 * Specifies a set of search paths.
+	 */
+	public FindFile searchPath(File... searchPath) {
+		for (File file : searchPath) {
+			addSearchPath(file);
+		}
+		return this;
+	}
 
 	/**
 	 * Specifies the search path. If provided path contains
@@ -116,11 +119,11 @@ public class FindFile {
 		if (searchPath.indexOf(File.pathSeparatorChar) != -1) {
 			String[] paths = StringUtil.split(searchPath, File.pathSeparator);
 			for (String path : paths) {
-				searchPath(path);
+				addSearchPath(new File(path));
 			}
 			return this;
 		}
-		searchPath(new File(searchPath));
+		addSearchPath(new File(searchPath));
 		return this;
 	}
 
@@ -128,7 +131,7 @@ public class FindFile {
 	 * Specifies search paths.
 	 * @see #searchPath(String) 
 	 */
-	public FindFile searchPath(String[] searchPaths) {
+	public FindFile searchPath(String... searchPaths) {
 		for (String searchPath : searchPaths) {
 			searchPath(searchPath);
 		}
@@ -136,59 +139,43 @@ public class FindFile {
 	}
 
 	/**
-	 * Specifies the search path.
-	 */
-	public FindFile searchPath(File searchPath) {
-		if (searchPath.exists() == false) {
-			return this;
-		}
-		if (fileList == null) {
-			fileList = new LinkedList<File>();
-		}
-		if (searchPath.isDirectory() == false) {
-			fileList.add(searchPath);
-			return this;
-		}
-		listFiles(searchPath);
-		return this;
-	}
-
-	/**
-	 * Specifies the search path.
+	 * Specifies the search path. Throws an exception if URI is invalid.
 	 */
 	public FindFile searchPath(URI searchPath) {
-		searchPath(new File(searchPath));
+		File file = FileUtil.toFile(searchPath);
+		if (file == null) {
+			throw new FindFileException("Invalid search path URI: '" + searchPath + "'.");
+		}
+		addSearchPath(file);
 		return this;
 	}
 
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URI[] searchPath) {
+	public FindFile searchPath(URI... searchPath) {
 		for (URI uri : searchPath) {
 			searchPath(uri);
 		}
 		return this;
 	}
 
-
 	/**
-	 * Specifies the search path.
+	 * Specifies the search path. Throws an exception if URL is invalid.
 	 */
 	public FindFile searchPath(URL searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
-			throw new FindFileException("Search path is not a valid file URL: '" + searchPath + "'.");
+			throw new FindFileException("Invalid search path URL: '" + searchPath + "'.");
 		}
-		searchPath(file);
+		addSearchPath(file);
 		return this;
 	}
-
 
 	/**
 	 * Specifies the search path.
 	 */
-	public FindFile searchPath(URL[] searchPath) {
+	public FindFile searchPath(URL... searchPath) {
 		for (URL url : searchPath) {
 			searchPath(url);
 		}
