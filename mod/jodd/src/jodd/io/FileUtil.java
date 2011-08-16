@@ -50,7 +50,11 @@ public class FileUtil {
 	 * Converts file URLs to file. Ignores other schemes and returns <code>null</code>.
 	 */
 	public static File toFile(URL url) {
-		return new File(toFileName(url));
+		String fileName = toFileName(url);
+		if (fileName == null) {
+			return null;
+		}
+		return new File(fileName);
 	}
 
 	/**
