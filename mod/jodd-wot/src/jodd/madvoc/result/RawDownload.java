@@ -8,11 +8,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * Download data for raw results.
  */
 public class RawDownload extends RawResultData {
+
+	public RawDownload(InputStream inputStream, String downloadFileName, String mimeType, int length) {
+		super(inputStream, downloadFileName, mimeType, length);
+	}
 
 	public RawDownload(byte[] bytes, String downloadFileName, String mimeType) {
 		super(new ByteArrayInputStream(bytes), downloadFileName, mimeType, bytes.length);
