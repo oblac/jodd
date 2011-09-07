@@ -114,38 +114,57 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- content disposition
 
 	/**
-	 * Prepares response for file download when file size is not known.
-	 * @see #prepareDownload(javax.servlet.http.HttpServletResponse, String, int) 
+	 * Prepares response for file download. Mime type and size is resolved from the file.
 	 */
-	public static void prepareDownload(HttpServletResponse response, String fileName) {
-		prepareDownload(response, fileName, -1);
+	public static void prepareDownload(HttpServletResponse response, File file) {
+		prepareDownload(response, file, null);
 	}
 
 	/**
-	 * Prepares response for file download. Sets correct mime type, file name and file size.
+	 * Prepares response for file download with specified mime type.
+	 */
+	public static void prepareDownload(HttpServletResponse response, File file, String mimeType) {
+		if (file.exists() == false) {
+			throw new IllegalArgumentException("File '" + file + "' doesn't exist.");
+		}
+		if (file.length() > Integer.MAX_VALUE) {
+			throw new IllegalArgumentException("File '" + file + "' is too big.");
+		}
+		prepareDownload(response, file.getAbsolutePath(), mimeType, (int) file.length());
+	}
+
+	/**
+	 * Prepares response for file download. Resolves mime type from file name extension.
 	 */
 	public static void prepareDownload(HttpServletResponse response, String fileName, int fileSize) {
-		String extension = FileNameUtil.getExtension(fileName);
-		String name = FileNameUtil.getName(fileName);
-		String mime = MimeTypes.getMimeType(extension);
-		response.setContentType(mime);
-		response.setHeader(CONTENT_DISPOSITION,"attachment;filename=\"" + name + '\"');
-		if (fileSize >= 0) {
-			response.setContentLength(fileSize);
-		}
+		prepareDownload(response, fileName, null, fileSize);
 	}
 
 	/**
 	 * Prepares response for file download.
+	 *
+	 * @param response http response
+	 * @param fileName file name, if full path then file name will be stripped, if null, will be ignored.
+	 * @param mimeType may be <code>null</code>
+	 * @param fileSize if less then 0 will be ignored
 	 */
-	public static void prepareDownload(HttpServletResponse response, File file) {
-		if (file.exists() == false) {
-			throw new IllegalArgumentException("Unable to prepare file for download. File '" + file + "' doesn't exist.");
+	public static void prepareDownload(HttpServletResponse response, String fileName, String mimeType, int fileSize) {
+		if ((mimeType == null) && (fileName != null)) {
+			String extension = FileNameUtil.getExtension(fileName);
+			mimeType = MimeTypes.getMimeType(extension);
 		}
-		if (file.length() > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Unable to prepare file for download. File '" + file + "' is too big.");
+		if (mimeType != null) {
+			response.setContentType(mimeType);
 		}
-		prepareDownload(response, file.getAbsolutePath(), (int) file.length());
+
+		if (fileSize >= 0) {
+			response.setContentLength(fileSize);
+		}
+
+		if (fileName != null) {
+			String name = FileNameUtil.getName(fileName);
+			response.setHeader(CONTENT_DISPOSITION,"attachment;filename=\"" + name + '\"');
+		}
 	}
 
 	// ---------------------------------------------------------------- cookie
