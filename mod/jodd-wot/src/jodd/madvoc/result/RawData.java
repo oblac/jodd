@@ -4,6 +4,7 @@ package jodd.madvoc.result;
 
 import jodd.util.MimeTypes;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 /**
@@ -12,18 +13,11 @@ import java.io.File;
 public class RawData extends RawResultData  {
 
 	public RawData(byte[] bytes, String mimeType) {
-		super(bytes, null, mimeType);
+		super(new ByteArrayInputStream(bytes), null, mimeType, bytes.length);
 	}
 
 	public RawData(byte[] bytes) {
-		super(bytes, null, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
+		this(bytes, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
 	}
 
-	public RawData(File file, String mimeType) {
-		super(file, mimeType);
-	}
-
-	public RawData(File file) {
-		super(file, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
-	}
 }

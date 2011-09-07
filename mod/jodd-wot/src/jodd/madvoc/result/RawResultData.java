@@ -2,13 +2,7 @@
 
 package jodd.madvoc.result;
 
-import jodd.util.MimeTypes;
-import jodd.io.FileUtil;
-import jodd.io.FileNameUtil;
-import jodd.madvoc.MadvocException;
-
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Holder for Raw results.
@@ -17,31 +11,23 @@ public abstract class RawResultData {
 
 	private static final String RESULT = RawResult.NAME + ':';
 
-	protected final byte[] bytes;
+	protected final InputStream inputStream;
 	protected final String downloadFileName;
 	protected final String mimeType;
+	protected final int length;
 
-	protected RawResultData(byte[] bytes, String downloadFileName, String mimeType) {
-		this.bytes = bytes;
+	protected RawResultData(InputStream inputStream, String downloadFileName, String mimeType, int length) {
+		this.inputStream = inputStream;
 		this.downloadFileName = downloadFileName;
 		this.mimeType = mimeType;
-	}
-
-	protected RawResultData(File file, String mimeType) {
-		try {
-			bytes = FileUtil.readBytes(file);
-		} catch (IOException ioex) {
-			throw new MadvocException("Unable to read file '" + file + "'.", ioex);
-		}
-		this.downloadFileName = file.getName();
-		this.mimeType = mimeType;
+		this.length = length;
 	}
 
 	/**
-	 * Returns byte array.
+	 * Returns content input stream.
 	 */
-	public byte[] getBytes() {
-		return bytes;
+	public InputStream getContentInputStream() {
+		return inputStream;
 	}
 
 	/**
@@ -56,6 +42,13 @@ public abstract class RawResultData {
 	 */
 	public String getDownloadFileName() {
 		return downloadFileName;
+	}
+
+	/**
+	 * Returns content length.
+	 */
+	public int getContentLength() {
+		return length;
 	}
 
 	@Override

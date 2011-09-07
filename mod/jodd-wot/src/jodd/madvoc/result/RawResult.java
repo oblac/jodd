@@ -2,6 +2,7 @@
 
 package jodd.madvoc.result;
 
+import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
@@ -9,6 +10,7 @@ import jodd.madvoc.component.MadvocConfig;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
 
@@ -38,14 +40,16 @@ public class RawResult extends ActionResult {
 
 		RawResultData result = (RawResultData) resultObject;
 
-		byte[] data = result.getBytes();
-
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		ServletUtil.prepareDownload(response, result.getDownloadFileName(), result.getMimeType(), result.getContentLength());
 
-		ServletUtil.prepareDownload(response, result.getDownloadFileName(), result.getMimeType(), data.length);
+		InputStream contentInputStream = result.getContentInputStream();
+		OutputStream out = response.getOutputStream();
 
-		OutputStream os = response.getOutputStream();
-		os.write(data);
-		os.flush();
+		StreamUtil.copy(contentInputStream, out);
+
+		out.flush();
+
+		StreamUtil.close(contentInputStream);
 	}
 }
