@@ -30,7 +30,8 @@
 <a href="hello.bigchange.html">BIG change</a> - forwards to complete different page, using double hash ('#') in result value.<br/>
 <a href="hello.noresult.html">404</a> - error: action exist, but result jsp page doesn't.<br/>
 <a href="hello.chain.html?chain=173">chains</a> - chaining from one action to another; passing and modifying the param.<br/>
-<a href="raw.html">raw</a> | <a href="raw.text.html">access</a> - two examples of RawResultData and 'raw:' results.<br/>
+<a href="raw.html">raw</a> with mime type | <a href="raw.text.html">pure raw</a> access - two examples of RawResultData and 'raw:' results.<br/>
+<a href="download">download txt file</a><br/>
 <br/>
 
 <a href="foo/hello">Hello</a> - action with no extension, different and explicitly defined action path.<br/>
@@ -68,7 +69,7 @@
 <a href="form.html">Form</a> example.<br/>
 <a href="girl.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br/>
 <a href="uploadfiles.html">Upload</a> example.<br/>
-<a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.custom">custom annotation</a>
+<a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.custom">custom annotation</a><br/>
 </p>
 
 <p>

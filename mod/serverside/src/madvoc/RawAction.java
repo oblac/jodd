@@ -4,17 +4,18 @@ package madvoc;
 
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
-import jodd.madvoc.result.RawResultData;
+import jodd.madvoc.result.RawData;
 import jodd.util.CharUtil;
+import jodd.util.MimeTypes;
 
 @MadvocAction
 public class RawAction {
 
 	@Action
-	public RawResultData view() {
+	public RawData view() {
 		String result = "this is some raw direct result";
 		byte[] bytes = CharUtil.toAsciiArray(result.toCharArray());
-		return new RawResultData(bytes);
+		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
 	}
 
 	@Action
