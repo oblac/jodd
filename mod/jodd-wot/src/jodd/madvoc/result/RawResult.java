@@ -6,6 +6,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
@@ -32,15 +33,16 @@ public class RawResult extends ActionResult {
 			return;
 		}
 		if (resultObject instanceof RawResultData != true) {
-			resultObject = new RawResultData(resultValue.getBytes(madvocConfig.getEncoding()));
+			resultObject = new RawData(resultValue.getBytes(madvocConfig.getEncoding()));
 		}
 
 		RawResultData result = (RawResultData) resultObject;
+
 		byte[] data = result.getBytes();
 
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
-		response.setContentType(result.getMime());
-		response.setContentLength(data.length);
+
+		ServletUtil.prepareDownload(response, result.getDownloadFileName(), result.getMimeType(), data.length);
 
 		OutputStream os = response.getOutputStream();
 		os.write(data);

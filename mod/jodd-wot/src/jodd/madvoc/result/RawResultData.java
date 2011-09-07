@@ -13,31 +13,28 @@ import java.io.IOException;
 /**
  * Holder for Raw results.
  */
-public class RawResultData {
+public abstract class RawResultData {
 
 	private static final String RESULT = RawResult.NAME + ':';
 
 	protected final byte[] bytes;
+	protected final String downloadFileName;
+	protected final String mimeType;
 
-	protected final String mime;
-
-	public RawResultData(byte[] bytes, String mimeType) {
+	protected RawResultData(byte[] bytes, String downloadFileName, String mimeType) {
 		this.bytes = bytes;
-		this.mime = mimeType;
+		this.downloadFileName = downloadFileName;
+		this.mimeType = mimeType;
 	}
 
-	public RawResultData(byte[] bytes) {
-		this(bytes, MimeTypes.MIME_APPLICATION_OCTET_STREAM);
-	}
-
-	public RawResultData(File file) {
+	protected RawResultData(File file, String mimeType) {
 		try {
 			bytes = FileUtil.readBytes(file);
 		} catch (IOException ioex) {
 			throw new MadvocException("Unable to read file '" + file + "'.", ioex);
 		}
-		String extension = FileNameUtil.getExtension(file.getAbsolutePath());
-		this.mime = MimeTypes.getMimeType(extension); 
+		this.downloadFileName = file.getName();
+		this.mimeType = mimeType;
 	}
 
 	/**
@@ -50,8 +47,15 @@ public class RawResultData {
 	/**
 	 * Returns content type.
 	 */
-	public String getMime() {
-		return mime;
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	/**
+	 * Returns download file name.
+	 */
+	public String getDownloadFileName() {
+		return downloadFileName;
 	}
 
 	@Override
