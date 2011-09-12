@@ -48,7 +48,9 @@ public class SetResolver {
 				continue;
 			}
 
-			if (ReflectUtil.isSubclass(field.getType(), Collection.class) == false) {
+
+			Class fieldType = field.getType();
+			if (fieldType != Collection.class && !ReflectUtil.isSubclass(fieldType, Collection.class)) {
 				continue;
 			}
 

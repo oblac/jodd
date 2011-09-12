@@ -5,6 +5,8 @@ package jodd.petite;
 import jodd.petite.test3.Batgirl;
 import jodd.petite.test3.Batman;
 import jodd.petite.test3.GothamCity;
+import jodd.petite.test3.Metropolis;
+import jodd.petite.test3.Superman;
 import junit.framework.TestCase;
 
 public class SetsTest extends TestCase {
@@ -52,5 +54,21 @@ public class SetsTest extends TestCase {
 		String str = gothamCity.whoIsThere();
 		assertTrue(str.contains("Batman"));
 		assertTrue(str.contains("Batgirl"));
+	}
+
+	public void testCollection() {
+		final PetiteContainer pc = new PetiteContainer();
+
+		pc.registerBean(Superman.class);
+		pc.registerBean(Metropolis.class);
+
+		Metropolis metropolis = pc.getBean(Metropolis.class);
+
+		assertNotNull(metropolis.superHeros);
+		assertFalse(metropolis.superHeros.isEmpty());
+		assertEquals(1, metropolis.superHeros.size());
+
+		String str = metropolis.whoIsThere();
+		assertTrue(str.contains("Superman"));
 	}
 }
