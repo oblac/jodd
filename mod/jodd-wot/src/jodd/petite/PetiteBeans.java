@@ -12,6 +12,7 @@ import jodd.util.ReflectUtil;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +34,11 @@ public abstract class PetiteBeans {
 	 * Map of all bean scopes.
 	 */
 	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<Class<? extends Scope>, Scope>();
+
+	/**
+	 * Map of all bean collections.
+	 */
+	protected final Map<Class, String[]> beanCollections = new HashMap<Class, String[]>();
 
 	/**
 	 * {@link PetiteConfig Petite configuration}.
@@ -218,6 +224,39 @@ public abstract class PetiteBeans {
 		return bd;
 	}
 
+
+	// ---------------------------------------------------------------- bean collections
+
+	/**
+	 * Resolve bean names for give type.
+	 */
+	protected String[] resolveBeanNamesForType(Class type) {
+		String[] beanNames = beanCollections.get(type);
+		if (beanNames != null) {
+			return beanNames;
+		}
+
+		ArrayList<String> list = new ArrayList<String>();
+
+		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
+			BeanDefinition beanDefinition = entry.getValue();
+
+			if (ReflectUtil.isSubclass(beanDefinition.type, type)) {
+				String beanName = entry.getKey();
+				list.add(beanName);
+			}
+		}
+
+		if (list.isEmpty()) {
+			beanNames = new String[0];
+		} else {
+			beanNames = list.toArray(new String[list.size()]);
+		}
+
+		beanCollections.put(type, beanNames);
+		return beanNames;
+	}
+
 	// ---------------------------------------------------------------- injection points
 
 	/**
@@ -372,6 +411,10 @@ public abstract class PetiteBeans {
 
 	protected PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
 		return petiteResolvers.getPropertyResolver().resolve(type, autowire);
+	}
+
+	protected CollectionInjectionPoint[] resolveCollectionInjectionPoint(Class type, boolean autowire) {
+		return petiteResolvers.getCollectionResolver().resolve(type, autowire);
 	}
 
 	protected MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
