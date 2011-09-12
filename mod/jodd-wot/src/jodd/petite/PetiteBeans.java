@@ -413,8 +413,8 @@ public abstract class PetiteBeans {
 		return petiteResolvers.getPropertyResolver().resolve(type, autowire);
 	}
 
-	protected CollectionInjectionPoint[] resolveCollectionInjectionPoint(Class type, boolean autowire) {
-		return petiteResolvers.getCollectionResolver().resolve(type, autowire);
+	protected SetInjectionPoint[] resolveCollectionInjectionPoint(Class type, boolean autowire) {
+		return petiteResolvers.getSetResolver().resolve(type, autowire);
 	}
 
 	protected MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {

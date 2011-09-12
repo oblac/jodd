@@ -64,10 +64,10 @@ public class InjectionPointFactory {
 	}
 
 	/**
-	 * Creates new collection injection point.
+	 * Creates new set injection point.
 	 */
-	public CollectionInjectionPoint createCollectionInjectionPoint(Field field) {
-		return new CollectionInjectionPoint(field);
+	public SetInjectionPoint createSetInjectionPoint(Field field) {
+		return new SetInjectionPoint(field);
 	}
 
 	// ---------------------------------------------------------------- utils
