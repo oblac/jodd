@@ -17,6 +17,7 @@ public class PetiteTests extends TestSuite {
 		addTestSuite(ParamTest.class);
 		addTestSuite(FullTypeTest.class);
 		addTestSuite(InjectionPointFactoryTest.class);
+		addTestSuite(SetsTest.class);
 	}
 
 	public static Test suite() {
