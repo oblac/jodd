@@ -6,7 +6,6 @@ import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 
 import java.util.Collection;
-import java.util.Set;
 
 @PetiteBean
 public class Metropolis {
