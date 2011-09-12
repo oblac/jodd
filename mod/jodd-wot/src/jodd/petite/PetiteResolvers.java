@@ -7,6 +7,7 @@ import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
 import jodd.petite.resolver.ParamResolver;
 import jodd.petite.resolver.PropertyResolver;
+import jodd.petite.resolver.CollectionResolver;
 
 /**
  * Simply holds all resolvers instances.
@@ -16,6 +17,7 @@ public class PetiteResolvers {
 	protected CtorResolver ctorResolver;
 	protected PropertyResolver propertyResolver;
 	protected MethodResolver methodResolver;
+	protected CollectionResolver collectionResolver;
 	protected InitMethodResolver initMethodResolver;
 	protected ParamResolver paramResolver;
 
@@ -23,11 +25,20 @@ public class PetiteResolvers {
 		ctorResolver = new CtorResolver(injectionPointFactory);
 		propertyResolver = new PropertyResolver(injectionPointFactory);
 		methodResolver = new MethodResolver(injectionPointFactory);
+		collectionResolver = new CollectionResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();
 		paramResolver = new ParamResolver();
 	}
 
 	// ---------------------------------------------------------------- access
+
+	public CollectionResolver getCollectionResolver() {
+		return collectionResolver;
+	}
+
+	public void setSetResolver(CollectionResolver collectionResolver) {
+		this.collectionResolver = collectionResolver;
+	}
 
 	public CtorResolver getCtorResolver() {
 		return ctorResolver;
