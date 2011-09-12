@@ -26,6 +26,7 @@ public class BeanDefinition {
 	// cache
 	public CtorInjectionPoint ctor;
 	public PropertyInjectionPoint[] properties;
+	public CollectionInjectionPoint[] collections;
 	public MethodInjectionPoint[] methods;
 	public InitMethodPoint[] initMethods;
 	public String[] params;

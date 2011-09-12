@@ -63,6 +63,13 @@ public class InjectionPointFactory {
 		return new PropertyInjectionPoint(field, references);
 	}
 
+	/**
+	 * Creates new collection injection point.
+	 */
+	public CollectionInjectionPoint createCollectionInjectionPoint(Field field) {
+		return new CollectionInjectionPoint(field);
+	}
+
 	// ---------------------------------------------------------------- utils
 
 	/**
