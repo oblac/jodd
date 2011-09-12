@@ -7,9 +7,11 @@ import jodd.introspector.ClassIntrospector;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.PropertyInjectionPoint;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -43,6 +45,10 @@ public class PropertyResolver {
 		for (Field field : allFields) {
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);
 			if ((autowire == false) && (ref == null)) {
+				continue;
+			}
+
+			if (ReflectUtil.isSubclass(field.getType(), Collection.class)) {
 				continue;
 			}
 
