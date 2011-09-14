@@ -137,6 +137,16 @@ public abstract class PetiteRegistry extends PetiteBeans {
 		registerPetitePropertyInjectionPoint(beanName, property, reference);
 	}
 
+
+	// ---------------------------------------------------------------- sets
+
+	/**
+	 * Registers set injection point.
+	 */
+	public void registerSetInjectionPoint(String beanName, String property) {
+		registerPetiteSetInjectionPoint(beanName, property);
+	}
+
 	// ---------------------------------------------------------------- method
 
 	/**

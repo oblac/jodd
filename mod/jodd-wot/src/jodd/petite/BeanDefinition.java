@@ -70,6 +70,18 @@ public class BeanDefinition {
 	}
 
 	/**
+	 * Adds set injection point.
+	 */
+	public void addSetInjectionPoint(SetInjectionPoint sip) {
+		if (sets == null) {
+			sets = new SetInjectionPoint[1];
+			sets[0] = sip;
+		} else {
+			sets = ArraysUtil.append(sets, sip);
+		}
+	}
+
+	/**
 	 * Adds method injection point.
 	 */
 	public void addMethodInjectionPoint(MethodInjectionPoint mip) {

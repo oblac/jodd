@@ -310,6 +310,26 @@ public abstract class PetiteBeans {
 	}
 
 	/**
+	 * Single point of property injection point registration.
+	 */
+	protected void registerPetiteSetInjectionPoint(String beanName, String property) {
+		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
+		SetInjectionPoint sip = defineSetInjectionPoint(
+				beanDefinition.type,
+				property);
+		beanDefinition.addSetInjectionPoint(sip);
+	}
+
+	private SetInjectionPoint defineSetInjectionPoint(Class type, String property) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		Field field = cd.getField(property, true);
+		if (field == null) {
+			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
+		}
+		return injectionPointFactory.createSetInjectionPoint(field);
+	}
+
+	/**
 	 * Single point of method injection point registration.
 	 */
 	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
