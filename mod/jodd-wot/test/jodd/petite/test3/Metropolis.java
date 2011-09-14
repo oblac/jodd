@@ -8,7 +8,7 @@ import jodd.petite.meta.PetiteInject;
 import java.util.Collection;
 
 @PetiteBean
-public class Metropolis {
+public class Metropolis implements SuperHero {
 
 	@PetiteInject
 	public Collection<SuperHero> superHeros;
@@ -22,4 +22,7 @@ public class Metropolis {
 		return superHeroes.trim();
 	}
 
+	public String getHeroName() {
+		return "delegate";
+	}
 }

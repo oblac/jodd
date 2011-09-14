@@ -132,8 +132,10 @@ public class PetiteContainer extends PetiteRegistry {
 			Collection beans = sip.createSet(beanNames.length);
 
 			for (String beanName : beanNames) {
-				Object value = getBean(beanName, acquiredBeans);
-				beans.add(value);
+				if (beanName.equals(def.name) == false) {
+					Object value = getBean(beanName, acquiredBeans);
+					beans.add(value);
+				}
 			}
 
 			BeanUtil.setDeclaredProperty(bean, sip.field.getName(), beans);
