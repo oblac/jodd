@@ -109,7 +109,6 @@ public class PetiteContainer extends PetiteRegistry {
 	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
 			def.properties = resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
-			def.sets = resolveCollectionInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (PropertyInjectionPoint pip : def.properties) {
 			String[] refName = pip.reference;
@@ -124,6 +123,9 @@ public class PetiteContainer extends PetiteRegistry {
 				continue;
 			}
 			BeanUtil.setDeclaredProperty(bean, pip.field.getName(), value);
+		}
+		if (def.sets == null) {
+			def.sets = resolveCollectionInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (SetInjectionPoint sip : def.sets) {
 
