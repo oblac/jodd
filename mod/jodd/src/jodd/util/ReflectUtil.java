@@ -6,6 +6,7 @@ import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConversionException;
 
+import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
@@ -821,81 +822,72 @@ public class ReflectUtil {
 	 * Returns <code>true</code> if method is bean getter.
 	 */
 	public static boolean isBeanPropertyGetter(Method method) {
+		return getBeanPropertyGetterPrefixLength(method) != 0;
+	}
+
+	private static int getBeanPropertyGetterPrefixLength(Method method) {
 		if (isObjectMethod(method)) {
-			return false;
+			return 0;
 		}
 		String methodName = method.getName();
 		Class returnType = method.getReturnType();
 		Class[] paramTypes =  method.getParameterTypes();
 		if (methodName.startsWith(METHOD_GET_PREFIX)) {		        // getter method must starts with 'get' and it is not getClass()
 			if ((returnType != null) && (paramTypes.length == 0)) {	// getter must have a return type and no arguments
-				return true;
+				return 3;
 			}
 		} else if (methodName.startsWith(METHOD_IS_PREFIX)) {		    // ister must starts with 'is'
 			if ((returnType != null)  && (paramTypes.length == 0)) {	// ister must have return type and no arguments
-				return true;
+				return 2;
 			}
 		}
-		return false;
+		return 0;
 	}
 
 	/**
 	 * Returns beans property getter name or <code>null</code> if method is not a real getter.
 	 */
 	public static String getBeanPropertyGetterName(Method method) {
-		if (isObjectMethod(method)) {
+		int prefixLength = getBeanPropertyGetterPrefixLength(method);
+		if (prefixLength == 0) {
 			return null;
 		}
-		String methodName = method.getName();
-		Class returnType = method.getReturnType();
-		Class[] paramTypes =  method.getParameterTypes();
-		if (methodName.startsWith(METHOD_GET_PREFIX)) {		// getter method must starts with 'get' and it is not getClass()
-			if ((returnType != null) && (paramTypes.length == 0)) {	// getter must have a return type and no arguments
-				return CharUtil.toLowerAscii(methodName.charAt(3)) + methodName.substring(4);
-			}
-		} else if (methodName.startsWith(METHOD_IS_PREFIX)) {		    // ister must starts with 'is'
-			if ((returnType != null)  && (paramTypes.length == 0)) {	// ister must have return type and no arguments
-				return CharUtil.toLowerAscii(methodName.charAt(2)) + methodName.substring(3);
-			}
-		}
-		return null;
+		String methodName = method.getName().substring(prefixLength);
+		return Introspector.decapitalize(methodName);
 	}
 
 	/**
 	 * Returns <code>true</code> if method is bean setter.
 	 */
 	public static boolean isBeanPropertySetter(Method method) {
+		return getBeanPropertySetterPrefixLength(method) != 0;
+	}
+
+	private static int getBeanPropertySetterPrefixLength(Method method) {
 		if (isObjectMethod(method)) {
-			return false;
+			return 0;
 		}
 		String methodName = method.getName();
 		Class[] paramTypes =  method.getParameterTypes();
 		if (methodName.startsWith(METHOD_SET_PREFIX)) {	        // setter must start with a 'set'
 			if (paramTypes.length == 1) {				        // setter must have just one argument
-				return true;
+				return 3;
 			}
 		}
-		return false;
+		return 0;
 	}
 
 	/**
 	 * Returns beans property setter name or <code>null</code> if method is not a real setter.
 	 */
 	public static String getBeanPropertySetterName(Method method) {
-		if (isObjectMethod(method)) {
+		int prefixLength = getBeanPropertySetterPrefixLength(method);
+		if (prefixLength == 0) {
 			return null;
 		}
-		String methodName = method.getName();
-		Class[] paramTypes =  method.getParameterTypes();
-		if (methodName.startsWith(METHOD_SET_PREFIX)) {	        // setter must start with a 'set'
-			if (paramTypes.length == 1) {				        // setter must have just one argument
-				return CharUtil.toLowerAscii(methodName.charAt(3)) + methodName.substring(4);
-			}
-		}
-		return null;
+		String methodName = method.getName().substring(prefixLength);
+		return Introspector.decapitalize(methodName);
 	}
-
-
 
 	// ---------------------------------------------------------------- generics
 

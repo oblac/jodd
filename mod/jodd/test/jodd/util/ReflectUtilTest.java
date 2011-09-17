@@ -2,11 +2,13 @@
 
 package jodd.util;
 
+import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import jodd.util.testdata.JavaBean;
 import jodd.util.testdata.W;
 import jodd.util.testdata2.En;
 import junit.framework.TestCase;
@@ -376,7 +378,7 @@ public class ReflectUtilTest extends TestCase {
 		assertFalse(ReflectUtil.isInterfaceImpl(STwo.class, STwo.class));
 	}
 
-	public static void testUnsetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
+	public void testUnsetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
 		Field f = W.class.getDeclaredField("constant");
 		f.setAccessible(true);
 
@@ -392,7 +394,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(173, i.intValue());
 	}
 
-	public static void testUnsetFieldModifiers2() throws NoSuchFieldException, IllegalAccessException {
+	public void testUnsetFieldModifiers2() throws NoSuchFieldException, IllegalAccessException {
 		Field f = W.class.getDeclaredField("priv");
 		f.setAccessible(true);
 
@@ -408,7 +410,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(173, i.intValue());
 	}
 
-	public static void testSetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
+	public void testSetFieldModifiers() throws NoSuchFieldException, IllegalAccessException {
 		Field f = W.class.getDeclaredField("regular");
 
 		ReflectUtil.setFieldModifiers(f, Modifier.FINAL);
@@ -420,5 +422,48 @@ public class ReflectUtilTest extends TestCase {
 		}
 	}
 
+	public void testBeanPropertyNames() {
+		String name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getOne"));
+		assertEquals("one", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setOne"));
+		assertEquals("one", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "isTwo"));
+		assertEquals("two", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setTwo"));
+		assertEquals("two", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getThree"));
+		assertEquals("three", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setThree"));
+		assertEquals("three", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getF"));
+		assertEquals("f", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setF"));
+		assertEquals("f", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getG"));
+		assertEquals("g", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setG"));
+		assertEquals("g", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getURL"));
+		assertEquals("URL", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setURL"));
+		assertEquals("URL", name);
+
+		name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getBIGsmall"));
+		assertEquals("BIGsmall", name);
+
+		name = ReflectUtil.getBeanPropertySetterName(ReflectUtil.findMethod(JavaBean.class, "setBIGsmall"));
+		assertEquals("BIGsmall", name);
+	}
 
 }
