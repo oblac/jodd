@@ -10,7 +10,6 @@ import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.AppUtil;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
-import jodd.joy.petite.ProxettaAwarePetiteContainer;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.db.DbJtxSessionProvider;
 import jodd.jtx.db.DbJtxTransactionManager;
@@ -21,6 +20,7 @@ import jodd.jtx.proxy.AnnotationTxAdviceSupport;
 import jodd.log.Log;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
+import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
@@ -232,7 +232,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Creates Petite container. By default, it creates
-	 * {@link jodd.joy.petite.ProxettaAwarePetiteContainer proxetta aware petite container}.
+	 * {@link jodd.petite.proxetta.ProxettaAwarePetiteContainer proxetta aware petite container}.
 	 */
 	protected PetiteContainer createPetiteContainer() {
 		return new ProxettaAwarePetiteContainer(proxetta);
