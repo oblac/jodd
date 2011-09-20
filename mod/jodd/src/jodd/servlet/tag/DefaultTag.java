@@ -12,7 +12,7 @@ public class DefaultTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		JspTag parent = getParent();
 		if (parent == null || !(parent instanceof SwitchTag)) {
-			throw new JspException("Parent Switch tag is required.", null);
+			throw new JspException(SwitchTag.MSG_PARENT_SWITCH_REQUIRED, null);
 		}
 
 		SwitchTag switchTag = (SwitchTag) parent;

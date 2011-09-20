@@ -10,6 +10,8 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class SwitchTag extends SimpleTagSupport {
 
+	static final String MSG_PARENT_SWITCH_REQUIRED = "Parent switch tag is required.";
+
 	private String value;
 	private boolean valueFounded;
 
