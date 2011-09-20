@@ -80,7 +80,6 @@ public class FileUtilTest extends TestCase {
 		}
 	}
 
-
 	public void testUnicodeString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
@@ -198,5 +197,18 @@ public class FileUtilTest extends TestCase {
 		} catch (IOException ioex) {
 			fail(ioex.toString());
 		}
+	}
+
+	public void testBytes() {
+		try {
+			byte[] bytes = FileUtil.readBytes(dataRoot + "/file/a.txt");
+
+			assertEquals(11, bytes.length);
+			assertEquals("test file\r\n", new String(bytes));
+
+		} catch (IOException ioex) {
+			fail(ioex.toString());
+		}
+
 	}
 }

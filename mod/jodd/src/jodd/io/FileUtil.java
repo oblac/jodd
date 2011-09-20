@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
  * File utilities.
  */
 public class FileUtil {
+
+	private static final String READ_ONLY = "r";
 
 	// ---------------------------------------------------------------- misc shortcuts
 
@@ -601,20 +604,20 @@ public class FileUtil {
 	/**
 	 * Reads file content as string.
 	 */
-	public static String readString(File source, String encoding) throws IOException {
-		if (source.exists() == false) {
-			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
+	public static String readString(File file, String encoding) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException("File '" + file + "' doesn't exist.");
 		}
-		if (source.isFile() == false) {
-			throw new IOException("Source '" + source + "' is not a file.");
+		if (file.isFile() == false) {
+			throw new IOException("Not a file: '" + file + "'.");
 		}
-		long len = source.length();
+		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
 			len = Integer.MAX_VALUE;
 		}
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream(source);
+			in = new FileInputStream(file);
 			StringWriter sw = new StringWriter((int) len);
 			StreamUtil.copy(in, sw, encoding);
 			return sw.toString();
@@ -711,17 +714,17 @@ public class FileUtil {
 	/**
 	 * Reads lines from source files.
 	 */
-	public static String[] readLines(File source, String encoding) throws IOException {
-		if (source.exists() == false) {
-			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
+	public static String[] readLines(File file, String encoding) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException("File '" + file + "' doesn't exist.");
 		}
-		if (source.isFile() == false) {
-			throw new IOException("Source '" + source + "' is not a file.");
+		if (file.isFile() == false) {
+			throw new IOException("Not a file: '" + file + "'.");
 		}
 		List<String> list = new ArrayList<String>();
 		FileInputStream in = null;
 		try {
-			in = new FileInputStream(source);
+			in = new FileInputStream(file);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in, encoding));
 			String strLine;
 			while ((strLine = br.readLine()) != null)   {
@@ -742,24 +745,24 @@ public class FileUtil {
 		return readBytes(new File(file));
 	}
 
-	public static byte[] readBytes(File source) throws IOException {
-		if (source.exists() == false) {
-			throw new FileNotFoundException("Source '" + source + "' doesn't exist.");
+	public static byte[] readBytes(File file) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException("File '" + file + "' doesn't exist.");
 		}
-		if (source.isFile() == false) {
-			throw new IOException("Source '" + source + "' exists, but it is not a file.");
+		if (file.isFile() == false) {
+			throw new IOException("Not a file: '" + file + "'.");
 		}
-		long len = source.length();
+		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
-			throw new IOException("Source size is greater then max array size.");
+			throw new IOException("File is larger then max array size.");
 		}
-		FileInputStream in = null;
-		try {
-			in = new FileInputStream(source);
-			return StreamUtil.readBytes(in);
-		} finally {
-			StreamUtil.close(in);
-		}
+
+		byte[] bytes = new byte[(int) len];
+		RandomAccessFile randomAccessFile = new RandomAccessFile(file, READ_ONLY);
+		randomAccessFile.readFully(bytes);
+		randomAccessFile.close();
+
+		return bytes;
 	}
 
 
@@ -800,7 +803,7 @@ public class FileUtil {
 	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
-				throw new IOException("Destination '" + dest + "' exist but it is not a file.");
+				throw new IOException("Not a file: '" + dest + "'.");
 			}
 		}
 		FileOutputStream out = null;
