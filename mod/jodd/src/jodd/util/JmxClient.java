@@ -139,7 +139,7 @@ public class JmxClient {
 		try {
 			return new ObjectName(mbeanName);
 		} catch (MalformedObjectNameException monex) {
-			throw new IllegalArgumentException("Invalid mbeanName: '" + mbeanName + "'.", monex);
+			throw new IllegalArgumentException("Invalid mbeanName: " + mbeanName, monex);
 		}
 	}
 

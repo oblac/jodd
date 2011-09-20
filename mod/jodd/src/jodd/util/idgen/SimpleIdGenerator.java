@@ -41,10 +41,10 @@ public class SimpleIdGenerator {
 	 */
 	public SimpleIdGenerator(int initialValue, int maxValue, boolean cycle) {
 		if (initialValue < 0) {
-			throw new IllegalArgumentException("Initial value '" + initialValue + "' must be a positive number.");
+			throw new IllegalArgumentException("Initial value must be positive: " + initialValue);
 		}
 		if (maxValue <= initialValue) {
-			throw new IllegalArgumentException("Max value '" + maxValue + "' is less or equals to initial value '" + initialValue + "'.");
+			throw new IllegalArgumentException("Max value: " + maxValue + " <= initial value: " + initialValue);
 		}
 		this.initialValue = this.value = initialValue;
 		this.maxValue = maxValue;

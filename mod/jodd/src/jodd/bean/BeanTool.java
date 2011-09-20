@@ -181,7 +181,7 @@ public class BeanTool {
 	public static void load(Object bean, Object source) {
 		BeanLoader loader = BeanLoaderManager.lookup(source);
 		if (loader == null) {
-			throw new BeanException("No registered bean loader for source: " + source.getClass().getName());
+			throw new BeanException("No registered bean loader for: " + source.getClass().getName());
 		}
 		loader.load(bean, source);
 	}
@@ -189,7 +189,7 @@ public class BeanTool {
 	public static void load(Object bean, Object source, Class type) {
 		BeanLoader loader = BeanLoaderManager.lookup(type);
 		if (loader == null) {
-			throw new BeanException("No registered bean loader for type: " + type.getName());
+			throw new BeanException("No registered bean loader for: " + type.getName());
 		}
 		loader.load(bean, source);
 	}

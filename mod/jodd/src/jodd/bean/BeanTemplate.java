@@ -77,7 +77,7 @@ public class BeanTemplate {
 			ndx += 2;
 			int ndx2 = template.indexOf(MACRO_END, ndx);
 			if (ndx2 == -1) {
-				throw new BeanException("Bad bean template format - unclosed macro at: " + (ndx - 2));
+				throw new BeanException("Bad template, unclosed macro at: " + (ndx - 2));
 			}
 
 			// detect inner macros, there is no escaping

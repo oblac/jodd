@@ -167,7 +167,7 @@ public abstract class ClassFinder {
 		File file = FileUtil.toFile(url);
 		if (file == null) {
 			if (ignoreException == false) {
-				throw new FindFileException("URL is not a valid file: '" + url + "'.");
+				throw new FindFileException("URL is not a valid file: " + url);
 			}
 		}
 		scanPath(file);
@@ -253,7 +253,7 @@ public abstract class ClassFinder {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
 			if (ignoreException == false) {
-				throw new FindFileException("Unable to work with zip file '" + file.getName() + "'.", ioex);
+				throw new FindFileException("Unable to work with zip file: " + file.getName(), ioex);
 			}
 			return;
 		}
@@ -375,7 +375,7 @@ public abstract class ClassFinder {
 		try {
 			onEntry(entryData);
 		} catch (Exception ex) {
-			throw new FindFileException("Unable to scan entry: '" + entryData + "'.", ex);
+			throw new FindFileException("Unable to scan entry: " + entryData, ex);
 		}
 	}
 
@@ -489,7 +489,7 @@ public abstract class ClassFinder {
 				inputStream = new FileInputStream(file);
 				return inputStream;
 			} catch (FileNotFoundException fnfex) {
-				throw new FindFileException("Unable to open file: '" + file.getAbsolutePath() + "'.", fnfex);
+				throw new FindFileException("Unable to open file: " + file.getAbsolutePath(), fnfex);
 			}
 		}
 

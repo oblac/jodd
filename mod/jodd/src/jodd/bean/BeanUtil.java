@@ -172,7 +172,7 @@ public class BeanUtil extends BeanUtilUtil {
 			Map map = (Map) bp.bean;
 			if (map.containsKey(bp.name) == false) {
 				if (bp.forced == false) {
-					throw new BeanException("Map key '" + bp.name + "' not found.", bp);
+					throw new BeanException("Map key not found: " + bp.name, bp);
 				}
 				Map value = new HashMap();
 				//noinspection unchecked
@@ -183,7 +183,7 @@ public class BeanUtil extends BeanUtilUtil {
 		}
 
 		// failed
-		throw new BeanException("Simple property '" + bp.name + "' not found.", bp);
+		throw new BeanException("Simple property not found: " + bp.name, bp);
 	}
 
 	public static void setSimpleProperty(Object bean, String property, Object value, boolean suppressSecurity) {
@@ -215,7 +215,7 @@ public class BeanUtil extends BeanUtilUtil {
 			((Map) bp.bean).put(bp.name, value);
 			return;
 		}
-		throw new BeanException("Simple property '" + bp.name + "' not found.", bp);
+		throw new BeanException("Simple property not found: " + bp.name, bp);
 	}
 
 
@@ -281,7 +281,7 @@ public class BeanUtil extends BeanUtilUtil {
 			return resultBean;	// no index, just simple bean
 		}
 		if (resultBean == null) {
-			throw new BeanException("Index property '" + bp.name + "' is null.", bp);
+			throw new BeanException("Index property is null: " + bp.name, bp);
 		}
 
 		// try: property[index]
@@ -313,7 +313,7 @@ public class BeanUtil extends BeanUtilUtil {
 				try {
 					value = ReflectUtil.newInstance(listType);
 				} catch (Exception ex) {
-					throw new BeanException("Unable to instatiate list element '" + bp.name + '[' + index + "]'.", bp, ex);
+					throw new BeanException("Unable to create list element: " + bp.name + '[' + index + "]", bp, ex);
 				}
 				//noinspection unchecked
 				list.set(index, value);
@@ -337,7 +337,7 @@ public class BeanUtil extends BeanUtilUtil {
 					try {
 						value = ReflectUtil.newInstance(mapType);
 					} catch (Exception ex) {
-						throw new BeanException("Unable to instatiate map element '" + bp.name + '[' + indexString + "]'.", bp, ex);
+						throw new BeanException("Unable to create map element: " + bp.name + '[' + indexString + "]", bp, ex);
 					}
 
 					//noinspection unchecked

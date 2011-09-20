@@ -144,7 +144,7 @@ public class FindFile {
 	public FindFile searchPath(URI searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
-			throw new FindFileException("Invalid search path URI: '" + searchPath + "'.");
+			throw new FindFileException("Invalid search path URI: " + searchPath);
 		}
 		addSearchPath(file);
 		return this;
@@ -166,7 +166,7 @@ public class FindFile {
 	public FindFile searchPath(URL searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
-			throw new FindFileException("Invalid search path URL: '" + searchPath + "'.");
+			throw new FindFileException("Invalid search path URL: " + searchPath);
 		}
 		addSearchPath(file);
 		return this;

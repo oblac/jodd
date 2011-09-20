@@ -43,7 +43,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 			destination.mkdirs();
 		}
 		if (destination.isDirectory() == false) {
-			throw new IOException("Destination folder is invalid: '" + destFolder + "'.");
+			throw new IOException("Invalid destination folder: " + destFolder);
 		}
 		this.destFolder = destination;
 		return this;

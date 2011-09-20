@@ -67,7 +67,7 @@ public class ReceiveMailSession {
 		try {
 			folder = store.getFolder(folderName);
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect to folder '" + folderName + "'.", msex);
+			throw new MailException("Unable to connect to folder: " + folderName, msex);
 		}
 		try {
 			folder.open(Folder.READ_WRITE);

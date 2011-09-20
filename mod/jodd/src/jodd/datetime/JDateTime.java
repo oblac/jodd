@@ -1122,7 +1122,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 */
 	public int getMonthLength(int m) {
 		if ((m < 1) || (m > 12)) {
-			throw new IllegalArgumentException("Invalid month index: '" + m + "'.");
+			throw new IllegalArgumentException("Invalid month: " + m);
 		}
 		if (m == 2) {
 			return this.leap ? 29 : 28;
@@ -1179,7 +1179,7 @@ public class JDateTime implements Comparable, Cloneable {
 	public void loadFrom(Object source) {
 		JdtConverter converter = JdtConverterManager.lookup(source.getClass());
 		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter for '" + source.getClass() + "' type not registered.");
+			throw new IllegalArgumentException("JdtConverter not registered: " + source.getClass());
 		}
 		//noinspection unchecked
 		converter.loadFrom(this, source);
@@ -1193,7 +1193,7 @@ public class JDateTime implements Comparable, Cloneable {
 	public <T> T convertTo(Class<T> type) {
 		JdtConverter<T> converter = JdtConverterManager.lookup(type);
 		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter for '" + type + "' type not registered.");
+			throw new IllegalArgumentException("JdtConverter not registered: " + type);
 		}
 		return converter.convertTo(this);
 	}
@@ -1206,7 +1206,7 @@ public class JDateTime implements Comparable, Cloneable {
 	public void storeTo(Object destination) {
 		JdtConverter converter = JdtConverterManager.lookup(destination.getClass());
 		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter for '" + destination.getClass() + "' type not registered.");
+			throw new IllegalArgumentException("JdtConverter not registered: " + destination.getClass());
 		}
 		//noinspection unchecked
 		converter.storeTo(this, destination);

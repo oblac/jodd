@@ -87,7 +87,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			if (fileNameExtension.equalsIgnoreCase(fileExtension) == true) {
 				if (allowFileExtensions == false) {	// extension matched and it is not allowed
 					if (breakOnError == true) {
-						throw new IOException("Filename extension of uploaded file in not allowed (" + fileNameExtension + ").");
+						throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 					}
 					size = input.skipToBoundary();
 					return false;
@@ -97,7 +97,7 @@ public class AdaptiveFileUpload extends FileUpload {
 		}
 		if (allowFileExtensions == true) {	// extension is not one of the allowed ones.
 			if (breakOnError == true) {
-				throw new IOException("Filename extension of uploaded file in not in the list of allowed ones (" + fileNameExtension + ").");
+				throw new IOException("Upload filename extension not allowed: " + fileNameExtension);
 			}
 			size = input.skipToBoundary();
 			return false;

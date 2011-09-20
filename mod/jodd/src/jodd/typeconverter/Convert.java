@@ -703,7 +703,7 @@ public class Convert {
 		}
 		TypeConverter converter = TypeConverterManager.lookup(destinationType);
 		if (converter == null) {
-			throw new TypeConversionException("Unable to convert value to type: '" + destinationType.getName() + "'.");
+			throw new TypeConversionException("Unable to convert value to type: " + destinationType.getName());
 		}
 		return converter.convert(value);
 	}

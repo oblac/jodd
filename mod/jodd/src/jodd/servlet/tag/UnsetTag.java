@@ -43,7 +43,7 @@ public class UnsetTag extends SimpleTagSupport {
         } else if (scopeValue.equals(SCOPE_PAGE)) {
             pageContext.removeAttribute(name);
         } else {
-			throw new JspException("Invalid scope: '" + scope + "'.");
+			throw new JspException("Invalid scope: " + scope);
         }
 	}
 }

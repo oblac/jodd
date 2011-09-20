@@ -316,12 +316,12 @@ public class ReflectUtil {
 					}
 				}
 			}
-			throw new ClassCastException("Unable to cast value to type: '" + destinationType.getName() + "'.");
+			throw new ClassCastException("Unable to cast value to type: " + destinationType.getName());
 		}
 		try {
 			return (T) converter.convert(value);
 		} catch (TypeConversionException tcex) {
-			throw new ClassCastException("Unable to convert value to type: '" + destinationType.getName() + "'.:" + tcex.toString());
+			throw new ClassCastException("Unable to convert value to type: " + destinationType.getName() + " : " + tcex.toString());
 		}
 	}
 

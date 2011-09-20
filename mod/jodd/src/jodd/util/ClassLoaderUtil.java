@@ -73,7 +73,7 @@ public class ClassLoaderUtil {
 		try {
 			addUrlToClassPath(path.toURL(), classLoader);
 		} catch (MalformedURLException muex) {
-			throw new IllegalArgumentException("Unable to convert path to URL: '" + path + "'.", muex);
+			throw new IllegalArgumentException("Unable to convert path to URL: " + path, muex);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class ClassLoaderUtil {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Unable to extend classpath with URL: '" + url + "'.", ex);
+			throw new IllegalArgumentException("Unable to extend classpath with URL: " + url, ex);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class ClassLoaderUtil {
 					new Class[]{String.class, byte[].class, int.class, int.class},
 					new Object[]{className, classData, new Integer(0), new Integer(classData.length)});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to define class '" + className + "'.", th);
+			throw new RuntimeException("Unable to define class: " + className, th);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class ClassLoaderUtil {
 					new Class[] {String.class},
 					new Object[] {className});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to find class '" + className + "'.", th);
+			throw new RuntimeException("Unable to find class: " + className, th);
 		}
 	}
 
@@ -484,7 +484,7 @@ public class ClassLoaderUtil {
 			}
 		}
 
-		throw new ClassNotFoundException("Class not found: '" + className + '\'');
+		throw new ClassNotFoundException("Class not found: " + className);
 	}
 
 	// ---------------------------------------------------------------- misc

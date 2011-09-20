@@ -125,10 +125,10 @@ public class ServletUtil {
 	 */
 	public static void prepareDownload(HttpServletResponse response, File file, String mimeType) {
 		if (file.exists() == false) {
-			throw new IllegalArgumentException("File '" + file + "' doesn't exist.");
+			throw new IllegalArgumentException("File not found: " + file);
 		}
 		if (file.length() > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("File '" + file + "' is too big.");
+			throw new IllegalArgumentException("File too big: " + file);
 		}
 		prepareDownload(response, file.getAbsolutePath(), mimeType, (int) file.length());
 	}
@@ -434,7 +434,7 @@ public class ServletUtil {
 		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
             request.getSession().getServletContext().setAttribute(name, value);
         } else {
-			throw new UncheckedException("Invalid scope: '" + scope + "'.");
+			throw new UncheckedException("Invalid scope: " + scope);
         }
 	}
 
@@ -453,7 +453,7 @@ public class ServletUtil {
 		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
             request.getSession().getServletContext().removeAttribute(name);
         } else {
-			throw new UncheckedException("Invalid scope: '" + scope + "'.");
+			throw new UncheckedException("Invalid scope: " + scope);
         }
 	}
 

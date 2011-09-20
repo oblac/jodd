@@ -132,7 +132,7 @@ public class DefaultFormatter extends AbstractFormatter {
 			case 10:	destination.second = v; break;
 			case 11:	destination.millisecond = v; break;
 			default:
-				throw new IllegalArgumentException("Parsing failed, template " + new String(patterns[patternIndex]) + " may not be used for parsing.");
+				throw new IllegalArgumentException("Parsing failed with template: " + new String(patterns[patternIndex]));
 		}
 	}
 }

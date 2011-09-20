@@ -86,7 +86,7 @@ public abstract class LoopingTagSupport extends SimpleTagSupport {
 		}
 		if (autoDirection == true) {
 			if (step < 0) {
-				throw new IllegalArgumentException("Step value can't be negative: '" + step + "'.");
+				throw new IllegalArgumentException("Step value can't be negative: " + step);
 			}
 			if (start > end) {
 				step = -step;

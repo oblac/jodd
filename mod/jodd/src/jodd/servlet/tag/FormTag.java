@@ -214,7 +214,7 @@ public class FormTag extends BodyTagSupport {
 		}
 		int ndx2 = value.indexOf(')', ndx);
 		if (ndx2 == -1) {
-			throw new IllegalArgumentException("ID reference not closed: '" + value + "'.");
+			throw new IllegalArgumentException("ID reference not closed: " + value);
 		}
 		String ref = value.substring(ndx + IDREF.length(), ndx2);
 		return value.substring(0, ndx) + formId + HtmlFormUtil.name2id(ref) + value.substring(ndx2 + 1);

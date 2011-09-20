@@ -23,10 +23,10 @@ public class TypeConversionException extends UncheckedException {
 	}
 
 	public TypeConversionException(Object value) {
-		this("Unable to convert value: '" + value + "'.");
+		this("Unable to convert value: " + value);
 	}
 
 	public TypeConversionException(Object value, Throwable t) {
-		this("Unable to convert value: '" + value + "'.", t);
+		this("Unable to convert value: " + value, t);
 	}
 }

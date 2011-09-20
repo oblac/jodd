@@ -28,7 +28,7 @@ public class BeanUtilUtil {
 			value = ReflectUtil.castType(value, paramTypes[0]);
 			m.invoke(bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to invoke setter '" + bean.getClass().getSimpleName() + '#' + m.getName() + "()'", ex);
+			throw new BeanException("Unable to invoke setter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
 		}
 	}
 
@@ -40,7 +40,7 @@ public class BeanUtilUtil {
 		try {
 			return m.invoke(bean);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to invoke getter '" + bean.getClass().getSimpleName() + '#' + m.getName() + "()'", ex);
+			throw new BeanException("Unable to invoke getter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class BeanUtilUtil {
 			value = ReflectUtil.castType(value, type);
 			f.set(bean, value);
 		} catch (Exception iaex) {
-			throw new BeanException("Unable to set field '" + bean.getClass().getSimpleName() + '#' + f.getName() + '\'', iaex);
+			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class BeanUtilUtil {
 		try {
 			return f.get(bean);
 		} catch (Exception iaex) {
-			throw new BeanException("Unable to get field '" + bean.getClass().getSimpleName() + '#' + f.getName() + '\'', iaex);
+			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
-				throw new BeanException("Unable to create array element '" + bp.name + '[' + index + "]'.", bp, ex);
+				throw new BeanException("Unable to create array element: " + bp.name + '[' + index + "]", bp, ex);
 			}
 			Array.set(array, index, value);
 		}
@@ -117,7 +117,7 @@ public class BeanUtilUtil {
 			} else {
 				Field field = bp.cd.getField(bp.name, true);
 				if (field == null) {
-					throw new BeanException("Unable to find setter or field named as '" + bp.name + '\'', bp);
+					throw new BeanException("Unable to find setter or field named as: " + bp.name, bp);
 				}
 				setField(bp.bean, field, newArray);
 			}
@@ -186,7 +186,7 @@ public class BeanUtilUtil {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
-			throw new BeanException("Provided index '" + indexString + "' is not a number.", bp, nfex);
+			throw new BeanException("Index not a number: " + indexString, bp, nfex);
 		}
 	}
 
