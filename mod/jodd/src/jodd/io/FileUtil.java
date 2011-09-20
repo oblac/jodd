@@ -27,6 +27,12 @@ import java.util.ArrayList;
 public class FileUtil {
 
 	private static final String READ_ONLY = "r";
+	private static final String MSG_NOT_A_DIRECTORY = "Not a directory: ";
+	private static final String MSG_CANT_CREATE = "Can't create: ";
+	private static final String MSG_NOT_FOUND = "Not found: ";
+	private static final String MSG_NOT_A_FILE = "Not a file: ";
+	private static final String MSG_ALREADY_EXISTS = "Already exists: ";
+	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
 	// ---------------------------------------------------------------- misc shortcuts
 
@@ -121,12 +127,12 @@ public class FileUtil {
 	public static void mkdirs(File dirs) throws IOException {
 		if (dirs.exists()) {
 			if (dirs.isDirectory() == false) {
-				throw new IOException("Not a directory: " + dirs);
+				throw new IOException(MSG_NOT_A_DIRECTORY + dirs);
 			}
 			return;
 		}
 		if (dirs.mkdirs() == false) {
-			throw new IOException("Can't create: " + dirs);
+			throw new IOException(MSG_CANT_CREATE + dirs);
 		}
 	}
 
@@ -142,12 +148,12 @@ public class FileUtil {
 	public static void mkdir(File dir) throws IOException {
 		if (dir.exists()) {
 			if (dir.isDirectory() == false) {
-				throw new IOException("Not a directory: " + dir);
+				throw new IOException(MSG_NOT_A_DIRECTORY + dir);
 			}
 			return;
 		}
 		if (dir.mkdir() == false) {
-			throw new IOException("Can't create: '" + dir);
+			throw new IOException(MSG_CANT_CREATE + dir);
 		}
 	}
 
@@ -220,10 +226,10 @@ public class FileUtil {
 
 	private static void checkFileCopy(File src, File dest, FileUtilParams params) throws IOException {
 		if (src.exists() == false) {
-			throw new FileNotFoundException("Not found: " + src);
+			throw new FileNotFoundException(MSG_NOT_FOUND + src);
 		}
 		if (src.isFile() == false) {
-			throw new IOException("Not a file: " + src);
+			throw new IOException(MSG_NOT_A_FILE + src);
 		}
 		if (equals(src, dest) == true) {
 			throw new IOException("Files '" + src + "' and '" + dest + "' are equal.");
@@ -232,10 +238,10 @@ public class FileUtil {
 		File destParent = dest.getParentFile();
 		if (destParent != null && destParent.exists() == false) {
 			if (params.createDirs == false) {
-				throw new IOException("Not found: " + destParent);
+				throw new IOException(MSG_NOT_FOUND + destParent);
 			}
 			if (destParent.mkdirs() == false) {
-				throw new IOException("Can't create: " + destParent);
+				throw new IOException(MSG_CANT_CREATE + destParent);
 			}
 		}
 	}
@@ -249,7 +255,7 @@ public class FileUtil {
 				throw new IOException("Destination '" + dest + "' is a directory.");
 			}
 			if (params.overwrite == false) {
-				throw new IOException("Already exists: " + dest);
+				throw new IOException(MSG_ALREADY_EXISTS + dest);
 			}
 		}
 
@@ -317,7 +323,7 @@ public class FileUtil {
 	 */
 	public static File copyFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
-			throw new IOException("Not a directory: " + destDir);
+			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 		}
 		File dest = new File(destDir, src.getName());
 		copyFile(src, dest, params);
@@ -350,10 +356,10 @@ public class FileUtil {
 
 	private static void checkDirCopy(File srcDir, File destDir) throws IOException {
 		if (srcDir.exists() == false) {
-			throw new FileNotFoundException("Not found: " + srcDir);
+			throw new FileNotFoundException(MSG_NOT_FOUND + srcDir);
 		}
 		if (srcDir.isDirectory() == false) {
-			throw new IOException("Not a directory: " + srcDir);
+			throw new IOException(MSG_NOT_A_DIRECTORY + srcDir);
 		}
 		if (equals(srcDir, destDir) == true) {
 			throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are equal.");
@@ -363,14 +369,14 @@ public class FileUtil {
 	private static void doCopyDirectory(File srcDir, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists()) {
 			if (destDir.isDirectory() == false) {
-				throw new IOException("Not a directory: " + destDir);
+				throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 			}
 		} else {
 			if (params.createDirs == false) {
-				throw new IOException("Not found: " + destDir);
+				throw new IOException(MSG_NOT_FOUND + destDir);
 			}
 			if (destDir.mkdirs() == false) {
-				throw new IOException("Can't create: " + destDir);
+				throw new IOException(MSG_CANT_CREATE + destDir);
 			}
 			if (params.preserveDate) {
 				destDir.setLastModified(srcDir.lastModified());
@@ -431,10 +437,10 @@ public class FileUtil {
 	private static void doMoveFile(File src, File dest, FileUtilParams params) throws IOException {
 		if (dest.exists()) {
 			if (dest.isFile() == false) {
-				throw new IOException("Not a file: " + dest);
+				throw new IOException(MSG_NOT_A_FILE + dest);
 			}
 			if (params.overwrite == false) {
-				throw new IOException("Already exists: " + dest);
+				throw new IOException(MSG_ALREADY_EXISTS + dest);
 			}
 			dest.delete();
 		}
@@ -459,7 +465,7 @@ public class FileUtil {
 	}
 	public static void moveFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
-			throw new IOException("Not a directory: " + destDir);
+			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 		}
 		moveFile(src, new File(destDir, src.getName()), params);
 	}
@@ -481,7 +487,7 @@ public class FileUtil {
 	private static void doMoveDirectory(File src, File dest) throws IOException {
 		if (dest.exists()) {
 			if (dest.isDirectory() == false) {
-				throw new IOException("Not a directory: " + dest);
+				throw new IOException(MSG_NOT_A_DIRECTORY + dest);
 			}
 			dest = new File(dest, dest.getName());
 			dest.mkdir();
@@ -502,13 +508,13 @@ public class FileUtil {
 
 	public static void deleteFile(File dest) throws IOException {
 		if (dest.exists() == false) {
-			throw new FileNotFoundException("Not found: " + dest);
+			throw new FileNotFoundException(MSG_NOT_FOUND + dest);
 		}
 		if (dest.isFile() == false) {
-			throw new IOException("Not a file: " + dest);
+			throw new IOException(MSG_NOT_A_FILE + dest);
 		}
 		if (dest.delete() == false) {
-			throw new IOException("Unable to delete: " + dest);
+			throw new IOException(MSG_UNABLE_TO_DELETE + dest);
 		}
 	}
 
@@ -530,7 +536,7 @@ public class FileUtil {
 	public static void deleteDir(File dest, FileUtilParams params) throws IOException {
 		cleanDir(dest, params);
 		if (dest.delete() == false) {
-			throw new IOException("Unable to delete: " + dest);
+			throw new IOException(MSG_UNABLE_TO_DELETE + dest);
 		}
 	}
 
@@ -553,11 +559,11 @@ public class FileUtil {
 	 */
 	public static void cleanDir(File dest, FileUtilParams params) throws IOException {
 		if (dest.exists() == false) {
-			throw new FileNotFoundException("Not found: " + dest);
+			throw new FileNotFoundException(MSG_NOT_FOUND + dest);
 		}
 
 		if (dest.isDirectory() == false) {
-			throw new IOException("Not a directory: " + dest);
+			throw new IOException(MSG_NOT_A_DIRECTORY + dest);
 		}
 
 		File[] files = dest.listFiles();
@@ -609,10 +615,10 @@ public class FileUtil {
 	 */
 	public static String readString(File file, String encoding) throws IOException {
 		if (file.exists() == false) {
-			throw new FileNotFoundException("Not found: " + file);
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
 		if (file.isFile() == false) {
-			throw new IOException("Not a file: " + file);
+			throw new IOException(MSG_NOT_A_FILE + file);
 		}
 		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
@@ -666,7 +672,7 @@ public class FileUtil {
 	protected static void outString(File dest, String data, String encoding, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
-				throw new IOException("Not a file: " + dest);
+				throw new IOException(MSG_NOT_A_FILE + dest);
 			}
 		}
 		FileOutputStream out = null;
@@ -719,10 +725,10 @@ public class FileUtil {
 	 */
 	public static String[] readLines(File file, String encoding) throws IOException {
 		if (file.exists() == false) {
-			throw new FileNotFoundException("Not found: " + file);
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
 		if (file.isFile() == false) {
-			throw new IOException("Not a file: " + file);
+			throw new IOException(MSG_NOT_A_FILE + file);
 		}
 		List<String> list = new ArrayList<String>();
 		FileInputStream in = null;
@@ -750,10 +756,10 @@ public class FileUtil {
 
 	public static byte[] readBytes(File file) throws IOException {
 		if (file.exists() == false) {
-			throw new FileNotFoundException("Not found: " + file);
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
 		if (file.isFile() == false) {
-			throw new IOException("Not a file: " + file);
+			throw new IOException(MSG_NOT_A_FILE + file);
 		}
 		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
@@ -806,7 +812,7 @@ public class FileUtil {
 	protected static void outBytes(File dest, byte[] data, int off, int len, boolean append) throws IOException {
 		if (dest.exists() == true) {
 			if (dest.isFile() == false) {
-				throw new IOException("Not a file: " + dest);
+				throw new IOException(MSG_NOT_A_FILE + dest);
 			}
 		}
 		FileOutputStream out = null;
@@ -884,7 +890,7 @@ public class FileUtil {
 	 */
 	public static boolean isNewer(File file, File reference) {
 		if (reference.exists() == false) {
-			throw new IllegalArgumentException("Not found reference file: " + reference);
+			throw new IllegalArgumentException("Reference file not found: " + reference);
 		}
 		return isNewer(file, reference.lastModified());
 	}
@@ -896,7 +902,7 @@ public class FileUtil {
 
 	public static boolean isOlder(File file, File reference) {
 		if (reference.exists() == false) {
-			throw new IllegalArgumentException("Not found reference file: " + reference);
+			throw new IllegalArgumentException("Reference file not found: " + reference);
 		}
 		return isOlder(file, reference.lastModified());
 	}
