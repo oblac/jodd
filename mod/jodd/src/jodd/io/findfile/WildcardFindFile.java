@@ -15,8 +15,11 @@ import java.io.File;
  */
 public class WildcardFindFile extends FindFile {
 
-	protected final String wildcard;
+	protected String wildcard;
 	protected boolean usePathWildcards;
+
+	public WildcardFindFile() {
+	}
 
 	public WildcardFindFile(String wildcard) {
 		this.wildcard = wildcard;
@@ -28,6 +31,20 @@ public class WildcardFindFile extends FindFile {
 	}
 
 	// ---------------------------------------------------------------- properties
+
+	/**
+	 * Returns the matching wildcard.
+	 */
+	public String getWildcard() {
+		return wildcard;
+	}
+
+	/**
+	 * Sets the matching wildcard.
+	 */
+	public void setWildcard(String wildcard) {
+		this.wildcard = wildcard;
+	}
 
 	/**
 	 * Returns <code>true</code> if path wildcards are in use.

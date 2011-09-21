@@ -13,10 +13,27 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile {
 
-	private final Pattern regexpPattern;
+	private Pattern regexpPattern;
+
+	public RegExpFindFile() {
+	}
 
 	public RegExpFindFile(String pattern) {
 		regexpPattern = Pattern.compile(pattern);
+	}
+
+	/**
+	 * Returns regular expression pattern.
+	 */
+	public Pattern getRegexpPattern() {
+		return regexpPattern;
+	}
+
+	/**
+	 * Sets regular expression pattern.
+	 */
+	public void setRegexpPattern(Pattern regexpPattern) {
+		this.regexpPattern = regexpPattern;
 	}
 
 	@Override
