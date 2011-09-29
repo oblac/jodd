@@ -503,6 +503,130 @@ public class ArraysUtil {
 	}
 
 
+	// ---------------------------------------------------------------- remove
+
+	/**
+	 * Removes subarray.
+	 */
+	public static <T> T[] remove(T[] buffer, int offset, int length) {
+		return remove(buffer, offset, length, null);
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] remove(T[] buffer, int offset, int length, Class componentType) {
+		if (componentType == null) {
+			componentType = buffer.getClass().getComponentType();
+		}
+		int len2 = buffer.length - length;
+		T[] temp = (T[]) Array.newInstance(componentType, len2);
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static String[] remove(String[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		String temp[] = new String[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static byte[] remove(byte[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		byte temp[] = new byte[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static char[] remove(char[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		char temp[] = new char[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static short[] remove(short[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		short temp[] = new short[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static int[] remove(int[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		int temp[] = new int[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static long[] remove(long[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		long temp[] = new long[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static float[] remove(float[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		float temp[] = new float[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static double[] remove(double[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		double temp[] = new double[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	public static boolean[] remove(boolean[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		boolean temp[] = new boolean[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+
+
 	// ---------------------------------------------------------------- subarray
 
 	/**

@@ -180,6 +180,48 @@ for type in types:
 	f.write(data)
 
 
+f.write('\n\n\t// ---------------------------------------------------------------- remove')
+f.write('''
+
+	/**
+	 * Removes subarray.
+	 */
+	public static <T> T[] remove(T[] buffer, int offset, int length) {
+		return remove(buffer, offset, length, null);
+	}
+
+	/**
+	 * Removes subarray.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] remove(T[] buffer, int offset, int length, Class componentType) {
+		if (componentType == null) {
+			componentType = buffer.getClass().getComponentType();
+		}
+		int len2 = buffer.length - length;
+		T[] temp = (T[]) Array.newInstance(componentType, len2);
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+''')
+template = '''
+	/**
+	 * Removes subarray.
+	 */
+	public static $T[] remove($T[] buffer, int offset, int length) {
+		int len2 = buffer.length - length;
+		$T temp[] = new $T[len2];
+		System.arraycopy(buffer, 0, temp, 0, offset);
+		System.arraycopy(buffer, offset + length, temp, offset, len2 - offset);
+		return temp;
+	}
+'''
+for type in types:
+	data = template.replace('$T', type)
+	f.write(data)
+
+
 
 
 f.write('\n\n\t// ---------------------------------------------------------------- subarray')

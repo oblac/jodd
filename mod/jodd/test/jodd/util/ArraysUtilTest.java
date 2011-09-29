@@ -152,4 +152,10 @@ public class ArraysUtilTest extends TestCase {
 		assertEquals("null", ArraysUtil.toString((long[]) null));
 	}
 
+	public void testRemove() {
+		assertEquals(new int[] {1,2,5}, ArraysUtil.remove(x, 2, 2));
+		assertEquals(new int[] {1}, ArraysUtil.remove(x, 1, 4));
+		assertEquals(new long[] {1,3,4,5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
+	}
+
 }
