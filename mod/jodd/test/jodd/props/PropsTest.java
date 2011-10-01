@@ -32,6 +32,7 @@ public class PropsTest extends TestCase {
 
 		assertEquals("foo\tboo\rzoo\nxxx\ftoo", p.getValue("special-chars"));
 		assertEquals("\\\\a", p.getValue("special2"));
+		assertEquals(3, p.getValue("special2").length());
 
 		assertNull(p.getValue("non existing"));
 
@@ -160,7 +161,7 @@ public class PropsTest extends TestCase {
 		p2.load(readDataFile("test.props"));
 
 		assertEquals(2, p.countTotalProperties());
-		assertEquals(18, p2.countTotalProperties());
+		assertEquals(19, p2.countTotalProperties());
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
