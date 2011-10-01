@@ -18,7 +18,7 @@ public class PropsTest extends TestCase {
 		Props p = new Props();
 		p.load(readDataFile("test.props"));
 
-		assertEquals(16, p.countTotalProperties());
+		assertEquals(17, p.countTotalProperties());
 
 		assertEquals("Snow White and the Seven Dwarfs", p.getValue("story"));
 		assertEquals("Walt Disney's New characters in his first full-length production!", p.getValue("Tagline"));
@@ -31,6 +31,7 @@ public class PropsTest extends TestCase {
 		assertEquals("Čađavi Žar utf8", p.getValue("comment"));
 
 		assertEquals("foo\tboo\rzoo\nxxx\ftoo", p.getValue("special-chars"));
+		assertEquals("\\\\a", p.getValue("special2"));
 
 		assertNull(p.getValue("non existing"));
 
