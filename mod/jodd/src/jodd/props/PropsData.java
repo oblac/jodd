@@ -2,9 +2,8 @@
 
 package jodd.props;
 
-import jodd.bean.BeanTemplate;
-import jodd.bean.BeanTemplateResolver;
-import jodd.util.StringPool;
+import jodd.bean.BeanTemplateMacroResolver;
+import jodd.bean.BeanTemplateParser;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,19 +25,24 @@ public class PropsData implements Cloneable {
 
 	protected final HashMap<String, Map<String, PropsValue>> profiles;		// profile properties
 
+	protected final BeanTemplateParser beanTemplateParser;
+
 	/**
 	 * If set, duplicate props will be appended to the end, separated by comma.
 	 */
 	protected boolean appendDuplicateProps;
 
 	public PropsData() {
-		this.properties = new HashMap<String, PropsValue>();
-		this.profiles = new HashMap<String, Map<String, PropsValue>>();
+		this(new HashMap<String, PropsValue>(), new HashMap<String, Map<String, PropsValue>>());
 	}
 
 	protected PropsData(HashMap<String, PropsValue> properties, HashMap<String, Map<String, PropsValue>> profiles) {
 		this.properties = properties;
 		this.profiles = profiles;
+
+		this.beanTemplateParser = new BeanTemplateParser();
+		beanTemplateParser.setResolveEscapes(false);
+		beanTemplateParser.setReplaceMissingKey(false);
 	}
 
 	@Override
@@ -54,7 +58,6 @@ public class PropsData implements Cloneable {
 		}
 
 		PropsData pd = new PropsData(newBase, newProfiles);
-
 		pd.appendDuplicateProps = appendDuplicateProps;
 
 		return pd;
@@ -198,7 +201,7 @@ public class PropsData implements Cloneable {
 	protected boolean resolveMacros(Map<String, PropsValue> map, final String profile) {
 		boolean replaced = false;
 
-		BeanTemplateResolver resolver = new BeanTemplateResolver() {
+		BeanTemplateMacroResolver macroResolver = new BeanTemplateMacroResolver() {
 			public Object resolve(String name) {
 				return lookupValue(name, profile);
 			}
@@ -206,7 +209,9 @@ public class PropsData implements Cloneable {
 
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			PropsValue pv = entry.getValue();
-			String newValue = BeanTemplate.parse(pv.value, resolver, StringPool.EMPTY);
+
+			String newValue = beanTemplateParser.parse(pv.value, macroResolver);
+
 			if (newValue.equals(pv.value) == false) {
 				pv.resolved = newValue;
 				replaced = true;

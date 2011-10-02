@@ -198,7 +198,8 @@ public class PropsTest extends TestCase {
 		Props p = new Props();
 		p.setValue("key1", "val${key2}");
 
-		assertEquals("val", p.getValue("key1"));
+		assertEquals("val${key2}", p.getValue("key1"));
+		assertNull(p.getValue("key1${key2}"));
 
 		p.setValue("key2", "hurrey\tme!");
 
@@ -220,6 +221,23 @@ public class PropsTest extends TestCase {
 		assertEquals("here,there,everywhere", p.getValue("bar", "prof"));
 
 	}
+
+	public void testDoubleLoadsAndResolves() {
+		Props props = new Props();
+		props.load("pojoBean2.val2=123");
+		props.load("pojoBean2.val1=\\\\${pojo}");
+
+		assertEquals("123", props.getValue("pojoBean2.val2"));
+		// BeanTemplate resolves \${foo} to ${foo}
+		// we must be sure that escaped value is not resolved.
+		assertEquals("\\${pojo}", props.getValue("pojoBean2.val1"));
+
+		props.load("pojoBean2.val1=\\\\${pojo} ${pojo}");
+		assertEquals(2, props.countTotalProperties());
+		assertEquals("\\${pojo} ${pojo}", props.getValue("pojoBean2.val1"));
+	}
+
+	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {
 		String dataFolder = this.getClass().getPackage().getName() + ".data.";

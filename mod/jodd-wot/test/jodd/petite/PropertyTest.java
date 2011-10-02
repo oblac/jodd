@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.petite.test2.Joo;
 import jodd.petite.test2.Moo;
+import jodd.props.Props;
 import junit.framework.TestCase;
 import jodd.petite.data.PojoBean2;
 
@@ -62,5 +63,23 @@ public class PropertyTest extends TestCase {
 
 		bd = pc.lookupBeanDefinition("moo");
 		assertEquals(2, bd.properties.length);
+	}
+
+	public void testProps() {
+		Props props = new Props();
+		props.load("pojoBean2.val2=123");
+		props.load("pojoBean2.val1=\\\\${pojo}");
+
+		assertEquals("123", props.getValue("pojoBean2.val2"));
+		assertEquals("\\${pojo}", props.getValue("pojoBean2.val1"));
+
+		PetiteContainer pc = new PetiteContainer();
+		pc.registerBean(PojoBean2.class);
+		pc.defineParameters(props);
+
+		PojoBean2 pojoBean2 = pc.getBean(PojoBean2.class);
+
+		assertEquals(123, pojoBean2.getVal2().intValue());
+		assertEquals("${pojo}", pojoBean2.getVal1());
 	}
 }
