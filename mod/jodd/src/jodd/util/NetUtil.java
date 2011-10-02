@@ -4,12 +4,16 @@ package jodd.util;
 
 import jodd.io.StreamUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 /**
  * Network utilities.
@@ -126,23 +130,33 @@ public class NetUtil {
 	 * Downloads resource as byte array.
 	 */
 	public static byte[] downloadBytes(String url) throws IOException {
-		HttpURLConnection connection = (HttpURLConnection) ((new URL(url).openConnection()));
-		return StreamUtil.readBytes(connection.getInputStream());
+		InputStream inputStream = new URL(url).openStream();
+		return StreamUtil.readBytes(inputStream);
 	}
 
 	/**
 	 * Downloads resource as String.
 	 */
 	public static String downloadString(String url, String encoding) throws IOException {
-		HttpURLConnection connection = (HttpURLConnection) ((new URL(url).openConnection()));
-		return new String(StreamUtil.readChars(connection.getInputStream(), encoding));
+		InputStream inputStream = new URL(url).openStream();
+		return new String(StreamUtil.readChars(inputStream, encoding));
 	}
 
 	/**
 	 * Downloads resource as String.
 	 */
 	public static String downloadString(String url) throws IOException {
-		HttpURLConnection connection = (HttpURLConnection) ((new URL(url).openConnection()));
-		return new String(StreamUtil.readChars(connection.getInputStream()));
+		InputStream inputStream = new URL(url).openStream();
+		return new String(StreamUtil.readChars(inputStream));
+	}
+
+	/**
+	 * Downoads resource to a file, potentially very efficiently.
+	 */
+	public static void downloadFile(String url, File file) throws IOException {
+		InputStream inputStream = new URL(url).openStream();
+		ReadableByteChannel rbc = Channels.newChannel(inputStream);
+		FileOutputStream fos = new FileOutputStream(file);
+		fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 	}
 }
