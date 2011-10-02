@@ -48,7 +48,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
-			assertEquals("Class not found: 'not.existing.class'", cnfex.getMessage());
+			assertEquals("Class not found: not.existing.class", cnfex.getMessage());
 		}
 
 		try {
