@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.util;
+package jodd.io;
 
-import jodd.io.StreamUtil;
+import jodd.util.StringUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -106,10 +106,7 @@ public class NetUtil {
 			hitDots++;
 		}
 
-		if (hitDots != 4) {
-			return false;
-		}
-		return true;
+		return hitDots == 4;
 	}
 
 	/**
