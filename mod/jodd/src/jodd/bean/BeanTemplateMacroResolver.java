@@ -3,13 +3,14 @@
 package jodd.bean;
 
 /**
- * Resolves bean template values.
+ * Resolves bean template macro values.
  */
-public interface BeanTemplateResolver {
+public interface BeanTemplateMacroResolver {
 
 	/**
 	 * Resolves founded macro name in bean template.
-	 * It may throw an exception if name is not found.
+	 * It may throw an {@link BeanException exception}
+	 * if name is not found.
 	 */
 	Object resolve(String name);
 }
