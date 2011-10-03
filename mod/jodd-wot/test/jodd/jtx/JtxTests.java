@@ -14,6 +14,6 @@ public class JtxTests extends TestSuite {
 	}
 
 	public static Test suite() {
-		return new DbTests();
+		return new JtxTests();
 	}
 }
