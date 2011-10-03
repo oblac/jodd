@@ -33,7 +33,7 @@ public class LagartoParserTest extends TestCase {
 		data = LagartoParserTest.class.getResource("live");
 		testLiveRoot = data.getFile();
 
-		data = LagartoParserTest.class.getResource("adapter");
+		data = LagartoParserTest.class.getResource("adaptert");
 		testAdapterRoot = data.getFile();
 	}
 
@@ -102,12 +102,11 @@ public class LagartoParserTest extends TestCase {
 	}
 
 	/**
-	 * 5.921s
-	 * 11.240
+	 * 13s
 	 */
 	public void testLiveHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile("*.html");
-		long reps = 10000;
+		long reps = 1;//0000;
 		JStopWatch jsw = new JStopWatch();
 		while (reps-- > 0) {
 			ff.searchPath(testDataRoot);
