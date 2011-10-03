@@ -1,0 +1,4 @@
+xml:1<?xml version="1.0" charset="UTF8"?>
+tag:foo:1<
+cdt:[<>]
+tag:foo:1>

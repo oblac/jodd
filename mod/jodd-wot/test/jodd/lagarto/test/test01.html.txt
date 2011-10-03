@@ -1,0 +1,4 @@
+tag:foo:1<<foo <b>
+txt:[b]
+tag:b:1>
+txt:[<>]

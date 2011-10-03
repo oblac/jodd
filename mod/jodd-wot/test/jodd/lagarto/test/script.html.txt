@@ -1,0 +1,2 @@
+scr:1<script type="text/javascript">[document.write("Hello World!")]
+scr:1<script type="text/javascript" src="/jquery.js">[]

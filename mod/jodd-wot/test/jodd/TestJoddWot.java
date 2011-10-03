@@ -5,6 +5,7 @@ package jodd;
 import jodd.db.DbTests;
 import jodd.db.oom.DbOomTests;
 import jodd.jtx.JtxTests;
+import jodd.lagarto.LagartoTests;
 import jodd.madvoc.MadvocTests;
 import jodd.paramo.ParamoTests;
 import jodd.petite.PetiteTests;
@@ -28,6 +29,7 @@ public class TestJoddWot {
 		suite.addTest(ProxettaTests.suite());
 		suite.addTest(ParamoTests.suite());
 		suite.addTest(VtorTests.suite());
+		suite.addTest(LagartoTests.suite());
 		return suite;
 	}
 }
