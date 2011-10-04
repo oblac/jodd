@@ -19,11 +19,20 @@ public class StripHtmlTagAdapter extends TagAdapter {
 		super(target);
 	}
 
+	protected int strippedCharsCount;
+
+	@Override
+	public void start() {
+		strippedCharsCount = 0;
+		super.start();
+	}
+
 	/**
 	 * Skips HTML comments.
 	 */
 	@Override
 	public void comment(CharSequence comment) {
+		strippedCharsCount += comment.length() + 7;
 	}
 
 	/**
@@ -31,11 +40,13 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	 */
 	@Override
 	public void text(CharSequence text) {
-		char[] dest = new char[text.length()];
+		int textLength = text.length();
+
+		char[] dest = new char[textLength];
 
 		int ndx = 0;
 		boolean regularChar = true;
-		for (int i = 0; i < text.length(); i++) {
+		for (int i = 0; i < textLength; i++) {
 			char c = text.charAt(i);
 
 			if (CharUtil.isWhitespace(c)) {
@@ -55,6 +66,16 @@ public class StripHtmlTagAdapter extends TagAdapter {
 
 		if (regularChar || (ndx != 1)) {
 			super.text(CharBuffer.wrap(dest, 0, ndx));
+			strippedCharsCount += textLength - ndx;
+		} else {
+			strippedCharsCount += textLength;
 		}
+	}
+
+	/**
+	 * Returns total number of stripped chars.
+	 */
+	public int getStrippedCharsCount() {
+		return strippedCharsCount;
 	}
 }
