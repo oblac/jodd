@@ -9,11 +9,13 @@ import jodd.util.CharUtil;
 import java.nio.CharBuffer;
 
 /**
- * Cleans all non important stuff from html.
+ * Strips all non-important characters from HTML.
+ * Script and style blocks are not stripped, just HTML text blocks
+ * and comments.
  */
-public class CleanHtmlTagAdapter extends TagAdapter {
+public class StripHtmlTagAdapter extends TagAdapter {
 
-	public CleanHtmlTagAdapter(TagVisitor target) {
+	public StripHtmlTagAdapter(TagVisitor target) {
 		super(target);
 	}
 

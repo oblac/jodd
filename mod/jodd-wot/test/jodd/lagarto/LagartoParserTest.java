@@ -4,7 +4,7 @@ import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
-import jodd.lagarto.adapter.CleanHtmlTagAdapter;
+import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.util.StringUtil;
 import junit.framework.TestCase;
 
@@ -93,8 +93,8 @@ public class LagartoParserTest extends TestCase {
 
 		StringBuilder out = new StringBuilder();
 		TagWriter tagWriter = new TagWriter(out);
-		CleanHtmlTagAdapter cleanHtmlTagAdapter = new CleanHtmlTagAdapter(tagWriter);
-		lagartoParser.parse(cleanHtmlTagAdapter);
+		StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(tagWriter);
+		lagartoParser.parse(stripHtmlTagAdapter);
 
 		ff = new File(testAdapterRoot, "clean-out.html");
 
