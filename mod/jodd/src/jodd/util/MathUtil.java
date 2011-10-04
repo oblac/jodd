@@ -50,4 +50,21 @@ public class MathUtil {
 	public static boolean isOdd(int x) {
 		return (x % 2) != 0;
 	}
+
+	/**
+	 * Calculates factorial of given number.
+	 */
+	public static long factorial(long x) {
+		if (x < 0) {
+			return 0;
+		}
+		long factorial = 1;
+
+		while (x > 1) {
+			factorial *= x;
+			x--;
+		}
+
+		return factorial;
+	}
 }
