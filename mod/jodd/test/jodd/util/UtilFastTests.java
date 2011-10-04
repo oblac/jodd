@@ -39,6 +39,7 @@ public class UtilFastTests extends TestSuite {
 		addTestSuite(PrettyStringBuilderTest.class);
 		addTestSuite(StringBandTest.class);
 		addTestSuite(BinarySearchTest.class);
+		addTestSuite(MathUtilTest.class);
 	}
 
 	public static Test suite() {

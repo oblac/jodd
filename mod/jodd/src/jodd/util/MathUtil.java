@@ -36,4 +36,18 @@ public class MathUtil {
 	public static int randomInt(int min, int max) {
 		return min + (int)(Math.random() * (max - min));
 	}
+
+	/**
+	 * Returns <code>true</code> if a number is even.
+	 */
+	public static boolean isEven(int x) {
+		return (x % 2) == 0;
+	}
+
+	/**
+	 * Returns <code>true</code> if a number is odd.
+	 */
+	public static boolean isOdd(int x) {
+		return (x % 2) != 0;
+	}
 }
