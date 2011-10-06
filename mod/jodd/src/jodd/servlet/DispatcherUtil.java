@@ -2,7 +2,6 @@
 
 package jodd.servlet;
 
-import jodd.servlet.filter.CharArrayResponseWrapper;
 import jodd.util.StringPool;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,41 +73,6 @@ public class DispatcherUtil {
 		}
 		return false;
 	}
-
-
-	// ---------------------------------------------------------------- wrap
-
-	public static CharArrayResponseWrapper wrap(ServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
-		include(request, wrapper, page);
-		return wrapper;
-	}
-
-	public static CharArrayResponseWrapper wrapNamed(HttpServletRequest request, HttpServletResponse response, String resource) throws IOException, ServletException {
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
-		includeNamed(request, wrapper, resource);
-		return wrapper;
-	}
-
-	public static CharArrayResponseWrapper wrapNamed(ServletContext context, HttpServletRequest request, HttpServletResponse response, String resource) throws IOException, ServletException {
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
-		includeNamed(context, request, wrapper, resource);
-		return wrapper;
-	}
-
-	public static CharArrayResponseWrapper wrapAbsolute(HttpServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
-		includeAbsolute(request, wrapper, page);
-		return wrapper;
-	}
-
-
-	public static CharArrayResponseWrapper wrapAbsolute(ServletContext context, ServletRequest request, HttpServletResponse response, String page) throws IOException, ServletException {
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
-		includeAbsolute(context, request, wrapper, page);
-		return wrapper;
-	}
-
 
 	// ---------------------------------------------------------------- forward
 
