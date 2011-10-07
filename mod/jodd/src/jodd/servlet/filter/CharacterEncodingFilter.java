@@ -3,6 +3,7 @@
 package jodd.servlet.filter;
 
 import jodd.JoddDefault;
+import jodd.typeconverter.Convert;
 
 import java.io.IOException;
 
@@ -108,12 +109,7 @@ public class CharacterEncodingFilter implements Filter {
 		if (this.encoding == null) {
 			this.encoding = JoddDefault.encoding;
 		}
-		String value = filterConfig.getInitParameter("ignore");
-		if (value == null) {
-			this.ignore = true;
-		} else {
-			this.ignore = value.equalsIgnoreCase("true");
-		}
+		this.ignore = Convert.toBoolean(filterConfig.getInitParameter("ignore"), true);
 	}
 
 	/**
