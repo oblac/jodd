@@ -190,22 +190,6 @@ public class CharUtil {
 		return -1;
 	}
 
-	// ---------------------------------------------------------------- is char at
-
-	public static boolean isCharAtEqual(char[] source, int index, char match) {
-		if ((index < 0) || (index >= source.length)) {
-			return false;
-		}
-		return source[index] == match;
-	}
-
-	public static boolean isCharAtEqual(CharSequence source, int index, char match) {
-		if ((index < 0) || (index >= source.length())) {
-			return false;
-		}
-		return source.charAt(index) == match;
-	}
-
 	// ---------------------------------------------------------------- is
 
 	/**
