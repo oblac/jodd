@@ -2,6 +2,8 @@
 
 package jodd.util;
 
+import jodd.JoddDefault;
+
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -14,7 +16,7 @@ public class CharUtil {
 	/**
 	 * Converts char array into byte array by stripping high byte.
 	 */
-	public static byte[] toByteArray(char[] carr) {
+	public static byte[] toSimpleByteArray(char[] carr) {
 		if (carr == null) {
 			return null;
 		}
@@ -26,6 +28,13 @@ public class CharUtil {
 	}
 
 	/**
+	 * Converts char array to byte array using default Jodd encoding.
+	 */
+	public static byte[] toByteArray(char[] carr) throws UnsupportedEncodingException {
+		return new String(carr).getBytes(JoddDefault.encoding);
+	}
+
+	/**
 	 * Converts char array to byte array using provided encoding.  
 	 */
 	public static byte[] toByteArray(char[] carr, String charset) throws UnsupportedEncodingException {
@@ -33,8 +42,7 @@ public class CharUtil {
 	}
 
 	/**
-	 * Converts char array into ASCII array.
-	 * @see #toAscii(char) 
+	 * Converts char array into {@link #toAscii(char) ASCII} array.
 	 */
 	public static byte[] toAsciiArray(char[] carr) {
 		if (carr == null) {
@@ -47,11 +55,10 @@ public class CharUtil {
 		return barr;
 	}
 
-
 	/**
 	 * Converts char sequence into byte array. Chars are truncated to byte size.
 	 */
-	public static byte[] toByteArray(CharSequence charSequence) {
+	public static byte[] toSimpleByteArray(CharSequence charSequence) {
 		if (charSequence == null) {
 			return null;
 		}
@@ -79,9 +86,9 @@ public class CharUtil {
 	// ---------------------------------------------------------------- to char array
 
 	/**
-	 * Converts byte array to char array by simply extending.
+	 * Converts byte array to char array by simply extending bytes to chars.
 	 */
-	public static char[] toCharArray(byte[] barr) {
+	public static char[] toSimpleCharArray(byte[] barr) {
 		if (barr == null) {
 			return null;
 		}
@@ -93,12 +100,18 @@ public class CharUtil {
 	}
 
 	/**
+	 * Converts byte array of default Jodd encoding to char array.
+	 */
+	public static char[] toCharArray(byte[] barr) throws UnsupportedEncodingException {
+		return new String(barr, JoddDefault.encoding).toCharArray();
+	}
+
+	/**
 	 * Converts byte array of specific encoding to char array.
 	 */
 	public static char[] toCharArray(byte[] barr, String charset) throws UnsupportedEncodingException {
 		return new String(barr, charset).toCharArray();
 	}
-
 
 	/**
 	 * Returns ASCII value of a char. In case of overload, 0x3F is returned.

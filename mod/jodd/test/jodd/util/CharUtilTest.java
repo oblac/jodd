@@ -13,10 +13,10 @@ public class CharUtilTest extends TestCase {
 		assertEquals(4, src.length);
 		assertEquals(269, src[3]);
 
-		byte[] dest = CharUtil.toByteArray(src);
+		byte[] dest = CharUtil.toSimpleByteArray(src);
 		assertEquals(4, dest.length);
 		assertEquals(269 - 256, dest[3]);
-		char[] src2 = CharUtil.toCharArray(dest);
+		char[] src2 = CharUtil.toSimpleCharArray(dest);
 		assertEquals(4, src2.length);
 		assertTrue(src[3] != src2[3]);
 
