@@ -7,25 +7,125 @@ import jodd.JoddDefault;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Various character and character sequence utilities.
+ * Various character and character sequence utilities, including <code>char[]</code> - <code>byte[]</code> conversions.
  */
 public class CharUtil {
 
-	// ---------------------------------------------------------------- to byte array
+	// ---------------------------------------------------------------- simple
 
 	/**
-	 * Converts char array into byte array by stripping high byte.
+	 * Converts (signed) byte to (unsigned) char.
+	 */
+	public static char toChar(byte b) {
+		return (char) (b & 0xFF);
+	}
+
+	/**
+	 * Converts char array into byte array by stripping the high byte of each character.
 	 */
 	public static byte[] toSimpleByteArray(char[] carr) {
-		if (carr == null) {
-			return null;
-		}
 		byte[] barr = new byte[carr.length];
 		for (int i = 0; i < carr.length; i++) {
 			barr[i] = (byte) carr[i];
 		}
 		return barr;
 	}
+
+	/**
+	 * Converts char sequence into byte array.
+	 * @see #toSimpleByteArray(char[])
+	 */
+	public static byte[] toSimpleByteArray(CharSequence charSequence) {
+		byte[] barr = new byte[charSequence.length()];
+		for (int i = 0; i < barr.length; i++) {
+			barr[i] = (byte) charSequence.charAt(i);
+		}
+		return barr;
+	}
+
+	/**
+	 * Converts byte array to char array by simply extending bytes to chars.
+	 */
+	public static char[] toSimpleCharArray(byte[] barr) {
+		char[] carr = new char[barr.length];
+		for (int i = 0; i < barr.length; i++) {
+			carr[i] = (char) (barr[i] & 0xFF);
+		}
+		return carr;
+	}
+
+	// ---------------------------------------------------------------- ascii
+
+	/**
+	 * Returns ASCII value of a char. In case of overload, 0x3F is returned.
+	 */
+	public static int toAscii(char c) {
+		if (c <= 0xFF) {
+			return c;
+		} else {
+			return 0x3F;
+		}
+	}
+
+	/**
+	 * Converts char array into {@link #toAscii(char) ASCII} array.
+	 */
+	public static byte[] toAsciiByteArray(char[] carr) {
+		byte[] barr = new byte[carr.length];
+		for (int i = 0; i < carr.length; i++) {
+			barr[i] = (byte) ((int) (carr[i] <= 0xFF ? carr[i] : 0x3F));
+		}
+		return barr;
+	}
+
+	/**
+	 * Converts char sequence into ASCII byte array.
+	 */
+	public static byte[] toAsciiByteArray(CharSequence charSequence) {
+		byte[] barr = new byte[charSequence.length()];
+		for (int i = 0; i < barr.length; i++) {
+			char c = charSequence.charAt(i);
+			barr[i] = (byte) ((int) (c <= 0xFF ? c : 0x3F));
+		}
+		return barr;
+	}
+
+	// ---------------------------------------------------------------- raw arrays
+
+	/**
+	 * Converts char array into byte array by replacing each character with two bytes.
+	 */
+	public static byte[] toRawByteArray(char[] carr) {
+		byte[] barr = new byte[carr.length << 1];
+		for (int i = 0, bpos = 0; i < carr.length; i++) {
+			char c = carr[i];
+			barr[bpos++] = (byte) ((c & 0xFF00) >> 8);
+			barr[bpos++] = (byte) (c & 0x00FF);
+		}
+		return barr;
+	}
+
+	public static char[] toRawCharArray(byte[] barr) {
+		int carrLen = barr.length >> 1;
+		if (carrLen << 1 < barr.length) {
+			carrLen++;
+		}
+		char[] carr = new char[carrLen];
+		int i = 0, j = 0;
+		while (i < barr.length) {
+			char c = (char) (barr[i] << 8);
+			i++;
+
+			if (i != barr.length) {
+				c += barr[i] & 0xFF;
+				i++;
+			}
+			carr[j++] = c;
+		}
+		return carr;
+	}
+
+	// ---------------------------------------------------------------- encoding
 
 	/**
 	 * Converts char array to byte array using default Jodd encoding.
@@ -42,64 +142,6 @@ public class CharUtil {
 	}
 
 	/**
-	 * Converts char array into {@link #toAscii(char) ASCII} array.
-	 */
-	public static byte[] toAsciiArray(char[] carr) {
-		if (carr == null) {
-			return null;
-		}
-		byte[] barr = new byte[carr.length];
-		for (int i = 0; i < carr.length; i++) {
-			barr[i] = (byte) toAscii(carr[i]);
-		}
-		return barr;
-	}
-
-	/**
-	 * Converts char sequence into byte array. Chars are truncated to byte size.
-	 */
-	public static byte[] toSimpleByteArray(CharSequence charSequence) {
-		if (charSequence == null) {
-			return null;
-		}
-		byte[] barr = new byte[charSequence.length()];
-		for (int i = 0; i < barr.length; i++) {
-			barr[i] = (byte) charSequence.charAt(i);
-		}
-		return barr;
-	}
-
-	/**
-	 * Converts char sequence into ASCII array.
-	 */
-	public static byte[] toAsciiArray(CharSequence charSequence) {
-		if (charSequence == null) {
-			return null;
-		}
-		byte[] barr = new byte[charSequence.length()];
-		for (int i = 0; i < barr.length; i++) {
-			barr[i] = (byte) toAscii(charSequence.charAt(i));
-		}
-		return barr;
-	}
-
-	// ---------------------------------------------------------------- to char array
-
-	/**
-	 * Converts byte array to char array by simply extending bytes to chars.
-	 */
-	public static char[] toSimpleCharArray(byte[] barr) {
-		if (barr == null) {
-			return null;
-		}
-		char[] carr = new char[barr.length];
-		for (int i = 0; i < barr.length; i++) {
-			carr[i] = (char) barr[i];
-		}
-		return carr;
-	}
-
-	/**
 	 * Converts byte array of default Jodd encoding to char array.
 	 */
 	public static char[] toCharArray(byte[] barr) throws UnsupportedEncodingException {
@@ -111,17 +153,6 @@ public class CharUtil {
 	 */
 	public static char[] toCharArray(byte[] barr, String charset) throws UnsupportedEncodingException {
 		return new String(barr, charset).toCharArray();
-	}
-
-	/**
-	 * Returns ASCII value of a char. In case of overload, 0x3F is returned.
-	 */
-	public static int toAscii(char c) {
-		if (c <= 0xFF) {
-			return c;
-		} else {
-			return 0x3F;
-		}
 	}
 
 	// ---------------------------------------------------------------- find
