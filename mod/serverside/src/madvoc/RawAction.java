@@ -14,7 +14,7 @@ public class RawAction {
 	@Action
 	public RawData view() {
 		String result = "this is some raw direct result";
-		byte[] bytes = CharUtil.toAsciiArray(result.toCharArray());
+		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
 		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
 	}
 
