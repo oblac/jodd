@@ -14,6 +14,15 @@
 
 	<!-- filters -->
 	<filter>
+		<filter-name>decora</filter-name>
+		<filter-class>jodd.decora.DecoraServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>decora</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
 		<filter-name>madvoc</filter-name>
 		<filter-class>jodd.madvoc.MadvocServletFilter</filter-class>
 		<init-param>
