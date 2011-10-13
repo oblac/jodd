@@ -6,17 +6,19 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 
 /**
- * Reusabled, parsed {@link Tag} implementation.
+ * Reusable, parsed {@link Tag tag} implementation.
  */
 class ParsedTag implements Tag {
 
+	private static final String ATTR_NAME_ID = "id";
 	// tag info
 	private String name;
+	private int idNdx;
 	private TagType type;
 	private String tagStart;
 	private String tagEnd;
 
-	// attrs
+	// attributes
 	private int attributesCount;
 	private String[] attrNames = new String[10];
 	private String[] attrValues = new String[10];
@@ -39,6 +41,7 @@ class ParsedTag implements Tag {
 	// 1
 	void startTag(String name) {
 		this.name = name;
+		this.idNdx = -1;
 		this.attributesCount = 0;
 	}
 
@@ -70,6 +73,13 @@ class ParsedTag implements Tag {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getId() {
+		if (idNdx == -1) {
+			return null;
+		}
+		return attrValues[idNdx];
 	}
 
 	public TagType getType() {
@@ -122,6 +132,16 @@ class ParsedTag implements Tag {
 		return getAttributeIndex(name, caseSensitive) > -1;
 	}
 
+	// ---------------------------------------------------------------- advanced
+
+	public int getTagPosition() {
+		return position;
+	}
+
+	public int getTagLength() {
+		return length;
+	}
+
 	// ---------------------------------------------------------------- write
 
 	public void setName(String tagName) {
@@ -137,7 +157,7 @@ class ParsedTag implements Tag {
 	public void addAttribute(String name, String value) {
 		ensureLength();
 		attrNames[attributesCount] = name;
-		attrValues[attributesCount] = value;
+		setAttrVal(attributesCount, name, value);
 		attributesCount++;
 		modified = true;
 	}
@@ -147,7 +167,7 @@ class ParsedTag implements Tag {
 		if (index == -1) {
 			addAttribute(name, value);
 		} else {
-			attrValues[index] = value;
+			setAttrVal(index, name, value);
 		}
 		modified = true;
 	}
@@ -156,14 +176,14 @@ class ParsedTag implements Tag {
 		if (index >= attributesCount) {
 			throw new IndexOutOfBoundsException();
 		}
-		attrValues[index] = value;
+		setAttrVal(index, value);
 		modified = true;
 	}
 
 	public void setAttributeValue(String name, boolean caseSensitive, String value) {
 		int index = getAttributeIndex(name, caseSensitive);
 		if (index != -1) {
-			attrValues[index] = value;
+			setAttrVal(index, name, value);
 		}
 		modified = true;
 	}
@@ -210,6 +230,19 @@ class ParsedTag implements Tag {
 			attrNames = ArraysUtil.resize(attrNames, attributesCount * 2);
 			attrValues = ArraysUtil.resize(attrValues, attributesCount * 2);
 		}
+	}
+
+	private void setAttrVal(int index, String name, String value) {
+		if (idNdx == -1) {
+			if (name.equalsIgnoreCase(ATTR_NAME_ID)) {
+				idNdx = index;
+			}
+		}
+		attrValues[index] = value;
+	}
+
+	private void setAttrVal(int index, String value) {
+		attrValues[index] = value;
 	}
 
 	// ---------------------------------------------------------------- output

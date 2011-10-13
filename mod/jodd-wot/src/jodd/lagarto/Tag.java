@@ -20,6 +20,13 @@ public interface Tag {
 	TagType getType();
 
 	/**
+	 * Returns <b>id</b> attribute value of a tag.
+	 * Implementations may simply call {@link #getAttributeValue(String, boolean)}
+	 * or to cache this value for better performances.
+	 */
+	String getId();
+
+	/**
 	 * Returns 1-based deep level of a tag from the root.
 	 */
 	int getDeepLevel();
@@ -35,12 +42,12 @@ public interface Tag {
 	String getAttributeName(int index);
 
 	/**
-	 * Returns atrrbute value or <code>null</code> for an empty attribute,
+	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 */
 	String getAttributeValue(int index);
 
 	/**
-	 * Returns atrrbute value or <code>null</code> for an empty attribute,
+	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 * Returns <code>null</code> also if attribute name does not exist.
 	 */
 	String getAttributeValue(String name, boolean caseSensitive);
@@ -54,6 +61,18 @@ public interface Tag {
 	 * Detects if an attribute is present.
 	 */
 	boolean hasAttribute(String name, boolean caseSensitive);
+
+	// ---------------------------------------------------------------- advanced
+
+	/**
+	 * Returns tag position in the input source.
+	 */
+	int getTagPosition();
+
+	/**
+	 * Returns tag length in the input source.
+	 */
+	int getTagLength();
 
 	// ---------------------------------------------------------------- write
 

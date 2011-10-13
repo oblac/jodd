@@ -5,22 +5,32 @@ package jodd.lagarto;
 import java.io.IOException;
 
 /**
- * Tag writter outputs content to destination.
+ * Tag writer outputs content to destination.
  */
 public class TagWriter implements TagVisitor {
 
-	private final Appendable out;
 	private final boolean build;
+	private Appendable appendable;
 
-	public TagWriter(Appendable out) {
-		this.out = out;
+	public TagWriter(Appendable appendable) {
+		this.appendable = appendable;
 		this.build = false;
 	}
 
-	public TagWriter(Appendable out, boolean build) {
-		this.out = out;
+	public TagWriter(Appendable appendable, boolean build) {
+		this.appendable = appendable;
 		this.build = build;
 	}
+
+	public void setOutput(Appendable out) {
+		this.appendable = out;
+	}
+
+	public Appendable getOutput() {
+		return appendable;
+	}
+
+	// ---------------------------------------------------------------- visitor
 
 	public void start() {
 	}
@@ -30,7 +40,7 @@ public class TagWriter implements TagVisitor {
 
 	public void tag(Tag tag) {
 		try {
-			tag.writeTo(out, build);
+			tag.writeTo(appendable, build);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -38,11 +48,11 @@ public class TagWriter implements TagVisitor {
 
 	public void xmp(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(out, build);
+			tag.writeTo(appendable, build);
 			if (body != null) {
-				out.append(body);
+				appendable.append(body);
 			}
-			out.append("</xmp>");
+			appendable.append("</xmp>");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -50,11 +60,11 @@ public class TagWriter implements TagVisitor {
 
 	public void script(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(out, build);
+			tag.writeTo(appendable, build);
 			if (body != null) {
-				out.append(body);
+				appendable.append(body);
 			}
-			out.append("</script>");
+			appendable.append("</script>");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -62,9 +72,9 @@ public class TagWriter implements TagVisitor {
 
 	public void comment(CharSequence comment) {
 		try {
-			out.append("<!--");
-			out.append(comment);
-			out.append("-->");
+			appendable.append("<!--");
+			appendable.append(comment);
+			appendable.append("-->");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -72,7 +82,7 @@ public class TagWriter implements TagVisitor {
 
 	public void text(CharSequence text) {
 		try {
-			out.append(text);
+			appendable.append(text);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -80,9 +90,9 @@ public class TagWriter implements TagVisitor {
 
 	public void cdata(CharSequence cdata) {
 		try {
-			out.append("<![CDATA[");
-			out.append(cdata);
-			out.append("]]>");
+			appendable.append("<![CDATA[");
+			appendable.append(cdata);
+			appendable.append("]]>");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -90,7 +100,7 @@ public class TagWriter implements TagVisitor {
 
 	public void xml(Tag tag) {
 		try {
-			tag.writeTo(out, build);
+			tag.writeTo(appendable, build);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -98,9 +108,9 @@ public class TagWriter implements TagVisitor {
 
 	public void directive(CharSequence directive) {
 		try {
-			out.append("<!");
-			out.append(directive);
-			out.append(">");
+			appendable.append("<!");
+			appendable.append(directive);
+			appendable.append(">");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -109,12 +119,12 @@ public class TagWriter implements TagVisitor {
 	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
 		try {
 			if (isDownlevelHidden) {
-				out.append("<!--[");
+				appendable.append("<!--[");
 			} else {
-				out.append("<![");
+				appendable.append("<![");
 			}
-			out.append(conditionalComment);
-			out.append("]>");
+			appendable.append(conditionalComment);
+			appendable.append("]>");
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -122,12 +132,12 @@ public class TagWriter implements TagVisitor {
 
 	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
 		try {
-			out.append("<![");
-			out.append(conditionalComment);
+			appendable.append("<![");
+			appendable.append(conditionalComment);
 			if (isDownlevelHidden) {
-				out.append("]-->");
+				appendable.append("]-->");
 			} else {
-				out.append("]>");
+				appendable.append("]>");
 			}
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
