@@ -51,7 +51,7 @@ public class FileLRUCache {
 	 * Returns maximum occupied space in bytes.
 	 */
 	public long getMaxOccupiedSpace() {
-		return maxFileSize * cache.getCacheSize();
+		return (long) maxFileSize * cache.getCacheSize();
 	}
 
 	/**
