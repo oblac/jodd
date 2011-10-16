@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 /**
  * Files LRU cache stores files content in memory to dramatically
- * speed up performances for frequently readed files.
+ * speed up performances for frequently read files.
  */
 public class FileLRUCache {
 
@@ -48,9 +48,9 @@ public class FileLRUCache {
 	}
 
 	/**
-	 * Returns maximum occupated space in bytes.
+	 * Returns maximum occupied space in bytes.
 	 */
-	public long getMaxOccupatedSpace() {
+	public long getMaxOccupiedSpace() {
 		return maxFileSize * cache.getCacheSize();
 	}
 
