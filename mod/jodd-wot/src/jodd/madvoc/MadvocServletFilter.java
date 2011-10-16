@@ -44,16 +44,14 @@ public class MadvocServletFilter implements Filter {
 	protected MadvocConfig madvocConfig;
 	protected MadvocController madvocController;
 
+
 	/**
 	 * Filter initialization.
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.filterConfig = filterConfig;
 
-		WebApplicationStarter starter = new WebApplicationStarter();
-		starter.setWebAppClass(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
-		starter.setParamsFiles(Convert.toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS)));
-		starter.setMadvocConfigurator(filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR));
+		WebApplicationStarter starter = createWebApplicationStarter(filterConfig);
 
 		try {
 			webapp = starter.startNewWebApplication(filterConfig.getServletContext());
@@ -65,6 +63,18 @@ public class MadvocServletFilter implements Filter {
 		madvocController = starter.getMadvocController();
 		madvocConfig = starter.getMadvocConfig();
 		log.info("Madvoc application started.");
+	}
+
+	/**
+	 * Creates {@link WebApplicationStarter web application starter} for this web application.
+	 * Override it to set custom {@link MadvocConfig Madvoc configurator} or other core settings.
+	 */
+	protected WebApplicationStarter createWebApplicationStarter(FilterConfig filterConfig) {
+		WebApplicationStarter starter = new WebApplicationStarter();
+		starter.setWebAppClass(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
+		starter.setParamsFiles(Convert.toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS)));
+		starter.setMadvocConfigurator(filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR));
+		return starter;
 	}
 
 	/**
