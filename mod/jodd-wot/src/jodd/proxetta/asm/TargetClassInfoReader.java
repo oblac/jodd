@@ -2,6 +2,7 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmConst;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.AnnotationVisitor;
@@ -19,7 +20,6 @@ import java.io.IOException;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import jodd.proxetta.ProxettaException;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ClassInfo;
 import jodd.proxetta.AnnotationInfo;
 import jodd.util.ClassLoaderUtil;
@@ -131,7 +131,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if ((access & MethodInfo.ACC_FINAL) != 0) {
+		if ((access & AsmConst.ACC_FINAL) != 0) {
 			return null;	// skip finals
 		}
 		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
@@ -188,10 +188,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 					}
 					MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
 					int acc = msign.getAccessFlags();
-					if ((acc & MethodInfo.ACC_PUBLIC) == 0) {   	// skip non-public
+					if ((acc & AsmConst.ACC_PUBLIC) == 0) {   	// skip non-public
 						return null;
 					}
-					if ((access & MethodInfo.ACC_FINAL) != 0) {		// skip finals
+					if ((access & AsmConst.ACC_FINAL) != 0) {		// skip finals
 						return null;
 					}
 					if (allMethodSignatures.contains(msign.getSignature())) {		// skip overriden method by some in above classes

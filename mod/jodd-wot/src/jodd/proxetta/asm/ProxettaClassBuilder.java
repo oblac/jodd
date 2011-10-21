@@ -2,6 +2,7 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmConst;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
@@ -16,9 +17,7 @@ import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
-import static jodd.util.StringPool.DOT;
 import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.EmptyClassVisitor;
 
@@ -66,7 +65,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
-		access &= ~MethodInfo.ACC_ABSTRACT;
+		access &= ~AsmConst.ACC_ABSTRACT;
 
 		// write destination class
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);
@@ -136,7 +135,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 		// creates static initialization block that simply calls all advice static init methods in correct order
 		if (wd.adviceClinits != null) {
-			MethodVisitor mv = wd.dest.visitMethod(MethodInfo.ACC_STATIC, CLINIT, DESC_VOID, null, null);
+			MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_STATIC, CLINIT, DESC_VOID, null, null);
 			mv.visitCode();
 			for (String name : wd.adviceClinits) {
 				mv.visitMethodInsn(INVOKESTATIC, wd.thisReference, name, DESC_VOID);
@@ -148,7 +147,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 		// creates init method that simply calls all advice constructor methods in correct order
 		// this created init method is called from each destination's constructor
-		MethodVisitor mv = wd.dest.visitMethod(MethodInfo.ACC_PRIVATE | MethodInfo.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
 		mv.visitCode();
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {

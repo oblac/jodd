@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta;
+package jodd.asm;
 
 /**
- * Some global constants.
+ * Some ASM constants.
  */
-public interface AsmConsts {
+public interface AsmConst {
 
 	// types
 	int TYPE_BYTE           = 'B';
@@ -44,6 +44,5 @@ public interface AsmConsts {
 	int ACC_SYNTHETIC = 0x1000;     // class, field, method
 	int ACC_ANNOTATION = 0x2000;    // class
 	int ACC_ENUM = 0x4000;          // class(?) field inner
-
 
 }

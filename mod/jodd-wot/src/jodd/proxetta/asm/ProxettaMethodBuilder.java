@@ -2,6 +2,7 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmConst;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Type;
@@ -17,7 +18,6 @@ import static org.objectweb.asm.Opcodes.ANEWARRAY;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ALOAD;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
@@ -92,7 +92,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected void createFirstChainDelegate_Start() {
 		// check invalid access flags
 		int access = msign.getAccessFlags();
-		if ((access & MethodInfo.ACC_FINAL) != 0) {   // detect final
+		if ((access & AsmConst.ACC_FINAL) != 0) {   // detect final
 			throw new ProxettaException("Unable to create proxy for final method: " + msign +". Remove final modifier or change the pointcut definition.");
 		}
 

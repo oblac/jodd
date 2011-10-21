@@ -2,6 +2,7 @@
 
 package examples.proxetta.n.proxy;
 
+import jodd.asm.AsmConst;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.ProxyPointcut;
@@ -35,7 +36,7 @@ public class Aspects {
 				new ProxyPointcut() {
 					public boolean apply(MethodInfo msign) {
 						System.out.println("$$$$$$$$$$ " + msign);
-						System.out.println("rrrrrrrrrr " + (msign.getReturnOpcodeType() == MethodInfo.TYPE_VOID));
+						System.out.println("rrrrrrrrrr " + (msign.getReturnOpcodeType() == AsmConst.TYPE_VOID));
 						return msign.getClassname().endsWith("Service");
 					}
 				});

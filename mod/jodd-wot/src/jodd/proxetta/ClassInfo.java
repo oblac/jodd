@@ -5,7 +5,7 @@ package jodd.proxetta;
 /**
  * Various target class information.
  */
-public interface ClassInfo extends AsmConsts {
+public interface ClassInfo {
 
 	/**
 	 * Returns package name.

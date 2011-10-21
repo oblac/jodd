@@ -6,7 +6,7 @@ package jodd.proxetta;
  * Method info provides various information about the method.
  * Used in {@link jodd.proxetta.ProxyPointcut pointcut} definitions.
  */
-public interface MethodInfo extends AsmConsts {
+public interface MethodInfo {
 
 	/**
 	 * Returns java-like method arguments declaration.

@@ -2,6 +2,7 @@
 
 package jodd.proxetta.pointcuts;
 
+import jodd.asm.AsmConst;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationInfo;
@@ -21,7 +22,7 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method is public.
 	 */
 	public boolean isPublic(MethodInfo msign) {
-		return (msign.getAccessFlags() & MethodInfo.ACC_PUBLIC) != 0;
+		return (msign.getAccessFlags() & AsmConst.ACC_PUBLIC) != 0;
 	}
 
 	/**
@@ -153,14 +154,14 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method's return type is <code>void</code>.
 	 */
 	public boolean hasNoReturnValue(MethodInfo msign) {
-		return msign.getReturnOpcodeType() == MethodInfo.TYPE_VOID;
+		return msign.getReturnOpcodeType() == AsmConst.TYPE_VOID;
 	}
 
 	/**
 	 * Returns <code>true</code> if method has a return type.
 	 */
 	public boolean hasReturnValue(MethodInfo msign) {
-		return msign.getReturnOpcodeType() != MethodInfo.TYPE_VOID;
+		return msign.getReturnOpcodeType() != AsmConst.TYPE_VOID;
 	}
 
 

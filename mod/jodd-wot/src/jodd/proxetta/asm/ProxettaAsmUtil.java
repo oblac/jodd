@@ -2,14 +2,14 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmConst;
 import jodd.mutable.MutableInteger;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import static org.objectweb.asm.Opcodes.*;
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
-import jodd.proxetta.AsmConsts;
+
 import static jodd.proxetta.asm.ProxettaNaming.*;
 import jodd.util.StringPool;
 import static jodd.util.StringPool.COLON;
@@ -42,14 +42,14 @@ public class ProxettaAsmUtil {
 	 * Changes method access to private and final.
 	 */
 	public static int makePrivateFinalAccess(int access) {
-		return (access & 0xFFFFFFF0) | MethodInfo.ACC_PRIVATE | MethodInfo.ACC_FINAL;
+		return (access & 0xFFFFFFF0) | AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL;
 	}
 
 	/**
 	 * Removes native method access flag.
 	 */
 	public static int makeNonNative(int access) {
-		return (access & ~MethodInfo.ACC_NATIVE);
+		return (access & ~AsmConst.ACC_NATIVE);
 	}
 
 	/**
@@ -651,7 +651,7 @@ public class ProxettaAsmUtil {
 	 * Converts type reference to java-name.
 	 */
 	public static String typeref2Name(String desc) {
-		if (desc.charAt(0) != AsmConsts.TYPE_REFERENCE) {
+		if (desc.charAt(0) != AsmConst.TYPE_REFERENCE) {
 			throw new ProxettaException("Invalid type description/reference.");
 		}
 		String name = desc.substring(1, desc.length() - 1);

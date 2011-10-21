@@ -7,7 +7,6 @@ import jodd.proxetta.data.BigFatJoe;
 import jodd.proxetta.data.StatCounter;
 import jodd.proxetta.data.StatCounterAdvice;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
-import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
