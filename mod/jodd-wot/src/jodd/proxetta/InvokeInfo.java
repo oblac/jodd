@@ -2,8 +2,8 @@
 
 package jodd.proxetta;
 
+import jodd.asm.AsmUtil;
 import jodd.mutable.MutableInteger;
-import jodd.proxetta.asm.ProxettaAsmUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class InvokeInfo {
 		MutableInteger from = new MutableInteger(1);
 		if (description.length() != 0) {
 			while (description.charAt(from.value) != ')') {
-				String a = ProxettaAsmUtil.typedescToSignature(description, from);
+				String a = AsmUtil.typedescToSignature(description, from);
 				args.add(a);
 			}
 		}
@@ -47,7 +47,7 @@ public class InvokeInfo {
 
 		from.value++;
 		returnType = description.length() > 0 ?
-				ProxettaAsmUtil.typedescToSignature(description, from) :
+				AsmUtil.typedescToSignature(description, from) :
 				className;
 
 		StringBuilder s = new StringBuilder();

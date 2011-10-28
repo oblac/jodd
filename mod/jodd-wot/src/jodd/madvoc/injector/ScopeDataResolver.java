@@ -7,6 +7,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
+import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.paramo.ParamoException;
 import jodd.util.ReflectUtil;
@@ -24,7 +25,7 @@ import java.lang.annotation.Annotation;
 /**
  * Collection of {@link ScopeData scope data} of certain type.
  * For each action class and action method it holds an array of ScopeData objects.
- * Each element of that array repesents data for one ScopeType.
+ * Each element of that array represents data for one ScopeType.
  * Some elements might be null as well.
  */
 public class ScopeDataResolver {
@@ -109,7 +110,7 @@ public class ScopeDataResolver {
 				scopeData[st.value()] = sd;
 			}
 		} else {
-			throw new MadvocException("IN data are availiable only for Class and Method.");
+			throw new MadvocException("IN data are available only for Class and Method.");
 		}
 		if (count == 0) {
 			scopeData = EMPTY_SCOPEDATA;
@@ -127,11 +128,11 @@ public class ScopeDataResolver {
 	protected ScopeData inspectMethodScopeData(Method method, ScopeType scopeType) {
 		Annotation[][] annotations = method.getParameterAnnotations();
 		Class<?>[] types = method.getParameterTypes();
-		String[] paramNames;
+		MethodParameter[] methodParameters;
 		try {
-			paramNames = Paramo.resolveParameterNames(method);
+			methodParameters = Paramo.resolveParameters(method);
 		} catch (ParamoException pex) {
-			paramNames = null;
+			methodParameters = null;
 		}
 
 		int paramsCount = types.length;
@@ -142,7 +143,7 @@ public class ScopeDataResolver {
 		for (int i = 0; i < paramsCount; i++) {
 			Annotation[] paramAnn = annotations[i];
 			Class type = types[i];
-			String name = paramNames[i];
+			String name = methodParameters != null ? methodParameters[i].getName() : null;
 			boolean hasAnnotation = false;
 			for (Annotation annotation : paramAnn) {
 				if (annotation instanceof In) {
@@ -157,8 +158,8 @@ public class ScopeDataResolver {
 				}*/
 
 			}
-			// annotations not availiable, treat it as request scope type
-			if ((hasAnnotation == false) && (scopeType == ScopeType.REQUEST) && (paramNames != null)) {
+			// annotations not available, treat it as request scope type
+			if ((hasAnnotation == false) && (scopeType == ScopeType.REQUEST) && (methodParameters != null)) {
 				sd.in[i] = defaultRequestScopeIn(scopeType, name, type);
 				incount++;
 			}

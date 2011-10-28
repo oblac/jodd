@@ -2,6 +2,7 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmUtil;
 import org.objectweb.asm.AnnotationVisitor;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 		this.desc = desc;
 		this.visible = visible;
 		this.elements = new HashMap<String, Object>();
-		this.className = ProxettaAsmUtil.typeref2Name(desc);
+		this.className = AsmUtil.typeref2Name(desc);
 	}
 
 	// ---------------------------------------------------------------- info

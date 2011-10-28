@@ -3,7 +3,7 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyMethodVisitor;
-import jodd.util.StringPool;
+import jodd.util.ArraysUtil;
 import org.objectweb.asm.Label;
 
 /**
@@ -13,14 +13,14 @@ final class ParamExtractor extends EmptyMethodVisitor {
 
 	private final int paramCount;
 	private final int ignoreCount;
-	private final StringBuilder result;
+	private MethodParameter[] methodParameters;
 	private int currentParam;
 	boolean debugInfoPresent;
 
 	ParamExtractor(int ignoreCount, int paramCount) {
 		this.ignoreCount = ignoreCount;
 		this.paramCount = paramCount;
-		this.result = new StringBuilder();
+		this.methodParameters = new MethodParameter[paramCount];
 		this.currentParam = 0;
 		this.debugInfoPresent = paramCount == 0;		// for 0 params, no need for debug info
 	}
@@ -31,14 +31,20 @@ final class ParamExtractor extends EmptyMethodVisitor {
 			if (name.equals("arg" + currentParam) == false) {
 				debugInfoPresent = true;
 			}
-			result.append(',');
-			result.append(name);
+			methodParameters[currentParam] = new MethodParameter(name, signature);
 			currentParam++;
 		}
 	}
 
-	String getResult() {
-		return result.length() != 0 ? result.substring(1) : StringPool.EMPTY;
+	@Override
+	public void visitEnd() {
+		if (methodParameters.length > currentParam) {
+			methodParameters = ArraysUtil.subarray(methodParameters, 0, currentParam);
+		}
+	}
+
+	MethodParameter[] getMethodParameters() {
+		return methodParameters;
 	}
 
 }

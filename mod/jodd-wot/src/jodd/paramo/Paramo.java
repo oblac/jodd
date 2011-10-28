@@ -3,7 +3,6 @@
 package jodd.paramo;
 
 import jodd.util.ClassLoaderUtil;
-import jodd.util.StringPool;
 import org.objectweb.asm.ClassReader;
 
 import java.io.IOException;
@@ -20,11 +19,12 @@ public class Paramo {
 	protected static final String CTOR_METHOD = "<init>";
 
 	/**
-	 * Resolves parameter names from method or constructor. Returns an empty
-	 * string when target does not contain any parameter.
-	 * No caching is involved in this process, i.e. class bytecode is examined every time.
+	 * Resolves method parameters from a method or constructor.
+	 * Returns an empty array when target does not contain any parameter.
+	 * No caching is involved in this process, i.e. class bytecode
+	 * is examined every time this method is called.
 	 */
-	public static String[] resolveParameterNames(AccessibleObject methodOrCtor) {
+	public static MethodParameter[] resolveParameters(AccessibleObject methodOrCtor) {
 		Class[] paramTypes;
 		Class declaringClass;
 		String name;
@@ -41,7 +41,7 @@ public class Paramo {
 		}
 
 		if (paramTypes.length == 0) {
-			return StringPool.EMPTY_ARRAY;
+			return MethodParameter.EMPTY_ARRAY;
 		}
 
 		InputStream stream;
@@ -54,7 +54,7 @@ public class Paramo {
 			ClassReader reader = new ClassReader(stream);
 			MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes);
 			reader.accept(visitor, 0);
-			return visitor.getParameterNames();
+			return visitor.getResolvedParameters();
 		} catch (IOException ioex) {
 			throw new ParamoException(ioex);
 		}

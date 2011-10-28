@@ -3,8 +3,6 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
-import jodd.util.StringPool;
-import jodd.util.StringUtil;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
@@ -102,18 +100,28 @@ final class MethodFinder extends EmptyClassVisitor {
 		return s.equals(paramType.getName());
 	}
 
+
 	/**
-	 * Returns parameter names once when method is parsed.
+	 * Returns method parameters once when method is parsed.
+	 * If method has no parameters, an empty array is returned.
 	 */
-	String[] getParameterNames() {
+	MethodParameter[] getResolvedParameters() {
 		if (paramExtractor == null) {
-			return StringPool.EMPTY_ARRAY;
+			return MethodParameter.EMPTY_ARRAY;
 		}
+		checkIfDebugInfoIsPresent();
+		return paramExtractor.getMethodParameters();
+	}
+
+
+	/**
+	 * Checks if debug info is present.
+	 */
+	private void checkIfDebugInfoIsPresent() {
 		if (paramExtractor.debugInfoPresent == false) {
 			throw new ParamoException("Parameter names not available for method: '"
 					+ declaringClass.getName() + '#' + methodName + "'.");
 		}
-		return StringUtil.splitc(paramExtractor.getResult(), ',');
 	}
 
 }

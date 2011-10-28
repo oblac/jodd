@@ -2,6 +2,7 @@
 
 package jodd.petite;
 
+import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
 
@@ -94,9 +95,9 @@ public class InjectionPointFactory {
 	 */
 	protected String[][] methodOrCtorDefaultReferences(AccessibleObject accobj, Class[] paramTypes) {
 		PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
-		String[] paramNames = null;
+		MethodParameter[] methodParameters = null;
 		if (petiteConfig.getUseParamo()) {
-			paramNames = Paramo.resolveParameterNames(accobj);
+			methodParameters = Paramo.resolveParameters(accobj);
 		}
 
 		String[][] references = new String[paramTypes.length][];
@@ -108,7 +109,7 @@ public class InjectionPointFactory {
 
 			for (int i = 0; i < ref.length; i++) {
 				switch (lookupReferences[i]) {
-					case NAME:				ref[i] = paramNames != null ? paramNames[j] : null; break;
+					case NAME:				ref[i] = methodParameters != null ? methodParameters[j].getName() : null; break;
 					case TYPE_SHORT_NAME:	ref[i] = StringUtil.uncapitalize(paramTypes[j].getSimpleName()); break;
 					case TYPE_FULL_NAME:	ref[i] = paramTypes[j].getName(); break;
 				}
