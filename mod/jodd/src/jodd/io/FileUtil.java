@@ -595,6 +595,45 @@ public class FileUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- read/write chars
+
+	public static char[] readChars(String fileName) throws IOException {
+		return readChars(new File(fileName), defaultParams.encoding);
+	}
+
+	public static char[] readChars(File file) throws IOException {
+		return readChars(file, defaultParams.encoding);
+	}
+
+	public static char[] readChars(String fileName, String encoding) throws IOException {
+		return readChars(new File(fileName), encoding);
+	}
+
+	/**
+	 * Reads file content as char array.
+	 */
+	public static char[] readChars(File file, String encoding) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
+		}
+		if (file.isFile() == false) {
+			throw new IOException(MSG_NOT_A_FILE + file);
+		}
+		long len = file.length();
+		if (len >= Integer.MAX_VALUE) {
+			len = Integer.MAX_VALUE;
+		}
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(file);
+			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
+			StreamUtil.copy(in, fastCharArrayWriter, encoding);
+			return fastCharArrayWriter.toCharArray();
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
 	// ---------------------------------------------------------------- read/write string
 
 
