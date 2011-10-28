@@ -3,6 +3,7 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -17,7 +18,7 @@ import java.util.HashMap;
  */
 final class MethodFinder extends EmptyClassVisitor {
 
-	public static final String[] EMPTY_NAMES = new String[0];
+	public static final String[] EMPTY_NAMES = StringPool.EMPTY_ARRAY;
 
 	private static final Map<String, String> primitives = new HashMap<String, String>(8);
 

@@ -8,6 +8,7 @@ import jodd.log.Log;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import jodd.util.ReflectUtil;
+import jodd.util.StringPool;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -248,7 +249,7 @@ public abstract class PetiteBeans {
 		}
 
 		if (list.isEmpty()) {
-			beanNames = new String[0];
+			beanNames = StringPool.EMPTY_ARRAY;
 		} else {
 			beanNames = list.toArray(new String[list.size()]);
 		}
@@ -371,10 +372,10 @@ public abstract class PetiteBeans {
 	private InitMethodPoint[] defineInitMethods(Class type, String[] beforeMethodNames, String[] afterMethodNames) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		if (beforeMethodNames == null) {
-			beforeMethodNames = new String[0];
+			beforeMethodNames = StringPool.EMPTY_ARRAY;
 		}
 		if (afterMethodNames == null) {
-			afterMethodNames = new String[0];
+			afterMethodNames = StringPool.EMPTY_ARRAY;
 		}
 		int total = beforeMethodNames.length + afterMethodNames.length;
 		InitMethodPoint[] methods = new InitMethodPoint[total];

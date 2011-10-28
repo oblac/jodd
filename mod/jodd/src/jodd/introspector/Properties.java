@@ -2,6 +2,8 @@
 
 package jodd.introspector;
 
+import jodd.util.StringPool;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -15,9 +17,9 @@ import static jodd.util.ReflectUtil.NO_PARAMETERS;
 class Properties {
 
 	Methods getters = new Methods();
-	String[] getterNames = new String[0];
+	String[] getterNames = StringPool.EMPTY_ARRAY;
 	Methods setters = new Methods();
-	String[] setterNames = new String[0];
+	String[] setterNames = StringPool.EMPTY_ARRAY;
 
 	ArrayList<String> getterNameList;
 	ArrayList<String> setterNameList;

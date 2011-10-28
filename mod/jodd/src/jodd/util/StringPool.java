@@ -75,4 +75,8 @@ public interface StringPool {
 	String ONE 				= "1";
 	String ZERO				= "0";
 	String DOLLAR_LEFT_BRACE= "${";
+
+	// ---------------------------------------------------------------- array
+
+	String[] EMPTY_ARRAY = new String[0];
 }

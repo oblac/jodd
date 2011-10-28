@@ -3,6 +3,7 @@
 package jodd.petite.resolver;
 
 import jodd.util.PropertiesUtil;
+import jodd.util.StringPool;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
 public class ParamResolver {
 
 	protected final Map<String, Object> params;
-
-	protected static final String[] EMPTY_PARAMS = new String[0];	// saves memory
 
 	public ParamResolver() {
 		params = new HashMap<String, Object>();
@@ -50,7 +49,7 @@ public class ParamResolver {
 			entry.setValue(value);
 		}
 		if (list.isEmpty()) {
-			return EMPTY_PARAMS;
+			return StringPool.EMPTY_ARRAY;
 		} else {
 			return list.toArray(new String[list.size()]);
 		}

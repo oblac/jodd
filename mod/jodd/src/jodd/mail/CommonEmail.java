@@ -2,6 +2,8 @@
 
 package jodd.mail;
 
+import jodd.util.StringPool;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,7 +22,7 @@ public abstract class CommonEmail {
 	public static final int PRIORITY_LOW 		= 4;
 	public static final int PRIORITY_LOWEST		= 5;
 
-	protected static final String[] NONE = new String[0];
+	protected static final String[] NONE = StringPool.EMPTY_ARRAY;
 
 	// ---------------------------------------------------------------- from
 
