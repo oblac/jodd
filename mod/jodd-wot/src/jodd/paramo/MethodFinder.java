@@ -18,8 +18,6 @@ import java.util.HashMap;
  */
 final class MethodFinder extends EmptyClassVisitor {
 
-	public static final String[] EMPTY_NAMES = StringPool.EMPTY_ARRAY;
-
 	private static final Map<String, String> primitives = new HashMap<String, String>(8);
 
 	private static final String TYPE_INT = "int";
@@ -109,7 +107,7 @@ final class MethodFinder extends EmptyClassVisitor {
 	 */
 	String[] getParameterNames() {
 		if (paramExtractor == null) {
-			return EMPTY_NAMES;
+			return StringPool.EMPTY_ARRAY;
 		}
 		if (paramExtractor.debugInfoPresent == false) {
 			throw new ParamoException("Parameter names not available for method: '"

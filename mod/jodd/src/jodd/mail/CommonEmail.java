@@ -22,8 +22,6 @@ public abstract class CommonEmail {
 	public static final int PRIORITY_LOW 		= 4;
 	public static final int PRIORITY_LOWEST		= 5;
 
-	protected static final String[] NONE = StringPool.EMPTY_ARRAY;
-
 	// ---------------------------------------------------------------- from
 
 	protected String from;
@@ -43,14 +41,14 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- to
 
-	protected String[] to = NONE;
+	protected String[] to = StringPool.EMPTY_ARRAY;
 
 	/**
 	 * Sets TO addresses.
 	 */
 	public void setTo(String... tos) {
 		if (tos == null) {
-			tos = NONE;
+			tos = StringPool.EMPTY_ARRAY;
 		}
 		to = tos;
 	}
@@ -64,14 +62,14 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- reply-to
 
-	protected String[] replyTo = NONE;
+	protected String[] replyTo = StringPool.EMPTY_ARRAY;
 
 	/**
 	 * Sets REPLY-TO addresses.
 	 */
 	public void setReplyTo(String... replyTo) {
 		if (replyTo == null) {
-			replyTo = NONE;
+			replyTo = StringPool.EMPTY_ARRAY;
 		}
 		this.replyTo = replyTo;
 	}
@@ -85,14 +83,14 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- cc
 
-	protected String[] cc = NONE;
+	protected String[] cc = StringPool.EMPTY_ARRAY;
 
 	/**
 	 * Sets CC addresses.
 	 */
 	public void setCc(String... ccs) {
 		if (ccs == null) {
-			ccs = NONE;
+			ccs = StringPool.EMPTY_ARRAY;
 		}
 		cc = ccs;
 	}
@@ -106,14 +104,14 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- bcc
 
-	protected String[] bcc = NONE;
+	protected String[] bcc = StringPool.EMPTY_ARRAY;
 
 	/**
 	 * Sets BCC addresses.
 	 */
 	public void setBcc(String... bccs) {
 		if (bccs == null) {
-			bccs = NONE;
+			bccs = StringPool.EMPTY_ARRAY;
 		}
 		bcc = bccs;
 	}

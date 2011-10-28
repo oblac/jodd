@@ -3,6 +3,7 @@
 package jodd.paramo;
 
 import jodd.util.ClassLoaderUtil;
+import jodd.util.StringPool;
 import org.objectweb.asm.ClassReader;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class Paramo {
 		}
 
 		if (paramTypes.length == 0) {
-			return MethodFinder.EMPTY_NAMES;
+			return StringPool.EMPTY_ARRAY;
 		}
 
 		InputStream stream;
