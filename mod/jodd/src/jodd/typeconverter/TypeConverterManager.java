@@ -29,6 +29,7 @@ import jodd.typeconverter.impl.FloatConverter;
 import jodd.typeconverter.impl.IntegerArrayConverter;
 import jodd.typeconverter.impl.IntegerConverter;
 import jodd.typeconverter.impl.JDateTimeConverter;
+import jodd.typeconverter.impl.LocaleConverter;
 import jodd.typeconverter.impl.LongArrayConverter;
 import jodd.typeconverter.impl.LongConverter;
 import jodd.typeconverter.impl.MutableByteConverter;
@@ -55,6 +56,7 @@ import java.math.BigInteger;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.net.URL;
+import java.util.Locale;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -146,6 +148,8 @@ public class TypeConverterManager {
 
 		register(URI.class, new URIConverter());
 		register(URL.class, new URLConverter());
+
+		register(Locale.class, new LocaleConverter());
 	}
 
 	/**

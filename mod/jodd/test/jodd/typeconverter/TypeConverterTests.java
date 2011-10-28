@@ -43,6 +43,7 @@ public class TypeConverterTests extends TestSuite {
 		addTestSuite(StringArrayConverterTest.class);
 		addTestSuite(URLConverterTest.class);
 		addTestSuite(URIConverterTest.class);
+		addTestSuite(LocaleConverterTest.class);
 	}
 
 	public static Test suite() {
