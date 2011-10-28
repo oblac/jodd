@@ -64,7 +64,7 @@ import java.util.Locale;
  */
 public class TypeConverterManager {
 
-	private static HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>();
+	private static HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(50);
 
 	static {
 		registerDefaults();
