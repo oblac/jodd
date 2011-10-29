@@ -23,7 +23,7 @@ public interface TagVisitor {
 	/**
 	 * Invoked on {@link Tag tag} (open, close or empty).
 	 * <p>
-	 * Warnning: the passed tag instance <b>should not</b> be kept beyond
+	 * Warning: the passed tag instance <b>should not</b> be kept beyond
 	 * this method as the parser reuse it!</p>
 	 */
 	void tag(Tag tag);

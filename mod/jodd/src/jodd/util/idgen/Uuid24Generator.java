@@ -33,12 +33,12 @@ public class Uuid24Generator {
 		id1 += (id2 & 0xFFFF0000L) >> 16;
 		id3 += (id2 & 0x0000FFFFL) << 32;
 
-		return unisgnedValueOf(id1) + unisgnedValueOf(id3);
+		return unsignedValueOf(id1) + unsignedValueOf(id3);
 	}
 
 	private static final char[] CHARS64 = Base64.getBase64Chars();
 	
-	private static String unisgnedValueOf(long l) {
+	private static String unsignedValueOf(long l) {
 		char[] buf = new char[64];
 		int charNdx = 64;
 		int radix = 1 << 6;

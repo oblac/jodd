@@ -208,9 +208,9 @@ public class ExceptionUtil {
 	 * Throws target of <code>InvocationTargetException</code> if it is exception.
 	 */
 	public static void throwTargetException(InvocationTargetException itex) throws Exception {
-		throw exctractTargetException(itex);
+		throw extractTargetException(itex);
 	}
-	public static Exception exctractTargetException(InvocationTargetException itex) {
+	public static Exception extractTargetException(InvocationTargetException itex) {
 		Throwable target = itex.getTargetException();
 		return target instanceof Exception ? (Exception) target : itex;
 	}

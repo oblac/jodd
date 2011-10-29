@@ -30,7 +30,7 @@ public class HttpSessionListenerBroadcaster implements HttpSessionListener {
 	}
 
 	public void sessionDestroyed(HttpSessionEvent event) {
-		broadcastSessionDestoryed(event);
+		broadcastSessionDestroyed(event);
 	}
 
 
@@ -70,7 +70,7 @@ public class HttpSessionListenerBroadcaster implements HttpSessionListener {
 	 * Broadcast all {@link #sessionDestroyed(javax.servlet.http.HttpSessionEvent)} messages to all
 	 * registered session listeners.
 	 */
-	public void broadcastSessionDestoryed(HttpSessionEvent event) {
+	public void broadcastSessionDestroyed(HttpSessionEvent event) {
 		for (HttpSessionListener listener : listeners) {
 			listener.sessionDestroyed(event);
 		}

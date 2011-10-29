@@ -66,7 +66,7 @@ public class Vtor {
 		for (Map.Entry<String, List<Check>> entry : ctx.map.entrySet()) {
 			String name = entry.getKey();
 			Object value = BeanUtil.getDeclaredPropertySilently(target, name);
-			String valueName = targetName != null ? (targetName + '.' + name) : name;		// pomeri gore
+			String valueName = targetName != null ? (targetName + '.' + name) : name;		// move up
 			ValidationConstraintContext vcc = new ValidationConstraintContext(this, target, valueName);
 			
 			for (Check check : entry.getValue()) {

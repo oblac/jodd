@@ -151,7 +151,7 @@ public class LagartoParser {
 	}
 
 	/**
-	 * Parses HTML coments.
+	 * Parses HTML comments.
 	 */
 	protected void parseComment() throws IOException {
 		flushText();

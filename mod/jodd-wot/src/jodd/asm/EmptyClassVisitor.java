@@ -36,7 +36,7 @@ public class EmptyClassVisitor implements ClassVisitor {
      * 
      * @param source the name of the source file from which the class was
      *        compiled. May be <code>null</code>.
-     * @param debug additional debug information to compute the correspondance
+     * @param debug additional debug information to compute the correspondence
      *        between source and compiled elements of the class. May be
      *        <code>null</code>.
      */

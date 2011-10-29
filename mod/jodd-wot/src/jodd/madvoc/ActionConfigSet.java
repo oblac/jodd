@@ -141,7 +141,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 		// left prefix to the macro
 		public String left;
 
-		// right sufix to the end or #method
+		// right suffix to the end or #method
 		public String right;
 
 		// regex pattern

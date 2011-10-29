@@ -39,7 +39,7 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	}
 
 	/**
-	 * Checks if header name is exclused.
+	 * Checks if header name is excluded.
 	 */
 	protected boolean isExcluded(String header) {
 		return "If-Modified-Since".equalsIgnoreCase(header);

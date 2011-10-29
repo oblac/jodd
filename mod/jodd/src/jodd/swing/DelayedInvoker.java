@@ -30,7 +30,7 @@ public class DelayedInvoker extends Timer {
 	}
 
 	/**
-	 * Creates invoker that will fire event to provided listerner after default delay.
+	 * Creates invoker that will fire event to provided listener after default delay.
 	 */
 	public DelayedInvoker(ActionListener actionListener) {
 		this(DEFAULT_DELAY, actionListener);

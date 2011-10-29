@@ -344,7 +344,7 @@ public class StringUtil {
 		return Convert.toStringArray(obj);
 	}
 
-	// ---------------------------------------------------------------- captialize
+	// ---------------------------------------------------------------- capitalize
 
 	/**
 	 * Capitalizes a string, changing the first letter to
@@ -415,19 +415,19 @@ public class StringUtil {
 	 * and a bit faster then <code>StringTokenizer</code>.
 	 *
 	 * @param src       string to split
-	 * @param delimeter split delimiter
+	 * @param delimiter split delimiter
 	 *
 	 * @return array of split strings
 	 */
-	public static String[] split(String src, String delimeter) {
-		int maxparts = (src.length() / delimeter.length()) + 2;		// one more for the last
+	public static String[] split(String src, String delimiter) {
+		int maxparts = (src.length() / delimiter.length()) + 2;		// one more for the last
 		int[] positions = new int[maxparts];
-		int dellen = delimeter.length();
+		int dellen = delimiter.length();
 
 		int i, j = 0;
 		int count = 0;
 		positions[0] = - dellen;
-		while ((i = src.indexOf(delimeter, j)) != -1) {
+		while ((i = src.indexOf(delimiter, j)) != -1) {
 			count++;
 			positions[count] = i;
 			j = i + dellen;

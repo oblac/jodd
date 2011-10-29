@@ -47,7 +47,7 @@ public class DbSession {
 			log.debug("Creating new db session");
 		}
 		if (connectionProvider == null) {
-			throw new DbSqlException("Connection provider is not availiable.");
+			throw new DbSqlException("Connection provider is not available.");
 		}
 		this.connectionProvider = connectionProvider;
 		txActive = false;

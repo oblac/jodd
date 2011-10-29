@@ -72,7 +72,7 @@ public class HtmlEncoder {
 		return buffer.toString();
 	}
 
-	// ---------------------------------------------------------------- enocode text
+	// ---------------------------------------------------------------- encode text
 
 	public static String block(Object object) {
 		if (object == null) {

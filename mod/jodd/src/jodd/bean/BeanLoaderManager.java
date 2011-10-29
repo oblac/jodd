@@ -93,7 +93,7 @@ public class BeanLoaderManager {
 	}
 
 	/**
-	 * Performs more throughly search for bean loader. It examines all available
+	 * Performs more thoroughly search for bean loader. It examines all available
 	 * loaders and returns the first that matches the object type.
 	 */
 	public static BeanLoader lookup(Object source) {

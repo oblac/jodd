@@ -396,12 +396,12 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 */
 	public static class SizeSnapshot {
 		final int totalCount;
-		final int avaliableCount;
+		final int availableCount;
 		final int busyCount;
 
-		SizeSnapshot(int avaliableCount, int busyCount) {
-			this.totalCount = avaliableCount + busyCount;
-			this.avaliableCount = avaliableCount;
+		SizeSnapshot(int availableCount, int busyCount) {
+			this.totalCount = availableCount + busyCount;
+			this.availableCount = availableCount;
 			this.busyCount = busyCount;
 		}
 
@@ -413,10 +413,10 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		}
 
 		/**
-		 * Returns number of availiable connections.
+		 * Returns number of available connections.
 		 */
-		public int getAvaliableCount() {
-			return avaliableCount;
+		public int getAvailableCount() {
+			return availableCount;
 		}
 
 		/**
@@ -429,7 +429,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		@Override
 		public String toString() {
 			return "Connections count: {total=" + totalCount +
-					", avaliable=" + avaliableCount +
+					", available=" + availableCount +
 					", busy=" + busyCount + '}';
 		}
 	}

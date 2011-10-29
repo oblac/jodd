@@ -159,7 +159,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
 
-		// check all public super methods that are not overriden
+		// check all public super methods that are not overridden
 		for (ClassReader cr : targetClassInfo.superClassReaders) {
 			cr.accept(new EmptyClassVisitor() {
 

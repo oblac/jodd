@@ -203,7 +203,7 @@ public class IntArrayList implements Serializable {
 
 
 	/**
-	 * Searches for the first occurence of the given argument.
+	 * Searches for the first occurrence of the given argument.
 	 */
 	public int indexOf(int data) {
 		for (int i = 0; i < size; i++) {

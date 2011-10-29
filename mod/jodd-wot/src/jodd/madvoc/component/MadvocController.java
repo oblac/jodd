@@ -205,7 +205,7 @@ public class MadvocController {
 	// ---------------------------------------------------------------- create
 
 	/**
-	 * Creates new action object from {@link ActionConfig} using default contructor.
+	 * Creates new action object from {@link ActionConfig} using default constructor.
 	 */
 	protected Object createAction(Class actionClass) {
 		try {

@@ -18,7 +18,7 @@ public interface Introspector {
 
 	/**
 	 * Registers new class type. If type already registered, it will be
-	 * reseted and registered again with new class descriptor.
+	 * reset and registered again with new class descriptor.
 	 */
 	ClassDescriptor register(Class type);
 

@@ -668,7 +668,7 @@ abstract class DbQueryBase {
 	}
 
 	/**
-	 * Returns generated key i.e. first genereted column as <code>long</code>.
+	 * Returns generated key i.e. first generated column as <code>long</code>.
 	 */
 	public long getGeneratedKey() {
 		checkInitialized();

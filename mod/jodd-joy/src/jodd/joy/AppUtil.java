@@ -10,7 +10,7 @@ import jodd.util.SystemUtil;
 import java.net.URL;
 
 /**
- * Commong application configuration utilities.
+ * Common application configuration utilities.
  */
 public class AppUtil {
 

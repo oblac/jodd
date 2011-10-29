@@ -91,7 +91,7 @@ public class SwingUtil {
 	}
 
 	/**
-	 * Enforeces JEditorPane font.
+	 * Enforces JEditorPane font.
 	 * Once the content type of a JEditorPane is set to text/html the font on the Pane starts to be managed by Swing.
 	 * This method forces using provided font.
 	 */

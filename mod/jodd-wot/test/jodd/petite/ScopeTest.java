@@ -6,7 +6,7 @@ import jodd.petite.scope.ThreadLocalScope;
 import jodd.petite.test.Boo;
 import jodd.petite.test.Foo;
 import jodd.petite.test.Zoo;
-import jodd.util.ConcurentUtil;
+import jodd.util.ConcurrentUtil;
 import junit.framework.TestCase;
 
 import java.util.concurrent.Semaphore;
@@ -29,7 +29,7 @@ public class ScopeTest extends TestCase {
 
 
 		final Semaphore sem = new Semaphore(1);
-		ConcurentUtil.acquire(sem);
+		ConcurrentUtil.acquire(sem);
 
 		Thread thread = new Thread() {
 			@Override
@@ -43,7 +43,7 @@ public class ScopeTest extends TestCase {
 			}
 		};
 		thread.start();
-		ConcurentUtil.waitForRelease(sem);
+		ConcurrentUtil.waitForRelease(sem);
 	}
 
 }

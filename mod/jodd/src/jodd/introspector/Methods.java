@@ -72,7 +72,7 @@ class Methods {
 			return null;
 		}
 		for (int i = 0; i < entry.size; i++) {
-			if (ReflectUtil.compareParameteres(entry.paramterTypes[i], paramTypes) == true) {
+			if (ReflectUtil.compareParameters(entry.paramterTypes[i], paramTypes) == true) {
 				return entry.methodsList[i];
 			}
 		}
@@ -111,7 +111,7 @@ class Methods {
 			return null;
 		}
 		for (MethodDescriptor md : list) {
-			if (ReflectUtil.compareParameteres(md.parameterTypes, paramTypes) == true) {
+			if (ReflectUtil.compareParameters(md.parameterTypes, paramTypes) == true) {
 				return md.method;
 			}
 		}

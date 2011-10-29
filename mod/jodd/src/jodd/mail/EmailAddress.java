@@ -105,7 +105,7 @@ public class EmailAddress {
 	private static final boolean ALLOW_DOMAIN_LITERALS = true;
 
 	/**
-	 * This contstant states that quoted identifiers are allowed
+	 * This constant states that quoted identifiers are allowed
 	 * (using quotes and angle brackets around the raw address) are allowed, e.g.:
 	 * <p>
 	 * <p><tt>"John Smith" &lt;john.smith@somewhere.com&gt;</tt>

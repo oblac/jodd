@@ -138,7 +138,7 @@ public class SqlTypeManager {
 	}
 
 	/**
-	 * Returns sql type instance. Instances are stored for better perfromances.
+	 * Returns sql type instance. Instances are stored for better performances.
 	 */
 	public static SqlType lookupSqlType(Class<? extends SqlType> sqlTypeClass) {
 		SqlType sqlType = sqlTypes.get(sqlTypeClass);

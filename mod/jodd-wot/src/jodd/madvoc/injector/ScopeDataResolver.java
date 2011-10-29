@@ -86,7 +86,7 @@ public class ScopeDataResolver {
 	}
 
 	/**
-	 * Inspects and returns scope data for all availiable scopes.
+	 * Inspects and returns scope data for all available scopes.
 	 */
 	protected ScopeData[] inspectAllScopeData(Object key) {
 		ScopeData[] scopeData;

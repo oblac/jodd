@@ -40,11 +40,11 @@ public class StringConverter implements TypeConverter<String> {
 		if (value instanceof Clob) {
 			Clob clob = (Clob) value;
 			try {
-				long lenght = clob.length();
-				if (lenght > Integer.MAX_VALUE) {
+				long length = clob.length();
+				if (length > Integer.MAX_VALUE) {
 					throw new TypeConversionException("Clob is too big.");
 				}
-				return clob.getSubString(1, (int) lenght);
+				return clob.getSubString(1, (int) length);
 			} catch (SQLException sex) {
 				throw new TypeConversionException(value, sex);
 			}

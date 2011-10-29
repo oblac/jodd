@@ -543,7 +543,7 @@ public class ReflectUtil {
 		if (first.getName().equals(second.getName()) == false) {
 			return false;
 		}
-		return compareParameteres(first.getParameterTypes(), second.getParameterTypes());
+		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
 	}
 
 	/**
@@ -553,7 +553,7 @@ public class ReflectUtil {
 		if (first.getName().equals(second.getName()) == false) {
 			return false;
 		}
-		return compareParameteres(first.getParameterTypes(), second.getParameterTypes());
+		return compareParameters(first.getParameterTypes(), second.getParameterTypes());
 	}
 
 	public static boolean compareSignatures(Field first, Field second) {
@@ -565,7 +565,7 @@ public class ReflectUtil {
 	/**
 	 * Compares method or ctor parameters.
 	 */
-	public static boolean compareParameteres(Class[] first, Class[] second) {
+	public static boolean compareParameters(Class[] first, Class[] second) {
 		if (first.length != second.length) {
 			return false;
 		}
@@ -664,7 +664,7 @@ public class ReflectUtil {
 
 
 	/**
-	 * Creates new intances including for common mutable classes that do not have a default constructor. 
+	 * Creates new instances including for common mutable classes that do not have a default constructor.
 	 * more user-friendly. It examines if class is a map, list,
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
 	 * Arrays are also created with no elements. Note that this bunch of ifs is faster then a hashmap.
@@ -754,7 +754,7 @@ public class ReflectUtil {
 	// ---------------------------------------------------------------- misc
 
 	/**
-	 * Returns <code>true</code> if the first member is accessable from second one.
+	 * Returns <code>true</code> if the first member is accessible from second one.
 	 */
 	public static boolean isAssignableFrom(Member member1, Member member2) {
 		return member1.getDeclaringClass().isAssignableFrom(member2.getDeclaringClass());

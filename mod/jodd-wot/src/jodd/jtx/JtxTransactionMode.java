@@ -127,7 +127,7 @@ s	 */
 		this.isolationLevel = ISOLATION_READ_UNCOMMITTED;
 		return this;
 	}
-	public JtxTransactionMode isolationReadCommited() {
+	public JtxTransactionMode isolationReadCommitted() {
 		this.isolationLevel = ISOLATION_READ_COMMITTED;
 		return this;
 	}

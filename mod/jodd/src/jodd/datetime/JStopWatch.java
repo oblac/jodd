@@ -195,7 +195,7 @@ public class JStopWatch {
 	// ---------------------------------------------------------------- output
 
 	/**
-	 * Returns total elapsed time as formated string from the last start.
+	 * Returns total elapsed time as formatted string from the last start.
 	 */
 	@Override
 	public String toString() {

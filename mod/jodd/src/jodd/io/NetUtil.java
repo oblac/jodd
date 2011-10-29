@@ -148,7 +148,7 @@ public class NetUtil {
 	}
 
 	/**
-	 * Downoads resource to a file, potentially very efficiently.
+	 * Downloads resource to a file, potentially very efficiently.
 	 */
 	public static void downloadFile(String url, File file) throws IOException {
 		InputStream inputStream = new URL(url).openStream();

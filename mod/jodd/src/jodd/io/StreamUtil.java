@@ -96,8 +96,8 @@ public class StreamUtil {
 	// ---------------------------------------------------------------- copy
 
 	/**
-	 * Copies input stream to output stream using buffer. Streams dont have
-	 * to be wrapped to buffered, since copying is already optimizied.
+	 * Copies input stream to output stream using buffer. Streams don't have
+	 * to be wrapped to buffered, since copying is already optimized.
 	 */
 	public static int copy(InputStream input, OutputStream output) throws IOException {
 		byte[] buffer = new byte[ioBufferSize];
@@ -166,7 +166,7 @@ public class StreamUtil {
 
     /**
 	 * Copies reader to writer using buffer.
-	 * Streams dont have to be wrapped to buffered, since copying is already optimized.
+	 * Streams don't have to be wrapped to buffered, since copying is already optimized.
 	 */
 	public static int copy(Reader input, Writer output) throws IOException {
 		char[] buffer = new char[ioBufferSize];
@@ -238,7 +238,7 @@ public class StreamUtil {
 
 	/**
 	 * Reads all available bytes from InputStream as a byte array.
-	 * Uses <code>in.availiable()</code> to determine the size of input stream.
+	 * Uses <code>in.available()</code> to determine the size of input stream.
 	 * This is the fastest method for reading input stream to byte array, but
 	 * depends on stream implementation of <code>available()</code>.
 	 * Buffered internally.

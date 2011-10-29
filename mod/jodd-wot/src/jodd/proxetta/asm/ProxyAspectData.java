@@ -271,7 +271,7 @@ final class ProxyAspectData {
 				}
 
 				// Parse EXECUTE method, just to gather some info, real parsing will come later
-				//return new MethodAdapter(new EmptyMethodVisitor()) {		// moze li se zameniti ovim dole?
+				//return new MethodAdapter(new EmptyMethodVisitor()) {		// toask may we replace this with the following code?
 				return new EmptyMethodVisitor() {
 					@Override
 					public void visitVarInsn(int opcode, int var) {

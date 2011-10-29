@@ -79,7 +79,7 @@ public class JdtConverterManager {
 	}
 
 	/**
-	 * Performs more throughly search for converter loader. It examines all available
+	 * Performs more thoroughly search for converter loader. It examines all available
 	 * converters and returns the first that matches the object type.
 	 */
 	public static JdtConverter lookup(Object source) {

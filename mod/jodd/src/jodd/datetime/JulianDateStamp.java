@@ -219,7 +219,7 @@ public class JulianDateStamp implements Serializable, Cloneable {
 
 	/**
 	 * Returns span between two days. Returned value may be positive (when this date
-	 * is after the provided one) or negative (wehn comapring to future date).
+	 * is after the provided one) or negative (when comparing to future date).
 	 */
 	public int daysSpan(JulianDateStamp otherDate) {
 		int now = getJulianDayNumber();

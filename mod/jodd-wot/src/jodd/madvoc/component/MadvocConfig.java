@@ -356,11 +356,11 @@ public class MadvocConfig {
 	/**
 	 * Sets the servlet attribute name prefix used in various places.
 	 */
-	public void setAttrNamePrefix(String serlvetAttrNamePrefix) {
-		if (StringUtil.isBlank(serlvetAttrNamePrefix)) {
-			serlvetAttrNamePrefix = StringPool.EMPTY;
+	public void setAttrNamePrefix(String servletAttrNamePrefix) {
+		if (StringUtil.isBlank(servletAttrNamePrefix)) {
+			servletAttrNamePrefix = StringPool.EMPTY;
 		}
-		this.attrNames = new AttrNames(serlvetAttrNamePrefix);
+		this.attrNames = new AttrNames(servletAttrNamePrefix);
 	}
 
 	public static class AttrNames {

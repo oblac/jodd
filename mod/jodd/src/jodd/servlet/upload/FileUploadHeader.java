@@ -74,7 +74,7 @@ public class FileUploadHeader {
 	}
 
 	/**
-	 * Strips content type information from request's data header.
+	 * Strips content type information from requests data header.
 	 * @param dataHeader data header string
 	 * @return content type or an empty string if no content type defined
 	 */

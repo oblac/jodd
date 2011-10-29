@@ -5,9 +5,9 @@ package jodd.util;
 import java.util.concurrent.Semaphore;
 
 /**
- * Misc concurent utilities.
+ * Misc concurrent utilities.
  */
-public class ConcurentUtil {
+public class ConcurrentUtil {
 
 	public static void acquire(Semaphore semaphore) {
 		try {
@@ -16,6 +16,7 @@ public class ConcurentUtil {
 			// ignore
 		}
 	}
+
 	public static void acquire(Semaphore semaphore, int permits) {
 		try {
 			semaphore.acquire(permits);

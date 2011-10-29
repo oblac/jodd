@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
 /**
- * Represents a bean named property. Contains two informations:
+ * Represents a bean named property. Contains two information:
  * <ol>
  * <li>Bean instance (and cached class descriptor)</li>
  * <li>Property name</li>

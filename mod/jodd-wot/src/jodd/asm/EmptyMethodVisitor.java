@@ -23,7 +23,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 *         annotation interface method, or <code>null</code> if this visitor
 	 *         is not interested in visiting this default value. The 'name'
 	 *         parameters passed to the methods of this annotation visitor are
-	 *         ignored. Moreover, exacly one visit method must be called on this
+	 *         ignored. Moreover, exactly one visit method must be called on this
 	 *         annotation visitor, followed by visitEnd.
 	 */
 	public AnnotationVisitor visitAnnotationDefault() {return null;}
@@ -64,7 +64,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	/**
 	 * Visits the current state of the local variables and operand stack
 	 * elements. This method must(*) be called <i>just before</i> any
-	 * instruction <b>i</b> that follows an unconditionnal branch instruction
+	 * instruction <b>i</b> that follows an unconditional branch instruction
 	 * such as GOTO or THROW, that is the target of a jump instruction, or that
 	 * starts an exception handler block. The visited types must describe the
 	 * values of the local variables and of the operand stack elements <i>just

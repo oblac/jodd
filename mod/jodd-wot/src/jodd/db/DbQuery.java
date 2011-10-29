@@ -61,7 +61,7 @@ public class DbQuery extends DbQueryBase {
 	}
 
 	/**
-	 * Creates a new query using defualt session provider.
+	 * Creates a new query using default session provider.
 	 */
 	public DbQuery(String sqlString) {
 		this(DbDefault.sessionProvider.getDbSession(), sqlString);
@@ -748,42 +748,42 @@ s	 */
 		}
 	}
 
-	public void setAsciiStream(int index, InputStream stream, int lenght) {
+	public void setAsciiStream(int index, InputStream stream, int length) {
 		init();
 		try {
-			preparedStatement.setAsciiStream(index, stream, lenght);
+			preparedStatement.setAsciiStream(index, stream, length);
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
 	}
 
-	public void setAsciiStream(String param, InputStream stream, int lenght) {
+	public void setAsciiStream(String param, InputStream stream, int length) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setAsciiStream(positions.get(i), stream, lenght);
+				preparedStatement.setAsciiStream(positions.get(i), stream, length);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);
 		}
 	}
 
-	public void setCharacterStream(int index, Reader reader, int lenght) {
+	public void setCharacterStream(int index, Reader reader, int length) {
 		init();
 		try {
-			preparedStatement.setCharacterStream(index, reader, lenght);
+			preparedStatement.setCharacterStream(index, reader, length);
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);
 		}
 	}
 
-	public void setCharacterStream(String param, Reader reader, int lenght) {
+	public void setCharacterStream(String param, Reader reader, int length) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
 			for (int i = 0; i < positions.size(); i++) {
-				preparedStatement.setCharacterStream(positions.get(i), reader, lenght);
+				preparedStatement.setCharacterStream(positions.get(i), reader, length);
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(param, sex);

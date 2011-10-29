@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * UUID generator of 32 bytes long values. It is builded from:
+ * UUID generator of 32 bytes long values. It is build from:
  * <ol>
  * <li> (0-7) IPAddress as HEX - 8 bytes
  * <li> (8-19) CurrentTimeMillis() as HEX - Display all 12 bytes
@@ -59,7 +59,7 @@ public class Uuid32Generator {
 		} catch (UnknownHostException uhex) {
 			throw new RuntimeException("Unknown host.", uhex);
 		} catch (NoSuchAlgorithmException nsaex) {
-			throw new RuntimeException("Algorithm 'SHA1PRNG' is unavailiable.", nsaex);
+			throw new RuntimeException("Algorithm 'SHA1PRNG' is unavailable.", nsaex);
 		}
 		return strRetVal.toString().toUpperCase();
 	}

@@ -20,7 +20,7 @@ public class ActionRequest {
 	protected final ActionConfig config;
 	protected final String actionPath;
 	protected final String[] actionPathChunks;
-	protected HttpServletRequest serlvetRequest;
+	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 
 	protected Object[] params;
@@ -39,14 +39,14 @@ public class ActionRequest {
 	 * Returns servlet request.
 	 */
 	public HttpServletRequest getHttpServletRequest() {
-		return serlvetRequest;
+		return servletRequest;
 	}
 
 	/**
 	 * Specifies new servlet request, in case of wrapping it.
 	 */
 	public void setHttpServletRequest(HttpServletRequest request) {
-		this.serlvetRequest = request;
+		this.servletRequest = request;
 	}
 
 	/**
@@ -137,11 +137,11 @@ public class ActionRequest {
 	/**
 	 * Creates new action request and action object.
 	 */
-	public ActionRequest(String actionPath, ActionConfig config, Object action, HttpServletRequest serlvetRequest, HttpServletResponse servletResponse) {
+	public ActionRequest(String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		this.actionPath = actionPath;
 		this.actionPathChunks = MadvocUtil.splitActionPath(actionPath);
 		this.config = config;
-		this.serlvetRequest = serlvetRequest;
+		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		totalInterceptors = (this.config.interceptors != null ? this.config.interceptors.length : 0);
 		interceptorIndex = 0;
@@ -180,7 +180,7 @@ public class ActionRequest {
 		try {
 			return config.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
-			throw ExceptionUtil.exctractTargetException(itex);
+			throw ExceptionUtil.extractTargetException(itex);
 		}
 	}
 

@@ -29,7 +29,7 @@ public class SessionScope implements Scope {
 	public SessionScope() {
 		sessionListeners = HttpSessionListenerBroadcaster.getInstance();
 		if (sessionListeners == null) {
-			throw new PetiteException(HttpSessionListenerBroadcaster.class.getSimpleName() + " not availiable.");
+			throw new PetiteException(HttpSessionListenerBroadcaster.class.getSimpleName() + " not available.");
 		}
 		sessionListeners.registerListener(new HttpSessionListener() {
 			public void sessionCreated(HttpSessionEvent httpSessionEvent) {
@@ -74,7 +74,7 @@ public class SessionScope implements Scope {
 	protected String getHttpSessionId() {
 		HttpServletRequest request = RequestContextListener.getRequest();
 		if (request == null) {
-			throw new PetiteException("No HTTP request binded to the current thread. Maybe RequestContextListener is not available?");
+			throw new PetiteException("No HTTP request bound to the current thread. Maybe RequestContextListener is not available?");
 		}
 		return request.getSession().getId();
 	}

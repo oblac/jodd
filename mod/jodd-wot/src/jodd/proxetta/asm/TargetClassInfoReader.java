@@ -142,7 +142,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	}
 
 	/**
-	 * Stores signatures for all super public methods not already overriden by target class.
+	 * Stores signatures for all super public methods not already overridden by target class.
 	 * All this methods will be accepted for proxyfication.
 	 */
 	@Override
@@ -156,7 +156,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 
 		List<String> superList = new ArrayList<String>();
-		// check all public super methods that are not overriden in superclass
+		// check all public super methods that are not overridden in superclass
 		while (nextSupername != null) {
 			InputStream inputStream = null;
 			ClassReader cr = null;
