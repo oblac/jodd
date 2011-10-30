@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -33,6 +34,7 @@ public abstract class LagartoServletFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String actionPath = DispatcherUtil.getServletPath(request);
 
 		if (acceptActionPath(request, actionPath) == false) {
@@ -40,11 +42,11 @@ public abstract class LagartoServletFilter implements Filter {
 			return;
 		}
 
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(servletResponse);
+		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
 		filterChain.doFilter(servletRequest, wrapper);
 		char[] content = wrapper.toCharArray();
 
-		if (content.length != 0) {
+		if ((content != null) && (content.length != 0)) {
 			LagartoParser lagartoParser = new LagartoParser(content);
 			content = parse(lagartoParser, request);
 			Writer out = servletResponse.getWriter();
