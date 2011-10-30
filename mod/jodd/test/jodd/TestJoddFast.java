@@ -9,8 +9,10 @@ import jodd.introspector.IntrospectorTests;
 import jodd.io.IoTests;
 import jodd.props.PropsTests;
 import jodd.servlet.ServletTests;
+import jodd.servlet.filter.FilterTests;
 import jodd.typeconverter.TypeConverterTests;
 import jodd.util.UtilFastTests;
+import jodd.util.collection.CollectionTests;
 import junit.framework.TestSuite;
 
 /**
@@ -28,7 +30,9 @@ public class TestJoddFast {
 		suite.addTest(FormatTests.suite());
 		suite.addTest(PropsTests.suite());
 		suite.addTest(ServletTests.suite());
+		suite.addTest(FilterTests.suite());
 		suite.addTest(UtilFastTests.suite());
+		suite.addTest(CollectionTests.suite());
 		suite.addTest(TypeConverterTests.suite());
 		suite.addTest(PropsTests.suite());
 		return suite;
