@@ -16,7 +16,7 @@ import javax.servlet.ServletOutputStream;
 public class ByteArrayOutputStreamWrapper extends ServletOutputStream {
 	protected OutputStream intStream;
 	protected FastByteArrayOutputStream baStream;
-	protected boolean finallized;
+	protected boolean finalized;
 	protected boolean flushOnFinalizeOnly = true;
 
 	public ByteArrayOutputStreamWrapper(OutputStream outStream) {
@@ -34,11 +34,11 @@ public class ByteArrayOutputStreamWrapper extends ServletOutputStream {
 	}
 
 	public void setFinallized() {
-		finallized = true;
+		finalized = true;
 	}
 
-	public boolean isFinallized() {
-		return finallized;
+	public boolean isFinalized() {
+		return finalized;
 	}
 
 
@@ -49,7 +49,7 @@ public class ByteArrayOutputStreamWrapper extends ServletOutputStream {
 
 	@Override
 	public void close() throws IOException {
-		if (finallized) {
+		if (finalized) {
 			processStream();
 			intStream.close();
 		}
@@ -61,7 +61,7 @@ public class ByteArrayOutputStreamWrapper extends ServletOutputStream {
 	@Override
 	public void flush() throws IOException {
 		if (baStream.size() != 0) {
-			if (!flushOnFinalizeOnly || finallized) {
+			if (!flushOnFinalizeOnly || finalized) {
 				processStream();
 				baStream = new FastByteArrayOutputStream();
 			}
