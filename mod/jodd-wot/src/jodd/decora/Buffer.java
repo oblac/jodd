@@ -3,7 +3,7 @@
 package jodd.decora;
 
 import jodd.io.FastCharArrayWriter;
-import jodd.servlet.filter.ByteArrayOutputStreamWrapper;
+import jodd.servlet.filter.FastByteArrayServletOutputStream;
 
 import javax.servlet.ServletOutputStream;
 import java.io.PrintWriter;
@@ -17,7 +17,7 @@ public class Buffer {
 	private static final byte[] EMPTY_BYTE_BUFFER = new byte[] {};
 
 	protected FastCharArrayWriter bufferedWriter;
-	protected ByteArrayOutputStreamWrapper bufferOutputStream;
+	protected FastByteArrayServletOutputStream bufferOutputStream;
 
 	protected PrintWriter outWriter;
 	protected ServletOutputStream outStream;
@@ -44,7 +44,7 @@ public class Buffer {
 			if (outWriter != null) {
 				throw new IllegalStateException("Can't call response.getOutputStream() after response.getWriter()");
 			}
-			bufferOutputStream = new ByteArrayOutputStreamWrapper();
+			bufferOutputStream = new FastByteArrayServletOutputStream();
 			outStream = bufferOutputStream;
 		}
 		return outStream;

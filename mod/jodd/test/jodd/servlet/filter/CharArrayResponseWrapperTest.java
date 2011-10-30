@@ -26,6 +26,14 @@ public class CharArrayResponseWrapperTest extends TestCase {
 		char[] chars = wrappedResponse.toCharArray();
 		String string = new String(chars);
 		assertEquals("OneTwo", string);
+
+		printWriter.write("123");
+		printWriter.flush();
+
+		chars = wrappedResponse.toCharArray();
+		string = new String(chars);
+		assertEquals("OneTwo123", string);
+
 	}
 
 	public void testBytes() throws IOException {

@@ -9,6 +9,7 @@ public class FilterTests extends TestSuite {
 
 	public FilterTests() {
 		super("jodd.servlet.filter test suite");
+		addTestSuite(ByteArrayResponseWrapperTest.class);
 		addTestSuite(CharArrayResponseWrapperTest.class);
 	}
 

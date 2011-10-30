@@ -6,21 +6,21 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-/*
- * ByteArray implementation of HttpServletResponseWrapper.
+/**
+ * Response wrapper that takes everything the client would normally output
+ * and saves it in byte array. It works for both output stream and writers.
  */
 public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
-	private PrintWriter writer;
-	private ByteArrayOutputStreamWrapper out;
+	private final PrintWriter writer;
+	private final FastByteArrayServletOutputStream out;
 
-	public ByteArrayResponseWrapper(ServletResponse response) throws IOException {
-		super((HttpServletResponse) response);
-		out = new ByteArrayOutputStreamWrapper(response.getOutputStream());
+	public ByteArrayResponseWrapper(HttpServletResponse response) {
+		super(response);
+		out = new FastByteArrayServletOutputStream();
 		writer = new PrintWriter(out);
 	}
 
@@ -35,30 +35,25 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Get a String representation of the entire buffer.
+	 * Get a string representation of the entire buffer.
 	 */
 	@Override
 	public String toString() {
 		return out.getByteArrayStream().toString();
 	}
 
-	/**
-	 * Get the underlying character array.
-	 */
-	public char[] toCharArray() {
-		return out.getByteArrayStream().toString().toCharArray();
+	@Override
+	public void reset() {
+		out.reset();
 	}
+
+	// ---------------------------------------------------------------- add-on
 
 	/**
 	 * Get the underlying byte array.
 	 */
 	public byte[] toByteArray() {
 		return out.getByteArrayStream().toByteArray();
-	}
-
-	@Override
-	public void reset() {
-		out.reset();
 	}
 }
 

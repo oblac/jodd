@@ -11,7 +11,7 @@ import jodd.io.FastCharArrayWriter;
 import jodd.util.StringPool;
 
 /**
- * A response wrapper that takes everything the client would normally output
+ * Response wrapper that takes everything the client would normally output
  * and saves it in character array. It works only for writers, byte stream
  * is not buffered.
  */
@@ -61,7 +61,7 @@ public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 		}
 	}
 
-	// ---------------------------------------------------------------- addons
+	// ---------------------------------------------------------------- add-on
 
 	/**
 	 * Explicitly closes the writer.
