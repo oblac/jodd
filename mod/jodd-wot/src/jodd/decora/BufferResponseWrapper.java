@@ -153,7 +153,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Prevents flushin buffer if buffering enabled.
+	 * Prevents flushing buffer if buffering enabled.
 	 */
 	@Override
 	public void flushBuffer() throws IOException {
