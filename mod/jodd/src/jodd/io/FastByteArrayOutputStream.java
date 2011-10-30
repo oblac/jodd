@@ -174,7 +174,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see java.io.ByteArrayOutputStream#toByteArray()
 	 */
-	public synchronized byte toByteArray()[] {
+	public synchronized byte[] toByteArray() {
 		int remaining = count;
 		int pos = 0;
 		byte newbuf[] = new byte[count];
