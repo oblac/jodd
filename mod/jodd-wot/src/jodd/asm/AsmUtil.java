@@ -95,6 +95,10 @@ public class AsmUtil {
 		}
 	}
 
+	/**
+	 * Returns java-like signature of a bytecode-like description.
+	 * @see #typedescToSignature(String, jodd.mutable.MutableInteger)
+	 */
 	public static String typedescToSignature(String desc) {
 		return typedescToSignature(desc, new MutableInteger());
 	}
