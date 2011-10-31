@@ -3,7 +3,6 @@
 package jodd.lagarto.filter;
 
 import jodd.io.FileNameUtil;
-import jodd.lagarto.LagartoParser;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.filter.CharArrayResponseWrapper;
 
@@ -20,6 +19,8 @@ import java.io.Writer;
 
 /**
  * Lagarto servlet filter takes HTML content and invokes user defined parser on it.
+ * This filter is a generic one and does not use Lagarto parser explicitly.
+ * It just gives a placeholder where user can add it's own parsing mechanism.
  */
 public abstract class LagartoServletFilter implements Filter {
 
@@ -47,8 +48,7 @@ public abstract class LagartoServletFilter implements Filter {
 		char[] content = wrapper.toCharArray();
 
 		if ((content != null) && (content.length != 0)) {
-			LagartoParser lagartoParser = new LagartoParser(content);
-			content = parse(lagartoParser, request);
+			content = parse(content, request);
 			Writer out = servletResponse.getWriter();
 			out.write(content);
 		}
@@ -70,8 +70,9 @@ public abstract class LagartoServletFilter implements Filter {
 	}
 
 	/**
-	 * Parses content with user-defined adapters, writers and visitors.
+	 * Main method that parses content. It can use Lagarto parser
+	 * or any other custom parsing technology.
 	 */
-	protected abstract char[] parse(LagartoParser lagartoParser, HttpServletRequest request);
+	protected abstract char[] parse(char[] content, HttpServletRequest request);
 
 }
