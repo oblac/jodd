@@ -2,6 +2,7 @@
 
 package jodd;
 
+import jodd.asm.AsmTests;
 import jodd.db.DbTests;
 import jodd.db.oom.DbOomTests;
 import jodd.decora.DecoraTests;
@@ -23,6 +24,7 @@ public class TestJoddWot {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Jodd WOT Java Library Test Suite");
+		suite.addTest(AsmTests.suite());
 		suite.addTest(DbTests.suite());
 		suite.addTest(DbOomTests.suite());
 		suite.addTest(JtxTests.suite());
