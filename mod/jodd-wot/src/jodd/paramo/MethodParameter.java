@@ -3,7 +3,8 @@
 package jodd.paramo;
 
 /**
- * Method parameter. It consist of a name and a generic signature.
+ * Resolved method parameter from bytecode.
+ * It consist of a name and a generic signature.
  */
 public class MethodParameter {
 
