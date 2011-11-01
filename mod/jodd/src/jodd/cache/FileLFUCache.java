@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Files LRU cache stores files content in memory to dramatically
+ * Files LFU cache stores files content in memory to dramatically
  * speed up performances for frequently read files.
  */
 public class FileLFUCache {
@@ -19,6 +19,10 @@ public class FileLFUCache {
 
 	protected int usedSize;
 
+	/**
+	 * Creates file LFU cache with specified size. Sets
+	 * {@link #maxFileSize max available file size} to half of this value.
+	 */
 	public FileLFUCache(int maxSize) {
 		this(maxSize, maxSize / 2, 0);
 	}
@@ -27,6 +31,12 @@ public class FileLFUCache {
 		this(maxSize, maxFileSize, 0);
 	}
 
+	/**
+	 * Creates new File LFU cache.
+	 * @param maxSize total cache size in bytes
+	 * @param maxFileSize max available file size in bytes, may be 0
+	 * @param timeout timeout, may be 0
+	 */
 	public FileLFUCache(int maxSize, int maxFileSize, long timeout) {
 		this.cache = new LFUCache<File, byte[]>(0, timeout) {
 			@Override
@@ -35,8 +45,8 @@ public class FileLFUCache {
 			}
 
 			@Override
-			protected void onRemove(CacheObject<File, byte[]> fileCacheObject) {
-				usedSize -= fileCacheObject.getObject().length;
+			protected void onRemove(CacheObject<File, byte[]> cacheObject) {
+				usedSize -= cacheObject.getObject().length;
 			}
 
 		};
@@ -109,7 +119,7 @@ public class FileLFUCache {
 		// add file
 		bytes = FileUtil.readBytes(file);
 
-		if (file.length() > maxFileSize) {
+		if ((maxFileSize != 0) && (file.length() > maxFileSize)) {
 			// don't cache files that size exceed max allowed file size
 			return bytes;
 		}
