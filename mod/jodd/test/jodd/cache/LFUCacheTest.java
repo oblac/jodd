@@ -39,13 +39,10 @@ public class LFUCacheTest extends TestCase {
 		assertNotNull(cache.get("3"));  // boost usage of a 3
 		assertNotNull(cache.get("1"));
 		assertNotNull(cache.get("2"));
-		cache.put("4", "4");			// since this is LFU cache, 1 or 2 will be removed, but not 3
+		cache.put("4", "4");			// since this is LFU cache, 1 AND 2 will be removed, but not 3
 		assertNotNull(cache.get("3"));
-		assertNotNull(cache.get("1"));
-		assertNull(cache.get("2"));		// so 2 is removed as it is added last
 		assertNotNull(cache.get("4"));
-		cache.put("3", "3");
-		assertNull(cache.get("4"));
+		assertEquals(2, cache.size());
 	}
 
 	public void testCacheTime() {
