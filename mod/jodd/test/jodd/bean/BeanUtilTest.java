@@ -12,6 +12,7 @@ import java.util.List;
 
 import jodd.bean.data.GetIsBool;
 import jodd.bean.data.IsGetBool;
+import jodd.bean.data.UppercaseBean;
 import jodd.bean.modifier.TrimStringsBeanModifier;
 import jodd.bean.data.Abean;
 import jodd.bean.data.Bbean;
@@ -1314,6 +1315,15 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1, cd.getAllBeanSetterNames().length);
 		assertEquals(1, cd.getAllBeanSetters().length);
 		assertEquals(3, cd.getAllMethods().length);
+	}
+
+	public void testUppercase() {
+		UppercaseBean ub = new UppercaseBean();
+		try {
+			BeanUtil.getProperty(ub, "URLaddress");
+		} catch (Exception ex) {
+			fail();
+		}
 	}
 
 }
