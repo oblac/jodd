@@ -36,11 +36,21 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 		cacheMap = new LinkedHashMap<K, CacheObject<K,V>>(cacheSize + 1, 1.0f, true) {
 			@Override
 			protected boolean removeEldestEntry(Map.Entry eldest) {
-				return size() > LRUCache.this.cacheSize;
+				return LRUCache.this.removeEldestEntry(size());
+				//return size() > LRUCache.this.cacheSize;
 			}
 		};
 	}
 
+	/**
+	 * Removes the eldest entry if current cache size exceed cache size.
+	 */
+	protected boolean removeEldestEntry(int currentSize) {
+		if (cacheSize == 0) {
+			return false;
+		}
+		return currentSize > cacheSize;
+	}
 
 	// ---------------------------------------------------------------- prune
 

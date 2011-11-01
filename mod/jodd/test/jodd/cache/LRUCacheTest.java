@@ -76,5 +76,16 @@ public class LRUCacheTest extends TestCase {
 		assertEquals(3, cache.size());
 	}
 
+	public void testEndless() {
+		Cache<String, String> cache = new LRUCache<String, String>(0);
+		assertFalse(cache.isFull());
+		cache.put("1", "1");
+		assertEquals(1, cache.size());
+		assertFalse(cache.isFull());
+
+		cache.put("2", "2");
+		assertEquals(2, cache.size());
+		assertFalse(cache.isFull());
+	}
 
 }
