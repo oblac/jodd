@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * LFU (least frequently used) cache.
+ * LFU (least frequently used) cache. Frequency is calculated as access count. This cache
+ * is resistant on 'new usages scenario': when some object is removed from the cache,
+ * access count of all items in cache is decreased by access count of removed value.
+ * This allows new frequent elements to come into the cache.
  *
  * <p>
  * Frequency of use data is kept on all items. The most frequently used items are kept in the cache.
@@ -27,7 +30,6 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 		this.timeout = timeout;
 		cacheMap = new HashMap<K, CacheObject<K,V>>(maxSize + 1);
 	}
-
 
 	// ---------------------------------------------------------------- prune
 
