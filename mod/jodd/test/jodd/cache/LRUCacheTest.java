@@ -35,7 +35,7 @@ public class LRUCacheTest extends TestCase {
 
 		assertNotNull(cache.get("3"));
 		assertNotNull(cache.get("3"));
-		assertNotNull(cache.get("3"));  // boost usage of a 3
+		assertNotNull(cache.get("3"));  // boost usage of a 3, but this doesn't change a thing, since this is a LRU cache and not a LFU cache
 		assertNotNull(cache.get("1"));
 		assertNotNull(cache.get("2"));
 		cache.put("4", "4");
@@ -46,7 +46,6 @@ public class LRUCacheTest extends TestCase {
 		cache.put("3", "3");
 		assertNull(cache.get("1"));
 	}
-
 
 	public void testCacheTime() {
 		Cache<String, String> cache = new LRUCache<String, String>(3);
