@@ -13,6 +13,7 @@ public class CacheTests extends TestSuite {
 		addTestSuite(LRUCacheTest.class);
 		addTestSuite(FIFOCacheTest.class);
 		addTestSuite(ConcurrencyTest.class);
+		addTestSuite(FileLFUCacheTest.class);
 	}
 
 	public static Test suite() {
