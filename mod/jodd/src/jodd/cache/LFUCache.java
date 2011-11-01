@@ -40,6 +40,8 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 	protected int pruneCache() {
         int count = 0;
 		CacheObject<K,V> comin = null;
+
+		// remove expired items and find cached object with minimal access count
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
 			CacheObject<K,V> co = values.next();
@@ -61,11 +63,15 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 		if (isFull() == false) {
 			return count;
 		}
+
+		// decrease access count to all cached objects
 		if (comin != null) {
+			int minAccessCount = comin.accessCount;
+
 			values = cacheMap.values().iterator();
 			while (values.hasNext()) {
 				CacheObject co = values.next();
-				co.accessCount -= comin.accessCount;
+				co.accessCount -= minAccessCount;
 				if (co.accessCount <= 0) {
 					values.remove();
 					count++;					
