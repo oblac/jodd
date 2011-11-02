@@ -16,6 +16,7 @@ import jodd.typeconverter.impl.BooleanArrayConverter;
 import jodd.typeconverter.impl.BooleanConverter;
 import jodd.typeconverter.impl.ByteArrayConverter;
 import jodd.typeconverter.impl.ByteConverter;
+import jodd.typeconverter.impl.CalendarConverter;
 import jodd.typeconverter.impl.CharacterConverter;
 import jodd.typeconverter.impl.ClassArrayConverter;
 import jodd.typeconverter.impl.ClassConverter;
@@ -50,6 +51,8 @@ import jodd.typeconverter.impl.URLConverter;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -64,7 +67,7 @@ import java.util.Locale;
  */
 public class TypeConverterManager {
 
-	private static HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(50);
+	private static HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(64);
 
 	static {
 		registerDefaults();
@@ -131,18 +134,20 @@ public class TypeConverterManager {
 		register(double[].class, new DoubleArrayConverter());
 		register(boolean[].class, new BooleanArrayConverter());
 
-
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
+
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());
 		register(Time.class, new SqlTimeConverter());
 		register(Timestamp.class, new SqlTimestampConverter());
+		register(Calendar.class, new CalendarConverter());
+		register(GregorianCalendar.class, new CalendarConverter());
+		register(JDateTime.class, new JDateTimeConverter());
 
 		register(FileUpload.class, new FileUploadConverter());
 		register(File.class, new FileConverter());
 
-		register(JDateTime.class, new JDateTimeConverter());
 		register(Class.class, new ClassConverter());
 		register(Class[].class, new ClassArrayConverter());
 

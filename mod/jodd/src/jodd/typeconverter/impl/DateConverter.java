@@ -6,6 +6,7 @@ import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -20,6 +21,12 @@ public class DateConverter implements TypeConverter<Date> {
 
 		if (value instanceof Date) {
 			return (Date) value;
+		}
+		if (value instanceof Calendar) {
+			return new Date(((Calendar)value).getTimeInMillis());
+		}
+		if (value instanceof JDateTime) {
+			return ((JDateTime) value).convertToDate();
 		}
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());

@@ -2,10 +2,12 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 
 /**
@@ -21,6 +23,16 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		if (value instanceof Date) {
 			return (Date) value;
 		}
+		if (value instanceof Calendar) {
+			return new Date(((Calendar)value).getTimeInMillis());
+		}
+		if (value instanceof java.util.Date) {
+			return new Date(((java.util.Date)value).getTime());
+		}
+		if (value instanceof JDateTime) {
+			return ((JDateTime) value).convertToSqlDate();
+		}
+
 		if (value instanceof Number) {
 			return new Date(((Number) value).longValue());
 		}
@@ -30,7 +42,7 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		// try yyyy-mm-dd for valueOf
 		if (stringValue.indexOf('-') != -1) {
 			try {
-				return (Date.valueOf(stringValue));
+				return Date.valueOf(stringValue);
 			} catch (IllegalArgumentException iaex) {
 				throw new TypeConversionException(value, iaex);
 			}

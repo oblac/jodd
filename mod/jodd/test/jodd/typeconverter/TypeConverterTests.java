@@ -15,6 +15,7 @@ public class TypeConverterTests extends TestSuite {
 		addTestSuite(BooleanConverterTest.class);
 		addTestSuite(ByteArrayConverterTest.class);
 		addTestSuite(ByteConverterTest.class);
+		addTestSuite(CalendarConverterTest.class);
 		addTestSuite(CharacterConverterTest.class);
 		addTestSuite(ClassArrayConverterTest.class);
 		addTestSuite(ClassConverterTest.class);
