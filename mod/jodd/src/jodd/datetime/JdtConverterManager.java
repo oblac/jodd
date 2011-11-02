@@ -8,8 +8,10 @@ import jodd.datetime.converter.DateTimeStampConverter;
 import jodd.datetime.converter.GregorianCalendarConverter;
 import jodd.datetime.converter.JdtConverter;
 import jodd.datetime.converter.SqlDateConverter;
+import jodd.datetime.converter.SqlTimeConverter;
 import jodd.datetime.converter.SqlTimestampConverter;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Calendar;
 import java.util.Map;
@@ -49,6 +51,7 @@ public class JdtConverterManager {
 		register(GregorianCalendar.class, new GregorianCalendarConverter());
 		register(Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());
+		register(Time.class, new SqlTimeConverter());
 		register(Timestamp.class, new SqlTimestampConverter());
 	}
 

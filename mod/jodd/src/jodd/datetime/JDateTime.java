@@ -2,6 +2,7 @@
 
 package jodd.datetime;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.Locale;
@@ -1244,6 +1245,14 @@ public class JDateTime implements Comparable, Cloneable {
 	 */
 	public java.sql.Date convertToSqlDate() {
 		return convertTo(java.sql.Date.class);
+	}
+
+	/**
+	 * Converts to {@link Time} instance.
+	 * @see #convertTo(Class)
+	 */
+	public Time convertToSqlTime() {
+		return convertTo(Time.class);
 	}
 
 	/**
