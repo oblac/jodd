@@ -2,11 +2,14 @@
 
 package jodd.datetime;
 
+import jodd.typeconverter.impl.CalendarConverter;
+import jodd.typeconverter.impl.DateConverter;
 import junit.framework.TestCase;
 import jodd.datetime.format.JdtFormatter;
 import jodd.datetime.format.DefaultFormatter;
 import jodd.datetime.format.JdtFormat;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.text.DateFormat;
@@ -76,9 +79,9 @@ public class FormatterTest extends TestCase {
 		assertEquals(s1, jdt.toString("YYYY-MM.DD"));
 
 		// gc
-		GregorianCalendar gc = jdt.convertToGregorianCalendar();
+		Calendar gc = CalendarConverter.valueOf(jdt);
 		DateFormat df = new SimpleDateFormat();
-		assertEquals(df.format(gc.getTime()), df.format(jdt.convertToDate()));
+		assertEquals(df.format(gc.getTime()), df.format(DateConverter.valueOf(jdt)));
 	}
 
 

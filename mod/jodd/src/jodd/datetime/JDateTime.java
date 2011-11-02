@@ -2,18 +2,17 @@
 
 package jodd.datetime;
 
-import java.sql.Time;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.Locale;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.sql.Timestamp;
-
-import jodd.datetime.converter.JdtConverter;
-import jodd.datetime.format.JdtFormatter;
 import jodd.datetime.format.JdtFormat;
+import jodd.datetime.format.JdtFormatter;
 import jodd.util.HashCode;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import static jodd.util.HashCode.hash;
 
 /**
@@ -898,12 +897,12 @@ public class JDateTime implements Comparable, Cloneable {
 	 * Constructor that sets current time specified as time in milliseconds, from
 	 * the midnight, January 1, 1970 UTC.
 	 *
-	 * @param milis  time in milliseconds, from the midnight, January 1, 1970 UTC
+	 * @param millis  time in milliseconds, from the midnight, January 1, 1970 UTC
 	 *
 	 * @see #setTimeInMillis(long )
 	 */
-	public JDateTime(long milis) {
-		setTimeInMillis(milis);
+	public JDateTime(long millis) {
+		setTimeInMillis(millis);
 	}
 
 	/**
@@ -1171,119 +1170,78 @@ public class JDateTime implements Comparable, Cloneable {
 		this.setCurrentTime();
 	}
 
-	// ---------------------------------------------------------------- conversion (general)
+	// ---------------------------------------------------------------- conversion
 
 	/**
-	 * Loads date time <b>from</b> an object using a converter registered in {@link JdtConverterManager}.
-	 * @see JdtConverter#loadFrom(JDateTime, Object)
+	 * Creates <code>JDateTime</code> from <code>Calendar</code>.
 	 */
-	public void loadFrom(Object source) {
-		JdtConverter converter = JdtConverterManager.lookup(source.getClass());
-		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter not registered: " + source.getClass());
-		}
-		//noinspection unchecked
-		converter.loadFrom(this, source);
+	public JDateTime(Calendar calendar) {
+		setDateTime(calendar);
 	}
 
 	/**
-	 * Converts date time <b>to</b> an another type.
-	 * All default converters have direct method for easier usage.
-	 * @see JdtConverter#convertTo(JDateTime)
+	 * Sets current date and time from <code>Calendar</code>.
 	 */
-	public <T> T convertTo(Class<T> type) {
-		JdtConverter<T> converter = JdtConverterManager.lookup(type);
-		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter not registered: " + type);
-		}
-		return converter.convertTo(this);
-	}
-
-
-	/**
-	 * Stores date time <b>to</b> a destination instance.
-	 * @see JdtConverter#storeTo(JDateTime, Object)
-	 */
-	public void storeTo(Object destination) {
-		JdtConverter converter = JdtConverterManager.lookup(destination.getClass());
-		if (converter == null) {
-			throw new IllegalArgumentException("JdtConverter not registered: " + destination.getClass());
-		}
-		//noinspection unchecked
-		converter.storeTo(this, destination);
-	}
-
-	// ---------------------------------------------------------------- conversions
-
-	/**
-	 * Converts to {@link Calendar} instance.
-	 * @see #convertTo(Class) 
-	 */
-	public Calendar convertToCalendar() {
-		return convertTo(Calendar.class);
+	public void setDateTime(Calendar calendar) {
+		setTimeInMillis(calendar.getTimeInMillis());
+		setTimeZone(calendar.getTimeZone());
 	}
 
 	/**
-	 * Converts to {@link Date} instance.
-	 * @see #convertTo(Class)
+	 * Creates <code>JDateTime</code> from <code>Date</code>.
+	 */
+	public JDateTime(Date date) {
+		setDateTime(date);
+	}
+
+	/**
+	 * Sets current date and time from <code>Date</code>.
+	 */
+	public void setDateTime(Date date) {
+		setTimeInMillis(date.getTime());
+	}
+
+	/**
+	 * Converts to <code>Date</code> instance.
 	 */
 	public Date convertToDate() {
-		return convertTo(Date.class);
+		return new Date(getTimeInMillis());
 	}
 
 	/**
-	 * Converts to {@link GregorianCalendar} instance.
-	 * @see #convertTo(Class) 
+	 * Converts to <code>Calendar</code> instance.
 	 */
-	public GregorianCalendar convertToGregorianCalendar() {
-		return convertTo(GregorianCalendar.class);
+	public Calendar convertToCalendar() {
+		Calendar calendar = Calendar.getInstance(getTimeZone());
+		calendar.setTimeInMillis(getTimeInMillis());
+		return calendar;
 	}
 
 	/**
-	 * Converts to {@link java.sql.Date} instance.
-	 * @see #convertTo(Class)
+	 * Converts to <code>java.sql.Date</code> instance.
 	 */
 	public java.sql.Date convertToSqlDate() {
-		return convertTo(java.sql.Date.class);
+		return new java.sql.Date(getTimeInMillis());
 	}
 
 	/**
-	 * Converts to {@link Time} instance.
-	 * @see #convertTo(Class)
+	 * Converts to <code>Time</code> instance.
 	 */
 	public Time convertToSqlTime() {
-		return convertTo(Time.class);
+		return new Time(getTimeInMillis());
 	}
 
 	/**
-	 * Converts to {@link Timestamp} instance.
-	 * @see #convertTo(Class)
+	 * Converts to <code>Timestamp</code> instance.
 	 */
 	public Timestamp convertToSqlTimestamp() {
-		return convertTo(Timestamp.class);
+		return new Timestamp(getTimeInMillis());
 	}
-
-	/**
-	 * Converts to {@link DateTimeStamp} instance.
-	 * @see #convertTo(Class)
-	 */
-	public DateTimeStamp convertToDateTimeStamp() {
-		return convertTo(DateTimeStamp.class);
-	}
-
 
 	// ---------------------------------------------------------------- ctors from conversions
 
 	/**
-	 * Constructs <code>JDateTime</code> from a objects.
-	 * @see #loadFrom(Object) 
-	 */
-	public JDateTime(Object o) {
-		loadFrom(o);
-	}
-
-	/**
-	 * Constructs <code>JDateTime</code> from <code>DateTimeStamp</code>.
+	 * Creates <code>JDateTime</code> from <code>DateTimeStamp</code>.
 	 */
 	public JDateTime(DateTimeStamp dts) {
 		setDateTimeStamp(dts);
@@ -1291,28 +1249,28 @@ public class JDateTime implements Comparable, Cloneable {
 
 
 	/**
-	 * Constructs <code>JDateTime</code> from <code>JulianDateStamp</code>.
+	 * Creates <code>JDateTime</code> from <code>JulianDateStamp</code>.
 	 */
 	public JDateTime(JulianDateStamp jds) {
 		setJulianDate(jds);
 	}
 
 	/**
-	 * Constructs <code>JDateTime</code> from <code>double</code> that represents JD.
+	 * Creates <code>JDateTime</code> from <code>double</code> that represents JD.
 	 */
 	public JDateTime(double jd) {
 		setJulianDate(new JulianDateStamp(jd));
 	}
 
 	/**
-	 * Constructs <code>JDateTime</code> from a string.
+	 * Creates <code>JDateTime</code> from a string.
 	 */
 	public JDateTime(String src) {
 		parse(src);
 	}
 
 	/**
-	 * Constructs <code>JDateTime</code> from a string, using specified template.
+	 * Creates <code>JDateTime</code> from a string, using specified template.
 	 */
 	public JDateTime(String src, String template) {
 		parse(src, template);

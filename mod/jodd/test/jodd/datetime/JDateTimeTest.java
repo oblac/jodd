@@ -7,6 +7,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.sql.Timestamp;
 
+import jodd.typeconverter.Convert;
+import jodd.typeconverter.impl.CalendarConverter;
+import jodd.typeconverter.impl.DateConverter;
+import jodd.typeconverter.impl.JDateTimeConverter;
+import jodd.typeconverter.impl.SqlDateConverter;
+import jodd.typeconverter.impl.SqlTimestampConverter;
 import junit.framework.TestCase;
 
 public class JDateTimeTest extends TestCase {
@@ -196,10 +202,9 @@ public class JDateTimeTest extends TestCase {
 		Calendar c = Calendar.getInstance();
 		c.set(2001, 0, 1, 2, 3, 4);
 		c.set(Calendar.MILLISECOND, 500);
-		JDateTime jdt = new JDateTime();
-		jdt.loadFrom(c);
+		JDateTime jdt = JDateTimeConverter.valueOf(c);
 		assertEquals("2001-01-01 02:03:04.500", jdt.toString());
-		Calendar c1 = jdt.convertToCalendar();
+		Calendar c1 = CalendarConverter.valueOf(jdt);
 		assertEquals(2001, c1.get(Calendar.YEAR));
 		assertEquals(0, c1.get(Calendar.MONTH));
 		assertEquals(1, c1.get(Calendar.DAY_OF_MONTH));
@@ -211,10 +216,10 @@ public class JDateTimeTest extends TestCase {
 
 		GregorianCalendar gc = new GregorianCalendar(2002, 5, 2, 3, 4, 5);
 		gc.set(GregorianCalendar.MILLISECOND, 600);
-		jdt.loadFrom(gc);
+		jdt = JDateTimeConverter.valueOf(gc);
 		assertEquals("2002-06-02 03:04:05.600", jdt.toString());
-		GregorianCalendar gc1 = new GregorianCalendar();
-		jdt.storeTo(gc1);
+		GregorianCalendar gc1 = (GregorianCalendar) CalendarConverter.valueOf(jdt);
+
 		assertEquals(2002, gc1.get(GregorianCalendar.YEAR));
 		assertEquals(5, gc1.get(GregorianCalendar.MONTH));
 		assertEquals(2, gc1.get(GregorianCalendar.DAY_OF_MONTH));
@@ -225,9 +230,9 @@ public class JDateTimeTest extends TestCase {
 
 		
 		Date d = new Date(101, 2, 3, 4, 5, 6);
-		jdt.loadFrom(d);
+		jdt = JDateTimeConverter.valueOf(d);
 		assertEquals("2001-03-03 04:05:06.000", jdt.toString());
-		Date d2 = jdt.convertToDate();
+		Date d2 = DateConverter.valueOf(jdt);
 		assertEquals(101, d2.getYear());
 		assertEquals(2, d2.getMonth());
 		assertEquals(3, d2.getDate());
@@ -250,19 +255,19 @@ public class JDateTimeTest extends TestCase {
 
 		
 		java.sql.Date sd = new java.sql.Date(123, 4, 5);
-		jdt.loadFrom(sd);
+		jdt = JDateTimeConverter.valueOf(sd);
 		assertEquals("2023-05-05 00:00:00.000",	jdt.toString());
 		java.sql.Date sd2 = new java.sql.Date(1, 2, 3);
-		jdt.storeTo(sd2);
+		sd2 = SqlDateConverter.valueOf(jdt);
 		assertEquals(123, sd2.getYear());
 		assertEquals(4, sd2.getMonth());
 		assertEquals(5, sd2.getDate());
 
 		
 		Timestamp st = new Timestamp(123, 4, 5, 6, 7, 8, 500000000);
-		jdt.loadFrom(st);
+		jdt = Convert.toJDateTime(st);
 		assertEquals("2023-05-05 06:07:08.500",	jdt.toString());
-		Timestamp st2 = jdt.convertToSqlTimestamp();
+		Timestamp st2 = SqlTimestampConverter.valueOf(jdt);
 		assertEquals(123, st2.getYear());
 		assertEquals(4, st2.getMonth());
 		assertEquals(5, st2.getDate());

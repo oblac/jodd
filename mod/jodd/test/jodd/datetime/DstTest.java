@@ -2,8 +2,10 @@
 
 package jodd.datetime;
 
+import jodd.typeconverter.impl.DateConverter;
 import junit.framework.TestCase;
 
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.GregorianCalendar;
 import static java.util.Calendar.HOUR;
@@ -20,8 +22,9 @@ public class DstTest extends TestCase {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 2, 29, 0, 31, 0);
 
-		assertEquals(gc.getTime(), jdt.convertToDate());
-		assertFalse(englandTZ.inDaylightTime(jdt.convertToDate()));
+		Date date = DateConverter.valueOf(jdt);
+		assertEquals(gc.getTime(), date);
+		assertFalse(englandTZ.inDaylightTime(date));
 		assertFalse(englandTZ.inDaylightTime(gc.getTime()));
 
 		assertEquals(0, gc.get(HOUR));
@@ -38,9 +41,10 @@ public class DstTest extends TestCase {
 		// in the DST
 		assertEquals(3600000, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		assertEquals(gc.getTime(), jdt.convertToDate());
+		date = DateConverter.valueOf(jdt);
+		assertEquals(gc.getTime(), date);
 
-		assertTrue(englandTZ.inDaylightTime(jdt.convertToDate()));
+		assertTrue(englandTZ.inDaylightTime(date));
 		assertTrue(englandTZ.inDaylightTime(gc.getTime()));
 
 		assertEquals(2, gc.get(HOUR));
@@ -79,9 +83,10 @@ public class DstTest extends TestCase {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 9, 25, 0, 31, 0);
 
-		assertEquals(gc.getTime(), jdt.convertToDate());
+		Date date = DateConverter.valueOf(jdt);
+		assertEquals(gc.getTime(), date);
 		assertTrue(englandTZ.inDaylightTime(gc.getTime()));
-		assertTrue(englandTZ.inDaylightTime(jdt.convertToDate()));
+		assertTrue(englandTZ.inDaylightTime(date));
 
 		assertEquals(0, gc.get(HOUR));
 		assertEquals(0, jdt.getHour());
@@ -97,9 +102,10 @@ public class DstTest extends TestCase {
 		// after DST
 		assertEquals(0, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		assertEquals(gc.getTime(), jdt.convertToDate());
+		date = DateConverter.valueOf(jdt);
+		assertEquals(gc.getTime(), date);
 
-		assertFalse(englandTZ.inDaylightTime(jdt.convertToDate()));
+		assertFalse(englandTZ.inDaylightTime(date));
 		assertFalse(englandTZ.inDaylightTime(gc.getTime()));
 
 		assertEquals(1, gc.get(HOUR));
