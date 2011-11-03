@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -40,7 +41,7 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		String stringValue = value.toString().trim();
 
 		// try yyyy-mm-dd for valueOf
-		if (stringValue.indexOf('-') != -1) {
+		if (StringUtil.containsOnlyDigits(stringValue) == false) {
 			try {
 				return Date.valueOf(stringValue);
 			} catch (IllegalArgumentException iaex) {

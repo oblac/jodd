@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.datetime.JDateTime;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -41,7 +42,7 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 		String stringValue = value.toString().trim();
 
 		// try yyyy-mm-dd for valueOf
-		if (stringValue.indexOf('-') != -1) {
+		if (StringUtil.containsOnlyDigits(stringValue) == false) {
 			try {
 				return Timestamp.valueOf(stringValue);
 			} catch (IllegalArgumentException iaex) {

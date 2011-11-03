@@ -7,6 +7,7 @@ import jodd.datetime.JDateTime;
 import jodd.datetime.JulianDateStamp;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +44,8 @@ public class JDateTimeConverter implements TypeConverter<JDateTime> {
 		}
 
 		String stringValue = value.toString().trim();
-		if (stringValue.indexOf('-') != -1) {
+
+		if (StringUtil.containsOnlyDigits(stringValue) == false) {
 			return new JDateTime(stringValue, JDateTime.DEFAULT_FORMAT);
 		}
 		try {
