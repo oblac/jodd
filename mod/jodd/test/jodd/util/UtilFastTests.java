@@ -28,6 +28,7 @@ public class UtilFastTests extends TestSuite {
 		addTestSuite(TextUtilTest.class);
 		addTestSuite(PropertiesUtilTest.class);
 		addTestSuite(Base64Test.class);
+		addTestSuite(Base32Test.class);
 		addTestSuite(PrettyStringBuilderTest.class);
 		addTestSuite(StringBandTest.class);
 		addTestSuite(BinarySearchTest.class);
