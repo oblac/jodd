@@ -36,7 +36,7 @@ public class Uuid24Generator {
 		return unsignedValueOf(id1) + unsignedValueOf(id3);
 	}
 
-	private static final char[] CHARS64 = Base64.getBase64Chars();
+	private static final char[] CHARS64 = Base64.getAlphabet();
 	
 	private static String unsignedValueOf(long l) {
 		char[] buf = new char[64];

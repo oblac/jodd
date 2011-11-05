@@ -27,7 +27,7 @@ public class Base64 {
 	/**
 	 * Returns Base64 characters, a clone of used array.
 	 */
-	public static char[] getBase64Chars() {
+	public static char[] getAlphabet() {
 		return CHARS.clone();
 	}
 
@@ -299,4 +299,3 @@ public class Base64 {
 	}
 
 }
-
