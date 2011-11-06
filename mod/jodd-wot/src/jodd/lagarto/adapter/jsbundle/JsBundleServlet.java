@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * JS bundles servlet simply loads javascript bundles.
+ * JS bundle servlet simply loads javascript bundles.
  */
 public class JsBundleServlet extends HttpServlet {
 

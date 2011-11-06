@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JS Bundle tag adapter parses HTML page and collects all information
+ * about linking javascript files.
+ */
 public class JsBundleTagAdapter extends TagAdapter {
 
 	protected final JsBundlesManager jsbManager;
@@ -22,10 +26,8 @@ public class JsBundleTagAdapter extends TagAdapter {
 
 	protected List<String> sources;
 	protected boolean firstScriptTag;
+	protected boolean insideConditionalComment;
 
-	/**
-	 * Creates new JS Bundle Manager.
-	 */
 	public JsBundleTagAdapter(JsBundlesManager jsBundlesManager, TagVisitor target, HttpServletRequest request) {
 		super(target);
 
@@ -43,13 +45,14 @@ public class JsBundleTagAdapter extends TagAdapter {
 			sources = new ArrayList<String>();
 		}
 		firstScriptTag = true;
+		insideConditionalComment = false;
 	}
 
 	@Override
 	public void script(Tag tag, CharSequence body) {
 		String src = tag.getAttributeValue("src", false);
 
-		if (src != null) {
+		if ((src != null) && (insideConditionalComment == false)) {
 			if (newAction) {
 				if (bundleId == null) {
 					bundleId = jsbManager.registerNewBundleId();
@@ -69,6 +72,18 @@ public class JsBundleTagAdapter extends TagAdapter {
 			}
 		}
 		super.script(tag, body);
+	}
+
+	@Override
+	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
+		insideConditionalComment = true;
+		super.condCommentStart(conditionalComment, isDownlevelHidden);
+	}
+
+	@Override
+	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
+		insideConditionalComment = false;
+		super.condCommentEnd(conditionalComment, isDownlevelHidden);
 	}
 
 	@Override
