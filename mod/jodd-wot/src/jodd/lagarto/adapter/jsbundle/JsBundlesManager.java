@@ -7,6 +7,7 @@ import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
+import jodd.servlet.ServletUtil;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.StringBand;
@@ -25,7 +26,6 @@ import java.util.Map;
 
 /**
  * JavaScript Bundles manager.
- * todo download local
  */
 public class JsBundlesManager {
 
@@ -36,10 +36,14 @@ public class JsBundlesManager {
 	protected Map<String, String> actionBundles = new HashMap<String, String>();	// action -> bundleId/digest
 	protected Map<String, String> mirrors = new HashMap<String, String>();			// temp id -> bundleId
 
+	protected String jsEncoding = StringPool.UTF_8;
 	protected String webRoot;
 	protected String bundleFolder;
 	protected String servletPath = "/jodd-jsbundle";
 	protected String bundleFilenamePrefix = "jodd-jsbundle-";
+	protected String localAddressAndPort = "http://localhost:8080";
+	protected boolean downloadLocal;
+	protected final String contextPath;
 
 	// ---------------------------------------------------------------- init
 
@@ -62,6 +66,7 @@ public class JsBundlesManager {
 		servletContext.setAttribute(ATTRIBUTE_NAME, this);
 		webRoot = servletContext.getRealPath(StringPool.EMPTY);
 		bundleFolder = SystemUtil.getTempDir();
+		contextPath = ServletUtil.getContextPath(servletContext);
 	}
 
 	// ---------------------------------------------------------------- access
@@ -122,6 +127,51 @@ public class JsBundlesManager {
 	 */
 	public void setBundleFilenamePrefix(String bundleFilenamePrefix) {
 		this.bundleFilenamePrefix = bundleFilenamePrefix;
+	}
+
+	/**
+	 * Returns js files encoding. By default its UTF8.
+	 */
+	public String getJsEncoding() {
+		return jsEncoding;
+	}
+
+	/**
+	 * Sets js files encoding.
+	 */
+	public void setJsEncoding(String jsEncoding) {
+		this.jsEncoding = jsEncoding;
+	}
+
+	/**
+	 * Returns local address and port for downloading
+	 * local javascripts.
+	 */
+	public String getLocalAddressAndPort() {
+		return localAddressAndPort;
+	}
+
+	/**
+	 * Specifies local address and port for downloading
+	 * local javascripts. By default its "http://localhost:8080".
+	 */
+	public void setLocalAddressAndPort(String localAddressAndPort) {
+		this.localAddressAndPort = localAddressAndPort;
+	}
+
+	/**
+	 * Returns <code>true</code> if local javascript files are downloaded
+	 * and not loaded from file system.
+	 */
+	public boolean isDownloadLocal() {
+		return downloadLocal;
+	}
+
+	/**
+	 * Sets if local javascript files should be downloaded or loaded from file system.
+	 */
+	public void setDownloadLocal(boolean downloadLocal) {
+		this.downloadLocal = downloadLocal;
 	}
 
 	// ---------------------------------------------------------------- lookup
@@ -230,15 +280,27 @@ public class JsBundlesManager {
 			}
 			String content;
 			if (src.startsWith("http://") || (src.startsWith("https://"))) {
-				content = NetUtil.downloadString(src, StringPool.UTF_8);
+				content = NetUtil.downloadString(src, jsEncoding);
 			} else {
-				String localFile = webRoot;
-				if (src.startsWith("/")) {
-					localFile += src;
+				if (downloadLocal == false) {
+					// load local javascript from file system
+					String localFile = webRoot;
+					if (src.startsWith(StringPool.SLASH)) {
+						localFile += src;
+					} else {
+						localFile += FileNameUtil.getPath(actionPath) + '/' + src;
+					}
+					content = FileUtil.readString(localFile);
 				} else {
-					localFile += FileNameUtil.getPath(actionPath) + '/' + src;
+					// download local javascript
+					String localUrl = localAddressAndPort;
+					if (src.startsWith(StringPool.SLASH)) {
+						localUrl += contextPath + src;
+					} else {
+						localUrl += contextPath + FileNameUtil.getPath(actionPath) + '/' + src;
+					}
+					content = NetUtil.downloadString(localUrl, jsEncoding);
 				}
-				content = FileUtil.readString(localFile);
 			}
 
 			content = onJavascriptContent(content);
