@@ -29,7 +29,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
         TagWriter tagWriter = new TagWriter(fastCharArrayWriter);
 
-		TagVisitor tagVisitors = createAdapters(tagWriter);
+		TagVisitor tagVisitors = createAdapters(tagWriter, request);
 
 		// parse
 		lagartoParser.parse(tagVisitors);
@@ -43,6 +43,6 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 	 * May be used if modifications does not overlap so everything can
 	 * be done within single visit (i.e. within just one parsing).
 	 */
-	protected abstract TagVisitor createAdapters(TagWriter rootTagWriter);
+	protected abstract TagVisitor createAdapters(TagWriter rootTagWriter, HttpServletRequest request);
 
 }
