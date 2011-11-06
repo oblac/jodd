@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JavaScript Bundles manager.
+ * JavaScript bundles manager.
  */
 public class JsBundlesManager {
 
@@ -101,7 +101,7 @@ public class JsBundlesManager {
 	}
 
 	/**
-	 * Returns {@link JsBundlesServlet} servlet path.
+	 * Returns {@link JsBundleServlet} servlet path.
 	 * Must be the same as in web.xml.
 	 */
 	public String getServletPath() {
@@ -109,7 +109,7 @@ public class JsBundlesManager {
 	}
 
 	/**
-	 * Sets registered path for {@link JsBundlesServlet} as registered in web.xml.
+	 * Sets registered path for {@link JsBundleServlet} as registered in web.xml.
 	 */
 	public void setServletPath(String servletPath) {
 		this.servletPath = servletPath;

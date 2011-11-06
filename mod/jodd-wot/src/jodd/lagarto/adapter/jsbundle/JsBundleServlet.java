@@ -17,7 +17,7 @@ import java.io.OutputStream;
 /**
  * JS bundles servlet simply loads javascript bundles.
  */
-public class JsBundlesServlet extends HttpServlet {
+public class JsBundleServlet extends HttpServlet {
 
 	protected JsBundlesManager jsBundlesManager;
 

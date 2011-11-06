@@ -59,7 +59,7 @@
 	<!-- servlet -->
 	<servlet>
 		<servlet-name>jodd-jsbundle</servlet-name>
-		<servlet-class>jodd.lagarto.adapter.jsbundle.JsBundlesServlet</servlet-class>
+		<servlet-class>jodd.lagarto.adapter.jsbundle.JsBundleServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jodd-jsbundle</servlet-name>
