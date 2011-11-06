@@ -84,6 +84,11 @@ this page is also an example of supplement action: it does not have an registere
 <a href="re/view3/173">regex pattern that matches</a> and <a href="re/view3/1x3">one that doesn't match</a> (404).<br/>
 </p>
 
+<h2>Lagarto</h2>
+<p>
+<a href="js.html">JS Bundle</a> example.<br/>
+</p>
+
 <h2>Info</h2>
 <p>
 List of all <a href="madvocInfo.html">Madvoc configurations...</a>.<br/>

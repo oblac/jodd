@@ -13,7 +13,6 @@
 
 </head>
 <body>
-
 <h1><decora:title>Madvoc - light MVC framework!</decora:title></h1>
 
 <div id="body">
