@@ -3,6 +3,7 @@
 package jodd.lagarto.filter;
 
 import jodd.io.FileNameUtil;
+import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.filter.CharArrayResponseWrapper;
 
@@ -23,6 +24,8 @@ import java.io.Writer;
  * It just gives a placeholder where user can add it's own parsing mechanism.
  */
 public abstract class LagartoServletFilter implements Filter {
+
+	private static final Log log = Log.getLogger(LagartoServletFilter.class);
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -48,7 +51,15 @@ public abstract class LagartoServletFilter implements Filter {
 		char[] content = wrapper.toCharArray();
 
 		if ((content != null) && (content.length != 0)) {
-			content = parse(content, request);
+			if (log.isDebugEnabled()) {
+				log.debug("Lagarto is about to parse: " + actionPath);
+			}
+			try {
+				content = parse(content, request);
+			} catch (Exception ex) {
+				log.error("Error parsing", ex);
+				throw new ServletException(ex);
+			}
 			Writer out = servletResponse.getWriter();
 			out.write(content);
 		}
