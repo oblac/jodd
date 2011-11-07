@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * HTML Stapler tag adapter parses HTML page and collects all information
- * about linking javascript/css files.
+ * about linking resource files.
  */
 public class HtmlStaplerTagAdapter extends TagAdapter {
 

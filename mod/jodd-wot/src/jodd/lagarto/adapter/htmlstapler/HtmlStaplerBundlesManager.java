@@ -109,7 +109,7 @@ public class HtmlStaplerBundlesManager {
 
 	/**
 	 * Sets web root, i.e. real path to the exploded files.
-	 * Web root is used to load local javascript files.
+	 * Web root is used to load local resource files.
 	 */
 	public void setWebRoot(String webRoot) {
 		this.webRoot = webRoot;
@@ -174,7 +174,7 @@ public class HtmlStaplerBundlesManager {
 
 	/**
 	 * Returns local address and port for downloading
-	 * local javascripts.
+	 * local resources.
 	 */
 	public String getLocalAddressAndPort() {
 		return localAddressAndPort;
@@ -182,14 +182,14 @@ public class HtmlStaplerBundlesManager {
 
 	/**
 	 * Specifies local address and port for downloading
-	 * local javascripts. By default its "http://localhost:8080".
+	 * local resources. By default its "http://localhost:8080".
 	 */
 	public void setLocalAddressAndPort(String localAddressAndPort) {
 		this.localAddressAndPort = localAddressAndPort;
 	}
 
 	/**
-	 * Returns <code>true</code> if local javascript files are downloaded
+	 * Returns <code>true</code> if local resource files are downloaded
 	 * and not loaded from file system.
 	 */
 	public boolean isDownloadLocal() {
@@ -197,7 +197,7 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Sets if local javascript files should be downloaded or loaded from file system.
+	 * Sets if local resource files should be downloaded or loaded from file system.
 	 */
 	public void setDownloadLocal(boolean downloadLocal) {
 		this.downloadLocal = downloadLocal;
@@ -253,7 +253,7 @@ public class HtmlStaplerBundlesManager {
 	public synchronized void registerBundle(String actionPath, String bundleId, List<String> sources) {
 
 		if (bundleId == null) {
-			// page does not include any javascript source file
+			// page does not include any resource source file
 			actionBundles.put(actionPath, StringPool.EMPTY);
 			return;
 		}
@@ -301,7 +301,7 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Creates bundle file by loading javascript files content. If bundle file already
+	 * Creates bundle file by loading resource files content. If bundle file already
 	 * exist it will not be recreated!
 	 */
 	protected void createBundle(String actionPath, String bundleId, List<String>sources) throws IOException {
@@ -320,7 +320,7 @@ public class HtmlStaplerBundlesManager {
 				content = NetUtil.downloadString(src, localFilesEncoding);
 			} else {
 				if (downloadLocal == false) {
-					// load local javascript from file system
+					// load local resource from file system
 					String localFile = webRoot;
 					if (src.startsWith(StringPool.SLASH)) {
 						localFile += src;
@@ -329,7 +329,7 @@ public class HtmlStaplerBundlesManager {
 					}
 					content = FileUtil.readString(localFile);
 				} else {
-					// download local javascript
+					// download local resource
 					String localUrl = localAddressAndPort;
 					if (src.startsWith(StringPool.SLASH)) {
 						localUrl += contextPath + src;
@@ -340,7 +340,7 @@ public class HtmlStaplerBundlesManager {
 				}
 			}
 
-			content = onJavascriptContent(content);
+			content = onResourceContent(content);
 			sb.append(content);
 		}
 
@@ -348,12 +348,12 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Invoked before javascript content is stored in the bundle.
-	 * May be us used for additional javascript processing, such as
+	 * Invoked before resource content is stored in the bundle.
+	 * May be us used for additional resource processing, such as
 	 * compressing, cleaning etc. By default it just returns unmodified
 	 * content.
 	 */
-	protected String onJavascriptContent(String content) {
+	protected String onResourceContent(String content) {
 		return content;
 	}
 
