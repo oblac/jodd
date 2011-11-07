@@ -7,6 +7,9 @@
 	<!--[if IE 7]>
     <script type="text/javascript" src="/jquery.tooltip.js"></script>
 	<![endif]-->
+
+	<link rel="stylesheet" type="text/css" href="http://jodd.org/jodd.css"/>
+	<link rel="stylesheet" type="text/css" href="css/jss.css"/>
 </head>
 <body>
 <h1>javascripts</h1>

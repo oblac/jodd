@@ -3,7 +3,7 @@
 <head>
 	<title>Jodd : <decora:title/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="jss.css">
+	<link rel="stylesheet" type="text/css" href="jss.css"/>
 <style>
 	div#footer {text-align: center; color:#08083a;}
 	div#body {padding: 40px;}
