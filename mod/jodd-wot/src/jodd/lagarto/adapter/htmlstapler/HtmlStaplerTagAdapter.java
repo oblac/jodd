@@ -9,19 +9,18 @@ import jodd.lagarto.TagVisitor;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * JS Bundle tag adapter parses HTML page and collects all information
- * about linking javascript files.
+ * HTML Stapler tag adapter parses HTML page and collects all information
+ * about linking javascript/css files.
  */
-public class JsBundleTagAdapter extends TagAdapter {
+public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	protected final BundlesManager bundlesManager;
-
 	protected final BundleAction jsBundleAction;
 	protected final BundleAction cssBundleAction;
 
 	protected boolean insideConditionalComment;
 
-	public JsBundleTagAdapter(TagVisitor target, HttpServletRequest request) {
+	public HtmlStaplerTagAdapter(TagVisitor target, HttpServletRequest request) {
 		super(target);
 
 		bundlesManager = BundlesManager.getBundlesManager(request);
@@ -51,7 +50,7 @@ public class JsBundleTagAdapter extends TagAdapter {
 		super.script(tag, body);
 	}
 
-	// ---------------------------------------------------------------- css links
+	// ---------------------------------------------------------------- css
 
 	@Override
 	public void tag(Tag tag) {

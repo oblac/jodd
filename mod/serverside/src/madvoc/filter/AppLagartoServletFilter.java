@@ -4,9 +4,9 @@ package madvoc.filter;
 
 import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
-import jodd.lagarto.adapter.jsbundle.JsBundleTagAdapter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
-import jodd.lagarto.adapter.jsbundle.BundlesManager;
+import jodd.lagarto.adapter.htmlstapler.BundlesManager;
+import jodd.lagarto.adapter.htmlstapler.HtmlStaplerTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
 
 import javax.servlet.FilterConfig;
@@ -29,8 +29,8 @@ public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 	protected TagVisitor createAdapters(TagWriter rootTagWriter, HttpServletRequest request) {
 		StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(rootTagWriter);
 
-		JsBundleTagAdapter jsBundleTagAdapter = new JsBundleTagAdapter(stripHtmlTagAdapter, request);
+		HtmlStaplerTagAdapter htmlStaplerTagAdapter = new HtmlStaplerTagAdapter(stripHtmlTagAdapter, request);
 
-		return jsBundleTagAdapter;
+		return htmlStaplerTagAdapter;
 	}
 }

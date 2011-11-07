@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * JS bundle servlet simply loads javascript bundles.
+ * HTML stapler servlet loads web resource bundles.
  */
-public class JsBundleServlet extends HttpServlet {
+public class HtmlStaplerServlet extends HttpServlet {
 
 	protected BundlesManager bundlesManager;
 

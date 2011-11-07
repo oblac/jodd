@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JavaScript bundles manager.
+ * HTML resources bundles manager.
  */
 public class BundlesManager {
 
@@ -40,8 +40,8 @@ public class BundlesManager {
 	protected String localFilesEncoding = StringPool.UTF_8;
 	protected String webRoot;
 	protected String bundleFolder;
-	protected String servletPath = "/jodd-jsbundle";
-	protected String bundleFilenamePrefix = "jodd-jsbundle-";
+	protected String staplerServletPath = "/jodd-bundle";
+	protected String bundleFilenamePrefix = "jodd-bundle-";
 	protected String localAddressAndPort = "http://localhost:8080";
 	protected boolean downloadLocal;
 	protected final String contextPath;
@@ -111,18 +111,18 @@ public class BundlesManager {
 	}
 
 	/**
-	 * Returns {@link JsBundleServlet} servlet path.
+	 * Returns {@link HtmlStaplerServlet} servlet path.
 	 * Must be the same as in web.xml.
 	 */
-	public String getServletPath() {
-		return servletPath;
+	public String getStaplerServletPath() {
+		return staplerServletPath;
 	}
 
 	/**
-	 * Sets registered path for {@link JsBundleServlet} as registered in web.xml.
+	 * Sets registered path for {@link HtmlStaplerServlet} as registered in web.xml.
 	 */
-	public void setServletPath(String servletPath) {
-		this.servletPath = servletPath;
+	public void setStaplerServletPath(String staplerServletPath) {
+		this.staplerServletPath = staplerServletPath;
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class BundlesManager {
 		try {
 			createBundle(actionPath, digest, sources);
 		} catch (IOException ioex) {
-			throw new JsBundleException("Can't create bundle from sources.", ioex);
+			throw new HtmlStaplerException("Can't create bundle from sources.", ioex);
 		}
 	}
 
@@ -272,7 +272,7 @@ public class BundlesManager {
 		try {
 			shaDigester = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException nsaex) {
-			throw new JsBundleException(nsaex);
+			throw new HtmlStaplerException(nsaex);
 		}
 
 		byte[] bytes = shaDigester.digest(CharUtil.toSimpleByteArray(source));

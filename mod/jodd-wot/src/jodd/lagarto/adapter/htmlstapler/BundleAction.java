@@ -58,9 +58,9 @@ public class BundleAction {
 		}
 
 		if (firstScriptTag == true) {
-			// this is a first tag, change the url to point to the bundle
+			// this is the first tag, change the url to point to the bundle
 			firstScriptTag = false;
-			return contextPath + bundlesManager.getServletPath() + "?id=" + bundleId;
+			return contextPath + bundlesManager.getStaplerServletPath() + "?id=" + bundleId;
 		} else {
 			// ignore all other script tags
 			return null;

@@ -58,12 +58,12 @@
 	
 	<!-- servlet -->
 	<servlet>
-		<servlet-name>jodd-jsbundle</servlet-name>
-		<servlet-class>jodd.lagarto.adapter.jsbundle.JsBundleServlet</servlet-class>
+		<servlet-name>jodd-html-stapler</servlet-name>
+		<servlet-class>jodd.lagarto.adapter.htmlstapler.HtmlStaplerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>jodd-jsbundle</servlet-name>
-		<url-pattern>/jodd-jsbundle</url-pattern>
+		<servlet-name>jodd-html-stapler</servlet-name>
+		<url-pattern>/jodd-bundle</url-pattern>
 	</servlet-mapping>
 
 	<!-- config -->
