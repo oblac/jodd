@@ -44,6 +44,7 @@ public class BundlesManager {
 	protected String bundleFilenamePrefix = "jodd-bundle-";
 	protected String localAddressAndPort = "http://localhost:8080";
 	protected boolean downloadLocal;
+	protected boolean sortResources;
 	protected final String contextPath;
 
 	// ---------------------------------------------------------------- init
@@ -80,6 +81,24 @@ public class BundlesManager {
 	}
 
 	// ---------------------------------------------------------------- access
+
+	/**
+	 * Returns <code>true</code> if resources are sorted before
+	 * bundle id (a digest) is created. When sorting is enabled,
+	 * two pages will share the same bundle even if they list
+	 * resources in different order.
+	 */
+	public boolean isSortResources() {
+		return sortResources;
+	}
+
+	/**
+	 * Sets the resources sorting before bundle id (i.e. a digest)
+	 * is created.
+	 */
+	public void setSortResources(boolean sortResources) {
+		this.sortResources = sortResources;
+	}
 
 	/**
 	 * Returns current web root.
@@ -244,7 +263,9 @@ public class BundlesManager {
 		for (int i = 0, sourcesArrayLength = sourcesArray.length; i < sourcesArrayLength; i++) {
 			sourcesArray[i] = sourcesArray[i].trim().toLowerCase();
 		}
-		Arrays.sort(sourcesArray);
+		if (sortResources) {
+			Arrays.sort(sourcesArray);
+		}
 
 		StringBand sb = new StringBand(sourcesArray.length);
 		for (String src : sourcesArray) {
