@@ -58,7 +58,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 			if (tag.getName().equalsIgnoreCase("link")) {
 				String type = tag.getAttributeValue("type", false);
 
-				if (type.equalsIgnoreCase("text/css") == true) {
+				if (type == null || type.equalsIgnoreCase("text/css") == true) {
 					String media = tag.getAttributeValue("media", false);
 
 					if (media == null || media.contains("screen")) {
