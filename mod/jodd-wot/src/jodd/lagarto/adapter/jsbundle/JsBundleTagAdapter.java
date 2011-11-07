@@ -5,12 +5,8 @@ package jodd.lagarto.adapter.jsbundle;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
 import jodd.lagarto.TagVisitor;
-import jodd.servlet.DispatcherUtil;
-import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * JS Bundle tag adapter parses HTML page and collects all information
@@ -18,61 +14,71 @@ import java.util.List;
  */
 public class JsBundleTagAdapter extends TagAdapter {
 
-	protected final JsBundlesManager jsbManager;
-	protected final boolean newAction;
-	protected final String actionPath;
-	protected final String contextPath;
-	protected String bundleId;
+	protected final BundlesManager bundlesManager;
 
-	protected List<String> sources;
-	protected boolean firstScriptTag;
+	protected final BundleAction jsBundleAction;
+	protected final BundleAction cssBundleAction;
+
 	protected boolean insideConditionalComment;
 
-	public JsBundleTagAdapter(JsBundlesManager jsBundlesManager, TagVisitor target, HttpServletRequest request) {
+	public JsBundleTagAdapter(TagVisitor target, HttpServletRequest request) {
 		super(target);
 
-		jsbManager = jsBundlesManager;
+		bundlesManager = BundlesManager.getBundlesManager(request);
 
-		actionPath = DispatcherUtil.getServletPath(request);
+		jsBundleAction = bundlesManager.start(request, "js");
+		cssBundleAction = bundlesManager.start(request, "css");
 
-		contextPath = ServletUtil.getContextPath(request);
-
-		bundleId = jsbManager.lookupBundleId(actionPath);
-
-		newAction = (bundleId == null);
-
-		if (newAction) {
-			sources = new ArrayList<String>();
-		}
-		firstScriptTag = true;
 		insideConditionalComment = false;
 	}
 
+	// ---------------------------------------------------------------- javascripts
+
 	@Override
 	public void script(Tag tag, CharSequence body) {
-		String src = tag.getAttributeValue("src", false);
+		if (insideConditionalComment == false) {
+			String src = tag.getAttributeValue("src", false);
 
-		if ((src != null) && (insideConditionalComment == false)) {
-			if (newAction) {
-				if (bundleId == null) {
-					bundleId = jsbManager.registerNewBundleId();
+			if (src != null) {
+				String link = jsBundleAction.processLink(src);
+				if (link != null) {
+					tag.setAttributeValue("src", false, link);
+					super.script(tag, body);
 				}
-				sources.add(src);
-			}
-
-			if (firstScriptTag == true) {
-				// this is a first tag, change the url to point to the bundle
-				firstScriptTag = false;
-				tag.setAttributeValue("src", false, contextPath + jsbManager.getServletPath() + "?id=" + bundleId);
-				super.script(tag, body);
-				return;
-			} else {
-				// ignore all other script tags
 				return;
 			}
 		}
 		super.script(tag, body);
 	}
+
+	// ---------------------------------------------------------------- css links
+
+	@Override
+	public void tag(Tag tag) {
+		if (insideConditionalComment == false) {
+			if (tag.getName().equalsIgnoreCase("link")) {
+				String type = tag.getAttributeValue("type", false);
+
+				if (type.equalsIgnoreCase("text/css") == true) {
+					String media = tag.getAttributeValue("media", false);
+
+					if (media == null || media.contains("screen")) {
+						String href = tag.getAttributeValue("href", false);
+
+						String link = cssBundleAction.processLink(href);
+						if (link != null) {
+							tag.setAttribute("href", false, link);
+							super.tag(tag);
+						}
+						return;
+					}
+				}
+			}
+		}
+		super.tag(tag);
+	}
+
+	// ---------------------------------------------------------------- conditional comments
 
 	@Override
 	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
@@ -86,11 +92,12 @@ public class JsBundleTagAdapter extends TagAdapter {
 		super.condCommentEnd(conditionalComment, isDownlevelHidden);
 	}
 
+	// ---------------------------------------------------------------- end
+
 	@Override
 	public void end() {
-		if (newAction) {
-			jsbManager.registerBundle(actionPath, bundleId, sources);
-		}
+		jsBundleAction.end();
+		cssBundleAction.end();
 		super.end();
 	}
 }

@@ -15,6 +15,7 @@ import jodd.util.StringPool;
 import jodd.util.SystemUtil;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -27,16 +28,16 @@ import java.util.Map;
 /**
  * JavaScript bundles manager.
  */
-public class JsBundlesManager {
+public class BundlesManager {
 
-	private static final String ATTRIBUTE_NAME = JsBundlesManager.class.getName();
+	private static final String ATTRIBUTE_NAME = BundlesManager.class.getName();
 
 	protected int bundleCount;		// for new bundles
 
 	protected Map<String, String> actionBundles = new HashMap<String, String>();	// action -> bundleId/digest
 	protected Map<String, String> mirrors = new HashMap<String, String>();			// temp id -> bundleId
 
-	protected String jsEncoding = StringPool.UTF_8;
+	protected String localFilesEncoding = StringPool.UTF_8;
 	protected String webRoot;
 	protected String bundleFolder;
 	protected String servletPath = "/jodd-jsbundle";
@@ -48,25 +49,34 @@ public class JsBundlesManager {
 	// ---------------------------------------------------------------- init
 
 	/**
-	 * Returns bundles manager from servlet context.
-	 * Throws exception if bundles manager doesn't exist.
+	 * Returns bundles manager.
 	 */
-	public static JsBundlesManager getJsBundlesManager(ServletContext servletContext) {
-		JsBundlesManager jsBundlesManager = (JsBundlesManager) servletContext.getAttribute(ATTRIBUTE_NAME);
-		if (jsBundlesManager == null) {
-			throw new JsBundleException("JsBundlesManager not initialized");
-		}
-		return jsBundlesManager;
+	public static BundlesManager getBundlesManager(HttpServletRequest servletRequest) {
+		return getBundlesManager(servletRequest.getSession().getServletContext());
+	}
+
+	/**
+	 * Returns bundles manager from servlet context.
+	 */
+	public static BundlesManager getBundlesManager(ServletContext servletContext) {
+		return (BundlesManager) servletContext.getAttribute(ATTRIBUTE_NAME);
 	}
 
 	/**
 	 * Creates new instance, initialize it and stores it in servlet context.
 	 */
-	public JsBundlesManager(ServletContext servletContext) {
+	public BundlesManager(ServletContext servletContext) {
 		servletContext.setAttribute(ATTRIBUTE_NAME, this);
-		webRoot = servletContext.getRealPath(StringPool.EMPTY);
-		bundleFolder = SystemUtil.getTempDir();
-		contextPath = ServletUtil.getContextPath(servletContext);
+		this.webRoot = servletContext.getRealPath(StringPool.EMPTY);
+		this.bundleFolder = SystemUtil.getTempDir();
+		this.contextPath = ServletUtil.getContextPath(servletContext);
+	}
+
+	/**
+	 * Starts bundle usage by creating new {@link BundleAction}.
+	 */
+	public BundleAction start(HttpServletRequest servletRequest, String bundleName) {
+		return new BundleAction(this, servletRequest, bundleName);
 	}
 
 	// ---------------------------------------------------------------- access
@@ -130,17 +140,17 @@ public class JsBundlesManager {
 	}
 
 	/**
-	 * Returns js files encoding. By default its UTF8.
+	 * Returns local files encoding. By default its UTF8.
 	 */
-	public String getJsEncoding() {
-		return jsEncoding;
+	public String getLocalFilesEncoding() {
+		return localFilesEncoding;
 	}
 
 	/**
-	 * Sets js files encoding.
+	 * Sets local files encoding.
 	 */
-	public void setJsEncoding(String jsEncoding) {
-		this.jsEncoding = jsEncoding;
+	public void setLocalFilesEncoding(String localFilesEncoding) {
+		this.localFilesEncoding = localFilesEncoding;
 	}
 
 	/**
@@ -241,17 +251,7 @@ public class JsBundlesManager {
 			sb.append(src);
 		}
 		String sourcesString = sb.toString();
-
-		MessageDigest shaDigester;
-		try {
-			shaDigester = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException nsaex) {
-			throw new JsBundleException(nsaex);
-		}
-
-		byte[] bytes = shaDigester.digest(CharUtil.toSimpleByteArray(sourcesString));
-		String digest = Base32.encode(bytes);
-
+		String digest = createDigest(sourcesString);
 
 		// bundle appears for the first time, create the bundle
 		actionBundles.put(actionPath, digest);
@@ -261,6 +261,22 @@ public class JsBundlesManager {
 		} catch (IOException ioex) {
 			throw new JsBundleException("Can't create bundle from sources.", ioex);
 		}
+	}
+
+	/**
+	 * Creates digest i.e. bundle id from given string.
+	 * Returned digest must be filename safe, for all platforms.
+	 */
+	protected String createDigest(String source) {
+		MessageDigest shaDigester;
+		try {
+			shaDigester = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException nsaex) {
+			throw new JsBundleException(nsaex);
+		}
+
+		byte[] bytes = shaDigester.digest(CharUtil.toSimpleByteArray(source));
+		return Base32.encode(bytes);
 	}
 
 	/**
@@ -280,7 +296,7 @@ public class JsBundlesManager {
 			}
 			String content;
 			if (src.startsWith("http://") || (src.startsWith("https://"))) {
-				content = NetUtil.downloadString(src, jsEncoding);
+				content = NetUtil.downloadString(src, localFilesEncoding);
 			} else {
 				if (downloadLocal == false) {
 					// load local javascript from file system
@@ -299,7 +315,7 @@ public class JsBundlesManager {
 					} else {
 						localUrl += contextPath + FileNameUtil.getPath(actionPath) + '/' + src;
 					}
-					content = NetUtil.downloadString(localUrl, jsEncoding);
+					content = NetUtil.downloadString(localUrl, localFilesEncoding);
 				}
 			}
 

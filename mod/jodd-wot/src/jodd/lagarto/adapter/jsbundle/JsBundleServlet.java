@@ -19,18 +19,18 @@ import java.io.OutputStream;
  */
 public class JsBundleServlet extends HttpServlet {
 
-	protected JsBundlesManager jsBundlesManager;
+	protected BundlesManager bundlesManager;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		jsBundlesManager = JsBundlesManager.getJsBundlesManager(config.getServletContext());
+		bundlesManager = BundlesManager.getBundlesManager(config.getServletContext());
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String bundleId = req.getParameter("id");
-		File file = jsBundlesManager.lookupBundleFile(bundleId);
+		File file = bundlesManager.lookupBundleFile(bundleId);
 		OutputStream out = resp.getOutputStream();
 		StreamUtil.copy(new FileInputStream(file), out);
 	}
