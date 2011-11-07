@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HtmlStaplerTagAdapter extends TagAdapter {
 
-	protected final BundlesManager bundlesManager;
+	protected final HtmlStaplerBundlesManager bundlesManager;
 	protected final BundleAction jsBundleAction;
 	protected final BundleAction cssBundleAction;
 
@@ -23,7 +23,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	public HtmlStaplerTagAdapter(TagVisitor target, HttpServletRequest request) {
 		super(target);
 
-		bundlesManager = BundlesManager.getBundlesManager(request);
+		bundlesManager = HtmlStaplerBundlesManager.getBundlesManager(request);
 
 		jsBundleAction = bundlesManager.start(request, "js");
 		cssBundleAction = bundlesManager.start(request, "css");

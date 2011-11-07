@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class BundleAction {
 
-	protected final BundlesManager bundlesManager;
+	protected final HtmlStaplerBundlesManager bundlesManager;
 	protected final String bundleName;
 	protected final boolean newAction;
 	protected final String actionPath;
@@ -27,7 +27,7 @@ public class BundleAction {
 	/**
 	 * Creates new bundle action.
 	 */
-	public BundleAction(BundlesManager bundlesManager, HttpServletRequest request, String bundleName) {
+	public BundleAction(HtmlStaplerBundlesManager bundlesManager, HttpServletRequest request, String bundleName) {
 		this.bundlesManager = bundlesManager;
 		this.bundleName = bundleName;
 

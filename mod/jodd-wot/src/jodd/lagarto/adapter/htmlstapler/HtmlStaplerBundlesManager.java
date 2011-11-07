@@ -28,9 +28,9 @@ import java.util.Map;
 /**
  * HTML resources bundles manager.
  */
-public class BundlesManager {
+public class HtmlStaplerBundlesManager {
 
-	private static final String ATTRIBUTE_NAME = BundlesManager.class.getName();
+	private static final String ATTRIBUTE_NAME = HtmlStaplerBundlesManager.class.getName();
 
 	protected int bundleCount;		// for new bundles
 
@@ -52,21 +52,21 @@ public class BundlesManager {
 	/**
 	 * Returns bundles manager.
 	 */
-	public static BundlesManager getBundlesManager(HttpServletRequest servletRequest) {
+	public static HtmlStaplerBundlesManager getBundlesManager(HttpServletRequest servletRequest) {
 		return getBundlesManager(servletRequest.getSession().getServletContext());
 	}
 
 	/**
 	 * Returns bundles manager from servlet context.
 	 */
-	public static BundlesManager getBundlesManager(ServletContext servletContext) {
-		return (BundlesManager) servletContext.getAttribute(ATTRIBUTE_NAME);
+	public static HtmlStaplerBundlesManager getBundlesManager(ServletContext servletContext) {
+		return (HtmlStaplerBundlesManager) servletContext.getAttribute(ATTRIBUTE_NAME);
 	}
 
 	/**
 	 * Creates new instance, initialize it and stores it in servlet context.
 	 */
-	public BundlesManager(ServletContext servletContext) {
+	public HtmlStaplerBundlesManager(ServletContext servletContext) {
 		servletContext.setAttribute(ATTRIBUTE_NAME, this);
 		this.webRoot = servletContext.getRealPath(StringPool.EMPTY);
 		this.bundleFolder = SystemUtil.getTempDir();

@@ -5,7 +5,7 @@ package madvoc.filter;
 import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
-import jodd.lagarto.adapter.htmlstapler.BundlesManager;
+import jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager;
 import jodd.lagarto.adapter.htmlstapler.HtmlStaplerTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
 
@@ -15,13 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 
 public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 
-	BundlesManager bundlesManager;
+	protected HtmlStaplerBundlesManager bundlesManager;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		super.init(filterConfig);
 
-		bundlesManager = new BundlesManager(filterConfig.getServletContext());
+		bundlesManager = new HtmlStaplerBundlesManager(filterConfig.getServletContext());
 		bundlesManager.reset();
 	}
 

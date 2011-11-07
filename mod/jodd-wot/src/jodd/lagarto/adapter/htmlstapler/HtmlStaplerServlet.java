@@ -19,12 +19,12 @@ import java.io.OutputStream;
  */
 public class HtmlStaplerServlet extends HttpServlet {
 
-	protected BundlesManager bundlesManager;
+	protected HtmlStaplerBundlesManager bundlesManager;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		bundlesManager = BundlesManager.getBundlesManager(config.getServletContext());
+		bundlesManager = HtmlStaplerBundlesManager.getBundlesManager(config.getServletContext());
 	}
 
 	@Override
