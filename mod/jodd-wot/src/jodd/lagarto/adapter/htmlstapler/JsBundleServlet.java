@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.adapter.jsbundle;
+package jodd.lagarto.adapter.htmlstapler;
 
 import jodd.io.StreamUtil;
 
