@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Bundle action.
+ * Bundle action used during page parsing and resources collection.
  */
 public class BundleAction {
 
@@ -31,7 +31,9 @@ public class BundleAction {
 		this.bundlesManager = bundlesManager;
 		this.bundleName = bundleName;
 
-		actionPath = DispatcherUtil.getServletPath(request) + '.' + bundleName;
+		String realActionPath = bundlesManager.resolveRealActionPath(DispatcherUtil.getServletPath(request));
+
+		actionPath = realActionPath + '*' + bundleName;
 
 		contextPath = ServletUtil.getContextPath(request);
 

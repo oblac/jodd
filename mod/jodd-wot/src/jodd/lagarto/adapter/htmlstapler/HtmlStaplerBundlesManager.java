@@ -283,7 +283,7 @@ public class HtmlStaplerBundlesManager {
 		try {
 			createBundle(actionPath, digest, sources);
 		} catch (IOException ioex) {
-			throw new HtmlStaplerException("Can't create bundle from sources.", ioex);
+			throw new HtmlStaplerException("Can't create bundle.", ioex);
 		}
 	}
 
@@ -319,7 +319,7 @@ public class HtmlStaplerBundlesManager {
 				sb.append(StringPool.NEWLINE);
 			}
 			String content;
-			if (src.startsWith("http://") || (src.startsWith("https://"))) {
+			if (isExternalResource(src)) {
 				content = NetUtil.downloadString(src, localFilesEncoding);
 			} else {
 				if (downloadLocal == false) {
@@ -355,6 +355,15 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
+	 * Returns <code>true</code> if resource link has to be downloaded.
+	 * By default, if resource link starts with "http://" or with "https://"
+	 * it will be considered as external resource.
+	 */
+	protected boolean isExternalResource(String link) {
+		return link.startsWith("http://") || (link.startsWith("https://"));
+	}
+
+	/**
 	 * Invoked before resource content is stored in the bundle.
 	 * May be us used for additional resource processing, such as
 	 * compressing, cleaning etc. By default it just returns unmodified
@@ -362,6 +371,17 @@ public class HtmlStaplerBundlesManager {
 	 */
 	protected String onResourceContent(String content) {
 		return content;
+	}
+
+	// ---------------------------------------------------------------- url rewriting
+
+	/**
+	 * Resolves real action path for given one.
+	 * When some URLs are dynamically created, many different links points
+	 * to the same page. Use this to prevent memory leaking.
+	 */
+	protected String resolveRealActionPath(String actionPath) {
+		return actionPath;
 	}
 
 	// ---------------------------------------------------------------- reset
