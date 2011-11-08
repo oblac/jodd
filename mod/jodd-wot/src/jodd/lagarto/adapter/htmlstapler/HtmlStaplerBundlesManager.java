@@ -7,6 +7,7 @@ import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
+import jodd.log.Log;
 import jodd.servlet.ServletUtil;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
@@ -29,6 +30,8 @@ import java.util.Map;
  * HTML resources bundles manager.
  */
 public class HtmlStaplerBundlesManager {
+
+	private static final Log log = Log.getLogger(HtmlStaplerBundlesManager.class);
 
 	private static final String ATTRIBUTE_NAME = HtmlStaplerBundlesManager.class.getName();
 
@@ -345,6 +348,10 @@ public class HtmlStaplerBundlesManager {
 		}
 
 		FileUtil.writeString(bundleFile, sb.toString());
+
+		if (log.isInfoEnabled()) {
+			log.info("Bundle created: " + bundleId);
+		}
 	}
 
 	/**
@@ -364,13 +371,19 @@ public class HtmlStaplerBundlesManager {
 	 */
 	public synchronized void reset() {
 		actionBundles.clear();
+
 		FindFile ff = new WildcardFindFile("*/" + bundleFilenamePrefix + StringPool.STAR);
 		ff.setIncludeDirs(false);
 		ff.searchPath(bundleFolder);
 
 		File f;
+		int count = 0;
 		while ((f = ff.nextFile()) != null) {
 			f.delete();
+			count++;
+		}
+		if (log.isInfoEnabled()) {
+			log.info("HtmlStapler reseted, " + count + " bundle files deleted.");
 		}
 	}
 
