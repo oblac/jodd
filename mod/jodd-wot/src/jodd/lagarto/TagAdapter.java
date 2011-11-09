@@ -13,6 +13,14 @@ public class TagAdapter implements TagVisitor {
 		this.target = target;
 	}
 
+	/**
+	 * Returns target tag visitor. It may be another
+	 * nested <code>TagAdapter</code> or <code>TagWriter</code>.
+	 */
+	public TagVisitor getTarget() {
+		return target;
+	}
+
 	public void start() {
 		target.start();
 	}
