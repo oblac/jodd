@@ -11,6 +11,7 @@ public class LagartoTests extends TestSuite {
 		super("jodd.lagarto test suite");
 		addTestSuite(LagartoParserTest.class);
 		addTestSuite(TagTypeTest.class);
+		addTestSuite(TagAdapterTest.class);
 	}
 
 	public static Test suite() {

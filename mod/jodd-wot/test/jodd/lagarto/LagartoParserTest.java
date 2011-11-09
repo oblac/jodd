@@ -4,7 +4,6 @@ import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
-import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.util.StringUtil;
 import junit.framework.TestCase;
 
@@ -19,7 +18,6 @@ public class LagartoParserTest extends TestCase {
 
 	protected String testDataRoot;
 	protected String testLiveRoot;
-	protected String testAdapterRoot;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -32,9 +30,6 @@ public class LagartoParserTest extends TestCase {
 
 		data = LagartoParserTest.class.getResource("live");
 		testLiveRoot = data.getFile();
-
-		data = LagartoParserTest.class.getResource("adaptert");
-		testAdapterRoot = data.getFile();
 	}
 
 	public void testHtmls() throws IOException {
@@ -84,21 +79,6 @@ public class LagartoParserTest extends TestCase {
 			}
 		}
 		System.out.println(jsw);
-	}
-
-	public void testCleanHtml() throws IOException {
-		File ff = new File(testAdapterRoot, "clean.html");
-
-		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff));
-
-		StringBuilder out = new StringBuilder();
-		TagWriter tagWriter = new TagWriter(out);
-		StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(tagWriter);
-		lagartoParser.parse(stripHtmlTagAdapter);
-
-		ff = new File(testAdapterRoot, "clean-out.html");
-
-		assertEquals(FileUtil.readString(ff), out.toString());
 	}
 
 	/**
@@ -247,6 +227,5 @@ public class LagartoParserTest extends TestCase {
 		lagartoParser.parse(visitor, writer1, writer2);
 		return new String[] {result.toString(), out.toString(), out2.toString()};
 	}
-
 
 }
