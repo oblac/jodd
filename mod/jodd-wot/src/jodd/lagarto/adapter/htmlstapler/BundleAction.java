@@ -6,7 +6,7 @@ import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,7 +42,7 @@ public class BundleAction {
 		newAction = (bundleId == null);
 
 		if (newAction) {
-			sources = new ArrayList<String>();
+			sources = new LinkedList<String>();
 		}
 
 		firstScriptTag = true;
