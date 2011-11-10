@@ -17,6 +17,8 @@ import static jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager.Strateg
  */
 public class BundleAction {
 
+	private static final String BUNDLE_ID_MARKER = "---jodd-bundle-id-marker---";
+
 	protected final HtmlStaplerBundlesManager bundlesManager;
 	protected final String bundleName;
 	protected final boolean newAction;
@@ -52,7 +54,7 @@ public class BundleAction {
 				sources = new LinkedList<String>();
 			}
 		} else {
-			bundleId = "jodd-bundle-action-" + bundleName;
+			bundleId = BUNDLE_ID_MARKER + bundleName;
 			bundleIdMark = bundleId.toCharArray();
 			newAction = true;
 			sources = new LinkedList<String>();
