@@ -37,8 +37,8 @@ public class HtmlStaplerBundlesManager {
 
 	protected int bundleCount;		// for new bundles
 
-	protected Map<String, String> actionBundles = new HashMap<String, String>();	// action -> bundleId/digest
-	protected Map<String, String> mirrors = new HashMap<String, String>();			// temp id -> bundleId
+	protected Map<String, String> actionBundles; 			// action -> bundleId/digest
+	protected Map<String, String> mirrors;					// temp id -> bundleId
 
 	protected String localFilesEncoding = StringPool.UTF_8;
 	protected String webRoot;
@@ -49,6 +49,30 @@ public class HtmlStaplerBundlesManager {
 	protected boolean downloadLocal;
 	protected boolean sortResources;
 	protected final String contextPath;
+	protected final Strategy strategy;
+
+	// ---------------------------------------------------------------- strategy
+
+	public enum Strategy {
+
+		/**
+		 * For each action manager stores the bundle id.
+		 * This gives top performances, as the links are collected only
+		 * once per page and bundle id (digest) is calculated only once
+		 * as well, only first time page is accessed. However, if there
+		 * are dynamic REST-alike links, there might be a large or infinite
+		 * number of action links in the application. This can be handled
+		 * in the code by overriding method <code>resolveRealActionPath()</code>.
+		 */
+		ACTION_MANAGED,
+
+		/**
+		 * Pragmatic strategy that collects all links and builds  bundle id
+		 * (digest) every time when page is processed. This gives slightly
+		 * slower performances, but there is no additional memory consumption.
+		 */
+		RESOURCES_ONLY
+	}
 
 	// ---------------------------------------------------------------- init
 
@@ -69,11 +93,17 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Creates new instance, initialize it and stores it in servlet context.
 	 */
-	public HtmlStaplerBundlesManager(ServletContext servletContext) {
+	public HtmlStaplerBundlesManager(ServletContext servletContext, Strategy strategy) {
+		this.strategy = strategy;
 		servletContext.setAttribute(ATTRIBUTE_NAME, this);
 		this.webRoot = servletContext.getRealPath(StringPool.EMPTY);
 		this.bundleFolder = SystemUtil.getTempDir();
 		this.contextPath = ServletUtil.getContextPath(servletContext);
+
+		if (strategy == Strategy.ACTION_MANAGED) {
+			actionBundles = new HashMap<String, String>();
+			mirrors = new HashMap<String, String>();
+		}
 	}
 
 	/**
@@ -84,6 +114,13 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	// ---------------------------------------------------------------- access
+
+	/**
+	 * Returns current {@link Strategy strategy}.
+	 */
+	public Strategy getStrategy() {
+		return strategy;
+	}
 
 	/**
 	 * Returns <code>true</code> if resources are sorted before
@@ -219,7 +256,7 @@ public class HtmlStaplerBundlesManager {
 	 * Lookups for bundle file.
 	 */
 	public File lookupBundleFile(String bundleId) {
-		if (mirrors.isEmpty() == false) {
+		if ((mirrors != null) && (mirrors.isEmpty() == false)) {
 			String realBundleId = mirrors.remove(bundleId);
 
 			if (realBundleId != null) {
@@ -252,13 +289,16 @@ public class HtmlStaplerBundlesManager {
 
 	/**
 	 * Registers new bundle that consist of provided list of source paths.
+	 * Returns the real bundle id, as provided one is just a temporary bundle id.
 	 */
-	public synchronized void registerBundle(String actionPath, String bundleId, List<String> sources) {
+	public synchronized String registerBundle(String actionPath, String tempBundleId, List<String> sources) {
 
-		if (bundleId == null) {
-			// page does not include any resource source file
-			actionBundles.put(actionPath, StringPool.EMPTY);
-			return;
+		if (tempBundleId == null || sources.isEmpty()) {
+			if (strategy == Strategy.ACTION_MANAGED) {
+				// page does not include any resource source file
+				actionBundles.put(actionPath, StringPool.EMPTY);
+			}
+			return null;
 		}
 
 		// create unique digest from the collected sources
@@ -278,13 +318,16 @@ public class HtmlStaplerBundlesManager {
 		String digest = createDigest(sourcesString);
 
 		// bundle appears for the first time, create the bundle
-		actionBundles.put(actionPath, digest);
-		mirrors.put(bundleId, digest);
+		if (strategy == Strategy.ACTION_MANAGED) {
+			actionBundles.put(actionPath, digest);
+			mirrors.put(tempBundleId, digest);
+		}
 		try {
 			createBundle(actionPath, digest, sources);
 		} catch (IOException ioex) {
 			throw new HtmlStaplerException("Can't create bundle.", ioex);
 		}
+		return digest;
 	}
 
 	/**
@@ -390,7 +433,10 @@ public class HtmlStaplerBundlesManager {
 	 * Clears all settings and removes all created bundle files from file system.
 	 */
 	public synchronized void reset() {
-		actionBundles.clear();
+		if (strategy == Strategy.ACTION_MANAGED) {
+			actionBundles.clear();
+			mirrors.clear();
+		}
 
 		FindFile ff = new WildcardFindFile("*/" + bundleFilenamePrefix + StringPool.STAR);
 		ff.setIncludeDirs(false);
