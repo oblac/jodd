@@ -2,7 +2,6 @@
 
 package madvoc.filter;
 
-import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager;
@@ -13,6 +12,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import static jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY;
+
 public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 
 	protected HtmlStaplerBundlesManager bundlesManager;
@@ -21,16 +22,24 @@ public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		super.init(filterConfig);
 
-		bundlesManager = new HtmlStaplerBundlesManager(filterConfig.getServletContext());
+		bundlesManager = new HtmlStaplerBundlesManager(filterConfig.getServletContext(), RESOURCES_ONLY);
 		bundlesManager.reset();
 	}
 
 	@Override
-	protected TagVisitor createAdapters(TagWriter rootTagWriter, HttpServletRequest request) {
-		StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(rootTagWriter);
+	protected LagartoParsingProcessor createParsingProcessor() {
+		return new LagartoParsingProcessor() {
+			@Override
+			protected char[] parse(TagWriter rootTagWriter, HttpServletRequest request) {
+				StripHtmlTagAdapter stripHtmlTagAdapter = new StripHtmlTagAdapter(rootTagWriter);
 
-		HtmlStaplerTagAdapter htmlStaplerTagAdapter = new HtmlStaplerTagAdapter(stripHtmlTagAdapter, request);
+				HtmlStaplerTagAdapter htmlStaplerTagAdapter = new HtmlStaplerTagAdapter(stripHtmlTagAdapter, request);
 
-		return htmlStaplerTagAdapter;
+				char[] content = invokeLagarto(htmlStaplerTagAdapter);
+
+				return htmlStaplerTagAdapter.postProcess(content);
+			}
+		};
 	}
+
 }
