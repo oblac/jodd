@@ -18,6 +18,7 @@ import static jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager.Strateg
 public class BundleAction {
 
 	private static final String BUNDLE_ID_MARKER = "---jodd-bundle-id-marker---";
+	private static final String UNSTAPLE_MARKER = "jodd-unstaple";
 
 	protected final HtmlStaplerBundlesManager bundlesManager;
 	protected final String bundleName;
@@ -64,7 +65,23 @@ public class BundleAction {
 	}
 
 	/**
-	 * Process link.
+	 * Returns <code>true</code> if resource link  should be collected into the bundle. Returns
+	 * <code>false</code> for resources that has to ignored or when no link existed (<code>null</code>).
+	 * <p>
+	 * By default, ignores resource links that contains "jodd.unstaple"
+	 * (usually set as dummy parameter name).
+	 */
+	public boolean acceptLink(String src) {
+		if (src == null) {
+			return false;
+		}
+		return !src.contains(UNSTAPLE_MARKER);
+	}
+
+	/**
+	 * Process links. Returns bundle link if this is the first resource
+	 * of the same type. Otherwise, returns <code>null</code> indicating
+	 * that collection is going on and the original link should be removed.
 	 */
 	public String processLink(String src) {
 		if (newAction) {

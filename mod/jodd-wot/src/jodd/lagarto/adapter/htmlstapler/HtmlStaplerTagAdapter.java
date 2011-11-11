@@ -38,7 +38,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 		if (insideConditionalComment == false) {
 			String src = tag.getAttributeValue("src", false);
 
-			if (src != null) {
+			if (jsBundleAction.acceptLink(src)) {
 				String link = jsBundleAction.processLink(src);
 				if (link != null) {
 					tag.setAttributeValue("src", false, link);
@@ -64,12 +64,14 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 					if (media == null || media.contains("screen")) {
 						String href = tag.getAttributeValue("href", false);
 
-						String link = cssBundleAction.processLink(href);
-						if (link != null) {
-							tag.setAttribute("href", false, link);
-							super.tag(tag);
+						if (cssBundleAction.acceptLink(href)) {
+							String link = cssBundleAction.processLink(href);
+							if (link != null) {
+								tag.setAttribute("href", false, link);
+								super.tag(tag);
+							}
+							return;
 						}
-						return;
 					}
 				}
 			}
