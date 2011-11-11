@@ -373,6 +373,13 @@ public class HtmlStaplerBundlesManager {
 					} else {
 						localFile += FileNameUtil.getPath(actionPath) + '/' + src;
 					}
+
+					// trim link parameters, if any
+					int qmndx = localFile.indexOf('?');
+					if (qmndx != -1) {
+						localFile = localFile.substring(0, qmndx);
+					}
+
 					content = FileUtil.readString(localFile);
 				} else {
 					// download local resource
