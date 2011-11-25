@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 /**
  * Converts given object to <code>Double</code>.
@@ -23,7 +24,11 @@ public class DoubleConverter implements TypeConverter<Double> {
 		}
 
 		try {
-			return Double.valueOf(value.toString().trim());
+			String stringValue = value.toString().trim();
+			if (StringUtil.startsWithChar(stringValue, '+')) {
+				stringValue = stringValue.substring(1);
+			}
+			return Double.valueOf(stringValue);
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}

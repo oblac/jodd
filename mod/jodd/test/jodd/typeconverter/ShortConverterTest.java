@@ -16,8 +16,23 @@ public class ShortConverterTest extends TestCase {
         assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf("1"));
         assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(" 1 "));
 
+		assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(" +1 "));
+        assertEquals(Short.valueOf((short) -1), ShortConverter.valueOf(" -1 "));
+		assertEquals(Short.valueOf((short) 32767), ShortConverter.valueOf(" +32767 "));
+        assertEquals(Short.valueOf((short) -32768), ShortConverter.valueOf(" -32768 "));
+
         try {
             ShortConverter.valueOf("a");
+            fail();
+        } catch (TypeConversionException ignore) {
+        }
+        try {
+            ShortConverter.valueOf("+32768");
+            fail();
+        } catch (TypeConversionException ignore) {
+        }
+        try {
+            ShortConverter.valueOf("-32769");
             fail();
         } catch (TypeConversionException ignore) {
         }

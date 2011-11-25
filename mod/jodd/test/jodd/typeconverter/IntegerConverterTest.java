@@ -16,6 +16,22 @@ public class IntegerConverterTest extends TestCase {
 		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf("1"));
 		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(" 1 "));
 
+		assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(" +1 "));
+		assertEquals(Integer.valueOf(-1), IntegerConverter.valueOf(" -1 "));
+		assertEquals(Integer.valueOf(2147483647), IntegerConverter.valueOf(" +2147483647 "));
+		assertEquals(Integer.valueOf(-2147483648), IntegerConverter.valueOf(" -2147483648 "));
+
+		try {
+			assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(" 2147483648 "));
+			fail();
+		} catch (TypeConversionException ignore) {
+		}
+		try {
+			assertEquals(Integer.valueOf(1), IntegerConverter.valueOf(" -2147483649 "));
+			fail();
+		} catch (TypeConversionException ignore) {
+		}
+
 		try {
 			IntegerConverter.valueOf("a");
 			fail();

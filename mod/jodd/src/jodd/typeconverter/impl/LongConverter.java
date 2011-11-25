@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 /**
  * Converts given object to a <code>Long</code>.
@@ -22,7 +23,11 @@ public class LongConverter implements TypeConverter<Long> {
 			return Long.valueOf(((Number)value).longValue());
 		}
 		try {
-			return Long.valueOf(value.toString().trim());
+			String stringValue = value.toString().trim();
+			if (StringUtil.startsWithChar(stringValue, '+')) {
+				stringValue = stringValue.substring(1);
+			}
+			return Long.valueOf(stringValue);
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
