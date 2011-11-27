@@ -273,11 +273,11 @@ class ParsedTag implements Tag {
 		writeTo(out, false);
 	}
 
-	public void writeTo(Appendable out, boolean buildAlways) throws IOException {
+	public void writeTo(Appendable out, boolean forceBuild) throws IOException {
 		if (modified) {
-			buildAlways = true;
+			forceBuild = true;
 		}
-		if (buildAlways) {
+		if (forceBuild) {
 			appendTo(out);
 		} else {
 			out.append(input.subSequence(position, position + length));

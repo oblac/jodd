@@ -47,10 +47,6 @@ public class LagartoParser {
 
 	// ---------------------------------------------------------------- parse
 
-	public void parse(TagVisitor... visitors) {
-		parse(new TagVisitorSet(visitors));
-	}
-
 	/**
 	 * Parses provided content.
 	 */
