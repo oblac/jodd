@@ -10,6 +10,7 @@ import javax.activation.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Email attachment.
@@ -68,17 +69,12 @@ public abstract class EmailAttachment {
 	 * Returns byte content of the attachment.
 	 */
 	public byte[] toByteArray() {
-		InputStream in = null;
-		try {
-			in = getDataSource().getInputStream();
-			FastByteArrayOutputStream out = new FastByteArrayOutputStream();
-			StreamUtil.copy(in, out);
-			return out.toByteArray();
-		} catch (IOException ioex) {
-			throw new MailException(ioex);
-		} finally {
-			StreamUtil.close(in);
-		}
+		FastByteArrayOutputStream out = size != -1 ?
+				new FastByteArrayOutputStream(size) :
+				new FastByteArrayOutputStream();
+
+		writeToStream(out);
+		return out.toByteArray();
 	}
 
 	/**
@@ -89,6 +85,21 @@ public abstract class EmailAttachment {
 		try {
 			in = getDataSource().getInputStream();
 			FileUtil.writeStream(destination, in);
+		} catch (IOException ioex) {
+			throw new MailException(ioex);
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
+	/**
+	 * Saves attachment to output stream.
+	 */
+	public void writeToStream(OutputStream out) {
+		InputStream in = null;
+		try {
+			in = getDataSource().getInputStream();
+			StreamUtil.copy(in, out);
 		} catch (IOException ioex) {
 			throw new MailException(ioex);
 		} finally {
