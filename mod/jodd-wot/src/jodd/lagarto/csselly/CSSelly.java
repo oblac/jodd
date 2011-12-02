@@ -9,7 +9,7 @@ import java.nio.CharBuffer;
 import java.util.List;
 
 /**
- * CSS selector parser..
+ * CSS selector parser.
  */
 public class CSSelly {
 

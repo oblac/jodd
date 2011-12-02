@@ -67,7 +67,7 @@ public class LagartoParser {
 		try {
 			_parse();
 		} catch (IOException ioex) {
-			throw new LagartoException("Parsing error", ioex);
+			throw new LagartoException("Parsing error.", ioex);
 		}
 		if (log.isDebugEnabled()) {
 			if (time != 0) {
@@ -146,7 +146,7 @@ public class LagartoParser {
 			buffTextEnd = end;
 		} else {
 			if (buffTextEnd != start) {
-				throw new LagartoException("Parsing error!");
+				throw new LagartoException("Parsing error.");
 			}
 			buffTextEnd = end;
 		}
