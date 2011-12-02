@@ -1,0 +1,6 @@
+tag:html:1<
+css:2[background-color: expression(2 < 4 ? "#fff" : "#222");]
+scr:2[var a = 2 < 4;]
+tag:body:2<
+tag:body:2>
+tag:html:1>

@@ -86,23 +86,39 @@ public class LagartoParserTest extends TestCase {
 	 */
 	public void testLiveHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile("*.html");
-		long reps = 1;//0000;
-		JStopWatch jsw = new JStopWatch();
-		while (reps-- > 0) {
-			ff.searchPath(testDataRoot);
-			File file;
-			while ((file = ff.nextFile()) != null) {
-				String content = FileUtil.readString(file);
-				parseEmpty(content);
+		ff.searchPath(testLiveRoot);
+		File file;
+		while ((file = ff.nextFile()) != null) {
+			String name = file.getName();
+			System.out.println("+" + name);
+			String content = FileUtil.readString(file);
+			String errors = "";
+			try {
+				errors = parseEmpty(content);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				fail(ex.toString());
 			}
+
+			if (name.equals("Answers.com.html") || name.equals("Yahoo!.html")) {
+				System.out.println(errors);
+				continue;
+			}
+			assertEquals(0, errors.length());
 		}
-		jsw.stop();
-		System.out.println(jsw.toString());
 	}
 
-	private void parseEmpty(String content) {
+	private String parseEmpty(String content) {
 		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(content));
-		lagartoParser.parse(new EmptyTagVisitor());
+		final StringBuilder errors = new StringBuilder();
+		lagartoParser.parse(new EmptyTagVisitor() {
+			@Override
+			public void error(String message) {
+				errors.append(message);
+				errors.append("\n");
+			}
+		});
+		return errors.toString();
 	}
 
 	private String[] parse(String content) {
@@ -166,6 +182,20 @@ public class LagartoParserTest extends TestCase {
 				result.append(NEWLINE);
 			}
 
+			public void style(Tag tag, CharSequence bodyM) {
+				result.append("css:").append(tag.getDeepLevel());
+				if (tag.getAttributeCount() > 0) {
+					try {
+						tag.writeTo(result, true);
+					} catch (IOException ignored) {
+					}
+				}
+				String body = bodyM.toString();
+				body = StringUtil.removeChars(body, "\r\n\t\b");
+				result.append('[').append(body).append(']');
+				result.append(NEWLINE);
+			}
+
 			public void script(Tag tag, CharSequence bodyM) {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
@@ -198,14 +228,10 @@ public class LagartoParserTest extends TestCase {
 				result.append("dir:[").append(directive).append(']').append(NEWLINE);
 			}
 
-			public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
-				result.append("cc").append(isDownlevelHidden ? 'H' : 'S');
+			public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+				result.append(isStartingTag ? "CC" : "cc").append(isDownlevelHidden ? 'H' : 'S');
 				result.append(":[").append(conditionalComment).append(']').append(NEWLINE);
-			}
 
-			public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
-				result.append("cc").append(isDownlevelHidden ? 'h' : 's');
-				result.append(":[").append(conditionalComment).append(']').append(NEWLINE);
 			}
 
 			public void text(CharSequence text) {
@@ -224,7 +250,11 @@ public class LagartoParserTest extends TestCase {
 		TagWriter writer2 = new TagWriter(out2, true);
 
 		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(content));
-		lagartoParser.parse(visitor, writer1, writer2);
+
+		TagAdapterWrapper taw = new TagAdapterWrapper(visitor,
+				new TagAdapterWrapper(writer1, writer2));
+
+		lagartoParser.parse(taw);
 		return new String[] {result.toString(), out.toString(), out2.toString()};
 	}
 
