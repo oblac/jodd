@@ -37,6 +37,10 @@ public class TagAdapter implements TagVisitor {
 		target.xmp(tag, body);
 	}
 
+	public void style(Tag tag, CharSequence body) {
+		target.style(tag, body);
+	}
+
 	public void script(Tag tag, CharSequence body) {
 		target.script(tag, body);
 	}
@@ -61,12 +65,8 @@ public class TagAdapter implements TagVisitor {
 		target.directive(directive);
 	}
 
-	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
-		target.condCommentStart(conditionalComment, isDownlevelHidden);
-	}
-
-	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
-		target.condCommentEnd(conditionalComment, isDownlevelHidden);
+	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+		target.condComment(conditionalComment, isStartingTag, isDownlevelHidden);
 	}
 
 	public void error(String message) {

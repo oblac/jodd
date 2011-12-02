@@ -15,8 +15,6 @@ public class LagartoParser {
 
 	private static final Log log = Log.getLogger(LagartoParser.class);
 
-	private static final String TAG_NAME_XMP = "xmp";
-	private static final String TAG_NAME_SCRIPT = "script";
 	private static final String HTML_QUOTE = "&quot;";
 
 	private final CharSequence input;
@@ -48,10 +46,18 @@ public class LagartoParser {
 	// ---------------------------------------------------------------- parse
 
 	/**
-	 * Parses provided content.
+	 * Parses provided content using HTML style.
 	 */
 	public void parse(TagVisitor visitor) {
+		parse(visitor, true);
+	}
+
+	/**
+	 * Parses provided content.
+	 */
+	public void parse(TagVisitor visitor, boolean parseHtmlStyle) {
 		this.visitor = visitor;
+		this.lexer.setParseSpecialHtmlTags(parseHtmlStyle);
 
 		long time = 0;
 		if (log.isDebugEnabled()) {
@@ -111,7 +117,7 @@ public class LagartoParser {
 					parseCCEnd();
 					break;
 				default:
-					error("Unexpected token: " + token);
+					error("Unexpected root token: " + token);
 					break;
 			}
 		}
@@ -193,7 +199,7 @@ public class LagartoParser {
 			isDownlevelHidden = false;
 		}
 
-		visitor.condCommentStart(input.subSequence(start, end), isDownlevelHidden);
+		visitor.condComment(input.subSequence(start, end), true, isDownlevelHidden);
 	}
 
 	/**
@@ -214,7 +220,7 @@ public class LagartoParser {
 		}
 		start += 3;
 
-		visitor.condCommentEnd(input.subSequence(start, end), isDownlevelHidden);
+		visitor.condComment(input.subSequence(start, end), false, isDownlevelHidden);
 	}
 
 	/**
@@ -225,6 +231,12 @@ public class LagartoParser {
 		skipWhiteSpace();
 		Token token;
 		token = nextToken();
+
+		// if token is not a special tag ensure
+		// not to scan for special tag name from now on
+		if (lexer.nextTagState == -1) {
+			lexer.nextTagState = -2;
+		}
 
 		if (token == Token.SLASH) {		// it is closing tag
 			type = TagType.CLOSE;
@@ -250,7 +262,7 @@ public class LagartoParser {
 				parseText(start, lexer.position());
 				break;
 			default:
-				error("Invalid tag.");
+				error("Invalid token in tag <" + text() + '>');
 				break;
 		}
 	}
@@ -287,8 +299,14 @@ loop:	while (true) {
 					parseText(start, lexer.position());
 					return;
 				default:
-					error("Invalid tag: " + tagName);
-					break loop;
+					// unexpected token, try to skip it!
+					String tokenText = text().toString();
+					error("Tag <" + tagName + "> invalid token: " + tokenText);
+					nextToken();	// there was a stepBack, so move forward
+					if (tokenText.length() > 1) {
+						lexer.yypushback(tokenText.length() - 1);
+					}
+					break;
 			}
 		}
 
@@ -301,7 +319,7 @@ loop:	while (true) {
 
 		switch (token) {
 			default:
-				error("Expected end of tag for: " + tagName);
+				error("Expected end of tag for <" + tagName + '>');
 				// continue as tag
 //				onTag(type, tagName, start, lexer.position() - start + 1);
 //				break;
@@ -319,17 +337,13 @@ loop:	while (true) {
 						tag.decreaseDeepLevel();
 						break;
 					}
-					if (tagName.equalsIgnoreCase(TAG_NAME_XMP)) {
+
+					// parse special tags
+					final int nextTagState = lexer.getNextTagState();
+					if (nextTagState > 0) {
 						tag.defineTag(type, start, len);
 						tag.increaseDeepLevel();
-						parseXMP();
-						tag.decreaseDeepLevel();
-						break;
-					}
-					if (tagName.equalsIgnoreCase(TAG_NAME_SCRIPT)) {
-						tag.defineTag(type, start, len);
-						tag.increaseDeepLevel();
-						parseScript();
+						parseSpecialTag(nextTagState);
 						tag.decreaseDeepLevel();
 						break;
 					}
@@ -399,26 +413,24 @@ loop:	while (true) {
 		}
 	}
 
-	protected void parseXMP() throws IOException {
-		lexer.stateXmp();
+	/**
+	 * Parses special tags.
+	 */
+	protected void parseSpecialTag(int state) throws IOException {
 		int start = lexer.position() + 1;
-		Token token = nextToken();
-		if (token != Token.TEXT) {
-			error("Invalid XMP tag.");
+		nextToken();
+		int end = start + lexer.length();
+		switch(state) {
+			case Lexer.XMP:
+				visitor.xmp(tag, input.subSequence(start, end - 6));
+				break;
+			case Lexer.SCRIPT:
+				visitor.script(tag, input.subSequence(start, end - 9));
+				break;
+			case Lexer.STYLE:
+				visitor.style(tag, input.subSequence(start, end - 8));
+				break;
 		}
-		int end = start + lexer.length() - 6;
-		visitor.xmp(tag, input.subSequence(start, end));
-	}
-
-	protected void parseScript() throws IOException {
-		lexer.stateScript();
-		int start = lexer.position() + 1;
-		Token token = nextToken();
-		if (token != Token.TEXT) {
-			error("Invalid SCRIPT tag.");
-		}
-		int end = start + lexer.length() - 9;
-		visitor.script(tag, input.subSequence(start, end));
 	}
 
 	// ---------------------------------------------------------------- utilities
@@ -485,7 +497,7 @@ loop:	while (true) {
 	protected void error(String message) {
 		int line = lexer.line();
 		int column = lexer.column();
-		if (line != 1) {
+		if (line != -1) {
 			message += " Error at: " + line + ':' + column;
 		}
 		visitor.error(message);

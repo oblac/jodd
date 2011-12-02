@@ -19,8 +19,8 @@ public class LagartoException extends UncheckedException {
 		super(message);
 	}
 
-	public LagartoException(String message, int line, int column) {
-		this(message + (line != 1 ? " Error at: " + line + ':' + column : ""));
+	public LagartoException(String message, int state, int line, int column) {
+		this(message + " State: " + state + (line != 1 ? " Error at: " + line + ':' + column : ""));
 	}
 
 	public LagartoException(String message, Throwable t) {

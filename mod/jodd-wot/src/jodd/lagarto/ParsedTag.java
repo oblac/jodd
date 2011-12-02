@@ -152,6 +152,8 @@ class ParsedTag implements Tag {
 	public void setType(TagType type) {
 		this.type = type;
 		modified = true;
+		tagStart = type.getStartString();
+		tagEnd = type.getEndString();
 	}
 
 	public void addAttribute(String name, String value) {
@@ -213,6 +215,10 @@ class ParsedTag implements Tag {
 			removeAttribute(index);
 		}
 		modified = true;
+	}
+
+	public void removeAttributes() {
+		attributesCount = 0;
 	}
 
 	public boolean isModified() {

@@ -22,6 +22,9 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void script(Tag tag, CharSequence body) {
 	}
 
+	public void style(Tag tag, CharSequence body) {
+	}
+
 	public void comment(CharSequence comment) {
 	}
 
@@ -37,10 +40,7 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void directive(CharSequence directive) {
 	}
 
-	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
-	}
-
-	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
+	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
 	}
 
 	public void error(String message) {

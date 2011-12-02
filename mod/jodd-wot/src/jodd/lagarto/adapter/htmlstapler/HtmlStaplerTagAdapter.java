@@ -81,16 +81,11 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	// ---------------------------------------------------------------- conditional comments
 
-	@Override
-	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
-		insideConditionalComment = true;
-		super.condCommentStart(conditionalComment, isDownlevelHidden);
-	}
 
 	@Override
-	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
-		insideConditionalComment = false;
-		super.condCommentEnd(conditionalComment, isDownlevelHidden);
+	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+		insideConditionalComment = isStartingTag;
+		super.condComment(conditionalComment, isStartingTag, isDownlevelHidden);
 	}
 
 	// ---------------------------------------------------------------- end

@@ -34,6 +34,7 @@ import java.nio.CharBuffer;
 	public void stateTag()		{ yybegin(TAG); }
 	public void stateXmp() 		{ yybegin(XMP); }
 	public void stateScript()   { yybegin(SCRIPT); }
+	public void stateStyle()    { yybegin(STYLE); }
 
 	// fast methods
 	public final CharSequence xxtext() {
@@ -42,10 +43,20 @@ import java.nio.CharBuffer;
 
 	// empty ctor
 	Lexer() {}
+
+	int nextTagState;
+	public int getNextTagState() {
+		return nextTagState;
+	}
+
+	boolean parseSpecialHtmlTags = true;
+	public void setParseSpecialHtmlTags(boolean parseSpecialHtmlTags) {
+		this.parseSpecialHtmlTags = parseSpecialHtmlTags;
+	}
 %}
 
 // additional lexer states
-%state TAG, XMP, SCRIPT, XML_DECLARATION
+%state TAG, XMP, SCRIPT, STYLE, XML_DECLARATION
 
 %%
 
@@ -59,8 +70,8 @@ import java.nio.CharBuffer;
 	"<![endif]>"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	"<![endif]-->"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	[^<]+               	{ return Token.TEXT; }
-	"<?"					{ stateTag(); return Token.XML_DECLARATION; }
-	"<"                 	{ stateTag(); return Token.LT; }
+	"<?"					{ nextTagState = -2; stateTag(); return Token.XML_DECLARATION; /* don't parse special names*/ }
+	"<"                 	{ nextTagState = parseSpecialHtmlTags ? -1 : -2; stateTag(); return Token.LT; /* parse special names */}
 }
 
 <TAG> {
@@ -69,21 +80,26 @@ import java.nio.CharBuffer;
 	"="                 { return Token.EQUALS; }
 	"\"" ~"\""          { return Token.QUOTE; }
 	"'" ~"'"            { return Token.QUOTE; }
+	"xmp"				{ if (nextTagState == -1) nextTagState = XMP; return Token.WORD; }
+	"script"			{ if (nextTagState == -1) nextTagState = SCRIPT; return Token.WORD; }
+	"style"				{ if (nextTagState == -1) nextTagState = STYLE; return Token.WORD; }
 	[^>\]/=\"\'\n\r \t\b\012][^>\]/=\n\r \t\b\012]* { return Token.WORD; }
-	">"                 { stateReset(); return Token.GT; }
+	">"                 { if (nextTagState < 0) nextTagState = YYINITIAL; yybegin(nextTagState); return Token.GT; }
 	"?>"                { stateReset(); return Token.GT; }
 }
 
 <XMP> {
 	~"</xmp" ~">"		{ stateReset(); return Token.TEXT; }
 }
-
 <SCRIPT> {
 	~"</script" ~">"	{ stateReset(); return Token.TEXT; }
 }
+<STYLE> {
+	~"</style" ~">"		{ stateReset(); return Token.TEXT; }
+}
 
 // fallback rule, when nothing else matches
-.|\n                    { throw new LagartoException("Illegal character <"+ yytext() +">.", line(), column());}
+.|\n                    { throw new LagartoException("Illegal character <"+ yytext() +">", yystate(), line(), column());}
 
 // end-of-file
 <<EOF>>                 { return Token.EOF; }

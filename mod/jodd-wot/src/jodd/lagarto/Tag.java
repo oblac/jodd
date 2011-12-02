@@ -121,7 +121,12 @@ public interface Tag {
 	/**
 	 * Removes attribute.
 	 */
-	void removeAttribute (String name, boolean caseSensitive);
+	void removeAttribute(String name, boolean caseSensitive);
+
+	/**
+	 * Removes all attributes.
+	 */
+	void removeAttributes();
 
 	/**
 	 * Returns <code>true</code> if tag is modified.

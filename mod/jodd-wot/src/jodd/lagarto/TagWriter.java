@@ -9,17 +9,17 @@ import java.io.IOException;
  */
 public class TagWriter implements TagVisitor {
 
-	private final boolean build;
-	private Appendable appendable;
+	protected final boolean forceBuild;
+	protected Appendable appendable;
 
 	public TagWriter(Appendable appendable) {
 		this.appendable = appendable;
-		this.build = false;
+		this.forceBuild = false;
 	}
 
-	public TagWriter(Appendable appendable, boolean build) {
+	public TagWriter(Appendable appendable, boolean forceBuild) {
 		this.appendable = appendable;
-		this.build = build;
+		this.forceBuild = forceBuild;
 	}
 
 	public void setOutput(Appendable out) {
@@ -40,7 +40,7 @@ public class TagWriter implements TagVisitor {
 
 	public void tag(Tag tag) {
 		try {
-			tag.writeTo(appendable, build);
+			tag.writeTo(appendable, forceBuild);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -48,7 +48,7 @@ public class TagWriter implements TagVisitor {
 
 	public void xmp(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(appendable, build);
+			tag.writeTo(appendable, forceBuild);
 			if (body != null) {
 				appendable.append(body);
 			}
@@ -58,9 +58,21 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
+	public void style(Tag tag, CharSequence body) {
+		try {
+			tag.writeTo(appendable, forceBuild);
+			if (body != null) {
+				appendable.append(body);
+			}
+			appendable.append("</style>");
+		} catch (IOException ioex) {
+			throw new LagartoException(ioex);
+		}
+	}
+
 	public void script(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(appendable, build);
+			tag.writeTo(appendable, forceBuild);
 			if (body != null) {
 				appendable.append(body);
 			}
@@ -72,9 +84,7 @@ public class TagWriter implements TagVisitor {
 
 	public void comment(CharSequence comment) {
 		try {
-			appendable.append("<!--");
-			appendable.append(comment);
-			appendable.append("-->");
+			TagWriterUtil.writeComment(appendable, comment);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -90,9 +100,7 @@ public class TagWriter implements TagVisitor {
 
 	public void cdata(CharSequence cdata) {
 		try {
-			appendable.append("<![CDATA[");
-			appendable.append(cdata);
-			appendable.append("]]>");
+			TagWriterUtil.writeCData(appendable, cdata);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -100,7 +108,7 @@ public class TagWriter implements TagVisitor {
 
 	public void xml(Tag tag) {
 		try {
-			tag.writeTo(appendable, build);
+			tag.writeTo(appendable, forceBuild);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -108,37 +116,15 @@ public class TagWriter implements TagVisitor {
 
 	public void directive(CharSequence directive) {
 		try {
-			appendable.append("<!");
-			appendable.append(directive);
-			appendable.append(">");
+			TagWriterUtil.writeDirective(appendable, directive);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
 	}
 
-	public void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden) {
+	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
 		try {
-			if (isDownlevelHidden) {
-				appendable.append("<!--[");
-			} else {
-				appendable.append("<![");
-			}
-			appendable.append(conditionalComment);
-			appendable.append("]>");
-		} catch (IOException ioex) {
-			throw new LagartoException(ioex);
-		}
-	}
-
-	public void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden) {
-		try {
-			appendable.append("<![");
-			appendable.append(conditionalComment);
-			if (isDownlevelHidden) {
-				appendable.append("]-->");
-			} else {
-				appendable.append("]>");
-			}
+			TagWriterUtil.writeConditionalComment(appendable, conditionalComment, isStartingTag, isDownlevelHidden);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}

@@ -39,6 +39,11 @@ public interface TagVisitor {
 	void script(Tag tag, CharSequence body);
 
 	/**
+	 * Invoked on <b>style</b> tag.
+	 */
+	void style(Tag tag, CharSequence body);
+
+	/**
 	 * Invoked on comment.
 	 */
 	void comment(CharSequence comment);
@@ -66,14 +71,9 @@ public interface TagVisitor {
 	void directive(CharSequence directive);
 
 	/**
-	 * Invoked on start of conditional comment.
+	 * Invoked on conditional comment.
 	 */
-	void condCommentStart(CharSequence conditionalComment, boolean isDownlevelHidden);
-
-	/**
-	 * Invoked on end of conditional comment.
-	 */
-	void condCommentEnd(CharSequence conditionalComment, boolean isDownlevelHidden);
+	void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden);
 
 	// ---------------------------------------------------------------- errors
 
