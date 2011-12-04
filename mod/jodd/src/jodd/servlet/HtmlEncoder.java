@@ -37,13 +37,6 @@ public class HtmlEncoder {
 
 	// ---------------------------------------------------------------- encode
 
-	public static String text(Object object) {
-		if (object == null) {
-			return StringPool.EMPTY;
-		}
-		return text(object.toString());
-	}
-
 	/**
 	 * Encodes a string to HTML-safe text. The following characters are replaced:
 	 * <ul>
@@ -74,14 +67,6 @@ public class HtmlEncoder {
 
 	// ---------------------------------------------------------------- encode text
 
-	public static String block(Object object) {
-		if (object == null) {
-			return StringPool.EMPTY;
-		}
-		return block(object.toString());
-	}
-
-
 	/**
 	 * Encodes text into HTML-safe block preserving paragraphs. Besides the {@link #text(String) default
 	 * special characters} the following are replaced, too:
@@ -89,7 +74,6 @@ public class HtmlEncoder {
 	 * <li>\n with &lt;br&gt;</li>
 	 * <li>\r with &lt;br&gt;</li>
 	 * </ul>
-	 *
 	 * <p>
 	 *  Method accepts any of CR, LF, or CR+LF as a line terminator.
 	 */
@@ -117,16 +101,8 @@ public class HtmlEncoder {
 
 	// ---------------------------------------------------------------- encode text strict
 
-	public static String strict(Object object) {
-		if (object == null) {
-			return StringPool.EMPTY;
-		}
-		return strict(object.toString());
-	}
-
-
 	/**
-	 * Encodes text int HTML-safe block and preserves format using smart spaces.
+	 * Encodes text int HTML-safe <b>block</b> and preserves format using smart spaces.
 	 * Additionally to {@link #block(String)}, the following characters are replaced:
 	 *
 	 * <ul>

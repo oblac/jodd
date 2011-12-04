@@ -7,6 +7,7 @@ import jodd.servlet.HtmlEncoder;
 import jodd.servlet.JspValueResolver;
 import jodd.servlet.PageContextThreadLocal;
 import jodd.servlet.ServletUtil;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 import static jodd.util.StringPool.EMPTY;
@@ -20,8 +21,15 @@ import javax.servlet.jsp.JspTagException;
  */
 public class JoddJspFunctions {
 
+	public static String text(Object object) {
+		if (object == null) {
+			return StringPool.EMPTY;
+		}
+		return HtmlEncoder.text(object.toString());
+	}
+
 	public static String valueEnc(String name, PageContext pageContext) {
-		return HtmlEncoder.text(JspValueResolver.resolveValue(name, pageContext));
+		return text(JspValueResolver.resolveValue(name, pageContext));
 	}
 
 	public static String valueEnc(String name) {
@@ -29,7 +37,7 @@ public class JoddJspFunctions {
 	}
 
 	public static String attributeEnc(String name, PageContext pageContext) {
-		return HtmlEncoder.text(JspValueResolver.resolveAttribute(name, pageContext));
+		return text(JspValueResolver.resolveAttribute(name, pageContext));
 	}
 
 	public static String attributeEnc(String name) {
@@ -37,7 +45,7 @@ public class JoddJspFunctions {
 	}
 
 	public static String propertyEnc(String name, PageContext pageContext) {
-		return HtmlEncoder.text(JspValueResolver.resolveProperty(name, pageContext));
+		return text(JspValueResolver.resolveProperty(name, pageContext));
 	}
 
 	public static String propertyEnc(String name) {

@@ -354,7 +354,7 @@
 	</function>
 	<function>
 		<name>formText</name>
-		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String text(java.lang.Object)</function-signature>
 	</function>
 	<function>
