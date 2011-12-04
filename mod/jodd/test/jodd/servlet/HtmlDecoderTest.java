@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 public class HtmlDecoderTest extends TestCase {
 
-	public void testHexOctal() {
+	public void testHexDecimal() {
 		String s;
 		s = HtmlDecoder.decode("&#xFF;");
 		assertEquals(1, s.length());
@@ -33,7 +33,7 @@ public class HtmlDecoderTest extends TestCase {
 		assertEquals("aaa AA aaa", s);
 	}
 
-	public void testTokens() {
+	public void testEntities() {
 		String s;
 
 		s = HtmlDecoder.decode("&amp;");
@@ -47,5 +47,9 @@ public class HtmlDecoderTest extends TestCase {
 
 		s = HtmlDecoder.decode("2 &lt; 5");
 		assertEquals("2 < 5", s);
+
+		s = HtmlDecoder.decode("&aacute;");
+		assertEquals(1, s.length());
+		assertEquals(0xe1, s.charAt(0));
 	}
 }
