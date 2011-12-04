@@ -8,6 +8,19 @@ package jodd.util;
 public class MathUtil {
 
 	/**
+	 * Converts char digit into integer value.
+	 */
+	public static int parseDigit(char digit) {
+		if ((digit >= '0') && (digit <= '9')) {
+			return digit - '0';
+		}
+		if (CharUtil.isLowercaseLetter(digit)) {
+			return 10 + digit - 'a';
+		}
+		return 10 + digit - 'A';
+	}
+
+	/**
 	 * Generates pseudo-random long from specific range. Generated number is
 	 * great or equals to min parameter value and less then max parameter value.
 	 * Uses {@link Math#random()}.

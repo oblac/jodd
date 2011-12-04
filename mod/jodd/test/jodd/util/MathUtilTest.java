@@ -23,4 +23,15 @@ public class MathUtilTest extends TestCase {
 		assertEquals(3628800, MathUtil.factorial(10));
 		assertEquals(1307674368000L, MathUtil.factorial(15));
 	}
+
+	public void testParseDigit() {
+		assertEquals(0, MathUtil.parseDigit('0'));
+		assertEquals(1, MathUtil.parseDigit('1'));
+		assertEquals(8, MathUtil.parseDigit('8'));
+		assertEquals(9, MathUtil.parseDigit('9'));
+		assertEquals(10, MathUtil.parseDigit('A'));
+		assertEquals(10, MathUtil.parseDigit('a'));
+		assertEquals(15, MathUtil.parseDigit('F'));
+		assertEquals(15, MathUtil.parseDigit('f'));
+	}
 }
