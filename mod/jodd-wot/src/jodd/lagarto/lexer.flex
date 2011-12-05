@@ -73,14 +73,14 @@ import java.nio.CharBuffer;
 <YYINITIAL> {
 	"<!--" [^\[] ~"-->"		{ return Token.COMMENT; }
 	"<!---->"           	{ return Token.COMMENT; }
-	"<!DOCTYPE"				{ stateDoctype(); return Token.DIRECTIVE; }
+	"<!DOCTYPE"				{ stateDoctype(); return Token.DOCTYPE; }
 	"<![CDATA[" ~"]]>"  	{ return Token.CDATA; }
 	"<!--[if" ~"]>"     	{ return Token.CONDITIONAL_COMMENT_START; }
 	"<![if" ~"]>"       	{ return Token.CONDITIONAL_COMMENT_START; }
 	"<![endif]>"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	"<![endif]-->"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	[^<]+               	{ return Token.TEXT; }
-	"<?"					{ nextTagState = YYINITIAL; stateTag(); return Token.XML_DECLARATION; }
+	"<?"					{ nextTagState = YYINITIAL; stateTag(); return Token.XML_LT; }
 	"<"                 	{ nextTagState = YYINITIAL; stateTag(); return Token.LT; }
 }
 
@@ -100,7 +100,7 @@ import java.nio.CharBuffer;
 	"\"" ~"\""          { return Token.QUOTE; }
 	"'" ~"'"            { return Token.QUOTE; }
 	[^>\]/=\"\'\n\r \t\b\f][^>\]/=\n\r \t\b\f]* { return Token.WORD; }
-	"?>"                { stateReset(); return Token.GT; }
+	"?>"                { stateReset(); return Token.XML_GT; }
 	">"                 { yybegin(nextTagState); return Token.GT; }
 }
 

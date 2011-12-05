@@ -97,7 +97,7 @@ public class LagartoParser {
 				case CDATA:
 					parseCDATA();
 					break;
-				case DIRECTIVE:
+				case DOCTYPE:
 					parseDoctype();
 					break;
 				case TEXT:
@@ -107,7 +107,7 @@ public class LagartoParser {
 				case LT:
 					parseTag(token, TagType.OPEN);
 					break;
-				case XML_DECLARATION:
+				case XML_LT:
 					parseTag(token, TagType.OPEN);
 					break;
 				case CONDITIONAL_COMMENT_START:
@@ -194,10 +194,10 @@ public class LagartoParser {
 
 			switch (i) {
 				case 0:
-					name = lexer.yytext();
+					name = text().toString();
 					break;
 				case 1:
-					if (lexer.yytext().equals("PUBLIC")) {
+					if (text().toString().equals("PUBLIC")) {
 						isPublic = true;
 					}
 					break;
@@ -282,7 +282,7 @@ public class LagartoParser {
 		switch (token) {
 			case WORD:					// tag name
 				String tagName = text().toString();
-				if (doParseTag(tagName)) {
+				if (acceptTag(tagName)) {
 					parseTagAndAttributes(tagToken, tagName, type, start);
 				} else {
 					// step back and parse tag as text
@@ -304,10 +304,13 @@ public class LagartoParser {
 	}
 
 	/**
-	 * Returns <code>true</code> if tag has to be parsed.
+	 * Returns <code>true</code> if some tag has to be parsed.
+	 * User may override this method to gain more control over what should be parsed.
+	 * May be used in situations where only few specific tags has to be parsed
+	 * (e.g. just title and body).
 	 */
 	@SuppressWarnings({"UnusedParameters"})
-	protected boolean doParseTag(String tagName) {
+	protected boolean acceptTag(String tagName) {
 		return true;
 	}
 
@@ -326,7 +329,12 @@ loop:	while (true) {
 
 			switch (token) {
 				case SLASH:
+					type = TagType.EMPTY;	// an empty tag, no body
+					nextToken();
+					break loop;
 				case GT:
+					break loop;
+				case XML_GT:
 					break loop;
 				case WORD:
 					parseAttribute();
@@ -337,6 +345,9 @@ loop:	while (true) {
 				default:
 					// unexpected token, try to skip it!
 					String tokenText = text().toString();
+					if (tokenText == null) {
+						tokenText = lexer.yytext();
+					}
 					error("Tag <" + tagName + "> invalid token: " + tokenText);
 					nextToken();	// there was a stepBack, so move forward
 					if (tokenText.length() > 1) {
@@ -348,9 +359,13 @@ loop:	while (true) {
 
 		token = nextToken();
 
-		if (token == Token.SLASH) {			// an empty tag, no body
-			type = TagType.EMPTY;
-			token = nextToken();
+		// since the same method is used for XML directive and for TAG, check
+		if (tagToken == Token.LT && token == Token.XML_GT) {
+			token = Token.GT;
+			error("Unmatched tag <" + tagName + "?>");
+		} else if (tagToken == Token.XML_LT && token == Token.GT) {
+			token = Token.XML_GT;
+			error("Unmatched tag <?" + tagName + '>');
 		}
 
 		switch (token) {
@@ -365,15 +380,6 @@ loop:	while (true) {
 				int len = lexer.position() - start + 1;
 
 				if (type.isOpeningTag()) {
-					if (tagToken == Token.XML_DECLARATION) {
-						tag.defineTag(type, start, len + 1);
-						tag.setTagMarks("<?", "?>");
-						tag.increaseDeepLevel();
-						visitor.xml(tag);
-						tag.decreaseDeepLevel();
-						break;
-					}
-
 					// parse special tags
 					final int nextTagState = lexer.getNextTagState();
 					if (nextTagState > 0) {
@@ -394,6 +400,15 @@ loop:	while (true) {
 				if (type.isClosingTag()) {
 					tag.decreaseDeepLevel();
 				}
+				break;
+			case XML_GT:
+				flushText();
+				int len2 = lexer.position() - start + 2;
+				tag.defineTag(type, start, len2);
+				tag.setTagMarks("<?", "?>");
+				tag.increaseDeepLevel();
+				visitor.xml(tag);
+				tag.decreaseDeepLevel();
 				break;
 			case EOF:
 				parseText(start, lexer.position());
@@ -441,9 +456,12 @@ loop:	while (true) {
 			} else if (token != Token.EOF) {
 				error("Invalid attribute: " + attributeName);
 			}
-		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD || token == Token.QUOTE) {
+		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD) {
 			tag.addAttribute(attributeName, null);
 			stepBack(token);
+		} else if (token == Token.QUOTE) {
+			error("Orphan attribute: " + text());
+			tag.addAttribute(attributeName, null);
 		} else if (token != Token.EOF) {
 			error("Invalid attribute: " + attributeName);
 		}
