@@ -32,6 +32,7 @@ import java.nio.CharBuffer;
 	// state methods
 	public void stateReset() 	{ yybegin(YYINITIAL); }
 	public void stateTag()		{ yybegin(TAG); }
+	public void stateAttr()		{ yybegin(ATTR); }
 	public void stateXmp() 		{ yybegin(XMP); }
 	public void stateScript()   { yybegin(SCRIPT); }
 	public void stateStyle()    { yybegin(STYLE); }
@@ -56,7 +57,7 @@ import java.nio.CharBuffer;
 %}
 
 // additional lexer states
-%state TAG, XMP, SCRIPT, STYLE, XML_DECLARATION
+%state TAG, ATTR, XMP, SCRIPT, STYLE, XML_DECLARATION
 
 %%
 
@@ -75,15 +76,21 @@ import java.nio.CharBuffer;
 }
 
 <TAG> {
+	[\n\r \t\b\f]+		{ return Token.WHITESPACE; }
+	"xmp"				{ if (nextTagState == -1) nextTagState = XMP; return Token.WORD; }
+	"script"			{ if (nextTagState == -1) nextTagState = SCRIPT; return Token.WORD; }
+	"style"				{ if (nextTagState == -1) nextTagState = STYLE; return Token.WORD; }
+	[^>\]/=\"\'\n\r \t\b\f\?]* { return Token.WORD; }
+	.					{ yypushback(1); stateAttr(); return Token.WHITESPACE;}
+}
+
+<ATTR> {
 	"/"                 { return Token.SLASH; }
 	[\n\r \t\b\012]+    { return Token.WHITESPACE; }
 	"="                 { return Token.EQUALS; }
 	"\"" ~"\""          { return Token.QUOTE; }
 	"'" ~"'"            { return Token.QUOTE; }
-	"xmp"				{ if (nextTagState == -1) nextTagState = XMP; return Token.WORD; }
-	"script"			{ if (nextTagState == -1) nextTagState = SCRIPT; return Token.WORD; }
-	"style"				{ if (nextTagState == -1) nextTagState = STYLE; return Token.WORD; }
-	[^>\]/=\"\'\n\r \t\b\012][^>\]/=\n\r \t\b\012]* { return Token.WORD; }
+	[^>\]/=\"\'\n\r \t\b\f][^>\]/=\n\r \t\b\f]* { return Token.WORD; }
 	">"                 { if (nextTagState < 0) nextTagState = YYINITIAL; yybegin(nextTagState); return Token.GT; }
 	"?>"                { stateReset(); return Token.GT; }
 }
@@ -99,7 +106,7 @@ import java.nio.CharBuffer;
 }
 
 // fallback rule, when nothing else matches
-.|\n                    { throw new LagartoException("Illegal character <"+ yytext() +">", yystate(), line(), column());}
+.|\n                    { throw new LagartoException("Illegal character ["+ yytext() + ']', yystate(), line(), column());}
 
 // end-of-file
 <<EOF>>                 { return Token.EOF; }
