@@ -57,7 +57,7 @@ public class LagartoParser {
 	 */
 	public void parse(TagVisitor visitor, boolean parseHtmlStyle) {
 		this.visitor = visitor;
-		this.lexer.setParseSpecialHtmlTags(parseHtmlStyle);
+		this.lexer.setParseHtml(parseHtmlStyle);
 
 		long time = 0;
 		if (log.isDebugEnabled()) {
@@ -403,7 +403,7 @@ loop:	while (true) {
 			} else if (token == Token.SLASH || token == Token.GT) {
 				stepBack(token);
 			} else if (token != Token.EOF) {
-				error("Invalid attribute value for: " + attributeName);
+				error("Invalid attribute: " + attributeName);
 			}
 		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD) {
 			tag.addAttribute(attributeName, null);

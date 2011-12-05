@@ -50,9 +50,9 @@ import java.nio.CharBuffer;
 		return nextTagState;
 	}
 
-	boolean parseSpecialHtmlTags = true;
-	public void setParseSpecialHtmlTags(boolean parseSpecialHtmlTags) {
-		this.parseSpecialHtmlTags = parseSpecialHtmlTags;
+	boolean parseHtml = true;
+	public void setParseHtml(boolean parseHtml) {
+		this.parseHtml = parseHtml;
 	}
 %}
 
@@ -71,16 +71,16 @@ import java.nio.CharBuffer;
 	"<![endif]>"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	"<![endif]-->"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	[^<]+               	{ return Token.TEXT; }
-	"<?"					{ nextTagState = -2; stateTag(); return Token.XML_DECLARATION; /* don't parse special names*/ }
-	"<"                 	{ nextTagState = parseSpecialHtmlTags ? -1 : -2; stateTag(); return Token.LT; /* parse special names */}
+	"<?"					{ nextTagState = YYINITIAL; stateTag(); return Token.XML_DECLARATION; }
+	"<"                 	{ nextTagState = YYINITIAL; stateTag(); return Token.LT; }
 }
 
 <TAG> {
 	[\n\r \t\b\f]+		{ return Token.WHITESPACE; }
-	"xmp"				{ if (nextTagState == -1) nextTagState = XMP; return Token.WORD; }
-	"script"			{ if (nextTagState == -1) nextTagState = SCRIPT; return Token.WORD; }
-	"style"				{ if (nextTagState == -1) nextTagState = STYLE; return Token.WORD; }
-	[^>\]/=\"\'\n\r \t\b\f\?]* { return Token.WORD; }
+	"xmp"				{ if (parseHtml) nextTagState = XMP; stateAttr(); return Token.WORD; }
+	"script"			{ if (parseHtml) nextTagState = SCRIPT; stateAttr(); return Token.WORD; }
+	"style"				{ if (parseHtml) nextTagState = STYLE; stateAttr(); return Token.WORD; }
+	[^>\]/=\"\'\n\r \t\b\f\?]* { stateAttr(); return Token.WORD; }
 	.					{ yypushback(1); stateAttr(); return Token.WHITESPACE;}
 }
 
@@ -91,8 +91,8 @@ import java.nio.CharBuffer;
 	"\"" ~"\""          { return Token.QUOTE; }
 	"'" ~"'"            { return Token.QUOTE; }
 	[^>\]/=\"\'\n\r \t\b\f][^>\]/=\n\r \t\b\f]* { return Token.WORD; }
-	">"                 { if (nextTagState < 0) nextTagState = YYINITIAL; yybegin(nextTagState); return Token.GT; }
 	"?>"                { stateReset(); return Token.GT; }
+	">"                 { yybegin(nextTagState); return Token.GT; }
 }
 
 <XMP> {
