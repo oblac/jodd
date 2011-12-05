@@ -150,6 +150,12 @@ public class HtmlEncoderTest extends TestCase {
 		assertEquals("/aaa?p=1", URLCoder.build().path("/aaa").param("p=1").toString());
 		assertEquals("/aaa?p=1&b=2", URLCoder.build().path("/aaa").param("p=1").param("b", "2").toString());
 	}
+
+	public void testNbsp() {
+		assertEquals(" ", HtmlEncoder.text(" "));
+		assertEquals("\u00a0", HtmlEncoder.text("\u00a0"));
+		assertEquals("\u00a0", HtmlDecoder.decode("&nbsp;"));
+	}
 	
 
 }

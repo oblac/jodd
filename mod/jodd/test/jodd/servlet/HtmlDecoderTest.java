@@ -52,4 +52,16 @@ public class HtmlDecoderTest extends TestCase {
 		assertEquals(1, s.length());
 		assertEquals(0xe1, s.charAt(0));
 	}
+
+	public void testSameNames() {
+		String s;
+
+		s = HtmlDecoder.decode("&aacute;");
+		assertEquals(1, s.length());
+		assertEquals(0xE1, s.charAt(0));
+
+		s = HtmlDecoder.decode("&Aacute;");
+		assertEquals(1, s.length());
+		assertEquals(0xC1, s.charAt(0));
+	}
 }

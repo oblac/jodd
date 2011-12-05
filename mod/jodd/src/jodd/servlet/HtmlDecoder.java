@@ -91,7 +91,7 @@ mainloop:
 				lastIndex++;
 			} else {
 				// token
-				String encodeToken = html.substring(ndx + 1, lastIndex).toLowerCase();
+				String encodeToken = html.substring(ndx + 1, lastIndex);
 				Character replacement = ENTITY_MAP.get(encodeToken);
 				if (replacement == null) {
 					result.append(encodeToken);

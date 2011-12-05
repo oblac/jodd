@@ -35,12 +35,12 @@ public class HtmlEncoder {
 		BLOCK['\r']	= "<br/>".toCharArray();     // ascii 13, carriage return
 	}
 
-	// ---------------------------------------------------------------- encode
+	// ---------------------------------------------------------------- encode text
 
 	/**
 	 * Encodes a string to HTML-safe text. The following characters are replaced:
 	 * <ul>
-	 * <li>' with &amp;#039; (&amp;apos; doesn't work)</li>
+	 * <li>' with &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
 	 * <li>" with &amp;quot;</li>
 	 * <li>&amp; with &amp;amp;</li>
 	 * <li>&lt; with &amp;lt;</li>
@@ -65,7 +65,7 @@ public class HtmlEncoder {
 		return buffer.toString();
 	}
 
-	// ---------------------------------------------------------------- encode text
+	// ---------------------------------------------------------------- encode text block
 
 	/**
 	 * Encodes text into HTML-safe block preserving paragraphs. Besides the {@link #text(String) default
