@@ -61,17 +61,18 @@ public interface TagVisitor {
 	void cdata(CharSequence cdata);
 
 	/**
-	 * Invoked on <b>xml</b> tag.
+	 * Invoked on <b>xml</b> declaration.
 	 */
 	void xml(Tag tag);
 
 	/**
-	 * Invoked on HTML directive.
+	 * Invoked on DOCTYPE directive. If publicId is <code>null</code>, it is a SYSTEM
+	 * directive, otherwise it is PUBLIC.
 	 */
-	void directive(CharSequence directive);
+	void doctype(String name, String publicId, String baseUri);
 
 	/**
-	 * Invoked on conditional comment.
+	 * Invoked on IE conditional comments.
 	 */
 	void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden);
 

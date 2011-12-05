@@ -1,4 +1,4 @@
-dir:[DOCTYPE html]
+doc:[html null null]
 tag:html:1<
 tag:head:2<
 tag:title:3<

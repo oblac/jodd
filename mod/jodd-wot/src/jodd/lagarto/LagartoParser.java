@@ -98,7 +98,7 @@ public class LagartoParser {
 					parseCDATA();
 					break;
 				case DIRECTIVE:
-					parseDirective();
+					parseDoctype();
 					break;
 				case TEXT:
 					int start = lexer.position();
@@ -173,13 +173,49 @@ public class LagartoParser {
 	}
 
 	/**
-	 * Parses HTML directive.
+	 * Parses HTML DOCTYPE directive.
 	 */
-	protected void parseDirective() throws IOException {
+	protected void parseDoctype() throws IOException {
 		flushText();
-		int start = lexer.position() + 2;
-		int end = start + lexer.length() - 3;
-		visitor.directive(input.subSequence(start, end));
+		skipWhiteSpace();
+
+		String name = null;
+		boolean isPublic = false;
+		String publicId = null;
+		String uri = null;
+
+		int i = 0;
+		while (true) {
+			skipWhiteSpace();
+			Token token = nextToken();
+			if (token == Token.GT) {
+				break;
+			}
+
+			switch (i) {
+				case 0:
+					name = lexer.yytext();
+					break;
+				case 1:
+					if (lexer.yytext().equals("PUBLIC")) {
+						isPublic = true;
+					}
+					break;
+				case 2:
+					if (isPublic) {
+						publicId = lexer.yytext(1, 1);
+					} else {
+						uri = lexer.yytext(1, 1);
+						break;
+					}
+					break;
+				case 3:
+					uri = lexer.yytext(1, 1);
+					break;
+				}
+			i++;
+		}
+		visitor.doctype(name, publicId, uri);
 	}
 
 	/**
@@ -405,7 +441,7 @@ loop:	while (true) {
 			} else if (token != Token.EOF) {
 				error("Invalid attribute: " + attributeName);
 			}
-		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD) {
+		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD || token == Token.QUOTE) {
 			tag.addAttribute(attributeName, null);
 			stepBack(token);
 		} else if (token != Token.EOF) {

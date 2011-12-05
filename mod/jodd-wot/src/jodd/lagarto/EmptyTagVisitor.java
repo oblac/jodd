@@ -37,7 +37,7 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void xml(Tag tag) {
 	}
 
-	public void directive(CharSequence directive) {
+	public void doctype(String name, String publicId, String baseUri) {
 	}
 
 	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {

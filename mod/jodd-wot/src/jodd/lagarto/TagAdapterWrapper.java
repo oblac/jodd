@@ -65,9 +65,9 @@ public class TagAdapterWrapper implements TagVisitor {
 		target.xml(tag);
 	}
 
-	public void directive(CharSequence directive) {
-		visitor.directive(directive);
-		target.directive(directive);
+	public void doctype(String name, String publicId, String baseUri) {
+		visitor.doctype(name, publicId, baseUri);
+		target.doctype(name, publicId, baseUri);
 	}
 
 	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {

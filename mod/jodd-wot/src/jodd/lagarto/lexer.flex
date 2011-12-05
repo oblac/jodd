@@ -36,10 +36,19 @@ import java.nio.CharBuffer;
 	public void stateXmp() 		{ yybegin(XMP); }
 	public void stateScript()   { yybegin(SCRIPT); }
 	public void stateStyle()    { yybegin(STYLE); }
+	public void stateDoctype()  { yybegin(DOCTYPE); }
 
 	// fast methods
 	public final CharSequence xxtext() {
 		return CharBuffer.wrap(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead);
+	}
+	public final String yytext(int startIndex) {
+		startIndex += zzStartRead;
+		return new String(zzBuffer, startIndex, zzMarkedPos - startIndex);
+	}
+	public final String yytext(int startIndex, int endIndexOffset) {
+		startIndex += zzStartRead;
+		return new String(zzBuffer, startIndex, zzMarkedPos - endIndexOffset - startIndex);
 	}
 
 	// empty ctor
@@ -57,14 +66,14 @@ import java.nio.CharBuffer;
 %}
 
 // additional lexer states
-%state TAG, ATTR, XMP, SCRIPT, STYLE, XML_DECLARATION
+%state TAG, ATTR, XMP, SCRIPT, STYLE, XML_DECLARATION, DOCTYPE
 
 %%
 
 <YYINITIAL> {
 	"<!--" [^\[] ~"-->"		{ return Token.COMMENT; }
 	"<!---->"           	{ return Token.COMMENT; }
-	"<!" [^\[\-] ~">"     	{ return Token.DIRECTIVE; }
+	"<!DOCTYPE"				{ stateDoctype(); return Token.DIRECTIVE; }
 	"<![CDATA[" ~"]]>"  	{ return Token.CDATA; }
 	"<!--[if" ~"]>"     	{ return Token.CONDITIONAL_COMMENT_START; }
 	"<![if" ~"]>"       	{ return Token.CONDITIONAL_COMMENT_START; }
@@ -86,7 +95,7 @@ import java.nio.CharBuffer;
 
 <ATTR> {
 	"/"                 { return Token.SLASH; }
-	[\n\r \t\b\012]+    { return Token.WHITESPACE; }
+	[\n\r \t\b\f]+      { return Token.WHITESPACE; }
 	"="                 { return Token.EQUALS; }
 	"\"" ~"\""          { return Token.QUOTE; }
 	"'" ~"'"            { return Token.QUOTE; }
@@ -103,6 +112,12 @@ import java.nio.CharBuffer;
 }
 <STYLE> {
 	~"</style" ~">"		{ stateReset(); return Token.TEXT; }
+}
+<DOCTYPE> {
+	[\n\r \t\b\f]+ 			{ return Token.WHITESPACE; }
+	"\"" ~"\""          	{ return Token.WORD; }
+	[^>\]/=\"\'\n\r \t\b\f][^>\]/=\n\r \t\b\f]*		{ return Token.WORD; }
+	">"                		{ stateReset(); return Token.GT; }
 }
 
 // fallback rule, when nothing else matches

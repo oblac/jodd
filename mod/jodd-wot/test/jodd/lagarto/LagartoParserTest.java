@@ -222,10 +222,9 @@ public class LagartoParserTest extends TestCase {
 				result.append("cdt:[").append(cdata).append(']').append(NEWLINE);
 			}
 
-			public void directive(CharSequence directiveM) {
-				String directive = directiveM.toString();
-				directive = StringUtil.removeChars(directive, "\r\n\t\b");
-				result.append("dir:[").append(directive).append(']').append(NEWLINE);
+			public void doctype(String name, String publicId, String baseUri) {
+				result.append("doc:[").append(name).append(' ');
+				result.append(publicId).append(' ').append(baseUri).append(']').append(NEWLINE);
 			}
 
 			public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {

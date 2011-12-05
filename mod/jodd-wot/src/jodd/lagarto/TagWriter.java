@@ -116,9 +116,9 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void directive(CharSequence directive) {
+	public void doctype(String name, String publicId, String baseUri) {
 		try {
-			TagWriterUtil.writeDirective(appendable, directive);
+			TagWriterUtil.writeDoctype(appendable, name, publicId, baseUri);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
