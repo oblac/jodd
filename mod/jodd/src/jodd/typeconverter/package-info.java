@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+
 /**
  * Slick and various type conversions. Following rules are applied:
  * + There are no default values. If conversion fails, <code>TypeConversionException</code> will be thrown.<br/>

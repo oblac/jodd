@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+
 /**
  * SwingSpy examines Swing layouts.<br>
  * Installation is simple, just add the following lines in your startup code:

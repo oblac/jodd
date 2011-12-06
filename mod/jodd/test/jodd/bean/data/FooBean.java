@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2011, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
 /* created by makebean v0.25 (coded by Weird) */
 

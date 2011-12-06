@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+
 /**
  * <p>
  * This package assembles proxy classes. You will probably like to keep out from this code:)
