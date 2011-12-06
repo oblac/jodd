@@ -17,12 +17,14 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	private long startTime;
 
-	protected final LagartoDOMBuilder builder;
+	protected final boolean caseSensitive;
+	protected final boolean parsingHtml;
 	protected Document rootNode;
 	protected Node parentNode;
 
 	public DOMBuilderTagVisitor(LagartoDOMBuilder builder) {
-		this.builder = builder;
+		this.parsingHtml = builder.isParsingHtml();
+		this.caseSensitive = !parsingHtml;
 	}
 
 	/**
@@ -57,7 +59,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 		switch (tagType) {
 			case OPEN:
-				node = new Element(tag);
+				node = new Element(tag, caseSensitive);
 				node.forceCloseTag = true;
 				parentNode.appendChild(node);
 				parentNode = node;
@@ -85,7 +87,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 				break;
 			case EMPTY:
-				node = new Element(tag);
+				node = new Element(tag, caseSensitive);
 				parentNode.appendChild(node);
 				break;
 		}
@@ -134,7 +136,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xmp(Tag tag, CharSequence body) {
-		Node node = new Element(tag);
+		Node node = new Element(tag, caseSensitive);
 		parentNode.appendChild(node);
 
 		if (body.length() != 0) {
@@ -144,7 +146,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void style(Tag tag, CharSequence body) {
-		Element node = new Element(tag);
+		Element node = new Element(tag, caseSensitive);
 		node.forceCloseTag = true;
 		parentNode.appendChild(node);
 
@@ -155,7 +157,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void script(Tag tag, CharSequence body) {
-		Element node = new Element(tag);
+		Element node = new Element(tag, caseSensitive);
 		node.forceCloseTag = true;
 		parentNode.appendChild(node);
 
@@ -172,7 +174,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	public void text(CharSequence text) {
 		String textValue = text.toString();
-		if (builder.isParsingHtml() == false) {
+		if (parsingHtml == false) {
 			if (StringUtil.isBlank(textValue)) {
 				return;
 			}
@@ -187,7 +189,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xml(Tag tag) {
-		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag);
+		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, caseSensitive);
 		parentNode.appendChild(xmlDeclaration);
 	}
 

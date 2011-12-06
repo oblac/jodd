@@ -18,7 +18,7 @@ public class Comment extends Node {
 	 * Creates regular comment.
 	 */
 	public Comment(String comment) {
-		super(NodeType.COMMENT, null);
+		super(NodeType.COMMENT, null, true);
 		this.nodeValue = comment;
 		this.conditionalDownlevelHidden = null;
 		this.isStartingTag = false;
@@ -28,7 +28,7 @@ public class Comment extends Node {
 	 * Creates conditional comment.
 	 */
 	public Comment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden) {
-		super(NodeType.COMMENT, null);
+		super(NodeType.COMMENT, null, true);
 		this.nodeValue = comment;
 		this.isStartingTag = isStartingTag;
 		this.conditionalDownlevelHidden = Boolean.valueOf(conditionalDownlevelHidden);

@@ -15,7 +15,7 @@ public class DocumentType extends Node {
 	protected final String baseUri;
 
 	public DocumentType(String value, String publicId, String baseUri) {
-		super(NodeType.DOCUMENT_TYPE, null);
+		super(NodeType.DOCUMENT_TYPE, null, true);
 		this.nodeValue = value;
 		this.publicId = publicId;
 		this.baseUri = baseUri;

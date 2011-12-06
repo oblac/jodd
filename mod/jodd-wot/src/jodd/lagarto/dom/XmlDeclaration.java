@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 public class XmlDeclaration extends Node {
 
-	public XmlDeclaration(Tag tag) {
-		super(NodeType.XML_DECLARATION, tag.getName().toLowerCase());
+	public XmlDeclaration(Tag tag, boolean caseSensitive) {
+		super(NodeType.XML_DECLARATION, tag.getName(), caseSensitive);
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {

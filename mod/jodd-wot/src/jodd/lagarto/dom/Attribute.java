@@ -17,7 +17,7 @@ public class Attribute {
 	protected String value;
 
 	public Attribute(String name, String value, boolean decode) {
-		this.name = name.trim().toLowerCase();
+		this.name = name;
 		this.nameHash = name.hashCode();
 		this.value = value != null ? (decode ? HtmlDecoder.decode(value) : value) : null;
 	}

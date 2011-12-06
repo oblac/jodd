@@ -12,7 +12,7 @@ import java.io.IOException;
 public class CData extends Node {
 
 	public CData(String cdata) {
-		super(NodeType.CDATA, null);
+		super(NodeType.CDATA, null, true);
 		this.nodeValue = cdata;
 	}
 

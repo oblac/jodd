@@ -8,7 +8,7 @@ package jodd.lagarto.dom;
 public class Document extends Node {
 
 	public Document() {
-		super(NodeType.DOCUMENT, null);
+		super(NodeType.DOCUMENT, null, true);
 	}
 
 }

@@ -16,8 +16,8 @@ public class Element extends Node {
 
 	protected Set<String> classNames;
 
-	public Element(Tag tag) {
-		super(NodeType.ELEMENT, tag.getName().toLowerCase());
+	public Element(Tag tag, boolean caseSensitive) {
+		super(NodeType.ELEMENT, tag.getName(), caseSensitive);
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
@@ -28,17 +28,20 @@ public class Element extends Node {
 	}
 
 	public Element(String name) {
-		super(NodeType.ELEMENT, name);
+		this(name, false);
+	}
+
+	public Element(String name, boolean caseSensitive) {
+		super(NodeType.ELEMENT, name, caseSensitive);
 	}
 
 
 	/**
-	 * Handles special attributes: 'id' and 'class'.
+	 * Handles special attribute: <code>class</code>.
 	 */
 	@Override
 	public void setAttribute(String name, String value) {
-		name = name.trim().toLowerCase();
-		if (name.equals("class")) {
+		if (name.equals("class")) {	// todo
 			setClassNames(value);
 		}
 		super.setAttribute(name, value);
@@ -66,6 +69,7 @@ public class Element extends Node {
 
 	/**
 	 * Returns <code>true</code> if element contains class name.
+	 * // todo REMOVE!!!!
 	 */
 	public boolean hasClass(String className) {
 		if (this.classNames == null) {

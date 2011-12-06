@@ -20,6 +20,7 @@ public abstract class Node {
 
 	protected final String nodeName;
 	protected final NodeType nodeType;
+	protected final boolean caseSensitive;
 	protected String nodeValue;
 
 	protected Node parentNode;
@@ -35,8 +36,9 @@ public abstract class Node {
 
 	protected int deepLevel;
 
-	protected Node(NodeType nodeType, String nodeName) {
-		this.nodeName = nodeName;
+	protected Node(NodeType nodeType, String nodeName, boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+		this.nodeName = caseSensitive ? nodeName : nodeName.toLowerCase();
 		this.nodeType = nodeType;
 	}
 
@@ -255,6 +257,10 @@ public abstract class Node {
 	 */
 	public void setAttribute(String name, String value) {
 		initAttributes();
+
+		if (!caseSensitive) {
+			name = name.toLowerCase();
+		}
 
 		// search if attribute with the same name exist
 		int nameHash = name.hashCode();
