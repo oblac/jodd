@@ -3,18 +3,13 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.Tag;
-import jodd.util.StringUtil;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Tag node.
  */
 public class Element extends Node {
-
-	protected Set<String> classNames;
 
 	public Element(Tag tag, boolean caseSensitive) {
 		super(NodeType.ELEMENT, tag.getName(), caseSensitive);
@@ -35,48 +30,6 @@ public class Element extends Node {
 		super(NodeType.ELEMENT, name, caseSensitive);
 	}
 
-
-	/**
-	 * Handles special attribute: <code>class</code>.
-	 */
-	@Override
-	public void setAttribute(String name, String value) {
-		if (name.equals("class")) {	// todo
-			setClassNames(value);
-		}
-		super.setAttribute(name, value);
-	}
-
-	// ---------------------------------------------------------------- class names
-
-	/**
-	 * Set class names.
-	 */
-	public void setClassNames(String classNames) {
-		if (classNames == null) {
-			this.classNames = null;
-			return;
-		}
-
-		initClassNames();
-		this.classNames.clear();
-
-		String[] classes = StringUtil.splitc(classNames, ' ');
-		for (String cn : classes) {
-			this.classNames.add(cn);
-		}
-	}
-
-	/**
-	 * Returns <code>true</code> if element contains class name.
-	 * // todo REMOVE!!!!
-	 */
-	public boolean hasClass(String className) {
-		if (this.classNames == null) {
-			return false;
-		}
-		return this.classNames.contains(className);
-	}
 
 	// ---------------------------------------------------------------- html
 
@@ -114,18 +67,6 @@ public class Element extends Node {
 			appendable.append("</");
 			appendable.append(nodeName);
 			appendable.append('>');
-		}
-	}
-
-
-	// ---------------------------------------------------------------- init
-
-	/**
-	 * Initializes class names if needed.
-	 */
-	protected void initClassNames() {
-		if (classNames == null) {
-			classNames = new HashSet<String>();
 		}
 	}
 }

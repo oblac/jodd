@@ -4,6 +4,7 @@ package jodd.lagarto.dom;
 
 import jodd.servlet.HtmlDecoder;
 import jodd.servlet.HtmlEncoder;
+import jodd.util.StringUtil;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ public class Attribute {
 	protected final String name;
 	protected final int nameHash;
 	protected String value;
+	protected String[] splits;
 
 	public Attribute(String name, String value, boolean decode) {
 		this.name = name;
@@ -64,5 +66,26 @@ public class Attribute {
 			appendable.append(HtmlEncoder.text(value));
 			appendable.append('\"');
 		}
+	}
+
+	// ---------------------------------------------------------------- splits
+
+	/**
+	 * Returns true if attribute is including some value.
+	 */
+	public boolean isIncluding(String include) {
+		if (value == null) {
+			return false;
+		}
+		if (splits == null) {
+			splits = StringUtil.splitc(value, ' ');
+		}
+
+		for (String s: splits) {
+			if (s.equals(include)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

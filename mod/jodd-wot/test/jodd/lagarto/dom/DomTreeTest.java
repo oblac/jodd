@@ -150,10 +150,10 @@ public class DomTreeTest extends TestCase {
 		assertTrue(node.hasAttribute("foo"));
 		assertNull(node.getAttribute("foo"));
 
-		assertFalse(node.hasClass("one"));
+		assertFalse(node.isAttributeIncluding("class", "one"));
 		node.setAttribute("class", "  one two  three  ");
-		assertTrue(node.hasClass("two"));
-		assertTrue(node.hasClass("three"));
+		assertTrue(node.isAttributeIncluding("class", "two"));
+		assertTrue(node.isAttributeIncluding("class", "three"));
 
 		assertEquals(3, node.getAttributesCount());
 	}
@@ -246,6 +246,6 @@ public class DomTreeTest extends TestCase {
 
 		assertEquals(1, h2.getAttributesCount());
 		assertEquals("y-ftr-txt-hdr  ", h2.getAttribute("class"));
-		assertTrue(h2.hasClass("y-ftr-txt-hdr"));
+		assertTrue(h2.isAttributeIncluding("class", "y-ftr-txt-hdr"));
 	}
 }

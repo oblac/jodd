@@ -240,13 +240,21 @@ public abstract class Node {
 	 * specify a value.
 	 */
 	public String getAttribute(String name) {
+		Attribute attribute = getAttributeInstance(name);
+		if (attribute == null) {
+			return null;
+		}
+		return attribute.getValue();
+	}
+
+	protected Attribute getAttributeInstance(String name) {
 		if (attributes == null) {
 			return null;
 		}
 		int nameHash = name.hashCode();
 		for (Attribute attr : attributes) {
 			if (attr.equalsName(name, nameHash)) {
-				return attr.getValue();
+				return attr;
 			}
 		}
 		return null;
@@ -278,6 +286,17 @@ public abstract class Node {
 	 */
 	public void setAttribute(String name) {
 		setAttribute(name, null);
+	}
+
+	/**
+	 * Returns <code>true</code> if attribute includes some word.
+	 */
+	public boolean isAttributeIncluding(String name, String word) {
+		Attribute attr = getAttributeInstance(name);
+		if (attr == null) {
+			return false;
+		}
+		return attr.isIncluding(word);
 	}
 
 	// ---------------------------------------------------------------- children count
