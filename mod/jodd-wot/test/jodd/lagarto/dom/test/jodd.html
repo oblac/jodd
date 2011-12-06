@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><!-- InstanceBegin template="/Templates/jodd.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Jodd | open-source java utility library and web application frameworks</title>
+<meta name="keywords" content="java, jodd, util, tools, framework, performance, optimized, open-source, beans, julian date, time, ioc, container, dependency, injection, mvc, web, actions, aspects, proxy, database, thin, jdbc, beanutil, madvoc, petite, proxetta, dboom, jdatetime, parser, html, decorator, decora, lagarto" />
+<meta name="description" content="Jodd is generic purpose open-source Java utility library and bundle of lightweight application frameworks. Jodd includes BeanUtil for bean manipulation, JDateTime for date-time works; Petite as IoC container, Madvoc for web, Proxetta for dynamic proxies and thin DB layer." />
+<!-- InstanceEndEditable -->
+<meta name="ROBOTS" content="ALL" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://jodd.org/feed.xml" />
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="/reset.css" rel="stylesheet" type="text/css" />
+<link href="/jodd.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/jquery.js"></script>
+<!-- InstanceBeginEditable name="head-script" -->
+<script type="text/javascript" src="/jquery.tooltip.js"></script>
+<!--script type="text/javascript" src="/jquery.carouFredSel.js"></script-->
+<style>
+#simpleTooltip { padding: 7px; border: 1px solid #A6A7AB; background: #F2F3F5; }
+</style>
+<script type="text/javascript">
+$(function() {
+	$('div.ben').simpletooltip();
+/*	$('#carousel').carouFredSel({
+		width: 500,
+		items: {
+			visible: 1,
+			width: 400,
+			height: 100
+		},
+		auto: {
+			pauseDuration: 5000,
+			delay: 1000
+		}
+	});*/
+});
+ses = ['#search-main', '#search-google'];
+function toggleSE(ndx) {
+	$("#search-choose-" + ndx + " a").css('font-weight', 'bold');
+	$("#search-choose-" + (1 - ndx) + " a").css('font-weight', 'normal');
+	$(ses[1 - ndx]).fadeOut('fast', function() {$(ses[ndx]).fadeIn('fast');});
+	return false;
+}
+</script>
+<!-- InstanceEndEditable -->
+</head>
+<body class="bgcol">
+<div id="container" style="width:100em"><!-- #BeginLibraryItem "/Library/headbar.lbi" --><div id="headbar">
+	<div id="headtitle">The Unbearable Lightness of Java</div>
+	<div id="headlinks">
+	<ul>
+	<li><a rel="home" href="/index.html">home<span class="desc"><br/>Return to main page</span></a></li>
+	<li><a href="/download/index.html">download<span class="desc"><br/>Download latest release</span></a></li>
+	<li><a href="/doc/index.html">docs<span class="desc"><br/>Browse documentation</span></a></li>
+	<li><a href="/bugs.html">bugs<span class="desc"><br/>Report issues</span></a></li>
+	<li><a href="/contact.html">contact<span class="desc"><br/>Contact jodders</span></a></li>
+	</ul>
+	</div>
+</div><!-- #EndLibraryItem --><div id="column3">
+	<div id="column2">
+		<div id="content-main"><!-- #BeginLibraryItem "/Library/addthis.lbi" --><div class="social_bookmark">
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_counter addthis_pill_style"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=najgor"></script>
+<!-- AddThis Button END -->
+</div><!-- #EndLibraryItem --><!-- InstanceBeginEditable name="content" -->
+<h1>Welcome to Jodd</h1>
+<p><em>Jodd</em> is generic purpose <b>open-source</b> Java utility library.
+It enriches JDK with many powerful and feature rich utilities. <em>Jodd</em> helps with everyday task,
+makes code more robust and reliable. Special attention is put into creating reusable and fastest possible code and still keeping it compact, under <em>550 KB</em>.</p>
+
+<p><em>Jodd Wot</em> is bundle of lightweight application
+frameworks - under <em>400 KB</em>!
+Designed following the <a href="http://en.wikipedia.org/wiki/Convention_over_configuration" class="external"><abbr title="Convention over Configuration">CoC</abbr></a>,
+<a href="http://en.wikipedia.org/wiki/DRY" class="external"><abbr title="Don't Repeat Yourself">DRY</abbr></a> and <a href="principle.html"><abbr title="Simple Common Sense">SCS</abbr></a> principles, it makes development simple, but not simpler;
+you get 90% of the features with 10% of usual effort.
+</p>
+
+<p><em>Jodd</em> is <b>free</b> software, released under the terms of the <a href="license.html">BSD license</a>.</p>
+
+<div id="carousel" style="margin-bottom:10px;">
+
+<div style="width:500px; float:left; padding: 16px 0 20px 0" class="cls">
+	<h2>Benefits</h2>
+	<div style="background:url(gfx/toolbox.png) no-repeat center top;" class="ben" title="Maximize your productivity level with simple and intuitive code.&lt;br/&gt;Speed up development with much less effort.">Productivity</div>
+	<div style="background:url(gfx/gear.png) no-repeat center top;" class="ben" title="Start using Jodd in very little time.&lt;br/&gt;Write modular and loosly coupled code.">Usability</div>
+	<div style="background:url(gfx/dollar.png) no-repeat center top;" class="ben" title="Save time and resources with Jodd.&lt;br/&gt;Develop maintenable applications with no complications.">Value</div>
+	<div style="background:url(gfx/puzzle.png) no-repeat center top;" class="ben" title="Integrate Jodd with your code and any framework.&lt;br/&gt;Choose components that suits you.">Flexibility</div>
+	<div style="background:url(gfx/sourcecode.png) no-repeat center top;" class="ben" title="Jodd uses the best development practices.&lt;br/&gt;By using smart conventions, Inversion of Control and POJO's,&lt;br/&gt;the code gets simpler and testable.">Quality</div>
+</div>
+<!--div style="width:500px; float:left;" class="cls">
+	<h2>Used by</h2>
+	<div style="margin:0 10px; float:left;">
+		<a href="http://liferay.com" title="Liferay Open Source Portal"><img src="gfx/logo/liferay_logo.png"/></a>
+	</div>
+	<div style="margin:0 10px; float:left;">
+		<a href="http://www.smithproject.org/index.cfm" title="Open Source CF Server"><img src="gfx/logo/smith_logo.gif"/></a>
+	</div>
+</div-->
+
+</div>
+
+
+
+<!-- InstanceEndEditable -->
+			<div id="content-related">
+				<!-- InstanceBeginEditable name="content-related" -->
+<h2>Highlights</h2><!-- #BeginLibraryItem "/Library/overview.lbi" --><div class="ojar round">
+<span class="oname">jodd core</span>
+<br clear="all"/>
+
+<div class="obox">
+<img src="/gfx/beanutil.png" align="left"/>
+<h3><a href="/doc/beanutil.html">BeanUtil</a></h3>
+<p>Fastest bean library, bundled with type introspection and type conversion tools and some unique features.</p>
+</div>
+
+<div class="obox">
+<img src="/gfx/jdatetime.png" align="left"/>
+<h3><a href="/doc/jdatetime.html">JDateTime</a></h3>
+<p>Elegant usage and astronomical precision in single time-manipulation class.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/gfx/props.png" align="left"/>
+<h3><a href="/doc/props.html">Props</a></h3>
+<p>Experience super properties replacement, featuring: UTF8, sections, profiles, macros and more.</p>
+</div>
+<div class="obox">
+<img src="/gfx/email-tool.png" align="left"/>
+<h3><a href="/doc/email.html">Email</a></h3>
+<p>Sending and receiving emails for busy developers.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/gfx/swiss-knife.png" align="left"/>
+<h3><a href="/doc/index.html">Utilities</a></h3>
+<p>Jodd is packed with many carefully selected utilities;
+obsessively optimized for performances and to be easy to use.</p>
+</div>
+
+<div class="obox">
+<img src="/gfx/servlet.png" align="left"/>
+<h3><a href="/doc/index.html">Servlet</a></h3>
+<p>Better standard tag library, jsp functions, support for
+file download, smart forms....</p>
+</div>
+
+<br clear="all"/>
+</div>
+
+
+
+
+<div class="ojar round">
+<span class="oname">jodd wot</span>
+<br clear="all"/>
+
+<div class="obox">
+<img src="/doc/madvoc/madvoc.png" align="left"/>
+<h3><a href="/doc/madvoc/index.html">Madvoc</a></h3>
+<p>Elegant web MVC framework that uses CoC and annotations in a pragmatic way to simplify web application development.</p>
+</div>
+
+<div class="obox">
+<img src="/doc/petite/petite.png" align="left"/>
+<h3><a href="/doc/petite/index.html">Petite</a></h3>
+<p>Slick and lightweight DI container that uses annotations and supports sufficient most of features offered by other containers.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/doc/proxetta/proxetta.png" align="left"/>
+<h3><a href="/doc/proxetta/index.html">Proxetta</a></h3>
+<p>The fastest proxy creator with unique approach for defying pointcuts and advices.</p>
+</div>
+
+<div class="obox">
+<img src="/doc/db/db.png" align="left"/>
+<h3><a href="/doc/db/index.html">Db &amp; DbOom</a></h3>
+<p>Efficient and thin layers that simplifies writing of database code significantly.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/doc/paramo/paramo.png" align="left"/>
+<h3><a href="/doc/paramo/index.html">Paramo</a></h3>
+<p>Access method and constructor parameter names with ease.</p>
+</div>
+
+<div class="obox">
+<img src="/doc/jtx/jtx.png" align="left"/>
+<h3><a href="/doc/jtx/index.html">JTX</a></h3>
+<p>Manage transactions with this small stand-alone tx manager.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/doc/vtor/vtor.png" align="left"/>
+<h3><a href="/doc/vtor/index.html">VTor</a></h3>
+<p>Focused validation framework for any Java object.</p>
+</div>
+
+<div class="obox">
+<img src="/doc/lagarto/lagarto.png" align="left"/>
+<h3><a href="/doc/lagarto/index.html">Lagarto</a></h3>
+<p>Fast and versatile all purpose HTML parser.</p>
+</div>
+
+<br clear="all"/>
+
+<div class="obox">
+<img src="/doc/decora/decora.png" align="left"/>
+<h3><a href="/doc/decora/index.html">Decora</a></h3>
+<p>Decoration framework for pages based on templates.</p>
+</div>
+
+<div class="obox">
+<h3><a href="/doc/index.html">...and more</a></h3>
+</div>
+
+<br clear="all"/>
+
+</div><!-- #EndLibraryItem --><br clear="all"/>
+<h2 style="padding-top:10px;">Examples</h2>
+
+<h3><a href="/doc/quickstart/index.html">Quickstart</a></h3>
+<p>Pre-configured ready to be used <em>Jodd</em> frameworks bundle.</p>
+<h3><a href="/uphea/index.html">Uphea</a></h3>
+<p>Open-source real-world example built on <em>Jodd</em> framework shows the best practices and key features.</p>
+
+
+				<!-- InstanceEndEditable -->
+			</div>
+		</div>
+		<div id="content-extra" class="rightbar">
+			<!-- InstanceBeginEditable name="content-extra" -->
+<h2>Download</h2>
+<div id="dlbtn"><a href="/download/index.html" class="round">
+latest version: <span class="dlhi">3.2.7</span><br />
+released on: <span class="dldate">Aug 29, 2011</span></a>
+</div>
+
+<div id="dlbtn2"><a href="/download/index.html#beta" class="round">latest beta: <span class="dldate">3.2.8-20111111</span></a></div>
+
+<div id="links">&raquo;&nbsp;<img src="/gfx/history.png" style="position:relative; top:3px;" width="16" height="16" alt="history"/> <a href="/history.html">release history</a><br/>
+&raquo;&nbsp;<img src="/gfx/mailinglist.gif" style="position:relative; top:1px;" width="17" height="12" alt="mailing list"/> <a href="http://groups.google.com/group/jodders?hl=en">user group</a><br/>
+&raquo;&nbsp;<img src="/gfx/feed-icon-16x16.png" style="position:relative; top:2px;" width="16" height="16" alt="rss feed"/> <a href="http://feeds.feedburner.com/jodd">news feed</a><br/>
+&raquo;&nbsp;<img src="/gfx/source.png" style="position:relative; top:3px;" width="16" height="16" alt="svn repository"/> <a href="http://code.google.com/p/jodd/source/browse/">source svn repo</a>
+</div>
+
+<!--h2 style="margin-top:30px;">Support</h2-->
+
+<h2 style="margin-top:50px;">Donate</h2>
+<div class="donate-comment">
+Why donate?<br />
+We want to invest<br />
+into better and <br />
+more convenient<br />
+infrastructure.</div><!-- #BeginLibraryItem "/Library/paypal.lbi" --><form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="image_url" value="http://jodd.org/jodd.png"/>
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="Q9WW2LX9QQPXU"/>
+<input type="image" src="http://jodd.org/gfx/paypal-donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
+</form><!-- #EndLibraryItem --><h2 style="margin-top:50px; margin-bottom:0px;">
+Search
+</h2>
+<div id="search-choose" class="cls">
+<ul>
+<li id="search-choose-0"><a href="#" onclick="return toggleSE(0);" style="font-weight:bold;">main</a></li>
+<li>|</li>
+<li id="search-choose-1"><a href="#" onclick="return toggleSE(1);">google</a></li></ul>
+</div>
+<div id="search-main" style="float:left;">
+<form action="http://jodd.org/sphider/search.php" method="get">
+	<input type="text" name="query" size="24" value=""/>
+	<input type="hidden" name="search" value="1"/>
+	<input type="submit" value="Go!"/>
+</form>
+<p class="search-comment" style="text-align:left">
+Our custom Search Engine indexes all pages including JavaDoc APIs.
+Simply type what you are searching for (e.g. '<i>string replace</i>', '<i>lru cache</i>'
+or '<i>file copy</i>'...) and you will be provided with accurate results.
+</p>
+</div>
+<div id="search-google" style="float:left;"><!-- #BeginLibraryItem "/Library/google-search.lbi" --><form action="http://www.google.com/cse" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="007177735174804706995:kpehwspt4ui" />
+    <input type="hidden" name="ie" value="UTF-8" />
+    <input type="text" name="q" size="25" />
+    <input type="submit" name="sa" value="Go!" />
+
+  </div>
+</form>
+
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+<!-- #EndLibraryItem --><p class="search-comment" style="text-align:left">
+Google Search is an alternative engine, and we can't be 100% sure if it
+has indexed all pages (especially the API). So do not expect you will
+be able to find everything with it - use it as supplement to our main search.
+</p>
+</div>
+<h2 style="margin-top:150px;">
+Thanks</h2>
+<p><!-- #BeginLibraryItem "/Library/intellij.lbi" --><a href="http://www.jetbrains.com/idea/" style="position: relative;display:block; width:125px; height:37px; border:0; margin:0;padding:0;text-decoration:none;text-indent:0;"><span style="margin: 0;padding: 0;position: absolute;top: 0;left: 33px;font-size: 10px;cursor:pointer;  background-image:none;border:0;color: #acc4f9; font-family: trebuchet ms,arial,sans-serif;font-weight: normal;text-align:left;">Developed with</span><img src="/gfx/logo/idea125x37_blue.gif" alt="The best Java IDE" border="0"/></a><!-- #EndLibraryItem --></p>
+<p><a href="http://liferay.com" style="position: relative;display:block; width:140px; height:34px; border:0; margin:0;padding:0;text-decoration:none;text-indent:0;"><img src="gfx/logo/liferay.png" /></a></p>
+<!-- InstanceEndEditable -->
+		</div>
+	</div>
+	<div id="content-addon" class="rightbar">
+		<!-- InstanceBeginEditable name="content-addon" --><!-- InstanceEndEditable --><!-- #BeginLibraryItem "/Library/docs.lbi" -->		<h2 class="menu">Documentation</h2>
+		<ul class="menu">
+			<li><a href="/doc/index.html">Jodd in action</a></li>
+		</ul>
+		<h3>Jodd</h3>
+		<ul class="menu">
+			<li><a href="/doc/beanutil.html">BeanUtil &middot; the fastest bean tool</a></li>
+			<li><a href="/doc/jdatetime.html">JDateTime &middot; accurate and elegant</a></li>
+			<li><a href="/doc/props.html">Props &middot; super properties</a></li>
+			<li><a href="/doc/email.html">Email &middot; convenient email handling</a></li>
+			<li><a href="/doc/index.html">More cool tools...</a></li>
+		</ul>
+		<h3>Jodd WOT</h3>
+		<ul class="menu">
+			<li><a href="/doc/madvoc/index.html">Madvoc &middot; slick MVC framework</a></li>
+			<li><a href="/doc/petite/index.html">Petite &middot; pragmatic DI container</a></li>
+			<li><a href="/doc/proxetta/index.html">Proxetta &middot; dynamic proxy</a></li>
+			<li><a href="/doc/db/index.html">Db &amp; DbOom &middot; easy db access</a></li>
+			<li><a href="/doc/jtx/index.html">JTX &middot; enjoyable transactions</a></li>
+			<li><a href="/doc/paramo/index.html">Paramo &middot; method params names</a></li>
+			<li><a href="/doc/vtor/index.html">VTor &middot; validation with style</a></li>
+			<li><a href="/doc/lagarto/index.html">Lagarto &middot; versatile html parser</a></li>
+			<li><a href="/doc/decora/index.html">Decora &middot; web page decorators</a></li>
+
+		</ul>
+		<h3>Examples</h3>
+		<ul class="menu">
+			<li><a href="/doc/example/build-web-app-with-jodd.html">Example - build web app with Jodd</a></li>
+			<li><a href="/uphea/index.html">Uphea - real world example</a></li>
+		</ul>
+		<h3>Reports</h3>
+		<ul class="menu2">
+			<li>API &middot; <a href="/api/jodd/index.html">jodd</a> &middot; <a href="/api/jodd-wot/index.html">wot</a></li>
+			<li>unit test results &middot; <a href="/test/jodd/index.html">jodd</a> &middot; <a href="/test/jodd-wot/index.html">wot</a></li>
+			<li>code coverage &middot; <a href="/test/jodd/coverage.html">jodd</a> &middot; <a href="/test/jodd-wot/coverage.html">wot</a></li>			
+		</ul>
+		<ul class="menu2">
+			<li><a href="/doc/needmore.html">Need more documentation?</a></li>
+		</ul>
+		<div style="margin-top:30px;">
+			<img src="/jodd_library.png" alt="Jodd Library"/> &nbsp;<img src="/jodd_framework.png" alt="Jodd Framework"/>
+		</div><!-- #BeginLibraryItem "/Library/ohloh.lbi" --><div id="ohloh">
+<script type="text/javascript" src="http://www.ohloh.net/p/90331/widgets/project_thin_badge.js"></script>
+</div><!-- #EndLibraryItem --><!-- #EndLibraryItem --></div>
+	</div><!-- #BeginLibraryItem "/Library/footer.lbi" --><div id="footer">
+	<div id="copyright">© 2011 Igor Spasic and the Jodd Team.
+		<div id="support">Supported by <a href="http://kewlcode.com">kewl code</a> and <a href="http://stop-talking-start-doing.com">stop talking start doing</a></div>
+	</div>
+	<div id="footlinks">
+		<ul>
+		<li><a href="/index.html">home</a></li>
+		<li><a href="/download/index.html">download</a></li>
+		<li><a href="/doc/index.html">docs</a></li>
+		<li><a href="/bugs.html">bugs</a></li>
+		<li><a href="http://labs.jodd.org">labs</a></li>
+		<li><a href="/contact.html">contact</a></li>
+		</ul>
+	</div>
+</div><!-- #EndLibraryItem --></div>
+<!-- #BeginLibraryItem "/Library/google-analytics.lbi" -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-153514-4");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- #EndLibraryItem -->
+</body>
+<!-- InstanceEnd --></html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<people_list>
+	<person>
+		<name>Fred Bloggs</name>
+		<birthdate>2008-11-27</birthdate>
+		<gender>Male</gender>
+	</person>
+</people_list>
