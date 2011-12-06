@@ -132,7 +132,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
 	protected void onActionClass(String className) throws ClassNotFoundException {
-		Class<?> actionClass = ClassLoaderUtil.loadClass(className, this.getClass());
+		Class<?> actionClass = ClassLoaderUtil.loadClass(className);
 
 		if (checkClass(actionClass) == false) {
 			return; 
@@ -165,7 +165,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected void onResultClass(String className) throws ClassNotFoundException {
-		Class resultClass = ClassLoaderUtil.loadClass(className, this.getClass());
+		Class resultClass = ClassLoaderUtil.loadClass(className);
 		if (resultClass.equals(ActionResult.class)) {
 			return;
 		}

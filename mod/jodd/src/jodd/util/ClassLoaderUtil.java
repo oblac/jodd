@@ -432,14 +432,6 @@ public class ClassLoaderUtil {
 	// ---------------------------------------------------------------- load class
 
 	/**
-	 * Loads a class with a given name dynamically.
-	 * @see #loadClass(String, Class) 
-	 */
-	public static Class loadClass(String className) throws ClassNotFoundException {
-		return loadClass(className, null);
-	}
-
-	/**
 	 * Loads a class with a given name dynamically, more reliable then <code>Class.forName</code>.
 	 * <p>
 	 * Class will be loaded using class loaders in the following order:
@@ -447,10 +439,9 @@ public class ClassLoaderUtil {
 	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
 	 * <li>the basic {@link Class#forName(java.lang.String)}
 	 * <li>{@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
-	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}
 	 * </ul>
 	 */
-	public static Class loadClass(String className, Class callingClass) throws ClassNotFoundException {
+	public static Class loadClass(String className) throws ClassNotFoundException {
 
 		// try #1
 		try {
@@ -474,14 +465,6 @@ public class ClassLoaderUtil {
 				return classLoader.loadClass(className);
 			}
 		} catch (ClassNotFoundException ignore) {
-		}
-
-		// try #4
-		if (callingClass != null) {
-			ClassLoader classLoader = callingClass.getClassLoader();
-			if (classLoader != null) {
-				return classLoader.loadClass(className);
-			}
 		}
 
 		throw new ClassNotFoundException("Class not found: " + className);

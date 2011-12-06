@@ -70,7 +70,7 @@ public class AsmUtil {
 		if (className.length() == 1) {
 			return loadBaseTypeClass(className);
 		}
-		return ClassLoaderUtil.loadClass(className, AsmUtil.class);
+		return ClassLoaderUtil.loadClass(className);
 	}
 
 	/**

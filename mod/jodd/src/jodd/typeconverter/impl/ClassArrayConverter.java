@@ -29,7 +29,7 @@ public class ClassArrayConverter implements TypeConverter<Class[]> {
 		Class[] result = new Class[total];
 		try {
 			for (int i = 0; i < total; i++) {
-				result[i] = ClassLoaderUtil.loadClass(allClassNames[i].trim(), ClassArrayConverter.class);
+				result[i] = ClassLoaderUtil.loadClass(allClassNames[i].trim());
 			}
 		} catch (ClassNotFoundException cnfex) {
 			throw new TypeConversionException(value, cnfex);

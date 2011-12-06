@@ -21,7 +21,7 @@ public abstract class MadvocTestCase extends TestCase {
 		String[] data = StringUtil.splitc(signature, '#');
 		try {
 			data[0] = this.getClass().getPackage().getName() + '.' + data[0];
-			Class c = ClassLoaderUtil.loadClass(data[0], this.getClass());
+			Class c = ClassLoaderUtil.loadClass(data[0]);
 			Method m = c.getMethod(data[1]);
 			return new Object[] {c, m};
 		} catch (Exception e) {

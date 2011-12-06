@@ -86,7 +86,7 @@ public class ActionsManager {
 		String actionMethodName = actionSignature.substring(ndx + 1);
 		Class actionClass;
 		try {
-			actionClass = ClassLoaderUtil.loadClass(actionClassName, this.getClass());
+			actionClass = ClassLoaderUtil.loadClass(actionClassName);
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc action class not found: '" + actionClassName + "'.", cnfex);
 		}

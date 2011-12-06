@@ -227,7 +227,7 @@ public abstract class Proxetta {
 		cp.accept(targetName, proxyClassName);
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
 			try {
-				return ClassLoaderUtil.loadClass(targetName, Proxetta.class);
+				return ClassLoaderUtil.loadClass(targetName);
 			} catch (ClassNotFoundException cnfex) {
 				throw new ProxettaException(cnfex);
 			}
