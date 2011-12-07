@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.zip.GZIPInputStream;
 
 /**
  * HTML decoder.
@@ -21,18 +22,21 @@ public class HtmlDecoder {
 	static {
 		Properties entityReferences = new Properties();
 
-		InputStream is = HtmlDecoder.class.getResourceAsStream(HtmlDecoder.class.getSimpleName() + ".properties");
+		InputStream is = HtmlDecoder.class.getResourceAsStream(HtmlDecoder.class.getSimpleName() + ".properties.gz");
 		if (is == null) {
 			throw new IllegalStateException("Entity reference file missing");
 		}
 
+		GZIPInputStream zis = null;
 		try {
-			entityReferences.load(is);
+			zis = new GZIPInputStream(is);
+
+			entityReferences.load(zis);
 		}
 		catch (IOException ioex) {
 			throw new IllegalStateException(ioex.getMessage());
 		} finally {
-			StreamUtil.close(is);
+			StreamUtil.close(zis);
 		}
 
 		ENTITY_MAP = new HashMap<String, Character>(entityReferences.size());
