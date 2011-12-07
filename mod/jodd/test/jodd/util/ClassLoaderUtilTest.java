@@ -44,7 +44,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		int v;
 	}
 
-	public void testClassLoaderUtil() {
+	public void testLoadClass() throws ClassNotFoundException {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
@@ -57,7 +57,28 @@ public class ClassLoaderUtilTest extends TestCase {
 		} catch (ClassNotFoundException ignore) {
 			fail();
 		}
+		assertEquals(Integer.class, ClassLoaderUtil.loadClass("java.lang.Integer"));
+		assertEquals(int.class, ClassLoaderUtil.loadClass("int"));
+		assertEquals(boolean.class, ClassLoaderUtil.loadClass("boolean"));
+		assertEquals(short.class, ClassLoaderUtil.loadClass("short"));
+		assertEquals(byte.class, ClassLoaderUtil.loadClass("byte"));
+		assertEquals(char.class, ClassLoaderUtil.loadClass("char"));
+		assertEquals(double.class, ClassLoaderUtil.loadClass("double"));
+		assertEquals(float.class, ClassLoaderUtil.loadClass("float"));
+		assertEquals(long.class, ClassLoaderUtil.loadClass("long"));
 
+		assertEquals(Integer[].class, ClassLoaderUtil.loadClass("java.lang.Integer[]"));
+		assertEquals(int[].class, ClassLoaderUtil.loadClass("int[]"));
+		assertEquals(boolean[].class, ClassLoaderUtil.loadClass("boolean[]"));
+		assertEquals(short[].class, ClassLoaderUtil.loadClass("short[]"));
+		assertEquals(byte[].class, ClassLoaderUtil.loadClass("byte[]"));
+		assertEquals(char[].class, ClassLoaderUtil.loadClass("char[]"));
+		assertEquals(double[].class, ClassLoaderUtil.loadClass("double[]"));
+		assertEquals(float[].class, ClassLoaderUtil.loadClass("float[]"));
+		assertEquals(long[].class, ClassLoaderUtil.loadClass("long[]"));
+
+		assertEquals(Integer[][].class, ClassLoaderUtil.loadClass("java.lang.Integer[][]"));
+		assertEquals(int[][].class, ClassLoaderUtil.loadClass("int[][]"));
 	}
 
 }

@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -428,9 +429,63 @@ public class ClassLoaderUtil {
 		return getResourceAsStream(getClassFileName(className), ClassLoaderUtil.class);
 	}
 
-
 	// ---------------------------------------------------------------- load class
 
+	/**
+	 * List of primitive type names.
+	 */
+	public static final String[] PRIMITIVE_TYPE_NAMES = new String[] {
+			"boolean", "byte", "char", "double", "float", "int", "long", "short",
+	};
+	/**
+	 * List of primitive types that matches names list.
+	 */
+	public static final Class[] PRIMITIVE_TYPES = new Class[] {
+			boolean.class, byte.class, char.class, double.class, float.class, int.class, long.class, short.class,
+	};
+	/**
+	 * List of primitive bytecode characters that matches names list.
+	 */
+	public static final char[] PRIMITIVE_BYTECODE_NAME = new char[] {
+			'Z', 'B', 'C', 'D', 'F', 'I', 'J', 'S'
+	};
+
+	/**
+	 * Prepares classname for loading.
+	 */
+	public static String prepareClassnameForLoading(String className) {
+		int bracketCount = StringUtil.count(className, '[');
+		if (bracketCount == 0) {
+			return className;
+		}
+
+		String brackets = StringUtil.repeat('[', bracketCount);
+
+		int bracketIndex = className.indexOf('[');
+		className = className.substring(0, bracketIndex);
+
+		int primitiveNdx = isPrimitiveClassName(className);
+		if (primitiveNdx >= 0) {
+			className = String.valueOf(PRIMITIVE_BYTECODE_NAME[primitiveNdx]);
+
+			return brackets + className;
+		} else {
+			return brackets + 'L' + className + ';';
+		}
+	}
+
+	/**
+	 * Detects if provided class name is a primitive type.
+	 * Returns >= 0 number if so.
+	 */
+	public static int isPrimitiveClassName(String className) {
+		int dotIndex = className.indexOf('.');
+		if (dotIndex != -1) {
+			return -1;
+		}
+		return Arrays.binarySearch(PRIMITIVE_TYPE_NAMES, className);
+	}
+	
 	/**
 	 * Loads a class with a given name dynamically, more reliable then <code>Class.forName</code>.
 	 * <p>
@@ -442,6 +497,16 @@ public class ClassLoaderUtil {
 	 * </ul>
 	 */
 	public static Class loadClass(String className) throws ClassNotFoundException {
+
+		className = prepareClassnameForLoading(className);
+		
+		if ((className.indexOf('.') == -1) || (className.indexOf('[') == -1)) {
+			// maybe a primitive
+			int primitiveNdx = isPrimitiveClassName(className);
+			if (primitiveNdx >= 0) {
+				return PRIMITIVE_TYPES[primitiveNdx];
+			}
+		}
 
 		// try #1
 		try {
