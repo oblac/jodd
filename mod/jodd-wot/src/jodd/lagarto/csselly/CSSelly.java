@@ -9,7 +9,11 @@ import java.nio.CharBuffer;
 import java.util.List;
 
 /**
- * CSS selector parser.
+ * CSS selector parser. Works with one query, i.e. does not support groups
+ * of selectors (selectors separated by a comma). To parse selectors group,
+ * manually split the group query into single queries and parse each.
+ *
+ * @see http://www.w3.org/TR/css3-selectors/#w3cselgrammar
  */
 public class CSSelly {
 

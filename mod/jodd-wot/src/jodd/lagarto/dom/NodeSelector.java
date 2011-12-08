@@ -5,12 +5,14 @@ package jodd.lagarto.dom;
 import jodd.lagarto.csselly.CSSelly;
 import jodd.lagarto.csselly.Combinator;
 import jodd.lagarto.csselly.CssSelector;
+import jodd.util.StringUtil;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Node selector selects DOM nodes using {@link CSSelly CSS3 selectors}.
+ * Group of queries are supported.
  */
 public class NodeSelector {
 
@@ -26,13 +28,29 @@ public class NodeSelector {
 	 * Selects nodes using CSS3 selector query.
 	 */
 	public LinkedList<Node> select(String query) {
-		CSSelly csselly = new CSSelly(query);
+		String[] singleQueries = StringUtil.splitc(query, ',');
+		
+		LinkedList<Node> results = new LinkedList<Node>();
 
-		List<CssSelector> selectors = csselly.parse();
+		for (String singleQuery : singleQueries) {
+			CSSelly csselly = new CSSelly(singleQuery);
+	
+			List<CssSelector> selectors = csselly.parse();
+	
+			List<Node> selectedNodes = select(rootNode, selectors);
 
-		return select(rootNode, selectors);
+			for (Node selectedNode : selectedNodes) {
+				if (results.contains(selectedNode) == false) {
+					results.add(selectedNode);
+				}
+			}
+		}
+		return results;
 	}
 
+	/**
+	 * Selects nodes using CSS3 selector query and returns the very first one.
+	 */
 	public Node selectFirst(String query) {
 		List<Node> selectedNodes = select(query);
 		if (selectedNodes.isEmpty()) {
@@ -56,6 +74,7 @@ public class NodeSelector {
 		return selectedNodes.get(0);
 	}
 
+	// ---------------------------------------------------------------- internal
 
 	protected void walk(Node rootNode, NodeFilter nodeFilter, LinkedList<Node> result) {
 		int childCount = rootNode.getChildNodesCount();
@@ -67,8 +86,6 @@ public class NodeSelector {
 			walk(node, nodeFilter, result);
 		}
 	}
-
-	// ---------------------------------------------------------------- internal #1
 
 	protected LinkedList<Node> select(Node rootNode, List<CssSelector> selectors) {
 

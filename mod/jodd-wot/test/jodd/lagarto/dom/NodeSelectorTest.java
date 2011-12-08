@@ -288,6 +288,16 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals("text/javascript", script.getAttribute("type"));
 	}
 
+	public void testGroupOfSelectors() throws IOException {
+		File file = new File(testDataRoot, "one.html");
+		String htmlContent = FileUtil.readString(file);
+
+		Document document = new LagartoDOMBuilder().parse(htmlContent);
+
+		List<Node> nodes = new NodeSelector(document).select("em, b, b");
+		assertEquals(9, nodes.size());
+	}
+
 
 	// ---------------------------------------------------------------- utils
 
