@@ -859,4 +859,9 @@ public class StringUtilTest extends TestCase {
 		assertEquals("Long...", StringUtil.shorten("Long long sentence", 8, "..."));
 		assertEquals("Longl...", StringUtil.shorten("Longlong sentence", 8, "..."));
 	}
+	
+	public void testCompressChars() {
+		assertEquals("1 2 3", StringUtil.compressChars("1   2    3", ' '));
+		assertEquals("1 2 3", StringUtil.compressChars("1 2 3", ' '));
+	}
 }

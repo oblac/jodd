@@ -575,6 +575,28 @@ public class StringUtil {
 		return result;
 	}
 
+	/**
+	 * Compress multiple occurrences of given char into one appearance.
+	 */
+	public static String compressChars(String s, char c) {
+		int len = s.length();
+		StringBuilder sb = new StringBuilder(len);
+		boolean wasChar = false;
+		for (int i = 0; i < len; i++) {
+			char c1 = s.charAt(i);
+			if (c1 == c) {
+				if (wasChar) {
+					continue;
+				}
+				wasChar = true;
+			} else {
+				wasChar = false;
+			}
+			sb.append(c1);
+		}
+		return sb.toString();
+	}
+
 
 	// ---------------------------------------------------------------- indexof and ignore cases
 
