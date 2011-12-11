@@ -27,6 +27,7 @@ public class CssSelector implements NodeFilter {
 	protected CssSelector nextCssSelector;
 
 	protected final String element;
+
 	protected Combinator combinator = Combinator.DESCENDANT;
 	protected List<Selector> selectors;
 
@@ -56,7 +57,9 @@ public class CssSelector implements NodeFilter {
 		return nextCssSelector;
 	}
 
-	public void setPrevCssSelector(CssSelector prevCssSelector) {
+	// ---------------------------------------------------------------- init
+
+	void setPrevCssSelector(CssSelector prevCssSelector) {
 		this.prevCssSelector = prevCssSelector;
 		prevCssSelector.nextCssSelector = this;
 	}
@@ -194,7 +197,9 @@ public class CssSelector implements NodeFilter {
 
 	// ---------------------------------------------------------------- match
 
-
+	/**
+	 * Accepts single node.
+	 */
 	public boolean accept(Node node) {
 		// match element name with node name
 		if (!matchElement(node)) {
@@ -238,6 +243,31 @@ public class CssSelector implements NodeFilter {
 		String element = getElement();
 		String nodeName = node.getNodeName();
 		return element.equals(StringPool.STAR) || element.equals(nodeName);
+	}
+
+
+	// ---------------------------------------------------------------- post process
+
+	/**
+	 * Accepts node within current results.
+	 */
+	public boolean accept(LinkedList<Node> currentResults, Node node) {
+		// match attributes
+		int totalSelectors = selectorsCount();
+		for (int i = 0; i < totalSelectors; i++) {
+			Selector selector = getSelector(i);
+
+			// just attr name existence
+			switch (selector.getType()) {
+				case PSEUDO_CLASS:
+					if (!((PseudoClassSelector) selector).accept(currentResults, node)) {
+						return false;
+					}
+					break;
+				default:
+			}
+		}
+		return true;
 	}
 
 }

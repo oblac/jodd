@@ -49,9 +49,6 @@ import java.nio.CharBuffer;
 		return new String(zzBuffer, startIndex, zzMarkedPos - endIndexOffset - startIndex);
 	}
 
-	// empty ctor
-	CSSellyLexer() {}
-
 	LinkedList<CssSelector> selectors = new LinkedList<CssSelector>();
 	CssSelector cssSelector;
 	String pseudoFnName;

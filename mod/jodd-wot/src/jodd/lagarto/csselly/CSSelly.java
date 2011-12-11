@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class CSSelly {
 
-	protected CSSellyLexer lexer;
+	protected final CSSellyLexer lexer;
 
 	public CSSelly(CharSequence charSequence) {
 		this(CharBuffer.wrap(charSequence));
@@ -26,6 +26,8 @@ public class CSSelly {
 	public CSSelly(CharBuffer input) {
 		this.lexer = new CSSellyLexer(new CharBufferReader(input));
 	}
+
+	// ---------------------------------------------------------------- parse
 
 	/**
 	 * Parses selector string.
@@ -52,11 +54,14 @@ public class CSSelly {
 				}
 				prevCssSelector = cssSelector;
 			}
+
 			return lexer.selectors;
 		} catch (IOException ioex) {
 			throw new CSSellyException(ioex);
 		}
 	}
+
+	// ---------------------------------------------------------------- toString
 
 	/**
 	 * Returns string representation of given list of selectors.

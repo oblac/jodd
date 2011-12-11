@@ -117,7 +117,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 			// get all children of parent node
 			Node[] childNodes = parentNode.getChildNodes();
-			parentNode.removeChilds();
+			parentNode.removeAllChilds();
 			if (parentNode.getNodeType() == Node.NodeType.ELEMENT) {
 				((Element) parentNode).forceCloseTag = false;
 			}

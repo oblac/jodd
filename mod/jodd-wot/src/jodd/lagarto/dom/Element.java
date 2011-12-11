@@ -61,7 +61,7 @@ public class Element extends Node {
 			appendable.append('>');
 
 			if (childCount != 0) {
-				writeChildNodesAsHtml(appendable);
+				toInnerHtml(appendable);
 			}
 
 			appendable.append("</");

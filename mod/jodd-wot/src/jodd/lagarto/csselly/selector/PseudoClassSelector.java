@@ -2,9 +2,14 @@
 
 package jodd.lagarto.csselly.selector;
 
+import jodd.lagarto.csselly.CSSellyException;
 import jodd.lagarto.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Pseudo class selector.
@@ -22,11 +27,61 @@ import jodd.lagarto.dom.NodeFilter;
  */
 public class PseudoClassSelector extends Selector implements NodeFilter {
 
+	protected static final Map<String, PseudoClass> PSEUDO_CLASS_MAP;
+
+	static {
+		PSEUDO_CLASS_MAP = new HashMap<String, PseudoClass>(8);
+
+		registerPseudoClass(PseudoClass.EMPTY.class);
+		registerPseudoClass(PseudoClass.FIRST_CHILD.class);
+		registerPseudoClass(PseudoClass.FIRST_OF_TYPE.class);
+		registerPseudoClass(PseudoClass.LAST_CHILD.class);
+		registerPseudoClass(PseudoClass.LAST_OF_TYPE.class);
+		registerPseudoClass(PseudoClass.ONLY_CHILD.class);
+		registerPseudoClass(PseudoClass.ONLY_OF_TYPE.class);
+		registerPseudoClass(PseudoClass.ROOT.class);
+
+		registerPseudoClass(PseudoClass.FIRST.class);
+		registerPseudoClass(PseudoClass.LAST.class);
+		registerPseudoClass(PseudoClass.BUTTON.class);
+	}
+
+	/**
+	 * Registers pseudo class.
+	 */
+	public static void registerPseudoClass(Class<? extends PseudoClass> pseudoClassType) {
+		PseudoClass pseudoClass;
+		try {
+			pseudoClass = pseudoClassType.newInstance();
+		} catch (Exception ex) {
+			throw new CSSellyException(ex);
+		}
+		PSEUDO_CLASS_MAP.put(pseudoClass.getPseudoClassName(), pseudoClass);
+	}
+
+	/**
+	 * Lookups pseudo class for given pseudo class name.
+	 */
+	public static PseudoClass lookupPseudoClass(String pseudoClassName) {
+		PseudoClass pseudoClass = PSEUDO_CLASS_MAP.get(pseudoClassName);
+		if (pseudoClass == null) {
+			throw new CSSellyException("Invalid or unsupported pseudo class: " + pseudoClassName);
+		}
+		return pseudoClass;
+	}
+
+	// ---------------------------------------------------------------- selector
+
 	protected final PseudoClass pseudoClass;
 
-	public PseudoClassSelector(String pseudoClass) {
+	public PseudoClassSelector(String pseudoClassName) {
 		super(Type.PSEUDO_CLASS);
-		this.pseudoClass = PseudoClass.valueOfName(pseudoClass);
+		this.pseudoClass = lookupPseudoClass(pseudoClassName);
+	}
+
+	public PseudoClassSelector(PseudoClass pseudoClass) {
+		super(Type.PSEUDO_CLASS);
+		this.pseudoClass = pseudoClass;
 	}
 
 	/**
@@ -41,5 +96,9 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 	 */
 	public boolean accept(Node node) {
 		return pseudoClass.match(node);
+	}
+
+	public boolean accept(LinkedList<Node> currentResults, Node node) {
+		return pseudoClass.match(currentResults, node);
 	}
 }

@@ -101,6 +101,17 @@ public abstract class Node {
 		childNodes.add(node);
 		reindexChildren();
 	}
+	
+	public void appendChild(Node... nodes) {
+		for (Node node: nodes) {
+			node.detachFromParent();
+			node.parentNode = this;
+			node.deepLevel = deepLevel + 1;
+			initChildNodes();
+			childNodes.add(node);
+		}
+		reindexChildren();
+	}
 
 	/**
 	 * Inserts node at given index.
@@ -170,7 +181,7 @@ public abstract class Node {
 	/**
 	 * Removes all child nodes.
 	 */
-	public void removeChilds() {
+	public void removeAllChilds() {
 		childNodes = null;
 		childElementNodes = null;
 		childElementNodesCount = 0;
@@ -683,8 +694,10 @@ public abstract class Node {
 	 */
 	public String getTextContent() {
 		StringBuilder sb = new StringBuilder(getChildNodesCount() + 1);
-		if ((nodeValue != null) && (nodeType != NodeType.COMMENT)) {
-			sb.append(nodeValue);
+		if (nodeValue != null) {
+			if ((nodeType == NodeType.TEXT) || (nodeType == NodeType.CDATA)) {
+				sb.append(nodeValue);
+			}
 		}
 		if (childNodes != null) {
 			for (Node childNode : childNodes) {
@@ -695,12 +708,25 @@ public abstract class Node {
 	}
 
 	/**
+	 * Generates HTML.
+	 */
+	public String getHtml() {
+		StringBuilder sb = new StringBuilder();
+		try {
+			toHtml(sb);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Generates inner HTML.
 	 */
 	public String getInnerHtml() {
 		StringBuilder sb = new StringBuilder();
 		try {
-			toHtml(sb);
+			toInnerHtml(sb);
 		} catch (IOException ioex) {
 			throw new LagartoDOMException(ioex);
 		}
@@ -714,10 +740,10 @@ public abstract class Node {
 		if (nodeValue != null) {
 			appendable.append(nodeValue);
 		}
-		writeChildNodesAsHtml(appendable);
+		toInnerHtml(appendable);
 	}
 
-	protected void writeChildNodesAsHtml(Appendable appendable) throws IOException {
+	protected void toInnerHtml(Appendable appendable) throws IOException {
 		if (childNodes != null) {
 			for (Node childNode : childNodes) {
 				childNode.toHtml(appendable);

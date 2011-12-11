@@ -213,7 +213,7 @@ public class DomTreeTest extends TestCase {
 
 	public void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
-		String innerHtml = document.getInnerHtml();
+		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input/><input/><img/></form></body></html>", innerHtml);
 
 		File file = new File(testDataRoot, "jodd.html");
@@ -221,7 +221,7 @@ public class DomTreeTest extends TestCase {
 		html = StringUtil.replace(html, " />", "/>");
 		html = StringUtil.replace(html, "'", "");
 		document = new LagartoDOMBuilder().parse(html);
-		innerHtml = document.getInnerHtml();
+		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
 
 		file = new File(testDataRoot, "Twitter.html");
@@ -230,7 +230,7 @@ public class DomTreeTest extends TestCase {
 		html = StringUtil.replace(html, "\" >", "\">");
 		html = StringUtil.replace(html, "'", "");
 		document = new LagartoDOMBuilder().parse(html);
-		innerHtml = document.getInnerHtml();
+		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
 
 		file = new File(testDataRoot, "Yahoo!.html");

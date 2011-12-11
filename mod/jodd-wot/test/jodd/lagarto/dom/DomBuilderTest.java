@@ -52,7 +52,7 @@ public class DomBuilderTest extends TestCase {
 		t = (Text) p.getChild(2);
 		assertEquals("Jodd", t.getNodeValue());
 
-		String generated = root.getInnerHtml();
+		String generated = root.getHtml();
 
 		assertEquals(page, generated);
 	}
@@ -139,27 +139,27 @@ public class DomBuilderTest extends TestCase {
 
 	public void testUnclosedTag() {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input>text<input>text<img></form></body></html>");
-		String innerHtml = document.getInnerHtml();
+		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input/>text<input/>text<img/></form></body></html>", innerHtml);
 
 		LagartoDOMBuilder lagartoDomBuilder = new LagartoDOMBuilder();
 		document = lagartoDomBuilder.parse("<body><b>bold</b><div>text1</span><div>as</div></body>");
-		innerHtml = document.getInnerHtml();
+		innerHtml = document.getHtml();
 		assertEquals("<body><b>bold</b><div/>text1<div>as</div></body>", innerHtml);
 
 		document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></xxx></body></html>");
-		innerHtml = document.getInnerHtml();
+		innerHtml = document.getHtml();
 		assertEquals("<html><body><form/><input/><input/><img/></body></html>", innerHtml);
 	}
 
 	public void testUncapital() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe'></body></html>");
-		String innerHtml = document.getInnerHtml();
+		String innerHtml = document.getHtml();
 		assertEquals("<html><body at=\"qWe\"></body></html>", innerHtml);
 
 		document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe' AT='zxc'></body></html>");
-		innerHtml = document.getInnerHtml();
+		innerHtml = document.getHtml();
 		assertEquals("<html><body at=\"zxc\"></body></html>", innerHtml);
 	}
 
@@ -171,7 +171,7 @@ public class DomBuilderTest extends TestCase {
 		assertEquals("q\u00A0w", foo);
 
 		div.setAttribute("foo", "q\u00A0w\u00A0e");
-		assertEquals("<div foo=\"q\u00A0w\u00A0e\">a&lt;b</div>", document.getInnerHtml());
+		assertEquals("<div foo=\"q\u00A0w\u00A0e\">a&lt;b</div>", document.getHtml());
 
 		Text text = (Text) document.getFirstChild().getFirstChild();
 

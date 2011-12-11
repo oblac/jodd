@@ -47,7 +47,7 @@ public class DomXmlTest extends TestCase {
 		assertEquals("Male", person.getChild(2).getTextContent());
 
 		xmlContent = StringUtil.removeChars(xmlContent, "\n\r\t");
-		assertEquals(xmlContent, doc.getInnerHtml());
+		assertEquals(xmlContent, doc.getHtml());
 	}
 
 	public void testUpheaWebXml() throws IOException {
@@ -59,7 +59,7 @@ public class DomXmlTest extends TestCase {
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
 		xmlContent = StringUtil.removeChars(xmlContent, "\n\r\t");
-		assertEquals(xmlContent, doc.getInnerHtml());
+		assertEquals(xmlContent, doc.getHtml());
 	}
 
 }

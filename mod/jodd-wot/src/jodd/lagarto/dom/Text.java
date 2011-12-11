@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class Text extends Node {
 
+	public Text() {
+		this(null);
+	}
+
 	public Text(String text) {
 		super(NodeType.TEXT, null, true);
 		this.nodeValue = text;
