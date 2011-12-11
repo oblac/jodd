@@ -2,16 +2,58 @@
 
 package jodd.lagarto.csselly.selector;
 
+import jodd.lagarto.csselly.CSSellyException;
 import jodd.lagarto.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Pseudo function selector.
  */
 public class PseudoFunctionSelector extends Selector implements NodeFilter {
+
+	protected static final Map<String, PseudoFunction> PSEUDO_FUNCTION_MAP;
+
+	static {
+		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(4);
+
+		registerPseudoFunction(PseudoFunction.NTH_CHILD.class);
+		registerPseudoFunction(PseudoFunction.NTH_LAST_CHILD.class);
+		registerPseudoFunction(PseudoFunction.NTH_LAST_OF_TYPE.class);
+		registerPseudoFunction(PseudoFunction.NTH_OF_TYPE.class);
+	}
+
+	/**
+	 * Registers pseudo function.
+	 */
+	public static void registerPseudoFunction(Class<? extends PseudoFunction> pseudoFunctionType) {
+		PseudoFunction pseudoFunction;
+		try {
+			pseudoFunction = pseudoFunctionType.newInstance();
+		} catch (Exception ex) {
+			throw new CSSellyException(ex);
+		}
+		PSEUDO_FUNCTION_MAP.put(pseudoFunction.getPseudoFunctionName(), pseudoFunction);
+	}
+
+	/**
+	 * Lookups pseudo function for given pseudo function name.
+	 */
+	public static PseudoFunction lookupPseudoFunction(String pseudoFunctionName) {
+		PseudoFunction pseudoFunction = PSEUDO_FUNCTION_MAP.get(pseudoFunctionName);
+		if (pseudoFunction == null) {
+			throw new CSSellyException("Unsupported pseudo function: " + pseudoFunctionName);
+		}
+		return pseudoFunction;
+	}
+
+
+	// ---------------------------------------------------------------- selector
 
 	protected final PseudoFunction pseudoFunction;
 
@@ -22,7 +64,7 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 	public PseudoFunctionSelector(String functionName, String expression) {
 		super(Type.PSEUDO_FUNCTION);
 
-		this.pseudoFunction = PseudoFunction.valueOfName(functionName.trim());
+		this.pseudoFunction = lookupPseudoFunction(functionName.trim());
 
 		expression = StringUtil.removeChars(expression, "+ \t\n\r\n");
 		if (expression.equals("odd")) {

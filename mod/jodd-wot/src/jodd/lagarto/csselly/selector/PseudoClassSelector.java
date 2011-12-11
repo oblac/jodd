@@ -30,7 +30,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 	protected static final Map<String, PseudoClass> PSEUDO_CLASS_MAP;
 
 	static {
-		PSEUDO_CLASS_MAP = new HashMap<String, PseudoClass>(8);
+		PSEUDO_CLASS_MAP = new HashMap<String, PseudoClass>(11);
 
 		registerPseudoClass(PseudoClass.EMPTY.class);
 		registerPseudoClass(PseudoClass.FIRST_CHILD.class);
@@ -65,7 +65,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 	public static PseudoClass lookupPseudoClass(String pseudoClassName) {
 		PseudoClass pseudoClass = PSEUDO_CLASS_MAP.get(pseudoClassName);
 		if (pseudoClass == null) {
-			throw new CSSellyException("Invalid or unsupported pseudo class: " + pseudoClassName);
+			throw new CSSellyException("Unsupported pseudo class: " + pseudoClassName);
 		}
 		return pseudoClass;
 	}
@@ -76,12 +76,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 
 	public PseudoClassSelector(String pseudoClassName) {
 		super(Type.PSEUDO_CLASS);
-		this.pseudoClass = lookupPseudoClass(pseudoClassName);
-	}
-
-	public PseudoClassSelector(PseudoClass pseudoClass) {
-		super(Type.PSEUDO_CLASS);
-		this.pseudoClass = pseudoClass;
+		this.pseudoClass = lookupPseudoClass(pseudoClassName.trim());
 	}
 
 	/**
