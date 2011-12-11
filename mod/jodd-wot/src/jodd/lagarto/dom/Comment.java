@@ -34,6 +34,13 @@ public class Comment extends Node {
 		this.conditionalDownlevelHidden = Boolean.valueOf(conditionalDownlevelHidden);
 	}
 
+	@Override
+	public Comment clone() {
+		return cloneTo(conditionalDownlevelHidden == null ?
+				new Comment(nodeValue) :
+				new Comment(nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue()));
+	}
+
 	/**
 	 * Returns <code>true</code> if this is a conditional comment.
 	 */

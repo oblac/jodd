@@ -30,6 +30,10 @@ public class Element extends Node {
 		super(NodeType.ELEMENT, name, caseSensitive);
 	}
 
+	@Override
+	public Element clone() {
+		return cloneTo(new Element(nodeName, caseSensitive));
+	}
 
 	// ---------------------------------------------------------------- html
 

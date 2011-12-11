@@ -18,6 +18,12 @@ public class Text extends Node {
 		this.nodeValue = text;
 	}
 
+	@Override
+	public Text clone() {
+		return cloneTo(new Text(nodeValue));
+	}
+
+
 	/**
 	 * Returns decoded HTML text.
 	 */

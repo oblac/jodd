@@ -21,6 +21,11 @@ public class DocumentType extends Node {
 		this.baseUri = baseUri;
 	}
 
+	@Override
+	public DocumentType clone() {
+		return cloneTo(new DocumentType(nodeValue, publicId, baseUri));
+	}
+
 	public String getRootName() {
 		return nodeValue;
 	}

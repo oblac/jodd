@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * DOM node.
  */
-public abstract class Node {
+public abstract class Node implements Cloneable {
 
 	/**
 	 * Node types.
@@ -41,6 +41,37 @@ public abstract class Node {
 		this.nodeName = caseSensitive ? nodeName : nodeName.toLowerCase();
 		this.nodeType = nodeType;
 	}
+
+	// ---------------------------------------------------------------- clone
+
+	/**
+	 * Copies all non-final values to the empty cloned object.
+	 * Cache-related values are not copied.
+	 */
+	protected <T extends Node> T cloneTo(T dest) {
+//		dest.nodeValue = nodeValue;		// set in clone implementations!
+		dest.parentNode = parentNode;
+		dest.deepLevel = deepLevel;
+
+		if (attributes != null) {
+			dest.attributes = new ArrayList<Attribute>(attributes.size());
+			for (Attribute attr : attributes) {
+				dest.attributes.add(attr.clone());
+			}
+		}
+
+		if (childNodes != null) {
+			dest.childNodes = new ArrayList<Node>(childNodes.size());
+			for (Node node : childNodes) {
+				dest.childNodes.add(node.clone());
+			}
+		}
+
+		return dest;
+	}
+	
+	@Override
+	public abstract Node clone();
 
 	// ---------------------------------------------------------------- basic
 

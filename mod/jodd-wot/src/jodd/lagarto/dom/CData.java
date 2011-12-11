@@ -17,6 +17,11 @@ public class CData extends Node {
 	}
 
 	@Override
+	public CData clone() {
+		return cloneTo(new CData(nodeValue));
+	}
+
+	@Override
 	public void toHtml(Appendable appendable) throws IOException {
 		TagWriterUtil.writeCData(appendable, nodeValue);
 	}

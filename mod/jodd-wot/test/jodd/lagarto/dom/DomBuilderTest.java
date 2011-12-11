@@ -57,6 +57,20 @@ public class DomBuilderTest extends TestCase {
 		assertEquals(page, generated);
 	}
 
+	public void testClone() {
+		String page = "<html><body><p id=\"w173\">Hello<br/>Jodd</p></body></html>";
+		Document root = new LagartoDOMBuilder().parse(page);
+
+		String generated = root.getHtml();
+		assertEquals(page, generated);
+		
+		Document rootClone = root.clone();
+		String generated2 = rootClone.getHtml();
+		assertEquals(page, generated2);
+		assertNotSame(root, rootClone);
+		assertNotSame(root.getChild(0), rootClone.getChild(0));
+	}
+
 	public void testSiblingsAndNames() {
 		Document document = new LagartoDOMBuilder().parse("<div id='top'><p id='id1'>one</p>text1<p id='id2'>two</p>text2<p id='id3'>three</p>text3</div>");
 		Element topDiv = (Element) document.getFirstChild();

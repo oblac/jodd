@@ -22,6 +22,20 @@ public class XmlDeclaration extends Node {
 		}
 	}
 
+	public XmlDeclaration(String name) {
+		this(name, false);
+	}
+
+	public XmlDeclaration(String name, boolean caseSensitive) {
+		super(NodeType.XML_DECLARATION, name, caseSensitive);
+	}
+
+	@Override
+	public XmlDeclaration clone() {
+		return cloneTo(new XmlDeclaration(nodeName, caseSensitive));
+	}
+
+
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
 		appendable.append("<?");

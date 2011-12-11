@@ -10,5 +10,9 @@ public class Document extends Node {
 	public Document() {
 		super(NodeType.DOCUMENT, null, true);
 	}
-
+	
+	@Override
+	public Document clone() {
+		return cloneTo(new Document());
+	}
 }

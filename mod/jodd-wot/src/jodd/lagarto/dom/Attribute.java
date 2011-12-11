@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Elements attribute.
  */
-public class Attribute {
+public class Attribute implements Cloneable {
 
 	protected final String name;
 	protected final int nameHash;
@@ -22,6 +22,11 @@ public class Attribute {
 		this.name = name;
 		this.nameHash = name.hashCode();
 		this.value = value != null ? (decode ? HtmlDecoder.decode(value) : value) : null;
+	}
+	
+	@Override
+	public Attribute clone() {
+		return new Attribute(name, value, false);
 	}
 
 	/**
