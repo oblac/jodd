@@ -49,7 +49,7 @@ public abstract class Node implements Cloneable {
 	 * Cache-related values are not copied.
 	 */
 	protected <T extends Node> T cloneTo(T dest) {
-//		dest.nodeValue = nodeValue;		// set in clone implementations!
+//		dest.nodeValue = nodeValue;		// already  in clone implementations!
 		dest.parentNode = parentNode;
 		dest.deepLevel = deepLevel;
 
@@ -62,8 +62,11 @@ public abstract class Node implements Cloneable {
 
 		if (childNodes != null) {
 			dest.childNodes = new ArrayList<Node>(childNodes.size());
-			for (Node node : childNodes) {
-				dest.childNodes.add(node.clone());
+			for (Node child : childNodes) {
+				Node childClone = child.clone();
+
+				childClone.parentNode = dest;	// fix parent!
+				dest.childNodes.add(childClone);
 			}
 		}
 
@@ -132,7 +135,10 @@ public abstract class Node implements Cloneable {
 		childNodes.add(node);
 		reindexChildren();
 	}
-	
+
+	/**
+	 * Appends several child nodes at once.
+	 */
 	public void appendChild(Node... nodes) {
 		for (Node node: nodes) {
 			node.detachFromParent();
