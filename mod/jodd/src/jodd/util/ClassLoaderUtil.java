@@ -4,6 +4,7 @@ package jodd.util;
 
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import sun.reflect.Reflection;
 
 import java.io.FileInputStream;
 import java.net.URL;
@@ -464,7 +465,7 @@ public class ClassLoaderUtil {
 		int bracketIndex = className.indexOf('[');
 		className = className.substring(0, bracketIndex);
 
-		int primitiveNdx = isPrimitiveClassName(className);
+		int primitiveNdx = getPrimitiveClassNameIndex(className);
 		if (primitiveNdx >= 0) {
 			className = String.valueOf(PRIMITIVE_BYTECODE_NAME[primitiveNdx]);
 
@@ -478,12 +479,16 @@ public class ClassLoaderUtil {
 	 * Detects if provided class name is a primitive type.
 	 * Returns >= 0 number if so.
 	 */
-	public static int isPrimitiveClassName(String className) {
+	private static int getPrimitiveClassNameIndex(String className) {
 		int dotIndex = className.indexOf('.');
 		if (dotIndex != -1) {
 			return -1;
 		}
 		return Arrays.binarySearch(PRIMITIVE_TYPE_NAMES, className);
+	}
+
+	public static Class loadClass(String className) throws ClassNotFoundException {
+		return loadClass(className, null);
 	}
 	
 	/**
@@ -491,45 +496,49 @@ public class ClassLoaderUtil {
 	 * <p>
 	 * Class will be loaded using class loaders in the following order:
 	 * <ul>
+	 * <li>provided class loader (if any)
 	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
-	 * <li>the basic {@link Class#forName(java.lang.String)}
-	 * <li>{@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
+	 * <li>caller classloader
 	 * </ul>
 	 */
-	public static Class loadClass(String className) throws ClassNotFoundException {
+	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
 
 		className = prepareClassnameForLoading(className);
 		
 		if ((className.indexOf('.') == -1) || (className.indexOf('[') == -1)) {
 			// maybe a primitive
-			int primitiveNdx = isPrimitiveClassName(className);
+			int primitiveNdx = getPrimitiveClassNameIndex(className);
 			if (primitiveNdx >= 0) {
 				return PRIMITIVE_TYPES[primitiveNdx];
 			}
 		}
 
-		// try #1
+		// try #1 - using provided class loader
 		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			if (classLoader != null) {
 				return classLoader.loadClass(className);
 			}
 		} catch (ClassNotFoundException ignore) {
 		}
 
-		// try #2
-		try {
-			return Class.forName(className);
-		} catch (ClassNotFoundException ignore) {
-		}
-
-		// try #3
-		try {
-			ClassLoader classLoader = ClassLoaderUtil.class.getClassLoader();
-			if (classLoader != null) {
-				return classLoader.loadClass(className);
+		// try #2 - using thread class loader
+		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
+			try {
+				return currentThreadClassLoader.loadClass(className);
+			} catch (ClassNotFoundException ignore) {
 			}
-		} catch (ClassNotFoundException ignore) {
+		}
+		
+		// try #3 - using caller classloader, similar as Class.forName()
+		Class callerClass = Reflection.getCallerClass(2);
+		ClassLoader callerClassLoader = callerClass.getClassLoader();
+
+		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
+			try {
+				return callerClassLoader.loadClass(className);
+			} catch (ClassNotFoundException ignore) {
+			}
 		}
 
 		throw new ClassNotFoundException("Class not found: " + className);
