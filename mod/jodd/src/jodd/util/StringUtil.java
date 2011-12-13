@@ -31,17 +31,17 @@ public class StringUtil {
 		if (i == -1) {
 			return s;
 		}
-		int sLen = s.length();
-		StringBuilder buf = new StringBuilder(sLen + with.length());
+		int length = s.length();
+		StringBuilder sb = new StringBuilder(length + with.length());
 		do {
-			 buf.append(s.substring(c,i));
-			 buf.append(with);
-			 c = i + sub.length();
-		 } while ((i = s.indexOf(sub, c)) != -1);
-		 if (c < sLen) {
-			 buf.append(s.substring(c, sLen));
-		 }
-		 return buf.toString();
+			sb.append(s.substring(c, i));
+			sb.append(with);
+			c = i + sub.length();
+		} while ((i = s.indexOf(sub, c)) != -1);
+		if (c < length) {
+			sb.append(s.substring(c, length));
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -52,8 +52,12 @@ public class StringUtil {
 	 * @param with   character to replace with
 	 */
 	public static String replaceChar(String s, char sub, char with) {
+		int startIndex = s.indexOf(sub);
+		if (startIndex == -1) {
+			return s;
+		}
 		char[] str = s.toCharArray();
-		for (int i = 0; i < str.length; i++) {
+		for (int i = startIndex; i < str.length; i++) {
 			if (str[i] == sub) {
 				str[i] = with;
 			}
@@ -105,13 +109,12 @@ public class StringUtil {
 	 * @param with   char to replace with
 	 */
 	public static String replaceFirst(String s, char sub, char with) {
-		char[] str = s.toCharArray();
-		for (int i = 0; i < str.length; i++) {
-			if (str[i] == sub) {
-				str[i] = with;
-				break;
-			}
+		int index = s.indexOf(sub);
+		if (index == -1) {
+			return s;
 		}
+		char[] str = s.toCharArray();
+		str[index] = with;
 		return new String(str);
 	}
 
@@ -138,13 +141,12 @@ public class StringUtil {
 	 * @param with   char to replace with
 	 */
 	public static String replaceLast(String s, char sub, char with) {
-		char[] str = s.toCharArray();
-		for (int i = str.length - 1; i >= 0; i--) {
-			if (str[i] == sub) {
-				str[i] = with;
-				break;
-			}
+		int index = s.lastIndexOf(sub);
+		if (index == -1) {
+			return s;
 		}
+		char[] str = s.toCharArray();
+		str[index] = with;
 		return new String(str);
 	}
 
@@ -166,15 +168,15 @@ public class StringUtil {
 		if (i == -1) {
 			return s;
 		}
-		StringBuilder buf = new StringBuilder(s.length());
+		StringBuilder sb = new StringBuilder(s.length());
 		do {
-			 buf.append(s.substring(c, i));
+			 sb.append(s.substring(c, i));
 			 c = i + sublen;
 		 } while ((i = s.indexOf(sub, c)) != -1);
 		 if (c < s.length()) {
-			 buf.append(s.substring(c, s.length()));
+			 sb.append(s.substring(c, s.length()));
 		 }
-		 return buf.toString();
+		 return sb.toString();
 	}
 
 	/**
@@ -185,14 +187,14 @@ public class StringUtil {
 	 */
 	public static String removeChars(String src, String chars) {
 		int i = src.length();
-		StringBuilder stringbuffer = new StringBuilder(i);
+		StringBuilder sb = new StringBuilder(i);
 		for (int j = 0; j < i; j++) {
 			char c = src.charAt(j);
 			if (chars.indexOf(c) == -1) {
-				stringbuffer.append(c);
+				sb.append(c);
 			}
 		}
-		return stringbuffer.toString();
+		return sb.toString();
 	}
 
 
@@ -204,7 +206,7 @@ public class StringUtil {
 	 */
 	public static String removeChars(String src, char... chars) {
 		int i = src.length();
-		StringBuilder stringbuffer = new StringBuilder(i);
+		StringBuilder sb = new StringBuilder(i);
 		mainloop:
 		for (int j = 0; j < i; j++) {
 			char c = src.charAt(j);
@@ -213,9 +215,9 @@ public class StringUtil {
 					continue mainloop;
 				}
 			}
-			stringbuffer.append(c);
+			sb.append(c);
 		}
-		return stringbuffer.toString();
+		return sb.toString();
 	}
 
 	/**
@@ -226,15 +228,15 @@ public class StringUtil {
 	 */
 	public static String remove(String src, char chars) {
 		int i = src.length();
-		StringBuilder stringbuffer = new StringBuilder(i);
+		StringBuilder sb = new StringBuilder(i);
 		for (int j = 0; j < i; j++) {
 			char c = src.charAt(j);
 			if (c == chars) {
 				continue;
 			}
-			stringbuffer.append(c);
+			sb.append(c);
 		}
-		return stringbuffer.toString();
+		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------- miscellaneous
@@ -593,6 +595,9 @@ public class StringUtil {
 				wasChar = false;
 			}
 			sb.append(c1);
+		}
+		if (sb.length() == len) {
+			return s;
 		}
 		return sb.toString();
 	}
@@ -2189,6 +2194,32 @@ public class StringUtil {
 		return sb.toString();
 	}
 
+	// ---------------------------------------------------------------- camel case
+
+	/**
+	 * Fixes camel case words.
+	 */
+	public static String fixCamelCase(String string) {
+		StringBuilder s = new StringBuilder();
+		int length = string.length();
+		boolean isPreviousCharUppercase = false;
+
+		for (int i = 0; i < length; i++) {
+			char ch = string.charAt(i);
+
+			if (Character.isUpperCase(ch) && (i > 0)) {
+				if (isPreviousCharUppercase) {
+					ch = Character.toLowerCase(ch);
+				}
+				isPreviousCharUppercase = true;
+			} else {
+				isPreviousCharUppercase = false;
+			}
+			s.append(ch);
+		}
+		return s.toString();
+	}
+
 	/**
 	 * Changes a camelCase string value to space separated
 	 */
@@ -2218,8 +2249,8 @@ public class StringUtil {
 	}
 
 	public static String wordsToCamelCase(String input, char separator) {
-		StringBuilder s = new StringBuilder();
 		int length = input.length();
+		StringBuilder sb = new StringBuilder(length);
 		boolean upperCase = false;
 
 		for (int i = 0; i < length; i++) {
@@ -2227,13 +2258,13 @@ public class StringUtil {
 			if (ch == separator) {
 				upperCase = true;
 			} else if (upperCase) {
-				s.append(Character.toUpperCase(ch));
+				sb.append(Character.toUpperCase(ch));
 				upperCase = false;
 			} else {
-				s.append(ch);
+				sb.append(ch);
 			}
 		}
-		return s.toString();
+		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------- prefixes
