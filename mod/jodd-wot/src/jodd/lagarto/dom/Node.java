@@ -308,6 +308,29 @@ public abstract class Node implements Cloneable {
 		return null;
 	}
 
+	protected int indexOfAttributeInstance(String name) {
+		if (attributes == null) {
+			return -1;
+		}
+		int nameHash = name.hashCode();
+		for (int i = 0; i < attributes.size(); i++) {
+			Attribute attr = attributes.get(i);
+			if (attr.equalsName(name, nameHash)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public boolean removeAttribute(String name) {
+		int index = indexOfAttributeInstance(name);
+		if (index == -1) {
+			return false;
+		}
+		attributes.remove(index);
+		return true;
+	}
+
 	/**
 	 * Sets attribute value. Value may be <code>null</code>.
 	 */
