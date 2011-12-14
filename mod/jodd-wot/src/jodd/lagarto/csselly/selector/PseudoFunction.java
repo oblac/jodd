@@ -90,7 +90,11 @@ public abstract class PseudoFunction {
 		@Override
 		public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
 			int value = Convert.toInteger(expression);
-			return index == value;
+			if (value >= 0) {
+				return index == value;
+			} else {
+				return index == currentResults.size() + value;
+			}
 		}
 	}
 
