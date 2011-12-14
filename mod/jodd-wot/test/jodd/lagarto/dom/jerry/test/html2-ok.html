@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  p { margin:8px; font-size:20px; color:blue;
+      cursor:pointer; }
+  b { text-decoration:underline; }
+  button { cursor:pointer; }
+  </style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <p>
+
+    &lt;b&gt;Click&lt;/b&gt; to change the &lt;span id=&quot;tag&quot;&gt;html&lt;/span&gt;
+  </p>
+  <p>
+
+    to a <span id="text">text</span> node.
+  </p>
+  <p>
+    This <button name="nada">button</button> does nothing.
+  </p>
+<script>
+    $("p").click(function () {
+      var htmlStr = $(this).html();
+      $(this).text(htmlStr);
+    });
+</script>
+
+</body>
+</html>

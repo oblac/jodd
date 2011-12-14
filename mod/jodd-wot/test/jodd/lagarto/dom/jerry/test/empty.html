@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  p { background:yellow; }
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <p>Hello, <span>Person</span> <a href="javascript:;">and person</a></p>
+
+<button>Call empty() on above paragraph</button>
+<script>
+  $("button").click(function () {
+    $("p").empty();
+  });
+</script>
+
+</body>
+</html>

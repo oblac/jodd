@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  div { width:50px; height:50px; margin:10px; float:left;
+        background:yellow; border:2px solid white; }
+  .green { background:#8f8; }
+  .gray { background:#ccc; }
+  #blueone { background:#99f; }
+  </style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <div style="border-color:red;"></div>
+  <div id="blueone"></div>
+  <div style="border-color:red;"></div>
+  <div class="green"></div>
+
+  <div class="green"></div>
+  <div class="gray" style="border-color:red;"></div>
+  <div style="border-color:red;"></div>
+<script>
+    $("div").not(".green, #blueone")
+            .css("border-color", "red");
+
+</script>
+
+</body>
+</html>

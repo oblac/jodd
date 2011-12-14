@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+ div { width:60px; height:60px; margin:10px; float:left; }
+ p { clear:left; font-weight:bold; font-size:16px;
+     color:blue; margin:0 10px; padding:2px; }
+ </style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <div style="border:2px solid red;background:yellow;"></div>
+
+  <div style="border:2px solid red;background:yellow;"></div>
+  <div style="border:2px solid red;background:yellow;"></div>
+  <div style="border:2px solid red;background:yellow;"></div>
+  <div style="border:2px solid red;background:yellow;"></div>
+  <div style="border:2px solid red;background:yellow;"></div>
+
+  <p style="background:yellow;">Added this... (notice no border)</p>
+<script>
+
+$("div").css("border", "2px solid red")
+        .add("p")
+        .css("background", "yellow");
+</script>
+
+</body>
+</html>

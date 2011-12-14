@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+
+  span { color:blue; font-weight:bold; }
+  button { width:100px; }
+  </style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <div><button disabled="disabled">First</button> - <span>this button is disabled</span></div>
+  <div><button>Second</button> - <span></span></div>
+
+  <div><button disabled="disabled">Third</button> - <span>this button is disabled</span></div>
+<script>$("button[disabled]").next().text("this button is disabled");</script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  div { color:blue; font-size:18px; }
+  </style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <div><b style="color:red;">Wow!!!!</b> Such excitement...</div>
+  <div><b style="color:red;">Wow!!!!</b> Such excitement...</div>
+  <div><b style="color:red;">Wow!!!!</b> Such excitement...</div>
+<script>
+
+    $("div").html("<b>Wow!</b> Such excitement...");
+    $("div b").append(document.createTextNode("!!!"))
+              .css("color", "red");
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  ul { float:left; margin:5px; font-size:16px; font-weight:bold; }
+  p { color:blue; margin:10px 20px; font-size:16px; padding:5px;
+      font-weight:bolder; }
+  .hilite { background:yellow; }
+</style>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+  <ul>
+    <li style="color:red;">One</li>
+
+    <li style="color:red;">Two</li>
+    <li class="hilite">Three</li>
+    <li style="color:red;">Four</li>
+  </ul>
+
+  <ul>
+    <li>Five</li>
+    <li>Six</li>
+    <li>Seven</li>
+
+  </ul>
+  <ul>
+    <li style="color:red;">Eight</li>
+    <li class="hilite" style="color:red;">Nine</li>
+
+    <li style="color:red;">Ten</li>
+    <li class="hilite" style="color:red;">Eleven</li>
+  </ul>
+  <p>Unique siblings: <b>7</b></p>
+<script>
+
+    var len = $(".hilite").siblings()
+                          .css("color", "red")
+                          .length;
+    $("b").text(len);
+</script>
+
+</body>
+</html>
