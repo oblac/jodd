@@ -3,12 +3,14 @@
 package jodd.lagarto.csselly.selector;
 
 import jodd.lagarto.dom.Node;
+import jodd.typeconverter.Convert;
+
+import java.util.LinkedList;
 
 /**
  * Pseudo functions.
  */
 public abstract class PseudoFunction {
-
 	/**
 	 * The <code>:nth-child(an+b)</code> pseudo-class notation represents an element that has an+b-1
 	 * siblings before it in the document tree, for any positive integer or zero value of n,
@@ -21,9 +23,12 @@ public abstract class PseudoFunction {
 	 */
 	public static class NTH_CHILD extends PseudoFunction {
 		@Override
-		public int resolveValue(Node node) {
-			return node.getSiblingNameIndex() + 1;
+		public boolean match(Node node, String expression) {
+			int value = node.getSiblingElementIndex() + 1;
+
+			return new PseudoFunctionExpression(expression).match(value);
 		}
+
 	}
 
 	/**
@@ -33,9 +38,12 @@ public abstract class PseudoFunction {
 	 */
 	public static class NTH_LAST_CHILD extends PseudoFunction {
 		@Override
-		public int resolveValue(Node node) {
-			return node.getParentNode().getChildElementsCount() - node.getSiblingElementIndex();
+		public boolean match(Node node, String expression) {
+			int value = node.getParentNode().getChildElementsCount() - node.getSiblingElementIndex();
+
+			return new PseudoFunctionExpression(expression).match(value);
 		}
+
 	}
 
 	/**
@@ -45,9 +53,12 @@ public abstract class PseudoFunction {
 	 */
 	public static class NTH_OF_TYPE extends PseudoFunction {
 		@Override
-		public int resolveValue(Node node) {
-			return node.getSiblingNameIndex() + 1;
+		public boolean match(Node node, String expression) {
+			int value = node.getSiblingNameIndex() + 1;
+
+			return new PseudoFunctionExpression(expression).match(value);
 		}
+
 	}
 
 	/**
@@ -57,18 +68,77 @@ public abstract class PseudoFunction {
 	 */
 	public static class NTH_LAST_OF_TYPE extends PseudoFunction {
 		@Override
-		public int resolveValue(Node node) {
+		public boolean match(Node node, String expression) {
 			Node child = node.getParentNode().getLastChildElement(node.getNodeName());
-			return child.getSiblingNameIndex() + 1 - node.getSiblingNameIndex();
+			int value = child.getSiblingNameIndex() + 1 - node.getSiblingNameIndex();
+
+			return new PseudoFunctionExpression(expression).match(value);
+		}
+	}
+
+	// ---------------------------------------------------------------- extension
+
+	/**
+	 * Select the element at index n within the matched set.
+	 */
+	public static class EQ extends PseudoFunction {
+		@Override
+		public boolean match(Node node, String expression) {
+			return true;
+		}
+
+		@Override
+		public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
+			int value = Convert.toInteger(expression);
+			return index == value;
+		}
+	}
+
+	/**
+	 * Select all elements at an index greater than index within the matched set.
+	 */
+	public static class GT extends PseudoFunction {
+		@Override
+		public boolean match(Node node, String expression) {
+			return true;
+		}
+
+		@Override
+		public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
+			int value = Convert.toInteger(expression);
+			return index > value;
+		}
+	}
+
+	/**
+	 *  Select all elements at an index less than index within the matched set.
+	 */
+	public static class LT extends PseudoFunction {
+		@Override
+		public boolean match(Node node, String expression) {
+			return true;
+		}
+
+		@Override
+		public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
+			int value = Convert.toInteger(expression);
+			return index < value;
 		}
 	}
 
 	// ---------------------------------------------------------------- interface
 
 	/**
-	 * Returns a value for pseudo function matching.
+	 * Matches node using provided expression.
 	 */
-	public abstract int resolveValue(Node node);
+	public abstract boolean match(Node node, String expression);
+	
+	/**
+	 * Returns <code>true</code> if node matches the pseudoclass within current results.
+	 */
+	public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
+		return true;
+	}
 
 	/**
 	 * Returns pseudo-function name.

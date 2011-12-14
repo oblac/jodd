@@ -4,6 +4,7 @@ package jodd.lagarto.csselly;
 
 import jodd.lagarto.csselly.selector.AttributeSelector;
 import jodd.lagarto.csselly.selector.PseudoClassSelector;
+import jodd.lagarto.csselly.selector.PseudoFunctionExpression;
 import jodd.lagarto.csselly.selector.PseudoFunctionSelector;
 import junit.framework.TestCase;
 
@@ -167,85 +168,101 @@ public class CSSellyTest extends TestCase {
 		assertEquals(1, cssSelector.selectorsCount());
 		PseudoFunctionSelector pfns = (PseudoFunctionSelector) cssSelector.getSelector(0);
 		assertEquals("nth-child", pfns.getPseudoFunction().getPseudoFunctionName());
-		assertEquals(2, pfns.getValueA());
-		assertEquals(1, pfns.getValueB());
+		PseudoFunctionExpression pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(2, pfe.getValueA());
+		assertEquals(1, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(odd)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
 		assertEquals("nth-child", pfns.getPseudoFunction().getPseudoFunctionName());
-		assertEquals(2, pfns.getValueA());
-		assertEquals(1, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(2, pfe.getValueA());
+		assertEquals(1, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(even)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
 		assertEquals("nth-child", pfns.getPseudoFunction().getPseudoFunctionName());
-		assertEquals(2, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(2, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(10n-1)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(10, pfns.getValueA());
-		assertEquals(-1, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(10, pfe.getValueA());
+		assertEquals(-1, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(10n+9)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(10, pfns.getValueA());
-		assertEquals(9, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(10, pfe.getValueA());
+		assertEquals(9, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(0n+5)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(0, pfns.getValueA());
-		assertEquals(5, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(0, pfe.getValueA());
+		assertEquals(5, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(5)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(0, pfns.getValueA());
-		assertEquals(5, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(0, pfe.getValueA());
+		assertEquals(5, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(1n + 0)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(1, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(1, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(n + 0)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(1, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(1, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(n)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(1, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(1, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(2n+0)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(2, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(2, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child(2n)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(2, pfns.getValueA());
-		assertEquals(0, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(2, pfe.getValueA());
+		assertEquals(0, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child( 3n + 1 )");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(3, pfns.getValueA());
-		assertEquals(1, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(3, pfe.getValueA());
+		assertEquals(1, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child( +3n - 2 )");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(3, pfns.getValueA());
-		assertEquals(-2, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(3, pfe.getValueA());
+		assertEquals(-2, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child( -n+ 6)");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(-1, pfns.getValueA());
-		assertEquals(6, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(-1, pfe.getValueA());
+		assertEquals(6, pfe.getValueB());
 
 		lexer = new CSSelly("div:nth-child( +6 )");
 		pfns = (PseudoFunctionSelector) lexer.parse().get(0).getSelector(0);
-		assertEquals(0, pfns.getValueA());
-		assertEquals(6, pfns.getValueB());
+		pfe = new PseudoFunctionExpression(pfns.getExpression());
+		assertEquals(0, pfe.getValueA());
+		assertEquals(6, pfe.getValueB());
 	}
 
 	public void testErrors() {

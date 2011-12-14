@@ -30,7 +30,7 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 	protected static final Map<String, PseudoClass> PSEUDO_CLASS_MAP;
 
 	static {
-		PSEUDO_CLASS_MAP = new HashMap<String, PseudoClass>(11);
+		PSEUDO_CLASS_MAP = new HashMap<String, PseudoClass>(26);
 
 		registerPseudoClass(PseudoClass.EMPTY.class);
 		registerPseudoClass(PseudoClass.FIRST_CHILD.class);
@@ -44,6 +44,21 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 		registerPseudoClass(PseudoClass.FIRST.class);
 		registerPseudoClass(PseudoClass.LAST.class);
 		registerPseudoClass(PseudoClass.BUTTON.class);
+		registerPseudoClass(PseudoClass.CHECKBOX.class);
+		registerPseudoClass(PseudoClass.FILE.class);
+		registerPseudoClass(PseudoClass.IMAGE.class);
+		registerPseudoClass(PseudoClass.INPUT.class);
+		registerPseudoClass(PseudoClass.HEADER.class);
+		registerPseudoClass(PseudoClass.PARENT.class);
+		registerPseudoClass(PseudoClass.PASSWORD.class);
+		registerPseudoClass(PseudoClass.RADIO.class);
+		registerPseudoClass(PseudoClass.RESET.class);
+		registerPseudoClass(PseudoClass.SELECTED.class);
+		registerPseudoClass(PseudoClass.CHECKED.class);
+		registerPseudoClass(PseudoClass.SUBMIT.class);
+		registerPseudoClass(PseudoClass.TEXT.class);
+		registerPseudoClass(PseudoClass.EVEN.class);
+		registerPseudoClass(PseudoClass.ODD.class);
 	}
 
 	/**
@@ -93,7 +108,11 @@ public class PseudoClassSelector extends Selector implements NodeFilter {
 		return pseudoClass.match(node);
 	}
 
-	public boolean accept(LinkedList<Node> currentResults, Node node) {
-		return pseudoClass.match(currentResults, node);
+	/**
+	 * Accepts node within selected results. Invoked after results are matched.
+	 */
+	public boolean accept(LinkedList<Node> currentResults, Node node, int index) {
+		return pseudoClass.match(currentResults, node, index);
 	}
+
 }

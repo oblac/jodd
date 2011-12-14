@@ -103,12 +103,25 @@ public class NodeSelector {
 		// iterate all selectors
 		for (CssSelector cssSelector : selectors) {
 
-			// new set of results
+			// create new set of results for current css selector
 			LinkedList<Node> selectedNodes = new LinkedList<Node>();
 			for (Node node : nodes) {
 				walk(node, cssSelector, selectedNodes);
 			}
-			nodes = selectedNodes;
+
+			// post-processing: filter out the results
+			LinkedList<Node> resultNodes = new LinkedList<Node>();
+			int index = 0;
+			for (Node node : selectedNodes) {
+				boolean match = filter(selectedNodes, node, cssSelector, index);
+				if (match == true) {
+					resultNodes.add(node);
+				}
+				index++;
+			}
+
+			// continue with results
+			nodes = resultNodes;
 		}
 
 		return nodes;
@@ -125,132 +138,64 @@ public class NodeSelector {
 				previousCssSelector.getCombinator() :
 				Combinator.DESCENDANT;
 
-		int childCount = rootNode.getChildNodesCount();
-
-		// collect all results for this selector
-		LinkedList<Node> currentResults = new LinkedList<Node>();
-		
 		switch (combinator) {
-			case DESCENDANT: {
-				// process children
+			case DESCENDANT:
+				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					Node node = rootNode.getChild(i);
-					boolean matched = select2(node, cssSelector);
-					if (matched) {
-						currentResults.add(node);
-					}
-				}
-				
-				// post-process current results and merge with results
-				for (Node node : currentResults) {
-					boolean matched = select3(currentResults, node, cssSelector);
-					if (matched) {
-						addNodeToResults(result, node);
-					}
-				}
-				
-				// walk all children
-				for (int i = 0; i < childCount; i++) {
-					Node node = rootNode.getChild(i);
+					selectAndAdd(node, cssSelector, result);
 					walk(node, cssSelector, result);
 				}
-			}
-			break;
-
-			case CHILD: {
-				// process children
+				break;
+			case CHILD:
+				childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					Node node = rootNode.getChild(i);
-					boolean matched = select2(node, cssSelector);
-					if (matched) {
-						currentResults.add(node);
-					}
+					selectAndAdd(node, cssSelector, result);
 				}
-
-				// post-process current results and merge with results
-				for (Node node : currentResults) {
-					boolean matched = select3(currentResults, node, cssSelector);
-					if (matched) {
-						addNodeToResults(result, node);
-					}
-				}
-			}
-			break;
-
-			case ADJACENT_SIBLING: {
-				// process children
+				break;
+			case ADJACENT_SIBLING:
 				Node node = rootNode.getNextSiblingElement();
 				if (node != null) {
-					boolean matched = select2(node, cssSelector);
-					if (matched) {
-						currentResults.add(node);
-					}
-
-					// post-process results
-					if (matched) {
-						matched = select3(currentResults, node, cssSelector);
-						if (matched) {
-							addNodeToResults(result, node);
-						}
-					}
+					selectAndAdd(node, cssSelector, result);
 				}
-			}
-			break;
-
-			case GENERAL_SIBLING: {
-				// process children
-				Node node = rootNode;
+				break;
+			case GENERAL_SIBLING:
+				node = rootNode;
 				while (true) {
 					node = node.getNextSiblingElement();
 					if (node == null) {
 						break;
 					}
-					boolean matched = select2(node, cssSelector);
-					if (matched) {
-						currentResults.add(node);
-					}
+					selectAndAdd(node, cssSelector, result);
 				}
-
-				// post-process current results and merge with results
-				for (Node node2 : currentResults) {
-					boolean matched = select3(currentResults, node2, cssSelector);
-					if (matched) {
-						addNodeToResults(result, node2);
-					}
-				}
-			}
-			break;
-		}
-	}
+				break;
+		}	}
 
 	/**
-	 * Adds node to results.
+	 * Selects single node for single selector and appends it to the results.
 	 */
-	protected void addNodeToResults(LinkedList<Node> result, Node node) {
-		// check for duplicates
-		if (result.contains(node)) {
-			return;
-		}
-		// no duplicate found, add it to the results
-		result.add(node);
-	}
-
-	/**
-	 * Selects single node by single selector.
-	 */
-	protected boolean select2(Node node, CssSelector cssSelector) {
+	protected void selectAndAdd(Node node, CssSelector cssSelector, LinkedList<Node> result) {
 		// ignore all nodes that are not elements
 		if (node.getNodeType() != Node.NodeType.ELEMENT) {
-			return false;
+			return;
 		}
-		return cssSelector.accept(node);
+		boolean matched = cssSelector.accept(node);
+		if (matched) {
+			// check for duplicates
+			if (result.contains(node)) {
+				return;
+			}
+			// no duplicate found, add it to the results
+			result.add(node);
+		}
 	}
 
 	/**
-	 * Post-selects node.
+	 * Filter nodes.
 	 */
-	protected boolean select3(LinkedList<Node> currentResults, Node node, CssSelector cssSelector) {
-		return cssSelector.accept(currentResults, node);
+	protected boolean filter(LinkedList<Node> currentResults, Node node, CssSelector cssSelector, int index) {
+		return cssSelector.accept(currentResults, node, index);
 	}
 
 }

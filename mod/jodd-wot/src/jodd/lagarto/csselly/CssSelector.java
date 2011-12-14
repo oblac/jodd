@@ -171,13 +171,7 @@ public class CssSelector implements NodeFilter {
 				case PSEUDO_FUNCTION:
 					PseudoFunctionSelector pfns = (PseudoFunctionSelector) selector;
 					out.append(':').append(pfns.getPseudoFunction().getPseudoFunctionName()).append('(');
-					out.append(pfns.getValueA()).append('n');
-					int b = pfns.getValueB();
-					if (b >= 0) {
-						out.append('+');
-					}
-					out.append(b);
-					out.append(')');
+					out.append(pfns.getExpression()).append(')');
 					break;
 			}
 		}
@@ -251,7 +245,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Accepts node within current results.
 	 */
-	public boolean accept(LinkedList<Node> currentResults, Node node) {
+	public boolean accept(LinkedList<Node> currentResults, Node node, int index) {
 		// match attributes
 		int totalSelectors = selectorsCount();
 		for (int i = 0; i < totalSelectors; i++) {
@@ -259,8 +253,13 @@ public class CssSelector implements NodeFilter {
 
 			// just attr name existence
 			switch (selector.getType()) {
+				case PSEUDO_FUNCTION:
+					if (!((PseudoFunctionSelector) selector).accept(currentResults, node, index)) {
+						return false;
+					}
+					break;
 				case PSEUDO_CLASS:
-					if (!((PseudoClassSelector) selector).accept(currentResults, node)) {
+					if (!((PseudoClassSelector) selector).accept(currentResults, node, index)) {
 						return false;
 					}
 					break;

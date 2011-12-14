@@ -6,10 +6,9 @@ import jodd.lagarto.csselly.CSSellyException;
 import jodd.lagarto.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
-import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -20,12 +19,16 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 	protected static final Map<String, PseudoFunction> PSEUDO_FUNCTION_MAP;
 
 	static {
-		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(4);
+		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(7);
 
 		registerPseudoFunction(PseudoFunction.NTH_CHILD.class);
 		registerPseudoFunction(PseudoFunction.NTH_LAST_CHILD.class);
 		registerPseudoFunction(PseudoFunction.NTH_LAST_OF_TYPE.class);
 		registerPseudoFunction(PseudoFunction.NTH_OF_TYPE.class);
+
+		registerPseudoFunction(PseudoFunction.EQ.class);
+		registerPseudoFunction(PseudoFunction.GT.class);
+		registerPseudoFunction(PseudoFunction.LT.class);
 	}
 
 	/**
@@ -56,47 +59,12 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 	// ---------------------------------------------------------------- selector
 
 	protected final PseudoFunction pseudoFunction;
-
-    protected final int a;
-
-    protected final int b;
+	protected final String expression;
 
 	public PseudoFunctionSelector(String functionName, String expression) {
 		super(Type.PSEUDO_FUNCTION);
-
 		this.pseudoFunction = lookupPseudoFunction(functionName.trim());
-
-		expression = StringUtil.removeChars(expression, "+ \t\n\r\n");
-		if (expression.equals("odd")) {
-			a = 2;
-			b = 1;
-		} else if (expression.equals("even")) {
-			a = 2;
-			b = 0;
-		} else {
-			int nndx = expression.indexOf('n');
-			if (nndx != -1) {
-				String aVal = expression.substring(0, nndx).trim();
-				if (aVal.length() == 0) {
-					a = 1;
-				} else {
-					if (aVal.equals(StringPool.DASH)) {
-						a = -1;
-					} else {
-						a = Integer.parseInt(aVal);
-					}
-				}
-				String bVal = expression.substring(nndx + 1);
-				if (bVal.length() == 0) {
-					b = 0;
-				} else {
-					b = Integer.parseInt(bVal);
-				}
-			} else {
-				a = 0;
-				b = Integer.parseInt(expression);
-			}
-		}
+		this.expression = expression;
 	}
 
 	/**
@@ -107,46 +75,24 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 	}
 
 	/**
-	 * Returns <b>a</b> value of the function expression.
+	 * Returns expression string.
 	 */
-	public int getValueA() {
-		return a;
+	public String getExpression() {
+		return expression;
 	}
-
-	/**
-	 * Returns <b>b</b> value of the function expression.
-	 */
-	public int getValueB() {
-		return b;
-	}
-
 
 	/**
 	 * Matches nodes with this pseudo function selector.
 	 */
 	public boolean accept(Node node) {
-		int x = pseudoFunction.resolveValue(node);
-		return match(x);
+		return pseudoFunction.match(node, expression);
 	}
 
 	/**
-	 * Matches expression with the value.
+	 * Accepts node within selected results. Invoked after results are matched.
 	 */
-	public boolean match(int value) {
-		if (a == 0) {
-			return value == b;
-		}
-
-		if (a > 0) {
-			if (value < b) {
-				return false;
-			}
-			return (value - b) % a == 0;
-		}
-
-		if (value > b) {
-			return false;
-		}
-		return (b - value) % (-a) == 0;
+	public boolean accept(LinkedList<Node> currentResults, Node node, int index) {
+		return pseudoFunction.match(currentResults, node, index, expression);
 	}
+
 }
