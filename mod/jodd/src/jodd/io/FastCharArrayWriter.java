@@ -81,7 +81,8 @@ public class FastCharArrayWriter extends Writer {
 				|| ((off + len) > b.length)
 				|| ((off + len) < 0)) {
 			throw new IndexOutOfBoundsException();
-		} else if (len == 0) {
+		}
+		if (len == 0) {
 			return;
 		}
 		int newcount = count + len;
