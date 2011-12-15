@@ -5,17 +5,19 @@ package jodd.io;
 import jodd.JoddDefault;
 import jodd.util.StringPool;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
-import java.io.StringWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileFilter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -634,6 +636,36 @@ public class FileUtil {
 		}
 	}
 
+
+	public static void writeChars(File dest, char[] data) throws IOException {
+		outChars(dest, data, JoddDefault.encoding, false);
+	}
+	public static void writeChars(String dest, char[] data) throws IOException {
+		outChars(new File(dest), data, JoddDefault.encoding, false);
+	}
+
+	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
+		outChars(dest, data, encoding, false);
+	}
+	public static void writeChars(String dest, char[] data, String encoding) throws IOException {
+		outChars(new File(dest), data, encoding, false);
+	}
+	
+	protected static void outChars(File dest, char[] data, String encoding, boolean append) throws IOException {
+		if (dest.exists() == true) {
+			if (dest.isFile() == false) {
+				throw new IOException(MSG_NOT_A_FILE + dest);
+			}
+		}
+		Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dest, append), encoding));
+		try {
+			out.write(data);
+		} finally {
+			StreamUtil.close(out);
+		}
+	}
+
+
 	// ---------------------------------------------------------------- read/write string
 
 
@@ -666,9 +698,9 @@ public class FileUtil {
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(file);
-			StringWriter sw = new StringWriter((int) len);
-			StreamUtil.copy(in, sw, encoding);
-			return sw.toString();
+			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
+			StreamUtil.copy(in, out, encoding);
+			return out.toString();
 		} finally {
 			StreamUtil.close(in);
 		}
@@ -735,6 +767,7 @@ public class FileUtil {
 		}
 
 	}
+
 	public static void writeStream(String dest, InputStream in) throws IOException {
 		FileOutputStream out = null;
 		try {
