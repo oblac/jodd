@@ -20,21 +20,26 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 		super(in);
 	}
 
+	/**
+	 * Reads expected byte. Throws exception on streams end.
+	 */
 	public byte readByte() throws IOException {
 		int i = super.read();
 		if (i == -1) {
-			throw new IOException("Unable to read data from HTTP request.");
+			throw new IOException("End of HTTP request stream reached.");
 		}
 		return (byte) i;
 	}
 
+	/**
+	 * Skips specified number of bytes.
+	 */
 	public void skipBytes(int i) throws IOException {
 		long len = super.skip(i);
 		if (len != i) {
 			throw new IOException("Unable to skip data in HTTP request.");
 		}
 	}
-
 
 	// ---------------------------------------------------------------- boundary
 
@@ -46,6 +51,12 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	public byte[] readBoundary() throws IOException {
 		FastByteArrayOutputStream boundaryOutput = new FastByteArrayOutputStream();
 		byte b;
+		// skip optional whitespaces
+		while ((b = readByte()) <= ' ') {
+		}
+		boundaryOutput.write(b);
+
+		// now read boundary chars
 		while ((b = readByte()) != '\r') {
 			boundaryOutput.write(b);
 		}
@@ -59,8 +70,6 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 		boundary[1] = '\n';
 		return boundary;
 	}
-
-
 
 	// ---------------------------------------------------------------- data header
 

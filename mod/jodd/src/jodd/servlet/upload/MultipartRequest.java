@@ -357,7 +357,10 @@ public class MultipartRequest {
 
 			input.skipBytes(1);
 			input.mark(1);
-			if (input.readByte() == '-') {
+
+			// read byte, but may be end of stream
+			int nextByte = input.read();
+			if (nextByte == -1 || nextByte == '-') {
 				input.reset();
 				break;
 			}
