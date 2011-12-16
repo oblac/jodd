@@ -2,39 +2,34 @@
 
 package jodd;
 
-import jodd.bean.BeanTests;
-import jodd.cache.CacheTests;
-import jodd.format.FormatTests;
-import jodd.introspector.IntrospectorTests;
-import jodd.io.IoTests;
-import jodd.props.PropsTests;
-import jodd.servlet.ServletTests;
-import jodd.servlet.filter.FilterTests;
-import jodd.typeconverter.TypeConverterTests;
-import jodd.util.UtilFastTests;
-import jodd.util.collection.CollectionTests;
 import junit.framework.TestSuite;
 
 /**
  * Faster test suite test. Convenient for quick tests in IntelliJ
  * with code-coverage turned on.
  */
-public class TestJoddFast {
+public class TestJoddFast extends TestJodd {
 
+	@SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 	public static TestSuite suite() {
-		TestSuite suite = new TestSuite("Jodd Java Library Test Suite");
-		suite.addTest(BeanTests.suite());
-		suite.addTest(CacheTests.suite());
-		suite.addTest(IntrospectorTests.suite());
-		suite.addTest(IoTests.suite());
-		suite.addTest(FormatTests.suite());
-		suite.addTest(PropsTests.suite());
-		suite.addTest(ServletTests.suite());
-		suite.addTest(FilterTests.suite());
-		suite.addTest(UtilFastTests.suite());
-		suite.addTest(CollectionTests.suite());
-		suite.addTest(TypeConverterTests.suite());
-		suite.addTest(PropsTests.suite());
-		return suite;
+		TestJoddFast test = new TestJoddFast();
+		return test.processAllTests("Jodd FAST Test Suite");
 	}
+
+	@Override
+	protected boolean acceptTestClass(Class testClass) {
+		if (testClass == TestJodd.class) {
+			return false;
+		}
+		String className = testClass.getName();
+		if (className.equals("jodd.util.MutexTest")) {
+			return false;
+		}
+		String packageName = testClass.getPackage().getName();
+		if (packageName.equals("jodd.datetime")) {
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -21,7 +21,6 @@ public class TestJoddWot {
 
 		while (testClasses.hasMoreElements()) {
 			String testClassName = testClasses.nextElement().toString();
-			System.out.println(testClassName);
 			Class testClass;
 			try {
 				testClass = Class.forName(testClassName);

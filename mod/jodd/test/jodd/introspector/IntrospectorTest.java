@@ -3,10 +3,10 @@
 package jodd.introspector;
 
 import junit.framework.TestCase;
-import jodd.introspector.test.Abean;
-import jodd.introspector.test.Bbean;
-import jodd.introspector.test.Ac;
-import jodd.introspector.test.Bc;
+import jodd.introspector.tst.Abean;
+import jodd.introspector.tst.Bbean;
+import jodd.introspector.tst.Ac;
+import jodd.introspector.tst.Bc;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
