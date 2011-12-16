@@ -29,7 +29,7 @@ public class WireTest extends TestCase {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
 		configurator.setIncludedEntries("jodd.petite.*");
-		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.test3.*");
+		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*");
 		configurator.configure(pc);
 
 		assertEquals(1, pc.getTotalBeans());

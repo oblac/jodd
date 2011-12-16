@@ -16,7 +16,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
 		assertEquals("/boo.foo.html", cfg.actionPath);
 
 		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
@@ -43,7 +43,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo1");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo1");
 		assertEquals("/boo.xxx.html", cfg.actionPath);
 		
 		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
@@ -61,7 +61,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo2");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo2");
 		assertEquals("/boo.foo2.xxx", cfg.actionPath);
 		assertTrue(cfg.isPathEndsWithExtension());
 
@@ -77,7 +77,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo3");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo3");
 		assertEquals("/boo.html", cfg.actionPath);
 
 		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
@@ -98,7 +98,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo4");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo4");
 		assertEquals("/xxx", cfg.actionPath);
 		assertNull(cfg.actionMethod);
 
@@ -120,7 +120,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo5");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo5");
 		assertEquals("/xxx.html", cfg.actionPath);
 		assertEquals("POST", cfg.actionMethod);
 
@@ -141,7 +141,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo8");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo8");
 		assertEquals("/boo.foo8", cfg.actionPath);
 		assertNull(cfg.actionPathExtension);
 		assertFalse(cfg.isPathEndsWithExtension());
@@ -172,7 +172,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo81");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo81");
 		assertEquals("/boo.foo81", cfg.actionPath);
 		assertEquals("html", cfg.actionPathExtension);
 		assertFalse(cfg.isPathEndsWithExtension());
@@ -213,7 +213,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo82");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo82");
 		assertEquals("/boo.foo82.html", cfg.actionPath);
 		assertEquals("html", cfg.actionPathExtension);
 		assertTrue(cfg.isPathEndsWithExtension());
@@ -244,7 +244,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo83");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo83");
 		assertEquals("/boo.foo83.json", cfg.actionPath);
 		assertEquals("json", cfg.actionPathExtension);
 		assertTrue(cfg.isPathEndsWithExtension());
@@ -283,7 +283,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
 		assertEquals("/boo.foo.html", cfg.actionPath);
 
 		String resultPath = resultMapper.resolveResultPath(cfg, "/%ok%?foo=1");
@@ -314,7 +314,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo2");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo2");
 
 		String resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/aliased", resultPath);
@@ -342,7 +342,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 
-		ActionConfig cfg = parse(actionMethodParser, "test.BooAction#foo");
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
 		assertEquals("/boo.foo.html", cfg.actionPath);
 
 		String resultPath = resultMapper.resolveResultPath(cfg, "#ok");

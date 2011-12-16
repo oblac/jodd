@@ -29,13 +29,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbOomManager dbOom = DbOomManager.getInstance();
-		if (dbOom.lookupType(Girl.class) == null) {
-			dbOom.registerEntity(Girl.class);
-		}
-		if (dbOom.lookupType(BadBoy.class) == null) {
-			dbOom.registerEntity(BadBoy.class);
-		}
-	}	
+		dbOom.reset();
+		dbOom.registerEntity(Girl.class);
+		dbOom.registerEntity(BadBoy.class);
+	}
 	
 	@Override
 	protected void tearDown() throws Exception {
