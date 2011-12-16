@@ -2,8 +2,8 @@
 
 package jodd.petite;
 
-import jodd.petite.test2.Joo;
-import jodd.petite.test2.Moo;
+import jodd.petite.tst2.Joo;
+import jodd.petite.tst2.Moo;
 import jodd.props.Props;
 import junit.framework.TestCase;
 import jodd.petite.data.PojoBean2;

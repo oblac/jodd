@@ -3,11 +3,11 @@
 package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.oom.test.Foo;
-import jodd.db.oom.test.BooSqlType;
-import jodd.db.oom.test.Boo;
-import jodd.db.oom.test.FooColor;
-import jodd.db.oom.test.FooWeight;
+import jodd.db.oom.tst.Foo;
+import jodd.db.oom.tst.BooSqlType;
+import jodd.db.oom.tst.Boo;
+import jodd.db.oom.tst.FooColor;
+import jodd.db.oom.tst.FooWeight;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;

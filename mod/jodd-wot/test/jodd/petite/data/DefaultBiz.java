@@ -3,7 +3,7 @@
 package jodd.petite.data;
 
 import jodd.petite.meta.PetiteBean;
-import jodd.petite.test.Foo;
+import jodd.petite.tst.Foo;
 
 @PetiteBean("biz")
 public class DefaultBiz implements Biz {

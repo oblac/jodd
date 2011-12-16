@@ -4,10 +4,10 @@ package jodd.db.oom.sqlgen;
 
 import jodd.db.oom.DbOomManager;
 import junit.framework.TestCase;
-import jodd.db.oom.test.Girl;
-import jodd.db.oom.test.Boy;
-import jodd.db.oom.test.BadBoy;
-import jodd.db.oom.test.BadGirl;
+import jodd.db.oom.tst.Girl;
+import jodd.db.oom.tst.Boy;
+import jodd.db.oom.tst.BadBoy;
+import jodd.db.oom.tst.BadGirl;
 
 import java.util.Map;
 

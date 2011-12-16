@@ -6,9 +6,9 @@ import junit.framework.TestCase;
 import jodd.petite.data.DefaultBizImpl;
 import jodd.petite.data.Biz;
 import jodd.petite.data.DefaultBiz;
-import jodd.petite.test.Foo;
-import jodd.petite.test.Boo;
-import jodd.petite.test.Zoo;
+import jodd.petite.tst.Foo;
+import jodd.petite.tst.Boo;
+import jodd.petite.tst.Zoo;
 
 public class MiscTest extends TestCase {
 

@@ -2,11 +2,11 @@
 
 package jodd.petite;
 
-import jodd.petite.test3.Batgirl;
-import jodd.petite.test3.Batman;
-import jodd.petite.test3.GothamCity;
-import jodd.petite.test3.Metropolis;
-import jodd.petite.test3.Superman;
+import jodd.petite.tst3.Batgirl;
+import jodd.petite.tst3.Batman;
+import jodd.petite.tst3.GothamCity;
+import jodd.petite.tst3.Metropolis;
+import jodd.petite.tst3.Superman;
 import junit.framework.TestCase;
 
 public class SetsTest extends TestCase {

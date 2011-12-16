@@ -4,15 +4,15 @@ package jodd.petite;
 
 import junit.framework.TestCase;
 import jodd.petite.config.AutomagicPetiteConfigurator;
-import jodd.petite.test.Boo;
-import jodd.petite.test.BooC;
-import jodd.petite.test.BooC2;
-import jodd.petite.test.Foo;
-import jodd.petite.test.Zoo;
-import jodd.petite.test.Goo;
-import jodd.petite.test.Loo;
-import jodd.petite.test.Ioo;
-import jodd.petite.test.impl.DefaultIoo;
+import jodd.petite.tst.Boo;
+import jodd.petite.tst.BooC;
+import jodd.petite.tst.BooC2;
+import jodd.petite.tst.Foo;
+import jodd.petite.tst.Zoo;
+import jodd.petite.tst.Goo;
+import jodd.petite.tst.Loo;
+import jodd.petite.tst.Ioo;
+import jodd.petite.tst.impl.DefaultIoo;
 import jodd.petite.scope.ProtoScope;
 
 import java.util.List;

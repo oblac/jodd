@@ -3,9 +3,9 @@
 package jodd.petite;
 
 import jodd.petite.scope.ThreadLocalScope;
-import jodd.petite.test.Boo;
-import jodd.petite.test.Foo;
-import jodd.petite.test.Zoo;
+import jodd.petite.tst.Boo;
+import jodd.petite.tst.Foo;
+import jodd.petite.tst.Zoo;
 import jodd.util.ConcurrentUtil;
 import junit.framework.TestCase;
 

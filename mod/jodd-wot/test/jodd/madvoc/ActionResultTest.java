@@ -6,7 +6,7 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.test.BooAction;
+import jodd.madvoc.tst.BooAction;
 
 public class ActionResultTest extends MadvocTestCase {
 

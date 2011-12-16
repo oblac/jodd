@@ -6,9 +6,9 @@ import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.DbQuery;
 import jodd.db.DbH2TestCase;
-import jodd.db.oom.test.Girl;
-import jodd.db.oom.test.IdName;
-import jodd.db.oom.test.Girl2;
+import jodd.db.oom.tst.Girl;
+import jodd.db.oom.tst.IdName;
+import jodd.db.oom.tst.Girl2;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 
@@ -18,8 +18,7 @@ import java.util.List;
 
 public class DbOom2Test extends DbH2TestCase {
 
-
-	public void testOrm() {
+	public void testOrm2() {
 		DbOomManager.getInstance().reset();
 
 		DbSession session = new DbThreadSession(cp);

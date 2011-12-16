@@ -9,10 +9,7 @@ import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
-import jodd.db.oom.test.Boy;
-import jodd.db.oom.test.Girl;
-
-import static jodd.db.oom.ColumnAliasType.TABLE_NAME;
+import jodd.db.oom.tst.Girl;
 
 public class DbNoTableTest extends DbHsqldbTestCase {
 

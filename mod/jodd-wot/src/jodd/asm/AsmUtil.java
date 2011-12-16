@@ -3,7 +3,6 @@
 package jodd.asm;
 
 import jodd.mutable.MutableInteger;
-import jodd.util.ClassLoaderUtil;
 
 /**
  * Generic ASM utils.
@@ -60,17 +59,6 @@ public class AsmUtil {
 		}
 		String name = desc.substring(1, desc.length() - 1);
 		return name.replace('/', '.');
-	}
-
-	/**
-	 * Loads class defined by bytecode-like descriptor,
-	 */
-	public static Class loadClass(String desc) throws ClassNotFoundException {
-		String className = typedesc2ClassName(desc);
-		if (className.length() == 1) {
-			return loadBaseTypeClass(className);
-		}
-		return ClassLoaderUtil.loadClass(className);
 	}
 
 	/**

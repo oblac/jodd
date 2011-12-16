@@ -4,10 +4,10 @@ package jodd.db.oom;
 
 import static jodd.db.oom.ColumnAliasType.*;
 import junit.framework.TestCase;
-import jodd.db.oom.test.Boy;
-import jodd.db.oom.test.BadBoy;
-import jodd.db.oom.test.BadGirl;
-import jodd.db.oom.test.Girl;
+import jodd.db.oom.tst.Boy;
+import jodd.db.oom.tst.BadBoy;
+import jodd.db.oom.tst.BadGirl;
+import jodd.db.oom.tst.Girl;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.sqlgen.ParameterValue;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;

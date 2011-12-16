@@ -2,8 +2,8 @@
 
 package jodd.petite;
 
-import jodd.petite.test2.Joo;
-import jodd.petite.test2.Koo;
+import jodd.petite.tst2.Joo;
+import jodd.petite.tst2.Koo;
 import junit.framework.TestCase;
 
 public class FullTypeTest extends TestCase {

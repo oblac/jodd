@@ -6,13 +6,13 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionPathMapper;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.test.Boo1Action;
-import jodd.madvoc.test.Boo2Action;
-import jodd.madvoc.test.Boo3Action;
-import jodd.madvoc.test.BooAction;
-import jodd.madvoc.test2.Boo4Action;
-import jodd.madvoc.test2.Boo5Action;
-import jodd.madvoc.test2.ReAction;
+import jodd.madvoc.tst.Boo1Action;
+import jodd.madvoc.tst.Boo2Action;
+import jodd.madvoc.tst.Boo3Action;
+import jodd.madvoc.tst.BooAction;
+import jodd.madvoc.tst2.Boo4Action;
+import jodd.madvoc.tst2.Boo5Action;
+import jodd.madvoc.tst2.ReAction;
 
 public class ActionMethodParserTest extends MadvocTestCase {
 

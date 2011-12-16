@@ -3,8 +3,8 @@
 package jodd.db.oom;
 
 import junit.framework.TestCase;
-import jodd.db.oom.test.Girl;
-import jodd.db.oom.test.BadBoy;
+import jodd.db.oom.tst.Girl;
+import jodd.db.oom.tst.BadBoy;
 
 public class JointHintResolverTest extends TestCase {
 

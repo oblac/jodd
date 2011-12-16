@@ -3,7 +3,7 @@
 package jodd.petite;
 
 import junit.framework.TestCase;
-import jodd.petite.test.Foo;
+import jodd.petite.tst.Foo;
 
 import java.util.Properties;
 

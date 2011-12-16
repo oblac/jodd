@@ -10,12 +10,12 @@ import static jodd.db.oom.ColumnAliasType.COLUMN_CODE;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import jodd.db.oom.test.BadBoy;
-import jodd.db.oom.test.BadGirl;
-import jodd.db.oom.test.Boy;
-import jodd.db.oom.test.Boy3;
-import jodd.db.oom.test.Girl;
-import jodd.db.oom.test.IdName;
+import jodd.db.oom.tst.BadBoy;
+import jodd.db.oom.tst.BadGirl;
+import jodd.db.oom.tst.Boy;
+import jodd.db.oom.tst.Boy3;
+import jodd.db.oom.tst.Girl;
+import jodd.db.oom.tst.IdName;
 import static jodd.db.oom.DbOomQuery.query;
 
 import java.util.Iterator;
@@ -29,8 +29,12 @@ public class DbOomTest extends DbHsqldbTestCase {
 		super.setUp();
 
 		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.registerEntity(Girl.class);
-		dbOom.registerEntity(BadBoy.class);
+		if (dbOom.lookupType(Girl.class) == null) {
+			dbOom.registerEntity(Girl.class);
+		}
+		if (dbOom.lookupType(BadBoy.class) == null) {
+			dbOom.registerEntity(BadBoy.class);
+		}
 	}	
 	
 	@Override
