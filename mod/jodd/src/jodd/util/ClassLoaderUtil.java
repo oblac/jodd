@@ -497,8 +497,9 @@ public class ClassLoaderUtil {
 	 * Class will be loaded using class loaders in the following order:
 	 * <ul>
 	 * <li>provided class loader (if any)
-	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
+	 * <li><code>Thread.currentThread().getContextClassLoader()}</code>
 	 * <li>caller classloader
+	 * <li>using <code>Class.forName</code>
 	 * </ul>
 	 */
 	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
@@ -539,6 +540,13 @@ public class ClassLoaderUtil {
 				return callerClassLoader.loadClass(className);
 			} catch (ClassNotFoundException ignore) {
 			}
+		}
+
+		// try #4 - using Class.forName(). We must use this since for JDK >= 6
+		// arrays will be not loaded using classloader, but only with forName.
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException ignore) {
 		}
 
 		throw new ClassNotFoundException("Class not found: " + className);
