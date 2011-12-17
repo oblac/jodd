@@ -29,6 +29,7 @@
 		<exclude name="**/.svn/**"/>
 		<exclude name="**/*.bat"/>
 		<exclude name="**/*.py"/>
+		<exclude name="**/*.flex"/>
 	</patternset>
 	<patternset id="resources">
 		<exclude name="**/*.java"/>
