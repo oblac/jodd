@@ -3,7 +3,7 @@
 prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - open-source Java utility library and web application frameworks.'
-prjVersion = '3.3'
+prjVersion = '3.3.1'
 
 # vars
 copyright = 'Copyright &#169; 2003-2011 Jodd Team'
