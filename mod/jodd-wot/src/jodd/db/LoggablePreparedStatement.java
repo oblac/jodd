@@ -2,6 +2,8 @@
 
 package jodd.db;
 
+import jodd.typeconverter.Convert;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -30,23 +32,27 @@ import java.math.BigDecimal;
  * In addition to the methods declared in <code>PreparedStatement</code>,
  * <code>LoggablePreparedStatement</code> provides a method {@link #getQueryString} which can be used to get
  * the query string in a format suitable for logging.
+ * <p>
+ * This implementation is based on <code>PreparedStatement</code> from JDK5.
+ * If you use new <code>PreparedStatement</code> methods, please use our
+ * <code>LoggablePreparedStatement6</code> implementation, built on JDK6.
  */
 public class LoggablePreparedStatement implements PreparedStatement {
 
 	/**
 	 * Used for storing parameter values needed for producing log.
 	 */
-	private ArrayList<String> parameterValues;
+	protected ArrayList<String> parameterValues;
 
 	/**
 	 * The query string with question marks as parameter placeholders.
 	 */
-	private String sqlTemplate;
+	protected String sqlTemplate;
 
 	/**
 	 * A statement created from a real database connection.
 	 */
-	private PreparedStatement wrappedStatement;
+	protected PreparedStatement wrappedStatement;
 
 	/**
 	* Constructs a LoggablePreparedStatement.
@@ -463,9 +469,9 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setArray(int i, Array x) throws SQLException {
 		wrappedStatement.setArray(i, x);
-		saveQueryParamValue(i, x);
-
+		saveQueryParamValueName(i, "Array", -1);
 	}
+
 	/**
 	 * Sets the designated parameter to the given input stream, which will have
 	 * the specified number of bytes.
@@ -486,7 +492,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		wrappedStatement.setAsciiStream(parameterIndex, x, length);
-		saveQueryParamValue(parameterIndex, x);
+		saveQueryParamValueName(parameterIndex, "AsciiStream", -1);
 	}
 	/**
 	 * Sets the designated parameter to a java.lang.BigDecimal value.
@@ -522,7 +528,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		wrappedStatement.setBinaryStream(parameterIndex, x, length);
-		saveQueryParamValue(parameterIndex, x);
+		saveQueryParamValueName(parameterIndex, "BinaryStream", length);
 
 	}
 	/**
@@ -536,7 +542,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setBlob(int i, Blob x) throws SQLException {
 		wrappedStatement.setBlob(i, x);
-		saveQueryParamValue(i, x);
+		saveQueryParamValueName(i, "Blob", -1);
 	}
 	/**
 	 * Sets the designated parameter to a Java boolean value.  The driver converts this
@@ -561,7 +567,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setByte(int parameterIndex, byte x) throws SQLException {
 		wrappedStatement.setByte(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Integer(x));
+		saveQueryParamValue(parameterIndex, Byte.valueOf(x));
 	}
 	/**
 	 * Sets the designated parameter to a Java array of bytes.  The driver converts
@@ -599,7 +605,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
 		wrappedStatement.setCharacterStream(parameterIndex, reader, length);
-		saveQueryParamValue(parameterIndex, reader);
+		saveQueryParamValueName(parameterIndex, "CharacterStream", length);
 
 	}
 	/**
@@ -613,7 +619,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setClob(int i, Clob x) throws SQLException {
 		wrappedStatement.setClob(i, x);
-		saveQueryParamValue(i, x);
+		saveQueryParamValueName(i, "Clob", -1);
 
 	}
 	/**
@@ -685,7 +691,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setDouble(int parameterIndex, double x) throws SQLException {
 		wrappedStatement.setDouble(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Double(x));
+		saveQueryParamValue(parameterIndex, Double.valueOf(x));
 	}
 	/**
 	 * Sets escape processing on or off.
@@ -750,7 +756,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setFloat(int parameterIndex, float x) throws SQLException {
 		wrappedStatement.setFloat(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Float(x));
+		saveQueryParamValue(parameterIndex, Float.valueOf(x));
 
 	}
 	/**
@@ -763,7 +769,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setInt(int parameterIndex, int x) throws SQLException {
 		wrappedStatement.setInt(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Integer(x));
+		saveQueryParamValue(parameterIndex, Integer.valueOf(x));
 	}
 	/**
 	 * Sets the designated parameter to a Java long value.  The driver converts this
@@ -775,7 +781,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setLong(int parameterIndex, long x) throws SQLException {
 		wrappedStatement.setLong(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Long(x));
+		saveQueryParamValue(parameterIndex, Long.valueOf(x));
 
 	}
 	/**
@@ -953,7 +959,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setRef(int i, Ref x) throws SQLException {
 		wrappedStatement.setRef(i, x);
-		saveQueryParamValue(i, x);
+		saveQueryParamValueName(i, "Ref", -1);
 
 	}
 	/**
@@ -966,7 +972,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 */
 	public void setShort(int parameterIndex, short x) throws SQLException {
 		wrappedStatement.setShort(parameterIndex, x);
-		saveQueryParamValue(parameterIndex, new Integer(x));
+		saveQueryParamValue(parameterIndex, Short.valueOf(x));
 	}
 	/**
 	 * Sets the designated parameter to a Java String value.  The driver converts this
@@ -979,7 +985,6 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	 * @exception SQLException if a database access error occurs
 	 */
 	public void setString(int parameterIndex, String x) throws SQLException {
-
 		wrappedStatement.setString(parameterIndex, x);
 		saveQueryParamValue(parameterIndex, x);
 	}
@@ -1079,7 +1084,7 @@ public class LoggablePreparedStatement implements PreparedStatement {
 	public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
 		//noinspection deprecation
 		wrappedStatement.setUnicodeStream(parameterIndex, x, length);
-		saveQueryParamValue(parameterIndex, x);
+		saveQueryParamValueName(parameterIndex, "UnicodeStream", length);
 	}
 
 	// ---------------------------------------------------------------- JDBC new
@@ -1408,23 +1413,31 @@ public class LoggablePreparedStatement implements PreparedStatement {
 		return buf.toString().trim();
 	}
 
+	// ---------------------------------------------------------------- query params
+
+	protected void saveQueryParamValueName(int position, String str, long len) {
+		if (len == -1) {
+			saveQueryParamValue(position, '<' + str + '>');
+		} else {
+			saveQueryParamValue(position, '<' + str + ", len=" + len + '>');
+		}
+	}
+
 	/**
 	 * Saves the parameter value <code>obj</code> for the specified <code>position</code> for use in logging output
 	 *
 	 * @param position position (starting at 1) of the parameter to save
 	 * @param obj java.lang.Object the parameter value to save
 	 */
-	private void saveQueryParamValue(int position, Object obj) {
+	protected void saveQueryParamValue(int position, Object obj) {
 		String strValue;
 		if (obj instanceof String || obj instanceof Date) {
 			strValue = "'" + obj + '\'';        // if we have a String or Date , include '' in the saved value
+		}
+		else if (obj == null) {
+			strValue = "<null>";				// convert null to the string null
 		} else {
-
-			if (obj == null) {
-				strValue = "<null>";            // convert null to the string null
-			} else {
-				strValue = obj.toString();      // unknown object (includes all Numbers), just call toString
-			}
+			strValue = Convert.toString(obj);	// all other objects (includes all Numbers, arrays, etc)
 		}
 
 		// if we are setting a position larger than current size of parameterValues, first make it larger
@@ -1433,4 +1446,5 @@ public class LoggablePreparedStatement implements PreparedStatement {
 		}
 		parameterValues.set(position, strValue);
 	}
+
 }
