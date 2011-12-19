@@ -30,7 +30,7 @@ module_dist_sources(moduleName, 'production')
 module_dist_javadoc(moduleName, 'production')
 
 module('jodd-wot')
-module_compile('production', 'jdk5', '>jodd.production, servlets, asm, slf4j')
+module_compile2('production', 'jdk5','jdk6', '>jodd.production, servlets, asm, slf4j')
 module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_compile('test', 		 'jdk5', '>jodd.production, #production, asm, slf4j, test')
 module_do_build('production, test')

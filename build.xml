@@ -22,7 +22,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3"/>
+	<property name="prjVersion" value="3.3.1"/>
 
 	<patternset id="ignored.files">
 		<exclude name="**/CVS/**"/>
@@ -350,9 +350,14 @@
 		<path refid="jdk5.classpath"/>
 		<path refid="jdk5.tools"/>
 	</path>
+	<path id="jodd-wot.production.bootclasspath.6">
+		<path refid="jdk6.classpath"/>
+		<path refid="jdk6.tools"/>
+	</path>
 
 	<property name="jodd-wot.production.out.dir" value="${output.dir}/production/jodd-wot"/>
 	<property name="jodd-wot.production.src.dir" value="mod/jodd-wot/src"/>
+	<property name="jodd-wot.production.src.dir.6" value="mod/jodd-wot.6/src"/>
 
 	<target name="compile.jodd-wot.production" description="compiles module: jodd-wot; production classes">
 		<mkdir dir="${jodd-wot.production.out.dir}"/>
@@ -367,6 +372,21 @@
 		</javac>
 		<copy todir="${jodd-wot.production.out.dir}">
 			<fileset dir="${jodd-wot.production.src.dir}">
+				<patternset refid="resources"/>
+				<type type="file"/>
+			</fileset>
+		</copy>
+		<javac destdir="${jodd-wot.production.out.dir}"
+				listfiles="on" debug="on"
+				source="1.6" target="1.6"
+				deprecation="true" encoding="UTF-8" includeantruntime="false"
+				fork="true" executable="${jdk6.bin}/javac">
+			<src location="${jodd-wot.production.src.dir.6}"/>
+			<bootclasspath refid="jodd-wot.production.bootclasspath.6"/>
+			<classpath refid="jodd-wot.production.classpath"/>
+		</javac>
+		<copy todir="${jodd-wot.production.out.dir}">
+			<fileset dir="${jodd-wot.production.src.dir.6}">
 				<patternset refid="resources"/>
 				<type type="file"/>
 			</fileset>
