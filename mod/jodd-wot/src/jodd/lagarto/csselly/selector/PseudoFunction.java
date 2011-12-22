@@ -4,6 +4,7 @@ package jodd.lagarto.csselly.selector;
 
 import jodd.lagarto.dom.Node;
 import jodd.typeconverter.Convert;
+import jodd.util.StringUtil;
 
 import java.util.LinkedList;
 
@@ -127,6 +128,21 @@ public abstract class PseudoFunction {
 		public boolean match(LinkedList<Node> currentResults, Node node, int index, String expression) {
 			int value = Convert.toInteger(expression);
 			return index < value;
+		}
+	}
+
+	/**
+	 * Selects all elements that contain the specified text.
+	 */
+	public static class CONTAINS extends PseudoFunction {
+		
+		@Override
+		public boolean match(Node node, String expression) {
+			if (StringUtil.startsWithChar(expression, '\'') || StringUtil.startsWithChar(expression, '"')) {
+				expression = expression.substring(1, expression.length() - 1);
+			}
+			String text = node.getTextContent();
+			return text.contains(expression);
 		}
 	}
 

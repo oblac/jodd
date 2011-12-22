@@ -19,7 +19,7 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 	protected static final Map<String, PseudoFunction> PSEUDO_FUNCTION_MAP;
 
 	static {
-		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(7);
+		PSEUDO_FUNCTION_MAP = new HashMap<String, PseudoFunction>(8);
 
 		registerPseudoFunction(PseudoFunction.NTH_CHILD.class);
 		registerPseudoFunction(PseudoFunction.NTH_LAST_CHILD.class);
@@ -29,6 +29,7 @@ public class PseudoFunctionSelector extends Selector implements NodeFilter {
 		registerPseudoFunction(PseudoFunction.EQ.class);
 		registerPseudoFunction(PseudoFunction.GT.class);
 		registerPseudoFunction(PseudoFunction.LT.class);
+		registerPseudoFunction(PseudoFunction.CONTAINS.class);
 	}
 
 	/**
