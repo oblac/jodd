@@ -274,6 +274,26 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	public void testPseudoContains() {
+		String html = readFile("pseudoContains.html");
+		String htmlOK = readFile("pseudoContains-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div:contains('John')").css("text-decoration", "underline");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	public void testPseudoContains2() {
+		String html = readFile("pseudoContains.html");
+		String htmlOK = readFile("pseudoContains-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div:contains(John)").css("text-decoration", "underline");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
 	public void testNext() {
 		String html = readFile("next.html");
 		String htmlOK = readFile("next-ok.html");
@@ -342,6 +362,51 @@ public class JerryTest extends TestCase {
 
 		Jerry doc = jerry(html);
 		doc.$("p").before("<b>Hello</b>");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	public void testIs() {
+		String html = readFile("is.html");
+		String htmlOK = readFile("is-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div").each(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+				if ($this.is(":first-child")) {
+					$this.text("Its the first div.");
+				} else if ($this.is(".blue,.red")) {
+					$this.text("Its a blue or red div.");
+				} else if ($this.is(":contains(Peter)")) {
+					$this.text("Its Peter!");
+				} else {
+					$this.html("Its nothing <em>special</em>.");
+				}
+				return true;
+			}
+		});
+		
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	public void testIs2() {
+		String html = readFile("is2.html");
+		String htmlOK = readFile("is2-ok.html");
+
+		Jerry doc = jerry(html);
+		boolean isFormParent = doc.$("input[type='checkbox']").parent().is("form");
+		doc.$("div").text("isFormParent = " + isFormParent);
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	public void testIs3() {
+		String html = readFile("is3.html");
+		String htmlOK = readFile("is3-ok.html");
+
+		Jerry doc = jerry(html);
+		boolean isFormParent = doc.$("input[type='checkbox']").parent().is("form");
+		doc.$("div").text("isFormParent = " + isFormParent);
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}

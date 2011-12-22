@@ -368,6 +368,31 @@ public class Jerry {
 		return new Jerry(this, result);
 	}
 
+	/**
+	 * Checks the current matched set of elements against a selector and
+	 * return <code>true</code> if at least one of these elements matches
+	 * the given arguments.
+	 */
+	public boolean is(String cssSelectors) {
+		
+		for (Node node : nodes) {
+			Node parentNode = node.getParentNode();
+			if (parentNode == null) {
+				continue;
+			}
+
+			NodeSelector nodeSelector = createNodeSelector(parentNode);
+			List<Node> selectedNodes = nodeSelector.select(cssSelectors);
+
+			for (Node selected : selectedNodes) {
+				if (node == selected) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	// ---------------------------------------------------------------- Attributes
 
 	/**
