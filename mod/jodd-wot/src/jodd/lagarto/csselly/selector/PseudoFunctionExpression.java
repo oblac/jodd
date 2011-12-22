@@ -2,6 +2,7 @@
 
 package jodd.lagarto.csselly.selector;
 
+import jodd.lagarto.csselly.CSSellyException;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -31,22 +32,33 @@ public class PseudoFunctionExpression {
 					if (aVal.equals(StringPool.DASH)) {
 						a = -1;
 					} else {
-						a = Integer.parseInt(aVal);
+						a = parseInt(aVal);
 					}
 				}
 				String bVal = expression.substring(nndx + 1);
 				if (bVal.length() == 0) {
 					b = 0;
 				} else {
-					b = Integer.parseInt(bVal);
+					b = parseInt(bVal);
 				}
 			} else {
 				a = 0;
-				b = Integer.parseInt(expression);
+				b = parseInt(expression);
 			}
 		}
-
 	}
+
+	/**
+	 * Parses int value or throws <code>CSSellyException</code> on failure.
+	 */
+	protected int parseInt(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException nfex) {
+			throw new CSSellyException(nfex);
+		}
+	}
+
 
 	/**
 	 * Returns <b>a</b> value of the function expression.
