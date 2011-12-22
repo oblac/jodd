@@ -113,20 +113,33 @@ dimension ={num}{ident}
 	.				{ throw new CSSellyException("Invalid combinator <"+ yytext() +">.", yystate(), line(), column()); }
 }
 
+/*
 <PSEUDO_FN> {
 	(
 		{w}
+// variant #1: simple
 //		( "+" | "-" | {dimension} | {num} | {string} | {ident} )+
-		(
-			( ("-" | "+")? {integer}? "n" ( {w} ("-" | "+") {w} {integer} )? )
-			| ("-" | "+")? {integer}
-			| "odd"
-         	| "even"
-		)
+
+// variant #2: more precise
+//		(
+//			( ("-" | "+")? {integer}? "n" ( {w} ("-" | "+") {w} {integer} )? )
+//			| ("-" | "+")? {integer}
+//			| "odd"
+//         	| "even"
+//		)
+
 		{w}
 	)
 	")"				{ cssSelector.addPseudoFunctionSelector(pseudoFnName, yytext(0, 1)); stateSelector(); }
 }
+*/
+
+<PSEUDO_FN> {
+// variant #3: allow all
+	~")"				{ cssSelector.addPseudoFunctionSelector(pseudoFnName, yytext(0, 1)); stateSelector(); }
+}
+
+
 
 
 // fallback rule, when nothing else matches
