@@ -270,19 +270,21 @@ public class CSSellyTest extends TestCase {
 			CSSelly lexer = new CSSelly("div ^ b");
 			lexer.parse();
 			fail();
-		} catch (Exception ex) {}
+		} catch (CSSellyException ex) {}
 
 		try {
 			CSSelly lexer = new CSSelly("div:wrong-pseudo-class-name");
 			lexer.parse();
 			fail();
-		} catch (Exception ex) {}
+		} catch (CSSellyException ex) {}
 
 		try {
 			CSSelly lexer = new CSSelly("div:nth-child(xxx)");
-			lexer.parse();
-			fail();
-		} catch (Exception ex) {}
+			List<CssSelector> selectorList = lexer.parse();
+			CssSelector cssSelector = selectorList.get(0);
+			PseudoFunctionSelector pfs = (PseudoFunctionSelector) cssSelector.getSelector(0);
+			new PseudoFunctionExpression(pfs.getExpression());
+		} catch (CSSellyException ex) {}
 
 	}
 }
