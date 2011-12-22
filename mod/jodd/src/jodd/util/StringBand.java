@@ -8,8 +8,8 @@ package jodd.util;
  * end of concatenation, when <code>toString</code> is invoked, strings are
  * joined together.
  * <p>
- * To make <code>StringBand</code> even faster, predict the number of used strings
- * (and not the final string size)!
+ * To make <code>StringBand</code> even faster, predict the number of <b>joined</b>
+ * strings (and not the final string size)!
  */
 public class StringBand {
 
@@ -97,9 +97,8 @@ public class StringBand {
 	}
 
 	/**
-	 * Appends a character. This is not so
-	 * efficient as in <code>StringBuilder</code>,
-	 * since new string is created.
+	 * Appends a character. This is <b>not</b> efficient
+	 * as in <code>StringBuilder</code>, since new string is created.
 	 */
 	public StringBand append(char c) {
 		return append(String.valueOf(c));
@@ -114,7 +113,8 @@ public class StringBand {
 
 	/**
 	 * Appends string representation of an object.
-	 * if <code>null</code>, 'null' string will be appended.
+	 * If <code>null</code>, the <code>'null'</code> string
+	 * will be appended.
 	 */
 	public StringBand append(Object obj) {
 		return append(String.valueOf(obj));
@@ -148,7 +148,7 @@ public class StringBand {
 	}
 
 	/**
-	 * Returns total string length;
+	 * Returns total string length.
 	 */
 	public int length() {
 		return length;
@@ -186,14 +186,15 @@ public class StringBand {
 		}
 
 		index = newIndex;
-		calculateLength();
+		length = calculateLength();
 	}
 
 	// ---------------------------------------------------------------- values
 
 	/**
 	 * Returns char at given position.
-	 * This method is <b>not</b> fast!
+	 * This method is <b>not</b> fast as it calculates
+	 * the right string array element and the offset!
 	 */
 	public char charAt(int pos) {
 		int len = 0;
@@ -204,7 +205,7 @@ public class StringBand {
 			}
 			len = newlen;
 		}
-		throw new IllegalArgumentException("Invalid char position value.");
+		throw new IllegalArgumentException("Invalid char index.");
 	}
 
 	/**
@@ -220,32 +221,35 @@ public class StringBand {
 	/**
 	 * Joins together all strings into one.
 	 */
+	@SuppressWarnings("CallToStringConcatCanBeReplacedByOperator")
 	public String toString() {
+
+		// special cases
 		if (index == 0) {
 			return StringPool.EMPTY;
 		}
-		String s;
-
-		if (index <= 3) {
-			s = array[0];
-			for (int i = 1; i < index; i++) {
-				s = s.concat(array[i]);
-			}
-		} else {
-			StringBuilder sb = new StringBuilder(length);
-			for (int i = 0; i < index; i++) {
-				sb.append(array[i]);
-			}
-			s = sb.toString();
+		if (index == 1) {
+			return array[0];
+		}
+		if (index == 2) {
+			return array[0].concat(array[1]);
+		}
+		if (index == 3) {
+			return array[0].concat(array[1]).concat(array[2]);
 		}
 
-		return s;
+		// join strings
+		StringBuilder sb = new StringBuilder(length);
+		for (int i = 0; i < index; i++) {
+			sb.append(array[i]);
+		}
+		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------- utils
 
 	/**
-	 * Expands string array capacity by multiplying its size by 2.
+	 * Expands internal string array by multiplying its size by 2.
 	 */
 	protected void expandCapacity() {
 		String[] newArray = new String[array.length << 1];
@@ -254,14 +258,14 @@ public class StringBand {
 	}
 
 	/**
-	 * Calculates length.
+	 * Calculates string length.
 	 */
-	protected void calculateLength() {
+	protected int calculateLength() {
 		int len = 0;
 		for (int i = 0; i < index; i++) {
 			len += array[i].length();
 		}
-		length = len;
+		return len;
 	}
 
 }
