@@ -6,6 +6,7 @@ import jodd.lagarto.csselly.CSSellyException;
 import jodd.lagarto.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
+import jodd.lagarto.dom.NodeListFilter;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import java.util.Map;
  * When calculating the position of an element in the list of children
  * of its parent, the index numbering starts at 1.
  */
-public class PseudoClassSelector extends Selector implements NodeFilter {
+public class PseudoClassSelector extends Selector implements NodeFilter, NodeListFilter {
 
 	protected static final Map<String, PseudoClass> PSEUDO_CLASS_MAP;
 
