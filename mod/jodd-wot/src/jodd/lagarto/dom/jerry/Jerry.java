@@ -565,6 +565,7 @@ public class Jerry {
 	/**
 	 * Gets the combined text contents of each element in the set of
 	 * matched elements, including their descendants.
+	 * Text is HTML decoded for text nodes.
 	 */
 	public String text() {
 		StringBuilder sb = new StringBuilder();
@@ -581,7 +582,7 @@ public class Jerry {
 		for (Node node : nodes) {
 			node.removeAllChilds();
 			Text textNode = new Text();
-			textNode.setText(text);
+			textNode.setTextContent(text);
 			node.appendChild(textNode);
 		}
 		return this;
@@ -589,6 +590,7 @@ public class Jerry {
 
 	/**
 	 * Gets the HTML contents of the first element in the set of matched elements.
+	 * Content is raw, not HTML decoded.
 	 */
 	public String html() {
 		return nodes[0].getInnerHtml();

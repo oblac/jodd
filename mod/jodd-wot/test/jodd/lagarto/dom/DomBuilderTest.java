@@ -190,7 +190,7 @@ public class DomBuilderTest extends TestCase {
 		Text text = (Text) document.getFirstChild().getFirstChild();
 
 		assertEquals("a&lt;b", text.getNodeValue());
-		assertEquals("a<b", text.getText());
+		assertEquals("a<b", text.getTextContent());
 	}
 
 	public void testXmlDec() {

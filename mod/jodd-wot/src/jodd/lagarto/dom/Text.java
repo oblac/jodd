@@ -23,19 +23,19 @@ public class Text extends Node {
 		return cloneTo(new Text(nodeValue));
 	}
 
+	/**
+	 * Sets HTML text, but encodes it first.
+	 */
+	public void setTextContent(String text) {
+		nodeValue = HtmlEncoder.text(text);
+	}
 
 	/**
 	 * Returns decoded HTML text.
 	 */
-	public String getText() {
+	@Override
+	public String getTextContent() {
 		return HtmlDecoder.decode(nodeValue);
-	}
-
-	/**
-	 * Sets HTML text, but encodes it first.
-	 */
-	public void setText(String text) {
-		nodeValue = HtmlEncoder.text(text);
 	}
 
 	/**
