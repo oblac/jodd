@@ -287,4 +287,10 @@ public class CSSellyTest extends TestCase {
 		} catch (CSSellyException ex) {}
 
 	}
+	
+	public void testUppercaseClassNames() {
+		CSSelly lexer = new CSSelly("div.fooBar");
+		List<CssSelector> selectorList = lexer.parse();
+		assertEquals(1, selectorList.size());
+	}
 }

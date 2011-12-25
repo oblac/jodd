@@ -58,11 +58,11 @@ import java.nio.CharBuffer;
 
 ident     =[-]?{nmstart}{nmchar}*
 name      ={nmchar}+
-nmstart   =[_a-z]|{nonascii}|{escape}
+nmstart   =[_a-zA-Z]|{nonascii}|{escape}
 nonascii  =[^\0-\177]
 unicode   =\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
 escape    ={unicode}|\\[^\n\r\f0-9a-f]
-nmchar    =[_a-z0-9-]|{nonascii}|{escape}
+nmchar    =[_a-zA-Z0-9-]|{nonascii}|{escape}
 num       =[0-9]+|[0-9]*\.[0-9]+
 string    ={string1}|{string2}
 string1   =\"([^\n\r\f\"]|\\{nl}|{nonascii}|{escape})*\"
