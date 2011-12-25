@@ -30,6 +30,7 @@
 		<exclude name="**/*.bat"/>
 		<exclude name="**/*.py"/>
 		<exclude name="**/*.flex"/>
+		<exclude name="**/*.template"/>
 	</patternset>
 	<patternset id="resources">
 		<exclude name="**/*.java"/>
