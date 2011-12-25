@@ -44,23 +44,23 @@ public class FastCharArrayWriter extends Writer {
 		return buffers.get(index);
 	}
 
-	private void needNewBuffer(int newcount) {
+	private void needNewBuffer(int newCount) {
 		if (currentBufferIndex < buffers.size() - 1) {
-			//Recycling old buffer
+			// recycling old buffer
 			filledBufferSum += currentBuffer.length;
 
 			currentBufferIndex++;
 			currentBuffer = getBuffer(currentBufferIndex);
 		} else {
-			//Creating new buffer
+			// creating new buffer
 			int newBufferSize;
 			if (currentBuffer == null) {
-				newBufferSize = newcount;
+				newBufferSize = newCount;
 				filledBufferSum = 0;
 			} else {
 				newBufferSize = Math.max(
 						currentBuffer.length << 1,
-						newcount - filledBufferSum);
+						newCount - filledBufferSum);
 				filledBufferSum += currentBuffer.length;
 			}
 
@@ -85,7 +85,7 @@ public class FastCharArrayWriter extends Writer {
 		if (len == 0) {
 			return;
 		}
-		int newcount = count + len;
+		int newCount = count + len;
 		int remaining = len;
 		int inBufferPos = count - filledBufferSum;
 		while (remaining > 0) {
@@ -93,11 +93,11 @@ public class FastCharArrayWriter extends Writer {
 			System.arraycopy(b, off + len - remaining, currentBuffer, inBufferPos, part);
 			remaining -= part;
 			if (remaining > 0) {
-				needNewBuffer(newcount);
+				needNewBuffer(newCount);
 				inBufferPos = 0;
 			}
 		}
-		count = newcount;
+		count = newCount;
 	}
 
 	/**
