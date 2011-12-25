@@ -40,17 +40,13 @@ public class FastCharArrayWriter extends Writer {
 		needNewBuffer(size);
 	}
 
-	private char[] getBuffer(int index) {
-		return buffers.get(index);
-	}
-
 	private void needNewBuffer(int newCount) {
 		if (currentBufferIndex < buffers.size() - 1) {
 			// recycling old buffer
 			filledBufferSum += currentBuffer.length;
 
 			currentBufferIndex++;
-			currentBuffer = getBuffer(currentBufferIndex);
+			currentBuffer = buffers.get(currentBufferIndex);
 		} else {
 			// creating new buffer
 			int newBufferSize;
@@ -74,12 +70,13 @@ public class FastCharArrayWriter extends Writer {
 	 * @see java.io.Writer#write(char[], int, int)
 	 */
 	@Override
-	public synchronized void write(char[] b, int off, int len) {
+	public void write(char[] b, int off, int len) {
+		int end = off + len;
 		if ((off < 0)
 				|| (off > b.length)
 				|| (len < 0)
-				|| ((off + len) > b.length)
-				|| ((off + len) < 0)) {
+				|| (end > b.length)
+				|| (end < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (len == 0) {
@@ -90,7 +87,7 @@ public class FastCharArrayWriter extends Writer {
 		int inBufferPos = count - filledBufferSum;
 		while (remaining > 0) {
 			int part = Math.min(remaining, currentBuffer.length - inBufferPos);
-			System.arraycopy(b, off + len - remaining, currentBuffer, inBufferPos, part);
+			System.arraycopy(b, end - remaining, currentBuffer, inBufferPos, part);
 			remaining -= part;
 			if (remaining > 0) {
 				needNewBuffer(newCount);
@@ -101,17 +98,23 @@ public class FastCharArrayWriter extends Writer {
 	}
 
 	/**
-	 * Calls the write(char[]) method.
-	 *
-	 * @see java.io.Writer#write(int)
+	 * Writes single byte.
 	 */
 	@Override
-	public synchronized void write(int b) {
-		write(new char[]{(char) b}, 0, 1);
+	public void write(int b) {
+		int inBufferPos = count - filledBufferSum;
+
+		if (inBufferPos == currentBuffer.length) {
+			needNewBuffer(count + 1);
+			inBufferPos = 0;
+		}
+
+		currentBuffer[inBufferPos] = (char) b;
+		count++;
 	}
 
 	@Override
-	public synchronized void write(String s, int off, int len) {
+	public void write(String s, int off, int len) {
 		write(s.toCharArray(), off, len);
 	}
 
@@ -143,20 +146,20 @@ public class FastCharArrayWriter extends Writer {
 	/**
 	 * @see java.io.CharArrayWriter#reset()
 	 */
-	public synchronized void reset() {
+	public void reset() {
 		count = 0;
 		filledBufferSum = 0;
 		currentBufferIndex = 0;
-		currentBuffer = getBuffer(currentBufferIndex);
+		currentBuffer = buffers.get(currentBufferIndex);
 	}
 
 	/**
 	 * @see java.io.CharArrayWriter#writeTo(java.io.Writer)
 	 */
-	public synchronized void writeTo(Writer out) throws IOException {
+	public void writeTo(Writer out) throws IOException {
 		int remaining = count;
 		for (int i = 0; i < buffers.size(); i++) {
-			char[] buf = getBuffer(i);
+			char[] buf = buffers.get(i);
 			int c = Math.min(buf.length, remaining);
 			out.write(buf, 0, c);
 			remaining -= c;
@@ -169,12 +172,12 @@ public class FastCharArrayWriter extends Writer {
 	/**
 	 * @see java.io.CharArrayWriter#toCharArray()
 	 */
-	public synchronized char[] toCharArray() {
+	public char[] toCharArray() {
 		int remaining = count;
 		int pos = 0;
 		char newbuf[] = new char[count];
 		for (int i = 0; i < buffers.size(); i++) {
-			char[] buf = getBuffer(i);
+			char[] buf = buffers.get(i);
 			int c = Math.min(buf.length, remaining);
 			System.arraycopy(buf, 0, newbuf, pos, c);
 			pos += c;

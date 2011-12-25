@@ -60,16 +60,12 @@ public class FastByteArrayOutputStream extends OutputStream {
 		needNewBuffer(size);
 	}
 
-	private byte[] getBuffer(int index) {
-		return buffers.get(index);
-	}
-
 	private void needNewBuffer(int newCount) {
 		if (currentBufferIndex < buffers.size() - 1) {
 			// recycling old buffer
 			filledBufferSum += currentBuffer.length;
 			currentBufferIndex++;
-			currentBuffer = getBuffer(currentBufferIndex);
+			currentBuffer = buffers.get(currentBufferIndex);
 		} else {
 			// creating new buffer
 			int newBufferSize;
@@ -93,12 +89,13 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
 	@Override
-	public synchronized void write(byte[] b, int off, int len) {
+	public void write(byte[] b, int off, int len) {
+		int end = off + len;
 		if ((off < 0)
 				|| (off > b.length)
 				|| (len < 0)
-				|| ((off + len) > b.length)
-				|| ((off + len) < 0)) {
+				|| (end > b.length)
+				|| (end < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (len == 0) {
@@ -109,7 +106,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 		int inBufferPos = count - filledBufferSum;
 		while (remaining > 0) {
 			int part = Math.min(remaining, currentBuffer.length - inBufferPos);
-			System.arraycopy(b, off + len - remaining, currentBuffer, inBufferPos, part);
+			System.arraycopy(b, end - remaining, currentBuffer, inBufferPos, part);
 			remaining -= part;
 			if (remaining > 0) {
 				needNewBuffer(newCount);
@@ -120,13 +117,19 @@ public class FastByteArrayOutputStream extends OutputStream {
 	}
 
 	/**
-	 * Calls the write(byte[]) method.
-	 *
-	 * @see java.io.OutputStream#write(int)
+	 * Writes single byte.
 	 */
 	@Override
-	public synchronized void write(int b) {
-		write(new byte[]{(byte) b}, 0, 1);
+	public void write(int b) {
+		int inBufferPos = count - filledBufferSum;
+
+		if (inBufferPos == currentBuffer.length) {
+			needNewBuffer(count + 1);
+			inBufferPos = 0;
+		}
+
+		currentBuffer[inBufferPos] = (byte) b;
+		count++;
 	}
 
 	/**
@@ -149,20 +152,20 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see java.io.ByteArrayOutputStream#reset()
 	 */
-	public synchronized void reset() {
+	public void reset() {
 		count = 0;
 		filledBufferSum = 0;
 		currentBufferIndex = 0;
-		currentBuffer = getBuffer(currentBufferIndex);
+		currentBuffer = buffers.get(currentBufferIndex);
 	}
 
 	/**
 	 * @see java.io.ByteArrayOutputStream#writeTo(OutputStream)
 	 */
-	public synchronized void writeTo(OutputStream out) throws IOException {
+	public void writeTo(OutputStream out) throws IOException {
 		int remaining = count;
 		for (int i = 0; i < buffers.size(); i++) {
-			byte[] buf = getBuffer(i);
+			byte[] buf = buffers.get(i);
 			int c = Math.min(buf.length, remaining);
 			out.write(buf, 0, c);
 			remaining -= c;
@@ -175,12 +178,12 @@ public class FastByteArrayOutputStream extends OutputStream {
 	/**
 	 * @see java.io.ByteArrayOutputStream#toByteArray()
 	 */
-	public synchronized byte[] toByteArray() {
+	public byte[] toByteArray() {
 		int remaining = count;
 		int pos = 0;
 		byte newbuf[] = new byte[count];
 		for (int i = 0; i < buffers.size(); i++) {
-			byte[] buf = getBuffer(i);
+			byte[] buf = buffers.get(i);
 			int c = Math.min(buf.length, remaining);
 			System.arraycopy(buf, 0, newbuf, pos, c);
 			pos += c;
