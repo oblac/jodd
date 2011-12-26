@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class FastLongBuffer {
 
 	private List<long[]> buffers = new ArrayList<long[]>();
-	private int currentBufferIndex;
-	private int filledBufferSum;
+	private int currentBufferIndex = -1;
 	private long[] currentBuffer;
+	private int offset;
 	private int count;
 
 	/**
@@ -37,26 +37,24 @@ public class FastLongBuffer {
 	}
 
 	private void needNewBuffer(int newCount) {
-		if (currentBufferIndex < buffers.size() - 1) {
-			// recycling old buffer
-			filledBufferSum += currentBuffer.length;
+		if (currentBufferIndex < buffers.size() - 1) {	// recycling old buffer
+			offset = 0;
 			currentBufferIndex++;
 			currentBuffer = buffers.get(currentBufferIndex);
-		} else {
-			// creating new buffer
+		} else {										// creating new buffer
 			int newBufferSize;
 			if (currentBuffer == null) {
 				newBufferSize = newCount;
-				filledBufferSum = 0;
 			} else {
 				newBufferSize = Math.max(
 						currentBuffer.length << 1,
-						newCount - filledBufferSum);
-				filledBufferSum += currentBuffer.length;
+						newCount - count);		// this will give no free additional space
+
 			}
 
 			currentBufferIndex++;
 			currentBuffer = new long[newBufferSize];
+			offset = 0;
 			buffers.add(currentBuffer);
 		}
 	}
@@ -78,17 +76,16 @@ public class FastLongBuffer {
 		}
 		int newCount = count + len;
 		int remaining = len;
-		int inBufferPos = count - filledBufferSum;
 		while (remaining > 0) {
-			int part = Math.min(remaining, currentBuffer.length - inBufferPos);
-			System.arraycopy(b, end - remaining, currentBuffer, inBufferPos, part);
+			int part = Math.min(remaining, currentBuffer.length - offset);
+			System.arraycopy(b, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
+			offset += part;
+			count += part;
 			if (remaining > 0) {
 				needNewBuffer(newCount);
-				inBufferPos = 0;
 			}
 		}
-		count = newCount;
 		return this;
 	}
 
@@ -103,14 +100,12 @@ public class FastLongBuffer {
 	 * Appends single long.
 	 */
 	public FastLongBuffer append(long value) {
-		int inBufferPos = count - filledBufferSum;
-
-		if (inBufferPos == currentBuffer.length) {
+		if (offset == currentBuffer.length) {
 			needNewBuffer(count + 1);
-			inBufferPos = 0;
 		}
 
-		currentBuffer[inBufferPos] = value;
+		currentBuffer[offset] = value;
+		offset++;
 		count++;
 
 		return this;
@@ -124,11 +119,32 @@ public class FastLongBuffer {
 	}
 
 	/**
+	 * Returns current index of long array.
+	 */
+	public int index() {
+		return currentBufferIndex;
+	}
+
+	/**
+	 * Returns offset in current array buffer.
+	 */
+	public int offset() {
+		return offset;
+	}
+
+	/**
+	 * Returns long chunk at given index.
+	 */
+	public long[] array(int index) {
+		return buffers.get(index);
+	}
+
+	/**
 	 * Resets the buffer content.
 	 */
 	public void reset() {
 		count = 0;
-		filledBufferSum = 0;
+		offset = 0;
 		currentBufferIndex = 0;
 		currentBuffer = buffers.get(currentBufferIndex);
 	}
@@ -139,17 +155,17 @@ public class FastLongBuffer {
 	public long[] toArray() {
 		int remaining = count;
 		int pos = 0;
-		long[] newbuf = new long[count];
+		long[] array = new long[count];
 		for (long[] buf : buffers) {
 			int c = Math.min(buf.length, remaining);
-			System.arraycopy(buf, 0, newbuf, pos, c);
+			System.arraycopy(buf, 0, array, pos, c);
 			pos += c;
 			remaining -= c;
 			if (remaining == 0) {
 				break;
 			}
 		}
-		return newbuf;
+		return array;
 	}
 
 }
