@@ -9,32 +9,28 @@ import java.util.NoSuchElementException;
 /**
  * Enumeration over an array. 
  */
-public class ArrayEnumeration implements Enumeration, Serializable {
+public class ArrayEnumeration<E> implements Enumeration<E>, Serializable {
 
-	private Object array[];
+	private E array[];
 	private int ndx;
-	private int to;
+	private int endNdx;
 
-	public ArrayEnumeration(Object arr[]) {
+	public ArrayEnumeration(E arr[]) {
 		this(arr, 0, arr.length);
 	}
 
-	public ArrayEnumeration(Object arr[], int from) {
-		this(arr, from, arr.length);
-	}
-
-	public ArrayEnumeration(Object arr[], int from, int to) {
+	public ArrayEnumeration(E arr[], int offset, int length) {
 		array = arr;
-		ndx = from;
-		this.to = to;
+		ndx = offset;
+		this.endNdx = offset + length;
 	}
 
 	public boolean hasMoreElements() {
-		return ndx < to;
+		return ndx < endNdx;
 	}
 
-	public Object nextElement()	throws NoSuchElementException {
-		if (ndx < to) {
+	public E nextElement()	throws NoSuchElementException {
+		if (ndx < endNdx) {
 			return array[ndx++];
 		}
 		throw new NoSuchElementException();

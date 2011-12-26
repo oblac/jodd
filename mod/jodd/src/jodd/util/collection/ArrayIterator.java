@@ -6,42 +6,37 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
 /**
  * Iterator over an array.
  */
-public class ArrayIterator implements Iterator, Serializable {
+public class ArrayIterator<E> implements Iterator<E>, Serializable {
 	
-	private Object array[];
-	private int currentIndex;
-	private int length;
-	private int offset;
+	private E array[];
+	private int ndx;
+	private int endNdx;
 
-	public ArrayIterator(Object aobj[]) {
-		array = aobj;
-		currentIndex = 0;
-		offset = 0;
-		length = array.length;
+	public ArrayIterator(E array[]) {
+		this.array = array;
+		ndx = 0;
+		endNdx = array.length;
 	}
 
-	public ArrayIterator(Object aobj[], int offset, int len) {
-		array = aobj;
-		currentIndex = offset;
-		this.offset = offset;
-		length = len;
+	public ArrayIterator(E array[], int offset, int len) {
+		this.array = array;
+		ndx = offset;
+		endNdx = offset + len;
 	}
 
 	public boolean hasNext() {
-		return currentIndex < length + offset;
+		return ndx < endNdx;
 	}
 
-	public Object next() throws NoSuchElementException {
-		try {
-			currentIndex++;
-			return array[currentIndex - 1];
-		} catch (ArrayIndexOutOfBoundsException ignored) {
-			throw new NoSuchElementException();
+	public E next() throws NoSuchElementException {
+		if (ndx < endNdx) {
+			ndx++;
+			return array[ndx - 1];
 		}
+		throw new NoSuchElementException();
 	}
 
 	public void remove() throws UnsupportedOperationException {
