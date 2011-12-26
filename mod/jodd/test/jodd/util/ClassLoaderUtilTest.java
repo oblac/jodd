@@ -21,7 +21,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		is.close();
 
 		URL url;
-		final String resourceName = "jodd/swing/spy/icons/button.png";
+		final String resourceName = "jodd/util/Bits.class";
 
 		url = ClassLoaderUtil.getResourceUrl(resourceName, ClassLoaderUtilTest.class);
 		assertNotNull(url);
