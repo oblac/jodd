@@ -5,6 +5,7 @@ package jodd.io;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 public class FastCharArrayTest extends TestCase {
@@ -37,5 +38,17 @@ public class FastCharArrayTest extends TestCase {
 		assertTrue(Arrays.equals(expected, result));
 	}
 
+	public void testWriteTo() throws IOException {
+		FastCharArrayWriter fcaw = new FastCharArrayWriter(2);
+		fcaw.write("Hello");
+		fcaw.write(' ');
+		fcaw.write("World");
+		fcaw.write('!');
+
+		StringWriter sw = new StringWriter();
+		fcaw.writeTo(sw);
+
+		assertEquals("Hello World!", sw.toString());
+	}
 
 }
