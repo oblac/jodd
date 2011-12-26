@@ -1,16 +1,10 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.io.IOException;
-
 /**
- * ArrayList of boolean primitives.
+ * ArrayList of boolean primitives. For just buffering values, consider
+ * using {@link jodd.util.collection.FastBooleanBuffer}.
  */
-public class BooleanArrayList implements Serializable {
+public class BooleanArrayList {
 
 	private boolean[] array;
 	private int size;
@@ -29,7 +23,7 @@ public class BooleanArrayList implements Serializable {
 	 */
 	public BooleanArrayList(int initialCapacity) {
 		if (initialCapacity < 0) {
-			throw new IllegalArgumentException("Capacity can't be negative: " + initialCapacity);
+			throw new IllegalArgumentException("Invalid capacity: " + initialCapacity);
 		}
 		array = new boolean[initialCapacity];
 		size = 0;
@@ -263,35 +257,17 @@ public class BooleanArrayList implements Serializable {
 		}
 	}
 
-	// ---------------------------------------------------------------- serializable
-
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		out.defaultWriteObject();
-		out.writeInt(array.length);
-		for (int i = 0; i < size; i++) {
-			out.writeBoolean(array[i]);
-		}
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-		in.defaultReadObject();
-		array = new boolean[in.readInt()];
-		for (int i = 0; i < size; i++) {
-			array[i] = in.readBoolean();
-		}
-	}
-
-	// ---------------------------------------------------------------- privates
+	// ---------------------------------------------------------------- checks
 
 	private void checkRange(int index) {
 		if (index < 0 || index >= size) {
-			throw new IndexOutOfBoundsException("Index should be at least 0 and less than " + size + ", found " + index);
+			throw new IndexOutOfBoundsException();
 		}
 	}
 
 	private void checkRangeIncludingEndpoint(int index) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("Index should be at least 0 and at most " + size + ", found " + index);
+			throw new IndexOutOfBoundsException();
 		}
 	}
 

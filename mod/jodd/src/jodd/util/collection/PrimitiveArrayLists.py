@@ -1,6 +1,5 @@
 # Create various primitive array lists
 
-import string
 import sys
 
 types = ['int', 'long', 'float', 'double', 'char', 'byte', 'short', 'boolean']
