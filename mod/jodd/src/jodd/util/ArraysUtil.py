@@ -1,9 +1,6 @@
-import string;
 
 f = open('ArraysUtil.java', 'w')
 f.write('''
-// Copyright (c) 2003-2011, Jodd Team (jodd.sf.net). All Rights Reserved.
-
 package jodd.util;
 
 import java.lang.reflect.Array;
