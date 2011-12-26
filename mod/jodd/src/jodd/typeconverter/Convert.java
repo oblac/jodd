@@ -1,6 +1,3 @@
-
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.*;
@@ -703,7 +700,7 @@ public class Convert {
 		}
 		TypeConverter converter = TypeConverterManager.lookup(destinationType);
 		if (converter == null) {
-			throw new TypeConversionException("Unable to convert value to type: " + destinationType.getName());
+			throw new TypeConversionException("Unable to convert value to type: '" + destinationType.getName() + "'.");
 		}
 		return converter.convert(value);
 	}

@@ -1,10 +1,6 @@
-import string;
 
 f = open('Convert.java', 'w')
-f.write('''
-// Copyright (c) 2003-2011, Jodd Team (jodd.sf.net). All Rights Reserved.
-
-package jodd.typeconverter;
+f.write('''package jodd.typeconverter;
 
 import jodd.typeconverter.impl.*;
 import jodd.mutable.*;
