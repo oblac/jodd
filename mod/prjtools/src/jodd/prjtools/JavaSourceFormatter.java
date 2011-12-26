@@ -14,15 +14,19 @@ import java.io.IOException;
  * Formats java sources.
  */
 public class JavaSourceFormatter {
-	
-	private static final String COPYRIGHT = "// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.";
 
+	/**
+	 * Set this to TRUE to write changes.
+	 */
 	private static final boolean WRITE_MODE = false;
+
+	private static final String COPYRIGHT = "// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.";
 
 	public static void main(String[] args) throws IOException {
 		JavaSourceFormatter formatter = new JavaSourceFormatter();
 
 		formatter.format("mod/jodd");
+		formatter.format("mod/jodd-wot");
 	}
 
 	public void format(String sourceRoot) throws IOException {
@@ -51,10 +55,14 @@ public class JavaSourceFormatter {
 
 		// COPYRIGHT
 		String content = StringUtil.trimLeft(originalContent);
-		
-		int index = StringUtil.indexOfChars(content, "\r\n");
-		if (index != -1) {
-			content = COPYRIGHT + content.substring(index);
+
+		if (content.startsWith("//")) {
+			int index = StringUtil.indexOfChars(content, "\r\n");
+			if (index != -1) {
+				content = COPYRIGHT + content.substring(index);
+			}
+		} else {
+			content = COPYRIGHT + "\r\n\r\n" + content;
 		}
 
 		// the end, detects changes
