@@ -1,14 +1,12 @@
 package jodd.util.collection;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
- * Fast long buffer.
+ * Fast, fast long buffer.
  */
 public class FastLongBuffer {
 
-	private List<long[]> buffers = new ArrayList<long[]>();
+	private long[][] buffers = new long[16][];
+	private int buffersCount = 0;
 	private int currentBufferIndex = -1;
 	private long[] currentBuffer;
 	private int offset;
@@ -37,10 +35,10 @@ public class FastLongBuffer {
 	}
 
 	private void needNewBuffer(int newCount) {
-		if (currentBufferIndex < buffers.size() - 1) {	// recycling old buffer
+		if (currentBufferIndex < buffersCount - 1) {	// recycling old buffer
 			offset = 0;
 			currentBufferIndex++;
-			currentBuffer = buffers.get(currentBufferIndex);
+			currentBuffer = buffers[currentBufferIndex];
 		} else {										// creating new buffer
 			int newBufferSize;
 			if (currentBuffer == null) {
@@ -55,7 +53,16 @@ public class FastLongBuffer {
 			currentBufferIndex++;
 			currentBuffer = new long[newBufferSize];
 			offset = 0;
-			buffers.add(currentBuffer);
+
+			// add buffer
+			if (currentBufferIndex >= buffers.length) {
+				int newLen = buffers.length << 1;
+				long[][] newBuffers = new long[newLen][];
+                System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
+                buffers = newBuffers;
+			}
+			buffers[currentBufferIndex] = currentBuffer;
+			buffersCount++;
 		}
 	}
 
@@ -136,7 +143,7 @@ public class FastLongBuffer {
 	 * Returns long chunk at given index.
 	 */
 	public long[] array(int index) {
-		return buffers.get(index);
+		return buffers[index];
 	}
 
 	/**
@@ -146,7 +153,8 @@ public class FastLongBuffer {
 		count = 0;
 		offset = 0;
 		currentBufferIndex = 0;
-		currentBuffer = buffers.get(currentBufferIndex);
+		currentBuffer = buffers[currentBufferIndex];
+		buffersCount = 1;
 	}
 
 	/**
