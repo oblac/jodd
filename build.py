@@ -21,10 +21,10 @@ module('jodd')
 module_compile('production', 'jdk5', 'mail, servlets')
 module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_compile('test', 		 'jdk5', '#production, mail, servlets, test')
-module_do_build('production, test')
-module_do_doc('production')
-module_do_test('jodd.TestJodd')
-module_do_findbugs()
+module_build('production, test')
+module_doc('production')
+module_test('jodd.TestJodd')
+module_findbugs()
 module_dist(moduleName, 'jodd.Jodd')
 module_dist_sources(moduleName, 'production')
 module_dist_javadoc(moduleName, 'production')
@@ -33,10 +33,10 @@ module('jodd-wot')
 module_compile2('production', 'jdk5','jdk6', '>jodd.production, servlets, asm, slf4j')
 module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
 module_compile('test', 		 'jdk5', '>jodd.production, #production, asm, slf4j, test')
-module_do_build('production, test')
-module_do_doc('production')
-module_do_test('jodd.TestJoddWot')
-module_do_findbugs()
+module_build('production, test')
+module_doc('production')
+module_test('jodd.TestJoddWot')
+module_findbugs()
 module_dist(moduleName, 'jodd.JoddWot')
 module_dist_sources(moduleName, 'production')
 module_dist_javadoc(moduleName, 'production')
@@ -44,12 +44,12 @@ module_dist_javadoc(moduleName, 'production')
 
 module('jodd-joy')
 module_compile('production', 'jdk5', '>jodd.production, >jodd-wot.production, servlets, slf4j')
-module_do_build('production')
+module_build('production')
 module_dist(moduleName)
 
 module('jodd-gfx')
 module_compile('production', 'jdk5', '')
-module_do_build('production')
+module_build('production')
 
 project()
 project_task('build', '.jodd, .jodd-wot, .jodd-joy, .jodd-gfx')
@@ -113,6 +113,7 @@ emma:	runs all tests
 findbugs:	finds bugs
 dist:	builds distribution jars
 dist-all:	build all distribution jars
+release:	performs all tasks for creating a release
 
 
 Pack

@@ -778,6 +778,7 @@ emma:	runs all tests
 findbugs:	finds bugs
 dist:	builds distribution jars
 dist-all:	build all distribution jars
+release:	performs all tasks for creating a release
 
 
 Pack
