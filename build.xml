@@ -22,7 +22,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.1"/>
+	<property name="prjVersion" value="3.3.2"/>
 
 	<patternset id="ignored.files">
 		<exclude name="**/CVS/**"/>
@@ -697,7 +697,7 @@
 		<delete dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
-	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist" description="creates full release"/>
+	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist-all" description="creates full release"/>
 
 	<target name="pack-dist" depends="dist" description="packs distribution jars">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>

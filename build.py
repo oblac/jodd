@@ -3,7 +3,7 @@
 prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - open-source Java utility library and web application frameworks.'
-prjVersion = '3.3.1'
+prjVersion = '3.3.2'
 
 # vars
 copyright = 'Copyright &#169; 2003-2011 Jodd Team'
@@ -60,7 +60,7 @@ project_task('dist', 'build, .jodd, .jodd-wot, .jodd-joy')
 project_task('dist-all', 'dist, dist-sources.jodd, dist-javadoc.jodd, dist-sources.jodd-wot, dist-javadoc.jodd-wot')
 project_clean()
 
-project_target('release', 'clean, build, javadoc, emma, findbugs, dist', 'creates full release')
+project_target('release', 'clean, build, javadoc, emma, findbugs, dist-all', 'creates full release')
 
 
 pack_dist = '''
