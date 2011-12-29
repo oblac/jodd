@@ -54,7 +54,6 @@ public class Props implements Cloneable {
 
 	private static final String DEFAULT_PROFILES_PROP = "@profiles";
 
-
 	protected final PropsParser parser;									// parser
 	protected final PropsData data;										// data
 
@@ -203,6 +202,14 @@ public class Props implements Cloneable {
 		}
 	}
 
+	/**
+	 * Loads environment properties.
+	 */
+	public void loadEnvironment() {
+		Properties environmentProperties = System.getProperties();
+		load(environmentProperties);
+	}
+
 	// ---------------------------------------------------------------- props
 
 	/**
@@ -332,4 +339,3 @@ s	 */
 	}
 
 }
-                                                     

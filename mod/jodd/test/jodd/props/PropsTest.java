@@ -236,6 +236,17 @@ public class PropsTest extends TestCase {
 		assertEquals(2, props.countTotalProperties());
 		assertEquals("\\${pojo} ${pojo}", props.getValue("pojoBean2.val1"));
 	}
+	
+	public void testEnvironment() {
+		Props props = new Props();
+		assertEquals(0, props.countTotalProperties());
+		assertNull(props.getValue("user.dir"));
+
+		props.loadEnvironment();
+
+		assertTrue(props.countTotalProperties() > 0);
+		assertNotNull(props.getValue("user.dir"));
+	}
 
 	// ---------------------------------------------------------------- util
 
