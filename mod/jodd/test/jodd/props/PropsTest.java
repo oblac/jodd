@@ -246,6 +246,11 @@ public class PropsTest extends TestCase {
 
 		assertTrue(props.countTotalProperties() > 0);
 		assertNotNull(props.getValue("user.dir"));
+		
+		assertNull(props.getValue("env.user.dir"));
+		props.loadEnvironment("env");
+		assertNotNull(props.getValue("user.dir"));
+		assertNotNull(props.getValue("env.user.dir"));
 	}
 
 	// ---------------------------------------------------------------- util

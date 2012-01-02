@@ -203,11 +203,29 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Loads environment properties.
+	 * Loads base properties from java properties using provided prefix.
+	 */
+	public void load(Properties p, String prefix) {
+		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
+		prefix += '.';
+		while (names.hasMoreElements()) {
+			String name = names.nextElement();
+			data.putBaseProperty(prefix + name, p.getProperty(name));
+		}
+	}
+
+	/**
+	 * Loads environment properties under given prefix.
+	 * If prefix is <code>null</code> it will not be used.
 	 */
 	public void loadEnvironment() {
 		Properties environmentProperties = System.getProperties();
 		load(environmentProperties);
+	}
+
+	public void loadEnvironment(String prefix) {
+		Properties environmentProperties = System.getProperties();
+		load(environmentProperties, prefix);
 	}
 
 	// ---------------------------------------------------------------- props
