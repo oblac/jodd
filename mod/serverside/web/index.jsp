@@ -71,10 +71,11 @@
 <a href="girl.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br/>
 <a href="uploadfiles.html">Upload</a> example.<br/>
 <a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.custom">custom annotation</a><br/>
+<a href="external.html">External link!</a>
 </p>
 
 <p>
-this page is also an example of supplement action: it does not have an registered action method,
+This page is also an example of supplement action: it does not have an registered action method,
 </p>
 
 <h2>Rest resources</h2>
