@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -179,7 +178,7 @@ public class ZipUtil {
 		}
 		zos.putNextEntry(e);
 		if (!isDir) {
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			InputStream is = new FileInputStream(file);
 			try {
 				StreamUtil.copy(is, zos);
 			} finally {
