@@ -59,7 +59,7 @@ public class ServletDispatcherResult extends ActionResult {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(target);
 		if (dispatcher == null) {
-			response.sendError(SC_NOT_FOUND, "Strange, result '" + target + "' not found.");	// this should never happened
+			response.sendError(SC_NOT_FOUND, "Result '" + target + "' not found.");	// this should never happened
 			return;
 		}
 

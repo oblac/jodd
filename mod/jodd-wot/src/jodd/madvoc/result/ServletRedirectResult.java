@@ -11,7 +11,7 @@ import jodd.servlet.DispatcherUtil;
 
 
 /**
- * Simply forwards to a page, without specifying new extension.
+ * Simply redirects to a page using <code>RequestDispatcher</code>.
  * 
  * @see ServletDispatcherResult
  */
@@ -26,7 +26,7 @@ public class ServletRedirectResult extends ActionResult {
 	}
 
 	/**
-	 * Redirects to the given location. Does its redirection via a RequestDispatcher.
+	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
@@ -35,4 +35,5 @@ public class ServletRedirectResult extends ActionResult {
 		resultPath = beanTemplateParser.parse(resultPath, actionRequest.getAction());
 		DispatcherUtil.redirect(request, response, resultPath);
 	}
+
 }
