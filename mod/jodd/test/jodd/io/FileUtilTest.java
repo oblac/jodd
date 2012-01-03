@@ -12,9 +12,6 @@ public class FileUtilTest extends TestCase {
 
 	protected String dataRoot;
 
-	private static final String SB = "sb.data";
-	private static final String SB_NEW = "sb1.data";
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -27,10 +24,10 @@ public class FileUtilTest extends TestCase {
 
 	public void testFileManipulation() {
 		try {
-			FileUtil.copy(new File(dataRoot, SB), new File(dataRoot, SB_NEW));
-			assertFalse(FileUtil.isNewer(new File(dataRoot, SB), new File(dataRoot, SB_NEW)));
-			assertFalse(FileUtil.isOlder(new File(dataRoot, SB), new File(dataRoot, SB_NEW)));
-			FileUtil.delete(new File(dataRoot, SB_NEW));
+			FileUtil.copy(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data"));
+			assertFalse(FileUtil.isNewer(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
+			assertFalse(FileUtil.isOlder(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
+			FileUtil.delete(new File(dataRoot, "sb1.data"));
 		} catch (Exception ex) {
 			fail("FileUtil.copy " + ex.toString());
 		}
@@ -53,7 +50,7 @@ public class FileUtilTest extends TestCase {
 		}
 		assertEquals(s, s2);
 
-		// test unicode chars (i.e. greaer then 255)
+		// test unicode chars (i.e. greater then 255)
 		char buf[] = s.toCharArray();
 		buf[0] = 256;
 		s = new String(buf);

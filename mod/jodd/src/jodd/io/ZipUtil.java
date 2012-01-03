@@ -13,86 +13,130 @@ import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Performs zip/unzip operations on files and directories.
+ * Performs zip/gzip/zlib operations on files and directories.
+ * These are just tools over existing java.util.zip classes,
+ * meaning that existing behavior and bugs are persisted.
+ * Most common issue is not being able to use UTF8 in file names,
+ * because implementation uses old ZIP format that supports only
+ * IBM Code Page 437. This bug was resolved in JDK7:
+ * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4244499
  */
 public class ZipUtil {
 
 	private static final String ZIP_EXT = ".zip";
+	private static final String GZIP_EXT = ".gz";
+	private static final String ZLIB_EXT = ".zlib";
 
-	public static InputStream createFirstEntryInputStream(String zipFileName) throws IOException {
-		return createFirstEntryInputStream(new File(zipFileName));
+	// ---------------------------------------------------------------- deflate
+
+	/**
+	 * Compresses a file into zlib archive.
+	 */
+	public static void zlib(String file) throws IOException {
+		zlib(new File(file));
 	}
 
 	/**
-	 * Creates an InputStream of first entry on a given zip file.
+	 * Compresses a file into zlib archive.
 	 */
-	public static InputStream createFirstEntryInputStream(File zipFile) throws IOException {
-		ZipFile zf = new ZipFile(zipFile);
-		Enumeration entries = zf.entries();
-		if (entries.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) entries.nextElement();
-			return zf.getInputStream(entry);
+	public static void zlib(File file) throws IOException {
+		if (file.isDirectory() == true) {
+			throw new IOException("zlib does not work on a folder");
 		}
-		return null;
-	}
-
-	public static ZipOutputStream createSingleEntryOutputStream(String zipEntryFileName) throws IOException {
-		return createSingleEntryOutputStream(new File(zipEntryFileName));
-	}
-
-	public static ZipOutputStream createSingleEntryOutputStream(File zipEntryFile) throws IOException {
-		String entryName = zipEntryFile.getName();
-		if (entryName.endsWith(ZIP_EXT)) {
-			entryName = entryName.substring(0, entryName.length() - ZIP_EXT.length());
-		}
-		return createSingleEntryOutputStream(entryName, zipEntryFile);
-	}
-
-	public static ZipOutputStream createSingleEntryOutputStream(String entryName, String zipEntryFileName) throws IOException {
-		return createSingleEntryOutputStream(entryName, new File(zipEntryFileName));
-	}
-
-	/**
-	 * Creates an <code>ZipOutputStream</zip> to zip file with single entry.
-	 */
-	public static ZipOutputStream createSingleEntryOutputStream(String entryName, File zipEntryFile) throws IOException {
-		String zipFileName = zipEntryFile.getAbsolutePath();
-		if (zipFileName.endsWith(ZIP_EXT) == false) {
-			zipFileName += ZIP_EXT;
-		}
-		FileOutputStream fos = new FileOutputStream(new File(zipFileName));
-		ZipOutputStream zos = new ZipOutputStream(fos);
-		ZipEntry ze = new ZipEntry(entryName);
+		FileInputStream fis = new FileInputStream(file);
+		Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
+		DeflaterOutputStream dos = new DeflaterOutputStream(new FileOutputStream(file.getAbsolutePath() + ZLIB_EXT), deflater);
 		try {
-			zos.putNextEntry(ze);
-		} catch (IOException ioex) {
-			StreamUtil.close(fos);
-			throw ioex;
+			StreamUtil.copy(fis, dos);
+		} finally {
+			StreamUtil.close(dos);
+			StreamUtil.close(fis);
 		}
-		return zos;
+	}
+
+	// ---------------------------------------------------------------- gzip
+	
+	/**
+	 * Compresses a file into gzip archive.
+	 */
+	public static void gzip(String fileName) throws IOException {
+		gzip(new File(fileName));
 	}
 
 	/**
-	 * Creates and opens zip output stream of a zip file. If zip file exist it will be recreated.
+	 * Compresses a file into gzip archive.
 	 */
-	public static ZipOutputStream createZip(File zip) throws FileNotFoundException {
-		return new ZipOutputStream(new FileOutputStream(zip));
+	public static void gzip(File file) throws IOException {
+		if (file.isDirectory() == true) {
+			throw new IOException("gzip does not work on a folder");
+		}
+		FileInputStream fis = new FileInputStream(file);
+		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file.getAbsolutePath() + GZIP_EXT));
+		try {
+			StreamUtil.copy(fis, gzos);
+		} finally {
+			StreamUtil.close(gzos);
+			StreamUtil.close(fis);
+		}
 	}
 
 	/**
-	 * @see #createZip(java.io.File)
+	 * Decompress gzip archive.
 	 */
-	public static ZipOutputStream createZip(String zipFile) throws FileNotFoundException {
-		return createZip(new File(zipFile));
+	public static void ungzip(String file) throws IOException {
+		ungzip(new File(file));
 	}
 
+	/**
+	 * Decompress gzip archive.
+	 */
+	public static void ungzip(File file) throws IOException {
+		String outFileName = FileNameUtil.removeExtension(file.getAbsolutePath());
+		File out = new File(outFileName);
+		out.createNewFile();
 
-	// ---------------------------------------------------------------- unzip
+		FileOutputStream fos = new FileOutputStream(out);
+		GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(file));
+		try {
+			StreamUtil.copy(gzis, fos);
+		} finally {
+			StreamUtil.close(fos);
+			StreamUtil.close(gzis);
+		}
+	}
+
+	// ---------------------------------------------------------------- zip
+
+	/**
+	 * Zips a file or a folder.
+	 */
+	public static void zip(String file) throws IOException {
+		zip(new File(file));
+	}
+
+	/**
+	 * Zips a file or a folder.
+	 */
+	public static void zip(File file) throws IOException {
+		String zipFile = file.getAbsolutePath() + ZIP_EXT;
+
+		ZipOutputStream zos = null;
+		try {
+			zos = createZip(zipFile);
+			addToZip(zos, file);
+		} finally {
+			StreamUtil.close(zos);
+		}
+	}
 
 	/**
 	 * Extracts zip file content to the target directory.
@@ -141,91 +185,100 @@ public class ZipUtil {
 				}
 			}
 		}
+
+		close(zip);
 	}
 
-	// ---------------------------------------------------------------- zip
+	// ---------------------------------------------------------------- zip stream
+
+	/**
+	 * @see #createZip(java.io.File)
+	 */
+	public static ZipOutputStream createZip(String zipFile) throws FileNotFoundException {
+		return createZip(new File(zipFile));
+	}
+
+	/**
+	 * Creates and opens zip output stream of a zip file. If zip file exist it will be recreated.
+	 */
+	public static ZipOutputStream createZip(File zip) throws FileNotFoundException {
+		return new ZipOutputStream(new FileOutputStream(zip));
+	}
 
 	/*
 	 * Adds a new file entry to the ZIP output stream.
 	 */
-	public static void addFileToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
-		addFileToZip(zos, file, relativeName, null);
+	public static void addToZip(ZipOutputStream zos, File file) throws IOException {
+		addToZip(zos, file, file.getName(), null);
 	}
-	public static void addFileToZip(ZipOutputStream zos, String fileName, String relativeName) throws IOException {
-		addFileToZip(zos, new File(fileName), relativeName, null);
+	public static void addToZip(ZipOutputStream zos, String file) throws IOException {
+		addToZip(zos, new File(file));
 	}
-	public static void addFileToZip(ZipOutputStream zos, String fileName, String relativeName, String comment) throws IOException {
-		addFileToZip(zos, new File(fileName), relativeName, comment);
+
+	public static void addToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
+		addToZip(zos, file, relativeName, null);
 	}
-	public static void addFileToZip(ZipOutputStream zos, File file, String relativeName, String comment) throws IOException {
+	public static void addToZip(ZipOutputStream zos, String fileName, String relativeName) throws IOException {
+		addToZip(zos, new File(fileName), relativeName, null);
+	}
+
+	public static void addToZip(ZipOutputStream zos, String fileName, String relativeName, String comment) throws IOException {
+		addToZip(zos, new File(fileName), relativeName, comment);
+	}
+
+	/*
+	 * Adds new entry to the ZIP output stream. The source may be either a file or a folder. If it is a folder,
+	 * it will be recursively scanned and all its content added to the zip.
+	 */
+	public static void addToZip(ZipOutputStream zos, File file, String relativeName, String comment) throws IOException {
 		while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
 			relativeName = relativeName.substring(1);
 		}
-
+		if (file.exists() == false) {
+			throw new FileNotFoundException(file.toString());
+		}
 		boolean isDir = file.isDirectory();
-		if (isDir && !StringUtil.endsWithChar(relativeName, '/')) {
-			relativeName += "/";
-		}
+		boolean addEntry = file.isFile();
 
-		long size = isDir ? 0 : file.length();
-		ZipEntry e = new ZipEntry(relativeName);
-		e.setTime(file.lastModified());
-		e.setComment(comment);
-		if (size == 0) {
-			e.setMethod(ZipEntry.STORED);
-			e.setSize(0);
-			e.setCrc(0);
-		}
-		zos.putNextEntry(e);
-		if (!isDir) {
-			InputStream is = new FileInputStream(file);
-			try {
-				StreamUtil.copy(is, zos);
-			} finally {
-				StreamUtil.close(is);
+		if (isDir) {
+			boolean noRelativePath = StringUtil.isEmpty(relativeName);
+			final File[] children = file.listFiles();
+			if (children.length != 0) {
+				for (File child : children) {
+					String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativeName + '/') + child.getName();
+					addToZip(zos, child, childRelativePath);
+				}
+			} else {
+				// add empty folder
+				if (!StringUtil.endsWithChar(relativeName, '/')) {
+					relativeName += '/';
+				}
+				addEntry = true;
 			}
 		}
-		zos.closeEntry();
-	}
 
-	public static void addDirToZip(ZipOutputStream out, String dirName) throws IOException {
-		String path = FileNameUtil.getName(dirName);
-		addDirToZip(out, new File(dirName), path);
-	}
-
-	public static void addDirToZip(ZipOutputStream out, String dirName, String relativePath) throws IOException {
-		addDirToZip(out, new File(dirName), relativePath);
-	}
-
-	/**
-	 * Adds a folder to the zip recursively using its name as relative zip path.
-	 */
-	public static void addDirToZip(ZipOutputStream out, File dir) throws IOException {
-		String path = FileNameUtil.getName(dir.getAbsolutePath());
-		addDirToZip(out, dir, path);
-	}
-
-	/**
-	 * Adds a folder to the zip recursively.
-	 */
-	public static void addDirToZip(ZipOutputStream out, File dir, String relativePath) throws IOException {
-		boolean noRelativePath = StringUtil.isEmpty(relativePath);
-		if (noRelativePath == false) {
-			addFileToZip(out, dir, relativePath);
-		}
-		final File[] children = dir.listFiles();
-		if (children != null) {
-			for (File child : children) {
-				final String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativePath + '/') + child.getName();
-				if (child.isDirectory()) {
-					addDirToZip(out, child, childRelativePath);
-				} else {
-					addFileToZip(out, child, childRelativePath);
+		if (addEntry) {
+			long size = isDir ? 0 : file.length();
+			ZipEntry e = new ZipEntry(relativeName);
+			e.setTime(file.lastModified());
+			e.setComment(comment);
+			if (size == 0) {
+				e.setMethod(ZipEntry.STORED);
+				e.setSize(0);
+				e.setCrc(0);
+			}
+			zos.putNextEntry(e);
+			if (!isDir) {
+				InputStream is = new FileInputStream(file);
+				try {
+					StreamUtil.copy(is, zos);
+				} finally {
+					StreamUtil.close(is);
 				}
 			}
+			zos.closeEntry();
 		}
 	}
-
 
 	// ---------------------------------------------------------------- close
 
