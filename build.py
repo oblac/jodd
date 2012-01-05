@@ -1,14 +1,14 @@
-
 # settings
 prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - open-source Java utility library and web application frameworks.'
-prjVersion = '3.3.2'
+prjVersion = '3.3.2-' + time_date
 
 # vars
-copyright = 'Copyright &#169; 2003-2011 Jodd Team'
+copyright = 'Copyright &#169; 2003-' + time_year + ' Jodd Team'
 
 # ant
+project()
 project_header()
 
 lib('asm')
@@ -17,50 +17,76 @@ lib('servlets')
 lib('slf4j')
 lib('test')
 
-module('jodd')
-module_compile('production', 'jdk5', 'mail, servlets')
-module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
-module_compile('test', 		 'jdk5', '#production, mail, servlets, test')
-module_build('production, test')
-module_doc('production')
-module_test('jodd.TestJodd')
-module_findbugs()
-module_dist(moduleName, 'jodd.Jodd')
-module_dist_sources(moduleName, 'production')
-module_dist_javadoc(moduleName, 'production')
+#---------------------------------------------------------- jodd
 
-module('jodd-wot')
-module_compile2('production', 'jdk5','jdk6', '>jodd.production, servlets, asm, slf4j')
-module_javadoc(moduleName.capitalize() + ' Library ${prjVersion}', copyright)
-module_compile('test', 		 'jdk5', '>jodd.production, #production, asm, slf4j, test')
-module_build('production, test')
-module_doc('production')
-module_test('jodd.TestJoddWot')
-module_findbugs()
-module_dist(moduleName, 'jodd.JoddWot')
-module_dist_sources(moduleName, 'production')
-module_dist_javadoc(moduleName, 'production')
+module('jodd', 'jdk5')
+module_compile('src',  'mail, servlets')
+module_compile('test', '#src, mail, servlets, test')
+module_build('src, test')
+module_emma('src', 'test', 'jodd.TestJodd')
+module_javadoc('src', moduleName.capitalize() + ' Library ${prjVersion}', copyright)
+module_findbugs('src')
 
+module_task('javadoc', '.src')
+module_task('emma', '.test')
+module_task('findbugs', '.src')
 
-module('jodd-joy')
-module_compile('production', 'jdk5', '>jodd.production, >jodd-wot.production, servlets, slf4j')
-module_build('production')
-module_dist(moduleName)
+artifact_jar(moduleName, 'jodd.src', 'jodd.Jodd')
+artifact_jar_sources(moduleName, 'jodd.src')
+artifact_jar_javadoc(moduleName, 'jodd.src')
 
-module('jodd-gfx')
-module_compile('production', 'jdk5', '')
-module_build('production')
+module_task('dist', 'jar.jodd')
+module_task('dist-all', 'jar.jodd, jar-sources.jodd, jar-javadoc.jodd')
 
-project()
-project_task('build', '.jodd, .jodd-wot, .jodd-joy, .jodd-gfx')
+#---------------------------------------------------------- jodd-wot
+
+module('jodd-wot', 'jdk5')
+module_compile('src',  '>jodd.src, servlets, asm, slf4j')
+module_compile('test', '>jodd.src, #src, asm, slf4j, test')
+module_build('src, test')
+module_emma('src', 'test', 'jodd.TestJoddWot')
+module_javadoc('src', moduleName.capitalize() + ' Library ${prjVersion}', copyright)
+module_findbugs('src')
+
+module_task('javadoc', '.src')
+module_task('emma', '.test')
+module_task('findbugs', '.src')
+
+module('jodd-wot.6', 'jdk6')
+module_compile('src',  '>jodd-wot.src')
+module_build('src')
+
+moduleName = 'jodd-wot'
+artifact_jar(moduleName, 'jodd-wot.src, jodd-wot.6.src', 'jodd.Jodd')
+artifact_jar_sources(moduleName, 'jodd-wot.src, jodd-wot.6.src')
+artifact_jar_javadoc(moduleName, 'jodd-wot.src')
+
+module_task('dist', 'jar.jodd-wot')
+module_task('dist-all', 'jar.jodd-wot, jar-sources.jodd-wot, jar-javadoc.jodd-wot')
+
+#---------------------------------------------------------- jodd-joy
+
+module('jodd-joy', 'jdk5')
+module_compile('src', '>jodd.src, >jodd-wot.src, servlets, slf4j')
+module_build('src')
+
+artifact_jar(moduleName, 'jodd-joy.src', '')
+
+module_task('dist', 'jar.jodd-joy')
+module_task('dist-all', 'jar.jodd-joy')
+
+#---------------------------------------------------------- project
+
+project_task('build', '.jodd, .jodd-wot, .jodd-wot.6, .jodd-joy')
 project_task('javadoc', 'build, .jodd, .jodd-wot')
 project_task('emma', 'build, .jodd, .jodd-wot')
 project_task('findbugs', 'build, .jodd, .jodd-wot')
 project_task('dist', 'build, .jodd, .jodd-wot, .jodd-joy')
-project_task('dist-all', 'dist, dist-sources.jodd, dist-javadoc.jodd, dist-sources.jodd-wot, dist-javadoc.jodd-wot')
+project_task('dist-all', 'build, .jodd, .jodd-wot, .jodd-joy')
+
 project_clean()
 
-project_target('release', 'clean, build, javadoc, emma, findbugs, dist-all', 'creates full release')
+project_target('release', 'clean, build, javadoc, emma, findbugs, dist-all', '* creates full release')
 
 
 pack_dist = '''
@@ -76,12 +102,12 @@ pack_maven = pack_dist + '''
 	pom/**
 '''
 pack_src = pack_dist + '''
-	${jodd.production.src.dir}/**
-	${jodd.production.javadoc.dir}/**
-	${jodd.test.src.dir}/**
-	${jodd-wot.production.src.dir}/**
-	${jodd-wot.production.javadoc.dir}/**
-	${jodd-wot.test.src.dir}/**
+	${jodd.src.src-dir}/**
+	${jodd.src.javadoc-dir}/**
+	${jodd.test.src-dir}/**
+	${jodd-wot.src.src-dir}/**
+	${jodd-wot.src.javadoc-dir}/**
+	${jodd-wot.test.src-dir}/**
 	etc/javadoc/**
 	build*
 '''
@@ -89,9 +115,9 @@ pack_all = pack_src + '''
 	lib/**
 '''
 pack('dist', 'jodd', 'dist', pack_dist, '')
-pack('mvn',  'jodd-mvn', 'dist', pack_maven, '')
-pack('src',  'jodd-all', 'pack-dist', pack_src, '')
-pack('all',  'jodd-all-with-dependencies', 'pack-src, pack-mvn', pack_all, 'lib/oracle/*')
+pack('mvn',  'jodd-mvn', 'dist-all', pack_maven, '')
+pack('src',  'jodd-all', 'pack-dist, pack-mvn', pack_src, '')
+pack('all',  'jodd-all-with-dependencies', 'pack-src', pack_all, 'lib/oracle/*')
 
 
 project_help('''
@@ -123,4 +149,5 @@ pack-mvn:	pack distribution, sources and javadoc jars
 pack-src:	pack sources and documents
 pack-all:	pack all
 ''')
+
 project_footer()
