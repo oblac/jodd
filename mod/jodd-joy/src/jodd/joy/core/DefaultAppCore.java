@@ -215,6 +215,7 @@ public abstract class DefaultAppCore {
 
 		// load parameters from properties files
 		Props appProps = createPetiteProps();
+		appProps.loadEnvironment("env");
 		PropsUtil.loadFromClasspath(appProps, "/app*.prop*");
 		petite.defineParameters(appProps);
 
@@ -224,7 +225,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Creates application {@link Props}. May be overridden to
-	 * configure the props features.
+	 * configure the <code>Props</code> features.
 	 */
 	protected Props createPetiteProps() {
 		return new Props();
@@ -364,7 +365,7 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- new types
 
 	/**
-	 * Initializes types for beanutil and db conversions and other usages.
+	 * Initializes types for BeanUtil, DbOom conversions and other usages.
 	 */
 	protected void initTypes() {
 	}
