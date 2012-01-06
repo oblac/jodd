@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.madvoc.result;
 
 import jodd.bean.BeanTemplateParser;
