@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.util.collection.FastCharBuffer;
+import jodd.util.buffer.FastCharBuffer;
 
 import java.io.IOException;
 import java.io.Writer;
