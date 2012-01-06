@@ -1,7 +1,5 @@
 package jodd.util.buffer;
 
-import java.io.IOException;
-
 /**
  * Fast, fast <code>char</code> buffer with some additional features.
  */
@@ -278,7 +276,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends character sequence to buffer.
 	 */
-	public FastCharBuffer append(CharSequence csq) throws IOException {
+	public FastCharBuffer append(CharSequence csq) {
 		append(csq, 0, csq.length());
 		return this;
 	}
@@ -286,7 +284,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends character sequence to buffer.
 	 */
-	public FastCharBuffer append(CharSequence csq, int start, int end) throws IOException {
+	public FastCharBuffer append(CharSequence csq, int start, int end) {
 		for (int i = start; i < end; i++) {
 			append(csq.charAt(i));
 		}
