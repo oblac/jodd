@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.util.collection;
+package jodd.util.buffer;
 
 import jodd.util.ArraysUtil;
 import junit.framework.TestCase;
@@ -88,4 +88,82 @@ public class FastBuffersTest extends TestCase {
 		assertEquals(131070, fib.size());
 		assertEquals(65535, fib.offset());
 	}
+
+	public void testAt() {
+		FastCharBuffer fcb = new FastCharBuffer(2);
+		fcb.append("12abc");
+
+		assertEquals('1', fcb.charAt(0));
+		assertEquals('2', fcb.charAt(1));
+		assertEquals('a', fcb.charAt(2));
+		assertEquals('b', fcb.charAt(3));
+		assertEquals('c', fcb.charAt(4));
+
+		assertEquals("12abc", fcb.toString());
+	}
+
+	public void testAtExceptions() {
+		FastCharBuffer fcb = new FastCharBuffer();
+		
+		try {
+			fcb.charAt(-1);
+			fail();
+		}
+		catch (IndexOutOfBoundsException ioobex) {
+		}
+
+		try {
+			fcb.charAt(0);
+			fail();
+		}
+		catch (IndexOutOfBoundsException ioobex) {
+		}
+
+		try {
+			fcb.charAt(1);
+			fail();
+		}
+		catch (IndexOutOfBoundsException ioobex) {
+		}
+
+		fcb.append('a');
+		assertEquals('a', fcb.charAt(0));
+
+		try {
+			fcb.charAt(1);
+			fail();
+		}
+		catch (IndexOutOfBoundsException ioobex) {
+		}
+	}
+
+	public void testArray() {
+		String str = "12abcd12345678qw";
+		FastCharBuffer fcb = new FastCharBuffer(2);
+		fcb.append(str);
+
+		assertEquals(16, fcb.length());
+		assertEquals(str, fcb.toString());
+
+		assertEquals(str.subSequence(3, 4).toString(), fcb.subSequence(3, 4).toString());
+		for (int i = 0; i < 16; i++) {
+			for (int j = i; j < 16; j++) {
+				assertEquals(str.subSequence(i, j).toString(), fcb.subSequence(i, j).toString());
+			}
+		}
+	}
+	
+	public void testAppend() {
+		String str = "1AB123412345678QWER";
+		FastCharBuffer fcb = new FastCharBuffer(1);
+		fcb.append(str);
+		assertEquals("1AB123412345678QWER", fcb.toString());
+
+		FastCharBuffer fcb2 = new FastCharBuffer(1);
+		fcb2.append("qASzxcvPOIUY");
+		fcb2.append(fcb);
+
+		assertEquals("qASzxcvPOIUY1AB123412345678QWER", fcb2.toString());
+	}
+
 }
