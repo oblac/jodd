@@ -1,10 +1,8 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
 /**
  * ArrayList of double primitives. For just buffering values, consider
- * using {@link jodd.util.collection.FastDoubleBuffer}.
+ * using <code>FastDoubleBuffer</code>.
  */
 public class DoubleArrayList {
 

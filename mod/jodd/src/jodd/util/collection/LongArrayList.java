@@ -1,10 +1,8 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
 /**
  * ArrayList of long primitives. For just buffering values, consider
- * using {@link jodd.util.collection.FastLongBuffer}.
+ * using <code>FastLongBuffer</code>.
  */
 public class LongArrayList {
 

@@ -2,7 +2,7 @@ package jodd.util.collection;
 
 /**
  * ArrayList of <type> primitives. For just buffering values, consider
- * using {@link jodd.util.collection.Fast<Type>Buffer}.
+ * using <code>Fast<Type>Buffer</code>.
  */
 public class <Type>ArrayList {
 

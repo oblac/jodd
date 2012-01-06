@@ -1,10 +1,8 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
 /**
  * ArrayList of short primitives. For just buffering values, consider
- * using {@link jodd.util.collection.FastShortBuffer}.
+ * using <code>FastShortBuffer</code>.
  */
 public class ShortArrayList {
 

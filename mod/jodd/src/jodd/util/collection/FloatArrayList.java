@@ -1,10 +1,8 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
 /**
  * ArrayList of float primitives. For just buffering values, consider
- * using {@link jodd.util.collection.FastFloatBuffer}.
+ * using <code>FastFloatBuffer</code>.
  */
 public class FloatArrayList {
 

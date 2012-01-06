@@ -1,10 +1,8 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.util.collection;
 
 /**
  * ArrayList of char primitives. For just buffering values, consider
- * using {@link jodd.util.collection.FastCharBuffer}.
+ * using <code>FastCharBuffer</code>.
  */
 public class CharArrayList {
 
