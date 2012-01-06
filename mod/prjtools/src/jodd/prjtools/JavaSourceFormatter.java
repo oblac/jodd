@@ -29,6 +29,10 @@ public class JavaSourceFormatter {
 		formatter.format("mod/jodd-wot");
 	}
 
+	public JavaSourceFormatter() {
+		System.out.println("Java Source Formatter " + (WRITE_MODE ? "is ACTIVE." : "works in TEST mode."));
+	}
+
 	public void format(String sourceRoot) throws IOException {
 
 		System.out.println("*** format: " + sourceRoot);
