@@ -27,7 +27,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.2-20120106"/>
+	<property name="prjVersion" value="3.3.2-beta"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
@@ -263,7 +263,7 @@
 	<property name="jodd.src.javadoc-dir" value="${output.dir}/javadoc/jodd.src"/>
 
 	<!-- javadoc: jodd -->
-
+	<mkdir dir="${jodd.src.javadoc-dir}"/>
 	<uptodate property="javadoc.jodd.src.required" targetfile="${output.dir}/jodd.src" >
 		<srcfiles dir="${jodd.src.javadoc-dir}" includes="*"/>
 	</uptodate>
@@ -504,7 +504,7 @@
 	<property name="jodd-wot.src.javadoc-dir" value="${output.dir}/javadoc/jodd-wot.src"/>
 
 	<!-- javadoc: jodd-wot -->
-
+	<mkdir dir="${jodd-wot.src.javadoc-dir}"/>
 	<uptodate property="javadoc.jodd-wot.src.required" targetfile="${output.dir}/jodd-wot.src" >
 		<srcfiles dir="${jodd-wot.src.javadoc-dir}" includes="*"/>
 	</uptodate>
