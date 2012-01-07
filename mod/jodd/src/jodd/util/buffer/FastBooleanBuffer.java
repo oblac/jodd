@@ -108,12 +108,12 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends single <code>boolean</code> to buffer.
 	 */
-	public FastBooleanBuffer append(boolean value) {
+	public FastBooleanBuffer append(boolean element) {
 		if (offset == currentBuffer.length) {
 			needNewBuffer(count + 1);
 		}
 
-		currentBuffer[offset] = value;
+		currentBuffer[offset] = element;
 		offset++;
 		count++;
 
@@ -123,7 +123,7 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	FastBooleanBuffer append(FastBooleanBuffer buff) {
+	public FastBooleanBuffer append(FastBooleanBuffer buff) {
 		for (int i = 0; i < buff.currentBufferIndex; i++) {
 			append(buff.buffers[i]);
 		}
@@ -136,6 +136,13 @@ public class FastBooleanBuffer {
 	 */
 	public int size() {
 		return count;
+	}
+
+	/**
+	 * Tests if this buffer has no elements.
+	 */
+	public boolean isEmpty() {
+		return count == 0;
 	}
 
 	/**
@@ -164,7 +171,7 @@ public class FastBooleanBuffer {
 	/**
 	 * Resets the buffer content.
 	 */
-	public void reset() {
+	public void clear() {
 		count = 0;
 		offset = 0;
 		currentBufferIndex = 0;

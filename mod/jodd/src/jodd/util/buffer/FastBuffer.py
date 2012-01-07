@@ -2,12 +2,17 @@
 
 import sys
 
-types = ['int', 'long', 'float', 'double', 'char', 'byte', 'short', 'boolean']
+types = ['int', 'long', 'float', 'double', 'char', 'byte', 'short', 'boolean', 'E']
 for atype in types:
 
+	atypeTitle = atype.title()
+
 	extended = 0
-	if atype == 'char':
+	if (atype == 'char') | (atype == 'E'):
 		extended = 1
+
+	if atype == 'E':
+		atypeTitle = ''
 
 	# read template
 	f = open('FastBuffer.java.template', 'r')
@@ -26,8 +31,14 @@ for atype in types:
 		template = strip
 
 	# transform
-	template = template.replace('<Type>', atype.title())
+	template = template.replace('<Type>', atypeTitle)
 	template = template.replace('<type>', atype)
+	if (atype == 'E'):
+		template = template.replace('FastBuffer', 'FastBuffer<E>')
+		template = template.replace('public FastBuffer<E>(', 'public FastBuffer(')
+		template = template.replace('new E[16][]', '(E[][]) new Object[16][]')
+		template = template.replace('new E[newLen][]', '(E[][]) new Object[newLen][]')
+		template = template.replace('new E[', '(E[]) new Object[')
 
 	# remove @@generated tags from template
 	java = ''
@@ -36,7 +47,7 @@ for atype in types:
 			continue
 		java = java + line + '\n'
 
-	dest = 'Fast' + atype.title() + 'Buffer.java'
+	dest = 'Fast' + atypeTitle + 'Buffer.java'
 
 	# insert template into extended file: read prefix and suffix
 	if extended == 1:

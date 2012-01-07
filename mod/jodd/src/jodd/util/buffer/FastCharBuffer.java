@@ -110,12 +110,12 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends single <code>char</code> to buffer.
 	 */
-	public FastCharBuffer append(char value) {
+	public FastCharBuffer append(char element) {
 		if (offset == currentBuffer.length) {
 			needNewBuffer(count + 1);
 		}
 
-		currentBuffer[offset] = value;
+		currentBuffer[offset] = element;
 		offset++;
 		count++;
 
@@ -125,7 +125,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	FastCharBuffer append(FastCharBuffer buff) {
+	public FastCharBuffer append(FastCharBuffer buff) {
 		for (int i = 0; i < buff.currentBufferIndex; i++) {
 			append(buff.buffers[i]);
 		}
@@ -138,6 +138,13 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	 */
 	public int size() {
 		return count;
+	}
+
+	/**
+	 * Tests if this buffer has no elements.
+	 */
+	public boolean isEmpty() {
+		return count == 0;
 	}
 
 	/**
@@ -166,7 +173,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Resets the buffer content.
 	 */
-	public void reset() {
+	public void clear() {
 		count = 0;
 		offset = 0;
 		currentBufferIndex = 0;

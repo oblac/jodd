@@ -108,12 +108,12 @@ public class FastFloatBuffer {
 	/**
 	 * Appends single <code>float</code> to buffer.
 	 */
-	public FastFloatBuffer append(float value) {
+	public FastFloatBuffer append(float element) {
 		if (offset == currentBuffer.length) {
 			needNewBuffer(count + 1);
 		}
 
-		currentBuffer[offset] = value;
+		currentBuffer[offset] = element;
 		offset++;
 		count++;
 
@@ -123,7 +123,7 @@ public class FastFloatBuffer {
 	/**
 	 * Appends another fast buffer to this one.
 	 */
-	FastFloatBuffer append(FastFloatBuffer buff) {
+	public FastFloatBuffer append(FastFloatBuffer buff) {
 		for (int i = 0; i < buff.currentBufferIndex; i++) {
 			append(buff.buffers[i]);
 		}
@@ -136,6 +136,13 @@ public class FastFloatBuffer {
 	 */
 	public int size() {
 		return count;
+	}
+
+	/**
+	 * Tests if this buffer has no elements.
+	 */
+	public boolean isEmpty() {
+		return count == 0;
 	}
 
 	/**
@@ -164,7 +171,7 @@ public class FastFloatBuffer {
 	/**
 	 * Resets the buffer content.
 	 */
-	public void reset() {
+	public void clear() {
 		count = 0;
 		offset = 0;
 		currentBufferIndex = 0;
