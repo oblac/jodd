@@ -6,6 +6,8 @@ import jodd.util.ArraysUtil;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class FastBuffersTest extends TestCase {
 
@@ -23,7 +25,7 @@ public class FastBuffersTest extends TestCase {
 		assertEquals(10, fib.size());
 		assertTrue(Arrays.equals(expected, fib.toArray()));
 
-		fib.reset();
+		fib.clear();
 		assertEquals(0, fib.size());
 	}
 	
@@ -164,6 +166,29 @@ public class FastBuffersTest extends TestCase {
 		fcb2.append(fcb);
 
 		assertEquals("qASzxcvPOIUY1AB123412345678QWER", fcb2.toString());
+	}
+	
+	public void testIterator() {
+		FastBuffer<String> fb = new FastBuffer<String>();
+		for (int i = 0; i < 100; i++) {
+			fb.append(String.valueOf(i));
+		}
+
+		assertEquals("23", fb.get(23));
+		
+		Iterator<String> it = fb.iterator();
+		
+		for (int i = 0; i < 100; i++) {
+			assertTrue(it.hasNext());
+			assertEquals(String.valueOf(i), it.next());
+		}
+		assertFalse(it.hasNext());
+		
+		try {
+			it.next();
+			fail();
+		} catch (NoSuchElementException nseex) {
+		}
 	}
 
 }
