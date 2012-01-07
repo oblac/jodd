@@ -141,21 +141,23 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	}
 
 	/**
-	 * Returns current index of <code>char</code> array.
+	 * Returns current index of inner <code>char</code> array chunk.
+	 * Represents the index of last used inner array chunk.
 	 */
 	public int index() {
 		return currentBufferIndex;
 	}
 
 	/**
-	 * Returns offset in current array buffer.
+	 * Returns the offset of last used element in current inner array chunk.
 	 */
 	public int offset() {
 		return offset;
 	}
 
 	/**
-	 * Returns <code>char</code> chunk at given index.
+	 * Returns <code>char</code> inner array chunk at given index.
+	 * May be used for iterating inner chunks in fast manner.
 	 */
 	public char[] array(int index) {
 		return buffers[index];
@@ -225,9 +227,9 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	}
 
 	/**
-	 * Returns <code>char</code> at given index.
+	 * Returns <code>char</code> element at given index.
 	 */
-	public char charAt(int index) {
+	public char get(int index) {
 		if (index >= count) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -256,6 +258,13 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	 */
 	public String toString() {
 		return new String(toArray());
+	}
+
+	/**
+	 * Returns char at given index.
+	 */
+	public char charAt(int index) {
+		return get(index);
 	}
 
 	/**

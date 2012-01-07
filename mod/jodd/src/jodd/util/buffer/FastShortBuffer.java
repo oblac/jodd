@@ -139,21 +139,23 @@ public class FastShortBuffer {
 	}
 
 	/**
-	 * Returns current index of <code>short</code> array.
+	 * Returns current index of inner <code>short</code> array chunk.
+	 * Represents the index of last used inner array chunk.
 	 */
 	public int index() {
 		return currentBufferIndex;
 	}
 
 	/**
-	 * Returns offset in current array buffer.
+	 * Returns the offset of last used element in current inner array chunk.
 	 */
 	public int offset() {
 		return offset;
 	}
 
 	/**
-	 * Returns <code>short</code> chunk at given index.
+	 * Returns <code>short</code> inner array chunk at given index.
+	 * May be used for iterating inner chunks in fast manner.
 	 */
 	public short[] array(int index) {
 		return buffers[index];
@@ -223,9 +225,9 @@ public class FastShortBuffer {
 	}
 
 	/**
-	 * Returns <code>short</code> at given index.
+	 * Returns <code>short</code> element at given index.
 	 */
-	public short shortAt(int index) {
+	public short get(int index) {
 		if (index >= count) {
 			throw new IndexOutOfBoundsException();
 		}
