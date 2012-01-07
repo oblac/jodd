@@ -27,7 +27,7 @@
 	<property file="build.user.properties"/>
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.2-beta"/>
+	<property name="prjVersion" value="3.3.2-20120108"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
