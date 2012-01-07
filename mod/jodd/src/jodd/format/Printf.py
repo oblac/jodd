@@ -1,19 +1,18 @@
-import string;
+import string
 
-f = open('Printf.java', 'w');
-f.write('''// Copyright (c) 2003-2006, Jodd Team (jodd.sf.net). All Rights Reserved.
-
+f = open('Printf.java', 'w')
+f.write('''
 package jodd.format;
 
 /**
  * Printf.
  */
-public class Printf {''');
+public class Printf {''')
 
-prim_types = ['byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean', 'String'];
-wrapper_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double', 'Boolean'];
+prim_types = ['byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolean', 'String']
+wrapper_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double', 'Boolean']
 
-f.write('\n\n\t// ---------------------------------------------------------------- primitives\n');
+f.write('\n\n\t// ---------------------------------------------------------------- primitives\n')
 template = '''
 	public static String str(String format, $T value) {
 		return new PrintfFormat(format).form(value);
@@ -24,10 +23,10 @@ template = '''
 
 '''
 for type in prim_types:
-	data = string.replace(template, '$T', type);
-	f.write(data);
+	data = string.replace(template, '$T', type)
+	f.write(data)
 
-f.write('\n\n\t// ---------------------------------------------------------------- wrappers\n');
+f.write('\n\n\t// ---------------------------------------------------------------- wrappers\n')
 template = '''
 	public static String str(String format, $T value) {
 		return new PrintfFormat(format).form(value.$tValue());
@@ -37,14 +36,14 @@ template = '''
 	}
 	
 '''
-count = 0;
+count = 0
 for type in wrapper_types:
-	data = string.replace(template, '$T', type);
-	data = string.replace(data, '$t', prim_types[count]);
-	f.write(data);
-	count = count + 1;
+	data = string.replace(template, '$T', type)
+	data = string.replace(data, '$t', prim_types[count])
+	f.write(data)
+	count = count + 1
 
-f.write('\n\n\t// ---------------------------------------------------------------- arrays\n');
+f.write('\n\n\t// ---------------------------------------------------------------- arrays\n')
 template = '''
 	public static String str(String format, $T[] params) {
 		PrintfFormat pf = new PrintfFormat();
@@ -59,10 +58,10 @@ template = '''
 
 '''
 for type in prim_types:
-	data = string.replace(template, '$T', type);
-	f.write(data);
+	data = string.replace(template, '$T', type)
+	f.write(data)
 
-f.write('\n\n\t// ---------------------------------------------------------------- wrapper arrays\n');
+f.write('\n\n\t// ---------------------------------------------------------------- wrapper arrays\n')
 template = '''
 	public static String str(String format, $T... params) {
 		PrintfFormat pf = new PrintfFormat();
@@ -75,14 +74,14 @@ template = '''
 		System.out.println(str(format, params));
 	}
 '''
-count = 0;
+count = 0
 for type in wrapper_types:
-	data = string.replace(template, '$T', type);
-	data = string.replace(data, '$t', prim_types[count]);
-	f.write(data);
-	count = count + 1;
+	data = string.replace(template, '$T', type)
+	data = string.replace(data, '$t', prim_types[count])
+	f.write(data)
+	count = count + 1
 
-f.write('\n\n\t// ---------------------------------------------------------------- object array\n');
+f.write('\n\n\t// ---------------------------------------------------------------- object array\n')
 f.write('''
 	public static String str(String format, Object... params) {
 		PrintfFormat pf = new PrintfFormat();
@@ -108,8 +107,7 @@ f.write('''
 		System.out.println(str(format, params));
 	}
 
-''');
+''')
 
-
-f.write('}');
-f.close();
+f.write('}')
+f.close()
