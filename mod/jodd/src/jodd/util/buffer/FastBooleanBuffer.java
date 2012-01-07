@@ -71,12 +71,12 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends <code>boolean</code> array to buffer.
 	 */
-	public FastBooleanBuffer append(boolean[] b, int off, int len) {
+	public FastBooleanBuffer append(boolean[] array, int off, int len) {
 		int end = off + len;
 		if ((off < 0)
-				|| (off > b.length)
+				|| (off > array.length)
 				|| (len < 0)
-				|| (end > b.length)
+				|| (end > array.length)
 				|| (end < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -87,7 +87,7 @@ public class FastBooleanBuffer {
 		int remaining = len;
 		while (remaining > 0) {
 			int part = Math.min(remaining, currentBuffer.length - offset);
-			System.arraycopy(b, end - remaining, currentBuffer, offset, part);
+			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
 			offset += part;
 			count += part;
@@ -101,8 +101,8 @@ public class FastBooleanBuffer {
 	/**
 	 * Appends <code>boolean</code> array to buffer.
 	 */
-	public FastBooleanBuffer append(boolean[] b) {
-		return append(b, 0, b.length);
+	public FastBooleanBuffer append(boolean[] array) {
+		return append(array, 0, array.length);
 	}
 
 	/**

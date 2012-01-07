@@ -71,12 +71,12 @@ public class FastShortBuffer {
 	/**
 	 * Appends <code>short</code> array to buffer.
 	 */
-	public FastShortBuffer append(short[] b, int off, int len) {
+	public FastShortBuffer append(short[] array, int off, int len) {
 		int end = off + len;
 		if ((off < 0)
-				|| (off > b.length)
+				|| (off > array.length)
 				|| (len < 0)
-				|| (end > b.length)
+				|| (end > array.length)
 				|| (end < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -87,7 +87,7 @@ public class FastShortBuffer {
 		int remaining = len;
 		while (remaining > 0) {
 			int part = Math.min(remaining, currentBuffer.length - offset);
-			System.arraycopy(b, end - remaining, currentBuffer, offset, part);
+			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
 			offset += part;
 			count += part;
@@ -101,8 +101,8 @@ public class FastShortBuffer {
 	/**
 	 * Appends <code>short</code> array to buffer.
 	 */
-	public FastShortBuffer append(short[] b) {
-		return append(b, 0, b.length);
+	public FastShortBuffer append(short[] array) {
+		return append(array, 0, array.length);
 	}
 
 	/**

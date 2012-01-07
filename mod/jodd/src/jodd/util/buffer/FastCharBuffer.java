@@ -73,12 +73,12 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends <code>char</code> array to buffer.
 	 */
-	public FastCharBuffer append(char[] b, int off, int len) {
+	public FastCharBuffer append(char[] array, int off, int len) {
 		int end = off + len;
 		if ((off < 0)
-				|| (off > b.length)
+				|| (off > array.length)
 				|| (len < 0)
-				|| (end > b.length)
+				|| (end > array.length)
 				|| (end < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -89,7 +89,7 @@ public class FastCharBuffer implements CharSequence, Appendable {
 		int remaining = len;
 		while (remaining > 0) {
 			int part = Math.min(remaining, currentBuffer.length - offset);
-			System.arraycopy(b, end - remaining, currentBuffer, offset, part);
+			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
 			offset += part;
 			count += part;
@@ -103,8 +103,8 @@ public class FastCharBuffer implements CharSequence, Appendable {
 	/**
 	 * Appends <code>char</code> array to buffer.
 	 */
-	public FastCharBuffer append(char[] b) {
-		return append(b, 0, b.length);
+	public FastCharBuffer append(char[] array) {
+		return append(array, 0, array.length);
 	}
 
 	/**
