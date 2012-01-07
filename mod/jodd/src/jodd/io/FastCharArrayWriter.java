@@ -83,7 +83,7 @@ public class FastCharArrayWriter extends Writer {
 	 * @see java.io.CharArrayWriter#reset()
 	 */
 	public void reset() {
-		buffer.reset();
+		buffer.clear();
 	}
 
 	/**

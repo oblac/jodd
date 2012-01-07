@@ -90,7 +90,7 @@ public class FastByteArrayOutputStream extends OutputStream {
 	 * @see java.io.ByteArrayOutputStream#reset()
 	 */
 	public void reset() {
-		buffer.reset();
+		buffer.clear();
 	}
 
 	/**
