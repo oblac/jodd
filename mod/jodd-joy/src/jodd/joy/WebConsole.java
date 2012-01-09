@@ -6,16 +6,19 @@ import jodd.bean.BeanUtil;
 import jodd.joy.core.DefaultAppCore;
 import jodd.joy.db.AppDao;
 import jodd.jtx.JtxTransaction;
+import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.JtxTransactionMode;
 import jodd.madvoc.WebApplication;
+import jodd.madvoc.WebApplicationStarter;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
 /**
- * Console runner of web application!
+ * Console for Madvoc web application.
  */
-public abstract class WebRunner extends WebStarter {
+public abstract class WebConsole {
 
 	/**
 	 * Web application.
@@ -76,5 +79,33 @@ public abstract class WebRunner extends WebStarter {
 	 * Runs user code without container. At this point everything is up and ready for the usage!
 	 */
 	public abstract void run();
+
+	// ---------------------------------------------------------------- util
+
+	/**
+	 * Starts web application.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <W extends WebApplication> W start(Class<W> webAppClass) {
+		WebApplicationStarter starter = new WebApplicationStarter();
+		starter.setWebAppClass(webAppClass.getName());
+		return (W) starter.startNewWebApplication(null);
+	}
+
+	protected static JtxTransactionManager jtxManager;
+
+	/**
+	 * Sets transaction manager.
+	 */
+	public static void setJtxManager(JtxTransactionManager jm) {
+		jtxManager = jm;
+	}
+
+	/**
+	 * Starts new transaction.
+	 */
+	public static JtxTransaction startRwTx() {
+		return jtxManager.requestTransaction(new JtxTransactionMode().readOnly(false));
+	}
 
 }

@@ -17,7 +17,7 @@ import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import javax.servlet.ServletContext;
 
 /**
- * Creates, initializes and starts {@link jodd.madvoc.WebApplication}.
+ * Maintain lifecycle of a {@link jodd.madvoc.WebApplication}.
  */
 public class WebApplicationStarter {
 
@@ -59,6 +59,13 @@ public class WebApplicationStarter {
 	 */
 	public MadvocConfig getMadvocConfig() {
 		return madvocConfig;
+	}
+
+	/**
+	 * Returns running web application.
+	 */
+	public WebApplication getWebApplication() {
+		return webapp;
 	}
 
 	/**
@@ -115,6 +122,7 @@ public class WebApplicationStarter {
 			throw new MadvocException("No Madvoc controller component found.");
 		}
 		madvocController.init(context);
+
 		return webapp;
 	}
 
