@@ -25,15 +25,19 @@
 	<!-- project data -->
 	
 	<property file="build.user.properties"/>
+	<property file="build.properties"/>
+	
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.2-20120108"/>
+	<property name="prjVersion" value="3.3.2-beta"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
 	<echo>Jodd - open-source Java utility library and web application frameworks.</echo>
 	<echo></echo>
 	<echo>built on: ${TODAY}</echo>
+	<echo>built using ${ant.version}</echo>
+	<echo>ant runs on java ${ant.java.version}</echo>
 	<echo/>
 
 	<patternset id="ignored.files">
@@ -100,20 +104,25 @@
 	<property name="etc.dir" value="etc"/>
 	<property name="tmp.dir" value="tmp"/>
 
+	<fileset id="lib.asm.fileset" dir="${basedir}/lib/asm" includes="**/*.jar"/>
 	<path id="lib.asm">
-		<fileset dir="${basedir}/lib/asm" includes="**/*.jar"/>
+		<fileset refid="lib.asm.fileset"/>
 	</path>
+	<fileset id="lib.mail.fileset" dir="${basedir}/lib/mail" includes="**/*.jar"/>
 	<path id="lib.mail">
-		<fileset dir="${basedir}/lib/mail" includes="**/*.jar"/>
+		<fileset refid="lib.mail.fileset"/>
 	</path>
+	<fileset id="lib.servlets.fileset" dir="${basedir}/lib/servlets" includes="**/*.jar"/>
 	<path id="lib.servlets">
-		<fileset dir="${basedir}/lib/servlets" includes="**/*.jar"/>
+		<fileset refid="lib.servlets.fileset"/>
 	</path>
+	<fileset id="lib.slf4j.fileset" dir="${basedir}/lib/slf4j" includes="**/*.jar"/>
 	<path id="lib.slf4j">
-		<fileset dir="${basedir}/lib/slf4j" includes="**/*.jar"/>
+		<fileset refid="lib.slf4j.fileset"/>
 	</path>
+	<fileset id="lib.test.fileset" dir="${basedir}/lib/test" includes="**/*.jar"/>
 	<path id="lib.test">
-		<fileset dir="${basedir}/lib/test" includes="**/*.jar"/>
+		<fileset refid="lib.test.fileset"/>
 	</path>
 
 	<!-- MODULE : jodd -->
