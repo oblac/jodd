@@ -6,11 +6,11 @@ import jodd.log.Log;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
-import jodd.typeconverter.Convert;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -19,69 +19,54 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Initializes and configures Madvoc and passes requests to {@link jodd.madvoc.component.MadvocController}.
+ * <code>Madvoc</code> filter serves as a {@link jodd.madvoc.component.MadvocController controller} part
+ * of the Madvoc framework. If {@link Madvoc} @{link WebApplication} is not already created,
+ * this filter will initialize and configure the Madvoc using filter init parameters.
  */
 public class MadvocServletFilter implements Filter {
 
 	private static Log log;
 
-	/**
-	 * Web application.
-	 */
-	public static final String PARAM_MADVOC_WEBAPP = "madvoc.webapp";
-	/**
-	 * Madvoc configurator.
-	 */
-	public static final String PARAM_MADVOC_CONFIGURATOR = "madvoc.configurator";
-	/**
-	 * List of Madvoc params and properties files to be found on classpath.
-	 */
-	public static final String PARAM_MADVOC_PARAMS = "madvoc.params";
-
-	protected FilterConfig filterConfig;
-
-	protected WebApplication webapp;
-	protected MadvocConfig madvocConfig;
+	protected Madvoc madvoc;
 	protected MadvocController madvocController;
-
 
 	/**
 	 * Filter initialization.
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException {
-		this.filterConfig = filterConfig;
+		ServletContext servletContext = filterConfig.getServletContext();
 
-		WebApplicationStarter starter = createWebApplicationStarter(filterConfig);
+		madvoc = Madvoc.get(servletContext);
+		if (madvoc == null) {
+			madvoc = createMadvoc(filterConfig);
+		}
 
 		try {
-			webapp = starter.startNewWebApplication(filterConfig.getServletContext());
+			madvoc.startNewWebApplication(servletContext);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			throw new ServletException("Unable to start Madvoc web application.", ex);
 		}
+
 		log = Log.getLogger(MadvocServletFilter.class);
-		madvocController = starter.getMadvocController();
-		madvocConfig = starter.getMadvocConfig();
-		log.info("Madvoc application started.");
+
+		madvocController = madvoc.getMadvocController();
 	}
 
 	/**
-	 * Creates {@link WebApplicationStarter web application starter} for this web application.
+	 * Creates {@link Madvoc Madvoc web application} if not already created.
 	 * Override it to set custom {@link MadvocConfig Madvoc configurator} or other core settings.
 	 */
-	protected WebApplicationStarter createWebApplicationStarter(FilterConfig filterConfig) {
-		WebApplicationStarter starter = new WebApplicationStarter();
-		starter.setWebAppClass(filterConfig.getInitParameter(PARAM_MADVOC_WEBAPP));
-		starter.setParamsFiles(Convert.toStringArray(filterConfig.getInitParameter(PARAM_MADVOC_PARAMS)));
-		starter.setMadvocConfigurator(filterConfig.getInitParameter(PARAM_MADVOC_CONFIGURATOR));
-		return starter;
+	protected Madvoc createMadvoc(FilterConfig filterConfig) {
+		Madvoc madvoc = new Madvoc();
+		madvoc.configure(filterConfig);
+		return madvoc;
 	}
 
 	/**
 	 * Filter destruction.
 	 */
 	public void destroy() {
-		webapp.destroy(madvocConfig);
+		madvoc.stopWebApplication();
 	}
 
 	// ---------------------------------------------------------------- do filter
@@ -111,8 +96,8 @@ public class MadvocServletFilter implements Filter {
 	}
 
 	/**
-	 * Process unconsumed action paths. Returns <code>null</code> if action path is consumed, otherwise
-	 * it returns action path to be consumed by filter chain.
+	 * Process unconsumed action paths. Returns <code>null</code> if action path is consumed,
+	 * otherwise returns action path to be consumed by filter chain.
 	 * By default it just returns action path.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
