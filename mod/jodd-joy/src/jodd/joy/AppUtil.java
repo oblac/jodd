@@ -34,7 +34,7 @@ public class AppUtil {
 	public static boolean resolveAppDirs(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, AppUtil.class);
 		if (url == null) {
-			throw new AppException("File not found on classpath: '" + classPathFileName + "'.");
+			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
 		}
 		String root = url.getFile();
 		String classpath = root.substring(0, root.length() - classPathFileName.length());

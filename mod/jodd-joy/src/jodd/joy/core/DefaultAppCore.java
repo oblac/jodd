@@ -85,7 +85,7 @@ public abstract class DefaultAppCore {
 	/**
 	 * Starts the application and performs all initialization.
 	 */
-	public synchronized void start() {
+	public void start() {
 		resolveAppDirs("app.props");			// app directories are resolved from location of 'app.props'.
 		prepareAppLogDir("log");				// creates log folder, depending of application type
 		initLogger();							// logger becomes available after this point
@@ -112,7 +112,7 @@ public abstract class DefaultAppCore {
 	/**
 	 * Stops the application.
 	 */
-	public synchronized void stop() {
+	public void stop() {
 		log.info("shutting down...");
 		stopApp();
 		stopDb();

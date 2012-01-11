@@ -9,20 +9,21 @@ import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
 import jodd.madvoc.WebApplication;
-import jodd.madvoc.WebApplicationStarter;
+import jodd.madvoc.Madvoc;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
 /**
- * Console for Madvoc web application.
+ * Standalone runner for Madvoc web application.
  */
-public abstract class WebConsole {
+public abstract class WebRunner {
 
 	/**
 	 * Web application.
 	 */
+	protected Madvoc madvoc;
 	protected WebApplication app;
 
 	/**
@@ -45,7 +46,11 @@ public abstract class WebConsole {
 	 */
 	public void runWebApp(Class<? extends WebApplication> webAppClass) {
 
-		app = start(webAppClass);
+		madvoc = new Madvoc();
+		madvoc.setWebAppClass(webAppClass);
+		madvoc.startNewWebApplication(null);
+		
+		app = madvoc.getWebApplication();
 
 		appCore = (DefaultAppCore) BeanUtil.getDeclaredProperty(app, "appCore");
 
@@ -80,17 +85,7 @@ public abstract class WebConsole {
 	 */
 	public abstract void run();
 
-	// ---------------------------------------------------------------- util
-
-	/**
-	 * Starts web application.
-	 */
-	@SuppressWarnings({"unchecked"})
-	public static <W extends WebApplication> W start(Class<W> webAppClass) {
-		WebApplicationStarter starter = new WebApplicationStarter();
-		starter.setWebAppClass(webAppClass.getName());
-		return (W) starter.startNewWebApplication(null);
-	}
+	// ---------------------------------------------------------------- jtx util
 
 	protected static JtxTransactionManager jtxManager;
 
