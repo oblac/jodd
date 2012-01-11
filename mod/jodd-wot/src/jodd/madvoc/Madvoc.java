@@ -166,8 +166,11 @@ public class Madvoc {
 
 		servletContext.setAttribute(MADVOC_ATTR, this);
 
+		// create and initialize web application
 		webapp = createWebApplication();
+		webapp.initWebApplication();
 
+		// init logger
 		log = Log.getLogger(Madvoc.class);
 		log.info("Madvoc starting...");
 
@@ -176,9 +179,6 @@ public class Madvoc {
 		} else {
 			log.info("Madvoc web application: " + webAppClass.getName());
 		}
-
-		// initialize web application
-		webapp.initWebApplication();
 
 		// params
 		if (paramsFiles != null) {
