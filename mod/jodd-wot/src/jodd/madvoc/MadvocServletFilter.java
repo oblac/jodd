@@ -39,12 +39,12 @@ public class MadvocServletFilter implements Filter {
 		madvoc = Madvoc.get(servletContext);
 		if (madvoc == null) {
 			madvoc = createMadvoc(filterConfig);
-		}
 
-		try {
-			madvoc.startNewWebApplication(servletContext);
-		} catch (Exception ex) {
-			throw new ServletException("Unable to start Madvoc web application.", ex);
+			try {
+				madvoc.startNewWebApplication(servletContext);
+			} catch (Exception ex) {
+				throw new ServletException("Unable to start Madvoc web application.", ex);
+			}
 		}
 
 		log = Log.getLogger(MadvocServletFilter.class);
