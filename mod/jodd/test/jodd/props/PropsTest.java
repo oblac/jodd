@@ -237,20 +237,22 @@ public class PropsTest extends TestCase {
 		assertEquals("\\${pojo} ${pojo}", props.getValue("pojoBean2.val1"));
 	}
 	
-	public void testEnvironment() {
+	public void testSystemProperties() {
 		Props props = new Props();
 		assertEquals(0, props.countTotalProperties());
 		assertNull(props.getValue("user.dir"));
 
-		props.loadEnvironment();
-
+		props.loadSystemProperties("sys");
 		assertTrue(props.countTotalProperties() > 0);
-		assertNotNull(props.getValue("user.dir"));
-		
-		assertNull(props.getValue("env.user.dir"));
+		assertNotNull(props.getValue("sys.user.dir"));
+	}
+
+	public void testEnvironment() {
+		Props props = new Props();
+		assertEquals(0, props.countTotalProperties());
+
 		props.loadEnvironment("env");
-		assertNotNull(props.getValue("user.dir"));
-		assertNotNull(props.getValue("env.user.dir"));
+		assertTrue(props.countTotalProperties() > 0);
 	}
 
 	// ---------------------------------------------------------------- util

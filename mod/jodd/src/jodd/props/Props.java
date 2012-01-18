@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -192,40 +193,72 @@ public class Props implements Cloneable {
 
 	/**
 	 * Loads base properties from the provided java properties.
+	 * Null values are ignored.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public void load(Properties p) {
 		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
+			String value = p.getProperty(name);
+			if (value == null) {
+				continue;
+			}
 			data.putBaseProperty(name, p.getProperty(name));
 		}
 	}
 
 	/**
 	 * Loads base properties from java properties using provided prefix.
+	 * Null values are ignored.
 	 */
+	@SuppressWarnings("unchecked")
 	public void load(Properties p, String prefix) {
 		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
 		prefix += '.';
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
-			data.putBaseProperty(prefix + name, p.getProperty(name));
+			String value = p.getProperty(name);
+			if (value == null) {
+				continue;
+			}
+			data.putBaseProperty(prefix + name, value);
 		}
 	}
 
 	/**
-	 * Loads environment properties under given prefix.
-	 * If prefix is <code>null</code> it will not be used.
+	 * Loads base properties from java Map using provided prefix.
+	 * Null values are ignored.
 	 */
-	public void loadEnvironment() {
-		Properties environmentProperties = System.getProperties();
-		load(environmentProperties);
+	@SuppressWarnings("unchecked")
+	public void load(Map<?, ?> map, String prefix) {
+		prefix += '.';
+		for (Map.Entry entry : map.entrySet()) {
+			String name = entry.getKey().toString();
+			Object value = entry.getValue();
+			if (value == null) {
+				continue;
+			}
+			data.putBaseProperty(prefix + name, value.toString());
+		}
 	}
 
-	public void loadEnvironment(String prefix) {
+	/**
+	 * Loads system properties with given prefix.
+	 * If prefix is <code>null</code> it will not be ignored.
+	 */
+	public void loadSystemProperties(String prefix) {
 		Properties environmentProperties = System.getProperties();
 		load(environmentProperties, prefix);
+	}
+
+	/**
+	 * Loads environment properties with given prefix.
+	 * If prefix is <code>null</code> it will not be used.
+	 */
+	public void loadEnvironment(String prefix) {
+		Map<String, String> environmentMap = System.getenv();
+		load(environmentMap, prefix);
 	}
 
 	// ---------------------------------------------------------------- props
