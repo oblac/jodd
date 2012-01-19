@@ -215,6 +215,7 @@ public abstract class DefaultAppCore {
 
 		// load parameters from properties files
 		Props appProps = createPetiteProps();
+		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
 		PropsUtil.loadFromClasspath(appProps, "/app*.prop*");
 		petite.defineParameters(appProps);
