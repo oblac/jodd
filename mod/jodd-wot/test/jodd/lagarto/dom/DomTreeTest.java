@@ -248,4 +248,14 @@ public class DomTreeTest extends TestCase {
 		assertEquals("y-ftr-txt-hdr  ", h2.getAttribute("class"));
 		assertTrue(h2.isAttributeIncluding("class", "y-ftr-txt-hdr"));
 	}
+
+	public void testBr() throws IOException {
+		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
+		String innerHtml = document.getHtml();
+		assertEquals("<div><br/>some content <br/>Some more</div>", innerHtml);
+
+		document = new LagartoDOMBuilder().parse("<br>some content <br>Some more");
+		innerHtml = document.getHtml();
+		assertEquals("<br/>some content <br/>Some more", innerHtml);
+	}
 }

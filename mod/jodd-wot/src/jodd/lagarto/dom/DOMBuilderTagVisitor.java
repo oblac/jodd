@@ -47,6 +47,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void end() {
+		// fix open tags
+		if (parentNode != rootNode) {
+			log.warn("Some tags are not closed.");
+			fixUpToMatchingPoint(rootNode);
+		}
 		if (log.isDebugEnabled()) {
 			long elapsed = System.currentTimeMillis() - startTime;
 			log.debug("DomTree created in " + elapsed + " ms.");
