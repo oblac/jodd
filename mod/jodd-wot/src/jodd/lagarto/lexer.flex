@@ -59,9 +59,9 @@ import java.nio.CharBuffer;
 		return nextTagState;
 	}
 
-	boolean parseHtml = true;
-	public void setParseHtml(boolean parseHtml) {
-		this.parseHtml = parseHtml;
+	boolean parseSpecialTagsAsCdata = true;
+	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
 	}
 %}
 
@@ -86,9 +86,9 @@ import java.nio.CharBuffer;
 
 <TAG> {
 	[\n\r \t\b\f]+		{ return Token.WHITESPACE; }
-	"xmp"				{ if (parseHtml) nextTagState = XMP; stateAttr(); return Token.WORD; }
-	"script"			{ if (parseHtml) nextTagState = SCRIPT; stateAttr(); return Token.WORD; }
-	"style"				{ if (parseHtml) nextTagState = STYLE; stateAttr(); return Token.WORD; }
+	"xmp"				{ if (parseSpecialTagsAsCdata) nextTagState = XMP; stateAttr(); return Token.WORD; }
+	"script"			{ if (parseSpecialTagsAsCdata) nextTagState = SCRIPT; stateAttr(); return Token.WORD; }
+	"style"				{ if (parseSpecialTagsAsCdata) nextTagState = STYLE; stateAttr(); return Token.WORD; }
 	[^>\]/=\"\'\n\r \t\b\f\?]* { stateAttr(); return Token.WORD; }
 	.					{ yypushback(1); stateAttr(); return Token.WHITESPACE;}
 }

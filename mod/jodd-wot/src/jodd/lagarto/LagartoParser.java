@@ -59,7 +59,7 @@ public class LagartoParser {
 	 */
 	public void parse(TagVisitor visitor, boolean parseHtmlStyle) {
 		this.visitor = visitor;
-		this.lexer.setParseHtml(parseHtmlStyle);
+		this.lexer.setParseSpecialTagsAsCdata(parseHtmlStyle);
 
 		long time = 0;
 		if (log.isDebugEnabled()) {
