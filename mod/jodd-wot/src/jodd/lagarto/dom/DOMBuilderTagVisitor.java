@@ -15,16 +15,15 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	private static final Log log = Log.getLogger(DOMBuilderTagVisitor.class);
 
+	protected final LagartoDOMBuilder builder;
+
 	private long startTime;
 
-	protected final boolean caseSensitive;
-	protected final boolean parsingHtml;
 	protected Document rootNode;
 	protected Node parentNode;
 
 	public DOMBuilderTagVisitor(LagartoDOMBuilder builder) {
-		this.parsingHtml = builder.isParsingHtml();
-		this.caseSensitive = !parsingHtml;
+		this.builder = builder;
 	}
 
 	/**
@@ -52,6 +51,13 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			log.warn("Some tags are not closed.");
 			fixUpToMatchingPoint(rootNode);
 		}
+
+		// remove whitespaces
+		if (builder.isIgnoreWhitespacesBetweenTags()) {
+			removeLastChildNodeIfEmptyText(parentNode, true);
+		}
+
+		// the end
 		if (log.isDebugEnabled()) {
 			long elapsed = System.currentTimeMillis() - startTime;
 			log.debug("DomTree created in " + elapsed + " ms.");
@@ -64,12 +70,21 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 		switch (tagType) {
 			case OPEN:
-				node = new Element(tag, caseSensitive);
+				if (builder.isIgnoreWhitespacesBetweenTags()) {
+					removeLastChildNodeIfEmptyText(parentNode, false);
+				}
+
+				node = new Element(tag, builder.isCaseSensitive());
 				node.forceCloseTag = true;
 				parentNode.appendChild(node);
 				parentNode = node;
 				break;
+
 			case CLOSE:
+				if (builder.isIgnoreWhitespacesBetweenTags()) {
+					removeLastChildNodeIfEmptyText(parentNode, true);
+				}
+
 				String tagName = tag.getName();
 
 				Node matchingParent = findMatchingParentOpenTag(tagName);
@@ -91,10 +106,35 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				fixUpToMatchingPoint(matchingParent);
 
 				break;
+
 			case EMPTY:
-				node = new Element(tag, caseSensitive);
+				node = new Element(tag, builder.isCaseSensitive());
 				parentNode.appendChild(node);
 				break;
+		}
+	}
+
+	/**
+	 * Removes last child node if contains just empty text.
+	 */
+	protected void removeLastChildNodeIfEmptyText(Node parentNode, boolean closedTag) {
+		Node lastChild = parentNode.getLastChild();
+		if (lastChild == null) {
+			return;
+		}
+		
+		if (lastChild.getNodeType() != Node.NodeType.TEXT) {
+			return;
+		}
+
+		if (closedTag) {
+			if (parentNode.getChildNodesCount() == 1) {
+				return;
+			}
+		}
+
+		if (StringUtil.isBlank(lastChild.getNodeValue())) {
+			lastChild.detachFromParent();
 		}
 	}
 
@@ -141,7 +181,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xmp(Tag tag, CharSequence body) {
-		Node node = new Element(tag, caseSensitive);
+		Node node = new Element(tag, builder.isCaseSensitive());
 		parentNode.appendChild(node);
 
 		if (body.length() != 0) {
@@ -151,7 +191,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void style(Tag tag, CharSequence body) {
-		Element node = new Element(tag, caseSensitive);
+		Element node = new Element(tag, builder.isCaseSensitive());
 		node.forceCloseTag = true;
 		parentNode.appendChild(node);
 
@@ -162,7 +202,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void script(Tag tag, CharSequence body) {
-		Element node = new Element(tag, caseSensitive);
+		Element node = new Element(tag, builder.isCaseSensitive());
 		node.forceCloseTag = true;
 		parentNode.appendChild(node);
 
@@ -173,17 +213,15 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void comment(CharSequence comment) {
+		if (builder.isIgnoreWhitespacesBetweenTags()) {
+			removeLastChildNodeIfEmptyText(parentNode, false);
+		}
 		Node node = new Comment(comment.toString());
 		parentNode.appendChild(node);
 	}
 
 	public void text(CharSequence text) {
 		String textValue = text.toString();
-		if (parsingHtml == false) {
-			if (StringUtil.isBlank(textValue)) {
-				return;
-			}
-		}
 		Node node = new Text(textValue);
 		parentNode.appendChild(node);
 	}
@@ -194,7 +232,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xml(Tag tag) {
-		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, caseSensitive);
+		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, builder.isCaseSensitive());
 		parentNode.appendChild(xmlDeclaration);
 	}
 

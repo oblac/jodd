@@ -17,20 +17,65 @@ import java.nio.CharBuffer;
  */
 public class LagartoDOMBuilder {
 
-	protected boolean parsingHtml = true;
+	protected boolean ignoreWhitespacesBetweenTags;
+	protected boolean caseSensitive;
+	protected boolean parseSpecialTagsAsCdata = true;
 
-	public boolean isParsingHtml() {
-		return parsingHtml;
+	public boolean isIgnoreWhitespacesBetweenTags() {
+		return ignoreWhitespacesBetweenTags;
 	}
 
 	/**
-	 * Specifies if content is parsed as HTML (default, <code>true</code>) or XML (<code>false</code>).
+	 * Specifies if whitespaces between open/closed tags should be ignored.
 	 */
-	public void setParsingHtml(boolean parsingHtml) {
-		this.parsingHtml = parsingHtml;
+	public void setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
+		this.ignoreWhitespacesBetweenTags = ignoreWhitespacesBetweenTags;
 	}
 
-// ---------------------------------------------------------------- parse
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	/**
+	 * Specifies if tag names are case sensitive.
+	 */
+	public void setCaseSensitive(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
+	public boolean isParseSpecialTagsAsCdata() {
+		return parseSpecialTagsAsCdata;
+	}
+
+	/**
+	 * Specifies if special tags should be parsed as CDATA block.
+	 * @see LagartoParser#parse(jodd.lagarto.TagVisitor, boolean)
+	 */
+	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	// ---------------------------------------------------------------- quick settings
+
+	/**
+	 * Enables HTML5 parsing mode.
+	 */
+	public void enableHtmlMode() {
+		ignoreWhitespacesBetweenTags = false;
+		caseSensitive = false;
+		parseSpecialTagsAsCdata = true;
+	}
+
+	/**
+	 * Enables XHTML/XML parsing mode.
+	 */
+	public void enableXmlMode() {
+		ignoreWhitespacesBetweenTags = true;
+		caseSensitive = true;
+		parseSpecialTagsAsCdata = false;
+	}
+
+	// ---------------------------------------------------------------- parse
 
 	/**
 	 * Creates DOM tree from provided content.
@@ -50,7 +95,7 @@ public class LagartoDOMBuilder {
 
 	protected Document parse(LagartoParser lagarto) {
 		DOMBuilderTagVisitor domBuilderTagVisitor = new DOMBuilderTagVisitor(this);
-		lagarto.parse(domBuilderTagVisitor, parsingHtml);
+		lagarto.parse(domBuilderTagVisitor, parseSpecialTagsAsCdata);
 		return domBuilderTagVisitor.getDocument();
 	}
 

@@ -28,7 +28,7 @@ public class DomXmlTest extends TestCase {
 		String xmlContent = FileUtil.readString(file);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setParsingHtml(false);
+		lagartoDOMBuilder.enableXmlMode();
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
 		assertEquals(2, doc.getChildNodesCount());	// not 3!
@@ -55,11 +55,32 @@ public class DomXmlTest extends TestCase {
 		String xmlContent = FileUtil.readString(file);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setParsingHtml(false);
+		lagartoDOMBuilder.enableXmlMode();
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
 		xmlContent = StringUtil.removeChars(xmlContent, "\n\r\t");
 		assertEquals(xmlContent, doc.getHtml());
 	}
+	
+	public void testWhitespaces() throws IOException {
+		String xmlContent = "<foo>   <!--c-->  <bar>   </bar>   </foo>";
 
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+
+		Document doc = lagartoDOMBuilder.parse(xmlContent);
+
+		assertEquals(1, doc.getChildNodesCount());
+
+		Element foo = (Element) doc.getChild(0);
+		assertEquals("foo", foo.getNodeName());
+
+		assertEquals(2, foo.getChildNodesCount());
+		Element bar = (Element) foo.getChild(1);
+		assertEquals("bar", bar.getNodeName());
+
+		assertEquals(1, bar.getChildNodesCount());	// must be 1 as whitespaces are between open/closed tag
+
+		assertEquals("<foo><!--c--><bar>   </bar></foo>", doc.getHtml());
+	}
 }
