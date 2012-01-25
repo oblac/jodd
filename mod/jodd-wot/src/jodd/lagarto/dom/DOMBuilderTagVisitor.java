@@ -220,6 +220,9 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		if (builder.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
+		if (builder.isIgnoreComments()) {
+			return;
+		}
 		Node node = new Comment(comment.toString());
 		parentNode.appendChild(node);
 	}

@@ -83,4 +83,16 @@ public class DomXmlTest extends TestCase {
 
 		assertEquals("<foo><!--c--><bar>   </bar><x/></foo>", doc.getHtml());
 	}
+
+	public void testIgnoreComments() throws IOException {
+		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <!--c--> <x/> <!--c--> </foo>";
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+		lagartoDOMBuilder.setIgnoreComments(true);
+
+		Document doc = lagartoDOMBuilder.parse(xmlContent);
+
+		assertEquals("<foo><bar>   </bar><x/></foo>", doc.getHtml());
+	}
 }

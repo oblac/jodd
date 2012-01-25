@@ -20,6 +20,7 @@ public class LagartoDOMBuilder {
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean caseSensitive;
 	protected boolean parseSpecialTagsAsCdata = true;
+	protected boolean ignoreComments;
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
 		return ignoreWhitespacesBetweenTags;
@@ -53,6 +54,17 @@ public class LagartoDOMBuilder {
 	 */
 	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
 		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	public boolean isIgnoreComments() {
+		return ignoreComments;
+	}
+
+	/**
+	 * Specifies if comments should be ignored in DOM tree.
+	 */
+	public void setIgnoreComments(boolean ignoreComments) {
+		this.ignoreComments = ignoreComments;
 	}
 
 	// ---------------------------------------------------------------- quick settings
