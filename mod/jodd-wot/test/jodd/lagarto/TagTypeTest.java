@@ -7,14 +7,14 @@ import junit.framework.TestCase;
 public class TagTypeTest extends TestCase {
 
 	public void testOpen() {
-		assertTrue(TagType.OPEN.isOpeningTag());
-		assertTrue(TagType.EMPTY.isOpeningTag());
-		assertFalse(TagType.CLOSE.isOpeningTag());
+		assertTrue(TagType.START.isStartingTag());
+		assertTrue(TagType.SELF_CLOSING.isStartingTag());
+		assertFalse(TagType.END.isStartingTag());
 	}
 
 	public void testClose() {
-		assertTrue(TagType.CLOSE.isClosingTag());
-		assertTrue(TagType.EMPTY.isClosingTag());
-		assertFalse(TagType.OPEN.isClosingTag());
+		assertTrue(TagType.END.isEndingTag());
+		assertTrue(TagType.SELF_CLOSING.isEndingTag());
+		assertFalse(TagType.START.isEndingTag());
 	}
 }

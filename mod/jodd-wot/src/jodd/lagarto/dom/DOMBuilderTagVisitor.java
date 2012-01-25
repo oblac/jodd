@@ -69,7 +69,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		Element node;
 
 		switch (tagType) {
-			case OPEN:
+			case START:
 				if (builder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
@@ -80,7 +80,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				parentNode = node;
 				break;
 
-			case CLOSE:
+			case END:
 				if (builder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, true);
 				}
@@ -107,7 +107,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 				break;
 
-			case EMPTY:
+			case SELF_CLOSING:
 				if (builder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}

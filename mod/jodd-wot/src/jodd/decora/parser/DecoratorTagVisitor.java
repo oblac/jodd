@@ -46,7 +46,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			onDecoraTag(tag);
 			return;
 		}
-		if (tag.getType().isOpeningTag()) {
+		if (tag.getType().isStartingTag()) {
 			String id = tag.getId();
 
 			if (id != null && id.startsWith("decora-")) {
@@ -68,7 +68,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	protected void onDecoraTag(Tag tag) {
 		String tagName = tag.getName();
 
-		if (tag.getType() == TagType.EMPTY) {
+		if (tag.getType() == TagType.SELF_CLOSING) {
 			checkNestedDecoraTags();
 			decoraTagName = tagName.substring(7);
 			decoraTagStart = tag.getTagPosition();
@@ -77,7 +77,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			return;
 		}
 
-		if (tag.getType() == TagType.OPEN) {
+		if (tag.getType() == TagType.START) {
 			checkNestedDecoraTags();
 			decoraTagName = tagName.substring(7);
 			decoraTagStart = tag.getTagPosition();
@@ -108,7 +108,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			idName = id.substring(dashIndex + 1);
 		}
 
-		if (tag.getType() == TagType.EMPTY) {
+		if (tag.getType() == TagType.SELF_CLOSING) {
 			checkNestedDecoraTags();
 			decoraTagName = tagName;
 			decoraIdName = idName;
@@ -118,7 +118,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			return;
 		}
 
-		if (tag.getType() == TagType.OPEN) {
+		if (tag.getType() == TagType.START) {
 			checkNestedDecoraTags();
 			decoraTagName = tagName;
 			decoraIdName = idName;

@@ -139,13 +139,13 @@ public class LagartoParserTest extends TestCase {
 				result.append("tag:").append(tag.getName());
 				result.append(':').append(tag.getDeepLevel());
 				switch (tag.getType()) {
-					case OPEN:
+					case START:
 						result.append('<');
 						break;
-					case CLOSE:
+					case END:
 						result.append('>');
 						break;
-					case EMPTY:
+					case SELF_CLOSING:
 						result.append("<>");
 						break;
 				}

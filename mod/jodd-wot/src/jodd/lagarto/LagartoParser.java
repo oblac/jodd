@@ -107,10 +107,10 @@ public class LagartoParser {
 					parseText(start, start + lexer.length());
 					break;
 				case LT:
-					parseTag(token, TagType.OPEN);
+					parseTag(token, TagType.START);
 					break;
 				case XML_LT:
-					parseTag(token, TagType.OPEN);
+					parseTag(token, TagType.START);
 					break;
 				case CONDITIONAL_COMMENT_START:
 					parseCCStart();
@@ -277,7 +277,7 @@ public class LagartoParser {
 		}
 
 		if (token == Token.SLASH) {		// it is closing tag
-			type = TagType.CLOSE;
+			type = TagType.END;
 			token = nextToken();
 		}
 
@@ -331,7 +331,7 @@ loop:	while (true) {
 
 			switch (token) {
 				case SLASH:
-					type = TagType.EMPTY;	// an empty tag, no body
+					type = TagType.SELF_CLOSING;	// an empty tag, no body
 					nextToken();
 					break loop;
 				case GT:
@@ -381,7 +381,7 @@ loop:	while (true) {
 
 				int len = lexer.position() - start + 1;
 
-				if (type.isOpeningTag()) {
+				if (type.isStartingTag()) {
 					// parse special tags
 					final int nextTagState = lexer.getNextTagState();
 					if (nextTagState > 0) {
@@ -395,11 +395,11 @@ loop:	while (true) {
 
 				// default tag
 				tag.defineTag(type, start, len);
-				if (type.isOpeningTag()) {
+				if (type.isStartingTag()) {
 					tag.increaseDeepLevel();
 				}
 				visitor.tag(tag);
-				if (type.isClosingTag()) {
+				if (type.isEndingTag()) {
 					tag.decreaseDeepLevel();
 				}
 				break;

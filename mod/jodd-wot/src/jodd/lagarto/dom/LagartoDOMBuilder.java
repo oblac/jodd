@@ -17,6 +17,13 @@ import java.nio.CharBuffer;
  */
 public class LagartoDOMBuilder {
 
+	/**
+	 * Default void tags.
+	 * http://dev.w3.org/html5/spec/Overview.html#void-elements
+	 */
+	public static final String[] HTML5_VOID_TAGS = {
+			"area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"};
+
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean caseSensitive;
 	protected boolean parseSpecialTagsAsCdata = true;

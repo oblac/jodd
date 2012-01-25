@@ -8,57 +8,57 @@ package jodd.lagarto;
 public enum TagType {
 
 	/**
-	 * Open tag: <code>&lt;foo&gt;</code>.
+	 * Start tags: <code>&lt;foo&gt;</code>.
 	 */
-	OPEN("<", ">"),
+	START("<", ">"),
 
 	/**
-	 * Close tag: <code>&lt;/foo&gt;</code>.
+	 * End tags: <code>&lt;/foo&gt;</code>.
 	 */
-	CLOSE("</", ">"),
+	END("</", ">"),
 
 	/**
-	 * Empty body tag: <code>&lt;foo/&gt;</code>.
+	 * Self closing tag: <code>&lt;foo/&gt;</code>.
 	 */
-	EMPTY("<", "/>");
+	SELF_CLOSING("<", "/>");
 
-	private final String start;
-	private final String end;
-	private final boolean isOpening;
-	private final boolean isClosing;
+	private final String startString;
+	private final String endString;
+	private final boolean isStarting;
+	private final boolean isEnding;
 
-	private TagType(String start, String end) {
-		this.start = start;
-		this.end = end;
-		isOpening = start.length() == 1;
-		isClosing = start.length() == 2 || end.length() == 2;
+	TagType(String startString, String endString) {
+		this.startString = startString;
+		this.endString = endString;
+		isStarting = startString.length() == 1;
+		isEnding = startString.length() == 2 || endString.length() == 2;
 	}
 
 	/**
 	 * Returns tags starting string.
 	 */
 	public String getStartString() {
-		return start;
+		return startString;
 	}
 
 	/**
 	 * Returns tags ending string.
 	 */
 	public String getEndString() {
-		return end;
+		return endString;
 	}
 
 	/**
-	 * Returns <code>true</code> if tag is {@link #OPEN} or {@link #EMPTY}.
+	 * Returns <code>true</code> if tag is {@link #START} or {@link #SELF_CLOSING}.
 	 */
-	public boolean isOpeningTag() {
-		return isOpening;
+	public boolean isStartingTag() {
+		return isStarting;
 	}
 
 	/**
-	 * Returns <code>true</code> if tag is {@link #CLOSE} or {@link #EMPTY}.
+	 * Returns <code>true</code> if tag is {@link #END} or {@link #SELF_CLOSING}.
 	 */
-	public boolean isClosingTag() {
-		return isClosing;
+	public boolean isEndingTag() {
+		return isEnding;
 	}
 }

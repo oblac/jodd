@@ -50,7 +50,7 @@ public class TagAdapterTest extends TestCase {
 		TagAdapter tagAdapter1 = new TagAdapter(tagWriter) {
 			@Override
 			public void tag(Tag tag) {
-				if (tag.getType().isOpeningTag()) {
+				if (tag.getType().isStartingTag()) {
 					String tagname = tag.getName();
 					if (tagname.equals("title")) {
 						String id = tag.getAttributeValue("id", false);
@@ -65,7 +65,7 @@ public class TagAdapterTest extends TestCase {
 		TagAdapter tagAdapter2 = new TagAdapter(tagAdapter1) {
 			@Override
 			public void tag(Tag tag) {
-				if (tag.getType().isOpeningTag()) {
+				if (tag.getType().isStartingTag()) {
 					String tagname = tag.getName();
 					if (tagname.equals("title")) {
 						tag.addAttribute("id", "172");

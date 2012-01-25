@@ -30,7 +30,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 	public void tag(Tag tag) {
 
 		// detect region end and extract content
-		if (tag.getType() == TagType.CLOSE) {
+		if (tag.getType() == TagType.END) {
 			if (currentRegions > 0) {
 				for (DecoraTag decoraTag : decoraTags) {
 					if (decoraTag.isRegionStarted() && decoraTag.getName().equals(tag.getName())) {
@@ -44,7 +44,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 			return;
 		}
 
-		if (tag.getType() == TagType.EMPTY) {
+		if (tag.getType() == TagType.SELF_CLOSING) {
 			return;
 		}
 
