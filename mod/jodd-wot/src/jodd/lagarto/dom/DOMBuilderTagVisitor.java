@@ -108,6 +108,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case EMPTY:
+				if (builder.isIgnoreWhitespacesBetweenTags()) {
+					removeLastChildNodeIfEmptyText(parentNode, false);
+				}
+
 				node = new Element(tag, builder.isCaseSensitive());
 				parentNode.appendChild(node);
 				break;

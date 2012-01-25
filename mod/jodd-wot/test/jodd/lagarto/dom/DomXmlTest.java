@@ -63,7 +63,7 @@ public class DomXmlTest extends TestCase {
 	}
 	
 	public void testWhitespaces() throws IOException {
-		String xmlContent = "<foo>   <!--c-->  <bar>   </bar>   </foo>";
+		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <x/> </foo>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
@@ -75,12 +75,12 @@ public class DomXmlTest extends TestCase {
 		Element foo = (Element) doc.getChild(0);
 		assertEquals("foo", foo.getNodeName());
 
-		assertEquals(2, foo.getChildNodesCount());
+		assertEquals(3, foo.getChildNodesCount());
 		Element bar = (Element) foo.getChild(1);
 		assertEquals("bar", bar.getNodeName());
 
 		assertEquals(1, bar.getChildNodesCount());	// must be 1 as whitespaces are between open/closed tag
 
-		assertEquals("<foo><!--c--><bar>   </bar></foo>", doc.getHtml());
+		assertEquals("<foo><!--c--><bar>   </bar><x/></foo>", doc.getHtml());
 	}
 }
