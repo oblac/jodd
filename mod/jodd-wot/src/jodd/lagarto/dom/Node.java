@@ -215,12 +215,17 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Removes all child nodes.
+	 * Removes all child nodes. Each child node will be detached from this parent.
 	 */
 	public void removeAllChilds() {
+		List<Node> removedNodes = childNodes;
 		childNodes = null;
 		childElementNodes = null;
 		childElementNodesCount = 0;
+
+		for (Node removedNode : removedNodes) {
+			removedNode.detachFromParent();
+		}
 	}
 
 	/**
