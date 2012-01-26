@@ -6,7 +6,6 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
 import jodd.log.Log;
-import jodd.util.StringUtil;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
@@ -161,7 +160,9 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			}
 		}
 
-		if (StringUtil.isBlank(lastChild.getNodeValue())) {
+		Text text = (Text) lastChild;
+
+		if (text.isBlank()) {
 			lastChild.detachFromParent();
 		}
 	}
