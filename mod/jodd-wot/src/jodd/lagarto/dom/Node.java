@@ -223,8 +223,10 @@ public abstract class Node implements Cloneable {
 		childElementNodes = null;
 		childElementNodesCount = 0;
 
-		for (Node removedNode : removedNodes) {
-			removedNode.detachFromParent();
+		if (removedNodes != null) {
+			for (Node removedNode : removedNodes) {
+				removedNode.detachFromParent();
+			}
 		}
 	}
 
