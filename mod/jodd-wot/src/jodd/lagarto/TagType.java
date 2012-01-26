@@ -9,6 +9,7 @@ public enum TagType {
 
 	/**
 	 * Start tags: <code>&lt;foo&gt;</code>.
+	 * Void tags are reported as start tags.
 	 */
 	START("<", ">"),
 

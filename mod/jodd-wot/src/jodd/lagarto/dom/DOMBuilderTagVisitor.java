@@ -64,6 +64,27 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 	}
 
+	/**
+	 * Creates new element with correct configuration.
+	 */
+	protected Element createElementNode(Tag tag) {
+		boolean isVoid = builder.isVoidTag(tag.getName());
+		boolean selfClosed = false;
+
+		if (builder.hasVoidTags()) {
+			// HTML ad XHTML
+			if (isVoid) {
+				// it's void tag, lookup the flag
+				selfClosed = builder.isSelfCloseVoidTags();
+			}
+		} else {
+			// XML, no voids, lookup the flag
+			selfClosed = builder.isSelfCloseVoidTags();
+		}
+		
+		return new Element(tag, isVoid, selfClosed, builder.isCaseSensitive());
+	}
+
 	public void tag(Tag tag) {
 		TagType tagType = tag.getType();
 		Element node;
@@ -74,10 +95,13 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
-				node = new Element(tag, builder.isCaseSensitive());
-				node.forceCloseTag = true;
+				node = createElementNode(tag);
+
 				parentNode.appendChild(node);
-				parentNode = node;
+
+				if (node.isVoidElement() == false) {
+					parentNode = node;
+				}
 				break;
 
 			case END:
@@ -112,7 +136,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
-				node = new Element(tag, builder.isCaseSensitive());
+				node = createElementNode(tag);
 				parentNode.appendChild(node);
 				break;
 		}
@@ -164,17 +188,32 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				break;
 			}
 
-			// get all children of parent node
+			// [*] get and remove all children of parent node (problematic, the open one)
 			Node[] childNodes = parentNode.getChildNodes();
 			parentNode.removeAllChilds();
-			if (parentNode.getNodeType() == Node.NodeType.ELEMENT) {
-				((Element) parentNode).forceCloseTag = false;
+
+			// [*] find the first non blank node and re-attach to parent
+			int ndx = 0;
+			while (ndx < childNodes.length) {
+				Node child = childNodes[ndx];
+				if (child.getNodeType() == Node.NodeType.TEXT) {
+					if (((Text)child).isBlank()) {
+						parentNode.appendChild(child);	// append blank nodes
+						ndx++;
+						continue;
+					}
+				}
+				parentNode.appendChild(child);
+				break;
 			}
 
-			// append all children to parent parent node
+			// [*] append remaining children to the parent parent node (good node)
 			Node parentParentNode = parentNode.getParentNode();
-			for (Node childNode : childNodes) {
-				parentParentNode.appendChild(childNode);
+			ndx++;
+			while (ndx < childNodes.length) {
+				Node child = childNodes[ndx];
+				parentParentNode.appendChild(child);
+				ndx++;
 			}
 
 			if (log.isWarnEnabled()) {
@@ -185,7 +224,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xmp(Tag tag, CharSequence body) {
-		Node node = new Element(tag, builder.isCaseSensitive());
+		Node node = createElementNode(tag);
 		parentNode.appendChild(node);
 
 		if (body.length() != 0) {
@@ -195,8 +234,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void style(Tag tag, CharSequence body) {
-		Element node = new Element(tag, builder.isCaseSensitive());
-		node.forceCloseTag = true;
+		Element node = createElementNode(tag);
 		parentNode.appendChild(node);
 
 		if (body.length() != 0) {
@@ -206,8 +244,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void script(Tag tag, CharSequence body) {
-		Element node = new Element(tag, builder.isCaseSensitive());
-		node.forceCloseTag = true;
+		Element node = createElementNode(tag);
 		parentNode.appendChild(node);
 
 		if (body.length() != 0) {

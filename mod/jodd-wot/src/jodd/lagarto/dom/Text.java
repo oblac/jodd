@@ -4,6 +4,7 @@ package jodd.lagarto.dom;
 
 import jodd.servlet.HtmlDecoder;
 import jodd.servlet.HtmlEncoder;
+import jodd.util.StringUtil;
 
 import java.io.IOException;
 
@@ -21,6 +22,18 @@ public class Text extends Node {
 	@Override
 	public Text clone() {
 		return cloneTo(new Text(nodeValue));
+	}
+	
+	protected Boolean blank;
+
+	/**
+	 * Returns <code>true</code> if text content is blank.
+	 */
+	public boolean isBlank() {
+		if (blank == null) {
+			blank = Boolean.valueOf(StringUtil.isBlank(nodeValue));
+		}
+		return blank.booleanValue();
 	}
 
 	/**

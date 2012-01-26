@@ -3,6 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParser;
+import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
 
@@ -28,6 +29,8 @@ public class LagartoDOMBuilder {
 	protected boolean caseSensitive;
 	protected boolean parseSpecialTagsAsCdata = true;
 	protected boolean ignoreComments;
+	protected boolean selfCloseVoidTags;
+	protected String[] voidTags = HTML5_VOID_TAGS;
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
 		return ignoreWhitespacesBetweenTags;
@@ -74,24 +77,85 @@ public class LagartoDOMBuilder {
 		this.ignoreComments = ignoreComments;
 	}
 
+	public String[] getVoidTags() {
+		return voidTags;
+	}
+
+	/**
+	 * Sets void tags. If <code>null</code>, void tags are not used.
+	 */
+	public void setVoidTags(String... voidTags) {
+		this.voidTags = voidTags;
+	}
+
+	/**
+	 * Returns <code>true</code> if void tags are used.
+	 * Using void tags makes parsing a different.
+	 */
+	public boolean hasVoidTags() {
+		return voidTags != null;
+	}
+
+	/**
+	 * Returns <code>true</code> if tag name is void.
+	 * If void tags are not defined, returns <code>false</code>
+	 * for any input.
+	 */
+	public boolean isVoidTag(String tagName) {
+		if (voidTags == null) {
+			return false;
+		}
+		tagName = tagName.toLowerCase();
+		return StringUtil.equalsOne(tagName, voidTags) != -1;
+	}
+
+	public boolean isSelfCloseVoidTags() {
+		return selfCloseVoidTags;
+	}
+
+	/**
+	 * Specifies if void tags should be self closed.
+	 */
+	public void setSelfCloseVoidTags(boolean selfCloseVoidTags) {
+		this.selfCloseVoidTags = selfCloseVoidTags;
+	}
+
 	// ---------------------------------------------------------------- quick settings
 
 	/**
 	 * Enables HTML5 parsing mode.
 	 */
-	public void enableHtmlMode() {
-		ignoreWhitespacesBetweenTags = false;
-		caseSensitive = false;
-		parseSpecialTagsAsCdata = true;
+	public LagartoDOMBuilder enableHtmlMode() {
+		ignoreWhitespacesBetweenTags = false;	// collect all whitespaces
+		caseSensitive = false;					// HTML is case insensitive
+		parseSpecialTagsAsCdata = true;			// script and style tags are parsed as CDATA
+		voidTags = HTML5_VOID_TAGS;				// list of void tags
+		selfCloseVoidTags = false;			// don't self close void tags
+		return this;
 	}
 
 	/**
-	 * Enables XHTML/XML parsing mode.
+	 * Enables XHTML mode.
 	 */
-	public void enableXmlMode() {
-		ignoreWhitespacesBetweenTags = true;
-		caseSensitive = true;
-		parseSpecialTagsAsCdata = false;
+	public LagartoDOMBuilder enableXhtmlMode() {
+		ignoreWhitespacesBetweenTags = false;	// collect all whitespaces
+		caseSensitive = true;					// XHTML is case sensitive
+		parseSpecialTagsAsCdata = false;		// all tags are parsed in the same way
+		voidTags = HTML5_VOID_TAGS;				// list of void tags
+		selfCloseVoidTags = true;				// self close void tags
+		return this;
+	}
+
+	/**
+	 * Enables XML parsing mode.
+	 */
+	public LagartoDOMBuilder enableXmlMode() {
+		ignoreWhitespacesBetweenTags = true;	// ignore whitespaces that are non content
+		caseSensitive = true;					// XML is case sensitive
+		parseSpecialTagsAsCdata = false;		// all tags are parsed in the same way
+		voidTags = null;						// there are no void tags
+		selfCloseVoidTags = false;				// don't self close empty tags (can be changed!)
+		return this;
 	}
 
 	// ---------------------------------------------------------------- parse

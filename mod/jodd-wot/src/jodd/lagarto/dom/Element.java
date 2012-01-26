@@ -11,8 +11,13 @@ import java.io.IOException;
  */
 public class Element extends Node {
 
-	public Element(Tag tag, boolean caseSensitive) {
+	protected final boolean voidElement;
+	protected final boolean selfClosed;
+
+	public Element(Tag tag, boolean voidElement, boolean selfClosed, boolean caseSensitive) {
 		super(NodeType.ELEMENT, tag.getName(), caseSensitive);
+		this.voidElement = voidElement;
+		this.selfClosed = selfClosed;
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
@@ -22,27 +27,44 @@ public class Element extends Node {
 		}
 	}
 
-	public Element(String name) {
-		this(name, false);
+	/**
+	 * Internal constructor.
+	 */
+	Element(String name) {
+		this(name, false, false, false);
 	}
 
-	public Element(String name, boolean caseSensitive) {
+	// ---------------------------------------------------------------- clone
+
+	/**
+	 * Internal constructor.
+	 */
+	private Element(String name, boolean voidElement, boolean selfClosed, boolean caseSensitive) {
 		super(NodeType.ELEMENT, name, caseSensitive);
+		this.voidElement = voidElement;
+		this.selfClosed = selfClosed;
 	}
 
 	@Override
 	public Element clone() {
-		return cloneTo(new Element(nodeName, caseSensitive));
+		return cloneTo(new Element(nodeName, voidElement, selfClosed, caseSensitive));
 	}
 
 	// ---------------------------------------------------------------- html
 
 	/**
-	 * When set to <code>true</code> closed tag will be used instead of
-	 * shortcut form (&lt;foo/&gt;) when there are no children nodes. Some
-	 * tags requires to have closing tag (e.g. <code>script</code>).
+	 * Returns <code>true</code> if element is void.
 	 */
-	protected boolean forceCloseTag;
+	public boolean isVoidElement() {
+		return voidElement;
+	}
+
+	/**
+	 * Returns <code>true</code> if element can self-close itself when empty.
+	 */
+	public boolean isSelfClosed() {
+		return selfClosed;
+	}
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
@@ -50,6 +72,7 @@ public class Element extends Node {
 		appendable.append(nodeName);
 
 		int attrCount = getAttributesCount();
+
 		if (attrCount != 0) {
 			for (int i = 0; i < attrCount; i++) {
 				Attribute attr = getAttribute(i);
@@ -59,18 +82,24 @@ public class Element extends Node {
 		}
 
 		int childCount = getChildNodesCount();
-		if ((childCount == 0) && !forceCloseTag) {
+
+		if (selfClosed && childCount == 0) {
 			appendable.append("/>");
-		} else {
-			appendable.append('>');
-
-			if (childCount != 0) {
-				toInnerHtml(appendable);
-			}
-
-			appendable.append("</");
-			appendable.append(nodeName);
-			appendable.append('>');
+			return;
 		}
+
+		appendable.append('>');
+
+		if (voidElement) {
+			return;
+		}
+
+		if (childCount != 0) {
+			toInnerHtml(appendable);
+		}
+
+		appendable.append("</");
+		appendable.append(nodeName);
+		appendable.append('>');
 	}
 }
