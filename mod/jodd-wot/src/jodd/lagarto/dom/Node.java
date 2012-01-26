@@ -115,9 +115,8 @@ public abstract class Node implements Cloneable {
 		if (parentNode == null) {
 			return;
 		}
-		int index = siblingIndex;
 		if (parentNode.childNodes != null) {
-			parentNode.childNodes.remove(index);
+			parentNode.childNodes.remove(siblingIndex);
 			parentNode.reindexChildren();
 		}
 		parentNode = null;
