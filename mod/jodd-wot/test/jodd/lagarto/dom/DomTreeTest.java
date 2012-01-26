@@ -214,13 +214,13 @@ public class DomTreeTest extends TestCase {
 	public void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
 		String innerHtml = document.getHtml();
-		assertEquals("<html><body><form><input/><input/><img/></form></body></html>", innerHtml);
+		assertEquals("<html><body><form><input><input><img></form></body></html>", innerHtml);
 
 		File file = new File(testDataRoot, "jodd.html");
 		String html = FileUtil.readString(file);
 		html = StringUtil.replace(html, " />", "/>");
 		html = StringUtil.replace(html, "'", "");
-		document = new LagartoDOMBuilder().parse(html);
+		document = new LagartoDOMBuilder().enableXhtmlMode().parse(html);
 		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
 
@@ -229,7 +229,9 @@ public class DomTreeTest extends TestCase {
 		html = StringUtil.replace(html, " />", "/>");
 		html = StringUtil.replace(html, "\" >", "\">");
 		html = StringUtil.replace(html, "'", "");
-		document = new LagartoDOMBuilder().parse(html);
+		LagartoDOMBuilder builder = new LagartoDOMBuilder();
+		builder.setSelfCloseVoidTags(true);						// use self-closing tags!
+		document = builder.parse(html);
 		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
 
@@ -252,10 +254,10 @@ public class DomTreeTest extends TestCase {
 	public void testBr() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
 		String innerHtml = document.getHtml();
-		assertEquals("<div><br/>some content <br/>Some more</div>", innerHtml);
+		assertEquals("<div><br>some content <br>Some more</div>", innerHtml);
 
 		document = new LagartoDOMBuilder().parse("<br>some content <br>Some more");
 		innerHtml = document.getHtml();
-		assertEquals("<br/>some content <br/>Some more", innerHtml);
+		assertEquals("<br>some content <br>Some more", innerHtml);
 	}
 }

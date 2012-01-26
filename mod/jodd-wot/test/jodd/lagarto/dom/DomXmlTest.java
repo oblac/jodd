@@ -67,6 +67,7 @@ public class DomXmlTest extends TestCase {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
+		lagartoDOMBuilder.setSelfCloseVoidTags(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -93,6 +94,6 @@ public class DomXmlTest extends TestCase {
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
-		assertEquals("<foo><bar>   </bar><x/></foo>", doc.getHtml());
+		assertEquals("<foo><bar>   </bar><x></x></foo>", doc.getHtml());
 	}
 }

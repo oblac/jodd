@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 public class DomBuilderTest extends TestCase {
 
 	public void testSimpleDomCreation() {
-		String page = "<html><body><p id=\"w173\">Hello<br/>Jodd</p></body></html>";
+		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 
 		Document root = new LagartoDOMBuilder().parse(page);
 
@@ -58,7 +58,7 @@ public class DomBuilderTest extends TestCase {
 	}
 
 	public void testClone() {
-		String page = "<html><body><p id=\"w173\">Hello<br/>Jodd</p></body></html>";
+		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 		Document root = new LagartoDOMBuilder().parse(page);
 
 		String generated = root.getHtml();
@@ -154,16 +154,16 @@ public class DomBuilderTest extends TestCase {
 	public void testUnclosedTag() {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input>text<input>text<img></form></body></html>");
 		String innerHtml = document.getHtml();
-		assertEquals("<html><body><form><input/>text<input/>text<img/></form></body></html>", innerHtml);
+		assertEquals("<html><body><form><input>text<input>text<img></form></body></html>", innerHtml);
 
 		LagartoDOMBuilder lagartoDomBuilder = new LagartoDOMBuilder();
 		document = lagartoDomBuilder.parse("<body><b>bold</b><div>text1</span><div>as</div></body>");
 		innerHtml = document.getHtml();
-		assertEquals("<body><b>bold</b><div/>text1<div>as</div></body>", innerHtml);
+		assertEquals("<body><b>bold</b><div>text1</div><div>as</div></body>", innerHtml);
 
 		document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></xxx></body></html>");
 		innerHtml = document.getHtml();
-		assertEquals("<html><body><form/><input/><input/><img/></body></html>", innerHtml);
+		assertEquals("<html><body><form><input></form><input><img></body></html>", innerHtml);
 	}
 
 	public void testUncapital() {

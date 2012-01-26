@@ -21,10 +21,25 @@
 <!--script type="text/javascript" src="/jquery.carouFredSel.js"></script-->
 <style>
 #simpleTooltip { padding: 7px; border: 1px solid #A6A7AB; background: #F2F3F5; }
+#eq {margin-top:20px;font-weight:bold;color:#777;font-size:1.5em; }
+#eq span {display:none; }
 </style>
 <script type="text/javascript">
+function fade(i) {
+	if (i == 11) {
+		return;
+	}
+	$('span#eq' + i).fadeIn(500, function() {
+		fade(i + 1);
+	});
+}
 $(function() {
 	$('div.ben').simpletooltip();
+	fade(1);
+	setInterval(function() {
+		$("#eq span").hide();
+		fade(1);
+	}, 10000);
 /*	$('#carousel').carouFredSel({
 		width: 500,
 		items: {
@@ -77,13 +92,26 @@ It enriches JDK with many powerful and feature rich utilities. <em>Jodd</em> hel
 makes code more robust and reliable. Special attention is put into creating reusable and fastest possible code and still keeping it compact, under <em>550 KB</em>.</p>
 
 <p><em>Jodd Wot</em> is bundle of lightweight application
-frameworks - under <em>400 KB</em>!
+frameworks - under <em>575 KB</em>!
 Designed following the <a href="http://en.wikipedia.org/wiki/Convention_over_configuration" class="external"><abbr title="Convention over Configuration">CoC</abbr></a>,
 <a href="http://en.wikipedia.org/wiki/DRY" class="external"><abbr title="Don't Repeat Yourself">DRY</abbr></a> and <a href="principle.html"><abbr title="Simple Common Sense">SCS</abbr></a> principles, it makes development simple, but not simpler;
 you get 90% of the features with 10% of usual effort.
 </p>
 
 <p><em>Jodd</em> is <b>free</b> software, released under the terms of the <a href="license.html">BSD license</a>.</p>
+
+<div id="eq">
+	<span id="eq1">Jodd</span>
+	<span id="eq2">=</span>
+	<span id="eq3">tools</span>
+	<span id="eq4"> + ioc</span>
+	<span id="eq5"> + mvc</span>
+	<span id="eq6"> + db</span>
+	<span id="eq7"> + aop</span>
+	<span id="eq8"> + tx</span>
+	<span id="eq9"> + html</span>
+	<span id="eq10"> &lt; 1.1M</span>
+</div>
 
 <div id="carousel" style="margin-bottom:10px;">
 
@@ -164,7 +192,7 @@ file download, smart forms....</p>
 
 
 <div class="ojar round">
-<span class="oname">jodd wot</span>
+<span class="oname">jodd wot frameworks</span>
 <br clear="all"/>
 
 <div class="obox">
@@ -230,10 +258,13 @@ file download, smart forms....</p>
 </div>
 
 <div class="obox">
-<h3><a href="/doc/index.html">...and more</a></h3>
+<img src="/doc/jerry/jerry.png" align="left"/>
+<h3><a href="/doc/jerry/index.html">Jerry</a></h3>
+<p>jQuery-friendly Java parser with CSS selectors support.</p>
 </div>
 
-<br clear="all"/>
+<h3 style="clear:both; text-align:center"><a href="/doc/index.html">...and much more...</a></h3>
+<br/>
 
 </div><!-- #EndLibraryItem --><br clear="all"/>
 <h2 style="padding-top:10px;">Examples</h2>
@@ -251,14 +282,14 @@ file download, smart forms....</p>
 			<!-- InstanceBeginEditable name="content-extra" -->
 <h2>Download</h2>
 <div id="dlbtn"><a href="/download/index.html" class="round">
-latest version: <span class="dlhi">3.2.7</span><br />
-released on: <span class="dldate">Aug 29, 2011</span></a>
+latest version: <span class="dlhi">3.3.1</span><br />
+released on: <span class="dldate">Dec 27, 2011</span></a>
 </div>
 
-<div id="dlbtn2"><a href="/download/index.html#beta" class="round">latest beta: <span class="dldate">3.2.8-20111111</span></a></div>
+<div id="dlbtn2"><a href="/download/index.html#beta" class="round">latest beta: <span class="dldate">3.3.2-20120120</span></a></div>
 
 <div id="links">&raquo;&nbsp;<img src="/gfx/history.png" style="position:relative; top:3px;" width="16" height="16" alt="history"/> <a href="/history.html">release history</a><br/>
-&raquo;&nbsp;<img src="/gfx/mailinglist.gif" style="position:relative; top:1px;" width="17" height="12" alt="mailing list"/> <a href="http://groups.google.com/group/jodders?hl=en">user group</a><br/>
+&raquo;&nbsp;<img src="/gfx/mailinglist.gif" style="position:relative; top:1px;" width="17" height="12" alt="mailing list"/> <a href="http://groups.google.com/forum/#!forum/jodders">user group</a><br/>
 &raquo;&nbsp;<img src="/gfx/feed-icon-16x16.png" style="position:relative; top:2px;" width="16" height="16" alt="rss feed"/> <a href="http://feeds.feedburner.com/jodd">news feed</a><br/>
 &raquo;&nbsp;<img src="/gfx/source.png" style="position:relative; top:3px;" width="16" height="16" alt="svn repository"/> <a href="http://code.google.com/p/jodd/source/browse/">source svn repo</a>
 </div>
@@ -346,6 +377,7 @@ Thanks</h2>
 			<li><a href="/doc/vtor/index.html">VTor &middot; validation with style</a></li>
 			<li><a href="/doc/lagarto/index.html">Lagarto &middot; versatile html parser</a></li>
 			<li><a href="/doc/decora/index.html">Decora &middot; web page decorators</a></li>
+			<li><a href="/doc/jerry/index.html">Jerry &middot; jQuery in Java</a></li>
 
 		</ul>
 		<h3>Examples</h3>
