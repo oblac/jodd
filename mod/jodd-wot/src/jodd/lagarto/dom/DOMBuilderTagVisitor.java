@@ -172,8 +172,22 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	 */
 	protected Node findMatchingParentOpenTag(String tagName) {
 		Node parent = parentNode;
+		
+		if (builder.isCaseSensitive() == false) {
+			tagName = tagName.toLowerCase();
+		}
+		
 		while (parent != null) {
-			if (tagName.equals(parent.getNodeName())) {
+			
+			String parentNodeName = parent.getNodeName();
+
+			if (parentNodeName != null) {
+				if (builder.isCaseSensitive() == false) {
+					parentNodeName = parentNodeName.toLowerCase();
+				}
+			}
+			
+			if (tagName.equals(parentNodeName)) {
 				return parent;
 			}
 			parent = parent.getParentNode();
@@ -181,9 +195,13 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		return null;
 	}
 
+	/**
+	 * Fixes unclosed tags. Adds closing tag to wrap one non-blank element.
+	 */
 	protected void fixUpToMatchingPoint(Node matchingParent) {
 		while (true) {
 			String nodeName = parentNode.getNodeName();
+
 			if (parentNode == matchingParent) {
 				parentNode = parentNode.getParentNode();
 				break;
