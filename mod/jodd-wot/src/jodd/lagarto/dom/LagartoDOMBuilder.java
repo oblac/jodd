@@ -8,13 +8,7 @@ import jodd.util.StringUtil;
 import java.nio.CharBuffer;
 
 /**
- * Lagarto DOM builder creates DOM tree from HTML or XML content.
- * XML parsing has the following differences:
- * <ul>
- *     <li>no special tags (<code>script</code>, <code>style</code>, <code>pre</code>)</li>
- *     <li>empty text nodes are ignored</li>
- *     <li>tag attributes are case sensitive</li>
- * </ul>
+ * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
 public class LagartoDOMBuilder {
 
