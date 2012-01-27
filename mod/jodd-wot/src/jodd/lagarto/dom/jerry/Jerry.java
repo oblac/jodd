@@ -78,6 +78,21 @@ public class Jerry {
 			return builder;
 		}
 
+		public JerryParser enableHtmlMode() {
+			builder.enableHtmlMode();
+			return this;
+		}
+
+		public JerryParser enableXhtmlMode() {
+			builder.enableXhtmlMode();
+			return this;
+		}
+
+		public JerryParser enableXmlMode() {
+			builder.enableXmlMode();
+			return this;
+		}
+
 		public Jerry parse(CharSequence content) {
 			Document doc = builder.parse(content);
 			return new Jerry(null, doc);
