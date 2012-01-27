@@ -67,12 +67,12 @@ public class Jerry {
 	/**
 	 * Content parser and Jerry factory.
 	 */
-	public static class JerryRunner {
+	public static class JerryParser {
 
 		protected final LagartoDOMBuilder builder = new LagartoDOMBuilder();
 
 		/**
-		 * Returns builder for more configuration control.
+		 * Returns builder for more configuration.
 		 */
 		public LagartoDOMBuilder getDOMBuilder() {
 			return builder;
@@ -83,18 +83,18 @@ public class Jerry {
 			return new Jerry(null, doc);
 		}
 
-		public Jerry jerry(CharBuffer content) {
+		public Jerry parse(CharBuffer content) {
 			Document doc = builder.parse(content);
 			return new Jerry(null, doc);
 		}
 	}
 
 	/**
-	 * Just creates new {@link JerryRunner Jerry runner} to separated parser creation
-	 * and creation of new Jerry instance.
+	 * Just creates new {@link jodd.lagarto.dom.jerry.Jerry.JerryParser Jerry runner} to separate
+	 * parser creation and creation of new Jerry instances.
 	 */
-	public static JerryRunner jerry() {
-		return new JerryRunner();
+	public static JerryParser jerry() {
+		return new JerryParser();
 	}
 
 	// ---------------------------------------------------------------- ctor
