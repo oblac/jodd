@@ -46,14 +46,55 @@ public class Jerry {
 
 	// ---------------------------------------------------------------- create
 
+	/**
+	 * Parses input sequence and creates new <code>Jerry</code>.
+	 */
 	public static Jerry jerry(CharSequence content) {
 		Document doc = new LagartoDOMBuilder().parse(content);
 		return new Jerry(null, doc);
 	}
 
+	/**
+	 * Parses input content and creates new <code>Jerry</code>.
+	 */
 	public static Jerry jerry(CharBuffer content) {
 		Document doc = new LagartoDOMBuilder().parse(content);
 		return new Jerry(null, doc);
+	}
+
+	// ---------------------------------------------------------------- 2-steps init
+
+	/**
+	 * Content parser and Jerry factory.
+	 */
+	public static class JerryRunner {
+
+		protected final LagartoDOMBuilder builder = new LagartoDOMBuilder();
+
+		/**
+		 * Returns builder for more configuration control.
+		 */
+		public LagartoDOMBuilder getDOMBuilder() {
+			return builder;
+		}
+
+		public Jerry parse(CharSequence content) {
+			Document doc = builder.parse(content);
+			return new Jerry(null, doc);
+		}
+
+		public Jerry jerry(CharBuffer content) {
+			Document doc = builder.parse(content);
+			return new Jerry(null, doc);
+		}
+	}
+
+	/**
+	 * Just creates new {@link JerryRunner Jerry runner} to separated parser creation
+	 * and creation of new Jerry instance.
+	 */
+	public static JerryRunner jerry() {
+		return new JerryRunner();
 	}
 
 	// ---------------------------------------------------------------- ctor
