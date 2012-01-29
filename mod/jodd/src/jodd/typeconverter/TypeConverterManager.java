@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import static jodd.JoddDefault.typeConverterManager;
+
 /**
  * Provides dynamic object conversion to a type.
  * Contains a map of registered converters. User may add new converter.
@@ -9,20 +11,18 @@ package jodd.typeconverter;
  */
 public class TypeConverterManager {
 
-	private static final TypeConverterManagerBean MANAGER = new TypeConverterManagerBean();
-
 	/**
 	 * Unregisters all converters.
 	 */
 	public static void unregisterAll() {
-		MANAGER.unregisterAll();
+		typeConverterManager.unregisterAll();
 	}
 
 	/**
 	 * Registers default set of converters.
 	 */
 	public static void registerDefaults() {
-		MANAGER.registerDefaults();
+		typeConverterManager.registerDefaults();
 	}
 
 	/**
@@ -33,11 +33,11 @@ public class TypeConverterManager {
 	 * @param typeConverter converter for provided class
 	 */
 	public static void register(Class type, TypeConverter typeConverter) {
-		MANAGER.register(type, typeConverter);
+		typeConverterManager.register(type, typeConverter);
 	}
 
 	public static void unregister(Class type) {
-		MANAGER.unregister(type);
+		typeConverterManager.unregister(type);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class TypeConverterManager {
 	 * @return founded converter or <code>null</code>
 	 */
 	public static TypeConverter lookup(Class type) {
-		return MANAGER.lookup(type);
+		return typeConverterManager.lookup(type);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class TypeConverterManager {
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
 	public static <T> T castType(Object value, Class<T> destinationType) {
-		return MANAGER.castType(value, destinationType);
+		return typeConverterManager.castType(value, destinationType);
 	}
 
 }
