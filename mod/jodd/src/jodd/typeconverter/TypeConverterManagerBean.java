@@ -65,6 +65,7 @@ import java.util.Locale;
 /**
  * Provides dynamic object conversion to a type.
  * Contains a map of registered converters. User may add new converters.
+ * Instantiable version of {@link TypeConverterManager}.
  */
 public class TypeConverterManagerBean {
 
