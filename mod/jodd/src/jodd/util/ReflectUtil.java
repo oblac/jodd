@@ -2,10 +2,6 @@
 
 package jodd.util;
 
-import jodd.typeconverter.TypeConverter;
-import jodd.typeconverter.TypeConverterManager;
-import jodd.typeconverter.TypeConversionException;
-
 import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -273,40 +269,6 @@ public class ReflectUtil {
 	public static boolean isInstanceOf(Object o, Class target) {
 		return isSubclass(o.getClass(), target);
 	}
-
-	/**
-	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
-	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
-	 */
-	@SuppressWarnings({"unchecked"})
-	public static <T> T castType(Object value, Class<T> destinationType) {
-		if (value == null) {
-			return null;
-		}
-		TypeConverter converter = TypeConverterManager.lookup(destinationType);
-		if (converter == null) {
-			// no converter available, try to cast manually
-			if (isInstanceOf(value, destinationType) == true) {
-				return (T) value;
-			}
-			if (destinationType.isEnum()) {
-				Object[] enums = destinationType.getEnumConstants();
-				String valStr = value.toString();
-				for (Object e : enums) {
-					if (e.toString().equals(valStr)) {
-						return (T) e;
-					}
-				}
-			}
-			throw new ClassCastException("Unable to cast value to type: " + destinationType.getName());
-		}
-		try {
-			return (T) converter.convert(value);
-		} catch (TypeConversionException tcex) {
-			throw new ClassCastException("Unable to convert value to type: " + destinationType.getName() + " : " + tcex.toString());
-		}
-	}
-
 
 	// ---------------------------------------------------------------- accessible methods
 

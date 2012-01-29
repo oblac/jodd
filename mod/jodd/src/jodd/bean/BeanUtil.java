@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
@@ -313,7 +314,7 @@ public class BeanUtil extends BeanUtilUtil {
 				try {
 					value = ReflectUtil.newInstance(listType);
 				} catch (Exception ex) {
-					throw new BeanException("Unable to create list element: " + bp.name + '[' + index + "]", bp, ex);
+					throw new BeanException("Unable to create list element: " + bp.name + '[' + index + ']', bp, ex);
 				}
 				//noinspection unchecked
 				list.set(index, value);
@@ -337,7 +338,7 @@ public class BeanUtil extends BeanUtilUtil {
 					try {
 						value = ReflectUtil.newInstance(mapType);
 					} catch (Exception ex) {
-						throw new BeanException("Unable to create map element: " + bp.name + '[' + indexString + "]", bp, ex);
+						throw new BeanException("Unable to create map element: " + bp.name + '[' + indexString + ']', bp, ex);
 					}
 
 					//noinspection unchecked
@@ -387,7 +388,7 @@ public class BeanUtil extends BeanUtilUtil {
 			int index = parseInt(indexString, bp);
 			Class listType = extracticGenericType(bp, 0);
 			if (listType != null) {
-				value = ReflectUtil.castType(value, listType);
+				value = TypeConverterManager.castType(value, listType);
 			}
 			List list = (List) nextBean;
 			if (bp.forced == true) {
@@ -400,7 +401,7 @@ public class BeanUtil extends BeanUtilUtil {
 			Map map = ((Map) nextBean);
 			Class mapType = extracticGenericType(bp, 1);
 			if (mapType != null) {
-				value = ReflectUtil.castType(value, mapType);
+				value = TypeConverterManager.castType(value, mapType);
 			}
 			map.put(indexString, value);
 			return;

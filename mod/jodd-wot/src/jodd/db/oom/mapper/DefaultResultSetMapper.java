@@ -10,7 +10,7 @@ import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
-import jodd.util.ReflectUtil;
+import jodd.typeconverter.TypeConverterManager;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -256,7 +256,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
 					cachedColumnValue = rs.getObject(colNdx + 1);
-					cachedColumnValue = ReflectUtil.castType(cachedColumnValue, destinationType);
+					cachedColumnValue = TypeConverterManager.castType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
 				throw new DbOomException("Unable to read value for column #" + (colNdx + 1) + '.', sex);

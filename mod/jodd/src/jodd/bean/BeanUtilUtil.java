@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
@@ -25,7 +26,7 @@ public class BeanUtilUtil {
 	protected static void invokeSetter(Object bean, Method m, Object value) {
 		try {
 			Class[] paramTypes = m.getParameterTypes();
-			value = ReflectUtil.castType(value, paramTypes[0]);
+			value = TypeConverterManager.castType(value, paramTypes[0]);
 			m.invoke(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke setter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
@@ -51,7 +52,7 @@ public class BeanUtilUtil {
 	protected static void setField(Object bean, Field f, Object value) {
 		try {
 			Class type = f.getType();
-			value = ReflectUtil.castType(value, type);
+			value = TypeConverterManager.castType(value, type);
 			f.set(bean, value);
 		} catch (Exception iaex) {
 			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
@@ -85,7 +86,7 @@ public class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
-				throw new BeanException("Unable to create array element: " + bp.name + '[' + index + "]", bp, ex);
+				throw new BeanException("Unable to create array element: " + bp.name + '[' + index + ']', bp, ex);
 			}
 			Array.set(array, index, value);
 		}
@@ -100,7 +101,7 @@ public class BeanUtilUtil {
 	protected static void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
 		Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
-		value = ReflectUtil.castType(value, componentType);
+		value = TypeConverterManager.castType(value, componentType);
 		Array.set(array, index, value);
 	}
 

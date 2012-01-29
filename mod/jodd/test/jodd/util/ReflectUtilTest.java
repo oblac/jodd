@@ -2,12 +2,12 @@
 
 package jodd.util;
 
-import java.beans.Introspector;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import jodd.typeconverter.TypeConverterManager;
 import jodd.util.testdata.JavaBean;
 import jodd.util.testdata.W;
 import jodd.util.testdata2.En;
@@ -330,25 +330,25 @@ public class ReflectUtilTest extends TestCase {
 	public void testCast() {
 
 		String s = "123";
-		Integer d = ReflectUtil.castType(s, Integer.class);
+		Integer d = TypeConverterManager.castType(s, Integer.class);
 		assertEquals(123, d.intValue());
 
-		s = ReflectUtil.castType(d, String.class);
+		s = TypeConverterManager.castType(d, String.class);
 		assertEquals("123", s);
 
-		MutableInteger md = ReflectUtil.castType(s, MutableInteger.class);
+		MutableInteger md = TypeConverterManager.castType(s, MutableInteger.class);
 		assertEquals(123, md.intValue());
 
 		B b = new B();
-		A a = ReflectUtil.castType(b, A.class);
+		A a = TypeConverterManager.castType(b, A.class);
 		assertEquals(a, b);
 	}
 
 	public void testCastEnums() {
 
-		En en = ReflectUtil.castType("ONE", En.class);
+		En en = TypeConverterManager.castType("ONE", En.class);
 		assertEquals(En.ONE, en);
-		en = ReflectUtil.castType("TWO", En.class);
+		en = TypeConverterManager.castType("TWO", En.class);
 		assertEquals(En.TWO, en);
 	}
 
