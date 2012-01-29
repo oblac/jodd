@@ -7,22 +7,16 @@ import javax.naming.NamingException;
 import javax.naming.InitialContext;
 
 /**
- * Simple context helper.
+ * Global context storage.
  */
 public class ContextUtil {
-
-	public static final String J2EE_ENV_JNDI_NAME       = "java:comp/env/";
-	public static final String JDBC_JNDI_NAME           = J2EE_ENV_JNDI_NAME + "jdbc/";
-	public static final String JMS_JNDI_NAME            = J2EE_ENV_JNDI_NAME + "jms/";
-	public static final String MAIL_JNDI_NAME           = J2EE_ENV_JNDI_NAME + "mail/";
-	public static final String URL_JNDI_NAME            = J2EE_ENV_JNDI_NAME + "url/";
 
 	private static InitialContext initContext;
 
 	/**
-	 * Gets initial naming context from default name service URL and default name service type.
+	 * Returns initial naming context from default name service URL and default name service type.
 	 */
-	public static InitialContext getInitContext() throws NamingException {
+	public static InitialContext getInitialContext() throws NamingException {
 		if (initContext == null) {
 			initContext = new InitialContext();
 		}
@@ -40,5 +34,12 @@ public class ContextUtil {
 				// ignore
 			}
 		}
+	}
+
+	/**
+	 * Closes naming context.
+	 */
+	public static void close() {
+		close(initContext);
 	}
 }

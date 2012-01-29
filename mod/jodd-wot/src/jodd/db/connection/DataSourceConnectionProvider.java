@@ -6,7 +6,6 @@ import jodd.db.DbSqlException;
 import jodd.util.ContextUtil;
 
 import javax.sql.DataSource;
-import javax.naming.Context;
 import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,7 +27,7 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 
 	public DataSourceConnectionProvider(String jndiName, String user, String pass) {
 		try {
-			this.dataSource = (DataSource) ContextUtil.getInitContext().lookup(jndiName);
+			this.dataSource = (DataSource) ContextUtil.getInitialContext().lookup(jndiName);
 		} catch (NamingException nex) {
 			throw new DbSqlException("Invalid JNDI datasource name: '" + jndiName + "'.", nex);
 		}
