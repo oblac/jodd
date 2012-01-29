@@ -37,7 +37,8 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * Compacts memory as much as possible by forcing garbage collection.
+	 * Compacts memory as much as possible by allocating huge memory block
+	 * and then forcing garbage collection.
 	 */
 	public static void compactMemory() {
 		try {
