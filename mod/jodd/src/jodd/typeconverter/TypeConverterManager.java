@@ -9,20 +9,20 @@ package jodd.typeconverter;
  */
 public class TypeConverterManager {
 
-	private static final TypeConverterManagerBean bean = new TypeConverterManagerBean();
+	private static final TypeConverterManagerBean manager = new TypeConverterManagerBean();
 
 	/**
 	 * Unregisters all converters.
 	 */
 	public static void unregisterAll() {
-		bean.unregisterAll();
+		manager.unregisterAll();
 	}
 
 	/**
 	 * Registers default set of converters.
 	 */
 	public static void registerDefaults() {
-		bean.registerDefaults();
+		manager.registerDefaults();
 	}
 
 	/**
@@ -33,11 +33,11 @@ public class TypeConverterManager {
 	 * @param typeConverter converter for provided class
 	 */
 	public static void register(Class type, TypeConverter typeConverter) {
-		bean.register(type, typeConverter);
+		manager.register(type, typeConverter);
 	}
 
 	public static void unregister(Class type) {
-		bean.unregister(type);
+		manager.unregister(type);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class TypeConverterManager {
 	 * @return founded converter or <code>null</code>
 	 */
 	public static TypeConverter lookup(Class type) {
-		return bean.lookup(type);
+		return manager.lookup(type);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class TypeConverterManager {
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
 	public static <T> T castType(Object value, Class<T> destinationType) {
-		return bean.castType(value, destinationType);
+		return manager.castType(value, destinationType);
 	}
 
 }
