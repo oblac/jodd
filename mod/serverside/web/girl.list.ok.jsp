@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
-<small><a href="index.jsp">back</a></small>
+<small><a href="/">back</a></small>
 All girls:<br>
 
 <%

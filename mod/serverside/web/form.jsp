@@ -1,7 +1,5 @@
 <%@ page import="madvoc.FooFormBean"%>
 <%@ page import="static jodd.servlet.HtmlFormUtil.*" %>
-<%@ page import="static jodd.util.ValueLookup.*" %>
-<%@ page import="static jodd.servlet.HtmlEncoder.*" %>
 <%@ page import="jodd.servlet.JspValueResolver" %>
 <%@ taglib prefix="j" uri="/jodd" %>
 <%@ taglib prefix="jfn" uri="/joddfn" %>
@@ -21,7 +19,7 @@
 %>
 
 <h1>Form</h1>
-<small><a href="index.jsp">back</a></small><br>
+<small><a href="/">back</a></small><br>
 
 
 
@@ -49,9 +47,9 @@
 	<tr><td>
 		Checkboxes <small><i>(Boolean[], unknown size)</i></small>
 	</td><td>
-		<input type="checkbox" name="foo.check2[0]" value="true" <%=checked(array(ffb.check2, 0))%>>
-		<input type="checkbox" name="foo.check2[1]" value="true" <%=checked(array(ffb.check2, 1))%>>
-		<input type="checkbox" name="foo.check2[2]" value="true" <%=checked(array(ffb.check2, 2))%>>
+		<input type="checkbox" name="foo.check2[0]" value="true" <%=checked(ffb.check2, 0)%>>
+		<input type="checkbox" name="foo.check2[1]" value="true" <%=checked(ffb.check2, 1)%>>
+		<input type="checkbox" name="foo.check2[2]" value="true" <%=checked(ffb.check2, 2)%>>
 	</td></tr>
 
 

@@ -4,9 +4,11 @@ package jodd.servlet;
 
 import jodd.typeconverter.Convert;
 import jodd.util.CharUtil;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Various utilities for raw population of HTML forms.
@@ -74,7 +76,62 @@ public class HtmlFormUtil {
 		}
 		return EMPTY;
 	}
+	
+	public static <T> String checked(T[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return checked(array[index]);
+	}
 
+	public static String checked(boolean[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return checked(array[index]);
+	}
+
+	public static String checked(byte[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
+
+	public static String checked(short[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
+
+	public static String array(int[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
+
+	public static String array(long[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
+
+	public static String array(float[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
+
+	public static String array(double[] array, int index) {
+		if ((array == null) || (index >= array.length) || (index < 0)) {
+			return EMPTY;
+		}
+		return (array[index] != 0) ? CHECKED : EMPTY;
+	}
 
 	// ---------------------------------------------------------------- checked value
 
@@ -171,7 +228,7 @@ public class HtmlFormUtil {
 		if (data instanceof List) {
 			return multiSelected((List) data, value);
 		}
-		throw new IllegalArgumentException("Invalid data type for multi-selected field.");
+		throw new IllegalArgumentException("Invalid multi-selected field data.");
 	}
 
 	public static String multiSelected(Object[] data, String value) {
@@ -249,6 +306,31 @@ public class HtmlFormUtil {
 			}
 		}
 		return new String(str);
+	}
+
+	// ---------------------------------------------------------------- map/list
+
+	public static Object list(List list, int index) {
+		if ((list == null) || (index >= list.size()) || (index < 0)) {
+			return null;
+		}
+		return list.get(index);
+	}
+
+	public static Object map(Map map, Object key) {
+		if (map == null) {
+			return null;
+		}
+		return map.get(key);
+	}
+	
+	// ---------------------------------------------------------------- text
+	
+	public static String text(Object value) {
+		if (value == null) {
+			return StringPool.EMPTY;
+		}
+		return HtmlEncoder.text(value.toString());
 	}
 
 }
