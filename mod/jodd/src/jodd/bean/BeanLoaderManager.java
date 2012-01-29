@@ -28,7 +28,7 @@ public class BeanLoaderManager {
     }
 
 	/**
-	 * Unregister all loaders.
+	 * Unregisters all loaders.
 	 */
 	public static void unregisterAll() {
 		loaders.clear();
