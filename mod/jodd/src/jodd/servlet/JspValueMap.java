@@ -2,9 +2,9 @@
 
 package jodd.servlet;
 
+import jodd.util.collection.EnumerationIterator;
 import jodd.util.collection.StringKeyedMapAdapter;
 import jodd.util.collection.CompositeIterator;
-import jodd.util.CollectionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
@@ -44,9 +44,9 @@ public class JspValueMap extends StringKeyedMapAdapter {
 	@SuppressWarnings({"unchecked"})
 	protected Iterator<String> getAttributeNames() {
 		return new CompositeIterator(
-				CollectionUtil.toIterator(request.getAttributeNames()),
-				CollectionUtil.toIterator(request.getSession().getAttributeNames()),
-				CollectionUtil.toIterator(request.getSession().getServletContext().getAttributeNames())
+				new EnumerationIterator<String>(request.getAttributeNames()),
+				new EnumerationIterator<String>(request.getSession().getAttributeNames()),
+				new EnumerationIterator<String>(request.getSession().getServletContext().getAttributeNames())
 		);
 	}
 

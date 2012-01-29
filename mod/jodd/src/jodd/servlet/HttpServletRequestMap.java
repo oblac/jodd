@@ -2,8 +2,8 @@
 
 package jodd.servlet;
 
+import jodd.util.collection.EnumerationIterator;
 import jodd.util.collection.StringKeyedMapAdapter;
-import jodd.util.CollectionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
@@ -43,6 +43,6 @@ public class HttpServletRequestMap extends StringKeyedMapAdapter {
 	@Override
 	@SuppressWarnings({"unchecked"})
 	protected Iterator<String> getAttributeNames() {
-		return CollectionUtil.toIterator(request.getAttributeNames());
+		return new EnumerationIterator<String>(request.getAttributeNames());
 	}
 }
