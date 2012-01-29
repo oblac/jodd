@@ -64,8 +64,9 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Invokes private <code>Class.getMethod0()</code> without throwing NoSuchMethodException.
-	 * Returns only public methods or <code>null</code> if method not found.
+	 * Invokes private <code>Class.getMethod0()</code> without throwing <code>NoSuchMethodException</code>.
+	 * Returns only public methods or <code>null</code> if method not found. Since no exception is
+	 * throwing, it works faster.
 	 *
 	 * @param c      			class to inspect
 	 * @param name   			name of method to find
@@ -75,23 +76,6 @@ public class ReflectUtil {
 	public static Method getMethod0(Class c, String name, Class... parameterTypes) {
 		try {
 			return (Method) _getMethod0.invoke(c, name, parameterTypes);
-		} catch (Exception ignore) {
-			return null;
-		}
-	}
-
-	/**
-	 * Invokes private <code>Class.getMethod0()</code> without throwing NoSuchMethod exception.
-	 * Returns only accessible methods.
-	 *
-	 * @param o      			object to inspect
-	 * @param name   			name of method to find
-	 * @param parameterTypes 	parameter types
-	 * @return founded method, or null
-	 */
-	public static Method getMethod0(Object o, String name, Class... parameterTypes) {
-		try {
-			return (Method) _getMethod0.invoke(o.getClass(), name, parameterTypes);
 		} catch (Exception ignore) {
 			return null;
 		}
@@ -129,7 +113,6 @@ public class ReflectUtil {
 			}
 		}
 		return null;
-
 	}
 
 
@@ -974,10 +957,12 @@ public class ReflectUtil {
 	public static Class toClass(Type type) {
 		if (type instanceof Class) {
 			return (Class) type;
-		} else if (type instanceof ParameterizedType) {
+		}
+		if (type instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) type;
 			return toClass(pt.getRawType());
-		} else if (type instanceof WildcardType) {
+		}
+		if (type instanceof WildcardType) {
 			WildcardType wt = (WildcardType) type;
 			Type[] lower = wt.getLowerBounds();
 			if (lower.length == 1) {

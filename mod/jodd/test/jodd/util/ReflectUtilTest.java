@@ -137,22 +137,22 @@ public class ReflectUtilTest extends TestCase {
 		m = ReflectUtil.getMethod0(TFooBean.class, "getMore", String.class, Integer.class);
 		assertNotNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getMore", String.class, Integer.class);
+		m = ReflectUtil.getMethod0(bean.getClass(), "getMore", String.class, Integer.class);
 		assertNotNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getXXX", String.class, Integer.class);
+		m = ReflectUtil.getMethod0(bean.getClass(), "getXXX", String.class, Integer.class);
 		assertNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getPublic");
+		m = ReflectUtil.getMethod0(bean.getClass(), "getPublic");
 		assertNotNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getDefault");
+		m = ReflectUtil.getMethod0(bean.getClass(), "getDefault");
 		assertNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getProtected");
+		m = ReflectUtil.getMethod0(bean.getClass(), "getProtected");
 		assertNull(m);
 		
-		m = ReflectUtil.getMethod0(bean, "getPrivate");
+		m = ReflectUtil.getMethod0(bean.getClass(), "getPrivate");
 		assertNull(m);
 	}
 
