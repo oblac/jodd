@@ -265,7 +265,6 @@ public class ReflectUtil {
 
 	/**
 	 * Dynamic version of <code>instanceof</code>.
-	 * Approx 3 times faster then Class.isInstance().
 	 *
 	 * @param o			object to match
 	 * @param target	target class
