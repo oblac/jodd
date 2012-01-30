@@ -3,7 +3,6 @@
 package jodd.servlet;
 
 import jodd.bean.BeanUtil;
-import jodd.bean.BeanUtilBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -112,7 +111,7 @@ public class JspValueResolver {
 		if (thisRef == name) {
 			return value;
 		}
-		name = BeanUtilBean.THIS_REF + name.substring(thisRef.length());
+		name = BeanUtil.THIS_REF + name.substring(thisRef.length());
 		return BeanUtil.getDeclaredPropertySilently(value, name);
 	}
 
@@ -131,7 +130,7 @@ public class JspValueResolver {
 		if (thisRef == name) {
 			return value;
 		}
-		name = BeanUtilBean.THIS_REF + name.substring(thisRef.length());
+		name = BeanUtil.THIS_REF + name.substring(thisRef.length());
 		return BeanUtil.getDeclaredPropertySilently(value, name);
 	}
 
