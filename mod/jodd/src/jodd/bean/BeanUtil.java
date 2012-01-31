@@ -36,6 +36,13 @@ public class BeanUtil {
 	private static final BeanUtilBean BEAN_UTIL_BEAN = new BeanUtilBean();
 
 	/**
+	 * Returns default {@link BeanUtilBean}.
+	 */
+	public static BeanUtilBean getDefaultBeanUtilBean() {
+		return BEAN_UTIL_BEAN;
+	}
+
+	/**
 	 * Returns <code>true</code> if simple property exist.
 	 */
 	public static boolean hasSimpleProperty(Object bean, String property, boolean suppressSecurity) {

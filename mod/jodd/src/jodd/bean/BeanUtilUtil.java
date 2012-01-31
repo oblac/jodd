@@ -20,7 +20,7 @@ public class BeanUtilUtil {
 	protected TypeConverterManagerBean typeConverterManager = JoddDefault.typeConverterManager;
 
 	/**
-	 * Sets custom type converter manager.
+	 * Sets custom {@link TypeConverterManagerBean type converter manager}.
 	 */
 	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
