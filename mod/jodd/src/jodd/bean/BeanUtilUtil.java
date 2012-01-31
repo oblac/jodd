@@ -2,7 +2,7 @@
 
 package jodd.bean;
 
-import jodd.JoddDefault;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class BeanUtilUtil {
 
-	protected TypeConverterManagerBean typeConverterManager = JoddDefault.typeConverterManager;
+	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
 
 	/**
 	 * Sets custom {@link TypeConverterManagerBean type converter manager}.

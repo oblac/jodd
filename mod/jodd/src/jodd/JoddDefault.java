@@ -2,7 +2,6 @@
 
 package jodd;
 
-import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringPool;
 
 /**
@@ -34,12 +33,6 @@ public class JoddDefault {
 	 * Default IO buffer size (32 KB).
 	 */
 	public static int ioBufferSize = 32768;
-
-	/**
-	 * Default type converter manager.
-	 */
-	public static TypeConverterManagerBean typeConverterManager = new TypeConverterManagerBean();
-
 
 	static {
 		Package pkg = Jodd.class.getPackage();
