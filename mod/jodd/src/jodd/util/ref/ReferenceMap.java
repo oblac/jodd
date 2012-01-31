@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author crazybob@google.com (Bob Lee)
  * @author fry@google.com (Charles Fry)
- * @author najgor
+ * @author igor.spasic@gmail.com
  */
 @SuppressWarnings("unchecked")
 public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {

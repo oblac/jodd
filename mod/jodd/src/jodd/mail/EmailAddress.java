@@ -84,7 +84,7 @@ import java.util.regex.Pattern;
  * already. The source code can be compiled with these booleans in various
  * states. They are configured to what is probably the most commonly-useful state.</b>
  *
- * @author Les Hazlewood, Casey Connor, najgor++
+ * @author Les Hazlewood, Casey Connor, Igor Spasic
  */
 public class EmailAddress {
 	/**
