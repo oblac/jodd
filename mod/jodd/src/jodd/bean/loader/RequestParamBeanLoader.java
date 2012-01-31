@@ -2,8 +2,6 @@
 
 package jodd.bean.loader;
 
-import jodd.bean.BeanUtil;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
@@ -16,24 +14,26 @@ import java.util.Enumeration;
  * case it is sent as a single String.
  *
  */
-public class RequestParamBeanLoader implements BeanLoader {
+public class RequestParamBeanLoader extends BaseBeanLoader {
 
-	private boolean trim;
+	protected final boolean trim;
 
 	public RequestParamBeanLoader() {
+		this.trim = false;
 	}
 
 	public RequestParamBeanLoader(boolean trim) {
 		this.trim = trim;
 	}
 
+	public void load(Object bean, Object source) {
+		if (source instanceof HttpServletRequest) {
+			HttpServletRequest httpServletRequest = (HttpServletRequest) source;
 
-	public static void loadBean(Object bean, Object request, boolean trim) {
-		if (request instanceof HttpServletRequest) {
-			Enumeration paramNames = ((HttpServletRequest)request).getParameterNames();
+			Enumeration paramNames = httpServletRequest.getParameterNames();
 			while (paramNames.hasMoreElements()) {
 				String paramName = (String) paramNames.nextElement();
-				String[] paramValues = ((HttpServletRequest)request).getParameterValues(paramName);
+				String[] paramValues = httpServletRequest.getParameterValues(paramName);
 				if (paramValues == null) {
 					continue;
 				}
@@ -45,21 +45,15 @@ public class RequestParamBeanLoader implements BeanLoader {
 						paramValues[i] = paramValues[i].trim();
 					}
 				}
-				try {
-					if (paramValues.length == 1) {	// use just String
-						BeanUtil.setPropertyForcedSilent(bean, paramName, paramValues[0]);
-					} else {	// use String array
-						BeanUtil.setPropertyForcedSilent(bean, paramName, paramValues);
-					}
-				} catch (Exception ex) {
-					// ignore exception
+
+				if (paramValues.length == 1) {	// use just String
+					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues[0]);
+				} else {						// use String array
+					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues);
 				}
+
 			}
 		}
-	}
-
-	public void load(Object bean, Object request) {
-		loadBean(bean, request, trim);
 	}
 
 }

@@ -14,9 +14,9 @@ public interface BeanLoader {
 	 * All properties from source object will be iterated
 	 * to be set into the destination.
 	 *
-	 * @param destination	instance that will be populated
+	 * @param bean		destination instance that will be populated
 	 * @param source	object to populate from
 	 */
-	void load(Object destination, Object source);
+	void load(Object bean, Object source);
 
 }

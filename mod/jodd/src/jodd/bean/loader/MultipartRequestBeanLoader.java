@@ -2,30 +2,32 @@
 
 package jodd.bean.loader;
 
-import jodd.bean.BeanUtil;
 import jodd.servlet.upload.MultipartRequest;
 import jodd.servlet.upload.FileUpload;
 
 /**
  * Populates java bean from {@link MultipartRequest} objects.
  */
-public class MultipartRequestBeanLoader implements BeanLoader {
+public class MultipartRequestBeanLoader extends BaseBeanLoader {
 
-	private boolean trim;
+	protected boolean trim;
 
 	public MultipartRequestBeanLoader() {
+		this.trim = false;
 	}
 
 	public MultipartRequestBeanLoader(boolean trim) {
 		this.trim = trim;
 	}
 
-	public static void loadBean(Object bean, Object request, boolean trim) {
-		if (request instanceof MultipartRequest) {
-			MultipartRequest mrequest = (MultipartRequest) request;
-			for (Object o : mrequest.getParameterNames()) {
+	public void load(Object bean, Object source) {
+		if (source instanceof MultipartRequest) {
+
+			MultipartRequest multipartRequest = (MultipartRequest) source;
+
+			for (Object o : multipartRequest.getParameterNames()) {
 				String paramName = (String) o;
-				String[] paramValues = mrequest.getParameterValues(paramName);
+				String[] paramValues = multipartRequest.getParameterValues(paramName);
 				if (paramValues == null) {
 					continue;
 				}
@@ -37,42 +39,29 @@ public class MultipartRequestBeanLoader implements BeanLoader {
 						paramValues[i] = paramValues[i].trim();
 					}
 				}
-				try {
-					if (paramValues.length == 1) {
-						// send just String
-						BeanUtil.setPropertyForced(bean, paramName, paramValues[0]);
-					} else {
-						// send String array
-						BeanUtil.setPropertyForced(bean, paramName, paramValues);
-					}
-				} catch (Exception bex) {
-					// ignore exception
+				if (paramValues.length == 1) {		// send just String
+					beanUtilBean.setPropertyForced(bean, paramName, paramValues[0]);
+				} else {							// send String array
+					beanUtilBean.setPropertyForced(bean, paramName, paramValues);
 				}
 			}
 
-			for (Object o1 : mrequest.getFileParameterNames()) {
+			for (Object o1 : multipartRequest.getFileParameterNames()) {
 				String paramName = (String) o1;
-				FileUpload[] uf = mrequest.getFiles(paramName);
+				FileUpload[] uf = multipartRequest.getFiles(paramName);
 				if (uf == null) {
 					continue;
 				}
 				if (uf.length == 0) {
 					continue;
 				}
-				try {
-					if (uf.length == 1) {
-						BeanUtil.setPropertyForcedSilent(bean, paramName, uf[0]);
-					} else {
-						BeanUtil.setPropertyForcedSilent(bean, paramName, uf);
-					}
-				} catch (Exception ex) {
-					// ignore exception
+
+				if (uf.length == 1) {
+					beanUtilBean.setPropertyForcedSilent(bean, paramName, uf[0]);
+				} else {
+					beanUtilBean.setPropertyForcedSilent(bean, paramName, uf);
 				}
 			}
 		}
-	}
-
-	public void load(Object bean, Object request) {
-		loadBean(bean, request, trim);
 	}
 }

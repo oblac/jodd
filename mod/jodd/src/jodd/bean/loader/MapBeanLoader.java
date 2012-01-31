@@ -4,8 +4,6 @@ package jodd.bean.loader;
 
 import java.util.Map;
 
-import jodd.bean.BeanUtil;
-
 /**
  * Populate java bean using objects that are implementation of Map interface.
  * <p>
@@ -13,24 +11,21 @@ import jodd.bean.BeanUtil;
  * each key of Map object is a <code>String</code> the represents a bean property name and
  * keys value is an object that represents bean property value.
  */
-public class MapBeanLoader implements BeanLoader {
+public class MapBeanLoader extends BaseBeanLoader {
 
 	@SuppressWarnings({"unchecked"})
-	public static void loadBean(Object bean, Object mapObj) {
-		if (mapObj instanceof Map) {
-			Map<String, Object> map = (Map<String, Object>) mapObj;
+	public void load(Object bean, Object source) {
+
+		if (source instanceof Map) {
+			Map<String, Object> map = (Map<String, Object>) source;
+
 			for (Map.Entry<String, Object> entry : map.entrySet()) {
+
 				Object propertyValue = entry.getValue();
-				if (propertyValue == null) {
-					continue;
-				}
-				BeanUtil.setPropertyForcedSilent(bean, entry.getKey(), propertyValue);
+
+				beanUtilBean.setPropertyForcedSilent(bean, entry.getKey(), propertyValue);
 			}
 		}
-	}
-
-	public void load(Object bean, Object map) {
-		loadBean(bean, map);
 	}
 
 }

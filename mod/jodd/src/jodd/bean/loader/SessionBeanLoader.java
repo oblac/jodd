@@ -6,43 +6,42 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
-import jodd.bean.BeanUtil;
+import jodd.util.StringUtil;
 
 /**
  * Populates java bean from HttpSession objects. It allows to be instanced with a
  * 'prefix' that will be added in front of all attributes.
  */
-public class SessionBeanLoader implements BeanLoader {
+public class SessionBeanLoader extends BaseBeanLoader {
+
+	protected final String prefix;
 
 	public SessionBeanLoader() {
+		this.prefix = null;
 	}
-
-	String prefix;
 
 	public SessionBeanLoader(String prefix) {
 		this.prefix = prefix;
 	}
 
-	public static void loadBean(Object bean, Object session, String prefix) {
-		if (session instanceof HttpSession) {
+	public void load(Object bean, Object source) {
+		if (source instanceof HttpSession) {
+			HttpSession session = (HttpSession) source;
 
-			Enumeration attribNames = ((HttpSession)session).getAttributeNames();
-			while (attribNames.hasMoreElements()) {
-				String attribName = (String) attribNames.nextElement();
-				Object value = ((HttpSession)session).getAttribute(attribName);
-				if (value == null) {
-					continue;
-				}
+			Enumeration attributeNames = session.getAttributeNames();
+
+			while (attributeNames.hasMoreElements()) {
+				String attributeName = (String) attributeNames.nextElement();
+
+				Object value = session.getAttribute(attributeName);
+
 				if (prefix != null) {
-					attribName = prefix + Character.toUpperCase(attribName.charAt(0)) + attribName.substring(1);
+					attributeName = prefix + StringUtil.capitalize(attributeName);
 				}
-				BeanUtil.setPropertyForcedSilent(bean, attribName, value);
+
+				beanUtilBean.setPropertyForcedSilent(bean, attributeName, value);
 			}
 		}
-	}
-
-	public void load(Object bean, Object session) {
-		loadBean(bean, session, prefix);
 	}
 
 }

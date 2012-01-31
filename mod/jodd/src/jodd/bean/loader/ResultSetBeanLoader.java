@@ -6,27 +6,32 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.StringTokenizer;
 
-import jodd.bean.BeanUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Populate java bean from ResultSet objects.
  */
-public class ResultSetBeanLoader implements BeanLoader {
+public class ResultSetBeanLoader extends BaseBeanLoader {
 
-	public static void loadBean(Object bean, Object rs) {
-		if (rs instanceof ResultSet) {
+	public void load(Object bean, Object source) {
+		if (source instanceof ResultSet) {
 			try {
-				ResultSetMetaData rsmd = ((ResultSet)rs).getMetaData();
+				ResultSet resultSet = (ResultSet) source;
+
+				ResultSetMetaData rsmd = resultSet.getMetaData();
+				
 				int numberOfColumns = rsmd.getColumnCount();
+				
 				for (int i = 1; i <= numberOfColumns; i++) {
 					StringTokenizer st = new StringTokenizer(rsmd.getColumnName(i), StringPool.UNDERSCORE);
 					StringBuilder columnName = new StringBuilder();
 					while (st.hasMoreTokens()) {
 						String token = st.nextToken().toLowerCase();
-						columnName.append(token.substring(0, 1).toUpperCase()).append(token.substring(1));
+						
+						columnName.append(StringUtil.capitalize(token));
 					}
-					BeanUtil.setPropertyForcedSilent(bean, columnName.toString(), ((ResultSet)rs).getObject(i));
+					beanUtilBean.setPropertyForcedSilent(bean, columnName.toString(), resultSet.getObject(i));
 				}
 			} catch (Exception ex) {
 				// ignore
@@ -34,9 +39,4 @@ public class ResultSetBeanLoader implements BeanLoader {
 		}
 	}
 
-	public void load(Object bean, Object rs) {
-		loadBean(bean, rs);
-	}
-
 }
-

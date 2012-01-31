@@ -10,32 +10,34 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Populates java bean from {@link MultipartRequestWrapper} objects.
  */
-public class MultipartRequestWrapperBeanLoader implements BeanLoader {
+public class MultipartRequestWrapperBeanLoader extends BaseBeanLoader {
 
-	private boolean trim;
+	protected final MultipartRequestBeanLoader multipartRequestBeanLoader;
+	protected final RequestBeanLoader requestBeanLoader;
 
 	public MultipartRequestWrapperBeanLoader() {
+		this(false);
 	}
 
 	public MultipartRequestWrapperBeanLoader(boolean trim) {
-		this.trim = trim;
+		multipartRequestBeanLoader = new MultipartRequestBeanLoader(trim);
+		requestBeanLoader = new RequestBeanLoader(trim);
 	}
 
-	public static void loadBean(Object bean, Object request, boolean trim) {
-		if (request instanceof MultipartRequestWrapper) {
-			MultipartRequest mrequest = ((MultipartRequestWrapper) request).getMultipartRequest();
-			if (mrequest != null) {
+	public void load(Object bean, Object source) {
+		if (source instanceof MultipartRequestWrapper) {
+			MultipartRequestWrapper multipartRequestWrapper = (MultipartRequestWrapper) source;
+
+			MultipartRequest multipartRequest = multipartRequestWrapper.getMultipartRequest();
+
+			if (multipartRequest != null) {
 				// multipart
-				MultipartRequestBeanLoader.loadBean(bean, mrequest, trim);
+				multipartRequestBeanLoader.load(bean, multipartRequest);
 			} else {
-				// regular
-				HttpServletRequest req = (HttpServletRequest) ((MultipartRequestWrapper) request).getRequest();
-				RequestBeanLoader.loadBean(bean, req, trim);
+				// regular request
+				HttpServletRequest req = (HttpServletRequest) multipartRequestWrapper.getRequest();
+				requestBeanLoader.load(bean, req);
 			}
 		}
-	}
-
-	public void load(Object bean, Object request) {
-		loadBean(bean, request, trim);
 	}
 }
