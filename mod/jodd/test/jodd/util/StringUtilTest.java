@@ -864,4 +864,8 @@ public class StringUtilTest extends TestCase {
 		assertEquals("1 2 3", StringUtil.compressChars("1   2    3", ' '));
 		assertEquals("1 2 3", StringUtil.compressChars("1 2 3", ' '));
 	}
+
+	public void testTitle() {
+		assertEquals("A New Day Is Born", StringUtil.title("a neW day IS born"));
+	}
 }
