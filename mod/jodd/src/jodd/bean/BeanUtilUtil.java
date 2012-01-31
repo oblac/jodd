@@ -2,7 +2,8 @@
 
 package jodd.bean;
 
-import jodd.typeconverter.TypeConverterManager;
+import jodd.JoddDefault;
+import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
@@ -16,6 +17,15 @@ import java.util.List;
  */
 public class BeanUtilUtil {
 
+	protected TypeConverterManagerBean typeConverterManager = JoddDefault.typeConverterManager;
+
+	/**
+	 * Sets custom type converter manager.
+	 */
+	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
+		this.typeConverterManager = typeConverterManager;
+	}
+
 	// ---------------------------------------------------------------- accessors
 
 	/**
@@ -23,10 +33,10 @@ public class BeanUtilUtil {
 	 * It is assumed that all provided arguments are valid.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected static void invokeSetter(Object bean, Method m, Object value) {
+	protected void invokeSetter(Object bean, Method m, Object value) {
 		try {
 			Class[] paramTypes = m.getParameterTypes();
-			value = TypeConverterManager.castType(value, paramTypes[0]);
+			value = typeConverterManager.castType(value, paramTypes[0]);
 			m.invoke(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke setter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
@@ -37,7 +47,7 @@ public class BeanUtilUtil {
 	 * Invokes <code>getXxx()</code> method of specified bean.
 	 * It is assumed that all provided arguments are valid.
 	 */
-	protected static Object invokeGetter(Object bean, Method m) {
+	protected Object invokeGetter(Object bean, Method m) {
 		try {
 			return m.invoke(bean);
 		} catch (Exception ex) {
@@ -49,10 +59,10 @@ public class BeanUtilUtil {
 	 * Sets field value.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected static void setField(Object bean, Field f, Object value) {
+	protected void setField(Object bean, Field f, Object value) {
 		try {
 			Class type = f.getType();
-			value = TypeConverterManager.castType(value, type);
+			value = typeConverterManager.castType(value, type);
 			f.set(bean, value);
 		} catch (Exception iaex) {
 			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
@@ -62,7 +72,7 @@ public class BeanUtilUtil {
 	/**
 	 * Return value of a field.
 	 */
-	protected static Object getField(Object bean, Field f) {
+	protected Object getField(Object bean, Field f) {
 		try {
 			return f.get(bean);
 		} catch (Exception iaex) {
@@ -76,7 +86,7 @@ public class BeanUtilUtil {
 	 * Returns the element of an array forced. If value is <code>null</code>, it will be instantiated.
 	 * If not the last part of indexed bean property, array will be expanded to the index if necessary.
 	 */
-	protected static Object arrayForcedGet(BeanProperty bp, Object array, int index) {
+	protected Object arrayForcedGet(BeanProperty bp, Object array, int index) {
 		Class componentType = array.getClass().getComponentType();
 		if (bp.last == false) {
 			array = ensureArraySize(bp, array, componentType, index);
@@ -98,16 +108,16 @@ public class BeanUtilUtil {
 	 * If speed is critical, it is better to allocate an array with proper size before using this method. 
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected static void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
+	protected void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
 		Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
-		value = TypeConverterManager.castType(value, componentType);
+		value = typeConverterManager.castType(value, componentType);
 		Array.set(array, index, value);
 	}
 
 
 	@SuppressWarnings({"SuspiciousSystemArraycopy"})
-	protected static Object ensureArraySize(BeanProperty bp, Object array, Class componentType, int index) {
+	protected Object ensureArraySize(BeanProperty bp, Object array, Class componentType, int index) {
 		int len = Array.getLength(array);
 		if (index >= len) {
 			Object newArray = Array.newInstance(componentType, index + 1);
@@ -129,7 +139,7 @@ public class BeanUtilUtil {
 
 
 	@SuppressWarnings({"unchecked"})	
-	protected static void ensureListSize(List list, int size) {
+	protected void ensureListSize(List list, int size) {
 		int len = list.size();
 		while (size >= len) {
 			list.add(null);
@@ -143,7 +153,7 @@ public class BeanUtilUtil {
 	/**
 	 * Finds the very first next dot. Ignores dots between index brackets.
 	 */
-	protected static int indexOfDot(String name) {
+	protected int indexOfDot(String name) {
 		int ndx = 0;
 		while (true) {
 			ndx = name.indexOf('.', ndx);
@@ -167,7 +177,7 @@ public class BeanUtilUtil {
 	 * If index is found, it is stripped from bean property name.
 	 * If no index is found, it returns <code>null</code>.
 	 */
-	protected static String extractIndex(BeanProperty bp) {
+	protected String extractIndex(BeanProperty bp) {
 		bp.index = null;
 		String name = bp.name;
 		int lastNdx = name.length() - 1;
@@ -183,7 +193,7 @@ public class BeanUtilUtil {
 	}
 
 
-	protected static int parseInt(String indexString, BeanProperty bp) {
+	protected int parseInt(String indexString, BeanProperty bp) {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
@@ -197,7 +207,7 @@ public class BeanUtilUtil {
 	 * Creates new instance for current property name through its setter.
 	 * It uses default constructor!
 	 */
-	protected static Object createBeanProperty(BeanProperty bp) {
+	protected Object createBeanProperty(BeanProperty bp) {
 		Method setter = bp.cd.getBeanSetter(bp.name, true);
 		Field field = null;
 		Class type;
@@ -229,7 +239,7 @@ public class BeanUtilUtil {
 	/**
 	 * Extracts generic parameter types. 
 	 */
-	protected static Class extracticGenericType(BeanProperty bp, int index) {
+	protected Class extracticGenericType(BeanProperty bp, int index) {
 		Type type;
 		if (bp.field != null) {
 			type = bp.field.getGenericType();
@@ -244,7 +254,7 @@ public class BeanUtilUtil {
 	/**
 	 * Extracts type of current property.
 	 */
-	protected static Class extractType(BeanProperty bp) {
+	protected Class extractType(BeanProperty bp) {
 		Class<?> type = null;
 		if (bp.field != null) {
 			if (bp.index != null) {
