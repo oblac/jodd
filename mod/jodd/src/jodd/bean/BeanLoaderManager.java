@@ -44,15 +44,14 @@ public class BeanLoaderManager {
 	 *
 	 * @see #register
 	 */
+	@SuppressWarnings("UnnecessaryFullyQualifiedName")
 	public static void registerDefaults() {
 		register(java.util.Map.class, new MapBeanLoader());
 		register(java.sql.ResultSet.class, new ResultSetBeanLoader());
 		try {
 			Class.forName("javax.servlet.http.HttpServletRequest");		// check if exists
 			register(javax.servlet.http.HttpServletRequest.class, new RequestBeanLoader());
-			Class.forName("javax.servlet.http.HttpSession");
 			register(javax.servlet.http.HttpSession.class, new SessionBeanLoader());
-			Class.forName("javax.servlet.ServletContext");
 			register(javax.servlet.ServletContext.class, new ServletContextBeanLoader());
 			register(jodd.servlet.upload.MultipartRequest.class, new MultipartRequestBeanLoader());
 			register(jodd.servlet.upload.MultipartRequestWrapper.class, new MultipartRequestWrapperBeanLoader());
