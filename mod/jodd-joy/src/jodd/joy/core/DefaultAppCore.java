@@ -91,7 +91,9 @@ public abstract class DefaultAppCore {
 		return new String[] {this.getClass().getPackage().getName() + ".*", "jodd.*"};
 	}
 
-	// ---------------------------------------------------------------- start
+	// ---------------------------------------------------------------- init
+	
+	protected boolean initialized;
 
 	/**
 	 * Returns <code>true</code> if application is started as a part of web application.
@@ -108,13 +110,19 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Starts the application and performs all initialization.
+	 * Initializes system. Invoked *before* anything else!
+	 * Override to register types for BeanUtil, DbOom conversions etc.
+	 * <p>
+	 * May also set the value of <code>appDir</code>.
 	 */
-	public void start() {
-		initSystem();
-
+	public void init() {
+		if (initialized == true) {
+			return;
+		}
+		initialized = true;
+		
 		if (appDir == null) {
-			resolveAppDir("app.props");		// app directory is resolved from location of 'app.props'.
+			resolveAppDir("app.props");			// app directory is resolved from location of 'app.props'.
 		}
 
 		System.setProperty(APP_DIR, appDir);
@@ -123,12 +131,60 @@ public abstract class DefaultAppCore {
 		initLogger();							// logger becomes available after this point
 
 		log.info("app dir: " + appDir);
+	}
+
+	/**
+	 * Initializes the logger. It must be initialized after the
+	 * log path is defined.
+	 */
+	protected void initLogger() {
+		log = Log.getLogger(DefaultAppCore.class);
+	}
+
+	/**
+	 * Resolves application root folders.
+	 * Usually invoked on the very beginning, <b>before</b> application initialization.
+	 * <p>
+	 * If application is started as web application, app folder is one below the WEB-INF folder.
+	 * Otherwise, the root folder is equal to the working folder.
+	 */
+	protected void resolveAppDir(String classPathFileName) {
+		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, DefaultAppCore.class);
+		if (url == null) {
+			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
+		}
+		String protocol = url.getProtocol();
+
+
+		if (protocol.equals("file") == false) {
+			try {
+				url = new URL(url.getFile());
+			} catch (MalformedURLException ignore) {
+			}
+		}
+
+		appDir = url.getFile();
+
+		int ndx = appDir.indexOf("WEB-INF");
+		boolean isWebApplication = (ndx != -1);
+
+		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
+	}
+
+	// ---------------------------------------------------------------- start
+
+	/**
+	 * Starts the application and performs all initialization.
+	 */
+	public void start() {
+
+		init();
 
 		try {
-			initProxetta();
-			initPetite();
-			initDb();
-			initApp();
+			startProxetta();
+			startPetite();
+			startDb();
+			startApp();
 			log.info("app started");
 		} catch (RuntimeException rex) {
 			log.error(rex.toString(), rex);
@@ -150,17 +206,6 @@ public abstract class DefaultAppCore {
 		log.info("app stopped");
 	}
 
-	// ---------------------------------------------------------------- log
-
-	/**
-	 * Initializes the logger. It must be initialized after the
-	 * log path is defined.
-	 */
-	protected void initLogger() {
-		log = Log.getLogger(DefaultAppCore.class);
-	}
-
-	
 	// ---------------------------------------------------------------- proxetta
 
 	protected Proxetta proxetta;
@@ -179,7 +224,7 @@ public abstract class DefaultAppCore {
 	 * annotated with <code>@Transaction</code> annotation. This is just one way how proxies
 	 * can be applied - since base configuration is in Java, everything is possible.
 	 */
-	protected void initProxetta() {
+	protected void startProxetta() {
 		log.info("proxetta initialization");
 		proxetta = Proxetta.withAspects(createAppAspects()).loadsWith(this.getClass().getClassLoader());
 	}
@@ -228,7 +273,7 @@ public abstract class DefaultAppCore {
 	 * be injected in the matched beans. At the end it registers
 	 * this instance of core into the container.
 	 */
-	protected void initPetite() {
+	protected void startPetite() {
 		log.info("petite initialization");
 		petite = createPetiteContainer();
 
@@ -316,7 +361,7 @@ public abstract class DefaultAppCore {
 	 * the class path for entities.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void initDb() {
+	protected void startDb() {
 		log.info("database initialization");
 
 		// connection pool
@@ -378,7 +423,7 @@ public abstract class DefaultAppCore {
 	 * Initializes business part of the application.
 	 * Simply delegates to {@link AppInit#init()}.
 	 */
-	protected void initApp() {
+	protected void startApp() {
 		appInit = (AppInit) petite.getBean(PETITE_APPINIT);
 		if (appInit != null) {
 			appInit.init();
@@ -393,50 +438,6 @@ public abstract class DefaultAppCore {
 		if (appInit != null) {
 			appInit.stop();
 		}
-	}
-
-	// ---------------------------------------------------------------- init system
-
-	/**
-	 * Initializes system. Invoked *before* anything else!
-	 * Registers types for BeanUtil, DbOom conversions etc.
-	 * <p>
-	 * May also set the value of <code>appDir</code>.
-	 */
-	protected void initSystem() {
-	}
-
-	// ---------------------------------------------------------------- resolve
-
-
-	/**
-	 * Resolves application root folders.
-	 * Usually invoked on the very beginning, <b>before</b> application initialization.
-	 * <p>
-	 * If application is started as web application, app folder is one below the WEB-INF folder.
-	 * Otherwise, the root folder is equal to the working folder.
-	 */
-	protected void resolveAppDir(String classPathFileName) {
-		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, DefaultAppCore.class);
-		if (url == null) {
-			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
-		}
-		String protocol = url.getProtocol();
-
-
-		if (protocol.equals("file") == false) {
-			try {
-				url = new URL(url.getFile());
-			} catch (MalformedURLException ignore) {
-			}
-		}
-
-		appDir = url.getFile();
-
-		int ndx = appDir.indexOf("WEB-INF");
-		boolean isWebApplication = (ndx != -1);
-
-		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
 	}
 
 }
