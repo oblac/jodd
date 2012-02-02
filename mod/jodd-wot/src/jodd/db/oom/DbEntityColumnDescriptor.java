@@ -80,7 +80,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 	 * Updates db sql type if not already set.
 	 */
 	public void updateDbSqlType(int dbSqlType) {
-		if (dbSqlType == Integer.MAX_VALUE) {
+		if (this.dbSqlType == Integer.MAX_VALUE) {
 			this.dbSqlType = dbSqlType;
 		}
 	}
