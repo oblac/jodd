@@ -8,7 +8,7 @@ import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.joy.AppUtil;
+import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.db.DbJtxSessionProvider;
@@ -29,14 +29,22 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
+import jodd.util.ClassLoaderUtil;
+import jodd.util.SystemUtil;
 
-import static jodd.joy.AppUtil.prepareAppLogDir;
-import static jodd.joy.AppUtil.resolveAppDirs;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Default application core frame.
  */
 public abstract class DefaultAppCore {
+
+	/**
+	 * Properties.
+	 */
+	public static final String APP_DIR = "app.dir";
+	public static final String APP_WEB = "app.web";
 
 	/**
 	 * Petite bean names.
@@ -47,9 +55,19 @@ public abstract class DefaultAppCore {
 	public static final String PETITE_APPINIT = "appInit";	// init bean
 
 	/**
-	 * Logger.
+	 * Logger. Resolved during initialization.
 	 */
 	protected static Log log;
+
+	/**
+	 * App dir. Resolved during initialization.
+	 */
+	protected String appDir;
+
+	/**
+	 * Is web application. Resolved during initialization.
+	 */
+	protected boolean isWebApplication;
 
 	/**
 	 * Default scanning path that will be examined by various
@@ -79,7 +97,14 @@ public abstract class DefaultAppCore {
 	 * Returns <code>true</code> if application is started as a part of web application.
 	 */
 	public boolean isWebApplication() {
-		return AppUtil.isWebApplication();
+		return isWebApplication;
+	}
+
+	/**
+	 * Returns application directory.
+	 */
+	public String getAppDir() {
+		return appDir;
 	}
 
 	/**
@@ -87,11 +112,18 @@ public abstract class DefaultAppCore {
 	 */
 	public void start() {
 		initSystem();
-		resolveAppDirs("app.props");			// app directories are resolved from location of 'app.props'.
-		prepareAppLogDir("log");				// creates log folder, depending of application type
+
+		if (appDir == null) {
+			resolveAppDir("app.props");		// app directory is resolved from location of 'app.props'.
+		}
+
+		System.setProperty(APP_DIR, appDir);
+		System.setProperty(APP_WEB, Boolean.toString(isWebApplication));
+
 		initLogger();							// logger becomes available after this point
-		log.info("app dir: " + AppUtil.getAppDir());
-		log.info("log dir: " + AppUtil.getLogDir());
+
+		log.info("app dir: " + appDir);
+
 		try {
 			initProxetta();
 			initPetite();
@@ -199,7 +231,7 @@ public abstract class DefaultAppCore {
 	protected void initPetite() {
 		log.info("petite initialization");
 		petite = createPetiteContainer();
-		boolean isWebApplication = AppUtil.isWebApplication();
+
 		log.info("app in web: " + Boolean.valueOf(isWebApplication));
 		if (isWebApplication == false) {
 			// make session scope to act as singleton scope
@@ -283,6 +315,7 @@ public abstract class DefaultAppCore {
 	 * configured. It is also configured automagically, by scanning
 	 * the class path for entities.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void initDb() {
 		log.info("database initialization");
 
@@ -362,13 +395,48 @@ public abstract class DefaultAppCore {
 		}
 	}
 
-	// ---------------------------------------------------------------- new types
+	// ---------------------------------------------------------------- init system
 
 	/**
 	 * Initializes system. Invoked *before* anything else!
 	 * Registers types for BeanUtil, DbOom conversions etc.
+	 * <p>
+	 * May also set the value of <code>appDir</code>.
 	 */
 	protected void initSystem() {
+	}
+
+	// ---------------------------------------------------------------- resolve
+
+
+	/**
+	 * Resolves application root folders.
+	 * Usually invoked on the very beginning, <b>before</b> application initialization.
+	 * <p>
+	 * If application is started as web application, app folder is one below the WEB-INF folder.
+	 * Otherwise, the root folder is equal to the working folder.
+	 */
+	protected void resolveAppDir(String classPathFileName) {
+		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, DefaultAppCore.class);
+		if (url == null) {
+			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
+		}
+		String protocol = url.getProtocol();
+
+
+		if (protocol.equals("file") == false) {
+			try {
+				url = new URL(url.getFile());
+			} catch (MalformedURLException ignore) {
+			}
+		}
+
+		appDir = url.getFile();
+
+		int ndx = appDir.indexOf("WEB-INF");
+		boolean isWebApplication = (ndx != -1);
+
+		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
 	}
 
 }
