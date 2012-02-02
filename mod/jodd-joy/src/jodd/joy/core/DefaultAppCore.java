@@ -86,13 +86,13 @@ public abstract class DefaultAppCore {
 	 * Starts the application and performs all initialization.
 	 */
 	public void start() {
+		initSystem();
 		resolveAppDirs("app.props");			// app directories are resolved from location of 'app.props'.
 		prepareAppLogDir("log");				// creates log folder, depending of application type
 		initLogger();							// logger becomes available after this point
 		log.info("app dir: " + AppUtil.getAppDir());
 		log.info("log dir: " + AppUtil.getLogDir());
 		try {
-			initTypes();
 			initProxetta();
 			initPetite();
 			initDb();
@@ -365,9 +365,10 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- new types
 
 	/**
-	 * Initializes types for BeanUtil, DbOom conversions and other usages.
+	 * Initializes system. Invoked *before* anything else!
+	 * Registers types for BeanUtil, DbOom conversions etc.
 	 */
-	protected void initTypes() {
+	protected void initSystem() {
 	}
 
 }
