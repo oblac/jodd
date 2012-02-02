@@ -91,7 +91,6 @@ public abstract class DefaultAppCore {
 		initLogger();							// logger becomes available after this point
 		log.info("app dir: " + AppUtil.getAppDir());
 		log.info("log dir: " + AppUtil.getLogDir());
-		log.info("classpath: " + AppUtil.getClasspathDir());
 		try {
 			initTypes();
 			initProxetta();

@@ -7,6 +7,7 @@ import jodd.joy.exception.AppException;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -16,7 +17,6 @@ public class AppUtil {
 
 	public static final String APP_DIR = "app.dir";
 	public static final String APP_WEB = "app.web";
-	public static final String CLASSPATH_DIR = "classpath.dir";
 	public static final String LOG_DIR = "log.dir";
 
 
@@ -36,13 +36,21 @@ public class AppUtil {
 		if (url == null) {
 			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
 		}
+		String protocol = url.getProtocol();
+
+		if (protocol.equals("file") == false) {
+			try {
+				url = new URL(url.getFile());
+			} catch (MalformedURLException ignore) {
+			}
+		}
+
 		String root = url.getFile();
-		String classpath = root.substring(0, root.length() - classPathFileName.length());
+
 		int ndx = root.indexOf("WEB-INF");
 		boolean isWebApplication = (ndx != -1);
 		root = isWebApplication ? root.substring(0, ndx) : SystemUtil.getWorkingFolder();
 		System.setProperty(APP_DIR, root);
-		System.setProperty(CLASSPATH_DIR, classpath);
 		System.setProperty(APP_WEB, Boolean.toString(isWebApplication));
 		return isWebApplication;
 	}
@@ -66,13 +74,6 @@ public class AppUtil {
 	 */
 	public static String getAppDir() {
 		return System.getProperty(APP_DIR);
-	}
-
-	/**
-	 * Returns class path directory.
-	 */
-	public static String getClasspathDir() {
-		return System.getProperty(CLASSPATH_DIR);
 	}
 
 	/**
