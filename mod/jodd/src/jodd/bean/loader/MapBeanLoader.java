@@ -5,11 +5,10 @@ package jodd.bean.loader;
 import java.util.Map;
 
 /**
- * Populate java bean using objects that are implementation of Map interface.
+ * Populate java bean using objects that are implementation of <code>Map</code> interface.
  * <p>
- * Properties in Map object are defined as follows:
- * each key of Map object is a <code>String</code> the represents a bean property name and
- * keys value is an object that represents bean property value.
+ * Each key of <code>Map</code> is a <code>String</code> the represents a bean property name and
+ * key value is an object that represents bean property value.
  */
 public class MapBeanLoader extends BaseBeanLoader {
 
