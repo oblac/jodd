@@ -359,7 +359,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			int index = parseInt(indexString, bp);
 			Class listType = extracticGenericType(bp, 0);
 			if (listType != null) {
-				value = typeConverterManager.castType(value, listType);
+				value = convertType(value, listType);
 			}
 			List list = (List) nextBean;
 			if (bp.forced == true) {
@@ -372,7 +372,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			Map map = ((Map) nextBean);
 			Class mapType = extracticGenericType(bp, 1);
 			if (mapType != null) {
-				value = typeConverterManager.castType(value, mapType);
+				value = convertType(value, mapType);
 			}
 			map.put(indexString, value);
 			return;

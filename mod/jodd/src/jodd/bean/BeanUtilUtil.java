@@ -26,17 +26,27 @@ public class BeanUtilUtil {
 		this.typeConverterManager = typeConverterManager;
 	}
 
+	/**
+	 * Converts object to destination type. Invoked before the
+	 * value is set into destination.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Object convertType(Object value, Class type) {
+		value = typeConverterManager.castType(value, type);
+		return value;
+	}
+
+	
 	// ---------------------------------------------------------------- accessors
 
 	/**
 	 * Invokes <code>setXxx()</code> method with appropriate conversion if available.
 	 * It is assumed that all provided arguments are valid.
 	 */
-	@SuppressWarnings({"unchecked"})
 	protected void invokeSetter(Object bean, Method m, Object value) {
 		try {
 			Class[] paramTypes = m.getParameterTypes();
-			value = typeConverterManager.castType(value, paramTypes[0]);
+			value = convertType(value, paramTypes[0]);
 			m.invoke(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke setter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
@@ -58,11 +68,10 @@ public class BeanUtilUtil {
 	/**
 	 * Sets field value.
 	 */
-	@SuppressWarnings({"unchecked"})
 	protected void setField(Object bean, Field f, Object value) {
 		try {
 			Class type = f.getType();
-			value = typeConverterManager.castType(value, type);
+			value = convertType(value, type);
 			f.set(bean, value);
 		} catch (Exception iaex) {
 			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
@@ -107,11 +116,10 @@ public class BeanUtilUtil {
 	 * Sets the array element forced. If index is greater then arrays length, array will be expanded to the index.
 	 * If speed is critical, it is better to allocate an array with proper size before using this method. 
 	 */
-	@SuppressWarnings({"unchecked"})
 	protected void arrayForcedSet(BeanProperty bp, Object array, int index, Object value) {
 		Class componentType = array.getClass().getComponentType();
 		array = ensureArraySize(bp, array, componentType, index);
-		value = typeConverterManager.castType(value, componentType);
+		value = convertType(value, componentType);
 		Array.set(array, index, value);
 	}
 
@@ -197,7 +205,7 @@ public class BeanUtilUtil {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
-			throw new BeanException("Index not a number: " + indexString, bp, nfex);
+			throw new BeanException("Invalid index: " + indexString, bp, nfex);
 		}
 	}
 
