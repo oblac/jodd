@@ -340,14 +340,15 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Retrieves given resource as URL.
-	 * @see #getResourceUrl(String, Class)
+	 * @see #getResourceUrl(String, ClassLoader)
 	 */
 	public static URL getResourceUrl(String resourceName) {
 		return getResourceUrl(resourceName, null);
 	}
 
 	/**
-	 * Retrieves given resource as URL.
+	 * Retrieves given resource as URL. Resource is always absolute and may
+	 * starts with a slash character.
 	 * <p>
 	 * Resource will be loaded using class loaders in the following order:
 	 * <ul>
@@ -356,18 +357,43 @@ public class ClassLoaderUtil {
 	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}
 	 * </ul>
 	 */
-	public static URL getResourceUrl(String resourceName, Class callingClass) {
-		URL url = Thread.currentThread().getContextClassLoader().getResource(resourceName);
-		if (url == null) {
-			url = ClassLoaderUtil.class.getClassLoader().getResource(resourceName);
+	public static URL getResourceUrl(String resourceName, ClassLoader classLoader) {
+
+		if (resourceName.startsWith("/")) {
+			resourceName = resourceName.substring(1);
 		}
-		if ((url == null) && (callingClass != null)) {
-			ClassLoader cl = callingClass.getClassLoader();
-			if (cl != null) {
-				url = cl.getResource(resourceName);
+		
+		URL resourceUrl;
+
+		// try #1 - using provided class loader
+		if (classLoader != null) {
+			resourceUrl = classLoader.getResource(resourceName);
+			if (resourceUrl != null) {
+				return resourceUrl;
 			}
 		}
-		return url;
+
+		// try #2 - using thread class loader
+		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
+			resourceUrl = currentThreadClassLoader.getResource(resourceName);
+			if (resourceUrl != null) {
+				return resourceUrl;
+			}
+		}
+
+		// try #3 - using caller classloader, similar as Class.forName()
+		Class callerClass = Reflection.getCallerClass(2);
+		ClassLoader callerClassLoader = callerClass.getClassLoader();
+
+		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
+			resourceUrl = callerClassLoader.getResource(resourceName);
+			if (resourceUrl != null) {
+				return resourceUrl;
+			}
+		}
+
+		return null;
 	}
 
 	// ---------------------------------------------------------------- get resource file
@@ -381,12 +407,12 @@ public class ClassLoaderUtil {
 	}
 
 	/**
-	 * Retrieves resource as file. Resource is retrieved as {@link #getResourceUrl(String, Class) URL},
+	 * Retrieves resource as file. Resource is retrieved as {@link #getResourceUrl(String, ClassLoader) URL},
 	 * than it is converted to URI so it can be used by File constructor.
 	 */
-	public static File getResourceFile(String resourceName, Class callingClass) {
+	public static File getResourceFile(String resourceName, ClassLoader classLoader) {
 		try {
-			return new File(getResourceUrl(resourceName, callingClass).toURI());
+			return new File(getResourceUrl(resourceName, classLoader).toURI());
 		} catch (URISyntaxException ignore) {
 			return null;
 		}
@@ -396,17 +422,17 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceAsStream(String, Class) 
+	 * @see #getResourceAsStream(String, ClassLoader
 	 */
 	public static InputStream getResourceAsStream(String resourceName) throws IOException {
-		return getResourceAsStream(resourceName, ClassLoaderUtil.class);
+		return getResourceAsStream(resourceName, null);
 	}
 
 	/**
 	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceUrl(String, Class)
+	 * @see #getResourceUrl(String, ClassLoader)
 	 */
-	public static InputStream getResourceAsStream(String resourceName, Class callingClass) throws IOException {
+	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
 		URL url = getResourceUrl(resourceName, callingClass);
 		if (url != null) {
 			return url.openStream();
@@ -416,18 +442,18 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Opens a class of the specified name for reading.
-	 * @see #getResourceAsStream(String, Class)
+	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(Class clazz) throws IOException {
-		return getResourceAsStream(getClassFileName(clazz), clazz);
+		return getResourceAsStream(getClassFileName(clazz), null);
 	}
 
 	/**
 	 * Opens a class of the specified name for reading.
-	 * @see #getResourceAsStream(String, Class)
+	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(String className) throws IOException {
-		return getResourceAsStream(getClassFileName(className), ClassLoaderUtil.class);
+		return getResourceAsStream(getClassFileName(className));
 	}
 
 	// ---------------------------------------------------------------- load class

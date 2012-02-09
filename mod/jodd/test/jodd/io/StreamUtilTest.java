@@ -21,7 +21,7 @@ public class StreamUtilTest extends TestCase {
 		if (dataRoot != null) {
 			return;
 		}
-		URL data = ClassLoaderUtil.getResourceUrl("jodd/io/data", StreamUtilTest.class);
+		URL data = ClassLoaderUtil.getResourceUrl("jodd/io/data");
 		dataRoot = data.getFile();
 	}
 

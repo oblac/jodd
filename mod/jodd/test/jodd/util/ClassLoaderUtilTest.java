@@ -23,7 +23,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		URL url;
 		final String resourceName = "jodd/util/Bits.class";
 
-		url = ClassLoaderUtil.getResourceUrl(resourceName, ClassLoaderUtilTest.class);
+		url = ClassLoaderUtil.getResourceUrl(resourceName);
 		assertNotNull(url);
 
 		is = ClassLoaderUtil.getResourceAsStream(resourceName);

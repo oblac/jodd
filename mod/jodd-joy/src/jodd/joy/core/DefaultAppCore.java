@@ -149,7 +149,7 @@ public abstract class DefaultAppCore {
 	 * Otherwise, the root folder is equal to the working folder.
 	 */
 	protected void resolveAppDir(String classPathFileName) {
-		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName, DefaultAppCore.class);
+		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName);
 		if (url == null) {
 			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
 		}
