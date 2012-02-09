@@ -35,139 +35,145 @@ public class BeanUtilTest extends TestCase {
 	public void testSimpleProperty() {
 		FooBean fb = new FooBean();
 
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		// read non initialized property (null)
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooInteger", false));
-		assertTrue(BeanUtil.hasProperty(fb, "fooInteger"));
-		assertEquals(Integer.class, BeanUtil.getPropertyType(fb, "fooInteger"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooInteger", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooInteger"));
+		assertEquals(Integer.class, beanUtilBean.getPropertyType(fb, "fooInteger"));
 
 		// set property
-		BeanUtil.setSimpleProperty(fb, "fooInteger", new Integer(173), false);
+		beanUtilBean.setSimpleProperty(fb, "fooInteger", new Integer(173), false);
 		// read initialized property
-		assertEquals(new Integer(173), BeanUtil.getSimpleProperty(fb, "fooInteger", false));
+		assertEquals(new Integer(173), beanUtilBean.getSimpleProperty(fb, "fooInteger", false));
 
 		// read non-initialized simple property (zero)
-		assertEquals(new Integer(0), BeanUtil.getSimpleProperty(fb, "fooint", false));
-		assertTrue(BeanUtil.hasProperty(fb, "fooint"));
-		assertEquals(int.class, BeanUtil.getPropertyType(fb, "fooint"));
-		assertFalse(BeanUtil.hasProperty(fb, "fooint-xxx"));
-		assertNull(BeanUtil.getPropertyType(fb, "fooint-xxx"));
+		assertEquals(new Integer(0), beanUtilBean.getSimpleProperty(fb, "fooint", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooint"));
+		assertEquals(int.class, beanUtilBean.getPropertyType(fb, "fooint"));
+		assertFalse(beanUtilBean.hasProperty(fb, "fooint-xxx"));
+		assertNull(beanUtilBean.getPropertyType(fb, "fooint-xxx"));
 
 		// read forced non-initialized property (not null)
-		assertTrue(BeanUtil.hasProperty(fb, "fooByte"));
-		assertEquals(Byte.class, BeanUtil.getPropertyType(fb, "fooByte"));
-		assertEquals(new Byte((byte)0), BeanUtil.getSimplePropertyForced(fb, "fooByte", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooByte"));
+		assertEquals(Byte.class, beanUtilBean.getPropertyType(fb, "fooByte"));
+		assertEquals(new Byte((byte)0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", false));
 
 		Map m = new HashMap();
 		// set property in map
-		BeanUtil.setSimpleProperty(m, "foo", new Integer(173), false);
+		beanUtilBean.setSimpleProperty(m, "foo", new Integer(173), false);
 		// read property from map
-		assertTrue(BeanUtil.hasProperty(m, "foo"));
-		assertEquals(new Integer(173), BeanUtil.getSimpleProperty(m, "foo", false));
+		assertTrue(beanUtilBean.hasProperty(m, "foo"));
+		assertEquals(new Integer(173), beanUtilBean.getSimpleProperty(m, "foo", false));
 
 		// read non-initialized map property
-		assertTrue(BeanUtil.hasProperty(fb, "fooMap"));
-		assertEquals(Map.class, BeanUtil.getPropertyType(fb, "fooMap"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooMap", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooMap"));
+		assertEquals(Map.class, beanUtilBean.getPropertyType(fb, "fooMap"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooMap", false));
 		// read forced non-initialized map property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooMap", false));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooMap", false));
 
 		// read non-initialized list property
-		assertTrue(BeanUtil.hasProperty(fb, "fooList"));
-		assertEquals(List.class, BeanUtil.getPropertyType(fb, "fooList"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooList", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooList"));
+		assertEquals(List.class, beanUtilBean.getPropertyType(fb, "fooList"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooList", false));
 		// read forced non-initialized list property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooList", false));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooList", false));
 
         // read non-initialized array (null)
-		assertTrue(BeanUtil.hasProperty(fb, "fooStringA"));
-		assertEquals(String[].class, BeanUtil.getPropertyType(fb, "fooStringA"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooStringA", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooStringA"));
+		assertEquals(String[].class, beanUtilBean.getPropertyType(fb, "fooStringA"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", false));
 		String[] tmp = new String[10];
 		tmp[2] = "foo";
 		// set array property
-		BeanUtil.setSimpleProperty(fb, "fooStringA", tmp, false);
+		beanUtilBean.setSimpleProperty(fb, "fooStringA", tmp, false);
 		// read array property
-		tmp = (String[]) BeanUtil.getSimpleProperty(fb, "fooStringA", false);
+		tmp = (String[]) beanUtilBean.getSimpleProperty(fb, "fooStringA", false);
 		assertEquals("foo", tmp[2]);
 
 		fb.setFooStringA(null);
 		// read non-initialized array property
-		assertTrue(BeanUtil.hasProperty(fb, "fooStringA"));
-		assertEquals(String[].class, BeanUtil.getPropertyType(fb, "fooStringA"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooStringA", false));
+		assertTrue(beanUtilBean.hasProperty(fb, "fooStringA"));
+		assertEquals(String[].class, beanUtilBean.getPropertyType(fb, "fooStringA"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", false));
 		// read forced non-initialized array property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooStringA", false));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooStringA", false));
 	}
 
 	public void testSimplePropertySlimPrivate() {
 		FooBeanSlim fb = new FooBeanSlim();
 
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		// read non initialized property (null)
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooInteger"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooInteger", true));
-		assertNull(BeanUtil.getPropertyType(fb, "fooInteger"));
-		assertEquals(Integer.class, BeanUtil.getDeclaredPropertyType(fb, "fooInteger"));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooInteger"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooInteger", true));
+		assertNull(beanUtilBean.getPropertyType(fb, "fooInteger"));
+		assertEquals(Integer.class, beanUtilBean.getDeclaredPropertyType(fb, "fooInteger"));
 
 		// set property
-		BeanUtil.setSimpleProperty(fb, "fooInteger", new Integer(173), true);
+		beanUtilBean.setSimpleProperty(fb, "fooInteger", new Integer(173), true);
 		// read initialized property
-		assertEquals(new Integer(173), BeanUtil.getSimpleProperty(fb, "fooInteger", true));
+		assertEquals(new Integer(173), beanUtilBean.getSimpleProperty(fb, "fooInteger", true));
 
 		// read non-initialized simple property (zero)
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooint"));
-		assertEquals(new Integer(0), BeanUtil.getSimpleProperty(fb, "fooint", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooint"));
+		assertEquals(new Integer(0), beanUtilBean.getSimpleProperty(fb, "fooint", true));
 
 		// read forced non-initialized property (not null)
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooByte"));
-		assertEquals(new Byte((byte)0), BeanUtil.getSimplePropertyForced(fb, "fooByte", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooByte"));
+		assertEquals(new Byte((byte)0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", true));
 
 		Map m = new HashMap();
 		// set property in map
-		assertFalse(BeanUtil.hasDeclaredProperty(m, "foo"));
-		BeanUtil.setSimpleProperty(m, "foo", new Integer(173), true);
+		assertFalse(beanUtilBean.hasDeclaredProperty(m, "foo"));
+		beanUtilBean.setSimpleProperty(m, "foo", new Integer(173), true);
 		// read property from map
-		assertTrue(BeanUtil.hasDeclaredProperty(m, "foo"));
-		assertEquals(new Integer(173), BeanUtil.getSimpleProperty(m, "foo", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(m, "foo"));
+		assertEquals(new Integer(173), beanUtilBean.getSimpleProperty(m, "foo", true));
 
 		// read non-initialized map property
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooMap"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooMap", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooMap"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooMap", true));
 		// read forced non-initialized map property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooMap", true));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooMap", true));
 
 		// read non-initialized list property
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooList"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooList", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooList"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooList", true));
 		// read forced non-initialized list property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooList", true));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooList", true));
 
         // read non-initialized array (null)
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooStringA"));
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooStringA", true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooStringA"));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", true));
 		String[] tmp = new String[10];
 		tmp[2] = "foo";
 		// set array property
-		BeanUtil.setSimpleProperty(fb, "fooStringA", tmp, true);
+		beanUtilBean.setSimpleProperty(fb, "fooStringA", tmp, true);
 		// read array property
-		tmp = (String[]) BeanUtil.getSimpleProperty(fb, "fooStringA", true);
+		tmp = (String[]) beanUtilBean.getSimpleProperty(fb, "fooStringA", true);
 		assertEquals("foo", tmp[2]);
 
 		fb = new FooBeanSlim();
 		// read non-initialized array property
-		assertNull(BeanUtil.getSimpleProperty(fb, "fooStringA", true));
+		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", true));
 		// read forced non-initialized array property
-		assertNotNull(BeanUtil.getSimplePropertyForced(fb, "fooStringA", true));
+		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooStringA", true));
 	}
 
 	public void testIndexProperty() {
 		FooBean fb = new FooBean();
 
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		// read forced non-initialized array property
 		assertNull(fb.getFooStringA());
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooStringA[0]"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[0]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[0]"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[0]"));
 		try {
-			BeanUtil.getIndexProperty(fb, "fooStringA[0]", false, true);
+			beanUtilBean.getIndexProperty(fb, "fooStringA[0]", false, true);
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
@@ -176,44 +182,44 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(0, fb.getFooStringA().length);
 
 		// set array property (non-forced)
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooStringA[7]"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[7]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[7]"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[7]"));
 		try {
-			BeanUtil.setIndexProperty(fb, "fooStringA[7]", "xxx", false, false);
+			beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "xxx", false, false);
 			fail();
 		} catch(ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
 		// set forced array property
-		BeanUtil.setIndexProperty(fb, "fooStringA[40]", "zzz", false, true);
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooStringA[40]"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[40]"));
-		assertEquals(String[].class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[40]"));
+		beanUtilBean.setIndexProperty(fb, "fooStringA[40]", "zzz", false, true);
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[40]"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[40]"));
+		assertEquals(String[].class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[40]"));
 		assertEquals("zzz", fb.getFooStringA()[40]);
 		assertEquals(41, fb.getFooStringA().length);
 
 		// set null
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooStringA[43]"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[43]"));
-		BeanUtil.setIndexProperty(fb, "fooStringA[43]", null, false, true);
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooStringA[43]"));
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[43]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[43]"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[43]"));
+		beanUtilBean.setIndexProperty(fb, "fooStringA[43]", null, false, true);
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[43]"));
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[43]"));
 		assertNull(fb.getFooStringA()[43]);
 		assertEquals(44, fb.getFooStringA().length);
 
 		// get forced
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooStringA[15]"));
-		assertNotNull(BeanUtil.getIndexProperty(fb, "fooStringA[15]", false, true));
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooStringA[15]"));
+		assertNotNull(beanUtilBean.getIndexProperty(fb, "fooStringA[15]", false, true));
 		assertNull(fb.getFooStringA()[0]);
 		assertNotNull(fb.getFooStringA()[15]);
 
 
 		// set uninitialized array property
 		fb.setFooStringA(null);
-		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(fb, "fooStringA[43]"));
-		BeanUtil.setIndexProperty(fb, "fooStringA[7]", "ccc", false, true);
+		assertEquals(String.class, beanUtilBean.getDeclaredPropertyType(fb, "fooStringA[43]"));
+		beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "ccc", false, true);
 		assertEquals("ccc", fb.getFooStringA()[7]);
 
 
@@ -222,10 +228,10 @@ public class BeanUtilTest extends TestCase {
 		
 		// read forced non-initialized list property
 		assertNull(fb.getFooList());
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooList[1]"));
-		assertEquals(Object.class, BeanUtil.getDeclaredPropertyType(fb, "fooList[1]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooList[1]"));
+		assertEquals(Object.class, beanUtilBean.getDeclaredPropertyType(fb, "fooList[1]"));
 		try {
-			BeanUtil.getIndexProperty(fb, "fooList[1]", false, true);
+			beanUtilBean.getIndexProperty(fb, "fooList[1]", false, true);
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
@@ -234,40 +240,40 @@ public class BeanUtilTest extends TestCase {
 
 		// set list property (non-forced)
 		try {
-			BeanUtil.setIndexProperty(fb, "fooList[1]", "xxx", false, false);
+			beanUtilBean.setIndexProperty(fb, "fooList[1]", "xxx", false, false);
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
 		}
 
 		// set forced list property
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooList[40]"));
-		BeanUtil.setIndexProperty(fb, "fooList[40]", "zzz", false, true);
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooList[40]"));
-		assertEquals(Object.class, BeanUtil.getDeclaredPropertyType(fb, "fooList[40]"));        // method type, not values type
-		assertEquals(Object.class, BeanUtil.getDeclaredPropertyType(fb, "fooList[39]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooList[40]"));
+		beanUtilBean.setIndexProperty(fb, "fooList[40]", "zzz", false, true);
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooList[40]"));
+		assertEquals(Object.class, beanUtilBean.getDeclaredPropertyType(fb, "fooList[40]"));        // method type, not values type
+		assertEquals(Object.class, beanUtilBean.getDeclaredPropertyType(fb, "fooList[39]"));
 		assertEquals("zzz", fb.getFooList().get(40));
 		assertEquals(41, fb.getFooList().size());
 
 		// set forced unitialized list property
 		fb.setFooList(null);
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooList[1]"));
-		BeanUtil.setIndexProperty(fb, "fooList[1]", "xxx", false, true);
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooList[1]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooList[1]"));
+		beanUtilBean.setIndexProperty(fb, "fooList[1]", "xxx", false, true);
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooList[1]"));
 		assertEquals("xxx", fb.getFooList().get(1));
 		assertEquals(2, fb.getFooList().size());
 
 
         // read forced non-initialized map property
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooMap[foo]"));
-		assertEquals(Object.class, BeanUtil.getDeclaredPropertyType(fb, "fooMap[foo]"));
-		assertNull(BeanUtil.getIndexProperty(fb, "fooMap[foo]", false, true));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooMap[foo]"));
+		assertEquals(Object.class, beanUtilBean.getDeclaredPropertyType(fb, "fooMap[foo]"));
+		assertNull(beanUtilBean.getIndexProperty(fb, "fooMap[foo]", false, true));
 		assertNotNull(fb.getFooMap());
 		// set non-initialized map property
 		fb.setFooMap(null);
-		assertFalse(BeanUtil.hasDeclaredProperty(fb, "fooMap[foo]"));
-		BeanUtil.setIndexProperty(fb, "fooMap[foo]", "xxx", false, true);
-		assertTrue(BeanUtil.hasDeclaredProperty(fb, "fooMap[foo]"));
+		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooMap[foo]"));
+		beanUtilBean.setIndexProperty(fb, "fooMap[foo]", "xxx", false, true);
+		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooMap[foo]"));
 		assertEquals("xxx", fb.getFooMap().get("foo"));
 		assertEquals(1, fb.getFooMap().size());
 	}
@@ -275,10 +281,12 @@ public class BeanUtilTest extends TestCase {
 	public void testIndexPropertySlimPrivate() {
 		FooBeanSlim fb = new FooBeanSlim();
 
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		// read forced non-initialized array property
 		assertNull(fb.getStringA());
 		try {
-			BeanUtil.getIndexProperty(fb, "fooStringA[0]", true, true);
+			beanUtilBean.getIndexProperty(fb, "fooStringA[0]", true, true);
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
@@ -288,18 +296,18 @@ public class BeanUtilTest extends TestCase {
 
 		// set array property (non-forced)
 		try {
-			BeanUtil.setIndexProperty(fb, "fooStringA[7]", "xxx", true, false);
+			beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "xxx", true, false);
 			fail();
 		} catch(ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
 		// set forced array property
-		BeanUtil.setIndexProperty(fb, "fooStringA[40]", "zzz", true, true);
+		beanUtilBean.setIndexProperty(fb, "fooStringA[40]", "zzz", true, true);
 		assertEquals("zzz", fb.getStringA()[40]);
 		assertEquals(41, fb.getStringA().length);
 
-		BeanUtil.setIndexProperty(fb, "fooStringA[43]", null, true, true);
+		beanUtilBean.setIndexProperty(fb, "fooStringA[43]", null, true, true);
 		assertNull(fb.getStringA()[43]);
 		assertEquals(44, fb.getStringA().length);
 
@@ -307,7 +315,7 @@ public class BeanUtilTest extends TestCase {
 		// set uninitialized array property
 		fb = new FooBeanSlim();
 		assertNull(fb.getStringA());
-		BeanUtil.setIndexProperty(fb, "fooStringA[7]", "ccc", true, true);
+		beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "ccc", true, true);
 		assertNotNull(fb.getStringA());
 		assertEquals("ccc", fb.getStringA()[7]);
 
@@ -315,7 +323,7 @@ public class BeanUtilTest extends TestCase {
 		// read forced non-initialized list property
 		assertNull(fb.getList());
 		try {
-			BeanUtil.getIndexProperty(fb, "fooList[1]", true, true);
+			beanUtilBean.getIndexProperty(fb, "fooList[1]", true, true);
 			fail();
 		} catch(IndexOutOfBoundsException ioobex) {
 			// ignore
@@ -324,31 +332,31 @@ public class BeanUtilTest extends TestCase {
 
 		// set list property (non-forced)
 		try {
-			BeanUtil.setIndexProperty(fb, "fooList[1]", "xxx", true, false);
+			beanUtilBean.setIndexProperty(fb, "fooList[1]", "xxx", true, false);
 			fail();
 		} catch(IndexOutOfBoundsException ioobex) {
 			// ignore
 		}
 		
 		// set forced list property
-		BeanUtil.setIndexProperty(fb, "fooList[40]", "zzz", true, true);
+		beanUtilBean.setIndexProperty(fb, "fooList[40]", "zzz", true, true);
 		assertEquals("zzz", fb.getList().get(40));
 		assertEquals(41, fb.getList().size());
 
 		// set forced unitialized list property
 		fb = new FooBeanSlim();
-		BeanUtil.setIndexProperty(fb, "fooList[1]", "xxx", true, true);
+		beanUtilBean.setIndexProperty(fb, "fooList[1]", "xxx", true, true);
 		assertEquals("xxx", fb.getList().get(1));
 
 		// read forced non-initialized map property
 		assertNull(fb.getMap());
-		assertNull(BeanUtil.getIndexProperty(fb, "fooMap[foo]", true, true));
+		assertNull(beanUtilBean.getIndexProperty(fb, "fooMap[foo]", true, true));
 		assertNotNull(fb.getMap());
 
 		// set non-initialized map property
 		fb = new FooBeanSlim();
 		assertNull(fb.getMap());
-		BeanUtil.setIndexProperty(fb, "fooMap[foo]", "xxx", true, true);
+		beanUtilBean.setIndexProperty(fb, "fooMap[foo]", "xxx", true, true);
 		assertNotNull(fb.getMap());
 		assertEquals("xxx", fb.getMap().get("foo"));
 	}
@@ -686,7 +694,7 @@ public class BeanUtilTest extends TestCase {
 
 
 	public void	testLoaders() {
-		HashMap map = new HashMap();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("fooInteger", new Integer(1));
 		map.put("fooint", new Integer(2));
@@ -1272,19 +1280,21 @@ public class BeanUtilTest extends TestCase {
 
 	public void testSimpleThis() {
 		FooBean fb = new FooBean();
-		BeanUtil.setSimpleProperty(fb, "fooString", "test", false);
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
+		beanUtilBean.setSimpleProperty(fb, "fooString", "test", false);
 		assertEquals("test", fb.getFooString());
-		assertEquals("test", BeanUtil.getSimpleProperty(fb, "fooString", false));
-		assertEquals("test", BeanUtil.getProperty(fb, "*this.fooString"));
+		assertEquals("test", beanUtilBean.getSimpleProperty(fb, "fooString", false));
+		assertEquals("test", beanUtilBean.getProperty(fb, "*this.fooString"));
 
 		FooBean4 fb4 = new FooBean4();
-		assertEquals("xxx", BeanUtil.getProperty(fb4, "data[0].bbean.abean.fooProp"));
-		assertEquals("xxx", BeanUtil.getProperty(fb4, "*this.data.*this[0].*this.bbean.abean.fooProp"));
+		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data[0].bbean.abean.fooProp"));
+		assertEquals("xxx", beanUtilBean.getProperty(fb4, "*this.data.*this[0].*this.bbean.abean.fooProp"));
 
 
-		assertEquals("foo", BeanUtil.extractThisReference("foo.aaa"));
-		assertEquals("foo", BeanUtil.extractThisReference("foo[1].aaa"));
-		assertEquals("foo", BeanUtil.extractThisReference("foo"));
+		assertEquals("foo", beanUtilBean.extractThisReference("foo.aaa"));
+		assertEquals("foo", beanUtilBean.extractThisReference("foo[1].aaa"));
+		assertEquals("foo", beanUtilBean.extractThisReference("foo"));
 	}
 
 	public void testIsGetBoolean() {

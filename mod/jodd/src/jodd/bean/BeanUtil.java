@@ -42,46 +42,6 @@ public class BeanUtil {
 		return BEAN_UTIL_BEAN;
 	}
 
-	/**
-	 * Returns <code>true</code> if simple property exist.
-	 */
-	public static boolean hasSimpleProperty(Object bean, String property, boolean suppressSecurity) {
-		return BEAN_UTIL_BEAN.hasSimpleProperty(bean, property, suppressSecurity);
-	}
-
-	/**
-	 * Reads simple property.
-	 */
-	public static Object getSimpleProperty(Object bean, String property, boolean suppressSecurity) {
-		return BEAN_UTIL_BEAN.getSimpleProperty(bean, property, suppressSecurity);
-	}
-
-	/**
-	 * Reads simple property forced: when property value doesn't exist, it will be created.
-	 */
-	public static Object getSimplePropertyForced(Object bean, String property, boolean suppressSecurity) {
-		return BEAN_UTIL_BEAN.getSimplePropertyForced(bean, property, suppressSecurity);
-	}
-
-	public static void setSimpleProperty(Object bean, String property, Object value, boolean suppressSecurity) {
-		BEAN_UTIL_BEAN.setSimpleProperty(bean, property, value, suppressSecurity);
-	}
-
-
-	// ---------------------------------------------------------------- indexed property
-
-	public static boolean hasIndexProperty(Object bean, String property, boolean suppressSecurity) {
-		return BEAN_UTIL_BEAN.hasIndexProperty(bean, property, suppressSecurity);
-	}
-
-	public static Object getIndexProperty(Object bean, String property, boolean suppressSecurity, boolean forced) {
-		return BEAN_UTIL_BEAN.getIndexProperty(bean, property, suppressSecurity, forced);
-	}
-
-	public static void setIndexProperty(Object bean, String property, Object value, boolean suppressSecurity, boolean forced) {
-		BEAN_UTIL_BEAN.setIndexProperty(bean, property, value, suppressSecurity, forced);
-	}
-
 	// ---------------------------------------------------------------- SET
 
 	/**
