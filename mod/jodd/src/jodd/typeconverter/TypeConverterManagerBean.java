@@ -218,7 +218,7 @@ public class TypeConverterManagerBean {
 		try {
 			return (T) converter.convert(value);
 		} catch (TypeConversionException tcex) {
-			throw new ClassCastException("Unable to convert to type: " + destinationType.getName() + " : " + tcex.toString());
+			throw new ClassCastException("Unable to convert to type: " + destinationType.getName() + '\n' + tcex.toString());
 		}
 	}
 

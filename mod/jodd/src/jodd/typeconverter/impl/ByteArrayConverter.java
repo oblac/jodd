@@ -48,59 +48,62 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 			return result;
 		}
 
-		if (type == byte[].class) {
-			return (byte[]) value;
-		}
-		if (type == int[].class) {
-			int[] values = (int[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) values[i];
+		if (type.getName().startsWith("[L") == false) {
+			// primitive arrays
+			if (type == byte[].class) {
+				return (byte[]) value;
 			}
-			return results;
-		}
-		if (type == long[].class) {
-			long[] values = (long[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) values[i];
+			if (type == int[].class) {
+				int[] values = (int[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) values[i];
+				}
+				return results;
 			}
-			return results;
-		}
-		if (type == double[].class) {
-			double[] values = (double[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) values[i];
+			if (type == long[].class) {
+				long[] values = (long[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) values[i];
+				}
+				return results;
 			}
-			return results;
-		}
-		if (type == float[].class) {
-			float[] values = (float[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) values[i];
+			if (type == double[].class) {
+				double[] values = (double[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) values[i];
+				}
+				return results;
 			}
-			return results;
-		}
-		if (type == boolean[].class) {
-			boolean[] values = (boolean[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) (values[i] == true ? 1 : 0);
+			if (type == float[].class) {
+				float[] values = (float[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) values[i];
+				}
+				return results;
 			}
-			return results;
-		}
-		if (type == short[].class) {
-			short[] values = (short[]) value;
-			byte[] results = new byte[values.length];
-			for (int i = 0; i < values.length; i++) {
-				results[i] = (byte) values[i];
+			if (type == boolean[].class) {
+				boolean[] values = (boolean[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) (values[i] == true ? 1 : 0);
+				}
+				return results;
 			}
-			return results;
+			if (type == short[].class) {
+				short[] values = (short[]) value;
+				byte[] results = new byte[values.length];
+				for (int i = 0; i < values.length; i++) {
+					results[i] = (byte) values[i];
+				}
+				return results;
+			}
 		}
 
-
+		// arrays
 		Object[] values = (Object[]) value;
 		byte[] results = new byte[values.length];
 		try {
