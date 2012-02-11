@@ -13,7 +13,7 @@ import static jodd.util.StringPool.*;
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 
-	public static Boolean valueOf(Object value) {
+	public Boolean convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -38,8 +38,4 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 		throw new TypeConversionException(value);
 	}
 
-	public Boolean convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

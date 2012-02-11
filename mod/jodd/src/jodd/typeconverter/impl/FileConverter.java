@@ -18,7 +18,7 @@ import java.io.InputStream;
  */
 public class FileConverter implements TypeConverter<File> {
 
-	public static File valueOf(Object value) {
+	public File convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -60,10 +60,6 @@ public class FileConverter implements TypeConverter<File> {
 			}
 		}
 		throw new TypeConversionException(value);
-	}
-
-	public File convert(Object value) {
-		return valueOf(value);
 	}
 
 }

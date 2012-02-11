@@ -8,27 +8,29 @@ import junit.framework.TestCase;
 public class BooleanConverterTest extends TestCase {
 
 	public void testConversion() {
-		assertNull(BooleanConverter.valueOf(null));
+		BooleanConverter booleanConverter = new BooleanConverter();
 
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf(Boolean.TRUE));
+		assertNull(booleanConverter.convert(null));
 
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("yes"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf(" yes "));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("YES"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("y"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("Y"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("on"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("ON"));
-		assertEquals(Boolean.TRUE, BooleanConverter.valueOf("1"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert(Boolean.TRUE));
 
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("no"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf(" no "));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("NO"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("n"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("N"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("off"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("OFF"));
-		assertEquals(Boolean.FALSE, BooleanConverter.valueOf("0"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("yes"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert(" yes "));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("YES"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("y"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("Y"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("on"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("ON"));
+		assertEquals(Boolean.TRUE, booleanConverter.convert("1"));
+
+		assertEquals(Boolean.FALSE, booleanConverter.convert("no"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert(" no "));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("NO"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("n"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("N"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("off"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("OFF"));
+		assertEquals(Boolean.FALSE, booleanConverter.convert("0"));
 	}
 }
 

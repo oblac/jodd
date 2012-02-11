@@ -11,7 +11,7 @@ import jodd.util.StringUtil;
  */
 public class FloatConverter implements TypeConverter<Float> {
 
-	public static Float valueOf(Object value) {
+	public Float convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -32,10 +32,6 @@ public class FloatConverter implements TypeConverter<Float> {
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
-	}
-
-	public Float convert(Object value) {
-		return valueOf(value);
 	}
 
 }

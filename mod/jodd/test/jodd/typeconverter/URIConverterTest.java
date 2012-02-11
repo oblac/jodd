@@ -10,8 +10,10 @@ import java.net.URI;
 public class URIConverterTest extends BaseTestCase {
 
 	public void testConversion() {
+		URIConverter uriConverter = new URIConverter();
+
 		File f = new File("/folder/file.ext");
-		URI uri = URIConverter.valueOf(f);
+		URI uri = uriConverter.convert(f);
 		assertNotNull(uri);
 	}
 

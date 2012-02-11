@@ -8,15 +8,17 @@ public class ClassArrayConverterTest extends BaseTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	public void testConversion() {
-		assertNull(ClassArrayConverter.valueOf(null));
+		ClassArrayConverter classArrayConverter = new ClassArrayConverter();
+		
+		assertNull(classArrayConverter.convert(null));
 
-		assertEq(arrc(String.class), ClassArrayConverter.valueOf(String.class));
-		assertEq(arrc(String.class, Integer.class), ClassArrayConverter.valueOf(arrc(String.class, Integer.class)));
-		assertEq(arrc(Integer.class), ClassArrayConverter.valueOf("java.lang.Integer"));
-		assertEq(arrc(Integer.class, String.class), ClassArrayConverter.valueOf("java.lang.Integer,    java.lang.String"));
+		assertEq(arrc(String.class), classArrayConverter.convert(String.class));
+		assertEq(arrc(String.class, Integer.class), classArrayConverter.convert(arrc(String.class, Integer.class)));
+		assertEq(arrc(Integer.class), classArrayConverter.convert("java.lang.Integer"));
+		assertEq(arrc(Integer.class, String.class), classArrayConverter.convert("java.lang.Integer,    java.lang.String"));
 
 		try {
-			ClassArrayConverter.valueOf("foo.Klass");
+			classArrayConverter.convert("foo.Klass");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

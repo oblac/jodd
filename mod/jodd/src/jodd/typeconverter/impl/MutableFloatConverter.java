@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 
-	public static MutableFloat valueOf(Object value) {
+	public MutableFloat convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -29,8 +29,4 @@ public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 		}
 	}
 
-	public MutableFloat convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

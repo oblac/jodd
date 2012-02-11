@@ -9,18 +9,20 @@ import java.math.BigDecimal;
 public class DoubleConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		assertNull(DoubleConverter.valueOf(null));
+		DoubleConverter doubleConverter = new DoubleConverter();
+		
+		assertNull(doubleConverter.convert(null));
 
-		assertEquals(Double.valueOf(1), DoubleConverter.valueOf(Integer.valueOf(1)));
-		assertEquals(Double.valueOf(1.73), DoubleConverter.valueOf(Double.valueOf(1.73D)));
-		assertEquals(Double.valueOf(1.73), DoubleConverter.valueOf("1.73"));
-		assertEquals(Double.valueOf(1.73), DoubleConverter.valueOf(" 1.73 "));
-		assertEquals(Double.valueOf(1.73), DoubleConverter.valueOf(" +1.73 "));
-		assertEquals(Double.valueOf(-1.73), DoubleConverter.valueOf(" -1.73 "));
-		assertEquals(Double.valueOf(1.73), DoubleConverter.valueOf(new BigDecimal("1.73")));
+		assertEquals(Double.valueOf(1), doubleConverter.convert(Integer.valueOf(1)));
+		assertEquals(Double.valueOf(1.73), doubleConverter.convert(Double.valueOf(1.73D)));
+		assertEquals(Double.valueOf(1.73), doubleConverter.convert("1.73"));
+		assertEquals(Double.valueOf(1.73), doubleConverter.convert(" 1.73 "));
+		assertEquals(Double.valueOf(1.73), doubleConverter.convert(" +1.73 "));
+		assertEquals(Double.valueOf(-1.73), doubleConverter.convert(" -1.73 "));
+		assertEquals(Double.valueOf(1.73), doubleConverter.convert(new BigDecimal("1.73")));
 
 		try {
-			DoubleConverter.valueOf("aaaa");
+			doubleConverter.convert("aaaa");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

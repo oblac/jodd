@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class DateConverter implements TypeConverter<Date> {
 
-	public static Date valueOf(Object value) {
+	public Date convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -47,10 +47,6 @@ public class DateConverter implements TypeConverter<Date> {
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
-	}
-
-	public Date convert(Object value) {
-		return valueOf(value);
 	}
 
 }

@@ -10,7 +10,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class CharacterConverter implements TypeConverter<Character> {
 
-	public static Character valueOf(Object value) {
+	public Character convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -32,8 +32,4 @@ public class CharacterConverter implements TypeConverter<Character> {
 		}
 	}
 
-	public Character convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

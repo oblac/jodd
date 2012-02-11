@@ -11,7 +11,7 @@ import jodd.util.CsvUtil;
  */
 public class LongArrayConverter implements TypeConverter<long[]> {
 
-	public static long[] valueOf(Object value) {
+	public long[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -108,7 +108,4 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 		return results;
 	}
 
-	public long[] convert(Object value) {
-		return valueOf(value);
-	}
 }

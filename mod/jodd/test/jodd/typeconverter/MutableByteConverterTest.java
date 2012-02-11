@@ -9,17 +9,19 @@ import junit.framework.TestCase;
 public class MutableByteConverterTest extends TestCase {
 
     public void testConversion() {
-        assertNull(MutableByteConverter.valueOf(null));
+		MutableByteConverter mutableByteConverter = new MutableByteConverter();
+		
+        assertNull(mutableByteConverter.convert(null));
 
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(new MutableByte((byte) 1)));
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(Integer.valueOf(1)));
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(Short.valueOf((short) 1)));
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(Double.valueOf(1.0D)));
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf("1"));
-        assertEquals(new MutableByte((byte) 1), MutableByteConverter.valueOf(" 1 "));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert(new MutableByte((byte) 1)));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert(Integer.valueOf(1)));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert(Short.valueOf((short) 1)));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert(Double.valueOf(1.0D)));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert("1"));
+        assertEquals(new MutableByte((byte) 1), mutableByteConverter.convert(" 1 "));
 
         try {
-            MutableByteConverter.valueOf("a");
+            mutableByteConverter.convert("a");
             fail();
         } catch (TypeConversionException ignore) {
         }

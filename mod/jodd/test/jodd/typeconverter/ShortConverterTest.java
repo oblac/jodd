@@ -8,31 +8,33 @@ import junit.framework.TestCase;
 public class ShortConverterTest extends TestCase {
 
     public void testConversion() {
-        assertNull(ShortConverter.valueOf(null));
+		ShortConverter shortConverter = new ShortConverter();
 
-        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(Short.valueOf((short) 1)));
-        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(Integer.valueOf(1)));
-        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(Double.valueOf(1.0D)));
-        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf("1"));
-        assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(" 1 "));
+        assertNull(shortConverter.convert(null));
 
-		assertEquals(Short.valueOf((short) 1), ShortConverter.valueOf(" +1 "));
-        assertEquals(Short.valueOf((short) -1), ShortConverter.valueOf(" -1 "));
-		assertEquals(Short.valueOf((short) 32767), ShortConverter.valueOf(" +32767 "));
-        assertEquals(Short.valueOf((short) -32768), ShortConverter.valueOf(" -32768 "));
+        assertEquals(Short.valueOf((short) 1), shortConverter.convert(Short.valueOf((short) 1)));
+        assertEquals(Short.valueOf((short) 1), shortConverter.convert(Integer.valueOf(1)));
+        assertEquals(Short.valueOf((short) 1), shortConverter.convert(Double.valueOf(1.0D)));
+        assertEquals(Short.valueOf((short) 1), shortConverter.convert("1"));
+        assertEquals(Short.valueOf((short) 1), shortConverter.convert(" 1 "));
+
+		assertEquals(Short.valueOf((short) 1), shortConverter.convert(" +1 "));
+        assertEquals(Short.valueOf((short) -1), shortConverter.convert(" -1 "));
+		assertEquals(Short.valueOf((short) 32767), shortConverter.convert(" +32767 "));
+        assertEquals(Short.valueOf((short) -32768), shortConverter.convert(" -32768 "));
 
         try {
-            ShortConverter.valueOf("a");
+            shortConverter.convert("a");
             fail();
         } catch (TypeConversionException ignore) {
         }
         try {
-            ShortConverter.valueOf("+32768");
+            shortConverter.convert("+32768");
             fail();
         } catch (TypeConversionException ignore) {
         }
         try {
-            ShortConverter.valueOf("-32769");
+            shortConverter.convert("-32769");
             fail();
         } catch (TypeConversionException ignore) {
         }

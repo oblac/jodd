@@ -11,7 +11,7 @@ import jodd.util.CsvUtil;
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 
-	public static int[] valueOf(Object value) {
+	public int[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -108,7 +108,4 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 		return results;
 	}
 
-	public int[] convert(Object value) {
-		return valueOf(value);
-	}
 }

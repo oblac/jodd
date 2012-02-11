@@ -11,17 +11,19 @@ import java.math.BigDecimal;
 public class MutableDoubleConverterTest extends TestCase {
 
     public void testConversion() {
-        assertNull(MutableDoubleConverter.valueOf(null));
+		MutableDoubleConverter mutableDoubleConverter = new MutableDoubleConverter();
+		
+        assertNull(mutableDoubleConverter.convert(null));
 
-        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(new MutableDouble(1.73)));
-        assertEquals(new MutableDouble(1), MutableDoubleConverter.valueOf(Integer.valueOf(1)));
-        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(Double.valueOf(1.73D)));
-        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf("1.73"));
-        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(" 1.73 "));
-        assertEquals(new MutableDouble(1.73), MutableDoubleConverter.valueOf(new BigDecimal("1.73")));
+        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new MutableDouble(1.73)));
+        assertEquals(new MutableDouble(1), mutableDoubleConverter.convert(Integer.valueOf(1)));
+        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(Double.valueOf(1.73D)));
+        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert("1.73"));
+        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(" 1.73 "));
+        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new BigDecimal("1.73")));
 
         try {
-            MutableDoubleConverter.valueOf("aaaa");
+            mutableDoubleConverter.convert("aaaa");
             fail();
         } catch (TypeConversionException ignore) {
         }

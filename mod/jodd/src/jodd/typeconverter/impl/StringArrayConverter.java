@@ -14,7 +14,7 @@ import jodd.util.CsvUtil;
  */
 public class StringArrayConverter implements TypeConverter<String[]> {
 
-	public static String[] valueOf(Object value) {
+	public String[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -106,8 +106,4 @@ public class StringArrayConverter implements TypeConverter<String[]> {
 		return result;
 	}
 
-	public String[] convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

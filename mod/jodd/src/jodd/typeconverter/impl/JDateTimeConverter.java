@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class JDateTimeConverter implements TypeConverter<JDateTime> {
 
-	public static JDateTime valueOf(Object value) {
+	public JDateTime convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -56,7 +56,4 @@ public class JDateTimeConverter implements TypeConverter<JDateTime> {
 		}
 	}
 
-	public JDateTime convert(Object value) {
-		return valueOf(value);
-	}
 }

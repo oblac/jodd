@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 
-	public static MutableDouble valueOf(Object value) {
+	public MutableDouble convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -29,8 +29,4 @@ public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 		}
 	}
 
-	public MutableDouble convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

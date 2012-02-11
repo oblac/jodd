@@ -2,8 +2,7 @@
 
 package jodd.datetime;
 
-import jodd.typeconverter.impl.CalendarConverter;
-import jodd.typeconverter.impl.DateConverter;
+import jodd.typeconverter.Convert;
 import jodd.typeconverter.impl.SqlDateConverter;
 import jodd.typeconverter.impl.SqlTimestampConverter;
 import junit.framework.TestCase;
@@ -50,17 +49,19 @@ public class TimeZoneTest extends TestCase {
 		assertEquals(gc.getTimeInMillis(), jdt2.getTimeInMillis());
 		assertEquals(jdt1.getTimeInMillis(), jdt2.getTimeInMillis());
 
-		java.util.Date date = DateConverter.valueOf(jdt1);
+		java.util.Date date = Convert.toDate(jdt1);
 		assertEquals(date.getTime(), jdt1.getTimeInMillis());
 
-		GregorianCalendar cal = (GregorianCalendar) CalendarConverter.valueOf(jdt1);
+		GregorianCalendar cal = (GregorianCalendar) Convert.toCalendar(jdt1);
 		assertEquals(cal.getTimeInMillis(), jdt1.getTimeInMillis());
 		assertEquals(cal.getTimeZone(), jdt1.getTimeZone());
 
-		java.sql.Date sqlDate = SqlDateConverter.valueOf(jdt1);
+		SqlDateConverter sqlDateConverter = new SqlDateConverter();
+		java.sql.Date sqlDate = sqlDateConverter.convert(jdt1);
 		assertEquals(sqlDate.getTime(), jdt1.getTimeInMillis());
 
-		Timestamp sqlTimestamp = SqlTimestampConverter.valueOf(jdt1);
+		SqlTimestampConverter sqlTimestampConverter = new SqlTimestampConverter();
+		Timestamp sqlTimestamp = sqlTimestampConverter.convert(jdt1);
 		assertEquals(sqlTimestamp.getTime(), jdt1.getTimeInMillis());
 	}
 

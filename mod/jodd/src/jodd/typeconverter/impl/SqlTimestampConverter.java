@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 
-	public static Timestamp valueOf(Object value) {
+	public Timestamp convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -57,10 +57,6 @@ public class SqlTimestampConverter implements TypeConverter<Timestamp> {
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
-	}
-
-	public Timestamp convert(Object value) {
-		return valueOf(value);
 	}
 
 }

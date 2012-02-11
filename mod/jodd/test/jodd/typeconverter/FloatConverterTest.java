@@ -9,18 +9,20 @@ import java.math.BigDecimal;
 public class FloatConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		assertNull(FloatConverter.valueOf(null));
+		FloatConverter floatConverter = new FloatConverter();
+		
+		assertNull(floatConverter.convert(null));
 
-		assertEquals(Float.valueOf(1), FloatConverter.valueOf(Integer.valueOf(1)));
-		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(Double.valueOf(1.73D)));
-		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf("1.73"));
-		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(" 1.73 "));
-		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(" +1.73 "));
-		assertEquals(Float.valueOf((float) -1.73), FloatConverter.valueOf(" -1.73 "));
-		assertEquals(Float.valueOf((float) 1.73), FloatConverter.valueOf(new BigDecimal("1.73")));
+		assertEquals(Float.valueOf(1), floatConverter.convert(Integer.valueOf(1)));
+		assertEquals(Float.valueOf((float) 1.73), floatConverter.convert(Double.valueOf(1.73D)));
+		assertEquals(Float.valueOf((float) 1.73), floatConverter.convert("1.73"));
+		assertEquals(Float.valueOf((float) 1.73), floatConverter.convert(" 1.73 "));
+		assertEquals(Float.valueOf((float) 1.73), floatConverter.convert(" +1.73 "));
+		assertEquals(Float.valueOf((float) -1.73), floatConverter.convert(" -1.73 "));
+		assertEquals(Float.valueOf((float) 1.73), floatConverter.convert(new BigDecimal("1.73")));
 
 		try {
-			FloatConverter.valueOf("aaaa");
+			floatConverter.convert("aaaa");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

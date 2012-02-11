@@ -11,7 +11,9 @@ import jodd.util.CsvUtil;
  */
 public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 
-	public static boolean[] valueOf(Object value) {
+	protected BooleanConverter booleanConverter = new BooleanConverter();
+
+	public boolean[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -26,7 +28,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 			boolean[] result = new boolean[values.length];
 			try {
 				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-					result[i] = BooleanConverter.valueOf(values[i]).booleanValue();
+					result[i] = booleanConverter.convert(values[i]).booleanValue();
 				}
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
@@ -93,12 +95,9 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		Object[] values = (Object[]) value;
 		boolean[] results = new boolean[values.length];
 		for (int i = 0; i < values.length; i++) {
-			results[i] = BooleanConverter.valueOf(values[i]).booleanValue();
+			results[i] = booleanConverter.convert(values[i]).booleanValue();
 		}
 		return results;
 	}
 
-	public boolean[] convert(Object value) {
-		return valueOf(value);
-	}
 }

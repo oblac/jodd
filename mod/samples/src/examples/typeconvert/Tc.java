@@ -2,7 +2,7 @@
 
 package examples.typeconvert;
 
-import jodd.typeconverter.impl.ByteArrayConverter;
+import jodd.typeconverter.Convert;
 
 public class Tc {
 
@@ -18,9 +18,9 @@ public class Tc {
 		System.out.println(i1 instanceof Object[]);
 		System.out.println(i2 instanceof int[]);
 
-		System.out.println(ByteArrayConverter.valueOf(sa));
-		System.out.println(ByteArrayConverter.valueOf(i1));
-		System.out.println(ByteArrayConverter.valueOf(i2));
+		System.out.println(Convert.toByteArray(sa));
+		System.out.println(Convert.toByteArray(i1));
+		System.out.println(Convert.toByteArray(i2));
 
 	}
 }

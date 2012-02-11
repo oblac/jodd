@@ -11,7 +11,7 @@ import jodd.util.StringUtil;
  */
 public class ShortConverter implements TypeConverter<Short> {
 
-	public static Short valueOf(Object value) {
+	public Short convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -33,7 +33,4 @@ public class ShortConverter implements TypeConverter<Short> {
 		}
 	}
 
-	public Short convert(Object value) {
-		return valueOf(value);
-	}
 }

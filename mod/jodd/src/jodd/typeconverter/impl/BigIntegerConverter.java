@@ -12,7 +12,7 @@ import java.math.BigInteger;
  */
 public class BigIntegerConverter implements TypeConverter<BigInteger> {
 
-	public static BigInteger valueOf(Object value) {
+	public BigInteger convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -28,10 +28,6 @@ public class BigIntegerConverter implements TypeConverter<BigInteger> {
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
-	}
-
-	public BigInteger convert(Object value) {
-		return valueOf(value);
 	}
 
 }

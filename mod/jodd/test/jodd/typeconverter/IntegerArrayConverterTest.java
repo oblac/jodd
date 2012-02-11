@@ -7,19 +7,21 @@ import jodd.typeconverter.impl.IntegerArrayConverter;
 public class IntegerArrayConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		assertNull(IntegerArrayConverter.valueOf(null));
+		IntegerArrayConverter integerArrayConverter = new IntegerArrayConverter();
+		
+		assertNull(integerArrayConverter.convert(null));
 
-		assertEq(arri(173, 234), IntegerArrayConverter.valueOf("173, 234"));
-		assertEq(arri(173), IntegerArrayConverter.valueOf(Double.valueOf(173)));
-		assertEq(arri(1, 7, 3), IntegerArrayConverter.valueOf(arri(1, 7, 3)));
-		assertEq(arri(1, 7, 3), IntegerArrayConverter.valueOf(arrl(1, 7, 3)));
-		assertEq(arri(1, 7, 3), IntegerArrayConverter.valueOf(arrf(1, 7, 3)));
-		assertEq(arri(1, 7, 3), IntegerArrayConverter.valueOf(arrd(1.1, 7.99, 3)));
-		assertEq(arri(173, 1022), IntegerArrayConverter.valueOf(arrs("173", "1022")));
-		assertEq(arri(173, 10), IntegerArrayConverter.valueOf(arro("173", Integer.valueOf(10))));
+		assertEq(arri(173, 234), integerArrayConverter.convert("173, 234"));
+		assertEq(arri(173), integerArrayConverter.convert(Double.valueOf(173)));
+		assertEq(arri(1, 7, 3), integerArrayConverter.convert(arri(1, 7, 3)));
+		assertEq(arri(1, 7, 3), integerArrayConverter.convert(arrl(1, 7, 3)));
+		assertEq(arri(1, 7, 3), integerArrayConverter.convert(arrf(1, 7, 3)));
+		assertEq(arri(1, 7, 3), integerArrayConverter.convert(arrd(1.1, 7.99, 3)));
+		assertEq(arri(173, 1022), integerArrayConverter.convert(arrs("173", "1022")));
+		assertEq(arri(173, 10), integerArrayConverter.convert(arro("173", Integer.valueOf(10))));
 
-		assertEq(arri(111, 777, 333), IntegerArrayConverter.valueOf(arrs("111", "   777     ", "333")));
-		assertEq(arri(111, 777, 333), IntegerArrayConverter.valueOf("111,  777,  333"));
+		assertEq(arri(111, 777, 333), integerArrayConverter.convert(arrs("111", "   777     ", "333")));
+		assertEq(arri(111, 777, 333), integerArrayConverter.convert("111,  777,  333"));
 
 	}
 

@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 
-	public static MutableInteger valueOf(Object value) {
+	public MutableInteger convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -29,8 +29,4 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 		}
 	}
 
-	public MutableInteger convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

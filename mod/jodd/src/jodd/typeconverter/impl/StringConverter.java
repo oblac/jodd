@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class StringConverter implements TypeConverter<String> {
 
-	public static String valueOf(Object value) {
+	public String convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -52,8 +52,4 @@ public class StringConverter implements TypeConverter<String> {
 		return value.toString();
 	}
 
-	public String convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

@@ -8,38 +8,40 @@ import junit.framework.TestCase;
 public class ByteConverterTest extends TestCase {
 
 	public void testConversion() {
-		assertNull(ByteConverter.valueOf(null));
+		ByteConverter byteConverter = new ByteConverter();
+		
+		assertNull(byteConverter.convert(null));
 
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Integer.valueOf(1)));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Short.valueOf((short) 1)));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf(Double.valueOf(1.5D)));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("1"));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("  1  "));
-		assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("  +1  "));
-		assertEquals(Byte.valueOf((byte) 127), ByteConverter.valueOf("  +127  "));
-		assertEquals(Byte.valueOf((byte) -1), ByteConverter.valueOf("  -1  "));
-		assertEquals(Byte.valueOf((byte) -128), ByteConverter.valueOf("  -128  "));
-		assertEquals(Byte.valueOf((byte) (300-256)), ByteConverter.valueOf(Integer.valueOf(300)));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert(Integer.valueOf(1)));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert(Short.valueOf((short) 1)));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert(Double.valueOf(1.5D)));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("1"));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("  1  "));
+		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("  +1  "));
+		assertEquals(Byte.valueOf((byte) 127), byteConverter.convert("  +127  "));
+		assertEquals(Byte.valueOf((byte) -1), byteConverter.convert("  -1  "));
+		assertEquals(Byte.valueOf((byte) -128), byteConverter.convert("  -128  "));
+		assertEquals(Byte.valueOf((byte) (300-256)), byteConverter.convert(Integer.valueOf(300)));
 
 		try {
-			assertEquals(Byte.valueOf((byte) 1), ByteConverter.valueOf("1.5"));
+			assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("1.5"));
 			fail();
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
-			ByteConverter.valueOf("a");
+			byteConverter.convert("a");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}
 
 		try {
-			ByteConverter.valueOf("128");
+			byteConverter.convert("128");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}
 		try {
-			ByteConverter.valueOf("-129");
+			byteConverter.convert("-129");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

@@ -16,7 +16,7 @@ import java.util.Calendar;
  */
 public class SqlDateConverter implements TypeConverter<Date> {
 
-	public static Date valueOf(Object value) {
+	public Date convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -58,8 +58,4 @@ public class SqlDateConverter implements TypeConverter<Date> {
 		}
 	}
 
-	public Date convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

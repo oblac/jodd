@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class FileUploadConverter implements TypeConverter<FileUpload> {
 
-	public static FileUpload valueOf(Object value) {
+	public FileUpload convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -21,8 +21,4 @@ public class FileUploadConverter implements TypeConverter<FileUpload> {
 		throw new TypeConversionException(value);
 	}
 
-	public FileUpload convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

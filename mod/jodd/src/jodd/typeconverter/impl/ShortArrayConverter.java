@@ -11,7 +11,7 @@ import jodd.util.CsvUtil;
  */
 public class ShortArrayConverter implements TypeConverter<short[]> {
 
-	public static short[] valueOf(Object value) {
+	public short[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -106,7 +106,4 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 		return results;
 	}
 
-	public short[] convert(Object value) {
-		return valueOf(value);
-	}
 }

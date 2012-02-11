@@ -12,7 +12,7 @@ import java.util.Locale;
  */
 public class LocaleConverter implements TypeConverter<Locale> {
 
-	public static Locale valueOf(Object value) {
+	public Locale convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -24,7 +24,4 @@ public class LocaleConverter implements TypeConverter<Locale> {
 		return LocaleUtil.getLocale(value.toString());
 	}
 
-	public Locale convert(Object value) {
-		return valueOf(value);
-	}
 }

@@ -10,7 +10,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class FloatArrayConverter implements TypeConverter<float[]> {
 
-	public static float[] valueOf(Object value) {
+	public float[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -101,7 +101,4 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 		return results;
 	}
 
-	public float[] convert(Object value) {
-		return valueOf(value);
-	}
 }

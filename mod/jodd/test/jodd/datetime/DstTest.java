@@ -2,7 +2,7 @@
 
 package jodd.datetime;
 
-import jodd.typeconverter.impl.DateConverter;
+import jodd.typeconverter.Convert;
 import junit.framework.TestCase;
 
 import java.util.Date;
@@ -22,7 +22,7 @@ public class DstTest extends TestCase {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 2, 29, 0, 31, 0);
 
-		Date date = DateConverter.valueOf(jdt);
+		Date date = Convert.toDate(jdt);
 		assertEquals(gc.getTime(), date);
 		assertFalse(englandTZ.inDaylightTime(date));
 		assertFalse(englandTZ.inDaylightTime(gc.getTime()));
@@ -41,7 +41,7 @@ public class DstTest extends TestCase {
 		// in the DST
 		assertEquals(3600000, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		date = DateConverter.valueOf(jdt);
+		date = Convert.toDate(jdt);
 		assertEquals(gc.getTime(), date);
 
 		assertTrue(englandTZ.inDaylightTime(date));
@@ -83,7 +83,7 @@ public class DstTest extends TestCase {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 9, 25, 0, 31, 0);
 
-		Date date = DateConverter.valueOf(jdt);
+		Date date = Convert.toDate(jdt);
 		assertEquals(gc.getTime(), date);
 		assertTrue(englandTZ.inDaylightTime(gc.getTime()));
 		assertTrue(englandTZ.inDaylightTime(date));
@@ -102,7 +102,7 @@ public class DstTest extends TestCase {
 		// after DST
 		assertEquals(0, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		date = DateConverter.valueOf(jdt);
+		date = Convert.toDate(jdt);
 		assertEquals(gc.getTime(), date);
 
 		assertFalse(englandTZ.inDaylightTime(date));

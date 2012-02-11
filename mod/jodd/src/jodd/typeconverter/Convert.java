@@ -1,5 +1,3 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
-
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.*;
@@ -10,6 +8,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
+import java.util.Calendar;
 
 /**
  * One class for simplifier and direct conversions to destination types.
@@ -18,6 +17,9 @@ import java.util.Date;
 public class Convert {
 
 
+	// ---------------------------------------------------------------- BigDecimal
+
+	public static BigDecimalConverter bigDecimalConverter = new BigDecimalConverter();
 
 	/**
 	 * Converts value to <code>BigDecimal</code>.
@@ -34,9 +36,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return BigDecimalConverter.valueOf(value);
+		return bigDecimalConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- BigInteger
+
+	public static BigIntegerConverter bigIntegerConverter = new BigIntegerConverter();
 
 	/**
 	 * Converts value to <code>BigInteger</code>.
@@ -53,9 +59,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return BigIntegerConverter.valueOf(value);
+		return bigIntegerConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Boolean
+
+	public static BooleanConverter booleanConverter = new BooleanConverter();
 
 	/**
 	 * Converts value to <code>boolean</code>.
@@ -72,7 +82,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return BooleanConverter.valueOf(value).booleanValue();
+		return booleanConverter.convert(value).booleanValue();
 	}
 
 	/**
@@ -83,9 +93,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return BooleanConverter.valueOf(value);
+		return booleanConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- boolean[]
+
+	public static BooleanArrayConverter booleanArrayConverter = new BooleanArrayConverter();
 
 	/**
 	 * Converts value to <code>boolean[]</code>.
@@ -102,9 +116,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return BooleanArrayConverter.valueOf(value);
+		return booleanArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Byte
+
+	public static ByteConverter byteConverter = new ByteConverter();
 
 	/**
 	 * Converts value to <code>byte</code>.
@@ -121,7 +139,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ByteConverter.valueOf(value).byteValue();
+		return byteConverter.convert(value).byteValue();
 	}
 
 	/**
@@ -132,9 +150,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ByteConverter.valueOf(value);
+		return byteConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- byte[]
+
+	public static ByteArrayConverter byteArrayConverter = new ByteArrayConverter();
 
 	/**
 	 * Converts value to <code>byte[]</code>.
@@ -151,9 +173,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ByteArrayConverter.valueOf(value);
+		return byteArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Character
+
+	public static CharacterConverter characterConverter = new CharacterConverter();
 
 	/**
 	 * Converts value to <code>char</code>.
@@ -170,7 +196,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return CharacterConverter.valueOf(value).charValue();
+		return characterConverter.convert(value).charValue();
 	}
 
 	/**
@@ -181,9 +207,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return CharacterConverter.valueOf(value);
+		return characterConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Class
+
+	public static ClassConverter classConverter = new ClassConverter();
 
 	/**
 	 * Converts value to <code>Class</code>.
@@ -200,9 +230,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ClassConverter.valueOf(value);
+		return classConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Class[]
+
+	public static ClassArrayConverter classArrayConverter = new ClassArrayConverter();
 
 	/**
 	 * Converts value to <code>Class[]</code>.
@@ -219,9 +253,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ClassArrayConverter.valueOf(value);
+		return classArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Double
+
+	public static DoubleConverter doubleConverter = new DoubleConverter();
 
 	/**
 	 * Converts value to <code>double</code>.
@@ -238,7 +276,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return DoubleConverter.valueOf(value).doubleValue();
+		return doubleConverter.convert(value).doubleValue();
 	}
 
 	/**
@@ -249,9 +287,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return DoubleConverter.valueOf(value);
+		return doubleConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- double[]
+
+	public static DoubleArrayConverter doubleArrayConverter = new DoubleArrayConverter();
 
 	/**
 	 * Converts value to <code>double[]</code>.
@@ -268,9 +310,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return DoubleArrayConverter.valueOf(value);
+		return doubleArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Float
+
+	public static FloatConverter floatConverter = new FloatConverter();
 
 	/**
 	 * Converts value to <code>float</code>.
@@ -287,7 +333,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return FloatConverter.valueOf(value).floatValue();
+		return floatConverter.convert(value).floatValue();
 	}
 
 	/**
@@ -298,9 +344,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return FloatConverter.valueOf(value);
+		return floatConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- float[]
+
+	public static FloatArrayConverter floatArrayConverter = new FloatArrayConverter();
 
 	/**
 	 * Converts value to <code>float[]</code>.
@@ -317,9 +367,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return FloatArrayConverter.valueOf(value);
+		return floatArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Integer
+
+	public static IntegerConverter integerConverter = new IntegerConverter();
 
 	/**
 	 * Converts value to <code>int</code>.
@@ -336,7 +390,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return IntegerConverter.valueOf(value).intValue();
+		return integerConverter.convert(value).intValue();
 	}
 
 	/**
@@ -347,9 +401,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return IntegerConverter.valueOf(value);
+		return integerConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- int[]
+
+	public static IntegerArrayConverter integerArrayConverter = new IntegerArrayConverter();
 
 	/**
 	 * Converts value to <code>int[]</code>.
@@ -366,9 +424,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return IntegerArrayConverter.valueOf(value);
+		return integerArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- JDateTime
+
+	public static JDateTimeConverter jDateTimeConverter = new JDateTimeConverter();
 
 	/**
 	 * Converts value to <code>JDateTime</code>.
@@ -385,9 +447,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return JDateTimeConverter.valueOf(value);
+		return jDateTimeConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Long
+
+	public static LongConverter longConverter = new LongConverter();
 
 	/**
 	 * Converts value to <code>long</code>.
@@ -404,7 +470,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return LongConverter.valueOf(value).longValue();
+		return longConverter.convert(value).longValue();
 	}
 
 	/**
@@ -415,9 +481,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return LongConverter.valueOf(value);
+		return longConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- long[]
+
+	public static LongArrayConverter longArrayConverter = new LongArrayConverter();
 
 	/**
 	 * Converts value to <code>long[]</code>.
@@ -434,9 +504,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return LongArrayConverter.valueOf(value);
+		return longArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableByte
+
+	public static MutableByteConverter mutableByteConverter = new MutableByteConverter();
 
 	/**
 	 * Converts value to <code>MutableByte</code>.
@@ -453,9 +527,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableByteConverter.valueOf(value);
+		return mutableByteConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableDouble
+
+	public static MutableDoubleConverter mutableDoubleConverter = new MutableDoubleConverter();
 
 	/**
 	 * Converts value to <code>MutableDouble</code>.
@@ -472,9 +550,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableDoubleConverter.valueOf(value);
+		return mutableDoubleConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableFloat
+
+	public static MutableFloatConverter mutableFloatConverter = new MutableFloatConverter();
 
 	/**
 	 * Converts value to <code>MutableFloat</code>.
@@ -491,9 +573,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableFloatConverter.valueOf(value);
+		return mutableFloatConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableInteger
+
+	public static MutableIntegerConverter mutableIntegerConverter = new MutableIntegerConverter();
 
 	/**
 	 * Converts value to <code>MutableInteger</code>.
@@ -510,9 +596,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableIntegerConverter.valueOf(value);
+		return mutableIntegerConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableLong
+
+	public static MutableLongConverter mutableLongConverter = new MutableLongConverter();
 
 	/**
 	 * Converts value to <code>MutableLong</code>.
@@ -529,9 +619,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableLongConverter.valueOf(value);
+		return mutableLongConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- MutableShort
+
+	public static MutableShortConverter mutableShortConverter = new MutableShortConverter();
 
 	/**
 	 * Converts value to <code>MutableShort</code>.
@@ -548,9 +642,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return MutableShortConverter.valueOf(value);
+		return mutableShortConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Short
+
+	public static ShortConverter shortConverter = new ShortConverter();
 
 	/**
 	 * Converts value to <code>short</code>.
@@ -567,7 +665,7 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ShortConverter.valueOf(value).shortValue();
+		return shortConverter.convert(value).shortValue();
 	}
 
 	/**
@@ -578,9 +676,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ShortConverter.valueOf(value);
+		return shortConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- short[]
+
+	public static ShortArrayConverter shortArrayConverter = new ShortArrayConverter();
 
 	/**
 	 * Converts value to <code>short[]</code>.
@@ -597,9 +699,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return ShortArrayConverter.valueOf(value);
+		return shortArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- String
+
+	public static StringConverter stringConverter = new StringConverter();
 
 	/**
 	 * Converts value to <code>String</code>.
@@ -616,9 +722,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return StringConverter.valueOf(value);
+		return stringConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- String[]
+
+	public static StringArrayConverter stringArrayConverter = new StringArrayConverter();
 
 	/**
 	 * Converts value to <code>String[]</code>.
@@ -635,9 +745,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return StringArrayConverter.valueOf(value);
+		return stringArrayConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- URI
+
+	public static URIConverter uRIConverter = new URIConverter();
 
 	/**
 	 * Converts value to <code>URI</code>.
@@ -654,9 +768,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return URIConverter.valueOf(value);
+		return uRIConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- URL
+
+	public static URLConverter uRLConverter = new URLConverter();
 
 	/**
 	 * Converts value to <code>URL</code>.
@@ -673,9 +791,13 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return URLConverter.valueOf(value);
+		return uRLConverter.convert(value);
 	}
 
+
+	// ---------------------------------------------------------------- Date
+
+	public static DateConverter dateConverter = new DateConverter();
 
 	/**
 	 * Converts value to <code>Date</code>.
@@ -692,20 +814,29 @@ public class Convert {
 		if (value == null) {
 			return defaultValue;
 		}
-		return DateConverter.valueOf(value);
+		return dateConverter.convert(value);
 	}
 
 
-	public static Object toObject(Object value, Class destinationType) {
+	// ---------------------------------------------------------------- Calendar
+
+	public static CalendarConverter calendarConverter = new CalendarConverter();
+
+	/**
+	 * Converts value to <code>Calendar</code>.
+	 */
+	public static Calendar toCalendar(Object value) {
+		return toCalendar(value, null);
+	}
+
+	/**
+	 * Converts value to <code>Calendar</code>. Returns default value
+	 * when value is <code>null</code>.
+	 */
+	public static Calendar toCalendar(Object value, Calendar defaultValue) {
 		if (value == null) {
-			return null;
+			return defaultValue;
 		}
-		TypeConverter converter = TypeConverterManager.lookup(destinationType);
-		if (converter == null) {
-			throw new TypeConversionException("Unable to convert value to type: '" + destinationType.getName() + "'.");
-		}
-		return converter.convert(value);
+		return calendarConverter.convert(value);
 	}
-
-
 }

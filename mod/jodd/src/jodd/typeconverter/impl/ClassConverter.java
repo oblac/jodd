@@ -11,7 +11,7 @@ import jodd.util.ClassLoaderUtil;
  */
 public class ClassConverter implements TypeConverter<Class> {
 
-	public static Class valueOf(Object value) {
+	public Class convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -24,10 +24,6 @@ public class ClassConverter implements TypeConverter<Class> {
 		} catch (ClassNotFoundException cnfex) {
 			throw new TypeConversionException(value, cnfex);
 		}
-	}
-
-	public Class convert(Object value) {
-		return valueOf(value);
 	}
 
 }

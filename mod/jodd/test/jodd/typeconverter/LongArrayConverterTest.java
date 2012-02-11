@@ -7,18 +7,20 @@ import jodd.typeconverter.impl.LongArrayConverter;
 public class LongArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {
-        assertNull(LongArrayConverter.valueOf(null));
+		LongArrayConverter longArrayConverter = new LongArrayConverter();
 
-        assertEq(arrl(173), LongArrayConverter.valueOf(Double.valueOf(173)));
-        assertEq(arrl(173, 1022, 29929), LongArrayConverter.valueOf(arrf(173, 1022, 29929)));
-        assertEq(arrl(173, 1022, 29929), LongArrayConverter.valueOf(arrd(173, 1022, 29929)));
-        assertEq(arrl(173, 1022, 29929), LongArrayConverter.valueOf(arri(173, 1022, 29929)));
-        assertEq(arrl(173, 1022, 29929), LongArrayConverter.valueOf(arrl(173, 1022, 29929)));
-        assertEq(arrl(173, 1022), LongArrayConverter.valueOf(arrs("173", "1022")));
-        assertEq(arrl(173, 1022), LongArrayConverter.valueOf(arro("173", Long.valueOf(1022))));
+        assertNull(longArrayConverter.convert(null));
 
-		assertEq(arrl(111, 777, 333), LongArrayConverter.valueOf(arrs("111", "   777     ", "333")));
-		assertEq(arrl(111, 777, 333), LongArrayConverter.valueOf("111,  777,  333"));
+        assertEq(arrl(173), longArrayConverter.convert(Double.valueOf(173)));
+        assertEq(arrl(173, 1022, 29929), longArrayConverter.convert(arrf(173, 1022, 29929)));
+        assertEq(arrl(173, 1022, 29929), longArrayConverter.convert(arrd(173, 1022, 29929)));
+        assertEq(arrl(173, 1022, 29929), longArrayConverter.convert(arri(173, 1022, 29929)));
+        assertEq(arrl(173, 1022, 29929), longArrayConverter.convert(arrl(173, 1022, 29929)));
+        assertEq(arrl(173, 1022), longArrayConverter.convert(arrs("173", "1022")));
+        assertEq(arrl(173, 1022), longArrayConverter.convert(arro("173", Long.valueOf(1022))));
+
+		assertEq(arrl(111, 777, 333), longArrayConverter.convert(arrs("111", "   777     ", "333")));
+		assertEq(arrl(111, 777, 333), longArrayConverter.convert("111,  777,  333"));
     }
 
     private void assertEq(long[] arr1, long[] arr2) {

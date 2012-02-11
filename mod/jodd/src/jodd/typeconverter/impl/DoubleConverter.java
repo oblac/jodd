@@ -11,7 +11,7 @@ import jodd.util.StringUtil;
  */
 public class DoubleConverter implements TypeConverter<Double> {
 
-	public static Double valueOf(Object value) {
+	public Double convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -34,8 +34,4 @@ public class DoubleConverter implements TypeConverter<Double> {
 		}
 	}
 
-	public Double convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

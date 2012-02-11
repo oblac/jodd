@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
  */
 public class URLConverter implements TypeConverter<URL> {
 
-	public static URL valueOf(Object value) {
+	public URL convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -49,9 +49,4 @@ public class URLConverter implements TypeConverter<URL> {
 			throw new TypeConversionException(value, muex);
 		}
 	}
-
-	public URL convert(Object value) {
-		return valueOf(value);
-	}
-
 }

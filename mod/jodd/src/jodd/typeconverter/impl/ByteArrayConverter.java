@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 
-	public static byte[] valueOf(Object value) {
+	public byte[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -120,7 +120,4 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 		return results;
 	}
 
-	public byte[] convert(Object value) {
-		return valueOf(value);
-	}
 }

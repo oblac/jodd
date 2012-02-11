@@ -1,3 +1,4 @@
+from test.test_iterlen import len
 
 f = open('Convert.java', 'w')
 f.write('''package jodd.typeconverter;
@@ -10,13 +11,13 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
+import java.util.Calendar;
 
 /**
  * One class for simplifier and direct conversions to destination types.
  * <b>DO NOT MODIFY: this source is generated.</b>
  */
 public class Convert {
-
 ''')
 
 types = [
@@ -50,11 +51,15 @@ types = [
 	['String[]', 'StringArray'],
 	['URI', 'null'],
 	['URL', 'null'],
-	['Date', 'null']
-
+	['Date', 'null'],
+	['Calendar', 'null']
 ]
 
 template = '''
+
+	// ---------------------------------------------------------------- $T
+
+	public static $TConverter $nConverter = new $TConverter();
 
 	/**
 	 * Converts value to <code>$T</code>.
@@ -71,11 +76,15 @@ template = '''
 		if (value == null) {
 			return defaultValue;
 		}
-		return $TConverter.valueOf(value);
+		return $nConverter.convert(value);
 	}
 '''
 
 template2 = '''
+
+	// ---------------------------------------------------------------- $T
+
+	public static $TConverter $nConverter = new $TConverter();
 
 	/**
 	 * Converts value to <code>$t</code>.
@@ -92,7 +101,7 @@ template2 = '''
 		if (value == null) {
 			return defaultValue;
 		}
-		return $TConverter.valueOf(value).$tValue();
+		return $nConverter.convert(value).$tValue();
 	}
 
 	/**
@@ -103,11 +112,15 @@ template2 = '''
 		if (value == null) {
 			return defaultValue;
 		}
-		return $TConverter.valueOf(value);
+		return $nConverter.convert(value);
 	}
 '''
 
 templateA = '''
+
+	// ---------------------------------------------------------------- $T
+
+	public static $1Converter $nConverter = new $1Converter();
 
 	/**
 	 * Converts value to <code>$T</code>.
@@ -124,7 +137,7 @@ templateA = '''
 		if (value == null) {
 			return defaultValue;
 		}
-		return $1Converter.valueOf(value);
+		return $nConverter.convert(value);
 	}
 '''
 
@@ -133,45 +146,30 @@ templateA = '''
 
 
 
-
-
 for type in types:
 	if len(type) == 2:
-		if (type[0][-2:] == '[]'):
+		if type[0][-2:] == '[]':
 			# array
 			data = templateA
 			data = data.replace('$T', type[0])
 			data = data.replace('$1', type[1])
+			data = data.replace('$n', type[1][0].lower() + type[1][1:])
 		else:
 			# big type
 			data = template
 			data = data.replace('$T', type[0])
+			data = data.replace('$n', type[0][0].lower() + type[0][1:])
 			data = data.replace('$1', type[1])
 	else:
 		# small type
 		data = template2
 		data = data.replace('$t', type[0])
 		data = data.replace('$T', type[1])
+		data = data.replace('$n', type[1][0].lower() + type[1][1:])
 		data = data.replace('$1', type[2])
 
 	f.write(data)
 
-
-f.write('''
-
-	public static Object toObject(Object value, Class destinationType) {
-		if (value == null) {
-			return null;
-		}
-		TypeConverter converter = TypeConverterManager.lookup(destinationType);
-		if (converter == null) {
-			throw new TypeConversionException("Unable to convert value to type: '" + destinationType.getName() + "'.");
-		}
-		return converter.convert(value);
-	}
-
-
-''')
 
 f.write('}')
 f.close()

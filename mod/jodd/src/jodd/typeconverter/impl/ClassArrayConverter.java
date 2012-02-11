@@ -11,7 +11,9 @@ import jodd.util.ClassLoaderUtil;
  */
 public class ClassArrayConverter implements TypeConverter<Class[]> {
 
-	public static Class[] valueOf(Object value) {
+	protected StringArrayConverter stringArrayConverter = new StringArrayConverter();
+
+	public Class[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -24,7 +26,7 @@ public class ClassArrayConverter implements TypeConverter<Class[]> {
 			return new Class[] {(Class) value};
 		}
 		
-		String[] allClassNames = StringArrayConverter.valueOf(value);
+		String[] allClassNames = stringArrayConverter.convert(value);
 		int total = allClassNames.length;
 		Class[] result = new Class[total];
 		try {
@@ -37,7 +39,4 @@ public class ClassArrayConverter implements TypeConverter<Class[]> {
 		return result;	
 	}
 
-	public Class[] convert(Object value) {
-		return valueOf(value);
-	}
 }

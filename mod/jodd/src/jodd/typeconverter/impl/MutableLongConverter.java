@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableLongConverter implements TypeConverter<MutableLong> {
 
-	public static MutableLong valueOf(Object value) {
+	public MutableLong convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -28,9 +28,4 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 			throw new TypeConversionException(value, nfex);
 		}
 	}
-
-	public MutableLong convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

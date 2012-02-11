@@ -7,16 +7,18 @@ import jodd.typeconverter.impl.CharacterConverter;
 public class CharacterConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		assertNull(CharacterConverter.valueOf(null));
+		CharacterConverter characterConverter = new CharacterConverter();
+		
+		assertNull(characterConverter.convert(null));
 
-		assertEquals(Character.valueOf((char) 1), CharacterConverter.valueOf(Character.valueOf((char)1)));
-		assertEquals(Character.valueOf((char) 1), CharacterConverter.valueOf(Integer.valueOf(1)));
-		assertEquals(Character.valueOf((char) 1), CharacterConverter.valueOf(Short.valueOf((short) 1)));
-		assertEquals(Character.valueOf((char) 1), CharacterConverter.valueOf(Double.valueOf(1.0D)));
-		assertEquals(new Character('1'), CharacterConverter.valueOf("1"));
+		assertEquals(Character.valueOf((char) 1), characterConverter.convert(Character.valueOf((char)1)));
+		assertEquals(Character.valueOf((char) 1), characterConverter.convert(Integer.valueOf(1)));
+		assertEquals(Character.valueOf((char) 1), characterConverter.convert(Short.valueOf((short) 1)));
+		assertEquals(Character.valueOf((char) 1), characterConverter.convert(Double.valueOf(1.0D)));
+		assertEquals(new Character('1'), characterConverter.convert("1"));
 
 		try {
-			CharacterConverter.valueOf("aa");
+			characterConverter.convert("aa");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

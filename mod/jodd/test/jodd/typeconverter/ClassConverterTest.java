@@ -7,13 +7,15 @@ import jodd.typeconverter.impl.ClassConverter;
 public class ClassConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		assertNull(ClassConverter.valueOf(null));
+		ClassConverter classConverter = new ClassConverter();
+		
+		assertNull(classConverter.convert(null));
 
-		assertEquals(String.class, ClassConverter.valueOf(String.class));
-		assertEquals(Integer.class, ClassConverter.valueOf("java.lang.Integer"));
+		assertEquals(String.class, classConverter.convert(String.class));
+		assertEquals(Integer.class, classConverter.convert("java.lang.Integer"));
 
 		try {
-			ClassConverter.valueOf("foo.Klass");
+			classConverter.convert("foo.Klass");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

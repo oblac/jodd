@@ -9,17 +9,19 @@ import junit.framework.TestCase;
 public class MutableShortConverterTest extends TestCase {
 
 	public void testConversion() {
-		assertNull(MutableShortConverter.valueOf(null));
+		MutableShortConverter mutableShortConverter = new MutableShortConverter();
+		
+		assertNull(mutableShortConverter.convert(null));
 
-		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(new MutableShort(1)));
-		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(Integer.valueOf(1)));
-        assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(Short.valueOf((short) 1)));
-		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(Double.valueOf(1.0D)));
-		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf("1"));
-		assertEquals(new MutableShort((short)1), MutableShortConverter.valueOf(" 1 "));
+		assertEquals(new MutableShort((short)1), mutableShortConverter.convert(new MutableShort(1)));
+		assertEquals(new MutableShort((short)1), mutableShortConverter.convert(Integer.valueOf(1)));
+        assertEquals(new MutableShort((short)1), mutableShortConverter.convert(Short.valueOf((short) 1)));
+		assertEquals(new MutableShort((short)1), mutableShortConverter.convert(Double.valueOf(1.0D)));
+		assertEquals(new MutableShort((short)1), mutableShortConverter.convert("1"));
+		assertEquals(new MutableShort((short)1), mutableShortConverter.convert(" 1 "));
 
 		try {
-			MutableShortConverter.valueOf("a");
+			mutableShortConverter.convert("a");
 			fail();
 		} catch (TypeConversionException ignore) {
 		}

@@ -11,7 +11,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableByteConverter implements TypeConverter<MutableByte> {
 
-	public static MutableByte valueOf(Object value) {
+	public MutableByte convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -28,10 +28,5 @@ public class MutableByteConverter implements TypeConverter<MutableByte> {
 			throw new TypeConversionException(value, nfex);
 		}
 	}
-
-	public MutableByte convert(Object value) {
-		return valueOf(value);
-	}
-	
 
 }

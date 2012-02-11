@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class CalendarConverter implements TypeConverter<Calendar> {
 
-	public static Calendar valueOf(Object value) {
+	public Calendar convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -53,7 +53,4 @@ public class CalendarConverter implements TypeConverter<Calendar> {
 		}
 	}
 
-	public Calendar convert(Object value) {
-		return valueOf(value);
-	}
 }

@@ -15,7 +15,7 @@ import java.net.URL;
  */
 public class URIConverter implements TypeConverter<URI> {
 
-	public static URI valueOf(Object value) {
+	public URI convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -43,10 +43,6 @@ public class URIConverter implements TypeConverter<URI> {
 		} catch (URISyntaxException usex) {
 			throw new TypeConversionException(value, usex);
 		}
-	}
-
-	public URI convert(Object value) {
-		return valueOf(value);
 	}
 
 }

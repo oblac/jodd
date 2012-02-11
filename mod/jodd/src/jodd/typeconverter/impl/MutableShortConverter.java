@@ -12,7 +12,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class MutableShortConverter implements TypeConverter<MutableShort> {
 
-	public static MutableShort valueOf(Object value) {
+	public MutableShort convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -28,10 +28,6 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 		} catch (NumberFormatException nfex) {
 			throw new TypeConversionException(value, nfex);
 		}
-	}
-
-	public MutableShort convert(Object value) {
-		return valueOf(value);
 	}
 
 }

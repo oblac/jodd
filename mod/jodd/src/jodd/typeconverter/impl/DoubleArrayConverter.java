@@ -10,7 +10,7 @@ import jodd.typeconverter.TypeConverter;
  */
 public class DoubleArrayConverter implements TypeConverter<double[]> {
 
-	public static double[] valueOf(Object value) {
+	public double[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -101,7 +101,4 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		return results;
 	}
 
-	public double[] convert(Object value) {
-		return valueOf(value);
-	}
 }

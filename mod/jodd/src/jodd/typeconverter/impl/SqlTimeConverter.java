@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class SqlTimeConverter implements TypeConverter<Time> {
 
-	public static Time valueOf(Object value) {
+	public Time convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -57,7 +57,4 @@ public class SqlTimeConverter implements TypeConverter<Time> {
 		}
 	}
 
-	public Time convert(Object value) {
-		return valueOf(value);
-	}
 }

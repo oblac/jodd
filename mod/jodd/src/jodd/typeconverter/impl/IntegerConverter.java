@@ -11,7 +11,7 @@ import jodd.util.StringUtil;
  */
 public class IntegerConverter implements TypeConverter<Integer> {
 
-	public static Integer valueOf(Object value) {
+	public Integer convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -33,8 +33,4 @@ public class IntegerConverter implements TypeConverter<Integer> {
 		}
 	}
 
-	public Integer convert(Object value) {
-		return valueOf(value);
-	}
-	
 }

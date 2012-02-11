@@ -7,19 +7,21 @@ import jodd.typeconverter.impl.StringArrayConverter;
 public class StringArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {
-        assertNull(StringArrayConverter.valueOf(null));
+		StringArrayConverter stringArrayConverter = new StringArrayConverter();
+		
+        assertNull(stringArrayConverter.convert(null));
 
-        assertEq(arrs(Double.class.getName()), StringArrayConverter.valueOf(Double.class));
-        assertEq(arrs("173"), StringArrayConverter.valueOf("173"));
-        assertEq(arrs("173", "1022"), StringArrayConverter.valueOf("173,1022"));
-        assertEq(arrs("173", " 1022"), StringArrayConverter.valueOf("173, 1022"));
-        assertEq(arrs("173", "1022"), StringArrayConverter.valueOf(arrs("173", "1022")));
-        assertEq(arrs("1", "7", "3"), StringArrayConverter.valueOf(arri(1, 7, 3)));
-        assertEq(arrs("1", "7", "3"), StringArrayConverter.valueOf(arrl(1, 7, 3)));
-        assertEq(arrs("1.0", "7.0", "3.0"), StringArrayConverter.valueOf(arrd(1, 7, 3)));
-        assertEq(arrs("1.0", "7.0", "3.0"), StringArrayConverter.valueOf(arrf(1, 7, 3)));
-        assertEq(arrs("173", "true"), StringArrayConverter.valueOf(arro("173", Boolean.TRUE)));
-        assertEq(arrs("173", "java.lang.String"), StringArrayConverter.valueOf(arro("173", String.class)));
+        assertEq(arrs(Double.class.getName()), stringArrayConverter.convert(Double.class));
+        assertEq(arrs("173"), stringArrayConverter.convert("173"));
+        assertEq(arrs("173", "1022"), stringArrayConverter.convert("173,1022"));
+        assertEq(arrs("173", " 1022"), stringArrayConverter.convert("173, 1022"));
+        assertEq(arrs("173", "1022"), stringArrayConverter.convert(arrs("173", "1022")));
+        assertEq(arrs("1", "7", "3"), stringArrayConverter.convert(arri(1, 7, 3)));
+        assertEq(arrs("1", "7", "3"), stringArrayConverter.convert(arrl(1, 7, 3)));
+        assertEq(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrd(1, 7, 3)));
+        assertEq(arrs("1.0", "7.0", "3.0"), stringArrayConverter.convert(arrf(1, 7, 3)));
+        assertEq(arrs("173", "true"), stringArrayConverter.convert(arro("173", Boolean.TRUE)));
+        assertEq(arrs("173", "java.lang.String"), stringArrayConverter.convert(arro("173", String.class)));
     }
 
     private void assertEq(String[] arr1, String[] arr2) {

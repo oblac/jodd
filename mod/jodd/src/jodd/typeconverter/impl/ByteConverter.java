@@ -12,7 +12,7 @@ import jodd.util.StringUtil;
  */
 public class ByteConverter implements TypeConverter<Byte> {
 
-	public static Byte valueOf(Object value) {
+	public Byte convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -33,7 +33,4 @@ public class ByteConverter implements TypeConverter<Byte> {
 		}
 	}
 
-	public Byte convert(Object value) {
-		return valueOf(value);
-	}
 }

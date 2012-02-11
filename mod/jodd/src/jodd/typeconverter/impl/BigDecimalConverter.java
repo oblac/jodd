@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  */
 public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 
-	public static BigDecimal valueOf(Object value) {
+	public BigDecimal convert(Object value) {
 		if (value == null) {
 			return null;
 		}
@@ -27,7 +27,4 @@ public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 		}
 	}
 
-	public BigDecimal convert(Object value) {
-		return valueOf(value);
-	}
 }
