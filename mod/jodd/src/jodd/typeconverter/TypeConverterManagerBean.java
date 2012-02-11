@@ -194,7 +194,7 @@ public class TypeConverterManagerBean {
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <T> T castType(Object value, Class<T> destinationType) {
+	public <T> T convertType(Object value, Class<T> destinationType) {
 		if (value == null) {
 			return null;
 		}

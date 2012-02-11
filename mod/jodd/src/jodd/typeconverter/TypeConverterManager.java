@@ -61,8 +61,8 @@ public class TypeConverterManager {
 	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
 	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
 	 */
-	public static <T> T castType(Object value, Class<T> destinationType) {
-		return TYPE_CONVERTER_MANAGER_BEAN.castType(value, destinationType);
+	public static <T> T convertType(Object value, Class<T> destinationType) {
+		return TYPE_CONVERTER_MANAGER_BEAN.convertType(value, destinationType);
 	}
 
 }

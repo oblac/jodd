@@ -256,7 +256,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
 					cachedColumnValue = rs.getObject(colNdx + 1);
-					cachedColumnValue = TypeConverterManager.castType(cachedColumnValue, destinationType);
+					cachedColumnValue = TypeConverterManager.convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
 				throw new DbOomException("Unable to read value for column #" + (colNdx + 1) + '.', sex);

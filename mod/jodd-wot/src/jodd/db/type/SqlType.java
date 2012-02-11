@@ -39,7 +39,7 @@ public abstract class SqlType<T> {
 	 * Stores value in database. Value is casted to sql type.
 	 */
 	public void storeValue(PreparedStatement st, int index, Object value, int dbSqlType) throws SQLException {
-		T t = TypeConverterManager.castType(value, sqlType);
+		T t = TypeConverterManager.convertType(value, sqlType);
 		set(st, index, t, dbSqlType);
 	}
 
@@ -68,7 +68,7 @@ public abstract class SqlType<T> {
 		if (destinationType == null) {
 			return (E) t;
 		}
-		return TypeConverterManager.castType(t, destinationType);
+		return TypeConverterManager.convertType(t, destinationType);
 	}
 
 }

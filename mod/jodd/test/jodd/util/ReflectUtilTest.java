@@ -330,25 +330,25 @@ public class ReflectUtilTest extends TestCase {
 	public void testCast() {
 
 		String s = "123";
-		Integer d = TypeConverterManager.castType(s, Integer.class);
+		Integer d = TypeConverterManager.convertType(s, Integer.class);
 		assertEquals(123, d.intValue());
 
-		s = TypeConverterManager.castType(d, String.class);
+		s = TypeConverterManager.convertType(d, String.class);
 		assertEquals("123", s);
 
-		MutableInteger md = TypeConverterManager.castType(s, MutableInteger.class);
+		MutableInteger md = TypeConverterManager.convertType(s, MutableInteger.class);
 		assertEquals(123, md.intValue());
 
 		B b = new B();
-		A a = TypeConverterManager.castType(b, A.class);
+		A a = TypeConverterManager.convertType(b, A.class);
 		assertEquals(a, b);
 	}
 
 	public void testCastEnums() {
 
-		En en = TypeConverterManager.castType("ONE", En.class);
+		En en = TypeConverterManager.convertType("ONE", En.class);
 		assertEquals(En.ONE, en);
-		en = TypeConverterManager.castType("TWO", En.class);
+		en = TypeConverterManager.convertType("TWO", En.class);
 		assertEquals(En.TWO, en);
 	}
 
