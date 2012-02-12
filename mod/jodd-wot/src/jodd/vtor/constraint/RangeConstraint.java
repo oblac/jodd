@@ -54,7 +54,7 @@ public class RangeConstraint implements ValidationConstraint<Range> {
 		if (value == null) {
 			return true;
 		}
-		double val = Convert.toDouble(value);
+		double val = Convert.toDoubleValue(value);
 		return val >= min && val <= max;
 	}
 

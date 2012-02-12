@@ -109,7 +109,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression, null);
+			return Convert.toInteger(expression);
 		}
 
 		@Override
@@ -135,7 +135,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression, null);
+			return Convert.toInteger(expression);
 		}
 
 		@Override
@@ -157,7 +157,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression, null);
+			return Convert.toInteger(expression);
 		}
 
 		@Override

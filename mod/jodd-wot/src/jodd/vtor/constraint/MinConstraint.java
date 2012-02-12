@@ -44,7 +44,7 @@ public class MinConstraint implements ValidationConstraint<Min> {
 		if (value == null) {
 			return true;
 		}
-		double val = Convert.toDouble(value);
+		double val = Convert.toDoubleValue(value);
 		return val > min;
 	}
 }

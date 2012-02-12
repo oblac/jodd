@@ -24,7 +24,7 @@ public class IfTag extends SimpleTagSupport {
 	public void doTag() throws JspException {
 		boolean testValue;
 		try {
-			testValue = Convert.toBoolean(test);
+			testValue = Convert.toBoolean(test, false);
 		} catch (TypeConversionException ignore) {
 			testValue = false;
 		}

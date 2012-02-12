@@ -2,6 +2,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
@@ -11,7 +12,11 @@ import jodd.util.CsvUtil;
  */
 public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 
-	protected BooleanConverter booleanConverter = new BooleanConverter();
+	protected final ConvertBean convertBean;
+
+	public BooleanArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public boolean[] convert(Object value) {
 		if (value == null) {
@@ -28,7 +33,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 			boolean[] result = new boolean[values.length];
 			try {
 				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-					result[i] = booleanConverter.convert(values[i]).booleanValue();
+					result[i] = convertBean.toBoolean(values[i], false);
 				}
 			} catch (NumberFormatException nfex) {
 				throw new TypeConversionException(value, nfex);
@@ -95,7 +100,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		Object[] values = (Object[]) value;
 		boolean[] results = new boolean[values.length];
 		for (int i = 0; i < values.length; i++) {
-			results[i] = booleanConverter.convert(values[i]).booleanValue();
+			results[i] = convertBean.toBoolean(values[i], false);
 		}
 		return results;
 	}

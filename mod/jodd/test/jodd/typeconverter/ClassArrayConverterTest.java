@@ -8,7 +8,7 @@ public class ClassArrayConverterTest extends BaseTestCase {
 
 	@SuppressWarnings({"unchecked"})
 	public void testConversion() {
-		ClassArrayConverter classArrayConverter = new ClassArrayConverter();
+		ClassArrayConverter classArrayConverter = (ClassArrayConverter) TypeConverterManager.lookup(Class[].class);
 		
 		assertNull(classArrayConverter.convert(null));
 

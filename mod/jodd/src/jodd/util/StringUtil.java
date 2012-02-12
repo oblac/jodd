@@ -342,7 +342,7 @@ public class StringUtil {
 	 * not converted.
 	 */
 	public static String toString(Object obj) {
-		return Convert.toString(obj, null);
+		return Convert.toString(obj);
 	}
 
 	/**
@@ -350,7 +350,8 @@ public class StringUtil {
 	 * string is returned.
 	 */
 	public static String toSafeString(Object obj) {
-		return Convert.toString(obj, EMPTY);
+		String value = Convert.toString(obj);
+		return value != null ? value : EMPTY;
 	}
 
 	/**

@@ -51,6 +51,7 @@ import jodd.typeconverter.impl.URLConverter;
 import jodd.util.ReflectUtil;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -71,15 +72,21 @@ public class TypeConverterManagerBean {
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(64);
 
-	public TypeConverterManagerBean() {
-		registerDefaults();
-	}
+	// ---------------------------------------------------------------- converter
+
+	protected ConvertBean convertBean = new ConvertBean();
 
 	/**
-	 * Unregisters all converters.
+	 * Returns {@link ConvertBean}.
 	 */
-	public void unregisterAll() {
-		converters.clear();
+	public ConvertBean getConvertBean() {
+		return convertBean;
+	}
+
+	// ---------------------------------------------------------------- methods
+
+	public TypeConverterManagerBean() {
+		registerDefaults();
 	}
 
 	/**
@@ -134,7 +141,7 @@ public class TypeConverterManagerBean {
 		register(long[].class, new LongArrayConverter());
 		register(float[].class, new FloatArrayConverter());
 		register(double[].class, new DoubleArrayConverter());
-		register(boolean[].class, new BooleanArrayConverter());
+		register(boolean[].class, new BooleanArrayConverter(convertBean));
 
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
@@ -151,7 +158,7 @@ public class TypeConverterManagerBean {
 		register(File.class, new FileConverter());
 
 		register(Class.class, new ClassConverter());
-		register(Class[].class, new ClassArrayConverter());
+		register(Class[].class, new ClassArrayConverter(convertBean));
 
 		register(URI.class, new URIConverter());
 		register(URL.class, new URLConverter());
@@ -167,10 +174,12 @@ public class TypeConverterManagerBean {
 	 * @param typeConverter	converter for provided class
 	 */
 	public void register(Class type, TypeConverter typeConverter) {
+		convertBean.register(type, typeConverter);
 		converters.put(type, typeConverter);
 	}
 
 	public void unregister(Class type) {
+		convertBean.register(type, null);
 		converters.remove(type);
 	}
 
@@ -185,41 +194,70 @@ public class TypeConverterManagerBean {
 	public TypeConverter lookup(Class type) {
 		return converters.get(type);
 	}
-	
-	
+
 	// ---------------------------------------------------------------- convert
 	
 	/**
-	 * Casts an object to destination type using {@link TypeConverterManager type conversion}.
-	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert} instead.
+	 * Converts an object to destination type.If destination type is one of common types,
+	 * consider using {@link jodd.typeconverter.Convert} instead for faster approach.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T convertType(Object value, Class<T> destinationType) {
+		TypeConverter converter = lookup(destinationType);
+
+		if (converter != null) {
+			try {
+				return (T) converter.convert(value);
+			} catch (TypeConversionException tcex) {
+				throw new ClassCastException("Unable to convert to type: " + destinationType.getName() + '\n' + tcex.toString());
+			}
+		}
+
+		// no converter
+
 		if (value == null) {
 			return null;
 		}
-		TypeConverter converter = lookup(destinationType);
-		if (converter == null) {
-			// no converter available, try to cast manually
-			if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
-				return (T) value;
+
+		// check same instances
+		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+			return (T) value;
+		}
+
+		// handle arrays
+		if (destinationType.isArray()) {
+			Class componentType = destinationType.getComponentType();
+
+			// value is not an array
+			if (value.getClass().isArray() == false) {
+				// create single array
+				T[] result = (T[]) Array.newInstance(componentType, 1);
+				result[0] = (T) convertType(value, componentType);
+				return (T) result;
 			}
-			if (destinationType.isEnum()) {
-				Object[] enums = destinationType.getEnumConstants();
-				String valStr = value.toString();
-				for (Object e : enums) {
-					if (e.toString().equals(valStr)) {
-						return (T) e;
-					}
+
+			// value is an array
+			Object[] array = (Object[]) value;
+			T[] result = (T[]) Array.newInstance(componentType, array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (T) convertType(array[i], componentType);
+			}
+			return (T) result;
+		}
+
+		// handle enums
+		if (destinationType.isEnum()) {
+			Object[] enums = destinationType.getEnumConstants();
+			String valStr = value.toString();
+			for (Object e : enums) {
+				if (e.toString().equals(valStr)) {
+					return (T) e;
 				}
 			}
-			throw new ClassCastException("Unable to cast to type: " + destinationType.getName());
 		}
-		try {
-			return (T) converter.convert(value);
-		} catch (TypeConversionException tcex) {
-			throw new ClassCastException("Unable to convert to type: " + destinationType.getName() + '\n' + tcex.toString());
-		}
+
+		// fail
+		throw new ClassCastException("Unable to cast to type: " + destinationType.getName());
 	}
 
 }

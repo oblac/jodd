@@ -2,6 +2,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.ClassLoaderUtil;
@@ -11,7 +12,11 @@ import jodd.util.ClassLoaderUtil;
  */
 public class ClassArrayConverter implements TypeConverter<Class[]> {
 
-	protected StringArrayConverter stringArrayConverter = new StringArrayConverter();
+	protected final ConvertBean convertBean;
+
+	public ClassArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public Class[] convert(Object value) {
 		if (value == null) {
@@ -26,7 +31,7 @@ public class ClassArrayConverter implements TypeConverter<Class[]> {
 			return new Class[] {(Class) value};
 		}
 		
-		String[] allClassNames = stringArrayConverter.convert(value);
+		String[] allClassNames = convertBean.toStringArray(value);
 		int total = allClassNames.length;
 		Class[] result = new Class[total];
 		try {

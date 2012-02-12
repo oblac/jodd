@@ -39,7 +39,7 @@ public class HtmlFormUtil {
 		if (data == null) {
 			return EMPTY;
 		}
-		if (Convert.toBoolean(data)) {
+		if (Convert.toBooleanValue(data)) {
 			return CHECKED;
 		}
 		return EMPTY;

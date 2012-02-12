@@ -19,13 +19,6 @@ public class TypeConverterManager {
 	}
 
 	/**
-	 * Unregisters all converters.
-	 */
-	public static void unregisterAll() {
-		TYPE_CONVERTER_MANAGER_BEAN.unregisterAll();
-	}
-
-	/**
 	 * Registers default set of converters.
 	 */
 	public static void registerDefaults() {
