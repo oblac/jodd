@@ -17,24 +17,27 @@ public class BooleanConverter implements TypeConverter<Boolean> {
 		if (value == null) {
 			return null;
 		}
+
 		if (value.getClass() == Boolean.class) {
 			return (Boolean) value;
 		}
-		String stringValue = value.toString().trim();
-		if (stringValue.equalsIgnoreCase(YES) ||
-				stringValue.equalsIgnoreCase(Y) ||
-				stringValue.equalsIgnoreCase(TRUE) ||
-				stringValue.equalsIgnoreCase(ON) ||
-				stringValue.equalsIgnoreCase(ONE)) {
+
+		String stringValue = value.toString().trim().toLowerCase();
+		if (stringValue.equals(YES) ||
+				stringValue.equals(Y) ||
+				stringValue.equals(TRUE) ||
+				stringValue.equals(ON) ||
+				stringValue.equals(ONE)) {
 			return Boolean.TRUE;
 		}
-		if (stringValue.equalsIgnoreCase(NO) ||
-				stringValue.equalsIgnoreCase(N) ||
-				stringValue.equalsIgnoreCase(FALSE) ||
-				stringValue.equalsIgnoreCase(OFF) ||
-				stringValue.equalsIgnoreCase(ZERO)) {
+		if (stringValue.equals(NO) ||
+				stringValue.equals(N) ||
+				stringValue.equals(FALSE) ||
+				stringValue.equals(OFF) ||
+				stringValue.equals(ZERO)) {
 			return Boolean.FALSE;
 		}
+
 		throw new TypeConversionException(value);
 	}
 
