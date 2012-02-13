@@ -7,7 +7,7 @@ import jodd.typeconverter.impl.LongArrayConverter;
 public class LongArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {
-		LongArrayConverter longArrayConverter = new LongArrayConverter();
+		LongArrayConverter longArrayConverter = (LongArrayConverter) TypeConverterManager.lookup(long[].class);
 
         assertNull(longArrayConverter.convert(null));
 

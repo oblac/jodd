@@ -7,7 +7,7 @@ import jodd.typeconverter.impl.DoubleArrayConverter;
 public class DoubleArrayConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		DoubleArrayConverter doubleArrayConverter = new DoubleArrayConverter();
+		DoubleArrayConverter doubleArrayConverter = (DoubleArrayConverter) TypeConverterManager.lookup(double[].class);
 
 		assertNull(doubleArrayConverter.convert(null));
 

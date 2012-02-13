@@ -136,11 +136,11 @@ public class TypeConverterManagerBean {
 		register(char.class, characterConverter);
 
 		register(byte[].class, new ByteArrayConverter(convertBean));
-		register(short[].class, new ShortArrayConverter());
-		register(int[].class, new IntegerArrayConverter());
-		register(long[].class, new LongArrayConverter());
-		register(float[].class, new FloatArrayConverter());
-		register(double[].class, new DoubleArrayConverter());
+		register(short[].class, new ShortArrayConverter(convertBean));
+		register(int[].class, new IntegerArrayConverter(convertBean));
+		register(long[].class, new LongArrayConverter(convertBean));
+		register(float[].class, new FloatArrayConverter(convertBean));
+		register(double[].class, new DoubleArrayConverter(convertBean));
 		register(boolean[].class, new BooleanArrayConverter(convertBean));
 
 		register(BigDecimal.class, new BigDecimalConverter());

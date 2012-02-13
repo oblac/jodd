@@ -7,7 +7,7 @@ import jodd.typeconverter.impl.IntegerArrayConverter;
 public class IntegerArrayConverterTest extends BaseTestCase {
 
 	public void testConversion() {
-		IntegerArrayConverter integerArrayConverter = new IntegerArrayConverter();
+		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) TypeConverterManager.lookup(int[].class);
 		
 		assertNull(integerArrayConverter.convert(null));
 

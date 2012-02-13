@@ -7,7 +7,7 @@ import jodd.typeconverter.impl.FloatArrayConverter;
 public class FloatArrayConverterTest extends BaseTestCase {
 	
 	public void testConversion() {
-		FloatArrayConverter floatArrayConverter = new FloatArrayConverter();
+		FloatArrayConverter floatArrayConverter = (FloatArrayConverter) TypeConverterManager.lookup(float[].class);
 		
 		assertNull(floatArrayConverter.convert(null));
 

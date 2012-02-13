@@ -31,17 +31,13 @@ public class ClassArrayConverter implements TypeConverter<Class[]> {
 			return new Class[] {(Class) value};
 		}
 		
-		String[] allClassNames = convertBean.toStringArray(value);
-		int total = allClassNames.length;
-		Class[] result = new Class[total];
-		try {
-			for (int i = 0; i < total; i++) {
-				result[i] = ClassLoaderUtil.loadClass(allClassNames[i].trim());
-			}
-		} catch (ClassNotFoundException cnfex) {
-			throw new TypeConversionException(value, cnfex);
+		String[] classNames = convertBean.toStringArray(value);
+		Class[] result = new Class[classNames.length];
+
+		for (int i = 0; i < classNames.length; i++) {
+			result[i] = convertBean.toClass(classNames[i]);
 		}
-		return result;	
+		return result;
 	}
 
 }

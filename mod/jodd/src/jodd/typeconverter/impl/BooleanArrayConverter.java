@@ -3,7 +3,6 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.ConvertBean;
-import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
@@ -25,20 +24,14 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 
 		Class type = value.getClass();
 		if (type.isArray() == false) {
-			if (type == Boolean.class) {
-				return new boolean[] {((Boolean) value).booleanValue()};
+			// string
+			if (type == String.class) {
+				String[] values = CsvUtil.toStringArray(value.toString());
+				return convertArray(values);
 			}
 
-			String[] values = CsvUtil.toStringArray(value.toString());
-			boolean[] result = new boolean[values.length];
-			try {
-				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-					result[i] = convertBean.toBooleanValue(values[i], false);
-				}
-			} catch (NumberFormatException nfex) {
-				throw new TypeConversionException(value, nfex);
-			}
-			return result;
+			// single value
+			return new boolean[] {convertBean.toBooleanValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
@@ -96,13 +89,16 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 			}
 		}
 
-		// arrays
-		Object[] values = (Object[]) value;
-		boolean[] results = new boolean[values.length];
+		// array
+		return convertArray((Object[]) value);
+	}
+
+	private boolean[] convertArray(Object[] values) {
+		boolean[] result = new boolean[values.length];
 		for (int i = 0; i < values.length; i++) {
-			results[i] = convertBean.toBooleanValue(values[i], false);
+			result[i] = convertBean.toBooleanValue(values[i]);
 		}
-		return results;
+		return result;
 	}
 
 }

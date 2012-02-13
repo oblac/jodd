@@ -2,7 +2,7 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
@@ -11,6 +11,12 @@ import jodd.util.CsvUtil;
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 
+	protected final ConvertBean convertBean;
+
+	public IntegerArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
+
 	public int[] convert(Object value) {
 		if (value == null) {
 			return null;
@@ -18,25 +24,19 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 
 		Class type = value.getClass();
 		if (type.isArray() == false) {
-			if (value instanceof Number) {
-				return new int[] {((Number) value).intValue()};
+			// string
+			if (type == String.class) {
+				String[] values = CsvUtil.toStringArray(value.toString());
+				return convertArray(values);
 			}
-			
-			String[] values = CsvUtil.toStringArray(value.toString());
-			int[] result = new int[values.length];
-			try {
-				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-					result[i] = Integer.parseInt(values[i].trim());
-				}
-			} catch (NumberFormatException nfex) {
-				throw new TypeConversionException(value, nfex);
-			}
-			return result;
+
+			// single value
+			return new int[] {convertBean.toIntegerValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
-        			if (type == int[].class) {
+			if (type == int[].class) {
 				return (int[]) value;
 			}
 			if (type == long[].class) {
@@ -90,20 +90,13 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 		}
 
 		// array
-		Object[] values = (Object[]) value;
+		return convertArray((Object[]) value);
+	}
+
+	protected int[] convertArray(Object[] values) {
 		int[] results = new int[values.length];
-		try {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] != null) {
-					if (values[i] instanceof Number) {
-						results[i] = ((Number) values[i]).intValue();
-					} else {
-						results[i] = Integer.parseInt(values[i].toString().trim());
-					}
-				}
-			}
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
+		for (int i = 0; i < values.length; i++) {
+			results[i] = convertBean.toIntegerValue(values[i]);
 		}
 		return results;
 	}

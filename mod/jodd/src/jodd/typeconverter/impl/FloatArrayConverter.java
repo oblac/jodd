@@ -2,13 +2,20 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.CsvUtil;
 
 /**
  *  Converts given object to <code>float[]</code>.
  */
 public class FloatArrayConverter implements TypeConverter<float[]> {
+
+	protected final ConvertBean convertBean;
+
+	public FloatArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public float[] convert(Object value) {
 		if (value == null) {
@@ -17,14 +24,14 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 
 		Class type = value.getClass();
 		if (type.isArray() == false) {
-			if (value instanceof Number) {
-				return new float[] {((Number) value).floatValue()};
+			// string
+			if (type == String.class) {
+				String[] values = CsvUtil.toStringArray(value.toString());
+				return convertArray(values);
 			}
-			try {
-				return new float[] {Float.parseFloat(value.toString().trim())};
-			} catch (NumberFormatException nfex) {
-				throw new TypeConversionException(value, nfex);
-			}
+
+			// single value
+			return new float[] {convertBean.toFloatValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
@@ -82,21 +89,14 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 			}
 		}
 
-		// arrays
-		Object[] values = (Object[]) value;
+		// array
+		return convertArray((Object[]) value);
+	}
+
+	protected float[] convertArray(Object[] values) {
 		float[] results = new float[values.length];
-		try {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] != null) {
-					if (values[i] instanceof Number) {
-						results[i] = ((Number) values[i]).floatValue();
-					} else {
-						results[i] = Float.parseFloat(values[i].toString().trim());
-					}
-				}
-			}
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
+		for (int i = 0; i < values.length; i++) {
+			results[i] = convertBean.toFloatValue(values[i]);
 		}
 		return results;
 	}

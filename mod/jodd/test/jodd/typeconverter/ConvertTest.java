@@ -97,6 +97,10 @@ public class ConvertTest extends TestCase {
 		assertTrue(barr[0]);
 		assertFalse(barr[1]);
 		assertTrue(barr[2]);
+
+		// return back
+		TypeConverter tc = TypeConverterManager.lookup(Boolean.class);
+		TypeConverterManager.register(boolean.class, tc);
 	}
 	
 }

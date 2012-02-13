@@ -7,7 +7,7 @@ import jodd.typeconverter.impl.ShortArrayConverter;
 public class ShortArrayConverterTest extends BaseTestCase {
 
     public void testConversion() {
-		ShortArrayConverter shortArrayConverter = new ShortArrayConverter();
+		ShortArrayConverter shortArrayConverter = (ShortArrayConverter) TypeConverterManager.lookup(short[].class);
 
         assertNull(shortArrayConverter.convert(null));
 

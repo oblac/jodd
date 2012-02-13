@@ -2,13 +2,20 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.CsvUtil;
 
 /**
  *  Converts given object to <code>double[]</code>.
  */
 public class DoubleArrayConverter implements TypeConverter<double[]> {
+
+	protected final ConvertBean convertBean;
+
+	public DoubleArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public double[] convert(Object value) {
 		if (value == null) {
@@ -17,14 +24,14 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 
 		Class type = value.getClass();
 		if (type.isArray() == false) {
-			if (value instanceof Number) {
-				return new double[] {((Number) value).doubleValue()};
+			// string
+			if (type == String.class) {
+				String[] values = CsvUtil.toStringArray(value.toString());
+				return convertArray(values);
 			}
-			try {
-				return new double[] {Double.parseDouble(value.toString().trim())};
-			} catch (NumberFormatException nfex) {
-				throw new TypeConversionException(value, nfex);
-			}
+
+			// single value
+			return new double[] {convertBean.toDoubleValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
@@ -83,20 +90,13 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		}
 
 		// array
-		Object[] values = (Object[]) value;
+		return convertArray((Object[]) value);
+	}
+
+	protected double[] convertArray(Object[] values) {
 		double[] results = new double[values.length];
-		try {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] != null) {
-					if (values[i] instanceof Number) {
-						results[i] = ((Number) values[i]).doubleValue();
-					} else {
-						results[i] = Double.parseDouble(values[i].toString().trim());
-					}
-				}
-			}
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
+		for (int i = 0; i < values.length; i++) {
+			results[i] = convertBean.toDoubleValue(values[i]);
 		}
 		return results;
 	}

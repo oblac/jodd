@@ -2,6 +2,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
@@ -14,15 +15,20 @@ import java.sql.SQLException;
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 
+	protected final ConvertBean convertBean;
+
+	public ByteArrayConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
+
 	public byte[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
 		Class type = value.getClass();
+
 		if (type.isArray() == false) {
-			if (value instanceof Number) {
-				return new byte[] {((Number) value).byteValue()};
-			}
+			// blob
 			if (value instanceof Blob) {
 				Blob blob = (Blob) value;
 				try {
@@ -36,16 +42,14 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 				}
 			}
 
-			String[] values = CsvUtil.toStringArray(value.toString());
-			byte[] result = new byte[values.length];
-			try {
-				for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-					result[i] = Byte.parseByte(values[i].trim());
-				}
-			} catch (NumberFormatException nfex) {
-				throw new TypeConversionException(value, nfex);
+			// string
+			if (type == String.class) {
+				String[] values = CsvUtil.toStringArray(value.toString());
+				return convertArray(values);
 			}
-			return result;
+
+			// single value
+			return new byte[] {convertBean.toByteValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
@@ -103,21 +107,16 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 			}
 		}
 
-		// arrays
-		Object[] values = (Object[]) value;
-		byte[] results = new byte[values.length];
-		try {
-			for (int i = 0; i < values.length; i++) {
-				if (values[i] instanceof Number) {
-					results[i] = ((Number) values[i]).byteValue();
-				} else {
-					results[i] = Byte.parseByte(values[i].toString().trim());
-				}
-			}
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
+		// array
+		return convertArray((Object[]) value);
+	}
+
+	protected byte[] convertArray(Object[] values) {
+		byte[] result = new byte[values.length];
+		for (int i = 0; i < values.length; i++) {
+			result[i] = convertBean.toByteValue(values[i]);
 		}
-		return results;
+		return result;
 	}
 
 }
