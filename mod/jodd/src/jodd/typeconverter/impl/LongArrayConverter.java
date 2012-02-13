@@ -34,7 +34,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 			return result;
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == long[].class) {
 				return (long[]) value;

@@ -34,7 +34,7 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 			return result;
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == short[].class) {
 				return (short[]) value;

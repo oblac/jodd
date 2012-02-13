@@ -48,7 +48,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 			return result;
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == byte[].class) {
 				return (byte[]) value;

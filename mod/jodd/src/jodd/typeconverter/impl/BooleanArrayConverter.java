@@ -41,7 +41,7 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 			return result;
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == boolean[].class) {
 				return (boolean[]) value;

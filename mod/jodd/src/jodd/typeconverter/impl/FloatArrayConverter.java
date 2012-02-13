@@ -27,7 +27,7 @@ public class FloatArrayConverter implements TypeConverter<float[]> {
 			}
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == float[].class) {
 				return (float[]) value;

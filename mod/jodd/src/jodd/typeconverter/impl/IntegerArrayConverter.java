@@ -34,7 +34,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 			return result;
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
         			if (type == int[].class) {
 				return (int[]) value;

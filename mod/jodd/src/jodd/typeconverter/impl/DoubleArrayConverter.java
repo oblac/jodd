@@ -27,7 +27,7 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 			}
 		}
 
-		if (type.getName().startsWith("[L") == false) {
+		if (type.getComponentType().isPrimitive()) {
 			// primitive arrays
 			if (type == double[].class) {
 				return (double[]) value;
