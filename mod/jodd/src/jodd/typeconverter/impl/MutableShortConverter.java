@@ -3,14 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableShort;
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
-
 
 /**
  * Converts given object to {@link MutableShort}.
  */
 public class MutableShortConverter implements TypeConverter<MutableShort> {
+
+	protected final ConvertBean convertBean;
+
+	public MutableShortConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public MutableShort convert(Object value) {
 		if (value == null) {
@@ -20,14 +25,8 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 		if (value.getClass() == MutableShort.class) {
 			return (MutableShort) value;
 		}
-		if (value instanceof Number) {
-			return new MutableShort(((Number)value).byteValue());
-		}
-		try {
-			return new MutableShort(value.toString().trim());
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
-		}
+
+		return new MutableShort(convertBean.toShortValue(value));
 	}
 
 }

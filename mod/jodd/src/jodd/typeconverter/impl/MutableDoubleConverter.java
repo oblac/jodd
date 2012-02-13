@@ -3,13 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableDouble;
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
 
 /**
  * Converts given object to {@link MutableDouble}.
  */
 public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
+
+	protected final ConvertBean convertBean;
+
+	public MutableDoubleConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public MutableDouble convert(Object value) {
 		if (value == null) {
@@ -19,14 +25,8 @@ public class MutableDoubleConverter implements TypeConverter<MutableDouble> {
 		if (value.getClass() == MutableDouble.class) {
 			return (MutableDouble) value;
 		}
-		if (value instanceof Number) {
-			return new MutableDouble(((Number)value).doubleValue());
-		}
-		try {
-			return new MutableDouble(value.toString().trim());
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
-		}
+
+		return new MutableDouble(convertBean.toDoubleValue(value));
 	}
 
 }

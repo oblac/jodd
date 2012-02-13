@@ -3,13 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableInteger;
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
 
 /**
  * Converts given object to an {@link MutableInteger}.
  */
 public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
+
+	protected final ConvertBean convertBean;
+
+	public MutableIntegerConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public MutableInteger convert(Object value) {
 		if (value == null) {
@@ -19,14 +25,8 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 		if (value.getClass() == MutableInteger.class) {
 			return (MutableInteger) value;
 		}
-		if (value instanceof Number) {
-			return new MutableInteger(((Number)value).intValue());
-		}
-		try {
-			return new MutableInteger(value.toString().trim());
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
-		}
+
+		return new MutableInteger(convertBean.toIntValue(value));
 	}
 
 }

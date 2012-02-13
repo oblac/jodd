@@ -3,13 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableLong;
-import jodd.typeconverter.TypeConversionException;
+import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
 
 /**
  * Converts given object to a {@link MutableLong}.
  */
 public class MutableLongConverter implements TypeConverter<MutableLong> {
+
+	protected final ConvertBean convertBean;
+
+	public MutableLongConverter(ConvertBean convertBean) {
+		this.convertBean = convertBean;
+	}
 
 	public MutableLong convert(Object value) {
 		if (value == null) {
@@ -19,13 +25,7 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 		if (value.getClass() == MutableLong.class) {
 			return (MutableLong) value;
 		}
-		if (value instanceof Number) {
-			return new MutableLong(((Number)value).longValue());
-		}
-		try {
-			return (new MutableLong(value.toString().trim()));
-		} catch (NumberFormatException nfex) {
-			throw new TypeConversionException(value, nfex);
-		}
+
+		return new MutableLong(convertBean.toLongValue(value));
 	}
 }

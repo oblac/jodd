@@ -101,32 +101,32 @@ public class TypeConverterManagerBean {
 		IntegerConverter integerConverter = new IntegerConverter();
 		register(Integer.class, integerConverter);
 		register(int.class, integerConverter);
-		register(MutableInteger.class, new MutableIntegerConverter());
+		register(MutableInteger.class, new MutableIntegerConverter(convertBean));
 
 		ShortConverter shortConverter = new ShortConverter();
 		register(Short.class, shortConverter);
 		register(short.class, shortConverter);
-		register(MutableShort.class, new MutableShortConverter());
+		register(MutableShort.class, new MutableShortConverter(convertBean));
 
 		LongConverter longConverter = new LongConverter();
 		register(Long.class, longConverter);
 		register(long.class, longConverter);
-		register(MutableLong.class, new MutableLongConverter());
+		register(MutableLong.class, new MutableLongConverter(convertBean));
 
 		ByteConverter byteConverter = new ByteConverter();
 		register(Byte.class, byteConverter);
 		register(byte.class, byteConverter);
-		register(MutableByte.class, new MutableByteConverter());
+		register(MutableByte.class, new MutableByteConverter(convertBean));
 
 		FloatConverter floatConverter = new FloatConverter();
 		register(Float.class, floatConverter);
 		register(float.class, floatConverter);
-		register(MutableFloat.class, new MutableFloatConverter());
+		register(MutableFloat.class, new MutableFloatConverter(convertBean));
 
 		DoubleConverter doubleConverter = new DoubleConverter();
 		register(Double.class, doubleConverter);
 		register(double.class, doubleConverter);
-		register(MutableDouble.class, new MutableDoubleConverter());
+		register(MutableDouble.class, new MutableDoubleConverter(convertBean));
 
 		BooleanConverter booleanConverter = new BooleanConverter();
 		register(Boolean.class, booleanConverter);
