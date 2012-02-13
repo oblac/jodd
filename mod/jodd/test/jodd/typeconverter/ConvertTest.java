@@ -51,6 +51,7 @@ public class ConvertTest extends TestCase {
 		assertEquals(555, Convert.toLong("555").longValue());
 
 		assertEquals(555, Convert.toShort("555").shortValue());
+		assertEquals(55, Convert.toByte("55").byteValue());
 
 		assertNotNull(Convert.toString("555"));
 		assertNotNull(Convert.toBooleanArray("1"));

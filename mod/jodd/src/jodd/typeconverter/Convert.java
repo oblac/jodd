@@ -107,6 +107,18 @@ public class Convert {
 		return getConvertBean().toCharacterValue(value);
 	}
 
+	public static Byte toByte(Object value) {
+		return getConvertBean().toByte(value);
+	}
+
+	public static byte toByte(Object value, byte defaultValue) {
+		return getConvertBean().toByte(value, defaultValue);
+	}
+
+	public static byte toByteValue(Object value) {
+		return getConvertBean().toByteValue(value);
+	}
+
 	public static boolean[] toBooleanArray(Object value) {
 		return getConvertBean().toBooleanArray(value);
 	}

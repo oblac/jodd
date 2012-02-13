@@ -16,6 +16,7 @@ types = [
 	[8, 'Double', 'double', '0'],
 	[10, 'Short', 'short', '(short) 0'],
 	[12, 'Character', 'char', '(char) 0'],
+	[14, 'Byte', 'byte', '(byte) 0'],
 ]
 
 template = '''
@@ -60,22 +61,22 @@ for type in types:
 ### -----------------------------------------------------------------
 
 types = [
-	[14, 'boolean[]', 'BooleanArray'],
-	[15, 'int[]', 'IntegerArray'],
-	[16, 'long[]', 'LongArray'],
-	[17, 'float[]', 'FloatArray'],
-	[18, 'double[]', 'DoubleArray'],
-	[19, 'short[]', 'ShortArray'],
-	[20, 'char[]', 'CharacterArray'],
-	[21, 'String', 'String'],
-	[22, 'String[]', 'StringArray'],
-	[23, 'Class', 'Class'],
-	[24, 'Class[]', 'ClassArray'],
-	[25, 'JDateTime', 'JDateTime'],
-	[26, 'Date', 'Date'],
-	[27, 'Calendar', 'Calendar'],
-	[28, 'BigInteger', 'BigInteger'],
-	[29, 'BigDecimal', 'BigDecimal'],
+	[16, 'boolean[]', 'BooleanArray'],
+	[17, 'int[]', 'IntegerArray'],
+	[18, 'long[]', 'LongArray'],
+	[19, 'float[]', 'FloatArray'],
+	[20, 'double[]', 'DoubleArray'],
+	[21, 'short[]', 'ShortArray'],
+	[22, 'char[]', 'CharacterArray'],
+	[23, 'String', 'String'],
+	[24, 'String[]', 'StringArray'],
+	[25, 'Class', 'Class'],
+	[26, 'Class[]', 'ClassArray'],
+	[27, 'JDateTime', 'JDateTime'],
+	[28, 'Date', 'Date'],
+	[29, 'Calendar', 'Calendar'],
+	[30, 'BigInteger', 'BigInteger'],
+	[31, 'BigDecimal', 'BigDecimal'],
 ]
 
 template = '''
