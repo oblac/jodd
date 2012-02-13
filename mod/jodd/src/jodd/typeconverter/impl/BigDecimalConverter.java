@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 
 /**
  * Converts given object to <code>BigDecimal</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li>object is converted to string, trimmed, and then converted if possible
  */
 public class BigDecimalConverter implements TypeConverter<BigDecimal> {
 

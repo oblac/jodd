@@ -14,7 +14,13 @@ import java.io.InputStream;
 
 /**
  * Converts given object into the <code>File</code>.
- * Returned file is stored in temporary folder.
+ * If created, returned file is stored in the temporary folder.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li><code>FileUpload</code> is read and converted
+ * <li><code>byte[]</code> content is used for creating a file
+ * <li><code>String</code> content is used for creating a file
  */
 public class FileConverter implements TypeConverter<File> {
 
@@ -22,10 +28,12 @@ public class FileConverter implements TypeConverter<File> {
 		if (value == null) {
 			return null;
 		}
-		Class type = value.getClass();
+
+
 		if (value instanceof File) {
 			return (File) value;
 		}
+
 		if (value instanceof FileUpload) {
 			FileUpload fileUpload = (FileUpload) value;
 
@@ -41,6 +49,8 @@ public class FileConverter implements TypeConverter<File> {
 				StreamUtil.close(in);
 			}
 		}
+
+		Class type = value.getClass();
 		if (type == byte[].class) {
 			try {
 				File tempFile = FileUtil.createTempFile();

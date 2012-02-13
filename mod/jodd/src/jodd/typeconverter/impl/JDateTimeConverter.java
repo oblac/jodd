@@ -14,6 +14,14 @@ import java.util.Date;
 
 /**
  * Converts object to {@link JDateTime}.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li><code>Calendar</code> object is converted
+ * <li><code>Date</code> object is converted
+ * <li><code>Number</code> is used as number of milliseconds
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds;
+ * otherwise as JDateTime pattern
  */
 public class JDateTimeConverter implements TypeConverter<JDateTime> {
 

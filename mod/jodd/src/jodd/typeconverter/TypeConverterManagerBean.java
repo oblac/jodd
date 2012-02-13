@@ -17,6 +17,7 @@ import jodd.typeconverter.impl.BooleanConverter;
 import jodd.typeconverter.impl.ByteArrayConverter;
 import jodd.typeconverter.impl.ByteConverter;
 import jodd.typeconverter.impl.CalendarConverter;
+import jodd.typeconverter.impl.CharacterArrayConverter;
 import jodd.typeconverter.impl.CharacterConverter;
 import jodd.typeconverter.impl.ClassArrayConverter;
 import jodd.typeconverter.impl.ClassConverter;
@@ -142,6 +143,7 @@ public class TypeConverterManagerBean {
 		register(float[].class, new FloatArrayConverter(convertBean));
 		register(double[].class, new DoubleArrayConverter(convertBean));
 		register(boolean[].class, new BooleanArrayConverter(convertBean));
+		register(char[].class, new CharacterArrayConverter(convertBean));
 
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());

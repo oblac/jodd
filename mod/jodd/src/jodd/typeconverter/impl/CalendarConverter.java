@@ -10,6 +10,17 @@ import jodd.util.StringUtil;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Converts given object to <code>Byte</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li><code>Date</code> object is converted
+ * <li><code>JDateTime</code> object is converted
+ * <li><code>Number</code> is used as number of milliseconds
+ * <li>finally, if string value contains only numbers it is parsed as milliseconds;
+ * otherwise as JDateTime pattern
+ */
 public class CalendarConverter implements TypeConverter<Calendar> {
 
 	public Calendar convert(Object value) {

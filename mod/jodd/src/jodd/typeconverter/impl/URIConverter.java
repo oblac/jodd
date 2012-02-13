@@ -12,6 +12,12 @@ import java.net.URL;
 
 /**
  * Convert given object to <code>URI</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li><code>File</code> is converted
+ * <li><code>URL</code> is converted
+ * <li><code>String</code> representation is used for creating URI
  */
 public class URIConverter implements TypeConverter<URI> {
 

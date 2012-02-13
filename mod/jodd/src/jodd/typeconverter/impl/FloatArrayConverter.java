@@ -7,7 +7,13 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
 /**
- *  Converts given object to <code>float[]</code>.
+ * Converts given object to <code>float[]</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>string is considered as CSV value and split before conversion
+ * <li>single value is returned as 1-length array wrapped over converted value
+ * <li>native arrays are converted directly
+ * <li>object arrays is converted element by element
  */
 public class FloatArrayConverter implements TypeConverter<float[]> {
 

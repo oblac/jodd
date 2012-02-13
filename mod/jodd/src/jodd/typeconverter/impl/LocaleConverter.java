@@ -8,7 +8,10 @@ import jodd.util.LocaleUtil;
 import java.util.Locale;
 
 /**
- * Converts given object to Java locale.
+ * Converts given object to Java <code>Locale</code>.
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li>finally, string representation of the object is used for getting the locale
  */
 public class LocaleConverter implements TypeConverter<Locale> {
 

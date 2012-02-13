@@ -7,8 +7,12 @@ import jodd.typeconverter.TypeConverter;
 import jodd.util.StringUtil;
 
 /**
- * Converts given object to <code>Byte</code>. Given object (if not already instance of
- * <code>Byte</code>) is first converted to <code>String</code> and then analyzed.
+ * Converts given object to <code>Byte</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li>object is converted to string, trimmed, and then converted if possible.
+ * Number string may start with plus and minus sign.
  */
 public class ByteConverter implements TypeConverter<Byte> {
 

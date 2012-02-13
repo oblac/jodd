@@ -7,7 +7,10 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 /**
- * Converts given object to {@link FileUpload}
+ * Converts given object to {@link FileUpload}.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
  */
 public class FileUploadConverter implements TypeConverter<FileUpload> {
 

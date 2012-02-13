@@ -8,8 +8,13 @@ import jodd.typeconverter.TypeConverter;
 import static jodd.util.StringPool.*;
 
 /**
- * Converts given object to <code>Boolean</code>. Given object (if not already instance of
- * <code>Boolean</code>) is first converted to <code>String</code> and then analyzed.
+ * Converts given object to <code>Boolean</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>object of destination type is simply casted
+ * <li>object is converted to string, trimmed. Then common boolean strings are matched:
+ * "yes", "y", "true", "on", "1" for <code>true</code>; and opposite values
+ * for <code>false</code>.
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 

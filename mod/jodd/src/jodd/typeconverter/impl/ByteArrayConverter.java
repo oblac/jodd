@@ -11,7 +11,14 @@ import java.sql.Blob;
 import java.sql.SQLException;
 
 /**
- *  Converts given object to <code>byte[]</code>.
+ * Converts given object to <code>byte[]</code>.
+ * Conversion rules:
+ * <li><code>null</code> value is returned as <code>null</code>
+ * <li>Blob values are converted directly
+ * <li>string is considered as CSV value and split before conversion
+ * <li>single value is returned as 1-length array wrapped over converted value
+ * <li>native arrays are converted directly
+ * <li>object arrays is converted element by element
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 

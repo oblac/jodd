@@ -60,7 +60,7 @@ public class ConvertTest extends TestCase {
 		assertNotNull(Convert.toFloatArray("1"));
 		assertNotNull(Convert.toDoubleArray("1"));
 		assertNotNull(Convert.toShortArray("1"));
-//		assertNotNull(Convert.toCharacterArray("A"));
+		assertNotNull(Convert.toCharacterArray("A"));
 	}
 	
 	public void testChangeConverter() {
