@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class MutableByteConverterTest extends TestCase {
 
     public void testConversion() {
-		MutableByteConverter mutableByteConverter = new MutableByteConverter();
+		MutableByteConverter mutableByteConverter = (MutableByteConverter) TypeConverterManager.lookup(MutableByte.class);
 		
         assertNull(mutableByteConverter.convert(null));
 

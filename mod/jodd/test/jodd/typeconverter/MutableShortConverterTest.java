@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class MutableShortConverterTest extends TestCase {
 
 	public void testConversion() {
-		MutableShortConverter mutableShortConverter = new MutableShortConverter();
+		MutableShortConverter mutableShortConverter = (MutableShortConverter) TypeConverterManager.lookup(MutableShort.class);
 		
 		assertNull(mutableShortConverter.convert(null));
 

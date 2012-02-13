@@ -9,7 +9,7 @@ import jodd.mutable.MutableInteger;
 public class MutableIntegerConverterTest extends TestCase {
 
 	public void testConversion() {
-		MutableIntegerConverter mutableIntegerConverter = new MutableIntegerConverter();
+		MutableIntegerConverter mutableIntegerConverter = (MutableIntegerConverter) TypeConverterManager.lookup(MutableInteger.class);
 		
 		assertNull(mutableIntegerConverter.convert(null));
 		

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class MutableFloatConverterTest extends TestCase {
 
     public void testConversion() {
-		MutableFloatConverter mutableFloatConverter = new MutableFloatConverter();
+		MutableFloatConverter mutableFloatConverter = (MutableFloatConverter) TypeConverterManager.lookup(MutableFloat.class);
 		
         assertNull(mutableFloatConverter.convert(null));
 

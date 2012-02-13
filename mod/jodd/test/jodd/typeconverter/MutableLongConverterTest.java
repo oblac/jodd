@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class MutableLongConverterTest extends TestCase {
 
     public void testConversion() {
-		MutableLongConverter mutableLongConverter = new MutableLongConverter();
+		MutableLongConverter mutableLongConverter = (MutableLongConverter) TypeConverterManager.lookup(MutableLong.class);
 		
         assertNull(mutableLongConverter.convert(null));
 

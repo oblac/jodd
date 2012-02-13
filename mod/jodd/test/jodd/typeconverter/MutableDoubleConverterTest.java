@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class MutableDoubleConverterTest extends TestCase {
 
     public void testConversion() {
-		MutableDoubleConverter mutableDoubleConverter = new MutableDoubleConverter();
+		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.lookup(MutableDouble.class);
 		
         assertNull(mutableDoubleConverter.convert(null));
 
