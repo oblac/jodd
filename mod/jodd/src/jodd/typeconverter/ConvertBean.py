@@ -10,12 +10,12 @@ java = java[0:genStart + 11]
 
 types = [
 	[0, 'Boolean', 'boolean', 'false'],
-	[1, 'Integer', 'int', '0'],
-	[2, 'Long', 'long', '0'],
-	[3, 'Float', 'float', '0'],
-	[4, 'Double', 'double', '0'],
-	[5, 'Short', 'short', '(short) 0'],
-	[6, 'Character', 'char', '(char) 0'],
+	[2, 'Integer', 'int', '0'],
+	[4, 'Long', 'long', '0'],
+	[6, 'Float', 'float', '0'],
+	[8, 'Double', 'double', '0'],
+	[10, 'Short', 'short', '(short) 0'],
+	[12, 'Character', 'char', '(char) 0'],
 ]
 
 template = '''
@@ -32,7 +32,7 @@ template = '''
 	 * when conversion result is <code>null</code>.
 	 */
 	public $t to$T(Object value, $t defaultValue) {
-		$T result = ($T) typeConverters[#].convert(value);
+		$T result = ($T) typeConverters[#++].convert(value);
 		if (result == null) {
 			return defaultValue;
 		}
@@ -50,6 +50,7 @@ template = '''
 for type in types:
 	# small type
 	data = template
+	data = data.replace('#++', str(type[0] + 1))
 	data = data.replace('#', str(type[0]))
 	data = data.replace('$T', type[1])
 	data = data.replace('$t', type[2])
@@ -59,22 +60,22 @@ for type in types:
 ### -----------------------------------------------------------------
 
 types = [
-	[7, 'boolean[]', 'BooleanArray'],
-	[8, 'int[]', 'IntegerArray'],
-	[9, 'long[]', 'LongArray'],
-	[10, 'float[]', 'FloatArray'],
-	[11, 'double[]', 'DoubleArray'],
-	[12, 'short[]', 'ShortArray'],
-	[13, 'char[]', 'CharacterArray'],
-	[14, 'String', 'String'],
-	[15, 'String[]', 'StringArray'],
-	[16, 'Class', 'Class'],
-	[17, 'Class[]', 'ClassArray'],
-	[18, 'JDateTime', 'JDateTime'],
-	[19, 'Date', 'Date'],
-	[20, 'Calendar', 'Calendar'],
-	[21, 'BigInteger', 'BigInteger'],
-	[22, 'BigDecimal', 'BigDecimal'],
+	[14, 'boolean[]', 'BooleanArray'],
+	[15, 'int[]', 'IntegerArray'],
+	[16, 'long[]', 'LongArray'],
+	[17, 'float[]', 'FloatArray'],
+	[18, 'double[]', 'DoubleArray'],
+	[19, 'short[]', 'ShortArray'],
+	[20, 'char[]', 'CharacterArray'],
+	[21, 'String', 'String'],
+	[22, 'String[]', 'StringArray'],
+	[23, 'Class', 'Class'],
+	[24, 'Class[]', 'ClassArray'],
+	[25, 'JDateTime', 'JDateTime'],
+	[26, 'Date', 'Date'],
+	[27, 'Calendar', 'Calendar'],
+	[28, 'BigInteger', 'BigInteger'],
+	[29, 'BigDecimal', 'BigDecimal'],
 ]
 
 template = '''
