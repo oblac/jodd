@@ -2,6 +2,9 @@
 
 package jodd.bean;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Supreme utility for reading and writing bean properties. However, this one is the fastest available.
  * Although it provides various methods, the whole thing can be easily extended to match most needs.
@@ -152,6 +155,20 @@ public class BeanUtil {
 
 	public static Class getDeclaredPropertyType(Object bean, String name) {
 		return BEAN_UTIL_BEAN.getDeclaredPropertyType(bean, name);
+	}
+	
+	// ---------------------------------------------------------------- populate
+
+	public static void populateBean(Object bean, Map<?, ?> map) {
+		BEAN_UTIL_BEAN.populateBean(bean, map);
+	}
+
+	public static void populateProperty(Object bean, String name, Map<?, ?> map) {
+		BEAN_UTIL_BEAN.populateProperty(bean, name, map);
+	}
+
+	public static void populateProperty(Object bean, String name, List<?> list) {
+		BEAN_UTIL_BEAN.populateProperty(bean, name, list);
 	}
 
 	// ---------------------------------------------------------------- utilities

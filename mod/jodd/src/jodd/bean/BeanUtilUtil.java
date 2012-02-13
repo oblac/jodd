@@ -32,7 +32,7 @@ public class BeanUtilUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	protected Object convertType(Object value, Class type) {
-		value = typeConverterManager.castType(value, type);
+		value = typeConverterManager.convertType(value, type);
 		return value;
 	}
 
@@ -232,7 +232,7 @@ public class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to create '" + bp.name + "' through its setter.", bp);
+			throw new BeanException("Unable to create '" + bp.name + "' property.", bp, ex);
 		}
 		if (setter != null) {
 			invokeSetter(bp.bean, setter, newInstance);

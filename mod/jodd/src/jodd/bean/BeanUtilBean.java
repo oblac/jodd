@@ -561,6 +561,66 @@ public class BeanUtilBean extends BeanUtilUtil {
 	}
 
 
+	// ---------------------------------------------------------------- populate
+
+	/**
+	 * Populates bean from a <code>Map</code>.
+	 */
+	public void populateBean(Object bean, Map<?, ?> map) {
+		populateProperty(bean, null, map);
+	}
+
+	/**
+	 * Populates <b>simple</b> bean property from a <code>Map</code>.
+	 */
+	public void populateProperty(Object bean, String name, Map<?, ?> map) {
+
+		if (name != null) {
+			if (map == null) {
+				setSimpleProperty(bean, name, null, false);
+				return;
+			}
+
+			bean = getSimplePropertyForced(bean, name, true);
+		}
+
+		for (Map.Entry<?, ?> entry : map.entrySet()) {
+			String key = entry.getKey().toString();
+			Object value = entry.getValue();
+
+			if (value != null) {
+				if (value instanceof Map) {
+					populateProperty(bean, key, (Map) value);
+					continue;
+				}
+				if (value instanceof List) {
+					populateProperty(bean, key, (List) value);
+					continue;
+				}
+			}
+
+			setSimpleProperty(bean, key, value, true);
+		}
+	}
+
+	/**
+	 * Populates <b>indexed</b> bean property from a <code>List</code>.
+	 */
+	public void populateProperty(Object bean, String name, List<?> list) {
+		if (list == null) {
+			setSimpleProperty(bean, name, null, false);
+			return;
+		}
+
+		name += '[';
+		int index = 0;
+
+		for (Object item : list) {
+			setIndexProperty(bean, name + index + ']', item, true, true);
+			index++;
+		}
+	}
+
 	// ---------------------------------------------------------------- utilities
 
 	private static char[] indexChars = new char[] {'.', '['};
