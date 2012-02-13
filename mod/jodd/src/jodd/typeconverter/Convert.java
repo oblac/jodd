@@ -39,12 +39,12 @@ public class Convert {
 		return getConvertBean().toInteger(value);
 	}
 
-	public static int toIntegerValue(Object value, int defaultValue) {
-		return getConvertBean().toIntegerValue(value, defaultValue);
+	public static int toIntValue(Object value, int defaultValue) {
+		return getConvertBean().toIntValue(value, defaultValue);
 	}
 
-	public static int toIntegerValue(Object value) {
-		return getConvertBean().toIntegerValue(value);
+	public static int toIntValue(Object value) {
+		return getConvertBean().toIntValue(value);
 	}
 
 	public static Long toLong(Object value) {
@@ -99,12 +99,12 @@ public class Convert {
 		return getConvertBean().toCharacter(value);
 	}
 
-	public static char toCharacterValue(Object value, char defaultValue) {
-		return getConvertBean().toCharacterValue(value, defaultValue);
+	public static char toCharValue(Object value, char defaultValue) {
+		return getConvertBean().toCharValue(value, defaultValue);
 	}
 
-	public static char toCharacterValue(Object value) {
-		return getConvertBean().toCharacterValue(value);
+	public static char toCharValue(Object value) {
+		return getConvertBean().toCharValue(value);
 	}
 
 	public static Byte toByte(Object value) {

@@ -110,7 +110,7 @@ public class ConvertBean {
 	 * Converts value to <code>int</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public int toIntegerValue(Object value, int defaultValue) {
+	public int toIntValue(Object value, int defaultValue) {
 		Integer result = (Integer) typeConverters[3].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -121,8 +121,8 @@ public class ConvertBean {
 	/**
 	 * Converts value to <code>int</code> with common default value.
 	 */
-	public int toIntegerValue(Object value) {
-		return toIntegerValue(value, 0);
+	public int toIntValue(Object value) {
+		return toIntValue(value, 0);
 	}
 
 
@@ -245,7 +245,7 @@ public class ConvertBean {
 	 * Converts value to <code>char</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public char toCharacterValue(Object value, char defaultValue) {
+	public char toCharValue(Object value, char defaultValue) {
 		Character result = (Character) typeConverters[13].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -256,8 +256,8 @@ public class ConvertBean {
 	/**
 	 * Converts value to <code>char</code> with common default value.
 	 */
-	public char toCharacterValue(Object value) {
-		return toCharacterValue(value, (char) 0);
+	public char toCharValue(Object value) {
+		return toCharValue(value, (char) 0);
 	}
 
 

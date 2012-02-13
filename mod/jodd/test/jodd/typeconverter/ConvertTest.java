@@ -25,8 +25,8 @@ public class ConvertTest extends TestCase {
 		assertNotNull(Convert.toCalendar((new JDateTime())));
 		
 		assertEquals(Character.valueOf('A'), Convert.toCharacter("A"));
-		assertEquals('A', Convert.toCharacterValue("A", ' '));
-		assertEquals('A', Convert.toCharacterValue("A"));
+		assertEquals('A', Convert.toCharValue("A", ' '));
+		assertEquals('A', Convert.toCharValue("A"));
 		
 		assertEquals(Integer.class, Convert.toClass("java.lang.Integer"));
 

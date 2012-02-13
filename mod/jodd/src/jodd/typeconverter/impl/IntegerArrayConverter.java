@@ -31,7 +31,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 			}
 
 			// single value
-			return new int[] {convertBean.toIntegerValue(value)};
+			return new int[] {convertBean.toIntValue(value)};
 		}
 
 		if (type.getComponentType().isPrimitive()) {
@@ -96,7 +96,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 	protected int[] convertArray(Object[] values) {
 		int[] results = new int[values.length];
 		for (int i = 0; i < values.length; i++) {
-			results[i] = convertBean.toIntegerValue(values[i]);
+			results[i] = convertBean.toIntValue(values[i]);
 		}
 		return results;
 	}

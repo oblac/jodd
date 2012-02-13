@@ -45,7 +45,7 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 
 		td.readOnly = Convert.toBooleanValue(readElement(annotation, "readOnly"), true);
 
-		td.timeout = Convert.toIntegerValue(readStringElement(annotation, "timeout"), JtxTransactionMode.DEFAULT_TIMEOUT);
+		td.timeout = Convert.toIntValue(readStringElement(annotation, "timeout"), JtxTransactionMode.DEFAULT_TIMEOUT);
 
 		return td;
 	}

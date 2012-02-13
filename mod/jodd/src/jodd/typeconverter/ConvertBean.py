@@ -32,7 +32,7 @@ template = '''
 	 * Converts value to <code>$t</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public $t to$TValue(Object value, $t defaultValue) {
+	public $t to$PValue(Object value, $t defaultValue) {
 		$T result = ($T) typeConverters[#++].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -43,8 +43,8 @@ template = '''
 	/**
 	 * Converts value to <code>$t</code> with common default value.
 	 */
-	public $t to$TValue(Object value) {
-		return to$TValue(value, $D);
+	public $t to$PValue(Object value) {
+		return to$PValue(value, $D);
 	}
 '''
 
@@ -55,6 +55,7 @@ for type in types:
 	data = data.replace('#', str(type[0]))
 	data = data.replace('$T', type[1])
 	data = data.replace('$t', type[2])
+	data = data.replace('$P', type[2].title())
 	data = data.replace('$D', type[3])
 	java += data
 
