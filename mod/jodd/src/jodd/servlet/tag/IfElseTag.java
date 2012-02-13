@@ -18,7 +18,7 @@ public class IfElseTag extends SimpleTagSupport {
 
 	public void setTest(String test) {
 		try {
-			this.testValue = Convert.toBoolean(test, false);
+			this.testValue = Convert.toBooleanValue(test, false);
 		} catch (TypeConversionException ignore) {
 			this.testValue = false;
 		}

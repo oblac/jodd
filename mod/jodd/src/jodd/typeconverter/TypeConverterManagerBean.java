@@ -135,7 +135,7 @@ public class TypeConverterManagerBean {
 		register(Character.class, characterConverter);
 		register(char.class, characterConverter);
 
-		register(byte[].class, new ByteArrayConverter());
+		register(byte[].class, new ByteArrayConverter(convertBean));
 		register(short[].class, new ShortArrayConverter());
 		register(int[].class, new IntegerArrayConverter());
 		register(long[].class, new LongArrayConverter());

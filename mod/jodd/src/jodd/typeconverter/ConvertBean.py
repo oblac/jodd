@@ -32,7 +32,7 @@ template = '''
 	 * Converts value to <code>$t</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public $t to$T(Object value, $t defaultValue) {
+	public $t to$TValue(Object value, $t defaultValue) {
 		$T result = ($T) typeConverters[#++].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -44,7 +44,7 @@ template = '''
 	 * Converts value to <code>$t</code> with common default value.
 	 */
 	public $t to$TValue(Object value) {
-		return to$T(value, $D);
+		return to$TValue(value, $D);
 	}
 '''
 

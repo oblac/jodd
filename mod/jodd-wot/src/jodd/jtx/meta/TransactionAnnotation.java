@@ -43,9 +43,9 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 
 		td.isolation = (JtxIsolationLevel) readElement(annotation, "isolation");
 
-		td.readOnly = Convert.toBoolean(readElement(annotation, "readOnly"), true);
+		td.readOnly = Convert.toBooleanValue(readElement(annotation, "readOnly"), true);
 
-		td.timeout = Convert.toInteger(readStringElement(annotation, "timeout"), JtxTransactionMode.DEFAULT_TIMEOUT);
+		td.timeout = Convert.toIntegerValue(readStringElement(annotation, "timeout"), JtxTransactionMode.DEFAULT_TIMEOUT);
 
 		return td;
 	}

@@ -27,8 +27,8 @@ public class Convert {
 		return getConvertBean().toBoolean(value);
 	}
 
-	public static boolean toBoolean(Object value, boolean defaultValue) {
-		return getConvertBean().toBoolean(value, defaultValue);
+	public static boolean toBooleanValue(Object value, boolean defaultValue) {
+		return getConvertBean().toBooleanValue(value, defaultValue);
 	}
 
 	public static boolean toBooleanValue(Object value) {
@@ -39,8 +39,8 @@ public class Convert {
 		return getConvertBean().toInteger(value);
 	}
 
-	public static int toInteger(Object value, int defaultValue) {
-		return getConvertBean().toInteger(value, defaultValue);
+	public static int toIntegerValue(Object value, int defaultValue) {
+		return getConvertBean().toIntegerValue(value, defaultValue);
 	}
 
 	public static int toIntegerValue(Object value) {
@@ -51,8 +51,8 @@ public class Convert {
 		return getConvertBean().toLong(value);
 	}
 
-	public static long toLong(Object value, long defaultValue) {
-		return getConvertBean().toLong(value, defaultValue);
+	public static long toLongValue(Object value, long defaultValue) {
+		return getConvertBean().toLongValue(value, defaultValue);
 	}
 
 	public static long toLongValue(Object value) {
@@ -63,8 +63,8 @@ public class Convert {
 		return getConvertBean().toFloat(value);
 	}
 
-	public static float toFloat(Object value, float defaultValue) {
-		return getConvertBean().toFloat(value, defaultValue);
+	public static float toFloatValue(Object value, float defaultValue) {
+		return getConvertBean().toFloatValue(value, defaultValue);
 	}
 
 	public static float toFloatValue(Object value) {
@@ -75,8 +75,8 @@ public class Convert {
 		return getConvertBean().toDouble(value);
 	}
 
-	public static double toDouble(Object value, double defaultValue) {
-		return getConvertBean().toDouble(value, defaultValue);
+	public static double toDoubleValue(Object value, double defaultValue) {
+		return getConvertBean().toDoubleValue(value, defaultValue);
 	}
 
 	public static double toDoubleValue(Object value) {
@@ -87,8 +87,8 @@ public class Convert {
 		return getConvertBean().toShort(value);
 	}
 
-	public static short toShort(Object value, short defaultValue) {
-		return getConvertBean().toShort(value, defaultValue);
+	public static short toShortValue(Object value, short defaultValue) {
+		return getConvertBean().toShortValue(value, defaultValue);
 	}
 
 	public static short toShortValue(Object value) {
@@ -99,8 +99,8 @@ public class Convert {
 		return getConvertBean().toCharacter(value);
 	}
 
-	public static char toCharacter(Object value, char defaultValue) {
-		return getConvertBean().toCharacter(value, defaultValue);
+	public static char toCharacterValue(Object value, char defaultValue) {
+		return getConvertBean().toCharacterValue(value, defaultValue);
 	}
 
 	public static char toCharacterValue(Object value) {
@@ -111,8 +111,8 @@ public class Convert {
 		return getConvertBean().toByte(value);
 	}
 
-	public static byte toByte(Object value, byte defaultValue) {
-		return getConvertBean().toByte(value, defaultValue);
+	public static byte toByteValue(Object value, byte defaultValue) {
+		return getConvertBean().toByteValue(value, defaultValue);
 	}
 
 	public static byte toByteValue(Object value) {

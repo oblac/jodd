@@ -83,7 +83,7 @@ public class ConvertBean {
 	 * Converts value to <code>boolean</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public boolean toBoolean(Object value, boolean defaultValue) {
+	public boolean toBooleanValue(Object value, boolean defaultValue) {
 		Boolean result = (Boolean) typeConverters[1].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -95,7 +95,7 @@ public class ConvertBean {
 	 * Converts value to <code>boolean</code> with common default value.
 	 */
 	public boolean toBooleanValue(Object value) {
-		return toBoolean(value, false);
+		return toBooleanValue(value, false);
 	}
 
 
@@ -110,7 +110,7 @@ public class ConvertBean {
 	 * Converts value to <code>int</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public int toInteger(Object value, int defaultValue) {
+	public int toIntegerValue(Object value, int defaultValue) {
 		Integer result = (Integer) typeConverters[3].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -122,7 +122,7 @@ public class ConvertBean {
 	 * Converts value to <code>int</code> with common default value.
 	 */
 	public int toIntegerValue(Object value) {
-		return toInteger(value, 0);
+		return toIntegerValue(value, 0);
 	}
 
 
@@ -137,7 +137,7 @@ public class ConvertBean {
 	 * Converts value to <code>long</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public long toLong(Object value, long defaultValue) {
+	public long toLongValue(Object value, long defaultValue) {
 		Long result = (Long) typeConverters[5].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -149,7 +149,7 @@ public class ConvertBean {
 	 * Converts value to <code>long</code> with common default value.
 	 */
 	public long toLongValue(Object value) {
-		return toLong(value, 0);
+		return toLongValue(value, 0);
 	}
 
 
@@ -164,7 +164,7 @@ public class ConvertBean {
 	 * Converts value to <code>float</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public float toFloat(Object value, float defaultValue) {
+	public float toFloatValue(Object value, float defaultValue) {
 		Float result = (Float) typeConverters[7].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -176,7 +176,7 @@ public class ConvertBean {
 	 * Converts value to <code>float</code> with common default value.
 	 */
 	public float toFloatValue(Object value) {
-		return toFloat(value, 0);
+		return toFloatValue(value, 0);
 	}
 
 
@@ -191,7 +191,7 @@ public class ConvertBean {
 	 * Converts value to <code>double</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public double toDouble(Object value, double defaultValue) {
+	public double toDoubleValue(Object value, double defaultValue) {
 		Double result = (Double) typeConverters[9].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -203,7 +203,7 @@ public class ConvertBean {
 	 * Converts value to <code>double</code> with common default value.
 	 */
 	public double toDoubleValue(Object value) {
-		return toDouble(value, 0);
+		return toDoubleValue(value, 0);
 	}
 
 
@@ -218,7 +218,7 @@ public class ConvertBean {
 	 * Converts value to <code>short</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public short toShort(Object value, short defaultValue) {
+	public short toShortValue(Object value, short defaultValue) {
 		Short result = (Short) typeConverters[11].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -230,7 +230,7 @@ public class ConvertBean {
 	 * Converts value to <code>short</code> with common default value.
 	 */
 	public short toShortValue(Object value) {
-		return toShort(value, (short) 0);
+		return toShortValue(value, (short) 0);
 	}
 
 
@@ -245,7 +245,7 @@ public class ConvertBean {
 	 * Converts value to <code>char</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public char toCharacter(Object value, char defaultValue) {
+	public char toCharacterValue(Object value, char defaultValue) {
 		Character result = (Character) typeConverters[13].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -257,7 +257,7 @@ public class ConvertBean {
 	 * Converts value to <code>char</code> with common default value.
 	 */
 	public char toCharacterValue(Object value) {
-		return toCharacter(value, (char) 0);
+		return toCharacterValue(value, (char) 0);
 	}
 
 
@@ -272,7 +272,7 @@ public class ConvertBean {
 	 * Converts value to <code>byte</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
-	public byte toByte(Object value, byte defaultValue) {
+	public byte toByteValue(Object value, byte defaultValue) {
 		Byte result = (Byte) typeConverters[15].convert(value);
 		if (result == null) {
 			return defaultValue;
@@ -284,7 +284,7 @@ public class ConvertBean {
 	 * Converts value to <code>byte</code> with common default value.
 	 */
 	public byte toByteValue(Object value) {
-		return toByte(value, (byte) 0);
+		return toByteValue(value, (byte) 0);
 	}
 
 

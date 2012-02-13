@@ -17,15 +17,15 @@ public class ConvertTest extends TestCase {
 		assertNull(Convert.toBigDecimal(null));
 		assertEquals(new BigInteger("123456789"), Convert.toBigInteger("123456789"));
 		assertEquals(Boolean.TRUE, Convert.toBoolean(("true")));
-		assertEquals(true, Convert.toBoolean("true", false));
-		assertEquals(false, Convert.toBoolean(null, false));
+		assertEquals(true, Convert.toBooleanValue("true", false));
+		assertEquals(false, Convert.toBooleanValue(null, false));
 		assertEquals(true, Convert.toBooleanValue("true"));
 		assertEquals(false, Convert.toBooleanValue(null));
 
 		assertNotNull(Convert.toCalendar((new JDateTime())));
 		
 		assertEquals(Character.valueOf('A'), Convert.toCharacter("A"));
-		assertEquals('A', Convert.toCharacter("A", ' '));
+		assertEquals('A', Convert.toCharacterValue("A", ' '));
 		assertEquals('A', Convert.toCharacterValue("A"));
 		
 		assertEquals(Integer.class, Convert.toClass("java.lang.Integer"));
@@ -36,11 +36,11 @@ public class ConvertTest extends TestCase {
 		assertNotNull(Convert.toDate(new JDateTime()));
 
 		assertEquals(1.0d, Convert.toDouble("1"));
-		assertEquals(1.0d, Convert.toDouble("1", 0));
+		assertEquals(1.0d, Convert.toDoubleValue("1", 0));
 		assertEquals(1.0d, Convert.toDoubleValue("1"));
 
 		assertEquals(1.0f, Convert.toFloat("1"));
-		assertEquals(1.0f, Convert.toFloat("1", 0));
+		assertEquals(1.0f, Convert.toFloatValue("1", 0));
 		assertEquals(1.0f, Convert.toFloat("1"));
 		assertEquals(1.0f, Convert.toFloatValue("1"));
 

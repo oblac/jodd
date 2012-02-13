@@ -6,7 +6,7 @@ import jodd.typeconverter.impl.ByteArrayConverter;
 
 public class ByteArrayConverterTest extends BaseTestCase {
 
-	ByteArrayConverter byteArrayConverter = new ByteArrayConverter();
+	ByteArrayConverter byteArrayConverter = (ByteArrayConverter) TypeConverterManager.lookup(byte[].class);
 
 	public void testArrayConversion() {
 		assertNull(byteArrayConverter.convert(null));

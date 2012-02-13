@@ -20,7 +20,7 @@ public class AssertTrueConstraint implements ValidationConstraint<AssertTrue>  {
 	}
 
 	public static boolean validate(Object value) {
-		return Convert.toBoolean(value, true) == true;
+		return Convert.toBooleanValue(value, true);
 	}
 
 }

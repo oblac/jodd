@@ -109,7 +109,7 @@ public class CharacterEncodingFilter implements Filter {
 		if (this.encoding == null) {
 			this.encoding = JoddDefault.encoding;
 		}
-		this.ignore = Convert.toBoolean(filterConfig.getInitParameter("ignore"), true);
+		this.ignore = Convert.toBooleanValue(filterConfig.getInitParameter("ignore"), true);
 	}
 
 	/**
