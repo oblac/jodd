@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
 /**
- * File utilites.
+ * Various IO utilities (files, streams, http...).
  */
 package jodd.io;
