@@ -320,7 +320,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// failed
-		throw new BeanException("Index property '" + bp.name + "' is neither an array, a list or a map.", bp);
+		throw new BeanException("Index property '" + bp.name + "' is not array, list or map.", bp);
 	}
 
 
@@ -377,7 +377,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			map.put(indexString, value);
 			return;
 		}
-		throw new BeanException("Index property '" + bp.name + "' is neither an array, a list or a map.", bp);
+		throw new BeanException("Index property '" + bp.name + "' is not array, list or map.", bp);
 	}
 
 
