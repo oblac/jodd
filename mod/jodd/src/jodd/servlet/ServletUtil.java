@@ -41,15 +41,6 @@ public class ServletUtil {
 	public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
 	private static final String JAVAX_SERVLET_ERROR_EXCEPTION = "javax.servlet.error.exception";
 
-	public static final String METHOD_GET 		= "GET";
-	public static final String METHOD_HEAD 		= "HEAD";
-	public static final String METHOD_PUT 		= "PUT";
-	public static final String METHOD_POST 		= "POST";
-	public static final String METHOD_DELETE 	= "DELETE";
-	public static final String METHOD_OPTIONS 	= "OPTIONS";
-	public static final String METHOD_TRACE 	= "TRACE";
-	public static final String METHOD_CONNECT 	= "CONNECT";
-
 	private static final String SCOPE_APPLICATION = "application";
 	private static final String SCOPE_SESSION = "session";
 	private static final String SCOPE_REQUEST = "request";
