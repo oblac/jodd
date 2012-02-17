@@ -2,14 +2,28 @@
 
 package jodd.servlet;
 
+import jodd.JoddDefault;
 import jodd.util.MathUtil;
+import jodd.util.StringPool;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * URL decoder.
  */
 public class URLDecoder {
 
+	/**
+	 * Decodes URL elements.
+	 */
 	public static String decode(String url) {
+		return decode(url, JoddDefault.encoding);
+	}
+
+	/**
+	 * Decodes URL elements.
+	 */
+	public static String decode(String url, String encoding) {
 
 		int queryIndex = url.indexOf('?');
 		if (queryIndex != -1) {
@@ -28,7 +42,7 @@ public class URLDecoder {
 		while (ndx != -1) {
 			result.append(url.substring(lastIndex, ndx));
 			ndx++;
-			if (ndx + 2 < len) {
+			if (ndx + 2 <= len) {
 				int value = MathUtil.parseDigit(url.charAt(ndx));
 				value <<= 4;
 				value += MathUtil.parseDigit(url.charAt(ndx + 1));
@@ -39,7 +53,12 @@ public class URLDecoder {
 			ndx = url.indexOf('%', lastIndex);
 		}
 		result.append(url.substring(lastIndex));
-		return result.toString();
+
+		try {
+			return new String(result.toString().getBytes(StringPool.ISO_8859_1), encoding);
+		} catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
 	}
 
 }
