@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
@@ -55,15 +53,6 @@ public class ServletUtil {
 		String type = request.getHeader(HEADER_CONTENT_TYPE);
 		return (type != null) && type.startsWith(TYPE_MULTIPART_FORM_DATA);
 	}
-
-	/**
-	 * Sets the "Vary response header" to User-Agent to indicate that the page content
-	 * varies depending on which user agent (browser) is being used.
-	 */
-	public static void setBrowserVary(HttpServletResponse response) {
-		response.setHeader( "Vary", "User-Agent");
-	}
-
 
 	// ---------------------------------------------------------------- authorization
 	/**
@@ -273,78 +262,6 @@ public class ServletUtil {
 			return values[0];
 		}
 		return values;
-	}
-
-
-	/**
-	 * Transfers attributes from provided map to the request.
-	 */
-	public static void setRequestAttributes(ServletRequest request, Map<String, Object> attributes) {
-		for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-			request.setAttribute(entry.getKey(), entry.getValue());
-		}
-	}
-
-	/**
-	 * Returns a new map containing request attributes.
-	 */
-	public static Map<String, Object> getRequestAttributes(ServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		loadRequestAttributes(map, request);
-		return map;
-	}
-
-	/**
-	 * Loads existing map with request attributes.
-	 */
-	public static void loadRequestAttributes(Map<String, Object> map, ServletRequest request) {
-		Enumeration names = request.getAttributeNames();
-		while (names.hasMoreElements()) {
-			String name = (String) names.nextElement();
-			map.put(name, request.getAttribute(name));
-		}
-	}
-
-	/**
-	 * Returns a new map containing request parameters. Request parameter may
-	 * be either String or String[].
-	 * @see #getRequestParameter(ServletRequest, String)
-	 */
-	public static Map<String, Object> getRequestParameters(ServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		loadRequestParameters(map, request);
-		return map;
-	}
-
-	public static void loadRequestParameters(Map<String, Object> map, ServletRequest request) {
-		Enumeration names = request.getParameterNames();
-		while (names.hasMoreElements()) {
-			String name = (String) names.nextElement();
-			map.put(name, getRequestParameter(request, name));
-		}
-	}
-
-	/**
-	 * Loads session attributes into a map.
-	 */
-	public static void loadSessionAttributes(Map<String, Object> destination, HttpSession session) {
-		Enumeration names = session.getAttributeNames();
-		while (names.hasMoreElements()) {
-			String name = (String) names.nextElement();
-			destination.put(name, session.getAttribute(name));
-		}
-	}
-
-	public static Map<String, Object> getSessionAttributes(HttpSession session) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		loadSessionAttributes(map, session);
-		return map;
-	}
-
-	public static void setSessionAttributes(HttpSession session, Map<String, Object> attributes) {
-		for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-			session.setAttribute(entry.getKey(), entry.getValue());
-		}
 	}
 
 
