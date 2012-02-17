@@ -9,6 +9,7 @@ public class MathUtil {
 
 	/**
 	 * Converts char digit into integer value.
+	 * Accepts numeric chars (0 - 9) as well as letter (A-z).
 	 */
 	public static int parseDigit(char digit) {
 		if ((digit >= '0') && (digit <= '9')) {
