@@ -301,6 +301,10 @@ public class LagartoParser {
 				break;
 			default:
 				error("Invalid token in tag <" + text() + '>');
+				// step back and parse tag as text
+				lexer.stateReset();
+				stepBack(lexer.nextToken());
+				parseText(start, lexer.position());
 				break;
 		}
 	}
