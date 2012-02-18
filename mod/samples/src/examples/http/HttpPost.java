@@ -6,20 +6,21 @@ import jodd.io.http.Http;
 import jodd.io.http.HttpParams;
 import jodd.io.http.HttpTransfer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class HttpGet {
+public class HttpPost {
 
 	public static void main(String[] args) throws IOException {
-		HttpTransfer request = Http.createRequest("GET", "http://jodd.org?id=1");
-		request.addHeader("User-Agent", "jodd");
+		HttpTransfer request = Http.createRequest("POST", "http://127.0.0.1:8080/upload.exec.html");
 
-		HttpParams httpParams = request.getQueryParameters();
-		httpParams.setParameter("id", "173");
-		request.setQueryParameters(httpParams);
+		HttpParams params = new HttpParams();
+		params.addParameter("boo", "Text");
+		params.addParameter("foo.file1", new File("d:\\a.jpg"));
+		request.setRequestParameters(params);
 
 		System.out.println(request);
 
@@ -29,7 +30,8 @@ public class HttpGet {
 
 		InputStream in = socket.getInputStream();
 		HttpTransfer response = Http.readResponse(in);
-		System.out.println(response);
+		System.out.println(response.toString());
 		socket.close();
+
 	}
 }

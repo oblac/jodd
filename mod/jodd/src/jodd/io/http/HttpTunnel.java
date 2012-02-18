@@ -147,8 +147,7 @@ public class HttpTunnel {
 
 			// resend request to target
 			OutputStream out = clientSocket.getOutputStream();
-			out.write(request.toArray());
-			out.flush();
+			request.send(out);
 
 			// read target response
 			InputStream in = clientSocket.getInputStream();
@@ -171,7 +170,7 @@ public class HttpTunnel {
 
 			// send response back
 			OutputStream socketOutput = socket.getOutputStream();
-			socketOutput.write(response.toArray());
+			response.send(socketOutput);
 
 			// close socket
 			StreamUtil.close(socketInput);

@@ -11,10 +11,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Util class for creating and reading request and response {@link HttpTransfer}.
+ * HTTP util class for creating request and response {@link HttpTransfer}.
  */
 public class Http {
 
@@ -27,6 +28,11 @@ public class Http {
 	public static HttpTransfer createRequest(String method, String fullUrl) throws IOException {
 		URL url = new URL(fullUrl);
 		String path = url.getPath();
+
+		String query = url.getQuery();
+		if (query != null) {
+			path = url.getPath() + '?' + query;
+		}
 
 		int port = url.getPort();
 		if (port == -1) {
@@ -62,43 +68,20 @@ public class Http {
 
 		HttpTransfer httpTransfer = new HttpTransfer();
 
-		// the first line
 		String line = reader.readLine();
 		String[] s = StringUtil.splitc(line, ' ');
+
 		httpTransfer.setMethod(s[0]);
 		httpTransfer.setPath(s[1]);
 		httpTransfer.setHttpVersion(s[2]);
 
-		readHeadersAndBody(httpTransfer, reader);
+		readHeaders(httpTransfer, reader);
+		readBody(httpTransfer, reader);
 
 		return httpTransfer;
 	}
 
 	// ---------------------------------------------------------------- response
-
-	/**
-	 * Reads response input stream and returns response {@link HttpTransfer}.
-	 */
-	public static HttpTransfer readResponse(InputStream in) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in, StringPool.ISO_8859_1));
-
-		HttpTransfer httpTransfer = new HttpTransfer();
-
-		// the first line
-		String line = reader.readLine().trim();
-		
-		int ndx = line.indexOf(' ');
-		httpTransfer.setHttpVersion(line.substring(0, ndx));
-
-		int ndx2 = line.indexOf(' ', ndx + 1);
-		httpTransfer.setStatusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
-
-		httpTransfer.setStatusPhrase(line.substring(ndx2).trim());
-
-		readHeadersAndBody(httpTransfer, reader);
-
-		return httpTransfer;
-	}
 
 	/**
 	 * Creates simple response {@link HttpTransfer}.
@@ -112,14 +95,72 @@ public class Http {
 		return httpTransfer;
 	}
 
+	/**
+	 * Reads response input stream and returns response {@link HttpTransfer}.
+	 * Supports both streamed and chunked response.
+	 */
+	public static HttpTransfer readResponse(InputStream in) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in, StringPool.ISO_8859_1));
 
-	// ---------------------------------------------------------------- util
+		HttpTransfer httpTransfer = new HttpTransfer();
 
-	protected static void readHeadersAndBody(HttpTransfer httpTransfer, BufferedReader reader) throws IOException {
-		String line;
+		// the first line
+		String line = reader.readLine().trim();
 
+		int ndx = line.indexOf(' ');
+		httpTransfer.setHttpVersion(line.substring(0, ndx));
+
+		int ndx2 = line.indexOf(' ', ndx + 1);
+		httpTransfer.setStatusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+
+		httpTransfer.setStatusPhrase(line.substring(ndx2).trim());
+
+		readHeaders(httpTransfer, reader);
+		readBody(httpTransfer, reader);
+
+		return httpTransfer;
+	}
+
+	/**
+	 * Reads response from HTTP URL connection.
+	 */
+	public static HttpTransfer readResponse(HttpURLConnection huc) throws IOException {
+		HttpTransfer httpTransfer = new HttpTransfer();
+
+		// the first line
+		String line = huc.getHeaderField(0);
+
+		int ndx = line.indexOf(' ');
+		httpTransfer.setHttpVersion(line.substring(0, ndx));
+
+		int ndx2 = line.indexOf(' ', ndx + 1);
+		httpTransfer.setStatusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+
+		httpTransfer.setStatusPhrase(line.substring(ndx2).trim());
+
+		int count = 1;
 		while (true) {
-			line = reader.readLine();
+			String key = huc.getHeaderFieldKey(count);
+			if (key == null) {
+				break;
+			}
+			String value = huc.getHeaderField(count);
+
+			httpTransfer.addHeader(key, value);
+
+			count++;
+		}
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(huc.getInputStream(), StringPool.ISO_8859_1));
+		readBody(httpTransfer, reader);
+
+		return httpTransfer;
+	}
+
+
+	protected static void readHeaders(HttpTransfer httpTransfer, BufferedReader reader) throws IOException {
+		while (true) {
+			String line = reader.readLine();
 			if (StringUtil.isBlank(line)) {
 				break;
 			}
@@ -127,9 +168,13 @@ public class Http {
 			int ndx = line.indexOf(':');
 			if (ndx != -1) {
 				httpTransfer.addHeader(line.substring(0, ndx), line.substring(ndx + 1));
+			} else {
+				throw new IOException("Invalid header " + line);
 			}
 		}
+	}
 
+	protected static void readBody(HttpTransfer httpTransfer, BufferedReader reader) throws IOException {
 		// content length
 		String contentLen = httpTransfer.getHeader("Content-Length");
 		if (contentLen != null) {
@@ -143,12 +188,12 @@ public class Http {
 
 		// chunked encoding
 		String transferEncoding = httpTransfer.getHeader("Transfer-Encoding");
-		if (transferEncoding!= null && transferEncoding.equalsIgnoreCase("chunked")) {
+		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
 
 			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 
 			while (true) {
-				line = reader.readLine();
+				String line = reader.readLine();
 				if (StringUtil.isBlank(line)) {
 					break;
 				}
