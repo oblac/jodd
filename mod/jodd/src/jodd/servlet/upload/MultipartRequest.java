@@ -126,7 +126,7 @@ public class MultipartRequest {
 
 	// ---------------------------------------------------------------- factories
 
-	private static final String MREQ_ATTR_NAME = "jodd.servlet.upload.MultipartRequest";
+	private static final String MREQ_ATTR_NAME = MultipartRequest.class.getName();
 
 	/**
 	 * Returns a new instance of MultipleRequest if it was not created before during current request.
