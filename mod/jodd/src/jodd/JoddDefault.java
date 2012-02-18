@@ -30,9 +30,9 @@ public class JoddDefault {
 	public static String encoding = StringPool.UTF_8;
 
 	/**
-	 * Default IO buffer size (32 KB).
+	 * Default IO buffer size (16 KB).
 	 */
-	public static int ioBufferSize = 32768;
+	public static int ioBufferSize = 16384;
 
 	static {
 		Package pkg = Jodd.class.getPackage();
