@@ -2,7 +2,13 @@
 
 package jodd.io.http;
 
+import jodd.io.FileUtil;
+import jodd.servlet.upload.FileUpload;
 import junit.framework.TestCase;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class HttpTest extends TestCase {
 
@@ -67,7 +73,71 @@ public class HttpTest extends TestCase {
 		map.addParameter("two", "xxx");
 		ht.setQueryParameters(map);
 		assertEquals("/jodd?one=1&one=2&two=xxx", ht.getPath());
+	}
+	
+	public void testInOut() throws IOException {
+		HttpTransfer request = Http.createRequest("GET", "http://jodd.org/?id=173");
+		request.addHeader("User-Agent", "Scaly");
+
+		HttpParams httpParams = new HttpParams();
+		httpParams.addParameter("one", "funny");
+		request.setRequestParameters(httpParams);
 		
+		byte[] bytes = request.toArray();
+		
+		
+		// read
+		HttpTransfer request2 = Http.readRequest(new ByteArrayInputStream(bytes));
+		HttpParams httpParams2 = request2.getRequestParameters();
+
+		assertEquals(request.getMethod(), request2.getMethod());
+		assertEquals(request.getPath(), request2.getPath());
+
+		assertEquals(request.getHeader("User-Agent"), request2.getHeader("User-Agent"));
+		assertEquals(request.getHeader("Content-Type"), request2.getHeader("content-type"));
+		assertEquals(request.getHeader("Content-Length"), request2.getHeader("content-length"));
+
+		assertEquals(httpParams.getParamsCount(), httpParams2.getParamsCount());
+		assertEquals(httpParams.getParameter("one"), httpParams2.getParameter("one"));
+
+	}
+
+	public void testFileUpload() throws IOException {
+		HttpTransfer request = Http.createRequest("GET", "http://jodd.org/?id=173");
+		request.addHeader("User-Agent", "Scaly");
+
+		HttpParams httpParams = new HttpParams();
+		httpParams.addParameter("one", "funny");
+		
+		File tmp = FileUtil.createTempFile();
+		FileUtil.writeString(tmp, "http");
+		httpParams.addParameter("two", tmp);
+
+		request.setRequestParameters(httpParams);
+
+
+		byte[] bytes = request.toArray();
+
+
+		// read
+		HttpTransfer request2 = Http.readRequest(new ByteArrayInputStream(bytes));
+		HttpParams httpParams2 = request2.getRequestParameters();
+
+		assertEquals(request.getMethod(), request2.getMethod());
+		assertEquals(request.getPath(), request2.getPath());
+
+		assertEquals(request.getHeader("User-Agent"), request2.getHeader("User-Agent"));
+		assertEquals(request.getHeader("Content-Type"), request2.getHeader("content-type"));
+		assertEquals(request.getHeader("Content-Length"), request2.getHeader("content-length"));
+
+		assertEquals(httpParams.getParamsCount(), httpParams2.getParamsCount());
+		assertEquals(httpParams.getParameter("one"), httpParams2.getParameter("one"));
+		
+		FileUpload fu = (FileUpload) httpParams2.getParameter("two");
+		assertEquals(4, fu.getSize());
+
+		String str = new String(fu.getFileContent());
+		assertEquals("http", str);
 	}
 
 }

@@ -4,6 +4,8 @@ package jodd.io.http;
 
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
+import jodd.servlet.upload.FileUpload;
+import jodd.servlet.upload.MultipartStreamParser;
 import jodd.util.KeyValue;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
@@ -11,6 +13,7 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.buffer.FastByteBuffer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -264,6 +267,49 @@ public class HttpTransfer {
 	}
 
 	// ---------------------------------------------------------------- request parameters
+
+	/**
+	 * Returns request parameters. For uploaded file, {@link FileUpload} is returned.
+	 */
+	public HttpParams getRequestParameters() {
+		String contentType = getHeader("Content-Type");
+		if (contentType.equals("application/x-www-form-urlencoded")) {
+			try {
+				return new HttpParams(new String(body, StringPool.ISO_8859_1), true);
+			} catch (UnsupportedEncodingException ignore) {
+			}
+		}
+
+		
+		HttpParams httpParams = new HttpParams();
+		
+		MultipartStreamParser multipartParser = new MultipartStreamParser();
+
+		ByteArrayInputStream bin = new ByteArrayInputStream(body);
+		try {
+			multipartParser.parseRequestStream(bin, StringPool.ISO_8859_1);
+		} catch (IOException ioex) {
+			return null;
+		}
+		
+		for (String paramName : multipartParser.getParameterNames()) {
+			String[] values = multipartParser.getParameterValues(paramName);
+			if (values.length == 1) {
+				httpParams.addParameter(paramName, values[0]);
+			} else {
+				httpParams.addParameter(paramName, values);
+			}
+		}
+		for (String paramName : multipartParser.getFileParameterNames()) {
+			FileUpload[] values = multipartParser.getFiles(paramName);
+			if (values.length == 1) {
+				httpParams.addParameter(paramName, values[0]);
+			} else {
+				httpParams.addParameter(paramName, values);
+			}
+		}
+		return httpParams;
+	}
 
 	/**
 	 * Sets the request parameters. This can be done in two ways: by setting the simple form
