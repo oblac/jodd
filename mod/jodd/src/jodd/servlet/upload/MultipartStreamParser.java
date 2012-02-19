@@ -38,7 +38,7 @@ public class MultipartStreamParser {
 	 */
 	protected void setLoaded() throws IOException {
 		if (loaded == true) {
-			throw new IOException("Multi-part request already loaded and parsed.");
+			throw new IOException("Multi-part request already parsed.");
 		}
 		loaded = true;
 	}
