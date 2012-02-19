@@ -4,17 +4,10 @@ package jodd.servlet.upload;
 
 import jodd.JoddDefault;
 import jodd.servlet.ServletUtil;
-import jodd.servlet.upload.impl.MemoryFileUploadFactory;
-import jodd.io.FastByteArrayOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Handles multi-part requests and extract uploaded files and parameters from
@@ -38,15 +31,12 @@ import java.util.Set;
  * This class loads complete request. To prevent big uploads (and potential
  * DoS attacks) check content length <b>before</b> loading.
  */
-public class MultipartRequest {
+public class MultipartRequest extends MultipartStreamParser {
 
 	// ---------------------------------------------------------------- properties
 
-	private Map<String, String[]> requestParameters;
-	private Map<String, FileUpload[]> requestFiles;
 	private HttpServletRequest request;
 	private String characterEncoding;
-	private FileUploadFactory fileUploadFactory;
 
 	/**
 	 * Returns actual http servlet request instance.
@@ -112,6 +102,7 @@ public class MultipartRequest {
 	 * @param fileUploadFactory	file factory, or <code>null</code> for default factory
 	 */
 	public MultipartRequest(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) {
+		super(fileUploadFactory);
 		this.request = request;
 		if (encoding != null) {
 			this.characterEncoding = encoding;
@@ -121,7 +112,6 @@ public class MultipartRequest {
 		if (this.characterEncoding == null) {
 			this.characterEncoding = JoddDefault.encoding;
 		}
-		this.fileUploadFactory = (fileUploadFactory == null ? new MemoryFileUploadFactory() : fileUploadFactory);
 	}
 
 	// ---------------------------------------------------------------- factories
@@ -187,27 +177,13 @@ public class MultipartRequest {
 
 	// ---------------------------------------------------------------- load
 
-	private boolean loaded;
-
-	/**
-	 * Returns <code>true</code> if multi-part request is already loaded.
-	 */
-	public boolean isLoaded() {
-		return loaded;
-	}
 
 	/**
 	 * Loads and parse multi-part request. It <b>doesn't</b> check if request is multi-part.
 	 * Must be called on same request at most <b>once</b>.
 	 */
 	public void parseMultipartRequest() throws IOException {
-		if (loaded == true) {
-			throw new IOException("Multi-part request already loaded and parsed.");
-		}
-		loaded = true;
-		requestParameters = new HashMap<String, String[]>();
-		requestFiles = new HashMap<String, FileUpload[]>();
-		parseRequestStream(request, characterEncoding);
+		parseRequestStream(request.getInputStream(), characterEncoding);
 	}
 
 	/**
@@ -217,176 +193,17 @@ public class MultipartRequest {
 	 * @see MultipartRequestWrapper
 	 */
 	public void parseRequest() throws IOException {
-		if (loaded == true) {
-			throw new IOException("Multi-part request already loaded and parsed.");
-		}
-		loaded = true;
-		requestParameters = new HashMap<String, String[]>();
-		requestFiles = new HashMap<String, FileUpload[]>();
 		if (ServletUtil.isMultipartRequest(request) == true) {
-			parseRequestStream(request, characterEncoding);
+			parseRequestStream(request.getInputStream(), characterEncoding);
 		} else {
 			Enumeration names = request.getParameterNames();
 			while (names.hasMoreElements()) {
 				String paramName = (String) names.nextElement();
 				String[] values = request.getParameterValues(paramName);
-				requestParameters.put(paramName, values);
+
+				putParameters(paramName, values);
 			}
 		}
 	}
 
-	// ---------------------------------------------------------------- parameters
-
-
-	/**
-	 * Returns single value of a parameter. If parameter name is used for
-	 * more then one parameter, only the first one will be returned.
-	 *
-	 * @return parameter value, or <code>null</code> if not found
-	 */
-	public String getParameter(String paramName) {
-		String[] values = requestParameters.get(paramName);
-		if ((values != null) && (values.length > 0)) {
-			return values[0];
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the names of the parameters contained in this request.
-	 */
-	public Set<String> getParameterNames() {
-		return requestParameters.keySet();
-	}
-
-	/**
-	 * Returns all values all of the values the given request parameter has.
-	 */
-	public String[] getParameterValues(String paramName) {
-		return requestParameters.get(paramName);
-	}
-
-
-	/**
-	 * Returns uploaded file.
-	 * @param paramName parameter name of the uploaded file
-	 * @return uploaded file or <code>null</code> if parameter name not found
-	 */
-	public FileUpload getFile(String paramName) {
-		FileUpload[] values = requestFiles.get(paramName);
-		if ((values != null) && (values.length > 0)) {
-			return values[0];
-		}
-		return null;
-	}
-
-
-	/**
-	 * Returns all uploaded files the given request parameter has.
-	 */
-	public FileUpload[] getFiles(String paramName) {
-		return requestFiles.get(paramName);
-	}
-
-	/**
-	 * Returns parameter names of all uploaded files.
-	 */
-	public Set<String> getFileParameterNames() {
-		return requestFiles.keySet();
-	}
-
-
-	// ---------------------------------------------------------------- load and extract
-
-	private void putFile(Map<String, List<FileUpload>> destination, String name, FileUpload value) {
-		List<FileUpload> valuesList = destination.get(name);
-		if (valuesList == null) {
-			valuesList = new ArrayList<FileUpload>();
-			destination.put(name, valuesList);
-		}
-		valuesList.add(value);
-	}
-
-	private void putString(Map<String, List<String>> destination, String name, String value) {
-		List<String> valuesList = destination.get(name);
-		if (valuesList == null) {
-			valuesList = new ArrayList<String>();
-			destination.put(name, valuesList);
-		}
-		valuesList.add(value);
-	}
-
-	/**
-	 * Extracts uploaded files and parameters from the request data.
-	 */
-	protected void parseRequestStream(HttpServletRequest request, String encoding) throws IOException {
-		HashMap<String, List<String>> reqParam = new HashMap<String, List<String>>();
-		HashMap<String, List<FileUpload>> reqFiles = new HashMap<String, List<FileUpload>>();
-
-		MultipartRequestInputStream input = new MultipartRequestInputStream(request.getInputStream());
-		input.readBoundary();
-		while (true) {
-			FileUploadHeader header = input.readDataHeader(encoding);
-			if (header == null) {
-				break;
-			}
-
-			if (header.isFile == true) {
-				String fileName = header.fileName;
-				if (fileName.length() > 0) {
-					if (header.contentType.indexOf("application/x-macbinary") > 0) {
-						input.skipBytes(128);
-					}
-				}
-				FileUpload newFile = fileUploadFactory.create(input);
-				newFile.processStream();
-				if (fileName.length() == 0) {
-					// file was specified, but no name was provided, therefore it was not uploaded
-					if (newFile.getSize() == 0) {
-						newFile.size = -1;
-					}
-				}
-				putFile(reqFiles, header.formFieldName, newFile);
-			} else {
-				// no file, therefore it is regular form parameter.
-				FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
-				input.copyAll(fbos);
-				String value = encoding != null ? new String(fbos.toByteArray(), encoding) : new String(fbos.toByteArray());
-				putString(reqParam, header.formFieldName, value);
-			}
-
-			input.skipBytes(1);
-			input.mark(1);
-
-			// read byte, but may be end of stream
-			int nextByte = input.read();
-			if (nextByte == -1 || nextByte == '-') {
-				input.reset();
-				break;
-			}
-			input.reset();
-		}
-
-		// convert lists into arrays
-		for (String paramName : reqParam.keySet()) {
-			List valuesList = reqParam.get(paramName);
-			if (valuesList != null) {
-				String[] result = new String[valuesList.size()];
-				for (int i = 0; i < result.length; i++) {
-					result[i] = (String) valuesList.get(i);
-				}
-				requestParameters.put(paramName, result);
-			}
-		}
-		for (String paramName : reqFiles.keySet()) {
-			List<FileUpload> valuesList = reqFiles.get(paramName);
-			if (valuesList != null) {
-				FileUpload[] result = new FileUpload[valuesList.size()];
-				for (int i = 0; i < result.length; i++) {
-					result[i] = valuesList.get(i);
-				}
-				requestFiles.put(paramName, result);
-			}
-		}
-	}
 }
