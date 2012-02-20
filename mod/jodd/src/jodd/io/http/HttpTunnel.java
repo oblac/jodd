@@ -105,9 +105,9 @@ public class HttpTunnel {
 		}
 
 		/**
-		 * Invoked after income connection is parsed.
-		 * The only thing changed is the modified "Host" header
-		 * to match the target.
+		 * Invoked after income connection is parsed. Nothing is
+		 * changed in the request. Sometimes, it make sense to
+		 * modify the "Host" header to match the target.
 		 */
 		protected void onRequest(HttpTransfer request) {
 		}
@@ -126,7 +126,7 @@ public class HttpTunnel {
 		 * Performs the tunneling. The following steps occurs:
 		 * <li>read and parse clients request
 		 * <li>open socket to target
-		 * <li>fix request and resend it to target
+		 * <li>resend request to target
 		 * <li>read targets response
 		 * <li>fix response and resend it to client
 		 */
@@ -140,9 +140,7 @@ public class HttpTunnel {
 			Socket clientSocket = new Socket();
 			clientSocket.connect(new InetSocketAddress(targetHost, targetPort));
 
-			// fix request
-			request.addHeader("Host", targetHost + ':' + targetPort);
-
+			// do request
 			onRequest(request);
 
 			// resend request to target
@@ -164,6 +162,7 @@ public class HttpTunnel {
 				response.addHeader("Content-Length", response.getBody().length);
 			}
 
+			// do response
 			onResponse(response);
 
 			// send response back
