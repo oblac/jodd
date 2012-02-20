@@ -165,8 +165,6 @@ public class HttpTunnel {
 			}
 
 			onResponse(response);
-			System.out.println("---------- ");
-			System.out.println(response);
 
 			// send response back
 			OutputStream socketOutput = socket.getOutputStream();
