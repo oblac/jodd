@@ -905,7 +905,7 @@ s	 */
 	 * @see #setObject(String, Object, Class, int)
 	 */
 	public void setObject(int index, Object value) {
-		setObject(index, value, null, Integer.MAX_VALUE);
+		setObject(index, value, null, Types.OTHER);
 	}
 
 	/**
@@ -944,7 +944,7 @@ s	 */
 	 * @see #setObject(String, Object, Class, int)
 	 */
 	public void setObject(String param, Object value) {
-		setObject(param, value, null, Integer.MAX_VALUE);
+		setObject(param, value, null, Types.OTHER);
 	}
 
 	/**
