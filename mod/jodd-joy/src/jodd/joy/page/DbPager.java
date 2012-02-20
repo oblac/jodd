@@ -11,15 +11,19 @@ import java.util.Map;
 import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 
-public class MySqlPager {
+/**
+ * Database pager. Provides
+ */
+public class DbPager {
 
 	private static final String SELECT = "select";
 
 	/**
 	 * Performs the pagination.
 	 */
-	public static <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, Class... target) {
+	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, Class... target) {
 		PageData<T> pageData = page(sql, pageRequest.getPage(), pageRequest.getSize(), params, target);
+
 		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
 			if (pageData.currentPage != pageRequest.getPage()) {
 				// out of bounds
@@ -33,23 +37,35 @@ public class MySqlPager {
 	/**
 	 * Pages given page. No fix in case of out-of-bounds.
 	 */
-	@SuppressWarnings({"unchecked"})
-	public static <T> PageData<T> page(String sql, int page, int pageSize, Map params, Class... target) {
+	public <T> PageData<T> page(String sql, int page, int pageSize, Map params, Class... target) {
 		int ndx = sql.indexOf(SELECT);
 		if (ndx != -1) {
 			sql = sql.substring(ndx + SELECT.length());
 		}
 
 		int from = (page - 1) * pageSize;
-		DbSqlBuilder dbsql = sql("select SQL_CALC_FOUND_ROWS " + sql + " limit " + from + ", " + pageSize);
+
+		DbSqlBuilder dbsql = sql(buildPageSql(sql, from, pageSize));
+
 		DbOomQuery query = query(dbsql);
 		query.setMaxRows(pageSize);
 		query.setFetchSize(pageSize);
 		query.setMap(params);
-		List list = query.listAndClose(target);
-		long count = query("SELECT FOUND_ROWS()").executeCountAndClose();
+
+		List<T> list = query.listAndClose(pageSize, target);
+
+		long count = list.size();
 
 		return new PageData<T>(page, (int) count, pageSize, list);
+	}
+
+	/**
+	 * Builds page SQL string. Given sql string has removed the 'select' keyword.
+	 * Returned SQL string may return more than <code>pageSize</code> elements,
+	 * but only <code>pageSize</code> will be parsed.
+	 */
+	protected String buildPageSql(String sqlNoSelect, int from, int pageSize) {
+		return "select " + sqlNoSelect + " limit " + from + ", " + pageSize;
 	}
 
 }
