@@ -99,7 +99,7 @@ public class DbMetaUtil {
 	 * Resolves column db sql type and populates it in column descriptor if missing.
 	 */
 	public static void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
-		if (dec.dbSqlType != Integer.MAX_VALUE) {
+		if (dec.dbSqlType != DbEntityColumnDescriptor.DB_SQLTYPE_UNKNOWN) {
 			return;
 		}
 		ResultSet rs = null;
@@ -110,10 +110,10 @@ public class DbMetaUtil {
 			if (rs.next()) {
 				dec.dbSqlType = rs.getInt(DATA_TYPE);
 			} else {
-				dec.dbSqlType = Integer.MIN_VALUE;
+				dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
 			}
 		} catch (SQLException sex) {
-			dec.dbSqlType = Integer.MIN_VALUE;
+			dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
 		} finally {
 			ResultSetUtil.close(rs);
 		}

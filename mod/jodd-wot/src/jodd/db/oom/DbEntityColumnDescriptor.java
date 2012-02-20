@@ -9,13 +9,24 @@ import jodd.db.type.SqlType;
  */
 public class DbEntityColumnDescriptor implements Comparable {
 
+	/**
+	 * Indicator for not yet resolved db sql type.
+	 */
+	public static final int DB_SQLTYPE_UNKNOWN = Integer.MAX_VALUE;
+
+	/**
+	 * Indicator for unavailable db sql type. Usually it is not
+	 * available by jdbc meta data.
+	 */
+	public static final int DB_SQLTYPE_NOT_AVAILABLE = Integer.MIN_VALUE;
+
 	protected final DbEntityDescriptor dbEntityDescriptor;
 	protected final String columnName;
 	protected final String propertyName;
 	protected final Class propertyType;
 	protected final boolean isId;
 	protected final Class<? extends SqlType> sqlTypeClass;
-	protected int dbSqlType = Integer.MAX_VALUE;
+	protected int dbSqlType = DB_SQLTYPE_UNKNOWN;
 
 	public DbEntityColumnDescriptor(DbEntityDescriptor ded, String columnName, String fieldName, Class fieldType, boolean isId, Class<? extends SqlType> sqlTypeClass) {
 		this.dbEntityDescriptor = ded;
@@ -80,7 +91,7 @@ public class DbEntityColumnDescriptor implements Comparable {
 	 * Updates db sql type if not already set.
 	 */
 	public void updateDbSqlType(int dbSqlType) {
-		if (this.dbSqlType == Integer.MAX_VALUE) {
+		if (this.dbSqlType == DB_SQLTYPE_UNKNOWN) {
 			this.dbSqlType = dbSqlType;
 		}
 	}
