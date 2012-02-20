@@ -56,7 +56,13 @@ public class Http {
 		httpTransfer.setHost(hostName);
 		httpTransfer.setPort(port);
 
-		httpTransfer.addHeader("Host", hostName);
+		String host = hostName;
+		
+		if (port != 80) {
+			host += ':' + port;
+		}
+
+		httpTransfer.addHeader("Host", host);
 		return httpTransfer;
 	}
 

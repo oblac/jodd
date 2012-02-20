@@ -141,7 +141,7 @@ public class HttpTunnel {
 			clientSocket.connect(new InetSocketAddress(targetHost, targetPort));
 
 			// fix request
-			request.addHeader("Host", targetHost);
+			request.addHeader("Host", targetHost + ':' + targetPort);
 
 			onRequest(request);
 
