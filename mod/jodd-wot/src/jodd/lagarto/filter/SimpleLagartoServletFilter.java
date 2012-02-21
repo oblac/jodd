@@ -25,6 +25,10 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 
 		LagartoParsingProcessor lpp = createParsingProcessor();
 
+		if (lpp == null) {
+			return content;
+		}
+
 		lpp.init(content);
 
 		return lpp.parse(request);
@@ -32,6 +36,7 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 
 	/**
 	 * Returns custom {@link LagartoParsingProcessor parsing processor}.
+	 * Returns <code>null</code> when content does not have to be parsed.
 	 */
 	protected abstract LagartoParsingProcessor createParsingProcessor();
 
