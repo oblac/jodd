@@ -321,13 +321,13 @@ public abstract class DefaultAppCore {
 	/**
 	 * Database debug mode will print out sql statements.
 	 */
-	protected boolean debugMode;
+	protected boolean dbDebug;
 
 	/**
-	 * Returns <code>true</code> if debug mode is on.
+	 * Returns <code>true</code> if database debug mode is on.
 	 */
-	public boolean isDebugMode() {
-		return debugMode;
+	public boolean isDbDebug() {
+		return dbDebug;
 	}
 
 	/**
@@ -378,7 +378,7 @@ public abstract class DefaultAppCore {
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		DbDefault.debug = debugMode;
+		DbDefault.debug = dbDebug;
 		DbDefault.connectionProvider = connectionProvider;
 		DbDefault.sessionProvider = sessionProvider;
 
