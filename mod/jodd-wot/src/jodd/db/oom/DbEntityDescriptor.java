@@ -230,5 +230,16 @@ public class DbEntityDescriptor {
 		ensureSingleIdColumn();
 		return idColumnDescriptors[0].getPropertyName();
 	}
+	
+	// ---------------------------------------------------------------- toString
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("DbEntity: ");
+		sb.append(schemaName);
+		sb.append('.');
+		sb.append(tableName);
+		return sb.toString();
+	}
 
 }

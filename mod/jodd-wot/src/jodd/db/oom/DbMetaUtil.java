@@ -2,24 +2,17 @@
 
 package jodd.db.oom;
 
-import jodd.db.ResultSetUtil;
-import jodd.db.oom.meta.DbTable;
-import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbTable;
 import jodd.db.type.SqlType;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Few meta resolving utils.
  */
 public class DbMetaUtil {
-
-	private static final String DATA_TYPE = "DATA_TYPE";
 
 	/**
 	 * Resolves table name from a type. If type is annotated, table name
@@ -54,7 +47,9 @@ public class DbMetaUtil {
 		return schemaName;
 	}
 
-
+	/**
+	 * Returns <code>true</code> if class is annotated with <code>DbTable</code> annotation.
+	 */
 	public static boolean resolveIsAnnotated(Class<?> type) {
 		DbTable dbTable = type.getAnnotation(DbTable.class);
 		return dbTable != null;
@@ -95,27 +90,4 @@ public class DbMetaUtil {
 	    return new DbEntityColumnDescriptor(ded, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
 	}
 
-	/**
-	 * Resolves column db sql type and populates it in column descriptor if missing.
-	 */
-	public static void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
-		if (dec.dbSqlType != DbEntityColumnDescriptor.DB_SQLTYPE_UNKNOWN) {
-			return;
-		}
-		ResultSet rs = null;
-		try {
-			DbEntityDescriptor ded = dec.getDbEntityDescriptor();
-			DatabaseMetaData dmd = connection.getMetaData();
-			rs = dmd.getColumns(null, ded.getSchemaName(), ded.getTableName(), dec.getColumnName());
-			if (rs.next()) {
-				dec.dbSqlType = rs.getInt(DATA_TYPE);
-			} else {
-				dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
-			}
-		} catch (SQLException sex) {
-			dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
-		} finally {
-			ResultSetUtil.close(rs);
-		}
-	}
 }

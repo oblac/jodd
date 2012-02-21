@@ -4,12 +4,16 @@ package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
+import jodd.db.ResultSetUtil;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
+import jodd.log.Log;
 import jodd.util.StringUtil;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -30,6 +34,8 @@ import static jodd.db.oom.DbOomUtil.initialCollectionSize;
  *
  */
 public class DbOomQuery extends DbQuery {
+
+	private static final Log log = Log.getLogger(DbOomQuery.class);
 
 	// ---------------------------------------------------------------- default ctors
 
@@ -123,11 +129,42 @@ public class DbOomQuery extends DbQuery {
 			if (dec == null) {
 				setObject(paramName, param.getValue());
 			} else {
-				DbMetaUtil.resolveColumnDbSqlType(connection, dec);
+				resolveColumnDbSqlType(connection, dec);
 				setObject(paramName, param.getValue(), dec.getSqlTypeClass(), dec.getDbSqlType());
 			}
 		}
 	}
+
+	/**
+	 * Resolves column db sql type and populates it in column descriptor if missing.
+	 */
+	protected void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
+		if (dec.dbSqlType != DbEntityColumnDescriptor.DB_SQLTYPE_UNKNOWN) {
+			return;
+		}
+		ResultSet rs = null;
+		DbEntityDescriptor ded = dec.getDbEntityDescriptor();
+		try {
+			DatabaseMetaData dmd = connection.getMetaData();
+			rs = dmd.getColumns(null, ded.getSchemaName(), ded.getTableName(), dec.getColumnName());
+			if (rs.next()) {
+				dec.dbSqlType = rs.getInt("DATA_TYPE");
+			} else {
+				dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
+				if (log.isWarnEnabled()) {
+					log.warn("Column db sql type not available: " + ded.toString() + '.' + dec.getColumnName());
+				}
+			}
+		} catch (SQLException sex) {
+			dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
+			if (log.isWarnEnabled()) {
+				log.warn("Column db sql type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
+			}
+		} finally {
+			ResultSetUtil.close(rs);
+		}
+	}
+
 
 	// ---------------------------------------------------------------- join hints
 
