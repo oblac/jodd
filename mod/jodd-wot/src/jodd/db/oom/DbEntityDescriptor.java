@@ -2,6 +2,9 @@
 
 package jodd.db.oom;
 
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
+import jodd.db.type.SqlType;
 import jodd.introspector.ClassIntrospector;
 import jodd.util.sort.FastMergeSort;
 
@@ -109,7 +112,7 @@ public class DbEntityDescriptor {
 		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
 		int idcount = 0;
 		for (Field field : fields) {
-			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated, columnNameUppercase);
+			DbEntityColumnDescriptor dec = resolveColumnDescriptors(field, isAnnotated, columnNameUppercase);
 			if (dec != null) {
 				decList.add(dec);
 				if (dec.isId) {
@@ -134,6 +137,43 @@ public class DbEntityDescriptor {
 			}
 		}
 	}
+
+
+	/**
+	 * Resolves column descriptor from field. If field is annotated value will be read
+	 * from annotation. If field is not annotated, then field will be ignored
+	 * if entity is annotated. Otherwise, column name is generated from the field name.
+	 */
+	private DbEntityColumnDescriptor resolveColumnDescriptors(Field field, boolean isAnnotated, boolean toUpperCase) {
+		String columnName = null;
+		boolean isId = false;
+		Class<? extends SqlType> sqlTypeClass = null;
+		DbId dbId = field.getAnnotation(DbId.class);
+		if (dbId != null) {
+			columnName = dbId.value().trim();
+			sqlTypeClass = dbId.sqlType();
+			isId = true;
+		} else {
+			DbColumn dbColumn = field.getAnnotation(DbColumn.class);
+			if (dbColumn != null) {
+				columnName = dbColumn.value().trim();
+				sqlTypeClass = dbColumn.sqlType();
+			} else {
+				if (isAnnotated == true) {
+					return null;
+				}
+			}
+		}
+
+		if ((columnName == null) || (columnName.length() == 0)) {
+			columnName = DbNameUtil.convertPropertyNameToColumnName(field.getName(), toUpperCase);
+		}
+		if (sqlTypeClass == SqlType.class) {
+			sqlTypeClass = null;
+		}
+	    return new DbEntityColumnDescriptor(this, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
+	}
+
 
 	// ---------------------------------------------------------------- finders
 
