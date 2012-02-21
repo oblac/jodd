@@ -17,4 +17,11 @@ public class HsqlDbPager extends DbPager {
 		return "select LIMIT " + from + ' ' + pageSize + sqlNoSelect;
 	}
 
+	/**
+	 * Builds count sql using COUNT(1).
+	 */
+	@Override
+	protected String buildCountSql(String sqlNoSelect) {
+		return "select count(1) " + sqlNoSelect;
+	}
 }

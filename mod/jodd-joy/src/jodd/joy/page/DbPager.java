@@ -12,9 +12,9 @@ import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 
 /**
- * Database pager. Provides
+ * Database pager.
  */
-public class DbPager {
+public abstract class DbPager {
 
 	private static final String SELECT = "select";
 
@@ -54,7 +54,7 @@ public class DbPager {
 
 		List<T> list = query.listAndClose(pageSize, target);
 
-		long count = list.size();
+		long count = query(buildCountSql(sql)).executeCountAndClose();
 
 		return new PageData<T>(page, (int) count, pageSize, list);
 	}
@@ -64,8 +64,12 @@ public class DbPager {
 	 * Returned SQL string may return more than <code>pageSize</code> elements,
 	 * but only <code>pageSize</code> will be parsed.
 	 */
-	protected String buildPageSql(String sqlNoSelect, int from, int pageSize) {
-		return "select " + sqlNoSelect + " limit " + from + ", " + pageSize;
-	}
+	protected abstract String buildPageSql(String sqlNoSelect, int from, int pageSize);
+
+	/**
+	 * Builds SQL for retrieving total number of results.
+	 * Given sql string has removed the 'select' keyword.
+	 */
+	protected abstract String buildCountSql(String sqlNoSelect);
 
 }

@@ -10,14 +10,20 @@ import jodd.joy.page.DbPager;
 public class MySqlPager extends DbPager {
 
 	/**
-	 * Builds MySql page SQL using <code>limit</code> keyword.
-	 * Note that SQL_CALC_FOUND_ROWS is not used as we do parse
-	 * returned rows (up to <code>pageSize</code>) so the FOUND_ROWS()
-	 * is known.
+	 * Builds page SQL using <code>limit</code> keyword.
+	 * Uses SQL_CALC_FOUND_ROWS for {@link #buildCountSql(String)}.
 	 */
 	@Override
 	protected String buildPageSql(String sqlNoSelect, int from, int pageSize) {
-		return "select " + sqlNoSelect + " limit " + from + ", " + pageSize;
+		return "select SQL_CALC_FOUND_ROWS " + sqlNoSelect + " limit " + from + ", " + pageSize;
+	}
+
+	/**
+	 * Returns FOUND_ROWS() sql to determine total count of founded rows.
+	 */
+	@Override
+	protected String buildCountSql(String sqlNoSelect) {
+		return "SELECT FOUND_ROWS()";
 	}
 
 }
