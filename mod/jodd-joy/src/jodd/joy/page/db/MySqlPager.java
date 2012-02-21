@@ -14,15 +14,16 @@ public class MySqlPager extends DbPager {
 	 * Uses SQL_CALC_FOUND_ROWS for {@link #buildCountSql(String)}.
 	 */
 	@Override
-	protected String buildPageSql(String sqlNoSelect, int from, int pageSize) {
-		return "select SQL_CALC_FOUND_ROWS " + sqlNoSelect + " limit " + from + ", " + pageSize;
+	protected String buildPageSql(String sql, int from, int pageSize) {
+		sql = removeSelect(sql);
+		return "select SQL_CALC_FOUND_ROWS " + sql + " limit " + from + ", " + pageSize;
 	}
 
 	/**
 	 * Returns FOUND_ROWS() sql to determine total count of founded rows.
 	 */
 	@Override
-	protected String buildCountSql(String sqlNoSelect) {
+	protected String buildCountSql(String sql) {
 		return "SELECT FOUND_ROWS()";
 	}
 

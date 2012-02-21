@@ -13,15 +13,18 @@ public class HsqlDbPager extends DbPager {
 	 * Builds page sql using LIMIT keyword after the SELECT.
 	 */
 	@Override
-	protected String buildPageSql(String sqlNoSelect, int from, int pageSize) {
-		return "select LIMIT " + from + ' ' + pageSize + sqlNoSelect;
+	protected String buildPageSql(String sql, int from, int pageSize) {
+		sql = removeSelect(sql);
+		return "select LIMIT " + from + ' ' + pageSize + sql;
 	}
 
 	/**
 	 * Builds count sql using COUNT(1).
 	 */
 	@Override
-	protected String buildCountSql(String sqlNoSelect) {
-		return "select count(1) " + sqlNoSelect;
+	protected String buildCountSql(String sql) {
+		sql = removeToFrom(sql);
+		sql = removeLastOrderBy(sql);
+		return "select count(1) " + sql;
 	}
 }
