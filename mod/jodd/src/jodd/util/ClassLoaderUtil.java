@@ -422,7 +422,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Opens a resource of the specified name for reading.
-	 * @see #getResourceAsStream(String, ClassLoader
+	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getResourceAsStream(String resourceName) throws IOException {
 		return getResourceAsStream(resourceName, null);
