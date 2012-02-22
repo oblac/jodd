@@ -18,6 +18,7 @@ import static jodd.util.StringPool.UTF_8;
 
 /**
  * Simple symmetric de/encryptor that uses PBE With MD5 And Triple DES.
+ * IMPORTANT: Does not work without patching the JDK!
  */
 public class SymmetricEncryptor {
 
