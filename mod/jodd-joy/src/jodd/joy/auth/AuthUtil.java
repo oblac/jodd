@@ -2,8 +2,9 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.crypt.SymmetricEncryptor;
+import jodd.joy.crypt.Threefish;
 import jodd.servlet.ServletUtil;
+import jodd.util.Base64;
 import jodd.util.StringUtil;
 
 import javax.servlet.http.Cookie;
@@ -33,8 +34,12 @@ public class AuthUtil {
 		return session.getAttribute(AUTH_SESSION_NAME);
 	}
 
-	private static final SymmetricEncryptor SYMEC = new SymmetricEncryptor("jodd#auth!enc*ss@ap");
+	private static final Threefish ENCRYPTOR = new Threefish(Threefish.BLOCK_SIZE_BITS_256);
 	private static final char COOKIE_DELIMETER = '*';
+	
+	static {
+		ENCRYPTOR.init("jodd#auth!enc*ss@ap", 0x134298db8abf9485L, 0x603bce00abL);
+	}
 
 	/**
 	 * Reads auth cookie and returns stored string array from cookie data.
@@ -46,7 +51,8 @@ public class AuthUtil {
 		}
 		String[] values = StringUtil.splitc(cookie.getValue(), COOKIE_DELIMETER);
 		for (int i = 0; i < values.length; i++) {
-			values[i] = SYMEC.decrypt(values[i]);
+			byte[] decoded = Base64.decode(values[i]);
+			values[i] = ENCRYPTOR.decryptString(decoded);
 		}
 		return values;
 	}
@@ -60,7 +66,8 @@ public class AuthUtil {
 			if (i > 0) {
 				sb.append(COOKIE_DELIMETER);
 			}
-			sb.append(SYMEC.encrypt(values[i]));
+			byte[] encrypted = ENCRYPTOR.encryptString(values[i]); 
+			sb.append(Base64.encodeToString(encrypted));
 		}
 
 		Cookie cookie = new Cookie(AUTH_COOKIE_NAME, sb.toString());
