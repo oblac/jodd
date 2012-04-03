@@ -456,7 +456,7 @@ public class HtmlStaplerBundlesManager {
 			count++;
 		}
 		if (log.isInfoEnabled()) {
-			log.info("HtmlStapler reseted, " + count + " bundle files deleted.");
+			log.info("HtmlStapler reset, " + count + " bundle files deleted.");
 		}
 	}
 
