@@ -5,6 +5,8 @@ package jodd.decora;
 import jodd.decora.parser.DecoraParser;
 import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
+import jodd.servlet.wrapper.BufferResponseWrapper;
+import jodd.servlet.wrapper.LastModifiedData;
 import jodd.util.ClassLoaderUtil;
 
 import javax.servlet.Filter;
@@ -123,45 +125,49 @@ public class DecoraServletFilter implements Filter {
 				}
 			}
 		};
-		filterChain.doFilter(decoraRequest, pageWrapper);
-		char[] pageContent = pageWrapper.getBufferedChars();
 
+		filterChain.doFilter(decoraRequest, pageWrapper);
+
+		if (pageWrapper.isBufferingEnabled() == false) {
+			// content was NOT buffered, so original request/response were used
+			return;
+		}
+
+		char[] pageContent = pageWrapper.getBufferContentAsChars();
 
 		/* PROCESS DECORATOR */
 
         boolean decorated = false;
 
-		if (pageContent != null && pageWrapper.isBufferingEnabled()) {
-			// if content was buffered, try to decorate it
+		// content was buffered, so try to decorate it
 
-			String actionPath = DispatcherUtil.getServletPath(request);
-			String decoratorPath = decoraManager.resolveDecorator(request, actionPath);
-			if (decoratorPath != null) {
+		String actionPath = DispatcherUtil.getServletPath(request);
+		String decoratorPath = decoraManager.resolveDecorator(request, actionPath);
+		if (decoratorPath != null) {
+			BufferResponseWrapper decoratorWrapper = new BufferResponseWrapper(response, lastModifiedData);
+			DispatcherUtil.forward(decoraRequest, decoratorWrapper, decoratorPath);
+			char[] decoraContent = decoratorWrapper.getBufferedChars();
 
-				BufferResponseWrapper decoratorWrapper = new BufferResponseWrapper(response, lastModifiedData);
-				DispatcherUtil.forward(decoraRequest, decoratorWrapper, decoratorPath);
-				char[] decoraContent = decoratorWrapper.getBufferedChars();
+			decoraParser.decorate(servletResponse.getWriter(), pageContent, decoraContent);
 
-				decoraParser.decorate(servletResponse.getWriter(), pageContent, decoraContent);
-
-				decorated = true;
-			}
-        }
-
-		if (response.isCommitted() == false) {
-			pageWrapper.preResponseCommit();
+			decorated = true;
 		}
 
-		/* DECORATOR NOT APPLIED, USE ORIGINAL RESPONSE */
+//		if (response.isCommitted() == false) {
+//			pageWrapper.preResponseCommit();
+//		}
+		pageWrapper.commitResponse();
 
-        if (pageContent!= null && !decorated) {
+		/* DECORATOR NOT APPLIED, USE ORIGINAL RESPONSE (that is buffered) */
+
+        if (!decorated) {
 			if (pageWrapper.isBufferStreamBased()) {
 				ServletOutputStream outputStream = response.getOutputStream();
 				outputStream.write(pageWrapper.getBufferedBytes());
 				outputStream.flush();
 			} else {
 				PrintWriter writer = response.getWriter();
-				writer.append(CharBuffer.wrap(pageContent));
+				writer.append(CharBuffer.wrap(pageWrapper.getBufferedChars()));
 				writer.flush();
 			}
 		}

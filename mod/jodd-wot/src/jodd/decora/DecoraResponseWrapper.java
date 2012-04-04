@@ -2,6 +2,9 @@
 
 package jodd.decora;
 
+import jodd.servlet.wrapper.BufferResponseWrapper;
+import jodd.servlet.wrapper.LastModifiedData;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
