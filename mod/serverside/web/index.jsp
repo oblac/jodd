@@ -87,7 +87,8 @@ This page is also an example of supplement action: it does not have an registere
 
 <h2>Lagarto</h2>
 <p>
-<a href="js.html">JS Bundle</a> example.<br/>
+<a href="js.html">HtmlStapler</a> example #1.<br/>
+<a href="stapler/js.html">HtmlStapler</a> example #2.<br/>
 </p>
 
 <h2>Info</h2>
