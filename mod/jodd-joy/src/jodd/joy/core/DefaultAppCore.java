@@ -166,7 +166,7 @@ public abstract class DefaultAppCore {
 		appDir = url.getFile();
 
 		int ndx = appDir.indexOf("WEB-INF");
-		boolean isWebApplication = (ndx != -1);
+		isWebApplication = (ndx != -1);
 
 		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
 	}
