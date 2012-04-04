@@ -13,6 +13,7 @@ import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 
 import javax.servlet.ServletContext;
@@ -25,6 +26,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * HTML resources bundles manager.
@@ -391,6 +394,10 @@ public class HtmlStaplerBundlesManager {
 					}
 					content = NetUtil.downloadString(localUrl, localFilesEncoding);
 				}
+
+				if (isCssResource(src)) {
+					content = fixCssRelativeUrls(content, src);
+				}
 			}
 
 			content = onResourceContent(content);
@@ -458,6 +465,67 @@ public class HtmlStaplerBundlesManager {
 		if (log.isInfoEnabled()) {
 			log.info("HtmlStapler reset, " + count + " bundle files deleted.");
 		}
+	}
+
+	// ---------------------------------------------------------------- css related
+
+	/**
+	 * Returns <code>true</code> if resource is CSS, so the
+	 * CSS urls can be fixed.
+	 */
+	protected boolean isCssResource(String src) {
+		return src.endsWith(".css");
+	}
+
+	private static final Pattern CSS_URL_PATTERN = Pattern.compile("url\\s*\\(\\s*([^\\)\\s]*)\\s*\\)", Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * Returns the content with all relative URLs fixed.
+	 */
+	protected String fixCssRelativeUrls(String content, String src) {
+
+		String path = FileNameUtil.getPath(src);
+
+		Matcher matcher = CSS_URL_PATTERN.matcher(content);
+
+		StringBuilder sb = new StringBuilder(content.length());
+
+		int start = 0;
+
+		while (matcher.find()) {
+			sb.append(content.substring(start, matcher.start()));
+
+			String url = fixRelativeUrl(matcher.group(1), path);
+
+			sb.append(url);
+
+			start = matcher.end();
+		}
+
+		sb.append(content.substring(start));
+
+		return sb.toString();
+	}
+
+	/**
+	 * For a given URL (optionally quoted), produces CSS URL
+	 * where relative paths are fixed and prefixed with offsetPath.
+	 */
+	protected String fixRelativeUrl(String url, String offsetPath) {
+
+		url = StringUtil.removeChars(url, "'\"");   // remove quotes
+
+		StringBuilder res = new StringBuilder();
+		res.append("url('");
+
+		if (url.startsWith(StringPool.SLASH) == false) {
+			res.append(offsetPath);
+		}
+
+		res.append(url);
+		res.append("')");
+
+		return res.toString();
 	}
 
 }
