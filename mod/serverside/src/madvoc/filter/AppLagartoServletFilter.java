@@ -42,4 +42,12 @@ public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 		};
 	}
 
+	@Override
+	protected boolean acceptActionPath(HttpServletRequest request, String actionPath) {
+		// skip html stapler servlet path from lagarto processing!!!
+		if (actionPath.equals(bundlesManager.getStaplerServletPath())) {
+			return false;
+		}
+		return super.acceptActionPath(request, actionPath);
+	}
 }
