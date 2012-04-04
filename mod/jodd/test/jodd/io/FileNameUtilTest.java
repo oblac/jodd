@@ -91,4 +91,10 @@ public class FileNameUtilTest extends TestCase {
 		assertEquals("/foo/bar/c.txt", FileNameUtil.concat("/foo", "bar/c.txt", true));
 		assertEquals("/foo/c.txt/bar", FileNameUtil.concat("/foo/c.txt", "bar", true));
 	}
+
+	public void testGetPathNoEndSeparator() {
+		assertEquals("", FileNameUtil.getPathNoEndSeparator("/hello.world.html"));
+		assertEquals("foo", FileNameUtil.getPathNoEndSeparator("/foo/hello.world.html"));
+		assertEquals("foo/bar", FileNameUtil.getPathNoEndSeparator("/foo/bar/hello.world.html"));
+	}
 }
