@@ -3,7 +3,7 @@
 package jodd.servlet.filter;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
+import static org.mockito.Mockito.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -13,10 +13,10 @@ import java.io.PrintWriter;
 public class ByteArrayResponseWrapperTest extends TestCase {
 
 	public void testWrite() throws IOException {
-		HttpServletResponseWrapper rw = EasyMock.createMock(HttpServletResponseWrapper.class);
-		ServletOutputStream os = EasyMock.createNiceMock(ServletOutputStream.class);
-		EasyMock.expect(rw.getOutputStream()).andReturn(os);
-		EasyMock.replay(rw, os);
+		HttpServletResponseWrapper rw = mock(HttpServletResponseWrapper.class);
+		ServletOutputStream os = mock(ServletOutputStream.class);
+
+		when(rw.getOutputStream()).thenReturn(os);
 
 		ByteArrayResponseWrapper wrappedResponse = new ByteArrayResponseWrapper(rw);
 		ServletOutputStream sos = wrappedResponse.getOutputStream();
