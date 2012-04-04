@@ -44,7 +44,7 @@ module_task('dist-all', 'jar.jodd, jar-sources.jodd, jar-javadoc.jodd')
 
 module('jodd-wot', 'jdk5')
 module_compile('src',  '>jodd.src, servlets, asm, slf4j')
-module_compile('test', '>jodd.src, #src, asm, slf4j, test')
+module_compile('test', '>jodd.src, #src, servlets, asm, slf4j, test')
 module_build('src, test')
 module_emma('src', 'test', 'jodd.TestJoddWot')
 module_javadoc('src', moduleName.capitalize() + ' Library ${prjVersion}', copyright)

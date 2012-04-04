@@ -405,6 +405,7 @@
 	<path id="jodd-wot.test.classpath">
 		<path path="${jodd.src.out-dir}"/>
 		<path path="${jodd-wot.src.out-dir}"/>
+		<path refid="lib.servlets"/>
 		<path refid="lib.asm"/>
 		<path refid="lib.slf4j"/>
 		<path refid="lib.test"/>
