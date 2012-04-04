@@ -110,21 +110,7 @@ public class DecoraServletFilter implements Filter {
 
 		final LastModifiedData lastModifiedData = new LastModifiedData();
 
-		DecoraResponseWrapper pageWrapper = new DecoraResponseWrapper(response, lastModifiedData, decoraManager) {
-			@Override
-			protected void preResponseCommit() {
-				long lastModified = lastModifiedData.getLastModified();
-				long ifModifiedSince = request.getDateHeader("If-Modified-Since");
-				if (lastModified > -1 && !response.containsHeader("Last-Modified")) {
-					if (ifModifiedSince < (lastModified / 1000 * 1000)) {
-						response.setDateHeader("Last-Modified", lastModified);
-					} else {
-						response.reset();
-						response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					}
-				}
-			}
-		};
+		DecoraResponseWrapper pageWrapper = new DecoraResponseWrapper(request, response, lastModifiedData, decoraManager);
 
 		filterChain.doFilter(decoraRequest, pageWrapper);
 

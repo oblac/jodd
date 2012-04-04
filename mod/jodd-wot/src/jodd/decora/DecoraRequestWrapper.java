@@ -21,9 +21,8 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	public String getHeader(String header) {
 		if (isExcluded(header)) {
 			return null;
-		} else {
-			return super.getHeader(header);
 		}
+		return super.getHeader(header);
 	}
 
 	/**
@@ -33,9 +32,8 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	public long getDateHeader(String header) {
 		if (isExcluded(header)) {
 			return -1;
-		} else {
-			return super.getDateHeader(header);
 		}
+		return super.getDateHeader(header);
 	}
 
 	/**
@@ -46,4 +44,3 @@ public class DecoraRequestWrapper extends HttpServletRequestWrapper {
 	}
 
 }
-
