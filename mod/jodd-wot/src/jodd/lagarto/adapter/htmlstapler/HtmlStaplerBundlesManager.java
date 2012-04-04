@@ -374,7 +374,7 @@ public class HtmlStaplerBundlesManager {
 					if (src.startsWith(StringPool.SLASH)) {
 						localFile += src;
 					} else {
-						localFile += FileNameUtil.getPath(actionPath) + '/' + src;
+						localFile += '/' + FileNameUtil.getPathNoEndSeparator(actionPath) + '/' + src;
 					}
 
 					// trim link parameters, if any
