@@ -5,7 +5,7 @@ package jodd.lagarto.filter;
 import jodd.io.FileNameUtil;
 import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
-import jodd.servlet.filter.CharArrayResponseWrapper;
+import jodd.servlet.wrapper.BufferResponseWrapper;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,7 +16,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Lagarto servlet filter takes HTML content and invokes user defined parser on it.
@@ -46,9 +45,10 @@ public abstract class LagartoServletFilter implements Filter {
 			return;
 		}
 
-		CharArrayResponseWrapper wrapper = new CharArrayResponseWrapper(response);
+		BufferResponseWrapper wrapper = new BufferResponseWrapper(response);
 		filterChain.doFilter(servletRequest, wrapper);
-		char[] content = wrapper.toCharArray();
+
+		char[] content = wrapper.getBufferContentAsChars();
 
 		if ((content != null) && (content.length != 0)) {
 			if (log.isDebugEnabled()) {
@@ -60,8 +60,8 @@ public abstract class LagartoServletFilter implements Filter {
 				log.error("Error parsing", ex);
 				throw new ServletException(ex);
 			}
-			Writer out = servletResponse.getWriter();
-			out.write(content);
+
+			wrapper.writeContentToResponse(content);
 		}
 	}
 
