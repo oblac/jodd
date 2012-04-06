@@ -46,6 +46,11 @@ public class JtxTransaction {
 
 	/**
 	 * Creates new transaction. Should be invoked by {@link jodd.jtx.JtxTransactionManager}.
+	 * If transaction is set as <code>active</code>, it will be actually created, meaning
+	 * that it is the first transaction on this connection i.e. in this session.
+	 * If transaction is not <code>active</code>, transaction object will be created,
+	 * but the real transaction not, and it is expected that one is already created before.
+	 *
 	 * @param txManager jtx manager
 	 * @param mode transaction mode
 	 * @param context transaction context within transaction works

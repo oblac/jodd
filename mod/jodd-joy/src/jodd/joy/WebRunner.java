@@ -97,10 +97,10 @@ public abstract class WebRunner {
 	}
 
 	/**
-	 * Starts new transaction.
+	 * Starts new read/write transaction in PROPAGATION_REQUIRED mode.
 	 */
 	public static JtxTransaction startRwTx() {
-		return jtxManager.requestTransaction(new JtxTransactionMode().readOnly(false));
+		return jtxManager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
 	}
 
 }
