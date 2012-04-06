@@ -15,6 +15,38 @@ import java.sql.SQLException;
 
 public class DbTransactionTest extends DbHsqldbTestCase {
 
+	/**
+	 * Tests if rollback works.
+	 */
+	public void testRollback()  throws SQLException {
+		// prepare manager
+		JtxTransactionManager manager = new JtxTransactionManager();
+		manager.registerResourceManager(new DbJtxResourceManager(cp));
+
+		// request transaction
+		JtxTransaction tx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
+		DbSession session = tx.requestResource(DbSession.class);
+		assertNotNull(session);
+
+		// insert two records
+		DbQuery query = new DbQuery(session, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
+		assertEquals(1, query.executeUpdateAndClose());
+		query = new DbQuery(session, "insert into GIRL values(5, 'Annita', 'bartender')");
+		assertEquals(1, query.executeUpdateAndClose());
+
+		// rollback
+		tx.rollback();
+
+		// check !!!
+		session = new DbSession(cp);
+
+		DbQuery query2 = new DbQuery(session, "select count(*) from GIRL");
+		long count = query2.executeCountAndClose();
+
+		assertEquals(0, count);
+		session.closeSession();
+	}
+
 
 	// ---------------------------------------------------------------- misc
 

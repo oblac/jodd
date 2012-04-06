@@ -63,7 +63,7 @@ public class JtxTransaction {
 		this.startAsActive = active;
 		txManager.associateTransaction(this);
 		if (log.isDebugEnabled()) {
-			log.debug("New JTX {status:" + this.status + " mode:" + this.mode + '}');
+			log.debug("New JTX {status:" + this.status + ", mode:" + this.mode + '}');
 		}
 	}
 
