@@ -187,7 +187,12 @@ public abstract class DefaultAppCore {
 			startApp();
 			log.info("app started");
 		} catch (RuntimeException rex) {
-			log.error(rex.toString(), rex);
+			if (log != null) {
+				log.error(rex.toString(), rex);
+			} else {
+				System.out.println(rex.toString());
+				rex.printStackTrace();
+			}
 			try {
 				stop();
 			} catch (Exception ignore) {
