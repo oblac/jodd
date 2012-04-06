@@ -143,6 +143,8 @@ public class Madvoc {
 	/**
 	 * Creates and starts new <code>Madvoc</code> web application.
 	 * <code>Madvoc</code> instance is stored in servlet context.
+	 * Important: <code>servletContext</code> may be <code>null</code>,
+	 * when web application is run out from container.
 	 */
 	@SuppressWarnings("InstanceofCatchParameter")
 	public void startNewWebApplication(ServletContext servletContext) {
@@ -164,7 +166,9 @@ public class Madvoc {
 	
 	private void start(ServletContext servletContext) { 
 
-		servletContext.setAttribute(MADVOC_ATTR, this);
+		if (servletContext != null) {
+			servletContext.setAttribute(MADVOC_ATTR, this);
+		}
 
 		// create and initialize web application
 		webapp = createWebApplication();

@@ -186,9 +186,11 @@ public class WebApplication {
 
 	/**
 	 * Initializes web application custom configuration.
+	 * When running web application out from container,
+	 * <code>servletContext</code> may be null
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected void init(MadvocConfig madvocConfig, ServletContext context) {
+	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		if (log.isDebugEnabled()) {
 			log.debug("Initializing Madvoc");
 		}
