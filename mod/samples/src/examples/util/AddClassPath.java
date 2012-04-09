@@ -3,8 +3,6 @@
 package examples.util;
 
 import jodd.util.ClassLoaderUtil;
-import jodd.util.SystemUtil;
-import jodd.io.FileUtil;
 
 public class AddClassPath {
 	public static void main(String args[]) throws Exception {
@@ -16,7 +14,7 @@ public class AddClassPath {
 //		System.out.println(c);
 
 
-		ClassLoaderUtil.addFileToClassPath(working);
+		ClassLoaderUtil.addFileToClassPath(working, ClassLoader.getSystemClassLoader());
 		Class c = Class.forName("TestClass");
 		Object o = c.newInstance();
 		System.out.println(o);

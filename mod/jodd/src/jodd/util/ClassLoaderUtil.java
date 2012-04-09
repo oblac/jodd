@@ -41,37 +41,26 @@ public class ClassLoaderUtil {
 		return cl;
 	}
 
+	/**
+	 * Returns system class loader.
+	 */
+	public static ClassLoader getSystemClassLoader() {
+		return ClassLoader.getSystemClassLoader();
+	}
+
 	// ---------------------------------------------------------------- add class path
 
 	/**
 	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
-	public static void addFileToClassPath(String path) {
-		addFileToClassPath(path, (URLClassLoader) getDefaultClassLoader());
-	}
-
-	/**
-	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
-	 */
-	public static void addFileToClassPath(String path, URLClassLoader classLoader) {
+	public static void addFileToClassPath(String path, ClassLoader classLoader) {
 		addFileToClassPath(new File(path), classLoader);
 	}
 
 	/**
 	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
 	 */
-	public static void addFileToClassPath(File path) {
-			addFileToClassPath(path, (URLClassLoader) getDefaultClassLoader());
-	}
-
-	/**
-	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader)
-	 */
-	public static void addFileToClassPath(File path, URLClassLoader classLoader) {
+	public static void addFileToClassPath(File path, ClassLoader classLoader) {
 		try {
 			addUrlToClassPath(path.toURL(), classLoader);
 		} catch (MalformedURLException muex) {
@@ -81,18 +70,10 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Adds the content pointed by the URL to the classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, java.net.URLClassLoader) 
-	 */
-	public static void addUrlToClassPath(URL url) {
-		addUrlToClassPath(url, (URLClassLoader) getDefaultClassLoader());
-	}
-
-	/**
-	 * Adds the content pointed by the URL to the classpath during runtime.
 	 * Uses reflection since <code>addURL</code> method of
 	 * <code>URLClassLoader</code> is protected.
 	 */
-	public static void addUrlToClassPath(URL url, URLClassLoader classLoader) {
+	public static void addUrlToClassPath(URL url, ClassLoader classLoader) {
 		try {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
