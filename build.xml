@@ -729,6 +729,7 @@
 		<zip destfile="${dist.dir}/jodd-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
 	${jodd-wot.jar}
+	${jodd-joy.jar}
 	file_id.diz
 " excludes=""/>
 	</target>
@@ -737,6 +738,7 @@
 		<zip destfile="${dist.dir}/jodd-mvn-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
 	${jodd-wot.jar}
+	${jodd-joy.jar}
 	file_id.diz
 
 	${jodd-sources.jar}
@@ -751,6 +753,7 @@
 		<zip destfile="${dist.dir}/jodd-all-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
 	${jodd-wot.jar}
+	${jodd-joy.jar}
 	file_id.diz
 
 	${jodd.src.src-dir}/**
@@ -768,6 +771,7 @@
 		<zip destfile="${dist.dir}/jodd-all-with-dependencies-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
 	${jodd.jar}
 	${jodd-wot.jar}
+	${jodd-joy.jar}
 	file_id.diz
 
 	${jodd.src.src-dir}/**

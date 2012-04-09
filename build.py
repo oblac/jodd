@@ -94,6 +94,7 @@ project_target('release', 'clean, build, javadoc, emma, findbugs, dist-all', '* 
 pack_dist = '''
 	${jodd.jar}
 	${jodd-wot.jar}
+	${jodd-joy.jar}
 	file_id.diz
 '''
 pack_maven = pack_dist + '''
