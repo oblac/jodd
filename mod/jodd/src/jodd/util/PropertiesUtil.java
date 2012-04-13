@@ -5,9 +5,6 @@ package jodd.util;
 import jodd.io.StreamUtil;
 import jodd.io.AsciiInputStream;
 import jodd.io.findfile.ClassScanner;
-import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
-import static jodd.util.StringPool.RIGHT_BRACE;
-import static jodd.util.StringPool.DOLLAR;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,8 +18,6 @@ import java.util.Map;
  * Misc java.util.Properties utils.
  */
 public class PropertiesUtil {
-
-	private static final String SLASH_DOLLAR = "\\$";
 
 	// ---------------------------------------------------------------- to/from files
 
@@ -237,34 +232,28 @@ public class PropertiesUtil {
 		}
 	}
 
+	private static final StringTemplateParser stp;
+
+	static {
+		stp = new StringTemplateParser();
+		stp.setParseValues(true);
+	}
+
 	/**
-	 * Returns property with resolved variables. Resolves inner properties, too.
+	 * Returns property with resolved variables.
 	 */
-	public static String resolveProperty(Map map, String key) {
+	public static String resolveProperty(final Map map, String key) {
 		String value = getProperty(map, key);
 		if (value == null) {
 			return null;
 		}
-		int leftLen = DOLLAR_LEFT_BRACE.length();
-		while (true) {
-			int[] ndx = StringUtil.indexOfRegion(value, DOLLAR_LEFT_BRACE, RIGHT_BRACE, '\\');
-			if (ndx == null) {
-				break;
+		value = stp.parse(value, new StringTemplateParser.MacroResolver() {
+			public String resolve(String macroName) {
+				return getProperty(map, macroName);
 			}
-			int innerNdx = StringUtil.lastIndexOf(value, DOLLAR_LEFT_BRACE, ndx[2], ndx[0]);
-			if (innerNdx > ndx[0] + leftLen) {
-				ndx[0] = innerNdx;
-				ndx[1] = innerNdx + leftLen;
-			}
-			key = value.substring(ndx[1], ndx[2]);
+		});
 
-			String inner = getProperty(map, key);
-			if (inner == null) {
-				inner = StringPool.EMPTY;
-			}
-			value = value.substring(0, ndx[0]) + inner + value.substring(ndx[3]);
-		}
-		return StringUtil.replace(value, SLASH_DOLLAR, DOLLAR);
+		return value;
 	}
 
 }

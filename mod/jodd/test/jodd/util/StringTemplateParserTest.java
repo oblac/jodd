@@ -42,7 +42,6 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("---<>---", stp.parse("---${key2}---", macroResolver));
 	}
 
-
 	public void testInner() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -56,6 +55,25 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("---value---", stp.parse("---${key${key1}}---", macroResolver));
 
 		assertEquals("---value---", stp.parse("---${key${key${key0}}}---", macroResolver));
+	}
+
+	public void testInner2() {
+		StringTemplateParser stp = new StringTemplateParser();
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("foo", "foo");
+		map.put("boo.foo", "*${foo}*");
+		map.put("zoo", "${boo.${foo}}");
+
+		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
+
+		assertEquals("-*${foo}*-", stp.parse("-${boo.${foo}}-", macroResolver));
+		assertEquals("-${boo.${foo}}-", stp.parse("-${zoo}-", macroResolver));
+
+		stp.setParseValues(true);
+		assertEquals("-*foo*-", stp.parse("-${boo.${foo}}-", macroResolver));
+		assertEquals("-*foo*-", stp.parse("-${zoo}-", macroResolver));
+
 	}
 
 	public void testResolver() {

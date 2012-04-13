@@ -23,6 +23,7 @@ public class StringTemplateParser {
 	protected String macroStart = DEFAULT_MACRO_START;
 	protected String macroEnd = DEFAULT_MACRO_END;
 	protected char escapeChar = '\\';
+	protected boolean parseValues;
 
 	public boolean isReplaceMissingKey() {
 		return replaceMissingKey;
@@ -96,6 +97,19 @@ public class StringTemplateParser {
 	public void setEscapeChar(char escapeChar) {
 		this.escapeChar = escapeChar;
 	}
+
+	public boolean isParseValues() {
+		return parseValues;
+	}
+
+	/**
+	 * Defines if macro values has to be parsed, too.
+	 * By default, macro values are returned as they are.
+	 */
+	public void setParseValues(boolean parseValues) {
+		this.parseValues = parseValues;
+	}
+
 
 	// ---------------------------------------------------------------- parse
 
@@ -184,7 +198,13 @@ public class StringTemplateParser {
 			}
 
 			if (ndx == ndx1) {
-				result.append(value.toString());
+				String stringValue = value.toString();
+				if (parseValues == true) {
+					if (stringValue.contains(macroStart)) {
+						stringValue = parse(stringValue, macroResolver);
+					}
+				}
+				result.append(stringValue);
 				i = ndx2 + endLen;
 			} else {
 				// inner macro
