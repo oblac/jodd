@@ -31,6 +31,7 @@ public class ParamResolver {
 
 	/**
 	 * Returns an array of param keys that belongs to provided bean.
+	 * Optionally resolves the value of returned parameters.
 	 */
 	public String[] resolve(String beanName, boolean resolveReferenceParams) {
 		beanName = beanName + '.';
