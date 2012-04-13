@@ -257,7 +257,11 @@ public class PropertiesUtil {
 				ndx[1] = innerNdx + leftLen;
 			}
 			key = value.substring(ndx[1], ndx[2]);
+
 			String inner = getProperty(map, key);
+			if (inner == null) {
+				inner = StringPool.EMPTY;
+			}
 			value = value.substring(0, ndx[0]) + inner + value.substring(ndx[3]);
 		}
 		return StringUtil.replace(value, SLASH_DOLLAR, DOLLAR);

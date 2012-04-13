@@ -55,4 +55,15 @@ public class PropertiesUtilTest extends TestCase {
 		assertEquals("\\foo", resolveProperty(p, "doo"));
 	}
 
+	public void testNull() {
+
+		Properties properties = new Properties();
+		properties.setProperty("foo", "123");
+		properties.setProperty("xyz", "q${foo}z");
+		properties.setProperty("abc", "q${bar}z");
+
+		assertEquals("q123z", resolveProperty(properties, "xyz"));
+		assertEquals("qz", resolveProperty(properties, "abc"));
+	}
+
 }
