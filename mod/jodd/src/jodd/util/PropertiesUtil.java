@@ -238,7 +238,7 @@ public class PropertiesUtil {
 	}
 
 	/**
-	 * Returns property with resolved variables.
+	 * Returns property with resolved variables. Resolves inner properties, too.
 	 */
 	public static String resolveProperty(Map map, String key) {
 		String value = getProperty(map, key);
