@@ -2,8 +2,7 @@
 
 package jodd.props;
 
-import jodd.bean.BeanTemplateMacroResolver;
-import jodd.bean.BeanTemplateParser;
+import jodd.util.StringTemplateParser;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +24,7 @@ public class PropsData implements Cloneable {
 
 	protected final HashMap<String, Map<String, PropsValue>> profiles;		// profile properties
 
-	protected final BeanTemplateParser beanTemplateParser;
+	protected final StringTemplateParser stringTemplateParser;
 
 	/**
 	 * If set, duplicate props will be appended to the end, separated by comma.
@@ -40,9 +39,9 @@ public class PropsData implements Cloneable {
 		this.properties = properties;
 		this.profiles = profiles;
 
-		this.beanTemplateParser = new BeanTemplateParser();
-		beanTemplateParser.setResolveEscapes(false);
-		beanTemplateParser.setReplaceMissingKey(false);
+		this.stringTemplateParser = new StringTemplateParser();
+		stringTemplateParser.setResolveEscapes(false);
+		stringTemplateParser.setReplaceMissingKey(false);
 	}
 
 	@Override
@@ -201,16 +200,16 @@ public class PropsData implements Cloneable {
 	protected boolean resolveMacros(Map<String, PropsValue> map, final String profile) {
 		boolean replaced = false;
 
-		BeanTemplateMacroResolver macroResolver = new BeanTemplateMacroResolver() {
-			public Object resolve(String name) {
-				return lookupValue(name, profile);
+		StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
+			public String resolve(String macroName) {
+				return lookupValue(macroName, profile);
 			}
 		};
 
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			PropsValue pv = entry.getValue();
 
-			String newValue = beanTemplateParser.parse(pv.value, macroResolver);
+			String newValue = stringTemplateParser.parse(pv.value, macroResolver);
 
 			if (newValue.equals(pv.value) == false) {
 				pv.resolved = newValue;

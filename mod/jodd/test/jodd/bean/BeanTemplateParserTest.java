@@ -73,16 +73,6 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals("---value---", beanTemplateParser.parse("---${key${key${key0}}}---", map));
 	}
 
-	public void testResolver() {
-		BeanTemplateMacroResolver btr = new BeanTemplateMacroResolver() {
-			public Object resolve(String name) {
-				return name.toUpperCase();
-			}
-		};
-
-		assertEquals("xxxSMALLxxx", beanTemplateParser.parse("xxx${small}xxx", btr));
-	}
-
 	public void testReplaceMissingKey() {
 		BeanTemplateParser btp = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<String, String>();
