@@ -11,6 +11,8 @@ import jodd.util.StringTemplateParser;
  * <p>
  * Once set, <code>BeanTemplateParser</code> instance is reusable
  * as it doesn't store any parsing state.
+ * <p>
+ * Based on {@link StringTemplateParser}.
  */
 public class BeanTemplateParser extends StringTemplateParser {
 
