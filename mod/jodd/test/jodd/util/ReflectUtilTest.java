@@ -466,4 +466,9 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals("BIGsmall", name);
 	}
 
+	public void testIsSubClassForCommonTypes() {
+		assertTrue(ReflectUtil.isSubclass(Long.class, Long.class));
+		assertFalse(ReflectUtil.isSubclass(Long.class, long.class));
+	}
+
 }
