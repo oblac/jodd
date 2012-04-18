@@ -13,7 +13,6 @@
 	</listener>
 
 	<!-- filters -->
-<!--
 	<filter>
 		<filter-name>lagarto</filter-name>
 		<filter-class>madvoc.filter.AppLagartoServletFilter</filter-class>
@@ -22,7 +21,6 @@
 		<filter-name>lagarto</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
--->
 
 
 	<filter>
