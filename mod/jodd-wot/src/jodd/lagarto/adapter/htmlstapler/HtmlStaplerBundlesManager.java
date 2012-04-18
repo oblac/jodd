@@ -294,7 +294,7 @@ public class HtmlStaplerBundlesManager {
 	 * Registers new bundle that consist of provided list of source paths.
 	 * Returns the real bundle id, as provided one is just a temporary bundle id.
 	 */
-	public synchronized String registerBundle(String actionPath, String tempBundleId, List<String> sources) {
+	public synchronized String registerBundle(String contextPath, String actionPath, String tempBundleId, List<String> sources) {
 
 		if (tempBundleId == null || sources.isEmpty()) {
 			if (strategy == Strategy.ACTION_MANAGED) {
@@ -326,7 +326,7 @@ public class HtmlStaplerBundlesManager {
 			mirrors.put(tempBundleId, digest);
 		}
 		try {
-			createBundle(actionPath, digest, sources);
+			createBundle(contextPath, actionPath, digest, sources);
 		} catch (IOException ioex) {
 			throw new HtmlStaplerException("Can't create bundle.", ioex);
 		}
@@ -353,7 +353,7 @@ public class HtmlStaplerBundlesManager {
 	 * Creates bundle file by loading resource files content. If bundle file already
 	 * exist it will not be recreated!
 	 */
-	protected void createBundle(String actionPath, String bundleId, List<String>sources) throws IOException {
+	protected void createBundle(String contextPath, String actionPath, String bundleId, List<String>sources) throws IOException {
 		File bundleFile = createBundleFile(bundleId);
 		if (bundleFile.exists()) {
 			return;
@@ -371,9 +371,16 @@ public class HtmlStaplerBundlesManager {
 				if (downloadLocal == false) {
 					// load local resource from file system
 					String localFile = webRoot;
+
+					if (src.startsWith(contextPath + '/')) {
+						src = src.substring(contextPath.length());
+					}
+
 					if (src.startsWith(StringPool.SLASH)) {
+						// absolute path
 						localFile += src;
 					} else {
+						// relative path
 						localFile += '/' + FileNameUtil.getPathNoEndSeparator(actionPath) + '/' + src;
 					}
 

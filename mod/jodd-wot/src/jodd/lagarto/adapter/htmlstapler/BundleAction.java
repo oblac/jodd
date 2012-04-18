@@ -106,7 +106,7 @@ public class BundleAction {
 	 */
 	public void end() {
 		if (newAction) {
-			bundleId = bundlesManager.registerBundle(actionPath, bundleId, sources);
+			bundleId = bundlesManager.registerBundle(contextPath, actionPath, bundleId, sources);
 		}
 	}
 
