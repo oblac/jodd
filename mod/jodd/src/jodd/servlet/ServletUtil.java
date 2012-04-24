@@ -35,6 +35,7 @@ public class ServletUtil {
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String TYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 	public static final String HEADER_AUTHORIZATION = "Authorization";
+	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String CONTENT_DISPOSITION = "Content-Disposition";
 	public static final String WWW_AUTHENTICATE = "WWW-Authenticate";
 	private static final String JAVAX_SERVLET_ERROR_EXCEPTION = "javax.servlet.error.exception";
@@ -44,6 +45,7 @@ public class ServletUtil {
 	private static final String SCOPE_REQUEST = "request";
 	private static final String SCOPE_PAGE = "page";
 
+
 	// ---------------------------------------------------------------- multi-part
 
 	/**
@@ -52,6 +54,14 @@ public class ServletUtil {
 	public static boolean isMultipartRequest(HttpServletRequest request) {
 		String type = request.getHeader(HEADER_CONTENT_TYPE);
 		return (type != null) && type.startsWith(TYPE_MULTIPART_FORM_DATA);
+	}
+
+	/**
+	 * Returns <code>true</code> if client supports gzip encoding.
+	 */
+	public static boolean isGzipSupported(HttpServletRequest request) {
+		String browserEncodings = request.getHeader(HEADER_ACCEPT_ENCODING);
+		return (browserEncodings != null) && (browserEncodings.contains("gzip"));
 	}
 
 	// ---------------------------------------------------------------- authorization
