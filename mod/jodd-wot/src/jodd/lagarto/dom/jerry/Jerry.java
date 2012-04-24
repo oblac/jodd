@@ -50,16 +50,14 @@ public class Jerry {
 	 * Parses input sequence and creates new <code>Jerry</code>.
 	 */
 	public static Jerry jerry(CharSequence content) {
-		Document doc = new LagartoDOMBuilder().parse(content);
-		return new Jerry(null, doc);
+		return jerry().parse(content);
 	}
 
 	/**
 	 * Parses input content and creates new <code>Jerry</code>.
 	 */
 	public static Jerry jerry(CharBuffer content) {
-		Document doc = new LagartoDOMBuilder().parse(content);
-		return new Jerry(null, doc);
+		return jerry().parse(content);
 	}
 
 	// ---------------------------------------------------------------- 2-steps init
@@ -95,12 +93,12 @@ public class Jerry {
 
 		public Jerry parse(CharSequence content) {
 			Document doc = builder.parse(content);
-			return new Jerry(null, doc);
+			return new Jerry(builder, doc);
 		}
 
 		public Jerry parse(CharBuffer content) {
 			Document doc = builder.parse(content);
-			return new Jerry(null, doc);
+			return new Jerry(builder, doc);
 		}
 	}
 
@@ -116,15 +114,32 @@ public class Jerry {
 
 	protected final Jerry parent;
 	protected final Node[] nodes;
+	protected final LagartoDOMBuilder builder;
 
+	/**
+	 * Creates root Jerry.
+	 */
+	protected Jerry(LagartoDOMBuilder builder, Node... nodes) {
+		this.parent = null;
+		this.nodes = nodes;
+		this.builder = builder;
+	}
+
+	/**
+	 * Creates parent Jerry.
+	 */
 	protected Jerry(Jerry parent, Node... nodes) {
 		this.parent = parent;
 		this.nodes = nodes;
+		this.builder = parent.builder;
 	}
+
 	protected Jerry(Jerry parent, Node[] nodes1, Node[] nodes2) {
 		this.parent = parent;
 		this.nodes = ArraysUtil.merge(nodes1, nodes2);
+		this.builder = parent.builder;
 	}
+
 	protected Jerry(Jerry parent, List<Node> nodeList) {
 		this(parent, nodeList.toArray(new Node[nodeList.size()]));
 	}
@@ -656,7 +671,7 @@ public class Jerry {
 	 * Sets the HTML contents of each element in the set of matched elements.
 	 */
 	public Jerry html(String html) {
-		final Document doc = new LagartoDOMBuilder().parse(html);
+		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
 			node.removeAllChilds();
@@ -673,7 +688,7 @@ public class Jerry {
 	 * element in the set of matched elements.
 	 */
 	public Jerry append(String html) {
-		final Document doc = new LagartoDOMBuilder().parse(html);
+		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
@@ -687,7 +702,7 @@ public class Jerry {
 	 * element in the set of matched elements.
 	 */
 	public Jerry before(String html) {
-		final Document doc = new LagartoDOMBuilder().parse(html);
+		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
@@ -734,7 +749,7 @@ public class Jerry {
 	 * Returns the original set of elements for chaining purposes.
 	 */
 	public Jerry wrap(String html) {
-		final Document doc = new LagartoDOMBuilder().parse(html);
+		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
