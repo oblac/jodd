@@ -26,13 +26,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <ul>
  * <li><b>threshold</b> - min number of bytes for compressing
- * or 0 for no compression at all. By defaults is 0.</li>
+ * or 0 for no compression at all. By defaults is 0. Good value is 128.</li>
  *
  * <li><b>match</b> - comma separated string patterns to be found
  * in uri for using gzip. Only uri's that have these patterns inside will use
  * gzip. Use '*' for applying gzip on all resources (ignoring the wildcards value)</li>
  *
- * <li><b>excludes</b> - comma separated string patterns to be excluded
+ * <li><b>exclude</b> - comma separated string patterns to be excluded
  * if found in uri for using gzip. It is applied only on <b>matched</b> uris.</li>
  *
  * <li><b>wildcards</b> - boolean that specifies wildcard matching for string patterns.
@@ -74,11 +74,6 @@ public class GzipFilter implements Filter {
 	}
 
 	/**
-	 * Minimal threshold.
-	 */
-	protected int minThreshold = 128;
-
-	/**
 	 * The threshold number to compress, (0 == no compression).
 	 */
     protected int threshold;
@@ -102,10 +97,6 @@ public class GzipFilter implements Filter {
 		try {
 			threshold = Convert.toIntValue(config.getInitParameter("threshold"), 0);
 		} catch (TypeConversionException ignore) {
-			threshold = 0;
-		}
-
-		if (threshold < minThreshold) {
 			threshold = 0;
 		}
 
