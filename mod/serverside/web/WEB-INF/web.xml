@@ -81,6 +81,10 @@
 	<servlet>
 		<servlet-name>jodd-html-stapler</servlet-name>
 		<servlet-class>jodd.lagarto.adapter.htmlstapler.HtmlStaplerServlet</servlet-class>
+		<init-param>
+			<param-name>gzip</param-name>
+			<param-value>true</param-value>
+		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jodd-html-stapler</servlet-name>
