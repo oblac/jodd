@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <ul>
  * <li><b>threshold</b> - min number of bytes for compressing
- * or 0 for no compression at all.</li>
+ * or 0 for no compression at all. By defaults is 0.</li>
  *
  * <li><b>match</b> - comma separated string patterns to be found
  * in uri for using gzip. Only uri's that have these patterns inside will use
