@@ -28,4 +28,46 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("Одјави се", div.text());
 		assertEquals(9, div.html().length());
 	}
+
+	public void testAppend1() {
+		Jerry.JerryParser jerryParser = Jerry.jerry();
+
+		jerryParser.enableHtmlMode();
+
+		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
+
+		Jerry book = doc.$("book");
+
+		book.append("<br>");
+
+		assertEquals("<xml><book><name>Foo</name><br></book></xml>", doc.html());
+	}
+
+	public void testAppend2() {
+		Jerry.JerryParser jerryParser = Jerry.jerry();
+
+		jerryParser.enableXmlMode();
+
+		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
+
+		Jerry book = doc.$("book");
+
+		book.append("<br>");
+
+		assertEquals("<xml><book><name>Foo</name><br></br></book></xml>", doc.html());
+	}
+
+	public void testAppend3() {
+		Jerry.JerryParser jerryParser = Jerry.jerry();
+
+		jerryParser.enableXhtmlMode();
+
+		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
+
+		Jerry book = doc.$("book");
+
+		book.append("<br>");
+
+		assertEquals("<xml><book><name>Foo</name><br/></book></xml>", doc.html());
+	}
 }
