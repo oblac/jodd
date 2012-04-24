@@ -145,6 +145,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	 * Removes last child node if contains just empty text.
 	 */
 	protected void removeLastChildNodeIfEmptyText(Node parentNode, boolean closedTag) {
+		if (parentNode == null) {
+			return;
+		}
+
 		Node lastChild = parentNode.getLastChild();
 		if (lastChild == null) {
 			return;
