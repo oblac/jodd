@@ -12,9 +12,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * Implementation of <b>HttpServletResponseWrapper</b> that works with
- * the CompressionServletResponseStream implementation..
+ * the {@link GzipResponseStream} implementation.
  */
-
 public class GzipResponseWrapper extends HttpServletResponseWrapper {
 
 	/**
@@ -27,7 +26,7 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Original response
+	 * Original response.
 	 */
 	protected HttpServletResponse origResponse;
 
@@ -38,23 +37,21 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	protected ServletOutputStream stream;
 
 	/**
-	 * The PrintWriter that has been returned by <code>getWriter()</code>, if
-	 * any.
+	 * The PrintWriter that has been returned by <code>getWriter()</code>, if any.
 	 */
 	protected PrintWriter writer;
 
 	/**
-	 * The threshold number to compress
+	 * The threshold number to compress.
 	 */
 	protected int threshold;
 
 	/**
-	 * Content type
+	 * Content type.
 	 */
 	protected String contentType;
 
 	// ---------------------------------------------------------------- public
-	
 	
 	/**
 	 * Set content type
@@ -75,17 +72,12 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	/**
 	 * Creates and returns a ServletOutputStream to write the content associated
 	 * with this Response.
-	 *
-	 * @return a ServletOutputStream to write the content associated with response
-	 * @exception IOException
-	 *                   if an input/output error occurs
 	 */
 	public ServletOutputStream createOutputStream() throws IOException {
 		GzipResponseStream gzstream = new GzipResponseStream(origResponse);
 		gzstream.setBuffer(threshold);
 		return gzstream;
 	}
-
 
 	/**
 	 * Finishes a response.
@@ -106,12 +98,8 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 
 	// ---------------------------------------------------------------- ServletResponse
 
-
 	/**
-	 * Flush the buffer and commit this response.
-	 *
-	 * @exception IOException
-	 *                   if an input/output error occurs
+	 * Flushes the buffer and commit this response.
 	 */
 	@Override
 	public void flushBuffer() throws IOException {
@@ -122,13 +110,6 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 
 	/**
 	 * Returns the servlet output stream associated with this Response.
-	 *
-	 * @return servlet output stream associated with this Response
-	 * @exception IllegalStateException
-	 *                   if <code>getWriter</code> has
-	 *                   already been called for this response
-	 * @exception IOException
-	 *                   if an input/output error occurs
 	 */
 	@Override
 	public ServletOutputStream getOutputStream() throws IOException {
@@ -140,18 +121,10 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 			stream = createOutputStream();
 		}
 		return(stream);
-
 	}
 
 	/**
 	 * Returns the writer associated with this Response.
-	 *
-	 * @return the writer associated with this Response
-	 * @exception IllegalStateException
-	 *                   if <code>getOutputStream</code> has
-	 *                   already been called for this response
-	 * @exception IOException
-	 *                   if an input/output error occurs
 	 */
 	@Override
 	public PrintWriter getWriter() throws IOException {
@@ -174,7 +147,6 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 		}
 		return(writer);
 	}
-
 
 	@Override
 	public void setContentLength(int length) {

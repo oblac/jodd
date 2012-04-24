@@ -8,16 +8,13 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-
-
+/**
+ * GZIP response stream.
+ */
 public class GzipResponseStream extends ServletOutputStream {
 
 	/**
-	 * Construct a servlet output stream associated with the specified Response.
-	 *
-	 * @param response The associated response
-	 *
-	 * @exception IOException
+	 * Constructs a servlet output stream associated with the specified Response.
 	 */
 	public GzipResponseStream(HttpServletResponse response) throws IOException {
 		super();
@@ -25,7 +22,6 @@ public class GzipResponseStream extends ServletOutputStream {
 		this.response = response;
 		this.output = response.getOutputStream();
 	}
-
 
 	/**
 	 * The threshold number which decides to compress or not.
@@ -69,9 +65,8 @@ public class GzipResponseStream extends ServletOutputStream {
 	protected ServletOutputStream output;
 
 
-
 	/**
-	 * Set the compressionThreshold number and create buffer for this size
+	 * Sets the compressionThreshold number and create buffer for this size.
 	 */
 	protected void setBuffer(int threshold) {
 		compressionThreshold = threshold;
@@ -79,10 +74,8 @@ public class GzipResponseStream extends ServletOutputStream {
 	}
 
 	/**
-	 * Close this output stream, causing any buffered data to be flushed and any
+	 * Closes this output stream, causing any buffered data to be flushed and any
 	 * further output data to throw an IOException.
-	 *
-	 * @exception IOException
 	 */
 	@Override
 	public void close() throws IOException {
@@ -105,10 +98,8 @@ public class GzipResponseStream extends ServletOutputStream {
 
 
 	/**
-	 * Flush any buffered data for this output stream, which also causes the
+	 * Flushes any buffered data for this output stream, which also causes the
 	 * response to be committed.
-	 *
-	 * @exception IOException
 	 */
 	@Override
 	public void flush() throws IOException {
@@ -130,12 +121,7 @@ public class GzipResponseStream extends ServletOutputStream {
 	}
 
 	/**
-	 * Write the specified byte to our output stream.
-	 *
-	 * @param b      The byte to be written
-	 *
-	 * @exception IOException
-	 *                   if an input/output error occurs
+	 * Writes the specified byte to our output stream.
 	 */
 	@Override
 	public void write(int b) throws IOException {
@@ -151,13 +137,8 @@ public class GzipResponseStream extends ServletOutputStream {
 
 
 	/**
-	 * Write <code>b.length</code> bytes from the specified byte array to our
+	 * Writes <code>b.length</code> bytes from the specified byte array to our
 	 * output stream.
-	 *
-	 * @param b      byte array to be written
-	 *
-	 * @exception IOException
-	 *                   if an input/output error occurs
 	 */
 	@Override
 	public void write(byte b[]) throws IOException {
@@ -166,15 +147,12 @@ public class GzipResponseStream extends ServletOutputStream {
 
 
 	/**
-	 * Write <code>len</code> bytes from the specified byte array, starting at
+	 * Writes <code>len</code> bytes from the specified byte array, starting at
 	 * the specified offset, to our output stream.
 	 *
 	 * @param b      byte array containing the bytes to be written
 	 * @param off    zero-relative starting offset of the bytes to be written
 	 * @param len    number of bytes to be written
-	 *
-	 * @exception IOException
-	 *                   if an input/output error occurs
 	 */
 	@Override
 	public void write(byte b[], int off, int len) throws IOException {
@@ -218,11 +196,8 @@ public class GzipResponseStream extends ServletOutputStream {
 
 	}
 
-
 	/**
-	 * Has this response stream been closed?
-	 *
-	 * @return true if stream has been closed
+	 * Returns <code>true</code> if this response stream been closed.
 	 */
 	public boolean closed() {
 		return(this.closed);
