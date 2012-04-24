@@ -32,9 +32,9 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipUtil {
 
-	private static final String ZIP_EXT = ".zip";
-	private static final String GZIP_EXT = ".gz";
-	private static final String ZLIB_EXT = ".zlib";
+	public static final String ZIP_EXT = ".zip";
+	public static final String GZIP_EXT = ".gz";
+	public static final String ZLIB_EXT = ".zlib";
 
 	// ---------------------------------------------------------------- deflate
 
