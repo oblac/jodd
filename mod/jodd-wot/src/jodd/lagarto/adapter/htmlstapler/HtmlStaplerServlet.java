@@ -31,13 +31,13 @@ public class HtmlStaplerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String bundleId = req.getParameter("id");
 		File file = bundlesManager.lookupBundleFile(bundleId);
-		writeBundleFile(resp, file);
+		sendBundleFile(resp, file);
 	}
 
 	/**
 	 * Outputs bundle file to the response.
 	 */
-	protected void writeBundleFile(HttpServletResponse resp, File bundleFile) throws IOException {
+	protected void sendBundleFile(HttpServletResponse resp, File bundleFile) throws IOException {
 		OutputStream out = resp.getOutputStream();
 		StreamUtil.copy(new FileInputStream(bundleFile), out);
 	}
