@@ -2,7 +2,9 @@
 
 package jodd.lagarto.adapter;
 
+import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
+import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
 import jodd.util.CharUtil;
 
@@ -20,10 +22,12 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	}
 
 	protected int strippedCharsCount;
+	protected boolean strip;
 
 	@Override
 	public void start() {
 		strippedCharsCount = 0;
+		strip = true;
 		super.start();
 	}
 
@@ -35,11 +39,31 @@ public class StripHtmlTagAdapter extends TagAdapter {
 		strippedCharsCount += comment.length() + 7;
 	}
 
+	@Override
+	public void tag(Tag tag) {
+		String tagName = tag.getName();
+
+		if (tag.getType() == TagType.START && tagName.equals("pre")) {
+			strip = false;
+		}
+
+		if (tag.getType() == TagType.END && tagName.equals("pre")) {
+			strip = true;
+		}
+
+		super.tag(tag);
+	}
+
 	/**
 	 * Cleans unnecessary whitespaces.
 	 */
 	@Override
 	public void text(CharSequence text) {
+		if (strip == false) {
+			super.text(text);
+			return;
+		}
+
 		int textLength = text.length();
 
 		char[] dest = new char[textLength];
