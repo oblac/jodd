@@ -44,12 +44,12 @@ public class BigClassTest extends TestCase {
 					assertNotNull(anns);
 					assertEquals(3, anns.length);
 					AnnotationInfo ai = anns[0];
-					assertSame(ai, lookupAnnotation(ci, MadvocAction.class));
+					assertSame(ai, getAnnotation(ci, MadvocAction.class));
 					assertEquals("jodd.madvoc.meta.MadvocAction", ai.getAnnotationClassname());
 					assertEquals("Ljodd/madvoc/meta/MadvocAction;", ai.getAnnotationSignature());
 					assertEquals("madvocAction", ai.getElement("value"));
 					ai = anns[1];
-					assertSame(ai, lookupAnnotation(ci, PetiteBean.class));
+					assertSame(ai, getAnnotation(ci, PetiteBean.class));
 					assertEquals("jodd.petite.meta.PetiteBean", ai.getAnnotationClassname());
 					assertEquals("Ljodd/petite/meta/PetiteBean;", ai.getAnnotationSignature());
 					assertTrue(ai.getElement("wiring") instanceof String[]);
@@ -57,7 +57,7 @@ public class BigClassTest extends TestCase {
 					assertEquals("Ljodd/petite/WiringMode;", w[0]);
 					assertEquals("OPTIONAL", w[1]);
 					ai = anns[2];
-					assertSame(ai, lookupAnnotation(ci, InterceptedBy.class));
+					assertSame(ai, getAnnotation(ci, InterceptedBy.class));
 					assertEquals("jodd.madvoc.meta.InterceptedBy", ai.getAnnotationClassname());
 					assertEquals("Ljodd/madvoc/meta/InterceptedBy;", ai.getAnnotationSignature());
 					assertTrue(ai.getElement("value") instanceof Object[]);
@@ -71,18 +71,18 @@ public class BigClassTest extends TestCase {
 					assertEquals(3, anns.length);
 
 					AnnotationInfo ai = anns[0];
-					assertSame(ai, lookupAnnotation(mi, Action.class));
+					assertSame(ai, getAnnotation(mi, Action.class));
 					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
 					assertEquals("value", ai.getElement("value"));
 					assertEquals("alias", ai.getElement("alias"));
 
 					ai = anns[1];
-					assertSame(ai, lookupAnnotation(mi, PetiteInject.class));
+					assertSame(ai, getAnnotation(mi, PetiteInject.class));
 					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[2];
-					assertSame(ai, lookupAnnotation(mi, Transaction.class));
+					assertSame(ai, getAnnotation(mi, Transaction.class));
 					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
 					assertEquals(2, ai.getElementNames().size());
 					String[] s = (String[]) ai.getElement("propagation");
@@ -95,17 +95,17 @@ public class BigClassTest extends TestCase {
 					assertEquals(3, anns.length);
 
 					AnnotationInfo ai = anns[0];
-					assertSame(ai, lookupAnnotation(mi, Action.class));
+					assertSame(ai, getAnnotation(mi, Action.class));
 					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[1];
-					assertSame(ai, lookupAnnotation(mi, PetiteInject.class));
+					assertSame(ai, getAnnotation(mi, PetiteInject.class));
 					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[2];
-					assertSame(ai, lookupAnnotation(mi, Transaction.class));
+					assertSame(ai, getAnnotation(mi, Transaction.class));
 					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 				}

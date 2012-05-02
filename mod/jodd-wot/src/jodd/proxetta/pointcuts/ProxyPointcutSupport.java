@@ -28,12 +28,12 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method is annotated with provided annotation.
 	 */
-	public AnnotationInfo lookupAnnotation(MethodInfo mi, Class<? extends Annotation> an) {
-		AnnotationInfo[] anns = mi.getAnnotations();
+	public AnnotationInfo getAnnotation(MethodInfo methodInfo, Class<? extends Annotation> mi) {
+		AnnotationInfo[] anns = methodInfo.getAnnotations();
 		if (anns == null) {
 			return null;
 		}
-		String anName = an.getName();
+		String anName = mi.getName();
 		for (AnnotationInfo ann : anns) {
 			if (ann.getAnnotationClassname().equals(anName)) {
 				return ann;
@@ -45,8 +45,8 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method is annotated with one of provided annotation.
 	 */
-	public boolean hasAnnotation(MethodInfo mi, Class<? extends Annotation>... an) {
-		AnnotationInfo[] anns = mi.getAnnotations();
+	public boolean hasAnnotation(MethodInfo methodInfo, Class<? extends Annotation>... an) {
+		AnnotationInfo[] anns = methodInfo.getAnnotations();
 		if (anns == null) {
 			return false;
 		}
@@ -62,10 +62,10 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	}
 
 	/**
-	 * Locates annotation in class info. Returns <code>null</code> if annotation doesn't exist.
+	 * Finds annotation in class info. Returns <code>null</code> if annotation doesn't exist.
 	 */
-	public AnnotationInfo lookupAnnotation(ClassInfo ci, Class<? extends Annotation> an) {
-		AnnotationInfo[] anns = ci.getAnnotations();
+	public AnnotationInfo getAnnotation(ClassInfo classInfo, Class<? extends Annotation> an) {
+		AnnotationInfo[] anns = classInfo.getAnnotations();
 		if (anns == null) {
 			return null;
 		}
@@ -81,8 +81,8 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if class is annotated with one of provided annotation.
 	 */
-	public boolean hasAnnotation(ClassInfo ci, Class<? extends Annotation>... an) {
-		AnnotationInfo[] anns = ci.getAnnotations();
+	public boolean hasAnnotation(ClassInfo classInfo, Class<? extends Annotation>... an) {
+		AnnotationInfo[] anns = classInfo.getAnnotations();
 		if (anns == null) {
 			return false;
 		}
