@@ -8,7 +8,7 @@ package jodd.introspector;
  */
 public class ClassIntrospector {
 
-	public static Introspector defaultInterceptor = new AccessibleIntrospector();
+	private static Introspector defaultInterceptor = new AccessibleIntrospector();
 
 	/**
 	 * Returns class descriptor for specified type.
