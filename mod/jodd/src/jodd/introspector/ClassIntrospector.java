@@ -27,23 +27,14 @@ public class ClassIntrospector {
 	/**
 	 * Clears cache.
 	 */
-	public static void resetCache() {
+	public static void reset() {
 		defaultInterceptor.reset();
-	}
-
-	/**
-	 * Returns a string with some basic statistics information.
-	 */
-	public static String getStatistics() {
-		return defaultInterceptor.getStatistics();
 	}
 
 	/**
 	 * Specifies custom global default introspector.
 	 */
 	public static void setDefaultIntrospector(Introspector i) {
-		if (i != null) {
-			defaultInterceptor = i;
-		}
+		defaultInterceptor = i;
 	}
 }

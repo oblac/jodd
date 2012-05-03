@@ -27,8 +27,4 @@ public interface Introspector {
 	 */
 	void reset();
 
-	/**
-	 * Returns simple statistics information about all cached descriptors and their usage.
-	 */
-	String getStatistics();
 }

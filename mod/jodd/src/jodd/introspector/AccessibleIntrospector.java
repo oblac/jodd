@@ -57,18 +57,4 @@ public class AccessibleIntrospector implements Introspector {
 		cache.clear();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getStatistics() {
-		StringBuilder stat = new StringBuilder();
-		stat.append("Total classes: ").append(cache.size()).append('\n');
-		for (Map.Entry<Class, ClassDescriptor> entry : cache.entrySet()) {
-			ClassDescriptor bcd = entry.getValue();
-			stat.append('\t').append(entry.getKey().getName()).append(" (");
-			stat.append(bcd.getUsageCount()).append(" uses)").append('\n');
-		}
-		return stat.toString();
-	}
-
 }

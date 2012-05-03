@@ -71,25 +71,4 @@ public class WeakIntrospector implements Introspector {
 		cache.clear();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getStatistics() {
-		StringBuilder stat = new StringBuilder();
-		int total = 0;
-		for (Map<String, ClassDescriptor> map : cache.values()) {
-			total += map.size();
-		}
-		stat.append("Total classes: ").append(total).append('\n');
-		for (Map<String, ClassDescriptor> map : cache.values()) {
-			for (ClassDescriptor bcd : map.values()) {
-				if (bcd != null) {
-					stat.append('\t').append(bcd.getType().getName()).append(" (");
-					stat.append(bcd.getUsageCount()).append(')').append('\n');
-				}
-			}
-		}
-		return stat.toString();
-	}
-
 }
