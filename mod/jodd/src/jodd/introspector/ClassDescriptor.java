@@ -491,9 +491,9 @@ public class ClassDescriptor {
 		Ctors publicCtors = new Ctors();
 		Ctors allCtors = new Ctors();
 
-
 		publicCtors.addCtors(type.getConstructors());
 		allCtors.addCtors(type.getDeclaredConstructors());
+
 		Constructor[] ctors = allCtors.getAllCtors();
 		for (Constructor ctor : ctors) {
 			if (ReflectUtil.isPublic(ctor) == false) {
@@ -502,6 +502,7 @@ public class ClassDescriptor {
 		}
 		publicCtors.lock();
 		allCtors.lock();
+
 		this.publicCtors = publicCtors;
 		this.allCtors = allCtors;
 	}

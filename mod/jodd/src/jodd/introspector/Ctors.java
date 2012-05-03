@@ -5,19 +5,20 @@ package jodd.introspector;
 import java.lang.reflect.Constructor;
 
 /**
- * Constructors map collection.
+ * Constructors collection.
  */
 class Ctors {
 
 	Constructor[] allCtors;
 	Class[][] allArgs;
-	boolean locked;
 	Constructor defaultCtor;
+	boolean locked;
 
 	void addCtors(Constructor[] ctors) {
 		if (locked == true) {
-			throw new IllegalStateException("Constructor introspection is already finished.");
+			throw new IllegalStateException("Introspection finished.");
 		}
+
 		allCtors = ctors;
 		allArgs = new Class[allCtors.length][];
 		for (int i = 0; i < ctors.length; i++) {
