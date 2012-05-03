@@ -6,26 +6,31 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
- * Fields map collection.
+ * Fields collection.
  */
 class Fields {
 
-	HashMap<String, Field> fMap = new HashMap<String, Field>();
+	final HashMap<String, Field> fieldsMap;
 	Field[] allFields;
+
 	boolean locked;
+
+	Fields(int maxFields) {
+		fieldsMap = new HashMap<String, Field>(maxFields);
+	}
 
 	void addField(String name, Field field) {
 		if (locked == true) {
-			throw new IllegalStateException("Fields introspection is already finished.");
+			throw new IllegalStateException();	// introspection finished
 		}
-		fMap.put(name, field);
+		fieldsMap.put(name, field);
 	}
 
 	void lock() {
 		locked = true;
-		allFields = new Field[fMap.size()];
+		allFields = new Field[fieldsMap.size()];
 		int count = 0;
-		for (Field field : fMap.values()) {
+		for (Field field : fieldsMap.values()) {
 			allFields[count] = field;
 			count++;
 		}
@@ -34,7 +39,7 @@ class Fields {
 	// ---------------------------------------------------------------- get
 
 	Field getField(String name) {
-		return fMap.get(name);
+		return fieldsMap.get(name);
 	}
 
 	int getCount() {

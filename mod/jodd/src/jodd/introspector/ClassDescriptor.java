@@ -120,10 +120,12 @@ public class ClassDescriptor {
 		if (allFields != null) {
 			return;
 		}
-		Fields publicFields = new Fields();
-		Fields allFields = new Fields();
 
 		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
+
+		Fields publicFields = new Fields(fields.length);
+		Fields allFields = new Fields(fields.length);
+
 		for (Field field : fields) {
 			String fName = field.getName();
 			if (ReflectUtil.isPublic(field)) {
@@ -132,8 +134,10 @@ public class ClassDescriptor {
 			ReflectUtil.forceAccess(field);
 			allFields.addField(fName, field);
 		}
+
 		publicFields.lock();
 		allFields.lock();
+
 		this.publicFields = publicFields;
 		this.allFields = allFields;
 	}

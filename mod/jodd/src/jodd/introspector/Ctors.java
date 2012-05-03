@@ -16,7 +16,7 @@ class Ctors {
 
 	void addCtors(Constructor[] ctors) {
 		if (locked == true) {
-			throw new IllegalStateException("Introspection finished.");
+			throw new IllegalStateException();	// introspection finished
 		}
 
 		allCtors = ctors;
