@@ -15,14 +15,16 @@ import java.util.List;
 class Methods {
 
 	HashMap<String, List<MethodDescriptor>> mMapTemp = new HashMap<String, List<MethodDescriptor>>();
-	HashMap<String, MethodEntry> mMap = new HashMap<String, MethodEntry>();
+	HashMap<String, MethodEntry> mMap;
+
 	Method[] allMethods;
-	boolean locked;
 	int count;
+
+	boolean locked;
 
 	void checkLocked() {
 		if (locked == true) {
-			throw new IllegalStateException("Methods introspection is already finished.");
+			throw new IllegalStateException();	// introspection finished
 		}
 	}
 

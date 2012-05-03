@@ -230,8 +230,10 @@ public class ClassDescriptor {
 			ReflectUtil.forceAccess(method);
 			allMethods.addMethod(methodName, method);
 		}
+
 		allMethods.lock();
 		publicMethods.lock();
+
 		this.allMethods = allMethods;
 		this.publicMethods = publicMethods;
 	}
