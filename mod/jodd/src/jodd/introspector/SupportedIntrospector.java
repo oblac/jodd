@@ -3,7 +3,7 @@
 package jodd.introspector;
 
 /**
- * {@link jodd.introspector.Introspector Introspector} caches all class descriptors.
+ * {@link jodd.introspector.Introspector Introspector} that caches all class descriptors.
  * All <b>supported</b> methods and fields are examined.
  * 
  * @see AccessibleIntrospector
