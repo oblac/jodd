@@ -540,41 +540,6 @@ public class ReflectUtil {
 		}
 	}
 
-	/**
-	 * Sets fields modifiers.
-	 * <p>
-	 * Warning: this is a hack! Usage may not be as expected.
-	 * All changes to fields modifiers must be applied
-	 * <b>before</b> first usage.
-	 */
-	public static void setFieldModifiers(Field field, int modifiers) {
-		try {
-			Field modifiersField = Field.class.getDeclaredField("modifiers");
-			modifiersField.setAccessible(true);
-			modifiersField.setInt(field, field.getModifiers() | modifiers);
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
-	/**
-	 * Unsets fields modifiers. For example, it may remove <code>final</code>
-	 * modifier on static fields.
-	 * <p>
-	 * Warning: this is a hack! Usage may not be as expected.
-	 * All changes to fields  modifiers must be applied
-	 * <b>before</b> first usage.
-	 */
-	public static void unsetFieldModifiers(Field field, int modifiers) {
-		try {
-			Field modifiersField = Field.class.getDeclaredField("modifiers");
-			modifiersField.setAccessible(true);
-			modifiersField.setInt(field, field.getModifiers() & ~modifiers);
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
 	// ---------------------------------------------------------------- is public
 
 	/**
