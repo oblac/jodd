@@ -76,7 +76,7 @@ public class WireTest extends TestCase {
 		assertNotNull(boo.zoo);
 		assertSame(boo.zoo.boo, boo);
 		assertEquals(3, boo.getFoo().hello());
-		assertEquals(1, boo.getFoo().getCounter());
+		assertEquals(2, boo.getFoo().getCounter());		// '2' because the first time we getBean('boo') the wiring occurred before exception was throwed!
 	}
 
 	public void testCreate() {
