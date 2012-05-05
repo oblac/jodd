@@ -25,7 +25,7 @@ public class BeanTemplateParser extends StringTemplateParser {
 	}
 
 	/**
-	 * Creates bean-backed {@link MacroResolver}.
+	 * Creates bean-backed <code>MacroResolver</code>.
 	 */
 	public static MacroResolver createBeanMacroResolver(final Object context) {
 		return new MacroResolver() {
