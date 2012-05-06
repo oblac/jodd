@@ -427,15 +427,16 @@ public class ClassLoaderUtil {
 	}
 
 	/**
-	 * Opens a class of the specified name for reading.
+	 * Opens a class of the specified name for reading using class classloader.
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(Class clazz) throws IOException {
-		return getResourceAsStream(getClassFileName(clazz), null);
+		return getResourceAsStream(getClassFileName(clazz), clazz.getClassLoader());
 	}
 
 	/**
-	 * Opens a class of the specified name for reading.
+	 * Opens a class of the specified name for reading. No specific classloader is used
+	 * for loading class.
 	 * @see #getResourceAsStream(String, ClassLoader)
 	 */
 	public static InputStream getClassAsStream(String className) throws IOException {
@@ -569,7 +570,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Resolves class file name from class name by replacing dot's with '/' separator
-	 * and adding class extension at the end.
+	 * and adding class extension at the end. If array, component type is returned.
 	 */
 	public static String getClassFileName(Class clazz) {
 		if (clazz.isArray()) {
