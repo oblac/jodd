@@ -48,8 +48,13 @@ public class Paramo {
 		try {
 			stream = ClassLoaderUtil.getClassAsStream(declaringClass);
 		} catch (IOException ioex) {
-			throw new ParamoException("Unable to read bytes of class '" + declaringClass.getName() + "'.", ioex);
+			throw new ParamoException("Unable to read class bytes: " + declaringClass.getName(), ioex);
 		}
+
+		if (stream == null) {
+			throw new ParamoException("Class not found: " + declaringClass);
+		}
+
 		try {
 			ClassReader reader = new ClassReader(stream);
 			MethodFinder visitor = new MethodFinder(declaringClass, name, paramTypes);
