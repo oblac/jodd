@@ -209,9 +209,11 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	protected String print2(int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Value must be positive: " + value);
-		} else if (value < 10) {
+		}
+		if (value < 10) {
 			return '0' + Integer.toString(value);
-		} else if (value < 100) {
+		}
+		if (value < 100) {
 			return Integer.toString(value);
 		}
 		throw new IllegalArgumentException("Value must be less then 100: " + value);
@@ -223,11 +225,14 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	protected String print3(int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Value must be positive: " + value);
-		} else if (value < 10) {
+		}
+		if (value < 10) {
 			return "00" + Integer.toString(value);
-		} else if (value < 100) {
+		}
+		if (value < 100) {
 			return '0' + Integer.toString(value);
-		} else if (value < 1000) {
+		}
+		if (value < 1000) {
 			return Integer.toString(value);
 		}
 		throw new IllegalArgumentException("Value must be less then 1000: " + value);
