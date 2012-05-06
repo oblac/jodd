@@ -129,7 +129,7 @@ public class JavaCompiler {
 		String sourceDirectory = sourceDirectoryFile.getCanonicalPath();
 
 		if (source.startsWith(sourceDirectory) == false) {
-			throw new CompilationException("Source file is not under source directory.");
+			throw new CompilationException("Source file not under source directory");
 		}
 
 		// ensure class name
@@ -161,7 +161,7 @@ public class JavaCompiler {
 			if (errors.length() > 0) {
 				throw new CompilationException(errors.toString());
 			} else {
-				throw new CompilationException("Java compilation failure.");
+				throw new CompilationException("Java compilation failure");
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class JavaCompiler {
 				break;
 			} catch (IOException ignore) {
 				if (++compilerIndex >= COMPILERS.length) {
-					throw new CompilationException("Compiler not found.");
+					throw new CompilationException("Compiler not found");
 				}
 			}
 		}

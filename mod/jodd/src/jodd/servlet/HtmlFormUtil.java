@@ -228,7 +228,7 @@ public class HtmlFormUtil {
 		if (data instanceof List) {
 			return multiSelected((List) data, value);
 		}
-		throw new IllegalArgumentException("Invalid multi-selected field data.");
+		throw new IllegalArgumentException("Invalid multi-selected field data");
 	}
 
 	public static String multiSelected(Object[] data, String value) {

@@ -43,7 +43,7 @@ public class SendMailSession {
 		try {
 			mailTransport.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect.", msex);
+			throw new MailException("Unable to connect", msex);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SendMailSession {
 		try {
 			mailTransport.close();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to close session. ", mex);
+			throw new MailException("Unable to close session", mex);
 		}
 	}
 

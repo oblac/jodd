@@ -306,7 +306,7 @@ public class JoddJspFunctions {
 	public static int length(Object obj) throws JspTagException {
 		int result = ObjectUtil.length(obj);
 		if (result == -1) {
-			throw new JspTagException("Provided object does not have length.");
+			throw new JspTagException("No length");
 		}
 		return result;
 	}

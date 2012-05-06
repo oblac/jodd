@@ -34,7 +34,7 @@ public class URLBuilder {
 	 */
 	public URLBuilder path(String value) {
 		if (hasParams) {
-			throw new IllegalArgumentException("Path element can't come after query parameters.");
+			throw new IllegalArgumentException("Path element can't come after query parameters");
 		}
 		if (firstpath == true) {
 			if (request != null) {

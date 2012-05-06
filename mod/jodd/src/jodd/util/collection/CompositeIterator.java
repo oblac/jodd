@@ -78,7 +78,7 @@ public class CompositeIterator implements Iterator {
 		if (currentIterator != -1) {
 			allIterators.get(currentIterator).remove();
 		} else {
-			throw new IllegalStateException("The next() method has not yet been called.");
+			throw new IllegalStateException("The next() method has not yet been called");
 		}
 	}
 }

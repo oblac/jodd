@@ -44,10 +44,10 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 	 */
 	public ReferenceMap(ReferenceType keyReferenceType, ReferenceType valueReferenceType) {
 		if ((keyReferenceType == null) || (valueReferenceType == null)) {
-			throw new IllegalArgumentException("References types can not be null.");
+			throw new IllegalArgumentException("References types can not be null");
 		}
 		if (keyReferenceType == ReferenceType.PHANTOM || valueReferenceType == ReferenceType.PHANTOM) {
-			throw new IllegalArgumentException("Phantom references not supported.");
+			throw new IllegalArgumentException("Phantom references not supported");
 		}
 		this.delegate = new ConcurrentHashMap<Object, Object>();
 		this.keyReferenceType = keyReferenceType;
@@ -396,7 +396,7 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 			try {
 				((InternalReference) reference).finalizeReferent();
 			} catch (Throwable t) {
-				throw new IllegalStateException("Unable to clean up after reference.", t);
+				throw new IllegalStateException("Unable to clean up after reference", t);
 			}
 		}
 

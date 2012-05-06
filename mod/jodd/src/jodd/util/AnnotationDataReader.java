@@ -26,7 +26,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	protected AnnotationDataReader() {
 		annotationClass = ReflectUtil.getGenericSupertype(this.getClass());
 		if (annotationClass == null) {
-			throw new IllegalArgumentException("Unable to resolve annotation from generic supertype.");
+			throw new IllegalArgumentException("Unable to resolve annotation from generic supertype");
 		}
 	}
 

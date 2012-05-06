@@ -26,7 +26,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	public byte readByte() throws IOException {
 		int i = super.read();
 		if (i == -1) {
-			throw new IOException("End of HTTP request stream reached.");
+			throw new IOException("End of HTTP request stream reached");
 		}
 		return (byte) i;
 	}
@@ -37,7 +37,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	public void skipBytes(int i) throws IOException {
 		long len = super.skip(i);
 		if (len != i) {
-			throw new IOException("Unable to skip data in HTTP request.");
+			throw new IOException("Unable to skip data in HTTP request");
 		}
 	}
 
@@ -61,7 +61,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 			boundaryOutput.write(b);
 		}
 		if (boundaryOutput.size() == 0) {
-			throw new IOException("Problems with parsing request: invalid boundary.");
+			throw new IOException("Problems with parsing request: invalid boundary");
 		}
 		skipBytes(1);
 		boundary = new byte[boundaryOutput.size() + 2];

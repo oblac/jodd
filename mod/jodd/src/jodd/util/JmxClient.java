@@ -128,7 +128,7 @@ public class JmxClient {
 	 */
 	protected void assertConnected() {
 		if (!connected.get()) {
-			throw new IllegalStateException("Not connected to JMX.");
+			throw new IllegalStateException("Not connected to JMX");
 		}
 	}
 

@@ -53,7 +53,7 @@ public class ReceiveMailSession {
 		try {
 			store.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to open session.", msex);
+			throw new MailException("Unable to open session", msex);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class ReceiveMailSession {
 			try {
 				folder.open(Folder.READ_ONLY);
 			} catch (MessagingException msex) {
-				throw new MailException("Unable to open folder.", msex);
+				throw new MailException("Unable to open folder: " + folderName, msex);
 			}
 		}
 	}
@@ -98,7 +98,7 @@ public class ReceiveMailSession {
 		try {
 			return folder.getMessageCount();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to read number of messages.", mex);
+			throw new MailException("Unable to read number of messages", mex);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class ReceiveMailSession {
 		try {
 			return folder.getNewMessageCount();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to read number of new messages.", mex);
+			throw new MailException("Unable to read number of new messages", mex);
 		}
 	}
 
@@ -142,9 +142,9 @@ public class ReceiveMailSession {
 				emails[i] = message2Email(msg);
 			}
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to read messages.", msex);
+			throw new MailException("Unable to read messages", msex);
 		} catch (IOException ioex) {
-			throw new MailException("Unable to read message content.", ioex);
+			throw new MailException("Unable to read message content", ioex);
 		}
 		return emails;
 	}

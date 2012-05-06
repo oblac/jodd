@@ -205,7 +205,7 @@ public class StringBand {
 			}
 			len = newlen;
 		}
-		throw new IllegalArgumentException("Invalid char index.");
+		throw new IllegalArgumentException("Invalid char index");
 	}
 
 	/**

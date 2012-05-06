@@ -189,7 +189,7 @@ public class HashBag<E> implements Bag<E> {
 	 */
 	public boolean add(E object, int nCopies) {
 		if (nCopies <= 0) {
-			throw new IllegalArgumentException("Invalid number of bag element copies (" + nCopies + ')');
+			throw new IllegalArgumentException("Invalid number of bag element copies: " + nCopies);
 		}
 		modCount++;
 		MutableInteger mut = map.get(object);
@@ -256,7 +256,7 @@ public class HashBag<E> implements Bag<E> {
 	@SuppressWarnings({"SuspiciousMethodCalls"})
 	public boolean remove(Object object, int nCopies) {
 		if (nCopies <= 0) {
-			throw new IllegalArgumentException("Invalid number of bag element copies (" + nCopies + ')');
+			throw new IllegalArgumentException("Invalid number of bag element copies: " + nCopies);
 		}
 		MutableInteger mut = map.get(object);
 		if (mut == null) {

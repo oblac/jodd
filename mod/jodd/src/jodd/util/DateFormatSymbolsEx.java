@@ -59,7 +59,7 @@ public class DateFormatSymbolsEx extends DateFormatSymbols {
 			_ampms = (String[]) f.get(this);
 			
 		} catch (Exception ex) {
-			throw new UncheckedException("Unable to initialize.", ex);
+			throw new UncheckedException("Unable to initialize", ex);
 		}
 	}
 

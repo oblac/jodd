@@ -234,7 +234,7 @@ public class FileUtil {
 			throw new IOException(MSG_NOT_A_FILE + src);
 		}
 		if (equals(src, dest) == true) {
-			throw new IOException("Files '" + src + "' and '" + dest + "' are equal.");
+			throw new IOException("Files '" + src + "' and '" + dest + "' are equal");
 		}
 
 		File destParent = dest.getParentFile();
@@ -254,7 +254,7 @@ public class FileUtil {
 	private static void doCopyFile(File src, File dest, FileUtilParams params) throws IOException {
 		if (dest.exists()) {
 			if (dest.isDirectory()) {
-				throw new IOException("Destination '" + dest + "' is a directory.");
+				throw new IOException("Destination '" + dest + "' is a directory");
 			}
 			if (params.overwrite == false) {
 				throw new IOException(MSG_ALREADY_EXISTS + dest);
@@ -264,7 +264,7 @@ public class FileUtil {
 		doCopy(src, dest);
 
 		if (src.length() != dest.length()) {
-			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes.");
+			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
 		}
 		if (params.preserveDate) {
 			dest.setLastModified(src.lastModified());
@@ -364,7 +364,7 @@ public class FileUtil {
 			throw new IOException(MSG_NOT_A_DIRECTORY + srcDir);
 		}
 		if (equals(srcDir, destDir) == true) {
-			throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are equal.");
+			throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are equal");
 		}
 	}
 
@@ -448,7 +448,7 @@ public class FileUtil {
 		}
 
 		if (src.renameTo(dest) == false) {
-			throw new IOException("Move failed: '" + src + "' to '" + dest + "'.");
+			throw new IOException("Move failed: '" + src + "' to '" + dest + '\'');
 		}
 	}
 
@@ -496,7 +496,7 @@ public class FileUtil {
 		}
 
 		if (src.renameTo(dest) == false) {
-			throw new IOException("Move failed: '" + src + "' to '" + dest + "'.");
+			throw new IOException("Move failed: '" + src + "' to '" + dest + '\'');
 		}
 	}
 
@@ -835,7 +835,7 @@ public class FileUtil {
 		}
 		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
-			throw new IOException("File is larger then max array size.");
+			throw new IOException("File is larger then max array size");
 		}
 
 		byte[] bytes = new byte[(int) len];
@@ -923,7 +923,7 @@ public class FileUtil {
 		}
 
 		if ((file1.isFile() == false) || (file2.isFile() == false)) {
-			throw new IOException("Only files can be compared.");
+			throw new IOException("Only files can be compared");
 		}
 
 		if (file1.length() != file2.length()) {

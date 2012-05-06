@@ -87,7 +87,7 @@ class Methods {
 			return null;
 		}
 		if (entry.size != 1) {
-			throw new IllegalArgumentException("Method '" + name + "' is not unique!");
+			throw new IllegalArgumentException("Method '" + name + "' is not unique");
 		}
 		return entry.methodsList[0];
 	}

@@ -251,7 +251,7 @@ public class StreamUtil {
 			i +=j;
 		}
 		if (i < l) {
-			throw new IOException("Could not completely read from input stream.");
+			throw new IOException("Failed to completely read input stream");
 		}
 		return byteArray;
 	}

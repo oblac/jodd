@@ -27,7 +27,7 @@ public class TagUtil {
 		try {
 			body.invoke(null);
 		} catch (IOException ioex) {
-			throw new JspException("Unable to invoke tag body.", ioex);
+			throw new JspException("Unable to invoke tag body", ioex);
 		}
 	}
 
@@ -41,7 +41,7 @@ public class TagUtil {
 		try {
 			body.invoke(writer);
 		} catch (IOException ioex) {
-			throw new JspException("Unable to invoke tag body.", ioex);
+			throw new JspException("Unable to invoke tag body", ioex);
 		}
 	}
 

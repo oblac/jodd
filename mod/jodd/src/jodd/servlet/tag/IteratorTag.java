@@ -101,7 +101,7 @@ public class IteratorTag extends SimpleTagSupport {
 		} else if (items instanceof String) {
 			iterateArray(Convert.toStringArray(items), from, count, pageContext);
 		} else {
-			throw new JspException("Provided items are not iterable (neither Collection, Objects array...).");
+			throw new JspException("Provided items are not iterable");
 		}
 
 		// cleanup
