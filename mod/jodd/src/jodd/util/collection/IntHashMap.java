@@ -67,10 +67,10 @@ public class IntHashMap extends AbstractMap implements Cloneable, Serializable {
 	 */
 	public IntHashMap(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
-			throw new IllegalArgumentException("Illegal Initial Capacity: "+ initialCapacity);
+			throw new IllegalArgumentException("Invalid initial capacity: "+ initialCapacity);
 		}
 		if (loadFactor <= 0) {
-			throw new IllegalArgumentException("Illegal Load factor: "+ loadFactor);
+			throw new IllegalArgumentException("Invalid load factor: "+ loadFactor);
 		}
 		if (initialCapacity == 0) {
 			initialCapacity = 1;

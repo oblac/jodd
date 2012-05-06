@@ -35,7 +35,7 @@ public class CompositeIterator implements Iterator {
 	 */
 	public void add(Iterator iterator) {
 		if (allIterators.contains(iterator)) {
-			throw new IllegalArgumentException("Same iterator already added to this composite.");
+			throw new IllegalArgumentException("Duplicate iterator in this composite");
 		}
 		allIterators.add(iterator);
 	}
