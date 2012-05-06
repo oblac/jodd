@@ -30,7 +30,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Returns default class loader. By default, it is thread context class loader.
-	 * If this one is <code>null</code> then class loader of this class is
+	 * If this one is <code>null</code> then class loader that loaded this class is
 	 * returned.
 	 */
 	public static ClassLoader getDefaultClassLoader() {
@@ -52,6 +52,7 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Adds additional file or path to classpath during runtime.
+	 * @see #addUrlToClassPath(java.net.URL, ClassLoader)
 	 */
 	public static void addFileToClassPath(String path, ClassLoader classLoader) {
 		addFileToClassPath(new File(path), classLoader);
@@ -59,12 +60,13 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Adds additional file or path to classpath during runtime.
+	 * @see #addUrlToClassPath(java.net.URL, ClassLoader)
 	 */
 	public static void addFileToClassPath(File path, ClassLoader classLoader) {
 		try {
 			addUrlToClassPath(path.toURL(), classLoader);
 		} catch (MalformedURLException muex) {
-			throw new IllegalArgumentException("Unable to convert path to URL: " + path, muex);
+			throw new IllegalArgumentException("Invalid path: " + path, muex);
 		}
 	}
 
@@ -78,7 +80,7 @@ public class ClassLoaderUtil {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Unable to extend classpath with URL: " + url, ex);
+			throw new IllegalArgumentException("Unable to add URL: " + url, ex);
 		}
 	}
 
@@ -128,6 +130,9 @@ public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- find class
 
+	/**
+	 * @see #findClass(String, java.net.URL[], ClassLoader)
+	 */
 	public static Class findClass(String className, File[] classPath) {
 		URL[] urls = new URL[classPath.length];
 		for (int i = 0; i < classPath.length; i++) {
@@ -168,7 +173,7 @@ public class ClassLoaderUtil {
 	private static final String[] MANIFESTS = {"Manifest.mf", "manifest.mf", "MANIFEST.MF"};
 
 	/**
-	 * Finds <b>tools.jar</b>. Returns <code>null</code> if not exist.
+	 * Finds <b>tools.jar</b>. Returns <code>null</code> if does not exist.
 	 */
 	public static File findToolsJar() {
 		String tools = new File(SystemUtil.getJavaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
