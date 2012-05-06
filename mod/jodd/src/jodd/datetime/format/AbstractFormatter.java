@@ -216,7 +216,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 		if (value < 100) {
 			return Integer.toString(value);
 		}
-		throw new IllegalArgumentException("Value must be less then 100: " + value);
+		throw new IllegalArgumentException("Value too big: " + value);
 	}
 
 	/**
@@ -235,6 +235,6 @@ public abstract class AbstractFormatter implements JdtFormatter {
 		if (value < 1000) {
 			return Integer.toString(value);
 		}
-		throw new IllegalArgumentException("Value must be less then 1000: " + value);
+		throw new IllegalArgumentException("Value too big: " + value);
 	}
 }
