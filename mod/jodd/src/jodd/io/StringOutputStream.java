@@ -73,7 +73,7 @@ public class StringOutputStream extends OutputStream implements Serializable {
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		if ((off < 0) || (len < 0) || (off + len) > b.length) {
-			throw new IndexOutOfBoundsException("Parameters out of bounds.");
+			throw new IndexOutOfBoundsException();
 		}
 		byte[] bytes = new byte[len];
 		for (int i = 0; i < len; i++) {
