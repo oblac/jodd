@@ -29,6 +29,18 @@ template = '''
 	}
 
 	/**
+	 * Converts value to <code>$T</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public $T to$T(Object value, $T defaultValue) {
+		$T result = ($T) typeConverters[#].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>$t</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -62,31 +74,43 @@ for type in types:
 ### -----------------------------------------------------------------
 
 types = [
-	[16, 'boolean[]', 'BooleanArray'],
-	[17, 'int[]', 'IntegerArray'],
-	[18, 'long[]', 'LongArray'],
-	[19, 'float[]', 'FloatArray'],
-	[20, 'double[]', 'DoubleArray'],
-	[21, 'short[]', 'ShortArray'],
-	[22, 'char[]', 'CharacterArray'],
-	[23, 'String', 'String'],
-	[24, 'String[]', 'StringArray'],
-	[25, 'Class', 'Class'],
-	[26, 'Class[]', 'ClassArray'],
-	[27, 'JDateTime', 'JDateTime'],
-	[28, 'Date', 'Date'],
-	[29, 'Calendar', 'Calendar'],
-	[30, 'BigInteger', 'BigInteger'],
-	[31, 'BigDecimal', 'BigDecimal'],
+	[16, 'boolean[]', 'BooleanArray',	0],
+	[17, 'int[]', 'IntegerArray', 		0],
+	[18, 'long[]', 'LongArray', 		0],
+	[19, 'float[]', 'FloatArray', 		0],
+	[20, 'double[]', 'DoubleArray', 	0],
+	[21, 'short[]', 'ShortArray', 		0],
+	[22, 'char[]', 'CharacterArray', 	0],
+	[23, 'String', 'String', 			1],
+	[24, 'String[]', 'StringArray', 	0],
+	[25, 'Class', 'Class', 				0],
+	[26, 'Class[]', 'ClassArray', 		0],
+	[27, 'JDateTime', 'JDateTime', 		1],
+	[28, 'Date', 'Date', 				1],
+	[29, 'Calendar', 'Calendar', 		1],
+	[30, 'BigInteger', 'BigInteger', 	1],
+	[31, 'BigDecimal', 'BigDecimal', 	1],
 ]
 
 template = '''
-
 	/**
 	 * Converts value to <code>$T</code>.
 	 */
 	public $T to$N(Object value) {
 		return ($T) typeConverters[#].convert(value);
+	}
+'''
+template2 = '''
+	/**
+	 * Converts value to <code>$T</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public $T to$N(Object value, $T defaultValue) {
+		$T result = ($T) typeConverters[#].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
 	}
 '''
 
@@ -98,6 +122,12 @@ for type in types:
 	data = data.replace('$N', type[2])
 	java += data
 
+	if type[3] == 1:
+		data = template2
+		data = data.replace('#', str(type[0]))
+		data = data.replace('$T', type[1])
+		data = data.replace('$N', type[2])
+		java += data
 
 ### -----------------------------------------------------------------
 

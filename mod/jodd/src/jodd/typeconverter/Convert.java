@@ -23,8 +23,16 @@ public class Convert {
 
 	// ---------------------------------------------------------------- @@generated
 
+	public static BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
+		return getConvertBean().toBigDecimal(value, defaultValue);
+	}
+
 	public static Boolean toBoolean(Object value) {
 		return getConvertBean().toBoolean(value);
+	}
+
+	public static Boolean toBoolean(Object value, Boolean defaultValue) {
+		return getConvertBean().toBoolean(value, defaultValue);
 	}
 
 	public static boolean toBooleanValue(Object value, boolean defaultValue) {
@@ -39,6 +47,10 @@ public class Convert {
 		return getConvertBean().toInteger(value);
 	}
 
+	public static Integer toInteger(Object value, Integer defaultValue) {
+		return getConvertBean().toInteger(value, defaultValue);
+	}
+
 	public static int toIntValue(Object value, int defaultValue) {
 		return getConvertBean().toIntValue(value, defaultValue);
 	}
@@ -49,6 +61,10 @@ public class Convert {
 
 	public static Long toLong(Object value) {
 		return getConvertBean().toLong(value);
+	}
+
+	public static Long toLong(Object value, Long defaultValue) {
+		return getConvertBean().toLong(value, defaultValue);
 	}
 
 	public static long toLongValue(Object value, long defaultValue) {
@@ -63,6 +79,10 @@ public class Convert {
 		return getConvertBean().toFloat(value);
 	}
 
+	public static Float toFloat(Object value, Float defaultValue) {
+		return getConvertBean().toFloat(value, defaultValue);
+	}
+
 	public static float toFloatValue(Object value, float defaultValue) {
 		return getConvertBean().toFloatValue(value, defaultValue);
 	}
@@ -73,6 +93,10 @@ public class Convert {
 
 	public static Double toDouble(Object value) {
 		return getConvertBean().toDouble(value);
+	}
+
+	public static Double toDouble(Object value, Double defaultValue) {
+		return getConvertBean().toDouble(value, defaultValue);
 	}
 
 	public static double toDoubleValue(Object value, double defaultValue) {
@@ -87,6 +111,10 @@ public class Convert {
 		return getConvertBean().toShort(value);
 	}
 
+	public static Short toShort(Object value, Short defaultValue) {
+		return getConvertBean().toShort(value, defaultValue);
+	}
+
 	public static short toShortValue(Object value, short defaultValue) {
 		return getConvertBean().toShortValue(value, defaultValue);
 	}
@@ -99,6 +127,10 @@ public class Convert {
 		return getConvertBean().toCharacter(value);
 	}
 
+	public static Character toCharacter(Object value, Character defaultValue) {
+		return getConvertBean().toCharacter(value, defaultValue);
+	}
+
 	public static char toCharValue(Object value, char defaultValue) {
 		return getConvertBean().toCharValue(value, defaultValue);
 	}
@@ -109,6 +141,10 @@ public class Convert {
 
 	public static Byte toByte(Object value) {
 		return getConvertBean().toByte(value);
+	}
+
+	public static Byte toByte(Object value, Byte defaultValue) {
+		return getConvertBean().toByte(value, defaultValue);
 	}
 
 	public static byte toByteValue(Object value, byte defaultValue) {
@@ -151,6 +187,10 @@ public class Convert {
 		return getConvertBean().toString(value);
 	}
 
+	public static String toString(Object value, String defaultValue) {
+		return getConvertBean().toString(value, defaultValue);
+	}
+
 	public static String[] toStringArray(Object value) {
 		return getConvertBean().toStringArray(value);
 	}
@@ -167,20 +207,35 @@ public class Convert {
 		return getConvertBean().toJDateTime(value);
 	}
 
+	public static JDateTime toJDateTime(Object value, JDateTime defaultValue) {
+		return getConvertBean().toJDateTime(value, defaultValue);
+	}
+
 	public static Date toDate(Object value) {
 		return getConvertBean().toDate(value);
+	}
+
+	public static Date toDate(Object value, Date defaultValue) {
+		return getConvertBean().toDate(value, defaultValue);
 	}
 
 	public static Calendar toCalendar(Object value) {
 		return getConvertBean().toCalendar(value);
 	}
 
+	public static Calendar toCalendar(Object value, Calendar defaultValue) {
+		return getConvertBean().toCalendar(value, defaultValue);
+	}
+
 	public static BigInteger toBigInteger(Object value) {
 		return getConvertBean().toBigInteger(value);
+	}
+
+	public static BigInteger toBigInteger(Object value, BigInteger defaultValue) {
+		return getConvertBean().toBigInteger(value, defaultValue);
 	}
 
 	public static BigDecimal toBigDecimal(Object value) {
 		return getConvertBean().toBigDecimal(value);
 	}
-
 }

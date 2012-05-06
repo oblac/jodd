@@ -2,14 +2,17 @@
 
 package jodd.typeconverter;
 
+import jodd.TestCaseEx;
 import jodd.datetime.JDateTime;
-import junit.framework.TestCase;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ConvertTest extends TestCase {
+@SuppressWarnings("ALL")
+public class ConvertTest extends TestCaseEx {
 	
 	public void testAllConversions() {
 		
@@ -35,6 +38,11 @@ public class ConvertTest extends TestCase {
 
 		assertNotNull(Convert.toDate(new JDateTime()));
 
+		assertEquals(173, Convert.toIntValue("173"));
+		assertEquals(173, Convert.toLongValue("173"));
+		assertEquals(173, Convert.toShortValue("173"));
+		assertEquals(17, Convert.toByteValue("17"));
+
 		assertEquals(1.0d, Convert.toDouble("1"));
 		assertEquals(1.0d, Convert.toDoubleValue("1", 0));
 		assertEquals(1.0d, Convert.toDoubleValue("1"));
@@ -54,13 +62,57 @@ public class ConvertTest extends TestCase {
 		assertEquals(55, Convert.toByte("55").byteValue());
 
 		assertNotNull(Convert.toString("555"));
-		assertNotNull(Convert.toBooleanArray("1"));
-		assertNotNull(Convert.toIntegerArray("1"));
-		assertNotNull(Convert.toLongArray("1"));
-		assertNotNull(Convert.toFloatArray("1"));
-		assertNotNull(Convert.toDoubleArray("1"));
-		assertNotNull(Convert.toShortArray("1"));
-		assertNotNull(Convert.toCharacterArray("A"));
+	}
+	public void testArrayConversion() {
+		assertEquals(new String[] {"555", "12"}, Convert.toStringArray("555,12"));
+		assertEquals(new String[] {"555", " 12"}, Convert.toStringArray("555, 12"));
+		assertEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
+		assertEquals(new int[] {1,2,-3}, Convert.toIntegerArray("1, 2, -3"));
+		assertEquals(new long[] {-12,2}, Convert.toLongArray("-12, 2"));
+		assertEquals(new float[] {1.1f, 2.2f}, Convert.toFloatArray("1.1, 2.2"), 0.5f);
+		assertEquals(new double[] {1.1, 2.2, -3.3}, Convert.toDoubleArray("1.1, 2.2, -3.3"), 0.5);
+		assertEquals(new short[] {-1,2}, Convert.toShortArray("-1,2"));
+		assertEquals(new char[] {'a', ',', 'A'}, Convert.toCharacterArray("a,A"));
+	}
+
+	public void testDefaultConversion() {
+
+		assertEquals(true, Convert.toBooleanValue(null, true));
+		assertEquals((byte) 23, Convert.toByteValue(null, (byte) 23));
+		assertEquals('A', Convert.toCharValue(null, 'A'));
+		assertEquals(1.4d, Convert.toDoubleValue(null, 1.4d));
+		assertEquals(1.4f, Convert.toFloatValue(null, 1.4f));
+		assertEquals(23L, Convert.toLongValue(null, 23L));
+		assertEquals(7, Convert.toIntValue(null, 7));
+		assertEquals(7, Convert.toShortValue(null, (short) 7));
+
+		BigDecimal defaultBigDecimal = new BigDecimal("1.1");
+		assertEquals(defaultBigDecimal, Convert.toBigDecimal(null, defaultBigDecimal));
+
+		BigInteger defaultBigInteger = new BigInteger("173");
+		assertEquals(defaultBigInteger, Convert.toBigInteger(null, defaultBigInteger));
+
+		String defaultString = "123qweasdzxc";
+		assertEquals(defaultString, Convert.toString(null, defaultString));
+
+		JDateTime defaultJDateTime = new JDateTime(2010, 4, 20);
+		assertEquals(defaultJDateTime, Convert.toJDateTime(null, defaultJDateTime));
+
+		Date defaultDate = defaultJDateTime.convertToDate();
+		assertEquals(defaultDate, Convert.toDate(null, defaultDate));
+
+		Calendar defaultCalendar = defaultJDateTime.convertToCalendar();
+		assertEquals(defaultCalendar, Convert.toCalendar(null, defaultCalendar));
+
+		assertEquals(Boolean.TRUE, Convert.toBoolean(null, Boolean.TRUE));
+		assertEquals(Byte.valueOf((byte) 123), Convert.toByte(null, Byte.valueOf((byte) 123)));
+		assertEquals(Character.valueOf('A'), Convert.toCharacter(null, Character.valueOf('A')));
+		assertEquals(Double.valueOf(5), Convert.toDouble(null, Double.valueOf(5)));
+		assertEquals(Float.valueOf(5), Convert.toFloat(null, Float.valueOf(5)));
+		assertEquals(Long.valueOf(7), Convert.toLong(null, Long.valueOf(7)));
+		assertEquals(Integer.valueOf(8), Convert.toInteger(null, Integer.valueOf(8)));
+		assertEquals(Short.valueOf((short) 3), Convert.toShort(null, Short.valueOf((short) 3)));
+
 	}
 	
 	public void testChangeConverter() {

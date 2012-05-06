@@ -80,6 +80,18 @@ public class ConvertBean {
 	}
 
 	/**
+	 * Converts value to <code>Boolean</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Boolean toBoolean(Object value, Boolean defaultValue) {
+		Boolean result = (Boolean) typeConverters[0].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>boolean</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -104,6 +116,18 @@ public class ConvertBean {
 	 */
 	public Integer toInteger(Object value) {
 		return (Integer) typeConverters[2].convert(value);
+	}
+
+	/**
+	 * Converts value to <code>Integer</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Integer toInteger(Object value, Integer defaultValue) {
+		Integer result = (Integer) typeConverters[2].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
 	}
 
 	/**
@@ -134,6 +158,18 @@ public class ConvertBean {
 	}
 
 	/**
+	 * Converts value to <code>Long</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Long toLong(Object value, Long defaultValue) {
+		Long result = (Long) typeConverters[4].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>long</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -158,6 +194,18 @@ public class ConvertBean {
 	 */
 	public Float toFloat(Object value) {
 		return (Float) typeConverters[6].convert(value);
+	}
+
+	/**
+	 * Converts value to <code>Float</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Float toFloat(Object value, Float defaultValue) {
+		Float result = (Float) typeConverters[6].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
 	}
 
 	/**
@@ -188,6 +236,18 @@ public class ConvertBean {
 	}
 
 	/**
+	 * Converts value to <code>Double</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Double toDouble(Object value, Double defaultValue) {
+		Double result = (Double) typeConverters[8].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>double</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -212,6 +272,18 @@ public class ConvertBean {
 	 */
 	public Short toShort(Object value) {
 		return (Short) typeConverters[10].convert(value);
+	}
+
+	/**
+	 * Converts value to <code>Short</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Short toShort(Object value, Short defaultValue) {
+		Short result = (Short) typeConverters[10].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
 	}
 
 	/**
@@ -242,6 +314,18 @@ public class ConvertBean {
 	}
 
 	/**
+	 * Converts value to <code>Character</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Character toCharacter(Object value, Character defaultValue) {
+		Character result = (Character) typeConverters[12].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>char</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -269,6 +353,18 @@ public class ConvertBean {
 	}
 
 	/**
+	 * Converts value to <code>Byte</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Byte toByte(Object value, Byte defaultValue) {
+		Byte result = (Byte) typeConverters[14].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
+
+	/**
 	 * Converts value to <code>byte</code>. Returns default value
 	 * when conversion result is <code>null</code>.
 	 */
@@ -287,14 +383,12 @@ public class ConvertBean {
 		return toByteValue(value, (byte) 0);
 	}
 
-
 	/**
 	 * Converts value to <code>boolean[]</code>.
 	 */
 	public boolean[] toBooleanArray(Object value) {
 		return (boolean[]) typeConverters[16].convert(value);
 	}
-
 
 	/**
 	 * Converts value to <code>int[]</code>.
@@ -303,14 +397,12 @@ public class ConvertBean {
 		return (int[]) typeConverters[17].convert(value);
 	}
 
-
 	/**
 	 * Converts value to <code>long[]</code>.
 	 */
 	public long[] toLongArray(Object value) {
 		return (long[]) typeConverters[18].convert(value);
 	}
-
 
 	/**
 	 * Converts value to <code>float[]</code>.
@@ -319,14 +411,12 @@ public class ConvertBean {
 		return (float[]) typeConverters[19].convert(value);
 	}
 
-
 	/**
 	 * Converts value to <code>double[]</code>.
 	 */
 	public double[] toDoubleArray(Object value) {
 		return (double[]) typeConverters[20].convert(value);
 	}
-
 
 	/**
 	 * Converts value to <code>short[]</code>.
@@ -335,14 +425,12 @@ public class ConvertBean {
 		return (short[]) typeConverters[21].convert(value);
 	}
 
-
 	/**
 	 * Converts value to <code>char[]</code>.
 	 */
 	public char[] toCharacterArray(Object value) {
 		return (char[]) typeConverters[22].convert(value);
 	}
-
 
 	/**
 	 * Converts value to <code>String</code>.
@@ -351,6 +439,17 @@ public class ConvertBean {
 		return (String) typeConverters[23].convert(value);
 	}
 
+	/**
+	 * Converts value to <code>String</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public String toString(Object value, String defaultValue) {
+		String result = (String) typeConverters[23].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
 
 	/**
 	 * Converts value to <code>String[]</code>.
@@ -359,14 +458,12 @@ public class ConvertBean {
 		return (String[]) typeConverters[24].convert(value);
 	}
 
-
 	/**
 	 * Converts value to <code>Class</code>.
 	 */
 	public Class toClass(Object value) {
 		return (Class) typeConverters[25].convert(value);
 	}
-
 
 	/**
 	 * Converts value to <code>Class[]</code>.
@@ -375,7 +472,6 @@ public class ConvertBean {
 		return (Class[]) typeConverters[26].convert(value);
 	}
 
-
 	/**
 	 * Converts value to <code>JDateTime</code>.
 	 */
@@ -383,6 +479,17 @@ public class ConvertBean {
 		return (JDateTime) typeConverters[27].convert(value);
 	}
 
+	/**
+	 * Converts value to <code>JDateTime</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public JDateTime toJDateTime(Object value, JDateTime defaultValue) {
+		JDateTime result = (JDateTime) typeConverters[27].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
 
 	/**
 	 * Converts value to <code>Date</code>.
@@ -391,6 +498,17 @@ public class ConvertBean {
 		return (Date) typeConverters[28].convert(value);
 	}
 
+	/**
+	 * Converts value to <code>Date</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Date toDate(Object value, Date defaultValue) {
+		Date result = (Date) typeConverters[28].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
 
 	/**
 	 * Converts value to <code>Calendar</code>.
@@ -399,6 +517,17 @@ public class ConvertBean {
 		return (Calendar) typeConverters[29].convert(value);
 	}
 
+	/**
+	 * Converts value to <code>Calendar</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public Calendar toCalendar(Object value, Calendar defaultValue) {
+		Calendar result = (Calendar) typeConverters[29].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
 
 	/**
 	 * Converts value to <code>BigInteger</code>.
@@ -407,11 +536,34 @@ public class ConvertBean {
 		return (BigInteger) typeConverters[30].convert(value);
 	}
 
+	/**
+	 * Converts value to <code>BigInteger</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public BigInteger toBigInteger(Object value, BigInteger defaultValue) {
+		BigInteger result = (BigInteger) typeConverters[30].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
+	}
 
 	/**
 	 * Converts value to <code>BigDecimal</code>.
 	 */
 	public BigDecimal toBigDecimal(Object value) {
 		return (BigDecimal) typeConverters[31].convert(value);
+	}
+
+	/**
+	 * Converts value to <code>BigDecimal</code>. Returns default value
+	 * when conversion result is <code>null</code>
+	 */
+	public BigDecimal toBigDecimal(Object value, BigDecimal defaultValue) {
+		BigDecimal result = (BigDecimal) typeConverters[31].convert(value);
+		if (result == null) {
+			return defaultValue;
+		}
+		return result;
 	}
 }
