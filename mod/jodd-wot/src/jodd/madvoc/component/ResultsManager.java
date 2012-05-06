@@ -76,9 +76,9 @@ public class ResultsManager {
 		try {
 			return actionResultClass.newInstance();
 		} catch (InstantiationException iex) {
-			throw new MadvocException("Unable to create Madvoc action result '" + actionResultClass + "'.", iex);
+			throw new MadvocException("Unable to create Madvoc action result: " + actionResultClass, iex);
 		} catch (IllegalAccessException iaex) {
-			throw new MadvocException("Not enough rights to create Madvoc action result '" + actionResultClass + "'.", iaex);
+			throw new MadvocException("Not enough rights to create Madvoc action result: " + actionResultClass, iaex);
 		}
 	}
 }

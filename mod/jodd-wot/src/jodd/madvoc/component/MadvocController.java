@@ -152,7 +152,7 @@ public class MadvocController {
 
 		ActionResult result = resultsManager.lookup(resultType);
 		if (result == null) {
-			throw new MadvocException("Unable to find action result type '" + resultType + "'.");
+			throw new MadvocException("Unable to find action result type: " + resultType);
 		}
 		if (result.isInitialized() == false) {
 			contextInjector.injectContext(result, req.getHttpServletRequest(), req.getHttpServletResponse());

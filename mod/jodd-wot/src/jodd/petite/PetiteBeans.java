@@ -187,7 +187,7 @@ public abstract class PetiteBeans {
 
 		// check if type is valid
 		if ((type != null) && (type.isInterface() == true)) {
-			throw new PetiteException("Unable to register interface '" + type.getName() + "'.");
+			throw new PetiteException("Unable to register interface: " + type.getName());
 		}
 		// register
 		Scope scope = resolveScope(scopeType);
@@ -276,7 +276,7 @@ public abstract class PetiteBeans {
 			Constructor[] ctors = cd.getAllCtors(true);
 			if (ctors.length > 0) {
 				if (ctors.length > 1) {
-					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: '" + type.getName() + "'.");
+					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + type.getName());
 				}
 				constructor = ctors[0];
 			}

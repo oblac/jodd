@@ -94,11 +94,11 @@ s	 */
 	// ---------------------------------------------------------------- methods for setting statement parameters
 
 	private void throwSetParamError(int index, Exception ex) {
-		throw new DbSqlException("Unable to set SQL parameter with index '" + index + "'.", ex);
+		throw new DbSqlException("Unable to set SQL parameter with index: " + index, ex);
 	}
 
 	private void throwSetParamError(String param, Exception ex) {
-		throw new DbSqlException("Unable to set SQL parameter with name '" + param + "'.", ex);
+		throw new DbSqlException("Unable to set SQL parameter with name: " + param, ex);
 	}
 
 	// ---------------------------------------------------------------- null
@@ -108,7 +108,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set parameter '" + index + "' with null value.", sex);
+			throw new DbSqlException("Unable to set null value to parameter: " + index, sex);
 		}
 	}
 
@@ -120,7 +120,7 @@ s	 */
 				preparedStatement.setNull(positions.get(i), type);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set parameter '" + param + "' with null value.", sex);
+			throw new DbSqlException("Unable to set null value to parameter: " + param, sex);
 		}
 
 	}
@@ -130,7 +130,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type, typeName);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set parameter '" + index + "' with null value.", sex);
+			throw new DbSqlException("Unable to set null value to parameter: " + index, sex);
 		}
 	}
 
@@ -142,7 +142,7 @@ s	 */
 				preparedStatement.setNull(positions.get(i), value, typeName);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to set parameter '" + param + "' with null value.", sex);
+			throw new DbSqlException("Unable to set null value to parameter: " + param, sex);
 		}
 	}
 

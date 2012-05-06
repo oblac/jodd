@@ -79,7 +79,7 @@ public class CtorResolver {
 			}
 		}
 		if (foundedCtor == null) {
-			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for '" + type.getName() + '\'');
+			throw new PetiteException("No constructor (annotated, single or default) founded as injection point for: " + type.getName());
 		}
 
 		String[][] references = PetiteUtil.convertAnnValueToReferences(refValues);

@@ -173,7 +173,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbSqlException("Database driver not found: '" + driver + '\'', cnfex);
+			throw new DbSqlException("Database driver not found: " + driver, cnfex);
 		}
 		if (minConnections > maxConnections) {
 			minConnections = maxConnections;

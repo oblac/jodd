@@ -50,7 +50,7 @@ public class EqualToFieldConstraint implements ValidationConstraint<EqualToField
 		try {
 			valueToCompare = BeanUtil.getProperty(target, fieldName);
 		} catch (BeanException bex) {
-			throw new VtorException("Unable to read value to compare: '" + fieldName + "'.", bex);
+			throw new VtorException("Unable to read value to compare: " + fieldName, bex);
 		}
 		if (valueToCompare == null) {
 			return false;

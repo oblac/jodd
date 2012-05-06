@@ -110,7 +110,7 @@ public class ValidationContext {
 			try {
 				vc = newConstraint(constraintClass, targetType);
 			} catch (Exception ex) {
-				throw new VtorException("Unable to create constraint: '" + constraintClass.getClass().getName() + "'.", ex);
+				throw new VtorException("Unable to create constraint: " + constraintClass.getClass().getName(), ex);
 			}
 			vc.configure(annotation);
 			Check check = new Check(targetName, vc);

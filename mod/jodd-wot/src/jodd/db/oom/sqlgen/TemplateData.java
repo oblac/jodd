@@ -97,7 +97,7 @@ public abstract class TemplateData {
 	public Object lookupObject(String ref) {
 		Object value = getObjectReference(ref);
 		if (value == null) {
-			throw new DbSqlBuilderException("Invalid object reference: '" + ref + "'.");
+			throw new DbSqlBuilderException("Invalid object reference: " + ref);
 		}
 		return value;
 	}
@@ -147,7 +147,7 @@ public abstract class TemplateData {
 		}
 		TableRefData t = new TableRefData(ded, tableAlias);
 		if (tableRefs.put(tableReference, t) != null) {
-			throw new DbSqlBuilderException("Duplicated table reference detected: '" + tableReference + "'.");
+			throw new DbSqlBuilderException("Duplicated table reference detected: " + tableReference);
 		}
 	}
 
@@ -239,7 +239,7 @@ public abstract class TemplateData {
 	protected DbEntityDescriptor lookupType(Class entity) {
 		DbEntityDescriptor ded = dbOomManager.lookupType(entity);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid or not-persistent entity type: '" + entity.getName() + "'.");
+			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}
 		return ded;
 	}

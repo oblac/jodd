@@ -29,7 +29,7 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 		try {
 			this.dataSource = (DataSource) ContextUtil.getInitialContext().lookup(jndiName);
 		} catch (NamingException nex) {
-			throw new DbSqlException("Invalid JNDI datasource name: '" + jndiName + "'.", nex);
+			throw new DbSqlException("Invalid JNDI datasource name: " + jndiName, nex);
 		}
 		this.username = user;
 		this.password = pass;

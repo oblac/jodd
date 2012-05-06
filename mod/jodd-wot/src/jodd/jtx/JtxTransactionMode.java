@@ -180,7 +180,7 @@ s	 */
 	 */
 	public void setTransactionTimeout(int timeout) {
 		if (timeout < DEFAULT_TIMEOUT) {
-			throw new JtxException("Invalid transaction timeout: '" + timeout + "'.");
+			throw new JtxException("Invalid transaction timeout: " + timeout);
 		}
 		this.timeout = timeout;
 	}

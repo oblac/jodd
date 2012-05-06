@@ -106,7 +106,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	 */
 	public static void setCacheThreshold(int ct) {
 		if (ct < 1) {
-			throw new DbSqlBuilderException("Cache threshold can't be less then 1 (" + ct + ").");
+			throw new DbSqlBuilderException("Cache threshold can't be less then 1: " + ct);
 		}
 		cacheThreshold = ct;
 	}

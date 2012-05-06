@@ -389,17 +389,17 @@ public class PetiteContainer extends PetiteRegistry {
 	public void setBeanProperty(String name, Object value) {
 		int ndx = name.indexOf('.');
 		if (ndx == -1) {
-			throw new PetiteException("Only bean name is specified, missing property name: '" + name + "'.");
+			throw new PetiteException("Only bean name is specified, missing property name: " + name);
 		}
 		String beanName = name.substring(0, ndx);
 		Object bean = getBean(beanName);
 		if (bean == null) {
-			throw new PetiteException("Bean doesn't exist: '" + name + "'.");
+			throw new PetiteException("Bean doesn't exist: " + name);
 		}
 		try {
 			BeanUtil.setDeclaredProperty(bean, name.substring(ndx + 1), value);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: '" + name, ex);
+			throw new PetiteException("Unable to set bean property: " + name, ex);
 		}
 	}
 
@@ -409,17 +409,17 @@ public class PetiteContainer extends PetiteRegistry {
 	public Object getBeanProperty(String name) {
 		int ndx = name.indexOf('.');
 		if (ndx == -1) {
-			throw new PetiteException("Only bean name is specified, missing property name: '" + name + "'.");
+			throw new PetiteException("Only bean name is specified, missing property name: " + name);
 		}
 		String beanName = name.substring(0, ndx);
 		Object bean = getBean(beanName);
 		if (bean == null) {
-			throw new PetiteException("Bean doesn't exist: '" + name + "'.");
+			throw new PetiteException("Bean doesn't exist: " + name);
 		}
 		try {
 			return BeanUtil.getDeclaredProperty(bean, name.substring(ndx + 1));
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: '" + name, ex);
+			throw new PetiteException("Unable to set bean property: " + name, ex);
 		}
 	}
 

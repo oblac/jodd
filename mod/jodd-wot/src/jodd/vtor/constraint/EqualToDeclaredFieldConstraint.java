@@ -49,7 +49,7 @@ public class EqualToDeclaredFieldConstraint implements ValidationConstraint<Equa
 		try {
 			valueToCompare = BeanUtil.getDeclaredProperty(target, fieldName);
 		} catch (BeanException bex) {
-			throw new VtorException("Unable to read value to compare: '" + fieldName + "'.", bex);
+			throw new VtorException("Unable to read value to compare: " + fieldName, bex);
 		}
 		if (valueToCompare == null) {
 			return false;

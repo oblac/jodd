@@ -346,7 +346,7 @@ public class DbOomManager {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOomException("Unable to create new entity instance using default constructor for type '" + type + "'.", ex);
+			throw new DbOomException("Unable to create new entity instance using default constructor for type: " + type, ex);
 		}
 	}
 

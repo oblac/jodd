@@ -386,7 +386,7 @@ public class JtxTransactionManager {
 		//noinspection unchecked
 		JtxResourceManager<E> resourceManager = this.resourceManagers.get(resourceType);
 		if (resourceManager == null) {
-			throw new JtxException("No registered resource manager for resource type: '" + resourceType.getSimpleName() + "'.");
+			throw new JtxException("No registered resource manager for resource type: " + resourceType.getSimpleName());
 		}
 		return resourceManager;
 	}

@@ -496,7 +496,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setFetchSize(fetchSize);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set fetch size of '" + fetchSize + '\'', sex);
+				throw new DbSqlException("Unable to set fetch size of: " + fetchSize, sex);
 			}
 		}
 	}
@@ -519,7 +519,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setMaxRows(maxRows);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set max rows of '" + maxRows + '\'', sex);
+				throw new DbSqlException("Unable to set max rows of: " + maxRows, sex);
 			}
 		}
 	}

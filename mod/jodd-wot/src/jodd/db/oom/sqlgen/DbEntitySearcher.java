@@ -55,7 +55,7 @@ public class DbEntitySearcher implements DbSqlGenerator {
 			try {
 				value = field.get(entity);
 			} catch (IllegalAccessException iaex) {
-				throw new DbSqlException("Unable to read value of property '" + field.getName() + "'.", iaex);
+				throw new DbSqlException("Unable to read value of property: " + field.getName(), iaex);
 			}
 			if (value != null) {
 				if (firstCondition) {

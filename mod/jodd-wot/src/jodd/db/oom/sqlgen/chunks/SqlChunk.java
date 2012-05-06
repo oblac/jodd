@@ -142,7 +142,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupType(Class entity) {
 		DbEntityDescriptor ded = templateData.getDbOomManager().lookupType(entity);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid or not-persistent entity type: '" + entity.getName() + "'.");
+			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
 		}
 		return ded;
 	}
@@ -161,7 +161,7 @@ public abstract class SqlChunk implements Cloneable {
 		DbEntityDescriptor ded = templateData.getTableDescriptor(tableRef);
 		if (ded == null) {
 			if (throwExceptionIfNotFound) {
-				throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "'.");
+				throw new DbSqlBuilderException("Invalid table reference: " + tableRef);
 			}
 		}
 		return ded;

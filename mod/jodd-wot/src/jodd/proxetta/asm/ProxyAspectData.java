@@ -133,7 +133,7 @@ final class ProxyAspectData {
 			 */
 			@Override
 			public void visitInnerClass(String name, String outerName, String innerName, int access) {
-				throw new ProxettaException("Proxetta doesn't allow inner classes in/for advice: '" + advice.getName() + "'.");
+				throw new ProxettaException("Proxetta doesn't allow inner classes in/for advice: " + advice.getName());
 			}
 
 			/**
@@ -152,7 +152,7 @@ final class ProxyAspectData {
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 				if (name.equals(CLINIT) == true) {              // [A6]
 					if (desc.equals(DESC_VOID) == false) {
-						throw new ProxettaException("Invalid static initialization block description for advice: '" + advice.getName() + "'.");
+						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
 					}
 					name = CLINIT_METHOD_NAME + METHOD_DIVIDER + aspectIndex;
 					access |= AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL;
@@ -183,7 +183,7 @@ final class ProxyAspectData {
 
 				if (name.equals(INIT) == true) { // [A7]
 					if (desc.equals(DESC_VOID) == false) {
-						throw new ProxettaException("Advices can have only default constructors. Invalid advice: '" + advice.getName() + "'.");
+						throw new ProxettaException("Advices can have only default constructors. Invalid advice: " + advice.getName());
 					}
 
 					name = INIT_METHOD_NAME + METHOD_DIVIDER + aspectIndex;

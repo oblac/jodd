@@ -31,8 +31,8 @@ public class InjectionPointFactory {
 			references = methodOrCtorDefaultReferences(constructor, constructor.getParameterTypes());
 		}
 		if (constructor.getParameterTypes().length != references.length) {
-			throw new PetiteException("Different number of constructor parameters and references for: '"
-					+ constructor.getName() + "'.");
+			throw new PetiteException(
+					"Different number of constructor parameters and references for: " + constructor.getName());
 		}
 		removeDuplicateNames(references);
 		return new CtorInjectionPoint(constructor, references);

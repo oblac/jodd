@@ -80,7 +80,7 @@ public class ActionsManager {
 	public ActionConfig register(String actionSignature, String actionPath) {
 		int ndx = actionSignature.indexOf('#');
 		if (ndx == -1) {
-			throw new MadvocException("Madvoc action signature syntax error: '" + actionSignature + "'.");
+			throw new MadvocException("Madvoc action signature syntax error: " + actionSignature);
 		}
 		String actionClassName = actionSignature.substring(0, ndx);
 		String actionMethodName = actionSignature.substring(ndx + 1);
@@ -88,7 +88,7 @@ public class ActionsManager {
 		try {
 			actionClass = ClassLoaderUtil.loadClass(actionClassName);
 		} catch (ClassNotFoundException cnfex) {
-			throw new MadvocException("Madvoc action class not found: '" + actionClassName + "'.", cnfex);
+			throw new MadvocException("Madvoc action class not found: " + actionClassName, cnfex);
 		}
 		return register(actionClass, actionMethodName, actionPath);
 	}
@@ -160,7 +160,7 @@ public class ActionsManager {
 
 		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
 			if (isDuplicate) {
-				throw new MadvocException("Duplicate action path for '" + cfg + "'.");
+				throw new MadvocException("Duplicate action path for " + cfg);
 			}
 		}
 		return cfg;

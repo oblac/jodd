@@ -95,7 +95,7 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 		try {
 			Class.forName(driverClass);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbSqlException("Unable to find JDBC driver class: '" + driverClass + '\'', cnfex);
+			throw new DbSqlException("Unable to find JDBC driver class: " + driverClass, cnfex);
 		}
 	}
 

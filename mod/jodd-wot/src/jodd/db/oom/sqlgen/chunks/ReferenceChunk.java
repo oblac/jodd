@@ -58,7 +58,7 @@ public class ReferenceChunk extends SqlChunk {
 			String column = dec == null ? null : dec.getColumnName();
 			//String column = ded.getColumnName(columnRef);
 			if (column == null) {
-				throw new DbSqlBuilderException("Unable to resolve column reference: '" + tableRef + '.' + columnRef + "'.");
+				throw new DbSqlBuilderException("Unable to resolve column reference: " + tableRef + '.' + columnRef);
 			}
 			out.append('.').append(column);
 		}
