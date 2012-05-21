@@ -31,14 +31,14 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		super(ScopeType.REQUEST);
 		this.encoding = madvocConfig.getEncoding();
 		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
-		this.attrNames = madvocConfig.getAttrNames();
+		this.attributeMoveId = madvocConfig.getAttributeMoveId();
 	}
 
 	// ---------------------------------------------------------------- configuration
 
 	protected final String encoding;
 	protected final Config config;
-	protected final MadvocConfig.AttrNames attrNames;
+	protected final String attributeMoveId;
 
 	/**
 	 * Returns encoding used inside. The same as Madvoc encoding.
@@ -284,7 +284,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	 * Outjects all request data from move result source, if exist.
 	 */
 	protected void outjectMoveSource(HttpServletRequest servletRequest) {
-		String moveId = servletRequest.getParameter(attrNames.moveId);
+		String moveId = servletRequest.getParameter(attributeMoveId);
 		if (moveId != null) {
 			HttpSession session = servletRequest.getSession();
 			ActionRequest sourceRequest = (ActionRequest) session.getAttribute(moveId);

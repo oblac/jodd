@@ -10,6 +10,7 @@ import jodd.servlet.URLCoder;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomStringUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -38,11 +39,14 @@ public class MoveResult extends ActionResult {
 	 */
 	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
-		HttpSession session = actionRequest.getHttpServletRequest().getSession();
+		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
+		HttpSession session = httpServletRequest.getSession();
+
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);
-		resultPath = URLCoder.build(resultPath).param(madvocConfig.getAttrNames().moveId, id).toString();
-		DispatcherUtil.redirect(actionRequest.getHttpServletRequest(), actionRequest.getHttpServletResponse(), resultPath);
+
+		resultPath = URLCoder.build(resultPath).param(madvocConfig.getAttributeMoveId(), id).toString();
+		DispatcherUtil.redirect(httpServletRequest, actionRequest.getHttpServletResponse(), resultPath);
 	}
 
 }

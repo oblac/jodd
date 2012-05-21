@@ -11,7 +11,6 @@ import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class MadvocConfig {
 		preventCaching = true;
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 		strictExtensionStripForResultPath = false;
-		setAttrNamePrefix("_m_");	// call 'M' for 'Madvoc' :)
+		attributeMoveId = "_m_move_id";
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -344,34 +343,17 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- attributes names
 
-	protected AttrNames attrNames;
+	protected String attributeMoveId;
 
-	/**
-	 * Returns various servlet attribute names.
-	 */
-	public AttrNames getAttrNames() {
-		return attrNames;
+	public String getAttributeMoveId() {
+		return attributeMoveId;
 	}
 
 	/**
-	 * Sets the servlet attribute name prefix used in various places.
+	 * Sets attribute name for {@link jodd.madvoc.result.MoveResult move results}.
 	 */
-	public void setAttrNamePrefix(String servletAttrNamePrefix) {
-		if (StringUtil.isBlank(servletAttrNamePrefix)) {
-			servletAttrNamePrefix = StringPool.EMPTY;
-		}
-		this.attrNames = new AttrNames(servletAttrNamePrefix);
+	public void setAttributeMoveId(String attributeMoveId) {
+		this.attributeMoveId = attributeMoveId;
 	}
 
-	public static class AttrNames {
-
-		/**
-		 * Session attribute name for {@link jodd.madvoc.result.MoveResult move results}.
-		 */
-		public final String moveId;
-
-		public AttrNames(String prefix) {
-			moveId = prefix + "move_id";
-		}
-	}
 }
