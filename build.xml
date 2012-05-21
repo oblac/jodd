@@ -29,7 +29,7 @@
 	
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.3"/>
+	<property name="prjVersion" value="3.3.4-beta"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
