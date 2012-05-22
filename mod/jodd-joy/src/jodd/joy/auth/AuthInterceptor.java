@@ -8,6 +8,8 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.DispatcherUtil;
+import jodd.servlet.URLCoder;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static jodd.joy.auth.AuthUtil.AUTH_SESSION_NAME;
-import static jodd.joy.madvoc.action.AppAction.CHAIN;
 import static jodd.joy.madvoc.action.AppAction.REDIRECT;
 
 /**
@@ -172,9 +173,8 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 				if (log.isDebugEnabled()) {
 					log.debug("authentication required");
 				}
-				servletRequest.setAttribute(loginSuccessPath, DispatcherUtil.getUrl(servletRequest));
 				actionRequest.getHttpServletResponse().setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return resultLogin();
+				return resultLogin(DispatcherUtil.getUrl(servletRequest));
 			}
 			// PUBLIC PAGE, NOT LOGGED IN
 			return actionRequest.invoke();
@@ -227,7 +227,9 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 		}
 		if (isNew == true || recreateCookieOnLogin == true) {
 			String[] cookieData = createCookieData(sessionObject);
-			AuthUtil.storeAuthCookie(servletResponse, cookieMaxAge, cookieData[0], cookieData[1]);
+			if (cookieData != null) {
+				AuthUtil.storeAuthCookie(servletResponse, cookieMaxAge, cookieData[0], cookieData[1]);
+			}
 		}
 	}
 
@@ -273,10 +275,17 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 	}
 
 	/**
-	 * Prepares result for login page.
+	 * Prepares result for login page, when access to target URL is forbidden.
+	 * To prevent using request parameter, consider CHAIN result type.
+	 * Target URL may be <code>null</code>.
 	 */
-	protected Object resultLogin() { 
-		return CHAIN + AppAction.ALIAS_LOGIN;
+	protected Object resultLogin(String targetUrl) {
+		if (targetUrl == null) {
+			targetUrl = StringPool.EMPTY;
+		} else {
+			targetUrl = URLCoder.build().param(loginSuccessPath, targetUrl).toString();
+		}
+		return REDIRECT + AppAction.ALIAS_LOGIN + targetUrl;
 	}
 
 	/**
@@ -310,6 +319,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 	/**
 	 * Tries to login user with cookie data. Returns session object, otherwise returns <code>null</code>.
+	 * Cookie data may be <code>null</code> if not used.
 	 */
 	protected abstract Object loginViaCookie(String[] cookieData);
 
@@ -336,6 +346,7 @@ public abstract class AuthInterceptor extends ActionInterceptor {
 
 	/**
 	 * Prepares cookie data from session object.
+	 * Returns <code>null</code> if cookie is not used.
 	 */
 	protected abstract String[] createCookieData(Object sessionObject);
 }
