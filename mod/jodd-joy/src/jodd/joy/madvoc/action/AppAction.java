@@ -34,11 +34,11 @@ public abstract class AppAction {
 	public static final String NONE = "none:";
 	public static final String VTOR_JSON = "vtor-json:";
 
-	public static final String ALIAS_INDEX = "%index%";
+	public static final String ALIAS_INDEX = "<index>";
 	public static final String ALIAS_INDEX_NAME = "index";
-	public static final String ALIAS_LOGIN = "%login%";
+	public static final String ALIAS_LOGIN = "<login>";
 	public static final String ALIAS_LOGIN_NAME = "login";
-	public static final String ALIAS_ACCESS_DENIED = "%accessDenied%";
+	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
 	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
 	public static final String EXT_JSON = "json";
@@ -47,14 +47,14 @@ public abstract class AppAction {
 	 * Creates alias. 
 	 */
 	protected String alias(String target) {
-		return '%' + target + '%';
+		return '<' + target + '>';
 	}
 
 	/**
 	 * Creates alias from target class and target method name.
 	 */
 	protected String alias(Class targetClass, String targetMethodName) {
-		return '%' + targetClass.getName() + '#' + targetMethodName + '%';
+		return '<' + targetClass.getName() + '#' + targetMethodName + '>';
 	}
 
 	/**
@@ -65,7 +65,7 @@ public abstract class AppAction {
 	protected String alias(Object target, String targetMethodName) {
 		String targetClassName = target.getClass().getName();
 		targetClassName = StringUtil.cutToIndexOf(targetClassName, '$');
-		return '%' + targetClassName + '#' + targetMethodName + '%';
+		return '<' + targetClassName + '#' + targetMethodName + '>';
 	}
 
 

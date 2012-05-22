@@ -27,7 +27,7 @@ public class ResultMapper {
 		int i = 0;
 		int len = resultValue.length();
 		while (i < len) {
-			int ndx = resultValue.indexOf('%', i);
+			int ndx = resultValue.indexOf('<', i);
 			if (ndx == -1) {
 				// alias markers not found
 				resultValue = (i == 0 ? resultValue : resultValue.substring(i));
@@ -37,7 +37,7 @@ public class ResultMapper {
 			}
 			result.append(resultValue.substring(i, ndx));
 			ndx++;
-			int ndx2 = resultValue.indexOf('%', ndx);
+			int ndx2 = resultValue.indexOf('>', ndx);
 			String alias = (ndx2 == -1 ? resultValue.substring(ndx) : resultValue.substring(ndx, ndx2));
 
 			// process alias

@@ -19,7 +19,7 @@ public class OneMoveAction {
 	public String execute() {
 		System.out.println("move");
 		value = "173";
-		return "move:/%two%";
+		return "move:/<two>";
 	}
 
 }

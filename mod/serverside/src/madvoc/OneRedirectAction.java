@@ -18,7 +18,7 @@ public class OneRedirectAction {
 	public String execute() {
 		System.out.println("redirect");
 		value = "173";
-		return "redirect:/%two%?value=${value}";
+		return "redirect:/<two>?value=${value}";
 	}
 	
 }

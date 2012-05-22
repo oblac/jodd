@@ -286,16 +286,16 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
 		assertEquals("/boo.foo.html", cfg.actionPath);
 
-		String resultPath = resultMapper.resolveResultPath(cfg, "/%ok%?foo=1");
+		String resultPath = resultMapper.resolveResultPath(cfg, "/<ok>?foo=1");
 		assertEquals("/xxx.jsp?foo=1", resultPath);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "%sok%");
+		resultPath = resultMapper.resolveResultPath(cfg, "<sok>");
 		assertEquals("/boo.foo.zzz", resultPath);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "#%sok%");
+		resultPath = resultMapper.resolveResultPath(cfg, "#<sok>");
 		assertEquals("/boo.zzz", resultPath);
 
-		resultPath = resultMapper.resolveResultPath(cfg, "%dude%?foo=1");
+		resultPath = resultMapper.resolveResultPath(cfg, "<dude>?foo=1");
 		assertEquals("/xxx.html?foo=1", resultPath);
 
 	}
