@@ -121,6 +121,11 @@ public class DecoraServletFilter implements Filter {
 
 		char[] pageContent = pageWrapper.getBufferContentAsChars();
 
+		if (pageContent == null || pageContent.length == 0) {
+			// no page content
+			return;
+		}
+
 		/* PROCESS DECORATOR */
 
         boolean decorated = false;
