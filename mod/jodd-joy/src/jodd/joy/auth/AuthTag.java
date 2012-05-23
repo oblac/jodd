@@ -30,7 +30,7 @@ public class AuthTag extends SimpleTagSupport {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		HttpSession httpSession = request.getSession();
 
-		Object userSession = AuthUtil.getActiveSession(httpSession);
+		Object userSession = AuthUtil.getUserSession(httpSession);
 		boolean invokeBody =  (userSession != null) ?  auth : !auth;
 		if (invokeBody) {
 			TagUtil.invokeBody(getJspBody());

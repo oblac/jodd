@@ -4,16 +4,19 @@ package jodd.joy.madvoc.interceptor;
 
 import jodd.joy.i18n.I18nInterceptor;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.madvoc.interceptor.PrepareAndIdInjectorInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
 /**
- * Public interceptor stack for pages that are available to everyone.
+ * Preparable version of default interceptor stack.
  */
-public class PublicInterceptorStack extends ActionInterceptorStack {
+public class DefaultPreparableInterceptorStack extends ActionInterceptorStack {
 
-	public PublicInterceptorStack() {
+	public DefaultPreparableInterceptorStack() {
 		super(
 				I18nInterceptor.class,
+				PrepareAndIdInjectorInterceptor.class,
 				ServletConfigInterceptor.class);
 	}
 }
+

@@ -8,15 +8,21 @@ import jodd.madvoc.meta.Action;
 /**
  * Authentication action, usually extended by login action.
  * Defines three actions: login, logout and register.
- * These actions are just 'hooks', so Madvoc can catch them, but
- * methods will not be executed since {@link AuthInterceptor} will
- * consume them. 
+ * These actions are just dummy 'hooks' so Madvoc can catch them and
+ * invoke interceptor. Methods itself will not be invoked.
+ * <p>
+ * Usually <code>LoginAction</code> extends this class.
  */
 public abstract class AuthAction extends AppAction {
 
 	public static final String LOGIN_ACTION_PATH = "/j_login";
 	public static final String LOGOUT_ACTION_PATH = "/j_logout";
 	public static final String REGISTER_ACTION_PATH = "/j_register";
+
+	public static final String LOGIN_USERNAME = "j_username";
+	public static final String LOGIN_PASSWORD = "j_password";
+	public static final String LOGIN_TOKEN = "j_token";
+	public static final String LOGIN_SUCCESS_PATH = "j_path";
 
 	/**
 	 * Login hook.

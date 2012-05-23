@@ -21,18 +21,58 @@ public class AuthUtil {
 	public static final String AUTH_COOKIE_NAME = "JODD_JOY_REMEMBERME";
 
 	/**
-	 * Returns <code>true</code> if user session is active.
+	 * Returns new session object from the request attributes,
+	 * usually created during user registration.
 	 */
-	public static boolean isSessionActive(HttpSession session) {
-		return session.getAttribute(AUTH_SESSION_NAME) != null;
+	public static Object getNewUserSession(HttpServletRequest servletRequest) {
+		Object newUserSession = servletRequest.getAttribute(AUTH_SESSION_NAME);
+		servletRequest.removeAttribute(AUTH_SESSION_NAME);
+		return newUserSession;
 	}
 
 	/**
-	 * Returns active session or <code>null</code> if there is no user session.
+	 * Returns user session or <code>null</code> if there is no authenticated user.
 	 */
-	public static Object getActiveSession(HttpSession session) {
-		return session.getAttribute(AUTH_SESSION_NAME);
+	public static Object getUserSession(HttpSession httpSession) {
+		return httpSession.getAttribute(AUTH_SESSION_NAME);
 	}
+
+	/**
+	 * @see #getUserSession(javax.servlet.http.HttpSession)
+	 */
+	public static Object getUserSession(HttpServletRequest servletRequest) {
+		return servletRequest.getSession().getAttribute(AUTH_SESSION_NAME);
+	}
+
+	/**
+	 * Closes user session.
+	 */
+	public static void closeUserSession(HttpSession httpSession) {
+		httpSession.removeAttribute(AUTH_SESSION_NAME);
+	}
+
+	/**
+	 * @see #closeUserSession(javax.servlet.http.HttpSession)
+	 */
+	public static void closeUserSession(HttpServletRequest servletRequest) {
+		servletRequest.getSession().removeAttribute(AUTH_SESSION_NAME);
+	}
+
+	/**
+	 * Starts user session by storing user session object into http session.
+	 */
+	public static void startUserSession(HttpSession httpSession, Object userSession) {
+		httpSession.setAttribute(AUTH_SESSION_NAME, userSession);
+	}
+
+	/**
+	 * @see #startUserSession(javax.servlet.http.HttpServletRequest, Object)
+	 */
+	public static void startUserSession(HttpServletRequest servletRequest, Object userSession) {
+		servletRequest.getSession().setAttribute(AUTH_SESSION_NAME, userSession);
+	}
+
+	// ---------------------------------------------------------------- cookies
 
 	private static final Threefish ENCRYPTOR = new Threefish(Threefish.BLOCK_SIZE_BITS_256);
 	private static final char COOKIE_DELIMETER = '*';

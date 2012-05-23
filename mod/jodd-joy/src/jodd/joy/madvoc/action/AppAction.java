@@ -41,8 +41,6 @@ public abstract class AppAction {
 	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
 	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
-	public static final String EXT_JSON = "json";
-
 	/**
 	 * Creates alias. 
 	 */
