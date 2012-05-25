@@ -6,10 +6,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
-import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
-import jodd.madvoc.injector.ApplicationScopeInjector;
-import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.meta.In;
@@ -39,18 +36,12 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 
 	protected RequestScopeInjector requestScopeInjector;
 	protected SessionScopeInjector sessionScopeInjector;
-	protected ApplicationScopeInjector applicationScopeInjector;
-	protected MadvocContextScopeInjector madvocContextScopeInjector;
-	protected ServletContextScopeInjector servletContextScopeInjector;
 	protected ActionPathMacroInjector actionPathMacroInjector;
 
 	@Override
 	public void init() {
 		requestScopeInjector = new RequestScopeInjector(madvocConfig);
 		sessionScopeInjector = new SessionScopeInjector();
-		applicationScopeInjector = contextInjector.getApplicationScopeInjector();
-		madvocContextScopeInjector = contextInjector.getMadvocContextScopeInjector();
-		servletContextScopeInjector = contextInjector.getServletContextScopeInjector();
 		actionPathMacroInjector = new ActionPathMacroInjector();
 	}
 
@@ -82,12 +73,13 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		servletContextScopeInjector.inject(target, servletRequest, servletResponse);
-		madvocContextScopeInjector.inject(target);
-		applicationScopeInjector.inject(target, servletRequest.getSession().getServletContext());
+		contextInjector.injectContext(target, servletRequest, servletResponse, false);
+
 		sessionScopeInjector.inject(target, servletRequest);
+
 		requestScopeInjector.prepare(servletRequest);
 		requestScopeInjector.inject(target, servletRequest);
+
 		actionPathMacroInjector.inject(target, actionRequest);
 	}
 
@@ -99,12 +91,11 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		servletContextScopeInjector.outject(target, servletResponse);
-		madvocContextScopeInjector.outject(target);
-		applicationScopeInjector.outject(target, servletRequest.getSession().getServletContext());
+		contextInjector.outjectContext(target, servletRequest, servletResponse);
+
 		sessionScopeInjector.outject(target, servletRequest);
+
 		requestScopeInjector.outject(target, servletRequest);
 	}
-
 
 }

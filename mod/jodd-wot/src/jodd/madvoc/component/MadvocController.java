@@ -155,15 +155,25 @@ public class MadvocController {
 			throw new MadvocException("Unable to find action result type: " + resultType);
 		}
 		if (result.isInitialized() == false) {
-			contextInjector.injectContext(result, req.getHttpServletRequest(), req.getHttpServletResponse());
-			result.initialized();
-			result.init();
+			initializeResult(result, req);
 		}
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(req.getHttpServletResponse());
 		}
 		String resultPath = resultMapper.resolveResultPath(req.getActionConfig(), resultValue);
 		result.render(req, resultObject, resultValue, resultPath);
+	}
+
+	/**
+	 * Initializes action result.
+	 */
+	protected void initializeResult(ActionResult result, ActionRequest actionRequest) {
+		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse httpServletResponse = actionRequest.getHttpServletResponse();
+
+		contextInjector.injectContext(result, httpServletRequest, httpServletResponse, true);
+		result.initialized();
+		result.init();
 	}
 
 	// ---------------------------------------------------------------- create
@@ -194,12 +204,19 @@ public class MadvocController {
 		cfg.interceptors = interceptorsManager.resolveAll(interceptorClasses);
 		for (ActionInterceptor interceptor : cfg.interceptors) {
 			if (interceptor.isInitialized() == false) {
-				contextInjector.injectContext(interceptor, applicationContext);
-				interceptor.initialized();
-				interceptor.init();
+				initializeInterceptor(interceptor);
 			}
 		}
 		cfg.initialized();
+	}
+
+	/**
+	 * Initializes action interceptor.
+	 */
+	protected void initializeInterceptor(ActionInterceptor interceptor) {
+		contextInjector.injectContext(interceptor, applicationContext, true);
+		interceptor.initialized();
+		interceptor.init();
 	}
 
 	// ---------------------------------------------------------------- create
