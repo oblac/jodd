@@ -163,7 +163,7 @@ public class ActionRequest {
 		if (interceptorIndex < totalInterceptors) {
 			ActionInterceptor interceptor = config.interceptors[interceptorIndex];
 			interceptorIndex++;
-			return interceptor.intercept(this);
+			return interceptor.invoke(this);
 		}
 
 		// action
