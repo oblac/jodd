@@ -387,15 +387,27 @@ public class PetiteContainer extends PetiteRegistry {
 	 * Sets petite bean property.
 	 */
 	public void setBeanProperty(String name, Object value) {
-		int ndx = name.indexOf('.');
-		if (ndx == -1) {
-			throw new PetiteException("Only bean name is specified, missing property name: " + name);
+		Object bean = null;
+		int ndx = name.length();
+
+		while (true) {
+			ndx = name.lastIndexOf('.', ndx);
+			if (ndx == -1) {
+				break;
+			}
+
+			String beanName = name.substring(0, ndx);
+			bean = getBean(beanName);
+			if (bean != null) {
+				break;
+			}
+			ndx--;
 		}
-		String beanName = name.substring(0, ndx);
-		Object bean = getBean(beanName);
+
 		if (bean == null) {
-			throw new PetiteException("Bean doesn't exist: " + name);
+			throw new PetiteException("Invalid bean property: " + name);
 		}
+
 		try {
 			BeanUtil.setDeclaredProperty(bean, name.substring(ndx + 1), value);
 		} catch (Exception ex) {

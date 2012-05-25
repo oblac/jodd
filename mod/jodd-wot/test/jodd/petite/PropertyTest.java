@@ -20,7 +20,32 @@ public class PropertyTest extends TestCase {
 		PojoBean2 pojo2 = (PojoBean2) pc.getBean("pojoBean2");
 		assertEquals("value", pojo2.getVal1());
 		assertEquals(173, pojo2.getVal2().intValue());
+	}
 
+	public void testSetWithMultipleDots() {
+		PetiteContainer pc = new PetiteContainer();
+
+		pc.registerBean("pojo", PojoBean2.class);
+
+		try {
+			pc.setBeanProperty("poco", null);
+			fail();
+		} catch (PetiteException ignore) {
+		}
+		pc.setBeanProperty("pojo.val1", "value");
+		pc.setBeanProperty("pojo.bean.name", "foo");
+
+		PojoBean2 pojo2 = (PojoBean2) pc.getBean("pojo");
+		assertEquals("value", pojo2.getVal1());
+		assertEquals("foo", pojo2.getBean().getName());
+
+		pc.registerBean("pojo.bean", PojoBean2.class);
+		pc.setBeanProperty("pojo.bean.val1", "value");
+		pc.setBeanProperty("pojo.bean.val2", "173");
+
+		pojo2 = (PojoBean2) pc.getBean("pojo.bean");
+		assertEquals("value", pojo2.getVal1());
+		assertEquals(173, pojo2.getVal2().intValue());
 	}
 
 	public void testGet() {

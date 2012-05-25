@@ -8,6 +8,8 @@ public class PojoBean2 {
 
 	protected Integer val2;
 
+	protected PojoBean3 bean = new PojoBean3();
+
 	public String getVal1() {
 		return val1;
 	}
@@ -22,5 +24,13 @@ public class PojoBean2 {
 
 	public void setVal2(Integer val2) {
 		this.val2 = val2;
+	}
+
+	public PojoBean3 getBean() {
+		return bean;
+	}
+
+	public void setBean(PojoBean3 bean) {
+		this.bean = bean;
 	}
 }
