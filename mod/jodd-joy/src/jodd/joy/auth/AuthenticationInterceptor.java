@@ -86,6 +86,10 @@ public abstract class AuthenticationInterceptor extends ActionInterceptor {
 					log.debug("login with cookie");
 				}
 				startAuthSession(servletRequest, servletResponse, userSession, false);
+
+				if (isLoginAction(actionPath)) {
+					return resultLoginSuccess(null);
+				}
 				// continue
 				return actionRequest.invoke();
 			}
