@@ -38,7 +38,7 @@ public class JtxTransaction {
 	protected final JtxTransactionManager txManager;
 	protected final JtxTransactionMode mode;
 	protected final Set<JtxResource> resources;
-	protected final Object context;
+	protected final Object scope;
 	protected final long deadline;
 	protected final boolean startAsActive;
 	protected Throwable rollbackCause;
@@ -53,13 +53,13 @@ public class JtxTransaction {
 	 *
 	 * @param txManager jtx manager
 	 * @param mode transaction mode
-	 * @param context transaction context within transaction works
+	 * @param scope transaction live scope within the other transaction requests are ignored
 	 * @param active if <code>true</code> it is an active transaction, otherwise it's not
 	 */
-	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object context, boolean active) {
+	public JtxTransaction(JtxTransactionManager txManager, JtxTransactionMode mode, Object scope, boolean active) {
 		this.txManager = txManager;
 		this.mode = mode;
-		this.context = context;
+		this.scope = scope;
 		this.resources = new HashSet<JtxResource>();
 		this.deadline = mode.getTransactionTimeout() == DEFAULT_TIMEOUT ?
 				DEFAULT_TIMEOUT :
@@ -87,10 +87,10 @@ public class JtxTransaction {
 	}
 
 	/**
-	 * Returns transaction context if exist, or <code>null</code>.
+	 * Returns transaction scope if exist, or <code>null</code>.
 	 */
-	public Object getContext() {
-		return context;
+	public Object getScope() {
+		return scope;
 	}
 
 	// ---------------------------------------------------------------- status

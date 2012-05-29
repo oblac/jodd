@@ -22,7 +22,7 @@ public class JtxTransactionManager {
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;
 	protected boolean validateExistingTransaction;
-	protected boolean ignoreContext;
+	protected boolean ignoreScope;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
 	protected final ThreadLocal<LinkedList<JtxTransaction>> txStack = new ThreadLocal<LinkedList<JtxTransaction>>() {
@@ -91,19 +91,19 @@ public class JtxTransactionManager {
 	}
 
 	/**
-	 * Returns if transaction context should be ignored.
+	 * Returns if transaction scope should be ignored.
 	 */
-	public boolean isIgnoreContext() {
-		return ignoreContext;
+	public boolean isIgnoreScope() {
+		return ignoreScope;
 	}
 
 	/**
-	 * Sets if transaction context should be ignored. If ignored,
-	 * there may be more then one transaction over one context.
-	 * Context also may be ignored if set to <code>null</code>
+	 * Sets if transaction scope should be ignored. If ignored,
+	 * there may be more then one transaction in one scope.
+	 * Scopes may be ignored if set to <code>null</code>
 	 */
-	public void setIgnoreContext(boolean ignoreContext) {
-		this.ignoreContext = ignoreContext;
+	public void setIgnoreScope(boolean ignoreScope) {
+		this.ignoreScope = ignoreScope;
 	}
 
 	// ---------------------------------------------------------------- count
@@ -194,8 +194,8 @@ public class JtxTransactionManager {
 	 * Custom implementations of manager may override this method for
 	 * creating custom transaction instances.
 	 */
-	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object context, boolean active) {
-		return new JtxTransaction(this, tm, context, active);
+	protected JtxTransaction createNewTransaction(JtxTransactionMode tm, Object scope, boolean active) {
+		return new JtxTransaction(this, tm, scope, active);
 	}
 
 
@@ -208,45 +208,45 @@ public class JtxTransactionManager {
 	/**
 	 * Requests transaction with specified {@link JtxTransactionMode mode}.
 	 * Depending on propagation behavior, it will return either <b>existing<b> or <b>new</b> transaction.
-	 * Only one transaction can be opened over one context.
+	 * Only one transaction can be opened over one scope.
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
-	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object context) {
+	public JtxTransaction requestTransaction(JtxTransactionMode mode, Object scope) {
 		if (log.isDebugEnabled()) {
 			log.debug("Requesting TX " + mode.toString());
 		}
 		JtxTransaction currentTx = getTransaction();
-		if (checkValidTxContext(currentTx, context) == false) {
+		if (isNewTxScope(currentTx, scope) == false) {
 			return currentTx;
 		}
 		switch (mode.getPropagationBehavior()) {
-			case PROPAGATION_REQUIRED: return propRequired(currentTx, mode, context);
-			case PROPAGATION_SUPPORTS: return propSupports(currentTx, mode, context);
-			case PROPAGATION_MANDATORY: return propMandatory(currentTx, mode, context);
-			case PROPAGATION_REQUIRES_NEW: return propRequiresNew(currentTx, mode, context);
-			case PROPAGATION_NOT_SUPPORTED: return propNotSupported(currentTx, mode, context);
-			case PROPAGATION_NEVER: return propNever(currentTx, mode, context);
+			case PROPAGATION_REQUIRED: return propRequired(currentTx, mode, scope);
+			case PROPAGATION_SUPPORTS: return propSupports(currentTx, mode, scope);
+			case PROPAGATION_MANDATORY: return propMandatory(currentTx, mode, scope);
+			case PROPAGATION_REQUIRES_NEW: return propRequiresNew(currentTx, mode, scope);
+			case PROPAGATION_NOT_SUPPORTED: return propNotSupported(currentTx, mode, scope);
+			case PROPAGATION_NEVER: return propNever(currentTx, mode, scope);
 		}
 		throw new JtxException("Invalid transaction propagation value (" + mode.getPropagationBehavior().value() + ')');
 	}
 
 	/**
-	 * Returns <code>true</code> if context is specified and it is different then of existing transaction.
+	 * Returns <code>true</code> if scope is specified and it is different then of existing transaction.
 	 */
-	protected boolean checkValidTxContext(JtxTransaction currentTx, Object destContext) {
-		if (ignoreContext == true) {
+	protected boolean isNewTxScope(JtxTransaction currentTx, Object destScope) {
+		if (ignoreScope == true) {
 			return true;
 		}
 		if (currentTx == null) {
 			return true;
 		}
-		if (destContext == null) {
+		if (destScope == null) {
 			return true;
 		}
-		if (currentTx.getContext() == null) {
+		if (currentTx.getScope() == null) {
 			return true;
 		}
-		return !destContext.equals(currentTx.getContext());
+		return !destScope.equals(currentTx.getScope());
 	}
 
 	/**
@@ -279,9 +279,9 @@ public class JtxTransactionManager {
 	 * T1   -> T1 (cont.)
 	 * </pre>
 	 */
-	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
+	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
-			currentTx = createNewTransaction(mode, context, true);
+			currentTx = createNewTransaction(mode, scope, true);
 		} else {
 			continueTx(currentTx, mode);
 		}
@@ -296,8 +296,8 @@ public class JtxTransactionManager {
 	 * </pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected JtxTransaction propRequiresNew(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
-		return createNewTransaction(mode, context, true);
+	protected JtxTransaction propRequiresNew(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
+		return createNewTransaction(mode, scope, true);
 	}
 
 	/**
@@ -307,12 +307,12 @@ public class JtxTransactionManager {
 	 * T1   -> T1 (cont.)
 	 * </pre>
 	 */
-	protected JtxTransaction propSupports(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
+	protected JtxTransaction propSupports(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx != null) && (currentTx.isNoTransaction() != true)) {
 			continueTx(currentTx, mode);
 		}
 		if (currentTx == null) {
-			currentTx = createNewTransaction(mode, context, false);
+			currentTx = createNewTransaction(mode, scope, false);
 		}
 		return currentTx;
 	}
@@ -325,7 +325,7 @@ public class JtxTransactionManager {
 	 * </pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
-	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
+	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
 			throw new JtxException("No existing transaction found for transaction marked with propagation 'mandatory'.");
 		}
@@ -340,14 +340,14 @@ public class JtxTransactionManager {
 	 * T1   -> None
 	 * </pre>
 	 */
-	protected JtxTransaction propNotSupported(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
+	protected JtxTransaction propNotSupported(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if (currentTx == null) {
-			return createNewTransaction(mode, context, false);
+			return createNewTransaction(mode, scope, false);
 		}
 		if (currentTx.isNoTransaction() == true) {
 			return currentTx;
 		}
-		return createNewTransaction(mode, context, false);
+		return createNewTransaction(mode, scope, false);
 	}
 
 	/**
@@ -357,12 +357,12 @@ public class JtxTransactionManager {
 	 * T1   -> Error
 	 * </pre>
 	 */
-	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object context) {
+	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx != null) && (currentTx.isNoTransaction() == false)) {
 			throw new JtxException("Existing transaction found for transaction marked with propagation 'never'.");
 		}
 		if (currentTx == null) {
-			currentTx = createNewTransaction(mode, context, false);
+			currentTx = createNewTransaction(mode, scope, false);
 		}
 		return currentTx;
 	}

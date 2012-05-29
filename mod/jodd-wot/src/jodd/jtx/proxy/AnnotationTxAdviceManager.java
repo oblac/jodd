@@ -32,7 +32,7 @@ public class AnnotationTxAdviceManager {
 
 	protected final JtxTransactionMode defaultTransactionMode;
 
-	protected final String contextPattern;
+	protected final String scopePattern;
 
 	protected Class<? extends Annotation>[] annotations;
 	protected TransactionAnnotation[] annotationInstances;
@@ -47,23 +47,23 @@ public class AnnotationTxAdviceManager {
 		this(jtxWorker, JTXCTX_PATTERN_CLASS + '#' + JTXCTX_PATTERN_METHOD, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern) {
-		this(new LeanJtxWorker(jtxManager), contextPattern);
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern) {
+		this(new LeanJtxWorker(jtxManager), scopePattern);
 	}
 
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String contextPattern) {
-		this(jtxWorker, contextPattern, null);
+	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern) {
+		this(jtxWorker, scopePattern, null);
 	}
 
-	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String contextPattern, JtxTransactionMode defaultTxMode) {
-		this(new LeanJtxWorker(jtxManager), contextPattern, defaultTxMode);
+	public AnnotationTxAdviceManager(JtxTransactionManager jtxManager, String scopePattern, JtxTransactionMode defaultTxMode) {
+		this(new LeanJtxWorker(jtxManager), scopePattern, defaultTxMode);
 	}
 
 	@SuppressWarnings( {"unchecked"})
-	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String contextPattern, JtxTransactionMode defaultTxMode) {
+	public AnnotationTxAdviceManager(LeanJtxWorker jtxWorker, String scopePattern, JtxTransactionMode defaultTxMode) {
 		this.jtxWorker = jtxWorker;
 		this.defaultTransactionMode = defaultTxMode == null ? new JtxTransactionMode().propagationSupports() : defaultTxMode;
-		this.contextPattern = contextPattern;
+		this.scopePattern = scopePattern;
 		registerAnnotations(new Class[] {Transaction.class});
 	}
 
@@ -84,13 +84,13 @@ public class AnnotationTxAdviceManager {
 	}
 
 	/**
-	 * Resolves tx context from context pattern.
+	 * Resolves tx scope from scope pattern.
 	 */
-	public String resolveContext(Class type, String methodName) {
-		if (contextPattern == null) {
+	public String resolveScope(Class type, String methodName) {
+		if (scopePattern == null) {
 			return null;
 		}
-		String ctx = contextPattern;
+		String ctx = scopePattern;
 		ctx = StringUtil.replace(ctx, JTXCTX_PATTERN_CLASS, type.getName());
 		ctx = StringUtil.replace(ctx, JTXCTX_PATTERN_METHOD, methodName);
 		return ctx;

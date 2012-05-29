@@ -31,8 +31,8 @@ public class AnnotationTxAdvice implements ProxyAdvice {
 		// request transaction
 		JtxTransaction tx = null;
 		try {
-			String context = manager.resolveContext(type, methodName);
-			tx = manager.getJtxWorker().maybeRequestTransaction(txMode, context);
+			String scope = manager.resolveScope(type, methodName);
+			tx = manager.getJtxWorker().maybeRequestTransaction(txMode, scope);
 			Object result = invoke();
 			manager.getJtxWorker().maybeCommitTransaction(tx);
 			return result;

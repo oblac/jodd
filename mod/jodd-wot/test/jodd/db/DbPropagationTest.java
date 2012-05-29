@@ -487,7 +487,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		// session #2: inner, required new
 		// important - have to be in different context!
 		JtxTransaction jtx2 = worker.maybeRequestTransaction(requiredNew(), CTX_2);
-		assertFalse(worker.getTransactionManager().isIgnoreContext());
+		assertFalse(worker.getTransactionManager().isIgnoreScope());
 		assertNotNull(jtx2);
 		DbSession session2 = sessionProvider.getDbSession();
 		assertNotSame(session1, session2);
