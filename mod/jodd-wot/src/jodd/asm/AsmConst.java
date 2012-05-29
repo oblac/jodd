@@ -52,6 +52,15 @@ public interface AsmConst {
 
 	String SIGNATURE_JAVA_LANG_OBJECT 		= "java/lang/Object";
 	String SIGNATURE_JAVA_LANG_CLASS 		= "java/lang/Class";
+	String SIGNATURE_JAVA_LANG_BYTE 		= "java/lang/Byte";
+	String SIGNATURE_JAVA_LANG_CHARACTER 	= "java/lang/Character";
+	String SIGNATURE_JAVA_LANG_SHORT 		= "java/lang/Short";
+	String SIGNATURE_JAVA_LANG_INTEGER 		= "java/lang/Integer";
+	String SIGNATURE_JAVA_LANG_BOOLEAN 		= "java/lang/Boolean";
+	String SIGNATURE_JAVA_LANG_LONG 		= "java/lang/Long";
+	String SIGNATURE_JAVA_LANG_FLOAT 		= "java/lang/Float";
+	String SIGNATURE_JAVA_LANG_DOUBLE 		= "java/lang/Double";
+	String SIGNATURE_JAVA_LANG_VOID 		= "java/lang/Void";
 
 	String L_SIGNATURE_JAVA_LANG_OBJECT 	= "Ljava/lang/Object;";
 	String L_SIGNATURE_JAVA_LANG_STRING 	= "Ljava/lang/String;";

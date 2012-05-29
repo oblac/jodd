@@ -97,31 +97,31 @@ public class ProxettaAsmUtil {
 	public static void loadClass(MethodVisitor mv, int type, String typeName) {
 		switch (type) {
 			case 'V':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Void", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_VOID, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'B':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Byte", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'C':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Character", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'S':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Short", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'I':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Integer", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'Z':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Boolean", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'J':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Long", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_LONG, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'F':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Float", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			case 'D':
-				mv.visitFieldInsn(GETSTATIC, "java/lang/Double", "TYPE", "Ljava/lang/Class;");
+				mv.visitFieldInsn(GETSTATIC, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "TYPE", AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 				break;
 			default:
 				mv.visitLdcInsn(Type.getType(typeName));
@@ -178,50 +178,50 @@ public class ProxettaAsmUtil {
 			case 'V':
 				break;
 			case 'B':
-				mv.visitTypeInsn(NEW, "java/lang/Byte");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Byte", "<init>", "(B)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "<init>", "(B)V");
 				break;
 			case 'C':
-				mv.visitTypeInsn(NEW, "java/lang/Character");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Character", "<init>", "(C)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "<init>", "(C)V");
 				break;
 			case 'S':
-				mv.visitTypeInsn(NEW, "java/lang/Short");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Short", "<init>", "(S)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "<init>", "(S)V");
 				break;
 			case 'I':
-				mv.visitTypeInsn(NEW, "java/lang/Integer");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Integer", "<init>", "(I)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "<init>", "(I)V");
 				break;
 			case 'Z':
 				mv.visitVarInsn(ILOAD, offset);
-				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;");
+				mv.visitMethodInsn(INVOKESTATIC, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "valueOf", "(Z)Ljava/lang/Boolean;");
 				break;
 			case 'J':
-				mv.visitTypeInsn(NEW, "java/lang/Long");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_LONG);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(LLOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Long", "<init>", "(J)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "<init>", "(J)V");
 				break;
 			case 'F':
-				mv.visitTypeInsn(NEW, "java/lang/Float");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(FLOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Float", "<init>", "(F)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "<init>", "(F)V");
 				break;
 			case 'D':
-				mv.visitTypeInsn(NEW, "java/lang/Double");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(DLOAD, offset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "<init>", "(D)V");
 				break;
 			default:
 				mv.visitVarInsn(ALOAD, offset);
@@ -279,43 +279,43 @@ public class ProxettaAsmUtil {
 			case 'V':
 				break;
 			case 'B':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "byteValue()B");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "byteValue", "byteValue()B");
 				mv.visitVarInsn(ISTORE, offset);
 				break;
 			case 'C':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "charValue()C");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "charValue()C");
 				mv.visitVarInsn(ISTORE, offset);
 				break;
 			case 'S':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "shortValue()S");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "shortValue", "shortValue()S");
 				mv.visitVarInsn(ISTORE, offset);
 				break;
 			case 'I':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "intValue()I");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "intValue", "intValue()I");
 				mv.visitVarInsn(ISTORE, offset);
 				break;
 			case 'Z':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "booleanValue()Z");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "booleanValue()Z");
 				mv.visitVarInsn(ISTORE, offset);
 				break;
 			case 'J':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "longValue()J");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_LONG);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "longValue", "longValue()J");
 				mv.visitVarInsn(LSTORE, offset);
 				break;
 			case 'F':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "floatValue()F");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "floatValue()F");
 				mv.visitVarInsn(FSTORE, offset);
 				break;
 			case 'D':
-				mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "doubleValue()D");
+				mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
+				mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "doubleValue()D");
 				mv.visitVarInsn(DSTORE, offset);
 				break;
 			default:
@@ -343,8 +343,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Byte");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Byte", "byteValue", "()B");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "byteValue", "()B");
 					}
 				}
 				mv.visitInsn(IRETURN);
@@ -355,8 +355,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Character");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Character", "charValue", "()C");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C");
 					}
 				}
 				mv.visitInsn(IRETURN);
@@ -367,8 +367,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Short");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Short", "shortValue", "()S");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "shortValue", "()S");
 					}
 				}
 				mv.visitInsn(IRETURN);
@@ -379,8 +379,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Integer");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Integer", "intValue", "()I");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "intValue", "()I");
 					}
 				}
 				mv.visitInsn(IRETURN);
@@ -391,8 +391,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Boolean");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "()Z");
 					}
 				}
 				mv.visitInsn(IRETURN);
@@ -403,8 +403,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(LCONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Long");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Long", "longValue", "()J");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_LONG);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "longValue", "()J");
 					}
 				}
 				mv.visitInsn(LRETURN);
@@ -415,8 +415,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(FCONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Float");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Float", "floatValue", "()F");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "()F");
 					}
 				}
 				mv.visitInsn(FRETURN);
@@ -427,8 +427,8 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(POP);
 						mv.visitInsn(DCONST_0);
 					} else {
-						mv.visitTypeInsn(CHECKCAST, "java/lang/Double");
-						mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D");
+						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
+						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "()D");
 					}
 				}
 				mv.visitInsn(DRETURN);
@@ -448,55 +448,55 @@ public class ProxettaAsmUtil {
 				break;
 			case 'B':
 				mv.visitVarInsn(ISTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Byte");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Byte", "<init>", "(B)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "<init>", "(B)V");
 				break;
 			case 'C':
 				mv.visitVarInsn(ISTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Character");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Character", "<init>", "(C)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "<init>", "(C)V");
 				break;
 			case 'S':
 				mv.visitVarInsn(ISTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Short");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Short", "<init>", "(S)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "<init>", "(S)V");
 				break;
 			case 'I':
 				mv.visitVarInsn(ISTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Integer");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(ILOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Integer", "<init>", "(I)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "<init>", "(I)V");
 				break;
 			case 'Z':
-				mv.visitMethodInsn(INVOKESTATIC, "java/lang/Boolean", "valueOf", "(Z)Ljava/lang/Boolean;");
+				mv.visitMethodInsn(INVOKESTATIC, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "valueOf", "(Z)Ljava/lang/Boolean;");
 				break;
 			case 'J':
 				mv.visitVarInsn(LSTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Long");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_LONG);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(LLOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Long", "<init>", "(J)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "<init>", "(J)V");
 				break;
 			case 'F':
 				mv.visitVarInsn(FSTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Float");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(FLOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Float", "<init>", "(F)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "<init>", "(F)V");
 				break;
 			case 'D':
 				mv.visitVarInsn(DSTORE, varOffset);
-				mv.visitTypeInsn(NEW, "java/lang/Double");
+				mv.visitTypeInsn(NEW, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
 				mv.visitInsn(DUP);
 				mv.visitVarInsn(DLOAD, varOffset);
-				mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V");
+				mv.visitMethodInsn(INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "<init>", "(D)V");
 				break;
 
 		}
