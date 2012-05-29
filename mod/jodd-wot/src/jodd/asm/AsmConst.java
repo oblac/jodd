@@ -51,5 +51,5 @@ public interface AsmConst {
 	// signatures
 
 	String SIGNATURE_JAVA_LANG_OBJECT = "java/lang/Object";
-
+	String SIGNATURE_JAVA_LANG_CLASS = "java/lang/Class";
 }
