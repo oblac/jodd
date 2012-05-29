@@ -16,12 +16,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Finds localized text.
+ * Central localization messages manager.
+ * @see ResourceBundleMessageResolver
  */
 public class LocalizationUtil {
 
 	private static final Log log = Log.getLogger(LocalizationUtil.class);
 
+	/**
+	 * Central message bundle instance.
+	 */
 	public static final ResourceBundleMessageResolver MESSAGE_RESOLVER = new ResourceBundleMessageResolver() {
 		@Override
 		public ResourceBundle getBundle(String bundleName, Locale locale, ClassLoader classLoader) {
@@ -45,6 +49,9 @@ public class LocalizationUtil {
 	public static final String REQUEST_BUNDLE_NAME_ATTR = ResourceBundleMessageResolver.class.getName() + ".bundleName";
 	public static final String SESSION_LOCALE_ATTR = ResourceBundleMessageResolver.class.getName() + ".locale";
 
+	/**
+	 * Sets bundle name for provided servlet request.
+	 */
 	public static void setRequestBundleName(ServletRequest request, String bundleName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Bundle name for this request: " + bundleName);
@@ -52,6 +59,9 @@ public class LocalizationUtil {
 		request.setAttribute(REQUEST_BUNDLE_NAME_ATTR, bundleName);
 	}
 
+	/**
+	 * Saves locale to HTTP session.
+	 */
 	public static void setSessionLocale(HttpSession session, String localeCode) {
 		if (log.isDebugEnabled()) {
 			log.debug("Locale stored to session: " + localeCode);
@@ -67,7 +77,6 @@ s	 */
 		Locale locale = (Locale) session.getAttribute(SESSION_LOCALE_ATTR);
 		return locale == null ? MESSAGE_RESOLVER.getFallbackLocale() : locale;
 	}
-
 
 	// ---------------------------------------------------------------- delegates
 
@@ -87,12 +96,16 @@ s	 */
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
+	public static String findDefaultMessage(HttpServletRequest request, String key) {
+		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
+		return MESSAGE_RESOLVER.findDefaultMessage(locale, key);
+	}
+
 	public String findMessage(String bundleName, Locale locale, String key) {
 		return MESSAGE_RESOLVER.findMessage(bundleName, locale, key);
 	}
 
-	public static String findDefaultMessage(HttpServletRequest request, String key) {
-		Locale locale = (Locale) request.getSession().getAttribute(SESSION_LOCALE_ATTR);
+	public static String findDefaultMessage(Locale locale, String key) {
 		return MESSAGE_RESOLVER.findDefaultMessage(locale, key);
 	}
 
@@ -131,10 +144,10 @@ s	 */
 		}
 	}
 
-	private static void clearMap(Class cl, Object obj, String name) throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		Field field = cl.getDeclaredField(name);
+	private static void clearMap(Class mapClass, Object map, String fieldName) throws Exception {
+		Field field = mapClass.getDeclaredField(fieldName);
 		field.setAccessible(true);
-		Object cache = field.get(obj);
+		Object cache = field.get(map);
 		synchronized (cache) {
 			Class ccl = cache.getClass();
 			Method clearMethod = ccl.getMethod("clear");
