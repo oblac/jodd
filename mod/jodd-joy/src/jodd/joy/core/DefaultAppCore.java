@@ -32,16 +32,18 @@ import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 
+import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Default application core frame.
+ * Default application core frame. Contains init point to
+ * all application frameworks and layers.
  */
 public abstract class DefaultAppCore {
 
 	/**
-	 * Properties.
+	 * Application properties (from props config file).
 	 */
 	public static final String APP_DIR = "app.dir";
 	public static final String APP_WEB = "app.web";
@@ -111,16 +113,33 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Initializes system. Invoked *before* anything else!
-	 * Override to register types for BeanUtil, DbOom conversions etc.
+	 * Override to register types for TypeManager, DbOom conversions, JTX annotations etc.
 	 * <p>
 	 * May also set the value of <code>appDir</code>.
 	 */
+	@SuppressWarnings("unchecked")
 	public void init() {
 		if (initialized == true) {
 			return;
 		}
 		initialized = true;
-		
+
+		if (appPropsName == null) {
+			appPropsName = "app.props";
+		}
+
+		if (appPropsNamePattern == null) {
+			appPropsNamePattern = "/app*.prop*";
+		}
+
+		if (jtxAnnotations == null) {
+			jtxAnnotations = new Class[] {Transaction.class, ReadWriteTransaction.class};
+		}
+
+		if (jtxContextPattern == null) {
+			jtxContextPattern = "$class";
+		}
+
 		if (appDir == null) {
 			resolveAppDir("app.props");			// app directory is resolved from location of 'app.props'.
 		}
@@ -245,11 +264,12 @@ public abstract class DefaultAppCore {
 	/**
 	 * Creates TX aspect that will be applied on all classes
 	 * having at least one public top-level method annotated
-	 * with <code>@Transaction</code>.
+	 * with {@link #jtxAnnotations registered JTX annotations}.
 	 */
 	protected ProxyAspect createTxProxyAspects() {
-		return new ProxyAspect(AnnotationTxAdvice.class,
-				new MethodAnnotationPointcut(Transaction.class, ReadWriteTransaction.class) {
+		return new ProxyAspect(
+				AnnotationTxAdvice.class,
+				new MethodAnnotationPointcut(jtxAnnotations) {
 			@Override
 			public boolean apply(MethodInfo methodInfo) {
 				return
@@ -270,6 +290,16 @@ public abstract class DefaultAppCore {
 	public PetiteContainer getPetite() {
 		return petite;
 	}
+
+	/**
+	 * Main application props file name, must exist in class path.
+	 */
+	protected String appPropsName;
+
+	/**
+	 * Application props file name pattern.
+	 */
+	protected String appPropsNamePattern;
 
 	/**
 	 * Creates and initializes Petite container.
@@ -298,7 +328,7 @@ public abstract class DefaultAppCore {
 		Props appProps = createPetiteProps();
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
-		PropsUtil.loadFromClasspath(appProps, "/app*.prop*");
+		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
 		petite.defineParameters(appProps);
 
 		// add AppCore instance to Petite
@@ -324,7 +354,7 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- database
 
 	/**
-	 * Database debug mode will print out sql statements.
+	 * Database debug mode will print out SQL statements.
 	 */
 	protected boolean dbDebug;
 
@@ -360,6 +390,16 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
+	 * JTX annotations.
+	 */
+	protected Class<? extends Annotation>[] jtxAnnotations;
+
+	/**
+	 * JTX context pattern.
+	 */
+	protected String jtxContextPattern;
+
+	/**
 	 * Initializes database. First, creates connection pool.
 	 * and transaction manager. Then, Jodds DbOomManager is
 	 * configured. It is also configured automagically, by scanning
@@ -377,9 +417,11 @@ public abstract class DefaultAppCore {
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
 		jtxManager.setValidateExistingTransaction(true);
-		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, "$class");
-		annTxAdviceManager.registerAnnotations(Transaction.class, ReadWriteTransaction.class);
+
+		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, jtxContextPattern);
+		annTxAdviceManager.registerAnnotations(jtxAnnotations);
 		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
+
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
