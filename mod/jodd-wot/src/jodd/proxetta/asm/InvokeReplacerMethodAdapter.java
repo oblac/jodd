@@ -2,6 +2,7 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.AsmConst;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
@@ -26,10 +27,6 @@ import static org.objectweb.asm.Opcodes.NEW;
  */
 public class InvokeReplacerMethodAdapter extends MethodAdapter {
 
-	private static final String SIGNATURE_OBJECT = "Ljava/lang/Object;";
-	private static final String SIGNATURE_STRING = "Ljava/lang/String;";
-	private static final String SIGNATURE_CLASS = "Ljava/lang/Class;";
-	
 	protected final WorkData wd;
 	protected final MethodInfo methodInfo;
 	protected final InvokeAspect[] aspects;
@@ -119,10 +116,10 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 
 		switch (opcode) {
 			case INVOKEINTERFACE:
-				desc = prependArgument(desc, SIGNATURE_OBJECT);
+				desc = prependArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
 				break;
 			case INVOKEVIRTUAL:
-				desc = prependArgument(desc, SIGNATURE_OBJECT);
+				desc = prependArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
 				break;
 			case INVOKESTATIC:
 				break;
@@ -132,23 +129,23 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 
 		// additional arguments
 		if (ir.isPassOwnerName()) {
-			desc = appendArgument(desc, SIGNATURE_STRING);
+			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(exOwner);
 		}
 		if (ir.isPassMethodName()) {
-			desc = appendArgument(desc, SIGNATURE_STRING);
+			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(methodInfo.getMethodName());
 		}
 		if (ir.isPassMethodSignature()) {
-			desc = appendArgument(desc, SIGNATURE_STRING);
+			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(methodInfo.getSignature());
 		}
 		if (ir.isPassTargetClass()) {
-			desc = appendArgument(desc, SIGNATURE_CLASS);
+			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
 			super.mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
 		}
 		if (ir.isPassThis()) {
-			desc = appendArgument(desc, SIGNATURE_OBJECT);
+			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
 			super.mv.visitVarInsn(ALOAD, 0);
 		}
 
