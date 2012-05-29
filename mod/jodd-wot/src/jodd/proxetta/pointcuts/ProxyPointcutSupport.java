@@ -16,8 +16,6 @@ import java.lang.annotation.Annotation;
  */
 public abstract class ProxyPointcutSupport implements ProxyPointcut {
 
-	protected static final String SIGNATURE_OBJECT_CLASS = "java/lang/Object";
-
 	/**
 	 * Returns <code>true</code> if method is public.
 	 */
@@ -126,7 +124,7 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method is declared in <code>Object</code> class (root class).
 	 */
 	public boolean isRootMethod(MethodInfo msign) {
-		return SIGNATURE_OBJECT_CLASS.equals(msign.getDeclaredClassName());
+		return AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(msign.getDeclaredClassName());
 	}
 
 

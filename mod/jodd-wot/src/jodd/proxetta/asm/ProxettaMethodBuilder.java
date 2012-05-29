@@ -249,7 +249,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+									mv.visitTypeInsn(ANEWARRAY, AsmConst.SIGNATURE_JAVA_LANG_OBJECT);
 									for (int i = 0; i < argsCount; i++) {
 										mv.visitInsn(DUP);
 										pushInt(mv, i);

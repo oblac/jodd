@@ -18,7 +18,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
  */
 public class TraceSignatureVisitor implements SignatureVisitor {
 
-    protected final StringBuffer declaration;       // is
+	protected final StringBuffer declaration;       // is
 
     protected boolean isInterface;                  // is
 
@@ -175,7 +175,7 @@ public class TraceSignatureVisitor implements SignatureVisitor {
     }
 
     public void visitClassType(final String name) {
-        if ("java/lang/Object".equals(name)) {
+        if (AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(name)) {
             // Map<java.lang.Object,java.util.List>
             // or
             // abstract public V get(Object key); (seen in Dictionary.class)

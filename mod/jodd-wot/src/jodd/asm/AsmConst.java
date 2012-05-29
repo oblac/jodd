@@ -8,6 +8,7 @@ package jodd.asm;
 public interface AsmConst {
 
 	// types
+
 	int TYPE_BYTE           = 'B';
 	int TYPE_CHAR           = 'C';
 	int TYPE_DOUBLE         = 'D';
@@ -26,6 +27,7 @@ public interface AsmConst {
 
 
 	// access flags
+
 	int ACC_PUBLIC = 0x0001;        // class, field, method
 	int ACC_PRIVATE = 0x0002;       // class, field, method
 	int ACC_PROTECTED = 0x0004;     // class, field, method
@@ -44,5 +46,10 @@ public interface AsmConst {
 	int ACC_SYNTHETIC = 0x1000;     // class, field, method
 	int ACC_ANNOTATION = 0x2000;    // class
 	int ACC_ENUM = 0x4000;          // class(?) field inner
+
+
+	// signatures
+
+	String SIGNATURE_JAVA_LANG_OBJECT = "java/lang/Object";
 
 }
