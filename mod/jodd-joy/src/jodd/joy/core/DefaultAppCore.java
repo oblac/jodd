@@ -136,8 +136,8 @@ public abstract class DefaultAppCore {
 			jtxAnnotations = new Class[] {Transaction.class, ReadWriteTransaction.class};
 		}
 
-		if (jtxContextPattern == null) {
-			jtxContextPattern = "$class";
+		if (jtxScopePattern == null) {
+			jtxScopePattern = "$class";
 		}
 
 		if (appDir == null) {
@@ -395,9 +395,10 @@ public abstract class DefaultAppCore {
 	protected Class<? extends Annotation>[] jtxAnnotations;
 
 	/**
-	 * JTX context pattern.
+	 * JTX scope pattern.
+	 * @see {@link AnnotationTxAdviceManager}
 	 */
-	protected String jtxContextPattern;
+	protected String jtxScopePattern;
 
 	/**
 	 * Initializes database. First, creates connection pool.
@@ -418,7 +419,7 @@ public abstract class DefaultAppCore {
 		jtxManager = createJtxTransactionManager(connectionProvider);
 		jtxManager.setValidateExistingTransaction(true);
 
-		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, jtxContextPattern);
+		AnnotationTxAdviceManager annTxAdviceManager = new AnnotationTxAdviceManager(jtxManager, jtxScopePattern);
 		annTxAdviceManager.registerAnnotations(jtxAnnotations);
 		AnnotationTxAdviceSupport.manager = annTxAdviceManager;
 
