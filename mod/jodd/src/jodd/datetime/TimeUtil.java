@@ -2,6 +2,10 @@
 
 package jodd.datetime;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Date time calculations and utilities. <code>TimeUtil</code> is used by
  * {@link JDateTime} and it contains few utilities that may be used
@@ -11,7 +15,6 @@ package jodd.datetime;
 public class TimeUtil {
 
 	public static final long MILLIS_IN_DAY = 1000L * 60 * 60 * 24;
-
 
 	// ---------------------------------------------------------------- misc calc
 	
@@ -326,5 +329,17 @@ public class TimeUtil {
 		return (dayOfWeek % 7) + 1;
 	}
 
+
+	// ---------------------------------------------------------------- format
+
+	public static final SimpleDateFormat HTTP_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+
+	/**
+	 * Formats time to HTTP date format.
+	 */
+	public static String formatHttpDate(long millis) {
+		Date date = new Date(millis);
+		return HTTP_DATE_FORMAT.format(date);
+	}
 
 }
