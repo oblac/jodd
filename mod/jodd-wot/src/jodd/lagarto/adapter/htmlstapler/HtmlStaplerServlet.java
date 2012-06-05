@@ -2,6 +2,7 @@
 
 package jodd.lagarto.adapter.htmlstapler;
 
+import jodd.datetime.JDateTime;
 import jodd.io.StreamUtil;
 import jodd.log.Log;
 import jodd.servlet.ServletUtil;
@@ -17,6 +18,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * HTML stapler servlet loads web resource bundles.
@@ -26,7 +30,10 @@ import java.io.OutputStream;
  */
 public class HtmlStaplerServlet extends HttpServlet {
 
+	private static final SimpleDateFormat HTTP_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+
 	protected HtmlStaplerBundlesManager bundlesManager;
+
 	protected boolean useGzip;
 
 	@Override
@@ -58,7 +65,23 @@ public class HtmlStaplerServlet extends HttpServlet {
 			response.setHeader("Content-Encoding", "gzip");
 		}
 
+		if (file.exists() == false) {
+			throw new ServletException("bundle not found: " + bundleId);
+		}
+
+		response.setHeader("Content-Length", String.valueOf(file.length()));
+
+		response.setHeader("Last-Modified", getHttpDate(file.lastModified()));
+
+		System.out.println(getHttpDate(file.lastModified()));
+
 		sendBundleFile(response, file);
+	}
+
+	protected String getHttpDate(long time) {
+		Date date = new Date(time);
+
+		return HTTP_DATE_FORMAT.format(date);
 	}
 
 	/**
@@ -70,5 +93,10 @@ public class HtmlStaplerServlet extends HttpServlet {
 	}
 
 	private static final Log log = Log.getLogger(HtmlStaplerServlet.class);
+
+
+
+
+
 
 }

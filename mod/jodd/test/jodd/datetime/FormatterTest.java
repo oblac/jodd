@@ -2,11 +2,11 @@
 
 package jodd.datetime;
 
+import jodd.datetime.format.Iso8601JdtFormatter;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.impl.CalendarConverter;
 import junit.framework.TestCase;
 import jodd.datetime.format.JdtFormatter;
-import jodd.datetime.format.DefaultFormatter;
 import jodd.datetime.format.JdtFormat;
 
 import java.util.Calendar;
@@ -72,7 +72,7 @@ public class FormatterTest extends TestCase {
 
 
 	public void testExternalConversion() {
-		JdtFormatter fmt = new DefaultFormatter();
+		JdtFormatter fmt = new Iso8601JdtFormatter();
 		JDateTime jdt = new JDateTime();
 		String s1 = fmt.convert(jdt, "YYYY-MM.DD");
 		assertEquals(s1, jdt.toString("YYYY-MM.DD"));
@@ -144,7 +144,7 @@ public class FormatterTest extends TestCase {
 
 
 	public void testFormat() {
-		JdtFormat format = new JdtFormat(new DefaultFormatter(), "YYYY+DD+MM");
+		JdtFormat format = new JdtFormat(new Iso8601JdtFormatter(), "YYYY+DD+MM");
 		JDateTime jdt = new JDateTime(2002, 2, 22);
 		assertEquals("2002+22+02", jdt.toString(format));
 		assertEquals(format.convert(jdt), jdt.toString(format));

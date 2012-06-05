@@ -2,8 +2,8 @@
 
 package jodd.datetime;
 
+import jodd.datetime.format.Iso8601JdtFormatter;
 import jodd.datetime.format.JdtFormatter;
-import jodd.datetime.format.DefaultFormatter;
 
 import java.util.TimeZone;
 import java.util.Locale;
@@ -22,7 +22,7 @@ public class JDateTimeDefault {
 
 	public static String format = JDateTime.DEFAULT_FORMAT;
 
-	public static JdtFormatter formatter = new DefaultFormatter();
+	public static JdtFormatter formatter = new Iso8601JdtFormatter();
 
 	public static int firstDayOfWeek = JDateTime.MONDAY;
 
