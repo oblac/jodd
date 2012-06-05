@@ -237,4 +237,42 @@ public abstract class AbstractFormatter implements JdtFormatter {
 		}
 		throw new IllegalArgumentException("Value too big: " + value);
 	}
+
+	/**
+	 * Prints 4 digits and optional minus sign.
+	 */
+	protected static String printPad4(int value) {
+		char[] result = new char[5];
+		int count = 0;
+
+		if (value < 0) {
+			result[count++] = '-';
+			value = -value;
+		}
+
+		String str = Integer.toString(value);
+
+		if (value < 10) {
+			result[count++] = '0';
+			result[count++] = '0';
+			result[count++] = '0';
+			result[count++] = str.charAt(0);
+		} else if (value < 100) {
+			result[count++] = '0';
+			result[count++] = '0';
+			result[count++] = str.charAt(0);
+			result[count++] = str.charAt(1);
+		} else if (value < 1000) {
+			result[count++] = '0';
+			result[count++] = str.charAt(0);
+			result[count++] = str.charAt(1);
+			result[count++] = str.charAt(2);
+		} else {
+			result[count++] = str.charAt(0);
+			result[count++] = str.charAt(1);
+			result[count++] = str.charAt(2);
+			result[count++] = str.charAt(3);
+		}
+		return new String(result, 0, count);
+	}
 }

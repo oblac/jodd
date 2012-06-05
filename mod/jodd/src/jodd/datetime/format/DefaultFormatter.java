@@ -4,7 +4,6 @@ package jodd.datetime.format;
 
 import jodd.datetime.DateTimeStamp;
 import jodd.datetime.JDateTime;
-import jodd.format.Printf;
 import jodd.util.LocaleUtil;
 import jodd.util.DateFormatSymbolsEx;
 
@@ -77,7 +76,7 @@ public class DefaultFormatter extends AbstractFormatter {
 		DateFormatSymbolsEx dfs = LocaleUtil.getDateFormatSymbols(jdt.getLocale());
 		switch (patternIndex) {
 			case 0:
-				return Printf.str("%~04i", jdt.getYear());
+				return printPad4(jdt.getYear());
 			case 1:
 				return print2(jdt.getMonth());
 			case 2:
@@ -111,9 +110,15 @@ public class DefaultFormatter extends AbstractFormatter {
 			case 16:
 				return jdt.getEra() == 1 ? dfs.getAdEra() : dfs.getBcEra();
 			case 17:
-				return jdt.getTimeZone().getDisplayName(false, TimeZone.LONG, jdt.getLocale());
+				return jdt.getTimeZone().getDisplayName(
+						jdt.isInDaylightTime(),
+						TimeZone.LONG,
+						jdt.getLocale());
 			case 18:
-				return jdt.getTimeZone().getDisplayName(false, TimeZone.SHORT, jdt.getLocale());
+				return jdt.getTimeZone().getDisplayName(
+						jdt.isInDaylightTime(),
+						TimeZone.SHORT,
+						jdt.getLocale());
 			default:
 				return new String(patterns[patternIndex]);
 		}
