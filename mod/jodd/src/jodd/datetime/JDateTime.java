@@ -1184,7 +1184,7 @@ public class JDateTime implements Comparable, Cloneable {
 	 */
 	public void setDateTime(Calendar calendar) {
 		setTimeInMillis(calendar.getTimeInMillis());
-		setTimeZone(calendar.getTimeZone());
+		changeTimeZone(calendar.getTimeZone());
 	}
 
 	/**
@@ -1314,12 +1314,12 @@ public class JDateTime implements Comparable, Cloneable {
 
 	// ---------------------------------------------------------------- timezone
 
-	protected TimeZone timezone = JDateTimeDefault.timeZone == null ? TimeZone.getDefault() : JDateTimeDefault.timeZone; 
+	protected TimeZone timezone = JDateTimeDefault.timeZone == null ? TimeZone.getDefault() : JDateTimeDefault.timeZone;
 
 	/**
-	 * Sets current timezone. Current time is changed if time zone has been changed.
+	 * Changes current timezone. Current time is changed if time zone has been changed.
 	 */
-	public void setTimeZone(TimeZone timezone) {
+	public void changeTimeZone(TimeZone timezone) {
 		long now = getTimeInMillis();
 		int difference = TimeZoneUtil.getOffsetDifference(now, this.timezone, timezone);
 		this.timezone = timezone;
@@ -1329,14 +1329,10 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 	/**
-	 * Sets time zone with/without changing the time.
+	 * Sets time zone <b>without</b> changing the time.
 	 */
-	public void setTimeZone(TimeZone timezone, boolean changeTime) {
-		if (changeTime == false) {
-			this.timezone = timezone;
-		} else {
-			setTimeZone(timezone);
-		}
+	public void setTimeZone(TimeZone timezone) {
+		this.timezone = timezone;
 	}
 
 	/**
@@ -1346,6 +1342,16 @@ public class JDateTime implements Comparable, Cloneable {
 		return timezone;
 	}
 
+	/**
+	 * Returns <code>true</code> if current date is in
+	 * daylight savings time in the time zone.
+	 */
+	public boolean isInDaylightTime() {
+		long now = getTimeInMillis();
+		int offset = timezone.getOffset(now);
+		int rawOffset = timezone.getRawOffset();
+		return (offset != rawOffset);
+	}
 
 	// ---------------------------------------------------------------- locale
 

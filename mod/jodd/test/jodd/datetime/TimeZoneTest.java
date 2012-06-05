@@ -7,6 +7,7 @@ import jodd.typeconverter.impl.SqlDateConverter;
 import jodd.typeconverter.impl.SqlTimestampConverter;
 import junit.framework.TestCase;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.sql.Timestamp;
@@ -19,7 +20,7 @@ public class TimeZoneTest extends TestCase {
 	    gc.setTimeInMillis(jdt1.getTimeInMillis());
 
 		TimeZone tz = TimeZone.getTimeZone("GMT+01:00");
-		jdt1.setTimeZone(tz);
+		jdt1.changeTimeZone(tz);
 		gc.setTimeZone(tz);
 		assertEquals(gc.getTimeInMillis(), jdt1.getTimeInMillis());
 
@@ -27,7 +28,7 @@ public class TimeZoneTest extends TestCase {
 		assertEquals(jdt1, jdt2);
 
 		tz = TimeZone.getTimeZone("GMT+02:00");
-		jdt2.setTimeZone(tz);
+		jdt2.changeTimeZone(tz);
 		gc.setTimeZone(tz);
 		assertEquals(gc.getTimeInMillis(), jdt1.getTimeInMillis());
 
@@ -39,12 +40,12 @@ public class TimeZoneTest extends TestCase {
 		}
 
 		tz = TimeZone.getTimeZone("GMT-12:00");
-		jdt1.setTimeZone(tz);
+		jdt1.changeTimeZone(tz);
 		gc.setTimeZone(tz);
 		assertEquals(gc.getTimeInMillis(), jdt1.getTimeInMillis());
 
 		tz = TimeZone.getTimeZone("GMT+10:00");
-		jdt2.setTimeZone(tz);
+		jdt2.changeTimeZone(tz);
 		gc.setTimeZone(tz);
 		assertEquals(gc.getTimeInMillis(), jdt2.getTimeInMillis());
 		assertEquals(jdt1.getTimeInMillis(), jdt2.getTimeInMillis());
@@ -67,7 +68,7 @@ public class TimeZoneTest extends TestCase {
 
 	public void testTzOffset() {
 		JDateTime now = new JDateTime(2009, 5, 1, 23, 45, 1, 0);
-		now.setTimeZone(TimeZone.getTimeZone("Europe/Belgrade"));
+		now.changeTimeZone(TimeZone.getTimeZone("Europe/Belgrade"));
 		TimeZone tz1 = now.getTimeZone();
 		TimeZone tz2 = TimeZone.getTimeZone("GMT+01:00");
 		TimeZone tz3 = TimeZone.getTimeZone("Japan");
@@ -79,7 +80,20 @@ public class TimeZoneTest extends TestCase {
 		assertEquals(8 * 3600000, TimeZoneUtil.getRawOffsetDifference(tz1, tz3));
 		assertEquals(7 * 3600000, TimeZoneUtil.getOffsetDifference(now.getTimeInMillis(), tz1, tz3));
 		assertEquals(7 * 3600000, TimeZoneUtil.getOffsetDifference(now, tz1, tz3));
+	}
 
+	public void testDlt() {
+		TimeZone cetTimeZone = TimeZone.getTimeZone("CET");
+		TimeZone cestTimeZone = TimeZone.getTimeZone("CEST");
+
+		JDateTime jDateTime = new JDateTime(2012, 6, 1, 11, 44, 55, 0);
+		jDateTime.setTimeZone(cetTimeZone);
+		Date date = jDateTime.convertToDate();
+
+		assertEquals(cetTimeZone.inDaylightTime(date), jDateTime.isInDaylightTime());
+
+		jDateTime.setTimeZone(cestTimeZone);
+		assertEquals(cestTimeZone.inDaylightTime(date), jDateTime.isInDaylightTime());
 	}
 
 }
