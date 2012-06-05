@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class FormatterTest extends TestCase {
 
@@ -33,6 +34,8 @@ public class FormatterTest extends TestCase {
 
 	public void testStringConversion() {
 		JDateTime jdt = new JDateTime(1975, 1, 1);
+		jdt.setTimeZone(TimeZone.getTimeZone("CET"));
+
 		assertEquals("2442413.5", jdt.getJulianDate().toString());
 		assertEquals("1975-01-01 00:00:00.000", jdt.toString());
 

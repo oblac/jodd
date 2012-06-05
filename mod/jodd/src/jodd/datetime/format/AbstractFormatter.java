@@ -242,7 +242,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * Prints 4 digits and optional minus sign.
 	 */
 	protected String printPad4(int value) {
-		char[] result = new char[5];
+		char[] result = new char[4];
 		int count = 0;
 
 		if (value < 0) {
@@ -268,10 +268,10 @@ public abstract class AbstractFormatter implements JdtFormatter {
 			result[count++] = str.charAt(1);
 			result[count++] = str.charAt(2);
 		} else {
-			result[count++] = str.charAt(0);
-			result[count++] = str.charAt(1);
-			result[count++] = str.charAt(2);
-			result[count++] = str.charAt(3);
+			if (count > 0) {
+				return '-' + str;
+			}
+			return str;
 		}
 		return new String(result, 0, count);
 	}
