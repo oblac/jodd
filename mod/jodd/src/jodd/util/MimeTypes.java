@@ -2,7 +2,14 @@
 
 package jodd.util;
 
+import jodd.io.StreamUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * Map file extensions to MIME types. Based on the Apache mime.types file.
@@ -119,197 +126,57 @@ public class MimeTypes {
 	public static final String MIME_VIDEO_X_SGI_MOVIE			= "video/x-sgi-movie";
 	public static final String MIME_X_CONFERENCE_X_COOLTALK		= "x-conference/x-cooltalk";
 
-	private static HashMap<String, String> mimeTypeMapping;
+	private static final HashMap<String, String> MIME_TYPE_MAP;
 
 	static {
-		mimeTypeMapping = new HashMap<String, String>(200) {
-			private void put1(String key, String value) {
-				if (put(key, value) != null) {
-					throw new IllegalArgumentException("Duplicated extension: " + key);
-				}
+		Properties mimes = new Properties();
+
+		InputStream is = MimeTypes.class.getResourceAsStream(MimeTypes.class.getSimpleName() + ".properties");
+		if (is == null) {
+			throw new IllegalStateException("Mime types file missing");
+		}
+
+		try {
+			mimes.load(is);
+		}
+		catch (IOException ioex) {
+			throw new IllegalStateException(ioex.getMessage());
+		} finally {
+			StreamUtil.close(is);
+		}
+
+		MIME_TYPE_MAP = new HashMap<String, String>(mimes.size());
+
+		Enumeration keys = mimes.propertyNames();
+		while (keys.hasMoreElements()) {
+			String fileExtension = (String) keys.nextElement();
+			String mimeNameField = mimes.getProperty(fileExtension);
+
+			String mimeType;
+			try {
+				Field field = MimeTypes.class.getField(mimeNameField);
+				field.setAccessible(true);
+				mimeType = (String) field.get(null);
+			} catch (Exception ex) {
+				throw new IllegalArgumentException("Invalid field: " + mimeNameField, ex);
 			}
-			{
-			put1("xul", MIME_APPLICATION_VND_MOZZILLA_XUL_XML);
-			put1("json", MIME_APPLICATION_JSON);
-			put1("ice", MIME_X_CONFERENCE_X_COOLTALK);
-			put1("movie", MIME_VIDEO_X_SGI_MOVIE);
-			put1("avi", MIME_VIDEO_X_MSVIDEO);
-			put1("wmv", MIME_VIDEO_X_MS_WMV);
-			put1("m4u", MIME_VIDEO_VND_MPEGURL);
-			put1("mxu", MIME_VIDEO_VND_MPEGURL);
-			put1("htc", MIME_TEXT_X_COMPONENT);
-			put1("etx", MIME_TEXT_X_SETEXT);
-			put1("wmls", MIME_TEXT_VND_WAP_WMLSCRIPT);
-			put1("wml", MIME_TEXT_VND_WAP_XML);
-			put1("tsv", MIME_TEXT_TAB_SEPARATED_VALUES);
-			put1("sgm", MIME_TEXT_SGML);
-			put1("sgml", MIME_TEXT_SGML);
-			put1("css", MIME_TEXT_CSS);
-			put1("ifb", MIME_TEXT_CALENDAR);
-			put1("ics", MIME_TEXT_CALENDAR);
-			put1("wrl", MIME_MODEL_VRLM);
-			put1("vrlm", MIME_MODEL_VRLM);
-			put1("silo", MIME_MODEL_MESH);
-			put1("mesh", MIME_MODEL_MESH);
-			put1("msh", MIME_MODEL_MESH);
-			put1("iges", MIME_MODEL_IGES);
-			put1("igs", MIME_MODEL_IGES);
-			put1("rgb", MIME_IMAGE_X_RGB);
-			put1("ppm", MIME_IMAGE_X_PORTABLE_PIXMAP);
-			put1("pgm", MIME_IMAGE_X_PORTABLE_GRAYMAP);
-			put1("pbm", MIME_IMAGE_X_PORTABLE_BITMAP);
-			put1("pnm", MIME_IMAGE_X_PORTABLE_ANYMAP);
-			put1("ico", MIME_IMAGE_X_ICON);
-			put1("ras", MIME_IMAGE_X_CMU_RASTER);
-			put1("wbmp", MIME_IMAGE_WAP_WBMP);
-			put1("djv", MIME_IMAGE_VND_DJVU);
-			put1("djvu", MIME_IMAGE_VND_DJVU);
-			put1("svg", MIME_IMAGE_SVG_XML);
-			put1("ief", MIME_IMAGE_IEF);
-			put1("cgm", MIME_IMAGE_CGM);
-			put1("bmp", MIME_IMAGE_BMP);
-			put1("xyz", MIME_CHEMICAL_X_XYZ);
-			put1("pdb", MIME_CHEMICAL_X_PDB);
-			put1("ra", MIME_AUDIO_X_PN_REALAUDIO);
-			put1("ram", MIME_AUDIO_X_PN_REALAUDIO);
-			put1("m3u", MIME_AUDIO_X_MPEGURL);
-			put1("aifc", MIME_AUDIO_X_AIFF);
-			put1("aif", MIME_AUDIO_X_AIFF);
-			put1("aiff", MIME_AUDIO_X_AIFF);
-			put1("mp3", MIME_AUDIO_MPEG);
-			put1("mp2", MIME_AUDIO_MPEG);
-			put1("mp1", MIME_AUDIO_MPEG);
-			put1("mpga", MIME_AUDIO_MPEG);
-			put1("kar", MIME_AUDIO_MIDI);
-			put1("mid", MIME_AUDIO_MIDI);
-			put1("midi", MIME_AUDIO_MIDI);
-			put1("dtd", MIME_APPLICATION_XML_DTD);
-			put1("xsl", MIME_APPLICATION_XML);
-			put1("xml", MIME_APPLICATION_XML);
-			put1("xslt", MIME_APPLICATION_XSLT_XML);
-			put1("xht", MIME_APPLICATION_XHTML_XML);
-			put1("xhtml", MIME_APPLICATION_XHTML_XML);
-			put1("src", MIME_APPLICATION_X_WAIS_SOURCE);
-			put1("ustar", MIME_APPLICATION_X_USTAR);
-			put1("ms", MIME_APPLICATION_X_TROFF_MS);
-			put1("me", MIME_APPLICATION_X_TROFF_ME);
-			put1("man", MIME_APPLICATION_X_TROFF_MAN);
-			put1("roff", MIME_APPLICATION_X_TROFF);
-			put1("tr", MIME_APPLICATION_X_TROFF);
-			put1("t", MIME_APPLICATION_X_TROFF);
-			put1("texi", MIME_APPLICATION_X_TEXINFO);
-			put1("texinfo", MIME_APPLICATION_X_TEXINFO);
-			put1("tex", MIME_APPLICATION_X_TEX);
-			put1("tcl", MIME_APPLICATION_X_TCL);
-			put1("sv4crc", MIME_APPLICATION_X_SV4CRC);
-			put1("sv4cpio", MIME_APPLICATION_X_SV4CPIO);
-			put1("sit", MIME_APPLICATION_X_STUFFIT);
-			put1("swf", MIME_APPLICATION_X_SHOCKWAVE_FLASH);
-			put1("shar", MIME_APPLICATION_X_SHAR);
-			put1("sh", MIME_APPLICATION_X_SH);
-			put1("cdf", MIME_APPLICATION_X_NETCDF);
-			put1("nc", MIME_APPLICATION_X_NETCDF);
-			put1("latex", MIME_APPLICATION_X_LATEX);
-			put1("skm", MIME_APPLICATION_X_KOAN);
-			put1("skt", MIME_APPLICATION_X_KOAN);
-			put1("skd", MIME_APPLICATION_X_KOAN);
-			put1("skp", MIME_APPLICATION_X_KOAN);
-			put1("js", MIME_APPLICATION_X_JAVASCRIPT);
-			put1("hdf", MIME_APPLICATION_X_HDF);
-			put1("gtar", MIME_APPLICATION_X_GTAR);
-			put1("spl", MIME_APPLICATION_X_FUTURESPLASH);
-			put1("dvi", MIME_APPLICATION_X_DVI);
-			put1("dxr", MIME_APPLICATION_X_DIRECTOR);
-			put1("dir", MIME_APPLICATION_X_DIRECTOR);
-			put1("dcr", MIME_APPLICATION_X_DIRECTOR);
-			put1("csh", MIME_APPLICATION_X_CSH);
-			put1("cpio", MIME_APPLICATION_X_CPIO);
-			put1("pgn", MIME_APPLICATION_X_CHESS_PGN);
-			put1("vcd", MIME_APPLICATION_X_CDLINK);
-			put1("bcpio", MIME_APPLICATION_X_BCPIO);
-			put1("rm", MIME_APPLICATION_VND_RNREALMEDIA);
-			put1("ppt", MIME_APPLICATION_VND_MSPOWERPOINT);
-			put1("mif", MIME_APPLICATION_VND_MIF);
-			put1("grxml", MIME_APPLICATION_SRGS_XML);
-			put1("gram", MIME_APPLICATION_SRGS);
-			put1("smil", MIME_APPLICATION_RDF_SMIL);
-			put1("smi", MIME_APPLICATION_RDF_SMIL);
-			put1("rdf", MIME_APPLICATION_RDF_XML);
-			put1("ogg", MIME_APPLICATION_X_OGG);
-			put1("oda", MIME_APPLICATION_ODA);
-			put1("dmg", MIME_APPLICATION_OCTET_STREAM);
-			put1("lzh", MIME_APPLICATION_OCTET_STREAM);
-			put1("so", MIME_APPLICATION_OCTET_STREAM);
-			put1("lha", MIME_APPLICATION_OCTET_STREAM);
-			put1("dms", MIME_APPLICATION_OCTET_STREAM);
-			put1("bin", MIME_APPLICATION_OCTET_STREAM);
-			put1("mathml", MIME_APPLICATION_MATHML_XML);
-			put1("cpt", MIME_APPLICATION_MAC_COMPACTPRO);
-			put1("hqx", MIME_APPLICATION_MAC_BINHEX40);
-			put1("jnlp", MIME_APPLICATION_JNLP);
-			put1("ez", MIME_APPLICATION_ANDREW_INSET);
-			put1("txt", MIME_TEXT_PLAIN);
-			put1("ini", MIME_TEXT_PLAIN);
-			put1("c", MIME_TEXT_PLAIN);
-			put1("h", MIME_TEXT_PLAIN);
-			put1("cpp", MIME_TEXT_PLAIN);
-			put1("cxx", MIME_TEXT_PLAIN);
-			put1("cc", MIME_TEXT_PLAIN);
-			put1("chh", MIME_TEXT_PLAIN);
-			put1("java", MIME_TEXT_PLAIN);
-			put1("csv", MIME_TEXT_PLAIN);
-			put1("bat", MIME_TEXT_PLAIN);
-			put1("cmd", MIME_TEXT_PLAIN);
-			put1("asc", MIME_TEXT_PLAIN);
-			put1("rtf", MIME_TEXT_RTF);
-			put1("rtx", MIME_TEXT_RICHTEXT);
-			put1("html", MIME_TEXT_HTML);
-			put1("htm", MIME_TEXT_HTML);
-			put1("zip", MIME_APPLICATION_ZIP);
-			put1("rar", MIME_APPLICATION_X_RAR_COMPRESSED);
-			put1("gzip", MIME_APPLICATION_X_GZIP);
-			put1("gz", MIME_APPLICATION_X_GZIP);
-			put1("tgz", MIME_APPLICATION_TGZ);
-			put1("tar", MIME_APPLICATION_X_TAR);
-			put1("gif", MIME_IMAGE_GIF);
-			put1("jpeg", MIME_IMAGE_JPEG);
-			put1("jpg", MIME_IMAGE_JPEG);
-			put1("jpe", MIME_IMAGE_JPEG);
-			put1("tiff", MIME_IMAGE_TIFF);
-			put1("tif", MIME_IMAGE_TIFF);
-			put1("png", MIME_IMAGE_PNG);
-			put1("au", MIME_AUDIO_BASIC);
-			put1("snd", MIME_AUDIO_BASIC);
-			put1("wav", MIME_AUDIO_X_WAV);
-			put1("mov", MIME_VIDEO_QUICKTIME);
-			put1("qt", MIME_VIDEO_QUICKTIME);
-			put1("mpeg", MIME_VIDEO_MPEG);
-			put1("mpg", MIME_VIDEO_MPEG);
-			put1("mpe", MIME_VIDEO_MPEG);
-			put1("abs", MIME_VIDEO_MPEG);
-			put1("doc", MIME_APPLICATION_MSWORD);
-			put1("xls", MIME_APPLICATION_VND_MSEXCEL);
-			put1("eps", MIME_APPLICATION_POSTSCRIPT);
-			put1("ai", MIME_APPLICATION_POSTSCRIPT);
-			put1("ps", MIME_APPLICATION_POSTSCRIPT);
-			put1("pdf", MIME_APPLICATION_PDF);
-			put1("exe", MIME_APPLICATION_OCTET_STREAM);
-			put1("dll", MIME_APPLICATION_OCTET_STREAM);
-			put1("class", MIME_APPLICATION_OCTET_STREAM);
-			put1("jar", MIME_APPLICATION_JAVA_ARCHIVE);
-		}};
+
+			if (MIME_TYPE_MAP.put(fileExtension, mimeType) != null) {
+				throw new IllegalArgumentException("Duplicated extension: " + fileExtension);
+			}
+		}
 	}
 
 	/**
-	 * Registers MIME type for provided extension. Existing extension type will be overriden.
+	 * Registers MIME type for provided extension. Existing extension type will be overridden.
 	 */
 	public static void registerMimeType(String ext, String mimeType) {
-		mimeTypeMapping.put(ext, mimeType);
+		MIME_TYPE_MAP.put(ext, mimeType);
 	}
 
 	/**
 	 * Returns the corresponding MIME type to the given extension.
-	 * If no MIME type was found it returns 'application/octet-stream' type.
+	 * If no MIME type was found it returns <code>application/octet-stream</code> type.
 	 */
 	public static String getMimeType(String ext) {
 		String mimeType = lookupMimeType(ext);
@@ -323,6 +190,6 @@ public class MimeTypes {
 	 * Simply returns MIME type or <code>null</code> if no type is found.
 	 */
 	public static String lookupMimeType(String ext) {
-		return mimeTypeMapping.get(ext.toLowerCase());
+		return MIME_TYPE_MAP.get(ext.toLowerCase());
 	}
 }
