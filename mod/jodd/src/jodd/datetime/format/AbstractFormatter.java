@@ -241,7 +241,7 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	/**
 	 * Prints 4 digits and optional minus sign.
 	 */
-	protected static String printPad4(int value) {
+	protected String printPad4(int value) {
 		char[] result = new char[5];
 		int count = 0;
 
