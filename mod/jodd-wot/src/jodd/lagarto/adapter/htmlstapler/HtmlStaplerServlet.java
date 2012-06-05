@@ -3,10 +3,10 @@
 package jodd.lagarto.adapter.htmlstapler;
 
 import jodd.io.StreamUtil;
-import jodd.io.ZipUtil;
 import jodd.log.Log;
 import jodd.servlet.ServletUtil;
 import jodd.typeconverter.Convert;
+import jodd.util.MimeTypes;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -46,10 +46,18 @@ public class HtmlStaplerServlet extends HttpServlet {
 			log.debug("bundle: " + bundleId);
 		}
 
+		int ndx = bundleId.lastIndexOf('-');
+		String extension = bundleId.substring(ndx + 1);
+
+		String contentType = MimeTypes.getMimeType(extension);
+		response.setContentType(contentType);
+
 		if (useGzip && ServletUtil.isGzipSupported(request)) {
-			file = lookupGzipBundleFile(file);
+			file = bundlesManager.lookupGzipBundleFile(file);
+
 			response.setHeader("Content-Encoding", "gzip");
 		}
+
 		sendBundleFile(response, file);
 	}
 
@@ -59,24 +67,6 @@ public class HtmlStaplerServlet extends HttpServlet {
 	protected void sendBundleFile(HttpServletResponse resp, File bundleFile) throws IOException {
 		OutputStream out = resp.getOutputStream();
 		StreamUtil.copy(new FileInputStream(bundleFile), out);
-	}
-
-	/**
-	 * Locates gzipped version of bundle file. If gzip file
-	 * does not exist, it will be created.
-	 */
-	protected File lookupGzipBundleFile(File file) throws IOException {
-		String path = file.getPath() + ZipUtil.GZIP_EXT;
-		File gzipFile = new File(path);
-
-		if (gzipFile.exists() == false) {
-			if (log.isDebugEnabled()) {
-				log.debug("gzip bundle to " + path);
-			}
-			ZipUtil.gzip(file);
-		}
-
-		return gzipFile;
 	}
 
 	private static final Log log = Log.getLogger(HtmlStaplerServlet.class);

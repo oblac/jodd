@@ -5,6 +5,7 @@ package jodd.lagarto.adapter.htmlstapler;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.NetUtil;
+import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.log.Log;
@@ -270,6 +271,24 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
+	 * Locates gzipped version of bundle file. If gzip file
+	 * does not exist, it will be created.
+	 */
+	public File lookupGzipBundleFile(File file) throws IOException {
+		String path = file.getPath() + ZipUtil.GZIP_EXT;
+		File gzipFile = new File(path);
+
+		if (gzipFile.exists() == false) {
+			if (log.isDebugEnabled()) {
+				log.debug("gzip bundle to " + path);
+			}
+			ZipUtil.gzip(file);
+		}
+
+		return gzipFile;
+	}
+
+	/**
 	 * Lookups for a bundle id for a given action.
 	 * Returns <code>null</code> if action still has no bundle.
 	 * Returns an empty string if action has an empty bundle.
@@ -294,7 +313,7 @@ public class HtmlStaplerBundlesManager {
 	 * Registers new bundle that consist of provided list of source paths.
 	 * Returns the real bundle id, as provided one is just a temporary bundle id.
 	 */
-	public synchronized String registerBundle(String contextPath, String actionPath, String tempBundleId, List<String> sources) {
+	public synchronized String registerBundle(String contextPath, String actionPath, String tempBundleId, String bundleContentType, List<String> sources) {
 
 		if (tempBundleId == null || sources.isEmpty()) {
 			if (strategy == Strategy.ACTION_MANAGED) {
@@ -318,19 +337,21 @@ public class HtmlStaplerBundlesManager {
 			sb.append(src);
 		}
 		String sourcesString = sb.toString();
-		String digest = createDigest(sourcesString);
+
+		String bundleId = createDigest(sourcesString);
+		bundleId += '-' + bundleContentType;
 
 		// bundle appears for the first time, create the bundle
 		if (strategy == Strategy.ACTION_MANAGED) {
-			actionBundles.put(actionPath, digest);
-			mirrors.put(tempBundleId, digest);
+			actionBundles.put(actionPath, bundleId);
+			mirrors.put(tempBundleId, bundleId);
 		}
 		try {
-			createBundle(contextPath, actionPath, digest, sources);
+			createBundle(contextPath, actionPath, bundleId, sources);
 		} catch (IOException ioex) {
 			throw new HtmlStaplerException("Can't create bundle.", ioex);
 		}
-		return digest;
+		return bundleId;
 	}
 
 	/**

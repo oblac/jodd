@@ -21,7 +21,7 @@ public class BundleAction {
 	private static final String UNSTAPLE_MARKER = "jodd-unstaple";
 
 	protected final HtmlStaplerBundlesManager bundlesManager;
-	protected final String bundleName;
+	protected final String bundleContentType;
 	protected final boolean newAction;
 	protected final String actionPath;
 	protected final String contextPath;
@@ -35,14 +35,14 @@ public class BundleAction {
 	/**
 	 * Creates new bundle action.
 	 */
-	public BundleAction(HtmlStaplerBundlesManager bundlesManager, HttpServletRequest request, String bundleName) {
+	public BundleAction(HtmlStaplerBundlesManager bundlesManager, HttpServletRequest request, String bundleContentType) {
 		this.bundlesManager = bundlesManager;
-		this.bundleName = bundleName;
+		this.bundleContentType = bundleContentType;
 		this.strategy = bundlesManager.getStrategy();
 
 		String realActionPath = bundlesManager.resolveRealActionPath(DispatcherUtil.getServletPath(request));
 
-		actionPath = realActionPath + '*' + bundleName;
+		actionPath = realActionPath + '*' + bundleContentType;
 
 		contextPath = ServletUtil.getContextPath(request);
 
@@ -55,7 +55,7 @@ public class BundleAction {
 				sources = new LinkedList<String>();
 			}
 		} else {
-			bundleId = BUNDLE_ID_MARKER + bundleName;
+			bundleId = BUNDLE_ID_MARKER + bundleContentType;
 			bundleIdMark = bundleId.toCharArray();
 			newAction = true;
 			sources = new LinkedList<String>();
@@ -87,6 +87,7 @@ public class BundleAction {
 		if (newAction) {
 			if (bundleId == null) {
 				bundleId = bundlesManager.registerNewBundleId();
+				bundleId += '-' + bundleContentType;
 			}
 			sources.add(src);
 		}
@@ -94,7 +95,8 @@ public class BundleAction {
 		if (firstScriptTag == true) {
 			// this is the first tag, change the url to point to the bundle
 			firstScriptTag = false;
-			return contextPath + bundlesManager.getStaplerServletPath() + "?id=" + bundleId;
+
+			return buildStaplerUrl();
 		} else {
 			// ignore all other script tags
 			return null;
@@ -102,11 +104,18 @@ public class BundleAction {
 	}
 
 	/**
+	 * Builds stapler URL based on bundle action data.
+	 */
+	protected String buildStaplerUrl() {
+		return contextPath + bundlesManager.getStaplerServletPath() + "?id=" + bundleId;
+	}
+
+	/**
 	 * Called on end of parsing.
 	 */
 	public void end() {
 		if (newAction) {
-			bundleId = bundlesManager.registerBundle(contextPath, actionPath, bundleId, sources);
+			bundleId = bundlesManager.registerBundle(contextPath, actionPath, bundleId, bundleContentType, sources);
 		}
 	}
 
