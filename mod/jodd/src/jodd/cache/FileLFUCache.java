@@ -45,8 +45,8 @@ public class FileLFUCache {
 			}
 
 			@Override
-			protected void onRemove(CacheObject<File, byte[]> cacheObject) {
-				usedSize -= cacheObject.getObject().length;
+			protected void onRemove(File key, byte[] cachedObject) {
+				usedSize -= cachedObject.length;
 			}
 
 		};

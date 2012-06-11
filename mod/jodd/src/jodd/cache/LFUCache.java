@@ -49,7 +49,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 			CacheObject<K,V> co = values.next();
 			if (co.isExpired() == true) {
 				values.remove();
-				onRemove(co);
+				onRemove(co.key, co.cachedObject);
 				count++;
 				continue;
 			}
@@ -77,7 +77,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 				co.accessCount -= minAccessCount;
 				if (co.accessCount <= 0) {
 					values.remove();
-					onRemove(co);
+					onRemove(co.key, co.cachedObject);
 					count++;					
 				}
 			}
@@ -89,7 +89,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 	 * Callback method invoked on cache object removal.
 	 * By default does nothing.
 	 */
-	protected void onRemove(CacheObject<K, V> cacheObject) {
+	protected void onRemove(K key, V cachedObject) {
 	}
 
 }
