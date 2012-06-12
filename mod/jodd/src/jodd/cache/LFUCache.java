@@ -69,7 +69,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 
 		// decrease access count to all cached objects
 		if (comin != null) {
-			int minAccessCount = comin.accessCount;
+			long minAccessCount = comin.accessCount;
 
 			values = cacheMap.values().iterator();
 			while (values.hasNext()) {

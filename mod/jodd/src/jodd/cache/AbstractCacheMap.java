@@ -25,9 +25,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 		final K2 key;
 		final V2 cachedObject;
-		long lastAccess;        // time of last access
-		int accessCount;        // number of accesses
-		long ttl; 				// objects timeout (time-to-live), 0 = no timeout
+		long lastAccess;		// time of last access
+		long accessCount;		// number of accesses
+		long ttl;				// objects timeout (time-to-live), 0 = no timeout
 
 		boolean isExpired() {
 			if (ttl == 0) {
