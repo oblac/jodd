@@ -33,7 +33,7 @@ module_task('javadoc', '.src')
 module_task('emma', '.test')
 module_task('findbugs', '.src')
 
-artifact_jar(moduleName, 'jodd.src', 'jodd.Jodd')
+artifact_jar_slim(moduleName, 'jodd.src', 'jodd.Jodd')
 artifact_jar_sources(moduleName, 'jodd.src')
 artifact_jar_javadoc(moduleName, 'jodd.src')
 
@@ -59,7 +59,7 @@ module_compile('src',  '>jodd-wot.src')
 module_build('src')
 
 moduleName = 'jodd-wot'
-artifact_jar(moduleName, 'jodd-wot.src, jodd-wot.6.src', 'jodd.Jodd')
+artifact_jar_slim(moduleName, 'jodd-wot.src, jodd-wot.6.src', 'jodd.Jodd')
 artifact_jar_sources(moduleName, 'jodd-wot.src, jodd-wot.6.src')
 artifact_jar_javadoc(moduleName, 'jodd-wot.src')
 
@@ -72,7 +72,7 @@ module('jodd-joy', 'jdk5')
 module_compile('src', '>jodd.src, >jodd-wot.src, servlets, slf4j')
 module_build('src')
 
-artifact_jar(moduleName, 'jodd-joy.src', '')
+artifact_jar_slim(moduleName, 'jodd-joy.src', '')
 
 module_task('dist', 'jar.jodd-joy')
 module_task('dist-all', 'jar.jodd-joy')

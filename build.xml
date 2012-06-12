@@ -335,7 +335,9 @@
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 				<attribute name="Main-Class" value="jodd.Jodd"/>
 			</manifest>
-			<fileset dir="${jodd.src.out-dir}"/>
+			<fileset dir="${jodd.src.out-dir}">
+				<exclude name="**/package-info.class"/>
+			</fileset>
 		</jar>
 	</target>
 
@@ -614,8 +616,12 @@
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 				<attribute name="Main-Class" value="jodd.Jodd"/>
 			</manifest>
-			<fileset dir="${jodd-wot.src.out-dir}"/>
-			<fileset dir="${jodd-wot.6.src.out-dir}"/>
+			<fileset dir="${jodd-wot.src.out-dir}">
+				<exclude name="**/package-info.class"/>
+			</fileset>
+			<fileset dir="${jodd-wot.6.src.out-dir}">
+				<exclude name="**/package-info.class"/>
+			</fileset>
 		</jar>
 	</target>
 
@@ -696,7 +702,9 @@
 				<attribute name="Implementation-Title" value="${prjName} jodd-joy"/>
 				<attribute name="Implementation-Version" value="${prjVersion}"/>
 			</manifest>
-			<fileset dir="${jodd-joy.src.out-dir}"/>
+			<fileset dir="${jodd-joy.src.out-dir}">
+				<exclude name="**/package-info.class"/>
+			</fileset>
 		</jar>
 	</target>
 
