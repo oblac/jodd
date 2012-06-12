@@ -13,7 +13,8 @@ import java.util.Iterator;
  * not changing their location in the buffer; when the cache is full, items are ejected in the order they were
  * added. Cache access overhead is constant time regardless of the size of the cache. The advantage of this algorithm
  * is that it's simple and fast; it can be implemented using a simple array and an index. The disadvantage is that
- * it's not very smart; it doesn't make any effort to keep more commonly used items in cache.<br>
+ * it's not very smart; it doesn't make any effort to keep more commonly used items in cache.
+ * <p>
  * Summary for FIFO: fast, not adaptive, not scan resistant.
  */
 public class FIFOCache<K, V> extends AbstractCacheMap<K, V> {

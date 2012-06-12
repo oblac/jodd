@@ -10,13 +10,13 @@ import java.util.Iterator;
  * is resistant on 'new usages scenario': when some object is removed from the cache,
  * access count of all items in cache is decreased by access count of removed value.
  * This allows new frequent elements to come into the cache.
- *
  * <p>
  * Frequency of use data is kept on all items. The most frequently used items are kept in the cache.
  * Because of the bookkeeping requirements, cache access overhead increases logarithmically with cache size.
  * The advantage is that long term usage patterns are captured well, incidentally making the algorithm scan resistant;
  * the disadvantage, besides the larger access overhead, is that the algorithm doesn't adapt quickly to changing
- * usage patterns, and in particular doesn't help with temporally clustered accesses.<br>
+ * usage patterns, and in particular doesn't help with temporally clustered accesses.
+ * <p>
  * Summary for LFU: not fast, captures frequency of use, scan resistant.
  */
 public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
@@ -86,7 +86,7 @@ public class LFUCache<K,V> extends AbstractCacheMap<K,V> {
 	}
 
 	/**
-	 * Callback method invoked on cache object removal.
+	 * Callback method invoked on cached object removal.
 	 * By default does nothing.
 	 */
 	protected void onRemove(K key, V cachedObject) {

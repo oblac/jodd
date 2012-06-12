@@ -2,6 +2,7 @@
 
 package jodd.cache;
 
+import jodd.mutable.MutableInteger;
 import junit.framework.TestCase;
 import jodd.util.ThreadUtil;
 
@@ -130,5 +131,22 @@ public class LFUCacheTest extends TestCase {
 		assertNotNull(cache.get("4"));
 		assertNull(cache.get("5"));
 	}
+
+	public void testOnRemove() {
+		final MutableInteger mutableInteger = new MutableInteger();
+		Cache<String, String> cache = new LFUCache<String, String>(2) {
+			@Override
+			protected void onRemove(String key, String cachedObject) {
+				mutableInteger.value++;
+			}
+		};
+
+		cache.put("1", "val1");
+		cache.put("2", "val2");
+		assertEquals(0, mutableInteger.value);
+		cache.put("3", "val3");
+		assertEquals(2, mutableInteger.value);
+	}
+
 
 }

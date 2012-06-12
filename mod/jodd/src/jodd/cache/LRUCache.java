@@ -18,7 +18,11 @@ import java.util.Iterator;
  * able to adapt somewhat to the data access pattern; frequently used items are less likely to be
  * ejected from the cache. The main disadvantage is that it can still get filled up with items that are
  * unlikely to be reaccessed soon; in particular, it can become useless in the face of scanning type accesses.
- * Nonetheless, this is by far the most frequently used caching algorithm.<br>
+ * Nonetheless, this is by far the most frequently used caching algorithm.
+ * <p>
+ * Implementation note: unfortunately, it was not possible to have <code>onRemove</code> callback method,
+ * since <code>LinkedHashMap</code> has its removal methods private.
+ * <p>
  * Summary for LRU: fast, adaptive, not scan resistant.
  */
 public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
@@ -37,7 +41,6 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
 			@Override
 			protected boolean removeEldestEntry(Map.Entry eldest) {
 				return LRUCache.this.removeEldestEntry(size());
-				//return size() > LRUCache.this.cacheSize;
 			}
 		};
 	}
@@ -65,7 +68,7 @@ public class LRUCache<K, V> extends AbstractCacheMap<K, V> {
         int count = 0;
 		Iterator<CacheObject<K,V>> values = cacheMap.values().iterator();
 		while (values.hasNext()) {
-			CacheObject co = values.next();
+			CacheObject<K,V> co = values.next();
 			if (co.isExpired() == true) {
 				values.remove();
 				count++;
