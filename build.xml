@@ -29,7 +29,7 @@
 	
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.4-beta"/>
+	<property name="prjVersion" value="3.3.4"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
@@ -730,8 +730,6 @@
 		<delete dir="${dist.dir}"/>
 		<mkdir dir="${dist.dir}"/>
 	</target>
-	<target name="release" depends="clean, build, javadoc, emma, findbugs, dist-all" description="* creates full release"/>
-
 	<target name="pack-dist" depends="dist" description="* pack dist">
 		<delete file="${dist.dir}/jodd-${prjVersion}.zip"/>
 		<zip destfile="${dist.dir}/jodd-${prjVersion}.zip" basedir='.' level="9" encoding="utf8" includes="
@@ -794,6 +792,20 @@
 	lib/**
 " excludes="lib/oracle/*"/>
 	</target>
+	<target name="release">
+		<echo>Releasing: ${prjVersion}</echo>
+
+		<antcall target="clean"/>
+		<antcall target="build"/>
+		<antcall target="javadoc"/>
+		<antcall target="emma"/>
+		<antcall target="findbugs"/>
+		<antcall target="dist-all"/>
+		<antcall target="pack-all"/>
+
+		<echo>Done!</echo>
+	</target>
+
 	<target name="help">
 		<echo>
 

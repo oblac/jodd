@@ -3,8 +3,8 @@ prjName = 'Jodd'
 prjId = 'jodd'
 prjDescription = 'Jodd - open-source Java utility library and web application frameworks.'
 #prjVersion = '3.3.2-' + time_date
-prjVersion = '3.3.4-beta'
-#prjVersion = '3.3.3'
+#prjVersion = '3.3.4-beta'
+prjVersion = '3.3.4'
 
 # vars
 copyright = 'Copyright &#169; 2003-' + time_year + ' Jodd Team'
@@ -88,9 +88,6 @@ project_task('dist-all', 'build, .jodd, .jodd-wot, .jodd-joy')
 
 project_clean()
 
-project_target('release', 'clean, build, javadoc, emma, findbugs, dist-all', '* creates full release')
-
-
 pack_dist = '''
 	${jodd.jar}
 	${jodd-wot.jar}
@@ -121,6 +118,23 @@ pack('dist', 'jodd', 'dist', pack_dist, '')
 pack('mvn',  'jodd-mvn', 'dist-all', pack_maven, '')
 pack('src',  'jodd-all', 'pack-dist, pack-mvn', pack_src, '')
 pack('all',  'jodd-all-with-dependencies', 'pack-src', pack_all, 'lib/oracle/*')
+
+
+out('''
+	<target name="release">
+		<echo>Releasing: ${prjVersion}</echo>
+
+		<antcall target="clean"/>
+		<antcall target="build"/>
+		<antcall target="javadoc"/>
+		<antcall target="emma"/>
+		<antcall target="findbugs"/>
+		<antcall target="dist-all"/>
+		<antcall target="pack-all"/>
+
+		<echo>Done!</echo>
+	</target>
+''')
 
 
 project_help('''
