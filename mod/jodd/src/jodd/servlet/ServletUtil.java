@@ -410,7 +410,7 @@ public class ServletUtil {
 	 * We thus remove anything we find between ";jsessionid=" (inclusive)
 	 * and either EOS or a subsequent ';' (exclusive).
 	 */
-	public static String stripSession(String url) {
+	public static String stripSessionId(String url) {
 		StringBuilder u = new StringBuilder(url);
 		int sessionStart;
 		while ((sessionStart = u.toString().indexOf(";jsessionid=")) != -1) {
@@ -479,7 +479,12 @@ public class ServletUtil {
 	 * @param treatEmptyParamsAsNull	empty parameters should be treated as <code>null</code>
 	 * @param ignoreEmptyRequestParams	if all parameters are empty, return <code>null</code>
 	 */
-	public static String[] prepareParameters(String[] paramValues, boolean trimParams, boolean treatEmptyParamsAsNull, boolean ignoreEmptyRequestParams) {
+	public static String[] prepareParameters(
+			String[] paramValues,
+			boolean trimParams,
+			boolean treatEmptyParamsAsNull,
+			boolean ignoreEmptyRequestParams) {
+
 		if (trimParams || treatEmptyParamsAsNull || ignoreEmptyRequestParams) {
 			int emptyCount = 0;
 			int total = paramValues.length;
@@ -513,7 +518,12 @@ public class ServletUtil {
 	/**
 	 * Copies all request parameters to attributes.
 	 */
-	public static void copyParamsToAttributes(HttpServletRequest servletRequest, boolean trimParams, boolean treatEmptyParamsAsNull, boolean ignoreEmptyRequestParams) {
+	public static void copyParamsToAttributes(
+			HttpServletRequest servletRequest,
+			boolean trimParams,
+			boolean treatEmptyParamsAsNull,
+			boolean ignoreEmptyRequestParams) {
+
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
