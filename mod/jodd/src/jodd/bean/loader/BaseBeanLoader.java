@@ -12,6 +12,8 @@ public abstract class BaseBeanLoader implements BeanLoader {
 
 	private BeanUtilBean beanUtilBean = BeanUtil.getDefaultBeanUtilBean();
 
+	protected boolean ignoreNulls;
+
 	public BeanUtilBean getBeanUtilBean() {
 		return beanUtilBean;
 	}
@@ -24,6 +26,12 @@ public abstract class BaseBeanLoader implements BeanLoader {
 	 * Sets the target bean property with value.
 	 */
 	protected void setProperty(Object targetBean, String name, Object value) {
+		if (ignoreNulls) {
+			if (value == null) {
+				return;
+			}
+		}
+
 		beanUtilBean.setPropertyForcedSilent(targetBean, name, value);
 	}
 }
