@@ -4,15 +4,15 @@ package madvoc.filter;
 
 import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
-import jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager;
-import jodd.lagarto.adapter.htmlstapler.HtmlStaplerTagAdapter;
+import jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager;
+import jodd.lagarto.htmlstapler.HtmlStaplerTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import static jodd.lagarto.adapter.htmlstapler.HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY;
+import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy.RESOURCES_ONLY;
 
 public class AppLagartoServletFilter extends SimpleLagartoServletFilter {
 

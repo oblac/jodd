@@ -83,7 +83,7 @@
 
 	<servlet>
 		<servlet-name>jodd-html-stapler</servlet-name>
-		<servlet-class>jodd.lagarto.adapter.htmlstapler.HtmlStaplerServlet</servlet-class>
+		<servlet-class>jodd.lagarto.htmlstapler.HtmlStaplerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jodd-html-stapler</servlet-name>
