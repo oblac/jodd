@@ -16,16 +16,6 @@ import java.util.Enumeration;
  */
 public class RequestParamBeanLoader extends BaseBeanLoader {
 
-	protected final boolean trim;
-
-	public RequestParamBeanLoader() {
-		this.trim = false;
-	}
-
-	public RequestParamBeanLoader(boolean trim) {
-		this.trim = trim;
-	}
-
 	public void load(Object bean, Object source) {
 		if (source instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) source;
@@ -40,16 +30,11 @@ public class RequestParamBeanLoader extends BaseBeanLoader {
 				if (paramValues.length == 0) {
 					continue;
 				}
-				if (trim == true) {
-					for (int i = 0; i < paramValues.length; i++) {
-						paramValues[i] = paramValues[i].trim();
-					}
-				}
 
 				if (paramValues.length == 1) {	// use just String
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues[0]);
+					setProperty(bean, paramName, paramValues[0]);
 				} else {						// use String array
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues);
+					setProperty(bean, paramName, paramValues);
 				}
 
 			}

@@ -10,16 +10,6 @@ import jodd.servlet.upload.FileUpload;
  */
 public class MultipartRequestBeanLoader extends BaseBeanLoader {
 
-	protected boolean trim;
-
-	public MultipartRequestBeanLoader() {
-		this.trim = false;
-	}
-
-	public MultipartRequestBeanLoader(boolean trim) {
-		this.trim = trim;
-	}
-
 	public void load(Object bean, Object source) {
 		if (source instanceof MultipartRequest) {
 
@@ -34,15 +24,10 @@ public class MultipartRequestBeanLoader extends BaseBeanLoader {
 				if (paramValues.length == 0) {
 					continue;
 				}
-				if (trim == true) {
-					for (int i = 0; i < paramValues.length; i++) {
-						paramValues[i] = paramValues[i].trim();
-					}
-				}
 				if (paramValues.length == 1) {		// send just String
-					beanUtilBean.setPropertyForced(bean, paramName, paramValues[0]);
+					setProperty(bean, paramName, paramValues[0]);
 				} else {							// send String array
-					beanUtilBean.setPropertyForced(bean, paramName, paramValues);
+					setProperty(bean, paramName, paramValues);
 				}
 			}
 
@@ -57,9 +42,9 @@ public class MultipartRequestBeanLoader extends BaseBeanLoader {
 				}
 
 				if (uf.length == 1) {
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, uf[0]);
+					setProperty(bean, paramName, uf[0]);
 				} else {
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, uf);
+					setProperty(bean, paramName, uf);
 				}
 			}
 		}

@@ -12,16 +12,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestBeanLoader extends BaseBeanLoader {
 
-	protected final boolean trim;
-
-	public RequestBeanLoader() {
-		this.trim = false;
-	}
-
-	public RequestBeanLoader(boolean trim) {
-		this.trim = trim;
-	}
-
 	public void load(Object bean, Object source) {
 		HttpServletRequest request = (HttpServletRequest) source;
 
@@ -37,15 +27,10 @@ public class RequestBeanLoader extends BaseBeanLoader {
 				if (paramValues.length == 0) {
 					continue;
 				}
-				if (trim == true) {
-					for (int i = 0; i < paramValues.length; i++) {
-						paramValues[i] = paramValues[i].trim();
-					}
-				}
 				if (paramValues.length == 1) {	// use just String
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues[0]);
+					setProperty(bean, paramName, paramValues[0]);
 				} else {						// use String array
-					beanUtilBean.setPropertyForcedSilent(bean, paramName, paramValues);
+					setProperty(bean, paramName, paramValues);
 				}
 			}
 
@@ -56,7 +41,7 @@ public class RequestBeanLoader extends BaseBeanLoader {
 
 				Object value = request.getAttribute(attributeName);
 
-				beanUtilBean.setPropertyForcedSilent(bean, attributeName, value);
+				setProperty(bean, attributeName, value);
 			}
 		}
 	}

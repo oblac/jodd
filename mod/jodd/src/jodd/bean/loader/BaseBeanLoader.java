@@ -10,7 +10,7 @@ import jodd.bean.BeanUtilBean;
  */
 public abstract class BaseBeanLoader implements BeanLoader {
 
-	protected BeanUtilBean beanUtilBean = BeanUtil.getDefaultBeanUtilBean();
+	private BeanUtilBean beanUtilBean = BeanUtil.getDefaultBeanUtilBean();
 
 	public BeanUtilBean getBeanUtilBean() {
 		return beanUtilBean;
@@ -18,5 +18,12 @@ public abstract class BaseBeanLoader implements BeanLoader {
 
 	public void setBeanUtilBean(BeanUtilBean beanUtilBean) {
 		this.beanUtilBean = beanUtilBean;
+	}
+
+	/**
+	 * Sets the target bean property with value.
+	 */
+	protected void setProperty(Object targetBean, String name, Object value) {
+		beanUtilBean.setPropertyForcedSilent(targetBean, name, value);
 	}
 }

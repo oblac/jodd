@@ -31,7 +31,8 @@ public class ResultSetBeanLoader extends BaseBeanLoader {
 						
 						columnName.append(StringUtil.capitalize(token));
 					}
-					beanUtilBean.setPropertyForcedSilent(bean, columnName.toString(), resultSet.getObject(i));
+
+					setProperty(bean, columnName.toString(), resultSet.getObject(i));
 				}
 			} catch (Exception ex) {
 				// ignore

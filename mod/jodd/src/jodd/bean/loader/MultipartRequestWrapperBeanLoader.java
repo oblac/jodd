@@ -16,12 +16,8 @@ public class MultipartRequestWrapperBeanLoader extends BaseBeanLoader {
 	protected final RequestBeanLoader requestBeanLoader;
 
 	public MultipartRequestWrapperBeanLoader() {
-		this(false);
-	}
-
-	public MultipartRequestWrapperBeanLoader(boolean trim) {
-		multipartRequestBeanLoader = new MultipartRequestBeanLoader(trim);
-		requestBeanLoader = new RequestBeanLoader(trim);
+		multipartRequestBeanLoader = new MultipartRequestBeanLoader();
+		requestBeanLoader = new RequestBeanLoader();
 	}
 
 	public void load(Object bean, Object source) {

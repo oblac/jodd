@@ -6,23 +6,10 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 
-import jodd.util.StringUtil;
-
 /**
- * Populates java bean from ServletContext objects. It allows to be instanced with a
- * 'prefix' that will be added in front of all attributes.
+ * Populates java bean from ServletContext objects.
  */
 public class ServletContextBeanLoader extends BaseBeanLoader {
-
-	protected final String prefix;
-
-	public ServletContextBeanLoader() {
-		this.prefix = null;
-	}
-
-	public ServletContextBeanLoader(String prefix) {
-		this.prefix = prefix;
-	}
 
 	public void load(Object bean, Object source) {
 		if (source instanceof ServletContext) {
@@ -37,11 +24,7 @@ public class ServletContextBeanLoader extends BaseBeanLoader {
 
 				Object value = servletContext.getAttribute(attributeName);
 
-				if (prefix != null) {
-					attributeName = prefix + StringUtil.capitalize(attributeName);
-				}
-
-				beanUtilBean.setPropertyForcedSilent(bean, attributeName, value);
+				setProperty(bean, attributeName, value);
 			}
 		}
 	}

@@ -5,10 +5,10 @@ package jodd.bean.loader;
 import java.util.Map;
 
 /**
- * Populate java bean using objects that are implementation of <code>Map</code> interface.
+ * Populate java bean using implementation of <code>Map</code>.
  * <p>
- * Each key of <code>Map</code> is a <code>String</code> the represents a bean property name and
- * key value is an object that represents bean property value.
+ * For each key of <code>Map</code>, it's <code>toString</code> method
+ * is called to get property name.
  */
 public class MapBeanLoader extends BaseBeanLoader {
 
@@ -16,13 +16,15 @@ public class MapBeanLoader extends BaseBeanLoader {
 	public void load(Object bean, Object source) {
 
 		if (source instanceof Map) {
-			Map<String, Object> map = (Map<String, Object>) source;
+			Map<Object, Object> map = (Map<Object, Object>) source;
 
-			for (Map.Entry<String, Object> entry : map.entrySet()) {
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
 
-				Object propertyValue = entry.getValue();
+				String name = entry.getKey().toString();
 
-				beanUtilBean.setPropertyForcedSilent(bean, entry.getKey(), propertyValue);
+				Object value = entry.getValue();
+
+				setProperty(bean, name, value);
 			}
 		}
 	}
