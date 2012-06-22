@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Various bean property utilities that makes writings of {@link BeanUtil} classes easy.
  */
-public class BeanUtilUtil {
+class BeanUtilUtil {
 
 	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
 

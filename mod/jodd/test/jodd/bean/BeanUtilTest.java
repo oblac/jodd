@@ -13,7 +13,6 @@ import java.util.List;
 import jodd.bean.data.GetIsBool;
 import jodd.bean.data.IsGetBool;
 import jodd.bean.data.UppercaseBean;
-import jodd.bean.modifier.TrimStringsBeanModifier;
 import jodd.bean.data.Abean;
 import jodd.bean.data.Bbean;
 import jodd.bean.data.Cbean;
@@ -773,18 +772,6 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("15", fb.getFooStringA()[1]);
 
 	}
-
-	public void	testForEach() {
-		FooBean fb = new FooBean();
-		fb.setFooString("   xxx   ");
-		fb.setFooStringA(new String[] {"   xxx   ", "  yy  ", " z "});
-		new TrimStringsBeanModifier().modify(fb);
-		assertEquals("xxx", fb.getFooString());
-		assertEquals("xxx", fb.getFooStringA()[0]);
-		assertEquals("yy", fb.getFooStringA()[1]);
-		assertEquals("z", fb.getFooStringA()[2]);
-	}
-
 
 	public void testGet() {
 		FooBean fb = new FooBean();
