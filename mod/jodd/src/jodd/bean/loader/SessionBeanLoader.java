@@ -7,8 +7,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpSession;
 
 /**
- * Populates java bean from HttpSession objects. It allows to be instanced with a
- * 'prefix' that will be added in front of all attributes.
+ * Populates java bean from HttpSession objects.
  */
 public class SessionBeanLoader extends BaseBeanLoader {
 

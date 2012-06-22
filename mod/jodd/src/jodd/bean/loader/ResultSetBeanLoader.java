@@ -24,6 +24,8 @@ public class ResultSetBeanLoader extends BaseBeanLoader {
 				int numberOfColumns = rsmd.getColumnCount();
 				
 				for (int i = 1; i <= numberOfColumns; i++) {
+					// todo add parameter for conversion, once when we add a method for different string conversions
+
 					StringTokenizer st = new StringTokenizer(rsmd.getColumnName(i), StringPool.UNDERSCORE);
 					StringBuilder columnName = new StringBuilder();
 					while (st.hasMoreTokens()) {

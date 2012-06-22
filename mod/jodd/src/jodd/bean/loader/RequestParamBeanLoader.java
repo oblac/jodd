@@ -7,12 +7,6 @@ import java.util.Enumeration;
 
 /**
  * Populates object from servlet request parameters.
- * <p>
- * By java servlet specifications, parameter values are always String arrays
- * (String[]).  That is how they are sent to BeanUtil.setProperty(),
- * except in case when this array contains just one String element. In that
- * case it is sent as a single String.
- *
  */
 public class RequestParamBeanLoader extends BaseBeanLoader {
 

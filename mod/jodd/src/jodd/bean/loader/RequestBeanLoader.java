@@ -7,8 +7,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Populates java bean from servlet request parameters and attributes. Parameters
- * are populated by using {@link RequestParamBeanLoader}.
+ * Populates java bean from servlet request parameters and attributes, in that order.
  */
 public class RequestBeanLoader extends BaseBeanLoader {
 
