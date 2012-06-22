@@ -9,10 +9,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterConfig;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
@@ -21,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import jodd.bean.BeanUtil;
 import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.util.Base64;
@@ -701,38 +696,5 @@ public class ServletUtil {
 		response.setDateHeader ("Expires", 0);          // prevents caching at the proxy server
 	}
 
-	// ---------------------------------------------------------------- filter
-
-	/**
-	 * Loads filter init parameters into the filter.
-	 */
-	public static void loadInitParameters(Filter filter, FilterConfig filterConfig) {
-		Enumeration initParameterNames = filterConfig.getInitParameterNames();
-
-		while (initParameterNames.hasMoreElements()) {
-			String parameterName  = (String) initParameterNames.nextElement();
-			Object parameterValue = filterConfig.getInitParameter(parameterName);
-
-			parameterName = parameterName.trim();
-
-			BeanUtil.setDeclaredPropertySilent(filter, parameterName, parameterValue);
-		}
-	}
-
-	/**
-	 * Loads servlet init parameters into the servlet.
-	 */
-	public static void loadInitParameters(Servlet servlet, ServletConfig servletConfig) {
-		Enumeration initParameterNames = servletConfig.getInitParameterNames();
-
-		while (initParameterNames.hasMoreElements()) {
-			String parameterName  = (String) initParameterNames.nextElement();
-			Object parameterValue = servletConfig.getInitParameter(parameterName);
-
-			parameterName = parameterName.trim();
-
-			BeanUtil.setDeclaredPropertySilent(servlet, parameterName, parameterValue);
-		}
-	}
 
 }
