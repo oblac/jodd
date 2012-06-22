@@ -2,7 +2,6 @@
 
 package jodd.bean;
 
-import jodd.util.ArraysUtil;
 import jodd.util.PrettyStringBuilder;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -22,7 +21,7 @@ public class BeanTool {
 	// ---------------------------------------------------------------- copy and apply
 
 	/**
-	 * Copies properties of one bean to another. It iterates all getXXX() methods,
+	 * Copies properties of one bean to another. Iterates all getXXX() methods,
 	 * reads values and populates destination bean through setXXX().
 	 * No exception is thrown on error.
 	 *
@@ -31,29 +30,34 @@ public class BeanTool {
 	 * @param suppressSecurity   <code>true</code> to suppress security
 	 */
 	public static void copy(Object source, Object destination, boolean suppressSecurity) {
-		copy(source, destination, true, suppressSecurity);
+		doCopy(source, destination, true, suppressSecurity);
 	}
 
+	/**
+	 * Same as {@link #copy(Object, Object, boolean)}, except <code>null</code> values
+	 * are not copied. Useful when destination object needs to be only partially updated.
+	 */
 	public static void apply(Object source, Object destination, boolean suppressSecurity) {
-		copy(source, destination, false, suppressSecurity);
+		doCopy(source, destination, false, suppressSecurity);
 	}
 
 	/**
 	 * Copies only public properties.
-	 * @param source    source bean
-	 * @param destination   destination bean
 	 * @see #copy(Object, Object, boolean)
 	 */
 	public static void copy(Object source, Object destination) {
-		copy(source, destination, true, false);
+		doCopy(source, destination, true, false);
 	}
 
-
+	/**
+	 * Applies only public properties.
+	 * @see #apply(Object, Object, boolean)
+	 */
 	public static void apply(Object source, Object destination) {
-		copy(source, destination, false, false);
+		doCopy(source, destination, false, false);
 	}
 
-	public static void copy(Object source, Object destination, boolean copyNulls, boolean suppressSecurity) {
+	private static void doCopy(Object source, Object destination, boolean copyNulls, boolean suppressSecurity) {
 		String[] properties = resolveProperties(source, suppressSecurity);
 
 		for (String name : properties) {
@@ -89,89 +93,6 @@ public class BeanTool {
 
 		return properties;
 	}
-
-	// ---------------------------------------------------------------- copy properties
-
-	/**
-	 * Copies the property values of the given source bean into the target bean.
-	 * The same as {@link #copy(Object, Object)}, but from different angle.
-	 */
-	public static void copyProperties(Object source, Object destination) {
-		copyProperties(source, destination, null, true);
-	}
-
-	/**
-	 * Copies the property values of the given source bean into the given target bean,
-	 * ignoring or including only the given "properties".
-	 */
-	public static void copyProperties(Object source, Object destination, String[] properties, boolean include) {
-		String[] p = resolveProperties(source, false);
-		for (String name : p) {
-			if (properties != null) {
-				if (include)  {
-					if (ArraysUtil.contains(properties, name) == false) {
-						continue;
-					}
-				} else {
-					if (ArraysUtil.contains(properties, name) == true) {
-						continue;
-					}
-				}
-			}
-			Object value = BeanUtil.getProperty(source, name);
-			BeanUtil.setPropertySilent(destination, name, value);
-		}
-	}
-
-	public static void copyProperties(Object source, Object destination, Class editable) {
-		ClassDescriptor cd = ClassIntrospector.lookup(editable);
-		String[] properties = cd.getAllBeanGetterNames();
-		copyProperties(source, destination, properties, true);
-	}
-
-	// ---------------------------------------------------------------- copy and apply fields
-
-	/**
-	 * Copies all fields values from source to destination. It iterates all source fields
-	 * and copies data to destination. No exception is thrown on error.
-	 */
-	public static void copyFields(Object source, Object destination, boolean suppressSecurity) {
-		copyFields(source, destination, true, suppressSecurity);
-	}
-
-	public static void applyFields(Object source, Object destination, boolean suppressSecurity) {
-		copyFields(source, destination, false, suppressSecurity);
-	}
-
-	public static void copyFields(Object source, Object destination, boolean copyNulls, boolean suppressSecurity) {
-		ClassDescriptor cdSrc = ClassIntrospector.lookup(source.getClass());
-		ClassDescriptor cdDest = ClassIntrospector.lookup(destination.getClass());
-
-		Field[] fields = cdSrc.getAllFields(suppressSecurity);
-		for (Field field : fields) {
-			Field destField = cdDest.getField(field.getName(), suppressSecurity);
-			if (destField != null) {
-				try {
-					Object value = field.get(source);
-					if ((copyNulls == false) && (value == null)) {
-						continue;
-					}
-					destField.set(destination, value);
-				} catch (IllegalAccessException iaex) {
-					// ignore
-				}
-			}
-		}
-	}
-
-	public static void copyFields(Object source, Object destination) {
-		copyFields(source, destination, true, false);
-	}
-
-	public static void applyFields(Object source, Object destination) {
-		copyFields(source, destination, false, false);
-	}
-
 
 	// ---------------------------------------------------------------- load
 
@@ -241,6 +162,5 @@ s	 */
 		}
 		return s.toString();
 	}
-
 
 }
