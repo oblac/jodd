@@ -47,7 +47,7 @@ public class HtmlStaplerBundlesManager {
 	protected String localFilesEncoding = StringPool.UTF_8;
 	protected String webRoot;
 	protected String bundleFolder;
-	protected String staplerServletPath = "/jodd-bundle";
+	protected String staplerPath = "/jodd-bundle/";
 	protected String bundleFilenamePrefix = "jodd-bundle-";
 	protected String localAddressAndPort = "http://localhost:8080";
 	protected boolean downloadLocal;
@@ -98,8 +98,9 @@ public class HtmlStaplerBundlesManager {
 	 * Creates new instance, initialize it and stores it in servlet context.
 	 */
 	public HtmlStaplerBundlesManager(ServletContext servletContext, Strategy strategy) {
-		this.strategy = strategy;
 		servletContext.setAttribute(ATTRIBUTE_NAME, this);
+
+		this.strategy = strategy;
 		this.webRoot = servletContext.getRealPath(StringPool.EMPTY);
 		this.bundleFolder = SystemUtil.getTempDir();
 		this.contextPath = ServletUtil.getContextPath(servletContext);
@@ -174,18 +175,23 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Returns {@link HtmlStaplerServlet} servlet path.
-	 * Must be the same as in web.xml.
+	 * Returns stapler path with starting and ending slash.
 	 */
-	public String getStaplerServletPath() {
-		return staplerServletPath;
+	public String getStaplerPath() {
+		return staplerPath;
 	}
 
 	/**
-	 * Sets registered path for {@link HtmlStaplerServlet} as registered in web.xml.
+	 * Sets stapler path.
 	 */
-	public void setStaplerServletPath(String staplerServletPath) {
-		this.staplerServletPath = staplerServletPath;
+	public void setStaplerPath(String staplerPath) {
+		if (staplerPath.startsWith(StringPool.SLASH) == false) {
+			staplerPath = StringPool.SLASH + staplerPath;
+		}
+		if (staplerPath.endsWith(StringPool.SLASH) == false) {
+			staplerPath += StringPool.SLASH;
+		}
+		this.staplerPath = staplerPath;
 	}
 
 	/**
@@ -339,7 +345,7 @@ public class HtmlStaplerBundlesManager {
 		String sourcesString = sb.toString();
 
 		String bundleId = createDigest(sourcesString);
-		bundleId += '-' + bundleContentType;
+		bundleId += '.' + bundleContentType;
 
 		// bundle appears for the first time, create the bundle
 		if (strategy == Strategy.ACTION_MANAGED) {
@@ -547,6 +553,7 @@ public class HtmlStaplerBundlesManager {
 		res.append("url('");
 
 		if (url.startsWith(StringPool.SLASH) == false) {
+			res.append("../");
 			res.append(offsetPath);
 		}
 
