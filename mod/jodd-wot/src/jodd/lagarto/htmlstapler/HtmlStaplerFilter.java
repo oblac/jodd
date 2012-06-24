@@ -34,6 +34,7 @@ import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy;
  * <li>resetOnStart - if bundles should be reset on server start (<code>true</code> by default)
  * <li>useGzip - if gzip should be used (<code>false</code> by default)
  * <li>cacheMaxAge - cache header max-age value (30 days by default), if set to 0 it will not be set.
+ * <li>staplerStragy - strategy (<code>RESOURCE_ONLY</code> by default)</li>
  *
  * Some additional settings can be applied on created
  * {@link #createBundleManager(javax.servlet.ServletContext, jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy) bundle manager}.
