@@ -14,8 +14,13 @@
 	<script src="<%=request.getContextPath()%>/js/js3.js?jodd-unstaple"></script>
 </head>
 <body>
-<h1>javascripts</h1>
-<p>This page loads few javascripts and css</p>
+<h1>html stapler</h1>
+<p>This page loads few javascripts and css. There must be:</p>
+<ul>
+	<li>two javascript alerts</li>
+	<li>background image</li>
+	<li>orange footer</li>
+</ul>
 
 </body>
 </html>

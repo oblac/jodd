@@ -35,11 +35,11 @@
 	</filter-mapping>
 
 	<filter>
-		<filter-name>lagarto</filter-name>
-		<filter-class>madvoc.filter.AppLagartoServletFilter</filter-class>
+		<filter-name>htmlstapler</filter-name>
+		<filter-class>jodd.lagarto.htmlstapler.HtmlStaplerFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>lagarto</filter-name>
+		<filter-name>htmlstapler</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
@@ -77,20 +77,6 @@
 		<!--<dispatcher>FORWARD</dispatcher>-->
 	</filter-mapping>
 	
-	<!-- servlet -->
-	<servlet>
-		<servlet-name>jodd-html-stapler</servlet-name>
-		<servlet-class>jodd.lagarto.htmlstapler.HtmlStaplerServlet</servlet-class>
-		<init-param>
-			<param-name>gzip</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>jodd-html-stapler</servlet-name>
-		<url-pattern>/jodd-bundle</url-pattern>
-	</servlet-mapping>
-
 	<!-- config -->
 	<jsp-config>
 		<jsp-property-group>
