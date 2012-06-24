@@ -102,6 +102,8 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 				HtmlStaplerTagAdapter htmlStaplerTagAdapter =
 						new HtmlStaplerTagAdapter(bundlesManager, servletPath, visitor);
 
+				// todo optionally add more adapters - think about adding a method so user can extend adapter chain
+
 				char[] content = invokeLagarto(htmlStaplerTagAdapter);
 
 				return htmlStaplerTagAdapter.postProcess(content);
