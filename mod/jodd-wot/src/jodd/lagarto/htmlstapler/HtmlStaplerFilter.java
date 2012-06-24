@@ -28,7 +28,12 @@ import java.io.OutputStream;
 import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy;
 
 /**
- * HtmlStapler filter. Supports HTML stripping, too!
+ * HtmlStapler filter. Parameters:
+ * <li>enabled - if the whole filter is enabled or not (<code>true</code> by default)
+ * <li>stripHtml - if the strip html feature is turned on (<code>true</code> by default)
+ * <li>resetOnStart - if bundles should be reset on server start (<code>true</code> by default)
+ * <li>useGzip - if gzip should be used (<code>false</code> by default)
+ * <li>cacheMaxAge - cache header max-age value (30 days by default), if set to 0 it will not be set.
  */
 public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
