@@ -34,11 +34,18 @@ public abstract class LagartoServletFilter implements Filter {
 
 	/**
 	 * Wraps the response and parse it using Lagarto parser.
+	 * It first calls {@link #processActionPath(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, String)}
+	 * to optionally consumes path, then {@link #acceptActionPath(javax.servlet.http.HttpServletRequest, String)} to
+	 * check if path is accepted for processing.
 	 */
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String actionPath = DispatcherUtil.getServletPath(request);
+
+		if (processActionPath(request, response, actionPath) == true) {
+			return;
+		}
 
 		if (acceptActionPath(request, actionPath) == false) {
 			filterChain.doFilter(servletRequest, servletResponse);
@@ -63,6 +70,19 @@ public abstract class LagartoServletFilter implements Filter {
 
 			wrapper.writeContentToResponse(content);
 		}
+	}
+
+	/**
+	 * Manually process the action path and returns <code>true</code> if path is consumed.
+	 * When path is consumed, filter chain is not continued.
+	 * By default, it returns <code>false</code>.
+	 */
+	protected boolean processActionPath(
+			HttpServletRequest servletRequest,
+			HttpServletResponse servletResponse,
+			String actionPath) throws IOException {
+
+		return false;
 	}
 
 	/**
