@@ -41,7 +41,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	protected boolean resetOnStart = true;
 	protected Strategy staplerStrategy = Strategy.RESOURCES_ONLY;
 	protected boolean useGzip;
-
+	protected int cacheMaxAge = 60 * 60 * 24 * 30;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -135,6 +135,10 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
 		servletResponse.setHeader("Content-Length", String.valueOf(file.length()));
 		servletResponse.setHeader("Last-Modified", TimeUtil.formatHttpDate(file.lastModified()));
+
+		if (cacheMaxAge > 0) {
+			servletResponse.setHeader("Cache-Control", "max-age=" + cacheMaxAge);
+		}
 
 		sendBundleFile(servletResponse, file);
 
