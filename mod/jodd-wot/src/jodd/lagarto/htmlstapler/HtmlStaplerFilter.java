@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy;
 
 /**
- * HtmlStapler filter.
+ * HtmlStapler filter. Supports HTML stripping, too!
  */
 public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
