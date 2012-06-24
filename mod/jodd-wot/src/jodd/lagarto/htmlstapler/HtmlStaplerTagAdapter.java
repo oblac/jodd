@@ -6,8 +6,6 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
 import jodd.lagarto.TagVisitor;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * HTML Stapler tag adapter parses HTML page and collects all information
  * about linking resource files.
@@ -20,13 +18,13 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	protected boolean insideConditionalComment;
 
-	public HtmlStaplerTagAdapter(TagVisitor target, HttpServletRequest request) {
+	public HtmlStaplerTagAdapter(HtmlStaplerBundlesManager bundlesManager, String servletPath, TagVisitor target) {
 		super(target);
 
-		bundlesManager = HtmlStaplerBundlesManager.getBundlesManager(request);
+		this.bundlesManager = bundlesManager;
 
-		jsBundleAction = bundlesManager.start(request, "js");
-		cssBundleAction = bundlesManager.start(request, "css");
+		jsBundleAction = bundlesManager.start(servletPath, "js");
+		cssBundleAction = bundlesManager.start(servletPath, "css");
 
 		insideConditionalComment = false;
 	}

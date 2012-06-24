@@ -9,7 +9,6 @@ import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.log.Log;
-import jodd.servlet.ServletUtil;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.StringBand;
@@ -17,8 +16,6 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -36,8 +33,6 @@ import java.util.regex.Pattern;
 public class HtmlStaplerBundlesManager {
 
 	private static final Log log = Log.getLogger(HtmlStaplerBundlesManager.class);
-
-	private static final String ATTRIBUTE_NAME = HtmlStaplerBundlesManager.class.getName();
 
 	protected int bundleCount;		// for new bundles
 
@@ -81,29 +76,13 @@ public class HtmlStaplerBundlesManager {
 	// ---------------------------------------------------------------- init
 
 	/**
-	 * Returns bundles manager.
+	 * Creates new instance and initialize it.
 	 */
-	public static HtmlStaplerBundlesManager getBundlesManager(HttpServletRequest servletRequest) {
-		return getBundlesManager(servletRequest.getSession().getServletContext());
-	}
-
-	/**
-	 * Returns bundles manager from servlet context.
-	 */
-	public static HtmlStaplerBundlesManager getBundlesManager(ServletContext servletContext) {
-		return (HtmlStaplerBundlesManager) servletContext.getAttribute(ATTRIBUTE_NAME);
-	}
-
-	/**
-	 * Creates new instance, initialize it and stores it in servlet context.
-	 */
-	public HtmlStaplerBundlesManager(ServletContext servletContext, Strategy strategy) {
-		servletContext.setAttribute(ATTRIBUTE_NAME, this);
-
+	public HtmlStaplerBundlesManager(String contextPath, String webRoot, Strategy strategy) {
+		this.contextPath = contextPath;
+		this.webRoot = webRoot;
 		this.strategy = strategy;
-		this.webRoot = servletContext.getRealPath(StringPool.EMPTY);
 		this.bundleFolder = SystemUtil.getTempDir();
-		this.contextPath = ServletUtil.getContextPath(servletContext);
 
 		if (strategy == Strategy.ACTION_MANAGED) {
 			actionBundles = new HashMap<String, String>();
@@ -114,8 +93,8 @@ public class HtmlStaplerBundlesManager {
 	/**
 	 * Starts bundle usage by creating new {@link BundleAction}.
 	 */
-	public BundleAction start(HttpServletRequest servletRequest, String bundleName) {
-		return new BundleAction(this, servletRequest, bundleName);
+	public BundleAction start(String servletPath, String bundleName) {
+		return new BundleAction(this, servletPath, bundleName);
 	}
 
 	// ---------------------------------------------------------------- access

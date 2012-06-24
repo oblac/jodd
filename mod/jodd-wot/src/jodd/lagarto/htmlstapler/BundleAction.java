@@ -2,11 +2,7 @@
 
 package jodd.lagarto.htmlstapler;
 
-import jodd.servlet.DispatcherUtil;
-import jodd.servlet.ServletUtil;
 import jodd.util.ArraysUtil;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,16 +31,16 @@ public class BundleAction {
 	/**
 	 * Creates new bundle action.
 	 */
-	public BundleAction(HtmlStaplerBundlesManager bundlesManager, HttpServletRequest request, String bundleContentType) {
+	public BundleAction(HtmlStaplerBundlesManager bundlesManager, String servletPath, String bundleContentType) {
 		this.bundlesManager = bundlesManager;
 		this.bundleContentType = bundleContentType;
 		this.strategy = bundlesManager.getStrategy();
 
-		String realActionPath = bundlesManager.resolveRealActionPath(DispatcherUtil.getServletPath(request));
+		String realActionPath = bundlesManager.resolveRealActionPath(servletPath);
 
 		actionPath = realActionPath + '*' + bundleContentType;
 
-		contextPath = ServletUtil.getContextPath(request);
+		contextPath = bundlesManager.contextPath;
 
 		if (strategy == ACTION_MANAGED) {
 			bundleId = bundlesManager.lookupBundleId(actionPath);
@@ -87,7 +83,7 @@ public class BundleAction {
 		if (newAction) {
 			if (bundleId == null) {
 				bundleId = bundlesManager.registerNewBundleId();
-				bundleId += '-' + bundleContentType;
+				bundleId += '.' + bundleContentType;
 			}
 			sources.add(src);
 		}

@@ -9,8 +9,10 @@ import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
 import jodd.log.Log;
+import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.MimeTypes;
+import jodd.util.StringPool;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -56,7 +58,9 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	 * Creates {@link HtmlStaplerBundlesManager} instance.
 	 */
 	protected HtmlStaplerBundlesManager createBundleManager(ServletContext servletContext, Strategy strategy) {
-		return new HtmlStaplerBundlesManager(servletContext, strategy);
+		String webRoot = servletContext.getRealPath(StringPool.EMPTY);
+		String contextPath = ServletUtil.getContextPath(servletContext);
+		return new HtmlStaplerBundlesManager(contextPath, webRoot, strategy);
 	}
 
 	@Override
@@ -69,11 +73,11 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			@Override
 			protected char[] parse(TagWriter rootTagWriter, HttpServletRequest request) {
 
-				TagVisitor firstVisitor = rootTagWriter;
+				TagVisitor visitor = rootTagWriter;
 
 				if (stripHtml) {
 
-					firstVisitor = new StripHtmlTagAdapter(rootTagWriter) {
+					visitor = new StripHtmlTagAdapter(rootTagWriter) {
 						@Override
 						public void end() {
 							super.end();
@@ -84,8 +88,10 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 					};
 				}
 
+				String servletPath = DispatcherUtil.getServletPath(request);
+
 				HtmlStaplerTagAdapter htmlStaplerTagAdapter =
-						new HtmlStaplerTagAdapter(firstVisitor, request);
+						new HtmlStaplerTagAdapter(bundlesManager, servletPath, visitor);
 
 				char[] content = invokeLagarto(htmlStaplerTagAdapter);
 
