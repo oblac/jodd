@@ -14,7 +14,9 @@ import java.util.Locale;
  */
 public class TimeUtil {
 
-	public static final long MILLIS_IN_DAY = 1000L * 60 * 60 * 24;
+	public static final int SECONDS_IN_DAY = 60 * 60 * 24;
+
+	public static final long MILLIS_IN_DAY = 1000L * SECONDS_IN_DAY;
 
 	// ---------------------------------------------------------------- misc calc
 	
