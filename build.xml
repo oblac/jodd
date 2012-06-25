@@ -29,7 +29,7 @@
 	
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.4"/>
+	<property name="prjVersion" value="3.3.5-beta"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
@@ -294,13 +294,13 @@
 
 	<!-- findbugs: jodd.src -->
 
-	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
-
 	<property name="jodd.src.findbugs-dir" value="${output.dir}/findbugs/jodd.src"/>
 
 	<target name="findbugs.jodd.src" depends="build.jodd" description="  findbug jodd.src">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
+
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
 		<mkdir dir="${jodd.src.findbugs-dir}"/>
 		<findbugs home="${findbugs.home}"
 				  output="html"
@@ -538,13 +538,13 @@
 
 	<!-- findbugs: jodd-wot.src -->
 
-	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
-
 	<property name="jodd-wot.src.findbugs-dir" value="${output.dir}/findbugs/jodd-wot.src"/>
 
 	<target name="findbugs.jodd-wot.src" depends="build.jodd-wot" description="  findbug jodd-wot.src">
 		<available classname="edu.umd.cs.findbugs.anttask.FindBugsTask" property="findbugs.present"/>
 		<fail unless="findbugs.present" message="Please copy 'findbugs-ant.jar' into ${env.ANT_HOME}/lib"/>
+
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
 		<mkdir dir="${jodd-wot.src.findbugs-dir}"/>
 		<findbugs home="${findbugs.home}"
 				  output="html"
