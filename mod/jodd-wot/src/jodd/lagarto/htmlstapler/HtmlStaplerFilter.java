@@ -50,7 +50,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	protected boolean resetOnStart = true;
 	protected Strategy staplerStrategy = Strategy.RESOURCES_ONLY;
 	protected boolean useGzip;
-	protected int cacheMaxAge = 60 * 60 * 24 * 30;
+	protected int cacheMaxAge = TimeUtil.SECONDS_IN_DAY * 30;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -68,7 +68,9 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	 */
 	protected HtmlStaplerBundlesManager createBundleManager(ServletContext servletContext, Strategy strategy) {
 		String webRoot = servletContext.getRealPath(StringPool.EMPTY);
+
 		String contextPath = ServletUtil.getContextPath(servletContext);
+
 		return new HtmlStaplerBundlesManager(contextPath, webRoot, strategy);
 	}
 
@@ -114,7 +116,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	@Override
 	protected boolean processActionPath(HttpServletRequest servletRequest, HttpServletResponse servletResponse, String actionPath) throws IOException {
 
-		String bundlePath = bundlesManager.getStaplerPath();
+		String bundlePath = '/' + bundlesManager.getStaplerPath() + '/';
 
 		if (actionPath.startsWith(bundlePath) == false) {
 			return false;

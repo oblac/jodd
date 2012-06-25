@@ -34,21 +34,22 @@ public class HtmlStaplerBundlesManager {
 
 	private static final Log log = Log.getLogger(HtmlStaplerBundlesManager.class);
 
-	protected int bundleCount;		// for new bundles
+	protected int bundleCount;		// counter for new bundles
 
 	protected Map<String, String> actionBundles; 			// action -> bundleId/digest
 	protected Map<String, String> mirrors;					// temp id -> bundleId
 
+	protected final String webRoot;
+	protected final String contextPath;
+	protected final Strategy strategy;
+
+	// parameters
 	protected String localFilesEncoding = StringPool.UTF_8;
-	protected String webRoot;
 	protected String bundleFolder;
-	protected String staplerPath = "/jodd-bundle/";
-	protected String bundleFilenamePrefix = "jodd-bundle-";
+	protected String staplerPath = "jodd-bundle";
 	protected String localAddressAndPort = "http://localhost:8080";
 	protected boolean downloadLocal;
 	protected boolean sortResources;
-	protected final String contextPath;
-	protected final Strategy strategy;
 
 	// ---------------------------------------------------------------- strategy
 
@@ -82,7 +83,8 @@ public class HtmlStaplerBundlesManager {
 		this.contextPath = contextPath;
 		this.webRoot = webRoot;
 		this.strategy = strategy;
-		this.bundleFolder = SystemUtil.getTempDir();
+
+		setBundleFolder(SystemUtil.getTempDir());
 
 		if (strategy == Strategy.ACTION_MANAGED) {
 			actionBundles = new HashMap<String, String>();
@@ -97,7 +99,7 @@ public class HtmlStaplerBundlesManager {
 		return new BundleAction(this, servletPath, bundleName);
 	}
 
-	// ---------------------------------------------------------------- access
+	// ---------------------------------------------------------------- params
 
 	/**
 	 * Returns current {@link Strategy strategy}.
@@ -132,14 +134,6 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Sets web root, i.e. real path to the exploded files.
-	 * Web root is used to load local resource files.
-	 */
-	public void setWebRoot(String webRoot) {
-		this.webRoot = webRoot;
-	}
-
-	/**
 	 * Returns bundles folder. By default, it is a system temp folder.
 	 */
 	public String getBundleFolder() {
@@ -154,7 +148,8 @@ public class HtmlStaplerBundlesManager {
 	}
 
 	/**
-	 * Returns stapler path with starting and ending slash.
+	 * Returns stapler path. It is both the file system folder
+	 * name and the web folder name.
 	 */
 	public String getStaplerPath() {
 		return staplerPath;
@@ -164,27 +159,7 @@ public class HtmlStaplerBundlesManager {
 	 * Sets stapler path.
 	 */
 	public void setStaplerPath(String staplerPath) {
-		if (staplerPath.startsWith(StringPool.SLASH) == false) {
-			staplerPath = StringPool.SLASH + staplerPath;
-		}
-		if (staplerPath.endsWith(StringPool.SLASH) == false) {
-			staplerPath += StringPool.SLASH;
-		}
 		this.staplerPath = staplerPath;
-	}
-
-	/**
-	 * Returns prefix of all bundle file names.
-	 */
-	public String getBundleFilenamePrefix() {
-		return bundleFilenamePrefix;
-	}
-
-	/**
-	 * Sets the prefix of bundle file names stored on disk.
-	 */
-	public void setBundleFilenamePrefix(String bundleFilenamePrefix) {
-		this.bundleFilenamePrefix = bundleFilenamePrefix;
 	}
 
 	/**
@@ -235,10 +210,15 @@ public class HtmlStaplerBundlesManager {
 	// ---------------------------------------------------------------- lookup
 
 	/**
-	 * Creates bundle file.
+	 * Creates bundle file in bundleFolder/staplerPath. Only file object
+	 * is created, not the file content.
 	 */
 	protected File createBundleFile(String bundleId) {
-		return new File(bundleFolder, bundleFilenamePrefix + bundleId);
+		File folder = new File(bundleFolder, staplerPath);
+		if (folder.exists() == false) {
+			folder.mkdirs();
+		}
+		return new File(folder, bundleId);
 	}
 
 	/**
@@ -465,9 +445,9 @@ public class HtmlStaplerBundlesManager {
 			mirrors.clear();
 		}
 
-		FindFile ff = new WildcardFindFile("*/" + bundleFilenamePrefix + StringPool.STAR);
+		FindFile ff = new WildcardFindFile("*");
 		ff.setIncludeDirs(false);
-		ff.searchPath(bundleFolder);
+		ff.searchPath(new File(bundleFolder, staplerPath));
 
 		File f;
 		int count = 0;
@@ -476,7 +456,7 @@ public class HtmlStaplerBundlesManager {
 			count++;
 		}
 		if (log.isInfoEnabled()) {
-			log.info("HtmlStapler reset, " + count + " bundle files deleted.");
+			log.info("reset: " + count + " bundle files deleted.");
 		}
 	}
 
