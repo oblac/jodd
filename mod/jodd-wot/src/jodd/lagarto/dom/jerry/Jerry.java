@@ -468,8 +468,12 @@ public class Jerry {
 
 	/**
 	 * Gets the value of an attribute for the first element in the set of matched elements.
+	 * Returns <code>null</code> if set is empty.
 	 */
 	public String attr(String name) {
+		if (nodes.length == 0) {
+			return null;
+		}
 		return nodes[0].getAttribute(name);
 	}
 
@@ -496,9 +500,14 @@ public class Jerry {
 
 	/**
 	 * Gets the value of a style property for the first element
-	 * in the set of matched elements.
+	 * in the set of matched elements. Returns <code>null</code>
+	 * if set s empty.
 	 */
 	public String css(String propertyName) {
+		if (nodes.length == 0) {
+			return null;
+		}
+
 		propertyName = StringUtil.camelCaseToWords(propertyName, '-');
 
 		String styleAttrValue = nodes[0].getAttribute("style");
@@ -664,6 +673,9 @@ public class Jerry {
 	 * Content is raw, not HTML decoded.
 	 */
 	public String html() {
+		if (nodes.length == 0) {
+			return null;
+		}
 		return nodes[0].getInnerHtml();
 	}
 

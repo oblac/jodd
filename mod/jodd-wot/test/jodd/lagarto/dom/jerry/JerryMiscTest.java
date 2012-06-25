@@ -70,4 +70,14 @@ public class JerryMiscTest extends TestCase {
 
 		assertEquals("<xml><book><name>Foo</name><br/></book></xml>", doc.html());
 	}
+
+	public void testNullForEmpty() {
+		Jerry doc = Jerry.jerry().parse("<html></html>");
+
+		assertNull(doc.$("#not-a-valid-id").attr("someAttribute"));
+
+		assertNull(doc.$("#not-a-valid-id").css("name"));
+
+		assertNull(doc.$("#not-a-valid-id").html());
+	}
 }
