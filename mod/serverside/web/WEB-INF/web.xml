@@ -37,6 +37,10 @@
 	<filter>
 		<filter-name>htmlstapler</filter-name>
 		<filter-class>jodd.lagarto.htmlstapler.HtmlStaplerFilter</filter-class>
+		<init-param>
+			<param-name>useGzip</param-name>
+			<param-value>true</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>htmlstapler</filter-name>
