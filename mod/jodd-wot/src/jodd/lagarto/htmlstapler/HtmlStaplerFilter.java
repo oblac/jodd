@@ -2,6 +2,7 @@
 
 package jodd.lagarto.htmlstapler;
 
+import jodd.bean.BeanUtil;
 import jodd.datetime.TimeUtil;
 import jodd.io.StreamUtil;
 import jodd.lagarto.TagVisitor;
@@ -48,9 +49,9 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	protected boolean enabled = true;
 	protected boolean stripHtml = true;
 	protected boolean resetOnStart = true;
-	protected Strategy staplerStrategy = Strategy.RESOURCES_ONLY;
 	protected boolean useGzip;
 	protected int cacheMaxAge = TimeUtil.SECONDS_IN_DAY * 30;
+	protected Strategy staplerStrategy = Strategy.RESOURCES_ONLY;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -58,8 +59,46 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
 		bundlesManager = createBundleManager(filterConfig.getServletContext(), staplerStrategy);
 
+		readFilterConfigParameters(filterConfig, this,
+				"enabled",
+				"stripHtml",
+				"resetOnStart",
+				"useGzip",
+				"cacheMaxAge"
+		);
+
+		String staplerStrategyName = filterConfig.getInitParameter("strategy");
+		if (staplerStrategyName != null) {
+			if (staplerStrategyName.equalsIgnoreCase("ACTION_MANAGED")) {
+				staplerStrategy = Strategy.ACTION_MANAGED;
+			}
+		}
+
+		readFilterConfigParameters(filterConfig, bundlesManager,
+				"bundleFolder",
+				"downloadLocal",
+				"localAddressAndPort",
+				"localFilesEncoding",
+				"notFoundExceptionEnabled",
+				"sortResources",
+				"staplerPath"
+		);
+
 		if (resetOnStart) {
 			bundlesManager.reset();
+		}
+	}
+
+	/**
+	 * Reads filter config parameters and set into destination target.
+	 */
+	protected void readFilterConfigParameters(FilterConfig filterConfig, Object target, String... parameters) {
+		for (String parameter : parameters) {
+			String value = filterConfig.getInitParameter(parameter);
+
+			if (value != null) {
+				BeanUtil.setProperty(target, parameter, value);
+			}
 		}
 	}
 
@@ -104,7 +143,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 				HtmlStaplerTagAdapter htmlStaplerTagAdapter =
 						new HtmlStaplerTagAdapter(bundlesManager, servletPath, visitor);
 
-				// todo optionally add more adapters - think about adding a method so user can extend adapter chain
+				// todo add more adapters
 
 				char[] content = invokeLagarto(htmlStaplerTagAdapter);
 
