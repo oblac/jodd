@@ -50,6 +50,7 @@ public class HtmlStaplerBundlesManager {
 	protected String localAddressAndPort = "http://localhost:8080";
 	protected boolean downloadLocal;
 	protected boolean sortResources;
+	protected boolean notFoundExceptionEnabled = true;
 
 	// ---------------------------------------------------------------- strategy
 
@@ -83,8 +84,7 @@ public class HtmlStaplerBundlesManager {
 		this.contextPath = contextPath;
 		this.webRoot = webRoot;
 		this.strategy = strategy;
-
-		setBundleFolder(SystemUtil.getTempDir());
+		this.bundleFolder = SystemUtil.getTempDir();
 
 		if (strategy == Strategy.ACTION_MANAGED) {
 			actionBundles = new HashMap<String, String>();
@@ -205,6 +205,22 @@ public class HtmlStaplerBundlesManager {
 	 */
 	public void setDownloadLocal(boolean downloadLocal) {
 		this.downloadLocal = downloadLocal;
+	}
+
+	/**
+	 * Returns <code>true</code> if exception will be thrown when
+	 * resource is not found.
+	 */
+	public boolean isNotFoundExceptionEnabled() {
+		return notFoundExceptionEnabled;
+	}
+
+	/**
+	 * Sets if exception should be thrown when some resource is not found.
+	 * If not enabled, the error will be logged as a warning.
+	 */
+	public void setNotFoundExceptionEnabled(boolean notFoundExceptionEnabled) {
+		this.notFoundExceptionEnabled = notFoundExceptionEnabled;
 	}
 
 	// ---------------------------------------------------------------- lookup
@@ -352,7 +368,17 @@ public class HtmlStaplerBundlesManager {
 			}
 			String content;
 			if (isExternalResource(src)) {
-				content = NetUtil.downloadString(src, localFilesEncoding);
+				try {
+					content = NetUtil.downloadString(src, localFilesEncoding);
+				} catch (IOException ioex) {
+					if (notFoundExceptionEnabled) {
+						throw ioex;
+					}
+					if (log.isWarnEnabled()) {
+						log.warn("Download failed: " + src + "; " + ioex.getMessage());
+					}
+					content = null;
+				}
 			} else {
 				if (downloadLocal == false) {
 					// load local resource from file system
@@ -376,25 +402,51 @@ public class HtmlStaplerBundlesManager {
 						localFile = localFile.substring(0, qmndx);
 					}
 
-					content = FileUtil.readString(localFile);
+					try {
+						content = FileUtil.readString(localFile);
+					} catch (IOException ioex) {
+						if (notFoundExceptionEnabled) {
+							throw ioex;
+						}
+						if (log.isWarnEnabled()) {
+							log.warn(ioex.getMessage());
+						}
+						content = null;
+					}
 				} else {
 					// download local resource
 					String localUrl = localAddressAndPort;
+
 					if (src.startsWith(StringPool.SLASH)) {
 						localUrl += contextPath + src;
 					} else {
 						localUrl += contextPath + FileNameUtil.getPath(actionPath) + '/' + src;
 					}
-					content = NetUtil.downloadString(localUrl, localFilesEncoding);
+
+					try {
+						content = NetUtil.downloadString(localUrl, localFilesEncoding);
+					} catch (IOException ioex) {
+						if (notFoundExceptionEnabled) {
+							throw ioex;
+						}
+						if (log.isWarnEnabled()) {
+							log.warn("Download failed: " + localUrl + "; " + ioex.getMessage());
+						}
+						content = null;
+					}
 				}
 
-				if (isCssResource(src)) {
-					content = fixCssRelativeUrls(content, src);
+				if (content != null) {
+					if (isCssResource(src)) {
+						content = fixCssRelativeUrls(content, src);
+					}
 				}
 			}
 
-			content = onResourceContent(content);
-			sb.append(content);
+			if (content != null) {
+				content = onResourceContent(content);
+				sb.append(content);
+			}
 		}
 
 		FileUtil.writeString(bundleFile, sb.toString());
