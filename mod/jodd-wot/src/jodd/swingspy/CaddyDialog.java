@@ -26,9 +26,9 @@ import java.awt.event.WindowEvent;
  */
 public class CaddyDialog extends JDialog {
 
-	private JPanel panel1 = new JPanel();
-	private BorderLayout borderLayout1 = new BorderLayout();
-	protected boolean modal;
+	private JPanel jpanel = new JPanel();
+	private BorderLayout borderLayout = new BorderLayout();
+	private boolean modal;
 	private WindowAdapter parentWindowListener;
 	private Window owner;
 
@@ -80,8 +80,8 @@ public class CaddyDialog extends JDialog {
 	// ---------------------------------------------------------------- funcs
 
 	private void jbInit() {
-		panel1.setLayout(borderLayout1);
-		getContentPane().add(panel1);
+		jpanel.setLayout(borderLayout);
+		getContentPane().add(jpanel);
 	}
 
 	private void initDialog(Window parent, String title, boolean isModal) {
@@ -114,13 +114,6 @@ public class CaddyDialog extends JDialog {
 		owner.setEnabled(true);
 		owner.setFocusableWindowState(true);
 		super.dispose();
-	}
-
-	@Override
-	public void hide() {
-		owner.setEnabled(true);
-		owner.setFocusableWindowState(true);
-		super.hide();
 	}
 
 	@Override
