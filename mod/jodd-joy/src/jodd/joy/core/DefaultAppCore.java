@@ -72,25 +72,29 @@ public abstract class DefaultAppCore {
 	protected boolean isWebApplication;
 
 	/**
-	 * Default scanning path that will be examined by various
+	 * Scanning entries that will be examined by various
 	 * Jodd auto-magic tools.
+	 *
 	 */
-	protected final String[] scanningPath;
+	protected final String[] scanIncludedEntries;
 
 	/**
 	 * Default constructor.
 	 */
 	protected DefaultAppCore() {
-		scanningPath = resolveScanningPath();
+		scanIncludedEntries = resolveScanIncludedEntries();
 	}
 
 	/**
-	 * Defines the scanning path for Jodd frameworks.
-	 * Scanning path will contain all classes inside and bellow
-	 * the app core packages and 'jodd' packages.
+	 * Defines the entries that will be included in the scanning process,
+	 * when configuring Jodd frameworks. By default, scanning entries includes
+	 * all classes that belongs to the project and to the jodd.
 	 */
-	protected String[] resolveScanningPath() {
-		return new String[] {this.getClass().getPackage().getName() + ".*", "jodd.*"};
+	protected String[] resolveScanIncludedEntries() {
+		return new String[] {
+				this.getClass().getPackage().getName() + ".*",
+				"jodd.*"
+		};
 	}
 
 	// ---------------------------------------------------------------- init
@@ -141,7 +145,7 @@ public abstract class DefaultAppCore {
 		}
 
 		if (appDir == null) {
-			resolveAppDir("app.props");			// app directory is resolved from location of 'app.props'.
+			resolveAppDir(appPropsName);		// app directory is resolved from location of 'app.props'.
 		}
 
 		System.setProperty(APP_DIR, appDir);
@@ -198,6 +202,7 @@ public abstract class DefaultAppCore {
 	public void start() {
 
 		init();
+		initProps();
 
 		try {
 			startProxetta();
@@ -228,6 +233,48 @@ public abstract class DefaultAppCore {
 		stopApp();
 		stopDb();
 		log.info("app stopped");
+	}
+
+	// ---------------------------------------------------------------- props
+
+	/**
+	 * Main application props file name, must exist in class path.
+	 */
+	protected String appPropsName;
+
+	/**
+	 * Application props file name pattern.
+	 */
+	protected String appPropsNamePattern;
+
+	/**
+	 * Application props.
+	 */
+	protected Props appProps;
+
+	/**
+	 * Returns applications properties loaded from props files.
+	 */
+	public Props getAppProps() {
+		return appProps;
+	}
+
+	/**
+	 * Loads props.
+	 */
+	protected void initProps() {
+		appProps = createPetiteProps();
+		appProps.loadSystemProperties("sys");
+		appProps.loadEnvironment("env");
+		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
+	}
+
+	/**
+	 * Creates application {@link Props}. May be overridden to
+	 * configure the <code>Props</code> features.
+	 */
+	protected Props createPetiteProps() {
+		return new Props();
 	}
 
 	// ---------------------------------------------------------------- proxetta
@@ -291,15 +338,6 @@ public abstract class DefaultAppCore {
 		return petite;
 	}
 
-	/**
-	 * Main application props file name, must exist in class path.
-	 */
-	protected String appPropsName;
-
-	/**
-	 * Application props file name pattern.
-	 */
-	protected String appPropsNamePattern;
 
 	/**
 	 * Creates and initializes Petite container.
@@ -321,26 +359,14 @@ public abstract class DefaultAppCore {
 
 		// automagic configuration
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-		pcfg.setIncludedEntries(scanningPath);
+		pcfg.setIncludedEntries(scanIncludedEntries);
 		pcfg.configure(petite);
 
 		// load parameters from properties files
-		Props appProps = createPetiteProps();
-		appProps.loadSystemProperties("sys");
-		appProps.loadEnvironment("env");
-		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
 		petite.defineParameters(appProps);
 
 		// add AppCore instance to Petite
 		petite.addBean(PETITE_APPCORE, this);
-	}
-
-	/**
-	 * Creates application {@link Props}. May be overridden to
-	 * configure the <code>Props</code> features.
-	 */
-	protected Props createPetiteProps() {
-		return new Props();
 	}
 
 	/**
@@ -436,7 +462,7 @@ public abstract class DefaultAppCore {
 
 		// automatic configuration
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-		dbcfg.setIncludedEntries(scanningPath);
+		dbcfg.setIncludedEntries(scanIncludedEntries);
 		dbcfg.configure(dbOomManager);
 	}
 
