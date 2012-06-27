@@ -74,27 +74,13 @@ public abstract class DefaultAppCore {
 	/**
 	 * Scanning entries that will be examined by various
 	 * Jodd auto-magic tools.
-	 *
 	 */
-	protected final String[] scanIncludedEntries;
+	protected String[] scanIncludedEntries;
 
 	/**
 	 * Default constructor.
 	 */
 	protected DefaultAppCore() {
-		scanIncludedEntries = resolveScanIncludedEntries();
-	}
-
-	/**
-	 * Defines the entries that will be included in the scanning process,
-	 * when configuring Jodd frameworks. By default, scanning entries includes
-	 * all classes that belongs to the project and to the jodd.
-	 */
-	protected String[] resolveScanIncludedEntries() {
-		return new String[] {
-				this.getClass().getPackage().getName() + ".*",
-				"jodd.*"
-		};
 	}
 
 	// ---------------------------------------------------------------- init
@@ -153,7 +139,7 @@ public abstract class DefaultAppCore {
 
 		initLogger();							// logger becomes available after this point
 
-		log.info("app dir: " + appDir);
+
 	}
 
 	/**
@@ -174,7 +160,7 @@ public abstract class DefaultAppCore {
 	protected void resolveAppDir(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName);
 		if (url == null) {
-			throw new AppException("Unable to resolve app dirs, missing: '" + classPathFileName + "'.");
+			throw new AppException("Unable to resolve app dirs, missing: " + classPathFileName);
 		}
 		String protocol = url.getProtocol();
 
@@ -202,13 +188,18 @@ public abstract class DefaultAppCore {
 	public void start() {
 
 		init();
+		initLogger();
 		initProps();
+		initScanning();
+
+		log.info("app dir: " + appDir);
 
 		try {
 			startProxetta();
 			startPetite();
 			startDb();
 			startApp();
+
 			log.info("app started");
 		} catch (RuntimeException rex) {
 			if (log != null) {
@@ -230,8 +221,10 @@ public abstract class DefaultAppCore {
 	 */
 	public void stop() {
 		log.info("shutting down...");
+
 		stopApp();
 		stopDb();
+
 		log.info("app stopped");
 	}
 
@@ -260,22 +253,32 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Loads props.
+	 * Creates and loads application props.
+	 * It first load system properties (registered as <code>sys.*</code>)
+	 * and then environment properties (registered as <code>env.*</code>).
+	 * Finally, props files are read from the classpath.
 	 */
 	protected void initProps() {
-		appProps = createPetiteProps();
+		appProps = new Props();
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
+
 		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
 	}
 
+
 	/**
-	 * Creates application {@link Props}. May be overridden to
-	 * configure the <code>Props</code> features.
+	 * Defines the entries that will be included in the scanning process,
+	 * when configuring Jodd frameworks. By default, scanning entries includes
+	 * all classes that belongs to the project and to the jodd.
 	 */
-	protected Props createPetiteProps() {
-		return new Props();
+	protected String[] initScanning() {
+		scanIncludedEntries = new String[] {
+				this.getClass().getPackage().getName() + ".*",
+				"jodd.*"
+		};
 	}
+
 
 	// ---------------------------------------------------------------- proxetta
 
