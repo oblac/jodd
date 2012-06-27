@@ -272,7 +272,7 @@ public abstract class DefaultAppCore {
 	 * when configuring Jodd frameworks. By default, scanning entries includes
 	 * all classes that belongs to the project and to the jodd.
 	 */
-	protected String[] initScanning() {
+	protected void initScanning() {
 		scanIncludedEntries = new String[] {
 				this.getClass().getPackage().getName() + ".*",
 				"jodd.*"
