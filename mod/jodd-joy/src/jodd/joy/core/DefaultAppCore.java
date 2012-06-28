@@ -72,12 +72,6 @@ public abstract class DefaultAppCore {
 	protected boolean isWebApplication;
 
 	/**
-	 * Scanning entries that will be examined by various
-	 * Jodd auto-magic tools.
-	 */
-	protected String[] scanIncludedEntries;
-
-	/**
 	 * Default constructor.
 	 */
 	protected DefaultAppCore() {
@@ -136,10 +130,6 @@ public abstract class DefaultAppCore {
 
 		System.setProperty(APP_DIR, appDir);
 		System.setProperty(APP_WEB, Boolean.toString(isWebApplication));
-
-		initLogger();							// logger becomes available after this point
-
-
 	}
 
 	/**
@@ -259,13 +249,33 @@ public abstract class DefaultAppCore {
 	 * Finally, props files are read from the classpath.
 	 */
 	protected void initProps() {
-		appProps = new Props();
+		if (appProps == null) {
+			appProps = new Props();
+		}
+
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
 
 		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
 	}
 
+	// ---------------------------------------------------------------- scanning
+
+	/**
+	 * Scanning entries that will be examined by various
+	 * Jodd auto-magic tools.
+	 */
+	protected String[] scanIncludedEntries;
+
+	/**
+	 * Scanning jars.
+	 */
+	protected String[] scanIncludedJars;
+
+	/**
+	 * Should scanning ignore the exception.
+	 */
+	protected boolean scanIgnoreExceptions;
 
 	/**
 	 * Defines the entries that will be included in the scanning process,
@@ -277,6 +287,10 @@ public abstract class DefaultAppCore {
 				this.getClass().getPackage().getName() + ".*",
 				"jodd.*"
 		};
+
+		scanIncludedJars = null;
+
+		scanIgnoreExceptions = false;
 	}
 
 
@@ -362,7 +376,15 @@ public abstract class DefaultAppCore {
 
 		// automagic configuration
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-		pcfg.setIncludedEntries(scanIncludedEntries);
+
+		if (scanIncludedEntries != null) {
+			pcfg.setIncludedEntries(scanIncludedEntries);
+		}
+		if (scanIncludedJars != null) {
+			pcfg.setIncludedJars(scanIncludedJars);
+		}
+		pcfg.setIgnoreException(scanIgnoreExceptions);
+
 		pcfg.configure(petite);
 
 		// load parameters from properties files
@@ -465,7 +487,15 @@ public abstract class DefaultAppCore {
 
 		// automatic configuration
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-		dbcfg.setIncludedEntries(scanIncludedEntries);
+
+		if (scanIncludedEntries != null) {
+			dbcfg.setIncludedEntries(scanIncludedEntries);
+		}
+		if (scanIncludedJars != null) {
+			dbcfg.setIncludedJars(scanIncludedJars);
+		}
+		dbcfg.setIgnoreException(scanIgnoreExceptions);
+
 		dbcfg.configure(dbOomManager);
 	}
 
@@ -488,7 +518,9 @@ public abstract class DefaultAppCore {
 	 */
 	protected void stopDb() {
 		log.info("database shutdown");
+
 		jtxManager.close();
+
 		connectionProvider.close();
 	}
 
