@@ -29,6 +29,7 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
+import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 
@@ -49,15 +50,24 @@ public abstract class DefaultAppCore {
 	public static final String APP_WEB = "app.web";
 
 	/**
-	 * Petite bean names.
+	 * Petite bean name for AppCore (this instance).
 	 */
-	public static final String PETITE_APPCORE = "app";		// AppCore
-	public static final String PETITE_DBPOOL = "dbpool";	// database pool
-	public static final String PETITE_DBOOM = "dboom";		// DbOom instance
-	public static final String PETITE_APPINIT = "appInit";	// init bean
+	public static final String PETITE_APPCORE = "app";
+	/**
+	 * Petite bean name for database pool.
+	 */
+	public static final String PETITE_DBPOOL = "dbpool";
+	/**
+	 * Petite bean name for DbOom instance.
+	 */
+	public static final String PETITE_DBOOM = "dboom";
+	/**
+	 * Petite bean name for {@link AppInit} bean.
+	 */
+	public static final String PETITE_APPINIT = "appInit";
 
 	/**
-	 * Logger. Resolved during initialization.
+	 * Logger. Resolved during {@link #initLogger() initialization}.
 	 */
 	protected static Log log;
 
@@ -94,8 +104,7 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Initializes system core. Invoked *before* anything else!
-	 * Override to register types for TypeManager, DbOom conversions, JTX annotations etc.
+	 * Initializes system core, invoked very first!
 	 * May also set the value of <code>appDir</code>.
 	 * Important: logging is not yet available in this method!
 	 */
@@ -126,8 +135,7 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Initializes the logger. It must be initialized after the
-	 * log path is defined.
+	 * Initializes the logger, after the log path is {@link #init() defined}.
 	 */
 	protected void initLogger() {
 		log = Log.getLogger(DefaultAppCore.class);
@@ -135,7 +143,6 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Resolves application root folders.
-	 * Usually invoked on the very beginning, <b>before</b> application initialization.
 	 * <p>
 	 * If application is started as web application, app folder is one below the WEB-INF folder.
 	 * Otherwise, the root folder is equal to the working folder.
@@ -166,7 +173,7 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- ready
 
 	/**
-	 * Callback when basic initialization is done.
+	 * Callback when core initialization is done.
 	 */
 	protected void ready() {
 		log.info("app dir: " + appDir);
@@ -280,19 +287,41 @@ public abstract class DefaultAppCore {
 	protected boolean scanIgnoreExceptions;
 
 	/**
-	 * Defines the entries that will be included in the scanning process,
+	 * Defines entries that will be included in the scanning process,
 	 * when configuring Jodd frameworks. By default, scanning entries includes
 	 * all classes that belongs to the project and to the jodd.
 	 */
 	protected void initScanning() {
-		scanIncludedEntries = new String[] {
-				this.getClass().getPackage().getName() + ".*",
-				"jodd.*"
-		};
 
-		scanIncludedJars = null;
+		// scan included entries
+		String value = appProps.getValue("app-scan.includedEntries");
 
-		scanIgnoreExceptions = false;
+		if (value == null) {
+			scanIncludedEntries = new String[] {
+					this.getClass().getPackage().getName() + ".*",
+					"jodd.*"
+			};
+		} else {
+			scanIncludedEntries = Convert.toStringArray(value);
+		}
+
+		// scan included jars
+		value = appProps.getValue("app-scan.includedJars");
+
+		if (value == null) {
+			scanIncludedJars = null;
+		} else {
+			scanIncludedJars = Convert.toStringArray(value);
+		}
+
+		// scan ignore exceptions
+		value = appProps.getValue("app-scan.ignoreExceptions");
+
+		if (value == null) {
+			scanIgnoreExceptions = false;
+		} else {
+			scanIgnoreExceptions = Convert.toBooleanValue(value);
+		}
 	}
 
 
