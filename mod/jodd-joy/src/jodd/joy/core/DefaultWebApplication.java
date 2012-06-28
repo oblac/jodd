@@ -36,12 +36,22 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	}
 
 	/**
-	 * Registers default and one additional Madvoc components.
+	 * Registers default and additional {@link ProxettaAwareActionsManager}.
+	 * Because the custom action manager is registered using an instance,
+	 * all custom Madvoc components should be registered before it!
+	 * For that reason, custom madvoc components should be registered
+	 * using {@link #registerMadvocComponents()}.
 	 */
 	@Override
-	public void registerMadvocComponents() {
+	public final void registerMadvocComponents() {
 		super.registerMadvocComponents();
+
+		registerCustomMadvocComponents();
+
 		registerComponent(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
+	}
+
+	protected void registerCustomMadvocComponents() {
 	}
 
 	/**
