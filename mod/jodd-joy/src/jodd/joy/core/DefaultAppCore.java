@@ -79,8 +79,6 @@ public abstract class DefaultAppCore {
 
 	// ---------------------------------------------------------------- init
 	
-	protected boolean initialized;
-
 	/**
 	 * Returns <code>true</code> if application is started as a part of web application.
 	 */
@@ -96,18 +94,13 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Initializes system. Invoked *before* anything else!
+	 * Initializes system core. Invoked *before* anything else!
 	 * Override to register types for TypeManager, DbOom conversions, JTX annotations etc.
-	 * <p>
 	 * May also set the value of <code>appDir</code>.
+	 * Important: logging is not yet available in this method!
 	 */
 	@SuppressWarnings("unchecked")
 	public void init() {
-		if (initialized == true) {
-			return;
-		}
-		initialized = true;
-
 		if (appPropsName == null) {
 			appPropsName = "app.props";
 		}
@@ -170,6 +163,15 @@ public abstract class DefaultAppCore {
 		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
 	}
 
+	// ---------------------------------------------------------------- ready
+
+	/**
+	 * Callback when basic initialization is done.
+	 */
+	protected void ready() {
+		log.info("app dir: " + appDir);
+	}
+
 	// ---------------------------------------------------------------- start
 
 	/**
@@ -182,7 +184,7 @@ public abstract class DefaultAppCore {
 		initProps();
 		initScanning();
 
-		log.info("app dir: " + appDir);
+		ready();
 
 		try {
 			startProxetta();
