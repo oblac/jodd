@@ -10,7 +10,7 @@ import jodd.madvoc.petite.PetiteWebApplication;
 import jodd.petite.PetiteContainer;
 
 /**
- * Default web application core.
+ * Default web application.
  */
 public abstract class DefaultWebApplication extends PetiteWebApplication {
 
@@ -40,7 +40,7 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	 * Because the custom action manager is registered using an instance,
 	 * all custom Madvoc components should be registered before it!
 	 * For that reason, custom madvoc components should be registered
-	 * using {@link #registerMadvocComponents()}.
+	 * using {@link #registerCustomMadvocComponents()}.
 	 */
 	@Override
 	public final void registerMadvocComponents() {
@@ -51,14 +51,18 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 		registerComponent(new ProxettaAwareActionsManager(defaultAppCore.getProxetta()));
 	}
 
+	/**
+	 * Registers custom madvoc components.
+	 * @see #registerMadvocComponents()
+	 */
 	protected void registerCustomMadvocComponents() {
 	}
 
 	/**
-	 * Defines application container for Madvoc usage. We will share applications
+	 * Defines application container for Madvoc usage. We share applications
 	 * Petite container from the appCore, so Madvoc can use it when creating
 	 * Madvoc actions. By sharing the application container with the Madvoc,
-	 * Petite beans may be injected in the actions.
+	 * Petite beans can be injected in the actions.
 	 * <p>
 	 * If container is not shared, PetiteWebApplication would create
 	 * new Petite container; that is fine when e.g. there are no layers.
@@ -68,9 +72,8 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 		return defaultAppCore.getPetite();
 	}
 
-
 	/**
-	 * Configure <code>AutomagicMadvocConfigurator</code>!
+	 * Configures <code>AutomagicMadvocConfigurator</code>!
 	 */
 	@Override
 	public void configure(MadvocConfigurator configurator) {
