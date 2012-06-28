@@ -20,6 +20,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	protected Document rootNode;
 	protected Node parentNode;
+	/**
+	 * While enabled, nodes will be added to the DOM tree.
+	 * Useful for skipping some tags.
+	 */
+	protected boolean enabled;
 
 	public DOMBuilderTagVisitor(LagartoDOMBuilder builder) {
 		this.builder = builder;
@@ -42,6 +47,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 		rootNode = new Document();
 		parentNode = rootNode;
+		enabled = true;
 	}
 
 	public void end() {
@@ -85,6 +91,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void tag(Tag tag) {
+		if (!enabled) {
+			return;
+		}
+
 		TagType tagType = tag.getType();
 		Element node;
 
@@ -247,6 +257,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void xmp(Tag tag, CharSequence body) {
+		if (!enabled) {
+			return;
+		}
+
 		Node node = createElementNode(tag);
 		parentNode.appendChild(node);
 
@@ -257,6 +271,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void style(Tag tag, CharSequence body) {
+		if (!enabled) {
+			return;
+		}
+
 		Element node = createElementNode(tag);
 		parentNode.appendChild(node);
 
@@ -267,6 +285,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void script(Tag tag, CharSequence body) {
+		if (!enabled) {
+			return;
+		}
+
 		Element node = createElementNode(tag);
 		parentNode.appendChild(node);
 
@@ -277,6 +299,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void comment(CharSequence comment) {
+		if (!enabled) {
+			return;
+		}
+
 		if (builder.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
@@ -288,27 +314,47 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void text(CharSequence text) {
+		if (!enabled) {
+			return;
+		}
+
 		String textValue = text.toString();
 		Node node = new Text(textValue);
 		parentNode.appendChild(node);
 	}
 
 	public void cdata(CharSequence cdata) {
+		if (!enabled) {
+			return;
+		}
+
 		CData cdataNode = new CData(cdata.toString());
 		parentNode.appendChild(cdataNode);
 	}
 
 	public void xml(Tag tag) {
+		if (!enabled) {
+			return;
+		}
+
 		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, builder.isCaseSensitive());
 		parentNode.appendChild(xmlDeclaration);
 	}
 
 	public void doctype(String name, String publicId, String baseUri) {
+		if (!enabled) {
+			return;
+		}
+
 		DocumentType documentType = new DocumentType(name, publicId, baseUri);
 		parentNode.appendChild(documentType);
 	}
 
 	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+		if (!enabled) {
+			return;
+		}
+
 		Node comment = new Comment(conditionalComment.toString(), isStartingTag, isDownlevelHidden);
 		parentNode.appendChild(comment);
 	}
