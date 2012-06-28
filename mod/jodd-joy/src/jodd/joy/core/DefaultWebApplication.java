@@ -73,20 +73,13 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	}
 
 	/**
-	 * Configures <code>AutomagicMadvocConfigurator</code>!
+	 * Configures <code>AutomagicMadvocConfigurator</code>.
 	 */
 	@Override
 	public void configure(MadvocConfigurator configurator) {
 		if (configurator instanceof AutomagicMadvocConfigurator) {
 			AutomagicMadvocConfigurator madvocConfigurator = (AutomagicMadvocConfigurator) configurator;
-
-			if (defaultAppCore.scanIncludedEntries != null) {
-				madvocConfigurator.setExcludedJars(defaultAppCore.scanIncludedEntries);
-			}
-			if (defaultAppCore.scanIncludedJars != null) {
-				madvocConfigurator.setExcludedJars(defaultAppCore.scanIncludedJars);
-			}
-			madvocConfigurator.setIgnoreException(defaultAppCore.scanIgnoreExceptions);
+			defaultAppCore.configureScanner(madvocConfigurator);
 		}
 		super.configure(configurator);
 	}

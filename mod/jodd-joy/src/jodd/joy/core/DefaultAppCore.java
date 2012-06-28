@@ -8,6 +8,7 @@ import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
+import jodd.io.findfile.ClassFinder;
 import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
@@ -324,6 +325,20 @@ public abstract class DefaultAppCore {
 		}
 	}
 
+	/**
+	 * Configures scanner class finder. Works for all three scanners:
+	 * Petite, DbOom and Madvoc.
+	 */
+	protected void configureScanner(ClassFinder classFinder) {
+		if (scanIncludedEntries != null) {
+			classFinder.setIncludedEntries(scanIncludedEntries);
+		}
+		if (scanIncludedJars != null) {
+			classFinder.setIncludedJars(scanIncludedJars);
+		}
+		classFinder.setIgnoreException(scanIgnoreExceptions);
+	}
+
 
 	// ---------------------------------------------------------------- proxetta
 
@@ -407,15 +422,7 @@ public abstract class DefaultAppCore {
 
 		// automagic configuration
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-
-		if (scanIncludedEntries != null) {
-			pcfg.setIncludedEntries(scanIncludedEntries);
-		}
-		if (scanIncludedJars != null) {
-			pcfg.setIncludedJars(scanIncludedJars);
-		}
-		pcfg.setIgnoreException(scanIgnoreExceptions);
-
+		configureScanner(pcfg);
 		pcfg.configure(petite);
 
 		// load parameters from properties files
@@ -518,15 +525,7 @@ public abstract class DefaultAppCore {
 
 		// automatic configuration
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-
-		if (scanIncludedEntries != null) {
-			dbcfg.setIncludedEntries(scanIncludedEntries);
-		}
-		if (scanIncludedJars != null) {
-			dbcfg.setIncludedJars(scanIncludedJars);
-		}
-		dbcfg.setIgnoreException(scanIgnoreExceptions);
-
+		configureScanner(dbcfg);
 		dbcfg.configure(dbOomManager);
 	}
 
