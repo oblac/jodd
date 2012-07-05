@@ -40,7 +40,7 @@ public class Email extends CommonEmail {
 		return this;
 	}
 	public Email replyTo(String... replyTos) {
-		setTo(replyTos);
+		setReplyTo(replyTos);
 		return this;
 	}
 
