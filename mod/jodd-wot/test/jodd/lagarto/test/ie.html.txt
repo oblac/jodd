@@ -1,6 +1,31 @@
 CCH:[if IE]
 txt:[IE5+ and above]
 ccH:[endif]
+CCH:[if IE]
+txt:[IE5+ and above-a]
+ccH:[endif]
 CCS:[if !IE]
-txt:[NOT using IE.]
+txt:[NOT using IE]
 ccS:[endif]
+CCS:[if !IE]
+txt:[NOT using IEa]
+ccS:[endif]
+CCH:[if !IE]3
+txt:[not IE]
+ccH:[endif]4
+CCH:[if !IE]3
+txt:[not IEa]
+ccH:[endif]4
+CCH:[if !IE]6
+txt:[not IE 2]
+ccH:[endif]10
+CCH:[if !IE]6
+txt:[not IE 2a]
+ccH:[endif]10
+CCH:[if !IE]5
+txt:[not IE 3]
+ccH:[endif]4
+CCH:[if !IE]5
+txt:[not IE 4a]
+ccH:[endif]4
+txt:[text]

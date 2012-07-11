@@ -1,0 +1,8 @@
+com:[comment]
+com:[a]
+com:[x]
+com:[]
+txt:[text]
+com:[zoom]
+com:[[A]]
+txt:[text2]
