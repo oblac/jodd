@@ -170,10 +170,22 @@ public class LagartoDOMBuilder {
 		return parse(lagarto);
 	}
 
+	/**
+	 * Parses the document using provided Lagarto parser.
+	 */
 	protected Document parse(LagartoParser lagarto) {
-		DOMBuilderTagVisitor domBuilderTagVisitor = new DOMBuilderTagVisitor(this);
+		DOMBuilderTagVisitor domBuilderTagVisitor = createDOMDomBuilderTagVisitor();
+
 		lagarto.parse(domBuilderTagVisitor, parseSpecialTagsAsCdata);
+
 		return domBuilderTagVisitor.getDocument();
+	}
+
+	/**
+	 * Creates {@link DOMBuilderTagVisitor}.
+	 */
+	protected DOMBuilderTagVisitor createDOMDomBuilderTagVisitor() {
+		return new DOMBuilderTagVisitor(this);
 	}
 
 }
