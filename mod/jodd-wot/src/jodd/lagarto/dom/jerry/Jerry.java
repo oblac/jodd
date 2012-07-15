@@ -67,7 +67,18 @@ public class Jerry {
 	 */
 	public static class JerryParser {
 
-		protected final LagartoDOMBuilder builder = new LagartoDOMBuilder();
+		protected final LagartoDOMBuilder builder;
+
+		public JerryParser() {
+			this.builder = createLagartoDOMBuilder();
+		}
+
+		/**
+		 * Creates <code>LagartoDomBuilder</code> for parsing.
+		 */
+		protected LagartoDOMBuilder createLagartoDOMBuilder() {
+			return new LagartoDOMBuilder();
+		}
 
 		/**
 		 * Returns builder for more configuration.
