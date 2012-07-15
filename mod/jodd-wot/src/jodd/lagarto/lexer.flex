@@ -71,14 +71,19 @@ import java.nio.CharBuffer;
 %%
 
 <YYINITIAL> {
-	"<!--" [^\[] ~"-->"		{ return Token.COMMENT; }
-	"<!---->"           	{ return Token.COMMENT; }
+	(
+		"<![if"
+		[^\]]*
+		"]>"
+	)                       { return Token.CONDITIONAL_COMMENT_START; }
+	(
+		("<!--" [^>]*)?
+		"<![endif]"
+		(">" | "-->")
+	)         				{ return Token.CONDITIONAL_COMMENT_END; }
+	"<!--" ~"-->"			{ return Token.COMMENT; }
 	"<!DOCTYPE"				{ stateDoctype(); return Token.DOCTYPE; }
 	"<![CDATA[" ~"]]>"  	{ return Token.CDATA; }
-	"<!--[if" ~"]>"     	{ return Token.CONDITIONAL_COMMENT_START; }
-	"<![if" ~"]>"       	{ return Token.CONDITIONAL_COMMENT_START; }
-	"<![endif]>"        	{ return Token.CONDITIONAL_COMMENT_END; }
-	"<![endif]-->"        	{ return Token.CONDITIONAL_COMMENT_END; }
 	[^<]+               	{ return Token.TEXT; }
 	"<?"					{ nextTagState = YYINITIAL; stateTag(); return Token.XML_LT; }
 	"<"                 	{ nextTagState = YYINITIAL; stateTag(); return Token.LT; }
