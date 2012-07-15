@@ -68,15 +68,16 @@ public interface TagVisitor {
 	void xml(Tag tag);
 
 	/**
-	 * Invoked on DOCTYPE directive. If publicId is <code>null</code>, it is a SYSTEM
+	 * Invoked on DOCTYPE directive. If <code>publicId</code> is <code>null</code>, it is a SYSTEM
 	 * directive, otherwise it is PUBLIC.
 	 */
 	void doctype(String name, String publicId, String baseUri);
 
 	/**
-	 * Invoked on IE conditional comments.
+	 * Invoked on IE conditional comment. The <code>expression</code> if unmodified expression.
+	 * <code>comment</code> is optional additional comment and may be <code>null</code>.
 	 */
-	void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden);
+	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment);
 
 	// ---------------------------------------------------------------- errors
 

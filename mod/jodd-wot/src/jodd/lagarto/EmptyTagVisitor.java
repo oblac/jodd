@@ -40,7 +40,7 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void doctype(String name, String publicId, String baseUri) {
 	}
 
-	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
 	}
 
 	public void error(String message) {

@@ -15,7 +15,7 @@ public class TagWriterUtil {
 		appendable.append("-->");
 	}
 
-	public static void writeConditionalComment(Appendable appendable, CharSequence value, boolean isStartingTag, boolean downlevelHidden) throws IOException {
+	public static void writeConditionalComment(Appendable appendable, CharSequence value, boolean isStartingTag, boolean downlevelHidden, CharSequence additionalComment) throws IOException {
 		if (isStartingTag) {
 			if (downlevelHidden) {
 				appendable.append("<!--[");
@@ -24,7 +24,15 @@ public class TagWriterUtil {
 			}
 			appendable.append(value);
 			appendable.append("]>");
+
+			if (additionalComment != null) {
+				appendable.append(additionalComment);
+			}
 		} else {
+			if (additionalComment != null) {
+				appendable.append(additionalComment);
+			}
+
 			appendable.append("<![");
 			appendable.append(value);
 			if (downlevelHidden) {

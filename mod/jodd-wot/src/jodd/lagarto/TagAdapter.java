@@ -65,8 +65,8 @@ public class TagAdapter implements TagVisitor {
 		target.doctype(name, publicId, baseUri);
 	}
 
-	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
-		target.condComment(conditionalComment, isStartingTag, isDownlevelHidden);
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+		target.condComment(expression, isStartingTag, isHidden, comment);
 	}
 
 	public void error(String message) {
