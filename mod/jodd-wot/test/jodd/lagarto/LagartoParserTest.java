@@ -229,9 +229,13 @@ public class LagartoParserTest extends TestCase {
 				result.append(publicId).append(' ').append(baseUri).append(']').append(NEWLINE);
 			}
 
-			public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
-				result.append(isStartingTag ? "CC" : "cc").append(isDownlevelHidden ? 'H' : 'S');
-				result.append(":[").append(conditionalComment).append(']').append(NEWLINE);
+			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+				result.append(isStartingTag ? "CC" : "cc").append(isHidden ? 'H' : 'S');
+				result.append(":[").append(expression).append(']');
+				if (comment != null) {
+					result.append(comment.length());
+				}
+				result.append(NEWLINE);
 
 			}
 
