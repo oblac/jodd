@@ -69,7 +69,7 @@ public class LagartoParser {
 		try {
 			_parse();
 		} catch (IOException ioex) {
-			throw new LagartoException("Parsing error.", ioex);
+			throw new LagartoException(ioex);
 		}
 		if (log.isDebugEnabled()) {
 			if (time != 0) {
@@ -94,7 +94,7 @@ public class LagartoParser {
 					visitor.end();
 					return;
 				case COMMENT:
-					parseComment();
+					parseCommentOrConditionalComment();
 					break;
 				case CDATA:
 					parseCDATA();
@@ -113,7 +113,7 @@ public class LagartoParser {
 					parseTag(token, TagType.START);
 					break;
 				case CONDITIONAL_COMMENT_START:
-					parseCCStart();
+					parseRevealedCCStart();
 					break;
 				case CONDITIONAL_COMMENT_END:
 					parseCCEnd();
@@ -148,19 +148,53 @@ public class LagartoParser {
 			buffTextEnd = end;
 		} else {
 			if (buffTextEnd != start) {
-				throw new LagartoException("Parsing error.");
+				throw new LagartoException();
 			}
 			buffTextEnd = end;
 		}
 	}
 
 	/**
-	 * Parses HTML comments.
+	 * Parses HTML comments. Detect IE hidden conditional comments, too.
 	 */
-	protected void parseComment() throws IOException {
+	protected void parseCommentOrConditionalComment() throws IOException {
 		flushText();
-		int start = lexer.position() + 4;
-		int end = start + lexer.length() - 7;
+
+		int start = lexer.position() + 4;		// skip "<!--"
+		int end = start + lexer.length() - 7;	// skip "-->"
+
+		if (LagartoParserUtil.regionStartWith(input, start, end, "[if")) {
+			// conditional comment start
+
+			int expressionEnd = LagartoParserUtil.regionIndexOf(input, start + 3, end, ']');
+
+			int ccend = expressionEnd + 2;
+
+			CharSequence additionalComment = null;
+
+			// cc start tag ends either with "]>" or at very next "-->"
+
+			int commentEnd = LagartoParserUtil.regionIndexOf(input, ccend, end, "<![endif]");
+
+			if (commentEnd == -1) {
+				additionalComment = input.subSequence(ccend, end + 3);
+			}
+
+			visitor.condComment(input.subSequence(start + 1, expressionEnd), true, true, additionalComment);
+
+			// calculate push back to the end of the starting tag
+
+			if (additionalComment == null) {
+				int pushBack = lexer.position() + lexer.length();
+
+				pushBack -= ccend;
+
+				lexer.yypushback(pushBack);
+			}
+
+			return;
+		}
+
 		visitor.comment(input.subSequence(start, end));
 	}
 
@@ -223,21 +257,29 @@ public class LagartoParser {
 	/**
 	 * Parses conditional comment start.
 	 */
-	protected void parseCCStart() throws IOException {
+	protected void parseRevealedCCStart() throws IOException {
 		flushText();
-		int start = lexer.position();
-		int end = start + lexer.length() - 2;
 
-		boolean isDownlevelHidden;
-		if (input.charAt(start + 2) == '-') {
-			start += 5;
-			isDownlevelHidden = true;
-		} else {
-			start += 3;
-			isDownlevelHidden = false;
+		int start = lexer.position();
+		int end = start + lexer.length();
+		int textStart = start;
+		int textEnd = end;
+
+		int i = start + 2;
+		while (i < end) {
+			if (input.charAt(i) == '[') {
+				i++;
+				textStart = i;
+				continue;
+			}
+			if (input.charAt(i) == ']') {
+				textEnd = i;
+				break;
+			}
+			i++;
 		}
 
-		visitor.condComment(input.subSequence(start, end), true, isDownlevelHidden);
+		visitor.condComment(input.subSequence(textStart, textEnd), true, false, null);
 	}
 
 	/**
@@ -247,18 +289,32 @@ public class LagartoParser {
 		flushText();
 		int start = lexer.position();
 		int end = start + lexer.length();
+		int textStart = start;
+		int textEnd = end;
 
-		boolean isDownlevelHidden;
-		if (input.charAt(end - 2) == '-') {
-			end -= 4;
-			isDownlevelHidden = true;
-		} else {
-			end -= 2;
-			isDownlevelHidden = false;
+		int i = start + 2;
+		while (i < end) {
+			if (input.charAt(i) == '[') {
+				i++;
+				textStart = i;
+				continue;
+			}
+			if (input.charAt(i) == ']') {
+				textEnd = i;
+				break;
+			}
+			i++;
 		}
-		start += 3;
 
-		visitor.condComment(input.subSequence(start, end), false, isDownlevelHidden);
+		boolean isDownlevelHidden = (end - textEnd) == 4;
+		boolean hasExtra = (textStart - start) > 3;
+
+		CharSequence additionalComment = null;
+		if (hasExtra) {
+			additionalComment = input.subSequence(start, textStart - 3);
+		}
+
+		visitor.condComment(input.subSequence(textStart, textEnd), false, isDownlevelHidden, additionalComment);
 	}
 
 	/**
