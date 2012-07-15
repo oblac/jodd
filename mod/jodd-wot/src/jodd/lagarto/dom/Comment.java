@@ -13,6 +13,7 @@ public class Comment extends Node {
 
 	protected final Boolean conditionalDownlevelHidden;
 	protected final boolean isStartingTag;
+	protected final String additionalComment;
 
 	/**
 	 * Creates regular comment.
@@ -22,23 +23,25 @@ public class Comment extends Node {
 		this.nodeValue = comment;
 		this.conditionalDownlevelHidden = null;
 		this.isStartingTag = false;
+		this.additionalComment = null;
 	}
 
 	/**
 	 * Creates conditional comment.
 	 */
-	public Comment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden) {
+	public Comment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
 		super(NodeType.COMMENT, null, true);
 		this.nodeValue = comment;
 		this.isStartingTag = isStartingTag;
 		this.conditionalDownlevelHidden = Boolean.valueOf(conditionalDownlevelHidden);
+		this.additionalComment = additionalComment;
 	}
 
 	@Override
 	public Comment clone() {
 		return cloneTo(conditionalDownlevelHidden == null ?
 				new Comment(nodeValue) :
-				new Comment(nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue()));
+				new Comment(nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment));
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class Comment extends Node {
 		if (conditionalDownlevelHidden == null) {
 			TagWriterUtil.writeComment(appendable, nodeValue);
 		} else {
-			TagWriterUtil.writeConditionalComment(appendable, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue());
+			TagWriterUtil.writeConditionalComment(appendable, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment);
 		}
 	}
 

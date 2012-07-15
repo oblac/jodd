@@ -350,13 +350,15 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.appendChild(documentType);
 	}
 
-	public void condComment(CharSequence conditionalComment, boolean isStartingTag, boolean isDownlevelHidden) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
 		if (!enabled) {
 			return;
 		}
 
-		Node comment = new Comment(conditionalComment.toString(), isStartingTag, isDownlevelHidden);
-		parentNode.appendChild(comment);
+		String additionalComment = comment != null ? comment.toString() : null;
+		Node commentNode = new Comment(expression.toString(), isStartingTag, isHidden, additionalComment);
+
+		parentNode.appendChild(commentNode);
 	}
 
 	public void error(String message) {
