@@ -78,20 +78,20 @@ public class DbEntitySqlTest extends TestCase {
 	public void testUpdate() {
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.update(g);
-		assertEquals("update GIRL Girl set Girl.ID=:girl.id, Girl.NAME=:girl.name, Girl.SPECIALITY=:girl.speciality  where (1=1)",
+		assertEquals("update GIRL Girl set ID=:girl.id, NAME=:girl.name, SPECIALITY=:girl.speciality  where (1=1)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl(Integer.valueOf(2), null, ".net");
 		b = DbEntitySql.update(bg);
 		assertEquals(
-				"update GIRL BadGirl set BadGirl.ID=:badGirl.fooid, BadGirl.SPECIALITY=:badGirl.foospeciality  where (BadGirl.ID=:badGirl.fooid)",
+				"update GIRL BadGirl set ID=:badGirl.fooid, SPECIALITY=:badGirl.foospeciality  where (BadGirl.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
 		b = DbEntitySql.updateAll(bg);
 		assertEquals(
-				"update GIRL BadGirl set BadGirl.ID=:badGirl.fooid, BadGirl.NAME=:badGirl.fooname, BadGirl.SPECIALITY=:badGirl.foospeciality  where (BadGirl.ID=:badGirl.fooid)",
+				"update GIRL BadGirl set ID=:badGirl.fooid, NAME=:badGirl.fooname, SPECIALITY=:badGirl.foospeciality  where (BadGirl.ID=:badGirl.fooid)",
 				b.generateQuery());
 		checkBadGirl2(b);
 	}

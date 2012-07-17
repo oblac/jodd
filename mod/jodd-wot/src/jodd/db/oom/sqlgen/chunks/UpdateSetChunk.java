@@ -53,7 +53,16 @@ public class UpdateSetChunk extends SqlChunk {
 				out.append(',').append(' ');
 			}
 			size++;
-			out.append(table).append('.').append(dec.getColumnName()).append('=');
+
+
+			// do not add table reference in set
+			// as only one table can be updated
+			// also, Postgress database does not allow it (see #JODD-21)
+
+			//out.append(table).append('.');
+
+			out.append(dec.getColumnName()).append('=');
+
 			String propertyName = typeName + '.' + property;
 			defineParameter(out, propertyName, value, dec);
 		}

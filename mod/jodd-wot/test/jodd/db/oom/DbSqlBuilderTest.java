@@ -202,16 +202,16 @@ public class DbSqlBuilderTest extends TestCase {
 		Boy b = new Boy();
 
 		DbSqlBuilder dbc = sql().set("b", b).table("Boy", "b");
-		assertEquals("set b.GIRL_ID=:boy.girlId, b.ID=:boy.id BOY b", dbc.generateQuery());
+		assertEquals("set GIRL_ID=:boy.girlId, ID=:boy.id BOY b", dbc.generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
 
 		dbc = sql().set("Boy", b).table("Boy", null);
-		assertEquals("set BOY.GIRL_ID=:boy.girlId, BOY.ID=:boy.id BOY", dbc.generateQuery());
+		assertEquals("set GIRL_ID=:boy.girlId, ID=:boy.id BOY", dbc.generateQuery());
 		assertEquals(2, dbc.getQueryParameters().size());
 
 
 		dbc = sql().setAll("b", b).table("Boy", "b");
-		assertEquals("set b.GIRL_ID=:boy.girlId, b.ID=:boy.id, b.NAME=:boy.name BOY b", dbc.generateQuery());
+		assertEquals("set GIRL_ID=:boy.girlId, ID=:boy.id, NAME=:boy.name BOY b", dbc.generateQuery());
 		assertEquals(3, dbc.getQueryParameters().size());
 
 		BadBoy bb = new BadBoy();
@@ -223,7 +223,7 @@ public class DbSqlBuilderTest extends TestCase {
 		assertEquals("set BOY", dbc.generateQuery());
 
 		dbc = sql().setAll("b", bb).table("BadBoy", "b");
-		assertEquals("set b.ID=:badBoy.ajdi, b.GIRL_ID=:badBoy.girlId, b.NAME=:badBoy.nejm BOY b", dbc.generateQuery());
+		assertEquals("set ID=:badBoy.ajdi, GIRL_ID=:badBoy.girlId, NAME=:badBoy.nejm BOY b", dbc.generateQuery());
 	}
 
 	public void testStrings() {

@@ -54,7 +54,7 @@ public abstract class SqlChunk implements Cloneable {
 	}
 
 	/**
-	 * Appends chunk to previous one and maintaince the double-linked list of the previous chunk.
+	 * Appends chunk to previous one and maintains the double-linked list of the previous chunk.
 	 * Current surrounding connections of this chunk will be cut-off.
 	 */
 	public void insertChunkAfter(SqlChunk previous) {
