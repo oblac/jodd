@@ -67,4 +67,29 @@ public class LagartoParserUtil {
 		return -1;
 	}
 
+	/**
+	 * Calculates line and row of current position in character sequence.
+	 * Returns <code>int[2]</code> where first number is line and second
+	 * number is row.
+	 */
+	public static int[] calculateLineAndRow(CharSequence charSequence, int position) {
+		int line = 1;
+
+		int offset = 0;
+		int lastNewLineOffset = 0;
+
+		while (offset < position) {
+			char c = charSequence.charAt(offset);
+
+			if (c == '\n') {
+				line++;
+				lastNewLineOffset++;
+			}
+
+			offset++;
+		}
+
+		return new int[] {line, position - lastNewLineOffset};
+	}
+
 }

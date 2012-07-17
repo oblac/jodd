@@ -48,6 +48,7 @@ public class LagartoParser {
 	// ---------------------------------------------------------------- properties
 
 	protected boolean enableConditionalComments = true;
+	protected boolean calculateErrorPosition;
 
 	public boolean isEnableConditionalComments() {
 		return enableConditionalComments;
@@ -64,6 +65,20 @@ public class LagartoParser {
 
 	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
 		lexer.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	public boolean isCalculateErrorPosition() {
+		return calculateErrorPosition;
+	}
+
+	/**
+	 * Resolves error position on {@link #error(String) parsing error}.
+	 * JFlex may be used to track current line and row, but that brings
+	 * overhead. By enabling this property, position will be calculated
+	 * manually only on errors.
+	 */
+	public void setCalculateErrorPosition(boolean calculateErrorPosition) {
+		this.calculateErrorPosition = calculateErrorPosition;
 	}
 
 	public boolean isParseSpecialTagsAsCdata() {
@@ -651,8 +666,23 @@ loop:	while (true) {
 	protected void error(String message) {
 		int line = lexer.line();
 		int column = lexer.column();
+
+		if (message == null) {
+			message = StringPool.EMPTY;
+		}
+
 		if (line != -1) {
-			message += " Error at: " + line + ':' + column;
+			// position is detected by jflex
+			message += " [" + line + ':' + column + ']';
+		} else {
+			int position = lexer.position();
+
+			if (calculateErrorPosition == false) {
+				message += " [@" + position + ']';
+			} else {
+				int[] lineRow = LagartoParserUtil.calculateLineAndRow(input, position);
+				message += " [" + lineRow[0] + ':' + lineRow[1] + " @" + position + ')';
+			}
 		}
 		visitor.error(message);
 	}

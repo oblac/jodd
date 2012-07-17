@@ -109,7 +109,6 @@ public class DomXmlTest extends TestCase {
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
 	}
 
-/*
 	public void testConditionalComments2() throws IOException {
 		String xmlContent = "<foo><![if !IE]><bar>Jodd</bar></foo>";
 
@@ -121,5 +120,4 @@ public class DomXmlTest extends TestCase {
 
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
 	}
-*/
 }
