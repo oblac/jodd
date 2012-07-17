@@ -77,7 +77,15 @@ public abstract class AuthenticationInterceptor extends ActionInterceptor {
 
 		// COOKIE
 		// user session is not available, check the cookie
-		String[] cookieData = useCookie ? AuthUtil.readAuthCookie(servletRequest) : null;
+		String[] cookieData = null;
+		if (useCookie) {
+			try {
+				cookieData = AuthUtil.readAuthCookie(servletRequest);
+			} catch (Exception ex) {
+				log.warn("invalid cookie", ex);
+			}
+		}
+
 		if (cookieData != null) {
 			userSession = loginViaCookie(cookieData);
 
