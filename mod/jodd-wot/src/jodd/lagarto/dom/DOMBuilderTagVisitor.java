@@ -357,14 +357,24 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
-		if (!enabled) {
-			return;
+		String defaultExpression = domBuilder.getConditionalCommentExpression();
+
+		if (defaultExpression != null) {
+			String expressionString = expression.toString().trim();
+
+			if (expressionString.equals(defaultExpression) == false) {
+				enabled = expressionString.equals("endif");
+			}
+		} else {
+			if (!enabled) {
+				return;
+			}
+
+			String additionalComment = comment != null ? comment.toString() : null;
+			Node commentNode = new Comment(expression.toString(), isStartingTag, isHidden, additionalComment);
+
+			parentNode.appendChild(commentNode);
 		}
-
-		String additionalComment = comment != null ? comment.toString() : null;
-		Node commentNode = new Comment(expression.toString(), isStartingTag, isHidden, additionalComment);
-
-		parentNode.appendChild(commentNode);
 	}
 
 	public void error(String message) {

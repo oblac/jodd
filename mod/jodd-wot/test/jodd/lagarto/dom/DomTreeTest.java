@@ -231,6 +231,7 @@ public class DomTreeTest extends TestCase {
 		html = StringUtil.replace(html, "'", "");
 		LagartoDOMBuilder builder = new LagartoDOMBuilder();
 		builder.setSelfCloseVoidTags(true);						// use self-closing tags!
+		builder.setConditionalCommentExpression(null);
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);

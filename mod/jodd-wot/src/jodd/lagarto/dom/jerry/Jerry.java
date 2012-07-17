@@ -67,10 +67,10 @@ public class Jerry {
 	 */
 	public static class JerryParser {
 
-		protected final LagartoDOMBuilder builder;
+		protected final LagartoDOMBuilder domBuilder;
 
 		public JerryParser() {
-			this.builder = createLagartoDOMBuilder();
+			this.domBuilder = createLagartoDOMBuilder();
 		}
 
 		/**
@@ -81,35 +81,35 @@ public class Jerry {
 		}
 
 		/**
-		 * Returns builder for more configuration.
+		 * Returns builder for additional configuration.
 		 */
 		public LagartoDOMBuilder getDOMBuilder() {
-			return builder;
+			return domBuilder;
 		}
 
 		public JerryParser enableHtmlMode() {
-			builder.enableHtmlMode();
+			domBuilder.enableHtmlMode();
 			return this;
 		}
 
 		public JerryParser enableXhtmlMode() {
-			builder.enableXhtmlMode();
+			domBuilder.enableXhtmlMode();
 			return this;
 		}
 
 		public JerryParser enableXmlMode() {
-			builder.enableXmlMode();
+			domBuilder.enableXmlMode();
 			return this;
 		}
 
 		public Jerry parse(CharSequence content) {
-			Document doc = builder.parse(content);
-			return new Jerry(builder, doc);
+			Document doc = domBuilder.parse(content);
+			return new Jerry(domBuilder, doc);
 		}
 
 		public Jerry parse(CharBuffer content) {
-			Document doc = builder.parse(content);
-			return new Jerry(builder, doc);
+			Document doc = domBuilder.parse(content);
+			return new Jerry(domBuilder, doc);
 		}
 	}
 
