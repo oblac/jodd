@@ -69,17 +69,6 @@ public abstract class LagartoParserEngine {
 	}
 
 	/**
-	 * Specifies if special tags should be parsed as CDATA block.
-	 */
-	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
-		lexer.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
-	}
-
-	public boolean isCalculateErrorPosition() {
-		return calculateErrorPosition;
-	}
-
-	/**
 	 * Resolves error position on {@link #error(String) parsing error}.
 	 * JFlex may be used to track current line and row, but that brings
 	 * overhead. By enabling this property, position will be calculated
@@ -89,10 +78,24 @@ public abstract class LagartoParserEngine {
 		this.calculateErrorPosition = calculateErrorPosition;
 	}
 
-	public boolean isParseSpecialTagsAsCdata() {
-		return lexer.parseSpecialTagsAsCdata;
+	public boolean isCalculateErrorPosition() {
+		return calculateErrorPosition;
 	}
 
+	// ---------------------------------------------------------------- lexer properties
+
+	protected boolean parseSpecialTagsAsCdata = true;
+
+	/**
+	 * Specifies if special tags should be parsed as CDATA block.
+	 */
+	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	public boolean isParseSpecialTagsAsCdata() {
+		return this.parseSpecialTagsAsCdata;
+	}
 
 	// ---------------------------------------------------------------- parse
 
@@ -108,7 +111,7 @@ public abstract class LagartoParserEngine {
 			time = System.currentTimeMillis();
 		}
 		try {
-			parseInput();
+			parse();
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -125,8 +128,13 @@ public abstract class LagartoParserEngine {
 	/**
 	 * Main parsing loop that process lexer tokens from input.
 	 */
-	protected void parseInput() throws IOException{
+	protected void parse() throws IOException{
+		// set lexer properties
+		lexer.setParseSpecialTagsAsCdata(this.parseSpecialTagsAsCdata);
+
+		// start
 		visitor.start();
+
 		while (true) {
 			Token token = nextToken();
 			switch (token) {
