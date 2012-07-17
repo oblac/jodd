@@ -7,6 +7,9 @@ import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
 import jodd.log.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Lagarto tag visitor that builds DOM tree.
  */
@@ -14,9 +17,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	private static final Log log = Log.getLogger(DOMBuilderTagVisitor.class);
 
-	protected final LagartoDOMBuilder builder;
+	protected final LagartoDOMBuilder domBuilder;
 
 	private long startTime;
+	private List<String> errors;
 
 	protected Document rootNode;
 	protected Node parentNode;
@@ -26,8 +30,8 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	 */
 	protected boolean enabled;
 
-	public DOMBuilderTagVisitor(LagartoDOMBuilder builder) {
-		this.builder = builder;
+	public DOMBuilderTagVisitor(LagartoDOMBuilder domBuilder) {
+		this.domBuilder = domBuilder;
 	}
 
 	/**
@@ -58,11 +62,13 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		// remove whitespaces
-		if (builder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, true);
 		}
 
 		// the end
+		rootNode.errors = this.errors;
+
 		if (log.isDebugEnabled()) {
 			long elapsed = System.currentTimeMillis() - startTime;
 			log.debug("DomTree created in " + elapsed + " ms.");
@@ -73,21 +79,21 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	 * Creates new element with correct configuration.
 	 */
 	protected Element createElementNode(Tag tag) {
-		boolean isVoid = builder.isVoidTag(tag.getName());
+		boolean isVoid = domBuilder.isVoidTag(tag.getName());
 		boolean selfClosed = false;
 
-		if (builder.hasVoidTags()) {
+		if (domBuilder.hasVoidTags()) {
 			// HTML ad XHTML
 			if (isVoid) {
 				// it's void tag, lookup the flag
-				selfClosed = builder.isSelfCloseVoidTags();
+				selfClosed = domBuilder.isSelfCloseVoidTags();
 			}
 		} else {
 			// XML, no voids, lookup the flag
-			selfClosed = builder.isSelfCloseVoidTags();
+			selfClosed = domBuilder.isSelfCloseVoidTags();
 		}
 		
-		return new Element(tag, isVoid, selfClosed, builder.isCaseSensitive());
+		return new Element(tag, isVoid, selfClosed, domBuilder.isCaseSensitive());
 	}
 
 	public void tag(Tag tag) {
@@ -100,7 +106,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 		switch (tagType) {
 			case START:
-				if (builder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
@@ -114,7 +120,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case END:
-				if (builder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, true);
 				}
 
@@ -141,7 +147,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case SELF_CLOSING:
-				if (builder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
@@ -187,7 +193,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	protected Node findMatchingParentOpenTag(String tagName) {
 		Node parent = parentNode;
 		
-		if (builder.isCaseSensitive() == false) {
+		if (domBuilder.isCaseSensitive() == false) {
 			tagName = tagName.toLowerCase();
 		}
 		
@@ -196,7 +202,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			String parentNodeName = parent.getNodeName();
 
 			if (parentNodeName != null) {
-				if (builder.isCaseSensitive() == false) {
+				if (domBuilder.isCaseSensitive() == false) {
 					parentNodeName = parentNodeName.toLowerCase();
 				}
 			}
@@ -303,10 +309,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		if (builder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
-		if (builder.isIgnoreComments()) {
+		if (domBuilder.isIgnoreComments()) {
 			return;
 		}
 		Node node = new Comment(comment.toString());
@@ -337,7 +343,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, builder.isCaseSensitive());
+		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, domBuilder.isCaseSensitive());
 		parentNode.appendChild(xmlDeclaration);
 	}
 
@@ -362,6 +368,12 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void error(String message) {
+		if (domBuilder.collectErrors) {
+			if (errors == null) {
+				errors = new ArrayList<String>();
+			}
+			errors.add(message);
+		}
 		if (log.isWarnEnabled()) {
 			log.warn("DOM tree may be corrupted due to parsing error. " + message);
 		}

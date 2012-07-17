@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class DomXmlTest extends TestCase {
 	protected String testDataRoot;
@@ -115,9 +116,14 @@ public class DomXmlTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
 		lagartoDOMBuilder.setIgnoreComments(true);
+		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.setCalculateErrorPosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
+		List<String> errors = doc.getErrors();
 
+		assertEquals(1, errors.size());
+		assertTrue(errors.get(0).contains("[1:5 @5]"));
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
 	}
 }
