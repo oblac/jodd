@@ -96,4 +96,30 @@ public class DomXmlTest extends TestCase {
 
 		assertEquals("<foo><bar>   </bar><x></x></foo>", doc.getHtml());
 	}
+
+	public void testConditionalComments() throws IOException {
+		String xmlContent = "<foo><!--[if !IE]>--><bar>Jodd</bar><!--<![endif]--></foo>";
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+		lagartoDOMBuilder.setIgnoreComments(true);
+
+		Document doc = lagartoDOMBuilder.parse(xmlContent);
+
+		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
+	}
+
+/*
+	public void testConditionalComments2() throws IOException {
+		String xmlContent = "<foo><![if !IE]><bar>Jodd</bar></foo>";
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+		lagartoDOMBuilder.setIgnoreComments(true);
+
+		Document doc = lagartoDOMBuilder.parse(xmlContent);
+
+		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
+	}
+*/
 }

@@ -45,21 +45,39 @@ public class LagartoParser {
 		this.tag = new ParsedTag(input);
 	}
 
-	// ---------------------------------------------------------------- parse
+	// ---------------------------------------------------------------- properties
+
+	protected boolean enableConditionalComments = true;
+
+	public boolean isEnableConditionalComments() {
+		return enableConditionalComments;
+	}
 
 	/**
-	 * Parses provided content using HTML style.
+	 * Enables detection of IE conditional comments. If not enabled,
+	 * downlevel-hidden cond. comments will be treated as regular comment,
+	 * while revealed cond. comments will be treated as an error.
 	 */
-	public void parse(TagVisitor visitor) {
-		parse(visitor, true);
+	public void setEnableConditionalComments(boolean enableConditionalComments) {
+		this.enableConditionalComments = enableConditionalComments;
 	}
+
+	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+		lexer.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	public boolean isParseSpecialTagsAsCdata() {
+		return lexer.parseSpecialTagsAsCdata;
+	}
+
+
+	// ---------------------------------------------------------------- parse
 
 	/**
 	 * Parses provided content.
 	 */
-	public void parse(TagVisitor visitor, boolean parseHtmlStyle) {
+	public void parse(TagVisitor visitor) {
 		this.visitor = visitor;
-		this.lexer.setParseSpecialTagsAsCdata(parseHtmlStyle);
 
 		long time = 0;
 		if (log.isDebugEnabled()) {
@@ -163,7 +181,10 @@ public class LagartoParser {
 		int start = lexer.position() + 4;		// skip "<!--"
 		int end = start + lexer.length() - 7;	// skip "-->"
 
-		if (LagartoParserUtil.regionStartWith(input, start, end, "[if")) {
+		if (
+				(enableConditionalComments) &&
+				(LagartoParserUtil.regionStartWith(input, start, end, "[if"))
+		){
 			// conditional comment start
 
 			int expressionEnd = LagartoParserUtil.regionIndexOf(input, start + 3, end, ']');
@@ -255,10 +276,17 @@ public class LagartoParser {
 	}
 
 	/**
-	 * Parses conditional comment start.
+	 * Parses revealed conditional comment start.
+	 * Downlevel-hidden conditional comment is detected in
+	 * {@link #parseCommentOrConditionalComment()}.
 	 */
 	protected void parseRevealedCCStart() throws IOException {
 		flushText();
+
+		if (enableConditionalComments == false) {
+			error("Conditional comments disabled");
+			return;
+		}
 
 		int start = lexer.position();
 		int end = start + lexer.length();
@@ -287,6 +315,7 @@ public class LagartoParser {
 	 */
 	protected void parseCCEnd() throws IOException {
 		flushText();
+
 		int start = lexer.position();
 		int end = start + lexer.length();
 		int textStart = start;
@@ -308,6 +337,15 @@ public class LagartoParser {
 
 		boolean isDownlevelHidden = (end - textEnd) == 4;
 		boolean hasExtra = (textStart - start) > 3;
+
+		if (enableConditionalComments == false) {
+			if (isDownlevelHidden) {
+				visitor.comment(input.subSequence(start, end));
+			} else {
+				error("Conditional comments disabled");
+			}
+			return;
+		}
 
 		CharSequence additionalComment = null;
 		if (hasExtra) {

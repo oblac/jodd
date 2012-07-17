@@ -24,6 +24,7 @@ public class LagartoDOMBuilder {
 	protected boolean parseSpecialTagsAsCdata = true;
 	protected boolean ignoreComments;
 	protected boolean selfCloseVoidTags;
+	protected boolean enableConditionalComments;
 	protected String[] voidTags = HTML5_VOID_TAGS;
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
@@ -114,6 +115,17 @@ public class LagartoDOMBuilder {
 		this.selfCloseVoidTags = selfCloseVoidTags;
 	}
 
+	public boolean isEnableConditionalComments() {
+		return enableConditionalComments;
+	}
+
+	/**
+	 * @see LagartoParser#setEnableConditionalComments(boolean)
+	 */
+	public void setEnableConditionalComments(boolean enableConditionalComments) {
+		this.enableConditionalComments = enableConditionalComments;
+	}
+
 	// ---------------------------------------------------------------- quick settings
 
 	/**
@@ -124,7 +136,8 @@ public class LagartoDOMBuilder {
 		caseSensitive = false;					// HTML is case insensitive
 		parseSpecialTagsAsCdata = true;			// script and style tags are parsed as CDATA
 		voidTags = HTML5_VOID_TAGS;				// list of void tags
-		selfCloseVoidTags = false;			// don't self close void tags
+		selfCloseVoidTags = false;				// don't self close void tags
+		enableConditionalComments = true;		// enable IE conditional comments
 		return this;
 	}
 
@@ -137,6 +150,7 @@ public class LagartoDOMBuilder {
 		parseSpecialTagsAsCdata = false;		// all tags are parsed in the same way
 		voidTags = HTML5_VOID_TAGS;				// list of void tags
 		selfCloseVoidTags = true;				// self close void tags
+		enableConditionalComments = true;		// enable IE conditional comments
 		return this;
 	}
 
@@ -149,6 +163,7 @@ public class LagartoDOMBuilder {
 		parseSpecialTagsAsCdata = false;		// all tags are parsed in the same way
 		voidTags = null;						// there are no void tags
 		selfCloseVoidTags = false;				// don't self close empty tags (can be changed!)
+		enableConditionalComments = false;		// disable IE conditional comments
 		return this;
 	}
 
@@ -172,11 +187,15 @@ public class LagartoDOMBuilder {
 
 	/**
 	 * Parses the document using provided Lagarto parser.
+	 * Sets parser properties.
 	 */
 	protected Document parse(LagartoParser lagarto) {
 		DOMBuilderTagVisitor domBuilderTagVisitor = createDOMDomBuilderTagVisitor();
 
-		lagarto.parse(domBuilderTagVisitor, parseSpecialTagsAsCdata);
+		lagarto.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);
+		lagarto.setEnableConditionalComments(enableConditionalComments);
+
+		lagarto.parse(domBuilderTagVisitor);
 
 		return domBuilderTagVisitor.getDocument();
 	}
