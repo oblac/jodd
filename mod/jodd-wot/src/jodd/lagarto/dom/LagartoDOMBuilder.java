@@ -2,7 +2,7 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoParser;
+import jodd.lagarto.LagartoParserEngine;
 import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
@@ -10,7 +10,7 @@ import java.nio.CharBuffer;
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
-public class LagartoDOMBuilder {
+public class LagartoDOMBuilder extends LagartoParserEngine {
 
 	/**
 	 * Default void tags.
@@ -21,10 +21,10 @@ public class LagartoDOMBuilder {
 
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean caseSensitive;
-	protected boolean parseSpecialTagsAsCdata = true;
 	protected boolean ignoreComments;
 	protected boolean selfCloseVoidTags;
-	protected boolean enableConditionalComments;
+	protected boolean collectErrors;
+
 	protected String[] voidTags = HTML5_VOID_TAGS;
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
@@ -47,18 +47,6 @@ public class LagartoDOMBuilder {
 	 */
 	public void setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
-	}
-
-	public boolean isParseSpecialTagsAsCdata() {
-		return parseSpecialTagsAsCdata;
-	}
-
-	/**
-	 * Specifies if special tags should be parsed as CDATA block.
-	 * @see LagartoParser#parse(jodd.lagarto.TagVisitor, boolean)
-	 */
-	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
-		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
 	}
 
 	public boolean isIgnoreComments() {
@@ -115,15 +103,15 @@ public class LagartoDOMBuilder {
 		this.selfCloseVoidTags = selfCloseVoidTags;
 	}
 
-	public boolean isEnableConditionalComments() {
-		return enableConditionalComments;
+	public boolean isCollectErrors() {
+		return collectErrors;
 	}
 
 	/**
-	 * @see LagartoParser#setEnableConditionalComments(boolean)
+	 * Enables error collection during parsing.
 	 */
-	public void setEnableConditionalComments(boolean enableConditionalComments) {
-		this.enableConditionalComments = enableConditionalComments;
+	public void setCollectErrors(boolean collectErrors) {
+		this.collectErrors = collectErrors;
 	}
 
 	// ---------------------------------------------------------------- quick settings
@@ -173,29 +161,25 @@ public class LagartoDOMBuilder {
 	 * Creates DOM tree from provided content.
 	 */
 	public Document parse(CharSequence content) {
-		LagartoParser lagarto = new LagartoParser(content);
-		return parse(lagarto);
+		initialize(CharBuffer.wrap(content));
+		return doParse();
 	}
 
 	/**
 	 * Creates DOM tree from the provided content.
 	 */
 	public Document parse(CharBuffer content) {
-		LagartoParser lagarto = new LagartoParser(content);
-		return parse(lagarto);
+		initialize(content);
+		return doParse();
 	}
 
 	/**
-	 * Parses the document using provided Lagarto parser.
-	 * Sets parser properties.
+	 * Parses the content.
 	 */
-	protected Document parse(LagartoParser lagarto) {
+	protected Document doParse() {
 		DOMBuilderTagVisitor domBuilderTagVisitor = createDOMDomBuilderTagVisitor();
 
-		lagarto.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);
-		lagarto.setEnableConditionalComments(enableConditionalComments);
-
-		lagarto.parse(domBuilderTagVisitor);
+		parse(domBuilderTagVisitor);
 
 		return domBuilderTagVisitor.getDocument();
 	}
