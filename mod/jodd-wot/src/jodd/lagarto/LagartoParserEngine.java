@@ -696,8 +696,8 @@ loop:	while (true) {
 			if (calculateErrorPosition == false) {
 				message += " [@" + position + ']';
 			} else {
-				int[] lineRow = LagartoParserUtil.calculateLineAndRow(input, position);
-				message += " [" + lineRow[0] + ':' + lineRow[1] + " @" + position + ']';
+				int[] lineAndColumn = LagartoParserUtil.calculateLineAndColumn(input, position);
+				message += " [" + lineAndColumn[0] + ':' + lineAndColumn[1] + " @" + position + ']';
 			}
 		}
 		visitor.error(message);
