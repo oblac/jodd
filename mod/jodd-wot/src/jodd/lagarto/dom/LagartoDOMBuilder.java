@@ -152,7 +152,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		voidTags = HTML5_VOID_TAGS;						// list of void tags
 		selfCloseVoidTags = true;						// self close void tags
 		enableConditionalComments = true;				// enable IE conditional comments
-		conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
+		conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
 		return this;
 	}
 
@@ -166,7 +166,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		voidTags = null;								// there are no void tags
 		selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
 		enableConditionalComments = false;				// disable IE conditional comments
-		conditionalCommentExpression = null;			// treat HTML as non-IE browser
+		conditionalCommentExpression = null;			// don't use
 		return this;
 	}
 
