@@ -87,7 +87,7 @@ public class FindFileTest extends TestCase {
 
 
 	public void testWildcardPath() {
-		FindFile ff = new WildcardFindFile("**/file/*", true)
+		FindFile ff = new WildcardFindFile("**/file/*")
 				.setRecursive(true)
 				.setIncludeDirs(true)
 				.searchPath(dataRoot);
@@ -117,7 +117,7 @@ public class FindFileTest extends TestCase {
 	}
 
 	public void testWildcardFileScanner() {
-		WildcardFileScanner wfs = new WildcardFileScanner("**/file/**", true);
+		WildcardFileScanner wfs = new WildcardFileScanner("**/file/**");
 
 		List<File> files = wfs.list(dataRoot);
 		assertEquals(1, files.size());

@@ -37,7 +37,7 @@ public class JavaSourceFormatter {
 
 		System.out.println("*** format: " + sourceRoot);
 
-		FindFile ff = new WildcardFindFile("**/*.java", true)
+		FindFile ff = new WildcardFindFile("**/*.java")
 				.setRecursive(true)
 				.setIncludeDirs(false)
 				.searchPath(sourceRoot);
