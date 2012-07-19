@@ -24,6 +24,10 @@ import java.io.FileNotFoundException;
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
  * Content of Jar files is also examined.
+ * <p>
+ * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
+ * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
+ * wildcard matcher.
  * @see ClassScanner
  */
 public abstract class ClassFinder {
