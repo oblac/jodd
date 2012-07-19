@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  * if found in uri for using gzip. It is applied only on <b>matched</b> uris.</li>
  *
  * <li><b>wildcards</b> - boolean that specifies wildcard matching for string patterns.
- * by default <code>false</code>.</li>
+ * by default <code>false</code>. URL is matched as {@link Wildcard#matchPathOne(String, String[]) paths}.</li>
  *
  * </ul>
  */
@@ -141,7 +141,7 @@ public class GzipFilter implements Filter {
 			result = true;
 		} else {
 			if (wildcards) {
-				result = Wildcard.matchOne(uri, matches) != -1;
+				result = Wildcard.matchPathOne(uri, matches) != -1;
 			} else {
 				for (String match : matches) {
 					if (uri.contains(match)) {
@@ -154,7 +154,7 @@ public class GzipFilter implements Filter {
 
 		if ((result == true) && (excludes != null)) {
 			if (wildcards) {
-				if (Wildcard.matchOne(uri, excludes) != -1) {
+				if (Wildcard.matchPathOne(uri, excludes) != -1) {
 					result = false;
 				}
 			} else {
