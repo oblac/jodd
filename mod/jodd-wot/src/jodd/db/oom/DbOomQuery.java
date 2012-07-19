@@ -338,7 +338,8 @@ public class DbOomQuery extends DbQuery {
 			types = rsm.resolveTables();
 		}
 		while (rsm.next()) {
-			Object row = resolveRowHints(rsm.parseObjects(types));
+			Object[] objects = rsm.parseObjects(types);
+			Object row = resolveRowHints(objects);
 			result.add((T) row);
 
 			max--;
@@ -424,7 +425,8 @@ public class DbOomQuery extends DbQuery {
 			types = rsm.resolveTables();
 		}
 		while (rsm.next()) {
-			Object row = resolveRowHints(rsm.parseObjects(types));
+			Object[] objects = rsm.parseObjects(types);
+			Object row = resolveRowHints(objects);
 			result.add((T) row);
 			max--;
 			if (max == 0) {
@@ -489,7 +491,8 @@ public class DbOomQuery extends DbQuery {
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
-		Object result = resolveRowHints(rsm.parseObjects(types));
+		Object[] objects = rsm.parseObjects(types);
+		Object result = resolveRowHints(objects);
 		close(rsm, close);
 		return result;
 	}
