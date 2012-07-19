@@ -9,56 +9,35 @@ import java.io.File;
 
 /**
  * {@link FindFile} that matches file names using <code>*</code>, <code>?</code>
- * and, optionally, <code>**</code> wildcards.
+ * and <code>**</code> wildcards.
  *
  * @see jodd.io.findfile.RegExpFindFile
  */
 public class WildcardFindFile extends FindFile {
 
-	protected String wildcard;
-	protected boolean usePathWildcards;
+	protected String pattern;
 
 	public WildcardFindFile() {
 	}
 
-	public WildcardFindFile(String wildcard) {
-		this.wildcard = wildcard;
-	}
-
-	public WildcardFindFile(String wildcard, boolean usePathWildcards) {
-		this.wildcard = wildcard;
-		this.usePathWildcards = usePathWildcards;
+	public WildcardFindFile(String pattern) {
+		this.pattern = pattern;
 	}
 
 	// ---------------------------------------------------------------- properties
 
 	/**
-	 * Returns the matching wildcard.
+	 * Returns the matching wildcard pattern.
 	 */
-	public String getWildcard() {
-		return wildcard;
+	public String getPattern() {
+		return pattern;
 	}
 
 	/**
-	 * Sets the matching wildcard.
+	 * Sets the matching wildcard pattern.
 	 */
-	public void setWildcard(String wildcard) {
-		this.wildcard = wildcard;
-	}
-
-	/**
-	 * Returns <code>true</code> if path wildcards are in use.
-	 */
-	public boolean isUsePathWildcards() {
-		return usePathWildcards;
-	}
-
-	/**
-	 * Set path wildcard matching algorithm.
-	 */
-	public WildcardFindFile setUsePathWildcards(boolean usePathWildcards) {
-		this.usePathWildcards = usePathWildcards;
-		return this;
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
 	}
 
 	// ---------------------------------------------------------------- accept
@@ -68,8 +47,6 @@ public class WildcardFindFile extends FindFile {
 		String path = currentFile.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
-		return usePathWildcards ?
-				Wildcard.matchPath(path, wildcard) :
-				Wildcard.match(path, wildcard) ;
+		return Wildcard.matchPath(path, pattern);
 	}
 }
