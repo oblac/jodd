@@ -52,11 +52,6 @@ public abstract class ClassFinder {
 	 * This rule is applied after the excluded rule.
 	 */
 	protected String[] includedJars;
-	/**
-	 * If set to <code>true</code> jars will be scanned using path wildcards.
-	 */
-	protected boolean usePathWildcards;
-
 
 	public String[] getSystemJars() {
 		return systemJars;
@@ -80,14 +75,6 @@ public abstract class ClassFinder {
 
 	public void setIncludedJars(String... includedJars) {
 		this.includedJars = includedJars;
-	}
-
-	public boolean isUsePathWildcards() {
-		return usePathWildcards;
-	}
-
-	public void setUsePathWildcards(boolean usePathWildcards) {
-		this.usePathWildcards = usePathWildcards;
 	}
 
 	// ---------------------------------------------------------------- included packages
@@ -198,25 +185,19 @@ public abstract class ClassFinder {
 		path = FileNameUtil.separatorsToUnix(path);
 
 		if (systemJars != null) {
-			int ndx = usePathWildcards ?
-					Wildcard.matchPathOne(path, systemJars) :
-					Wildcard.matchOne(path, systemJars);
+			int ndx = Wildcard.matchPathOne(path, systemJars);
 			if (ndx != -1) {
 				return false;
 			}
 		}
 		if (excludedJars != null) {
-			int ndx = usePathWildcards ?
-					Wildcard.matchPathOne(path, excludedJars) :
-					Wildcard.matchOne(path, excludedJars);
+			int ndx = Wildcard.matchPathOne(path, excludedJars);
 			if (ndx != -1) {
 				return false;
 			}
 		}
 		if (includedJars != null) {
-			int ndx = usePathWildcards ?
-					Wildcard.matchPathOne(path, includedJars) :
-					Wildcard.matchOne(path, includedJars);
+			int ndx = Wildcard.matchPathOne(path, includedJars);
 			if (ndx == -1) {
 				return false;
 			}
