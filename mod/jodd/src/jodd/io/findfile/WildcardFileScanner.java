@@ -11,33 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wildcard file scanner.
+ * Wildcard pattern file scanner.
  */
 public class WildcardFileScanner extends FileScanner {
 
-	protected final String wildcard;
-	protected boolean usePathWildcards;
+	protected final String pattern;
 	protected List<File> files;
 
-	public WildcardFileScanner(String wildcard) {
-		this(wildcard, false);
-	}
-
-	public WildcardFileScanner(String wildcard, boolean usePathWildcards) {
+	public WildcardFileScanner(String pattern) {
 		files = new ArrayList<File>();
-		this.wildcard = wildcard;
-		this.usePathWildcards = usePathWildcards;
-	}
-
-	public boolean isUsePathWildcards() {
-		return usePathWildcards;
-	}
-
-	/**
-	 * Set path wildcard matching algorithm.
-	 */
-	public void setUsePathWildcards(boolean usePathWildcards) {
-		this.usePathWildcards = usePathWildcards;
+		this.pattern = pattern;
 	}
 
 	@Override
@@ -45,10 +28,7 @@ public class WildcardFileScanner extends FileScanner {
 		String path = file.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
-		boolean match = usePathWildcards ?
-				Wildcard.matchPath(path, wildcard) :
-				Wildcard.match(path, wildcard) ;
-
+		boolean match = Wildcard.matchPath(path, pattern);
 
 		if (match) {
 			files.add(file);
