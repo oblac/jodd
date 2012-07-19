@@ -80,6 +80,11 @@ public class ZipUtilTest extends TestCase {
 		
 		assertTrue(zipFile.exists());
 
+		ZipUtil.unzip(zipFile, new File(dataRoot), "sbda*");
+
+		assertTrue(new File(dataRoot, "sbdata").exists());
+		assertFalse(new File(dataRoot, "folder").exists());
+
 		ZipUtil.unzip(zipFile, new File(dataRoot));
 
 		assertTrue(new File(dataRoot, "sbdata").exists());

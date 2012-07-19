@@ -4,6 +4,7 @@ package jodd.io;
 
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import jodd.util.Wildcard;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -138,8 +139,11 @@ public class ZipUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- unzip
+
 	/**
 	 * Extracts zip file content to the target directory.
+	 * @see #unzip(java.io.File, java.io.File, String...)
 	 */
 	public static void unzip(String zipFile, String destDir) throws IOException {
 		unzip(new File(zipFile), new File(destDir));
@@ -147,17 +151,43 @@ public class ZipUtil {
 
 	/**
 	 * Extracts zip file content to the target directory.
+	 * @see #unzip(java.io.File, java.io.File, String...)
+	 */
+	public static void unzip(String zipFile, String destDir, String... patterns) throws IOException {
+		unzip(new File(zipFile), new File(destDir), patterns);
+	}
+
+	/**
+	 * Extracts zip file to the target directory.
+	 * @see #unzip(java.io.File, java.io.File, String...)
+	 */
+	public static void unzip(File zipFile, File destDir) throws IOException {
+		unzip(zipFile, destDir, null);
+	}
+
+	/**
+	 * Extracts zip file to the target directory. If patterns are provided
+	 * only matched paths are extracted.
 	 *
 	 * @param zipFile zip file
 	 * @param destDir destination directory
+	 * @param patterns wildcard patterns, may be <code>null</code>
 	 */
-	public static void unzip(File zipFile, File destDir) throws IOException {
+	public static void unzip(File zipFile, File destDir, String... patterns) throws IOException {
 		ZipFile zip = new ZipFile(zipFile);
-		Enumeration en = zip.entries();
+		Enumeration zipEntries = zip.entries();
 
-		while (en.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) en.nextElement();
-			File file = (destDir != null) ? new File(destDir, entry.getName()) : new File(entry.getName());
+		while (zipEntries.hasMoreElements()) {
+			ZipEntry entry = (ZipEntry) zipEntries.nextElement();
+			String entryName = entry.getName();
+
+			if (patterns != null) {
+				if (Wildcard.matchPathOne(entryName, patterns) == -1) {
+					continue;
+				}
+			}
+
+			File file = (destDir != null) ? new File(destDir, entryName) : new File(entryName);
 			if (entry.isDirectory()) {
 				if (!file.mkdirs()) {
 					if (file.isDirectory() == false) {
