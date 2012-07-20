@@ -253,11 +253,11 @@ public class JavaCompiler {
 
 		StringBuilder sb = new StringBuilder();
 
-		char chars[] = compilerSpec.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
+		int compilerSpecLen = compilerSpec.length();
+		for (int i = 0; i < compilerSpecLen; i++) {
+			char c = compilerSpec.charAt(i);
 			if (c == '%') {
-				c = chars[++i];
+				c = compilerSpec.charAt(++i);
 
 				// %d is destination dir
 				if ((c == 'd') && (outdir != null)) {
