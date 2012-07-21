@@ -390,19 +390,30 @@ public class StringUtil {
 	 * Internal method for changing the first character case. It is significantly
 	 * faster using StringBuffers then just simply Strings.
 	 */
-	private static String changeFirstCharacterCase(boolean capitalize, String str) {
-		int strLen = str.length();
+	private static String changeFirstCharacterCase(boolean capitalize, String string) {
+		int strLen = string.length();
 		if (strLen == 0) {
-			return str;
+			return string;
 		}
-		StringBuilder buf = new StringBuilder(strLen);
+
+		char ch = string.charAt(0);
+		char modifiedCh;
 		if (capitalize) {
-			buf.append(Character.toUpperCase(str.charAt(0)));
+			modifiedCh = Character.toUpperCase(ch);
 		} else {
-			buf.append(Character.toLowerCase(str.charAt(0)));
+			modifiedCh = Character.toLowerCase(ch);
 		}
-		buf.append(str.substring(1));
-		return buf.toString();
+
+		if (modifiedCh == ch) {
+			// no change, return unchanged string
+			return string;
+
+		}
+
+		StringBuilder builder = new StringBuilder(strLen);
+		builder.append(modifiedCh);
+		builder.append(string.substring(1));
+		return builder.toString();
 	}
 
 	/**

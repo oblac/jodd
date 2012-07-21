@@ -718,10 +718,12 @@ public class StringUtilTest extends TestCase {
 	}
 
 	public void testCapitalize() {
+		assertEquals("F", StringUtil.capitalize("f"));
 		assertEquals("Foo", StringUtil.capitalize("foo"));
 		assertEquals("Foo", StringUtil.capitalize("Foo"));
 		assertEquals("", StringUtil.capitalize(""));
 
+		assertEquals("f", StringUtil.uncapitalize("F"));
 		assertEquals("foo", StringUtil.uncapitalize("foo"));
 		assertEquals("foo", StringUtil.uncapitalize("Foo"));
 		assertEquals("", StringUtil.uncapitalize(""));
