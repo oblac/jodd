@@ -223,20 +223,26 @@ public class StringUtil {
 	/**
 	 * Removes a single character from string.
 	 *
-	 * @param src    source string
-	 * @param chars  character to remove
+	 * @param string    source string
+	 * @param ch  character to remove
 	 */
-	public static String remove(String src, char chars) {
-		int i = src.length();
-		StringBuilder sb = new StringBuilder(i);
-		for (int j = 0; j < i; j++) {
-			char c = src.charAt(j);
-			if (c == chars) {
+	public static String remove(String string, char ch) {
+		int stringLen = string.length();
+		char[] result = new char[stringLen];
+		int offset = 0;
+
+		for (int i = 0; i < stringLen; i++) {
+			char c = string.charAt(i);
+
+			if (c == ch) {
 				continue;
 			}
-			sb.append(c);
+
+			result[offset] = c;
+			offset++;
 		}
-		return sb.toString();
+
+		return new String(result, 0, offset);
 	}
 
 	// ---------------------------------------------------------------- miscellaneous
@@ -1911,11 +1917,12 @@ public class StringUtil {
 	/**
 	 * Escapes a string using java rules.
 	 */
-	public static String escapeJava(String str) {
-		char[] chars = str.toCharArray();
+	public static String escapeJava(String string) {
+		int strLen = string.length();
+		StringBuilder sb = new StringBuilder(strLen);
 
-		StringBuilder sb = new StringBuilder(str.length());
-		for (char c : chars) {
+		for (int i = 0; i < strLen; i++) {
+			char c = string.charAt(i);
 			switch (c) {
 				case '\b' : sb.append("\\b"); break;
 				case '\t' : sb.append("\\t"); break;
