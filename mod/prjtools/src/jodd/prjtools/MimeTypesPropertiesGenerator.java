@@ -42,6 +42,20 @@ public class MimeTypesPropertiesGenerator {
 
 			count++;
 
+			// shorten mime type
+
+			if (mimeType.startsWith("application/")) {
+				mimeType = '/' + mimeType.substring(12);
+			} else if (mimeType.startsWith("audio/")) {
+				mimeType = "a/" + mimeType.substring(6);
+			} else if (mimeType.startsWith("image/")) {
+				mimeType = "i/" + mimeType.substring(6);
+			} else if (mimeType.startsWith("text/")) {
+				mimeType = "t/" + mimeType.substring(5);
+			} else if (mimeType.startsWith("video/")) {
+				mimeType = "v/" + mimeType.substring(6);
+			}
+
 			result += mimeType + '=' + extensions;
 			result += "\r\n";
 		}

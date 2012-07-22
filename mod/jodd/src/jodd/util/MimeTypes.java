@@ -52,6 +52,18 @@ public class MimeTypes {
 			String mimeType = (String) keys.nextElement();
 			String extensions = mimes.getProperty(mimeType);
 
+			if (mimeType.startsWith("/")) {
+				mimeType = "application" + mimeType;
+			} else if (mimeType.startsWith("a/")) {
+				mimeType = "audio" + mimeType.substring(1);
+			} else if (mimeType.startsWith("i/")) {
+				mimeType = "image" + mimeType.substring(1);
+			} else if (mimeType.startsWith("t/")) {
+				mimeType = "text" + mimeType.substring(1);
+			} else if (mimeType.startsWith("v/")) {
+				mimeType = "video" + mimeType.substring(1);
+			}
+
 			String[] allExtensions = StringUtil.splitc(extensions, ' ');
 
 			for (String extension : allExtensions) {
