@@ -1878,7 +1878,7 @@ public class StringUtil {
 	 * Joins an array of strings into one string.
 	 */
 	public static String join(String... parts) {
-		StringBuilder sb = new StringBuilder();
+		StringBand sb = new StringBand(parts.length);
 		for (String part : parts) {
 			sb.append(part);
 		}
@@ -1886,23 +1886,23 @@ public class StringUtil {
 	}
 
 	/**
-	 * Joins list of iterable elements.
+	 * Joins list of iterable elements. Separator string
+	 * may be <code>null</code>.
 	 */
 	public static String join(Iterable<?> elements, String separator) {
 		if (elements == null) {
 			return EMPTY;
 		}
-		StringBuilder buf = new StringBuilder();
-		if (separator == null) {
-			separator = EMPTY;
-		}
+		StringBand sb = new StringBand();
 		for (Object o : elements) {
-			if (buf.length() > 0) {
-				buf.append(separator);
+			if (sb.length() > 0) {
+				if (separator != null) {
+					sb.append(separator);
+				}
 			}
-			buf.append(o);
+			sb.append(o);
 		}
-		return buf.toString();
+		return sb.toString();
 	}
 
 	// ---------------------------------------------------------------- charset
@@ -2193,21 +2193,20 @@ public class StringUtil {
 	 * Creates a new string that contains the provided string a number of times.
 	 */
 	public static String repeat(String source, int count) {
-		StringBuilder result = new StringBuilder(count * source.length());
+		StringBand result = new StringBand(count);
 		while (count > 0) {
 			result.append(source);
-			count --;
+			count--;
 		}
 		return result.toString();
 	}
 
 	public static String repeat(char c, int count) {
-		StringBuilder result = new StringBuilder(count);
-		while (count > 0) {
-			result.append(c);
-			count --;
+		char[] result = new char[count];
+		for (int i = 0; i < count; i++) {
+			result[i] = c;
 		}
-		return result.toString();
+		return new String(result);
 	}
 
 	/**
@@ -2317,7 +2316,6 @@ public class StringUtil {
 	 * arguments do not have a common prefix.
 	 */
 	public static String findCommonPrefix(String... strings) {
-
 		StringBuilder prefix = new StringBuilder();
 		int index = 0;
 		char c = 0;
