@@ -519,7 +519,7 @@ public class Jerry {
 			return null;
 		}
 
-		propertyName = StringUtil.camelCaseToWords(propertyName, '-');
+		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
 		String styleAttrValue = nodes[0].getAttribute("style");
 		if (styleAttrValue == null) {
@@ -534,7 +534,7 @@ public class Jerry {
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
 	public Jerry css(String propertyName, String value) {
-		propertyName = StringUtil.camelCaseToWords(propertyName, '-');
+		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
 		for (Node node : nodes) {
 			String styleAttrValue = node.getAttribute("style");
@@ -557,7 +557,7 @@ public class Jerry {
 
 			for (int i = 0; i < css.length; i += 2) {
 				String propertyName = css[i];
-				propertyName = StringUtil.camelCaseToWords(propertyName, '-');
+				propertyName = StringUtil.fromCamelCase(propertyName, '-');
 				styles.put(propertyName, css[i + 1]);
 			}
 			styleAttrValue = generateAttributeValue(styles, ';', ':');
@@ -575,7 +575,7 @@ public class Jerry {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				className = StringUtil.camelCaseToWords(className, '-');
+				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.add(className) == true) {
 					wasChange = true;
 				}
@@ -596,7 +596,7 @@ public class Jerry {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			for (String className : classNames) {
-				className = StringUtil.camelCaseToWords(className, '-');
+				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.contains(className)) {
 					return true;
 				}
@@ -615,7 +615,7 @@ public class Jerry {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				className = StringUtil.camelCaseToWords(className, '-');
+				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.remove(className) == true) {
 					wasChange = true;
 				}
@@ -638,7 +638,7 @@ public class Jerry {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			for (String className : classNames) {
-				className = StringUtil.camelCaseToWords(className, '-');
+				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.contains(className) == true) {
 					classes.remove(className);
 				} else {

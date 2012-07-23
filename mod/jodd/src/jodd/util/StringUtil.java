@@ -2242,61 +2242,59 @@ public class StringUtil {
 	// ---------------------------------------------------------------- camel case
 
 	/**
-	 * Fixes camel case words.
+	 * Changes CamelCase string to lower case words separated by provided
+	 * separator character. The following translations are applied:
+	 * <ul><li>Every upper case letter in the CamelCase name is translated into
+	 * two characters, a separator and the lower case equivalent of the target character,
+	 * with three exceptions.
+	 * <ol><li>For contiguous sequences of upper case letters, characters after the first
+	 * character are replaced only by their lower case equivalent, and are not
+	 * preceded by a separator (<code>theFOO</code> to <code>the_foo</code>).
+	 * <li>An upper case character in the first position of the CamelCase name
+	 * is not preceded by a separator character, and is translated only to its
+	 * lower case equivalent. (<code>Foo</code> to <code>foo</code> and not <code>_foo</code>)
+	 * <li>An upper case character in the CamelCase name that is already preceded
+	 * by a separator character is translated only to its lower case equivalent,
+	 * and is not preceded by an additional separator. (<code>user_Name</code>
+	 * to <code>user_name</code> and not <code>user__name</code>.
+	 * </ol>
+	 * <li>If the CamelCase name starts with a separator, then that
+	 * separator is not included in the translated name, unless the CamelCase
+	 * name is just one character in length, i.e., it is the separator character.
+	 * This applies only to the first character of the CamelCase name.
 	 */
-	public static String fixCamelCase(String string) {
-		StringBuilder s = new StringBuilder();
-		int length = string.length();
-		boolean isPreviousCharUppercase = false;
-
-		for (int i = 0; i < length; i++) {
-			char ch = string.charAt(i);
-
-			if (Character.isUpperCase(ch) && (i > 0)) {
-				if (isPreviousCharUppercase) {
-					ch = Character.toLowerCase(ch);
-				}
-				isPreviousCharUppercase = true;
-			} else {
-				isPreviousCharUppercase = false;
-			}
-			s.append(ch);
-		}
-		return s.toString();
-	}
-
-	/**
-	 * Changes a camelCase string value to space separated
-	 */
-	public static String camelCaseToWords(String input) {
-		return camelCaseToWords(input, ' ');
-	}
-
-	public static String camelCaseToWords(String input, char separator) {
-		StringBuilder s = new StringBuilder();
+	public static String fromCamelCase(String input, char separator) {
 		int length = input.length();
+		StringBuilder result = new StringBuilder(length * 2);
+		int resultLength = 0;
+		boolean prevTranslated = false;
 		for (int i = 0; i < length; i++) {
-			char ch = input.charAt(i);
-			if (Character.isUpperCase(ch) && (i > 0)) {
-				s.append(separator);
-				ch = Character.toLowerCase(ch);
+			char c = input.charAt(i);
+			if (i > 0 || c != separator) {// skip first starting separator
+				if (Character.isUpperCase(c)) {
+					if (!prevTranslated && resultLength > 0 && result.charAt(resultLength - 1) != separator) {
+						result.append(separator);
+						resultLength++;
+					}
+					c = Character.toLowerCase(c);
+					prevTranslated = true;
+				} else {
+					prevTranslated = false;
+				}
+				result.append(c);
+				resultLength++;
 			}
-			s.append(ch);
 		}
-		return s.toString();
+		return resultLength > 0 ? result.toString() : input;
 	}
 
 	/**
-	 * Changes a space separated string value to camelCase
+	 * Converts separated string value to CamelCase.
 	 */
-	public static String wordsToCamelCase(String input) {
-		return wordsToCamelCase(input, ' ');
-	}
-
-	public static String wordsToCamelCase(String input, char separator) {
+	public static String toCamelCase(String input, boolean firstCharUppercase, char separator) {
 		int length = input.length();
 		StringBuilder sb = new StringBuilder(length);
-		boolean upperCase = false;
+		boolean upperCase = firstCharUppercase;
 
 		for (int i = 0; i < length; i++) {
 			char ch = input.charAt(i);
@@ -2320,7 +2318,7 @@ public class StringUtil {
 	 */
 	public static String findCommonPrefix(String... strings) {
 
-		StringBuilder prefx = new StringBuilder();
+		StringBuilder prefix = new StringBuilder();
 		int index = 0;
 		char c = 0;
 
@@ -2343,9 +2341,9 @@ public class StringUtil {
 			}
 
 			index++;
-			prefx.append(c);
+			prefix.append(c);
 		}
-		return prefx.length() == 0 ? StringPool.EMPTY : prefx.toString();
+		return prefix.length() == 0 ? StringPool.EMPTY : prefix.toString();
 	}
 
 
