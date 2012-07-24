@@ -28,17 +28,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 		dbOom.registerEntity(Girl.class);
 		dbOom.registerEntity(BadBoy.class);
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 	}
 	
 	public void testOrm() {

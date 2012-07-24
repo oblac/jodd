@@ -17,6 +17,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
 		dbOom.registerEntity(Bean1.class);
 	}

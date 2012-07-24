@@ -22,11 +22,11 @@ public class LiveDatabaseTest extends TestCase {
 	DbOomManager dboom;
 
 	protected void init() {
+		DbOomManager.resetAll();
 		dboom = DbOomManager.getInstance();
 
 		dboom.getTableNames().setUppercase(false);
 
-		dboom.reset();
 		dboom.registerEntity(Tester.class);
 	}
 

@@ -20,18 +20,12 @@ public class DbSqlBuilderTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 		dbOom.registerType(Girl.class);
 		dbOom.registerType(BadGirl.class);
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 	}
 	
 	public void testTable() {

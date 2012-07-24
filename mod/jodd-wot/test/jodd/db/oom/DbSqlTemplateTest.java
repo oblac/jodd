@@ -19,21 +19,15 @@ public class DbSqlTemplateTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+
+		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);
 		dbOom.registerType(BadGirl.class);
 		dbOom.registerType(Girl.class);
 	}
 	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
-	}
-		
 	protected void assertContains(String string, String... chunks) {
 		for (String chunk : chunks) {
 			assertTrue(string.contains(chunk));

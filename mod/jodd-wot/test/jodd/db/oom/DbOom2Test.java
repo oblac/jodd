@@ -19,7 +19,7 @@ import java.util.List;
 public class DbOom2Test extends DbH2TestCase {
 
 	public void testOrm2() {
-		DbOomManager.getInstance().reset();
+		DbOomManager.resetAll();
 
 		DbSession session = new DbThreadSession(cp);
 
