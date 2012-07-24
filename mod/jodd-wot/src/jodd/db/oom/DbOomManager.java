@@ -20,6 +20,8 @@ import java.util.Map;
  * to lookup for an entity from table name. Table names are read from result-set meta data, for example.
  * Moreover, it is not needed to use mappings at all: in that case just provide entity types during result set to
  * objects conversion.
+ *
+ * @see jodd.db.DbManager
  */
 public class DbOomManager {
 
@@ -50,7 +52,7 @@ public class DbOomManager {
 		dbOomManager = new DbOomManager();
 	}
 
-	// ---------------------------------------------------------------- prefix & suffix
+	// ---------------------------------------------------------------- naming
 
 	protected String schemaName;
 	protected TableNamingStrategy tableNames = new TableNamingStrategy();
