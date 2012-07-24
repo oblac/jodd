@@ -12,6 +12,7 @@ import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.oom.tst.FooWeigthSqlType;
 import jodd.db.type.SqlTypeManager;
 
 import java.util.List;
@@ -20,9 +21,10 @@ import java.math.BigDecimal;
 
 public class MappingTest extends DbHsqldbTestCase {
 
-@Override
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		DbOomManager.resetAll();
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class MappingTest extends DbHsqldbTestCase {
 		DbOomManager dbOom = DbOomManager.getInstance();
 		dbOom.registerEntity(Foo.class);
 		SqlTypeManager.register(Boo.class, BooSqlType.class);
-		//SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);		// it is not required to register!
+		SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);
 
 		List<Foo> foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);
 		assertEquals(1, foos.size());
