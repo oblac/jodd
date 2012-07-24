@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global DB-OOM (database - object-oriented) mapping definitions, prefixes and cache.
+ * DbOom manager. Contains various global settings, DB-OOM (database - object-oriented)
+ * mapping definitions, naming conventions etc.
  * <p>
  * Mapping definitions are used <b>only</b> by a result set mapper (such as {@link jodd.db.oom.mapper.ResultSetMapper}
  * to lookup for an entity from table name. Table names are read from result-set meta data, for example.
