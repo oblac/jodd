@@ -142,7 +142,7 @@ public class ReflectUtil {
 	 * @param method 		method to invoke
 	 * @param paramClasses	classes of parameters
 	 * @param params 		parameters
-�	 */
+	 */
 	public static Object invoke(Class c, Object obj, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		Method m = c.getMethod(method, paramClasses);
 		return m.invoke(obj, params);
@@ -481,7 +481,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Compares method signatures: names and parameters
+	 * Compares method signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Method first, Method second) {
 		if (first.getName().equals(second.getName()) == false) {
@@ -491,7 +491,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Compares constructor signatures: names and parameters
+	 * Compares constructor signatures: names and parameters.
 	 */
 	public static boolean compareSignatures(Constructor first, Constructor second) {
 		if (first.getName().equals(second.getName()) == false) {
@@ -576,7 +576,8 @@ public class ReflectUtil {
 	 * Creates new instances including for common mutable classes that do not have a default constructor.
 	 * more user-friendly. It examines if class is a map, list,
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
-	 * Arrays are also created with no elements. Note that this bunch of ifs is faster then a hashmap.
+	 * Arrays are also created with no elements. Note that this bunch of <code>if</code> blocks
+	 * is faster then using a <code>HashMap</code>.
 	 */
 	public static Object newInstance(Class type) throws IllegalAccessException, InstantiationException {
 		if (type.isPrimitive()) {
