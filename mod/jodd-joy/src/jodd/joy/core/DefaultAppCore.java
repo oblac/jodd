@@ -2,7 +2,7 @@
 
 package jodd.joy.core;
 
-import jodd.db.DbDefault;
+import jodd.db.DbManager;
 import jodd.db.DbSessionProvider;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
@@ -59,7 +59,11 @@ public abstract class DefaultAppCore {
 	 */
 	public static final String PETITE_DBPOOL = "dbpool";
 	/**
-	 * Petite bean name for DbOom instance.
+	 * Petite bean name for DbManager instance.
+	 */
+	public static final String PETITE_DB = "db";
+	/**
+	 * Petite bean name for DbOomManager instance.
 	 */
 	public static final String PETITE_DBOOM = "dboom";
 	/**
@@ -443,18 +447,6 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- database
 
 	/**
-	 * Database debug mode will print out SQL statements.
-	 */
-	protected boolean dbDebug;
-
-	/**
-	 * Returns <code>true</code> if database debug mode is on.
-	 */
-	public boolean isDbDebug() {
-		return dbDebug;
-	}
-
-	/**
 	 * JTX manager.
 	 */
 	protected JtxTransactionManager jtxManager;
@@ -515,11 +507,12 @@ public abstract class DefaultAppCore {
 		DbSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 
 		// global settings
-		DbDefault.debug = dbDebug;
-		DbDefault.connectionProvider = connectionProvider;
-		DbDefault.sessionProvider = sessionProvider;
+		DbManager dbManager = DbManager.getInstance();
+		dbManager.setConnectionProvider(connectionProvider);
+		dbManager.setSessionProvider(sessionProvider);
+		petite.addBean(PETITE_DB, dbManager);
 
-		DbOomManager dbOomManager = createDbOomManager();
+		DbOomManager dbOomManager = DbOomManager.getInstance();
 		DbOomManager.setInstance(dbOomManager);
 		petite.addBean(PETITE_DBOOM, dbOomManager);
 
@@ -536,12 +529,6 @@ public abstract class DefaultAppCore {
 		return new DbJtxTransactionManager(connectionProvider);
 	}
 
-	/**
-	 * Creates DbOomManager.
-	 */
-	protected DbOomManager createDbOomManager() {
-		return DbOomManager.getInstance();
-	}
 
 	/**
 	 * Closes database resources at the end.
