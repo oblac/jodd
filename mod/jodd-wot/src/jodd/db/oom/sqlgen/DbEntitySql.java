@@ -6,8 +6,6 @@ import jodd.bean.BeanUtil;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomManager;
 
-import static jodd.db.oom.DbNameUtil.convertColumnNameToPropertyName;
-import static jodd.db.oom.DbNameUtil.convertTableNameToClassName;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static jodd.util.StringPool.EQUALS;
 import static jodd.util.StringPool.SPACE;
@@ -167,9 +165,10 @@ public class DbEntitySql {
 		DbOomManager dbOomManager = DbOomManager.getInstance();
 		DbEntityDescriptor dedFk = dbOomManager.lookupType(value.getClass());
 
-		String fkColumn =
-				uncapitalize(convertTableNameToClassName(dedFk.getTableName(), dbOomManager.getTableNamePrefix(), dbOomManager.getTableNameSuffix())) +
-				capitalize(convertColumnNameToPropertyName(dedFk.getIdColumnName()));
+		String tableName = dbOomManager.getTableNames().convertTableNameToEntityName(dedFk.getTableName());
+		String columnName = dbOomManager.getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
+
+		String fkColumn = uncapitalize(tableName) + capitalize(columnName);
 		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).colvalue(idValue);
 	}
