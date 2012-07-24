@@ -24,7 +24,7 @@ public class LiveDatabaseTest extends TestCase {
 	protected void init() {
 		dboom = DbOomManager.getInstance();
 
-		dboom.setTableNameUppercase(false);
+		dboom.getTableNames().setUppercase(false);
 
 		dboom.reset();
 		dboom.registerEntity(Tester.class);

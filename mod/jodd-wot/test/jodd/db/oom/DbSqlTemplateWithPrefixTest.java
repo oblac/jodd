@@ -16,11 +16,12 @@ public class DbSqlTemplateWithPrefixTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
 
-		dbOom.setTableNamePrefix("PRE_");
-		dbOom.setTableNameSuffix("_SUF");
+		DbOomManager.resetAll();
+		DbOomManager dbOom = DbOomManager.getInstance();
+
+		dbOom.getTableNames().setPrefix("PRE_");
+		dbOom.getTableNames().setSuffix("_SUF");
 
 		dbOom.registerType(Boy.class);
 		dbOom.registerType(BadBoy.class);
@@ -28,17 +29,7 @@ public class DbSqlTemplateWithPrefixTest extends TestCase {
 		dbOom.registerType(Girl.class);
 	}
 
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		DbOomManager dbOom = DbOomManager.getInstance();
-		dbOom.reset();
-	}
-
-
 	public void testTablePrefixSuffix() {
-
 		DbSqlBuilder st;
 
 		st = sql("$T{Boy} $Boy.id $C{Boy.id}");
@@ -46,9 +37,6 @@ public class DbSqlTemplateWithPrefixTest extends TestCase {
 
 		st = sql("$T{Boy b} $b.id $C{b.id}");
 		assertEquals("PRE_BOY_SUF b b.ID b.ID", st.generateQuery());
-
-		DbOomManager.getInstance().setTableNamePrefix(null);
-		DbOomManager.getInstance().setTableNameSuffix(null);
 	}
 
 }

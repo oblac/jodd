@@ -17,13 +17,13 @@ public class DbEntitySqlTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
-		if (dbOom.isRegistered(Girl.class) == false) {
-			dbOom.registerType(Boy.class);
-			dbOom.registerType(BadBoy.class);
-			dbOom.registerType(BadGirl.class);
-			dbOom.registerType(Girl.class);
-		}
+
+		dbOom.registerType(Boy.class);
+		dbOom.registerType(BadBoy.class);
+		dbOom.registerType(BadGirl.class);
+		dbOom.registerType(Girl.class);
 	}
 
 	protected void checkGirl(DbSqlBuilder b) {
