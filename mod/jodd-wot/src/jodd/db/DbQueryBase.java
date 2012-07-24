@@ -21,6 +21,20 @@ abstract class DbQueryBase {
 
 	private static final Log log = Log.getLogger(DbQueryBase.class);
 
+	// ---------------------------------------------------------------- ctor
+
+	protected final DbManager dbManager = DbManager.getInstance();
+
+	protected DbQueryBase() {
+		this.forcePreparedStatement = dbManager.forcePreparedStatement;
+		this.type = dbManager.type;
+		this.concurrencyType = dbManager.concurrencyType;
+		this.holdability = dbManager.holdability;
+		this.debug = dbManager.debug;
+		this.fetchSize = dbManager.fetchSize;
+		this.maxRows = dbManager.maxRows;
+	}
+
 	// ---------------------------------------------------------------- query states
 
 	public static final int QUERY_CREATED = 1;
@@ -120,7 +134,7 @@ abstract class DbQueryBase {
 	/**
 	 * If set to <code>true</code> all created statements will be prepared.
 	 */
-	protected boolean forcePreparedStatement = DbDefault.forcePreparedStatement;
+	protected boolean forcePreparedStatement;
 
 	/**
 	 * Forces creation of prepared statements.
@@ -152,11 +166,12 @@ abstract class DbQueryBase {
 	 * Performs JDBC initialization of the query. Obtains connection, parses the SQL query string
 	 * and creates statements. Initialization is performed only once, when switching to initialized state.
 	 */
+	@SuppressWarnings("MagicConstant")
 	protected void initializeJdbc() {
 		// connection
 		if (connection == null) {
 			if (session == null) {
-				session = DbDefault.sessionProvider.getDbSession();
+				session = dbManager.sessionProvider.getDbSession();
 			}
 			connection = session.getConnection();
 		}
@@ -336,7 +351,7 @@ abstract class DbQueryBase {
 	 */
 	public static final int TYPE_SCROLL_INSENSITIVE = ResultSet.TYPE_SCROLL_INSENSITIVE;
 
-	protected int type = DbDefault.type;
+	protected int type;
 
 	public int getType() {
 		return type;
@@ -367,7 +382,7 @@ abstract class DbQueryBase {
 	 */
 	public static final int CONCUR_UPDATABLE = ResultSet.CONCUR_UPDATABLE;
 
-	protected int concurrencyType = DbDefault.concurrencyType;
+	protected int concurrencyType;
 
 	public int getConcurrencyType() {
 		return concurrencyType;
@@ -401,7 +416,7 @@ abstract class DbQueryBase {
 	 */
 	public static final int HOLD_CURSORS_OVER_COMMIT = ResultSet.HOLD_CURSORS_OVER_COMMIT;
 
-	protected int holdability = DbDefault.holdability;
+	protected int holdability;
 
 	public int getHoldability() {
 		return holdability;
@@ -422,7 +437,7 @@ abstract class DbQueryBase {
 
 	// ---------------------------------------------------------------- debug mode
 
-	protected boolean debug = DbDefault.debug;
+	protected boolean debug;
 
 	public boolean isInDebugMode() {
 		return debug;
@@ -477,8 +492,12 @@ abstract class DbQueryBase {
 
 	// ---------------------------------------------------------------- performance hints
 
-	protected int fetchSize = DbDefault.fetchSize;
+	protected int fetchSize;
 
+	/**
+	 * Returns fetch size.
+	 * @see #setFetchSize(int)
+	 */
 	public int getFetchSize() {
 		return fetchSize;
 	}
@@ -501,8 +520,12 @@ abstract class DbQueryBase {
 		}
 	}
 
-	protected int maxRows = DbDefault.maxRows;
+	protected int maxRows;
 
+	/**
+	 * Returns max rows.
+	 * @see #setMaxRows(int)
+	 */
 	public int getMaxRows() {
 		return maxRows;
 	}

@@ -34,7 +34,7 @@ public class DbThreadSession extends DbSession {
 	 * default connection provider.
 	 */
 	public DbThreadSession() {
-		this(DbDefault.connectionProvider);
+		this(null);
 	}
 
 	

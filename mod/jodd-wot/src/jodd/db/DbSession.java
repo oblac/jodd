@@ -29,6 +29,7 @@ public class DbSession {
 
 	// ---------------------------------------------------------------- init & close
 
+	protected final DbManager dbManager = DbManager.getInstance();
 	protected final ConnectionProvider connectionProvider;
 	protected Connection connection;
 
@@ -36,7 +37,7 @@ public class DbSession {
 	 * Creates new database session using default connection provider.
 	 */
 	public DbSession() {
-		this(DbDefault.connectionProvider);
+		this(null);
 	}
 
 	/**
@@ -47,11 +48,14 @@ public class DbSession {
 			log.debug("Creating new db session");
 		}
 		if (connectionProvider == null) {
-			throw new DbSqlException("Connection provider is not available.");
+			connectionProvider = dbManager.connectionProvider;
+			if (connectionProvider == null) {
+				throw new DbSqlException("Connection provider is not available.");
+			}
 		}
 		this.connectionProvider = connectionProvider;
 		txActive = false;
-		txMode = DbDefault.transactionMode;
+		txMode = dbManager.transactionMode;
 		queries = new HashSet<DbQueryBase>();
 	}
 
@@ -214,7 +218,7 @@ public class DbSession {
 	 * Starts transaction with default transaction mode.
 	 */
 	public void beginTransaction() {
-		beginTransaction(DbDefault.transactionMode);
+		beginTransaction(dbManager.transactionMode);
 	}
 
 	/**
