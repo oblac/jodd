@@ -59,7 +59,7 @@ public class DbOomManager {
 	protected String schemaName;
 	protected TableNamingStrategy tableNames = new TableNamingStrategy();
 	protected ColumnNamingStrategy columnNames = new ColumnNamingStrategy();
-	protected boolean strictCompare;
+	protected boolean strictCompare = true;
 
 	/**
 	 * Returns current table name strategy.

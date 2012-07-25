@@ -62,6 +62,7 @@ public class StrictCompareTest extends TestCase {
 	public void testTableNameDefault() {
 		DbOomManager.resetAll();
 		DbOomManager dboom = DbOomManager.getInstance();
+		dboom.setStrictCompare(false);
 
 		dboom.registerEntity(Tester.class);
 
