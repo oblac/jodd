@@ -66,7 +66,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder updateColumn(Object entity, String columnRef, Object value) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(UPDATE).table(entity, tableRef)._(SET).column(tableRef, columnRef)._(EQUALS).colvalue(value)._(WHERE).matchIds(tableRef, entity);
+		return sql()._(UPDATE).table(entity, tableRef)._(SET).column(tableRef, columnRef)._(EQUALS).columnValue(value)._(WHERE).matchIds(tableRef, entity);
 	}
 
 
@@ -104,7 +104,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder deleteById(Object entityType, Number id) {
 		String tableRef = createTableRefName(entityType);
-		return sql()._(DELETE_FROM).table(entityType, null)._(WHERE).refId(tableRef)._(EQUALS).colvalue(id);
+		return sql()._(DELETE_FROM).table(entityType, null)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
 	}
 
 
@@ -153,7 +153,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder findByColumn(Class entity, String column, Object value) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, column)._(EQUALS).colvalue(value);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, column)._(EQUALS).columnValue(value);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class DbEntitySql {
 
 		String fkColumn = uncapitalize(tableName) + capitalize(columnName);
 		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
-		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).colvalue(idValue);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).columnValue(idValue);
 	}
 
 	// ---------------------------------------------------------------- find by Id
@@ -188,7 +188,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder findById(Object entityType, Number id) {
 		String tableRef = createTableRefName(entityType);
-		return sql()._(SELECT).column(tableRef)._(FROM).table(entityType, tableRef)._(WHERE).refId(tableRef)._(EQUALS).colvalue(id);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entityType, tableRef)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
 	}
 
 	// ---------------------------------------------------------------- count

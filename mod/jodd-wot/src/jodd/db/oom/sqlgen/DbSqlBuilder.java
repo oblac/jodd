@@ -373,15 +373,15 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return addChunk(new ValueChunk(objectReference));
 	}
 
-	public DbSqlBuilder colvalue(String name, Object value) {
+	public DbSqlBuilder columnValue(String name, Object value) {
 		return addChunk(new ColumnValueChunk(name, value));
 	}
 
-	public DbSqlBuilder colvalue(Object value) {
+	public DbSqlBuilder columnValue(Object value) {
 		return addChunk(new ColumnValueChunk(null, value));
 	}
 
-	public DbSqlBuilder colvalueRef(String objectReference) {
+	public DbSqlBuilder columnValueRef(String objectReference) {
 		return addChunk(new ColumnValueChunk(objectReference));
 	}
 
