@@ -26,12 +26,11 @@ import static jodd.db.oom.DbOomUtil.initialCollectionSize;
 /**
  * A simple ORM extension for {@link DbQuery}.
  * <p>
- * ORM extension may map results to objects in two ways:
+ * OOM extension may map results to objects in two ways:
  * <ul>
  * <li><i>auto</i> mode - when result set is mapped to provided types, and</li>
  * <li><i>mapped</i> mode - requires explicit mapping definitions.</li>
  * </ul>
- *
  */
 public class DbOomQuery extends DbQuery {
 
@@ -152,13 +151,13 @@ public class DbOomQuery extends DbQuery {
 			} else {
 				dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
 				if (log.isWarnEnabled()) {
-					log.warn("Column db sql type not available: " + ded.toString() + '.' + dec.getColumnName());
+					log.warn("Column SQL type not available: " + ded.toString() + '.' + dec.getColumnName());
 				}
 			}
 		} catch (SQLException sex) {
 			dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
 			if (log.isWarnEnabled()) {
-				log.warn("Column db sql type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
+				log.warn("Column SQL type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
 			}
 		} finally {
 			ResultSetUtil.close(rs);
