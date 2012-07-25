@@ -238,8 +238,10 @@ public class DbEntityDescriptor {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DbEntity: ");
-		sb.append(schemaName);
-		sb.append('.');
+		if (schemaName != null) {
+			sb.append(schemaName);
+			sb.append('.');
+		}
 		sb.append(tableName);
 		return sb.toString();
 	}
