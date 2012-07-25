@@ -63,7 +63,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	protected final DbOomManager dbOomManager;
 	protected final ResultSet rs;
-
+	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
 	protected final String[] columnNames;		// list of all column names
 	protected final int[] columnDbSqlTypes;		// list of all column db types
@@ -78,18 +78,21 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	}
 
 	/**
-	 * Reads RS meta-data for column and table names.
+	 * Reads ResultSet meta-data for column and table names.
 	 */
 	public DefaultResultSetMapper(ResultSet rs, Map<String, ColumnData> columnAliases, DbOomManager oomManager) {
 		this.dbOomManager = oomManager;
 		this.rs = rs;
-		this.resultColumns = new HashSet<String>();
+		this.strictCompare = dbOomManager.isStrictCompare();
+		//this.resultColumns = new HashSet<String>();
 		try {
 			ResultSetMetaData rsMetaData = rs.getMetaData();
 			if (rsMetaData == null) {
+
 				throw new DbOomException("JDBC driver does not provide meta-data.");
 			}
 			totalColumns = rsMetaData.getColumnCount();
+			this.resultColumns = new HashSet<String>(totalColumns);
 			columnNames = new String[totalColumns];
 			columnDbSqlTypes = new int[totalColumns];
 			tableNames = new String[totalColumns];
@@ -135,12 +138,22 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				if (columnName.length() == 0) {
 					columnName = null;
 				}
+
 				if (columnName != null) {
-					columnName = columnName.trim();//.toUpperCase();
+					columnName = columnName.trim();
+
+					if (!strictCompare) {
+						columnName = columnName.toUpperCase();
+					}
 				}
 				columnNames[i] = columnName;
+
 				if (tableName != null) {
-					tableName = tableName.trim();//.toUpperCase();
+					tableName = tableName.trim();
+
+					if (!strictCompare) {
+						tableName = tableName.toUpperCase();
+					}
 				}
 				tableNames[i] = tableName;
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
@@ -226,7 +239,11 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				}
 				DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
 				if (ded != null) {
-					cachedTypesTableNames[i] = ded.getTableName();//.toUpperCase();
+					String tableName = ded.getTableName();
+					if (!strictCompare) {
+						tableName = tableName.toUpperCase();
+					}
+					cachedTypesTableNames[i] = tableName;
 				}
 			}
 			cachedUsedTypes = types;			

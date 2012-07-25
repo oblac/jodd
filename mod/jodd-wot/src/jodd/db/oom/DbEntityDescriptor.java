@@ -16,13 +16,14 @@ import java.util.List;
  */
 public class DbEntityDescriptor {
 
-	public DbEntityDescriptor(Class type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy) {
+	public DbEntityDescriptor(Class type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy, boolean strictCompare) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
 		this.schemaName = DbMetaUtil.resolveSchemaName(type, schemaName);
 		this.tableName = DbMetaUtil.resolveTableName(type, tableNamingStrategy);
 		this.columnNamingStrategy = columnNamingStrategy;
+		this.strictCompare = strictCompare;
 	}
 
 	// ---------------------------------------------------------------- type and table
@@ -33,6 +34,7 @@ public class DbEntityDescriptor {
 	private final String tableName;
 	private final String schemaName;
 	private final ColumnNamingStrategy columnNamingStrategy;
+	private final boolean strictCompare;
 
 	/**
 	 * Returns entity type.
@@ -137,9 +139,17 @@ public class DbEntityDescriptor {
 			return null;
 		}
 		init();
-		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-			if (columnDescriptor.columnName.equals(columnName) == true) {
-				return columnDescriptor;
+		if (strictCompare) {
+			for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
+				if (columnDescriptor.columnName.equals(columnName) == true) {
+					return columnDescriptor;
+				}
+			}
+		} else {
+			for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
+				if (columnDescriptor.columnName.equalsIgnoreCase(columnName) == true) {
+					return columnDescriptor;
+				}
 			}
 		}
 		return null;
