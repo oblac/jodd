@@ -40,7 +40,7 @@ public class UpdateSetChunk extends SqlChunk {
 
 		DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 		String typeName = StringUtil.uncapitalize(ded.getEntityName());
-		String table = resolveTable(tableRef, ded); 
+		//String table = resolveTable(tableRef, ded);
 
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
