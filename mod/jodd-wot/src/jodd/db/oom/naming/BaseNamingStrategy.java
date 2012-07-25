@@ -63,6 +63,18 @@ abstract class BaseNamingStrategy {
 		this.uppercase = uppercase;
 	}
 
+	public boolean isLowercase() {
+		return !uppercase;
+	}
+
+	/**
+	 * Alternative property to {@link #setUppercase(boolean)}.
+	 * Does just opposite.
+	 */
+	public void setLowercase(boolean lowercase) {
+		this.uppercase = !lowercase;
+	}
+
 	// ---------------------------------------------------------------- util methods
 
 	protected static StringBuilder toUppercase(StringBuilder string) {
