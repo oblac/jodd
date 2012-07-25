@@ -2,6 +2,7 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
@@ -13,6 +14,7 @@ import java.util.List;
 
 /**
  * Live database test. Requires database services to be started.
+ * There must exist the database: "jodd-test".
  */
 public class LiveDatabaseTest extends TestCase {
 
@@ -21,91 +23,205 @@ public class LiveDatabaseTest extends TestCase {
 	CoreConnectionPool cp;
 	DbOomManager dboom;
 
-	protected void init() {
+	// ---------------------------------------------------------------- common
+
+	protected LiveDatabaseTest init(boolean strictCompare) {
 		DbOomManager.resetAll();
+
 		dboom = DbOomManager.getInstance();
+		dboom.setStrictCompare(strictCompare);
 
-		dboom.getTableNames().setUppercase(false);
+		cp = new CoreConnectionPool();
+		return this;
+	}
 
+	protected void connect() {
+		cp.init();
+
+		DbManager.getInstance().setConnectionProvider(cp);
 		dboom.registerEntity(Tester.class);
 	}
 
-	// ---------------------------------------------------------------- mysql
-
-	protected void mysql() {
-		initMySql();
-		createMySqlTables();
+	interface DbAccess {
+		void initDb();
+		void createTables();
 	}
 
-	protected void initMySql() {
-		cp = new CoreConnectionPool();
-		cp.setDriver("com.mysql.jdbc.Driver");
-		cp.setUrl("jdbc:mysql://localhost:3306/" + DB_NAME);
-		cp.setUser("root");
-		cp.setPassword("root!");
-		cp.init();
+	/**
+	 * DATABASES TO TEST!
+	 */
+	DbAccess[] databases = new DbAccess[] {
+			new MySql(),
+			new PostgreSql(),
+			// new HsqlDb(), using old hsqldb, need to test with the latest one
+			// but hsqldb 2 is on java 6
+	};
+
+	/**
+	 * MySql.
+	 */
+	public class MySql implements DbAccess {
+
+		public void initDb() {
+			cp.setDriver("com.mysql.jdbc.Driver");
+			cp.setUrl("jdbc:mysql://localhost:3306/" + DB_NAME);
+			cp.setUser("root");
+			cp.setPassword("root!");
+
+			if (dboom.isStrictCompare()) {
+				dboom.getTableNames().setLowercase(true);
+				dboom.getColumnNames().setUppercase(true);
+			}
+		}
+
+		public void createTables() {
+			DbSession session = new DbSession();
+
+			String sql = "create table TESTER (" +
+								"ID			INT UNSIGNED NOT NULL AUTO_INCREMENT," +
+								"NAME		VARCHAR(20)	not null," +
+								"VALUE		INT NULL," +
+								"primary key (ID)" +
+								')';
+
+			DbQuery query = new DbQuery(session, sql);
+			query.executeUpdateAndClose();
+
+			session.closeSession();
+			assertTrue(query.isClosed());
+		}
 	}
 
-	protected void createMySqlTables() {
-		DbSession session = new DbSession(cp);
+	/**
+	 * PostgreSql.
+	 */
+	public class PostgreSql implements DbAccess {
 
-		String sql = "create table TESTER (" +
-							"ID			INT UNSIGNED NOT NULL AUTO_INCREMENT," +
-							"NAME		VARCHAR(20)	not null," +
-							"VALUE		INT NULL," +
-							"primary key (ID)" +
-							')';
+		public void initDb() {
+			cp.setDriver("org.postgresql.Driver");
+			cp.setUrl("jdbc:postgresql://localhost/" + DB_NAME);
+			cp.setUser("postgres");
+			cp.setPassword("root!");
 
-		DbQuery query = new DbQuery(session, sql);
-		query.executeUpdateAndClose();
+			if (dboom.isStrictCompare()) {
+				dboom.getTableNames().setLowercase(true);
+				dboom.getColumnNames().setLowercase(true);
+			}
+		}
 
-		session.closeSession();
-		assertTrue(query.isClosed());
+		public void createTables() {
+			DbSession session = new DbSession();
+
+			String sql = "create table TESTER (" +
+								"ID			SERIAL," +
+								"NAME		varchar(20)	NOT NULL," +
+								"VALUE		integer NULL," +
+								"primary key (ID)" +
+								')';
+
+			DbQuery query = new DbQuery(session, sql);
+			query.executeUpdateAndClose();
+
+			session.closeSession();
+			assertTrue(query.isClosed());
+		}
+	}
+
+	public class HsqlDb implements DbAccess {
+
+		public void initDb() {
+			cp = new CoreConnectionPool();
+			cp.setDriver("org.hsqldb.jdbcDriver");
+			cp.setUrl("jdbc:hsqldb:mem:test");
+			cp.setUser("sa");
+			cp.setPassword("");
+
+			if (dboom.isStrictCompare()) {
+				dboom.getTableNames().setUppercase(true);
+				dboom.getColumnNames().setUppercase(true);
+			}
+		}
+
+		public void createTables() {
+			DbSession session = new DbSession();
+
+			String sql = "create table TESTER (" +
+								"ID			IDENTITY," +
+								"NAME		varchar(20)	NOT NULL," +
+								"VALUE		integer NULL," +
+								"primary key (ID)" +
+								')';
+
+			DbQuery query = new DbQuery(session, sql);
+			query.executeUpdateAndClose();
+
+			session.closeSession();
+			assertTrue(query.isClosed());
+		}
 	}
 
 	// ---------------------------------------------------------------- drop
 
-	protected void dropAllTables() {
-		DbSession session = new DbSession(cp);
+	protected void close() {
+		DbSession session = new DbSession();
 
 		DbQuery query = new DbQuery(session, "drop table TESTER");
 		query.executeUpdateAndClose();
 
 		session.closeSession();
 		assertTrue(query.isClosed());
+
+		cp.close();
 	}
 
 	// ---------------------------------------------------------------- test
 
 	public void testDb() {
-		init();
 
-		mysql();
+		for (int i = 0; i < 2; i++) {
+			boolean strict = i == 0;
 
-		try {
-			workoutEntity();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			fail(ex.toString());
-		} finally {
-			dropAllTables();
+			for (DbAccess db : databases) {
+				init(strict);
+				db.initDb();
+				connect();
+				db.createTables();
+
+				try {
+					workoutEntity();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					fail(ex.toString());
+				} finally {
+					close();
+				}
+			}
 		}
 	}
 
 	// ---------------------------------------------------------------- workout
 
 	protected void workoutEntity() {
-		DbSession session = new DbSession(cp);
+		DbSession session = new DbSession();
 
 		Tester tester = new Tester();
 		tester.setName("one");
 		tester.setValue(Integer.valueOf(7));
 
-
-		DbOomQuery query = new DbOomQuery(session, DbEntitySql.insert(tester));
-		query.executeUpdateAndClose();
-
+		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.insert(tester));
+		dbOomQuery.setGeneratedKey();
+		dbOomQuery.executeUpdate();
 		assertDb(session, "{1,one,7}");
+
+		long key = dbOomQuery.getGeneratedKey();
+		tester.setId(Long.valueOf(key));
+		dbOomQuery.close();
+
+		assertEquals(1, tester.getId().longValue());
+
+		tester.setName("seven");
+		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdateAndClose();
+		assertDb(session, "{1,seven,7}");
 
 		session.closeSession();
 	}
