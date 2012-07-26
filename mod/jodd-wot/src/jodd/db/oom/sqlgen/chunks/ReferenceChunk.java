@@ -9,8 +9,8 @@ import jodd.util.StringPool;
 
 /**
  * Resolves column and table references. Reference is given in format: <code>tableRef.propertyName</code>.
- * Property name may be '+', indicating the identity columns. If property name is omitted, only table name
- * will be rendered.
+ * The <code>propertyName</code> may be '+' (e.g. <code>tableRef.+</code>), indicating the identity columns.
+ * If property name is omitted (e.g. <code>tableRef</code>), only table name will be rendered.
  */
 public class ReferenceChunk extends SqlChunk {
 
@@ -48,7 +48,9 @@ public class ReferenceChunk extends SqlChunk {
 	@Override
 	public void process(StringBuilder out) {
 		DbEntityDescriptor ded = lookupTableRef(tableRef);
-		out.append(resolveTable(tableRef, ded));
+
+		String tableName = resolveTable(tableRef, ded);
+		out.append(tableName);
 
 		if (onlyId == true) {
 			out.append('.').append(ded.getIdColumnName());
