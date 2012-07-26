@@ -100,7 +100,7 @@ public class DbEntitySqlTest extends TestCase {
 		BadGirl bg = new BadGirl(Integer.valueOf(1), "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.updateColumn(bg, "fooname", "Anja");
 		assertEquals(
-				"update GIRL BadGirl set BadGirl.NAME=:p0 where (BadGirl.ID=:badGirl.fooid)",
+				"update GIRL BadGirl set NAME=:p0 where (BadGirl.ID=:badGirl.fooid)",
 				b.generateQuery());
 		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(2, params.entrySet().size());

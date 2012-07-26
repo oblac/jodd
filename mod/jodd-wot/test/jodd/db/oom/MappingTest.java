@@ -112,6 +112,7 @@ public class MappingTest extends DbHsqldbTestCase {
 
 
 		doq = new DbOomQuery(DbEntitySql.updateColumn(foo, "timestamp2", new JDateTime("2010-02-02 20:20:20.222")));
+
 		doq.executeUpdateAndClose();
 
 		foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);

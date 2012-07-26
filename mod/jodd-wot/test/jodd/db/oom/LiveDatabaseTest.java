@@ -223,6 +223,13 @@ public class LiveDatabaseTest extends TestCase {
 		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdateAndClose();
 		assertDb(session, "{1,seven,7}");
 
+		tester.setName("SEVEN");
+		DbOomQuery.query(session, DbEntitySql.update(tester)).executeUpdateAndClose();
+		assertDb(session, "{1,SEVEN,7}");
+
+		tester.setName("seven");
+		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdateAndClose();
+
 		session.closeSession();
 	}
 

@@ -113,8 +113,11 @@ public class DbSqlBuilderTest extends TestCase {
 
 	public void testColumn() {
 		assertEquals("BOY.ID BOY", sql().column("Boy.id").table("Boy", null).generateQuery());
+		assertEquals("BOY.ID BOY", sql().column("Boy", "id").table("Boy", null).generateQuery());
 		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table("Boy", "Boy").generateQuery());
 		assertEquals("b.ID BOY b", sql().column("b.id").table("Boy", "b").generateQuery());
+		assertEquals("Boy$ID BOY b", sql().column("Boy.id").table("Boy", "b").generateQuery());
+		assertEquals("b.ID BOY b", sql().column("b", "id").table("Boy", "b").generateQuery());
 		assertEquals("Boy.ID BOY Boy", sql().column("Boy.id").table(Boy.class).generateQuery());
 
 		assertEquals("b.ID, b.GIRL_ID, b.NAME BOY b", sql().column("b.*").table("BadBoy", "b").generateQuery());
@@ -123,6 +126,10 @@ public class DbSqlBuilderTest extends TestCase {
 		assertEquals("b.ID as col_0_ BOY b", sql().column("b.id").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
 		assertEquals("b.ID as b$ID BOY b", sql().column("b.id").table("Boy", "b").aliasColumnsAs(TABLE_REFERENCE).generateQuery());
 		assertEquals("b.ID as BOY$ID BOY b", sql().column("b.id").table("Boy", "b").aliasColumnsAs(TABLE_NAME).generateQuery());
+
+		assertEquals("col_0_ BOY b", sql().column("Boy.id").table("Boy", "b").aliasColumnsAs(COLUMN_CODE).generateQuery());
+		assertEquals("Boy$ID BOY b", sql().column("Boy.id").table("Boy", "b").aliasColumnsAs(TABLE_REFERENCE).generateQuery());
+		assertEquals("BOY$ID BOY b", sql().column("Boy.id").table("Boy", "b").aliasColumnsAs(TABLE_NAME).generateQuery());
 	}
 
 	public void testReferences() {

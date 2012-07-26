@@ -37,9 +37,19 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 
 		// two
-		DbSqlBuilder dbSqlBuilder = DbSqlBuilder.sql("select $g.id + 10 as $C{Bean1.sum}, UCASE($g.name) as $C{Bean1.bigName}, $C{g.*} from $T{Girl g} where $g.id=1").
-				aliasColumnsAs(ColumnAliasType.COLUMN_CODE);
-		assertEquals("select g.ID + 10 as col_0_, UCASE(g.NAME) as col_1_, g.ID as col_2_, g.NAME as col_3_, g.SPECIALITY as col_4_ from GIRL g where g.ID=1", dbSqlBuilder.generateQuery());
+		DbSqlBuilder dbSqlBuilder = DbSqlBuilder
+				.sql("select $g.id + 10 as $C{Bean1.sum}, UCASE($g.name) as $C{Bean1.bigName}, $C{g.*} from $T{Girl g} where $g.id=1")
+				.aliasColumnsAs(ColumnAliasType.COLUMN_CODE);
+
+		assertEquals(
+				"select g.ID + 10 as col_0_, UCASE(g.NAME) as col_1_, g.ID as col_2_, g.NAME as col_3_, g.SPECIALITY as col_4_ from GIRL g where g.ID=1",
+				dbSqlBuilder.generateQuery());
+
+		dbSqlBuilder.reset();
+
+		assertEquals(
+				"select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1",
+				dbSqlBuilder.generateQuery());
 
 		dbSqlBuilder.reset();
 
@@ -50,7 +60,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		Girl girl = (Girl) row[1];
 
 		assertNotNull(bean1);
-		assertEquals(Integer.valueOf(11), bean1.getSum());
+		assertEquals(11, bean1.getSum().intValue());
 		assertEquals("ANNA", bean1.getBigName());
 
 		assertNotNull(girl);
@@ -61,8 +71,11 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 
 		// three
-		dbSqlBuilder = DbSqlBuilder.sql("select $g.id + 10 as $C{Bean1.sum}, UCASE($g.name) as $C{Bean1.bigName}, $C{g.*} from $T{Girl g} where $g.id=1");
-		assertEquals("select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1", dbSqlBuilder.generateQuery());
+		dbSqlBuilder = DbSqlBuilder.sql(
+				"select $g.id + 10 as $C{Bean1.sum}, UCASE($g.name) as $C{Bean1.bigName}, $C{g.*} from $T{Girl g} where $g.id=1");
+		assertEquals(
+				"select g.ID + 10 as Bean1$SUM, UCASE(g.NAME) as Bean1$BIG_NAME, g.ID, g.NAME, g.SPECIALITY from GIRL g where g.ID=1",
+				dbSqlBuilder.generateQuery());
 
 		dbSqlBuilder.reset();
 
@@ -73,7 +86,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		girl = (Girl) row[1];
 
 		assertNotNull(bean1);
-		assertEquals(Integer.valueOf(11), bean1.getSum());
+		assertEquals(11, bean1.getSum().intValue());
 		assertEquals("ANNA", bean1.getBigName());
 
 		assertNotNull(girl);
