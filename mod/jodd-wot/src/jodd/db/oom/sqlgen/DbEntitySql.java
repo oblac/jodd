@@ -66,7 +66,15 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder updateColumn(Object entity, String columnRef, Object value) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(UPDATE).table(entity, tableRef)._(SET).column(tableRef, columnRef)._(EQUALS).columnValue(value)._(WHERE).matchIds(tableRef, entity);
+		return sql()._(UPDATE).table(entity, tableRef)._(SET).ref(null, columnRef)._(EQUALS).columnValue(value)._(WHERE).matchIds(tableRef, entity);
+	}
+
+	/**
+	 * Reads property value and updates the DB.
+	 */
+	public static DbSqlBuilder updateColumn(Object entity, String columnRef) {
+		Object value = BeanUtil.getProperty(entity, columnRef);
+		return updateColumn(entity, columnRef, value);
 	}
 
 
@@ -169,7 +177,7 @@ public class DbEntitySql {
 		String columnName = dbOomManager.getColumnNames().convertColumnNameToPropertyName(dedFk.getIdColumnName());
 
 		String fkColumn = uncapitalize(tableName) + capitalize(columnName);
-		Object idValue = BeanUtil.getDeclaredPropertySilently(value, dedFk.getIdPropertyName());
+		Object idValue = BeanUtil.getProperty(value, dedFk.getIdPropertyName());
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).ref(tableRef, fkColumn)._(EQUALS).columnValue(idValue);
 	}
 

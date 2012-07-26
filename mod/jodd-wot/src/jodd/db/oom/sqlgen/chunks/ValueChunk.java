@@ -8,6 +8,8 @@ import java.util.Collection;
  * Defines SQL parameter and its value. Name may be <code>null</code> and will be
  * automatically generated. Collections are recognized and will be rendered into
  * the list of values.
+ * <p>
+ * For the <b>last</b> value use {@link ColumnValueChunk}!
  */
 public class ValueChunk extends SqlChunk {
 

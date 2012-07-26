@@ -5,7 +5,7 @@ package jodd.db.oom.sqlgen.chunks;
 import jodd.db.oom.DbEntityColumnDescriptor;
 
 /**
- * {@link jodd.db.oom.sqlgen.chunks.ValueChunk Value} for the last column.
+ * {@link ValueChunk Value} for the <b>last</b> column.
  */
 public class ColumnValueChunk extends ValueChunk {
 
