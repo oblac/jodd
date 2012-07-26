@@ -127,7 +127,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 							tableName = rsMetaData.getTableName(i + 1);
 						} catch (SQLException sex) {
 							// ignore
-						}
+					}
 						if ((tableName != null) && (tableName.length() == 0)) {
 							tableName = null;
 						}
@@ -204,13 +204,21 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 		for (int i = 0; i < tableNames.length; i++) {
 			String tableName = tableNames[i];
 			String columnName = columnNames[i];
+
+			if (tableName == null) {
+				// Maybe JDBC driver does not support it
+				throw new DbOomException("Table name not available in driver meta-data.");
+			}
+
 			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
 				resultColumns.clear();
 				lastTableName = tableName;
+
 				DbEntityDescriptor ded = dbOomManager.lookupTableName(tableName);
 				if (ded == null) {
-					throw new DbOomException("Table name '" + tableName + "' not registered.");
+					throw new DbOomException("Table name not registered: " + tableName);
 				}
+
 				classes.add(ded.getType());
 			}
 			resultColumns.add(columnName);

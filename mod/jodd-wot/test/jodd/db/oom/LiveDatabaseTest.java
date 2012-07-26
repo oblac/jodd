@@ -229,6 +229,54 @@ public class LiveDatabaseTest extends TestCase {
 
 		tester.setName("seven");
 		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdateAndClose();
+		assertDb(session, "{1,seven,7}");
+
+		tester = new Tester();
+		tester.setId(Long.valueOf(2));
+		tester.setName("two");
+		tester.setValue(Integer.valueOf(2));
+		DbOomQuery.query(session, DbEntitySql.insert(tester)).executeUpdateAndClose();
+		assertDb(session, "{1,seven,7}{2,two,2}");
+
+		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		assertEquals(2, count);
+
+		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).findOneAndClose(Tester.class);
+		assertNotNull(tester);
+		assertEquals(2, tester.getId().longValue());
+		assertEquals("two", tester.getName());
+		assertEquals(2, tester.getValue().intValue());
+
+		tester = DbOomQuery
+				.query(session, DbEntitySql
+						.findById(Tester.class, Integer.valueOf(2))
+						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
+				.findOneAndClose(Tester.class);
+		assertNotNull(tester);
+		assertEquals(2, tester.getId().longValue());
+
+		tester = DbOomQuery
+				.query(session, DbEntitySql
+						.findById(Tester.class, Integer.valueOf(2))
+						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
+				.findOneAndClose(Tester.class);
+		assertNotNull(tester);
+		assertEquals(2, tester.getId().longValue());
+
+		tester = DbOomQuery
+				.query(session, DbEntitySql
+						.findById(Tester.class, Integer.valueOf(2))
+						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
+				.findOneAndClose(Tester.class);
+		assertNotNull(tester);
+		assertEquals(2, tester.getId().longValue());
+
+		tester = (Tester) DbOomQuery
+				.query(session, DbEntitySql
+						.findById(Tester.class, Integer.valueOf(2))
+						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))	// fixes POSTGRESQL
+				.findOneAndClose();
+		assertNotNull(tester);
 
 		session.closeSession();
 	}
