@@ -243,9 +243,7 @@ public class LiveDatabaseTest extends TestCase {
 
 		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).findOneAndClose(Tester.class);
 		assertNotNull(tester);
-		assertEquals(2, tester.getId().longValue());
-		assertEquals("two", tester.getName());
-		assertEquals(2, tester.getValue().intValue());
+		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
@@ -253,7 +251,7 @@ public class LiveDatabaseTest extends TestCase {
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
 				.findOneAndClose(Tester.class);
 		assertNotNull(tester);
-		assertEquals(2, tester.getId().longValue());
+		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
@@ -261,7 +259,7 @@ public class LiveDatabaseTest extends TestCase {
 						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
 				.findOneAndClose(Tester.class);
 		assertNotNull(tester);
-		assertEquals(2, tester.getId().longValue());
+		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
@@ -269,14 +267,27 @@ public class LiveDatabaseTest extends TestCase {
 						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
 				.findOneAndClose(Tester.class);
 		assertNotNull(tester);
-		assertEquals(2, tester.getId().longValue());
+		assertEquals("{2,two,2}", tester.toString());
 
 		tester = (Tester) DbOomQuery
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))	// fixes POSTGRESQL
 				.findOneAndClose();
-		assertNotNull(tester);
+		assertEquals("{2,two,2}", tester.toString());
+
+		tester = new Tester();
+		tester.setName("seven");
+		tester = DbOomQuery.query(session, DbEntitySql.find(tester)).findOneAndClose(Tester.class);
+		assertEquals("{1,seven,7}", tester.toString());
+
+		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).findOneAndClose(Tester.class);
+		assertEquals("{1,seven,7}", tester.toString());
+
+		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, Integer.valueOf(1))).executeUpdateAndClose();
+
+		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		assertEquals(1, count);
 
 		session.closeSession();
 	}
