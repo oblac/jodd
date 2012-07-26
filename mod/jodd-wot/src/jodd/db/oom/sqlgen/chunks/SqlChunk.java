@@ -167,6 +167,17 @@ public abstract class SqlChunk implements Cloneable {
 		return ded;
 	}
 
+	/**
+	 * Finds for table that contains column,
+	 */
+	protected DbEntityDescriptor findColumnRef(String columnRef) {
+		DbEntityDescriptor ded = templateData.findTableDescriptorByColumnRef(columnRef);
+		if (ded == null) {
+			throw new DbSqlBuilderException("Invalid column reference: " + columnRef);
+		}
+		return ded;
+	}
+
 	// ---------------------------------------------------------------- misc
 
 	/**

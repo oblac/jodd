@@ -128,6 +128,20 @@ public abstract class TemplateData {
 	}
 
 	/**
+	 * Finds entity descriptor of a table that contains provided column reference.
+	 */
+	public DbEntityDescriptor findTableDescriptorByColumnRef(String columnRef) {
+		for (Map.Entry<String, TableRefData> entry : tableRefs.entrySet()) {
+			DbEntityDescriptor ded = entry.getValue().desc;
+
+			if (ded.findByPropertyName(columnRef) != null) {
+				return ded;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Returns table alias for provided table reference.
 	 */
 	public String getTableAlias(String tableRef) {
@@ -150,7 +164,6 @@ public abstract class TemplateData {
 			throw new DbSqlBuilderException("Duplicated table reference detected: " + tableReference);
 		}
 	}
-
 
 	// ---------------------------------------------------------------- column data
 
