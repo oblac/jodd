@@ -42,10 +42,10 @@ public abstract class ClassFinder {
 	 * By default it consists of java runtime libraries.
 	 */
 	protected String[] systemJars = new String[] {
-			"*/jre/lib/*.jar",
-			"*/jre/lib/ext/*.jar",
-			"*/tools.jar",
-			"*/j2ee.jar"
+			"**/jre/lib/*.jar",
+			"**/jre/lib/ext/*.jar",
+			"**/tools.jar",
+			"**/j2ee.jar"
 	};
 	/**
 	 * Array of excluded jars.
