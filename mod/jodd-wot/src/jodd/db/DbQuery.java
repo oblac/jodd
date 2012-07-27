@@ -4,6 +4,7 @@ package jodd.db;
 
 import jodd.bean.BeanUtil;
 import jodd.io.AsciiInputStream;
+import jodd.log.Log;
 import jodd.util.collection.IntArrayList;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
@@ -43,12 +44,18 @@ import java.util.Map;
  */
 public class DbQuery extends DbQueryBase {
 
+	private static final Log log = Log.getLogger(DbQuery.class);
+
 	/**
 	 * Creates new query,
 	 */
 	public DbQuery(Connection conn, String sqlString) {
 		this.connection = conn;
 		this.sqlString = sqlString;
+
+		if (log.isDebugEnabled()) {
+			log.debug("DbQuery: " + sqlString);
+		}
 	}
 
 	/**
@@ -61,6 +68,10 @@ public class DbQuery extends DbQueryBase {
 		this.session = session;
 		session.attachQuery(this);
 		this.sqlString = sqlString;
+
+		if (log.isDebugEnabled()) {
+			log.debug("DbQuery: " + sqlString);
+		}
 	}
 
 	/**
