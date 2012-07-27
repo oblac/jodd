@@ -28,7 +28,7 @@ public class FindFileTest extends TestCase {
 	}
 
 	public void testWildcardFile() {
-		FindFile ff = new WildcardFindFile("*file/a*")
+		FindFile ff = new WildcardFindFile("**/*file/a*")
 				.setRecursive(true)
 				.setIncludeDirs(true)
 				.searchPath(dataRoot);
