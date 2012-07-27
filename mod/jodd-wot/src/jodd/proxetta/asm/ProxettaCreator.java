@@ -25,7 +25,7 @@ public class ProxettaCreator extends ClassProcessor {
 	@Override
 	protected WorkData process(ClassReader cr, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
 		if (log.isDebugEnabled()) {
-			log.debug("Creating proxy for " + cr.getClassName());
+			log.debug("process to proxy:" + cr.getClassName());
 		}
 		ProxettaClassBuilder pcb = new ProxettaClassBuilder(destClassWriter, aspects, classNameSuffix(), reqProxyClassName, targetClassInfoReader);
 		cr.accept(pcb, 0);

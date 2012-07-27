@@ -4,6 +4,7 @@ package jodd.proxetta;
 
 import java.io.InputStream;
 
+import jodd.log.Log;
 import jodd.proxetta.asm.ClassProcessor;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -32,6 +33,8 @@ import jodd.util.ClassLoaderUtil;
  * <li> foo.Foo - full proxy class name is specified. 
  */
 public abstract class Proxetta {
+
+	private static final Log log = Log.getLogger(Proxetta.class);
 
 	/**
 	 * Specifies aspects for the target and creates Proxetta instance.
@@ -121,7 +124,7 @@ public abstract class Proxetta {
 	// ---------------------------------------------------------------- ProxyCreator
 
 	/**
-	 * Creates {@link jodd.proxetta.asm.ProxettaCreator} with current options.
+	 * Creates {@link ClassProcessor} with current options.
 	 */
 	protected abstract ClassProcessor createClassProcessor();
 
@@ -179,9 +182,18 @@ public abstract class Proxetta {
 	 */
 	protected byte[] createProxy(ClassProcessor cp) {
 		byte[] result = cp.toByteArray();
+
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
+			if (log.isDebugEnabled()) {
+				log.debug("proxy not applied");
+			}
 			return null;
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("proxy created");
+		}
+
 		return result;
 	}
 
@@ -198,9 +210,19 @@ public abstract class Proxetta {
 	public Class defineProxy(Class target, String proxyClassName) {
 		ClassProcessor cp = prepareClassProcessor();
 		cp.accept(target, proxyClassName);
+
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
+			if (log.isDebugEnabled()) {
+				log.debug("proxy not applied on " + target.getName());
+			}
+
 			return target;
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("proxy created on " + target.getName());
+		}
+
 		try {
 			if (classLoader == null) {
 				ClassLoader cl = target.getClassLoader();
@@ -225,13 +247,23 @@ public abstract class Proxetta {
 	public Class defineProxy(String targetName, String proxyClassName) {
 		ClassProcessor cp = prepareClassProcessor();
 		cp.accept(targetName, proxyClassName);
+
 		if ((forced == false) && (cp.isProxyApplied() == false)) {
+			if (log.isDebugEnabled()) {
+				log.debug("proxy not applied on " + targetName);
+			}
+
 			try {
 				return ClassLoaderUtil.loadClass(targetName);
 			} catch (ClassNotFoundException cnfex) {
 				throw new ProxettaException(cnfex);
 			}
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("proxy created on " + targetName);
+		}
+
 		try {
 			if (classLoader == null) {
 				return ClassLoaderUtil.defineClass(cp.getProxyClassName(), cp.toByteArray());
