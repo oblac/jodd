@@ -138,7 +138,7 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.matchPath("c:\\najgor", "?:\\**\\naj**r"));
 	}
 
-	public void testPaths() {
+	public void testDifferences() {
 		assertTrue(Wildcard.match("/uphea", "*/uphea*"));
 		assertTrue(Wildcard.match("/prj/uphea-app.jar", "*/uphea*"));
 
@@ -146,5 +146,11 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.matchPath("prj/uphea", "*/uphea*"));
 		assertFalse(Wildcard.matchPath("/prj/uphea-app.jar", "*/uphea*"));
 		assertTrue(Wildcard.matchPath("/prj/uphea-app.jar", "**/uphea*"));
+
+		assertTrue(Wildcard.match("/some/path/lib-jodd-v1", "*jodd*"));
+		assertTrue(Wildcard.matchPath("/some/path/lib-jodd-v1", "**/*jodd*"));
+
+		assertTrue(Wildcard.match("/some/path/lib-jodd-v1", "*/path/lib-jodd*"));
+		assertTrue(Wildcard.matchPath("/some/path/lib-jodd-v1", "**/path/lib-jodd*"));
 	}
 }
