@@ -8,9 +8,10 @@ import javax.servlet.jsp.tagext.JspFragment;
 import java.io.IOException;
 import java.io.Writer;
 
-public class EmptyJspFragment extends JspFragment {
+public class MockJspFragment extends JspFragment {
 
-	int count;
+	public int count;
+	public InvokeCallback invokeCallback;
 
 	@Override
 	public JspContext getJspContext() {
@@ -20,9 +21,15 @@ public class EmptyJspFragment extends JspFragment {
 	@Override
 	public void invoke(Writer writer) throws JspException, IOException {
 		count++;
+
+		if (invokeCallback != null) {
+			invokeCallback.onInvoke(count);
+		}
 	}
 
-	public int getCount() {
-		return count;
+
+	public interface InvokeCallback {
+		void onInvoke(int count);
 	}
+
 }

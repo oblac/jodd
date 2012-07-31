@@ -11,7 +11,7 @@ public class IfTagTest extends TestCase {
 
 	public void testIfTag() throws JspException {
 
-		final EmptyJspFragment jspFragment = new EmptyJspFragment();
+		final MockJspFragment jspFragment = new MockJspFragment();
 
 		IfTag ifTag = new IfTag() {
 			@Override
@@ -23,16 +23,16 @@ public class IfTagTest extends TestCase {
 		ifTag.setTest(String.valueOf(2 == 2));
 		ifTag.doTag();
 
-		assertEquals(1, jspFragment.getCount());
+		assertEquals(1, jspFragment.count);
 
 		ifTag.setTest(String.valueOf(2 == 3));
 		ifTag.doTag();
 
-		assertEquals(1, jspFragment.getCount());
+		assertEquals(1, jspFragment.count);
 
 		ifTag.setTest("true");
 		ifTag.doTag();
 
-		assertEquals(2, jspFragment.getCount());
+		assertEquals(2, jspFragment.count);
 	}
 }
