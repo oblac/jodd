@@ -1,6 +1,0 @@
-font requirements
------------------
-
-'j' straight line that is rounded at the bottom; rounding should end with a not-parallel line; dot to be rounded square.
-'o' circle, not an ellipse
-'d' should be soft, not striaght
