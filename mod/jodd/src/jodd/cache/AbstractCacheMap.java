@@ -4,6 +4,8 @@ package jodd.cache;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Default implementation of timed and size cache map.
@@ -44,7 +46,10 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	protected Map<K,CacheObject<K,V>> cacheMap;
 
-	protected final Object cacheLock = new Object();
+	private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
+	private final Lock readLock = cacheLock.readLock();
+	private final Lock writeLock = cacheLock.writeLock();
+
 
 	// ---------------------------------------------------------------- properties
 
@@ -97,7 +102,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void put(K key, V object, long timeout) {
-		synchronized (cacheLock) {
+		writeLock.lock();
+
+		try {
 			CacheObject<K,V> co = new CacheObject<K,V>(key, object, timeout);
 			if (timeout != 0) {
 				existCustomTimeout = true;
@@ -106,6 +113,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				pruneCache();
 			}
 			cacheMap.put(key, co);
+		}
+		finally {
+			writeLock.unlock();
 		}
 	}
 
@@ -116,7 +126,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public V get(K key) {
-		synchronized (cacheLock) {
+		readLock.lock();
+
+		try {
 			CacheObject<K,V> co = cacheMap.get(key);
 			if (co == null) {
 				return null;
@@ -126,6 +138,9 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				return null;
 			}
 			return co.getObject();
+		}
+		finally {
+			readLock.unlock();
 		}
 	}
 
@@ -147,8 +162,12 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public final int prune() {
-		synchronized (cacheLock) {
+		writeLock.lock();
+		try {
 			return pruneCache();
+		}
+		finally {
+			writeLock.unlock();
 		}
 	}
 
@@ -168,8 +187,12 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void remove(K key) {
-		synchronized (cacheLock) {
+		writeLock.lock();
+		try {
 			cacheMap.remove(key);
+		}
+		finally {
+			writeLock.unlock();
 		}
 	}
 
@@ -177,8 +200,12 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public void clear() {
-		synchronized (cacheLock) {
+		writeLock.lock();
+		try {
 			cacheMap.clear();
+		}
+		finally {
+			writeLock.unlock();
 		}
 	}
 
