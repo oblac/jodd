@@ -51,4 +51,22 @@ public class RuntimeUtil {
 		System.gc();
 	}
 
+	// ---------------------------------------------------------------- location
+
+	/**
+	 * Returns location of the class. If class is not in a jar, it's classpath
+	 * is returned; otherwise the jar location.
+	 */
+	public static String classLocation(Class clazz) {
+		return clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+	}
+
+	/**
+	 * Returns jodd location.
+	 * @see #classLocation
+	 */
+	public static String joddLocation() {
+		return classLocation(RuntimeUtil.class);
+	}
+
 }
