@@ -4,6 +4,10 @@ package jodd.io.filter;
 
 import java.io.File;
 
+/**
+ * Base implementation of {@link FileFilterEx}.
+ * Implement either one of provided methods.
+ */
 abstract class FileFilterBase implements FileFilterEx {
 
 	/**
