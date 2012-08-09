@@ -152,5 +152,8 @@ public class WildcardTest extends TestCase {
 
 		assertTrue(Wildcard.match("/some/path/lib-jodd-v1", "*/path/lib-jodd*"));
 		assertTrue(Wildcard.matchPath("/some/path/lib-jodd-v1", "**/path/lib-jodd*"));
+
+		assertTrue(Wildcard.match("/some/path/lib-jodd-v1", "*/lib-jodd*"));
+		assertTrue(Wildcard.matchPath("/some/path/lib-jodd-v1", "**/lib-jodd*"));
 	}
 }
