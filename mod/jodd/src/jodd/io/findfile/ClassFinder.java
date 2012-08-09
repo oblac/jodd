@@ -41,7 +41,7 @@ public abstract class ClassFinder {
 	 * Array of system jars that are excluded from the search.
 	 * By default it consists of java runtime libraries.
 	 */
-	protected String[] systemJars = new String[] {
+	protected static String[] systemJars = new String[] {
 			"**/jre/lib/*.jar",
 			"**/jre/lib/ext/*.jar",
 			"**/tools.jar",
@@ -57,15 +57,18 @@ public abstract class ClassFinder {
 	 */
 	protected String[] includedJars;
 
-	public String[] getSystemJars() {
+	/**
+	 * Returns system jars.
+	 */
+	public static String[] getSystemJars() {
 		return systemJars;
 	}
 
 	/**
 	 * Specifies system jars, that are always excluded first.
 	 */
-	public void setSystemJars(String[] systemJars) {
-		this.systemJars = systemJars;
+	public static void setSystemJars(String[] newSystemJars) {
+		systemJars = newSystemJars;
 	}
 
 	public String[] getExcludedJars() {
