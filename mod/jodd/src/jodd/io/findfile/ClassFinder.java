@@ -61,6 +61,9 @@ public abstract class ClassFinder {
 		return systemJars;
 	}
 
+	/**
+	 * Specifies system jars, that are always excluded first.
+	 */
 	public void setSystemJars(String[] systemJars) {
 		this.systemJars = systemJars;
 	}
@@ -128,11 +131,13 @@ public abstract class ClassFinder {
 		this.includeResources = includeResources;
 	}
 
-
 	public boolean isIgnoreException() {
 		return ignoreException;
 	}
 
+	/**
+	 * Sets if exceptions during scanning process should be ignored or not.
+	 */
 	public void setIgnoreException(boolean ignoreException) {
 		this.ignoreException = ignoreException;
 	}
@@ -183,6 +188,10 @@ public abstract class ClassFinder {
 
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
+	 * The following logic is provided by default, in given order:
+	 * <li>system jars are excluded
+	 * <li>excluded jars are excluded (if specified)
+	 * <li>only included jars are included (if specified)
 	 */
 	protected boolean acceptJar(File jarFile) {
 		String path = jarFile.getAbsolutePath();
@@ -238,7 +247,7 @@ public abstract class ClassFinder {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
 			if (ignoreException == false) {
-				throw new FindFileException("Unable to work with zip file: " + file.getName(), ioex);
+				throw new FindFileException("Unable to open zip: " + file.getName(), ioex);
 			}
 			return;
 		}
@@ -399,7 +408,7 @@ public abstract class ClassFinder {
 			int index = ArraysUtil.indexOf(data, bytes);
 			return index != -1;
 		} catch (IOException ioex) {
-			throw new FindFileException("Unable to read bytes from input stream.", ioex);
+			throw new FindFileException("Unable to read from input stream.", ioex);
 		}
 	}
 
