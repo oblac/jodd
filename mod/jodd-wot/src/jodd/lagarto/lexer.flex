@@ -7,8 +7,7 @@ import java.nio.CharBuffer;
 %class Lexer
 %type Token
 %function nextToken
-%public
-%final
+%abstract
 %unicode
 %byaccj
 %char
@@ -31,13 +30,13 @@ import java.nio.CharBuffer;
 	public int column()   { return -1; /*yycolumn;*/ } 	// for debugging
 
 	// state methods
-	public void stateReset() 	{ yybegin(YYINITIAL); }
-	public void stateTag()		{ yybegin(TAG); }
-	public void stateAttr()		{ yybegin(ATTR); }
-	public void stateXmp() 		{ yybegin(XMP); }
-	public void stateScript()   { yybegin(SCRIPT); }
-	public void stateStyle()    { yybegin(STYLE); }
-	public void stateDoctype()  { yybegin(DOCTYPE); }
+	void stateReset() 	{ yybegin(YYINITIAL); }
+	void stateTag()		{ yybegin(TAG); }
+	void stateAttr()		{ yybegin(ATTR); }
+	void stateXmp() 		{ yybegin(XMP); }
+	void stateScript()   { yybegin(SCRIPT); }
+	void stateStyle()    { yybegin(STYLE); }
+	void stateDoctype()  { yybegin(DOCTYPE); }
 
 	// fast methods
 	public final CharSequence xxtext() {
@@ -52,11 +51,8 @@ import java.nio.CharBuffer;
 		return new String(zzBuffer, startIndex, zzMarkedPos - endIndexOffset - startIndex);
 	}
 
-	// empty ctor
-	Lexer() {}
-
 	int nextTagState;
-	public int getNextTagState() {
+	int getNextTagState() {
 		return nextTagState;
 	}
 
