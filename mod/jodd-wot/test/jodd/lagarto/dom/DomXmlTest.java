@@ -117,7 +117,7 @@ public class DomXmlTest extends TestCase {
 		lagartoDOMBuilder.enableXmlMode();
 		lagartoDOMBuilder.setIgnoreComments(true);
 		lagartoDOMBuilder.setCollectErrors(true);
-		lagartoDOMBuilder.setCalculateErrorPosition(true);
+		lagartoDOMBuilder.setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 		List<String> errors = doc.getErrors();

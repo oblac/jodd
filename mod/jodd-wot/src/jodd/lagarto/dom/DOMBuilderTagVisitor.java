@@ -97,7 +97,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		
 		Element element = new Element(tag, isVoid, selfClosed, domBuilder.isCaseSensitive());
 
-		if (domBuilder.isCalculateErrorPosition()) {
+		if (domBuilder.isCalculatePosition()) {
 			element.position = calculatePosition(tag);
 		}
 
@@ -144,7 +144,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				if (matchingParent == null) {			// matching open tag not found, remove it
 					if (log.isWarnEnabled()) {
 						String positionString = StringPool.EMPTY;
-						if (domBuilder.isCalculateErrorPosition()) {
+						if (domBuilder.isCalculatePosition()) {
 							positionString = calculatePosition(tag).toString();
 						}
 
@@ -270,7 +270,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 			if (log.isWarnEnabled()) {
 				String positionString = StringPool.EMPTY;
-				if (domBuilder.isCalculateErrorPosition()) {
+				if (domBuilder.isCalculatePosition()) {
 					positionString = parentNode.position.toString();
 				}
 				log.warn("Unclosed tag: <" + nodeName + "> " + positionString + " closed.");

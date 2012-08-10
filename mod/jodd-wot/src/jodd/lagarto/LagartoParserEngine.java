@@ -58,7 +58,7 @@ public abstract class LagartoParserEngine {
 	// ---------------------------------------------------------------- properties
 
 	protected boolean enableConditionalComments = true;
-	protected boolean calculateErrorPosition;
+	protected boolean calculatePosition;
 
 	public boolean isEnableConditionalComments() {
 		return enableConditionalComments;
@@ -79,12 +79,12 @@ public abstract class LagartoParserEngine {
 	 * overhead. By enabling this property, position will be calculated
 	 * manually only on errors.
 	 */
-	public void setCalculateErrorPosition(boolean calculateErrorPosition) {
-		this.calculateErrorPosition = calculateErrorPosition;
+	public void setCalculatePosition(boolean calculatePosition) {
+		this.calculatePosition = calculatePosition;
 	}
 
-	public boolean isCalculateErrorPosition() {
-		return calculateErrorPosition;
+	public boolean isCalculatePosition() {
+		return calculatePosition;
 	}
 
 	// ---------------------------------------------------------------- lexer properties
@@ -698,7 +698,7 @@ loop:	while (true) {
 		} else {
 			int position = lexer.position();
 
-			if (calculateErrorPosition == false) {
+			if (calculatePosition == false) {
 				message += " [@" + position + ']';
 			} else {
 				LagartoLexer.Position currentPosition = lexer.currentPosition();
