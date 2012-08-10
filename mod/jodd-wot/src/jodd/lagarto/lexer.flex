@@ -7,6 +7,7 @@ import java.nio.CharBuffer;
 %class Lexer
 %type Token
 %function nextToken
+%public
 %final
 %unicode
 %byaccj
