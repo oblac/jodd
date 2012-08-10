@@ -37,8 +37,8 @@ public class RegExpFindFile extends FindFile {
 	}
 
 	@Override
-	protected boolean acceptFile(File currentFile) {
-		String path = currentFile.getAbsolutePath();
+	protected boolean acceptFile(File file) {
+		String path = file.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
 		return regexpPattern.matcher(path).matches();

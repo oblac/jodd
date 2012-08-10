@@ -43,8 +43,8 @@ public class WildcardFindFile extends FindFile {
 	// ---------------------------------------------------------------- accept
 
 	@Override
-	protected boolean acceptFile(File currentFile) {
-		String path = currentFile.getAbsolutePath();
+	protected boolean acceptFile(File file) {
+		String path = file.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
 		return Wildcard.matchPath(path, pattern);
