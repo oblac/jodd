@@ -52,22 +52,8 @@ public class ff {
 			}
 			i++;
 		}
+
 		// ----------------------------------------------------------------
-
-		ff = new WildcardFindFile("*").setRecursive(true).setIncludeDirs(true).searchPath(SystemUtil.getClassPath());
-		Iterator<File> iterator = ff.iterator();
-		i = 1;
-
-		while (iterator.hasNext()) {
-			f = iterator.next();
-			if (f.isDirectory() == true) {
-				System.out.println(i + ". >" + f.getName());
-			} else {
-				System.out.println(i + ". " + f.getName());
-			}
-			i++;
-		}
-
 
 		System.out.println("---end---");
 	}
