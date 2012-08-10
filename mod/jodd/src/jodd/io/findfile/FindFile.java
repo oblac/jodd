@@ -19,13 +19,17 @@ import java.util.NoSuchElementException;
  * @see RegExpFindFile
  * @see FilterFindFile
  *
- * todo: Add sorting and comparators
+ * todo: Add sorting via comparators
  */
 public class FindFile {
 
 	// ---------------------------------------------------------------- flags
 
 	protected boolean recursive;
+	protected boolean includeDirs = true;
+	protected boolean includeFiles = true;
+	protected boolean walking = true;
+
 
 	public boolean isRecursive() {
 		return recursive;
@@ -39,9 +43,6 @@ public class FindFile {
 		return this;
 	}
 
-
-	protected boolean includeDirs = true;
-
 	public boolean isIncludeDirs() {
 		return includeDirs;
 	}
@@ -53,9 +54,6 @@ public class FindFile {
 		this.includeDirs = includeDirs;
 		return this;
 	}
-
-
-	protected boolean includeFiles = true;
 
 	public boolean isIncludeFiles() {
 		return includeFiles;
@@ -69,34 +67,31 @@ public class FindFile {
 		return this;
 	}
 
-
-	// ---------------------------------------------------------------- search path
-
-	protected LinkedList<File> fileList;
+	public boolean isWalking() {
+		return walking;
+	}
 
 	/**
-	 * Adds existing search path to the file list.
-	 * If path is a folder, it will be scanned for all files.
+	 * Sets the walking mode. When walking mode is on (by default),
+	 * folders are walked immediately. Although natural, for large
+	 * set of files, this is not memory-optimal approach, since many
+	 * files are held in memory, when going deeper.
+	 * <p>
+	 * When walking mode is turned off, folders are processed once
+	 * all files are processed, one after the other. The order is
+	 * not natural, but memory consumption is optimal.
 	 */
-	protected void addSearchPath(File searchPath) {
-		if (searchPath.exists() == false) {
-			return;
-		}
-		if (fileList == null) {
-			fileList = new LinkedList<File>();
-		}
-		if (searchPath.isDirectory() == false) {
-			fileList.add(searchPath);
-			return;
-		}
-		listFiles(searchPath);
+	public void setWalking(boolean walking) {
+		this.walking = walking;
 	}
+
+	// ---------------------------------------------------------------- search path
 
 	/**
 	 * Specifies single search path.
 	 */
 	public FindFile searchPath(File searchPath) {
-		addSearchPath(searchPath);
+		addPath(searchPath);
 		return this;
 	}
 
@@ -105,7 +100,7 @@ public class FindFile {
 	 */
 	public FindFile searchPath(File... searchPath) {
 		for (File file : searchPath) {
-			addSearchPath(file);
+			addPath(file);
 		}
 		return this;
 	}
@@ -119,11 +114,11 @@ public class FindFile {
 		if (searchPath.indexOf(File.pathSeparatorChar) != -1) {
 			String[] paths = StringUtil.split(searchPath, File.pathSeparator);
 			for (String path : paths) {
-				addSearchPath(new File(path));
+				addPath(new File(path));
 			}
 			return this;
 		}
-		addSearchPath(new File(searchPath));
+		addPath(new File(searchPath));
 		return this;
 	}
 
@@ -146,7 +141,7 @@ public class FindFile {
 		if (file == null) {
 			throw new FindFileException("Invalid search path URI: " + searchPath);
 		}
-		addSearchPath(file);
+		addPath(file);
 		return this;
 	}
 
@@ -168,7 +163,7 @@ public class FindFile {
 		if (file == null) {
 			throw new FindFileException("Invalid search path URL: " + searchPath);
 		}
-		addSearchPath(file);
+		addPath(file);
 		return this;
 	}
 
@@ -182,63 +177,237 @@ public class FindFile {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- types
+	// ---------------------------------------------------------------- files iterator
 
-	protected boolean listSubfilesAfterFolder = true;
+	/**
+	 * Files iterator simply walks over files array.
+	 * Ignores null items. Consumed files are immediately
+	 * removed from the array.
+	 */
+	protected class FilesIterator {
+		protected final File folder;
+		protected final String[] files;
 
-	public boolean isListSubfilesAfterFolder() {
-		return listSubfilesAfterFolder;
+		public FilesIterator(File folder) {
+			this.folder = folder;
+			this.files = folder.list();
+		}
+
+		public FilesIterator(String[] files) {
+			this.folder = null;
+			this.files = files;
+		}
+
+		protected int index;
+
+		/**
+		 * Returns next file or <code>null</code>
+		 * when no next file is available.
+		 */
+		public File next() {
+			while (index < files.length) {
+				String fileName = files[index];
+
+				if (fileName == null) {
+					index++;
+					continue;
+				}
+				files[index] = null;
+				index++;
+
+				File file;
+				if (folder == null) {
+					file = new File(fileName);
+				} else {
+					file = new File(folder, fileName);
+				}
+
+				if (file.isFile()) {
+					if (acceptFile(file) == false) {
+						continue;
+					}
+				}
+
+				return file;
+			}
+			return null;
+		}
 	}
 
 	/**
-	 * If set to <code>true</code> then all subfiles of a folder will be listed
-	 * directly after the folder, while folder will be listed first. Otherwise,
-	 * sub files will be listed after the all files of current folder.
+	 * Called on each file entry (file or directory) and returns <code>true</code>
+	 * if file passes search criteria.
 	 */
-	public FindFile setListSubfilesAfterFolder(boolean listSubfilesAfterFolder) {
-		this.listSubfilesAfterFolder = listSubfilesAfterFolder;
-		return this;
+	protected boolean acceptFile(File file) {
+		return true;
 	}
 
 	// ---------------------------------------------------------------- next file
+
+	protected LinkedList<File> pathList;
+	protected LinkedList<File> pathListOriginal;
+	protected LinkedList<File> todoFolders;
+	protected LinkedList<FilesIterator> todoFiles;
+
+	protected File lastFile;
+
+	/**
+	 * Returns last founded file.
+	 * Returns <code>null</code> at the very beginning.
+	 */
+	public File lastFile() {
+		return lastFile;
+	}
+
+	/**
+	 * Adds existing search path to the file list.
+	 * Non existing files are ignored.
+	 * If path is a folder, it will be scanned for all files.
+	 */
+	protected void addPath(File path) {
+		if (path.exists() == false) {
+			return;
+		}
+		if (pathList == null) {
+			pathList = new LinkedList<File>();
+		}
+
+		pathList.add(path);
+	}
+
+	/**
+	 * Reset the search.
+	 */
+	public void reset() {
+		pathList = pathListOriginal;
+		pathListOriginal = null;
+		todoFiles = null;
+		lastFile = null;
+	}
 
 	/**
 	 * Finds the next file. Returns founded file that matches search configuration
 	 * or <code>null</code> if no more files can be found.
 	 */
 	public File nextFile() {
-		if (fileList == null) {
-			return null;
+
+		if (todoFiles == null) {
+			init();
 		}
 
 		while (true) {
-			if (fileList.isEmpty()) {
-				fileList = null;
-				return null;
-			}
-			File currentFile = fileList.removeFirst();
-			if (currentFile.isDirectory()) {
-				if (recursive == true) {
-					listFiles(currentFile);
+
+			// iterate files
+
+			if (todoFiles.isEmpty() == false) {
+				FilesIterator filesIterator = todoFiles.getLast();
+				File nextFile = filesIterator.next();
+
+				if (nextFile == null) {
+					todoFiles.removeLast();
+					continue;
 				}
-				if (includeDirs == true) {
-					if (acceptFile(currentFile) == true) {
-						return currentFile;
+
+				if (nextFile.isDirectory()) {
+					if (walking == false) {
+						todoFolders.add(nextFile);
+						continue;
 					}
+					// walking
+					if (recursive == true) {
+						todoFiles.add(new FilesIterator(nextFile));
+					}
+					if (includeDirs == true) {
+						if (acceptFile(nextFile)) {
+							lastFile = nextFile;
+							return nextFile;
+						}
+					}
+					continue;
 				}
-				continue;
+
+				lastFile = nextFile;
+				return nextFile;
 			}
-			return currentFile;
+
+			// process folders
+
+			File folder;
+			boolean initialDir = false;
+
+			if (todoFolders.isEmpty()) {
+				if (pathList.isEmpty()) {
+					// the end
+					return null;
+				}
+
+				folder = pathList.removeFirst();
+				initialDir = true;
+			} else {
+				folder = todoFolders.removeFirst();
+			}
+
+			if (recursive == true) {
+				todoFiles.add(new FilesIterator(folder));
+			}
+
+			if ((!initialDir) && (includeDirs == true)) {
+				if (acceptFile(folder)) {
+					lastFile = folder;
+					return folder;
+				}
+			}
 		}
 	}
 
 	/**
-	 * Returns file walker iterator.
+	 * Performs scanning.
+	 */
+	public void scan() {
+		while (nextFile() != null) {
+		}
+	}
+
+
+	/**
+	 * Initializes file walking.
+	 * Separates input files and folders.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void init() {
+		todoFiles = new LinkedList<FilesIterator>();
+		todoFolders = new LinkedList<File>();
+
+		if (pathListOriginal == null) {
+			pathListOriginal = (LinkedList<File>) pathList.clone();
+		}
+		String[] files = new String[pathList.size()];
+
+		int index = 0;
+		Iterator<File> iterator = pathList.iterator();
+		while (iterator.hasNext()) {
+			File file = iterator.next();
+
+			if (file.isFile()) {
+				files[index++] = file.getAbsolutePath();
+				iterator.remove();
+			}
+		}
+
+		if (index != 0) {
+			FilesIterator filesIterator = new FilesIterator(files);
+			todoFiles.add(filesIterator);
+		}
+	}
+
+	/**
+	 * Returns file walking iterator.
 	 */
 	public Iterator<File> iterator() {
 
 		return new Iterator<File>() {
 			private File nextFile;
+
 			public boolean hasNext() {
 				nextFile = nextFile();
 				return nextFile != null;
@@ -255,54 +424,5 @@ public class FindFile {
 				throw new UnsupportedOperationException();
 			}
 		};
-	}
-
-
-
-	// ---------------------------------------------------------------- list files
-
-	/**
-	 * List all files and folders in specified directory.
-	 * <b>All</b> folders are added to the list (because of possible recursion).
-	 * Opposite, files are filtered first and added if matched.
-	 */
-	protected void listFiles(File directory) {
-		File[] list = directory.listFiles();
-		LinkedList<File> subFolders;
-		LinkedList<File> subFiles;
-		if (listSubfilesAfterFolder == false) {
-			subFolders = fileList;
-			subFiles = fileList;
-		} else {
-			subFolders = new LinkedList<File>();
-			subFiles = new LinkedList<File>();
-		}
-		for (File currentFile : list) {
-			if (currentFile.isFile() == true) {
-				if ((includeFiles == true) && (acceptFile(currentFile) == true)) {
-					subFiles.addLast(currentFile);
-				}
-			} else if (currentFile.isDirectory() == true) {
-				subFolders.addLast(currentFile);
-			}
-		}
-		if (listSubfilesAfterFolder == true) {
-			if (subFiles.isEmpty() == false) {
-				fileList.addAll(0, subFiles);
-			}
-			if (subFolders.isEmpty() == false) {
-				fileList.addAll(0, subFolders);
-			}
-		}
-	}
-
-	// ---------------------------------------------------------------- callback
-
-	/**
-	 * Called on each file entry (file or directory) and returns <code>true</code>
-	 * if file passes search criteria.
-	 */
-	protected boolean acceptFile(File currentFile) {
-		return true;
 	}
 }
