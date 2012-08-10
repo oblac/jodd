@@ -2,7 +2,6 @@
 
 package jodd.lagarto;
 
-import jodd.io.CharBufferReader;
 import jodd.log.Log;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -22,7 +21,7 @@ public abstract class LagartoParserEngine {
 	private static final String HTML_QUOTE = "&quot;";
 
 	private CharSequence input;
-	private Lexer lexer;
+	private LagartoLexer lexer;
 	private ParsedTag tag;
 	private TagVisitor visitor;
 
@@ -40,7 +39,7 @@ public abstract class LagartoParserEngine {
 	 */
 	protected void initialize(CharBuffer input) {
 		this.input = input;
-		this.lexer = new Lexer(new CharBufferReader(input));
+		this.lexer = new LagartoLexer(input);
 		this.tag = new ParsedTag(input);
 
 		this.buffering = false;
@@ -51,12 +50,11 @@ public abstract class LagartoParserEngine {
 	}
 
 	/**
-	 * Returns input.
+	 * Returns Lagarto lexer.
 	 */
-	public CharSequence getInput() {
-		return input;
+	public LagartoLexer getLexer() {
+		return lexer;
 	}
-
 	// ---------------------------------------------------------------- properties
 
 	protected boolean enableConditionalComments = true;
@@ -703,8 +701,8 @@ loop:	while (true) {
 			if (calculateErrorPosition == false) {
 				message += " [@" + position + ']';
 			} else {
-				int[] lineAndColumn = LagartoParserUtil.calculateLineAndColumn(input, position);
-				message += " [" + lineAndColumn[0] + ':' + lineAndColumn[1] + " @" + position + ']';
+				LagartoLexer.Position currentPosition = lexer.currentPosition();
+				message += ' ' + currentPosition.toString();
 			}
 		}
 		visitor.error(message);
