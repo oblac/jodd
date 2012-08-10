@@ -2,6 +2,8 @@
 
 package jodd.lagarto.dom;
 
+import jodd.lagarto.LagartoLexer;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public abstract class Node implements Cloneable {
 	protected int siblingNameIndex = -1;
 
 	protected int deepLevel;
+	protected LagartoLexer.Position position;
 
 	protected Node(NodeType nodeType, String nodeName, boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
