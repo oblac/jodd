@@ -50,6 +50,13 @@ public abstract class LagartoParserEngine {
 		this.lastToken = Token.UNKNOWN;
 	}
 
+	/**
+	 * Returns input.
+	 */
+	public CharSequence getInput() {
+		return input;
+	}
+
 	// ---------------------------------------------------------------- properties
 
 	protected boolean enableConditionalComments = true;
@@ -702,6 +709,5 @@ loop:	while (true) {
 		}
 		visitor.error(message);
 	}
-
 
 }
