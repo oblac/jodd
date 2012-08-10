@@ -4,14 +4,12 @@ package jodd.io;
 
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.RegExpFindFile;
-import jodd.io.findfile.WildcardFileScanner;
 import jodd.io.findfile.WildcardFindFile;
 import junit.framework.TestCase;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.List;
 
 public class FindFileTest extends TestCase {
 
@@ -114,26 +112,6 @@ public class FindFileTest extends TestCase {
 
 		assertEquals(0, countDirs);
 		assertEquals(2, countFiles);
-	}
-
-	public void testWildcardFileScanner() {
-		WildcardFileScanner wfs = new WildcardFileScanner("**/file/**");
-
-		List<File> files = wfs.list(dataRoot);
-		assertEquals(1, files.size());
-
-		wfs.setRecursive(true);
-
-		wfs.setIncludeDirs(true);
-		files = wfs.list(dataRoot);
-		assertEquals(3, files.size());
-
-		wfs.setIncludeDirs(false);
-		files = wfs.list(dataRoot);
-		assertEquals(2, files.size());
-
-		assertTrue(files.contains(new File(dataRoot + "/file/a.png")));
-		assertTrue(files.contains(new File(dataRoot + "/file/a.txt")));
 	}
 
 	public void testRegexp() {
