@@ -7,7 +7,6 @@ import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
-import jodd.io.findfile.WildcardFindFile;
 import jodd.log.Log;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
@@ -497,7 +496,7 @@ public class HtmlStaplerBundlesManager {
 			mirrors.clear();
 		}
 
-		FindFile ff = new WildcardFindFile("*");
+		FindFile ff = new FindFile();
 		ff.setIncludeDirs(false);
 		ff.searchPath(new File(bundleFolder, staplerPath));
 
