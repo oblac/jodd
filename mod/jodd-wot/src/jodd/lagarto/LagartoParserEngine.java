@@ -74,7 +74,8 @@ public abstract class LagartoParserEngine {
 	}
 
 	/**
-	 * Resolves error position on {@link #error(String) parsing error}.
+	 * Resolves current position on {@link #error(String) parsing error}
+	 * and other occasions.
 	 * JFlex may be used to track current line and row, but that brings
 	 * overhead. By enabling this property, position will be calculated
 	 * manually only on errors.
