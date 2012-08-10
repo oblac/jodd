@@ -347,7 +347,7 @@ public class FindFile {
 				folder = todoFolders.removeFirst();
 			}
 
-			if (recursive == true) {
+			if ((initialDir) || (recursive == true)) {
 				todoFiles.add(new FilesIterator(folder));
 			}
 

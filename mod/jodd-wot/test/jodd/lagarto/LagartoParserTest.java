@@ -35,13 +35,15 @@ public class LagartoParserTest extends TestCase {
 	}
 
 	public void testHtmls() throws IOException {
-		FindFile ff = new WildcardFindFile("*.*ml");
+		FindFile ff = new WildcardFindFile("**/*.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
+		boolean processed = false;
 		while (reps-- > 0) {
 			ff.searchPath(testDataRoot);
 			File file;
 			while ((file = ff.nextFile()) != null) {
+				processed = true;
 				System.out.println("+" + file.getName());
 				String content = FileUtil.readString(file);
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
@@ -80,6 +82,7 @@ public class LagartoParserTest extends TestCase {
 				}
 			}
 		}
+		assertTrue(processed);
 		System.out.println(jsw);
 	}
 
@@ -87,10 +90,12 @@ public class LagartoParserTest extends TestCase {
 	 * 13s
 	 */
 	public void testLiveHtmls() throws IOException {
-		FindFile ff = new WildcardFindFile("*.html");
+		FindFile ff = new WildcardFindFile("**/*.html");
 		ff.searchPath(testLiveRoot);
 		File file;
+		boolean processed = false;
 		while ((file = ff.nextFile()) != null) {
+			processed = true;
 			String name = file.getName();
 			System.out.println("+" + name);
 			String content = FileUtil.readString(file);
@@ -108,6 +113,7 @@ public class LagartoParserTest extends TestCase {
 			}
 			assertEquals(0, errors.length());
 		}
+		assertTrue(processed);
 	}
 
 	private String parseEmpty(String content) {
