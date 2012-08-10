@@ -2,7 +2,6 @@
 
 package jodd.io.findfile;
 
-import jodd.io.FileNameUtil;
 import jodd.util.Wildcard;
 
 import java.io.File;
@@ -44,8 +43,7 @@ public class WildcardFindFile extends FindFile {
 
 	@Override
 	protected boolean acceptFile(File file) {
-		String path = file.getAbsolutePath();
-		path = FileNameUtil.separatorsToUnix(path);
+		String path = getMatchingFilePath(file);
 
 		return Wildcard.matchPath(path, pattern);
 	}

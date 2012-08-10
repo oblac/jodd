@@ -2,6 +2,7 @@
 
 package jodd.io.findfile;
 
+import jodd.io.FileNameUtil;
 import jodd.util.StringUtil;
 import jodd.io.FileUtil;
 
@@ -23,12 +24,33 @@ import java.util.NoSuchElementException;
  */
 public class FindFile {
 
+	/**
+	 * Match type.
+	 * @see FindFile#getMatchingFilePath(java.io.File)
+	 * @see FindFile#acceptFile(java.io.File)
+	 */
+	public enum Match {
+		/**
+		 * Full, absolute path.
+		 */
+		FULL_PATH,
+		/**
+		 * Relative path from current root.
+		 */
+		RELATIVE_PATH,
+		/**
+		 * Just file name.
+		 */
+		NAME
+	}
+
 	// ---------------------------------------------------------------- flags
 
 	protected boolean recursive;
 	protected boolean includeDirs = true;
 	protected boolean includeFiles = true;
 	protected boolean walking = true;
+	protected Match matchType = Match.FULL_PATH;
 
 
 	public boolean isRecursive() {
@@ -83,6 +105,17 @@ public class FindFile {
 	 */
 	public void setWalking(boolean walking) {
 		this.walking = walking;
+	}
+
+	public Match getMatchType() {
+		return matchType;
+	}
+
+	/**
+	 * Set {@link Match matching type}.
+	 */
+	public void setMatchType(Match match) {
+		this.matchType = match;
 	}
 
 	// ---------------------------------------------------------------- search path
@@ -242,6 +275,31 @@ public class FindFile {
 		return true;
 	}
 
+	/**
+	 * Resolves file path depending on {@link Match matching type}
+	 * Returned path is formatted in unix style.
+	 */
+	protected String getMatchingFilePath(File file) {
+
+		String path = null;
+
+		switch (matchType) {
+			case FULL_PATH:
+				path = file.getAbsolutePath();
+				break;
+			case RELATIVE_PATH:
+				path = file.getAbsolutePath();
+				path = path.substring(rootPath.length());
+				break;
+			case NAME:
+				path = file.getName();
+		}
+
+		path = FileNameUtil.separatorsToUnix(path);
+
+		return path;
+	}
+
 	// ---------------------------------------------------------------- next file
 
 	protected LinkedList<File> pathList;
@@ -250,6 +308,8 @@ public class FindFile {
 	protected LinkedList<FilesIterator> todoFiles;
 
 	protected File lastFile;
+	protected File rootFile;
+	protected String rootPath;
 
 	/**
 	 * Returns last founded file.
@@ -342,6 +402,10 @@ public class FindFile {
 				}
 
 				folder = pathList.removeFirst();
+
+				rootFile = folder;
+				rootPath = rootFile.getAbsolutePath();
+
 				initialDir = true;
 			} else {
 				folder = todoFolders.removeFirst();

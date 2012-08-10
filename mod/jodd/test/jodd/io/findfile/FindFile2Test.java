@@ -69,4 +69,90 @@ public class FindFile2Test extends TestCase {
 		assertEquals(11, StringUtil.count(s1.toString(), '|'));
 		assertTrue(s2.indexOf("| sumo | gamma |") != -1);
 	}
+
+	public void testTwoRoots() {
+
+		FindFile ff = new WildcardFindFile("**");
+		ff.setIncludeDirs(true);
+		ff.setIncludeFiles(true);
+		ff.setRecursive(true);
+		ff.setWalking(true);
+		ff.searchPath(dataRoot + "/beta");
+		ff.searchPath(dataRoot + "/sumo");
+
+		int count = 0;
+		while (ff.nextFile() != null) {
+			count++;
+		}
+
+		assertEquals(5, count);
+
+		ff.reset();
+		ff.setIncludeDirs(false);
+
+		count = 0;
+		while (ff.nextFile() != null) {
+			count++;
+		}
+
+		assertEquals(3, count);
+
+	}
+
+	public void testTwoRootsAndWildcardMatchTypes() {
+
+		WildcardFindFile wff = new WildcardFindFile();
+		wff.setIncludeDirs(true);
+		wff.setIncludeFiles(true);
+		wff.setRecursive(true);
+		wff.setWalking(true);
+		wff.searchPath(dataRoot + "/beta");
+		wff.searchPath(dataRoot + "/sumo");
+
+		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.setPattern("**/sumo/*");
+		int count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(1, count);
+
+		wff.reset();
+		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.setPattern("**/sumo/**");
+		count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(2, count);
+
+		wff.reset();
+		wff.setMatchType(WildcardFindFile.Match.NAME);
+		wff.setPattern("*.txt");
+		count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(3, count);
+
+		wff.reset();
+		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
+		wff.setPattern("/gamma/*");
+		count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(1, count);
+
+		wff.reset();
+		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
+		wff.setPattern("/*a*.txt");
+		count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(1, count);
+
+	}
+
 }
