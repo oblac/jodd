@@ -83,7 +83,7 @@ public class LagartoParserUtil {
 
 			if (c == '\n') {
 				line++;
-				lastNewLineOffset++;
+				lastNewLineOffset = offset + 1;
 			}
 
 			offset++;
