@@ -142,14 +142,12 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				}
 
 				if (matchingParent == null) {			// matching open tag not found, remove it
-					if (log.isWarnEnabled()) {
-						String positionString = StringPool.EMPTY;
-						if (domBuilder.isCalculatePosition()) {
-							positionString = calculatePosition(tag).toString();
-						}
 
-						log.warn("Orphan closed tag: </" + tagName + "> " + positionString + " ignored.");
+					String positionString = StringPool.EMPTY;
+					if (domBuilder.isCalculatePosition()) {
+						positionString = calculatePosition(tag).toString();
 					}
+					error("Orphan closed tag: </" + tagName + "> " + positionString + " ignored.");
 					break;
 				}
 
@@ -250,31 +248,35 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				Node child = childNodes[ndx];
 				if (child.getNodeType() == Node.NodeType.TEXT) {
 					if (((Text)child).isBlank()) {
-						parentNode.appendChild(child);	// append blank nodes
+//						parentNode.appendChild(child);	// append blank nodes
 						ndx++;
 						continue;
 					}
 				}
-				parentNode.appendChild(child);
+//				parentNode.appendChild(child);
+				ndx++;
 				break;
 			}
+			// simply adds calculated number of child nodes
+			parentNode.appendChild(childNodes, 0, ndx);
 
 			// [*] append remaining children to the parent parent node (good node)
 			Node parentParentNode = parentNode.getParentNode();
-			ndx++;
-			while (ndx < childNodes.length) {
-				Node child = childNodes[ndx];
-				parentParentNode.appendChild(child);
-				ndx++;
-			}
 
-			if (log.isWarnEnabled()) {
-				String positionString = StringPool.EMPTY;
-				if (domBuilder.isCalculatePosition()) {
-					positionString = parentNode.position.toString();
-				}
-				log.warn("Unclosed tag: <" + nodeName + "> " + positionString + " closed.");
+			parentParentNode.appendChild(childNodes, ndx, childNodes.length);
+
+//			it's slow to loop single child append!
+//			while (ndx < childNodes.length) {
+//				Node child = childNodes[ndx];
+//				parentParentNode.appendChild(child);
+//				ndx++;
+//			}
+
+			String positionString = StringPool.EMPTY;
+			if (domBuilder.isCalculatePosition()) {
+				positionString = parentNode.position.toString();
 			}
+			error("Unclosed tag: <" + nodeName + "> " + positionString + " closed.");
 			parentNode = parentParentNode;
 		}
 	}
@@ -395,14 +397,14 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void error(String message) {
-		if (domBuilder.collectErrors) {
+		if (domBuilder.isCollectErrors()) {
 			if (errors == null) {
 				errors = new ArrayList<String>();
 			}
 			errors.add(message);
 		}
 		if (log.isWarnEnabled()) {
-			log.warn("DOM tree may be corrupted due to parsing error. " + message);
+			log.warn(message);
 		}
 	}
 
