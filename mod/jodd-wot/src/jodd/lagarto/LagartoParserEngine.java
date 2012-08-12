@@ -74,11 +74,11 @@ public abstract class LagartoParserEngine {
 	}
 
 	/**
-	 * Resolves current position on {@link #error(String) parsing error}
-	 * and other occasions.
+	 * Resolves current position on {@link #error(String) parsing errors}
+	 * and other occasions. Note: this makes processing SLOW!
 	 * JFlex may be used to track current line and row, but that brings
-	 * overhead. By enabling this property, position will be calculated
-	 * manually only on errors.
+	 * overhead, and can't be easily disabled. By enabling this property,
+	 * position will be calculated manually only on errors.
 	 */
 	public void setCalculatePosition(boolean calculatePosition) {
 		this.calculatePosition = calculatePosition;
@@ -577,11 +577,12 @@ loop:	while (true) {
 				}
 				tag.addAttribute(attributeName, attributeValue);
 			} else if (token == Token.WORD) {
+				// attribute value is not quoted, take everything until the space or tag end as a value
 				String attributeValue = text().toString();
 				while (true) {
 					Token next = nextToken();
-					if (next == Token.WORD || next == Token.EQUALS || next == Token.SLASH) {
-						attributeValue += text();	// rare!
+					if (next != Token.WHITESPACE && next != Token.GT) {
+						attributeValue += text();	// rare, keep joining attribute value with tokens
 					} else {
 						stepBack(next);
 						break;
