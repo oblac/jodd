@@ -201,7 +201,7 @@ public class JDateTimeMoreTest extends TestCase {
 		DateTimeStamp dts = new DateTimeStamp(-2310, 3, 24, 7, 6, 16, 171);
 
 		JDateTime jdt = new JDateTime(dts);
-		System.out.println(jdt);
+
 		DateTimeStamp dts2 = jdt.getDateTimeStamp();
 		assertNotSame(dts, dts2);
 		assertEquals(dts, dts2);
