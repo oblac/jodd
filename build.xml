@@ -217,7 +217,7 @@
 		<available classname="junit.framework.TestCase" property="junit.present"/>
 		<fail unless="junit.present" message="Please copy 'junit.jar' into ${env.ANT_HOME}/lib"/>
 		<mkdir dir="${jodd.test.junit-dir}"/>
-		<junit printsummary="yes" haltonerror="no" haltonfailure="yes" fork="yes">
+		<junit haltonerror="no" haltonfailure="yes" fork="yes">
 			<jvmarg value="-Demma.coverage.out.file=${jodd.test.emma-dir}/coverage.emma"/>
 			<jvmarg value="-Demma.coverage.out.merge=false"/>
 			<formatter type="plain" usefile="false"/>
@@ -461,7 +461,7 @@
 		<available classname="junit.framework.TestCase" property="junit.present"/>
 		<fail unless="junit.present" message="Please copy 'junit.jar' into ${env.ANT_HOME}/lib"/>
 		<mkdir dir="${jodd-wot.test.junit-dir}"/>
-		<junit printsummary="yes" haltonerror="no" haltonfailure="yes" fork="yes">
+		<junit haltonerror="no" haltonfailure="yes" fork="yes">
 			<jvmarg value="-Demma.coverage.out.file=${jodd-wot.test.emma-dir}/coverage.emma"/>
 			<jvmarg value="-Demma.coverage.out.merge=false"/>
 			<formatter type="plain" usefile="false"/>
