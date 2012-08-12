@@ -13,7 +13,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * <ul>
  * <li>create a new cache map
  * <li>implements own <code>prune</code> strategy
- * </ul> 
+ * </ul>
+ * Uses <code>ReentrantReadWriteLock</code> to synchronize access.
+ * Since upgrading from a read lock to the write lock is not possible,
+ * be careful withing {@link #get(Object)} method.
  */
 public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
@@ -134,7 +137,8 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 				return null;
 			}
 			if (co.isExpired() == true) {
-				remove(key);
+				// remove(key);		// can't upgrade the lock
+				cacheMap.remove(key);
 				return null;
 			}
 			return co.getObject();
