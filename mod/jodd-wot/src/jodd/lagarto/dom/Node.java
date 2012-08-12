@@ -127,7 +127,8 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Appends child node.
+	 * Appends child node. Don't use this node in the loop,
+	 * since it might be slow due to {@link #reindexChildren()}.
 	 */
 	public void appendChild(Node node) {
 		node.detachFromParent();
@@ -140,9 +141,26 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Appends several child nodes at once.
+	 * @see #appendChild(Node[], int, int)
 	 */
 	public void appendChild(Node... nodes) {
-		for (Node node: nodes) {
+		appendChild(nodes, 0, nodes.length);
+	}
+
+	/**
+	 * Appends several child nodes at once.
+	 * Much faster then looping {@link #appendChild(Node)}
+	 * since reindex is done only once, at the end.
+	 */
+	public void appendChild(Node[] nodes, int from, int to) {
+		if (from == to) {
+			return;	// add nothing
+		}
+		if (to > nodes.length) {
+			to = nodes.length;
+		}
+		for (int i = from; i < to; i++) {
+			Node node = nodes[i];
 			node.detachFromParent();
 			node.parentNode = this;
 			node.deepLevel = deepLevel + 1;
