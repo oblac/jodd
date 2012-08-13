@@ -108,20 +108,16 @@ public class ParsingProblemsTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 //		lagartoDOMBuilder.setCalculatePosition(true);
 		lagartoDOMBuilder.setCollectErrors(true);
-		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
 
 		// 1564 open DTs + 1564 open DDs + 1 open P
-		assertEquals(3129, doc.getErrors().size());
+		assertEquals(3129, document.getErrors().size());
 
-/*
-		Jerry doc$ = Jerry.jerry(FileUtil.readString(file));
-		doc$.$("td.NavBarCell1").each(new JerryFunction() {
-		      public boolean onNode(Jerry $this, int index) {
-		        System.out.println("-----");
-		        System.out.println($this.text());
-		        return true;
-		      }
-		    });
-*/
+		Jerry doc = Jerry.jerry(FileUtil.readString(file));
+		assertEquals(16, doc.$("td.NavBarCell1").size());
+
+		assertEquals(1, doc.$("dl").size());
+		assertEquals(1564, doc.$("dd").size());
+		assertEquals(1564, doc.$("dt").size());
 	}
 }
