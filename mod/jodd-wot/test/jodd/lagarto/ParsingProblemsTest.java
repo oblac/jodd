@@ -115,9 +115,11 @@ public class ParsingProblemsTest extends TestCase {
 
 		Jerry doc = Jerry.jerry(FileUtil.readString(file));
 		assertEquals(16, doc.$("td.NavBarCell1").size());
+		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
 
 		assertEquals(1, doc.$("dl").size());
 		assertEquals(1564, doc.$("dd").size());
 		assertEquals(1564, doc.$("dt").size());
+		assertEquals(1564, doc.$("dt a").size());
 	}
 }
