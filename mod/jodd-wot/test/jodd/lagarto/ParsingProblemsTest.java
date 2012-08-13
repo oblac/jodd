@@ -7,6 +7,7 @@ import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.jerry.Jerry;
 import jodd.lagarto.dom.jerry.JerryFunction;
+import jodd.util.StringUtil;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -121,5 +122,74 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals(1564, doc.$("dd").size());
 		assertEquals(1564, doc.$("dt").size());
 		assertEquals(1564, doc.$("dt a").size());
+
+		// http://docs.oracle.com/javase/6/docs/api/index-files/index-4.html
+		file = new File(testDataRoot, "index-4-eng.html");
+		doc = Jerry.jerry(FileUtil.readString(file));
+
+		assertEquals(16, doc.$("td.NavBarCell1").size());
+		assertEquals(2, doc.$("table td.NavBarCell1Rev").size());
+
+		final StringBuilder sb = new StringBuilder();
+		doc.$("td.NavBarCell1").each(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+				sb.append("---\n");
+				sb.append($this.text().trim());
+				sb.append('\n');
+				return true;
+			}
+		});
+		String s = sb.toString();
+		s = StringUtil.remove(s, ' ');
+		s = StringUtil.remove(s, '\r');
+		s = StringUtil.remove(s, '\u00A0');
+		assertEquals(
+				"---\n" +
+				"Overview\n" +
+				"Package\n" +
+				"Class\n" +
+				"Use\n" +
+				"Tree\n" +
+				"Deprecated\n" +
+				"Index\n" +
+				"Help\n" +
+				"---\n" +
+				"Overview\n" +
+				"---\n" +
+				"Package\n" +
+				"---\n" +
+				"Class\n" +
+				"---\n" +
+				"Use\n" +
+				"---\n" +
+				"Tree\n" +
+				"---\n" +
+				"Deprecated\n" +
+				"---\n" +
+				"Help\n" +
+				"---\n" +
+				"Overview\n" +
+				"Package\n" +
+				"Class\n" +
+				"Use\n" +
+				"Tree\n" +
+				"Deprecated\n" +
+				"Index\n" +
+				"Help\n" +
+				"---\n" +
+				"Overview\n" +
+				"---\n" +
+				"Package\n" +
+				"---\n" +
+				"Class\n" +
+				"---\n" +
+				"Use\n" +
+				"---\n" +
+				"Tree\n" +
+				"---\n" +
+				"Deprecated\n" +
+				"---\n" +
+				"Help\n",
+				s);
 	}
 }
