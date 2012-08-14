@@ -58,17 +58,19 @@ public abstract class Node implements Cloneable {
 
 		if (attributes != null) {
 			dest.attributes = new ArrayList<Attribute>(attributes.size());
-			for (Attribute attr : attributes) {
+			for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
+				Attribute attr = attributes.get(i);
 				dest.attributes.add(attr.clone());
 			}
 		}
 
 		if (childNodes != null) {
 			dest.childNodes = new ArrayList<Node>(childNodes.size());
-			for (Node child : childNodes) {
+			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+				Node child = childNodes.get(i);
 				Node childClone = child.clone();
 
-				childClone.parentNode = dest;	// fix parent!
+				childClone.parentNode = dest;    // fix parent!
 				dest.childNodes.add(childClone);
 			}
 		}
@@ -245,7 +247,8 @@ public abstract class Node implements Cloneable {
 		childElementNodesCount = 0;
 
 		if (removedNodes != null) {
-			for (Node removedNode : removedNodes) {
+			for (int i = 0, removedNodesSize = removedNodes.size(); i < removedNodesSize; i++) {
+				Node removedNode = removedNodes.get(i);
 				removedNode.detachFromParent();
 			}
 		}
@@ -301,7 +304,8 @@ public abstract class Node implements Cloneable {
 			return false;
 		}
 		int nameHash = name.hashCode();
-		for (Attribute attr : attributes) {
+		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
+			Attribute attr = attributes.get(i);
 			if (attr.equalsName(name, nameHash)) {
 				return true;
 			}
@@ -327,7 +331,8 @@ public abstract class Node implements Cloneable {
 			return null;
 		}
 		int nameHash = name.hashCode();
-		for (Attribute attr : attributes) {
+		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
+			Attribute attr = attributes.get(i);
 			if (attr.equalsName(name, nameHash)) {
 				return attr;
 			}
@@ -340,7 +345,7 @@ public abstract class Node implements Cloneable {
 			return -1;
 		}
 		int nameHash = name.hashCode();
-		for (int i = 0; i < attributes.size(); i++) {
+		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
 			if (attr.equalsName(name, nameHash)) {
 				return i;
@@ -370,7 +375,8 @@ public abstract class Node implements Cloneable {
 
 		// search if attribute with the same name exist
 		int nameHash = name.hashCode();
-		for (Attribute attr : attributes) {
+		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
+			Attribute attr = attributes.get(i);
 			if (attr.equalsName(name, nameHash)) {
 				attr.setValue(value);
 				return;
@@ -515,7 +521,8 @@ public abstract class Node implements Cloneable {
 		if (childNodes == null) {
 			return null;
 		}
-		for (Node child : childNodes) {
+		for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+			Node child = childNodes.get(i);
 			if (elementName.equals(child.getNodeName())) {
 				child.initSiblingNames();
 				return child;
@@ -613,7 +620,8 @@ public abstract class Node implements Cloneable {
 		if (siblingNameIndex == -1) {
 			List<Node> siblings = parentNode.childNodes;
 			int index = 0;
-			for (Node sibling : siblings) {
+			for (int i = 0, siblingsSize = siblings.size(); i < siblingsSize; i++) {
+				Node sibling = siblings.get(i);
 				if (sibling.siblingNameIndex == -1
 						&& nodeType == NodeType.ELEMENT
 						&& nodeName.equals(sibling.getNodeName())) {
@@ -787,7 +795,8 @@ public abstract class Node implements Cloneable {
 			}
 		}
 		if (childNodes != null) {
-			for (Node childNode : childNodes) {
+			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+				Node childNode = childNodes.get(i);
 				sb.append(childNode.getTextContent());
 			}
 		}
@@ -832,7 +841,8 @@ public abstract class Node implements Cloneable {
 
 	protected void toInnerHtml(Appendable appendable) throws IOException {
 		if (childNodes != null) {
-			for (Node childNode : childNodes) {
+			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+				Node childNode = childNodes.get(i);
 				childNode.toHtml(appendable);
 			}
 		}
