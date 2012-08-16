@@ -20,21 +20,34 @@ public abstract class Node implements Cloneable {
 		DOCUMENT, ELEMENT, TEXT, COMMENT, CDATA, DOCUMENT_TYPE, XML_DECLARATION
 	}
 
+	// node values
+
 	protected final String nodeName;
 	protected final NodeType nodeType;
 	protected final boolean caseSensitive;
 	protected String nodeValue;
 
-	protected Node parentNode;
+	// attributes
+
 	protected List<Attribute> attributes;
+
+	// parent
+
+	protected Node parentNode;
+
+	// children
 
 	protected List<Node> childNodes;
 	protected int childElementNodesCount;
 	protected Node[] childElementNodes;
 
+	// siblings
+
 	protected int siblingIndex;
 	protected int siblingElementIndex = -1;
 	protected int siblingNameIndex = -1;
+
+	// position information
 
 	protected int deepLevel;
 	protected LagartoLexer.Position position;
@@ -143,26 +156,10 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Appends several child nodes at once.
-	 * @see #appendChild(Node[], int, int)
+	 * Reindex is done after all children is added.
 	 */
 	public void appendChild(Node... nodes) {
-		appendChild(nodes, 0, nodes.length);
-	}
-
-	/**
-	 * Appends several child nodes at once.
-	 * Much faster then looping {@link #appendChild(Node)}
-	 * since reindex is done only once, at the end.
-	 */
-	public void appendChild(Node[] nodes, int from, int to) {
-		if (from == to) {
-			return;	// add nothing
-		}
-		if (to > nodes.length) {
-			to = nodes.length;
-		}
-		for (int i = from; i < to; i++) {
-			Node node = nodes[i];
+		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
 			node.deepLevel = deepLevel + 1;
@@ -580,12 +577,91 @@ public abstract class Node implements Cloneable {
 	// ---------------------------------------------------------------- internal
 
 	/**
+	 * Checks the health of child nodes. Useful during complex tree manipulation,
+	 * to check if everything is OK. Not optimized for speed, should be used just
+	 * for testing purposes.
+	 */
+	public boolean check() {
+
+		if (childNodes == null) {
+			return true;
+		}
+
+		// children
+		int siblingElementIndex = 0;
+		for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+			Node childNode = childNodes.get(i);
+
+			if (childNode.siblingIndex != i) {
+				return false;
+			}
+
+			if (childNode.getNodeType() == NodeType.ELEMENT) {
+				if (childNode.siblingElementIndex != siblingElementIndex) {
+					return false;
+				}
+				siblingElementIndex++;
+			}
+		}
+
+		if (childElementNodesCount != siblingElementIndex) {
+			return false;
+		}
+
+		// child element nodes
+		if (childElementNodes != null) {
+			if (childElementNodes.length != childElementNodesCount) {
+				return false;
+			}
+
+			int childCount = getChildNodesCount();
+			for (int i = 0; i < childCount; i++) {
+				Node child = getChild(i);
+				if (child.siblingElementIndex >= 0) {
+					if (childElementNodes[child.siblingElementIndex] != child) {
+						return false;
+					}
+				}
+			}
+		}
+
+		// sibling names
+		if (siblingNameIndex != -1) {
+			List<Node> siblings = parentNode.childNodes;
+			int index = 0;
+			for (int i = 0, siblingsSize = siblings.size(); i < siblingsSize; i++) {
+				Node sibling = siblings.get(i);
+				if (sibling.siblingNameIndex == -1
+						&& nodeType == NodeType.ELEMENT
+						&& nodeName.equals(sibling.getNodeName())) {
+					if (sibling.siblingNameIndex != index++) {
+						return false;
+					}
+				}
+			}
+		}
+
+		// process children
+		for (Node childNode : childNodes) {
+			if (!childNode.check()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Reindex children nodes. Must be called on every children addition/removal.
+	 * Iterates {@link #childNodes} list and:
+	 * <li>calculates three different sibling indexes,
+	 * <li>calculates total child element node count,
+	 * <li>resets child element nodes array (will be init lazy later by @{#initChildElementNodes}.
 	 */
 	protected void reindexChildren() {
 		int siblingElementIndex = 0;
-		for (int i = 0; i < childNodes.size(); i++) {
+		for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 			Node childNode = childNodes.get(i);
+
 			childNode.siblingIndex = i;
 			childNode.siblingNameIndex = -1;	// reset sibling name info
 			if (childNode.getNodeType() == NodeType.ELEMENT) {
@@ -593,6 +669,7 @@ public abstract class Node implements Cloneable {
 				siblingElementIndex++;
 			}
 		}
+
 		childElementNodesCount = siblingElementIndex;
 		childElementNodes = null;	// reset child element nodes
 	}
@@ -603,6 +680,7 @@ public abstract class Node implements Cloneable {
 	protected void initChildElementNodes() {
 		if (childElementNodes == null) {
 			childElementNodes = new Node[childElementNodesCount];
+
 			int childCount = getChildNodesCount();
 			for (int i = 0; i < childCount; i++) {
 				Node child = getChild(i);
@@ -636,7 +714,7 @@ public abstract class Node implements Cloneable {
 	 */
 	protected void initAttributes() {
 		if (attributes == null) {
-			attributes = new ArrayList<Attribute>();
+			attributes = new ArrayList<Attribute>(5);
 		}
 	}
 
