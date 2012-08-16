@@ -9,8 +9,7 @@ import jodd.lagarto.TagVisitor;
 import jodd.log.Log;
 import jodd.util.StringPool;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
@@ -20,10 +19,9 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	private static final Log log = Log.getLogger(DOMBuilderTagVisitor.class);
 
 	protected final LagartoDOMBuilder domBuilder;
+	protected final HtmlImplicitClosingRules implRules = new HtmlImplicitClosingRules();
 
 	private long startTime;
-	private List<String> errors;
-
 	protected Document rootNode;
 	protected Node parentNode;
 	/**
@@ -43,7 +41,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		return rootNode;
 	}
 
-	// ---------------------------------------------------------------- visitor
+	// ---------------------------------------------------------------- start/end
 
 	public void start() {
 		startTime = System.currentTimeMillis();
@@ -57,10 +55,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void end() {
-		// fix open tags
 		if (parentNode != rootNode) {
-			log.warn("Some tags are not closed.");
-			fixUpToMatchingPoint(rootNode);
+			if (log.isWarnEnabled()) {
+				log.warn("Some tags are not closed.");
+			}
+			// nothing to fix here, assuming all tags are implicitly closed on EOF
 		}
 
 		// remove whitespaces
@@ -68,14 +67,15 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			removeLastChildNodeIfEmptyText(parentNode, true);
 		}
 
-		// the end
-		rootNode.errors = this.errors;
+		// elapsed
+		domBuilder.elapsed = System.currentTimeMillis() - startTime;
 
 		if (log.isDebugEnabled()) {
-			long elapsed = System.currentTimeMillis() - startTime;
-			log.debug("DomTree created in " + elapsed + " ms.");
+			log.debug("LagartoDom tree created in " + domBuilder.elapsed + " ms.");
 		}
 	}
+
+	// ---------------------------------------------------------------- tag
 
 	/**
 	 * Creates new element with correct configuration.
@@ -120,6 +120,25 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 				node = createElementNode(tag);
 
+				if (domBuilder.isImpliedEndTags()) {
+
+					String parentNodeName = parentNode.getNodeName();
+					if (parentNodeName != null) {
+						if (implRules.implicitlyCloseParentTagOnNewTag(parentNodeName, node.getNodeName())) {
+							parentNode = parentNode.getParentNode();
+
+							if (log.isDebugEnabled()) {
+								String positionString = StringPool.EMPTY;
+								if (domBuilder.isCalculatePosition()) {
+									positionString = parentNode.position.toString();
+								}
+								log.debug("Implicitly closed tag <" + node.getNodeName() + "> " + positionString);
+							}
+
+						}
+					}
+				}
+
 				parentNode.appendChild(node);
 
 				if (node.isVoidElement() == false) {
@@ -147,13 +166,39 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 					if (domBuilder.isCalculatePosition()) {
 						positionString = calculatePosition(tag).toString();
 					}
-					error("Orphan closed tag: </" + tagName + "> " + positionString + " ignored.");
+					error("Orphan closed tag ignored: </" + tagName + "> " + positionString);
 					break;
 				}
 
+				// try to close it implicitly
+				if (domBuilder.isImpliedEndTags()) {
+					boolean fixed = false;
+					while (implRules.implicitlyCloseParentTagOnTagEnd(parentNode.getNodeName(), tagName)) {
+						parentNode = parentNode.getParentNode();
+
+						if (log.isDebugEnabled()) {
+							String positionString = StringPool.EMPTY;
+							if (domBuilder.isCalculatePosition()) {
+								positionString = parentNode.position.toString();
+							}
+							log.debug("Implicitly closed tag <" + tagName + "> " + positionString);
+						}
+
+						if (parentNode == matchingParent) {
+							parentNode = matchingParent.parentNode;
+							fixed = true;
+							break;
+						}
+					}
+					if (fixed) {
+						break;
+					}
+				}
+
+
 				// matching tag found, but it is not a regular situation
 				// therefore close all unclosed tags in between
-				fixUpToMatchingPoint(matchingParent);
+				fixUnclosedTagsUpToMatchingParent(matchingParent);
 
 				break;
 
@@ -167,6 +212,8 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				break;
 		}
 	}
+
+	// ---------------------------------------------------------------- util
 
 	/**
 	 * Removes last child node if contains just empty text.
@@ -227,59 +274,44 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	/**
-	 * Fixes unclosed tags. Adds closing tag to wrap one non-blank element.
+	 * Fixes all unclosed tags up to matching parent.
 	 */
-	protected void fixUpToMatchingPoint(Node matchingParent) {
+	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
+		LinkedList<Node> finalNodes = new LinkedList<Node>();
+
 		while (true) {
-			String nodeName = parentNode.getNodeName();
 
 			if (parentNode == matchingParent) {
 				parentNode = parentNode.getParentNode();
 				break;
 			}
 
-			// [*] get and remove all children of parent node (problematic, the open one)
-			Node[] childNodes = parentNode.getChildNodes();
-			parentNode.removeAllChilds();
-
-			// [*] find the first non blank node and re-attach to parent
-			int ndx = 0;
-			while (ndx < childNodes.length) {
-				Node child = childNodes[ndx];
-				if (child.getNodeType() == Node.NodeType.TEXT) {
-					if (((Text)child).isBlank()) {
-//						parentNode.appendChild(child);	// append blank nodes
-						ndx++;
-						continue;
-					}
-				}
-//				parentNode.appendChild(child);
-				ndx++;
-				break;
-			}
-			// simply adds calculated number of child nodes
-			parentNode.appendChild(childNodes, 0, ndx);
-
-			// [*] append remaining children to the parent parent node (good node)
 			Node parentParentNode = parentNode.getParentNode();
 
-			parentParentNode.appendChild(childNodes, ndx, childNodes.length);
-
-//			it's slow to loop single child append!
-//			while (ndx < childNodes.length) {
-//				Node child = childNodes[ndx];
-//				parentParentNode.appendChild(child);
-//				ndx++;
-//			}
+			parentNode.detachFromParent();
 
 			String positionString = StringPool.EMPTY;
 			if (domBuilder.isCalculatePosition()) {
 				positionString = parentNode.position.toString();
 			}
-			error("Unclosed tag: <" + nodeName + "> " + positionString + " closed.");
+
+			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + positionString);
+
+			finalNodes.addFirst(parentNode);
 			parentNode = parentParentNode;
 		}
+
+		Node[] newChilds = new Node[finalNodes.size()];
+
+		for (int i = 0; i < finalNodes.size(); i++) {
+			Node node = finalNodes.get(i);
+			newChilds[i] = node;
+		}
+
+		matchingParent.appendChild(newChilds);
 	}
+
+	// ---------------------------------------------------------------- tree
 
 	public void xmp(Tag tag, CharSequence body) {
 		if (!enabled) {
@@ -396,12 +428,14 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 	}
 
+	// ---------------------------------------------------------------- error
+
 	public void error(String message) {
 		if (domBuilder.isCollectErrors()) {
-			if (errors == null) {
-				errors = new ArrayList<String>();
+			if (domBuilder.errors == null) {
+				domBuilder.errors = new LinkedList<String>();
 			}
-			errors.add(message);
+			domBuilder.errors.add(message);
 		}
 		if (log.isWarnEnabled()) {
 			log.warn(message);
