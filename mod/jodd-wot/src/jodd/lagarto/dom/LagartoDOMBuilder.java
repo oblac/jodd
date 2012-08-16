@@ -33,6 +33,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	protected boolean collectErrors;
 	protected String conditionalCommentExpression;
 	protected String[] voidTags = HTML5_VOID_TAGS;
+	protected boolean impliedEndTags;
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
 		return ignoreWhitespacesBetweenTags;
@@ -129,6 +130,18 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		this.conditionalCommentExpression = conditionalCommentExpression;
 	}
 
+	public boolean isImpliedEndTags() {
+		return impliedEndTags;
+	}
+
+	/**
+	 * Enables implied end tags for certain tags. Defined in
+	 * "8.2.5.2 Closing elements that have implied end tags".
+	 */
+	public void setImpliedEndTags(boolean impliedEndTags) {
+		this.impliedEndTags = impliedEndTags;
+	}
+
 	// ---------------------------------------------------------------- quick settings
 
 	/**
@@ -140,6 +153,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		parseSpecialTagsAsCdata = true;					// script and style tags are parsed as CDATA
 		voidTags = HTML5_VOID_TAGS;						// list of void tags
 		selfCloseVoidTags = false;						// don't self close void tags
+		impliedEndTags = true;							// some tags end is implied
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
 		return this;
@@ -154,6 +168,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		parseSpecialTagsAsCdata = false;				// all tags are parsed in the same way
 		voidTags = HTML5_VOID_TAGS;						// list of void tags
 		selfCloseVoidTags = true;						// self close void tags
+		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
 		return this;
@@ -168,6 +183,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		parseSpecialTagsAsCdata = false;				// all tags are parsed in the same way
 		voidTags = null;								// there are no void tags
 		selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
+		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = false;				// disable IE conditional comments
 		conditionalCommentExpression = null;			// don't use
 		return this;
