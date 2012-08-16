@@ -6,6 +6,7 @@ import jodd.lagarto.LagartoParserEngine;
 import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
+import java.util.List;
 
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
@@ -22,6 +23,8 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	 */
 	public static final String[] HTML5_VOID_TAGS = {
 			"area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"};
+
+	// ---------------------------------------------------------------- IN flags
 
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean caseSensitive;
@@ -204,6 +207,28 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	 */
 	protected DOMBuilderTagVisitor createDOMDomBuilderTagVisitor() {
 		return new DOMBuilderTagVisitor(this);
+	}
+
+	// ---------------------------------------------------------------- OUT
+
+	protected List<String> errors;
+
+	protected long elapsed;
+
+	/**
+	 * Returns list of warnings and errors occurred during parsing.
+	 * Returns <code>null</code> if parsing was successful; or if
+	 * errors are {@link #setCollectErrors(boolean) not collected}.
+	 */
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	/**
+	 * Returns elapsed parsing time in milliseconds.
+	 */
+	public long getParsingTime() {
+		return elapsed;
 	}
 
 }
