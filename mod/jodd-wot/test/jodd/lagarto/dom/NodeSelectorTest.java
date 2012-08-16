@@ -286,6 +286,8 @@ public class NodeSelectorTest extends TestCase {
 
 		Element script = (Element) new NodeSelector(html).selectFirst("script");
 		assertEquals("text/javascript", script.getAttribute("type"));
+
+		assertTrue(document.check());
 	}
 
 	public void testGroupOfSelectors() throws IOException {
@@ -296,6 +298,8 @@ public class NodeSelectorTest extends TestCase {
 
 		List<Node> nodes = new NodeSelector(document).select("em, b, b");
 		assertEquals(9, nodes.size());
+
+		assertTrue(document.check());
 	}
 
 

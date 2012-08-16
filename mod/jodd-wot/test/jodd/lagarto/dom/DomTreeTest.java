@@ -45,6 +45,8 @@ public class DomTreeTest extends TestCase {
 		assertEquals(0, html.getSiblingIndex());
 		assertEquals(0, html.getSiblingElementIndex());
 		assertEquals(0, html.getSiblingNameIndex());
+
+		assertTrue(document.check());
 	}
 
 	public void testDetach() {
@@ -60,6 +62,8 @@ public class DomTreeTest extends TestCase {
 
 		assertEquals(0, html.getChildNodesCount());
 		assertNull(div1.getParentNode());
+
+		assertTrue(document.check());
 	}
 
 	public void testInsertRemoveDeepLevel() {
@@ -131,6 +135,8 @@ public class DomTreeTest extends TestCase {
 
 		assertFalse(div1.hasChildNodes());
 		assertTrue(html.hasChildNodes());
+
+		assertTrue(document.check());
 	}
 
 	public void testAttributes() {
@@ -195,6 +201,8 @@ public class DomTreeTest extends TestCase {
 		assertNull(b.getNextSiblingName());
 		assertNull(b.getNextSiblingElement());
 		assertNull(b.getPreviousSiblingName());
+
+		assertTrue(node.check());
 	}
 
 	public void testCssPath() {
@@ -209,12 +217,15 @@ public class DomTreeTest extends TestCase {
 
 		assertEquals("html div#one div", div2.getCssPath());
 		assertEquals("html div#one", div1.getCssPath());
+
+		assertTrue(document.check());
 	}
 
 	public void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input><input><img></form></body></html>", innerHtml);
+		assertTrue(document.check());
 
 		File file = new File(testDataRoot, "jodd.html");
 		String html = FileUtil.readString(file);
@@ -223,6 +234,7 @@ public class DomTreeTest extends TestCase {
 		document = new LagartoDOMBuilder().enableXhtmlMode().parse(html);
 		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
+		assertTrue(document.check());
 
 		file = new File(testDataRoot, "Twitter.html");
 		html = FileUtil.readString(file);
@@ -235,6 +247,7 @@ public class DomTreeTest extends TestCase {
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
 		assertEquals(html, innerHtml);
+		assertTrue(document.check());
 
 		file = new File(testDataRoot, "Yahoo!.html");
 		html = FileUtil.readString(file);
@@ -250,15 +263,19 @@ public class DomTreeTest extends TestCase {
 		assertEquals(1, h2.getAttributesCount());
 		assertEquals("y-ftr-txt-hdr  ", h2.getAttribute("class"));
 		assertTrue(h2.isAttributeIncluding("class", "y-ftr-txt-hdr"));
+
+		assertTrue(document.check());
 	}
 
 	public void testBr() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
 		String innerHtml = document.getHtml();
 		assertEquals("<div><br>some content <br>Some more</div>", innerHtml);
+		assertTrue(document.check());
 
 		document = new LagartoDOMBuilder().parse("<br>some content <br>Some more");
 		innerHtml = document.getHtml();
 		assertEquals("<br>some content <br>Some more", innerHtml);
+		assertTrue(document.check());
 	}
 }

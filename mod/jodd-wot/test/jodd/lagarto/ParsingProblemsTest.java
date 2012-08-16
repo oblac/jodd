@@ -69,12 +69,14 @@ public class ParsingProblemsTest extends TestCase {
 		Document document = lagartoDOMBuilder.parse(html);
 
 		assertEquals("<a href=\"123\">xxx</a>", document.getHtml());
+		assertTrue(document.check());
 
 		html = "<a href=../org/w3c/dom/'http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list'>xxx</a>";
 
 		lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.setCalculatePosition(true);
 		document = lagartoDOMBuilder.parse(html);
+		assertTrue(document.check());
 
 		assertEquals("<a href=\"../org/w3c/dom/&#039;http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list&#039;\">xxx</a>", document.getHtml());
 	}
@@ -86,8 +88,9 @@ public class ParsingProblemsTest extends TestCase {
 		lagartoDOMBuilder.setCalculatePosition(true);
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		assertTrue(doc.check());
 
-		assertEquals(1, doc.getErrors().size());
+		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 	}
 
 	public void testIssue23_1() throws IOException {
@@ -97,10 +100,10 @@ public class ParsingProblemsTest extends TestCase {
 		lagartoDOMBuilder.setCalculatePosition(true);
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		assertTrue(doc.check());
 
 		System.out.println(doc.getHtml());
-
-		assertEquals(13, doc.getErrors().size());
+		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 	}
 
 	public void testIssue23() throws IOException {
@@ -110,9 +113,10 @@ public class ParsingProblemsTest extends TestCase {
 //		lagartoDOMBuilder.setCalculatePosition(true);
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		assertTrue(document.check());
 
-		// 1564 open DTs + 1564 open DDs + 1 open P
-		assertEquals(3129, document.getErrors().size());
+		// (1564 open DTs + 1564 open DDs) 1 open P
+		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 
 		Jerry doc = Jerry.jerry(FileUtil.readString(file));
 		assertEquals(16, doc.$("td.NavBarCell1").size());
@@ -121,7 +125,7 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals(1, doc.$("dl").size());
 		assertEquals(1564, doc.$("dd").size());
 		assertEquals(1564, doc.$("dt").size());
-		assertEquals(1564, doc.$("dt a").size());
+		assertEquals(3144, doc.$("dt a").size());
 
 		// http://docs.oracle.com/javase/6/docs/api/index-files/index-4.html
 		file = new File(testDataRoot, "index-4-eng.html");

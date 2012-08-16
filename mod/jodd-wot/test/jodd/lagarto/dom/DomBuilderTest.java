@@ -55,6 +55,8 @@ public class DomBuilderTest extends TestCase {
 		String generated = root.getHtml();
 
 		assertEquals(page, generated);
+
+		assertTrue(root.check());
 	}
 
 	public void testClone() {
@@ -69,6 +71,8 @@ public class DomBuilderTest extends TestCase {
 		assertEquals(page, generated2);
 		assertNotSame(root, rootClone);
 		assertNotSame(root.getChild(0), rootClone.getChild(0));
+
+		assertTrue(root.check());
 	}
 
 	public void testSiblingsAndNames() {
@@ -114,6 +118,8 @@ public class DomBuilderTest extends TestCase {
 		assertEquals(t3, topDiv.getLastChild());
 		assertEquals(p3, topDiv.getLastChildElement());
 		assertEquals(p3, topDiv.getLastChildElement("p"));
+
+		assertTrue(document.check());
 	}
 
 	public void testNamesAndChilds() {
@@ -149,21 +155,47 @@ public class DomBuilderTest extends TestCase {
 		assertEquals(s3, topDiv.getLastChildElement());
 		assertEquals(p3, topDiv.getLastChildElement("p"));
 		assertEquals(s3, topDiv.getLastChildElement("span"));
+
+		assertTrue(document.check());
 	}
 
 	public void testUnclosedTag() {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input>text<input>text<img></form></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body><form><input>text<input>text<img></form></body></html>", innerHtml);
+		assertTrue(document.check());
 
 		LagartoDOMBuilder lagartoDomBuilder = new LagartoDOMBuilder();
 		document = lagartoDomBuilder.parse("<body><b>bold</b><div>text1</span><div>as</div></body>");
 		innerHtml = document.getHtml();
-		assertEquals("<body><b>bold</b><div>text1</div><div>as</div></body>", innerHtml);
+		assertEquals("<body><b>bold</b><div>text1<div>as</div></div></body>", innerHtml);
+		assertTrue(document.check());
 
 		document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></xxx></body></html>");
 		innerHtml = document.getHtml();
-		assertEquals("<html><body><form><input></form><input><img></body></html>", innerHtml);
+		assertEquals("<html><body><form><input><input><img></form></body></html>", innerHtml);
+		assertTrue(document.check());
+	}
+
+	public void testUnclosedTag2() {
+		Document document = new LagartoDOMBuilder().parse(
+				"<DL>\n" +
+				"<DT><A HREF=\"../java/awt/PageAttributes.MediaType.html#D\"><B>D</B></A> - \n" +
+				"Static variable in class java.awt.\n" +
+				"<A HREF=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</A>\n" +
+				"<DD>The MediaType instance for Engineering D, 22 x 34 in." +
+				"</DL>");
+		assertTrue(document.check());
+
+		String innerHtml = document.getHtml();
+		assertEquals(
+				"<dl>\n" +
+				"<dt><a href=\"../java/awt/PageAttributes.MediaType.html#D\"><b>D</b></a> - \n" +
+				"Static variable in class java.awt.\n" +
+				"<a href=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</a>\n" +
+				"</dt><dd>The MediaType instance for Engineering D, 22 x 34 in." +
+				"</dd></dl>",
+				innerHtml);
 	}
 
 	public void testUncapital() {
@@ -171,10 +203,12 @@ public class DomBuilderTest extends TestCase {
 		Document document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe'></body></html>");
 		String innerHtml = document.getHtml();
 		assertEquals("<html><body at=\"qWe\"></body></html>", innerHtml);
+		assertTrue(document.check());
 
 		document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe' AT='zxc'></body></html>");
 		innerHtml = document.getHtml();
 		assertEquals("<html><body at=\"zxc\"></body></html>", innerHtml);
+		assertTrue(document.check());
 	}
 
 	public void testEncode() {
@@ -191,6 +225,7 @@ public class DomBuilderTest extends TestCase {
 
 		assertEquals("a&lt;b", text.getNodeValue());
 		assertEquals("a<b", text.getTextContent());
+		assertTrue(document.check());
 	}
 
 	public void testXmlDec() {
@@ -204,6 +239,8 @@ public class DomBuilderTest extends TestCase {
 		Element div = (Element) xml.getNextSibling();
 		assertEquals(0, div.getAttributesCount());
 		assertEquals("div", div.getNodeName());
+
+		assertTrue(document.check());
 	}
 
 	public void testOrphanAttribute() {
@@ -217,6 +254,8 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(div.hasAttribute("foo"));
 		assertTrue(div.hasAttribute("zoo"));
 		assertFalse(div.hasAttribute("'8989'"));
+
+		assertTrue(document.check());
 	}
 
 }

@@ -15,6 +15,7 @@ public class HtmlXmlXhtmlTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableHtmlMode().parse(content);
 		assertEquals(HTML_STRING, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testHtml2XHtml() {
@@ -22,6 +23,7 @@ public class HtmlXmlXhtmlTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableXhtmlMode().parse(content);
 		assertEquals(XHTML_STRING, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testXHtml2Html() {
@@ -29,6 +31,7 @@ public class HtmlXmlXhtmlTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableHtmlMode().parse(content);
 		assertEquals(HTML_STRING, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testXml() {
@@ -36,6 +39,7 @@ public class HtmlXmlXhtmlTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.enableXmlMode().parse(content);
 		assertEquals(XML_STRING, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 }

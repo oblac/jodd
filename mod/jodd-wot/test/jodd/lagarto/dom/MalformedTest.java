@@ -10,7 +10,8 @@ public class MalformedTest extends TestCase {
 		String content = "<body><div>test<span>sss</span></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
-		assertEquals("<body><div>test</div><span>sss</span></body>", doc.getHtml());
+		assertEquals("<body><div>test<span>sss</span></div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testOneNodeWithBlanks() {
@@ -18,20 +19,23 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><div>   <span>sss</span></div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testTwoNodes() {
 		String content = "<body><div>test<span><form>xxx</form></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
-		assertEquals("<body><div>test</div><span><form>xxx</form></span></body>", doc.getHtml());
+		assertEquals("<body><div>test<span><form>xxx</form></span></div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testTwoNodes2() {
 		String content = "<body><div>test<span><form>xxx</body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
-		assertEquals("<body><div>test</div><span><form>xxx</form></span></body>", doc.getHtml());
+		assertEquals("<body><div>test<span><form>xxx</form></span></div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testPeterSimple1() {
@@ -39,6 +43,7 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<div><h1>FORELE</h1><p>dicuss</p><div>xxx</div></div>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testPeterSimple2() {
@@ -46,6 +51,7 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<div><h1>FORELE</h1><p>dicuss</p><div><h2>HAB</h2><p>AMONG</p></div></div>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testPeterSimple3WithSpaces() {
@@ -53,6 +59,7 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<div> <h1>FORELE</h1> <p>DICUSS </p><div> <h2>HAB</h2> <p>AMONG </p></div> </div>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testPeterFull() {
@@ -81,6 +88,7 @@ public class MalformedTest extends TestCase {
 						"</div>";
 		
 		assertEquals(expected, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testEof() {
@@ -88,6 +96,7 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><div>test</div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 	public void testEof2() {
@@ -95,6 +104,7 @@ public class MalformedTest extends TestCase {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><div></div></body>", doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 }

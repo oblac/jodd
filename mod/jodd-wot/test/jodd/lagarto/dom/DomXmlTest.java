@@ -49,6 +49,8 @@ public class DomXmlTest extends TestCase {
 
 		xmlContent = StringUtil.removeChars(xmlContent, "\n\r\t");
 		assertEquals(xmlContent, doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 
 	public void testUpheaWebXml() throws IOException {
@@ -61,6 +63,8 @@ public class DomXmlTest extends TestCase {
 
 		xmlContent = StringUtil.removeChars(xmlContent, "\n\r\t");
 		assertEquals(xmlContent, doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 	
 	public void testWhitespaces() throws IOException {
@@ -84,6 +88,8 @@ public class DomXmlTest extends TestCase {
 		assertEquals(1, bar.getChildNodesCount());	// must be 1 as whitespaces are between open/closed tag
 
 		assertEquals("<foo><!--c--><bar>   </bar><x/></foo>", doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 
 	public void testIgnoreComments() throws IOException {
@@ -96,6 +102,8 @@ public class DomXmlTest extends TestCase {
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
 		assertEquals("<foo><bar>   </bar><x></x></foo>", doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 
 	public void testConditionalComments() throws IOException {
@@ -108,6 +116,8 @@ public class DomXmlTest extends TestCase {
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 
 	public void testConditionalComments2() throws IOException {
@@ -120,10 +130,12 @@ public class DomXmlTest extends TestCase {
 		lagartoDOMBuilder.setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
-		List<String> errors = doc.getErrors();
+		List<String> errors = lagartoDOMBuilder.getErrors();
 
 		assertEquals(1, errors.size());
 		assertTrue(errors.get(0).contains("[1:5 @5]"));
 		assertEquals("<foo><bar>Jodd</bar></foo>", doc.getHtml());
+
+		assertTrue(doc.check());
 	}
 }
