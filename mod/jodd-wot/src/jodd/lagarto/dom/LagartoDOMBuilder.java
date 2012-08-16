@@ -135,8 +135,10 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	}
 
 	/**
-	 * Enables implied end tags for certain tags. Defined in
-	 * "8.2.5.2 Closing elements that have implied end tags".
+	 * Enables implied end tags for certain tags.
+	 * This flag reduces the performances a bit, so if you
+	 * are dealing with 'straight' html that uses closes
+	 * tags, consider switching this flag off.
 	 */
 	public void setImpliedEndTags(boolean impliedEndTags) {
 		this.impliedEndTags = impliedEndTags;
