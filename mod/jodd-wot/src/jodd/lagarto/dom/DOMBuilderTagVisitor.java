@@ -121,20 +121,19 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				node = createElementNode(tag);
 
 				if (domBuilder.isImpliedEndTags()) {
+					while (true) {
+						String parentNodeName = parentNode.getNodeName();
+						if (!implRules.implicitlyCloseParentTagOnNewTag(parentNodeName, node.getNodeName())) {
+							break;
+						}
+						parentNode = parentNode.getParentNode();
 
-					String parentNodeName = parentNode.getNodeName();
-					if (parentNodeName != null) {
-						if (implRules.implicitlyCloseParentTagOnNewTag(parentNodeName, node.getNodeName())) {
-							parentNode = parentNode.getParentNode();
-
-							if (log.isDebugEnabled()) {
-								String positionString = StringPool.EMPTY;
-								if (domBuilder.isCalculatePosition()) {
-									positionString = parentNode.position.toString();
-								}
-								log.debug("Implicitly closed tag <" + node.getNodeName() + "> " + positionString);
+						if (log.isDebugEnabled()) {
+							String positionString = StringPool.EMPTY;
+							if (domBuilder.isCalculatePosition()) {
+								positionString = parentNode.position.toString();
 							}
-
+							log.debug("Implicitly closed tag <" + node.getNodeName() + "> " + positionString);
 						}
 					}
 				}
