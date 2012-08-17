@@ -278,4 +278,32 @@ public class DomTreeTest extends TestCase {
 		assertEquals("<br>some content <br>Some more", innerHtml);
 		assertTrue(document.check());
 	}
+
+	public void testReindexOne() {
+		Document document = new Document();
+
+		Element one = new Element("one");
+		document.addChild(one);
+
+		assertEquals(1, document.childElementNodesCount);
+		assertEquals(0, one.siblingElementIndex);
+
+		Element two = new Element("two");
+		document.addChild(two);
+
+		assertEquals(2, document.childElementNodesCount);
+		assertEquals(0, one.siblingElementIndex);
+		assertEquals(1, two.siblingElementIndex);
+
+		Text three = new Text("xxx");
+		document.addChild(three);
+
+		Element four = new Element("four");
+		document.addChild(four);
+
+		assertEquals(3, document.childElementNodesCount);
+		assertEquals(0, one.siblingElementIndex);
+		assertEquals(1, two.siblingElementIndex);
+		assertEquals(2, four.siblingElementIndex);
+	}
 }

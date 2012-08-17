@@ -151,7 +151,7 @@ public abstract class Node implements Cloneable {
 		node.deepLevel = deepLevel + 1;
 		initChildNodes();
 		childNodes.add(node);
-		reindexChildren();
+		reindexChildrenOnAdd(1);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public abstract class Node implements Cloneable {
 			initChildNodes();
 			childNodes.add(node);
 		}
-		reindexChildren();
+		reindexChildrenOnAdd(nodes.length);
 	}
 
 	/**
@@ -660,6 +660,30 @@ public abstract class Node implements Cloneable {
 	protected void reindexChildren() {
 		int siblingElementIndex = 0;
 		for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
+			Node childNode = childNodes.get(i);
+
+			childNode.siblingIndex = i;
+			childNode.siblingNameIndex = -1;	// reset sibling name info
+			if (childNode.getNodeType() == NodeType.ELEMENT) {
+				childNode.siblingElementIndex = siblingElementIndex;
+				siblingElementIndex++;
+			}
+		}
+
+		childElementNodesCount = siblingElementIndex;
+		childElementNodes = null;	// reset child element nodes
+	}
+
+	/**
+	 * Optimized variant of {@link #reindexChildren()} for addition.
+	 * Only added children are optimized.
+	 */
+	protected void reindexChildrenOnAdd(int addedCount) {
+		int childNodesSize = childNodes.size();
+		int previousSize = childNodes.size() - addedCount;
+
+		int siblingElementIndex = childElementNodesCount;
+		for (int i = previousSize; i < childNodesSize; i++) {
 			Node childNode = childNodes.get(i);
 
 			childNode.siblingIndex = i;
