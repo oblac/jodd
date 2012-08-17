@@ -102,4 +102,9 @@ public class Element extends Node {
 		appendable.append(nodeName);
 		appendable.append('>');
 	}
+
+	@Override
+	public String toString() {
+		return '<' + nodeName + '>';
+	}
 }
