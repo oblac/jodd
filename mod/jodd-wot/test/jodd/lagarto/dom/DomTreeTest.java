@@ -27,7 +27,7 @@ public class DomTreeTest extends TestCase {
 	public void testSpecialCases() {
 		Document document = new Document();
 		Element html = new Element("html");
-		document.appendChild(html);
+		document.addChild(html);
 
 		assertEquals(0, html.getChildNodesCount());
 		assertNull(html.getChild(0));
@@ -52,11 +52,11 @@ public class DomTreeTest extends TestCase {
 	public void testDetach() {
 		Document document = new Document();
 		Element html = new Element("html");
-		document.appendChild(html);
+		document.addChild(html);
 		Element div1 = new Element("div");
-		html.appendChild(div1);
+		html.addChild(div1);
 		Element div2 = new Element("div");
-		div1.appendChild(div2);
+		div1.addChild(div2);
 
 		div1.detachFromParent();
 
@@ -69,14 +69,14 @@ public class DomTreeTest extends TestCase {
 	public void testInsertRemoveDeepLevel() {
 		Document document = new Document();
 		Element html = new Element("html");
-		document.appendChild(html);
+		document.addChild(html);
 
 		Element div1 = new Element("div");
-		html.appendChild(div1);
+		html.addChild(div1);
 		Element div2 = new Element("div");
-		html.appendChild(div2);
+		html.addChild(div2);
 		Element div3 = new Element("div");
-		html.appendChild(div3);
+		html.addChild(div3);
 
 		assertEquals(2, div1.getDeepLevel());
 		assertEquals(2, div2.getDeepLevel());
@@ -168,24 +168,24 @@ public class DomTreeTest extends TestCase {
 		Element node = new Element("div");
 
 		Text textHello = new Text("hello");
-		node.appendChild(textHello);
+		node.addChild(textHello);
 
 		Element em = new Element("em");
-		node.appendChild(em);
+		node.addChild(em);
 		Text textJodd = new Text("jodd");
-		em.appendChild(textJodd);
+		em.addChild(textJodd);
 
 		Text textHey = new Text("!");
-		node.appendChild(textHey);
+		node.addChild(textHey);
 
 		assertEquals(3, node.getChildNodesCount());
 		assertEquals(1, node.getChildElementsCount());
 		assertEquals(1, node.getChildElementsCount("em"));
 
 		Element b = new Element("b");
-		node.appendChild(b);
+		node.addChild(b);
 		Text textJodd2 = new Text("fwk");
-		b.appendChild(textJodd2);
+		b.addChild(textJodd2);
 
 		assertEquals(4, node.getChildNodesCount());
 		assertEquals(2, node.getChildElementsCount());
@@ -208,12 +208,12 @@ public class DomTreeTest extends TestCase {
 	public void testCssPath() {
 		Document document = new Document();
 		Element html = new Element("html");
-		document.appendChild(html);
+		document.addChild(html);
 		Element div1 = new Element("div");
 		div1.setAttribute("id", "one");
-		html.appendChild(div1);
+		html.addChild(div1);
 		Element div2 = new Element("div");
-		div1.appendChild(div2);
+		div1.addChild(div2);
 
 		assertEquals("html div#one div", div2.getCssPath());
 		assertEquals("html div#one", div1.getCssPath());

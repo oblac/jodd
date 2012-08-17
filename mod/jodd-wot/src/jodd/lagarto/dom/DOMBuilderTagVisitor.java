@@ -145,7 +145,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 					}
 				}
 
-				parentNode.appendChild(node);
+				parentNode.addChild(node);
 
 				if (node.isVoidElement() == false) {
 					parentNode = node;
@@ -214,7 +214,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 				}
 
 				node = createElementNode(tag);
-				parentNode.appendChild(node);
+				parentNode.addChild(node);
 				break;
 		}
 	}
@@ -314,7 +314,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			newChilds[i] = node;
 		}
 
-		matchingParent.appendChild(newChilds);
+		matchingParent.addChild(newChilds);
 	}
 
 	// ---------------------------------------------------------------- tree
@@ -325,11 +325,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		Node node = createElementNode(tag);
-		parentNode.appendChild(node);
+		parentNode.addChild(node);
 
 		if (body.length() != 0) {
 			Node text = new Text(body.toString());
-			node.appendChild(text);
+			node.addChild(text);
 		}
 	}
 
@@ -339,11 +339,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		Element node = createElementNode(tag);
-		parentNode.appendChild(node);
+		parentNode.addChild(node);
 
 		if (body.length() != 0) {
 			Node text = new Text(body.toString());
-			node.appendChild(text);
+			node.addChild(text);
 		}
 	}
 
@@ -353,11 +353,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		Element node = createElementNode(tag);
-		parentNode.appendChild(node);
+		parentNode.addChild(node);
 
 		if (body.length() != 0) {
 			Node text = new Text(body.toString());
-			node.appendChild(text);
+			node.addChild(text);
 		}
 	}
 
@@ -373,7 +373,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 		Node node = new Comment(comment.toString());
-		parentNode.appendChild(node);
+		parentNode.addChild(node);
 	}
 
 	public void text(CharSequence text) {
@@ -383,7 +383,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 		String textValue = text.toString();
 		Node node = new Text(textValue);
-		parentNode.appendChild(node);
+		parentNode.addChild(node);
 	}
 
 	public void cdata(CharSequence cdata) {
@@ -392,7 +392,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		CData cdataNode = new CData(cdata.toString());
-		parentNode.appendChild(cdataNode);
+		parentNode.addChild(cdataNode);
 	}
 
 	public void xml(Tag tag) {
@@ -401,7 +401,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, domBuilder.isCaseSensitive());
-		parentNode.appendChild(xmlDeclaration);
+		parentNode.addChild(xmlDeclaration);
 	}
 
 	public void doctype(String name, String publicId, String baseUri) {
@@ -410,7 +410,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		DocumentType documentType = new DocumentType(name, publicId, baseUri);
-		parentNode.appendChild(documentType);
+		parentNode.addChild(documentType);
 	}
 
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
@@ -430,7 +430,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			String additionalComment = comment != null ? comment.toString() : null;
 			Node commentNode = new Comment(expression.toString(), isStartingTag, isHidden, additionalComment);
 
-			parentNode.appendChild(commentNode);
+			parentNode.addChild(commentNode);
 		}
 	}
 

@@ -674,7 +674,7 @@ public class Jerry {
 			node.removeAllChilds();
 			Text textNode = new Text();
 			textNode.setTextContent(text);
-			node.appendChild(textNode);
+			node.addChild(textNode);
 		}
 		return this;
 	}
@@ -699,7 +699,7 @@ public class Jerry {
 		for (Node node : nodes) {
 			node.removeAllChilds();
 			Document workingDoc = doc.clone();
-			node.appendChild(workingDoc.getChildNodes());
+			node.addChild(workingDoc.getChildNodes());
 		}
 		return this;
 	}
@@ -715,7 +715,7 @@ public class Jerry {
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
-			node.appendChild(workingDoc);
+			node.addChild(workingDoc);
 		}
 		return this;
 	}
@@ -784,7 +784,7 @@ public class Jerry {
 			// replace
 			Node parent = node.getParentNode();
 			int index = node.getSiblingIndex();
-			inmostNode.appendChild(node);
+			inmostNode.addChild(node);
 			parent.insertChild(workingDoc.getFirstChild(), index);
 		}
 
