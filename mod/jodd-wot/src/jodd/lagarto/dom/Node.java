@@ -142,23 +142,15 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Attaches (previously un-attached) child without
-	 * reindexing the children.
-	 */
-	public void attachChild(Node node) {
-		node.parentNode = this;
-		node.deepLevel = deepLevel + 1;
-		initChildNodes();
-		childNodes.add(node);
-	}
-
-	/**
 	 * Appends child node. Don't use this node in the loop,
 	 * since it might be slow due to {@link #reindexChildren()}.
 	 */
 	public void addChild(Node node) {
 		node.detachFromParent();
-		attachChild(node);
+		node.parentNode = this;
+		node.deepLevel = deepLevel + 1;
+		initChildNodes();
+		childNodes.add(node);
 		reindexChildren();
 	}
 
@@ -169,7 +161,10 @@ public abstract class Node implements Cloneable {
 	public void addChild(Node... nodes) {
 		for (Node node : nodes) {
 			node.detachFromParent();
-			attachChild(node);
+			node.parentNode = this;
+			node.deepLevel = deepLevel + 1;
+			initChildNodes();
+			childNodes.add(node);
 		}
 		reindexChildren();
 	}
