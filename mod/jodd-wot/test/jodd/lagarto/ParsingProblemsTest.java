@@ -102,7 +102,6 @@ public class ParsingProblemsTest extends TestCase {
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
-		System.out.println(doc.getHtml());
 		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 	}
 
