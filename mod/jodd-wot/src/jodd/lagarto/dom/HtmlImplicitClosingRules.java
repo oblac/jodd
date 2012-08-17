@@ -41,14 +41,23 @@ public class HtmlImplicitClosingRules {
 			new String[] {"th"},
 			new String[] {"th"},
 
-			new String[] {"tr", "td", "th"},
+			new String[] {"tr", "td", "th", "colgroup"},
 			new String[] {"tr"},
 
-			new String[] {"thead", "tr", "td", "th"},
+			new String[] {"thead", "tr", "td", "th", "colgroup"},
 			new String[] {"tbody"},
 
 			new String[] {"tbody", "tr", "td", "th"},
 			new String[] {"tfoot"},
+
+			new String[] {"colgroup"},
+			new String[] {"thead"},
+
+			new String[] {"colgroup"},
+			new String[] {"colgroup"},
+
+			new String[] {"optgroup"},
+			new String[] {"optgroup"},
 
 			new String[] {"head"},
 			new String[] {"body"},
@@ -91,7 +100,10 @@ public class HtmlImplicitClosingRules {
 			new String[] {"li"},
 
 			new String[] {"table"},
-			new String[] {"th", "td", "tr", "tbody", "tfoot"}
+			new String[] {"th", "td", "tr", "tbody", "tfoot", "thead"},
+
+			new String[] {"select"},
+			new String[] {"optgroup"},
 	};
 
 	/**

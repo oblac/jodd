@@ -97,12 +97,40 @@ public class HtmlImplicitClosingRuleTest extends TestCase {
 		assertEquals("<table><thead><tr><td>col#1</td><td>col #2</td></tr></thead><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody></table>", doc.getHtml());
 		assertNull(lagartoDOMBuilder.getErrors());
 	}
+
 	public void testTagTFOOT() {
 		String content = "<table><tbody><tr><td>cell #1<td>cell #2<tr><td>cell #3<td>cell #4<tfoot><tr><td>sum #1<td>sum #2</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody><tfoot><tr><td>sum #1</td><td>sum #2</td></tr></tfoot></table>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testTagCOLGROUP1() {
+		String content = "<table><colgroup><colgroup><thead></table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<table><colgroup></colgroup><colgroup></colgroup><thead></thead></table>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testTagCOLGROUP2() {
+		String content = "<table><colgroup><colgroup><tbody></table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<table><colgroup></colgroup><colgroup></colgroup><tbody></tbody></table>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testTagCOLGROUP3() {
+		String content = "<table><colgroup><col></colgroup><colgroup><tr><td></table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<table><colgroup><col></colgroup><colgroup></colgroup><tr><td></td></tr></table>", doc.getHtml());
 		assertNull(lagartoDOMBuilder.getErrors());
 	}
 
@@ -121,6 +149,15 @@ public class HtmlImplicitClosingRuleTest extends TestCase {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<html><body>body</body></html>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testTagOPTGROUP() {
+		String content = "<form><select><optgroup><option>option#1</option><optgroup><option>option#2</option></select></form>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<form><select><optgroup><option>option#1</option></optgroup><optgroup><option>option#2</option></optgroup></select></form>", doc.getHtml());
 		assertNull(lagartoDOMBuilder.getErrors());
 	}
 
