@@ -56,10 +56,17 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 	public void end() {
 		if (parentNode != rootNode) {
-			if (log.isWarnEnabled()) {
-				log.warn("Some tags are not closed.");
+
+			if (!domBuilder.isImpliedEndTags()) {
+				if (log.isWarnEnabled()) {
+					String positionString = StringPool.EMPTY;
+					if (domBuilder.isCalculatePosition()) {
+						positionString = parentNode.position.toString();
+					}
+					log.warn("Some unclosed tags are closed: <" + parentNode.getNodeName() + "> " + positionString);
+				}
 			}
-			// nothing to fix here, assuming all tags are implicitly closed on EOF
+				// nothing to fix here, assuming all tags are implicitly closed on EOF
 		}
 
 		// remove whitespaces

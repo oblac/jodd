@@ -71,6 +71,15 @@ public class HtmlImplicitClosingRuleTest extends TestCase {
 		assertNull(lagartoDOMBuilder.getErrors());
 	}
 
+	public void testTagTH() {
+		String content = "<table><tr><th>cell #1<th>cell #2<tr><td>cell #3<td>cell #4</table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<table><tr><th>cell #1</th><th>cell #2</th></tr><tr><td>cell #3</td><td>cell #4</td></tr></table>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
 	public void testTagTBODY() {
 		String content = "<table><tbody><tr><td>cell #1<td>cell #2<tr><td>cell #3<td>cell #4</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -94,6 +103,24 @@ public class HtmlImplicitClosingRuleTest extends TestCase {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody><tfoot><tr><td>sum #1</td><td>sum #2</td></tr></tfoot></table>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testHEAD() {
+		String content = "<html><head>head<body>body</html>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<html><head>head</head><body>body</body></html>", doc.getHtml());
+		assertNull(lagartoDOMBuilder.getErrors());
+	}
+
+	public void testBODY() {
+		String content = "<html><body>body";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setCollectErrors(true);
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<html><body>body</body></html>", doc.getHtml());
 		assertNull(lagartoDOMBuilder.getErrors());
 	}
 

@@ -9,6 +9,8 @@ import jodd.util.StringUtil;
  */
 public class HtmlImplicitClosingRules {
 
+	// ---------------------------------------------------------------- start
+
 	/**
 	 * List of tags that can be implicitly closed on provided children.
 	 * The first array contains parent tag name (i.e. parent node name),
@@ -36,34 +38,21 @@ public class HtmlImplicitClosingRules {
 			new String[] {"td"},
 			new String[] {"td"},
 
-			new String[] {"tr", "td"},
+			new String[] {"th"},
+			new String[] {"th"},
+
+			new String[] {"tr", "td", "th"},
 			new String[] {"tr"},
 
-			new String[] {"thead", "tr", "td"},
+			new String[] {"thead", "tr", "td", "th"},
 			new String[] {"tbody"},
 
-			new String[] {"tbody", "tr", "td"},
-			new String[] {"tfoot"}
+			new String[] {"tbody", "tr", "td", "th"},
+			new String[] {"tfoot"},
+
+			new String[] {"head"},
+			new String[] {"body"},
 	};
-	/**
-	 * List of tags that can be implicitly closed on tags end.
-	 * The first array contains current node name (i.e. ending tag).
-	 * The second array contains list of all of parent tags that can be closed.
-	 * <p>
-	 * Interpret it like this: [first array CLOSE tag] closes [second array tag]
-	 */
-	public static final String[][] IMPLIED_ON_END = new String[][] {
-			new String[] {"dl"},
-			new String[] {"dd", "dt"},
-
-			new String[] {"ul", "ol"},
-			new String[] {"li"},
-
-			new String[] {"table"},
-			new String[] {"td", "tr", "tbody", "tfoot"}
-	};
-
-
 	/**
 	 * Returns <code>true</code> if parent node tag can be closed implicitly.
 	 */
@@ -84,6 +73,26 @@ public class HtmlImplicitClosingRules {
 
 		return false;
 	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * List of tags that can be implicitly closed on tags end.
+	 * The first array contains current node name (i.e. ending tag).
+	 * The second array contains list of all of parent tags that can be closed.
+	 * <p>
+	 * Interpret it like this: [first array CLOSE tag] closes [second array tag]
+	 */
+	public static final String[][] IMPLIED_ON_END = new String[][] {
+			new String[] {"dl"},
+			new String[] {"dd", "dt"},
+
+			new String[] {"ul", "ol"},
+			new String[] {"li"},
+
+			new String[] {"table"},
+			new String[] {"th", "td", "tr", "tbody", "tfoot"}
+	};
 
 	/**
 	 * Returns <code>true</code> if current end tag (node name) closes the parent tag.
