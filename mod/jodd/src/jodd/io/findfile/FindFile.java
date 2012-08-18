@@ -442,6 +442,11 @@ public class FindFile {
 		todoFiles = new LinkedList<FilesIterator>();
 		todoFolders = new LinkedList<File>();
 
+		if (pathList == null) {
+			pathList = new LinkedList<File>();
+			return;
+		}
+
 		if (pathListOriginal == null) {
 			pathListOriginal = (LinkedList<File>) pathList.clone();
 		}

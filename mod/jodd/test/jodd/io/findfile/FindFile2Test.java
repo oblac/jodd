@@ -152,6 +152,41 @@ public class FindFile2Test extends TestCase {
 			count++;
 		}
 		assertEquals(1, count);
+	}
+
+	public void testNonExisting() {
+		FindFile wff = new FindFile();
+
+		wff.setIncludeDirs(true);
+		wff.setIncludeFiles(true);
+		wff.setRecursive(true);
+		wff.setWalking(true);
+		wff.searchPath(dataRoot + "/void");
+
+		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		int count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(0, count);
+	}
+
+	public void testNotFound() {
+		WildcardFindFile wff = new WildcardFindFile();
+		wff.setIncludeDirs(true);
+		wff.setIncludeFiles(true);
+		wff.setRecursive(true);
+		wff.setWalking(true);
+		wff.searchPath(dataRoot + "/beta");
+		wff.searchPath(dataRoot + "/sumo");
+
+		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
+		wff.setPattern("**/xxxxxxx/*");
+		int count = 0;
+		while (wff.nextFile() != null) {
+			count++;
+		}
+		assertEquals(0, count);
 
 	}
 
