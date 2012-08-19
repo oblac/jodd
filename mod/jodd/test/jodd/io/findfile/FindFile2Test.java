@@ -243,6 +243,19 @@ public class FindFile2Test extends TestCase {
 
 		assertEquals("alpha.txt | jodd1.txt | jodd10.txt | zero.txt | beta | sumo | ", str.toString());
 
+		ff.reset();
+		ff.sortNone();
+		ff.sortFoldersLast();
+		ff.sortByExtension();
+		ff.sortByName();
+		str.setLength(0);
+
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("alpha.txt | jodd1.txt | jodd10.txt | zero.txt | beta | sumo | ", str.toString());
+
 	}
 
 

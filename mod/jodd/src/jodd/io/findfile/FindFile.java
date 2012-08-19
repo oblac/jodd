@@ -579,6 +579,14 @@ public class FindFile {
 	}
 
 	/**
+	 * Adds generic sorting.
+	 */
+	public FindFile sortWith(Comparator<File> fileComparator) {
+		addComparator(fileComparator);
+		return this;
+	}
+
+	/**
 	 * Puts folders before files.
 	 */
 	public FindFile sortFoldersFirst() {
@@ -607,6 +615,22 @@ public class FindFile {
 	 */
 	public FindFile sortByNameDesc() {
 		addComparator(new FileNameComparator(false));
+		return this;
+	}
+
+	/**
+	 * Sorts files by file extension.
+	 */
+	public FindFile sortByExtension() {
+		addComparator(new FileExtensionComparator(true));
+		return this;
+	}
+
+	/**
+	 * Sorts files by file extension descending.
+	 */
+	public FindFile sortByExtensionDesc() {
+		addComparator(new FileExtensionComparator(false));
 		return this;
 	}
 
@@ -665,6 +689,32 @@ public class FindFile {
 
 		public int compare(File file1, File file2) {
 			long diff = file1.getName().compareToIgnoreCase(file2.getName());
+			if (diff == 0) {
+				return 0;
+			}
+			if (diff > 0) {
+				return order;
+			}
+			return -order;
+		}
+	}
+
+	public static class FileExtensionComparator implements Comparator<File> {
+
+		protected final int order;
+
+		public FileExtensionComparator(boolean ascending) {
+			if (ascending) {
+				order = 1;
+			} else {
+				order = -1;
+			}
+		}
+
+		public int compare(File file1, File file2) {
+			String ext1 = FileNameUtil.getExtension(file1.getName());
+			String ext2 = FileNameUtil.getExtension(file2.getName());
+			long diff = ext1.compareToIgnoreCase(ext2);
 			if (diff == 0) {
 				return 0;
 			}
