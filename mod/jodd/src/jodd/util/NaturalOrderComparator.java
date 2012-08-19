@@ -9,6 +9,16 @@ import java.util.Comparator;
  */
 public class NaturalOrderComparator<T> implements Comparator<T> {
 
+	protected final boolean ignoreCase;
+
+	public NaturalOrderComparator() {
+		ignoreCase = false;
+	}
+
+	public NaturalOrderComparator(boolean ignoreCase) {
+		this.ignoreCase = ignoreCase;
+	}
+
 	/**
 	 * Compare digits at certain position in two strings.
 	 * The longest run of digits wins. That aside, the greatest
@@ -125,6 +135,10 @@ public class NaturalOrderComparator<T> implements Comparator<T> {
 			}
 
 			// compare chars
+			if (ignoreCase) {
+				char1 = Character.toLowerCase(char1);
+				char2 = Character.toLowerCase(char2);
+			}
 			if (char1 < char2) {
 				return -1;
 			}
