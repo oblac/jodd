@@ -3,14 +3,19 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.MultipleComparator;
 import jodd.util.StringUtil;
 import jodd.io.FileUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -19,8 +24,6 @@ import java.util.NoSuchElementException;
  * @see WildcardFindFile
  * @see RegExpFindFile
  * @see FilterFindFile
- *
- * todo: Add sorting via comparators
  */
 public class FindFile {
 
@@ -94,7 +97,7 @@ public class FindFile {
 	}
 
 	/**
-	 * Sets the walking mode. When walking mode is on (by default),
+	 * Sets the walking recursive mode. When walking mode is on (by default),
 	 * folders are walked immediately. Although natural, for large
 	 * set of files, this is not memory-optimal approach, since many
 	 * files are held in memory, when going deeper.
@@ -102,9 +105,11 @@ public class FindFile {
 	 * When walking mode is turned off, folders are processed once
 	 * all files are processed, one after the other. The order is
 	 * not natural, but memory consumption is optimal.
+	 * @see #setRecursive(boolean)
 	 */
-	public void setWalking(boolean walking) {
+	public FindFile setWalking(boolean walking) {
 		this.walking = walking;
+		return this;
 	}
 
 	public Match getMatchType() {
@@ -114,8 +119,9 @@ public class FindFile {
 	/**
 	 * Set {@link Match matching type}.
 	 */
-	public void setMatchType(Match match) {
+	public FindFile setMatchType(Match match) {
 		this.matchType = match;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- search path
@@ -219,16 +225,43 @@ public class FindFile {
 	 */
 	protected class FilesIterator {
 		protected final File folder;
-		protected final String[] files;
+		protected final String[] fileNames;
+		protected final File[] files;
 
 		public FilesIterator(File folder) {
 			this.folder = folder;
-			this.files = folder.list();
+			if (sortComparators != null) {
+				this.files = folder.listFiles();
+
+				if ((sortComparators != null) && (this.files != null)) {
+					Arrays.sort(this.files, new MultipleComparator<File>(sortComparators));
+				}
+
+				this.fileNames = null;
+			} else {
+				this.files = null;
+				this.fileNames = folder.list();
+			}
 		}
 
-		public FilesIterator(String[] files) {
+		public FilesIterator(String[] fileNames) {
 			this.folder = null;
-			this.files = files;
+			if (sortComparators != null) {
+				int fileNamesLength = fileNames.length;
+				this.files = new File[fileNamesLength];
+
+				for (int i = 0; i < fileNamesLength; i++) {
+					String fileName = fileNames[i];
+					if (fileName != null) {
+						this.files[i] = new File(fileName);
+					}
+
+				}
+				this.fileNames = null;
+			} else {
+				this.files = null;
+				this.fileNames = fileNames;
+			}
 		}
 
 		protected int index;
@@ -238,14 +271,22 @@ public class FindFile {
 		 * when no next file is available.
 		 */
 		public File next() {
-			while (index < files.length) {
-				String fileName = files[index];
+			if (files != null) {
+				return nextFile();
+			} else {
+				return nextFileName();
+			}
+		}
+
+		protected File nextFileName() {
+			while (index < fileNames.length) {
+				String fileName = fileNames[index];
 
 				if (fileName == null) {
 					index++;
 					continue;
 				}
-				files[index] = null;
+				fileNames[index] = null;
 				index++;
 
 				File file;
@@ -254,6 +295,28 @@ public class FindFile {
 				} else {
 					file = new File(folder, fileName);
 				}
+
+				if (file.isFile()) {
+					if (acceptFile(file) == false) {
+						continue;
+					}
+				}
+
+				return file;
+			}
+			return null;
+		}
+
+		protected File nextFile() {
+			while (index < files.length) {
+				File file = files[index];
+
+				if (file == null) {
+					index++;
+					continue;
+				}
+				files[index] = null;
+				index++;
 
 				if (file.isFile()) {
 					if (acceptFile(file) == false) {
@@ -336,7 +399,8 @@ public class FindFile {
 	}
 
 	/**
-	 * Reset the search.
+	 * Reset the search so it can be run again with very
+	 * same parameters (and sorting options).
 	 */
 	public void reset() {
 		pathList = pathListOriginal;
@@ -493,5 +557,145 @@ public class FindFile {
 				throw new UnsupportedOperationException();
 			}
 		};
+	}
+
+	// ---------------------------------------------------------------- sort
+
+	protected List<Comparator<File>> sortComparators;
+
+	protected void addComparator(Comparator<File> comparator) {
+		if (sortComparators == null) {
+			sortComparators = new ArrayList<Comparator<File>>(4);
+		}
+		sortComparators.add(comparator);
+	}
+
+	/**
+	 * Removes ALL sorting options.
+	 */
+	public FindFile sortNone() {
+		sortComparators = null;
+		return this;
+	}
+
+	/**
+	 * Puts folders before files.
+	 */
+	public FindFile sortFoldersFirst() {
+		addComparator(new FolderFirstComparator(true));
+		return this;
+	}
+
+	/**
+	 * Puts files before folders.
+	 */
+	public FindFile sortFoldersLast() {
+		addComparator(new FolderFirstComparator(false));
+		return this;
+	}
+
+	/**
+	 * Sorts files by file name.
+	 */
+	public FindFile sortByName() {
+		addComparator(new FileNameComparator(true));
+		return this;
+	}
+
+	/**
+	 * Sorts files by file names descending.
+	 */
+	public FindFile sortByNameDesc() {
+		addComparator(new FileNameComparator(false));
+		return this;
+	}
+
+	/**
+	 * Sorts files by last modified time.
+	 */
+	public FindFile sortByTime() {
+		addComparator(new FileLastModifiedTimeComparator(true));
+		return this;
+	}
+
+	/**
+	 * Sorts files by last modified time descending.
+	 */
+	public FindFile sortByTimeDesc() {
+		addComparator(new FileLastModifiedTimeComparator(false));
+		return this;
+	}
+
+	// ---------------------------------------------------------------- comparators
+
+	public static class FolderFirstComparator implements Comparator<File> {
+
+		protected final int order;
+
+		public FolderFirstComparator(boolean foldersFirst) {
+			if (foldersFirst) {
+				order = 1;
+			} else {
+				order = -1;
+			}
+		}
+
+		public int compare(File file1, File file2) {
+			if (file1.isFile() && file2.isDirectory()) {
+				return order;
+			}
+			if (file1.isDirectory() && file2.isFile()) {
+				return -order;
+			}
+			return 0;
+		}
+	}
+
+	public static class FileNameComparator implements Comparator<File> {
+
+		protected final int order;
+
+		public FileNameComparator(boolean ascending) {
+			if (ascending) {
+				order = 1;
+			} else {
+				order = -1;
+			}
+		}
+
+		public int compare(File file1, File file2) {
+			long diff = file1.getName().compareToIgnoreCase(file2.getName());
+			if (diff == 0) {
+				return 0;
+			}
+			if (diff > 0) {
+				return order;
+			}
+			return -order;
+		}
+	}
+
+	public static class FileLastModifiedTimeComparator implements Comparator<File> {
+
+		protected final int order;
+
+		public FileLastModifiedTimeComparator(boolean ascending) {
+			if (ascending) {
+				order = 1;
+			} else {
+				order = -1;
+			}
+		}
+
+		public int compare(File file1, File file2) {
+			long diff = file1.lastModified() - file2.lastModified();
+			if (diff == 0) {
+				return 0;
+			}
+			if (diff > 0) {
+				return order;
+			}
+			return -order;
+		}
 	}
 }

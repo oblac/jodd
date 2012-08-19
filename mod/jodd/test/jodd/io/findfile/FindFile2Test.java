@@ -190,4 +190,60 @@ public class FindFile2Test extends TestCase {
 
 	}
 
+
+	public void testSort() {
+		final StringBuilder str = new StringBuilder();
+
+		FindFile ff = new FindFile();
+		ff.setIncludeDirs(true);
+		ff.setIncludeFiles(true);
+		ff.setRecursive(false);
+		ff.sortByName();
+		ff.searchPath(dataRoot);
+
+		File f;
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("alpha.txt | beta | jodd1.txt | jodd10.txt | sumo | zero.txt | ", str.toString());
+
+		ff.reset();
+		ff.sortNone();
+		ff.sortByNameDesc();
+		str.setLength(0);
+
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("zero.txt | sumo | jodd10.txt | jodd1.txt | beta | alpha.txt | ", str.toString());
+
+		ff.reset();
+		ff.sortNone();
+		ff.sortFoldersFirst();
+		ff.sortByName();
+		str.setLength(0);
+
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("beta | sumo | alpha.txt | jodd1.txt | jodd10.txt | zero.txt | ", str.toString());
+
+		ff.reset();
+		ff.sortNone();
+		ff.sortFoldersLast();
+		ff.sortByName();
+		str.setLength(0);
+
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("alpha.txt | jodd1.txt | jodd10.txt | zero.txt | beta | sumo | ", str.toString());
+
+	}
+
+
 }
