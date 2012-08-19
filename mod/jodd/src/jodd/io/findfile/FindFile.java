@@ -4,6 +4,7 @@ package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
 import jodd.util.MultipleComparator;
+import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
 import jodd.io.FileUtil;
 
@@ -603,7 +604,7 @@ public class FindFile {
 	}
 
 	/**
-	 * Sorts files by file name.
+	 * Sorts files by file name, using <b>natural</b> sort.
 	 */
 	public FindFile sortByName() {
 		addComparator(new FileNameComparator(true));
@@ -611,7 +612,7 @@ public class FindFile {
 	}
 
 	/**
-	 * Sorts files by file names descending.
+	 * Sorts files by file names descending, using <b>natural</b> sort.
 	 */
 	public FindFile sortByNameDesc() {
 		addComparator(new FileNameComparator(false));
@@ -678,6 +679,7 @@ public class FindFile {
 	public static class FileNameComparator implements Comparator<File> {
 
 		protected final int order;
+		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<String>(true);
 
 		public FileNameComparator(boolean ascending) {
 			if (ascending) {
@@ -688,11 +690,11 @@ public class FindFile {
 		}
 
 		public int compare(File file1, File file2) {
-			long diff = file1.getName().compareToIgnoreCase(file2.getName());
-			if (diff == 0) {
-				return 0;
+			int result = naturalOrderComparator.compare(file1.getName(), file2.getName());
+			if (result == 0) {
+				return result;
 			}
-			if (diff > 0) {
+			if (result > 0) {
 				return order;
 			}
 			return -order;
