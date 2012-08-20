@@ -1,0 +1,20 @@
+﻿Subcommander utf test file:
+
+abcdefghijklmnopqrstuvwxyz
+
+öüäÖÜÄ
+
+^°
+
+`´
+
+!"§$%&/()=?
+
+²³{[]}\
+
+~
+
+€@
+
+*
+
