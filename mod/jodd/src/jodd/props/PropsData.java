@@ -7,7 +7,6 @@ import jodd.util.StringTemplateParser;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Props data storage for base and profile properties.
@@ -224,16 +223,15 @@ public class PropsData implements Cloneable {
 	// ---------------------------------------------------------------- extract
 
 	/**
-	 * Extract props as <code>Properties</code>.
+	 * Extract props to target map.
 	 */
-	public Properties extractProperties(String... profiles) {
-		Properties properties = new Properties();
+	public void extract(Map<String, String> target, String... profiles) {
 		if (profiles != null) {
 			for (String profile : profiles) {
 				while (true) {
 					Map<String, PropsValue> map  = this.profiles.get(profile);
 					if (map != null) {
-						extract(properties, map);
+						extract(target, map);
 					}
 
 					int ndx = profile.indexOf('.');
@@ -244,16 +242,14 @@ public class PropsData implements Cloneable {
 				}
 			}
 		}
-		extract(properties, this.properties);
-		return properties;
+		extract(target, this.properties);
 	}
 
-	protected void extract(Properties properties, Map<String, PropsValue> map) {
+	protected void extract(Map<String, String> target, Map<String, PropsValue> map) {
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			String key = entry.getKey();
-			String existingValue = properties.getProperty(key);
-			if (existingValue == null) {
-				properties.setProperty(key, entry.getValue().getValue());
+			if (!target.containsKey(key)) {
+				target.put(key, entry.getValue().getValue());
 			}
 		}
 	}

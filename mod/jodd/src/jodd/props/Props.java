@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -340,9 +341,37 @@ s	 */
 	/**
 	 * Extract props to properties.
 	 */
+	@SuppressWarnings("unchecked")
 	public Properties extractProperties(String... profiles) {
 		initialize();
-		return data.extractProperties(profiles);
+		Properties properties = new Properties();
+		data.extract((Map)properties, profiles);
+		return properties;
+	}
+
+	/**
+	 * Extract base props to map.
+	 */
+	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
+	public Map<String, String> extractBaseMap() {
+		return extractMap(null);
+	}
+
+	/**
+	 * Extracts map belonging to active profiles.
+s	 */
+	public Map<String, String> extractMap() {
+		return extractMap(activeProfiles);
+	}
+
+	/**
+	 * Extract props to map.
+	 */
+	public Map<String, String> extractMap(String... profiles) {
+		initialize();
+		Map<String, String> map = new HashMap<String, String>();
+		data.extract(map, profiles);
+		return map;
 	}
 
 	// ---------------------------------------------------------------- initialize
