@@ -3,6 +3,7 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.FastSort;
 import jodd.util.MultipleComparator;
 import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
@@ -10,7 +11,6 @@ import jodd.io.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -235,7 +235,7 @@ public class FindFile {
 				this.files = folder.listFiles();
 
 				if ((sortComparators != null) && (this.files != null)) {
-					Arrays.sort(this.files, new MultipleComparator<File>(sortComparators));
+					FastSort.sort(this.files, new MultipleComparator<File>(sortComparators));
 				}
 
 				this.fileNames = null;
