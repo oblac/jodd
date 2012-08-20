@@ -5,7 +5,7 @@ package jodd.db.oom;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
-import jodd.util.sort.FastMergeSort;
+import jodd.util.FastSort;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -115,7 +115,7 @@ public class DbEntityDescriptor {
 			throw new DbOomException("Entity '" + type + "' doesn't have any column mappings.");
 		}
 		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
-		FastMergeSort.doSort(columnDescriptors);
+		FastSort.sort(columnDescriptors);
 
 		// extract ids from sorted list
 		if (idcount > 0) {
