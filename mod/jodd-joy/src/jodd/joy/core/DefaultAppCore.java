@@ -276,6 +276,13 @@ public abstract class DefaultAppCore {
 	protected AppScanner appScanner;
 
 	/**
+	 * Returns app scanner.
+	 */
+	public AppScanner getAppScanner() {
+		return appScanner;
+	}
+
+	/**
 	 * Creates {@link AppScanner}.
 	 */
 	protected void initScanning() {

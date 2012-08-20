@@ -79,7 +79,7 @@ public abstract class DefaultWebApplication extends PetiteWebApplication {
 	public void configure(MadvocConfigurator configurator) {
 		if (configurator instanceof AutomagicMadvocConfigurator) {
 			AutomagicMadvocConfigurator madvocConfigurator = (AutomagicMadvocConfigurator) configurator;
-			defaultAppCore.configureScanner(madvocConfigurator);
+			defaultAppCore.getAppScanner().configure(madvocConfigurator);
 		}
 		super.configure(configurator);
 	}
