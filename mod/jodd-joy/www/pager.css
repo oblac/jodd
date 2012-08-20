@@ -1,0 +1,48 @@
+
+/* buttons */
+.pagerBar .nav 					{ background: url(/gfx/page/nav.png) no-repeat; width:24px; height:20px; float:left;}
+.pagerBar .btnFirstPage 		{ background-position: 0 -22px;  cursor: default; }
+.pagerBar .btnFirstPageActive	{ background-position: 0 -2px;   cursor: pointer; }
+.pagerBar .btnPreviousPage 		{ background-position: 0 -142px; cursor: default; }
+.pagerBar .btnPreviousPageActive { background-position: 0 -122px; cursor: pointer;}
+.pagerBar .btnNextPage 			{ background-position: 0 -102px; cursor: default; }
+.pagerBar .btnNextPageActive 	{ background-position: 0 -82px;  cursor: pointer;}
+.pagerBar .btnLastPage 			{ background-position: 0 -62px;  cursor: default; }
+.pagerBar .btnLastPageActive 	{ background-position: 0 -42px;  cursor: pointer; }
+
+.pagerBar .btnSplit 			{ background: url(/gfx/page/split.gif) no-repeat; cursor: default; width:6px; height:20px; float:left;}
+.pagerBar .btnAdd 				{ background-position: 0 -162px; cursor: pointer;}
+.pagerBar .btnFilter 			{ background-position: 0 -182px; cursor: pointer;}
+
+
+/* tables */
+table.pagerBorder					{ border: 1px solid #bbb;}
+
+table.pagerTable 					{ font-family: Tahoma,sans-serif; font-size:1em; table-layout:fixed;}
+table.pagerTable thead td			{ font-weight: bold; color: #F1EDF2; background-color:#E38D72; border: 1px solid white; padding:5px; font-variant:small-caps;}
+table.pagerTable thead td.sort		{ cursor: pointer; color: white;}
+table.pagerTable thead td.sort_asc	{ background: #E38D72 url(/gfx/page/sort_up.png) no-repeat right top;}
+table.pagerTable thead td.sort_desc	{ background: #E38D72 url(/gfx/page/sort_down.png) no-repeat right bottom; }
+
+table.pagerTable tbody td		 		{ padding: 7px 5px 7px 5px; vertical-align:middle; border: 1px solid white; }
+table.pagerTable tbody td.nodata 		{ background-color: #F9F9F9;}
+table.pagerTable tbody tr.row0	 		{ background-color: #FFFFFF;}
+table.pagerTable tbody tr.row1	 		{ background-color: #FBF1ED;}
+table.pagerTable tbody tr.row:hover		{ background-color:#FFFAE9;}
+table.pagerTable tbody tr.row td:hover	{ background-color:#FFF3C0;}
+
+table.pagerTable tbody div.emptyRow		{height:19px;}
+
+/* other */
+table.pagerTable tr.pagerBar 			{ background-color: #F0EBE9;}
+table.pagerTable tr.pagerBar td			{ padding:0; margin:0;}
+.pagerBarCtx					{padding: 8px 0 4px 14px; border-top: 1px solid #CCC;}
+.pagerBarCtx div.pagerLinks		{ float:left; margin-left:20px;}
+.pagerBarCtx div.pagerLinks	span	{ padding:6px; font-weight: bold; font-size: 14px;}
+.pagerBarCtx div.pagerLinks	a	{ color: #666; font-weight: normal;}
+.pagerBarCtx div.pagerReport	{ font-family: Tahoma,sans-serif; font-size:0.7em; padding-right:6px; padding-top:3px; text-align:right; float:right; color:#555; }
+.pagerBarCtx div.pagerTitle 	{ font-size: 1.1em; font-variant:small-caps; letter-spacing:2px; padding:4px;}
+
+.pagerBarCtx ul					{list-style-type: none; padding:0; float:left;}
+.pagerBarCtx ul li				{margin:0; float:left;}
+.pagerBarCtx ul li a			{color: #eee; display: block; text-decoration: none; padding: 10px;}

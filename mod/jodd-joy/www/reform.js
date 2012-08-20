@@ -1,5 +1,5 @@
 /**
- * Re:Form - Jodd form tool.
+ * Re:Form - Jodd Joy form tool.
  *
  * Features:
  * + live ajax validation
@@ -23,8 +23,6 @@ ReForm.prototype.defaults = {
 	errorClass:						'error',			// name of error class
 	errorMsgClass:					'error_msg'			// name of error message class
 };
-
-ReForm.defaults = ReForm.prototype.defaults;
 
 function ReForm(formid, options) {
 
@@ -168,7 +166,6 @@ ReForm.prototype.validateForm = function(onlyVisited, onValidCallback) {
 	var _this = this;
 	var options = {
 		iframe:		false,
-		dataType:	'text',
 		url:		_this.opts.validationUrl,
 		success:	function(response) {
 						if (_this.activateErrors(response, onlyVisited) === false) {
@@ -217,8 +214,7 @@ ReForm.prototype._submitFormNow = function(_this) {
 	submitData[this.opts.usedFieldsParamName] = _this.allFields;
 	var options = {
 		data:	submitData,
-		dataType: 'html',
-		iframe: false,
+		dataType: 'text',
 		success:
 				function(responseText) {
 					if (responseText.startsWith('[{')) {

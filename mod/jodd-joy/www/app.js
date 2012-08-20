@@ -1,4 +1,3 @@
-
 /**
  * Redirects to some page.
  */
@@ -81,7 +80,7 @@ $(document).ajaxError(function(event, xhr, settings) {
  */
 var pwt;
 function pleaseWait(show) {
-	if (show === false) {
+	if (!show) {
 		if (pwt != undefined) {
 			clearTimer(pwt);
 			pwt = undefined;
