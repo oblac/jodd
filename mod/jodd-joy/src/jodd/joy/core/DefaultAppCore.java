@@ -8,7 +8,6 @@ import jodd.db.connection.ConnectionProvider;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.config.AutomagicDbOomConfigurator;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.io.findfile.ClassFinder;
 import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
@@ -30,7 +29,6 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
-import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 
@@ -144,6 +142,7 @@ public abstract class DefaultAppCore {
 	 */
 	protected void initLogger() {
 		log = Log.getLogger(DefaultAppCore.class);
+		log.info("app dir: " + appDir);
 	}
 
 	/**
@@ -181,7 +180,6 @@ public abstract class DefaultAppCore {
 	 * Callback when core initialization is done.
 	 */
 	protected void ready() {
-		log.info("app dir: " + appDir);
 	}
 
 	// ---------------------------------------------------------------- start
@@ -275,74 +273,15 @@ public abstract class DefaultAppCore {
 
 	// ---------------------------------------------------------------- scanning
 
-	/**
-	 * Scanning entries that will be examined by various
-	 * Jodd auto-magic tools.
-	 */
-	protected String[] scanIncludedEntries;
+	protected AppScanner appScanner;
 
 	/**
-	 * Scanning jars.
-	 */
-	protected String[] scanIncludedJars;
-
-	/**
-	 * Should scanning ignore the exception.
-	 */
-	protected boolean scanIgnoreExceptions;
-
-	/**
-	 * Defines entries that will be included in the scanning process,
-	 * when configuring Jodd frameworks. By default, scanning entries includes
-	 * all classes that belongs to the project and to the jodd.
+	 * Creates {@link AppScanner}.
 	 */
 	protected void initScanning() {
-
-		// scan included entries
-		String value = appProps.getValue("app-scan.includedEntries");
-
-		if (value == null) {
-			scanIncludedEntries = new String[] {
-					this.getClass().getPackage().getName() + ".*",
-					"jodd.*"
-			};
-		} else {
-			scanIncludedEntries = Convert.toStringArray(value);
-		}
-
-		// scan included jars
-		value = appProps.getValue("app-scan.includedJars");
-
-		if (value == null) {
-			scanIncludedJars = null;
-		} else {
-			scanIncludedJars = Convert.toStringArray(value);
-		}
-
-		// scan ignore exceptions
-		value = appProps.getValue("app-scan.ignoreExceptions");
-
-		if (value == null) {
-			scanIgnoreExceptions = false;
-		} else {
-			scanIgnoreExceptions = Convert.toBooleanValue(value);
-		}
+		appScanner = new AppScanner(this);
+		appScanner.init();
 	}
-
-	/**
-	 * Configures scanner class finder. Works for all three scanners:
-	 * Petite, DbOom and Madvoc.
-	 */
-	protected void configureScanner(ClassFinder classFinder) {
-		if (scanIncludedEntries != null) {
-			classFinder.setIncludedEntries(scanIncludedEntries);
-		}
-		if (scanIncludedJars != null) {
-			classFinder.setIncludedJars(scanIncludedJars);
-		}
-		classFinder.setIgnoreException(scanIgnoreExceptions);
-	}
-
 
 	// ---------------------------------------------------------------- proxetta
 
@@ -426,7 +365,7 @@ public abstract class DefaultAppCore {
 
 		// automagic configuration
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-		configureScanner(pcfg);
+		appScanner.configure(pcfg);
 		pcfg.configure(petite);
 
 		// load parameters from properties files
@@ -518,7 +457,7 @@ public abstract class DefaultAppCore {
 
 		// automatic configuration
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
-		configureScanner(dbcfg);
+		appScanner.configure(dbcfg);
 		dbcfg.configure(dbOomManager);
 	}
 
