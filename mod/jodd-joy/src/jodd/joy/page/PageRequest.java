@@ -11,6 +11,7 @@ public class PageRequest {
 
 	protected int page = 1;
 	protected int size = defaultPageSize;
+	protected String pagerId;
 
 	public PageRequest() {
 	}
@@ -51,6 +52,19 @@ public class PageRequest {
 		this.size = size;
 	}
 
+	/**
+	 * Returns pager id.
+	 */
+	public String getPagerId() {
+		return pagerId;
+	}
+
+	/**
+	 * Returns pager id.
+	 */
+	public void setPagerId(String pagerId) {
+		this.pagerId = pagerId;
+	}
 
 	/**
 	 * Calculates offset.
