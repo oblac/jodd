@@ -11,6 +11,7 @@ import java.net.URL;
 public class FileUtilTest extends TestCase {
 
 	protected String dataRoot;
+	protected String utfdataRoot;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -20,6 +21,8 @@ public class FileUtilTest extends TestCase {
 		}
 		URL data = FileUtilTest.class.getResource("data");
 		dataRoot = data.getFile();
+		data = FileUtilTest.class.getResource("utf");
+		utfdataRoot = data.getFile();
 	}
 
 	public void testFileManipulation() {
@@ -207,5 +210,27 @@ public class FileUtilTest extends TestCase {
 			fail(ioex.toString());
 		}
 
+	}
+
+	public void testUTFReads() throws IOException {
+		String content = FileUtil.readUTFString(new File(utfdataRoot, "utf-8.txt"));
+
+		String content8 = FileUtil.readString(new File(utfdataRoot, "utf-8.txt"), "UTF-8");
+		assertEquals(content, content8);
+
+		String content1 = FileUtil.readUTFString(new File(utfdataRoot, "utf-16be.txt"));
+		assertEquals(content, content1);
+
+		String content16 = FileUtil.readString(new File(utfdataRoot, "utf-16be.txt"), "UTF-16BE");
+		assertEquals(content, content16);
+
+		String content162 = FileUtil.readString(new File(utfdataRoot, "utf-16be.txt"), "UTF-16");
+		assertEquals(content, content162);
+
+		String content2 = FileUtil.readUTFString(new File(utfdataRoot, "utf-16le.txt"));
+		assertEquals(content, content2);
+
+		String content163 = FileUtil.readString(new File(utfdataRoot, "utf-16le.txt"), "UTF-16LE");
+		assertEquals(content, content163);
 	}
 }

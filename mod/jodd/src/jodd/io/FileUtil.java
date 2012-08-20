@@ -599,6 +599,37 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- read/write chars
 
+	public static char[] readUTFChars(String fileName) throws IOException {
+		return readUTFChars(new File(fileName));
+	}
+
+	/**
+	 * Reads UTF file content as char array.
+	 * @see UnicodeInputStream
+	 */
+	public static char[] readUTFChars(File file) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
+		}
+		if (file.isFile() == false) {
+			throw new IOException(MSG_NOT_A_FILE + file);
+		}
+		long len = file.length();
+		if (len >= Integer.MAX_VALUE) {
+			len = Integer.MAX_VALUE;
+		}
+		UnicodeInputStream in = null;
+		try {
+			in = new UnicodeInputStream(new FileInputStream(file), null);
+			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
+			String encoding = in.getDetectedEncoding();
+			StreamUtil.copy(in, fastCharArrayWriter, encoding);
+			return fastCharArrayWriter.toCharArray();
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
 	public static char[] readChars(String fileName) throws IOException {
 		return readChars(new File(fileName), defaultParams.encoding);
 	}
@@ -625,9 +656,13 @@ public class FileUtil {
 		if (len >= Integer.MAX_VALUE) {
 			len = Integer.MAX_VALUE;
 		}
-		FileInputStream in = null;
+
+		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
+			if (encoding.startsWith("UTF")) {
+				in = new UnicodeInputStream(in, encoding);
+			}
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
 			StreamUtil.copy(in, fastCharArrayWriter, encoding);
 			return fastCharArrayWriter.toCharArray();
@@ -668,6 +703,38 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- read/write string
 
+	public static String readUTFString(String fileName) throws IOException {
+		return readUTFString(new File(fileName));
+	}
+
+	/**
+	 * Detects optional BOM and reads UTF string from a file.
+	 * If BOM is missing, UTF-8 is assumed.
+	 * @see UnicodeInputStream
+	 */
+	public static String readUTFString(File file) throws IOException {
+		if (file.exists() == false) {
+			throw new FileNotFoundException(MSG_NOT_FOUND + file);
+		}
+		if (file.isFile() == false) {
+			throw new IOException(MSG_NOT_A_FILE + file);
+		}
+		long len = file.length();
+		if (len >= Integer.MAX_VALUE) {
+			len = Integer.MAX_VALUE;
+		}
+		UnicodeInputStream in = null;
+		try {
+			in = new UnicodeInputStream(new FileInputStream(file), null);
+			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
+			String encoding = in.getDetectedEncoding();
+			StreamUtil.copy(in, out, encoding);
+			return out.toString();
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
 
 	public static String readString(String source) throws IOException {
 		return readString(new File(source), defaultParams.encoding);
@@ -682,7 +749,8 @@ public class FileUtil {
 	}
 
 	/**
-	 * Reads file content as string.
+	 * Reads file content as string encoded in provided encoding.
+	 * For UTF encoded files, detects optional BOM characters.
 	 */
 	public static String readString(File file, String encoding) throws IOException {
 		if (file.exists() == false) {
@@ -695,9 +763,12 @@ public class FileUtil {
 		if (len >= Integer.MAX_VALUE) {
 			len = Integer.MAX_VALUE;
 		}
-		FileInputStream in = null;
+		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
+			if (encoding.startsWith("UTF")) {
+				in = new UnicodeInputStream(in, encoding);
+			}
 			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
 			StreamUtil.copy(in, out, encoding);
 			return out.toString();
@@ -803,9 +874,13 @@ public class FileUtil {
 			throw new IOException(MSG_NOT_A_FILE + file);
 		}
 		List<String> list = new ArrayList<String>();
-		FileInputStream in = null;
+
+		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
+			if (encoding.startsWith("UTF")) {
+				in = new UnicodeInputStream(in, encoding);
+			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(in, encoding));
 			String strLine;
 			while ((strLine = br.readLine()) != null)   {
