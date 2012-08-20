@@ -8,6 +8,7 @@ import static jodd.db.oom.sqlgen.DbEntitySql.updateAll;
 import static jodd.db.oom.sqlgen.DbEntitySql.findByColumn;
 import static jodd.db.oom.DbOomQuery.query;
 import jodd.db.DbQuery;
+import jodd.log.Log;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
 
@@ -19,12 +20,18 @@ import java.util.List;
 @PetiteBean
 public class AppDao {
 
+	private static final Log log = Log.getLogger(AppDao.class);
+
 	@PetiteInject
 	DbIdGenerator dbIdGenerator;
 
+	public AppDao() {
+		setAutogeneratePrimaryKey(true);
+	}
+
 	// ---------------------------------------------------------------- config
 
-	protected boolean autogeneratePrimaryKey = true;
+	protected boolean autogeneratePrimaryKey;
 
 	/**
 	 * Returns <code>true</code> if primary keys should be auto-generated.
@@ -38,6 +45,13 @@ public class AppDao {
 	 */
 	public void setAutogeneratePrimaryKey(boolean autogeneratePrimaryKey) {
 		this.autogeneratePrimaryKey = autogeneratePrimaryKey;
+		if (log.isDebugEnabled()) {
+			if (autogeneratePrimaryKey) {
+				log.debug("IDs are automatically incremented by database");
+			} else {
+				log.debug("IDs are generated");
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------- store
@@ -45,7 +59,6 @@ public class AppDao {
 	/**
 	 * Saves or updates entity. If ID is not <code>null</code>, entity will be updated.
 	 * Otherwise, entity will be inserted into the database.
-	 * todo add support for different strategies when autogeneretedKey == false
 	 */
 	public <E extends Entity> E store(E entity) {
 		if (entity.isPersistent() == false) {
