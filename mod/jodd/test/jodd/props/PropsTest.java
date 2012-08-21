@@ -36,8 +36,8 @@ public class PropsTest extends TestCase {
 
 		assertNull(p.getValue("non existing"));
 
-
-		Properties prop = p.extractBaseProperties();
+		Properties prop = new Properties();
+		p.extractBaseProps(prop);
 		assertEquals("1937{c}", prop.getProperty("year"));
 		assertEquals("49.5", prop.getProperty("doc.weight"));
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
@@ -76,27 +76,43 @@ public class PropsTest extends TestCase {
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy", "develop"));
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy"));
 
-		Properties prop = p.extractBaseProperties();
+		Properties prop = new Properties();
+		p.extractBaseProps(prop);
 		assertEquals("one", prop.getProperty("foo"));
 
-		prop = p.extractProperties("non_existing");
+		prop.clear();
+		p.extractProps(prop, "non_existing");
 		assertEquals("one", prop.getProperty("foo"));
 
-		prop = p.extractProperties("aaa");
+		prop.clear();
+		p.extractProps(prop, "aaa");
 		assertEquals("12345", prop.getProperty("vitamine"));
 
-		prop = p.extractProperties("develop");
+		prop.clear();
+		p.extractProps(prop, "develop");
 		assertEquals("localhost", prop.getProperty("db.url"));
 		assertEquals("one", prop.getProperty("foo"));
-		prop = p.extractProperties("develop", "deploy");
+
+		prop.clear();
+		p.extractProps(prop, "develop", "deploy");
 		assertEquals("localhost", prop.getProperty("db.url"));
 		assertEquals("one", prop.getProperty("foo"));
-		prop = p.extractProperties("deploy", "develop");
+
+		prop.clear();
+		p.extractProps(prop, "deploy", "develop");
 		assertEquals("192.168.1.102", prop.getProperty("db.url"));
 		assertEquals("one", prop.getProperty("foo"));
-		prop = p.extractProperties("deploy");
+
+		prop.clear();
+		p.extractProps(prop, "deploy");
 		assertEquals("192.168.1.102", prop.getProperty("db.url"));
 		assertEquals("one", prop.getProperty("foo"));
+
+		prop.clear();
+		p.setActiveProfiles("deploy");
+		p.extractSubProps(prop, "db.*");
+		assertEquals(2, prop.size());
+
 	}
 
 	public void testNestedProfiles() throws IOException {
@@ -112,16 +128,19 @@ public class PropsTest extends TestCase {
 		assertEquals("Grazias", p.getValue("key3", "one.two"));
 		assertEquals("Grazias", p.getValue("key3", "one"));
 
-		Properties prop = p.extractProperties();
+		Properties prop = new Properties();
+		p.extractProps(prop);
 		assertEquals(3, prop.size());
 		assertEquals("hello", prop.getProperty("key1"));
 
-		prop = p.extractProperties("one");
+		prop.clear();
+		p.extractProps(prop, "one");
 		assertEquals(3 + 1, prop.size());
 		assertEquals("Hi!", prop.getProperty("key1"));
 		assertEquals("Grazias", prop.getProperty("key3"));
 
-		prop = p.extractProperties("one.two");
+		prop.clear();
+		p.extractProps(prop, "one.two");
 		assertEquals(3 + 2, prop.size());
 		assertEquals("Hola!", prop.getProperty("key1"));
 		assertEquals("world", prop.getProperty("key2"));
@@ -139,8 +158,8 @@ public class PropsTest extends TestCase {
 		assertEquals("/roo/re", p.getValue("data.path", "@p1"));
 		assertEquals("/app/re", p.getValue("data.path", "@p2"));
 
-
-		Properties prop = p.extractProperties("@prof2");
+		Properties prop = new Properties();
+		p.extractProps(prop, "@prof2");
 		assertEquals("/foo/data3", prop.getProperty("data.path"));
 	}
 
@@ -184,6 +203,9 @@ public class PropsTest extends TestCase {
 		assertEquals("hello", p.getBaseValue("key1"));
 		assertEquals("Hola!", p.getValue("key1"));
 		assertEquals("world", p.getValue("key2"));
+
+		assertEquals(1, p.getActiveProfiles().length);
+		assertEquals("one.two", p.getActiveProfiles()[0]);
 	}
 
 	public void testProperties() throws IOException {
@@ -289,6 +311,5 @@ public class PropsTest extends TestCase {
 		Props p = new Props();
 		return loadProps(p, fileName);
 	}
-
 
 }

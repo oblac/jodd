@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -85,6 +84,22 @@ public class Props implements Cloneable {
 		p.activeProfilesProp = activeProfilesProp;
 
 		return p;
+	}
+
+	/**
+	 * Returns active profiles or <code>null</code> if none defined.
+	 */
+	public String[] getActiveProfiles() {
+		initialize();
+		return activeProfiles;
+	}
+
+	/**
+	 * Overrides active profiles.
+	 */
+	public void setActiveProfiles(String... activeProfiles) {
+		initialize();
+		this.activeProfiles = activeProfiles;
 	}
 
 	// ---------------------------------------------------------------- configuration
@@ -324,55 +339,42 @@ public class Props implements Cloneable {
 	// ---------------------------------------------------------------- extract
 
 	/**
-	 * Extract base props to properties.
+	 * Extract base props (no profiles).
 	 */
-	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
-	public Properties extractBaseProperties() {
-		return extractProperties(null);
+	public void extractBaseProps(Map target) {
+		extractProps(target, null);
 	}
 
 	/**
-	 * Extracts properties belonging to active profiles.
-s	 */
-	public Properties extractProperties() {
-		return extractProperties(activeProfiles);
+	 * Extracts props belonging to active profiles.
+	 */
+	public void extractProps(Map target) {
+		extractProps(target, activeProfiles);
 	}
 
 	/**
-	 * Extract props to properties.
+	 * Extract props of given profiles.
 	 */
-	@SuppressWarnings("unchecked")
-	public Properties extractProperties(String... profiles) {
+	public void extractProps(Map target, String... profiles) {
 		initialize();
-		Properties properties = new Properties();
-		data.extract((Map)properties, profiles);
-		return properties;
+		data.extract(target, profiles, null);
 	}
 
-	/**
-	 * Extract base props to map.
-	 */
-	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
-	public Map<String, String> extractBaseMap() {
-		return extractMap(null);
-	}
-
-	/**
-	 * Extracts map belonging to active profiles.
-s	 */
-	public Map<String, String> extractMap() {
-		return extractMap(activeProfiles);
-	}
-
-	/**
-	 * Extract props to map.
-	 */
-	public Map<String, String> extractMap(String... profiles) {
+	public void extractBaseSubProps(Map target, String... wildcardPatterns) {
 		initialize();
-		Map<String, String> map = new HashMap<String, String>();
-		data.extract(map, profiles);
-		return map;
+		data.extract(target, null, wildcardPatterns);
 	}
+
+	public void extractSubProps(Map target, String... wildcardPatterns) {
+		initialize();
+		data.extract(target, activeProfiles, wildcardPatterns);
+	}
+
+	public void extractSubProps(Map target, String[] profiles, String[] wildcardPatterns) {
+		initialize();
+		data.extract(target, profiles, wildcardPatterns);
+	}
+
 
 	// ---------------------------------------------------------------- initialize
 

@@ -5,6 +5,7 @@ package jodd.petite;
 import jodd.petite.scope.Scope;
 import jodd.props.Props;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
@@ -228,8 +229,8 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	/**
 	 * Defines many parameters at once. 
 	 */
-	public void defineParameters(Map<Object, Object> properties) {
-		for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+	public void defineParameters(Map<?, ?> properties) {
+		for (Map.Entry<?, ?> entry : properties.entrySet()) {
 			defineParameter(entry.getKey().toString(), entry.getValue());
 		}
 	}
@@ -238,7 +239,9 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	 * Defines many parameters at once from {@link Props}.
 	 */
 	public void defineParameters(Props props) {
-		defineParameters(props.extractProperties());
+		Map<?, ?> map = new HashMap<Object, Object>();
+		props.extractProps(map);
+		defineParameters(map);
 	}
 
 }

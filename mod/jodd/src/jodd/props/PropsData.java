@@ -3,6 +3,7 @@
 package jodd.props;
 
 import jodd.util.StringTemplateParser;
+import jodd.util.Wildcard;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -225,13 +226,13 @@ public class PropsData implements Cloneable {
 	/**
 	 * Extract props to target map.
 	 */
-	public void extract(Map<String, String> target, String... profiles) {
+	public void extract(Map target, String[] profiles, String[] wildcardPatterns) {
 		if (profiles != null) {
 			for (String profile : profiles) {
 				while (true) {
 					Map<String, PropsValue> map  = this.profiles.get(profile);
 					if (map != null) {
-						extract(target, map);
+						extractMap(target, map, wildcardPatterns);
 					}
 
 					int ndx = profile.indexOf('.');
@@ -242,12 +243,20 @@ public class PropsData implements Cloneable {
 				}
 			}
 		}
-		extract(target, this.properties);
+		extractMap(target, this.properties, wildcardPatterns);
 	}
 
-	protected void extract(Map<String, String> target, Map<String, PropsValue> map) {
+	@SuppressWarnings("unchecked")
+	protected void extractMap(Map target, Map<String, PropsValue> map, String[] wildcardPatterns) {
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
 			String key = entry.getKey();
+
+			if (wildcardPatterns != null) {
+				if (Wildcard.matchOne(key, wildcardPatterns) == -1) {
+					continue;
+				}
+			}
+
 			if (!target.containsKey(key)) {
 				target.put(key, entry.getValue().getValue());
 			}
