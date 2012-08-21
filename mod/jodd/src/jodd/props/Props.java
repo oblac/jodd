@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 
@@ -211,34 +210,14 @@ public class Props implements Cloneable {
 	 * Loads base properties from the provided java properties.
 	 * Null values are ignored.
 	 */
-	@SuppressWarnings({"unchecked"})
-	public void load(Properties p) {
-		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
-		while (names.hasMoreElements()) {
-			String name = names.nextElement();
-			String value = p.getProperty(name);
+	public void load(Map<?, ?> p) {
+		for (Map.Entry<?, ?> entry : p.entrySet()) {
+			String name = entry.getKey().toString();
+			Object value = entry.getValue();
 			if (value == null) {
 				continue;
 			}
-			data.putBaseProperty(name, p.getProperty(name));
-		}
-	}
-
-	/**
-	 * Loads base properties from java properties using provided prefix.
-	 * Null values are ignored.
-	 */
-	@SuppressWarnings("unchecked")
-	public void load(Properties p, String prefix) {
-		Enumeration<String> names = (Enumeration<String>) p.propertyNames();
-		prefix += '.';
-		while (names.hasMoreElements()) {
-			String name = names.nextElement();
-			String value = p.getProperty(name);
-			if (value == null) {
-				continue;
-			}
-			data.putBaseProperty(prefix + name, value);
+			data.putBaseProperty(name, value.toString());
 		}
 	}
 
