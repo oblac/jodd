@@ -13,7 +13,7 @@ public class DbIdGeneratorTest extends DbHsqldbTestCase {
 		ThreadDbSessionHolder.set(session);
 
 		AppDao appDao = new AppDao();
-		appDao.setAutogeneratePrimaryKey(false);
+		appDao.setGeneratedKeys(false);
 		appDao.dbIdGenerator = new DbIdGenerator();
 
 		Girl girl = new Girl();
