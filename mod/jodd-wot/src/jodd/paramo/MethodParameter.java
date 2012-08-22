@@ -4,7 +4,8 @@ package jodd.paramo;
 
 /**
  * Resolved method parameter from bytecode.
- * It consist of a name and a signature.
+ * It consist of parameter name and parameter bytecode signature
+ * (including generics info).
  */
 public class MethodParameter {
 
@@ -28,7 +29,7 @@ public class MethodParameter {
 
 	/**
 	 * Returns method parameter signature.
-	 * It works for both generic and non-generic types.
+	 * Generics information is available, too.
 	 */
 	public String getSignature() {
 		return signature;
