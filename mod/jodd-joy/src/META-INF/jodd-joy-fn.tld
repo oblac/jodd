@@ -11,13 +11,4 @@
 	<short-name>joddfn-joy</short-name>
 	<uri>/joddfn-joy</uri>
 
-	<function>
-		<description>
-			Initializes page.
-		</description>
-		<name>initPage</name>
-		<function-class>jodd.joy.jsp.JoddJoyJspFunctions</function-class>
-		<function-signature>void initPage(javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-
 </taglib>
