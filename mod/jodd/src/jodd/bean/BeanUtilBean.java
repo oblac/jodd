@@ -623,13 +623,13 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	// ---------------------------------------------------------------- utilities
 
-	private static char[] indexChars = new char[] {'.', '['};
+	private static final char[] INDEX_CHARS = new char[] {'.', '['};
 
 	/**
 	 * Extract the first name of this reference.
 	 */
 	public String extractThisReference(String propertyName) {
-		int ndx = StringUtil.indexOfChars(propertyName, indexChars);
+		int ndx = StringUtil.indexOfChars(propertyName, INDEX_CHARS);
 		if (ndx == -1) {
 			return propertyName;
 		}
