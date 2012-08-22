@@ -294,7 +294,8 @@ public class ObjectUtil {
 	}
 
 	/**
-	 * Returns true if first argument contains provided element.
+	 * Returns <code>true</code> if first argument contains provided element.
+	 * It works for strings, collections, maps and arrays.
 s	 */
 	public static boolean containsElement(Object obj, Object element) {
 		if (obj == null) {
@@ -304,7 +305,7 @@ s	 */
 			if (element == null) {
 				return false;
 			}
-			return ((String)obj).indexOf(element.toString()) != -1;
+			return ((String) obj).contains(element.toString());
 		}
 		if (obj instanceof Collection) {
 			return ((Collection) obj).contains(element);
