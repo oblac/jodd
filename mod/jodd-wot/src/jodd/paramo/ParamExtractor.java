@@ -31,6 +31,9 @@ final class ParamExtractor extends EmptyMethodVisitor {
 			if (name.equals("arg" + currentParam) == false) {
 				debugInfoPresent = true;
 			}
+			if (signature == null) {
+				signature = desc;
+			}
 			methodParameters[currentParam] = new MethodParameter(name, signature);
 			currentParam++;
 		}

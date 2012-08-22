@@ -119,9 +119,9 @@ public class ParamoTest extends TestCase {
 		MethodParameter[] mps = Paramo.resolveParameters(m);
 		assertEquals(2, mps.length);
 		assertEquals("foo", mps[0].getName());
-		assertNull(mps[0].getSignature());
+		assertEquals("Ljava/util/Map;", mps[0].getSignature());
 		assertEquals("aLong", mps[1].getName());
-		assertNull(mps[1].getSignature());
+		assertEquals("Ljava/lang/Long;", mps[1].getSignature());
 	}
 
 	public void testGeneric() {
@@ -131,7 +131,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("foo", mps[0].getName());
 		assertEquals("Ljava/util/Map<Ljava/lang/String;Ljava/lang/Long;>;", mps[0].getSignature());
 		assertEquals("aLong", mps[1].getName());
-		assertNull(mps[1].getSignature());
+		assertEquals("Ljava/lang/Long;", mps[1].getSignature());
 
 		m = ReflectUtil.findDeclaredMethod(Generic.class, "two");
 		mps = Paramo.resolveParameters(m);
