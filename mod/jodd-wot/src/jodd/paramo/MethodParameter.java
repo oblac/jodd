@@ -28,7 +28,7 @@ public class MethodParameter {
 
 	/**
 	 * Returns method parameter signature when parameter type uses generics.
-	 * May be <code>null</code> if the local variable type does not use generic types.
+	 * May be <code>null</code> if the type does not use generic types.
 	 */
 	public String getSignature() {
 		return signature;
