@@ -24,4 +24,11 @@ public class PageContextThreadLocal {
 	public static PageContext get() {
 		return THREAD_LOCAL.get();
 	}
+
+	/**
+	 * Clears thread local variable.
+	 */
+	public static void clear() {
+		THREAD_LOCAL.remove();
+	}
 }
