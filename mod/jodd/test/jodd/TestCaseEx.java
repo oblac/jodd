@@ -5,7 +5,7 @@ package jodd;
 import junit.framework.TestCase;
 
 /**
- * base JUnit test class with some additional asserts.
+ * Base JUnit test class with some additional asserts.
  */
 @SuppressWarnings("JUnitAbstractTestClassNamingConvention")
 public abstract class TestCaseEx extends TestCase {
