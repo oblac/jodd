@@ -51,7 +51,7 @@ public class CsrfShield {
 	}
 
 	public static String prepareCsrfToken() {
-		return prepareCsrfToken(PageContextThreadLocal.get());
+		return prepareCsrfToken(ServletUtil.getPageContextFromThread());
 	}
 
 	/**

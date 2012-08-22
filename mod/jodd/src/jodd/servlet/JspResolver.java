@@ -111,7 +111,7 @@ public class JspResolver {
 	}
 
 	public static Object resolveAttribute(String attributeName) {
-		return attribute(attributeName, PageContextThreadLocal.get());
+		return attribute(attributeName, ServletUtil.getPageContextFromThread());
 	}
 
 	// ---------------------------------------------------------------- tools

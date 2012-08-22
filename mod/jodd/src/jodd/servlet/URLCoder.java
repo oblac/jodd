@@ -42,7 +42,7 @@ public class URLCoder {
 	}
 
 	public static String url1(String value) {
-		return url(value, PageContextThreadLocal.get());
+		return url(value, ServletUtil.getPageContextFromThread());
 	}
 	public static String url(String value, PageContext pageContext) {
 		return url(value, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
