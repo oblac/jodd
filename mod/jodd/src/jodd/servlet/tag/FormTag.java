@@ -4,7 +4,7 @@ package jodd.servlet.tag;
 import jodd.servlet.HtmlEncoder;
 import jodd.servlet.HtmlFormUtil;
 import jodd.servlet.HtmlTag;
-import jodd.servlet.JspValueResolver;
+import jodd.servlet.JspResolver;
 import jodd.util.StringUtil;
 
 import javax.servlet.jsp.JspWriter;
@@ -65,11 +65,13 @@ public class FormTag extends BodyTagSupport {
 	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
 		JspWriter out = body.getEnclosingWriter();
+
 		String bodytext = populateForm(body.getString(), new FieldResolver() {
 			public Object value(String name) {
-				return JspValueResolver.resolveProperty(name, pageContext);
+				return JspResolver.value(name, pageContext);
 			}
 		});
+
 		try {
 			out.print(bodytext);
 		} catch (IOException ioex) {
