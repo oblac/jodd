@@ -10,6 +10,18 @@ import jodd.joy.page.DbPager;
 public class HsqlDbPager extends DbPager {
 
 	/**
+	 * Appends ORDER BY keyword.
+	 */
+	@Override
+	protected String buildOrderSql(String sql, String column, boolean ascending) {
+		sql += " order by " + column;
+		if (!ascending) {
+			sql += " desc";
+		}
+		return sql;
+	}
+
+	/**
 	 * Builds page sql using LIMIT keyword after the SELECT.
 	 */
 	@Override

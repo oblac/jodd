@@ -12,14 +12,7 @@ public class PageRequest {
 	protected int page = 1;
 	protected int size = defaultPageSize;
 	protected String pagerId;
-
-	public PageRequest() {
-	}
-
-	public PageRequest(int page, int size) {
-		this.page = page;
-		this.size = size;
-	}
+	protected int sort;
 
 	/**
 	 * Returns requested page number.
@@ -53,6 +46,20 @@ public class PageRequest {
 	}
 
 	/**
+	 * Returns sort index.
+	 * If <code>0</code>, nothing should be sorted.
+	 * Positive values represents ascending order,
+	 * negative values descending.
+	 */
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
+	/**
 	 * Returns pager id.
 	 */
 	public String getPagerId() {
@@ -78,6 +85,8 @@ public class PageRequest {
 		return "PageRequest{" +
 				"page=" + page +
 				", size=" + size +
+				", size=" + size +
+				", pagerId=" + pagerId +
 				'}';
 	}
 }

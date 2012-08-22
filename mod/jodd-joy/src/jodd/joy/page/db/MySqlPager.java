@@ -10,6 +10,18 @@ import jodd.joy.page.DbPager;
 public class MySqlPager extends DbPager {
 
 	/**
+	 * Appends ORDER BY keyword.
+	 */
+	@Override
+	protected String buildOrderSql(String sql, String column, boolean ascending) {
+		sql += " order by " + column;
+		if (!ascending) {
+			sql += " desc";
+		}
+		return sql;
+	}
+
+	/**
 	 * Builds page SQL using <code>limit</code> keyword.
 	 * Uses SQL_CALC_FOUND_ROWS for {@link #buildCountSql(String)}.
 	 */
