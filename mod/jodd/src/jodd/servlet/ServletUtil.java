@@ -101,7 +101,7 @@ public class ServletUtil {
 		resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
-	// ---------------------------------------------------------------- content disposition
+	// ---------------------------------------------------------------- download and content disposition
 
 	/**
 	 * Prepares response for file download. Mime type and size is resolved from the file.
@@ -212,7 +212,7 @@ public class ServletUtil {
 	}
 
 
-	// ---------------------------------------------------------------- request/session
+	// ---------------------------------------------------------------- context path
 
 	/**
 	 * Returns correct context path, as by Servlet definition. Different
@@ -254,45 +254,73 @@ public class ServletUtil {
 	}
 
 	/**
-	 * @see #getContextPath(javax.servlet.ServletContext)
+	 * Stores context path in server context and request scope.
 	 */
-	public static String getContextPath() {
-		return getContextPath(PageContextThreadLocal.get());
+	public static void storeContextPath(PageContext pageContext, String contextPathVariableName) {
+		String ctxPath = getContextPath(pageContext);
+
+		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		request.setAttribute(contextPathVariableName, ctxPath);
+
+		ServletContext servletContext = pageContext.getServletContext();
+		servletContext.setAttribute(contextPathVariableName, ctxPath);
 	}
 
 	/**
-	 * Returns HTTP request parameter as String or String[].
+	 * Stores context path in page context and request scope.
 	 */
-	public static Object getRequestParameter(ServletRequest request, String name) {
-		String[] values = request.getParameterValues(name);
-		if (values == null) {
-			return null;
-		}
-		if (values.length == 1) {
-			return values[0];
-		}
-		return values;
+	public static void storeContextPath(ServletContext servletContext, String contextPathVariableName) {
+		String ctxPath = getContextPath(servletContext);
+
+		servletContext.setAttribute(contextPathVariableName, ctxPath);
+	}
+
+	// ---------------------------------------------------------------- page context thread
+
+	/**
+	 * Stores page context in current thread.
+	 * @see PageContextThreadLocal
+	 */
+	public static void storePageContextInThread(PageContext pageContext) {
+		PageContextThreadLocal.set(pageContext);
+	}
+
+	/**
+	 * Returns {@link #storePageContextInThread(javax.servlet.jsp.PageContext) previously stored}
+	 * page context from the current thread.
+	 */
+	public static PageContext getPageContextFromThread() {
+		return PageContextThreadLocal.get();
+	}
+
+	/**
+	 * Returns context path using page context from current thread.
+	 * @see PageContextThreadLocal
+	 */
+	public static String getContextPath() {
+		PageContext pageContext = PageContextThreadLocal.get();
+		return getContextPath(pageContext);
 	}
 
 
-	// ---------------------------------------------------------------- get value
+	// ---------------------------------------------------------------- attributes and values
 
 	/**
 	 * Returns non-<code>null</code> attribute value. Scopes are examined in the
 	 * following order: page, request, session, application.
 	 */
-	public static Object attrValue(PageContext pageContext, String name) {
+	public static Object attribute(PageContext pageContext, String name) {
 		Object value = pageContext.getAttribute(name);
 		if (value != null) {
 			return value;
 		}
-		return attrValue((HttpServletRequest) pageContext.getRequest(), name);
+		return attribute((HttpServletRequest) pageContext.getRequest(), name);
 	}
 	/**
 	 * Returns non-<code>null</code> attribute value. Scopes are examined in the
 	 * following order: request, session, application.
 	 */
-	public static Object attrValue(HttpServletRequest request, String name) {
+	public static Object attribute(HttpServletRequest request, String name) {
 		Object value = request.getAttribute(name);
 		if (value != null) {
 			return value;
@@ -337,6 +365,8 @@ public class ServletUtil {
 		return request.getSession().getServletContext().getAttribute(name);
 	}
 
+	// ---------------------------------------------------------------- scope attributes
+
 	/**
 	 * Sets scope attribute.
 	 */
@@ -345,14 +375,18 @@ public class ServletUtil {
 		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
 			pageContext.setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_REQUEST)) {
+		}
+		else if (scopeValue.equals(SCOPE_REQUEST)) {
 			request.setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_SESSION)) {
+		}
+		else if (scopeValue.equals(SCOPE_SESSION)) {
 			request.getSession().setAttribute(name, value);
-		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
+		}
+		else if (scopeValue.equals(SCOPE_APPLICATION)) {
             request.getSession().getServletContext().setAttribute(name, value);
-        } else {
-			throw new UncheckedException("Invalid scope: " + scope);
+        }
+		else {
+			throw new IllegalArgumentException("Invalid scope: " + scope);
         }
 	}
 
@@ -364,14 +398,18 @@ public class ServletUtil {
 		String scopeValue = scope != null ? scope.toLowerCase() : SCOPE_PAGE;
 		if (scopeValue.equals(SCOPE_PAGE)) {
 			pageContext.removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_REQUEST)) {
+		}
+		else if (scopeValue.equals(SCOPE_REQUEST)) {
 			request.removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_SESSION)) {
+		}
+		else if (scopeValue.equals(SCOPE_SESSION)) {
 			request.getSession().removeAttribute(name);
-		} else if (scopeValue.equals(SCOPE_APPLICATION)) {
+		}
+		else if (scopeValue.equals(SCOPE_APPLICATION)) {
             request.getSession().getServletContext().removeAttribute(name);
-        } else {
-			throw new UncheckedException("Invalid scope: " + scope);
+        }
+		else {
+			throw new IllegalArgumentException("Invalid scope: " + scope);
         }
 	}
 
@@ -458,14 +496,28 @@ public class ServletUtil {
 	// ---------------------------------------------------------------- params
 
 	/**
+	 * Returns HTTP request parameter as String or String[].
+	 */
+	public static Object getRequestParameter(ServletRequest request, String name) {
+		String[] values = request.getParameterValues(name);
+		if (values == null) {
+			return null;
+		}
+		if (values.length == 1) {
+			return values[0];
+		}
+		return values;
+	}
+
+	/**
 	 * Checks if some parameter is in GET parameters.
 	 */
-	public boolean isGetParameter(HttpServletRequest request, String key) {
-		key = URLCoder.encodeQuery(key) + '=';
+	public boolean isGetParameter(HttpServletRequest request, String name) {
+		name = URLCoder.encodeQuery(name) + '=';
 		String query = request.getQueryString();
 		String[] nameValuePairs = StringUtil.splitc(query, '&');
 		for (String nameValuePair : nameValuePairs) {
-			if (nameValuePair.startsWith(key)) {
+			if (nameValuePair.startsWith(name)) {
 				return true;
 			}
 		}
@@ -644,10 +696,10 @@ public class ServletUtil {
 		loop:
 		for (int i = 0; i < 4; i++) {
 			switch (i) {
-				case 0: result.append("\nREQUEST\n--------\n");
+				case 0: result.append("\nREQUEST\n-------\n");
 						enumeration = request.getAttributeNames();
 						break;
-				case 1: result.append("\nSESSION\n--------\n");
+				case 1: result.append("\nSESSION\n-------\n");
 						enumeration = session.getAttributeNames();
 						break;
 				case 2: result.append("\nAPPLICATION\n-----------\n");
@@ -656,7 +708,7 @@ public class ServletUtil {
 				case 3:	if (pageContext == null) {
 							break loop;
 						}
-						result.append("\nPAGE\n-----------\n");
+						result.append("\nPAGE\n----\n");
 						enumeration = pageContext.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
 			}
 			while (enumeration.hasMoreElements()) {
