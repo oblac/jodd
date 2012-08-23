@@ -259,11 +259,15 @@ public abstract class DefaultAppCore {
 	 * It first load system properties (registered as <code>sys.*</code>)
 	 * and then environment properties (registered as <code>env.*</code>).
 	 * Finally, props files are read from the classpath.
+	 * <p>
+	 * If props have been already loaded, does nothing.
 	 */
 	protected void initProps() {
-		if (appProps == null) {
-			appProps = new Props();
+		if (appProps != null) {
+			return;
 		}
+
+		appProps = new Props();
 
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
