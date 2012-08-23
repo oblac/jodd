@@ -4,8 +4,8 @@
 <html>
 <body>
 
-${jfn:storePageContext(pageContext)}
-${jfn:setContextPathVariable(pageContext, "page", "CTX")}
+${jfn:storePageContextInThread(pageContext)}
+${jfn:storeContextPath(pageContext, "CTX")}
 
 <j:url _="/hello.jsp"/> 6 sec
 ${jfn:url("/hello.jsp", pageContext)} 0.9s
