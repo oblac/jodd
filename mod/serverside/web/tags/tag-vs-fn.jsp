@@ -7,9 +7,10 @@
 ${jfn:storePageContextInThread(pageContext)}
 ${jfn:storeContextPath(pageContext, "CTX")}
 
-<j:url _="/hello.jsp"/> 6 sec
-${jfn:url("/hello.jsp", pageContext)} 0.9s
-${jfn:url1("/hello.jsp")}
+<j:url _="/hello.jsp"/> 5.243 sec
+${jfn:url("/hello.jsp", pageContext)} 0.632
+${jfn:url1("/hello.jsp")} 00.592
+${CTX}/hello.jsp total: 00.151
 
 <%
 	long l = 100000;
