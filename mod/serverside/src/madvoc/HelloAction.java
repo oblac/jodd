@@ -85,7 +85,7 @@ public class HelloAction {
 	@Action
 	public String again() throws IOException {
 		System.out.println(">HelloAction.again");
-		servletResponse.getWriter().print("Direct stream output...");
+		servletResponse.getWriter().print("<body>Direct stream output...</body>");
 		return "none:";
 	}
 

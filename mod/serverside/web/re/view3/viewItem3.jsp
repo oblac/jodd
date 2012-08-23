@@ -1,6 +1,6 @@
 <html>
 <body>
-Hello: ${girlId}
+Hello: ${itemId}
 
 <pre style="color:white; background-color:green;">
 Hello: 173
@@ -8,7 +8,7 @@ Hello: 173
 
 Console:
 <pre style="color:white; background-color:darkblue;">
-&lt;?&gt;173
+&lt;3&gt;173
 </pre>
 
 </body>

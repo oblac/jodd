@@ -13,13 +13,13 @@ public class RawAction {
 
 	@Action
 	public RawData view() {
-		String result = "this is some raw direct result";
+		String result = "<body>this is some raw direct result</body>";
 		byte[] bytes = CharUtil.toAsciiByteArray(result.toCharArray());
 		return new RawData(bytes, MimeTypes.MIME_TEXT_HTML);
 	}
 
 	@Action
 	public String text() {
-		return "raw:some raw txt";
+		return "raw:<body>some raw txt</body>";
 	}
 }

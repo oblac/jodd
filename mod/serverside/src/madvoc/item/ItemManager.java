@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package madvoc.girl;
+package madvoc.item;
 
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.SessionScope;
@@ -12,18 +12,18 @@ import java.util.List;
  * Scoped person manager.
  */
 @PetiteBean(scope=SessionScope.class)
-public class GirlManager {
+public class ItemManager {
 
 	private int idCount;
 
-	private List<Girl> girls = new ArrayList<Girl>();
+	private List<Item> items = new ArrayList<Item>();
 
-    public void add(Girl girl) {
-		girl.setId(idCount++);
-		girls.add(girl);
+    public void add(Item item) {
+		item.setId(idCount++);
+		items.add(item);
     }
 
-    public List<Girl> getAllGirls() {
-        return girls;
+    public List<Item> getAllItems() {
+        return items;
     }
 }

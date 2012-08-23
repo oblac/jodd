@@ -4,20 +4,21 @@ package madvoc;
 
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Action;
-import madvoc.girl.Girl;
+import madvoc.item.Item;
 
 public class SuperSubAction extends SuperAction {
 
 	@In
-	Girl girl;
+	Item item;
 
-	@In("girl") Girl girl2;
+	@In("item")
+	Item item2;
 
 	@Action
 	public void view() {
 		System.out.println("MethodAction.hello");
-		System.out.println("girl = " + girl);
-		System.out.println("girl2 = " + girl2);
+		System.out.println("item = " + item);
+		System.out.println("item2 = " + item2);
 		common();
 	}
 

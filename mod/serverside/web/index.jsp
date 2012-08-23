@@ -50,7 +50,7 @@
 <a href="hello.defint2.html?foo=173&foo2=">parameters are copied</a> - different setting of ServletConfigInterceptor, where:
 	1) all parameters are copied to attributes, 2) parameters are not injected and 3) empty params are treated as null.<br/>
 <a href="misc.html">misc scopes</a> (invoke twice!) - access different scopes throught their map adapters.<br/>
-<a href="misc.post.html?girl.id=1&girl.name=requestName">inject id, prepare and execute</a> - prebarable action first injects only id parameters,
+<a href="misc.post.html?item.id=1&item.name=requestName">inject id, prepare and execute</a> - prebarable action first injects only id parameters,
 	then prepares it and executes the action method at the end.<br/>
 <a href="misc.raw.html?q=2">misc scopes (2)</a> (check console).<br/>
 
@@ -61,16 +61,16 @@
 <form action="search" method="post"><input type="text" name="query"  value="šaran"><input type="submit"> - forms are encoded/decoded correctly.</form>
 
 <p>
-<a href="super.html?girl.id=173">Super</a> method.<br/>
+<a href="super.html?item.id=173">Super</a> method.<br/>
 <a href="super.simple.html?id=22">Super member</a> non-static class.<br/>
 </p>
 
 <h2>More</h2>
 <p>
 <a href="form.html">Form</a> example.<br/>
-<a href="girl.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br/>
+<a href="item.list.html">Session scope</a> example - access session holder that is a PetiteBean of SessionScope.<br/>
 <a href="uploadfiles.html">Upload</a> example.<br/>
-<a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.custom">custom annotation</a><br/>
+<a href="annotation.action.html">default annotation</a> and <a href="annotation.custom.html">custom annotation</a><br/>
 <a href="external.html">External link!</a>
 </p>
 

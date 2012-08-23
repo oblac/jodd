@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package madvoc.girl;
+package madvoc.item;
 
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.In;
@@ -15,37 +15,37 @@ import java.util.List;
 
 @MadvocAction
 @InterceptedBy({EchoInterceptor.class, DefaultWebAppInterceptors.class})
-public class GirlAction {
+public class ItemAction {
 
 	@PetiteInject
-	GirlManager girlManager;
+	ItemManager itemManager;
 
 	@In
-	Girl girl;
+	Item item;
 
 	@Action
 	public String add() {
-		System.out.println("GirlAction.add");
-		System.out.println(girlManager);
-		girlManager.add(girl);
+		System.out.println("ItemAction.add");
+		System.out.println(itemManager);
+		itemManager.add(item);
 		prepare();
 		return "#list.ok";
 	}
 
 
 	@Out
-	List<Girl> girls;
+	List<Item> items;
 
 	@Action
 	public String list() {
-		System.out.println("GirlAction.list");
-		System.out.println(girlManager);
+		System.out.println("ItemAction.list");
+		System.out.println(itemManager);
 		prepare();
 		return "ok";
 	}
 
 	private void prepare() {
-		girls = girlManager.getAllGirls();
+		items = itemManager.getAllItems();
 	}
 
 }

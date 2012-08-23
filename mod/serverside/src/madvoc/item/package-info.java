@@ -1,5 +1,5 @@
 
 @MadvocAction("/")
-package madvoc.girl;
+package madvoc.item;
 
 import jodd.madvoc.meta.MadvocAction;

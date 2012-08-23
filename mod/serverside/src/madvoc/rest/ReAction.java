@@ -12,22 +12,22 @@ import static jodd.madvoc.meta.Action.NONE;
 public class ReAction {
 
 	@InOut
-	long girlId;
+	long itemId;
 
-	@Action(value = "view/${girlId}", extension = NONE)
-	public void viewGirl() {
-		System.out.println("<1>" +girlId);
+	@Action(value = "view/${itemId}", extension = NONE)
+	public void viewItem() {
+		System.out.println("<1>" + itemId);
 	}
 
-	@Action(value = "view2/g-${girlId}")
-	public String viewGirl2() {
-		System.out.println("<2>" + girlId);
-		return "redirect:/re/view/${girlId}";
+	@Action(value = "view2/g-${itemId}")
+	public String viewItem2() {
+		System.out.println("<2>" + itemId);
+		return "redirect:/re/view/${itemId}";
 	}
 
-	@Action(value = "view3/${girlId:^[0-9]+}", extension = NONE)
-	public String viewGirl3() {
-		System.out.println("<3>" + girlId);
+	@Action(value = "view3/${itemId:^[0-9]+}", extension = NONE)
+	public String viewItem3() {
+		System.out.println("<3>" + itemId);
 		return "#[method].OK";
 	}
 }

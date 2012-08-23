@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package madvoc.girl;
+package madvoc.item;
 
-public class Girl {
+public class Item {
 
 	private int id;
 
@@ -28,7 +28,7 @@ public class Girl {
 
 	@Override
 	public String toString() {
-		return "Girl{" +
+		return "Item{" +
 				"id=" + id +
 				", name='" + name + '\'' +
 				'}';

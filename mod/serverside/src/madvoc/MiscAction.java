@@ -15,7 +15,7 @@ import jodd.madvoc.interceptor.EchoInterceptor;
 
 import java.util.Map;
 
-import madvoc.girl.Girl;
+import madvoc.item.Item;
 
 @MadvocAction
 public class MiscAction implements Preparable {
@@ -45,21 +45,21 @@ public class MiscAction implements Preparable {
 
 	public void prepare() {
 		System.out.println("MiscAction.prepare");
-		if (girl != null) {
-			girl.setName("database name");
+		if (item != null) {
+			item.setName("database name");
 		}
-		System.out.println(girl);
+		System.out.println(item);
 	}
 
 
 	@In
-	Girl girl;
+	Item item;
 
 	@Action
 	@InterceptedBy({EchoInterceptor.class, IdRequestInjectorInterceptor.class, PrepareInterceptor.class, ServletConfigInterceptor.class})
 	public void post() {
 		System.out.println("MiscAction.post");
-		System.out.println(girl);
+		System.out.println(item);
 	}
 
 	// ----------------------------------------------------------------
