@@ -112,7 +112,7 @@ public abstract class DefaultAppCore {
 	 * Important: logging is not yet available in this method!
 	 */
 	@SuppressWarnings("unchecked")
-	public void init() {
+	public void initCore() {
 		if (appPropsName == null) {
 			appPropsName = "app.props";
 		}
@@ -141,6 +141,10 @@ public abstract class DefaultAppCore {
 	 * Initializes the logger, after the log path is {@link #init() defined}.
 	 */
 	protected void initLogger() {
+		if (log != null) {
+			return;
+		}
+
 		log = Log.getLogger(DefaultAppCore.class);
 		log.info("app dir: " + appDir);
 	}
@@ -177,12 +181,37 @@ public abstract class DefaultAppCore {
 	// ---------------------------------------------------------------- ready
 
 	/**
-	 * Callback when core initialization is done.
+	 * Called after the {@link #init() core initialization},
+	 * during the {@link #start() application startup}.
 	 */
 	protected void ready() {
 	}
 
 	// ---------------------------------------------------------------- start
+
+	protected boolean initialized;
+
+	/**
+	 * Initializes application.
+	 * May be called several times, but the core
+	 * will be initialized just once.
+	 * Usually called manually when core needs to
+	 * be created before server is started
+	 * (e.g. in embedded environments)
+	 */
+	public void init() {
+		if (initialized) {
+			return;
+		}
+
+		initCore();
+		initLogger();
+		initProps();
+		initScanning();
+
+		initialized = true;
+	}
+
 
 	/**
 	 * Starts the application and performs all initialization.
@@ -190,9 +219,6 @@ public abstract class DefaultAppCore {
 	public void start() {
 
 		init();
-		initLogger();
-		initProps();
-		initScanning();
 
 		ready();
 
@@ -287,9 +313,13 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Creates {@link AppScanner}.
+	 * Initializes {@link AppScanner}.
 	 */
 	protected void initScanning() {
+		if (appScanner != null) {
+			return;
+		}
+
 		appScanner = new AppScanner(this);
 		appScanner.init();
 	}
@@ -396,6 +426,8 @@ public abstract class DefaultAppCore {
 
 	// ---------------------------------------------------------------- database
 
+	protected boolean useDatabase = true;
+
 	/**
 	 * JTX manager.
 	 */
@@ -439,6 +471,11 @@ public abstract class DefaultAppCore {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void startDb() {
+		if (!useDatabase) {
+			log.info("database is not used");
+			return;
+		}
+
 		log.info("database initialization");
 
 		// connection pool
