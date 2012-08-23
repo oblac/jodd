@@ -3,115 +3,38 @@
 package jodd.servlet.jspfn;
 
 import jodd.datetime.JDateTime;
-import jodd.servlet.HtmlEncoder;
-import jodd.servlet.JspValueResolver;
-import jodd.servlet.PageContextThreadLocal;
 import jodd.servlet.ServletUtil;
-import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
-import static jodd.util.StringPool.EMPTY;
 
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspTagException;
+
+import static jodd.util.StringPool.EMPTY;
 
 /**
- * Nice big set of JSP functions. Mainly delegates to other utilities,
- * just performs some user-input checking.
+ * Some JSP functions. Mainly delegates to other utilities,
+ * just performs some input checking.
  */
 public class JoddJspFunctions {
 
-	public static String text(Object object) {
-		if (object == null) {
-			return StringPool.EMPTY;
-		}
-		return HtmlEncoder.text(object.toString());
-	}
-
-	public static String valueEnc(String name, PageContext pageContext) {
-		return text(JspValueResolver.resolveValue(name, pageContext));
-	}
-
-	public static String valueEnc(String name) {
-		return valueEnc(name, PageContextThreadLocal.get());
-	}
-
-	public static String attributeEnc(String name, PageContext pageContext) {
-		return text(JspValueResolver.resolveAttribute(name, pageContext));
-	}
-
-	public static String attributeEnc(String name) {
-		return attributeEnc(name, PageContextThreadLocal.get());
-	}
-
-	public static String propertyEnc(String name, PageContext pageContext) {
-		return text(JspValueResolver.resolveProperty(name, pageContext));
-	}
-
-	public static String propertyEnc(String name) {
-		return propertyEnc(name, PageContextThreadLocal.get());
-	}
+	private static final String CTX_VAR_NAME = "CTX";
 
 	/**
-	 * Returns default value if provided value is <code>null</code>.
+	 * Performs page initialization. The following is done:
+	 * <ul>
+	 * <li>PageContextThreadLocal is set</li>
+	 * <li>CTX request attribute is set with context path value</li>
+	 * <li>CTX context attribute is set with context path value</li>
+	 * </ul>
 	 */
-	public static Object defaultValue(Object value, Object defaultValue) {
-		if (value == null) {
-			return defaultValue;
-		}
-		return value;
-	}
-
-	/**
-	 * Returns default string if value is <code>null</code> or empty.
-	 */
-	public static String defaultString(String value, String defaultValue) {
-		if (value == null) {
-			return defaultValue;
-		}
-		if (StringUtil.isEmpty(value)) {
-			return defaultValue;
-		}
-		return value;
+	public static void initPage(PageContext pageContext) {
+		ServletUtil.storePageContextInThread(pageContext);
+		ServletUtil.storeContextPath(pageContext, CTX_VAR_NAME);
 	}
 
 
 	// ---------------------------------------------------------------- string manipulation
 
-	/**
-	 * Joins strings.
-	 */
-	public static String join(String[] array, String separator) {
-		if (array == null) {
-			return EMPTY;
-		}
-		if (separator == null) {
-			separator = EMPTY;
-		}
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < array.length; i++) {
-			if (i > 0) {
-				result.append(separator);
-			}
-			String value = array[i];
-			result.append(value != null ? value : EMPTY);
-		}
-		return result.toString();
-	}
-
-	public static String join2(String one, String two) {
-		if (one == null) {
-			one = EMPTY;
-		}
-		if (two == null) {
-			return one;
-		}
-		return one + two;
-	}
-
-	/**
-	 * Converts all of the characters of the input string to upper case.
-	 */
 	public static String toUpperCase(String input) {
 		if (input == null) {
 			return EMPTY;
@@ -119,35 +42,11 @@ public class JoddJspFunctions {
 		return input.toUpperCase();
 	}
 
-	/**
-	 * Converts all of the characters of the input string to lower case.
-	 */
 	public static String toLowerCase(String input) {
 		if (input == null) {
 			return EMPTY;
 		}
 		return input.toLowerCase();
-	}
-
-	public static String capitalize(String input) {
-		if (input == null) {
-			return EMPTY;
-		}
-		return StringUtil.capitalize(input);
-	}
-
-	public static String uncapitalize(String input) {
-		if (input == null) {
-			return EMPTY;
-		}
-		return StringUtil.uncapitalize(input);
-	}
-
-	public static String trim(String input) {
-		if (input == null) {
-			return EMPTY;
-		}
-		return input.trim();
 	}
 
 	public static String replace(String input, String substringBefore, String substringAfter) {
@@ -168,77 +67,13 @@ public class JoddJspFunctions {
 
 	// ---------------------------------------------------------------- substrings
 
-	public static int indexOf(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return input.indexOf(substring);
-	}
-
-	public static boolean contains(String input, String substring) {
-		return indexOf(input, substring) != -1;
-	}
-
-	public static boolean containsIgnoreCase(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return StringUtil.indexOfIgnoreCase(input, substring) != -1;
-	}
-
-	public static boolean startsWith(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return input.startsWith(substring);
-	}
-
-	public static boolean startsWithIgnoreCase(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return StringUtil.startsWithIgnoreCase(input, substring);
-	}
-
-	public static boolean endsWith(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return input.endsWith(substring);
-	}
-
-	public static boolean endsWithIgnoreCase(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		return StringUtil.endsWithIgnoreCase(input, substring);
-	}
-
-
-
 	public static String substring(String input, int beginIndex, int endIndex) {
 		if (input == null) {
 			input = EMPTY;
 		}
-		if (beginIndex >= input.length()) {
+		int length = input.length();
+
+		if (beginIndex >= length) {
 			return EMPTY;
 		}
 		if (beginIndex < 0) {
@@ -253,66 +88,18 @@ public class JoddJspFunctions {
 		return input.substring(beginIndex, endIndex);
 	}
 
-	public static String substringAfter(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (input.length() == 0) {
-			return EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		if (substring.length() == 0) {
-			return input;
-		}
-
-		int index = input.indexOf(substring);
-		if (index == -1) {
-			return EMPTY;
-		} else {
-			return input.substring(index + substring.length());
-		}
-	}
-
-	public static String substringBefore(String input, String substring) {
-		if (input == null) {
-			input = EMPTY;
-		}
-		if (input.length() == 0) {
-			return EMPTY;
-		}
-		if (substring == null) {
-			substring = EMPTY;
-		}
-		if (substring.length() == 0) {
-			return EMPTY;
-		}
-
-		int index = input.indexOf(substring);
-		if (index == -1) {
-			return EMPTY;
-		} else {
-			return input.substring(0, index);
-		}
-	}
-
 	// ---------------------------------------------------------------- collections
 
 	/**
 	 * Returns the length of provided object (collection, array and so on).
 	 * If object doesn't have a length, exception is thrown.
 	 */
-	public static int length(Object obj) throws JspTagException {
+	public static int length(Object obj) {
 		int result = ObjectUtil.length(obj);
 		if (result == -1) {
-			throw new JspTagException("No length");
+			throw new IllegalArgumentException("No length");
 		}
 		return result;
-	}
-
-	public static boolean containsElement(Object obj, Object element) {
-		return ObjectUtil.containsElement(obj, element);
 	}
 
 	// ---------------------------------------------------------------- test
@@ -333,17 +120,6 @@ public class JoddJspFunctions {
 	 */
 	public static String fmtTime(JDateTime jdt, String format) {
 		return jdt.toString(format);
-	}
-
-
-	// ---------------------------------------------------------------- ctx
-
-	/**
-	 * Stores current context path in page context scope.
-	 */
-	public static void setContextPathVariable(PageContext pageContext, String scope, String contextPathVariableName) {
-		String ctxPath = ServletUtil.getContextPath(pageContext);
-		ServletUtil.setScopeAttribute(contextPathVariableName, ctxPath, scope, pageContext);
 	}
 
 }

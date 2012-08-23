@@ -11,98 +11,75 @@
 	<short-name>joddfn</short-name>
 	<uri>/joddfn</uri>
 
-
-	<!-- page -->
+	<!-- page context -->
 
 	<function>
 		<description>
-			Saves page context into thread local variable. Required for all jsp functions
-			that doesn't have PageContext in arguments.
+			Stores page context into thread local variable.
+			Required for all alternative JSP tags/functions that
+			doesn't have the PageContext as an argument.
 		</description>
-		<name>storePageContext</name>
-		<function-class>jodd.servlet.PageContextThreadLocal</function-class>
-		<function-signature>void set(javax.servlet.jsp.PageContext)</function-signature>
+		<name>storePageContextInThread</name>
+		<function-class>jodd.servlet.ServletUtil</function-class>
+		<function-signature>void storePageContextInThread(javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 
 	<function>
 		<description>
-			Sets scope variable that contains context path value.
+			Sets context and request scope variable with context path value.
+			This makes using context path more easier.
 		</description>
-		<name>setContextPathVariable</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>void setContextPathVariable(javax.servlet.jsp.PageContext,java.lang.String,java.lang.String)</function-signature>
+		<name>storeContextPath</name>
+		<function-class>jodd.servlet.ServletUtil</function-class>
+		<function-signature>void storeContextPath(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
 	</function>
 
 	<function>
 		<description>
-			Renders context path. See storePageContext().
+			Renders context path from page context stored in current thread.
 		</description>
 		<name>ctx</name>
 		<function-class>jodd.servlet.ServletUtil</function-class>
 		<function-signature>java.lang.String getContextPath()</function-signature>
 	</function>
 
-	<!-- jsp value resolver -->
-
-	<function>
-		<name>value</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveValue(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>value1</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveValue(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>attribute</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveAttribute(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>attribute1</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveAttribute(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>property</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveProperty(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>property1</name>
-		<function-class>jodd.servlet.JspValueResolver</function-class>
-		<function-signature>java.lang.Object resolveProperty(java.lang.String)</function-signature>
-	</function>
-
-	<!-- errors -->
-
 	<function>
 		<description>
-			Returns servlet error throwable.
+			Initializes page context.
 		</description>
-		<name>servletError</name>
-		<function-class>jodd.servlet.ServletUtil</function-class>
-		<function-signature>java.lang.Throwable getServletError(javax.servlet.ServletRequest)</function-signature>
+		<name>initPage</name>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<function-signature>void initPage(javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 
 	<!-- html encoder -->
 
 	<function>
+		<description>
+			Encodes string to HTML-safe content.
+		</description>
 		<name>out</name>
 		<function-class>jodd.servlet.HtmlEncoder</function-class>
 		<function-signature>java.lang.String text(java.lang.String)</function-signature>
 	</function>
 	<function>
-		<name>outblock</name>
+		<description>
+			Encodes string to HTML-safe content.
+		</description>
+		<name>out-block</name>
 		<function-class>jodd.servlet.HtmlEncoder</function-class>
 		<function-signature>java.lang.String block(java.lang.String)</function-signature>
 	</function>
 	<function>
-		<name>outstrict</name>
+		<description>
+			Encodes string to HTML-safe content and preserve the spaces.
+		</description>
+		<name>out-strict</name>
 		<function-class>jodd.servlet.HtmlEncoder</function-class>
 		<function-signature>java.lang.String strict(java.lang.String)</function-signature>
 	</function>
+
+	<!-- url encoder -->
 
 	<function>
 		<name>url</name>
@@ -125,90 +102,28 @@
 		<function-signature>java.lang.String encodeQuery(java.lang.String)</function-signature>
 	</function>
 
+	<!-- html -->
+
 	<function>
+		<description>
+			Converts some name to safely HTML element ID.
+		</description>
 		<name>name2id</name>
 		<function-class>jodd.servlet.HtmlFormUtil</function-class>
 		<function-signature>java.lang.String name2id(java.lang.String)</function-signature>
 	</function>
 
-	<!-- jodd fn -->
+	<!-- strings -->
 
 	<function>
-		<name>valueEnc</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String valueEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>valueEnc1</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String valueEnc(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>attributeEnc</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String attributeEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>attributeEnc1</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String attributeEnc(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>propertyEnc</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String propertyEnc(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>propertyEnc1</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String propertyEnc(java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>defaultValue</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.Object defaultValue(java.lang.Object,java.lang.Object)</function-signature>
-	</function>
-	<function>
-		<name>defaultString</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String defaultString(java.lang.String,java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>join</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String join(java.lang.String[],java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>join2</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String join2(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>toLowerCase</name>
+		<name>lowercase</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String toLowerCase(java.lang.String)</function-signature>
 	</function>
 	<function>
-		<name>toUpperCase</name>
+		<name>uppercase</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String toUpperCase(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>capitalize</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String capitalize(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>uncapitalize</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String uncapitalize(java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>trim</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String trim(java.lang.String)</function-signature>
 	</function>
 	<function>
 		<name>replace</name>
@@ -216,54 +131,9 @@
 		<function-signature>java.lang.String replace(java.lang.String,java.lang.String,java.lang.String)</function-signature>
 	</function>
 	<function>
-		<name>indexOf</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>int indexOf(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>contains</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean contains(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>containsIgnoreCase</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean containsIgnoreCase(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>startsWith</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean startsWith(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>startsWithIgnoreCase</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean startsWithIgnoreCase(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>endsWith</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean endsWith(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>endsWithIgnoreCase</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>boolean endsWithIgnoreCase(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>substring</name>
+		<name>substr</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String substring(java.lang.String,int,int)</function-signature>
-	</function>
-	<function>
-		<name>substringAfter</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String substringAfter(java.lang.String,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>substringBefore</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String substringBefore(java.lang.String,java.lang.String)</function-signature>
 	</function>
 	<function>
 		<name>length</name>
@@ -271,115 +141,37 @@
 		<function-signature>int length(java.lang.Object)</function-signature>
 	</function>
 	<function>
-		<name>containsElement</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
+		<name>contains</name>
+		<function-class>jodd.util.ObjectUtil</function-class>
 		<function-signature>boolean containsElement(java.lang.Object,java.lang.Object)</function-signature>
 	</function>
-	<function>
-		<name>wildcardMatch</name>
-		<function-class>jodd.util.Wildcard</function-class>
-		<function-signature>boolean match(java.lang.String, java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>wildcardMatchPath</name>
-		<function-class>jodd.util.Wildcard</function-class>
-		<function-signature>boolean matchPath(java.lang.String,java.lang.String)</function-signature>
-	</function>
-
-	<!-- bean -->
-
-	<function>
-		<name>beanProperty</name>
-		<function-class>jodd.bean.BeanUtil</function-class>
-		<function-signature>java.lang.Object getProperty(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>beanDeclaredProperty</name>
-		<function-class>jodd.bean.BeanUtil</function-class>
-		<function-signature>java.lang.Object getDeclaredProperty(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-
 
 	<!-- test -->
 	
 	<function>
+		<description>
+			Tests condition and returns one of the provided arguments.
+		</description>
 		<name>test</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.Object test(boolean,java.lang.Object,java.lang.Object)</function-signature>
 	</function>
 
-	<!-- time -->
+	<!-- format -->
 
 	<function>
 		<name>fmtTime</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String fmtTime(jodd.datetime.JDateTime,java.lang.String)</function-signature>
 	</function>
-
-	<!-- print -->
-
 	<function>
 		<name>printf</name>
 		<function-class>jodd.format.Printf</function-class>
 		<function-signature>java.lang.String str(java.lang.String,java.lang.Object)</function-signature>
 	</function>
 
-	<function>
-		<name>prettystr</name>
-		<function-class>jodd.util.PrettyStringBuilder</function-class>
-		<function-signature>java.lang.String str(java.lang.Object)</function-signature>
-	</function>
-
-
-	<!-- form -->
-	<function>
-		<name>formCheckedValue</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String checkedValue(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>formChecked</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String checked(java.lang.Object)</function-signature>
-	</function>
-	<function>
-		<name>formCheckedAs</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String checked(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>formCheckedExist</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String checkedExist(java.lang.Object)</function-signature>
-	</function>
-	<function>
-		<name>formText</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String text(java.lang.Object)</function-signature>
-	</function>
-	<function>
-		<name>formSelected</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String selected(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>formSelectedValue</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String selectedValue(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>formMultiSelected</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String multiSelected(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-	<function>
-		<name>formMultiSelectedValue</name>
-		<function-class>jodd.servlet.HtmlFormUtil</function-class>
-		<function-signature>java.lang.String multiSelectedValue(java.lang.Object,java.lang.String)</function-signature>
-	</function>
-
-
 	<!-- csrf -->
+
 	<function>
 		<name>prepareCsrfToken</name>
 		<function-class>jodd.servlet.CsrfShield</function-class>
