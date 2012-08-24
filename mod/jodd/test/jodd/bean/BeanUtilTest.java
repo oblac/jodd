@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Properties;
 
 import jodd.bean.data.GetIsBool;
 import jodd.bean.data.IsGetBool;
@@ -1321,6 +1322,19 @@ public class BeanUtilTest extends TestCase {
 		} catch (Exception ex) {
 			fail();
 		}
+	}
+
+	public void testPropertiesWithDot() {
+		Properties props = new Properties();
+		BeanUtil.setProperty(props, "ldap", "data");
+
+		assertEquals("data", props.getProperty("ldap"));
+
+		BeanUtil.setProperty(props, "*this[ldap.auth.enabled]", "data2");
+
+		assertEquals("data", props.getProperty("ldap"));
+		assertEquals("data2", props.getProperty("ldap.auth.enabled"));
+
 	}
 
 }
