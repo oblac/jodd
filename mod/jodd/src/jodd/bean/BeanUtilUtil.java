@@ -197,6 +197,9 @@ class BeanUtilUtil {
 		bp.index = null;
 		String name = bp.name;
 		int lastNdx = name.length() - 1;
+		if (lastNdx < 0) {
+			return null;
+		}
 		if (name.charAt(lastNdx) == ']') {
 			int leftBracketNdx = name.lastIndexOf('[');
 			if (leftBracketNdx != -1) {
