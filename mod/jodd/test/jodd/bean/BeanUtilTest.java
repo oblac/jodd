@@ -1278,6 +1278,7 @@ public class BeanUtilTest extends TestCase {
 		FooBean4 fb4 = new FooBean4();
 		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data[0].bbean.abean.fooProp"));
 		assertEquals("xxx", beanUtilBean.getProperty(fb4, "*this.data.*this[0].*this.bbean.abean.fooProp"));
+		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data[0].bbean.abean.fooProp"));
 
 
 		assertEquals("foo", beanUtilBean.extractThisReference("foo.aaa"));
@@ -1331,10 +1332,39 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("data", props.getProperty("ldap"));
 
 		BeanUtil.setProperty(props, "*this[ldap.auth.enabled]", "data2");
-		//BeanUtil.setProperty(props, "[ldap.auth.enabled]", "data2");
+		BeanUtil.setProperty(props, "[ldap.auth.enabled]", "data2");
 
 		assertEquals("data", props.getProperty("ldap"));
 		assertEquals("data2", props.getProperty("ldap.auth.enabled"));
+
+
+		Map map = new HashMap();
+		FooBean fb = new FooBean();
+
+		BeanUtil.setProperty(map, "[aaa.bbb]", fb);
+		BeanUtil.setPropertyForced(map, "[aaa.bbb].fooMap[xxx.ccc]", "zzzz");
+		assertEquals("zzzz", ((FooBean)map.get("aaa.bbb")).getFooMap().get("xxx.ccc"));
+
+		BeanUtil.setPropertyForced(fb, ".fooint", "123");
+		assertEquals(123, fb.getFooint());
+
+		try {
+			BeanUtil.setProperty(map, ".[aaa.bbb]", "zzzz");
+			fail();
+		} catch (Exception ex) {
+		}
+
+		try {
+			BeanUtil.setPropertyForced(fb, "..fooint", "123");
+			fail();
+		} catch (Exception ex) {
+		}
+
+		BeanUtil.setPropertyForced(map, ".[aaa.bbb].fooMap..[eee.ccc]", "zzzz");
+		// forced works because *this is a map!
+		assertEquals("zzzz", BeanUtil.getProperty(map, ".[aaa.bbb].fooMap..[eee.ccc]"));
+		assertEquals("zzzz", BeanUtil.getProperty(map, "*this.[aaa.bbb].fooMap..[eee.ccc]"));
+
 	}
 
 }

@@ -22,6 +22,7 @@ class BeanProperty {
 		this.name = propertyName;
 		setBean(bean);
 		this.last = true;
+		this.first = true;
 		this.forced = forced;
 		this.fullName = bean.getClass().getSimpleName() + '#' + propertyName;
 	}
@@ -33,6 +34,7 @@ class BeanProperty {
 	ClassDescriptor cd;
 	String name;        // property name
 	boolean last;       // is it a last property (when nested)
+	boolean first;		// is it first property (when nested)
 
 	/**
 	 * Sets new bean instance.
@@ -40,6 +42,7 @@ class BeanProperty {
 	public void setBean(Object bean) {
 		this.bean = bean;
 		this.cd = (bean == null ? null : ClassIntrospector.lookup(bean.getClass()));
+		this.first = false;
 	}
 
 	// ---------------------------------------------------------------- flags

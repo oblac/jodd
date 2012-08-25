@@ -112,7 +112,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	protected Object getSimpleProperty(BeanProperty bp, boolean suppressSecurity) {
 
-		if (bp.name.equals(THIS_REF)) {
+		if ((bp.name.length() == 0 && bp.first) || bp.name.equals(THIS_REF)) {
 			return bp.bean;
 		}
 
