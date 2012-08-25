@@ -163,20 +163,28 @@ class BeanUtilUtil {
 	 */
 	protected int indexOfDot(String name) {
 		int ndx = 0;
-		while (true) {
-			ndx = name.indexOf('.', ndx);
-			if (ndx == -1) {
-				return -1;
-			}
-			int rightNdx = name.indexOf(']');
-			if (rightNdx > ndx) {
-				if (name.lastIndexOf('[', rightNdx) < ndx) {
-					ndx = rightNdx + 1;
-					continue;
+		int len = name.length();
+
+		boolean insideBracket = false;
+
+		while (ndx < len) {
+			char c = name.charAt(ndx);
+
+			if (insideBracket) {
+				if (c == ']') {
+					insideBracket = false;
+				}
+			} else {
+				if (c == '.') {
+					return ndx;
+				}
+				if (c == '[') {
+					insideBracket = true;
 				}
 			}
-			return ndx;
+			ndx++;
 		}
+		return -1;
 	}
 
 

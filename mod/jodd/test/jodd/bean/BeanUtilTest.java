@@ -1331,10 +1331,10 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("data", props.getProperty("ldap"));
 
 		BeanUtil.setProperty(props, "*this[ldap.auth.enabled]", "data2");
+		//BeanUtil.setProperty(props, "[ldap.auth.enabled]", "data2");
 
 		assertEquals("data", props.getProperty("ldap"));
 		assertEquals("data2", props.getProperty("ldap.auth.enabled"));
-
 	}
 
 }
