@@ -277,6 +277,34 @@ public class PropsTest extends TestCase {
 		assertTrue(props.countTotalProperties() > 0);
 	}
 
+	public void testValueWithBracket() throws IOException {
+		Props p = new Props();
+		p.load(readDataFile("test3.props"));
+
+		assertEquals("info@jodd.org;patrick@jodd.org", p.getValue("email.from"));
+		assertEquals("[ERROR] Got %s exceptions", p.getValue("email.subject"));
+		assertEquals("line1line2line3", p.getValue("email.text"));
+
+
+		p = new Props();
+		p.setIgnorePrefixWhitespacesOnNewLine(false);
+		p.load(readDataFile("test3.props"));
+
+		assertEquals("info@jodd.org;patrick@jodd.org", p.getValue("email.from"));
+		assertEquals("[ERROR] Got %s exceptions", p.getValue("email.subject"));
+		assertEquals("line1\tline2line3", p.getValue("email.text"));
+
+		p = new Props();
+		p.setIgnorePrefixWhitespacesOnNewLine(false);
+		p.setEscapeNewLineValue("\n");
+		p.load(readDataFile("test3.props"));
+
+		assertEquals("info@jodd.org;patrick@jodd.org", p.getValue("email.from"));
+		assertEquals("[ERROR] Got %s exceptions", p.getValue("email.subject"));
+		assertEquals("line1\n\tline2\nline3", p.getValue("email.text"));
+	}
+
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {

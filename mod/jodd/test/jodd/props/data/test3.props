@@ -1,0 +1,9 @@
+
+email.from=info@jodd.org;patrick@jodd.org
+
+email.subject=[ERROR] Got %s exceptions
+
+email.text=line1\
+	line2\
+line3
+

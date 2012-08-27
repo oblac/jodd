@@ -7,9 +7,9 @@ url = www.imdb.com/title/tt0029583/
 ; Since the ; character (after Dwarfs) starts a comment
 ; (either at the beginning or middle of the line, we have
 ; to escape it with a backslash.
-plot = Snow White, pursued by a jealous queen, hides with the Dwarfs\; \
+plot = Snow White, pursued by a jealous queen, hides with the Dwarfs; \
 		the queen feeds her a poison apple, but Prince Charming \
-		awakens her with a kiss. # this is a comment
+		awakens her with a kiss.
 
 # This is also a comment line
 # The first : can also be used as assignment operator

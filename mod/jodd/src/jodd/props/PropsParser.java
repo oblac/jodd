@@ -77,7 +77,8 @@ public class PropsParser implements Cloneable {
 		TEXT,
 		ESCAPE,
 		ESCAPE_NEWLINE,
-		COMMENT
+		COMMENT,
+		VALUE
 	}
 
 	/**
@@ -99,12 +100,10 @@ public class PropsParser implements Cloneable {
 			if (state == ParseState.COMMENT) {			// comment, skip to the end of the line
 				if (c == '\n') {
 					state = ParseState.TEXT;
-				} else {
-					continue;
 				}
 			}
-
-			if (state == ParseState.ESCAPE) {
+			else if (state == ParseState.ESCAPE) {
+				state = ParseState.VALUE;
 				switch (c) {
 					case '\r':
 					case '\n':
@@ -126,93 +125,108 @@ public class PropsParser implements Cloneable {
 							}
 						}
 						sb.append((char) value);
-						state = ParseState.TEXT;
 						break;
 					case 't':
 						sb.append('\t');
-						state = PropsParser.ParseState.TEXT;
 						break;
 					case 'n':
 						sb.append('\n');
-						state = PropsParser.ParseState.TEXT;
 						break;
 					case 'r':
 						sb.append('\r');
-						state = PropsParser.ParseState.TEXT;
 						break;
 					case 'f':
 						sb.append('\f');
-						state = PropsParser.ParseState.TEXT;
 						break;
 					default:
 						sb.append(c);
-						state = ParseState.TEXT;
 				}
-				continue;
 			}
-
-			switch (c) {
-				case '[':			// start section
-					sb.setLength(0);
-					insideSection = true;
-					break;
-
-				case ']': 			// end section
-					if (insideSection) {
-						currentSection = sb.toString().trim();
+			else if (state == ParseState.TEXT) {
+				switch (c) {
+					case '[':			// start section
 						sb.setLength(0);
-						insideSection = false;
-						if (currentSection.length() == 0) {
-							currentSection = null;
+						insideSection = true;
+						break;
+
+					case ']': 			// end section
+						if (insideSection) {
+							currentSection = sb.toString().trim();
+							sb.setLength(0);
+							insideSection = false;
+							if (currentSection.length() == 0) {
+								currentSection = null;
+							}
+						} else {
+							sb.append(c);
 						}
-					} else {
-						sb.append(c);
-					}
-					break;
+						break;
 
-				case '\\': // escape char, take the next char as is
-					state = ParseState.ESCAPE;
-					break;
+					case '#':
+					case ';':
+						state = ParseState.COMMENT;
+						break;
 
-				case '#':
-				case ';':
-					state = ParseState.COMMENT;
-					break;
-
-				case '=': // assignment operator
-				case ':':
-					if (key == null) {
-						key = sb.toString().trim();
-						sb.setLength(0);
-					} else {
-						sb.append(c);
-					}
-					break;
-
-				case '\r':
-				case '\n':
-					if ((state == ParseState.ESCAPE_NEWLINE) && (c == '\n')) {
-						sb.append(escapeNewLineValue);
-						if (ignorePrefixWhitespacesOnNewLine == false) {
-							state = ParseState.TEXT;
+					case '=': // assignment operator
+					case ':':
+						if (key == null) {
+							key = sb.toString().trim();
+							sb.setLength(0);
+						} else {
+							sb.append(c);
 						}
-					} else {
+						state = ParseState.VALUE;
+						break;
+
+					case '\r':
+					case '\n':
 						add(currentSection, key, sb);
 						sb.setLength(0);
 						key = null;
-					}
-					break;
-
-				case ' ':
-				case '\t':
-					if ((state == ParseState.ESCAPE_NEWLINE)) {
 						break;
-					}
-				default:
-					sb.append(c);
-					state = ParseState.TEXT;
+
+					case ' ':
+					case '\t':
+						break;		// ignore whitespaces
+					default:
+						sb.append(c);
+				}
+			}
+			else {
+				switch (c) {
+					case '\\': // escape char, take the next char as is
+						state = ParseState.ESCAPE;
+						break;
+
+					case '\r':
+					case '\n':
+						if ((state == ParseState.ESCAPE_NEWLINE) && (c == '\n')) {
+							sb.append(escapeNewLineValue);
+							if (ignorePrefixWhitespacesOnNewLine == false) {
+								state = ParseState.VALUE;
+							}
+						} else {
+							add(currentSection, key, sb);
+							sb.setLength(0);
+							key = null;
+
+							// end of value, continue to test
+							state = ParseState.TEXT;
+						}
+						break;
+
+					case ' ':
+					case '\t':
+						if ((state == ParseState.ESCAPE_NEWLINE)) {
+							break;
+						}
+					default:
+						sb.append(c);
+						state = ParseState.VALUE;
+				}
 			}
 		}
+
 		if (key != null) {
 			add(currentSection, key, sb);
 		}
