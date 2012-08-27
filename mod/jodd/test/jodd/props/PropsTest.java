@@ -304,6 +304,15 @@ public class PropsTest extends TestCase {
 		assertEquals("line1\n\tline2\nline3", p.getValue("email.text"));
 	}
 
+	public void testMultilineValue() throws IOException {
+		Props p = new Props();
+		p.setValueTrimLeft(true);
+		p.load(readDataFile("test3.props"));
+
+		assertEquals("\r\n\tHello from\r\n\tthe multiline\r\n\tvalue\r\n", p.getValue("email.footer"));
+		assertEquals("aaa", p.getValue("email.header"));
+	}
+
 
 	// ---------------------------------------------------------------- util
 

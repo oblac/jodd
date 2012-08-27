@@ -148,6 +148,13 @@ public class Props implements Cloneable {
 		data.appendDuplicateProps = appendDuplicateProps;
 	}
 
+	/**
+	 * Enables multiline values.
+	 */
+	public void setMultilineValues(boolean multilineValues) {
+		parser.multilineValues = multilineValues;
+	}
+
 	// ---------------------------------------------------------------- load
 
 	/**

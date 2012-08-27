@@ -37,11 +37,17 @@ public class PropsParser implements Cloneable {
 	 */
 	protected boolean ignorePrefixWhitespacesOnNewLine = true;
 
+
+	/**
+	 * Defines if multi-line values may be written using triple-quotes
+	 * as in python.
+	 */
+	protected boolean multilineValues = true;
+
 	/**
 	 * Don't include empty properties.
 	 */
 	protected boolean skipEmptyProps = true;
-
 
 	protected final PropsData propsData;
 
@@ -66,6 +72,7 @@ public class PropsParser implements Cloneable {
 		pp.valueTrimRight = valueTrimRight;
 		pp.ignorePrefixWhitespacesOnNewLine = ignorePrefixWhitespacesOnNewLine;
 		pp.skipEmptyProps = skipEmptyProps;
+		pp.multilineValues = multilineValues;
 
 		return pp;
 	}
@@ -180,7 +187,7 @@ public class PropsParser implements Cloneable {
 
 					case '\r':
 					case '\n':
-						add(currentSection, key, sb);
+						add(currentSection, key, sb, true);
 						sb.setLength(0);
 						key = null;
 						break;
@@ -206,11 +213,11 @@ public class PropsParser implements Cloneable {
 								state = ParseState.VALUE;
 							}
 						} else {
-							add(currentSection, key, sb);
+							add(currentSection, key, sb, true);
 							sb.setLength(0);
 							key = null;
 
-							// end of value, continue to test
+							// end of value, continue to text
 							state = ParseState.TEXT;
 						}
 						break;
@@ -223,19 +230,43 @@ public class PropsParser implements Cloneable {
 					default:
 						sb.append(c);
 						state = ParseState.VALUE;
+
+						if (multilineValues) {
+							if (sb.length() == 3) {
+
+								// check for ''' beginning
+								if (sb.toString().equals("'''")) {
+									sb.setLength(0);
+									int endIndex = in.indexOf("'''", ndx);
+									if (endIndex == -1) {
+										endIndex = in.length();
+									}
+									sb.append(in, ndx, endIndex);
+
+									// append
+									add(currentSection, key, sb, false);
+									sb.setLength(0);
+									key = null;
+
+									// end of value, continue to text
+									state = ParseState.TEXT;
+									ndx = endIndex + 3;
+								}
+							}
+						}
 				}
 			}
 		}
 
 		if (key != null) {
-			add(currentSection, key, sb);
+			add(currentSection, key, sb, true);
 		}
 	}
 
 	/**
 	 * Adds accumulated value to key and current section.
 	 */
-	protected void add(String section, String key, StringBuilder value) {
+	protected void add(String section, String key, StringBuilder value, boolean trim) {
 		if (value.length() == 0 && skipEmptyProps) {
 			return;
 		}
@@ -247,12 +278,15 @@ public class PropsParser implements Cloneable {
 			key = section + '.' + key;
 		}
 		String v = value.toString();
-		if (valueTrimLeft && valueTrimRight) {
-			v = v.trim();
-		} else if (valueTrimLeft) {
-			v = StringUtil.trimLeft(v);
-		} else {
-			v = StringUtil.trimRight(v);
+
+		if (trim) {
+			if (valueTrimLeft && valueTrimRight) {
+				v = v.trim();
+			} else if (valueTrimLeft) {
+				v = StringUtil.trimLeft(v);
+			} else {
+				v = StringUtil.trimRight(v);
+			}
 		}
 
 		add(key, v);
