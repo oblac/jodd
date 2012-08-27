@@ -21,6 +21,13 @@ public class ProxyProxetta extends Proxetta {
 	}
 
 	/**
+	 * Specifies aspects for the target and creates this <code>Proxetta</code> instance.
+	 */
+	public static ProxyProxetta withAspects(ProxyAspect... aspects) {
+		return new ProxyProxetta(aspects);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

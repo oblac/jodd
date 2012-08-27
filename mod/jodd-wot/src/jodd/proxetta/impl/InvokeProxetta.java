@@ -21,6 +21,13 @@ public class InvokeProxetta extends Proxetta {
 	}
 
 	/**
+	 * Specifies invoke replacement aspects and creates this <code>Proxetta</code> instance.
+	 */
+	public static InvokeProxetta withAspects(InvokeAspect... aspects) {
+		return new InvokeProxetta(aspects);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
