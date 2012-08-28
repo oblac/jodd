@@ -30,6 +30,7 @@ public final class WorkData {
 	ProxyAspectData[] proxyAspects;
 	String wrapperRef;
 	String wrapperType;
+	boolean wrapInterface;
 
 	public String thisReference;
 	public boolean proxyApplied;

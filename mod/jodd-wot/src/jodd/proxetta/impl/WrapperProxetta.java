@@ -41,6 +41,24 @@ public class WrapperProxetta extends Proxetta {
 
 	// ---------------------------------------------------------------- shortcuts
 
+	public WrapperProxettaBuilder builder(Class targetClassOrInterface) {
+		WrapperProxettaBuilder builder = builder();
+
+		builder.setTarget(targetClassOrInterface);
+
+		return builder;
+	}
+
+	public WrapperProxettaBuilder builder(Class targetClassOrInterface, String targetProxyClassName) {
+		WrapperProxettaBuilder builder = builder();
+
+		builder.setTarget(targetClassOrInterface);
+		builder.setTargetProxyClassName(targetProxyClassName);
+
+		return builder;
+	}
+
+
 	public WrapperProxettaBuilder builder(Class targetClassOrInterface, Class targetInterface) {
 		WrapperProxettaBuilder builder = builder();
 

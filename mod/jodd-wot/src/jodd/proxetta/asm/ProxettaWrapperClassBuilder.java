@@ -18,7 +18,16 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	protected final Class targetInterface;
 	protected final String targetFieldName;
 
-	public ProxettaWrapperClassBuilder(Class targetClassOrInterface, Class targetInterface, String targetFieldName, ClassVisitor dest, ProxyAspect[] aspects, String suffix, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
+	public ProxettaWrapperClassBuilder(
+			Class targetClassOrInterface,
+			Class targetInterface,
+			String targetFieldName,
+			ClassVisitor dest,
+			ProxyAspect[] aspects,
+			String suffix,
+			String reqProxyClassName,
+			TargetClassInfoReader targetClassInfoReader) {
+
 		super(dest, aspects, suffix, reqProxyClassName, targetClassInfoReader);
 		this.targetClassOrInterface = targetClassOrInterface;
 		this.targetInterface = targetInterface;
@@ -26,6 +35,9 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		this.createInitMethod = false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 
@@ -35,14 +47,20 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		wd.superName = AsmConst.SIGNATURE_JAVA_LANG_OBJECT;
 
 		// change access of destination
-		access &= ~AsmConst.ACC_ABSTRACT;
-		access &= ~AsmConst.ACC_INTERFACE;
+		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_ABSTRACT);
+		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_INTERFACE);
 
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {
+			wd.wrapInterface = true;
 			interfaces = new String[] {"L" + targetClassOrInterface.getName().replace(".", "/") + ";"};
 		} else {
-			interfaces = new String[] {"L" + targetInterface.getName().replace(".", "/") + ";"};
+			wd.wrapInterface = false;
+			if (targetInterface != null) {
+				interfaces = new String[] {"L" + targetInterface.getName().replace(".", "/") + ";"};
+			} else {
+				interfaces = null;
+			}
 		}
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, interfaces);
 
@@ -75,10 +93,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
 
 	/**
-	 * Creates proxified methods and constructors.
-	 * Destination proxy will have all constructors as a target class, using {@link jodd.proxetta.asm.ProxettaCtorBuilder}.
-	 * Static initializers are removed, since they will be execute in target anyway.
-	 * For each method, {@link ProxettaMethodBuilder} determines if method matches pointcut. If so, method will be proxified.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {

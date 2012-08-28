@@ -46,10 +46,10 @@ public class ProxettaAsmUtil {
 	}
 
 	/**
-	 * Removes native method access flag.
+	 * Removes access flag.
 	 */
-	public static int makeNonNative(int access) {
-		return (access & ~AsmConst.ACC_NATIVE);
+	public static int removeAccessFlag(int access, int flag) {
+		return (access & ~flag);
 	}
 
 	/**

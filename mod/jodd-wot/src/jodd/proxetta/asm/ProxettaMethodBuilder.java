@@ -7,6 +7,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Type;
 
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
+import static org.objectweb.asm.Opcodes.ACC_NATIVE;
 import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.ARETURN;
@@ -100,7 +102,9 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		// create proxy methods
 		tmd = new TargetMethodData(msign, aspectList);
 
-		access = ProxettaAsmUtil.makeNonNative(access);
+		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_NATIVE);
+		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_ABSTRACT);
+
 		mv = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
 	}
 
@@ -129,8 +133,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		final ProxyAspectData aspectData = td.getProxyData();
 
 		int access = td.msign.getAccessFlags();
-		access = ProxettaAsmUtil.makeNonNative(access);
+
+		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_NATIVE);
+		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_ABSTRACT);
 		access = ProxettaAsmUtil.makePrivateFinalAccess(access);
+
 		final MethodVisitor mv = wd.dest.visitMethod(access, td.methodName(), td.msign.getDescription(), null, null);
 		mv.visitCode();
 
@@ -206,13 +213,19 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 
 										if (wd.wrapperRef == null) {
+											// PROXY
 											loadSpecialMethodArguments(mv, td.msign);
 											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
 										} else {
+											// WRAPPER
 											mv.visitVarInsn(ALOAD, 0);
 											mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
 											loadVirtualMethodArguments(mv, td.msign);
-											mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+											if (wd.wrapInterface) {
+												mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+											} else {
+												mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+											}
 										}
 
 										prepareReturnValue(mv, td.msign, aspectData.maxLocalVarOffset);     // [F4]

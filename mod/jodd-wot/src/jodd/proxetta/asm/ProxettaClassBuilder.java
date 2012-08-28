@@ -3,12 +3,15 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
+import jodd.proxetta.ProxettaException;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.FieldVisitor;
+
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -71,7 +74,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
-		access &= ~AsmConst.ACC_ABSTRACT;
+		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_ABSTRACT);
 
 		// write destination class
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);
@@ -253,6 +256,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		}
 		if (aspectList == null) {
 			return null; // no pointcut on this method, return
+		}
+		int access = msign.getAccessFlags();
+		if (wd.wrapperRef == null) {
+			if ((access & ACC_ABSTRACT) != 0) {
+				throw new ProxettaException("Unable to proxy abstract method: " + msign);
+			}
 		}
 		wd.proxyApplied = true;
 		return new ProxettaMethodBuilder(msign, wd, aspectList);

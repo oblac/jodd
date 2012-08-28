@@ -28,9 +28,9 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	protected String targetFieldName = "_target";
 
 	/**
-	 * Defines class or interface that will be wrapped.
-	 * Resulting wrapper will be of the <b>same type</b> as target.
-	 * For wrapping just interface, use also {@link #setTargetInterface(Class)}.
+	 * Defines class or interface to wrap.
+	 * For setting the interface of the resulting class,
+	 * use {@link #setTargetInterface(Class)}.
 	 */
 	@Override
 	public void setTarget(Class target) {
@@ -39,11 +39,12 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	}
 
 	/**
-	 * Defines the interface that will be wrapped.
-	 * Only interface methods are wrapped, even if
-	 * target has more.
+	 * Defines the interface of the resulting class.
 	 */
 	public void setTargetInterface(Class targetInterface) {
+		if (targetInterface.isInterface() == false) {
+			throw new ProxettaException("Not an interface: " + targetInterface.getName());
+		}
 		this.targetInterface = targetInterface;
 	}
 

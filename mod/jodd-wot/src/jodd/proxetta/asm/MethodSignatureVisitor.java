@@ -326,7 +326,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 */
 	@Override
 	public String toString() {
-		return "MethodSignature: " + classname + "  " + getSignature();
+		return getDeclaredClassName() + '#' + getMethodName() + getDescription();
 	}
 
 }
