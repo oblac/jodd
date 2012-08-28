@@ -4,8 +4,7 @@ package jodd.proxetta.impl;
 
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.Proxetta;
-import jodd.proxetta.asm.ClassProcessor;
-import jodd.proxetta.asm.InvokeCreator;
+import jodd.proxetta.asm.ProxettaInvokeCreator;
 import jodd.proxetta.asm.ProxettaNaming;
 
 /**
@@ -27,12 +26,33 @@ public class InvokeProxetta extends Proxetta {
 		return new InvokeProxetta(aspects);
 	}
 
+	public InvokeAspect[] getAspects() {
+		return invokeAspects;
+	}
+
+	// ---------------------------------------------------------------- implement
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ClassProcessor createClassProcessor() {
-		return new InvokeCreator(this.invokeAspects);
+	public ProxettaInvokeCreator builder() {
+		return new ProxettaInvokeCreator(this);
+	}
+
+	// ---------------------------------------------------------------- shortcuts
+
+	public ProxettaInvokeCreator builder(Class target) {
+		ProxettaInvokeCreator builder = builder();
+		builder.setTarget(target);
+		return builder;
+	}
+
+	public ProxettaInvokeCreator builder(Class target, String targetProxyClassName) {
+		ProxettaInvokeCreator builder = builder();
+		builder.setTarget(target);
+		builder.setTargetProxyClassName(targetProxyClassName);
+		return builder;
 	}
 
 }

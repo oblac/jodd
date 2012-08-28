@@ -4,8 +4,7 @@ package jodd.proxetta.impl;
 
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ClassProcessor;
-import jodd.proxetta.asm.ProxettaCreator;
+import jodd.proxetta.asm.ProxettaProxyCreator;
 import jodd.proxetta.asm.ProxettaNaming;
 
 /**
@@ -28,10 +27,35 @@ public class ProxyProxetta extends Proxetta {
 	}
 
 	/**
+	 * Returns aspects.
+	 */
+	public ProxyAspect[] getAspects() {
+		return aspects;
+	}
+
+	// ---------------------------------------------------------------- implement
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ClassProcessor createClassProcessor() {
-		return new ProxettaCreator(aspects);
+	public ProxettaProxyCreator builder() {
+		return new ProxettaProxyCreator(this);
 	}
+
+	// ---------------------------------------------------------------- shortcuts
+
+	public ProxettaProxyCreator builder(Class target) {
+		ProxettaProxyCreator builder = builder();
+		builder.setTarget(target);
+		return builder;
+	}
+
+	public ProxettaProxyCreator builder(Class target, String targetProxyClassName) {
+		ProxettaProxyCreator builder = builder();
+		builder.setTarget(target);
+		builder.setTargetProxyClassName(targetProxyClassName);
+		return builder;
+	}
+
 }
