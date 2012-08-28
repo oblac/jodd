@@ -108,7 +108,7 @@ public class WrapperTest extends TestCase {
 			}
 		}));
 
-		proxetta.setDebugFolder("d:\\");
+//		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over INTERFACE
 		// resulting object has one interface
