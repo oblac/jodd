@@ -7,7 +7,7 @@ import org.objectweb.asm.AnnotationVisitor;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.RETURN;
-import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
 import jodd.asm.EmptyMethodVisitor;
@@ -50,7 +50,7 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 		mv.visitCode();
 
 		// call super ctor
-		loadMethodArguments(mv, msign);
+		loadSpecialMethodArguments(mv, msign);
 		mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, msign.getMethodName(), msign.getDescription());
 
 		// invoke advice ctors
