@@ -30,6 +30,8 @@ final class WorkData {
 	String thisReference;
 	String superReference;
 	ProxyAspectData[] proxyAspects;
+	String wrapperRef;
+	String wrapperType;
 
 	// ---------------------------------------------------------------- init
 

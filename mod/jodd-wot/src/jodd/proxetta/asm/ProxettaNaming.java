@@ -25,7 +25,7 @@ public interface ProxettaNaming {
 	/**
 	 * Invoke proxy class name suffix.
 	 */
-	String INVOKE_PROXY_CLASS_NAME_SUFFIX = "$Clonnetou";
+	String INVOKE_PROXY_CLASS_NAME_SUFFIX = "$Clonetou";
 
 	/**
 	 * Wrapper class name suffix.

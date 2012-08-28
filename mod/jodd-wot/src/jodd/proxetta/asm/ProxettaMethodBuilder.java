@@ -7,6 +7,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Type;
 
+import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.POP;
@@ -109,7 +110,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 */
 	protected void createFirstChainDelegate_Continue(TargetMethodData td) {
 		mv.visitCode();
-		loadMethodArguments(mv, td.msign);
+		loadSpecialMethodArguments(mv, td.msign);
 		mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.firstMethodName(), td.msign.getDescription());
 		visitReturn(mv, td.msign, false);
 		mv.visitMaxs(0, 0);
@@ -203,13 +204,21 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
-										loadMethodArguments(mv, td.msign);
-										mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
+
+										if (wd.wrapperRef == null) {
+											loadSpecialMethodArguments(mv, td.msign);
+											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());
+										} else {
+											mv.visitVarInsn(ALOAD, 0);
+											mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
+											loadVirtualMethodArguments(mv, td.msign);
+											mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), td.msign.getMethodName(), td.msign.getDescription());
+										}
 
 										prepareReturnValue(mv, td.msign, aspectData.maxLocalVarOffset);     // [F4]
 										traceNext = true;
 									} else {                                                    // calls next proxy method
-										loadMethodArguments(mv, td.msign);
+										loadSpecialMethodArguments(mv, td.msign);
 										mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.nextMethodName(), td.msign.getDescription());
 										visitReturn(mv, td.msign, false);
 									}

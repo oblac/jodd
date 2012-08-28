@@ -3,8 +3,9 @@
 package jodd.proxetta.methref;
 
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.asm.ProxettaProxyCreator;
+import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
 /**
@@ -12,7 +13,7 @@ import jodd.proxetta.pointcuts.AllMethodsPointcut;
  */
 public class MethrefProxetta {
 
-	protected final Proxetta proxetta;
+	protected final ProxyProxetta proxetta;
 
 	public static final String METHREF_CLASSNAME_SUFFIX = "$Methref";
 
@@ -35,13 +36,17 @@ public class MethrefProxetta {
 				return super.apply(methodInfo);
 			}
 		});
-		proxetta = Proxetta.withAspects(aspectAll, aspectStr).useClassNameSuffix(METHREF_CLASSNAME_SUFFIX);
+
+		proxetta = ProxyProxetta.withAspects(aspectAll, aspectStr);
+		proxetta.setClassNameSuffix(METHREF_CLASSNAME_SUFFIX);
 	}
 
 	/**
 	 * Simply delegates to {@link jodd.proxetta.Proxetta#defineProxy(Class)}.
 	 */
 	public Class defineProxy(Class target) {
-		return proxetta.defineProxy(target);
+		ProxettaProxyCreator ppc =  proxetta.builder();
+		ppc.setTarget(target);
+		return ppc.define();
 	}
 }

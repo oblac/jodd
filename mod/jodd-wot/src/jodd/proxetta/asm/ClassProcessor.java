@@ -2,6 +2,9 @@
 
 package jodd.proxetta.asm;
 
+import jodd.log.Log;
+import jodd.proxetta.Proxetta;
+import jodd.util.StringUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import jodd.proxetta.ProxettaException;
@@ -13,117 +16,254 @@ import java.io.IOException;
 
 /**
  * Base class processor.
+ * // todo move to proxetta and impl packages!
  */
 public abstract class ClassProcessor {
 
-	// ---------------------------------------------------------------- variable name
+	private static final Log log = Log.getLogger(ClassProcessor.class);
+
+	protected final Proxetta proxetta;
+
+	protected ClassProcessor(Proxetta proxetta) {
+		this.proxetta = proxetta;
+	}
+	// ---------------------------------------------------------------- IN
+
+	/**
+	 * Main target source.
+	 */
+	private InputStream targetInputStream;
+
+	/**
+	 * Target class, when available.
+	 */
+	private Class targetClass;
+
+	/**
+	 * Target class name, when available.
+	 */
+	private String targetClassName;
+
+	/**
+	 * Requested proxy class name (or class name template).
+	 */
+	protected String requestedProxyClassName;
+
+	/**
+	 * Sets requested proxy class name.
+	 */
+	public void setTargetProxyClassName(String targetProxyClassName) {
+		this.requestedProxyClassName = targetProxyClassName;
+	}
+
+	// ---------------------------------------------------------------- IN targets
+
+	/**
+	 * Defines class input stream as a target.
+	 */
+	protected void setTarget(InputStream target) {
+		checkTarget();
+
+		targetInputStream = target;
+		targetClass = null;
+		targetClassName = null;
+	}
+
+	/**
+	 * Defines class name as a target.
+	 * Class will not be loaded by classloader!
+	 */
+	protected void setTarget(String targetName) {
+		checkTarget();
+
+		try {
+			targetInputStream = ClassLoaderUtil.getClassAsStream(targetName);
+			targetClassName = targetName;
+			targetClass = null;
+		} catch (IOException ioex) {
+			StreamUtil.close(targetInputStream);
+			throw new ProxettaException("Unable to stream class name: " + targetName, ioex);
+		}
+	}
+
+	/**
+	 * Defines class as a target.
+	 */
+	protected void setTarget(Class target) {
+		checkTarget();
+
+		try {
+			targetInputStream = ClassLoaderUtil.getClassAsStream(target);
+			targetClass = target;
+			targetClassName = target.getName();
+		} catch (IOException ioex) {
+			StreamUtil.close(targetInputStream);
+			throw new ProxettaException("Unable to stream class: " + target.getName(), ioex);
+		}
+	}
+
+	/**
+	 * Checks if target is not defined yet.
+	 */
+	private void checkTarget() {
+		if (targetInputStream != null) {
+			throw new ProxettaException("Target already defined");
+		}
+
+	}
+
+	// ---------------------------------------------------------------- IN naming
 
 	/**
 	 * Number appended to proxy class name, incremented on each use to make classnames unique
 	 * in the system (e.g. classloader).
-	 * @see #setUseVariableClassName(boolean)
+	 *
+	 * @see Proxetta#setVariableClassName(boolean)
  	 */
 	protected static int suffixCounter;
 
-	protected boolean useSuffix;
-
-	protected String classNameSuffix;
-
-	/**
-	 * Specifies class name will vary on each creation. This prevents
-	 * <code>java.lang.LinkageError: duplicate class definition.</code>
-	 */
-	public void setUseVariableClassName(boolean useVariableClassName) {
-		useSuffix = useVariableClassName;
-	}
-
-	/**
-	 * Specifies class name suffix for created class. If set to <code>null</code>
-	 * suffix is not used.
-	 */
-	public void setClassNameSuffix(String classNameSuffix) {
-		this.classNameSuffix = classNameSuffix;
-	}
 
 	/**
 	 * Returns new suffix or <code>null</code> if suffix is not in use.
 	 */
-	protected String classNameSuffix() {
-		if (useSuffix == false) {
+	protected String classNameSuffix() {		// todo rename to setNextClassNameSuffix()
+		String classNameSuffix = proxetta.getClassNameSuffix();
+
+		if (proxetta.isVariableClassName() == false) {
 			return classNameSuffix;
 		}
 		suffixCounter++;
 		return classNameSuffix + suffixCounter;
 	}
 
-	// ---------------------------------------------------------------- create
+	// ---------------------------------------------------------------- PROCESS
 
 	/**
 	 * Creates custom class builder and process the target class with it.
 	 */
-	protected abstract WorkData process(ClassReader cr, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader);
+	protected abstract WorkData process(ClassReader cr, TargetClassInfoReader targetClassInfoReader);
 
-	// ---------------------------------------------------------------- accept
+	// ---------------------------------------------------------------- ACCEPT
 
 	protected ClassWriter destClassWriter;			// destination class writer
 	protected boolean proxyApplied;
 	protected String proxyClassName;
 
 	/**
-	 * Single point of class reader acceptance. Reads the target and creates destination class.
+	 * Reads the target and creates destination class.
 	 */
-	protected ClassProcessor accept(ClassReader cr, String reqProxyClassName) {
+	protected void process() {
+		if (targetInputStream == null) {
+			throw new ProxettaException("Target not defined");
+		}
+		// create class reader
+		ClassReader classReader;
+		try {
+			classReader = new ClassReader(targetInputStream);
+		} catch (IOException ioex) {
+			throw new ProxettaException("Error reading class input stream.", ioex);
+		}
+
 		// reads information
 		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader();
-		cr.accept(targetClassInfoReader, 0);
+		classReader.accept(targetClassInfoReader, 0);
 
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 
 		// create proxy
-		WorkData wd = process(cr, reqProxyClassName, targetClassInfoReader);
+		if (log.isDebugEnabled()) {
+			log.debug("processing: " + classReader.getClassName());
+		}
+		WorkData wd = process(classReader, targetClassInfoReader);
 
+		// store important data
 		proxyApplied = wd.proxyApplied;
 		proxyClassName = wd.thisReference.replace('/', '.');
-
-		return this;
 	}
 
-	public ClassProcessor accept(InputStream in, String reqProxyClassName) {
-		ClassReader cr;
-		try {
-			cr = new ClassReader(in);
-		} catch (IOException ioex) {
-			throw new ProxettaException("Error reading class input stream.", ioex);
+	/**
+	 * Returns byte array of invoked proxetta creator.
+	 */
+	public byte[] create() {
+		process();
+
+		byte[] result = toByteArray();
+
+		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+			if (log.isDebugEnabled()) {
+				log.debug("proxy not applied");
+			}
+			return null;
 		}
-		return accept(cr, reqProxyClassName);
+
+		if (log.isDebugEnabled()) {
+			log.debug("proxy created");
+		}
+
+		return result;
 	}
 
-	public ClassProcessor accept(String targetName, String reqProxyClassName) {
-		InputStream inputStream = null;
+	public Class define() {
+		process();
+
+		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
+			if (log.isDebugEnabled()) {
+				log.debug("proxy not applied: " + StringUtil.toSafeString(targetClassName));
+			}
+
+			if (targetClass != null) {
+				return targetClass;
+			} else if (targetClassName != null) {
+				try {
+					return ClassLoaderUtil.loadClass(targetClassName);
+				} catch (ClassNotFoundException cnfex) {
+					throw new ProxettaException(cnfex);
+				}
+			}
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("proxy created on " + StringUtil.toSafeString(targetClassName));
+		}
+
 		try {
-			inputStream = ClassLoaderUtil.getClassAsStream(targetName);
-			return accept(inputStream, reqProxyClassName);
-		} catch (IOException ioex) {
-			throw new ProxettaException("Unable to open stream for class name: " + targetName, ioex);
-		} finally {
-			StreamUtil.close(inputStream);
+			ClassLoader classLoader = proxetta.getClassLoader();
+
+			if (classLoader == null) {
+
+				if (targetClass != null) {
+					classLoader = targetClass.getClassLoader();
+				}
+
+				if (classLoader == null) {
+					classLoader = ClassLoaderUtil.getDefaultClassLoader();
+				}
+			}
+
+//FileUtil.writeBytes("d:\\xxx.class", cp.toByteArray());	// todo debug MODE!!!!! create classes somewhere on disk!!!!!
+
+			return ClassLoaderUtil.defineClass(getProxyClassName(), toByteArray(), classLoader);
+		} catch (Exception ex) {
+			throw new ProxettaException("Class definition failed.", ex);
 		}
 	}
 
-	public ClassProcessor accept(Class target, String reqProxyClassName) {
-		InputStream inputStream = null;
+	/**
+	 * Creates new instance.
+	 */
+	public Object newInstance() {
+		Class type = define();
 		try {
-			inputStream = ClassLoaderUtil.getClassAsStream(target);
-			return accept(inputStream, reqProxyClassName);
-		} catch (IOException ioex) {
-			throw new ProxettaException("Unable to open stream for: " + target.getName(), ioex);
-		} finally {
-			StreamUtil.close(inputStream);
+			return type.newInstance();
+		} catch (Exception ex) {
+			throw new ProxettaException("Unable to create new instance of Proxetta class.", ex);
 		}
 	}
 
 
-	// ---------------------------------------------------------------- after
+
+
+	// ---------------------------------------------------------------- OUT
 
 	/**
 	 * Checks if proxy is created and throws an exception if not.
@@ -157,6 +297,5 @@ public abstract class ClassProcessor {
 		checkAccepted();
 		return proxyClassName;
 	}
-
 
 }

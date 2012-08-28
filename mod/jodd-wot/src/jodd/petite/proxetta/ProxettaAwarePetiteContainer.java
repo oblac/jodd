@@ -6,19 +6,20 @@ import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteContainer;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
-import jodd.proxetta.Proxetta;
+import jodd.proxetta.asm.ProxettaProxyCreator;
+import jodd.proxetta.impl.ProxyProxetta;
 
 /**
  * Proxetta-aware Petite container that applies proxies on bean registration.
  */
 public class ProxettaAwarePetiteContainer extends PetiteContainer {
 
-	protected final Proxetta proxetta;
+	protected final ProxyProxetta proxetta;
 
 	public ProxettaAwarePetiteContainer() {
 		this(null);
 	}
-	public ProxettaAwarePetiteContainer(Proxetta proxetta) {
+	public ProxettaAwarePetiteContainer(ProxyProxetta proxetta) {
 		this.proxetta = proxetta;
 	}
 
@@ -31,7 +32,9 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 			if (name == null) {
 				name = resolveBeanName(type);
 			}
-			type = proxetta.defineProxy(type);
+			ProxettaProxyCreator ppc = proxetta.builder();
+			ppc.setTarget(type);
+			type = ppc.define();
 		}
 		return super.registerPetiteBean(name, type, scopeType, wiringMode);
 	}
