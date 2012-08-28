@@ -4,7 +4,6 @@ package jodd.proxetta.impl;
 
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ProxettaProxyCreator;
 import jodd.proxetta.asm.ProxettaNaming;
 
 /**
@@ -39,20 +38,20 @@ public class ProxyProxetta extends Proxetta {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProxettaProxyCreator builder() {
-		return new ProxettaProxyCreator(this);
+	public ProxyProxettaBuilder builder() {
+		return new ProxyProxettaBuilder(this);
 	}
 
 	// ---------------------------------------------------------------- shortcuts
 
-	public ProxettaProxyCreator builder(Class target) {
-		ProxettaProxyCreator builder = builder();
+	public ProxyProxettaBuilder builder(Class target) {
+		ProxyProxettaBuilder builder = builder();
 		builder.setTarget(target);
 		return builder;
 	}
 
-	public ProxettaProxyCreator builder(Class target, String targetProxyClassName) {
-		ProxettaProxyCreator builder = builder();
+	public ProxyProxettaBuilder builder(Class target, String targetProxyClassName) {
+		ProxyProxettaBuilder builder = builder();
 		builder.setTarget(target);
 		builder.setTargetProxyClassName(targetProxyClassName);
 		return builder;

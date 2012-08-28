@@ -1,8 +1,11 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.asm;
+package jodd.proxetta.impl;
 
-import jodd.proxetta.impl.InvokeProxetta;
+import jodd.proxetta.ProxettaBuilder;
+import jodd.proxetta.asm.InvokeClassBuilder;
+import jodd.proxetta.asm.TargetClassInfoReader;
+import jodd.proxetta.asm.WorkData;
 import org.objectweb.asm.ClassReader;
 
 import java.io.InputStream;
@@ -10,11 +13,11 @@ import java.io.InputStream;
 /**
  * Invocation replacer class processor.
  */
-public class ProxettaInvokeCreator extends ClassProcessor {
+public class InvokeProxettaBuilder extends ProxettaBuilder {
 
 	protected final InvokeProxetta invokeProxetta;
 
-	public ProxettaInvokeCreator(InvokeProxetta invokeProxetta) {
+	public InvokeProxettaBuilder(InvokeProxetta invokeProxetta) {
 		super(invokeProxetta);
 		this.invokeProxetta = invokeProxetta;
 	}
@@ -49,7 +52,7 @@ public class ProxettaInvokeCreator extends ClassProcessor {
 
 		cr.accept(icb, 0);
 
-		return icb.wd;
+		return icb.getWorkData();
 	}
 
 }

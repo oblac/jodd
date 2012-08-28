@@ -1,8 +1,11 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.asm;
+package jodd.proxetta.impl;
 
-import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.ProxettaBuilder;
+import jodd.proxetta.asm.ProxettaClassBuilder;
+import jodd.proxetta.asm.TargetClassInfoReader;
+import jodd.proxetta.asm.WorkData;
 import org.objectweb.asm.ClassReader;
 
 import java.io.InputStream;
@@ -10,11 +13,11 @@ import java.io.InputStream;
 /**
  * Creates the proxy subclass using ASM library.
  */
-public class ProxettaProxyCreator extends ClassProcessor {
+public class ProxyProxettaBuilder extends ProxettaBuilder {
 
 	protected final ProxyProxetta proxyProxetta;
 
-	public ProxettaProxyCreator(ProxyProxetta proxyProxetta) {
+	public ProxyProxettaBuilder(ProxyProxetta proxyProxetta) {
 		super(proxyProxetta);
 		this.proxyProxetta = proxyProxetta;
 	}
@@ -48,7 +51,8 @@ public class ProxettaProxyCreator extends ClassProcessor {
 				targetClassInfoReader);
 
 		cr.accept(pcb, 0);
-		return pcb.wd;
+
+		return pcb.getWorkData();
 	}
 
 }

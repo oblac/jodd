@@ -1,18 +1,21 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.asm;
+package jodd.proxetta.impl;
 
+import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;
-import jodd.proxetta.impl.WrapperProxetta;
+import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
+import jodd.proxetta.asm.TargetClassInfoReader;
+import jodd.proxetta.asm.WorkData;
 import org.objectweb.asm.ClassReader;
 
 import java.lang.reflect.Field;
 
-public class ProxettaWrapperCreator extends ClassProcessor {
+public class WrapperProxettaBuilder extends ProxettaBuilder {
 
 	protected final WrapperProxetta wrapperProxetta;
 
-	public ProxettaWrapperCreator(WrapperProxetta wrapperProxetta) {
+	public WrapperProxettaBuilder(WrapperProxetta wrapperProxetta) {
 		super(wrapperProxetta);
 		this.wrapperProxetta = wrapperProxetta;
 	}
@@ -46,7 +49,8 @@ public class ProxettaWrapperCreator extends ClassProcessor {
 						targetClassInfoReader);
 
 		cr.accept(pcb, 0);
-		return pcb.wd;
+
+		return pcb.getWorkData();
 	}
 
 

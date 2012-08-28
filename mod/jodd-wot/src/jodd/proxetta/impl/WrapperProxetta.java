@@ -5,7 +5,6 @@ package jodd.proxetta.impl;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.asm.ProxettaNaming;
-import jodd.proxetta.asm.ProxettaWrapperCreator;
 
 /**
  * Proxetta that creates wrappers.
@@ -36,14 +35,14 @@ public class WrapperProxetta extends Proxetta {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProxettaWrapperCreator builder() {
-		return new ProxettaWrapperCreator(this);
+	public WrapperProxettaBuilder builder() {
+		return new WrapperProxettaBuilder(this);
 	}
 
 	// ---------------------------------------------------------------- shortcuts
 
-	public ProxettaWrapperCreator builder(Class targetClassOrInterface, Class targetInterface) {
-		ProxettaWrapperCreator builder = builder();
+	public WrapperProxettaBuilder builder(Class targetClassOrInterface, Class targetInterface) {
+		WrapperProxettaBuilder builder = builder();
 
 		builder.setTarget(targetClassOrInterface);
 		builder.setTargetInterface(targetInterface);
@@ -51,8 +50,8 @@ public class WrapperProxetta extends Proxetta {
 		return builder;
 	}
 
-	public ProxettaWrapperCreator builder(Class targetClassOrInterface, Class targetInterface, String targetProxyClassName) {
-		ProxettaWrapperCreator builder = builder();
+	public WrapperProxettaBuilder builder(Class targetClassOrInterface, Class targetInterface, String targetProxyClassName) {
+		WrapperProxettaBuilder builder = builder();
 
 		builder.setTarget(targetClassOrInterface);
 		builder.setTargetInterface(targetInterface);

@@ -4,7 +4,7 @@ package jodd.proxetta.methref;
 
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ProxettaProxyCreator;
+import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
 
@@ -45,8 +45,8 @@ public class MethrefProxetta {
 	 * Simply delegates to {@link jodd.proxetta.Proxetta#defineProxy(Class)}.
 	 */
 	public Class defineProxy(Class target) {
-		ProxettaProxyCreator ppc =  proxetta.builder();
-		ppc.setTarget(target);
-		return ppc.define();
+		ProxyProxettaBuilder builder =  proxetta.builder();
+		builder.setTarget(target);
+		return builder.define();
 	}
 }

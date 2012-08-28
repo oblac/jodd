@@ -30,6 +30,13 @@ public class InvokeClassBuilder extends ClassAdapter {
 		this.reqProxyClassName = reqProxyClassName;
 	}
 
+	/**
+	 * Returns working data.
+	 */
+	public WorkData getWorkData() {
+		return wd;
+	}
+
 	// ---------------------------------------------------------------- header
 
 	@Override

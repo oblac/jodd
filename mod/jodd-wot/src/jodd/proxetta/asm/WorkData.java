@@ -12,7 +12,7 @@ import static jodd.util.StringPool.DOT;
 /**
  * Holds various information about the current process of making proxy.
  */
-final class WorkData {
+public final class WorkData {
 
 	final ClassVisitor dest;
 
@@ -24,14 +24,15 @@ final class WorkData {
 
 	String targetPackage;
 	String targetClassname;
-	boolean proxyApplied;
 	String nextSupername;
 	String superName;
-	String thisReference;
 	String superReference;
 	ProxyAspectData[] proxyAspects;
 	String wrapperRef;
 	String wrapperType;
+
+	public String thisReference;
+	public boolean proxyApplied;
 
 	// ---------------------------------------------------------------- init
 

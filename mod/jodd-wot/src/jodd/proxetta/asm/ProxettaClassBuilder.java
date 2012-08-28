@@ -52,6 +52,12 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		this.targetClassInfo = targetClassInfoReader;
 	}
 
+	/**
+	 * Returns working data.
+	 */
+	public WorkData getWorkData() {
+		return wd;
+	}
 
 	// ---------------------------------------------------------------- header
 
@@ -221,8 +227,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
 		// not used
 	}
-
-
 
 	// ---------------------------------------------------------------- create proxy method builder if needed
 

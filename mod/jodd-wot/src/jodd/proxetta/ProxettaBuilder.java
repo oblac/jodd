@@ -1,13 +1,13 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.asm;
+package jodd.proxetta;
 
 import jodd.log.Log;
-import jodd.proxetta.Proxetta;
+import jodd.proxetta.asm.TargetClassInfoReader;
+import jodd.proxetta.asm.WorkData;
 import jodd.util.StringUtil;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import jodd.proxetta.ProxettaException;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 
@@ -15,16 +15,20 @@ import java.io.InputStream;
 import java.io.IOException;
 
 /**
- * Base class processor.
- * // todo move to proxetta and impl packages!
+ * Proxetta builder. While {@link Proxetta} only holds aspects and
+ * configuration, <code>ProxettaBuilder</code> deals with the
+ * actually building proxies and wrappers over provided target.
  */
-public abstract class ClassProcessor {
+public abstract class ProxettaBuilder {
 
-	private static final Log log = Log.getLogger(ClassProcessor.class);
+	private static final Log log = Log.getLogger(ProxettaBuilder.class);
 
 	protected final Proxetta proxetta;
 
-	protected ClassProcessor(Proxetta proxetta) {
+	/**
+	 * Creates new builder.
+	 */
+	protected ProxettaBuilder(Proxetta proxetta) {
 		this.proxetta = proxetta;
 	}
 	// ---------------------------------------------------------------- IN
@@ -182,7 +186,7 @@ public abstract class ClassProcessor {
 	}
 
 	/**
-	 * Returns byte array of invoked proxetta creator.
+	 * Returns byte array of created class.
 	 */
 	public byte[] create() {
 		process();
@@ -191,24 +195,27 @@ public abstract class ClassProcessor {
 
 		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
 			if (log.isDebugEnabled()) {
-				log.debug("proxy not applied");
+				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}
 			return null;
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("proxy created");
+			log.debug("proxy created " + StringUtil.toSafeString(targetClassName));
 		}
 
 		return result;
 	}
 
+	/**
+	 * Defines class.
+	 */
 	public Class define() {
 		process();
 
 		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
 			if (log.isDebugEnabled()) {
-				log.debug("proxy not applied: " + StringUtil.toSafeString(targetClassName));
+				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
 			}
 
 			if (targetClass != null) {
@@ -223,7 +230,7 @@ public abstract class ClassProcessor {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("proxy created on " + StringUtil.toSafeString(targetClassName));
+			log.debug("proxy created " + StringUtil.toSafeString(targetClassName));
 		}
 
 		try {
@@ -249,7 +256,8 @@ public abstract class ClassProcessor {
 	}
 
 	/**
-	 * Creates new instance.
+	 * Creates new instance of created class.
+	 * Assumes default no-arg constructor.
 	 */
 	public Object newInstance() {
 		Class type = define();

@@ -4,7 +4,6 @@ package jodd.proxetta.impl;
 
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.Proxetta;
-import jodd.proxetta.asm.ProxettaInvokeCreator;
 import jodd.proxetta.asm.ProxettaNaming;
 
 /**
@@ -36,20 +35,20 @@ public class InvokeProxetta extends Proxetta {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProxettaInvokeCreator builder() {
-		return new ProxettaInvokeCreator(this);
+	public InvokeProxettaBuilder builder() {
+		return new InvokeProxettaBuilder(this);
 	}
 
 	// ---------------------------------------------------------------- shortcuts
 
-	public ProxettaInvokeCreator builder(Class target) {
-		ProxettaInvokeCreator builder = builder();
+	public InvokeProxettaBuilder builder(Class target) {
+		InvokeProxettaBuilder builder = builder();
 		builder.setTarget(target);
 		return builder;
 	}
 
-	public ProxettaInvokeCreator builder(Class target, String targetProxyClassName) {
-		ProxettaInvokeCreator builder = builder();
+	public InvokeProxettaBuilder builder(Class target, String targetProxyClassName) {
+		InvokeProxettaBuilder builder = builder();
 		builder.setTarget(target);
 		builder.setTargetProxyClassName(targetProxyClassName);
 		return builder;
