@@ -34,6 +34,7 @@ public abstract class Proxetta {
 	protected ClassLoader classLoader;
 	protected boolean variableClassName;
 	protected String classNameSuffix;
+	protected String debugFolder;
 
 	/**
 	 * Specifies 'forced' mode. If <code>true</code>, new proxy class will be created even if there are no
@@ -89,6 +90,18 @@ public abstract class Proxetta {
 
 	public String getClassNameSuffix() {
 		return classNameSuffix;
+	}
+
+	/**
+	 * Specifies the debug folder where all created classes will be
+	 * written to, for debugging purposes.
+	 */
+	public void setDebugFolder(String debugFolder) {
+		this.debugFolder = debugFolder;
+	}
+
+	public String getDebugFolder() {
+		return debugFolder;
 	}
 
 	// ---------------------------------------------------------------- builder

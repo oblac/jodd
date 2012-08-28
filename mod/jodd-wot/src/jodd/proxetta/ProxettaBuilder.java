@@ -2,6 +2,7 @@
 
 package jodd.proxetta;
 
+import jodd.io.FileUtil;
 import jodd.log.Log;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
@@ -11,6 +12,7 @@ import org.objectweb.asm.ClassWriter;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -198,6 +200,8 @@ public abstract class ProxettaBuilder {
 
 		byte[] result = toByteArray();
 
+		dumpClass(result);
+
 		if ((proxetta.isForced() == false) && (isProxyApplied() == false)) {
 			if (log.isDebugEnabled()) {
 				log.debug("proxy not applied " + StringUtil.toSafeString(targetClassName));
@@ -252,9 +256,11 @@ public abstract class ProxettaBuilder {
 				}
 			}
 
-//FileUtil.writeBytes("d:\\xxx.class", cp.toByteArray());	// todo debug MODE!!!!! create classes somewhere on disk!!!!!
+			byte[] bytes = toByteArray();
 
-			return ClassLoaderUtil.defineClass(getProxyClassName(), toByteArray(), classLoader);
+			dumpClass(bytes);
+
+			return ClassLoaderUtil.defineClass(getProxyClassName(), bytes, classLoader);
 		} catch (Exception ex) {
 			throw new ProxettaException("Class definition failed.", ex);
 		}
@@ -274,7 +280,36 @@ public abstract class ProxettaBuilder {
 	}
 
 
+	// ---------------------------------------------------------------- debug
 
+	/**
+	 * Writes created class content to output folder for debugging purposes.
+	 */
+	protected void dumpClass(byte[] bytes) {
+		String debugFolder = proxetta.getDebugFolder();
+		if (debugFolder == null) {
+			return;
+		}
+
+		File folder = new File(debugFolder);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		String fileName = proxyClassName;
+		if (fileName == null) {
+			fileName = "proxetta-" + System.currentTimeMillis();
+		}
+
+		fileName += ".class";
+
+		File file = new File(folder, fileName);
+		try {
+			FileUtil.writeBytes(file, bytes);
+		} catch (IOException ioex) {
+			log.warn("Error dumping class", ioex);
+		}
+	}
 
 	// ---------------------------------------------------------------- OUT
 
@@ -290,7 +325,7 @@ public abstract class ProxettaBuilder {
 	/**
 	 * Returns raw bytecode.
 	 */
-	public byte[] toByteArray() {
+	protected byte[] toByteArray() {
 		checkAccepted();
 		return destClassWriter.toByteArray();
 	}
