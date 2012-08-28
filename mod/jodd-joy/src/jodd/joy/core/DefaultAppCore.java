@@ -26,8 +26,8 @@ import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
@@ -326,12 +326,12 @@ public abstract class DefaultAppCore {
 
 	// ---------------------------------------------------------------- proxetta
 
-	protected Proxetta proxetta;
+	protected ProxyProxetta proxetta;
 
 	/**
 	 * Returns proxetta.
 	 */
-	public Proxetta getProxetta() {
+	public ProxyProxetta getProxetta() {
 		return proxetta;
 	}
 
@@ -344,7 +344,8 @@ public abstract class DefaultAppCore {
 	 */
 	protected void startProxetta() {
 		log.info("proxetta initialization");
-		proxetta = Proxetta.withAspects(createAppAspects()).loadsWith(this.getClass().getClassLoader());
+		proxetta = ProxyProxetta.withAspects(createAppAspects());
+		proxetta.setClassLoader(this.getClass().getClassLoader());
 	}
 
 	/**

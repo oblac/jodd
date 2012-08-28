@@ -6,7 +6,7 @@ import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteContainer;
 import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
-import jodd.proxetta.asm.ProxettaProxyCreator;
+import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.impl.ProxyProxetta;
 
 /**
@@ -32,9 +32,11 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 			if (name == null) {
 				name = resolveBeanName(type);
 			}
-			ProxettaProxyCreator ppc = proxetta.builder();
-			ppc.setTarget(type);
-			type = ppc.define();
+
+			ProxyProxettaBuilder builder = proxetta.builder();
+			builder.setTarget(type);
+
+			type = builder.define();
 		}
 		return super.registerPetiteBean(name, type, scopeType, wiringMode);
 	}

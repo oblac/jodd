@@ -4,7 +4,7 @@ package jodd.joy.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.ActionConfig;
-import jodd.proxetta.Proxetta;
+import jodd.proxetta.impl.ProxyProxetta;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -15,13 +15,13 @@ import java.util.HashMap;
  */
 public class ProxettaAwareActionsManager extends ActionsManager {
 
-	protected final Proxetta proxetta;
+	protected final ProxyProxetta proxetta;
 	protected final Map<Class, Class> proxyActionClasses;
 
 	public ProxettaAwareActionsManager() {
 		this(null);
 	}
-	public ProxettaAwareActionsManager(Proxetta proxetta) {
+	public ProxettaAwareActionsManager(ProxyProxetta proxetta) {
 		this.proxetta = proxetta;
 		this.proxyActionClasses = new HashMap<Class, Class>();
 	}
@@ -40,7 +40,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 			// create proxy for action class if not already created
 			Class existing = proxyActionClasses.get(actionClass);
 			if (existing == null) {
-				existing = proxetta.defineProxy(actionClass);
+				existing = proxetta.builder(actionClass).define();
 				proxyActionClasses.put(actionClass, existing);
 			}
 			actionClass = existing;
