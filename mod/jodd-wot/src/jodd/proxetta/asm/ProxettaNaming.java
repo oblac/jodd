@@ -28,6 +28,11 @@ public interface ProxettaNaming {
 	String INVOKE_PROXY_CLASS_NAME_SUFFIX = "$Clone";
 
 	/**
+	 * Wrapper class name suffix.
+	 */
+	String WRAPPER_CLASS_NAME_SUFFIX = "$Wrapper";
+
+	/**
 	 * Prefix for advice method names.
 	 */
 	String METHOD_PREFIX = "$__";
