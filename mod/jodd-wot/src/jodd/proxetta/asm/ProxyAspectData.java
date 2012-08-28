@@ -250,7 +250,7 @@ final class ProxyAspectData {
 								}
 							} else
 
-							if (opcode == INVOKESTATIC) {
+							if (opcode == INVOKESTATIC || opcode == INVOKESPECIAL) {
 								if (owner.equals(adviceReference)) {
 									owner = wd.thisReference;
 									name = adviceMethodName(name, aspectIndex);
