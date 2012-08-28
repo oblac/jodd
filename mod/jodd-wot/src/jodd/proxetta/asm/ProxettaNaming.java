@@ -23,14 +23,14 @@ public interface ProxettaNaming {
 	String PROXY_CLASS_NAME_SUFFIX = "$Proxetta";
 
 	/**
-	 * Proxy class name suffix.
+	 * Invoke proxy class name suffix.
 	 */
-	String INVOKE_PROXY_CLASS_NAME_SUFFIX = "$Clone";
+	String INVOKE_PROXY_CLASS_NAME_SUFFIX = "$Clonnetou";
 
 	/**
 	 * Wrapper class name suffix.
 	 */
-	String WRAPPER_CLASS_NAME_SUFFIX = "$Wrapper";
+	String WRAPPER_CLASS_NAME_SUFFIX = "$Wraporetto";
 
 	/**
 	 * Prefix for advice method names.
