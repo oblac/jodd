@@ -8,12 +8,12 @@ import jodd.petite.WiringMode;
 import jodd.petite.scope.Scope;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import examples.petite.Foo;
 import examples.petite.FooImpl;
 import examples.petite.Boo;
 import examples.proxetta.LogProxyAdvice;
+import jodd.proxetta.impl.ProxyProxetta;
 
 public class Petite {
 
@@ -33,7 +33,7 @@ public class Petite {
 		PetiteContainer petite = new PetiteContainer() {
 			@Override
 			protected BeanDefinition registerPetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
-				type = Proxetta.withAspects(pd4log).defineProxy(type);
+				type = ProxyProxetta.withAspects(pd4log).builder(type).define();
 				return super.registerPetiteBean(name, type, scopeType, wiringMode);
 			}
 		};

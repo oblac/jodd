@@ -5,7 +5,7 @@ package examples.proxetta.dci2;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
-import jodd.proxetta.Proxetta;
+import jodd.proxetta.impl.InvokeProxetta;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class FrameworkManager {
 	public static synchronized <T> T bind(Class<T> roleClass, Object target) {
 		Class proxifiedRoleclass = proxies.get(roleClass);
 		if (proxifiedRoleclass == null) {
-			proxifiedRoleclass = fp.defineProxy(roleClass);
+			proxifiedRoleclass = fp.builder(roleClass).define();
 			proxies.put(roleClass, proxifiedRoleclass);
 		}
 		try {
@@ -36,12 +36,12 @@ public class FrameworkManager {
 
 	// ---------------------------------------------------------------- proxetta
 
-	private static Proxetta fp = Proxetta.withAspects(
+	private static InvokeProxetta fp = InvokeProxetta.withAspects(
 			new InvokeAspect() {
 				@Override
 				public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
 					if (invokeInfo.getClassName().equals(Self.class.getCanonicalName()) &&
-						invokeInfo.getMethodName().equals("get")
+							invokeInfo.getMethodName().equals("get")
 							) {
 						return InvokeReplacer.
 								with(InjectUtil.class, "create").

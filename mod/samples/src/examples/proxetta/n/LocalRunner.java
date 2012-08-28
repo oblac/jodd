@@ -2,12 +2,10 @@
 
 package examples.proxetta.n;
 
-import jodd.proxetta.Proxetta;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.datetime.JStopWatch;
+import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.ReflectUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +18,7 @@ public class LocalRunner {
 
 	public static void main(String[] args) throws Exception {
 		Aspects a = new Aspects();
-		Proxetta p = Proxetta.withAspects(
+		ProxyProxetta p = ProxyProxetta.withAspects(
 				a.getTxAspect()
 //				,a.getJoAspect()
 		);
@@ -39,7 +37,7 @@ public class LocalRunner {
 		StreamUtil.close(is);
 
 
-		b = p.createProxy(UserService.class);
+		b = p.builder(UserService.class).create();
 		if (b != null) {
 			try {
 				FileUtil.writeBytes("d:\\UserServiceProxy.class", b);
@@ -49,7 +47,7 @@ public class LocalRunner {
 		}
 		System.out.println("----------------------------------------------------------------- RUN");
 
-		UserService u =  p.createProxyInstance(UserService.class);
+		UserService u = (UserService) p.builder(UserService.class).newInstance();
 //		System.out.println(u);          --> A??????????
 //		u.findUser("", "");
 //		u.doo();

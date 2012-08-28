@@ -2,8 +2,8 @@
 
 package examples.proxetta.dci;
 
-import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
+import jodd.proxetta.impl.ProxyProxetta;
 
 /**
  * Example.
@@ -28,8 +28,7 @@ public class RunMe {
 	 * (such Petite from Jodd :)
 	 */
 	private static <T> T createRole(Class<T> target) throws Exception {
-		Class<T> proxified = Proxetta.withAspects(aspect).defineProxy(target);
-		return proxified.newInstance();
+		return (T) ProxyProxetta.withAspects(aspect).builder(target).newInstance();
 	}
 
 	/**

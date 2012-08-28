@@ -4,10 +4,10 @@ package examples.proxetta;
 
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
-import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.AnnotationInfo;
 import jodd.io.FileUtil;
+import jodd.proxetta.impl.ProxyProxetta;
 import jodd.util.ClassLoaderUtil;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class ProxettaExample {
 
 	public static void main(String[] args) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, IOException {
 
-		byte[] fooBytes = Proxetta.withAspects(pd1, pd2).createProxy(Foo.class);
+		byte[] fooBytes = ProxyProxetta.withAspects(pd1, pd2).builder(Foo.class).create();
 		FileUtil.writeBytes("d://Foo.class", fooBytes);
 		//Class fooClass = ClassLoaderUtil.defineClass("examples.proxetta.Foo$JoddProxy", fooBytes);
 		Class fooClass = ClassLoaderUtil.defineClass(fooBytes);
@@ -84,7 +84,11 @@ public class ProxettaExample {
 		System.out.println("\t\t\tmethod annotation: " + custom);
 
 		System.out.println("\n\n\n--------------------------------------------------------------------");
-		Class zooClass = Proxetta.withAspects(pd1,pd2).forced(true).defineProxy(Zoo.class);
+
+		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(pd1,pd2);
+		proxyProxetta.setForced(true);
+
+		Class zooClass = proxyProxetta.builder(Zoo.class).define();
 		System.out.println(zooClass);
 		Zoo zoo = (Zoo) zooClass.newInstance();
 		zoo.zoo();
