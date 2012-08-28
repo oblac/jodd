@@ -194,7 +194,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					@SuppressWarnings({"ParameterNameDiffersFromOverriddenParameter"})
 					@Override
 					public void visitMethodInsn(int opcode, String string, String mname, String mdesc) {
-						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE)) {
+						if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE) || (opcode == INVOKESPECIAL)) {
 							if (string.equals(aspectData.adviceReference)) {
 								string = wd.thisReference;
 								mname = adviceMethodName(mname, aspectData.aspectIndex);

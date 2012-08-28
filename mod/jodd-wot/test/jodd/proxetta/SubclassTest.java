@@ -37,6 +37,7 @@ public class SubclassTest extends TestCase {
 		}
 */
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(a1);
+		proxyProxetta.setClassNameSuffix("$$Proxetta");
 		ProxyProxettaBuilder pb = proxyProxetta.builder();
 		pb.setTarget(Foo.class);
 		Foo foo = (Foo) pb.newInstance();
