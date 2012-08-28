@@ -7,6 +7,7 @@ import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationInfo;
 import jodd.proxetta.ClassInfo;
+import jodd.proxetta.asm.ProxettaAsmUtil;
 import jodd.util.Wildcard;
 
 import java.lang.annotation.Annotation;
@@ -19,8 +20,8 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method is public.
 	 */
-	public boolean isPublic(MethodInfo msign) {
-		return (msign.getAccessFlags() & AsmConst.ACC_PUBLIC) != 0;
+	public boolean isPublic(MethodInfo methodInfo) {
+		return (methodInfo.getAccessFlags() & AsmConst.ACC_PUBLIC) != 0;
 	}
 
 	/**
@@ -100,15 +101,15 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method has no arguments.
 	 */
-	public boolean hasNoArguments(MethodInfo msign) {
-		return msign.getArgumentsCount() == 0;
+	public boolean hasNoArguments(MethodInfo methodInfo) {
+		return methodInfo.getArgumentsCount() == 0;
 	}
 
 	/**
 	 * Returns <code>true</code> if method has only one argument.
 	 */
-	public boolean hasOneArgument(MethodInfo msign) {
-		return msign.getArgumentsCount() == 1;
+	public boolean hasOneArgument(MethodInfo methodInfo) {
+		return methodInfo.getArgumentsCount() == 1;
 	}
 
 	// ---------------------------------------------------------------- methods level
@@ -116,15 +117,24 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method is a top-level method.
 	 */
-	public boolean isTopLevelMethod(MethodInfo msign) {
-		return msign.isTopLevelMethod();
+	public boolean isTopLevelMethod(MethodInfo methodInfo) {
+		return methodInfo.isTopLevelMethod();
 	}
 
 	/**
 	 * Returns <code>true</code> if method is declared in <code>Object</code> class (root class).
 	 */
-	public boolean isRootMethod(MethodInfo msign) {
-		return AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(msign.getDeclaredClassName());
+	public boolean isRootMethod(MethodInfo methodInfo) {
+		return AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(methodInfo.getDeclaredClassName());
+	}
+
+	/**
+	 * Returns <code>true</code> if method is constructor or static block.
+	 */
+	public boolean isSpecialMethod(MethodInfo methodInfo) {
+		return
+				methodInfo.getMethodName().equals(ProxettaAsmUtil.INIT) ||
+				methodInfo.getMethodName().equals(ProxettaAsmUtil.CLINIT);
 	}
 
 
@@ -133,15 +143,15 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Match method name to provided {@link jodd.util.Wildcard} pattern.
 	 */
-	public boolean matchMethodName(MethodInfo msing, String wildcard) {
-		return Wildcard.match(msing.getMethodName(), wildcard);
+	public boolean matchMethodName(MethodInfo methodInfo, String wildcard) {
+		return Wildcard.match(methodInfo.getMethodName(), wildcard);
 	}
 
 	/**
 	 * Match class name to provided {@link jodd.util.Wildcard} pattern.
 	 */
-	public boolean matchClassName(MethodInfo msing, String wildcard) {
-		return Wildcard.match(msing.getClassname(), wildcard);
+	public boolean matchClassName(MethodInfo methodInfo, String wildcard) {
+		return Wildcard.match(methodInfo.getClassname(), wildcard);
 	}
 
 
@@ -151,15 +161,15 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if method's return type is <code>void</code>.
 	 */
-	public boolean hasNoReturnValue(MethodInfo msign) {
-		return msign.getReturnOpcodeType() == AsmConst.TYPE_VOID;
+	public boolean hasNoReturnValue(MethodInfo methodInfo) {
+		return methodInfo.getReturnOpcodeType() == AsmConst.TYPE_VOID;
 	}
 
 	/**
 	 * Returns <code>true</code> if method has a return type.
 	 */
-	public boolean hasReturnValue(MethodInfo msign) {
-		return msign.getReturnOpcodeType() != AsmConst.TYPE_VOID;
+	public boolean hasReturnValue(MethodInfo methodInfo) {
+		return methodInfo.getReturnOpcodeType() != AsmConst.TYPE_VOID;
 	}
 
 
@@ -169,15 +179,15 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	/**
 	 * Returns <code>true</code> if both pointcuts can be applied on the method..
 	 */
-	public boolean and(MethodInfo msign, ProxyPointcut p1, ProxyPointcut p2) {
-		return p1.apply(msign) && p2.apply(msign);
+	public boolean and(MethodInfo methodInfo, ProxyPointcut p1, ProxyPointcut p2) {
+		return p1.apply(methodInfo) && p2.apply(methodInfo);
 	}
 
 	/**
 	 * Returns <code>true</code> if at least one pointcuts can be applied on the method..
 	 */
-	public boolean or(MethodInfo msign, ProxyPointcut p1, ProxyPointcut p2) {
-		return p1.apply(msign) || p2.apply(msign);
+	public boolean or(MethodInfo methodInfo, ProxyPointcut p1, ProxyPointcut p2) {
+		return p1.apply(methodInfo) || p2.apply(methodInfo);
 	}
 
 }
