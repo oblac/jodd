@@ -212,7 +212,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								if (isInvokeMethod(mname, mdesc)) {           // [R7]
 									if (td.isLastMethodInChain()) {                            // last proxy method just calls super target method
 
-										if (wd.wrapperRef == null) {
+										if (wd.isWrapper() == false) {
 											// PROXY
 											loadSpecialMethodArguments(mv, td.msign);
 											mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, td.msign.getMethodName(), td.msign.getDescription());

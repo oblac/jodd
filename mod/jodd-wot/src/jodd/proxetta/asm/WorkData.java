@@ -35,6 +35,10 @@ public final class WorkData {
 	public String thisReference;
 	public boolean proxyApplied;
 
+	public boolean isWrapper() {
+		return wrapperRef != null;
+	}
+
 	// ---------------------------------------------------------------- init
 
 	/**

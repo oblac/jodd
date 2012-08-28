@@ -32,7 +32,6 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		this.targetClassOrInterface = targetClassOrInterface;
 		this.targetInterface = targetInterface;
 		this.targetFieldName = targetFieldName;
-		this.createInitMethod = false;
 	}
 
 	/**

@@ -136,9 +136,6 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	// ---------------------------------------------------------------- end
 
-	protected boolean createInitMethod = true;
-
-
 	/**
 	 * Finalizes creation of destination proxy class.
 	 */
@@ -158,7 +155,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			mv.visitEnd();
 		}
 
-		if (createInitMethod) {
+		if (wd.isWrapper() == false) {
 			// creates init method that simply calls all advice constructor methods in correct order
 			// this created init method is called from each destination's constructor
 			MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
@@ -258,7 +255,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			return null; // no pointcut on this method, return
 		}
 		int access = msign.getAccessFlags();
-		if (wd.wrapperRef == null) {
+		if (wd.isWrapper() == false) {
 			if ((access & ACC_ABSTRACT) != 0) {
 				throw new ProxettaException("Unable to proxy abstract method: " + msign);
 			}
