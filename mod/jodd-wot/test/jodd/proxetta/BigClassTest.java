@@ -2,6 +2,7 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.impl.ProxyProxetta;
 import junit.framework.TestCase;
 import jodd.proxetta.data.BigFatJoe;
 import jodd.proxetta.data.StatCounter;
@@ -114,7 +115,7 @@ public class BigClassTest extends TestCase {
 			}
 		});
 
-		byte[] classBytes = Proxetta.withAspects(aspect).createProxy(BigFatJoe.class);
+		byte[] classBytes = ProxyProxetta.withAspects(aspect).builder(BigFatJoe.class).create();
 		//FileUtil.writeBytes("d://joe.class", classBytes);
 		Class clazz = ClassLoaderUtil.defineClass(classBytes);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();

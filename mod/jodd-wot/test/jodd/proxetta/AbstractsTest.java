@@ -3,6 +3,7 @@
 package jodd.proxetta;
 
 import jodd.proxetta.data.Inter;
+import jodd.proxetta.impl.ProxyProxetta;
 import junit.framework.TestCase;
 import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Abstra;
@@ -10,14 +11,14 @@ import jodd.proxetta.data.Abstra2;
 
 public class AbstractsTest extends TestCase {
 
-	public void testAbstract1() {
+	public void testAbstract1() throws Exception {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
 				return true;
 			}
 		});
 
-		Abstra aaa = Proxetta.withAspects(proxyAspect).createProxyInstance(Abstra.class);
+		Abstra aaa = (Abstra) ProxyProxetta.withAspects(proxyAspect).builder(Abstra.class).newInstance();
 		assertNotNull(aaa);
 		aaa.foo();
 	}
@@ -30,7 +31,7 @@ public class AbstractsTest extends TestCase {
 		});
 
 		try {
-			Proxetta.withAspects(proxyAspect).createProxyInstance(Abstra2.class);
+			ProxyProxetta.withAspects(proxyAspect).builder(Abstra2.class).newInstance();
 			fail();
 		} catch (ProxettaException ignore) {
 		}
@@ -44,7 +45,7 @@ public class AbstractsTest extends TestCase {
 		});
 
 		try {
-			Proxetta.withAspects(proxyAspect).createProxyInstance(Inter.class);
+			ProxyProxetta.withAspects(proxyAspect).builder(Inter.class).newInstance();
 			fail();
 		} catch (ProxettaException ignore) {
 		}

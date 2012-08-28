@@ -3,6 +3,8 @@
 package jodd.proxetta;
 
 import jodd.io.FastByteArrayOutputStream;
+import jodd.proxetta.asm.ProxettaNaming;
+import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.inv.Inter;
 import jodd.proxetta.inv.One;
 import jodd.proxetta.inv.OneWithSuper;
@@ -20,17 +22,17 @@ public class InvReplTest extends TestCase {
 
 	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 
-		Proxetta proxetta = initProxetta();
+		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
-		byte klazz[] = proxetta.createProxy(One.class);
+		byte klazz[] = proxetta.builder(One.class).create();
 		//FileUtil.writeBytes("d:\\OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append("$Clone").toString(), klazz).newInstance();
+		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(ProxettaNaming.INVOKE_PROXY_CLASS_NAME_SUFFIX).toString(), klazz).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());	// clone ctor calls super ctor,
 		fbaos.reset();
 
@@ -39,14 +41,14 @@ public class InvReplTest extends TestCase {
 		fbaos.reset();
 
 		one.example2();
-		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$Clone!15013static: 4", fbaos.toString());
+		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$Clonetou!15013static: 4", fbaos.toString());
 		fbaos.reset();
 
 		one.example3();
 		assertEquals("state = REPLACED ctor!", fbaos.toString());
 		fbaos.reset();
 
-		assertEquals("jodd.proxetta.inv.One$Clone", one.getClass().getName());
+		assertEquals("jodd.proxetta.inv.One$Clonetou", one.getClass().getName());
 		assertTrue(one instanceof Serializable);
 
 		Annotation[] anns = one.getClass().getAnnotations();
@@ -60,9 +62,9 @@ public class InvReplTest extends TestCase {
 
 
 	public void testSuper() {
-		Proxetta proxetta = initProxetta();
+		InvokeProxetta proxetta = initProxetta();
 		try {
-			OneWithSuper ows = proxetta.createProxyInstance(OneWithSuper.class);
+			proxetta.builder(OneWithSuper.class).define();
 			fail();
 		} catch (ProxettaException ignore) {
 
@@ -70,9 +72,9 @@ public class InvReplTest extends TestCase {
 	}
 
 	public void testInterface() {
-		Proxetta proxetta = initProxetta();
+		InvokeProxetta proxetta = initProxetta();
 		try {
-			Inter ows = proxetta.createProxyInstance(Inter.class);
+			proxetta.builder(Inter.class).newInstance();
 			fail();
 		} catch (ProxettaException ignore) {
 		}
@@ -80,8 +82,8 @@ public class InvReplTest extends TestCase {
 
 
 
-	protected Proxetta initProxetta() {
-		Proxetta fp = Proxetta.withAspects(
+	protected InvokeProxetta initProxetta() {
+		InvokeProxetta fp = InvokeProxetta.withAspects(
 				new InvokeAspect() {
 					@Override
 					public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
@@ -127,7 +129,8 @@ public class InvReplTest extends TestCase {
 							return null;
 						}
 					}
-				});
+				}
+		);
 		return fp;		
 	}
 }
