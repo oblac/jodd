@@ -74,7 +74,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
-		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_ABSTRACT);
+		access &= ~AsmConst.ACC_ABSTRACT;
 
 		// write destination class
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);

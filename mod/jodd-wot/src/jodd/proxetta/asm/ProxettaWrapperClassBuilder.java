@@ -46,8 +46,8 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		wd.superName = AsmConst.SIGNATURE_JAVA_LANG_OBJECT;
 
 		// change access of destination
-		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_ABSTRACT);
-		access = ProxettaAsmUtil.removeAccessFlag(access, AsmConst.ACC_INTERFACE);
+		access &= ~AsmConst.ACC_ABSTRACT;
+		access &= ~AsmConst.ACC_INTERFACE;
 
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {

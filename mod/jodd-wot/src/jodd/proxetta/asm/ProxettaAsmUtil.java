@@ -46,13 +46,6 @@ public class ProxettaAsmUtil {
 	}
 
 	/**
-	 * Removes access flag.
-	 */
-	public static int removeAccessFlag(int access, int flag) {
-		return (access & ~flag);
-	}
-
-	/**
 	 * Validates argument index.
 	 */
 	public static void checkArgumentIndex(MethodSignatureVisitor msign, int argIndex, Class<? extends ProxyAdvice> advice) {

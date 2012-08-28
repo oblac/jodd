@@ -102,8 +102,8 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		// create proxy methods
 		tmd = new TargetMethodData(msign, aspectList);
 
-		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_NATIVE);
-		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_ABSTRACT);
+		access &= ~ACC_NATIVE;
+		access &= ~ACC_ABSTRACT;
 
 		mv = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
 	}
@@ -134,8 +134,8 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 		int access = td.msign.getAccessFlags();
 
-		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_NATIVE);
-		access = ProxettaAsmUtil.removeAccessFlag(access, ACC_ABSTRACT);
+		access &= ~ACC_NATIVE;
+		access &= ~ACC_ABSTRACT;
 		access = ProxettaAsmUtil.makePrivateFinalAccess(access);
 
 		final MethodVisitor mv = wd.dest.visitMethod(access, td.methodName(), td.msign.getDescription(), null, null);
