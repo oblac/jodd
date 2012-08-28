@@ -133,11 +133,15 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 
 	// ---------------------------------------------------------------- end
 
+	protected boolean createInitMethod = true;
+
+
 	/**
 	 * Finalizes creation of destination proxy class.
 	 */
 	@Override
 	public void visitEnd() {
+
 
 		// creates static initialization block that simply calls all advice static init methods in correct order
 		if (wd.adviceClinits != null) {
@@ -151,19 +155,21 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			mv.visitEnd();
 		}
 
-		// creates init method that simply calls all advice constructor methods in correct order
-		// this created init method is called from each destination's constructor
-		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
-		mv.visitCode();
-		if (wd.adviceInits != null) {
-			for (String name : wd.adviceInits) {
-				mv.visitVarInsn(ALOAD, 0);
-				mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, name, DESC_VOID);
+		if (createInitMethod) {
+			// creates init method that simply calls all advice constructor methods in correct order
+			// this created init method is called from each destination's constructor
+			MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
+			mv.visitCode();
+			if (wd.adviceInits != null) {
+				for (String name : wd.adviceInits) {
+					mv.visitVarInsn(ALOAD, 0);
+					mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, name, DESC_VOID);
+				}
 			}
+			mv.visitInsn(RETURN);
+			mv.visitMaxs(0, 0);
+			mv.visitEnd();
 		}
-		mv.visitInsn(RETURN);
-		mv.visitMaxs(0, 0);
-		mv.visitEnd();
 
 		// check all public super methods that are not overridden
 		for (ClassReader cr : targetClassInfo.superClassReaders) {

@@ -21,6 +21,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		super(dest, aspects, suffix, reqProxyClassName, targetClassInfoReader);
 		this.targetClassOrInterface = targetClassOrInterface;
 		this.targetInterface = targetInterface;
+		this.createInitMethod = false;
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// no superclass
-		wd.superName = "java/lang/Object";
+		wd.superName = AsmConst.SIGNATURE_JAVA_LANG_OBJECT;
 
 		// change access of destination
 		access &= ~AsmConst.ACC_ABSTRACT;
@@ -55,18 +56,21 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		FieldVisitor fv  = wd.dest.visitField(AsmConst.ACC_PUBLIC, wd.wrapperRef, wd.wrapperType, null, null);
 		fv.visitEnd();
 
+		createEmptyCtor();
+	}
 
-
-		// create empty ctor
+	/**
+	 * Created empty default constructor.
+	 */
+	protected void createEmptyCtor() {
 		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PUBLIC, INIT, "()V", null, null);
 		mv.visitCode();
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_OBJECT, INIT, "()V");
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
 	}
-
 
 
 	/**
