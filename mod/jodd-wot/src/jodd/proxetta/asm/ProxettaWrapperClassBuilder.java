@@ -3,6 +3,7 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxyAspect;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -52,11 +53,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {
 			wd.wrapInterface = true;
-			interfaces = new String[] {"L" + targetClassOrInterface.getName().replace(".", "/") + ";"};
+			interfaces = new String[] {AsmUtil.typeToTyperef(targetClassOrInterface)};
 		} else {
 			wd.wrapInterface = false;
 			if (targetInterface != null) {
-				interfaces = new String[] {"L" + targetInterface.getName().replace(".", "/") + ";"};
+				interfaces = new String[] {AsmUtil.typeToTyperef(targetInterface)};
 			} else {
 				interfaces = null;
 			}
@@ -70,7 +71,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
 		// create new field wrapper field and store it's reference into work-data
 		wd.wrapperRef = targetFieldName;
-		wd.wrapperType = "L" + name + ";";
+		wd.wrapperType = 'L' + name + ';';
 		FieldVisitor fv  = wd.dest.visitField(AsmConst.ACC_PUBLIC, wd.wrapperRef, wd.wrapperType, null, null);
 		fv.visitEnd();
 

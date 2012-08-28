@@ -3,6 +3,7 @@
 package jodd.asm;
 
 import jodd.mutable.MutableInteger;
+import jodd.util.StringPool;
 
 /**
  * Generic ASM utils.
@@ -160,6 +161,42 @@ public class AsmUtil {
 
 			default: throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
 		}
+	}
+
+	// ---------------------------------------------------------------- type
+
+	public static String typeToTyperef(Class type) {
+		if (type.isArray() == false) {
+			if (type.isPrimitive() == false) {
+				return 'L' + type.getName().replace('.', '/') + ';';
+			}
+			if (type == int.class) {
+				return "I";
+			}
+			if (type == long.class) {
+				return "J";
+			}
+			if (type == boolean.class) {
+				return "Z";
+			}
+			if (type == double.class) {
+				return "D";
+			}
+			if (type == float.class) {
+				return "F";
+			}
+			if (type == short.class) {
+				return "S";
+			}
+			if (type == void.class) {
+				return "V";
+			}
+			if (type == char.class) {
+				return "B";
+			}
+		}
+
+		return type.getName();
 	}
 
 }

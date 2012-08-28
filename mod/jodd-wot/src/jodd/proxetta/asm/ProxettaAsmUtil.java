@@ -55,13 +55,6 @@ public class ProxettaAsmUtil {
 	}
 
 	/**
-	 * Utility method that converts type to character.
-	 */
-	public static String strtype(int type) {
-		return Character.toString((char) type);
-	}
-
-	/**
 	 * Builds advice field name.
 	 */
 	public static String adviceFieldName(String name, int index) {
