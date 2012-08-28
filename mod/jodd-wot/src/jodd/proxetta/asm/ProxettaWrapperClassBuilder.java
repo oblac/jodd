@@ -16,11 +16,13 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
 	protected final Class targetClassOrInterface;
 	protected final Class targetInterface;
+	protected final String targetFieldName;
 
-	public ProxettaWrapperClassBuilder(Class targetClassOrInterface, Class targetInterface, ClassVisitor dest, ProxyAspect[] aspects, String suffix, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
+	public ProxettaWrapperClassBuilder(Class targetClassOrInterface, Class targetInterface, String targetFieldName, ClassVisitor dest, ProxyAspect[] aspects, String suffix, String reqProxyClassName, TargetClassInfoReader targetClassInfoReader) {
 		super(dest, aspects, suffix, reqProxyClassName, targetClassInfoReader);
 		this.targetClassOrInterface = targetClassOrInterface;
 		this.targetInterface = targetInterface;
+		this.targetFieldName = targetFieldName;
 		this.createInitMethod = false;
 	}
 
@@ -49,9 +51,8 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 			wd.proxyAspects[i] = new ProxyAspectData(wd, aspects[i], i);
 		}
 
-
 		// create new field wrapper field and store it's reference into work-data
-		wd.wrapperRef = "_wrapper";
+		wd.wrapperRef = targetFieldName;
 		wd.wrapperType = "L" + name + ";";
 		FieldVisitor fv  = wd.dest.visitField(AsmConst.ACC_PUBLIC, wd.wrapperRef, wd.wrapperType, null, null);
 		fv.visitEnd();
