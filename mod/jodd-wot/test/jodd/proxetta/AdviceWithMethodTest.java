@@ -18,7 +18,7 @@ public class AdviceWithMethodTest extends TestCase {
 				new ProxyAspect(CollectorAdvice.class, new AllTopMethodsPointcut())
 		);
 
-		proxetta.setDebugFolder("d:\\");
+//		proxetta.setDebugFolder("d:\\");
 
 		Foo foo = (Foo) proxetta.builder(Foo.class).newInstance();
 
