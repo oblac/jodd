@@ -44,7 +44,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 						targetInterface,
 						destClassWriter,
 						wrapperProxetta.getAspects(),
-						classNameSuffix(),
+						resolveClassNameSuffix(),
 						requestedProxyClassName,
 						targetClassInfoReader);
 

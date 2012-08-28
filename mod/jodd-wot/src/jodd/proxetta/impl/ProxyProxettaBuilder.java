@@ -46,7 +46,7 @@ public class ProxyProxettaBuilder extends ProxettaBuilder {
 		ProxettaClassBuilder pcb = new ProxettaClassBuilder(
 				destClassWriter,
 				proxyProxetta.getAspects(),
-				classNameSuffix(),
+				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);
 

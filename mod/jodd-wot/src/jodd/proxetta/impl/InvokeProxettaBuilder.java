@@ -46,7 +46,7 @@ public class InvokeProxettaBuilder extends ProxettaBuilder {
 		InvokeClassBuilder icb = new InvokeClassBuilder(
 				destClassWriter,
 				invokeProxetta.getAspects(),
-				classNameSuffix(),
+				resolveClassNameSuffix(),
 				requestedProxyClassName,
 				targetClassInfoReader);
 
