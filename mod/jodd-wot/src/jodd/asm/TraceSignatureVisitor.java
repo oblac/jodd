@@ -2,6 +2,7 @@
 
 package jodd.asm;
 
+import jodd.util.StringUtil;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.signature.SignatureVisitor;
 
@@ -15,6 +16,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
  *
  * Changes made by igor:
  * <li>all private scopes made protected
+ * <li>getExceptionsArray added
  */
 public class TraceSignatureVisitor implements SignatureVisitor {
 
@@ -250,6 +252,17 @@ public class TraceSignatureVisitor implements SignatureVisitor {
     public String getExceptions() {
         return exceptions == null ? null : exceptions.toString();
     }
+
+	public String[] getExceptionsArray() {		 // is
+		if (exceptions == null) {
+			return null;
+		}
+		String[] result = StringUtil.splitc(exceptions.toString(), ',');
+
+		StringUtil.trimAll(result);
+
+		return result;
+	}
 
     // -----------------------------------------------
 
