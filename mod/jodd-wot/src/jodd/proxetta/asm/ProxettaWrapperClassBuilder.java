@@ -12,6 +12,14 @@ import org.objectweb.asm.Opcodes;
 
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
+import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;
+import static jodd.proxetta.asm.ProxettaAsmUtil.visitReturn;
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
+import static org.objectweb.asm.Opcodes.ACC_NATIVE;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 
 public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
@@ -111,8 +119,38 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 			return null;
 		}
 
-		return applyProxy(msign);
+		ProxettaMethodBuilder proxettaMethodBuilder = applyProxy(msign);
+
+		if (wd.isWrapper() && proxettaMethodBuilder == null) {
+			createSimpleMethodWrapper(msign);
+		}
+		return proxettaMethodBuilder;
 	}
 
+	/**
+	 * Creates simple method wrapper without proxy.
+	 */
+	protected void createSimpleMethodWrapper(MethodSignatureVisitor msign) {
+
+		int access = msign.getAccessFlags();
+
+		access &= ~ACC_ABSTRACT;
+		access &= ~ACC_NATIVE;
+
+		MethodVisitor mv = wd.dest.visitMethod(access, msign.getMethodName(), msign.getDescription(), msign.getSignature(), msign.getExceptionsArray());
+		mv.visitCode();
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
+		loadVirtualMethodArguments(mv, msign);
+		if (wd.wrapInterface) {
+			mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
+		} else {
+			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());		// todo ovo sa substring prebaci
+		}
+		ProxettaAsmUtil.prepareReturnValue(mv, msign, 0);
+		visitReturn(mv, msign, true, false);
+		mv.visitMaxs(0, 0);
+		mv.visitEnd();
+	}
 
 }

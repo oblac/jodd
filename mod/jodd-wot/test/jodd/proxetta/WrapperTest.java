@@ -138,4 +138,36 @@ public class WrapperTest extends TestCase {
 		}
 	}
 
+
+	public void testPartialMethodsWrapped() throws Exception {
+
+		Calc calc = new CalcImpl();
+
+		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			public boolean apply(MethodInfo methodInfo) {
+				return isTopLevelMethod(methodInfo) && isPublic(methodInfo) && methodInfo.getMethodName().equals("hello");
+			}
+		}));
+
+//		proxetta.setDebugFolder("d:\\");
+
+		WrapperProxettaBuilder builder = proxetta.builder(Calc.class, ".CalcImpl4");
+
+		Class<Calc> calc2Class = builder.define();
+
+		Calc calc2 = calc2Class.newInstance();
+
+		builder.injectTargetIntoWrapper(calc, calc2);
+
+		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+
+		calc2.hello();
+
+		assertEquals(2, StatCounter.counter);
+
+		assertEquals(10, calc2.calculate(3, 7));
+
+		assertEquals(2, StatCounter.counter);		// counter not called in calculate!
+	}
+
 }
