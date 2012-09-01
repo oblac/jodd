@@ -623,6 +623,9 @@ public class FileUtil {
 			in = new UnicodeInputStream(new FileInputStream(file), null);
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter((int) len);
 			String encoding = in.getDetectedEncoding();
+			if (encoding == null) {
+				encoding = StringPool.UTF_8;
+			}
 			StreamUtil.copy(in, fastCharArrayWriter, encoding);
 			return fastCharArrayWriter.toCharArray();
 		} finally {
@@ -728,6 +731,9 @@ public class FileUtil {
 			in = new UnicodeInputStream(new FileInputStream(file), null);
 			FastCharArrayWriter out = new FastCharArrayWriter((int) len);
 			String encoding = in.getDetectedEncoding();
+			if (encoding == null) {
+				encoding = StringPool.UTF_8;
+			}
 			StreamUtil.copy(in, out, encoding);
 			return out.toString();
 		} finally {
