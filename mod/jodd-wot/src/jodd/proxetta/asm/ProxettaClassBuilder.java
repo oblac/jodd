@@ -242,6 +242,26 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * Otherwise, returns <code>null</code>.
 	 */
 	protected ProxettaMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+		List<ProxyAspectData> aspectList = matchMethodPointcuts(msign);
+
+		if (aspectList == null) {
+			// no pointcuts on this method, return
+			return null;
+		}
+
+		int access = msign.getAccessFlags();
+		if ((access & ACC_ABSTRACT) != 0) {
+			throw new ProxettaException("Unable to process abstract method: " + msign);
+		}
+
+		wd.proxyApplied = true;
+		return new ProxettaMethodBuilder(msign, wd, aspectList);
+	}
+
+	/**
+	 * Matches pointcuts on method. If no pointcut found, returns <code>null</code>.
+	 */
+	protected List<ProxyAspectData> matchMethodPointcuts(MethodSignatureVisitor msign) {
 		List<ProxyAspectData> aspectList = null;
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
 			if (aspectData.apply(msign) == true) {
@@ -251,17 +271,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 				aspectList.add(aspectData);
 			}
 		}
-		if (aspectList == null) {
-			return null; // no pointcut on this method, return
-		}
-		int access = msign.getAccessFlags();
-		if (wd.isWrapper() == false) {
-			if ((access & ACC_ABSTRACT) != 0) {
-				throw new ProxettaException("Unable to proxy abstract method: " + msign);
-			}
-		}
-		wd.proxyApplied = true;
-		return new ProxettaMethodBuilder(msign, wd, aspectList);
+		return aspectList;
 	}
 
 }

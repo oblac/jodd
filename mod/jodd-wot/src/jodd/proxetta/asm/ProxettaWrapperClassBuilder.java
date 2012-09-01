@@ -4,11 +4,14 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
 import jodd.asm.AsmUtil;
+import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+
+import java.util.List;
 
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
@@ -119,12 +122,22 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 			return null;
 		}
 
-		ProxettaMethodBuilder proxettaMethodBuilder = applyProxy(msign);
+		return applyProxy(msign);
+	}
 
-		if (wd.isWrapper() && proxettaMethodBuilder == null) {
+	@Override
+	protected ProxettaMethodBuilder applyProxy(MethodSignatureVisitor msign) {
+		List<ProxyAspectData> aspectList = matchMethodPointcuts(msign);
+
+		if (aspectList == null) {
+			wd.proxyApplied = true;
 			createSimpleMethodWrapper(msign);
+			return null;
 		}
-		return proxettaMethodBuilder;
+
+		wd.proxyApplied = true;
+		return new ProxettaMethodBuilder(msign, wd, aspectList);
+
 	}
 
 	/**
