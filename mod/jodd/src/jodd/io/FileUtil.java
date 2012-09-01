@@ -741,6 +741,26 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * Detects optional BOM and reads UTF string from an input stream.
+	 * If BOM is missing, UTF-8 is assumed.
+	 */
+	public static String readUTFString(InputStream inputStream) throws IOException {
+		UnicodeInputStream in = null;
+		try {
+			in = new UnicodeInputStream(inputStream, null);
+			FastCharArrayWriter out = new FastCharArrayWriter();
+			String encoding = in.getDetectedEncoding();
+			if (encoding == null) {
+				encoding = StringPool.UTF_8;
+			}
+			StreamUtil.copy(in, out, encoding);
+			return out.toString();
+		} finally {
+			StreamUtil.close(in);
+		}
+	}
+
 
 	public static String readString(String source) throws IOException {
 		return readString(new File(source), defaultParams.encoding);
