@@ -64,11 +64,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {
 			wd.wrapInterface = true;
-			interfaces = new String[] {AsmUtil.typeToTyperef(targetClassOrInterface)};
+			interfaces = new String[] {targetClassOrInterface.getName().replace('.', '/')};
 		} else {
 			wd.wrapInterface = false;
 			if (targetInterface != null) {
-				interfaces = new String[] {AsmUtil.typeToTyperef(targetInterface)};
+				interfaces = new String[] {targetInterface.getName().replace('.', '/')};
 			} else {
 				interfaces = null;
 			}
