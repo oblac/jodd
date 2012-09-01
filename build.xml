@@ -566,47 +566,10 @@
 
 	<target name="findbugs.jodd-wot" depends="findbugs.jodd-wot.src" description="+ findbugs module"/>
 
-	<!-- MODULE : jodd-wot.6 -->
-
-	<path id="jodd-wot.6.src.classpath">
-		<path path="${jodd-wot.src.out-dir}"/>
-	</path>
-
-	<!-- compile: jodd-wot.6.src -->
-
-	<path id="jodd-wot.6.src.bootclasspath">
-		<path refid="jdk6.classpath"/>
-		<path refid="jdk6.tools"/>
-	</path>
-
-	<property name="jodd-wot.6.src.out-dir" value="${output.dir}/classes/jodd-wot.6.src"/>
-	<property name="jodd-wot.6.src.src-dir" value="${mod.dir}/jodd-wot.6/src"/>
-
-	<target name="compile.jodd-wot.6.src" description="  compile jodd-wot.6.src">
-		<mkdir dir="${jodd-wot.6.src.out-dir}"/>
-		<touch file="${output.dir}/jodd-wot.6.src"/>
-		<javac destdir="${jodd-wot.6.src.out-dir}"
-				listfiles="on" debug="on"
-				source="1.6" target="1.6"
-				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk6.bin}/javac">
-			<src location="${jodd-wot.6.src.src-dir}"/>
-			<bootclasspath refid="jodd-wot.6.src.bootclasspath"/>
-			<classpath refid="jodd-wot.6.src.classpath"/>
-		</javac>
-		<copy todir="${jodd-wot.6.src.out-dir}">
-			<fileset dir="${jodd-wot.6.src.src-dir}">
-				<patternset refid="resources"/>
-				<type type="file"/>
-			</fileset>
-		</copy>
-	</target>
-	<target name="build.jodd-wot.6" depends="compile.jodd-wot.6.src" description="+ build jodd-wot.6"/>
-
 	<!-- jar: jodd-wot -->
 	<property name="jodd-wot.jar" value="${dist.dir}/jodd-wot-${prjVersion}.jar"/>
 
-	<target name="jar.jodd-wot" depends="compile.jodd-wot.src, compile.jodd-wot.6.src">
+	<target name="jar.jodd-wot" depends="compile.jodd-wot.src">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-wot.jar}" compress="true">
 			<manifest>
@@ -619,20 +582,16 @@
 			<fileset dir="${jodd-wot.src.out-dir}">
 				<exclude name="**/package-info.class"/>
 			</fileset>
-			<fileset dir="${jodd-wot.6.src.out-dir}">
-				<exclude name="**/package-info.class"/>
-			</fileset>
 		</jar>
 	</target>
 
 	<!-- jar sources: jodd-wot -->
 	<property name="jodd-wot-sources.jar" value="${dist.dir}/jodd-wot-${prjVersion}-sources.jar"/>
 
-	<target name="jar-sources.jodd-wot" depends="compile.jodd-wot.src, compile.jodd-wot.6.src">
+	<target name="jar-sources.jodd-wot" depends="compile.jodd-wot.src">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${jodd-wot-sources.jar}" compress="true">
 			<fileset dir="${jodd-wot.src.src-dir}"/>
-			<fileset dir="${jodd-wot.6.src.src-dir}"/>
 		</jar>
 	</target>
 
@@ -712,7 +671,7 @@
 
 	<target name="dist-all.jodd-joy" depends="jar.jodd-joy" description="+ dist-all module"/>
 
-	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-wot.6, build.jodd-joy" description="* build all"/>
+	<target name="build" depends="build.jodd, build.jodd-wot, build.jodd-joy" description="* build all"/>
 
 	<target name="javadoc" depends="build, javadoc.jodd, javadoc.jodd-wot" description="* javadoc all"/>
 

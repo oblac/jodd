@@ -54,13 +54,9 @@ module_task('javadoc', '.src')
 module_task('emma', '.test')
 module_task('findbugs', '.src')
 
-module('jodd-wot.6', 'jdk6')
-module_compile('src',  '>jodd-wot.src')
-module_build('src')
-
 moduleName = 'jodd-wot'
-artifact_jar_slim(moduleName, 'jodd-wot.src, jodd-wot.6.src', 'jodd.Jodd')
-artifact_jar_sources(moduleName, 'jodd-wot.src, jodd-wot.6.src')
+artifact_jar_slim(moduleName, 'jodd-wot.src', 'jodd.Jodd')
+artifact_jar_sources(moduleName, 'jodd-wot.src')
 artifact_jar_javadoc(moduleName, 'jodd-wot.src')
 
 module_task('dist', 'jar.jodd-wot')
@@ -79,7 +75,7 @@ module_task('dist-all', 'jar.jodd-joy')
 
 #---------------------------------------------------------- project
 
-project_task('build', '.jodd, .jodd-wot, .jodd-wot.6, .jodd-joy')
+project_task('build', '.jodd, .jodd-wot, .jodd-joy')
 project_task('javadoc', 'build, .jodd, .jodd-wot')
 project_task('emma', 'build, .jodd, .jodd-wot')
 project_task('findbugs', 'build, .jodd, .jodd-wot')
