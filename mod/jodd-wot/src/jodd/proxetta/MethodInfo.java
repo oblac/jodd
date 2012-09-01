@@ -35,9 +35,13 @@ public interface MethodInfo {
 	 */
 	int getArgumentsCount();
 
-	int getArgumentOpcodeType(int index);
+	char getArgumentOpcodeType(int index);
 
-	int getReturnOpcodeType();
+	/**
+	 * Returns return type opcode.
+	 * For example, returns 'V' for void etc.
+	 */
+	char getReturnOpcodeType();
 
 	int getAccessFlags();
 

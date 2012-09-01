@@ -4,6 +4,7 @@ package jodd.proxetta.asm;
 
 import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.Opcodes;
+import jodd.util.collection.CharArrayList;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
 import jodd.proxetta.MethodInfo;
@@ -36,7 +37,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
-	protected IntArrayList argumentsOpcodeType;
+	protected CharArrayList argumentsOpcodeType;
 	protected IntArrayList argumentsOffset;
 	protected List<String> argumentsTypeNames;
 
@@ -84,7 +85,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		super.visitParameterType();
 		visitingArgument = true;
 		if (argumentsOpcodeType == null) {
-			argumentsOpcodeType = new IntArrayList();
+			argumentsOpcodeType = new CharArrayList();
 			argumentsOffset = new IntArrayList();
 			argumentsTypeNames = new ArrayList<String>();
 
@@ -183,7 +184,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	/**
 	 * @param index 1-base index
 	 */
-	public int getArgumentOpcodeType(int index) {
+	public char getArgumentOpcodeType(int index) {
 		return argumentsOpcodeType.get(index);
 	}
 
@@ -199,8 +200,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return argumentsWords;
 	}
 
-	public int getReturnOpcodeType() {
-		return returnOpcodeType.value;
+	public char getReturnOpcodeType() {
+		return (char) returnOpcodeType.value;
 	}
 
 	protected String getReturnTypeName() {
@@ -273,7 +274,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	 * Saves argument type if parameter is currently visiting, otherwise
 	 * saves return type. When saving arguments data, stores also current argument offset.
 	 */
-	private void maybeUseType(int type, String typeName) {
+	private void maybeUseType(char type, String typeName) {
 		if (visitingArgument == true) {
 			if (isArray() == true) {
 				type = '[';
