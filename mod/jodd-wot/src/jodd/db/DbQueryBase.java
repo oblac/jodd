@@ -2,6 +2,7 @@
 
 package jodd.db;
 
+import jodd.db.debug.LoggablePreparedStatementFactory;
 import jodd.log.Log;
 
 import java.sql.Statement;
@@ -197,15 +198,15 @@ abstract class DbQueryBase {
 			if (debug == true) {
 				if (generatedColumns != null) {
 					if (generatedColumns.length == 0) {
-						statement = new LoggablePreparedStatement(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
+						statement = LoggablePreparedStatementFactory.create(connection, query.sql, Statement.RETURN_GENERATED_KEYS);
 					} else {
-						statement = new LoggablePreparedStatement(connection, query.sql, generatedColumns);
+						statement = LoggablePreparedStatementFactory.create(connection, query.sql, generatedColumns);
 					}
 				} else {
 					if (holdability != DEFAULT_HOLDABILITY) {
-						statement = new LoggablePreparedStatement(connection, query.sql, type, concurrencyType, holdability);
+						statement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType, holdability);
 					} else {
-						statement = new LoggablePreparedStatement(connection, query.sql, type, concurrencyType);
+						statement = LoggablePreparedStatementFactory.create(connection, query.sql, type, concurrencyType);
 					}
 				}
 			} else {
@@ -714,8 +715,8 @@ abstract class DbQueryBase {
 	 * Returns query SQL string. For prepared statements, returned sql string with quick-and-dirty replaced values.
 	 */
 	public String getQueryString() {
-		if ((preparedStatement != null) && (preparedStatement instanceof LoggablePreparedStatement)) {
-			return ((LoggablePreparedStatement) preparedStatement).getQueryString();
+		if ((preparedStatement != null) && debug) {
+			return LoggablePreparedStatementFactory.getQueryString(preparedStatement);
 		}
 		if (query != null) {
 			return query.sql;
