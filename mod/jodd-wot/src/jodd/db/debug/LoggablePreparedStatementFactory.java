@@ -87,8 +87,6 @@ public class LoggablePreparedStatementFactory {
 							(argumentsCount == 2 || argumentsCount == 3);			// number of arguments
 				}
 			}));
-
-			proxetta.setDebugFolder("d:\\");
 		}
 
 		return proxetta;

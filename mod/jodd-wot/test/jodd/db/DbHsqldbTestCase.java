@@ -55,7 +55,7 @@ public abstract class DbHsqldbTestCase extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {		
 		dbtxm.close();
-		cp.close();
+//		cp.close();
 		dbtxm = null;
 		super.tearDown();		
 	}
