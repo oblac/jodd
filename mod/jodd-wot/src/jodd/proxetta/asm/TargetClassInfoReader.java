@@ -8,6 +8,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.signature.SignatureReader;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -75,6 +76,8 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected int hierarchyLevel;
 	protected AnnotationInfo[] annotations;
 	protected List<AnnotationInfo> classAnnotations;
+	protected boolean isTargetIntreface;
+	protected Set<String> nextInterfaces;
 
 	// ---------------------------------------------------------------- class interface
 
@@ -114,7 +117,18 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
 		this.hierarchyLevel = 1;
+
+		this.isTargetIntreface = (access & AsmConst.ACC_INTERFACE) != 0;
+		if (this.isTargetIntreface) {
+			nextInterfaces = new HashSet<String>();
+			if (interfaces != null) {
+				for (String inter : interfaces) {
+					nextInterfaces.add(inter);
+				}
+			}
+		}
 	}
+
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
@@ -171,42 +185,33 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			hierarchyLevel++;
 			superList.add(nextSupername);
 			superClassReaders.add(cr);	// remember the super class reader
-			cr.accept(new EmptyClassVisitor() {
-
-				String declaredClassName;
-
-				@Override
-				public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-					nextSupername = superName;
-					declaredClassName = name;
-				}
-
-				@Override
-				public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-					if (name.equals(INIT) || name.equals(CLINIT)) {
-						return null;
-					}
-					MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
-					int acc = msign.getAccessFlags();
-					if ((acc & AsmConst.ACC_PUBLIC) == 0) {   	// skip non-public
-						return null;
-					}
-					if ((access & AsmConst.ACC_FINAL) != 0) {		// skip finals
-						return null;
-					}
-					if (allMethodSignatures.contains(msign.getSignature())) {		// skip overriden method by some in above classes
-						return null;
-					}
-
-					msign.setDeclaredClassName(declaredClassName);		// indicates it is not a top level class
-					String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, declaredClassName);
-					methodSignatures.put(key, msign);
-					allMethodSignatures.add(msign.getSignature());
-					return new MethodAnnotationReader(msign);
-				}
-			}, 0);
+			cr.accept(new SuperClassVisitor(), 0);
 		}
 		superClasses = superList.toArray(new String[superList.size()]);
+
+		// check all interface methods that are not overridden in super-interface
+		if (nextInterfaces != null) {
+			while (!nextInterfaces.isEmpty()) {
+				Iterator<String> iterator = nextInterfaces.iterator();
+				String next = iterator.next();
+				iterator.remove();
+
+				InputStream inputStream = null;
+				ClassReader cr = null;
+				try {
+					inputStream = ClassLoaderUtil.getClassAsStream(next);
+					cr = new ClassReader(inputStream);
+				} catch (IOException ioex) {
+					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
+				} finally {
+					StreamUtil.close(inputStream);
+				}
+				hierarchyLevel++;
+				superClassReaders.add(cr);				// remember the super class reader
+				cr.accept(new SuperClassVisitor(), 0);
+			}
+		}
+
 	}
 
 
@@ -250,5 +255,58 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		}
 	}
 
+	// ---------------------------------------------------------------- super class visitor
 
+	private class SuperClassVisitor extends EmptyClassVisitor {
+
+		String declaredClassName;
+
+		@Override
+		public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+			nextSupername = superName;
+			declaredClassName = name;
+
+			// append inner interfaces
+			if (nextInterfaces != null) {
+				if (interfaces != null) {
+					for (String inter : interfaces) {
+						nextInterfaces.add(inter);
+					}
+				}
+			}
+
+		}
+
+		@Override
+		public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			if (name.equals(INIT) || name.equals(CLINIT)) {
+				return null;
+			}
+			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, thisReference);
+			int acc = msign.getAccessFlags();
+			if ((acc & AsmConst.ACC_PUBLIC) == 0) {   	// skip non-public
+				return null;
+			}
+			if ((access & AsmConst.ACC_FINAL) != 0) {		// skip finals
+				return null;
+			}
+			if (allMethodSignatures.contains(msign.getSignature())) {		// skip overridden method by some in above classes
+				return null;
+			}
+
+			msign.setDeclaredClassName(declaredClassName);		// indicates it is not a top level class
+			String key = ProxettaAsmUtil.createMethodSignaturesKey(access, name, desc, declaredClassName);
+			methodSignatures.put(key, msign);
+			allMethodSignatures.add(msign.getSignature());
+			return new MethodAnnotationReader(msign);
+		}
+	}
+
+	// ---------------------------------------------------------------- toString
+
+
+	@Override
+	public String toString() {
+		return "target: " + this.targetPackage + '.' + this.targetClassname;
+	}
 }
