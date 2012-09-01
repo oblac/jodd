@@ -69,4 +69,16 @@ public class UnicodeInputStreamTest extends TestCase {
 		assertEquals(4, uis.getBOMSize());
 		assertEquals("UTF-32LE", uis.getDetectedEncoding());
 	}
+
+	public void testNoUtf() throws IOException {
+		byte[] bytes =  new byte[4];
+		Bits.putInt(bytes, 0, 0x11223344);
+
+		ByteArrayInputStream basis = new ByteArrayInputStream(bytes);
+		UnicodeInputStream uis = new UnicodeInputStream(basis, null);
+		uis.init();
+
+		assertEquals(0, uis.getBOMSize());
+		assertNull(uis.getDetectedEncoding());
+	}
 }
