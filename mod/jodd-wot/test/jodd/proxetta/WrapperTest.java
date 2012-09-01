@@ -2,6 +2,8 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.data.CalcSuper;
+import jodd.proxetta.data.CalcSuperImpl;
 import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.data.Calc;
 import jodd.proxetta.data.CalcImpl;
@@ -33,8 +35,8 @@ public class WrapperTest extends TestCase {
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over CLASS
-		// resulting object has no interfaces
-		// resulting object wraps all target methods
+		// resulting object has NO interfaces
+		// resulting object wraps ALL target class methods
 		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass());
 
 		Class calc2Class = builder.define();
@@ -76,8 +78,8 @@ public class WrapperTest extends TestCase {
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over CLASS casted to interface,
-		// resulting object has one interface
-		// all target methods are wrapped
+		// resulting object has ONE interface
+		// ALL target methods are wrapped
 		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass(), Calc.class, ".CalcImpl2");
 
 		Class<Calc> calc2Class = builder.define();
@@ -111,7 +113,7 @@ public class WrapperTest extends TestCase {
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over INTERFACE
-		// resulting object has one interface
+		// resulting object has ONE interface
 		// only interface methods are wrapped
 		WrapperProxettaBuilder builder = proxetta.builder(Calc.class, ".CalcImpl3");
 
@@ -141,21 +143,23 @@ public class WrapperTest extends TestCase {
 
 	public void testPartialMethodsWrapped() throws Exception {
 
-		Calc calc = new CalcImpl();
+		Calc calc = new CalcSuperImpl();
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return isTopLevelMethod(methodInfo) && isPublic(methodInfo) && methodInfo.getMethodName().equals("hello");
+				return
+						isPublic(methodInfo) &&
+						(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"));
 			}
 		}));
 
 //		proxetta.setDebugFolder("d:\\");
 
-		WrapperProxettaBuilder builder = proxetta.builder(Calc.class, ".CalcImpl4");
+		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class);
 
-		Class<Calc> calc2Class = builder.define();
+		Class<CalcSuper> calc2Class = builder.define();
 
-		Calc calc2 = calc2Class.newInstance();
+		CalcSuper calc2 = calc2Class.newInstance();
 
 		builder.injectTargetIntoWrapper(calc, calc2);
 
@@ -168,6 +172,57 @@ public class WrapperTest extends TestCase {
 		assertEquals(10, calc2.calculate(3, 7));
 
 		assertEquals(2, StatCounter.counter);		// counter not called in calculate!
+
+		calc2.ola();
+
+		assertEquals(3, StatCounter.counter);
+
+		calc2.superhi();
+		calc2.maybe(4, 5);
+		calc2.calculate(4, 5);
+
+		assertEquals(3, StatCounter.counter);
+	}
+
+	public void testNoPointcutMatched() throws Exception {
+
+		Calc calc = new CalcSuperImpl();
+
+		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
+			public boolean apply(MethodInfo methodInfo) {
+				return false;
+			}
+		}));
+
+//		proxetta.setDebugFolder("d:\\");
+
+		WrapperProxettaBuilder builder = proxetta.builder(CalcSuper.class, ".CalcSuper22");
+
+		Class<CalcSuper> calc2Class = builder.define();
+
+		CalcSuper calc2 = calc2Class.newInstance();
+
+		builder.injectTargetIntoWrapper(calc, calc2);
+
+		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+
+		calc2.hello();
+
+		assertEquals(1, StatCounter.counter);
+
+		assertEquals(10, calc2.calculate(3, 7));
+
+		assertEquals(1, StatCounter.counter);		// counter not called in calculate!
+
+		calc2.ola();
+
+		assertEquals(1, StatCounter.counter);
+
+		calc2.superhi();
+		calc2.maybe(4, 5);
+		calc2.calculate(4, 5);
+
+		assertEquals(1, StatCounter.counter);
 	}
 
 }
