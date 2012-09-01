@@ -166,4 +166,13 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		mv.visitEnd();
 	}
 
+	@Override
+	public void visitEnd() {
+		makeStaticInitBlock();
+
+		processSuperMethods();
+
+		wd.dest.visitEnd();
+
+	}
 }
