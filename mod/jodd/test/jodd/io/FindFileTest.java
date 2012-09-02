@@ -22,7 +22,7 @@ public class FindFileTest extends TestCase {
 			return;
 		}
 		URL data = FileUtilTest.class.getResource("data");
-		dataRoot = data.getFile().substring(1);
+		dataRoot = data.getFile();
 	}
 
 	public void testWildcardFile() {
