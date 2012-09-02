@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
+import jodd.util.StringUtil;
 import junit.framework.TestCase;
 import jodd.util.ClassLoaderUtil;
 
@@ -40,8 +41,14 @@ public class StreamUtilTest extends TestCase {
 
 	public void testCompare() {
 		try {
-			FileInputStream in1 = new FileInputStream(new File(dataRoot, "file/a.txt"));
-			AsciiInputStream in2 = new AsciiInputStream("test file\r\n");
+			File file = new File(dataRoot, "file/a.txt");
+			FileInputStream in1 = new FileInputStream(file);
+
+			String content = "test file\r\n";
+			if (file.length() == 10) {
+				content = StringUtil.remove(content, '\r');
+			}
+			AsciiInputStream in2 = new AsciiInputStream(content);
 			assertTrue(StreamUtil.compare(in1, in2));
 			StreamUtil.close(in2);
 			StreamUtil.close(in1);
@@ -59,12 +66,14 @@ public class StreamUtilTest extends TestCase {
 			StreamUtil.close(in);
 
 			String s = new String(data);
-			assertEquals("test file\r\n", s);
+			s = StringUtil.remove(s, '\r');
+			assertEquals("test file\n", s);
 
 			in = new FileInputStream(new File(dataRoot, "file/a.txt"));
 			String str = new String(StreamUtil.readChars(in));
 			StreamUtil.close(in);
-			assertEquals("test file\r\n", str);
+			str = StringUtil.remove(str, '\r');
+			assertEquals("test file\n", str);
 		} catch (FileNotFoundException e) {
 			fail("StreamUtil.testGetBytes " + e.toString());
 		} catch (IOException e) {
