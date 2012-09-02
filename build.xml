@@ -54,9 +54,9 @@
 		<patternset refid="ignored.files"/>
 	</patternset>
 
-	<property name="jdk5.bin" value="${jdk5.home}/bin"/>
-	<path id="jdk5.classpath">
-		<fileset dir="${jdk5.home}">
+	<property name="jdk.bin" value="${jdk.home}/bin"/>
+	<path id="jdk.classpath">
+		<fileset dir="${jdk.home}">
 			<include name="jre/lib/charsets.jar"/>
 			<include name="jre/lib/deploy.jar"/>
 			<include name="jre/lib/javaws.jar"/>
@@ -70,30 +70,8 @@
 			<include name="jre/lib/ext/sunpkcs11.jar"/>
 		</fileset>
 	</path>
-	<path id="jdk5.tools">
-		<fileset dir="${jdk5.home}">
-			<include name="lib/tools.jar"/>
-		</fileset>
-	</path>
-
-	<property name="jdk6.bin" value="${jdk6.home}/bin"/>
-	<path id="jdk6.classpath">
-		<fileset dir="${jdk6.home}">
-			<include name="jre/lib/charsets.jar"/>
-			<include name="jre/lib/deploy.jar"/>
-			<include name="jre/lib/javaws.jar"/>
-			<include name="jre/lib/jce.jar"/>
-			<include name="jre/lib/jsse.jar"/>
-			<include name="jre/lib/plugin.jar"/>
-			<include name="jre/lib/rt.jar"/>
-			<include name="jre/lib/ext/dnsns.jar"/>
-			<include name="jre/lib/ext/localedata.jar"/>
-			<include name="jre/lib/ext/sunjce_provider.jar"/>
-			<include name="jre/lib/ext/sunpkcs11.jar"/>
-		</fileset>
-	</path>
-	<path id="jdk6.tools">
-		<fileset dir="${jdk6.home}">
+	<path id="jdk.tools">
+		<fileset dir="${jdk.home}">
 			<include name="lib/tools.jar"/>
 		</fileset>
 	</path>
@@ -135,8 +113,8 @@
 	<!-- compile: jodd.src -->
 
 	<path id="jodd.src.bootclasspath">
-		<path refid="jdk5.classpath"/>
-		<path refid="jdk5.tools"/>
+		<path refid="jdkk.classpath"/>
+		<path refid="jdkk.tools"/>
 	</path>
 
 	<property name="jodd.src.out-dir" value="${output.dir}/classes/jodd.src"/>
@@ -147,9 +125,9 @@
 		<touch file="${output.dir}/jodd.src"/>
 		<javac destdir="${jodd.src.out-dir}"
 				listfiles="on" debug="on"
-				source="1.5" target="1.5"
+				source="1.k" target="1.k"
 				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk5.bin}/javac">
+				fork="true" executable="${jdkk.bin}/javac">
 			<src location="${jodd.src.src-dir}"/>
 			<bootclasspath refid="jodd.src.bootclasspath"/>
 			<classpath refid="jodd.src.classpath"/>
@@ -172,8 +150,8 @@
 	<!-- compile: jodd.test -->
 
 	<path id="jodd.test.bootclasspath">
-		<path refid="jdk5.classpath"/>
-		<path refid="jdk5.tools"/>
+		<path refid="jdkk.classpath"/>
+		<path refid="jdkk.tools"/>
 	</path>
 
 	<property name="jodd.test.out-dir" value="${output.dir}/classes/jodd.test"/>
@@ -184,9 +162,9 @@
 		<touch file="${output.dir}/jodd.test"/>
 		<javac destdir="${jodd.test.out-dir}"
 				listfiles="on" debug="on"
-				source="1.5" target="1.5"
+				source="1.k" target="1.k"
 				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk5.bin}/javac">
+				fork="true" executable="${jdkk.bin}/javac">
 			<src location="${jodd.test.src-dir}"/>
 			<bootclasspath refid="jodd.test.bootclasspath"/>
 			<classpath refid="jodd.test.classpath"/>
@@ -282,8 +260,8 @@
 		<javadoc destdir="${jodd.src.javadoc-dir}" version="false" author="false" additionalparam="-J-Xmx32m"
 				windowtitle="jodd" stylesheetfile="${etc.dir}/javadoc/jodd.css"
 				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
-				source="1.5"
-				executable="${jdk5.bin}/javadoc">
+				source="1.k"
+				executable="${jdkk.bin}/javadoc">
 			<bootclasspath refid="jodd.src.bootclasspath"/>
 			<classpath refid="jodd.src.classpath"/>
 			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
@@ -377,8 +355,8 @@
 	<!-- compile: jodd-wot.src -->
 
 	<path id="jodd-wot.src.bootclasspath">
-		<path refid="jdk5.classpath"/>
-		<path refid="jdk5.tools"/>
+		<path refid="jdkk.classpath"/>
+		<path refid="jdkk.tools"/>
 	</path>
 
 	<property name="jodd-wot.src.out-dir" value="${output.dir}/classes/jodd-wot.src"/>
@@ -389,9 +367,9 @@
 		<touch file="${output.dir}/jodd-wot.src"/>
 		<javac destdir="${jodd-wot.src.out-dir}"
 				listfiles="on" debug="on"
-				source="1.5" target="1.5"
+				source="1.k" target="1.k"
 				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk5.bin}/javac">
+				fork="true" executable="${jdkk.bin}/javac">
 			<src location="${jodd-wot.src.src-dir}"/>
 			<bootclasspath refid="jodd-wot.src.bootclasspath"/>
 			<classpath refid="jodd-wot.src.classpath"/>
@@ -416,8 +394,8 @@
 	<!-- compile: jodd-wot.test -->
 
 	<path id="jodd-wot.test.bootclasspath">
-		<path refid="jdk5.classpath"/>
-		<path refid="jdk5.tools"/>
+		<path refid="jdkk.classpath"/>
+		<path refid="jdkk.tools"/>
 	</path>
 
 	<property name="jodd-wot.test.out-dir" value="${output.dir}/classes/jodd-wot.test"/>
@@ -428,9 +406,9 @@
 		<touch file="${output.dir}/jodd-wot.test"/>
 		<javac destdir="${jodd-wot.test.out-dir}"
 				listfiles="on" debug="on"
-				source="1.5" target="1.5"
+				source="1.k" target="1.k"
 				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk5.bin}/javac">
+				fork="true" executable="${jdkk.bin}/javac">
 			<src location="${jodd-wot.test.src-dir}"/>
 			<bootclasspath refid="jodd-wot.test.bootclasspath"/>
 			<classpath refid="jodd-wot.test.classpath"/>
@@ -526,8 +504,8 @@
 		<javadoc destdir="${jodd-wot.src.javadoc-dir}" version="false" author="false" additionalparam="-J-Xmx32m"
 				windowtitle="jodd-wot" stylesheetfile="${etc.dir}/javadoc/jodd-wot.css"
 				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
-				source="1.5"
-				executable="${jdk5.bin}/javadoc">
+				source="1.k"
+				executable="${jdkk.bin}/javadoc">
 			<bootclasspath refid="jodd-wot.src.bootclasspath"/>
 			<classpath refid="jodd-wot.src.classpath"/>
 			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
@@ -621,8 +599,8 @@
 	<!-- compile: jodd-joy.src -->
 
 	<path id="jodd-joy.src.bootclasspath">
-		<path refid="jdk5.classpath"/>
-		<path refid="jdk5.tools"/>
+		<path refid="jdkk.classpath"/>
+		<path refid="jdkk.tools"/>
 	</path>
 
 	<property name="jodd-joy.src.out-dir" value="${output.dir}/classes/jodd-joy.src"/>
@@ -633,9 +611,9 @@
 		<touch file="${output.dir}/jodd-joy.src"/>
 		<javac destdir="${jodd-joy.src.out-dir}"
 				listfiles="on" debug="on"
-				source="1.5" target="1.5"
+				source="1.k" target="1.k"
 				deprecation="true" encoding="UTF-8" includeantruntime="false"
-				fork="true" executable="${jdk5.bin}/javac">
+				fork="true" executable="${jdkk.bin}/javac">
 			<src location="${jodd-joy.src.src-dir}"/>
 			<bootclasspath refid="jodd-joy.src.bootclasspath"/>
 			<classpath refid="jodd-joy.src.classpath"/>
