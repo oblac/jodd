@@ -21,7 +21,7 @@ lib('test')
 
 #---------------------------------------------------------- jodd
 
-module('jodd', 'jdk')
+module('jodd', '5')
 module_compile('src',  'mail, servlets')
 module_compile('test', '#src, mail, servlets, test')
 module_build('src, test')
@@ -42,7 +42,7 @@ module_task('dist-all', 'jar.jodd, jar-sources.jodd, jar-javadoc.jodd')
 
 #---------------------------------------------------------- jodd-wot
 
-module('jodd-wot', 'jdk')
+module('jodd-wot', '5')
 module_compile('src',  '>jodd.src, servlets, asm, slf4j')
 module_compile('test', '>jodd.src, #src, servlets, asm, slf4j, test')
 module_build('src, test')
@@ -64,7 +64,7 @@ module_task('dist-all', 'jar.jodd-wot, jar-sources.jodd-wot, jar-javadoc.jodd-wo
 
 #---------------------------------------------------------- jodd-joy
 
-module('jodd-joy', 'jdk')
+module('jodd-joy', '5')
 module_compile('src', '>jodd.src, >jodd-wot.src, servlets, slf4j')
 module_build('src')
 
