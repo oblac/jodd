@@ -2,6 +2,7 @@
 
 package jodd.io;
 
+import jodd.util.StringUtil;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -201,10 +202,13 @@ public class FileUtilTest extends TestCase {
 
 	public void testBytes() {
 		try {
+			File file = new File(dataRoot + "/file/a.txt");
 			byte[] bytes = FileUtil.readBytes(dataRoot + "/file/a.txt");
 
-			assertEquals(11, bytes.length);
-			assertEquals("test file\r\n", new String(bytes));
+			assertEquals(file.length(), bytes.length);
+			String content = new String(bytes);
+			content = StringUtil.remove(content, '\r');
+			assertEquals("test file\n", content);
 
 		} catch (IOException ioex) {
 			fail(ioex.toString());
