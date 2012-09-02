@@ -42,6 +42,9 @@ public class FindFileTest extends TestCase {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
+				if (path.startsWith("/") == false) {
+					path = '/' + path;
+				}
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 						path.equals(dataRoot + "/file/a.txt");
@@ -70,6 +73,10 @@ public class FindFileTest extends TestCase {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
+				if (path.startsWith("/") == false) {
+					path = '/' + path;
+				}
+
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 						path.equals(dataRoot + "/file/a.txt");
@@ -101,6 +108,10 @@ public class FindFileTest extends TestCase {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
+				if (path.startsWith("/") == false) {
+					path = '/' + path;
+				}
+
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 						path.equals(dataRoot + "/file/a.txt");
@@ -131,6 +142,10 @@ public class FindFileTest extends TestCase {
 				countFiles++;
 				String path = f.getAbsolutePath();
 				path = FileNameUtil.separatorsToUnix(path);
+				if (path.startsWith("/") == false) {
+					path = '/' + path;
+				}
+
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
 						path.equals(dataRoot + "/file/a.txt");
