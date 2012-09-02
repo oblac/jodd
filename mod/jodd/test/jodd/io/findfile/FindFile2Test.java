@@ -19,7 +19,7 @@ public class FindFile2Test extends TestCase {
 			return;
 		}
 		URL data = FindFile2Test.class.getResource("data");
-		dataRoot = data.getFile().substring(1);
+		dataRoot = data.getFile();
 	}
 
 	public void testAcceptAndWalk() {
