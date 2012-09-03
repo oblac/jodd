@@ -549,6 +549,16 @@ abstract class DbQueryBase {
 	}
 
 	// ---------------------------------------------------------------- execute
+	protected long start;
+	protected long elapsed = -1;
+
+	/**
+	 * Returns query execution elapsed time in milliseconds.
+	 * Returns <code>-1</code> if query is still not executed.
+	 */
+	public long getExecutionTime() {
+		return elapsed;
+	}
 
 	/**
 	 * Executes the query. If this method is invoked at least once, the query or
@@ -558,6 +568,8 @@ abstract class DbQueryBase {
 	 * @see Statement#execute(String)
 	 */
 	public ResultSet execute() {
+		start = System.currentTimeMillis();
+
 		init();
 		ResultSet rs = null;
 		if (log.isDebugEnabled()) {
@@ -576,6 +588,11 @@ abstract class DbQueryBase {
 		}
 		saveResultSet(rs);
 		totalOpenResultSetCount++;
+
+		elapsed = System.currentTimeMillis() - start;
+		if (log.isDebugEnabled()) {
+			log.debug("execution time: " + elapsed + "ms");
+		}
 		return rs;
 	}
 
@@ -600,6 +617,8 @@ abstract class DbQueryBase {
 	 * @see Statement#executeUpdate(String)
 	 */
 	protected int executeUpdate(boolean closeQuery) {
+		start = System.currentTimeMillis();
+
 		init();
 		int result;
 		if (log.isDebugEnabled()) {
@@ -625,6 +644,11 @@ abstract class DbQueryBase {
 		if (closeQuery) {
 			close();
 		}
+
+		elapsed = System.currentTimeMillis() - start;
+		if (log.isDebugEnabled()) {
+			log.debug("execution time: " + elapsed + "ms");
+		}
 		return result;
 	}
 
@@ -648,6 +672,8 @@ abstract class DbQueryBase {
 	 * Executes count queries and optionally closes query afterwards.
 	 */
 	protected long executeCount(boolean close) {
+		start = System.currentTimeMillis();
+
 		init();
 		ResultSet rs = null;
 		if (log.isDebugEnabled()) {
@@ -659,7 +685,15 @@ abstract class DbQueryBase {
 			} else {
 				rs = preparedStatement.executeQuery();
 			}
-			return ResultSetUtil.getFirstLong(rs);
+
+			long firstLong = ResultSetUtil.getFirstLong(rs);
+
+			elapsed = System.currentTimeMillis() - start;
+			if (log.isDebugEnabled()) {
+				log.debug("execution time: " + elapsed + "ms");
+			}
+
+			return firstLong;
 		} catch (SQLException sex) {
 			throw new DbSqlException("Unable to execute count query.", sex);
 		} finally {
