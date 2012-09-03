@@ -85,17 +85,14 @@ public class DbOom2Test extends DbH2TestCase {
 		q.close();
 
 		session.closeSession();
-	}
 
 
 	/**
 	 * Test fails on HSQLDB 1.8 since generated columns are not supported.
 	 */
-	public void testGenerated() {
+		session = new DbThreadSession(cp);
 
-		DbSession session = new DbThreadSession(cp);
-
-		DbOomQuery q = new DbOomQuery("insert into GIRL (NAME) values('Janna')");
+		q = new DbOomQuery("insert into GIRL (NAME) values('Janna')");
 		q.setGeneratedColumns();
 		q.executeUpdate();
 		long key = q.getGeneratedKey();
@@ -133,13 +130,13 @@ public class DbOom2Test extends DbH2TestCase {
 		assertEquals(0, q.getOpenResultSetCount());
 
 		session.closeSession();
-	}
 
-	public void testGeneratedValue() {
-		DbSession session = new DbThreadSession(cp);
+
+
+		session = new DbThreadSession(cp);
 		DbOomManager.getInstance().registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
-		DbOomQuery q = DbEntitySql.insert(g2).query();
+		q = DbEntitySql.insert(g2).query();
 		assertEquals("insert into GIRL (NAME) values (:girl2.name)", q.getQueryString());
 		q.setGeneratedColumns("ID");
 		q.executeUpdate();
@@ -155,14 +152,12 @@ public class DbOom2Test extends DbH2TestCase {
 		assertEquals(7, g2.id.intValue());
 
 		session.closeSession();
-	}
 
 
 
-	public void testLike() {
-		DbSession session = new DbThreadSession(cp);
+		session = new DbThreadSession(cp);
 
-		DbOomQuery q = DbSqlBuilder.sql("select * from $T{Girl g} where $g.name like :what order by $g.id").query();
+		q = DbSqlBuilder.sql("select * from $T{Girl g} where $g.name like :what order by $g.id").query();
 		q.setString("what", "%anna%");
 		List<Girl2> girls = q.list(Girl2.class);
 		assertEquals(2, girls.size());
