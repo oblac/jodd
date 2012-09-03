@@ -28,7 +28,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		//  play with the query
 
 		String sql = "select * from GIRL where ID = :id";
-		query = new DbProfiledQuery(session, sql);
+		query = new DbQuery(session, sql);
 		query.setDebugMode();
 		query.setInteger("id", 2);
 		ResultSet rs = query.execute();
