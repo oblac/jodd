@@ -35,7 +35,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		assertEquals(1, query.getOpenResultSetCount());
 	//	assertEquals(1, DbQuery.totalOpenResultSetCount);
 
-		assertEquals("select * from GIRL where ID = 2\nExecution time: ", query.getQueryString().substring(0, 48));
+		assertEquals("select * from GIRL where ID = 2", query.getQueryString());
 		while (rs.next()) {
 			assertEquals(2, rs.getInt(1));
 			assertEquals("Sandra", rs.getString(2));
