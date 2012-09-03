@@ -9,6 +9,7 @@ import jodd.proxetta.InvokeReplacer;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringPool;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -187,6 +188,15 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 		}
 		super.visitInsn(opcode);
 	}
+
+	@Override
+	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	}
+
+	@Override
+	public void visitLineNumber(int i, Label label) {
+	}
+
 
 	// ---------------------------------------------------------------- util
 

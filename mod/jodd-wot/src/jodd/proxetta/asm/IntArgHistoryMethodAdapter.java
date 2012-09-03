@@ -141,4 +141,11 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 		super.visitMultiANewArrayInsn(string, i);
 	}
 
+	@Override
+	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+	}
+
+	@Override
+	public void visitLineNumber(int i, Label label) {
+	}
 }

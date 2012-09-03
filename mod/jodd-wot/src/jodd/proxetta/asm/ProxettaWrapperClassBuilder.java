@@ -3,8 +3,6 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
-import jodd.asm.AsmUtil;
-import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyAspect;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;

@@ -4,6 +4,7 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.ClassReader;
@@ -160,6 +161,14 @@ final class ProxyAspectData {
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 
 						@Override
+						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						}
+
+						@Override
+						public void visitLineNumber(int i, Label label) {
+						}
+
+						@Override
 						public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 							if (opcode == INVOKESTATIC) {
 								if (owner.equals(adviceReference)) {
@@ -190,6 +199,13 @@ final class ProxyAspectData {
 					access = ProxettaAsmUtil.makePrivateFinalAccess(access);
 					wd.addAdviceInitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
+						@Override
+						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						}
+
+						@Override
+						public void visitLineNumber(int i, Label label) {
+						}
 
 						int state; // used to detect and to ignore the first super call()
 
@@ -240,6 +256,14 @@ final class ProxyAspectData {
 				if (name.equals(EXECUTE_METHOD_NAME) == false) {
 					name = adviceMethodName(name, aspectIndex);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
+
+						@Override
+						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+						}
+
+						@Override
+						public void visitLineNumber(int i, Label label) {
+						}
 
 						@Override
 						public void visitMethodInsn(int opcode, String owner, String name, String desc) {
