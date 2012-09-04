@@ -42,7 +42,7 @@ public class MethrefProxetta {
 	}
 
 	/**
-	 * Simply delegates to {@link jodd.proxetta.Proxetta#defineProxy(Class)}.
+	 * Generates new class.
 	 */
 	public Class defineProxy(Class target) {
 		ProxyProxettaBuilder builder =  proxetta.builder();
