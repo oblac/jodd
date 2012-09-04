@@ -41,8 +41,7 @@ public class StuckTest extends TestCase {
 		try {
 			doc.$("a").each(new JerryFunction() {
 				public boolean onNode(Jerry $this, int index) {
-					System.out.println("-----");
-					System.out.println($this.html());
+					assertEquals("Go to Database Directory", $this.html().trim());
 					return false;
 				}
 			});
