@@ -8,6 +8,7 @@ import jodd.db.DbSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.tst.Tester;
 import jodd.db.pool.CoreConnectionPool;
+import jodd.util.SystemUtil;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -69,7 +70,11 @@ public class LiveDatabaseTest extends TestCase {
 			cp.setPassword("root!");
 
 			if (dboom.isStrictCompare()) {
-				dboom.getTableNames().setLowercase(true);
+				if (SystemUtil.isHostWindows()) {
+					dboom.getTableNames().setLowercase(true);
+				} else {
+					dboom.getTableNames().setUppercase(true);
+				}
 				dboom.getColumnNames().setUppercase(true);
 			}
 		}
