@@ -128,24 +128,44 @@ public class NodeSelector {
 	}
 
 	/**
+	 * Walks over the child notes, maintaining the tree order and not using recursion.
+	 */
+	protected void walkDescendantsIteratively(LinkedList<Node> nodes, CssSelector cssSelector, LinkedList<Node> result) {
+		while (!nodes.isEmpty()) {
+			Node node = nodes.removeFirst();
+			selectAndAdd(node, cssSelector, result);
+
+			// append children in walking order to be processed right after this node
+			int childCount = node.getChildNodesCount();
+			for (int i = childCount - 1; i >= 0; i--) {
+				nodes.addFirst(node.getChild(i));
+			}
+		}
+	}
+
+	/**
 	 * Finds nodes in the tree that matches single selector.
 	 */
 	protected void walk(Node rootNode, CssSelector cssSelector, LinkedList<Node> result) {
 
 		// previous combinator determines the behavior
 		CssSelector previousCssSelector = cssSelector.getPrevCssSelector();
+
 		Combinator combinator = previousCssSelector != null ?
 				previousCssSelector.getCombinator() :
 				Combinator.DESCENDANT;
 
 		switch (combinator) {
 			case DESCENDANT:
+				LinkedList<Node> nodes = new LinkedList<Node>();
 				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
-					Node node = rootNode.getChild(i);
-					selectAndAdd(node, cssSelector, result);
-					walk(node, cssSelector, result);
+					nodes.add(rootNode.getChild(i));
+					// recursive
+//					selectAndAdd(node, cssSelector, result);
+//					walk(node, cssSelector, result);
 				}
+				walkDescendantsIteratively(nodes, cssSelector, result);
 				break;
 			case CHILD:
 				childCount = rootNode.getChildNodesCount();
