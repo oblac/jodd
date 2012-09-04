@@ -29,7 +29,7 @@
 	
 	<property name="prjName" value="Jodd"/>
 	<property name="prjId" value="jodd"/>
-	<property name="prjVersion" value="3.3.8-beta"/>
+	<property name="prjVersion" value="3.3.8"/>
 
 	<echo/>
 	<echo>${prjName} ${prjVersion}</echo>
@@ -261,7 +261,7 @@
 				windowtitle="jodd" stylesheetfile="${etc.dir}/javadoc/jodd.css"
 				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
 				source="1.5"
-				executable="${jdk$.bin}/javadoc">
+				executable="${jdk.bin}/javadoc">
 			<bootclasspath refid="jodd.src.bootclasspath"/>
 			<classpath refid="jodd.src.classpath"/>
 			<doctitle><![CDATA[Jodd Library ${prjVersion}]]></doctitle>
@@ -505,7 +505,7 @@
 				windowtitle="jodd-wot" stylesheetfile="${etc.dir}/javadoc/jodd-wot.css"
 				breakiterator="true" charset="UTF-8" docencoding="UTF-8"
 				source="1.5"
-				executable="${jdk$.bin}/javadoc">
+				executable="${jdk.bin}/javadoc">
 			<bootclasspath refid="jodd-wot.src.bootclasspath"/>
 			<classpath refid="jodd-wot.src.classpath"/>
 			<doctitle><![CDATA[Jodd-wot Library ${prjVersion}]]></doctitle>
