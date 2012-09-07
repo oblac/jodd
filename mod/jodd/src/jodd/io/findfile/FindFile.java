@@ -274,8 +274,10 @@ public class FindFile {
 		public File next() {
 			if (files != null) {
 				return nextFile();
-			} else {
+			} else if (fileNames != null) {
 				return nextFileName();
+			} else {
+				return null;
 			}
 		}
 
