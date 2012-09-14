@@ -300,6 +300,9 @@ public class FindFile {
 				}
 
 				if (file.isFile()) {
+					if (includeFiles == false) {
+						continue;
+					}
 					if (acceptFile(file) == false) {
 						continue;
 					}
@@ -322,6 +325,9 @@ public class FindFile {
 				index++;
 
 				if (file.isFile()) {
+					if (includeFiles == false) {
+						continue;
+					}
 					if (acceptFile(file) == false) {
 						continue;
 					}
