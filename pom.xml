@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.jodd</groupId>
+		<artifactId>jodd-parent</artifactId>
+		<version>3.4.0-SNAPSHOT</version>
+		<relativePath>jodd-parent</relativePath>
+	</parent>
+
+	<artifactId>jodd</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>jodd-parent</module>
+		<module>jodd-core</module>
+	</modules>
+
+	<profiles>
+
+		<!-- profile: DIST -->
+		<profile>
+			<id>dist</id>
+			<modules>
+				<module>jodd-distributions</module>
+			</modules>
+			<build>
+				<defaultGoal>clean package</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>true</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- profile: RELEASE -->
+		<profile>
+			<id>release</id>
+			<modules>
+				<module>jodd-distributions</module>
+			</modules>
+			<build>
+				<defaultGoal>clean package</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<stylesheetfile>src/main/javadoc/jodd.css</stylesheetfile>
+							<author>false</author>
+							<bottom><![CDATA[<div id="footer">Copyright &#169; 2003-2012 Jodd Team</div>]]></bottom>
+							<breakiterator>true</breakiterator>
+							<charset>UTF-8</charset>
+							<docencoding>UTF-8</docencoding>
+							<source>${java.source.version}</source>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
