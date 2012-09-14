@@ -258,5 +258,37 @@ public class FindFile2Test extends TestCase {
 
 	}
 
+	public void testJustFoldersAndFiles() {
+		FindFile ff = new FindFile();
+		ff.setIncludeDirs(false);
+		ff.setIncludeFiles(true);
+		ff.setRecursive(false);
+		ff.sortByName();
+		ff.searchPath(dataRoot);
+
+		File f;
+		StringBuilder str = new StringBuilder();
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("alpha.txt | jodd1.txt | jodd10.txt | zero.txt | ", str.toString());
+
+		ff = new FindFile();
+		ff.setIncludeDirs(true);
+		ff.setIncludeFiles(false);
+		ff.setRecursive(false);
+		ff.sortByName();
+		ff.searchPath(dataRoot);
+
+		str = new StringBuilder();
+		while ((f = ff.nextFile()) != null) {
+			str.append(f.getName()).append(" | ");
+		}
+
+		assertEquals("beta | sumo | ", str.toString());
+
+	}
+
 
 }
