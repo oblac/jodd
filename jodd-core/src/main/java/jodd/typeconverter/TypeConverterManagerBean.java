@@ -9,7 +9,6 @@ import jodd.mutable.MutableFloat;
 import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
-import jodd.servlet.upload.FileUpload;
 import jodd.typeconverter.impl.BigDecimalConverter;
 import jodd.typeconverter.impl.BigIntegerConverter;
 import jodd.typeconverter.impl.BooleanArrayConverter;
@@ -25,7 +24,6 @@ import jodd.typeconverter.impl.DateConverter;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import jodd.typeconverter.impl.DoubleConverter;
 import jodd.typeconverter.impl.FileConverter;
-import jodd.typeconverter.impl.FileUploadConverter;
 import jodd.typeconverter.impl.FloatArrayConverter;
 import jodd.typeconverter.impl.FloatConverter;
 import jodd.typeconverter.impl.IntegerArrayConverter;
@@ -49,6 +47,7 @@ import jodd.typeconverter.impl.StringArrayConverter;
 import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 
 import java.io.File;
@@ -156,7 +155,6 @@ public class TypeConverterManagerBean {
 		register(GregorianCalendar.class, new CalendarConverter());
 		register(JDateTime.class, new JDateTimeConverter());
 
-		register(FileUpload.class, new FileUploadConverter());
 		register(File.class, new FileConverter());
 
 		register(Class.class, new ClassConverter());
@@ -166,6 +164,19 @@ public class TypeConverterManagerBean {
 		register(URL.class, new URLConverter());
 
 		register(Locale.class, new LocaleConverter());
+
+		try {
+			Class<?> fileUploadClass = ClassLoaderUtil.loadClass("jodd.servlet.upload.FileUpload");
+			Class<?> fileUploadConverterClass = ClassLoaderUtil.loadClass("jodd.servlet.upload.FileUploadConverter");
+
+			TypeConverter fileUploadConverter = (TypeConverter) fileUploadConverterClass.newInstance();
+
+			register(fileUploadClass, fileUploadConverter);
+		} catch (ClassNotFoundException cnfex) {
+			// ignore
+		} catch (Exception ex) {
+			throw new TypeConversionException(ex);
+		}
 	}
 
 	/**

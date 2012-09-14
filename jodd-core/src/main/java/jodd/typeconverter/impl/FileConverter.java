@@ -3,14 +3,11 @@
 package jodd.typeconverter.impl;
 
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
-import jodd.servlet.upload.FileUpload;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Converts given object into the <code>File</code>.
@@ -29,11 +26,11 @@ public class FileConverter implements TypeConverter<File> {
 			return null;
 		}
 
-
 		if (value instanceof File) {
 			return (File) value;
 		}
 
+/*
 		if (value instanceof FileUpload) {
 			FileUpload fileUpload = (FileUpload) value;
 
@@ -49,6 +46,7 @@ public class FileConverter implements TypeConverter<File> {
 				StreamUtil.close(in);
 			}
 		}
+*/
 
 		Class type = value.getClass();
 		if (type == byte[].class) {
