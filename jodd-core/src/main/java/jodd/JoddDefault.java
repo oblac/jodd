@@ -15,11 +15,6 @@ public class JoddDefault {
 	public static final String JODD_VERSION;
 
 	/**
-	 * Jodd root package.
-	 */
-	public static final String JODD_PACKAGE_NAME;
-
-	/**
 	 * Default temp file prefix.
 	 */
 	public static String tempFilePrefix = "jodd-";
@@ -35,9 +30,9 @@ public class JoddDefault {
 	public static int ioBufferSize = 16384;
 
 	static {
-		Package pkg = Jodd.class.getPackage();
+		Package pkg = JoddDefault.class.getPackage();
+
 		JODD_VERSION = pkg.getImplementationVersion();
-		JODD_PACKAGE_NAME = pkg.getName();
 	}
 
 }
