@@ -17,6 +17,7 @@
 	<modules>
 		<module>jodd-parent</module>
 		<module>jodd-core</module>
+		<module>jodd-bean</module>
 	</modules>
 
 	<profiles>
