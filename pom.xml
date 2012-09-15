@@ -101,6 +101,12 @@
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
+								<configuration>
+									<excludes>
+										<exclude>*Test</exclude>
+										<exclude>*.?</exclude>
+									</excludes>
+								</configuration>
 							</execution>
 							<execution>
 								<id>report</id>
