@@ -52,7 +52,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		}
 
 		try {
-			Class joddClass = ClassLoaderUtil.loadClass("jodd.Jodd");
+			Class joddClass = ClassLoaderUtil.loadClass("jodd.util.ClassLoaderUtilTest");
 			assertNotNull(joddClass);
 		} catch (ClassNotFoundException ignore) {
 			fail();
