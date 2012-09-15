@@ -7,12 +7,7 @@ import java.util.Map;
 
 import jodd.bean.loader.BeanLoader;
 import jodd.bean.loader.MapBeanLoader;
-import jodd.bean.loader.MultipartRequestBeanLoader;
-import jodd.bean.loader.MultipartRequestWrapperBeanLoader;
-import jodd.bean.loader.RequestBeanLoader;
 import jodd.bean.loader.ResultSetBeanLoader;
-import jodd.bean.loader.ServletContextBeanLoader;
-import jodd.bean.loader.SessionBeanLoader;
 
 /**
  * Manager for {@link BeanLoader} instances that populates java beans from various sources.
@@ -49,12 +44,12 @@ public class BeanLoaderManager {
 		register(java.util.Map.class, new MapBeanLoader());
 		register(java.sql.ResultSet.class, new ResultSetBeanLoader());
 		try {
-			Class.forName("javax.servlet.http.HttpServletRequest");		// check if exists
-			register(javax.servlet.http.HttpServletRequest.class, new RequestBeanLoader());
-			register(javax.servlet.http.HttpSession.class, new SessionBeanLoader());
-			register(javax.servlet.ServletContext.class, new ServletContextBeanLoader());
-			register(jodd.servlet.upload.MultipartRequest.class, new MultipartRequestBeanLoader());
-			register(jodd.servlet.upload.MultipartRequestWrapper.class, new MultipartRequestWrapperBeanLoader());
+			Class.forName("jodd.servlet.BeanLoaderManagerAddon");
+//			register(javax.servlet.http.HttpServletRequest.class, new RequestBeanLoader());
+//			register(javax.servlet.http.HttpSession.class, new SessionBeanLoader());
+//			register(javax.servlet.ServletContext.class, new ServletContextBeanLoader());
+//			register(jodd.servlet.upload.MultipartRequest.class, new MultipartRequestBeanLoader());
+//			register(jodd.servlet.upload.MultipartRequestWrapper.class, new MultipartRequestWrapperBeanLoader());
 		} catch (ClassNotFoundException cnfex) {
 			// ignore
 		}

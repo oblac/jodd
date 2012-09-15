@@ -2,7 +2,7 @@
 		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-	<id>jodd</id>
+	<id>jodd-zip</id>
 
 	<formats>
 		<format>dir</format>
@@ -11,20 +11,16 @@
 
 	<includeBaseDirectory>false</includeBaseDirectory>
 
-	<dependencySets>
-		<dependencySet>
-			<includes>
-				<include>org.jodd:jodd-core</include>
-			</includes>
-			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
-			<outputDirectory>/</outputDirectory>
-			<useProjectArtifact>false</useProjectArtifact>
-		</dependencySet>
-	</dependencySets>
-
 	<fileSets>
 		<fileSet>
-			<directory>../</directory>
+			<directory>target</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>*.txt</include>

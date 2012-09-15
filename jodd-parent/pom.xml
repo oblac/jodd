@@ -68,11 +68,19 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- jodd -->
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-core</artifactId>
 				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-bean</artifactId>
+				<version>3.4.0-SNAPSHOT</version>
+			</dependency>
+
+			<!-- external -->
 			<dependency>
 				<groupId>javax.mail</groupId>
 				<artifactId>mail</artifactId>
@@ -98,6 +106,8 @@
 				<artifactId>slf4j-simple</artifactId>
 				<version>1.6.6</version>
 			</dependency>
+
+			<!-- test -->
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
