@@ -20,6 +20,7 @@
 		<module>jodd-bean</module>
 		<module>jodd-mail</module>
 		<module>jodd-props</module>
+		<module>jodd-servlet</module>
 	</modules>
 
 	<profiles>

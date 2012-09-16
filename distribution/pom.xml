@@ -31,6 +31,10 @@
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-props</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-servlet</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

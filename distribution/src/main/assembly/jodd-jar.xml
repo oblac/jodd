@@ -18,6 +18,7 @@
 				<include>org.jodd:jodd-bean</include>
 				<include>org.jodd:jodd-mail</include>
 				<include>org.jodd:jodd-props</include>
+				<include>org.jodd:jodd-servlet</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
