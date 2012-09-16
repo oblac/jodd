@@ -87,6 +87,11 @@
 				<artifactId>jodd-mail</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-props</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
 
 			<!-- external -->
 			<dependency>

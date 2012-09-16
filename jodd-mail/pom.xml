@@ -19,8 +19,8 @@
 			<artifactId>jodd-core</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>mail</artifactId>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
 		</dependency>
 	</dependencies>
 

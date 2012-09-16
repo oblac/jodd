@@ -19,6 +19,7 @@
 		<module>jodd-core</module>
 		<module>jodd-bean</module>
 		<module>jodd-mail</module>
+		<module>jodd-props</module>
 	</modules>
 
 	<profiles>
