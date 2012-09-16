@@ -200,12 +200,399 @@
 					<version>2.5.1</version>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+				<plugin>
+					<groupId>com.soebes.maven.plugins</groupId>
+					<artifactId>maven-echo-plugin</artifactId>
+					<version>0.1</version>
+				</plugin>
+				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.5.10.201208310627</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<!-- echo -->
+		<plugins>
+			<plugin>
+				<groupId>com.soebes.maven.plugins</groupId>
+				<artifactId>maven-echo-plugin</artifactId>
+
+				<!-- default lifecycle -->
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ validate phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>initialize</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ initialize phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ generate-sources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-sources</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-sources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ generate-resources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-resources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ compile phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-classes</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-classes phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ generate-test-sources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-test-sources</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-test-sources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-test-resources</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ generate-test-resources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-test-resources</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-test-resources phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test-compile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ test-compile phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-test-classes</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ process-test-classes phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ test phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>prepare-package</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ prepare-package phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ package phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pre-integration-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ pre-integration-test phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>integration-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ integration-test phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ post-integration-test phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ verify phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ install phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ deploy phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+
+					<!-- clean lifecycle -->
+					<execution>
+						<id>pre-clean</id>
+						<phase>pre-clean</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ pre-clean phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ clean phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-clean</id>
+						<phase>post-clean</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ post-clean phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+
+					<!-- site lifecycle -->
+					<execution>
+						<id>pre-site</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ pre-site phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>site</id>
+						<phase>site</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ site phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-site</id>
+						<phase>post-site</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ post-site phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+					<execution>
+						<id>site-deploy</id>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>echo</goal>
+						</goals>
+						<configuration>
+							<echos>
+								<echo>+++ site-deploy phase</echo>
+							</echos>
+						</configuration>
+					</execution>
+				</executions>
+
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

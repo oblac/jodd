@@ -62,6 +62,7 @@
 			<build>
 				<defaultGoal>clean package</defaultGoal>
 				<plugins>
+					<!-- sources -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
@@ -73,6 +74,8 @@
 							</execution>
 						</executions>
 					</plugin>
+					
+					<!-- javadoc -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -91,8 +94,17 @@
 									<goal>jar</goal>
 								</goals>
 							</execution>
+							<execution>
+								<id>aggregate</id>
+								<phase>package</phase>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+							</execution>
 						</executions>
 					</plugin>
+
+					<!-- jacoco -->
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
@@ -101,6 +113,7 @@
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
+								<phase>process-test-classes</phase>
 								<configuration>
 									<excludes>
 										<exclude>*Test</exclude>
