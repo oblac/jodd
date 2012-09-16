@@ -16,6 +16,7 @@
 			<includes>
 				<include>org.jodd:jodd-core</include>
 				<include>org.jodd:jodd-bean</include>
+				<include>org.jodd:jodd-mail</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
