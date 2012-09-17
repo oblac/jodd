@@ -22,6 +22,7 @@
 		<module>jodd-props</module>
 		<module>jodd-upload</module>
 		<module>jodd-servlet</module>
+		<module>jodd-http</module>
 	</modules>
 
 	<profiles>
