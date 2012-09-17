@@ -17,14 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import jodd.exception.UncheckedException;
 import jodd.io.StreamUtil;
 import jodd.util.Base64;
 import jodd.util.StringPool;
 import jodd.util.MimeTypes;
 import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.servlet.upload.FileUpload;
+import jodd.upload.FileUpload;
 import jodd.util.StringUtil;
 
 /**

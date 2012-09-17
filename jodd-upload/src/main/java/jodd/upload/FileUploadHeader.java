@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload;
+package jodd.upload;
 
 import jodd.io.FileNameUtil;
 import jodd.util.StringPool;

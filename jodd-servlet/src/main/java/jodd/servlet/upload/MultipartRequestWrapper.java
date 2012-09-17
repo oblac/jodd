@@ -3,6 +3,8 @@
 package jodd.servlet.upload;
 
 import jodd.servlet.ServletUtil;
+import jodd.upload.FileUpload;
+import jodd.upload.FileUploadFactory;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;

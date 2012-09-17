@@ -4,6 +4,8 @@ package jodd.servlet.upload;
 
 import jodd.JoddDefault;
 import jodd.servlet.ServletUtil;
+import jodd.upload.FileUploadFactory;
+import jodd.upload.MultipartStreamParser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

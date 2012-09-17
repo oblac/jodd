@@ -1,17 +1,17 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload.impl;
+package jodd.upload.impl;
 
-import jodd.servlet.upload.FileUpload;
-import jodd.servlet.upload.MultipartRequestInputStream;
-import jodd.servlet.upload.FileUploadFactory;
+import jodd.upload.FileUpload;
+import jodd.upload.MultipartRequestInputStream;
+import jodd.upload.FileUploadFactory;
 import jodd.util.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Factory for {@link jodd.servlet.upload.impl.DiskFileUpload}
+ * Factory for {@link jodd.upload.impl.DiskFileUpload}
  */
 public class DiskFileUploadFactory implements FileUploadFactory {
 

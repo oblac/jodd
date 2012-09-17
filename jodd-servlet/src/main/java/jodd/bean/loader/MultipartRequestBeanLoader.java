@@ -3,7 +3,7 @@
 package jodd.bean.loader;
 
 import jodd.servlet.upload.MultipartRequest;
-import jodd.servlet.upload.FileUpload;
+import jodd.upload.FileUpload;
 
 /**
  * Populates java bean from {@link MultipartRequest} objects.

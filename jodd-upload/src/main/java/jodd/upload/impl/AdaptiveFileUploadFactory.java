@@ -1,10 +1,10 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload.impl;
+package jodd.upload.impl;
 
-import jodd.servlet.upload.FileUploadFactory;
-import jodd.servlet.upload.FileUpload;
-import jodd.servlet.upload.MultipartRequestInputStream;
+import jodd.upload.FileUploadFactory;
+import jodd.upload.FileUpload;
+import jodd.upload.MultipartRequestInputStream;
 
 import java.io.File;
 

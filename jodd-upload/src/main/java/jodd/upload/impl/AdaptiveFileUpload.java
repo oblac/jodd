@@ -1,14 +1,14 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload.impl;
+package jodd.upload.impl;
 
 import jodd.JoddDefault;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
-import jodd.servlet.upload.FileUpload;
-import jodd.servlet.upload.MultipartRequestInputStream;
+import jodd.upload.FileUpload;
+import jodd.upload.MultipartRequestInputStream;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload;
+package jodd.upload;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.servlet.upload.impl.MemoryFileUploadFactory;
+import jodd.upload.impl.MemoryFileUploadFactory;
 import jodd.util.ArraysUtil;
 
 import java.io.IOException;

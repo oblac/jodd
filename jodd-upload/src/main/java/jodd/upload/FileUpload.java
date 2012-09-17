@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet.upload;
+package jodd.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,8 +9,6 @@ import java.io.InputStream;
  * Encapsulates base for uploaded file. Its instance may be
  * either valid, when it represent an uploaded file, or invalid
  * when uploaded file doesn't exist or there was a problem with it.
- *
- * @see jodd.servlet.upload.MultipartRequest
  */
 public abstract class FileUpload {
 
