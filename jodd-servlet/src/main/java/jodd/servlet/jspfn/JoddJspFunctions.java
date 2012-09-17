@@ -2,11 +2,16 @@
 
 package jodd.servlet.jspfn;
 
+import jodd.JoddDefault;
 import jodd.datetime.JDateTime;
 import jodd.servlet.ServletUtil;
+import jodd.servlet.URLBuilder;
+import jodd.servlet.URLCoder;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 import static jodd.util.StringPool.EMPTY;
@@ -116,10 +121,40 @@ public class JoddJspFunctions {
 	// ---------------------------------------------------------------- datetime
 
 	/**
-	 * Formats jdatetime.
+	 * Formats JDateTime.
 	 */
 	public static String fmtTime(JDateTime jdt, String format) {
 		return jdt.toString(format);
+	}
+
+	// ---------------------------------------------------------------- url
+
+	public static String url1(String value) {
+		return url(value, ServletUtil.getPageContextFromThread());
+	}
+	public static String url(String value, PageContext pageContext) {
+		return url(value, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+	}
+	public static String url(String value, String encoding, PageContext pageContext) {
+		return url(value, encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+	}
+	public static String url(String value, HttpServletRequest request, HttpServletResponse response) {
+		return url(value, JoddDefault.encoding, request, response);
+	}
+	public static String url(String value, String encoding, HttpServletRequest request, HttpServletResponse response) {
+		String result = ServletUtil.resolveUrl(URLCoder.url(value, encoding), request);
+		if (ServletUtil.isAbsoluteUrl(result) == false) {
+			result = response.encodeURL(result);        // rewrite relative URLs
+		}
+		return result;
+	}
+
+	public static URLBuilder build(PageContext pageContext) {
+		return new URLBuilder((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse(), JoddDefault.encoding);
+	}
+
+	public static URLBuilder build(HttpServletRequest request, HttpServletResponse response) {
+		return new URLBuilder(request, response, JoddDefault.encoding);
 	}
 
 }

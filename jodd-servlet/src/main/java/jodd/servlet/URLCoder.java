@@ -5,9 +5,6 @@ package jodd.servlet;
 import jodd.util.StringPool;
 import jodd.JoddDefault;
 
-import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,25 +38,6 @@ public class URLCoder {
 		}
 	}
 
-	public static String url1(String value) {
-		return url(value, ServletUtil.getPageContextFromThread());
-	}
-	public static String url(String value, PageContext pageContext) {
-		return url(value, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
-	}
-	public static String url(String value, String encoding, PageContext pageContext) {
-		return url(value, encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
-	}
-	public static String url(String value, HttpServletRequest request, HttpServletResponse response) {
-		return url(value, JoddDefault.encoding, request, response);
-	}
-	public static String url(String value, String encoding, HttpServletRequest request, HttpServletResponse response) {
-		String result = ServletUtil.resolveUrl(url(value, encoding), request);
-		if (ServletUtil.isAbsoluteUrl(result) == false) {
-			result = response.encodeURL(result);        // rewrite relative URLs
-		}
-		return result;
-	}
 
 	public static String url(String url) {
 		return url(url, JoddDefault.encoding);
@@ -178,13 +156,6 @@ public class URLCoder {
 		return build().path(path);
 	}
 
-	public static URLBuilder build(PageContext pageContext) {
-		return new URLBuilder((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse(), JoddDefault.encoding);
-	}
-
-	public static URLBuilder build(HttpServletRequest request, HttpServletResponse response) {
-		return new URLBuilder(request, response, JoddDefault.encoding);
-	}
 
 	// ---------------------------------------------------------------- util
 

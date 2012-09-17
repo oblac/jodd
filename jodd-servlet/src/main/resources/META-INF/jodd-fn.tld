@@ -83,12 +83,12 @@
 
 	<function>
 		<name>url</name>
-		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 	<function>
 		<name>url1</name>
-		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String url1(java.lang.String)</function-signature>
 	</function>
 	<function>
