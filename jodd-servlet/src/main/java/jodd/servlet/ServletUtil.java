@@ -25,6 +25,7 @@ import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.upload.FileUpload;
 import jodd.util.StringUtil;
+import jodd.util.URLCoder;
 
 /**
  * Miscellaneous servlet utilities.

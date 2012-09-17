@@ -1,8 +1,7 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet;
+package jodd.util;
 
-import jodd.util.StringPool;
 import jodd.JoddDefault;
 
 import java.io.UnsupportedEncodingException;
@@ -47,8 +46,7 @@ public class URLCoder {
 	 * Faster smart URL encoding. URL is parsed after the '?' sign.
 	 * Both parameter name and values are parsed. This method is not 100% correct:
 	 * it can't make a difference between <code>'&'</code> char in parameter value and
-	 * <code>'&'</code> used as a delimiter. For more precise version,
-	 * use {@link #build()}.
+	 * <code>'&'</code> used as a delimiter.
 	 */
 	public static String url(String url, String encoding) {
 		int paramNdx = url.indexOf('?');
@@ -143,17 +141,6 @@ public class URLCoder {
 		StringBuilder sb = new StringBuilder(value.length());
 		appendPath(sb, value);
 		return sb.toString();
-	}
-
-
-	// ---------------------------------------------------------------- build url
-
-	public static URLBuilder build() {
-		return new URLBuilder(null, null, JoddDefault.encoding);
-	}
-
-	public static URLBuilder build(String path) {
-		return build().path(path);
 	}
 
 

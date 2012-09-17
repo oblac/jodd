@@ -1,10 +1,8 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet;
+package jodd.util;
 
 import jodd.JoddDefault;
-import jodd.util.MathUtil;
-import jodd.util.StringPool;
 
 import java.io.UnsupportedEncodingException;
 

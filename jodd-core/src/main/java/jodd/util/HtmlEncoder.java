@@ -1,8 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet;
-
-import jodd.util.StringPool;
+package jodd.util;
 
 /**
  * Encodes text and URL strings in various ways resulting HTML-safe text.

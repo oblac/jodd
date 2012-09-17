@@ -5,8 +5,8 @@ package jodd.servlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import static jodd.servlet.URLCoder.appendPath;
-import static jodd.servlet.URLCoder.appendQuery;
+import static jodd.util.URLCoder.appendPath;
+import static jodd.util.URLCoder.appendQuery;
 
 /**
  * Safe URL builder.

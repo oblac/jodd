@@ -6,7 +6,7 @@ import jodd.JoddDefault;
 import jodd.datetime.JDateTime;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.URLBuilder;
-import jodd.servlet.URLCoder;
+import jodd.util.URLCoder;
 import jodd.util.StringUtil;
 import jodd.util.ObjectUtil;
 

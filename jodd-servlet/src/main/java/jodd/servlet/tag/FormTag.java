@@ -1,7 +1,7 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 package jodd.servlet.tag;
 
-import jodd.servlet.HtmlEncoder;
+import jodd.util.HtmlEncoder;
 import jodd.servlet.HtmlFormUtil;
 import jodd.servlet.HtmlTag;
 import jodd.servlet.JspResolver;

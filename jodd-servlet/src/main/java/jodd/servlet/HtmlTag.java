@@ -3,6 +3,7 @@
 package jodd.servlet;
 
 import jodd.util.CharUtil;
+import jodd.util.HtmlEncoder;
 import jodd.util.StringPool;
 
 import java.util.LinkedHashMap;

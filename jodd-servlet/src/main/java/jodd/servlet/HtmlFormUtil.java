@@ -4,6 +4,7 @@ package jodd.servlet;
 
 import jodd.typeconverter.Convert;
 import jodd.util.CharUtil;
+import jodd.util.HtmlEncoder;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 

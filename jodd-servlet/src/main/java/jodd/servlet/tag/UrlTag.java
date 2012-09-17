@@ -2,7 +2,7 @@
 
 package jodd.servlet.tag;
 
-import jodd.servlet.URLCoder;
+import jodd.util.URLCoder;
 import jodd.servlet.URLBuilder;
 import jodd.util.StringPool;
 
