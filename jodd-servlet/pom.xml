@@ -23,6 +23,10 @@
 			<artifactId>jodd-bean</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-upload</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>

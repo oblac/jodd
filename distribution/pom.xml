@@ -33,6 +33,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
+			<artifactId>jodd-upload</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
 			<artifactId>jodd-servlet</artifactId>
 		</dependency>
 	</dependencies>
