@@ -11,8 +11,26 @@ import java.net.URLEncoder;
 
 /**
  * Encodes URLs better, significantly faster and more convenient.
- * This encoder handles path and queries differently, as
- * defined by specification!
+ * This encoder handles <b>path</b> and <p>queries</p> differently,
+ * as defined by the specification!
+ * <p>
+ * There are several ways how <code>URLCoder</code> can be used.
+ * <p>
+ * The simplest way - but somewhat not correct (in certain usecases) -
+ * is to use {@link #encodeUrl(String)} and provide full URL.
+ *
+ * <p>
+ * The precise way would be building target URL using
+ * {@link #encodePath(String)} and {@link #encodeQuery(String)} methods.
+ * for each URL element. For example:
+ * <code>
+ * String targetUrl = encodePath("http://jodd.org") + "&" +
+ * 		encodeQuery("param") + "=" + encodeQuery("value");
+ * </code>
+ *
+ * <p>
+ * However, this is not the most user-friendly way. The user-friendly way
+ * is using the {@link Builder builder} class with fluent interface.
  */
 public class URLCoder {
 
@@ -37,22 +55,27 @@ public class URLCoder {
 		}
 	}
 
-
-	public static String url(String url) {
-		return url(url, JoddDefault.encoding);
+	/**
+	 * @see #encodeUrl
+	 */
+	public static String encodeUrl(String url) {
+		return URLCoder.encodeUrl(url, JoddDefault.encoding);
 	}
 
 	/**
 	 * Faster smart URL encoding. URL is parsed after the '?' sign.
-	 * Both parameter name and values are parsed. This method is not 100% correct:
-	 * it can't make a difference between <code>'&'</code> char in parameter value and
+	 * Both parameter name and values are parsed.
+	 * <p>
+	 * <b>Note</b>: This method is NOT 100% correct: it can't make a
+	 * difference between <code>'&'</code> char in parameter value and
 	 * <code>'&'</code> used as a delimiter.
 	 */
-	public static String url(String url, String encoding) {
+	public static String encodeUrl(String url, String encoding) {
 		int paramNdx = url.indexOf('?');
 		if (paramNdx == -1) {
 			return encodePath(url);
 		}
+
 		StringBuilder result = new StringBuilder(url.length() >> 1);
 		appendPath(result, url.substring(0, paramNdx));
 		result.append('?');
@@ -68,7 +91,7 @@ public class URLCoder {
 			}
 			int eqNdx = q.indexOf('=');
 			if (eqNdx == -1) {
-				result.append(q);
+				appendQuery(result, q, encoding);
 			} else {
 				String name = q.substring(0, eqNdx);
 				appendQuery(result, name, encoding);
@@ -128,11 +151,15 @@ public class URLCoder {
 			if (c < 128) {
 				result.append(URI_CHARS[c]);
 			} else {
-				quoteNon7bit(result, c);
+				// quoteNon7bit
+				if ((Character.isSpaceChar(c) || Character.isISOControl(c))) {
+					appendEncoded(result, c);
+				} else {
+					result.append(c);
+				}
 			}
 		}
 	}
-
 
 	/**
 	 * Encodes <b>path</b> part of the URL.
@@ -145,14 +172,6 @@ public class URLCoder {
 
 
 	// ---------------------------------------------------------------- util
-
-	private static void quoteNon7bit(StringBuilder dest, char c) {
-		if ((Character.isSpaceChar(c) || Character.isISOControl(c))) {
-			appendEncoded(dest, c);
-		} else {
-			dest.append(c);
-		}
-	}
 
 	private static void appendEncoded(StringBuilder sb, char c) {
 		byte[] bytes;
@@ -174,4 +193,93 @@ public class URLCoder {
 	}
 
 	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
+
+	// ---------------------------------------------------------------- builder
+
+	/**
+	 * Creates URL builder for user-friendly way of building URLs.
+	 */
+	public static Builder build() {
+		return new Builder(JoddDefault.encoding);
+	}
+
+	public static class Builder {
+
+		protected final StringBuilder url;
+		protected final String encoding;
+		protected boolean hasParams;
+
+		public Builder(String encoding) {
+			url = new StringBuilder();
+			this.hasParams = false;
+			this.encoding = encoding;
+		}
+
+		/**
+		 * Defines path.
+		 */
+		public Builder path(String value) {
+			if (hasParams) {
+				throw new IllegalArgumentException("Path element can't come after query parameters");
+			}
+			appendPath(url, value);
+			return this;
+		}
+
+		/**
+		 * Appends new parameter to url.
+		 */
+		public Builder param(String name, Object value) {
+			return param(name, value == null ? null : value.toString());
+		}
+
+		/**
+		 * Appends new parameter to url.
+		 */
+		public Builder param(String name, String value) {
+			url.append(hasParams ? '&' : '?');
+			hasParams = true;
+			appendQuery(url, name, encoding);
+			if ((value != null) && (value.length() > 0)) {
+				url.append('=');
+				appendQuery(url, value, encoding);
+			}
+			return this;
+		}
+
+		public Builder param(String nameValue) {
+			url.append(hasParams ? '&' : '?');
+
+			hasParams = true;
+
+			int eqNdx = nameValue.indexOf('=');
+			String name;
+			String value = null;
+
+			if (eqNdx == -1) {
+				name = nameValue;
+			} else {
+				name = nameValue.substring(0, eqNdx);
+				value = nameValue.substring(eqNdx + 1);
+			}
+
+			appendQuery(url, name, encoding);
+
+			if ((value != null) && (value.length() > 0)) {
+				url.append('=');
+				appendQuery(url, value, encoding);
+			}
+
+			return this;
+		}
+
+		/**
+		 * Returns built URL.
+		 */
+		@Override
+		public String toString() {
+			return url.toString();
+		}
+	}
+
 }

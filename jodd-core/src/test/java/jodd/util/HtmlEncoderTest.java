@@ -116,23 +116,21 @@ public class HtmlEncoderTest extends TestCase {
 	}
 
 	public void testEncodeUrl() {
-		assertEquals("/aaa", URLCoder.url("/aaa"));
-		assertEquals("/aaa?", URLCoder.url("/aaa?"));
-		assertEquals("/aaa?b", URLCoder.url("/aaa?b"));
-		assertEquals("/aaa?b=", URLCoder.url("/aaa?b="));
-		assertEquals("/aaa?b=c", URLCoder.url("/aaa?b=c"));
-		assertEquals("/aaa?b=+c", URLCoder.url("/aaa?b= c"));
-		assertEquals("/aaa?b=+c&", URLCoder.url("/aaa?b= c&"));
-		assertEquals("/aaa?b=+c&dd", URLCoder.url("/aaa?b= c&dd"));
-		assertEquals("/aaa?b=+c&dd=", URLCoder.url("/aaa?b= c&dd="));
-		assertEquals("/aaa?b=++c&dd=%3D", URLCoder.url("/aaa?b=  c&dd=="));
-		assertEquals("/aaa?b=++c&dd=%3D&=", URLCoder.url("/aaa?b=  c&dd==&="));
-		assertEquals("?data=The+string+%C3%BC%40foo-bar", URLCoder.url("?data=The string ü@foo-bar"));
+		assertEquals("/aaa", URLCoder.encodeUrl("/aaa"));
+		assertEquals("/aaa?", URLCoder.encodeUrl("/aaa?"));
+		assertEquals("/aaa?b", URLCoder.encodeUrl("/aaa?b"));
+		assertEquals("/aaa?b=", URLCoder.encodeUrl("/aaa?b="));
+		assertEquals("/aaa?b=c", URLCoder.encodeUrl("/aaa?b=c"));
+		assertEquals("/aaa?b=+c", URLCoder.encodeUrl("/aaa?b= c"));
+		assertEquals("/aaa?b=+c&", URLCoder.encodeUrl("/aaa?b= c&"));
+		assertEquals("/aaa?b=+c&dd", URLCoder.encodeUrl("/aaa?b= c&dd"));
+		assertEquals("/aaa?b=+c&dd=", URLCoder.encodeUrl("/aaa?b= c&dd="));
+		assertEquals("/aaa?b=++c&dd=%3D", URLCoder.encodeUrl("/aaa?b=  c&dd=="));
+		assertEquals("/aaa?b=++c&dd=%3D&=", URLCoder.encodeUrl("/aaa?b=  c&dd==&="));
+		assertEquals("?data=The+string+%C3%BC%40foo-bar", URLCoder.encodeUrl("?data=The string ü@foo-bar"));
 	}
 
 	public void testEncodeBaseUrl() {
-		// tofix
-/*
 		assertEquals("/aaa", URLCoder.build().path("/aaa").toString());
 		assertEquals("/aaa?", URLCoder.build().path("/aaa").param("").toString());
 		assertEquals("/aaa?b", URLCoder.build().path("/aaa").param("b").toString());
@@ -151,7 +149,6 @@ public class HtmlEncoderTest extends TestCase {
 		assertEquals("/aaa", URLCoder.build().path("/aaa").toString());
 		assertEquals("/aaa?p=1", URLCoder.build().path("/aaa").param("p=1").toString());
 		assertEquals("/aaa?p=1&b=2", URLCoder.build().path("/aaa").param("p=1").param("b", "2").toString());
-*/
 	}
 
 	public void testNbsp() {

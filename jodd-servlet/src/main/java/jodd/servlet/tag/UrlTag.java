@@ -3,7 +3,6 @@
 package jodd.servlet.tag;
 
 import jodd.util.URLCoder;
-import jodd.servlet.URLBuilder;
 import jodd.util.StringPool;
 
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -45,20 +44,21 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 	@Override
 	public void doTag() throws JspException {
 		PageContext pageContext = (PageContext) getJspContext();
-		URLBuilder urlBuilder = URLCoder.build(pageContext).path(baseUrl);
+		URLCoder.Builder builder = URLCoder.build().path(baseUrl);
+
 		for (int i = 0; i < attrs.size(); i += 2) {
-			urlBuilder.param(attrs.get(i), attrs.get(i + 1));
+			builder.param(attrs.get(i), attrs.get(i + 1));
 		}
 
 		if (var == null) {
 			JspWriter out = pageContext.getOut();
 			try {
-				out.print(urlBuilder.toString());
+				out.print(builder.toString());
 			} catch (IOException ioex) {
 				// ignore
 			}
 		} else {
-			pageContext.setAttribute(var, urlBuilder.toString());
+			pageContext.setAttribute(var, builder.toString());
 		}
 	}
 }
