@@ -3,3 +3,4 @@
 target
 *.iml
 .idea
+/*.user.*

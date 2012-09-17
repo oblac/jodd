@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.io.http;
+package jodd.http;
 
 import jodd.io.StreamUtil;
 
@@ -44,7 +44,7 @@ public class HttpTunnel {
 	protected int targetPort = 8080;
 
 	protected ExecutorService executorService;
-	protected boolean running;
+	protected volatile boolean running;
 	protected ServerSocket serverSocket;
 
 	/**

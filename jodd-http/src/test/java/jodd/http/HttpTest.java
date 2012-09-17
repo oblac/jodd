@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.io.http;
+package jodd.http;
 
 import jodd.io.FileUtil;
-import jodd.servlet.upload.FileUpload;
+import jodd.upload.FileUpload;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;

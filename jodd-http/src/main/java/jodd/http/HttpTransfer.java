@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.io.http;
+package jodd.http;
 
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
-import jodd.servlet.upload.FileUpload;
-import jodd.servlet.upload.MultipartStreamParser;
+import jodd.upload.FileUpload;
+import jodd.upload.MultipartStreamParser;
 import jodd.util.KeyValue;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;

@@ -1,9 +1,9 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.io.http;
+package jodd.http;
 
-import jodd.servlet.URLCoder;
-import jodd.servlet.URLDecoder;
+import jodd.util.URLCoder;
+import jodd.util.URLDecoder;
 import jodd.util.ArraysUtil;
 import jodd.util.KeyValue;
 

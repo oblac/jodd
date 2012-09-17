@@ -3,4 +3,4 @@
 /**
  * Tiny, raw and simple HTTP client.
  */
-package jodd.io.http;
+package jodd.http;
