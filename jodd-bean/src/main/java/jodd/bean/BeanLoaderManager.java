@@ -2,12 +2,16 @@
 
 package jodd.bean;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import jodd.bean.loader.BeanLoader;
 import jodd.bean.loader.MapBeanLoader;
 import jodd.bean.loader.ResultSetBeanLoader;
+import jodd.util.ClassLoaderUtil;
+import jodd.util.ReflectUtil;
 
 /**
  * Manager for {@link BeanLoader} instances that populates java beans from various sources.
@@ -16,7 +20,7 @@ public class BeanLoaderManager {
 
 	// ---------------------------------------------------------------- manager
 
-	private static final Map<Class, BeanLoader> loaders = new HashMap<Class, BeanLoader>();
+	protected static final Map<Class, BeanLoader> loaders = new HashMap<Class, BeanLoader>();
 
     static {
 		registerDefaults();
@@ -39,19 +43,23 @@ public class BeanLoaderManager {
 	 *
 	 * @see #register
 	 */
-	@SuppressWarnings("UnnecessaryFullyQualifiedName")
 	public static void registerDefaults() {
 		register(java.util.Map.class, new MapBeanLoader());
 		register(java.sql.ResultSet.class, new ResultSetBeanLoader());
+
 		try {
-			Class.forName("jodd.servlet.BeanLoaderManagerAddon");
-//			register(javax.servlet.http.HttpServletRequest.class, new RequestBeanLoader());
-//			register(javax.servlet.http.HttpSession.class, new SessionBeanLoader());
-//			register(javax.servlet.ServletContext.class, new ServletContextBeanLoader());
-//			register(jodd.servlet.upload.MultipartRequest.class, new MultipartRequestBeanLoader());
-//			register(jodd.servlet.upload.MultipartRequestWrapper.class, new MultipartRequestWrapperBeanLoader());
+			Class loaderAddon = ClassLoaderUtil.loadClass("jodd.bean.loader.ServletBeanLoaderManagerAddon");
+
+			ReflectUtil.invoke(loaderAddon, null, "registerDefaults", null);
+
 		} catch (ClassNotFoundException cnfex) {
 			// ignore
+		} catch (NoSuchMethodException nsmex) {
+			// ignore
+		} catch (InvocationTargetException itex) {
+			throw new BeanException(itex);
+		} catch (IllegalAccessException iaex) {
+			throw new BeanException(iaex);
 		}
 	}
 
