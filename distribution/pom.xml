@@ -67,6 +67,16 @@
 						<descriptor>src/main/assembly/jodd-jar.xml</descriptor>
 						<descriptor>src/main/assembly/jodd-zip.xml</descriptor>
 					</descriptors>
+					<archive>
+						<manifest>
+				            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Built-By>oblac.com</Built-By>
+							<Debug-Info>on</Debug-Info>
+							<Implementation-Title>Jodd</Implementation-Title>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
