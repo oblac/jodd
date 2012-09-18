@@ -166,13 +166,13 @@ public class TypeConverterManagerBean {
 		register(Locale.class, new LocaleConverter());
 
 		try {
-			Class<?> fileUploadClass = ClassLoaderUtil.loadClass("jodd.servlet.upload.FileUpload");
-			Class<?> fileUploadConverterClass = ClassLoaderUtil.loadClass("jodd.servlet.upload.FileUploadConverter");
+			Class<?> managerAddon = ClassLoaderUtil.loadClass("jodd.typeconverter.UploadTypeConverterManagerAddon");
 
-			TypeConverter fileUploadConverter = (TypeConverter) fileUploadConverterClass.newInstance();
+			ReflectUtil.invoke(managerAddon, "registerDefaults", this);
 
-			register(fileUploadClass, fileUploadConverter);
 		} catch (ClassNotFoundException cnfex) {
+			// ignore
+		} catch (NoSuchMethodException nsmex) {
 			// ignore
 		} catch (Exception ex) {
 			throw new TypeConversionException(ex);

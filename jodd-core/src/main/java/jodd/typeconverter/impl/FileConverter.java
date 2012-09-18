@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.io.FileUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.ArraysUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +16,24 @@ import java.io.IOException;
  * Conversion rules:
  * <li><code>null</code> value is returned as <code>null</code>
  * <li>object of destination type is simply casted
- * <li><code>FileUpload</code> is read and converted
  * <li><code>byte[]</code> content is used for creating a file
  * <li><code>String</code> content is used for creating a file
+ * <p>
+ * This converter is plugable and add-on file converters from
+ * other modules can be added.
  */
 public class FileConverter implements TypeConverter<File> {
+
+	protected TypeConverter<File>[] addonFileConverters;
+
+	@SuppressWarnings("unchecked")
+	public void registerAddonConverter(TypeConverter<File> fileTypeConverter) {
+		if (addonFileConverters == null) {
+			addonFileConverters = new TypeConverter[0];
+		}
+
+		ArraysUtil.append(addonFileConverters, fileTypeConverter);
+	}
 
 	public File convert(Object value) {
 		if (value == null) {
@@ -28,6 +42,16 @@ public class FileConverter implements TypeConverter<File> {
 
 		if (value instanceof File) {
 			return (File) value;
+		}
+
+		if (addonFileConverters != null) {
+			for (TypeConverter<File> addonFileConverter : addonFileConverters) {
+				File file = addonFileConverter.convert(value);
+
+				if (file != null) {
+					return file;
+				}
+			}
 		}
 
 /*

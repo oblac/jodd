@@ -50,16 +50,14 @@ public class BeanLoaderManager {
 		try {
 			Class loaderAddon = ClassLoaderUtil.loadClass("jodd.bean.loader.ServletBeanLoaderManagerAddon");
 
-			ReflectUtil.invoke(loaderAddon, null, "registerDefaults", null);
+			ReflectUtil.invoke(loaderAddon, "registerDefaults", null);
 
 		} catch (ClassNotFoundException cnfex) {
 			// ignore
 		} catch (NoSuchMethodException nsmex) {
 			// ignore
-		} catch (InvocationTargetException itex) {
-			throw new BeanException(itex);
-		} catch (IllegalAccessException iaex) {
-			throw new BeanException(iaex);
+		} catch (Exception ex) {
+			throw new BeanException(ex);
 		}
 	}
 
