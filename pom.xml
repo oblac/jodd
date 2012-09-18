@@ -24,6 +24,7 @@
 		<module>jodd-servlet</module>
 		<module>jodd-http</module>
 		<module>jodd-proxetta</module>
+		<module>jodd-swingspy</module>
 	</modules>
 
 	<profiles>
