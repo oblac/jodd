@@ -2,22 +2,11 @@
 
 package jodd.proxetta.data;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.InterceptedBy;
-import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.interceptor.ServletConfigInterceptor;
-import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteBean;
-import jodd.petite.WiringMode;
-import jodd.jtx.meta.Transaction;
-import jodd.jtx.JtxPropagationBehavior;
-
 import java.util.Map;
 
 @MadvocAction(value = "madvocAction")
-@PetiteBean(value = "petiteBean", wiring = WiringMode.OPTIONAL)
-@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
+@PetiteBean(value = "petiteBean")
+@InterceptedBy({Str.class, Two.class})
 public class BigFatJoe extends SmallSkinnyZoe {
 
 	@PetiteInject
@@ -40,7 +29,7 @@ public class BigFatJoe extends SmallSkinnyZoe {
 	@Override
 	@Action(method = "method", extension = "extension", alias = "alias", value = "value")
 	@PetiteInject
-	@Transaction(readOnly = true, propagation = JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW)
+	@Transaction(readOnly = true, propagation = "PROPAGATION_REQUIRES_NEW")
 	public void publicMethod() {
 		System.out.println("BigFatJoe.publicMethod");
 		super.publicMethod();

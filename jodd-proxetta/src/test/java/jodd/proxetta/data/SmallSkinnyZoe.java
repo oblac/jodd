@@ -2,10 +2,6 @@
 
 package jodd.proxetta.data;
 
-import jodd.madvoc.meta.Action;
-import jodd.petite.meta.PetiteInject;
-import jodd.jtx.meta.Transaction;
-
 public class SmallSkinnyZoe {
 
 	public void publicMethod() {

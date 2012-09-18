@@ -2,6 +2,12 @@
 
 package jodd.proxetta;
 
+import jodd.proxetta.data.Action;
+import jodd.proxetta.data.InterceptedBy;
+import jodd.proxetta.data.MadvocAction;
+import jodd.proxetta.data.PetiteBean;
+import jodd.proxetta.data.PetiteInject;
+import jodd.proxetta.data.Transaction;
 import jodd.proxetta.impl.ProxyProxetta;
 import junit.framework.TestCase;
 import jodd.proxetta.data.BigFatJoe;
@@ -11,13 +17,6 @@ import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.madvoc.meta.InterceptedBy;
-import jodd.petite.meta.PetiteInject;
-import jodd.petite.meta.PetiteBean;
-import jodd.jtx.meta.Transaction;
-import jodd.jtx.JtxPropagationBehavior;
 import jodd.mutable.MutableBoolean;
 
 import java.io.IOException;
@@ -46,25 +45,21 @@ public class BigClassTest extends TestCase {
 					assertEquals(3, anns.length);
 					AnnotationInfo ai = anns[0];
 					assertSame(ai, getAnnotation(ci, MadvocAction.class));
-					assertEquals("jodd.madvoc.meta.MadvocAction", ai.getAnnotationClassname());
-					assertEquals("Ljodd/madvoc/meta/MadvocAction;", ai.getAnnotationSignature());
+					assertEquals(MadvocAction.class.getName(), ai.getAnnotationClassname());
+					assertEquals("L" + MadvocAction.class.getName().replace('.', '/') + ";", ai.getAnnotationSignature());
 					assertEquals("madvocAction", ai.getElement("value"));
 					ai = anns[1];
 					assertSame(ai, getAnnotation(ci, PetiteBean.class));
-					assertEquals("jodd.petite.meta.PetiteBean", ai.getAnnotationClassname());
-					assertEquals("Ljodd/petite/meta/PetiteBean;", ai.getAnnotationSignature());
-					assertTrue(ai.getElement("wiring") instanceof String[]);
-					String[] w = (String[]) ai.getElement("wiring");
-					assertEquals("Ljodd/petite/WiringMode;", w[0]);
-					assertEquals("OPTIONAL", w[1]);
+					assertEquals(PetiteBean.class.getName(), ai.getAnnotationClassname());
+					assertEquals("L" + PetiteBean.class.getName().replace('.', '/') + ";", ai.getAnnotationSignature());
 					ai = anns[2];
 					assertSame(ai, getAnnotation(ci, InterceptedBy.class));
-					assertEquals("jodd.madvoc.meta.InterceptedBy", ai.getAnnotationClassname());
-					assertEquals("Ljodd/madvoc/meta/InterceptedBy;", ai.getAnnotationSignature());
+					assertEquals(InterceptedBy.class.getName(), ai.getAnnotationClassname());
+					assertEquals("L" + InterceptedBy.class.getName().replace('.', '/') + ";", ai.getAnnotationSignature());
 					assertTrue(ai.getElement("value") instanceof Object[]);
 					assertFalse(ai.getElement("value") instanceof String[]);
 					Object c1 = ((Object[]) ai.getElement("value"))[0];
-					assertEquals("Ljodd/madvoc/interceptor/EchoInterceptor;", ((Type) c1).getDescriptor());
+					assertEquals("Ljodd/proxetta/data/Str;", ((Type) c1).getDescriptor());
 				}
 				if (mi.getMethodName().equals("publicMethod")) {
 					AnnotationInfo[] anns = mi.getAnnotations();
@@ -73,22 +68,21 @@ public class BigClassTest extends TestCase {
 
 					AnnotationInfo ai = anns[0];
 					assertSame(ai, getAnnotation(mi, Action.class));
-					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
+					assertEquals(Action.class.getName(), ai.getAnnotationClassname());
 					assertEquals("value", ai.getElement("value"));
 					assertEquals("alias", ai.getElement("alias"));
 
 					ai = anns[1];
 					assertSame(ai, getAnnotation(mi, PetiteInject.class));
-					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
+					assertEquals(PetiteInject.class.getName(), ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[2];
 					assertSame(ai, getAnnotation(mi, Transaction.class));
-					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
+					assertEquals(Transaction.class.getName(), ai.getAnnotationClassname());
 					assertEquals(2, ai.getElementNames().size());
-					String[] s = (String[]) ai.getElement("propagation");
-					assertEquals("Ljodd/jtx/JtxPropagationBehavior;", s[0]);
-					assertEquals("PROPAGATION_REQUIRES_NEW", s[1]);
+					String s = (String) ai.getElement("propagation");
+					assertEquals("PROPAGATION_REQUIRES_NEW", s);
 				}
 				if (mi.getMethodName().equals("superPublicMethod")) {
 					AnnotationInfo[] anns = mi.getAnnotations();
@@ -97,17 +91,17 @@ public class BigClassTest extends TestCase {
 
 					AnnotationInfo ai = anns[0];
 					assertSame(ai, getAnnotation(mi, Action.class));
-					assertEquals("jodd.madvoc.meta.Action", ai.getAnnotationClassname());
+					assertEquals(Action.class.getName(), ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[1];
 					assertSame(ai, getAnnotation(mi, PetiteInject.class));
-					assertEquals("jodd.petite.meta.PetiteInject", ai.getAnnotationClassname());
+					assertEquals(PetiteInject.class.getName(), ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 
 					ai = anns[2];
 					assertSame(ai, getAnnotation(mi, Transaction.class));
-					assertEquals("jodd.jtx.meta.Transaction", ai.getAnnotationClassname());
+					assertEquals(Transaction.class.getName(), ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 				}
 				System.out.println(!isRootMethod(mi) + " " + mi.getDeclaredClassName() + '#' + mi.getMethodName());
@@ -120,7 +114,7 @@ public class BigClassTest extends TestCase {
 		Class clazz = ClassLoaderUtil.defineClass(classBytes);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
-		assertEquals("jodd.proxetta.data.BigFatJoe$Proxetta", bigFatJoe.getClass().getName());
+		assertEquals(BigFatJoe.class.getName() + "$Proxetta", bigFatJoe.getClass().getName());
 
 		// test invocation
 
@@ -162,8 +156,8 @@ public class BigClassTest extends TestCase {
 
 		Transaction tx = (Transaction) aa[2];
 		assertTrue(tx.readOnly());
-		assertEquals(-1, tx.timeout());
-		assertEquals(JtxPropagationBehavior.PROPAGATION_REQUIRES_NEW, tx.propagation());
+		assertEquals(1000, tx.timeout());
+		assertEquals("PROPAGATION_REQUIRES_NEW", tx.propagation());
 
 		bigFatJoe.runInnerClass();
 		assertEquals(11, StatCounter.counter);		// proxy + call

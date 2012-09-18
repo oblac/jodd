@@ -2,19 +2,16 @@
 
 package jodd.proxetta.inv;
 
-import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.interceptor.ServletConfigInterceptor;
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.InterceptedBy;
-import jodd.madvoc.meta.MadvocAction;
-import jodd.petite.WiringMode;
-import jodd.petite.meta.PetiteBean;
+import jodd.proxetta.data.Action;
+import jodd.proxetta.data.InterceptedBy;
+import jodd.proxetta.data.MadvocAction;
+import jodd.proxetta.data.PetiteBean;
 
 import java.io.Serializable;
 
 @MadvocAction(value = "madvocAction")
-@PetiteBean(value = "petiteBean", wiring = WiringMode.OPTIONAL)
-@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
+@PetiteBean(value = "petiteBean")
+@InterceptedBy({One.class, Two.class})
 public class One extends SubOne implements Serializable {
 
 	public One() {

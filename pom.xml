@@ -23,6 +23,7 @@
 		<module>jodd-upload</module>
 		<module>jodd-servlet</module>
 		<module>jodd-http</module>
+		<module>jodd-proxetta</module>
 	</modules>
 
 	<profiles>

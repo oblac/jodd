@@ -3,7 +3,6 @@
 package jodd.proxetta;
 
 import jodd.io.FileUtil;
-import jodd.log.Log;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.util.StringUtil;
@@ -11,6 +10,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ import java.io.IOException;
  */
 public abstract class ProxettaBuilder {
 
-	private static final Log log = Log.getLogger(ProxettaBuilder.class);
+	Logger log = LoggerFactory.getLogger(ProxettaBuilder.class);
 
 	protected final Proxetta proxetta;
 
