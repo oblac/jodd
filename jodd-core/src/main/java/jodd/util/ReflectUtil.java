@@ -148,6 +148,13 @@ public class ReflectUtil {
 		return m.invoke(obj, params);
 	}
 
+	/**
+	 * Invokes static method.
+	 */
+	public static Object invoke(Class c, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Method m = c.getMethod(method, paramClasses);
+		return m.invoke(null, params);
+	}
 
 	/**
 	 * Invokes accessible method of an object.
@@ -168,14 +175,22 @@ public class ReflectUtil {
 	 * @param method method of an object
 	 * @param params method parameters
 	 */
-	public static Object invoke(Object obj, String method, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	public static Object invoke(Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		Class[] paramClass = getClasses(params);
 		return invoke(obj, method, paramClass, params);
 	}
 
-	public static Object invoke(Class c, Object obj, String method, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	public static Object invoke(Class c, Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		Class[] paramClass = getClasses(params);
 		return invoke(c, obj, method, paramClass, params);
+	}
+
+	/**
+	 * Invokes static method.
+	 */
+	public static Object invoke(Class c, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Class[] paramClass = getClasses(params);
+		return invoke(c, null, method, paramClass, params);
 	}
 
 
@@ -197,6 +212,12 @@ public class ReflectUtil {
 		return m.invoke(obj, params);
 	}
 
+	public static Object invokeDeclared(Class c, String method, Class[] paramClasses, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Method m = c.getDeclaredMethod(method, paramClasses);
+		m.setAccessible(true);
+		return m.invoke(null, params);
+	}
+
 	/**
 	 * Invokes any method of a class suppressing java access checking.
 	 *
@@ -211,14 +232,19 @@ public class ReflectUtil {
 		return m.invoke(obj, params);
 	}
 
-	public static Object invokeDeclared(Object obj, String method, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	public static Object invokeDeclared(Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		Class[] paramClass = getClasses(params);
 		return invokeDeclared(obj, method, paramClass, params);
 	}
 
-	public static Object invokeDeclared(Class c, Object obj, String method, Object[] params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+	public static Object invokeDeclared(Class c, Object obj, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		Class[] paramClass = getClasses(params);
 		return invokeDeclared(c, obj, method, paramClass, params);
+	}
+
+	public static Object invokeDeclared(Class c, String method, Object... params) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Class[] paramClass = getClasses(params);
+		return invokeDeclared(c, null, method, paramClass, params);
 	}
 
 
