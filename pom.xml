@@ -66,7 +66,7 @@
 				<module>distribution</module>
 			</modules>
 			<build>
-				<defaultGoal>clean package</defaultGoal>
+				<defaultGoal>clean package javadoc:aggregate</defaultGoal>
 				<plugins>
 					<!-- sources -->
 					<plugin>
@@ -100,13 +100,13 @@
 									<goal>jar</goal>
 								</goals>
 							</execution>
-							<execution>
+							<!--execution>
 								<id>aggregate</id>
 								<phase>package</phase>
 								<goals>
 									<goal>aggregate</goal>
 								</goals>
-							</execution>
+							</execution-->
 						</executions>
 					</plugin>
 
