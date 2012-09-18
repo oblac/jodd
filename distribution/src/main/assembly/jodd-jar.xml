@@ -21,6 +21,7 @@
 				<include>org.jodd:jodd-upload</include>
 				<include>org.jodd:jodd-servlet</include>
 				<include>org.jodd:jodd-http</include>
+				<include>org.jodd:jodd-proxetta</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

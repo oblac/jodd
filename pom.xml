@@ -124,6 +124,8 @@
 									<excludes>
 										<exclude>*Test</exclude>
 										<exclude>*.?</exclude>
+										<exclude>*Foo*</exclude>
+										<exclude>*.data.*</exclude>
 									</excludes>
 								</configuration>
 							</execution>
