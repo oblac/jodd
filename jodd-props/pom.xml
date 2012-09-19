@@ -14,10 +14,13 @@
 	<artifactId>jodd-props</artifactId>
 
 	<dependencies>
+		<!-- jodd -->
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-core</artifactId>
 		</dependency>
+
+		<!-- test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

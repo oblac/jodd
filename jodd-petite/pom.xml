@@ -29,7 +29,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
+			<artifactId>jodd-servlet</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
 			<artifactId>jodd-proxetta</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- external -->

@@ -14,10 +14,13 @@
 	<artifactId>jodd-proxetta</artifactId>
 
 	<dependencies>
+		<!-- jodd -->
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-core</artifactId>
 		</dependency>
+
+		<!-- external -->
 		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm</artifactId>
@@ -26,6 +29,8 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
+
+		<!-- test -->
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-bean</artifactId>

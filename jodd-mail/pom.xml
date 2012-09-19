@@ -14,10 +14,13 @@
 	<artifactId>jodd-mail</artifactId>
 
 	<dependencies>
+		<!-- jodd -->
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-core</artifactId>
 		</dependency>
+
+		<!-- external -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
