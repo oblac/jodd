@@ -2,9 +2,6 @@
 
 package jodd.swingspy;
 
-import jodd.bean.BeanTool;
-import jodd.servlet.HtmlEncoder;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,7 +41,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.util.TreeSet;
 
 /**
  * SwingSpy GUI.
@@ -162,10 +162,67 @@ public class SwingSpyPanel extends JPanel {
 		}
 
 		public String toDetailedString() {
-			StringBuilder str = new StringBuilder("<html>");
-			str.append(HtmlEncoder.block(BeanTool.attributesToString(component)));
-			return str.toString();
+			Object bean = component;
+			if (bean == null) {
+				return "<null>";
+			}
+
+			TreeSet<String> treeSet = new TreeSet<String>();
+
+			Class clazz = bean.getClass();
+			Field[] fields = clazz.getDeclaredFields();
+
+			for (Field field : fields) {
+				StringBuilder str = new StringBuilder();
+
+				int modifiers = field.getModifiers();
+				if (Modifier.isPublic(modifiers)) {
+					str.append('+');
+				} else if (Modifier.isProtected(modifiers)) {
+					str.append('#');
+				} else if (Modifier.isPrivate(modifiers)) {
+					str.append('-');
+				} else {
+					str.append(' ');
+				}
+
+				str.append(field.getName()).append(':');
+
+				try {
+					Object value = field.get(bean);
+
+					if (value == null) {
+						str.append("<null>");
+					} else {
+						String valueString = value.toString();
+						if (valueString.length() > 250) {
+							valueString = valueString.substring(0, 250) + "...";
+						}
+						str.append(valueString);
+					}
+				} catch (IllegalAccessException ignore) {
+					str.append("N/A");
+				}
+
+				str.append("\n");
+
+				treeSet.add(htmlSafe(str.toString()));
+			}
+
+			StringBuilder resolve = new StringBuilder("<html>");
+			for (String s1 : treeSet) {
+				resolve.append(s1);
+			}
+			return resolve.toString();
 		}
+	}
+
+	private static String htmlSafe(String str) {
+		str = str.replace("<", "&gt;");
+		str = str.replace(">", "&lt;");
+		str = str.replace(" ", "&nbsp;");
+		str = str.replace("\n", "<br>");
+		return str;
 	}
 
 	// ---------------------------------------------------------------- selection listener

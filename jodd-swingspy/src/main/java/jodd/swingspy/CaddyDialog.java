@@ -2,8 +2,6 @@
 
 package jodd.swingspy;
 
-import jodd.util.StringPool;
-
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -34,11 +32,11 @@ public class CaddyDialog extends JDialog {
 
 
 	public CaddyDialog() {
-		this((Frame) null, StringPool.EMPTY, false);
+		this((Frame) null, "", false);
 	}
 
 	public CaddyDialog(Frame owner) {
-		this(owner, StringPool.EMPTY, false);
+		this(owner, "", false);
 	}
 
 	public CaddyDialog(Frame owner, String title) {
@@ -58,7 +56,7 @@ public class CaddyDialog extends JDialog {
 	}
 
 	public CaddyDialog(Dialog owner) {
-		this(owner, StringPool.EMPTY, false);
+		this(owner, "", false);
 	}
 
 	public CaddyDialog(Dialog owner, String title) {
