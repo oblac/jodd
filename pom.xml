@@ -26,6 +26,7 @@
 		<module>jodd-proxetta</module>
 		<module>jodd-swingspy</module>
 		<module>jodd-vtor</module>
+		<module>jodd-petite</module>
 	</modules>
 
 	<profiles>

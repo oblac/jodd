@@ -122,6 +122,11 @@
 				<artifactId>jodd-vtor</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-petite</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
 
 			<!-- external -->
 			<dependency>
