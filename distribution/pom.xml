@@ -47,6 +47,10 @@
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-proxetta</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-swingspy</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

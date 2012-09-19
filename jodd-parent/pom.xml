@@ -112,6 +112,11 @@
 				<artifactId>jodd-proxetta</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-swingspy</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
 
 			<!-- external -->
 			<dependency>
