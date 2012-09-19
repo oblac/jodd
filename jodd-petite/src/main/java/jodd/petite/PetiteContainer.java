@@ -3,7 +3,6 @@
 package jodd.petite;
 
 import jodd.bean.BeanUtil;
-import jodd.log.Log;
 import jodd.petite.config.PetiteConfigurator;
 import jodd.petite.scope.SingletonScope;
 
@@ -12,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jodd.typeconverter.Convert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Petite IOC container. Consist of following layers:
@@ -21,7 +22,7 @@ import jodd.typeconverter.Convert;
  */
 public class PetiteContainer extends PetiteRegistry {
 
-	private static final Log log = Log.getLogger(PetiteContainer.class);
+	private static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
 

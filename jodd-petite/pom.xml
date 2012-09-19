@@ -14,6 +14,7 @@
 	<artifactId>jodd-petite</artifactId>
 
 	<dependencies>
+		<!-- jodd -->
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-core</artifactId>
@@ -22,6 +23,22 @@
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-bean</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-props</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-proxetta</artifactId>
+		</dependency>
+
+		<!-- external -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
