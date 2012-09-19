@@ -25,6 +25,7 @@
 		<module>jodd-http</module>
 		<module>jodd-proxetta</module>
 		<module>jodd-swingspy</module>
+		<module>jodd-vtor</module>
 	</modules>
 
 	<profiles>
