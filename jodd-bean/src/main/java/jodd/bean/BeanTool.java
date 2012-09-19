@@ -2,16 +2,12 @@
 
 package jodd.bean;
 
-import jodd.util.PrettyStringBuilder;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.bean.loader.BeanLoader;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  * Various utilities that are applied on whole bean(s). 
@@ -115,52 +111,5 @@ public class BeanTool {
 		loader.load(bean, source);
 	}
 
-
-	// ---------------------------------------------------------------- to string
-
-	/**
-	 * Constructs sorted string of all class attributes and their values.
-s	 */
-	public static String attributesToString(Object bean) {
-		PrettyStringBuilder prettyString = new PrettyStringBuilder();
-		if (bean == null) {
-			return prettyString.toString(bean);
-		}
-
-		TreeSet<String> ts = new TreeSet<String>();
-
-		ClassDescriptor cd = ClassIntrospector.lookup(bean.getClass());
-		Field[] fields = cd.getAllFields(true);
-		for (Field field : fields) {
-			StringBuilder s = new StringBuilder();
-
-			int modifiers = field.getModifiers();
-			if (Modifier.isPublic(modifiers)) {
-				s.append('+');
-			} else if (Modifier.isProtected(modifiers)) {
-				s.append('#');
-			} else if (Modifier.isPrivate(modifiers)) {
-				s.append('-');
-			} else {
-				s.append(' ');
-			}
-			s.append(field.getName()).append(':');
-
-			try {
-				Object value = field.get(bean);
-				s.append(prettyString.toString(value));
-			} catch (IllegalAccessException ignore) {
-				s.append("N/A");
-			}
-			s.append('\n');
-			ts.add(s.toString());
-		}
-
-		StringBuilder s = new StringBuilder();
-		for (String s1 : ts) {
-			s.append(s1);
-		}
-		return s.toString();
-	}
 
 }
