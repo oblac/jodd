@@ -8,7 +8,7 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.result.MoveResult;
 import jodd.servlet.upload.MultipartRequestWrapper;
-import jodd.servlet.upload.FileUpload;
+import jodd.upload.FileUpload;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;

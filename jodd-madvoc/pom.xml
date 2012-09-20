@@ -33,8 +33,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
+			<artifactId>jodd-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
 			<artifactId>jodd-petite</artifactId>
-			<optional>true</optional>
 		</dependency>
 
 		<!-- external -->

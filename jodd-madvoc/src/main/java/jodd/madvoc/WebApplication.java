@@ -2,7 +2,6 @@
 
 package jodd.madvoc;
 
-import jodd.log.Log;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
@@ -21,6 +20,8 @@ import java.lang.reflect.Modifier;
 import java.util.Properties;
 
 import jodd.props.Props;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.
@@ -28,7 +29,7 @@ import jodd.props.Props;
  */
 public class WebApplication {
 
-	private static Log log;
+	private static Logger log;
 
 	public static final String MADVOC_CONTAINER_NAME = "madpc";
 
@@ -56,7 +57,7 @@ public class WebApplication {
 	 * Also adds itself into it.
 	 */
 	protected void initWebApplication() {
-		log = Log.getLogger(WebApplication.class);
+		log = LoggerFactory.getLogger(WebApplication.class);
 		if (log.isDebugEnabled()) {
 			log.debug("Initializing Madvoc web application");
 		}

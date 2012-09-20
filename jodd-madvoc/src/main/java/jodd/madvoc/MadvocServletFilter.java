@@ -2,10 +2,11 @@
 
 package jodd.madvoc;
 
-import jodd.log.Log;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,7 +26,7 @@ import java.io.IOException;
  */
 public class MadvocServletFilter implements Filter {
 
-	private static Log log;
+	private static Logger log;
 
 	protected Madvoc madvoc;
 	protected MadvocController madvocController;
@@ -47,7 +48,7 @@ public class MadvocServletFilter implements Filter {
 			}
 		}
 
-		log = Log.getLogger(MadvocServletFilter.class);
+		log = LoggerFactory.getLogger(MadvocServletFilter.class);
 
 		madvocController = madvoc.getMadvocController();
 	}

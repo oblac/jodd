@@ -7,9 +7,6 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
-import jodd.paramo.MethodParameter;
-import jodd.paramo.Paramo;
-import jodd.paramo.ParamoException;
 import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -20,13 +17,12 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.lang.annotation.Annotation;
 
 /**
  * Collection of {@link ScopeData scope data} of certain type.
  * For each action class and action method it holds an array of ScopeData objects.
  * Each element of that array represents data for one ScopeType.
- * Some elements might be null as well.
+ * Some elements might be <code>null</code> as well.
  */
 public class ScopeDataResolver {
 
@@ -47,9 +43,11 @@ public class ScopeDataResolver {
 	 * Lookups INput data for given method and scope type.
 	 * Returns <code>null</code> if no data is found.
 	 */
+/*
 	public ScopeData.In[] lookupInData(Method actionMethod, ScopeType scopeType) {
 		return lookupIn(actionMethod, scopeType);
 	}
+*/
 
 	protected ScopeData.In[] lookupIn(Object key, ScopeType scopeType) {
 		ScopeData[] scopeData = scopeMap.get(key);
@@ -101,6 +99,7 @@ public class ScopeDataResolver {
 				}
 				scopeData[st.value()] = sd;
 			}
+/*
 		} else if (key instanceof Method) {
 			for (ScopeType st : allScopeTypes) {
 				ScopeData sd = inspectMethodScopeData((Method) key, st);
@@ -109,8 +108,9 @@ public class ScopeDataResolver {
 				}
 				scopeData[st.value()] = sd;
 			}
+*/
 		} else {
-			throw new MadvocException("IN data are available only for Class and Method.");
+			throw new MadvocException("IN data are available only for Class.");
 		}
 		if (count == 0) {
 			scopeData = EMPTY_SCOPEDATA;
@@ -125,6 +125,7 @@ public class ScopeDataResolver {
 	/**
 	 * Inspects all method parameters for scope data.
 	 */
+/*
 	protected ScopeData inspectMethodScopeData(Method method, ScopeType scopeType) {
 		Annotation[][] annotations = method.getParameterAnnotations();
 		Class<?>[] types = method.getParameterTypes();
@@ -152,10 +153,12 @@ public class ScopeDataResolver {
 						incount++;
 					}
 					hasAnnotation = true;
-				}/* else if (annotation instanceof Out) {
+				}*/
+/* else if (annotation instanceof Out) {
 					sd.out[i] = inspectOut((Out) annotation, scopeType, StringUtil.uncapitalize(type.getSimpleName()), type);
 					outcount++;
-				}*/
+				}*//*
+
 
 			}
 			// annotations not available, treat it as request scope type
@@ -167,13 +170,12 @@ public class ScopeDataResolver {
 		if (incount == 0) {
 			sd.in = null;
 		}
-/*
-		if (outcount == 0) {
-			sd.out = null;
-		}
-*/
+//		if (outcount == 0) {
+//			sd.out = null;
+//		}
 		return sd;
 	}
+*/
 
 
 

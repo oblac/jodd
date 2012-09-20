@@ -4,8 +4,8 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
-import jodd.servlet.upload.FileUploadFactory;
-import jodd.servlet.upload.impl.AdaptiveFileUploadFactory;
+import jodd.upload.FileUploadFactory;
+import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.result.ServletDispatcherResult;

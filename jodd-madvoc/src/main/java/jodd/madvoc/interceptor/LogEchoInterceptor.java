@@ -2,14 +2,15 @@
 
 package jodd.madvoc.interceptor;
 
-import jodd.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Echo interceptor that outputs to logger.
  */
 public class LogEchoInterceptor extends EchoInterceptor {
 
-	private static final Log log = Log.getLogger(LogEchoInterceptor.class);
+	private static final Logger log = LoggerFactory.getLogger(LogEchoInterceptor.class);
 
 	@Override
 	protected void out(String message) {

@@ -6,7 +6,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.servlet.URLCoder;
+import jodd.util.URLCoder;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.RandomStringUtil;
 
@@ -45,7 +45,7 @@ public class MoveResult extends ActionResult {
 		String id = generateUniqueId();
 		session.setAttribute(id, actionRequest);
 
-		resultPath = URLCoder.build(resultPath).param(madvocConfig.getAttributeMoveId(), id).toString();
+		resultPath = URLCoder.build().path(resultPath).param(madvocConfig.getAttributeMoveId(), id).toString();
 		DispatcherUtil.redirect(httpServletRequest, actionRequest.getHttpServletResponse(), resultPath);
 	}
 

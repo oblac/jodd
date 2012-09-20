@@ -2,7 +2,6 @@
 
 package jodd.madvoc;
 
-import jodd.log.Log;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Convert;
@@ -13,6 +12,8 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -35,7 +36,7 @@ public class Madvoc {
 	 */
 	public static final String PARAM_MADVOC_PARAMS = "madvoc.params";
 
-	private static Log log;
+	private static Logger log;
 	
 	// ---------------------------------------------------------------- statics
 
@@ -175,7 +176,7 @@ public class Madvoc {
 		webapp.initWebApplication();
 
 		// init logger
-		log = Log.getLogger(Madvoc.class);
+		log = LoggerFactory.getLogger(Madvoc.class);
 		log.info("Madvoc starting...");
 
 		if (webapp.getClass().equals(WebApplication.class)) {

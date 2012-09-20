@@ -5,7 +5,6 @@ package jodd.madvoc.config;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.io.findfile.ClassFinder;
-import jodd.log.Log;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.ActionsManager;
@@ -18,6 +17,8 @@ import jodd.madvoc.result.ActionResult;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -34,7 +35,7 @@ import java.lang.reflect.Modifier;
  */
 public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocConfigurator {
 
-	private static final Log log = Log.getLogger(AutomagicMadvocConfigurator.class);
+	private static final Logger log = LoggerFactory.getLogger(AutomagicMadvocConfigurator.class);
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
