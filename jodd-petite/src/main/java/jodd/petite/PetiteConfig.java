@@ -2,6 +2,7 @@
 
 package jodd.petite;
 
+import jodd.Jodd;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.SingletonScope;
@@ -23,7 +24,7 @@ public class PetiteConfig {
 		        PetiteReference.TYPE_SHORT_NAME,
 				PetiteReference.TYPE_FULL_NAME
 		};
-		useParamo = true;
+		useParamo = Jodd.isJoddProxettaLoaded();
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -157,9 +158,14 @@ public class PetiteConfig {
 
 	/**
 	 * Specifies if <b>Paramo</b> tool should be used to resolve
-	 * method and ctor argument names.
+	 * method and ctor argument names. If <b>Paramo</b> is not
+	 * available, this property can't be set (i.e. will be
+	 * always <code>false</code>).
 	 */
 	public void setUseParamo(boolean useParamo) {
+		if (Jodd.isJoddProxettaLoaded() == false) {
+			return;
+		}
 		this.useParamo = useParamo;
 	}
 }
