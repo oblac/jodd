@@ -24,6 +24,7 @@
 				<include>org.jodd:jodd-proxetta</include>
 				<include>org.jodd:jodd-vtor</include>
 				<include>org.jodd:jodd-petite</include>
+				<include>org.jodd:jodd-madvoc</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

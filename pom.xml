@@ -27,6 +27,7 @@
 		<module>jodd-swingspy</module>
 		<module>jodd-vtor</module>
 		<module>jodd-petite</module>
+		<module>jodd-madvoc</module>
 	</modules>
 
 	<profiles>
