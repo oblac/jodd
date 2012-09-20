@@ -309,14 +309,49 @@ public class ClassLoaderUtil {
 
 		String[] tokens = StringUtil.splitc(s, ' ');
 		for (String t : tokens) {
-			try {
-				File file = new File(base, t);
-				file = file.getCanonicalFile();
+			File file;
 
-				if (file.exists()) {
-					classpaths.add(file);
+			// try file with the base path
+			try {
+				file = new File(base, t);
+				file = file.getCanonicalFile();
+				if (file.exists() == false) {
+					file = null;
 				}
-			} catch (IOException ignore) {
+			} catch (Exception ignore) {
+				file = null;
+			}
+
+			if (file == null) {
+				// try file with absolute path
+				try {
+					file = new File(t);
+					file = file.getCanonicalFile();
+					if (file.exists() == false) {
+						file = null;
+					}
+				} catch (Exception ignore) {
+					file = null;
+				}
+			}
+
+			if (file == null) {
+				// try the URL
+				try {
+					URL url = new URL(t);
+
+					file = new File(url.getFile());
+					file = file.getCanonicalFile();
+					if (file.exists() == false) {
+						file = null;
+					}
+				} catch (Exception ignore) {
+					file = null;
+				}
+			}
+
+			if (file != null && file.exists() == true) {
+				classpaths.add(file);
 			}
 		}
 	}
