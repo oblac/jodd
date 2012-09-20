@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.Jodd;
 import jodd.datetime.JDateTime;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -165,17 +166,14 @@ public class TypeConverterManagerBean {
 
 		register(Locale.class, new LocaleConverter());
 
-		try {
-			Class<?> managerAddon = ClassLoaderUtil.loadClass("jodd.typeconverter.UploadTypeConverterManagerAddon");
+		if (Jodd.isJoddUploadLoaded()) {
+			try {
+				Class<?> managerAddon = ClassLoaderUtil.loadClass("jodd.typeconverter.UploadTypeConverterManagerAddon");
 
-			ReflectUtil.invoke(managerAddon, "registerDefaults", this);
-
-		} catch (ClassNotFoundException cnfex) {
-			// ignore
-		} catch (NoSuchMethodException nsmex) {
-			// ignore
-		} catch (Exception ex) {
-			throw new TypeConversionException(ex);
+				ReflectUtil.invoke(managerAddon, "registerDefaults", this);
+			} catch (Exception ex) {
+				throw new TypeConversionException(ex);
+			}
 		}
 	}
 

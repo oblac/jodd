@@ -2,11 +2,10 @@
 
 package jodd.bean;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import jodd.Jodd;
 import jodd.bean.loader.BeanLoader;
 import jodd.bean.loader.MapBeanLoader;
 import jodd.bean.loader.ResultSetBeanLoader;
@@ -47,17 +46,14 @@ public class BeanLoaderManager {
 		register(java.util.Map.class, new MapBeanLoader());
 		register(java.sql.ResultSet.class, new ResultSetBeanLoader());
 
-		try {
-			Class loaderAddon = ClassLoaderUtil.loadClass("jodd.bean.loader.ServletBeanLoaderManagerAddon");
+		if (Jodd.isJoddServletLoaded()) {
+			try {
+				Class loaderAddon = ClassLoaderUtil.loadClass("jodd.bean.loader.ServletBeanLoaderManagerAddon");
 
-			ReflectUtil.invoke(loaderAddon, "registerDefaults", null);
-
-		} catch (ClassNotFoundException cnfex) {
-			// ignore
-		} catch (NoSuchMethodException nsmex) {
-			// ignore
-		} catch (Exception ex) {
-			throw new BeanException(ex);
+				ReflectUtil.invoke(loaderAddon, "registerDefaults", null);
+			} catch (Exception ex) {
+				throw new BeanException(ex);
+			}
 		}
 	}
 
