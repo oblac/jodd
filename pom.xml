@@ -28,6 +28,7 @@
 		<module>jodd-vtor</module>
 		<module>jodd-petite</module>
 		<module>jodd-madvoc</module>
+		<module>jodd-db</module>
 	</modules>
 
 	<profiles>
