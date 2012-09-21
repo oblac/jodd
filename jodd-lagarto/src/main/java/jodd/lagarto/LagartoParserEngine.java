@@ -2,9 +2,10 @@
 
 package jodd.lagarto;
 
-import jodd.log.Log;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
@@ -16,7 +17,7 @@ import java.nio.CharBuffer;
  */
 public abstract class LagartoParserEngine {
 
-	private static final Log log = Log.getLogger(LagartoParserEngine.class);
+	private static final Logger log = LoggerFactory.getLogger(LagartoParserEngine.class);
 
 	private static final String HTML_QUOTE = "&quot;";
 

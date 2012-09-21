@@ -6,8 +6,9 @@ import jodd.lagarto.LagartoLexer;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
-import jodd.log.Log;
 import jodd.util.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
@@ -16,7 +17,7 @@ import java.util.LinkedList;
  */
 public class DOMBuilderTagVisitor implements TagVisitor {
 
-	private static final Log log = Log.getLogger(DOMBuilderTagVisitor.class);
+	private static final Logger log = LoggerFactory.getLogger(DOMBuilderTagVisitor.class);
 
 	protected final LagartoDOMBuilder domBuilder;
 	protected final HtmlImplicitClosingRules implRules = new HtmlImplicitClosingRules();

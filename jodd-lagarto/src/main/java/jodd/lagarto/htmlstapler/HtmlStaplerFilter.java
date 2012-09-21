@@ -9,11 +9,12 @@ import jodd.lagarto.TagVisitor;
 import jodd.lagarto.TagWriter;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
 import jodd.lagarto.filter.SimpleLagartoServletFilter;
-import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -35,7 +36,7 @@ import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy;
  */
 public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
-	private static final Log log = Log.getLogger(HtmlStaplerFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(HtmlStaplerFilter.class);
 
 	protected HtmlStaplerBundlesManager bundlesManager;
 

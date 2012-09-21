@@ -10,6 +10,7 @@ public class Jodd {
 		joddDbLoaded = checkModule("db");
 		joddHttpLoaded = checkModule("http");
 		joddJtxLoaded = checkModule("jtx");
+		joddLagartoLoaded = checkModule("lagarto");
 		joddMadvocLoaded = checkModule("madvoc");
 		joddMailLoaded = checkModule("mail");
 		joddPetiteLoaded = checkModule("petite");
@@ -41,6 +42,7 @@ public class Jodd {
 	private static final boolean joddDbLoaded;
 	private static final boolean joddHttpLoaded;
 	private static final boolean joddJtxLoaded;
+	private static final boolean joddLagartoLoaded;
 	private static final boolean joddMadvocLoaded;
 	private static final boolean joddMailLoaded;
 	private static final boolean joddPetiteLoaded;
@@ -66,6 +68,10 @@ public class Jodd {
 
 	public static boolean isJoddJtxLoaded() {
 		return joddJtxLoaded;
+	}
+
+	public static boolean isJoddLagartoLoaded() {
+		return joddLagartoLoaded;
 	}
 
 	public static boolean isJoddMadvocLoaded() {
@@ -99,5 +105,4 @@ public class Jodd {
 	public static boolean isJoddVtorLoaded() {
 		return joddVtorLoaded;
 	}
-
 }

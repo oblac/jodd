@@ -2,8 +2,8 @@
 
 package jodd.lagarto.dom;
 
-import jodd.servlet.HtmlDecoder;
-import jodd.servlet.HtmlEncoder;
+import jodd.util.HtmlDecoder;
+import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
 
 import java.io.IOException;

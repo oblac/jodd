@@ -3,9 +3,10 @@
 package jodd.lagarto.filter;
 
 import jodd.io.FileNameUtil;
-import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,7 +25,7 @@ import java.io.IOException;
  */
 public abstract class LagartoServletFilter implements Filter {
 
-	private static final Log log = Log.getLogger(LagartoServletFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(LagartoServletFilter.class);
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}

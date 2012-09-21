@@ -7,13 +7,14 @@ import jodd.io.FileUtil;
 import jodd.io.NetUtil;
 import jodd.io.ZipUtil;
 import jodd.io.findfile.FindFile;
-import jodd.log.Log;
 import jodd.util.Base32;
 import jodd.util.CharUtil;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.util.regex.Pattern;
  */
 public class HtmlStaplerBundlesManager {
 
-	private static final Log log = Log.getLogger(HtmlStaplerBundlesManager.class);
+	private static final Logger log = LoggerFactory.getLogger(HtmlStaplerBundlesManager.class);
 
 	protected int bundleCount;		// counter for new bundles
 
