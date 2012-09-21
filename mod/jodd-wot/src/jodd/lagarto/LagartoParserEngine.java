@@ -617,7 +617,13 @@ loop:	while (true) {
 				visitor.xmp(tag, input.subSequence(start, end - 6));
 				break;
 			case Lexer.SCRIPT:
-				visitor.script(tag, input.subSequence(start, end - 9));
+        visitor.script(tag, input.subSequence(start, end - 9));
+        break;
+      case Lexer.PRE:
+        visitor.script(tag, input.subSequence(start, end - 6));
+        break;
+      case Lexer.CODE:
+				visitor.script(tag, input.subSequence(start, end - 7));
 				break;
 			case Lexer.STYLE:
 				visitor.style(tag, input.subSequence(start, end - 8));
