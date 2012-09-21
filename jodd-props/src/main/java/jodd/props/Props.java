@@ -20,8 +20,8 @@ import java.util.Properties;
 
 /**
  * Super properties: fast, configurable, supports (ini) sections, profiles.
- *
- * <p>
+ * <p/>
+ * <p/>
  * Basic parsing rules:
  * <li> By default, props files are UTF8 encoded.
  * <li> Leading and trailing spaces will be trimmed from section names and property names.
@@ -32,19 +32,19 @@ import java.util.Properties;
  * <li> If the last character of a line is backslash (\), the value is continued on the next line with new line character included.
  * <li> \\uXXXX is encoded as character
  * <li> \t, \r and \f are encoded as characters
- *
- * <p>
+ * <p/>
+ * <p/>
  * Sections rules:
  * <li> Section names are enclosed between [ and ].
  * <li> Properties following a section header belong to that section. Section name is added as a prefix to section properties.
  * <li> Section ends with empty section definition [] or with new section start
- *
- * <p>
+ * <p/>
+ * <p/>
  * Profiles rules:
  * <li> Profile names are enclosed between &lt; and &gt; in property key.
  * <li> Each property key may contain zero, one or more profile definitions.
- *
- * <p>
+ * <p/>
+ * <p/>
  * Macro rules:
  * <li> Profile values may contain references to other properties using ${ and }
  * <li> Inner references are supported
@@ -54,11 +54,15 @@ public class Props implements Cloneable {
 
 	private static final String DEFAULT_PROFILES_PROP = "@profiles";
 
-	protected final PropsParser parser;									// parser
-	protected final PropsData data;										// data
+	protected final PropsParser parser;
 
-	protected String activeProfilesProp = DEFAULT_PROFILES_PROP;		// active profiles property
+	protected final PropsData data;
+
+	protected String activeProfilesProp = DEFAULT_PROFILES_PROP;
+
 	protected String[] activeProfiles;
+
+	protected volatile boolean initialized;
 
 	/**
 	 * Creates new props.
@@ -67,7 +71,7 @@ public class Props implements Cloneable {
 		this(new PropsParser());
 	}
 
-	protected Props(PropsParser parser) {
+	protected Props(final PropsParser parser) {
 		this.parser = parser;
 		this.data = parser.getPropsData();
 	}
@@ -77,11 +81,10 @@ public class Props implements Cloneable {
 	 */
 	@Override
 	protected Props clone() {
-		PropsParser parser = this.parser.clone();
-		Props p = new Props(parser);
+		final PropsParser parser = this.parser.clone();
+		final Props p = new Props(parser);
 
 		p.activeProfilesProp = activeProfilesProp;
-
 		return p;
 	}
 
@@ -93,21 +96,21 @@ public class Props implements Cloneable {
 		return activeProfiles;
 	}
 
+	// ---------------------------------------------------------------- configuration
+
 	/**
 	 * Overrides active profiles.
 	 */
-	public void setActiveProfiles(String... activeProfiles) {
+	public void setActiveProfiles(final String... activeProfiles) {
 		initialize();
 		this.activeProfiles = activeProfiles;
 	}
-
-	// ---------------------------------------------------------------- configuration
 
 	/**
 	 * Specifies the new line string when EOL is escaped.
 	 * Default value is an empty string.
 	 */
-	public void setEscapeNewLineValue(String escapeNewLineValue) {
+	public void setEscapeNewLineValue(final String escapeNewLineValue) {
 		parser.escapeNewLineValue = escapeNewLineValue;
 	}
 
@@ -115,7 +118,7 @@ public class Props implements Cloneable {
 	 * Specifies should the values be trimmed from the left.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimLeft(boolean valueTrimLeft) {
+	public void setValueTrimLeft(final boolean valueTrimLeft) {
 		parser.valueTrimLeft = valueTrimLeft;
 	}
 
@@ -123,44 +126,44 @@ public class Props implements Cloneable {
 	 * Specifies should the values be trimmed from the right.
 	 * Default is <code>true</code>.
 	 */
-	public void setValueTrimRight(boolean valueTrimRight) {
+	public void setValueTrimRight(final boolean valueTrimRight) {
 		parser.valueTrimRight = valueTrimRight;
 	}
 
 	/**
 	 * Defines if the prefix whitespaces should be ignored when value is split into the lines.
 	 */
-	public void setIgnorePrefixWhitespacesOnNewLine(boolean ignorePrefixWhitespacesOnNewLine) {
+	public void setIgnorePrefixWhitespacesOnNewLine(final boolean ignorePrefixWhitespacesOnNewLine) {
 		parser.ignorePrefixWhitespacesOnNewLine = ignorePrefixWhitespacesOnNewLine;
 	}
 
 	/**
 	 * Skips empty properties.
 	 */
-	public void setSkipEmptyProps(boolean skipEmptyProps) {
+	public void setSkipEmptyProps(final boolean skipEmptyProps) {
 		parser.skipEmptyProps = skipEmptyProps;
 	}
 
 	/**
 	 * Appends duplicate props.
 	 */
-	public void setAppendDuplicateProps(boolean appendDuplicateProps) {
+	public void setAppendDuplicateProps(final boolean appendDuplicateProps) {
 		data.appendDuplicateProps = appendDuplicateProps;
-	}
-
-	/**
-	 * Enables multiline values.
-	 */
-	public void setMultilineValues(boolean multilineValues) {
-		parser.multilineValues = multilineValues;
 	}
 
 	// ---------------------------------------------------------------- load
 
 	/**
+	 * Enables multiline values.
+	 */
+	public void setMultilineValues(final boolean multilineValues) {
+		parser.multilineValues = multilineValues;
+	}
+
+	/**
 	 * Parses input string and loads provided properties map.
 	 */
-	protected synchronized void parse(String data) {
+	protected synchronized void parse(final String data) {
 		initialized = false;
 		parser.parse(data);
 	}
@@ -168,7 +171,7 @@ public class Props implements Cloneable {
 	/**
 	 * Loads props from the string.
 	 */
-	public void load(String data) {
+	public void load(final String data) {
 		parse(data);
 	}
 
@@ -176,9 +179,9 @@ public class Props implements Cloneable {
 	 * Loads props from the file. Assumes UTF8 encoding unless
 	 * the file ends with '.properties', than it uses ISO 8859-1.
 	 */
-	public void load(File file) throws IOException {
-		String extension = FileNameUtil.getExtension(file.getAbsolutePath());
-		String data;
+	public void load(final File file) throws IOException {
+		final String extension = FileNameUtil.getExtension(file.getAbsolutePath());
+		final String data;
 		if (extension.equalsIgnoreCase("properties")) {
 			data = FileUtil.readString(file, StringPool.ISO_8859_1);
 		} else {
@@ -190,15 +193,15 @@ public class Props implements Cloneable {
 	/**
 	 * Loads properties from the file in provided encoding.
 	 */
-	public void load(File file, String encoding) throws IOException {
+	public void load(final File file, final String encoding) throws IOException {
 		parse(FileUtil.readString(file, encoding));
 	}
 
 	/**
 	 * Loads properties from input stream. Stream is not closed at the end.
 	 */
-	public void load(InputStream in) throws IOException {
-		Writer out = new FastCharArrayWriter();
+	public void load(final InputStream in) throws IOException {
+		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out);
 		parse(out.toString());
 	}
@@ -207,8 +210,8 @@ public class Props implements Cloneable {
 	 * Loads properties from input stream and provided encoding.
 	 * Stream is not closed at the end.
 	 */
-	public void load(InputStream in, String encoding) throws IOException {
-		Writer out = new FastCharArrayWriter();
+	public void load(final InputStream in, final String encoding) throws IOException {
+		final Writer out = new FastCharArrayWriter();
 		StreamUtil.copy(in, out, encoding);
 		parse(out.toString());
 	}
@@ -217,10 +220,10 @@ public class Props implements Cloneable {
 	 * Loads base properties from the provided java properties.
 	 * Null values are ignored.
 	 */
-	public void load(Map<?, ?> p) {
-		for (Map.Entry<?, ?> entry : p.entrySet()) {
-			String name = entry.getKey().toString();
-			Object value = entry.getValue();
+	public void load(final Map<?, ?> p) {
+		for (final Map.Entry<?, ?> entry : p.entrySet()) {
+			final String name = entry.getKey().toString();
+			final Object value = entry.getValue();
 			if (value == null) {
 				continue;
 			}
@@ -233,15 +236,16 @@ public class Props implements Cloneable {
 	 * Null values are ignored.
 	 */
 	@SuppressWarnings("unchecked")
-	public void load(Map<?, ?> map, String prefix) {
-		prefix += '.';
-		for (Map.Entry entry : map.entrySet()) {
-			String name = entry.getKey().toString();
-			Object value = entry.getValue();
+	public void load(final Map<?, ?> map, final String prefix) {
+		String realPrefix = prefix;
+		realPrefix += '.';
+		for (final Map.Entry entry : map.entrySet()) {
+			final String name = entry.getKey().toString();
+			final Object value = entry.getValue();
 			if (value == null) {
 				continue;
 			}
-			data.putBaseProperty(prefix + name, value.toString());
+			data.putBaseProperty(realPrefix + name, value.toString());
 		}
 	}
 
@@ -249,21 +253,21 @@ public class Props implements Cloneable {
 	 * Loads system properties with given prefix.
 	 * If prefix is <code>null</code> it will not be ignored.
 	 */
-	public void loadSystemProperties(String prefix) {
-		Properties environmentProperties = System.getProperties();
+	public void loadSystemProperties(final String prefix) {
+		final Properties environmentProperties = System.getProperties();
 		load(environmentProperties, prefix);
 	}
+
+	// ---------------------------------------------------------------- props
 
 	/**
 	 * Loads environment properties with given prefix.
 	 * If prefix is <code>null</code> it will not be used.
 	 */
-	public void loadEnvironment(String prefix) {
-		Map<String, String> environmentMap = System.getenv();
+	public void loadEnvironment(final String prefix) {
+		final Map<String, String> environmentMap = System.getenv();
 		load(environmentMap, prefix);
 	}
-
-	// ---------------------------------------------------------------- props
 
 	/**
 	 * Counts the total number of properties, including all profiles.
@@ -279,41 +283,43 @@ public class Props implements Cloneable {
 	 * Returns <code>null</code> if property doesn't exist.
 	 */
 	@SuppressWarnings({"NullArgumentToVariableArgMethod"})
-	public String getBaseValue(String key) {
+	public String getBaseValue(final String key) {
 		return getValue(key, null);
 	}
 
 	/**
 	 * Returns value of property, using active profiles.
 	 */
-	public String getValue(String key) {
+	public String getValue(final String key) {
 		return getValue(key, activeProfiles);
-	}
-
-	/**
-	 * Returns <code>string</code> value of given profiles. If key is not
-	 * found under listed profiles, base properties will be searched.
-	 * Returns <code>null</code> if property doesn't exist.
-	 */
-	public String getValue(String key, String... profiles) {
-		initialize();
-		return data.lookupValue(key, profiles);
 	}
 
 
 	// ---------------------------------------------------------------- put
 
 	/**
+	 * Returns <code>string</code> value of given profiles. If key is not
+	 * found under listed profiles, base properties will be searched.
+	 * Returns <code>null</code> if property doesn't exist.
+	 */
+	public String getValue(final String key, final String... profiles) {
+		initialize();
+		return data.lookupValue(key, profiles);
+	}
+
+	/**
 	 * Sets default value.
 	 */
-	public void setValue(String key, String value) {
+	public void setValue(final String key, final String value) {
 		setValue(key, value, null);
 	}
+
+	// ---------------------------------------------------------------- extract
 
 	/**
 	 * Sets value on some profile.
 	 */
-	public void setValue(String key, String value, String profile) {
+	public void setValue(final String key, final String value, final String profile) {
 		if (profile == null) {
 			data.putBaseProperty(key, value);
 		} else {
@@ -322,49 +328,45 @@ public class Props implements Cloneable {
 		initialized = false;
 	}
 
-	// ---------------------------------------------------------------- extract
-
 	/**
 	 * Extract base props (no profiles).
 	 */
-	public void extractBaseProps(Map target) {
+	public void extractBaseProps(final Map target) {
 		extractProps(target, null);
 	}
 
 	/**
 	 * Extracts props belonging to active profiles.
 	 */
-	public void extractProps(Map target) {
+	public void extractProps(final Map target) {
 		extractProps(target, activeProfiles);
 	}
 
 	/**
 	 * Extract props of given profiles.
 	 */
-	public void extractProps(Map target, String... profiles) {
+	public void extractProps(final Map target, final String... profiles) {
 		initialize();
 		data.extract(target, profiles, null);
 	}
 
-	public void extractBaseSubProps(Map target, String... wildcardPatterns) {
+	public void extractBaseSubProps(final Map target, final String... wildcardPatterns) {
 		initialize();
 		data.extract(target, null, wildcardPatterns);
 	}
 
-	public void extractSubProps(Map target, String... wildcardPatterns) {
+	public void extractSubProps(final Map target, final String... wildcardPatterns) {
 		initialize();
 		data.extract(target, activeProfiles, wildcardPatterns);
-	}
-
-	public void extractSubProps(Map target, String[] profiles, String[] wildcardPatterns) {
-		initialize();
-		data.extract(target, profiles, wildcardPatterns);
 	}
 
 
 	// ---------------------------------------------------------------- initialize
 
-	protected volatile boolean initialized;
+	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
+		initialize();
+		data.extract(target, profiles, wildcardPatterns);
+	}
 
 	/**
 	 * Initializes props by replacing macros in values with the lookup values.
@@ -391,12 +393,12 @@ public class Props implements Cloneable {
 			activeProfiles = null;
 			return;
 		}
-		PropsValue pv = data.getBaseProperty(activeProfilesProp);
+		final PropsValue pv = data.getBaseProperty(activeProfilesProp);
 		if (pv == null) {
 			activeProfiles = null;
 			return;
 		}
-		String value = pv.getValue();
+		final String value = pv.getValue();
 		if (StringUtil.isBlank(value)) {
 			activeProfiles = null;
 			return;
