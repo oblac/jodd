@@ -147,6 +147,11 @@
 				<artifactId>jodd-lagarto</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-parent</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
 
 			<!-- external -->
 			<dependency>
