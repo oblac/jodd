@@ -2,7 +2,8 @@
 
 package jodd.jtx;
 
-import jodd.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static jodd.jtx.JtxStatus.*;
 import static jodd.jtx.JtxTransactionMode.DEFAULT_TIMEOUT;
@@ -31,7 +32,7 @@ import java.util.HashSet;
  */
 public class JtxTransaction {
 
-	private static final Log log = Log.getLogger(JtxTransaction.class);
+	private static final Logger log = LoggerFactory.getLogger(JtxTransaction.class);
 
 	// ---------------------------------------------------------------- init
 

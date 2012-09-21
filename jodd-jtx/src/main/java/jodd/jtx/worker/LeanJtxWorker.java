@@ -5,7 +5,8 @@ package jodd.jtx.worker;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
-import jodd.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Lean transaction worker helps dealing transactions when they were requested
@@ -14,7 +15,7 @@ import jodd.log.Log;
  */
 public class LeanJtxWorker {
 
-	private static final Log log = Log.getLogger(LeanJtxWorker.class);
+	private static final Logger log = LoggerFactory.getLogger(LeanJtxWorker.class);
 
 	protected final JtxTransactionManager txManager;
 

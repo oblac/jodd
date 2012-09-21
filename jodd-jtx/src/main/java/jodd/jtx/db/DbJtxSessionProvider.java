@@ -7,7 +7,8 @@ import jodd.db.DbSession;
 import jodd.db.DbSqlException;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
-import jodd.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Returns session from the db transaction manager.
@@ -15,7 +16,7 @@ import jodd.log.Log;
  */
 public class DbJtxSessionProvider implements DbSessionProvider {
 
-	private static final Log log = Log.getLogger(DbJtxSessionProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(DbJtxSessionProvider.class);
 
 	protected final JtxTransactionManager jtxTxManager;
 	protected final JtxTransactionMode defaultTxMode;

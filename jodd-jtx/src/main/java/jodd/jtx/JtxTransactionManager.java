@@ -2,6 +2,9 @@
 
 package jodd.jtx;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
 
@@ -9,15 +12,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import jodd.log.Log;
-
 /**
  * {@link JtxTransaction} manager is responsible for handling transaction
  * propagation and resource managers. It also holds various configuration data. .
  */
 public class JtxTransactionManager {
 
-	private static final Log log = Log.getLogger(JtxTransactionManager.class);
+	private static final Logger log = LoggerFactory.getLogger(JtxTransactionManager.class);
 
 	protected int maxResourcesPerTransaction;
 	protected boolean oneResourceManager;

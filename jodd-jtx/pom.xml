@@ -20,6 +20,12 @@
 			<artifactId>jodd-core</artifactId>
 		</dependency>
 
+		<!-- external -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
 		<!-- test -->
 		<dependency>
 			<groupId>junit</groupId>

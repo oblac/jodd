@@ -7,7 +7,9 @@ public class Jodd {
 
 	static {
 		joddBeanLoaded = checkModule("bean");
+		joddDbLoaded = checkModule("db");
 		joddHttpLoaded = checkModule("http");
+		joddJtxLoaded = checkModule("jtx");
 		joddMadvocLoaded = checkModule("madvoc");
 		joddMailLoaded = checkModule("mail");
 		joddPetiteLoaded = checkModule("petite");
@@ -36,7 +38,9 @@ public class Jodd {
 	}
 
 	private static final boolean joddBeanLoaded;
+	private static final boolean joddDbLoaded;
 	private static final boolean joddHttpLoaded;
+	private static final boolean joddJtxLoaded;
 	private static final boolean joddMadvocLoaded;
 	private static final boolean joddMailLoaded;
 	private static final boolean joddPetiteLoaded;
@@ -48,13 +52,20 @@ public class Jodd {
 
 	// ---------------------------------------------------------------- getters
 
-
 	public static boolean isJoddBeanLoaded() {
 		return joddBeanLoaded;
 	}
 
+	public static boolean isJoddDbLoaded() {
+		return joddDbLoaded;
+	}
+
 	public static boolean isJoddHttpLoaded() {
 		return joddHttpLoaded;
+	}
+
+	public static boolean isJoddJtxLoaded() {
+		return joddJtxLoaded;
 	}
 
 	public static boolean isJoddMadvocLoaded() {
