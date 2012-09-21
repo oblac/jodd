@@ -8,8 +8,6 @@ import jodd.jtx.meta.Transaction;
 import jodd.jtx.meta.TransactionAnnotation;
 import jodd.jtx.meta.TransactionAnnotationData;
 import jodd.jtx.worker.LeanJtxWorker;
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringUtil;
 
@@ -108,11 +106,14 @@ public class AnnotationTxAdviceManager {
 		JtxTransactionMode txMode = txmap.get(signature);
 		if (txMode == null) {
 			if (txmap.containsKey(signature) == false) {
-				ClassDescriptor cd = ClassIntrospector.lookup(type);
-				Method m = cd.getMethod(methodName, methodArgTypes);
-				if (m == null) {
-					throw new ProxettaException("Method '" + methodName + "'not found in class: " + type.getName());
+
+				Method m;
+				try {
+					m = type.getMethod(methodName, methodArgTypes);
+				} catch (NoSuchMethodException nsmex) {
+					throw new ProxettaException(nsmex);
 				}
+
 				TransactionAnnotationData txAnn = getTransactionAnnotation(m);
 				if (txAnn != null) {
 					txMode = new JtxTransactionMode();

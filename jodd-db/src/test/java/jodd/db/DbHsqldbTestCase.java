@@ -3,7 +3,7 @@
 package jodd.db;
 
 import jodd.db.pool.CoreConnectionPool;
-import jodd.jtx.db.DbJtxTransactionManager;
+import jodd.db.jtx.DbJtxTransactionManager;
 
 import junit.framework.TestCase;
 

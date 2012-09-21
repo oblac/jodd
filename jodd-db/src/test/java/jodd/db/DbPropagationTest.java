@@ -5,7 +5,7 @@ package jodd.db;
 import jodd.jtx.JtxException;
 import jodd.jtx.JtxTransaction;
 import jodd.jtx.JtxTransactionMode;
-import jodd.jtx.db.DbJtxSessionProvider;
+import jodd.db.jtx.DbJtxSessionProvider;
 import jodd.jtx.worker.LeanJtxWorker;
 
 public class DbPropagationTest extends DbHsqldbTestCase {

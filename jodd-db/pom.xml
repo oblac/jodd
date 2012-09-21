@@ -25,16 +25,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
+			<artifactId>jodd-jtx</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
 			<artifactId>jodd-proxetta</artifactId>
 			<optional>true</optional>
 		</dependency>
 
 		<!-- test -->
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-jtx</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

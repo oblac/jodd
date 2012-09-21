@@ -3,7 +3,7 @@
 package jodd.db;
 
 import junit.framework.TestCase;
-import jodd.jtx.db.DbJtxTransactionManager;
+import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
 
 public abstract class DbH2TestCase extends TestCase {
