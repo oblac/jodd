@@ -29,6 +29,7 @@
 		<module>jodd-petite</module>
 		<module>jodd-madvoc</module>
 		<module>jodd-db</module>
+		<module>jodd-jtx</module>
 	</modules>
 
 	<profiles>

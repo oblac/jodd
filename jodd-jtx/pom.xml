@@ -11,7 +11,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>jodd-db</artifactId>
+	<artifactId>jodd-jtx</artifactId>
 
 	<dependencies>
 		<!-- jodd -->
@@ -19,22 +19,8 @@
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-bean</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-proxetta</artifactId>
-			<optional>true</optional>
-		</dependency>
 
 		<!-- test -->
-		<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-jtx</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
