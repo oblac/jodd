@@ -5,15 +5,18 @@ package jodd.props;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.StreamUtil;
 import jodd.util.ClassLoaderUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Properties;
 
-public class PropsTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class PropsTest {
+
+	@Test
 	public void testBasic() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test.props"));
@@ -43,6 +46,7 @@ public class PropsTest extends TestCase {
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
 	}
 
+	@Test
 	public void testEscapeNewValue() throws IOException {
 		Props p = new Props();
 		p.setEscapeNewLineValue("<br>");
@@ -50,6 +54,7 @@ public class PropsTest extends TestCase {
 		assertEquals("Snow White, pursued by a jealous queen, hides with the Dwarfs; <br>the queen feeds her a poison apple, but Prince Charming <br>awakens her with a kiss.", p.getValue("plot"));
 	}
 
+	@Test
 	public void testIgnorePrefixWhitespace() throws IOException {
 		Props p = new Props();
 		p.setIgnorePrefixWhitespacesOnNewLine(false);
@@ -57,6 +62,7 @@ public class PropsTest extends TestCase {
 		assertEquals("Snow White, pursued by a jealous queen, hides with the Dwarfs; \t\tthe queen feeds her a poison apple, but Prince Charming \t\tawakens her with a kiss.", p.getValue("plot"));
 	}
 
+	@Test
 	public void testProfiles() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test-profiles.props"));
@@ -115,6 +121,7 @@ public class PropsTest extends TestCase {
 
 	}
 
+	@Test
 	public void testNestedProfiles() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test-profiles.props"));
@@ -147,6 +154,7 @@ public class PropsTest extends TestCase {
 		assertEquals("Grazias", prop.getProperty("key3"));
 	}
 
+	@Test
 	public void testMacros() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
@@ -163,6 +171,7 @@ public class PropsTest extends TestCase {
 		assertEquals("/foo/data3", prop.getProperty("data.path"));
 	}
 
+	@Test
 	public void testMacros2() throws IOException {
 		Props p = new Props();
 		p.setValue("key1", "**${key${key3}}**");
@@ -172,6 +181,7 @@ public class PropsTest extends TestCase {
 		assertEquals("**++++**", p.getValue("key1"));
 	}
 
+	@Test
 	public void testClone() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
@@ -187,6 +197,7 @@ public class PropsTest extends TestCase {
 		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
 	}
 
+	@Test
 	public void testEmpty() throws IOException {
 		Props p = new Props();
 		p.setSkipEmptyProps(false);
@@ -197,6 +208,7 @@ public class PropsTest extends TestCase {
 		assertEquals("", p.getValue("empty"));
 	}
 
+	@Test
 	public void testActiveProfiles() throws IOException {
 		Props p = loadProps("test-actp.props");
 
@@ -208,6 +220,7 @@ public class PropsTest extends TestCase {
 		assertEquals("one.two", p.getActiveProfiles()[0]);
 	}
 
+	@Test
 	public void testProperties() throws IOException {
 		Props p = loadProps("test.properties");
 
@@ -216,6 +229,7 @@ public class PropsTest extends TestCase {
 		assertEquals("some utf8 šđžčć", p.getValue("three"));
 	}
 
+	@Test
 	public void testAdd() {
 		Props p = new Props();
 		p.setValue("key1", "val${key2}");
@@ -228,6 +242,7 @@ public class PropsTest extends TestCase {
 		assertEquals("valhurrey\tme!", p.getValue("key1"));
 	}
 
+	@Test
 	public void testDuplicate() throws IOException {
 		Props p = new Props();
 		loadProps(p, "test-dupl.props");
@@ -241,9 +256,9 @@ public class PropsTest extends TestCase {
 
 		assertEquals("one,two,three", p.getValue("foo"));
 		assertEquals("here,there,everywhere", p.getValue("bar", "prof"));
-
 	}
 
+	@Test
 	public void testDoubleLoadsAndResolves() {
 		Props props = new Props();
 		props.load("pojoBean2.val2=123");
@@ -258,7 +273,8 @@ public class PropsTest extends TestCase {
 		assertEquals(2, props.countTotalProperties());
 		assertEquals("\\${pojo} ${pojo}", props.getValue("pojoBean2.val1"));
 	}
-	
+
+	@Test
 	public void testSystemProperties() {
 		Props props = new Props();
 		assertEquals(0, props.countTotalProperties());
@@ -269,6 +285,7 @@ public class PropsTest extends TestCase {
 		assertNotNull(props.getValue("sys.user.dir"));
 	}
 
+	@Test
 	public void testEnvironment() {
 		Props props = new Props();
 		assertEquals(0, props.countTotalProperties());
@@ -277,6 +294,7 @@ public class PropsTest extends TestCase {
 		assertTrue(props.countTotalProperties() > 0);
 	}
 
+	@Test
 	public void testValueWithBracket() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test3.props"));
@@ -284,7 +302,6 @@ public class PropsTest extends TestCase {
 		assertEquals("info@jodd.org;patrick@jodd.org", p.getValue("email.from"));
 		assertEquals("[ERROR] Got %s exceptions", p.getValue("email.subject"));
 		assertEquals("line1line2line3", p.getValue("email.text"));
-
 
 		p = new Props();
 		p.setIgnorePrefixWhitespacesOnNewLine(false);
@@ -304,6 +321,7 @@ public class PropsTest extends TestCase {
 		assertEquals("line1\n\tline2\nline3", p.getValue("email.text"));
 	}
 
+	@Test
 	public void testMultilineValue() throws IOException {
 		Props p = new Props();
 		p.setValueTrimLeft(true);

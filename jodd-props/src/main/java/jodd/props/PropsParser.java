@@ -14,7 +14,10 @@ import java.util.ArrayList;
 public class PropsParser implements Cloneable {
 
 	protected static final String PROFILE_LEFT = "<";
+
 	protected static final String PROFILE_RIGHT = ">";
+
+	protected final PropsData propsData;
 
 	/**
 	 * Value that will be inserted when escaping the new line.
@@ -37,7 +40,6 @@ public class PropsParser implements Cloneable {
 	 */
 	protected boolean ignorePrefixWhitespacesOnNewLine = true;
 
-
 	/**
 	 * Defines if multi-line values may be written using triple-quotes
 	 * as in python.
@@ -49,13 +51,11 @@ public class PropsParser implements Cloneable {
 	 */
 	protected boolean skipEmptyProps = true;
 
-	protected final PropsData propsData;
-
 	public PropsParser() {
 		this.propsData = new PropsData();
 	}
 
-	public PropsParser(PropsData propsData) {
+	public PropsParser(final PropsData propsData) {
 		this.propsData = propsData;
 	}
 
@@ -65,7 +65,7 @@ public class PropsParser implements Cloneable {
 
 	@Override
 	public PropsParser clone() {
-		PropsParser pp = new PropsParser(this.propsData.clone());
+		final PropsParser pp = new PropsParser(this.propsData.clone());
 
 		pp.escapeNewLineValue = escapeNewLineValue;
 		pp.valueTrimLeft = valueTrimLeft;
@@ -91,36 +91,38 @@ public class PropsParser implements Cloneable {
 	/**
 	 * Loads properties.
 	 */
-	public void parse(String in) {
+	public void parse(final String in) {
 		ParseState state = ParseState.TEXT;
 		boolean insideSection = false;
 		String currentSection = null;
 		String key = null;
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
-		int len = in.length();
+		final int len = in.length();
 		int ndx = 0;
 		while (ndx < len) {
-			char c = in.charAt(ndx);
+			final char c = in.charAt(ndx);
 			ndx++;
 
-			if (state == ParseState.COMMENT) {			// comment, skip to the end of the line
+			if (state == ParseState.COMMENT) {
+				// comment, skip to the end of the line
 				if (c == '\n') {
 					state = ParseState.TEXT;
 				}
-			}
-			else if (state == ParseState.ESCAPE) {
+			} else if (state == ParseState.ESCAPE) {
 				state = ParseState.VALUE;
 				switch (c) {
 					case '\r':
 					case '\n':
-						state = ParseState.ESCAPE_NEWLINE;	// if the EOL is \n or \r\n, escapes both chars
+						// if the EOL is \n or \r\n, escapes both chars
+						state = ParseState.ESCAPE_NEWLINE;
 						break;
-					case 'u':		// encode UTF character
+					// encode UTF character
+					case 'u':
 						int value = 0;
 
 						for (int i = 0; i < 4; i++) {
-							char hexChar = in.charAt(ndx++);
+							final char hexChar = in.charAt(ndx++);
 							if (CharUtil.isDigit(hexChar)) {
 								value = (value << 4) + hexChar - '0';
 							} else if (hexChar >= 'a' && hexChar <= 'f') {
@@ -148,15 +150,16 @@ public class PropsParser implements Cloneable {
 					default:
 						sb.append(c);
 				}
-			}
-			else if (state == ParseState.TEXT) {
+			} else if (state == ParseState.TEXT) {
 				switch (c) {
-					case '[':			// start section
+					// start section
+					case '[':
 						sb.setLength(0);
 						insideSection = true;
 						break;
 
-					case ']': 			// end section
+					// end section
+					case ']':
 						if (insideSection) {
 							currentSection = sb.toString().trim();
 							sb.setLength(0);
@@ -174,7 +177,8 @@ public class PropsParser implements Cloneable {
 						state = ParseState.COMMENT;
 						break;
 
-					case '=': // assignment operator
+					// assignment operator
+					case '=':
 					case ':':
 						if (key == null) {
 							key = sb.toString().trim();
@@ -194,14 +198,15 @@ public class PropsParser implements Cloneable {
 
 					case ' ':
 					case '\t':
-						break;		// ignore whitespaces
+						// ignore whitespaces
+						break;
 					default:
 						sb.append(c);
 				}
-			}
-			else {
+			} else {
 				switch (c) {
-					case '\\': // escape char, take the next char as is
+					case '\\':
+						// escape char, take the next char as is
 						state = ParseState.ESCAPE;
 						break;
 
@@ -266,16 +271,18 @@ public class PropsParser implements Cloneable {
 	/**
 	 * Adds accumulated value to key and current section.
 	 */
-	protected void add(String section, String key, StringBuilder value, boolean trim) {
+	protected void add(final String section, final String key, final StringBuilder value, final boolean trim) {
 		if (value.length() == 0 && skipEmptyProps) {
 			return;
 		}
+		// ignore lines without : or =
 		if (key == null) {
-			return;			// ignore lines without : or =
+			return;
 		}
-		
+		String fullKey = key;
+
 		if (section != null) {
-			key = section + '.' + key;
+			fullKey = section + '.' + fullKey;
 		}
 		String v = value.toString();
 
@@ -289,50 +296,50 @@ public class PropsParser implements Cloneable {
 			}
 		}
 
-		add(key, v);
+		add(fullKey, v);
 	}
 
 	/**
 	 * Adds key-value to properties and profiles.
 	 */
-	protected void add(String key, String value) {
-		int ndx = key.indexOf(PROFILE_LEFT);
+	protected void add(final String key, final String value) {
+		String fullKey = key;
+		int ndx = fullKey.indexOf(PROFILE_LEFT);
 		if (ndx == -1) {
-			propsData.putBaseProperty(key, value);
+			propsData.putBaseProperty(fullKey, value);
 			return;
 		}
 
 		// extract profiles
 		ArrayList<String> keyProfiles = new ArrayList<String>();
+
 		while (true) {
-			ndx = key.indexOf(PROFILE_LEFT);
+			ndx = fullKey.indexOf(PROFILE_LEFT);
 			if (ndx == -1) {
 				break;
 			}
 
-			int len = key.length();
+			final int len = fullKey.length();
 
-			int ndx2 = key.indexOf(PROFILE_RIGHT, ndx + 1);
+			int ndx2 = fullKey.indexOf(PROFILE_RIGHT, ndx + 1);
 			if (ndx2 == -1) {
 				ndx2 = len;
 			}
 
 			// remember profile
-			String profile = key.substring(ndx + 1, ndx2);
+			final String profile = fullKey.substring(ndx + 1, ndx2);
 			keyProfiles.add(profile);
 
 			// extract profile from key
 			ndx2++;
-			String right = (ndx2 == len) ? StringPool.EMPTY : key.substring(ndx2);
-			key = key.substring(0, ndx) + right;
+			final String right = (ndx2 == len) ? StringPool.EMPTY : fullKey.substring(ndx2);
+			fullKey = fullKey.substring(0, ndx) + right;
 		}
 
 		// add value to extracted profiles
-		for (String p : keyProfiles) {
-			propsData.putProfileProperty(key, value, p);
+		for (final String p : keyProfiles) {
+			propsData.putProfileProperty(fullKey, value, p);
 		}
 	}
-
-
 
 }
