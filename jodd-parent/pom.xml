@@ -194,7 +194,7 @@
 			<dependency>
 				<groupId>postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>9.1-902.jdbc3</version>
+				<version>9.1-901.jdbc3</version>
 			</dependency>
 			<dependency>
 				<groupId>mysql</groupId>

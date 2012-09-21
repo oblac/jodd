@@ -42,16 +42,16 @@ public class MappingTest extends DbHsqldbTestCase {
 							"STRING		integer		not null," +
 							"STRING2	integer		not null," +
 							"BOO		integer		not null," +
-							"COLOR		varchar		not null," +
+							"COLOR		varchar(50)		not null," +
 							"WEIGHT		integer		not null," +
 							"TIMESTAMP	timestamp	not null," +
 							"TIMESTAMP2	timestamp	not null," +
 							"CLOB		longvarchar	not null," +
 							"BLOB		longvarbinary not null," +
-							"DECIMAL	decimal		not null," +
-							"DECIMAL2	varchar		not null," +
+							"DECIMAL	real		not null," +
+							"DECIMAL2	varchar(50)		not null," +
 							"JDT1		bigint		not null," +
-							"JDT2		varchar		not null," +
+							"JDT2		varchar(50)		not null," +
 							"primary key (ID)" +
 							')';
 		executeUpdate(session, sql);
@@ -89,8 +89,8 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals((byte)0xAB, foo.blob.getBytes(1,3)[0]);
 		assertEquals((byte)0xCD, foo.blob.getBytes(1,3)[1]);
 		assertEquals((byte)0xEF, foo.blob.getBytes(1,3)[2]);
-		assertEquals("1.01", foo.decimal.toString());
-		assertEquals("-7.17", foo.decimal2.toString());
+		assertEquals("1.01", foo.decimal.toString().substring(0, 4));
+		assertEquals("-7.17", foo.decimal2.toString().substring(0,5));
 		assertEquals("1970-01-01", foo.jdt1.toString("YYYY-MM-DD"));
 		assertEquals("1970-01-01", foo.jdt2.toString("YYYY-MM-DD"));
 
@@ -101,7 +101,7 @@ public class MappingTest extends DbHsqldbTestCase {
 		foo.weight = FooWeight.heavy;
 		foo.number.value = 222;
 		foo.timestamp.setYear(108);
-		foo.decimal = new BigDecimal("34.12");
+		foo.decimal = new Double("34.12");
 		foo.decimal2 = new BigDecimal("1.099");
 		DbOomQuery doq = new DbOomQuery(DbEntitySql.update(foo));
 		foo.jdt1.setDay(2);
@@ -133,7 +133,7 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals("W173", foo.clob.getSubString(1, 4));
 		assertEquals(3, foo.blob.length());
 		assertEquals("34.12", foo.decimal.toString());
-		assertEquals("1.099", foo.decimal2.toString());
+		assertEquals("1.099", foo.decimal2.toString().substring(0, 5));
 		assertEquals("3000-01-02", foo.jdt1.toString("YYYY-MM-DD"));
 		assertEquals("2900-01-03", foo.jdt2.toString("YYYY-MM-DD"));
 

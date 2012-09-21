@@ -948,7 +948,12 @@ s	 */
 			if (sqlType != null) {
 				sqlType.storeValue(preparedStatement, index, value, dbSqlType);
 			} else {
-				preparedStatement.setObject(index, value);
+				// unknown type - todo add more if types
+				if (dbSqlType == Types.VARCHAR) {
+					preparedStatement.setString(index, value.toString());
+				} else {
+					preparedStatement.setObject(index, value);
+				}
 			}
 		} catch (SQLException sex) {
 			throwSetParamError(index, sex);

@@ -44,38 +44,23 @@ public class DbTransactionMode {
 	 */
 	public static final int ISOLATION_SERIALIZABLE 			= Connection.TRANSACTION_SERIALIZABLE;
 
+
 	private int isolation;
 
+	/**
+	 * Returns isolation level.
+	 */
 	public int getIsolation() {
 		return isolation;
 	}
 
-	public void setIsolation(int isolation) {
+	/**
+	 * Sets isolation level.
+	 */
+	public DbTransactionMode setIsolation(int isolation) {
 		this.isolation = isolation;
-	}
-
-	public DbTransactionMode isolationNone() {
-		this.isolation = ISOLATION_NONE;
 		return this;
 	}
-	public DbTransactionMode isolationReadUncommitted() {
-		this.isolation = ISOLATION_READ_UNCOMMITTED;
-		return this;
-	}
-	public DbTransactionMode isolationReadCommited() {
-		this.isolation = ISOLATION_READ_COMMITTED;
-		return this;
-	}
-	public DbTransactionMode isolationRepeatableRead() {
-		this.isolation = ISOLATION_REPEATABLE_READ;
-		return this;
-	}
-	public DbTransactionMode isolationSerializable() {
-		this.isolation = ISOLATION_SERIALIZABLE;
-		return this;
-	}
-
-
 
 	// ---------------------------------------------------------------- read-only
 

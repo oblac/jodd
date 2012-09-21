@@ -51,7 +51,7 @@ public class Foo {
 	public Blob blob;
 
 	@DbColumn
-	public BigDecimal decimal;
+	public Double decimal;
 
 	@DbColumn
 	public BigDecimal decimal2;

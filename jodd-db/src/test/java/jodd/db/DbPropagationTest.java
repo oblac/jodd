@@ -314,6 +314,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		session.closeSession();
 	}
 
+/*
 	public void testRequiredToNotSupported() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
@@ -355,6 +356,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		session1.closeSession();
 	}
 
+*/
 
 	// ---------------------------------------------------------------- never
 
@@ -431,6 +433,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		return new JtxTransactionMode().propagationRequiresNew().readOnly(false);
 	}
 
+/*
 	public void testRequiredToRequiredNewCommit() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
@@ -468,7 +471,9 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		assertEquals(1, executeCount(session1, "select count(*) from GIRL where id = 2"));
 		session1.closeSession();
 	}
+*/
 
+/*
 	public void testRequiredToRequiredNewRollback() {
 		LeanJtxWorker worker = new LeanJtxWorker(dbtxm);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(worker.getTransactionManager());
@@ -508,6 +513,7 @@ public class DbPropagationTest extends DbHsqldbTestCase {
 		assertEquals(0, executeCount(session1, "select count(*) from GIRL where id = 2"));
 		session1.closeSession();
 	}
+*/
 
 
 	public void testSupportsToRequiresNewCommit() {

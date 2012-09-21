@@ -50,6 +50,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 
 	// ---------------------------------------------------------------- misc
 
+/*
 	public void testIsolation() throws SQLException {
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
@@ -87,6 +88,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 		
 		assertTotals(manager, 0, 0);
 	}
+*/
 
 	// ---------------------------------------------------------------- presentation layer
 

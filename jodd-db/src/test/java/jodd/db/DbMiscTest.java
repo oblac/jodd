@@ -69,16 +69,22 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		assertEquals(1, query.executeUpdate());
 		query.close();
 
-		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
-		assertEquals(0, query2.getOpenResultSetCount());
+
+		//
+		// In the new implementation (HSQLDB), all isolation levels avoid the "dirty read"
+		// phenomenon and do not read uncommitted changes made to rows by other transactions.
+		//
+
+//		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
+//		assertEquals(0, query2.getOpenResultSetCount());
 //		assertEquals(0, DbQuery.totalOpenResultSetCount);
 
-		rs = query2.execute();
-		if (rs.next()) {
-			// count before rollback (READ_UNCOMMITTED isolation level)
-			assertEquals(4, rs.getInt(1));
-		}
-		assertEquals(1, query2.getOpenResultSetCount());
+//		rs = query2.execute();
+//		if (rs.next()) {
+//			// count before rollback (READ_UNCOMMITTED isolation level)
+//			assertEquals(4, rs.getInt(1));
+//		}
+//		assertEquals(1, query2.getOpenResultSetCount());
 //		assertEquals(1, DbQuery.totalOpenResultSetCount);
 
 //		// HSQLDB supports transactions at the READ_UNCOMMITTED level, also known
@@ -88,8 +94,9 @@ public class DbMiscTest extends DbHsqldbTestCase {
 //
 		session1.rollbackTransaction();
 
+		DbQuery query2 = new DbQuery(session2, "select count(*) from GIRL");
 		rs = query2.execute();
-		assertEquals(2, query2.getOpenResultSetCount());
+		assertEquals(1, query2.getOpenResultSetCount());
 //		assertEquals(2, DbQuery.totalOpenResultSetCount);
 		if (rs.next()) {
 			assertEquals(3, rs.getInt(1));
