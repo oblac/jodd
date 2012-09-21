@@ -4,10 +4,11 @@ package jodd.db;
 
 import jodd.bean.BeanUtil;
 import jodd.io.AsciiInputStream;
-import jodd.log.Log;
 import jodd.util.collection.IntArrayList;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +45,7 @@ import java.util.Map;
  */
 public class DbQuery extends DbQueryBase {
 
-	private static final Log log = Log.getLogger(DbQuery.class);
+	private static final Logger log = LoggerFactory.getLogger(DbQuery.class);
 
 	/**
 	 * Creates new query,

@@ -2,7 +2,8 @@
 
 package jodd.db;
 
-import jodd.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Returns {@link DbSession} assigned to current thread.
@@ -15,7 +16,7 @@ import jodd.log.Log;
  */
 public class ThreadDbSessionProvider implements DbSessionProvider {
 
-	private static final Log log = Log.getLogger(ThreadDbSessionProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(ThreadDbSessionProvider.class);
 
 	protected final boolean createIfMissing;
 

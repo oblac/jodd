@@ -6,8 +6,9 @@ import jodd.db.oom.DbOomManager;
 import jodd.io.findfile.ClassFinder;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.meta.DbTable;
-import jodd.log.Log;
 import jodd.util.ClassLoaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import java.io.InputStream;
  */
 public class AutomagicDbOomConfigurator extends ClassFinder {
 
-	private static final Log log = Log.getLogger(AutomagicDbOomConfigurator.class);
+	private static final Logger log = LoggerFactory.getLogger(AutomagicDbOomConfigurator.class);
 
 	protected final byte[] dbTableAnnotationBytes;
 	protected final boolean registerAsEntities;
@@ -42,7 +43,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	}
 
 	/**
-	 * Configures {@link jodd.petite.PetiteContainer} with specified class path.
+	 * Configures {@link DbOomManager} with specified class path.
 	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager)
 	 */
 	public void configure(DbOomManager dbOomManager, File[] classpath) {
@@ -58,7 +59,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	}
 
 	/**
-	 * Configures {@link jodd.petite.PetiteContainer} with default class path.
+	 * Configures {@link DbOomManager} with default class path.
 	 * @see AutomagicDbOomConfigurator#configure(jodd.db.oom.DbOomManager, java.io.File[])
 	 */
 	public void configure(DbOomManager dbOomManager) {
@@ -66,7 +67,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	}
 
 	/**
-	 * Scans all classes and registers only those annotated with {@link jodd.petite.meta.PetiteBean}.
+	 * Scans all classes and registers only those annotated with {@link DbTable}.
 	 * Because of performance purposes, classes are not dynamically loaded; instead, their
 	 * file content is examined.
 	 */

@@ -3,6 +3,8 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,8 +12,6 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-
-import jodd.log.Log;
 
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
@@ -21,11 +21,11 @@ import jodd.log.Log;
  * All invoked queries are stored within one session and closed implicitly
  * on session closing.
  * <p>
- * For managed transaction see {@link jodd.jtx.db.DbJtxTransactionManager}.
+ * For managed transaction see <code>DbJtxTransactionManager</code> from <b>jodd-tx</b>.
  */
 public class DbSession {
 
-	private static final Log log = Log.getLogger(DbSession.class);
+	private static final Logger log = LoggerFactory.getLogger(DbSession.class);
 
 	// ---------------------------------------------------------------- init & close
 

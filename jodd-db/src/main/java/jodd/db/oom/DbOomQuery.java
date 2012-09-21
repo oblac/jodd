@@ -7,8 +7,9 @@ import jodd.db.DbSession;
 import jodd.db.ResultSetUtil;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
-import jodd.log.Log;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -34,7 +35,7 @@ import static jodd.db.oom.DbOomUtil.initialCollectionSize;
  */
 public class DbOomQuery extends DbQuery {
 
-	private static final Log log = Log.getLogger(DbOomQuery.class);
+	private static final Logger log = LoggerFactory.getLogger(DbOomQuery.class);
 
 	// ---------------------------------------------------------------- default ctors
 
