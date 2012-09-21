@@ -20,9 +20,9 @@ public class PropsData implements Cloneable {
 
 	private static final String APPEND_SEPARATOR = ",";
 
-	protected final HashMap<String, PropsValue> properties;					// base properties
+	protected final HashMap<String, PropsValue> baseProperties;
 
-	protected final HashMap<String, Map<String, PropsValue>> profiles;		// profile properties
+	protected final HashMap<String, Map<String, PropsValue>> profileProperties;
 
 	protected final StringTemplateParser stringTemplateParser;
 
@@ -35,9 +35,9 @@ public class PropsData implements Cloneable {
 		this(new HashMap<String, PropsValue>(), new HashMap<String, Map<String, PropsValue>>());
 	}
 
-	protected PropsData(HashMap<String, PropsValue> properties, HashMap<String, Map<String, PropsValue>> profiles) {
-		this.properties = properties;
-		this.profiles = profiles;
+	protected PropsData(final HashMap<String, PropsValue> properties, final HashMap<String, Map<String, PropsValue>> profiles) {
+		this.baseProperties = properties;
+		this.profileProperties = profiles;
 
 		this.stringTemplateParser = new StringTemplateParser();
 		stringTemplateParser.setResolveEscapes(false);
@@ -46,19 +46,18 @@ public class PropsData implements Cloneable {
 
 	@Override
 	public PropsData clone() {
-		HashMap<String, PropsValue> newBase = new HashMap<String, PropsValue>();
-		HashMap<String, Map<String, PropsValue>> newProfiles = new HashMap<String, Map<String, PropsValue>>();
+		final HashMap<String, PropsValue> newBase = new HashMap<String, PropsValue>();
+		final HashMap<String, Map<String, PropsValue>> newProfiles = new HashMap<String, Map<String, PropsValue>>();
 
-		newBase.putAll(properties);
-		for (Map.Entry<String, Map<String, PropsValue>> entry : profiles.entrySet()) {
-			Map<String, PropsValue> map = new HashMap<String, PropsValue>(entry.getValue().size());
+		newBase.putAll(baseProperties);
+		for (final Map.Entry<String, Map<String, PropsValue>> entry : profileProperties.entrySet()) {
+			final Map<String, PropsValue> map = new HashMap<String, PropsValue>(entry.getValue().size());
 			map.putAll(entry.getValue());
 			newProfiles.put(entry.getKey(), map);
 		}
 
-		PropsData pd = new PropsData(newBase, newProfiles);
+		final PropsData pd = new PropsData(newBase, newProfiles);
 		pd.appendDuplicateProps = appendDuplicateProps;
-
 		return pd;
 	}
 
@@ -67,14 +66,15 @@ public class PropsData implements Cloneable {
 	/**
 	 * Puts key-value pair into the map, with respect of appending duplicate properties
 	 */
-	protected void put(Map<String, PropsValue> map, String key, String value) {
+	protected void put(final Map<String, PropsValue> map, final String key, final String value) {
+		String realValue = value;
 		if (appendDuplicateProps) {
 			PropsValue pv = map.get(key);
 			if (pv != null) {
-				value = pv.value + APPEND_SEPARATOR + value;
+				realValue = pv.value + APPEND_SEPARATOR + realValue;
 			}
 		}
-		map.put(key, new PropsValue(value));
+		map.put(key, new PropsValue(realValue));
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -83,21 +83,21 @@ public class PropsData implements Cloneable {
 	 * Counts base properties.
 	 */
 	public int countBaseProperties() {
-		return properties.size();
+		return baseProperties.size();
 	}
 
 	/**
 	 * Adds base property.
 	 */
-	public void putBaseProperty(String key, String value) {
-		put(properties, key, value);
+	public void putBaseProperty(final String key, final String value) {
+		put(baseProperties, key, value);
 	}
 
 	/**
 	 * Returns base property or <code>null</code> if it doesn't exist.
 	 */
-	public PropsValue getBaseProperty(String key) {
-		return properties.get(key);
+	public PropsValue getBaseProperty(final String key) {
+		return baseProperties.get(key);
 	}
 
 	// ---------------------------------------------------------------- profiles
@@ -107,27 +107,26 @@ public class PropsData implements Cloneable {
 	 * that easy on execution.
 	 */
 	public int countProfileProperties() {
-		HashSet<String> profileKeys = new HashSet<String>();
+		final HashSet<String> profileKeys = new HashSet<String>();
 
-		for (Map<String, PropsValue> map : profiles.values()) {
-			for (String key : map.keySet()) {
-				if (properties.containsKey(key) == false) {
+		for (final Map<String, PropsValue> map : profileProperties.values()) {
+			for (final String key : map.keySet()) {
+				if (!baseProperties.containsKey(key)) {
 					profileKeys.add(key);
 				}
 			}
 		}
-
 		return profileKeys.size();
 	}
 
 	/**
 	 * Adds profile property.
 	 */
-	public void putProfileProperty(String key, String value, String profile) {
-		Map<String, PropsValue> map = profiles.get(profile);
+	public void putProfileProperty(final String key, final String value, final String profile) {
+		Map<String, PropsValue> map = profileProperties.get(profile);
 		if (map == null) {
 			map = new HashMap<String, PropsValue>();
-			profiles.put(profile, map);
+			profileProperties.put(profile, map);
 		}
 		put(map, key, value);
 	}
@@ -135,8 +134,8 @@ public class PropsData implements Cloneable {
 	/**
 	 * Returns profile property.
 	 */
-	public PropsValue getProfileProperty(String profile, String key) {
-		Map<String, PropsValue> profileMap = profiles.get(profile);
+	public PropsValue getProfileProperty(final String profile, final String key) {
+		final Map<String, PropsValue> profileMap = profileProperties.get(profile);
 		if (profileMap == null) {
 			return null;
 		}
@@ -149,20 +148,20 @@ public class PropsData implements Cloneable {
 	/**
 	 * Lookup props value through profiles and base properties.
 	 */
-	protected String lookupValue(String key, String... profiles) {
+	protected String lookupValue(final String key, final String... profiles) {
 		if (profiles != null) {
 			nextprofile:
 			for (String profile : profiles) {
 				while (true) {
-					Map<String, PropsValue> profileMap = this.profiles.get(profile);
+					final Map<String, PropsValue> profileMap = this.profileProperties.get(profile);
 					if (profileMap == null) {
 						continue nextprofile;
 					}
-					PropsValue value = profileMap.get(key);
+					final PropsValue value = profileMap.get(key);
 					if (value != null) {
 						return value.getValue();
 					}
-					int ndx = profile.lastIndexOf('.');
+					final int ndx = profile.lastIndexOf('.');
 					if (ndx == -1) {
 						break;
 					}
@@ -170,8 +169,8 @@ public class PropsData implements Cloneable {
 				}
 			}
 		}
-		PropsValue value = getBaseProperty(key);
-		return value == null ?  null : value.getValue();
+		final PropsValue value = getBaseProperty(key);
+		return value == null ? null : value.getValue();
 	}
 
 
@@ -182,36 +181,33 @@ public class PropsData implements Cloneable {
 	 */
 	public void resolveMacros() {
 		int loopCount = 0;
-
 		while (loopCount++ < MAX_INNER_MACROS) {
-			boolean replaced = resolveMacros(this.properties, null);
+			boolean replaced = resolveMacros(this.baseProperties, null);
 
-			for (Map.Entry<String, Map<String, PropsValue>> entry : profiles.entrySet()) {
-				String profile = entry.getKey();
+			for (final Map.Entry<String, Map<String, PropsValue>> entry : profileProperties.entrySet()) {
+				final String profile = entry.getKey();
 				replaced = resolveMacros(entry.getValue(), profile) || replaced;
 			}
 
-			if (replaced == false) {
+			if (!replaced) {
 				break;
 			}
 		}
 	}
 
-	protected boolean resolveMacros(Map<String, PropsValue> map, final String profile) {
+	protected boolean resolveMacros(final Map<String, PropsValue> map, final String profile) {
 		boolean replaced = false;
 
-		StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
+		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
 			public String resolve(String macroName) {
 				return lookupValue(macroName, profile);
 			}
 		};
 
-		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
-			PropsValue pv = entry.getValue();
-
-			String newValue = stringTemplateParser.parse(pv.value, macroResolver);
-
-			if (newValue.equals(pv.value) == false) {
+		for (final Map.Entry<String, PropsValue> entry : map.entrySet()) {
+			final PropsValue pv = entry.getValue();
+			final String newValue = stringTemplateParser.parse(pv.value, macroResolver);
+			if (!newValue.equals(pv.value)) {
 				pv.resolved = newValue;
 				replaced = true;
 			} else {
@@ -226,16 +222,16 @@ public class PropsData implements Cloneable {
 	/**
 	 * Extract props to target map.
 	 */
-	public void extract(Map target, String[] profiles, String[] wildcardPatterns) {
+	public void extract(final Map target, final String[] profiles, final String[] wildcardPatterns) {
 		if (profiles != null) {
 			for (String profile : profiles) {
 				while (true) {
-					Map<String, PropsValue> map  = this.profiles.get(profile);
+					final Map<String, PropsValue> map = this.profileProperties.get(profile);
 					if (map != null) {
 						extractMap(target, map, wildcardPatterns);
 					}
 
-					int ndx = profile.indexOf('.');
+					final int ndx = profile.indexOf('.');
 					if (ndx == -1) {
 						break;
 					}
@@ -243,13 +239,13 @@ public class PropsData implements Cloneable {
 				}
 			}
 		}
-		extractMap(target, this.properties, wildcardPatterns);
+		extractMap(target, this.baseProperties, wildcardPatterns);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void extractMap(Map target, Map<String, PropsValue> map, String[] wildcardPatterns) {
+	protected void extractMap(final Map target, final Map<String, PropsValue> map, final String[] wildcardPatterns) {
 		for (Map.Entry<String, PropsValue> entry : map.entrySet()) {
-			String key = entry.getKey();
+			final String key = entry.getKey();
 
 			if (wildcardPatterns != null) {
 				if (Wildcard.matchOne(key, wildcardPatterns) == -1) {
