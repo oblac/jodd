@@ -3,11 +3,12 @@
 package jodd.decora;
 
 import jodd.decora.parser.DecoraParser;
-import jodd.log.Log;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.servlet.wrapper.LastModifiedData;
 import jodd.util.ClassLoaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,7 +28,7 @@ import java.nio.CharBuffer;
  */
 public class DecoraServletFilter implements Filter {
 
-	private static final Log log = Log.getLogger(DecoraServletFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(DecoraServletFilter.class);
 
 	public static final String PARAM_DECORA_MANAGER = "decora.manager";
 	public static final String PARAM_DECORA_PARSER = "decora.parser";

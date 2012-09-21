@@ -17,7 +17,11 @@
 		<!-- jodd -->
 		<dependency>
 			<groupId>org.jodd</groupId>
-			<artifactId>jodd-core</artifactId>
+			<artifactId>jodd-lagarto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-servlet</artifactId>
 		</dependency>
 
 		<!-- external -->
