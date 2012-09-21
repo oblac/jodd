@@ -149,7 +149,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
-				<artifactId>jodd-parent</artifactId>
+				<artifactId>jodd-decora</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
 
