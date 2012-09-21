@@ -35,6 +35,8 @@ import java.nio.CharBuffer;
 	void stateAttr()		{ yybegin(ATTR); }
 	void stateXmp() 		{ yybegin(XMP); }
 	void stateScript()   { yybegin(SCRIPT); }
+	void statePre()   { yybegin(PRE); }
+	void stateCode()   { yybegin(CODE); }
 	void stateStyle()    { yybegin(STYLE); }
 	void stateDoctype()  { yybegin(DOCTYPE); }
 
@@ -63,7 +65,7 @@ import java.nio.CharBuffer;
 %}
 
 // additional lexer states
-%state TAG, ATTR, XMP, SCRIPT, STYLE, XML_DECLARATION, DOCTYPE
+%state TAG, ATTR, XMP, SCRIPT, PRE, CODE, STYLE, XML_DECLARATION, DOCTYPE
 
 %%
 
@@ -90,6 +92,8 @@ import java.nio.CharBuffer;
 	[\n\r \t\b\f]+		{ return Token.WHITESPACE; }
 	"xmp"				{ if (parseSpecialTagsAsCdata) nextTagState = XMP; stateAttr(); return Token.WORD; }
 	"script"			{ if (parseSpecialTagsAsCdata) nextTagState = SCRIPT; stateAttr(); return Token.WORD; }
+	"pre"			{ if (parseSpecialTagsAsCdata) nextTagState = PRE; stateAttr(); return Token.WORD; }
+	"code"			{ if (parseSpecialTagsAsCdata) nextTagState = CODE; stateAttr(); return Token.WORD; }
 	"style"				{ if (parseSpecialTagsAsCdata) nextTagState = STYLE; stateAttr(); return Token.WORD; }
 	[^>\]/=\"\'\n\r \t\b\f\?]* { stateAttr(); return Token.WORD; }
 	.					{ yypushback(1); stateAttr(); return Token.WHITESPACE;}
@@ -111,6 +115,12 @@ import java.nio.CharBuffer;
 }
 <SCRIPT> {
 	~"</script" ~">"	{ stateReset(); return Token.TEXT; }
+}
+<PRE> {
+	~"</pre" ~">"	{ stateReset(); return Token.TEXT; }
+}
+<CODE> {
+	~"</code" ~">"	{ stateReset(); return Token.TEXT; }
 }
 <STYLE> {
 	~"</style" ~">"		{ stateReset(); return Token.TEXT; }
