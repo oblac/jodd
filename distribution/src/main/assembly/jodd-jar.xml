@@ -26,6 +26,7 @@
 				<include>org.jodd:jodd-petite</include>
 				<include>org.jodd:jodd-madvoc</include>
 				<include>org.jodd:jodd-db</include>
+				<include>org.jodd:jodd-lagarto</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

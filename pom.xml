@@ -30,6 +30,7 @@
 		<module>jodd-madvoc</module>
 		<module>jodd-db</module>
 		<module>jodd-jtx</module>
+		<module>jodd-lagarto</module>
 	</modules>
 
 	<profiles>
