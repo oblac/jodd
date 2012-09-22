@@ -32,6 +32,7 @@
 		<module>jodd-jtx</module>
 		<module>jodd-lagarto</module>
 		<module>jodd-decora</module>
+		<module>jodd-joy</module>
 	</modules>
 
 	<profiles>

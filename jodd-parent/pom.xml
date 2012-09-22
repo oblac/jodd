@@ -152,6 +152,11 @@
 				<artifactId>jodd-decora</artifactId>
 				<version>${jodd.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.jodd</groupId>
+				<artifactId>jodd-joy</artifactId>
+				<version>${jodd.version}</version>
+			</dependency>
 
 			<!-- external -->
 			<dependency>
