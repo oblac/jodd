@@ -8,9 +8,10 @@ import static jodd.db.oom.sqlgen.DbEntitySql.updateAll;
 import static jodd.db.oom.sqlgen.DbEntitySql.findByColumn;
 import static jodd.db.oom.DbOomQuery.query;
 import jodd.db.DbQuery;
-import jodd.log.Log;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @PetiteBean
 public class AppDao {
 
-	private static final Log log = Log.getLogger(AppDao.class);
+	private static final Logger log = LoggerFactory.getLogger(AppDao.class);
 
 	@PetiteInject
 	DbIdGenerator dbIdGenerator;

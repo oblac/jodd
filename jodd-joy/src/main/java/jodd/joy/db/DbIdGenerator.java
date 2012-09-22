@@ -5,9 +5,10 @@ package jodd.joy.db;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbOomQuery;
-import jodd.log.Log;
 import jodd.mutable.MutableLong;
 import jodd.petite.meta.PetiteBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ import static jodd.db.oom.DbOomQuery.query;
 @PetiteBean
 public class DbIdGenerator {
 
-	private static final Log log = Log.getLogger(DbIdGenerator.class);
+	private static final Logger log = LoggerFactory.getLogger(DbIdGenerator.class);
 
 	protected Map<Class<? extends Entity>, MutableLong> idmap = new HashMap<Class<? extends Entity>, MutableLong>();
 

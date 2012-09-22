@@ -11,13 +11,12 @@ import jodd.db.pool.CoreConnectionPool;
 import jodd.joy.exception.AppException;
 import jodd.joy.jtx.meta.ReadWriteTransaction;
 import jodd.jtx.JtxTransactionManager;
-import jodd.jtx.db.DbJtxSessionProvider;
-import jodd.jtx.db.DbJtxTransactionManager;
+import jodd.db.jtx.DbJtxSessionProvider;
+import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.jtx.meta.Transaction;
 import jodd.jtx.proxy.AnnotationTxAdvice;
 import jodd.jtx.proxy.AnnotationTxAdviceManager;
 import jodd.jtx.proxy.AnnotationTxAdviceSupport;
-import jodd.log.Log;
 import jodd.petite.PetiteContainer;
 import jodd.petite.config.AutomagicPetiteConfigurator;
 import jodd.petite.proxetta.ProxettaAwarePetiteContainer;
@@ -31,6 +30,8 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
@@ -72,7 +73,7 @@ public abstract class DefaultAppCore {
 	/**
 	 * Logger. Resolved during {@link #initLogger() initialization}.
 	 */
-	protected static Log log;
+	protected static Logger log;
 
 	/**
 	 * App dir. Resolved during initialization.
@@ -145,7 +146,7 @@ public abstract class DefaultAppCore {
 			return;
 		}
 
-		log = Log.getLogger(DefaultAppCore.class);
+		log = LoggerFactory.getLogger(DefaultAppCore.class);
 		log.info("app dir: " + appDir);
 	}
 

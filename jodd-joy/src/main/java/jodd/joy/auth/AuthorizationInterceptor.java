@@ -3,12 +3,13 @@
 package jodd.joy.auth;
 
 import jodd.joy.madvoc.action.AppAction;
-import jodd.log.Log;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.servlet.DispatcherUtil;
-import jodd.servlet.URLCoder;
+import jodd.util.URLCoder;
 import jodd.util.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,7 @@ import static jodd.joy.madvoc.action.AppAction.REDIRECT;
  */
 public abstract class AuthorizationInterceptor extends ActionInterceptor {
 
-	private static final Log log = Log.getLogger(AuthorizationInterceptor.class);
+	private static final Logger log = LoggerFactory.getLogger(AuthorizationInterceptor.class);
 
 	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {

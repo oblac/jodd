@@ -65,8 +65,8 @@
 		<!-- source encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- java versions -->
-		<java.source.version>1.5</java.source.version>
-		<java.target.version>1.5</java.target.version>
+		<java.source.version>1.6</java.source.version>
+		<java.target.version>1.6</java.target.version>
 	</properties>
 
 	<dependencyManagement>

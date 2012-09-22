@@ -3,9 +3,10 @@
 package jodd.joy.core;
 
 import jodd.io.findfile.ClassFinder;
-import jodd.log.Log;
 import jodd.props.Props;
 import jodd.typeconverter.Convert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in
@@ -15,7 +16,7 @@ import jodd.typeconverter.Convert;
  */
 public class AppScanner {
 
-	private static final Log log = Log.getLogger(AppScanner.class);
+	private static final Logger log = LoggerFactory.getLogger(AppScanner.class);
 
 	private static final String PROPS_PREFIX = "app-scan";
 

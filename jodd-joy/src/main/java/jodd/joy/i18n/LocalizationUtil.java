@@ -2,16 +2,16 @@
 
 package jodd.joy.i18n;
 
-import jodd.log.Log;
 import jodd.util.ResourceBundleMessageResolver;
 import jodd.util.LocaleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
  */
 public class LocalizationUtil {
 
-	private static final Log log = Log.getLogger(LocalizationUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(LocalizationUtil.class);
 
 	/**
 	 * Central message bundle instance.

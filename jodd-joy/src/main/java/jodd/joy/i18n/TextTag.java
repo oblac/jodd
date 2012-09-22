@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import jodd.servlet.HtmlEncoder;
+import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
 import static jodd.joy.i18n.LocalizationUtil.findMessage;
 import static jodd.joy.i18n.LocalizationUtil.findDefaultMessage;

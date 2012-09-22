@@ -2,7 +2,6 @@
 
 package jodd.joy.db;
 
-import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.ThreadDbSessionHolder;
 
