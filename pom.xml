@@ -13,6 +13,7 @@
 
 	<artifactId>jodd</artifactId>
 	<packaging>pom</packaging>
+	<name>Jodd Project</name>
 
 	<modules>
 		<module>jodd-core</module>
@@ -76,7 +77,8 @@
 			<build>
 				<defaultGoal>clean package javadoc:aggregate</defaultGoal>
 				<plugins>
-					<!-- sources -->
+
+					<!-- jar sources -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
@@ -88,8 +90,8 @@
 							</execution>
 						</executions>
 					</plugin>
-					
-					<!-- javadoc -->
+
+					<!-- jar javadoc -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -108,13 +110,6 @@
 									<goal>jar</goal>
 								</goals>
 							</execution>
-							<!--execution>
-								<id>aggregate</id>
-								<phase>package</phase>
-								<goals>
-									<goal>aggregate</goal>
-								</goals>
-							</execution-->
 						</executions>
 					</plugin>
 
@@ -128,31 +123,6 @@
 							</includes>
 						</configuration>
 					</plugin-->
-
-					<!-- junit reports -->
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>test-reports</id>
-								<phase>test</phase>
-								<configuration>
-									<target>
-										<mkdir dir="target/surefire-reports"/>
-										<junitreport todir="target/surefire-reports">
-											<fileset dir="target/surefire-reports">
-												<include name="**/*.xml"/>
-											</fileset>
-											<report format="noframes" todir="target/surefire-reports"/>
-										</junitreport>
-									</target>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 
 					<!-- jacoco -->
 					<plugin>
@@ -183,17 +153,36 @@
 							</execution>
 						</executions>
 					</plugin>
+
+					<!-- aggregate surefire reports -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-report-plugin</artifactId>
+						<configuration>
+							<aggregate>true</aggregate>
+							<linkXRef>false</linkXRef>
+						</configuration>
+ 						<executions>
+							<execution>
+								<id>junit-report</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>report-only</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
 
 		<!-- profile: NOTEST -->
-		<!-- usage: mvn clean package -Dno-test=true -->
+		<!-- usage: mvn clean package -Dnotests=true -->
 		<profile>
 			<id>no-test</id>
 			<activation>
 				<property>
-					<name>no-test</name>
+					<name>notests</name>
 					<value>true</value>
 				</property>
 			</activation>

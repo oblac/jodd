@@ -8,10 +8,10 @@
 		<groupId>org.jodd</groupId>
 		<artifactId>jodd</artifactId>
 		<version>3.4.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>jodd-lagarto</artifactId>
+	<name>Jodd Lagarto</name>
 
 	<dependencies>
 		<!-- jodd -->

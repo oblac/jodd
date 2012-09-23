@@ -13,6 +13,7 @@
 
 	<artifactId>distribution</artifactId>
 	<packaging>pom</packaging>
+	<name>Jodd Distribution</name>
 
 	<dependencies>
 		<dependency>
