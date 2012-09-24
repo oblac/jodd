@@ -2,9 +2,9 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.csselly.CSSelly;
-import jodd.lagarto.csselly.Combinator;
-import jodd.lagarto.csselly.CssSelector;
+import jodd.csselly.CSSelly;
+import jodd.csselly.Combinator;
+import jodd.csselly.CssSelector;
 import jodd.util.StringUtil;
 
 import java.util.LinkedList;

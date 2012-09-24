@@ -4,8 +4,8 @@ package jodd.lagarto;
 
 import jodd.io.StreamUtil;
 import jodd.io.StringOutputStream;
-import jodd.lagarto.dom.jerry.Jerry;
-import jodd.lagarto.dom.jerry.JerryFunction;
+import jodd.jerry.Jerry;
+import jodd.jerry.JerryFunction;
 import junit.framework.TestCase;
 
 import java.io.File;

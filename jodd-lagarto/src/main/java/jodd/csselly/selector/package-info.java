@@ -3,4 +3,4 @@
 /**
  * Different CSSelector selectors.
  */
-package jodd.lagarto.csselly.selector;
+package jodd.csselly.selector;

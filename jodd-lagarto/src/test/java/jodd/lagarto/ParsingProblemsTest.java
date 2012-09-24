@@ -5,8 +5,8 @@ package jodd.lagarto;
 import jodd.io.FileUtil;
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.LagartoDOMBuilder;
-import jodd.lagarto.dom.jerry.Jerry;
-import jodd.lagarto.dom.jerry.JerryFunction;
+import jodd.jerry.Jerry;
+import jodd.jerry.JerryFunction;
 import jodd.util.StringUtil;
 import junit.framework.TestCase;
 

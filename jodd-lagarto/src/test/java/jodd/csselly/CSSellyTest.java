@@ -1,11 +1,11 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.csselly;
+package jodd.csselly;
 
-import jodd.lagarto.csselly.selector.AttributeSelector;
-import jodd.lagarto.csselly.selector.PseudoClassSelector;
-import jodd.lagarto.csselly.selector.PseudoFunctionExpression;
-import jodd.lagarto.csselly.selector.PseudoFunctionSelector;
+import jodd.csselly.selector.AttributeSelector;
+import jodd.csselly.selector.PseudoClassSelector;
+import jodd.csselly.selector.PseudoFunctionExpression;
+import jodd.csselly.selector.PseudoFunctionSelector;
 import junit.framework.TestCase;
 
 import java.util.List;

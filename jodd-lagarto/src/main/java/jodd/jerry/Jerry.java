@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.dom.jerry;
+package jodd.jerry;
 
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.LagartoDOMBuilder;
@@ -114,7 +114,7 @@ public class Jerry {
 	}
 
 	/**
-	 * Just creates new {@link jodd.lagarto.dom.jerry.Jerry.JerryParser Jerry runner} to separate
+	 * Just creates new {@link jodd.jerry.Jerry.JerryParser Jerry runner} to separate
 	 * parser creation and creation of new Jerry instances.
 	 */
 	public static JerryParser jerry() {

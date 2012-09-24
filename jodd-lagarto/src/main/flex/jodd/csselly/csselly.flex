@@ -1,4 +1,4 @@
-package jodd.lagarto.csselly;
+package jodd.csselly;
 
 import java.util.LinkedList;
 import java.nio.CharBuffer;

@@ -1,8 +1,8 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.csselly.selector;
+package jodd.csselly.selector;
 
-import jodd.lagarto.csselly.Selector;
+import jodd.csselly.Selector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 

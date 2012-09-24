@@ -1,10 +1,10 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.csselly;
+package jodd.csselly;
 
-import jodd.lagarto.csselly.selector.AttributeSelector;
-import jodd.lagarto.csselly.selector.PseudoClassSelector;
-import jodd.lagarto.csselly.selector.PseudoFunctionSelector;
+import jodd.csselly.selector.AttributeSelector;
+import jodd.csselly.selector.PseudoClassSelector;
+import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.util.StringPool;
@@ -12,8 +12,8 @@ import jodd.util.StringPool;
 import java.util.LinkedList;
 import java.util.List;
 
-import static jodd.lagarto.csselly.selector.Match.EQUALS;
-import static jodd.lagarto.csselly.selector.Match.INCLUDES;
+import static jodd.csselly.selector.Match.EQUALS;
+import static jodd.csselly.selector.Match.INCLUDES;
 
 /**
  * CSS selector.

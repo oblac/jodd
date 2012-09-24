@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.dom.jerry;
+package jodd.jerry;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import static jodd.lagarto.dom.jerry.Jerry.jerry;
+import static jodd.jerry.Jerry.jerry;
 
 public class JerryTest extends TestCase {
 	protected String testDataRoot;
