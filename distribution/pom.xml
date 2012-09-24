@@ -78,7 +78,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
-			<artifactId>jodd-decora</artifactId>
+			<artifactId>jodd-lagarto-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jodd</groupId>
