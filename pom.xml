@@ -35,6 +35,7 @@
 		<module>jodd-joy</module>
 	</modules>
 
+
 	<profiles>
 
 		<!-- profile: DIST -->
@@ -154,7 +155,40 @@
 						</executions>
 					</plugin>
 
-					<!-- aggregate surefire reports -->
+				</plugins>
+			</build>
+
+		</profile>
+
+		<!-- profile: POST-RELEASE -->
+		<profile>
+			<id>post-release</id>
+			<build>
+				<defaultGoal>site:site</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>true</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<reportSets>
+							<reportSet>
+								<reports>
+									<report>license</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-report-plugin</artifactId>
@@ -162,24 +196,15 @@
 							<aggregate>true</aggregate>
 							<linkXRef>false</linkXRef>
 						</configuration>
- 						<executions>
-							<execution>
-								<id>junit-report</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>report-only</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
-			</build>
+			</reporting>
 		</profile>
 
-		<!-- profile: NOTEST -->
+		<!-- profile: NOTESTS -->
 		<!-- usage: mvn clean package -Dnotests=true -->
 		<profile>
-			<id>no-test</id>
+			<id>notests</id>
 			<activation>
 				<property>
 					<name>notests</name>
@@ -198,6 +223,7 @@
 				</plugins>
 			</build>
 		</profile>
+
 	</profiles>
 
 </project>

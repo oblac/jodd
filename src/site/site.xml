@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${project.name}">
+
+	<publishDate position="navigation-bottom" format="yyyy-MM-dd"/>
+	<version position="right"/>
+	<poweredBy>
+		<logo name="Jodd" href="http://jodd.org" img="images/jodd.png"/>
+	</poweredBy>
+	<body>
+	</body>
+</project>

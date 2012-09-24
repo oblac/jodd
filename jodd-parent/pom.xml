@@ -256,11 +256,6 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.12.3</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.2</version>
 				</plugin>
@@ -272,29 +267,11 @@
 						<quiet>true</quiet>
 					</configuration>
 				</plugin>
-				<!--plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.1</version>
-					<configuration>
-						<reportPlugins>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-project-info-reports-plugin</artifactId>
-								<version>2.5.1</version>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-surefire-report-plugin</artifactId>
-								<version>2.12.3</version>
-								<configuration>
-									<aggregate>true</aggregate>
-									<linkXRef>false</linkXRef>
-								</configuration>
-							</plugin>
-						</reportPlugins>
-					</configuration>
-				</plugin-->
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
@@ -319,7 +296,21 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.5.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.12.3</version>
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>

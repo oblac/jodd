@@ -110,7 +110,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-				            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
 							<Built-By>oblac.com</Built-By>

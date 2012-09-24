@@ -11,7 +11,7 @@
 	</parent>
 
 	<artifactId>jodd-db</artifactId>
-	<name>Jodd Db &amp; DbOom</name>
+	<name>Jodd DbOom</name>
 
 	<dependencies>
 		<!-- jodd -->
