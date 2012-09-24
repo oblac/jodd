@@ -116,7 +116,7 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
-							<Built-By>oblac.com</Built-By>
+							<Built-By>jodd.org</Built-By>
 							<Debug-Info>on</Debug-Info>
 							<Implementation-Title>Jodd</Implementation-Title>
 						</manifestEntries>
