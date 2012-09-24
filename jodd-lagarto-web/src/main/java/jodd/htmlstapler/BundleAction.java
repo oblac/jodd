@@ -1,12 +1,12 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.htmlstapler;
+package jodd.htmlstapler;
 
 import jodd.util.ArraysUtil;
 import java.util.LinkedList;
 import java.util.List;
 
-import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy.ACTION_MANAGED;
+import static jodd.htmlstapler.HtmlStaplerBundlesManager.Strategy.ACTION_MANAGED;
 
 /**
  * Bundle action used during page parsing and resources collection.

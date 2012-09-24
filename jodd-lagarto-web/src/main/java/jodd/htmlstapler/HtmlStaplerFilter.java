@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.lagarto.htmlstapler;
+package jodd.htmlstapler;
 
 import jodd.bean.BeanUtil;
 import jodd.datetime.TimeUtil;
@@ -27,12 +27,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy;
+import static jodd.htmlstapler.HtmlStaplerBundlesManager.Strategy;
 
 /**
  * HtmlStapler filter.
  * Part of the parameters are here, the other part is in the
- * {@link #createBundleManager(javax.servlet.ServletContext, jodd.lagarto.htmlstapler.HtmlStaplerBundlesManager.Strategy) bundle manager}.
+ * {@link #createBundleManager(javax.servlet.ServletContext, jodd.htmlstapler.HtmlStaplerBundlesManager.Strategy)}  bundle manager}.
  */
 public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 
