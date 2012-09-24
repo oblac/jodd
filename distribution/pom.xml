@@ -13,6 +13,7 @@
 
 	<artifactId>distribution</artifactId>
 	<packaging>pom</packaging>
+	
 	<name>Jodd Distribution</name>
 
 	<dependencies>
@@ -88,6 +89,8 @@
 
 	<build>
 		<plugins>
+
+			<!-- assembly -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -120,6 +123,7 @@
 					</archive>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

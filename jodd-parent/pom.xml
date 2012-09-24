@@ -67,6 +67,8 @@
 		<!-- java versions -->
 		<java.source.version>1.6</java.source.version>
 		<java.target.version>1.6</java.target.version>
+		<!-- jacoco version -->
+		<jacoco.version>0.5.10.201208310627</jacoco.version>
 	</properties>
 
 	<dependencyManagement>
@@ -251,6 +253,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12.3</version>
 				</plugin>
@@ -292,7 +299,7 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.5.10.201208310627</version>
+					<version>${jacoco.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -37,8 +37,10 @@
 
 
 	<profiles>
-
-		<!-- profile: DIST -->
+		<!--
+			profile: DIST
+			quickly creates distribution jars w/o invoking tests
+		-->
 		<profile>
 			<id>dist</id>
 			<modules>
@@ -69,7 +71,10 @@
 			</build>
 		</profile>
 
-		<!-- profile: RELEASE -->
+		<!--
+			profile: RELEASE
+			builds everything for the release
+		-->
 		<profile>
 			<id>release</id>
 			<modules>
@@ -125,7 +130,7 @@
 						</configuration>
 					</plugin-->
 
-					<!-- jacoco -->
+					<!-- jacoco w/o reporting -->
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
@@ -134,7 +139,6 @@
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
-								<phase>process-test-classes</phase>
 								<configuration>
 									<excludes>
 										<exclude>*Test</exclude>
@@ -145,27 +149,29 @@
 									</excludes>
 								</configuration>
 							</execution>
-							<execution>
+							<!--execution>
 								<id>report</id>
 								<phase>prepare-package</phase>
 								<goals>
 									<goal>report</goal>
 								</goals>
-							</execution>
+							</execution-->
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
-
 		</profile>
 
-		<!-- profile: POST-RELEASE -->
+		<!--
+			profile: POST-RELEASE
+			generats various reports
+		-->
 		<profile>
 			<id>post-release</id>
 			<build>
-				<defaultGoal>site:site</defaultGoal>
+				<defaultGoal>verify site:site</defaultGoal>
 				<plugins>
+					<!-- skip tests -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
@@ -173,11 +179,90 @@
 							<skipTests>true</skipTests>
 						</configuration>
 					</plugin>
+
+					<!-- fetch jacoco jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+							<executions>
+								<!-- copy the ant tasks jar, needed later for taskdef -->
+								<execution>
+									<id>jacoco-dependency-ant</id>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									<phase>process-test-resources</phase>
+									<inherited>false</inherited>
+									<configuration>
+										<artifactItems>
+											<artifactItem>
+												<groupId>org.jacoco</groupId>
+												<artifactId>org.jacoco.ant</artifactId>
+												<version>${jacoco.version}</version>
+											</artifactItem>
+										</artifactItems>
+										<stripVersion>true</stripVersion>
+										<outputDirectory>${basedir}/target/jacoco-jars</outputDirectory>
+									</configuration>
+								</execution>
+							</executions>
+					</plugin>
+
+					<!-- aggregate jacoco reports -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<echo message="Generating Jodd JaCoCo Reports" />
+										<taskdef name="report" classname="org.jacoco.ant.ReportTask">
+											<classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
+										</taskdef>
+										<mkdir dir="${basedir}/target/coverage-report" />
+										<report>
+											<executiondata>
+												<fileset dir="${basedir}">
+													<include name="*/target/jacoco.exec" />
+												</fileset>
+											</executiondata>
+											<structure name="Jodd Coverage Project">
+												<group name="jodd">
+													<classfiles>
+														<fileset dir="${basedir}">
+															<include name="*/target/classes/**/*" />
+														</fileset>
+													</classfiles>
+												</group>
+											</structure>
+											<html destdir="${basedir}/target/coverage-report/html" />
+											<xml destfile="${basedir}/target/coverage-report/coverage-report.xml" />
+											<csv destfile="${basedir}/target/coverage-report/coverage-report.csv" />
+										</report>
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.jacoco</groupId>
+								<artifactId>org.jacoco.ant</artifactId>
+								<version>${jacoco.version}</version>
+							</dependency>
+						</dependencies>
+					</plugin>
 				</plugins>
 			</build>
 
 			<reporting>
 				<plugins>
+
+					<!-- minimize site creation, for speed -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -189,6 +274,8 @@
 							</reportSet>
 						</reportSets>
 					</plugin>
+
+					<!-- aggregate surefire reports -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-report-plugin</artifactId>
@@ -201,8 +288,10 @@
 			</reporting>
 		</profile>
 
-		<!-- profile: NOTESTS -->
-		<!-- usage: mvn clean package -Dnotests=true -->
+		<!--
+			profile: NOTESTS
+			usage: mvn clean package -Dnotests=true
+		-->
 		<profile>
 			<id>notests</id>
 			<activation>
