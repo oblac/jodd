@@ -2,16 +2,19 @@
 
 package jodd.db.oom;
 
-import junit.framework.TestCase;
-import jodd.db.oom.tst.Girl;
 import jodd.db.oom.tst.BadBoy;
+import jodd.db.oom.tst.Girl;
+import org.junit.Test;
 
-public class JointHintResolverTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class JointHintResolverTest {
+
+	@Test
 	public void testHints() {
 		Girl girl = new Girl();
-		BadBoy badBoy = new BadBoy(); 
-		Object[] data = new Object[] {girl, badBoy};
+		BadBoy badBoy = new BadBoy();
+		Object[] data = new Object[]{girl, badBoy};
 
 		JoinHintResolver jhr = new JoinHintResolver();
 		Object[] result = jhr.join(data, "girl, boy");
@@ -28,8 +31,9 @@ public class JointHintResolverTest extends TestCase {
 		badBoy = (BadBoy) result[0];
 		assertEquals(girl, badBoy.girl);
 
-		girl = new Girl(); badBoy = new BadBoy();
-		data = new Object[] {girl, badBoy, Integer.valueOf(7)};
+		girl = new Girl();
+		badBoy = new BadBoy();
+		data = new Object[]{girl, badBoy, Integer.valueOf(7)};
 		jhr = new JoinHintResolver();
 		result = jhr.join(data, "boy.girl, boy, boy.girlId");
 		assertEquals(1, result.length);
@@ -38,8 +42,9 @@ public class JointHintResolverTest extends TestCase {
 		assertEquals(girl, badBoy.girl);
 		assertEquals(7, badBoy.girlId.intValue());
 
-		girl = new Girl(); badBoy = new BadBoy();
-		data = new Object[] {girl, badBoy, Integer.valueOf(7)};
+		girl = new Girl();
+		badBoy = new BadBoy();
+		data = new Object[]{girl, badBoy, Integer.valueOf(7)};
 		jhr = new JoinHintResolver();
 		result = jhr.join(data, "boy.girl, boy, girlId");
 		assertEquals(2, result.length);
@@ -48,6 +53,5 @@ public class JointHintResolverTest extends TestCase {
 		assertEquals(girl, badBoy.girl);
 		assertNull(badBoy.girlId);
 		assertTrue(result[1] instanceof Integer);
-		
 	}
 }

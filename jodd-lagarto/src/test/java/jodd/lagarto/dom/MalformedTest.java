@@ -2,10 +2,14 @@
 
 package jodd.lagarto.dom;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MalformedTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+public class MalformedTest {
+
+	@Test
 	public void testOneNode() {
 		String content = "<body><div>test<span>sss</span></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -14,6 +18,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testOneNodeWithBlanks() {
 		String content = "<body><div>   <span>sss</span></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -22,6 +27,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testTwoNodes() {
 		String content = "<body><div>test<span><form>xxx</form></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -30,6 +36,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testTwoNodes2() {
 		String content = "<body><div>test<span><form>xxx</body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -38,6 +45,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testPeterSimple1() {
 		String content = "<div><h1>FORELE</h1><p>dicuss<div>xxx</div></div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -46,6 +54,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testPeterSimple2() {
 		String content = "<div><h1>FORELE</h1><p>dicuss<div><h2>HAB</h2><p>AMONG</div></div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -54,6 +63,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testPeterSimple3WithSpaces() {
 		String content = "<div> <h1>FORELE</h1> <p>dicuss <div> <h2>HAB</h2> <p>AMONG </div> </div>".toUpperCase();
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -62,6 +72,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testPeterFull() {
 		String content = "<DIV class=\"section\" id=\"forest-elephants\" >\n" +
 				"<H1>Forest elephants</H1>\n" +
@@ -75,22 +86,23 @@ public class MalformedTest extends TestCase {
 				"</DIV>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(content);
-		
+
 		String expected = "<div class=\"section\" id=\"forest-elephants\">\n" +
-						"<h1>Forest elephants</h1>\n" +
-						"<p>In this section, we discuss the lesser known forest elephants.\n" +
-						"...this section continues...\n</p>" +
-						"<div class=\"subsection\" id=\"forest-habitat\">\n" +
-						"<h2>Habitat</h2>\n" +
-						"<p>Forest elephants do not live in trees but among them.\n" +
-						"...this subsection continues...\n</p>" +
-						"</div>\n" +
-						"</div>";
-		
+				"<h1>Forest elephants</h1>\n" +
+				"<p>In this section, we discuss the lesser known forest elephants.\n" +
+				"...this section continues...\n</p>" +
+				"<div class=\"subsection\" id=\"forest-habitat\">\n" +
+				"<h2>Habitat</h2>\n" +
+				"<p>Forest elephants do not live in trees but among them.\n" +
+				"...this subsection continues...\n</p>" +
+				"</div>\n" +
+				"</div>";
+
 		assertEquals(expected, doc.getHtml());
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testEof() {
 		String content = "<body><div>test";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
@@ -99,6 +111,7 @@ public class MalformedTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testEof2() {
 		String content = "<body><div>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();

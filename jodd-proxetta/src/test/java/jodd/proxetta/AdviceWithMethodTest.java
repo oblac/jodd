@@ -6,13 +6,17 @@ import jodd.proxetta.data.CollectorAdvice;
 import jodd.proxetta.data.Foo;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class AdviceWithMethodTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+public class AdviceWithMethodTest {
+
+	@Test
 	public void testCollector() throws NoSuchFieldException, IllegalAccessException {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(CollectorAdvice.class, new AllTopMethodsPointcut())

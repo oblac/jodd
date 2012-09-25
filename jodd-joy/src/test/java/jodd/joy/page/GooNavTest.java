@@ -2,10 +2,13 @@
 
 package jodd.joy.page;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class GooNavTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class GooNavTest {
+
+	@Test
 	public void testPage() {
 		GooNav nav = new GooNav(6, 3, 10);
 		assertEquals(1, nav.getFrom());
@@ -49,5 +52,5 @@ public class GooNavTest extends TestCase {
 
 	}
 
-	
+
 }

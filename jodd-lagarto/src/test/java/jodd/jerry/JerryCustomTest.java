@@ -3,10 +3,13 @@
 package jodd.jerry;
 
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JerryCustomTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JerryCustomTest {
+
+	@Test
 	public void testConditionalTags() {
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 
@@ -26,6 +29,7 @@ public class JerryCustomTest extends TestCase {
 		assertEquals("<html><body></body></html>", html);
 	}
 
+	@Test
 	public void testConditionalTags2() {
 		Jerry doc = Jerry.jerry(
 				"<html>" +
@@ -43,9 +47,10 @@ public class JerryCustomTest extends TestCase {
 		assertEquals("<html><body></body></html>", html);
 	}
 
+	@Test
 	public void testConditionalTags3() {
 
-		Jerry.JerryParser jerry  = Jerry.jerry();
+		Jerry.JerryParser jerry = Jerry.jerry();
 
 		jerry.getDOMBuilder().setConditionalCommentExpression("if gt IE 9");
 

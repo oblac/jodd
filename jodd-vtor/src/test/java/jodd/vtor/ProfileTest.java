@@ -5,12 +5,16 @@ package jodd.vtor;
 import jodd.vtor.constraint.MinLengthConstraint;
 import jodd.vtor.data.Too;
 import jodd.vtor.data.Zoo;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
-public class ProfileTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class ProfileTest {
+
+	@Test
 	public void testProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(true);
@@ -54,6 +58,7 @@ public class ProfileTest extends TestCase {
 	}
 
 
+	@Test
 	public void testDefaultProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
@@ -80,6 +85,7 @@ public class ProfileTest extends TestCase {
 	}
 
 
+	@Test
 	public void testMinusPlusProfiles() {
 		Vtor vtor = new Vtor();
 		vtor.setValidateAllProfilesByDefault(false);
@@ -128,6 +134,7 @@ public class ProfileTest extends TestCase {
 		assertEquals(2, vlist.size());
 	}
 
+	@Test
 	public void testAsJoyAction() {
 		Vtor vtor = new Vtor();
 		vtor.useProfiles(Vtor.DEFAULT_PROFILE, "register");

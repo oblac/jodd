@@ -2,31 +2,25 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.Action;
-import jodd.proxetta.data.InterceptedBy;
-import jodd.proxetta.data.MadvocAction;
-import jodd.proxetta.data.PetiteBean;
-import jodd.proxetta.data.PetiteInject;
-import jodd.proxetta.data.Transaction;
-import jodd.proxetta.impl.ProxyProxetta;
-import junit.framework.TestCase;
-import jodd.proxetta.data.BigFatJoe;
-import jodd.proxetta.data.StatCounter;
-import jodd.proxetta.data.StatCounterAdvice;
-import jodd.proxetta.pointcuts.ProxyPointcutSupport;
-import jodd.util.ClassLoaderUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.mutable.MutableBoolean;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
-
+import jodd.proxetta.data.*;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.pointcuts.ProxyPointcutSupport;
+import jodd.util.ClassLoaderUtil;
+import org.junit.Test;
 import org.objectweb.asm.Type;
 
-public class BigClassTest extends TestCase {
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
+import static org.junit.Assert.*;
+
+public class BigClassTest {
+
+	@Test
 	public void testAllFeatures() throws IOException, IllegalAccessException, InstantiationException {
 		StatCounter.counter = 0;
 		final MutableBoolean firstTime = new MutableBoolean(true);
@@ -118,16 +112,16 @@ public class BigClassTest extends TestCase {
 
 		// test invocation
 
-		assertEquals(3, StatCounter.counter);		// 2 x static + 1 x instance
+		assertEquals(3, StatCounter.counter);        // 2 x static + 1 x instance
 		bigFatJoe.publicMethod();
 		assertEquals(4, StatCounter.counter);
 		bigFatJoe.callInnerMethods();
-		assertEquals(7, StatCounter.counter);		// private method is not overriden
+		assertEquals(7, StatCounter.counter);        // private method is not overriden
 
 		bigFatJoe.superPublicMethod();
 		assertEquals(8, StatCounter.counter);
 		bigFatJoe.callInnerMethods2();
-		assertEquals(9, StatCounter.counter);		// only public super methods are overriden
+		assertEquals(9, StatCounter.counter);        // only public super methods are overriden
 
 
 		// test class annotation
@@ -160,7 +154,7 @@ public class BigClassTest extends TestCase {
 		assertEquals("PROPAGATION_REQUIRES_NEW", tx.propagation());
 
 		bigFatJoe.runInnerClass();
-		assertEquals(11, StatCounter.counter);		// proxy + call
+		assertEquals(11, StatCounter.counter);        // proxy + call
 
 	}
 }

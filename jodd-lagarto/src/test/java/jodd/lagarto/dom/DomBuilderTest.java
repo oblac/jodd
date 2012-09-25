@@ -2,10 +2,13 @@
 
 package jodd.lagarto.dom;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class DomBuilderTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class DomBuilderTest {
+
+	@Test
 	public void testSimpleDomCreation() {
 		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 
@@ -59,13 +62,14 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(root.check());
 	}
 
+	@Test
 	public void testClone() {
 		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 		Document root = new LagartoDOMBuilder().parse(page);
 
 		String generated = root.getHtml();
 		assertEquals(page, generated);
-		
+
 		Document rootClone = root.clone();
 		String generated2 = rootClone.getHtml();
 		assertEquals(page, generated2);
@@ -75,6 +79,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(root.check());
 	}
 
+	@Test
 	public void testSiblingsAndNames() {
 		Document document = new LagartoDOMBuilder().parse("<div id='top'><p id='id1'>one</p>text1<p id='id2'>two</p>text2<p id='id3'>three</p>text3</div>");
 		Element topDiv = (Element) document.getFirstChild();
@@ -122,6 +127,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testNamesAndChilds() {
 		Document document = new LagartoDOMBuilder().parse("<div id='top'><p id='id1'>one</p><span id='t1'>text1</span><p id='id2'>two</p><span id='t2'>text2</span><p id='id3'>three</p><span id='t3'>text3</span></div>");
 		Element topDiv = (Element) document.getFirstChild();
@@ -159,6 +165,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testUnclosedTag() {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input>text<input>text<img></form></body></html>");
 		String innerHtml = document.getHtml();
@@ -177,27 +184,29 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testUnclosedTag2() {
 		Document document = new LagartoDOMBuilder().parse(
 				"<DL>\n" +
-				"<DT><A HREF=\"../java/awt/PageAttributes.MediaType.html#D\"><B>D</B></A> - \n" +
-				"Static variable in class java.awt.\n" +
-				"<A HREF=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</A>\n" +
-				"<DD>The MediaType instance for Engineering D, 22 x 34 in." +
-				"</DL>");
+						"<DT><A HREF=\"../java/awt/PageAttributes.MediaType.html#D\"><B>D</B></A> - \n" +
+						"Static variable in class java.awt.\n" +
+						"<A HREF=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</A>\n" +
+						"<DD>The MediaType instance for Engineering D, 22 x 34 in." +
+						"</DL>");
 		assertTrue(document.check());
 
 		String innerHtml = document.getHtml();
 		assertEquals(
 				"<dl>\n" +
-				"<dt><a href=\"../java/awt/PageAttributes.MediaType.html#D\"><b>D</b></a> - \n" +
-				"Static variable in class java.awt.\n" +
-				"<a href=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</a>\n" +
-				"</dt><dd>The MediaType instance for Engineering D, 22 x 34 in." +
-				"</dd></dl>",
+						"<dt><a href=\"../java/awt/PageAttributes.MediaType.html#D\"><b>D</b></a> - \n" +
+						"Static variable in class java.awt.\n" +
+						"<a href=\"../java/awt/PageAttributes.MediaType.html\">PageAttributes.MediaType</a>\n" +
+						"</dt><dd>The MediaType instance for Engineering D, 22 x 34 in." +
+						"</dd></dl>",
 				innerHtml);
 	}
 
+	@Test
 	public void testUncapital() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe'></body></html>");
@@ -211,6 +220,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testEncode() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<div foo=\"q&nbsp;w\">a&lt;b</div>");
@@ -228,6 +238,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testXmlDec() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<?html?><div?></div>");
@@ -243,6 +254,7 @@ public class DomBuilderTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testOrphanAttribute() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document document = lagartoDOMBuilder.parse("<div qwe '8989' foo zoo='123'/>");

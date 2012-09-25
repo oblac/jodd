@@ -2,10 +2,13 @@
 
 package jodd;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JoddProxettaTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JoddProxettaTest {
+
+	@Test
 	public void testLoadedModules() {
 		assertEquals(true, Jodd.isJoddBeanLoaded());
 		assertEquals(false, Jodd.isJoddHttpLoaded());

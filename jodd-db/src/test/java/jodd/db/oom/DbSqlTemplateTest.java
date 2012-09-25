@@ -2,23 +2,25 @@
 
 package jodd.db.oom;
 
-import static jodd.db.oom.ColumnAliasType.*;
-import junit.framework.TestCase;
-import jodd.db.oom.tst.Boy;
-import jodd.db.oom.tst.BadBoy;
-import jodd.db.oom.tst.BadGirl;
-import jodd.db.oom.tst.Girl;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.sqlgen.ParameterValue;
-import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
+import jodd.db.oom.tst.BadBoy;
+import jodd.db.oom.tst.BadGirl;
+import jodd.db.oom.tst.Boy;
+import jodd.db.oom.tst.Girl;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Map;
 
-public class DbSqlTemplateTest extends TestCase {
+import static jodd.db.oom.ColumnAliasType.*;
+import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
+import static org.junit.Assert.*;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+public class DbSqlTemplateTest {
+
+	@Before
+	public void setUp() throws Exception {
 
 		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
@@ -27,13 +29,14 @@ public class DbSqlTemplateTest extends TestCase {
 		dbOom.registerType(BadGirl.class);
 		dbOom.registerType(Girl.class);
 	}
-	
+
 	protected void assertContains(String string, String... chunks) {
 		for (String chunk : chunks) {
 			assertTrue(string.contains(chunk));
 		}
 	}
 
+	@Test
 	public void testAliasNoAlias() {
 		DbSqlBuilder st;
 
@@ -45,6 +48,7 @@ public class DbSqlTemplateTest extends TestCase {
 	}
 
 
+	@Test
 	public void testTables() {
 		DbSqlBuilder st;
 
@@ -79,11 +83,13 @@ public class DbSqlTemplateTest extends TestCase {
 	}
 
 
+	@Test
 	public void testManyTables() {
 		DbSqlBuilder st = sql("$T{Boy, Girl girl}");
 		assertEquals("BOY, GIRL girl", st.generateQuery());
 	}
 
+	@Test
 	public void testColumns1() {
 		DbSqlBuilder st;
 
@@ -120,6 +126,7 @@ public class DbSqlTemplateTest extends TestCase {
 	}
 
 
+	@Test
 	public void testColumns2() {
 		DbSqlBuilder st;
 
@@ -143,7 +150,7 @@ public class DbSqlTemplateTest extends TestCase {
 	}
 
 
-
+	@Test
 	public void testColumns3() {
 		DbSqlBuilder st;
 
@@ -177,6 +184,7 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY.ID from BOY", st.generateQuery());
 	}
 
+	@Test
 	public void testReferencesAndEscapes() {
 		DbSqlBuilder st;
 
@@ -215,8 +223,8 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY b - b.ID=2,b.ID<b.ID", st.generateQuery());
 	}
 
-	
 
+	@Test
 	public void testMatch() {
 		DbSqlBuilder st;
 
@@ -245,7 +253,7 @@ public class DbSqlTemplateTest extends TestCase {
 		assertEquals("BOY b where (1=1)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertNull(map);
-		
+
 		st = sql("$T{boy b} where $M{b=boy}").use("boy", badBoy);
 		assertEquals("BOY b where (1=1)", st.generateQuery());
 		map = st.getQueryParameters();
@@ -270,6 +278,7 @@ public class DbSqlTemplateTest extends TestCase {
 	}
 
 
+	@Test
 	public void testJoin() {
 		DbSqlBuilder st = sql("select $C{bb.*}, $C{bg.+} from $T{BadGirl bg} join $T{Boy bb} on $bg.+=bb.GIRL_ID");
 		assertEquals("select bb.GIRL_ID, bb.ID, bb.NAME, bg.ID from GIRL bg join BOY bb on bg.ID=bb.GIRL_ID", st.generateQuery());

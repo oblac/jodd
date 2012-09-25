@@ -3,13 +3,17 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.tst.BooAction;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ActionResultTest extends MadvocTestCase {
 
+	@Test
 	public void testMethod() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -37,6 +41,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/xxx.ext", resultPath);
 	}
 
+	@Test
 	public void testMethod1() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -45,16 +50,16 @@ public class ActionResultTest extends MadvocTestCase {
 
 		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo1");
 		assertEquals("/boo.xxx.html", cfg.actionPath);
-		
+
 		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
 		assertEquals("/boo.xxx.ok", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/boo.xxx", resultPath);
 		resultPath = resultMapper.resolveResultPath(cfg, "/xxx.ext");
 		assertEquals("/xxx.ext", resultPath);
-
 	}
 
+	@Test
 	public void testMethod2() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -71,6 +76,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/boo.foo2", resultPath);
 	}
 
+	@Test
 	public void testMethod3() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -92,6 +98,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/doo.ok", resultPath);
 	}
 
+	@Test
 	public void testMethod4() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -114,6 +121,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/doo.ok", resultPath);
 	}
 
+	@Test
 	public void testMethod5() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -134,6 +142,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/doo.ok", resultPath);
 	}
 
+	@Test
 	public void testMethod8() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -165,6 +174,7 @@ public class ActionResultTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testMethod81() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -206,6 +216,7 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/boo.ok", resultPath);
 	}
 
+	@Test
 	public void testMethod82() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -233,10 +244,10 @@ public class ActionResultTest extends MadvocTestCase {
 			assertEquals("/boo.foo82", resultPath);
 			resultPath = resultMapper.resolveResultPath(cfg, "#ok");
 			assertEquals("/boo.ok", resultPath);
-
 		}
 	}
 
+	@Test
 	public void testMethod83() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -265,10 +276,9 @@ public class ActionResultTest extends MadvocTestCase {
 			resultPath = resultMapper.resolveResultPath(cfg, "#ok");
 			assertEquals("/boo.ok", resultPath);
 		}
-
 	}
 
-
+	@Test
 	public void testAlias() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -297,11 +307,10 @@ public class ActionResultTest extends MadvocTestCase {
 
 		resultPath = resultMapper.resolveResultPath(cfg, "<dude>?foo=1");
 		assertEquals("/xxx.html?foo=1", resultPath);
-
 	}
 
+	@Test
 	public void testAlias2() {
-
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
@@ -318,11 +327,10 @@ public class ActionResultTest extends MadvocTestCase {
 
 		String resultPath = resultMapper.resolveResultPath(cfg, null);
 		assertEquals("/aliased", resultPath);
-
 	}
 
+	@Test
 	public void testAlias3() {
-
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
@@ -333,9 +341,9 @@ public class ActionResultTest extends MadvocTestCase {
 		actionsManager.register(BooAction.class, "foo2");
 
 		assertEquals("/boo.foo2.xxx", config.lookupPathAlias(BooAction.class.getName() + "#foo2"));
-
 	}
 
+	@Test
 	public void testBack() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -353,7 +361,6 @@ public class ActionResultTest extends MadvocTestCase {
 
 		resultPath = resultMapper.resolveResultPath(cfg, "##[class].[method].ok");
 		assertEquals("/boo.foo.ok", resultPath);
-
 	}
 
 }

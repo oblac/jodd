@@ -4,20 +4,21 @@ package jodd.jerry;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import static jodd.jerry.Jerry.jerry;
+import static org.junit.Assert.assertEquals;
 
-public class JerryTest extends TestCase {
+public class JerryTest {
 	protected String testDataRoot;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		if (testDataRoot != null) {
 			return;
 		}
@@ -25,6 +26,7 @@ public class JerryTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testText1() {
 		String html = readFile("text1.html");
 		String text = jerry(html).$("div.demo-container").text();
@@ -34,6 +36,7 @@ public class JerryTest extends TestCase {
 		assertEquals("Demonstration Box list item 1 list item 2", text);
 	}
 
+	@Test
 	public void testHtml1() {
 		String html = readFile("html1.html");
 		String text = jerry(html).$("div.demo-container").html();
@@ -41,10 +44,11 @@ public class JerryTest extends TestCase {
 		assertEquals("<div class=\"demo-box\">Demonstration Box</div>", text.trim());
 	}
 
+	@Test
 	public void testHtml2() {
 		String html = readFile("html2.html");
 		String htmlOK = readFile("html2-ok.html");
-		
+
 		Jerry doc = jerry(html);
 		Jerry p = doc.$("p:first");
 		String htmlContent = p.html();
@@ -52,7 +56,8 @@ public class JerryTest extends TestCase {
 
 		assertEquals(htmlOK, actualHtml(doc));
 	}
-	
+
+	@Test
 	public void testHtml3() {
 		String html = readFile("html3.html");
 		String htmlOK = readFile("html3-ok.html");
@@ -63,6 +68,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testHtml4() {
 		String html = readFile("html4.html");
 		String htmlOK = readFile("html4-ok.html");
@@ -73,6 +79,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testHtml5() {
 		String html = readFile("html5.html");
 		String htmlOK = readFile("html5-ok.html");
@@ -84,6 +91,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testAdd() {
 		String html = readFile("add.html");
 		String htmlOK = readFile("add-ok.html");
@@ -95,6 +103,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testEnd() {
 		String html = readFile("end.html");
 		String htmlOK = readFile("end-ok.html");
@@ -103,6 +112,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testNot() {
 		String html = readFile("not.html");
 		String htmlOK = readFile("not-ok.html");
@@ -111,6 +121,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testFirst() {
 		String html = readFile("first.html");
 		String htmlOK = readFile("first-ok.html");
@@ -119,6 +130,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testLast() {
 		String html = readFile("last.html");
 		String htmlOK = readFile("last-ok.html");
@@ -127,6 +139,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testAddClass() {
 		String html = readFile("addClass.html");
 		String htmlOK = readFile("addClass-ok.html");
@@ -135,6 +148,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testPseudoLast() {
 		String html = readFile("pseudoLast.html");
 		String htmlOK = readFile("pseudoLast-ok.html");
@@ -143,6 +157,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testPseudoFirst() {
 		String html = readFile("pseudoFirst.html");
 		String htmlOK = readFile("pseudoFirst-ok.html");
@@ -151,6 +166,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml($));
 	}
 
+	@Test
 	public void testPseudoButton() {
 		String html = readFile("pseudoButton.html");
 		String htmlOK = readFile("pseudoButton-ok.html");
@@ -161,6 +177,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoCheckbox() {
 		String html = readFile("pseudoCheckbox.html");
 		String htmlOK = readFile("pseudoCheckbox-ok.html");
@@ -171,6 +188,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoFile() {
 		String html = readFile("pseudoFile.html");
 		String htmlOK = readFile("pseudoFile-ok.html");
@@ -181,6 +199,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoInput() {
 		String html = readFile("pseudoInput.html");
 		String htmlOK = readFile("pseudoInput-ok.html");
@@ -189,10 +208,11 @@ public class JerryTest extends TestCase {
 		Jerry allInputs = doc.$(":input");
 		Jerry formChildren = doc.$("form > *");
 		doc.$("#messages").text("Found " + allInputs.length() + " inputs and the form has " +
-		                             formChildren.length() + " children.");
+				formChildren.length() + " children.");
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoHeader() {
 		String html = readFile("pseudoHeader.html");
 		String htmlOK = readFile("pseudoHeader-ok.html");
@@ -202,6 +222,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoParent() {
 		String html = readFile("pseudoParent.html");
 		String htmlOK = readFile("pseudoParent-ok.html");
@@ -211,6 +232,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoSelected() {
 		String html = readFile("pseudoSelected.html");
 		String htmlOK = readFile("pseudoSelected-ok.html");
@@ -227,6 +249,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoEq() {
 		String html = readFile("pseudoEq.html");
 		String htmlOK = readFile("pseudoEq-ok.html");
@@ -236,6 +259,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoEq2() {
 		String html = readFile("pseudoEq2.html");
 		String htmlOK = readFile("pseudoEq2-ok.html");
@@ -250,10 +274,11 @@ public class JerryTest extends TestCase {
 			}
 		});
 
-		doc.$("ul.nav li:nth-child(2)").css("color","red");
+		doc.$("ul.nav li:nth-child(2)").css("color", "red");
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoEven() {
 		String html = readFile("pseudoEven.html");
 		String htmlOK = readFile("pseudoEven-ok.html");
@@ -264,6 +289,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoGt() {
 		String html = readFile("pseudoGt.html");
 		String htmlOK = readFile("pseudoGt-ok.html");
@@ -274,6 +300,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoContains() {
 		String html = readFile("pseudoContains.html");
 		String htmlOK = readFile("pseudoContains-ok.html");
@@ -284,6 +311,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testPseudoContains2() {
 		String html = readFile("pseudoContains.html");
 		String htmlOK = readFile("pseudoContains-ok.html");
@@ -294,6 +322,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testNext() {
 		String html = readFile("next.html");
 		String htmlOK = readFile("next-ok.html");
@@ -304,6 +333,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testEq() {
 		String html = readFile("eq.html");
 		String htmlOK = readFile("eq-ok.html");
@@ -315,6 +345,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testSibling() {
 		String html = readFile("sibling.html");
 		String htmlOK = readFile("sibling-ok.html");
@@ -325,6 +356,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testSibling2() {
 		String html = readFile("sibling2.html");
 		String htmlOK = readFile("sibling2-ok.html");
@@ -336,6 +368,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testRemove() {
 		String html = readFile("remove.html");
 		String htmlOK = readFile("remove-ok.html");
@@ -346,6 +379,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testEmpty() {
 		String html = readFile("empty.html");
 		String htmlOK = readFile("empty-ok.html");
@@ -356,6 +390,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testBefore() {
 		String html = readFile("before.html");
 		String htmlOK = readFile("before-ok.html");
@@ -366,6 +401,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testIs() {
 		String html = readFile("is.html");
 		String htmlOK = readFile("is-ok.html");
@@ -385,10 +421,11 @@ public class JerryTest extends TestCase {
 				return true;
 			}
 		});
-		
+
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testIs2() {
 		String html = readFile("is2.html");
 		String htmlOK = readFile("is2-ok.html");
@@ -400,6 +437,7 @@ public class JerryTest extends TestCase {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
 	public void testIs3() {
 		String html = readFile("is3.html");
 		String htmlOK = readFile("is3-ok.html");

@@ -7,7 +7,8 @@ import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,15 +16,15 @@ import java.net.URL;
 import java.nio.CharBuffer;
 
 import static jodd.util.StringPool.NEWLINE;
+import static org.junit.Assert.*;
 
-public class LagartoParserTest extends TestCase {
+public class LagartoParserTest {
 
 	protected String testDataRoot;
 	protected String testLiveRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -34,6 +35,7 @@ public class LagartoParserTest extends TestCase {
 		testLiveRoot = data.getFile();
 	}
 
+	@Test
 	public void testHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile("**/*.*ml");
 		long reps = 1;
@@ -89,6 +91,7 @@ public class LagartoParserTest extends TestCase {
 	/**
 	 * 13s
 	 */
+	@Test
 	public void testLiveHtmls() throws IOException {
 		FindFile ff = new WildcardFindFile("**/*.html");
 		ff.searchPath(testLiveRoot);
@@ -266,7 +269,7 @@ public class LagartoParserTest extends TestCase {
 				new TagAdapterWrapper(writer1, writer2));
 
 		lagartoParser.parse(taw);
-		return new String[] {result.toString(), out.toString(), out2.toString()};
+		return new String[]{result.toString(), out.toString(), out2.toString()};
 	}
 
 }

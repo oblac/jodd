@@ -2,13 +2,16 @@
 
 package jodd.petite;
 
-import jodd.petite.data.SomeService;
-import jodd.petite.data.PojoBean;
 import jodd.petite.data.PojoAnnBean;
-import junit.framework.TestCase;
+import jodd.petite.data.PojoBean;
+import jodd.petite.data.SomeService;
+import org.junit.Test;
 
-public class ManualTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ManualTest {
+
+	@Test
 	public void testManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(SomeService.class);
@@ -31,6 +34,7 @@ public class ManualTest extends TestCase {
 		assertEquals(1, pojoBean.count);
 	}
 
+	@Test
 	public void testManualRegistrationUsingAnnotations() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(SomeService.class);
@@ -48,6 +52,7 @@ public class ManualTest extends TestCase {
 		assertEquals(1, pojoBean.count);
 	}
 
+	@Test
 	public void testManualDefinitionUsingAnnotations() {
 
 		PetiteContainer pc = new PetiteContainer();
@@ -67,6 +72,7 @@ public class ManualTest extends TestCase {
 
 	}
 
+	@Test
 	public void testManualDefinition() {
 
 		PetiteContainer pc = new PetiteContainer();

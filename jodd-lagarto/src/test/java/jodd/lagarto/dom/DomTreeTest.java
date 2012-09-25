@@ -4,19 +4,21 @@ package jodd.lagarto.dom;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class DomTreeTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class DomTreeTest {
 
 	protected String testDataRoot;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		if (testDataRoot != null) {
 			return;
 		}
@@ -24,6 +26,7 @@ public class DomTreeTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testSpecialCases() {
 		Document document = new Document();
 		Element html = new Element("html");
@@ -49,6 +52,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testDetach() {
 		Document document = new Document();
 		Element html = new Element("html");
@@ -66,6 +70,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testInsertRemoveDeepLevel() {
 		Document document = new Document();
 		Element html = new Element("html");
@@ -139,6 +144,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testAttributes() {
 		Element node = new Element("div");
 
@@ -164,6 +170,7 @@ public class DomTreeTest extends TestCase {
 		assertEquals(3, node.getAttributesCount());
 	}
 
+	@Test
 	public void testChildren() {
 		Element node = new Element("div");
 
@@ -205,6 +212,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(node.check());
 	}
 
+	@Test
 	public void testCssPath() {
 		Document document = new Document();
 		Element html = new Element("html");
@@ -221,6 +229,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testToWrite() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<html><body><form><input><input><img></form></body></html>");
 		String innerHtml = document.getHtml();
@@ -242,7 +251,7 @@ public class DomTreeTest extends TestCase {
 		html = StringUtil.replace(html, "\" >", "\">");
 		html = StringUtil.replace(html, "'", "");
 		LagartoDOMBuilder builder = new LagartoDOMBuilder();
-		builder.setSelfCloseVoidTags(true);						// use self-closing tags!
+		builder.setSelfCloseVoidTags(true);                        // use self-closing tags!
 		builder.setConditionalCommentExpression(null);
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
@@ -267,6 +276,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testBr() throws IOException {
 		Document document = new LagartoDOMBuilder().parse("<div><br>some content <br>Some more</div>");
 		String innerHtml = document.getHtml();
@@ -279,6 +289,7 @@ public class DomTreeTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testReindexOne() {
 		Document document = new Document();
 

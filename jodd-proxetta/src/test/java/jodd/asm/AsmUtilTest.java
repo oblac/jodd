@@ -2,10 +2,13 @@
 
 package jodd.asm;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class AsmUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class AsmUtilTest {
+
+	@Test
 	public void testTyperef2Name() {
 		assertEquals("java.lang.String", AsmUtil.typeref2Name("Ljava/lang/String;"));
 	}

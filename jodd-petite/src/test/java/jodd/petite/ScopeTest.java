@@ -7,12 +7,15 @@ import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
 import jodd.util.ConcurrentUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.concurrent.Semaphore;
 
-public class ScopeTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ScopeTest {
+
+	@Test
 	public void testThreadLocalScope() {
 		final PetiteContainer pc = new PetiteContainer();
 

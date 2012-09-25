@@ -2,10 +2,13 @@
 
 package jodd.servlet;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class HtmlTagTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class HtmlTagTest {
+
+	@Test
 	public void testTagName() {
 		String body = "<html>";
 		HtmlTag tag = new HtmlTag(body);
@@ -50,6 +53,7 @@ public class HtmlTagTest extends TestCase {
 		assertEquals(0, tag.totalAttributes());
 	}
 
+	@Test
 	public void testAttributes() {
 		String body = "<select name=\"Marie\">";
 		HtmlTag tag = new HtmlTag(body);
@@ -77,6 +81,7 @@ public class HtmlTagTest extends TestCase {
 	}
 
 
+	@Test
 	public void testAddValue() {
 		String body = "<input name=\"xxx\">";
 		HtmlTag tag = new HtmlTag(body);
@@ -101,6 +106,7 @@ public class HtmlTagTest extends TestCase {
 
 	}
 
+	@Test
 	public void testLocate() {
 		String html = "<form name=\"form2\" method=\"post\" action=\"postForm.exec.html\">\n";
 		HtmlTag tag = HtmlTag.locateNextTag(html, 0);

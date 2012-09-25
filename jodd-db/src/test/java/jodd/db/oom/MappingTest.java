@@ -3,57 +3,53 @@
 package jodd.db.oom;
 
 import jodd.datetime.JDateTime;
-import jodd.db.oom.tst.Foo;
-import jodd.db.oom.tst.BooSqlType;
-import jodd.db.oom.tst.Boo;
-import jodd.db.oom.tst.FooColor;
-import jodd.db.oom.tst.FooWeight;
-import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.oom.tst.FooWeigthSqlType;
+import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.oom.tst.*;
 import jodd.db.type.SqlTypeManager;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.List;
-import java.sql.SQLException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MappingTest extends DbHsqldbTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 		DbOomManager.resetAll();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testMapping() throws SQLException {
 		DbSession session = new DbThreadSession(cp);
 
 		executeUpdate(session, "drop table FOO if exists");
 		String sql = "create table FOO (" +
-							"ID			integer		not null," +
-							"NUMBER		integer 	not null," +
-							"STRING		integer		not null," +
-							"STRING2	integer		not null," +
-							"BOO		integer		not null," +
-							"COLOR		varchar(50)		not null," +
-							"WEIGHT		integer		not null," +
-							"TIMESTAMP	timestamp	not null," +
-							"TIMESTAMP2	timestamp	not null," +
-							"CLOB		longvarchar	not null," +
-							"BLOB		longvarbinary not null," +
-							"DECIMAL	real		not null," +
-							"DECIMAL2	varchar(50)		not null," +
-							"JDT1		bigint		not null," +
-							"JDT2		varchar(50)		not null," +
-							"primary key (ID)" +
-							')';
+				"ID			integer		not null," +
+				"NUMBER		integer 	not null," +
+				"STRING		integer		not null," +
+				"STRING2	integer		not null," +
+				"BOO		integer		not null," +
+				"COLOR		varchar(50)		not null," +
+				"WEIGHT		integer		not null," +
+				"TIMESTAMP	timestamp	not null," +
+				"TIMESTAMP2	timestamp	not null," +
+				"CLOB		longvarchar	not null," +
+				"BLOB		longvarbinary not null," +
+				"DECIMAL	real		not null," +
+				"DECIMAL2	varchar(50)		not null," +
+				"JDT1		bigint		not null," +
+				"JDT2		varchar(50)		not null," +
+				"primary key (ID)" +
+				')';
 		executeUpdate(session, sql);
 
 		sql = "insert into FOO values (1, 555, 173, 7, 999, 'red', 1, '2009-08-07 06:05:04.3333', '2010-01-20 01:02:03.4444', 'W173', 'ABCDEF', 1.01, '-7.17', 0, '0')";
@@ -86,11 +82,11 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals(4, foo.clob.length());
 		assertEquals("W173", foo.clob.getSubString(1, 4));
 		assertEquals(3, foo.blob.length());
-		assertEquals((byte)0xAB, foo.blob.getBytes(1,3)[0]);
-		assertEquals((byte)0xCD, foo.blob.getBytes(1,3)[1]);
-		assertEquals((byte)0xEF, foo.blob.getBytes(1,3)[2]);
+		assertEquals((byte) 0xAB, foo.blob.getBytes(1, 3)[0]);
+		assertEquals((byte) 0xCD, foo.blob.getBytes(1, 3)[1]);
+		assertEquals((byte) 0xEF, foo.blob.getBytes(1, 3)[2]);
 		assertEquals("1.01", foo.decimal.toString().substring(0, 4));
-		assertEquals("-7.17", foo.decimal2.toString().substring(0,5));
+		assertEquals("-7.17", foo.decimal2.toString().substring(0, 5));
 		assertEquals("1970-01-01", foo.jdt1.toString("YYYY-MM-DD"));
 		assertEquals("1970-01-01", foo.jdt2.toString("YYYY-MM-DD"));
 

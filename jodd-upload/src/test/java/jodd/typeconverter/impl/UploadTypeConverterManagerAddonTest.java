@@ -4,12 +4,15 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverterManager;
 import jodd.upload.FileUpload;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
 
-public class UploadTypeConverterManagerAddonTest extends TestCase {
+import static org.junit.Assert.assertNotNull;
 
+public class UploadTypeConverterManagerAddonTest {
+
+	@Test
 	public void testRegistration() {
 		FileUploadConverter fileUploadConverter = (FileUploadConverter) TypeConverterManager.lookup(FileUpload.class);
 

@@ -5,21 +5,20 @@ package jodd.proxetta;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.proxetta.asm.ProxettaNaming;
 import jodd.proxetta.impl.InvokeProxetta;
-import jodd.proxetta.inv.Inter;
-import jodd.proxetta.inv.One;
-import jodd.proxetta.inv.OneWithSuper;
-import jodd.proxetta.inv.Replacer;
-import jodd.proxetta.inv.Two;
+import jodd.proxetta.inv.*;
 import jodd.util.ClassLoaderUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-public class InvReplTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class InvReplTest {
+
+	@Test
 	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
 
 		InvokeProxetta proxetta = initProxetta();
@@ -33,7 +32,7 @@ public class InvReplTest extends TestCase {
 		System.setOut(new PrintStream(fbaos));
 
 		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(ProxettaNaming.INVOKE_PROXY_CLASS_NAME_SUFFIX).toString(), klazz).newInstance();
-		assertEquals("one ctor!one ctor!", fbaos.toString());	// clone ctor calls super ctor,
+		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 
 		one.example1();
@@ -61,6 +60,7 @@ public class InvReplTest extends TestCase {
 	}
 
 
+	@Test
 	public void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
@@ -71,6 +71,7 @@ public class InvReplTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testInterface() {
 		InvokeProxetta proxetta = initProxetta();
 		try {
@@ -79,7 +80,6 @@ public class InvReplTest extends TestCase {
 		} catch (ProxettaException ignore) {
 		}
 	}
-
 
 
 	protected InvokeProxetta initProxetta() {
@@ -131,6 +131,6 @@ public class InvReplTest extends TestCase {
 					}
 				}
 		);
-		return fp;		
+		return fp;
 	}
 }

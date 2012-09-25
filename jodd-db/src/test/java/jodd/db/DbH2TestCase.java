@@ -2,19 +2,19 @@
 
 package jodd.db;
 
-import junit.framework.TestCase;
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
+import org.junit.After;
+import org.junit.Before;
 
-public abstract class DbH2TestCase extends TestCase {
+public abstract class DbH2TestCase {
 
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dbtxm != null) {
 			return;
 		}
@@ -28,12 +28,11 @@ public abstract class DbH2TestCase extends TestCase {
 		dbtxm = new DbJtxTransactionManager(cp);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		dbtxm.close();
 		cp.close();
 		dbtxm = null;
-		super.tearDown();
 	}
 
 	// ---------------------------------------------------------------- helpers
