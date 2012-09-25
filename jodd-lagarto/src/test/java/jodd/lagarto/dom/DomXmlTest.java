@@ -4,19 +4,22 @@ package jodd.lagarto.dom;
 
 import jodd.io.FileUtil;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class DomXmlTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class DomXmlTest {
 	protected String testDataRoot;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		if (testDataRoot != null) {
 			return;
 		}
@@ -24,6 +27,7 @@ public class DomXmlTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testPeopleXml() throws IOException {
 		File file = new File(testDataRoot, "people.xml");
 		String xmlContent = FileUtil.readString(file);
@@ -32,7 +36,7 @@ public class DomXmlTest extends TestCase {
 		lagartoDOMBuilder.enableXmlMode();
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
-		assertEquals(2, doc.getChildNodesCount());	// not 3!
+		assertEquals(2, doc.getChildNodesCount());    // not 3!
 
 		XmlDeclaration xml = (XmlDeclaration) doc.getFirstChild();
 		assertEquals(3, xml.getAttributesCount());
@@ -53,6 +57,7 @@ public class DomXmlTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testUpheaWebXml() throws IOException {
 		File file = new File(testDataRoot, "uphea-web.xml");
 		String xmlContent = FileUtil.readString(file);
@@ -66,7 +71,8 @@ public class DomXmlTest extends TestCase {
 
 		assertTrue(doc.check());
 	}
-	
+
+	@Test
 	public void testWhitespaces() throws IOException {
 		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <x/> </foo>";
 
@@ -85,13 +91,14 @@ public class DomXmlTest extends TestCase {
 		Element bar = (Element) foo.getChild(1);
 		assertEquals("bar", bar.getNodeName());
 
-		assertEquals(1, bar.getChildNodesCount());	// must be 1 as whitespaces are between open/closed tag
+		assertEquals(1, bar.getChildNodesCount());    // must be 1 as whitespaces are between open/closed tag
 
 		assertEquals("<foo><!--c--><bar>   </bar><x/></foo>", doc.getHtml());
 
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testIgnoreComments() throws IOException {
 		String xmlContent = "<foo>   <!--c-->  <bar>   </bar> <!--c--> <x/> <!--c--> </foo>";
 
@@ -106,6 +113,7 @@ public class DomXmlTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testConditionalComments() throws IOException {
 		String xmlContent = "<foo><!--[if !IE]>--><bar>Jodd</bar><!--<![endif]--></foo>";
 
@@ -120,6 +128,7 @@ public class DomXmlTest extends TestCase {
 		assertTrue(doc.check());
 	}
 
+	@Test
 	public void testConditionalComments2() throws IOException {
 		String xmlContent = "<foo><![if !IE]><bar>Jodd</bar></foo>";
 

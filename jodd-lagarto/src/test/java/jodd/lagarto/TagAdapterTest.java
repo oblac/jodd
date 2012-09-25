@@ -4,20 +4,22 @@ package jodd.lagarto;
 
 import jodd.io.FileUtil;
 import jodd.lagarto.adapter.StripHtmlTagAdapter;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class TagAdapterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class TagAdapterTest {
 
 	protected String testAdapterRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		if (testAdapterRoot!= null) {
+	@Before
+	public void setUp() throws Exception {
+		if (testAdapterRoot != null) {
 			return;
 		}
 
@@ -25,6 +27,7 @@ public class TagAdapterTest extends TestCase {
 		testAdapterRoot = data.getFile();
 	}
 
+	@Test
 	public void testCleanHtml() throws IOException {
 		File ff = new File(testAdapterRoot, "clean.html");
 
@@ -40,6 +43,7 @@ public class TagAdapterTest extends TestCase {
 		assertEquals(FileUtil.readString(ff), out.toString());
 	}
 
+	@Test
 	public void testTwoAdapters() throws IOException {
 		File ff = new File(testAdapterRoot, "two.html");
 
