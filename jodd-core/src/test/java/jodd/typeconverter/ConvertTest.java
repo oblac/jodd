@@ -4,6 +4,7 @@ package jodd.typeconverter;
 
 import jodd.AssertPrimitiveArraysTestHelper;
 import jodd.datetime.JDateTime;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,6 +17,7 @@ import static org.junit.Assert.*;
 @SuppressWarnings("ALL")
 public class ConvertTest {
 
+	@Test
 	public void testAllConversions() {
 
 		assertEquals(new BigDecimal("11.2"), Convert.toBigDecimal("11.2"));
@@ -45,14 +47,14 @@ public class ConvertTest {
 		assertEquals(173, Convert.toShortValue("173"));
 		assertEquals(17, Convert.toByteValue("17"));
 
-		assertEquals(1.0d, Convert.toDouble("1").doubleValue());
-		assertEquals(1.0d, Convert.toDoubleValue("1", 0));
-		assertEquals(1.0d, Convert.toDoubleValue("1"));
+		assertEquals(1.0d, Convert.toDouble("1").doubleValue(), 0.005);
+		assertEquals(1.0d, Convert.toDoubleValue("1", 0), 0.005);
+		assertEquals(1.0d, Convert.toDoubleValue("1"), 0.005);
 
-		assertEquals(1.0f, Convert.toFloat("1").floatValue());
-		assertEquals(1.0f, Convert.toFloatValue("1", 0));
-		assertEquals(1.0f, Convert.toFloat("1").floatValue());
-		assertEquals(1.0f, Convert.toFloatValue("1"));
+		assertEquals(1.0f, Convert.toFloat("1").floatValue(), 0.005);
+		assertEquals(1.0f, Convert.toFloatValue("1", 0), 0.005);
+		assertEquals(1.0f, Convert.toFloat("1").floatValue(), 0.005);
+		assertEquals(1.0f, Convert.toFloatValue("1"), 0.005);
 
 		assertEquals(12, Convert.toInteger("12").intValue());
 
@@ -66,25 +68,27 @@ public class ConvertTest {
 		assertNotNull(Convert.toString("555"));
 	}
 
+	@Test
 	public void testArrayConversion() {
 		assertEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
 		assertEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
-		assertEquals(new boolean[]{true, false, true}, Convert.toBooleanArray("1, 0, true"));
-		assertEquals(new int[]{1, 2, -3}, Convert.toIntegerArray("1, 2, -3"));
-		assertEquals(new long[]{-12, 2}, Convert.toLongArray("-12, 2"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new boolean[]{true, false, true}, Convert.toBooleanArray("1, 0, true"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new int[]{1, 2, -3}, Convert.toIntegerArray("1, 2, -3"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new long[]{-12, 2}, Convert.toLongArray("-12, 2"));
 		AssertPrimitiveArraysTestHelper.assertEquals(new float[]{1.1f, 2.2f}, Convert.toFloatArray("1.1, 2.2"), 0.5f);
 		AssertPrimitiveArraysTestHelper.assertEquals(new double[]{1.1, 2.2, -3.3}, Convert.toDoubleArray("1.1, 2.2, -3.3"), 0.5);
-		assertEquals(new short[]{-1, 2}, Convert.toShortArray("-1,2"));
-		assertEquals(new char[]{'a', ',', 'A'}, Convert.toCharacterArray("a,A"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new short[]{-1, 2}, Convert.toShortArray("-1,2"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new char[]{'a', ',', 'A'}, Convert.toCharacterArray("a,A"));
 	}
 
+	@Test
 	public void testDefaultConversion() {
 
 		assertEquals(true, Convert.toBooleanValue(null, true));
 		assertEquals((byte) 23, Convert.toByteValue(null, (byte) 23));
 		assertEquals('A', Convert.toCharValue(null, 'A'));
-		assertEquals(1.4d, Convert.toDoubleValue(null, 1.4d));
-		assertEquals(1.4f, Convert.toFloatValue(null, 1.4f));
+		assertEquals(1.4d, Convert.toDoubleValue(null, 1.4d), 0.005);
+		assertEquals(1.4f, Convert.toFloatValue(null, 1.4f), 0.005);
 		assertEquals(23L, Convert.toLongValue(null, 23L));
 		assertEquals(7, Convert.toIntValue(null, 7));
 		assertEquals(7, Convert.toShortValue(null, (short) 7));
@@ -118,6 +122,7 @@ public class ConvertTest {
 
 	}
 
+	@Test
 	public void testChangeConverter() {
 		String[] array = new String[]{"true", "false", "yeah"};
 
