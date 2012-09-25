@@ -2,15 +2,19 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.Inter;
-import jodd.proxetta.impl.ProxyProxetta;
-import junit.framework.TestCase;
-import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Abstra;
 import jodd.proxetta.data.Abstra2;
+import jodd.proxetta.data.FooProxyAdvice;
+import jodd.proxetta.data.Inter;
+import jodd.proxetta.impl.ProxyProxetta;
+import org.junit.Test;
 
-public class AbstractsTest extends TestCase {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+public class AbstractsTest {
+
+	@Test
 	public void testAbstract1() throws Exception {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
@@ -23,6 +27,7 @@ public class AbstractsTest extends TestCase {
 		aaa.foo();
 	}
 
+	@Test
 	public void testAbstract2() {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {
@@ -37,6 +42,7 @@ public class AbstractsTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testInterface() {
 		ProxyAspect proxyAspect = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
 			public boolean apply(MethodInfo methodInfo) {

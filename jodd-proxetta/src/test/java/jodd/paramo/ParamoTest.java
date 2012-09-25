@@ -6,25 +6,29 @@ import jodd.paramo.data.Foo;
 import jodd.paramo.data.Generic;
 import jodd.paramo.data.NonGeneric;
 import jodd.util.ReflectUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class ParamoTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class ParamoTest {
 
 	private String[] resolveParameterNames(MethodParameter[] methodParameters) {
 		String[] result = new String[methodParameters.length];
 		for (
-			int i = 0, methodParametersLength = methodParameters.length;
-			i < methodParametersLength; i++) {
+				int i = 0, methodParametersLength = methodParameters.length;
+				i < methodParametersLength; i++) {
 			MethodParameter methodParameter = methodParameters[i];
-			
+
 			result[i] = methodParameter.getName();
 		}
 		return result;
 	}
 
+	@Test
 	public void testConstructor() throws NoSuchMethodException {
 		Constructor c = Foo.class.getConstructor(String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(c);
@@ -33,6 +37,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("something", s[0]);
 	}
 
+	@Test
 	public void testOneParam() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("one", String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -41,6 +46,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("foo", s[0]);
 	}
 
+	@Test
 	public void testTwoParams() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("two", String.class, String.class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -50,6 +56,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("password", s[1]);
 	}
 
+	@Test
 	public void testNoParams() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("hello");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -57,6 +64,7 @@ public class ParamoTest extends TestCase {
 		assertEquals(0, mps.length);
 	}
 
+	@Test
 	public void testArray() throws NoSuchMethodException {
 		Method m = Foo.class.getMethod("array", String.class, Integer[].class, float[].class);
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -67,6 +75,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("floats", s[2]);
 	}
 
+	@Test
 	public void testPrimitives() throws NoSuchMethodException {
 		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primitives");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -82,6 +91,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("y", s[7]);
 	}
 
+	@Test
 	public void testPrimitivesArrays1() throws NoSuchMethodException {
 		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr1");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -91,6 +101,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("two", s[1]);
 	}
 
+	@Test
 	public void testPrimitivesArrays2() throws NoSuchMethodException {
 		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarr2");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -104,6 +115,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("c", s[5]);
 	}
 
+	@Test
 	public void testPrimitivesArrays3() throws NoSuchMethodException {
 		Method m = ReflectUtil.findDeclaredMethod(Foo.class, "primarrShortByte");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -114,6 +126,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("somethingElse", s[2]);
 	}
 
+	@Test
 	public void testNonGeneric() {
 		Method m = ReflectUtil.findDeclaredMethod(NonGeneric.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
@@ -124,6 +137,7 @@ public class ParamoTest extends TestCase {
 		assertEquals("Ljava/lang/Long;", mps[1].getSignature());
 	}
 
+	@Test
 	public void testGeneric() {
 		Method m = ReflectUtil.findDeclaredMethod(Generic.class, "one");
 		MethodParameter[] mps = Paramo.resolveParameters(m);
