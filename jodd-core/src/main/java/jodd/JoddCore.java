@@ -5,14 +5,10 @@ package jodd;
 import jodd.util.StringPool;
 
 /**
- * Jodd library global defaults. They are used in more then one place (class, package).
+ * Jodd CORE module.
+ * Contains some global defaults.
  */
 public class JoddCore {
-
-	/**
-	 * Jodd version.
-	 */
-	public static final String JODD_VERSION;
 
 	/**
 	 * Default temp file prefix.
@@ -28,11 +24,5 @@ public class JoddCore {
 	 * Default IO buffer size (16 KB).
 	 */
 	public static int ioBufferSize = 16384;
-
-	static {
-		Package pkg = JoddCore.class.getPackage();
-
-		JODD_VERSION = pkg.getImplementationVersion();
-	}
 
 }
