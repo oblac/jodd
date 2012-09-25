@@ -218,23 +218,30 @@ public class FileUtilTest extends TestCase {
 
 	public void testUTFReads() throws IOException {
 		String content = FileUtil.readUTFString(new File(utfdataRoot, "utf-8.txt"));
+		content = content.replace("\r\n", "\n");
 
 		String content8 = FileUtil.readString(new File(utfdataRoot, "utf-8.txt"), "UTF-8");
+		content8 = content8.replace("\r\n", "\n");
 		assertEquals(content, content8);
 
 		String content1 = FileUtil.readUTFString(new File(utfdataRoot, "utf-16be.txt"));
+		content1 = content1.replace("\r\n", "\n");
 		assertEquals(content, content1);
 
 		String content16 = FileUtil.readString(new File(utfdataRoot, "utf-16be.txt"), "UTF-16BE");
+		content16 = content16.replace("\r\n", "\n");
 		assertEquals(content, content16);
 
 		String content162 = FileUtil.readString(new File(utfdataRoot, "utf-16be.txt"), "UTF-16");
+		content162 = content162.replace("\r\n", "\n");
 		assertEquals(content, content162);
 
 		String content2 = FileUtil.readUTFString(new File(utfdataRoot, "utf-16le.txt"));
+		content2 = content2.replace("\r\n", "\n");
 		assertEquals(content, content2);
 
 		String content163 = FileUtil.readString(new File(utfdataRoot, "utf-16le.txt"), "UTF-16LE");
+		content163 = content163.replace("\r\n", "\n");
 		assertEquals(content, content163);
 	}
 }
