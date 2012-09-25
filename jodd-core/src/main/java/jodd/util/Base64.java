@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 
 import java.util.Arrays;
 import java.io.UnsupportedEncodingException;
@@ -35,7 +35,7 @@ public class Base64 {
 
 	public static char[] encodeToChar(String s) {
 		try {
-			return encodeToChar(s.getBytes(JoddDefault.encoding), false);
+			return encodeToChar(s.getBytes(JoddCore.encoding), false);
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -133,7 +133,7 @@ public class Base64 {
 
 	public static byte[] encodeToByte(String s) {
 		try {
-			return encodeToByte(s.getBytes(JoddDefault.encoding), false);
+			return encodeToByte(s.getBytes(JoddCore.encoding), false);
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
@@ -230,14 +230,14 @@ public class Base64 {
 
 	public static String encodeToString(String s) {
 		try {
-			return new String(encodeToChar(s.getBytes(JoddDefault.encoding), false));
+			return new String(encodeToChar(s.getBytes(JoddCore.encoding), false));
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
 	public static String decodeToString(String s) {
 		try {
-			return new String(decode(s), JoddDefault.encoding);
+			return new String(decode(s), JoddCore.encoding);
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}

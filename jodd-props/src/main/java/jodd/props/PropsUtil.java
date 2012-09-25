@@ -2,7 +2,7 @@
 
 package jodd.props;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -25,7 +25,7 @@ public class PropsUtil {
 		final ClassScanner scanner = new ClassScanner() {
 			@Override
 			protected void onEntry(EntryData entryData) throws IOException {
-				String encoding = JoddDefault.encoding;
+				String encoding = JoddCore.encoding;
 				if (StringUtil.endsWithIgnoreCase(entryData.getName(), ".properties")) {
 					encoding = StringPool.ISO_8859_1;
 				}

@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.util.MimeTypes;
 
 /**
@@ -29,7 +29,7 @@ public class EmailMessage {
 	public EmailMessage(String content, String mimeType) {
 		this.content = content;
 		this.mimeType = mimeType;
-		this.encoding = JoddDefault.encoding;
+		this.encoding = JoddCore.encoding;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class EmailMessage {
 	public EmailMessage(String content) {
 		this.content = content;
 		this.mimeType = MimeTypes.MIME_TEXT_PLAIN;
-		this.encoding = JoddDefault.encoding;
+		this.encoding = JoddCore.encoding;
 	}
 
 	// ---------------------------------------------------------------- getters

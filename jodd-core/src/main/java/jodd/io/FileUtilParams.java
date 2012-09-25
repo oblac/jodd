@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 
 /**
  * {@link FileUtil File utilities} parameters.
@@ -14,7 +14,7 @@ public class FileUtilParams implements Cloneable {
 	protected boolean createDirs = true;				// create missing subdirectories of destination
 	protected boolean recursive = true;					// use recursive directory copying and deleting
 	protected boolean continueOnError = true;			// don't stop on error and continue job as much as possible
-	protected String encoding = JoddDefault.encoding;	// default encoding for reading/writing strings
+	protected String encoding = JoddCore.encoding;		// default encoding for reading/writing strings
 
 
 	public boolean isPreserveDate() {

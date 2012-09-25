@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
@@ -221,7 +221,7 @@ public class ReceiveMailSession {
 				String fileName = part.getFileName();
 				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 
-				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(JoddDefault.encoding));
+				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(JoddCore.encoding));
 			} else {
 				String contentType = part.getContentType();
 				email.addMessage(stringContent, extractMimeType(contentType), extractEncoding(contentType));

@@ -2,7 +2,7 @@
 
 package jodd.upload.impl;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;
@@ -134,7 +134,7 @@ public class AdaptiveFileUpload extends FileUpload {
 			}
 		}
 
-		tempFile = FileUtil.createTempFile(JoddDefault.tempFilePrefix, TMP_FILE_SUFFIX, uploadPath);
+		tempFile = FileUtil.createTempFile(JoddCore.tempFilePrefix, TMP_FILE_SUFFIX, uploadPath);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tempFile));
 		if (data != null) {
 			size = data.length;

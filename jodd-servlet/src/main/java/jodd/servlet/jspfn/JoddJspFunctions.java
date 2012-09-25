@@ -2,7 +2,7 @@
 
 package jodd.servlet.jspfn;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.datetime.JDateTime;
 import jodd.servlet.ServletUtil;
 import jodd.util.URLCoder;
@@ -133,7 +133,7 @@ public class JoddJspFunctions {
 	}
 
 	public static String url(String value, PageContext pageContext) {
-		return url(value, JoddDefault.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+		return url(value, JoddCore.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
 	}
 
 	public static String url(String value, String encoding, PageContext pageContext) {
@@ -141,7 +141,7 @@ public class JoddJspFunctions {
 	}
 
 	public static String url(String value, HttpServletRequest request, HttpServletResponse response) {
-		return url(value, JoddDefault.encoding, request, response);
+		return url(value, JoddCore.encoding, request, response);
 	}
 
 	public static String url(String value, String encoding, HttpServletRequest request, HttpServletResponse response) {

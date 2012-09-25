@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 
 import java.io.UnsupportedEncodingException;
 
@@ -15,7 +15,7 @@ public class URLDecoder {
 	 * Decodes URL elements.
 	 */
 	public static String decode(String url) {
-		return decode(url, JoddDefault.encoding);
+		return decode(url, JoddCore.encoding);
 	}
 
 	/**

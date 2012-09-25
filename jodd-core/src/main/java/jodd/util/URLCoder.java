@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -59,7 +59,7 @@ public class URLCoder {
 	 * @see #encodeUrl
 	 */
 	public static String encodeUrl(String url) {
-		return URLCoder.encodeUrl(url, JoddDefault.encoding);
+		return URLCoder.encodeUrl(url, JoddCore.encoding);
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class URLCoder {
 	 * Encodes <b>query</b> part of the URL.
 	 */
 	public static String encodeQuery(String value) {
-		return encodeQuery(value, JoddDefault.encoding);
+		return encodeQuery(value, JoddCore.encoding);
 	}
 
 	// ---------------------------------------------------------------- path
@@ -200,7 +200,7 @@ public class URLCoder {
 	 * Creates URL builder for user-friendly way of building URLs.
 	 */
 	public static Builder build() {
-		return new Builder(JoddDefault.encoding);
+		return new Builder(JoddCore.encoding);
 	}
 
 	public static class Builder {

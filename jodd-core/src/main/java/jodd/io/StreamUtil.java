@@ -2,8 +2,9 @@
 
 package jodd.io;
 
-import static jodd.JoddDefault.ioBufferSize;
-import jodd.JoddDefault;
+import static jodd.JoddCore.ioBufferSize;
+
+import jodd.JoddCore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -143,13 +144,13 @@ public class StreamUtil {
 	 * Copies input stream to writer using buffer.
 	 */
 	public static void copy(InputStream input, Writer output) throws IOException {
-		copy(input, output, JoddDefault.encoding);
+		copy(input, output, JoddCore.encoding);
 	}
 	/**
 	 * Copies specified number of bytes from input stream to writer using buffer.
 	 */
 	public static void copy(InputStream input, Writer output, int byteCount) throws IOException {
-		copy(input, output, JoddDefault.encoding, byteCount);
+		copy(input, output, JoddCore.encoding, byteCount);
 	}
 	/**
 	 * Copies input stream to writer using buffer and specified encoding.
@@ -208,13 +209,13 @@ public class StreamUtil {
 	 * Copies reader to output stream using buffer.
 	 */
 	public static void copy(Reader input, OutputStream output) throws IOException {
-		copy(input, output, JoddDefault.encoding);
+		copy(input, output, JoddCore.encoding);
 	}
 	/**
 	 * Copies specified number of characters from reader to output stream using buffer.
 	 */
 	public static void copy(Reader input, OutputStream output, int charCount) throws IOException {
-		copy(input, output, JoddDefault.encoding, charCount);
+		copy(input, output, JoddCore.encoding, charCount);
 	}
 	/**
 	 * Copies reader to output stream using buffer and specified encoding.

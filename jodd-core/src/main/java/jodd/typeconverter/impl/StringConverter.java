@@ -2,7 +2,7 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
@@ -40,7 +40,7 @@ public class StringConverter implements TypeConverter<String> {
 			if (type == byte[].class) {
 				byte[] valueArray = (byte[]) value;
 				try {
-					return new String(valueArray, 0, valueArray.length, JoddDefault.encoding);
+					return new String(valueArray, 0, valueArray.length, JoddCore.encoding);
 				} catch (UnsupportedEncodingException ueex) {
 					throw new TypeConversionException(ueex);
 				}

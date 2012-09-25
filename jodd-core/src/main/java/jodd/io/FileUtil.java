@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 import jodd.util.StringPool;
 
 import java.io.BufferedWriter;
@@ -676,10 +676,10 @@ public class FileUtil {
 
 
 	public static void writeChars(File dest, char[] data) throws IOException {
-		outChars(dest, data, JoddDefault.encoding, false);
+		outChars(dest, data, JoddCore.encoding, false);
 	}
 	public static void writeChars(String dest, char[] data) throws IOException {
-		outChars(new File(dest), data, JoddDefault.encoding, false);
+		outChars(new File(dest), data, JoddCore.encoding, false);
 	}
 
 	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
@@ -1282,7 +1282,7 @@ public class FileUtil {
 		return createTempFile(true);
 	}
 	public static File createTempFile(boolean create) throws IOException {
-		return createTempFile(JoddDefault.tempFilePrefix, ".tmp", (File) null, create);
+		return createTempFile(JoddCore.tempFilePrefix, ".tmp", (File) null, create);
 	}
 	public static File createTempFile(String prefix, String suffix) throws IOException {
 		return createTempFile(prefix, suffix, (File) null, true);

@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddDefault;
+import jodd.JoddCore;
 
 import java.io.UnsupportedEncodingException;
 
@@ -131,7 +131,7 @@ public class CharUtil {
 	 * Converts char array to byte array using default Jodd encoding.
 	 */
 	public static byte[] toByteArray(char[] carr) throws UnsupportedEncodingException {
-		return new String(carr).getBytes(JoddDefault.encoding);
+		return new String(carr).getBytes(JoddCore.encoding);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CharUtil {
 	 * Converts byte array of default Jodd encoding to char array.
 	 */
 	public static char[] toCharArray(byte[] barr) throws UnsupportedEncodingException {
-		return new String(barr, JoddDefault.encoding).toCharArray();
+		return new String(barr, JoddCore.encoding).toCharArray();
 	}
 
 	/**
