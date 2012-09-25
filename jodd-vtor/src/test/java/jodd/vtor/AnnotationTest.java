@@ -5,12 +5,16 @@ package jodd.vtor;
 import jodd.vtor.constraint.TimeAfterConstraint;
 import jodd.vtor.data.Tad;
 import jodd.vtor.data.Woo;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
-public class AnnotationTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+public class AnnotationTest {
+
+	@Test
 	public void testAnn() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Woo());
@@ -30,6 +34,7 @@ public class AnnotationTest extends TestCase {
 		assertEquals(3, v.size());
 	}
 
+	@Test
 	public void testTime() {
 		Vtor vtor = new Vtor();
 		vtor.validate(new Tad());
