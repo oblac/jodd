@@ -1,3 +1,5 @@
+// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.props;
 
 import java.io.BufferedWriter;
@@ -10,9 +12,6 @@ import java.util.Properties;
  * Converter for Java Properties to Jodd Props format.
  */
 class PropertiesToProps {
-
-	PropertiesToProps() {
-	}
 
 	/**
 	 * Convert Java Properties to Jodd Props format
