@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileFilter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -59,17 +60,6 @@ public class FileUtil {
 	}
 
 	/**
-	 * Converts URI to file. Returns <code>null</code> in case of invalid URI.
-	 */
-	public static File toFile(URI uri) {
-		try {
-			return new File(uri);
-		} catch (IllegalArgumentException ignore) {
-			return null;
-		}
-	}
-
-	/**
 	 * Converts file URLs to file. Ignores other schemes and returns <code>null</code>.
 	 */
 	public static File toFile(URL url) {
@@ -78,6 +68,14 @@ public class FileUtil {
 			return null;
 		}
 		return new File(fileName);
+	}
+
+	/**
+	 * Converts file to URL in a correct way.
+	 * Returns <code>null</code> in case of error.
+	 */
+	public static URL toURL(File file) throws MalformedURLException {
+		return file.toURI().toURL();
 	}
 
 	/**

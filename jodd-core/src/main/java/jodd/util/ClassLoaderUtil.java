@@ -64,7 +64,7 @@ public class ClassLoaderUtil {
 	 */
 	public static void addFileToClassPath(File path, ClassLoader classLoader) {
 		try {
-			addUrlToClassPath(path.toURL(), classLoader);
+			addUrlToClassPath(FileUtil.toURL(path), classLoader);
 		} catch (MalformedURLException muex) {
 			throw new IllegalArgumentException("Invalid path: " + path, muex);
 		}
@@ -138,7 +138,7 @@ public class ClassLoaderUtil {
 		for (int i = 0; i < classPath.length; i++) {
 			File file = classPath[i];
 			try {
-				urls[i] = file.toURL();
+				urls[i] = FileUtil.toURL(file);
 			} catch (MalformedURLException ignore) {
 			}
 		}

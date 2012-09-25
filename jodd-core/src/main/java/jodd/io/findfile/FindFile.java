@@ -177,11 +177,15 @@ public class FindFile {
 	 * Specifies the search path. Throws an exception if URI is invalid.
 	 */
 	public FindFile searchPath(URI searchPath) {
-		File file = FileUtil.toFile(searchPath);
-		if (file == null) {
-			throw new FindFileException("Invalid search path URI: " + searchPath);
+		File file;
+		try {
+			file = new File(searchPath);
+		} catch (Exception ex) {
+			throw new FindFileException("Invalid search path URI: " + searchPath, ex);
 		}
+
 		addPath(file);
+
 		return this;
 	}
 

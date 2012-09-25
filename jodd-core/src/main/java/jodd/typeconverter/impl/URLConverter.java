@@ -2,6 +2,7 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.io.FileUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 
@@ -33,7 +34,7 @@ public class URLConverter implements TypeConverter<URL> {
 		if (value instanceof File) {
 			File file = (File) value;
 			try {
-				return file.toURL();
+				return FileUtil.toURL(file);
 			} catch (MalformedURLException muex) {
 				throw new TypeConversionException(value, muex);
 			}
