@@ -91,7 +91,9 @@ public class PropertiesToPropsTestHelper {
 			fail(e.getMessage());
 			throw new IllegalStateException(e);
 		}
-		assertEquals(expected, actual);
+
+		String actualUnixStyle = actual.replace("\r\n", "\n");
+		assertEquals(expected, actualUnixStyle);
 	}
 
 	private static String readContent(final BufferedReader reader) throws IOException {
