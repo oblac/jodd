@@ -4,10 +4,13 @@ package jodd.petite;
 
 import jodd.petite.tst2.Joo;
 import jodd.petite.tst2.Koo;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class FullTypeTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class FullTypeTest {
+
+	@Test
 	public void testFullTypeProperty() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
@@ -36,6 +39,7 @@ public class FullTypeTest extends TestCase {
 		assertEquals(joo, koo.someNoJooName);
 	}
 
+	@Test
 	public void testFullTypeMethodCtor() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
@@ -55,6 +59,7 @@ public class FullTypeTest extends TestCase {
 		assertNotNull(koo.joojoo);
 	}
 
+	@Test
 	public void testOptionalAndNotAllReferences() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setDefaultWiringMode(WiringMode.OPTIONAL);

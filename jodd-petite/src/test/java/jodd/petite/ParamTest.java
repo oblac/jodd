@@ -2,13 +2,17 @@
 
 package jodd.petite;
 
-import junit.framework.TestCase;
 import jodd.petite.tst.Foo;
+import org.junit.Test;
 
 import java.util.Properties;
 
-public class ParamTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+public class ParamTest {
+
+	@Test
 	public void testSimpleParams() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -20,6 +24,7 @@ public class ParamTest extends TestCase {
 		assertEquals("FOONAME", foo.getName());
 	}
 
+	@Test
 	public void testRefParams() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -34,6 +39,7 @@ public class ParamTest extends TestCase {
 		assertEquals("$FOONAME", foo.getName());
 	}
 
+	@Test
 	public void testRefParamsEscape() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -45,6 +51,7 @@ public class ParamTest extends TestCase {
 		assertEquals("${name}", foo.getName());
 	}
 
+	@Test
 	public void testRefParamsNoResolve() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setResolveReferenceParameters(false);
@@ -59,6 +66,7 @@ public class ParamTest extends TestCase {
 		assertEquals("${name}", foo.getName());
 	}
 
+	@Test
 	public void testProperties() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
