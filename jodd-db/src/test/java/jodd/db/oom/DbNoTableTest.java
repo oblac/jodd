@@ -10,14 +10,19 @@ import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.tst.Girl;
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 // IGNORED DUE TO BUG in HSQLDB 2.2.8, WORKS IN 2.2.9 but not yet on Maven.
 @Ignore
 public class DbNoTableTest extends DbHsqldbTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		DbOomManager.resetAll();
@@ -25,6 +30,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		dbOom.registerEntity(Bean1.class);
 	}
 
+	@Test
 	public void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
@@ -70,7 +76,6 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		assertEquals("Anna", girl.name);
 		assertEquals("seduction", girl.speciality);
 		assertEquals(1, girl.id);
-
 
 
 		// three

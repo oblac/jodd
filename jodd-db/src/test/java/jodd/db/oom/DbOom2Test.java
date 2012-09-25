@@ -2,22 +2,26 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbH2TestCase;
+import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
-import jodd.db.DbQuery;
-import jodd.db.DbH2TestCase;
-import jodd.db.oom.tst.Girl;
-import jodd.db.oom.tst.IdName;
-import jodd.db.oom.tst.Girl2;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
+import jodd.db.oom.tst.Girl;
+import jodd.db.oom.tst.Girl2;
+import jodd.db.oom.tst.IdName;
+import org.junit.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.junit.Assert.*;
+
 public class DbOom2Test extends DbH2TestCase {
 
+	@Test
 	public void testOrm2() {
 		DbOomManager.resetAll();
 
@@ -27,12 +31,12 @@ public class DbOom2Test extends DbH2TestCase {
 		executeUpdate(session, "drop table GIRL if exists");
 
 		String sql = "create table GIRL (" +
-							"ID			IDENTITY," +
-							"NAME		varchar(20)	not null," +
-							"SPECIALITY	varchar(20)	null," +
-							"TIME timestamp not null default CURRENT_TIMESTAMP, " +
-							"primary key (ID)" +
-							')';
+				"ID			IDENTITY," +
+				"NAME		varchar(20)	not null," +
+				"SPECIALITY	varchar(20)	null," +
+				"TIME timestamp not null default CURRENT_TIMESTAMP, " +
+				"primary key (ID)" +
+				')';
 
 		DbQuery query = new DbQuery(sql);
 		query.executeUpdateAndClose();
@@ -64,7 +68,7 @@ public class DbOom2Test extends DbH2TestCase {
 		assertEquals("Anna", idName.name);
 
 		try {
-			q.findOne();		// this will fail since no entity is registered!
+			q.findOne();        // this will fail since no entity is registered!
 			fail();
 		} catch (DbOomException doex) {
 			// ignore
@@ -87,9 +91,9 @@ public class DbOom2Test extends DbH2TestCase {
 		session.closeSession();
 
 
-	/**
-	 * Test fails on HSQLDB 1.8 since generated columns are not supported.
-	 */
+		/**
+		 * Test fails on HSQLDB 1.8 since generated columns are not supported.
+		 */
 		session = new DbThreadSession(cp);
 
 		q = new DbOomQuery("insert into GIRL (NAME) values('Janna')");
@@ -132,7 +136,6 @@ public class DbOom2Test extends DbH2TestCase {
 		session.closeSession();
 
 
-
 		session = new DbThreadSession(cp);
 		DbOomManager.getInstance().registerEntity(Girl2.class, true);
 		Girl2 g2 = new Girl2("Gwen");
@@ -154,7 +157,6 @@ public class DbOom2Test extends DbH2TestCase {
 		session.closeSession();
 
 
-
 		session = new DbThreadSession(cp);
 
 		q = DbSqlBuilder.sql("select * from $T{Girl g} where $g.name like :what order by $g.id").query();
@@ -174,11 +176,13 @@ public class DbOom2Test extends DbH2TestCase {
 		assertEquals(4, girl.id.intValue());
 		assertEquals("Janna", girl.name);
 	}
+
 	private void checkGirl5(Girl2 girl) {
 		assertNotNull(girl);
 		assertEquals(5, girl.id.intValue());
 		assertEquals("Janna2", girl.name);
 	}
+
 	private void checkGirl1(Girl girl) {
 		assertNotNull(girl);
 		assertEquals(1, girl.id);

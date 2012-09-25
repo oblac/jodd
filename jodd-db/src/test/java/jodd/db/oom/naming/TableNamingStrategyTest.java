@@ -2,10 +2,13 @@
 
 package jodd.db.oom.naming;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TableNamingStrategyTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class TableNamingStrategyTest {
+
+	@Test
 	public void testEntityNameToTableName() {
 		assertEquals("FOO_BOO_ZOO", convertClassNameToTableName("FooBooZoo", true));
 		assertEquals("foo_boo_zoo", convertClassNameToTableName("FooBooZoo", false));
@@ -34,6 +37,7 @@ public class TableNamingStrategyTest extends TestCase {
 		assertEquals("qwe_table_naming_strategy_test", convertClassNameToTableName(this.getClass(), "QWE_", null, false));
 	}
 
+	@Test
 	public void testEntityNameToTableName2() {
 		TableNamingStrategy tns = new TableNamingStrategy();
 
@@ -60,6 +64,7 @@ public class TableNamingStrategyTest extends TestCase {
 
 	}
 
+	@Test
 	public void testSpecialEntityNameToTableName() {
 		assertEquals("FOO_BOO_ZOO", convertClassNameToTableName("FooBooZoo$xxx", true));
 		assertEquals("foo_boo_zoo", convertClassNameToTableName("FooBooZoo$xxx", false));
@@ -67,6 +72,7 @@ public class TableNamingStrategyTest extends TestCase {
 	}
 
 
+	@Test
 	public void testTableNameToEntityName() {
 		assertEquals("FooBooZoo", convertTableNameToClassName("FOO_BOO_ZOO", null, null));
 		assertEquals("FooBooZoo", convertTableNameToClassName("foo_boo_zoo", null, null));
@@ -97,6 +103,7 @@ public class TableNamingStrategyTest extends TestCase {
 		assertEquals("", convertTableNameToClassName("", "QWE_", "_XXX"));
 	}
 
+	@Test
 	public void testTableNameToEntityName2() {
 		TableNamingStrategy tns = new TableNamingStrategy();
 
@@ -142,7 +149,7 @@ public class TableNamingStrategyTest extends TestCase {
 		tableNamingStrategy.setSuffix(tableSuffix);
 		tableNamingStrategy.setChangeCase(true);
 		tableNamingStrategy.setUppercase(toUpperCase);
-		
+
 		return tableNamingStrategy.convertEntityNameToTableName(className);
 	}
 

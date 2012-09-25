@@ -2,13 +2,18 @@
 
 package jodd.db;
 
-import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.jtx.DbJtxSessionProvider;
+import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.jtx.JtxTransactionManager;
 import jodd.jtx.JtxTransactionMode;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 
+	@Test
 	public void testSessionProvider() {
 		JtxTransactionManager jtxManager = new DbJtxTransactionManager(cp);
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager, new JtxTransactionMode().propagationSupports());

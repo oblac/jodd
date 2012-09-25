@@ -3,14 +3,18 @@
 package jodd.db.debug;
 
 import jodd.db.DbHsqldbTestCase;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import static org.junit.Assert.assertEquals;
+
 public class LoggablePreparedStatementTest extends DbHsqldbTestCase {
 
+	@Test
 	public void testSetParameters() throws SQLException {
 		Connection connection = cp.getConnection();
 
