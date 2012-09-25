@@ -1,9 +1,12 @@
 package jodd;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JoddPropsTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JoddPropsTest {
+
+	@Test
 	public void testLoadedModules() {
 		assertEquals(false, Jodd.isJoddBeanLoaded());
 		assertEquals(false, Jodd.isJoddHttpLoaded());
