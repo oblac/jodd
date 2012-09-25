@@ -77,13 +77,13 @@ class PropertiesToProps {
 	private void writeProfileProperty(final BufferedWriter bw, final String profileName,
 									  final String key, final String value)
 			throws IOException {
-		bw.write(key + "<" + profileName + ">" + "=" + value);
+		bw.write(key + '<' + profileName + '>' + '=' + value);
 		bw.newLine();
 	}
 
 	private void writeBaseProperty(final BufferedWriter bw, final String key, final String value)
 			throws IOException {
-		bw.write(key + "=" + value);
+		bw.write(key + '=' + value);
 		bw.newLine();
 	}
 }

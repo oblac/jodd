@@ -67,7 +67,7 @@ public class JmxClient {
 	public <T> T getMBeanProxy(final String mbeanName, final Class<T> mBeanInterface) {
 		assertConnected();
 		ObjectName objectName = buildObjectName(mbeanName);
-		return (T) MBeanServerInvocationHandler.newProxyInstance(mbsc, objectName, mBeanInterface, false);
+		return MBeanServerInvocationHandler.newProxyInstance(mbsc, objectName, mBeanInterface, false);
 	}
 
 	/**

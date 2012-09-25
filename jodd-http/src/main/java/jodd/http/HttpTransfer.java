@@ -355,19 +355,19 @@ public class HttpTransfer {
 			Class type = value.getClass();
 
 			if (type == String.class) {
-				sb.append("Content-Disposition: form-data; name=\"" + name + "\"\r\n\r\n");
+				sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"\r\n\r\n");
 				sb.append(value);
 			} else if (type == String[].class) {
 				String[] array = (String[]) value;
 				for (String v : array) {
-					sb.append("Content-Disposition: form-data; name=\"" + name + "\"\r\n\r\n");
+					sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"\r\n\r\n");
 					sb.append(v);
 				}
 			} else if (value instanceof File) {
 				File file = (File) value;
 				String fileName = FileNameUtil.getName(file.getName());
 
-				sb.append("Content-Disposition: form-data; name=\"" + name + "\";filename=\"" + fileName + "\"\r\n");
+				sb.append("Content-Disposition: form-data; name=\"").append(name).append("\";filename=\"").append(fileName).append("\"\r\n");
 				sb.append("Content-Type: ").append(MimeTypes.getMimeType(FileNameUtil.getExtension(fileName))).append("\r\n");
 				sb.append("Content-Transfer-Encoding: binary\r\n\r\n");
 

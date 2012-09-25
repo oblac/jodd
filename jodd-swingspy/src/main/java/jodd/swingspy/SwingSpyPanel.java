@@ -204,7 +204,7 @@ public class SwingSpyPanel extends JPanel {
 					str.append("N/A");
 				}
 
-				str.append("\n");
+				str.append('\n');
 
 				treeSet.add(htmlSafe(str.toString()));
 			}

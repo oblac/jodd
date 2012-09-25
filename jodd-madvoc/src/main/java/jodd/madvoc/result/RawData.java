@@ -5,7 +5,6 @@ package jodd.madvoc.result;
 import jodd.util.MimeTypes;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 
 /**

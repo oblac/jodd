@@ -10,7 +10,6 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.result.ActionResult;
-import jodd.servlet.ServletUtil;
 import jodd.util.CharUtil;
 import jodd.util.MimeTypes;
 import jodd.vtor.Violation;

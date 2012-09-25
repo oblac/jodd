@@ -3,7 +3,6 @@
 package jodd.asm;
 
 import jodd.mutable.MutableInteger;
-import jodd.util.StringPool;
 
 /**
  * Generic ASM utils.

@@ -461,7 +461,7 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * JTX scope pattern.
-	 * @see {@link AnnotationTxAdviceManager}
+	 * @see AnnotationTxAdviceManager
 	 */
 	protected String jtxScopePattern;
 

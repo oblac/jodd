@@ -44,9 +44,9 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 		}
 	}
 
-	public void closeConnection(Connection conn) {
+	public void closeConnection(Connection connection) {
 		try {
-			conn.close();
+			connection.close();
 		} catch (SQLException sex) {
 			// ignore
 		}

@@ -6,7 +6,6 @@ import jodd.util.Bits;
 import jodd.util.StringPool;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 /**
  * Threefish cipher.

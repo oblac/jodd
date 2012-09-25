@@ -5,7 +5,6 @@ package jodd.servlet.wrapper;
 import jodd.util.CharUtil;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;

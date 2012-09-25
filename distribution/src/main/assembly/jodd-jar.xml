@@ -14,20 +14,21 @@
 		<dependencySet>
 			<unpack>true</unpack>
 			<includes>
-				<include>org.jodd:jodd-core</include>
 				<include>org.jodd:jodd-bean</include>
-				<include>org.jodd:jodd-mail</include>
-				<include>org.jodd:jodd-props</include>
-				<include>org.jodd:jodd-upload</include>
-				<include>org.jodd:jodd-servlet</include>
-				<include>org.jodd:jodd-http</include>
-				<include>org.jodd:jodd-proxetta</include>
-				<include>org.jodd:jodd-vtor</include>
-				<include>org.jodd:jodd-petite</include>
-				<include>org.jodd:jodd-madvoc</include>
+				<include>org.jodd:jodd-core</include>
 				<include>org.jodd:jodd-db</include>
+				<include>org.jodd:jodd-http</include>
+				<include>org.jodd:jodd-jtx</include>
 				<include>org.jodd:jodd-lagarto</include>
 				<include>org.jodd:jodd-lagarto-web</include>
+				<include>org.jodd:jodd-madvoc</include>
+				<include>org.jodd:jodd-mail</include>
+				<include>org.jodd:jodd-petite</include>
+				<include>org.jodd:jodd-props</include>
+				<include>org.jodd:jodd-proxetta</include>
+				<include>org.jodd:jodd-servlet</include>
+				<include>org.jodd:jodd-upload</include>
+				<include>org.jodd:jodd-vtor</include>
 			</includes>
 			<outputFileNameMapping>jodd-${artifact.version}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

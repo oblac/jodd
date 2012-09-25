@@ -46,10 +46,10 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 		}
 	}
 
-	public void closeConnection(Connection conn) {
+	public void closeConnection(Connection connection) {
 		try {
-			if (conn != null) {
-				conn.close();
+			if (connection != null) {
+				connection.close();
 			}
 		} catch (SQLException sex) {
 			// ignore

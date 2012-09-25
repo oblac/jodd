@@ -120,9 +120,9 @@ public class DriverManagerConnectionProvider implements ConnectionProvider {
 		return conn;
 	}
 
-	public void closeConnection(Connection conn) {
+	public void closeConnection(Connection connection) {
 		try {
-			conn.close();
+			connection.close();
 		} catch (SQLException sex) {
 			// ignore
 		}

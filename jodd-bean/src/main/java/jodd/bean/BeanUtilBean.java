@@ -398,7 +398,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value, false);
 			return true;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return false;
 		}
 	}
@@ -420,7 +420,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value, false);
 			return true;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return false;
 		}
 	}
@@ -442,7 +442,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value, true);
 			return true;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return false;
 		}
 	}
@@ -463,7 +463,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value, true);
 			return true;
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return false;
 		}
 	}
@@ -490,7 +490,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		try {
 			resolveNestedProperties(beanProperty);
 			return getIndexProperty(beanProperty, false);
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return null;
 		}
 	}
@@ -514,7 +514,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		try {
 			resolveNestedProperties(beanProperty);
 			return getIndexProperty(beanProperty, true);
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 			return null;
 		}
 	}
