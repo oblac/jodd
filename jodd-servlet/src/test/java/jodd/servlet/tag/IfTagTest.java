@@ -2,13 +2,16 @@
 
 package jodd.servlet.tag;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 
-public class IfTagTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class IfTagTest {
+
+	@Test
 	public void testIfTag() throws JspException {
 
 		final MockJspFragment jspFragment = new MockJspFragment();

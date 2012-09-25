@@ -2,10 +2,14 @@
 
 package jodd.servlet.wrapper;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ContentTypeHeaderResolverTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class ContentTypeHeaderResolverTest {
+
+	@Test
 	public void testResolver() {
 		ContentTypeHeaderResolver cthr = new ContentTypeHeaderResolver("text/html; charset=utf-8");
 		assertEquals("text/html", cthr.getMimeType());

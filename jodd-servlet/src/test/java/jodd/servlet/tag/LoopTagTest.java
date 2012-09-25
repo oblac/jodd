@@ -3,18 +3,21 @@
 package jodd.servlet.tag;
 
 import jodd.util.LoopIterator;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 
-public class LoopTagTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LoopTagTest {
+
+	@Test
 	public void testLoopTag() throws JspException {
 
 		final MockJspFragment jspFragment = new MockJspFragment();
-		final MockJspContext jspContext= new MockJspContext();
+		final MockJspContext jspContext = new MockJspContext();
 
 		LoopTag loopTag = new LoopTag() {
 			@Override
@@ -60,7 +63,7 @@ public class LoopTagTest extends TestCase {
 		};
 		loopTag.setStatus("s");
 		loopTag.doTag();
-		assertNull(jspContext.getAttribute("s"));	// attribute was cleared
+		assertNull(jspContext.getAttribute("s"));    // attribute was cleared
 
 		jspFragment.count = 0;
 		loopTag.setModulus(3);

@@ -1,9 +1,12 @@
 package jodd.bean;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ServletBeanLoaderManagerTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class ServletBeanLoaderManagerTest {
+
+	@Test
 	public void testRegisterDefaults() {
 		assertEquals(7, BeanLoaderManager.loaders.size());
 	}
