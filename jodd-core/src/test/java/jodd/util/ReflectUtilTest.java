@@ -2,34 +2,31 @@
 
 package jodd.util;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-
+import jodd.mutable.MutableInteger;
 import jodd.typeconverter.TypeConverterManager;
-import jodd.util.testdata.JavaBean;
-import jodd.util.testdata2.En;
-import junit.framework.TestCase;
+import jodd.util.subclass.*;
 import jodd.util.testdata.A;
 import jodd.util.testdata.B;
 import jodd.util.testdata.C;
+import jodd.util.testdata.JavaBean;
 import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
-import jodd.util.subclass.SBase;
-import jodd.util.subclass.SOne;
-import jodd.util.subclass.IOne;
-import jodd.util.subclass.STwo;
-import jodd.util.subclass.ITwo;
-import jodd.util.subclass.IBase;
-import jodd.util.subclass.IExtra;
-import jodd.mutable.MutableInteger;
+import jodd.util.testdata2.En;
+import org.junit.Test;
 
-public class ReflectUtilTest extends TestCase {
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
+import static org.junit.Assert.*;
+
+public class ReflectUtilTest {
+
+	@Test
 	public void testInvoke() {
 		TFooBean bean = new TFooBean();
-		
-		String result;		
+
+		String result;
 		try {
 			result = (String) ReflectUtil.invoke(TFooBean.class, bean, "getPublic", null, null);
 			assertEquals("public", result);
@@ -40,28 +37,32 @@ public class ReflectUtilTest extends TestCase {
 		} catch (Exception e) {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
-		
-		try {		
+
+		try {
 			ReflectUtil.invoke(TFooBean.class, bean, "getDefault", null, null);
 			fail("ReflectUtil.invoke() works irregular!");
-		} catch (Exception e) {}
-		
-		try {		
+		} catch (Exception e) {
+		}
+
+		try {
 			ReflectUtil.invoke(TFooBean.class, bean, "getProtected", null, null);
 			fail("ReflectUtil.invoke() works irregular!");
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
-		try {		
+		try {
 			ReflectUtil.invoke(TFooBean.class, bean, "getPrivate", null, null);
 			fail("ReflectUtil.invoke() works irregular!");
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 	}
-	
-	
+
+
+	@Test
 	public void testInvokeEx() {
 		TFooBean bean = new TFooBean();
-		
-		String result;		
+
+		String result;
 		try {
 			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getPublic", null, null);
 			assertEquals("public", result);
@@ -72,8 +73,8 @@ public class ReflectUtilTest extends TestCase {
 		} catch (Exception e) {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
-		
-		try {		
+
+		try {
 			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getDefault", null, null);
 			assertEquals("default", result);
 			result = (String) ReflectUtil.invokeDeclared(bean, "getDefault", null, null);
@@ -81,8 +82,8 @@ public class ReflectUtilTest extends TestCase {
 		} catch (Exception e) {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
-		
-		try {		
+
+		try {
 			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getProtected", null, null);
 			assertEquals("protected", result);
 			result = (String) ReflectUtil.invokeDeclared(bean, "getProtected", null, null);
@@ -91,7 +92,7 @@ public class ReflectUtilTest extends TestCase {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
 
-		try {		
+		try {
 			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getPrivate", null, null);
 			assertEquals("private", result);
 			result = (String) ReflectUtil.invokeDeclared(bean, "getPrivate", null);
@@ -99,76 +100,80 @@ public class ReflectUtilTest extends TestCase {
 		} catch (Exception e) {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
-	
+
 	}
-	
+
+	@Test
 	public void testInvoke2() {
 		TFooBean bean = new TFooBean();
 		String result;
-		try {		
-			result = (String) ReflectUtil.invoke(TFooBean.class, bean, "getMore", new Class[] {String.class, Integer.class}, new Object[] {"qwerty", new Integer(173)});
+		try {
+			result = (String) ReflectUtil.invoke(TFooBean.class, bean, "getMore", new Class[]{String.class, Integer.class}, new Object[]{"qwerty", new Integer(173)});
 			assertEquals("qwerty173", result);
-			result = (String) ReflectUtil.invoke(TFooBean.class, bean, "getMore", new Object[] {"Qwerty", new Integer(173)});
+			result = (String) ReflectUtil.invoke(TFooBean.class, bean, "getMore", new Object[]{"Qwerty", new Integer(173)});
 			assertEquals("Qwerty173", result);
-			result = (String) ReflectUtil.invoke(bean, "getMore", new Class[] {String.class, Integer.class}, new Object[] {"QWerty", new Integer(173)});
+			result = (String) ReflectUtil.invoke(bean, "getMore", new Class[]{String.class, Integer.class}, new Object[]{"QWerty", new Integer(173)});
 			assertEquals("QWerty173", result);
-			result = (String) ReflectUtil.invoke(bean, "getMore", new Object[] {"QWErty", new Integer(173)});
+			result = (String) ReflectUtil.invoke(bean, "getMore", new Object[]{"QWErty", new Integer(173)});
 			assertEquals("QWErty173", result);
-			
-			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getMore", new Class[] {String.class, Integer.class}, new Object[] {"qwerty", new Integer(173)});
+
+			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getMore", new Class[]{String.class, Integer.class}, new Object[]{"qwerty", new Integer(173)});
 			assertEquals("qwerty173", result);
-			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getMore", new Object[] {"Qwerty", new Integer(173)});
+			result = (String) ReflectUtil.invokeDeclared(TFooBean.class, bean, "getMore", new Object[]{"Qwerty", new Integer(173)});
 			assertEquals("Qwerty173", result);
-			result = (String) ReflectUtil.invokeDeclared(bean, "getMore", new Class[] {String.class, Integer.class}, new Object[] {"QWerty", new Integer(173)});
+			result = (String) ReflectUtil.invokeDeclared(bean, "getMore", new Class[]{String.class, Integer.class}, new Object[]{"QWerty", new Integer(173)});
 			assertEquals("QWerty173", result);
-			result = (String) ReflectUtil.invokeDeclared(bean, "getMore", new Object[] {"QWErty", new Integer(173)});
+			result = (String) ReflectUtil.invokeDeclared(bean, "getMore", new Object[]{"QWErty", new Integer(173)});
 			assertEquals("QWErty173", result);
 		} catch (Exception e) {
 			fail("ReflectUtil.invoke() failed " + e.toString());
 		}
 	}
-	
-	
+
+
+	@Test
 	public void testMethod0() {
 		TFooBean bean = new TFooBean();
 		Method m;
 		m = ReflectUtil.getMethod0(TFooBean.class, "getMore", String.class, Integer.class);
 		assertNotNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getMore", String.class, Integer.class);
 		assertNotNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getXXX", String.class, Integer.class);
 		assertNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getPublic");
 		assertNotNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getDefault");
 		assertNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getProtected");
 		assertNull(m);
-		
+
 		m = ReflectUtil.getMethod0(bean.getClass(), "getPrivate");
 		assertNull(m);
 	}
 
 
+	@Test
 	public void testMethod() {
 		TFooBean bean = new TFooBean();
 		Method m;
 		m = ReflectUtil.findMethod(TFooBean.class, "getMore");
 		assertNotNull(m);
-		
+
 		m = ReflectUtil.findMethod(bean.getClass(), "getMore");
 		assertNotNull(m);
-		
+
 		m = ReflectUtil.findMethod(bean.getClass(), "getXXX");
 		assertNull(m);
 	}
-	
-	
+
+
+	@Test
 	public void testMatchClasses() {
 		TFooBean a = new TFooBean();
 		TFooBean b = new TFooBean();
@@ -179,13 +184,13 @@ public class ReflectUtilTest extends TestCase {
 		assertTrue(ReflectUtil.isSubclass(TFooBean.class, b.getClass()));
 		assertTrue(ReflectUtil.isSubclass(a.getClass(), b.getClass()));
 		assertTrue(ReflectUtil.isSubclass(b.getClass(), a.getClass()));
-		
+
 		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, c.getClass()));
 		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, TFooBean.class));
 		assertFalse(ReflectUtil.isSubclass(TFooBean.class, TFooBean2.class));
 		assertTrue(ReflectUtil.isSubclass(c.getClass(), TFooBean.class));
 		assertFalse(ReflectUtil.isSubclass(a.getClass(), TFooBean2.class));
-		
+
 		assertTrue(ReflectUtil.isSubclass(TFooBean.class, Serializable.class));
 		assertTrue(Serializable.class.isInstance(c));
 		//noinspection ConstantConditions
@@ -201,17 +206,18 @@ public class ReflectUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testAccessibleA() {
 		Method[] ms = ReflectUtil.getAccessibleMethods(A.class, null);
-		assertEquals(4 + 11, ms.length);			// there are 11 accessible Object methods (9 public + 2 protected)
+		assertEquals(4 + 11, ms.length);            // there are 11 accessible Object methods (9 public + 2 protected)
 		ms = ReflectUtil.getAccessibleMethods(A.class);
 		assertEquals(4, ms.length);
 		ms = A.class.getMethods();
-		assertEquals(1 + 9, ms.length);				// there are 9 public Object methods
+		assertEquals(1 + 9, ms.length);                // there are 9 public Object methods
 		ms = A.class.getDeclaredMethods();
 		assertEquals(4, ms.length);
 		ms = ReflectUtil.getSupportedMethods(A.class, null);
-		assertEquals(4 + 12, ms.length);			// there are 12 total Object methods (9 public + 2 protected + 1 private)
+		assertEquals(4 + 12, ms.length);            // there are 12 total Object methods (9 public + 2 protected + 1 private)
 		ms = ReflectUtil.getSupportedMethods(A.class);
 		assertEquals(4, ms.length);
 
@@ -226,6 +232,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(4, fs.length);
 	}
 
+	@Test
 	public void testAccessibleB() {
 		Method[] ms = ReflectUtil.getAccessibleMethods(B.class, null);
 		assertEquals(3 + 11, ms.length);
@@ -251,6 +258,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(4, fs.length);
 	}
 
+	@Test
 	public void testAccessibleC() {
 		Method[] ms = ReflectUtil.getAccessibleMethods(C.class, null);
 		assertEquals(5 + 11, ms.length);
@@ -276,6 +284,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(5, fs.length);
 	}
 
+	@Test
 	public void testAccessibleD() {
 		Method[] ms = ReflectUtil.getAccessibleMethods(D.class, null);
 		assertEquals(3 + 11, ms.length);
@@ -299,7 +308,8 @@ public class ReflectUtilTest extends TestCase {
 		fs = ReflectUtil.getSupportedFields(D.class);
 		assertEquals(5, fs.length);
 	}
-		
+
+	@Test
 	public void testAccessibleE() {
 		Method[] ms = ReflectUtil.getAccessibleMethods(E.class, null);
 		assertEquals(5 + 11, ms.length);
@@ -325,6 +335,7 @@ public class ReflectUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testCast() {
 
 		String s = "123";
@@ -342,6 +353,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals(a, b);
 	}
 
+	@Test
 	public void testCastEnums() {
 
 		En en = TypeConverterManager.convertType("ONE", En.class);
@@ -351,6 +363,7 @@ public class ReflectUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testIsSubclassAndInterface() {
 		assertTrue(ReflectUtil.isSubclass(SBase.class, SBase.class));
 
@@ -376,6 +389,7 @@ public class ReflectUtilTest extends TestCase {
 		assertFalse(ReflectUtil.isInterfaceImpl(STwo.class, STwo.class));
 	}
 
+	@Test
 	public void testBeanPropertyNames() {
 		String name = ReflectUtil.getBeanPropertyGetterName(ReflectUtil.findMethod(JavaBean.class, "getOne"));
 		assertEquals("one", name);
@@ -420,6 +434,7 @@ public class ReflectUtilTest extends TestCase {
 		assertEquals("BIGsmall", name);
 	}
 
+	@Test
 	public void testIsSubClassForCommonTypes() {
 		assertTrue(ReflectUtil.isSubclass(Long.class, Long.class));
 		assertFalse(ReflectUtil.isSubclass(Long.class, long.class));

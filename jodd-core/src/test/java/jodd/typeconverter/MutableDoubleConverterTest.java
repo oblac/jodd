@@ -4,29 +4,32 @@ package jodd.typeconverter;
 
 import jodd.mutable.MutableDouble;
 import jodd.typeconverter.impl.MutableDoubleConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class MutableDoubleConverterTest extends TestCase {
+import static org.junit.Assert.*;
 
-    public void testConversion() {
+public class MutableDoubleConverterTest {
+
+	@Test
+	public void testConversion() {
 		MutableDoubleConverter mutableDoubleConverter = (MutableDoubleConverter) TypeConverterManager.lookup(MutableDouble.class);
-		
-        assertNull(mutableDoubleConverter.convert(null));
 
-        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new MutableDouble(1.73)));
-        assertEquals(new MutableDouble(1), mutableDoubleConverter.convert(Integer.valueOf(1)));
-        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(Double.valueOf(1.73D)));
-        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert("1.73"));
-        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(" 1.73 "));
-        assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new BigDecimal("1.73")));
+		assertNull(mutableDoubleConverter.convert(null));
 
-        try {
-            mutableDoubleConverter.convert("aaaa");
-            fail();
-        } catch (TypeConversionException ignore) {
-        }
-    }
+		assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new MutableDouble(1.73)));
+		assertEquals(new MutableDouble(1), mutableDoubleConverter.convert(Integer.valueOf(1)));
+		assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(Double.valueOf(1.73D)));
+		assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert("1.73"));
+		assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(" 1.73 "));
+		assertEquals(new MutableDouble(1.73), mutableDoubleConverter.convert(new BigDecimal("1.73")));
+
+		try {
+			mutableDoubleConverter.convert("aaaa");
+			fail();
+		} catch (TypeConversionException ignore) {
+		}
+	}
 }
 

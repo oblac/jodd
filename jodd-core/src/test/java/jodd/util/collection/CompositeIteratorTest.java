@@ -2,13 +2,17 @@
 
 package jodd.util.collection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompositeIteratorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+public class CompositeIteratorTest {
+
+	@Test
 	public void testNextWithOne() {
 		CompositeIterator compositeIterator = new CompositeIterator();
 		List list = createList();
@@ -21,6 +25,7 @@ public class CompositeIteratorTest extends TestCase {
 		assertEquals(0, count);
 	}
 
+	@Test
 	public void testRemoveWithOne() {
 		CompositeIterator compositeIterator = new CompositeIterator();
 		List list = createList();
@@ -36,6 +41,7 @@ public class CompositeIteratorTest extends TestCase {
 	}
 
 
+	@Test
 	public void testNextWithTwo() {
 		CompositeIterator compositeIterator = new CompositeIterator();
 		List list = createList();
@@ -52,6 +58,7 @@ public class CompositeIteratorTest extends TestCase {
 		assertEquals(0, count);
 	}
 
+	@Test
 	public void testRemoveWithTwo() {
 		List<Integer> list1 = createList();
 		List<Integer> list2 = createList();
@@ -72,6 +79,7 @@ public class CompositeIteratorTest extends TestCase {
 		assertEquals(0, list2.size());
 	}
 
+	@Test
 	public void testNextWithThree() {
 		List<Integer> list1 = createList();
 		List<Integer> list2 = createList();
@@ -90,6 +98,7 @@ public class CompositeIteratorTest extends TestCase {
 		assertEquals(0, count);
 	}
 
+	@Test
 	public void testRemoveWithThree() {
 		List<Integer> list1 = createList();
 		List<Integer> list2 = new ArrayList<Integer>();
@@ -112,6 +121,7 @@ public class CompositeIteratorTest extends TestCase {
 		assertEquals(0, list3.size());
 	}
 
+	@Test
 	public void testRemoveFail() {
 		List<Integer> list1 = createList();
 		List<Integer> list2 = createList();

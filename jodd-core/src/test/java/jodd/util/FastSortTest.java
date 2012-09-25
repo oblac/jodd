@@ -2,18 +2,21 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-public class FastSortTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class FastSortTest {
 
 	static Random rnd = new Random();
 
+	@Test
 	public void testSort1() {
-		String[] strings = new String[1024*100];
+		String[] strings = new String[1024 * 100];
 
 		for (int i = 0, stringsLength = strings.length; i < stringsLength; i++) {
 			strings[i] = RandomStringUtil.randomAlphaNumeric(10 + rnd.nextInt(100));
@@ -29,8 +32,9 @@ public class FastSortTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSort2() {
-		String[] strings = new String[1024*100];
+		String[] strings = new String[1024 * 100];
 
 		for (int i = 0, stringsLength = strings.length; i < stringsLength; i++) {
 			strings[i] = RandomStringUtil.randomAlphaNumeric(10 + rnd.nextInt(100));

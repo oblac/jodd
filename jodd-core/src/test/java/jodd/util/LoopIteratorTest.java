@@ -2,14 +2,17 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class LoopIteratorTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LoopIteratorTest {
+
+	@Test
 	public void testUp() {
 		LoopIterator ls = new LoopIterator(1, 5);
 
-		assertTrue(ls.next());	// jump to 1
+		assertTrue(ls.next());    // jump to 1
 		assertTrue(ls.isFirst());
 		assertFalse(ls.isLast());
 		assertEquals(1, ls.getValue());
@@ -19,10 +22,10 @@ public class LoopIteratorTest extends TestCase {
 		assertEquals(1, ls.getModulus());
 		assertEquals(0, ls.getIndexModulus());
 
-		assertTrue(ls.next());	// 2
-		assertTrue(ls.next());	// 3
-		assertTrue(ls.next());	// 4
-		assertTrue(ls.next());	// jump to 5
+		assertTrue(ls.next());    // 2
+		assertTrue(ls.next());    // 3
+		assertTrue(ls.next());    // 4
+		assertTrue(ls.next());    // jump to 5
 
 		assertFalse(ls.isFirst());
 		assertTrue(ls.isLast());
@@ -48,10 +51,11 @@ public class LoopIteratorTest extends TestCase {
 		assertEquals(0, ls.getIndexModulus());
 	}
 
+	@Test
 	public void testDown() {
 		LoopIterator ls = new LoopIterator(5, 1, -1);
 
-		assertTrue(ls.next());	// jump to 5
+		assertTrue(ls.next());    // jump to 5
 		assertTrue(ls.isFirst());
 		assertFalse(ls.isLast());
 		assertEquals(5, ls.getValue());
@@ -64,7 +68,7 @@ public class LoopIteratorTest extends TestCase {
 		assertTrue(ls.next());
 		assertTrue(ls.next());
 		assertTrue(ls.next());
-		assertTrue(ls.next());	// jump to 1
+		assertTrue(ls.next());    // jump to 1
 
 		assertFalse(ls.isFirst());
 		assertTrue(ls.isLast());
@@ -90,6 +94,7 @@ public class LoopIteratorTest extends TestCase {
 		assertEquals(0, ls.getIndexModulus());
 	}
 
+	@Test
 	public void testSingle() {
 		LoopIterator ls = new LoopIterator(1, 5, 20, 10);
 		assertTrue(ls.next());
@@ -120,6 +125,7 @@ public class LoopIteratorTest extends TestCase {
 		assertEquals(1, ls.getValue());
 	}
 
+	@Test
 	public void testNone() {
 		LoopIterator ls = new LoopIterator(2, 1);
 		assertFalse(ls.next());

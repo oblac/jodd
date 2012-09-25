@@ -2,13 +2,16 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-import java.util.Locale;
 import java.text.DateFormatSymbols;
+import java.util.Locale;
 
-public class LocaleUtilTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LocaleUtilTest {
+
+	@Test
 	public void testLocaleUtil() {
 		Locale locale1 = LocaleUtil.getLocale("fr", "FR");
 		Locale locale2 = LocaleUtil.getLocale("fr_FR");
@@ -17,7 +20,7 @@ public class LocaleUtilTest extends TestCase {
 		locale1 = LocaleUtil.getLocale("en");
 		locale2 = LocaleUtil.getLocale("en_EN");
 		assertNotSame(locale1, locale2);
-		
+
 		DateFormatSymbols dfs = LocaleUtil.getDateFormatSymbols(locale2);
 		assertEquals("January", dfs.getMonths()[0]);
 

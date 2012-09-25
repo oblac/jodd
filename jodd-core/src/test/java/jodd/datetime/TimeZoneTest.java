@@ -5,19 +5,22 @@ package jodd.datetime;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.impl.SqlDateConverter;
 import jodd.typeconverter.impl.SqlTimestampConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import java.sql.Timestamp;
 
-public class TimeZoneTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class TimeZoneTest {
+
+	@Test
 	public void testTimeZones() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt1 = new JDateTime();
-	    gc.setTimeInMillis(jdt1.getTimeInMillis());
+		gc.setTimeInMillis(jdt1.getTimeInMillis());
 
 		TimeZone tz = TimeZone.getTimeZone("GMT+01:00");
 		jdt1.changeTimeZone(tz);
@@ -66,6 +69,7 @@ public class TimeZoneTest extends TestCase {
 		assertEquals(sqlTimestamp.getTime(), jdt1.getTimeInMillis());
 	}
 
+	@Test
 	public void testTzOffset() {
 		JDateTime now = new JDateTime(2009, 5, 1, 23, 45, 1, 0);
 		now.changeTimeZone(TimeZone.getTimeZone("Europe/Belgrade"));
@@ -82,6 +86,7 @@ public class TimeZoneTest extends TestCase {
 		assertEquals(7 * 3600000, TimeZoneUtil.getOffsetDifference(now, tz1, tz3));
 	}
 
+	@Test
 	public void testDlt() {
 		TimeZone cetTimeZone = TimeZone.getTimeZone("CET");
 		TimeZone cestTimeZone = TimeZone.getTimeZone("CEST");

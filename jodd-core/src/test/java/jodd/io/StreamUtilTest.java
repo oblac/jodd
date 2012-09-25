@@ -2,23 +2,25 @@
 
 package jodd.io;
 
+import jodd.util.ClassLoaderUtil;
+import jodd.util.StringUtil;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
-import jodd.util.StringUtil;
-import junit.framework.TestCase;
-import jodd.util.ClassLoaderUtil;
+import static org.junit.Assert.*;
 
-public class StreamUtilTest extends TestCase {
+public class StreamUtilTest {
 
 	protected String dataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -26,6 +28,7 @@ public class StreamUtilTest extends TestCase {
 		dataRoot = data.getFile();
 	}
 
+	@Test
 	public void testCopy() {
 		AsciiInputStream in = new AsciiInputStream("input");
 		StringOutputStream out = new StringOutputStream();
@@ -39,6 +42,7 @@ public class StreamUtilTest extends TestCase {
 		StreamUtil.close(in);
 	}
 
+	@Test
 	public void testCompare() {
 		try {
 			File file = new File(dataRoot, "file/a.txt");
@@ -59,6 +63,7 @@ public class StreamUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetBytes() {
 		try {
 			FileInputStream in = new FileInputStream(new File(dataRoot, "file/a.txt"));

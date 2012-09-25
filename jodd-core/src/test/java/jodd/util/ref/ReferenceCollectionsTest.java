@@ -2,17 +2,15 @@
 
 package jodd.util.ref;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class ReferenceCollectionsTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ReferenceCollectionsTest {
+
+	@Test
 	@SuppressWarnings({"unchecked"})
 	public void testReferenceMap() {
 		HashMap map = new HashMap();
@@ -39,9 +37,8 @@ public class ReferenceCollectionsTest extends TestCase {
 		assertFalse(it.hasNext());
 		Object[] arr = es.toArray();
 		assertEquals(map.size(), arr.length);
-		assertEquals("xxx", ((Map.Entry)arr[0]).getKey());
-		assertEquals("456", ((Map.Entry)arr[0]).getValue());
-
+		assertEquals("xxx", ((Map.Entry) arr[0]).getKey());
+		assertEquals("456", ((Map.Entry) arr[0]).getValue());
 
 
 		Set keys = rm.keySet();
@@ -67,6 +64,7 @@ public class ReferenceCollectionsTest extends TestCase {
 		assertTrue(rm.isEmpty());
 	}
 
+	@Test
 	@SuppressWarnings({"unchecked"})
 	public void testReferenceSet() {
 		HashSet set = new HashSet();

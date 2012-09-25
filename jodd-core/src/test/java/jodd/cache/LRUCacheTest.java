@@ -2,11 +2,14 @@
 
 package jodd.cache;
 
-import junit.framework.TestCase;
 import jodd.util.ThreadUtil;
+import org.junit.Test;
 
-public class LRUCacheTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LRUCacheTest {
+
+	@Test
 	public void testCache() {
 		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("1", "1");
@@ -25,6 +28,7 @@ public class LRUCacheTest extends TestCase {
 		assertNull(cache.get("4"));
 	}
 
+	@Test
 	public void testCache2() {
 		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("1", "1");
@@ -47,6 +51,7 @@ public class LRUCacheTest extends TestCase {
 		assertNull(cache.get("1"));
 	}
 
+	@Test
 	public void testCacheTime() {
 		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("3", "3");
@@ -60,7 +65,8 @@ public class LRUCacheTest extends TestCase {
 		assertNull(cache.get("1"));     // expired
 		assertFalse(cache.isFull());
 	}
-	
+
+	@Test
 	public void testPrune() {
 		Cache<String, String> cache = new LRUCache<String, String>(3);
 		cache.put("1", "1");
@@ -75,6 +81,7 @@ public class LRUCacheTest extends TestCase {
 		assertEquals(3, cache.size());
 	}
 
+	@Test
 	public void testEndless() {
 		Cache<String, String> cache = new LRUCache<String, String>(0);
 		assertFalse(cache.isFull());

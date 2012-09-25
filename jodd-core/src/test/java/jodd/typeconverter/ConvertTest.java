@@ -2,7 +2,7 @@
 
 package jodd.typeconverter;
 
-import jodd.TestCaseEx;
+import jodd.AssertPrimitiveArraysTestHelper;
 import jodd.datetime.JDateTime;
 
 import java.math.BigDecimal;
@@ -11,11 +11,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.junit.Assert.*;
+
 @SuppressWarnings("ALL")
-public class ConvertTest extends TestCaseEx {
-	
+public class ConvertTest {
+
 	public void testAllConversions() {
-		
+
 		assertEquals(new BigDecimal("11.2"), Convert.toBigDecimal("11.2"));
 		assertNull(Convert.toBigDecimal(null));
 		assertEquals(new BigInteger("123456789"), Convert.toBigInteger("123456789"));
@@ -26,11 +28,11 @@ public class ConvertTest extends TestCaseEx {
 		assertEquals(false, Convert.toBooleanValue(null));
 
 		assertNotNull(Convert.toCalendar((new JDateTime())));
-		
+
 		assertEquals(Character.valueOf('A'), Convert.toCharacter("A"));
 		assertEquals('A', Convert.toCharValue("A", ' '));
 		assertEquals('A', Convert.toCharValue("A"));
-		
+
 		assertEquals(Integer.class, Convert.toClass("java.lang.Integer"));
 
 		assertEquals(Integer.class, Convert.toClassArray("java.lang.Integer")[0]);
@@ -43,13 +45,13 @@ public class ConvertTest extends TestCaseEx {
 		assertEquals(173, Convert.toShortValue("173"));
 		assertEquals(17, Convert.toByteValue("17"));
 
-		assertEquals(1.0d, Convert.toDouble("1"));
+		assertEquals(1.0d, Convert.toDouble("1").doubleValue());
 		assertEquals(1.0d, Convert.toDoubleValue("1", 0));
 		assertEquals(1.0d, Convert.toDoubleValue("1"));
 
-		assertEquals(1.0f, Convert.toFloat("1"));
+		assertEquals(1.0f, Convert.toFloat("1").floatValue());
 		assertEquals(1.0f, Convert.toFloatValue("1", 0));
-		assertEquals(1.0f, Convert.toFloat("1"));
+		assertEquals(1.0f, Convert.toFloat("1").floatValue());
 		assertEquals(1.0f, Convert.toFloatValue("1"));
 
 		assertEquals(12, Convert.toInteger("12").intValue());
@@ -63,16 +65,17 @@ public class ConvertTest extends TestCaseEx {
 
 		assertNotNull(Convert.toString("555"));
 	}
+
 	public void testArrayConversion() {
-		assertEquals(new String[] {"555", "12"}, Convert.toStringArray("555,12"));
-		assertEquals(new String[] {"555", " 12"}, Convert.toStringArray("555, 12"));
-		assertEquals(new boolean[] {true, false, true}, Convert.toBooleanArray("1, 0, true"));
-		assertEquals(new int[] {1,2,-3}, Convert.toIntegerArray("1, 2, -3"));
-		assertEquals(new long[] {-12,2}, Convert.toLongArray("-12, 2"));
-		assertEquals(new float[] {1.1f, 2.2f}, Convert.toFloatArray("1.1, 2.2"), 0.5f);
-		assertEquals(new double[] {1.1, 2.2, -3.3}, Convert.toDoubleArray("1.1, 2.2, -3.3"), 0.5);
-		assertEquals(new short[] {-1,2}, Convert.toShortArray("-1,2"));
-		assertEquals(new char[] {'a', ',', 'A'}, Convert.toCharacterArray("a,A"));
+		assertEquals(new String[]{"555", "12"}, Convert.toStringArray("555,12"));
+		assertEquals(new String[]{"555", " 12"}, Convert.toStringArray("555, 12"));
+		assertEquals(new boolean[]{true, false, true}, Convert.toBooleanArray("1, 0, true"));
+		assertEquals(new int[]{1, 2, -3}, Convert.toIntegerArray("1, 2, -3"));
+		assertEquals(new long[]{-12, 2}, Convert.toLongArray("-12, 2"));
+		AssertPrimitiveArraysTestHelper.assertEquals(new float[]{1.1f, 2.2f}, Convert.toFloatArray("1.1, 2.2"), 0.5f);
+		AssertPrimitiveArraysTestHelper.assertEquals(new double[]{1.1, 2.2, -3.3}, Convert.toDoubleArray("1.1, 2.2, -3.3"), 0.5);
+		assertEquals(new short[]{-1, 2}, Convert.toShortArray("-1,2"));
+		assertEquals(new char[]{'a', ',', 'A'}, Convert.toCharacterArray("a,A"));
 	}
 
 	public void testDefaultConversion() {
@@ -114,9 +117,9 @@ public class ConvertTest extends TestCaseEx {
 		assertEquals(Short.valueOf((short) 3), Convert.toShort(null, Short.valueOf((short) 3)));
 
 	}
-	
+
 	public void testChangeConverter() {
-		String[] array = new String[] {"true", "false", "yeah"};
+		String[] array = new String[]{"true", "false", "yeah"};
 
 		boolean barr[];
 
@@ -127,7 +130,7 @@ public class ConvertTest extends TestCaseEx {
 		}
 
 		// create new boolean type converter
-		
+
 		TypeConverter<Boolean> booleanTypeConverter = new TypeConverter<Boolean>() {
 			public Boolean convert(Object value) {
 				if (value.equals("true")) {
@@ -143,9 +146,9 @@ public class ConvertTest extends TestCaseEx {
 		// change boolean converter! boolean[] depends on it!
 
 		TypeConverterManager.register(boolean.class, booleanTypeConverter);
-		
+
 		barr = Convert.toBooleanArray(array);
-		
+
 		assertTrue(barr[0]);
 		assertFalse(barr[1]);
 		assertTrue(barr[2]);
@@ -154,5 +157,5 @@ public class ConvertTest extends TestCaseEx {
 		TypeConverter tc = TypeConverterManager.lookup(Boolean.class);
 		TypeConverterManager.register(boolean.class, tc);
 	}
-	
+
 }

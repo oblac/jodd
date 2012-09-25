@@ -2,22 +2,25 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
 import jodd.util.collection.SimpleQueue;
 import jodd.util.collection.SimpleStack;
+import org.junit.Test;
 
-public class StackQueueTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class StackQueueTest {
+
+	@Test
 	public void testQueue() {
 		SimpleQueue sq = new SimpleQueue();
 		assertEquals(0, sq.size());
-		sq.put("Hallo!");					// first in
+		sq.put("Hallo!");                    // first in
 		assertEquals(1, sq.size());
 		sq.put("Tschuss!");
 		assertEquals(2, sq.size());
 		sq.put("End");
 		assertEquals(3, sq.size());
-		assertEquals("Hallo!", sq.get());	// first out
+		assertEquals("Hallo!", sq.get());    // first out
 		assertEquals(2, sq.size());
 		assertEquals("Tschuss!", sq.peek());
 		assertEquals(2, sq.size());
@@ -29,6 +32,7 @@ public class StackQueueTest extends TestCase {
 		assertTrue(sq.isEmpty());
 	}
 
+	@Test
 	public void testStack() {
 		SimpleStack ss = new SimpleStack();
 		assertEquals(0, ss.size());
@@ -36,9 +40,9 @@ public class StackQueueTest extends TestCase {
 		assertEquals(1, ss.size());
 		ss.push("Hallo!");
 		assertEquals(2, ss.size());
-		ss.push("Tschuss!");				// last in
+		ss.push("Tschuss!");                // last in
 		assertEquals(3, ss.size());
-		assertEquals("Tschuss!", ss.pop());	// first out
+		assertEquals("Tschuss!", ss.pop());    // first out
 		assertEquals(2, ss.size());
 		assertEquals("Hallo!", ss.peek());
 		assertEquals(2, ss.size());

@@ -3,24 +3,27 @@
 package jodd.util.buffer;
 
 import jodd.util.ArraysUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class FastBuffersTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class FastBuffersTest {
+
+	@Test
 	public void testCommon() {
 		FastIntBuffer fib = new FastIntBuffer(2);
 		fib.append(1);
 		fib.append(2);
 		fib.append(3);
-		
-		fib.append(new int[] {4,5,6,7,8,9});
-		fib.append(new int[] {10,11,12,13,14,15}, 3,1);
 
-		int[] expected = new int[] {1,2,3,4,5,6,7,8,9,13};
+		fib.append(new int[]{4, 5, 6, 7, 8, 9});
+		fib.append(new int[]{10, 11, 12, 13, 14, 15}, 3, 1);
+
+		int[] expected = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13};
 
 		assertEquals(10, fib.size());
 		assertTrue(Arrays.equals(expected, fib.toArray()));
@@ -28,7 +31,8 @@ public class FastBuffersTest extends TestCase {
 		fib.clear();
 		assertEquals(0, fib.size());
 	}
-	
+
+	@Test
 	public void testChunks() {
 		FastIntBuffer fib = new FastIntBuffer(2);
 
@@ -36,23 +40,23 @@ public class FastBuffersTest extends TestCase {
 		assertEquals(0, fib.index());
 		assertEquals(0, fib.offset());
 
-		fib.append(new int[] {1,2,3});
+		fib.append(new int[]{1, 2, 3});
 
 		assertEquals(3, fib.size());
 		assertEquals(1, fib.index());
 		assertEquals(1, fib.offset());
 
-		assertTrue(Arrays.equals(new int[] {1,2}, fib.array(0)));
-		assertTrue(Arrays.equals(new int[] {3,0,0,0}, fib.array(1)));
-		assertTrue(Arrays.equals(new int[] {3}, ArraysUtil.subarray(fib.array(1), 0, fib.offset())));
+		assertTrue(Arrays.equals(new int[]{1, 2}, fib.array(0)));
+		assertTrue(Arrays.equals(new int[]{3, 0, 0, 0}, fib.array(1)));
+		assertTrue(Arrays.equals(new int[]{3}, ArraysUtil.subarray(fib.array(1), 0, fib.offset())));
 
-		fib.append(new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16});
+		fib.append(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
 
 		assertEquals(19, fib.size());
 		assertEquals(2, fib.index());
 		assertEquals(13, fib.array(2).length);
 		assertEquals(13, fib.offset());
-		assertTrue(Arrays.equals(new int[] {4,5,6,7,8,9,10,11,12,13,14,15,16}, ArraysUtil.subarray(fib.array(2), 0, fib.offset())));
+		assertTrue(Arrays.equals(new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}, ArraysUtil.subarray(fib.array(2), 0, fib.offset())));
 
 		fib.append(100);
 
@@ -61,10 +65,11 @@ public class FastBuffersTest extends TestCase {
 		assertEquals(26, fib.array(3).length);
 		assertEquals(1, fib.offset());
 	}
-	
+
+	@Test
 	public void testInnerBuffers() {
 		FastIntBuffer fib = new FastIntBuffer(1);
-		
+
 		fib.append(new int[2]);
 		assertEquals(1, fib.offset());
 		fib.append(new int[4]);
@@ -91,6 +96,7 @@ public class FastBuffersTest extends TestCase {
 		assertEquals(65535, fib.offset());
 	}
 
+	@Test
 	public void testAt() {
 		FastCharBuffer fcb = new FastCharBuffer(2);
 		fcb.append("12abc");
@@ -104,28 +110,26 @@ public class FastBuffersTest extends TestCase {
 		assertEquals("12abc", fcb.toString());
 	}
 
+	@Test
 	public void testAtExceptions() {
 		FastCharBuffer fcb = new FastCharBuffer();
-		
+
 		try {
 			fcb.charAt(-1);
 			fail();
-		}
-		catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
 		try {
 			fcb.charAt(0);
 			fail();
-		}
-		catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
 		try {
 			fcb.charAt(1);
 			fail();
-		}
-		catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 		}
 
 		fcb.append('a');
@@ -134,11 +138,11 @@ public class FastBuffersTest extends TestCase {
 		try {
 			fcb.charAt(1);
 			fail();
-		}
-		catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 		}
 	}
 
+	@Test
 	public void testArray() {
 		String str = "12abcd12345678qw";
 		FastCharBuffer fcb = new FastCharBuffer(2);
@@ -154,7 +158,8 @@ public class FastBuffersTest extends TestCase {
 			}
 		}
 	}
-	
+
+	@Test
 	public void testAppend() {
 		String str = "1AB123412345678QWER";
 		FastCharBuffer fcb = new FastCharBuffer(1);
@@ -167,7 +172,8 @@ public class FastBuffersTest extends TestCase {
 
 		assertEquals("qASzxcvPOIUY1AB123412345678QWER", fcb2.toString());
 	}
-	
+
+	@Test
 	public void testIterator() {
 		FastBuffer<String> fb = new FastBuffer<String>();
 		for (int i = 0; i < 100; i++) {
@@ -175,15 +181,15 @@ public class FastBuffersTest extends TestCase {
 		}
 
 		assertEquals("23", fb.get(23));
-		
+
 		Iterator<String> it = fb.iterator();
-		
+
 		for (int i = 0; i < 100; i++) {
 			assertTrue(it.hasNext());
 			assertEquals(String.valueOf(i), it.next());
 		}
 		assertFalse(it.hasNext());
-		
+
 		try {
 			it.next();
 			fail();

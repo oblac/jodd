@@ -8,22 +8,22 @@ public class TFooBean implements Serializable, TFooIndyEx {
 
 	private static final long serialVersionUID = 3689908457570776112L;
 
-	public String getPublic() { 
+	public String getPublic() {
 		return "public";
 	}
-	
-	String getDefault() { 
+
+	String getDefault() {
 		return "default";
 	}
-	
-	protected String getProtected() { 
+
+	protected String getProtected() {
 		return "protected";
 	}
-	
-	private String getPrivate() { 
+
+	private String getPrivate() {
 		return "private";
 	}
-	
+
 	public String getMore(String s, Integer i) {
 		return s + i;
 	}

@@ -2,7 +2,8 @@
 
 package jodd.io;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,13 +11,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.zip.ZipOutputStream;
 
-public class ZipUtilTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ZipUtilTest {
 
 	protected String dataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -24,6 +27,7 @@ public class ZipUtilTest extends TestCase {
 		dataRoot = data.getFile();
 	}
 
+	@Test
 	public void testGzip() throws IOException {
 		ZipUtil.gzip(new File(dataRoot, "sb.data"));
 		File gzipFile = new File(dataRoot, "sb.data.gz");
@@ -33,7 +37,7 @@ public class ZipUtilTest extends TestCase {
 		ZipUtil.ungzip(new File(dataRoot, "sb2.data.gz"));
 		File data = new File(dataRoot, "sb2.data");
 		assertTrue(data.exists());
-		
+
 		byte[] data2Bytes = FileUtil.readBytes(data);
 		byte[] data1Bytes = FileUtil.readBytes(new File(dataRoot, "sb.data"));
 
@@ -44,6 +48,7 @@ public class ZipUtilTest extends TestCase {
 		FileUtil.delete(new File(dataRoot, "sb2.data.gz"));
 	}
 
+	@Test
 	public void testZlib() throws IOException {
 		ZipUtil.zlib(new File(dataRoot, "sb.data"));
 		File zlibFile = new File(dataRoot, "sb.data.zlib");
@@ -52,7 +57,8 @@ public class ZipUtilTest extends TestCase {
 		// cleanup
 		FileUtil.delete(zlibFile);
 	}
-	
+
+	@Test
 	public void testZip() throws IOException {
 		ZipUtil.zip(new File(dataRoot, "sb.data"));
 		File zipFile = new File(dataRoot, "sb.data.zip");
@@ -66,18 +72,19 @@ public class ZipUtilTest extends TestCase {
 		// cleanup
 		FileUtil.delete(zipFile);
 	}
-	
+
+	@Test
 	public void testZipStreams() throws IOException {
 		File zipFile = new File(dataRoot, "test.zip");
-		
+
 		ZipOutputStream zos = ZipUtil.createZip(zipFile);
-		
+
 		ZipUtil.addToZip(zos, new File(dataRoot, "sb.data"), "sbdata", "This is sb data file");
 
 		ZipUtil.addToZip(zos, new File(dataRoot, "file"), "folder", "This is a folder and all its files");
 
 		StreamUtil.close(zos);
-		
+
 		assertTrue(zipFile.exists());
 
 		ZipUtil.unzip(zipFile, new File(dataRoot), "sbda*");

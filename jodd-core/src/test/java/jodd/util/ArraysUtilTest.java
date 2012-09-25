@@ -2,9 +2,16 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ArraysUtilTest extends TestCase {
+import static jodd.AssertPrimitiveArraysTestHelper.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+
+public class ArraysUtilTest {
 
 	int[] x;
 	int[] y;
@@ -12,9 +19,8 @@ public class ArraysUtilTest extends TestCase {
 	Long[] xx;
 	Long[] yy;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		x = new int[5];
 		xx = new Long[5];
 		for (int i = 0; i < x.length; i++) {
@@ -29,87 +35,83 @@ public class ArraysUtilTest extends TestCase {
 		}
 	}
 
-	protected void assertEquals(int[] expected, int[] provided) {
-		assertEquals(expected.length, provided.length);
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i], provided[i]);
-		}
-	}
-
-	protected void assertEquals(long[] expected, long[] provided) {
-		assertEquals(expected.length, provided.length);
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i], provided[i]);
-		}
-	}
-
+	@Test
 	public void testJoin() {
-		assertEquals(new int[] {1,2,3,4,5,11,12,13}, ArraysUtil.join(x, y));
-		assertEquals(new long[] {1,2,3,4,5,11,12,13}, ArraysUtil.values(ArraysUtil.join(xx, yy)));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.join(x, y));
+		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.join(xx, yy)));
 	}
 
+	@Test
 	public void testMerge() {
-		assertEquals(new int[] {1,2,3,4,5,11,12,13}, ArraysUtil.merge(x, y));
-		assertEquals(new long[] {1,2,3,4,5,11,12,13}, ArraysUtil.values(ArraysUtil.merge(xx, yy)));
-		assertEquals(new int[] {1,2,3,4,5,11,12,13,11,12,13}, ArraysUtil.merge(x, y, y));
-		assertEquals(new long[] {1,2,3,4,5,11,12,13,11,12,13}, ArraysUtil.values(ArraysUtil.merge(xx, yy, yy)));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.merge(x, y));
+		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy)));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.merge(x, y, y));
+		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy, yy)));
 	}
 
+	@Test
 	public void testAppend() {
-		assertEquals(new int[] {1,2,3,4,5,100}, ArraysUtil.append(x, 100));
-		assertEquals(new long[] {1,2,3,4,5,100}, ArraysUtil.values(ArraysUtil.append(xx, Long.valueOf(100))));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 100}, ArraysUtil.append(x, 100));
+		assertEquals(new long[]{1, 2, 3, 4, 5, 100}, ArraysUtil.values(ArraysUtil.append(xx, Long.valueOf(100))));
 	}
 
+	@Test
 	public void testResize() {
-		assertEquals(new int[] {1,2,3}, ArraysUtil.resize(x, 3));
-		assertEquals(new long[] {1,2,3}, ArraysUtil.values(ArraysUtil.resize(xx, 3)));
-		assertEquals(new int[] {1,2,3,4,5,0,0}, ArraysUtil.resize(x, 7));
-		assertEquals(new long[] {1,2,3,4,5,0,0}, ArraysUtil.values(ArraysUtil.resize(xx, 7)));
-		assertEquals(new int[] {}, ArraysUtil.resize(x, 0));
+		assertEquals(new int[]{1, 2, 3}, ArraysUtil.resize(x, 3));
+		assertEquals(new long[]{1, 2, 3}, ArraysUtil.values(ArraysUtil.resize(xx, 3)));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.resize(x, 7));
+		assertEquals(new long[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.values(ArraysUtil.resize(xx, 7)));
+		assertEquals(new int[]{}, ArraysUtil.resize(x, 0));
 	}
 
+	@Test
 	public void testSub() {
-		assertEquals(new int[] {2,3,4}, ArraysUtil.subarray(x, 1, 3));
-		assertEquals(new long[] {2,3,4}, ArraysUtil.values(ArraysUtil.subarray(xx, 1, 3)));
+		assertEquals(new int[]{2, 3, 4}, ArraysUtil.subarray(x, 1, 3));
+		assertEquals(new long[]{2, 3, 4}, ArraysUtil.values(ArraysUtil.subarray(xx, 1, 3)));
 	}
 
+	@Test
 	public void testInsert() {
-		assertEquals(new int[] {1,2,3,11,12,13,4,5}, ArraysUtil.insert(x, y, 3));
-		assertEquals(new int[] {11,12,13,1,2,3,4,5}, ArraysUtil.insert(x, y, 0));
-		assertEquals(new int[] {1,2,3,4,5,11,12,13}, ArraysUtil.insert(x, y, 5));
+		assertEquals(new int[]{1, 2, 3, 11, 12, 13, 4, 5}, ArraysUtil.insert(x, y, 3));
+		assertEquals(new int[]{11, 12, 13, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, y, 0));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.insert(x, y, 5));
 
-		assertEquals(new int[] {1,2,3,173,4,5}, ArraysUtil.insert(x, 173, 3));
-		assertEquals(new int[] {173,1,2,3,4,5}, ArraysUtil.insert(x, 173, 0));
-		assertEquals(new int[] {1,2,3,4,5,173}, ArraysUtil.insert(x, 173, 5));
+		assertEquals(new int[]{1, 2, 3, 173, 4, 5}, ArraysUtil.insert(x, 173, 3));
+		assertEquals(new int[]{173, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, 173, 0));
+		assertEquals(new int[]{1, 2, 3, 4, 5, 173}, ArraysUtil.insert(x, 173, 5));
 	}
 
+	@Test
 	public void testInsertAt() {
-		assertEquals(new int[] {1,2,3,11,12,13,5}, ArraysUtil.insertAt(x, y, 3));
-		assertEquals(new int[] {11,12,13,2,3,4,5}, ArraysUtil.insertAt(x, y, 0));
-		assertEquals(new int[] {1,2,3,4,11,12,13}, ArraysUtil.insertAt(x, y, 4));
+		assertEquals(new int[]{1, 2, 3, 11, 12, 13, 5}, ArraysUtil.insertAt(x, y, 3));
+		assertEquals(new int[]{11, 12, 13, 2, 3, 4, 5}, ArraysUtil.insertAt(x, y, 0));
+		assertEquals(new int[]{1, 2, 3, 4, 11, 12, 13}, ArraysUtil.insertAt(x, y, 4));
 	}
 
 
+	@Test
 	public void testIndexOf() {
-		assertEquals(0, ArraysUtil.indexOf(x, 1));
-		assertEquals(1, ArraysUtil.indexOf(x, 2));
-		assertEquals(4, ArraysUtil.indexOf(x, 5));
-		assertEquals(-1, ArraysUtil.indexOf(x, 6));
-		assertEquals(1, ArraysUtil.indexOf(xx, Long.valueOf(2)));
-		assertEquals(-1, ArraysUtil.indexOf(xx, Long.valueOf(12)));
-		assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12)));
-		assertEquals(-1, ArraysUtil.indexOf(yy, Long.valueOf(12), 2));
+		Assert.assertEquals(0, ArraysUtil.indexOf(x, 1));
+		Assert.assertEquals(1, ArraysUtil.indexOf(x, 2));
+		Assert.assertEquals(4, ArraysUtil.indexOf(x, 5));
+		Assert.assertEquals(-1, ArraysUtil.indexOf(x, 6));
+		Assert.assertEquals(1, ArraysUtil.indexOf(xx, Long.valueOf(2)));
+		Assert.assertEquals(-1, ArraysUtil.indexOf(xx, Long.valueOf(12)));
+		Assert.assertEquals(1, ArraysUtil.indexOf(yy, Long.valueOf(12)));
+		Assert.assertEquals(-1, ArraysUtil.indexOf(yy, Long.valueOf(12), 2));
 	}
 
+	@Test
 	public void testIndexOf2() {
-		assertEquals(0, ArraysUtil.indexOf(x, new int[] {}));
-		assertEquals(0, ArraysUtil.indexOf(x, new int[] {1,2,3}));
-		assertEquals(-1, ArraysUtil.indexOf(x, new int[] {1,2,3,7}));
+		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[]{}));
+		Assert.assertEquals(0, ArraysUtil.indexOf(x, new int[]{1, 2, 3}));
+		Assert.assertEquals(-1, ArraysUtil.indexOf(x, new int[]{1, 2, 3, 7}));
 
-		assertEquals(1, ArraysUtil.indexOf(x, new int[] {2,3}));
-		assertEquals(4, ArraysUtil.indexOf(x, new int[] {5}));
+		Assert.assertEquals(1, ArraysUtil.indexOf(x, new int[]{2, 3}));
+		Assert.assertEquals(4, ArraysUtil.indexOf(x, new int[]{5}));
 	}
 
+	@Test
 	public void testContains() {
 		assertTrue(ArraysUtil.contains(x, 1));
 		assertTrue(ArraysUtil.contains(x, 2));
@@ -120,42 +122,47 @@ public class ArraysUtilTest extends TestCase {
 		assertTrue(ArraysUtil.contains(yy, Long.valueOf(13)));
 		assertFalse(ArraysUtil.contains(yy, Long.valueOf(13), 3));
 	}
-	public void testContains2() {
-		assertTrue(ArraysUtil.contains(x, new int[] {}));
-		assertTrue(ArraysUtil.contains(x, new int[] {1,2,3}));
-		assertFalse(ArraysUtil.contains(x, new int[] {1,2,3,7}));
 
-		assertTrue(ArraysUtil.contains(x, new int[] {2,3}));
-		assertTrue(ArraysUtil.contains(x, new int[] {5}));
+	@Test
+	public void testContains2() {
+		assertTrue(ArraysUtil.contains(x, new int[]{}));
+		assertTrue(ArraysUtil.contains(x, new int[]{1, 2, 3}));
+		assertFalse(ArraysUtil.contains(x, new int[]{1, 2, 3, 7}));
+
+		assertTrue(ArraysUtil.contains(x, new int[]{2, 3}));
+		assertTrue(ArraysUtil.contains(x, new int[]{5}));
 	}
 
 
+	@Test
 	public void testConvert() {
-		Integer[] src = new Integer[] {Integer.valueOf(1), null, Integer.valueOf(3)};
+		Integer[] src = new Integer[]{Integer.valueOf(1), null, Integer.valueOf(3)};
 		int[] dest = ArraysUtil.values(src);
-		assertEquals(3, dest.length);
-		assertEquals(1, dest[0]);
-		assertEquals(0, dest[1]);
-		assertEquals(3, dest[2]);
+		Assert.assertEquals(3, dest.length);
+		Assert.assertEquals(1, dest[0]);
+		Assert.assertEquals(0, dest[1]);
+		Assert.assertEquals(3, dest[2]);
 
 		src = ArraysUtil.valuesOf(dest);
-		assertEquals(3, src.length);
-		assertEquals(1, src[0].intValue());
-		assertEquals(0, src[1].intValue());
-		assertEquals(3, src[2].intValue());
+		Assert.assertEquals(3, src.length);
+		Assert.assertEquals(1, src[0].intValue());
+		Assert.assertEquals(0, src[1].intValue());
+		Assert.assertEquals(3, src[2].intValue());
 
 	}
 
+	@Test
 	public void testToString() {
-		assertEquals("1, 2, 3", ArraysUtil.toString(new int[] {1,2,3}));
-		assertEquals("1, null, 3.1", ArraysUtil.toString(new Object[] {1,null,3.1}));
-		assertEquals("null", ArraysUtil.toString((long[]) null));
+		Assert.assertEquals("1, 2, 3", ArraysUtil.toString(new int[]{1, 2, 3}));
+		Assert.assertEquals("1, null, 3.1", ArraysUtil.toString(new Object[]{1, null, 3.1}));
+		Assert.assertEquals("null", ArraysUtil.toString((long[]) null));
 	}
 
+	@Test
 	public void testRemove() {
-		assertEquals(new int[] {1,2,5}, ArraysUtil.remove(x, 2, 2));
-		assertEquals(new int[] {1}, ArraysUtil.remove(x, 1, 4));
-		assertEquals(new long[] {1,3,4,5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
+		assertEquals(new int[]{1, 2, 5}, ArraysUtil.remove(x, 2, 2));
+		assertEquals(new int[]{1}, ArraysUtil.remove(x, 1, 4));
+		assertEquals(new long[]{1, 3, 4, 5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
 	}
 
 }

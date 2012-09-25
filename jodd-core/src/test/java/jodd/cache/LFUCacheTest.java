@@ -3,11 +3,14 @@
 package jodd.cache;
 
 import jodd.mutable.MutableInteger;
-import junit.framework.TestCase;
 import jodd.util.ThreadUtil;
+import org.junit.Test;
 
-public class LFUCacheTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LFUCacheTest {
+
+	@Test
 	public void testCache() {
 		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1");
@@ -27,6 +30,7 @@ public class LFUCacheTest extends TestCase {
 		assertNotNull(cache.get("3"));
 	}
 
+	@Test
 	public void testCache2() {
 		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1");
@@ -40,19 +44,20 @@ public class LFUCacheTest extends TestCase {
 		assertNotNull(cache.get("3"));  // boost usage of a 3
 		assertNotNull(cache.get("1"));
 		assertNotNull(cache.get("2"));
-		cache.put("4", "4");			// since this is LFU cache, 1 AND 2 will be removed, but not 3
+		cache.put("4", "4");            // since this is LFU cache, 1 AND 2 will be removed, but not 3
 		assertNotNull(cache.get("3"));
 		assertNotNull(cache.get("4"));
 		assertEquals(2, cache.size());
 	}
 
+	@Test
 	public void testCacheTime() {
 		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1", 50);
 		assertNotNull(cache.get("1"));
 		assertNotNull(cache.get("1"));  // boost usage
 		cache.put("2", "2");
-		cache.get("2");		
+		cache.get("2");
 		assertFalse(cache.isFull());
 		cache.put("3", "3");
 		assertTrue(cache.isFull());
@@ -74,6 +79,7 @@ public class LFUCacheTest extends TestCase {
 		assertNull(cache.get("1"));
 	}
 
+	@Test
 	public void testPrune() {
 		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1");
@@ -89,6 +95,7 @@ public class LFUCacheTest extends TestCase {
 		assertEquals(1, cache.size());
 	}
 
+	@Test
 	public void testBoosting() {
 		Cache<String, String> cache = new LFUCache<String, String>(3);
 		cache.put("1", "1");
@@ -109,21 +116,21 @@ public class LFUCacheTest extends TestCase {
 
 		cache.put("4", "4");
 
-		assertNull(cache.get("1"));		// 1 is less frequent and it is out of cache
-		assertNotNull(cache.get("4"));	// 4 is new and it is inside
+		assertNull(cache.get("1"));        // 1 is less frequent and it is out of cache
+		assertNotNull(cache.get("4"));    // 4 is new and it is inside
 
 		cache.get("3");
 		cache.get("2");
 
 		// bad sequence
 		cache.put("5", "5");
-		cache.get("5");				// situation: 2(1), 3(2), 5(1)   value(accessCount)
+		cache.get("5");                // situation: 2(1), 3(2), 5(1)   value(accessCount)
 		cache.put("4", "4");
-		cache.get("4");				// situation: 3(1), 4(1)
+		cache.get("4");                // situation: 3(1), 4(1)
 		cache.put("5", "5");
-		cache.get("5");				// situation: 3(1), 4(1), 5(1)
+		cache.get("5");                // situation: 3(1), 4(1), 5(1)
 		cache.put("4", "4");
-		cache.get("4");				// situation: 4(1)
+		cache.get("4");                // situation: 4(1)
 
 		assertNull(cache.get("1"));
 		assertNull(cache.get("2"));
@@ -132,6 +139,7 @@ public class LFUCacheTest extends TestCase {
 		assertNull(cache.get("5"));
 	}
 
+	@Test
 	public void testOnRemove() {
 		final MutableInteger mutableInteger = new MutableInteger();
 		Cache<String, String> cache = new LFUCache<String, String>(2) {

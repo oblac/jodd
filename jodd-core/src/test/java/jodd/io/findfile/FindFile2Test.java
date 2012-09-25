@@ -3,18 +3,20 @@
 package jodd.io.findfile;
 
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 
-public class FindFile2Test extends TestCase {
+import static org.junit.Assert.*;
+
+public class FindFile2Test {
 
 	protected String dataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -22,6 +24,7 @@ public class FindFile2Test extends TestCase {
 		dataRoot = data.getFile();
 	}
 
+	@Test
 	public void testAcceptAndWalk() {
 		final StringBuilder s1 = new StringBuilder();
 		final StringBuilder s2 = new StringBuilder();
@@ -70,6 +73,7 @@ public class FindFile2Test extends TestCase {
 		assertTrue(s2.indexOf("| sumo | gamma |") != -1);
 	}
 
+	@Test
 	public void testTwoRoots() {
 
 		FindFile ff = new WildcardFindFile("**");
@@ -99,6 +103,7 @@ public class FindFile2Test extends TestCase {
 
 	}
 
+	@Test
 	public void testTwoRootsAndWildcardMatchTypes() {
 
 		WildcardFindFile wff = new WildcardFindFile();
@@ -154,6 +159,7 @@ public class FindFile2Test extends TestCase {
 		assertEquals(1, count);
 	}
 
+	@Test
 	public void testNonExisting() {
 		FindFile wff = new FindFile();
 
@@ -171,6 +177,7 @@ public class FindFile2Test extends TestCase {
 		assertEquals(0, count);
 	}
 
+	@Test
 	public void testNotFound() {
 		WildcardFindFile wff = new WildcardFindFile();
 		wff.setIncludeDirs(true);
@@ -191,6 +198,7 @@ public class FindFile2Test extends TestCase {
 	}
 
 
+	@Test
 	public void testSort() {
 		final StringBuilder str = new StringBuilder();
 
@@ -258,6 +266,7 @@ public class FindFile2Test extends TestCase {
 
 	}
 
+	@Test
 	public void testJustFoldersAndFiles() {
 		FindFile ff = new FindFile();
 		ff.setIncludeDirs(false);

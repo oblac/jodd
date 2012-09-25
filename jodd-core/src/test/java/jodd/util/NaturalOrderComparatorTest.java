@@ -2,29 +2,35 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class NaturalOrderComparatorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class NaturalOrderComparatorTest {
+
+	@Test
 	public void testNatural202() {
 		assertEquals(1, new NaturalOrderComparator<String>().compare("2-02", "2-2"));
 	}
 
+	@Test
 	public void testNaturalSig() {
 		assertEquals(-1, new NaturalOrderComparator<String>().compare("sig[0]", "sig[1]"));
 	}
 
+	@Test
 	public void testNaturalSig00() {
 		assertEquals(-1, new NaturalOrderComparator<String>().compare("sig[0]", "sig[00]"));
 	}
 
+	@Test
 	public void testNaturalOrder() {
 
-		String[] strings = new String[] {
+		String[] strings = new String[]{
 				"1.2.9.1",
 				"1.2.10",
 				"1.2.10.5",

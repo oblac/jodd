@@ -2,10 +2,14 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class WildcardTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+public class WildcardTest {
+
+	@Test
 	public void testMatch() {
 		assertTrue(Wildcard.match("CfgOptions.class", "C*class"));
 		assertFalse(Wildcard.match("CfgOptions.class", "C*clas"));
@@ -19,7 +23,7 @@ public class WildcardTest extends TestCase {
 
 		// multiple wildcards
 		assertTrue(Wildcard.match("CfgOptions.class", "*g*c**ss"));
-		assertTrue(Wildcard.match("CfgOptions.class", "*g*c**s"));	// THIS IS TRUE!!!
+		assertTrue(Wildcard.match("CfgOptions.class", "*g*c**s"));    // THIS IS TRUE!!!
 		assertTrue(Wildcard.match("CfgOptions.class", "*gOpti******ons.c**ss"));
 		assertTrue(Wildcard.match("CfgOptions.class", "***gOpti*ons.c**ss"));
 		assertTrue(Wildcard.match("CfgOptions.class", "***gOptions.c**"));
@@ -52,6 +56,7 @@ public class WildcardTest extends TestCase {
 	 * Only match() has escaped wildcards; matchPath() does not have them
 	 * as escape character is equal to one of the path characters..
 	 */
+	@Test
 	public void testMatchEscapedWildcards() {
 		assertFalse(Wildcard.match("CfgOptions.class", "*gOpti\\*c?ass"));
 		assertTrue(Wildcard.match("CfgOpti*class", "*gOpti\\*class"));
@@ -64,6 +69,7 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.match("What's this?", "What*\\?"));
 	}
 
+	@Test
 	public void testMatchPath1() {
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "C*class"));
 		assertFalse(Wildcard.matchPath("CfgOptions.class", "C*clas"));
@@ -77,7 +83,7 @@ public class WildcardTest extends TestCase {
 
 		// multiple wildcards
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "*g*c**ss"));
-		assertTrue(Wildcard.matchPath("CfgOptions.class", "*g*c**s"));	// THIS IS TRUE!!!
+		assertTrue(Wildcard.matchPath("CfgOptions.class", "*g*c**s"));    // THIS IS TRUE!!!
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "*gOpti******ons.c**ss"));
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "***gOpti*ons.c**ss"));
 		assertTrue(Wildcard.matchPath("CfgOptions.class", "***gOptions.c**"));
@@ -106,12 +112,14 @@ public class WildcardTest extends TestCase {
 		assertFalse(Wildcard.matchPath("CfgOptions.class", "C*ti*c?*la?*"));
 	}
 
+	@Test
 	public void testMatchWildcard() {
 		assertTrue(Wildcard.match("app.nfo", "app*"));
 		assertFalse(Wildcard.match("\\app.nfo", "app*"));
 		assertTrue(Wildcard.match("\\app.nfo", "\\\\app*"));
 	}
 
+	@Test
 	public void testMatchPath2() {
 		assertTrue(Wildcard.matchPath("/foo", "/fo*"));
 		assertTrue(Wildcard.matchPath("/foo", "/**"));
@@ -138,6 +146,7 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.matchPath("c:\\najgor", "?:\\**\\naj**r"));
 	}
 
+	@Test
 	public void testDifferences() {
 		assertTrue(Wildcard.match("/uphea", "*/uphea*"));
 		assertTrue(Wildcard.match("/prj/uphea-app.jar", "*/uphea*"));
@@ -157,6 +166,7 @@ public class WildcardTest extends TestCase {
 		assertTrue(Wildcard.matchPath("/some/path/lib-jodd-v1", "**/lib-jodd*"));
 	}
 
+	@Test
 	public void testMore() {
 		assertTrue(Wildcard.matchPath("/a/b/c/d", "**/b/**"));
 		assertTrue(Wildcard.matchPath("/a/b/c", "**/b/**"));

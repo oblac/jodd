@@ -3,9 +3,15 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.DoubleArrayConverter;
+import org.junit.Test;
 
-public class DoubleArrayConverterTest extends BaseTestCase {
+import static jodd.typeconverter.TypeConverterTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class DoubleArrayConverterTest {
+
+	@Test
 	public void testConversion() {
 		DoubleArrayConverter doubleArrayConverter = (DoubleArrayConverter) TypeConverterManager.lookup(double[].class);
 
@@ -17,8 +23,8 @@ public class DoubleArrayConverterTest extends BaseTestCase {
 		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrl(1, 7, 3)));
 		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrf(1, 7, 3)));
 		assertEq(arrd(1.0, 0.0, 1.0), doubleArrayConverter.convert(arrl(true, false, true)));
-		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrb((byte)1, (byte)7, (byte)3)));
-		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrs((short)1, (short)7, (short)3)));
+		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrb((byte) 1, (byte) 7, (byte) 3)));
+		assertEq(arrd(1.0, 7.0, 3.0), doubleArrayConverter.convert(arrs((short) 1, (short) 7, (short) 3)));
 		assertEq(arrd(1.73, 10.22), doubleArrayConverter.convert(arrs("1.73", "10.22")));
 		assertEq(arrd(1.73, 10.22), doubleArrayConverter.convert(arrs(" 1.73 ", " 10.22 ")));
 		assertEq(arrd(1.73, 10), doubleArrayConverter.convert(arro("1.73", Integer.valueOf(10))));

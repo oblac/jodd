@@ -3,10 +3,14 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BooleanConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BooleanConverterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class BooleanConverterTest {
+
+	@Test
 	public void testConversion() {
 		BooleanConverter booleanConverter = new BooleanConverter();
 

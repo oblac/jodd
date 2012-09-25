@@ -2,11 +2,14 @@
 
 package jodd.datetime;
 
-import junit.framework.TestCase;
 import jodd.util.LocaleUtil;
+import org.junit.Test;
 
-public class LocaleTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class LocaleTest {
+
+	@Test
 	public void testFrench() {
 		JDateTime jdt = new JDateTime(2012, 12, 21);
 		jdt.setLocale(LocaleUtil.getLocale("fr"));

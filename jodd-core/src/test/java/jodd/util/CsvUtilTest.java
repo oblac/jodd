@@ -2,10 +2,13 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class CsvUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class CsvUtilTest {
+
+	@Test
 	public void testToCsv() {
 		assertEquals("a", CsvUtil.toCsvString("a"));
 		assertEquals("a,b", CsvUtil.toCsvString("a", "b"));
@@ -19,18 +22,19 @@ public class CsvUtilTest extends TestCase {
 		assertEquals("\"a\nb\"", CsvUtil.toCsvString("a\nb"));
 	}
 
+	@Test
 	public void testFromCsv() {
 		assertStringArray(CsvUtil.toStringArray("a"), "a");
-		assertStringArray(CsvUtil.toStringArray("a,b"), "a","b");
-		assertStringArray(CsvUtil.toStringArray("a, b "), "a"," b ");
-		assertStringArray(CsvUtil.toStringArray("a,\" b \""), "a"," b ");
-		assertStringArray(CsvUtil.toStringArray("a,b,"), "a","b", "");
-		assertStringArray(CsvUtil.toStringArray("a,b,\"jo,e\""), "a","b", "jo,e");
-		assertStringArray(CsvUtil.toStringArray("a,b,\"\"\"some\"\"r\""), "a","b", "\"some\"r");
+		assertStringArray(CsvUtil.toStringArray("a,b"), "a", "b");
+		assertStringArray(CsvUtil.toStringArray("a, b "), "a", " b ");
+		assertStringArray(CsvUtil.toStringArray("a,\" b \""), "a", " b ");
+		assertStringArray(CsvUtil.toStringArray("a,b,"), "a", "b", "");
+		assertStringArray(CsvUtil.toStringArray("a,b,\"jo,e\""), "a", "b", "jo,e");
+		assertStringArray(CsvUtil.toStringArray("a,b,\"\"\"some\"\"r\""), "a", "b", "\"some\"r");
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super, luxurious truck\""), "1997", "Ford", "E350", "Super, luxurious truck");
 		assertStringArray(CsvUtil.toStringArray("1997,Ford,E350,\"Super \"\"luxurious\"\" truck\""), "1997", "Ford", "E350", "Super \"luxurious\" truck");
 		assertStringArray(CsvUtil.toStringArray("\"a\nb\""), "a\nb");
-		assertStringArray(CsvUtil.toStringArray("a,,b"), "a","", "b");
+		assertStringArray(CsvUtil.toStringArray("a,,b"), "a", "", "b");
 	}
 
 

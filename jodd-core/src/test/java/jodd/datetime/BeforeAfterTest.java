@@ -2,10 +2,13 @@
 
 package jodd.datetime;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BeforeAfterTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class BeforeAfterTest {
+
+	@Test
 	public void testBefore() {
 		JDateTime now = new JDateTime();
 		JDateTime future = now.clone();
@@ -35,6 +38,7 @@ public class BeforeAfterTest extends TestCase {
 		assertTrue(now.equalsTime(future2));
 	}
 
+	@Test
 	public void testAfter() {
 		JDateTime now = new JDateTime();
 		JDateTime past = now.clone();

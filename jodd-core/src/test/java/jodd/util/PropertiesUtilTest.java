@@ -2,20 +2,23 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-import java.util.Properties;
 import java.io.IOException;
+import java.util.Properties;
 
 import static jodd.util.PropertiesUtil.resolveProperty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-public class PropertiesUtilTest extends TestCase {
+public class PropertiesUtilTest {
 
+	@Test
 	public void testResolve() throws IOException {
 		Properties p = PropertiesUtil.createFromString(
 				"foo=foo\n" +
-				"boo.foo=*${foo}*\n" +
-				"zoo=${boo.${foo}}");
+						"boo.foo=*${foo}*\n" +
+						"zoo=${boo.${foo}}");
 		assertEquals(3, p.size());
 
 		assertNull(p.getProperty("xxx"));
@@ -34,12 +37,13 @@ public class PropertiesUtilTest extends TestCase {
 		assertEquals("*foo*", p.getProperty("zoo"));
 	}
 
+	@Test
 	public void testEscape() throws IOException {
 		Properties p = PropertiesUtil.createFromString(
 				"foo=foo\n" +
-				"boo.foo=*\\\\${foo}*\n" +
-				"zoo=\\\\${boo.\\\\${foo}}\n" +
-				"doo=\\\\\\\\${foo}");
+						"boo.foo=*\\\\${foo}*\n" +
+						"zoo=\\\\${boo.\\\\${foo}}\n" +
+						"doo=\\\\\\\\${foo}");
 		assertEquals(4, p.size());
 
 		assertNull(p.getProperty("xxx"));
@@ -55,6 +59,7 @@ public class PropertiesUtilTest extends TestCase {
 		assertEquals("\\foo", resolveProperty(p, "doo"));
 	}
 
+	@Test
 	public void testNull() {
 
 		Properties properties = new Properties();

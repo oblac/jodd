@@ -3,15 +3,18 @@
 package jodd.datetime;
 
 import jodd.typeconverter.Convert;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 import static java.util.Calendar.HOUR;
+import static org.junit.Assert.*;
 
-public class DstTest extends TestCase {
+public class DstTest {
 
+	@Test
 	public void testSpringForward() {
 		TimeZone englandTZ = TimeZone.getTimeZone("Europe/London");
 		TimeZone.setDefault(englandTZ);
@@ -73,6 +76,7 @@ public class DstTest extends TestCase {
 	}
 */
 
+	@Test
 	public void testFallBack() {
 		TimeZone englandTZ = TimeZone.getTimeZone("Europe/London");
 		TimeZone.setDefault(englandTZ);

@@ -3,12 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BigDecimalConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class BigDecimalConverterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class BigDecimalConverterTest {
+
+	@Test
 	public void testConversion() {
 		BigDecimalConverter bigDecimalConverter = new BigDecimalConverter();
 

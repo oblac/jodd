@@ -2,16 +2,19 @@
 
 package jodd.cache;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.ConcurrentModificationException;
 import java.util.concurrent.Semaphore;
 
-public class ConcurrencyTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ConcurrencyTest {
 
 	/**
 	 * http://code.google.com/p/jodd/issues/detail?id=4
- 	 */
+	 */
+	@Test
 	public void testPutGetAndPrune() throws InterruptedException {
 		LFUCache<String, String> lfuCache = new LFUCache<String, String>(2, 0);
 
@@ -46,6 +49,7 @@ public class ConcurrencyTest extends TestCase {
 		public Thread1(Semaphore semaphore, Cache<String, String> cache) {
 			super(semaphore, cache);
 		}
+
 		@Override
 		public void work() {
 			long l = 100000;
@@ -54,10 +58,12 @@ public class ConcurrencyTest extends TestCase {
 			}
 		}
 	}
+
 	public static class Thread2 extends SemaphoreThread {
 		public Thread2(Semaphore semaphore, Cache<String, String> cache) {
 			super(semaphore, cache);
 		}
+
 		@Override
 		public void work() {
 			long l = 100000;
@@ -73,6 +79,7 @@ public class ConcurrencyTest extends TestCase {
 		final Cache<String, String> cache;
 		final Semaphore semaphore;
 		public ConcurrentModificationException exception;
+
 		protected SemaphoreThread(Semaphore semaphore, Cache<String, String> cache) {
 			this.semaphore = semaphore;
 			this.cache = cache;
@@ -82,6 +89,7 @@ public class ConcurrencyTest extends TestCase {
 				e.printStackTrace();
 			}
 		}
+
 		@Override
 		public void run() {
 			try {
@@ -91,6 +99,7 @@ public class ConcurrencyTest extends TestCase {
 			}
 			semaphore.release();
 		}
+
 		protected abstract void work();
 	}
 }
