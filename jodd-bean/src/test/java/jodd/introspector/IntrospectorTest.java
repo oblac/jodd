@@ -2,17 +2,20 @@
 
 package jodd.introspector;
 
-import junit.framework.TestCase;
 import jodd.introspector.tst.Abean;
-import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Ac;
+import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Bc;
+import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
-public class IntrospectorTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class IntrospectorTest {
+
+	@Test
 	public void testBasic() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 		assertNotNull(cd);
@@ -28,6 +31,7 @@ public class IntrospectorTest extends TestCase {
 		assertEquals(1, setters.length);
 	}
 
+	@Test
 	public void testExtends() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 		assertNotNull(cd);
@@ -51,11 +55,12 @@ public class IntrospectorTest extends TestCase {
 		assertEquals(2, setters.length);
 	}
 
+	@Test
 	public void testCtors() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Ac.class);
 		Constructor[] ctors = cd.getAllCtors();
 		assertEquals(1, ctors.length);
-   		ctors = cd.getAllCtors(true);
+		ctors = cd.getAllCtors(true);
 		assertEquals(2, ctors.length);
 		assertNotNull(cd.getDefaultCtor(true));
 		assertNull(cd.getDefaultCtor());
@@ -66,7 +71,7 @@ public class IntrospectorTest extends TestCase {
 		cd = ClassIntrospector.lookup(Bc.class);
 		ctors = cd.getAllCtors();
 		assertEquals(1, ctors.length);
-   		ctors = cd.getAllCtors(true);
+		ctors = cd.getAllCtors(true);
 		assertEquals(1, ctors.length);
 		assertNull(cd.getDefaultCtor());
 		assertNull(cd.getDefaultCtor(true));
@@ -75,6 +80,5 @@ public class IntrospectorTest extends TestCase {
 		assertNull(ctor);
 		ctor = cd.getCtor(new Class[]{String.class}, true);
 		assertNotNull(ctor);
-
 	}
 }

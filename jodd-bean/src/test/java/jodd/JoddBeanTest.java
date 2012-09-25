@@ -1,19 +1,23 @@
 package jodd;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JoddBeanTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+public class JoddBeanTest {
+
+	@Test
 	public void testLoadedModules() {
-		assertEquals(true, Jodd.isJoddBeanLoaded());
-		assertEquals(false, Jodd.isJoddHttpLoaded());
-		assertEquals(false, Jodd.isJoddMadvocLoaded());
-		assertEquals(false, Jodd.isJoddMailLoaded());
-		assertEquals(false, Jodd.isJoddPetiteLoaded());
-		assertEquals(false, Jodd.isJoddPropsLoaded());
-		assertEquals(false, Jodd.isJoddProxettaLoaded());
-		assertEquals(false, Jodd.isJoddServletLoaded());
-		assertEquals(false, Jodd.isJoddUploadLoaded());
-		assertEquals(false, Jodd.isJoddVtorLoaded());
+		assertTrue(Jodd.isJoddBeanLoaded());
+		assertFalse(Jodd.isJoddHttpLoaded());
+		assertFalse(Jodd.isJoddMadvocLoaded());
+		assertFalse(Jodd.isJoddMailLoaded());
+		assertFalse(Jodd.isJoddPetiteLoaded());
+		assertFalse(Jodd.isJoddPropsLoaded());
+		assertFalse(Jodd.isJoddProxettaLoaded());
+		assertFalse(Jodd.isJoddServletLoaded());
+		assertFalse(Jodd.isJoddUploadLoaded());
+		assertFalse(Jodd.isJoddVtorLoaded());
 	}
 }

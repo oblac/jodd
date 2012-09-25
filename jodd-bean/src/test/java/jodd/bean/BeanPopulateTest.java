@@ -2,19 +2,21 @@
 
 package jodd.bean;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BeanPopulateTest extends TestCase {
-	
+import static org.junit.Assert.*;
+
+public class BeanPopulateTest {
+
 	public static class Bean {
 		Foo foo;
 	}
-	
+
 	public static class Foo {
 		String one;
 		int two;
@@ -24,12 +26,13 @@ public class BeanPopulateTest extends TestCase {
 		Integer four = new Integer(23);
 		Bar five;
 	}
-	
+
 	public static class Bar {
 		String xxx;
 		String zzz;
 	}
 
+	@Test
 	public void testPopulate() {
 
 		Map fooMap = new HashMap();
@@ -50,7 +53,7 @@ public class BeanPopulateTest extends TestCase {
 		map2.put("zzz", "ZZZ");
 		fooMap.put("five", map2);
 
-		
+
 		for (int i = 0; i < 2; i++) {
 			Bean bean = new Bean();
 			if (i == 0) {

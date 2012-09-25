@@ -2,21 +2,23 @@
 
 package jodd.bean;
 
-import jodd.bean.data.FooBeanString;
-import junit.framework.TestCase;
 import jodd.bean.data.FooBean;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BeanCopyTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class BeanCopyTest {
+
+	@Test
 	public void testCopy() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
 		BeanTool.copy(fb, dest);
 
-		Integer v =	(Integer) BeanUtil.getProperty(dest, "fooInteger");
+		Integer v = (Integer) BeanUtil.getProperty(dest, "fooInteger");
 		assertEquals(201, v.intValue());
 		v = (Integer) BeanUtil.getProperty(dest, "fooint");
 		assertEquals(202, v.intValue());
@@ -56,7 +58,7 @@ public class BeanCopyTest extends TestCase {
 		FooBean empty = new FooBean();
 		BeanTool.copy(empty, dest);
 
-		v =	(Integer) BeanUtil.getProperty(dest, "fooInteger");
+		v = (Integer) BeanUtil.getProperty(dest, "fooInteger");
 		assertNull(v);
 		v = (Integer) BeanUtil.getProperty(dest, "fooint");
 		assertEquals(0, v.intValue());
@@ -75,15 +77,15 @@ public class BeanCopyTest extends TestCase {
 		b = (Boolean) BeanUtil.getProperty(dest, "fooBoolean");
 		assertNull(b);
 		b = (Boolean) BeanUtil.getProperty(dest, "fooboolean");
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 		f = (Float) BeanUtil.getProperty(dest, "fooFloat");
 		assertNull(f);
 		f = (Float) BeanUtil.getProperty(dest, "foofloat");
-		assertEquals(0, f.floatValue(), 0.005);
+		assertEquals(0, f, 0.005);
 		d = (Double) BeanUtil.getProperty(dest, "fooDouble");
 		assertNull(d);
 		d = (Double) BeanUtil.getProperty(dest, "foodouble");
-		assertEquals(0, d.doubleValue(), 0.005);
+		assertEquals(0, d, 0.005);
 		s = (String) BeanUtil.getProperty(dest, "fooString");
 		assertNull(s);
 		sa = (String[]) BeanUtil.getProperty(dest, "fooStringA");
@@ -92,6 +94,7 @@ public class BeanCopyTest extends TestCase {
 
 	static class Less {
 		String data;
+
 		Integer number;
 
 		public String getData() {
@@ -113,7 +116,9 @@ public class BeanCopyTest extends TestCase {
 
 	static class More {
 		String data;
+
 		String number;
+
 		String boo;
 
 		public String getData() {
@@ -142,6 +147,7 @@ public class BeanCopyTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testLessToMore() {
 		Less less = new Less();
 		less.data = "data";
@@ -158,6 +164,7 @@ public class BeanCopyTest extends TestCase {
 		assertEquals(17, less.number.intValue());
 	}
 
+	@Test
 	public void testCopyMap() {
 		Map map = new HashMap();
 		map.put("fooint", Integer.valueOf(102));
@@ -188,11 +195,11 @@ public class BeanCopyTest extends TestCase {
 		fb.setFooBoolean(Boolean.TRUE);
 		fb.setFooboolean(false);
 		fb.setFooFloat(new Float(209.0));
-		fb.setFoofloat((float)210.0);
+		fb.setFoofloat((float) 210.0);
 		fb.setFooDouble(new Double(211.0));
 		fb.setFoodouble(212.0);
 		fb.setFooString("213");
-		fb.setFooStringA(new String[] {"214", "215"} );
+		fb.setFooStringA(new String[]{"214", "215"});
 		return fb;
 	}
 }

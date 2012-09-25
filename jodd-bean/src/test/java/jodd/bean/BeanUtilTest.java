@@ -2,36 +2,26 @@
 
 package jodd.bean;
 
+import jodd.bean.data.*;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
+import jodd.mutable.MutableInteger;
+import org.junit.Test;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
-import jodd.bean.data.GetIsBool;
-import jodd.bean.data.IsGetBool;
-import jodd.bean.data.UppercaseBean;
-import jodd.bean.data.Abean;
-import jodd.bean.data.Bbean;
-import jodd.bean.data.Cbean;
-import jodd.bean.data.FooBean;
-import jodd.bean.data.FooBean2;
-import jodd.bean.data.FooBean3;
-import jodd.bean.data.FooBean4;
-import jodd.bean.data.FooBeanSlim;
-import jodd.bean.data.Gig;
-import jodd.bean.data.XBean;
-import jodd.bean.data.ZBean;
-import jodd.mutable.MutableInteger;
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class BeanUtilTest extends TestCase {
+public class BeanUtilTest {
 
+	@Test
 	public void testSimpleProperty() {
 		FooBean fb = new FooBean();
 
@@ -57,7 +47,7 @@ public class BeanUtilTest extends TestCase {
 		// read forced non-initialized property (not null)
 		assertTrue(beanUtilBean.hasProperty(fb, "fooByte"));
 		assertEquals(Byte.class, beanUtilBean.getPropertyType(fb, "fooByte"));
-		assertEquals(new Byte((byte)0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", false));
+		assertEquals(new Byte((byte) 0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", false));
 
 		Map m = new HashMap();
 		// set property in map
@@ -80,7 +70,7 @@ public class BeanUtilTest extends TestCase {
 		// read forced non-initialized list property
 		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooList", false));
 
-        // read non-initialized array (null)
+		// read non-initialized array (null)
 		assertTrue(beanUtilBean.hasProperty(fb, "fooStringA"));
 		assertEquals(String[].class, beanUtilBean.getPropertyType(fb, "fooStringA"));
 		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", false));
@@ -101,6 +91,7 @@ public class BeanUtilTest extends TestCase {
 		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooStringA", false));
 	}
 
+	@Test
 	public void testSimplePropertySlimPrivate() {
 		FooBeanSlim fb = new FooBeanSlim();
 
@@ -123,7 +114,7 @@ public class BeanUtilTest extends TestCase {
 
 		// read forced non-initialized property (not null)
 		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooByte"));
-		assertEquals(new Byte((byte)0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", true));
+		assertEquals(new Byte((byte) 0), beanUtilBean.getSimplePropertyForced(fb, "fooByte", true));
 
 		Map m = new HashMap();
 		// set property in map
@@ -145,7 +136,7 @@ public class BeanUtilTest extends TestCase {
 		// read forced non-initialized list property
 		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooList", true));
 
-        // read non-initialized array (null)
+		// read non-initialized array (null)
 		assertTrue(beanUtilBean.hasDeclaredProperty(fb, "fooStringA"));
 		assertNull(beanUtilBean.getSimpleProperty(fb, "fooStringA", true));
 		String[] tmp = new String[10];
@@ -163,6 +154,7 @@ public class BeanUtilTest extends TestCase {
 		assertNotNull(beanUtilBean.getSimplePropertyForced(fb, "fooStringA", true));
 	}
 
+	@Test
 	public void testIndexProperty() {
 		FooBean fb = new FooBean();
 
@@ -187,7 +179,7 @@ public class BeanUtilTest extends TestCase {
 		try {
 			beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "xxx", false, false);
 			fail();
-		} catch(ArrayIndexOutOfBoundsException aioobex) {
+		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
@@ -223,9 +215,6 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("ccc", fb.getFooStringA()[7]);
 
 
-
-
-		
 		// read forced non-initialized list property
 		assertNull(fb.getFooList());
 		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooList[1]"));
@@ -264,7 +253,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(2, fb.getFooList().size());
 
 
-        // read forced non-initialized map property
+		// read forced non-initialized map property
 		assertFalse(beanUtilBean.hasDeclaredProperty(fb, "fooMap[foo]"));
 		assertEquals(Object.class, beanUtilBean.getDeclaredPropertyType(fb, "fooMap[foo]"));
 		assertNull(beanUtilBean.getIndexProperty(fb, "fooMap[foo]", false, true));
@@ -278,6 +267,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1, fb.getFooMap().size());
 	}
 
+	@Test
 	public void testIndexPropertySlimPrivate() {
 		FooBeanSlim fb = new FooBeanSlim();
 
@@ -298,7 +288,7 @@ public class BeanUtilTest extends TestCase {
 		try {
 			beanUtilBean.setIndexProperty(fb, "fooStringA[7]", "xxx", true, false);
 			fail();
-		} catch(ArrayIndexOutOfBoundsException aioobex) {
+		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
@@ -325,7 +315,7 @@ public class BeanUtilTest extends TestCase {
 		try {
 			beanUtilBean.getIndexProperty(fb, "fooList[1]", true, true);
 			fail();
-		} catch(IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
 		}
 		assertNotNull(fb.getList());
@@ -334,10 +324,10 @@ public class BeanUtilTest extends TestCase {
 		try {
 			beanUtilBean.setIndexProperty(fb, "fooList[1]", "xxx", true, false);
 			fail();
-		} catch(IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
 		}
-		
+
 		// set forced list property
 		beanUtilBean.setIndexProperty(fb, "fooList[40]", "zzz", true, true);
 		assertEquals("zzz", fb.getList().get(40));
@@ -364,6 +354,7 @@ public class BeanUtilTest extends TestCase {
 
 	// ---------------------------------------------------------------- types
 
+	@Test
 	public void testSetPropertyNumbers() {
 		FooBean fb = new FooBean();
 
@@ -373,12 +364,13 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1, fb.getFooInteger().intValue());
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooInteger());
-		BeanUtil.setProperty(fb, propName, "2");			// valid string
+		BeanUtil.setProperty(fb, propName, "2");            // valid string
 		assertEquals(2, fb.getFooInteger().intValue());
 		try {
-			BeanUtil.setProperty(fb, propName, "x");		// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");        // invalid string - value stays the same
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2, fb.getFooInteger().intValue());
 
 		// int
@@ -387,18 +379,20 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1, fb.getFooint());
 
 		try {
-			BeanUtil.setProperty(fb, propName, null); 	// null is not an int
+			BeanUtil.setProperty(fb, propName, null);     // null is not an int
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(1, fb.getFooint());
 
 		BeanUtil.setProperty(fb, propName, "2");
 		assertEquals(2, fb.getFooint());
 
 		try {
-			BeanUtil.setProperty(fb, propName, "w");	// invalid string
+			BeanUtil.setProperty(fb, propName, "w");    // invalid string
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2, fb.getFooint());
 
 
@@ -410,13 +404,14 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(3L, fb.getFooLong().longValue());
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooLong());
-		BeanUtil.setProperty(fb, propName, "2");			// valid string
+		BeanUtil.setProperty(fb, propName, "2");            // valid string
 		assertEquals(2L, fb.getFooLong().longValue());
 
 		try {
-			BeanUtil.setProperty(fb, propName, "x");		// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");        // invalid string - value stays the same
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2L, fb.getFooLong().longValue());
 
 		// long
@@ -427,17 +422,19 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(3L, fb.getFoolong());
 
 		try {
-			BeanUtil.setProperty(fb, propName, null); 			// null is not a long
+			BeanUtil.setProperty(fb, propName, null);             // null is not a long
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 
 		assertEquals(3L, fb.getFoolong());
-		BeanUtil.setProperty(fb, propName, "2");			// valid string
+		BeanUtil.setProperty(fb, propName, "2");            // valid string
 		assertEquals(2L, fb.getFoolong());
 		try {
-			BeanUtil.setProperty(fb, propName, "w");		// invalid string
+			BeanUtil.setProperty(fb, propName, "w");        // invalid string
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2L, fb.getFoolong());
 
 		// Byte
@@ -447,16 +444,17 @@ public class BeanUtilTest extends TestCase {
 		BeanUtil.setProperty(fb, propName, new Integer(3));
 		assertEquals(3, fb.getFooByte().byteValue());
 		BeanUtil.setProperty(fb, propName, new Integer(257));
-		assertEquals(1, fb.getFooByte().byteValue());				// lower byte of 257
+		assertEquals(1, fb.getFooByte().byteValue());                // lower byte of 257
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooByte());
-		BeanUtil.setProperty(fb, propName, "2");					// valid string
+		BeanUtil.setProperty(fb, propName, "2");                    // valid string
 		assertEquals(2, fb.getFooByte().byteValue());
 
 		try {
-			BeanUtil.setProperty(fb, propName, "x");			// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");            // invalid string - value stays the same
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2, fb.getFooByte().byteValue());
 
 		// byte
@@ -468,46 +466,48 @@ public class BeanUtilTest extends TestCase {
 		BeanUtil.setProperty(fb, propName, new Integer(257));
 		assertEquals(1, fb.getFoobyte());
 		try {
-			BeanUtil.setProperty(fb, propName, null);		// null is not a byte
+			BeanUtil.setProperty(fb, propName, null);        // null is not a byte
 			fail();
-		} catch (Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(1, fb.getFoobyte());
-		BeanUtil.setProperty(fb, propName, "2");			// valid string
+		BeanUtil.setProperty(fb, propName, "2");            // valid string
 		assertEquals(2, fb.getFoobyte());
 		try {
-			BeanUtil.setProperty(fb, propName, "x");		// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");        // invalid string - value stays the same
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2, fb.getFoobyte());
 
 		// Boolean
 		propName = "fooBoolean";
 		BeanUtil.setProperty(fb, propName, Boolean.TRUE);
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, Boolean.FALSE);
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "yes");
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "y");
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "true");
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "on");
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "1");
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "no");
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "n");
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "false");
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "off");
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 		BeanUtil.setProperty(fb, propName, "0");
-		assertFalse(fb.getFooBoolean().booleanValue());
+		assertFalse(fb.getFooBoolean());
 
 		// boolean
 		propName = "fooboolean";
@@ -519,7 +519,8 @@ public class BeanUtilTest extends TestCase {
 		try {
 			BeanUtil.setProperty(fb, propName, null);
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 
 		assertFalse(fb.getFooboolean());
 		BeanUtil.setProperty(fb, propName, "yes");
@@ -546,18 +547,19 @@ public class BeanUtilTest extends TestCase {
 		// Float
 		propName = "fooFloat";
 		BeanUtil.setProperty(fb, propName, new Float(1.1));
-		assertEquals(1.1, fb.getFooFloat().floatValue(), 0.0005);
+		assertEquals(1.1, fb.getFooFloat(), 0.0005);
 		BeanUtil.setProperty(fb, propName, new Integer(3));
-		assertEquals(3.0, fb.getFooFloat().floatValue(), 0.0005);
+		assertEquals(3.0, fb.getFooFloat(), 0.0005);
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooFloat());
-		BeanUtil.setProperty(fb, propName, "2.2");			// valid string
-		assertEquals(2.2, fb.getFooFloat().floatValue(), 0.0005);
+		BeanUtil.setProperty(fb, propName, "2.2");            // valid string
+		assertEquals(2.2, fb.getFooFloat(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, "x");		// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");        // invalid string - value stays the same
 			fail();
-		} catch (Exception ex) {}
-		assertEquals(2.2, fb.getFooFloat().floatValue(), 0.0005);
+		} catch (Exception ex) {
+		}
+		assertEquals(2.2, fb.getFooFloat(), 0.0005);
 
 		// float
 		propName = "foofloat";
@@ -566,34 +568,37 @@ public class BeanUtilTest extends TestCase {
 		BeanUtil.setProperty(fb, propName, new Integer(3));
 		assertEquals(3.0, fb.getFoofloat(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, null);			// null is not a long
+			BeanUtil.setProperty(fb, propName, null);            // null is not a long
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(3.0, fb.getFoofloat(), 0.0005);
-		BeanUtil.setProperty(fb, propName, "2.2");				// valid string
+		BeanUtil.setProperty(fb, propName, "2.2");                // valid string
 
 		assertEquals(2.2, fb.getFoofloat(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, "w");			// invalid string
+			BeanUtil.setProperty(fb, propName, "w");            // invalid string
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2.2, fb.getFoofloat(), 0.0005);
 
 		// Double
 		propName = "fooDouble";
 		BeanUtil.setProperty(fb, propName, new Double(1.1));
-		assertEquals(1.1, fb.getFooDouble().doubleValue(), 0.0005);
+		assertEquals(1.1, fb.getFooDouble(), 0.0005);
 		BeanUtil.setProperty(fb, propName, new Integer(3));
-		assertEquals(3.0, fb.getFooDouble().doubleValue(), 0.0005);
+		assertEquals(3.0, fb.getFooDouble(), 0.0005);
 		BeanUtil.setProperty(fb, propName, null);
 		assertNull(fb.getFooDouble());
-		BeanUtil.setProperty(fb, propName, "2.2");			// valid string
-		assertEquals(2.2, fb.getFooDouble().doubleValue(), 0.0005);
+		BeanUtil.setProperty(fb, propName, "2.2");            // valid string
+		assertEquals(2.2, fb.getFooDouble(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, "x");		// invalid string - value stays the same
+			BeanUtil.setProperty(fb, propName, "x");        // invalid string - value stays the same
 			fail();
-		} catch (Exception ex) {}
-		assertEquals(2.2, fb.getFooDouble().doubleValue(), 0.0005);
+		} catch (Exception ex) {
+		}
+		assertEquals(2.2, fb.getFooDouble(), 0.0005);
 
 		// double
 		propName = "foodouble";
@@ -602,21 +607,24 @@ public class BeanUtilTest extends TestCase {
 		BeanUtil.setProperty(fb, propName, new Integer(3));
 		assertEquals(3.0, fb.getFoodouble(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, null);		// null is not a long
+			BeanUtil.setProperty(fb, propName, null);        // null is not a long
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(3.0, fb.getFoodouble(), 0.0005);
-		BeanUtil.setProperty(fb, propName, "2.2");				// valid string
+		BeanUtil.setProperty(fb, propName, "2.2");                // valid string
 
 		assertEquals(2.2, fb.getFoodouble(), 0.0005);
 		try {
-			BeanUtil.setProperty(fb, propName, "w");					// invalid string
+			BeanUtil.setProperty(fb, propName, "w");                    // invalid string
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertEquals(2.2, fb.getFoodouble(), 0.0005);
 	}
 
 
+	@Test
 	public void testSetPropertySql() {
 		FooBean2 fb = new FooBean2();
 
@@ -643,6 +651,7 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testSetPropertyMath() {
 		FooBean2 fb = new FooBean2();
 		String propName = "fooBigDecimal";
@@ -651,6 +660,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1.2, fb.getFooBigDecimal().doubleValue(), 0.0005);
 	}
 
+	@Test
 	public void testSetPropertyString() {
 		FooBean fb = new FooBean();
 
@@ -663,7 +673,7 @@ public class BeanUtilTest extends TestCase {
 
 		// String array
 		propName = "fooStringA";
-		String[] sa = new String[] {"one", "two", "three"};
+		String[] sa = new String[]{"one", "two", "three"};
 		BeanUtil.setProperty(fb, propName, sa);
 		assertEquals("one", fb.getFooStringA()[0]);
 		assertEquals("two", fb.getFooStringA()[1]);
@@ -693,15 +703,16 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
-	public void	testLoaders() {
+	@Test
+	public void testLoaders() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("fooInteger", new Integer(1));
 		map.put("fooint", new Integer(2));
 		map.put("fooLong", new Long(3));
 		map.put("foolong", new Long(4));
-		map.put("fooByte", new Byte((byte)5));
-		map.put("foobyte", new Byte((byte)6));
+		map.put("fooByte", new Byte((byte) 5));
+		map.put("foobyte", new Byte((byte) 6));
 		map.put("fooCharacter", new Character('7'));
 		map.put("foochar", new Character('8'));
 		map.put("fooBoolean", Boolean.TRUE);
@@ -724,11 +735,11 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(6, fb.getFoobyte());
 		assertEquals('7', fb.getFooCharacter().charValue());
 		assertEquals('8', fb.getFoochar());
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		assertFalse(fb.getFooboolean());
-		assertEquals(9.0, fb.getFooFloat().floatValue(), 0.005);
+		assertEquals(9.0, fb.getFooFloat(), 0.005);
 		assertEquals(10.0, fb.getFoofloat(), 0.005);
-		assertEquals(11.0, fb.getFooDouble().doubleValue(), 0.005);
+		assertEquals(11.0, fb.getFooDouble(), 0.005);
 		assertEquals(12.0, fb.getFoodouble(), 0.005);
 		assertEquals("13", fb.getFooString());
 		assertEquals("14", fb.getFooStringA()[0]);
@@ -738,8 +749,8 @@ public class BeanUtilTest extends TestCase {
 		map.put("Fooint", new Integer(2));
 		map.put("FooLong", new Long(3));
 		map.put("Foolong", new Long(4));
-		map.put("FooByte", new Byte((byte)5));
-		map.put("Foobyte", new Byte((byte)6));
+		map.put("FooByte", new Byte((byte) 5));
+		map.put("Foobyte", new Byte((byte) 6));
 		map.put("FooCharacter", new Character('7'));
 		map.put("Foochar", new Character('8'));
 		map.put("FooBoolean", Boolean.TRUE);
@@ -762,11 +773,11 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(6, fb.getFoobyte());
 		assertEquals('7', fb.getFooCharacter().charValue());
 		assertEquals('8', fb.getFoochar());
-		assertTrue(fb.getFooBoolean().booleanValue());
+		assertTrue(fb.getFooBoolean());
 		assertFalse(fb.getFooboolean());
-		assertEquals(9.0, fb.getFooFloat().floatValue(), 0.005);
+		assertEquals(9.0, fb.getFooFloat(), 0.005);
 		assertEquals(10.0, fb.getFoofloat(), 0.005);
-		assertEquals(11.0, fb.getFooDouble().doubleValue(), 0.005);
+		assertEquals(11.0, fb.getFooDouble(), 0.005);
 		assertEquals(12.0, fb.getFoodouble(), 0.005);
 		assertEquals("13", fb.getFooString());
 		assertEquals("14", fb.getFooStringA()[0]);
@@ -774,6 +785,7 @@ public class BeanUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testGet() {
 		FooBean fb = new FooBean();
 		fb.setFooInteger(new Integer(101));
@@ -787,13 +799,13 @@ public class BeanUtilTest extends TestCase {
 		fb.setFooBoolean(Boolean.TRUE);
 		fb.setFooboolean(false);
 		fb.setFooFloat(new Float(109.0));
-		fb.setFoofloat((float)110.0);
+		fb.setFoofloat((float) 110.0);
 		fb.setFooDouble(new Double(111.0));
 		fb.setFoodouble(112.0);
 		fb.setFooString("113");
-		fb.setFooStringA(new String[] {"114", "115"} );
+		fb.setFooStringA(new String[]{"114", "115"});
 
-		Integer v =	(Integer) BeanUtil.getProperty(fb, "fooInteger");
+		Integer v = (Integer) BeanUtil.getProperty(fb, "fooInteger");
 		assertEquals(101, v.intValue());
 		v = (Integer) BeanUtil.getProperty(fb, "fooint");
 		assertEquals(102, v.intValue());
@@ -810,17 +822,17 @@ public class BeanUtilTest extends TestCase {
 		c = (Character) BeanUtil.getProperty(fb, "foochar");
 		assertEquals('8', c.charValue());
 		Boolean b = (Boolean) BeanUtil.getProperty(fb, "fooBoolean");
-		assertTrue(b.booleanValue());
+		assertTrue(b);
 		b = (Boolean) BeanUtil.getProperty(fb, "fooboolean");
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 		Float f = (Float) BeanUtil.getProperty(fb, "fooFloat");
-		assertEquals(109.0, f.floatValue(), 0.005);
+		assertEquals(109.0, f, 0.005);
 		f = (Float) BeanUtil.getProperty(fb, "foofloat");
-		assertEquals(110.0, f.floatValue(), 0.005);
+		assertEquals(110.0, f, 0.005);
 		Double d = (Double) BeanUtil.getProperty(fb, "fooDouble");
-		assertEquals(111.0, d.doubleValue(), 0.005);
+		assertEquals(111.0, d, 0.005);
 		d = (Double) BeanUtil.getProperty(fb, "foodouble");
-		assertEquals(112.0, d.doubleValue(), 0.005);
+		assertEquals(112.0, d, 0.005);
 		String s = (String) BeanUtil.getProperty(fb, "fooString");
 		assertEquals("113", s);
 		String[] sa = (String[]) BeanUtil.getProperty(fb, "fooStringA");
@@ -830,6 +842,7 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testNested() {
 		Cbean cbean = new Cbean();
 		String value = "testnest";
@@ -847,10 +860,11 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(value2, (String) BeanUtil.getProperty(bbean, "abean.fooProp"));
 	}
 
+	@Test
 	public void testIster() {
 		Abean abean = new Abean();
 		Boolean b = (Boolean) BeanUtil.getProperty(abean, "something");
-		assertTrue(b.booleanValue());
+		assertTrue(b);
 		try {
 			BeanUtil.getProperty(abean, "Something");
 			fail();
@@ -859,13 +873,14 @@ public class BeanUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMap() {
 		Cbean cbean = new Cbean();
 		Abean abean = cbean.getBbean().getAbean();
 		assertNull(BeanUtil.getDeclaredPropertyType(abean, "mval"));
 		BeanUtil.setProperty(abean, "mval", new Integer(173));
 		BeanUtil.setProperty(abean, "mval2", new Integer(1));
-		assertEquals(173, (abean.get("mval")).intValue());
+		assertEquals((abean.get("mval")).intValue(), 173);
 		assertEquals(173, ((Integer) BeanUtil.getProperty(abean, "mval")).intValue());
 		assertEquals(1, ((Integer) BeanUtil.getProperty(abean, "mval2")).intValue());
 		assertTrue(BeanUtil.hasDeclaredProperty(cbean, "bbean.abean.mval"));
@@ -874,11 +889,12 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(3, ((Integer) BeanUtil.getProperty(cbean, "bbean.abean.mval")).intValue());
 		HashMap map = new HashMap();
 		BeanUtil.setProperty(map, "val1", new Integer(173));
-		assertEquals(173, ((Integer)map.get("val1")).intValue());
+		assertEquals(173, ((Integer) map.get("val1")).intValue());
 		Integer i = (Integer) BeanUtil.getProperty(map, "val1");
 		assertEquals(173, i.intValue());
 	}
 
+	@Test
 	public void testMap2() {
 		Map<String, String> m = new HashMap<String, String>();
 		m.put("dd.dd", "value");
@@ -897,6 +913,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("value", BeanUtil.getProperty(m2, "map[dd.dd]"));
 	}
 
+	@Test
 	public void testMap3() {
 		Map m = new HashMap();
 		BeanUtil.setProperty(m, "Foo", "John");
@@ -919,37 +936,45 @@ public class BeanUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNotDeclared() {
 		FooBean3 fb = new FooBean3();
 
 		try {
 			BeanUtil.setProperty(fb, "pprotected", new Integer(1));
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			BeanUtil.getProperty(fb, "pprotected");
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 
 		try {
 			BeanUtil.setProperty(fb, "ppackage", new Integer(2));
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			BeanUtil.getProperty(fb, "ppackage");
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 
 		try {
 			BeanUtil.setProperty(fb, "pprivate", new Integer(3));
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		try {
 			BeanUtil.getProperty(fb, "pprivate");
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 	}
 
+	@Test
 	public void testDeclared() {
 		FooBean3 fb = new FooBean3();
 
@@ -981,14 +1006,17 @@ public class BeanUtilTest extends TestCase {
 			this.fb = fb;
 		}
 
-		/** @noinspection UnnecessaryBoxing*/
-		private Integer[] data = new Integer[] {Integer.valueOf("173"), Integer.valueOf("2")};
+		/**
+		 * @noinspection UnnecessaryBoxing
+		 */
+		private Integer[] data = new Integer[]{Integer.valueOf("173"), Integer.valueOf("2")};
 
 		public Integer[] getData() {
 			return data;
 		}
 	}
 
+	@Test
 	public void testArrays() {
 		FooBean4 fb4 = new FooBean4();
 		Dummy dummy = new Dummy();
@@ -1028,15 +1056,17 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testForced() {
 		XBean x = new XBean();
 		assertTrue(BeanUtil.hasDeclaredProperty(x, "y"));
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "y.foo"));
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "y[23].foo"));
-		try{
+		try {
 			BeanUtil.setProperty(x, "y.foo", "yyy");
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertNull(x.getY());
 
 		BeanUtil.setPropertyForced(x, "y.foo", "yyy");
@@ -1048,7 +1078,7 @@ public class BeanUtilTest extends TestCase {
 		try {
 			BeanUtil.setProperty(x, "yy[2].foo", "yyy");
 			fail();
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 		}
 		assertNull(x.getYy()[2]);
 
@@ -1063,18 +1093,21 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testSilent() {
 		FooBean fb = new FooBean();
 		assertFalse(BeanUtil.hasDeclaredProperty(fb, "notexisting"));
 		try {
 			BeanUtil.setProperty(fb, "notexisting", null);
 			fail();
-		} catch(Exception ex) {}
+		} catch (Exception ex) {
+		}
 		assertFalse(BeanUtil.setPropertySilent(fb, "notexisting", null));
-		
+
 	}
 
 
+	@Test
 	public void testGenerics() {
 		Gig gig = new Gig();
 
@@ -1117,6 +1150,7 @@ public class BeanUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testNoGenerics() {
 		Gig gig = new Gig();
 
@@ -1128,19 +1162,19 @@ public class BeanUtilTest extends TestCase {
 
 		BeanUtil.setPropertyForced(gig, "listOfIntegers2[1]", Integer.valueOf(1));
 		assertNull(gig.getListOfIntegers2().get(0));
-		assertEquals(1, ((Integer)gig.getListOfIntegers2().get(1)).intValue());
+		assertEquals(1, ((Integer) gig.getListOfIntegers2().get(1)).intValue());
 		assertEquals(2, gig.getListOfStrings2().size());
 
 		BeanUtil.setPropertyForced(gig, "listOfIntegers2[3]", "3");
 		assertNull(gig.getListOfIntegers2().get(0));
-		assertEquals(1, ((Integer)gig.getListOfIntegers2().get(1)).intValue());
+		assertEquals(1, ((Integer) gig.getListOfIntegers2().get(1)).intValue());
 		assertNull(gig.getListOfIntegers2().get(2));
 		assertEquals("3", gig.getListOfIntegers2().get(3));
 		assertEquals(4, gig.getListOfIntegers2().size());
 
 		BeanUtil.setPropertyForced(gig, "listOfAbeans2[1].fooProp", "xxx");
 		assertNull(gig.getListOfAbeans2().get(0));
-		assertEquals("xxx", ((Map)gig.getListOfAbeans2().get(1)).get("fooProp"));
+		assertEquals("xxx", ((Map) gig.getListOfAbeans2().get(1)).get("fooProp"));
 		assertEquals(2, gig.getListOfAbeans2().size());
 
 		BeanUtil.setPropertyForced(gig, "mapOfIntegers2[kkk]", "173");
@@ -1148,7 +1182,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(1, gig.getMapOfIntegers2().size());
 
 		BeanUtil.setPropertyForced(gig, "mapOfAbeans2[kkk].fooProp", "zzz");
-		assertEquals("zzz", ((Map)gig.getMapOfAbeans2().get("kkk")).get("fooProp"));
+		assertEquals("zzz", ((Map) gig.getMapOfAbeans2().get("kkk")).get("fooProp"));
 		assertEquals(1, gig.getMapOfAbeans2().size());
 
 	}
@@ -1157,6 +1191,7 @@ public class BeanUtilTest extends TestCase {
 	/**
 	 * All exceptions.
 	 */
+	@Test
 	public void testExceptions() {
 		Map map = new HashMap();
 		Gig gig = new Gig();
@@ -1221,6 +1256,7 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testGeneralMapOnly() {
 		Map map = new HashMap();
 		BeanUtil.setPropertyForced(map, "foo.lll", "value");
@@ -1230,11 +1266,12 @@ public class BeanUtilTest extends TestCase {
 		map = new HashMap();
 		BeanUtil.setPropertyForced(map, "foo.lll[2]", "value");
 		assertNotNull(map.get("foo"));
-		assertNotNull(((Map)map.get("foo")).get("lll"));
+		assertNotNull(((Map) map.get("foo")).get("lll"));
 		assertEquals("value", ((Map) ((Map) map.get("foo")).get("lll")).get("2"));
 	}
 
 
+	@Test
 	public void testInheritance() {
 		ZBean zb = new ZBean();
 
@@ -1266,6 +1303,7 @@ public class BeanUtilTest extends TestCase {
 	}
 
 
+	@Test
 	public void testSimpleThis() {
 		FooBean fb = new FooBean();
 		BeanUtilBean beanUtilBean = new BeanUtilBean();
@@ -1286,11 +1324,12 @@ public class BeanUtilTest extends TestCase {
 		assertEquals("foo", beanUtilBean.extractThisReference("foo"));
 	}
 
+	@Test
 	public void testIsGetBoolean() {
 		IsGetBool i = new IsGetBool();
 		Object value = BeanUtil.getProperty(i, "flag");
 		assertNotNull(value);
-		assertTrue(((Boolean) value).booleanValue());
+		assertTrue((Boolean) value);
 
 		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
 		assertEquals(1, cd.getAllBeanGetterNames().length);
@@ -1304,7 +1343,7 @@ public class BeanUtilTest extends TestCase {
 		GetIsBool i2 = new GetIsBool();
 		value = BeanUtil.getProperty(i2, "flag");
 		assertNotNull(value);
-		assertTrue(((Boolean) value).booleanValue());
+		assertTrue((Boolean) value);
 
 		cd = ClassIntrospector.lookup(GetIsBool.class);
 		assertEquals(1, cd.getAllBeanGetterNames().length);
@@ -1316,6 +1355,7 @@ public class BeanUtilTest extends TestCase {
 		assertEquals(3, cd.getAllMethods().length);
 	}
 
+	@Test
 	public void testUppercase() {
 		UppercaseBean ub = new UppercaseBean();
 		try {
@@ -1325,6 +1365,7 @@ public class BeanUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPropertiesWithDot() {
 		Properties props = new Properties();
 		BeanUtil.setProperty(props, "ldap", "data");
@@ -1343,7 +1384,7 @@ public class BeanUtilTest extends TestCase {
 
 		BeanUtil.setProperty(map, "[aaa.bbb]", fb);
 		BeanUtil.setPropertyForced(map, "[aaa.bbb].fooMap[xxx.ccc]", "zzzz");
-		assertEquals("zzzz", ((FooBean)map.get("aaa.bbb")).getFooMap().get("xxx.ccc"));
+		assertEquals("zzzz", ((FooBean) map.get("aaa.bbb")).getFooMap().get("xxx.ccc"));
 
 		BeanUtil.setPropertyForced(fb, ".fooint", "123");
 		assertEquals(123, fb.getFooint());
