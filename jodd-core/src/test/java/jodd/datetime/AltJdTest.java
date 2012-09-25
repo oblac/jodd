@@ -2,10 +2,13 @@
 
 package jodd.datetime;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class AltJdTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class AltJdTest {
+
+	@Test
 	public void testReduced() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 		assertEquals(2454945.41707, jdt.getJulianDateDouble(), 1.0e-10);
@@ -21,6 +24,7 @@ public class AltJdTest extends TestCase {
 		assertEquals(jdt, jdt2);
 	}
 
+	@Test
 	public void testModified() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 
@@ -34,6 +38,7 @@ public class AltJdTest extends TestCase {
 		assertEquals(jdt, jdt2);
 	}
 
+	@Test
 	public void testTruncated() {
 		JDateTime jdt = new JDateTime(2454945.41707);
 

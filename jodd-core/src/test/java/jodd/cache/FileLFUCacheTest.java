@@ -4,12 +4,14 @@ package jodd.cache;
 
 import jodd.io.FileUtil;
 import jodd.util.SystemUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-public class FileLFUCacheTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class FileLFUCacheTest {
 
 	private File tempFolder = new File(SystemUtil.getTempDir());
 
@@ -27,6 +29,7 @@ public class FileLFUCacheTest extends TestCase {
 		return file;
 	}
 
+	@Test
 	public void testCache() throws IOException {
 		FileLFUCache cache = new FileLFUCache(25);
 
@@ -45,7 +48,7 @@ public class FileLFUCacheTest extends TestCase {
 		assertEquals(2, cache.getCachedFilesCount());
 		assertEquals(19, cache.getUsedSize());
 
-		cache.getFileBytes(c);		// b is out, a(2), c(1)
+		cache.getFileBytes(c);        // b is out, a(2), c(1)
 
 		assertEquals(2, cache.getCachedFilesCount());
 		assertEquals(17, cache.getUsedSize());
@@ -54,7 +57,7 @@ public class FileLFUCacheTest extends TestCase {
 		cache.getFileBytes(c);
 		cache.getFileBytes(c);
 
-		cache.getFileBytes(b);		// a is out
+		cache.getFileBytes(b);        // a is out
 
 		assertEquals(2, cache.getCachedFilesCount());
 		assertEquals(16, cache.getUsedSize());

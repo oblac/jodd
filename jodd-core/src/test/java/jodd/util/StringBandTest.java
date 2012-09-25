@@ -2,10 +2,13 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class StringBandTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class StringBandTest {
+
+	@Test
 	public void testSbands() {
 		StringBand sb = new StringBand(5);
 

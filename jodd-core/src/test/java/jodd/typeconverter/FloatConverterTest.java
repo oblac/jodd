@@ -3,14 +3,18 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.FloatConverter;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class FloatConverterTest extends BaseTestCase {
+import static org.junit.Assert.*;
 
+public class FloatConverterTest {
+
+	@Test
 	public void testConversion() {
 		FloatConverter floatConverter = new FloatConverter();
-		
+
 		assertNull(floatConverter.convert(null));
 
 		assertEquals(Float.valueOf(1), floatConverter.convert(Integer.valueOf(1)));

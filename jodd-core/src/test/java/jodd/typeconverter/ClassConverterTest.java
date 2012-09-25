@@ -3,12 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ClassConverter;
+import org.junit.Test;
 
-public class ClassConverterTest extends BaseTestCase {
+import static org.junit.Assert.*;
 
+public class ClassConverterTest {
+
+	@Test
 	public void testConversion() {
 		ClassConverter classConverter = new ClassConverter();
-		
+
 		assertNull(classConverter.convert(null));
 
 		assertEquals(String.class, classConverter.convert(String.class));

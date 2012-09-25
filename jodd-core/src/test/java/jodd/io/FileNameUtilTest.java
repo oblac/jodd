@@ -2,11 +2,14 @@
 
 package jodd.io;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-@SuppressWarnings( {"SimplifiableJUnitAssertion"})
-public class FileNameUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings({"SimplifiableJUnitAssertion"})
+public class FileNameUtilTest {
+
+	@Test
 	public void testPrefixLength() {
 		assertEquals(0, FileNameUtil.getPrefixLength("a\\b\\c.txt"));
 		assertEquals(1, FileNameUtil.getPrefixLength("\\a\\b\\c.txt"));
@@ -26,6 +29,7 @@ public class FileNameUtilTest extends TestCase {
 		assertEquals(9, FileNameUtil.getPrefixLength("//server//./bar"));
 	}
 
+	@Test
 	public void testNormalizeProblem() {
 		assertEquals("//foo/bar", FileNameUtil.normalize("//foo/.///bar", true));
 		assertEquals("/bar", FileNameUtil.normalize("/./bar", true));
@@ -34,6 +38,7 @@ public class FileNameUtilTest extends TestCase {
 		assertEquals("/foo/bar", FileNameUtil.normalize("/foo//./bar", true));
 	}
 
+	@Test
 	public void testNormalize() {
 		assertEquals("/foo/", FileNameUtil.normalize("/foo//", true));
 		assertEquals("/foo/", FileNameUtil.normalize("/foo/./", true));
@@ -56,6 +61,7 @@ public class FileNameUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testNormalizeNoEndSeparator() {
 		assertEquals("/foo", FileNameUtil.normalizeNoEndSeparator("/foo//", true));
 		assertEquals("/foo", FileNameUtil.normalizeNoEndSeparator("/foo/./", true));
@@ -77,6 +83,7 @@ public class FileNameUtilTest extends TestCase {
 		assertEquals(null, FileNameUtil.normalizeNoEndSeparator("~/../bar", true));
 	}
 
+	@Test
 	public void testConcat() {
 		assertEquals("/foo/bar", FileNameUtil.concat("/foo/", "bar", true));
 		assertEquals("\\foo\\bar", FileNameUtil.concat("/foo/", "bar", false));
@@ -92,6 +99,7 @@ public class FileNameUtilTest extends TestCase {
 		assertEquals("/foo/c.txt/bar", FileNameUtil.concat("/foo/c.txt", "bar", true));
 	}
 
+	@Test
 	public void testGetPathNoEndSeparator() {
 		assertEquals("", FileNameUtil.getPathNoEndSeparator("/hello.world.html"));
 		assertEquals("foo", FileNameUtil.getPathNoEndSeparator("/foo/hello.world.html"));

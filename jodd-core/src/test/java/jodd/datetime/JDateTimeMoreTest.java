@@ -2,13 +2,17 @@
 
 package jodd.datetime;
 
-import java.util.GregorianCalendar;
+import org.junit.Test;
+
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
-public class JDateTimeMoreTest extends TestCase {
+public class JDateTimeMoreTest {
 
+	@Test
 	public void test1582() {
 		JDateTime jdt1582 = new JDateTime(1582, 10, 4);
 		assertEquals(4, jdt1582.getDayOfWeek());
@@ -19,10 +23,11 @@ public class JDateTimeMoreTest extends TestCase {
 		assertEquals(5, jdt1582.getDayOfWeek());
 	}
 
+	@Test
 	public void testCompareToAndAdd() {
 		JDateTime gt1 = new JDateTime();
-		if (gt1.getDay() > 28) {		// back and forth adds works without corrections
-			gt1.setDay(28);				// for days that exists in all months
+		if (gt1.getDay() > 28) {        // back and forth adds works without corrections
+			gt1.setDay(28);                // for days that exists in all months
 		}
 
 		// check for year 1582
@@ -43,15 +48,15 @@ public class JDateTimeMoreTest extends TestCase {
 			gt2.addYear(i);
 			assertEquals(0, gt1.compareTo(gt2));
 		}
-		
+
 		for (int i = 1; i < 60000; i++) {
 			gt2.add(0, i, 0);
 			assertEquals(-1, gt1.compareTo(gt2));
 			gt2.addMonth(-i);
 			assertEquals(0, gt1.compareTo(gt2));
 		}
-		for (int i = 1; i < 5000; i++) {				// Year 1582, months moving
-			gt2.add(0, i, 0);							// before it still doesn't work
+		for (int i = 1; i < 5000; i++) {                // Year 1582, months moving
+			gt2.add(0, i, 0);                            // before it still doesn't work
 			assertEquals(-1, gt1.compareTo(gt2));
 			gt2.addMonth(-2 * i);
 			assertEquals(1, gt1.compareTo(gt2));
@@ -89,7 +94,7 @@ public class JDateTimeMoreTest extends TestCase {
 		for (int i = 1; i < 1000000; i++) {
 			gt2.addTime(0, 0, i, 0);
 			assertEquals(-1, gt1.compareTo(gt2));
-			gt2.addSecond(- 7 * i);
+			gt2.addSecond(-7 * i);
 			assertEquals(1, gt1.compareTo(gt2));
 			gt2.addSecond(6 * i);
 			assertEquals(0, gt1.compareTo(gt2));
@@ -104,15 +109,14 @@ public class JDateTimeMoreTest extends TestCase {
 			assertEquals(0, gt1.compareTo(gt2));
 		}
 	}
-	
 
 
-
+	@Test
 	public void testWeekOfYear() {
 		JDateTime gt = new JDateTime();
 		GregorianCalendar gc = new GregorianCalendar();
-		int[] _fdiw = {0, GregorianCalendar.MONDAY, GregorianCalendar.TUESDAY, GregorianCalendar.WEDNESDAY, GregorianCalendar.THURSDAY, GregorianCalendar.FRIDAY, GregorianCalendar.SATURDAY, GregorianCalendar.SUNDAY};		
-		
+		int[] _fdiw = {0, GregorianCalendar.MONDAY, GregorianCalendar.TUESDAY, GregorianCalendar.WEDNESDAY, GregorianCalendar.THURSDAY, GregorianCalendar.FRIDAY, GregorianCalendar.SATURDAY, GregorianCalendar.SUNDAY};
+
 		// test all starting dates (first day in week)
 		for (int fdiw = 1; fdiw <= 7; fdiw++) {
 			gc.setFirstDayOfWeek(_fdiw[fdiw]);
@@ -126,14 +130,14 @@ public class JDateTimeMoreTest extends TestCase {
 				for (int y = 1800; y < 3000; y++) {
 
 					if (y == 1916) {
-						continue;		// skip this year due to specific daylight savings
+						continue;        // skip this year due to specific daylight savings
 					}
 
 					gt.set(y, 1, 1);
 					gc.set(y, 0, 1);
-		
+
 					int total = gt.isLeapYear() ? 366 : 365;
-					
+
 					// test all days
 					for (int i = 0; i < total; i++) {
 						assertEquals(gc.get(GregorianCalendar.DAY_OF_MONTH), gt.getDay());
@@ -159,6 +163,7 @@ public class JDateTimeMoreTest extends TestCase {
 	// ---------------------------------------------------------------- specific problems
 
 
+	@Test
 	public void testMillisProblems() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt = new JDateTime();
@@ -197,6 +202,7 @@ public class JDateTimeMoreTest extends TestCase {
 	}
 
 
+	@Test
 	public void test1() {
 		DateTimeStamp dts = new DateTimeStamp(-2310, 3, 24, 7, 6, 16, 171);
 
@@ -212,6 +218,7 @@ public class JDateTimeMoreTest extends TestCase {
 	}
 
 
+	@Test
 	public void testCtor() {
 		JDateTime jdt = new JDateTime("2011-04-01 12:32:22.123");
 		assertEquals(2011, jdt.getYear());
@@ -233,6 +240,7 @@ public class JDateTimeMoreTest extends TestCase {
 	}
 
 
+	@Test
 	public void testMillis0() {
 		JDateTime jdt = new JDateTime(0);
 		GregorianCalendar gc = new GregorianCalendar();
@@ -242,13 +250,14 @@ public class JDateTimeMoreTest extends TestCase {
 
 	// ---------------------------------------------------------------- additional
 
+	@Test
 	public void testAddMonthNoFix() {
 		JDateTime jdt;
 
 		// January, no fix
 
 		jdt = new JDateTime("2010-01-31");
-        jdt.addMonth(1, false);
+		jdt.addMonth(1, false);
 		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
 		jdt.subMonth(1, false);
 		assertEquals("2010-02-03", jdt.toString("YYYY-MM-DD"));
@@ -256,7 +265,7 @@ public class JDateTimeMoreTest extends TestCase {
 		// January, fix
 
 		jdt = new JDateTime("2010-01-31");
-        jdt.addMonth(1);
+		jdt.addMonth(1);
 		assertEquals("2010-02-28", jdt.toString("YYYY-MM-DD"));
 		jdt.subMonth(1);
 		assertEquals("2010-01-28", jdt.toString("YYYY-MM-DD"));
@@ -275,13 +284,13 @@ public class JDateTimeMoreTest extends TestCase {
 		// days, no month fix
 
 		jdt = new JDateTime("2010-01-31");
-        jdt.addDay(31, false);
+		jdt.addDay(31, false);
 		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
 		jdt.subDay(31, false);
 		assertEquals("2010-01-31", jdt.toString("YYYY-MM-DD"));
 
 		jdt = new JDateTime("2010-01-31");
-        jdt.addDay(31);
+		jdt.addDay(31);
 		assertEquals("2010-03-03", jdt.toString("YYYY-MM-DD"));
 		jdt.subDay(31);
 		assertEquals("2010-01-31", jdt.toString("YYYY-MM-DD"));
@@ -289,27 +298,28 @@ public class JDateTimeMoreTest extends TestCase {
 		// March
 
 		jdt = new JDateTime("2010-03-31");
-        jdt.addMonth(1, false);
+		jdt.addMonth(1, false);
 		assertEquals("2010-05-01", jdt.toString("YYYY-MM-DD"));
 		jdt.subMonth(1, false);
 		assertEquals("2010-04-01", jdt.toString("YYYY-MM-DD"));
 
 		jdt = new JDateTime("2010-03-31");
-        jdt.addMonth(1);
+		jdt.addMonth(1);
 		assertEquals("2010-04-30", jdt.toString("YYYY-MM-DD"));
 		jdt.subMonth(1);
 		assertEquals("2010-03-30", jdt.toString("YYYY-MM-DD"));
 
 	}
 
+	@Test
 	public void testWeeks() {
 		JDateTime jdt = new JDateTime(2011, 1, 1);
-		assertEquals(0, jdt.getWeekOfMonth());	// in previous year!
-		assertEquals(52, jdt.getWeekOfYear());	// in previous year!
+		assertEquals(0, jdt.getWeekOfMonth());    // in previous year!
+		assertEquals(52, jdt.getWeekOfYear());    // in previous year!
 
 		jdt.setDate(2011, 1, 2);
-		assertEquals(0, jdt.getWeekOfMonth());	// in previous year!
-		assertEquals(52, jdt.getWeekOfYear());	// in previous year!
+		assertEquals(0, jdt.getWeekOfMonth());    // in previous year!
+		assertEquals(52, jdt.getWeekOfYear());    // in previous year!
 
 		jdt.setDate(2011, 1, 3);
 		assertEquals(JDateTime.MONDAY, jdt.getDayOfWeek());
@@ -329,7 +339,7 @@ public class JDateTimeMoreTest extends TestCase {
 		assertEquals(4, jdt.getWeekOfYear());
 
 		jdt.setDate(2011, 1, 31);
-		assertEquals(5, jdt.getWeekOfMonth());	// ?
+		assertEquals(5, jdt.getWeekOfMonth());    // ?
 		assertEquals(5, jdt.getWeekOfYear());
 
 		jdt.setDate(2011, 2, 1);

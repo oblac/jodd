@@ -3,12 +3,18 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.IntegerArrayConverter;
+import org.junit.Test;
 
-public class IntegerArrayConverterTest extends BaseTestCase {
+import static jodd.typeconverter.TypeConverterTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class IntegerArrayConverterTest {
+
+	@Test
 	public void testConversion() {
 		IntegerArrayConverter integerArrayConverter = (IntegerArrayConverter) TypeConverterManager.lookup(int[].class);
-		
+
 		assertNull(integerArrayConverter.convert(null));
 
 		assertEq(arri(173, 234), integerArrayConverter.convert("173, 234"));

@@ -2,14 +2,17 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class ClassLoaderUtilTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ClassLoaderUtilTest {
+
+	@Test
 	public void testStream() throws IOException {
 
 		InputStream is = ClassLoaderUtil.getClassAsStream(ClassLoaderUtilTest.class);
@@ -31,6 +34,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		is.close();
 	}
 
+	@Test
 	public void testClassFileName() {
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest.class));
 		assertEquals("jodd/util/ClassLoaderUtilTest.class", ClassLoaderUtil.getClassFileName(ClassLoaderUtilTest[].class));
@@ -44,6 +48,7 @@ public class ClassLoaderUtilTest extends TestCase {
 		int v;
 	}
 
+	@Test
 	public void testLoadClass() throws ClassNotFoundException {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");

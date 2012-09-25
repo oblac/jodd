@@ -3,13 +3,18 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ClassArrayConverter;
+import org.junit.Test;
 
-public class ClassArrayConverterTest extends BaseTestCase {
+import static jodd.typeconverter.TypeConverterTestHelper.arrc;
+import static org.junit.Assert.*;
 
+public class ClassArrayConverterTest {
+
+	@Test
 	@SuppressWarnings({"unchecked"})
 	public void testConversion() {
 		ClassArrayConverter classArrayConverter = (ClassArrayConverter) TypeConverterManager.lookup(Class[].class);
-		
+
 		assertNull(classArrayConverter.convert(null));
 
 		assertEq(arrc(String.class), classArrayConverter.convert(String.class));

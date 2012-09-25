@@ -2,14 +2,16 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.HashMap;
 
 import static jodd.util.StringTemplateParser.createMapMacroResolver;
+import static org.junit.Assert.assertEquals;
 
-public class StringTemplateParserTest extends TestCase {
+public class StringTemplateParserTest {
 
+	@Test
 	public void testMap() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -20,6 +22,7 @@ public class StringTemplateParserTest extends TestCase {
 	}
 
 
+	@Test
 	public void testMissing() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -42,6 +45,7 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("---<>---", stp.parse("---${key2}---", macroResolver));
 	}
 
+	@Test
 	public void testInner() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -57,6 +61,7 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("---value---", stp.parse("---${key${key${key0}}}---", macroResolver));
 	}
 
+	@Test
 	public void testInner2() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -76,6 +81,7 @@ public class StringTemplateParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testResolver() {
 		StringTemplateParser stp = new StringTemplateParser();
 		StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
@@ -86,6 +92,7 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("xxxSMALLxxx", stp.parse("xxx${small}xxx", macroResolver));
 	}
 
+	@Test
 	public void testReplaceMissingKey() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -108,6 +115,7 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals(".${key2}.", stp.parse(".${key2}.", macroResolver));
 	}
 
+	@Test
 	public void testResolveEscapes() {
 		StringTemplateParser stp = new StringTemplateParser();
 
@@ -126,6 +134,7 @@ public class StringTemplateParserTest extends TestCase {
 		assertEquals("...\\\\\\\\\\${fooProp}...", stp.parse("...\\\\\\\\\\${fooProp}...", macroResolver));
 	}
 
+	@Test
 	public void testCustomMacrosEnds() {
 		StringTemplateParser stp = new StringTemplateParser();
 

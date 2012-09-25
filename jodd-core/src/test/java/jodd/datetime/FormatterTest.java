@@ -3,35 +3,39 @@
 package jodd.datetime;
 
 import jodd.datetime.format.Iso8601JdtFormatter;
+import jodd.datetime.format.JdtFormat;
+import jodd.datetime.format.JdtFormatter;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.impl.CalendarConverter;
-import junit.framework.TestCase;
-import jodd.datetime.format.JdtFormatter;
-import jodd.datetime.format.JdtFormat;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Calendar;
-import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
-public class FormatterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+public class FormatterTest {
 
 	Locale originalLocale;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		originalLocale = Locale.getDefault();
 		Locale.setDefault(Locale.ENGLISH);
 	}
 
-	@Override
+	@After
 	public void tearDown() throws Exception {
-		super.tearDown();
 		Locale.setDefault(originalLocale);
 	}
 
+	@Test
 	public void testStringConversion() {
 		JDateTime jdt = new JDateTime(1975, 1, 1);
 		jdt.setTimeZone(TimeZone.getTimeZone("CET"));
@@ -74,6 +78,7 @@ public class FormatterTest extends TestCase {
 	}
 
 
+	@Test
 	public void testExternalConversion() {
 		JdtFormatter fmt = new Iso8601JdtFormatter();
 		JDateTime jdt = new JDateTime();
@@ -88,7 +93,7 @@ public class FormatterTest extends TestCase {
 	}
 
 
-
+	@Test
 	public void testQuotes() {
 		JDateTime jdt = new JDateTime(1968, 9, 30);
 		assertEquals("SHe WAS Bsample'O'R'N ON 30 September 1968", jdt.toString("SHe 'WAS' 'Bsample''O''R''N' ON DD MML YYYY"));
@@ -102,8 +107,7 @@ public class FormatterTest extends TestCase {
 	}
 
 
-
-
+	@Test
 	public void testParsing() {
 		JDateTime jdt = new JDateTime();
 		jdt.parse("2003-11-24 23:18:38.173");
@@ -146,6 +150,7 @@ public class FormatterTest extends TestCase {
 	}
 
 
+	@Test
 	public void testFormat() {
 		JdtFormat format = new JdtFormat(new Iso8601JdtFormatter(), "YYYY+DD+MM");
 		JDateTime jdt = new JDateTime(2002, 2, 22);

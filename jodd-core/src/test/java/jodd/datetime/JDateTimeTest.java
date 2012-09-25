@@ -2,21 +2,24 @@
 
 package jodd.datetime;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.sql.Timestamp;
-
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.impl.SqlDateConverter;
 import jodd.typeconverter.impl.SqlTimestampConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JDateTimeTest extends TestCase {
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import static org.junit.Assert.*;
+
+public class JDateTimeTest {
+
+	@Test
 	public void testSetGetMillis() {
 		JDateTime jdt = new JDateTime(2003, 2, 28, 23, 59, 59, 0);
-		
+
 		for (int i = 0; i < 1000; i++) {
 			jdt.setMillisecond(i);
 			assertEquals(i, jdt.getMillisecond());
@@ -24,6 +27,7 @@ public class JDateTimeTest extends TestCase {
 	}
 
 
+	@Test
 	public void testSet999Millis() {
 
 		JDateTime jdt = new JDateTime();
@@ -35,12 +39,13 @@ public class JDateTimeTest extends TestCase {
 		assertEquals("2003-03-01 00:00:00.000", jdt.toString());
 
 		// this used to be a problem
-		jdt.set(2003, 2, 28, 23, 59, 59, 999);		// 12 fraction digits  - last working
+		jdt.set(2003, 2, 28, 23, 59, 59, 999);        // 12 fraction digits  - last working
 		assertEquals("2003-02-28 23:59:59.999", jdt.toString());
 
 	}
 
 
+	@Test
 	public void testDaysInMonth() {
 		JDateTime jdt = new JDateTime(2003, 1, 1);
 		assertEquals(31, jdt.getMonthLength());
@@ -52,6 +57,7 @@ public class JDateTimeTest extends TestCase {
 	}
 
 
+	@Test
 	public void testToString() {
 
 		JDateTime jdt = new JDateTime(2003, 1, 1, 1, 1, 1, 1);
@@ -64,6 +70,7 @@ public class JDateTimeTest extends TestCase {
 		assertEquals("2003-10-10 10:10:10.123", jdt.toString());
 	}
 
+	@Test
 	public void testAddMonths() {
 		GregorianCalendar gc = new GregorianCalendar(2003, 0, 31);
 		gc.add(Calendar.MONTH, 1);
@@ -100,12 +107,11 @@ public class JDateTimeTest extends TestCase {
 		assertEquals("2005-02-28 00:00:00.000", gt.toString());
 
 
-
 		gt.setDate(2004, 2, 29);
 		gt.addYear(-1, true);
 		assertEquals("2003-02-28 00:00:00.000", gt.toString());
 
-		gt.setDate(2003, 11, 31);		// == 2003-12-01
+		gt.setDate(2003, 11, 31);        // == 2003-12-01
 		gt.add(0, -8, -31, true);
 		assertEquals("2003-02-28 00:00:00.000", gt.toString());
 		gt.setDate(2003, 11, 31);
@@ -122,15 +128,16 @@ public class JDateTimeTest extends TestCase {
 	}
 
 
+	@Test
 	public void testMiscSetsGets() {
 		JDateTime gt = new JDateTime(2003, 11, 26, 21, 8, 25, 173);
-		
+
 		gt.setYear(2002);
 		assertEquals(2002, gt.getYear());
 
 		gt.setMonth(10);
 		assertEquals(10, gt.getMonth());
-		
+
 		gt.setDay(27);
 		assertEquals(27, gt.getDay());
 
@@ -155,6 +162,7 @@ public class JDateTimeTest extends TestCase {
 
 	}
 
+	@Test
 	public void testLeapYears() {
 
 		JDateTime gt = new JDateTime(1984, 2, 29);
@@ -170,15 +178,15 @@ public class JDateTimeTest extends TestCase {
 		assertEquals("2004-02-29 00:00:00.000", gt.toString());
 
 		gt.set(1900, 2, 29);
-		assertFalse(gt.isLeapYear());			// not a leap year
+		assertFalse(gt.isLeapYear());            // not a leap year
 		assertEquals("1900-03-01 00:00:00.000", gt.toString());
 
 		gt.set(2000, 2, 29);
-		assertTrue(gt.isLeapYear());			// a leap year
+		assertTrue(gt.isLeapYear());            // a leap year
 		assertEquals("2000-02-29 00:00:00.000", gt.toString());
 
 		gt.set(1600, 2, 29);
-		assertTrue(gt.isLeapYear());			// a leap year
+		assertTrue(gt.isLeapYear());            // a leap year
 		assertEquals("1600-02-29 00:00:00.000", gt.toString());
 
 		for (int y = -4700; y < 5000; y++) {
@@ -193,8 +201,7 @@ public class JDateTimeTest extends TestCase {
 	}
 
 
-
-	
+	@Test
 	public void testLoadFromStoreTo() {
 		Calendar c = Calendar.getInstance();
 		c.set(2001, 0, 1, 2, 3, 4);
@@ -225,7 +232,7 @@ public class JDateTimeTest extends TestCase {
 		assertEquals(5, gc1.get(GregorianCalendar.SECOND));
 		assertEquals(600, gc1.get(GregorianCalendar.MILLISECOND));
 
-		
+
 		Date d = new Date(101, 2, 3, 4, 5, 6);
 		jdt = Convert.toJDateTime(d);
 		assertEquals("2001-03-03 04:05:06.000", jdt.toString());
@@ -237,23 +244,23 @@ public class JDateTimeTest extends TestCase {
 		assertEquals(5, d2.getMinutes());
 		assertEquals(6, d2.getSeconds());
 
-		
+
 		JDateTime gt_new = new JDateTime(2003, 6, 5, 4, 3, 2, 100);
 		jdt.setJulianDate(gt_new.getJulianDate());
-		assertEquals("2003-06-05 04:03:02.100",	jdt.toString());
+		assertEquals("2003-06-05 04:03:02.100", jdt.toString());
 		JDateTime gt2 = jdt.clone();
 		assertEquals(2003, gt2.getYear());
 		assertEquals(6, gt2.getMonth());
 		assertEquals(5, gt2.getDay());
 		assertEquals(4, gt2.getHour());
 		assertEquals(3, gt2.getMinute());
-		assertEquals(2, (int)gt2.getSecond());
+		assertEquals(2, (int) gt2.getSecond());
 		assertEquals(100, gt2.getMillisecond());
 
-		
+
 		java.sql.Date sd = new java.sql.Date(123, 4, 5);
 		jdt = Convert.toJDateTime(sd);
-		assertEquals("2023-05-05 00:00:00.000",	jdt.toString());
+		assertEquals("2023-05-05 00:00:00.000", jdt.toString());
 		java.sql.Date sd2 = new java.sql.Date(1, 2, 3);
 		SqlDateConverter sqlDateConverter = new SqlDateConverter();
 		sd2 = sqlDateConverter.convert(jdt);
@@ -261,10 +268,10 @@ public class JDateTimeTest extends TestCase {
 		assertEquals(4, sd2.getMonth());
 		assertEquals(5, sd2.getDate());
 
-		
+
 		Timestamp st = new Timestamp(123, 4, 5, 6, 7, 8, 500000000);
 		jdt = Convert.toJDateTime(st);
-		assertEquals("2023-05-05 06:07:08.500",	jdt.toString());
+		assertEquals("2023-05-05 06:07:08.500", jdt.toString());
 		SqlTimestampConverter sqlTimestampConverter = new SqlTimestampConverter();
 		Timestamp st2 = sqlTimestampConverter.convert(jdt);
 		assertEquals(123, st2.getYear());
@@ -273,9 +280,10 @@ public class JDateTimeTest extends TestCase {
 		assertEquals(6, st2.getHours());
 		assertEquals(7, st2.getMinutes());
 		assertEquals(8, st2.getSeconds());
-		assertEquals(500, st2.getNanos()/1000000);
+		assertEquals(500, st2.getNanos() / 1000000);
 	}
 
+	@Test
 	public void testMillis() {
 		GregorianCalendar gc = new GregorianCalendar();
 		JDateTime jdt = new JDateTime();
@@ -322,6 +330,7 @@ public class JDateTimeTest extends TestCase {
 	}
 
 
+	@Test
 	public void testClone() {
 		JDateTime now = new JDateTime(2009, 5, 1, 23, 45, 1, 0);
 		JulianDateStamp now3 = now.getJulianDate().clone();

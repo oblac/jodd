@@ -2,11 +2,15 @@
 
 package jodd.datetime;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
-public class ValidsTest extends TestCase {
+public class ValidsTest {
 
+	@Test
 	public void testValidDateTime() {
 		assertTrue(TimeUtil.isValidDate(2002, 1, 31));
 		assertFalse(TimeUtil.isValidDate(2002, 1, 32));
@@ -17,7 +21,7 @@ public class ValidsTest extends TestCase {
 		assertTrue(TimeUtil.isValidDate(2002, 12, 29));
 		assertTrue(TimeUtil.isValidDate(2000, 2, 29));
 		assertFalse(TimeUtil.isValidDate(1900, 2, 29));
-		
+
 		assertTrue(TimeUtil.isValidTime(0, 0, 0, 0));
 		assertFalse(TimeUtil.isValidTime(0, 0, 60, 0));
 		assertFalse(TimeUtil.isValidTime(0, 60, 0, 0));
@@ -35,6 +39,7 @@ public class ValidsTest extends TestCase {
 	}
 
 
+	@Test
 	public void testIsValid() {
 		JDateTime jdt = new JDateTime();
 		assertTrue(jdt.isValid("2002-01-31"));
@@ -79,6 +84,7 @@ public class ValidsTest extends TestCase {
 		assertTrue(jdt.isValid("2-3-1 2:3:  4.007"));
 	}
 
+	@Test
 	public void testIsValid2() {
 		JDateTime jdt = new JDateTime();
 		String date = jdt.toString("YYYY-MM-DD");

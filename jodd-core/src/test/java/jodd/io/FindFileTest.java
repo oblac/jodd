@@ -5,19 +5,22 @@ package jodd.io;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.RegExpFindFile;
 import jodd.io.findfile.WildcardFindFile;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 
-public class FindFileTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class FindFileTest {
 
 	protected String dataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -25,6 +28,7 @@ public class FindFileTest extends TestCase {
 		dataRoot = data.getFile();
 	}
 
+	@Test
 	public void testWildcardFile() {
 		FindFile ff = new WildcardFindFile("**/*file/a*")
 				.setRecursive(true)
@@ -47,7 +51,7 @@ public class FindFileTest extends TestCase {
 				}
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
-						path.equals(dataRoot + "/file/a.txt");
+								path.equals(dataRoot + "/file/a.txt");
 
 				assertTrue(matched);
 
@@ -79,7 +83,7 @@ public class FindFileTest extends TestCase {
 
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
-						path.equals(dataRoot + "/file/a.txt");
+								path.equals(dataRoot + "/file/a.txt");
 
 				assertTrue(matched);
 			}
@@ -91,6 +95,7 @@ public class FindFileTest extends TestCase {
 	}
 
 
+	@Test
 	public void testWildcardPath() {
 		FindFile ff = new WildcardFindFile("**/file/*")
 				.setRecursive(true)
@@ -114,7 +119,7 @@ public class FindFileTest extends TestCase {
 
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
-						path.equals(dataRoot + "/file/a.txt");
+								path.equals(dataRoot + "/file/a.txt");
 
 				assertTrue(matched);
 
@@ -125,6 +130,7 @@ public class FindFileTest extends TestCase {
 		assertEquals(2, countFiles);
 	}
 
+	@Test
 	public void testRegexp() {
 		FindFile ff = new RegExpFindFile(".*/a[.].*")
 				.setRecursive(true)
@@ -148,7 +154,7 @@ public class FindFileTest extends TestCase {
 
 				boolean matched =
 						path.equals(dataRoot + "/file/a.png") ||
-						path.equals(dataRoot + "/file/a.txt");
+								path.equals(dataRoot + "/file/a.txt");
 
 				assertTrue(matched);
 

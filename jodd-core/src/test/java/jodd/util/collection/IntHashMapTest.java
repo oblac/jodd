@@ -2,10 +2,13 @@
 
 package jodd.util.collection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class IntHashMapTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class IntHashMapTest {
+
+	@Test
 	public void testAll() {
 		IntHashMap ihm = new IntHashMap();
 
@@ -14,7 +17,7 @@ public class IntHashMapTest extends TestCase {
 		}
 
 		for (int i = 0; i < 10000; i++) {
-			assertEquals(((Integer)ihm.get(i)).intValue(), i);
+			assertEquals(((Integer) ihm.get(i)).intValue(), i);
 		}
 	}
 

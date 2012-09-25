@@ -2,9 +2,11 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class Base64Test extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class Base64Test {
 
 	String text = "Man is distinguished, not only by his reason, but by this singular passion from other animals," +
 			" which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge," +
@@ -16,6 +18,7 @@ public class Base64Test extends TestCase {
 			"dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo" +
 			"ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=";
 
+	@Test
 	public void testEncoding() {
 		assertEquals(enc, Base64.encodeToString(text));
 		assertEquals("TQ==", Base64.encodeToString("M"));
@@ -23,6 +26,7 @@ public class Base64Test extends TestCase {
 		assertEquals("TWFu", Base64.encodeToString("Man"));
 	}
 
+	@Test
 	public void testDecode() {
 		assertEquals(text, Base64.decodeToString(enc));
 		assertEquals("M", Base64.decodeToString("TQ=="));

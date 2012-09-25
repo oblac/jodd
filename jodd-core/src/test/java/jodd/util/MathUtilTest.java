@@ -2,10 +2,14 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MathUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+public class MathUtilTest {
+
+	@Test
 	public void testOddEven() {
 		assertTrue(MathUtil.isEven(0));
 		assertTrue(MathUtil.isOdd(1));
@@ -14,6 +18,7 @@ public class MathUtilTest extends TestCase {
 		assertTrue(MathUtil.isEven(-2));
 	}
 
+	@Test
 	public void testFactorial() {
 		assertEquals(0, MathUtil.factorial(-1));
 		assertEquals(1, MathUtil.factorial(0));
@@ -24,6 +29,7 @@ public class MathUtilTest extends TestCase {
 		assertEquals(1307674368000L, MathUtil.factorial(15));
 	}
 
+	@Test
 	public void testParseDigit() {
 		assertEquals(0, MathUtil.parseDigit('0'));
 		assertEquals(1, MathUtil.parseDigit('1'));

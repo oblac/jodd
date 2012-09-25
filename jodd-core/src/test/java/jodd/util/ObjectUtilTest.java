@@ -2,10 +2,14 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ObjectUtilTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+public class ObjectUtilTest {
+
+	@Test
 	public void testEquals() {
 		Object a = new Integer(173);
 		Object b = new Integer(1);

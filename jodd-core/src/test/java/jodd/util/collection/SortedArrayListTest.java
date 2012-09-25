@@ -3,13 +3,16 @@
 package jodd.util.collection;
 
 import jodd.util.RandomStringUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class SortedArrayListTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class SortedArrayListTest {
+
+	@Test
 	public void testList1() {
 		SortedArrayList<String> list = new SortedArrayList<String>();
 
@@ -29,6 +32,7 @@ public class SortedArrayListTest extends TestCase {
 		assertEquals("cc", list.get(2));
 	}
 
+	@Test
 	public void testList2() {
 		SortedArrayList<String> list = new SortedArrayList<String>();
 
@@ -50,6 +54,7 @@ public class SortedArrayListTest extends TestCase {
 		assertEquals(1, list.findInsertionPoint("a"));
 	}
 
+	@Test
 	public void testRandom() {
 		int total = 100000;
 

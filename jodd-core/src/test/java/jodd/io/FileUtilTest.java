@@ -3,20 +3,22 @@
 package jodd.io;
 
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class FileUtilTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class FileUtilTest {
 
 	protected String dataRoot;
 	protected String utfdataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (dataRoot != null) {
 			return;
 		}
@@ -26,30 +28,28 @@ public class FileUtilTest extends TestCase {
 		utfdataRoot = data.getFile();
 	}
 
-	public void testFileManipulation() {
-		try {
-			FileUtil.copy(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data"));
-			assertFalse(FileUtil.isNewer(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
-			assertFalse(FileUtil.isOlder(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
-			FileUtil.delete(new File(dataRoot, "sb1.data"));
-		} catch (Exception ex) {
-			fail("FileUtil.copy " + ex.toString());
-		}
+	@Test
+	public void testFileManipulation() throws IOException {
+		FileUtil.copy(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data"));
+		assertFalse(FileUtil.isNewer(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
+		assertFalse(FileUtil.isOlder(new File(dataRoot, "sb.data"), new File(dataRoot, "sb1.data")));
+		FileUtil.delete(new File(dataRoot, "sb1.data"));
 	}
 
+	@Test
 	public void testString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
 		try {
 			FileUtil.writeString(new File(dataRoot, "test.txt"), s);
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.writeString " + ex.toString());
 		}
 
 		String s2 = null;
 		try {
 			s2 = FileUtil.readString(dataRoot + "/test.txt");
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.readString " + ex.toString());
 		}
 		assertEquals(s, s2);
@@ -61,13 +61,13 @@ public class FileUtilTest extends TestCase {
 
 		try {
 			FileUtil.writeString(dataRoot + "/test.txt", s);
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.writeString " + ex.toString());
 		}
 
 		try {
 			s2 = FileUtil.readString(dataRoot + "/test.txt");
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.readString " + ex.toString());
 		}
 
@@ -81,6 +81,7 @@ public class FileUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testUnicodeString() {
 		String s = "This is a test file\nIt only has\nthree lines!!";
 
@@ -90,14 +91,14 @@ public class FileUtilTest extends TestCase {
 
 		try {
 			FileUtil.writeString(dataRoot + "/test2.txt", s, "UTF-16");
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.writeString " + ex.toString());
 		}
 
 		String s2 = null;
 		try {
 			s2 = FileUtil.readString(dataRoot + "/test2.txt", "UTF-16");
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			fail("FileUtil.readString " + ex.toString());
 		}
 		assertEquals(s, s2);
@@ -110,6 +111,7 @@ public class FileUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testFileManipulations() {
 		String root = dataRoot + "/file/";
 		String tmp = root + "tmp/";
@@ -121,7 +123,7 @@ public class FileUtilTest extends TestCase {
 			FileUtil.copyFile(root + "a.txt", root + "w.txt");
 			FileUtil.copyFile(root + "a.png", root + "w.png");
 			FileUtil.copyFile(root + "a.txt", root + "w.txt");
-		} catch(IOException ioex) {
+		} catch (IOException ioex) {
 			fail(ioex.toString());
 		}
 
@@ -200,6 +202,7 @@ public class FileUtilTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBytes() {
 		try {
 			File file = new File(dataRoot + "/file/a.txt");
@@ -216,6 +219,7 @@ public class FileUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testUTFReads() throws IOException {
 		String content = FileUtil.readUTFString(new File(utfdataRoot, "utf-8.txt"));
 		content = content.replace("\r\n", "\n");

@@ -2,10 +2,13 @@
 
 package jodd.datetime;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JulianDateStampTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JulianDateStampTest {
+
+	@Test
 	public void testSet() {
 		JDateTime jdt = new JDateTime(2008, 12, 20, 10, 44, 55, 0);
 		JulianDateStamp jds = jdt.getJulianDate();
@@ -23,6 +26,7 @@ public class JulianDateStampTest extends TestCase {
 
 	}
 
+	@Test
 	public void testbetween() {
 		JDateTime jdt = new JDateTime(2008, 12, 20, 0, 0, 0, 0);
 		JDateTime jdt2 = new JDateTime(2008, 12, 20, 0, 0, 0, 0);
@@ -38,7 +42,7 @@ public class JulianDateStampTest extends TestCase {
 		assertEquals(1, jdt2.getJulianDate().daysBetween(jdt.getJulianDate()));
 
 		jdt2.subYear(1);
-		assertEquals(367, jdt2.getJulianDate().daysBetween(jdt.getJulianDate()));		// 2008 is leap year
+		assertEquals(367, jdt2.getJulianDate().daysBetween(jdt.getJulianDate()));        // 2008 is leap year
 
 		jdt2.addDay(1);
 		assertEquals(366, jdt2.getJulianDate().daysBetween(jdt.getJulianDate()));
@@ -46,6 +50,7 @@ public class JulianDateStampTest extends TestCase {
 	}
 
 
+	@Test
 	public void testDecimalFloating() {
 
 		DateTimeStamp dts = new DateTimeStamp(1970, 1, 13, 14, 24, 0, 0);

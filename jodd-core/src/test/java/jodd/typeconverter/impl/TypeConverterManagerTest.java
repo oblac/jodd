@@ -3,12 +3,16 @@
 package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverterManager;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
 
-public class TypeConverterManagerTest extends TestCase {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+public class TypeConverterManagerTest {
+
+	@Test
 	public void testRegistration() {
 		FileConverter fileTypeConverter = (FileConverter) TypeConverterManager.lookup(File.class);
 

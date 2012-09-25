@@ -2,15 +2,19 @@
 
 package jodd.datetime;
 
+import org.junit.Test;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class TimeUtilTest extends TestCase {
+public class TimeUtilTest {
 
-public void testFromToJulian() {
+	@Test
+	public void testFromToJulian() {
 
 		DateTimeStamp time;
 		JulianDateStamp jds;
@@ -119,6 +123,8 @@ public void testFromToJulian() {
 		assertEquals(2147438064.499989, jds.doubleValue(), 1.0e-8);
 		assertEquals(2147438064, jds.getJulianDayNumber());
 	}
+
+	@Test
 	public void testFix() {
 		DateTimeStamp t = new DateTimeStamp();
 		t.year = 2003;
@@ -136,6 +142,7 @@ public void testFromToJulian() {
 		assertEquals(t.toString(), t2.toString());
 	}
 
+	@Test
 	public void testMonteCarlo() {
 		Random r = new Random();
 		for (int i = 0; i < 5000000; i++) {
@@ -147,6 +154,7 @@ public void testFromToJulian() {
 		}
 	}
 
+	@Test
 	public void testDates() {
 		DateTimeStamp t = new DateTimeStamp();
 		GregorianCalendar gc = new GregorianCalendar();
@@ -156,7 +164,9 @@ public void testFromToJulian() {
 			for (int i = 0; i < 365; i++) {
 				t.month = gc.get(Calendar.MONTH) + 1;
 				t.day = gc.get(Calendar.DAY_OF_MONTH);
-				t.hour = t.minute = 0; t.second = 0; t.millisecond = 0;
+				t.hour = t.minute = 0;
+				t.second = 0;
+				t.millisecond = 0;
 				double jd = TimeUtil.toJulianDate(t).doubleValue();
 				DateTimeStamp t2 = TimeUtil.fromJulianDate(jd);
 				assertEquals(t.toString(), t2.toString());
@@ -166,6 +176,7 @@ public void testFromToJulian() {
 	}
 
 
+	@Test
 	public void testTimes() {
 		DateTimeStamp t = new DateTimeStamp();
 		GregorianCalendar gc = new GregorianCalendar();
@@ -187,6 +198,7 @@ public void testFromToJulian() {
 		}
 	}
 
+	@Test
 	public void testDayOfYear() {
 
 		int doy = TimeUtil.dayOfYear(2003, 1, 1);
@@ -206,6 +218,7 @@ public void testFromToJulian() {
 
 	}
 
+	@Test
 	public void testSetAccumulation() {
 		DateTimeStamp gts1 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		DateTimeStamp gts2 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
@@ -221,6 +234,7 @@ public void testFromToJulian() {
 	}
 
 
+	@Test
 	public void testSetDateAccumulation() {
 		DateTimeStamp gts1 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
 		DateTimeStamp gts2 = new DateTimeStamp(2003, 11, 24, 21, 40, 38, 173);
@@ -236,6 +250,7 @@ public void testFromToJulian() {
 	}
 
 
+	@Test
 	public void testToCalendar() {
 		assertEquals(Calendar.JANUARY, TimeUtil.toCalendarMonth(JDateTime.JANUARY));
 		assertEquals(Calendar.DECEMBER, TimeUtil.toCalendarMonth(JDateTime.DECEMBER));
@@ -245,7 +260,6 @@ public void testFromToJulian() {
 		assertEquals(Calendar.SATURDAY, TimeUtil.toCalendarDayOfWeek(JDateTime.SATURDAY));
 		assertEquals(Calendar.SUNDAY, TimeUtil.toCalendarDayOfWeek(JDateTime.SUNDAY));
 	}
-
 
 
 }

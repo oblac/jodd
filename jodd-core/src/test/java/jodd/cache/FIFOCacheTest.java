@@ -2,13 +2,16 @@
 
 package jodd.cache;
 
-import junit.framework.TestCase;
 import jodd.util.ThreadUtil;
+import org.junit.Test;
 
 import java.util.Iterator;
 
-public class FIFOCacheTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class FIFOCacheTest {
+
+	@Test
 	public void testCache() {
 		Cache<String, String> cache = new FIFOCache<String, String>(3);
 		assertEquals(3, cache.getCacheSize());
@@ -41,6 +44,7 @@ public class FIFOCacheTest extends TestCase {
 		assertEquals(0, cache.size());
 	}
 
+	@Test
 	public void testCacheTime() {
 		Cache<String, String> cache = new FIFOCache<String, String>(3);
 		cache.put("1", "1");
@@ -57,6 +61,7 @@ public class FIFOCacheTest extends TestCase {
 
 	}
 
+	@Test
 	public void testCacheIterator() {
 		Cache<String, String> cache = new FIFOCache<String, String>(3);
 		cache.put("1", "1");
@@ -77,6 +82,7 @@ public class FIFOCacheTest extends TestCase {
 		assertEquals(2, count);
 	}
 
+	@Test
 	public void testCacheTime2() {
 		Cache<String, String> cache = new FIFOCache<String, String>(3, 50);
 		cache.put("1", "1");
@@ -91,6 +97,7 @@ public class FIFOCacheTest extends TestCase {
 	}
 
 
+	@Test
 	public void testPrune() {
 		Cache<String, String> cache = new FIFOCache<String, String>(3);
 		cache.put("1", "1");

@@ -2,15 +2,19 @@
 
 package jodd.bean;
 
-import junit.framework.TestCase;
 import jodd.bean.data.Woof;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-public class BeanUtilGenericsTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+public class BeanUtilGenericsTest {
+
+	@Test
 	public void testOne() {
 		Woof woof = new Woof();
 		Class type = woof.getClass();

@@ -3,13 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.ByteConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ByteConverterTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ByteConverterTest {
+
+	@Test
 	public void testConversion() {
 		ByteConverter byteConverter = new ByteConverter();
-		
+
 		assertNull(byteConverter.convert(null));
 
 		assertEquals(Byte.valueOf((byte) 1), byteConverter.convert(Integer.valueOf(1)));
@@ -21,7 +24,7 @@ public class ByteConverterTest extends TestCase {
 		assertEquals(Byte.valueOf((byte) 127), byteConverter.convert("  +127  "));
 		assertEquals(Byte.valueOf((byte) -1), byteConverter.convert("  -1  "));
 		assertEquals(Byte.valueOf((byte) -128), byteConverter.convert("  -128  "));
-		assertEquals(Byte.valueOf((byte) (300-256)), byteConverter.convert(Integer.valueOf(300)));
+		assertEquals(Byte.valueOf((byte) (300 - 256)), byteConverter.convert(Integer.valueOf(300)));
 
 		try {
 			assertEquals(Byte.valueOf((byte) 1), byteConverter.convert("1.5"));

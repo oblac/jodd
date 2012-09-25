@@ -3,21 +3,27 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BooleanArrayConverter;
+import org.junit.Test;
 
-public class BooleanArrayConverterTest extends BaseTestCase {
+import static jodd.typeconverter.TypeConverterTestHelper.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class BooleanArrayConverterTest {
+
+	@Test
 	public void testConversion() {
 		BooleanArrayConverter booleanArrayConverter = (BooleanArrayConverter) TypeConverterManager.lookup(boolean[].class);
 
 		assertNull(booleanArrayConverter.convert(null));
-		
-		boolean[] primitiveArray = new boolean[] {false, true, false};
+
+		boolean[] primitiveArray = new boolean[]{false, true, false};
 		Object convertedArray = booleanArrayConverter.convert(primitiveArray);
 		assertEquals(boolean[].class, convertedArray.getClass());
 
-		Boolean[] booleanArray = new Boolean[] {Boolean.FALSE, Boolean.TRUE, Boolean.FALSE};
+		Boolean[] booleanArray = new Boolean[]{Boolean.FALSE, Boolean.TRUE, Boolean.FALSE};
 		convertedArray = booleanArrayConverter.convert(booleanArray);
-		assertEquals(boolean[].class, convertedArray.getClass());	// boolean[]!
+		assertEquals(boolean[].class, convertedArray.getClass());    // boolean[]!
 
 		assertEq(arrl(true), booleanArrayConverter.convert(Boolean.TRUE));
 		assertEq(arrl(true), booleanArrayConverter.convert("true"));
@@ -28,9 +34,10 @@ public class BooleanArrayConverterTest extends BaseTestCase {
 		assertEq(arrl(true, false, true), booleanArrayConverter.convert(arrs(" true ", "0", " yes ")));
 	}
 
+	@Test
 	public void testArrayConversion() {
-		Object[] booleanArray = new Object[] {Boolean.FALSE, "TRUE", Integer.valueOf(0)};
-		
+		Object[] booleanArray = new Object[]{Boolean.FALSE, "TRUE", Integer.valueOf(0)};
+
 		boolean[] arr1 = TypeConverterManager.convertType(booleanArray, boolean[].class);
 		assertEquals(3, arr1.length);
 		assertEq(arrl(false, true, false), arr1);
@@ -51,7 +58,7 @@ public class BooleanArrayConverterTest extends BaseTestCase {
 	private void assertEq(boolean[] arr1, Boolean[] arr2) {
 		assertEquals(arr1.length, arr2.length);
 		for (int i = 0; i < arr1.length; i++) {
-			assertEquals(arr1[i], arr2[i].booleanValue());
+			assertEquals(arr1[i], arr2[i]);
 		}
 	}
 

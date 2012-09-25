@@ -2,15 +2,19 @@
 
 package jodd.bean;
 
-import junit.framework.TestCase;
 import jodd.bean.data.Abean;
+import org.junit.Test;
 
 import java.util.HashMap;
 
-public class BeanTemplateParserTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+public class BeanTemplateParserTest {
 
 	BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
+	@Test
 	public void testTemplate() {
 		Abean a = new Abean();
 
@@ -35,6 +39,7 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals("${fooProp}abean_value", beanTemplateParser.parse("\\${fooProp}${fooProp}", a));
 	}
 
+	@Test
 	public void testMap() {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("key1", "value1");
@@ -42,6 +47,7 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals("---value1---", beanTemplateParser.parse("---${key1}---", map));
 	}
 
+	@Test
 	public void testMissing() {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("key1", "value1");
@@ -62,6 +68,7 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals("---<>---", beanTemplateParser2.parse("---${key2}---", map));
 	}
 
+	@Test
 	public void testInner() {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("key0", "1");
@@ -73,6 +80,7 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals("---value---", beanTemplateParser.parse("---${key${key${key0}}}---", map));
 	}
 
+	@Test
 	public void testReplaceMissingKey() {
 		BeanTemplateParser btp = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -96,6 +104,7 @@ public class BeanTemplateParserTest extends TestCase {
 		assertEquals(".${key2}.", btp.parse(".${key2}.", map));
 	}
 
+	@Test
 	public void testResolveEscapes() {
 		Abean a = new Abean();
 		BeanTemplateParser btp = new BeanTemplateParser();

@@ -2,10 +2,14 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MimeTypesTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class MimeTypesTest {
+
+	@Test
 	public void testSimpleMime() {
 		assertEquals("application/atom+xml", MimeTypes.getMimeType("atom"));
 		assertEquals("audio/x-wav", MimeTypes.getMimeType("wav"));

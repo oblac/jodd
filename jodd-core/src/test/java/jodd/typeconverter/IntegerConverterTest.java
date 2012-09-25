@@ -3,13 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.IntegerConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class IntegerConverterTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class IntegerConverterTest {
+
+	@Test
 	public void testConversion() {
 		IntegerConverter integerConverter = new IntegerConverter();
-		
+
 		assertNull(integerConverter.convert(null));
 
 		assertEquals(Integer.valueOf(1), integerConverter.convert(Integer.valueOf(1)));

@@ -2,15 +2,18 @@
 
 package jodd.util.collection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
-@SuppressWarnings("AutoBoxing")
-public class ArrayIteratorTest extends TestCase {
+import static org.junit.Assert.*;
 
+@SuppressWarnings("AutoBoxing")
+public class ArrayIteratorTest {
+
+	@Test
 	public void testArrayIteration() {
-		Integer[] i = new Integer[] {1, 2, 3, 4, 5};
+		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i);
 		assertTrue(ae.hasNext());
@@ -31,8 +34,9 @@ public class ArrayIteratorTest extends TestCase {
 
 	}
 
+	@Test
 	public void testArrayIterationFrom() {
-		Integer[] i = new Integer[] {1, 2, 3, 4, 5};
+		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
 		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i, 2, 2);
 		assertTrue(ae.hasNext());

@@ -2,14 +2,18 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
-public class CharUtilTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+public class CharUtilTest {
+
+	@Test
 	public void testToSimpleByteArray() {
-		char[] src = new char[] {0, 10, 'A', 127, 128, 255, 256};
+		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toSimpleByteArray(src);
 
 		assertEquals(0, dest[0]);
@@ -21,8 +25,9 @@ public class CharUtilTest extends TestCase {
 		assertEquals(0, dest[6]);
 	}
 
+	@Test
 	public void testToSimpleCharArray() {
-		byte[] src = new byte[] {0, 10, 65, 127, -128, -1};
+		byte[] src = new byte[]{0, 10, 65, 127, -128, -1};
 		char[] dest = CharUtil.toSimpleCharArray(src);
 
 		assertEquals(0, dest[0]);
@@ -33,8 +38,9 @@ public class CharUtilTest extends TestCase {
 		assertEquals(255, dest[5]);
 	}
 
+	@Test
 	public void testToAsciiByteArray() {
-		char[] src = new char[] {0, 10, 'A', 127, 128, 255, 256};
+		char[] src = new char[]{0, 10, 'A', 127, 128, 255, 256};
 		byte[] dest = CharUtil.toAsciiByteArray(src);
 
 		assertEquals(0, dest[0]);
@@ -46,8 +52,9 @@ public class CharUtilTest extends TestCase {
 		assertEquals(0x3F, dest[6]);
 	}
 
+	@Test
 	public void testToRawByteArray() {
-		char[] src = new char[] {0, 'A', 255, 256, 0xFF7F};
+		char[] src = new char[]{0, 'A', 255, 256, 0xFF7F};
 		byte[] dest = CharUtil.toRawByteArray(src);
 
 		assertEquals(src.length * 2, dest.length);
@@ -68,8 +75,9 @@ public class CharUtilTest extends TestCase {
 		assertEquals(127, dest[9]);
 	}
 
+	@Test
 	public void testToRawCharArray() {
-		byte[] src = new byte[] {0,0, 0,65, 0,-1, 1,0, -1};
+		byte[] src = new byte[]{0, 0, 0, 65, 0, -1, 1, 0, -1};
 		char[] dest = CharUtil.toRawCharArray(src);
 
 		assertEquals(src.length / 2 + src.length % 2, dest.length);
@@ -82,6 +90,7 @@ public class CharUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testToByte() throws UnsupportedEncodingException {
 		char[] src = "tstč".toCharArray();
 		assertEquals(4, src.length);
@@ -103,7 +112,7 @@ public class CharUtilTest extends TestCase {
 		assertEquals(0x3F, dest3[3]);
 
 		dest = CharUtil.toByteArray(src, "UTF16");
-		assertEquals(8 + 2, dest.length);	// BOM included
+		assertEquals(8 + 2, dest.length);    // BOM included
 		assertEquals(269 - 256, dest[9]);
 		assertEquals(1, dest[8]);
 		src2 = CharUtil.toCharArray(dest, "UTF16");

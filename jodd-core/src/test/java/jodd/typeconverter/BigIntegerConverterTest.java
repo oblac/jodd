@@ -3,12 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.BigIntegerConverter;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.math.BigInteger;
 
-public class BigIntegerConverterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class BigIntegerConverterTest {
+
+	@Test
 	public void testConversion() {
 		BigIntegerConverter bigIntegerConverter = new BigIntegerConverter();
 

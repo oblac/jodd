@@ -2,10 +2,13 @@
 
 package jodd.format;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class FormatTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class FormatTest {
+
+	@Test
 	public void testIntLong() {
 		assertEquals("1", Printf.str("%d", 1));
 		assertEquals("17", Printf.str("%d", 17));
@@ -31,12 +34,12 @@ public class FormatTest extends TestCase {
 		int i = -1;
 		assertEquals("-1", Printf.str("%,d", i));
 		assertEquals("-1", Printf.str("%,i", i));
-		assertEquals("4294967295", Printf.str("%u", i));	// 2^32 - 1
+		assertEquals("4294967295", Printf.str("%u", i));    // 2^32 - 1
 		assertEquals("4,294,967,295", Printf.str("%,u", i));
 		assertEquals("ffffffff", Printf.str("%x", i));
 		assertEquals("ffff ffff", Printf.str("%,x", i));
 
-		i =	2147483647;			// 2^31 - 1 (max int)
+		i = 2147483647;            // 2^31 - 1 (max int)
 		assertEquals(Integer.MAX_VALUE, i);
 		assertEquals("2147483647", Printf.str("%d", i));
 		assertEquals("2147483647", Printf.str("%i", i));
@@ -59,9 +62,7 @@ public class FormatTest extends TestCase {
 		assertEquals("8000 0000", Printf.str("%,x", i));
 
 
-
-
-		long l = 2147483648L;	// 2^31 (max int + 1)
+		long l = 2147483648L;    // 2^31 (max int + 1)
 		assertEquals("2147483648", Printf.str("%d", l));
 		assertEquals("-2147483648", Printf.str("%i", l));
 		assertEquals("2147483648", Printf.str("%u", l));
@@ -108,12 +109,14 @@ public class FormatTest extends TestCase {
 		assertEquals("8000 0000 0000 0000", Printf.str("%,X", l));
 	}
 
+	@Test
 	public void testChar() {
 		assertEquals("A", Printf.str("%c", 'A'));
 		assertEquals("--- A ---", Printf.str("--- %c ---", 'A'));
 	}
 
 
+	@Test
 	public void testFormatedInt() {
 		assertEquals("0001", Printf.str("%04d", 1));
 		assertEquals("+001", Printf.str("%+04d", 1));
@@ -136,6 +139,7 @@ public class FormatTest extends TestCase {
 		assertEquals("123,456", Printf.str("%,d", 123456));
 	}
 
+	@Test
 	public void testStrings() {
 		assertEquals("A", Printf.str("%c", 'A'));
 		assertEquals("str", Printf.str("%s", "str"));
@@ -159,6 +163,7 @@ public class FormatTest extends TestCase {
 		assertEquals(" % q ", Printf.str(" %% %s ", new String[]{"q"}));
 	}
 
+	@Test
 	public void testFloats() {
 		assertEquals("1.700000", Printf.str("%f", 1.7));
 		assertEquals("1.7", Printf.str("%1.1f", 1.7));
@@ -190,6 +195,7 @@ public class FormatTest extends TestCase {
 		assertEquals("1.001e+012", Printf.str("%g", 100.1e10));
 	}
 
+	@Test
 	public void testBoolean() {
 		assertEquals("true", Printf.str("%l", true));
 		assertEquals("false", Printf.str("%l", false));
@@ -198,14 +204,15 @@ public class FormatTest extends TestCase {
 		assertEquals("true", Printf.str("%l", 123));
 		assertEquals("false", Printf.str("%l", 0));
 		assertEquals("TRUE", Printf.str("%L", 123));
-		assertEquals("FALSE", Printf.str("%L", 0));		
+		assertEquals("FALSE", Printf.str("%L", 0));
 		assertEquals("true", Printf.str("%l", 123L));
 		assertEquals("false", Printf.str("%l", 0L));
 		assertEquals("TRUE", Printf.str("%L", 123L));
-		assertEquals("FALSE", Printf.str("%L", 0L));		
+		assertEquals("FALSE", Printf.str("%L", 0L));
 	}
 
 
+	@Test
 	public void testIntRanges() {
 		int i;
 
@@ -217,7 +224,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Integer.toString(i), Printf.str("%o", i));
 		assertEquals(Integer.toString(i), Printf.str("%b", i));
 
-		i = 1; long v = 1;
+		i = 1;
+		long v = 1;
 		assertEquals(Integer.toString(i), Printf.str("%d", i));
 		assertEquals(Integer.toString(i), Printf.str("%i", i));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", i));
@@ -225,7 +233,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(v, 8), Printf.str("%o", i));
 		assertEquals(Long.toString(v, 2), Printf.str("%b", i));
 
-		i = Integer.MAX_VALUE; v = (1L << 31) - 1;
+		i = Integer.MAX_VALUE;
+		v = (1L << 31) - 1;
 		assertEquals(Integer.toString(i), Printf.str("%d", i));
 		assertEquals(Integer.toString(i), Printf.str("%i", i));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", i));
@@ -233,7 +242,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(v, 8), Printf.str("%o", i));
 		assertEquals(Long.toString(v, 2), Printf.str("%b", i));
 
-		i = Integer.MIN_VALUE; v = (1L << 31);
+		i = Integer.MIN_VALUE;
+		v = (1L << 31);
 		assertEquals(Integer.toString(i), Printf.str("%d", i));
 		assertEquals(Integer.toString(i), Printf.str("%i", i));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", i));
@@ -241,7 +251,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(v, 8), Printf.str("%o", i));
 		assertEquals(Long.toString(v, 2), Printf.str("%b", i));
 
-		i = -1; v = (1L << 32) - 1;
+		i = -1;
+		v = (1L << 32) - 1;
 		assertEquals(Integer.toString(i), Printf.str("%d", i));
 		assertEquals(Integer.toString(i), Printf.str("%i", i));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", i));
@@ -250,6 +261,7 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(v, 2), Printf.str("%b", i));
 	}
 
+	@Test
 	public void testLongRanges() {
 		long l;
 
@@ -269,7 +281,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(l, 8), Printf.str("%o", l));
 		assertEquals(Long.toString(l, 2), Printf.str("%b", l));
 
-		l = Integer.MAX_VALUE; long v = (1L << 31) - 1;
+		l = Integer.MAX_VALUE;
+		long v = (1L << 31) - 1;
 		assertEquals(Long.toString(l), Printf.str("%d", l));
 		assertEquals(Long.toString(l), Printf.str("%i", l));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", l));
@@ -294,7 +307,8 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toBinaryString(l), Printf.str("%b", l));
 
 
-		l = ((long) Integer.MAX_VALUE) + 1; v = (1L << 31);
+		l = ((long) Integer.MAX_VALUE) + 1;
+		v = (1L << 31);
 		assertEquals(Long.toString(l), Printf.str("%d", l));
 		assertEquals(Long.toString(Integer.MIN_VALUE), Printf.str("%i", l));
 		assertEquals(Long.toString(v, 16), Printf.str("%x", l));
@@ -303,7 +317,7 @@ public class FormatTest extends TestCase {
 		assertEquals(Long.toString(v, 2), Printf.str("%b", l));
 
 
-		l = ((long)Integer.MIN_VALUE) - 1;
+		l = ((long) Integer.MIN_VALUE) - 1;
 		assertEquals(Long.toString(l), Printf.str("%d", l));
 		assertEquals(Long.toString(Integer.MAX_VALUE), Printf.str("%i", l));
 		assertEquals(Long.toHexString(l), Printf.str("%x", l));
@@ -330,7 +344,7 @@ public class FormatTest extends TestCase {
 	}
 
 
-
+	@Test
 	public void testBinary() {
 		assertEquals("1", Printf.str("%b", 1));
 		assertEquals("11", Printf.str("%b", 3));
@@ -341,6 +355,7 @@ public class FormatTest extends TestCase {
 		assertEquals("11111111 11111111 11111111 11111111 11111111 11111111 11111111 11110011", Printf.str("%,b", -13L));
 	}
 
+	@Test
 	public void testSuccessive() {
 		String fmt = "...%i...%i...";
 		PrintfFormat pf = new PrintfFormat();

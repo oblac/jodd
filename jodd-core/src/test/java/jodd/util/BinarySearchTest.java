@@ -2,34 +2,38 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinarySearchTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class BinarySearchTest {
 
 	protected List<String> list;
 	protected BinarySearch<String> listBinarySearch;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		list = new ArrayList<String>();
-		list.add("aaa");	// 0
+		list.add("aaa");    // 0
 		list.add("bbb");
 		list.add("ccc");
-		list.add("ddd");	// 3
-		list.add("ddd");	// 4
-		list.add("ddd");	// 5
+		list.add("ddd");    // 3
+		list.add("ddd");    // 4
+		list.add("ddd");    // 5
 		list.add("eee");
-		list.add("iii");	// 7
-		list.add("iii");	// 8
+		list.add("iii");    // 7
+		list.add("iii");    // 8
 		list.add("sss");
 
 		listBinarySearch = BinarySearch.forList(list);
 	}
 
+	@Test
 	public void testFind() {
 		assertEquals(0, listBinarySearch.find("aaa"));
 		assertEquals(1, listBinarySearch.find("bbb"));
@@ -49,6 +53,7 @@ public class BinarySearchTest extends TestCase {
 		assertTrue(ndx == 7 || ndx == 8);
 	}
 
+	@Test
 	public void testFindFirst() {
 		assertEquals(0, listBinarySearch.findFirst("aaa"));
 		assertEquals(1, listBinarySearch.findFirst("bbb"));
@@ -66,6 +71,7 @@ public class BinarySearchTest extends TestCase {
 		assertEquals(7, listBinarySearch.findFirst("iii"));
 	}
 
+	@Test
 	public void testFindLast() {
 		assertEquals(0, listBinarySearch.findLast("aaa"));
 		assertEquals(6, listBinarySearch.findLast("eee"));
@@ -80,6 +86,7 @@ public class BinarySearchTest extends TestCase {
 		assertEquals(8, listBinarySearch.findLast("iii"));
 	}
 
+	@Test
 	public void testFindRange() {
 		assertEquals(3, listBinarySearch.findFirst("ddd"));
 		assertEquals(5, listBinarySearch.findLast("ddd", 3));

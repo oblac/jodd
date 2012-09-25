@@ -2,13 +2,16 @@
 
 package jodd.util.collection;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Test primitive arrays
  */
-public class PrimitivearraysTest extends TestCase {
+public class PrimitivearraysTest {
 
+	@Test
 	public void testCommonOperations() {
 
 		IntArrayList ilist = new IntArrayList();
@@ -25,12 +28,12 @@ public class PrimitivearraysTest extends TestCase {
 		assertEquals(1, ilist.get(1));
 		assertEquals(4, ilist.get(0));
 
-		ilist.addAll(new int[] {9, 8, 7});
+		ilist.addAll(new int[]{9, 8, 7});
 		assertEquals(7, ilist.size());
 		assertEquals(9, ilist.get(4));
 		assertEquals(7, ilist.get(6));
 
-		ilist.addAll(3, new int[] {-1, -2});
+		ilist.addAll(3, new int[]{-1, -2});
 		assertEquals(9, ilist.size());
 		assertEquals(2, ilist.get(2));
 		assertEquals(-1, ilist.get(3));
@@ -63,12 +66,13 @@ public class PrimitivearraysTest extends TestCase {
 	}
 
 
+	@Test
 	public void testEquality() {
-		IntArrayList ilist = new IntArrayList(new int[] {1,2,3,4,5,6});
+		IntArrayList ilist = new IntArrayList(new int[]{1, 2, 3, 4, 5, 6});
 		assertTrue(ilist.contains(4));
 		assertFalse(ilist.contains(111));
 
-		FloatArrayList flist = new FloatArrayList(new float[] {1f,2f, 3f, 4f, 5f});
+		FloatArrayList flist = new FloatArrayList(new float[]{1f, 2f, 3f, 4f, 5f});
 		assertTrue(flist.contains(4f, 0.001f));
 		assertFalse(flist.contains(111f, 0.001f));
 

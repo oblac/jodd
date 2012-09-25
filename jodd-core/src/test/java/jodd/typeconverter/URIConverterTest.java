@@ -3,12 +3,16 @@
 package jodd.typeconverter;
 
 import jodd.typeconverter.impl.URIConverter;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URI;
 
-public class URIConverterTest extends BaseTestCase {
+import static org.junit.Assert.assertNotNull;
 
+public class URIConverterTest {
+
+	@Test
 	public void testConversion() {
 		URIConverter uriConverter = new URIConverter();
 

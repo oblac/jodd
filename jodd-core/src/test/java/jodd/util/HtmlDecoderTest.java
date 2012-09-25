@@ -2,10 +2,13 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class HtmlDecoderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class HtmlDecoderTest {
+
+	@Test
 	public void testHexDecimal() {
 		String s;
 		s = HtmlDecoder.decode("&#xFF;");
@@ -33,6 +36,7 @@ public class HtmlDecoderTest extends TestCase {
 		assertEquals("aaa AA aaa", s);
 	}
 
+	@Test
 	public void testEntities() {
 		String s;
 
@@ -53,6 +57,7 @@ public class HtmlDecoderTest extends TestCase {
 		assertEquals(0xe1, s.charAt(0));
 	}
 
+	@Test
 	public void testSameNames() {
 		String s;
 
