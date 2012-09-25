@@ -7,10 +7,6 @@ package jodd.props;
  */
 public class PropsValue {
 
-	public PropsValue(String value) {
-		this.value = value;
-	}
-
 	/**
 	 * Original value.
 	 */
@@ -22,13 +18,16 @@ public class PropsValue {
 	 */
 	protected String resolved;
 
+	public PropsValue(final String value) {
+		this.value = value;
+	}
+
 	/**
 	 * Returns either resolved or real value.
 	 */
 	public String getValue() {
 		return resolved != null ? resolved : value;
 	}
-
 
 	@Override
 	public String toString() {
