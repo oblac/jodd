@@ -13,9 +13,13 @@ import jodd.madvoc.tst.BooAction;
 import jodd.madvoc.tst2.Boo4Action;
 import jodd.madvoc.tst2.Boo5Action;
 import jodd.madvoc.tst2.ReAction;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ActionMethodParserTest extends MadvocTestCase {
 
+	@Test
 	public void testDefaultMethods() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -32,6 +36,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testMethod() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -63,10 +68,11 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("/xxx.html", cfg.actionPath);
 		assertEquals("POST", cfg.actionMethod);
 
-	    MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		assertEquals("/xxx.html", madvocConfig.lookupPathAlias("dude"));
 	}
 
+	@Test
 	public void testMethodWithPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -107,6 +113,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 	}
 
 
+	@Test
 	public void testClasses() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -133,6 +140,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testClassesWithPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -161,6 +169,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testClassesWithoutPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -184,7 +193,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
-
+	@Test
 	public void testPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -208,6 +217,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testNoPackage() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -231,6 +241,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
 	public void testEndSlashClassName() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -249,6 +260,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
 	}
 
+	@Test
 	public void testMacros() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -307,6 +319,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(3, actionsManager.getActionsCount());
 	}
 
+	@Test
 	public void testMacrosWildcards() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -353,6 +366,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(2, actionsManager.getActionsCount());
 	}
 
+	@Test
 	public void testMacrosDups() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();

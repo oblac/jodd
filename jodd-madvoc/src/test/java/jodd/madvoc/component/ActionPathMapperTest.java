@@ -4,9 +4,13 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocTestCase;
 import jodd.madvoc.WebApplication;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ActionPathMapperTest extends MadvocTestCase {
 
+	@Test
 	public void testMapping() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
@@ -27,7 +31,6 @@ public class ActionPathMapperTest extends MadvocTestCase {
 		assertEquals("com.zoo.Foo#execute", signature);
 
 
-
 		signature = mapper.mapActionPathToSignature("/doo/foo.boo.html", "com.zoo");
 		assertEquals("com.zoo.doo.Foo#boo", signature);
 
@@ -39,7 +42,6 @@ public class ActionPathMapperTest extends MadvocTestCase {
 
 		signature = mapper.mapActionPathToSignature("/doo/foo", "com.zoo");
 		assertEquals("com.zoo.doo.Foo#execute", signature);
-
 	}
 
 }

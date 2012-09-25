@@ -4,21 +4,20 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
-import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.madvoc.interceptor.ActionInterceptorStack;
-import jodd.madvoc.interceptor.AnnotatedFieldsInterceptor;
-import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
-import jodd.madvoc.interceptor.EchoInterceptor;
-import jodd.madvoc.interceptor.LogEchoInterceptor;
-import jodd.madvoc.interceptor.ServletConfigInterceptor;
+import jodd.madvoc.interceptor.*;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class InterceptorManagerTest extends MadvocTestCase {
 
 	@SuppressWarnings({"unchecked"})
+	@Test
 	public void testExpand() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
+		im.madvocConfig.defaultInterceptors = new Class[]{ServletConfigInterceptor.class};
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				EchoInterceptor.class,
@@ -31,12 +30,13 @@ public class InterceptorManagerTest extends MadvocTestCase {
 	}
 
 	@SuppressWarnings({"unchecked"})
+	@Test
 	public void testExpand2() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[] {EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class};
+		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class};
 
-		Class<? extends ActionInterceptor>[] in = new Class[] {
+		Class<? extends ActionInterceptor>[] in = new Class[]{
 				AnnotatedFieldsInterceptor.class,
 				DefaultWebAppInterceptors.class,
 				EchoInterceptor.class
@@ -52,12 +52,13 @@ public class InterceptorManagerTest extends MadvocTestCase {
 	}
 
 	@SuppressWarnings({"unchecked"})
+	@Test
 	public void testExpandStack() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[] {EchoInterceptor.class, ServletConfigInterceptor.class};
+		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
-		Class<? extends ActionInterceptor>[] in = new Class[] {
+		Class<? extends ActionInterceptor>[] in = new Class[]{
 				TestStack.class,
 				DefaultWebAppInterceptors.class,
 				EchoInterceptor.class
@@ -78,13 +79,14 @@ public class InterceptorManagerTest extends MadvocTestCase {
 	}
 
 	@SuppressWarnings({"unchecked"})
+	@Test
 	public void testExpandSelf() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 
 		im.madvocConfig.setDefaultInterceptors(new Class[]{
 				EchoInterceptor.class,
-				DefaultWebAppInterceptors.class	// cyclic dependency
+				DefaultWebAppInterceptors.class    // cyclic dependency
 		});
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
@@ -102,12 +104,13 @@ public class InterceptorManagerTest extends MadvocTestCase {
 
 
 	@SuppressWarnings({"unchecked"})
+	@Test
 	public void testExpandStack2() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
-		im.madvocConfig.defaultInterceptors = new Class[] {EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
+		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
 
-		Class<? extends ActionInterceptor>[] in = new Class[] {
+		Class<? extends ActionInterceptor>[] in = new Class[]{
 				DefaultWebAppInterceptors.class,
 		};
 
@@ -122,16 +125,16 @@ public class InterceptorManagerTest extends MadvocTestCase {
 	}
 
 	public static class TestStack extends ActionInterceptorStack {
-		@SuppressWarnings( {"unchecked"})
+		@SuppressWarnings({"unchecked"})
 		public TestStack() {
-			super(new Class[] {Test2Stack.class, DefaultWebAppInterceptors.class});
+			super(new Class[]{Test2Stack.class, DefaultWebAppInterceptors.class});
 		}
 	}
 
 	public static class Test2Stack extends ActionInterceptorStack {
-		@SuppressWarnings( {"unchecked"})
+		@SuppressWarnings({"unchecked"})
 		public Test2Stack() {
-			super(new Class[] {AnnotatedFieldsInterceptor.class, LogEchoInterceptor.class});
+			super(new Class[]{AnnotatedFieldsInterceptor.class, LogEchoInterceptor.class});
 		}
 	}
 
