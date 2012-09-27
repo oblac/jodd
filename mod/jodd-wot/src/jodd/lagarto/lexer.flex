@@ -14,8 +14,8 @@ import java.nio.CharBuffer;
 %ignorecase
 
 // for debugging, adds overhead
-//%line
-//%column
+%line
+%column
 
 // faster than %pack or %table
 %switch
@@ -26,8 +26,8 @@ import java.nio.CharBuffer;
 	// position methods
 	public int position() { return yychar; }
 	public int length()   { return yylength(); }
-	public int line()     { return -1; /*yyline;*/ }   	// for debugging
-	public int column()   { return -1; /*yycolumn;*/ } 	// for debugging
+	public int line()     { return yyline+1; }   	// for debugging
+	public int column()   { return yycolumn+1; } 	// for debugging
 
 	// state methods
 	void stateReset() 	{ yybegin(YYINITIAL); }
