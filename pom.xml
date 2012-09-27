@@ -374,8 +374,6 @@
 	</licenses>
 
 	<properties>
-		<!-- jodd version -->
-		<jodd.version>3.4.0-SNAPSHOT</jodd.version>
 		<!-- source encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- java versions -->
@@ -391,87 +389,87 @@
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-core</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-bean</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-mail</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-props</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-upload</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-servlet</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-http</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-proxetta</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-swingspy</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-vtor</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-petite</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-madvoc</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-db</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-jtx</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto-web</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-joy</artifactId>
-				<version>${jodd.version}</version>
+				<version>3.4.0-SNAPSHOT</version>
 			</dependency>
 
 			<!-- external -->
@@ -638,6 +636,7 @@
 						<includes>
 							<include>org.jodd:*</include>
 						</includes>
+						<generateBackupPoms>false</generateBackupPoms>
 					</configuration>
 				</plugin>
 			</plugins>
