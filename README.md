@@ -53,10 +53,10 @@ That's all what you need to know;)
 
 ### Versioning
 
-Display plugin and dependency information (in `jodd-parent`):
+Display plugin and dependency information:
 
-    mvn versions:display-plugin-updates
-    mvn versions:display-dependency-updates
+    mvn -N versions:display-plugin-updates
+    mvn -N versions:display-dependency-updates
 
 
 ## Contributing
