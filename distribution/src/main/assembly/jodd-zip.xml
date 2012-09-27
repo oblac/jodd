@@ -20,10 +20,11 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}</directory>
+			<directory>../</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>*.txt</include>
+				<include>*.diz</include>
 			</includes>
 		</fileSet>
 	</fileSets>
