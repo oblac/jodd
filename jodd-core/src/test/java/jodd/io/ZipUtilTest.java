@@ -9,8 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -63,11 +67,41 @@ public class ZipUtilTest {
 		ZipUtil.zip(new File(dataRoot, "sb.data"));
 		File zipFile = new File(dataRoot, "sb.data.zip");
 		assertTrue(zipFile.exists());
+
+		// cleanup
 		FileUtil.delete(zipFile);
 
 		ZipUtil.zip(new File(dataRoot, "file"));
 		zipFile = new File(dataRoot, "file.zip");
 		assertTrue(zipFile.exists());
+
+		// cleanup
+		FileUtil.delete(zipFile);
+	}
+
+	@Test
+	public void testZipDir() throws IOException {
+		ZipUtil.zip(new File(dataRoot));
+		File zipFile = new File(dataRoot + ".zip");
+		assertTrue(zipFile.exists());
+
+		int directoryCount = 0;
+
+		ZipFile zipfile = new ZipFile(zipFile);
+		try {
+			for (Enumeration<? extends ZipEntry> entries = zipfile.entries(); entries.hasMoreElements(); ) {
+				ZipEntry zipEntry = entries.nextElement();
+				if (zipEntry.isDirectory()) {
+					directoryCount++;
+
+					assertTrue(zipEntry.getName().equals("data/") || zipEntry.getName().equals("data/file/"));
+				}
+			}
+		} finally {
+			zipfile.close();
+		}
+
+		assertEquals(2, directoryCount);
 
 		// cleanup
 		FileUtil.delete(zipFile);

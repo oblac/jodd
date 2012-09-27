@@ -24,7 +24,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Performs zip/gzip/zlib operations on files and directories.
- * These are just tools over existing java.util.zip classes,
+ * These are just tools over existing <code>java.util.zip</code> classes,
  * meaning that existing behavior and bugs are persisted.
  * Most common issue is not being able to use UTF8 in file names,
  * because implementation uses old ZIP format that supports only
@@ -51,7 +51,7 @@ public class ZipUtil {
 	 */
 	public static void zlib(File file) throws IOException {
 		if (file.isDirectory() == true) {
-			throw new IOException("zlib does not work on a folder");
+			throw new IOException("Cant zlib a folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
 		Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
@@ -78,7 +78,7 @@ public class ZipUtil {
 	 */
 	public static void gzip(File file) throws IOException {
 		if (file.isDirectory() == true) {
-			throw new IOException("gzip does not work on a folder");
+			throw new IOException("Cant gzip a folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
 		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file.getAbsolutePath() + GZIP_EXT));
@@ -264,50 +264,53 @@ public class ZipUtil {
 		while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
 			relativeName = relativeName.substring(1);
 		}
+
 		if (file.exists() == false) {
 			throw new FileNotFoundException(file.toString());
 		}
+
 		boolean isDir = file.isDirectory();
-		boolean addEntry = file.isFile();
 
 		if (isDir) {
-			boolean noRelativePath = StringUtil.isEmpty(relativeName);
-			final File[] children = file.listFiles();
-			if (children.length != 0) {
-				for (File child : children) {
-					String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativeName + '/') + child.getName();
-					addToZip(zos, child, childRelativePath);
-				}
-			} else {
-				// add empty folder
-				if (!StringUtil.endsWithChar(relativeName, '/')) {
-					relativeName += '/';
-				}
-				addEntry = true;
+			// add folder record
+			if (!StringUtil.endsWithChar(relativeName, '/')) {
+				relativeName += '/';
 			}
 		}
 
-		if (addEntry) {
-			long size = isDir ? 0 : file.length();
-			ZipEntry e = new ZipEntry(relativeName);
-			e.setTime(file.lastModified());
-			e.setComment(comment);
-			if (size == 0) {
-				e.setMethod(ZipEntry.STORED);
-				e.setSize(0);
-				e.setCrc(0);
+		long size = isDir ? 0 : file.length();
+
+		ZipEntry zipEntry = new ZipEntry(relativeName);
+		zipEntry.setTime(file.lastModified());
+		zipEntry.setComment(comment);
+		if (size == 0) {
+			zipEntry.setMethod(ZipEntry.STORED);
+			zipEntry.setSize(0);
+			zipEntry.setCrc(0);
+		}
+
+		zos.putNextEntry(zipEntry);
+
+		if (isDir == false) {
+			InputStream is = new FileInputStream(file);
+			try {
+				StreamUtil.copy(is, zos);
+			} finally {
+				StreamUtil.close(is);
 			}
-			zos.putNextEntry(e);
-			if (!isDir) {
-				InputStream is = new FileInputStream(file);
-				try {
-					StreamUtil.copy(is, zos);
-				} finally {
-					StreamUtil.close(is);
+		} else {
+			boolean noRelativePath = StringUtil.isEmpty(relativeName);
+
+			final File[] children = file.listFiles();
+			if (children != null && children.length != 0) {
+				for (File child : children) {
+					String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativeName) + child.getName();
+					addToZip(zos, child, childRelativePath);
 				}
 			}
-			zos.closeEntry();
 		}
+
+		zos.closeEntry();
 	}
 
 	// ---------------------------------------------------------------- close
