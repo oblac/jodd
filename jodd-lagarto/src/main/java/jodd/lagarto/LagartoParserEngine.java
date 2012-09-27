@@ -397,48 +397,64 @@ public abstract class LagartoParserEngine {
 	 * Parse tag starting from "&lt;".
 	 */
 	protected void parseTag(Token tagToken, TagType type) throws IOException {
-		int start = lexer.position();
-		skipWhiteSpace();
-		Token token;
-		token = nextToken();
+		final int start = lexer.position();
 
-		// if token is not a special tag ensure
-		// not to scan for special tag name from now on
-		if (lexer.nextTagState == -1) {
-			lexer.nextTagState = -2;
-		}
-
-		if (token == Token.SLASH) {		// it is closing tag
-			type = TagType.END;
+		try {
+			skipWhiteSpace();
+			Token token;
 			token = nextToken();
-		}
 
-		switch (token) {
-			case WORD:					// tag name
-				String tagName = text().toString();
-				if (acceptTag(tagName)) {
-					parseTagAndAttributes(tagToken, tagName, type, start);
-				} else {
-					// step back and parse tag as text
-					lexer.stateReset();
-					stepBack(lexer.nextToken());
+			// if token is not a special tag ensure
+			// not to scan for special tag name from now on
+			if (lexer.nextTagState == -1) {
+				lexer.nextTagState = -2;
+			}
+
+			if (token == Token.SLASH) {		// it is closing tag
+				type = TagType.END;
+				token = nextToken();
+			}
+
+			switch (token) {
+				case WORD:					// tag name
+					String tagName = text().toString();
+					if (acceptTag(tagName)) {
+						parseTagAndAttributes(tagToken, tagName, type, start);
+					} else {
+						// step back and parse tag as text
+						parseAsText(start);
+					}
+					break;
+				case GT:	// illegal tag (<>), consume it as text
+					parseText(start, lexer.position() + 1);
+					break;
+				case EOF:	// eof, consume it as text
 					parseText(start, lexer.position());
-				}
-				break;
-			case GT:	// illegal tag (<>), consume it as text
-				parseText(start, lexer.position() + 1);
-				break;
-			case EOF:	// eof, consume it as text
-				parseText(start, lexer.position());
-				break;
-			default:
-				error("Invalid token in tag <" + text() + '>');
-				// step back and parse tag as text
-				lexer.stateReset();
-				stepBack(lexer.nextToken());
-				parseText(start, lexer.position());
-				break;
+					break;
+				default:
+					error("Invalid token in tag <" + text() + '>');
+
+					// step back and parse tag as text
+					parseAsText(start);
+					break;
+			}
+		} catch (LagartoException lex) {
+			// if exception occurs during tag parsing
+			// step back and parse tag as text
+			error(lex.getMessage());
+
+			parseAsText(start);
 		}
+	}
+
+	/**
+	 * Resets current state, steps back and parses content
+	 * as text, starting from provided position.
+	 */
+	protected void parseAsText(int start) throws IOException {
+		lexer.stateReset();
+		stepBack(lexer.nextToken());
+		parseText(start, lexer.position());
 	}
 
 	/**
