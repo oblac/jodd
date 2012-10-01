@@ -13,6 +13,7 @@ import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
 import jodd.util.testdata2.En;
 import org.junit.Test;
+import sun.reflect.Reflection;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -438,6 +439,17 @@ public class ReflectUtilTest {
 	public void testIsSubClassForCommonTypes() {
 		assertTrue(ReflectUtil.isSubclass(Long.class, Long.class));
 		assertFalse(ReflectUtil.isSubclass(Long.class, long.class));
+	}
+
+	@Test
+	public void testGetCallerClass() {
+		assertFalse(Reflection.getCallerClass(0).equals(ReflectUtil.getCallerClass(0)));
+
+		assertEquals(Reflection.getCallerClass(1), ReflectUtil.getCallerClass(1));
+		assertEquals(Reflection.getCallerClass(2), ReflectUtil.getCallerClass(2));
+		assertEquals(Reflection.getCallerClass(3), ReflectUtil.getCallerClass(3));
+
+		assertEquals(ReflectUtilTest.class, ReflectUtil.getCallerClass(1));
 	}
 
 }

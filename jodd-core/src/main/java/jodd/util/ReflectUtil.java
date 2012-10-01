@@ -954,4 +954,29 @@ public class ReflectUtil {
 		}
 	}
 
+	// ---------------------------------------------------------------- caller
+
+	private static class ReflectUtilSecurityManager extends SecurityManager {
+		public Class getCallerClass(int callStackDepth) {
+			return getClassContext()[callStackDepth + 1];
+		}
+	}
+
+	private static final ReflectUtilSecurityManager SECURITY_MANAGER = new ReflectUtilSecurityManager();
+
+	/**
+	 * Emulates <code>Reflection.getCallerClass</code> using standard API.
+	 * This implementation uses custom <code>SecurityManager</code>
+	 * and it is the fastest. Other implementations are:
+	 * <ul>
+	 * <li><code>new Throwable().getStackTrace()[callStackDepth]</code>
+	 * <li><code>Thread.currentThread().getStackTrace()[callStackDepth]</code> (the slowest)
+	 * <p>
+	 * Note that original <code>Reflection.getCallerClass</code> is way faster
+	 * then any emulation.
+	 */
+	public static Class getCallerClass(int framesToSkip) {
+		return SECURITY_MANAGER.getCallerClass(framesToSkip);
+	}
+
 }
