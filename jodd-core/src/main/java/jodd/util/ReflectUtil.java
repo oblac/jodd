@@ -2,7 +2,6 @@
 
 package jodd.util;
 
-import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
@@ -789,7 +788,7 @@ public class ReflectUtil {
 			return null;
 		}
 		String methodName = method.getName().substring(prefixLength);
-		return Introspector.decapitalize(methodName);
+		return StringUtil.decapitalize(methodName);
 	}
 
 	/**
@@ -822,7 +821,7 @@ public class ReflectUtil {
 			return null;
 		}
 		String methodName = method.getName().substring(prefixLength);
-		return Introspector.decapitalize(methodName);
+		return StringUtil.decapitalize(methodName);
 	}
 
 	// ---------------------------------------------------------------- generics
