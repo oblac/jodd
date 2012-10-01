@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Enumeration;
-import java.beans.XMLEncoder;
-import java.beans.XMLDecoder;
 import java.lang.reflect.Array;
 
 /**
@@ -136,31 +134,6 @@ public class ObjectUtil {
 		}
 	}
 
-	/**
-	 * Writes serializable object to a XML file. Existing file will be overwritten.
-	 */
-	public static void writeObjectAsXml(File dest, Object object) throws IOException {
-		FileOutputStream fos = null;
-		XMLEncoder xmlenc = null;
-		try {
-			fos = new FileOutputStream(dest);
-			xmlenc = new XMLEncoder(new BufferedOutputStream(fos));
-			xmlenc.writeObject(object);
-		} finally {
-			StreamUtil.close(fos);
-			if (xmlenc != null) {
-				xmlenc.close();
-			}
-		}
-	}
-
-	/**
-	 * @see #writeObjectAsXml(java.io.File, Object) 
-	 */
-	public static void writeObjectAsXml(String dest, Object object) throws IOException {
-		writeObjectAsXml(new File(dest), object);
-	}
-
 
 	/**
 	 * @see #readObject(java.io.File)
@@ -185,33 +158,6 @@ public class ObjectUtil {
 			StreamUtil.close(ois);
 		}
 		return result;
-	}
-
-	/**
-	 * Reads serialized object from the XML file.
-	 */
-	public static Object readObjectAsXml(File source) throws IOException {
-		Object result = null;
-		FileInputStream fis = null;
-		XMLDecoder xmldec = null;
-		try {
-			fis = new FileInputStream(source);
-			xmldec = new XMLDecoder(new BufferedInputStream(fis));
-			result = xmldec.readObject();
-		} finally {
-			StreamUtil.close(fis);
-			if (xmldec != null) {
-				xmldec.close();
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * @see #readObjectAsXml(java.io.File) 
-	 */
-	public static Object readObjectAsXml(String source) throws IOException {
-		return readObjectAsXml(new File(source));
 	}
 
 	// ---------------------------------------------------------------- serialization to byte array
