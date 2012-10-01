@@ -742,7 +742,14 @@ public class StringUtilTest {
 		assertEquals("f", StringUtil.uncapitalize("F"));
 		assertEquals("foo", StringUtil.uncapitalize("foo"));
 		assertEquals("foo", StringUtil.uncapitalize("Foo"));
+		assertEquals("uRL", StringUtil.uncapitalize("URL"));
 		assertEquals("", StringUtil.uncapitalize(""));
+
+		assertEquals("f", StringUtil.decapitalize("F"));
+		assertEquals("foo", StringUtil.decapitalize("foo"));
+		assertEquals("foo", StringUtil.decapitalize("Foo"));
+		assertEquals("URL", StringUtil.decapitalize("URL"));
+		assertEquals("", StringUtil.decapitalize(""));
 	}
 
 	@Test
