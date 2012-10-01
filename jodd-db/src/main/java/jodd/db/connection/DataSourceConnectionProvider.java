@@ -3,8 +3,8 @@
 package jodd.db.connection;
 
 import jodd.db.DbSqlException;
-import jodd.util.ContextUtil;
 
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.naming.NamingException;
 import java.sql.Connection;
@@ -27,7 +27,9 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 
 	public DataSourceConnectionProvider(String jndiName, String user, String pass) {
 		try {
-			this.dataSource = (DataSource) ContextUtil.getInitialContext().lookup(jndiName);
+			InitialContext initialContext = new InitialContext();
+
+			this.dataSource = (DataSource) initialContext.lookup(jndiName);
 		} catch (NamingException nex) {
 			throw new DbSqlException("Invalid JNDI datasource name: " + jndiName, nex);
 		}
