@@ -4,7 +4,6 @@ package jodd.util;
 
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import sun.reflect.Reflection;
 
 import java.io.FileInputStream;
 import java.net.URL;
@@ -404,7 +403,7 @@ public class ClassLoaderUtil {
 		}
 
 		// try #3 - using caller classloader, similar as Class.forName()
-		Class callerClass = Reflection.getCallerClass(2);
+		Class callerClass = ReflectUtil.getCallerClass(2);
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
 		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
@@ -580,7 +579,7 @@ public class ClassLoaderUtil {
 		}
 		
 		// try #3 - using caller classloader, similar as Class.forName()
-		Class callerClass = Reflection.getCallerClass(2);
+		Class callerClass = ReflectUtil.getCallerClass(2);
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
 		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
