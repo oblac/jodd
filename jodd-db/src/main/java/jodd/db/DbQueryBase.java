@@ -584,7 +584,7 @@ abstract class DbQueryBase {
 			}
 			rs.setFetchSize(fetchSize);
 		} catch (SQLException sex) {
-			ResultSetUtil.close(rs);
+			DbUtil.close(rs);
 			throw new DbSqlException("Unable to execute query.", sex);
 		}
 		saveResultSet(rs);
@@ -687,7 +687,7 @@ abstract class DbQueryBase {
 				rs = preparedStatement.executeQuery();
 			}
 
-			long firstLong = ResultSetUtil.getFirstLong(rs);
+			long firstLong = DbUtil.getFirstLong(rs);
 
 			elapsed = System.currentTimeMillis() - start;
 			if (log.isDebugEnabled()) {
@@ -698,7 +698,7 @@ abstract class DbQueryBase {
 		} catch (SQLException sex) {
 			throw new DbSqlException("Unable to execute count query.", sex);
 		} finally {
-			ResultSetUtil.close(rs);
+			DbUtil.close(rs);
 			if (close) {
 				close();
 			}
@@ -733,11 +733,11 @@ abstract class DbQueryBase {
 		checkInitialized();
 		ResultSet rs = getGeneratedColumns();
 		try {
-			return ResultSetUtil.getFirstLong(rs);
+			return DbUtil.getFirstLong(rs);
 		} catch (SQLException sex) {
 			throw new DbSqlException("Unable to get generated key as long value.", sex);
 		} finally {
-			ResultSetUtil.close(rs);
+			DbUtil.close(rs);
 			resultSets.remove(rs);
 			totalOpenResultSetCount--;
 		}

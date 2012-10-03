@@ -4,7 +4,7 @@ package jodd.db.oom;
 
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import jodd.db.ResultSetUtil;
+import jodd.db.DbUtil;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.util.StringUtil;
@@ -161,7 +161,7 @@ public class DbOomQuery extends DbQuery {
 				log.warn("Column SQL type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
 			}
 		} finally {
-			ResultSetUtil.close(rs);
+			DbUtil.close(rs);
 		}
 	}
 

@@ -156,7 +156,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		if (wd.wrapInterface) {
 			mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
 		} else {
-			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());		// todo ovo sa substring prebaci
+			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
 		}
 		ProxettaAsmUtil.prepareReturnValue(mv, msign, 0);
 		visitReturn(mv, msign, true, false);
