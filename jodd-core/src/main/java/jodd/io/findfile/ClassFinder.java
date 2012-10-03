@@ -39,13 +39,13 @@ public abstract class ClassFinder {
 
 	/**
 	 * Array of system jars that are excluded from the search.
-	 * By default it consists of java runtime libraries.
+	 * By default, these paths are common for linux, windows and mac.
 	 */
 	protected static String[] systemJars = new String[] {
 			"**/jre/lib/*.jar",
 			"**/jre/lib/ext/*.jar",
-			"**/tools.jar",
-			"**/j2ee.jar"
+			"**/Java/Extensions/*.jar",
+			"**/Classes/*.jar"
 	};
 	/**
 	 * Array of excluded jars.
@@ -67,7 +67,7 @@ public abstract class ClassFinder {
 	/**
 	 * Specifies system jars, that are always excluded first.
 	 */
-	public static void setSystemJars(String[] newSystemJars) {
+	public static void setSystemJars(String... newSystemJars) {
 		systemJars = newSystemJars;
 	}
 
