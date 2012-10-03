@@ -11,6 +11,18 @@
 
 	<includeBaseDirectory>false</includeBaseDirectory>
 
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/addon</outputDirectory>
+			<includes>
+				<include>org.jodd:jodd-joy</include>
+				<include>org.jodd:jodd-swingspy</include>
+			</includes>
+			<unpack>false</unpack>
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+
 	<fileSets>
 		<fileSet>
 			<directory>target</directory>
