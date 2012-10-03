@@ -59,7 +59,7 @@
 			Encodes string to HTML-safe content.
 		</description>
 		<name>out</name>
-		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-class>jodd.util.HtmlEncoder</function-class>
 		<function-signature>java.lang.String text(java.lang.String)</function-signature>
 	</function>
 	<function>
@@ -67,7 +67,7 @@
 			Encodes string to HTML-safe content.
 		</description>
 		<name>out-block</name>
-		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-class>jodd.util.HtmlEncoder</function-class>
 		<function-signature>java.lang.String block(java.lang.String)</function-signature>
 	</function>
 	<function>
@@ -75,7 +75,7 @@
 			Encodes string to HTML-safe content and preserve the spaces.
 		</description>
 		<name>out-strict</name>
-		<function-class>jodd.servlet.HtmlEncoder</function-class>
+		<function-class>jodd.util.HtmlEncoder</function-class>
 		<function-signature>java.lang.String strict(java.lang.String)</function-signature>
 	</function>
 
@@ -93,12 +93,12 @@
 	</function>
 	<function>
 		<name>urlPath</name>
-		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-class>jodd.util.URLCoder</function-class>
 		<function-signature>java.lang.String encodePath(java.lang.String)</function-signature>
 	</function>
 	<function>
 		<name>urlQuery</name>
-		<function-class>jodd.servlet.URLCoder</function-class>
+		<function-class>jodd.util.URLCoder</function-class>
 		<function-signature>java.lang.String encodeQuery(java.lang.String)</function-signature>
 	</function>
 
