@@ -100,27 +100,53 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<finalName>jodd-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<attach>false</attach>
+							<descriptors>
+								<descriptor>src/main/assembly/jodd-jar.xml</descriptor>
+								<descriptor>src/main/assembly/jodd-zip.xml</descriptor>
+							</descriptors>
+							<archive>
+								<manifest>
+									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+								</manifest>
+								<manifestEntries>
+									<Built-By>jodd.org</Built-By>
+									<Debug-Info>on</Debug-Info>
+									<Implementation-Title>Jodd</Implementation-Title>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>embedded-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>jodd-embedded-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<attach>false</attach>
+							<descriptors>
+								<descriptor>src/main/assembly/jodd-embedded-jar.xml</descriptor>
+							</descriptors>
+							<archive>
+								<manifest>
+									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+								</manifest>
+								<manifestEntries>
+									<Built-By>jodd.org</Built-By>
+									<Debug-Info>on</Debug-Info>
+									<Implementation-Title>Jodd (embedded)</Implementation-Title>
+								</manifestEntries>
+							</archive>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<finalName>jodd-${project.version}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<attach>false</attach>
-					<descriptors>
-						<descriptor>src/main/assembly/jodd-jar.xml</descriptor>
-						<descriptor>src/main/assembly/jodd-zip.xml</descriptor>
-					</descriptors>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Built-By>jodd.org</Built-By>
-							<Debug-Info>on</Debug-Info>
-							<Implementation-Title>Jodd</Implementation-Title>
-						</manifestEntries>
-					</archive>
-				</configuration>
 			</plugin>
 
 		</plugins>

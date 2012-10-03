@@ -1,0 +1,62 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+	<id>jodd-essential-jar</id>
+
+	<formats>
+		<format>jar</format>
+	</formats>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<fileSets>
+			<fileSet>
+				<directory>../jodd-bean/target/classes/</directory>
+				<outputDirectory>/</outputDirectory>
+				<excludes>
+					<exclude>jodd/Jodd*.class</exclude>
+					<exclude>jodd/bean/loader/*</exclude>
+					<exclude>jodd/bean/BeanLoaderManager.class</exclude>
+				</excludes>
+			</fileSet>
+			<fileSet>
+				<directory>../jodd-core/target/classes/</directory>
+				<outputDirectory>/</outputDirectory>
+				<excludes>
+					<exclude>jodd/Jodd*.class</exclude>
+					<exclude>jodd/compiler/*</exclude>
+					<exclude>jodd/format/*</exclude>
+					<exclude>jodd/io/findfile/*</exclude>
+					<exclude>jodd/io/filter/*</exclude>
+					<exclude>jodd/io/FileMonitor*</exclude>
+					<exclude>jodd/io/FileChangeListener.class</exclude>
+					<exclude>jodd/util/sort/*</exclude>
+					<exclude>jodd/util/JmxClient.class</exclude>
+					<exclude>jodd/util/MimeTypes.*</exclude>
+					<exclude>jodd/util/ObjectXmlUtil.class</exclude>
+					<exclude>jodd/util/PrettyStringBuilder.class</exclude>
+					<exclude>jodd/util/ClipboardUtil.class</exclude>
+					<exclude>jodd/util/collection/IntHashMap*.class</exclude>
+					<exclude>jodd/util/ref/*</exclude>
+					<exclude>jodd/util/BCrypt.class</exclude>
+					<exclude>jodd/util/ResourceBundleMessageResolver.class</exclude>
+					<exclude>jodd/util/HtmlDecoder*</exclude>
+					<exclude>jodd/util/HashCode.class</exclude>
+					<exclude>jodd/util/FastSort.class</exclude>
+					<exclude>jodd/util/DateFormatSymbolsEx.class</exclude>
+					<exclude>jodd/util/Base32.class</exclude>
+					<exclude>jodd/util/collection/HashBag*</exclude>
+					<exclude>jodd/util/collection/Bag.class</exclude>
+					<exclude>jodd/io/DebugOutputStream.class</exclude>
+					<exclude>jodd/util/collection/Joined*</exclude>
+					<exclude>jodd/util/collection/EnumerationIterator.class</exclude>
+					<exclude>jodd/util/ComparableComparator.class</exclude>
+					<exclude>jodd/util/LoopIterator.class</exclude>
+					<exclude>jodd/util/MultiComparator.class</exclude>
+					<exclude>jodd/util/TextUtil.class</exclude>
+					<exclude>jodd/util/BinarySearch*.class</exclude>
+				</excludes>
+			</fileSet>
+	</fileSets>
+</assembly>
