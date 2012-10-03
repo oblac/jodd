@@ -14,8 +14,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -258,18 +258,21 @@ public class ClassLoaderUtil {
 	 * <li>bootstrap classpath
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
-		Set<File> classpaths = new HashSet<File>();
+		Set<File> classpaths = new TreeSet<File>();
 
 		while (classLoader != null) {
 			if (classLoader instanceof URLClassLoader) {
 				URL[] urls = ((URLClassLoader) classLoader).getURLs();
 				for (URL u : urls) {
 					File f = FileUtil.toFile(u);
-					if (f != null) {
+					if ((f != null) && f.exists()) {
 						try {
 							f = f.getCanonicalFile();
-							classpaths.add(f);
-							addInnerClasspathItems(classpaths, f);
+
+							boolean newElement = classpaths.add(f);
+							if (newElement) {
+								addInnerClasspathItems(classpaths, f);
+							}
 						} catch (IOException ignore) {
 						}
 					}
@@ -280,7 +283,21 @@ public class ClassLoaderUtil {
 
 		String bootstrap = SystemUtil.getSunBoothClassPath();
 		if (bootstrap != null) {
-			classpaths.add(new File(bootstrap));
+			String[] bootstrapFiles = StringUtil.splitc(bootstrap, File.pathSeparatorChar);
+			for (String bootstrapFile: bootstrapFiles) {
+				File f = new File(bootstrapFile);
+				if (f.exists()) {
+					try {
+						f = f.getCanonicalFile();
+
+						boolean newElement = classpaths.add(f);
+						if (newElement) {
+							addInnerClasspathItems(classpaths, f);
+						}
+					} catch (IOException ignore) {
+					}
+				}
+			}
 		}
 
 		File[] result = new File[classpaths.size()];
