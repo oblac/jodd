@@ -25,37 +25,39 @@
 				<outputDirectory>/</outputDirectory>
 				<excludes>
 					<exclude>jodd/Jodd*.class</exclude>
+					<exclude>jodd/cache/FileLFU*.class</exclude>
+					<exclude>jodd/cache/NoCache.class</exclude>
 					<exclude>jodd/compiler/*</exclude>
 					<exclude>jodd/format/*</exclude>
-					<exclude>jodd/io/findfile/*</exclude>
-					<exclude>jodd/io/filter/*</exclude>
-					<exclude>jodd/io/FileMonitor*</exclude>
+					<exclude>jodd/io/DebugOutputStream.class</exclude>
 					<exclude>jodd/io/FileChangeListener.class</exclude>
-					<exclude>jodd/util/sort/*</exclude>
+					<exclude>jodd/io/FileMonitor*</exclude>
+					<exclude>jodd/io/filter/*</exclude>
+					<exclude>jodd/io/findfile/*</exclude>
+					<exclude>jodd/util/BCrypt.class</exclude>
+					<exclude>jodd/util/Base32.class</exclude>
+					<exclude>jodd/util/BinarySearch*.class</exclude>
+					<exclude>jodd/util/ClipboardUtil.class</exclude>
+					<exclude>jodd/util/ComparableComparator.class</exclude>
+					<exclude>jodd/util/DateFormatSymbolsEx.class</exclude>
+					<exclude>jodd/util/FastSort.class</exclude>
+					<exclude>jodd/util/HashCode.class</exclude>
+					<exclude>jodd/util/HtmlDecoder*</exclude>
 					<exclude>jodd/util/JmxClient.class</exclude>
+					<exclude>jodd/util/LoopIterator.class</exclude>
 					<exclude>jodd/util/MimeTypes.*</exclude>
+					<exclude>jodd/util/MultiComparator.class</exclude>
 					<exclude>jodd/util/ObjectXmlUtil.class</exclude>
 					<exclude>jodd/util/PrettyStringBuilder.class</exclude>
-					<exclude>jodd/util/ClipboardUtil.class</exclude>
-					<exclude>jodd/util/collection/IntHashMap*.class</exclude>
-					<exclude>jodd/util/ref/*</exclude>
-					<exclude>jodd/util/BCrypt.class</exclude>
 					<exclude>jodd/util/ResourceBundleMessageResolver.class</exclude>
-					<exclude>jodd/util/HtmlDecoder*</exclude>
-					<exclude>jodd/util/HashCode.class</exclude>
-					<exclude>jodd/util/FastSort.class</exclude>
-					<exclude>jodd/util/DateFormatSymbolsEx.class</exclude>
-					<exclude>jodd/util/Base32.class</exclude>
-					<exclude>jodd/util/collection/HashBag*</exclude>
-					<exclude>jodd/util/collection/Bag.class</exclude>
-					<exclude>jodd/io/DebugOutputStream.class</exclude>
-					<exclude>jodd/util/collection/Joined*</exclude>
-					<exclude>jodd/util/collection/EnumerationIterator.class</exclude>
-					<exclude>jodd/util/ComparableComparator.class</exclude>
-					<exclude>jodd/util/LoopIterator.class</exclude>
-					<exclude>jodd/util/MultiComparator.class</exclude>
 					<exclude>jodd/util/TextUtil.class</exclude>
-					<exclude>jodd/util/BinarySearch*.class</exclude>
+					<exclude>jodd/util/collection/Bag.class</exclude>
+					<exclude>jodd/util/collection/EnumerationIterator.class</exclude>
+					<exclude>jodd/util/collection/HashBag*</exclude>
+					<exclude>jodd/util/collection/IntHashMap*.class</exclude>
+					<exclude>jodd/util/collection/Joined*</exclude>
+					<exclude>jodd/util/ref/*</exclude>
+					<exclude>jodd/util/sort/*</exclude>
 				</excludes>
 			</fileSet>
 	</fileSets>
