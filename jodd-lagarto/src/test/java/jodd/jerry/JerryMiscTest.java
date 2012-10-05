@@ -80,4 +80,18 @@ public class JerryMiscTest extends TestCase {
 
 		assertNull(doc.$("#not-a-valid-id").html());
 	}
+
+
+	public void testFirstNotDirectly() {
+		Jerry doc = Jerry.jerry().parse("<html><div>one</div><p>two</p><div>three</div><p>four</p></html>");
+
+		assertEquals(2, doc.$("div").size());
+		assertEquals(2, doc.$("p").size());
+		assertEquals("one", doc.$("div").first().text());
+		assertEquals("two", doc.$("p").first().text());
+
+		assertEquals("four", doc.$("p").last().text());
+		assertEquals("three", doc.$("div").last().text());
+
+	}
 }

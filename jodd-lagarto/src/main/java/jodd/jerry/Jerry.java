@@ -379,10 +379,8 @@ public class Jerry {
 	 */
 	public Jerry first() {
 		List<Node> result = new NodeList(nodes.length);
-		for (Node node : nodes) {
-			if (node.getSiblingElementIndex() == 0) {
-				result.add(node);
-			}
+		if (nodes.length > 0) {
+			result.add(nodes[0]);
 		}
 		return new Jerry(this, result);
 	}
@@ -392,11 +390,8 @@ public class Jerry {
 	 */
 	public Jerry last() {
 		List<Node> result = new NodeList(nodes.length);
-		for (Node node : nodes) {
-			int elementsLastIndex = node.getParentNode().getChildElementsCount() - 1;
-			if (node.getSiblingElementIndex() == elementsLastIndex) {
-				result.add(node);
-			}
+		if (nodes.length > 0) {
+			result.add(nodes[nodes.length - 1]);
 		}
 		return new Jerry(this, result);
 	}
