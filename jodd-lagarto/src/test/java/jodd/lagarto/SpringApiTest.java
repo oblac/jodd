@@ -36,7 +36,6 @@ public class SpringApiTest extends TestCase {
 
 		// parse
 		doc.$("a").each(new JerryFunction() {
-			@Override
 			public boolean onNode(Jerry $this, int index) {
 				assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
 				return false;
@@ -55,7 +54,6 @@ public class SpringApiTest extends TestCase {
 
 		// parse
 		doc.$("a").each(new JerryFunction() {
-			@Override
 			public boolean onNode(Jerry $this, int index) {
 				assertEquals("<a name=\"navbar_top\"><!-- --></a>", $this.get()[0].getHtml());
 				return false;

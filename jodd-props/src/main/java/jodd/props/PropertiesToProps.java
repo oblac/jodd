@@ -31,14 +31,18 @@ class PropertiesToProps {
 
 	private void writeProfilePropertiesThatAreNotInTheBase(final BufferedWriter bw, final Properties baseProperties,
 														   final Map<String, Properties> profiles) throws IOException {
+
 		for (final Map.Entry<String, Properties> entry : profiles.entrySet()) {
 			final String profileName = entry.getKey();
 			final Properties profileProperties = entry.getValue();
-			for (final String key : profileProperties.stringPropertyNames()) {
+
+			for (final Object key : profileProperties.keySet()) {
 				if (baseProperties.containsKey(key)) {
 					continue;
 				}
-				writeProfileProperty(bw, profileName, key, profileProperties.getProperty(key));
+
+				final String keyString = key.toString();
+				writeProfileProperty(bw, profileName, keyString, profileProperties.getProperty(keyString));
 			}
 		}
 	}
@@ -55,10 +59,12 @@ class PropertiesToProps {
 
 	private void writeBaseAndProfileProperties(final BufferedWriter bw, final Properties baseProperties,
 											   final Map<String, Properties> profiles) throws IOException {
-		for (final String key : baseProperties.stringPropertyNames()) {
-			final String value = baseProperties.getProperty(key);
-			writeBaseProperty(bw, key, value);
-			writeProfilePropertiesOfKey(bw, key, profiles);
+		for (final Object key : baseProperties.keySet()) {
+			final String keyString = key.toString();
+
+			final String value = baseProperties.getProperty(keyString);
+			writeBaseProperty(bw, keyString, value);
+			writeProfilePropertiesOfKey(bw, keyString, profiles);
 		}
 	}
 
