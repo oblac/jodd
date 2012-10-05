@@ -4,6 +4,7 @@ package jodd.datetime.format;
 
 import jodd.datetime.DateTimeStamp;
 import jodd.datetime.JDateTime;
+import jodd.util.CharUtil;
 
 /**
  * Abstract formatter for easier {@link JdtFormatter} implementations.
@@ -161,39 +162,64 @@ public abstract class AbstractFormatter implements JdtFormatter {
 	 * @see JdtFormatter#parse(String, String)
 	 */
 	public DateTimeStamp parse(String value, String format) {
-		char[] sc = value.toCharArray();
-		char[] fc = format.toCharArray();
+		char[] valueChars = value.toCharArray();
+		char[] formatChars = format.toCharArray();
 
 		int i = 0, j = 0;
-		int slen = value.length();
-		int tlen = format.length();
+		int valueLen = valueChars.length;
+		int formatLen = formatChars.length;
+
+		// detect if separators are used
+		boolean useSeparators = true;
+
+		if (valueLen == formatLen) {
+			useSeparators = false;
+
+			for (char valueChar : valueChars) {
+				if (CharUtil.isDigit(valueChar) == false) {
+					useSeparators = true;
+					break;
+				}
+			}
+		}
 
 		DateTimeStamp time = new DateTimeStamp();
-		StringBuilder w = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		while (true) {
-			int n = findPattern(fc, i);
+			int n = findPattern(formatChars, i);
 			if (n != -1) {					// pattern founded
-				i += patterns[n].length;
-				w.setLength(0);
-				char next = 0xFFFF;
-				if (i < tlen) {
-					next = fc[i];			// next = delimiter
-				}
-				while ((j < slen) && (sc[j] != next)) {
-					char scj = sc[j];
-					if ((scj != ' ') && (scj != '\t')) {		// ignore surrounding whitespaces
-						w.append(sc[j]);
+				int patternLen = patterns[n].length;
+				i += patternLen;
+				sb.setLength(0);
+				if (useSeparators == false) {
+					for (int k = 0; k < patternLen; k++) {
+						sb.append(valueChars[j++]);
 					}
-					j++;
+				} else {
+					char next = 0xFFFF;
+					if (i < formatLen) {
+						next = formatChars[i];			// next = delimiter
+					}
+					while ((j < valueLen) && (valueChars[j] != next)) {
+						char scj = valueChars[j];
+						if ((scj != ' ') && (scj != '\t')) {		// ignore surrounding whitespaces
+							sb.append(valueChars[j]);
+						}
+						j++;
+					}
 				}
-				parseValue(n, w.toString(), time);
+
+				parseValue(n, sb.toString(), time);
 			} else  {
-				if (fc[i] == sc[j]) {
+				if (!useSeparators) {
+					throw new IllegalArgumentException("Invalid value: " + value);
+				}
+				if (formatChars[i] == valueChars[j]) {
 					j++;
 				}
 				i++;
 			}
-			if ((i == tlen) || (j == slen)) {
+			if ((i == formatLen) || (j == valueLen)) {
 				break;
 			}
 		}
