@@ -122,17 +122,17 @@
 					</execution>
 
 					<execution>
-						<id>embedded-assembly</id>
+						<id>mobile-assembly</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
 						<configuration>
-							<finalName>jodd-embedded-${project.version}</finalName>
+							<finalName>jodd-mobile-${project.version}</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
 							<attach>false</attach>
 							<descriptors>
-								<descriptor>src/main/assembly/jodd-embedded-jar.xml</descriptor>
+								<descriptor>src/main/assembly/jodd-mobile-jar.xml</descriptor>
 							</descriptors>
 							<archive>
 								<manifest>
@@ -141,7 +141,7 @@
 								<manifestEntries>
 									<Built-By>jodd.org</Built-By>
 									<Debug-Info>on</Debug-Info>
-									<Implementation-Title>Jodd (embedded)</Implementation-Title>
+									<Implementation-Title>Jodd (Mobile)</Implementation-Title>
 								</manifestEntries>
 							</archive>
 						</configuration>
