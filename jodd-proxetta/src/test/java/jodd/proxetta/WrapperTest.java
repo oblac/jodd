@@ -28,14 +28,14 @@ public class WrapperTest extends TestCase {
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return isTopLevelMethod(methodInfo) && isPublic(methodInfo);
+				return !isRootMethod(methodInfo) && isPublic(methodInfo);
 			}
 		}));
 
 //		proxetta.setDebugFolder("d:\\");
 
 		// wrapper over CLASS
-		// resulting object has NO interfaces
+		// resulting object has ALL interfaces
 		// resulting object wraps ALL target class methods
 		WrapperProxettaBuilder builder = proxetta.builder(calc.getClass());
 
@@ -43,8 +43,8 @@ public class WrapperTest extends TestCase {
 
 		Object object = calc2Class.newInstance();
 
-		assertFalse(object instanceof Calc);
-		assertEquals(0, calc2Class.getInterfaces().length);
+		assertTrue(object instanceof Calc);
+		assertEquals(1, calc2Class.getInterfaces().length);
 
 		builder.injectTargetIntoWrapper(calc, object);
 
@@ -71,7 +71,7 @@ public class WrapperTest extends TestCase {
 
 		WrapperProxetta proxetta = WrapperProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new ProxyPointcutSupport() {
 			public boolean apply(MethodInfo methodInfo) {
-				return isTopLevelMethod(methodInfo) && isPublic(methodInfo);
+				return !isRootMethod(methodInfo) && isPublic(methodInfo);
 			}
 		}));
 

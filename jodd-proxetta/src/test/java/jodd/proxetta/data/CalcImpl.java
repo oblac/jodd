@@ -2,11 +2,7 @@
 
 package jodd.proxetta.data;
 
-public class CalcImpl implements Calc {
-
-	public void hello() {
-		System.out.println("calculator");
-	}
+public class CalcImpl extends CalcImplBase implements Calc {
 
 	public int calculate(int a, int b) {
 		return a + b;

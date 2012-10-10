@@ -61,14 +61,20 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {
+			// target is interface
 			wd.wrapInterface = true;
+
 			interfaces = new String[] {targetClassOrInterface.getName().replace('.', '/')};
 		} else {
+			// target is class
 			wd.wrapInterface = false;
+
 			if (targetInterface != null) {
+				// interface provided
 				interfaces = new String[] {targetInterface.getName().replace('.', '/')};
 			} else {
-				interfaces = null;
+				// no interface provided, use all
+				//interfaces = null;
 			}
 		}
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, interfaces);
