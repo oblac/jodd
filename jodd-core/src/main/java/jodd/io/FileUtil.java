@@ -1029,7 +1029,7 @@ public class FileUtil {
 			return false;
 		}
 
-		if (equals(file1, file1)) {
+		if (equals(file1, file2)) {
 			return true;
 		}
 
