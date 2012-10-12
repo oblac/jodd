@@ -18,6 +18,8 @@ public interface MethodInfo {
 	 */
 	String getReturnType();
 
+	String getReturnTypeName();
+
 	String getExceptions();
 
 	/**

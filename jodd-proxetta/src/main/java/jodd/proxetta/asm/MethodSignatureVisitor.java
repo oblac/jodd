@@ -204,7 +204,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return (char) returnOpcodeType.value;
 	}
 
-	protected String getReturnTypeName() {
+	public String getReturnTypeName() {
 		return returnTypeName.toString();
 	}
 
@@ -299,8 +299,12 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 				typeName = getArrayDepthString() + typeName;
 			}
 			returnOpcodeType.value = type;
+
 			returnTypeName.setLength(0);
-			returnTypeName.append(typeName);
+
+			if (typeName != null) {
+				returnTypeName.append(typeName);
+			}
 		}
 	}
 
