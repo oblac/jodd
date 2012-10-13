@@ -321,14 +321,10 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- return
 
-	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast) {
-		visitReturn(mv, msign, isLast, false);
-	}
-
 	/**
 	 * Visits return opcodes.
 	 */
-	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast, boolean returnDefault) {
+	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast) {
 		switch (msign.getReturnOpcodeType()) {
 			case 'V':
 				if (isLast == true) {
@@ -336,6 +332,7 @@ public class ProxettaAsmUtil {
 				}
 				mv.visitInsn(RETURN);
 				break;
+
 			case 'B':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -346,16 +343,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(IRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(ICONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "byteValue", "()B");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BYTE);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BYTE, "byteValue", "()B");
 				}
 				mv.visitInsn(IRETURN);
 				break;
+
 			case 'C':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -366,16 +359,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(IRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(ICONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C");
 				}
 				mv.visitInsn(IRETURN);
 				break;
+
 			case 'S':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -386,16 +375,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(IRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(ICONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "shortValue", "()S");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_SHORT);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_SHORT, "shortValue", "()S");
 				}
 				mv.visitInsn(IRETURN);
 				break;
+
 			case 'I':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -406,16 +391,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(IRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(ICONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "intValue", "()I");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_INTEGER);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_INTEGER, "intValue", "()I");
 				}
 				mv.visitInsn(IRETURN);
 				break;
+
 			case 'Z':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -426,16 +407,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(IRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(ICONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "()Z");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "()Z");
 				}
 				mv.visitInsn(IRETURN);
 				break;
+
 			case 'J':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -446,16 +423,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(LRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(LCONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_LONG);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "longValue", "()J");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_LONG);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_LONG, "longValue", "()J");
 				}
 				mv.visitInsn(LRETURN);
 				break;
+
 			case 'F':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -466,16 +439,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(FRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(FCONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "()F");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_FLOAT);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "()F");
 				}
 				mv.visitInsn(FRETURN);
 				break;
+
 			case 'D':
 				if (isLast == true) {
 					mv.visitInsn(DUP);
@@ -486,16 +455,12 @@ public class ProxettaAsmUtil {
 						mv.visitInsn(DRETURN);
 					mv.visitLabel(label);
 
-					if (returnDefault) {
-						mv.visitInsn(POP);
-						mv.visitInsn(DCONST_0);
-					} else {
-						mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
-						mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "()D");
-					}
+					mv.visitTypeInsn(CHECKCAST, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE);
+					mv.visitMethodInsn(INVOKEVIRTUAL, AsmConst.SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "()D");
 				}
 				mv.visitInsn(DRETURN);
 				break;
+
 			default:
 				mv.visitInsn(ARETURN);
 				break;
@@ -741,15 +706,6 @@ public class ProxettaAsmUtil {
 	public static boolean isTargetMethodDescriptionMethod(String name, String desc) {
 		if (name.equals("targetMethodDescription")) {
 			if (desc.equals("()Ljava/lang/String;")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isPushDefaultResultValueMethod(String name, String desc) {
-		if (name.equals("pushDefaultResultValue")) {
-			if (desc.equals("()V")) {
 				return true;
 			}
 		}

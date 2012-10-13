@@ -175,12 +175,10 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 						super.visitIincInsn(var, i1);  // [F1]
 					}
 
-					boolean returnDefault;
-
 					@Override
 					public void visitInsn(int opcode) {
 						if (opcode == ARETURN) {
-							visitReturn(mv, td.msign, true, returnDefault);
+							visitReturn(mv, td.msign, true);
 							return;
 						}
 						if (traceNext == true) {
@@ -321,11 +319,6 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isReturnTypeMethod(mname, mdesc)) {        // [R11]
 									loadMethodReturnClass(mv, td.msign);
-									return;
-								} else
-
-								if (isPushDefaultResultValueMethod(mname, mdesc)) {
-									returnDefault = true;
 									return;
 								} else
 

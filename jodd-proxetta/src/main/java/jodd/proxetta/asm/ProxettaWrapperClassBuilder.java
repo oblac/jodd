@@ -165,7 +165,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
 		}
 		ProxettaAsmUtil.prepareReturnValue(mv, msign, 0);
-		visitReturn(mv, msign, true, false);
+		visitReturn(mv, msign, true);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
 	}

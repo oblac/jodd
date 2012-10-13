@@ -16,7 +16,7 @@ public final class ProxyTarget {
 	 * <code>null</code> is used for return value.
 	 */
 	public static Object invoke() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	// ---------------------------------------------------------------- arguments
@@ -25,7 +25,7 @@ public final class ProxyTarget {
 	 * Inserts total number of method's arguments.
 	 */
 	public static int argumentsCount() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
@@ -34,7 +34,7 @@ public final class ProxyTarget {
 	 * @see #createArgumentsClassArray()
 	 */
 	public static Class argumentType(int index) {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
@@ -42,14 +42,14 @@ public final class ProxyTarget {
 	 * @see #createArgumentsArray()
 	 */
 	public static Object argument(int index) {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
 	 * Assigns new value for an argument specified by 1-based index.
 	 */
 	public static void setArgument(Object value, int index) {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	// ---------------------------------------------------------------- arguments array
@@ -62,7 +62,7 @@ public final class ProxyTarget {
 	 * @see #argument(int) 
 	 */
 	public static Object[] createArgumentsArray() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public final class ProxyTarget {
 	 * @see #argumentType(int)
 	 */
 	public static Class[] createArgumentsClassArray() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	// ---------------------------------------------------------------- return value
@@ -81,21 +81,22 @@ public final class ProxyTarget {
 	 * Inserts return type of target method. <code>null</code> is used for void.
 	 */
 	public static Class returnType() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
-	 * Push default primitive result value, so the following <code>return</code> instruction returns it.
-	 * Used usually when returning <code>null</code> (in general case) and when some target method
-	 * returns primitive type. Then you have to call this method before the <code>return null</code>
-	 * to return 0 value for all returned primitives.
+	 * Prepares return value. Must be used as last method call:
+	 * <pre>
+	 *     ...
+	 *     return ProxyTarget.returnValue(xxx);
+	 * </pre>
+	 *
+	 * Used when returning values in general case, when return type may
+	 * be either primitive or an object. Also, must be used when returning <code>null</code>
+	 * for primitives.
 	 */
-	public static void pushDefaultResultValue() {
-		throw new UnsupportedOperationException();
-	}
-
 	public static Object returnValue(Object value) {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	// ---------------------------------------------------------------- target
@@ -104,21 +105,21 @@ public final class ProxyTarget {
 	 * Inserts proxy (i.e. target) instance.
 	 */
 	public static Object target() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 	
 	/**
 	 * Inserts target class.
 	 */
 	public static Class targetClass() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
 	 * Inserts target method name. Useful for reflection.
 	 */
 	public static String targetMethodName() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
@@ -127,7 +128,7 @@ public final class ProxyTarget {
 	 * @see #targetMethodDescription()
 	 */
 	public static String targetMethodSignature() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 	/**
@@ -136,7 +137,7 @@ public final class ProxyTarget {
 	 * @see #targetMethodSignature() 
 	 */
 	public static String targetMethodDescription() {
-		throw new UnsupportedOperationException();
+		throw new ProxettaException();
 	}
 
 }
