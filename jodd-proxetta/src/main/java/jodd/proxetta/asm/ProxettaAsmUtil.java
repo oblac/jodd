@@ -4,6 +4,7 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
 import jodd.util.StringBand;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import static org.objectweb.asm.Opcodes.*;
@@ -324,6 +325,9 @@ public class ProxettaAsmUtil {
 		visitReturn(mv, msign, isLast, false);
 	}
 
+	/**
+	 * Visits return opcodes.
+	 */
 	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast, boolean returnDefault) {
 		switch (msign.getReturnOpcodeType()) {
 			case 'V':
@@ -334,6 +338,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'B':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+						mv.visitInsn(IRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -358,6 +370,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'S':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+						mv.visitInsn(IRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -370,6 +390,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'I':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+						mv.visitInsn(IRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -382,6 +410,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'Z':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+						mv.visitInsn(IRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -394,6 +430,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'J':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(LCONST_0);
+						mv.visitInsn(LRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(LCONST_0);
@@ -406,6 +450,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'F':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(FCONST_0);
+						mv.visitInsn(FRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(FCONST_0);
@@ -418,6 +470,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'D':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(DCONST_0);
+						mv.visitInsn(DRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(DCONST_0);
@@ -434,7 +494,9 @@ public class ProxettaAsmUtil {
 		}
 	}
 
-
+	/**
+	 * Prepares return value.
+	 */
 	public static void prepareReturnValue(MethodVisitor mv, MethodSignatureVisitor msign, int varOffset) {
 		varOffset += msign.getAllArgumentsSize();
 		switch (msign.getReturnOpcodeType()) {
@@ -495,6 +557,44 @@ public class ProxettaAsmUtil {
 				break;
 
 		}
+	}
+
+	public static void castToReturnType(MethodVisitor mv, MethodSignatureVisitor msign) {
+		final String returnType;
+
+		char returnOpcodeType = msign.getReturnOpcodeType();
+
+		switch (returnOpcodeType) {
+			case 'I':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_INTEGER;
+				break;
+			case 'J':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_LONG;
+				break;
+			case 'S':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_SHORT;
+				break;
+			case 'B':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_BYTE;
+				break;
+			case 'Z':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_BOOLEAN;
+				break;
+			case 'F':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_FLOAT;
+				break;
+			case 'D':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_DOUBLE;
+				break;
+			case '[':
+				returnType = msign.getReturnTypeName();
+				break;
+			default:
+				returnType = msign.getReturnType().replace('.', '/');
+				break;
+		}
+
+		mv.visitTypeInsn(CHECKCAST, returnType);
 	}
 
 	// ---------------------------------------------------------------- method signature
@@ -639,6 +739,15 @@ public class ProxettaAsmUtil {
 	public static boolean isPushDefaultResultValueMethod(String name, String desc) {
 		if (name.equals("pushDefaultResultValue")) {
 			if (desc.equals("()V")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isReturnValueMethod(String name, String desc) {
+		if (name.equals("returnValue")) {
+			if (desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
 				return true;
 			}
 		}

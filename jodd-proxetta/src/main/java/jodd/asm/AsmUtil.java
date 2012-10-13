@@ -164,6 +164,9 @@ public class AsmUtil {
 
 	// ---------------------------------------------------------------- type
 
+	/**
+	 * Converts type to type ref.
+	 */
 	public static String typeToTyperef(Class type) {
 		if (type.isArray() == false) {
 			if (type.isPrimitive() == false) {

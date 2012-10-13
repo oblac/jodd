@@ -327,6 +327,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								if (isPushDefaultResultValueMethod(mname, mdesc)) {
 									returnDefault = true;
 									return;
+								} else
+
+								if (isReturnValueMethod(mname, mdesc)) {
+									castToReturnType(mv, td.msign);
+									return;
 								}
 							}
 						}

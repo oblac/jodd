@@ -85,9 +85,16 @@ public final class ProxyTarget {
 	}
 
 	/**
-	 * Push default result value, so the following <code>return</code> instruction returns it.
+	 * Push default primitive result value, so the following <code>return</code> instruction returns it.
+	 * Used usually when returning <code>null</code> (in general case) and when some target method
+	 * returns primitive type. Then you have to call this method before the <code>return null</code>
+	 * to return 0 value for all returned primitives.
 	 */
 	public static void pushDefaultResultValue() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static Object returnValue(Object value) {
 		throw new UnsupportedOperationException();
 	}
 
