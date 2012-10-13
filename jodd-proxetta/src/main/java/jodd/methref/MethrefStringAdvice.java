@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta.methref;
+package jodd.methref;
 
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxyTarget;

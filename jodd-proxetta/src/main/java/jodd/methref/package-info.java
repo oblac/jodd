@@ -3,4 +3,4 @@
 /**
  * Strong typed method name references.
  */
-package jodd.proxetta.methref;
+package jodd.methref;
