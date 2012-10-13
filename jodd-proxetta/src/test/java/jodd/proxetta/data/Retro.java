@@ -43,4 +43,8 @@ public class Retro {
 	public void method10() {
 	}
 
+	public char method11() {
+		return flag ? 'r' : 'R';
+	}
+
 }

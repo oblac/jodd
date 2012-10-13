@@ -45,6 +45,7 @@ public class ReturnTest extends TestCase {
 		assertEquals(7.7, retro.method7(), 0.005);
 		assertEquals(8.8, retro.method8(), 0.005);
 		assertEquals(9, retro.method9().length);
+		assertEquals('r', retro.method11());
 
 		retro.method10();
 	}
@@ -74,6 +75,7 @@ public class ReturnTest extends TestCase {
 		assertEquals(0, retro.method7(), 0.005);
 		assertEquals(0, retro.method8(), 0.005);
 		assertNull(retro.method9());
+		assertEquals(0, retro.method11());
 
 		retro.method10();
 	}

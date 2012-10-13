@@ -16,7 +16,6 @@ public class MethrefAdvice implements ProxyAdvice {
 	public Object execute() {
 		methodName = ProxyTarget.targetMethodName();
 
-		ProxyTarget.pushDefaultResultValue();
-		return null;
+		return ProxyTarget.returnValue(null);
 	}
 }

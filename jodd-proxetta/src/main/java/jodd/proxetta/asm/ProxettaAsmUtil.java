@@ -358,6 +358,14 @@ public class ProxettaAsmUtil {
 				break;
 			case 'C':
 				if (isLast == true) {
+					mv.visitInsn(DUP);
+					Label label = new Label();
+					mv.visitJumpInsn(IFNONNULL, label);
+						mv.visitInsn(POP);
+						mv.visitInsn(ICONST_0);
+						mv.visitInsn(IRETURN);
+					mv.visitLabel(label);
+
 					if (returnDefault) {
 						mv.visitInsn(POP);
 						mv.visitInsn(ICONST_0);
@@ -585,6 +593,9 @@ public class ProxettaAsmUtil {
 				break;
 			case 'D':
 				returnType = AsmConst.SIGNATURE_JAVA_LANG_DOUBLE;
+				break;
+			case 'C':
+				returnType = AsmConst.SIGNATURE_JAVA_LANG_CHARACTER;
 				break;
 			case '[':
 				returnType = msign.getReturnTypeName();
