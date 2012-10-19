@@ -16,15 +16,24 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Petite IOC container. Consist of following layers:
- * <li>PetiteContainer - top layer that provides business usage
- * <li>{@link PetiteRegistry}
- * <li>{@link PetiteBeans}
+ * <ul>
+ * <li>PetiteContainer - top layer that provides business usage methods
+ * <li>{@link PetiteRegistry} - beans storage methods
+ * <li>{@link PetiteBeans} - base layer for storing beans in scopes
  */
 public class PetiteContainer extends PetiteRegistry {
 
 	private static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 
+	/**
+	 * Petite container reference name.
+	 * Used when container itself is added as its bean.
+	 * @see #addSelf()
+	 * @see #addSelf(String)
+	 */
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
+
+	protected ScopedProxyManager scopedProxyManager = new ScopedProxyManager();
 
 	public PetiteContainer() {
 		this(new PetiteConfig());
@@ -111,10 +120,25 @@ public class PetiteContainer extends PetiteRegistry {
 		if (def.properties == null) {
 			def.properties = resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
+
+		boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
+
 		for (PropertyInjectionPoint pip : def.properties) {
 			String[] refName = pip.reference;
 
-			Object value = getBean(refName, acquiredBeans);
+			Object value = null;
+
+			if (mixing) {
+				BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
+
+				if (refBeanDefinition != null) {
+					value = scopedProxyManager.getScopedProxyBean(this, def, refBeanDefinition);
+				}
+			}
+
+			if (value == null) {
+				value = getBean(refName, acquiredBeans);
+			}
 
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
@@ -125,6 +149,8 @@ public class PetiteContainer extends PetiteRegistry {
 			}
 			BeanUtil.setDeclaredProperty(bean, pip.field.getName(), value);
 		}
+
+		// sets
 		if (def.sets == null) {
 			def.sets = resolveCollectionInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
@@ -157,14 +183,31 @@ public class PetiteContainer extends PetiteRegistry {
 			Object[] args = new Object[refNames.length];
 			for (int i = 0; i < refNames.length; i++) {
 				String[] refName = refNames[i];
-				args[i] = getBean(refName, acquiredBeans);
-				if (args[i] == null) {
+				Object value = null;
+
+				boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
+
+				if (mixing) {
+					BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
+
+					if (refBeanDefinition != null) {
+						value = scopedProxyManager.getScopedProxyBean(this, def, refBeanDefinition);
+					}
+				}
+
+				if (value == null) {
+					value = getBean(refName, acquiredBeans);
+				}
+
+				args[i] = value;
+				if (value == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
 						throw new PetiteException("Wiring failed. Beans references: '" +
 								Convert.toString(refName) + "' not found for method '" + def.type.getName() + '#' + methodRef.method.getName() + "()'.");
 					}
 				}
 			}
+
 			try {
 				methodRef.method.invoke(bean, args);
 			} catch (Exception ex) {
@@ -177,12 +220,12 @@ public class PetiteContainer extends PetiteRegistry {
 	/**
 	 * Invokes all init methods.
 	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def, Boolean fireFirstOff) {
+	protected void invokeInitMethods(Object bean, BeanDefinition def, boolean fireFirstOff) {
 		if (def.initMethods == null) {
 			def.initMethods = resolveInitMethods(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
-			if ((fireFirstOff != null) && (fireFirstOff.booleanValue() != initMethod.firstOff)) {
+			if (fireFirstOff != initMethod.firstOff) {
 				continue;
 			}
 			try {
@@ -197,6 +240,10 @@ public class PetiteContainer extends PetiteRegistry {
 	 * Injects all parameters.
 	 */
 	protected void injectParams(Object bean, BeanDefinition def) {
+		if (def.name == null) {
+			return;
+		}
+
 		if (def.params == null) {
 			def.params = resolveBeanParams(def.name, petiteConfig.getResolveReferenceParameters());
 		}
@@ -281,36 +328,41 @@ public class PetiteContainer extends PetiteRegistry {
 		if (bean == null) {
 			// Create new bean in the scope
 			bean = newBeanInstance(def, acquiredBeans);
-			wireBean(bean, def, acquiredBeans);
-			invokeInitMethods(bean, def, Boolean.TRUE);
-			injectParams(bean, def);
-			invokeInitMethods(bean, def, Boolean.FALSE);
+			wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 			def.scopeRegister(bean);
 		}
 		return bean;
 	}
 
+	/**
+	 * Wires bean, injects parameters and invokes init methods.
+	 */
+	protected void wireBeanInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean, Map<String, Object> acquiredBeans) {
+		wireBean(bean, def, acquiredBeans);
+		invokeInitMethods(bean, def, true);
+		injectParams(bean, def);
+		invokeInitMethods(bean, def, false);
+	}
+
 	// ---------------------------------------------------------------- wire
 
 	/**
-	 * Wires provided bean with the container using default wiring mode and default init methods flag.
+	 * Wires provided bean with the container using default wiring mode.
 	 * Bean is not registered. 
 	 */
 	public void wire(Object bean) {
-		wire(bean, null, petiteConfig.getDefaultRunInitMethods());
+		wire(bean, null);
 	}
 
 	/**
 	 * Wires provided bean with the container and optionally invokes init methods.
 	 * Bean is not registered.
 	 */
-	public void wire(Object bean, WiringMode wiringMode, boolean init) {
+	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
-		wireBean(bean, def, new HashMap<String, Object>());
-		if (init) {
-			invokeInitMethods(bean,  def, null);
-		}
+		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 	}
 
 	// ---------------------------------------------------------------- create
@@ -320,7 +372,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 * Bean is <b>not</b> registered.
 	 */
 	public <E> E createBean(Class<E> type) {
-		return createBean(type, null, petiteConfig.getDefaultRunInitMethods());
+		return createBean(type, null);
 	}
 
 	/**
@@ -328,15 +380,12 @@ public class PetiteContainer extends PetiteRegistry {
 	 * <b>not</b> registered.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E createBean(Class<E> type, WiringMode wiringMode, boolean init) {
+	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode);
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		Object bean = newBeanInstance(def, acquiredBeans);
-		wireBean(bean, def, acquiredBeans);
-		if (init) {
-			invokeInitMethods(bean, def, null);
-		}
+		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 		return (E) bean;
 	}
 
@@ -359,10 +408,7 @@ public class PetiteContainer extends PetiteRegistry {
 		BeanDefinition def = lookupExistingBeanDefinition(name);
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		acquiredBeans.put(name, bean);
-		wireBean(bean, def, acquiredBeans);
-		invokeInitMethods(bean, def, Boolean.TRUE);
-		injectParams(bean, def);
-		invokeInitMethods(bean, def, Boolean.FALSE);
+		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 		def.scopeRegister(bean);
 	}
 

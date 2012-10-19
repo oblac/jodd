@@ -16,7 +16,6 @@ public class PetiteConfig {
 		defaultScope = SingletonScope.class;
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
-		defaultRunInitMethods = true;
 		resolveReferenceParameters = true;
 		useFullTypeNames = false;
 		lookupReferences = new PetiteReference[] {
@@ -25,6 +24,8 @@ public class PetiteConfig {
 				PetiteReference.TYPE_FULL_NAME
 		};
 		useParamo = Jodd.isJoddProxettaLoaded();
+		wireScopedProxy = false;
+		detectMixedScopes = false;
 	}
 
 	protected Class<? extends Scope> defaultScope;
@@ -47,6 +48,7 @@ public class PetiteConfig {
 		this.defaultScope = defaultScope;
 	}
 
+	// ----------------------------------------------------------------
 
 	protected WiringMode defaultWiringMode;
 	/**
@@ -75,6 +77,8 @@ public class PetiteConfig {
 	}
 
 
+	// ----------------------------------------------------------------
+
 	protected boolean detectDuplicatedBeanNames;
 	/**
 	 * Returns <code>true</code> if container detects duplicated bean names.
@@ -89,22 +93,7 @@ public class PetiteConfig {
 		this.detectDuplicatedBeanNames = detectDuplicatedBeanNames;
 	}
 
-
-	protected boolean defaultRunInitMethods;
-	/**
-	 * Returns <code>true</code> if init methods should be invoked on explicit wiring, adding and creating.
-	 */
-	public boolean getDefaultRunInitMethods() {
-		return defaultRunInitMethods;
-	}
-	/**
-	 * Specifies is init method should be invoked on explicit wiring, adding and creating.
-	 */
-	public void setDefaultRunInitMethods(boolean defaultRunInitMethods) {
-		this.defaultRunInitMethods = defaultRunInitMethods;
-	}
-
-
+	// ----------------------------------------------------------------
 
 	protected boolean resolveReferenceParameters;
 	/**
@@ -120,6 +109,7 @@ public class PetiteConfig {
 		this.resolveReferenceParameters = resolveReferenceParameters;
 	}
 
+	// ----------------------------------------------------------------
 
 	protected boolean useFullTypeNames;
 
@@ -150,6 +140,8 @@ public class PetiteConfig {
 		this.lookupReferences = lookupReferences;
 	}
 
+	// ----------------------------------------------------------------
+
 	protected boolean useParamo;
 
 	public boolean getUseParamo() {
@@ -167,5 +159,35 @@ public class PetiteConfig {
 			return;
 		}
 		this.useParamo = useParamo;
+	}
+
+	// ----------------------------------------------------------------
+
+	protected boolean wireScopedProxy;
+	protected boolean detectMixedScopes;
+
+	public boolean isWireScopedProxy() {
+		return wireScopedProxy;
+	}
+
+	/**
+	 * Defines if scoped proxies should be wired.
+	 */
+	public void setWireScopedProxy(boolean wireScopedProxy) {
+		this.wireScopedProxy = wireScopedProxy;
+	}
+
+	public boolean isDetectMixedScopes() {
+		return detectMixedScopes;
+	}
+
+	/**
+	 * Defines if mixed scopes should be detected as errors.
+	 * If {@link #wireScopedProxy} is not set, then enabling this flag
+	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
+	 * enabling this flag will just issue a warn message in the log.
+	 */
+	public void setDetectMixedScopes(boolean detectMixedScopes) {
+		this.detectMixedScopes = detectMixedScopes;
 	}
 }

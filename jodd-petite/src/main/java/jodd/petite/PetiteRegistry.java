@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Petite container layer that provides various mods for registering all kind
- * of user stuff.
+ * Petite container layer provides various methods for registering
+ * beans.
  */
 public abstract class PetiteRegistry extends PetiteBeans {
 
