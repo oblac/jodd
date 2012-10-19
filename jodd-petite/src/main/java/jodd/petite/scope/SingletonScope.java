@@ -25,4 +25,10 @@ public class SingletonScope implements Scope {
 		instances.remove(name);
 	}
 
+	/**
+	 * Allows only singleton scoped beans to be injected into the target singleton bean.
+	 */
+	public boolean accept(Scope referenceScope) {
+		return (referenceScope.getClass() == SingletonScope.class);
+	}
 }
