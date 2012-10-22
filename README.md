@@ -36,7 +36,7 @@ use just one Jodd bundle jar. The one jar that bind them all:)
 
 ## Building Jodd
 
-Jodd is built with Maven 3 on JDK6. After cloning Jodd git repo,
+Jodd is built with Maven 3. After cloning Jodd git repo,
 you can build the full release with:
 
     mvn -P release
@@ -57,11 +57,6 @@ Display plugin and dependency information:
 
     mvn -N versions:display-plugin-updates
     mvn -N versions:display-dependency-updates
-
-Set new version:
-
-    mvn versions:set -DnewVersion=3.4.0-20120927
-    mvn versions:set -DnewVersion=3.4.0-SNAPSHOOT
 
 Done.
 
