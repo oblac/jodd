@@ -30,9 +30,9 @@ public class ParserTest {
 
 		String format = jdt.toString(timePattern);
 
-		JDateTime jdt1 = new JDateTime ();
+		JDateTime jdt1 = new JDateTime();
 
-		jdt1.parse(format,timePattern);
+		jdt1.parse(format, timePattern);
 
 		assertEquals(jdt, jdt1);
 

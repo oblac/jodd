@@ -2,10 +2,12 @@
 
 package jodd.datetime;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -37,7 +39,7 @@ public class JDateTimeMoreTest {
 			}
 		}
 
-		JDateTime gt2 = (JDateTime) gt1.clone();
+		JDateTime gt2 = gt1.clone();
 		assertEquals(0, gt1.compareTo(gt2));
 
 		for (int i = 1; i < 1000; i++) {
@@ -355,7 +357,35 @@ public class JDateTimeMoreTest {
 		assertEquals(52, jdt.getWeekOfYear());
 		jdt.setDate(2012, 1, 1);
 		assertEquals(52, jdt.getWeekOfYear());
-
 	}
 
+	@Test
+	public void testNow() {
+		long time = System.currentTimeMillis();
+		JDateTime jdt = new JDateTime(time);
+
+		assertEquals(time, jdt.getTimeInMillis());
+	}
+
+	@Test
+	public void testMillisPrecision() {
+		JDateTimeDefault.timeZone = TimeZone.getTimeZone("CET");
+
+		JDateTime jdt = new JDateTime(new JulianDateStamp(2456223, 0.42596945));
+		JDateTime jdt0 = new JDateTime(1350936803760L);
+		JDateTime jdt1 = new JDateTime(2012, 10, 22, 22, 13, 23, 760);
+
+		Assert.assertEquals(1350936803760L, jdt1.getTimeInMillis());
+		Assert.assertEquals(1350936803760L, jdt0.getTimeInMillis());
+		Assert.assertEquals(1350936803760L, jdt.getTimeInMillis());
+		assertEquals(42596945, jdt.getJulianDate().getSignificantFraction());
+		assertEquals(42596944, jdt0.getJulianDate().getSignificantFraction());
+		assertEquals(42596944, jdt1.getJulianDate().getSignificantFraction());
+
+		Assert.assertEquals(jdt0, jdt1);
+		Assert.assertEquals(jdt, jdt0);
+		Assert.assertEquals(jdt, jdt1);
+
+		JDateTimeDefault.timeZone = null;
+	}
 }
