@@ -6,11 +6,15 @@ import jodd.Jodd;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.SingletonScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Petite configuration.
  */
 public class PetiteConfig {
+
+	private static final Logger log = LoggerFactory.getLogger(PetiteConfig.class);
 
 	public PetiteConfig() {
 		defaultScope = SingletonScope.class;
@@ -156,6 +160,9 @@ public class PetiteConfig {
 	 */
 	public void setUseParamo(boolean useParamo) {
 		if (Jodd.isJoddProxettaLoaded() == false) {
+			if (log.isWarnEnabled()) {
+				log.warn("Feature not available without Proxetta");
+			}
 			return;
 		}
 		this.useParamo = useParamo;
@@ -172,8 +179,15 @@ public class PetiteConfig {
 
 	/**
 	 * Defines if scoped proxies should be wired.
+	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
+		if (Jodd.isJoddProxettaLoaded() == false) {
+			if (log.isWarnEnabled()) {
+				log.warn("Feature not available without Proxetta");
+			}
+			return;
+		}
 		this.wireScopedProxy = wireScopedProxy;
 	}
 
@@ -186,8 +200,15 @@ public class PetiteConfig {
 	 * If {@link #wireScopedProxy} is not set, then enabling this flag
 	 * will throw an exception on mixed scopes. If {@link #wireScopedProxy} is set
 	 * enabling this flag will just issue a warn message in the log.
+	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
+		if (Jodd.isJoddProxettaLoaded() == false) {
+			if (log.isWarnEnabled()) {
+				log.warn("Feature not available without Proxetta");
+			}
+			return;
+		}
 		this.detectMixedScopes = detectMixedScopes;
 	}
 }

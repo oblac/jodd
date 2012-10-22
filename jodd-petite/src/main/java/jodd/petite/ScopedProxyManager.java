@@ -36,6 +36,12 @@ public class ScopedProxyManager {
 	protected Map<Class, Class> proxyClasses = new HashMap<Class, Class>();
 	protected Map<String, Object> proxies = new HashMap<String, Object>();
 
+	public ScopedProxyManager() {
+		if (log.isDebugEnabled()) {
+			log.debug("ScopedProxyManager created");
+		}
+	}
+
 	/**
 	 * Returns scoped proxy bean if injection scopes are mixed on some injection point.
 	 * May return <code>null</code> if mixing scopes is not detected.

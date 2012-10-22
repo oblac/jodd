@@ -2,6 +2,7 @@
 
 package jodd.petite;
 
+import jodd.Jodd;
 import jodd.bean.BeanUtil;
 import jodd.petite.config.PetiteConfigurator;
 import jodd.petite.scope.SingletonScope;
@@ -33,16 +34,35 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	public static final String PETITE_CONTAINER_REF_NAME = "petiteContainer";
 
-	protected ScopedProxyManager scopedProxyManager = new ScopedProxyManager();
+	protected final ScopedProxyManager scopedProxyManager;
 
+	/**
+	 * Creates new Petite container using {@link PetiteConfig default configuration}.
+	 */
 	public PetiteContainer() {
 		this(new PetiteConfig());
 	}
 
+	/**
+	 * Creates new Petite container using {@link PetiteContainer provided configuration}.
+	 */
 	public PetiteContainer(PetiteConfig config) {
 		super(config);
+
+		if (Jodd.isJoddProxettaLoaded()) {
+			scopedProxyManager = new ScopedProxyManager();
+		} else {
+			scopedProxyManager = null;
+		}
+
 		if (log.isDebugEnabled()) {
 			log.debug("Petite container created.");
+
+			if (Jodd.isJoddProxettaLoaded()) {
+				log.debug("Petite proxy features enabled.");
+			} else {
+				log.debug("Petite proxy features not available.");
+			}
 		}
 	}
 
