@@ -1574,6 +1574,10 @@ public class JDateTime implements Comparable, Cloneable {
 
 	// ---------------------------------------------------------------- equals & hashCode
 
+	/**
+	 * Compares if two JDateTime instances are equal.
+	 * Comparison precision is 1e-3 seconds.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -1586,7 +1590,7 @@ public class JDateTime implements Comparable, Cloneable {
 		return  (this.monthFix == jdt.monthFix) &&
 				(this.firstDayOfWeek == jdt.firstDayOfWeek) &&
 				(this.mustHaveDayOfFirstWeek == jdt.mustHaveDayOfFirstWeek) &&
-				(this.jdate.equals(jdt.jdate)) &&
+				(this.time.equals(jdt.time)) &&
 				(this.timezone.equals(jdt.timezone));
 	}
 
@@ -1689,7 +1693,6 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 
-
 	// ---------------------------------------------------------------- alternative representation
 
 
@@ -1706,50 +1709,6 @@ public class JDateTime implements Comparable, Cloneable {
 	public void setJulianDate(double jd) {
 		setJulianDate(new JulianDateStamp(jd));
 	}
-
-	/**
-	 * Returns Reduced Julian Date (RJD), used by astronomers.
-	 * RJD = JD − 2400000
-	 */
-	public JulianDateStamp getReducedJulianDate() {
-		return jdate.getReducedJulianDate();
-	}
-	public double getReducedJulianDateDouble() {
-		return jdate.getReducedJulianDate().doubleValue();
-	}
-
-	public void setReducedJulianDate(double rjd) {
-		jdate.setReducedJulianDate(rjd);
-	}
-
-	/**
-	 * Returns Modified Julian Date (MJD), where date starts from midnight rather than noon.
-	 * RJD = JD − 2400000.5
-	 */
-	public JulianDateStamp getModifiedJulianDate() {
-		return jdate.getModifiedJulianDate();
-	}
-	public double getModifiedJulianDateDouble() {
-		return jdate.getModifiedJulianDate().doubleValue();
-	}
-	public void setModifiedJulianDate(double mjd) {
-		jdate.setModifiedJulianDate(mjd);
-	}
-
-	/**
-	 * Returns Truncated Julian Day (TJD), introduced by NASA for the space program.
-	 * TJD began at midnight at the beginning of May 24, 1968 (Friday).
-	 */
-	public JulianDateStamp getTruncatedJulianDate() {
-		return jdate.getTruncatedJulianDate();
-	}
-	public double getTruncatedJulianDateDouble() {
-		return jdate.getTruncatedJulianDate().doubleValue();
-	}
-	public void setTruncatedJulianDate(double tjd) {
-		jdate.setTruncatedJulianDate(tjd);
-	}
-
 
 	// ---------------------------------------------------------------- custom equals
 

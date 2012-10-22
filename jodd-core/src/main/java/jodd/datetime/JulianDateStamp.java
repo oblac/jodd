@@ -23,20 +23,22 @@ import java.io.Serializable;
  * The Julian Date (JD) is the number of days (with decimal fraction of the day) that
  * have elapsed since 12 noon Greenwich Mean Time (UT or TT) of that day.
  * Rounding to the nearest integer gives the Julian day number.
- *
- *
+ * <p>
  * For calculations that will have time precision of 1e-3 seconds, both
- * fraction and integer part must have enough numerics in it. The problem is
+ * fraction and integer part must have enough digits in it. The problem is
  * that integer part is big and, on the other hand fractional is small, and
  * since final julian date is a sum of this two values, some fraction
  * numerals may be lost. Therefore, for higher precision both
- * fractional and intger part of julian date real number has to be
+ * fractional and integer part of julian date real number has to be
  * preserved.
+ * <p>
+ * This class stores the unmodified fraction part, but not all digits
+ * are significant! For 1e-3 seconds precision, only 8 digits after
+ * the decimal point are significant.
  *
  * @see TimeUtil
  * @see JDateTime
  * @see DateTimeStamp
- *
  */
 public class JulianDateStamp implements Serializable, Cloneable {
 
@@ -45,6 +47,9 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	 */
 	protected int integer;
 
+	/**
+	 * Returns integer part of the Julian Date (JD).
+	 */
 	public int getInteger() {
 		return integer;
 	}
@@ -55,8 +60,19 @@ public class JulianDateStamp implements Serializable, Cloneable {
 	 */
 	protected double fraction;
 
+	/**
+	 * Returns the fraction part of Julian Date (JD).
+	 * Returned value is always in [0.0, 1.0) range.
+	 */
 	public double getFraction() {
 		return fraction;
+	}
+
+	/**
+	 * Calculates and returns significant fraction only as an int.
+	 */
+	public int getSignificantFraction() {
+		return (int) (fraction * 100000000);
 	}
 
 	/**
@@ -69,7 +85,6 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		}
 		return integer;
 	}
-
 
 	// ---------------------------------------------------------------- ctors
 
@@ -259,6 +274,10 @@ public class JulianDateStamp implements Serializable, Cloneable {
 
 	// ---------------------------------------------------------------- conversion
 
+	/**
+	 * Returns Reduced Julian Date (RJD), used by astronomers.
+	 * RJD = JD − 2400000
+	 */
 	public JulianDateStamp getReducedJulianDate() {
 		return new JulianDateStamp(integer - 2400000, fraction);
 	}
@@ -267,6 +286,10 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		set(rjd + 2400000);
 	}
 
+	/**
+	 * Returns Modified Julian Date (MJD), where date starts from midnight rather than noon.
+	 * RJD = JD − 2400000.5
+	 */
 	public JulianDateStamp getModifiedJulianDate() {
 		return new JulianDateStamp(integer - 2400000, fraction - 0.5);
 	}
@@ -275,6 +298,10 @@ public class JulianDateStamp implements Serializable, Cloneable {
 		set(mjd + 2400000.5);
 	}
 
+	/**
+	 * Returns Truncated Julian Day (TJD), introduced by NASA for the space program.
+	 * TJD began at midnight at the beginning of May 24, 1968 (Friday).
+	 */
 	public JulianDateStamp getTruncatedJulianDate() {
 		return new JulianDateStamp(integer - 2440000, fraction - 0.5);
 	}
