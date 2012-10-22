@@ -63,9 +63,11 @@ public class HttpParams {
 
 	/**
 	 * Adds a parameter.Parameter may be:
-	 * <li>string, for single-value parameters
-	 * <li>string array, for multi-value parameter
-	 * <li>File, for files
+	 * <ul>
+	 * <li>string, for single-value parameters</li>
+	 * <li>string array, for multi-value parameter</li>
+	 * <li>File, for files</li>
+	 * </ul>
 	 * <p>
 	 * String parameters are accumulated, so adding a
 	 * parameter with the same name twice will result in

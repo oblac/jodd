@@ -8,10 +8,12 @@ import jodd.typeconverter.TypeConverter;
 /**
  * Converts given object to <code>char[]</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>single value is converted to string and its characters are returned
- * <li>native arrays are converted directly
- * <li>object arrays is converted element by element
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>single value is converted to string and its characters are returned</li>
+ * <li>native arrays are converted directly</li>
+ * <li>object arrays is converted element by element</li>
+ * </ul>
  */
 public class CharacterArrayConverter implements TypeConverter<char[]> {
 

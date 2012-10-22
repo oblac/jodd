@@ -8,11 +8,13 @@ import jodd.typeconverter.TypeConverter;
 /**
  * Converts given object to <code>Class</code> array.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li>single Class is wrapped in 1-length array
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li>single Class is wrapped in 1-length array</li>
  * <li>string value is converted to string array (from CSV format) and
- * then each element is converted
+ * then each element is converted</li>
+ * </ul>
  */
 public class ClassArrayConverter implements TypeConverter<Class[]> {
 

@@ -14,14 +14,16 @@ import java.util.Date;
 /**
  * Converts given object to <code>java.sql.Time</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li><code>Calendar</code> object is converted
- * <li><code>Date</code> object is converted
- * <li><code>JDateTime</code> object is converted
- * <li><code>Number</code> is used as number of milliseconds
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li><code>Calendar</code> object is converted</li>
+ * <li><code>Date</code> object is converted</li>
+ * <li><code>JDateTime</code> object is converted</li>
+ * <li><code>Number</code> is used as number of milliseconds</li>
  * <li>finally, if string value contains only numbers it is parsed as milliseconds;
- * otherwise as JDateTime pattern
+ * otherwise as JDateTime pattern</li>
+ * </ul>
  */
 public class SqlTimeConverter implements TypeConverter<Time> {
 

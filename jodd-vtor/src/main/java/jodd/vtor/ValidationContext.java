@@ -122,8 +122,10 @@ public class ValidationContext {
 
 	/**
 	 * Create new constraint. The following rules are used:
-	 * <li>use default constructor if exist.
-	 * <li>otherwise, use constructor with ValidationContext parameter.
+	 * <ul>
+	 * <li>use default constructor if exist.</li>
+	 * <li>otherwise, use constructor with ValidationContext parameter.</li>
+	 * </ul>
 	 */
 	protected <V extends ValidationConstraint> V newConstraint(Class<V> constraint, Class targetType) throws Exception {
 		Constructor<V> ctor;

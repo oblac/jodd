@@ -338,10 +338,11 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Creates Proxetta with all aspects. The following aspects are created:
-	 *
+	 * <ul>
 	 * <li>Transaction proxy - applied on all classes that contains public top-level methods
 	 * annotated with <code>@Transaction</code> annotation. This is just one way how proxies
-	 * can be applied - since base configuration is in Java, everything is possible.
+	 * can be applied - since base configuration is in Java, everything is possible.</li>
+	 * </ul>
 	 */
 	protected void startProxetta() {
 		log.info("proxetta initialization");

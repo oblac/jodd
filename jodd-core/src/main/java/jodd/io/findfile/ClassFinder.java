@@ -192,9 +192,11 @@ public abstract class ClassFinder {
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
 	 * The following logic is provided by default, in given order:
-	 * <li>system jars are excluded
-	 * <li>excluded jars are excluded (if specified)
-	 * <li>only included jars are included (if specified)
+	 * <ul>
+	 * <li>system jars are excluded</li>
+	 * <li>excluded jars are excluded (if specified)</li>
+	 * <li>only included jars are included (if specified)</li>
+	 * </ul>
 	 */
 	protected boolean acceptJar(File jarFile) {
 		String path = jarFile.getAbsolutePath();
@@ -381,9 +383,12 @@ public abstract class ClassFinder {
 
 	/**
 	 * Called during classpath scanning when class or resource is found.
+	 * <ul>
 	 * <li>Class name is java-alike class name (pk1.pk2.class) that may be immediately used
-	 * for dynamic loading.
-	 * <li>Resource name starts with '\' and represents either jar path (\pk1/pk2/res) or relative file path (\pk1\pk2\res).
+	 * for dynamic loading.</li>
+	 * <li>Resource name starts with '\' and represents either jar path (\pk1/pk2/res) or relative file path (\pk1\pk2\res).</li>
+	 * </ul>
+	 *
      * <code>InputStream</code> is provided by InputStreamProvider and opened lazy.
 	 * Once opened, input stream doesn't have to be closed - this is done by this class anyway.
 	 */

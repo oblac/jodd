@@ -298,8 +298,10 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	/**
 	 * Prepares stuff before {@link #inject(Object, javax.servlet.http.HttpServletRequest) injection}.
 	 * Preparation should be invoked only once per request. It includes the following:
-	 * <li>copying parameters to attributes
-	 * <li>handling of move results by outjection the move source.
+	 * <ul>
+	 * <li>copying parameters to attributes</li>
+	 * <li>handling of move results by outjection the move source.</li>
+	 * </ul>
 	 */
 	public void prepare(HttpServletRequest servletRequest) {
 		if (config.copyParamsToAttributes == true) {

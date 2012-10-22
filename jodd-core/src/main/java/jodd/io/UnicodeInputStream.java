@@ -10,11 +10,11 @@ import java.io.PushbackInputStream;
  * Unicode input stream for detecting UTF encodings and reading BOM characters.
  * Detects following BOMs:
  * <ul>
- * <li>UTF-8
- * <li>UTF-16BE
- * <li>UTF-16LE
- * <li>UTF-32BE
- * <li>UTF-32LE
+ * <li>UTF-8</li>
+ * <li>UTF-16BE</li>
+ * <li>UTF-16LE</li>
+ * <li>UTF-32BE</li>
+ * <li>UTF-32LE</li>
  * </ul>
  */
 public class UnicodeInputStream extends InputStream {

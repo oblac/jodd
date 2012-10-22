@@ -9,8 +9,10 @@ import jodd.typeconverter.TypeConverter;
 /**
  * Converts given object to {@link FileUpload}.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * </ul>
  */
 public class FileUploadConverter implements TypeConverter<FileUpload> {
 

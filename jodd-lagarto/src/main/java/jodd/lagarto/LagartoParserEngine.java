@@ -12,8 +12,10 @@ import java.nio.CharBuffer;
 
 /**
  * Lagarto HTML/XML parser engine. Usage consist of two steps:
- * <li>{@link #initialize(java.nio.CharBuffer) initalization} with provided content
- * <li>actual {@link #parse(TagVisitor) parsing} the content
+ * <ul>
+ * <li>{@link #initialize(java.nio.CharBuffer) initalization} with provided content</li>
+ * <li>actual {@link #parse(TagVisitor) parsing} the content</li>
+ * </ul>
  */
 public abstract class LagartoParserEngine {
 

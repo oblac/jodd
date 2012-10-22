@@ -16,9 +16,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Petite IOC container. Consist of following layers:
- * <li>PetiteContainer - top layer that provides business usage
- * <li>{@link PetiteRegistry}
- * <li>{@link PetiteBeans}
+ * <ul>
+ * <li>PetiteContainer - top layer that provides business usage</li>
+ * <li>{@link PetiteRegistry}</li>
+ * <li>{@link PetiteBeans}</li>
+ * </ul>
  */
 public class PetiteContainer extends PetiteRegistry {
 

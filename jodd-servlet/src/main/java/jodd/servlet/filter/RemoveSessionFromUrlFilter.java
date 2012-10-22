@@ -17,8 +17,10 @@ import java.io.IOException;
 /**
  * Protects from exposing session ids in URLs for security reasons.
  * Does the following:
- * <li>invalidates session if session id is exposed in the URL
- * <li>removes session id from URLs.
+ * <ul>
+ * <li>invalidates session if session id is exposed in the URL</li>
+ * <li>removes session id from URLs.</li>
+ * </ul>
  */
 public class RemoveSessionFromUrlFilter implements Filter {
 

@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletResponse;
  * Configures actions and applies some servlet configuration prior action execution.
  * This interceptor does the following:
  * <ul>
- * <li>uses multi-part request if needed
- * <li>performs the injection (using either default or specified injector)
- * <li>invokes the action
- * <li>performs the outjection.
+ * <li>uses multi-part request if needed</li>
+ * <li>performs the injection (using either default or specified injector)</li>
+ * <li>invokes the action</li>
+ * <li>performs the outjection.</li>
  * </ul>
  */
 public class ServletConfigInterceptor extends ActionInterceptor {

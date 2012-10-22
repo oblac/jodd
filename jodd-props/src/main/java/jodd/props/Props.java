@@ -21,8 +21,8 @@ import java.util.Properties;
 /**
  * Super properties: fast, configurable, supports (ini) sections, profiles.
  * <p/>
- * <p/>
  * Basic parsing rules:
+ * <ul>
  * <li> By default, props files are UTF8 encoded.
  * <li> Leading and trailing spaces will be trimmed from section names and property names.
  * <li> Leading and/or trailing spaces may be trimmed from property values.
@@ -32,23 +32,27 @@ import java.util.Properties;
  * <li> If the last character of a line is backslash (\), the value is continued on the next line with new line character included.
  * <li> \\uXXXX is encoded as character
  * <li> \t, \r and \f are encoded as characters
- * <p/>
+ * </ul>
  * <p/>
  * Sections rules:
+ * <ul>
  * <li> Section names are enclosed between [ and ].
  * <li> Properties following a section header belong to that section. Section name is added as a prefix to section properties.
  * <li> Section ends with empty section definition [] or with new section start
- * <p/>
+ * </ul>
  * <p/>
  * Profiles rules:
+ * <ul>
  * <li> Profile names are enclosed between &lt; and &gt; in property key.
  * <li> Each property key may contain zero, one or more profile definitions.
- * <p/>
+ * </ul>
  * <p/>
  * Macro rules:
+ * <ul>
  * <li> Profile values may contain references to other properties using ${ and }
  * <li> Inner references are supported
  * <li> References are resolved first in the profile context and then in the base props context.
+ * </ul>
  */
 public class Props implements Cloneable {
 

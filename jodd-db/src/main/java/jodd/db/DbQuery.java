@@ -34,14 +34,18 @@ import java.util.Map;
  * Encapsulates {@link Statement} and all its operations.
  * <p>
  * It may be:
+ * <ul>
  * <li>used in an un-managed way, created directly from connection;</li>
  * <li>managed by {@link DbSession};</li>
  * <li>managed by {@link jodd.db.DbThreadSession} i.e. {@link ThreadDbSessionHolder}.</li>
+ * </ul>
  * <p>
  * Query life-cycle states:
- * <li>1) created:     statement == null, initialized == false
- * <li>2) initialized: statement != null, initialized == true
- * <li>3) closed:      statement == null, initialized == true
+ * <ul>
+ * <li>1) created:     statement == null, initialized == false</li>
+ * <li>2) initialized: statement != null, initialized == true</li>
+ * <li>3) closed:      statement == null, initialized == true</li>
+ * </ul>
  */
 public class DbQuery extends DbQueryBase {
 

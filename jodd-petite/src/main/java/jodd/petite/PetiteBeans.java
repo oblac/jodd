@@ -149,9 +149,11 @@ public abstract class PetiteBeans {
 
 	/**
 	 * Single point of bean registration. The following rules are applied:
-	 * <li>if name is missing, it will be resolved from the class (name or annotation)
-	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)
-	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)
+	 * <ul>
+	 * <li>if name is missing, it will be resolved from the class (name or annotation)</li>
+	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)</li>
+	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)</li>
+	 * </ul>
 	 */
 	protected BeanDefinition registerPetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		if (name == null) {

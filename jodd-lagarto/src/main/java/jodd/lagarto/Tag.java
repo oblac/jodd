@@ -150,8 +150,10 @@ public interface Tag {
 
 	/**
 	 * Write out the complete tag. There are two modes how tag can be written.
-	 * <li> optimized - if tag is not modified it will be written in its <b>original</b> form. otherwise it will be generated.
-	 * <li> force build - tag will be always build from tag name and attributes. Resulting tag may be different than source.
+	 * <ul>
+	 * <li> optimized - if tag is not modified it will be written in its <b>original</b> form. otherwise it will be generated.</li>
+	 * <li> force build - tag will be always build from tag name and attributes. Resulting tag may be different than source.</li>
+	 * </ul>
 	 */
 	void writeTo(Appendable out, boolean forceBuild) throws IOException;
 

@@ -14,11 +14,13 @@ import java.net.MalformedURLException;
 /**
  * Converts given object to <code>URL</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li><code>File</code> is converted
- * <li><code>URI</code> is converted
- * <li><code>String</code> representation is used for creating URL
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li><code>File</code> is converted</li>
+ * <li><code>URI</code> is converted</li>
+ * <li><code>String</code> representation is used for creating URL</li>
+ * </ul>
  */
 public class URLConverter implements TypeConverter<URL> {
 

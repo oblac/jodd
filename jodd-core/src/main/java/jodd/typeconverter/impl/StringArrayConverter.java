@@ -8,10 +8,12 @@ import jodd.util.CsvUtil;
 /**
  * Converts given object to <code>String[]</code>.
  * Conversion rules:
- * <li>an object array is converted to <code>String[]</code> array.
- * <li>primitive arrays are converted to string arrays, element by element
- * <li><code>Class[]</code> is converted to array of class names.
- * <li>simple object is created to <code>String[]</code> array from CSV representation of <code>toString</code>.
+ * <ul>
+ * <li>an object array is converted to <code>String[]</code> array.</li>
+ * <li>primitive arrays are converted to string arrays, element by element</li>
+ * <li><code>Class[]</code> is converted to array of class names.</li>
+ * <li>simple object is created to <code>String[]</code> array from CSV representation of <code>toString</code>.</li>
+ * </ul>
  */
 public class StringArrayConverter implements TypeConverter<String[]> {
 

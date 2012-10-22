@@ -73,7 +73,7 @@ public class EmptyMethodVisitor implements MethodVisitor {
 	 * V1_6. <br> <br> Packed frames are basically
 	 * "deltas" from the state of the previous frame (very first frame is
 	 * implicitly defined by the method's parameters and access flags): <ul>
-	 * <liOpcodes#F_SAME representing frame with exactly the same
+	 * <li>Opcodes#F_SAME representing frame with exactly the same
 	 * locals as the previous frame and with the empty stack.</li> <li>Opcodes#F_SAME1
 	 * representing frame with exactly the same locals as the previous frame and
 	 * with single value on the stack (<code>nStack</code> is 1 and

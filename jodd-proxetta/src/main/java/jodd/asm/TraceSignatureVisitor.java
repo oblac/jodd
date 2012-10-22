@@ -9,14 +9,16 @@ import org.objectweb.asm.signature.SignatureVisitor;
 /**
  * A {@link SignatureVisitor} that prints a disassembled view of the signature
  * it visits.
- * 
+
+ * Changes made by igor (jodd):
+ * <ul>
+ * <li>all private scopes made protected</li>
+ * <li>getExceptionsArray added</li>
+ * </ul>
+ *
  * @author Eugene Kuleshov
  * @author Eric Bruneton
  * @author Igor Spasic (is)
- *
- * Changes made by igor:
- * <li>all private scopes made protected
- * <li>getExceptionsArray added
  */
 public class TraceSignatureVisitor implements SignatureVisitor {
 

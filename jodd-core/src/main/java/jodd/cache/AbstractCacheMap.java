@@ -11,8 +11,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Default implementation of timed and size cache map.
  * Implementations should:
  * <ul>
- * <li>create a new cache map
- * <li>implements own <code>prune</code> strategy
+ * <li>create a new cache map</li>
+ * <li>implements own <code>prune</code> strategy</li>
  * </ul>
  * Uses <code>ReentrantReadWriteLock</code> to synchronize access.
  * Since upgrading from a read lock to the write lock is not possible,

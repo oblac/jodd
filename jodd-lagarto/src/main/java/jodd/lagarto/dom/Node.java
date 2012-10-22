@@ -653,9 +653,11 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Reindex children nodes. Must be called on every children addition/removal.
 	 * Iterates {@link #childNodes} list and:
-	 * <li>calculates three different sibling indexes,
-	 * <li>calculates total child element node count,
-	 * <li>resets child element nodes array (will be init lazy later by @{#initChildElementNodes}.
+	 * <ul>
+	 * <li>calculates three different sibling indexes,</li>
+	 * <li>calculates total child element node count,</li>
+	 * <li>resets child element nodes array (will be init lazy later by @{#initChildElementNodes}.</li>
+	 * </ul>
 	 */
 	protected void reindexChildren() {
 		int siblingElementIndex = 0;

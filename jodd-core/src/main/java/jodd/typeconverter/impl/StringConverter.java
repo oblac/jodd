@@ -14,13 +14,15 @@ import java.sql.SQLException;
 /**
  * Converts given object to <code>String</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>for <code>CharSequence</code> type returns toString value
- * <li><code>Class</code> returns cass name
- * <li><code>byte[]</code> is used for creating UTF8 string
- * <li><code>char[]</code> is used for creating string
- * <li><code>Clob</code> is converted
- * <li>finally, <code>toString()</code> value is returned.
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>for <code>CharSequence</code> type returns toString value</li>
+ * <li><code>Class</code> returns cass name</li>
+ * <li><code>byte[]</code> is used for creating UTF8 string</li>
+ * <li><code>char[]</code> is used for creating string</li>
+ * <li><code>Clob</code> is converted</li>
+ * <li>finally, <code>toString()</code> value is returned.</li>
+ * </ul>
  */
 public class StringConverter implements TypeConverter<String> {
 

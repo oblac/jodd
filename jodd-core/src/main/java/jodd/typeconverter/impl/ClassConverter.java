@@ -9,9 +9,11 @@ import jodd.util.ClassLoaderUtil;
 /**
  * Converts given object to <code>Class</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li>string value of the object is trimmed and used for class loading.
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li>string value of the object is trimmed and used for class loading.</li>
+ * </ul>
  */
 public class ClassConverter implements TypeConverter<Class> {
 

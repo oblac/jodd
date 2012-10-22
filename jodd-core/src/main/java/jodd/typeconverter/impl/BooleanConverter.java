@@ -10,11 +10,13 @@ import static jodd.util.StringPool.*;
 /**
  * Converts given object to <code>Boolean</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
  * <li>object is converted to string, trimmed. Then common boolean strings are matched:
  * "yes", "y", "true", "on", "1" for <code>true</code>; and opposite values
- * for <code>false</code>.
+ * for <code>false</code>.</li>
+ * </ul>
  */
 public class BooleanConverter implements TypeConverter<Boolean> {
 

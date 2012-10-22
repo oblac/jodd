@@ -969,8 +969,9 @@ public class ReflectUtil {
 	 * This implementation uses custom <code>SecurityManager</code>
 	 * and it is the fastest. Other implementations are:
 	 * <ul>
-	 * <li><code>new Throwable().getStackTrace()[callStackDepth]</code>
-	 * <li><code>Thread.currentThread().getStackTrace()[callStackDepth]</code> (the slowest)
+	 * <li><code>new Throwable().getStackTrace()[callStackDepth]</code></li>
+	 * <li><code>Thread.currentThread().getStackTrace()[callStackDepth]</code> (the slowest)</li>
+	 * </ul>
 	 * <p>
 	 * Note that original <code>Reflection.getCallerClass</code> is way faster
 	 * then any emulation.

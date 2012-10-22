@@ -9,9 +9,11 @@ import jodd.util.StringUtil;
 /**
  * Converts given object to <code>Byte</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li>object is converted to string, trimmed, and then converted if possible.
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li>object is converted to string, trimmed, and then converted if possible.</li>
+ * </ul>
  * Number string may start with plus and minus sign.
  */
 public class ByteConverter implements TypeConverter<Byte> {

@@ -116,19 +116,23 @@ public class HttpTunnel {
 		 * Invoked after target response is processed. Response is now
 		 * ready to be sent back to the client. The following header
 		 * parameters are changed:
-		 * <li>Transfer-Encoding is removed, as body is returned at once,
-		 * <li>Content-Length is added/update to body size.
+		 * <ul>
+		 * <li>Transfer-Encoding is removed, as body is returned at once,</li>
+		 * <li>Content-Length is added/update to body size.</li>
+		 * </ul>
 		 */
 		protected void onResponse(HttpTransfer response) {
 		}
 
 		/**
 		 * Performs the tunneling. The following steps occurs:
-		 * <li>read and parse clients request
-		 * <li>open socket to target
-		 * <li>resend request to target
-		 * <li>read targets response
-		 * <li>fix response and resend it to client
+		 * <ul>
+		 * <li>read and parse clients request</li>
+		 * <li>open socket to target</li>
+		 * <li>resend request to target</li>
+		 * <li>read targets response</li>
+		 * <li>fix response and resend it to client</li>
+		 * </ul>
 		 */
 		protected void tunnel() throws IOException {
 

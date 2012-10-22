@@ -16,9 +16,11 @@ import java.io.InputStreamReader;
 
 /**
  * Java compilation tool. Supports following compilers:
- * <li>jikesw, jikes (disabled by default)
- * <li>internal javac (from tools.jar)
- * <li>external javac
+ * <ul>
+ * <li>jikesw, jikes (disabled by default)</li>
+ * <li>internal javac (from tools.jar)</li>
+ * <li>external javac</li>
+ * </ul>
  */
 public class JavaCompiler {
 

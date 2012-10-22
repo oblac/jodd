@@ -253,9 +253,11 @@ public class ClassLoaderUtil {
 	/**
 	 * Returns default class path from all available <code>URLClassLoader</code>
 	 * in classloader hierarchy. The following is added to the classpath list:
-	 * <li>file URLs from <code>URLClassLoader</code> (other URL protocols are ignored)
-	 * <li>inner entries from containing <b>manifest</b> files (if exist)
-	 * <li>bootstrap classpath
+	 * <ul>
+	 * <li>file URLs from <code>URLClassLoader</code> (other URL protocols are ignored)</li>
+	 * <li>inner entries from containing <b>manifest</b> files (if exist)</li>
+	 * <li>bootstrap classpath</li>
+	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
 		Set<File> classpaths = new TreeSet<File>();
@@ -389,9 +391,9 @@ public class ClassLoaderUtil {
 	 * <p>
 	 * Resource will be loaded using class loaders in the following order:
 	 * <ul>
-	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}
-	 * <li>{@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}
-	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}
+	 * <li>{@link Thread#getContextClassLoader() Thread.currentThread().getContextClassLoader()}</li>
+	 * <li>{@link Class#getClassLoader() ClassLoaderUtil.class.getClassLoader()}</li>
+	 * <li>if <code>callingClass</code> is provided: {@link Class#getClassLoader() callingClass.getClassLoader()}</li>
 	 * </ul>
 	 */
 	public static URL getResourceUrl(String resourceName, ClassLoader classLoader) {
@@ -560,10 +562,10 @@ public class ClassLoaderUtil {
 	 * <p>
 	 * Class will be loaded using class loaders in the following order:
 	 * <ul>
-	 * <li>provided class loader (if any)
-	 * <li><code>Thread.currentThread().getContextClassLoader()}</code>
-	 * <li>caller classloader
-	 * <li>using <code>Class.forName</code>
+	 * <li>provided class loader (if any)</li>
+	 * <li><code>Thread.currentThread().getContextClassLoader()}</code></li>
+	 * <li>caller classloader</li>
+	 * <li>using <code>Class.forName</code></li>
 	 * </ul>
 	 */
 	public static Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {

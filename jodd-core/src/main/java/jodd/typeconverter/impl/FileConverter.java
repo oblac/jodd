@@ -14,10 +14,12 @@ import java.io.IOException;
  * Converts given object into the <code>File</code>.
  * If created, returned file is stored in the temporary folder.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>object of destination type is simply casted
- * <li><code>byte[]</code> content is used for creating a file
- * <li><code>String</code> content is used for creating a file
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>object of destination type is simply casted</li>
+ * <li><code>byte[]</code> content is used for creating a file</li>
+ * <li><code>String</code> content is used for creating a file</li>
+ * </ul>
  * <p>
  * This converter is plugable and add-on file converters from
  * other modules can be added.

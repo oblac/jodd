@@ -15,8 +15,10 @@ public class VtorUtil {
 
 	/**
 	 * Returns JSON violations string. Contains javascript array with elements that contain:
-	 * <li>name - violation name
-	 * <li>msg - message code i.e. constraint class name
+	 * <ul>
+	 * <li>name - violation name</li>
+	 * <li>msg - message code i.e. constraint class name</li>
+	 * </ul>
 	 */
 	public static String createViolationsJsonString(HttpServletRequest request, List<Violation> violations) {
 		if (violations == null) {

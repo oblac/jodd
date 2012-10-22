@@ -17,19 +17,23 @@ import jodd.util.StringPool;
  * <code>tableName.column</code> or <code>alias.column</code> (if table has an alias).
  * <p>
  * There are some special values for propertyName
- * <li>wildcard (*), all table columns will be listed
- * <li>id sign (+), all table id columns will be listed
+ * <ul>
+ * <li>wildcard (*), all table columns will be listed</li>
+ * <li>id sign (+), all table id columns will be listed</li?
+ * </ul>
  * <p>
  * If previous chunk is also a column chunk, comma separator will be added in between.
  * <p>
  * Note that column alias are appended to the column name (using 'as' construct).
  * <p>
  * Macro rules:
- * <li><code>$C{tableRef}</code> is rendered as FOO.col1, FOO.col2,...
- * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns
- * <li><code>$C{tableRef.+}</code> renders to only identity columns
- * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column
+ * <ul>
+ * <li><code>$C{tableRef}</code> is rendered as FOO.col1, FOO.col2,...</li>
+ * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns</li>
+ * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
+ * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
+ * </ul>
  */
 public class ColumnsSelectChunk extends SqlChunk {
 

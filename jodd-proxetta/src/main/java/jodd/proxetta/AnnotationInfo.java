@@ -17,10 +17,12 @@ public interface AnnotationInfo {
 
 	/**
 	 * Lookups for annotation element. May return:
-	 * <li>String - for simple values,
-	 * <li>Object[] - for array values
-	 * <li>String[2] - pair of two strings, representing description and value
-	 * <li>AnnotationInfo - nested annotation.
+	 * <ul>
+	 * <li>String - for simple values,</li>
+	 * <li>Object[] - for array values</li>
+	 * <li>String[2] - pair of two strings, representing description and value</li>
+	 * <li>AnnotationInfo - nested annotation.</li>
+	 * </ul>
 	 */
 	Object getElement(String name);
 

@@ -9,11 +9,13 @@ import jodd.util.CsvUtil;
 /**
  * Converts given object to <code>int[]</code>.
  * Conversion rules:
- * <li><code>null</code> value is returned as <code>null</code>
- * <li>string is considered as CSV value and split before conversion
- * <li>single value is returned as 1-length array wrapped over converted value
- * <li>native arrays are converted directly
- * <li>object arrays is converted element by element
+ * <ul>
+ * <li><code>null</code> value is returned as <code>null</code></li>
+ * <li>string is considered as CSV value and split before conversion</li>
+ * <li>single value is returned as 1-length array wrapped over converted value</li>
+ * <li>native arrays are converted directly</li>
+ * <li>object arrays is converted element by element</li>
+ * </ul>
  */
 public class IntegerArrayConverter implements TypeConverter<int[]> {
 
