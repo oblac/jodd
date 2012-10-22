@@ -36,15 +36,20 @@ public class ScopedProxyManager {
 	protected Map<Class, Class> proxyClasses = new HashMap<Class, Class>();
 	protected Map<String, Object> proxies = new HashMap<String, Object>();
 
-
-	public Object getScopedProxyBean(PetiteContainer petiteContainer, BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
+	/**
+	 * Returns scoped proxy bean if injection scopes are mixed on some injection point.
+	 * May return <code>null</code> if mixing scopes is not detected.
+	 */
+	public Object lookupValue(PetiteContainer petiteContainer, BeanDefinition targetBeanDefinition, BeanDefinition refBeanDefinition) {
 		Scope targetScope = targetBeanDefinition.scope;
 		Scope refBeanScope = refBeanDefinition.scope;
 
 		boolean detectMixedScopes = petiteContainer.getConfig().isDetectMixedScopes();
 		boolean wireScopedProxy = petiteContainer.getConfig().isWireScopedProxy();
 
-		if (targetScope.accept(refBeanScope) == false) {
+		// when target scope is null then all beans can be injected into it
+		// similar to prototype scope
+		if (targetScope != null && targetScope.accept(refBeanScope) == false) {
 
 			if (wireScopedProxy == false) {
 				if (detectMixedScopes) {
@@ -63,7 +68,7 @@ public class ScopedProxyManager {
 				}
 			}
 
-			String scopedProxyBeanName = "<-" + refBeanDefinition.name;
+			String scopedProxyBeanName = refBeanDefinition.name;
 
 			Object proxy = proxies.get(scopedProxyBeanName);
 

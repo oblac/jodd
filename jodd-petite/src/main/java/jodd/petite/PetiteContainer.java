@@ -132,7 +132,7 @@ public class PetiteContainer extends PetiteRegistry {
 				BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
 
 				if (refBeanDefinition != null) {
-					value = scopedProxyManager.getScopedProxyBean(this, def, refBeanDefinition);
+					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
 				}
 			}
 
@@ -191,7 +191,7 @@ public class PetiteContainer extends PetiteRegistry {
 					BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
 
 					if (refBeanDefinition != null) {
-						value = scopedProxyManager.getScopedProxyBean(this, def, refBeanDefinition);
+						value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
 					}
 				}
 
