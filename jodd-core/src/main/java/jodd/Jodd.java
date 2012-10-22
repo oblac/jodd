@@ -8,19 +8,19 @@ package jodd;
 public class Jodd {
 
 	static {
-		joddBeanLoaded = checkModule("bean");
-		joddDbLoaded = checkModule("db");
-		joddHttpLoaded = checkModule("http");
-		joddJtxLoaded = checkModule("jtx");
-		joddLagartoLoaded = checkModule("lagarto");
-		joddMadvocLoaded = checkModule("madvoc");
-		joddMailLoaded = checkModule("mail");
-		joddPetiteLoaded = checkModule("petite");
-		joddPropsLoaded = checkModule("props");
-		joddProxettaLoaded = checkModule("proxetta");
-		joddServletLoaded = checkModule("servlet");
-		joddUploadLoaded = checkModule("upload");
-		joddVtorLoaded = checkModule("vtor");
+		beanLoaded = checkModule("bean");
+		dbLoaded = checkModule("db");
+		httpLoaded = checkModule("http");
+		jtxLoaded = checkModule("jtx");
+		lagartoLoaded = checkModule("lagarto");
+		madvocLoaded = checkModule("madvoc");
+		mailLoaded = checkModule("mail");
+		petiteLoaded = checkModule("petite");
+		propsLoaded = checkModule("props");
+		proxettaLoaded = checkModule("proxetta");
+		servletLoaded = checkModule("servlet");
+		uploadLoaded = checkModule("upload");
+		vtorLoaded = checkModule("vtor");
 	}
 
 	/**
@@ -40,71 +40,71 @@ public class Jodd {
 		}
 	}
 
-	private static final boolean joddBeanLoaded;
-	private static final boolean joddDbLoaded;
-	private static final boolean joddHttpLoaded;
-	private static final boolean joddJtxLoaded;
-	private static final boolean joddLagartoLoaded;
-	private static final boolean joddMadvocLoaded;
-	private static final boolean joddMailLoaded;
-	private static final boolean joddPetiteLoaded;
-	private static final boolean joddPropsLoaded;
-	private static final boolean joddProxettaLoaded;
-	private static final boolean joddServletLoaded;
-	private static final boolean joddUploadLoaded;
-	private static final boolean joddVtorLoaded;
+	private static final boolean beanLoaded;
+	private static final boolean dbLoaded;
+	private static final boolean httpLoaded;
+	private static final boolean jtxLoaded;
+	private static final boolean lagartoLoaded;
+	private static final boolean madvocLoaded;
+	private static final boolean mailLoaded;
+	private static final boolean petiteLoaded;
+	private static final boolean propsLoaded;
+	private static final boolean proxettaLoaded;
+	private static final boolean servletLoaded;
+	private static final boolean uploadLoaded;
+	private static final boolean vtorLoaded;
 
 	// ---------------------------------------------------------------- getters
 
-	public static boolean isJoddBeanLoaded() {
-		return joddBeanLoaded;
+	public static boolean isBeanLoaded() {
+		return beanLoaded;
 	}
 
-	public static boolean isJoddDbLoaded() {
-		return joddDbLoaded;
+	public static boolean isDbLoaded() {
+		return dbLoaded;
 	}
 
-	public static boolean isJoddHttpLoaded() {
-		return joddHttpLoaded;
+	public static boolean isHttpLoaded() {
+		return httpLoaded;
 	}
 
-	public static boolean isJoddJtxLoaded() {
-		return joddJtxLoaded;
+	public static boolean isJtxLoaded() {
+		return jtxLoaded;
 	}
 
-	public static boolean isJoddLagartoLoaded() {
-		return joddLagartoLoaded;
+	public static boolean isLagartoLoaded() {
+		return lagartoLoaded;
 	}
 
-	public static boolean isJoddMadvocLoaded() {
-		return joddMadvocLoaded;
+	public static boolean isMadvocLoaded() {
+		return madvocLoaded;
 	}
 
-	public static boolean isJoddMailLoaded() {
-		return joddMailLoaded;
+	public static boolean isMailLoaded() {
+		return mailLoaded;
 	}
 
-	public static boolean isJoddPetiteLoaded() {
-		return joddPetiteLoaded;
+	public static boolean isPetiteLoaded() {
+		return petiteLoaded;
 	}
 
-	public static boolean isJoddPropsLoaded() {
-		return joddPropsLoaded;
+	public static boolean isPropsLoaded() {
+		return propsLoaded;
 	}
 
-	public static boolean isJoddProxettaLoaded() {
-		return joddProxettaLoaded;
+	public static boolean isProxettaLoaded() {
+		return proxettaLoaded;
 	}
 
-	public static boolean isJoddServletLoaded() {
-		return joddServletLoaded;
+	public static boolean isServletLoaded() {
+		return servletLoaded;
 	}
 
-	public static boolean isJoddUploadLoaded() {
-		return joddUploadLoaded;
+	public static boolean isUploadLoaded() {
+		return uploadLoaded;
 	}
 
-	public static boolean isJoddVtorLoaded() {
-		return joddVtorLoaded;
+	public static boolean isVtorLoaded() {
+		return vtorLoaded;
 	}
 }

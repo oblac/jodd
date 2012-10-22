@@ -7,15 +7,15 @@ import junit.framework.TestCase;
 public class JoddPetiteTest extends TestCase {
 
 	public void testLoadedModules() {
-		assertEquals(true, Jodd.isJoddBeanLoaded());
-		assertEquals(false, Jodd.isJoddHttpLoaded());
-		assertEquals(false, Jodd.isJoddMadvocLoaded());
-		assertEquals(false, Jodd.isJoddMailLoaded());
-		assertEquals(true, Jodd.isJoddPetiteLoaded());
-		assertEquals(true, Jodd.isJoddPropsLoaded());
-		assertEquals(true, Jodd.isJoddProxettaLoaded());
-		assertEquals(true, Jodd.isJoddServletLoaded());
-		assertEquals(true, Jodd.isJoddUploadLoaded());
-		assertEquals(false, Jodd.isJoddVtorLoaded());
+		assertEquals(true, Jodd.isBeanLoaded());
+		assertEquals(false, Jodd.isHttpLoaded());
+		assertEquals(false, Jodd.isMadvocLoaded());
+		assertEquals(false, Jodd.isMailLoaded());
+		assertEquals(true, Jodd.isPetiteLoaded());
+		assertEquals(true, Jodd.isPropsLoaded());
+		assertEquals(true, Jodd.isProxettaLoaded());
+		assertEquals(true, Jodd.isServletLoaded());
+		assertEquals(true, Jodd.isUploadLoaded());
+		assertEquals(false, Jodd.isVtorLoaded());
 	}
 }

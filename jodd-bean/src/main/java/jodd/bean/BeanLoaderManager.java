@@ -46,7 +46,7 @@ public class BeanLoaderManager {
 		register(java.util.Map.class, new MapBeanLoader());
 		register(java.sql.ResultSet.class, new ResultSetBeanLoader());
 
-		if (Jodd.isJoddServletLoaded()) {
+		if (Jodd.isServletLoaded()) {
 			try {
 				Class loaderAddon = ClassLoaderUtil.loadClass("jodd.bean.loader.ServletBeanLoaderManagerAddon");
 

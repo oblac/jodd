@@ -49,7 +49,7 @@ public class PetiteContainer extends PetiteRegistry {
 	public PetiteContainer(PetiteConfig config) {
 		super(config);
 
-		if (Jodd.isJoddProxettaLoaded()) {
+		if (Jodd.isProxettaLoaded()) {
 			scopedProxyManager = new ScopedProxyManager();
 		} else {
 			scopedProxyManager = null;
@@ -58,7 +58,7 @@ public class PetiteContainer extends PetiteRegistry {
 		if (log.isDebugEnabled()) {
 			log.debug("Petite container created.");
 
-			if (Jodd.isJoddProxettaLoaded()) {
+			if (Jodd.isProxettaLoaded()) {
 				log.debug("Petite proxy features enabled.");
 			} else {
 				log.debug("Petite proxy features not available.");

@@ -11,15 +11,15 @@ public class JoddBeanTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertTrue(Jodd.isJoddBeanLoaded());
-		assertFalse(Jodd.isJoddHttpLoaded());
-		assertFalse(Jodd.isJoddMadvocLoaded());
-		assertFalse(Jodd.isJoddMailLoaded());
-		assertFalse(Jodd.isJoddPetiteLoaded());
-		assertFalse(Jodd.isJoddPropsLoaded());
-		assertFalse(Jodd.isJoddProxettaLoaded());
-		assertFalse(Jodd.isJoddServletLoaded());
-		assertFalse(Jodd.isJoddUploadLoaded());
-		assertFalse(Jodd.isJoddVtorLoaded());
+		assertTrue(Jodd.isBeanLoaded());
+		assertFalse(Jodd.isHttpLoaded());
+		assertFalse(Jodd.isMadvocLoaded());
+		assertFalse(Jodd.isMailLoaded());
+		assertFalse(Jodd.isPetiteLoaded());
+		assertFalse(Jodd.isPropsLoaded());
+		assertFalse(Jodd.isProxettaLoaded());
+		assertFalse(Jodd.isServletLoaded());
+		assertFalse(Jodd.isUploadLoaded());
+		assertFalse(Jodd.isVtorLoaded());
 	}
 }

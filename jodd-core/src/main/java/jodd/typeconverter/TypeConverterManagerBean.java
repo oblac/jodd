@@ -166,7 +166,7 @@ public class TypeConverterManagerBean {
 
 		register(Locale.class, new LocaleConverter());
 
-		if (Jodd.isJoddUploadLoaded()) {
+		if (Jodd.isUploadLoaded()) {
 			try {
 				Class<?> managerAddon = ClassLoaderUtil.loadClass("jodd.typeconverter.UploadTypeConverterManagerAddon");
 
