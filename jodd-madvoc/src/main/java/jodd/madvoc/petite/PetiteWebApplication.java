@@ -13,25 +13,42 @@ import jodd.petite.config.AutomagicPetiteConfigurator;
 public class PetiteWebApplication extends WebApplication {
 
 	/**
+	 * Creates default Petite container that will be
+	 * {@link #providePetiteContainer() provided} to Madvoc.
+	 * This method does not have to be fired off if Petite
+	 * container is created on some other place!
+	 */
+	protected PetiteContainer createPetiteContainer() {
+		return new PetiteContainer();
+	}
+
+	/**
 	 * Provides {@link PetiteContainer Petite container} instance that will be used as application context.
-	 * By default it creates new instance and performs
+	 * By default it {@link #createPetiteContainer() creates new container instance} and performs
 	 * {@link jodd.petite.config.AutomagicPetiteConfigurator auto-magic configuration}.
 	 */
 	protected PetiteContainer providePetiteContainer() {
-		PetiteContainer pc = new PetiteContainer();
+		PetiteContainer pc = createPetiteContainer();
+
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
+
 		configurator.configure(pc);
+
 		return pc;
 	}
 
 
 	/**
-	 * Registers provided Petite container and Petite-aware Madvoc components.
+	 * Registers {@link #providePetiteContainer() provided Petite container}
+	 * and Petite-aware Madvoc components.
 	 */
 	@Override
 	public void registerMadvocComponents() {
 		super.registerMadvocComponents();
-		registerComponent("petiteContainer", providePetiteContainer());
+
+		PetiteContainer petiteContainer = providePetiteContainer();
+		registerComponent("petiteContainer", petiteContainer);
+
 		registerComponent(PetiteMadvocController.class);
 		registerComponent(PetiteInterceptorManager.class);
 		registerComponent(PetiteResultsManager.class);
