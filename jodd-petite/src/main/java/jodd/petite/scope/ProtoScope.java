@@ -18,4 +18,10 @@ public class ProtoScope implements Scope {
 	public void remove(String name) {
 	}
 
+	/**
+	 * Allow all scopes to be injected into prototype scoped beans.
+	 */
+	public boolean accept(Scope referenceScope) {
+		return true;
+	}
 }

@@ -28,4 +28,17 @@ public interface Scope {
 	 */
 	void remove(String name);
 
+	/**
+	 * Returns <code>true</code> if a bean of referenced scope can be
+	 * injected into target bean of this scope. Otherwise, returns
+	 * <code>false</code>, which may be a sign for scoped proxy to be
+	 * injected.
+	 * <p>
+	 * In general, injection of 'shorter' reference scopes
+	 * into the 'longer' target scopes should not be accepted.
+	 * In other words, if reference scope is 'longer' or equal (same),
+	 * this method should return <code>true</code>.
+	 */
+	boolean accept(Scope referenceScope);
+
 }

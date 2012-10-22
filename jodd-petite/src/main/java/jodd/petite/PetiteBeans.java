@@ -120,6 +120,19 @@ public abstract class PetiteBeans {
 	}
 
 	/**
+	 * Lookups for first founded {@link BeanDefinition bean definition}.
+	 */
+	protected BeanDefinition lookupBeanDefinition(String[] names) {
+		for (String name : names) {
+			BeanDefinition beanDefinition = lookupBeanDefinition(name);
+			if (beanDefinition != null) {
+				return beanDefinition;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Lookups for existing bean. Throws exception if bean is not found.
 	 */
 	protected BeanDefinition lookupExistingBeanDefinition(String name) {
@@ -150,12 +163,16 @@ public abstract class PetiteBeans {
 	/**
 	 * Single point of bean registration. The following rules are applied:
 	 * <ul>
-	 * <li>if name is missing, it will be resolved from the class (name or annotation)</li>
-	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)</li>
-	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)</li>
-	 * </ul>
+	 * <li>if name is missing, it will be resolved from the class (name or annotation)
+	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)
+	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)
 	 */
-	protected BeanDefinition registerPetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
+	protected BeanDefinition registerPetiteBean(
+			String name,
+			Class type,
+			Class<? extends Scope> scopeType,
+			WiringMode wiringMode) {
+
 		if (name == null) {
 			name = PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
 		}

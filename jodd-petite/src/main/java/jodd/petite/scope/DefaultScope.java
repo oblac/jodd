@@ -24,4 +24,7 @@ public final class DefaultScope implements Scope {
 	public void remove(String name) {
 	}
 
+	public boolean accept(Scope referenceScope) {
+		return false;
+	}
 }

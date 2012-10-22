@@ -31,4 +31,26 @@ public class ThreadLocalScope implements Scope {
 		Map<String, Object> threadLocalMap = context.get();
 		threadLocalMap.remove(name);
 	}
+
+	/**
+	 * Defines allowed referenced scopes that can be injected into the
+	 * thread-local scoped bean.
+	 */
+	public boolean accept(Scope referenceScope) {
+		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == ThreadLocalScope.class) {
+			return true;
+		}
+
+		if (refScopeType == SingletonScope.class) {
+			return true;
+		}
+
+		if (refScopeType == SessionScope.class) {
+			return true;
+		}
+
+		return true;
+	}
 }

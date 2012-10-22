@@ -20,7 +20,7 @@ public class BeanDefinition {
 	// finals
 	public final String name;			// bean name
 	public final Class type;			// bean type
-	protected final Scope scope;  		// bean scope
+	protected final Scope scope;  		// bean scope, may be null for beans that are not stored in scope but just wired
 	public final WiringMode wiringMode;	// wiring mode
 
 	// cache

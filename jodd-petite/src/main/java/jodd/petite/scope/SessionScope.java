@@ -16,7 +16,7 @@ import java.util.WeakHashMap;
 /**
  * Session scope stores unique object instances per single http session.
  * Upon creation, new session listener is registered (dynamically) that will
- * keep track on active sessions.{@link RequestContextListener} is used for accessing
+ * keep track on active sessions. {@link RequestContextListener} is used for accessing
  * the request and {@link HttpSessionListenerBroadcaster} is used for listening
  * session lifecycle.
  */
@@ -64,6 +64,21 @@ public class SessionScope implements Scope {
 		for (Map<String, Object> map : sessionInstances.values()) {
 			map.remove(name);
 		}
+	}
+
+	public boolean accept(Scope referenceScope) {
+		Class<? extends Scope> refScopeType = referenceScope.getClass();
+
+		if (refScopeType == SingletonScope.class) {
+			return true;
+		}
+
+		if (refScopeType == SessionScope.class) {
+			return true;
+		}
+
+		return true;
+
 	}
 
 	// ---------------------------------------------------------------- util
