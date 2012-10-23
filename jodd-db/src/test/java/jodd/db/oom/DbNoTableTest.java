@@ -12,8 +12,6 @@ import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.tst.Girl;
 import org.junit.Ignore;
 
-// IGNORED DUE TO BUG in HSQLDB 2.2.8, WORKS IN 2.2.9 but not yet on Maven.
-@Ignore
 public class DbNoTableTest extends DbHsqldbTestCase {
 
 	@Override
