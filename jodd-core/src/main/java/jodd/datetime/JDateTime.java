@@ -1597,7 +1597,7 @@ public class JDateTime implements Comparable, Cloneable {
 	@Override
 	public int hashCode() {
 		int result = HashCode.SEED;
-		result = hash(result, jdate);
+		result = hash(result, time);
 		result = hash(result, timezone);
 		result = hash(result, monthFix);
 		result = hash(result, firstDayOfWeek);
