@@ -952,13 +952,20 @@ public abstract class Node implements Cloneable {
 		}
 	}
 
-	// ---------------------------------------------------------------- deep
+	// ---------------------------------------------------------------- position
 
 	/**
 	 * Returns deep level.
 	 */
 	public int getDeepLevel() {
 		return deepLevel;
+	}
+
+	/**
+	 * Returns node position, if position is calculated, otherwise <code>null</code>.
+	 */
+	public LagartoLexer.Position getPosition() {
+		return position;
 	}
 
 	/**

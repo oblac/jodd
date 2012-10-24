@@ -61,7 +61,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			if (!domBuilder.isImpliedEndTags()) {
 				if (log.isWarnEnabled()) {
 					String positionString = StringPool.EMPTY;
-					if (domBuilder.isCalculatePosition()) {
+					if (parentNode.position != null) {
 						positionString = parentNode.position.toString();
 					}
 					log.warn("Some unclosed tags are closed: <" + parentNode.getNodeName() + "> " + positionString);
@@ -138,7 +138,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 						if (log.isDebugEnabled()) {
 							String positionString = StringPool.EMPTY;
-							if (domBuilder.isCalculatePosition()) {
+							if (parentNode.position != null) {
 								positionString = parentNode.position.toString();
 							}
 							log.debug("Implicitly closed tag <" + node.getNodeName() + "> " + positionString);
@@ -185,7 +185,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 						if (log.isDebugEnabled()) {
 							String positionString = StringPool.EMPTY;
-							if (domBuilder.isCalculatePosition()) {
+							if (parentNode.position != null) {
 								positionString = parentNode.position.toString();
 							}
 							log.debug("Implicitly closed tag <" + tagName + "> " + positionString);
@@ -298,7 +298,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			parentNode.detachFromParent();
 
 			String positionString = StringPool.EMPTY;
-			if (domBuilder.isCalculatePosition()) {
+			if (parentNode.position != null) {
 				positionString = parentNode.position.toString();
 			}
 
