@@ -4,18 +4,20 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-
 	<groupId>org.jodd</groupId>
 	<artifactId>jodd</artifactId>
-	<version>3.4.0-SNAPSHOT</version>
+	<version>3.4.0</version>
 	<packaging>pom</packaging>
 
 	<name>Jodd Project</name>
+	<description>
+		Jodd is an open-source Java utility library and set of frameworks.
+		Jodd tools enriches JDK with many powerful and feature rich utilities.
+		It helps with everyday task, makes code more robust and reliable.
+		Jodd frameworks is set of lightweight application frameworks, compact yet powerful.
+		Designed following the CoC, DRY and SCS principles, it makes development
+		simple, but not simpler.
+	</description>
 
 	<modules>
 		<module>jodd-core</module>
@@ -395,87 +397,87 @@
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-core</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-bean</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-mail</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-props</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-upload</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-servlet</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-http</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-proxetta</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-swingspy</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-vtor</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-petite</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-madvoc</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-db</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-jtx</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto-web</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-joy</artifactId>
-				<version>3.4.0-SNAPSHOT</version>
+				<version>3.4.0</version>
 			</dependency>
 
 			<!-- external -->
@@ -641,11 +643,6 @@
 					<configuration>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>

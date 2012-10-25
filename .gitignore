@@ -4,3 +4,4 @@ target
 *.iml
 .idea
 /*.user.*
+/*.pass
