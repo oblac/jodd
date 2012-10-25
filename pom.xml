@@ -6,7 +6,7 @@
 
 	<groupId>org.jodd</groupId>
 	<artifactId>jodd</artifactId>
-	<version>3.4.0</version>
+	<version>3.4.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Jodd Project</name>
@@ -397,87 +397,87 @@
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-core</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-bean</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-mail</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-props</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-upload</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-servlet</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-http</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-proxetta</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-swingspy</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-vtor</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-petite</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-madvoc</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-db</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-jtx</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-lagarto-web</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jodd</groupId>
 				<artifactId>jodd-joy</artifactId>
-				<version>3.4.0</version>
+				<version>3.4.1-SNAPSHOT</version>
 			</dependency>
 
 			<!-- external -->

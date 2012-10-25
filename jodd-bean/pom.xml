@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.jodd</groupId>
 		<artifactId>jodd</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>jodd-bean</artifactId>
