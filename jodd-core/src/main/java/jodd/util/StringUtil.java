@@ -242,6 +242,10 @@ public class StringUtil {
 			offset++;
 		}
 
+		if (offset == stringLen) {
+			return string;	// no changes
+		}
+
 		return new String(result, 0, offset);
 	}
 
