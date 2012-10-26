@@ -4,6 +4,7 @@ package jodd.lagarto;
 
 import jodd.io.FileUtil;
 import jodd.lagarto.dom.Document;
+import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
@@ -194,5 +195,25 @@ public class ParsingProblemsTest extends TestCase {
 				"---\n" +
 				"Help\n",
 				s);
+	}
+
+	public void testNamespaces() throws IOException {
+		File file = new File(testDataRoot, "namespace.xml");
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+		lagartoDOMBuilder.setCalculatePosition(true);
+
+		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
+		assertTrue(doc.check());
+
+		Element cfgTestElement = (Element) doc.getChild(1);
+
+		assertEquals("cfg:test", cfgTestElement.getNodeName());
+
+		Element cfgNode = (Element) cfgTestElement.getChild(0);
+
+		assertEquals("cfg:node", cfgNode.getNodeName());
+
 	}
 }

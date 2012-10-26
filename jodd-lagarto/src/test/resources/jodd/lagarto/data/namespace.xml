@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfg:test xmlns:cfg="http://test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<cfg:node>This is a text</cfg:node>
+</cfg:test>
