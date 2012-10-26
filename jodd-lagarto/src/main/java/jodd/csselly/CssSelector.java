@@ -8,6 +8,7 @@ import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Node;
 import jodd.lagarto.dom.NodeFilter;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class CssSelector implements NodeFilter {
 		if (element == null) {
 			element = StringPool.STAR;
 		}
-		this.element = element;
+		this.element = unescape(element);
 		this.selectors = new LinkedList<Selector>();
 	}
 
@@ -107,14 +108,17 @@ public class CssSelector implements NodeFilter {
 	// ---------------------------------------------------------------- attributes
 
 	public void addIdSelector(String id) {
+		id = unescape(id);
 		selectors.add(new AttributeSelector(ID, EQUALS, id));
 	}
 
 	public void addClassSelector(String clazz) {
+		clazz = unescape(clazz);
 		selectors.add(new AttributeSelector(CLASS, INCLUDES, clazz));
 	}
 
 	public void addAttributeSelector(String attribute) {
+		attribute = unescape(attribute);
 		selectors.add(new AttributeSelector(attribute));
 	}
 
@@ -267,6 +271,20 @@ public class CssSelector implements NodeFilter {
 			}
 		}
 		return true;
+	}
+
+
+	// ---------------------------------------------------------------- util
+
+	/**
+	 * Unescapes CSS string by removing all backslash characters from it.
+	 */
+	protected String unescape(String value) {
+		if (value.indexOf('\\') == -1) {
+			return value;
+		}
+
+		return StringUtil.remove(value, '\\');
 	}
 
 }

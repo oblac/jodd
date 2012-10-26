@@ -290,4 +290,33 @@ public class CSSellyTest extends TestCase {
 		List<CssSelector> selectorList = lexer.parse();
 		assertEquals(1, selectorList.size());
 	}
+
+	public void testEscape() {
+
+		// element
+		CSSelly lexer = new CSSelly("itunes\\:image");
+		List<CssSelector> selectors = lexer.parse();
+
+		assertEquals(1, selectors.size());
+		CssSelector cssSelector = selectors.get(0);
+
+		assertEquals("itunes:image", cssSelector.getElement());
+
+
+		// attribute
+
+		lexer = new CSSelly("itunes\\:image#foo\\:bar");
+		selectors = lexer.parse();
+
+		assertEquals(1, selectors.size());
+		cssSelector = selectors.get(0);
+
+		assertEquals("itunes:image", cssSelector.getElement());
+		Selector selector = cssSelector.getSelector(0);
+
+		AttributeSelector attributeSelector = (AttributeSelector)selector;
+
+		assertEquals("foo:bar", attributeSelector.getValue());
+
+	}
 }

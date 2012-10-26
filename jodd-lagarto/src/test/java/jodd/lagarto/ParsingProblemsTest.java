@@ -215,5 +215,23 @@ public class ParsingProblemsTest extends TestCase {
 
 		assertEquals("cfg:node", cfgNode.getNodeName());
 
+
+
+		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
+
+		jerryParser.enableXmlMode();
+
+		Jerry jerry = jerryParser.parse(FileUtil.readString(file));
+
+		final StringBuilder result = new StringBuilder();
+
+		jerry.$("cfg\\:test").each(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+				result.append($this.$("cfg\\:node").text());
+				return true;
+			}
+		});
+
+		assertEquals("This is a text", result.toString());
 	}
 }
