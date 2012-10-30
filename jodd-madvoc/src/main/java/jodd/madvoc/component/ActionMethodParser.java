@@ -84,6 +84,7 @@ public class ActionMethodParser {
 		String extension = readMethodExtension(annotationData);
 		String alias = readMethodAlias(annotationData);
 		String httpMethod = readMethodHttpMethod(annotationData);
+		String resultType = readResultType(annotationData);
 
 		if (methodActionPath != null) {
 			// additional changes
@@ -110,7 +111,7 @@ public class ActionMethodParser {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
 			madvocConfig.registerPathAlias(alias, actionPath);
 		}
-		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod, extension);
+		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod, extension, resultType);
 	}
 
 	/**
@@ -319,6 +320,17 @@ public class ActionMethodParser {
 		return method;
 	}
 
+	/**
+	 * Reads method's result type.
+	 */
+	private String readResultType(ActionAnnotationData annotationData) {
+		String resultType = null;
+		if (annotationData != null) {
+			resultType = annotationData.getResult();
+		}
+		return resultType;
+	}
+
 	// ---------------------------------------------------------------- create action configuration
 
 	/**
@@ -330,7 +342,9 @@ public class ActionMethodParser {
 			Class<? extends ActionInterceptor>[] interceptorClasses,
 			String actionPath,
 			String actionMethod,
-			String actionPathExtension) {
+			String actionPathExtension,
+			String resultType)
+	{
 
 		return new ActionConfig(
 				actionClass,
@@ -338,7 +352,8 @@ public class ActionMethodParser {
 				interceptorClasses,
 				actionPath,
 				actionMethod,
-				actionPathExtension);
+				actionPathExtension,
+				resultType);
 	}
 
 }

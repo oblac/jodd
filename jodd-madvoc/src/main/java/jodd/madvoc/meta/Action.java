@@ -42,8 +42,14 @@ public @interface Action {
 	String alias() default "";
 
 	/**
-	 * Defines action method (such as HTTP request method).
+	 * Defines action method (such as HTTP request method: GET, POST....).
 	 */
 	String method() default "";
+
+	/**
+	 * Defines action result type, so it does not have to be specified in method return value.
+	 * Useful for custom annotations.
+	 */
+	String result() default "";
 
 }

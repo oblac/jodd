@@ -9,7 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * JSON action annotation. Extension is set to '<b>json</b>'.
+ * JSON action annotation. Extension is set to '<b>json</b>' and
+ * result type to {@link jodd.joy.madvoc.result.JSONResult json}.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,5 +24,7 @@ public @interface JsonAction {
 	String alias() default "";
 
 	String method() default "";
+
+	String result() default "json";
 
 }
