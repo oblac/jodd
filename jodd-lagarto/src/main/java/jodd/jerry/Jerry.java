@@ -12,6 +12,8 @@ import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.Set;
 /**
  * Jerry is JQuery in Java.
  */
-public class Jerry {
+public class Jerry implements Iterable<Jerry> {
 
 	@SuppressWarnings("CloneableClassWithoutClone")
 	private static class NodeList extends ArrayList<Node> {
@@ -209,9 +211,8 @@ public class Jerry {
 
 		for (Node node : nodes) {
 			Node[] children = node.getChildElements();
-			for (Node child : children) {
-				result.add(child);
-			}
+
+			Collections.addAll(result, children);
 		}
 		return new Jerry(this, result);
 	}
@@ -786,6 +787,35 @@ public class Jerry {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- iterator
+
+	/**
+	 * Returns iterator over nodes contained in the Jerry object.
+	 * Each node is wrapped. Similar to {@link #each(JerryFunction)}.
+	 */
+	public Iterator<Jerry> iterator() {
+		final Jerry jerry = this;
+
+		return new Iterator<Jerry>() {
+
+			private int index = 0;
+
+			public boolean hasNext() {
+				return index < jerry.nodes.length;
+			}
+
+			public Jerry next() {
+				Jerry nextJerry = new Jerry(jerry, jerry.get(index));
+				index++;
+				return nextJerry;
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
+
 	// ---------------------------------------------------------------- internal
 
 	protected Set<String> createPropertiesSet(String attrValue, char propertiesDelimiter) {
@@ -794,9 +824,8 @@ public class Jerry {
 		}
 		String[] properties = StringUtil.splitc(attrValue, propertiesDelimiter);
 		LinkedHashSet<String> set = new LinkedHashSet<String>(properties.length);
-		for (String property : properties) {
-			set.add(property);
-		}
+
+		Collections.addAll(set, properties);
 		return set;
 	}
 	

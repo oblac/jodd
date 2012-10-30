@@ -4,6 +4,8 @@ package jodd.jerry;
 
 import junit.framework.TestCase;
 
+import java.util.Iterator;
+
 public class JerryMiscTest extends TestCase {
 	
 	public void testTextContentDecoding() {
@@ -92,6 +94,33 @@ public class JerryMiscTest extends TestCase {
 
 		assertEquals("four", doc.$("p").last().text());
 		assertEquals("three", doc.$("div").last().text());
+	}
 
+	public void testIterator1() {
+		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
+
+		Iterator<Jerry> iterator = doc.find(".foo").iterator();
+		String result = "";
+
+		while (iterator.hasNext()) {
+			Jerry j = iterator.next();
+			result += j.attr("id");
+		}
+
+		assertEquals("onetwo", result);
+	}
+
+	public void testIterator2() {
+		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
+
+		Iterator<Jerry> iterator = doc.find(".notfound").iterator();
+		String result = "";
+
+		while (iterator.hasNext()) {
+			Jerry j = iterator.next();
+			result += j.attr("id");
+		}
+
+		assertEquals("", result);
 	}
 }
