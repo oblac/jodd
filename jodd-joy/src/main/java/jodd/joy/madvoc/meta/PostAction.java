@@ -28,4 +28,6 @@ public @interface PostAction {
 
 	String method() default AppAction.METHOD_POST;
 
+	String result() default "";
+
 }

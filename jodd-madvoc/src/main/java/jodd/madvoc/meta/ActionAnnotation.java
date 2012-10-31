@@ -43,6 +43,8 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ad.method = readStringElement(annotation, "method");
 
+		ad.result = readStringElement(annotation, "result");
+
 		return ad;
 	}
 
