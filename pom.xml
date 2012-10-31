@@ -19,6 +19,12 @@
 		simple, but not simpler.
 	</description>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<modules>
 		<module>jodd-core</module>
 		<module>jodd-bean</module>
