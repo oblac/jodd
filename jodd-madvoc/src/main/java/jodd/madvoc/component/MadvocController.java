@@ -144,17 +144,17 @@ public class MadvocController {
 
 		String resultType = madvocConfig.getDefaultResultType();
 
-		if (resultValue != null) {
+		String actionResultType = req.getActionConfig().getResultType();
+
+		if (actionResultType != null) {
+			resultType = actionResultType;
+		} else if (resultValue != null) {
 			int columnIndex = resultValue.indexOf(':');
+
 			if (columnIndex != -1) {
 				resultType = resultValue.substring(0, columnIndex);
+
 				resultValue = resultValue.substring(columnIndex + 1);
-			} else {
-				// result type not specified in return value, try annotation
-				String actionResultType = req.getActionConfig().getResultType();
-				if (actionResultType != null) {
-					resultType = actionResultType;
-				}
 			}
 		}
 
