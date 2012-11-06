@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-http</artifactId>
 	<name>Jodd HTTP client</name>
+	<description>
+		Jodd HTTP client is easy-to-use http client.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

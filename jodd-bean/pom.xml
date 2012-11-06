@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-bean</artifactId>
 	<name>Jodd BeanUtil</name>
+	<description>
+		Jodd BeanUtil is fast and powerful bean manipulation library.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

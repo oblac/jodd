@@ -59,17 +59,7 @@
 			<build>
 				<defaultGoal>clean package</defaultGoal>
 				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
+					<!-- skip tests -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
@@ -93,6 +83,25 @@
 			<build>
 				<defaultGoal>clean package javadoc:aggregate</defaultGoal>
 				<plugins>
+
+					<!-- manifest: default -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<useDefaultManifestFile>true</useDefaultManifestFile>
+							<archive>
+								<manifest>
+									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+								</manifest>
+								<manifestEntries>
+									<Built-By>jodd.org</Built-By>
+									<Debug-Info>on</Debug-Info>
+									<Implementation-Build-Timestamp>${maven.build.timestamp}</Implementation-Build-Timestamp>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</plugin>
 
 					<!-- jar sources -->
 					<plugin>
@@ -300,13 +309,13 @@
 
 		<!--
 			profile: NOTESTS
-			usage: mvn clean package -Dnotests=true
+			usage: mvn clean package -Dskiptests=true
 		-->
 		<profile>
 			<id>notests</id>
 			<activation>
 				<property>
-					<name>notests</name>
+					<name>skiptests</name>
 					<value>true</value>
 				</property>
 			</activation>

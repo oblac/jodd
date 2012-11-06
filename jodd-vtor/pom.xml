@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-vtor</artifactId>
 	<name>Jodd VTor</name>
+	<description>
+		Jodd VTor is focused validation framework for any Java object.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

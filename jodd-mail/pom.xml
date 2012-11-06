@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-mail</artifactId>
 	<name>Jodd Mail</name>
+	<description>
+		Jodd Mail is a little tool for sending and receiving emails.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

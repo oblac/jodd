@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-jtx</artifactId>
 	<name>Jodd JTX manager</name>
+	<description>
+		Jodd JTX is small stand-alone transaction manager.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-db</artifactId>
 	<name>Jodd DbOom</name>
+	<description>
+		Jodd DB is efficient and thin database facade; DbOom is convenient database object mapper.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

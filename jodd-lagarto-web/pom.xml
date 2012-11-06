@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-lagarto-web</artifactId>
 	<name>Jodd Lagarto Web</name>
+	<description>
+		Jodd Lagarto for Web is Lagarto addons for web: Decora, HtmlStapler and some filters.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

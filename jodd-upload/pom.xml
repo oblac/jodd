@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-upload</artifactId>
 	<name>Jodd Upload</name>
+	<description>
+		Jodd Upload is library for managing uploads.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

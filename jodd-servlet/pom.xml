@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-servlet</artifactId>
 	<name>Jodd Servlet</name>
+	<description>
+		Jodd Servlet is set of web tools, including the nice tag library, wrappers and some filters.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

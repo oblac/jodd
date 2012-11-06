@@ -12,5 +12,8 @@
 
 	<artifactId>jodd-swingspy</artifactId>
 	<name>Jodd SwingSpy</name>
+	<description>
+		Jodd SwingSpy is standalone tool for exploring the swing UI components.
+	</description>
 
 </project>

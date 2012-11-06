@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-core</artifactId>
 	<name>Jodd Core</name>
+	<description>
+		Jodd Core tools and utilities, including type converters, JDateTime, cache etc.
+	</description>
 
 	<dependencies>
 		<!-- test -->

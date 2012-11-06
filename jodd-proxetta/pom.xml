@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-proxetta</artifactId>
 	<name>Jodd Proxetta</name>
+	<description>
+		Jodd Proxetta is the fastest proxy creator with unique approach for defying pointcuts and advices.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-lagarto</artifactId>
 	<name>Jodd Lagarto</name>
+	<description>
+		Jodd Lagarto is fast and versatile all purpose HTML parser. Includes Jerry and CSSelly.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->

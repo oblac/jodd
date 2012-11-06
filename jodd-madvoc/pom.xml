@@ -12,6 +12,9 @@
 
 	<artifactId>jodd-madvoc</artifactId>
 	<name>Jodd Madvoc</name>
+	<description>
+		Jodd Madvoc is elegant web MVC framework that uses CoC and annotations in a pragmatic way to simplify web application development.
+	</description>
 
 	<dependencies>
 		<!-- jodd -->
