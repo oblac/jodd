@@ -103,6 +103,21 @@
 						</configuration>
 					</plugin>
 
+					<!-- manifest: osgi -->
+					<plugin>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>maven-bundle-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>bundle-manifest</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>manifest</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
 					<!-- jar sources -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -673,6 +688,17 @@
 							<include>org.jodd:*</include>
 						</includes>
 						<generateBackupPoms>false</generateBackupPoms>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+					<extensions>true</extensions>
+					<configuration>
+						<supportedProjectTypes>
+							<supportedProjectType>jar</supportedProjectType>
+						</supportedProjectTypes>
 					</configuration>
 				</plugin>
 			</plugins>
