@@ -116,6 +116,16 @@
 									<Built-By>jodd.org</Built-By>
 									<Debug-Info>on</Debug-Info>
 									<Implementation-Title>Jodd</Implementation-Title>
+									<Export-Package>jodd.*</Export-Package>
+									<Import-Package>*;resolution:=optional</Import-Package>
+									<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+									<Bundle-Name>Jodd Bundle</Bundle-Name>
+									<Bundle-Version>${project.version}</Bundle-Version>
+									<Bundle-SymbolicName>org.jodd</Bundle-SymbolicName>
+									<Bundle-Description>Jodd is an open-source Java utility library and set of frameworks.</Bundle-Description>
+									<Bundle-License>${project.licenses[0].url}</Bundle-License>
+									<Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+									<Bundle-DocURL>${project.organization.url}</Bundle-DocURL>
 								</manifestEntries>
 							</archive>
 						</configuration>
@@ -142,6 +152,15 @@
 									<Built-By>jodd.org</Built-By>
 									<Debug-Info>on</Debug-Info>
 									<Implementation-Title>Jodd (Mobile)</Implementation-Title>
+									<Export-Package>jodd.*</Export-Package>
+									<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+									<Bundle-Name>Jodd Mobile</Bundle-Name>
+									<Bundle-Version>${project.version}</Bundle-Version>
+									<Bundle-SymbolicName>org.jodd</Bundle-SymbolicName>
+									<Bundle-Description>Jodd Mobile contains only selected tools from jodd-core and jodd-bean; keeping jar small.</Bundle-Description>
+									<Bundle-License>${project.licenses[0].url}</Bundle-License>
+									<Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+									<Bundle-DocURL>${project.organization.url}</Bundle-DocURL>
 								</manifestEntries>
 							</archive>
 						</configuration>
