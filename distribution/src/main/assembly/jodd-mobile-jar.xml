@@ -51,13 +51,24 @@
 					<exclude>jodd/util/PrettyStringBuilder.class</exclude>
 					<exclude>jodd/util/ResourceBundleMessageResolver.class</exclude>
 					<exclude>jodd/util/TextUtil.class</exclude>
+					<exclude>jodd/util/buffer/FastShortBuffer.class</exclude>
+					<exclude>jodd/util/collection/Array*.class</exclude>
 					<exclude>jodd/util/collection/Bag.class</exclude>
+					<exclude>jodd/util/collection/ShortArrayList.class</exclude>
 					<exclude>jodd/util/collection/EnumerationIterator.class</exclude>
+					<exclude>jodd/util/collection/CompositeIterator.class</exclude>
 					<exclude>jodd/util/collection/HashBag*</exclude>
 					<exclude>jodd/util/collection/IntHashMap*.class</exclude>
 					<exclude>jodd/util/collection/Joined*</exclude>
 					<exclude>jodd/util/ref/*</exclude>
 					<exclude>jodd/util/sort/*</exclude>
+				</excludes>
+			</fileSet>
+			<fileSet>
+				<directory>../jodd-props/target/classes/</directory>
+				<outputDirectory>/</outputDirectory>
+				<excludes>
+					<exclude>jodd/Jodd*.class</exclude>
 				</excludes>
 			</fileSet>
 	</fileSets>
