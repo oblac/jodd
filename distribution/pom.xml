@@ -157,7 +157,7 @@
 									<Bundle-Name>Jodd Mobile</Bundle-Name>
 									<Bundle-Version>${project.version}</Bundle-Version>
 									<Bundle-SymbolicName>org.jodd</Bundle-SymbolicName>
-									<Bundle-Description>Jodd Mobile contains only selected tools from jodd-core and jodd-bean; keeping jar small.</Bundle-Description>
+									<Bundle-Description>Jodd Mobile contains only selected tools from jodd-core, jodd-bean and jodd-props; keeping jar small.</Bundle-Description>
 									<Bundle-License>${project.licenses[0].url}</Bundle-License>
 									<Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
 									<Bundle-DocURL>${project.organization.url}</Bundle-DocURL>
