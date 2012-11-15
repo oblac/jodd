@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -49,6 +50,13 @@ public class HttpTransfer {
 	protected byte[] body;
 	
 	// ---------------------------------------------------------------- common
+
+	/**
+	 * Creates socket using host and port.
+	 */
+	public Socket createSocket() throws IOException {
+		return new Socket(getHost(), getPort());
+	}
 
 	/**
 	 * Builds URL from connection data: host, port and path.
