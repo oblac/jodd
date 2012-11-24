@@ -167,4 +167,42 @@ public class ArraysTest {
 		assertNotNull(result);
 		assertEquals(BOOLEANS, (Boolean[]) result);
 	}
+
+	// ---------------------------------------------------------------- single value
+
+	@Test
+	public void testArrayToIntConversionSingleValue() {
+		Object result = TypeConverterManager.convertType(Integer.valueOf(173), int[].class);
+
+		assertNotNull(result);
+		assertEquals(new int[] {173}, (int[]) result);
+	}
+
+	@Test
+	public void testIntToArrayConversionSingleValue() {
+		Object result = TypeConverterManager.convertType(173, Integer[].class);
+
+		assertNotNull(result);
+		assertEquals(new Integer[] {173}, (Integer[]) result);
+	}
+
+	// ---------------------------------------------------------------- string csv
+
+	@Test
+	public void testArrayToIntConversionCommaSeparated() {
+		Object result = TypeConverterManager.convertType("1,2,3", int[].class);
+
+		assertNotNull(result);
+		assertEquals(new int[] {1,2,3}, (int[]) result);
+	}
+
+	@Test
+	public void testIntToArrayConversionCommaSeparated() {
+		Object result = TypeConverterManager.convertType("1,2,3", Integer[].class);
+
+		assertNotNull(result);
+		assertEquals(new Integer[] {1,2,3}, (Integer[]) result);
+	}
+
+
 }

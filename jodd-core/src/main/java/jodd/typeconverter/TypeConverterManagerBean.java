@@ -49,6 +49,7 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.CsvUtil;
 import jodd.util.ReflectUtil;
 
 import java.io.File;
@@ -62,6 +63,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -72,6 +74,7 @@ import java.util.Locale;
 public class TypeConverterManagerBean {
 
 	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(64);
+	private final HashSet<Class> numberTypes = new HashSet<Class>(16);
 
 	// ---------------------------------------------------------------- converter
 
@@ -99,41 +102,41 @@ public class TypeConverterManagerBean {
 		register(String[].class, new StringArrayConverter());
 
 		IntegerConverter integerConverter = new IntegerConverter();
-		register(Integer.class, integerConverter);
+		register(Integer.class, integerConverter, true);
 		register(int.class, integerConverter);
-		register(MutableInteger.class, new MutableIntegerConverter(convertBean));
+		register(MutableInteger.class, new MutableIntegerConverter(convertBean), true);
 
 		ShortConverter shortConverter = new ShortConverter();
-		register(Short.class, shortConverter);
+		register(Short.class, shortConverter, true);
 		register(short.class, shortConverter);
-		register(MutableShort.class, new MutableShortConverter(convertBean));
+		register(MutableShort.class, new MutableShortConverter(convertBean), true);
 
 		LongConverter longConverter = new LongConverter();
-		register(Long.class, longConverter);
+		register(Long.class, longConverter, true);
 		register(long.class, longConverter);
-		register(MutableLong.class, new MutableLongConverter(convertBean));
+		register(MutableLong.class, new MutableLongConverter(convertBean), true);
 
 		ByteConverter byteConverter = new ByteConverter();
-		register(Byte.class, byteConverter);
+		register(Byte.class, byteConverter, true);
 		register(byte.class, byteConverter);
-		register(MutableByte.class, new MutableByteConverter(convertBean));
+		register(MutableByte.class, new MutableByteConverter(convertBean), true);
 
 		FloatConverter floatConverter = new FloatConverter();
-		register(Float.class, floatConverter);
+		register(Float.class, floatConverter, true);
 		register(float.class, floatConverter);
-		register(MutableFloat.class, new MutableFloatConverter(convertBean));
+		register(MutableFloat.class, new MutableFloatConverter(convertBean), true);
 
 		DoubleConverter doubleConverter = new DoubleConverter();
-		register(Double.class, doubleConverter);
+		register(Double.class, doubleConverter, true);
 		register(double.class, doubleConverter);
-		register(MutableDouble.class, new MutableDoubleConverter(convertBean));
+		register(MutableDouble.class, new MutableDoubleConverter(convertBean), true);
 
 		BooleanConverter booleanConverter = new BooleanConverter();
-		register(Boolean.class, booleanConverter);
+		register(Boolean.class, booleanConverter, true);
 		register(boolean.class, booleanConverter);
 
 		CharacterConverter characterConverter = new CharacterConverter();
-		register(Character.class, characterConverter);
+		register(Character.class, characterConverter, true);
 		register(char.class, characterConverter);
 
 		register(byte[].class, new ByteArrayConverter(convertBean));
@@ -189,6 +192,15 @@ public class TypeConverterManagerBean {
 		converters.put(type, typeConverter);
 	}
 
+	public void register(Class type, TypeConverter typeConverter, boolean numberType) {
+		convertBean.register(type, typeConverter);
+		converters.put(type, typeConverter);
+		if (numberType) {
+			numberTypes.add(type);
+		}
+	}
+
+
 	public void unregister(Class type) {
 		convertBean.register(type, null);
 		converters.remove(type);
@@ -242,80 +254,91 @@ public class TypeConverterManagerBean {
 
 			// source value itself is not an array
 			if (valueClass.isArray() == false) {
-				// create single array
-				T[] result = (T[]) Array.newInstance(componentType, 1);
-				result[0] = (T) convertType(value, componentType);
-				return (T) result;
+				// check if value is comma separated, but only for number types (and not primitives)
+				if ((valueClass == String.class) && (numberTypes.contains(componentType))) {
+					value = CsvUtil.toStringArray(value.toString());
+					valueClass = String[].class;
+				}
+				else {
+					// create single array
+					T[] result = (T[]) Array.newInstance(componentType, 1);
+					result[0] = (T) convertType(value, componentType);
+					return (T) result;
+				}
 			}
 
 			// source value is an array
 			Class valueComponentType = valueClass.getComponentType();
 			Object result;
-			if (valueComponentType == int.class) {
-				int[] array = (int[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+
+			if (valueComponentType.isPrimitive()) {
+				if (valueComponentType == int.class) {
+					int[] array = (int[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == long.class) {
-				long[] array = (long[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == long.class) {
+					long[] array = (long[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == float.class) {
-				float[] array = (float[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == float.class) {
+					float[] array = (float[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == double.class) {
-				double[] array = (double[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == double.class) {
+					double[] array = (double[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == short.class) {
-				short[] array = (short[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == short.class) {
+					short[] array = (short[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == byte.class) {
-				byte[] array = (byte[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == byte.class) {
+					byte[] array = (byte[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == char.class) {
-				char[] array = (char[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == char.class) {
+					char[] array = (char[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
 				}
-				result = objArray;
-			}
-			else if (valueComponentType == boolean.class) {
-				boolean [] array = (boolean[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
+				else if (valueComponentType == boolean.class) {
+					boolean [] array = (boolean[]) value;
+					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
+					for (int i = 0; i < array.length; i++) {
+						objArray[i] = (T) convertType(array[i], componentType);
+					}
+					result = objArray;
+				} else {
+					throw new IllegalArgumentException();
 				}
-				result = objArray;
-			}
-			else {
+			} else {
 				Object[] array = (Object[]) value;
 				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
 				for (int i = 0; i < array.length; i++) {
