@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static jodd.AssertPrimitiveArraysTestHelper.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,55 +37,55 @@ public class ArraysUtilTest {
 
 	@Test
 	public void testJoin() {
-		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.join(x, y));
-		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.join(xx, yy)));
+		assertArrayEquals(new int[] {1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.join(x, y));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.join(xx, yy)));
 	}
 
 	@Test
 	public void testMerge() {
-		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.merge(x, y));
-		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy)));
-		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.merge(x, y, y));
-		assertEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy, yy)));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.merge(x, y));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy)));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.merge(x, y, y));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy, yy)));
 	}
 
 	@Test
 	public void testAppend() {
-		assertEquals(new int[]{1, 2, 3, 4, 5, 100}, ArraysUtil.append(x, 100));
-		assertEquals(new long[]{1, 2, 3, 4, 5, 100}, ArraysUtil.values(ArraysUtil.append(xx, Long.valueOf(100))));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 100}, ArraysUtil.append(x, 100));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 100}, ArraysUtil.values(ArraysUtil.append(xx, Long.valueOf(100))));
 	}
 
 	@Test
 	public void testResize() {
-		assertEquals(new int[]{1, 2, 3}, ArraysUtil.resize(x, 3));
-		assertEquals(new long[]{1, 2, 3}, ArraysUtil.values(ArraysUtil.resize(xx, 3)));
-		assertEquals(new int[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.resize(x, 7));
-		assertEquals(new long[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.values(ArraysUtil.resize(xx, 7)));
-		assertEquals(new int[]{}, ArraysUtil.resize(x, 0));
+		assertArrayEquals(new int[]{1, 2, 3}, ArraysUtil.resize(x, 3));
+		assertArrayEquals(new long[]{1, 2, 3}, ArraysUtil.values(ArraysUtil.resize(xx, 3)));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.resize(x, 7));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 0, 0}, ArraysUtil.values(ArraysUtil.resize(xx, 7)));
+		assertArrayEquals(new int[]{}, ArraysUtil.resize(x, 0));
 	}
 
 	@Test
 	public void testSub() {
-		assertEquals(new int[]{2, 3, 4}, ArraysUtil.subarray(x, 1, 3));
-		assertEquals(new long[]{2, 3, 4}, ArraysUtil.values(ArraysUtil.subarray(xx, 1, 3)));
+		assertArrayEquals(new int[]{2, 3, 4}, ArraysUtil.subarray(x, 1, 3));
+		assertArrayEquals(new long[]{2, 3, 4}, ArraysUtil.values(ArraysUtil.subarray(xx, 1, 3)));
 	}
 
 	@Test
 	public void testInsert() {
-		assertEquals(new int[]{1, 2, 3, 11, 12, 13, 4, 5}, ArraysUtil.insert(x, y, 3));
-		assertEquals(new int[]{11, 12, 13, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, y, 0));
-		assertEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.insert(x, y, 5));
+		assertArrayEquals(new int[]{1, 2, 3, 11, 12, 13, 4, 5}, ArraysUtil.insert(x, y, 3));
+		assertArrayEquals(new int[]{11, 12, 13, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, y, 0));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.insert(x, y, 5));
 
-		assertEquals(new int[]{1, 2, 3, 173, 4, 5}, ArraysUtil.insert(x, 173, 3));
-		assertEquals(new int[]{173, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, 173, 0));
-		assertEquals(new int[]{1, 2, 3, 4, 5, 173}, ArraysUtil.insert(x, 173, 5));
+		assertArrayEquals(new int[]{1, 2, 3, 173, 4, 5}, ArraysUtil.insert(x, 173, 3));
+		assertArrayEquals(new int[]{173, 1, 2, 3, 4, 5}, ArraysUtil.insert(x, 173, 0));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 173}, ArraysUtil.insert(x, 173, 5));
 	}
 
 	@Test
 	public void testInsertAt() {
-		assertEquals(new int[]{1, 2, 3, 11, 12, 13, 5}, ArraysUtil.insertAt(x, y, 3));
-		assertEquals(new int[]{11, 12, 13, 2, 3, 4, 5}, ArraysUtil.insertAt(x, y, 0));
-		assertEquals(new int[]{1, 2, 3, 4, 11, 12, 13}, ArraysUtil.insertAt(x, y, 4));
+		assertArrayEquals(new int[]{1, 2, 3, 11, 12, 13, 5}, ArraysUtil.insertAt(x, y, 3));
+		assertArrayEquals(new int[]{11, 12, 13, 2, 3, 4, 5}, ArraysUtil.insertAt(x, y, 0));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 11, 12, 13}, ArraysUtil.insertAt(x, y, 4));
 	}
 
 
@@ -160,9 +160,9 @@ public class ArraysUtilTest {
 
 	@Test
 	public void testRemove() {
-		assertEquals(new int[]{1, 2, 5}, ArraysUtil.remove(x, 2, 2));
-		assertEquals(new int[]{1}, ArraysUtil.remove(x, 1, 4));
-		assertEquals(new long[]{1, 3, 4, 5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
+		assertArrayEquals(new int[]{1, 2, 5}, ArraysUtil.remove(x, 2, 2));
+		assertArrayEquals(new int[]{1}, ArraysUtil.remove(x, 1, 4));
+		assertArrayEquals(new long[]{1, 3, 4, 5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
 	}
 
 }
