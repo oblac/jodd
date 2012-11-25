@@ -1,9 +1,14 @@
 package jodd.typeconverter;
 
+import jodd.AssertPrimitiveArraysTestHelper;
+import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
-import static jodd.AssertPrimitiveArraysTestHelper.*;
+import java.math.BigInteger;
+
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class ArraysTest {
 
@@ -30,7 +35,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, int[].class);
 
 		assertNotNull(result);
-		assertEquals(INTS, (int[]) result);
+		assertArrayEquals(INTS, (int[]) result);
 	}
 
 	@Test
@@ -39,7 +44,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Integer[].class);
 
 		assertNotNull(result);
-		assertEquals(INTEGERS, (Integer[]) result);
+		assertArrayEquals(INTEGERS, (Integer[]) result);
 	}
 
 	@Test
@@ -48,7 +53,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, long[].class);
 
 		assertNotNull(result);
-		assertEquals(LONGS1, (long[]) result);
+		assertArrayEquals(LONGS1, (long[]) result);
 	}
 
 	@Test
@@ -57,7 +62,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Long[].class);
 
 		assertNotNull(result);
-		assertEquals(LONGS, (Long[]) result);
+		assertArrayEquals(LONGS, (Long[]) result);
 	}
 
 	@Test
@@ -66,7 +71,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, float[].class);
 
 		assertNotNull(result);
-		assertEquals(FLOATS1, (float[]) result, 0.005f);
+		assertArrayEquals(FLOATS1, (float[]) result, 0.005f);
 	}
 
 	@Test
@@ -75,7 +80,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Float[].class);
 
 		assertNotNull(result);
-		assertEquals(FLOATS, (Float[]) result);
+		assertArrayEquals(FLOATS, (Float[]) result);
 	}
 
 	@Test
@@ -84,7 +89,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, double[].class);
 
 		assertNotNull(result);
-		assertEquals(DOUBLES1, (double[]) result, 0.005f);
+		assertArrayEquals(DOUBLES1, (double[]) result, 0.005f);
 	}
 
 	@Test
@@ -93,7 +98,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Double[].class);
 
 		assertNotNull(result);
-		assertEquals(DOUBLES, (Double[]) result);
+		assertArrayEquals(DOUBLES, (Double[]) result);
 	}
 
 	@Test
@@ -102,7 +107,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, short[].class);
 
 		assertNotNull(result);
-		assertEquals(SHORTS1, (short[]) result);
+		assertArrayEquals(SHORTS1, (short[]) result);
 	}
 
 	@Test
@@ -111,7 +116,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Short[].class);
 
 		assertNotNull(result);
-		assertEquals(SHORTS, (Short[]) result);
+		assertArrayEquals(SHORTS, (Short[]) result);
 	}
 
 	@Test
@@ -120,7 +125,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, byte[].class);
 
 		assertNotNull(result);
-		assertEquals(BYTES1, (byte[]) result);
+		assertArrayEquals(BYTES1, (byte[]) result);
 	}
 
 	@Test
@@ -129,7 +134,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Byte[].class);
 
 		assertNotNull(result);
-		assertEquals(BYTES, (Byte[]) result);
+		assertArrayEquals(BYTES, (Byte[]) result);
 	}
 
 	@Test
@@ -138,7 +143,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, char[].class);
 
 		assertNotNull(result);
-		assertEquals(CHARS, (char[]) result);
+		assertArrayEquals(CHARS, (char[]) result);
 	}
 
 	@Test
@@ -147,7 +152,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Character[].class);
 
 		assertNotNull(result);
-		assertEquals(CHARACTERS, (Character[]) result);
+		assertArrayEquals(CHARACTERS, (Character[]) result);
 	}
 
 	@Test
@@ -156,7 +161,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(objects, boolean[].class);
 
 		assertNotNull(result);
-		assertEquals(BOOLEANS1, (boolean[]) result);
+		AssertPrimitiveArraysTestHelper.assertEquals(BOOLEANS1, (boolean[]) result);
 	}
 
 	@Test
@@ -165,7 +170,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(primitives, Boolean[].class);
 
 		assertNotNull(result);
-		assertEquals(BOOLEANS, (Boolean[]) result);
+		assertArrayEquals(BOOLEANS, (Boolean[]) result);
 	}
 
 	// ---------------------------------------------------------------- single value
@@ -175,7 +180,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(Integer.valueOf(173), int[].class);
 
 		assertNotNull(result);
-		assertEquals(new int[] {173}, (int[]) result);
+		assertArrayEquals(new int[] {173}, (int[]) result);
 	}
 
 	@Test
@@ -183,7 +188,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType(173, Integer[].class);
 
 		assertNotNull(result);
-		assertEquals(new Integer[] {173}, (Integer[]) result);
+		assertArrayEquals(new Integer[] {173}, (Integer[]) result);
 	}
 
 	// ---------------------------------------------------------------- string csv
@@ -193,7 +198,7 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType("1,2,3", int[].class);
 
 		assertNotNull(result);
-		assertEquals(new int[] {1,2,3}, (int[]) result);
+		assertArrayEquals(new int[] {1,2,3}, (int[]) result);
 	}
 
 	@Test
@@ -201,7 +206,167 @@ public class ArraysTest {
 		Object result = TypeConverterManager.convertType("1,2,3", Integer[].class);
 
 		assertNotNull(result);
-		assertEquals(new Integer[] {1,2,3}, (Integer[]) result);
+		assertArrayEquals(new Integer[] {1,2,3}, (Integer[]) result);
+	}
+
+	@Test
+	public void testMutableIntToArrayConversionCommaSeparated() {
+		Object result = TypeConverterManager.convertType("1,2,3", MutableInteger[].class);
+
+		assertNotNull(result);
+		MutableInteger[] mutables = (MutableInteger[]) result;
+		assertEquals(1, mutables[0].value);
+		assertEquals(2, mutables[1].value);
+		assertEquals(3, mutables[2].value);
+
+	}
+
+
+	// ---------------------------------------------------------------- prim 2 prim
+
+	@Test
+	public void testIntToLongArray() {
+		Object result = TypeConverterManager.convertType(new int[] {1,2,3}, long[].class);
+
+		assertNotNull(result);
+		assertArrayEquals(new long[] {1,2,3}, (long[]) result);
+	}
+
+	@Test
+	public void testIntToLongArray2() {
+		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, long[][].class);
+
+		assertNotNull(result);
+		AssertPrimitiveArraysTestHelper.assertArrayEquals(new long[][] {{1, 2, 3}, {4, 5}}, (long[][]) result);
+	}
+
+	@Test
+	public void testIntToLongArray3() {
+		Object result = TypeConverterManager.convertType(new int[][] {{1,2,3},{4,5}}, Long[][].class);
+
+		assertNotNull(result);
+		AssertPrimitiveArraysTestHelper.assertArrayEquals(new Long[][] {{1l, 2l, 3l}, {4l, 5l}}, (Long[][]) result);
+	}
+
+	// ---------------------------------------------------------------- mutables
+
+	@Test
+	public void testMutableToInteger() {
+		Object mutables = new MutableInteger[] {
+				new MutableInteger(7),
+				new MutableInteger(3),
+				new MutableInteger(1)
+		};
+
+		Object result = TypeConverterManager.convertType(mutables, Integer[].class);
+		assertNotNull(result);
+
+		assertArrayEquals(new Integer[] {7,3,1}, (Integer[]) result);
+	}
+
+	@Test
+	public void testIntegerToMutable() {
+		Object integers = new Integer[] {
+				new Integer(7),
+				new Integer(3),
+				new Integer(1)
+		};
+
+		Object result = TypeConverterManager.convertType(integers, MutableInteger[].class);
+		assertNotNull(result);
+
+		MutableInteger[] mutables = (MutableInteger[]) result;
+		assertEquals(7, mutables[0].value);
+		assertEquals(3, mutables[1].value);
+		assertEquals(1, mutables[2].value);
+	}
+
+	@Test
+	public void testMutableToInt() {
+		Object mutables = new MutableInteger[] {
+				new MutableInteger(7),
+				new MutableInteger(3),
+				new MutableInteger(1)
+		};
+
+		Object result = TypeConverterManager.convertType(mutables, int[].class);
+		assertNotNull(result);
+
+		assertArrayEquals(new int[] {7,3,1}, (int[]) result);
+	}
+
+	@Test
+	public void testIntToMutable() {
+		int[] array = new int[] {7,3,1};
+
+		Object result = TypeConverterManager.convertType(array, MutableInteger[].class);
+		assertNotNull(result);
+
+		MutableInteger[] mutables = (MutableInteger[]) result;
+		assertEquals(7, mutables[0].value);
+		assertEquals(3, mutables[1].value);
+		assertEquals(1, mutables[2].value);
+	}
+
+
+	// ---------------------------------------------------------------- bigint
+
+	@Test
+	public void testBigIntegerToInteger() {
+		Object bigIntegers = new BigInteger[] {
+				new BigInteger("7"),
+				new BigInteger("3"),
+				new BigInteger("1")
+		};
+
+		Object result = TypeConverterManager.convertType(bigIntegers, Integer[].class);
+		assertNotNull(result);
+
+		assertArrayEquals(new Integer[] {7,3,1}, (Integer[]) result);
+	}
+
+	@Test
+	public void testIntegerToBigInteger() {
+		Object integers = new Integer[] {
+				new Integer(7),
+				new Integer(3),
+				new Integer(1)
+		};
+
+		Object result = TypeConverterManager.convertType(integers, BigInteger[].class);
+		assertNotNull(result);
+
+		BigInteger[] bigIntegers = (BigInteger[]) result;
+		assertEquals(7, bigIntegers[0].intValue());
+		assertEquals(3, bigIntegers[1].intValue());
+		assertEquals(1, bigIntegers[2].intValue());
+	}
+
+	@Test
+	public void testBigIntegerToInt() {
+		Object bigIntegers = new BigInteger[] {
+				new BigInteger("7"),
+				new BigInteger("3"),
+				new BigInteger("1")
+		};
+
+		Object result = TypeConverterManager.convertType(bigIntegers, int[].class);
+		assertNotNull(result);
+
+		assertArrayEquals(new int[] {7, 3, 1}, (int[]) result);
+	}
+
+	@Test
+	public void testIntToBigInteger() {
+		int[] array = new int[] {7,3,1};
+
+		Object result = TypeConverterManager.convertType(array, BigInteger[].class);
+		assertNotNull(result);
+
+		BigInteger[] bigIntegers = (BigInteger[]) result;
+		assertEquals(7, bigIntegers[0].byteValue());
+		assertEquals(3, bigIntegers[1].byteValue());
+		assertEquals(1, bigIntegers[2].byteValue());
 	}
 
 
