@@ -10,6 +10,8 @@ import jodd.mutable.MutableFloat;
 import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
+import jodd.typeconverter.impl.ArrayConverter;
+import jodd.typeconverter.impl.ArrayNumberConverter;
 import jodd.typeconverter.impl.BigDecimalConverter;
 import jodd.typeconverter.impl.BigIntegerConverter;
 import jodd.typeconverter.impl.BooleanArrayConverter;
@@ -49,11 +51,9 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
 import jodd.util.ClassLoaderUtil;
-import jodd.util.CsvUtil;
 import jodd.util.ReflectUtil;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -63,7 +63,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -73,8 +72,7 @@ import java.util.Locale;
  */
 public class TypeConverterManagerBean {
 
-	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(64);
-	private final HashSet<Class> numberTypes = new HashSet<Class>(16);
+	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(70);
 
 	// ---------------------------------------------------------------- converter
 
@@ -102,41 +100,41 @@ public class TypeConverterManagerBean {
 		register(String[].class, new StringArrayConverter());
 
 		IntegerConverter integerConverter = new IntegerConverter();
-		register(Integer.class, integerConverter, true);
+		register(Integer.class, integerConverter);
 		register(int.class, integerConverter);
-		register(MutableInteger.class, new MutableIntegerConverter(convertBean), true);
+		register(MutableInteger.class, new MutableIntegerConverter(convertBean));
 
 		ShortConverter shortConverter = new ShortConverter();
-		register(Short.class, shortConverter, true);
+		register(Short.class, shortConverter);
 		register(short.class, shortConverter);
-		register(MutableShort.class, new MutableShortConverter(convertBean), true);
+		register(MutableShort.class, new MutableShortConverter(convertBean));
 
 		LongConverter longConverter = new LongConverter();
-		register(Long.class, longConverter, true);
+		register(Long.class, longConverter);
 		register(long.class, longConverter);
-		register(MutableLong.class, new MutableLongConverter(convertBean), true);
+		register(MutableLong.class, new MutableLongConverter(convertBean));
 
 		ByteConverter byteConverter = new ByteConverter();
-		register(Byte.class, byteConverter, true);
+		register(Byte.class, byteConverter);
 		register(byte.class, byteConverter);
-		register(MutableByte.class, new MutableByteConverter(convertBean), true);
+		register(MutableByte.class, new MutableByteConverter(convertBean));
 
 		FloatConverter floatConverter = new FloatConverter();
-		register(Float.class, floatConverter, true);
+		register(Float.class, floatConverter);
 		register(float.class, floatConverter);
-		register(MutableFloat.class, new MutableFloatConverter(convertBean), true);
+		register(MutableFloat.class, new MutableFloatConverter(convertBean));
 
 		DoubleConverter doubleConverter = new DoubleConverter();
-		register(Double.class, doubleConverter, true);
+		register(Double.class, doubleConverter);
 		register(double.class, doubleConverter);
-		register(MutableDouble.class, new MutableDoubleConverter(convertBean), true);
+		register(MutableDouble.class, new MutableDoubleConverter(convertBean));
 
 		BooleanConverter booleanConverter = new BooleanConverter();
-		register(Boolean.class, booleanConverter, true);
+		register(Boolean.class, booleanConverter);
 		register(boolean.class, booleanConverter);
 
 		CharacterConverter characterConverter = new CharacterConverter();
-		register(Character.class, characterConverter, true);
+		register(Character.class, characterConverter);
 		register(char.class, characterConverter);
 
 		register(byte[].class, new ByteArrayConverter(convertBean));
@@ -148,8 +146,26 @@ public class TypeConverterManagerBean {
 		register(boolean[].class, new BooleanArrayConverter(convertBean));
 		register(char[].class, new CharacterArrayConverter(convertBean));
 
+		register(Integer[].class, new ArrayNumberConverter<Integer>(this, Integer.class));
+		register(Long[].class, new ArrayNumberConverter<Long>(this, Long.class));
+		register(Byte[].class, new ArrayNumberConverter<Byte>(this, Byte.class));
+		register(Short[].class, new ArrayNumberConverter<Short>(this, Short.class));
+		register(Float[].class, new ArrayNumberConverter<Float>(this, Float.class));
+		register(Double[].class, new ArrayNumberConverter<Double>(this, Double.class));
+		register(Boolean[].class, new ArrayNumberConverter<Boolean>(this, Boolean.class));
+		register(Character[].class, new ArrayNumberConverter<Character>(this, Character.class));
+
+		register(MutableInteger[].class, new ArrayNumberConverter<MutableInteger>(this, MutableInteger.class));
+		register(MutableLong[].class, new ArrayNumberConverter<MutableLong>(this, MutableLong.class));
+		register(MutableByte[].class, new ArrayNumberConverter<MutableByte>(this, MutableByte.class));
+		register(MutableShort[].class, new ArrayNumberConverter<MutableShort>(this, MutableShort.class));
+		register(MutableFloat[].class, new ArrayNumberConverter<MutableFloat>(this, MutableFloat.class));
+		register(MutableDouble[].class, new ArrayNumberConverter<MutableDouble>(this, MutableDouble.class));
+
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
+		register(BigDecimal[].class, new ArrayNumberConverter<BigDecimal>(this, BigDecimal.class));
+		register(BigInteger[].class, new ArrayNumberConverter<BigInteger>(this, BigInteger.class));
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());
@@ -192,15 +208,6 @@ public class TypeConverterManagerBean {
 		converters.put(type, typeConverter);
 	}
 
-	public void register(Class type, TypeConverter typeConverter, boolean numberType) {
-		convertBean.register(type, typeConverter);
-		converters.put(type, typeConverter);
-		if (numberType) {
-			numberTypes.add(type);
-		}
-	}
-
-
 	public void unregister(Class type) {
 		convertBean.register(type, null);
 		converters.remove(type);
@@ -221,8 +228,12 @@ public class TypeConverterManagerBean {
 	// ---------------------------------------------------------------- convert
 	
 	/**
-	 * Converts an object to destination type.If destination type is one of common types,
-	 * consider using {@link jodd.typeconverter.Convert} instead for faster approach.
+	 * Converts an object to destination type. If type is registered, it's
+	 * {@link TypeConverter} will be used. If not, it scans of destination is
+	 * an array or enum, as those two cases are handled in a special way.
+	 * <p>
+	 * If destination type is one of common types, consider using {@link jodd.typeconverter.Convert}
+	 * instead for somewhat faster approach (no lookup).
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T convertType(Object value, Class<T> destinationType) {
@@ -249,104 +260,9 @@ public class TypeConverterManagerBean {
 
 		// handle destination arrays
 		if (destinationType.isArray()) {
-			Class componentType = destinationType.getComponentType();
-			Class valueClass = value.getClass();
+			ArrayConverter<T> arrayConverter = new ArrayConverter(this, destinationType.getComponentType());
 
-			// source value itself is not an array
-			if (valueClass.isArray() == false) {
-				// check if value is comma separated, but only for number types (and not primitives)
-				if ((valueClass == String.class) && (numberTypes.contains(componentType))) {
-					value = CsvUtil.toStringArray(value.toString());
-					valueClass = String[].class;
-				}
-				else {
-					// create single array
-					T[] result = (T[]) Array.newInstance(componentType, 1);
-					result[0] = (T) convertType(value, componentType);
-					return (T) result;
-				}
-			}
-
-			// source value is an array
-			Class valueComponentType = valueClass.getComponentType();
-			Object result;
-
-			if (valueComponentType.isPrimitive()) {
-				if (valueComponentType == int.class) {
-					int[] array = (int[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == long.class) {
-					long[] array = (long[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == float.class) {
-					float[] array = (float[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == double.class) {
-					double[] array = (double[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == short.class) {
-					short[] array = (short[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == byte.class) {
-					byte[] array = (byte[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == char.class) {
-					char[] array = (char[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				}
-				else if (valueComponentType == boolean.class) {
-					boolean [] array = (boolean[]) value;
-					T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-					for (int i = 0; i < array.length; i++) {
-						objArray[i] = (T) convertType(array[i], componentType);
-					}
-					result = objArray;
-				} else {
-					throw new IllegalArgumentException();
-				}
-			} else {
-				Object[] array = (Object[]) value;
-				T[] objArray = (T[]) Array.newInstance(componentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = (T) convertType(array[i], componentType);
-				}
-				result = objArray;
-			}
-			return (T) result;
+			return (T) arrayConverter.convert(value);
 		}
 
 		// handle enums
