@@ -9,7 +9,7 @@ import javax.activation.FileDataSource;
 import java.io.File;
 
 /**
- * File attachment.
+ * File {@link EmailAttachment email attachment}.
  */
 public class FileAttachment extends EmailAttachment {
 
