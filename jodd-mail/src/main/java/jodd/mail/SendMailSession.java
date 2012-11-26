@@ -2,6 +2,8 @@
 
 package jodd.mail;
 
+import jodd.util.StringPool;
+
 import javax.activation.DataHandler;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -168,7 +170,7 @@ public class SendMailSession {
 					attBodyPart.setFileName(att.getName());
 					attBodyPart.setDataHandler(new DataHandler(att.getDataSource()));
 					if (att.isInline()) {
-						attBodyPart.setContentID(att.getContentId());
+						attBodyPart.setContentID(StringPool.LEFT_CHEV + att.getContentId() + StringPool.RIGHT_CHEV);
 						attBodyPart.setDisposition(INLINE);
 					}
 					multipart.addBodyPart(attBodyPart);
