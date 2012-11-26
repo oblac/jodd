@@ -19,6 +19,7 @@ public abstract class EmailAttachment {
 
 	protected final String name;
 	protected final String contentId;
+	protected EmailMessage targetMessage;
 
 	protected EmailAttachment(String name, String contentId) {
 		this.name = name;
@@ -46,6 +47,29 @@ public abstract class EmailAttachment {
 		return contentId != null;
 	}
 
+	/**
+	 * Sets target message for embedded attachments.
+	 */
+	public void setEmbeddedMessage(EmailMessage emailMessage) {
+		if (isInline() == false) {
+			throw new MailException("Only inline attachments may be embedded.");
+		}
+		targetMessage = emailMessage;
+	}
+
+	/**
+	 * Returns <code>true</code> if attachment is embedded into provided message.
+	 */
+	public boolean isEmbeddedInto(EmailMessage emailMessage) {
+		return targetMessage == emailMessage;
+	}
+
+
+	// ---------------------------------------------------------------- data source
+
+	/**
+	 * Returns <code>DataSource</code> implementation, depending of attachment source.
+	 */
 	public abstract DataSource getDataSource();
 
 	// ---------------------------------------------------------------- size

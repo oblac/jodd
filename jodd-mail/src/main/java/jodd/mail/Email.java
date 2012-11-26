@@ -15,6 +15,9 @@ import java.util.LinkedList;
  */
 public class Email extends CommonEmail {
 
+	/**
+	 * Static constructor for fluent interface.
+	 */
 	public static Email create() {
 		return new Email();
 	}
@@ -114,20 +117,25 @@ public class Email extends CommonEmail {
 	 * Returns an array of attachments or <code>null</code> if no attachment enclosed with this email. 
 	 */
 	public LinkedList<EmailAttachment> getAttachments() {
-		if (attachments == null) {
-			return null;
-		}
 		return attachments;
 	}
 
 	/**
-	 * Adds generic attachment.
+	 * Adds generic attachment. If attachment is <i>inline</i>, it will be attached to
+	 * the latest added message. Hence, the order of attaching files is important.
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
 			attachments = new LinkedList<EmailAttachment>();
 		}
+
 		attachments.add(emailAttachment);
+
+		if (emailAttachment.isInline()) {
+			if (!messages.isEmpty()) {
+				emailAttachment.setEmbeddedMessage(messages.getLast());
+			}
+		}
 		return this;
 	}
 

@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import java.util.Map;
 public class SendMailSession {
 
 	private static final String ALTERNATIVE = "alternative";
+	private static final String RELATED = "related";
 	private static final String CHARSET = ";charset=";
 	private static final String INLINE = "inline";
 	
@@ -148,37 +150,108 @@ public class SendMailSession {
 		int totalMessages = messages.size();
 
 		if ((attachments == null) && (totalMessages == 1)) {
+			// special case: no attachments and just one content
 			EmailMessage emailMessage = messages.get(0);
+
 			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
+
 		} else {
 			Multipart multipart = new MimeMultipart();
 			Multipart msgMultipart = multipart;
+
 			if (totalMessages > 1) {
-				MimeBodyPart body = new MimeBodyPart();
+				MimeBodyPart bodyPart = new MimeBodyPart();
 				msgMultipart = new MimeMultipart(ALTERNATIVE);
-				body.setContent(msgMultipart);
-				multipart.addBodyPart(body);
+				bodyPart.setContent(msgMultipart);
+				multipart.addBodyPart(bodyPart);
 			}
+
 			for (EmailMessage emailMessage : messages) {
-				MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
-				msgMultipart.addBodyPart(messageData);
-			}
-			if (attachments != null) {
-				for (EmailAttachment att : attachments) {
-					MimeBodyPart attBodyPart = new MimeBodyPart();
-					attBodyPart.setFileName(att.getName());
-					attBodyPart.setDataHandler(new DataHandler(att.getDataSource()));
-					if (att.isInline()) {
-						attBodyPart.setContentID(StringPool.LEFT_CHEV + att.getContentId() + StringPool.RIGHT_CHEV);
-						attBodyPart.setDisposition(INLINE);
+				// detect embedded attachments
+				LinkedList<EmailAttachment> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
+
+				MimeBodyPart bodyPart = new MimeBodyPart();
+
+				if (embeddedAttachments == null) {
+					// no embedded attachments, just add message
+					bodyPart.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
+				} else {
+					// embedded attachments detected, join them as related
+					MimeMultipart relatedMultipart = new MimeMultipart(RELATED);
+
+					MimeBodyPart messageData = new MimeBodyPart();
+
+					messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
+
+					relatedMultipart.addBodyPart(messageData);
+
+					for (EmailAttachment att : embeddedAttachments) {
+						MimeBodyPart attBodyPart = createAttachmentBodyPart(att);
+						relatedMultipart.addBodyPart(attBodyPart);
 					}
+
+					bodyPart.setContent(relatedMultipart);
+				}
+
+				msgMultipart.addBodyPart(bodyPart);
+
+			}
+
+			if (attachments != null) {
+				// attach remaining attachments
+				for (EmailAttachment att : attachments) {
+					MimeBodyPart attBodyPart = createAttachmentBodyPart(att);
 					multipart.addBodyPart(attBodyPart);
 				}
 			}
+
 			msg.setContent(multipart);
 		}
 		return msg;
+	}
+
+	/**
+	 * Creates attachment body part. Handles regular and inline attachments.
+	 */
+	protected MimeBodyPart createAttachmentBodyPart(EmailAttachment attachment) throws MessagingException {
+		MimeBodyPart attBodyPart = new MimeBodyPart();
+		attBodyPart.setFileName(attachment.getName());
+		attBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
+		if (attachment.isInline()) {
+			attBodyPart.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
+			attBodyPart.setDisposition(INLINE);
+		}
+		return attBodyPart;
+	}
+
+	/**
+	 * Filters out the list of embedded attachments for given message. If none found, returns <code>null</code>.
+	 */
+	protected LinkedList<EmailAttachment> filterEmbeddedAttachments(LinkedList<EmailAttachment> attachments, EmailMessage emailMessage) {
+		if (attachments == null) {
+			return null;
+		}
+
+		LinkedList<EmailAttachment> embeddedAttachments = null;
+
+		Iterator<EmailAttachment> iterator = attachments.iterator();
+
+		while (iterator.hasNext()) {
+			EmailAttachment emailAttachment = iterator.next();
+
+			if (emailAttachment.isEmbeddedInto(emailMessage)) {
+
+				if (embeddedAttachments == null) {
+					embeddedAttachments = new LinkedList<EmailAttachment>();
+				}
+
+				embeddedAttachments.add(emailAttachment);
+
+				iterator.remove();
+			}
+		}
+
+		return embeddedAttachments;
 	}
 
 }
