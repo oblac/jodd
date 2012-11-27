@@ -21,10 +21,23 @@ public abstract class EmailAttachment {
 	protected final String contentId;
 	protected EmailMessage targetMessage;
 
+	/**
+	 * Creates new attachment with given name and content id for inline attachments.
+	 * Content id may be <code>null</code> if attachment is not embedded.
+	 */
 	protected EmailAttachment(String name, String contentId) {
 		this.name = name;
 		this.contentId = contentId;
 	}
+
+	/**
+	 * Creates {@link EmailAttachmentBuilder builder} for convenient
+	 * building of the email attachments.
+	 */
+	public static EmailAttachmentBuilder attachment() {
+		return new EmailAttachmentBuilder();
+	}
+
 
 	/**
 	 * Returns attachment name.
@@ -34,7 +47,8 @@ public abstract class EmailAttachment {
 	}
 
 	/**
-	 * Returns content id for inline attachments, may be <code>null</code>.
+	 * Returns content id for inline attachments.
+	 * Equals to <code>null</code> when attachment is not embedded.
 	 */
 	public String getContentId() {
 		return contentId;
@@ -63,7 +77,6 @@ public abstract class EmailAttachment {
 	public boolean isEmbeddedInto(EmailMessage emailMessage) {
 		return targetMessage == emailMessage;
 	}
-
 
 	// ---------------------------------------------------------------- data source
 

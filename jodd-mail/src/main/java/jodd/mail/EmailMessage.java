@@ -24,20 +24,11 @@ public class EmailMessage {
 	}
 
 	/**
-	 * Defines UTF 8 email content.
+	 * Defines UTF-8 email content.
 	 */
 	public EmailMessage(String content, String mimeType) {
 		this.content = content;
 		this.mimeType = mimeType;
-		this.encoding = JoddCore.encoding;
-	}
-
-	/**
-	 * Defines text/plain UTF 8 email content.
-	 */
-	public EmailMessage(String content) {
-		this.content = content;
-		this.mimeType = MimeTypes.MIME_TEXT_PLAIN;
 		this.encoding = JoddCore.encoding;
 	}
 

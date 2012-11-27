@@ -2,11 +2,8 @@
 
 package jodd.mail;
 
-import jodd.mail.att.ByteArrayAttachment;
-import jodd.mail.att.FileAttachment;
 import jodd.util.MimeTypes;
 
-import java.io.File;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -74,11 +71,20 @@ public class Email extends CommonEmail {
 
 	// ---------------------------------------------------------------- message
 
+	public Email message(String text, String mimeType, String encoding) {
+		addMessage(text, mimeType, encoding);
+		return this;
+	}
+	public Email message(String text, String mimeType) {
+		addMessage(text, mimeType);
+		return this;
+	}
+
 	/**
 	 * Adds plain message text.
 	 */
 	public Email addText(String text) {
-		messages.add(new EmailMessage(text));
+		messages.add(new EmailMessage(text, MimeTypes.MIME_TEXT_PLAIN));
 		return this;
 	}
 	public Email addText(String text, String encoding) {
@@ -98,17 +104,6 @@ public class Email extends CommonEmail {
 		return this;
 	}
 
-
-	public Email message(String text, String mimeType, String encoding) {
-		addMessage(text, mimeType, encoding);
-		return this;
-	}
-	public Email message(String text, String mimeType) {
-		addMessage(text, mimeType);
-		return this;
-	}
-
-
 	// ---------------------------------------------------------------- attachments
 
 	protected LinkedList<EmailAttachment> attachments;
@@ -121,15 +116,21 @@ public class Email extends CommonEmail {
 	}
 
 	/**
-	 * Adds generic attachment. If attachment is <i>inline</i>, it will be attached to
-	 * the latest added message. Hence, the order of attaching files is important.
+	 * Adds attachment.
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
 			attachments = new LinkedList<EmailAttachment>();
 		}
-
 		attachments.add(emailAttachment);
+		return this;
+	}
+
+	/**
+	 * Embed attachment to last message.
+	 */
+	public Email embed(EmailAttachment emailAttachment) {
+		attach(emailAttachment);
 
 		if (emailAttachment.isInline()) {
 			if (!messages.isEmpty()) {
@@ -139,43 +140,17 @@ public class Email extends CommonEmail {
 		return this;
 	}
 
-	/**
-	 * Attach bytes.
-	 */
-	public Email attachBytes(byte[] bytes, String contentType, String name) {
-		attach(new ByteArrayAttachment(bytes, contentType, name));
+	public Email attach(EmailAttachmentBuilder emailAttachmentBuilder) {
+		emailAttachmentBuilder.setInline(false);
+		attach(emailAttachmentBuilder.create());
 		return this;
 	}
 
-	/**
-	 * Adds an existing file as attachment.
-	 */
-	public Email attachFile(String fileName) {
-		attach(new FileAttachment(new File(fileName)));
+	public Email embed(EmailAttachmentBuilder emailAttachmentBuilder) {
+		emailAttachmentBuilder.setInline(true);
+		embed(emailAttachmentBuilder.create());
 		return this;
 	}
-	public Email attachFile(File file) {
-		attach(new FileAttachment(file));
-		return this;
-	}
-	public Email embedFile(String fileName, String contentId) {
-		File f = new File(fileName);
-		attach(new FileAttachment(f, f.getName(), contentId));
-		return this;
-	}
-	public Email embedFile(File file, String contentId) {
-		attach(new FileAttachment(file, file.getName(), contentId));
-		return this;
-	}
-	public Email embedFile(String fileName) {
-		attach(new FileAttachment(new File(fileName), true));
-		return this;
-	}
-	public Email embedFile(File file) {
-		attach(new FileAttachment(file, true));
-		return this;
-	}
-
 
 	// ---------------------------------------------------------------- headers
 
