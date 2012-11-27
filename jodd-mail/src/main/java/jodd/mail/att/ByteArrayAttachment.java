@@ -21,12 +21,9 @@ public class ByteArrayAttachment extends EmailAttachment {
 		this.contentType = contentType;
 	}
 
-	public ByteArrayAttachment(byte[] content, String contentType, String name) {
-		super(name, null);
-		this.content = content;
-		this.contentType = contentType;
-	}
-
+	/**
+	 * Returns <code>ByteArrayDataSource</code>.
+	 */
 	@Override
 	public DataSource getDataSource() {
 		return new ByteArrayDataSource(content, contentType);
@@ -38,4 +35,5 @@ public class ByteArrayAttachment extends EmailAttachment {
 	public String getContentType() {
 		return contentType;
 	}
+
 }

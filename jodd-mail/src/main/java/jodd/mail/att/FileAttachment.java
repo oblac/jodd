@@ -10,6 +10,8 @@ import java.io.File;
 
 /**
  * File {@link EmailAttachment email attachment}.
+ * Content type is not set by user, but by <code>javax.mail</code>
+ * framework.
  */
 public class FileAttachment extends EmailAttachment {
 
@@ -19,14 +21,10 @@ public class FileAttachment extends EmailAttachment {
 		super(name, contentId);
 		this.file = file;
 	}
-	public FileAttachment(File file, boolean inline) {
-		super(file.getName(), inline ? file.getName() : null);
-		this.file = file;
-	}
-	public FileAttachment(File file) {
-		this(file, false);
-	}
 
+	/**
+	 * Returns attached file.
+	 */
 	public File getFile() {
 		return file;
 	}

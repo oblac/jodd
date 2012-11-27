@@ -7,7 +7,7 @@ import jodd.mail.EmailAttachment;
 import javax.activation.DataSource;
 
 /**
- * Generic data source adapter for attachments.
+ * Generic <code>DataSource</code> adapter for attachments.
  */
 public class DataSourceAttachment extends EmailAttachment {
 
@@ -18,11 +18,9 @@ public class DataSourceAttachment extends EmailAttachment {
 		this.dataSource = dataSource;
 	}
 
-	public DataSourceAttachment(DataSource dataSource, String name) {
-		super(name, null);
-		this.dataSource = dataSource;
-	}
-
+	/**
+	 * Returns wrapped data source.
+	 */
 	@Override
 	public DataSource getDataSource() {
 		return dataSource;

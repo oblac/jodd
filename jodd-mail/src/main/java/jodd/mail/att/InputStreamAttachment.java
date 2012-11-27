@@ -22,12 +22,9 @@ public class InputStreamAttachment extends EmailAttachment {
 		this.contentType = contentType;
 	}
 
-	public InputStreamAttachment(InputStream inputStream, String contentType, String name) {
-		super(name, null);
-		this.inputStream = inputStream;
-		this.contentType = contentType;
-	}
-
+	/**
+	 * Returns <code>ByteArrayDataSource</code>.
+	 */
 	@Override
 	public DataSource getDataSource() {
 		try {
