@@ -215,7 +215,13 @@ public class SendMailSession {
 	 */
 	protected MimeBodyPart createAttachmentBodyPart(EmailAttachment attachment) throws MessagingException {
 		MimeBodyPart attBodyPart = new MimeBodyPart();
-		attBodyPart.setFileName(attachment.getName());
+
+		String attachmentName = attachment.getName();
+		if (attachmentName == null) {
+			throw new MessagingException("No attachment name");
+		}
+		attBodyPart.setFileName(attachmentName);
+
 		attBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
 		if (attachment.isInline()) {
 			attBodyPart.setContentID(StringPool.LEFT_CHEV + attachment.getContentId() + StringPool.RIGHT_CHEV);
