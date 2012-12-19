@@ -11,7 +11,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Empty method visitor.
  */
-public class EmptyMethodVisitor extends MethodVisitor {
+public abstract class EmptyMethodVisitor extends MethodVisitor {
 
 	public EmptyMethodVisitor() {
 		super(Opcodes.ASM4);

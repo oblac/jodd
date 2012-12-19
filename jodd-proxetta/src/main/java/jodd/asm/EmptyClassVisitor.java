@@ -12,7 +12,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Empty class visitor.
  */
-public class EmptyClassVisitor extends ClassVisitor {
+public abstract class EmptyClassVisitor extends ClassVisitor {
 
 	public EmptyClassVisitor() {
 		super(Opcodes.ASM4);

@@ -8,7 +8,7 @@ import org.objectweb.asm.Opcodes;
 /**
  * Empty annotation visitor.
  */
-public class EmptyAnnotationVisitor extends AnnotationVisitor {
+public abstract class EmptyAnnotationVisitor extends AnnotationVisitor {
 
 	public EmptyAnnotationVisitor() {
 		super(Opcodes.ASM4);
