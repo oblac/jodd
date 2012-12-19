@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import org.objectweb.asm.MethodAdapter;
+import jodd.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Label;
 import static org.objectweb.asm.Opcodes.*;

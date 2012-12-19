@@ -3,6 +3,7 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
+import jodd.asm.MethodAdapter;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
@@ -10,7 +11,6 @@ import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringPool;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 

@@ -20,7 +20,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
  * @author Eric Bruneton
  * @author Igor Spasic (is)
  */
-public class TraceSignatureVisitor implements SignatureVisitor {
+public class TraceSignatureVisitor extends SignatureVisitor {
 
 	protected final StringBuffer declaration;       // is
 
@@ -56,11 +56,13 @@ public class TraceSignatureVisitor implements SignatureVisitor {
     protected String separator = "";                // is
 
     public TraceSignatureVisitor(final int access) {
+		super(Opcodes.ASM4);
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
         this.declaration = new StringBuffer();
     }
 
     protected TraceSignatureVisitor(final StringBuffer buf) {       // is
+		super(Opcodes.ASM4);
         this.declaration = buf;
     }
 

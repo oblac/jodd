@@ -3,10 +3,10 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
+import jodd.asm.MethodAdapter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.ClassReader;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.ALOAD;

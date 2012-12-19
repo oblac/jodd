@@ -2,8 +2,8 @@
 
 package jodd.proxetta.asm;
 
+import jodd.asm.ClassAdapter;
 import jodd.proxetta.InvokeAspect;
-import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
