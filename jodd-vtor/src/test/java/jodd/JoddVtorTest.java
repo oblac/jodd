@@ -2,10 +2,13 @@
 
 package jodd;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JoddVtorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JoddVtorTest {
+
+	@Test
 	public void testLoadedModules() {
 		assertEquals(true, Jodd.isBeanLoaded());
 		assertEquals(false, Jodd.isHttpLoaded());

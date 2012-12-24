@@ -6,12 +6,15 @@ import jodd.vtor.constraint.AssertValidConstraint;
 import jodd.vtor.constraint.MinLengthConstraint;
 import jodd.vtor.data.Boo;
 import jodd.vtor.data.Foo;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
-public class ManualTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class ManualTest {
+
+	@Test
 	public void testManualConfig() {
 
 		ValidationContext vctx = new ValidationContext();
@@ -54,6 +57,7 @@ public class ManualTest extends TestCase {
 
 	}
 
+	@Test
 	public void testManualAddViolation() {
 
 		ValidationContext vctx = new ValidationContext();
