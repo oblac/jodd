@@ -2,16 +2,21 @@
 
 package jodd.servlet.filter;
 
-import junit.framework.TestCase;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ByteArrayResponseWrapperTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+public class ByteArrayResponseWrapperTest {
+
+	@Test
 	public void testWrite() throws IOException {
 		HttpServletResponseWrapper rw = mock(HttpServletResponseWrapper.class);
 		ServletOutputStream os = mock(ServletOutputStream.class);

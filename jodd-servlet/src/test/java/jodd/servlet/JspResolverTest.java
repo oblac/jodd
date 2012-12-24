@@ -2,20 +2,23 @@
 
 package jodd.servlet;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JspResolverTest extends TestCase {
+public class JspResolverTest {
 
 	static class Foo {
 		String name = "Hello";
-		int[] array = new int[] {1, 7, 3};
+		int[] array = new int[]{1, 7, 3};
 	}
 
 	HttpServletRequest servletRequest;
@@ -23,9 +26,8 @@ public class JspResolverTest extends TestCase {
 	ServletContext servletContext;
 
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 
 		servletRequest = mock(HttpServletRequest.class);
 		httpSession = mock(HttpSession.class);
@@ -43,6 +45,7 @@ public class JspResolverTest extends TestCase {
 		when(servletContext.getAttribute("boo.attr")).thenReturn("boobaa");
 	}
 
+	@Test
 	public void testAttributes() {
 		assertEquals("value", JspResolver.attribute("name", servletRequest));
 		assertEquals("value2", JspResolver.attribute("name2", servletRequest));
@@ -53,6 +56,7 @@ public class JspResolverTest extends TestCase {
 		assertNull(JspResolver.attribute("xxx.attr", servletRequest));
 	}
 
+	@Test
 	public void testValues() {
 		JspResolver jspResolver = new JspResolver(servletRequest);
 		assertEquals("value", jspResolver.value("name"));
