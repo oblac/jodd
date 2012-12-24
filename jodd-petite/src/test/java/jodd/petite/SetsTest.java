@@ -2,15 +2,14 @@
 
 package jodd.petite;
 
-import jodd.petite.tst3.Batgirl;
-import jodd.petite.tst3.Batman;
-import jodd.petite.tst3.GothamCity;
-import jodd.petite.tst3.Metropolis;
-import jodd.petite.tst3.Superman;
-import junit.framework.TestCase;
+import jodd.petite.tst3.*;
+import org.junit.Test;
 
-public class SetsTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class SetsTest {
+
+	@Test
 	public void testEmptySet() {
 		final PetiteContainer pc = new PetiteContainer();
 
@@ -22,6 +21,7 @@ public class SetsTest extends TestCase {
 		assertTrue(gothamCity.superHeros.isEmpty());
 	}
 
+	@Test
 	public void testOneHero() {
 		final PetiteContainer pc = new PetiteContainer();
 
@@ -38,6 +38,7 @@ public class SetsTest extends TestCase {
 		assertEquals("Batman", str);
 	}
 
+	@Test
 	public void testTwoHeros() {
 		final PetiteContainer pc = new PetiteContainer();
 
@@ -56,6 +57,7 @@ public class SetsTest extends TestCase {
 		assertTrue(str.contains("Batgirl"));
 	}
 
+	@Test
 	public void testCollection() {
 		final PetiteContainer pc = new PetiteContainer();
 

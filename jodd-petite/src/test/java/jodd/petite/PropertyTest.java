@@ -2,14 +2,17 @@
 
 package jodd.petite;
 
+import jodd.petite.data.PojoBean2;
 import jodd.petite.tst2.Joo;
 import jodd.petite.tst2.Moo;
 import jodd.props.Props;
-import junit.framework.TestCase;
-import jodd.petite.data.PojoBean2;
+import org.junit.Test;
 
-public class PropertyTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class PropertyTest {
+
+	@Test
 	public void testSet() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(PojoBean2.class);
@@ -22,6 +25,7 @@ public class PropertyTest extends TestCase {
 		assertEquals(173, pojo2.getVal2().intValue());
 	}
 
+	@Test
 	public void testSetWithMultipleDots() {
 		PetiteContainer pc = new PetiteContainer();
 
@@ -48,6 +52,7 @@ public class PropertyTest extends TestCase {
 		assertEquals(173, pojo2.getVal2().intValue());
 	}
 
+	@Test
 	public void testGet() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(PojoBean2.class);
@@ -64,6 +69,7 @@ public class PropertyTest extends TestCase {
 		assertEquals(Integer.valueOf(173), pc.getBeanProperty("pojoBean2.val2"));
 	}
 
+	@Test
 	public void testCount() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Moo.class);
@@ -90,6 +96,7 @@ public class PropertyTest extends TestCase {
 		assertEquals(2, bd.properties.length);
 	}
 
+	@Test
 	public void testProps() {
 		Props props = new Props();
 		props.load("pojoBean2.val2=123");

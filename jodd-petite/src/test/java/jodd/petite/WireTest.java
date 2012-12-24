@@ -2,29 +2,25 @@
 
 package jodd.petite;
 
-import junit.framework.TestCase;
 import jodd.petite.config.AutomagicPetiteConfigurator;
-import jodd.petite.tst.Boo;
-import jodd.petite.tst.BooC;
-import jodd.petite.tst.BooC2;
-import jodd.petite.tst.Foo;
-import jodd.petite.tst.Zoo;
-import jodd.petite.tst.Goo;
-import jodd.petite.tst.Loo;
-import jodd.petite.tst.Ioo;
-import jodd.petite.tst.impl.DefaultIoo;
 import jodd.petite.scope.ProtoScope;
+import jodd.petite.tst.*;
+import jodd.petite.tst.impl.DefaultIoo;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-public class WireTest extends TestCase {
+import static org.junit.Assert.*;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+public class WireTest {
+
+	@Before
+	public void setUp() throws Exception {
 		Foo.instanceCounter = 0;
 	}
 
+	@Test
 	public void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
@@ -76,9 +72,10 @@ public class WireTest extends TestCase {
 		assertNotNull(boo.zoo);
 		assertSame(boo.zoo.boo, boo);
 		assertEquals(3, boo.getFoo().hello());
-		assertEquals(2, boo.getFoo().getCounter());		// '2' because the first time we getBean('boo') the wiring occurred before exception was throwed!
+		assertEquals(2, boo.getFoo().getCounter());        // '2' because the first time we getBean('boo') the wiring occurred before exception was throwed!
 	}
 
+	@Test
 	public void testCreate() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -97,6 +94,7 @@ public class WireTest extends TestCase {
 		assertEquals(1, boo.getCount());
 	}
 
+	@Test
 	public void testCtor() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(BooC.class);
@@ -124,6 +122,7 @@ public class WireTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testAutowire() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Goo.class, ProtoScope.class);
@@ -156,6 +155,7 @@ public class WireTest extends TestCase {
 		pc.removeBean(Goo.class);
 	}
 
+	@Test
 	public void testInterface() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -168,6 +168,7 @@ public class WireTest extends TestCase {
 		assertEquals(DefaultIoo.class, ioo.getClass());
 	}
 
+	@Test
 	public void testSelf() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.addSelf();
@@ -176,9 +177,10 @@ public class WireTest extends TestCase {
 
 		PetiteContainer pc2 = (PetiteContainer) pc.getBean(PetiteContainer.PETITE_CONTAINER_REF_NAME);
 		assertEquals(pc2, pc);
-		
+
 	}
 
+	@Test
 	public void testInit() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(Foo.class);
@@ -201,7 +203,7 @@ public class WireTest extends TestCase {
 
 		assertEquals(6, order.size());
 		assertEquals("first", order.get(0));
-		assertEquals("second", order.get(1));		// Collections.sort() is stable: equals methods are not reordered.
+		assertEquals("second", order.get(1));        // Collections.sort() is stable: equals methods are not reordered.
 		assertEquals("third", order.get(2));
 		assertEquals("init", order.get(3));
 		assertEquals("beforeLast", order.get(4));

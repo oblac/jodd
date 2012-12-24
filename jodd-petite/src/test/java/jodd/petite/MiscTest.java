@@ -2,16 +2,19 @@
 
 package jodd.petite;
 
-import junit.framework.TestCase;
-import jodd.petite.data.DefaultBizImpl;
 import jodd.petite.data.Biz;
 import jodd.petite.data.DefaultBiz;
-import jodd.petite.tst.Foo;
+import jodd.petite.data.DefaultBizImpl;
 import jodd.petite.tst.Boo;
+import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
+import org.junit.Test;
 
-public class MiscTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class MiscTest {
+
+	@Test
 	public void testOne() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(DefaultBizImpl.class);
@@ -23,12 +26,12 @@ public class MiscTest extends TestCase {
 
 		pc = new PetiteContainer();
 		pc.registerBean(DefaultBizImpl.class);
-		pc.registerBean(DefaultBiz.class);			// override!
+		pc.registerBean(DefaultBiz.class);            // override!
 		assertEquals(1, pc.getTotalBeans());
 		pc.registerBean(Foo.class);
 		pc.registerPropertyInjectionPoint("biz", "foo");
 		pc.registerInitMethods("biz", "init", "init2");
-		
+
 		assertEquals(2, pc.getTotalBeans());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -39,6 +42,7 @@ public class MiscTest extends TestCase {
 		assertEquals(2, ((DefaultBiz) bizI).initCount);
 	}
 
+	@Test
 	public void testTwo() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerBean(DefaultBizImpl.class);
@@ -50,7 +54,7 @@ public class MiscTest extends TestCase {
 		assertTrue(bizI instanceof DefaultBizImpl);
 
 		//pc = new PetiteContainer();			// same container!!!
-		pc.registerBean(DefaultBiz.class);			// override! instance will be removed from the scope
+		pc.registerBean(DefaultBiz.class);            // override! instance will be removed from the scope
 		assertEquals(1, pc.getTotalBeans());
 		bizI = pc.getBean("biz");
 		assertTrue(bizI instanceof Biz);
@@ -59,6 +63,7 @@ public class MiscTest extends TestCase {
 	}
 
 
+	@Test
 	public void testAdd() {
 		PetiteContainer pc = new PetiteContainer();
 		Foo foo = new Foo();
@@ -68,6 +73,7 @@ public class MiscTest extends TestCase {
 		assertSame(foo, foo2);
 	}
 
+	@Test
 	public void testAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
@@ -85,7 +91,7 @@ public class MiscTest extends TestCase {
 
 		Zoo zoo = (Zoo) pc.getBean("zoo");
 		assertNotNull(zoo.boo);
-		assertSame(zoo, boo.zoo);		// circular dependecy
+		assertSame(zoo, boo.zoo);        // circular dependecy
 		assertSame(boo, zoo.boo);
 
 		Boo boo2 = (Boo) pc.getBean("boo");
@@ -107,9 +113,10 @@ public class MiscTest extends TestCase {
 		assertSame(foo, boo2.getFoo());
 		assertEquals(1, boo2.getFoo().hello());
 		assertEquals(2, boo2.getFoo().getCounter());
-		assertEquals(12, boo.orders.size());		// init methods are called again due to re-add
+		assertEquals(12, boo.orders.size());        // init methods are called again due to re-add
 	}
 
+	@Test
 	public void testNoAdd2WithCircDep() {
 		Foo.instanceCounter = 0;
 		PetiteContainer pc = new PetiteContainer();
