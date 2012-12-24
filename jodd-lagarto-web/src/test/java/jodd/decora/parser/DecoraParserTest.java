@@ -2,28 +2,28 @@
 
 package jodd.decora.parser;
 
-import jodd.io.CharBufferReader;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
 
-public class DecoraParserTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class DecoraParserTest {
 
 	protected String testDataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -31,6 +31,7 @@ public class DecoraParserTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testDecoraParser() throws IOException {
 		DecoraParser decoraParser = new DecoraParser();
 
