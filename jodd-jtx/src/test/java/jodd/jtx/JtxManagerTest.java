@@ -6,9 +6,11 @@ import jodd.exception.UncheckedException;
 import jodd.jtx.data.WorkResourceManager;
 import jodd.jtx.data.WorkSession;
 import jodd.jtx.worker.LeanJtxWorker;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JtxManagerTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class JtxManagerTest {
 
 	private JtxTransactionManager createManager() {
 		JtxTransactionManager jtxManager = new JtxTransactionManager();
@@ -22,6 +24,7 @@ public class JtxManagerTest extends TestCase {
 
 	// ---------------------------------------------------------------- ro
 
+	@Test
 	public void testReadOnly() {
 		JtxTransactionManager manager = createManager();
 		JtxTransaction jtx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(true));
@@ -42,6 +45,7 @@ public class JtxManagerTest extends TestCase {
 
 	// ---------------------------------------------------------------- rollback
 
+	@Test
 	public void testRollback() {
 		JtxTransactionManager manager = createManager();
 		JtxTransaction jtx = manager.requestTransaction(new JtxTransactionMode().propagationRequired().readOnly(false));
@@ -58,6 +62,7 @@ public class JtxManagerTest extends TestCase {
 
 	// ---------------------------------------------------------------- required
 
+	@Test
 	public void testPropagationRequired() {
 
 		JtxTransactionManager manager = createManager();
@@ -86,6 +91,7 @@ public class JtxManagerTest extends TestCase {
 		assertTrue(jtx1.isCommitted());
 	}
 
+	@Test
 	public void testPropagationRequiredWithWorker() {
 
 		LeanJtxWorker worker = createWorker();
@@ -113,6 +119,7 @@ public class JtxManagerTest extends TestCase {
 
 	// ---------------------------------------------------------------- supports
 
+	@Test
 	public void testPropagationSupports() {
 
 		JtxTransactionManager manager = createManager();
@@ -131,6 +138,7 @@ public class JtxManagerTest extends TestCase {
 
 	// ---------------------------------------------------------------- required
 
+	@Test
 	public void testPropagationRequiresNew() {
 
 		JtxTransactionManager manager = createManager();
