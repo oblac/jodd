@@ -2,15 +2,13 @@
 
 package jodd.madvoc;
 
-import junit.framework.TestCase;
+import jodd.madvoc.component.ActionMethodParser;
+import jodd.util.ClassLoaderUtil;
+import jodd.util.StringUtil;
 
 import java.lang.reflect.Method;
 
-import jodd.util.StringUtil;
-import jodd.util.ClassLoaderUtil;
-import jodd.madvoc.component.ActionMethodParser;
-
-public abstract class MadvocTestCase extends TestCase {
+public abstract class MadvocTestCase {
 
 	protected ActionConfig parse(ActionMethodParser actionMethodParser, String signature) {
 		Object[] data = resolveSignature(signature);
@@ -23,7 +21,7 @@ public abstract class MadvocTestCase extends TestCase {
 			data[0] = this.getClass().getPackage().getName() + '.' + data[0];
 			Class c = ClassLoaderUtil.loadClass(data[0]);
 			Method m = c.getMethod(data[1]);
-			return new Object[] {c, m};
+			return new Object[]{c, m};
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

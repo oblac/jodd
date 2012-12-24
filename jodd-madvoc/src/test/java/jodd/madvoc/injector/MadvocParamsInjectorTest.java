@@ -3,10 +3,13 @@
 package jodd.madvoc.injector;
 
 import jodd.petite.PetiteContainer;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MadvocParamsInjectorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class MadvocParamsInjectorTest {
+
+	@Test
 	public void testInjection() {
 		PetiteContainer madpc = new PetiteContainer();
 

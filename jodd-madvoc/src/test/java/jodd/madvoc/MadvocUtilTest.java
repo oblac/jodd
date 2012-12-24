@@ -2,13 +2,17 @@
 
 package jodd.madvoc;
 
+import org.junit.Test;
+
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MadvocUtilTest extends MadvocTestCase {
 
-
+	@Test
 	public void testLasNdx2() {
-
 		String s = "/xxx.zzzz.wwww";
 		int i = MadvocUtil.lastIndexOfSlashDot(s);
 		assertEquals(9, i);
@@ -47,7 +51,7 @@ public class MadvocUtilTest extends MadvocTestCase {
 		assertEquals(6, MadvocUtil.lastIndexOfSlashDot("/xxx./xxx"));
 	}
 
-
+	@Test
 	public void testLasNdx() {
 		assertEquals(-1, MadvocUtil.lastIndexOfDotAfterSlash(""));
 		assertEquals(-1, MadvocUtil.lastIndexOfDotAfterSlash("xxx"));
@@ -67,6 +71,7 @@ public class MadvocUtilTest extends MadvocTestCase {
 		assertEquals(9, MadvocUtil.lastIndexOfDotAfterSlash("/xxx./xxx."));
 	}
 
+	@Test
 	public void testFirstNdx() {
 		assertEquals(-1, MadvocUtil.indexOfDotAfterSlash("xxx"));
 		assertEquals(0, MadvocUtil.indexOfDotAfterSlash(".xxx"));
@@ -83,15 +88,16 @@ public class MadvocUtilTest extends MadvocTestCase {
 		assertEquals(-1, MadvocUtil.indexOfDotAfterSlash("/xxx/xxx"));
 		assertEquals(6, MadvocUtil.indexOfDotAfterSlash("/.xxx/.xxx"));
 		assertEquals(9, MadvocUtil.indexOfDotAfterSlash("/xxx./xxx."));
-
 	}
 
+	@Test
 	public void testSplitActionPath() {
-		assertTrue(Arrays.equals(new String[] {"qqq"}, MadvocUtil.splitActionPath("/qqq")));
-		assertTrue(Arrays.equals(new String[] {"qqq", "www"}, MadvocUtil.splitActionPath("/qqq/www")));
-		assertTrue(Arrays.equals(new String[] {"qqq", "www", "eee"}, MadvocUtil.splitActionPath("/qqq/www/eee")));
+		assertTrue(Arrays.equals(new String[]{"qqq"}, MadvocUtil.splitActionPath("/qqq")));
+		assertTrue(Arrays.equals(new String[]{"qqq", "www"}, MadvocUtil.splitActionPath("/qqq/www")));
+		assertTrue(Arrays.equals(new String[]{"qqq", "www", "eee"}, MadvocUtil.splitActionPath("/qqq/www/eee")));
 	}
 
+	@Test
 	public void testActionName() {
 		assertEquals("foo", MadvocUtil.stripLastCamelWord("fooAction"));
 		assertEquals("foo", MadvocUtil.stripLastCamelWord("foo"));
