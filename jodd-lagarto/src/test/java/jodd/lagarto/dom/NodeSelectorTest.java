@@ -3,20 +3,22 @@
 package jodd.lagarto.dom;
 
 import jodd.io.FileUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class NodeSelectorTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class NodeSelectorTest {
 
 	protected String testDataRoot;
 
-	@Override
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		if (testDataRoot != null) {
 			return;
 		}
@@ -24,6 +26,7 @@ public class NodeSelectorTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -38,6 +41,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals(4, nodes.size());
 	}
 
+	@Test
 	public void testMoreTags() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -59,6 +63,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals(2, nodes.size());
 	}
 
+	@Test
 	public void testIdClass() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -89,6 +94,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals(2, nodes.size());
 	}
 
+	@Test
 	public void testAttributes() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -129,6 +135,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals(1, nodes.size());
 	}
 
+	@Test
 	public void testCombinators() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -151,6 +158,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals("lina", nodes.get(0).getAttribute(0).getValue());
 	}
 
+	@Test
 	public void testPseudoClasses() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -198,6 +206,7 @@ public class NodeSelectorTest extends TestCase {
 
 	}
 
+	@Test
 	public void testPseudoFunctions() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -209,7 +218,7 @@ public class NodeSelectorTest extends TestCase {
 
 		nodes = nodeSelector.select("p#text > em:nth-last-child(2n+1)");
 		assertEquals(1, nodes.size());
-		assertEquals("lina", ((Element)nodes.get(0)).getAttribute("id"));
+		assertEquals("lina", ((Element) nodes.get(0)).getAttribute("id"));
 
 		nodes = nodeSelector.select("p#text em:nth-last-child(2n+1)");
 		assertEquals(2, nodes.size());
@@ -228,6 +237,7 @@ public class NodeSelectorTest extends TestCase {
 
 	}
 
+	@Test
 	public void testDuplicatesRemoval() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -236,6 +246,7 @@ public class NodeSelectorTest extends TestCase {
 	}
 
 
+	@Test
 	public void testNodeSelector() throws IOException {
 		NodeSelector nodeSelector = createNodeFilter();
 
@@ -257,6 +268,7 @@ public class NodeSelectorTest extends TestCase {
 		assertEquals(2, nodes.size());
 	}
 
+	@Test
 	public void testTwoHtml() throws IOException {
 		File file = new File(testDataRoot, "two.html");
 		String htmlContent = FileUtil.readString(file);
@@ -290,6 +302,7 @@ public class NodeSelectorTest extends TestCase {
 		assertTrue(document.check());
 	}
 
+	@Test
 	public void testGroupOfSelectors() throws IOException {
 		File file = new File(testDataRoot, "one.html");
 		String htmlContent = FileUtil.readString(file);

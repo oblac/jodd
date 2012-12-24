@@ -6,7 +6,8 @@ import jodd.io.StreamUtil;
 import jodd.io.StringOutputStream;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,13 +16,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
-public class StuckTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+public class StuckTest {
 
 	protected String testDataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -29,6 +32,7 @@ public class StuckTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testStuck() throws IOException {
 		File file = new File(testDataRoot, "stuck.html.gz");
 		InputStream in = new GZIPInputStream(new FileInputStream(file));

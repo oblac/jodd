@@ -2,10 +2,13 @@
 
 package jodd.jerry;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JerryParserTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JerryParserTest {
+
+	@Test
 	public void testJerryParserCreation() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -20,6 +23,7 @@ public class JerryParserTest extends TestCase {
 		assertEquals("<xml><book isbn=\"123\"><name>Foo<br></br></name></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testAppendContent() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -34,6 +38,7 @@ public class JerryParserTest extends TestCase {
 		assertEquals("<xml><book isbn=\"123\"><name>Foo</name><br></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testAppendContent2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -48,6 +53,7 @@ public class JerryParserTest extends TestCase {
 		assertEquals("<xml><book isbn=\"123\"><name>Foo</name><br></br></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testAppendContent3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 

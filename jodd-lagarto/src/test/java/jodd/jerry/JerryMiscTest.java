@@ -2,15 +2,19 @@
 
 package jodd.jerry;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.Iterator;
 
-public class JerryMiscTest extends TestCase {
-	
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class JerryMiscTest {
+
+	@Test
 	public void testTextContentDecoding() {
 		String html = "<html><body><div>&#1054;&#1076;&#1112;&#1072;&#1074;&#1080; &#1089;&#1077;</div></body></html>";
-		
+
 		Jerry doc = Jerry.jerry(html);
 		Jerry div = doc.$("div");
 
@@ -19,6 +23,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals(57, div.html().length());
 	}
 
+	@Test
 	public void testTextContentDecoding2() {
 		String html = "<html><body><div></div></body></html>";
 
@@ -31,6 +36,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals(9, div.html().length());
 	}
 
+	@Test
 	public void testAppend1() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -45,6 +51,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("<xml><book><name>Foo</name><br></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testAppend2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -59,6 +66,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("<xml><book><name>Foo</name><br></br></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testAppend3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
@@ -73,6 +81,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("<xml><book><name>Foo</name><br/></book></xml>", doc.html());
 	}
 
+	@Test
 	public void testNullForEmpty() {
 		Jerry doc = Jerry.jerry().parse("<html></html>");
 
@@ -83,7 +92,7 @@ public class JerryMiscTest extends TestCase {
 		assertNull(doc.$("#not-a-valid-id").html());
 	}
 
-
+	@Test
 	public void testFirstNotDirectly() {
 		Jerry doc = Jerry.jerry().parse("<html><div>one</div><p>two</p><div>three</div><p>four</p></html>");
 
@@ -96,6 +105,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("three", doc.$("div").last().text());
 	}
 
+	@Test
 	public void testIterator1() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 
@@ -110,6 +120,7 @@ public class JerryMiscTest extends TestCase {
 		assertEquals("onetwo", result);
 	}
 
+	@Test
 	public void testIterator2() {
 		Jerry doc = Jerry.jerry().parse("<div id='one' class='foo'>one</div><div id='two' class='foo'>two</div>");
 

@@ -2,10 +2,13 @@
 
 package jodd.lagarto;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class LagartoParserUtilTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class LagartoParserUtilTest {
+
+	@Test
 	public void testStartWith() {
 		assertTrue(LagartoParserUtil.regionStartWith("123456", 1, 3, "2"));
 		assertTrue(LagartoParserUtil.regionStartWith("123456", 0, 3, "1"));
@@ -15,6 +18,7 @@ public class LagartoParserUtilTest extends TestCase {
 		assertFalse(LagartoParserUtil.regionStartWith("123", 0, 3, "1234"));
 	}
 
+	@Test
 	public void testIndexOfChar() {
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 0, 3, 'x'));
 
@@ -40,6 +44,7 @@ public class LagartoParserUtilTest extends TestCase {
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 0, 0, '1'));
 	}
 
+	@Test
 	public void testIndexOfString() {
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 0, 3, "x"));
 
@@ -65,13 +70,14 @@ public class LagartoParserUtilTest extends TestCase {
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 0, 0, "1"));
 	}
 
+	@Test
 	public void testIndexOfString2() {
 		assertEquals(1, LagartoParserUtil.regionIndexOf("123", 0, 3, "23"));
 		assertEquals(1, LagartoParserUtil.regionIndexOf("123", 1, 3, "23"));
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 2, 3, "23"));
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 3, 3, "23"));
 
-		assertEquals("12", "123".subSequence(0,2).toString());
+		assertEquals("12", "123".subSequence(0, 2).toString());
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 0, 2, "23"));
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 1, 2, "23"));
 		assertEquals(-1, LagartoParserUtil.regionIndexOf("123", 2, 2, "23"));

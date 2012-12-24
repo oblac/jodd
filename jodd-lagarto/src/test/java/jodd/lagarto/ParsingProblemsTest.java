@@ -3,26 +3,28 @@
 package jodd.lagarto;
 
 import jodd.io.FileUtil;
-import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
+import jodd.lagarto.dom.Document;
 import jodd.util.StringUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.CharBuffer;
 
-public class ParsingProblemsTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ParsingProblemsTest {
 
 	protected String testDataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -30,13 +32,14 @@ public class ParsingProblemsTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testInvalidTag() {
 		String html = "<html>text1<=>text2</html>";
 
 		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(html));
-		
+
 		final StringBuilder sb = new StringBuilder();
-		
+
 		try {
 			lagartoParser.parse(new EmptyTagVisitor() {
 				@Override
@@ -62,6 +65,7 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals("html text1<=>text2 html ", sb.toString());
 	}
 
+	@Test
 	public void testNonQuotedAttributeValue() {
 		String html = "<a href=123>xxx</a>";
 
@@ -82,6 +86,7 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals("<a href=\"../org/w3c/dom/&#039;http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list&#039;\">xxx</a>", document.getHtml());
 	}
 
+	@Test
 	public void testIssue23_0() throws IOException {
 		File file = new File(testDataRoot, "index-4-v0.html");
 
@@ -94,6 +99,7 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 	}
 
+	@Test
 	public void testIssue23_1() throws IOException {
 		File file = new File(testDataRoot, "index-4-v1.html");
 
@@ -106,6 +112,7 @@ public class ParsingProblemsTest extends TestCase {
 		assertEquals(1, lagartoDOMBuilder.getErrors().size());
 	}
 
+	@Test
 	public void testIssue23() throws IOException {
 		File file = new File(testDataRoot, "index-4.html");
 
@@ -149,54 +156,55 @@ public class ParsingProblemsTest extends TestCase {
 		s = StringUtil.remove(s, '\u00A0');
 		assertEquals(
 				"---\n" +
-				"Overview\n" +
-				"Package\n" +
-				"Class\n" +
-				"Use\n" +
-				"Tree\n" +
-				"Deprecated\n" +
-				"Index\n" +
-				"Help\n" +
-				"---\n" +
-				"Overview\n" +
-				"---\n" +
-				"Package\n" +
-				"---\n" +
-				"Class\n" +
-				"---\n" +
-				"Use\n" +
-				"---\n" +
-				"Tree\n" +
-				"---\n" +
-				"Deprecated\n" +
-				"---\n" +
-				"Help\n" +
-				"---\n" +
-				"Overview\n" +
-				"Package\n" +
-				"Class\n" +
-				"Use\n" +
-				"Tree\n" +
-				"Deprecated\n" +
-				"Index\n" +
-				"Help\n" +
-				"---\n" +
-				"Overview\n" +
-				"---\n" +
-				"Package\n" +
-				"---\n" +
-				"Class\n" +
-				"---\n" +
-				"Use\n" +
-				"---\n" +
-				"Tree\n" +
-				"---\n" +
-				"Deprecated\n" +
-				"---\n" +
-				"Help\n",
+						"Overview\n" +
+						"Package\n" +
+						"Class\n" +
+						"Use\n" +
+						"Tree\n" +
+						"Deprecated\n" +
+						"Index\n" +
+						"Help\n" +
+						"---\n" +
+						"Overview\n" +
+						"---\n" +
+						"Package\n" +
+						"---\n" +
+						"Class\n" +
+						"---\n" +
+						"Use\n" +
+						"---\n" +
+						"Tree\n" +
+						"---\n" +
+						"Deprecated\n" +
+						"---\n" +
+						"Help\n" +
+						"---\n" +
+						"Overview\n" +
+						"Package\n" +
+						"Class\n" +
+						"Use\n" +
+						"Tree\n" +
+						"Deprecated\n" +
+						"Index\n" +
+						"Help\n" +
+						"---\n" +
+						"Overview\n" +
+						"---\n" +
+						"Package\n" +
+						"---\n" +
+						"Class\n" +
+						"---\n" +
+						"Use\n" +
+						"---\n" +
+						"Tree\n" +
+						"---\n" +
+						"Deprecated\n" +
+						"---\n" +
+						"Help\n",
 				s);
 	}
 
+	@Test
 	public void testNamespaces() throws IOException {
 		File file = new File(testDataRoot, "namespace.xml");
 

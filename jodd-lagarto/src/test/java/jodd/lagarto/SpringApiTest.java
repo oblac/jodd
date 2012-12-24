@@ -1,23 +1,23 @@
 package jodd.lagarto;
 
 import jodd.io.FileUtil;
-import jodd.io.StreamUtil;
-import jodd.io.StringOutputStream;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class SpringApiTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class SpringApiTest {
 
 	protected String testDataRoot;
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		if (testDataRoot != null) {
 			return;
 		}
@@ -25,6 +25,7 @@ public class SpringApiTest extends TestCase {
 		testDataRoot = data.getFile();
 	}
 
+	@Test
 	public void testPortletUtils() throws IOException {
 		File file = new File(testDataRoot, "PortletUtils.html");
 		String content = FileUtil.readString(file);
@@ -43,6 +44,7 @@ public class SpringApiTest extends TestCase {
 		});
 	}
 
+	@Test
 	public void testAbstractFormController() throws IOException {
 		File file = new File(testDataRoot, "AbstractFormController.html");
 		String content = FileUtil.readString(file);

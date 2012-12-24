@@ -6,12 +6,15 @@ import jodd.csselly.selector.AttributeSelector;
 import jodd.csselly.selector.PseudoClassSelector;
 import jodd.csselly.selector.PseudoFunctionExpression;
 import jodd.csselly.selector.PseudoFunctionSelector;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
-public class CSSellyTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class CSSellyTest {
+
+	@Test
 	public void testSingleSelectors() {
 		CSSelly lexer = new CSSelly("  div  ");
 		assertEquals("div", CSSelly.toString(lexer.parse()));
@@ -44,6 +47,7 @@ public class CSSellyTest extends TestCase {
 		assertEquals(1, selectors.get(0).selectorsCount());
 	}
 
+	@Test
 	public void testMultipleSelectors() {
 		CSSelly lexer = new CSSelly("  div  b#xo  foo.solid #jodd * #bib.box.red  ");
 		List<CssSelector> selectors = lexer.parse();
@@ -79,6 +83,7 @@ public class CSSellyTest extends TestCase {
 		assertNull(sixt.getNextCssSelector());
 	}
 
+	@Test
 	public void testAttributes() {
 		CSSelly lexer = new CSSelly("div[a1='123']");
 		List<CssSelector> selectors = lexer.parse();
@@ -101,6 +106,7 @@ public class CSSellyTest extends TestCase {
 		assertEquals("div[a1=\"123\"]", CSSelly.toString(selectors));
 	}
 
+	@Test
 	public void testCombinators() {
 		CSSelly lexer = new CSSelly("div b");
 		List<CssSelector> selectors = lexer.parse();
@@ -146,6 +152,7 @@ public class CSSellyTest extends TestCase {
 		assertNull(cssSelector.getCombinator());
 	}
 
+	@Test
 	public void testPseudoClasses() {
 		CSSelly lexer = new CSSelly("div:first-child");
 		List<CssSelector> selectors = lexer.parse();
@@ -158,6 +165,7 @@ public class CSSellyTest extends TestCase {
 		assertEquals("first-child", psc.getPseudoClass().getPseudoClassName());
 	}
 
+	@Test
 	public void testPseudoFunctions() {
 		CSSelly lexer = new CSSelly("div:nth-child(2n+1)");
 		List<CssSelector> selectors = lexer.parse();
@@ -265,32 +273,38 @@ public class CSSellyTest extends TestCase {
 		assertEquals(6, pfe.getValueB());
 	}
 
+	@Test
 	public void testErrors() {
 		try {
 			CSSelly lexer = new CSSelly("div ^ b");
 			lexer.parse();
 			fail();
-		} catch (CSSellyException ex) {}
+		} catch (CSSellyException ex) {
+		}
 
 		try {
 			CSSelly lexer = new CSSelly("div:wrong-pseudo-class-name");
 			lexer.parse();
 			fail();
-		} catch (CSSellyException ex) {}
+		} catch (CSSellyException ex) {
+		}
 
 		try {
 			CSSelly lexer = new CSSelly("div:nth-child(xxx)");
 			lexer.parse();
-		} catch (CSSellyException ex) {}
+		} catch (CSSellyException ex) {
+		}
 
 	}
-	
+
+	@Test
 	public void testUppercaseClassNames() {
 		CSSelly lexer = new CSSelly("div.fooBar");
 		List<CssSelector> selectorList = lexer.parse();
 		assertEquals(1, selectorList.size());
 	}
 
+	@Test
 	public void testEscape() {
 
 		// element
