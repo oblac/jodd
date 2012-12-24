@@ -2,10 +2,13 @@
 
 package jodd.util;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TextUtilTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class TextUtilTest  {
+
+	@Test
 	public void testFormatPara() {
 		String txt = "123 567 90AB";
 		String p = TextUtil.formatParagraph(txt, 6, false);
@@ -37,6 +40,7 @@ public class TextUtilTest extends TestCase {
 
 	}
 
+	@Test
 	public void testTabsToSpaces() {
 		String s = TextUtil.convertTabsToSpaces("q\tqa\t", 3);
 		assertEquals("q  qa ", s);

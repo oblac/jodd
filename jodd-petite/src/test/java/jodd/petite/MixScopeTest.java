@@ -6,10 +6,12 @@ import jodd.petite.mix.Small;
 import jodd.petite.scope.ProtoScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class MixScopeTest extends TestCase {
+public class MixScopeTest {
 
+	@Test
 	public void testPrototypeInSingleton() {
 		Small.instanceCounter = 0;
 
@@ -40,6 +42,7 @@ public class MixScopeTest extends TestCase {
 		assertEquals(5, Small.instanceCounter);
 	}
 
+	@Test
 	public void testPrototypeInSingleton2() {
 		Small.instanceCounter = 0;
 
@@ -70,6 +73,7 @@ public class MixScopeTest extends TestCase {
 		assertEquals(5, Small.instanceCounter);
 	}
 
+	@Test
 	public void testSingleFactoryInstance() {
 
 		Small.instanceCounter = 0;
@@ -101,6 +105,7 @@ public class MixScopeTest extends TestCase {
 		assertSame(small1, small4);
 	}
 
+	@Test
 	public void testThreadLocalScopeInSingleton() {
 
 		Small.instanceCounter = 0;

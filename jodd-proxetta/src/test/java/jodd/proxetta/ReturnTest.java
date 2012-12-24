@@ -6,12 +6,15 @@ import jodd.proxetta.data.ReturnNullAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 
-public class ReturnTest extends TestCase {
 
+public class ReturnTest {
+
+	@Test
 	public void testWrapperWithProxyReturns() throws Exception {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(ReflectionReplacementAdvice.class, new AllMethodsPointcut()));
@@ -50,6 +53,7 @@ public class ReturnTest extends TestCase {
 		retro.method10();
 	}
 
+	@Test
 	public void testNullReturns() throws Exception {
 		ProxyProxetta proxetta = ProxyProxetta.withAspects(
 				new ProxyAspect(ReturnNullAdvice.class, new AllMethodsPointcut()));

@@ -2,10 +2,13 @@
 
 package jodd.bean;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BeanUtilUtilTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class BeanUtilUtilTest {
+
+	@Test
 	public void testIndexOfDot() {
 		BeanUtilUtil buu = new BeanUtilUtil();
 
