@@ -3,10 +3,13 @@
 package jodd.db.oom;
 
 import jodd.db.oom.tst.Tester;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class StrictCompareTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class StrictCompareTest {
+
+	@Test
 	public void testStrict() {
 		DbOomManager.resetAll();
 		DbOomManager dboom = DbOomManager.getInstance();
@@ -56,9 +59,10 @@ public class StrictCompareTest extends TestCase {
 
 		assertNull(ded.findByColumnName("ID"));
 		assertNotNull(ded.findByColumnName("id"));
-		assertNull(ded.findByColumnName("Id")); 	// column is mapped to a property, and it starts with uncapitalized char
+		assertNull(ded.findByColumnName("Id"));     // column is mapped to a property, and it starts with uncapitalized char
 	}
 
+	@Test
 	public void testTableNameDefault() {
 		DbOomManager.resetAll();
 		DbOomManager dboom = DbOomManager.getInstance();

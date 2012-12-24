@@ -2,23 +2,26 @@
 
 package jodd.db;
 
-import jodd.jtx.JtxTransactionManager;
-import jodd.jtx.JtxTransaction;
-import jodd.jtx.JtxTransactionMode;
-import jodd.jtx.JtxException;
 import jodd.db.jtx.DbJtxResourceManager;
 import jodd.db.jtx.DbJtxTransaction;
+import jodd.jtx.JtxException;
+import jodd.jtx.JtxTransaction;
+import jodd.jtx.JtxTransactionManager;
+import jodd.jtx.JtxTransactionMode;
 import jodd.util.ThreadUtil;
+import org.junit.Test;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static org.junit.Assert.*;
 
 public class DbTransactionTest extends DbHsqldbTestCase {
 
 	/**
 	 * Tests if rollback works.
 	 */
-	public void testRollback()  throws SQLException {
+	@Test
+	public void testRollback() throws SQLException {
 		// prepare manager
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
@@ -91,7 +94,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 */
 
 	// ---------------------------------------------------------------- presentation layer
-
+	@Test
 	public void testAction() {
 		assertNotNull(dbtxm);
 		assertTotals(0, 0);
@@ -191,7 +194,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 	}
 
 	// ---------------------------------------------------------------- test time
-
+	@Test
 	public void testTime() {
 		JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
@@ -209,14 +212,14 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 			executeCount(session1, "select count(*) from GIRL");
 			fail();
 		} catch (JtxException ignore) {
-			
+
 		}
 		tx1.rollback();
 	}
 
 
 	// ---------------------------------------------------------------- thread
-
+	@Test
 	public void testThread() {
 		final JtxTransactionManager manager = new JtxTransactionManager();
 		manager.registerResourceManager(new DbJtxResourceManager(cp));
@@ -252,7 +255,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 	}
 
 	// ---------------------------------------------------------------- notx
-
+	@Test
 	public void testNoTx() {
 
 		final JtxTransactionManager manager = new JtxTransactionManager();

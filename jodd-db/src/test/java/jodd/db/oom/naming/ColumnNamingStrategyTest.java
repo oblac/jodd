@@ -2,10 +2,13 @@
 
 package jodd.db.oom.naming;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ColumnNamingStrategyTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class ColumnNamingStrategyTest {
+
+	@Test
 	public void testColumnNameToPropertyName() {
 		assertEquals("fooBooZoo", convertColumnNameToPropertyName("FOO_BOO_ZOO"));
 		assertEquals("fooBooZoo", convertColumnNameToPropertyName("foo_boo_zoo"));
@@ -16,6 +19,7 @@ public class ColumnNamingStrategyTest extends TestCase {
 		assertEquals("", convertColumnNameToPropertyName(""));
 	}
 
+	@Test
 	public void testColumnNameToPropertyName2() {
 		ColumnNamingStrategy cns = new ColumnNamingStrategy();
 
@@ -28,6 +32,7 @@ public class ColumnNamingStrategyTest extends TestCase {
 		assertEquals("fooZoo", cns.convertColumnNameToPropertyName("fooZoo"));
 	}
 
+	@Test
 	public void testPropertyNameToColumnName() {
 		assertEquals("FOO_BOO_ZOO", convertPropertyNameToColumnName("fooBooZoo", true));
 		assertEquals("foo_boo_zoo", convertPropertyNameToColumnName("fooBooZoo", false));
@@ -36,6 +41,7 @@ public class ColumnNamingStrategyTest extends TestCase {
 		assertEquals("", convertPropertyNameToColumnName("", true));
 	}
 
+	@Test
 	public void testPropertyNameToColumnName2() {
 		ColumnNamingStrategy cns = new ColumnNamingStrategy();
 

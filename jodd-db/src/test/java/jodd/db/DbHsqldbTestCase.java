@@ -2,20 +2,19 @@
 
 package jodd.db;
 
-import jodd.db.pool.CoreConnectionPool;
 import jodd.db.jtx.DbJtxTransactionManager;
+import jodd.db.pool.CoreConnectionPool;
+import org.junit.After;
+import org.junit.Before;
 
-import junit.framework.TestCase;
-
-public abstract class DbHsqldbTestCase extends TestCase {
+public abstract class DbHsqldbTestCase {
 
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		cp = new CoreConnectionPool();
 		cp.setDriver("org.hsqldb.jdbcDriver");
 		cp.setUrl("jdbc:hsqldb:mem:test");
@@ -24,40 +23,39 @@ public abstract class DbHsqldbTestCase extends TestCase {
 		cp.setPassword("");
 		cp.init();
 		dbtxm = new DbJtxTransactionManager(cp);
-		
+
 		// initial data
 		DbSession session = new DbSession(cp);
 
 		executeUpdate(session, "drop table BOY if exists");
-		executeUpdate(session, "drop table GIRL if exists");	
-		
+		executeUpdate(session, "drop table GIRL if exists");
+
 		String sql = "create table GIRL (" +
-						   "ID			integer		not null," +
-						   "NAME		varchar(20)	not null," +
-						   "SPECIALITY	varchar(20)	null," +
-						   "primary key (ID)" +
-							')';
-				
-		executeUpdate(session, sql);		
-		
+				"ID			integer		not null," +
+				"NAME		varchar(20)	not null," +
+				"SPECIALITY	varchar(20)	null," +
+				"primary key (ID)" +
+				')';
+
+		executeUpdate(session, sql);
+
 		sql = "create table BOY (" +
-		   "ID			integer	not null," +
-		   "GIRL_ID		integer	null," +
-		   "NAME	varchar(20)	null," +
-		   "primary key (ID)," +
-			"FOREIGN KEY (GIRL_ID) REFERENCES GIRL (ID)" +
-			')';
-		
+				"ID			integer	not null," +
+				"GIRL_ID		integer	null," +
+				"NAME	varchar(20)	null," +
+				"primary key (ID)," +
+				"FOREIGN KEY (GIRL_ID) REFERENCES GIRL (ID)" +
+				')';
+
 		executeUpdate(session, sql);
 		session.closeSession();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {		
+	@After
+	public void tearDown() throws Exception {
 		dbtxm.close();
 //		cp.close();
 		dbtxm = null;
-		super.tearDown();		
 	}
 
 	// ---------------------------------------------------------------- helpers

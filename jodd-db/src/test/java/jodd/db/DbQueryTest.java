@@ -2,11 +2,12 @@
 
 package jodd.db;
 
-import junit.framework.TestCase;
-
 import jodd.util.collection.IntArrayList;
+import org.junit.Test;
 
-public class DbQueryTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class DbQueryTest {
 
 	static class DbQueryEx extends DbQueryParser {
 		String prepare(String sql) {
@@ -31,6 +32,7 @@ public class DbQueryTest extends TestCase {
 		assertTrue(dbp.prepared);
 	}
 
+	@Test
 	public void testPrepareSql() {
 		DbQueryEx dbp = new DbQueryEx();
 		assertEquals("aaa", dbp.prepare("aaa"));
@@ -64,6 +66,5 @@ public class DbQueryTest extends TestCase {
 		doTestDoubleNamedParam(dbp, "x", 1, 4);
 
 		assertTrue(dbp.prepared);
-
 	}
 }

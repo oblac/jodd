@@ -7,15 +7,16 @@ import jodd.db.oom.tst.BadBoy;
 import jodd.db.oom.tst.BadGirl;
 import jodd.db.oom.tst.Boy;
 import jodd.db.oom.tst.Girl;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
+import static org.junit.Assert.assertEquals;
 
-public class DbSqlTemplateWithPrefixTest extends TestCase {
+public class DbSqlTemplateWithPrefixTest {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 
 		DbOomManager.resetAll();
 		DbOomManager dbOom = DbOomManager.getInstance();
@@ -29,6 +30,7 @@ public class DbSqlTemplateWithPrefixTest extends TestCase {
 		dbOom.registerType(Girl.class);
 	}
 
+	@Test
 	public void testTablePrefixSuffix() {
 		DbSqlBuilder st;
 

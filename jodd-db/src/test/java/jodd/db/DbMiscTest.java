@@ -2,15 +2,20 @@
 
 package jodd.db;
 
+import org.junit.Test;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class DbMiscTest extends DbHsqldbTestCase {
 
+	@Test
 	public void testBig() throws Exception {
-		DbSession session = new DbSession(cp);		
+		DbSession session = new DbSession(cp);
 
 		DbQuery query = new DbQuery(session, "select count(*) from GIRL");
 		assertEquals(0, query.executeCount());
@@ -21,7 +26,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		assertEquals(1, executeUpdate(session, "insert into GIRL values(3, 'Monica', 'hacking')"));
 		assertEquals(3, query.executeCount());
 		assertEquals(0, query.getOpenResultSetCount());
-	//	assertEquals(0, DbQuery.totalOpenResultSetCount);
+		//	assertEquals(0, DbQuery.totalOpenResultSetCount);
 		query.close();
 
 
@@ -33,7 +38,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		query.setInteger("id", 2);
 		ResultSet rs = query.execute();
 		assertEquals(1, query.getOpenResultSetCount());
-	//	assertEquals(1, DbQuery.totalOpenResultSetCount);
+		//	assertEquals(1, DbQuery.totalOpenResultSetCount);
 
 		assertEquals("select * from GIRL where ID = 2", query.getQueryString());
 		while (rs.next()) {
@@ -45,9 +50,8 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		session.closeSession();
 		assertTrue(query.isClosed());
 		assertEquals(0, query.getOpenResultSetCount());
-		
-	//	assertEquals(0, DbQuery.totalOpenResultSetCount);
 
+		//	assertEquals(0, DbQuery.totalOpenResultSetCount);
 
 
 		// thread dbsession
@@ -57,7 +61,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		assertEquals(3, q.executeCount());
 		dbts.closeSession();
 
-		assertNull(DbThreadSession.getCurrentSession()); 
+		assertNull(DbThreadSession.getCurrentSession());
 
 		// transaction example
 
@@ -105,11 +109,12 @@ public class DbMiscTest extends DbHsqldbTestCase {
 		session2.closeSession();
 		assertEquals(0, query2.getOpenResultSetCount());
 //		assertEquals(0, DbQuery.totalOpenResultSetCount);
-	
+
 		session1.closeSession();
 
 	}
 
+	@Test
 	public void testSetMap() throws SQLException {
 		DbSession session = new DbSession(cp);
 		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = :id");
@@ -124,6 +129,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 
 	}
 
+	@Test
 	public void testSetObjects() throws SQLException {
 		DbSession session = new DbSession(cp);
 		DbQuery dbQuery = new DbQuery(session, "select * from GIRL where ID = ?");

@@ -9,15 +9,17 @@ import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.tst.Tester;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.util.SystemUtil;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Live database test. Requires database services to be started.
  * There must exist the database: "jodd-test".
  */
-public class LiveDatabaseTest extends TestCase {
+public class LiveDatabaseTest {
 
 	public static final String DB_NAME = "jodd-test";
 
@@ -45,13 +47,14 @@ public class LiveDatabaseTest extends TestCase {
 
 	interface DbAccess {
 		void initDb();
+
 		void createTables();
 	}
 
 	/**
 	 * DATABASES TO TEST!
 	 */
-	DbAccess[] databases = new DbAccess[] {
+	DbAccess[] databases = new DbAccess[]{
 			new MySql(),
 			new PostgreSql(),
 			// new HsqlDb(), using old hsqldb, need to test with the latest one
@@ -83,11 +86,11 @@ public class LiveDatabaseTest extends TestCase {
 			DbSession session = new DbSession();
 
 			String sql = "create table TESTER (" +
-								"ID			INT UNSIGNED NOT NULL AUTO_INCREMENT," +
-								"NAME		VARCHAR(20)	not null," +
-								"VALUE		INT NULL," +
-								"primary key (ID)" +
-								')';
+					"ID			INT UNSIGNED NOT NULL AUTO_INCREMENT," +
+					"NAME		VARCHAR(20)	not null," +
+					"VALUE		INT NULL," +
+					"primary key (ID)" +
+					')';
 
 			DbQuery query = new DbQuery(session, sql);
 			query.executeUpdateAndClose();
@@ -118,11 +121,11 @@ public class LiveDatabaseTest extends TestCase {
 			DbSession session = new DbSession();
 
 			String sql = "create table TESTER (" +
-								"ID			SERIAL," +
-								"NAME		varchar(20)	NOT NULL," +
-								"VALUE		integer NULL," +
-								"primary key (ID)" +
-								')';
+					"ID			SERIAL," +
+					"NAME		varchar(20)	NOT NULL," +
+					"VALUE		integer NULL," +
+					"primary key (ID)" +
+					')';
 
 			DbQuery query = new DbQuery(session, sql);
 			query.executeUpdateAndClose();
@@ -151,11 +154,11 @@ public class LiveDatabaseTest extends TestCase {
 			DbSession session = new DbSession();
 
 			String sql = "create table TESTER (" +
-								"ID			IDENTITY," +
-								"NAME		varchar(20)	NOT NULL," +
-								"VALUE		integer NULL," +
-								"primary key (ID)" +
-								')';
+					"ID			IDENTITY," +
+					"NAME		varchar(20)	NOT NULL," +
+					"VALUE		integer NULL," +
+					"primary key (ID)" +
+					')';
 
 			DbQuery query = new DbQuery(session, sql);
 			query.executeUpdateAndClose();
@@ -181,6 +184,7 @@ public class LiveDatabaseTest extends TestCase {
 
 	// ---------------------------------------------------------------- test
 
+	@Test
 	public void testDb() {
 
 		for (int i = 0; i < 2; i++) {
@@ -277,7 +281,7 @@ public class LiveDatabaseTest extends TestCase {
 		tester = (Tester) DbOomQuery
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
-						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))	// fixes POSTGRESQL
+						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))    // fixes POSTGRESQL
 				.findOneAndClose();
 		assertEquals("{2,two,2}", tester.toString());
 
