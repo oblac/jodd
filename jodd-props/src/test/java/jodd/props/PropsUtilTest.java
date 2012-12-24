@@ -15,7 +15,6 @@ import java.util.Properties;
 import static jodd.props.PropertiesToPropsTestHelper.assertEqualsToPropsFile;
 import static jodd.props.PropertiesToPropsTestHelper.safelyWritePropertiesToProps;
 
-// todo: implement equals and hashCode in Jodd Props, PropsData and PropsValue then use assertEqualProps
 public class PropsUtilTest {
 
 	private static final String PROPSUTIL_CONVERT_PATH = "propsutil/convert";
