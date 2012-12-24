@@ -2,10 +2,13 @@
 
 package jodd.joy.page;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class PageNavTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class PageNavTest {
+
+	@Test
 	public void testPage() {
 		PageNav nav = new PageNav(9, 3, 10);
 		assertEquals(1, nav.getFrom());
@@ -63,5 +66,5 @@ public class PageNavTest extends TestCase {
 
 	}
 
-	
+
 }

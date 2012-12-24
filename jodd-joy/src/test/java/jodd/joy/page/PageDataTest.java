@@ -2,10 +2,13 @@
 
 package jodd.joy.page;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class PageDataTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class PageDataTest {
+
+	@Test
 	public void testPaging() {
 		PageData pd = new PageData(PageData.calcPageOfItem(0, 20), 50, 20);
 		assertEquals(1, pd.getCurrentPage());
@@ -40,6 +43,7 @@ public class PageDataTest extends TestCase {
 		assertTrue(pd.isLastPage());
 	}
 
+	@Test
 	public void testOver() {
 		PageData pd = new PageData(PageData.calcPageOfItem(-1, 20), 50, 20);
 		assertEquals(1, pd.getCurrentPage());
@@ -60,6 +64,7 @@ public class PageDataTest extends TestCase {
 		assertEquals(10, pd.getPageItemsCount());
 	}
 
+	@Test
 	public void testOne() {
 		PageData pd = new PageData(1, 1, 20);
 		assertEquals(1, pd.getCurrentPage());
@@ -71,6 +76,7 @@ public class PageDataTest extends TestCase {
 		assertEquals(1, pd.getPageItemsCount());
 	}
 
+	@Test
 	public void testMinusOne() {
 		PageData pd = new PageData(-1, 100, 20);
 		assertEquals(1, pd.getCurrentPage());
@@ -83,6 +89,7 @@ public class PageDataTest extends TestCase {
 
 	}
 
+	@Test
 	public void testZero() {
 		PageData pd = new PageData(1, 0, 20);
 		assertTrue(pd.isLastPage());
@@ -129,6 +136,7 @@ public class PageDataTest extends TestCase {
 		assertEquals(0, pd.getPageItemsCount());
 	}
 
+	@Test
 	public void testCalc() {
 		assertEquals(0, PageData.calcFirstItemIndexOfPage(1, 5, 3));
 		assertEquals(0, PageData.calcFirstItemIndexOfPage(1, 5, 10));
@@ -143,6 +151,7 @@ public class PageDataTest extends TestCase {
 	}
 
 
+	@Test
 	public void testFlow() {
 		PageRequest pageRequest = new PageRequest();
 		pageRequest.setPage(1);

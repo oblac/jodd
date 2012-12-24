@@ -4,9 +4,14 @@ package jodd.joy.db;
 
 import jodd.db.DbSession;
 import jodd.db.ThreadDbSessionHolder;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DbIdGeneratorTest extends DbHsqldbTestCase {
 
+	@Test
 	public void testIdGen() throws Exception {
 		DbSession session = new DbSession(cp);
 		ThreadDbSessionHolder.set(session);

@@ -2,9 +2,11 @@
 
 package jodd.joy.crypt;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class BlockCipherTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class BlockCipherTest {
 
 	static class FooBlockCipher extends BlockCipher {
 
@@ -27,6 +29,7 @@ public class BlockCipherTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBlock8() {
 		FooBlockCipher cypher = new FooBlockCipher();
 
