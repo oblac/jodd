@@ -3,21 +3,26 @@
 package jodd.methref;
 
 import jodd.proxetta.data.Str;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MethrefTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class MethrefTest {
+
+	@Test
 	public void testString() {
 		assertEquals("foo", Methref.sref(Str.class).foo());
 		assertEquals("foo2", Methref.sref(Str.class).foo2(null, null));
 	}
 
+	@Test
 	public void testNonString() {
 		Methref<Str> m = Methref.on(Str.class);
 		assertEquals("redirect:boo", "redirect:" + m.ref(m.method().boo()));
 		assertEquals("foo", m.ref(m.method().foo()));
 	}
 
+	@Test
 	public void testPrimitives() {
 		Methref<Str> m = Methref.on(Str.class);
 		assertEquals("izoo", m.ref(m.method().izoo()));
@@ -30,6 +35,7 @@ public class MethrefTest extends TestCase {
 		assertEquals("yzoo", m.ref(m.method().yzoo()));
 	}
 
+	@Test
 	public void testVoid() {
 		Methref<Str> m = Methref.on(Str.class);
 		m.method().voo();

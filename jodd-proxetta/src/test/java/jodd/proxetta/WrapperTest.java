@@ -2,27 +2,25 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.data.CalcSuper;
-import jodd.proxetta.data.CalcSuperImpl;
-import jodd.proxetta.impl.WrapperProxettaBuilder;
-import jodd.proxetta.data.Calc;
-import jodd.proxetta.data.CalcImpl;
-import jodd.proxetta.data.StatCounter;
-import jodd.proxetta.data.StatCounterAdvice;
+import jodd.proxetta.data.*;
 import jodd.proxetta.impl.WrapperProxetta;
+import jodd.proxetta.impl.WrapperProxettaBuilder;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-public class WrapperTest extends TestCase {
+import static org.junit.Assert.*;
 
-	@Override
+public class WrapperTest {
+
+	@Before
 	public void setUp() throws Exception {
-		super.setUp();
 		StatCounter.counter = 0;
 	}
 
+	@Test
 	public void testClassWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
@@ -48,7 +46,7 @@ public class WrapperTest extends TestCase {
 
 		builder.injectTargetIntoWrapper(calc, object);
 
-		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+		assertEquals(1, StatCounter.counter);    // counter in static block !!!
 
 		Method method = calc2Class.getMethod("hello");
 		assertNotNull(method);
@@ -66,6 +64,7 @@ public class WrapperTest extends TestCase {
 		assertNotNull(calc2Class.getMethod("customMethod"));
 	}
 
+	@Test
 	public void testClassWrapperCastToInterface() throws Exception {
 		Calc calc = new CalcImpl();
 
@@ -88,7 +87,7 @@ public class WrapperTest extends TestCase {
 
 		builder.injectTargetIntoWrapper(calc, calc2);
 
-		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+		assertEquals(1, StatCounter.counter);    // counter in static block !!!
 
 		calc2.hello();
 
@@ -101,6 +100,7 @@ public class WrapperTest extends TestCase {
 		assertNotNull(calc2Class.getMethod("customMethod"));
 	}
 
+	@Test
 	public void testInterfaceWrapper() throws Exception {
 		Calc calc = new CalcImpl();
 
@@ -123,7 +123,7 @@ public class WrapperTest extends TestCase {
 
 		builder.injectTargetIntoWrapper(calc, calc2);
 
-		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+		assertEquals(1, StatCounter.counter);    // counter in static block !!!
 
 		calc2.hello();
 
@@ -141,6 +141,7 @@ public class WrapperTest extends TestCase {
 	}
 
 
+	@Test
 	public void testPartialMethodsWrapped() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
@@ -149,7 +150,7 @@ public class WrapperTest extends TestCase {
 			public boolean apply(MethodInfo methodInfo) {
 				return
 						isPublic(methodInfo) &&
-						(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"));
+								(methodInfo.getMethodName().equals("hello") || methodInfo.getMethodName().equals("ola"));
 			}
 		}));
 
@@ -163,7 +164,7 @@ public class WrapperTest extends TestCase {
 
 		builder.injectTargetIntoWrapper(calc, calc2);
 
-		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+		assertEquals(1, StatCounter.counter);    // counter in static block !!!
 
 		calc2.hello();
 
@@ -171,7 +172,7 @@ public class WrapperTest extends TestCase {
 
 		assertEquals(10, calc2.calculate(3, 7));
 
-		assertEquals(2, StatCounter.counter);		// counter not called in calculate!
+		assertEquals(2, StatCounter.counter);        // counter not called in calculate!
 
 		calc2.ola();
 
@@ -184,6 +185,7 @@ public class WrapperTest extends TestCase {
 		assertEquals(3, StatCounter.counter);
 	}
 
+	@Test
 	public void testNoPointcutMatched() throws Exception {
 
 		Calc calc = new CalcSuperImpl();
@@ -204,7 +206,7 @@ public class WrapperTest extends TestCase {
 
 		builder.injectTargetIntoWrapper(calc, calc2);
 
-		assertEquals(1, StatCounter.counter);	// counter in static block !!!
+		assertEquals(1, StatCounter.counter);    // counter in static block !!!
 
 		calc2.hello();
 
@@ -212,7 +214,7 @@ public class WrapperTest extends TestCase {
 
 		assertEquals(10, calc2.calculate(3, 7));
 
-		assertEquals(1, StatCounter.counter);		// counter not called in calculate!
+		assertEquals(1, StatCounter.counter);        // counter not called in calculate!
 
 		calc2.ola();
 

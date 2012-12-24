@@ -2,24 +2,23 @@
 
 package jodd.proxetta;
 
-import jodd.proxetta.impl.ProxyProxettaBuilder;
-import jodd.proxetta.data.StatCounterAdvice;
+import jodd.proxetta.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
-import junit.framework.TestCase;
-import jodd.proxetta.data.FooProxyAdvice;
-import jodd.proxetta.data.Foo;
-import jodd.proxetta.data.Two;
-import jodd.proxetta.data.StatCounter;
+import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
-public class SubclassTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class SubclassTest {
+
+	@Test
 	public void test1() {
 
 		ProxyAspect a1 = new ProxyAspect(FooProxyAdvice.class, new ProxyPointcut() {
@@ -64,6 +63,7 @@ public class SubclassTest extends TestCase {
 
 	}
 
+	@Test
 	public void testProxyClassNames() {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(true);
@@ -117,6 +117,7 @@ public class SubclassTest extends TestCase {
 
 	}
 
+	@Test
 	public void testInnerOverride() {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(FooProxyAdvice.class, new AllMethodsPointcut()));
 		ProxyProxettaBuilder builder = proxyProxetta.builder();
@@ -129,6 +130,7 @@ public class SubclassTest extends TestCase {
 		assertEquals("foo.Two$Proxetta", two.getClass().getName());
 	}
 
+	@Test
 	public void testJdk() throws Exception {
 		ProxyProxetta proxyProxetta = ProxyProxetta.withAspects(new ProxyAspect(StatCounterAdvice.class, new AllMethodsPointcut()));
 		proxyProxetta.setVariableClassName(false);
