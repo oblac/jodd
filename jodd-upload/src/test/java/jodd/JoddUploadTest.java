@@ -2,10 +2,13 @@
 
 package jodd;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class JoddUploadTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
+public class JoddUploadTest {
+
+	@Test
 	public void testLoadedModules() {
 		assertEquals(false, Jodd.isBeanLoaded());
 		assertEquals(false, Jodd.isHttpLoaded());
