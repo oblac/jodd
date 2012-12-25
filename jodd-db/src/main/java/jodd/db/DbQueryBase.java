@@ -113,7 +113,6 @@ abstract class DbQueryBase {
 	protected Connection connection;
 	protected DbSession session;
 	protected String sqlString;
-	protected DbSessionProvider dbSessionProvider;
 
 	/**
 	 * Returns used {@link DbSession}.
@@ -179,15 +178,13 @@ abstract class DbQueryBase {
 	protected void initSession(DbSession session) {
 		if (session != null) {
 			this.session = session;
-			this.dbSessionProvider = null;
-
 			return;
 		}
 
-		dbSessionProvider = dbManager.sessionProvider;
+		DbSessionProvider dbSessionProvider = dbManager.sessionProvider;
 
 		if (dbSessionProvider == null) {
-			throw new DbSqlException("Session provider not defined.");
+			throw new DbSqlException("Session provider not available.");
 		}
 
 		this.session = dbSessionProvider.getDbSession();

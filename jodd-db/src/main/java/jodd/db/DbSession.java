@@ -94,10 +94,17 @@ public class DbSession {
 	}
 
 	/**
-	 * Indicates whether a session is open.
+	 * Indicates whether a session is closed.
 	 */
 	public boolean isSessionClosed() {
 		return queries == null;
+	}
+
+	/**
+	 * Returns <code>true</code> if session is open.
+	 */
+	public boolean isSessionOpen() {
+		return queries != null;
 	}
 
 
