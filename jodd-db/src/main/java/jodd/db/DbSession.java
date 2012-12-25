@@ -105,7 +105,8 @@ public class DbSession {
 
 	/**
 	 * Bag of all queries attached to this session. Explicitly closed queries
-	 * remains in the bag. If <code>null</code> session is closed;
+	 * remains in the set. If <code>null</code> session is closed.
+	 * If not <code>null</code>, but empty, session is still considered as open.
 	 */
 	protected Set<DbQueryBase> queries;
 
@@ -113,6 +114,9 @@ public class DbSession {
 	 * Returns total number of queries assigned to this session.
 	 */
 	public int getTotalQueries() {
+		if (queries == null) {
+			return 0;
+		}
 		return queries.size();
 	}
 
@@ -261,7 +265,7 @@ public class DbSession {
 
 	protected void checkOpenSession() {
 		if (queries == null) {
-			throw new DbSqlException("Session is already closed.");
+			throw new DbSqlException("Session is closed.");
 		}
 	}
 

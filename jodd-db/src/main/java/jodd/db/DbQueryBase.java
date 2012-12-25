@@ -113,6 +113,7 @@ abstract class DbQueryBase {
 	protected Connection connection;
 	protected DbSession session;
 	protected String sqlString;
+	protected DbSessionProvider dbSessionProvider;
 
 	// ---------------------------------------------------------------- attributes
 
@@ -165,6 +166,27 @@ abstract class DbQueryBase {
 	}
 
 	/**
+	 * Initializes session. When not specified (i.e. is <code>null</code>),
+	 * session is fetched from session provider.
+	 */
+	protected void initSession(DbSession session) {
+		if (session != null) {
+			this.session = session;
+			this.dbSessionProvider = null;
+
+			return;
+		}
+
+		dbSessionProvider = dbManager.sessionProvider;
+
+		if (dbSessionProvider == null) {
+			throw new DbSqlException("Session provider not defined.");
+		}
+
+		this.session = dbSessionProvider.getDbSession();
+	}
+
+	/**
 	 * Performs JDBC initialization of the query. Obtains connection, parses the SQL query string
 	 * and creates statements. Initialization is performed only once, when switching to initialized state.
 	 */
@@ -172,9 +194,8 @@ abstract class DbQueryBase {
 	protected void initializeJdbc() {
 		// connection
 		if (connection == null) {
-			if (session == null) {
-				session = dbManager.sessionProvider.getDbSession();
-			}
+			initSession(session);
+
 			connection = session.getConnection();
 		}
 

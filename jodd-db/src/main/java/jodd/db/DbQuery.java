@@ -67,11 +67,9 @@ public class DbQuery extends DbQueryBase {
 	 * Creates a new query from {@link DbSession}.
 	 */
 	public DbQuery(DbSession session, String sqlString) {
-		if (session == null) {
-			session = dbManager.sessionProvider.getDbSession();
-		}
-		this.session = session;
-		session.attachQuery(this);
+		initSession(session);
+
+		this.session.attachQuery(this);
 		this.sqlString = sqlString;
 
 		if (log.isDebugEnabled()) {
