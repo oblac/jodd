@@ -28,54 +28,55 @@ public class DbJtxTransactionManagerTest extends DbHsqldbTestCase {
 		DbJtxSessionProvider sessionProvider = new DbJtxSessionProvider(jtxManager);
 		DbManager.getInstance().setSessionProvider(sessionProvider);
 
-		// start, 0 transactions, no session
-		assertEquals(0, jtxManager.totalTransactions());
+		for (int i = 0; i < 2; i++) {
 
-		// start transaction
-		jtxManager.requestTransaction(new JtxTransactionMode());
+			// start, 0 transactions, no session
+			assertEquals(0, jtxManager.totalTransactions());
 
-		// get session from provider!
-		DbSession dbSession = sessionProvider.getDbSession();
-		assertNotNull(dbSession);
+			// start transaction
+			jtxManager.requestTransaction(new JtxTransactionMode());
 
-		// transaction started, but connection not yet fetched as it is not used yet
-		assertEquals(1, jtxManager.totalTransactions());
-		assertEquals(0, cp.getConnectionsCount().getBusyCount());
+			// get session from provider!
+			DbSession dbSession = sessionProvider.getDbSession();
+			assertNotNull(dbSession);
 
-		// same session as it is the same transaction
-		DbSession dbSession2 = sessionProvider.getDbSession();
-		assertNotNull(dbSession2);
-		assertSame(dbSession, dbSession2);
+			// transaction started, but connection not yet fetched as it is not used yet
+			assertEquals(1, jtxManager.totalTransactions());
+			assertEquals(0, cp.getConnectionsCount().getBusyCount());
 
-		// create query, session is get from provider, the very same one
-		DbQuery dbQuery = new DbQuery("SELECT 173 FROM (VALUES(0))");
-		long value = dbQuery.executeCount();
-		assertEquals(173, value);
-		assertSame(dbSession, dbQuery.getSession());
+			// same session as it is the same transaction
+			DbSession dbSession2 = sessionProvider.getDbSession();
+			assertNotNull(dbSession2);
+			assertSame(dbSession, dbSession2);
 
-		// transaction still active, connection still in use
-		assertEquals(1, jtxManager.totalTransactions());
-		assertEquals(1, cp.getConnectionsCount().getBusyCount());
+			// create query, session is get from provider, the very same one
+			DbQuery dbQuery = new DbQuery("SELECT 173 FROM (VALUES(0))");
+			long value = dbQuery.executeCount();
+			assertEquals(173, value);
+			assertSame(dbSession, dbQuery.getSession());
 
-		// close query
-		dbQuery.close();
+			// transaction still active, connection still in use
+			assertEquals(1, jtxManager.totalTransactions());
+			assertEquals(1, cp.getConnectionsCount().getBusyCount());
 
-		// transaction still active, connection still in use (!)
-		// since session is still active
-		assertEquals(1, jtxManager.totalTransactions());
-		assertEquals(1, cp.getConnectionsCount().getBusyCount());
+			// close query
+			dbQuery.close();
 
-		// commit transaction...
-		//jtxManager.getTransaction().commit();
-		// ...or quit session using provider
-		DbManager.getInstance().getSessionProvider().closeDbSession();
+			// transaction still active, connection still in use (!)
+			// since session is still active
+			assertEquals(1, jtxManager.totalTransactions());
+			assertEquals(1, cp.getConnectionsCount().getBusyCount());
+			assertTrue(!dbQuery.getSession().isSessionClosed());
 
-		// no transaction
-		assertEquals(0, jtxManager.totalTransactions());
-		// session is closed
-		assertTrue(dbSession.isSessionClosed());
-		// connection is returned
-		assertEquals(0, cp.getConnectionsCount().getBusyCount());
+			// commit transaction...
+			jtxManager.getTransaction().commit();
 
+			// no transaction
+			assertEquals(0, jtxManager.totalTransactions());
+			// session is closed
+			assertTrue(dbSession.isSessionClosed());
+			// connection is returned
+			assertEquals(0, cp.getConnectionsCount().getBusyCount());
+		}
 	}
 }
