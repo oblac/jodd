@@ -115,6 +115,13 @@ abstract class DbQueryBase {
 	protected String sqlString;
 	protected DbSessionProvider dbSessionProvider;
 
+	/**
+	 * Returns used {@link DbSession}.
+	 */
+	public DbSession getSession() {
+		return session;
+	}
+
 	// ---------------------------------------------------------------- attributes
 
 	protected Statement statement;
