@@ -962,7 +962,15 @@ public class ReflectUtil {
 		}
 	}
 
-	private static final ReflectUtilSecurityManager SECURITY_MANAGER = new ReflectUtilSecurityManager();
+	private static ReflectUtilSecurityManager SECURITY_MANAGER;
+
+	static {
+		try {
+			SECURITY_MANAGER = new ReflectUtilSecurityManager();
+		} catch (Exception ex) {
+			SECURITY_MANAGER = null;
+		}
+	}
 
 	/**
 	 * Emulates <code>Reflection.getCallerClass</code> using standard API.
@@ -973,11 +981,30 @@ public class ReflectUtil {
 	 * <li><code>Thread.currentThread().getStackTrace()[callStackDepth]</code> (the slowest)</li>
 	 * </ul>
 	 * <p>
+	 * In case when usage of <code>SecurityManager</code> is not allowed,
+	 * this method fails back to the second implementation.
+	 * <p>
 	 * Note that original <code>Reflection.getCallerClass</code> is way faster
 	 * then any emulation.
 	 */
 	public static Class getCallerClass(int framesToSkip) {
-		return SECURITY_MANAGER.getCallerClass(framesToSkip);
+		if (SECURITY_MANAGER != null) {
+			return SECURITY_MANAGER.getCallerClass(framesToSkip);
+		}
+
+		StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+
+		if (framesToSkip >= 2) {
+			framesToSkip += 4;
+		}
+
+		String className = stackTraceElements[framesToSkip].getClassName();
+
+		try {
+			return Thread.currentThread().getContextClassLoader().loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			throw new UnsupportedOperationException(className + " not found.");
+		}
 	}
 
 }

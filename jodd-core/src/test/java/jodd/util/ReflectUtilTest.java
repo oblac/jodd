@@ -452,4 +452,22 @@ public class ReflectUtilTest {
 		assertEquals(ReflectUtilTest.class, ReflectUtil.getCallerClass(1));
 	}
 
+	@Test
+	public void testGetCallerClass2() throws NoSuchFieldException, IllegalAccessException {
+		Field field = ReflectUtil.class.getDeclaredField("SECURITY_MANAGER");
+		field.setAccessible(true);
+		Object value = field.get(null);
+		field.set(null, null);
+
+		assertFalse(Reflection.getCallerClass(0).equals(ReflectUtil.getCallerClass(0)));
+
+		assertEquals(Reflection.getCallerClass(1), ReflectUtil.getCallerClass(1));
+		assertEquals(Reflection.getCallerClass(2), ReflectUtil.getCallerClass(2));
+		assertEquals(Reflection.getCallerClass(3), ReflectUtil.getCallerClass(3));
+
+		assertEquals(ReflectUtilTest.class, ReflectUtil.getCallerClass(1));
+
+		field.set(null, value);
+	}
+
 }
