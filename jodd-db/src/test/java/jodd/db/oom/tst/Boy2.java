@@ -8,6 +8,15 @@ import jodd.db.oom.meta.DbColumn;
 @DbTable("BOY")
 public class Boy2 {
 
+	public Boy2() {
+	}
+
+	public Boy2(int id, String name, int girlId) {
+		this.id = id;
+		this.name = name;
+		this.girlId = girlId;
+	}
+
 	@DbColumn
 	public int id;
 
