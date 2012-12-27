@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link jodd.db.oom.DbOomManager} table name.
+ * {@link jodd.db.oom.DbOomManager} table (or view) name.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 public @interface DbTable {
 
 	/**
-	 * Table name.
+	 * Table or view name.
 	 */
 	String value() default "";
 

@@ -173,7 +173,8 @@ public class DbOomQuery extends DbQuery {
 	protected JoinHintResolver hintResolver = dbOomManager.getHintResolver();
 
 	/**
-	 * Specifies hints for the query.
+	 * Specifies hints for the query. Provided string is
+	 * split on ',' separator.
 	 */
 	public DbOomQuery withHints(String hint) {
 		this.hints = StringUtil.splitc(hint, ',');
@@ -183,7 +184,7 @@ public class DbOomQuery extends DbQuery {
 	/**
 	 * Specifies multiple hints for the query.
 	 */
-	public DbOomQuery withHints(String[] hints) {
+	public DbOomQuery withHints(String... hints) {
 		this.hints = hints;
 		return this;
 	}

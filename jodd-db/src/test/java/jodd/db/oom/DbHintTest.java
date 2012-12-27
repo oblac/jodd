@@ -67,10 +67,9 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// todo select with two hints
 
-/*
 		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girl.*}, (select count (1) from $T{Girl girl2}) as boy.totalGirls from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
-		dbOomQuery.withHints("boy.totalGirls, boy");
+				sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirls from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery.withHints("boy", "boy.girl", "boy.totalGirls");
 		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
@@ -79,8 +78,6 @@ public class DbHintTest extends DbHsqldbTestCase {
 		assertNotNull(boy2.girl);
 		assertEquals(1, boy2.girl.id);
 		assertEquals(2, boy2.totalGirls);
-*/
-
 
 		dbSession.closeSession();
 	}
