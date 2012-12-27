@@ -33,6 +33,10 @@ import jodd.util.StringPool;
  * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
+ * <li><code>$C{hint.entityRef...}</code> defines a hint</li>
+ * <li><code>$C{hint:entityRef...}</code> defines a hint with custom name</li>
+ * <li><code>$C{.columName}</code> renders as column name</li>
+ * <li><code>$C{hint:.columName}</code> renders as column name and defines its hint</li>
  * </ul>
  */
 public class ColumnsSelectChunk extends SqlChunk {
@@ -80,8 +84,16 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.tableRef = tref;
 				this.hint = null;
 			} else {
-				this.tableRef = tref.substring(dotNdx + 1);
-				this.hint = tref;
+				int doubleColumnNdx = tref.indexOf(':');
+				if (doubleColumnNdx == -1) {
+					// no special hint
+					this.tableRef = tref.substring(dotNdx + 1);
+					this.hint = tref;
+				} else {
+					// hint is different
+					this.tableRef = tref.substring(doubleColumnNdx + 1);
+					this.hint = tref.substring(0, doubleColumnNdx);
+				}
 			}
 
 			// column
@@ -121,6 +133,12 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 		// columns
 		separateByCommaOrSpace(out);
+
+		// special case, only column name, no table ref/name
+		if (tableRef.length() == 0) {
+			out.append(columnRef);
+			return;
+		}
 
 		boolean useTableReference = true;
 		DbEntityDescriptor ded = lookupTableRef(tableRef, false);

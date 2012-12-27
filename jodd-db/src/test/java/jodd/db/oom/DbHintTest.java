@@ -37,6 +37,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		assertEquals(1, DbEntitySql.insert(new Boy2(1, "John", 1)).query().executeUpdateAndClose());
 
 		// select without hint
+
 		DbOomQuery dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
 
@@ -51,7 +52,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		Girl girl = (Girl) result[1];
 		assertEquals(1, girl.id);
 
-		// select with one hint!
+		// select with t-sql hint
 
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{boy.girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
@@ -65,19 +66,46 @@ public class DbHintTest extends DbHsqldbTestCase {
 		assertEquals(1, boy2.girl.id);
 		assertEquals(0, boy2.totalGirls);
 
-		// todo select with two hints
+		// select with external hints
 
 		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirls from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
-		dbOomQuery.withHints("boy", "boy.girl", "boy.totalGirls");
+				sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirlsCount from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery.withHints("boy", "boy.girlAlt", "boy.totalGirls");
 		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);
 		assertEquals(1, boy2.girlId);
-		assertNotNull(boy2.girl);
-		assertEquals(1, boy2.girl.id);
+		assertNotNull(boy2.girlAlt);
+		assertEquals(1, boy2.girlAlt.id);
 		assertEquals(2, boy2.totalGirls);
+
+		// same select with t-sql hints
+
+		dbOomQuery = new DbOomQuery(
+				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
+
+		assertEquals(1, boy2.id);
+		assertEquals("John", boy2.name);
+		assertEquals(1, boy2.girlId);
+		assertNotNull(boy2.girlAlt);
+		assertEquals(1, boy2.girlAlt.id);
+		assertEquals(0, boy2.totalGirls);
+
+		// same select with t-sql hints
+
+		dbOomQuery = new DbOomQuery(
+				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*}, (select count (1) from $T{Girl girl2}) as $C{boy.totalGirls:.totalGirlsCount} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
+
+		assertEquals(1, boy2.id);
+		assertEquals("John", boy2.name);
+		assertEquals(1, boy2.girlId);
+		assertNotNull(boy2.girlAlt);
+		assertEquals(1, boy2.girlAlt.id);
+		assertEquals(2, boy2.totalGirls);
+
 
 		dbSession.closeSession();
 	}

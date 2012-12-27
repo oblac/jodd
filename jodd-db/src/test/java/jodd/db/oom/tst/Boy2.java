@@ -33,4 +33,5 @@ public class Boy2 {
 	// ---------------------------------------------------------------- joins
 
 	public Girl girl;
+	public Girl girlAlt;
 }
