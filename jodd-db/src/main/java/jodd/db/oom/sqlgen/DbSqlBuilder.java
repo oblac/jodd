@@ -214,6 +214,13 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return appendRaw(StringPool.SPACE);
 	}
 
+	public DbSqlBuilder _(SqlChunk chunk) {
+		return addChunk(chunk);
+	}
+	
+	public DbSqlBuilder _r(String text) {
+		return appendRaw(text);
+	}
 	// ---------------------------------------------------------------- interface
 
 	/**
