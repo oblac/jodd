@@ -471,6 +471,55 @@ public class Jerry implements Iterable<Jerry> {
 		return false;
 	}
 
+	/**
+	 * Reduces the set of matched elements to those that match the selector.
+	 */
+	public Jerry filter(String cssSelectors) {
+		List<Node> result = new NodeList(nodes.length);
+
+		for (Node node : nodes) {
+			Node parentNode = node.getParentNode();
+			if (parentNode == null) {
+				continue;
+			}
+
+			NodeSelector nodeSelector = createNodeSelector(parentNode);
+			List<Node> selectedNodes = nodeSelector.select(cssSelectors);
+
+			for (Node selected : selectedNodes) {
+				if (node == selected) {
+					result.add(node);
+				}
+			}
+		}
+		return new Jerry(this, result);
+	}
+
+	/**
+	 * Reduces the set of matched elements to those that pass the
+	 * {@link JerryFunction function's} test.
+	 */
+	public Jerry filter(JerryFunction jerryFunction) {
+		List<Node> result = new NodeList(nodes.length);
+
+		for (int i = 0; i < nodes.length; i++) {
+			Node node = nodes[i];
+			Node parentNode = node.getParentNode();
+			if (parentNode == null) {
+				continue;
+			}
+
+			Jerry $this = new Jerry(this, node);
+
+			boolean accept = jerryFunction.onNode($this, i);
+
+			if (accept) {
+				result.add(node);
+			}
+		}
+		return new Jerry(this, result);
+	}
+
 	// ---------------------------------------------------------------- Attributes
 
 	/**
