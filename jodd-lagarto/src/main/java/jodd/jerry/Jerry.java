@@ -286,9 +286,19 @@ public class Jerry implements Iterable<Jerry> {
 
 		return new Jerry(this, result);
 	}
-	
+
+	/**
+	 * @see #find(String)
+	 */
 	public Jerry $(String cssSelector) {
 		return find(cssSelector);
+	}
+
+	/**
+	 * Shortcut for <code>context.find(css)</code>.
+	 */
+	public static Jerry $(String cssSelector, Jerry context) {
+		return context.find(cssSelector);
 	}
 
 	/**

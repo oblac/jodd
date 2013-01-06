@@ -468,8 +468,7 @@ public class JerryTest {
 		Jerry doc = jerry(html);
 		doc.$("li").filter(new JerryFunction() {
 			public boolean onNode(Jerry $this, int index) {
-//				return Jerry.$("strong", $this).length == 1;
-				return $this.find("strong").length() == 1;
+				return Jerry.$("strong", $this).length() == 1;
 			}
 		}).css("background-color", "red");
 
