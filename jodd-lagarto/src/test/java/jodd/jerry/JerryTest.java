@@ -449,6 +449,78 @@ public class JerryTest {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
+	public void testFilter() {
+		String html = readFile("filter.html");
+		String htmlOK = readFile("filter-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").filter(":even").css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testFilter2() {
+		String html = readFile("filter2.html");
+		String htmlOK = readFile("filter2-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").filter(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+//				return Jerry.$("strong", $this).length == 1;
+				return $this.find("strong").length() == 1;
+			}
+		}).css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testFilter2_2() {
+		String html = readFile("filter2.html");
+		String htmlOK = readFile("filter2-ok2.html");
+
+		Jerry doc = jerry(html);
+		doc.$("li").filter(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+				return index % 3 == 2;
+			}
+		}).css("background-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testFilter3() {
+		String html = readFile("filter3.html");
+		String htmlOK = readFile("filter3-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div").css("background", "#c8ebcc")
+				.filter(".middle")
+				.css("border-color", "red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
+	@Test
+	public void testFilter4() {
+		String html = readFile("filter4.html");
+		String htmlOK = readFile("filter4-ok.html");
+
+		Jerry doc = jerry(html);
+		doc.$("div").css("background", "#b4b0da")
+				.filter(new JerryFunction() {
+					public boolean onNode(Jerry $this, int index) {
+						return index == 1 || $this.attr("id").equals("fourth");
+					}
+				})
+				.css("border", "3px double red");
+
+		assertEquals(htmlOK, actualHtml(doc));
+	}
+
 	// ---------------------------------------------------------------- tools
 
 	private String actualHtml(Jerry $) {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+  div { width:60px; height:60px; margin:5px; float:left;
+        border:3px white solid; }
+  </style>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+
+  <div id="first" style="background:#b4b0da;"></div>
+  <div id="second" style="background:#b4b0da;border:3px double red;"></div>
+  <div id="third" style="background:#b4b0da;"></div>
+
+  <div id="fourth" style="background:#b4b0da;border:3px double red;"></div>
+  <div id="fifth" style="background:#b4b0da;"></div>
+  <div id="sixth" style="background:#b4b0da;"></div>
+<script>
+    $("div").css("background", "#b4b0da")
+            .filter(function (index) {
+                  return index == 1 || $(this).attr("id") == "fourth";
+                })
+            .css("border", "3px double red");
+
+</script>
+
+</body>
+</html>
