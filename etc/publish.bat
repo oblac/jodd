@@ -15,7 +15,7 @@ setlocal
 set JAVA_HOME=d:\java\jdk6
 set JDK_HOME=d:\java\jdk6
 
-set JODD_VERSION=3.4.0
+set JODD_VERSION=3.4.1
 set GPG_ARGS=--batch --passphrase-file .pass --armor --detach-sign
 set DEPLOY_ARGS=-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2 -DrepositoryId=sonatype-nexus-staging -DgeneratePom=false
 set MVN=d:\java\apache-maven-3.0.4\bin\mvn.bat 
