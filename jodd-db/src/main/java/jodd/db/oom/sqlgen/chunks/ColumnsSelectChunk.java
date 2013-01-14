@@ -50,7 +50,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 	protected final String tableRef;
 	protected final String columnRef;
-	protected String[] columnRefArr;
+	protected final String[] columnRefArr;
 	protected final int includeColumns;
 	protected final String hint;
 
@@ -66,6 +66,10 @@ public class ColumnsSelectChunk extends SqlChunk {
 	public ColumnsSelectChunk(String tableRef, String columnRef) {
 		this(tableRef, columnRef, null, COLS_NA, null);
 	}
+	
+	public ColumnsSelectChunk(String tableRef, String ...columnRefArr) {
+		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
+	}
 
 	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
 		this(tableRef, null, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
@@ -78,6 +82,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		if (dotNdx == -1) {
 			this.tableRef = reference;
 			this.columnRef = null;
+			this.columnRefArr = null;
 			this.includeColumns = COLS_ALL;
 			this.hint = null;
 		} else {
@@ -106,9 +111,11 @@ public class ColumnsSelectChunk extends SqlChunk {
 			// column
 			if (reference.equals(StringPool.STAR)) {
 				this.columnRef = null;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_ALL;
 			} else if (reference.equals(StringPool.PLUS)) {
 				this.columnRef = null;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_ONLY_IDS;
 			} else if(!reference.isEmpty() 
 				&& reference.charAt(0) == LEFT_SQ_BRACKET
@@ -119,6 +126,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.includeColumns = COLS_NA_MULTI;
 			} else {
 				this.columnRef = reference;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_NA;
 			}
 		}
