@@ -54,20 +54,21 @@ public class ColumnsSelectChunk extends SqlChunk {
 	protected final int includeColumns;
 	protected final String hint;
 
-	protected ColumnsSelectChunk(String tableRef, String columnRef, int includeColumns, String hint) {
+	protected ColumnsSelectChunk(String tableRef, String columnRef,String[] columnRefArr, int includeColumns, String hint) {
 		super(CHUNK_SELECT_COLUMNS);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
+		this.columnRefArr = columnRefArr;
 		this.includeColumns = includeColumns;
 		this.hint = hint;
 	}
 
 	public ColumnsSelectChunk(String tableRef, String columnRef) {
-		this(tableRef, columnRef, COLS_NA, null);
+		this(tableRef, columnRef, null, COLS_NA, null);
 	}
 
 	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
-		this(tableRef, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
+		this(tableRef, null, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
 	public ColumnsSelectChunk(String reference) {
@@ -252,6 +253,6 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 	@Override
 	public SqlChunk clone() {
-		return new ColumnsSelectChunk(tableRef, columnRef, includeColumns, hint);
+		return new ColumnsSelectChunk(tableRef, columnRef, columnRefArr, includeColumns, hint);
 	}
 }
