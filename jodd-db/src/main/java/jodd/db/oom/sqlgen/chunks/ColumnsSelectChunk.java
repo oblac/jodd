@@ -7,7 +7,9 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
+import jodd.util.ArraysUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Columns select chunk resolves entity column(s) from column references. Should be used for SELECT queries.
@@ -42,9 +44,13 @@ import jodd.util.StringPool;
 public class ColumnsSelectChunk extends SqlChunk {
 
 	private static final String AS = " as ";
+	private static final char SPLIT = '|';
+	private static final char  LEFT_SQ_BRACKET  = '[';
+	private static final char  RIGHT_SQ_BRACKET = ']';
 
 	protected final String tableRef;
 	protected final String columnRef;
+	protected String[] columnRefArr;
 	protected final int includeColumns;
 	protected final String hint;
 
@@ -103,6 +109,13 @@ public class ColumnsSelectChunk extends SqlChunk {
 			} else if (reference.equals(StringPool.PLUS)) {
 				this.columnRef = null;
 				this.includeColumns = COLS_ONLY_IDS;
+			} else if(!reference.isEmpty() 
+				&& reference.charAt(0) == LEFT_SQ_BRACKET
+				&&reference.charAt(reference.length()-1) == RIGHT_SQ_BRACKET){
+			    	this.columnRef = null;
+				this.columnRefArr = StringUtil.splitc(reference.substring(1, reference.length()-1), SPLIT);
+				StringUtil.trimAll(this.columnRefArr);
+				this.includeColumns = COLS_NA_MULTI;
 			} else {
 				this.columnRef = reference;
 				this.includeColumns = COLS_NA;
@@ -150,8 +163,14 @@ public class ColumnsSelectChunk extends SqlChunk {
 		if (columnRef == null) {
 			DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 			int count = 0;
+			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
 			for (DbEntityColumnDescriptor dec : decList) {
 				if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+					continue;
+				}
+				if ((includeColumns == COLS_NA_MULTI) 
+					&& (!withIds || (dec.isId() == false))
+					&& (!ArraysUtil.contains(columnRefArr, dec.getPropertyName()))) {
 					continue;
 				}
 				if (count > 0) {
