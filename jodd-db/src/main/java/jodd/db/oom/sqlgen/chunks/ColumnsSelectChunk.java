@@ -7,7 +7,9 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.db.oom.sqlgen.TemplateData;
+import jodd.util.ArraysUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 /**
  * Columns select chunk resolves entity column(s) from column references. Should be used for SELECT queries.
@@ -32,6 +34,7 @@ import jodd.util.StringPool;
  * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns</li>
  * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
+ * <li><code>$C{tableRef.[colRef1|colRef2|...]}</code> is rendered as FOO.column1, FOO.column2,..., support id sign (+)</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
  * <li><code>$C{hint.entityRef...}</code> defines a hint</li>
  * <li><code>$C{hint:entityRef...}</code> defines a hint with custom name</li>
@@ -42,26 +45,35 @@ import jodd.util.StringPool;
 public class ColumnsSelectChunk extends SqlChunk {
 
 	private static final String AS = " as ";
+	private static final char SPLIT = '|';
+	private static final char  LEFT_SQ_BRACKET  = '[';
+	private static final char  RIGHT_SQ_BRACKET = ']';
 
 	protected final String tableRef;
 	protected final String columnRef;
+	protected final String[] columnRefArr;
 	protected final int includeColumns;
 	protected final String hint;
 
-	protected ColumnsSelectChunk(String tableRef, String columnRef, int includeColumns, String hint) {
+	protected ColumnsSelectChunk(String tableRef, String columnRef,String[] columnRefArr, int includeColumns, String hint) {
 		super(CHUNK_SELECT_COLUMNS);
 		this.tableRef = tableRef;
 		this.columnRef = columnRef;
+		this.columnRefArr = columnRefArr;
 		this.includeColumns = includeColumns;
 		this.hint = hint;
 	}
 
 	public ColumnsSelectChunk(String tableRef, String columnRef) {
-		this(tableRef, columnRef, COLS_NA, null);
+		this(tableRef, columnRef, null, COLS_NA, null);
+	}
+	
+	public ColumnsSelectChunk(String tableRef, String[] columnRefArr) {
+		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
 	}
 
 	public ColumnsSelectChunk(String tableRef, boolean includeAll) {
-		this(tableRef, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
+		this(tableRef, null, null, includeAll == true ? COLS_ALL : COLS_ONLY_IDS, null);
 	}
 
 	public ColumnsSelectChunk(String reference) {
@@ -71,6 +83,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		if (dotNdx == -1) {
 			this.tableRef = reference;
 			this.columnRef = null;
+			this.columnRefArr = null;
 			this.includeColumns = COLS_ALL;
 			this.hint = null;
 		} else {
@@ -99,12 +112,22 @@ public class ColumnsSelectChunk extends SqlChunk {
 			// column
 			if (reference.equals(StringPool.STAR)) {
 				this.columnRef = null;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_ALL;
 			} else if (reference.equals(StringPool.PLUS)) {
 				this.columnRef = null;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_ONLY_IDS;
+			} else if(!reference.isEmpty() 
+				&& reference.charAt(0) == LEFT_SQ_BRACKET
+				&&reference.charAt(reference.length()-1) == RIGHT_SQ_BRACKET){
+			    	this.columnRef = null;
+				this.columnRefArr = StringUtil.splitc(reference.substring(1, reference.length()-1), SPLIT);
+				StringUtil.trimAll(this.columnRefArr);
+				this.includeColumns = COLS_NA_MULTI;
 			} else {
 				this.columnRef = reference;
+				this.columnRefArr = null;
 				this.includeColumns = COLS_NA;
 			}
 		}
@@ -150,8 +173,14 @@ public class ColumnsSelectChunk extends SqlChunk {
 		if (columnRef == null) {
 			DbEntityColumnDescriptor[] decList = ded.getColumnDescriptors();
 			int count = 0;
+			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
 			for (DbEntityColumnDescriptor dec : decList) {
 				if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+					continue;
+				}
+				if ((includeColumns == COLS_NA_MULTI) 
+					&& (!withIds || (dec.isId() == false))
+					&& (!ArraysUtil.contains(columnRefArr, dec.getPropertyName()))) {
 					continue;
 				}
 				if (count > 0) {
@@ -233,6 +262,6 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 	@Override
 	public SqlChunk clone() {
-		return new ColumnsSelectChunk(tableRef, columnRef, includeColumns, hint);
+		return new ColumnsSelectChunk(tableRef, columnRef, columnRefArr, includeColumns, hint);
 	}
 }
