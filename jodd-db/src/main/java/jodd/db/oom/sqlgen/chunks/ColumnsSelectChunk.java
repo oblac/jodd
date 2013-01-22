@@ -34,7 +34,7 @@ import jodd.util.StringUtil;
  * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns</li>
  * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
- * <li><code>$C{tableRef.[colRef1|colRef2|...]}</code> is rendered as FOO.column1, FOO.column2,..., support id sign (+)</li>
+ * <li><code>$C{tableRef.[colRef1,colRef2|...]}</code> is rendered as FOO.column1, FOO.column2,..., support id sign (+)</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
  * <li><code>$C{hint.entityRef...}</code> defines a hint</li>
  * <li><code>$C{hint:entityRef...}</code> defines a hint with custom name</li>
@@ -45,7 +45,7 @@ import jodd.util.StringUtil;
 public class ColumnsSelectChunk extends SqlChunk {
 
 	private static final String AS = " as ";
-	private static final char SPLIT = '|';
+	private static final char SPLIT = ',';
 	private static final char  LEFT_SQ_BRACKET  = '[';
 	private static final char  RIGHT_SQ_BRACKET = ']';
 
@@ -68,7 +68,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 		this(tableRef, columnRef, null, COLS_NA, null);
 	}
 	
-	public ColumnsSelectChunk(String tableRef, String[] columnRefArr) {
+	public ColumnsSelectChunk(String tableRef, String... columnRefArr) {
 		this(tableRef, null, columnRefArr, COLS_NA_MULTI, null);
 	}
 
@@ -118,11 +118,13 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.columnRef = null;
 				this.columnRefArr = null;
 				this.includeColumns = COLS_ONLY_IDS;
-			} else if(!reference.isEmpty() 
-				&& reference.charAt(0) == LEFT_SQ_BRACKET
-				&&reference.charAt(reference.length()-1) == RIGHT_SQ_BRACKET){
-			    	this.columnRef = null;
-				this.columnRefArr = StringUtil.splitc(reference.substring(1, reference.length()-1), SPLIT);
+			} else if (
+					reference.length() != 0
+					&& reference.charAt(0) == LEFT_SQ_BRACKET
+					&& reference.charAt(reference.length() - 1) == RIGHT_SQ_BRACKET) {
+
+				this.columnRef = null;
+				this.columnRefArr = StringUtil.splitc(reference.substring(1, reference.length() - 1), SPLIT);
 				StringUtil.trimAll(this.columnRefArr);
 				this.includeColumns = COLS_NA_MULTI;
 			} else {
