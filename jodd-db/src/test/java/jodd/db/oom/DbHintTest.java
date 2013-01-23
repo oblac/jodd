@@ -107,6 +107,21 @@ public class DbHintTest extends DbHsqldbTestCase {
 		assertNotNull(boy2.girlAlt);
 		assertEquals(1, boy2.girlAlt.id);
 		assertEquals(2, boy2.totalGirls);
+		
+		
+		// same select with t-sql hints
+
+		dbOomQuery = new DbOomQuery(
+				sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id,name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
+
+		assertEquals(1, boy2.id);
+		assertEquals("John", boy2.name);
+		assertEquals(1, boy2.girlId);
+		assertNotNull(boy2.girlAlt);
+		assertEquals(1, boy2.girlAlt.id);
+		assertNotNull(boy2.girlAlt.name);
+		assertNull(boy2.girlAlt.speciality);
 
 
 		dbSession.closeSession();
