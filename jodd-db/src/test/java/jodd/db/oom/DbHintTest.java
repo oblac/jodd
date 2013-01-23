@@ -110,7 +110,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		// same select with t-sql hints
 
 		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id|name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+				sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id,name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
 		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);

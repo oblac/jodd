@@ -46,8 +46,6 @@ public class ColumnsSelectChunk extends SqlChunk {
 
 	private static final String AS = " as ";
 	private static final char SPLIT = ',';
-	private static final char  LEFT_SQ_BRACKET  = '[';
-	private static final char  RIGHT_SQ_BRACKET = ']';
 
 	protected final String tableRef;
 	protected final String columnRef;
@@ -120,8 +118,8 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.includeColumns = COLS_ONLY_IDS;
 			} else if (
 					reference.length() != 0
-					&& reference.charAt(0) == LEFT_SQ_BRACKET
-					&& reference.charAt(reference.length() - 1) == RIGHT_SQ_BRACKET) {
+					&& reference.charAt(0) == '['
+					&& reference.charAt(reference.length() - 1) == ']') {
 
 				this.columnRef = null;
 				this.columnRefArr = StringUtil.splitc(reference.substring(1, reference.length() - 1), SPLIT);
