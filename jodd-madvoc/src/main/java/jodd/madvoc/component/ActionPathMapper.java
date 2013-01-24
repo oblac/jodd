@@ -6,7 +6,6 @@ import jodd.petite.meta.PetiteInject;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.MadvocUtil;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
 
@@ -54,9 +53,7 @@ public class ActionPathMapper {
 	 */
 	public ActionConfig resolveActionConfig(String actionPath, String method) {
 
-		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
-
-		ActionConfig cfg = actionsManager.lookup(actionPath, actionPathChunks, method);
+		ActionConfig cfg = actionsManager.lookup(actionPath, method);
 
 		if ((cfg == null) && madvocConfig.isActionPathMappingEnabled()) {
 			String packageRoot = madvocConfig.getRootPackage();

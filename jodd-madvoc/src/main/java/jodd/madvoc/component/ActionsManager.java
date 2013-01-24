@@ -6,6 +6,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.MadvocUtil;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.BinarySearch;
 import jodd.util.ClassLoaderUtil;
@@ -171,24 +172,30 @@ public class ActionsManager {
 
 	/**
 	 * Returns action configurations for provided action path.
+	 * First it lookups for exact <code>actionPath</code>.
+	 * If action path is not registered, it is split into chunks
+	 * and match against macros.
 	 * Returns <code>null</code> if action path is not registered.
 	 */
-	public ActionConfig lookup(String actionPath, String[] actionChunks, String method) {
+	public ActionConfig lookup(String actionPath, String method) {
+
 		// 1st try: the map
-		ActionConfigSet acset = map.get(actionPath);
-		if (acset != null) {
-			ActionConfig actionConfig = acset.lookup(method);
+		ActionConfigSet actionConfigSet = map.get(actionPath);
+		if (actionConfigSet != null) {
+			ActionConfig actionConfig = actionConfigSet.lookup(method);
 			if (actionConfig != null) {
 				return actionConfig;
 			}
 		}
 
+		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+
 		// 2nd try: the list
 		int low = 0;
 		int high = list.size() - 1;
 		int macroNdx = 0;
-		for (int deep = 0; deep < actionChunks.length; deep++) {
-			String chunk = actionChunks[deep];
+		for (int deep = 0; deep < actionPathChunks.length; deep++) {
+			String chunk = actionPathChunks[deep];
 			listMatch.deep = deep;
 
 			int nextLow = listMatch.findFirst(chunk, low, high);
@@ -222,7 +229,7 @@ public class ActionsManager {
 		if (cfg == null) {
 			return null;
 		}
-		if (set.actionPathChunks.length != actionChunks.length) {
+		if (set.actionPathChunks.length != actionPathChunks.length) {
 			return null;
 		}
 		return cfg;
