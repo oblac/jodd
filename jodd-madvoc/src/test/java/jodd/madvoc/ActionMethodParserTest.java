@@ -280,9 +280,13 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionConfigSet set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/user/${id}/macro.html", cfg.actionPath);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(2, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
+		assertEquals(4, set.actionPathMacros.length);
+		assertNull(set.actionPathMacros[0]);
+		assertNull(set.actionPathMacros[1]);
+		assertNotNull(set.actionPathMacros[2]);
+		assertNull(set.actionPathMacros[3]);
+
+		assertEquals("id", set.actionPathMacros[2].name);
 
 
 		actionsManager.register(ReAction.class, "macro2");
@@ -292,11 +296,9 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/user/image/${id}/${fmt}/macro2.html", cfg.actionPath);
-		assertEquals(2, set.actionPathMacros.length);
-		assertEquals(3, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
-		assertEquals(4, set.actionPathMacros[1].ndx);
-		assertEquals("fmt", set.actionPathMacros[1].name);
+		assertEquals(6, set.actionPathMacros.length);
+		assertEquals("id", set.actionPathMacros[3].name);
+		assertEquals("fmt", set.actionPathMacros[4].name);
 
 		actionsManager.register(ReAction.class, "macro3");
 		cfg = actionPathMapper.resolveActionConfig("/re/users/173/macro3", "POST");
@@ -306,10 +308,8 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/users/${id}/macro3", cfg.actionPath);
 		assertEquals("POST", cfg.actionMethod);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(2, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
-
+		assertEquals(4, set.actionPathMacros.length);
+		assertEquals("id", set.actionPathMacros[2].name);
 
 		cfg = actionPathMapper.resolveActionConfig("/re/user/index.html", "GET");
 		assertNull(cfg);
@@ -346,11 +346,10 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionConfigSet set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/wild${id}cat.html", cfg.actionPath);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(1, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
-		assertEquals("wild", set.actionPathMacros[0].left);
-		assertEquals("cat.html", set.actionPathMacros[0].right);
+		assertEquals(2, set.actionPathMacros.length);
+		assertEquals("id", set.actionPathMacros[1].name);
+		assertEquals("wild", set.actionPathMacros[1].left);
+		assertEquals("cat.html", set.actionPathMacros[1].right);
 
 		cfg = actionPathMapper.resolveActionConfig("/re/wild123dog.html", "GET");
 		assertNull(cfg);
@@ -361,11 +360,10 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/wild${id}dog.html", cfg.actionPath);
 		assertEquals("POST", cfg.actionMethod);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(1, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
-		assertEquals("wild", set.actionPathMacros[0].left);
-		assertEquals("dog.html", set.actionPathMacros[0].right);
+		assertEquals(2, set.actionPathMacros.length);
+		assertEquals("id", set.actionPathMacros[1].name);
+		assertEquals("wild", set.actionPathMacros[1].left);
+		assertEquals("dog.html", set.actionPathMacros[1].right);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
@@ -387,18 +385,16 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionConfigSet set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/duplo/${id:^[0-9]+}", cfg.actionPath);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(2, set.actionPathMacros[0].ndx);
-		assertEquals("id", set.actionPathMacros[0].name);
+		assertEquals(3, set.actionPathMacros.length);
+		assertEquals("id", set.actionPathMacros[2].name);
 
 		cfg = actionPathMapper.resolveActionConfig("/re/duplo/aaa", "GET");
 		assertNotNull(cfg);
 		set = cfg.getActionConfigSet();
 		assertEquals(ReAction.class, cfg.actionClass);
 		assertEquals("/re/duplo/${sid}", cfg.actionPath);
-		assertEquals(1, set.actionPathMacros.length);
-		assertEquals(2, set.actionPathMacros[0].ndx);
-		assertEquals("sid", set.actionPathMacros[0].name);
+		assertEquals(3, set.actionPathMacros.length);
+		assertEquals("sid", set.actionPathMacros[2].name);
 
 		assertEquals(2, actionsManager.getActionsCount());
 	}
