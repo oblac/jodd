@@ -8,23 +8,28 @@ import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionRequest;
 
 /**
- * Injects macro values from action path.
+ * Injects macro values from action path into the action bean.
  */
 public class ActionPathMacroInjector {
 
 	public void inject(Object target, ActionRequest actionRequest) {
 		ActionConfig config = actionRequest.getActionConfig();
 		ActionConfigSet set = config.getActionConfigSet();
-		if (set.actionPathMacros== null) {
+
+		if (set.actionPathMacros == null) {
 			return;
 		}
 
 		String[] actionPathChunks = actionRequest.getActionPathChunks();
+
 		for (int i = 0; i < set.actionPathMacros.length; i++) {
 			ActionConfigSet.PathMacro macro = set.actionPathMacros[i];
-			int ndx = macro.ndx;
+			if (macro == null) {
+				continue;
+			}
+
 			String name = macro.name;
-			String value = actionPathChunks[ndx];
+			String value = actionPathChunks[i];
 
 			int leftLen = macro.left.length();
 			int rightLen = macro.right.length();
@@ -33,6 +38,7 @@ public class ActionPathMacroInjector {
 				// there is additional prefix and/or suffix
 				value = value.substring(leftLen, value.length() - rightLen);
 			}
+
 			BeanUtil.setDeclaredPropertyForcedSilent(target, name, value);
 		}
 	}

@@ -7,6 +7,7 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -32,9 +33,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	 */
 	public List<ActionConfig> getActionConfigs() {
 		List<ActionConfig> list = new ArrayList<ActionConfig>(configs.length);
-		for (ActionConfig config : configs) {
-			list.add(config);
-		}
+		Collections.addAll(list, configs);
 		return list;
 	}
 
@@ -98,17 +97,20 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	// ---------------------------------------------------------------- macros
 
 	/**
-	 * Finds the best matching macro.
+	 * Resolve macros for each chunk. If chunk does not have macro,
+	 * <code>null</code> is set.
 	 */
 	protected PathMacro[] resolveMacros(String[] chunks) {
-		List<PathMacro> list = new ArrayList<PathMacro>(chunks.length);
+		PathMacro[] pathMacros = new PathMacro[chunks.length];
 
 		for (int i = 0; i < chunks.length; i++) {
 			String chunk = chunks[i];
 
 			int[] ndx = StringUtil.indexOfRegion(chunk, StringPool.DOLLAR_LEFT_BRACE, StringPool.RIGHT_BRACE);
+			PathMacro macro = null;
+
 			if (ndx != null) {
-				PathMacro macro = new PathMacro();
+				macro = new PathMacro();
 
 				String name = chunk.substring(ndx[1], ndx[2]);
 
@@ -119,23 +121,21 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 					name = name.substring(0, colonNdx);
 				}
 				macro.name = name;
-				macro.ndx = i;
 				macro.left = (ndx[0] == 0 ? StringPool.EMPTY : chunk.substring(0, ndx[0]));
 				macro.right = (ndx[3] == chunk.length() ? StringPool.EMPTY : chunk.substring(ndx[3]));
-
-				list.add(macro);
 			}
+
+			pathMacros[i] = macro;
 		}
-		if (list.isEmpty()) {
-			return null;
-		}
-		return list.toArray(new PathMacro[list.size()]);
+		return pathMacros;
 	}
 
+	/**
+	 * Definition of action path macro.
+	 */
 	public static class PathMacro {
 
-		public int ndx;
-
+		// macro name
 		public String name;
 
 		// left prefix to the macro
