@@ -257,9 +257,9 @@ public class Madvoc {
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc web application class not found: " + webAppClassName, cnfex);
 		} catch (ClassCastException ccex) {
-			throw new MadvocException("Class '" + webAppClass.getName() + "' is not a Madvoc web application.", ccex);
+			throw new MadvocException("Not a Madvoc web application class: " + webAppClassName, ccex);
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to load Madvoc web application class" + ex.toString(), ex);
+			throw new MadvocException("Unable to load Madvoc web application class: " + webAppClassName, ex);
 		}
 		return webApp;
 	}
@@ -304,9 +304,9 @@ public class Madvoc {
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc configurator class not found: " + madvocConfiguratorClassName, cnfex);
 		} catch (ClassCastException ccex) {
-			throw new MadvocException("Class '" + madvocConfiguratorClass.getName() + "' is not a Madvoc configurator.", ccex);
+			throw new MadvocException("Not a Madvoc configurator class: " + madvocConfiguratorClassName, ccex);
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to load Madvoc configurator class: " + ex.toString(), ex);
+			throw new MadvocException("Unable to load Madvoc configurator class: " + madvocConfiguratorClassName, ex);
 		}
 		return configurator;
 	}
