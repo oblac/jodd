@@ -2,14 +2,12 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.macro.PathMacro;
 import jodd.util.ArraysUtil;
-import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Set of {@link ActionConfig action configs} with the same action path
@@ -22,10 +20,18 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	public final String[] actionPathChunks;
 	public final PathMacro[] actionPathMacros;
 
-	public ActionConfigSet(String actionPath) {
+	/**
+	 * Creates new action config set. It is set of <code>ActionConfig</code>s, i.e. Madvoc
+	 * actions, with the same action path and different http method.
+	 *
+	 * @param actionPath action path
+	 * @param actionPathChunks action path split in chunks
+	 * @param pathMacros path macros if action path contains any or <code>null</code>
+	 */
+	public ActionConfigSet(String actionPath, String[] actionPathChunks, PathMacro[] pathMacros) {
 		this.actionPath = actionPath;
-		this.actionPathChunks = MadvocUtil.splitActionPath(actionPath);
-		this.actionPathMacros = resolveMacros(actionPathChunks);
+		this.actionPathChunks = actionPathChunks;
+		this.actionPathMacros = pathMacros;
 	}
 
 	/**
@@ -92,60 +98,6 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 
 	public int compareTo(ActionConfigSet set) {
 		return this.actionPath.compareTo(set.actionPath);
-	}
-
-	// ---------------------------------------------------------------- macros
-
-	/**
-	 * Resolve macros for each chunk. If chunk does not have macro,
-	 * <code>null</code> is set.
-	 */
-	protected PathMacro[] resolveMacros(String[] chunks) {
-		PathMacro[] pathMacros = new PathMacro[chunks.length];
-
-		for (int i = 0; i < chunks.length; i++) {
-			String chunk = chunks[i];
-
-			int[] ndx = StringUtil.indexOfRegion(chunk, StringPool.DOLLAR_LEFT_BRACE, StringPool.RIGHT_BRACE);
-			PathMacro macro = null;
-
-			if (ndx != null) {
-				macro = new PathMacro();
-
-				String name = chunk.substring(ndx[1], ndx[2]);
-
-				int colonNdx = name.indexOf(':');
-				if (colonNdx != -1) {
-					String pattern = name.substring(colonNdx + 1);
-					macro.pattern = Pattern.compile(pattern);
-					name = name.substring(0, colonNdx);
-				}
-				macro.name = name;
-				macro.left = (ndx[0] == 0 ? StringPool.EMPTY : chunk.substring(0, ndx[0]));
-				macro.right = (ndx[3] == chunk.length() ? StringPool.EMPTY : chunk.substring(ndx[3]));
-			}
-
-			pathMacros[i] = macro;
-		}
-		return pathMacros;
-	}
-
-	/**
-	 * Definition of action path macro.
-	 */
-	public static class PathMacro {
-
-		// macro name
-		public String name;
-
-		// left prefix to the macro
-		public String left;
-
-		// right suffix to the end or #method
-		public String right;
-
-		// regex pattern
-		public Pattern pattern;
 	}
 
 }

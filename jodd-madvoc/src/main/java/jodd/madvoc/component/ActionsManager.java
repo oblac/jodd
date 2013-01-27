@@ -7,6 +7,7 @@ import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.macro.PathMacro;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.collection.SortedArrayList;
@@ -28,6 +29,9 @@ public class ActionsManager {
 
 	@PetiteInject
 	protected ActionMethodParser actionMethodParser;
+
+	@PetiteInject
+	protected ActionPathMacroManager actionPathMacroManager;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -152,7 +156,7 @@ public class ActionsManager {
 					cfg.actionClass.getName() + '#' + cfg.actionClassMethod.getName());
 		}
 
-		ActionConfigSet set = new ActionConfigSet(cfg.actionPath);
+		ActionConfigSet set = createActionConfigSet(cfg.actionPath);
 
 		if (set.actionPathMacros != null) {
 			// new action patch contain macros
@@ -189,6 +193,17 @@ public class ActionsManager {
 			actionsCount++;
 		}
 		return cfg;
+	}
+
+	/**
+	 * Creates new action config set from the action path.
+	 */
+	protected ActionConfigSet createActionConfigSet(String actionPath) {
+		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+
+		PathMacro[] pathMacros = actionPathMacroManager.buildActionPathMacros(actionPathChunks);
+
+		return new ActionConfigSet(actionPath, actionPathChunks, pathMacros);
 	}
 
 	// ---------------------------------------------------------------- look-up
@@ -269,41 +284,17 @@ public class ActionsManager {
 	 * Returns number of additional chars matched (0 or more);
 	 * or -1 if chunks are not matched.
 	 */
-	protected int matchChunk(String actionPathChunk, ActionConfigSet.PathMacro macro, String chunk) {
+	protected int matchChunk(String actionPathChunk, PathMacro pathMacro, String chunk) {
 
-		if (macro == null) {
-			// there is no macro at this level, just check strings
+		if (pathMacro == null) {
+			// there is no macro at this level, just check chunk strings
 			if (actionPathChunk.equals(chunk)) {
 				return chunk.length();
 			}
 			return -1;
 		}
 
-		// detect macro
-
-		int matchedChars = 0;
-
-		if (chunk.startsWith(macro.left) == false) {
-			return -1;
-		}
-		matchedChars += macro.left.length();
-
-		if (chunk.endsWith(macro.right) == false) {
-			return -1;
-		}
-		matchedChars += macro.right.length();
-
-		// match value
-		if (macro.pattern != null) {
-			String value = chunk.substring(macro.left.length(), chunk.length() - macro.right.length());
-
-			if (macro.pattern.matcher(value).matches() == false) {
-				return -1;
-			}
-		}
-
-		// macro found
-		return matchedChars;
+		return pathMacro.match(chunk);
 	}
 
 }

@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
@@ -155,6 +156,7 @@ public class WebApplication {
 		registerComponent(ActionMethodParser.class);
 		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
+		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(MadvocConfig.class);
