@@ -1,7 +1,11 @@
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.WebApplication;
+import jodd.madvoc.macro.RegExpPathMacro;
+import jodd.madvoc.macro.WildcardPathMacro;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -109,6 +113,42 @@ public class ActionsManagerTest {
 		assertNull(actionConfig);
 
 		actionConfig = actionsManager.lookup("/life/universe/else", null);
+		assertNull(actionConfig);
+	}
+
+	@Test
+	public void testActionPathMacrosRegexp() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+
+		ActionPathMacroManager actionPathMacroManager = webapp.getComponent(ActionPathMacroManager.class);
+		actionPathMacroManager.setPathMacroClass(RegExpPathMacro.class);
+
+		actionsManager.register(FooAction.class, "one", "/${one:[ab]+}");
+
+		ActionConfig actionConfig = actionsManager.lookup("/a", null);
+		assertNotNull(actionConfig);
+
+		actionConfig = actionsManager.lookup("/ac", null);
+		assertNull(actionConfig);
+	}
+
+	@Test
+	public void testActionPathMacrosWildcard() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+
+		ActionPathMacroManager actionPathMacroManager = webapp.getComponent(ActionPathMacroManager.class);
+		actionPathMacroManager.setPathMacroClass(WildcardPathMacro.class);
+
+		actionsManager.register(FooAction.class, "one", "/${one:a?a}");
+
+		ActionConfig actionConfig = actionsManager.lookup("/aaa", null);
+		assertNotNull(actionConfig);
+
+		actionConfig = actionsManager.lookup("/aab", null);
 		assertNull(actionConfig);
 	}
 }
