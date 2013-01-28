@@ -13,12 +13,9 @@ import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
@@ -35,7 +32,6 @@ public class MadvocConfig {
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		pathAliases = new HashMap<String, String>();
 		createDefaultAliases = false;
 		defaultExtension = "html";
 		supplementAction = null;//DefaultActionSupplement.class;
@@ -186,25 +182,7 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- path aliases
 
-	protected Map<String, String> pathAliases;
 	protected boolean createDefaultAliases;
-
-	/**
-	 * Registers new path alias.
-	 */
-	public void registerPathAlias(String alias, String path) {
-		pathAliases.put(alias, path);
-	}
-
-	/**
-	 * Returns path alias.
-	 */
-	public String lookupPathAlias(String alias) {
-		if (pathAliases.isEmpty()) {
-			return null;
-		}
-		return pathAliases.get(alias);
-	}
 
 	public boolean isCreateDefaultAliases() {
 		return createDefaultAliases;
@@ -398,7 +376,6 @@ public class MadvocConfig {
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +
-				",\n\tpathAliases=\n\t\t" + StringUtil.replace(pathAliases.toString(), ",", "\n\t\t") +
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
 				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +

@@ -283,12 +283,11 @@ public class ActionResultTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
-		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
-		config.registerPathAlias("ok", "xxx.jsp");
-		config.registerPathAlias("sok", "zzz");
 
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo5");
+		actionsManager.registerPathAlias("ok", "xxx.jsp");
+		actionsManager.registerPathAlias("sok", "zzz");
 
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -314,11 +313,9 @@ public class ActionResultTest extends MadvocTestCase {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
-		MadvocConfig config = webapp.getComponent(MadvocConfig.class);
-		config.registerPathAlias("/boo.foo2", "/aliased");
-
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo2");
+		actionsManager.registerPathAlias("/boo.foo2", "/aliased");
 
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
@@ -340,7 +337,7 @@ public class ActionResultTest extends MadvocTestCase {
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		actionsManager.register(BooAction.class, "foo2");
 
-		assertEquals("/boo.foo2.xxx", config.lookupPathAlias(BooAction.class.getName() + "#foo2"));
+		assertEquals("/boo.foo2.xxx", actionsManager.lookupPathAlias(BooAction.class.getName() + "#foo2"));
 	}
 
 	@Test

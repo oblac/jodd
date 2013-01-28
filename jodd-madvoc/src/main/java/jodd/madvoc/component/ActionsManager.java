@@ -19,9 +19,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Manages all Madvoc action registrations.
+ * Manages all Madvoc action and aliases registrations.
  */
 public class ActionsManager {
 
@@ -39,10 +40,12 @@ public class ActionsManager {
 	protected int actionsCount;
 	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
 	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
+	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
 		this.map = new HashMap<String, ActionConfigSet>();
 		this.list = new SortedArrayList<ActionConfigSet>(new ActionConfigSetComparator());
+		this.pathAliases = new HashMap<String, String>();
 	}
 
 	/**
@@ -252,11 +255,19 @@ public class ActionsManager {
 			int totalMatchedChars = 0;
 			for (int j = 0; j < deep; j++) {
 				String chunk = actionPathChunks[j];
+				PathMacro pathMacro = actionConfigSet.actionPathMacros[j];
 
-				int matchedChars = matchChunk(
-						actionConfigSet.actionPathChunks[j],
-						actionConfigSet.actionPathMacros[j],
-						chunk);
+				int matchedChars = -1;
+
+				if (pathMacro == null) {
+					// there is no macro at this level, just check chunk strings
+					String actionPathChunk = actionConfigSet.actionPathChunks[j];
+					if (actionPathChunk.equals(chunk)) {
+						matchedChars = chunk.length();
+					}
+				} else {
+					matchedChars = pathMacro.match(chunk);
+				}
 
 				if (matchedChars == -1) {
 					continue loop;
@@ -279,22 +290,20 @@ public class ActionsManager {
 		return set.lookup(method);
 	}
 
+	// ---------------------------------------------------------------- aliases
+
 	/**
-	 * Match action path chunk with current chunk.
-	 * Returns number of additional chars matched (0 or more);
-	 * or -1 if chunks are not matched.
+	 * Registers new path alias.
 	 */
-	protected int matchChunk(String actionPathChunk, PathMacro pathMacro, String chunk) {
+	public void registerPathAlias(String alias, String path) {
+		pathAliases.put(alias, path);
+	}
 
-		if (pathMacro == null) {
-			// there is no macro at this level, just check chunk strings
-			if (actionPathChunk.equals(chunk)) {
-				return chunk.length();
-			}
-			return -1;
-		}
-
-		return pathMacro.match(chunk);
+	/**
+	 * Returns path alias.
+	 */
+	public String lookupPathAlias(String alias) {
+		return pathAliases.get(alias);
 	}
 
 }
