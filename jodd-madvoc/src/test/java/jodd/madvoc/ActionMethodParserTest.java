@@ -3,12 +3,10 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.ActionPathMapper;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.macro.RegExpPathMacro;
-import jodd.madvoc.macro.WildcardPathMacro;
 import jodd.madvoc.tst.Boo1Action;
 import jodd.madvoc.tst.Boo2Action;
 import jodd.madvoc.tst.Boo3Action;
@@ -373,11 +371,10 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
-		ActionPathMacroManager actionPathMacroManager = webapp.getComponent(ActionPathMacroManager.class);
-		actionPathMacroManager.setPathMacroClass(RegExpPathMacro.class);
 
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
 		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.setPathMacroClass(RegExpPathMacro.class);
 
 		actionsManager.register(ReAction.class, "duplo1");
 		actionsManager.register(ReAction.class, "duplo2");

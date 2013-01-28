@@ -4,25 +4,16 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.macro.PathMacro;
-import jodd.madvoc.macro.WildcardPathMacro;
+import jodd.petite.meta.PetiteInject;
 
 /**
  * Create and manage action path macros.
  */
 public class ActionPathMacroManager {
 
-	protected Class<? extends PathMacro> pathMacroClass = WildcardPathMacro.class;
+	@PetiteInject
+	protected MadvocConfig madvocConfig;
 
-	/**
-	 * Returns current implementation for path macros.
-	 */
-	public Class<? extends PathMacro> getPathMacroClass() {
-		return pathMacroClass;
-	}
-
-	public void setPathMacroClass(Class<? extends PathMacro> pathMacroClass) {
-		this.pathMacroClass = pathMacroClass;
-	}
 
 	/**
 	 * Builds action path macros from given action path chunks.
@@ -59,7 +50,7 @@ public class ActionPathMacroManager {
 	 */
 	protected PathMacro createPathMacro() {
 		try {
-			return pathMacroClass.newInstance();
+			return madvocConfig.getPathMacroClass().newInstance();
 		} catch (Exception ex) {
 			throw new MadvocException("Unable to create Madvoc path macro class.", ex);
 		}

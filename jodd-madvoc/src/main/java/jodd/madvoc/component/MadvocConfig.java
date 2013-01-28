@@ -2,19 +2,22 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionAnnotation;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.impl.AdaptiveFileUploadFactory;
+import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
+import jodd.madvoc.macro.PathMacro;
+import jodd.madvoc.macro.WildcardPathMacro;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.result.ServletDispatcherResult;
-import jodd.madvoc.injector.RequestScopeInjector;
+import jodd.upload.FileUploadFactory;
+import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
@@ -356,4 +359,51 @@ public class MadvocConfig {
 		this.attributeMoveId = attributeMoveId;
 	}
 
+	// ---------------------------------------------------------------- path macro class
+
+	protected Class<? extends PathMacro> pathMacroClass = WildcardPathMacro.class;
+
+	/**
+	 * Returns current implementation for path macros.
+	 */
+	public Class<? extends PathMacro> getPathMacroClass() {
+		return pathMacroClass;
+	}
+
+	/**
+	 * Sets implementation for path macros.
+	 */
+	public void setPathMacroClass(Class<? extends PathMacro> pathMacroClass) {
+		this.pathMacroClass = pathMacroClass;
+	}
+
+
+	// ---------------------------------------------------------------- toString
+
+	/**
+	 * Prepares string with full configuration.
+	 */
+	@Override
+	public String toString() {
+		return "MadvocConfig{" +
+				"\nactionAnnotations=" + (actionAnnotations == null ? null : Arrays.asList(actionAnnotations)) +
+				"\n, actionPathMappingEnabled=" + actionPathMappingEnabled +
+				"\n, attributeMoveId='" + attributeMoveId + '\'' +
+				"\n, createDefaultAliases=" + createDefaultAliases +
+				"\n, defaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
+				"\n, defaultExtension='" + defaultExtension + '\'' +
+				"\n, defaultInterceptors=" + (defaultInterceptors == null ? null : Arrays.asList(defaultInterceptors)) +
+				"\n, defaultResultType='" + defaultResultType + '\'' +
+				"\n, detectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
+				"\n, encoding='" + encoding + '\'' +
+				"\n, fileUploadFactory=" + fileUploadFactory +
+				"\n, pathAliases=" + pathAliases +
+				"\n, pathMacroClass=" + pathMacroClass +
+				"\n, preventCaching=" + preventCaching +
+				"\n, requestScopeInjectorConfig=" + requestScopeInjectorConfig +
+				"\n, rootPackage='" + rootPackage + '\'' +
+				"\n, strictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
+				"\n, supplementAction=" + supplementAction +
+				"\n}";
+	}
 }
