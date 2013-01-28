@@ -13,6 +13,7 @@ import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -386,24 +387,32 @@ public class MadvocConfig {
 	@Override
 	public String toString() {
 		return "MadvocConfig{" +
-				"\nactionAnnotations=" + (actionAnnotations == null ? null : Arrays.asList(actionAnnotations)) +
-				"\n, actionPathMappingEnabled=" + actionPathMappingEnabled +
-				"\n, attributeMoveId='" + attributeMoveId + '\'' +
-				"\n, createDefaultAliases=" + createDefaultAliases +
-				"\n, defaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
-				"\n, defaultExtension='" + defaultExtension + '\'' +
-				"\n, defaultInterceptors=" + (defaultInterceptors == null ? null : Arrays.asList(defaultInterceptors)) +
-				"\n, defaultResultType='" + defaultResultType + '\'' +
-				"\n, detectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
-				"\n, encoding='" + encoding + '\'' +
-				"\n, fileUploadFactory=" + fileUploadFactory +
-				"\n, pathAliases=" + pathAliases +
-				"\n, pathMacroClass=" + pathMacroClass +
-				"\n, preventCaching=" + preventCaching +
-				"\n, requestScopeInjectorConfig=" + requestScopeInjectorConfig +
-				"\n, rootPackage='" + rootPackage + '\'' +
-				"\n, strictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
-				"\n, supplementAction=" + supplementAction +
+				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
+				",\n\tactionPathMappingEnabled=" + actionPathMappingEnabled +
+				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
+				",\n\tcreateDefaultAliases=" + createDefaultAliases +
+				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
+				",\n\tdefaultExtension='" + defaultExtension + '\'' +
+				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
+				",\n\tdefaultResultType='" + defaultResultType + '\'' +
+				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
+				",\n\tencoding='" + encoding + '\'' +
+				",\n\tfileUploadFactory=" + fileUploadFactory +
+				",\n\tpathAliases=\n\t\t" + StringUtil.replace(pathAliases.toString(), ",", "\n\t\t") +
+				",\n\tpathMacroClass=" + pathMacroClass.getName() +
+				",\n\tpreventCaching=" + preventCaching +
+				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
+				",\n\trootPackage='" + rootPackage + '\'' +
+				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
+				",\n\tsupplementAction=" + supplementAction +
 				"\n}";
+	}
+
+	private static String toString(Class[] classes) {
+		String s = "";
+		for (Class clazz : classes) {
+			s += "\n\t\t" + clazz.getName();
+		}
+		return s;
 	}
 }
