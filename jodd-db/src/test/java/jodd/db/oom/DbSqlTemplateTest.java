@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.db.oom;
 
@@ -188,17 +188,17 @@ public class DbSqlTemplateTest {
 	public void testColumns4() {
 		DbSqlBuilder st;
 		
-		st = sql("$T{b b} | $C{b.[name]} | $C{b.[id|name]} | $C{b.[id|name|girlId]}").use("b", Boy.class);
+		st = sql("$T{b b} | $C{b.[name]} | $C{b.[id,name]} | $C{b.[id,name,girlId]}").use("b", Boy.class);
 		assertEquals("BOY b | b.NAME | b.ID, b.NAME | b.GIRL_ID, b.ID, b.NAME", st.generateQuery());
 		
-		st = sql("$T{b b} | $C{b.[  name  ]} | $C{b.[  id |	name    ]}").use("b", Boy.class);
+		st = sql("$T{b b} | $C{b.[  name  ]} | $C{b.[  id ,	name    ]}").use("b", Boy.class);
 		assertEquals("BOY b | b.NAME | b.ID, b.NAME", st.generateQuery());
 		
 		//TODO:
-		st = sql("$T{b b} | $C{b.[id|name]} | $C{b.[name|id]}").use("b", Boy.class);
+		st = sql("$T{b b} | $C{b.[id,name]} | $C{b.[name,id]}").use("b", Boy.class);
 		assertEquals("BOY b | b.ID, b.NAME | b.ID, b.NAME", st.generateQuery());
 		
-		st = sql("$T{b b} | $C{b.[+|nejm]} | $C{b.[ajdi|nejm]}").use("b", BadBoy.class);
+		st = sql("$T{b b} | $C{b.[+,nejm]} | $C{b.[ajdi,nejm]}").use("b", BadBoy.class);
 		assertEquals("BOY b | b.ID, b.NAME | b.ID, b.NAME", st.generateQuery());
 		
 	}

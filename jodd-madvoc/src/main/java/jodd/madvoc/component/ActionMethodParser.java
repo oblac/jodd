@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.madvoc.component;
 
@@ -30,6 +30,9 @@ public class ActionMethodParser {
 	protected static final String REPL_CLASS = "[class]";
 	protected static final String REPL_METHOD = "[method]";
 	protected static final String REPL_EXTENSION = "[ext]";
+
+	@PetiteInject
+	protected ActionsManager actionsManager;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -106,10 +109,10 @@ public class ActionMethodParser {
 		// register alias
 		if (alias != null) {
 			String aliasPath = StringUtil.cutToIndexOf(actionPath, StringPool.HASH);
-			madvocConfig.registerPathAlias(alias, aliasPath);
+			actionsManager.registerPathAlias(alias, aliasPath);
 		} else if (madvocConfig.isCreateDefaultAliases()) {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
-			madvocConfig.registerPathAlias(alias, actionPath);
+			actionsManager.registerPathAlias(alias, actionPath);
 		}
 		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod, extension, resultType);
 	}

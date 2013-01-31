@@ -1,20 +1,21 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.meta.Action;
-import jodd.madvoc.meta.ActionAnnotation;
-import jodd.upload.FileUploadFactory;
-import jodd.upload.impl.AdaptiveFileUploadFactory;
+import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
+import jodd.madvoc.macro.PathMacro;
+import jodd.madvoc.macro.WildcardPathMacro;
+import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.result.ServletDispatcherResult;
-import jodd.madvoc.injector.RequestScopeInjector;
+import jodd.upload.FileUploadFactory;
+import jodd.upload.impl.AdaptiveFileUploadFactory;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Arrays;
 
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
@@ -31,7 +32,6 @@ public class MadvocConfig {
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		pathAliases = new HashMap<String, String>();
 		createDefaultAliases = false;
 		defaultExtension = "html";
 		supplementAction = null;//DefaultActionSupplement.class;
@@ -182,25 +182,7 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- path aliases
 
-	protected Map<String, String> pathAliases;
 	protected boolean createDefaultAliases;
-
-	/**
-	 * Registers new path alias.
-	 */
-	public void registerPathAlias(String alias, String path) {
-		pathAliases.put(alias, path);
-	}
-
-	/**
-	 * Returns path alias.
-	 */
-	public String lookupPathAlias(String alias) {
-		if (pathAliases.isEmpty()) {
-			return null;
-		}
-		return pathAliases.get(alias);
-	}
 
 	public boolean isCreateDefaultAliases() {
 		return createDefaultAliases;
@@ -356,4 +338,58 @@ public class MadvocConfig {
 		this.attributeMoveId = attributeMoveId;
 	}
 
+	// ---------------------------------------------------------------- path macro class
+
+	protected Class<? extends PathMacro> pathMacroClass = WildcardPathMacro.class;
+
+	/**
+	 * Returns current implementation for path macros.
+	 */
+	public Class<? extends PathMacro> getPathMacroClass() {
+		return pathMacroClass;
+	}
+
+	/**
+	 * Sets implementation for path macros.
+	 */
+	public void setPathMacroClass(Class<? extends PathMacro> pathMacroClass) {
+		this.pathMacroClass = pathMacroClass;
+	}
+
+
+	// ---------------------------------------------------------------- toString
+
+	/**
+	 * Prepares string with full configuration.
+	 */
+	@Override
+	public String toString() {
+		return "MadvocConfig{" +
+				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
+				",\n\tactionPathMappingEnabled=" + actionPathMappingEnabled +
+				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
+				",\n\tcreateDefaultAliases=" + createDefaultAliases +
+				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
+				",\n\tdefaultExtension='" + defaultExtension + '\'' +
+				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
+				",\n\tdefaultResultType='" + defaultResultType + '\'' +
+				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
+				",\n\tencoding='" + encoding + '\'' +
+				",\n\tfileUploadFactory=" + fileUploadFactory +
+				",\n\tpathMacroClass=" + pathMacroClass.getName() +
+				",\n\tpreventCaching=" + preventCaching +
+				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
+				",\n\trootPackage='" + rootPackage + '\'' +
+				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
+				",\n\tsupplementAction=" + supplementAction +
+				"\n}";
+	}
+
+	private static String toString(Class[] classes) {
+		String s = "";
+		for (Class clazz : classes) {
+			s += "\n\t\t" + clazz.getName();
+		}
+		return s;
+	}
 }

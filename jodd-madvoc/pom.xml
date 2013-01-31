@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.jodd</groupId>
 		<artifactId>jodd</artifactId>
-		<version>3.4.1</version>
+		<version>3.4.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>jodd-madvoc</artifactId>

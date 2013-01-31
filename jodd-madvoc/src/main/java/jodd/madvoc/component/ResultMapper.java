@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.madvoc.component;
 
@@ -17,6 +17,9 @@ public class ResultMapper {
 	protected static final String REPL_METHOD = "[method]";
 
 	@PetiteInject
+	protected ActionsManager actionsManager;
+
+	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
 	/**
@@ -31,7 +34,7 @@ public class ResultMapper {
 			if (ndx == -1) {
 				// alias markers not found
 				resultValue = (i == 0 ? resultValue : resultValue.substring(i));
-				String alias = madvocConfig.lookupPathAlias(resultValue);
+				String alias = actionsManager.lookupPathAlias(resultValue);
 				result.append(alias != null ? alias : resultValue);
 				break;
 			}
@@ -41,7 +44,7 @@ public class ResultMapper {
 			String alias = (ndx2 == -1 ? resultValue.substring(ndx) : resultValue.substring(ndx, ndx2));
 
 			// process alias
-			alias = madvocConfig.lookupPathAlias(alias);
+			alias = actionsManager.lookupPathAlias(alias);
 			if (alias != null) {
 				result.append(alias);
 			}

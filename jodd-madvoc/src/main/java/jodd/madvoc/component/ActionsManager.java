@@ -1,4 +1,4 @@
-// Copyright (c) 2003-2012, Jodd Team (jodd.org). All Rights Reserved.
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.madvoc.component;
 
@@ -6,8 +6,9 @@ import jodd.introspector.ClassIntrospector;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.macro.PathMacro;
 import jodd.petite.meta.PetiteInject;
-import jodd.util.BinarySearch;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.collection.SortedArrayList;
 import org.slf4j.Logger;
@@ -15,11 +16,13 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Manages all Madvoc action registrations.
+ * Manages all Madvoc action and aliases registrations.
  */
 public class ActionsManager {
 
@@ -29,23 +32,42 @@ public class ActionsManager {
 	protected ActionMethodParser actionMethodParser;
 
 	@PetiteInject
+	protected ActionPathMacroManager actionPathMacroManager;
+
+	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
 	protected int actionsCount;
-	protected final HashMap<String, ActionConfigSet> map;
-	protected final SortedArrayList<ActionConfigSet> list;
-	protected final ActionPathChunksBinarySearch listMatch;
-	protected final BinarySearch<ActionConfigSet> listBS;
+	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
+	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
+	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
 		this.map = new HashMap<String, ActionConfigSet>();
-		this.list = new SortedArrayList<ActionConfigSet>();
-		listMatch = new ActionPathChunksBinarySearch();
-		listBS = BinarySearch.forList(list);
+		this.list = new SortedArrayList<ActionConfigSet>(new ActionConfigSetComparator());
+		this.pathAliases = new HashMap<String, String>();
+	}
+
+	/**
+	 * Comparator that considers first chunks number then action path.
+	 */
+	public static class ActionConfigSetComparator implements Comparator<ActionConfigSet> {
+
+		public int compare(ActionConfigSet set1, ActionConfigSet set2) {
+			int deep1 = set1.actionPathChunks.length;
+			int deep2 = set2.actionPathChunks.length;
+
+			if (deep1 == deep2) {
+				return set1.actionPath.compareTo(set2.actionPath);
+			}
+			return deep1 - deep2;
+		}
 	}
 
 	/**
 	 * Returns all registered action configurations.
+	 * Returned list is a join of action paths
+	 * with and without the macro.
 	 */
 	public List<ActionConfig> getAllActionConfigurations() {
 		List<ActionConfig> all = new ArrayList<ActionConfig>(actionsCount);
@@ -137,16 +159,24 @@ public class ActionsManager {
 					cfg.actionClass.getName() + '#' + cfg.actionClassMethod.getName());
 		}
 
-		ActionConfigSet set = new ActionConfigSet(cfg.actionPath);
+		ActionConfigSet set = createActionConfigSet(cfg.actionPath);
 
 		if (set.actionPathMacros != null) {
-			int ndx = listBS.find(set);
+			// new action patch contain macros
+			int ndx = -1;
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).actionPath.equals(actionPath)) {
+					ndx = i;
+					break;
+				}
+			}
 			if (ndx < 0) {
 				list.add(set);
 			} else {
 				set = list.get(ndx);
 			}
 		} else {
+			// action path is without macros
 			if (map.containsKey(cfg.actionPath) == false) {
 				map.put(cfg.actionPath, set);
 			} else {
@@ -155,139 +185,125 @@ public class ActionsManager {
 
 		}
 		boolean isDuplicate = set.add(cfg);
-		if (isDuplicate == false) {
-			actionsCount++;
-		}
 
 		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
 			if (isDuplicate) {
 				throw new MadvocException("Duplicate action path for " + cfg);
 			}
 		}
+
+		if (isDuplicate == false) {
+			actionsCount++;
+		}
 		return cfg;
+	}
+
+	/**
+	 * Creates new action config set from the action path.
+	 */
+	protected ActionConfigSet createActionConfigSet(String actionPath) {
+		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+
+		PathMacro[] pathMacros = actionPathMacroManager.buildActionPathMacros(actionPathChunks);
+
+		return new ActionConfigSet(actionPath, actionPathChunks, pathMacros);
 	}
 
 	// ---------------------------------------------------------------- look-up
 
 	/**
 	 * Returns action configurations for provided action path.
+	 * First it lookups for exact <code>actionPath</code>.
+	 * If action path is not registered, it is split into chunks
+	 * and match against macros.
 	 * Returns <code>null</code> if action path is not registered.
 	 */
-	public ActionConfig lookup(String actionPath, String[] actionChunks, String method) {
+	public ActionConfig lookup(String actionPath, String method) {
+
 		// 1st try: the map
-		ActionConfigSet acset = map.get(actionPath);
-		if (acset != null) {
-			ActionConfig actionConfig = acset.lookup(method);
+
+		ActionConfigSet actionConfigSet = map.get(actionPath);
+		if (actionConfigSet != null) {
+			ActionConfig actionConfig = actionConfigSet.lookup(method);
 			if (actionConfig != null) {
 				return actionConfig;
 			}
 		}
 
 		// 2nd try: the list
-		int low = 0;
-		int high = list.size() - 1;
-		int macroNdx = 0;
-		for (int deep = 0; deep < actionChunks.length; deep++) {
-			String chunk = actionChunks[deep];
-			listMatch.deep = deep;
 
-			int nextLow = listMatch.findFirst(chunk, low, high);
-			if (nextLow < 0) {
-				// there is no exact match, check if there is a macro on low index
-				int matched = matchChunk(chunk, deep, macroNdx, low, high);
-				if (matched == -1) {
-					low = nextLow;
-					break;
+		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+
+		int len = list.size();
+
+		int lastMatched = -1;
+		int maxMatchedChars = -1;
+
+	loop:
+		for (int i = 0; i < len; i++) {
+			actionConfigSet = list.get(i);
+			int deep = actionConfigSet.actionPathChunks.length;
+			if (deep < actionPathChunks.length) {
+				continue;
+			}
+			if (deep > actionPathChunks.length) {
+				break;
+			}
+
+			// equal number of chunks, match one by one
+
+			int totalMatchedChars = 0;
+			for (int j = 0; j < deep; j++) {
+				String chunk = actionPathChunks[j];
+				PathMacro pathMacro = actionConfigSet.actionPathMacros[j];
+
+				int matchedChars = -1;
+
+				if (pathMacro == null) {
+					// there is no macro at this level, just check chunk strings
+					String actionPathChunk = actionConfigSet.actionPathChunks[j];
+					if (actionPathChunk.equals(chunk)) {
+						matchedChars = chunk.length();
+					}
 				} else {
-					// macro found, continue
-					macroNdx++;
-					low = matched;
-					high = matched;
+					matchedChars = pathMacro.match(chunk);
 				}
-			} else {
-				// exact match found, proceed
-				low = nextLow;
-				if (high > low) {
-					high = listMatch.findLast(chunk, low, high);
+
+				if (matchedChars == -1) {
+					continue loop;
 				}
+
+				totalMatchedChars += matchedChars;
+			}
+
+			if (totalMatchedChars > maxMatchedChars) {
+				maxMatchedChars = totalMatchedChars;
+				lastMatched = i;
 			}
 		}
-		if (low < 0) {
+
+		if (lastMatched < 0) {
 			return null;
 		}
 
-		ActionConfigSet set = list.get(low);
-		ActionConfig cfg = set.lookup(method);
-
-		if (cfg == null) {
-			return null;
-		}
-		if (set.actionPathChunks.length != actionChunks.length) {
-			return null;
-		}
-		return cfg;
+		ActionConfigSet set = list.get(lastMatched);
+		return set.lookup(method);
 	}
 
+	// ---------------------------------------------------------------- aliases
 
-	protected int matchChunk(String chunk, int chunkNdx, int macroNdx, int low, int high) {
-
-		for (int i = low; i <= high; i++) {
-			ActionConfigSet set = list.get(i);
-
-			// check if there is a macro on this chunk position
-			if (macroNdx >= set.actionPathMacros.length) {
-				continue;
-			}
-			ActionConfigSet.PathMacro macro = set.actionPathMacros[macroNdx];
-			if (macro.ndx != chunkNdx) {
-				continue;
-			}
-
-			// match macro
-			if (chunk.startsWith(macro.left) == false) {
-				continue;
-			}
-			if (chunk.endsWith(macro.right) == false) {
-				continue;
-			}
-
-			// match value
-			if (macro.pattern != null) {
-				String value = chunk.substring(macro.left.length(), chunk.length() - macro.right.length());
-				if (macro.pattern.matcher(value).matches() == false) {
-					continue;
-				}
-			}
-
-			// macro found
-			return i;
-		}
-		return -1;
+	/**
+	 * Registers new path alias.
+	 */
+	public void registerPathAlias(String alias, String path) {
+		pathAliases.put(alias, path);
 	}
 
 	/**
-	 * Binary search for action paths chunks.
+	 * Returns path alias.
 	 */
-	protected class ActionPathChunksBinarySearch extends BinarySearch<String> {
-
-		protected int deep;
-
-		/**
-		 * Returns chunk <code>deep</code> of a path at <code>index</code>.
-		 */
-		protected String get(int index, int deep) {
-			return list.get(index).actionPathChunks[deep];
-		}
-
-		@Override
-		protected int compare(int index, String element) {
-			return get(index, deep).compareTo(element);
-		}
-
-		@Override
-		protected int getLastIndex() {
-			return list.size() - 1;
-		}
+	public String lookupPathAlias(String alias) {
+		return pathAliases.get(alias);
 	}
 
 }
