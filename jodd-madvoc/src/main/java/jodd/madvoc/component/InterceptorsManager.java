@@ -14,6 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import jodd.madvoc.WebApplication;
+import jodd.madvoc.injector.MadvocParamsInjector;
+import jodd.madvoc.interceptor.ConfigableActionInterceptorStack;
+import jodd.petite.PetiteContainer;
+import jodd.petite.meta.PetiteInitMethod;
 
 /**
  * Manager for Madvoc interceptors. By default, all interceptors are pooled so there will be only one
@@ -23,6 +28,17 @@ public class InterceptorsManager {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
+	@PetiteInject
+	protected PetiteContainer madpc;
+
+ 	protected MadvocParamsInjector madvocParamsInjector;
+	
+	@PetiteInitMethod
+	void createInjector() {
+	    if (madpc != null) {
+		madvocParamsInjector = new MadvocParamsInjector(madpc);
+	    }
+	}
 
 	public InterceptorsManager() {
 		interceptors = new HashMap<Class<? extends ActionInterceptor>, ActionInterceptor>();
@@ -136,7 +152,12 @@ public class InterceptorsManager {
 	 */
 	protected ActionInterceptor createInterceptor(Class<? extends ActionInterceptor> interceptorClass) {
 		try {
-			return interceptorClass.newInstance();
+		    ActionInterceptor interceptor = interceptorClass.newInstance();
+		    //just inject subclass of ConfigableActionInterceptorStack, other will be Initialized later
+		    if (ReflectUtil.isSubclass(interceptorClass, ConfigableActionInterceptorStack.class) && madvocParamsInjector != null) {
+			madvocParamsInjector.inject(interceptor);
+		    }
+		    return interceptor;
 		} catch (InstantiationException iex) {
 			throw new MadvocException("Unable to create Madvoc interceptor: " + interceptorClass, iex);
 		} catch (IllegalAccessException iaex) {

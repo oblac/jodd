@@ -5,6 +5,7 @@ package jodd.madvoc.component;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
 import jodd.madvoc.interceptor.*;
+import jodd.petite.PetiteContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -77,7 +78,48 @@ public class InterceptorManagerTest extends MadvocTestCase {
 
 		assertEquals(EchoInterceptor.class, out[6]);
 	}
+	
+	
+	@SuppressWarnings({"unchecked"})
+	@Test
+	public void testExpandConfigableStack() {
+		InterceptorsManager im = new InterceptorsManager();
+		im.madvocConfig = new MadvocConfig();
+		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
+		PetiteContainer madpc = new PetiteContainer();
+		madpc.defineParameter(TestConfigableStack.class.getName()+".interceptors",
+			AnnotatedFieldsInterceptor.class.getName()
+			+ ","
+			+ ServletConfigInterceptor.class.getName()
+			+ ","
+			+ LogEchoInterceptor.class.getName()
+			);
+		im.madpc=madpc;
+		im.createInjector();
+		
+		Class<? extends ActionInterceptor>[] in = new Class[]{
+			TestConfigableStack.class,
+			TestConfigableStack2.class,
+			EchoInterceptor.class
+		};
+
+		Class<? extends ActionInterceptor>[] out = im.expand(in);
+		assertEquals(6, out.length);
+
+		//assert: TestConfigableStack => defined in madpc
+		assertEquals(AnnotatedFieldsInterceptor.class, out[0]);
+		assertEquals(ServletConfigInterceptor.class, out[1]);
+		assertEquals(LogEchoInterceptor.class, out[2]);
+
+		//assert: TestConfigableStack2 => madvocConfig.defaultInterceptors
+		assertEquals(EchoInterceptor.class, out[3]);
+		assertEquals(ServletConfigInterceptor.class, out[4]);
+
+		assertEquals(EchoInterceptor.class, out[5]);
+	}
+	
+	
 	@SuppressWarnings({"unchecked"})
 	@Test
 	public void testExpandSelf() {
@@ -137,5 +179,11 @@ public class InterceptorManagerTest extends MadvocTestCase {
 			super(new Class[]{AnnotatedFieldsInterceptor.class, LogEchoInterceptor.class});
 		}
 	}
-
+	
+	public static class TestConfigableStack extends ConfigableActionInterceptorStack{
+		
+	}
+	public static class TestConfigableStack2 extends ConfigableActionInterceptorStack{
+		
+	}
 }
