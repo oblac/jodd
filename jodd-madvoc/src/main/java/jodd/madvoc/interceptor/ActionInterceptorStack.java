@@ -13,7 +13,7 @@ import jodd.madvoc.MadvocException;
  */
 public abstract class ActionInterceptorStack extends ActionInterceptor {
 
-	private Class<? extends ActionInterceptor>[] interceptors;
+	protected Class<? extends ActionInterceptor>[] interceptors;
 
 	/**
 	 * Constructs an interceptor stack with the given interceptors
