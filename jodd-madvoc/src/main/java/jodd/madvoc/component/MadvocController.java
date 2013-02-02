@@ -38,7 +38,7 @@ public class MadvocController {
 	protected InterceptorsManager interceptorsManager;
 
 	@PetiteInject
-	protected ContextInjector contextInjector;
+	protected ServletContextInjector servletContextInjector;
 
 	@PetiteInject
 	protected ResultsManager resultsManager;
@@ -179,7 +179,8 @@ public class MadvocController {
 		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse httpServletResponse = actionRequest.getHttpServletResponse();
 
-		contextInjector.injectContext(result, httpServletRequest, httpServletResponse, true);
+		servletContextInjector.injectContext(result, httpServletRequest, httpServletResponse);
+
 		result.initialized();
 		result.init();
 	}
@@ -222,7 +223,8 @@ public class MadvocController {
 	 * Initializes action interceptor.
 	 */
 	protected void initializeInterceptor(ActionInterceptor interceptor) {
-		contextInjector.injectContext(interceptor, applicationContext, true);
+		servletContextInjector.injectContext(interceptor, applicationContext);
+
 		interceptor.initialized();
 		interceptor.init();
 	}

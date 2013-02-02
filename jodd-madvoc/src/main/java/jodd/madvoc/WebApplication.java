@@ -4,6 +4,7 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocContextInjector;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionPathMapper;
@@ -12,7 +13,7 @@ import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ActionPathRewriter;
-import jodd.madvoc.component.ContextInjector;
+import jodd.madvoc.component.ServletContextInjector;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 
@@ -163,7 +164,8 @@ public class WebApplication {
 		registerComponent(MadvocController.class);
 		registerComponent(ResultsManager.class);
 		registerComponent(ResultMapper.class);
-		registerComponent(ContextInjector.class);
+		registerComponent(ServletContextInjector.class);
+		registerComponent(MadvocContextInjector.class);
 	}
 
 

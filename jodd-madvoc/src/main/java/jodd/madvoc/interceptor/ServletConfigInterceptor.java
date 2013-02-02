@@ -4,11 +4,12 @@ package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocContextInjector;
+import jodd.madvoc.component.ServletContextInjector;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.injector.SessionScopeInjector;
 import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.component.ContextInjector;
 import jodd.madvoc.meta.In;
 import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
@@ -32,7 +33,10 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
-	protected ContextInjector contextInjector;
+	protected ServletContextInjector servletContextInjector;
+
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocContextInjector madvocContextInjector;
 
 	protected RequestScopeInjector requestScopeInjector;
 	protected SessionScopeInjector sessionScopeInjector;
@@ -73,7 +77,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		contextInjector.injectContext(target, servletRequest, servletResponse, false);
+		madvocContextInjector.injectContext(target);
+		servletContextInjector.injectContext(target, servletRequest, servletResponse);
 
 		sessionScopeInjector.inject(target, servletRequest);
 
@@ -91,7 +96,8 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		contextInjector.outjectContext(target, servletRequest, servletResponse);
+		madvocContextInjector.outjectContext(target);
+		servletContextInjector.outjectContext(target, servletRequest, servletResponse);
 
 		sessionScopeInjector.outject(target, servletRequest);
 
