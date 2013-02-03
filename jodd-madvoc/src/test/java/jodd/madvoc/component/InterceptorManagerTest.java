@@ -59,6 +59,10 @@ public class InterceptorManagerTest extends MadvocTestCase {
 		im.madvocConfig = new MadvocConfig();
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
+		im.madvocContextInjector = new MadvocContextInjector();
+		im.madvocContextInjector.madpc = new PetiteContainer();
+		im.madvocContextInjector.createInjectors();
+
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				TestStack.class,
 				DefaultWebAppInterceptors.class,
@@ -82,40 +86,39 @@ public class InterceptorManagerTest extends MadvocTestCase {
 	
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void testExpandConfigableStack() {
+	public void testExpandConfigurableStack() {
 		InterceptorsManager im = new InterceptorsManager();
 		im.madvocConfig = new MadvocConfig();
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
 		PetiteContainer madpc = new PetiteContainer();
-		madpc.defineParameter(TestConfigableStack.class.getName()+".interceptors",
-			AnnotatedFieldsInterceptor.class.getName()
-			+ ","
-			+ ServletConfigInterceptor.class.getName()
-			+ ","
-			+ LogEchoInterceptor.class.getName()
-			);
-		im.madpc=madpc;
-		im.createInjector();
-		
-		Class<? extends ActionInterceptor>[] in = new Class[]{
-			TestConfigableStack.class,
-			TestConfigableStack2.class,
+		madpc.defineParameter(
+				TestConfigurableStack.class.getName() + ".interceptors",
+				AnnotatedFieldsInterceptor.class.getName() + "," +
+				ServletConfigInterceptor.class.getName() + "," +
+				LogEchoInterceptor.class.getName()
+		);
+		im.madvocContextInjector = new MadvocContextInjector();
+		im.madvocContextInjector.madpc = madpc;
+		im.madvocContextInjector.createInjectors();
+
+		Class<? extends ActionInterceptor>[] in = new Class[] {
+			TestConfigurableStack.class,
+			TestConfigurableStack2.class,
 			EchoInterceptor.class
 		};
 
 		Class<? extends ActionInterceptor>[] out = im.expand(in);
-		assertEquals(6, out.length);
+		assertEquals(6, out.length);		// 3 + 2 + 1
 
-		//assert: TestConfigableStack => defined in madpc
+		// assert: TestConfigurableStack => defined in madpc
 		assertEquals(AnnotatedFieldsInterceptor.class, out[0]);
 		assertEquals(ServletConfigInterceptor.class, out[1]);
 		assertEquals(LogEchoInterceptor.class, out[2]);
 
-		//assert: TestConfigableStack2 => madvocConfig.defaultInterceptors
+		//assert: TestConfigurableStack2 => madvocConfig.defaultInterceptors
 		assertEquals(EchoInterceptor.class, out[3]);
 		assertEquals(ServletConfigInterceptor.class, out[4]);
-
 		assertEquals(EchoInterceptor.class, out[5]);
 	}
 	
@@ -152,6 +155,10 @@ public class InterceptorManagerTest extends MadvocTestCase {
 		im.madvocConfig = new MadvocConfig();
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
 
+		im.madvocContextInjector = new MadvocContextInjector();
+		im.madvocContextInjector.madpc = new PetiteContainer();
+		im.madvocContextInjector.createInjectors();
+
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				DefaultWebAppInterceptors.class,
 		};
@@ -180,10 +187,12 @@ public class InterceptorManagerTest extends MadvocTestCase {
 		}
 	}
 	
-	public static class TestConfigableStack extends ConfigableActionInterceptorStack{
-		
+	public static class TestConfigurableStack extends ActionInterceptorStack {
 	}
-	public static class TestConfigableStack2 extends ConfigableActionInterceptorStack{
-		
+
+	public static class TestConfigurableStack2 extends ActionInterceptorStack {
+		public TestConfigurableStack2() {
+			super(DefaultWebAppInterceptors.class);
+		}
 	}
 }

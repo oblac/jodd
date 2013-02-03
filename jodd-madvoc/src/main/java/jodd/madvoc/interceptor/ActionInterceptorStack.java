@@ -2,7 +2,6 @@
 
 package jodd.madvoc.interceptor;
 
-
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 
@@ -16,13 +15,17 @@ public abstract class ActionInterceptorStack extends ActionInterceptor {
 	protected Class<? extends ActionInterceptor>[] interceptors;
 
 	/**
-	 * Constructs an interceptor stack with the given interceptors
+	 * Constructs an empty interceptor stack that will be configured later,
+	 * using {@link #setInterceptors(Class[])}.
+	 */
+	protected ActionInterceptorStack() {
+	}
+
+	/**
+	 * Constructs an interceptor stack with the given interceptors.
 	 */
 	protected ActionInterceptorStack(Class<? extends ActionInterceptor>... interceptorClasses) {
-		if (interceptorClasses.length == 0) {
-			throw new MadvocException("Empty action interceptor stack is not allowed.");
-		}
-		this.interceptors = interceptorClasses;
+		setInterceptors(interceptorClasses);
 	}
 
 	/**
@@ -38,5 +41,15 @@ public abstract class ActionInterceptorStack extends ActionInterceptor {
 	 */
 	public Class<? extends ActionInterceptor>[] getInterceptors() {
 		return interceptors;
+	}
+
+	/**
+	 * Sets interceptor classes.
+	 */
+	public void setInterceptors(Class<? extends ActionInterceptor>... interceptors) {
+		if (interceptors.length == 0) {
+			throw new MadvocException("Empty action interceptor stack is not allowed.");
+		}
+		this.interceptors = interceptors;
 	}
 }

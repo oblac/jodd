@@ -4,6 +4,7 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
+import jodd.petite.meta.PetiteInject;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -12,6 +13,9 @@ import java.util.HashMap;
  * Manager for Madvoc results.
  */
 public class ResultsManager {
+
+	@PetiteInject
+ 	protected MadvocContextInjector madvocContextInjector;
 
 	public ResultsManager() {
 		this.results = new HashMap<String, ActionResult>();
@@ -44,6 +48,9 @@ public class ResultsManager {
 		} else {
 			results.put(result.getType(), result);
 		}
+
+		madvocContextInjector.injectContext(result);
+
 		return result;
 	}
 
