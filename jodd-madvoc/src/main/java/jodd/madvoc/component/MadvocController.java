@@ -237,10 +237,8 @@ public class MadvocController {
 	protected Object createAction(Class actionClass) {
 		try {
 			return actionClass.newInstance();
-		} catch (InstantiationException iex) {
-			throw new MadvocException("Unable to create Madvoc action.", iex);
-		} catch (IllegalAccessException iaex) {
-			throw new MadvocException("Not enough rights to create Madvoc action.", iaex);
+		} catch (Exception ex) {
+			throw new MadvocException("Unable to create Madvoc action.", ex);
 		}
 	}
 

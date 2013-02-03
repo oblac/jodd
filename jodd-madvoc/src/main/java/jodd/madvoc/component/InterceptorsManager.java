@@ -143,10 +143,8 @@ public class InterceptorsManager {
 	protected ActionInterceptor createInterceptor(Class<? extends ActionInterceptor> interceptorClass) {
 		try {
 		    return interceptorClass.newInstance();
-		} catch (InstantiationException iex) {
-			throw new MadvocException("Unable to create Madvoc interceptor: " + interceptorClass, iex);
-		} catch (IllegalAccessException iaex) {
-			throw new MadvocException("Not enough rights to create Madvoc action interceptor: " + interceptorClass, iaex);
+		} catch (Exception ex) {
+			throw new MadvocException("Unable to create Madvoc interceptor: " + interceptorClass, ex);
 		}
 	}
 
