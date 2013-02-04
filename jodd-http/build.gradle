@@ -1,5 +1,5 @@
 
-ext.moduleName = 'odd HTTP client'
+ext.moduleName = 'Jodd HTTP client'
 ext.moduleDescription = 'Jodd HTTP client is easy-to-use http client.'
 
 dependencies {

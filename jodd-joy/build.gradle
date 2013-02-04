@@ -1,0 +1,18 @@
+
+ext.moduleName = 'Jodd Joy'
+ext.moduleDescription = 'Jodd Joy is set of Jodd extensions that makes development of web applications even easier.'
+
+dependencies {
+	compile project(':jodd-core')
+	compile project(':jodd-madvoc')
+	compile project(':jodd-vtor')
+	compile project(':jodd-jtx')
+	compile project(':jodd-db')
+	compile project(':jodd-proxetta')
+	compile project(':jodd-mail')
+
+	compile lib.log
+
+	testCompile lib.junit
+	testCompile lib.hsqldb
+}

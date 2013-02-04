@@ -1,10 +1,32 @@
 
+description = '''
+	Jodd is an open-source Java utility library and set of micro frameworks.
+	Jodd tools enriches JDK with many powerful and feature rich utilities.
+	It helps with everyday task, makes code more robust and reliable.
+	Jodd frameworks is set of lightweight application frameworks, compact yet powerful.
+	Designed following the CoC, DRY and SCS principles, it makes development
+	simple, but not simpler.
+'''
+
 version = '3.4.2-SNAPSHOT' 
 
 ext {
 	// libraries
 	lib = [
+		mail:			'javax.mail:mail:1.4.5',
+		activation:		'javax.activation:activation:1.1.1',
+		servlet:		'javax.servlet:servlet-api:2.5',
+		jsp:			'javax.servlet.jsp:jsp-api:2.0',
+		log:			'org.slf4j:slf4j-api:1.7.2',
+		simpleLog:		'org.slf4j:slf4j-simple:1.7.2',
+		asm:			'org.ow2.asm:asm:4.1',
+		
 		junit: 			'junit:junit:4.10',
+		mockito:		'org.mockito:mockito-all:1.9.5',
+		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
+		h2db:			'com.h2database:h2:1.1.111',
+		postgresql:		'postgresql:postgresql:9.1-901-1.jdbc4',
+		mysql:			'mysql:mysql-connector-java:5.1.21',
 		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.5.10.201208310627:runtime@jar',
 		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.5.10.201208310627'
 	]

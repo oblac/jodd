@@ -1,0 +1,16 @@
+
+ext.moduleName = 'Jodd DbOom'
+ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is convenient database object mapper.'
+
+dependencies {
+	compile project(':jodd-core')
+	compile project(':jodd-bean')
+	compile project(':jodd-jtx')
+	compile project(':jodd-proxetta')
+
+	testCompile lib.junit
+	testCompile lib.hsqldb
+	testCompile lib.h2db
+	testCompile lib.mysql
+	testCompile lib.postgresql
+}

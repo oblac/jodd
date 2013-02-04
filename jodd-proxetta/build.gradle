@@ -1,0 +1,13 @@
+
+ext.moduleName = 'Jodd Proxetta'
+ext.moduleDescription = 'Jodd Proxetta is the fastest proxy creator with unique approach for defying pointcuts and advices.'
+
+dependencies {
+	compile project(':jodd-core')
+
+	compile lib.asm
+	compile lib.log
+	
+	testCompile project(':jodd-bean')
+	testCompile lib.junit
+}

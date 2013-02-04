@@ -1,0 +1,15 @@
+
+ext.moduleName = 'Jodd Servlet'
+ext.moduleDescription = 'Jodd Servlet is set of web tools, including the nice tag library, wrappers and some filters.'
+
+dependencies {
+	compile project(':jodd-core')
+	compile project(':jodd-bean')
+	compile project(':jodd-upload')
+
+	compile lib.servlet
+	compile lib.jsp
+	
+	testCompile lib.junit
+	testCompile lib.mockito
+}
