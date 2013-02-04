@@ -64,7 +64,8 @@ def javaModules() {
 def javaBundleModules() {
 	rootProject.subprojects.findAll {
 		it.name.contains('jodd-') &&
-		!it.name.equals('jodd-swingspy')
+		!it.name.equals('jodd-swingspy') &&
+		!it.name.equals('jodd-joy')
 	}
 }
 
@@ -112,6 +113,22 @@ configure(javaModules()) {
 				version = project.version
 				description = project.moduleDescription
 				attributes 'Implementation-Title': project.moduleName
+			}
+		}
+	}
+
+	javadoc {
+		afterEvaluate {
+			configure(options) {
+				windowTitle 'Jodd API Documentation'
+				docTitle "$project.moduleName $project.version API Documentation"
+				bottom = 'Copyright &#169; 2003-2013 <a href="http://jodd.org">Jodd Team</a>'
+				breakIterator = true
+				author = false
+				encoding = 'UTF-8'
+				docEncoding = 'UTF-8'
+				stylesheetFile = file('src/main/javadoc/jodd.css')
+				source = '1.5'
 			}
 		}
 	}

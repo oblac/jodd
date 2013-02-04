@@ -102,11 +102,14 @@ task distroZip(type: Zip) {
 	from '../README.md'
 	from '../LICENSE'
 
-	rootProject.project(':jodd-swingspy').tasks.withType(Jar).each { jar ->
-		if (!jar.name.contains('sources') && !jar.name.contains('javadoc')) {
-			from jar
+	def addonModules = [':jodd-swingspy', ':jodd-joy']
+
+	addonModules.each{ addon->
+		rootProject.project(addon).tasks.withType(Jar).each { jar ->
+			if (!jar.name.contains('sources') && !jar.name.contains('javadoc')) {
+				from jar
+			}
 		}
-		
 	}
 }
 
