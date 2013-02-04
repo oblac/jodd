@@ -1,0 +1,53 @@
+apply plugin: "propdeps-maven"
+
+install {
+	repositories.mavenInstaller {
+		customizePom(pom, project)
+	}
+}
+
+def customizePom(pom, gradleProject) {
+	pom.whenConfigured { generatedPom ->
+
+		// eliminate test-scoped dependencies (no need in maven central poms)
+		generatedPom.dependencies.removeAll { dep ->
+			dep.scope == "test"
+		}
+
+		// add all items necessary for maven central publication
+		generatedPom.project {
+			name = gradleProject.moduleName
+			description = gradleProject.moduleDescription
+			url = 'http://jodd.org'
+			organization {
+				name = 'Jodd'
+				url = 'http://jodd.org'
+			}
+			issueManagement {
+				system = 'GitHub'
+				url = 'https://github.com/oblac/jodd/issues'
+			}
+			licenses {
+				license {
+					name 'The New BSD License'
+					url 'http://jodd.org/license.html'
+					distribution 'repo'
+				}
+			}
+			scm {
+				url = 'https://github.com/oblac/jodd'
+				connection = 'scm:git:git://github.com/oblac/jodd.git'
+				developerConnection = 'scm:git:ssh://git@github.com/oblac/jodd.git'
+			}
+			developers {
+				developer {
+					id = 'igor'
+					name = 'Igor Spasic'
+					email = 'igor@jodd.org'
+					timezone = '+1'
+				}
+			}
+		}
+	}
+}
+

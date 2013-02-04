@@ -11,6 +11,8 @@ description = '''
 version = '3.4.2-SNAPSHOT' 
 
 ext {
+	gradleScriptDir = "${rootProject.projectDir}/gradle"
+
 	// libraries
 	lib = [
 		mail:			'javax.mail:mail:1.4.5',
@@ -52,6 +54,7 @@ allprojects {
 	repositories {
 		mavenCentral()
 	}
+
 }
 
 subprojects {
@@ -101,6 +104,7 @@ configure(javaModules()) {
 	}
 
 	artifacts {
+		archives jar
 		archives sourcesJar
 		archives javadocJar
 	}
@@ -135,6 +139,11 @@ configure(javaModules()) {
 }
 
 configure(javaBundleModules()) {
+	apply plugin: 'maven'
+	apply plugin: 'signing'
+	apply plugin: 'propdeps'
+	apply from: "${gradleScriptDir}/publish-maven.gradle"
+
 	configurations {
 		codeCoverage
 	}
@@ -151,6 +160,10 @@ configure(javaBundleModules()) {
 			'-Xms128m',
 			'-Xmx512m',
 			'-XX:MaxPermSize=128m'
+	}
+
+	signing {
+		sign configurations.archives
 	}
 }
 
@@ -271,7 +284,6 @@ task release() {
 	dependsOn ':distribution:make'
 	dependsOn projectReport
 }
-
 
 // --- wrapper ----------------------------------------------------------------
 
