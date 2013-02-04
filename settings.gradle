@@ -1,0 +1,10 @@
+
+include 'jodd-core'
+include 'jodd-bean'
+include 'jodd-props'
+include 'jodd-upload'
+include 'jodd-http'
+
+include 'jodd-swingspy'
+
+include 'distribution'

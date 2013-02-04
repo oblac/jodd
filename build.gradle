@@ -1,0 +1,241 @@
+
+version = '3.4.2-SNAPSHOT' 
+
+ext {
+	// libraries
+	lib = [
+		junit: 			'junit:junit:4.10',
+		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.5.10.201208310627:runtime@jar',
+		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.5.10.201208310627'
+	]
+
+	// common manifest data
+	commonManifest = [
+		'Debug-Info' : 'on',
+		'Built-By' : 'jodd.org',
+		'Bundle-License' : 'http://jodd.org/license.html',
+		'Bundle-Vendor' : 'Jodd',
+		'Bundle-DocURL' : 'http://jodd.org',
+		'Implementation-Version': version,
+		'Implementation-Vendor': 'Jodd Team'
+	]
+}
+
+allprojects {
+	version = rootProject.version
+
+	ext.isSnapshot = version.endsWith("-SNAPSHOT")
+	ext.isSubproject = project.parent != null
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+}
+
+def javaModules() {
+	subprojects.findAll { it.name.contains('jodd-') }
+}
+
+def javaBundleModules() {
+	rootProject.subprojects.findAll {
+		it.name.contains('jodd-') &&
+		!it.name.equals('jodd-swingspy')
+	}
+}
+
+def javaMobileModules() {
+	rootProject.subprojects.findAll {
+		it.name.equals('jodd-core') ||
+		it.name.equals('jodd-bean') ||
+		it.name.equals('jodd-props')
+	}
+}
+
+configure(javaModules()) {
+	apply plugin: 'java'
+	apply plugin: 'osgi'
+
+	group = 'org.jodd'
+
+	sourceCompatibility = 1.5
+	targetCompatibility = 1.5
+
+	tasks.withType(Compile) {
+		options.encoding = 'UTF-8'
+	}
+	compileJava.options.debug = true
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = 'javadoc'
+		from javadoc.destinationDir
+	}
+
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+
+	jar {
+		afterEvaluate {
+			manifest.attributes << commonManifest
+			manifest {
+				name = project.moduleName
+				version = project.version
+				description = project.moduleDescription
+				attributes 'Implementation-Title': project.moduleName
+			}
+		}
+	}
+}
+
+configure(javaBundleModules()) {
+	configurations {
+		codeCoverage
+	}
+
+	dependencies {
+		codeCoverage lib.jacoco_agent
+	}
+
+	test {
+		testReport = false
+		systemProperties = System.properties
+		jvmArgs "-javaagent:${configurations.codeCoverage.asPath}=destfile=${project.buildDir.path}/coverage-results/jacoco.exec,sessionid=HSServ,append=false,excludes=*Test:*.?:*Foo*:*.data.*:*.tst*",
+			'-Djacoco=true',
+			'-Xms128m',
+			'-Xmx512m',
+			'-XX:MaxPermSize=128m'
+	}
+}
+
+// --- project ----------------------------------------------------------------
+
+apply plugin: 'project-report'
+
+configurations {
+	codeCoverageAnt
+}
+
+dependencies {
+	codeCoverageAnt lib.jacoco_ant
+}
+
+def allMainSourceSets = javaBundleModules().sourceSets.main
+
+
+task buildModules {
+	dependsOn javaModules().build
+}
+
+task clean(type: Delete) {
+	group 'Project'
+	description 'Cleans everything.'
+
+	doLast {
+		delete buildDir
+	}
+}
+
+task javadocAll(type: Javadoc) {
+	group 'Documentation'
+	description 'Builds the aggregated Java docs for all modules.'
+	dependsOn buildModules
+
+	maxMemory '512m'
+
+	source allMainSourceSets.allJava
+
+	destinationDir = file("$buildDir/reports/javadoc")
+	classpath = files(allMainSourceSets.compileClasspath)
+
+	configure(options) {
+		windowTitle 'Jodd API Documentation'
+		docTitle "Jodd Project $project.version API Documentation"
+		bottom = 'Copyright &#169; 2003-2013 <a href="http://jodd.org">Jodd Team</a>'
+		breakIterator = true
+		author = false
+		encoding = 'UTF-8'
+		docEncoding = 'UTF-8'
+		stylesheetFile = file('src/main/javadoc/jodd.css')
+		source = '1.5'
+	}
+
+	inputs.files(allMainSourceSets.allSource + allMainSourceSets.compileClasspath)
+	outputs.dir destinationDir
+}
+
+task coverageReportAll() {
+	dependsOn buildModules
+	group 'Documentation'
+
+	ant.taskdef(
+		name:'jacocoreport',
+		classname: 'org.jacoco.ant.ReportTask',
+		classpath: configurations.codeCoverageAnt.asPath
+	)
+
+	def coverageDir = "$buildDir/reports/coverage"
+
+	ant.mkdir dir: coverageDir
+
+	inputs.files(allMainSourceSets.allSource + allMainSourceSets.compileClasspath)
+	outputs.dir file(coverageDir)
+
+	doLast {
+		ant.jacocoreport {
+			executiondata {
+				javaBundleModules().each {submodule ->
+					ant.file file: submodule.buildDir.toString() + '/coverage-results/jacoco.exec'
+				}
+			}
+			structure(name: 'Jodd Coverage Report') {
+				javaBundleModules().each {submodule ->
+					group(name: submodule.name) {
+						classfiles {
+							fileset dir: "${submodule.sourceSets.main.output.classesDir}"
+						}
+					}
+				}
+			}
+
+			xml  destfile: "$coverageDir/jacoco.xml"
+			html destdir:  coverageDir
+		}
+	}
+}
+
+task testReport(type: TestReport) {
+	group 'Documentation'
+
+	destinationDir = file("$buildDir/reports/tests")
+	reportOn javaBundleModules()*.test
+}
+
+
+// --- release ----------------------------------------------------------------
+
+task release() {
+	group 'Project'
+	description 'Builds everything.'
+	
+	dependsOn buildModules
+	dependsOn javadocAll
+	dependsOn coverageReportAll
+	dependsOn testReport
+	dependsOn ':distribution:make'
+	dependsOn projectReport
+}
+
+
+// --- wrapper ----------------------------------------------------------------
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.4'
+}

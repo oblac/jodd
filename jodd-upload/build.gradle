@@ -1,0 +1,9 @@
+
+ext.moduleName = 'Jodd Upload'
+ext.moduleDescription = 'Jodd Upload is library for managing uploads.'
+
+dependencies {
+	compile project(':jodd-core')
+	
+	testCompile lib.junit
+}

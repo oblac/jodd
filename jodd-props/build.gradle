@@ -1,0 +1,9 @@
+
+ext.moduleName = 'Jodd Props'
+ext.moduleDescription = 'Jodd Props is super properties replacement, featuring: UTF8, sections, profiles, macros and more.'
+
+dependencies {
+	compile project(':jodd-core')
+
+	testCompile lib.junit
+}

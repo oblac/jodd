@@ -1,0 +1,7 @@
+
+ext.moduleName = 'Jodd Core'
+ext.moduleDescription = 'Jodd Core tools and utilities, including type converters, JDateTime, cache etc.'
+
+dependencies {
+	testCompile lib.junit
+}

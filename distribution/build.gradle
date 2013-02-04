@@ -1,0 +1,123 @@
+
+task clean(type: Delete) {
+	doLast {
+		delete buildDir
+	}
+}
+
+task bundleJar(type: Jar) {
+	dependsOn rootProject.buildModules
+
+	baseName = 'jodd-' + project.version
+	destinationDir = new File(buildDir, 'lib')
+	
+	javaBundleModules().each {submodule ->
+		from submodule.sourceSets.main.output
+	}
+	manifest.attributes << commonManifest
+	manifest {
+		attributes 'Implementation-Title': 'Jodd Bundle'
+		attributes 'Bundle-ManifestVersion' : 2
+		attributes 'Bundle-Name' : 'Jodd Bundle'
+		attributes 'Bundle-Version' : rootProject.version
+		attributes 'Bundle-SymbolicName' : 'org.jodd'
+		attributes 'Bundle-Description' : 'Jodd is an open-source Java utility library and set of micro frameworks.'
+		attributes 'Export-Package' : 'jodd.*'
+		attributes 'Import-Package' : '*;resolution:=optional'
+	}
+}
+
+task bundleMobileJar(type: Jar) {
+	dependsOn rootProject.buildModules
+
+	baseName = 'jodd-mobile-' + project.version
+	destinationDir = new File(buildDir, 'lib')
+
+	javaMobileModules().each {submodule ->
+		from submodule.sourceSets.main.output
+	}
+
+	exclude 'jodd/Jodd*.class'
+	exclude 'jodd/bean/loader/*'
+	exclude 'jodd/bean/BeanLoaderManager.class'
+
+	exclude 'jodd/cache/FileLFU*.class'
+	exclude 'jodd/cache/NoCache.class'
+	exclude 'jodd/compiler/*'
+	exclude 'jodd/format/*'
+	exclude 'jodd/io/DebugOutputStream.class'
+	exclude 'jodd/io/FileChangeListener.class'
+	exclude 'jodd/io/FileMonitor*'
+	exclude 'jodd/io/filter/*'
+	exclude 'jodd/io/findfile/*'
+	exclude 'jodd/util/BCrypt.class'
+	exclude 'jodd/util/Base32.class'
+	exclude 'jodd/util/BinarySearch*.class'
+	exclude 'jodd/util/ClipboardUtil.class'
+	exclude 'jodd/util/ComparableComparator.class'
+	exclude 'jodd/util/DateFormatSymbolsEx.class'
+	exclude 'jodd/util/FastSort.class'
+	exclude 'jodd/util/HashCode.class'
+	exclude 'jodd/util/HtmlDecoder*'
+	exclude 'jodd/util/JmxClient.class'
+	exclude 'jodd/util/LoopIterator.class'
+	exclude 'jodd/util/MimeTypes.*'
+	exclude 'jodd/util/MultiComparator.class'
+	exclude 'jodd/util/ObjectXmlUtil.class'
+	exclude 'jodd/util/PrettyStringBuilder.class'
+	exclude 'jodd/util/ResourceBundleMessageResolver.class'
+	exclude 'jodd/util/TextUtil.class'
+	exclude 'jodd/util/buffer/FastShortBuffer.class'
+	exclude 'jodd/util/collection/Array*.class'
+	exclude 'jodd/util/collection/Bag.class'
+	exclude 'jodd/util/collection/ShortArrayList.class'
+	exclude 'jodd/util/collection/EnumerationIterator.class'
+	exclude 'jodd/util/collection/CompositeIterator.class'
+	exclude 'jodd/util/collection/HashBag*'
+	exclude 'jodd/util/collection/IntHashMap*.class'
+	exclude 'jodd/util/collection/Joined*'
+	exclude 'jodd/util/ref/*'
+	exclude 'jodd/util/sort/*'
+
+	manifest.attributes << commonManifest
+	manifest {
+		attributes 'Implementation-Title': 'Jodd Mobile Bundle'
+		attributes 'Bundle-Description' : 'Jodd Mobile contains only selected tools from jodd-core, jodd-bean and jodd-props; keeping jar small.'
+		attributes 'Bundle-Version' : rootProject.version
+	}
+}
+
+task distroZip(type: Zip) {
+	dependsOn rootProject.buildModules
+	dependsOn bundleJar
+	dependsOn bundleMobileJar
+
+	baseName = 'jodd-' + project.version
+	destinationDir = new File(buildDir, 'zip')
+	
+	this.tasks.withType(Jar).each { jar ->
+		from jar
+	}
+	from '../file_id.diz'
+	from '../README.md'
+	from '../LICENSE'
+
+	rootProject.project(':jodd-swingspy').tasks.withType(Jar).each { jar ->
+		if (!jar.name.contains('sources') && !jar.name.contains('javadoc')) {
+			from jar
+		}
+		
+	}
+}
+
+artifacts {
+	bundleJar
+	bundleMobileJar
+	distroZip
+}
+
+task make {
+	group 'Project'
+	description 'Builds bundle jars.'
+	dependsOn distroZip	
+}

@@ -1,0 +1,9 @@
+
+ext.moduleName = 'Jodd BeanUtil'
+ext.moduleDescription = 'Jodd BeanUtil is fast and powerful bean manipulation library.'
+
+dependencies {
+	compile project(':jodd-core')
+	
+	testCompile lib.junit
+}

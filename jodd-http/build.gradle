@@ -1,0 +1,10 @@
+
+ext.moduleName = 'odd HTTP client'
+ext.moduleDescription = 'Jodd HTTP client is easy-to-use http client.'
+
+dependencies {
+	compile project(':jodd-core')
+	compile project(':jodd-upload')
+
+	testCompile lib.junit
+}
