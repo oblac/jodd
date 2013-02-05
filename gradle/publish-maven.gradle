@@ -11,7 +11,7 @@ uploadArchives {
 		customizePom(pom, project)
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-		if (project.hasProperty('sonatypeUsername') {
+		if (project.hasProperty('sonatypeUsername')) {
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
