@@ -11,11 +11,13 @@ uploadArchives {
 		customizePom(pom, project)
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-		snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
-			authentication(userName: sonatypeUsername, password: sonatypePassword)
-		}
-		repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-			authentication(userName: sonatypeUsername, password: sonatypePassword)
+		if (project.hasProperty('sonatypeUsername') {
+			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+			repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
 		}
 	}
 }
