@@ -1,5 +1,11 @@
 apply plugin: "propdeps-maven"
 
+signing {
+	if (project.hasProperty('JODD_ADMIN')) {
+		sign configurations.archives
+	}
+}
+
 install {
 	repositories.mavenInstaller {
 		customizePom(pom, project)
@@ -9,9 +15,10 @@ install {
 uploadArchives {
 	repositories.mavenDeployer {
 		customizePom(pom, project)
+		
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-		if (project.hasProperty('sonatypeUsername')) {
+		if (project.hasProperty('JODD_ADMIN')) {
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}

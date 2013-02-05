@@ -161,10 +161,6 @@ configure(javaBundleModules()) {
 			'-Xmx512m',
 			'-XX:MaxPermSize=128m'
 	}
-
-	signing {
-		sign configurations.archives
-	}
 }
 
 // --- project ----------------------------------------------------------------
