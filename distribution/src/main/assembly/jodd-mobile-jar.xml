@@ -15,7 +15,6 @@
 				<directory>../jodd-bean/target/classes/</directory>
 				<outputDirectory>/</outputDirectory>
 				<excludes>
-					<exclude>jodd/Jodd*.class</exclude>
 					<exclude>jodd/bean/loader/*</exclude>
 					<exclude>jodd/bean/BeanLoaderManager.class</exclude>
 				</excludes>
@@ -24,7 +23,6 @@
 				<directory>../jodd-core/target/classes/</directory>
 				<outputDirectory>/</outputDirectory>
 				<excludes>
-					<exclude>jodd/Jodd*.class</exclude>
 					<exclude>jodd/cache/FileLFU*.class</exclude>
 					<exclude>jodd/cache/NoCache.class</exclude>
 					<exclude>jodd/compiler/*</exclude>
@@ -68,7 +66,6 @@
 				<directory>../jodd-props/target/classes/</directory>
 				<outputDirectory>/</outputDirectory>
 				<excludes>
-					<exclude>jodd/Jodd*.class</exclude>
 				</excludes>
 			</fileSet>
 	</fileSets>

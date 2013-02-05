@@ -35,7 +35,6 @@ task bundleMobileJar(type: Jar) {
 		from submodule.sourceSets.main.output
 	}
 
-	exclude 'jodd/Jodd*.class'
 	exclude 'jodd/bean/loader/*'
 	exclude 'jodd/bean/BeanLoaderManager.class'
 
