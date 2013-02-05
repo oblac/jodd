@@ -190,9 +190,7 @@ task clean(type: Delete) {
 	group 'Project'
 	description 'Cleans everything.'
 
-	doLast {
-		delete buildDir
-	}
+	delete buildDir
 }
 
 task javadocAll(type: Javadoc) {
@@ -283,6 +281,22 @@ task release() {
 	dependsOn testReport
 	dependsOn ':distribution:make'
 	dependsOn projectReport
+}
+
+configure(javaBundleModules()) {
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+ 				snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
+ 					authentication(userName: sonatypeUsername, password: sonatypePassword)
+ 				}
+				repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+					authentication(userName: sonatypeUsername, password: sonatypePassword)
+				}
+			}
+		}
+	}
 }
 
 // --- wrapper ----------------------------------------------------------------

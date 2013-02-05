@@ -1,8 +1,6 @@
 
 task clean(type: Delete) {
-	doLast {
-		delete buildDir
-	}
+	delete buildDir
 }
 
 task bundleJar(type: Jar) {

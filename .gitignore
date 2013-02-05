@@ -1,9 +1,9 @@
 /dist/
 /out/
-target
 *.iml
 .idea
-/*.user.*
-/*.pass
+/user.*
+.*
 .gradle
 build
+target
