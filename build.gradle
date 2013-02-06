@@ -10,6 +10,8 @@ description = '''
 
 version = '3.4.2-SNAPSHOT' 
 
+apply plugin: 'idea'
+
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
 
@@ -83,6 +85,7 @@ def javaMobileModules() {
 configure(javaModules()) {
 	apply plugin: 'java'
 	apply plugin: 'osgi'
+	apply plugin: 'idea'
 
 	group = 'org.jodd'
 
@@ -141,7 +144,6 @@ configure(javaModules()) {
 configure(javaBundleModules()) {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
-	apply plugin: 'propdeps'
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	configurations {

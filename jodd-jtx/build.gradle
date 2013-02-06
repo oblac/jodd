@@ -4,9 +4,10 @@ ext.moduleDescription = 'Jodd JTX manager.'
 
 dependencies {
 	compile project(':jodd-core')
-	optional(project(':jodd-proxetta'))
+	compile project(':jodd-proxetta')
 
 	compile lib.log
 	
 	testCompile lib.junit
 }
+optional = ['jodd-proxetta']

@@ -1,4 +1,4 @@
-apply plugin: "propdeps-maven"
+ext.optional = []
 
 signing {
 	if (project.hasProperty('JODD_ADMIN')) {
@@ -35,6 +35,14 @@ def customizePom(pom, gradleProject) {
 		// eliminate test-scoped dependencies (no need in maven central poms)
 		generatedPom.dependencies.removeAll { dep ->
 			dep.scope == "test"
+		}
+
+		// modify POM and add optional flag where needed
+		generatedPom.dependencies.findAll {
+			println it.artifactId
+		 	if (it.artifactId in project.optional) {
+				it.optional = true
+			}
 		}
 
 		// add all items necessary for maven central publication

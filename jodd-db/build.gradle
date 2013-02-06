@@ -5,8 +5,8 @@ ext.moduleDescription = 'Jodd DB is efficient and thin database facade; DbOom is
 dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
-	optional(project(':jodd-jtx'))
-	optional(project(':jodd-proxetta'))
+	compile project(':jodd-jtx')
+	compile project(':jodd-proxetta')
 
 	testCompile lib.junit
 	testCompile lib.hsqldb
@@ -14,3 +14,4 @@ dependencies {
 	testCompile lib.mysql
 	testCompile lib.postgresql
 }
+optional = ['jodd-jtx', 'jodd-proxetta']
