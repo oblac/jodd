@@ -1,14 +1,14 @@
 Jodd
 ====
 
-**Jodd** is set of open-source Java tools and frameworks; compact, yet powerful.
+**Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
 Official web site: http://jodd.org/
 
 Invitation web site: http://joddframework.org
 
 
-## Modules of Jodd
+## Jodd Modules
 
 **Jodd** is split into many modules, so choose what to use.
 Some tools and utility modules are:
@@ -20,7 +20,7 @@ Some tools and utility modules are:
 + `jodd-upload`, handles HTTP uploads.
 + `jodd-servlet` with many servlet utilities, including nice tag library.
 
-and some frameworks modules:
+and some micro frameworks:
 
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
@@ -36,35 +36,28 @@ Read more in our [official documentation](http://jodd.org/doc).
 ## Jodd Bundle
 
 If you are already using many **Jodd** jars, you can simply
-just use the *bundle* jar. It's a single jar that bind them all:)
+just use the *bundle* jar. It's a single jar that bind all modules:)
 
 
-## Building Jodd
+## Building Jodd from source
 
-**Jodd** is built with Maven 3. After cloning **Jodd** git repo,
-you can build the full release with:
+**Jodd** uses [Gradle](http://gradle.org/) build system. Good thing is that you don't have to install anything; the only prerequisites are [Git](http://help.github.com/set-up-git-redirect) and Java JDK.
 
-    mvn -P release
+### Check out sources
 
-If you need to generate various reports after the successful build:
+    git clone https://github.com/oblac/jodd.git jodd
 
-    mvn -P post-release
+### Compile and test, build jars
 
-To quickly build distribution jars (no tests are invoked) invoke one of these:
+    gradlew build
 
-    mvn -P dist
-    mvn -P release -Dskiptests=true
+### Build full release with reports
 
-That's all what you need to know;)
+    gradlew release
 
-### Versioning
+### Install Jodd into your local Maven
 
-Display plugin and dependency information:
-
-    mvn -N versions:display-plugin-updates
-    mvn -N versions:display-dependency-updates
-
-Done.
+    gradlew install
 
 ## Contributing
 
