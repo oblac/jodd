@@ -11,6 +11,7 @@ description = '''
 version = '3.4.2-SNAPSHOT' 
 
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
@@ -86,6 +87,7 @@ configure(javaModules()) {
 	apply plugin: 'java'
 	apply plugin: 'osgi'
 	apply plugin: 'idea'
+	apply plugin: 'eclipse'
 
 	group = 'org.jodd'
 
