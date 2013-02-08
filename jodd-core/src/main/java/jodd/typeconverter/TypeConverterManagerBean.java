@@ -48,6 +48,7 @@ import jodd.typeconverter.impl.SqlTimeConverter;
 import jodd.typeconverter.impl.SqlTimestampConverter;
 import jodd.typeconverter.impl.StringArrayConverter;
 import jodd.typeconverter.impl.StringConverter;
+import jodd.typeconverter.impl.TimeZoneConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
 import jodd.util.ClassLoaderUtil;
@@ -64,6 +65,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Provides dynamic object conversion to a type.
@@ -184,6 +186,7 @@ public class TypeConverterManagerBean {
 		register(URL.class, new URLConverter());
 
 		register(Locale.class, new LocaleConverter());
+		register(TimeZone.class, new TimeZoneConverter());
 
 		if (Jodd.isUploadLoaded()) {
 			try {
