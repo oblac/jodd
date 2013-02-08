@@ -116,7 +116,7 @@ artifacts {
 	distroZip
 }
 
-task make {
+task build {
 	group 'Project'
 	description 'Builds bundle jars.'
 	dependsOn distroZip	

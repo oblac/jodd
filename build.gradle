@@ -279,7 +279,7 @@ task release() {
 	dependsOn javadocAll
 	dependsOn coverageReportAll
 	dependsOn testReport
-	dependsOn ':distribution:make'
+	dependsOn ':distribution:build'
 	dependsOn projectReport
 }
 
