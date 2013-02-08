@@ -499,6 +499,30 @@ public class StringUtil {
 		return string;
 	}
 
+	// ---------------------------------------------------------------- substring
+
+	/**
+	 * Returns a new string that is a substring of this string. The substring
+	 * begins at the specified <code>fromIndex</code> and extends to the character
+	 * at index <code>toIndex - 1</code>. However, index values can be negative,
+	 * and then the real index will be calculated from the strings end. This
+	 * allows to specify, e.g. <code>substring(1,-1)</code> to cut one character
+	 * from both ends of the string.
+	 */
+	public static String substring(String string, int fromIndex, int toIndex) {
+		int len = string.length();
+
+		if (fromIndex < 0) {
+			fromIndex = len + fromIndex;
+		}
+
+		if (toIndex < 0) {
+			toIndex = len + toIndex;
+		}
+
+		return string.substring(fromIndex, toIndex);
+	}
+
 	// ---------------------------------------------------------------- split
 
 	/**

@@ -928,4 +928,16 @@ public class StringUtilTest {
 	public void testTitle() {
 		assertEquals("A New Day Is Born", StringUtil.title("a neW day IS born"));
 	}
+
+	@Test
+	public void testSubstring() {
+		assertEquals("2", StringUtil.substring("123", 1, 2));
+		assertEquals("", StringUtil.substring("123", 1, 1));
+
+		assertEquals("2", StringUtil.substring("123", 1, -1));
+		assertEquals("", StringUtil.substring("123", 1, -2));
+		assertEquals("", StringUtil.substring("123", 2, -1));
+
+		assertEquals("2", StringUtil.substring("123", -2, -1));
+	}
 }
