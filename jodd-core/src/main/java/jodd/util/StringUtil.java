@@ -507,13 +507,18 @@ public class StringUtil {
 	 * at index <code>toIndex - 1</code>. However, index values can be negative,
 	 * and then the real index will be calculated from the strings end. This
 	 * allows to specify, e.g. <code>substring(1,-1)</code> to cut one character
-	 * from both ends of the string.
+	 * from both ends of the string. If <code>fromIndex</code> is negative
+	 * and <code>toIndex</code> is 0, it will return last characters of the string.
 	 */
 	public static String substring(String string, int fromIndex, int toIndex) {
 		int len = string.length();
 
 		if (fromIndex < 0) {
 			fromIndex = len + fromIndex;
+
+			if (toIndex == 0) {
+				toIndex = len;
+			}
 		}
 
 		if (toIndex < 0) {

@@ -939,5 +939,7 @@ public class StringUtilTest {
 		assertEquals("", StringUtil.substring("123", 2, -1));
 
 		assertEquals("2", StringUtil.substring("123", -2, -1));
+
+		assertEquals("23", StringUtil.substring("123", -2, 0));
 	}
 }
