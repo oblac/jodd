@@ -40,7 +40,7 @@ public class HttpTransfer {
 
 	protected String method;
 	
-	protected String path;
+	private String _path;	// don't use it directly!
 	
 	protected int statusCode;
 	
@@ -60,11 +60,21 @@ public class HttpTransfer {
 	}
 
 	/**
+	 * Creates HttpURLConnection using host, port and path.
+	 * @see #buildURL()
+	 */
+	public HttpURLConnection createURLConnection() throws IOException {
+		URL url = buildURL();
+
+		return (HttpURLConnection) url.openConnection();
+	}
+
+	/**
 	 * Builds URL from connection data: host, port and path.
 	 */
 	public URL buildURL() {
 		try {
-			return new URL("http", host, port, path);
+			return new URL("http", host, port, getPath());
 		} catch (MalformedURLException murlex) {
 			return null;
 		}
@@ -129,20 +139,27 @@ public class HttpTransfer {
 	}
 
 	/**
-	 * Returns request path.
+	 * Returns request path (including query part).
 	 */
 	public String getPath() {
-		return path;
+		applyQueryParameters();		// make sure that path is set correctly
+
+		return _path;
 	}
 
 	/**
-	 * Sets request path. Adds a slash if path doesn't start with one.
+	 * Sets request path, including the query. Adds a slash if path doesn't start with one.
+	 * Setting the path invalidates any previously created {@link #getQueryParameters() query parameters}
+	 * object!
 	 */
 	public void setPath(String path) {
 		if (path.startsWith(StringPool.SLASH) == false) {
 			path = StringPool.SLASH + path;
 		}
-		this.path = path;
+
+		this._path = path;
+
+		queryParameters = null;
 	}
 
 	// ---------------------------------------------------------------- response
@@ -245,10 +262,54 @@ public class HttpTransfer {
 	// ---------------------------------------------------------------- query
 
 	/**
-	 * Sets query parameters.
+	 * Contains query parameters.
+	 */
+	protected HttpParams queryParameters;
+
+	/**
+	 * Sets new query parameters. Existing query parameters are thrown away.
 	 */
 	public void setQueryParameters(HttpParams httpParams) {
-		String path = getPath();
+		queryParameters = httpParams;
+
+		queryParameters.modified = true;
+	}
+
+	/**
+	 * Returns query parameters from the {@link HttpTransfer} path.
+	 * First time the parameters will be created from the query.
+	 */
+	public HttpParams getQueryParameters() {
+		if (queryParameters != null) {
+			return queryParameters;
+		}
+
+		final String path = this._path;
+		int ndx = path.indexOf('?');
+
+		if (ndx != -1) {
+			String query = path.substring(ndx + 1);
+
+			queryParameters = new HttpParams(query, true);
+		} else {
+			queryParameters = new HttpParams();
+		}
+
+		return queryParameters;
+	}
+
+	/**
+	 * Applies query parameters, if modified.
+	 */
+	protected void applyQueryParameters() {
+		if (queryParameters == null) {
+			return;
+		}
+		if (queryParameters.modified == false) {
+			return;
+		}
+
+		String path = this._path;
 
 		int ndx = path.indexOf('?');
 		if (ndx != -1) {
@@ -258,32 +319,16 @@ public class HttpTransfer {
 		StringBuilder sb = new StringBuilder();
 		sb.append(path);
 
-		String query = httpParams.toString();
+		String query = queryParameters.toString();
 
 		if (query.length() != 0) {
 			sb.append('?');
 			sb.append(query);
 		}
 
-		setPath(sb.toString());
-	}
+		queryParameters.modified = false;
 
-	/**
-	 * Reads query parameters from the {@link HttpTransfer} path.
-	 */
-	public HttpParams getQueryParameters() {
-		String path = getPath();
-
-		HttpParams httpParams = new HttpParams();
-
-		int ndx = path.indexOf('?');
-		if (ndx != -1) {
-			String query = path.substring(ndx + 1);
-
-			httpParams.addParameters(query, true);
-		}
-
-	    return httpParams;
+		this._path = sb.toString();
 	}
 
 	// ---------------------------------------------------------------- request parameters
@@ -383,7 +428,7 @@ public class HttpTransfer {
 					sb.append("Content-Disposition: form-data; name=\"").append(name).append("\"\r\n\r\n");
 					sb.append(v);
 				}
-			} else if (value instanceof File) {
+			} else if (type == File.class) {
 				File file = (File) value;
 				String fileName = FileNameUtil.getName(file.getName());
 
@@ -393,6 +438,8 @@ public class HttpTransfer {
 
 				char[] chars = FileUtil.readChars(file, StringPool.ISO_8859_1);
 				sb.append(chars);
+			} else {
+				throw new HttpException("Unsupported parameter type: " + type.getName());
 			}
 			sb.append("\r\n");
 		}
@@ -429,7 +476,7 @@ public class HttpTransfer {
 		if (method != null) {
 			append(buff, method);
 			buff.append(SPACE);
-			append(buff, path);
+			append(buff, getPath());
 			buff.append(SPACE);
 			append(buff, httpVersion);
 			buff.append(CRLF);

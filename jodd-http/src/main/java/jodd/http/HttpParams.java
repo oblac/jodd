@@ -19,6 +19,7 @@ public class HttpParams {
 	protected final Map<String, Object> params;
 
 	protected boolean hasFiles;
+	protected boolean modified;
 
 	public HttpParams(Map<String, Object> params) {
 		this.params = params;
@@ -34,7 +35,10 @@ public class HttpParams {
 
 	public HttpParams(String query, boolean decode) {
 		this.params = new LinkedHashMap<String, Object>();
+
 		addParameters(query, decode);
+
+		modified = false;
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -48,7 +52,7 @@ public class HttpParams {
 
 	/**
 	 * Returns <code>true</code> if parameters contains
-	 * at least on non-string parameter, i.e. an upload file.
+	 * at least on non-string parameter, like a file for upload.
 	 */
 	public boolean hasFiles() {
 		return hasFiles;
@@ -96,10 +100,14 @@ public class HttpParams {
 	 */
 	public void setParameter(String name, Object value) {
 		Class type = value.getClass();
+
 		if ((type != String.class) && (type != String[].class)) {
 			hasFiles = true;
 		}
+
 		params.put(name, value);
+
+		modified = true;
 	}
 
 	/**
@@ -147,13 +155,26 @@ public class HttpParams {
 
 			ndx2 = ndx + 1;
 		}
+
+		modified = true;
 	}
 
 	/**
-	 * Removes a parameter.
+	 * Removes single parameter.
 	 */
 	public void removeParameter(String key) {
 		params.remove(key);
+
+		modified = true;
+	}
+
+	/**
+	 * Clears all parameters.
+	 */
+	public void clear() {
+		params.clear();
+
+		modified = true;
 	}
 
 	/**

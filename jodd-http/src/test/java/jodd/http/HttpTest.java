@@ -11,7 +11,11 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class HttpTest {
 
@@ -24,59 +28,88 @@ public class HttpTest {
 
 		ht.setPath("jodd");
 		assertEquals("/jodd", ht.getPath());
-		assertNull(ht.getQueryParameters());
+		assertNotNull(ht.getQueryParameters());
+		assertEquals(0, ht.getQueryParameters().getParamsCount());
 
 		ht.setQueryParameters(new HttpParams("one=two"));
 		assertEquals("/jodd?one=two", ht.getPath());
-		HttpParams map = ht.getQueryParameters();
-		assertEquals(1, map.getParamsCount());
-		assertEquals("two", map.getParameter("one"));
+		HttpParams params = ht.getQueryParameters();
+		assertEquals(1, params.getParamsCount());
+		assertEquals("two", params.getParameter("one"));
 
 		ht.setQueryParameters(new HttpParams("one"));
 		assertEquals("/jodd?one", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(1, map.getParamsCount());
-		assertNull(map.getParameter("one"));
+		params = ht.getQueryParameters();
+		assertEquals(1, params.getParamsCount());
+		assertNull(params.getParameter("one"));
 
 		ht.setQueryParameters(new HttpParams("one="));
 		assertEquals("/jodd?one=", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(1, map.getParamsCount());
-		assertEquals("", map.getParameter("one"));
+		params = ht.getQueryParameters();
+		assertEquals(1, params.getParamsCount());
+		assertEquals("", params.getParameter("one"));
 
 		ht.setQueryParameters(new HttpParams("one=aaa&two=bbb"));
 		assertEquals("/jodd?one=aaa&two=bbb", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(2, map.getParamsCount());
-		assertEquals("aaa", map.getParameter("one"));
-		assertEquals("bbb", map.getParameter("two"));
+		params = ht.getQueryParameters();
+		assertEquals(2, params.getParamsCount());
+		assertEquals("aaa", params.getParameter("one"));
+		assertEquals("bbb", params.getParameter("two"));
 
 		ht.setQueryParameters(new HttpParams("one=&two=aaa"));
 		assertEquals("/jodd?one=&two=aaa", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(2, map.getParamsCount());
-		assertEquals("", map.getParameter("one"));
-		assertEquals("aaa", map.getParameter("two"));
+		params = ht.getQueryParameters();
+		assertEquals(2, params.getParamsCount());
+		assertEquals("", params.getParameter("one"));
+		assertEquals("aaa", params.getParameter("two"));
 
 		ht.setQueryParameters(new HttpParams("one=Супер"));
 		assertEquals("/jodd?one=%D0%A1%D1%83%D0%BF%D0%B5%D1%80", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(1, map.getParamsCount());
-		assertEquals("Супер", map.getParameter("one"));
+		params = ht.getQueryParameters();
+		assertEquals(1, params.getParamsCount());
+		assertEquals("Супер", params.getParameter("one"));
 
 		ht.setQueryParameters(new HttpParams("one=Sуp"));
 		assertEquals("/jodd?one=S%D1%83p", ht.getPath());
 
 		ht.setQueryParameters(new HttpParams("one=1&one=2"));
 		assertEquals("/jodd?one=1&one=2", ht.getPath());
-		map = ht.getQueryParameters();
-		assertEquals(1, map.getParamsCount());
-		assertEquals("1", ((String[]) map.getParameter("one"))[0]);
-		assertEquals("2", ((String[]) map.getParameter("one"))[1]);
+		params = ht.getQueryParameters();
+		assertEquals(1, params.getParamsCount());
+		assertEquals("1", ((String[]) params.getParameter("one"))[0]);
+		assertEquals("2", ((String[]) params.getParameter("one"))[1]);
 
-		map.addParameter("two", "xxx");
-		ht.setQueryParameters(map);
+		params.addParameter("two", "xxx");
+		ht.setQueryParameters(params);
 		assertEquals("/jodd?one=1&one=2&two=xxx", ht.getPath());
+	}
+
+	@Test
+	public void testQueryParamsInstances() {
+		HttpTransfer httpTransfer = new HttpTransfer();
+
+		httpTransfer.setPath("/jodd?one=1&two=2");
+		HttpParams queryParams = httpTransfer.getQueryParameters();
+
+		assertNotNull(queryParams);
+		assertEquals(2, queryParams.getParamsCount());
+
+		queryParams.setParameter("one", "173");
+
+		HttpParams queryParams2 = httpTransfer.getQueryParameters();
+		assertSame(queryParams, queryParams2);
+
+		assertEquals(2, queryParams.getParamsCount());
+
+		assertTrue(queryParams.modified);
+
+		assertEquals("/jodd?one=173&two=2", httpTransfer.getPath());
+
+		assertFalse(queryParams.modified);
+
+		queryParams.addParameter("three", "3");
+
+		assertTrue(queryParams.modified);
 	}
 
 	@Test
@@ -104,7 +137,6 @@ public class HttpTest {
 
 		assertEquals(httpParams.getParamsCount(), httpParams2.getParamsCount());
 		assertEquals(httpParams.getParameter("one"), httpParams2.getParameter("one"));
-
 	}
 
 	@Test
@@ -120,7 +152,6 @@ public class HttpTest {
 		httpParams.addParameter("two", tmp);
 
 		request.setRequestParameters(httpParams);
-
 
 		byte[] bytes = request.toArray();
 
