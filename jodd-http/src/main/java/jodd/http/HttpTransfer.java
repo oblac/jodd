@@ -6,6 +6,7 @@ import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
+import jodd.util.Base64;
 import jodd.util.KeyValue;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
@@ -211,6 +212,19 @@ public class HttpTransfer {
 	public void addHeader(String name, int value) {
 		addHeader(name, String.valueOf(value));
 	}
+
+	// ---------------------------------------------------------------- auth
+
+	/**
+	 * Enables basic authentication by adding required header.
+	 */
+	public void useBasicAuthentication(String username, String password) {
+		String data = username.concat(StringPool.COLON).concat(password);
+
+		String base64 = Base64.encodeToString(data);
+
+		addHeader("Authorization", "Basic " + base64);
+	}
 	
 	// ---------------------------------------------------------------- body
 
@@ -256,18 +270,16 @@ public class HttpTransfer {
 
 	/**
 	 * Reads query parameters from the {@link HttpTransfer} path.
-	 * Path remains unmodified.
 	 */
 	public HttpParams getQueryParameters() {
 		String path = getPath();
 
-		HttpParams httpParams = null;
+		HttpParams httpParams = new HttpParams();
 
 		int ndx = path.indexOf('?');
 		if (ndx != -1) {
 			String query = path.substring(ndx + 1);
 
-			httpParams = new HttpParams();
 			httpParams.addParameters(query, true);
 		}
 
@@ -458,6 +470,14 @@ public class HttpTransfer {
 	}
 
 	// ---------------------------------------------------------------- send
+
+	/**
+	 * Sends complete HTTP transfer to socket.
+	 * @see #send(java.io.OutputStream)
+	 */
+	public void send(Socket socket) throws IOException {
+		send(socket.getOutputStream());
+	}
 
 	/**
 	 * Sends complete HTTP transfer to output stream.

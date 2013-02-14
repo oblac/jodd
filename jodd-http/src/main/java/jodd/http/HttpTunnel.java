@@ -79,10 +79,7 @@ public class HttpTunnel {
 	public void stop() {
 		running = false;
 		executorService.shutdown();
-		try {
-			serverSocket.close();
-		} catch (IOException ignore) {
-		}
+		Http.close(serverSocket);
 	}
 
 	/**
@@ -158,7 +155,7 @@ public class HttpTunnel {
 			// close client socket
 			StreamUtil.close(in);
 			StreamUtil.close(out);
-			clientSocket.close();
+			Http.close(clientSocket);
 
 			// fix response
 			if (response.getBody() != null) {
@@ -176,7 +173,7 @@ public class HttpTunnel {
 			// close socket
 			StreamUtil.close(socketInput);
 			StreamUtil.close(socketOutput);
-			socket.close();
+			Http.close(socket);
 		}
 	}
 

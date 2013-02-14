@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 
 /**
@@ -99,6 +101,14 @@ public class Http {
 		httpTransfer.setStatusPhrase(statusPhrase);
 
 		return httpTransfer;
+	}
+
+	/**
+	 * Reads response from socket.
+	 * @see #readResponse(java.io.InputStream)
+	 */
+	public static HttpTransfer readResponse(Socket socket) throws IOException {
+		return readResponse(socket.getInputStream());
 	}
 
 	/**
@@ -214,6 +224,35 @@ public class Http {
 
 			httpTransfer.setBody(fbaos.toByteArray());
 		}
+	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * Closes a socket, without throwing an exception.
+	 */
+	public static void close(Socket socket) {
+		try {
+			socket.close();
+		} catch (IOException ignore) {
+		}
+	}
+
+	/**
+	 * Closes a server socket, without throwing an exception.
+	 */
+	public static void close(ServerSocket serverSocket) {
+		try {
+			serverSocket.close();
+		} catch (IOException ignore) {
+		}
+	}
+
+	/**
+	 * Disconnects URL connection.
+	 */
+	public static void close(HttpURLConnection httpURLConnection) {
+		httpURLConnection.disconnect();
 	}
 
 }
