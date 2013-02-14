@@ -4,6 +4,7 @@ package jodd.io;
 
 import jodd.JoddCore;
 import jodd.util.StringPool;
+import jodd.util.URLDecoder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +20,6 @@ import java.io.InputStreamReader;
 import java.io.FileFilter;
 import java.io.Writer;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
@@ -79,22 +79,16 @@ public class FileUtil {
 	}
 
 	/**
-	 * Converts file URLs to file name. Ignores other schemes and returns <code>null</code>.
+	 * Converts file URLs to file name. Accepts only URLs with 'file' protocol.
+	 * Otherwise, for other schemes returns <code>null</code>.
 	 */
 	public static String toFileName(URL url) {
 		if ((url == null) || (url.getProtocol().equals("file") == false)) {
 			return null;
 		}
 		String filename = url.getFile().replace('/', File.separatorChar);
-		int pos = 0;
-		while ((pos = filename.indexOf('%', pos)) >= 0) {
-			if (pos + 2 < filename.length()) {
-				String hexStr = filename.substring(pos + 1, pos + 3);
-				char ch = (char) Integer.parseInt(hexStr, 16);
-				filename = filename.substring(0, pos) + ch + filename.substring(pos + 3);
-			}
-		}
-		return filename;
+
+		return URLDecoder.decode(filename, JoddCore.encoding);
 	}
 
 	/**
