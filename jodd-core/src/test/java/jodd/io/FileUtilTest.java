@@ -139,7 +139,7 @@ public class FileUtilTest {
 
 		// don't overwrite
 		try {
-			FileUtil.copyFileToDir(root + "a.txt", tmp, FileUtil.params().overwrite(false));
+			FileUtil.copyFileToDir(root + "a.txt", tmp, FileUtil.params().setOverwrite(false));
 			fail("copy file don't overwrite");
 		} catch (IOException e) {
 			// ignore
@@ -154,7 +154,7 @@ public class FileUtilTest {
 		}
 
 		try {
-			FileUtil.moveFileToDir(root + "w.png", tmp, FileUtil.cloneParams().overwrite(false));
+			FileUtil.moveFileToDir(root + "w.png", tmp, FileUtil.cloneParams().setOverwrite(false));
 			fail("move file don't overwrite");
 		} catch (IOException e) {
 			// ignore

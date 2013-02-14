@@ -20,10 +20,7 @@ public class FileUtilParams implements Cloneable {
 	public boolean isPreserveDate() {
 		return preserveDate;
 	}
-	public void setPreserveDate(boolean preserveDate) {
-		this.preserveDate = preserveDate;
-	}
-	public FileUtilParams preserveDate(boolean preserveDate) {
+	public FileUtilParams setPreserveDate(boolean preserveDate) {
 		this.preserveDate = preserveDate;
 		return this;
 	}
@@ -31,10 +28,7 @@ public class FileUtilParams implements Cloneable {
 	public boolean isOverwrite() {
 		return overwrite;
 	}
-	public void setOverwrite(boolean overwrite) {
-		this.overwrite = overwrite;
-	}
-	public FileUtilParams overwrite(boolean overwrite) {
+	public FileUtilParams setOverwrite(boolean overwrite) {
 		this.overwrite = overwrite;
 		return this;
 	}
@@ -42,10 +36,7 @@ public class FileUtilParams implements Cloneable {
 	public boolean isCreateDirs() {
 		return createDirs;
 	}
-	public void setCreateDirs(boolean createDirs) {
-		this.createDirs = createDirs;
-	}
-	public FileUtilParams createDirs(boolean createDirs) {
+	public FileUtilParams setCreateDirs(boolean createDirs) {
 		this.createDirs = createDirs;
 		return this;
 	}
@@ -53,10 +44,7 @@ public class FileUtilParams implements Cloneable {
 	public boolean isRecursive() {
 		return recursive;
 	}
-	public void setRecursive(boolean recursive) {
-		this.recursive = recursive;
-	}
-	public FileUtilParams recursive(boolean recursive) {
+	public FileUtilParams setRecursive(boolean recursive) {
 		this.recursive = recursive;
 		return this;
 	}
@@ -64,10 +52,7 @@ public class FileUtilParams implements Cloneable {
 	public boolean isContinueOnError() {
 		return continueOnError;
 	}
-	public void setContinueOnError(boolean continueOnError) {
-		this.continueOnError = continueOnError;
-	}
-	public FileUtilParams continueOnError(boolean continueOnError) {
+	public FileUtilParams setContinueOnError(boolean continueOnError) {
 		this.continueOnError = continueOnError;
 		return this;
 	}
@@ -76,10 +61,7 @@ public class FileUtilParams implements Cloneable {
 	public String getEncoding() {
 		return encoding;
 	}
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
-	public FileUtilParams encoding(String encoding) {
+	public FileUtilParams setEncoding(String encoding) {
 		this.encoding = encoding;
 		return this;
 	}
