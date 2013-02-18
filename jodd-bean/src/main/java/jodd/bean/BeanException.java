@@ -13,9 +13,6 @@ public class BeanException extends UncheckedException {
 		super(t);
 	}
 
-	public BeanException() {
-	}
-
 	public BeanException(String message) {
 		super(message);
 	}

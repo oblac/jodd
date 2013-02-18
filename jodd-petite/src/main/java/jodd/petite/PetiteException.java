@@ -13,10 +13,6 @@ public class PetiteException extends UncheckedException {
 		super(t);
 	}
 
-	public PetiteException() {
-		super();
-	}
-
 	public PetiteException(String message) {
 		super(message);
 	}

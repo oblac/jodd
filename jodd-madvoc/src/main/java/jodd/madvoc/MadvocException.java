@@ -13,10 +13,6 @@ public class MadvocException extends UncheckedException {
 		super(t);
 	}
 
-	public MadvocException() {
-		super();
-	}
-
 	public MadvocException(String message) {
 		super(message);
 	}

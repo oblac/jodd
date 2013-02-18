@@ -13,9 +13,6 @@ public class FindFileException extends UncheckedException {
 		super(t);
 	}
 
-	public FindFileException() {
-	}
-
 	public FindFileException(String message) {
 		super(message);
 	}

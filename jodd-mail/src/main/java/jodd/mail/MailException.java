@@ -9,9 +9,6 @@ import jodd.exception.UncheckedException;
  */
 public class MailException extends UncheckedException {
 
-	public MailException() {
-	}
-
 	public MailException(String message) {
 		super(message);
 	}

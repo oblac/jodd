@@ -13,9 +13,6 @@ public class VtorException extends UncheckedException {
 		super(t);
 	}
 
-	public VtorException() {
-	}
-
 	public VtorException(String message) {
 		super(message);
 	}

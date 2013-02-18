@@ -13,10 +13,6 @@ public class HtmlStaplerException extends UncheckedException {
 		super(t);
 	}
 
-	public HtmlStaplerException() {
-		super();
-	}
-
 	public HtmlStaplerException(String message) {
 		super(message);
 	}

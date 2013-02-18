@@ -13,9 +13,6 @@ public class ParamoException extends UncheckedException {
 		super(t);
 	}
 
-	public ParamoException() {
-	}
-
 	public ParamoException(String message) {
 		super(message);
 	}

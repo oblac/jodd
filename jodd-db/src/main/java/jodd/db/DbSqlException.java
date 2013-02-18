@@ -17,9 +17,6 @@ public class DbSqlException extends UncheckedException {
 		super(t);
 	}
 
-	public DbSqlException() {
-	}
-
 	public DbSqlException(String message) {
 		super(message);
 	}

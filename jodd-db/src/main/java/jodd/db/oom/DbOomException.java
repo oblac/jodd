@@ -13,9 +13,6 @@ public class DbOomException extends DbSqlException {
 		super(t);
 	}
 
-	public DbOomException() {
-	}
-
 	public DbOomException(String message) {
 		super(message);
 	}

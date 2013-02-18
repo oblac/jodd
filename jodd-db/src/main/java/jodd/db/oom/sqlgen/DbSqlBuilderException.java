@@ -10,9 +10,6 @@ public class DbSqlBuilderException extends DbOomException {
 		super(t);
 	}
 
-	public DbSqlBuilderException() {
-	}
-
 	public DbSqlBuilderException(String message) {
 		super(message);
 	}

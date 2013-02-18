@@ -13,10 +13,6 @@ public class JtxException extends UncheckedException {
 		super(t);
 	}
 
-	public JtxException() {
-		super();
-	}
-
 	public JtxException(String message) {
 		super(message);
 	}

@@ -140,7 +140,7 @@ public class EmailAttachmentBuilder {
 		if (sourceFile != null) {
 			return createFileAttachment();
 		}
-		throw new MailException();
+		throw new MailException("No source.");
 	}
 
 	/**

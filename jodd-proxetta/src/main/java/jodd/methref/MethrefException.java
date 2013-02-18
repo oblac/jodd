@@ -13,9 +13,6 @@ public class MethrefException extends ProxettaException {
 		super(throwable);
 	}
 
-	public MethrefException() {
-	}
-
 	public MethrefException(String string) {
 		super(string);
 	}

@@ -13,10 +13,6 @@ public class DecoraException extends UncheckedException {
 		super(t);
 	}
 
-	public DecoraException() {
-		super();
-	}
-
 	public DecoraException(String message) {
 		super(message);
 	}

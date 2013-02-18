@@ -11,9 +11,6 @@ public class HttpException extends UncheckedException {
 		super(t);
 	}
 
-	public HttpException() {
-	}
-
 	public HttpException(String message) {
 		super(message);
 	}

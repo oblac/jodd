@@ -4,14 +4,13 @@ package jodd.typeconverter;
 
 import jodd.exception.UncheckedException;
 
+/**
+ * Type conversion exception.
+ */
 public class TypeConversionException extends UncheckedException {
 
 	public TypeConversionException(Throwable t) {
 		super(t);
-	}
-
-	public TypeConversionException() {
-		super();
 	}
 
 	public TypeConversionException(String message) {
