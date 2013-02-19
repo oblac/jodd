@@ -21,7 +21,6 @@ import java.io.Writer;
  */
 public class StreamUtil {
 
-
 	// ---------------------------------------------------------------- silent close
 
 	/**
