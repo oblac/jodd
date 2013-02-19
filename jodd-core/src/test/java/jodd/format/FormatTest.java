@@ -364,4 +364,11 @@ public class FormatTest {
 		assertEquals("...1...2...", fmt);
 	}
 
+	@Test
+	public void testObjects() {
+		String result = Printf.str("%i %3.2f %X", Integer.valueOf(173), Double.valueOf(1.73), Long.valueOf(10));
+
+		assertEquals("173 1.73 A", result);
+	}
+
 }
