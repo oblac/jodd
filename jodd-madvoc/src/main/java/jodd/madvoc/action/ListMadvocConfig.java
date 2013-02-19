@@ -79,41 +79,4 @@ public class ListMadvocConfig {
 		});
 	}
 
-
-	protected String toSystemOut() {
-		System.out.println("ACTIONS");
-		System.out.println("-------");
-		for (ActionConfig ac : actions) {
-			if (ac.isInitialized()) {
-				System.out.print("[x] ");
-			} else {
-				System.out.print("[ ] ");
-			}
-			System.out.println(ac.actionPath + "  ->  " + ac.getActionString());
-		}
-
-		System.out.println("\nINTERCEPTORS");
-		System.out.println("------------");
-		for (ActionInterceptor ai : interceptors) {
-			if (ai.isInitialized()) {
-				System.out.print("[x] ");
-			} else {
-				System.out.print("[ ] ");
-			}
-			System.out.println(ai.getClass().getName());
-		}
-
-		System.out.println("\nRESULTS");
-		System.out.println("-------");
-		for (ActionResult ar : results) {
-			if (ar.isInitialized()) {
-				System.out.print("[x] ");
-			} else {
-				System.out.print("[ ] ");
-			}
-			System.out.println(ar.getType() + "  " + ar.getClass().getName());
-		}
-		return "none:";
-	}
-
 }
