@@ -4,7 +4,7 @@ package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
 import jodd.util.FastSort;
-import jodd.util.MultipleComparator;
+import jodd.util.MultiComparator;
 import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
 import jodd.io.FileUtil;
@@ -239,7 +239,7 @@ public class FindFile {
 				this.files = folder.listFiles();
 
 				if ((sortComparators != null) && (this.files != null)) {
-					FastSort.sort(this.files, new MultipleComparator<File>(sortComparators));
+					FastSort.sort(this.files, new MultiComparator<File>(sortComparators));
 				}
 
 				this.fileNames = null;

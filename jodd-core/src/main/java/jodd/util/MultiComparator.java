@@ -2,30 +2,31 @@
 
 package jodd.util;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.io.Serializable;
+import java.util.List;
 
 /**
- * Compare objects using several comparators at once.
+ * Multiple comparators compares using list of comparators.
  */
-public class MultiComparator implements Comparator, Serializable {
+public class MultiComparator<T> implements Comparator<T> {
 
-	private ArrayList<Comparator> comparators = new ArrayList<Comparator>();
+	protected final List<Comparator<T>> comparators;
 
-	public MultiComparator(Comparator... comparators) {
-		for (Comparator c : comparators) {
-			this.comparators.add(c);
-		}
+	public MultiComparator(List<Comparator<T>> comparators) {
+		this.comparators = comparators;
 	}
-	
-	public void add(Comparator c) {
-		comparators.add(c);
-	}
-	
-	public int compare(Object arg0, Object arg1) {
-		for (Comparator c : comparators) {
-			int result = c.compare(arg0, arg1);
+
+	/**
+	 * Compares two objects starting with first comparator; if they are equals
+	 * proceeds to the next comparator and so on.
+	 */
+	public int compare(T o1, T o2) {
+		int comparatorsSize = comparators.size();
+
+		for (int i = 0; i < comparatorsSize; i++) {
+			Comparator<T> comparator = comparators.get(i);
+
+			int result = comparator.compare(o1, o2);
 			if (result != 0) {
 				return result;
 			}
