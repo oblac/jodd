@@ -6,10 +6,10 @@ import jodd.madvoc.ActionConfig;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.macro.RegExpPathMacro;
 import jodd.madvoc.macro.WildcardPathMacro;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
