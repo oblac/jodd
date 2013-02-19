@@ -4,6 +4,7 @@ package jodd.util;
 
 /**
  * Simple name-value holder.
+ * @see Tuple2
  */
 public class NameValue<N, V> {
 
@@ -46,6 +47,7 @@ public class NameValue<N, V> {
 		this.value = value;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof NameValue)) {
 			return false;
@@ -65,6 +67,7 @@ public class NameValue<N, V> {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return (name == null ? 0 : name.hashCode()) ^
 				(value == null ? 0 : value.hashCode());
