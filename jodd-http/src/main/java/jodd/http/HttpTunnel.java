@@ -79,7 +79,10 @@ public class HttpTunnel {
 	public void stop() {
 		running = false;
 		executorService.shutdown();
-		Http.close(serverSocket);
+		try {
+			serverSocket.close();
+		} catch (IOException ignore) {
+		}
 	}
 
 	/**
@@ -103,10 +106,9 @@ public class HttpTunnel {
 
 		/**
 		 * Invoked after income connection is parsed. Nothing is
-		 * changed in the request. Sometimes, it make sense to
-		 * modify the "Host" header to match the target.
+		 * changed in the request, except the target host and port.
 		 */
-		protected void onRequest(HttpTransfer request) {
+		protected void onRequest(HttpRequest request) {
 		}
 
 		/**
@@ -118,7 +120,7 @@ public class HttpTunnel {
 		 * <li>Content-Length is added/update to body size.</li>
 		 * </ul>
 		 */
-		protected void onResponse(HttpTransfer response) {
+		protected void onResponse(HttpResponse response) {
 		}
 
 		/**
@@ -135,32 +137,37 @@ public class HttpTunnel {
 
 			// read request
 			InputStream socketInput = socket.getInputStream();
-			HttpTransfer request = Http.readRequest(socketInput);
+			HttpRequest request = HttpRequest.readFrom(socketInput);
 
 			// open client socket to target
 			Socket clientSocket = new Socket();
 			clientSocket.connect(new InetSocketAddress(targetHost, targetPort));
 
 			// do request
+			request.host(targetHost);
+			request.port(targetPort);
 			onRequest(request);
 
 			// resend request to target
 			OutputStream out = clientSocket.getOutputStream();
-			request.send(out);
+			request.sendTo(out);
 
 			// read target response
 			InputStream in = clientSocket.getInputStream();
-			HttpTransfer response = Http.readResponse(in);
+			HttpResponse response = HttpResponse.readFrom(in);
 
 			// close client socket
 			StreamUtil.close(in);
 			StreamUtil.close(out);
-			Http.close(clientSocket);
+			try {
+				clientSocket.close();
+			} catch (IOException ignore) {
+			}
 
 			// fix response
-			if (response.getBody() != null) {
+			if (response.body() != null) {
 				response.removeHeader("Transfer-Encoding");
-				response.addHeader("Content-Length", response.getBody().length);
+				response.contentLength(response.body().length());
 			}
 
 			// do response
@@ -168,12 +175,15 @@ public class HttpTunnel {
 
 			// send response back
 			OutputStream socketOutput = socket.getOutputStream();
-			response.send(socketOutput);
+			response.sendTo(socketOutput);
 
 			// close socket
 			StreamUtil.close(socketInput);
 			StreamUtil.close(socketOutput);
-			Http.close(socket);
+			try {
+				socket.close();
+			} catch (IOException ignore) {
+			}
 		}
 	}
 

@@ -75,6 +75,7 @@ public interface StringPool {
 	String ONE 				= "1";
 	String ZERO				= "0";
 	String DOLLAR_LEFT_BRACE= "${";
+	String CRLF				= "\r\n";
 
 	// ---------------------------------------------------------------- array
 
