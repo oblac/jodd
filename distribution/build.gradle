@@ -64,6 +64,7 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/PrettyStringBuilder.class'
 	exclude 'jodd/util/ResourceBundleMessageResolver.class'
 	exclude 'jodd/util/TextUtil.class'
+	exclude 'jodd/util/Tuple3.class'
 	exclude 'jodd/util/buffer/FastShortBuffer.class'
 	exclude 'jodd/util/collection/Array*.class'
 	exclude 'jodd/util/collection/Bag.class'

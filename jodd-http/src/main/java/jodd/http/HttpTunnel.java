@@ -146,6 +146,7 @@ public class HttpTunnel {
 			// do request
 			request.host(targetHost);
 			request.port(targetPort);
+			request.setHostHeader();
 			onRequest(request);
 
 			// resend request to target

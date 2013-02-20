@@ -121,7 +121,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			if (ndx == -1) {
 				port = 80;
 			} else {
-				port = Integer.valueOf(host.substring(ndx + 1));
+				port = Integer.parseInt(host.substring(ndx + 1));
 				host = host.substring(0, ndx);
 			}
 		}
@@ -350,6 +350,22 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- misc
+
+	/**
+	 * Sets 'Host' header from current host and port.
+	 */
+	public HttpRequest setHostHeader() {
+		String hostPort = this.host;
+
+		if (port != 80) {
+			hostPort += StringPool.COLON + port;
+		}
+
+		header(HEADER_HOST, hostPort);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- send
 
 	protected HttpTransport httpTransport;
@@ -402,14 +418,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// host port
 
-		if (header("Host") == null) {
-			String hostPort = this.host;
-
-			if (port != 80) {
-				hostPort += StringPool.COLON + port;
-			}
-
-			header("Host", hostPort);
+		if (header(HEADER_HOST) == null) {
+			setHostHeader();
 		}
 
 		// form

@@ -34,6 +34,7 @@ public abstract class HttpBase<T> {
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
+	public static final String HEADER_HOST = "Host";
 	public static final String HEADER_ETAG = "ETag";
 
 	protected String httpVersion = "HTTP/1.1";
