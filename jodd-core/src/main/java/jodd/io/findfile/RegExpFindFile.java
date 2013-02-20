@@ -9,35 +9,36 @@ import java.util.regex.Pattern;
  * Simple {@link FindFile} that matches file names with regular expression pattern.
  * @see jodd.io.findfile.WildcardFindFile
  */
-public class RegExpFindFile extends FindFile {
+public class RegExpFindFile extends FindFile<RegExpFindFile> {
 
-	private Pattern regexpPattern;
+	private Pattern searchPattern;
 
 	public RegExpFindFile() {
 	}
 
 	public RegExpFindFile(String pattern) {
-		regexpPattern = Pattern.compile(pattern);
+		searchPattern = Pattern.compile(pattern);
 	}
 
 	/**
-	 * Returns regular expression pattern.
+	 * Returns regular expression search pattern.
 	 */
-	public Pattern getRegexpPattern() {
-		return regexpPattern;
+	public Pattern getSearchPattern() {
+		return searchPattern;
 	}
 
 	/**
-	 * Sets regular expression pattern.
+	 * Sets regular expression search pattern.
 	 */
-	public void setRegexpPattern(Pattern regexpPattern) {
-		this.regexpPattern = regexpPattern;
+	public RegExpFindFile setSearchPattern(Pattern searchPattern) {
+		this.searchPattern = searchPattern;
+		return this;
 	}
 
 	@Override
 	protected boolean acceptFile(File file) {
 		String path = getMatchingFilePath(file);
 
-		return regexpPattern.matcher(path).matches();
+		return searchPattern.matcher(path).matches();
 	}
 }

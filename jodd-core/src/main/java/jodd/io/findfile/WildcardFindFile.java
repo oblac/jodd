@@ -12,31 +12,32 @@ import java.io.File;
  *
  * @see jodd.io.findfile.RegExpFindFile
  */
-public class WildcardFindFile extends FindFile {
+public class WildcardFindFile extends FindFile<WildcardFindFile> {
 
-	protected String pattern;
+	protected String searchPattern;
 
 	public WildcardFindFile() {
 	}
 
-	public WildcardFindFile(String pattern) {
-		this.pattern = pattern;
+	public WildcardFindFile(String searchPattern) {
+		this.searchPattern = searchPattern;
 	}
 
 	// ---------------------------------------------------------------- properties
 
 	/**
-	 * Returns the matching wildcard pattern.
+	 * Returns the matching wildcard search pattern.
 	 */
-	public String getPattern() {
-		return pattern;
+	public String getSearchPattern() {
+		return searchPattern;
 	}
 
 	/**
-	 * Sets the matching wildcard pattern.
+	 * Sets the matching wildcard search pattern.
 	 */
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
+	public WildcardFindFile setSearchPattern(String searchPattern) {
+		this.searchPattern = searchPattern;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- accept
@@ -45,6 +46,6 @@ public class WildcardFindFile extends FindFile {
 	protected boolean acceptFile(File file) {
 		String path = getMatchingFilePath(file);
 
-		return Wildcard.matchPath(path, pattern);
+		return Wildcard.matchPath(path, searchPattern);
 	}
 }

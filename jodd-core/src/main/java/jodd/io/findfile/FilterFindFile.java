@@ -11,30 +11,29 @@ import java.util.Arrays;
 /**
  * {@link FindFile} that uses file filters.
  */
-public class FilterFindFile extends FindFile {
+public class FilterFindFile extends FindFile<FilterFindFile> {
 
-
-	protected List<FileFilter> ffilters;
+	protected List<FileFilter> fileFilterList;
 
 	/**
 	 * Adds array of file filters.
 	 */
-	public FindFile addFilters(FileFilter[] ff) {
-		if (ffilters == null) {
-			ffilters = new ArrayList<FileFilter>(ff.length);
+	public FilterFindFile addFilters(FileFilter... filters) {
+		if (fileFilterList == null) {
+			fileFilterList = new ArrayList<FileFilter>(filters.length);
 		}
-		ffilters.addAll(Arrays.asList(ff));
+		fileFilterList.addAll(Arrays.asList(filters));
 		return this;
 	}
 
 	/**
 	 * Adds a file filter.
 	 */
-	public FindFile addFilter(FileFilter ff) {
-		if (ffilters == null) {
-			ffilters = new ArrayList<FileFilter>();
+	public FilterFindFile addFilter(FileFilter filter) {
+		if (fileFilterList == null) {
+			fileFilterList = new ArrayList<FileFilter>();
 		}
-		ffilters.add(ff);
+		fileFilterList.add(filter);
 		return this;
 	}
 
@@ -44,8 +43,8 @@ public class FilterFindFile extends FindFile {
 	 */
 	@Override
 	protected boolean acceptFile(File file) {
-		if (ffilters != null) {
-			for (FileFilter ff : ffilters) {
+		if (fileFilterList != null) {
+			for (FileFilter ff : fileFilterList) {
 				if (ff.accept(file) == false) {
 					return false;
 				}
