@@ -418,15 +418,10 @@ public abstract class HttpBase<T> {
 			bodyString = fastCharArrayWriter.toString();
 		}
 
-		// read available body, final try
+		// no body
 		if (bodyString == null) {
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
-			try {
-				StreamUtil.copy(reader, fastCharArrayWriter);
-			} catch (IOException ioex) {
-				throw new HttpException(ioex);
-			}
-			bodyString = fastCharArrayWriter.toString();
+			body = null;
+			return;
 		}
 
 		// PARSE BODY
