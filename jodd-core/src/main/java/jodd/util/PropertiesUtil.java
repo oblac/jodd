@@ -3,7 +3,7 @@
 package jodd.util;
 
 import jodd.io.StreamUtil;
-import jodd.io.AsciiInputStream;
+import jodd.io.StringInputStream;
 import jodd.io.findfile.ClassScanner;
 
 import java.io.File;
@@ -133,7 +133,7 @@ public class PropertiesUtil {
 	 * Loads properties from string.
 	 */
 	public static void loadFromString(Properties p, String data) throws IOException {
-		InputStream is = new AsciiInputStream(data);
+		InputStream is = new StringInputStream(data, StringInputStream.Mode.ASCII);
 		try {
 			p.load(is);
 		} finally {

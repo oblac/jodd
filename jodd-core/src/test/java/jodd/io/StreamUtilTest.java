@@ -30,7 +30,7 @@ public class StreamUtilTest {
 
 	@Test
 	public void testCopy() {
-		AsciiInputStream in = new AsciiInputStream("input");
+		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
 		StringOutputStream out = new StringOutputStream();
 		try {
 			StreamUtil.copy(in, out);
@@ -52,7 +52,7 @@ public class StreamUtilTest {
 			if (file.length() == 10) {
 				content = StringUtil.remove(content, '\r');
 			}
-			AsciiInputStream in2 = new AsciiInputStream(content);
+			StringInputStream in2 = new StringInputStream(content, StringInputStream.Mode.ASCII);
 			assertTrue(StreamUtil.compare(in1, in2));
 			StreamUtil.close(in2);
 			StreamUtil.close(in1);

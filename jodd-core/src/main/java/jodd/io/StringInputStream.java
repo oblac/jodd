@@ -43,10 +43,6 @@ public class StringInputStream extends InputStream implements Serializable {
 		ASCII
 	}
 
-	public StringInputStream(String string) {
-		this(string, Mode.ALL);
-	}
-
 	public StringInputStream(String string, Mode mode) {
 		this.string = string;
 		this.mode = mode;
