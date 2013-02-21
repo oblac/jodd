@@ -31,6 +31,7 @@ import static jodd.util.StringPool.CRLF;
 @SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
+	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
@@ -148,6 +149,21 @@ public abstract class HttpBase<T> {
 		return header(HEADER_CONTENT_ENCODING);
 	}
 
+	/**
+	 * Returns "Accept-Encoding" header.
+	 */
+	public String acceptEncoding() {
+		return header(HEADER_ACCEPT_ENCODING);
+	}
+
+	/**
+	 * Sets "Accept-Encoding" header.
+	 */
+	public T acceptEncoding(String encodings) {
+		header(HEADER_ACCEPT_ENCODING, encodings);
+		return (T) this;
+	}
+
 	// ---------------------------------------------------------------- form
 
 	protected void initForm() {
@@ -189,8 +205,6 @@ public abstract class HttpBase<T> {
 	public Map<String, Object> form() {
 		return form;
 	}
-
-	// ---------------------------------------------------------------- body
 
 	/**
 	 * Returns body as received or set. Any form parameter change
@@ -330,6 +344,9 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- parsing
 
+	/**
+	 * Parses headers.
+	 */
 	protected void readHeaders(BufferedReader reader) {
 		while (true) {
 			String line;
@@ -352,6 +369,9 @@ public abstract class HttpBase<T> {
 		}
 	}
 
+	/**
+	 * Parses body.
+	 */
 	protected void readBody(BufferedReader reader) {
 		String bodyString = null;
 

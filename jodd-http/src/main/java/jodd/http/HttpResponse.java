@@ -2,6 +2,9 @@
 
 package jodd.http;
 
+import jodd.io.StreamUtil;
+import jodd.io.StringInputStream;
+import jodd.io.StringOutputStream;
 import jodd.util.StringPool;
 
 import java.io.BufferedReader;
@@ -10,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import static jodd.util.StringPool.CRLF;
 import static jodd.util.StringPool.SPACE;
@@ -49,6 +53,34 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 */
 	public HttpResponse statusPhrase(String statusPhrase) {
 		this.statusPhrase = statusPhrase;
+		return this;
+	}
+
+	// ---------------------------------------------------------------- body
+
+	/**
+	 * Unzips GZip-ed body content, removes the content-encoding header
+	 * and sets the new content-length value.
+	 */
+	public HttpResponse unzip() {
+		String contentEncoding = contentEncoding();
+
+		if (contentEncoding != null && contentEncoding().equals("gzip")) {
+			if (body != null) {
+				removeHeader(HEADER_CONTENT_ENCODING);
+				try {
+					StringInputStream in = new StringInputStream(body, StringInputStream.Mode.STRIP);
+					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
+					StringOutputStream out = new StringOutputStream();
+
+					StreamUtil.copy(gzipInputStream, out);
+
+					body(out.toString());
+				} catch (IOException ioex) {
+					throw new HttpException(ioex);
+				}
+			}
+		}
 		return this;
 	}
 
