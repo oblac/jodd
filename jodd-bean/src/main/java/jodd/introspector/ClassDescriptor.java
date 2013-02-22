@@ -247,9 +247,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods with the same name.
 	 */
-	public Method[] getAllMethods(String name, boolean supressSecurity) {
+	public Method[] getAllMethods(String name, boolean suppressSecurity) {
 		inspectMethods();
-		if (supressSecurity == true) {
+		if (suppressSecurity == true) {
 			return allMethods.getAllMethods(name);
 		} else {
 			return publicMethods.getAllMethods(name);
@@ -259,9 +259,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods.
 	 */
-	public Method[] getAllMethods(boolean supressSecurity) {
+	public Method[] getAllMethods(boolean suppressSecurity) {
 		inspectMethods();
-		if (supressSecurity == true) {
+		if (suppressSecurity == true) {
 			return allMethods.getAllMethods();
 		} else {
 			return publicMethods.getAllMethods();
