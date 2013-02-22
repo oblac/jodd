@@ -71,8 +71,8 @@ public class BeanCopy extends BeanVisitor {
 	 * Defines if all properties should be copied (when set to <code>true</code>)
 	 * or only public (when set to <code>false</code>, default).
 	 */
-	public BeanCopy declared(boolean suppressSecurity) {
-		this.suppressSecurity = suppressSecurity;
+	public BeanCopy declared(boolean declared) {
+		this.declared = declared;
 		return this;
 	}
 

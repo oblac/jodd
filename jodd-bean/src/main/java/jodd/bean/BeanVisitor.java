@@ -27,9 +27,9 @@ public abstract class BeanVisitor {
 	 */
 	protected String[] includeNames;
 	/**
-	 * Suppress security flag;
+	 * Flag for enabling declared properties, or just public one.
 	 */
-	protected boolean suppressSecurity;
+	protected boolean declared;
 	/**
 	 * Defines if null values should be ignored.
 	 */
@@ -41,7 +41,7 @@ public abstract class BeanVisitor {
 	 * Returns an array of bean properties. If bean is a <code>Map</code>,
 	 * all its keys will be returned.
 	 */
-	protected String[] resolveProperties(Object bean, boolean suppressSecurity) {
+	protected String[] resolveProperties(Object bean, boolean declared) {
 		String[] properties;
 
 		if (bean instanceof Map) {
@@ -56,7 +56,7 @@ public abstract class BeanVisitor {
 		} else {
 			ClassDescriptor classDescriptor = ClassIntrospector.lookup(bean.getClass());
 
-			properties = classDescriptor.getAllBeanGetterNames(suppressSecurity);
+			properties = classDescriptor.getAllBeanGetterNames(declared);
 		}
 
 		return properties;
@@ -83,7 +83,7 @@ public abstract class BeanVisitor {
 
 			Object value;
 
-			if (suppressSecurity) {
+			if (declared) {
 				value = BeanUtil.getDeclaredProperty(source, name);
 			} else {
 				value = BeanUtil.getProperty(source, name);

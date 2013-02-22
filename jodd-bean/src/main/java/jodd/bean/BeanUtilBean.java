@@ -60,24 +60,24 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Returns <code>true</code> if simple property exist.
 	 */
-	public boolean hasSimpleProperty(Object bean, String property, boolean suppressSecurity) {
-		return hasSimpleProperty(new BeanProperty(bean, property, false), suppressSecurity);
+	public boolean hasSimpleProperty(Object bean, String property, boolean declared) {
+		return hasSimpleProperty(new BeanProperty(bean, property, false), declared);
 	}
 
-	protected boolean hasSimpleProperty(BeanProperty bp, boolean suppressSecurity) {
+	protected boolean hasSimpleProperty(BeanProperty bp, boolean declared) {
 		if (bp.bean == null) {
 			return false;
 		}
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetter(bp.name, suppressSecurity);
+		bp.method = bp.cd.getBeanGetter(bp.name, declared);
 		if (bp.method != null) {
 			return true;
 		}
 
 		// try: =property
-		bp.field = bp.cd.getField(bp.name, suppressSecurity);
+		bp.field = bp.cd.getField(bp.name, declared);
 		if (bp.field != null) {
 			return true;
 		}
@@ -97,20 +97,20 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Reads simple property.
 	 */
-	public Object getSimpleProperty(Object bean, String property, boolean suppressSecurity) {
-		return getSimpleProperty(new BeanProperty(bean, property, false), suppressSecurity);
+	public Object getSimpleProperty(Object bean, String property, boolean declared) {
+		return getSimpleProperty(new BeanProperty(bean, property, false), declared);
 	}
 
 	/**
 	 * Reads simple property forced: when property value doesn't exist, it will be created.
 	 */
-	public Object getSimplePropertyForced(Object bean, String property, boolean suppressSecurity) {
-		return getSimpleProperty(new BeanProperty(bean, property, true), suppressSecurity);
+	public Object getSimplePropertyForced(Object bean, String property, boolean declared) {
+		return getSimpleProperty(new BeanProperty(bean, property, true), declared);
 	}
 
 	public static final String THIS_REF = "*this";
 
-	protected Object getSimpleProperty(BeanProperty bp, boolean suppressSecurity) {
+	protected Object getSimpleProperty(BeanProperty bp, boolean declared) {
 
 		if ((bp.name.length() == 0 && bp.first) || bp.name.equals(THIS_REF)) {
 			return bp.bean;
@@ -118,7 +118,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetter(bp.name, suppressSecurity);
+		bp.method = bp.cd.getBeanGetter(bp.name, declared);
 		if (bp.method != null) {
 			Object result = invokeGetter(bp.bean, bp.method);
 			if ((result == null) && (bp.forced == true)) {
@@ -128,7 +128,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// try: =property
-		bp.field = bp.cd.getField(bp.name, suppressSecurity);
+		bp.field = bp.cd.getField(bp.name, declared);
 		if (bp.field != null) {
 			Object result = getField(bp.bean, bp.field);
 			if ((result == null) && (bp.forced == true)) {
@@ -156,25 +156,25 @@ public class BeanUtilBean extends BeanUtilUtil {
 		throw new BeanException("Simple property not found: " + bp.name, bp);
 	}
 
-	public void setSimpleProperty(Object bean, String property, Object value, boolean suppressSecurity) {
-		setSimpleProperty(new BeanProperty(bean, property, false), value, suppressSecurity);
+	public void setSimpleProperty(Object bean, String property, Object value, boolean declared) {
+		setSimpleProperty(new BeanProperty(bean, property, false), value, declared);
 	}
 
 	/**
 	 * Sets a value of simple property.
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void setSimpleProperty(BeanProperty bp, Object value, boolean suppressSecurity) {
+	protected void setSimpleProperty(BeanProperty bp, Object value, boolean declared) {
 
 		// try: setProperty(value)
-		Method method = bp.cd.getBeanSetter(bp.name, suppressSecurity);
+		Method method = bp.cd.getBeanSetter(bp.name, declared);
 		if (method != null) {
 			invokeSetter(bp.bean, method, value);
 			return;
 		}
 
 		// try: property=
-		Field field = bp.cd.getField(bp.name, suppressSecurity);
+		Field field = bp.cd.getField(bp.name, declared);
 		if (field != null) {
 			setField(bp.bean, field, value);
 			return;
@@ -193,11 +193,11 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	// ---------------------------------------------------------------- indexed property
 
-	public boolean hasIndexProperty(Object bean, String property, boolean suppressSecurity) {
-		return hasIndexProperty(new BeanProperty(bean, property, false), suppressSecurity);
+	public boolean hasIndexProperty(Object bean, String property, boolean declared) {
+		return hasIndexProperty(new BeanProperty(bean, property, false), declared);
 	}
 
-	protected boolean hasIndexProperty(BeanProperty bp, boolean suppressSecurity) {
+	protected boolean hasIndexProperty(BeanProperty bp, boolean declared) {
 
 		if (bp.bean == null) {
 			return false;
@@ -205,10 +205,10 @@ public class BeanUtilBean extends BeanUtilUtil {
 		String indexString = extractIndex(bp);
 
 		if (indexString == null) {
-			return hasSimpleProperty(bp, suppressSecurity);
+			return hasSimpleProperty(bp, declared);
 		}
 
-		Object resultBean = getSimpleProperty(bp, suppressSecurity);
+		Object resultBean = getSimpleProperty(bp, declared);
 
 		if (resultBean == null) {
 			return false;
@@ -234,18 +234,18 @@ public class BeanUtilBean extends BeanUtilUtil {
 	}
 
 
-	public Object getIndexProperty(Object bean, String property, boolean suppressSecurity, boolean forced) {
-		return getIndexProperty(new BeanProperty(bean, property, forced), suppressSecurity);
+	public Object getIndexProperty(Object bean, String property, boolean declared, boolean forced) {
+		return getIndexProperty(new BeanProperty(bean, property, forced), declared);
 	}
 
 	/**
 	 * Get non-nested property value: either simple or indexed property.
 	 * If forced, missing bean will be created if possible.
 	 */
-	protected Object getIndexProperty(BeanProperty bp, boolean suppressSecurity) {
+	protected Object getIndexProperty(BeanProperty bp, boolean declared) {
 		String indexString = extractIndex(bp);
 
-		Object resultBean = getSimpleProperty(bp, suppressSecurity);
+		Object resultBean = getSimpleProperty(bp, declared);
 
 		if (indexString == null) {
 			return resultBean;	// no index, just simple bean
@@ -323,24 +323,24 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 
 
-	public void setIndexProperty(Object bean, String property, Object value, boolean suppressSecurity, boolean forced) {
-		setIndexProperty(new BeanProperty(bean, property, forced), value, suppressSecurity);
+	public void setIndexProperty(Object bean, String property, Object value, boolean declared, boolean forced) {
+		setIndexProperty(new BeanProperty(bean, property, forced), value, declared);
 	}
 
 	/**
 	 * Sets indexed or regular properties (no nested!).
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected void setIndexProperty(BeanProperty bp, Object value, boolean suppressSecurity) {
+	protected void setIndexProperty(BeanProperty bp, Object value, boolean declared) {
 		String indexString = extractIndex(bp);
 
 		if (indexString == null) {
-			setSimpleProperty(bp, value, suppressSecurity);
+			setSimpleProperty(bp, value, declared);
 			return;
 		}
 
 		// try: getInner()
-		Object nextBean = getSimpleProperty(bp, suppressSecurity);
+		Object nextBean = getSimpleProperty(bp, declared);
 
 		// inner bean found
 		if (nextBean.getClass().isArray() == true) {

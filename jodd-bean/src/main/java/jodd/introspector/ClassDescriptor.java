@@ -149,11 +149,11 @@ public class ClassDescriptor {
 	 * Returns the field identified by name or <code>null</code> if not found.
 	 *
 	 * @param name	field name
-	 * @param suppressSecurity whether to look at non-public ones.
+	 * @param declared whether to look at non-public ones.
 	 */
-	public Field getField(String name, boolean suppressSecurity) {
+	public Field getField(String name, boolean declared) {
 		inspectFields();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allFields.getField(name);
 		} else {
 			return publicFields.getField(name);
@@ -163,9 +163,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns the total number of fields.
 	 */
-	public int getFieldCount(boolean suppressSecurity) {
+	public int getFieldCount(boolean declared) {
 		inspectFields();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allFields.getCount();
 		} else {
 			return publicFields.getCount();
@@ -175,9 +175,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all fields.
 	 */
-	public Field[] getAllFields(boolean suppressSecurity) {
+	public Field[] getAllFields(boolean declared) {
 		inspectFields();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allFields.getAllFields();
 		} else {
 			return publicFields.getAllFields();
@@ -221,11 +221,11 @@ public class ClassDescriptor {
 	 * Returns the method identified by name or <code>null</code> if not found.
 	 *
 	 * @param name	method name
-	 * @param suppressSecurity whether to look at non-public ones.
+	 * @param declared whether to look at non-public ones.
 	 */
-	public Method getMethod(String name, boolean suppressSecurity) {
+	public Method getMethod(String name, boolean declared) {
 		inspectMethods();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allMethods.getMethod(name);
 		} else {
 			return publicMethods.getMethod(name);
@@ -235,9 +235,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns the method identified by name and parameters.
 	 */
-	public Method getMethod(String name, Class[] params, boolean suppressSecurity) {
+	public Method getMethod(String name, Class[] params, boolean declared) {
 		inspectMethods();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allMethods.getMethod(name, params);
 		} else {
 			return publicMethods.getMethod(name, params);
@@ -247,9 +247,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods with the same name.
 	 */
-	public Method[] getAllMethods(String name, boolean suppressSecurity) {
+	public Method[] getAllMethods(String name, boolean declared) {
 		inspectMethods();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allMethods.getAllMethods(name);
 		} else {
 			return publicMethods.getAllMethods(name);
@@ -259,9 +259,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods.
 	 */
-	public Method[] getAllMethods(boolean suppressSecurity) {
+	public Method[] getAllMethods(boolean declared) {
 		inspectMethods();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allMethods.getAllMethods();
 		} else {
 			return publicMethods.getAllMethods();
@@ -319,9 +319,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns bean setter identified by name.
 	 */
-	public Method getBeanSetter(String name, boolean suppressSecurity) {
+	public Method getBeanSetter(String name, boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.setters.getMethod(name);
 		} else {
 			return publicProperties.setters.getMethod(name);
@@ -330,9 +330,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all bean setters.
 	 */
-	public Method[] getAllBeanSetters(boolean suppressSecurity) {
+	public Method[] getAllBeanSetters(boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.setters.getAllMethods();
 		} else {
 			return publicProperties.setters.getAllMethods();
@@ -342,9 +342,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all bean setters names.
 	 */
-	public String[] getAllBeanSetterNames(boolean suppressSecurity) {
+	public String[] getAllBeanSetterNames(boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.setterNames;
 		} else {
 			return publicProperties.setterNames;
@@ -354,9 +354,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns bean getter identified by name.
 	 */
-	public Method getBeanGetter(String name, boolean suppressSecurity) {
+	public Method getBeanGetter(String name, boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.getters.getMethod(name);
 		} else {
 			return publicProperties.getters.getMethod(name);
@@ -366,9 +366,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns all bean getters.
 	 */
-	public Method[] getAllBeanGetters(boolean suppressSecurity) {
+	public Method[] getAllBeanGetters(boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.getters.getAllMethods();
 		} else {
 			return publicProperties.getters.getAllMethods();
@@ -378,9 +378,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns all bean getters names.
 	 */
-	public String[] getAllBeanGetterNames(boolean suppressSecurity) {
+	public String[] getAllBeanGetterNames(boolean declared) {
 		inspectProperties();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allProperties.getterNames;
 		} else {
 			return publicProperties.getterNames;
@@ -422,9 +422,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns the default ctor or <code>null</code> if not found.
 	 */
-	public Constructor getDefaultCtor(boolean suppressSecurity) {
+	public Constructor getDefaultCtor(boolean declared) {
 		inspectCtors();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allCtors.getDefaultCtor();
 		} else {
 			return publicCtors.getDefaultCtor();
@@ -435,11 +435,11 @@ public class ClassDescriptor {
 	 * Returns the constructor identified by arguments or <code>null</code> if not found.
 	 *
 	 * @param args	ctor arguments
-	 * @param suppressSecurity whether to look at non-public ones.
+	 * @param declared whether to look at non-public ones.
 	 */
-	public Constructor getCtor(Class[] args, boolean suppressSecurity) {
+	public Constructor getCtor(Class[] args, boolean declared) {
 		inspectCtors();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allCtors.getCtor(args);
 		} else {
 			return publicCtors.getCtor(args);
@@ -459,9 +459,9 @@ public class ClassDescriptor {
 	/**
 	 * Returns the total number of constructors.
 	 */
-	public int getCtorCount(boolean suppressSecurity) {
+	public int getCtorCount(boolean declared) {
 		inspectCtors();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allCtors.getCount();
 		} else {
 			return publicCtors.getCount();
@@ -471,14 +471,13 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all ctors.
 	 */
-	public Constructor[] getAllCtors(boolean suppressSecurity) {
+	public Constructor[] getAllCtors(boolean declared) {
 		inspectCtors();
-		if (suppressSecurity == true) {
+		if (declared == true) {
 			return allCtors.getAllCtors();
 		} else {
 			return publicCtors.getAllCtors();
 		}
 	}
-
 
 }
