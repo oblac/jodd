@@ -19,6 +19,7 @@ Some tools and utility modules are:
 + `jodd-email` for easier email sending.
 + `jodd-upload`, handles HTTP uploads.
 + `jodd-servlet` with many servlet utilities, including nice tag library.
++ `jodd-http`, tiny HTTP client.
 
 and some micro frameworks:
 
