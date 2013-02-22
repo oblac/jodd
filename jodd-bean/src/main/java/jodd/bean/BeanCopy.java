@@ -51,7 +51,7 @@ public class BeanCopy extends BeanVisitor {
 	public BeanCopy includeByTemplate(Class template) {
 		ClassDescriptor cd = ClassIntrospector.lookup(template);
 
-		String[] properties = cd.getAllBeanGetterNames();
+		String[] properties = cd.getAllBeanGetterNames(false);
 
 		include(properties);
 

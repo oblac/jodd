@@ -6,9 +6,13 @@ import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 
+/**
+ * Method descriptor.
+ */
 class MethodDescriptor {
 	final Method method;
 	final Class[] parameterTypes;
+
 	MethodDescriptor(Method method) {
 		Class[] params = method.getParameterTypes();
 		if (params == null) {

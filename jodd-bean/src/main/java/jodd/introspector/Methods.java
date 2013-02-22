@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Methods
+ * Methods collection.
  */
 class Methods {
 

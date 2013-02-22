@@ -19,15 +19,15 @@ public class IntrospectorTest {
 	public void testBasic() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 		assertNotNull(cd);
-		Method[] getters = cd.getAllBeanGetters();
+		Method[] getters = cd.getAllBeanGetters(false);
 		assertEquals(2, getters.length);
-		assertNotNull(cd.getBeanGetter("fooProp"));
-		assertNotNull(cd.getBeanGetter("something"));
-		assertNull(cd.getBeanGetter("FooProp"));
-		assertNull(cd.getBeanGetter("Something"));
-		assertNull(cd.getBeanGetter("notExisting"));
+		assertNotNull(cd.getBeanGetter("fooProp", false));
+		assertNotNull(cd.getBeanGetter("something", false));
+		assertNull(cd.getBeanGetter("FooProp", false));
+		assertNull(cd.getBeanGetter("Something", false));
+		assertNull(cd.getBeanGetter("notExisting", false));
 
-		Method[] setters = cd.getAllBeanSetters();
+		Method[] setters = cd.getAllBeanSetters(false);
 		assertEquals(1, setters.length);
 	}
 
@@ -36,20 +36,20 @@ public class IntrospectorTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 		assertNotNull(cd);
 
-		Method[] getters = cd.getAllBeanGetters();
+		Method[] getters = cd.getAllBeanGetters(false);
 		assertEquals(2, getters.length);
 		getters = cd.getAllBeanGetters(true);
 		assertEquals(3, getters.length);
-		assertNotNull(cd.getBeanGetter("fooProp"));
-		assertNotNull(cd.getBeanGetter("something"));
-		assertNull(cd.getBeanGetter("FooProp"));
-		assertNull(cd.getBeanGetter("Something"));
-		assertNull(cd.getBeanGetter("notExisting"));
+		assertNotNull(cd.getBeanGetter("fooProp", false));
+		assertNotNull(cd.getBeanGetter("something", false));
+		assertNull(cd.getBeanGetter("FooProp", false));
+		assertNull(cd.getBeanGetter("Something", false));
+		assertNull(cd.getBeanGetter("notExisting", false));
 
 		assertNotNull(cd.getBeanGetter("boo", true));
-		assertNull(cd.getBeanGetter("boo"));
+		assertNull(cd.getBeanGetter("boo", false));
 
-		Method[] setters = cd.getAllBeanSetters();
+		Method[] setters = cd.getAllBeanSetters(false);
 		assertEquals(1, setters.length);
 		setters = cd.getAllBeanSetters(true);
 		assertEquals(2, setters.length);
@@ -58,7 +58,7 @@ public class IntrospectorTest {
 	@Test
 	public void testCtors() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Ac.class);
-		Constructor[] ctors = cd.getAllCtors();
+		Constructor[] ctors = cd.getAllCtors(false);
 		assertEquals(1, ctors.length);
 		ctors = cd.getAllCtors(true);
 		assertEquals(2, ctors.length);
@@ -69,7 +69,7 @@ public class IntrospectorTest {
 		assertNotNull(ctor);
 
 		cd = ClassIntrospector.lookup(Bc.class);
-		ctors = cd.getAllCtors();
+		ctors = cd.getAllCtors(false);
 		assertEquals(1, ctors.length);
 		ctors = cd.getAllCtors(true);
 		assertEquals(1, ctors.length);

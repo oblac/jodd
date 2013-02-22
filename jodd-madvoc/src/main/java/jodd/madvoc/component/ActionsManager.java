@@ -127,7 +127,7 @@ public class ActionsManager {
 	 * Registers action with provided action path, class and method name.
 	 */
 	public ActionConfig register(Class actionClass, String actionMethod, String actionPath) {
-		Method method = ClassIntrospector.lookup(actionClass).getMethod(actionMethod);
+		Method method = ClassIntrospector.lookup(actionClass).getMethod(actionMethod, false);
 		if (method == null) {
 			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method '" + actionMethod + "'.");
 		}

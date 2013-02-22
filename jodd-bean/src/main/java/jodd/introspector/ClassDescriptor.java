@@ -161,14 +161,6 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns the public field identified by name or <code>null</code> if not found.
-	 */
-	public Field getField(String name) {
-		inspectFields();
-		return publicFields.getField(name);
-	}
-
-	/**
 	 * Returns the total number of fields.
 	 */
 	public int getFieldCount(boolean suppressSecurity) {
@@ -178,14 +170,6 @@ public class ClassDescriptor {
 		} else {
 			return publicFields.getCount();
 		}
-	}
-
-	/**
-	 * Returns the total number of public fields.
-	 */
-	public int getFieldCount() {
-		inspectFields();
-		return publicFields.getCount();
 	}
 
 	/**
@@ -199,14 +183,6 @@ public class ClassDescriptor {
 			return publicFields.getAllFields();
 		}
 	}
-	/**
-	 * Returns an array of all public fields.
-	 */
-	public Field[] getAllFields() {
-		inspectFields();
-		return publicFields.getAllFields();
-	}
-
 
 	// ---------------------------------------------------------------- methods
 
@@ -257,14 +233,6 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns the public method identified by name or <code>null</code> if not found.
-	 */
-	public Method getMethod(String name) {
-		inspectMethods();
-		return publicMethods.getMethod(name);
-	}
-
-	/**
 	 * Returns the method identified by name and parameters.
 	 */
 	public Method getMethod(String name, Class[] params, boolean suppressSecurity) {
@@ -274,13 +242,6 @@ public class ClassDescriptor {
 		} else {
 			return publicMethods.getMethod(name, params);
 		}
-	}
-	/**
-	 * Returns the public method identified by name and parameters.
-	 */
-	public Method getMethod(String name, Class[] params) {
-		inspectMethods();
-		return publicMethods.getMethod(name, params);
 	}
 
 	/**
@@ -294,13 +255,6 @@ public class ClassDescriptor {
 			return publicMethods.getAllMethods(name);
 		}
 	}
-	/**
-	 * Returns an array of all public methods with the same name.
-	 */
-	public Method[] getAllMethods(String name) {
-		inspectMethods();
-		return publicMethods.getAllMethods(name);
-	}
 
 	/**
 	 * Returns an array of all methods.
@@ -313,15 +267,6 @@ public class ClassDescriptor {
 			return publicMethods.getAllMethods();
 		}
 	}
-
-	/**
-	 * Returns an array of all public methods.
-	 */
-	public Method[] getAllMethods() {
-		inspectMethods();
-		return publicMethods.getAllMethods();
-	}
-
 
 	// ---------------------------------------------------------------- beans
 
@@ -383,13 +328,6 @@ public class ClassDescriptor {
 		}
 	}
 	/**
-	 * Returns public bean setter identified by name.
-	 */
-	public Method getBeanSetter(String name) {
-		inspectProperties();
-		return publicProperties.setters.getMethod(name);
-	}
-	/**
 	 * Returns an array of all bean setters.
 	 */
 	public Method[] getAllBeanSetters(boolean suppressSecurity) {
@@ -399,13 +337,6 @@ public class ClassDescriptor {
 		} else {
 			return publicProperties.setters.getAllMethods();
 		}
-	}
-	/**
-	 * Returns an array of all public bean setters.
-	 */
-	public Method[] getAllBeanSetters() {
-		inspectProperties();
-		return publicProperties.setters.getAllMethods();
 	}
 
 	/**
@@ -418,13 +349,6 @@ public class ClassDescriptor {
 		} else {
 			return publicProperties.setterNames;
 		}
-	}
-	/**
-	 * Returns an array of all public bean setters names.
-	 */
-	public String[] getAllBeanSetterNames() {
-		inspectProperties();
-		return publicProperties.setterNames;
 	}
 
 	/**
@@ -440,13 +364,6 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns public bean getter identified by name.
-	 */
-	public Method getBeanGetter(String name) {
-		inspectProperties();
-		return publicProperties.getters.getMethod(name);
-	}
-	/**
 	 * Returns all bean getters.
 	 */
 	public Method[] getAllBeanGetters(boolean suppressSecurity) {
@@ -457,13 +374,7 @@ public class ClassDescriptor {
 			return publicProperties.getters.getAllMethods();
 		}
 	}
-	/**
-	 * Returns all public bean getters.
-	 */
-	public Method[] getAllBeanGetters() {
-		inspectProperties();
-		return publicProperties.getters.getAllMethods();
-	}
+
 	/**
 	 * Returns all bean getters names.
 	 */
@@ -475,14 +386,6 @@ public class ClassDescriptor {
 			return publicProperties.getterNames;
 		}
 	}
-	/**
-	 * Returns all public bean getters names.
-	 */
-	public String[] getAllBeanGetterNames() {
-		inspectProperties();
-		return publicProperties.getterNames;
-	}
-
 
 
 	// ---------------------------------------------------------------- ctors
@@ -544,14 +447,6 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns the public ctor identified by arguments or <code>null</code> if not found.
-	 */
-	public Constructor getCtor(Class[] args) {
-		inspectCtors();
-		return publicCtors.getCtor(args);
-	}
-
-	/**
 	 * Returns the public default ctor or <code>null</code> if not found.
 	 */
 	public Constructor getDefaultCtor() {
@@ -573,19 +468,9 @@ public class ClassDescriptor {
 		}
 	}
 
-
-	/**
-	 * Returns the total number of public constructors.
-	 */
-	public int getCtorCount() {
-		inspectCtors();
-		return publicCtors.getCount();
-	}
-
 	/**
 	 * Returns an array of all ctors.
 	 */
-
 	public Constructor[] getAllCtors(boolean suppressSecurity) {
 		inspectCtors();
 		if (suppressSecurity == true) {
@@ -595,12 +480,5 @@ public class ClassDescriptor {
 		}
 	}
 
-	/**
-	 * Returns an array of all public ctors.
-	 */
-	public Constructor[] getAllCtors() {
-		inspectCtors();
-		return publicCtors.getAllCtors();
-	}
 
 }

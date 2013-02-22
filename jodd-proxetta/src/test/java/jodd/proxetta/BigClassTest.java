@@ -135,7 +135,7 @@ public class BigClassTest {
 
 		// test method annotation
 		ClassDescriptor cd = ClassIntrospector.lookup(clazz);
-		Method m = cd.getMethod("publicMethod");
+		Method m = cd.getMethod("publicMethod", false);
 		assertNotNull(m);
 		Annotation[] aa = m.getAnnotations();
 		assertEquals(3, aa.length);

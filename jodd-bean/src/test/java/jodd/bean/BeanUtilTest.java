@@ -1332,13 +1332,13 @@ public class BeanUtilTest {
 		assertTrue((Boolean) value);
 
 		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
-		assertEquals(1, cd.getAllBeanGetterNames().length);
-		assertEquals(1, cd.getAllBeanGetters().length);
-		assertEquals("isFlag", cd.getAllBeanGetters()[0].getName());
-		assertEquals("isFlag", cd.getBeanGetter("flag").getName());
-		assertEquals(1, cd.getAllBeanSetterNames().length);
-		assertEquals(1, cd.getAllBeanSetters().length);
-		assertEquals(3, cd.getAllMethods().length);
+		assertEquals(1, cd.getAllBeanGetterNames(false).length);
+		assertEquals(1, cd.getAllBeanGetters(false).length);
+		assertEquals("isFlag", cd.getAllBeanGetters(false)[0].getName());
+		assertEquals("isFlag", cd.getBeanGetter("flag", false).getName());
+		assertEquals(1, cd.getAllBeanSetterNames(false).length);
+		assertEquals(1, cd.getAllBeanSetters(false).length);
+		assertEquals(3, cd.getAllMethods(false).length);
 
 		GetIsBool i2 = new GetIsBool();
 		value = BeanUtil.getProperty(i2, "flag");
@@ -1346,13 +1346,13 @@ public class BeanUtilTest {
 		assertTrue((Boolean) value);
 
 		cd = ClassIntrospector.lookup(GetIsBool.class);
-		assertEquals(1, cd.getAllBeanGetterNames().length);
-		assertEquals(1, cd.getAllBeanGetters().length);
-		assertEquals("isFlag", cd.getAllBeanGetters()[0].getName());
-		assertEquals("isFlag", cd.getBeanGetter("flag").getName());
-		assertEquals(1, cd.getAllBeanSetterNames().length);
-		assertEquals(1, cd.getAllBeanSetters().length);
-		assertEquals(3, cd.getAllMethods().length);
+		assertEquals(1, cd.getAllBeanGetterNames(false).length);
+		assertEquals(1, cd.getAllBeanGetters(false).length);
+		assertEquals("isFlag", cd.getAllBeanGetters(false)[0].getName());
+		assertEquals("isFlag", cd.getBeanGetter("flag", false).getName());
+		assertEquals(1, cd.getAllBeanSetterNames(false).length);
+		assertEquals(1, cd.getAllBeanSetters(false).length);
+		assertEquals(3, cd.getAllMethods(false).length);
 	}
 
 	@Test
