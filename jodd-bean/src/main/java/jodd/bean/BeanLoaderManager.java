@@ -105,4 +105,25 @@ public class BeanLoaderManager {
 		return load;
 	}
 
+	// ---------------------------------------------------------------- load
+
+	/**
+	 * Populates bean from given object by using a loader for given objects type.
+	 */
+	public static void load(Object bean, Object source) {
+		BeanLoader loader = lookup(source);
+		if (loader == null) {
+			throw new BeanException("No BeanLoader for: " + source.getClass().getName());
+		}
+		loader.load(bean, source);
+	}
+
+	public static void load(Object bean, Object source, Class type) {
+		BeanLoader loader = lookup(type);
+		if (loader == null) {
+			throw new BeanException("No BeanLoader for: " + type.getName());
+		}
+		loader.load(bean, source);
+	}
+
 }

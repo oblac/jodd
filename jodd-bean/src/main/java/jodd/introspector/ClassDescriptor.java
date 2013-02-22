@@ -72,7 +72,6 @@ public class ClassDescriptor {
 	// ---------------------------------------------------------------- special
 
 	private boolean isArray;
-
 	/**
 	 * Returns <code>true</code> if class is an array.
 	 */
@@ -82,7 +81,7 @@ public class ClassDescriptor {
 
 	private boolean isMap;
 	/**
-	 * Returns <code>true</code> if class is a Map.
+	 * Returns <code>true</code> if class is a <code>Map</code>.
 	 */
 	public boolean isMap() {
 		return isMap;
@@ -90,20 +89,24 @@ public class ClassDescriptor {
 
 	private boolean isList;
 	/**
-	 * Returns <code>true</code> if class is a List.
+	 * Returns <code>true</code> if class is a <code>List</code>.
 	 */
 	public boolean isList() {
 		return isList;
 	}
 
 	private boolean isSet;
-
+	/**
+	 * Returns <code>true</code> if type is a <code>Set</code>.
+	 */
 	public boolean isSet() {
 		return isSet;
 	}
 
 	private boolean isCollection;
-
+	/**
+	 * Returns <code>true</code> if type is a collection.
+	 */
 	public boolean isCollection() {
 		return isCollection;
 	}

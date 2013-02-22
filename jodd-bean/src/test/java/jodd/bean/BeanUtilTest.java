@@ -725,7 +725,7 @@ public class BeanUtilTest {
 		map.put("fooStringA", new String[]{"14", "15"});
 
 		FooBean fb = new FooBean();
-		BeanTool.load(fb, map);
+		BeanLoaderManager.load(fb, map);
 
 		assertEquals(1, fb.getFooInteger().intValue());
 		assertEquals(2, fb.getFooint());
@@ -763,7 +763,7 @@ public class BeanUtilTest {
 		map.put("FooStringA", new String[]{"14", "15"});
 
 		fb = new FooBean();
-		BeanTool.load(fb, map);
+		BeanLoaderManager.load(fb, map);
 
 		assertEquals(1, fb.getFooInteger().intValue());
 		assertEquals(2, fb.getFooint());

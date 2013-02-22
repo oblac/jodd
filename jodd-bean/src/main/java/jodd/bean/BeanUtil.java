@@ -30,9 +30,6 @@ import java.util.Map;
  * libraries still requires to have both accessors in order to set or get value.
  * Another reason is that most common usage is to work with public accessors, and in that case
  * private fields are ignored.
- *
- * @see BeanUtilUtil
- * @see BeanTool
  */
 public class BeanUtil {
 
