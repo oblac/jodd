@@ -2,7 +2,7 @@
 
 package jodd.asm;
 
-import org.objectweb.asm.AnnotationVisitor;
+import jodd.asm4.AnnotationVisitor;
 
 /**
  * Annotation visitor adapter.

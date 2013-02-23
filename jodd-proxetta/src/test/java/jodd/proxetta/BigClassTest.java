@@ -10,7 +10,7 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
-import org.objectweb.asm.Type;
+import jodd.asm4.Type;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

@@ -3,8 +3,8 @@
 package jodd.asm;
 
 import jodd.util.StringUtil;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.signature.SignatureVisitor;
+import jodd.asm4.Opcodes;
+import jodd.asm4.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} that prints a disassembled view of the signature
@@ -14,29 +14,30 @@ import org.objectweb.asm.signature.SignatureVisitor;
  * <ul>
  * <li>all private scopes made protected</li>
  * <li>getExceptionsArray added</li>
+ * <li>constructor commented</li>
  * </ul>
  *
  * @author Eugene Kuleshov
  * @author Eric Bruneton
- * @author Igor Spasic (is)
+ * @author Igor Spasic (jodd)
  */
 public class TraceSignatureVisitor extends SignatureVisitor {
 
-	protected final StringBuffer declaration;       // is
+	protected final StringBuffer declaration;       // jodd
 
-    protected boolean isInterface;                  // is
+    protected boolean isInterface;                  // jodd
 
-    protected boolean seenFormalParameter;          // is
+    protected boolean seenFormalParameter;          // jodd
 
-    protected boolean seenInterfaceBound;           // is
+    protected boolean seenInterfaceBound;           // jodd
 
-    protected boolean seenParameter;                // is
+    protected boolean seenParameter;                // jodd
 
-    protected boolean seenInterface;                // is
+    protected boolean seenInterface;                // jodd
 
-    protected StringBuffer returnType;              // is
+    protected StringBuffer returnType;              // jodd
 
-    protected StringBuffer exceptions;              // is
+    protected StringBuffer exceptions;              // jodd
 
     /**
      * Stack used to keep track of class types that have arguments. Each element
@@ -44,24 +45,26 @@ public class TraceSignatureVisitor extends SignatureVisitor {
      * the lowest order bit. Pushing false = *2, pushing true = *2+1, popping =
      * /2.
      */
-    protected int argumentStack;                    // is
+    protected int argumentStack;                    // jodd
 
     /**
      * Stack used to keep track of array class types. Each element of this stack
      * is a boolean encoded in one bit. The top of the stack is the lowest order
      * bit. Pushing false = *2, pushing true = *2+1, popping = /2.
      */
-    protected int arrayStack;                       // is
+    protected int arrayStack;                       // jodd
 
-    protected String separator = "";                // is
+    protected String separator = "";                // jodd
 
-    public TraceSignatureVisitor(final int access) {
+/*
+    public TraceSignatureVisitor(final int access) {	// jodd
 		super(Opcodes.ASM4);
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
         this.declaration = new StringBuffer();
     }
+*/
 
-    protected TraceSignatureVisitor(final StringBuffer buf) {       // is
+    protected TraceSignatureVisitor(final StringBuffer buf) {       // jodd
 		super(Opcodes.ASM4);
         this.declaration = buf;
     }
@@ -257,7 +260,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {
         return exceptions == null ? null : exceptions.toString();
     }
 
-	public String[] getExceptionsArray() {		 // is
+	public String[] getExceptionsArray() {		 // jodd
 		if (exceptions == null) {
 			return null;
 		}

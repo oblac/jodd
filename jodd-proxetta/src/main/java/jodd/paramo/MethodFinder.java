@@ -3,8 +3,8 @@
 package jodd.paramo;
 
 import jodd.asm.EmptyClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.Type;
 
 import java.lang.reflect.Modifier;
 import java.util.Map;

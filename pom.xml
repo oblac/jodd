@@ -536,11 +536,11 @@
 				<artifactId>slf4j-api</artifactId>
 				<version>1.7.2</version>
 			</dependency>
-			<dependency>
+			<!--dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm</artifactId>
 				<version>4.1</version>
-			</dependency>
+			</dependency-->
 
 			<!-- test -->
 			<dependency>

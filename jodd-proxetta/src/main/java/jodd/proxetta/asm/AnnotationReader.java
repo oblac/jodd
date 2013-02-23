@@ -3,7 +3,7 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import org.objectweb.asm.AnnotationVisitor;
+import jodd.asm4.AnnotationVisitor;
 
 import java.util.Map;
 import java.util.HashMap;

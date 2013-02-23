@@ -3,10 +3,10 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.signature.SignatureReader;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.ClassReader;
+import jodd.asm4.AnnotationVisitor;
+import jodd.asm4.signature.SignatureReader;
 
 import java.util.Iterator;
 import java.util.Set;

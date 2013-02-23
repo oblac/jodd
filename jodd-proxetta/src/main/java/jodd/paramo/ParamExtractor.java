@@ -4,7 +4,7 @@ package jodd.paramo;
 
 import jodd.asm.EmptyMethodVisitor;
 import jodd.util.ArraysUtil;
-import org.objectweb.asm.Label;
+import jodd.asm4.Label;
 
 /**
  * Extracts param information from a method.

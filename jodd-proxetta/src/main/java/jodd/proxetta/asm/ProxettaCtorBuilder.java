@@ -2,11 +2,11 @@
 
 package jodd.proxetta.asm;
 
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.AnnotationVisitor;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.RETURN;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.AnnotationVisitor;
+import static jodd.asm4.Opcodes.INVOKESPECIAL;
+import static jodd.asm4.Opcodes.ALOAD;
+import static jodd.asm4.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;

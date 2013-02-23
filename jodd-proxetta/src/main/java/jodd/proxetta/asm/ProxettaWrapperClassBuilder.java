@@ -4,10 +4,10 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmConst;
 import jodd.proxetta.ProxyAspect;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import jodd.asm4.ClassVisitor;
+import jodd.asm4.FieldVisitor;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.Opcodes;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadVirtualMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.visitReturn;
-import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
-import static org.objectweb.asm.Opcodes.ACC_NATIVE;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm4.Opcodes.ACC_ABSTRACT;
+import static jodd.asm4.Opcodes.ACC_NATIVE;
+import static jodd.asm4.Opcodes.ALOAD;
+import static jodd.asm4.Opcodes.GETFIELD;
+import static jodd.asm4.Opcodes.INVOKEINTERFACE;
+import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
 
 public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 

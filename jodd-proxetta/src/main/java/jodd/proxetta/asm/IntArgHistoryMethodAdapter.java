@@ -3,9 +3,9 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.MethodAdapter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Label;
-import static org.objectweb.asm.Opcodes.*;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.Label;
+import static jodd.asm4.Opcodes.*;
 import jodd.proxetta.ProxettaException;
 
 /**

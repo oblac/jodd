@@ -7,7 +7,7 @@ import jodd.proxetta.ProxettaException;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
-import org.objectweb.asm.ClassReader;
+import jodd.asm4.ClassReader;
 
 import java.lang.reflect.Field;
 

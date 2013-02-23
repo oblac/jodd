@@ -3,7 +3,7 @@
 package jodd.paramo;
 
 import jodd.util.ClassLoaderUtil;
-import org.objectweb.asm.ClassReader;
+import jodd.asm4.ClassReader;
 
 import java.io.IOException;
 import java.io.InputStream;

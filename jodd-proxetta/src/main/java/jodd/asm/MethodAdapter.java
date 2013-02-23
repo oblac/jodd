@@ -2,8 +2,8 @@
 
 package jodd.asm;
 
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.Opcodes;
 
 /**
  * An empty MethodVisitor that delegates to another MethodVisitor. This class
@@ -12,7 +12,7 @@ import org.objectweb.asm.Opcodes;
  */
 public abstract class MethodAdapter extends MethodVisitor {
 
-	public MethodAdapter(MethodVisitor mv) {
+	protected MethodAdapter(MethodVisitor mv) {
 		super(Opcodes.ASM4, mv);
 	}
 }

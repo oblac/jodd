@@ -2,15 +2,15 @@
 
 package jodd.asm;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Opcodes;
+import jodd.asm4.AnnotationVisitor;
+import jodd.asm4.Opcodes;
 
 /**
  * Empty annotation visitor.
  */
 public abstract class EmptyAnnotationVisitor extends AnnotationVisitor {
 
-	public EmptyAnnotationVisitor() {
+	protected EmptyAnnotationVisitor() {
 		super(Opcodes.ASM4);
 	}
 

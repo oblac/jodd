@@ -2,8 +2,8 @@
 
 package jodd.asm;
 
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
+import jodd.asm4.ClassVisitor;
+import jodd.asm4.Opcodes;
 
 /**
  * An empty ClassVisitor that delegates to another ClassVisitor.
@@ -12,7 +12,7 @@ import org.objectweb.asm.Opcodes;
  */
 public abstract class ClassAdapter extends ClassVisitor {
 
-	public ClassAdapter(ClassVisitor cv) {
+	protected ClassAdapter(ClassVisitor cv) {
 		super(Opcodes.ASM4, cv);
 	}
 }

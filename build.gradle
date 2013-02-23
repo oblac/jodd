@@ -24,7 +24,7 @@ ext {
 		jsp:			'javax.servlet.jsp:jsp-api:2.0',
 		log:			'org.slf4j:slf4j-api:1.7.2',
 		simpleLog:		'org.slf4j:slf4j-simple:1.7.2',
-		asm:			'org.ow2.asm:asm:4.1',
+//		asm:			'org.ow2.asm:asm:4.1',
 		
 		junit: 			'junit:junit:4.10',
 		mockito:		'org.mockito:mockito-all:1.9.5',

@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import org.objectweb.asm.ClassVisitor;
+import jodd.asm4.ClassVisitor;
 
 import java.util.List;
 import java.util.ArrayList;

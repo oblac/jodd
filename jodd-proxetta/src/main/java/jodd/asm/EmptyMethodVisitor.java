@@ -2,18 +2,15 @@
 
 package jodd.asm;
 
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
+import jodd.asm4.MethodVisitor;
+import jodd.asm4.Opcodes;
 
 /**
  * Empty method visitor.
  */
 public abstract class EmptyMethodVisitor extends MethodVisitor {
 
-	public EmptyMethodVisitor() {
+	protected EmptyMethodVisitor() {
 		super(Opcodes.ASM4);
 	}
 
