@@ -8,7 +8,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.4.2-SNAPSHOT' 
+version = '3.4.2-SNAPSHOT'
 
 apply plugin: 'idea'
 apply plugin: 'eclipse'
@@ -88,6 +88,9 @@ configure(javaModules()) {
 	apply plugin: 'osgi'
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
+	apply plugin: 'maven'
+	apply plugin: 'signing'
+	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'
 
@@ -144,10 +147,6 @@ configure(javaModules()) {
 }
 
 configure(javaBundleModules()) {
-	apply plugin: 'maven'
-	apply plugin: 'signing'
-	apply from: "${gradleScriptDir}/publish-maven.gradle"
-
 	configurations {
 		codeCoverage
 	}
