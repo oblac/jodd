@@ -46,9 +46,10 @@ public class BeanCopy extends BeanVisitor {
 	}
 
 	/**
-	 * Define included names from a template class.
+	 * Defines included property names as public properties
+	 * of given template class.
 	 */
-	public BeanCopy includeByTemplate(Class template) {
+	public BeanCopy includeAs(Class template) {
 		ClassDescriptor cd = ClassIntrospector.lookup(template);
 
 		String[] properties = cd.getAllBeanGetterNames(false);

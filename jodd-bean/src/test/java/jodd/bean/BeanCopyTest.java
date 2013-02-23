@@ -181,7 +181,7 @@ public class BeanCopyTest {
 		FooBean fooBean = createFooBean();
 		FooBean dest = new FooBean();
 
-		BeanCopy.beans(fooBean, dest).includeByTemplate(FooBeanString.class).copy();
+		BeanCopy.beans(fooBean, dest).includeAs(FooBeanString.class).copy();
 
 		Integer v = (Integer) BeanUtil.getProperty(dest, "fooInteger");
 		assertNull(v);
