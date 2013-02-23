@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.management.Attribute;
-import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerInvocationHandler;
 import javax.management.MalformedObjectNameException;
@@ -78,10 +77,8 @@ public class JmxClient {
 		try {
 			ObjectName objectName = buildObjectName(mbeanName);
 			return mbsc.getAttribute(objectName, attributeName);
-		} catch (JMException jmex) {
-			throw new IllegalArgumentException(jmex);
-		} catch (IOException ioex) {
-			throw new IllegalStateException(ioex);
+		} catch (Exception ex) {
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -94,10 +91,8 @@ public class JmxClient {
 			ObjectName objectName = buildObjectName(mbeanName);
 			Attribute attribute = new Attribute(attributeName, value);
 			mbsc.setAttribute(objectName, attribute);
-		} catch (JMException jmex) {
-			throw new IllegalArgumentException(jmex);
-		} catch (IOException ioex) {
-			throw new IllegalStateException(ioex);
+		} catch (Exception ex) {
+			throw new IllegalStateException(ex);
 		}
 	}
 
@@ -116,10 +111,8 @@ public class JmxClient {
 		try {
 			ObjectName objectName = buildObjectName(mbeanName);
 			mbsc.invoke(objectName, methodName, params, signature);
-		} catch (JMException jmex) {
-			throw new IllegalArgumentException(jmex);
-		} catch (IOException ioex) {
-			throw new IllegalStateException(ioex);
+		} catch (Exception ex) {
+			throw new IllegalArgumentException(ex);
 		}
 	}
 

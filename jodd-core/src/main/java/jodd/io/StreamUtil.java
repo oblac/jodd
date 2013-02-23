@@ -31,7 +31,7 @@ public class StreamUtil {
 		if (in != null) {
 			try {
 				in.close();
-			} catch (IOException ioe) {
+			} catch (IOException ioex) {
 				// ignore
 			}
 		}
@@ -50,7 +50,7 @@ public class StreamUtil {
 			}
 			try {
 				out.close();
-			} catch (IOException ioe) {
+			} catch (IOException ioex) {
 				// ignore
 			}
 		}
@@ -65,7 +65,7 @@ public class StreamUtil {
 		if (in != null) {
 			try {
 				in.close();
-			} catch (IOException ioe) {
+			} catch (IOException ioex) {
 				// ignore
 			}
 		}
@@ -85,7 +85,7 @@ public class StreamUtil {
 			}
 			try {
 				out.close();
-			} catch (IOException ioe) {
+			} catch (IOException ioex) {
 				// ignore
 			}
 		}

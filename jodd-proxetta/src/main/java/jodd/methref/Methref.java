@@ -27,10 +27,8 @@ public class Methref<C> {
 		// create new instance
 		try {
 			instance = proxifiedTarget.newInstance();
-		} catch (InstantiationException iex) {
-			throw new MethrefException(iex);
-		} catch (IllegalAccessException iaex) {
-			throw new MethrefException(iaex);
+		} catch (Exception ex) {
+			throw new MethrefException(ex);
 		}
 	}
 
@@ -102,10 +100,8 @@ public class Methref<C> {
 			Field f = instance.getClass().getDeclaredField("$__methodName$0");
 			f.setAccessible(true);
 			return f.get(instance).toString();
-		} catch (NoSuchFieldException nsfex) {
-			throw new MethrefException("Unable to find injected field.", nsfex);
-		} catch (IllegalAccessException iaex) {
-			throw new MethrefException("Unable to find injected field.", iaex);
+		} catch (Exception ex) {
+			throw new MethrefException("Unable to find injected field.", ex);
 		}
 	}
 

@@ -73,8 +73,8 @@ class BeanUtilUtil {
 			Class type = f.getType();
 			value = convertType(value, type);
 			f.set(bean, value);
-		} catch (Exception iaex) {
-			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
+		} catch (Exception ex) {
+			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), ex);
 		}
 	}
 
@@ -84,8 +84,8 @@ class BeanUtilUtil {
 	protected Object getField(Object bean, Field f) {
 		try {
 			return f.get(bean);
-		} catch (Exception iaex) {
-			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + f.getName(), iaex);
+		} catch (Exception ex) {
+			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + f.getName(), ex);
 		}
 	}
 
