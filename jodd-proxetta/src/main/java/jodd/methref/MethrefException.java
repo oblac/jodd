@@ -20,4 +20,5 @@ public class MethrefException extends ProxettaException {
 	public MethrefException(String string, Throwable throwable) {
 		super(string, throwable);
 	}
+
 }

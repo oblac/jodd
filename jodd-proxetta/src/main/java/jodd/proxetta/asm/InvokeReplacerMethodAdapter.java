@@ -194,7 +194,7 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitLineNumber(int i, Label label) {
+	public void visitLineNumber(int line, Label start) {
 	}
 
 

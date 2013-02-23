@@ -72,73 +72,73 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitVarInsn(int i, int i1) {
+	public void visitVarInsn(int opcode, int var) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitVarInsn(i, i1);
+		super.visitVarInsn(opcode, var);
 	}
 
 	@Override
-	public void visitTypeInsn(int i, String string) {
+	public void visitTypeInsn(int opcode, String type) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitTypeInsn(i, string);
+		super.visitTypeInsn(opcode, type);
 	}
 
 	@Override
-	public void visitFieldInsn(int i, String string, String string1, String string2) {
+	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitFieldInsn(i, string, string1, string2);
+		super.visitFieldInsn(opcode, owner, name, desc);
 	}
 
 	@Override
-	public void visitMethodInsn(int i, String string, String string1, String string2) {
+	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitMethodInsn(i, string, string1, string2);
+		super.visitMethodInsn(opcode, owner, name, desc);
 	}
 
 	@Override
-	public void visitJumpInsn(int i, Label label) {
+	public void visitJumpInsn(int opcode, Label label) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitJumpInsn(i, label);
+		super.visitJumpInsn(opcode, label);
 	}
 
 	@Override
-	public void visitLdcInsn(Object object) {
+	public void visitLdcInsn(Object cst) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitLdcInsn(object);
+		super.visitLdcInsn(cst);
 	}
 
 	@Override
-	public void visitIincInsn(int i, int i1) {
+	public void visitIincInsn(int var, int increment) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitIincInsn(i, i1);
+		super.visitIincInsn(var, increment);
 	}
 
 	@Override
-	public void visitTableSwitchInsn(int i, int i1, Label label, Label[] labels) {
+	public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitTableSwitchInsn(i, i1, label, labels);
+		super.visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
 	@Override
-	public void visitLookupSwitchInsn(Label label, int[] ints, Label[] labels) {
+	public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitLookupSwitchInsn(label, ints, labels);
+		super.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(String string, int i) {
+	public void visitMultiANewArrayInsn(String desc, int dims) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitMultiANewArrayInsn(string, i);
+		super.visitMultiANewArrayInsn(desc, dims);
 	}
 
 	@Override
@@ -146,6 +146,6 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitLineNumber(int i, Label label) {
+	public void visitLineNumber(int line, Label start) {
 	}
 }

@@ -18,4 +18,5 @@ public class MethrefAdvice implements ProxyAdvice {
 
 		return ProxyTarget.returnValue(null);
 	}
+
 }

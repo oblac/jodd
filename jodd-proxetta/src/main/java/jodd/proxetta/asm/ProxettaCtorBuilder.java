@@ -18,46 +18,46 @@ import jodd.asm.EmptyMethodVisitor;
 public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 
 	protected final MethodSignatureVisitor msign;
-	protected final MethodVisitor mv;
+	protected final MethodVisitor methodVisitor;
 	protected final WorkData wd;
 
-	public ProxettaCtorBuilder(MethodVisitor mv, MethodSignatureVisitor msign, WorkData wd) {
-		this.mv = mv;
+	public ProxettaCtorBuilder(MethodVisitor methodVisitor, MethodSignatureVisitor msign, WorkData wd) {
+		this.methodVisitor = methodVisitor;
 		this.msign = msign;
 		this.wd = wd;
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		mv.visitAnnotation(desc, visible);
+		methodVisitor.visitAnnotation(desc, visible);
 		return null;
 	}
 
 	@Override
 	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-		mv.visitParameterAnnotation(parameter, desc, visible);
+		methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return null;
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
-		mv.visitAnnotationDefault();
+		methodVisitor.visitAnnotationDefault();
 		return null;
 	}
 
 	@Override
 	public void visitEnd() {
-		mv.visitCode();
+		methodVisitor.visitCode();
 
 		// call super ctor
-		loadSpecialMethodArguments(mv, msign);
-		mv.visitMethodInsn(INVOKESPECIAL, wd.superReference, msign.getMethodName(), msign.getDescription());
+		loadSpecialMethodArguments(methodVisitor, msign);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.superReference, msign.getMethodName(), msign.getDescription());
 
 		// invoke advice ctors
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, INIT_METHOD_NAME, DESC_VOID);
-		mv.visitInsn(RETURN);
-		mv.visitMaxs(0, 0);
-		mv.visitEnd();
+		methodVisitor.visitVarInsn(ALOAD, 0);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, INIT_METHOD_NAME, DESC_VOID);
+		methodVisitor.visitInsn(RETURN);
+		methodVisitor.visitMaxs(0, 0);
+		methodVisitor.visitEnd();
 	}
 }

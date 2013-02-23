@@ -49,4 +49,5 @@ public class MethrefProxetta {
 		builder.setTarget(target);
 		return builder.define();
 	}
+
 }

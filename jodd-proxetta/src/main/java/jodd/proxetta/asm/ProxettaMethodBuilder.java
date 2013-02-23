@@ -54,19 +54,19 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 */
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		AnnotationVisitor destAnn = mv.visitAnnotation(desc, visible); // [A4]
+		AnnotationVisitor destAnn = methodVisitor.visitAnnotation(desc, visible); // [A4]
 		return new AnnotationVisitorAdapter(destAnn);
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
-		AnnotationVisitor destAnn = mv.visitAnnotationDefault();
+		AnnotationVisitor destAnn = methodVisitor.visitAnnotationDefault();
 		return new AnnotationVisitorAdapter(destAnn);
 	}
 
 	@Override
 	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-		AnnotationVisitor destAnn = mv.visitParameterAnnotation(parameter, desc, visible);
+		AnnotationVisitor destAnn = methodVisitor.visitParameterAnnotation(parameter, desc, visible);
 		return new AnnotationVisitorAdapter(destAnn);
 	}
 
@@ -87,7 +87,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	// ---------------------------------------------------------------- creating
 
 	protected TargetMethodData tmd;
-	protected MethodVisitor mv;
+	protected MethodVisitor methodVisitor;
 
 	/**
 	 * Starts creation of first chain delegate.
@@ -105,7 +105,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		access &= ~ACC_NATIVE;
 		access &= ~ACC_ABSTRACT;
 
-		mv = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
+		methodVisitor = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
 	}
 
 	/**
@@ -113,12 +113,12 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * This method mirrors the target method.
 	 */
 	protected void createFirstChainDelegate_Continue(TargetMethodData td) {
-		mv.visitCode();
-		loadSpecialMethodArguments(mv, td.msign);
-		mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.firstMethodName(), td.msign.getDescription());
-		visitReturn(mv, td.msign, false);
-		mv.visitMaxs(0, 0);
-		mv.visitEnd();
+		methodVisitor.visitCode();
+		loadSpecialMethodArguments(methodVisitor, td.msign);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.firstMethodName(), td.msign.getDescription());
+		visitReturn(methodVisitor, td.msign, false);
+		methodVisitor.visitMaxs(0, 0);
+		methodVisitor.visitEnd();
 	}
 
 
@@ -154,25 +154,25 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 				return new IntArgHistoryMethodAdapter(mv) {
 
 					@Override
-					public void visitFieldInsn(int opcode, String string, String string1, String string2) {
-						if (string.equals(aspectData.adviceReference)) {
-							string = wd.thisReference;              // [F5]
-							string1 = adviceFieldName(string1, aspectData.aspectIndex);
+					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+						if (owner.equals(aspectData.adviceReference)) {
+							owner = wd.thisReference;              // [F5]
+							name = adviceFieldName(name, aspectData.aspectIndex);
 						}
-						super.visitFieldInsn(opcode, string, string1, string2);
+						super.visitFieldInsn(opcode, owner, name, desc);
 					}
 
 
 					@Override
-					public void visitVarInsn(int opcode, int i1) {
-						i1 += (i1 == 0 ? 0 : td.msign.getAllArgumentsSize());
-						super.visitVarInsn(opcode, i1);   // [F1]
-					}
-
-					@Override
-					public void visitIincInsn(int var, int i1) {
+					public void visitVarInsn(int opcode, int var) {
 						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
-						super.visitIincInsn(var, i1);  // [F1]
+						super.visitVarInsn(opcode, var);   // [F1]
+					}
+
+					@Override
+					public void visitIincInsn(int var, int increment) {
+						var += (var == 0 ? 0 : td.msign.getAllArgumentsSize());
+						super.visitIincInsn(var, increment);  // [F1]
 					}
 
 					@Override

@@ -20,4 +20,5 @@ public class ParamoException extends UncheckedException {
 	public ParamoException(String message, Throwable t) {
 		super(message, t);
 	}
+
 }

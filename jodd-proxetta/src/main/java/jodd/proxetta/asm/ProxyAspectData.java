@@ -165,7 +165,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitLineNumber(int i, Label label) {
+						public void visitLineNumber(int line, Label start) {
 						}
 
 						@Override
@@ -204,7 +204,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitLineNumber(int i, Label label) {
+						public void visitLineNumber(int line, Label start) {
 						}
 
 						int state; // used to detect and to ignore the first super call()
@@ -262,7 +262,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitLineNumber(int i, Label label) {
+						public void visitLineNumber(int line, Label start) {
 						}
 
 						@Override

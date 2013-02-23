@@ -14,4 +14,5 @@ public class MethrefStringAdvice implements ProxyAdvice {
 	public Object execute() {
 		return ProxyTarget.targetMethodName();
 	}
+
 }
