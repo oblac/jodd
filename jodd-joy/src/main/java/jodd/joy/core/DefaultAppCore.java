@@ -119,7 +119,9 @@ public abstract class DefaultAppCore {
 		}
 
 		if (appPropsNamePattern == null) {
-			appPropsNamePattern = "/app*.prop*";
+			int index = appPropsName.lastIndexOf('.');
+
+			appPropsNamePattern = '/' + appPropsName.substring(0, index) + "*.prop*";
 		}
 
 		if (jtxAnnotations == null) {
