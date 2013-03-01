@@ -23,13 +23,13 @@ public class DbIdGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(DbIdGenerator.class);
 
-	protected Map<Class<? extends Entity>, MutableLong> idmap = new HashMap<Class<? extends Entity>, MutableLong>();
+	protected Map<Class<? extends Entity>, MutableLong> entityIdsMap = new HashMap<Class<? extends Entity>, MutableLong>();
 
 	/**
 	 * Resets all stored data.
 	 */
 	public synchronized void reset() {
-		idmap.clear();
+		entityIdsMap.clear();
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class DbIdGenerator {
 	 * On later calls, stored id is incremented and returned.
 	 */
 	public synchronized long nextId(Class<? extends Entity> entityType) {
-		MutableLong lastId = idmap.get(entityType);
+		MutableLong lastId = entityIdsMap.get(entityType);
 		if (lastId == null) {
 			DbOomManager dbOomManager = DbOomManager.getInstance();
 

@@ -2,52 +2,43 @@
 
 package jodd.joy.db;
 
-import jodd.db.oom.meta.DbId;
-
 /**
  * Abstract entity.
  */
 public abstract class Entity {
 
 	/**
-	 * Unique entity identifier.
+	 * Returns entity ID. Value 0 means that entity
+	 * is not stored in the persistence layer.
 	 */
-	@DbId
-	protected Long id;
+	protected abstract long getEntityId();
 
 	/**
-	 * Returns entity id.
+	 * Sets entity ID.
 	 */
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	public abstract void setEntityId(long id);
 
 	/**
-	 * Returns <code>true</code> if entity is persisted, i.e. id is not <code>null</code>
+	 * Returns <code>true</code> if entity is persisted, i.e.
+	 * {@link #getEntityId() ID} is not <code>0</code>
 	 */
 	public boolean isPersistent() {
-		return id != null;
+		return getEntityId() != 0;
 	}
 
 	/**
-	 * Detaches entity by setting id to <code>null</code>.
+	 * Detaches entity by setting ID to <code>0</code>.
 	 */
 	public void detach() {
-		id = null;
+		setEntityId(0);
 	}
 
 	// ---------------------------------------------------------------- equals
 
 	@Override
 	public int hashCode() {
-		if (id == null) {
-			return System.identityHashCode(this);
-		}
-		return 31 * id.hashCode();
+		long value = getEntityId();
+		return (int)(value ^ (value >>> 32));
 	}
 
 	@Override
@@ -60,21 +51,16 @@ public abstract class Entity {
 		}
 		Entity entity = (Entity) o;
 
-		if (id == null && entity.id == null) {
+		if (getEntityId() == 0 && entity.getEntityId() == 0) {
 			return this == o;
 		}
-		if ((id == null) || (entity.id == null)) {
-			return false;
-		}
-		return id.equals(entity.id);
+		return getEntityId() == entity.getEntityId();
 	}
 
-
-
-	// ---------------------------------------------------------------- tostring
+	// ---------------------------------------------------------------- toString
 
 	@Override
 	public String toString() {
-		return "Entity{" + this.getClass().getSimpleName() + ':' + id +	'}';
+		return "Entity{" + this.getClass().getSimpleName() + ':' + getEntityId() + '}';
 	}
 }

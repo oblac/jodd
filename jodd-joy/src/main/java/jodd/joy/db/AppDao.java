@@ -69,10 +69,10 @@ public class AppDao {
 				q.setGeneratedKey();
 				q.executeUpdate();
 				long key = q.getGeneratedKey();
-				entity.setId(Long.valueOf(key));
+				entity.setEntityId(key);
 			} else {
 				long nextId = dbIdGenerator.nextId(entity);
-				entity.setId(Long.valueOf(nextId));
+				entity.setEntityId(nextId);
 				q = query(insert(entity));
 				q.executeUpdate();
 			}
