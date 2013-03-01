@@ -13,6 +13,7 @@ abstract class BaseNamingStrategy {
 	protected char separatorChar = '_';
 	protected boolean changeCase = true;
 	protected boolean uppercase = true;
+	protected boolean strictAnnotationNames = true;
 
 	public boolean isSplitCamelCase() {
 		return splitCamelCase;
@@ -69,10 +70,22 @@ abstract class BaseNamingStrategy {
 
 	/**
 	 * Alternative property to {@link #setUppercase(boolean)}.
-	 * Does just opposite.
+	 * Does just the opposite.
 	 */
 	public void setLowercase(boolean lowercase) {
 		this.uppercase = !lowercase;
+	}
+
+	public boolean isStrictAnnotationNames() {
+		return strictAnnotationNames;
+	}
+
+	/**
+	 * Defines if annotation names are strict, or if all the naming
+	 * rules should apply on them, too.
+	 */
+	public void setStrictAnnotationNames(boolean strictAnnotationNames) {
+		this.strictAnnotationNames = strictAnnotationNames;
 	}
 
 	// ---------------------------------------------------------------- util methods

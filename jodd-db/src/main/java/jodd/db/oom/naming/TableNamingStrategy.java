@@ -136,4 +136,14 @@ public class TableNamingStrategy extends BaseNamingStrategy {
 
 		return tableName.substring(i, len);
 	}
+
+	/**
+	 * Applies table naming strategy to given table name hint.
+	 * Returns full table name.
+	 */
+	public String applyToTableName(String tableName) {
+		String entityName = convertTableNameToEntityName(tableName);
+
+		return convertEntityNameToTableName(entityName);
+	}
 }

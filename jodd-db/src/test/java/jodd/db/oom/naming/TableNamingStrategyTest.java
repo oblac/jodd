@@ -129,6 +129,40 @@ public class TableNamingStrategyTest {
 		assertEquals("JoddUser", tns.convertTableNameToEntityName("JoddUser"));
 	}
 
+	@Test
+	public void testApplyToTableName() {
+		TableNamingStrategy tns = new TableNamingStrategy();
+
+		assertEquals("JODD_USER", tns.applyToTableName("JODD_USER"));
+		assertEquals("JODD", tns.applyToTableName("joDd"));
+
+		tns.setPrefix("SUP_");
+
+		assertEquals("SUP_JODD_USER", tns.applyToTableName("JODD_USER"));
+		assertEquals("SUP_JODD_USER", tns.applyToTableName("SUP_JODD_USER"));
+		assertEquals("SUP_JODD", tns.applyToTableName("joDd"));
+
+		tns.setSuffix("_EX");
+		assertEquals("SUP_JODD_USER_EX", tns.applyToTableName("JODD_USER"));
+		assertEquals("SUP_JODD_USER_EX", tns.applyToTableName("SUP_JODD_USER_EX"));
+
+		tns.setLowercase(true);
+
+		assertEquals("sup_jodd_user_ex", tns.applyToTableName("SUP_JODD_USER_EX"));
+	}
+
+	@Test
+	public void testApplyToColumnName() {
+		ColumnNamingStrategy cns = new ColumnNamingStrategy();
+
+		assertEquals("JODD_USER", cns.applyToColumnName("JODD_USER"));
+		assertEquals("JODD", cns.applyToColumnName("joDd"));
+
+		cns.setLowercase(true);
+
+		assertEquals("sup_jodd_user_ex", cns.applyToColumnName("SUP_JODD_USER_EX"));
+	}
+
 	// ---------------------------------------------------------------- tools
 
 	static String convertClassNameToTableName(Class clazz, boolean toUpperCase) {

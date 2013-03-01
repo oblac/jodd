@@ -30,6 +30,10 @@ public class DbMetaUtil {
 		}
 		if ((tableName == null) || (tableName.length() == 0)) {
 			tableName = tableNamingStrategy.convertEntityNameToTableName(type);
+		} else {
+			if (!tableNamingStrategy.isStrictAnnotationNames()) {
+				tableName = tableNamingStrategy.applyToTableName(tableName);
+			}
 		}
 		return tableName;
 	}
@@ -91,6 +95,10 @@ public class DbMetaUtil {
 
 		if ((columnName == null) || (columnName.length() == 0)) {
 			columnName = columnNamingStrategy.convertPropertyNameToColumnName(field.getName());
+		} else {
+			if (!columnNamingStrategy.isStrictAnnotationNames()) {
+				columnName = columnNamingStrategy.applyToColumnName(columnName);
+			}
 		}
 		if (sqlTypeClass == SqlType.class) {
 			sqlTypeClass = null;
