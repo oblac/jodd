@@ -8,6 +8,8 @@ dependencies {
 	compile project(':jodd-jtx')
 	compile project(':jodd-proxetta')
 
+	compile lib.log
+
 	testCompile lib.junit
 	testCompile lib.hsqldb
 	testCompile lib.h2db
