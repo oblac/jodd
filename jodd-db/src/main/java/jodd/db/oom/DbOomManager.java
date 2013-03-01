@@ -7,6 +7,9 @@ import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -26,6 +29,8 @@ import java.util.Map;
  * @see jodd.db.DbManager
  */
 public class DbOomManager {
+
+	private static final Logger log = LoggerFactory.getLogger(DbOomManager.class);
 
 	// ---------------------------------------------------------------- singleton
 
@@ -193,6 +198,11 @@ public class DbOomManager {
 	public DbEntityDescriptor registerType(Class type) {
 		DbEntityDescriptor ded = createDbEntityDescriptor(type);
 		DbEntityDescriptor existing = descriptorsMap.put(type, ded);
+
+		if (log.isDebugEnabled()) {
+			log.debug("Register " + type.getName() + " as " + ded.getTableName());
+		}
+
 		if (existing != null) {
 			throw new DbOomException("Type registration failed! Type '" + existing.getType() + "' already registered.");
 		}
@@ -210,6 +220,7 @@ public class DbOomManager {
 	public DbEntityDescriptor registerEntity(Class type) {
 		DbEntityDescriptor ded = registerType(type);
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
+
 		if (existing != null) {
 			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity class: " + existing.getType());
 		}
