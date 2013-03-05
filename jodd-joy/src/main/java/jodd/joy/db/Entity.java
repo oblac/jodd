@@ -16,7 +16,7 @@ public abstract class Entity {
 	/**
 	 * Sets entity ID.
 	 */
-	public abstract void setEntityId(long id);
+	protected abstract void setEntityId(long id);
 
 	/**
 	 * Returns <code>true</code> if entity is persisted, i.e.
