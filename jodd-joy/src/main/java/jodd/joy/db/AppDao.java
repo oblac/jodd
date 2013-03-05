@@ -94,21 +94,21 @@ public class AppDao {
 	// ---------------------------------------------------------------- update
 
 	/**
+	 * Finds single entity by its id.
+	 */
+	public <E extends Entity> E findById(Class<E> entityType, long id) {
+		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).findOneAndClose(entityType);
+	}
+
+
+	/**
 	 * Updates single property.
 	 */
 	public <E extends Entity> void updateProperty(E entity, String name, Object value) {
 		query(DbEntitySql.updateColumn(entity, name, value)).executeUpdateAndClose();
 	}
 
-
 	// ---------------------------------------------------------------- find
-
-	/**
-	 * Finds single entity by its id.
-	 */
-	public <E extends Entity> E findById(Class<E> entityType, Long id) {
-		return query(DbEntitySql.findById(entityType, id)).findOneAndClose(entityType);
-	}
 
 	/**
 	 * Finds single entity by its id.
@@ -149,8 +149,8 @@ public class AppDao {
 	/**
 	 * Deleted single entity by its id.
 	 */
-	public void deleteById(Class entityType, Long id) {
-		query(DbEntitySql.deleteById(entityType, id)).executeUpdateAndClose();
+	public void deleteById(Class entityType, long id) {
+		query(DbEntitySql.deleteById(entityType, Long.valueOf(id))).executeUpdateAndClose();
 	}
 
 	/**
