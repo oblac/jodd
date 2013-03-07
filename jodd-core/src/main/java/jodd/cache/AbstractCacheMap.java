@@ -125,6 +125,23 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 
 	// ---------------------------------------------------------------- get
 
+	protected int hitCount;
+	protected int missCount;
+
+	/**
+	 * Returns hit count.
+	 */
+	public int getHitCount() {
+		return hitCount;
+	}
+
+	/**
+	 * Returns miss count.
+	 */
+	public int getMissCount() {
+		return missCount;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -134,13 +151,18 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		try {
 			CacheObject<K,V> co = cacheMap.get(key);
 			if (co == null) {
+				missCount++;
 				return null;
 			}
 			if (co.isExpired() == true) {
 				// remove(key);		// can't upgrade the lock
 				cacheMap.remove(key);
+
+				missCount++;
 				return null;
 			}
+
+			hitCount++;
 			return co.getObject();
 		}
 		finally {
