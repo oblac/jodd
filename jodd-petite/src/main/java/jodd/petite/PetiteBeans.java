@@ -93,7 +93,7 @@ public abstract class PetiteBeans {
 				registerScope(scopeType, scope);
 				scopes.put(scopeType, scope);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to create Petite scope: '" + scopeType.getName(), ex);
+				throw new PetiteException("Unable to create Petite scope: " + scopeType.getName(), ex);
 			}
 		}
 		return scope;
@@ -139,7 +139,7 @@ public abstract class PetiteBeans {
 	protected BeanDefinition lookupExistingBeanDefinition(String name) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(name);
 		if (beanDefinition == null) {
-			throw new PetiteException("Bean: '" + name + "' not registered.");
+			throw new PetiteException("Bean not found: " + name);
 		}
 		return beanDefinition;
 	}
@@ -194,7 +194,7 @@ public abstract class PetiteBeans {
 			if (petiteConfig.getDetectDuplicatedBeanNames()) {
 				throw new PetiteException(
 						"Duplicated bean name detected while registering class '" + type.getName() + "'. Petite bean class '" +
-						existing.type.getName() + "' is already registered with the name '" + name + "'.");
+						existing.type.getName() + "' is already registered with the name: " + name);
 			}
 		}
 		if (log.isDebugEnabled()) {
@@ -305,7 +305,7 @@ public abstract class PetiteBeans {
 			constructor = cd.getCtor(paramTypes, true);
 		}
 		if (constructor == null) {
-			throw new PetiteException("Constructor '" + type.getName() + "()' not found.");
+			throw new PetiteException("Constructor not found: " + type.getName());
 		}
 		return injectionPointFactory.createCtorInjectionPoint(constructor, references);
 	}
@@ -326,7 +326,7 @@ public abstract class PetiteBeans {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Field field = cd.getField(property, true);
 		if (field == null) {
-			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
+			throw new PetiteException("Property not found: " + type.getName() + '#' + property);
 		}
 		return injectionPointFactory.createPropertyInjectionPoint(field, references);
 	}
@@ -346,7 +346,7 @@ public abstract class PetiteBeans {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Field field = cd.getField(property, true);
 		if (field == null) {
-			throw new PetiteException("Property '" + type.getName() + '#' + property + "' doesn't exist");
+			throw new PetiteException("Property not found: " + type.getName() + '#' + property);
 		}
 		return injectionPointFactory.createSetInjectionPoint(field);
 	}
@@ -368,7 +368,7 @@ public abstract class PetiteBeans {
 			Method[] methods = cd.getAllMethods(methodName, true);
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
-					throw new PetiteException(methods.length + " suitable methods found as injection points for '" + type.getName() + '#' + methodName + "()'.");
+					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + type.getName() + '#' + methodName);
 				}
 				method = methods[0];
 			}
@@ -376,7 +376,7 @@ public abstract class PetiteBeans {
 			method = cd.getMethod(methodName, paramTypes, true);
 		}
 		if (method == null) {
-			throw new PetiteException("Method '" + type.getName() + '#' + methodName + "()' not found.");
+			throw new PetiteException("Method not found: " + type.getName() + '#' + methodName);
 		}
 		return injectionPointFactory.createMethodInjectionPoint(method, references);
 	}
@@ -403,7 +403,7 @@ public abstract class PetiteBeans {
 		for (i = 0; i < initMethodNames.length; i++) {
 			Method m = cd.getMethod(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
 			if (m == null) {
-				throw new PetiteException("Init method '" + type.getName() + '#' + initMethodNames[i] + "()' not found.");
+				throw new PetiteException("Init method not found: " + type.getName() + '#' + initMethodNames[i]);
 			}
 			initMethodPoints[i] = new InitMethodPoint(m, i, invocationStrategy);
 		}

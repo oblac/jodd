@@ -113,7 +113,7 @@ public class PetiteContainer extends PetiteRegistry {
 		try {
 			bean = def.ctor.constructor.newInstance(args);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to create new bean instance '" + def.type.getName() + "' using constructor: '" + def.ctor.constructor + "'.", ex);
+			throw new PetiteException("Unable to create new bean instance '" + def.type.getName() + "' using constructor: " + def.ctor.constructor, ex);
 		}
 
 		if (def.name != null) {
@@ -166,7 +166,7 @@ public class PetiteContainer extends PetiteRegistry {
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
 					throw new PetiteException("Wiring failed. Beans references: '" +
-							Convert.toString(refName) + "' not found for property '"+ def.type.getName() + '#' + pip.field.getName() + "'.");
+							Convert.toString(refName) + "' not found for property: "+ def.type.getName() + '#' + pip.field.getName());
 				}
 				continue;
 			}
@@ -226,7 +226,7 @@ public class PetiteContainer extends PetiteRegistry {
 				if (value == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
 						throw new PetiteException("Wiring failed. Beans references: '" +
-								Convert.toString(refName) + "' not found for method '" + def.type.getName() + '#' + methodRef.method.getName() + "()'.");
+								Convert.toString(refName) + "' not found for method: " + def.type.getName() + '#' + methodRef.method.getName());
 					}
 				}
 			}
@@ -277,7 +277,7 @@ public class PetiteContainer extends PetiteRegistry {
 			try {
 				BeanUtil.setDeclaredProperty(bean, destination, value);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to set parameter: '" + param + "' to bean '" + def.name + "'.", ex);
+				throw new PetiteException("Unable to set parameter: '" + param + "' to bean: " + def.name, ex);
 			}
 		}
 	}

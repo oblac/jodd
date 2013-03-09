@@ -359,7 +359,7 @@ public class ScopeDataResolver {
 				InOut inout = method.getAnnotation(InOut.class);
 				if (inout != null) {
 					if (in != null) {
-						throw new MadvocException("InOut method annotation cannot be used together with In: " + method.getDeclaringClass() + '#' + method.getName() + "()");
+						throw new MadvocException("InOut method annotation cannot be used together with In: " + method.getDeclaringClass() + '#' + method.getName());
 					}
 					ii = inspectIn(inout, scopeType, propertyName, method.getParameterTypes()[0]);
 					if (ii != null) {
@@ -378,7 +378,7 @@ public class ScopeDataResolver {
 				InOut inout = method.getAnnotation(InOut.class);
 				if (inout != null) {
 					if (out != null) {
-						throw new MadvocException("InOut method annotation cannot be used together with Out: " + method.getDeclaringClass() + '#' + method.getName() + "()");
+						throw new MadvocException("InOut method annotation cannot be used together with Out: " + method.getDeclaringClass() + '#' + method.getName());
 					}
 					oi = inspectOut(inout, scopeType, propertyName, method.getReturnType());
 					if (oi != null) {

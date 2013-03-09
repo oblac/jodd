@@ -270,7 +270,7 @@ public class Madvoc {
 		try {
 			return PropsUtil.createFromClasspath(patterns);
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to load Madvoc parameters from: :" +
+			throw new MadvocException("Unable to load Madvoc parameters from: " +
 					Convert.toString(patterns) + ".properties': " + ex.toString(), ex);
 		}
 	}

@@ -39,7 +39,7 @@ public class InitMethodResolver {
 				continue;
 			}
 			if (method.getParameterTypes().length > 0) {
-				throw new PetiteException("Arguments are not allowed for Petite init method: " + type.getName() + '#' + method.getName() + "().");
+				throw new PetiteException("Arguments are not allowed for Petite init method: " + type.getName() + '#' + method.getName());
 			}
 			int order = petiteInitMethod.order();
 			list.add(new InitMethodPoint(method, order, petiteInitMethod.invoke()));

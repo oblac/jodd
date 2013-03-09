@@ -109,19 +109,11 @@ final class MethodFinder extends EmptyClassVisitor {
 		if (paramExtractor == null) {
 			return MethodParameter.EMPTY_ARRAY;
 		}
-		checkIfDebugInfoIsPresent();
-		return paramExtractor.getMethodParameters();
-	}
-
-
-	/**
-	 * Checks if debug info is present.
-	 */
-	private void checkIfDebugInfoIsPresent() {
 		if (paramExtractor.debugInfoPresent == false) {
-			throw new ParamoException("Parameter names not available for method: '"
-					+ declaringClass.getName() + '#' + methodName + "'.");
+			throw new ParamoException("Parameter names not available for method: "
+					+ declaringClass.getName() + '#' + methodName);
 		}
+		return paramExtractor.getMethodParameters();
 	}
 
 }

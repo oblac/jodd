@@ -46,8 +46,8 @@ public class InjectionPointFactory {
 			references = methodOrCtorDefaultReferences(method, method.getParameterTypes());
 		}
 		if (method.getParameterTypes().length != references.length) {
-			throw new PetiteException("Different number of method parameters and references for: '" +
-					method.getDeclaringClass().getName() + '#' + method.getName()+ "()'.");
+			throw new PetiteException("Different number of method parameters and references for: " +
+					method.getDeclaringClass().getName() + '#' + method.getName());
 		}
 		removeDuplicateNames(references);
 		return new MethodInjectionPoint(method, references);

@@ -28,8 +28,8 @@ public class SetInjectionPoint<T> {
 
 		this.targetClass = ReflectUtil.getComponentType(field.getGenericType());
 		if (targetClass == null) {
-			throw new PetiteException("Unknown Petite set component type '" +
-					field.getDeclaringClass().getSimpleName() + '.' + field.getName() + "'.");
+			throw new PetiteException("Unknown Petite set component type " +
+					field.getDeclaringClass().getSimpleName() + '.' + field.getName());
 		}
 	}
 

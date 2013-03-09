@@ -41,8 +41,8 @@ public class ResultsManager {
 		ActionResult existing = lookup(result.getType());
 		if (existing != null) {
 			if (existing.getClass().equals(resultClass) == false) {
-				throw new MadvocException("Madvoc result with the same result type '" + result.getType() + "' already registered: '"
-						+ resultClass.getSimpleName() + "'.");
+				throw new MadvocException("Madvoc result with the same result type '" + result.getType() + "' already registered: "
+						+ resultClass.getSimpleName());
 			}
 			result = existing;
 		} else {

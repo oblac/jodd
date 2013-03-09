@@ -129,7 +129,7 @@ public class ActionsManager {
 	public ActionConfig register(Class actionClass, String actionMethod, String actionPath) {
 		Method method = ClassIntrospector.lookup(actionClass).getMethod(actionMethod, false);
 		if (method == null) {
-			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method '" + actionMethod + "'.");
+			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method: " + actionMethod);
 		}
 		return registerAction(actionClass, method, actionPath);
 	}
