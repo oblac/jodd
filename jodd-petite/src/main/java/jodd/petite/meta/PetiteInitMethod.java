@@ -8,6 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
+import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
+
 /**
  * Points to the Petite bean implementation. If used on an interfaces, Petite will
  * resolve specified implementation. If used on package, all interfaces marked with PetiteBean
@@ -26,8 +28,9 @@ public @interface PetiteInitMethod {
 	int order() default 0;
 
 	/**
-	 * Indicates that method will be initialized right after the wiring and <b>before</b>
-	 * parameters setup.
+	 * Defines init method invocation strategy, i.e. moment in beans lifecycle when
+	 * init methods will be invoked.
 	 */
-	boolean firstOff() default false;
+	InitMethodInvocationStrategy invoke() default POST_INITIALIZE;
+
 }

@@ -9,6 +9,8 @@ import jodd.madvoc.MadvocException;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
 
+import static jodd.petite.meta.InitMethodInvocationStrategy.AFTER_WIRING;
+
 /**
  * Resolves action configuration from action path on each request.
  * Should be built with great performances.
@@ -27,7 +29,7 @@ public class ActionPathMapper {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	@PetiteInitMethod(order = 1, firstOff = true)
+	@PetiteInitMethod(order = 1, invoke = AFTER_WIRING)
 	void actionPathMapperInit() {
 		String[] d = madvocConfig.getDefaultActionMethodNames();
 		String method1 = null;

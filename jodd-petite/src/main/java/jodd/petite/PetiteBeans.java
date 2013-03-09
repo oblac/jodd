@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import jodd.util.ReflectUtil;
@@ -294,7 +295,7 @@ public abstract class PetiteBeans {
 		Constructor constructor = null;
 		if (paramTypes == null) {
 			Constructor[] ctors = cd.getAllCtors(true);
-			if (ctors.length > 0) {
+			if (ctors != null && ctors.length > 0) {
 				if (ctors.length > 1) {
 					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + type.getName());
 				}
@@ -365,7 +366,7 @@ public abstract class PetiteBeans {
 		Method method = null;
 		if (paramTypes == null) {
 			Method[] methods = cd.getAllMethods(methodName, true);
-			if (methods.length > 0) {
+			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
 					throw new PetiteException(methods.length + " suitable methods found as injection points for '" + type.getName() + '#' + methodName + "()'.");
 				}
@@ -383,38 +384,30 @@ public abstract class PetiteBeans {
 	/**
 	 * Single point of init method registration.
 	 */
-	protected void registerPetiteInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
+	protected void registerPetiteInitMethods(String beanName, String[] initMethodNames, InitMethodInvocationStrategy invocationStrategy) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, beforeMethodNames, afterMethodNames);
+		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, initMethodNames, invocationStrategy);
 		beanDefinition.addInitMethodPoints(methods);
 	}
 
-	private InitMethodPoint[] defineInitMethods(Class type, String[] beforeMethodNames, String[] afterMethodNames) {
+	private InitMethodPoint[] defineInitMethods(Class type, String[] initMethodNames, InitMethodInvocationStrategy invocationStrategy) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		if (beforeMethodNames == null) {
-			beforeMethodNames = StringPool.EMPTY_ARRAY;
+		if (initMethodNames == null) {
+			initMethodNames = StringPool.EMPTY_ARRAY;
 		}
-		if (afterMethodNames == null) {
-			afterMethodNames = StringPool.EMPTY_ARRAY;
-		}
-		int total = beforeMethodNames.length + afterMethodNames.length;
-		InitMethodPoint[] methods = new InitMethodPoint[total];
+
+		int total = initMethodNames.length;
+		InitMethodPoint[] initMethodPoints = new InitMethodPoint[total];
+
 		int i;
-		for (i = 0; i < beforeMethodNames.length; i++) {
-			Method m = cd.getMethod(beforeMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+		for (i = 0; i < initMethodNames.length; i++) {
+			Method m = cd.getMethod(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
 			if (m == null) {
-				throw new PetiteException("Init method '" + type.getName() + '#' + beforeMethodNames[i] + "()' not found.");
+				throw new PetiteException("Init method '" + type.getName() + '#' + initMethodNames[i] + "()' not found.");
 			}
-			methods[i] = new InitMethodPoint(m, i, true);
+			initMethodPoints[i] = new InitMethodPoint(m, i, invocationStrategy);
 		}
-		for (int j = 0; j < afterMethodNames.length; j++) {
-			Method m = cd.getMethod(afterMethodNames[j], ReflectUtil.NO_PARAMETERS, true);
-			if (m == null) {
-				throw new PetiteException("Init method '" + type.getName() + '#' + afterMethodNames[j] + "()' not found.");
-			}
-			methods[i + j] = new InitMethodPoint(m, i + j, true);
-		}
-		return methods;
+		return initMethodPoints;
 	}
 
 	// ---------------------------------------------------------------- statistics

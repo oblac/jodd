@@ -2,6 +2,8 @@
 
 package jodd.petite;
 
+import jodd.petite.meta.InitMethodInvocationStrategy;
+
 import java.lang.reflect.Method;
 
 /**
@@ -9,20 +11,16 @@ import java.lang.reflect.Method;
  */
 public class InitMethodPoint implements Comparable {
 
-	public static final InitMethodPoint[] EMPTY = new InitMethodPoint[0]; 
+	public static final InitMethodPoint[] EMPTY = new InitMethodPoint[0];
 
 	public final Method method;
 	public final int order;
-	public final boolean firstOff;
+	public final InitMethodInvocationStrategy invocationStrategy;
 
-	public InitMethodPoint(Method method) {
-		this(method, 0, false);
-	}
-
-	public InitMethodPoint(Method method, int order, boolean firstOff) {
+	public InitMethodPoint(Method method, int order, InitMethodInvocationStrategy invocationStrategy) {
 		this.method = method;
 		this.order = order == 0 ? (Integer.MAX_VALUE >> 1) : (order < 0 ? Integer.MAX_VALUE + order: order);
-		this.firstOff = firstOff;
+		this.invocationStrategy = invocationStrategy;
 	}
 
 	public int compareTo(Object other) {

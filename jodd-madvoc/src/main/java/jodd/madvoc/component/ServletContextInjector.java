@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
+import static jodd.petite.meta.InitMethodInvocationStrategy.AFTER_WIRING;
+
 /**
  * Set of injectors that can inject/outject values using various servlets 'global' scopes.
  * They can be used for {@link jodd.madvoc.interceptor.ActionInterceptor interceptors}
@@ -22,7 +24,7 @@ public class ServletContextInjector {
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected ServletContextScopeInjector servletContextScopeInjector;
 
-	@PetiteInitMethod(order = 1, firstOff = true)
+	@PetiteInitMethod(order = 1, invoke = AFTER_WIRING)
 	void createInjectors() {
 		applicationScopeInjector = new ApplicationScopeInjector();
 		servletContextScopeInjector = new ServletContextScopeInjector();

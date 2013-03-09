@@ -7,6 +7,7 @@ import jodd.petite.data.PojoBean;
 import jodd.petite.data.SomeService;
 import org.junit.Test;
 
+import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 import static org.junit.Assert.*;
 
 public class ManualTest {
@@ -21,7 +22,7 @@ public class ManualTest {
 		pc.registerCtorInjectionPoint("pojo");
 		pc.registerPropertyInjectionPoint("pojo", "service", "someService");
 		pc.registerMethodInjectionPoint("pojo", "injectService", "someService");
-		pc.registerInitMethods("pojo", "init");
+		pc.registerInitMethods("pojo", new String[] {"init"}, POST_INITIALIZE);
 
 		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
 		SomeService ss = (SomeService) pc.getBean("someService");
@@ -83,7 +84,7 @@ public class ManualTest {
 		pc.registerCtorInjectionPoint("pojo");
 		pc.registerPropertyInjectionPoint("pojo", "service", "someService");
 		pc.registerMethodInjectionPoint("pojo", "injectService", "someService");
-		pc.registerInitMethods("pojo", "init");
+		pc.registerInitMethods("pojo", new String[] {"init"}, POST_INITIALIZE);
 
 		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
 		SomeService ss = (SomeService) pc.getBean("someService");

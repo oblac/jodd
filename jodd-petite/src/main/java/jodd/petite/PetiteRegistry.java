@@ -2,6 +2,7 @@
 
 package jodd.petite;
 
+import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.props.Props;
 
@@ -183,14 +184,8 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	/**
 	 * Manually registers init methods.
 	 */
-	public void registerInitMethods(String beanName, String... methodNames) {
-		registerPetiteInitMethods(beanName, null, methodNames);
-	}
-	/**
-	 * Manually registers init methods.
-	 */
-	public void registerInitMethods(String beanName, String[] beforeMethodNames, String[] afterMethodNames) {
-		registerPetiteInitMethods(beanName, beforeMethodNames, afterMethodNames);
+	public void registerInitMethods(String beanName, String[] initMethods, InitMethodInvocationStrategy invocationStrategy) {
+		registerPetiteInitMethods(beanName, initMethods, invocationStrategy);
 	}
 
 	// ---------------------------------------------------------------- remove

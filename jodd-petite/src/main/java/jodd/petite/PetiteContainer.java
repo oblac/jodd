@@ -5,6 +5,7 @@ package jodd.petite;
 import jodd.Jodd;
 import jodd.bean.BeanUtil;
 import jodd.petite.config.PetiteConfigurator;
+import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.SingletonScope;
 
 import java.util.Collection;
@@ -99,7 +100,9 @@ public class PetiteContainer extends PetiteRegistry {
 				args[i] = getBean(def.ctor.references[i], acquiredBeans);
 				if (args[i] == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
-						throw new PetiteException("Wiring constructor failed. Reference '" + def.ctor.references[i] + "' not found for constructor '" + def.ctor.constructor + "'.");
+						throw new PetiteException(
+								"Wiring constructor failed. References '" + Convert.toString(def.ctor.references[i]) +
+								"' not found for constructor: " + def.ctor.constructor);
 					}
 				}
 			}
@@ -240,12 +243,12 @@ public class PetiteContainer extends PetiteRegistry {
 	/**
 	 * Invokes all init methods.
 	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def, boolean fireFirstOff) {
+	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		if (def.initMethods == null) {
 			def.initMethods = resolveInitMethods(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
-			if (fireFirstOff != initMethod.firstOff) {
+			if (invocationStrategy != initMethod.invocationStrategy) {
 				continue;
 			}
 			try {
@@ -358,17 +361,18 @@ public class PetiteContainer extends PetiteRegistry {
 	 * Wires bean, injects parameters and invokes init methods.
 	 */
 	protected void wireBeanInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean, Map<String, Object> acquiredBeans) {
+		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
 		wireBean(bean, def, acquiredBeans);
-		invokeInitMethods(bean, def, true);
+		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_DEFINE);
 		injectParams(bean, def);
-		invokeInitMethods(bean, def, false);
+		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_INITIALIZE);
 	}
 
 	// ---------------------------------------------------------------- wire
 
 	/**
 	 * Wires provided bean with the container using default wiring mode.
-	 * Bean is not registered. 
+	 * Bean is <b>not</b> registered.
 	 */
 	public void wire(Object bean) {
 		wire(bean, null);
@@ -376,7 +380,7 @@ public class PetiteContainer extends PetiteRegistry {
 
 	/**
 	 * Wires provided bean with the container and optionally invokes init methods.
-	 * Bean is not registered.
+	 * Bean is <b>not</b> registered.
 	 */
 	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
@@ -501,6 +505,5 @@ public class PetiteContainer extends PetiteRegistry {
 			throw new PetiteException("Unable to set bean property: " + name, ex);
 		}
 	}
-
 
 }

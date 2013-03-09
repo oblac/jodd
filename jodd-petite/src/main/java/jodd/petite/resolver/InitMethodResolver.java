@@ -32,6 +32,7 @@ public class InitMethodResolver {
 		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
 		ClassDescriptor cd = new ClassDescriptor(type, false);
 		Method[] allMethods = cd.getAllMethods(true);
+
 		for (Method method : allMethods) {
 			PetiteInitMethod petiteInitMethod = method.getAnnotation(PetiteInitMethod.class);
 			if (petiteInitMethod == null) {
@@ -41,7 +42,7 @@ public class InitMethodResolver {
 				throw new PetiteException("Arguments are not allowed for Petite init method: " + type.getName() + '#' + method.getName() + "().");
 			}
 			int order = petiteInitMethod.order();
-			list.add(new InitMethodPoint(method, order, petiteInitMethod.firstOff()));
+			list.add(new InitMethodPoint(method, order, petiteInitMethod.invoke()));
 		}
 		if (list.isEmpty()) {
 			methods = InitMethodPoint.EMPTY;
@@ -53,6 +54,9 @@ public class InitMethodResolver {
 		return methods;
 	}
 
+	/**
+	 * Removes all init methods for given type.
+	 */
 	public void remove(Class type) {
 		initMethods.remove(type);
 	}

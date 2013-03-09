@@ -10,6 +10,7 @@ import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
 import org.junit.Test;
 
+import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 import static org.junit.Assert.*;
 
 public class MiscTest {
@@ -30,7 +31,7 @@ public class MiscTest {
 		assertEquals(1, pc.getTotalBeans());
 		pc.registerBean(Foo.class);
 		pc.registerPropertyInjectionPoint("biz", "foo");
-		pc.registerInitMethods("biz", "init", "init2");
+		pc.registerInitMethods("biz", new String[] {"init", "init2"}, POST_INITIALIZE);
 
 		assertEquals(2, pc.getTotalBeans());
 		bizI = pc.getBean("biz");
@@ -91,7 +92,7 @@ public class MiscTest {
 
 		Zoo zoo = (Zoo) pc.getBean("zoo");
 		assertNotNull(zoo.boo);
-		assertSame(zoo, boo.zoo);        // circular dependecy
+		assertSame(zoo, boo.zoo);        // circular dependency
 		assertSame(boo, zoo.boo);
 
 		Boo boo2 = (Boo) pc.getBean("boo");
