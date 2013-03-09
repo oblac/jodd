@@ -9,7 +9,7 @@ import jodd.madvoc.MadvocException;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
 
-import static jodd.petite.meta.InitMethodInvocationStrategy.AFTER_WIRING;
+import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
 
 /**
  * Resolves action configuration from action path on each request.
@@ -29,7 +29,7 @@ public class ActionPathMapper {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	@PetiteInitMethod(order = 1, invoke = AFTER_WIRING)
+	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void actionPathMapperInit() {
 		String[] d = madvocConfig.getDefaultActionMethodNames();
 		String method1 = null;

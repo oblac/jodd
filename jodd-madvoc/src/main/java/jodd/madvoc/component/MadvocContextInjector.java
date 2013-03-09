@@ -8,7 +8,7 @@ import jodd.petite.PetiteContainer;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.petite.meta.PetiteInject;
 
-import static jodd.petite.meta.InitMethodInvocationStrategy.AFTER_WIRING;
+import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
 
 /**
  * Set of injectors that can inject/outject values using various Madvoc 'global' scopes.
@@ -25,7 +25,7 @@ public class MadvocContextInjector {
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
 	protected MadvocParamsInjector madvocParamsInjector;
 
-	@PetiteInitMethod(order = 1, invoke = AFTER_WIRING)
+	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
 		// need to have init method, so it can be called after the madpc is injected
 		madvocContextScopeInjector = new MadvocContextScopeInjector(madpc);
