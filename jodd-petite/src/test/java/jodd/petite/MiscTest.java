@@ -31,7 +31,7 @@ public class MiscTest {
 		assertEquals(1, pc.getTotalBeans());
 		pc.registerBean(Foo.class);
 		pc.registerPropertyInjectionPoint("biz", "foo");
-		pc.registerInitMethods("biz", new String[] {"init", "init2"}, POST_INITIALIZE);
+		pc.registerInitMethods("biz", POST_INITIALIZE, "init", "init2");
 
 		assertEquals(2, pc.getTotalBeans());
 		bizI = pc.getBean("biz");

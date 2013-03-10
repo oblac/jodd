@@ -384,7 +384,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of init method registration.
 	 */
-	protected void registerPetiteInitMethods(String beanName, String[] initMethodNames, InitMethodInvocationStrategy invocationStrategy) {
+	protected void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, initMethodNames, invocationStrategy);
 		beanDefinition.addInitMethodPoints(methods);

@@ -163,8 +163,8 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	/**
 	 * Manually registers init methods.
 	 */
-	public void registerInitMethods(String beanName, String[] initMethods, InitMethodInvocationStrategy invocationStrategy) {
-		registerPetiteInitMethods(beanName, initMethods, invocationStrategy);
+	public void registerInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethods) {
+		registerPetiteInitMethods(beanName, invocationStrategy, initMethods);
 	}
 
 	// ---------------------------------------------------------------- remove

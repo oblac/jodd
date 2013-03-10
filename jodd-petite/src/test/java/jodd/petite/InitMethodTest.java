@@ -26,7 +26,7 @@ public class InitMethodTest {
 		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", new String[] {"init"}, POST_CONSTRUCT);
+		petiteContainer.registerInitMethods("foo", POST_CONSTRUCT, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -51,7 +51,7 @@ public class InitMethodTest {
 		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", new String[] {"init"}, POST_DEFINE);
+		petiteContainer.registerInitMethods("foo", POST_DEFINE, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -76,7 +76,7 @@ public class InitMethodTest {
 		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", new String[] {"init"}, POST_INITIALIZE);
+		petiteContainer.registerInitMethods("foo", POST_INITIALIZE, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -101,9 +101,9 @@ public class InitMethodTest {
 		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", new String[] {"init1"}, POST_CONSTRUCT);
-		petiteContainer.registerInitMethods("foo", new String[] {"init2"}, POST_DEFINE);
-		petiteContainer.registerInitMethods("foo", new String[] {"init3"}, POST_INITIALIZE);
+		petiteContainer.registerInitMethods("foo", POST_CONSTRUCT, "init1");
+		petiteContainer.registerInitMethods("foo", POST_DEFINE, "init2");
+		petiteContainer.registerInitMethods("foo", POST_INITIALIZE, "init3");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
