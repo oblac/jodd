@@ -25,7 +25,8 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	// ---------------------------------------------------------------- bean
 
 	/**
-	 * Registers Petite bean class.
+	 * Registers Petite bean class. Name, scope type and wiring mode
+	 * are resolved from the class.
 	 */
 	public void registerBean(Class type) {
 		registerPetiteBean(null, type, null, null);
@@ -89,6 +90,9 @@ public abstract class PetiteRegistry extends PetiteBeans {
 		definePetiteBean(name, type, scopeType, null);
 	}
 
+	/**
+	 * Defines bean.
+	 */
 	public void defineBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		definePetiteBean(name, type, scopeType, wiringMode);
 	}
@@ -104,20 +108,9 @@ public abstract class PetiteRegistry extends PetiteBeans {
 
 	/**
 	 * Registers constructor injection point.
-	 */
-	public void registerCtorInjectionPoint(String beanName, Class[] paramTypes) {
-		registerPetiteCtorInjectionPoint(beanName, paramTypes, null);
-	}
-	
-	/**
-	 * Registers constructor injection point.
-	 */
-	public void registerCtorInjectionPoint(String beanName, String... references) {
-		registerPetiteCtorInjectionPoint(beanName, null, references);
-	}
-
-	/**
-	 * Registers constructor injection point.
+	 * @param beanName bean name
+	 * @param paramTypes optional constructor parameter types
+	 * @param references optional explicit references for injection
 	 */
 	public void registerCtorInjectionPoint(String beanName, Class[] paramTypes, String... references) {
 		registerPetiteCtorInjectionPoint(beanName, paramTypes, references);
@@ -161,21 +154,7 @@ public abstract class PetiteRegistry extends PetiteBeans {
 	/**
 	 * Registers method injection point.
 	 */
-	public void registerMethodInjectionPoint(String beanName, String methodName, String... references) {
-		registerPetiteMethodInjectionPoint(beanName, methodName, null, references);
-	}
-
-	/**
-	 * Registers method injection point.
-	 */
-	public void registerMethodInjectionPoint(String beanName, String methodName, Class[] arguments) {
-		registerPetiteMethodInjectionPoint(beanName, methodName, arguments, null);
-	}
-
-	/**
-	 * Registers method injection point.
-	 */
-	public void registerMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
+	public void registerMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String... references) {
 		registerPetiteMethodInjectionPoint(beanName, methodName, arguments, references);
 	}
 

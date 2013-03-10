@@ -145,7 +145,7 @@ public class ActionsManager {
 	// ---------------------------------------------------------------- registration
 
 	/**
-	 * Registration single point. Optionally, if action path with the same name already exist,
+	 * Registration main point. Optionally, if action path with the same name already exist,
 	 * exception will be thrown. Returns created {@link ActionConfig}.
 	 */
 	protected ActionConfig registerAction(Class actionClass, Method actionMethod, String actionPath) {

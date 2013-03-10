@@ -152,7 +152,7 @@ public class PetiteContainer extends PetiteRegistry {
 			Object value = null;
 
 			if (mixing) {
-				BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
+				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
 
 				if (refBeanDefinition != null) {
 					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
@@ -211,7 +211,7 @@ public class PetiteContainer extends PetiteRegistry {
 				boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
 				if (mixing) {
-					BeanDefinition refBeanDefinition = lookupBeanDefinition(refName);
+					BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
 
 					if (refBeanDefinition != null) {
 						value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);

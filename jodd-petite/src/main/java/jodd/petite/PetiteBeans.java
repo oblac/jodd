@@ -123,7 +123,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Lookups for first founded {@link BeanDefinition bean definition}.
 	 */
-	protected BeanDefinition lookupBeanDefinition(String[] names) {
+	protected BeanDefinition lookupBeanDefinitions(String... names) {
 		for (String name : names) {
 			BeanDefinition beanDefinition = lookupBeanDefinition(name);
 			if (beanDefinition != null) {
@@ -162,11 +162,11 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- register beans
 
 	/**
-	 * Single point of bean registration. The following rules are applied:
+	 * Main point of bean registration. The following rules are applied:
 	 * <ul>
-	 * <li>if name is missing, it will be resolved from the class (name or annotation)
-	 * <li>if wiring mode is missing, it will be resolved from the class (annotation or default one)
-	 * <li>if scope type is missing, it will be resolved from the class (annotation or default one)
+	 * <li>if <code>name</code> is missing, it will be resolved from the class (name or annotation)
+	 * <li>if <code>wiringMode</code> is missing, it will be resolved from the class (annotation or default one)
+	 * <li>if <code>scopeType</code> is missing, it will be resolved from the class (annotation or default one)
 	 */
 	protected BeanDefinition registerPetiteBean(
 			String name,
@@ -218,7 +218,7 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Single point of bean definition.
+	 * Main point of bean definition.
 	 */
 	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
@@ -282,7 +282,7 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- injection points
 
 	/**
-	 * Single point of constructor injection point registration.
+	 * Main point of constructor injection point registration.
 	 */
 	protected void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
@@ -311,7 +311,7 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Single point of property injection point registration.
+	 * Main point of property injection point registration.
 	 */
 	protected void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
@@ -332,7 +332,7 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Single point of property injection point registration.
+	 * Main point of property injection point registration.
 	 */
 	protected void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
@@ -352,7 +352,7 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Single point of method injection point registration.
+	 * Main point of method injection point registration.
 	 */
 	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
@@ -382,7 +382,7 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Single point of init method registration.
+	 * Main point of init method registration.
 	 */
 	protected void registerPetiteInitMethods(String beanName, String[] initMethodNames, InitMethodInvocationStrategy invocationStrategy) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);

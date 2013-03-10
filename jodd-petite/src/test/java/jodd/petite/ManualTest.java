@@ -21,7 +21,7 @@ public class ManualTest {
 
 		pc.registerCtorInjectionPoint("pojo");
 		pc.registerPropertyInjectionPoint("pojo", "service", "someService");
-		pc.registerMethodInjectionPoint("pojo", "injectService", "someService");
+		pc.registerMethodInjectionPoint("pojo", "injectService", null, "someService");
 		pc.registerInitMethods("pojo", new String[] {"init"}, POST_INITIALIZE);
 
 		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
@@ -83,7 +83,7 @@ public class ManualTest {
 
 		pc.registerCtorInjectionPoint("pojo");
 		pc.registerPropertyInjectionPoint("pojo", "service", "someService");
-		pc.registerMethodInjectionPoint("pojo", "injectService", "someService");
+		pc.registerMethodInjectionPoint("pojo", "injectService", null, "someService");
 		pc.registerInitMethods("pojo", new String[] {"init"}, POST_INITIALIZE);
 
 		PojoBean pojoBean = (PojoBean) pc.getBean("pojo");
