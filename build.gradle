@@ -131,6 +131,7 @@ configure(javaModules()) {
 	}
 
 	javadoc {
+		exclude '**/asm4/**'
 		afterEvaluate {
 			configure(options) {
 				windowTitle 'Jodd API Documentation'
@@ -201,6 +202,7 @@ task javadocAll(type: Javadoc) {
 	maxMemory '512m'
 
 	source allMainSourceSets.allJava
+	exclude '**/asm4/**'
 
 	destinationDir = file("$buildDir/reports/javadoc")
 	classpath = files(allMainSourceSets.compileClasspath)
