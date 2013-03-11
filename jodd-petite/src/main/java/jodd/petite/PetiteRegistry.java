@@ -167,6 +167,15 @@ public abstract class PetiteRegistry extends PetiteBeans {
 		registerPetiteInitMethods(beanName, invocationStrategy, initMethods);
 	}
 
+	// ---------------------------------------------------------------- factory
+
+	/**
+	 * Registers method provider.
+	 */
+	public void registerProvider(String providerName, String beanName, String methodName, Class[] arguments) {
+		registerPetiteProvider(providerName, beanName, methodName, arguments);
+	}
+
 	// ---------------------------------------------------------------- remove
 
 	/**

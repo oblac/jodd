@@ -12,11 +12,11 @@ public class PropertyInjectionPoint {
 	public static final PropertyInjectionPoint[] EMPTY = new PropertyInjectionPoint[0]; 
 
 	public final Field field;
-	public final String[] reference;
+	public final String[] references;
 
-	PropertyInjectionPoint(Field field, String[] reference) {
+	PropertyInjectionPoint(Field field, String[] references) {
 		this.field = field;
-		this.reference = reference;
+		this.references = references;
 	}
 
 }

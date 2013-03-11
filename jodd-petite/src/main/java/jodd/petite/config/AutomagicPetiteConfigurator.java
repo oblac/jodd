@@ -96,4 +96,5 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	protected Class loadClass(String className) throws ClassNotFoundException {
 		return ClassLoaderUtil.loadClass(className);
 	}
+
 }

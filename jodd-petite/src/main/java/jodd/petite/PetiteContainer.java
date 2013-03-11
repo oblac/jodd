@@ -83,7 +83,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected Object newBeanInstance(BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.ctor == null) {
-			def.ctor = resolveCtorInjectionPoint(def.type);
+			def.ctor = petiteResolvers.getCtorResolver().resolve(def.type);
 		}
 
 		// other ctors
@@ -141,18 +141,18 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
-			def.properties = resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+			def.properties = petiteResolvers.getPropertyResolver().resolve(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 
 		boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
 
 		for (PropertyInjectionPoint pip : def.properties) {
-			String[] refName = pip.reference;
+			String[] refNames = pip.references;
 
 			Object value = null;
 
 			if (mixing) {
-				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refName);
+				BeanDefinition refBeanDefinition = lookupBeanDefinitions(refNames);
 
 				if (refBeanDefinition != null) {
 					value = scopedProxyManager.lookupValue(this, def, refBeanDefinition);
@@ -160,13 +160,13 @@ public class PetiteContainer extends PetiteRegistry {
 			}
 
 			if (value == null) {
-				value = getBean(refName, acquiredBeans);
+				value = getBean(refNames, acquiredBeans);
 			}
 
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
 					throw new PetiteException("Wiring failed. Beans references: '" +
-							Convert.toString(refName) + "' not found for property: "+ def.type.getName() + '#' + pip.field.getName());
+							Convert.toString(refNames) + "' not found for property: "+ def.type.getName() + '#' + pip.field.getName());
 				}
 				continue;
 			}
@@ -175,7 +175,7 @@ public class PetiteContainer extends PetiteRegistry {
 
 		// sets
 		if (def.sets == null) {
-			def.sets = resolveCollectionInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+			def.sets = petiteResolvers.getSetResolver().resolve(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (SetInjectionPoint sip : def.sets) {
 
@@ -199,7 +199,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireMethods(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.methods == null) {
-			def.methods = resolveMethodInjectionPoint(def.type);
+			def.methods = petiteResolvers.getMethodResolver().resolve(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
 			String[][] refNames = methodRef.references;
@@ -245,7 +245,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		if (def.initMethods == null) {
-			def.initMethods = resolveInitMethods(bean);
+			def.initMethods = petiteResolvers.getInitMethodResolver().resolve(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {
@@ -343,6 +343,12 @@ public class PetiteContainer extends PetiteRegistry {
 		// Lookup for registered bean definition.
 		BeanDefinition def = lookupBeanDefinition(name);
 		if (def == null) {
+
+			// try provider
+			ProviderDefinition providerDefinition = lookupProviderDefinition(name);
+			if (providerDefinition != null) {
+				return invokeProvider(providerDefinition);
+			}
 			return null;
 		}
 
@@ -412,6 +418,34 @@ public class PetiteContainer extends PetiteRegistry {
 		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 		return (E) bean;
 	}
+
+	// ---------------------------------------------------------------- providers
+
+	/**
+	 * Invokes provider to get a bean.
+	 */
+	protected Object invokeProvider(ProviderDefinition provider) {
+		if (provider.method != null) {
+
+			Object bean;
+			if (provider.beanName != null) {
+				// instance factory method
+				bean = getBean(provider.beanName);
+			} else {
+				// static factory method
+				bean = null;
+			}
+			try {
+				return provider.method.invoke(bean);
+			} catch (Exception ex) {
+				throw new PetiteException("Unable to invoked provider method: " + provider.method.getName(), ex);
+			}
+		}
+
+		throw new PetiteException("Invalid provider");
+	}
+
+
 
 	// ---------------------------------------------------------------- add
 

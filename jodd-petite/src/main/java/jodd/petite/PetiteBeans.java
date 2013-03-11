@@ -5,10 +5,12 @@ package jodd.petite;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.meta.InitMethodInvocationStrategy;
+import jodd.petite.meta.PetiteProvider;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,11 @@ public abstract class PetiteBeans {
 	 * Map of all bean scopes.
 	 */
 	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<Class<? extends Scope>, Scope>();
+
+	/**
+	 * Map of all providers.
+	 */
+	protected final Map<String, ProviderDefinition> providers = new HashMap<String, ProviderDefinition>();
 
 	/**
 	 * Map of all bean collections.
@@ -210,10 +217,14 @@ public abstract class PetiteBeans {
 		if ((type != null) && (type.isInterface() == true)) {
 			throw new PetiteException("Unable to register interface: " + type.getName());
 		}
+
 		// register
 		Scope scope = resolveScope(scopeType);
 		BeanDefinition beanDefinition = new BeanDefinition(name, type, scope, wiringMode);
 		beans.put(name, beanDefinition);
+
+		// providers
+		registerPetiteProviders(beanDefinition);
 		return beanDefinition;
 	}
 
@@ -222,7 +233,7 @@ public abstract class PetiteBeans {
 	 */
 	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
-		def.ctor = resolveCtorInjectionPoint(type);
+		def.ctor = petiteResolvers.getCtorResolver().resolve(type);
 		def.properties = PropertyInjectionPoint.EMPTY;
 		def.methods = MethodInjectionPoint.EMPTY;
 		def.initMethods = InitMethodPoint.EMPTY;
@@ -410,6 +421,67 @@ public abstract class PetiteBeans {
 		return initMethodPoints;
 	}
 
+	// ---------------------------------------------------------------- providers
+
+	/**
+	 * Lookups for provider definition. Returns <code>null</code> if not found.
+	 */
+	protected ProviderDefinition lookupProviderDefinition(String name) {
+		return providers.get(name);
+	}
+
+	/**
+	 * Registers all providers for given bean.
+	 */
+	protected void registerPetiteProviders(BeanDefinition beanDefinition) {
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		Method[] methods = cd.getAllMethods(true);
+
+		for (Method method : methods) {
+			PetiteProvider petiteProvider = method.getAnnotation(PetiteProvider.class);
+			if (petiteProvider == null) {
+				continue;
+			}
+
+			String providerName = petiteProvider.value();
+
+			if (StringUtil.isBlank(providerName)) {
+				providerName = method.getName();
+			}
+
+			registerPetiteProvider(providerName, beanDefinition.name, method);
+		}
+	}
+
+	/**
+	 * Registers instance method provider.
+	 */
+	protected void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
+		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
+
+		if (beanDefinition == null) {
+			throw new PetiteException("Bean not found: " + beanName);
+		}
+
+		Class beanType = beanDefinition.type;
+
+		ClassDescriptor cd = ClassIntrospector.lookup(beanType);
+		Method method = cd.getMethod(methodName, arguments, true);
+
+		if (method == null) {
+			throw new PetiteException("Provider method not bound: " + methodName);
+		}
+
+		registerPetiteProvider(providerName, beanName, method);
+	}
+
+	protected void registerPetiteProvider(String providerName, String beanName, Method method) {
+		ProviderDefinition providerDefinition = new ProviderDefinition(beanName, method);
+
+		providers.put(providerName, providerDefinition);
+	}
+
+
 	// ---------------------------------------------------------------- statistics
 
 	/**
@@ -431,32 +503,6 @@ public abstract class PetiteBeans {
 	 */
 	public Iterator<BeanDefinition> beansIterator() {
 		return beans.values().iterator();
-	}
-
-	// ---------------------------------------------------------------- resolvers
-
-	protected CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
-		return petiteResolvers.getCtorResolver().resolve(type);
-	}
-
-	protected CtorInjectionPoint resolveDefaultCtorInjectionPoint(Class type) {
-		return petiteResolvers.getCtorResolver().resolveDefault(type);
-	}
-
-	protected PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
-		return petiteResolvers.getPropertyResolver().resolve(type, autowire);
-	}
-
-	protected SetInjectionPoint[] resolveCollectionInjectionPoint(Class type, boolean autowire) {
-		return petiteResolvers.getSetResolver().resolve(type, autowire);
-	}
-
-	protected MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
-		return petiteResolvers.getMethodResolver().resolve(type);
-	}
-
-	protected InitMethodPoint[] resolveInitMethods(Object bean) {
-		return petiteResolvers.getInitMethodResolver().resolve(bean);
 	}
 
 	// ---------------------------------------------------------------- params
