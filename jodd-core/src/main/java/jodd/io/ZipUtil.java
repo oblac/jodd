@@ -282,9 +282,10 @@ public class ZipUtil {
 
 		ZipEntry zipEntry = new ZipEntry(relativeName);
 		zipEntry.setTime(file.lastModified());
-		zipEntry.setComment(comment);
+		if (comment != null) {
+			zipEntry.setComment(comment);
+		}
 		if (size == 0) {
-			zipEntry.setMethod(ZipEntry.STORED);
 			zipEntry.setSize(0);
 			zipEntry.setCrc(0);
 		}
