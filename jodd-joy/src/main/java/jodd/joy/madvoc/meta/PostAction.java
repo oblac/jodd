@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Action(method = AppAction.METHOD_POST)
 public @interface PostAction {
 
 	String value() default "";
@@ -25,8 +26,6 @@ public @interface PostAction {
 	String extension() default Action.NONE;
 
 	String alias() default "";
-
-	String method() default AppAction.METHOD_POST;
 
 	String result() default "";
 

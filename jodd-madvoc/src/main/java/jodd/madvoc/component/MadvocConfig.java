@@ -49,12 +49,15 @@ public class MadvocConfig {
 	protected Class<? extends Annotation>[] actionAnnotations;
 	private ActionAnnotation<?>[] actionAnnotationInstances;
 
+	/**
+	 * Returns array of action annotations.
+	 */
 	public Class<? extends Annotation>[] getActionAnnotations() {
 		return actionAnnotations;
 	}
 
 	/**
-	 * Sets action annotations.
+	 * Sets action annotations. User may define custom annotations with predefined values.
 	 */
 	@SuppressWarnings( {"unchecked"})
 	public void setActionAnnotations(Class<? extends Annotation>... actionAnnotations) {

@@ -943,7 +943,8 @@ public class ReflectUtil {
 	// ---------------------------------------------------------------- annotations
 
 	/**
-	 * Reads annotation value. Returns <code>null</code> on error.
+	 * Reads annotation value. Returns <code>null</code> on error
+	 * (e.g. when value name not found).
 	 */
 	public static Object readAnnotationValue(Annotation annotation, String name) {
 		try {

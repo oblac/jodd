@@ -12,11 +12,12 @@ import java.lang.annotation.Target;
 
 /**
  * Marker for action methods. It is not necessary to mark a method, however, this annotation 
- * may be used to specify non-default action path.
+ * may be used to specify non-default action path. Moreover, this annotation may be used
+ * to mark custom annotations!
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 public @interface Action {
 
 	/**

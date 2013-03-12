@@ -8,35 +8,65 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 
 /**
- * Annotation reader that reads an annotation and returns annotation data object filled
- * with annotation element values. May be used when having two or more annotations with
- * same elements - since java doesn't support annotation inheritance.
+ * Annotation reader reads an annotation and returns {@link AnnotationData annotation data object}
+ * populated with annotation element values. Can be used to simulate annotation inheritance,
+ * as such does not exist in Java.
+ * <p>
+ * There are 3 ways how this class can be used. First, it can be used on single annotation,
+ * but that does not make much sense.
+ * <p>
+ * Second way is with child and parent annotation. The parent annotation is default one,
+ * like a base class. Child annotation contains some predefined values different from parent.
+ * Note that child annotation does NOT have to specify all elements - all missing elements
+ * will be read from default parent annotation. So child annotation behaves like it is
+ * overriding the parent one.
+ * <p>
+ * Third way is similar, except the child annotation is also annotated with parent annotation!
+ * Besides overriding features and default values, this way we can finalize some element value
+ * and prevent it from being modified by user.
  */
 public abstract class AnnotationDataReader<A extends Annotation, D extends AnnotationDataReader.AnnotationData<A>> {
 
+	protected final Annotation defaultAnnotation;
 	protected final Class<A> annotationClass;
 
 	// ---------------------------------------------------------------- ctor
 
 	/**
 	 * Creates new annotation data reader using annotation definition
-	 * from class generics.
+	 * from class generics. Moreover, allows annotation to be annotated
+	 * with default annotation, for convenient and fail-back value reading.
+	 * @param annotationClass annotation type to read from
+	 * @param defaultAnnotationClass optional default annotation type, used to annotate the annotation class.
 	 */
 	@SuppressWarnings( {"unchecked"})
-	protected AnnotationDataReader() {
-		annotationClass = ReflectUtil.getGenericSupertype(this.getClass());
+	protected AnnotationDataReader(Class<A> annotationClass, Class<? extends Annotation> defaultAnnotationClass) {
 		if (annotationClass == null) {
-			throw new IllegalArgumentException("Unable to resolve annotation from generic supertype");
+			annotationClass = ReflectUtil.getGenericSupertype(this.getClass(), 0);
+			if (annotationClass == null || annotationClass == Annotation.class) {
+				throw new IllegalArgumentException("Missing annotation from generics supertype");
+			}
+		}
+		this.annotationClass = annotationClass;
+
+		// read default annotation
+		if (defaultAnnotationClass != null && defaultAnnotationClass != annotationClass) {
+
+			Annotation defaultAnnotation = annotationClass.getAnnotation(defaultAnnotationClass);
+
+			// no default annotation on parent, create annotation
+			if (defaultAnnotation == null) {
+				try {
+					defaultAnnotation = defaultAnnotationClass.newInstance();
+				} catch (Exception ignore) {
+				}
+			}
+
+			this.defaultAnnotation = defaultAnnotation;
+		} else {
+			this.defaultAnnotation = null;
 		}
 	}
-
-	/**
-	 * Creates new annotation data reader using provided annotation class.
-	 */
-	protected AnnotationDataReader(Class<A> annotationClass) {
-		this.annotationClass = annotationClass;
-	}
-
 
 	// ---------------------------------------------------------------- methods
 
@@ -60,7 +90,6 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	 * If annotation is not presented, <code>null</code> is returned.
 	 */
 	public D readAnnotationData(AccessibleObject accessibleObject) {
-
 		A annotation = accessibleObject.getAnnotation(annotationClass);
 		if (annotation == null) {
 			return null;
@@ -78,26 +107,38 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 
 	/**
 	 * Reads non-empty, trimmed, annotation element value. If annotation value is
-	 * an empty string, returns <code>null</code>.
+	 * missing, it will read value from default annotation. If still missing,
+	 * returns <code>null</code>.
 	 */
 	protected String readStringElement(A annotation, String name) {
-		String value = Convert.toString(ReflectUtil.readAnnotationValue(annotation, name));
-		if (value != null) {
-			value = value.trim();
-			if (value.length() == 0) {
-				value = null;
+		Object annotationValue = ReflectUtil.readAnnotationValue(annotation, name);
+		if (annotationValue == null) {
+			if (defaultAnnotation == null) {
+				return null;
+			}
+			annotationValue = ReflectUtil.readAnnotationValue(defaultAnnotation, name);
+			if (annotationValue == null) {
+				return null;
 			}
 		}
-		return value;
+		String value = Convert.toString(annotationValue);
+		return value.trim();
 	}
 
 	/**
-	 * Reads annotation element as an object.
+	 * Reads annotation element as an object. If annotation value
+	 * is missing, it will be read from default annotation.
+	 * If still missing, returns <code>null</code>.
 	 */
 	protected Object readElement(A annotation, String name) {
-		return ReflectUtil.readAnnotationValue(annotation, name);
+		Object annotationValue = ReflectUtil.readAnnotationValue(annotation, name);
+		if (annotationValue == null) {
+			if (defaultAnnotation != null) {
+				annotationValue = ReflectUtil.readAnnotationValue(defaultAnnotation, name);
+			}
+		}
+		return annotationValue;
 	}
-
 
 	// ---------------------------------------------------------------- annotation data
 
@@ -119,4 +160,5 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 			return annotation;
 		}
 	}
+
 }

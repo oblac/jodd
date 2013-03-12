@@ -3,6 +3,7 @@
 package jodd.madvoc.meta;
 
 import jodd.util.AnnotationDataReader;
+import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
@@ -13,10 +14,11 @@ import java.lang.reflect.AccessibleObject;
 public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader<A, ActionAnnotationData<A>> {
 
 	public ActionAnnotation() {
+		super(null, Action.class);
 	}
 
 	public ActionAnnotation(Class<A> annotationClass) {
-		super(annotationClass);
+		super(annotationClass, Action.class);
 	}
 
 	/**
@@ -35,17 +37,31 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
 
-		ad.value = readStringElement(annotation, "value");
+		ad.value = readString(annotation, "value");
 
-		ad.extension = readStringElement(annotation, "extension");
+		ad.extension = readString(annotation, "extension");
 
-		ad.alias = readStringElement(annotation, "alias");
+		ad.alias = readString(annotation, "alias");
 
-		ad.method = readStringElement(annotation, "method");
+		ad.method = readString(annotation, "method");
 
-		ad.result = readStringElement(annotation, "result");
+		ad.result = readString(annotation, "result");
 
 		return ad;
+	}
+
+	/**
+	 * Reads string element from the annotation. Converts
+	 * empty strings to <code>null</code>.
+	 */
+	private String readString(A annotation, String name) {
+		String value = readStringElement(annotation, name);
+
+		if (StringUtil.isEmpty(value)) {
+			value = null;
+		}
+
+		return value;
 	}
 
 }
