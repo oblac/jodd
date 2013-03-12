@@ -119,13 +119,14 @@ public class ZipUtil {
 
 	/**
 	 * Zips a file or a folder.
+	 * @see #zip(java.io.File)
 	 */
 	public static void zip(String file) throws IOException {
 		zip(new File(file));
 	}
 
 	/**
-	 * Zips a file or a folder.
+	 * Zips a file or a folder. If adding a folder, all its content will be added.
 	 */
 	public static void zip(File file) throws IOException {
 		String zipFile = file.getAbsolutePath() + ZIP_EXT;
@@ -133,7 +134,7 @@ public class ZipUtil {
 		ZipOutputStream zos = null;
 		try {
 			zos = createZip(zipFile);
-			addToZip(zos, file);
+			addToZip(zos).file(file).recursive().add();
 		} finally {
 			StreamUtil.close(zos);
 		}
@@ -145,24 +146,8 @@ public class ZipUtil {
 	 * Extracts zip file content to the target directory.
 	 * @see #unzip(java.io.File, java.io.File, String...)
 	 */
-	public static void unzip(String zipFile, String destDir) throws IOException {
-		unzip(new File(zipFile), new File(destDir));
-	}
-
-	/**
-	 * Extracts zip file content to the target directory.
-	 * @see #unzip(java.io.File, java.io.File, String...)
-	 */
 	public static void unzip(String zipFile, String destDir, String... patterns) throws IOException {
 		unzip(new File(zipFile), new File(destDir), patterns);
-	}
-
-	/**
-	 * Extracts zip file to the target directory.
-	 * @see #unzip(java.io.File, java.io.File, String...)
-	 */
-	public static void unzip(File zipFile, File destDir) throws IOException {
-		unzip(zipFile, destDir, null);
 	}
 
 	/**
@@ -171,7 +156,7 @@ public class ZipUtil {
 	 *
 	 * @param zipFile zip file
 	 * @param destDir destination directory
-	 * @param patterns wildcard patterns, may be <code>null</code>
+	 * @param patterns optional wildcard patterns of files to extract, may be <code>null</code>
 	 */
 	public static void unzip(File zipFile, File destDir, String... patterns) throws IOException {
 		ZipFile zip = new ZipFile(zipFile);
@@ -181,7 +166,7 @@ public class ZipUtil {
 			ZipEntry entry = (ZipEntry) zipEntries.nextElement();
 			String entryName = entry.getName();
 
-			if (patterns != null) {
+			if (patterns != null && patterns.length > 0) {
 				if (Wildcard.matchPathOne(entryName, patterns) == -1) {
 					continue;
 				}
@@ -222,6 +207,7 @@ public class ZipUtil {
 	// ---------------------------------------------------------------- zip stream
 
 	/**
+	 * Creates and opens zip output stream of a zip file.
 	 * @see #createZip(java.io.File)
 	 */
 	public static ZipOutputStream createZip(String zipFile) throws FileNotFoundException {
@@ -235,83 +221,154 @@ public class ZipUtil {
 		return new ZipOutputStream(new FileOutputStream(zip));
 	}
 
-	/*
-	 * Adds a new file entry to the ZIP output stream.
+	/**
+	 * Starts a command for adding file entries to the zip.
+	 * @see #addToZip(java.util.zip.ZipOutputStream, java.io.File, String, String, boolean)
 	 */
-	public static void addToZip(ZipOutputStream zos, File file) throws IOException {
-		addToZip(zos, file, file.getName(), null);
-	}
-	public static void addToZip(ZipOutputStream zos, String file) throws IOException {
-		addToZip(zos, new File(file));
+	public static AddToZip addToZip(ZipOutputStream zos) {
+		return new AddToZip(zos);
 	}
 
-	public static void addToZip(ZipOutputStream zos, File file, String relativeName) throws IOException {
-		addToZip(zos, file, relativeName, null);
-	}
-	public static void addToZip(ZipOutputStream zos, String fileName, String relativeName) throws IOException {
-		addToZip(zos, new File(fileName), relativeName, null);
-	}
-
-	public static void addToZip(ZipOutputStream zos, String fileName, String relativeName, String comment) throws IOException {
-		addToZip(zos, new File(fileName), relativeName, comment);
-	}
-
-	/*
-	 * Adds new entry to the ZIP output stream. The source may be either a file or a folder. If it is a folder,
-	 * it will be recursively scanned and all its content added to the zip.
+	/**
+	 * Command: "add to zip".
 	 */
-	public static void addToZip(ZipOutputStream zos, File file, String relativeName, String comment) throws IOException {
-		while (relativeName.length() != 0 && relativeName.charAt(0) == '/') {
-			relativeName = relativeName.substring(1);
+	public static class AddToZip {
+		private final ZipOutputStream zos;
+		private File file;
+		private String path;
+		private String comment;
+		private boolean recursive = true;
+
+		private AddToZip(ZipOutputStream zos) {
+			this.zos = zos;
 		}
 
+		/**
+		 * Defines file or folder to be added to zip.
+		 */
+		public AddToZip file(File file) {
+			this.file = file;
+			return this;
+		}
+		/**
+		 * Defines file or folder to be added to zip.
+		 */
+		public AddToZip file(String fileName) {
+			this.file = new File(fileName);
+			return this;
+		}
+
+		/**
+		 * Defines file or folder to be added to zip.
+		 */
+		public AddToZip file(String parent, String child) {
+			this.file = new File(parent, child);
+			return this;
+		}
+
+		/**
+		 * Defines optional entry path.
+		 */
+		public AddToZip path(String path) {
+			this.path = path;
+			return this;
+		}
+
+		/**
+		 * Defines optional comment.
+		 */
+		public AddToZip comment(String comment) {
+			this.comment = comment;
+			return this;
+		}
+		/**
+		 * Defines if folders content should be added.
+		 * Ignored for files.
+		 */
+		public AddToZip recursive() {
+			this.recursive = true;
+			return this;
+		}
+		/**
+		 * Invokes the adding command.
+		 */
+		public void add() throws IOException {
+			addToZip(zos, file, path, comment, recursive);
+		}
+	}
+
+	/**
+	 * Adds single entry to ZIP output stream. For user-friendly way of adding entries to zip
+	 * see {@link #addToZip(java.util.zip.ZipOutputStream)}.
+	 *
+	 * @param zos zip output stream
+	 * @param file file or folder to add
+	 * @param path relative path of file entry; if <code>null</code> files name will be used instead
+	 * @param comment optional comment
+	 * @param recursive when set to <code>true</code> content of added folders will be added, too
+	 */
+	public static void addToZip(ZipOutputStream zos, File file, String path, String comment, boolean recursive) throws IOException {
 		if (file.exists() == false) {
 			throw new FileNotFoundException(file.toString());
+		}
+
+		if (path == null) {
+			path = file.getName();
+		}
+
+		while (path.length() != 0 && path.charAt(0) == '/') {
+			path = path.substring(1);
 		}
 
 		boolean isDir = file.isDirectory();
 
 		if (isDir) {
 			// add folder record
-			if (!StringUtil.endsWithChar(relativeName, '/')) {
-				relativeName += '/';
+			if (!StringUtil.endsWithChar(path, '/')) {
+				path += '/';
 			}
 		}
 
-		long size = isDir ? 0 : file.length();
-
-		ZipEntry zipEntry = new ZipEntry(relativeName);
+		ZipEntry zipEntry = new ZipEntry(path);
 		zipEntry.setTime(file.lastModified());
+
 		if (comment != null) {
 			zipEntry.setComment(comment);
 		}
-		if (size == 0) {
+
+		if (isDir) {
 			zipEntry.setSize(0);
 			zipEntry.setCrc(0);
 		}
 
 		zos.putNextEntry(zipEntry);
 
-		if (isDir == false) {
+		if (!isDir) {
 			InputStream is = new FileInputStream(file);
 			try {
 				StreamUtil.copy(is, zos);
 			} finally {
 				StreamUtil.close(is);
 			}
-		} else {
-			boolean noRelativePath = StringUtil.isEmpty(relativeName);
+		}
+
+		zos.closeEntry();
+
+		// continue adding
+
+		if (recursive && file.isDirectory()) {
+			boolean noRelativePath = StringUtil.isEmpty(path);
 
 			final File[] children = file.listFiles();
+
 			if (children != null && children.length != 0) {
 				for (File child : children) {
-					String childRelativePath = (noRelativePath ? StringPool.EMPTY : relativeName) + child.getName();
-					addToZip(zos, child, childRelativePath);
+					String childRelativePath = (noRelativePath ? StringPool.EMPTY : path) + child.getName();
+					addToZip(zos, child, childRelativePath, comment, recursive);
 				}
 			}
 		}
 
-		zos.closeEntry();
 	}
 
 	// ---------------------------------------------------------------- close

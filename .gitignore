@@ -7,3 +7,4 @@
 .gradle
 build
 target
+/classes/

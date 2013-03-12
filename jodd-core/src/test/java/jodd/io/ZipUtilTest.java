@@ -113,9 +113,9 @@ public class ZipUtilTest {
 
 		ZipOutputStream zos = ZipUtil.createZip(zipFile);
 
-		ZipUtil.addToZip(zos, new File(dataRoot, "sb.data"), "sbdata", "This is sb data file");
+		ZipUtil.addToZip(zos).file(dataRoot, "sb.data").path("sbdata").comment("This is sb data file").add();
 
-		ZipUtil.addToZip(zos, new File(dataRoot, "file"), "folder", "This is a folder and all its files");
+		ZipUtil.addToZip(zos).file(dataRoot, "file").path("folder").comment("This is a folder and all its files").add();
 
 		StreamUtil.close(zos);
 
