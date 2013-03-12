@@ -130,8 +130,9 @@ public class MadvocController {
 	/**
 	 * Invokes a result after the action invocation.
 	 * <p>
-	 * Result value consist of two parts: type and value. Type is optional and, if exists, it is separated
-	 * by semi-colon from the value. If type is not specified, the default result type is used. Type defines which
+	 * Result value consist of two parts: type and value. Result type is optional and, if exists, it is separated
+	 * by semi-colon from the value. If type is not specified, the annotation value will be used first,
+	 * and then the default result type if still not defined. Result type defines which
 	 * {@link ActionResult} should be used for rendering the value.
 	 * <p>
 	 * Result value is first checked against aliased values. Then, it is resolved and then passed
@@ -141,20 +142,26 @@ public class MadvocController {
 	 */
 	public void render(ActionRequest req, Object resultObject) throws Exception {
 		String resultValue = resultObject != null ? resultObject.toString() : null;
+		String resultType = null;
 
-		String resultType = madvocConfig.getDefaultResultType();
-
-		String actionResultType = req.getActionConfig().getResultType();
-
-		if (actionResultType != null) {
-			resultType = actionResultType;
-		} else if (resultValue != null) {
+		// first check result value
+		if (resultValue != null) {
 			int columnIndex = resultValue.indexOf(':');
 
 			if (columnIndex != -1) {
 				resultType = resultValue.substring(0, columnIndex);
 
 				resultValue = resultValue.substring(columnIndex + 1);
+			}
+		}
+
+		// result type still not set, read config
+		if (resultType == null) {
+			resultType = req.getActionConfig().getResultType();
+
+			// result type still not defined, use default
+			if (resultType == null) {
+				resultType = madvocConfig.getDefaultResultType();
 			}
 		}
 

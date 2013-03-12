@@ -2,6 +2,8 @@
 
 package jodd.joy.madvoc.meta;
 
+import jodd.madvoc.meta.Action;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,17 +11,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * JSON action annotation. Extension is set to '<b>json</b>' and
- * result type to {@link jodd.joy.madvoc.result.JSONResult json}.
+ * JSON action annotation. Extension is set to <b>json</b>
+ * and result type to <b>json</b>.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Action(extension = "json")
 public @interface JSONAction {
 
 	String value() default "";
-
-	String extension() default "json";
 
 	String alias() default "";
 
