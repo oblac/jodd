@@ -233,13 +233,15 @@ public class WebApplication {
 	// ---------------------------------------------------------------- configurator
 
 	/**
-	 * Wires configurator in the the Madvoc container and invokes configuration.
+	 * Adds configurator to Madvoc container and invokes configuration.
 	 */
 	public void configure(MadvocConfigurator configurator) {
 		if (log.isDebugEnabled()) {
 			log.debug("Configuring Madvoc");
 		}
-		madpc.wire(configurator);
+
+		registerComponent(configurator);
+
 		configurator.configure();
 	}
 }
