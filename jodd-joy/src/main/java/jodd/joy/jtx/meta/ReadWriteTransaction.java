@@ -5,6 +5,7 @@ package jodd.joy.jtx.meta;
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransactionMode;
+import jodd.jtx.meta.Transaction;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,13 +19,12 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@Transaction(readOnly = false)
 public @interface ReadWriteTransaction {
 
 	JtxPropagationBehavior propagation() default JtxPropagationBehavior.PROPAGATION_REQUIRED;
 
 	JtxIsolationLevel isolation() default JtxIsolationLevel.ISOLATION_DEFAULT;
-
-	boolean readOnly() default false;
 
 	int timeout() default JtxTransactionMode.DEFAULT_TIMEOUT;
 

@@ -17,7 +17,7 @@ import java.lang.annotation.ElementType;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 public @interface Transaction {
 
 	/**
