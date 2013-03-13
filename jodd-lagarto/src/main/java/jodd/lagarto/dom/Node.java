@@ -893,6 +893,14 @@ public abstract class Node implements Cloneable {
 	 */
 	public String getTextContent() {
 		StringBuilder sb = new StringBuilder(getChildNodesCount() + 1);
+		appendTextContent(sb);
+		return sb.toString();
+	}
+
+	/**
+	 * Appends the text content to a StringBuilder.
+	 */
+	public void appendTextContent(StringBuilder sb) {
 		if (nodeValue != null) {
 			if ((nodeType == NodeType.TEXT) || (nodeType == NodeType.CDATA)) {
 				sb.append(nodeValue);
@@ -901,7 +909,7 @@ public abstract class Node implements Cloneable {
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);
-				sb.append(childNode.getTextContent());
+				childNode.appendTextContent(sb);
 			}
 		}
 		return sb.toString();
