@@ -2,6 +2,7 @@
 
 package jodd.lagarto.dom;
 
+import jodd.io.FastCharArrayWriter;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -268,6 +269,27 @@ public class DomBuilderTest {
 		assertFalse(div.hasAttribute("'8989'"));
 
 		assertTrue(document.check());
+	}
+
+	@Test
+	public void testAppendable() {
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		Document document = lagartoDOMBuilder.parse("<div foo=\"123\">some <b>nice</b> text</div>");
+		Element div = (Element) document.getFirstChild();
+
+		String textContent = div.getTextContent();
+
+		StringBuilder stringBuilder = new StringBuilder();
+		div.appendTextContent(stringBuilder);
+
+		assertEquals(textContent, stringBuilder.toString());
+
+		FastCharArrayWriter charBuffer = new FastCharArrayWriter();
+		div.appendTextContent(charBuffer);
+
+		System.out.println(charBuffer.toString());
+
+		assertEquals(textContent, charBuffer.toString());
 	}
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * DOM node.
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public abstract class Node implements Cloneable {
 
 	/**
@@ -890,6 +891,7 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Returns the text content of this node and its descendants.
+	 * @see #appendTextContent(Appendable)
 	 */
 	public String getTextContent() {
 		StringBuilder sb = new StringBuilder(getChildNodesCount() + 1);
@@ -898,21 +900,27 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Appends the text content to a StringBuilder.
+	 * Appends the text content to an <code>Appendable</code>
+	 * (<code>StringBuilder</code>, <code>CharBuffer</code>...).
+	 * This way we can reuse the <code>Appendable</code> instance
+	 * during the creation of text content and have better performances.
 	 */
-	public void appendTextContent(StringBuilder sb) {
+	public void appendTextContent(Appendable appendable) {
 		if (nodeValue != null) {
 			if ((nodeType == NodeType.TEXT) || (nodeType == NodeType.CDATA)) {
-				sb.append(nodeValue);
+				try {
+					appendable.append(nodeValue);
+				} catch (IOException ioex) {
+					throw new LagartoDOMException(ioex);
+				}
 			}
 		}
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);
-				childNode.appendTextContent(sb);
+				childNode.appendTextContent(appendable);
 			}
 		}
-		return sb.toString();
 	}
 
 	/**
