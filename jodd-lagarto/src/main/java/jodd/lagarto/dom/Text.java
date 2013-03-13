@@ -52,6 +52,14 @@ public class Text extends Node {
 	}
 
 	/**
+	 * Appends the text content to a StringBuilder.
+	 */
+	@Override
+	public void appendTextContent(StringBuilder sb) {
+		sb.append(getTextContent());
+	}
+
+	/**
 	 * Sets HTML text, but encodes it first.
 	 */
 	public void setTextStrict(String text) {
