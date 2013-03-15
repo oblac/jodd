@@ -52,6 +52,18 @@ public class Text extends Node {
 	}
 
 	/**
+	 * Appends the text content to <code>Appendable</code>.
+	 */
+	@Override
+	public void appendTextContent(Appendable appendable) {
+		try {
+			appendable.append(getTextContent());
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
+	}
+
+	/**
 	 * Sets HTML text, but encodes it first.
 	 */
 	public void setTextStrict(String text) {
