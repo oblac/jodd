@@ -5,8 +5,8 @@ package jodd.madvoc.component;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
-import jodd.madvoc.macro.PathMacro;
-import jodd.madvoc.macro.WildcardPathMacro;
+import jodd.madvoc.macro.PathMacros;
+import jodd.madvoc.macro.WildcardPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.result.ServletDispatcherResult;
@@ -42,6 +42,7 @@ public class MadvocConfig {
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 		strictExtensionStripForResultPath = false;
 		attributeMoveId = "_m_move_id";
+		pathMacroClass = WildcardPathMacros.class;
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -343,19 +344,19 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- path macro class
 
-	protected Class<? extends PathMacro> pathMacroClass = WildcardPathMacro.class;
+	protected Class<? extends PathMacros> pathMacroClass;
 
 	/**
 	 * Returns current implementation for path macros.
 	 */
-	public Class<? extends PathMacro> getPathMacroClass() {
+	public Class<? extends PathMacros> getPathMacroClass() {
 		return pathMacroClass;
 	}
 
 	/**
 	 * Sets implementation for path macros.
 	 */
-	public void setPathMacroClass(Class<? extends PathMacro> pathMacroClass) {
+	public void setPathMacroClass(Class<? extends PathMacros> pathMacroClass) {
 		this.pathMacroClass = pathMacroClass;
 	}
 

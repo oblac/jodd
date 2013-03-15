@@ -4,8 +4,8 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.WebApplication;
-import jodd.madvoc.macro.RegExpPathMacro;
-import jodd.madvoc.macro.WildcardPathMacro;
+import jodd.madvoc.macro.RegExpPathMacros;
+import jodd.madvoc.macro.WildcardPathMacros;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -123,7 +123,7 @@ public class ActionsManagerTest {
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setPathMacroClass(RegExpPathMacro.class);
+		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.register(FooAction.class, "one", "/${one:[ab]+}");
 
@@ -141,7 +141,7 @@ public class ActionsManagerTest {
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setPathMacroClass(WildcardPathMacro.class);
+		madvocConfig.setPathMacroClass(WildcardPathMacros.class);
 
 		actionsManager.register(FooAction.class, "one", "/${one:a?a}");
 

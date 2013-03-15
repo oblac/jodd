@@ -6,7 +6,7 @@ import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.macro.PathMacro;
+import jodd.util.StringUtil;
 
 /**
  * Injects macro values from action path into the action bean.
@@ -21,23 +21,19 @@ public class ActionPathMacroInjector {
 			return;
 		}
 
-		String[] actionPathChunks = actionRequest.getActionPathChunks();
+		String[] names = set.actionPathMacros.getNames();
+		String[] values = set.actionPathMacros.extract(actionRequest.getActionPath());
 
-		for (int i = 0; i < set.actionPathMacros.length; i++) {
-			PathMacro pathMacro = set.actionPathMacros[i];
-			if (pathMacro == null) {
+		for (int i = 0; i < values.length; i++) {
+			String value = values[i];
+
+			if (StringUtil.isEmpty(value)) {
 				continue;
 			}
 
-			String[] names = pathMacro.getNames();
-			String[] values = pathMacro.extract(actionPathChunks[i]);
+			String name = names[i];
 
-			for (int j = 0; j < names.length; j++) {
-				String name = names[j];
-				String value = values[j];
-
-				BeanUtil.setDeclaredPropertyForcedSilent(target, name, value);
-			}
+			BeanUtil.setDeclaredPropertyForcedSilent(target, name, value);
 		}
 	}
 }

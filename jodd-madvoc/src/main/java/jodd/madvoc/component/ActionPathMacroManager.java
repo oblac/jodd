@@ -3,7 +3,7 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.macro.PathMacro;
+import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
 
 /**
@@ -14,31 +14,16 @@ public class ActionPathMacroManager {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-
 	/**
-	 * Builds action path macros from given action path chunks.
-	 * Resulting array is either <code>null</code>, if no chunk contains
-	 * a macro, or array of the same size, with <code>PathMacro</code>
-	 * implementations on indexes where path macro chunk is detected.
+	 * Builds {@link PathMacros action path macros} from given action
+	 * path chunks. Returns either <code>null</code>, if
+	 * no action path contains no macros, or instance of the <code>PathMacro</code>
+	 * implementations.
 	 */
-	public PathMacro[] buildActionPathMacros(String[] chunks) {
-		PathMacro[] pathMacros = new PathMacro[chunks.length];
+	public PathMacros buildActionPathMacros(String actionPath) {
+		PathMacros pathMacros = createPathMacro();
 
-		int macroCount = 0;
-
-		for (int i = 0; i < chunks.length; i++) {
-			String chunk = chunks[i];
-
-			PathMacro pathMacro = createPathMacro();
-
-			if (pathMacro.init(chunk)) {
-				macroCount++;
-
-				pathMacros[i] = pathMacro;
-			}
-		}
-
-		if (macroCount == 0) {
+		if (pathMacros.init(actionPath) == false) {
 			return null;
 		}
 
@@ -48,11 +33,11 @@ public class ActionPathMacroManager {
 	/**
 	 * Creates new <code>PathMacro</code> instance.
 	 */
-	protected PathMacro createPathMacro() {
+	protected PathMacros createPathMacro() {
 		try {
 			return madvocConfig.getPathMacroClass().newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create Madvoc path macro class.", ex);
+			throw new MadvocException("Unable to create PathMacros instance.", ex);
 		}
 	}
 

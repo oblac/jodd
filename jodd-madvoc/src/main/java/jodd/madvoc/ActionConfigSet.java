@@ -2,8 +2,9 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.macro.PathMacro;
+import jodd.madvoc.macro.PathMacros;
 import jodd.util.ArraysUtil;
+import jodd.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,21 +17,24 @@ import java.util.List;
 public class ActionConfigSet implements Comparable<ActionConfigSet> {
 
 	protected ActionConfig[] configs = new ActionConfig[0];
+
+	// action path
 	public final String actionPath;
-	public final String[] actionPathChunks;
-	public final PathMacro[] actionPathMacros;
+	// simple count of '/', for faster matching
+	public final int deep;
+	// macros
+	public final PathMacros actionPathMacros;
 
 	/**
 	 * Creates new action config set. It is set of <code>ActionConfig</code>s, i.e. Madvoc
 	 * actions, with the same action path and different http method.
 	 *
 	 * @param actionPath action path
-	 * @param actionPathChunks action path split in chunks
-	 * @param pathMacros path macros if action path contains any or <code>null</code>
+	 * @param pathMacros action path macros if existing any or <code>null</code>
 	 */
-	public ActionConfigSet(String actionPath, String[] actionPathChunks, PathMacro[] pathMacros) {
+	public ActionConfigSet(String actionPath, PathMacros pathMacros) {
 		this.actionPath = actionPath;
-		this.actionPathChunks = actionPathChunks;
+		this.deep = StringUtil.count(actionPath, '/');
 		this.actionPathMacros = pathMacros;
 	}
 

@@ -6,10 +6,10 @@ import jodd.introspector.ClassIntrospector;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.MadvocUtil;
-import jodd.madvoc.macro.PathMacro;
+import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.StringUtil;
 import jodd.util.collection.SortedArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +54,8 @@ public class ActionsManager {
 	public static class ActionConfigSetComparator implements Comparator<ActionConfigSet> {
 
 		public int compare(ActionConfigSet set1, ActionConfigSet set2) {
-			int deep1 = set1.actionPathChunks.length;
-			int deep2 = set2.actionPathChunks.length;
+			int deep1 = set1.deep;
+			int deep2 = set2.deep;
 
 			if (deep1 == deep2) {
 				return set1.actionPath.compareTo(set2.actionPath);
@@ -202,11 +202,9 @@ public class ActionsManager {
 	 * Creates new action config set from the action path.
 	 */
 	protected ActionConfigSet createActionConfigSet(String actionPath) {
-		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+		PathMacros pathMacros = actionPathMacroManager.buildActionPathMacros(actionPath);
 
-		PathMacro[] pathMacros = actionPathMacroManager.buildActionPathMacros(actionPathChunks);
-
-		return new ActionConfigSet(actionPath, actionPathChunks, pathMacros);
+		return new ActionConfigSet(actionPath, pathMacros);
 	}
 
 	// ---------------------------------------------------------------- look-up
@@ -232,52 +230,34 @@ public class ActionsManager {
 
 		// 2nd try: the list
 
-		String[] actionPathChunks = MadvocUtil.splitActionPath(actionPath);
+		int actionPathDeep = StringUtil.count(actionPath, '/');
 
 		int len = list.size();
 
 		int lastMatched = -1;
 		int maxMatchedChars = -1;
 
-	loop:
 		for (int i = 0; i < len; i++) {
 			actionConfigSet = list.get(i);
-			int deep = actionConfigSet.actionPathChunks.length;
-			if (deep < actionPathChunks.length) {
+
+			int deep = actionConfigSet.deep;
+			if (deep < actionPathDeep) {
 				continue;
 			}
-			if (deep > actionPathChunks.length) {
+			if (deep > actionPathDeep) {
 				break;
 			}
 
-			// equal number of chunks, match one by one
+			// same deep level, try the fully match
 
-			int totalMatchedChars = 0;
-			for (int j = 0; j < deep; j++) {
-				String chunk = actionPathChunks[j];
-				PathMacro pathMacro = actionConfigSet.actionPathMacros[j];
+			int matchedChars = actionConfigSet.actionPathMacros.match(actionPath);
 
-				int matchedChars = -1;
-
-				if (pathMacro == null) {
-					// there is no macro at this level, just check chunk strings
-					String actionPathChunk = actionConfigSet.actionPathChunks[j];
-					if (actionPathChunk.equals(chunk)) {
-						matchedChars = chunk.length();
-					}
-				} else {
-					matchedChars = pathMacro.match(chunk);
-				}
-
-				if (matchedChars == -1) {
-					continue loop;
-				}
-
-				totalMatchedChars += matchedChars;
+			if (matchedChars == -1) {
+				continue;
 			}
 
-			if (totalMatchedChars > maxMatchedChars) {
-				maxMatchedChars = totalMatchedChars;
+			if (matchedChars > maxMatchedChars) {
+				maxMatchedChars = matchedChars;
 				lastMatched = i;
 			}
 		}
@@ -287,6 +267,7 @@ public class ActionsManager {
 		}
 
 		ActionConfigSet set = list.get(lastMatched);
+
 		return set.lookup(method);
 	}
 

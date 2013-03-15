@@ -7,10 +7,10 @@ import jodd.util.Wildcard;
 /**
  * Wildcard path macro matcher.
  */
-public class WildcardPathMacro extends BasePathMacro {
+public class WildcardPathMacros extends BasePathMacros {
 
 	@Override
-	protected boolean matchValue(String value) {
-		return Wildcard.matchPath(value,  pattern);
+	protected boolean matchValue(int macroIndex, String value) {
+		return Wildcard.matchPath(value, patterns[macroIndex]);
 	}
 }
