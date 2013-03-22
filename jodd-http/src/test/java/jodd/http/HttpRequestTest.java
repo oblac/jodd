@@ -220,4 +220,12 @@ public class HttpRequestTest {
 		tempFile.delete();
 	}
 
+	@Test
+	public void testUrl() {
+		HttpRequest httpRequest = new HttpRequest();
+		httpRequest.set("GET http://jodd.org:173/index.html?light=true");
+
+		assertEquals("http://jodd.org:173/index.html?light=true", httpRequest.url());
+	}
+
 }

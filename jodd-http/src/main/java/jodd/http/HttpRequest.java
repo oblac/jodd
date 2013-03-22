@@ -3,6 +3,7 @@
 package jodd.http;
 
 import jodd.util.Base64;
+import jodd.util.StringBand;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -333,6 +334,44 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			return StringPool.EMPTY;
 		}
 		return HttpUtil.buildQuery(query);
+	}
+
+	// ---------------------------------------------------------------- full path
+
+	/**
+	 * Returns full URL path.
+	 * Simply concatenates {@link #protocol(String) protocol}, {@link #host(String) host},
+	 * {@link #port(int) port}, {@link #path(String) path} and {@link #queryString(String) query string}.
+	 */
+	public String url() {
+		StringBand url = new StringBand(8);
+
+		if (protocol != null) {
+			url.append(protocol);
+			url.append("://");
+		}
+
+		if (host != null) {
+			url.append(host);
+		}
+
+		if (port != 80) {
+			url.append(':');
+			url.append(port);
+		}
+
+		if (path != null) {
+			url.append(path);
+		}
+
+		String queryString = queryString();
+
+		if (StringUtil.isNotBlank(queryString)) {
+			url.append('?');
+			url.append(queryString);
+		}
+
+		return url.toString();
 	}
 
 	// ---------------------------------------------------------------- auth
