@@ -223,11 +223,7 @@ public class RequestScopeInjector extends BaseScopeInjector {
 						for (int i = 0; i < paramValues.length; i++) {
 							String p = paramValues[i];
 							if (p != null) {
-								try {
-									paramValues[i] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
-								} catch (UnsupportedEncodingException unex) {
-									//ignore
-								}
+								paramValues[i] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
 							}
 						}
 					}

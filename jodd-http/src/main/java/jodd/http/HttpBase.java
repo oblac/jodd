@@ -84,11 +84,21 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets header parameter. Existing parameter is overwritten.
 	 * The order of header parameters is preserved.
+	 * Also scans for 'Content-Type' header and defines
+	 * {@link #mediaType() media type} and, optionally,
+	 * {@link #charset() charset}.
 	 */
 	public T header(String name, String value) {
 		String key = name.trim().toLowerCase();
 
-		headers.put(key, value.trim());
+		value = value.trim();
+
+		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
+			mediaType = HttpUtil.extractMediaType(value);
+			charset = HttpUtil.extractContentTypeParameter(value, "charset");
+		}
+
+		headers.put(key, value);
 		return (T) this;
 	}
 
@@ -113,14 +123,39 @@ public abstract class HttpBase<T> {
 	// ---------------------------------------------------------------- common headers
 
 	/**
-	 * Returns "Content-Type" header.
+	 * Charset. Set on {@link #contentType(String)}.
+	 */
+	protected String charset;
+
+	/**
+	 * Returns charset, as set in 'Content-Type' header.
+	 * Otherwise, returns <code>null</code>.
+	 */
+	public String charset() {
+		return charset;
+	}
+
+	/**
+	 * Media type. Set on {@link #contentType(String)}.
+	 */
+	protected String mediaType;
+
+	/**
+	 * Returns media type, as se in 'Content-Type' header.
+	 */
+	public String mediaType() {
+		return mediaType;
+	}
+
+	/**
+	 * Returns full "Content-Type" header.
 	 */
 	public String contentType() {
 		return header(HEADER_CONTENT_TYPE);
 	}
 
 	/**
-	 * Sets "Content-Type" header.
+	 * Sets full "Content-Type" header.
 	 */
 	public T contentType(String contentType) {
 		header(HEADER_CONTENT_TYPE, contentType);
@@ -128,7 +163,8 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns "Content-Length" header.
+	 * Returns "Content-Length" header or
+	 * <code>null</code> if not set.
 	 */
 	public String contentLength() {
 		return header(HEADER_CONTENT_LENGTH);
