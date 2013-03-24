@@ -811,7 +811,7 @@ public class StringUtilTest {
 	}
 
 	@Test
-	public void testCharset() throws UnsupportedEncodingException {
+	public void testCharset() {
 		assertEquals("123", StringUtil.convertCharset("123", ISO_8859_1, UTF_8));
 		String s = StringUtil.convertCharset("\250\275", UTF_8, ISO_8859_1);
 		assertEquals(4, s.length());

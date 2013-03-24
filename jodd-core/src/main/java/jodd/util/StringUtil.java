@@ -1976,8 +1976,12 @@ public class StringUtil {
 	/**
 	 * Converts string charset.
 	 */
-	public static String convertCharset(String source, String srcCharsetName, String newCharsetName) throws UnsupportedEncodingException {
-		return new String(source.getBytes(srcCharsetName), newCharsetName);
+	public static String convertCharset(String source, String srcCharsetName, String newCharsetName) {
+		try {
+			return new String(source.getBytes(srcCharsetName), newCharsetName);
+		} catch (UnsupportedEncodingException unex) {
+			throw new IllegalArgumentException(unex);
+		}
 	}
 
 	/**
