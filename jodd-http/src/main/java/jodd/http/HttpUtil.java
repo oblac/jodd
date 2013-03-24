@@ -149,4 +149,66 @@ public class HttpUtil {
 
 		return new String(name);
 	}
+
+	// ---------------------------------------------------------------- content type
+
+	/**
+	 * Extracts media-type from value of "Content Type" header.
+	 */
+	public static String extractMediaType(String contentType) {
+		int index = contentType.indexOf(';');
+
+		if (index == -1) {
+			return contentType;
+		}
+
+		return contentType.substring(0, index);
+	}
+
+	/**
+	 * Extracts "Content Type" parameter. Returns <code>null</code>
+	 * if parameter not found.
+	 */
+	public static String extractContentTypeParameter(String contentType, String parameter) {
+		int index = 0;
+
+		while (true) {
+			index = contentType.indexOf(';', index);
+
+			if (index == -1) {
+				return null;
+			}
+
+			index++;
+
+			// skip whitespaces
+			while (contentType.charAt(index) == ' ') {
+				index++;
+			}
+
+			int eqNdx = contentType.indexOf('=', index);
+
+			if (eqNdx == -1) {
+				return null;
+			}
+
+			String paramName = contentType.substring(index, eqNdx);
+
+			eqNdx++;
+
+			if (!paramName.equalsIgnoreCase(parameter)) {
+				index = eqNdx;
+				continue;
+			}
+
+			int endIndex = contentType.indexOf(';', eqNdx);
+
+			if (endIndex == -1) {
+				return contentType.substring(eqNdx);
+			} else {
+				return contentType.substring(eqNdx, endIndex);
+			}
+		}
+	}
+
 }
