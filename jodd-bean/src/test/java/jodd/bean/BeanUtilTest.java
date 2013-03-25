@@ -1405,7 +1405,19 @@ public class BeanUtilTest {
 		// forced works because *this is a map!
 		assertEquals("zzzz", BeanUtil.getProperty(map, ".[aaa.bbb].fooMap..[eee.ccc]"));
 		assertEquals("zzzz", BeanUtil.getProperty(map, "*this.[aaa.bbb].fooMap..[eee.ccc]"));
+	}
 
+	@Test
+	public void testEnums() {
+		EnumBean enumBean = new EnumBean();
+
+		BeanUtil.setProperty(enumBean, "id", Integer.valueOf(123));
+		BeanUtil.setProperty(enumBean, "color", "RED");
+		BeanUtil.setProperty(enumBean, "status", "STARTED");
+
+		assertEquals(123, enumBean.getId());
+		assertEquals(Color.RED, enumBean.getColor());
+		assertEquals(Status.STARTED, enumBean.getStatus());
 	}
 
 }
