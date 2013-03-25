@@ -2,6 +2,7 @@
 
 package jodd.http;
 
+import jodd.JoddHttp;
 import jodd.util.Base64;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
@@ -333,7 +334,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (query == null) {
 			return StringPool.EMPTY;
 		}
-		return HttpUtil.buildQuery(query);
+		return HttpUtil.buildQuery(query, queryEncoding);
+	}
+
+	// ---------------------------------------------------------------- query encoding
+
+	protected String queryEncoding = JoddHttp.defaultQueryEncoding;
+
+	/**
+	 * Defines encoding for query parameters. Default value is
+	 * copied from {@link JoddHttp#defaultQueryEncoding}.
+	 */
+	public HttpRequest queryEncoding(String encoding) {
+		this.queryEncoding = encoding;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- full path

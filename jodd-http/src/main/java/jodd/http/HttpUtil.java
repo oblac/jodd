@@ -19,7 +19,7 @@ public class HttpUtil {
 	/**
 	 * Builds a query string from given query map.
 	 */
-	public static String buildQuery(HttpParamsMap queryMap) {
+	public static String buildQuery(HttpParamsMap queryMap, String encoding) {
 		int queryMapSize = queryMap.size();
 
 		if (queryMapSize == 0) {
@@ -37,13 +37,13 @@ public class HttpUtil {
 				query.append('&');
 			}
 
-			key = URLCoder.encodeQuery(key);
+			key = URLCoder.encodeQuery(key, encoding);
 			query.append(key);
 
 			if (value != null) {
 				query.append('=');
 				if (value instanceof String) {
-					String valueString = URLCoder.encodeQuery((String) value);
+					String valueString = URLCoder.encodeQuery((String) value, encoding);
 					query.append(valueString);
 				} else {
 					String[] values = (String[]) value;
@@ -163,6 +163,13 @@ public class HttpUtil {
 		}
 
 		return contentType.substring(0, index);
+	}
+
+	/**
+	 * @see #extractContentTypeParameter(String, String)
+	 */
+	public static String extractContentTypeCharset(String contentType) {
+		return extractContentTypeParameter(contentType, "charset");
 	}
 
 	/**

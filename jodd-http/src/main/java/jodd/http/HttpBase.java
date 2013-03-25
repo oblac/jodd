@@ -2,6 +2,7 @@
 
 package jodd.http;
 
+import jodd.JoddHttp;
 import jodd.datetime.TimeUtil;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
@@ -42,7 +43,7 @@ public abstract class HttpBase<T> {
 	protected Map<String, String> headers = new LinkedHashMap<String, String>();
 
 	protected HttpParamsMap form;	// holds form data (when used)
-	protected String body;			// holds body string (always)
+	protected String body;			// holds raw body string (always)
 
 	// ---------------------------------------------------------------- properties
 
@@ -84,9 +85,9 @@ public abstract class HttpBase<T> {
 	/**
 	 * Sets header parameter. Existing parameter is overwritten.
 	 * The order of header parameters is preserved.
-	 * Also scans for 'Content-Type' header and defines
-	 * {@link #mediaType() media type} and, optionally,
-	 * {@link #charset() charset}.
+	 * Also detects 'Content-Type' header and extracts
+	 * {@link #mediaType() media type} and {@link #charset() charset}
+	 * values.
 	 */
 	public T header(String name, String value) {
 		String key = name.trim().toLowerCase();
@@ -95,7 +96,7 @@ public abstract class HttpBase<T> {
 
 		if (key.equalsIgnoreCase(HEADER_CONTENT_TYPE)) {
 			mediaType = HttpUtil.extractMediaType(value);
-			charset = HttpUtil.extractContentTypeParameter(value, "charset");
+			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
 		headers.put(key, value);
@@ -103,11 +104,20 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * Internal direct header setting.
+	 */
+	protected void _header(String name, String value) {
+		String key = name.trim().toLowerCase();
+		value = value.trim();
+		headers.put(key, value);
+	}
+
+	/**
 	 * Sets <code>int</code> value as header parameter,
 	 * @see #header(String, String)
 	 */
 	public T header(String name, int value) {
-		header(name, String.valueOf(value));
+		_header(name, String.valueOf(value));
 		return (T) this;
 	}
 
@@ -116,46 +126,68 @@ public abstract class HttpBase<T> {
 	 * @see #header(String, String)
 	 */
 	public T header(String name, long millis) {
-		header(name, TimeUtil.formatHttpDate(millis));
+		_header(name, TimeUtil.formatHttpDate(millis));
 		return (T) this;
 	}
 
-	// ---------------------------------------------------------------- common headers
+	// ---------------------------------------------------------------- content type
 
-	/**
-	 * Charset. Set on {@link #contentType(String)}.
-	 */
 	protected String charset;
 
 	/**
-	 * Returns charset, as set in 'Content-Type' header.
-	 * Otherwise, returns <code>null</code>.
+	 * Returns charset, as defined by 'Content-Type' header.
+	 * If not set, returns <code>null</code> - indicating
+	 * the default charset (ISO-8859-1).
 	 */
 	public String charset() {
 		return charset;
 	}
 
 	/**
-	 * Media type. Set on {@link #contentType(String)}.
+	 * Defines just content type charset. Setting this value to
+	 * <code>null</code> will remove the charset information from
+	 * the header.
 	 */
+	public T charset(String charset) {
+		this.charset = null;
+		contentType(null, charset);
+		return (T) this;
+	}
+
+
 	protected String mediaType;
 
 	/**
-	 * Returns media type, as se in 'Content-Type' header.
+	 * Returns media type, as defined by 'Content-Type' header.
+	 * If not set, returns <code>null</code> - indicating
+	 * the default media type, depending on request/response.
 	 */
 	public String mediaType() {
 		return mediaType;
 	}
 
 	/**
+	 * Defines just content media type.
+	 * Setting this value to <code>null</code> will
+	 * not have any effects.
+	 */
+	public T mediaType(String mediaType) {
+		contentType(mediaType, null);
+		return (T) this;
+	}
+
+	/**
 	 * Returns full "Content-Type" header.
+	 * It consists of {@link #mediaType() media type}
+	 * and {@link #charset() charset}.
 	 */
 	public String contentType() {
 		return header(HEADER_CONTENT_TYPE);
 	}
 
 	/**
-	 * Sets full "Content-Type" header.
+	 * Sets full "Content-Type" header. Both {@link #mediaType() media type}
+	 * and {@link #charset() charset} are overridden.
 	 */
 	public T contentType(String contentType) {
 		header(HEADER_CONTENT_TYPE, contentType);
@@ -163,7 +195,38 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns "Content-Length" header or
+	 * Sets "Content-Type" header by defining media-type and/or charset parameter.
+	 * This method may be used to update media-type and/or charset by passing
+	 * non-<code>null</code> value for changes.
+	 * <p>
+	 * Important: if Content-Type header has some other parameters, they will be removed!
+	 */
+	public T contentType(String mediaType, String charset) {
+		if (mediaType == null) {
+			mediaType = this.mediaType;
+		} else {
+			this.mediaType = mediaType;
+		}
+
+		if (charset == null) {
+			charset = this.charset;
+		} else {
+			this.charset = charset;
+		}
+
+		String contentType = mediaType;
+		if (charset != null) {
+			contentType += ";charset=" + charset;
+		}
+
+		_header(HEADER_CONTENT_TYPE, contentType);
+		return (T) this;
+	}
+
+	// ---------------------------------------------------------------- common headers
+
+	/**
+	 * Returns full "Content-Length" header or
 	 * <code>null</code> if not set.
 	 */
 	public String contentLength() {
@@ -171,7 +234,7 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Sets the "Content-Length" header.
+	 * Sets the full "Content-Length" header.
 	 */
 	public T contentLength(int value) {
 		header(HEADER_CONTENT_LENGTH, value);
@@ -242,23 +305,110 @@ public abstract class HttpBase<T> {
 		return form;
 	}
 
+	// ---------------------------------------------------------------- form encoding
+
+	protected String formEncoding = JoddHttp.defaultFormEncoding;
+
 	/**
-	 * Returns body as received or set. Any form parameter change
-	 * will NOT be reflected here until sending the request.
+	 * Defines encoding for forms parameters. Default value is
+	 * copied from {@link JoddHttp#defaultFormEncoding}.
+	 * It is overridden by {@link #charset() charset} value.
+	 */
+	public T formEncoding(String encoding) {
+		this.formEncoding = encoding;
+		return (T) this;
+	}
+
+	// ---------------------------------------------------------------- body
+
+	/**
+	 * Returns <b>raw</b> body as received or set (always in ISO-8859-1 encoding).
+	 * If body content is a text, use {@link #bodyText()} to get it converted.
 	 */
 	public String body() {
 		return body;
 	}
 
 	/**
-	 * Sets complete body and discards all form parameters.
-	 * Also sets "Content-Length" parameter.
+	 * Returns <b>raw</b> body bytes.
+	 */
+	public byte[] bodyBytes() {
+		if (body == null) {
+			return null;
+		}
+		try {
+			return body.getBytes(StringPool.ISO_8859_1);
+		} catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns {@link #body() body content} as text. If {@link #charset() charset parameter}
+	 * of "Content-Type" header is defined, body string charset is converted, otherwise
+	 * the same raw body content is returned.
+	 */
+	public String bodyText() {
+		if (charset != null) {
+			return StringUtil.convertCharset(body, StringPool.ISO_8859_1, charset);
+		}
+		return body();
+	}
+
+	/**
+	 * Sets <b>raw</b> body content and discards all form parameters.
+	 * Important: body string is in RAW format, meaning, ISO-8859-1 encoding.
+	 * Also sets "Content-Length" parameter. However, "Content-Type" is not set
+	 * and it is expected from user to set this one.
 	 */
 	public T body(String body) {
 		this.body = body;
 		this.form = null;
 		contentLength(body.length());
 		return (T) this;
+	}
+
+	/**
+	 * Defines body text and content type (as media type and charset).
+	 * Body string will be converted to {@link #body(String) raw body string}
+	 * and "Content-Type" header will be set.
+	 */
+	public T bodyText(String body, String mediaType, String charset) {
+		body = StringUtil.convertCharset(body, charset, StringPool.ISO_8859_1);
+		contentType(mediaType, charset);
+		body(body);
+		return (T) this;
+	}
+
+	/**
+	 * Defines {@link #bodyText(String, String, String) body text content}
+	 * that will be encoded in {@link JoddHttp#defaultBodyEncoding default body encoding}.
+	 */
+	public T bodyText(String body, String mediaType) {
+		return bodyText(body, mediaType, JoddHttp.defaultBodyEncoding);
+	}
+	/**
+	 * Defines {@link #bodyText(String, String, String) body text content}
+	 * that will be encoded as {@link JoddHttp#defaultBodyMediaType default body media type}
+	 * in {@link JoddHttp#defaultBodyEncoding default body encoding}.
+	 */
+	public T bodyText(String body) {
+		return bodyText(body, JoddHttp.defaultBodyMediaType, JoddHttp.defaultBodyEncoding);
+	}
+
+	/**
+	 * Sets <b>raw</b> body content and discards form parameters.
+	 * Also sets "Content-Length" and "Content-Type" parameter.
+	 * @see #body(String)
+	 */
+	public T body(byte[] content, String contentType) {
+		String body = null;
+		try {
+			body = new String(content, StringPool.ISO_8859_1);
+		} catch (UnsupportedEncodingException ignore) {
+		}
+		contentType(contentType);
+		return body(body);
 	}
 
 	// ---------------------------------------------------------------- body form
@@ -287,13 +437,22 @@ public abstract class HttpBase<T> {
 		}
 
 		// todo allow user to force usage of multipart
+
 		if (!isFormMultipart()) {
-			String queryString = HttpUtil.buildQuery(form);
+			// determine form encoding
+			String formEncoding = charset;
 
-			contentType("application/x-www-form-urlencoded");
-			contentLength(queryString.length());
+			if (formEncoding == null) {
+				formEncoding = this.formEncoding;
+			}
 
-			return queryString;
+			// encode
+			String formQueryString = HttpUtil.buildQuery(form, formEncoding);
+
+			contentType("application/x-www-form-urlencoded", null);
+			contentLength(formQueryString.length());
+
+			return formQueryString;
 		}
 
 		String boundary = StringUtil.repeat('-', 10) + RandomStringUtil.randomAlphaNumeric(10);
@@ -329,7 +488,7 @@ public abstract class HttpBase<T> {
 				sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
 
 				String mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
-				sb.append("Content-Type: ").append(mimeType).append(CRLF);
+				sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
 				sb.append("Content-Transfer-Encoding: binary").append(CRLF);
 				sb.append(CRLF);
 
@@ -472,23 +631,27 @@ public abstract class HttpBase<T> {
 			}
 		}
 
-		// PARSE BODY
+		// BODY READY - PARSE BODY
+		String charset = this.charset;
+		if (charset == null) {
+			charset = StringPool.ISO_8859_1;
+		}
 		body = bodyString;
 
-		String contentType = contentType();
+		String mediaType = mediaType();
 
-		if (contentType == null) {
-			contentType = StringPool.EMPTY;
+		if (mediaType == null) {
+			mediaType = StringPool.EMPTY;
 		} else {
-			contentType = contentType.toLowerCase();
+			mediaType = mediaType.toLowerCase();
 		}
 
-		if (contentType.equals("application/x-www-form-urlencoded")) {
+		if (mediaType.equals("application/x-www-form-urlencoded")) {
 			form = HttpUtil.parseQuery(bodyString, true);
 			return;
 		}
 
-		if (contentType.startsWith("multipart/form-data")) {
+		if (mediaType.equals("multipart/form-data")) {
 			form = new HttpParamsMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
@@ -496,7 +659,7 @@ public abstract class HttpBase<T> {
 			try {
 				byte[] bodyBytes = bodyString.getBytes(StringPool.ISO_8859_1);
 				ByteArrayInputStream bin = new ByteArrayInputStream(bodyBytes);
-				multipartParser.parseRequestStream(bin, StringPool.ISO_8859_1);
+				multipartParser.parseRequestStream(bin, charset);
 			} catch (IOException ioex) {
 				throw new HttpException(ioex);
 			}
@@ -523,6 +686,8 @@ public abstract class HttpBase<T> {
 
 			return;
 		}
+
+		// body is a simple content
 
 		form = null;
 	}
