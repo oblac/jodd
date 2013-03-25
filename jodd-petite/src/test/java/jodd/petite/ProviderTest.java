@@ -7,6 +7,7 @@ import jodd.petite.tst5.Solar2;
 import jodd.petite.tst5.Solar3;
 import jodd.petite.tst5.Sun;
 import jodd.petite.tst5.Sun2;
+import jodd.petite.tst5.Planet;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 
@@ -51,6 +52,17 @@ public class ProviderTest {
 		Sun sun = pc.getBean(Sun.class);
 
 		assertEquals("Sun{Earth}", sun.toString());
+	}
+
+	@Test
+	public void testProviderLookup() {
+		PetiteContainer pc = new PetiteContainer();
+
+		pc.registerBean(Solar3.class);
+
+		Planet earth = (Planet) pc.getBean("planet");
+
+		assertEquals("Earth", earth.toString());
 	}
 
 }
