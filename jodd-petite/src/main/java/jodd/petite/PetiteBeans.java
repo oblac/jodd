@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -446,10 +447,20 @@ public abstract class PetiteBeans {
 			String providerName = petiteProvider.value();
 
 			if (StringUtil.isBlank(providerName)) {
+				// default provider name
 				providerName = method.getName();
+
+				if (providerName.endsWith("Provider")) {
+					providerName = StringUtil.substring(providerName, 0, -8);
+				}
 			}
 
-			registerPetiteProvider(providerName, beanDefinition.name, method);
+			if (Modifier.isStatic(method.getModifiers())) {
+				registerPetiteProvider(providerName, method);
+			} else {
+				registerPetiteProvider(providerName, beanDefinition.name, method);
+			}
+
 		}
 	}
 
@@ -469,14 +480,31 @@ public abstract class PetiteBeans {
 		Method method = cd.getMethod(methodName, arguments, true);
 
 		if (method == null) {
-			throw new PetiteException("Provider method not bound: " + methodName);
+			throw new PetiteException("Provider method not found: " + methodName);
 		}
 
 		registerPetiteProvider(providerName, beanName, method);
 	}
 
+	protected void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		Method method = cd.getMethod(staticMethodName, arguments, true);
+
+		if (method == null) {
+			throw new PetiteException("Provider method not found: " + staticMethodName);
+		}
+
+		registerPetiteProvider(providerName, method);
+	}
+
 	protected void registerPetiteProvider(String providerName, String beanName, Method method) {
 		ProviderDefinition providerDefinition = new ProviderDefinition(beanName, method);
+
+		providers.put(providerName, providerDefinition);
+	}
+
+	protected void registerPetiteProvider(String providerName, Method staticMethod) {
+		ProviderDefinition providerDefinition = new ProviderDefinition(staticMethod);
 
 		providers.put(providerName, providerDefinition);
 	}

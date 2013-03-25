@@ -3,6 +3,7 @@
 package jodd.petite;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * Bean provider definition.
@@ -18,6 +19,10 @@ public class ProviderDefinition {
 	}
 
 	public ProviderDefinition(Method staticMethod) {
+		if (!Modifier.isStatic(staticMethod.getModifiers())) {
+			throw new PetiteException("Provider method is not static: " + staticMethod);
+		}
+
 		this.method = staticMethod;
 	}
 

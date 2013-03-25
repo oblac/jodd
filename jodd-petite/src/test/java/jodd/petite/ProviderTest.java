@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.petite.tst5.Solar;
 import jodd.petite.tst5.Solar2;
+import jodd.petite.tst5.Solar3;
 import jodd.petite.tst5.Sun;
 import jodd.petite.tst5.Sun2;
 import jodd.util.ReflectUtil;
@@ -36,6 +37,18 @@ public class ProviderTest {
 		pc.registerPropertyInjectionPoint("sun2", "planet");
 
 		Sun2 sun = pc.getBean(Sun2.class);
+
+		assertEquals("Sun{Earth}", sun.toString());
+	}
+
+	@Test
+	public void testInstanceStaticMethodProvider() {
+		PetiteContainer pc = new PetiteContainer();
+
+		pc.registerBean(Solar3.class);	// still needs to be a bean
+		pc.registerBean(Sun.class);
+
+		Sun sun = pc.getBean(Sun.class);
 
 		assertEquals("Sun{Earth}", sun.toString());
 	}

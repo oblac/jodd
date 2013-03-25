@@ -2,8 +2,6 @@
 
 package jodd.petite.tst5;
 
-import jodd.petite.meta.PetiteProvider;
-
 public class Solar2 {
 
 	public Planet planetProvider() {
