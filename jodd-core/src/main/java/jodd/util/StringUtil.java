@@ -1974,9 +1974,12 @@ public class StringUtil {
 	// ---------------------------------------------------------------- charset
 
 	/**
-	 * Converts string charset.
+	 * Converts string charset. If charset names are the same, the same string is returned.
 	 */
 	public static String convertCharset(String source, String srcCharsetName, String newCharsetName) {
+		if (srcCharsetName.equals(newCharsetName)) {
+			return source;
+		}
 		try {
 			return new String(source.getBytes(srcCharsetName), newCharsetName);
 		} catch (UnsupportedEncodingException unex) {
