@@ -21,8 +21,8 @@ public class MixScopeTest {
 		pc.getConfig().setWireScopedProxy(true);
 		pc.getConfig().setDetectMixedScopes(true);
 
-		pc.registerBean("big", Big.class, SingletonScope.class);
-		pc.registerBean("small", Small.class, ProtoScope.class);
+		pc.registerPetiteBean("big", Big.class, SingletonScope.class, null, false);
+		pc.registerPetiteBean("small", Small.class, ProtoScope.class, null, false);
 
 		Big big = (Big) pc.getBean("big");
 
@@ -52,8 +52,8 @@ public class MixScopeTest {
 		pc.getConfig().setWireScopedProxy(true);
 		pc.getConfig().setDetectMixedScopes(true);
 
-		pc.registerBean("big", Big2.class, SingletonScope.class);
-		pc.registerBean("small", Small.class, ProtoScope.class);
+		pc.registerPetiteBean("big", Big2.class, SingletonScope.class, null, false);
+		pc.registerPetiteBean("small", Small.class, ProtoScope.class, null, false);
 
 		Big2 big = (Big2) pc.getBean("big");
 
@@ -84,9 +84,9 @@ public class MixScopeTest {
 		pc.getConfig().setWireScopedProxy(true);
 		pc.getConfig().setDetectMixedScopes(true);
 
-		pc.registerBean("big", Big.class, SingletonScope.class);
-		pc.registerBean("big2", Big.class, SingletonScope.class);
-		pc.registerBean("small", Small.class, ProtoScope.class);
+		pc.registerPetiteBean("big", Big.class, SingletonScope.class, null, false);
+		pc.registerPetiteBean("big2", Big.class, SingletonScope.class, null, false);
+		pc.registerPetiteBean("small", Small.class, ProtoScope.class, null, false);
 
 		Big big = (Big) pc.getBean("big");
 
@@ -116,8 +116,8 @@ public class MixScopeTest {
 		pc.getConfig().setWireScopedProxy(true);
 		pc.getConfig().setDetectMixedScopes(true);
 
-		pc.registerBean("big", Big.class, SingletonScope.class);
-		pc.registerBean("small", Small.class, ThreadLocalScope.class);
+		pc.registerPetiteBean("big", Big.class, SingletonScope.class, null, false);
+		pc.registerPetiteBean("small", Small.class, ThreadLocalScope.class, null, false);
 
 		final Big big = (Big) pc.getBean("big");
 

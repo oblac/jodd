@@ -19,46 +19,50 @@ public class ProviderTest {
 	public void testInstanceMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerBean(Solar.class);
-		pc.registerBean(Sun.class);
+		pc.registerPetiteBean(null, Solar.class, null, null, false);
+		pc.registerPetiteBean(null, Sun.class, null, null, false);
 
 		Sun sun = pc.getBean(Sun.class);
 
 		assertEquals("Sun{Earth}", sun.toString());
 	}
 
+
 	@Test
 	public void testInstanceMethodProviderManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerBean(Solar2.class);
-		pc.registerBean(Sun2.class);
+		pc.registerPetiteBean(null, Solar2.class, null, null, false);
+		pc.registerPetiteBean(null, Sun2.class, null, null, false);
 
 		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ReflectUtil.NO_PARAMETERS);
-		pc.registerPropertyInjectionPoint("sun2", "planet");
+		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
 
 		Sun2 sun = pc.getBean(Sun2.class);
 
 		assertEquals("Sun{Earth}", sun.toString());
 	}
 
+
 	@Test
 	public void testInstanceStaticMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerBean(Solar3.class);	// still needs to be a bean
-		pc.registerBean(Sun.class);
+		pc.registerPetiteBean(null, Solar3.class, null, null, false);	// still needs to be a bean
+		pc.registerPetiteBean(null, Sun.class, null, null, false);
 
 		Sun sun = pc.getBean(Sun.class);
 
 		assertEquals("Sun{Earth}", sun.toString());
 	}
 
+
+
 	@Test
 	public void testProviderLookup() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerBean(Solar3.class);
+		pc.registerPetiteBean(null, Solar3.class, null, null, false);
 
 		Planet earth = (Planet) pc.getBean("planet");
 

@@ -15,7 +15,7 @@ public class ParamTest {
 	@Test
 	public void testSimpleParams() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerBean(Foo.class);
+		pc.registerPetiteBean(null, Foo.class, null, null, false);
 
 		pc.defineParameter("foo.name", "FOONAME");
 
@@ -27,7 +27,7 @@ public class ParamTest {
 	@Test
 	public void testRefParams() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerBean(Foo.class);
+		pc.registerPetiteBean(null, Foo.class, null, null, false);
 
 		pc.defineParameter("foo.name", "$${name}");
 		pc.defineParameter("name", "${name${num}}");
@@ -42,7 +42,7 @@ public class ParamTest {
 	@Test
 	public void testRefParamsEscape() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerBean(Foo.class);
+		pc.registerPetiteBean(null, Foo.class, null, null, false);
 
 		pc.defineParameter("foo.name", "\\${name}");
 
@@ -55,7 +55,7 @@ public class ParamTest {
 	public void testRefParamsNoResolve() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setResolveReferenceParameters(false);
-		pc.registerBean(Foo.class);
+		pc.registerPetiteBean(null, Foo.class, null, null, false);
 
 		pc.defineParameter("foo.name", "${name}");
 		pc.defineParameter("name", "${name2}");
@@ -69,7 +69,7 @@ public class ParamTest {
 	@Test
 	public void testProperties() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerBean(Foo.class);
+		pc.registerPetiteBean(null, Foo.class, null, null, false);
 
 		Properties p = new Properties();
 		p.setProperty("foo.name", "${name}");

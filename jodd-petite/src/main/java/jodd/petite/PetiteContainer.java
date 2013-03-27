@@ -17,13 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Petite IOC container. Consist of following layers:
- * <ul>
- * <li>PetiteContainer - top layer that provides business usage methods
- * <li>{@link PetiteRegistry} - beans storage methods
- * <li>{@link PetiteBeans} - base layer for storing beans in scopes
+ * Petite IOC container.
  */
-public class PetiteContainer extends PetiteRegistry {
+public class PetiteContainer extends PetiteBeans {
 
 	private static final Logger log = LoggerFactory.getLogger(PetiteContainer.class);
 
@@ -64,15 +60,6 @@ public class PetiteContainer extends PetiteRegistry {
 			} else {
 				log.debug("Petite proxy features not available.");
 			}
-		}
-	}
-
-	/**
-	 * Configures this instance of container.
-	 */
-	public void configure(PetiteConfigurator... petiteConfigurators) {
-		for (PetiteConfigurator petiteConfigurator : petiteConfigurators) {
-			petiteConfigurator.configure(this);
 		}
 	}
 
@@ -463,7 +450,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	public void addBean(String name, Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		registerBean(name, bean.getClass(), SingletonScope.class, wiringMode);
+		registerPetiteBean(name, bean.getClass(), SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		acquiredBeans.put(name, bean);

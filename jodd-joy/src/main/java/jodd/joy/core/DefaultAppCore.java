@@ -484,7 +484,7 @@ public abstract class DefaultAppCore {
 		log.info("database initialization");
 
 		// connection pool
-		petite.registerBean(PETITE_DBPOOL, CoreConnectionPool.class);
+		petite.registerPetiteBean(PETITE_DBPOOL, CoreConnectionPool.class, null, null, false);
 		connectionProvider = (ConnectionProvider) petite.getBean(PETITE_DBPOOL);
 		connectionProvider.init();
 

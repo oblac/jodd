@@ -7,6 +7,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
+import jodd.props.Props;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
 import org.slf4j.Logger;
@@ -17,8 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base layer of {@link PetiteContainer Petite Container}.
@@ -179,11 +182,12 @@ public abstract class PetiteBeans {
 	 * <li>if <code>wiringMode</code> is missing, it will be resolved from the class (annotation or default one)
 	 * <li>if <code>scopeType</code> is missing, it will be resolved from the class (annotation or default one)
 	 */
-	protected BeanDefinition registerPetiteBean(
+	public BeanDefinition registerPetiteBean(
 			String name,
 			Class type,
 			Class<? extends Scope> scopeType,
-			WiringMode wiringMode) {
+			WiringMode wiringMode,
+			boolean define) {
 
 		if (name == null) {
 			name = PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
@@ -200,7 +204,7 @@ public abstract class PetiteBeans {
 		if (scopeType == DefaultScope.class) {
 			scopeType = petiteConfig.getDefaultScope();
 		}
-		BeanDefinition existing = removeBeanDefinition(name);
+		BeanDefinition existing = removeBean(name);
 		if (existing != null) {
 			if (petiteConfig.getDetectDuplicatedBeanNames()) {
 				throw new PetiteException(
@@ -236,19 +240,37 @@ public abstract class PetiteBeans {
 			}
 		}
 
+		// define
+		if (define) {
+			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(type);
+			beanDefinition.properties = PropertyInjectionPoint.EMPTY;
+			beanDefinition.methods = MethodInjectionPoint.EMPTY;
+			beanDefinition.initMethods = InitMethodPoint.EMPTY;
+		}
+
 		// return
 		return beanDefinition;
 	}
 
 	/**
-	 * Main point of bean definition.
+	 * Removes all petite beans of provided type. Type is not resolved for name!
+	 * Instead, all beans are iterated and only beans with equal types are removed.
+	 * @see #removeBean(String)
 	 */
-	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
-		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
-		def.ctor = petiteResolvers.resolveCtorInjectionPoint(type);
-		def.properties = PropertyInjectionPoint.EMPTY;
-		def.methods = MethodInjectionPoint.EMPTY;
-		def.initMethods = InitMethodPoint.EMPTY;
+	public void removeBean(Class type) {
+		// collect bean names
+		Set<String> beanNames = new HashSet<String>();
+		Iterator<BeanDefinition> it = beansIterator();
+		while (it.hasNext()) {
+			BeanDefinition def = it.next();
+			if (def.type.equals(type)) {
+				beanNames.add(def.name);
+			}
+		}
+		// remove collected bean names
+		for (String beanName : beanNames) {
+			removeBean(beanName);
+		}
 	}
 
 	/**
@@ -256,7 +278,7 @@ public abstract class PetiteBeans {
 	 * All resolvers references are deleted, too.
 	 * Returns bean definition of removed bean or <code>null</code>.
 	 */
-	protected BeanDefinition removeBeanDefinition(String name) {
+	public BeanDefinition removeBean(String name) {
 		BeanDefinition bd = beans.remove(name);
 		if (bd == null) {
 			return null;
@@ -303,12 +325,13 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of constructor injection point registration.
 	 */
-	protected void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
+	public void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
 		beanDefinition.ctor = defineCtorInjectionPoint(beanDefinition.type, paramTypes, ref);
 	}
 
+	// todo inline define methods!
 	private CtorInjectionPoint defineCtorInjectionPoint(Class type, Class[] paramTypes, String[][] references) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Constructor constructor = null;
@@ -332,7 +355,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of property injection point registration.
 	 */
-	protected void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
+	public void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		PropertyInjectionPoint pip = definePropertyInjectionPoint(
 				beanDefinition.type,
@@ -353,7 +376,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of property injection point registration.
 	 */
-	protected void registerPetiteSetInjectionPoint(String beanName, String property) {
+	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		SetInjectionPoint sip = defineSetInjectionPoint(
 				beanDefinition.type,
@@ -373,7 +396,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of method injection point registration.
 	 */
-	protected void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
+	public void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
 		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, ref);
@@ -403,7 +426,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Main point of init method registration.
 	 */
-	protected void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
+	public void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, initMethodNames, invocationStrategy);
 		beanDefinition.addInitMethodPoints(methods);
@@ -434,7 +457,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Registers instance method provider.
 	 */
-	protected void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
+	public void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
 
 		if (beanDefinition == null) {
@@ -458,7 +481,7 @@ public abstract class PetiteBeans {
 	/**
 	 * Registers static method provider.
 	 */
-	protected void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
+	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Method method = cd.getMethod(staticMethodName, arguments, true);
 
@@ -515,6 +538,24 @@ public abstract class PetiteBeans {
 	 */
 	protected String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
 		return paramManager.resolve(name, resolveReferenceParams);
+	}
+
+	/**
+	 * Defines many parameters at once.
+	 */
+	public void defineParameters(Map<?, ?> properties) {
+		for (Map.Entry<?, ?> entry : properties.entrySet()) {
+			defineParameter(entry.getKey().toString(), entry.getValue());
+		}
+	}
+
+	/**
+	 * Defines many parameters at once from {@link jodd.props.Props}.
+	 */
+	public void defineParameters(Props props) {
+		Map<?, ?> map = new HashMap<Object, Object>();
+		props.extractProps(map);
+		defineParameters(map);
 	}
 
 }

@@ -10,13 +10,17 @@ import static org.junit.Assert.*;
 
 public class FullTypeTest {
 
+	private void registerBean(PetiteContainer petiteContainer, Class beanType) {
+		petiteContainer.registerPetiteBean(null, beanType, null, null, false);
+	}
+
 	@Test
 	public void testFullTypeProperty() {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
-		pc.registerBean(Koo.class);
-		pc.registerBean(Joo.class);
+		registerBean(pc, Koo.class);
+		registerBean(pc, Joo.class);
 
 		assertEquals(2, pc.getTotalBeans());
 
@@ -44,8 +48,8 @@ public class FullTypeTest {
 		PetiteContainer pc = new PetiteContainer();
 		pc.getConfig().setUseFullTypeNames(true);
 
-		pc.registerBean(Koo.class);
-		pc.registerBean(Joo.class);
+		registerBean(pc, Koo.class);
+		registerBean(pc, Joo.class);
 
 		Koo koo = (Koo) pc.getBean(Koo.class.getName());
 		assertNotNull(koo);
@@ -66,8 +70,8 @@ public class FullTypeTest {
 		pc.getConfig().setUseFullTypeNames(false);
 		pc.getConfig().setLookupReferences(PetiteReference.NAME);
 
-		pc.registerBean(Koo.class);
-		pc.registerBean(Joo.class);
+		registerBean(pc, Koo.class);
+		registerBean(pc, Joo.class);
 
 		assertEquals(2, pc.getTotalBeans());
 

@@ -14,19 +14,23 @@ import static org.junit.Assert.assertEquals;
 
 public class InitMethodTest {
 
+	private void defineBean(PetiteContainer petiteContainer, String beanName, Class type) {
+		petiteContainer.registerPetiteBean(beanName, type, null, null, true);
+	}
+
 	@Test
 	public void testPostConstructor() {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
-		petiteContainer.defineBean("bar", Bar.class);
-		petiteContainer.defineBean("foo", Foo.class);
+		defineBean(petiteContainer, "bar", Bar.class);
+		defineBean(petiteContainer, "foo", Foo.class);
 
 		// wiring
-		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
+		petiteContainer.registerPetitePropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", POST_CONSTRUCT, "init");
+		petiteContainer.registerPetiteInitMethods("foo", POST_CONSTRUCT, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -44,14 +48,14 @@ public class InitMethodTest {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
-		petiteContainer.defineBean("bar", Bar.class);
-		petiteContainer.defineBean("foo", Foo.class);
+		defineBean(petiteContainer, "bar", Bar.class);
+		defineBean(petiteContainer, "foo", Foo.class);
 
 		// wiring
-		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
+		petiteContainer.registerPetitePropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", POST_DEFINE, "init");
+		petiteContainer.registerPetiteInitMethods("foo", POST_DEFINE, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -69,14 +73,14 @@ public class InitMethodTest {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
-		petiteContainer.defineBean("bar", Bar.class);
-		petiteContainer.defineBean("foo", Foo.class);
+		defineBean(petiteContainer, "bar", Bar.class);
+		defineBean(petiteContainer, "foo", Foo.class);
 
 		// wiring
-		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
+		petiteContainer.registerPetitePropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", POST_INITIALIZE, "init");
+		petiteContainer.registerPetiteInitMethods("foo", POST_INITIALIZE, "init");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -94,16 +98,16 @@ public class InitMethodTest {
 		PetiteContainer petiteContainer = new PetiteContainer();
 
 		// define two beans
-		petiteContainer.defineBean("bar", Bar.class);
-		petiteContainer.defineBean("foo", Foo2.class);
+		defineBean(petiteContainer, "bar", Bar.class);
+		defineBean(petiteContainer, "foo", Foo2.class);
 
 		// wiring
-		petiteContainer.registerPropertyInjectionPoint("foo", "bar", "bar");
+		petiteContainer.registerPetitePropertyInjectionPoint("foo", "bar", "bar");
 
 		// init method
-		petiteContainer.registerInitMethods("foo", POST_CONSTRUCT, "init1");
-		petiteContainer.registerInitMethods("foo", POST_DEFINE, "init2");
-		petiteContainer.registerInitMethods("foo", POST_INITIALIZE, "init3");
+		petiteContainer.registerPetiteInitMethods("foo", POST_CONSTRUCT, "init1");
+		petiteContainer.registerPetiteInitMethods("foo", POST_DEFINE, "init2");
+		petiteContainer.registerPetiteInitMethods("foo", POST_INITIALIZE, "init3");
 
 		// param
 		petiteContainer.defineParameter("foo.data", "data");
@@ -115,4 +119,5 @@ public class InitMethodTest {
 		assertEquals("bar", foo.bar.toString());
 		assertEquals("data", foo.data);
 	}
+
 }

@@ -87,7 +87,7 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 		if (petiteBean == null) {
 			return;
 		}
-		container.registerBean(beanClass);
+		container.registerPetiteBean(null, beanClass, null, null, false);
 	}
 
 	/**
