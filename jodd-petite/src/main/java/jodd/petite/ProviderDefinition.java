@@ -10,15 +10,20 @@ import java.lang.reflect.Modifier;
  */
 public class ProviderDefinition {
 
+	public static final ProviderDefinition[] EMPTY = new ProviderDefinition[0];
+
+	protected String name;
 	protected String beanName;
 	protected Method method;
 
-	public ProviderDefinition(String beanName, Method method) {
+	public ProviderDefinition(String name, String beanName, Method method) {
+		this.name = name;
 		this.beanName = beanName;
 		this.method = method;
 	}
 
-	public ProviderDefinition(Method staticMethod) {
+	public ProviderDefinition(String name, Method staticMethod) {
+		this.name = name;
 		if (!Modifier.isStatic(staticMethod.getModifiers())) {
 			throw new PetiteException("Provider method is not static: " + staticMethod);
 		}

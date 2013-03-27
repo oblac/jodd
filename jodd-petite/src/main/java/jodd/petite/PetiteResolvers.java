@@ -6,10 +6,11 @@ import jodd.petite.resolver.CtorResolver;
 import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
 import jodd.petite.resolver.PropertyResolver;
+import jodd.petite.resolver.ProviderResolver;
 import jodd.petite.resolver.SetResolver;
 
 /**
- * Simply holds all resolvers instances.
+ * Holds all resolvers instances and offers delegate methods.
  */
 public class PetiteResolvers {
 
@@ -18,6 +19,7 @@ public class PetiteResolvers {
 	protected MethodResolver methodResolver;
 	protected SetResolver setResolver;
 	protected InitMethodResolver initMethodResolver;
+	protected ProviderResolver providerResolver;
 
 	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
 		ctorResolver = new CtorResolver(injectionPointFactory);
@@ -25,6 +27,7 @@ public class PetiteResolvers {
 		methodResolver = new MethodResolver(injectionPointFactory);
 		setResolver = new SetResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();
+		providerResolver = new ProviderResolver();
 	}
 
 	// ---------------------------------------------------------------- delegates
@@ -62,6 +65,13 @@ public class PetiteResolvers {
 	 */
 	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
 		return initMethodResolver.resolve(bean);
+	}
+
+	/**
+	 * Resolves provider definition defined in a bean.
+	 */
+	public ProviderDefinition[] resolveProviderDefinitions(BeanDefinition beanDefinition) {
+		return providerResolver.resolve(beanDefinition);
 	}
 
 }

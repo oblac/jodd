@@ -345,7 +345,8 @@ public class PetiteContainer extends PetiteRegistry {
 		if (def == null) {
 
 			// try provider
-			ProviderDefinition providerDefinition = lookupProviderDefinition(name);
+			ProviderDefinition providerDefinition = providers.get(name);
+
 			if (providerDefinition != null) {
 				return invokeProvider(providerDefinition);
 			}

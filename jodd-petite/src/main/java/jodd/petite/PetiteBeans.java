@@ -5,19 +5,16 @@ package jodd.petite;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.petite.meta.InitMethodInvocationStrategy;
-import jodd.petite.meta.PetiteProvider;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -231,7 +228,15 @@ public abstract class PetiteBeans {
 		beans.put(name, beanDefinition);
 
 		// providers
-		registerPetiteProviders(beanDefinition);
+		ProviderDefinition[] providerDefinitions = petiteResolvers.resolveProviderDefinitions(beanDefinition);
+
+		if (providerDefinitions != null) {
+			for (ProviderDefinition providerDefinition : providerDefinitions) {
+				providers.put(providerDefinition.name, providerDefinition);
+			}
+		}
+
+		// return
 		return beanDefinition;
 	}
 
@@ -427,46 +432,6 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- providers
 
 	/**
-	 * Lookups for provider definition. Returns <code>null</code> if not found.
-	 */
-	protected ProviderDefinition lookupProviderDefinition(String name) {
-		return providers.get(name);
-	}
-
-	/**
-	 * Registers all providers for given bean.
-	 */
-	protected void registerPetiteProviders(BeanDefinition beanDefinition) {
-		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		Method[] methods = cd.getAllMethods(true);
-
-		for (Method method : methods) {
-			PetiteProvider petiteProvider = method.getAnnotation(PetiteProvider.class);
-			if (petiteProvider == null) {
-				continue;
-			}
-
-			String providerName = petiteProvider.value();
-
-			if (StringUtil.isBlank(providerName)) {
-				// default provider name
-				providerName = method.getName();
-
-				if (providerName.endsWith("Provider")) {
-					providerName = StringUtil.substring(providerName, 0, -8);
-				}
-			}
-
-			if (Modifier.isStatic(method.getModifiers())) {
-				registerPetiteProvider(providerName, method);
-			} else {
-				registerPetiteProvider(providerName, beanDefinition.name, method);
-			}
-
-		}
-	}
-
-	/**
 	 * Registers instance method provider.
 	 */
 	protected void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
@@ -485,9 +450,14 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Provider method not found: " + methodName);
 		}
 
-		registerPetiteProvider(providerName, beanName, method);
+		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, beanName, method);
+
+		providers.put(providerName, providerDefinition);
 	}
 
+	/**
+	 * Registers static method provider.
+	 */
 	protected void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Method method = cd.getMethod(staticMethodName, arguments, true);
@@ -496,21 +466,10 @@ public abstract class PetiteBeans {
 			throw new PetiteException("Provider method not found: " + staticMethodName);
 		}
 
-		registerPetiteProvider(providerName, method);
-	}
-
-	protected void registerPetiteProvider(String providerName, String beanName, Method method) {
-		ProviderDefinition providerDefinition = new ProviderDefinition(beanName, method);
+		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, method);
 
 		providers.put(providerName, providerDefinition);
 	}
-
-	protected void registerPetiteProvider(String providerName, Method staticMethod) {
-		ProviderDefinition providerDefinition = new ProviderDefinition(staticMethod);
-
-		providers.put(providerName, providerDefinition);
-	}
-
 
 	// ---------------------------------------------------------------- statistics
 
