@@ -67,7 +67,7 @@ public abstract class PetiteBeans {
 	protected final PetiteResolvers petiteResolvers;
 
 	/**
-	 * Parameters manager.
+	 * {@link ParamManager Parameters manager}.
 	 */
 	protected final ParamManager paramManager;
 
@@ -87,7 +87,7 @@ public abstract class PetiteBeans {
 
 	/**
 	 * Returns {@link PetiteConfig Petite configuration}.
-	 * All changes on config should be applied <b>before</b>
+	 * All changes on config should be done <b>before</b>
 	 * beans registration process starts.
 	 */
 	public PetiteConfig getConfig() {
@@ -176,11 +176,13 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- register beans
 
 	/**
-	 * Main point of bean registration. The following rules are applied:
-	 * <ul>
-	 * <li>if <code>name</code> is missing, it will be resolved from the class (name or annotation)
-	 * <li>if <code>wiringMode</code> is missing, it will be resolved from the class (annotation or default one)
-	 * <li>if <code>scopeType</code> is missing, it will be resolved from the class (annotation or default one)
+	 * Registers or defines a bean.
+	 *
+	 * @param name bean name, if <code>null</code> it will be resolved from the class (name or annotation)
+	 * @param type bean type, must be specified
+	 * @param scopeType bean scope, if <code>null</code> it will be resolved from the class (annotation or default one)
+	 * @param wiringMode wiring mode, if <code>null</code> it will be resolved from the class (annotation or default one)
+	 * @param define when set to <code>true</code> bean will be defined - all injection points will be set to none
 	 */
 	public BeanDefinition registerPetiteBean(
 			String name,
@@ -287,7 +289,6 @@ public abstract class PetiteBeans {
 		return bd;
 	}
 
-
 	// ---------------------------------------------------------------- bean collections
 
 	/**
@@ -323,117 +324,119 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- injection points
 
 	/**
-	 * Main point of constructor injection point registration.
+	 * Registers constructor injection point.
+	 *
+	 * @param beanName bean name
+	 * @param paramTypes constructor parameter types, may be <code>null</code>
+	 * @param references references for arguments
 	 */
 	public void registerPetiteCtorInjectionPoint(String beanName, Class[] paramTypes, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
-		beanDefinition.ctor = defineCtorInjectionPoint(beanDefinition.type, paramTypes, ref);
-	}
 
-	// todo inline define methods!
-	private CtorInjectionPoint defineCtorInjectionPoint(Class type, Class[] paramTypes, String[][] references) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
 		Constructor constructor = null;
+
 		if (paramTypes == null) {
 			Constructor[] ctors = cd.getAllCtors(true);
 			if (ctors != null && ctors.length > 0) {
 				if (ctors.length > 1) {
-					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + type.getName());
+					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + beanDefinition.type.getName());
 				}
 				constructor = ctors[0];
 			}
 		} else {
 			constructor = cd.getCtor(paramTypes, true);
 		}
+
 		if (constructor == null) {
-			throw new PetiteException("Constructor not found: " + type.getName());
+			throw new PetiteException("Constructor not found: " + beanDefinition.type.getName());
 		}
-		return injectionPointFactory.createCtorInjectionPoint(constructor, references);
+
+		beanDefinition.ctor = injectionPointFactory.createCtorInjectionPoint(constructor, ref);
 	}
 
 	/**
-	 * Main point of property injection point registration.
+	 * Registers property injection point.
+	 *
+	 * @param beanName bean name
+	 * @param property property name
+	 * @param reference explicit injection reference, may be <code>null</code>
 	 */
 	public void registerPetitePropertyInjectionPoint(String beanName, String property, String reference) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		PropertyInjectionPoint pip = definePropertyInjectionPoint(
-				beanDefinition.type,
-				property,
-				reference == null ? null : new String[] {reference});
+		String[] references = reference == null ? null : new String[] {reference};
+
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		Field field = cd.getField(property, true);
+		if (field == null) {
+			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
+		}
+		PropertyInjectionPoint pip = injectionPointFactory.createPropertyInjectionPoint(field, references);
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
 
-	private PropertyInjectionPoint definePropertyInjectionPoint(Class type, String property, String[] references) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		Field field = cd.getField(property, true);
-		if (field == null) {
-			throw new PetiteException("Property not found: " + type.getName() + '#' + property);
-		}
-		return injectionPointFactory.createPropertyInjectionPoint(field, references);
-	}
-
 	/**
-	 * Main point of property injection point registration.
+	 * Registers set injection point.
+	 *
+	 * @param beanName bean name
+	 * @param property set property name
 	 */
 	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		SetInjectionPoint sip = defineSetInjectionPoint(
-				beanDefinition.type,
-				property);
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
+		Field field = cd.getField(property, true);
+		if (field == null) {
+			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
+		}
+		SetInjectionPoint sip = injectionPointFactory.createSetInjectionPoint(field);
 		beanDefinition.addSetInjectionPoint(sip);
 	}
 
-	private SetInjectionPoint defineSetInjectionPoint(Class type, String property) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		Field field = cd.getField(property, true);
-		if (field == null) {
-			throw new PetiteException("Property not found: " + type.getName() + '#' + property);
-		}
-		return injectionPointFactory.createSetInjectionPoint(field);
-	}
-
 	/**
-	 * Main point of method injection point registration.
+	 * Registers method injection point.
+	 *
+	 * @param beanName bean name
+	 * @param methodName method name
+	 * @param arguments method arguments, may be <code>null</code>
+	 * @param references injection references
 	 */
 	public void registerPetiteMethodInjectionPoint(String beanName, String methodName, Class[] arguments, String[] references) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		String[][] ref = PetiteUtil.convertRefToReferences(references);
-		MethodInjectionPoint mip = defineMethodInjectionPoint(beanDefinition.type, methodName, arguments, ref);
-		beanDefinition.addMethodInjectionPoint(mip);
-	}
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
 
-	private MethodInjectionPoint defineMethodInjectionPoint(Class type, String methodName, Class[] paramTypes, String[][] references) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Method method = null;
-		if (paramTypes == null) {
+		if (arguments == null) {
 			Method[] methods = cd.getAllMethods(methodName, true);
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
-					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + type.getName() + '#' + methodName);
+					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + beanDefinition.type.getName() + '#' + methodName);
 				}
 				method = methods[0];
 			}
 		} else {
-			method = cd.getMethod(methodName, paramTypes, true);
+			method = cd.getMethod(methodName, arguments, true);
 		}
 		if (method == null) {
-			throw new PetiteException("Method not found: " + type.getName() + '#' + methodName);
+			throw new PetiteException("Method not found: " + beanDefinition.type.getName() + '#' + methodName);
 		}
-		return injectionPointFactory.createMethodInjectionPoint(method, references);
+		MethodInjectionPoint mip = injectionPointFactory.createMethodInjectionPoint(method, ref);
+
+		beanDefinition.addMethodInjectionPoint(mip);
 	}
 
 	/**
-	 * Main point of init method registration.
+	 * Registers init method.
+	 *
+	 * @param beanName bean name
+	 * @param invocationStrategy moment of invocation
+	 * @param initMethodNames init method names
 	 */
 	public void registerPetiteInitMethods(String beanName, InitMethodInvocationStrategy invocationStrategy, String... initMethodNames) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
-		InitMethodPoint[] methods = defineInitMethods(beanDefinition.type, initMethodNames, invocationStrategy);
-		beanDefinition.addInitMethodPoints(methods);
-	}
 
-	private InitMethodPoint[] defineInitMethods(Class type, String[] initMethodNames, InitMethodInvocationStrategy invocationStrategy) {
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
+		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
 		if (initMethodNames == null) {
 			initMethodNames = StringPool.EMPTY_ARRAY;
 		}
@@ -445,17 +448,23 @@ public abstract class PetiteBeans {
 		for (i = 0; i < initMethodNames.length; i++) {
 			Method m = cd.getMethod(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
 			if (m == null) {
-				throw new PetiteException("Init method not found: " + type.getName() + '#' + initMethodNames[i]);
+				throw new PetiteException("Init method not found: " + beanDefinition.type.getName() + '#' + initMethodNames[i]);
 			}
 			initMethodPoints[i] = new InitMethodPoint(m, i, invocationStrategy);
 		}
-		return initMethodPoints;
+
+		beanDefinition.addInitMethodPoints(initMethodPoints);
 	}
 
 	// ---------------------------------------------------------------- providers
 
 	/**
 	 * Registers instance method provider.
+	 *
+	 * @param providerName provider name
+	 * @param beanName bean name
+	 * @param methodName instance method name
+	 * @param arguments method argument types, may be <code>null</code>
 	 */
 	public void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
@@ -480,6 +489,11 @@ public abstract class PetiteBeans {
 
 	/**
 	 * Registers static method provider.
+	 *
+	 * @param providerName provider name
+	 * @param type class type
+	 * @param staticMethodName static method name
+	 * @param arguments method argument types, may be <code>null</code>
 	 */
 	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
