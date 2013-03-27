@@ -33,7 +33,7 @@ public class PetiteResolvers {
 	 * Resolves constructor injection point.
 	 */
 	public CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
-		return ctorResolver.resolve(type);
+		return ctorResolver.resolve(type, true);
 	}
 
 	/**

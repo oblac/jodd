@@ -30,15 +30,7 @@ public class CtorResolver {
 	 * constructors exist, the default one will be used as injection point. Otherwise, exception
 	 * is thrown.
 	 */
-	public CtorInjectionPoint resolve(Class type) {
-		return resolve(type, true);
-	}
-
-	public CtorInjectionPoint resolveDefault(Class type) {
-		return resolve(type, false);
-	}
-
-	protected CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
+	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Constructor[] allCtors = cd.getAllCtors(true);
 		Constructor foundedCtor = null;
