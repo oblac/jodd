@@ -3,8 +3,8 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
-import jodd.petite.resolver.ParamResolver;
 
 /**
  * Specific non-scoped injector that injects Madvoc parameters (from madvoc.props to targets).
@@ -13,19 +13,19 @@ import jodd.petite.resolver.ParamResolver;
  */
 public class MadvocParamsInjector {
 
-	protected final ParamResolver madvocPetiteParamResolver;
+	protected final ParamManager madvocPetiteParamManager;
 
 	public MadvocParamsInjector(PetiteContainer madpc) {
-		madvocPetiteParamResolver = madpc.getResolvers().getParamResolver();
+		madvocPetiteParamManager = madpc.getParamManager();
 	}
 
 	public void inject(Object target) {
 		String className = target.getClass().getName();
 
-		String[] params = madvocPetiteParamResolver.resolve(className, true);
+		String[] params = madvocPetiteParamManager.resolve(className, true);
 
 		for (String param : params) {
-			Object value = madvocPetiteParamResolver.get(param);
+			Object value = madvocPetiteParamManager.get(param);
 
 			String propertyName = param.substring(className.length() + 1);
 

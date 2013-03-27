@@ -83,7 +83,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected Object newBeanInstance(BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.ctor == null) {
-			def.ctor = petiteResolvers.getCtorResolver().resolve(def.type);
+			def.ctor = petiteResolvers.resolveCtorInjectionPoint(def.type);
 		}
 
 		// other ctors
@@ -141,7 +141,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
-			def.properties = petiteResolvers.getPropertyResolver().resolve(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 
 		boolean mixing = petiteConfig.wireScopedProxy || petiteConfig.detectMixedScopes;
@@ -175,7 +175,7 @@ public class PetiteContainer extends PetiteRegistry {
 
 		// sets
 		if (def.sets == null) {
-			def.sets = petiteResolvers.getSetResolver().resolve(def.type, def.wiringMode == WiringMode.AUTOWIRE);
+			def.sets = petiteResolvers.resolveSetInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
 		for (SetInjectionPoint sip : def.sets) {
 
@@ -199,7 +199,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void wireMethods(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.methods == null) {
-			def.methods = petiteResolvers.getMethodResolver().resolve(def.type);
+			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
 		for (MethodInjectionPoint methodRef : def.methods) {
 			String[][] refNames = methodRef.references;
@@ -245,7 +245,7 @@ public class PetiteContainer extends PetiteRegistry {
 	 */
 	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		if (def.initMethods == null) {
-			def.initMethods = petiteResolvers.getInitMethodResolver().resolve(bean);
+			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {

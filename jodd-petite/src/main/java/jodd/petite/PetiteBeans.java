@@ -66,17 +66,23 @@ public abstract class PetiteBeans {
 	 */
 	protected final PetiteResolvers petiteResolvers;
 
+	/**
+	 * Parameters manager.
+	 */
+	protected final ParamManager paramManager;
+
 	protected PetiteBeans(PetiteConfig petiteConfig) {
 		this.petiteConfig = petiteConfig;
 		this.injectionPointFactory = new InjectionPointFactory(petiteConfig);
 		this.petiteResolvers = new PetiteResolvers(injectionPointFactory);
+		this.paramManager = new ParamManager();
 	}
 
 	/**
-	 * Returns Petite resolvers.
+	 * Returns parameter manager.
 	 */
-	public PetiteResolvers getResolvers() {
-		return petiteResolvers;
+	public ParamManager getParamManager() {
+		return paramManager;
 	}
 
 	/**
@@ -234,7 +240,7 @@ public abstract class PetiteBeans {
 	 */
 	protected void definePetiteBean(String name, Class type, Class<? extends Scope> scopeType, WiringMode wiringMode) {
 		BeanDefinition def = registerPetiteBean(name, type, scopeType, wiringMode);
-		def.ctor = petiteResolvers.getCtorResolver().resolve(type);
+		def.ctor = petiteResolvers.resolveCtorInjectionPoint(type);
 		def.properties = PropertyInjectionPoint.EMPTY;
 		def.methods = MethodInjectionPoint.EMPTY;
 		def.initMethods = InitMethodPoint.EMPTY;
@@ -250,10 +256,6 @@ public abstract class PetiteBeans {
 		if (bd == null) {
 			return null;
 		}
-		petiteResolvers.getCtorResolver().remove(bd.type);
-		petiteResolvers.getPropertyResolver().remove(bd.type);
-		petiteResolvers.getMethodResolver().remove(bd.type);
-		petiteResolvers.getInitMethodResolver().remove(bd.type);
 		bd.scopeRemove();
 		return bd;
 	}
@@ -539,21 +541,21 @@ public abstract class PetiteBeans {
 	 * Defines new parameter. Parameters with same name will be replaced.
 	 */
 	public void defineParameter(String name, Object value) {
-		petiteResolvers.getParamResolver().put(name, value);
+		paramManager.put(name, value);
 	}
 
 	/**
 	 * Returns defined parameter.
 	 */
 	public Object getParameter(String name) {
-		return petiteResolvers.getParamResolver().get(name);
+		return paramManager.get(name);
 	}
 
 	/**
 	 * Prepares list of all bean parameters and optionally resolves inner references.
 	 */
 	protected String[] resolveBeanParams(String name, boolean resolveReferenceParams) {
-		return petiteResolvers.getParamResolver().resolve(name, resolveReferenceParams);
+		return paramManager.resolve(name, resolveReferenceParams);
 	}
 
 }

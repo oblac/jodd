@@ -12,16 +12,12 @@ import jodd.util.ReflectUtil;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 
 /**
  * Resolves properties.
  */
 public class PropertyResolver {
-
-	protected final Map<Class, PropertyInjectionPoint[]> properties = new HashMap<Class, PropertyInjectionPoint[]>();
 
 	protected final InjectionPointFactory injectionPointFactory;
 
@@ -33,15 +29,11 @@ public class PropertyResolver {
 	 * Resolves all fields for given type.
 	 */
 	public PropertyInjectionPoint[] resolve(Class type, boolean autowire) {
-		PropertyInjectionPoint[] fields = properties.get(type);
-		if (fields != null) {
-			return fields;
-		}
-
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
 		Field[] allFields = cd.getAllFields(true);
+
 		for (Field field : allFields) {
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);
 			if ((autowire == false) && (ref == null)) {
@@ -64,17 +56,16 @@ public class PropertyResolver {
 
 			list.add(injectionPointFactory.createPropertyInjectionPoint(field, refName));
 		}
+
+		PropertyInjectionPoint[] fields;
+
 		if (list.isEmpty()) {
 			fields = PropertyInjectionPoint.EMPTY;
 		} else {
 			fields = list.toArray(new PropertyInjectionPoint[list.size()]);
 		}
-		properties.put(type, fields);
-		return fields;
-	}
 
-	public void remove(Class type) {
-		properties.remove(type);
+		return fields;
 	}
 
 }

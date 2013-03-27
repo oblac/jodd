@@ -11,15 +11,11 @@ import jodd.petite.PetiteUtil;
 import jodd.petite.meta.PetiteInject;
 
 import java.lang.reflect.Constructor;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Resolver for constructor injection points.
  */
 public class CtorResolver {
-
-	protected final Map<Class, CtorInjectionPoint> ctors = new HashMap<Class, CtorInjectionPoint>();
 
 	protected final InjectionPointFactory injectionPointFactory;
 
@@ -43,10 +39,6 @@ public class CtorResolver {
 	}
 
 	protected CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
-		CtorInjectionPoint cip = ctors.get(type);
-		if (cip != null) {
-			return cip;
-		}
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		Constructor[] allCtors = cd.getAllCtors(true);
 		Constructor foundedCtor = null;
@@ -84,13 +76,7 @@ public class CtorResolver {
 
 		String[][] references = PetiteUtil.convertAnnValueToReferences(refValues);
 
-		cip = injectionPointFactory.createCtorInjectionPoint(foundedCtor, references);
-		ctors.put(type, cip);
-		return cip;
-	}
-
-	public void remove(Class type) {
-		ctors.remove(type);
+		return injectionPointFactory.createCtorInjectionPoint(foundedCtor, references);
 	}
 
 }

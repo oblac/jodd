@@ -5,7 +5,6 @@ package jodd.petite;
 import jodd.petite.resolver.CtorResolver;
 import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
-import jodd.petite.resolver.ParamResolver;
 import jodd.petite.resolver.PropertyResolver;
 import jodd.petite.resolver.SetResolver;
 
@@ -19,7 +18,6 @@ public class PetiteResolvers {
 	protected MethodResolver methodResolver;
 	protected SetResolver setResolver;
 	protected InitMethodResolver initMethodResolver;
-	protected ParamResolver paramResolver;
 
 	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
 		ctorResolver = new CtorResolver(injectionPointFactory);
@@ -27,56 +25,43 @@ public class PetiteResolvers {
 		methodResolver = new MethodResolver(injectionPointFactory);
 		setResolver = new SetResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();
-		paramResolver = new ParamResolver();
 	}
 
-	// ---------------------------------------------------------------- access
+	// ---------------------------------------------------------------- delegates
 
-	public SetResolver getSetResolver() {
-		return setResolver;
+	/**
+	 * Resolves constructor injection point.
+	 */
+	public CtorInjectionPoint resolveCtorInjectionPoint(Class type) {
+		return ctorResolver.resolve(type);
 	}
 
-	public void setSetResolver(SetResolver setResolver) {
-		this.setResolver = setResolver;
+	/**
+	 * Resolves property injection points.
+	 */
+	public PropertyInjectionPoint[] resolvePropertyInjectionPoint(Class type, boolean autowire) {
+		return propertyResolver.resolve(type, autowire);
 	}
 
-	public CtorResolver getCtorResolver() {
-		return ctorResolver;
+	/**
+	 * Resolves method injection points.
+	 */
+	public MethodInjectionPoint[] resolveMethodInjectionPoint(Class type) {
+		return methodResolver.resolve(type);
 	}
 
-	public void setCtorResolver(CtorResolver ctorResolver) {
-		this.ctorResolver = ctorResolver;
+	/**
+	 * Resolves set injection points.
+	 */
+	public SetInjectionPoint[] resolveSetInjectionPoint(Class type, boolean autowire) {
+		return setResolver.resolve(type, autowire);
 	}
 
-	public PropertyResolver getPropertyResolver() {
-		return propertyResolver;
+	/**
+	 * Resolves init method points.
+	 */
+	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
+		return initMethodResolver.resolve(bean);
 	}
 
-	public void setPropertyResolver(PropertyResolver propertyResolver) {
-		this.propertyResolver = propertyResolver;
-	}
-
-	public MethodResolver getMethodResolver() {
-		return methodResolver;
-	}
-
-	public void setMethodResolver(MethodResolver methodResolver) {
-		this.methodResolver = methodResolver;
-	}
-
-	public InitMethodResolver getInitMethodResolver() {
-		return initMethodResolver;
-	}
-
-	public void setInitMethodResolver(InitMethodResolver initMethodResolver) {
-		this.initMethodResolver = initMethodResolver;
-	}
-
-	public ParamResolver getParamResolver() {
-		return paramResolver;
-	}
-
-	public void setParamResolver(ParamResolver paramResolver) {
-		this.paramResolver = paramResolver;
-	}
 }

@@ -8,8 +8,6 @@ import jodd.petite.InitMethodPoint;
 import jodd.introspector.ClassDescriptor;
 
 import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,14 +17,8 @@ import java.util.List;
  */
 public class InitMethodResolver {
 
-	protected final Map<Class, InitMethodPoint[]> initMethods = new HashMap<Class, InitMethodPoint[]>();
-
 	public InitMethodPoint[] resolve(Object bean) {
 		Class<?> type = bean.getClass();
-		InitMethodPoint[] methods = initMethods.get(type);
-		if (methods != null) {
-			return methods;
-		}
 
 		// lookup methods
 		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
@@ -44,21 +36,17 @@ public class InitMethodResolver {
 			int order = petiteInitMethod.order();
 			list.add(new InitMethodPoint(method, order, petiteInitMethod.invoke()));
 		}
+
+		InitMethodPoint[] methods;
+
 		if (list.isEmpty()) {
 			methods = InitMethodPoint.EMPTY;
 		} else {
 			Collections.sort(list);
 			methods = list.toArray(new InitMethodPoint[list.size()]);
 		}
-		initMethods.put(type, methods);
-		return methods;
-	}
 
-	/**
-	 * Removes all init methods for given type.
-	 */
-	public void remove(Class type) {
-		initMethods.remove(type);
+		return methods;
 	}
 
 }
