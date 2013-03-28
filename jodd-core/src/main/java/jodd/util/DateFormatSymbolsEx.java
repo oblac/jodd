@@ -2,129 +2,91 @@
 
 package jodd.util;
 
-import jodd.exception.UncheckedException;
-
 import java.util.Locale;
 import java.text.DateFormatSymbols;
-import java.lang.reflect.Field;
 
 /**
- * Enhanced <code>DateFormatSymbols</code> with improved performance by avoiding duplication of returned arrays.
- * Note: this class should be cached as by {@link LocaleUtil}, since reflection is used upon creation.
+ * Simple holder for <code>DateFormatSymbols</code> that doesn't create new array on each call.
+ * This improves performance by avoiding duplication of returned arrays.
+ * <p>
+ * Use this class from {@link LocaleUtil} or cache it manually.
  */
-public class DateFormatSymbolsEx extends DateFormatSymbols {
+public class DateFormatSymbolsEx {
 
-	public DateFormatSymbolsEx() {
-		super();
-		afterInit();
-	}
+	protected final String[] months;
+	protected final String[] shortMonths;
+	protected final String[] weekdays;
+	protected final String[] shortWeekdays;
+	protected final String[] eras;
+	protected final String[] ampms;
 
 	public DateFormatSymbolsEx(Locale locale) {
-		super(locale);
-		afterInit();
+		DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
+
+		months = dateFormatSymbols.getMonths();
+		shortMonths = dateFormatSymbols.getShortMonths();
+		weekdays = dateFormatSymbols.getWeekdays();
+		shortWeekdays = dateFormatSymbols.getShortWeekdays();
+		eras = dateFormatSymbols.getEras();
+		ampms = dateFormatSymbols.getAmPmStrings();
 	}
 
-	String[] _months;
-	String[] _shortMonths;
-	String[] _weekdays;
-	String[] _shortWeekdays;
-	String[] _eras;
-	String[] _ampms;
-
-	protected void afterInit() {
-		Class type = DateFormatSymbols.class;
-		try {
-			Field f = type.getDeclaredField("months");
-			f.setAccessible(true);
-			_months = (String[]) f.get(this);
-
-			f = type.getDeclaredField("shortMonths");
-			f.setAccessible(true);
-			_shortMonths = (String[]) f.get(this);
-
-			f = type.getDeclaredField("weekdays");
-			f.setAccessible(true);
-			_weekdays = (String[]) f.get(this);
-
-			f = type.getDeclaredField("shortWeekdays");
-			f.setAccessible(true);
-			_shortWeekdays = (String[]) f.get(this);
-
-			f = type.getDeclaredField("eras");
-			f.setAccessible(true);
-			_eras = (String[]) f.get(this);
-
-			f = type.getDeclaredField("ampms");
-			f.setAccessible(true);
-			_ampms = (String[]) f.get(this);
-			
-		} catch (Exception ex) {
-			throw new UncheckedException("Unable to initialize", ex);
-		}
-	}
-
-	// ---------------------------------------------------------------- fast
+	// ---------------------------------------------------------------- getters
 
 	/**
 	 * Returns month string.
 	 */
 	public String getMonth(int i) {
-		return this._months[i];
+		return this.months[i];
 	}
 
 	/**
 	 * Returns short months.
 	 */
 	public String getShortMonth(int i) {
-		return this._shortMonths[i];
+		return this.shortMonths[i];
 	}
 
 	/**
 	 * Returns weekday.
 	 */
 	public String getWeekday(int i) {
-		return this._weekdays[i];
+		return this.weekdays[i];
 	}
 
 	/**
 	 * Returns short weekday.
 	 */
 	public String getShortWeekday(int i) {
-		return this._shortWeekdays[i];
+		return this.shortWeekdays[i];
 	}
 
 	/**
 	 * Returns BC era.
 	 */
 	public String getBcEra() {
-		return this._eras[0];
+		return this.eras[0];
 	}
 
 	/**
 	 * Returns AD era.
 	 */
 	public String getAdEra() {
-		return this._eras[1];
+		return this.eras[1];
 	}
 
 	/**
 	 * Returns AM.
 	 */
 	public String getAM() {
-		return this._ampms[0];
+		return this.ampms[0];
 	}
 
 	/**
 	 * Returns PM.
 	 */
 	public String getPM() {
-		return this._ampms[1];
+		return this.ampms[1];
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public Object clone() {
-		return super.clone();
-	}
 }

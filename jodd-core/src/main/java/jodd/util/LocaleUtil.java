@@ -116,20 +116,22 @@ public class LocaleUtil {
 	// ---------------------------------------------------------------- locale elements
 
 	/**
-	 * Returns <code>DateFormatSymbols</code> instance for specified locale.
+	 * Returns cached <code>DateFormatSymbols</code> instance for specified locale.
 	 */
 	public static DateFormatSymbolsEx getDateFormatSymbols(Locale locale) {
 		LocaleData localeData = lookupLocaleData(locale);
 		DateFormatSymbolsEx dfs = localeData.dateFormatSymbols;
+
 		if (dfs == null) {
 			dfs = new DateFormatSymbolsEx(locale);
 			localeData.dateFormatSymbols = dfs;
 		}
+
 		return dfs;
 	}
 
 	/**
-	 * Returns <code>NumberFormat</code> instance for specified locale.
+	 * Returns cached <code>NumberFormat</code> instance for specified locale.
 	 */
 	public static NumberFormat getNumberFormat(Locale locale) {
 		LocaleData localeData = lookupLocaleData(locale);
