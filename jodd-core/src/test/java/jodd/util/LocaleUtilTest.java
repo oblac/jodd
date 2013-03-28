@@ -17,13 +17,20 @@ public class LocaleUtilTest {
 		Locale locale2 = LocaleUtil.getLocale("fr_FR");
 		assertSame(locale1, locale2);
 
+		DateFormatSymbolsEx dfs = LocaleUtil.getDateFormatSymbols(locale2);
+		DateFormatSymbols dfsJava = new DateFormatSymbols(locale2);
+		assertEquals(dfs.getMonth(0), dfsJava.getMonths()[0]);
+		assertEquals(dfs.getWeekday(1), dfsJava.getWeekdays()[1]);
+		assertEquals(dfs.getShortMonth(2), dfsJava.getShortMonths()[2]);
+
 		locale1 = LocaleUtil.getLocale("en");
 		locale2 = LocaleUtil.getLocale("en_EN");
 		assertNotSame(locale1, locale2);
 
-		DateFormatSymbols dfs = LocaleUtil.getDateFormatSymbols(locale2);
-		assertEquals("January", dfs.getMonths()[0]);
-
-
+		dfs = LocaleUtil.getDateFormatSymbols(locale2);
+		dfsJava = new DateFormatSymbols(locale2);
+		assertEquals(dfs.getMonth(0), dfsJava.getMonths()[0]);
+		assertEquals(dfs.getWeekday(1), dfsJava.getWeekdays()[1]);
+		assertEquals(dfs.getShortMonth(2), dfsJava.getShortMonths()[2]);
 	}
 }
