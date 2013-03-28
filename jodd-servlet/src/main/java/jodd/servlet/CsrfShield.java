@@ -65,7 +65,7 @@ public class CsrfShield {
 	 * Generates new CSRF token and puts it in the session. Returns generated token value.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static synchronized String prepareCsrfToken(HttpSession session, int timeToLive) {
+	public static String prepareCsrfToken(HttpSession session, int timeToLive) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if (tokenSet == null) {
 			tokenSet = new HashSet<Token>();
@@ -134,7 +134,7 @@ public class CsrfShield {
 	 * Checks token value.
 C	 */
 	@SuppressWarnings({"unchecked"})
-	public static synchronized boolean checkCsrfToken(HttpSession session, String tokenValue) {
+	public static boolean checkCsrfToken(HttpSession session, String tokenValue) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if ((tokenSet == null) && (tokenValue == null)) {
 			return true;
