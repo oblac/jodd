@@ -178,15 +178,14 @@ public abstract class PetiteBeans {
 	/**
 	 * Registers or defines a bean.
 	 *
-	 * @param name bean name, if <code>null</code> it will be resolved from the class (name or annotation)
 	 * @param type bean type, must be specified
+	 * @param name bean name, if <code>null</code> it will be resolved from the class (name or annotation)
 	 * @param scopeType bean scope, if <code>null</code> it will be resolved from the class (annotation or default one)
 	 * @param wiringMode wiring mode, if <code>null</code> it will be resolved from the class (annotation or default one)
 	 * @param define when set to <code>true</code> bean will be defined - all injection points will be set to none
 	 */
 	public BeanDefinition registerPetiteBean(
-			String name,
-			Class type,
+			Class type, String name,
 			Class<? extends Scope> scopeType,
 			WiringMode wiringMode,
 			boolean define) {

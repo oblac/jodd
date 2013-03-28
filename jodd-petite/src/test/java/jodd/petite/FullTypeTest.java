@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class FullTypeTest {
 
 	private void registerBean(PetiteContainer petiteContainer, Class beanType) {
-		petiteContainer.registerPetiteBean(null, beanType, null, null, false);
+		petiteContainer.registerPetiteBean(beanType, null, null, null, false);
 	}
 
 	@Test

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class InitMethodTest {
 
 	private void defineBean(PetiteContainer petiteContainer, String beanName, Class type) {
-		petiteContainer.registerPetiteBean(beanName, type, null, null, true);
+		petiteContainer.registerPetiteBean(type, beanName, null, null, true);
 	}
 
 	@Test

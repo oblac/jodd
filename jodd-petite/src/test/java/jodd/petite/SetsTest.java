@@ -13,7 +13,7 @@ public class SetsTest {
 	public void testEmptySet() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, GothamCity.class, null, null, false);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -25,8 +25,8 @@ public class SetsTest {
 	public void testOneHero() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Batman.class, null, null, false);
-		pc.registerPetiteBean(null, GothamCity.class, null, null, false);
+		pc.registerPetiteBean(Batman.class, null, null, null, false);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -42,9 +42,9 @@ public class SetsTest {
 	public void testTwoHeros() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Batman.class, null, null, false);
-		pc.registerPetiteBean(null, GothamCity.class, null, null, false);
-		pc.registerPetiteBean(null, Batgirl.class, null, null, false);
+		pc.registerPetiteBean(Batman.class, null, null, null, false);
+		pc.registerPetiteBean(GothamCity.class, null, null, null, false);
+		pc.registerPetiteBean(Batgirl.class, null, null, null, false);
 
 		GothamCity gothamCity = pc.getBean(GothamCity.class);
 
@@ -61,8 +61,8 @@ public class SetsTest {
 	public void testCollection() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Superman.class, null, null, false);
-		pc.registerPetiteBean(null, Metropolis.class, null, null, false);
+		pc.registerPetiteBean(Superman.class, null, null, null, false);
+		pc.registerPetiteBean(Metropolis.class, null, null, null, false);
 
 		Metropolis metropolis = pc.getBean(Metropolis.class);
 

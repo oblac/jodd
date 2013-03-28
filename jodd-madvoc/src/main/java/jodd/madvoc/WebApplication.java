@@ -105,7 +105,7 @@ public class WebApplication {
 			log.debug("Registering component '" + name + "' of type " + component.getName());
 		}
 		madpc.removeBean(name);
-		madpc.registerPetiteBean(name, component, null, null, false);
+		madpc.registerPetiteBean(component, name, null, null, false);
 	}
 
 	/**

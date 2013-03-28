@@ -19,8 +19,8 @@ public class ProviderTest {
 	public void testInstanceMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Solar.class, null, null, false);
-		pc.registerPetiteBean(null, Sun.class, null, null, false);
+		pc.registerPetiteBean(Solar.class, null, null, null, false);
+		pc.registerPetiteBean(Sun.class, null, null, null, false);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -32,8 +32,8 @@ public class ProviderTest {
 	public void testInstanceMethodProviderManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Solar2.class, null, null, false);
-		pc.registerPetiteBean(null, Sun2.class, null, null, false);
+		pc.registerPetiteBean(Solar2.class, null, null, null, false);
+		pc.registerPetiteBean(Sun2.class, null, null, null, false);
 
 		pc.registerPetiteProvider("planet", "solar2", "planetProvider", ReflectUtil.NO_PARAMETERS);
 		pc.registerPetitePropertyInjectionPoint("sun2", "planet", null);
@@ -48,8 +48,8 @@ public class ProviderTest {
 	public void testInstanceStaticMethodProvider() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Solar3.class, null, null, false);	// still needs to be a bean
-		pc.registerPetiteBean(null, Sun.class, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false);	// still needs to be a bean
+		pc.registerPetiteBean(Sun.class, null, null, null, false);
 
 		Sun sun = pc.getBean(Sun.class);
 
@@ -62,7 +62,7 @@ public class ProviderTest {
 	public void testProviderLookup() {
 		PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean(null, Solar3.class, null, null, false);
+		pc.registerPetiteBean(Solar3.class, null, null, null, false);
 
 		Planet earth = (Planet) pc.getBean("planet");
 

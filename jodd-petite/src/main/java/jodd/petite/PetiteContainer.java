@@ -4,7 +4,6 @@ package jodd.petite;
 
 import jodd.Jodd;
 import jodd.bean.BeanUtil;
-import jodd.petite.config.PetiteConfigurator;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.SingletonScope;
 
@@ -450,7 +449,7 @@ public class PetiteContainer extends PetiteBeans {
 	 */
 	public void addBean(String name, Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
-		registerPetiteBean(name, bean.getClass(), SingletonScope.class, wiringMode, false);
+		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
 		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
 		acquiredBeans.put(name, bean);

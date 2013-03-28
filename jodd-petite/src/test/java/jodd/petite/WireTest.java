@@ -40,7 +40,7 @@ public class WireTest {
 
 
 		// register again the same class, but this time with proto scope
-		pc.registerPetiteBean("foo2", Foo.class, ProtoScope.class, null, false);
+		pc.registerPetiteBean(Foo.class, "foo2", ProtoScope.class, null, false);
 		assertEquals(2, pc.getTotalBeans());
 		assertEquals(2, pc.getTotalScopes());
 
@@ -49,7 +49,7 @@ public class WireTest {
 
 
 		// register boo
-		pc.registerPetiteBean(null, Boo.class, null, null, false);
+		pc.registerPetiteBean(Boo.class, null, null, null, false);
 		assertEquals(3, pc.getTotalBeans());
 		assertEquals(2, pc.getTotalScopes());
 
@@ -62,7 +62,7 @@ public class WireTest {
 			// zoo class is missing
 		}
 
-		pc.registerPetiteBean(null, Zoo.class, null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false);
 		assertEquals(4, pc.getTotalBeans());
 		assertEquals(2, pc.getTotalScopes());
 
@@ -78,9 +78,9 @@ public class WireTest {
 	@Test
 	public void testCreate() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
-		pc.registerPetiteBean(null, Zoo.class, null, null, false);
-		pc.registerPetiteBean(null, Boo.class, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Boo.class, null, null, null, false);
 		assertEquals(3, pc.getTotalBeans());
 		assertEquals(1, pc.getTotalScopes());
 		assertEquals(0, Foo.instanceCounter);
@@ -97,8 +97,8 @@ public class WireTest {
 	@Test
 	public void testCtor() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, BooC.class, null, null, false);
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
+		pc.registerPetiteBean(BooC.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		assertEquals(2, pc.getTotalBeans());
 		assertEquals(1, pc.getTotalScopes());
 		assertEquals(0, Foo.instanceCounter);
@@ -108,8 +108,8 @@ public class WireTest {
 		assertNotNull(boo.getFoo());
 		assertEquals(1, boo.getFoo().hello());
 
-		pc.registerPetiteBean("boo", BooC2.class, null, null, false);
-		pc.registerPetiteBean(null, Zoo.class, null, null, false);
+		pc.registerPetiteBean(BooC2.class, "boo", null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false);
 		assertEquals(4, pc.getTotalBeans());
 		assertEquals(1, pc.getTotalScopes());
 		assertEquals(1, Foo.instanceCounter);
@@ -125,8 +125,8 @@ public class WireTest {
 	@Test
 	public void testAutowire() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, Goo.class, ProtoScope.class, null, false);
-		pc.registerPetiteBean(null, Loo.class, null, null, false);
+		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
+		pc.registerPetiteBean(Loo.class, null, null, null, false);
 
 		assertEquals(2, pc.getTotalBeans());
 
@@ -135,7 +135,7 @@ public class WireTest {
 		assertNotNull(goo.looCustom);
 		assertNull(goo.foo);
 
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
 		goo = (Goo) pc.getBean("goo");
 		assertNotNull(goo);
 		assertNotNull(goo.looCustom);
@@ -143,9 +143,9 @@ public class WireTest {
 
 		pc = new PetiteContainer();
 		pc.getConfig().setDefaultWiringMode(WiringMode.AUTOWIRE);
-		pc.registerPetiteBean(null, Goo.class, ProtoScope.class, null, false);
-		pc.registerPetiteBean(null, Loo.class, null, null, false);
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
+		pc.registerPetiteBean(Goo.class, null, ProtoScope.class, null, false);
+		pc.registerPetiteBean(Loo.class, null, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
 
 		goo = (Goo) pc.getBean("goo");
 		assertNotNull(goo);
@@ -158,8 +158,8 @@ public class WireTest {
 	@Test
 	public void testInterface() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
-		pc.registerPetiteBean("ioo", DefaultIoo.class, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(DefaultIoo.class, "ioo", null, null, false);
 
 		assertEquals(2, pc.getTotalBeans());
 		Ioo ioo = (Ioo) pc.getBean("ioo");
@@ -183,10 +183,10 @@ public class WireTest {
 	@Test
 	public void testInit() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, Foo.class, null, null, false);
-		pc.registerPetiteBean(null, Zoo.class, null, null, false);
-		pc.registerPetiteBean(null, Boo.class, null, null, false);
-		pc.registerPetiteBean("boo2", Boo.class, null, null, false);
+		pc.registerPetiteBean(Foo.class, null, null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Boo.class, null, null, null, false);
+		pc.registerPetiteBean(Boo.class, "boo2", null, null, false);
 
 		Boo boo = (Boo) pc.getBean("boo");
 		assertNotNull(boo.getFoo());

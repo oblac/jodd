@@ -19,9 +19,9 @@ public class ScopeTest {
 	public void testThreadLocalScope() {
 		final PetiteContainer pc = new PetiteContainer();
 
-		pc.registerPetiteBean("foo", Foo.class, null, null, false);
-		pc.registerPetiteBean(null, Zoo.class, null, null, false);
-		pc.registerPetiteBean(null, Boo.class, ThreadLocalScope.class, null, false);
+		pc.registerPetiteBean(Foo.class, "foo", null, null, false);
+		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.registerPetiteBean(Boo.class, null, ThreadLocalScope.class, null, false);
 
 		assertEquals(3, pc.getTotalBeans());
 		assertEquals(2, pc.getTotalScopes());

@@ -16,8 +16,8 @@ public class ManualTest {
 	@Test
 	public void testManualRegistration() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, SomeService.class, null, null, false);
-		pc.registerPetiteBean("pojo", PojoBean.class, null, null, false);
+		pc.registerPetiteBean(SomeService.class, null, null, null, false);
+		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
 		assertEquals(2, pc.getTotalBeans());
 
 		pc.registerPetiteCtorInjectionPoint("pojo", null, null);
@@ -64,8 +64,8 @@ public class ManualTest {
 	@Test
 	public void testManualRegistrationUsingAnnotations() {
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, SomeService.class, null, null, false);
-		pc.registerPetiteBean("pojo", PojoAnnBean.class, null, null, false);
+		pc.registerPetiteBean(SomeService.class, null, null, null, false);
+		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, false);
 		assertEquals(2, pc.getTotalBeans());
 
 		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
@@ -103,8 +103,8 @@ public class ManualTest {
 	public void testManualDefinitionUsingAnnotations() {
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, SomeService.class, null, null, false);
-		pc.registerPetiteBean("pojo", PojoAnnBean.class, null, null, true);
+		pc.registerPetiteBean(SomeService.class, null, null, null, false);
+		pc.registerPetiteBean(PojoAnnBean.class, "pojo", null, null, true);
 		assertEquals(2, pc.getTotalBeans());
 
 		PojoAnnBean pojoBean = (PojoAnnBean) pc.getBean("pojo");
@@ -143,8 +143,8 @@ public class ManualTest {
 	public void testManualDefinition() {
 
 		PetiteContainer pc = new PetiteContainer();
-		pc.registerPetiteBean(null, SomeService.class, null, null, false);
-		pc.registerPetiteBean("pojo", PojoBean.class, null, null, true);
+		pc.registerPetiteBean(SomeService.class, null, null, null, false);
+		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, true);
 		assertEquals(2, pc.getTotalBeans());
 
 		pc.registerPetiteCtorInjectionPoint("pojo", null, null);
