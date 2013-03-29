@@ -44,31 +44,43 @@ import java.net.URL;
 public abstract class DefaultAppCore {
 
 	/**
-	 * Application properties (from props config file).
+	 * Application system property - application folder.
 	 */
 	public static final String APP_DIR = "app.dir";
+	/**
+	 * Application system property - flag if web application is detected..
+	 */
 	public static final String APP_WEB = "app.web";
 
 	/**
 	 * Petite bean name for AppCore (this instance).
 	 */
-	public static final String PETITE_APPCORE = "app";
+	public static final String PETITE_CORE = "core";
 	/**
 	 * Petite bean name for database pool.
 	 */
 	public static final String PETITE_DBPOOL = "dbpool";
 	/**
-	 * Petite bean name for DbManager instance.
+	 * Petite bean name for <code>DbManager</code> instance.
 	 */
 	public static final String PETITE_DB = "db";
 	/**
-	 * Petite bean name for DbOomManager instance.
+	 * Petite bean name for <code>DbOomManager</code> instance.
 	 */
 	public static final String PETITE_DBOOM = "dboom";
 	/**
 	 * Petite bean name for {@link AppInit} bean.
 	 */
-	public static final String PETITE_APPINIT = "appInit";
+	public static final String PETITE_INIT = "init";
+	/**
+	 * Petite bean name for application props.
+	 */
+	public static final String PETITE_PROPS = "props";
+	/**
+	 * Petite bean name for {@link AppScanner} bean.
+	 */
+	public static final String PETITE_SCAN = "scan";
+
 
 	/**
 	 * Logger. Resolved during {@link #initLogger() initialization}.
@@ -108,8 +120,7 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Initializes system core, invoked very first!
-	 * May also set the value of <code>appDir</code>.
+	 * Initializes application core, invoked very first!
 	 * Important: logging is not yet available in this method!
 	 */
 	@SuppressWarnings("unchecked")
@@ -210,7 +221,7 @@ public abstract class DefaultAppCore {
 		initCore();
 		initLogger();
 		initProps();
-		initScanning();
+		initScanner();
 
 		initialized = true;
 	}
@@ -309,7 +320,7 @@ public abstract class DefaultAppCore {
 	protected AppScanner appScanner;
 
 	/**
-	 * Returns app scanner.
+	 * Returns scanner.
 	 */
 	public AppScanner getAppScanner() {
 		return appScanner;
@@ -318,13 +329,12 @@ public abstract class DefaultAppCore {
 	/**
 	 * Initializes {@link AppScanner}.
 	 */
-	protected void initScanning() {
+	protected void initScanner() {
 		if (appScanner != null) {
 			return;
 		}
 
 		appScanner = new AppScanner(this);
-		appScanner.init();
 	}
 
 	// ---------------------------------------------------------------- proxetta
@@ -409,16 +419,21 @@ public abstract class DefaultAppCore {
 			petite.registerScope(SessionScope.class, new SingletonScope());
 		}
 
+		// load parameters from properties files
+		petite.defineParameters(appProps);
+
+		// adds a scanner bean, so it can be immediately configured from props
+		petite.addBean(PETITE_SCAN, appScanner);
+
 		// automagic configuration
 		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
 		appScanner.configure(pcfg);
 		pcfg.configure(petite);
 
-		// load parameters from properties files
-		petite.defineParameters(appProps);
-
 		// add AppCore instance to Petite
-		petite.addBean(PETITE_APPCORE, this);
+		petite.addBean(PETITE_CORE, this);
+
+		petite.addBean(PETITE_PROPS, appProps);
 	}
 
 	/**
@@ -526,6 +541,10 @@ public abstract class DefaultAppCore {
 	 * Closes database resources at the end.
 	 */
 	protected void stopDb() {
+		if (!useDatabase) {
+			return;
+		}
+
 		log.info("database shutdown");
 
 		jtxManager.close();
@@ -542,7 +561,7 @@ public abstract class DefaultAppCore {
 	 * Simply delegates to {@link AppInit#init()}.
 	 */
 	protected void startApp() {
-		appInit = (AppInit) petite.getBean(PETITE_APPINIT);
+		appInit = (AppInit) petite.getBean(PETITE_INIT);
 		if (appInit != null) {
 			appInit.init();
 		}
