@@ -3,7 +3,6 @@
 package jodd.joy.core;
 
 import jodd.io.findfile.ClassFinder;
-import jodd.props.Props;
 import jodd.typeconverter.Convert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +16,6 @@ import org.slf4j.LoggerFactory;
 public class AppScanner {
 
 	private static final Logger log = LoggerFactory.getLogger(AppScanner.class);
-
-	private static final String PROPS_PREFIX = "app-scan";
 
 	protected final DefaultAppCore appCore;
 
@@ -42,53 +39,31 @@ public class AppScanner {
 	 */
 	protected boolean ignoreExceptions;
 
-
-	public void init() {
-		Props appProps = appCore.getAppProps();
-
-		// scan included entries
-		String value = appProps.getValue(PROPS_PREFIX + ".includedEntries");
-
-		if (value == null) {
-			includedEntries = new String[] {
-					appCore.getClass().getPackage().getName() + ".*",
-					"jodd.*"
-			};
-		} else {
-			includedEntries = Convert.toStringArray(value);
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("Scan entries: " + Convert.toString(includedEntries));
-		}
-
-		// scan included jars
-		value = appProps.getValue(PROPS_PREFIX + ".includedJars");
-
-		if (value == null) {
-			includedJars = null;
-		} else {
-			includedJars = Convert.toStringArray(value);
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("Scan jars: " + Convert.toString(includedJars));
-		}
-
-
-		// scan ignore exceptions
-		value = appProps.getValue(PROPS_PREFIX + ".ignoreExceptions");
-
-		if (value == null) {
-			ignoreExceptions = false;
-		} else {
-			ignoreExceptions = Convert.toBooleanValue(value);
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("Scan ignore exception: " + ignoreExceptions);
-		}
+	public String[] getIncludedEntries() {
+		return includedEntries;
 	}
+
+	public void setIncludedEntries(String... includedEntries) {
+		this.includedEntries = includedEntries;
+	}
+
+	public String[] getIncludedJars() {
+		return includedJars;
+	}
+
+	public void setIncludedJars(String... includedJars) {
+		this.includedJars = includedJars;
+	}
+
+	public boolean isIgnoreExceptions() {
+		return ignoreExceptions;
+	}
+
+	public void setIgnoreExceptions(boolean ignoreExceptions) {
+		this.ignoreExceptions = ignoreExceptions;
+	}
+
+	// ---------------------------------------------------------------- props
 
 
 	/**
@@ -96,6 +71,20 @@ public class AppScanner {
 	 * Petite, DbOom and Madvoc.
 	 */
 	public void configure(ClassFinder classFinder) {
+
+		if (includedEntries == null) {
+			includedEntries = new String[] {
+					appCore.getClass().getPackage().getName() + ".*",
+					"jodd.*"
+			};
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Scan entries: " + Convert.toString(includedEntries));
+			log.debug("Scan jars: " + Convert.toString(includedJars));
+			log.debug("Scan ignore exception: " + ignoreExceptions);
+		}
+
 		if (includedEntries != null) {
 			classFinder.setIncludedEntries(includedEntries);
 		}
@@ -106,6 +95,5 @@ public class AppScanner {
 
 		classFinder.setIgnoreException(ignoreExceptions);
 	}
-
 
 }
