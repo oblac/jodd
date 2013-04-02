@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import jodd.JoddMail;
 import jodd.util.StringPool;
 
 import javax.activation.DataHandler;
@@ -31,6 +32,10 @@ public class SendMailSession {
 	
 	protected final Session mailSession;
 	protected final Transport mailTransport;
+
+	static {
+		JoddMail.mailSystem.defineJavaMailSystemProperties();
+	}
 
 	/**
 	 * Creates new mail session.

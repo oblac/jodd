@@ -3,6 +3,7 @@
 package jodd.mail;
 
 import jodd.JoddCore;
+import jodd.JoddMail;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
@@ -34,6 +35,10 @@ public class ReceiveMailSession {
 
 	protected final Session session;
 	protected final Store store;
+
+	static {
+		JoddMail.mailSystem.defineJavaMailSystemProperties();
+	}
 
 	/**
 	 * Creates new mail session.
@@ -71,7 +76,7 @@ public class ReceiveMailSession {
 		}
 		try {
 			folder.open(Folder.READ_WRITE);
-		} catch (MessagingException mex) {
+		} catch (MessagingException ignore) {
 			try {
 				folder.open(Folder.READ_ONLY);
 			} catch (MessagingException msex) {
