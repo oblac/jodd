@@ -2,6 +2,7 @@
 
 package jodd.servlet.filter;
 
+import jodd.io.FileNameUtil;
 import jodd.servlet.ServletUtil;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.TypeConversionException;
@@ -20,25 +21,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Compresses output with gzip, for browsers that supports it.
+ * Compresses output with GZIP, for browsers that supports it.
  * <p>
  * Configuration is based on the following initialization parameters:
  *
  * <ul>
- * <li><b>threshold</b> - min number of bytes for compressing
+ * <li><code>threshold</code> - min number of bytes for compressing
  * or 0 for no compression at all. By defaults is 0. Good value is 128.</li>
  *
- * <li><b>match</b> - comma separated string patterns to be found
- * in uri for using gzip. Only uri's that have these patterns inside will use
- * gzip. Use '*' for applying gzip on all resources (ignoring the wildcards value)</li>
+ * <li><code>match</code> - comma separated string patterns to be found
+ * in the uri for using gzip. Only uris that match these patterns will be gzipped.
+ * Use '<b>*</b>' to enable default matching using just <b>extensions</b>.
+ * <b>extensions</b> (ignoring the wildcards value)</li>
  *
- * <li><b>exclude</b> - comma separated string patterns to be excluded
- * if found in uri for using gzip. It is applied only on <b>matched</b> uris.</li>
+ * <li><code>extensions</code> - when <b>match</b> is set to all resources,
+ * this parameter defines list of URI extensions that should be gzipped.
+ * By default set to: <code>html, htm, css, js</code>.
+ * </li>
  *
- * <li><b>wildcards</b> - boolean that specifies wildcard matching for string patterns.
+ * <li><code>exclude</code> - comma separated string patterns to be excluded
+ * if found in uri for using gzip. It is applied only if all urls are <b>matched</b>.</li>
+ *
+ * <li><code>wildcards</code> - boolean that specifies wildcard matching for string patterns.
  * by default <code>false</code>. URL is matched as {@link Wildcard#matchPathOne(String, String[]) paths}.</li>
  *
+ * <li><code>requestParameterName</code> - name of request parameter that can override GZipping.
+ * Default value is <code>gzip</code>. Set it to an empty string to turn this feature off.
+ * </li>
+ *
  * </ul>
+ *
+ * All matching is done in lowercase. You can override this class for finer control.
  */
 public class GzipFilter implements Filter {
 	
@@ -73,14 +86,12 @@ public class GzipFilter implements Filter {
 		}
 	}
 
-	/**
-	 * The threshold number to compress, (0 == no compression).
-	 */
-    protected int threshold;
-
+    protected int threshold;			// the threshold number to compress, (0 == no compression).
 	protected String[] matches;
 	protected String[] excludes;
 	protected boolean wildcards;
+	protected String requestParameterName;
+	protected String[] extensions;
 
 	/**
 	 * Filter initialization.
@@ -119,6 +130,26 @@ public class GzipFilter implements Filter {
 				excludes[i] = excludes[i].trim();
 			}
 		}
+
+		// request parameter name
+		requestParameterName = config.getInitParameter("requestParameterName");
+
+		if (requestParameterName == null) {
+			requestParameterName = "gzip";
+		}
+
+		requestParameterName = requestParameterName.trim();
+
+		// allowed extensions
+
+		String urlExtensions = config.getInitParameter("extensions");
+
+		if (urlExtensions != null) {
+			extensions = StringUtil.splitc(urlExtensions, ", ");
+		} else {
+			extensions = new String[] {"html", "html", "js", "css"};
+		}
+
 	}
 
 	public void destroy() {
@@ -127,18 +158,44 @@ public class GzipFilter implements Filter {
 	}
 
 	/**
-	 * Determine if uri is eligible for gzip-ing.
+	 * Determine if request is eligible for GZipping.
 	 */
-	private boolean isGzipEligible(HttpServletRequest req) {
-		String uri = req.getRequestURI();
+	protected boolean isGzipEligible(HttpServletRequest request) {
+		// request parameter name
+
+		if (requestParameterName.length() != 0) {
+			String forceGzipString = request.getParameter(requestParameterName);
+
+			if (forceGzipString != null) {
+				return Convert.toBooleanValue(forceGzipString, false);
+			}
+		}
+
+		// extract uri
+
+		String uri = request.getRequestURI();
+
 		if (uri == null) {
 			return false;
 		}
 
+		uri = uri.toLowerCase();
+
 		boolean result = false;
-		
+
+		// check uri
+
 		if (matches == null) {							// match=*
-			result = true;
+			// extension
+			String extension = FileNameUtil.getExtension(uri);
+
+			if (extension.length() > 0) {
+				extension = extension.toLowerCase();
+
+				if (StringUtil.equalsOne(extension, extensions) != -1) {
+					result = true;
+				}
+			}
 		} else {
 			if (wildcards) {
 				result = Wildcard.matchPathOne(uri, matches) != -1;
@@ -166,6 +223,8 @@ public class GzipFilter implements Filter {
 				}
 			}
 		}
+
 		return result;
 	}
+
 }
