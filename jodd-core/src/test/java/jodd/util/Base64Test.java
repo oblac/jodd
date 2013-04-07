@@ -5,6 +5,7 @@ package jodd.util;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Base64Test {
 
@@ -32,5 +33,32 @@ public class Base64Test {
 		assertEquals("M", Base64.decodeToString("TQ=="));
 		assertEquals("Ma", Base64.decodeToString("TWE="));
 		assertEquals("Man", Base64.decodeToString("TWFu"));
+	}
+
+	@Test
+	public void testUTF8() {
+		String utf8string = "Здоровая";
+
+		String encoded = Base64.encodeToString(utf8string);
+		String decoded = Base64.decodeToString(encoded);
+
+		assertEquals(utf8string, decoded);
+
+		for (int i = 0; i < 10; i++) {
+			utf8string += utf8string;
+		}
+
+		assertTrue(utf8string.length() > 76);
+
+		byte[] encodedBytes = Base64.encodeToByte(utf8string, true);
+		decoded = Base64.decodeToString(encodedBytes);
+
+		assertEquals(utf8string, decoded);
+
+
+		encoded = Base64.encodeToString(utf8string, true);
+		decoded = Base64.decodeToString(encoded);
+
+		assertEquals(utf8string, decoded);
 	}
 }

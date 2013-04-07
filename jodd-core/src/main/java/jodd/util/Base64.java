@@ -8,8 +8,16 @@ import java.util.Arrays;
 import java.io.UnsupportedEncodingException;
 
 /**
- * One of the <b>fastest</b> Base64 encoder/decoder implementations.
- * Base64 encoding is defined in RFC 2045.
+ * The <b>fastest</b> Base64 encoder/decoder implementations.
+ * Base64 is defined in RFC 2045.
+ * <p>
+ * Encoding supports two modes - with or without line separator.
+ * When line separator flag is on, result will have lines with
+ * max size of 76 chars, as per spec.
+ * <p>
+ * When decoding, input must be valid, without illegal characters.
+ * If input contains lines, they must be 76 chars long. Lines must
+ * end with CRLF ("\r\n"), as per spec.
  */
 public class Base64 {
 
@@ -24,29 +32,11 @@ public class Base64 {
 		INV['='] = 0;
 	}
 
-	/**
-	 * Returns Base64 characters, a clone of used array.
-	 */
-	public static char[] getAlphabet() {
-		return CHARS.clone();
-	}
-
-	// ---------------------------------------------------------------- char[]
-
-	public static char[] encodeToChar(String s) {
-		try {
-			return encodeToChar(s.getBytes(JoddCore.encoding), false);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
-	}
-
-	public static char[] encodeToChar(byte[] arr) {
-		return encodeToChar(arr, false);
-	}
+	// ---------------------------------------------------------------- char
 
 	/**
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
+	 * @param lineSeparator optional CRLF after 76 chars, unless EOF.
 	 */
 	public static char[] encodeToChar(byte[] arr, boolean lineSeparator) {
 		int len = arr != null ? arr.length : 0;
@@ -139,11 +129,21 @@ public class Base64 {
 		}
 	}
 
+	public static byte[] encodeToByte(String s, boolean lineSep) {
+		try {
+			return encodeToByte(s.getBytes(JoddCore.encoding), lineSep);
+		} catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
+	}
+
 	public static byte[] encodeToByte(byte[] arr) {
 		return encodeToByte(arr, false);
 	}
 
-	/** Encodes a raw byte array into a BASE64 <code>byte[]</code>.
+	/**
+	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
+	 * @param lineSeparator optional CRLF after 76 chars, unless EOF.
 	 */
 	public static byte[] encodeToByte(byte[] arr, boolean lineSep) {
 		int len = arr != null ? arr.length : 0;
@@ -183,8 +183,16 @@ public class Base64 {
 		return dest;
 	}
 
+	public static String decodeToString(byte[] arr) {
+		try {
+			return new String(decode(arr), JoddCore.encoding);
+		} catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
+	}
+
 	/**
-	 * Decodes a BASE64 encoded byte array.
+	 * Decodes BASE64 encoded byte array.
 	 */
 	public static byte[] decode(byte[] arr) {
 		int length = arr.length;
@@ -235,14 +243,14 @@ public class Base64 {
 			return null;
 		}
 	}
-	public static String decodeToString(String s) {
+
+	public static String encodeToString(String s, boolean lineSep) {
 		try {
-			return new String(decode(s), JoddCore.encoding);
+			return new String(encodeToChar(s.getBytes(JoddCore.encoding), lineSep));
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
 	}
-
 
 	public static String encodeToString(byte[] arr) {
 		return new String(encodeToChar(arr, false));
@@ -253,6 +261,14 @@ public class Base64 {
 	 */
 	public static String encodeToString(byte[] arr, boolean lineSep) {
 		return new String(encodeToChar(arr, lineSep));
+	}
+
+	public static String decodeToString(String s) {
+		try {
+			return new String(decode(s), JoddCore.encoding);
+		} catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
 	}
 
 	/**
