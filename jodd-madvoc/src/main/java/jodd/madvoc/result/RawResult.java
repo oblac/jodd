@@ -16,7 +16,8 @@ import java.io.IOException;
 
 /**
  * Raw results directly writes byte context to the output.
- * Output is closed after writing.
+ * Content type and charset encoding (e.g. set by Madvoc) is ignored
+ * and new values should be set here. Output is closed after writing.
  */
 public class RawResult extends ActionResult {
 
@@ -41,8 +42,12 @@ public class RawResult extends ActionResult {
 		RawResultData result = (RawResultData) resultObject;
 
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
-		ServletUtil.prepareDownload(response, result.getDownloadFileName(), result.getMimeType(), result.getContentLength());
 
+		// reset content type and prepare response
+		response.setContentType(null);
+		ServletUtil.prepareResponse(response, result.getDownloadFileName(), result.getMimeType(), result.getContentLength());
+
+		// write out
 		InputStream contentInputStream = result.getContentInputStream();
 		OutputStream out = response.getOutputStream();
 

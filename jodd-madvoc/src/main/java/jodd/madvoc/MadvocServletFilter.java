@@ -81,15 +81,22 @@ public class MadvocServletFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 
 		String actionPath = DispatcherUtil.getServletPath(request);
+
 		try {
-			actionPath = madvocController.invoke(actionPath, request, response);
+			MadvocResponseWrapper madvocResponse = new MadvocResponseWrapper(response);
+
+			actionPath = madvocController.invoke(actionPath, request, madvocResponse);
 		} catch (Exception ex) {
 			log.error("Exception while invoking action path: " + actionPath, ex);
+
 			ex.printStackTrace();
+
 			throw new ServletException(ex);
 		}
 		if (actionPath != null) {	// action path is not consumed
+
 			actionPath = processUnhandledPath(actionPath, req, res);
+
 			if (actionPath != null) {
 				chain.doFilter(request, response);
 			}
