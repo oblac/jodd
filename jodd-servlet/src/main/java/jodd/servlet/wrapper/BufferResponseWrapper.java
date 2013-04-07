@@ -331,7 +331,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Prevents setting content-length fif buffering enabled.
+	 * Prevents setting content-length if buffering enabled.
 	 */
 	@Override
 	public void setHeader(String name, String value) {
@@ -348,9 +348,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public void addHeader(String name, String value) {
-		if (name.toLowerCase().equals(CONTENT_TYPE)) {
+		String lowerName = name.toLowerCase();
+
+		if (lowerName.equals(CONTENT_TYPE)) {
 			setContentType(value);
-		} else if (buffer == null || !name.toLowerCase().equals(CONTENT_LENGTH)) {
+		} else if (buffer == null || !lowerName.equals(CONTENT_LENGTH)) {
 			super.addHeader(name, value);
 		}
 	}
