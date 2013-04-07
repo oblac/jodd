@@ -28,6 +28,7 @@ public class MadvocConfig {
 	public MadvocConfig() {
 		setActionAnnotations(Action.class);
 		encoding = StringPool.UTF_8;
+		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
@@ -81,6 +82,7 @@ public class MadvocConfig {
 	// ---------------------------------------------------------------- encoding
 
 	protected String encoding;
+	protected boolean applyCharacterEncoding;
 
 	/**
 	 * Returns character encoding.
@@ -96,6 +98,19 @@ public class MadvocConfig {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Returns if character encoding should be set in request and response by Madvoc.
+	 */
+	public boolean isApplyCharacterEncoding() {
+		return applyCharacterEncoding;
+	}
+
+	/**
+	 * Defines is character encoding has to be set by Madvoc into the request and response.
+	 */
+	public void setApplyCharacterEncoding(boolean applyCharacterEncoding) {
+		this.applyCharacterEncoding = applyCharacterEncoding;
+	}
 
 	// ---------------------------------------------------------------- file upload factory
 
@@ -371,6 +386,7 @@ public class MadvocConfig {
 		return "MadvocConfig{" +
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
 				",\n\tactionPathMappingEnabled=" + actionPathMappingEnabled +
+				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
 				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
 				",\n\tcreateDefaultAliases=" + createDefaultAliases +
 				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
