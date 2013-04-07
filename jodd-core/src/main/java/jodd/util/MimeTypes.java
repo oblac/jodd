@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -26,7 +28,7 @@ public class MimeTypes {
 	public static final String MIME_TEXT_PLAIN 					= "text/plain";
 	public static final String MIME_TEXT_HTML					= "text/html";
 
-	private static final HashMap<String, String> MIME_TYPE_MAP;
+	private static final HashMap<String, String> MIME_TYPE_MAP;	// extension -> mime-type map
 
 	static {
 		Properties mimes = new Properties();
@@ -98,5 +100,37 @@ public class MimeTypes {
 	 */
 	public static String lookupMimeType(String ext) {
 		return MIME_TYPE_MAP.get(ext.toLowerCase());
+	}
+
+	/**
+	 * Finds all extensions that belong to given mime type(s).
+	 * If wildcard mode is on, provided mime type is wildcard pattern.
+	 * @param mimeType list of mime types, separated by comma
+	 * @param useWildcard if set, mime types are wildcard patterns
+	 */
+	public static String[] findExtensionsByMimeTypes(String mimeType, boolean useWildcard) {
+		LinkedList<String> extensions = new LinkedList<String>();
+		mimeType = mimeType.toLowerCase();
+
+		String[] mimeTypes = StringUtil.splitc(mimeType, ", ");
+
+		for (Map.Entry<String, String> entry : MIME_TYPE_MAP.entrySet()) {
+			String entryExtension = entry.getKey();
+			String entryMimeType = entry.getValue().toLowerCase();
+
+			int matchResult = useWildcard ?
+					Wildcard.matchOne(entryMimeType, mimeTypes) :
+					StringUtil.equalsOne(entryMimeType, mimeTypes);
+
+			if (matchResult != -1) {
+				extensions.add(entryExtension);
+			}
+		}
+
+		if (extensions.isEmpty()) {
+			return StringPool.EMPTY_ARRAY;
+		}
+
+		return extensions.toArray(new String[extensions.size()]);
 	}
 }
