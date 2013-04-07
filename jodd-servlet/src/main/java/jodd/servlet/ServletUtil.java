@@ -111,7 +111,7 @@ public class ServletUtil {
 	}
 
 	/**
-	 * Prepares response for file download with specified mime type.
+	 * Prepares response for file download with provided mime type.
 	 */
 	public static void prepareDownload(HttpServletResponse response, File file, String mimeType) {
 		if (file.exists() == false) {
@@ -120,29 +120,23 @@ public class ServletUtil {
 		if (file.length() > Integer.MAX_VALUE) {
 			throw new IllegalArgumentException("File too big: " + file);
 		}
-		prepareDownload(response, file.getAbsolutePath(), mimeType, (int) file.length());
+		prepareResponse(response, file.getAbsolutePath(), mimeType, (int) file.length());
 	}
 
 	/**
-	 * Prepares response for file download. Resolves mime type from file name extension.
-	 */
-	public static void prepareDownload(HttpServletResponse response, String fileName, int fileSize) {
-		prepareDownload(response, fileName, null, fileSize);
-	}
-
-	/**
-	 * Prepares response for file download.
+	 * Prepares response for various provided data.
 	 *
 	 * @param response http response
 	 * @param fileName file name, if full path then file name will be stripped, if null, will be ignored.
-	 * @param mimeType may be <code>null</code>
-	 * @param fileSize if less then 0 will be ignored
+	 * @param mimeType mime type with optional charset, may be <code>null</code>
+	 * @param fileSize if less then 0 it will be ignored
 	 */
-	public static void prepareDownload(HttpServletResponse response, String fileName, String mimeType, int fileSize) {
+	public static void prepareResponse(HttpServletResponse response, String fileName, String mimeType, int fileSize) {
 		if ((mimeType == null) && (fileName != null)) {
 			String extension = FileNameUtil.getExtension(fileName);
 			mimeType = MimeTypes.getMimeType(extension);
 		}
+
 		if (mimeType != null) {
 			response.setContentType(mimeType);
 		}
@@ -153,7 +147,7 @@ public class ServletUtil {
 
 		if (fileName != null) {
 			String name = FileNameUtil.getName(fileName);
-			response.setHeader(CONTENT_DISPOSITION,"attachment;filename=\"" + name + '\"');
+			response.setHeader(CONTENT_DISPOSITION, "attachment;filename=\"" + name + '\"');
 		}
 	}
 
