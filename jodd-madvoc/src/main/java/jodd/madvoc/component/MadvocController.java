@@ -74,13 +74,9 @@ public class MadvocController {
 	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String, String)
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
-		ActionRequest request = null;
+		ActionRequest actionRequest = null;
 
-		String encoding = madvocConfig.getEncoding();
-		if (encoding != null) {
-			servletRequest.setCharacterEncoding(madvocConfig.getEncoding());
-			servletResponse.setCharacterEncoding(madvocConfig.getEncoding());
-		}
+		boolean characterEncodingSet = false;
 
 		while (actionPath != null) {
 			if (log.isDebugEnabled()) {
@@ -100,18 +96,31 @@ public class MadvocController {
 				log.debug("Invoking action path '" + actionPath + "' using " + actionConfig.actionClass.getSimpleName());
 			}
 
+			// set character encoding
+			if (!characterEncodingSet && madvocConfig.isApplyCharacterEncoding()) {
+
+				String encoding = madvocConfig.getEncoding();
+
+				if (encoding != null) {
+					servletRequest.setCharacterEncoding(madvocConfig.getEncoding());
+					servletResponse.setCharacterEncoding(madvocConfig.getEncoding());
+				}
+
+				characterEncodingSet = true;
+			}
+
 			// create action object
 			Object action = createAction(actionConfig.actionClass);
 
 			// create action request
-			ActionRequest previousRequest = request;
-			request = createActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
-			request.setPreviousActionRequest(previousRequest);
+			ActionRequest previousRequest = actionRequest;
+			actionRequest = createActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
+			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			invokeAndRender(request);
+			invokeAndRender(actionRequest);
 
-			actionPath = request.getNextActionPath();
+			actionPath = actionRequest.getNextActionPath();
 		}
 		return null;
 	}
@@ -119,9 +128,9 @@ public class MadvocController {
 	/**
 	 * Invokes action request (interceptors and action method) and renders result.
 	 */
-	protected void invokeAndRender(ActionRequest request) throws Exception {
-		Object resultValueObject = request.invoke();
-		render(request, resultValueObject);
+	protected void invokeAndRender(ActionRequest actionRequest) throws Exception {
+		Object resultValueObject = actionRequest.invoke();
+		render(actionRequest, resultValueObject);
 	}
 
 
@@ -140,7 +149,7 @@ public class MadvocController {
 	 *
 	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object, String, String)
 	 */
-	public void render(ActionRequest req, Object resultObject) throws Exception {
+	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
 		String resultValue = resultObject != null ? resultObject.toString() : null;
 		String resultType = null;
 
@@ -157,7 +166,7 @@ public class MadvocController {
 
 		// result type still not set, read config
 		if (resultType == null) {
-			resultType = req.getActionConfig().getResultType();
+			resultType = actionRequest.getActionConfig().getResultType();
 
 			// result type still not defined, use default
 			if (resultType == null) {
@@ -170,13 +179,13 @@ public class MadvocController {
 			throw new MadvocException("Unable to find action result type: " + resultType);
 		}
 		if (result.isInitialized() == false) {
-			initializeResult(result, req);
+			initializeResult(result, actionRequest);
 		}
 		if (madvocConfig.isPreventCaching()) {
-			ServletUtil.preventCaching(req.getHttpServletResponse());
+			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
-		String resultPath = resultMapper.resolveResultPath(req.getActionConfig(), resultValue);
-		result.render(req, resultObject, resultValue, resultPath);
+		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
+		result.render(actionRequest, resultObject, resultValue, resultPath);
 	}
 
 	/**
@@ -217,7 +226,9 @@ public class MadvocController {
 		if (interceptorClasses == null) {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
 		}
+
 		cfg.interceptors = interceptorsManager.resolveAll(interceptorClasses);
+
 		for (ActionInterceptor interceptor : cfg.interceptors) {
 			if (interceptor.isInitialized() == false) {
 				initializeInterceptor(interceptor);
@@ -260,6 +271,5 @@ public class MadvocController {
 	protected ActionRequest createActionRequest(String actionPath, ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		return new ActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
 	}
-
 
 }
