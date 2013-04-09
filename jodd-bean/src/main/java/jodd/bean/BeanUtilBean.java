@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.JoddBean;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
@@ -77,7 +78,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// try: =property
-		bp.field = bp.cd.getField(bp.name, declared);
+		bp.field = getField(bp, declared);
 		if (bp.field != null) {
 			return true;
 		}
@@ -108,11 +109,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		return getSimpleProperty(new BeanProperty(bean, property, true), declared);
 	}
 
-	public static final String THIS_REF = "*this";
-
 	protected Object getSimpleProperty(BeanProperty bp, boolean declared) {
 
-		if ((bp.name.length() == 0 && bp.first) || bp.name.equals(THIS_REF)) {
+		if ((bp.name.length() == 0 && bp.first) || bp.name.equals(JoddBean.thisRef)) {
 			return bp.bean;
 		}
 
@@ -128,9 +127,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// try: =property
-		bp.field = bp.cd.getField(bp.name, declared);
+		bp.field = getField(bp, declared);
 		if (bp.field != null) {
-			Object result = getField(bp.bean, bp.field);
+			Object result = getFieldValue(bp.bean, bp.field);
 			if ((result == null) && (bp.forced == true)) {
 				result = createBeanProperty(bp);
 			}
@@ -174,9 +173,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// try: property=
-		Field field = bp.cd.getField(bp.name, declared);
+		Field field = getField(bp, declared);
 		if (field != null) {
-			setField(bp.bean, field, value);
+			setFieldValue(bp.bean, field, value);
 			return;
 		}
 

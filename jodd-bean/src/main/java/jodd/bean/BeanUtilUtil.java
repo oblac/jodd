@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.JoddBean;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
@@ -68,7 +69,7 @@ class BeanUtilUtil {
 	/**
 	 * Sets field value.
 	 */
-	protected void setField(Object bean, Field f, Object value) {
+	protected void setFieldValue(Object bean, Field f, Object value) {
 		try {
 			Class type = f.getType();
 			value = convertType(value, type);
@@ -81,7 +82,7 @@ class BeanUtilUtil {
 	/**
 	 * Return value of a field.
 	 */
-	protected Object getField(Object bean, Field f) {
+	protected Object getFieldValue(Object bean, Field f) {
 		try {
 			return f.get(bean);
 		} catch (Exception ex) {
@@ -134,19 +135,18 @@ class BeanUtilUtil {
 			if (setter != null) {
 				invokeSetter(bp.bean, setter, newArray);
 			} else {
-				Field field = bp.cd.getField(bp.name, true);
+				Field field = getField(bp, true);
 				if (field == null) {
 					throw new BeanException("Unable to find setter or field named as: " + bp.name, bp);
 				}
-				setField(bp.bean, field, newArray);
+				setFieldValue(bp.bean, field, newArray);
 			}
 			array = newArray;
 		}
 		return array;
 	}
 
-
-	@SuppressWarnings({"unchecked"})	
+	@SuppressWarnings({"unchecked"})
 	protected void ensureListSize(List list, int size) {
 		int len = list.size();
 		while (size >= len) {
@@ -154,7 +154,6 @@ class BeanUtilUtil {
 			len++;
 		}
 	}
-
 
 	// ---------------------------------------------------------------- index
 
@@ -211,7 +210,6 @@ class BeanUtilUtil {
 		return null;
 	}
 
-
 	protected int parseInt(String indexString, BeanProperty bp) {
 		try {
 			return Integer.parseInt(indexString);
@@ -233,7 +231,7 @@ class BeanUtilUtil {
 		if (setter != null) {
 			type = setter.getParameterTypes()[0];
 		} else {
-			field = bp.cd.getField(bp.name, true);
+			field = getField(bp, true);
 			if (field == null) {
 				return null;
 			}
@@ -248,7 +246,7 @@ class BeanUtilUtil {
 		if (setter != null) {
 			invokeSetter(bp.bean, setter, newInstance);
 		} else {
-			setField(bp.bean, field, newInstance);
+			setFieldValue(bp.bean, field, newInstance);
 		}
 		return newInstance;
 	}
@@ -297,6 +295,21 @@ class BeanUtilUtil {
 			}
 		}
 		return type;
+	}
+
+	// ---------------------------------------------------------------- field name
+
+	/**
+	 * Returns field for a property.
+	 */
+	protected Field getField(BeanProperty bp, boolean declared) {
+		String fieldName = bp.name;
+
+		if (JoddBean.fieldPrefix != null) {
+			fieldName = JoddBean.fieldPrefix + fieldName;
+		}
+
+		return bp.cd.getField(fieldName, declared);
 	}
 
 }

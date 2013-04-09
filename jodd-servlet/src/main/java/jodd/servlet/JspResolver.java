@@ -2,6 +2,7 @@
 
 package jodd.servlet;
 
+import jodd.JoddBean;
 import jodd.bean.BeanUtil;
 import jodd.bean.BeanUtilBean;
 
@@ -120,7 +121,7 @@ public class JspResolver {
 		if (thisRef.equals(name)) {
 			return value;
 		}
-		name = BeanUtilBean.THIS_REF + name.substring(thisRef.length());
+		name = JoddBean.thisRef + name.substring(thisRef.length());
 		return BeanUtil.getDeclaredPropertySilently(value, name);
 	}
 
