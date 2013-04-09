@@ -6,7 +6,9 @@ import jodd.petite.scope.Scope;
 import jodd.util.ArraysUtil;
 
 /**
- * Petite bean definition, for internal use only.
+ * Petite bean definition and cache. Consist of bean data that defines a bean
+ * and cache, that might not be initialized (if <code>null</code>).
+ * To initialize cache, get the bean instance from container.
  */
 public class BeanDefinition {
 
@@ -18,49 +20,125 @@ public class BeanDefinition {
 	}
 
 	// finals
-	public final String name;			// bean name
-	public final Class type;			// bean type
+	protected final String name;		// bean name
+	protected final Class type;			// bean type
 	protected final Scope scope;  		// bean scope, may be null for beans that are not stored in scope but just wired
-	public final WiringMode wiringMode;	// wiring mode
+	protected final WiringMode wiringMode;	// wiring mode
 
 	// cache
-	public CtorInjectionPoint ctor;
-	public PropertyInjectionPoint[] properties;
-	public SetInjectionPoint[] sets;
-	public MethodInjectionPoint[] methods;
-	public InitMethodPoint[] initMethods;
-	public String[] params;
+	protected CtorInjectionPoint ctor;
+	protected PropertyInjectionPoint[] properties;
+	protected SetInjectionPoint[] sets;
+	protected MethodInjectionPoint[] methods;
+	protected InitMethodPoint[] initMethods;
+	protected String[] params;
+
+	// ---------------------------------------------------------------- definition getters
+
+	/**
+	 * Returns bean name.
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Returns bean type.
+	 */
+	public Class getType() {
+		return type;
+	}
+
+	/**
+	 * Returns beans scope type.
+	 */
+	public Class<? extends Scope> getScope() {
+		if (scope == null) {
+			return null;
+		}
+		return scope.getClass();
+	}
+
+	/**
+	 * Returns wiring mode.
+	 */
+	public WiringMode getWiringMode() {
+		return wiringMode;
+	}
+
+	// ---------------------------------------------------------------- cache getters
+
+	/**
+	 * Returns constructor injection point.
+	 */
+	public CtorInjectionPoint getCtorInjectionPoint() {
+		return ctor;
+	}
+
+	/**
+	 * Returns property injection points.
+	 */
+	public PropertyInjectionPoint[] getPropertyInjectionPoints() {
+		return properties;
+	}
+
+	/**
+	 * Returns set injection points.
+	 */
+	public SetInjectionPoint[] getSetInjectionPoints() {
+		return sets;
+	}
+
+	/**
+	 * Returns method injection points.
+	 */
+	public MethodInjectionPoint[] getMethodInjectionPoints() {
+		return methods;
+	}
+
+	/**
+	 * Returns init method points.
+	 */
+	public InitMethodPoint[] getInitMethodPoints() {
+		return initMethods;
+	}
+
+	/**
+	 * Returns parameters.
+	 */
+	public String[] getParams() {
+		return params;
+	}
 
 	// ---------------------------------------------------------------- scope delegates
 
 	/**
 	 * Delegates to {@link jodd.petite.scope.Scope#lookup(String)}. 
 	 */
-	public Object scopeLookup() {
+	protected Object scopeLookup() {
 		return scope.lookup(name);
 	}
 
 	/**
 	 * Delegates to {@link jodd.petite.scope.Scope#register(String, Object)}.
 	 */
-	public void scopeRegister(Object object) {
+	protected void scopeRegister(Object object) {
 		scope.register(name, object);
 	}
 
 	/**
 	 * Delegates to {@link jodd.petite.scope.Scope#remove(String)}. 
 	 */
-	public void scopeRemove() {
+	protected void scopeRemove() {
 		scope.remove(name);
 	}
-
 
 	// ---------------------------------------------------------------- appends
 
 	/**
 	 * Adds property injection point.
 	 */
-	public void addPropertyInjectionPoint(PropertyInjectionPoint pip) {
+	protected void addPropertyInjectionPoint(PropertyInjectionPoint pip) {
 		if (properties == null) {
 			properties = new PropertyInjectionPoint[1];
 			properties[0] = pip;
@@ -72,7 +150,7 @@ public class BeanDefinition {
 	/**
 	 * Adds set injection point.
 	 */
-	public void addSetInjectionPoint(SetInjectionPoint sip) {
+	protected void addSetInjectionPoint(SetInjectionPoint sip) {
 		if (sets == null) {
 			sets = new SetInjectionPoint[1];
 			sets[0] = sip;
@@ -84,7 +162,7 @@ public class BeanDefinition {
 	/**
 	 * Adds method injection point.
 	 */
-	public void addMethodInjectionPoint(MethodInjectionPoint mip) {
+	protected void addMethodInjectionPoint(MethodInjectionPoint mip) {
 		if (methods == null) {
 			methods = new MethodInjectionPoint[1];
 			methods[0] = mip;
@@ -96,7 +174,7 @@ public class BeanDefinition {
 	/**
 	 * Adds init methods.
 	 */
-	public void addInitMethodPoints(InitMethodPoint[] methods) {
+	protected void addInitMethodPoints(InitMethodPoint[] methods) {
 		if (initMethods == null) {
 			initMethods = methods;
 		} else {
@@ -112,6 +190,7 @@ public class BeanDefinition {
 				"name='" + name + '\'' +
 				", type=" + type +
 				", scope=" + scope +
+				", wiring= " + wiringMode +
 				'}';
 	}
 }

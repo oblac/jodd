@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -130,7 +129,7 @@ public abstract class PetiteBeans {
 	 * Lookups for {@link BeanDefinition bean definition}.
 	 * Returns <code>null</code> if bean name doesn't exist.
 	 */
-	protected BeanDefinition lookupBeanDefinition(String name) {
+	public BeanDefinition lookupBeanDefinition(String name) {
 		return beans.get(name);
 	}
 
@@ -254,20 +253,20 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Removes all petite beans of provided type. Type is not resolved for name!
+	 * Removes all petite beans of provided type. Bean name is not resolved from a type!
 	 * Instead, all beans are iterated and only beans with equal types are removed.
 	 * @see #removeBean(String)
 	 */
 	public void removeBean(Class type) {
 		// collect bean names
 		Set<String> beanNames = new HashSet<String>();
-		Iterator<BeanDefinition> it = beansIterator();
-		while (it.hasNext()) {
-			BeanDefinition def = it.next();
+
+		for (BeanDefinition def : beans.values()) {
 			if (def.type.equals(type)) {
 				beanNames.add(def.name);
 			}
 		}
+
 		// remove collected bean names
 		for (String beanName : beanNames) {
 			removeBean(beanName);
@@ -291,7 +290,7 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- bean collections
 
 	/**
-	 * Resolve bean names for give type.
+	 * Resolves bean names for give type.
 	 */
 	protected String[] resolveBeanNamesForType(Class type) {
 		String[] beanNames = beanCollections.get(type);
@@ -524,10 +523,10 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Returns iterator over all registered beans.
+	 * Returns set of all bean names.
 	 */
-	public Iterator<BeanDefinition> beansIterator() {
-		return beans.values().iterator();
+	public Set<String> getBeanNames() {
+		return beans.keySet();
 	}
 
 	// ---------------------------------------------------------------- params

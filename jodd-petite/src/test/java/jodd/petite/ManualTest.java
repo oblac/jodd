@@ -7,6 +7,8 @@ import jodd.petite.data.PojoBean;
 import jodd.petite.data.SomeService;
 import org.junit.Test;
 
+import java.util.Set;
+
 import static jodd.petite.PetiteRegistry.petite;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 import static org.junit.Assert.*;
@@ -19,6 +21,12 @@ public class ManualTest {
 		pc.registerPetiteBean(SomeService.class, null, null, null, false);
 		pc.registerPetiteBean(PojoBean.class, "pojo", null, null, false);
 		assertEquals(2, pc.getTotalBeans());
+
+		Set<String> names = pc.getBeanNames();
+		assertEquals(2, names.size());
+
+		assertTrue(names.contains("pojo"));
+		assertTrue(names.contains("someService"));
 
 		pc.registerPetiteCtorInjectionPoint("pojo", null, null);
 		pc.registerPetitePropertyInjectionPoint("pojo", "service", "someService");
