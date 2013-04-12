@@ -58,11 +58,12 @@ import java.util.ArrayList;
  *
  * <p>
  * Results that are not used during parsing will be set to <code>null</code>.
+ * <p>
  */
-public class DefaultResultSetMapper implements ResultSetMapper {
+public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	protected final DbOomManager dbOomManager;
-	protected final ResultSet rs;
+
 	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
 	protected final String[] columnNames;		// list of all column names
@@ -73,25 +74,22 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 
 	// ---------------------------------------------------------------- ctor
 
-	public DefaultResultSetMapper(ResultSet rs, DbOomManager dbOomManager) {
-		this(rs, null, dbOomManager);
-	}
-
 	/**
-	 * Reads ResultSet meta-data for column and table names.
+	 * Reads <code>ResultSet</code> meta-data for column and table names.
 	 */
-	public DefaultResultSetMapper(ResultSet rs, Map<String, ColumnData> columnAliases, DbOomManager oomManager) {
+	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, DbOomManager oomManager) {
+		super(resultSet);
 		this.dbOomManager = oomManager;
-		this.rs = rs;
 		this.strictCompare = dbOomManager.isStrictCompare();
 		//this.resultColumns = new HashSet<String>();
 		try {
-			ResultSetMetaData rsMetaData = rs.getMetaData();
+			ResultSetMetaData rsMetaData = resultSet.getMetaData();
 			if (rsMetaData == null) {
-
 				throw new DbOomException("JDBC driver does not provide meta-data.");
 			}
+
 			totalColumns = rsMetaData.getColumnCount();
+
 			this.resultColumns = new HashSet<String>(totalColumns);
 			columnNames = new String[totalColumns];
 			columnDbSqlTypes = new int[totalColumns];
@@ -168,45 +166,17 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean next() {
-		try {
-			return rs.next();
-		} catch (SQLException sex) {
-			throw new DbOomException("Unable to move ResultSet cursor to next position.", sex);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void close() {
-		try {
-			rs.close();
-		} catch (SQLException sex) {
-			// ignore
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ResultSet getResultSet() {
-		return rs;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Class[] resolveTables() {
 		List<Class> classes = new ArrayList<Class>(tableNames.length);
 		String lastTableName = null;
 		resultColumns.clear();
+
 		for (int i = 0; i < tableNames.length; i++) {
 			String tableName = tableNames[i];
 			String columnName = columnNames[i];
 
 			if (tableName == null) {
-				// Maybe JDBC driver does not support it
+				// maybe JDBC driver does not support it
 				throw new DbOomException("Table name not available in driver meta-data.");
 			}
 
@@ -278,9 +248,9 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					sqlType = SqlTypeManager.lookup(destinationType);
 				}
 				if (sqlType != null) {
-					cachedColumnValue = sqlType.readValue(rs, colNdx + 1, destinationType, columnDbSqlType);
+					cachedColumnValue = sqlType.readValue(resultSet, colNdx + 1, destinationType, columnDbSqlType);
 				} else {
-					cachedColumnValue = rs.getObject(colNdx + 1);
+					cachedColumnValue = resultSet.getObject(colNdx + 1);
 					cachedColumnValue = TypeConverterManager.convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
@@ -296,6 +266,7 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 	 */
 	public Object[] parseObjects(Class... types) {
 		resultColumns.clear();
+
 		int totalTypes = types.length;
 		Object[] result = new Object[totalTypes];
 		boolean[] resultUsage = new boolean[totalTypes];
@@ -338,6 +309,9 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
 					String propertyName = (dec == null ? null : dec.getPropertyName());
 					if (propertyName != null) {
+
+						// if current entity instance does not exist (i.e. we are at the first column
+						// of some entity), create the instance and store it
 						if (result[currentResult] == null) {
 							result[currentResult] = dbOomManager.createEntityInstance(currentType);
 						}
@@ -352,7 +326,9 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 							dec.updateDbSqlType(columnDbSqlType);	// updates column db sql type information for the entity!!!
 							Class<? extends SqlType> sqlTypeClass = dec.getSqlTypeClass();
 							Object value = readColumnValue(colNdx, type, sqlTypeClass, columnDbSqlType);
+
 							if (value != null) {
+								// inject column value into existing entity
 								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
 							}
@@ -374,15 +350,8 @@ public class DefaultResultSetMapper implements ResultSetMapper {
 				result[i] = null;
 			}
 		}
-		return result;
-	}
 
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Object parseOneObject(Class... types) {
-		return parseObjects(types)[0];
+		return result;
 	}
 
 }

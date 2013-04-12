@@ -11,7 +11,7 @@ import java.sql.ResultSet;
  * are provided. Instead, they are mapped by {@link jodd.db.oom.DbOomManager} or
  * similar external class.
  * <p>
- * This interface also specifies some simple and most used ResultSet wrapper methods.
+ * There should be only one instance of <code>ResultSetMapper</code> per <code>ResultSet</code>.
  */
 public interface ResultSetMapper {
 
