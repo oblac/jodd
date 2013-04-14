@@ -113,9 +113,11 @@ public class DbOomQuery extends DbQuery {
 		if (sqlgen == null) {
 			return;
 		}
-		String[] joinHints = sqlgen.getJoinHints();
-		if (joinHints != null) {
-			withHints(joinHints);
+		if (hints == null) {
+			String[] joinHints = sqlgen.getJoinHints();
+			if (joinHints != null) {
+				withHints(joinHints);
+			}
 		}
 		// insert parameters
 		Map<String, ParameterValue> parameters = sqlgen.getQueryParameters();
