@@ -7,6 +7,7 @@ import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @DbTable("GIRL")
 public class Girl2 {
@@ -35,5 +36,44 @@ public class Girl2 {
 
 	@DbColumn
 	public Timestamp time;
+
+
+		// ---------------------------------------------------------------- equals hashCode
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Girl2 girl = (Girl2) o;
+
+		if (id != girl.id) return false;
+		if (name != null ? !name.equals(girl.name) : girl.name != null) return false;
+		if (speciality != null ? !speciality.equals(girl.speciality) : girl.speciality != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = speciality != null ? speciality.hashCode() : 0;
+		result = 31 * result + id;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
+
+	// ---------------------------------------------------------------- boys
+
+	List<Boy> boys;
+
+	public List<Boy> getBoys() {
+		return boys;
+	}
+
+	public void setBoys(List<Boy> boys) {
+		this.boys = boys;
+	}
+
+
 
 }
