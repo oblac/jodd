@@ -202,6 +202,17 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- result set
 
+	protected boolean cacheEntities = dbOomManager.isCacheEntitiesInResultSet();
+
+	/**
+	 * Defines if entities should be cached in {@link ResultSetMapper}.
+	 * Overrides default value in {@link DbOomManager}.
+	 */
+	public DbOomQuery cacheEntities(boolean cacheEntities) {
+		this.cacheEntities = cacheEntities;
+		return this;
+	}
+
 	/**
 	 * Executes the query and returns {@link #createResultSetMapper(java.sql.ResultSet) builded ResultSet mapper}.
 	 */
@@ -213,7 +224,9 @@ public class DbOomQuery extends DbQuery {
 	 * Factory for result sets mapper.
 	 */
 	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
-		return dbOomManager.createResultSetMapper(resultSet, sqlgen != null ? sqlgen.getColumnData() : null);
+		Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
+
+		return dbOomManager.createResultSetMapper(resultSet, columnAliases, cacheEntities);
 	}
 
 

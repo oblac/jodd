@@ -349,11 +349,26 @@ public class DbOomManager {
 
 	// ---------------------------------------------------------------- result set mapper
 
+	protected boolean cacheEntitiesInResultSet;
+
+	public boolean isCacheEntitiesInResultSet() {
+		return cacheEntitiesInResultSet;
+	}
+
+	/**
+	 * Defines if entities have to be cached in result set.
+	 * When cached, more memory is consumed during the existence of
+	 * {@link ResultSetMapper}.
+	 */
+	public void setCacheEntitiesInResultSet(boolean cacheEntitiesInResultSet) {
+		this.cacheEntitiesInResultSet = cacheEntitiesInResultSet;
+	}
+
 	/**
 	 * Creates a new instance of {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 */
-	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases) {
-		return new DefaultResultSetMapper(resultSet, columnAliases, this);
+	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities) {
+		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- create entity

@@ -15,6 +15,7 @@ import jodd.typeconverter.TypeConverterManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
 public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	protected final DbOomManager dbOomManager;
-
+	protected final boolean cacheEntities;
 	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
 	protected final String[] columnNames;		// list of all column names
@@ -76,10 +77,15 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	/**
 	 * Reads <code>ResultSet</code> meta-data for column and table names.
+	 * @param resultSet JDBC result set
+	 * @param columnAliases alias names for columns, if exist
+	 * @param cacheEntities flag if entities should be cached
+	 * @param oomManager DbOom manager instance
 	 */
-	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, DbOomManager oomManager) {
+	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomManager oomManager) {
 		super(resultSet);
 		this.dbOomManager = oomManager;
+		this.cacheEntities = cacheEntities;
 		this.strictCompare = dbOomManager.isStrictCompare();
 		//this.resultColumns = new HashSet<String>();
 		try {
@@ -339,7 +345,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					}
 				}
 			}
-			// got to next type, i.e. result
+			// go to next type, i.e. result
 			currentResult++;
 			resultColumns.clear();
 		}
@@ -351,7 +357,39 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			}
 		}
 
+		if (cacheEntities) {
+			cacheResultSetEntities(result);
+		}
+
 		return result;
+	}
+
+
+	// ---------------------------------------------------------------- cache
+
+	protected HashMap<Object, Object> entitiesCache;
+
+	/**
+	 * Caches returned entities. Replaces new instances with existing ones.
+	 */
+	protected void cacheResultSetEntities(Object[] result) {
+		if (entitiesCache == null) {
+			entitiesCache = new HashMap<Object, Object>();
+		}
+
+		for (int i = 0; i < result.length; i++) {
+			Object object = result[i];
+
+			Object cachedObject = entitiesCache.get(object);
+
+			if (cachedObject == null) {
+				// object is not in the cache, add it
+				entitiesCache.put(object, object);
+			} else {
+				// object is in the cache, replace it
+				result[i] = cachedObject;
+			}
+		}
 	}
 
 }
