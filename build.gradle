@@ -8,8 +8,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '3.4.4-SNAPSHOT'
-version = '3.4.3'
+version = '3.4.4-SNAPSHOT'
+//version = '3.4.3'
 
 apply plugin: 'idea'
 apply plugin: 'eclipse'
@@ -113,6 +113,31 @@ configure(javaModules()) {
 		from javadoc.destinationDir
 	}
 
+	// integration tests
+
+	sourceSets {
+		integrationTest {
+			java.srcDir file('src/integration-test/java')
+			resources.srcDir file('src/integration-test/resources')
+		}
+	}
+
+	dependencies {
+		integrationTestCompile sourceSets.main.output
+		integrationTestCompile configurations.testCompile
+		integrationTestCompile sourceSets.test.output
+		integrationTestRuntime configurations.testRuntime
+	}
+
+
+	task integrationTest(type: Test, dependsOn: jar) {
+		testClassesDir = sourceSets.integrationTest.output.classesDir
+		classpath = sourceSets.integrationTest.runtimeClasspath
+		systemProperties['jar.path'] = jar.archivePath
+	}
+
+	// artifacts
+
 	artifacts {
 		archives jar
 		archives sourcesJar
@@ -186,6 +211,10 @@ def allMainSourceSets = javaBundleModules().sourceSets.main
 
 task buildModules {
 	dependsOn javaModules().build
+}
+
+task testAll {
+	dependsOn javaModules().integrationTest
 }
 
 task clean(type: Delete) {
@@ -279,6 +308,7 @@ task release() {
 	description 'Builds everything.'
 	
 	dependsOn buildModules
+	dependsOn testAll
 	dependsOn javadocAll
 	dependsOn coverageReportAll
 	dependsOn testReport
