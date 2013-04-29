@@ -9,7 +9,7 @@ import java.util.Properties;
 public class EchoTestServer extends NanoHTTPD {
 
 	public EchoTestServer() throws IOException {
-		super(80, new File("."));
+		super(8081, new File("."));
 	}
 
 	public String uri;

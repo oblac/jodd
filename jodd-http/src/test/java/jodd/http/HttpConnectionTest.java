@@ -17,7 +17,7 @@ public class HttpConnectionTest {
 	public void testEcho() throws IOException {
 		EchoTestServer echoTestServer = new EchoTestServer();
 
-		HttpResponse response = HttpRequest.get("http://localhost:80/hello?id=12").send();
+		HttpResponse response = HttpRequest.get("http://localhost:8081/hello?id=12").send();
 
 		assertEquals(200, response.statusCode());
 		assertEquals("OK", response.statusPhrase());
@@ -42,7 +42,7 @@ public class HttpConnectionTest {
 		FileUtil.writeString(file, "upload test");
 
 		HttpResponse response = HttpRequest
-				.post("http://localhost:80/hello")
+				.post("http://localhost:8081/hello")
 				.form("id", "12")
 				.form("file", file)
 				.send();
