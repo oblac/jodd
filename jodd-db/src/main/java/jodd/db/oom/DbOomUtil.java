@@ -4,6 +4,9 @@ package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Some utilities.
  */
@@ -43,10 +46,33 @@ public class DbOomUtil {
 
 
 	/**
-	 * Returns initial collection size when max is provided.
+	 * Returns initial collections size when <code>max</code>
+	 * value is provided.
 	 */
 	public static int initialCollectionSize(int max) {
-		return max != 0 ? max : 10;
+		return max > 0 ? max : 10;
 	}
+
+	/**
+	 * Compares if new element is equals to existing element at given index.
+	 */
+	public static <T> boolean equalsToElement(List<T> list, int elementIndex, T newElement) {
+		if (elementIndex < 0) {
+			return false;
+		}
+
+		T existingElement = list.get(elementIndex);
+
+		if (existingElement == null) {
+			return newElement != null;
+		}
+
+		if (newElement.getClass().isArray()) {
+			return Arrays.equals((Object[]) existingElement, (Object[]) newElement);
+		} else {
+			return existingElement.equals(newElement);
+		}
+	}
+
 
 }

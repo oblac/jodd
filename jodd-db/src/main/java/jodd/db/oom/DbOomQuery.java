@@ -229,6 +229,21 @@ public class DbOomQuery extends DbQuery {
 		return dbOomManager.createResultSetMapper(resultSet, columnAliases, cacheEntities);
 	}
 
+	// ---------------------------------------------------------------- db list
+
+	protected boolean entityAwareMode = dbOomManager.isEntityAwareMode();
+
+	/**
+	 * Defines entity-aware mode for entities tracking in result collection.
+	 * @see DbOomManager#setEntityAwareMode(boolean)
+	 */
+	public DbOomQuery entityAwareMode(boolean entityAware) {
+		if (entityAware) {
+			this.cacheEntities = true;
+		}
+		this.entityAwareMode = entityAware;
+		return this;
+	}
 
 	// ---------------------------------------------------------------- iterator
 
@@ -266,29 +281,29 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- list
 
-	public <T> List<T> listOne(Class<T> type) {
-		return listOne(type, 0, false);
+	public <T> List<T> listOne(Class<T> type, Class... otherTypes) {
+		return listOne(type, otherTypes, -1, false);
 	}
-	public <T> List<T> listOneAndClose(Class<T> type) {
-		return listOne(type, 0, true);
+	public <T> List<T> listOneAndClose(Class<T> type, Class... otherTypes) {
+		return listOne(type, otherTypes, -1, true);
 	}
 	public <T> List<T> listOne() {
-		return listOne(null, 0, false);
+		return listOne(null, null, -1, false);
 	}
 	public <T> List<T> listOneAndClose() {
-		return listOne(null, 0, true);
+		return listOne(null, null, -1, true);
 	}
-	public <T> List<T> listOne(int max, Class<T> type) {
-		return listOne(type, max, false);
+	public <T> List<T> listOne(int max, Class<T> type, Class... otherTypes) {
+		return listOne(type, otherTypes, max, false);
 	}
-	public <T> List<T> listOneAndClose(int max, Class<T> type) {
-		return listOne(type, max, true);
+	public <T> List<T> listOneAndClose(int max, Class<T> type, Class... otherTypes) {
+		return listOne(type, otherTypes, max, true);
 	}
 	public <T> List<T> listOne(int max) {
-		return listOne(null, max, false);
+		return listOne(null, null, max, false);
 	}
 	public <T> List<T> listOneAndClose(int max) {
-		return listOne(null, max, true);
+		return listOne(null, null, max, true);
 	}
 
 	/**
@@ -299,33 +314,61 @@ public class DbOomQuery extends DbQuery {
 	 * @return list of mapped entities
 	 */
 	@SuppressWarnings({"unchecked"})
-	protected <T> List<T> listOne(Class<T> type, int max, boolean close) {
+	protected <T> List<T> listOne(Class<T> type, Class[] otherTypes, int max, boolean close) {
 		List<T> result = new ArrayList<T>(initialCollectionSize(max));
+
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
-		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
+
+		Class[] types;
+		if (type == null) {
+			types = rsm.resolveTables();
+		} else {
+			types = new Class[1 + otherTypes.length];
+			types[0] = type;
+			System.arraycopy(otherTypes, 0, types, 1, otherTypes.length);
+		}
+
 		while (rsm.next()) {
-			result.add((T) rsm.parseOneObject(types));
-			max--;
-			if (max == 0) {
+			Object[] objects = rsm.parseObjects(types);
+			Object row = resolveRowHints(objects);
+
+			int size = result.size();
+
+			T newElement = (T) row;
+
+			if (entityAwareMode) {
+				if (DbOomUtil.equalsToElement(result, size - 1, newElement)) {
+					continue;
+				}
+			}
+
+			if (size == max) {
 				break;
 			}
+
+			if (newElement.getClass().isArray()) {
+				newElement = (T) ((Object[])newElement)[0];
+			}
+
+			result.add(newElement);
 		}
+
 		close(rsm, close);
 		return result;
 	}
 
 
 	public <T> List<T> list(Class... types) {
-		return list(types, 0, false);
+		return list(types, -1, false);
 	}
 	public <T> List<T> listAndClose(Class... types) {
-		return list(types, 0, true);
+		return list(types, -1, true);
 	}
 	public <T> List<T> list() {
-		return list(null, 0, false);
+		return list(null, -1, false);
 	}
 	public <T> List<T> listAndClose() {
-		return list(null, 0, true);
+		return list(null, -1, true);
 	}
 	public <T> List<T> list(int max, Class... types) {
 		return list(types, max, false);
@@ -349,20 +392,33 @@ public class DbOomQuery extends DbQuery {
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
 		List<T> result = new ArrayList<T>(initialCollectionSize(max));
+
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
+
 		while (rsm.next()) {
 			Object[] objects = rsm.parseObjects(types);
 			Object row = resolveRowHints(objects);
-			result.add((T) row);
 
-			max--;
-			if (max == 0) {
+			int size = result.size();
+
+			T newElement = (T) row;
+
+			if (entityAwareMode) {
+				if (DbOomUtil.equalsToElement(result, size - 1, newElement)) {
+					continue;
+				}
+			}
+
+			if (size == max) {
 				break;
 			}
+
+			result.add(newElement);
 		}
+
 		close(rsm, close);
 		return result;
 	}

@@ -371,6 +371,29 @@ public class DbOomManager {
 		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
+	// ---------------------------------------------------------------- db list
+
+	protected boolean entityAwareMode;
+
+	/**
+	 * Returns <code>true</code> if entity-aware mode is enabled.
+	 */
+	public boolean isEntityAwareMode() {
+		return entityAwareMode;
+	}
+
+	/**
+	 * Defines entity-aware mode, when resulting collections does not have duplicates.
+	 * It make sense to enable it only if {@link #setCacheEntitiesInResultSet(boolean) cache} is set.
+	 * Therefore, enabling smart mode will also enable caching.
+	 */
+	public void setEntityAwareMode(boolean entityAwareMode) {
+		if (entityAwareMode) {
+			this.cacheEntitiesInResultSet = true;
+		}
+		this.entityAwareMode = entityAwareMode;
+	}
+
 	// ---------------------------------------------------------------- create entity
 
 	/**
