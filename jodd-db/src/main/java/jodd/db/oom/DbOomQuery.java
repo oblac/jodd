@@ -362,46 +362,6 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- set
 
-	public <T> Set<T> listSetOne(Class<T> type) {
-		return listSetOne(type, 0, false);
-	}
-	public <T> Set<T> listSetOneAndClose(Class<T> type) {
-		return listSetOne(type, 0, true);
-	}
-	public <T> Set<T> listSetOne() {
-		return listSetOne(null, 0, false);
-	}
-	public <T> Set<T> listSetOneAndClose() {
-		return listSetOne(null, 0, true);
-	}
-	public <T> Set<T> listSetOne(int max, Class<T> type) {
-		return listSetOne(type, max, false);
-	}
-	public <T> Set<T> listSetOneAndClose(int max, Class<T> type) {
-		return listSetOne(type, max, true);
-	}
-	public <T> Set<T> listSetOne(int max) {
-		return listSetOne(null, max, false);
-	}
-	public <T> Set<T> listSetOneAndClose(int max) {
-		return listSetOne(null, max, true);
-	}
-	@SuppressWarnings({"unchecked"})
-	protected <T> Set<T> listSetOne(Class<T> type, int max, boolean close) {
-		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
-		ResultSetMapper rsm = executeAndBuildResultSetMapper();
-		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
-		while (rsm.next()) {
-			result.add((T) rsm.parseOneObject(types));
-			max--;
-			if (max == 0) {
-				break;
-			}
-		}
-		close(rsm, close);
-		return result;
-	}
-
 	public <T> Set<T> listSet(Class... types) {
 		return listSet(types, -1, false);
 	}

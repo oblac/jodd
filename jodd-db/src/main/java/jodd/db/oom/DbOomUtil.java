@@ -4,9 +4,6 @@ package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Some utilities.
  */

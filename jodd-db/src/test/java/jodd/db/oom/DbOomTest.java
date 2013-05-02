@@ -108,12 +108,12 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertFalse(q.isClosed());
 
 		// set
-		Set<Girl> setGirl = q.listSetOne(Girl.class);
+		Set<Girl> setGirl = q.listSet(Girl.class);
 		assertEquals(3, setGirl.size());
 		girl = (setGirl.iterator().next());
 		checkGirl1(girl);
 
-		setGirl = q.listSetOne();
+		setGirl = q.listSet();
 		assertEquals(3, setGirl.size());
 		girl = (setGirl.iterator().next());
 		checkGirl1(girl);
@@ -210,7 +210,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 
 		// set
-		Set<BadBoy> setBadBoy = q.listSetOne(BadBoy.class);
+		Set<BadBoy> setBadBoy = q.listSet(BadBoy.class);
 		assertEquals(1, setBadBoy.size());
 		badBoy = (setBadBoy.iterator().next());
 		checkBoy(badBoy);
