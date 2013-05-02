@@ -128,18 +128,18 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(2, girl1.getBoys().size());
 
 
-		// smart mode + max + listOne, same as above, except using the listOne todo remove listOne !!!
-
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
-
-		List<Girl2> result3 = q.withHints("g", "g.boys").entityAwareMode(true).listOneAndClose(1, Girl2.class, Boy.class);
-
-		assertEquals(1, result3.size());
-
-		girl1 = result3.get(0);
-
-		assertNotNull(girl1.getBoys());
-		assertEquals(2, girl1.getBoys().size());
+//		// smart mode + max + listOne, same as above, except using the listOne todo remove listOne !!!
+//
+//		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+//
+//		List<Girl2> result3 = q.withHints("g", "g.boys").entityAwareMode(true).listOneAndClose(1, Girl2.class, Boy.class);
+//
+//		assertEquals(1, result3.size());
+//
+//		girl1 = result3.get(0);
+//
+//		assertNotNull(girl1.getBoys());
+//		assertEquals(2, girl1.getBoys().size());
 
 
 		// the end

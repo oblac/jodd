@@ -141,7 +141,7 @@ public class AppDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E extends Entity> List<E> find(E criteria) {
-		return (List<E>) query(DbEntitySql.find(criteria)).listOneAndClose(criteria.getClass());
+		return query(DbEntitySql.find(criteria)).listAndClose(criteria.getClass());
 	}
 
 	// ---------------------------------------------------------------- delete

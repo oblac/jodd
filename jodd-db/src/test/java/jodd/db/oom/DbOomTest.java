@@ -84,13 +84,13 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1(girl);
 
 		// list
-		List<Girl> listGirl = q.listOne(Girl.class);
+		List<Girl> listGirl = q.list(Girl.class);
 		assertEquals(3, listGirl.size());
 		girl = listGirl.get(1);
 		checkGirl2(girl);
 
 
-		listGirl = q.listOne();
+		listGirl = q.list();
 		assertEquals(3, listGirl.size());
 		girl = listGirl.get(1);
 		checkGirl2(girl);
@@ -198,7 +198,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 
 		// list
-		List<BadBoy> listBadBoyt = q.listOne(BadBoy.class);
+		List<BadBoy> listBadBoyt = q.list(BadBoy.class);
 		assertEquals(1, listBadBoyt.size());
 		badBoy = listBadBoyt.get(0);
 		checkBoy(badBoy);
@@ -467,7 +467,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkBoy((Boy) result[3]);
 
 		assertEquals(1.0f, ((Float) result[4]).floatValue(), 0.05);
-		assertEquals("Monica", (String) result[5]);
+		assertEquals("Monica", result[5]);
 
 
 		q = new DbOomQuery(sql("select $C{g.*}, $C{g.*} from $T{g} where $g.id=3").aliasColumnsAs(COLUMN_CODE).use("g", Girl.class));
@@ -489,12 +489,12 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(1, list.size());
 		result = (Object[]) list.get(0);
 		checkGirl3((Girl) result[1]);
-		assertEquals("Monica", (String) result[0]);
+		assertEquals("Monica", result[0]);
 
 		//q.reset();
 		list = q.list(String.class, Girl.class);
 		result = (Object[]) list.get(0);
-		assertEquals("Monica", (String) result[0]);
+		assertEquals("Monica", result[0]);
 
 
 		q.close();
@@ -545,7 +545,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(2);
 		f = DbEntitySql.findById(badGirl).query();
-		list = f.listOneAndClose(BadGirl.class);
+		list = f.listAndClose(BadGirl.class);
 		assertTrue(f.isClosed());
 		assertEquals(1, list.size());
 		checkBadGirl2((BadGirl) list.get(0));
@@ -609,7 +609,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
 		BadGirl bbgg = DbEntitySql.findById(badGirl).query().findOneAndClose(BadGirl.class);
-		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().listOneAndClose(BadBoy.class);
+		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().listAndClose(BadBoy.class);
 
 		assertNotNull(bbgg);
 		assertEquals(3, bbgg.fooid.intValue());

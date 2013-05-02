@@ -196,7 +196,7 @@ public class DbOomQuery extends DbQuery {
 	 * Returns either single object or objects array.
 	 */
 	protected Object resolveRowHints(Object[] row) {
-		row = hintResolver.join(row, hints);
+		row = hintResolver.join(row, hints);		// todo inline this, and use the info from the next line
 		return row.length == 1 ? row[0] : row;
 	}
 
@@ -281,83 +281,6 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- list
 
-	public <T> List<T> listOne(Class<T> type, Class... otherTypes) {
-		return listOne(type, otherTypes, -1, false);
-	}
-	public <T> List<T> listOneAndClose(Class<T> type, Class... otherTypes) {
-		return listOne(type, otherTypes, -1, true);
-	}
-	public <T> List<T> listOne() {
-		return listOne(null, null, -1, false);
-	}
-	public <T> List<T> listOneAndClose() {
-		return listOne(null, null, -1, true);
-	}
-	public <T> List<T> listOne(int max, Class<T> type, Class... otherTypes) {
-		return listOne(type, otherTypes, max, false);
-	}
-	public <T> List<T> listOneAndClose(int max, Class<T> type, Class... otherTypes) {
-		return listOne(type, otherTypes, max, true);
-	}
-	public <T> List<T> listOne(int max) {
-		return listOne(null, null, max, false);
-	}
-	public <T> List<T> listOneAndClose(int max) {
-		return listOne(null, null, max, true);
-	}
-
-	/**
-	 * Iterates results set, maps rows to just one class and populates the array list.
-	 * @param type target type
-	 * @param max max number of rows to collect, <code>0</code> for all
-	 * @param close <code>true</code> if query is closed at the end, otherwise <code> false
-	 * @return list of mapped entities
-	 */
-	@SuppressWarnings({"unchecked"})
-	protected <T> List<T> listOne(Class<T> type, Class[] otherTypes, int max, boolean close) {
-		List<T> result = new ArrayList<T>(initialCollectionSize(max));
-
-		ResultSetMapper rsm = executeAndBuildResultSetMapper();
-
-		Class[] types;
-		if (type == null) {
-			types = rsm.resolveTables();
-		} else {
-			types = new Class[1 + otherTypes.length];
-			types[0] = type;
-			System.arraycopy(otherTypes, 0, types, 1, otherTypes.length);
-		}
-
-		while (rsm.next()) {
-			Object[] objects = rsm.parseObjects(types);
-			Object row = resolveRowHints(objects);
-
-			int size = result.size();
-
-			T newElement = (T) row;
-
-			if (entityAwareMode) {
-				if (DbOomUtil.equalsToElement(result, size - 1, newElement)) {
-					continue;
-				}
-			}
-
-			if (size == max) {
-				break;
-			}
-
-			if (newElement.getClass().isArray()) {
-				newElement = (T) ((Object[])newElement)[0];
-			}
-
-			result.add(newElement);
-		}
-
-		close(rsm, close);
-		return result;
-	}
-
-
 	public <T> List<T> list(Class... types) {
 		return list(types, -1, false);
 	}
@@ -383,11 +306,11 @@ public class DbOomQuery extends DbQuery {
 		return list(null, max, true);
 	}
 	/**
-	 * Iterates result set, maps rows to classes and populates the array list.
+	 * Iterates result set, maps rows to classes and populates resulting array list.
 	 * @param types mapping types
-	 * @param max max number of rows to collect, <code>0</code> for all
-	 * @param close <code>true</code> if query is closed at the end, otherwise <code> false
-	 * @return list of mapped entities
+	 * @param max max number of rows to collect, <code>-1</code> for all
+	 * @param close <code>true</code> if query is closed at the end, otherwise <code>false</code>.
+	 * @return list of mapped entities or array of entities
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
