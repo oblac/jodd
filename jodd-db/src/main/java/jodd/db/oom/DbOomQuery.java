@@ -16,6 +16,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -321,6 +322,8 @@ public class DbOomQuery extends DbQuery {
 			types = rsm.resolveTables();
 		}
 
+		Object previousElement = null;
+
 		while (rsm.next()) {
 			Object[] objects = rsm.parseObjects(types);
 			Object row = resolveRowHints(objects);
@@ -329,9 +332,19 @@ public class DbOomQuery extends DbQuery {
 
 			T newElement = (T) row;
 
-			if (entityAwareMode) {
-				if (DbOomUtil.equalsToElement(result, size - 1, newElement)) {
-					continue;
+			if (entityAwareMode && size > 0) {
+				if (previousElement != null && newElement != null) {
+					boolean equals;
+
+					if (newElement.getClass().isArray()) {
+						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
+					} else {
+						equals = previousElement.equals(newElement);
+					}
+
+					if (equals) {
+						continue;
+					}
 				}
 			}
 
@@ -340,6 +353,7 @@ public class DbOomQuery extends DbQuery {
 			}
 
 			result.add(newElement);
+			previousElement = newElement;
 		}
 
 		close(rsm, close);
@@ -389,16 +403,16 @@ public class DbOomQuery extends DbQuery {
 	}
 
 	public <T> Set<T> listSet(Class... types) {
-		return listSet(types, 0, false);
+		return listSet(types, -1, false);
 	}
 	public <T> Set<T> listSetAndClose(Class... types) {
-		return listSet(types, 0, true);
+		return listSet(types, -1, true);
 	}
 	public <T> Set<T> listSet() {
-		return listSet(null, 0, false);
+		return listSet(null, -1, false);
 	}
 	public <T> Set<T> listSetAndClose() {
-		return listSet(null, 0, true);
+		return listSet(null, -1, true);
 	}
 	public <T> Set<T> listSet(int max, Class... types) {
 		return listSet(types, max, false);
@@ -415,19 +429,46 @@ public class DbOomQuery extends DbQuery {
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
 		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
+
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
 			types = rsm.resolveTables();
 		}
+
+		Object previousElement = null;
+
 		while (rsm.next()) {
 			Object[] objects = rsm.parseObjects(types);
 			Object row = resolveRowHints(objects);
-			result.add((T) row);
-			max--;
-			if (max == 0) {
+
+			int size = result.size();
+
+			T newElement = (T) row;
+
+			if (entityAwareMode && size > 0) {
+				if (previousElement != null && newElement != null) {
+					boolean equals;
+
+					if (newElement.getClass().isArray()) {
+						equals = Arrays.equals((Object[]) previousElement, (Object[]) newElement);
+					} else {
+						equals = previousElement.equals(newElement);
+					}
+
+					if (equals) {
+						continue;
+					}
+				}
+			}
+
+			if (size == max) {
 				break;
 			}
+
+			result.add(newElement);
+			previousElement = newElement;
 		}
+
 		close(rsm, close);
 		return result;
 	}

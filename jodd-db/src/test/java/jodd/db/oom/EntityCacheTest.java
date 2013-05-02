@@ -12,13 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class EntityCacheTest extends DbHsqldbTestCase {
 
@@ -114,7 +116,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(1, girl3.getBoys().size());
 
 
-		// smart mode + max, same as above, except using list with max count!
+		// enetytAware with list + max
 
 		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
 
@@ -128,19 +130,38 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 		assertEquals(2, girl1.getBoys().size());
 
 
-//		// smart mode + max + listOne, same as above, except using the listOne todo remove listOne !!!
-//
-//		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
-//
-//		List<Girl2> result3 = q.withHints("g", "g.boys").entityAwareMode(true).listOneAndClose(1, Girl2.class, Boy.class);
-//
-//		assertEquals(1, result3.size());
-//
-//		girl1 = result3.get(0);
-//
-//		assertNotNull(girl1.getBoys());
-//		assertEquals(2, girl1.getBoys().size());
+		// entityAware with set
 
+		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+
+		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(Girl2.class, Boy.class);
+
+		assertEquals(2, set1.size());
+
+		for (Girl2 girl : set1) {
+			if (girl.id.equals(1)) {
+				assertEquals(1, girl.getBoys().size());
+			}
+			if (girl.id.equals(2)) {
+				assertEquals(2, girl.getBoys().size());
+			}
+		}
+
+		// entityAware with set + max
+
+		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+
+		set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(1, Girl2.class, Boy.class);
+
+		assertEquals(1, set1.size());
+
+		for (Girl2 girl : set1) {
+			if (girl.id.equals(2)) {
+				assertEquals(2, girl.getBoys().size());
+			} else {
+				fail();
+			}
+		}
 
 		// the end
 
