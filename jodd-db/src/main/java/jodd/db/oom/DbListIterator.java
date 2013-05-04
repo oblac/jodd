@@ -76,7 +76,7 @@ class DbListIterator<T> implements Iterator<T> {
 
 			Object[] objects = resultSetMapper.parseObjects(types);
 
-			Object row = query.resolveRowHints(objects);
+			Object row = query.resolveRowResults(objects);
 
 			newElement = (T) row;
 

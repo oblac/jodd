@@ -196,8 +196,8 @@ public class DbOomQuery extends DbQuery {
 	 * Prepares a row (array of rows mapped object) using hints.
 	 * Returns either single object or objects array.
 	 */
-	protected Object resolveRowHints(Object[] row) {
-		row = hintResolver.join(row, hints);		// todo inline this, and use the info from the next line
+	protected Object resolveRowResults(Object[] row) {
+		row = hintResolver.join(row, hints);
 		return row.length == 1 ? row[0] : row;
 	}
 
@@ -312,7 +312,7 @@ public class DbOomQuery extends DbQuery {
 
 		while (rsm.next()) {
 			Object[] objects = rsm.parseObjects(types);
-			Object row = resolveRowHints(objects);
+			Object row = resolveRowResults(objects);
 
 			int size = result.size();
 
@@ -385,7 +385,7 @@ public class DbOomQuery extends DbQuery {
 
 		while (rsm.next()) {
 			Object[] objects = rsm.parseObjects(types);
-			Object row = resolveRowHints(objects);
+			Object row = resolveRowResults(objects);
 
 			int size = result.size();
 
