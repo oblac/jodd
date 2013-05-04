@@ -12,17 +12,26 @@ import java.util.Iterator;
  */
 class DbListIterator<T> implements Iterator<T> {
 
-	protected DbOomQuery query;
-	protected ResultSetMapper resultSetMapper;
-	protected boolean closeOnEnd;
-	protected Class[] types;
-	protected boolean one;
+	protected final DbOomQuery query;
+	protected final boolean entityAwareMode;
+	protected final ResultSetMapper resultSetMapper;
+	protected final Class[] types;
+	protected final boolean closeOnEnd;
 
 	// ---------------------------------------------------------------- ctors
 
 	DbListIterator(DbOomQuery query, Class[] types, boolean closeOnEnd) {
 		this.query = query;
 		this.resultSetMapper = query.executeAndBuildResultSetMapper();
+		this.entityAwareMode = query.entityAwareMode;
+		this.types = (types == null ? resultSetMapper.resolveTables() : types);
+		this.closeOnEnd = closeOnEnd;
+	}
+
+	DbListIterator(DbOomQuery query, Class[] types, ResultSetMapper resultSetMapper, boolean closeOnEnd) {
+		this.query = query;
+		this.resultSetMapper = resultSetMapper;
+		this.entityAwareMode = query.entityAwareMode;
 		this.types = (types == null ? resultSetMapper.resolveTables() : types);
 		this.closeOnEnd = closeOnEnd;
 	}
@@ -60,7 +69,7 @@ class DbListIterator<T> implements Iterator<T> {
 			if (resultSetMapper.next() == false) {
 				// no more rows, no more parsing, previousElement is the last one to iterate
 				last = true;
-				return true;
+				return entityAwareMode;
 			}
 
 			// parse row
@@ -71,7 +80,7 @@ class DbListIterator<T> implements Iterator<T> {
 
 			newElement = (T) row;
 
-			if (query.entityAwareMode) {
+			if (entityAwareMode) {
 
 				if (count == 0 && previousElement == null) {
 					previousElement = newElement;
@@ -104,6 +113,10 @@ class DbListIterator<T> implements Iterator<T> {
 	 * Returns next mapped object.
 	 */
 	public T next() {
+		if (!entityAwareMode) {
+			return newElement;
+		}
+
 		count++;
 
 		T result = previousElement;
