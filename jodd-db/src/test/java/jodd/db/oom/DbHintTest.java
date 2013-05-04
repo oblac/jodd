@@ -43,7 +43,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		DbOomQuery dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
 
-		Object[] result = (Object[]) dbOomQuery.find(Boy2.class, Girl.class);
+		Object[] result = dbOomQuery.find(Boy2.class, Girl.class);
 
 		Boy2 boy2 = (Boy2) result[0];
 		assertEquals(1, boy2.id);
@@ -59,7 +59,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{boy.girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
 
-		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
+		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);
@@ -73,7 +73,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirlsCount from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
 		dbOomQuery.withHints("boy", "boy.girlAlt", "boy.totalGirls");
-		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
+		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);
@@ -86,7 +86,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
-		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
+		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);
@@ -99,7 +99,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*}, (select count (1) from $T{Girl girl2}) as $C{boy.totalGirls:.totalGirlsCount} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
-		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
+		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);
@@ -113,7 +113,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		dbOomQuery = new DbOomQuery(
 				sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id,name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
-		boy2 = (Boy2) dbOomQuery.find(Boy2.class, Girl.class);
+		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
 		assertEquals("John", boy2.name);

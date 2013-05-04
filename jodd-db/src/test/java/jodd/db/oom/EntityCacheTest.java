@@ -191,6 +191,14 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		assertFalse(iterator.hasNext());
 
+		// ---------------------------------------------------------------- find
+
+		q = new DbOomQuery(sql(TSQL));
+
+		girl1 = q.withHints("g", "g.boys").entityAwareMode(true).findAndClose(Girl2.class, Boy.class);
+
+		assertNotNull(girl1.getBoys());
+		assertEquals(2, girl1.getBoys().size());
 
 		// the end
 

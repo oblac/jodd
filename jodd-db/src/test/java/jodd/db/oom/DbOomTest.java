@@ -70,17 +70,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		DbOomQuery q = new DbOomQuery("select * from GIRL order by ID");
 
-		Girl girl = q.findOne(Girl.class);
+		Girl girl = q.find(Girl.class);
 		checkGirl1(girl);
 		assertTrue(q.isActive());
 
-		IdName idName = q.findOne(IdName.class);
+		IdName idName = q.find(IdName.class);
 		assertNotNull(idName);
 		assertEquals(1, idName.id);
 		assertEquals("Anna", idName.name);
 
 
-		girl = (Girl) q.find(Girl.class);
+		girl = q.find(Girl.class);
 		checkGirl1(girl);
 
 		// list
@@ -99,12 +99,16 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals(3, list.size());
 		girl = (Girl) list.get(2);
 		checkGirl3(girl);
+		checkGirl2((Girl) list.get(1));
+		checkGirl1((Girl) list.get(0));
 		assertFalse(q.isClosed());
 
 		list = q.list();
 		assertEquals(3, list.size());
 		girl = (Girl) list.get(2);
 		checkGirl3(girl);
+		checkGirl2((Girl) list.get(1));
+		checkGirl1((Girl) list.get(0));
 		assertFalse(q.isClosed());
 
 		// set
@@ -120,27 +124,58 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		Set set = q.listSet(Girl.class);
 		assertEquals(3, set.size());
-		girl = (Girl) set.iterator().next();
+		Iterator iterator = set.iterator();
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
 		checkGirl1(girl);
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
+		checkGirl2(girl);
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
+		checkGirl3(girl);
+		assertFalse(iterator.hasNext());
 
 		set = q.listSet();
 		assertEquals(3, set.size());
-		girl = (Girl) set.iterator().next();
+		iterator = set.iterator();
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
 		checkGirl1(girl);
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
+		checkGirl2(girl);
+		assertTrue(iterator.hasNext());
+		girl = (Girl) iterator.next();
+		checkGirl3(girl);
+		assertFalse(iterator.hasNext());
 
 		// iterator
 		Iterator<Girl> it = q.iterate(Girl.class);
+		int count = 0;
 		while (it.hasNext()) {
 			girl = it.next();
+			count++;
+			switch (girl.id) {
+				case 1: checkGirl1(girl); break;
+				case 2: checkGirl2(girl); break;
+				case 3: checkGirl3(girl); break;
+			}
 		}
-		checkGirl3(girl);
+		assertEquals(3, count);
 
 		it = q.iterate();
+		count = 0;
 		while (it.hasNext()) {
 			girl = it.next();
+			count++;
+			switch (girl.id) {
+				case 1: checkGirl1(girl); break;
+				case 2: checkGirl2(girl); break;
+				case 3: checkGirl3(girl); break;
+			}
 		}
-		checkGirl3(girl);
-
+		assertEquals(3, count);
 
 		Iterator it2 = q.iterate(Girl.class);
 		while (it2.hasNext()) {
@@ -184,16 +219,16 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		q = new DbOomQuery("select * from BOY order by ID");
 
-		BadBoy badBoy = q.findOne(BadBoy.class);
+		BadBoy badBoy = q.find(BadBoy.class);
 		checkBoy(badBoy);
 
-		badBoy = (BadBoy) q.findOne();
+		badBoy = q.find();
 		checkBoy(badBoy);
 
-		badBoy = (BadBoy) q.find(BadBoy.class);
+		badBoy = q.find(BadBoy.class);
 		checkBoy(badBoy);
 
-		badBoy = (BadBoy) q.find();
+		badBoy = q.find();
 		checkBoy(badBoy);
 
 
@@ -241,19 +276,16 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
-		girl = q.findOne(Girl.class);
+		girl = q.find(Girl.class);
 		checkGirl3(girl);
 
-		girl = (Girl) q.findOne();
-		checkGirl3(girl);
-
-		Object[] res = (Object[]) q.find(Girl.class, BadBoy.class);
+		Object[] res = q.find(Girl.class, BadBoy.class);
 		badBoy = (BadBoy) res[1];
 		girl = (Girl) res[0];
 		checkGirl3(girl);
 		checkBoy(badBoy);
 
-		res = (Object[]) q.find();
+		res = q.find();
 		girl = (Girl) res[0];
 		badBoy = (BadBoy) res[1];
 		checkGirl3(girl);
@@ -263,7 +295,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 
 		q = new DbOomQuery(DbSqlBuilder.sql("select $C{girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
-		badBoy = (BadBoy) q.withHints("BadBoy.girl, BadBoy").find();
+		badBoy = q.withHints("BadBoy.girl, BadBoy").find();
 		girl = badBoy.girl;
 		checkGirl3(girl);
 		checkBoy(badBoy);
@@ -280,7 +312,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		q.close();
 
 		q = query(sql("select $C{BadBoy.girl.*}, $C{BadBoy.*} from $T{Girl girl} join $T{BadBoy} on girl.id=$BadBoy.girlId"));
-		badBoy = (BadBoy) q.find();
+		badBoy = q.find();
 		girl = badBoy.girl;
 		checkGirl3(girl);
 		checkBoy(badBoy);
@@ -292,31 +324,31 @@ public class DbOomTest extends DbHsqldbTestCase {
 		//q = new DbOomQuery("select * from GIRL, BOY where BOY.GIRL_ID=GIRL.ID");
 		q = new DbOomQuery("select * from GIRL join BOY on GIRL.ID=BOY.GIRL_ID");
 
-		badBoy = q.findOne(BadBoy.class);
+		badBoy = q.find(BadBoy.class);
 		assertNull(badBoy);         // wrong mapping order, girl is first!
 
-		BadGirl badGirl = q.findOne(BadGirl.class);
+		BadGirl badGirl = q.find(BadGirl.class);
 		checkBadGirl3(badGirl);
 
-		res = (Object[]) q.find(BadBoy.class, BadGirl.class);
+		res = q.find(BadBoy.class, BadGirl.class);
 		badBoy = (BadBoy) res[0];
 		badGirl = (BadGirl) res[1];
 		checkBadGirl3(badGirl);
 		assertNull(badBoy);     // order is invalid
 
-		res = (Object[]) q.find(BadGirl.class, BadBoy.class);
+		res = q.find(BadGirl.class, BadBoy.class);
 		badBoy = (BadBoy) res[1];
 		badGirl = (BadGirl) res[0];
 		checkBadGirl3(badGirl);
 		checkBoy(badBoy);
 
-		res = (Object[]) q.find(Boy.class, Girl.class);
+		res = q.find(Boy.class, Girl.class);
 		Boy boy = (Boy) res[0];
 		girl = (Girl) res[1];
 		assertNull(boy);        // order is invalid
 		checkGirl3(girl);
 
-		res = (Object[]) q.find(Girl.class, Boy.class);
+		res = q.find(Girl.class, Boy.class);
 		boy = (Boy) res[1];
 		girl = (Girl) res[0];
 		checkBoy(boy);
@@ -376,19 +408,19 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl.fooname = "Sandra";
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		Object[] result = (Object[]) q.find(BadGirl.class, BadBoy.class);
+		Object[] result = q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{g.*, b.*} from $T{g}, $T{b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadGirl.class, BadBoy.class);
+		result = q.find(BadGirl.class, BadBoy.class);
 		checkBoy((BadBoy) result[1]);
 		checkBadGirl2((BadGirl) result[0]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
+		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
@@ -397,26 +429,26 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badBoy.nejm = "Johny";
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
+		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select $C{b.*, g.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
+		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 		dt = sql("select b.*, g.* from $T{g g}, $T{b b} where $M{b=b} and $M{g=g}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadBoy.class, BadGirl.class);
+		result = q.find(BadBoy.class, BadGirl.class);
 		checkBoy((BadBoy) result[0]);
 		checkBadGirl2((BadGirl) result[1]);
 
 
 		dt = sql("select $C{g.fooid}, $C{b.*} from $T{g}, $T{b} where $M{g=g} and $M{b=b}").use("g", badGirl).use("b", badBoy);
 		q = new DbOomQuery(dt);
-		result = (Object[]) q.find(BadGirl.class, BadBoy.class);
+		result = q.find(BadGirl.class, BadBoy.class);
 		badGirl = (BadGirl) result[0];
 		checkBoy((BadBoy) result[1]);
 		assertEquals(2, badGirl.fooid.intValue());
@@ -551,7 +583,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkBadGirl2((BadGirl) list.get(0));
 
 		f = DbEntitySql.count(badGirl).query();
-		int count = (int) f.executeCountAndClose();
+		count = (int) f.executeCountAndClose();
 		assertEquals(1, count);
 		assertTrue(f.isClosed());
 
@@ -608,7 +640,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		BadGirl bbgg = DbEntitySql.findById(badGirl).query().findOneAndClose(BadGirl.class);
+		BadGirl bbgg = DbEntitySql.findById(badGirl).query().findAndClose(BadGirl.class);
 		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().listAndClose(BadBoy.class);
 
 		assertNotNull(bbgg);
@@ -622,7 +654,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().findOne(badGirl.getClass());
+		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1(badGirl);
 
 		badGirl.fooname = "Ticky";
@@ -630,7 +662,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().findOne(badGirl.getClass());
+		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt(badGirl);
 
 		badGirl.foospeciality = null;
@@ -638,7 +670,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(1);
-		badGirl = DbEntitySql.findById(badGirl).query().findOne(badGirl.getClass());
+		badGirl = DbEntitySql.findById(badGirl).query().find(badGirl.getClass());
 		checkBadGirl1Alt2(badGirl);
 
 

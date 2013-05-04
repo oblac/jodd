@@ -58,17 +58,17 @@ public class DbOom2Test extends DbH2TestCase {
 
 		DbOomQuery q = new DbOomQuery("select * from GIRL where ID=1");
 
-		Girl girl = q.findOne(Girl.class);
+		Girl girl = q.find(Girl.class);
 		checkGirl1(girl);
 		assertTrue(q.isActive());
 
-		IdName idName = q.findOne(IdName.class);
+		IdName idName = q.find(IdName.class);
 		assertNotNull(idName);
 		assertEquals(1, idName.id);
 		assertEquals("Anna", idName.name);
 
 		try {
-			q.findOne();        // this will fail since no entity is registered!
+			q.find();        // this will fail since no entity is registered!
 			fail();
 		} catch (DbOomException doex) {
 			// ignore
@@ -79,7 +79,7 @@ public class DbOom2Test extends DbH2TestCase {
 		assertEquals(2, DbOomManager.getInstance().getTotalNames());
 
 		DbOomManager.getInstance().registerEntity(Girl.class, true);
-		girl = (Girl) q.findOne();
+		girl = q.find();
 		checkGirl1(girl);
 
 		assertEquals(2, DbOomManager.getInstance().getTotalTypes());
@@ -148,7 +148,7 @@ public class DbOom2Test extends DbH2TestCase {
 		q.close();
 		assertEquals(7, g2.id.intValue());
 
-		g2 = DbEntitySql.findByColumn(Girl2.class, "name", "Gwen").query().findOne(Girl2.class);
+		g2 = DbEntitySql.findByColumn(Girl2.class, "name", "Gwen").query().find(Girl2.class);
 		assertEquals("Gwen", g2.name);
 		assertNull(g2.speciality);
 		assertNotNull(g2.time);
