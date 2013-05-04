@@ -11,6 +11,7 @@ import jodd.db.oom.tst.Girl2;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class EntityCacheTest extends DbHsqldbTestCase {
+
+	public static final String TSQL =
+			"select $C{g.id, g.name, g.speciality}, $C{b.*} from " +
+			"$T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId " +
+			"order by $g.id desc";
 
 	@Override
 	@Before
@@ -48,7 +54,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// map rows to two types, use cache, no hints
 
-		DbOomQuery q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		DbOomQuery q = new DbOomQuery(sql(TSQL));
 
 		List<Object[]> result = q.cacheEntities(true).listAndClose(Girl2.class, Boy.class);
 
@@ -76,7 +82,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// map rows to two types, use cache and hints, but only one entity per row is stored in list
 
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		q = new DbOomQuery(sql(TSQL));
 
 		List<Girl2> result2 = q.withHints("g", "g.boys").cacheEntities(true).listAndClose(Girl2.class, Boy.class);
 
@@ -100,7 +106,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// smart mode, same as above, except no duplicates in the list (entityAware mode)!
 
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		q = new DbOomQuery(sql(TSQL));
 
 		result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(Girl2.class, Boy.class);
 
@@ -118,7 +124,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// enetytAware with list + max
 
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		q = new DbOomQuery(sql(TSQL));
 
 		result2 = q.withHints("g", "g.boys").entityAwareMode(true).listAndClose(1, Girl2.class, Boy.class);
 
@@ -132,7 +138,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// entityAware with set
 
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		q = new DbOomQuery(sql(TSQL));
 
 		Set<Girl2> set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(Girl2.class, Boy.class);
 
@@ -149,7 +155,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		// entityAware with set + max
 
-		q = new DbOomQuery(sql("select $C{g.id, g.name, g.speciality}, $C{b.*} from $T{Girl2 g} join $T{Boy b} on $g.id = $b.girlId order by $g.id desc"));
+		q = new DbOomQuery(sql(TSQL));
 
 		set1 = q.withHints("g", "g.boys").entityAwareMode(true).listSetAndClose(1, Girl2.class, Boy.class);
 
@@ -162,6 +168,29 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 				fail();
 			}
 		}
+
+		// iterator
+
+		q = new DbOomQuery(sql(TSQL));
+
+		Iterator<Girl2> iterator = q.withHints("g", "g.boys").entityAwareMode(true).iterateAndClose(Girl2.class, Boy.class);
+
+		assertTrue(iterator.hasNext());
+
+		girl1 = iterator.next();
+
+		assertNotNull(girl1.getBoys());
+		assertEquals(2, girl1.getBoys().size());
+
+		assertTrue(iterator.hasNext());
+
+		girl3 = iterator.next();
+
+		assertNotNull(girl3.getBoys());
+		assertEquals(1, girl3.getBoys().size());
+
+		assertFalse(iterator.hasNext());
+
 
 		// the end
 

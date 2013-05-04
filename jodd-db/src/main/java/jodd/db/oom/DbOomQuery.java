@@ -248,22 +248,6 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- iterator
 
-	public <T> Iterator<T> iterateOne(Class<T> type) {
-		return iterateOne(type, false);
-	}
-	public <T> Iterator<T> iterateOneAndClose(Class<T> type) {
-		return iterateOne(type, true);
-	}
-	public <T> Iterator<T> iterateOne() {
-		return iterateOne(null, false);
-	}
-	public <T> Iterator<T> iterateOneAndClose() {
-		return iterateOne(null, true);
-	}
-	protected <T> Iterator<T> iterateOne(Class<T> type, boolean close) {
-		return new DbListOneIterator<T>(this, type, close);
-	}
-
 	public <T> Iterator<T> iterate(Class... types) {
 		return iterate(types, false);
 	}

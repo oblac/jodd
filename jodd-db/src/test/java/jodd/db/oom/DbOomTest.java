@@ -129,13 +129,13 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1(girl);
 
 		// iterator
-		Iterator<Girl> it = q.iterateOne(Girl.class);
+		Iterator<Girl> it = q.iterate(Girl.class);
 		while (it.hasNext()) {
 			girl = it.next();
 		}
 		checkGirl3(girl);
 
-		it = q.iterateOne();
+		it = q.iterate();
 		while (it.hasNext()) {
 			girl = it.next();
 		}
@@ -221,7 +221,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkBoy(badBoy);
 
 		// iterator
-		Iterator<BadBoy> itBad = q.iterateOne(BadBoy.class);
+		Iterator<BadBoy> itBad = q.iterate(BadBoy.class);
 		while (itBad.hasNext()) {
 			badBoy = itBad.next();
 		}
