@@ -97,7 +97,7 @@ public class AppDao {
 	 * Finds single entity by its id.
 	 */
 	public <E extends Entity> E findById(Class<E> entityType, long id) {
-		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).findOneAndClose(entityType);
+		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).findAndClose(entityType);
 	}
 
 
@@ -118,14 +118,14 @@ public class AppDao {
 		if (entity == null) {
 			return null;
 		}
-		return (E) query(DbEntitySql.findById(entity)).findOneAndClose(entity.getClass());
+		return (E) query(DbEntitySql.findById(entity)).findAndClose(entity.getClass());
 	}
 
 	/**
 	 * Finds single entity by property match,
 	 */
 	public <E extends Entity> E findOneByProperty(Class<E> entityType, String name, Object value) {
-		return query(findByColumn(entityType, name, value)).findOneAndClose(entityType);
+		return query(findByColumn(entityType, name, value)).findAndClose(entityType);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class AppDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E extends Entity> E findOne(E criteria) {
-		return (E) query(DbEntitySql.find(criteria)).findOneAndClose(criteria.getClass());
+		return (E) query(DbEntitySql.find(criteria)).findAndClose(criteria.getClass());
 	}
 
 	/**

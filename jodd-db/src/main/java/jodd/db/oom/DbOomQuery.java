@@ -218,7 +218,9 @@ public class DbOomQuery extends DbQuery {
 	 * Executes the query and returns {@link #createResultSetMapper(java.sql.ResultSet) builded ResultSet mapper}.
 	 */
 	protected ResultSetMapper executeAndBuildResultSetMapper() {
-		return createResultSetMapper(execute());
+		ResultSet resultSet = execute();
+
+		return createResultSetMapper(resultSet);
 	}
 
 	/**
@@ -419,70 +421,48 @@ public class DbOomQuery extends DbQuery {
 
 	// ---------------------------------------------------------------- find
 
-	@SuppressWarnings({"unchecked"})
-	public <T> T findOne(Class<T> type) {
-		return findOne(type, false, null);
-	}
-	public <T> T findOneAndClose(Class<T> type) {
-		return findOne(type, true, null);
-	}
-	public Object findOne() {
-		return findOne(null, false, null);
-	}
-	public Object findOneAndClose() {
-		return findOne(null, true, null);
-	}
-	@SuppressWarnings({"unchecked"})
-	protected <T> T findOne(Class<T> type, boolean close, ResultSet resultSet) {
-		if (resultSet == null) {
-			resultSet = execute();
-		}
-		ResultSetMapper rsm = createResultSetMapper(resultSet);
-		if (rsm.next() == false) {
-			return null;
-		}
-		Class[] types = (type == null ? rsm.resolveTables() : new Class[]{type});
-		Object result = rsm.parseOneObject(types);
-		close(rsm, close);
-		return (T) result;
-	}
-
-
-	public Object find(Class... types) {
+	public <T> T find(Class... types) {
 		return find(types, false, null);
 	}
-	public Object findAndClose(Class... types) {
+	public <T> T findAndClose(Class... types) {
 		return find(types, true, null);
 	}
-	public Object find() {
+	public <T> T find() {
 		return find(null, false, null);
 	}
-	public Object findAndClose() {
+	public <T> T findAndClose() {
 		return find(null, true, null);
 	}
-	protected Object find(Class[] types, boolean close, ResultSet resultSet) {
+	protected <T> T find(Class[] types, boolean close, ResultSet resultSet) {
 		if (resultSet == null) {
 			resultSet = execute();
 		}
 		ResultSetMapper rsm = createResultSetMapper(resultSet);
-		if (rsm.next() == false) {
-			return null;
+
+		Iterator<T> iterator = new DbListIterator<T>(this, types, rsm, false);
+
+		T result = null;
+
+		if (iterator.hasNext()) {
+			result = iterator.next();
 		}
-		if (types == null) {
-			types = rsm.resolveTables();
-		}
-		Object[] objects = rsm.parseObjects(types);
-		Object result = resolveRowHints(objects);
+
 		close(rsm, close);
 		return result;
 	}
 
 	// ---------------------------------------------------------------- generated columns
 
+	/**
+	 * Finds generated key column of given type.
+	 */
 	public <T> T findGeneratedKey(Class<T> type) {
-		return findOne(type, false, getGeneratedColumns());
+		return find(new Class[] {type}, false, getGeneratedColumns());
 	}
 
+	/**
+	 * Finds generated columns.
+	 */
 	public Object findGeneratedColumns(Class... types) {
 		return find(types, false, getGeneratedColumns());
 	}
