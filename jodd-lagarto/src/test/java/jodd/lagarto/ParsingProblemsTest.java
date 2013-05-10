@@ -242,4 +242,20 @@ public class ParsingProblemsTest {
 
 		assertEquals("This is a text", result.toString());
 	}
+
+  @Test
+  public void testPreserveCC() throws IOException {
+    File file = new File(testDataRoot, "preserve-cc.html");
+
+    String expectedResult = FileUtil.readString(file);
+
+    Jerry.JerryParser jerryParser = new Jerry.JerryParser();
+    jerryParser.enableHtmlMode();
+    jerryParser.getDOMBuilder().setEnableConditionalComments(false);
+
+    Jerry jerry = jerryParser.parse(expectedResult);
+    String result = jerry.html();
+
+    assertEquals(expectedResult, result);
+  }
 }
