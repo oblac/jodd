@@ -96,18 +96,21 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- scopes
 
 	/**
-	 * Resolves scope from scope type.
+	 * Resolves and registers scope from a scope type.
 	 */
-	protected Scope resolveScope(Class<? extends Scope> scopeType) {
-		Scope scope = scopes.get(scopeType);
+	@SuppressWarnings("unchecked")
+	public <S extends Scope> S resolveScope(Class<S> scopeType) {
+		S scope = (S) scopes.get(scopeType);
 		if (scope == null) {
+
 			try {
-				scope = scopeType.newInstance();
-				registerScope(scopeType, scope);
-				scopes.put(scopeType, scope);
+				scope = PetiteUtil.newInstance(scopeType, (PetiteContainer) this);
 			} catch (Exception ex) {
 				throw new PetiteException("Unable to create Petite scope: " + scopeType.getName(), ex);
 			}
+
+			registerScope(scopeType, scope);
+			scopes.put(scopeType, scope);
 		}
 		return scope;
 	}
@@ -115,8 +118,8 @@ public abstract class PetiteBeans {
 	/**
 	 * Registers new scope. It is not necessary to manually register scopes,
 	 * since they become registered on first scope resolving.
-	 * However, it is possible to pre-register some scopes, or to replace one scope
-	 * type with another. This may be important for testing purposes when
+	 * However, it is possible to pre-register some scopes, or to <i>replace</i> one scope
+	 * type with another. Replacing may be important for testing purposes when
 	 * using container-depended scopes.
 	 */
 	public void registerScope(Class<? extends Scope> scopeType, Scope scope) {

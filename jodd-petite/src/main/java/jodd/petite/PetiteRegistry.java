@@ -37,7 +37,7 @@ public class PetiteRegistry {
 	 * Starts with bean registration. Example:
 	 * <code>bean(Foo.class).name("").scope(...).wiringMode(...).define().register();</code>
 	 *
-	 * @see PetiteBeans#registerPetiteBean(Class, String, Class
+	 * @see PetiteBeans#registerPetiteBean(Class, String, Class, WiringMode, boolean)
 	 */
 	public BeanRegister bean(Class beanType) {
 		return new BeanRegister(beanType);

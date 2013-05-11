@@ -2,6 +2,8 @@
 
 package jodd.petite.scope;
 
+import jodd.util.ArraysUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,18 +41,27 @@ public class ThreadLocalScope implements Scope {
 	public boolean accept(Scope referenceScope) {
 		Class<? extends Scope> refScopeType = referenceScope.getClass();
 
-		if (refScopeType == ThreadLocalScope.class) {
-			return true;
+		for (int i = 0; i < acceptedScopes.length; i++) {
+			if (refScopeType == acceptedScopes[i]) {
+				return true;
+			}
 		}
 
-		if (refScopeType == SingletonScope.class) {
-			return true;
-		}
-
-		if (refScopeType == SessionScope.class) {
-			return true;
-		}
-
-		return true;
+		return false;
 	}
+
+	/**
+	 * Registers scope that will be {@link #accept(Scope) accepted}.
+	 */
+	protected void acceptScope(Class<? extends Scope> scope) {
+		acceptedScopes = ArraysUtil.append(acceptedScopes, scope);
+	}
+
+	// array of accepted scopes that can be injected here
+	protected Class[] acceptedScopes = new Class[] {
+			ThreadLocalScope.class,
+			SingletonScope.class,
+			//SessionScope.class,
+	};
+
 }

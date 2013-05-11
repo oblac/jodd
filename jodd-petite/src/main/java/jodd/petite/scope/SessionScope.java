@@ -2,6 +2,7 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.servlet.HttpSessionListenerBroadcaster;
 import jodd.servlet.RequestContextListener;
@@ -26,11 +27,16 @@ public class SessionScope implements Scope {
 
 	protected final HttpSessionListenerBroadcaster sessionListeners;
 
-	public SessionScope() {
+	/**
+	 * Session scope.
+	 */
+	public SessionScope(PetiteContainer petiteContainer) {
 		sessionListeners = HttpSessionListenerBroadcaster.getInstance();
+
 		if (sessionListeners == null) {
 			throw new PetiteException(HttpSessionListenerBroadcaster.class.getSimpleName() + " not available.");
 		}
+
 		sessionListeners.registerListener(new HttpSessionListener() {
 			public void sessionCreated(HttpSessionEvent httpSessionEvent) {
 				sessionInstances.put(httpSessionEvent.getSession().getId(), new HashMap<String, Object>());
@@ -39,6 +45,10 @@ public class SessionScope implements Scope {
 				sessionInstances.remove(httpSessionEvent.getSession().getId());
 			}
 		});
+
+		// register session scope on first usage
+		ThreadLocalScope threadLocalScope = petiteContainer.resolveScope(ThreadLocalScope.class);
+		threadLocalScope.acceptScope(SessionScope.class);
 	}
 
 	public Object lookup(String name) {
@@ -77,7 +87,7 @@ public class SessionScope implements Scope {
 			return true;
 		}
 
-		return true;
+		return false;
 
 	}
 

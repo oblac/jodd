@@ -2,10 +2,15 @@
 
 package jodd.petite;
 
+import jodd.bean.BeanUtil;
+import jodd.petite.scope.ProtoScope;
+import jodd.petite.scope.SessionScope;
+import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
 import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
+import jodd.servlet.HttpSessionListenerBroadcaster;
 import jodd.util.ConcurrentUtil;
 import org.junit.Test;
 
@@ -47,6 +52,29 @@ public class ScopeTest {
 		};
 		thread.start();
 		ConcurrentUtil.waitForRelease(sem);
+	}
+
+	@Test
+	public void testSessionScopeAccepted() {
+		PetiteContainer pc = new PetiteContainer();
+
+		ThreadLocalScope threadLocalScope = pc.resolveScope(ThreadLocalScope.class);
+		SingletonScope singletonScope = pc.resolveScope(SingletonScope.class);
+		ProtoScope protoScope = pc.resolveScope(ProtoScope.class);
+
+		assertTrue(threadLocalScope.accept(singletonScope));
+		assertTrue(threadLocalScope.accept(threadLocalScope));
+		assertFalse(threadLocalScope.accept(protoScope));
+
+		Class[] acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
+		assertEquals(2, acceptedClasses.length);
+
+		new HttpSessionListenerBroadcaster();
+		SessionScope sessionScope = pc.resolveScope(SessionScope.class);
+
+		acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
+		assertEquals(3, acceptedClasses.length);
+		assertTrue(threadLocalScope.accept(sessionScope));
 	}
 
 }

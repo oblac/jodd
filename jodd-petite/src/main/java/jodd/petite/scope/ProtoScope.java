@@ -19,7 +19,7 @@ public class ProtoScope implements Scope {
 	}
 
 	/**
-	 * Allow all scopes to be injected into prototype scoped beans.
+	 * Allows all scopes to be injected into prototype scoped beans.
 	 */
 	public boolean accept(Scope referenceScope) {
 		return true;

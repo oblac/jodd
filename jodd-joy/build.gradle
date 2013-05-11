@@ -4,6 +4,7 @@ ext.moduleDescription = 'Jodd Joy is set of Jodd extensions that makes developme
 
 dependencies {
 	compile project(':jodd-core')
+	compile project(':jodd-petite')
 	compile project(':jodd-madvoc')
 	compile project(':jodd-vtor')
 	compile project(':jodd-jtx')

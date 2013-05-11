@@ -8,10 +8,38 @@ import jodd.petite.scope.DefaultScope;
 import jodd.typeconverter.Convert;
 import jodd.util.StringUtil;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Few Petite utilities, used internally.
  */
 public class PetiteUtil {
+
+	/**
+	 * Creates new instance of given type. In the first try, it tries to use
+	 * constructor with a {@link PetiteContainer}. If that files, uses default
+	 * constructor to builds an instance.
+	 */
+	public static <T> T newInstance(Class<T> type, PetiteContainer petiteContainer) throws Exception {
+		T t = null;
+
+		// first try ctor(PetiteContainer)
+		try {
+			Constructor<T> ctor = type.getConstructor(PetiteContainer.class);
+			t = ctor.newInstance(petiteContainer);
+		} catch (NoSuchMethodException nsmex) {
+			// ignore
+		} catch (Exception ex) {
+			throw ex;
+		}
+
+		// if first try failed, try default ctor
+		if (t == null) {
+			return type.newInstance();
+		}
+
+		return t;
+	}
 
 	/**
 	 * Converts comma-separated string into double string array.
