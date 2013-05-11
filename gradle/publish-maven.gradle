@@ -1,4 +1,5 @@
 ext.optional = []
+ext.provided = []
 
 signing {
 	if (project.hasProperty('JODD_ADMIN')) {
@@ -32,16 +33,22 @@ uploadArchives {
 def customizePom(pom, gradleProject) {
 	pom.whenConfigured { generatedPom ->
 
-		// eliminate test-scoped dependencies (no need in maven central poms)
+		// eliminate test-scoped dependencies (no need in maven central POMs)
 		generatedPom.dependencies.removeAll { dep ->
 			dep.scope == "test"
 		}
 
-		// modify POM and add optional flag where needed
+		// modify POM and change scope to provided and/or add optional flag where needed
 		generatedPom.dependencies.findAll {
-			println it.artifactId
-		 	if (it.artifactId in project.optional) {
+			ext.artifactId = it.artifactId
+			ext.fulldep = it.groupId + ':' + it.artifactId + ':' + it.version
+
+			if (ext.artifactId in project.optional || ext.fulldep in project.optional) {
 				it.optional = true
+			}
+
+		 	if (ext.artifactId in project.provided || ext.fulldep in project.provided) {
+				it.scope = "provided"
 			}
 		}
 

@@ -129,12 +129,41 @@ configure(javaModules()) {
 		integrationTestRuntime configurations.testRuntime
 	}
 
-
 	task integrationTest(type: Test, dependsOn: jar) {
 		testClassesDir = sourceSets.integrationTest.output.classesDir
 		classpath = sourceSets.integrationTest.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
 	}
+
+/*
+	// provided fix - still not working as provided dependencies do not appear in resulting pom
+
+	configurations {
+		provided
+		compile.extendsFrom provided
+	}
+
+	conf2ScopeMappings.addMapping(1, configurations.provided, "compile")
+
+	sourceSets {
+		main.compileClasspath += configurations.provided
+		main.runtimeClasspath += configurations.provided
+		test.compileClasspath += configurations.provided
+		test.runtimeClasspath += configurations.provided
+	}
+
+	javadoc {
+		classpath += configurations.provided
+	}
+
+	idea {
+		module {
+			scopes.PROVIDED.plus += configurations.provided
+		}
+	}
+
+	eclipse.classpath.plusConfigurations += configurations.provided
+*/
 
 	// artifacts
 
@@ -207,7 +236,6 @@ dependencies {
 }
 
 def allMainSourceSets = javaBundleModules().sourceSets.main
-
 
 task buildModules {
 	dependsOn javaModules().build

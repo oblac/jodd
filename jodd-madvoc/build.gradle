@@ -10,9 +10,11 @@ dependencies {
 	compile project(':jodd-servlet')
 	compile project(':jodd-petite')
 
+	compile lib.log
+
 	compile lib.servlet
 	compile lib.jsp
-	compile lib.log
-	
+
 	testCompile lib.junit
 }
+provided = [lib.servlet, lib.jsp]

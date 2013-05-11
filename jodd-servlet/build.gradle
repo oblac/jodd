@@ -13,3 +13,4 @@ dependencies {
 	testCompile lib.junit
 	testCompile lib.mockito
 }
+provided = [lib.servlet, lib.jsp]
