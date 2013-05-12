@@ -380,7 +380,7 @@ public abstract class LagartoParserEngine {
 
 		if (enableConditionalComments == false) {
 			if (isDownlevelHidden) {
-        // +4 and -3 to skip the <!-- and the --> the same way the parseCommentOrConditionalComment() method does.
+				// +4 and -3 to skip the <!-- and the --> the same way the parseCommentOrConditionalComment() method does.
 				visitor.comment(input.subSequence(start + 4, end - 3));
 			} else {
 				error("Conditional comments disabled");
