@@ -152,15 +152,18 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			throw new HttpException(ioex);
 		}
 
-		line = line.trim();
+		if (line != null) {
 
-		int ndx = line.indexOf(' ');
-		httpResponse.httpVersion(line.substring(0, ndx));
+			line = line.trim();
 
-		int ndx2 = line.indexOf(' ', ndx + 1);
-		httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+			int ndx = line.indexOf(' ');
+			httpResponse.httpVersion(line.substring(0, ndx));
 
-		httpResponse.statusPhrase(line.substring(ndx2).trim());
+			int ndx2 = line.indexOf(' ', ndx + 1);
+			httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
+
+			httpResponse.statusPhrase(line.substring(ndx2).trim());
+		}
 
 		httpResponse.readHeaders(reader);
 		httpResponse.readBody(reader);
