@@ -102,8 +102,8 @@ public class MadvocController {
 				String encoding = madvocConfig.getEncoding();
 
 				if (encoding != null) {
-					servletRequest.setCharacterEncoding(madvocConfig.getEncoding());
-					servletResponse.setCharacterEncoding(madvocConfig.getEncoding());
+					servletRequest.setCharacterEncoding(encoding);
+					servletResponse.setCharacterEncoding(encoding);
 				}
 
 				characterEncodingSet = true;
