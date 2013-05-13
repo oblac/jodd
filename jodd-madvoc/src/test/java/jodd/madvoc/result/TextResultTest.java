@@ -32,6 +32,7 @@ public class TextResultTest {
 	public void testEncoding() {
 		HttpResponse httpResponse = HttpRequest.get("localhost:8080/textResultEncoding").send();
 		assertEquals(200, httpResponse.statusCode());
+		assertEquals("text/plain;charset=UTF-8", httpResponse.contentType());
 		assertEquals("this text contents chinese chars 中文", httpResponse.bodyText());
 	}
 
@@ -39,10 +40,4 @@ public class TextResultTest {
 		return "text:this text contents chinese chars 中文";
 	}
 
-
-	// ---------------------------------------------------------------- configurator
-
-	public void configure() {
-		//To change body of implemented methods use File | Settings | File Templates.
-	}
 }

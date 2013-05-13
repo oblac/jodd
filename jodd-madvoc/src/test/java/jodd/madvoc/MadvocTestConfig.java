@@ -5,6 +5,8 @@ package jodd.madvoc;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.config.MadvocConfigurator;
+import jodd.madvoc.result.RawResult;
+import jodd.madvoc.result.RawResultTest;
 import jodd.madvoc.result.TextResult;
 import jodd.madvoc.result.TextResultTest;
 import jodd.petite.meta.PetiteInject;
@@ -18,7 +20,9 @@ public class MadvocTestConfig implements MadvocConfigurator {
 
 	public void configure() {
 		resultsManager.register(TextResult.class);
+		resultsManager.register(RawResult.class);
 
 		actionsManager.register(TextResultTest.class, "madvocEncoding", "/textResultEncoding");
+		actionsManager.register(RawResultTest.class, "madvocRawImage", "/madvocRawImage");
 	}
 }
