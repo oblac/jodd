@@ -102,6 +102,30 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 		}
 	}
 
+	// ---------------------------------------------------------------- get
+
+	/**
+	 * Returns content type and, optionally, charset. Returns <code>null</code>
+	 * when mime type is not set.
+	 */
+	@Override
+	public String getContentType() {
+		String contentType = mimeType;
+
+		if (mimeType != null && characterEncoding != null) {
+			contentType += ";charset=" + characterEncoding;
+		}
+		return contentType;
+	}
+
+	/**
+	 * Returns character encoding or <code>null</code> if not set.
+	 */
+	@Override
+	public String getCharacterEncoding() {
+		return characterEncoding;
+	}
+
 	// ---------------------------------------------------------------- out
 
 	@Override

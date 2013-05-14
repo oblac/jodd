@@ -36,7 +36,8 @@ public class RawResult extends ActionResult {
 			return;
 		}
 		if (resultObject instanceof RawResultData != true) {
-			resultObject = new RawData(resultValue.getBytes(madvocConfig.getEncoding()));
+			String encoding = madvocConfig.getEncoding();
+			resultObject = new RawData(resultValue.getBytes(encoding));
 		}
 
 		RawResultData result = (RawResultData) resultObject;

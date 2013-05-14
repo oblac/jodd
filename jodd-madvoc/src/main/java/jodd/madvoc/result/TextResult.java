@@ -4,14 +4,10 @@ package jodd.madvoc.result;
 
 import jodd.io.StreamUtil;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.meta.In;
 import jodd.util.MimeTypes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 /**
  * Text result returns a result value, i.e. a string.
@@ -22,9 +18,6 @@ public class TextResult extends ActionResult {
 
 	public static final String NAME = "text";
 
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
-
 	public TextResult() {
 		super(NAME);
 	}
@@ -33,10 +26,11 @@ public class TextResult extends ActionResult {
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
+		String encoding = response.getCharacterEncoding();
 		response.setContentType(MimeTypes.MIME_TEXT_PLAIN);
-		response.setCharacterEncoding(madvocConfig.getEncoding());
+		response.setCharacterEncoding(encoding);
 
-		byte[] data = resultValue.getBytes(madvocConfig.getEncoding());
+		byte[] data = resultValue.getBytes(encoding);
 		response.setContentLength(data.length);
 
 		OutputStream out = null;
