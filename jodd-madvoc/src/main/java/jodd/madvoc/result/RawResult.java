@@ -44,7 +44,7 @@ public class RawResult extends ActionResult {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		// reset content type and prepare response
-		response.setContentType(null);
+		// since we are using MadvocResponseWrapper, the charset will be reset as well.
 		ServletUtil.prepareResponse(response, result.getDownloadFileName(), result.getMimeType(), result.getContentLength());
 
 		// write out

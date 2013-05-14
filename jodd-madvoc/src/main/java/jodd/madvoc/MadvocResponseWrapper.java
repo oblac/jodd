@@ -16,6 +16,16 @@ import java.io.PrintWriter;
  * <li>Delays setting of response encoding until response is being used,
  * allowing resetting the charset.</li>
  * </ul>
+ * This unifies the behavior of servlet containers. Method <code>setContentType</code>
+ * may be called more times, and its on servlet container how to deal with character encodings.
+ * For example, if user set content type with following values:
+ * <ul>
+ *     <ol><code>text/html;charset="UTF-8"</code></ol>
+ *     <ol><code>image/png"</code></ol>
+ * </ul>
+ * the question is would the second call reset the character or not. Tomcat 6-7, for example,
+ * does not reset the charset on content type change. In our opinion this is an error
+ * since new content type means new charset, as well.
  */
 public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 
@@ -52,8 +62,9 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Caches content type for later. If passed value is <code>null</code>
-	 * content type will be reset as never set.
+	 * Sets content type. If charset is missing, current value is reset.
+	 * If passed value is <code>null</code>, content type will be reset
+	 * as never set.
 	 */
 	@Override
 	public void setContentType(String type) {
@@ -70,8 +81,7 @@ public class MadvocResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Caches character encoding charset for later. If passed value
-	 * is <code>null</code> encoding will be reset as never set.
+	 * Sets just character encoding. Setting to <code>null</code> resets it.
 	 */
 	@Override
 	public void setCharacterEncoding(String charset) {
