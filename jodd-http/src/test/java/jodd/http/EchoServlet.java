@@ -19,40 +19,43 @@ import java.util.Map;
 
 public class EchoServlet extends HttpServlet {
 
-	public static EchoServlet ref;
+	public static Data ref;
 
-	public EchoServlet() {
-		ref = this;
+	public static void testinit() {
+		ref = new Data();
 	}
 
-	public boolean get;
-	public boolean post;
-	public String queryString;
-	public String body;
-	public Map<String, String> header;
-	public Map<String, String> params;
+	public static class Data {
+		public boolean get;
+		public boolean post;
+		public String queryString;
+		public String body;
+		public Map<String, String> header;
+		public Map<String, String> params;
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		get = true;
-		post = false;
+		ref.get = true;
+		ref.post = false;
 		readAll(req);
-		write(resp, body);
+		write(resp, ref.body);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		post = true;
-		get = false;
+		ref.post = true;
+		ref.get = false;
 		readAll(req);
-		write(resp, body);
+		write(resp, ref.body);
 	}
 
 	// ---------------------------------------------------------------- write
 
 	protected void write(HttpServletResponse resp, String text) throws IOException {
 		if (text != null) {
-			resp.setIntHeader("Content-Length", text.getBytes(StringPool.UTF_8).length);
+			resp.setContentLength(text.getBytes(StringPool.UTF_8).length);
+			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().write(text);
 			resp.flushBuffer();
 		}
@@ -61,9 +64,9 @@ public class EchoServlet extends HttpServlet {
 	// ---------------------------------------------------------------- read all
 
 	protected void readAll(HttpServletRequest req) throws IOException {
-		body = readRequestBody(req);
-		queryString = req.getQueryString();
-		header = copyHeaders(req);
+		ref.body = readRequestBody(req);
+		ref.queryString = req.getQueryString();
+		ref.header = copyHeaders(req);
 	}
 
 	protected String readRequestBody(HttpServletRequest request) throws IOException {

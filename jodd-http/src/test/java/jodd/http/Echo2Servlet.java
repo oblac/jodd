@@ -8,9 +8,9 @@ import java.io.IOException;
 public class Echo2Servlet extends EchoServlet {
 
 	protected void readAll(HttpServletRequest req) throws IOException {
-		queryString = req.getQueryString();
-		header = copyHeaders(req);
-		params = copyParams(req);
+		ref.queryString = req.getQueryString();
+		ref.header = copyHeaders(req);
+		ref.params = copyParams(req);
 	}
 
 }
