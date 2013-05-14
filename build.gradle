@@ -21,13 +21,13 @@ ext {
 	lib = [
 		mail:			'javax.mail:mail:1.4.5',
 		activation:		'javax.activation:activation:1.1.1',
-		servlet:		'javax.servlet:servlet-api:2.5',
+		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
 		jsp:			'javax.servlet.jsp:jsp-api:2.0',
 		log:			'org.slf4j:slf4j-api:1.7.2',
 		simpleLog:		'org.slf4j:slf4j-simple:1.7.2',
 //		asm:			'org.ow2.asm:asm:4.1',
-		
-		junit: 			'junit:junit:4.10',
+
+		junit: 			'junit:junit:4.11',
 		mockito:		'org.mockito:mockito-all:1.9.5',
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
@@ -35,7 +35,12 @@ ext {
 		mysql:			'mysql:mysql-connector-java:5.1.21',
 		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.5.10.201208310627:runtime@jar',
 		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.5.10.201208310627',
-		winstone:		'net.sourceforge.winstone:winstone-lite:0.9.10'
+		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
+		tomcat_embed:	[	'org.apache.tomcat:tomcat-catalina:7.0.40',
+							'org.apache.tomcat.embed:tomcat-embed-core:7.0.40',
+							'org.apache.tomcat.embed:tomcat-embed-jasper:7.0.40',
+							'org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.40',
+							'org.apache.tomcat.embed:tomcat-embed-logging-log4j:7.0.40']
 	]
 
 	// common manifest data
@@ -111,6 +116,13 @@ configure(javaModules()) {
 	task javadocJar(type: Jar, dependsOn: javadoc) {
 		classifier = 'javadoc'
 		from javadoc.destinationDir
+	}
+
+	// tests
+	test {
+		beforeTest { descriptor ->
+			logger.lifecycle("\t" + descriptor)
+		}
 	}
 
 	// integration tests

@@ -17,6 +17,6 @@ dependencies {
 
 	testCompile project(':jodd-http')
 	testCompile lib.junit
-	testCompile lib.winstone
+	testCompile lib.tomcat_embed
 }
 provided = [lib.servlet, lib.jsp]

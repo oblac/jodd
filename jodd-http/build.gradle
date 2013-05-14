@@ -7,6 +7,5 @@ dependencies {
 	compile project(':jodd-upload')
 
 	testCompile lib.junit
-	testCompile lib.winstone
-	testCompile lib.servlet
+	testCompile lib.tomcat_embed
 }
