@@ -2,31 +2,32 @@ package jodd.madvoc.result;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
-import jodd.madvoc.MadvocWinstoneServer;
+import jodd.madvoc.MadvocTomcatServer;
+import jodd.madvoc.TestServer;
 import jodd.util.MimeTypes;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class RawResultTest {
+public class ResultsTest {
 
-	static MadvocWinstoneServer winstoneServer;
+	static TestServer testServer;
 
 	@BeforeClass
-	public static void startServer() throws IOException {
-		winstoneServer = new MadvocWinstoneServer();
-		winstoneServer.start();
+	public static void startServer() throws Exception {
+		testServer = new MadvocTomcatServer();
+		testServer.start();
 	}
 
 	@AfterClass
-	public static void stopServer() {
-		winstoneServer.stop();
+	public static void stopServer() throws Exception {
+		testServer.stop();
 	}
+
+	// ---------------------------------------------------------------- raw
 
 	@Test
 	public void testRawResult() {
@@ -47,5 +48,19 @@ public class RawResultTest {
 		0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02,
 		0x02, 0x4c, 0x01, 0x00, 0x3b
 	};
+
+	// ---------------------------------------------------------------- text
+
+	@Test
+	public void testEncoding() {
+		HttpResponse httpResponse = HttpRequest.get("localhost:8080/textResultEncoding").send();
+		assertEquals(200, httpResponse.statusCode());
+		assertEquals("text/plain;charset=UTF-8", httpResponse.contentType());
+		assertEquals("this text contents chinese chars 中文", httpResponse.bodyText());
+	}
+
+	public String madvocEncoding() {
+		return "text:this text contents chinese chars 中文";
+	}
 
 }
