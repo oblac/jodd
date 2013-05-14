@@ -3,9 +3,6 @@
 package jodd.joy.madvoc.result;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.meta.In;
 import jodd.madvoc.result.ActionResult;
 import jodd.util.MimeTypes;
 
@@ -23,17 +20,15 @@ public class JSONResult extends ActionResult {
 		super(NAME);
 	}
 
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocConfig madvocConfig;
-
-
 	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
+		String encoding = response.getCharacterEncoding();
 		response.setContentType(MimeTypes.MIME_APPLICATION_JSON);
+		response.setCharacterEncoding(encoding);
 
-		byte[] data = resultValue.getBytes(madvocConfig.getEncoding());
+		byte[] data = resultValue.getBytes(encoding);
 
 		OutputStream os = response.getOutputStream();
 		os.write(data);
