@@ -1,4 +1,7 @@
+PRJ_ROOT=../../../../../../
 
-~/java/jflex-code/jflex/bin/jflex -d . lexer.flex
+java -jar $PRJ_ROOT/etc/jflex/JFlex.jar -d . lexer.flex
 
-#rm *.java~
+mv Lexer.java ../../../java/jodd/lagarto/
+
+echo done!
