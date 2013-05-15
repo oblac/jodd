@@ -16,8 +16,8 @@ import java.nio.CharBuffer;
 //%line
 //%column
 
-// faster than %pack or %table
-%switch
+// code generation(%switch, %table, %pack)
+%table
 %buffer 4096
 
 // additional methods
