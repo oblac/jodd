@@ -63,14 +63,16 @@ nonascii  =[^\0-\177]
 unicode   =\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
 escape    ={unicode}|\\[^\n\r\f0-9a-f]
 nmchar    =[_a-zA-Z0-9-]|{nonascii}|{escape}
-num       =[0-9]+|[0-9]*\.[0-9]+
+//num       =[0-9]+|[0-9]*\.[0-9]+		// not used
 string    ={string1}|{string2}
 string1   =\"([^\n\r\f\"]|\\{nl}|{nonascii}|{escape})*\"
 string2   =\'([^\n\r\f\']|\\{nl}|{nonascii}|{escape})*\'
 nl        =\n|\r\n|\r|\f
-w         =[ \t\r\n\f]*
-integer   =[0-9]+
-dimension ={num}{ident}
+whitespace=[ \t\r\n\f]
+w         ={whitespace}*
+ww        ={whitespace}+
+//integer   =[0-9]+						// not used
+//dimension ={num}{ident}				// not used
 
 
 // additional lexer states
@@ -79,7 +81,7 @@ dimension ={num}{ident}
 %%
 
 <YYINITIAL> {
-	{w}				{ /* ignore whitespaces */ }
+	{ww}			{ /* ignore whitespaces */ }
 	{ident}			{ cssSelector = new CssSelector(yytext()); selectors.add(cssSelector); stateSelector(); }
 	"*"				{ cssSelector = new CssSelector(); selectors.add(cssSelector); stateSelector(); }
 	.				{ cssSelector = new CssSelector(); selectors.add(cssSelector); yypushback(1); stateSelector(); }
@@ -91,7 +93,7 @@ dimension ={num}{ident}
 	"."{ident}		{ cssSelector.addClassSelector(yytext(1)); }
 	":"{ident}"("	{ pseudoFnName = yytext(1,1); statePseudoFn(); }
 	":"{ident}		{ cssSelector.addPseudoClassSelector(yytext(1)); }
-	.?				{ yypushback(1); stateCombinator(); }
+	.				{ yypushback(1); stateCombinator(); }
 }
 
 <ATTR> {
