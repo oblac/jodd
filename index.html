@@ -3,135 +3,209 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="javascripts/jquery.cycle.all.js"></script>
+    <script src="javascripts/slideshow.js"></script>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Jodd by oblac</title>
+    <title>Jodd by Oblac</title>
   </head>
 
   <body>
     <div id="container">
-      <div class="inner">
+      <div class="inner">      
+
+      <pre class="wow">1.2 MB ONLY!</pre>
 
         <header>
           <h1>Jodd</h1>
           <h2>The Unbearable Lightness of Java</h2>
+
+          <p><strong>Jodd</strong> is set of open-source Java tools and micro frameworks; compact, yet powerful.</p>
+
         </header>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/oblac/jodd/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/oblac/jodd/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/oblac/jodd" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+          <p style="text-align:center;"><a href="http://jodd.org">http://jodd.org</a></p>
 
-        <hr>
 
         <section id="main_content">
-          <h1>Jodd</h1>
 
-<p><strong>Jodd</strong> is set of open-source Java tools and micro frameworks; compact, yet powerful.</p>
+      <hr>
+      
+      <div id="slideshow">
 
-<p>Official web site: <a href="http://jodd.org/">http://jodd.org/</a></p>
+          <ul class="slides-nav">
+                <li class="on"><a href="#slide-petite"><img src="images/jodd-petite-icon.png"></a></li>
+                <li><a href="#slide-madvoc"><img src="images/jodd-madvoc-icon.png"></a></li>
+                <li><a href="#slide-dboom"><img src="images/jodd-dboom-icon.png"></a></li>
+                <li><a href="#slide-lagarto"><img src="images/jodd-lagarto-icon.png"></a></li>
+                <li><a href="#slide-jerry"><img src="images/jodd-jerry-icon.png"></a></li>
+                <li><a href="#slide-proxetta"><img src="images/jodd-proxetta-icon.png"></a></li>
+                <li><a href="#slide-decora"><img src="images/jodd-decora-icon.png"></a></li>
+                <li><a href="#slide-stapler"><img src="images/jodd-stapler-icon.png"></a></li>
+                <li><a href="#slide-vtor"><img src="images/jodd-vtor-icon.png"></a></li>
+          </ul>
 
-<p>Invitation web site: <a href="http://joddframework.org">http://joddframework.org</a></p>
 
-<h2>Jodd Modules</h2>
+      <div class="slides">
+      <ul>
 
-<p><strong>Jodd</strong> is split into many modules, so choose what to use.
-Some tools and utility modules are:</p>
+        <li id="slide-petite" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-petite.png">
+          </div>
+          <div class="txt">
+            <h1>Petite</h1>
+            <p>
+              Petite IoC container binds your components in loose-coupled architecture.
+              Using few annotations, or manually, you can wire beans with ease.
+              Petite is lightweight, fast and still powerful enough to help you build
+              whatever you imagined.
+            </p>
+          </div>
+        </li>
 
-<ul>
-<li>
-<code>jodd-core</code> contains many utilities, including <code>JDateTime</code> and <code>Convert</code>.</li>
-<li>
-<code>jodd-bean</code>, our infamous <code>BeanUtil</code>.</li>
-<li>
-<code>jodd-props</code> is the super-replacement for Java <code>Properties</code>.</li>
-<li>
-<code>jodd-email</code> for easier email sending.</li>
-<li>
-<code>jodd-upload</code>, handles HTTP uploads.</li>
-<li>
-<code>jodd-servlet</code> with many servlet utilities, including nice tag library.</li>
-<li>
-<code>jodd-http</code>, tiny HTTP client.</li>
-</ul><p>and some micro frameworks:</p>
+        <li id="slide-madvoc" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-madvoc.png">
+          </div>
+          <div class="txt">
+            <h1>Madvoc</h1>
+            <p>
+              Madvoc is heavy-duty web framework. Using pragmatic conventions,
+              writing presentation layer becomes a simpler task. Packed with
+              many features, this light and fast web layer speeds up the
+              development of web actions.
+            </p>
+          </div>
+        </li>
 
-<ul>
-<li>
-<code>jodd-madvoc</code> - slick MVC framework.</li>
-<li>
-<code>jodd-petite</code> - pragmatic DI container.</li>
-<li>
-<code>jodd-lagarto</code> - HTML parser with <code>Jerry</code> and <code>CSSelly</code>.</li>
-<li>
-<code>jodd-lagarto-web</code> - <code>Lagarto</code> addon for web: <code>Decora</code>, <code>HtmlStapler</code> and more.</li>
-<li>
-<code>jodd-proxetta</code> - dynamic proxies and <code>Paramo</code>.</li>
-<li>
-<code>jodd-db</code> - thin database layer and object mapper.</li>
-<li>
-<code>jodd-vtor</code> - validation framework.</li>
-</ul><p>Read more in our <a href="http://jodd.org/doc">official documentation</a>.</p>
+        <li id="slide-dboom" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-dboom.png">
+          </div>
+          <div class="txt">
+            <h1>DbOom</h1>
+            <p>
+              Brings back joy and simplicity of native database programming!
+              If you just need more robust JDBC access, or 
+              powerful object-entity mapping, DbOom will help.
+              Speed up your development, don't write simple queries and
+              use template-sql extension.
+            </p>
+          </div>
+        </li>
 
-<h2>Jodd Bundle</h2>
+        <li id="slide-lagarto" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-lagarto.png">
+          </div>
+          <div class="txt">
+            <h1>Lagarto</h1>
+            <p>
+              Welcome to fastest HTML parser! Lagarto core
+              uses visitor pattern to parse (X)HTML and XML content.
+              On top of it, try Lagarto DOM builder, for more
+              convenient approach. And finally, with help of
+              CSSelly, select nodes using CSS 3 selectors.
+            </p>
+          </div>
+        </li>
 
-<p>If you are already using many <strong>Jodd</strong> jars, you can simply
-just use the <em>bundle</em> jar. It's a single jar that bind all modules:)</p>
+        <li id="slide-jerry" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-jerry.png">
+          </div>
+          <div class="txt">
+            <h1>Jerry</h1>
+            <p>
+              Enjoy jQuery syntax in Java! Parse HTML content
+              and use elegant interface that mirrors jQuery API 
+              that you are already used to.
+            </p>
+          </div>
+        </li>
 
-<h2>Building Jodd from source</h2>
+        <li id="slide-proxetta" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-proxetta.png">
+          </div>
+          <div class="txt">
+            <h1>Proxetta</h1>
+            <p>
+                Proxetta creates dynamic proxies in run-time.
+                What is unique is how pointcuts and advices
+                are defined. Moreover, there are three different
+                flavors: proxy, wrapper and invoker replacer, 
+                an another unique feature.
+            </p>
+          </div>
+        </li>
 
-<p><strong>Jodd</strong> uses <a href="http://gradle.org/">Gradle</a> build system. Good thing is that you don't have to install anything; the only prerequisites are <a href="http://help.github.com/set-up-git-redirect">Git</a> and Java JDK.</p>
+        <li id="slide-decora" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-decora.png">
+          </div>
+          <div class="txt">
+            <h1>Decora</h1>
+            <p>
+              Decora is web decoration framework to help in creating sites
+              consisting of pages based on templates.
+              This gives a consistent look-and-feel, navigation and layout scheme.
+              Use Decora with taglib tags, or just with native HTML!
+            </p>
+          </div>
+        </li>
 
-<h3>Check out sources</h3>
+        <li id="slide-stapler" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-stapler.png">
+          </div>
+          <div class="txt">
+            <h1>HtmlStapler</h1>
+            <p>
+              HtmlStapler transparently packages web resources included by
+              your HTML pages: javascripts and CSS files. This significantly
+              speeds up webpage load time and page response as instead of
+              loading many resource files, only one or two bundles will load.
+            </p>
+          </div>
+        </li>
 
-<pre><code>git clone https://github.com/oblac/jodd.git jodd
-</code></pre>
+        <li id="slide-vtor" class="slide">
+          <div class="iborder">
+            <img src="images/jodd-vtor.png">
+          </div>
+          <div class="txt">
+            <h1>VTor</h1>
+            <p>
+              VTor is a pragmatic validation framework for any kind of Java objects. Fast, small and focused on validation. Constraints can be declared with annotations or manually, grouped in profiles.
+            </p>
+          </div>
+        </li>
+      </ul>
+      </div>
+      </div>
 
-<h3>Compile and test, build jars</h3>
+      <hr>
 
-<pre><code>gradlew build
-</code></pre>
+        <h3>Think Lightweight, Be Awesome, Get Things Done!</h3>
 
-<h3>Build full release with reports</h3>
+        <p>
+          Learn more about <a href="http://jodd.org"><strong>Jodd</strong></a>
+          and then go and <a href="http://github.com/oblac/jodd">get it</a>!
+        </p>
 
-<pre><code>gradlew release
-</code></pre>
-
-<h3>Install Jodd into your local Maven</h3>
-
-<pre><code>gradlew install
-</code></pre>
-
-<h2>Contributing</h2>
-
-<p>Feel free to contribute! Follow these steps:</p>
-
-<p>First time only:</p>
-
-<ul>
-<li>fork the <strong>Jodd</strong> repo (<code>upstream</code>) to your GitHub account (<code>origin</code>).</li>
-<li>clone <code>origin</code> as your <code>local</code> repo</li>
-</ul><p>Every other time:</p>
-
-<ul>
-<li>update both <code>origin</code> and <code>local</code> repos from <code>upstream</code>
-</li>
-<li>create new branch for a feature or bug fix</li>
-<li>commit often :)</li>
-<li>once when work is done, push local changes to your <code>origin</code>
-</li>
-<li>send us a pull request (PR)</li>
-</ul><p>We will pickup up from here:)</p>
         </section>
 
         <footer>
-          Jodd is maintained by <a href="https://github.com/oblac">oblac</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+          <a href="http://github.com/oblac/jodd">Jodd</a> is maintained by <a href="https://github.com/oblac">oblac</a> on GitHub.<br>
         </footer>
 
                   <script type="text/javascript">
