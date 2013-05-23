@@ -38,7 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Default application core frame. Contains init point to
+ * Default application core. Contains init points to
  * all application frameworks and layers.
  */
 public abstract class DefaultAppCore {
@@ -96,6 +96,11 @@ public abstract class DefaultAppCore {
 	 * Is web application. Resolved during initialization.
 	 */
 	protected boolean isWebApplication;
+
+	/**
+	 * Props profiles.
+	 */
+	protected String[] appPropsProfiles;
 
 	/**
 	 * Default constructor.
@@ -296,9 +301,10 @@ public abstract class DefaultAppCore {
 
 	/**
 	 * Creates and loads application props.
-	 * It first load system properties (registered as <code>sys.*</code>)
+	 * It first loads system properties (registered as <code>sys.*</code>)
 	 * and then environment properties (registered as <code>env.*</code>).
-	 * Finally, props files are read from the classpath.
+	 * Finally, props files are read from the classpath. All properties
+	 * are loaded using
 	 * <p>
 	 * If props have been already loaded, does nothing.
 	 */
@@ -308,6 +314,8 @@ public abstract class DefaultAppCore {
 		}
 
 		appProps = new Props();
+
+		appProps.setActiveProfiles(appPropsProfiles);
 
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
@@ -464,13 +472,6 @@ public abstract class DefaultAppCore {
 	 * Database connection provider.
 	 */
 	protected ConnectionProvider connectionProvider;
-
-	/**
-	 * Returns connection provider.
-	 */
-	public ConnectionProvider getConnectionProvider() {
-		return connectionProvider;
-	}
 
 	/**
 	 * JTX annotations.
