@@ -887,7 +887,7 @@ public class ReflectUtil {
 	 * <table border="1">
 	 * <tr>
 	 * <th><code>type</code></th>
-	 * <th><code>getSimpleType(type)</code></th>
+	 * <th><code>toClass(type)</code></th>
 	 * </tr>
 	 * <tr>
 	 * <td><code>String</code></td>
@@ -937,6 +937,31 @@ public class ReflectUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Resolves concrete field type when declared in generic class and type defined in concrete subclass.
+	 */
+	public static Class getFieldConcreteType(Field field, Class concreteClass) {
+		Type type = field.getGenericType();
+
+		if (!(type instanceof TypeVariable)) {
+			return toClass(type);
+		}
+
+		TypeVariable typeVariable = (TypeVariable) type;
+
+		Class declaringClass = field.getDeclaringClass();
+		TypeVariable[] typeParameters = declaringClass.getTypeParameters();
+
+		for (int index = 0; index < typeParameters.length; index++) {
+			if (typeParameters[index].equals(typeVariable)) {
+
+				// matched type
+				return getGenericSupertype(concreteClass, index);
+			}
+		}
+		return Object.class;
 	}
 
 

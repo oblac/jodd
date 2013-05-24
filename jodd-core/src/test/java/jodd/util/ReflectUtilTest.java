@@ -18,6 +18,7 @@ import sun.reflect.Reflection;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -468,6 +469,38 @@ public class ReflectUtilTest {
 		assertEquals(ReflectUtilTest.class, ReflectUtil.getCallerClass(1));
 
 		field.set(null, value);
+	}
+
+	public static class BaseClass<A, B> {
+		public A f1;
+		public B f2;
+		public String f3;
+	}
+
+	public static class ConcreteClass extends BaseClass<String, Integer> {
+		public Long f4;
+		public List<Long> f5;
+	}
+
+	@Test
+	public void testGetFieldConcreteType() throws NoSuchFieldException {
+		Field f1 = BaseClass.class.getField("f1");
+		Field f2 = BaseClass.class.getField("f2");
+		Field f3 = BaseClass.class.getField("f3");
+		Field f4 = ConcreteClass.class.getField("f4");
+		Field f5 = ConcreteClass.class.getField("f5");
+
+		assertEquals(String.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 0));
+		assertEquals(Integer.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 1));
+
+		assertEquals(String.class, ReflectUtil.getFieldConcreteType(f1, ConcreteClass.class));
+		assertEquals(Integer.class, ReflectUtil.getFieldConcreteType(f2, ConcreteClass.class));
+		assertEquals(String.class, ReflectUtil.getFieldConcreteType(f3, ConcreteClass.class));
+		assertEquals(Long.class, ReflectUtil.getFieldConcreteType(f4, ConcreteClass.class));
+		assertEquals(List.class, ReflectUtil.getFieldConcreteType(f5, ConcreteClass.class));
+		assertEquals(Object.class, ReflectUtil.toClass(f1.getGenericType()));
+		assertEquals(null, ReflectUtil.getComponentType(f1.getGenericType()));
+		assertEquals(Long.class, ReflectUtil.getComponentType(f5.getGenericType()));
 	}
 
 }
