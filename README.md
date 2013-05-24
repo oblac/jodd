@@ -3,9 +3,11 @@ Jodd
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
-Official web site: http://jodd.org/
+Official web site (site, documentation, information): http://jodd.org/
 
-Invitation web site: http://joddframework.org
+GitHub page (short overview of micro frameworks): http://oblac.github.io/jodd
+
+Invitation web site (just visual effects): http://joddframework.org
 
 
 ## Jodd Modules
@@ -37,12 +39,14 @@ Read more in our [official documentation](http://jodd.org/doc).
 ## Jodd Bundle
 
 If you are already using many **Jodd** jars, you can simply
-just use the *bundle* jar. It's a single jar that bind all modules:)
+just use the _bundle_ jar. It's a single jar that bind all modules:)
 
 
 ## Building Jodd from source
 
-**Jodd** uses [Gradle](http://gradle.org/) build system. Good thing is that you don't have to install anything; the only prerequisites are [Git](http://help.github.com/set-up-git-redirect) and Java JDK.
+**Jodd** uses [Gradle](http://gradle.org/) build system. Good thing is that
+you don't have to install anything; the only prerequisites are
+[Git](http://help.github.com/set-up-git-redirect) and Java JDK.
 
 ### Check out sources
 
@@ -75,4 +79,4 @@ Every other time:
 + once when work is done, push local changes to your `origin`
 + send us a pull request (PR)
 
-We will pickup up from here:)
+We will pickup up from there:)
