@@ -87,9 +87,10 @@ public class ScopeDataResolver {
 	 * Inspects and returns scope data for all available scopes.
 	 */
 	protected ScopeData[] inspectAllScopeData(Object key) {
-		ScopeData[] scopeData;
 		ScopeType[] allScopeTypes = ScopeType.values();
-		scopeData = new ScopeData[allScopeTypes.length];
+
+		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
+
 		int count = 0;
 		if (key instanceof Class) {
 			for (ScopeType st : allScopeTypes) {
@@ -314,8 +315,10 @@ public class ScopeDataResolver {
 
 		// fields
 		for (Field field : fields) {
+			Class fieldType = ReflectUtil.getFieldConcreteType(field, actionClass);
+
 			In in = field.getAnnotation(In.class);
-			ScopeData.In ii = inspectIn(in, scopeType, field.getName(), field.getType());
+			ScopeData.In ii = inspectIn(in, scopeType, field.getName(), fieldType);
 			if (ii != null) {
 				listIn.add(ii);
 			}
@@ -331,7 +334,7 @@ public class ScopeDataResolver {
 			}
 
 			Out out = field.getAnnotation(Out.class);
-			ScopeData.Out oi = inspectOut(out, scopeType, field.getName(), field.getType());
+			ScopeData.Out oi = inspectOut(out, scopeType, field.getName(), fieldType);
 			if (oi != null) {
 				listOut.add(oi);
 			}
