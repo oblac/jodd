@@ -182,6 +182,45 @@ public class PropsTest {
 	}
 
 	@Test
+	public void testMacroNotExist() {
+		Props p = new Props();
+		p.setValue("mac1", "value1");
+		p.setValue("key1", "${mac1}");
+		p.setValue("key2", "${mac2}");
+
+		assertEquals("value1", p.getValue("mac1"));
+		assertEquals("value1", p.getValue("key1"));
+		assertEquals("${mac2}", p.getValue("key2"));
+	}
+
+	@Test
+	public void testMacroNotExistIgnoreMissing() {
+		Props p = new Props();
+		p.setIgnoreMissingMacros(true);
+		p.setValue("mac1", "value1");
+		p.setValue("key1", "${mac1}");
+		p.setValue("key2", "${mac2}");
+
+		assertEquals("value1", p.getValue("mac1"));
+		assertEquals("value1", p.getValue("key1"));
+		assertNull(p.getValue("key2"));
+	}
+
+	@Test
+	public void testMacroNotExistSkipEmpty() {
+		Props p = new Props();
+		p.setIgnoreMissingMacros(true);
+		p.setSkipEmptyProps(false);
+		p.setValue("mac1", "value1");
+		p.setValue("key1", "${mac1}");
+		p.setValue("key2", "${mac2}");
+
+		assertEquals("value1", p.getValue("mac1"));
+		assertEquals("value1", p.getValue("key1"));
+		assertEquals("", p.getValue("key2"));
+	}
+
+	@Test
 	public void testClone() throws IOException {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));

@@ -142,10 +142,11 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Skips empty properties.
+	 * Skips empty properties as they don't exist.
 	 */
 	public void setSkipEmptyProps(final boolean skipEmptyProps) {
 		parser.skipEmptyProps = skipEmptyProps;
+		data.skipEmptyProps = skipEmptyProps;
 	}
 
 	/**
@@ -153,6 +154,13 @@ public class Props implements Cloneable {
 	 */
 	public void setAppendDuplicateProps(final boolean appendDuplicateProps) {
 		data.appendDuplicateProps = appendDuplicateProps;
+	}
+
+	/**
+	 * Ignore missing macros by replacing them with an empty string.
+	 */
+	public void setIgnoreMissingMacros(boolean ignoreMissingMacros) {
+		data.ignoreMissingMacros = ignoreMissingMacros;
 	}
 
 	// ---------------------------------------------------------------- load

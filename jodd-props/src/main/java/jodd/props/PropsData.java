@@ -2,11 +2,13 @@
 
 package jodd.props;
 
+import jodd.util.StringPool;
 import jodd.util.StringTemplateParser;
 import jodd.util.Wildcard;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -24,12 +26,17 @@ public class PropsData implements Cloneable {
 
 	protected final HashMap<String, Map<String, PropsValue>> profileProperties;
 
-	protected final StringTemplateParser stringTemplateParser;
-
 	/**
 	 * If set, duplicate props will be appended to the end, separated by comma.
 	 */
 	protected boolean appendDuplicateProps;
+
+	/**
+	 * When set, missing macros will be replaces with an empty string.
+	 */
+	protected boolean ignoreMissingMacros;
+
+	protected boolean skipEmptyProps = true;
 
 	public PropsData() {
 		this(new HashMap<String, PropsValue>(), new HashMap<String, Map<String, PropsValue>>());
@@ -38,10 +45,6 @@ public class PropsData implements Cloneable {
 	protected PropsData(final HashMap<String, PropsValue> properties, final HashMap<String, Map<String, PropsValue>> profiles) {
 		this.baseProperties = properties;
 		this.profileProperties = profiles;
-
-		this.stringTemplateParser = new StringTemplateParser();
-		stringTemplateParser.setResolveEscapes(false);
-		stringTemplateParser.setReplaceMissingKey(false);
 	}
 
 	@Override
@@ -58,6 +61,8 @@ public class PropsData implements Cloneable {
 
 		final PropsData pd = new PropsData(newBase, newProfiles);
 		pd.appendDuplicateProps = appendDuplicateProps;
+		pd.ignoreMissingMacros = ignoreMissingMacros;
+		pd.skipEmptyProps = skipEmptyProps;
 		return pd;
 	}
 
@@ -177,16 +182,29 @@ public class PropsData implements Cloneable {
 	// ---------------------------------------------------------------- resolve
 
 	/**
-	 * Resolves all macros in this props set.
+	 * Resolves all macros in this props set. Called once on initialization.
 	 */
 	public void resolveMacros() {
+		// create string template pareser that will be used internally
+		StringTemplateParser stringTemplateParser = new StringTemplateParser();
+		stringTemplateParser.setResolveEscapes(false);
+
+		if (!ignoreMissingMacros) {
+			stringTemplateParser.setReplaceMissingKey(false);
+		} else {
+			stringTemplateParser.setReplaceMissingKey(true);
+			stringTemplateParser.setMissingKeyReplacement(StringPool.EMPTY);
+		}
+
+		// start parsing
 		int loopCount = 0;
 		while (loopCount++ < MAX_INNER_MACROS) {
-			boolean replaced = resolveMacros(this.baseProperties, null);
+			boolean replaced = resolveMacros(this.baseProperties, null, stringTemplateParser);
 
 			for (final Map.Entry<String, Map<String, PropsValue>> entry : profileProperties.entrySet()) {
-				final String profile = entry.getKey();
-				replaced = resolveMacros(entry.getValue(), profile) || replaced;
+				String profile = entry.getKey();
+
+				replaced = resolveMacros(entry.getValue(), profile, stringTemplateParser) || replaced;
 			}
 
 			if (!replaced) {
@@ -195,7 +213,7 @@ public class PropsData implements Cloneable {
 		}
 	}
 
-	protected boolean resolveMacros(final Map<String, PropsValue> map, final String profile) {
+	protected boolean resolveMacros(final Map<String, PropsValue> map, final String profile, StringTemplateParser stringTemplateParser) {
 		boolean replaced = false;
 
 		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
@@ -204,10 +222,22 @@ public class PropsData implements Cloneable {
 			}
 		};
 
-		for (final Map.Entry<String, PropsValue> entry : map.entrySet()) {
+		Iterator<Map.Entry<String, PropsValue>> iterator = map.entrySet().iterator();
+
+		while (iterator.hasNext()) {
+			Map.Entry<String, PropsValue> entry = iterator.next();
 			final PropsValue pv = entry.getValue();
 			final String newValue = stringTemplateParser.parse(pv.value, macroResolver);
+
 			if (!newValue.equals(pv.value)) {
+				if (skipEmptyProps) {
+					if (newValue.length() == 0) {
+						iterator.remove();
+						replaced = true;
+						continue;
+					}
+				}
+
 				pv.resolved = newValue;
 				replaced = true;
 			} else {
