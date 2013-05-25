@@ -313,7 +313,7 @@ public abstract class DefaultAppCore {
 			return;
 		}
 
-		appProps = new Props();
+		appProps = createProps();
 
 		appProps.setActiveProfiles(appPropsProfiles);
 
@@ -321,6 +321,13 @@ public abstract class DefaultAppCore {
 		appProps.loadEnvironment("env");
 
 		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
+	}
+
+	/**
+	 * Creates new Props.
+	 */
+	protected Props createProps() {
+		return new Props();
 	}
 
 	// ---------------------------------------------------------------- scanning
