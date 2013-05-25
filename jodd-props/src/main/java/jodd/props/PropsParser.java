@@ -272,9 +272,6 @@ public class PropsParser implements Cloneable {
 	 * Adds accumulated value to key and current section.
 	 */
 	protected void add(final String section, final String key, final StringBuilder value, final boolean trim) {
-		if (value.length() == 0 && skipEmptyProps) {
-			return;
-		}
 		// ignore lines without : or =
 		if (key == null) {
 			return;
@@ -294,6 +291,10 @@ public class PropsParser implements Cloneable {
 			} else {
 				v = StringUtil.trimRight(v);
 			}
+		}
+
+		if (v.length() == 0 && skipEmptyProps) {
+			return;
 		}
 
 		add(fullKey, v);
