@@ -1,0 +1,50 @@
+General Tasks:
+	- Replace for-each loop with index loop, as it takes less space @tbd
+	- Add smart download in NetUtil.
+	- StringInputStream, add option to use encoding @next @v3.4.5
+	- migrate to gradle v1.6 @next @v3.4.5
+	- add efficient text searches
+		Check various algorithms, like BM etc.
+Props:
+	- Add new property "ignoreMacros" @v3.4.5 @done
+Madvoc:
+	- Action methods with arguments
+	- Add result methods: ok(), redirect() etc.
+		There are two places where to add: in #jodd-joy and in #jodd-madvoc .
+	- Manual registration of ActionConfig, using fluent interface @soon
+	- Add Convertes, that convert input text automatically
+		For example, convert "1,473.00" into "1473"
+	- MadvocServletFilter, consume action path, like load static content @tbd
+	- Check AnnotatedFieldInterceptor @test
+	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
+		For example, it may choose if extension is "json" or not based on class name.
+	- Error 404 to contain info about missing page @tbd
+	- Add JSONResult(returnCode, jsonString) @soon @review
+	- Prevent memory leak for un-existing pages in that special mode @hot
+EMail:
+	- Add IMAP support @soon
+Cache:
+	- LFU, add optional count reduction
+	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
+JTX:
+	- Add 'Rollback on' feature… that does rollback only on certain exception types.
+	- Thread timeout
+	- How to explicilty specify TX scope in annotation @tbd
+	- Check nested TX, once again @test
+Proxetta:
+	- Add proxy detection and return super class. @soon
+		Since naming convention can be changed, maybe we can add public static field in every proxy that contains this information.
+	- Add statistics: number of proxified methods etc.
+DbOom:
+	- LoadById, load values into existing instance
+	- Generic finder method. Try to detect method arguments. @next @v3.4.5
+	- Add batch update
+	- Introduce #execute() interceptors? @tbd
+MethRef:
+	- Return property name instead of method name.
+		For exampl, if method is getFoo() this would return just "foo".
+Joy:
+	- Localization arguments, {0}, {1}…
+	- Don't encode text tags in resource bundles
+	- Pager, do sort @review
+	- AppCore, add optional scanning so to allow manual registration @next
