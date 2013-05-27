@@ -324,10 +324,14 @@ public abstract class DefaultAppCore {
 	}
 
 	/**
-	 * Creates new Props.
+	 * Creates new Props. Empty props will be ignored,
+	 * and missing macros will be resolved as empty string.
 	 */
 	protected Props createProps() {
-		return new Props();
+		Props props = new Props();
+		props.setSkipEmptyProps(true);
+		props.setIgnoreMissingMacros(true);
+		return props;
 	}
 
 	// ---------------------------------------------------------------- scanning
