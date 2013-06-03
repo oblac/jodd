@@ -5,6 +5,8 @@ General Tasks:
 	- migrate to gradle v1.6 @next @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
+	- Add more TypeConverters! @next @v3.4.5
+		See that json lib used in other project - nice list of possible converters
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
@@ -21,6 +23,7 @@ Madvoc:
 	- Error 404 to contain info about missing page @tbd
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Prevent memory leak for un-existing pages in that special mode @hot
+	- Cache interceptor @github(27) @tbd @soon
 EMail:
 	- Add IMAP support @soon
 Cache:
@@ -37,7 +40,7 @@ Proxetta:
 	- Add statistics: number of proxified methods etc.
 DbOom:
 	- LoadById, load values into existing instance
-	- Generic finder method. Try to detect method arguments. @next @v3.4.5
+	- Generic finder method. Try to detect method arguments using MethRef. @next @v3.4.5
 	- Add batch update
 	- Introduce #execute() interceptors? @tbd
 MethRef:
