@@ -52,12 +52,17 @@ public abstract class Proxetta {
 
 
 	/**
-	 * Specifies classloaders for loading created classes..
+	 * Specifies classloaders for loading created classes.
+	 * If classloader not specified, default one will be used.
 	 */
 	public void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
 
+	/**
+	 * Returns specified classloader for loading created classes.
+	 * If classloader is not specified, returns <code>null</code>.
+	 */
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}

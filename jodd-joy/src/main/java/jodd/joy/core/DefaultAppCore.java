@@ -378,7 +378,6 @@ public abstract class DefaultAppCore {
 	protected void startProxetta() {
 		log.info("proxetta initialization");
 		proxetta = ProxyProxetta.withAspects(createAppAspects());
-		proxetta.setClassLoader(this.getClass().getClassLoader());
 	}
 
 	/**
