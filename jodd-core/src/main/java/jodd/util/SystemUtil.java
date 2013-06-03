@@ -9,29 +9,6 @@ import java.io.File;
  */
 public class SystemUtil {
 
-	/**
-	 * Calculates and returns java system timer resolution in miliseconds.
-	 * Resolution of a timer depends on platform and java version.
-	 */
-	public static double systemTimerResolution() {
-		long t1, t2;
-		int sumres = 0;
-		//noinspection CallToSystemGC
-		System.gc();
-		int loops = 20;
-		for (int i = 0; i < loops; ++i) {
-			t1 = System.currentTimeMillis();
-			while (true) {
-				t2 = System.currentTimeMillis();
-				if (t2 != t1) {
-					sumres += (int) (t2 - t1);
-					break;
-				}
-			}
-		}
-		return (sumres / (double) loops);
-	}
-
 	// ---------------------------------------------------------------- properties
 
 	public static final String USER_DIR = "user.dir";
@@ -52,6 +29,52 @@ public class SystemUtil {
 	public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
 	public static final String FILE_ENCODING = "file.encoding";
 	public static final String SUN_BOOT_CLASS_PATH = "sun.boot.class.path";
+
+	private static int javaVersionNumber;
+
+	static {
+
+		// determine the Java version by looking at available classes.
+
+		try {
+			// 1.0
+			javaVersionNumber = 10;
+
+			Class.forName("java.lang.Void");
+			// 1.1
+			javaVersionNumber++;
+
+			Class.forName("java.lang.ThreadLocal");
+			// 1.2
+			javaVersionNumber++;
+
+			Class.forName("java.lang.StrictMath");
+			// 1.3
+			javaVersionNumber++;
+
+			Class.forName("java.lang.CharSequence");
+			//1.4
+			javaVersionNumber++;
+
+			Class.forName("java.net.Proxy");
+			// 1.5
+			javaVersionNumber++;
+
+			Class.forName("java.net.CookieStore");
+			// 1.6
+			javaVersionNumber++;
+
+			Class.forName("java.nio.file.FileSystem");
+			// 1.7
+			javaVersionNumber++;
+
+			Class.forName("java.lang.reflect.Executable");
+			// 1.8
+			javaVersionNumber++;
+		} catch (Throwable ignore) {
+		}
+	}
+
 
 	/**
 	 * Returns current working folder.
@@ -128,7 +151,8 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns Java version.
+	 * Returns Java version string, as specified in system property.
+	 * Returned string contain major version, minor version and revision.
 	 * @see #getJavaSpecificationVersion()
 	 */
 	public static String getJavaVersion() {
@@ -138,8 +162,17 @@ public class SystemUtil {
 	/**
 	 * Retrieves the version of the currently running JVM.
 	 */
-	public static double getJavaSpecificationVersion() {
-		return Double.parseDouble(System.getProperty(JAVA_SPECIFICATION_VERSION));
+	public static String getJavaSpecificationVersion() {
+		return System.getProperty(JAVA_SPECIFICATION_VERSION);
+	}
+
+	/**
+	 * Returns detected java version. Returned number is
+	 * a number 10x the <code>major.minor</code>, e.g.
+	 * Java1.5 returns <code>15</code>.
+	 */
+	public static int getJavaVersionNumber() {
+		return javaVersionNumber;
 	}
 
 	/**
@@ -147,6 +180,23 @@ public class SystemUtil {
 	 */
 	public static String getJavaVendor() {
 		return System.getProperty(JAVA_VENDOR);
+	}
+
+	/**
+	 * Checks if the currently running JVM is at least compliant
+	 * with provided JDK version.
+	 * @param version java version multiplied by 10, e.g. <code>1.5</code> is <code>15</code>
+	 */
+	public static boolean isAtLeastJavaVersion(int version) {
+		return javaVersionNumber >= version;
+	}
+
+	/**
+	 * Checks if the currently running JVM is equal to provided version.
+	 * @param version java version, multiplied by 10, e.g. <code>1.5</code> is <code>15</code>.
+	 */
+	public static boolean isJavaVersion(int version) {
+		return javaVersionNumber == version;
 	}
 
 	/**
@@ -169,21 +219,6 @@ public class SystemUtil {
 	public static String getFileEncoding() {
 		return System.getProperty(FILE_ENCODING);
 	}
-
-	/**
-	 * Checks if the currently running JVM is at least compliant with JDK 1.5.
-	 */
-	public static boolean isAtLeastJdk15() {
-		return getJavaSpecificationVersion() >= 1.5;
-	}
-
-	/**
-	 * Checks if the currently running JVM is at least compliant with JDK 1.6.
-	 */
-	public static boolean isAtLeastJdk16() {
-		return getJavaSpecificationVersion() >= 1.6;
-	}
-
 
 	/**
 	 * Returns <code>true</code> if host is Windows.
@@ -221,20 +256,20 @@ public class SystemUtil {
 	}
 
 	/**
-	 * Returns <code>true<</code> if host is AIX.
+	 * Returns <code>true</code> if host is AIX.
 	 */
 	public static boolean isHostAix() {
 		return getOsName().toUpperCase().equals("AIX");
 	}
 
 	/**
-	 * Returns sun bootstrap class path.
+	 * Returns bootstrap class path.
 	 */
 	public static String getSunBoothClassPath() {
 		return System.getProperty(SUN_BOOT_CLASS_PATH);
 	}
 
-	// ---------------------------------------------------------------- set
+	// ---------------------------------------------------------------- http proxy
 
 	/**
 	 * Sets HTTP proxy settings.
