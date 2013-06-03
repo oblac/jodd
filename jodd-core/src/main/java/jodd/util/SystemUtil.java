@@ -3,6 +3,7 @@
 package jodd.util;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Various system utilities.
@@ -73,6 +74,70 @@ public class SystemUtil {
 			javaVersionNumber++;
 		} catch (Throwable ignore) {
 		}
+	}
+
+	private static String[] jrePackages;
+
+	/**
+	 * Returns list of packages, build into runtime jars.
+	 */
+	public static String[] getJrePackages() {
+		if (jrePackages == null) {
+			buildJrePackages();
+		}
+		return jrePackages;
+	}
+
+	/**
+	 * Builds a set of java core packages.
+	 */
+	private static void buildJrePackages() {
+		ArrayList<String> packages = new ArrayList<String>();
+
+		switch (javaVersionNumber) {
+			case 18:
+			case 17:
+			case 16:
+			case 15:
+				// in Java1.5, the apache stuff moved
+				packages.add("com.sun.org.apache");
+				// fall through...
+			case 14:
+				if (javaVersionNumber == 14) {
+					packages.add("org.apache.crimson");
+					packages.add("org.apache.xalan");
+					packages.add("org.apache.xml");
+					packages.add("org.apache.xpath");
+				}
+				packages.add("org.ietf.jgss");
+				packages.add("org.w3c.dom");
+				packages.add("org.xml.sax");
+				// fall through...
+			case 13:
+				packages.add("org.omg");
+				packages.add("com.sun.corba");
+				packages.add("com.sun.jndi");
+				packages.add("com.sun.media");
+				packages.add("com.sun.naming");
+				packages.add("com.sun.org.omg");
+				packages.add("com.sun.rmi");
+				packages.add("sunw.io");
+				packages.add("sunw.util");
+				// fall through...
+			case 12:
+				packages.add("com.sun.java");
+				packages.add("com.sun.image");
+				// fall through...
+			case 11:
+			default:
+				// core stuff
+				packages.add("sun");
+				packages.add("java");
+				packages.add("javax");
+				break;
+		}
+
+		jrePackages = packages.toArray(new String[packages.size()]);
 	}
 
 
