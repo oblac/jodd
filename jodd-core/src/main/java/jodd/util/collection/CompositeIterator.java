@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.ArrayList;
 
 /**
- * Iterator that combines multiple other iterators.
+ * Iterator that combines multiple iterators.
  */
 public class CompositeIterator<T> implements Iterator<T> {
 
@@ -81,4 +81,5 @@ public class CompositeIterator<T> implements Iterator<T> {
 
 		allIterators.get(currentIterator).remove();
 	}
+
 }
