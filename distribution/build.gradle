@@ -53,6 +53,7 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/ClipboardUtil.class'
 	exclude 'jodd/util/ComparableComparator.class'
 	exclude 'jodd/util/DateFormatSymbolsEx.class'
+	exclude 'jodd/util/ExtendedClassLoader.class'
 	exclude 'jodd/util/FastSort.class'
 	exclude 'jodd/util/HashCode.class'
 	exclude 'jodd/util/HtmlDecoder*'

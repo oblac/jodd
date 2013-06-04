@@ -3,10 +3,15 @@ General Tasks:
 	- Add smart download in NetUtil.
 	- StringInputStream, add option to use encoding @next @v3.4.5
 	- migrate to gradle v1.6 @next @v3.4.5
+		Check if we can drop jacoco code in favor of 1.6 plugin
 	- add efficient text searches
 		Check various algorithms, like BM etc.
 	- Add more TypeConverters! @next @v3.4.5
 		See that json lib used in other project - nice list of possible converters
+	- Add ExtendedURLClassLoader @v3.4.5 @done
+	- Add some util methods for class loading etc @next @v3.4.5
+	- Migrate to fluent interface: createTempFile @next @v3.4.5
+	- Add symbolic link FileUtil methods @next @v3.4.5
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
