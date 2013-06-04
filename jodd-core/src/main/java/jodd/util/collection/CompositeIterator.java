@@ -9,9 +9,9 @@ import java.util.ArrayList;
 /**
  * Iterator that combines multiple other iterators.
  */
-public class CompositeIterator implements Iterator {
+public class CompositeIterator<T> implements Iterator<T> {
 
-	protected final List<Iterator> allIterators = new ArrayList<Iterator>();
+	protected final List<Iterator<T>> allIterators = new ArrayList<Iterator<T>>();
 
 	/**
 	 * Creates new composite iterator.
@@ -23,62 +23,62 @@ public class CompositeIterator implements Iterator {
 	/**
 	 * Creates new composite iterator with provided iterators.
 	 */
-	public CompositeIterator(Iterator... iterators) {
-		for (Iterator iterator : iterators) {
+	public CompositeIterator(Iterator<T>... iterators) {
+		for (Iterator<T> iterator : iterators) {
 			add(iterator);
 		}
 	}
 
-
 	/**
 	 * Adds an iterator to this composite.
 	 */
-	public void add(Iterator iterator) {
+	public void add(Iterator<T> iterator) {
 		if (allIterators.contains(iterator)) {
-			throw new IllegalArgumentException("Duplicate iterator in this composite");
+			throw new IllegalArgumentException("Duplicate iterator");
 		}
 		allIterators.add(iterator);
 	}
 
 	// ---------------------------------------------------------------- interface
 
+	protected int currentIterator = -1;
 
 	/**
-	 * {@inheritDoc}
+	 * Returns <code>true</code> if next element is available.
 	 */
 	public boolean hasNext() {
-		for (Iterator iterator : allIterators) {
+		if (currentIterator == -1) {
+			currentIterator = 0;
+		}
+		for (int i = currentIterator; i < allIterators.size(); i++) {
+			Iterator iterator = allIterators.get(i);
 			if (iterator.hasNext()) {
+				currentIterator = i;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected int currentIterator = -1;
-
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object next() {
-		for (int i = 0; i < allIterators.size(); i++) {
-			Iterator iterator = allIterators.get(i);
-			if (iterator.hasNext()) {
-				currentIterator = i;
-				return iterator.next();
-			}
+	public T next() {
+		if (hasNext() == false) {
+			throw new NoSuchElementException();
 		}
-		throw new NoSuchElementException("All iterators exhausted");
+
+		return allIterators.get(currentIterator).next();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void remove() {
-		if (currentIterator != -1) {
-			allIterators.get(currentIterator).remove();
-		} else {
-			throw new IllegalStateException("The next() method has not yet been called");
+		if (currentIterator == -1) {
+			throw new IllegalStateException("The next() has not yet been called");
 		}
+
+		allIterators.get(currentIterator).remove();
 	}
 }

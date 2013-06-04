@@ -12,6 +12,7 @@ General Tasks:
 	- Add some util methods for class loading etc @next @v3.4.5
 	- Migrate to fluent interface: createTempFile @next @v3.4.5
 	- Add symbolic link FileUtil methods @next @v3.4.5
+	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
