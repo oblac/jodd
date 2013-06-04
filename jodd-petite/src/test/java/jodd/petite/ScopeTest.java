@@ -11,7 +11,6 @@ import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
 import jodd.servlet.HttpSessionListenerBroadcaster;
-import jodd.util.ConcurrentUtil;
 import org.junit.Test;
 
 import java.util.concurrent.Semaphore;
@@ -21,7 +20,7 @@ import static org.junit.Assert.*;
 public class ScopeTest {
 
 	@Test
-	public void testThreadLocalScope() {
+	public void testThreadLocalScope() throws InterruptedException {
 		final PetiteContainer pc = new PetiteContainer();
 
 		pc.registerPetiteBean(Foo.class, "foo", null, null, false);
@@ -37,7 +36,7 @@ public class ScopeTest {
 
 
 		final Semaphore sem = new Semaphore(1);
-		ConcurrentUtil.acquire(sem);
+		sem.acquire();
 
 		Thread thread = new Thread() {
 			@Override
@@ -51,7 +50,8 @@ public class ScopeTest {
 			}
 		};
 		thread.start();
-		ConcurrentUtil.waitForRelease(sem);
+		sem.acquire();
+		sem.release();
 	}
 
 	@Test
