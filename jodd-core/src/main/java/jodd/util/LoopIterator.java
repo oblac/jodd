@@ -3,12 +3,14 @@
 package jodd.util;
 
 /**
- * Loop iterator. Should be used as in while construct:
- * <code>
+ * Loop iterator that provides various counting data about the loop cycles.
+ * Should be used as in <code>while</code> construct:
+ *
+ * <pre><code>
  * while (loopIterator.next()) {
  * 		// do something
  * }
- * </code>
+ * </code></pre>
  */
 public class LoopIterator {
 

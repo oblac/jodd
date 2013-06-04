@@ -143,7 +143,7 @@ public class Base64 {
 
 	/**
 	 * Encodes a raw byte array into a BASE64 <code>char[]</code>.
-	 * @param lineSeparator optional CRLF after 76 chars, unless EOF.
+	 * @param lineSep optional CRLF after 76 chars, unless EOF.
 	 */
 	public static byte[] encodeToByte(byte[] arr, boolean lineSep) {
 		int len = arr != null ? arr.length : 0;
