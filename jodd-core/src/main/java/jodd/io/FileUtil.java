@@ -29,7 +29,6 @@ import java.util.ArrayList;
  */
 public class FileUtil {
 
-	private static final String READ_ONLY = "r";
 	private static final String MSG_NOT_A_DIRECTORY = "Not a directory: ";
 	private static final String MSG_CANT_CREATE = "Can't create: ";
 	private static final String MSG_NOT_FOUND = "Not found: ";
@@ -37,13 +36,27 @@ public class FileUtil {
 	private static final String MSG_ALREADY_EXISTS = "Already exists: ";
 	private static final String MSG_UNABLE_TO_DELETE = "Unable to delete: ";
 
+	/**
+	 * Simple factory for <code>File</code> objects.
+	 */
+	private static File file(String fileName) {
+		return new File(fileName);
+	}
+
+	/**
+	 * Simple factory for <code>File</code> objects.
+	 */
+	private static File file(File parent, String fileName) {
+		return new File(parent, fileName);
+	}
+
 	// ---------------------------------------------------------------- misc shortcuts
 
 	/**
 	 * Checks if two files points to the same file.
 	 */
 	public static boolean equals(String file1, String file2) {
-		return equals(new File(file1), new File(file2));
+		return equals(file(file1), file(file2));
 	}
 
 	/**
@@ -67,7 +80,7 @@ public class FileUtil {
 		if (fileName == null) {
 			return null;
 		}
-		return new File(fileName);
+		return file(fileName);
 	}
 
 	/**
@@ -91,29 +104,14 @@ public class FileUtil {
 		return URLDecoder.decode(filename, JoddCore.encoding);
 	}
 
-	/**
-	 * Converts array of URLS to file names string. Other schemes are ignored.
-	 */
-	public static String toFileNames(URL[] urls) {
-		StringBuilder path = new StringBuilder();
-		for (URL url : urls) {
-			String fileName = toFileName(url);
-			if (fileName == null) {
-				continue;
-			}
-			path.append(fileName).append(File.pathSeparatorChar);
-		}
-		return path.toString();
-	}
-
-
 	// ---------------------------------------------------------------- mkdirs
 
 	/**
 	 * Creates all folders at once.
+	 * @see #mkdirs(java.io.File)
 	 */
 	public static void mkdirs(String dirs) throws IOException {
-		mkdirs(new File(dirs));
+		mkdirs(file(dirs));
 	}
 	/**
 	 * Creates all folders at once.
@@ -132,9 +130,10 @@ public class FileUtil {
 
 	/**
 	 * Creates single folder.
+	 * @see #mkdir(java.io.File)
 	 */
 	public static void mkdir(String dir) throws IOException {
-		mkdir(new File(dir));
+		mkdir(file(dir));
 	}
 	/**
 	 * Creates single folders.
@@ -154,12 +153,11 @@ public class FileUtil {
 	// ---------------------------------------------------------------- touch
 
 	/**
-	 * {@link #touch(java.io.File)}
+	 * @see #touch(java.io.File)
 	 */
 	public static void touch(String file) throws IOException {
-		touch(new File(file));
+		touch(file(file));
 	}
-
 	/**
 	 * Implements the Unix "touch" utility. It creates a new file
 	 * with size 0 or, if the file exists already, it is opened and
@@ -198,20 +196,27 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- copy file to file
 
+	/**
+	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
+	 */
 	public static void copyFile(String src, String dest) throws IOException {
-		copyFile(new File(src), new File(dest), defaultParams);
+		copyFile(file(src), file(dest), defaultParams);
 	}
-
+	/**
+	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
+	 */
 	public static void copyFile(String src, String dest, FileUtilParams params) throws IOException {
-		copyFile(new File(src), new File(dest), params);
+		copyFile(file(src), file(dest), params);
 	}
-
+	/**
+	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
+	 */
 	public static void copyFile(File src, File dest) throws IOException {
 		copyFile(src, dest, defaultParams);
 	}
 
 	/**
-	 * Copies a file to another file with specified copy params.
+	 * Copies a file to another file with specified {@link FileUtilParams copy params}.
 	 */
 	public static void copyFile(File src, File dest, FileUtilParams params) throws IOException {
 		checkFileCopy(src, dest, params);
@@ -253,31 +258,7 @@ public class FileUtil {
 			}
 		}
 
-		doCopy(src, dest);
-
-		if (src.length() != dest.length()) {
-			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
-		}
-		if (params.preserveDate) {
-			dest.setLastModified(src.lastModified());
-		}
-	}
-
-	// ---------------------------------------------------------------- simple copy file
-
-	/**
-	 * Copies one file to another without any checking.
-	 * @see #doCopy(java.io.File, java.io.File)
-	 */
-	protected static void doCopy(String src, String dest) throws IOException {
-		doCopy(new File(src), new File(dest));
-	}
-
-	/**
-	 * Copies one file to another without any checking. It is assumed that
-	 * both parameters represents valid files.
-	 */
-	protected static void doCopy(File src, File dest) throws IOException {
+		// do copy file
 		FileInputStream input = new FileInputStream(src);
 		try {
 			FileOutputStream output = new FileOutputStream(dest);
@@ -289,8 +270,16 @@ public class FileUtil {
 		} finally {
 			StreamUtil.close(input);
 		}
-	}
 
+		// done
+
+		if (src.length() != dest.length()) {
+			throw new IOException("Copy file failed of '" + src + "' to '" + dest + "' due to different sizes");
+		}
+		if (params.preserveDate) {
+			dest.setLastModified(src.lastModified());
+		}
+	}
 
 	// ---------------------------------------------------------------- copy file to directory
 
@@ -298,13 +287,13 @@ public class FileUtil {
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static File copyFileToDir(String src, String destDir) throws IOException {
-		return copyFileToDir(new File(src), new File(destDir), defaultParams);
+		return copyFileToDir(file(src), file(destDir), defaultParams);
 	}
 	/**
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static File copyFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
-		return copyFileToDir(new File(src), new File(destDir), params);
+		return copyFileToDir(file(src), file(destDir), params);
 	}
 	/**
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
@@ -319,7 +308,7 @@ public class FileUtil {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 		}
-		File dest = new File(destDir, src.getName());
+		File dest = file(destDir, src.getName());
 		copyFile(src, dest, params);
 		return dest;
 	}
@@ -329,11 +318,11 @@ public class FileUtil {
 
 
 	public static void copyDir(String srcDir, String destDir) throws IOException {
-		copyDir(new File(srcDir), new File(destDir), defaultParams);
+		copyDir(file(srcDir), file(destDir), defaultParams);
 	}
 
 	public static void copyDir(String srcDir, String destDir, FileUtilParams params) throws IOException {
-		copyDir(new File(srcDir), new File(destDir), params);
+		copyDir(file(srcDir), file(destDir), params);
 	}
 
 	public static void copyDir(File srcDir, File destDir) throws IOException {
@@ -384,7 +373,7 @@ public class FileUtil {
 
 		IOException exception = null;
 		for (File file : files) {
-			File destFile = new File(destDir, file.getName());
+			File destFile = file(destDir, file.getName());
 			try {
 				if (file.isDirectory()) {
 					if (params.recursive == true) {
@@ -412,11 +401,11 @@ public class FileUtil {
 	// ---------------------------------------------------------------- move file
 
 	public static void moveFile(String src, String dest) throws IOException {
-		moveFile(new File(src), new File(dest), defaultParams);
+		moveFile(file(src), file(dest), defaultParams);
 	}
 
 	public static void moveFile(String src, String dest, FileUtilParams params) throws IOException {
-		moveFile(new File(src), new File(dest), params);
+		moveFile(file(src), file(dest), params);
 	}
 
 	public static void moveFile(File src, File dest) throws IOException {
@@ -448,10 +437,10 @@ public class FileUtil {
 
 
 	public static void moveFileToDir(String src, String destDir) throws IOException {
-		moveFileToDir(new File(src), new File(destDir), defaultParams);
+		moveFileToDir(file(src), file(destDir), defaultParams);
 	}
 	public static void moveFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
-		moveFileToDir(new File(src), new File(destDir), params);
+		moveFileToDir(file(src), file(destDir), params);
 	}
 
 	public static void moveFileToDir(File src, File destDir) throws IOException {
@@ -461,18 +450,15 @@ public class FileUtil {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 		}
-		moveFile(src, new File(destDir, src.getName()), params);
+		moveFile(src, file(destDir, src.getName()), params);
 	}
-
-
 
 
 	// ---------------------------------------------------------------- move dir
 
 	public static void moveDir(String srcDir, String destDir) throws IOException {
-		moveDir(new File(srcDir), new File(destDir));
+		moveDir(file(srcDir), file(destDir));
 	}
-
 	public static void moveDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
 		doMoveDirectory(srcDir, destDir);
@@ -483,7 +469,7 @@ public class FileUtil {
 			if (dest.isDirectory() == false) {
 				throw new IOException(MSG_NOT_A_DIRECTORY + dest);
 			}
-			dest = new File(dest, dest.getName());
+			dest = file(dest, dest.getName());
 			dest.mkdir();
 		}
 
@@ -492,12 +478,10 @@ public class FileUtil {
 		}
 	}
 
-
-
 	// ---------------------------------------------------------------- delete file
 
 	public static void deleteFile(String dest) throws IOException {
-		deleteFile(new File(dest));
+		deleteFile(file(dest));
 	}
 
 	public static void deleteFile(File dest) throws IOException {
@@ -516,10 +500,10 @@ public class FileUtil {
 	// ---------------------------------------------------------------- delete dir
 
 	public static void deleteDir(String dest) throws IOException {
-		deleteDir(new File(dest), defaultParams);
+		deleteDir(file(dest), defaultParams);
 	}
 	public static void deleteDir(String dest, FileUtilParams params) throws IOException {
-		deleteDir(new File(dest), params);
+		deleteDir(file(dest), params);
 	}
 	public static void deleteDir(File dest) throws IOException {
 		deleteDir(dest, defaultParams);
@@ -537,13 +521,11 @@ public class FileUtil {
 
 
 	public static void cleanDir(String dest) throws IOException {
-		cleanDir(new File(dest), defaultParams);
+		cleanDir(file(dest), defaultParams);
 	}
-
 	public static void cleanDir(String dest, FileUtilParams params) throws IOException {
-		cleanDir(new File(dest), params);
+		cleanDir(file(dest), params);
 	}
-
 	public static void cleanDir(File dest) throws IOException {
 		cleanDir(dest, defaultParams);
 	}
@@ -592,9 +574,8 @@ public class FileUtil {
 	// ---------------------------------------------------------------- read/write chars
 
 	public static char[] readUTFChars(String fileName) throws IOException {
-		return readUTFChars(new File(fileName));
+		return readUTFChars(file(fileName));
 	}
-
 	/**
 	 * Reads UTF file content as char array.
 	 * @see UnicodeInputStream
@@ -626,7 +607,7 @@ public class FileUtil {
 	}
 
 	public static char[] readChars(String fileName) throws IOException {
-		return readChars(new File(fileName), defaultParams.encoding);
+		return readChars(file(fileName), defaultParams.encoding);
 	}
 
 	public static char[] readChars(File file) throws IOException {
@@ -634,7 +615,7 @@ public class FileUtil {
 	}
 
 	public static char[] readChars(String fileName, String encoding) throws IOException {
-		return readChars(new File(fileName), encoding);
+		return readChars(file(fileName), encoding);
 	}
 
 	/**
@@ -671,14 +652,14 @@ public class FileUtil {
 		outChars(dest, data, JoddCore.encoding, false);
 	}
 	public static void writeChars(String dest, char[] data) throws IOException {
-		outChars(new File(dest), data, JoddCore.encoding, false);
+		outChars(file(dest), data, JoddCore.encoding, false);
 	}
 
 	public static void writeChars(File dest, char[] data, String encoding) throws IOException {
 		outChars(dest, data, encoding, false);
 	}
 	public static void writeChars(String dest, char[] data, String encoding) throws IOException {
-		outChars(new File(dest), data, encoding, false);
+		outChars(file(dest), data, encoding, false);
 	}
 	
 	protected static void outChars(File dest, char[] data, String encoding, boolean append) throws IOException {
@@ -699,7 +680,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- read/write string
 
 	public static String readUTFString(String fileName) throws IOException {
-		return readUTFString(new File(fileName));
+		return readUTFString(file(fileName));
 	}
 
 	/**
@@ -755,11 +736,11 @@ public class FileUtil {
 
 
 	public static String readString(String source) throws IOException {
-		return readString(new File(source), defaultParams.encoding);
+		return readString(file(source), defaultParams.encoding);
 	}
 
 	public static String readString(String source, String encoding) throws IOException {
-		return readString(new File(source), encoding);
+		return readString(file(source), encoding);
 	}
 
 	public static String readString(File source) throws IOException {
@@ -797,11 +778,11 @@ public class FileUtil {
 
 
 	public static void writeString(String dest, String data) throws IOException {
-		outString(new File(dest), data, defaultParams.encoding, false);
+		outString(file(dest), data, defaultParams.encoding, false);
 	}
 
 	public static void writeString(String dest, String data, String encoding) throws IOException {
-		outString(new File(dest), data, encoding, false);
+		outString(file(dest), data, encoding, false);
 	}
 
 	public static void writeString(File dest, String data) throws IOException {
@@ -814,11 +795,11 @@ public class FileUtil {
 
 
 	public static void appendString(String dest, String data) throws IOException {
-		outString(new File(dest), data, defaultParams.encoding, true);
+		outString(file(dest), data, defaultParams.encoding, true);
 	}
 
 	public static void appendString(String dest, String data, String encoding) throws IOException {
-		outString(new File(dest), data, encoding, true);
+		outString(file(dest), data, encoding, true);
 	}
 
 	public static void appendString(File dest, String data) throws IOException {
@@ -854,7 +835,6 @@ public class FileUtil {
 		} finally {
 			StreamUtil.close(out);
 		}
-
 	}
 
 	public static void writeStream(String dest, InputStream in) throws IOException {
@@ -872,10 +852,10 @@ public class FileUtil {
 
 
 	public static String[] readLines(String source) throws IOException {
-		return readLines(new File(source), defaultParams.encoding);
+		return readLines(file(source), defaultParams.encoding);
 	}
 	public static String[] readLines(String source, String encoding) throws IOException {
-		return readLines(new File(source), encoding);
+		return readLines(file(source), encoding);
 	}
 	public static String[] readLines(File source) throws IOException {
 		return readLines(source, defaultParams.encoding);
@@ -916,7 +896,7 @@ public class FileUtil {
 
 
 	public static byte[] readBytes(String file) throws IOException {
-		return readBytes(new File(file));
+		return readBytes(file(file));
 	}
 
 	public static byte[] readBytes(File file) throws IOException {
@@ -932,7 +912,7 @@ public class FileUtil {
 		}
 
 		byte[] bytes = new byte[(int) len];
-		RandomAccessFile randomAccessFile = new RandomAccessFile(file, READ_ONLY);
+		RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
 		randomAccessFile.readFully(bytes);
 		randomAccessFile.close();
 
@@ -942,11 +922,11 @@ public class FileUtil {
 
 
 	public static void writeBytes(String dest, byte[] data) throws IOException {
-		outBytes(new File(dest), data, 0, data.length, false);
+		outBytes(file(dest), data, 0, data.length, false);
 	}
 
 	public static void writeBytes(String dest, byte[] data, int off, int len) throws IOException {
-		outBytes(new File(dest), data, off, len, false);
+		outBytes(file(dest), data, off, len, false);
 	}
 
 	public static void writeBytes(File dest, byte[] data) throws IOException {
@@ -959,11 +939,11 @@ public class FileUtil {
 
 
 	public static void appendBytes(String dest, byte[] data) throws IOException {
-		outBytes(new File(dest), data, 0, data.length, true);
+		outBytes(file(dest), data, 0, data.length, true);
 	}
 
 	public static void appendBytes(String dest, byte[] data, int off, int len) throws IOException {
-		outBytes(new File(dest), data, off, len, true);
+		outBytes(file(dest), data, off, len, true);
 	}
 
 	public static void appendBytes(File dest, byte[] data) throws IOException {
@@ -992,7 +972,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- equals content
 
 	public static boolean compare(String file1, String file2) throws IOException {
-		return compare(new File(file1), new File(file2));
+		return compare(file(file1), file(file2));
 	}
 
 	/**
@@ -1042,7 +1022,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- time
 
 	public static boolean isNewer(String file, String reference) {
-		return isNewer(new File(file), new File(reference));
+		return isNewer(file(file), file(reference));
 	}
 
 	/**
@@ -1062,7 +1042,7 @@ public class FileUtil {
 
 
 	public static boolean isOlder(String file, String reference) {
-		return isOlder(new File(file), new File(reference));
+		return isOlder(file(file), file(reference));
 	}
 
 	public static boolean isOlder(File file, File reference) {
@@ -1089,7 +1069,7 @@ public class FileUtil {
 	}
 
 	public static boolean isNewer(String file, long timeMillis) {
-		return isNewer(new File(file), timeMillis);
+		return isNewer(file(file), timeMillis);
 	}
 
 
@@ -1101,18 +1081,18 @@ public class FileUtil {
 	}
 
 	public static boolean isOlder(String file, long timeMillis) {
-		return isOlder(new File(file), timeMillis);
+		return isOlder(file(file), timeMillis);
 	}
 
 
 	// ---------------------------------------------------------------- smart copy
 
 	public static void copy(String src, String dest) throws IOException {
-		copy(new File(src), new File(dest), defaultParams);
+		copy(file(src), file(dest), defaultParams);
 	}
 
 	public static void copy(String src, String dest, FileUtilParams params) throws IOException {
-		copy(new File(src), new File(dest), params);
+		copy(file(src), file(dest), params);
 	}
 
 	public static void copy(File src, File dest) throws IOException {
@@ -1138,11 +1118,11 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart move
 
 	public static void move(String src, String dest) throws IOException {
-		move(new File(src), new File(dest), defaultParams);
+		move(file(src), file(dest), defaultParams);
 	}
 
 	public static void move(String src, String dest, FileUtilParams params) throws IOException {
-		move(new File(src), new File(dest), params);
+		move(file(src), file(dest), params);
 	}
 
 	public static void move(File src, File dest) throws IOException {
@@ -1169,11 +1149,11 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart delete
 
 	public static void delete(String dest) throws IOException {
-		delete(new File(dest), defaultParams);
+		delete(file(dest), defaultParams);
 	}
 
 	public static void delete(String dest, FileUtilParams params) throws IOException {
-		delete(new File(dest), params);
+		delete(file(dest), params);
 	}
 
 	public static void delete(File dest) throws IOException {
@@ -1254,43 +1234,34 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- temp
 
+	public static File createTempDirectory() throws IOException {
+		return createTempDirectory(JoddCore.tempFilePrefix, null, null);
+	}
+
+	/**
+	 * Creates temporary directory.
+	 */
 	public static File createTempDirectory(String prefix, String suffix) throws IOException {
-		return createTempDirectory(prefix, suffix, (File) null);
+		return createTempDirectory(prefix, suffix, null);
 	}
-	public static File createTempDirectory(String prefix, String suffix, String tempDirName) throws IOException {
-		return createTempDirectory(prefix, suffix, new File(tempDirName));
-	}
+
 	/**
 	 * Creates temporary directory.
 	 */
 	public static File createTempDirectory(String prefix, String suffix, File tempDir) throws IOException {
-		File file = doCreateTempFile(prefix, suffix, tempDir);
+		File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		file.mkdir();
 		return file;
 	}
 
+	/**
+	 * Simple method that creates temp file.
+	 */
 	public static File createTempFile() throws IOException {
-		return createTempFile(true);
+		return createTempFile(JoddCore.tempFilePrefix, null, null, true);
 	}
-	public static File createTempFile(boolean create) throws IOException {
-		return createTempFile(JoddCore.tempFilePrefix, ".tmp", (File) null, create);
-	}
-	public static File createTempFile(String prefix, String suffix) throws IOException {
-		return createTempFile(prefix, suffix, (File) null, true);
-	}
-	public static File createTempFile(String prefix, String suffix, boolean create) throws IOException {
-		return createTempFile(prefix, suffix, (File) null, create);
-	}
-	public static File createTempFile(String prefix, String suffix, String tempDirName) throws IOException {
-		return createTempFile(prefix, suffix, new File(tempDirName), true);
-	}
-	public static File createTempFile(String prefix, String suffix, File tempDir) throws IOException {
-		return createTempFile(prefix, suffix, tempDir, true);
-	}
-	public static File createTempFile(String prefix, String suffix, String tempDirName, boolean create) throws IOException {
-		return createTempFile(prefix, suffix, new File(tempDirName), create);
-	}
+
 	/**
 	 * Creates temporary file.
 	 * If <code>create</code> is set to <code>true</code> file will be
@@ -1298,7 +1269,7 @@ public class FileUtil {
 	 * deleted - trick that will make temp file exist only if they are used.
 	 */
 	public static File createTempFile(String prefix, String suffix, File tempDir, boolean create) throws IOException {
-		File file = doCreateTempFile(prefix, suffix, tempDir);
+		File file = createTempFile(prefix, suffix, tempDir);
 		file.delete();
 		if (create) {
 			file.createNewFile();
@@ -1306,13 +1277,17 @@ public class FileUtil {
 		return file;
 	}
 
-	private static File doCreateTempFile(String prefix, String suffix, File dir) throws IOException {
+	/**
+	 * Creates temporary file. Wraps java method and repeat creation several time
+	 * if something fail.
+	 */
+	public static File createTempFile(String prefix, String suffix, File dir) throws IOException {
 		int exceptionsCount = 0;
 		while (true) {
 			try {
 				return File.createTempFile(prefix, suffix, dir).getCanonicalFile();
 			} catch (IOException ioex) {	// fixes java.io.WinNTFileSystem.createFileExclusively access denied
-				if (++exceptionsCount >= 100) {
+				if (++exceptionsCount >= 50) {
 					throw ioex;
 				}
 			}
