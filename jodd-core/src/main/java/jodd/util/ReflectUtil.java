@@ -92,10 +92,12 @@ public class ReflectUtil {
 		return findDeclaredMethod(c, methodName, true);
 	}
 
+	/**
+	 * @see #findMethod(Class, String)
+	 */
 	public static Method findDeclaredMethod(Class c, String methodName) {
 		return findDeclaredMethod(c, methodName, false);
 	}
-
 
 	private static Method findDeclaredMethod(Class c, String methodName, boolean publicOnly) {
 		if ((methodName == null) || (c == null)) {

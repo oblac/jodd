@@ -9,10 +9,8 @@ General Tasks:
 	- Add more TypeConverters! @next @v3.4.5
 		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
-	- Add some util methods for class loading etc @next @v3.4.5
-	- Migrate to fluent interface: createTempFile @next @v3.4.5
-	- Add symbolic link FileUtil methods @next @v3.4.5
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
+	- Check FileUtil.move/copy dir/file variants @next @v3.4.5
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:

@@ -28,16 +28,30 @@ public class ClassLoaderUtil {
 	// ---------------------------------------------------------------- default class loader
 
 	/**
-	 * Returns default class loader. By default, it is thread context class loader.
-	 * If this one is <code>null</code> then class loader that loaded this class is
-	 * returned.
+	 * Returns default class loader. By default, it is {@link #getContextClassLoader() threads context class loader}.
+	 * If this one is <code>null</code>, then class loader of the <b>caller class</b> is returned.
 	 */
 	public static ClassLoader getDefaultClassLoader() {
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		ClassLoader cl = getContextClassLoader();
 		if (cl == null) {
-			cl = ClassLoaderUtil.class.getClassLoader();
+			Class callerClass = ReflectUtil.getCallerClass(2);
+			cl = callerClass.getClassLoader();
 		}
 		return cl;
+	}
+
+	/**
+	 * Returns thread context class loader.
+	 */
+	public static ClassLoader getContextClassLoader() {
+		return Thread.currentThread().getContextClassLoader();
+	}
+
+	/**
+	 * Sets the thread context class loader.
+	 */
+	public static void setContextClassLoader(ClassLoader classLoader) {
+		Thread.currentThread().setContextClassLoader(classLoader);
 	}
 
 	/**
@@ -48,14 +62,6 @@ public class ClassLoaderUtil {
 	}
 
 	// ---------------------------------------------------------------- add class path
-
-	/**
-	 * Adds additional file or path to classpath during runtime.
-	 * @see #addUrlToClassPath(java.net.URL, ClassLoader)
-	 */
-	public static void addFileToClassPath(String path, ClassLoader classLoader) {
-		addFileToClassPath(new File(path), classLoader);
-	}
 
 	/**
 	 * Adds additional file or path to classpath during runtime.
@@ -88,26 +94,10 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Defines a class from byte array into the system class loader.
-	 * @see #defineClass(String, byte[], ClassLoader) 
-	 */
-	public static Class defineClass(byte[] classData) {
-		return defineClass(null, classData, getDefaultClassLoader());
-	}
-
-	/**
-	 * Defines a class from byte array into the system class loader.
 	 * @see #defineClass(String, byte[], ClassLoader)
 	 */
 	public static Class defineClass(String className, byte[] classData) {
 		return defineClass(className, classData, getDefaultClassLoader());
-	}
-
-	/**
-	 * Defines a class from byte array into the specified class loader.
-	 * @see #defineClass(String, byte[], ClassLoader)
-	 */
-	public static Class defineClass(byte[] classData, ClassLoader classLoader) {
-		return defineClass(null, classData, classLoader);
 	}
 
 	/**
@@ -120,8 +110,8 @@ public class ClassLoaderUtil {
 	public static Class defineClass(String className, byte[] classData, ClassLoader classLoader) {
 		try {
 			return (Class) ReflectUtil.invokeDeclared(ClassLoader.class, classLoader, "defineClass",
-					new Class[]{String.class, byte[].class, int.class, int.class},
-					new Object[]{className, classData, new Integer(0), new Integer(classData.length)});
+					new Class[] {String.class, byte[].class, int.class, int.class},
+					new Object[] {className, classData, Integer.valueOf(0), Integer.valueOf(classData.length)});
 		} catch (Throwable th) {
 			throw new RuntimeException("Unable to define class: " + className, th);
 		}
