@@ -37,7 +37,6 @@ public class ObjectUtil {
 		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
 	}
 
-
 	/**
 	 * Compares two objects or two object arrays. Useful for {@link Object#equals(Object)}.
 	 * @see #equals(Object, Object)
@@ -49,19 +48,21 @@ public class ObjectUtil {
 		if (obj2 == null) {
 			return false;
 		}
+
 		if (obj1.getClass().isArray()) {
 			if (obj2.getClass().isArray() == false) {
 				return false;
 			}
 			return Arrays.equals((Object[])obj1, (Object[])obj2);
-		} else {
-			return obj1.equals(obj2);
 		}
+
+		return obj1.equals(obj2);
 	}
 
 	/**
 	 * Non-symmetric utility for comparing the types of two objects. Might be useful for {@link Object#equals(Object)}
 	 * if <code>instanceof</code> is not used.
+	 *
 	 * @param object <code>equals()</code> argument
 	 * @param thiz current class that overrides <code>equals()</code>
 	 */
@@ -91,14 +92,19 @@ public class ObjectUtil {
 	 * Create object copy using serialization mechanism.
 	 */
 	public static Object cloneViaSerialization(Serializable obj) throws IOException, ClassNotFoundException {
-		FastByteArrayOutputStream bytes = new FastByteArrayOutputStream();
+		FastByteArrayOutputStream bos = new FastByteArrayOutputStream();
 		ObjectOutputStream out = null;
 		ObjectInputStream in = null;
 		Object objCopy = null;
+
 		try {
-			out = new ObjectOutputStream(bytes);
+			out = new ObjectOutputStream(bos);
 			out.writeObject(obj);
-			in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+			out.flush();
+
+			byte[] bytes = bos.toByteArray();
+
+			in = new ObjectInputStream(new ByteArrayInputStream(bytes));
 			objCopy = in.readObject();
 		} finally {
 			StreamUtil.close(out);
@@ -123,17 +129,21 @@ public class ObjectUtil {
 	 */
 	public static void writeObject(File dest, Object object) throws IOException {
 		FileOutputStream fos = null;
+		BufferedOutputStream bos = null;
 		ObjectOutputStream oos = null;
+
 		try {
 			fos = new FileOutputStream(dest);
-			oos = new ObjectOutputStream(new BufferedOutputStream(fos));
+			bos = new BufferedOutputStream(fos);
+			oos = new ObjectOutputStream(bos);
+
 			oos.writeObject(object);
 		} finally {
-			StreamUtil.close(fos);
 			StreamUtil.close(oos);
+			StreamUtil.close(bos);
+			StreamUtil.close(fos);
 		}
 	}
-
 
 	/**
 	 * @see #readObject(java.io.File)
@@ -148,14 +158,19 @@ public class ObjectUtil {
 	public static Object readObject(File source) throws IOException, ClassNotFoundException {
 		Object result = null;
 		FileInputStream fis = null;
+		BufferedInputStream bis = null;
 		ObjectInputStream ois = null;
+
 		try {
 			fis = new FileInputStream(source);
-			ois = new ObjectInputStream(new BufferedInputStream(fis));
+			bis = new BufferedInputStream(fis);
+			ois = new ObjectInputStream(bis);
+
 			result = ois.readObject();
 		} finally {
-			StreamUtil.close(fis);
 			StreamUtil.close(ois);
+			StreamUtil.close(bis);
+			StreamUtil.close(fis);
 		}
 		return result;
 	}
@@ -168,10 +183,10 @@ public class ObjectUtil {
 	public static byte[] objectToByteArray(Object obj) throws IOException {
 		FastByteArrayOutputStream bos = new FastByteArrayOutputStream();
 		ObjectOutputStream oos = null;
+
 		try {
 			oos = new ObjectOutputStream(bos);
 			oos.writeObject(obj);
-			oos.flush();
 		} finally {
 			StreamUtil.close(oos);
 		}
@@ -185,6 +200,7 @@ public class ObjectUtil {
 		Object retObj = null;
 		ByteArrayInputStream bais = new ByteArrayInputStream(data);
 		ObjectInputStream ois = null;
+
 		try {
 			ois = new ObjectInputStream(bais);
 			retObj = ois.readObject();
