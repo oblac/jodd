@@ -29,13 +29,13 @@ import java.util.Set;
  */
 public class ReflectUtil {
 
-	/** an empty class array */
+	/** Empty class array. */
 	public static final Class[] NO_PARAMETERS = new Class[0];
 
-	/** an empty object array */
+	/** Empty object array. */
 	public static final Object[] NO_ARGUMENTS = new Object[0];
 
-	/** an empty object array */
+	/** Empty type array. */
 	public static final Type[] NO_TYPES = new Type[0];
 
 	public static final String METHOD_GET_PREFIX = "get";
@@ -837,7 +837,7 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Returns the component type of the given <code>type</code>.<br>
+	 * Returns the component type of the given <code>type</code>.
 	 * For example the following types all have the component-type MyClass:
 	 * <ul>
 	 * <li>MyClass[]</li>
@@ -865,107 +865,148 @@ public class ReflectUtil {
 				index = generics.length + index;
 			}
 			if (index < generics.length) {
-				return toClass(generics[index]);
+				return getRawType(generics[index]);
 			}
 		} else if (type instanceof GenericArrayType) {
 			GenericArrayType gat = (GenericArrayType) type;
-			return toClass(gat.getGenericComponentType());
+			return getRawType(gat.getGenericComponentType());
 		}
 		return null;
 	}
 
+	/**
+	 * Returns generic supertype for given class and 0-based index.
+	 * @see #getComponentType(java.lang.reflect.Type, int)
+	 */
 	public static Class getGenericSupertype(Class type, int index) {
 		return getComponentType(type.getGenericSuperclass(), index);
 	}
 
+	/**
+	 * @see #getComponentType(java.lang.reflect.Type)
+	 */
 	public static Class getGenericSupertype(Class type) {
 		return getComponentType(type.getGenericSuperclass());
 	}
 
 
 	/**
-	 * Returns {@link Class} for the given <code>type</code>.<br>
-	 * Examples: <br>
-	 * <table border="1">
-	 * <tr>
-	 * <th><code>type</code></th>
-	 * <th><code>toClass(type)</code></th>
-	 * </tr>
-	 * <tr>
-	 * <td><code>String</code></td>
-	 * <td><code>String</code></td>
-	 * </td>
-	 * <tr>
-	 * <td><code>List&lt;String&gt;</code></td>
-	 * <td><code>List</code></td>
-	 * </td>
-	 * <tr>
-	 * <td><code>&lt;T extends MyClass&gt; T[]</code></td>
-	 * <td><code>MyClass[]</code></td>
-	 * </td>
-	 * </table>
+	 * Returns raw class for given <code>type</code>. Use this method with both
+	 * regular and generic types.
 	 *
-	 * @param type is the type to convert.
-	 * @return the closest class representing the given <code>type</code>.
+	 * @param type the type to convert
+	 * @return the closest class representing the given <code>type</code>
+	 * @see #getRawType(java.lang.reflect.Type, Class)
 	 */
-	public static Class toClass(Type type) {
+	public static Class getRawType(Type type) {
+		return getRawType(type, null);
+	}
+
+	/**
+	 * Returns raw class for given <code>type</code> when implementation class is known
+	 * and it makes difference.
+	 * @see #resolveVariable(java.lang.reflect.TypeVariable, Class)
+	 */
+	public static Class<?> getRawType(Type type, Class implClass) {
 		if (type instanceof Class) {
 			return (Class) type;
 		}
 		if (type instanceof ParameterizedType) {
-			ParameterizedType pt = (ParameterizedType) type;
-			return toClass(pt.getRawType());
+			ParameterizedType pType = (ParameterizedType) type;
+			return getRawType(pType.getRawType(), implClass);
 		}
 		if (type instanceof WildcardType) {
-			WildcardType wt = (WildcardType) type;
-			Type[] lower = wt.getLowerBounds();
-			if (lower.length == 1) {
-				return toClass(lower[0]);
+			WildcardType wType = (WildcardType) type;
+
+			Type[] lowerTypes = wType.getLowerBounds();
+			if (lowerTypes.length > 0) {
+				return getRawType(lowerTypes[0], implClass);
 			}
-			Type[] upper = wt.getUpperBounds();
-			if (upper.length == 1) {
-				return toClass(upper[0]);
+
+			Type[] upperTypes = wType.getUpperBounds();
+			if (upperTypes.length != 0) {
+				return getRawType(upperTypes[0], implClass);
 			}
-		} else if (type instanceof GenericArrayType) {
-			GenericArrayType gat = (GenericArrayType) type;
-			Class componentType = toClass(gat.getGenericComponentType());
-			// this is sort of stupid but there seems no other way...
-			return Array.newInstance(componentType, 0).getClass();
-		} else if (type instanceof TypeVariable) {
-			TypeVariable tv = (TypeVariable) type;
-			Type[] bounds = tv.getBounds();
-			if (bounds.length == 1) {
-				return toClass(bounds[0]);
+
+			return Object.class;
+		}
+		if (type instanceof GenericArrayType) {
+			Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
+			Class<?> rawType = getRawType(genericComponentType, implClass);
+			// this is sort of stupid, but there seems no other way (consider don't creating new instances each time)...
+			return Array.newInstance(rawType, 0).getClass();
+		}
+		if (type instanceof TypeVariable) {
+			TypeVariable<?> varType = (TypeVariable<?>) type;
+			if (implClass == null) {
+				Type[] boundsTypes = varType.getBounds();
+				if (boundsTypes.length == 0) {
+					return Object.class;
+				}
+				return getRawType(boundsTypes[0], implClass);
+			} else {
+				Type resolvedType = resolveVariable(varType, implClass);
+				return getRawType(resolvedType, null);
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * Resolves concrete field type when declared in generic class and type defined in concrete subclass.
-	 */
-	public static Class getFieldConcreteType(Field field, Class concreteClass) {
-		Type type = field.getGenericType();
 
-		if (!(type instanceof TypeVariable)) {
-			return toClass(type);
+	/**
+	 * Resolves <code>TypeVariable</code> with given implementation class.
+	 */
+	public static Type resolveVariable(TypeVariable variable, final Class implClass) {
+		final Class rawType = getRawType(implClass, null);
+
+		int index = ArraysUtil.indexOf(rawType.getTypeParameters(), variable);
+		if (index >= 0) {
+			return variable;
 		}
 
-		TypeVariable typeVariable = (TypeVariable) type;
+		final Class[] interfaces = rawType.getInterfaces();
+		final Type[] genericInterfaces = rawType.getGenericInterfaces();
 
-		Class declaringClass = field.getDeclaringClass();
-		TypeVariable[] typeParameters = declaringClass.getTypeParameters();
+		for (int i = 0; i <= interfaces.length; i++) {
+			Class rawInterface;
 
-		for (int index = 0; index < typeParameters.length; index++) {
-			if (typeParameters[index].equals(typeVariable)) {
+			if (i < interfaces.length) {
+				rawInterface = interfaces[i];
+			} else {
+				rawInterface = rawType.getSuperclass();
+				if (rawInterface == null) {
+					continue;
+				}
+			}
 
-				// matched type
-				return getGenericSupertype(concreteClass, index);
+			final Type resolved = resolveVariable(variable, rawInterface);
+			if (resolved instanceof Class || resolved instanceof ParameterizedType) {
+				return resolved;
+			}
+
+			if (resolved instanceof TypeVariable) {
+				final TypeVariable typeVariable = (TypeVariable) resolved;
+				index = ArraysUtil.indexOf(rawInterface.getTypeParameters(), typeVariable);
+
+				if (index < 0) {
+					throw new IllegalArgumentException("Can't resolve type variable:" + typeVariable);
+				}
+
+				final Type type = i < genericInterfaces.length ? genericInterfaces[i] : rawType.getGenericSuperclass();
+
+				if (type instanceof Class) {
+					return Object.class;
+				}
+
+				if (type instanceof ParameterizedType) {
+					return ((ParameterizedType) type).getActualTypeArguments()[index];
+				}
+
+				throw new IllegalArgumentException("Invalid type: " + type);
 			}
 		}
-		return Object.class;
+		return null;
 	}
-
 
 	// ---------------------------------------------------------------- annotations
 

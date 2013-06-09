@@ -18,6 +18,7 @@ import sun.reflect.Reflection;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -471,15 +472,24 @@ public class ReflectUtilTest {
 		field.set(null, value);
 	}
 
+	// ---------------------------------------------------------------- field concrete type
+
 	public static class BaseClass<A, B> {
 		public A f1;
 		public B f2;
 		public String f3;
+		public A[] array1;
 	}
 
 	public static class ConcreteClass extends BaseClass<String, Integer> {
 		public Long f4;
 		public List<Long> f5;
+	}
+
+	public static class BaseClass2<X> extends BaseClass<X, Integer> {
+	}
+
+	public static class ConcreteClass2 extends BaseClass2<String> {
 	}
 
 	@Test
@@ -489,18 +499,122 @@ public class ReflectUtilTest {
 		Field f3 = BaseClass.class.getField("f3");
 		Field f4 = ConcreteClass.class.getField("f4");
 		Field f5 = ConcreteClass.class.getField("f5");
+		Field array1 = BaseClass.class.getField("array1");
 
 		assertEquals(String.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 0));
 		assertEquals(Integer.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 1));
 
-		assertEquals(String.class, ReflectUtil.getFieldConcreteType(f1, ConcreteClass.class));
-		assertEquals(Integer.class, ReflectUtil.getFieldConcreteType(f2, ConcreteClass.class));
-		assertEquals(String.class, ReflectUtil.getFieldConcreteType(f3, ConcreteClass.class));
-		assertEquals(Long.class, ReflectUtil.getFieldConcreteType(f4, ConcreteClass.class));
-		assertEquals(List.class, ReflectUtil.getFieldConcreteType(f5, ConcreteClass.class));
-		assertEquals(Object.class, ReflectUtil.toClass(f1.getGenericType()));
-		assertEquals(null, ReflectUtil.getComponentType(f1.getGenericType()));
+		assertEquals(String.class, ReflectUtil.getRawType(f1.getGenericType(), ConcreteClass.class));
+		assertEquals(Integer.class, ReflectUtil.getRawType(f2.getGenericType(), ConcreteClass.class));
+		assertEquals(String.class, ReflectUtil.getRawType(f3.getGenericType(), ConcreteClass.class));
+		assertEquals(Long.class, ReflectUtil.getRawType(f4.getGenericType(), ConcreteClass.class));
+		assertEquals(List.class, ReflectUtil.getRawType(f5.getGenericType(), ConcreteClass.class));
+		assertEquals(String[].class, ReflectUtil.getRawType(array1.getGenericType(), ConcreteClass.class));
+
+		assertEquals(Object.class, ReflectUtil.getRawType(f1.getGenericType()));
+		assertNull(ReflectUtil.getComponentType(f1.getGenericType()));
 		assertEquals(Long.class, ReflectUtil.getComponentType(f5.getGenericType()));
 	}
+
+	@Test
+	public void testGetFieldConcreteType2() throws Exception {
+		Field array1 = BaseClass.class.getField("array1");
+		Field f2 = ConcreteClass2.class.getField("f2");
+
+		assertEquals(String[].class, ReflectUtil.getRawType(array1.getGenericType(), ConcreteClass2.class));
+		assertEquals(Integer.class, ReflectUtil.getRawType(f2.getGenericType(), ConcreteClass2.class));
+		assertEquals(Integer.class, ReflectUtil.getRawType(f2.getGenericType(), BaseClass2.class));
+	}
+
+	// ---------------------------------------------------------------- test raw
+
+	public static class Soo {
+		public List<String> stringList;
+		public String[] strings;
+		public String string;
+
+		public List<Integer> getIntegerList() {return null;}
+		public Integer[] getIntegers() {return null;}
+		public Integer getInteger() {return null;}
+		public <T> T getTemplate(T foo) {return null;}
+		public Collection<? extends Number> getCollection() {return null;}
+		public Collection<?> getCollection2() {return null;}
+	}
+
+	@Test
+	public void testGetRawAndComponentType() throws NoSuchFieldException {
+
+		Class<Soo> sooClass = Soo.class;
+
+		Field stringList = sooClass.getField("stringList");
+		assertEquals(List.class, ReflectUtil.getRawType(stringList.getType()));
+		assertEquals(String.class, ReflectUtil.getComponentType(stringList.getGenericType()));
+
+		Field strings = sooClass.getField("strings");
+		assertEquals(String[].class, ReflectUtil.getRawType(strings.getType()));
+		assertEquals(String.class, ReflectUtil.getComponentType(strings.getGenericType()));
+
+		Field string = sooClass.getField("string");
+		assertEquals(String.class, ReflectUtil.getRawType(string.getType()));
+		assertNull(ReflectUtil.getComponentType(string.getGenericType()));
+
+		Method integerList = ReflectUtil.findMethod(sooClass, "getIntegerList");
+		assertEquals(List.class, ReflectUtil.getRawType(integerList.getReturnType()));
+		assertEquals(Integer.class, ReflectUtil.getComponentType(integerList.getGenericReturnType()));
+
+		Method integers = ReflectUtil.findMethod(sooClass, "getIntegers");
+		assertEquals(Integer[].class, ReflectUtil.getRawType(integers.getReturnType()));
+		assertEquals(Integer.class, ReflectUtil.getComponentType(integers.getGenericReturnType()));
+
+		Method integer = ReflectUtil.findMethod(sooClass, "getInteger");
+		assertEquals(Integer.class, ReflectUtil.getRawType(integer.getReturnType()));
+		assertNull(ReflectUtil.getComponentType(integer.getGenericReturnType()));
+
+		Method template = ReflectUtil.findMethod(sooClass, "getTemplate");
+		assertEquals(Object.class, ReflectUtil.getRawType(template.getReturnType()));
+		assertNull(ReflectUtil.getComponentType(template.getGenericReturnType()));
+
+		Method collection = ReflectUtil.findMethod(sooClass, "getCollection");
+		assertEquals(Collection.class, ReflectUtil.getRawType(collection.getReturnType()));
+		assertEquals(Number.class, ReflectUtil.getComponentType(collection.getGenericReturnType()));
+
+		Method collection2 = ReflectUtil.findMethod(sooClass, "getCollection2");
+		assertEquals(Collection.class, ReflectUtil.getRawType(collection2.getReturnType()));
+		assertEquals(Object.class, ReflectUtil.getComponentType(collection2.getGenericReturnType()));
+	}
+
+	public static class Base2<N extends Number, K> {
+		public N getNumber() {return null;}
+		public K getKiko() {return null;}
+	}
+	public static class Impl1<N extends Number> extends Base2<N, Long> {
+	}
+	public static class Impl2 extends Impl1<Integer> {
+	}
+
+	@Test
+	public void testGetRawWithImplClass() throws NoSuchFieldException {
+		Method number = ReflectUtil.findMethod(Base2.class, "getNumber");
+		Method kiko = ReflectUtil.findMethod(Base2.class, "getKiko");
+
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getReturnType()));
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getGenericReturnType()));
+
+		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getReturnType()));
+		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getGenericReturnType()));
+
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getReturnType(), Impl1.class));
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getGenericReturnType(), Impl1.class));
+
+		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getReturnType(), Impl1.class));
+		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl1.class));
+
+		assertEquals(Number.class, ReflectUtil.getRawType(number.getReturnType(), Impl2.class));
+		assertEquals(Integer.class, ReflectUtil.getRawType(number.getGenericReturnType(), Impl2.class));
+
+		assertEquals(Object.class, ReflectUtil.getRawType(kiko.getReturnType(), Impl2.class));
+		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl2.class));
+	}
+
 
 }
