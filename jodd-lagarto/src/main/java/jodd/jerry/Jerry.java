@@ -149,7 +149,7 @@ public class Jerry implements Iterable<Jerry> {
 
 	protected Jerry(Jerry parent, Node[] nodes1, Node[] nodes2) {
 		this.parent = parent;
-		this.nodes = ArraysUtil.merge(nodes1, nodes2);
+		this.nodes = ArraysUtil.join(nodes1, nodes2);
 		this.builder = parent.builder;
 	}
 

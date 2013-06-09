@@ -315,7 +315,7 @@ public class ScopeDataResolver {
 
 		// fields
 		for (Field field : fields) {
-			Class fieldType = ReflectUtil.getFieldConcreteType(field, actionClass);
+			Class fieldType = ReflectUtil.getRawType(field.getGenericType(), actionClass);
 
 			In in = field.getAnnotation(In.class);
 			ScopeData.In ii = inspectIn(in, scopeType, field.getName(), fieldType);
