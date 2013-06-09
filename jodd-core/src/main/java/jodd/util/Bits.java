@@ -3,7 +3,7 @@
 package jodd.util;
 
 /**
- * A copy of <code>java.io.Bits</code>, which is for unknown reason package local.
+ * Part a copy of <code>java.io.Bits</code>, which is for unknown reason package local.
  * Utility methods for packing/unpacking primitive values in/out of byte arrays
  * using big-endian byte ordering.
  */
@@ -31,10 +31,7 @@ public class Bits {
 	}
 
 	public static float getFloat(byte[] b, int off) {
-		int i = ((b[off + 3] & 0xFF)) +
-				((b[off + 2] & 0xFF) << 8) +
-				((b[off + 1] & 0xFF) << 16) +
-				((b[off]) << 24);
+		int i = getInt(b, off);
 		return Float.intBitsToFloat(i);
 	}
 
@@ -50,14 +47,7 @@ public class Bits {
 	}
 
 	public static double getDouble(byte[] b, int off) {
-		long j = ((b[off + 7] & 0xFFL)) +
-				((b[off + 6] & 0xFFL) << 8) +
-				((b[off + 5] & 0xFFL) << 16) +
-				((b[off + 4] & 0xFFL) << 24) +
-				((b[off + 3] & 0xFFL) << 32) +
-				((b[off + 2] & 0xFFL) << 40) +
-				((b[off + 1] & 0xFFL) << 48) +
-				(((long) b[off]) << 56);
+		long j = getLong(b, off);
 		return Double.longBitsToDouble(j);
 	}
 
@@ -84,10 +74,7 @@ public class Bits {
 
 	public static void putFloat(byte[] b, int off, float val) {
 		int i = Float.floatToIntBits(val);
-		b[off + 3] = (byte) (i);
-		b[off + 2] = (byte) (i >>> 8);
-		b[off + 1] = (byte) (i >>> 16);
-		b[off] = (byte) (i >>> 24);
+		putInt(b, off, i);
 	}
 
 	public static void putLong(byte[] b, int off, long val) {
@@ -103,13 +90,37 @@ public class Bits {
 
 	public static void putDouble(byte[] b, int off, double val) {
 		long j = Double.doubleToLongBits(val);
-		b[off + 7] = (byte) (j);
-		b[off + 6] = (byte) (j >>> 8);
-		b[off + 5] = (byte) (j >>> 16);
-		b[off + 4] = (byte) (j >>> 24);
-		b[off + 3] = (byte) (j >>> 32);
-		b[off + 2] = (byte) (j >>> 40);
-		b[off + 1] = (byte) (j >>> 48);
-		b[off] = (byte) (j >>> 56);
+		putLong(b, off, j);
 	}
+
+	// ---------------------------------------------------------------- mask
+
+	public static boolean isSet(final byte value, final byte mask) {
+		return (value & mask) == mask;
+	}
+
+	public static boolean isSet(final int value, final int mask) {
+		return (value & mask) == mask;
+	}
+
+	public static boolean notSet(final int value, final int mask) {
+		return (value & mask) != mask;
+	}
+
+	/**
+	 * Returns value with the bit corresponding to the mask set
+	 * (if setBit is true) or cleared (if setBit is false).
+	 */
+	public static int set(int value, int mask, boolean setBit) {
+		return setBit ? value | mask : value & ~mask;
+	}
+
+	/**
+	 * Returns value with the bit corresponding to the mask set
+	 * (if setBit is true) or cleared (if setBit is false).
+	 */
+	public static byte set(byte value, byte mask, boolean setBit) {
+		return (byte) (setBit ? value | mask : value & ~mask);
+	}
+
 }
