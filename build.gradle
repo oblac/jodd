@@ -222,7 +222,7 @@ configure(javaBundleModules()) {
 	test {
 		testReport = false
 		systemProperties = System.properties
-		jvmArgs "-javaagent:${configurations.codeCoverage.asPath}=destfile=${project.buildDir.path}/coverage-results/jacoco.exec,sessionid=HSServ,append=false,excludes=*Test:*.?:*Foo*:*.data.*:*.tst*",
+		jvmArgs "-javaagent:${configurations.codeCoverage.asPath}=destfile=${project.buildDir.path}/coverage-results/jacoco.exec,sessionid=HSServ,append=false,excludes=*Test:*.?:*Foo*:*.data.*:*.tst*:*\$*",
 			'-Djacoco=true',
 			'-Xms128m',
 			'-Xmx512m',
