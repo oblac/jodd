@@ -19,6 +19,7 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -1002,10 +1003,92 @@ public class ReflectUtil {
 					return ((ParameterizedType) type).getActualTypeArguments()[index];
 				}
 
-				throw new IllegalArgumentException("Invalid type: " + type);
+				throw new IllegalArgumentException("Unsupported type: " + type);
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Converts <code>Type</code> to a <code>String</code>. Supports successor interfaces:
+	 * <ul>
+	 * <li><code>java.lang.Class</code> - represents usual class</li>
+	 * <li><code>java.lang.reflect.ParameterizedType</code> - class with generic parameter (e.g. <code>List</code>)</li>
+	 * <li><code>java.lang.reflect.TypeVariable</code> - generic type literal (e.g. <code>List</code>, <code>T</code> - type variable)</li>
+	 * <li><code>java.lang.reflect.WildcardType</code> - wildcard type (<code>List&lt;? extends Number&gt;</code>, <code>"? extends Number</code> - wildcard type)</li>
+	 * <li><code>java.lang.reflect.GenericArrayType</code> - type for generic array (e.g. <code>T[]</code>, <code>T</code> - array type)</li>
+	 * </ul>
+	 */
+	public static String typeToString(Type type) {
+		StringBuilder sb = new StringBuilder();
+		typeToString(sb, type, new HashSet<Type>());
+		return sb.toString();
+	}
+
+	private static void typeToString(StringBuilder sb, Type type, Set<Type> visited) {
+		if (type instanceof ParameterizedType) {
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			final Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+			sb.append(rawType.getName());
+			boolean first = true;
+			for (Type typeArg : parameterizedType.getActualTypeArguments()) {
+				if (first) {
+					first = false;
+				} else {
+					sb.append(", ");
+				}
+				sb.append('<');
+				typeToString(sb, typeArg, visited);
+				sb.append('>');
+			}
+		} else if (type instanceof WildcardType) {
+			WildcardType wildcardType = (WildcardType) type;
+			sb.append('?');
+
+			// According to JLS(http://java.sun.com/docs/books/jls/third_edition/html/typesValues.html#4.5.1):
+			// - Lower and upper can't coexist: (for instance, this is not allowed: <? extends List<String> & super MyInterface>)
+			// - Multiple bounds are not supported (for instance, this is not allowed: <? extends List<String> & MyInterface>)
+
+			final Type bound;
+			if (wildcardType.getLowerBounds().length != 0) {
+				sb.append(" super ");
+				bound = wildcardType.getLowerBounds()[0];
+			} else {
+				sb.append(" extends ");
+				bound = wildcardType.getUpperBounds()[0];
+			}
+			typeToString(sb, bound, visited);
+		} else if (type instanceof TypeVariable<?>) {
+			TypeVariable<?> typeVariable = (TypeVariable<?>) type;
+			sb.append(typeVariable.getName());
+
+			// prevent cycles in case: <T extends List<T>>
+
+			if (!visited.contains(type)) {
+				visited.add(type);
+				sb.append(" extends ");
+				boolean first = true;
+				for (Type bound : typeVariable.getBounds()) {
+					if (first) {
+						first = false;
+					} else {
+						sb.append(" & ");
+					}
+					typeToString(sb, bound, visited);
+				}
+				visited.remove(type);
+			}
+		} else if (type instanceof GenericArrayType) {
+			GenericArrayType genericArrayType = (GenericArrayType) type;
+			typeToString(genericArrayType.getGenericComponentType());
+			sb.append(genericArrayType.getGenericComponentType());
+			sb.append("[]");
+		} else if (type instanceof Class) {
+			Class<?> typeClass = (Class<?>) type;
+			sb.append(typeClass.getName());
+		} else {
+			throw new IllegalArgumentException("Unsupported type: " + type);
+		}
 	}
 
 	// ---------------------------------------------------------------- annotations

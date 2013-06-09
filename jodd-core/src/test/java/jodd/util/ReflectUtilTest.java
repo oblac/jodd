@@ -18,8 +18,13 @@ import sun.reflect.Reflection;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -616,5 +621,98 @@ public class ReflectUtilTest {
 		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl2.class));
 	}
 
+	// ---------------------------------------------------------------- type2string
 
+	public static class FieldType<K extends Number, V extends List<String> & Collection<String>> {
+		List fRaw;
+		List<Object> fTypeObject;
+		List<String> fTypeString;
+		List<?> fWildcard;
+		List<? super List<String>> fBoundedWildcard;
+		Map<String, List<Set<Long>>> fTypeNested;
+		Map<K, V> fTypeLiteral;
+		K[] fGenericArray;
+	}
+
+	@Test
+	public void testFieldTypeToString() {
+		Field[] fields = FieldType.class.getDeclaredFields();
+
+		Arrays.sort(fields, new Comparator<Field>() {
+			public int compare(Field o1, Field o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		String result = "";
+		for (Field field : fields) {
+			Type type = field.getGenericType();
+			result += field.getName() + " - " + ReflectUtil.typeToString(type) + '\n';
+		}
+
+		assertEquals(
+				"fBoundedWildcard - java.util.List<? super java.util.List<java.lang.String>>\n" +
+				"fGenericArray - K[]\n" +
+				"fRaw - java.util.List\n" +
+				"fTypeLiteral - java.util.Map<K extends java.lang.Number>, <V extends java.util.List<java.lang.String> & java.util.Collection<java.lang.String>>\n" +
+				"fTypeNested - java.util.Map<java.lang.String>, <java.util.List<java.util.Set<java.lang.Long>>>\n" +
+				"fTypeObject - java.util.List<java.lang.Object>\n" +
+				"fTypeString - java.util.List<java.lang.String>\n" +
+				"fWildcard - java.util.List<? extends java.lang.Object>\n",
+				result);
+	}
+
+	public static class MethodReturnType {
+		List mRaw() {return null;}
+		List<String> mTypeString() {return null;}
+		List<?> mWildcard() {return null;}
+		List<? extends Number> mBoundedWildcard() {return null;}
+		<T extends List<String>> List<T> mTypeLiteral() {return null;}
+	}
+
+	@Test
+	public void testMethodTypeToString() {
+		Method[] methods = MethodReturnType.class.getDeclaredMethods();
+
+		Arrays.sort(methods, new Comparator<Method>() {
+			public int compare(Method o1, Method o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		String result = "";
+		for (Method method : methods) {
+			Type type = method.getGenericReturnType();
+			result += method.getName() + " - " + ReflectUtil.typeToString(type) + '\n';
+		}
+
+		assertEquals(
+				"mBoundedWildcard - java.util.List<? extends java.lang.Number>\n" +
+				"mRaw - java.util.List\n" +
+				"mTypeLiteral - java.util.List<T extends java.util.List<java.lang.String>>\n" +
+				"mTypeString - java.util.List<java.lang.String>\n" +
+				"mWildcard - java.util.List<? extends java.lang.Object>\n",
+				result);
+	}
+
+	public static class MethodParameterType {
+		<T extends List<T>> void m(String p1, T p2, List<?> p3, List<T> p4) { }
+	}
+
+	@Test
+	public void testMethodParameterTypeToString() {
+		String result = "";
+		for (Method method : MethodParameterType.class.getDeclaredMethods()) {
+			for (Type type : method.getGenericParameterTypes()) {
+				result += method.getName() + " - " + ReflectUtil.typeToString(type) + '\n';
+			}
+		}
+
+		assertEquals(
+				"m - java.lang.String\n" +
+				"m - T extends java.util.List<T>\n" +
+				"m - java.util.List<? extends java.lang.Object>\n" +
+				"m - java.util.List<T extends java.util.List<T>>\n",
+				result);
+	}
 }
