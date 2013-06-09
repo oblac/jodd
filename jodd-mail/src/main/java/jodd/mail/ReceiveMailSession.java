@@ -124,8 +124,8 @@ public class ReceiveMailSession {
 	// ---------------------------------------------------------------- receive emails
 
 	/**
-	 * Receives all emails.
-	 * @param delete delete received messages
+	 * Receives all emails. Received messages are marked as 'seen' or deleted.
+	 * @param delete if <code>true</code>, received messages will be deleted
 	 * @return array of received messages
 	 */
 	public ReceivedEmail[] receiveEmail(boolean delete) {
@@ -141,8 +141,11 @@ public class ReceiveMailSession {
 			emails = new ReceivedEmail[messages.length];
 			for (int i = 0; i < messages.length; i++) {
 				Message msg = messages[i];
+
 				if (delete) {
 					msg.setFlag(Flags.Flag.DELETED, true);
+				} else {
+					msg.setFlag(Flags.Flag.SEEN, true);
 				}
 				emails[i] = message2Email(msg);
 			}
