@@ -6,10 +6,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 
 public class ArraysUtilTest {
 
@@ -37,16 +39,17 @@ public class ArraysUtilTest {
 
 	@Test
 	public void testJoin() {
-		assertArrayEquals(new int[] {1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.join(x, y));
+		assertArrayEquals(new int[]{}, ArraysUtil.join(new int[0]));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5}, ArraysUtil.join(x));
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.join(x, y));
 		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.join(xx, yy)));
-	}
+		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.join(x, y, y));
+		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.values(ArraysUtil.join(xx, yy, yy)));
 
-	@Test
-	public void testMerge() {
-		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.merge(x, y));
-		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy)));
-		assertArrayEquals(new int[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.merge(x, y, y));
-		assertArrayEquals(new long[]{1, 2, 3, 4, 5, 11, 12, 13, 11, 12, 13}, ArraysUtil.values(ArraysUtil.merge(xx, yy, yy)));
+		assertArrayEquals(new int[]{1,2,3,4,5}, ArraysUtil.join(x));
+		assertEquals("[1, 2, 3, 4, 5, 11, 12, 13]", Arrays.toString(ArraysUtil.join(Number.class, new Number[][] {xx, yy})));
+		assertEquals("[1, 2, 3, 4, 5]", Arrays.toString(ArraysUtil.join(Number.class, new Number[][] {xx})));
+		assertEquals("[]", Arrays.toString(ArraysUtil.join(Number.class, new Number[][] {})));
 	}
 
 	@Test
@@ -154,7 +157,7 @@ public class ArraysUtilTest {
 	@Test
 	public void testToString() {
 		Assert.assertEquals("1, 2, 3", ArraysUtil.toString(new int[]{1, 2, 3}));
-		Assert.assertEquals("1, null, 3.1", ArraysUtil.toString(new Object[]{1, null, 3.1}));
+		Assert.assertEquals("1, null, 3.1", ArraysUtil.toString(new Object[]{Integer.valueOf(1), null, Double.valueOf(3.1)}));
 		Assert.assertEquals("null", ArraysUtil.toString((long[]) null));
 	}
 

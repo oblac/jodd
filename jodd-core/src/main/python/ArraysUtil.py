@@ -20,15 +20,26 @@ big_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double',
 prim_types_safe = ['byte', 'char', 'short', 'int', 'long', 'boolean']
 
 
-f.write('\n\n\t// ---------------------------------------------------------------- merge')
+f.write('\n\n\t// ---------------------------------------------------------------- join')
 f.write('''
 
 	/**
-	 * Merge arrays.
+	 * Joins arrays. Component type is resolved from the array argument.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> T[] merge(T[]... arrays) {
-		Class componentType =  arrays.getClass().getComponentType().getComponentType();
+	public static <T> T[] join(T[]... arrays) {
+		Class<T> componentType = (Class<T>) arrays.getClass().getComponentType().getComponentType();
+		return join(componentType, arrays);	
+	}
+
+	/**
+	 * Joins arrays using provided component type.
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] join(Class<T> componentType, T[][] arrays) {
+		if (arrays.length == 1) {
+			return arrays[0];
+		}		
 		int length = 0;
 		for (T[] array : arrays) {
 			length += array.length;
@@ -46,9 +57,15 @@ f.write('''
 ''')
 template = '''
 	/**
-	 * Merge arrays.
+	 * Join <code>$T</code> arrays.
 	 */
-	public static $T[] merge($T[]... arrays) {
+	public static $T[] join($T[]... arrays) {
+		if (arrays.length == 0) {
+			return new $T[0];
+		}
+		if (arrays.length == 1) {
+			return arrays[0];
+		}
 		int length = 0;
 		for ($T[] array : arrays) {
 			length += array.length;
@@ -66,50 +83,6 @@ for type in types:
 	data = template.replace('$T', type)
 	f.write(data)
 
-
-
-f.write('\n\n\t// ---------------------------------------------------------------- join')
-f.write('''
-
-	/**
-	 * Joins two arrays.
-	 */
-	public static <T> T[] join(T[] first, T[] second) {
-		return join(first, second, null);
-	}
-
-	/**
-	 * Joins two arrays.
-	 */
-	@SuppressWarnings({"unchecked"})
-	public static <T> T[] join(T[] first, T[] second, Class componentType) {
-		if (componentType == null) {
-			componentType = first.getClass().getComponentType();
-		}
-		T[] temp = (T[]) Array.newInstance(componentType, first.length + second.length);
-		System.arraycopy(first, 0, temp, 0, first.length);
-		System.arraycopy(second, 0, temp, first.length, second.length);
-		return temp;
-	}
-
-''')
-template = '''
-	/**
-	 * Joins two arrays.
-	 */
-	public static $T[] join($T[] first, $T[] second) {
-		$T[] temp = new $T[first.length + second.length];
-		System.arraycopy(first, 0, temp, 0, first.length);
-		System.arraycopy(second, 0, temp, first.length, second.length);
-		return temp;
-	}
-'''
-for type in types:
-	data = template.replace('$T', type)
-	f.write(data)
-
-
-
 f.write('\n\n\t// ---------------------------------------------------------------- resize')
 f.write('''
 
@@ -117,7 +90,8 @@ f.write('''
 	 * Resizes an array.
 	 */
 	public static <T> T[] resize(T[] buffer, int newSize) {
-		return resize(buffer, newSize, null);
+		Class<T> componentType = (Class<T>) buffer.getClass().getComponentType();
+		return resize(buffer, newSize, componentType);
 	}
 		
 	/**
@@ -125,9 +99,6 @@ f.write('''
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] resize(T[] buffer, int newSize, Class<?> componentType) {
-		if (componentType == null) {
-			componentType =  buffer.getClass().getComponentType();
-		}
 		T[] temp = (T[]) Array.newInstance(componentType, newSize);
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
@@ -136,7 +107,7 @@ f.write('''
 )
 template = '''
 	/**
-	 * Resizes an array.
+	 * Resizes a <code>$T</code> array.
 	 */
 	public static $T[] resize($T buffer[], int newSize) {
 		$T temp[] = new $T[newSize];
@@ -164,7 +135,7 @@ f.write('''
 )
 template = '''
 	/**
-	 * Appends an element to array.
+	 * Appends an element to <code>$T</code> array.
 	 */
 	public static $T[] append($T buffer[], $T newElement) {
 		$T[] t = resize(buffer, buffer.length + 1);
@@ -181,20 +152,18 @@ f.write('\n\n\t// --------------------------------------------------------------
 f.write('''
 
 	/**
-	 * Removes subarray.
+	 * Removes sub-array.
 	 */
 	public static <T> T[] remove(T[] buffer, int offset, int length) {
-		return remove(buffer, offset, length, null);
+		Class<T> componentType = (Class<T>) buffer.getClass().getComponentType();
+		return remove(buffer, offset, length, componentType);
 	}
 
 	/**
-	 * Removes subarray.
+	 * Removes sub-array.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> T[] remove(T[] buffer, int offset, int length, Class componentType) {
-		if (componentType == null) {
-			componentType = buffer.getClass().getComponentType();
-		}
+	public static <T> T[] remove(T[] buffer, int offset, int length, Class<T> componentType) {
 		int len2 = buffer.length - length;
 		T[] temp = (T[]) Array.newInstance(componentType, len2);
 		System.arraycopy(buffer, 0, temp, 0, offset);
@@ -204,7 +173,7 @@ f.write('''
 ''')
 template = '''
 	/**
-	 * Removes subarray.
+	 * Removes sub-array from <code>$T</code> array.
 	 */
 	public static $T[] remove($T[] buffer, int offset, int length) {
 		int len2 = buffer.length - length;
@@ -228,17 +197,15 @@ f.write('''
 	 * Returns subarray.
 	 */
 	public static <T> T[] subarray(T[] buffer, int offset, int length) {
-		return subarray(buffer, offset, length, null);
+		Class<T> componentType = (Class<T>) buffer.getClass().getComponentType();
+		return subarray(buffer, offset, length, componentType);
 	}
 
 	/**
 	 * Returns subarray.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public static <T> T[] subarray(T[] buffer, int offset, int length, Class componentType) {
-		if (componentType == null) {
-			componentType = buffer.getClass().getComponentType();
-		}
+	public static <T> T[] subarray(T[] buffer, int offset, int length, Class<T> componentType) {
 		T[] temp = (T[]) Array.newInstance(componentType, length);
 		System.arraycopy(buffer, offset, temp, 0, length);
 		return temp;
@@ -264,36 +231,36 @@ f.write('\n\n\t// --------------------------------------------------------------
 f.write('''
 
 	/**
-	 * Inserts one array into another.
+	 * Inserts one array into another array.
 	 */
 	public static <T> T[] insert(T[] dest, T[] src, int offset) {
-		return insert(dest, src, offset, null);
+		Class<T> componentType = (Class<T>) dest.getClass().getComponentType();
+		return insert(dest, src, offset, componentType);
 	}
-
+	/**
+	 * Inserts one element into an array.
+	 */
 	public static <T> T[] insert(T[] dest, T src, int offset) {
-		return insert(dest, src, offset, null);
+		Class<T> componentType = (Class<T>) dest.getClass().getComponentType();
+		return insert(dest, src, offset, componentType);
 	}
 
 	/**
-	 * Inserts one array into another.
+	 * Inserts one array into another array.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] insert(T[] dest, T[] src, int offset, Class componentType) {
-		if (componentType == null) {
-			componentType = dest.getClass().getComponentType();
-		}
 		T[] temp = (T[]) Array.newInstance(componentType, dest.length + src.length);
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
 		System.arraycopy(dest, offset, temp, src.length + offset, dest.length - offset);
 		return temp;
 	}
-
+	/**
+	 * Inserts one element into another array.
+	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] insert(T[] dest, T src, int offset, Class componentType) {
-		if (componentType == null) {
-			componentType = dest.getClass().getComponentType();
-		}
 		T[] temp = (T[]) Array.newInstance(componentType, dest.length + 1);
 		System.arraycopy(dest, 0, temp, 0, offset);
 		temp[offset] = src;
@@ -303,7 +270,7 @@ f.write('''
 ''')
 template = '''
 	/**
-	 * Inserts one array into another.
+	 * Inserts one array into another <code>$T</code> array.
 	 */
 	public static $T[] insert($T[] dest, $T[] src, int offset) {
 		$T[] temp = new $T[dest.length + src.length];
@@ -314,7 +281,7 @@ template = '''
 	}
 
 	/**
-	 * Inserts one element into array.
+	 * Inserts one element into another <code>$T</code> array.
 	 */
 	public static $T[] insert($T[] dest, $T src, int offset) {
 		$T[] temp = new $T[dest.length + 1];
@@ -332,20 +299,18 @@ f.write('\n\n\t// --------------------------------------------------------------
 f.write('''
 
 	/**
-	 * Inserts one array into another by replacing specified offset.
+	 * Inserts one array into another at given offset.
 	 */
 	public static <T> T[] insertAt(T[] dest, T[] src, int offset) {
-		return insertAt(dest, src, offset, null);
+		Class<T> componentType = (Class<T>) dest.getClass().getComponentType();
+		return insertAt(dest, src, offset, componentType);
 	}
 
 	/**
-	 * Inserts one array into another by replacing specified offset.
+	 * Inserts one array into another at given offset.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] insertAt(T[] dest, T[] src, int offset, Class componentType) {
-		if (componentType == null) {
-			componentType = dest.getClass().getComponentType();
-		}
 		T[] temp = (T[]) Array.newInstance(componentType, dest.length + src.length - 1);
 		System.arraycopy(dest, 0, temp, 0, offset);
 		System.arraycopy(src, 0, temp, offset, src.length);
@@ -411,7 +376,7 @@ f.write('''
 ''')
 template = '''
 	/**
-	 * Finds the first occurrence in an array.
+	 * Finds the first occurrence of an element in an array.
 	 */
 	public static int indexOf($T[] array, $T value) {
 		for (int i = 0; i < array.length; i++) {
@@ -421,11 +386,14 @@ template = '''
 		}
 		return -1;
 	}
+	/**
+	 * Returns <code>true</code> if an array contains given value.
+	 */
 	public static boolean contains($T[] array, $T value) {
 		return indexOf(array, value) != -1;
 	}
 	/**
-	 * Finds the first occurrence in an array from specified given position.
+	 * Finds the first occurrence of given value in an array from specified given position.
 	 */
 	public static int indexOf($T[] array, $T value, int startIndex) {
 		for (int i = startIndex; i < array.length; i++) {
@@ -453,7 +421,7 @@ for type in prim_types_safe:
 
 template = '''
 	/**
-	 * Finds the first occurrence in an array.
+	 * Finds the first occurrence of value in <code>$T</code> array.
 	 */
 	public static int indexOf($T[] array, $T value) {
 		for (int i = 0; i < array.length; i++) {
@@ -463,11 +431,15 @@ template = '''
 		}
 		return -1;
 	}
+	/**
+	 * Returns <code>true</code> if <code>$T</code> array contains given value.
+	 */
 	public static boolean contains($T[] array, $T value) {
 		return indexOf(array, value) != -1;
 	}
 	/**
-	 * Finds the first occurrence in an array from specified given position.
+	 * Finds the first occurrence of given value in <code>$T</code>
+	 * array from specified given position.
 	 */
 	public static int indexOf($T[] array, $T value, int startIndex) {
 		for (int i = startIndex; i < array.length; i++) {
@@ -478,7 +450,7 @@ template = '''
 		return -1;
 	}
 	/**
-	 * Finds the first occurrence in an array from specified given position and upto given length.
+	 * Finds the first occurrence in <code>$T</code> array from specified given position and upto given length.
 	 */
 	public static int indexOf($T[] array, $T value, int startIndex, int endIndex) {
 		for (int i = startIndex; i < endIndex; i++) {
@@ -647,7 +619,8 @@ f.write('\n\n\t// --------------------------------------------------------------
 f.write('''
 
 	/**
-	 * Converts an array to string. Return string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma and
+	 * an empty space. Returned string contains no brackets.
 	 */
 	public static String toString(Object[] array) {
 		if (array == null) {
@@ -666,7 +639,8 @@ f.write('''
 )
 template = '''
 	/**
-	 * Converts an array to string. Return string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma and
+	 * an empty space. Returned string contains no brackets.
 	 */
 	public static String toString($T[] array) {
 		if (array == null) {
