@@ -3,11 +3,11 @@
 package jodd.bean;
 
 import jodd.JoddBean;
+import jodd.introspector.FieldDescriptor;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -173,9 +173,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// try: property=
-		Field field = getField(bp, declared);
-		if (field != null) {
-			setFieldValue(bp.bean, field, value);
+		FieldDescriptor fieldDescriptor = getField(bp, declared);
+		if (fieldDescriptor != null) {
+			setFieldValue(bp.bean, fieldDescriptor, value);
 			return;
 		}
 

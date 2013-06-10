@@ -71,7 +71,7 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- special
 
-	private boolean isArray;
+	private final boolean isArray;
 	/**
 	 * Returns <code>true</code> if class is an array.
 	 */
@@ -79,7 +79,7 @@ public class ClassDescriptor {
 		return isArray;
 	}
 
-	private boolean isMap;
+	private final boolean isMap;
 	/**
 	 * Returns <code>true</code> if class is a <code>Map</code>.
 	 */
@@ -87,7 +87,7 @@ public class ClassDescriptor {
 		return isMap;
 	}
 
-	private boolean isList;
+	private final boolean isList;
 	/**
 	 * Returns <code>true</code> if class is a <code>List</code>.
 	 */
@@ -95,7 +95,7 @@ public class ClassDescriptor {
 		return isList;
 	}
 
-	private boolean isSet;
+	private final boolean isSet;
 	/**
 	 * Returns <code>true</code> if type is a <code>Set</code>.
 	 */
@@ -103,7 +103,7 @@ public class ClassDescriptor {
 		return isSet;
 	}
 
-	private boolean isCollection;
+	private final boolean isCollection;
 	/**
 	 * Returns <code>true</code> if type is a collection.
 	 */
@@ -132,14 +132,11 @@ public class ClassDescriptor {
 		for (Field field : fields) {
 			String fName = field.getName();
 			if (ReflectUtil.isPublic(field)) {
-				publicFields.addField(fName, field);
+				publicFields.addField(fName, field, type);
 			}
 			ReflectUtil.forceAccess(field);
-			allFields.addField(fName, field);
+			allFields.addField(fName, field, type);
 		}
-
-		publicFields.lock();
-		allFields.lock();
 
 		this.publicFields = publicFields;
 		this.allFields = allFields;
@@ -181,6 +178,18 @@ public class ClassDescriptor {
 			return allFields.getAllFields();
 		} else {
 			return publicFields.getAllFields();
+		}
+	}
+
+	/**
+	 * Returns field descriptor.
+	 */
+	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
+		inspectFields();
+		if (declared == true) {
+			return allFields.getFieldDescriptor(name);
+		} else {
+			return publicFields.getFieldDescriptor(name);
 		}
 	}
 
@@ -453,8 +462,6 @@ public class ClassDescriptor {
 		inspectCtors();
 		return publicCtors.getDefaultCtor();
 	}
-
-
 
 	/**
 	 * Returns the total number of constructors.

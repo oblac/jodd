@@ -10,43 +10,66 @@ import java.util.HashMap;
  */
 class Fields {
 
-	final HashMap<String, Field> fieldsMap;
+	final HashMap<String, FieldDescriptor> fieldsMap;
 	Field[] allFields;
 
-	boolean locked;
-
 	Fields(int maxFields) {
-		fieldsMap = new HashMap<String, Field>(maxFields);
+		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
 	}
 
-	void addField(String name, Field field) {
-		if (locked == true) {
-			throw new IllegalStateException();	// introspection finished
-		}
-		fieldsMap.put(name, field);
-	}
+	void addField(String name, Field field, Class implClass) {
+		fieldsMap.put(name, new FieldDescriptor(field, implClass));
 
-	void lock() {
-		locked = true;
-		allFields = new Field[fieldsMap.size()];
-		int count = 0;
-		for (Field field : fieldsMap.values()) {
-			allFields[count] = field;
-			count++;
-		}
+		// reset collection
+		allFields = null;
 	}
 
 	// ---------------------------------------------------------------- get
 
+	/**
+	 * Returns field with given name or <code>null</code>
+	 * if field not found.
+	 */
 	Field getField(String name) {
+		FieldDescriptor fieldDescriptor = fieldsMap.get(name);
+
+		if (fieldDescriptor == null) {
+			return null;
+		}
+
+		return fieldDescriptor.getField();
+	}
+
+	/**
+	 * Returns {@link FieldDescriptor field descriptor}.
+	 */
+	FieldDescriptor getFieldDescriptor(String name) {
 		return fieldsMap.get(name);
 	}
 
+	/**
+	 * Returns {@link #getAllFields() all fields} count.
+	 */
 	int getCount() {
-		return allFields.length;
+		return getAllFields().length;
 	}
 
+	/**
+	 * Returns all fields of this collection. Returns empty array
+	 * if no fields exist. Initialized lazy.
+	 */
 	Field[] getAllFields() {
+		if (allFields == null) {
+			Field[] allFieldsNew = new Field[fieldsMap.size()];
+
+			int count = 0;
+			for (FieldDescriptor fieldDescriptor : fieldsMap.values()) {
+				allFieldsNew[count] = fieldDescriptor.getField();
+				count++;
+			}
+
+			allFields = allFieldsNew;
+		}
 		return allFields;
 	}
 

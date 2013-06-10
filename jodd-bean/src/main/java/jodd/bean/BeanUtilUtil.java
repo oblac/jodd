@@ -3,12 +3,12 @@
 package jodd.bean;
 
 import jodd.JoddBean;
+import jodd.introspector.FieldDescriptor;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -69,24 +69,26 @@ class BeanUtilUtil {
 	/**
 	 * Sets field value.
 	 */
-	protected void setFieldValue(Object bean, Field f, Object value) {
+	protected void setFieldValue(Object bean, FieldDescriptor fd, Object value) {
 		try {
-			Class type = f.getType();
+			Class type = fd.getRawType();
+
 			value = convertType(value, type);
-			f.set(bean, value);
+
+			fd.getField().set(bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + f.getName(), ex);
+			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
 		}
 	}
 
 	/**
 	 * Return value of a field.
 	 */
-	protected Object getFieldValue(Object bean, Field f) {
+	protected Object getFieldValue(Object bean, FieldDescriptor fd) {
 		try {
-			return f.get(bean);
+			return fd.getField().get(bean);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + f.getName(), ex);
+			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
 		}
 	}
 
@@ -135,7 +137,7 @@ class BeanUtilUtil {
 			if (setter != null) {
 				invokeSetter(bp.bean, setter, newArray);
 			} else {
-				Field field = getField(bp, true);
+				FieldDescriptor field = getField(bp, true);
 				if (field == null) {
 					throw new BeanException("Unable to find setter or field named as: " + bp.name, bp);
 				}
@@ -226,7 +228,7 @@ class BeanUtilUtil {
 	 */
 	protected Object createBeanProperty(BeanProperty bp) {
 		Method setter = bp.cd.getBeanSetter(bp.name, true);
-		Field field = null;
+		FieldDescriptor field = null;
 		Class type;
 		if (setter != null) {
 			type = setter.getParameterTypes()[0];
@@ -235,7 +237,7 @@ class BeanUtilUtil {
 			if (field == null) {
 				return null;
 			}
-			type = field.getType();
+			type = field.getRawType();
 		}
 		Object newInstance;
 		try {
@@ -259,7 +261,7 @@ class BeanUtilUtil {
 	protected Class extracticGenericType(BeanProperty bp, int index) {
 		Type type;
 		if (bp.field != null) {
-			type = bp.field.getGenericType();
+			type = bp.field.getField().getGenericType();
 		} else if (bp.method != null) {
 			type = bp.method.getGenericReturnType();
 		} else {
@@ -270,18 +272,19 @@ class BeanUtilUtil {
 
 	/**
 	 * Extracts type of current property.
+	 * todo fix this, too
 	 */
 	protected Class extractType(BeanProperty bp) {
 		Class<?> type = null;
 		if (bp.field != null) {
 			if (bp.index != null) {
-				type = ReflectUtil.getComponentType(bp.field.getGenericType());
+				type = ReflectUtil.getComponentType(bp.field.getField().getGenericType());
 				if (type == null) {
 					return Object.class;
 				}
 			}
 			if (type == null) {
-				type = bp.field.getType();
+				type = bp.field.getField().getType();
 			}
 		} else if (bp.method != null) {
 			if (bp.index != null) {
@@ -302,14 +305,14 @@ class BeanUtilUtil {
 	/**
 	 * Returns field for a property.
 	 */
-	protected Field getField(BeanProperty bp, boolean declared) {
+	protected FieldDescriptor getField(BeanProperty bp, boolean declared) {
 		String fieldName = bp.name;
 
 		if (JoddBean.fieldPrefix != null) {
 			fieldName = JoddBean.fieldPrefix + fieldName;
 		}
 
-		return bp.cd.getField(fieldName, declared);
+		return bp.cd.getFieldDescriptor(fieldName, declared);
 	}
 
 }
