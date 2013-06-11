@@ -12,7 +12,7 @@ import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
 import static jodd.util.ReflectUtil.NO_PARAMETERS;
 
 /**
- * Bean properties.
+ * Bean properties collection.
  */
 class Properties {
 
@@ -24,12 +24,12 @@ class Properties {
 	ArrayList<String> getterNameList;
 	ArrayList<String> setterNameList;
 
-	void addMethod(String name, Method method) {
+	void addMethod(String name, Method method, Class implClass) {
 		if (name.charAt(0) == '-') {
 			name = name.substring(1);
 
 			// check for special case of double get/is
-			Method existingMethod = getters.lookupMethod(name, NO_PARAMETERS);
+			Method existingMethod = getters.getMethod(name, NO_PARAMETERS);
 			if (existingMethod != null) {
 				// getter with the same name already exist
 				String methodName = method.getName();
@@ -46,14 +46,14 @@ class Properties {
 				}
 			}
 
-			getters.addMethod(name, method);
+			getters.addMethod(name, method, implClass);
 			if (getterNameList == null) {
 				getterNameList = new ArrayList<String>();
 			}
 			getterNameList.add(name);
 		} else if (name.charAt(0) == '+') {
 			name = name.substring(1);
-			setters.addMethod(name, method);
+			setters.addMethod(name, method, implClass);
 			if (setterNameList == null) {
 				setterNameList = new ArrayList<String>();
 			}
@@ -76,14 +76,6 @@ class Properties {
 			}
 			setterNameList = null;
 		}
-		getters.lock();
-		setters.lock();
 	}
 
-	public String[] getAllBeanGetterNames() {
-		return getterNames;
-	}
-	public String[] getAllBeanSetterNames() {
-		return setterNames;
-	}
 }

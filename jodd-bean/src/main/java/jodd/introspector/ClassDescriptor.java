@@ -213,14 +213,11 @@ public class ClassDescriptor {
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (ReflectUtil.isPublic(method)) {
-				publicMethods.addMethod(methodName, method);
+				publicMethods.addMethod(methodName, method, type);
 			}
 			ReflectUtil.forceAccess(method);
-			allMethods.addMethod(methodName, method);
+			allMethods.addMethod(methodName, method, type);
 		}
-
-		allMethods.lock();
-		publicMethods.lock();
 
 		this.allMethods = allMethods;
 		this.publicMethods = publicMethods;
@@ -313,10 +310,10 @@ public class ClassDescriptor {
 
 			if (add == true) {
 				if (ReflectUtil.isPublic(method)) {
-					publicProperties.addMethod(methodName, method);
+					publicProperties.addMethod(methodName, method, type);
 				}
 				ReflectUtil.forceAccess(method);
-				allProperties.addMethod(methodName, method);
+				allProperties.addMethod(methodName, method, type);
 			}
 		}
 		allProperties.lock();

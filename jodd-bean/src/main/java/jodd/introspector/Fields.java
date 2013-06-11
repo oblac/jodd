@@ -11,7 +11,8 @@ import java.util.HashMap;
 class Fields {
 
 	final HashMap<String, FieldDescriptor> fieldsMap;
-	Field[] allFields;
+
+	Field[] allFields;		// cache
 
 	Fields(int maxFields) {
 		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
@@ -20,7 +21,7 @@ class Fields {
 	void addField(String name, Field field, Class implClass) {
 		fieldsMap.put(name, new FieldDescriptor(field, implClass));
 
-		// reset collection
+		// reset cache
 		allFields = null;
 	}
 

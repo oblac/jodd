@@ -2,6 +2,7 @@
 
 package jodd.introspector;
 
+import jodd.util.ArraysUtil;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
@@ -14,117 +15,103 @@ import java.util.List;
  */
 class Methods {
 
-	HashMap<String, List<MethodDescriptor>> mMapTemp = new HashMap<String, List<MethodDescriptor>>();
-	HashMap<String, MethodEntry> mMap;
+	final HashMap<String, MethodDescriptor[]> methodsMap;
 
-	Method[] allMethods;
-	int count;
+	Method[] allMethods;		// cache
 
-	boolean locked;
-
-	void checkLocked() {
-		if (locked == true) {
-			throw new IllegalStateException();	// introspection finished
-		}
+	Methods() {
+		methodsMap = new HashMap<String, MethodDescriptor[]>();
 	}
 
-	void addMethod(String name, Method method) {
-		checkLocked();
-		count++;
-		List<MethodDescriptor> paramList = mMapTemp.get(name);
-		if (paramList == null) {
-			paramList = new ArrayList<MethodDescriptor>();
-			mMapTemp.put(name, paramList);
-		}
-		paramList.add(new MethodDescriptor(method));
-	}
+	void addMethod(String name, Method method, Class implClass) {
+		MethodDescriptor[] mds = methodsMap.get(name);
 
-	void lock() {
-		HashMap<String, MethodEntry> newMap = new HashMap<String, MethodEntry>(mMapTemp.size());
-		locked = true;
-		allMethods = new Method[count];
-		int k = 0;
-		for (String name : mMapTemp.keySet()) {
-			List<MethodDescriptor> list = mMapTemp.get(name);
-			if (list.isEmpty()) {
-				continue;
-			}
-			MethodEntry entry = new MethodEntry();
-			entry.size = list.size();
-			entry.methodsList = new Method[entry.size];
-			entry.paramterTypes = new Class[entry.size][];
-			for (int i = 0; i < entry.size; i++) {
-				MethodDescriptor md = list.get(i);
-				allMethods[k] = md.method;
-				k++;
-				entry.methodsList[i] = md.method;
-				entry.paramterTypes[i] = md.parameterTypes;
-			}
-			newMap.put(name, entry);
+		if (mds == null) {
+			mds = new MethodDescriptor[1];
+		} else {
+			mds = ArraysUtil.resize(mds, mds.length + 1);
 		}
-		mMap = newMap;
-		mMapTemp = null;
+		methodsMap.put(name, mds);
+
+		mds[mds.length - 1] = new MethodDescriptor(method, implClass);
+
+		// reset cache
+		allMethods = null;
 	}
 
 	// ---------------------------------------------------------------- get
 
+	/**
+	 * Returns a method that matches given name and parameter types.
+	 */
 	Method getMethod(String name, Class[] paramTypes) {
-		MethodEntry entry = mMap.get(name);
-		if (entry == null) {
+		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		if (methodDescriptors == null) {
 			return null;
 		}
-		for (int i = 0; i < entry.size; i++) {
-			if (ReflectUtil.compareParameters(entry.paramterTypes[i], paramTypes) == true) {
-				return entry.methodsList[i];
+		for (int i = 0; i < methodDescriptors.length; i++) {
+			Method m = methodDescriptors[i].getMethod();
+			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes) == true) {
+				return methodDescriptors[i].getMethod();
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * Returns single method with given name, if one and only one such method exists.
+	 */
 	Method getMethod(String name) {
-		MethodEntry entry = mMap.get(name);
-		if (entry == null) {
+		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		if (methodDescriptors == null) {
 			return null;
 		}
-		if (entry.size != 1) {
-			throw new IllegalArgumentException("Method '" + name + "' is not unique");
+		if (methodDescriptors.length != 1) {
+			throw new IllegalArgumentException("Method name not unique: " + name);
 		}
-		return entry.methodsList[0];
+		return methodDescriptors[0].getMethod();
 	}
 
+	/**
+	 * Returns all methods for given name. Not cached.
+	 */
 	Method[] getAllMethods(String name) {
-		MethodEntry entry = mMap.get(name);
-		if (entry == null) {
-			return null;
+		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		if (methodDescriptors == null) {
+			return new Method[0];
 		}
-		return entry.methodsList;
+
+		List<Method> allMethodsList = new ArrayList<Method>();
+
+		for (MethodDescriptor methodDescriptor : methodDescriptors) {
+			allMethodsList.add(methodDescriptor.getMethod());
+		}
+
+		return allMethodsList.toArray(new Method[allMethodsList.size()]);
 	}
 
+	/**
+	 * Returns all methods. Cached.
+	 */
 	Method[] getAllMethods() {
+		if (allMethods == null) {
+			List<Method> allMethodsList = new ArrayList<Method>();
+
+			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
+				for (MethodDescriptor methodDescriptor : methodDescriptors) {
+					allMethodsList.add(methodDescriptor.getMethod());
+				}
+			}
+
+			allMethods = allMethodsList.toArray(new Method[allMethodsList.size()]);
+		}
 		return allMethods;
 	}
 
-	// ---------------------------------------------------------------- introspection time
-
-	Method lookupMethod(String name, Class[] paramTypes) {
-		checkLocked();
-		List<MethodDescriptor> list = mMapTemp.get(name);
-		if (list == null) {
-			return null;
-		}
-		for (MethodDescriptor md : list) {
-			if (ReflectUtil.compareParameters(md.parameterTypes, paramTypes) == true) {
-				return md.method;
-			}
-		}
-		return null;
-	}
-
-	public void removeAllMethodsForName(String name) {
-		checkLocked();
-		List<MethodDescriptor> paramList = mMapTemp.remove(name);
-		if (paramList != null) {
-			count -= paramList.size();
-		}
+	// todo!
+	void removeAllMethodsForName(String name) {
+		methodsMap.remove(name);
+		// clear cache
+		allMethods = null;
 	}
 }
