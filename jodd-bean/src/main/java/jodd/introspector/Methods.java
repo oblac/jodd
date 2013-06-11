@@ -15,12 +15,15 @@ import java.util.List;
  */
 class Methods {
 
-	final HashMap<String, MethodDescriptor[]> methodsMap;
+	private final HashMap<String, MethodDescriptor[]> methodsMap;
+	private int count;
 
-	Method[] allMethods;		// cache
+	// cache
+	private Method[] allMethods;
 
 	Methods() {
 		methodsMap = new HashMap<String, MethodDescriptor[]>();
+		count = 0;
 	}
 
 	void addMethod(String name, Method method, Class implClass) {
@@ -34,6 +37,9 @@ class Methods {
 		methodsMap.put(name, mds);
 
 		mds[mds.length - 1] = new MethodDescriptor(method, implClass);
+
+		// increment count
+		count++;
 
 		// reset cache
 		allMethods = null;
@@ -109,7 +115,7 @@ class Methods {
 	}
 
 	/**
-	 * Returns all methods. Cached.
+	 * Returns all methods. Cached. Lazy.
 	 */
 	Method[] getAllMethods() {
 		if (allMethods == null) {
@@ -127,12 +133,23 @@ class Methods {
 	}
 
 	/**
+	 * Returns number of methods in this collection.
+	 */
+	int getCount() {
+		return count;
+	}
+
+	/**
 	 * Remove all methods for given name.
 	 */
 	void removeMethods(String name) {
-		methodsMap.remove(name);
+		MethodDescriptor[] removed = methodsMap.remove(name);
 
-		// clear cache
-		allMethods = null;
+		if (removed != null) {
+			// clear cache
+			allMethods = null;
+			// update count
+			count -= removed.length;
+		}
 	}
 }

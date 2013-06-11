@@ -10,12 +10,14 @@ import java.util.HashMap;
  */
 class Fields {
 
-	final HashMap<String, FieldDescriptor> fieldsMap;
+	private final HashMap<String, FieldDescriptor> fieldsMap;
 
-	Field[] allFields;		// cache
+	private int count;				// count
+	private Field[] allFields;		// cache
 
 	Fields(int maxFields) {
 		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
+		count = 0;
 	}
 
 	void addField(String name, Field field, Class implClass) {
@@ -23,6 +25,8 @@ class Fields {
 
 		// reset cache
 		allFields = null;
+		// increment count
+		count++;
 	}
 
 	// ---------------------------------------------------------------- get
@@ -49,10 +53,10 @@ class Fields {
 	}
 
 	/**
-	 * Returns {@link #getAllFields() all fields} count.
+	 * Returns number of fields in this collection.
 	 */
 	int getCount() {
-		return getAllFields().length;
+		return count;
 	}
 
 	/**
@@ -63,10 +67,10 @@ class Fields {
 		if (allFields == null) {
 			Field[] allFieldsNew = new Field[fieldsMap.size()];
 
-			int count = 0;
+			int ndx = 0;
 			for (FieldDescriptor fieldDescriptor : fieldsMap.values()) {
-				allFieldsNew[count] = fieldDescriptor.getField();
-				count++;
+				allFieldsNew[ndx] = fieldDescriptor.getField();
+				ndx++;
 			}
 
 			allFields = allFieldsNew;

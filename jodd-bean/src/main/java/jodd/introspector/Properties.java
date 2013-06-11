@@ -2,10 +2,9 @@
 
 package jodd.introspector;
 
-import jodd.util.StringPool;
+import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
 import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
@@ -16,15 +15,18 @@ import static jodd.util.ReflectUtil.NO_PARAMETERS;
  */
 class Properties {
 
-	Methods getters = new Methods();
-	String[] getterNames = StringPool.EMPTY_ARRAY;
-	Methods setters = new Methods();
-	String[] setterNames = StringPool.EMPTY_ARRAY;
+	private Methods getters = new Methods();
+	private String[] getterNames;
+	private Methods setters = new Methods();
+	private String[] setterNames;
 
-	ArrayList<String> getterNameList;
-	ArrayList<String> setterNameList;
-
+	/**
+	 * Adds getter or setter to collection.
+	 */
 	void addMethod(String name, Method method, Class implClass) {
+		getterNames = null;
+		setterNames = null;
+
 		if (name.charAt(0) == '-') {
 			name = name.substring(1);
 
@@ -37,8 +39,7 @@ class Properties {
 				if (
 						existingMethodName.startsWith(METHOD_GET_PREFIX) &&
 						methodName.startsWith(METHOD_IS_PREFIX)) {
-					getters.removeMethods(name);	// remove getter to use ister instead of it
-					getterNameList.remove(name);
+					getters.removeMethods(name);	// remove getter to use ister instead
 				} else if (
 						existingMethodName.startsWith(METHOD_IS_PREFIX) &&
 						methodName.startsWith(METHOD_GET_PREFIX)) {
@@ -47,35 +48,62 @@ class Properties {
 			}
 
 			getters.addMethod(name, method, implClass);
-			if (getterNameList == null) {
-				getterNameList = new ArrayList<String>();
-			}
-			getterNameList.add(name);
 		} else if (name.charAt(0) == '+') {
 			name = name.substring(1);
 			setters.addMethod(name, method, implClass);
-			if (setterNameList == null) {
-				setterNameList = new ArrayList<String>();
-			}
-			setterNameList.add(name);
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 
-	void lock() {
-		if (getterNameList != null) {
-			getterNames = new String[getterNameList.size()];
-			for (int i = 0; i < getterNameList.size(); i++) {
-				getterNames[i] = getterNameList.get(i);
+	// ---------------------------------------------------------------- get
+
+	/**
+	 * Returns getters collection.
+	 */
+	Methods getGetters() {
+		return getters;
+	}
+
+	/**
+	 * Returns getter names. Cached. Lazy.
+	 */
+	String[] getGetterNames() {
+		if (getterNames == null) {
+			Method[] getterMethods = getters.getAllMethods();
+			String[] names = new String[getterMethods.length];
+
+			for (int i = 0; i < getterMethods.length; i++) {
+				names[i] = ReflectUtil.getBeanPropertyGetterName(getterMethods[i]);
 			}
-			getterNameList = null;
+
+			getterNames = names;
 		}
-		if (setterNameList != null) {
-			setterNames = new String[setterNameList.size()];
-			for (int i = 0; i < setterNameList.size(); i++) {
-				setterNames[i] = setterNameList.get(i);
+		return getterNames;
+	}
+
+	/**
+	 * Returns setters collection.
+	 */
+	Methods getSetters() {
+		return setters;
+	}
+
+	/**
+	 * Returns setter names. Cached. Lazy.
+	 */
+	String[] getSetterNames() {
+		if (setterNames == null) {
+			Method[] setterMethods = setters.getAllMethods();
+			String[] names = new String[setterMethods.length];
+
+			for (int i = 0; i < setterMethods.length; i++) {
+				names[i] = ReflectUtil.getBeanPropertySetterName(setterMethods[i]);
 			}
-			setterNameList = null;
+
+			setterNames = names;
 		}
+		return setterNames;
 	}
 
 }

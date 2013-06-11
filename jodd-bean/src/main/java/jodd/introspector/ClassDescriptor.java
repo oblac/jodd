@@ -150,23 +150,19 @@ public class ClassDescriptor {
 	 */
 	public Field getField(String name, boolean declared) {
 		inspectFields();
-		if (declared == true) {
-			return allFields.getField(name);
-		} else {
-			return publicFields.getField(name);
-		}
+
+		Fields fields = declared ? allFields : publicFields;
+		return fields.getField(name);
 	}
 
 	/**
 	 * Returns the total number of fields.
 	 */
-	public int getFieldCount(boolean declared) {
+	public int getFieldsCount(boolean declared) {
 		inspectFields();
-		if (declared == true) {
-			return allFields.getCount();
-		} else {
-			return publicFields.getCount();
-		}
+
+		Fields fields = declared ? allFields : publicFields;
+		return fields.getCount();
 	}
 
 	/**
@@ -174,11 +170,9 @@ public class ClassDescriptor {
 	 */
 	public Field[] getAllFields(boolean declared) {
 		inspectFields();
-		if (declared == true) {
-			return allFields.getAllFields();
-		} else {
-			return publicFields.getAllFields();
-		}
+
+		Fields fields = declared ? allFields : publicFields;
+		return fields.getAllFields();
 	}
 
 	/**
@@ -186,18 +180,15 @@ public class ClassDescriptor {
 	 */
 	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
 		inspectFields();
-		if (declared == true) {
-			return allFields.getFieldDescriptor(name);
-		} else {
-			return publicFields.getFieldDescriptor(name);
-		}
+
+		Fields fields = declared ? allFields : publicFields;
+		return fields.getFieldDescriptor(name);
 	}
 
 	// ---------------------------------------------------------------- methods
 
 	protected Methods publicMethods;
 	protected Methods allMethods;
-
 
 	/**
 	 * Inspect methods and create methods cache.
@@ -224,6 +215,16 @@ public class ClassDescriptor {
 	}
 
 	/**
+	 * Returns methods count.
+	 */
+	public int getMethodsCount(boolean declared) {
+		inspectMethods();
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getCount();
+	}
+
+	/**
 	 * Returns the method identified by name or <code>null</code> if not found.
 	 *
 	 * @param name	method name
@@ -231,11 +232,9 @@ public class ClassDescriptor {
 	 */
 	public Method getMethod(String name, boolean declared) {
 		inspectMethods();
-		if (declared == true) {
-			return allMethods.getMethod(name);
-		} else {
-			return publicMethods.getMethod(name);
-		}
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getMethod(name);
 	}
 
 	/**
@@ -243,11 +242,9 @@ public class ClassDescriptor {
 	 */
 	public Method getMethod(String name, Class[] params, boolean declared) {
 		inspectMethods();
-		if (declared == true) {
-			return allMethods.getMethod(name, params);
-		} else {
-			return publicMethods.getMethod(name, params);
-		}
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getMethod(name, params);
 	}
 
 	/**
@@ -255,11 +252,9 @@ public class ClassDescriptor {
 	 */
 	public Method[] getAllMethods(String name, boolean declared) {
 		inspectMethods();
-		if (declared == true) {
-			return allMethods.getAllMethods(name);
-		} else {
-			return publicMethods.getAllMethods(name);
-		}
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getAllMethods(name);
 	}
 
 	/**
@@ -267,11 +262,9 @@ public class ClassDescriptor {
 	 */
 	public Method[] getAllMethods(boolean declared) {
 		inspectMethods();
-		if (declared == true) {
-			return allMethods.getAllMethods();
-		} else {
-			return publicMethods.getAllMethods();
-		}
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getAllMethods();
 	}
 
 	// ---------------------------------------------------------------- beans
@@ -316,8 +309,7 @@ public class ClassDescriptor {
 				allProperties.addMethod(methodName, method, type);
 			}
 		}
-		allProperties.lock();
-		publicProperties.lock();
+
 		this.allProperties = allProperties;
 		this.publicProperties = publicProperties;
 	}
@@ -327,11 +319,9 @@ public class ClassDescriptor {
 	 */
 	public Method getBeanSetter(String name, boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.setters.getMethod(name);
-		} else {
-			return publicProperties.setters.getMethod(name);
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getSetters().getMethod(name);
 	}
 
 	/**
@@ -339,11 +329,9 @@ public class ClassDescriptor {
 	 */
 	public MethodDescriptor getBeanSetterMethodDescriptor(String name, boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.setters.getMethodDescriptor(name);
-		} else {
-			return publicProperties.setters.getMethodDescriptor(name);
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getSetters().getMethodDescriptor(name);
 	}
 
 	/**
@@ -351,11 +339,9 @@ public class ClassDescriptor {
 	 */
 	public Method[] getAllBeanSetters(boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.setters.getAllMethods();
-		} else {
-			return publicProperties.setters.getAllMethods();
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getSetters().getAllMethods();
 	}
 
 	/**
@@ -363,11 +349,9 @@ public class ClassDescriptor {
 	 */
 	public String[] getAllBeanSetterNames(boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.setterNames;
-		} else {
-			return publicProperties.setterNames;
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getSetterNames();
 	}
 
 	/**
@@ -375,11 +359,9 @@ public class ClassDescriptor {
 	 */
 	public Method getBeanGetter(String name, boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.getters.getMethod(name);
-		} else {
-			return publicProperties.getters.getMethod(name);
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getGetters().getMethod(name);
 	}
 
 	/**
@@ -387,11 +369,9 @@ public class ClassDescriptor {
 	 */
 	public Method[] getAllBeanGetters(boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.getters.getAllMethods();
-		} else {
-			return publicProperties.getters.getAllMethods();
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getGetters().getAllMethods();
 	}
 
 	/**
@@ -399,11 +379,9 @@ public class ClassDescriptor {
 	 */
 	public String[] getAllBeanGetterNames(boolean declared) {
 		inspectProperties();
-		if (declared == true) {
-			return allProperties.getterNames;
-		} else {
-			return publicProperties.getterNames;
-		}
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getGetterNames();
 	}
 
 
@@ -443,11 +421,9 @@ public class ClassDescriptor {
 	 */
 	public Constructor getDefaultCtor(boolean declared) {
 		inspectCtors();
-		if (declared == true) {
-			return allCtors.getDefaultCtor();
-		} else {
-			return publicCtors.getDefaultCtor();
-		}
+
+		Ctors ctors = declared ? allCtors : publicCtors;
+		return ctors.getDefaultCtor();
 	}
 
 	/**
@@ -458,11 +434,9 @@ public class ClassDescriptor {
 	 */
 	public Constructor getCtor(Class[] args, boolean declared) {
 		inspectCtors();
-		if (declared == true) {
-			return allCtors.getCtor(args);
-		} else {
-			return publicCtors.getCtor(args);
-		}
+
+		Ctors ctors = declared ? allCtors : publicCtors;
+		return ctors.getCtor(args);
 	}
 
 	/**
@@ -470,19 +444,18 @@ public class ClassDescriptor {
 	 */
 	public Constructor getDefaultCtor() {
 		inspectCtors();
+
 		return publicCtors.getDefaultCtor();
 	}
 
 	/**
 	 * Returns the total number of constructors.
 	 */
-	public int getCtorCount(boolean declared) {
+	public int getCtorsCount(boolean declared) {
 		inspectCtors();
-		if (declared == true) {
-			return allCtors.getCount();
-		} else {
-			return publicCtors.getCount();
-		}
+
+		Ctors ctors = declared ? allCtors : publicCtors;
+		return ctors.getCount();
 	}
 
 	/**
@@ -490,11 +463,9 @@ public class ClassDescriptor {
 	 */
 	public Constructor[] getAllCtors(boolean declared) {
 		inspectCtors();
-		if (declared == true) {
-			return allCtors.getAllCtors();
-		} else {
-			return publicCtors.getAllCtors();
-		}
+
+		Ctors ctors = declared ? allCtors : publicCtors;
+		return ctors.getAllCtors();
 	}
 
 }
