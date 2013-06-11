@@ -9,10 +9,10 @@ import java.lang.reflect.Constructor;
  */
 class Ctors {
 
-	Constructor[] allCtors;
-	Class[][] allArgs;
-	Constructor defaultCtor;
-	int count;
+	private Constructor[] allCtors;
+	private Class[][] allArgs;
+	private Constructor defaultCtor;
+	private int count;
 
 	/**
 	 * Add all ctors at once.
@@ -62,7 +62,7 @@ class Ctors {
 	}
 
 	/**
-	 * Returns ctor count;
+	 * Returns ctor count.
 	 */
 	int getCount() {
 		return allCtors.length;
