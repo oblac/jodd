@@ -12,35 +12,38 @@ class Ctors {
 	Constructor[] allCtors;
 	Class[][] allArgs;
 	Constructor defaultCtor;
-	boolean locked;
+	int count;
 
-	void addCtors(Constructor[] ctors) {
-		if (locked == true) {
-			throw new IllegalStateException();	// introspection finished
-		}
-
+	/**
+	 * Add all ctors at once.
+	 */
+	void addCtors(Constructor... ctors) {
 		allCtors = ctors;
 		allArgs = new Class[allCtors.length][];
+
 		for (int i = 0; i < ctors.length; i++) {
 			Constructor ctor = ctors[i];
 			allArgs[i] = ctor.getParameterTypes();
+
 			if (allArgs[i].length == 0) {
 				defaultCtor = ctor;
 			}
+			count++;
 		}
 	}
 
-	void lock() {
-		locked = true;
-	}
-
-
 	// ---------------------------------------------------------------- get
 
+	/**
+	 * Returns default (no-args) ctor.
+	 */
 	Constructor getDefaultCtor() {
 		return defaultCtor;
 	}
 
+	/**
+	 * Returns ctor for given argument types.
+	 */
 	Constructor getCtor(Class[] args) {
 		ctors:
 		for (int i = 0; i < allArgs.length; i++) {
@@ -58,10 +61,16 @@ class Ctors {
 		return null;
 	}
 
+	/**
+	 * Returns ctor count;
+	 */
 	int getCount() {
 		return allCtors.length;
 	}
 
+	/**
+	 * Returns all ctors.
+	 */
 	Constructor[] getAllCtors() {
 		return allCtors;
 	}

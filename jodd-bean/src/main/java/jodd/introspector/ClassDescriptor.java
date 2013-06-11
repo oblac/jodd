@@ -409,8 +409,6 @@ public class ClassDescriptor {
 				ReflectUtil.forceAccess(ctor);
 			}
 		}
-		publicCtors.lock();
-		allCtors.lock();
 
 		this.publicCtors = publicCtors;
 		this.allCtors = allCtors;
