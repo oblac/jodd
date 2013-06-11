@@ -12,6 +12,7 @@ General Tasks:
 	- Check FileUtil.move/copy dir/file variants @next @v3.4.5
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
+	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @next
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
