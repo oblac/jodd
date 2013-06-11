@@ -60,6 +60,8 @@ class Methods {
 
 	/**
 	 * Returns single method with given name, if one and only one such method exists.
+	 * Returns <code>null</code> if no method exist in this collection by given name.
+	 * @see #getMethodDescriptor(String)
 	 */
 	Method getMethod(String name) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
@@ -70,6 +72,22 @@ class Methods {
 			throw new IllegalArgumentException("Method name not unique: " + name);
 		}
 		return methodDescriptors[0].getMethod();
+	}
+
+	/**
+	 * Returns method descriptor for given name.
+	 * Returns <code>null</code> if no method exist in this collection by given name.
+	 * @see #getMethod(String)
+	 */
+	MethodDescriptor getMethodDescriptor(String name) {
+		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
+		if (methodDescriptors == null) {
+			return null;
+		}
+		if (methodDescriptors.length != 1) {
+			throw new IllegalArgumentException("Method name not unique: " + name);
+		}
+		return methodDescriptors[0];
 	}
 
 	/**
@@ -108,9 +126,12 @@ class Methods {
 		return allMethods;
 	}
 
-	// todo!
-	void removeAllMethodsForName(String name) {
+	/**
+	 * Remove all methods for given name.
+	 */
+	void removeMethods(String name) {
 		methodsMap.remove(name);
+
 		// clear cache
 		allMethods = null;
 	}

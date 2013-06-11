@@ -4,6 +4,7 @@ package jodd.bean;
 
 import jodd.JoddBean;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
@@ -44,13 +45,16 @@ class BeanUtilUtil {
 	 * Invokes <code>setXxx()</code> method with appropriate conversion if available.
 	 * It is assumed that all provided arguments are valid.
 	 */
-	protected void invokeSetter(Object bean, Method m, Object value) {
+	protected void invokeSetter(Object bean, MethodDescriptor md, Object value) {
 		try {
-			Class[] paramTypes = m.getParameterTypes();
+			Class[] paramTypes = md.getRawParameterTypes();
+
 			value = convertType(value, paramTypes[0]);
-			m.invoke(bean, value);
+
+			md.getMethod().invoke(bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to invoke setter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
+			throw new BeanException("Unable to invoke setter: " +
+					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
 		}
 	}
 
@@ -62,7 +66,8 @@ class BeanUtilUtil {
 		try {
 			return m.invoke(bean);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to invoke getter: " + bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
+			throw new BeanException("Unable to invoke getter: " +
+					bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
 		}
 	}
 
@@ -77,7 +82,8 @@ class BeanUtilUtil {
 
 			fd.getField().set(bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to set field: " + bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
+			throw new BeanException("Unable to set field: " +
+					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
 		}
 	}
 
@@ -88,7 +94,8 @@ class BeanUtilUtil {
 		try {
 			return fd.getField().get(bean);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to get field " + bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
+			throw new BeanException("Unable to get field " +
+					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
 		}
 	}
 
@@ -133,7 +140,7 @@ class BeanUtilUtil {
 		if (index >= len) {
 			Object newArray = Array.newInstance(componentType, index + 1);
 			System.arraycopy(array, 0, newArray, 0, len);
-			Method setter = bp.cd.getBeanSetter(bp.name, true);
+			MethodDescriptor setter = bp.cd.getBeanSetterMethodDescriptor(bp.name, true);
 			if (setter != null) {
 				invokeSetter(bp.bean, setter, newArray);
 			} else {
@@ -227,11 +234,11 @@ class BeanUtilUtil {
 	 * It uses default constructor!
 	 */
 	protected Object createBeanProperty(BeanProperty bp) {
-		Method setter = bp.cd.getBeanSetter(bp.name, true);
+		MethodDescriptor setter = bp.cd.getBeanSetterMethodDescriptor(bp.name, true);
 		FieldDescriptor field = null;
 		Class type;
 		if (setter != null) {
-			type = setter.getParameterTypes()[0];
+			type = setter.getRawParameterTypes()[0];
 		} else {
 			field = getField(bp, true);
 			if (field == null) {
@@ -243,7 +250,7 @@ class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to create '" + bp.name + "' property.", bp, ex);
+			throw new BeanException("Unable to create property: " + bp.name, bp, ex);
 		}
 		if (setter != null) {
 			invokeSetter(bp.bean, setter, newInstance);
@@ -258,7 +265,7 @@ class BeanUtilUtil {
 	/**
 	 * Extracts generic parameter types. 
 	 */
-	protected Class extracticGenericType(BeanProperty bp, int index) {
+	protected Class extractGenericType(BeanProperty bp, int index) {
 		Type type;
 		if (bp.field != null) {
 			type = bp.field.getField().getGenericType();

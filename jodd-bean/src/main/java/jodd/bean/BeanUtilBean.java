@@ -4,11 +4,11 @@ package jodd.bean;
 
 import jodd.JoddBean;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +166,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	protected void setSimpleProperty(BeanProperty bp, Object value, boolean declared) {
 
 		// try: setProperty(value)
-		Method method = bp.cd.getBeanSetter(bp.name, declared);
+		MethodDescriptor method = bp.cd.getBeanSetterMethodDescriptor(bp.name, declared);
 		if (method != null) {
 			invokeSetter(bp.bean, method, value);
 			return;
@@ -275,7 +275,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			}
 			Object value = list.get(index);
 			if (value == null) {
-				Class listType = extracticGenericType(bp, 0);
+				Class listType = extractGenericType(bp, 0);
 				if (listType == null) {
 					listType = Map.class;
 				}
@@ -299,7 +299,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			Object value = map.get(indexString);
 			if (bp.last == false) {
 				if (value == null) {
-					Class mapType = extracticGenericType(bp, 1);
+					Class mapType = extractGenericType(bp, 1);
 					if (mapType == null) {
 						mapType = Map.class;
 					}
@@ -354,7 +354,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		if (nextBean instanceof List) {
 			int index = parseInt(indexString, bp);
-			Class listType = extracticGenericType(bp, 0);
+			Class listType = extractGenericType(bp, 0);
 			if (listType != null) {
 				value = convertType(value, listType);
 			}
@@ -367,7 +367,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 		if (nextBean instanceof Map) {
 			Map map = ((Map) nextBean);
-			Class mapType = extracticGenericType(bp, 1);
+			Class mapType = extractGenericType(bp, 1);
 			if (mapType != null) {
 				value = convertType(value, mapType);
 			}

@@ -37,7 +37,7 @@ class Properties {
 				if (
 						existingMethodName.startsWith(METHOD_GET_PREFIX) &&
 						methodName.startsWith(METHOD_IS_PREFIX)) {
-					getters.removeAllMethodsForName(name);	// remove getter to use ister instead of it
+					getters.removeMethods(name);	// remove getter to use ister instead of it
 					getterNameList.remove(name);
 				} else if (
 						existingMethodName.startsWith(METHOD_IS_PREFIX) &&
