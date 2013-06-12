@@ -939,16 +939,17 @@ public class ReflectUtil {
 		}
 		if (type instanceof TypeVariable) {
 			TypeVariable<?> varType = (TypeVariable<?>) type;
-			if (implClass == null) {
-				Type[] boundsTypes = varType.getBounds();
-				if (boundsTypes.length == 0) {
-					return Object.class;
-				}
-				return getRawType(boundsTypes[0], implClass);
-			} else {
+			if (implClass != null) {
 				Type resolvedType = resolveVariable(varType, implClass);
-				return getRawType(resolvedType, null);
+				if (resolvedType != null) {
+					return getRawType(resolvedType, null);
+				}
 			}
+			Type[] boundsTypes = varType.getBounds();
+			if (boundsTypes.length == 0) {
+				return Object.class;
+			}
+			return getRawType(boundsTypes[0], implClass);
 		}
 		return null;
 	}

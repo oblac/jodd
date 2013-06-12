@@ -695,24 +695,44 @@ public class ReflectUtilTest {
 				result);
 	}
 
-	public static class MethodParameterType {
-		<T extends List<T>> void m(String p1, T p2, List<?> p3, List<T> p4) { }
+	public static class MethodParameterType<A> {
+		<T extends List<T>> void m(A a, String p1, T p2, List<?> p3, List<T> p4) { }
 	}
+
+	public static class Mimple extends MethodParameterType<Long>{}
 
 	@Test
 	public void testMethodParameterTypeToString() {
 		String result = "";
-		for (Method method : MethodParameterType.class.getDeclaredMethods()) {
-			for (Type type : method.getGenericParameterTypes()) {
-				result += method.getName() + " - " + ReflectUtil.typeToString(type) + '\n';
+		Method method = null;
+		for (Method m : MethodParameterType.class.getDeclaredMethods()) {
+			for (Type type : m.getGenericParameterTypes()) {
+				result += m.getName() + " - " + ReflectUtil.typeToString(type) + '\n';
 			}
+			method = m;
 		}
 
 		assertEquals(
+				"m - A extends java.lang.Object\n" +
 				"m - java.lang.String\n" +
 				"m - T extends java.util.List<T>\n" +
 				"m - java.util.List<? extends java.lang.Object>\n" +
 				"m - java.util.List<T extends java.util.List<T>>\n",
 				result);
+
+
+		Type[] types = method.getGenericParameterTypes();
+		assertEquals(Object.class, ReflectUtil.getRawType(types[0], MethodParameterType.class));
+		assertEquals(String.class, ReflectUtil.getRawType(types[1], MethodParameterType.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[2], MethodParameterType.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[3], MethodParameterType.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[4], MethodParameterType.class));
+
+		// same methods, using different impl class
+		assertEquals(Long.class, ReflectUtil.getRawType(types[0], Mimple.class));		// change!
+		assertEquals(String.class, ReflectUtil.getRawType(types[1], Mimple.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[2], Mimple.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[3], Mimple.class));
+		assertEquals(List.class, ReflectUtil.getRawType(types[4], Mimple.class));
 	}
 }
