@@ -248,6 +248,16 @@ public class ClassDescriptor {
 	}
 
 	/**
+	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
+	 */
+	public MethodDescriptor getMethodDescriptor(String name, Class[] params, boolean declared) {
+		inspectMethods();
+
+		Methods methods = declared ? allMethods : publicMethods;
+		return methods.getMethodDescriptor(name, params);
+	}
+
+	/**
 	 * Returns an array of all methods with the same name.
 	 */
 	public Method[] getAllMethods(String name, boolean declared) {

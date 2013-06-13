@@ -51,6 +51,14 @@ class Methods {
 	 * Returns a method that matches given name and parameter types.
 	 */
 	Method getMethod(String name, Class[] paramTypes) {
+		MethodDescriptor methodDescriptor = getMethodDescriptor(name, paramTypes);
+		if (methodDescriptor == null) {
+			return null;
+		}
+		return methodDescriptor.getMethod();
+	}
+
+	MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
@@ -58,7 +66,7 @@ class Methods {
 		for (int i = 0; i < methodDescriptors.length; i++) {
 			Method m = methodDescriptors[i].getMethod();
 			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes) == true) {
-				return methodDescriptors[i].getMethod();
+				return methodDescriptors[i];
 			}
 		}
 		return null;
@@ -70,14 +78,11 @@ class Methods {
 	 * @see #getMethodDescriptor(String)
 	 */
 	Method getMethod(String name) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
-		if (methodDescriptors == null) {
+		MethodDescriptor methodDescriptor = getMethodDescriptor(name);
+		if (methodDescriptor == null) {
 			return null;
 		}
-		if (methodDescriptors.length != 1) {
-			throw new IllegalArgumentException("Method name not unique: " + name);
-		}
-		return methodDescriptors[0].getMethod();
+		return methodDescriptor.getMethod();
 	}
 
 	/**
