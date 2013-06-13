@@ -9,7 +9,7 @@ import static jodd.asm4.Opcodes.ALOAD;
 import static jodd.asm4.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
-import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
+import static jodd.JoddProxetta.initMethodName;
 import jodd.asm.EmptyMethodVisitor;
 
 /**
@@ -55,7 +55,7 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 
 		// invoke advice ctors
 		methodVisitor.visitVarInsn(ALOAD, 0);
-		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, INIT_METHOD_NAME, DESC_VOID);
+		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, initMethodName, DESC_VOID);
 		methodVisitor.visitInsn(RETURN);
 		methodVisitor.visitMaxs(0, 0);
 		methodVisitor.visitEnd();

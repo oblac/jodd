@@ -16,7 +16,7 @@ import static jodd.asm4.Opcodes.INVOKESTATIC;
 import static jodd.asm4.Opcodes.RETURN;
 import static jodd.asm4.Opcodes.ALOAD;
 import static jodd.asm4.Opcodes.INVOKESPECIAL;
-import static jodd.proxetta.asm.ProxettaNaming.INIT_METHOD_NAME;
+import static jodd.JoddProxetta.initMethodName;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
@@ -172,7 +172,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * This created init method is called from each destination's constructor.
 	 */
 	protected void makeProxyConstructor() {
-		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, INIT_METHOD_NAME, DESC_VOID, null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, initMethodName, DESC_VOID, null, null);
 		mv.visitCode();
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {

@@ -4,17 +4,20 @@ package jodd.proxetta;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.io.FileUtil;
 import jodd.mutable.MutableBoolean;
 import jodd.proxetta.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.SystemUtil;
 import org.junit.Test;
 import jodd.asm4.Type;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -104,11 +107,13 @@ public class BigClassTest {
 		});
 
 		byte[] classBytes = ProxyProxetta.withAspects(aspect).builder(BigFatJoe.class).create();
-		//FileUtil.writeBytes("d://joe.class", classBytes);
+		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
+		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
+		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);
 		Class clazz = ClassLoaderUtil.defineClass(null, classBytes);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
-		assertEquals(BigFatJoe.class.getName() + "$Proxetta", bigFatJoe.getClass().getName());
+		assertEquals(BigFatJoe.class.getName() + "$$Proxetta", bigFatJoe.getClass().getName());
 
 		// test invocation
 
@@ -116,13 +121,12 @@ public class BigClassTest {
 		bigFatJoe.publicMethod();
 		assertEquals(4, StatCounter.counter);
 		bigFatJoe.callInnerMethods();
-		assertEquals(7, StatCounter.counter);        // private method is not overriden
+		assertEquals(7, StatCounter.counter);        // private method is not overridden
 
 		bigFatJoe.superPublicMethod();
 		assertEquals(8, StatCounter.counter);
 		bigFatJoe.callInnerMethods2();
-		assertEquals(9, StatCounter.counter);        // only public super methods are overriden
-
+		assertEquals(9, StatCounter.counter);        // only public super methods are overridden
 
 		// test class annotation
 		MadvocAction ma = (MadvocAction) clazz.getAnnotation(MadvocAction.class);

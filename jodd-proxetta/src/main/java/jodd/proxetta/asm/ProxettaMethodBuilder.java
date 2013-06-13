@@ -24,7 +24,7 @@ import static jodd.asm4.Opcodes.ALOAD;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.proxetta.asm.ProxettaNaming.EXECUTE_METHOD_NAME;
+import static jodd.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
@@ -147,7 +147,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-				if (name.equals(EXECUTE_METHOD_NAME) == false) {
+				if (name.equals(executeMethodName) == false) {
 					return null;
 				}
 

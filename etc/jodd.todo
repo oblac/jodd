@@ -1,6 +1,6 @@
 General Tasks:
 	- Replace for-each loop with index loop, as it takes less space @tbd
-	- Add smart download in NetUtil.
+	- Add smart download in NetUtil
 	- migrate to gradle v1.6 @next @v3.4.5
 		Check if we can drop jacoco code in favor of 1.6 plugin
 	- add efficient text searches
@@ -12,7 +12,9 @@ General Tasks:
 	- Check FileUtil.move/copy dir/file variants @next @v3.4.5
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
+BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @next
+	- Use new raw type info in BeanUtil @v3.4.5 @next
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
@@ -44,9 +46,16 @@ Proxetta:
 	- Add proxy detection and return super class. @soon
 		Since naming convention can be changed, maybe we can add public static field in every proxy that contains this information.
 	- Add statistics: number of proxified methods etc.
+	- Add wrapper that wraps the instance of the same class, but loaded with different classloader @next
+		So you don't have to use reflection manually!
+	- Moved PetiteNaming to JoddPetite @done @v3.4.5
+	- Use $$ as divider @done @v3.4.5
+	- Add AOP detector for all various Proxetta types @next @v3.4.5
+	- Comment out non used methods @next @v3.4.5
+	- Remove signatures from proxy code @next @v3.4.5
 DbOom:
 	- LoadById, load values into existing instance
-	- Generic finder method. Try to detect method arguments using MethRef. @next @v3.4.5
+	- Generic finder method. Try to detect method arguments using MethRef? @next @v3.4.5
 	- Add batch update
 	- Introduce #execute() interceptors? @tbd
 MethRef:
@@ -57,3 +66,4 @@ Joy:
 	- Don't encode text tags in resource bundles
 	- Pager, do sort @review
 	- AppCore, add optional scanning so to allow manual registration @next
+	- Update gradle example in quickstarts @soon

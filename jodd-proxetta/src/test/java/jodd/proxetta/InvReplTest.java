@@ -3,7 +3,7 @@
 package jodd.proxetta;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.proxetta.asm.ProxettaNaming;
+import jodd.JoddProxetta;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.inv.*;
 import jodd.util.ClassLoaderUtil;
@@ -31,7 +31,7 @@ public class InvReplTest {
 //		PrintStream out = System.out;
 		System.setOut(new PrintStream(fbaos));
 
-		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(ProxettaNaming.INVOKE_PROXY_CLASS_NAME_SUFFIX).toString(), klazz).newInstance();
+		One one = (One) ClassLoaderUtil.defineClass((new StringBuilder()).append(className).append(JoddProxetta.invokeProxyClassNameSuffix).toString(), klazz).newInstance();
 		assertEquals("one ctor!one ctor!", fbaos.toString());    // clone ctor calls super ctor,
 		fbaos.reset();
 
@@ -40,14 +40,14 @@ public class InvReplTest {
 		fbaos.reset();
 
 		one.example2();
-		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$Clonetou!15013static: 4", fbaos.toString());
+		assertEquals("REPLACED STATIC! one * jodd/proxetta/inv/Two * example2 * void example2() * jodd.proxetta.inv.One * jodd.proxetta.inv.One$$Clonetou!15013static: 4", fbaos.toString());
 		fbaos.reset();
 
 		one.example3();
 		assertEquals("state = REPLACED ctor!", fbaos.toString());
 		fbaos.reset();
 
-		assertEquals("jodd.proxetta.inv.One$Clonetou", one.getClass().getName());
+		assertEquals("jodd.proxetta.inv.One$$Clonetou", one.getClass().getName());
 		assertTrue(one instanceof Serializable);
 
 		Annotation[] anns = one.getClass().getAnnotations();

@@ -4,7 +4,7 @@ package jodd.joy.i18n;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.proxetta.asm.ProxettaNaming;
+import jodd.JoddProxetta;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +29,8 @@ public class I18nInterceptor extends ActionInterceptor {
 	protected String getActionClassName(Object action) {
 		Class clazz = action.getClass();
 		String name = clazz.getName();
-		if (name.endsWith(ProxettaNaming.PROXY_CLASS_NAME_SUFFIX)) {
+		// todo add util for proxy target detecion!
+		if (name.endsWith(JoddProxetta.proxyClassNameSuffix)) {
 			clazz = clazz.getSuperclass();
 			name = clazz.getName();
 		}

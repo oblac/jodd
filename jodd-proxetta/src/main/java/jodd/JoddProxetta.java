@@ -6,4 +6,61 @@ package jodd;
  * Jodd PROXETTA module.
  */
 public class JoddProxetta {
+
+	// ---------------------------------------------------------------- constants
+
+	/**
+	 * {@link jodd.proxetta.ProxyAdvice#execute()}
+	 */
+	public static String executeMethodName = "execute";
+
+
+	// ---------------------------------------------------------------- settings
+
+	/**
+	 * Proxy class name suffix.
+	 */
+	public static String proxyClassNameSuffix = "$$Proxetta";
+
+	/**
+	 * Invoke proxy class name suffix.
+	 */
+	public static String invokeProxyClassNameSuffix = "$$Clonetou";
+
+	/**
+	 * Wrapper class name suffix.
+	 */
+	public static String wrapperClassNameSuffix = "$$Wraporetto";
+
+	/**
+	 * Prefix for advice method names.
+	 */
+	public static String methodPrefix = "$__";
+
+	/**
+	 * Divider for method names.
+	 */
+	public static String methodDivider = "$";
+
+
+	/**
+	 * Method name for advice 'clinit' methods.
+	 */
+	public static String clinitMethodName = "$clinit";
+
+	/**
+	 * Method name for advice default constructor ('init') methods.
+	 */
+	public static String initMethodName = "$init";
+
+	/**
+	 * Prefix for advice field names.
+	 */
+	public static String fieldPrefix = "$__";
+
+	/**
+	 * Divider for field names.
+	 */
+	public static String fieldDivider = "$";
+
 }

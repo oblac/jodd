@@ -2,9 +2,9 @@
 
 package jodd.proxetta.impl;
 
+import jodd.JoddProxetta;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ProxettaNaming;
 
 /**
  * Proxetta that creates wrappers.
@@ -15,7 +15,7 @@ public class WrapperProxetta extends Proxetta {
 
 	public WrapperProxetta(ProxyAspect... aspects) {
 		this.aspects = aspects;
-		classNameSuffix = ProxettaNaming.WRAPPER_CLASS_NAME_SUFFIX;
+		classNameSuffix = JoddProxetta.wrapperClassNameSuffix;
 	}
 
 	public static WrapperProxetta withAspects(ProxyAspect... aspects) {

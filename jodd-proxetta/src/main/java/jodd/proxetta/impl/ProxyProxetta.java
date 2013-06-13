@@ -2,9 +2,9 @@
 
 package jodd.proxetta.impl;
 
+import jodd.JoddProxetta;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
-import jodd.proxetta.asm.ProxettaNaming;
 
 /**
  * Proxetta that creates proxies.
@@ -15,7 +15,7 @@ public class ProxyProxetta extends Proxetta {
 
 	public ProxyProxetta(ProxyAspect... aspects) {
 		this.aspects = aspects;
-		classNameSuffix = ProxettaNaming.PROXY_CLASS_NAME_SUFFIX;
+		classNameSuffix = JoddProxetta.proxyClassNameSuffix;
 	}
 
 	/**

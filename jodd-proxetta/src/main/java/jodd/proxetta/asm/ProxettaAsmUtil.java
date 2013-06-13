@@ -10,7 +10,7 @@ import jodd.asm4.Type;
 import static jodd.asm4.Opcodes.*;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
-import static jodd.proxetta.asm.ProxettaNaming.*;
+import static jodd.JoddProxetta.*;
 import jodd.util.StringPool;
 import static jodd.util.StringPool.COLON;
 
@@ -59,14 +59,14 @@ public class ProxettaAsmUtil {
 	 * Builds advice field name.
 	 */
 	public static String adviceFieldName(String name, int index) {
-		return FIELD_PREFIX + name + FIELD_DIVIDER + index;
+		return fieldPrefix + name + fieldDivider + index;
 	}
 
 	/**
 	 * Builds advice method name.
 	 */
 	public static String adviceMethodName(String name, int index) {
-		return METHOD_PREFIX + name + METHOD_DIVIDER + index;
+		return methodPrefix + name + methodDivider + index;
 	}
 
 
