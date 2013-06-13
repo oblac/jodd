@@ -51,8 +51,7 @@ Proxetta:
 	- Moved PetiteNaming to JoddPetite @done @v3.4.5
 	- Use $$ as divider @done @v3.4.5
 	- Add AOP detector for all various Proxetta types @next @v3.4.5
-	- Comment out non used methods @next @v3.4.5
-	- Remove signatures from proxy code @next @v3.4.5
+	- Remove and fix raw signatures from proxy code @done @v3.4.5
 DbOom:
 	- LoadById, load values into existing instance
 	- Generic finder method. Try to detect method arguments using MethRef? @next @v3.4.5

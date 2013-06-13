@@ -9,7 +9,8 @@ package jodd.proxetta;
 public interface MethodInfo {
 
 	/**
-	 * Returns java-like method arguments declaration.
+	 * Returns full java-like method arguments declaration.
+	 * @see #getSignature()
 	 */
 	String getDeclaration();
 
@@ -20,12 +21,22 @@ public interface MethodInfo {
 
 	String getReturnTypeName();
 
+	/**
+	 * Returns list of exceptions.
+	 */
 	String getExceptions();
 
 	/**
-	 * Returns java-like method signature.
+	 * Returns java-like method signature of @{link #getDescription description}.
+	 * Does not contain any generic information.
 	 */
 	String getSignature();
+
+	/**
+	 * Returns raw bytecode signature or <code>null</code> if not present.
+	 * @see #getDescription()
+	 */
+	public String getRawSignature();
 
 	/**
 	 * Returns method name.
@@ -54,6 +65,8 @@ public interface MethodInfo {
 
 	/**
 	 * Returns bytecode-like method description.
+	 * @see #getSignature()
+	 * @see #getRawSignature()
 	 */
 	String getDescription();
 

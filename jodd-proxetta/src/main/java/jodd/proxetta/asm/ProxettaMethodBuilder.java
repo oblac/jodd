@@ -105,7 +105,8 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 		access &= ~ACC_NATIVE;
 		access &= ~ACC_ABSTRACT;
 
-		methodVisitor = wd.dest.visitMethod(access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getSignature(), null);
+		methodVisitor = wd.dest.visitMethod(
+				access, tmd.msign.getMethodName(), tmd.msign.getDescription(), tmd.msign.getRawSignature(), null);
 	}
 
 	/**

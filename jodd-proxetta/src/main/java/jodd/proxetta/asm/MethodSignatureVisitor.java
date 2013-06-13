@@ -34,6 +34,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected StringBuilder returnTypeName;
 	protected String classname;
 	protected String description;
+	protected String rawSignature;
 	protected AnnotationInfo[] annotations;
 
 	protected boolean visitingArgument;
@@ -48,21 +49,21 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	// ---------------------------------------------------------------- ctors
 
-	public MethodSignatureVisitor(String description) {
+/*	public MethodSignatureVisitor(String description) {
 		this();
 		this.description = description;
 	}
-
-	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, ClassInfo targetClassInfo) {
+*/
+	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String signature, ClassInfo targetClassInfo) {
 		this();
-		isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
+		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.methodName = methodName;
 		this.access = access;
 		this.classname = classname;
 		this.description = description;
 		this.targetClassInfo = targetClassInfo;
+		this.rawSignature = signature;
 	}
-
 
 	private MethodSignatureVisitor() {
         super(new StringBuffer());
@@ -171,6 +172,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			methodDeclaration.append(" throws ").append(genericExceptions);
 		}
 		return methodDeclaration.toString();
+	}
+
+	public String getRawSignature() {
+		return rawSignature;
 	}
 
 	public String getMethodName() {

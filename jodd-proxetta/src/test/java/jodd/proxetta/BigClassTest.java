@@ -101,15 +101,15 @@ public class BigClassTest {
 					assertEquals(Transaction.class.getName(), ai.getAnnotationClassname());
 					assertEquals(0, ai.getElementNames().size());
 				}
-				System.out.println(!isRootMethod(mi) + " " + mi.getDeclaredClassName() + '#' + mi.getMethodName());
+				//System.out.println(!isRootMethod(mi) + " " + mi.getDeclaredClassName() + '#' + mi.getMethodName());
 				return !isRootMethod(mi);
 			}
 		});
 
 		byte[] classBytes = ProxyProxetta.withAspects(aspect).builder(BigFatJoe.class).create();
-		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
-		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
-		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);
+//		URL resource = BigFatJoe.class.getResource("/" + BigFatJoe.class.getName().replace(".", "/") + ".class");
+//		jodd.io.FileUtil.copy(FileUtil.toFile(resource), new java.io.File(SystemUtil.getUserHome(), "jo.class"));
+//		jodd.io.FileUtil.writeBytes(new java.io.File(SystemUtil.getUserHome(), "joe.class"), classBytes);
 		Class clazz = ClassLoaderUtil.defineClass(null, classBytes);
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 

@@ -154,7 +154,8 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		access &= ~ACC_ABSTRACT;
 		access &= ~ACC_NATIVE;
 
-		MethodVisitor mv = wd.dest.visitMethod(access, msign.getMethodName(), msign.getDescription(), msign.getSignature(), msign.getExceptionsArray());
+		MethodVisitor mv = wd.dest.visitMethod(
+				access, msign.getMethodName(), msign.getDescription(), msign.getRawSignature(), msign.getExceptionsArray());
 		mv.visitCode();
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
