@@ -17,7 +17,6 @@ import jodd.asm4.Type;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -114,6 +113,7 @@ public class BigClassTest {
 		BigFatJoe bigFatJoe = (BigFatJoe) clazz.newInstance();
 
 		assertEquals(BigFatJoe.class.getName() + "$$Proxetta", bigFatJoe.getClass().getName());
+		assertEquals(BigFatJoe.class, ProxettaUtil.getTargetClass(bigFatJoe.getClass()));
 
 		// test invocation
 

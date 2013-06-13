@@ -194,7 +194,6 @@ public class DbSqlTemplateTest {
 		st = sql("$T{b b} | $C{b.[  name  ]} | $C{b.[  id ,	name    ]}").use("b", Boy.class);
 		assertEquals("BOY b | b.NAME | b.ID, b.NAME", st.generateQuery());
 		
-		//TODO:
 		st = sql("$T{b b} | $C{b.[id,name]} | $C{b.[name,id]}").use("b", Boy.class);
 		assertEquals("BOY b | b.ID, b.NAME | b.ID, b.NAME", st.generateQuery());
 		

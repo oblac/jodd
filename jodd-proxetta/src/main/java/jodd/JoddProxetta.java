@@ -7,15 +7,10 @@ package jodd;
  */
 public class JoddProxetta {
 
-	// ---------------------------------------------------------------- constants
-
 	/**
 	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */
 	public static String executeMethodName = "execute";
-
-
-	// ---------------------------------------------------------------- settings
 
 	/**
 	 * Proxy class name suffix.
@@ -42,7 +37,6 @@ public class JoddProxetta {
 	 */
 	public static String methodDivider = "$";
 
-
 	/**
 	 * Method name for advice 'clinit' methods.
 	 */
@@ -62,5 +56,10 @@ public class JoddProxetta {
 	 * Divider for field names.
 	 */
 	public static String fieldDivider = "$";
+
+	/**
+	 * Wrapper target field name.
+	 */
+	public static String wrapperTargetFieldName = "_target";
 
 }

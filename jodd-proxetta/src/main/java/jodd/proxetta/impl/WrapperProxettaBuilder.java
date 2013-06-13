@@ -2,14 +2,14 @@
 
 package jodd.proxetta.impl;
 
+import jodd.JoddProxetta;
 import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxettaUtil;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
 import jodd.asm4.ClassReader;
-
-import java.lang.reflect.Field;
 
 /**
  * Creates wrapper using ASM library.
@@ -25,7 +25,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 
 	protected Class targetClassOrInterface;
 	protected Class targetInterface;
-	protected String targetFieldName = "_target";
+	protected String targetFieldName = JoddProxetta.wrapperTargetFieldName;
 
 	/**
 	 * Defines class or interface to wrap.
@@ -49,7 +49,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	}
 
 	/**
-	 * Defines target field name.
+	 * Defines custom target field name.
 	 */
 	public void setTargetFieldName(String targetFieldName) {
 		this.targetFieldName = targetFieldName;
@@ -81,13 +81,7 @@ public class WrapperProxettaBuilder extends ProxettaBuilder {
 	 * Injects target into wrapper.
 	 */
 	public void injectTargetIntoWrapper(Object target, Object wrapper) {
-		try {
-			Field field = wrapper.getClass().getField(targetFieldName);
-			field.setAccessible(true);
-			field.set(wrapper, target);
-		} catch (Exception ex) {
-			throw new ProxettaException(ex);
-		}
+		ProxettaUtil.injectTargetIntoWrapper(target, wrapper, targetFieldName);
 	}
 
 }
