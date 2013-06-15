@@ -10,8 +10,6 @@ import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -62,12 +60,12 @@ class BeanUtilUtil {
 	 * Invokes <code>getXxx()</code> method of specified bean.
 	 * It is assumed that all provided arguments are valid.
 	 */
-	protected Object invokeGetter(Object bean, Method m) {
+	protected Object invokeGetter(Object bean, MethodDescriptor md) {
 		try {
-			return m.invoke(bean);
+			return md.getMethod().invoke(bean);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke getter: " +
-					bean.getClass().getSimpleName() + '#' + m.getName() + "()", ex);
+					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
 		}
 	}
 
@@ -263,18 +261,16 @@ class BeanUtilUtil {
 	// ---------------------------------------------------------------- generic and type
 
 	/**
-	 * Extracts generic parameter types. 
+	 * Extracts generic parameter types.
 	 */
-	protected Class extractGenericType(BeanProperty bp, int index) {
-		Type type;
+	protected Class extractGenericType(BeanProperty bp) {
 		if (bp.field != null) {
-			type = bp.field.getField().getGenericType();
-		} else if (bp.method != null) {
-			type = bp.method.getGenericReturnType();
-		} else {
-			return null;
+			return bp.field.getRawComponentType();
 		}
-		return ReflectUtil.getComponentType(type, index);
+		if (bp.method != null) {
+			return bp.method.getRawReturnComponentType();
+		}
+		return null;
 	}
 
 	/**
@@ -295,13 +291,13 @@ class BeanUtilUtil {
 			}
 		} else if (bp.method != null) {
 			if (bp.index != null) {
-				type = ReflectUtil.getComponentType(bp.method.getGenericReturnType());
+				type = ReflectUtil.getComponentType(bp.method.getMethod().getGenericReturnType());
 				if (type == null) {
 					return Object.class;
 				}
 			}
 			if (type == null) {
-				type = bp.method.getReturnType();
+				type = bp.method.getMethod().getReturnType();
 			}
 		}
 		return type;

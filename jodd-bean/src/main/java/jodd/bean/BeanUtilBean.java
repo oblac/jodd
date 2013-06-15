@@ -72,7 +72,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetter(bp.name, declared);
+		bp.method = bp.cd.getBeanGetterMethodDescriptor(bp.name, declared);
 		if (bp.method != null) {
 			return true;
 		}
@@ -117,7 +117,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetter(bp.name, declared);
+		bp.method = bp.cd.getBeanGetterMethodDescriptor(bp.name, declared);
 		if (bp.method != null) {
 			Object result = invokeGetter(bp.bean, bp.method);
 			if ((result == null) && (bp.forced == true)) {
@@ -192,6 +192,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	// ---------------------------------------------------------------- indexed property
 
+	/**
+	 * Returns <code>true</code> if bean has indexed property.
+	 */
 	public boolean hasIndexProperty(Object bean, String property, boolean declared) {
 		return hasIndexProperty(new BeanProperty(bean, property, false), declared);
 	}
@@ -275,12 +278,13 @@ public class BeanUtilBean extends BeanUtilUtil {
 			}
 			Object value = list.get(index);
 			if (value == null) {
-				Class listType = extractGenericType(bp, 0);
-				if (listType == null) {
-					listType = Map.class;
+				Class listComponentType = extractGenericType(bp);
+				if (listComponentType == null) {
+					// not an error: when component type is unknown, use Map as generic bean
+					listComponentType = Map.class;
 				}
 				try {
-					value = ReflectUtil.newInstance(listType);
+					value = ReflectUtil.newInstance(listComponentType);
 				} catch (Exception ex) {
 					throw new BeanException("Unable to create list element: " + bp.name + '[' + index + ']', bp, ex);
 				}
@@ -299,12 +303,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 			Object value = map.get(indexString);
 			if (bp.last == false) {
 				if (value == null) {
-					Class mapType = extractGenericType(bp, 1);
-					if (mapType == null) {
-						mapType = Map.class;
+					Class mapComponentType = extractGenericType(bp);
+					if (mapComponentType == null) {
+						mapComponentType = Map.class;
 					}
 					try {
-						value = ReflectUtil.newInstance(mapType);
+						value = ReflectUtil.newInstance(mapComponentType);
 					} catch (Exception ex) {
 						throw new BeanException("Unable to create map element: " + bp.name + '[' + indexString + ']', bp, ex);
 					}
@@ -317,7 +321,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// failed
-		throw new BeanException("Index property '" + bp.name + "' is not array, list or map.", bp);
+		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
 	}
 
 
@@ -341,6 +345,10 @@ public class BeanUtilBean extends BeanUtilUtil {
 		// try: getInner()
 		Object nextBean = getSimpleProperty(bp, declared);
 
+		if (nextBean == null) {
+			throw new BeanException("Index property is null:" + bp.name, bp);
+		}
+
 		// inner bean found
 		if (nextBean.getClass().isArray() == true) {
 			int index = parseInt(indexString, bp);
@@ -354,9 +362,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		if (nextBean instanceof List) {
 			int index = parseInt(indexString, bp);
-			Class listType = extractGenericType(bp, 0);
-			if (listType != null) {
-				value = convertType(value, listType);
+			Class listComponentType = extractGenericType(bp);
+			if (listComponentType != null) {
+				value = convertType(value, listComponentType);
 			}
 			List list = (List) nextBean;
 			if (bp.forced == true) {
@@ -367,14 +375,16 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 		if (nextBean instanceof Map) {
 			Map map = ((Map) nextBean);
-			Class mapType = extractGenericType(bp, 1);
-			if (mapType != null) {
-				value = convertType(value, mapType);
+			Class mapComponentType = extractGenericType(bp);
+			if (mapComponentType != null) {
+				value = convertType(value, mapComponentType);
 			}
 			map.put(indexString, value);
 			return;
 		}
-		throw new BeanException("Index property '" + bp.name + "' is not array, list or map.", bp);
+
+		// failed
+		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
 	}
 
 
@@ -539,6 +549,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	// ---------------------------------------------------------------- type
 
+	/**
+	 * Returns property type.
+	 */
 	public Class getPropertyType(Object bean, String name) {
 		BeanProperty beanProperty = new BeanProperty(bean, name, false);
 		if (resolveExistingNestedProperties(beanProperty) == false) {
@@ -548,6 +561,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		return extractType(beanProperty);
 	}
 
+	/**
+	 * Returns property type of declared property.
+	 */
 	public Class getDeclaredPropertyType(Object bean, String name) {
 		BeanProperty beanProperty = new BeanProperty(bean, name, false);
 		if (resolveExistingNestedProperties(beanProperty) == false) {

@@ -18,7 +18,7 @@ public class BeanException extends UncheckedException {
 	}
 
 	public BeanException(String message, BeanProperty bp) {
-		super(message + " Invalid property: " + bp);
+		super(message + ". Invalid property: " + bp);
 	}
 
 	public BeanException(String message, Throwable t) {
@@ -26,7 +26,7 @@ public class BeanException extends UncheckedException {
 	}
 
 	public BeanException(String message, BeanProperty bp, Throwable t) {
-		super(message + " Invalid property: " + bp, t);
+		super(message + ". Invalid property: " + bp, t);
 	}
 
 }

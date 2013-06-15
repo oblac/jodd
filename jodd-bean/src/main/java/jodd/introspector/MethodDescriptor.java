@@ -8,23 +8,27 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * Method descriptor.
+ * Method descriptor.  Holds additional method data,
+ * that might be specific to implementation class.
  */
 public class MethodDescriptor {
 
 	protected final Method method;
 	protected final Class[] rawParameterTypes;
 	protected final Class rawReturnType;
+	protected final Class rawReturnComponentType;
 
 	public MethodDescriptor(Method method, Class implClass) {
 		this.method = method;
-		this.rawReturnType = ReflectUtil.getRawType(method.getGenericReturnType(), implClass);
+		Type type = method.getGenericReturnType();
+		this.rawReturnType = ReflectUtil.getRawType(type, implClass);
+		this.rawReturnComponentType = ReflectUtil.getComponentType(type, implClass);
 
 		Type[] params = method.getGenericParameterTypes();
 		rawParameterTypes = new Class[params.length];
 
 		for (int i = 0; i < params.length; i++) {
-			Type type = params[i];
+			type = params[i];
 			rawParameterTypes[i] = ReflectUtil.getRawType(type, implClass);
 		}
 	}
@@ -41,6 +45,15 @@ public class MethodDescriptor {
 	 */
 	public Class getRawReturnType() {
 		return rawReturnType;
+	}
+
+	/**
+	 * Returns raw component type of return type.
+	 * May be <code>null</code> if return type does not have
+	 * components.
+	 */
+	public Class getRawReturnComponentType() {
+		return rawReturnComponentType;
 	}
 
 	/**

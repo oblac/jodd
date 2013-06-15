@@ -5,8 +5,7 @@ package jodd.bean;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.FieldDescriptor;
-
-import java.lang.reflect.Method;
+import jodd.introspector.MethodDescriptor;
 
 /**
  * Represents a bean named property. Contains two information:
@@ -51,7 +50,7 @@ class BeanProperty {
 
 	// ---------------------------------------------------------------- simple properties
 
-	Method method;
+	MethodDescriptor method;
 	FieldDescriptor field;
 	String index;
 	

@@ -375,6 +375,16 @@ public class ClassDescriptor {
 	}
 
 	/**
+	 * Returns {@link MethodDescriptor} for bean setter identified by name.
+	 */
+	public MethodDescriptor getBeanGetterMethodDescriptor(String name, boolean declared) {
+		inspectProperties();
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getGetters().getMethodDescriptor(name);
+	}
+
+	/**
 	 * Returns all bean getters.
 	 */
 	public Method[] getAllBeanGetters(boolean declared) {

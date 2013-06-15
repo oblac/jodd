@@ -30,6 +30,7 @@ public class BeanUtilGenericsTest {
 		public A f1;		// String
 		public B f2;		// Integer
 
+
 		public void setFoo1(A a) {
 			f1 = a;
 		}
