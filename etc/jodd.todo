@@ -13,8 +13,8 @@ General Tasks:
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
 BeanUtil:
-	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @next
-	- Use new raw type info in BeanUtil @v3.4.5 @next
+	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
+	- Use new raw type info in BeanUtil @v3.4.5 @done
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:

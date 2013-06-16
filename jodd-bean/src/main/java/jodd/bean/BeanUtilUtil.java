@@ -309,32 +309,23 @@ class BeanUtilUtil {
 
 	/**
 	 * Extracts type of current property.
-	 * todo fix this, too
 	 */
 	protected Class extractType(BeanProperty bp) {
-		Class<?> type = null;
 		if (bp.field != null) {
 			if (bp.index != null) {
-				type = ReflectUtil.getComponentType(bp.field.getField().getGenericType());
-				if (type == null) {
-					return Object.class;
-				}
+				Class type = bp.field.getRawComponentType();
+				return type == null ? Object.class : type;
 			}
-			if (type == null) {
-				type = bp.field.getField().getType();
-			}
-		} else if (bp.method != null) {
-			if (bp.index != null) {
-				type = ReflectUtil.getComponentType(bp.method.getMethod().getGenericReturnType());
-				if (type == null) {
-					return Object.class;
-				}
-			}
-			if (type == null) {
-				type = bp.method.getMethod().getReturnType();
-			}
+			return bp.field.getRawType();
 		}
-		return type;
+		if (bp.method != null) {
+			if (bp.index != null) {
+				Class type = bp.method.getRawReturnComponentType();
+				return type == null ? Object.class : type;
+			}
+			return bp.method.getRawReturnType();
+		}
+		return null;// this should not happens
 	}
 
 	// ---------------------------------------------------------------- field name
