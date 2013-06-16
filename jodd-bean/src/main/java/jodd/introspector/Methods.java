@@ -15,18 +15,23 @@ import java.util.List;
  */
 class Methods {
 
+	private final ClassDescriptor classDescriptor;
 	private final HashMap<String, MethodDescriptor[]> methodsMap;
 	private int count;
 
 	// cache
 	private Method[] allMethods;
 
-	Methods() {
-		methodsMap = new HashMap<String, MethodDescriptor[]>();
-		count = 0;
+	Methods(ClassDescriptor classDescriptor, int maxMethods) {
+		this.classDescriptor = classDescriptor;
+		if (maxMethods == 0) {
+			maxMethods = 16;
+		}
+		this.methodsMap = new HashMap<String, MethodDescriptor[]>(maxMethods);
+		this.count = 0;
 	}
 
-	void addMethod(String name, Method method, Class implClass) {
+	void addMethod(String name, Method method) {
 		MethodDescriptor[] mds = methodsMap.get(name);
 
 		if (mds == null) {
@@ -36,7 +41,7 @@ class Methods {
 		}
 		methodsMap.put(name, mds);
 
-		mds[mds.length - 1] = new MethodDescriptor(method, implClass);
+		mds[mds.length - 1] = new MethodDescriptor(classDescriptor, method);
 
 		// increment count
 		count++;

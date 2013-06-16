@@ -139,16 +139,18 @@ public class BeanUtilBean extends BeanUtilUtil {
 		// try: (Map) get("property")
 		if (bp.cd.isMap()) {
 			Map map = (Map) bp.bean;
-			if (map.containsKey(bp.name) == false) {
+			Object key = convertIndexToMapKey(bp.name, bp);
+
+			if (map.containsKey(key) == false) {
 				if (bp.forced == false) {
 					throw new BeanException("Map key not found: " + bp.name, bp);
 				}
 				Map value = new HashMap();
 				//noinspection unchecked
-				map.put(bp.name, value);
+				map.put(key, value);
 				return value;
 			}
-			return map.get(bp.name);
+			return map.get(key);
 		}
 
 		// failed
@@ -278,8 +280,8 @@ public class BeanUtilBean extends BeanUtilUtil {
 			}
 			Object value = list.get(index);
 			if (value == null) {
-				Class listComponentType = extractGenericType(bp);
-				if (listComponentType == null) {
+				Class listComponentType = extractGenericComponentType(bp);
+				if (listComponentType == Object.class) {
 					// not an error: when component type is unknown, use Map as generic bean
 					listComponentType = Map.class;
 				}
@@ -297,14 +299,16 @@ public class BeanUtilBean extends BeanUtilUtil {
 		// try: map.get('index')
 		if (resultBean instanceof Map) {
 			Map map = (Map) resultBean;
+			Object key = convertIndexToMapKey(indexString, bp);
+
 			if (bp.forced == false) {
-				return map.get(indexString);
+				return map.get(key);
 			}
-			Object value = map.get(indexString);
+			Object value = map.get(key);
 			if (bp.last == false) {
 				if (value == null) {
-					Class mapComponentType = extractGenericType(bp);
-					if (mapComponentType == null) {
+					Class mapComponentType = extractGenericComponentType(bp);
+					if (mapComponentType == Object.class) {
 						mapComponentType = Map.class;
 					}
 					try {
@@ -314,7 +318,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 					}
 
 					//noinspection unchecked
-					map.put(indexString, value);
+					map.put(key, value);
 				}
 			}
 			return value;
@@ -362,8 +366,8 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		if (nextBean instanceof List) {
 			int index = parseInt(indexString, bp);
-			Class listComponentType = extractGenericType(bp);
-			if (listComponentType != null) {
+			Class listComponentType = extractGenericComponentType(bp);
+			if (listComponentType != Object.class) {
 				value = convertType(value, listComponentType);
 			}
 			List list = (List) nextBean;
@@ -374,12 +378,14 @@ public class BeanUtilBean extends BeanUtilUtil {
 			return;
 		}
 		if (nextBean instanceof Map) {
-			Map map = ((Map) nextBean);
-			Class mapComponentType = extractGenericType(bp);
-			if (mapComponentType != null) {
+			Map map = (Map) nextBean;
+			Object key = convertIndexToMapKey(indexString, bp);
+
+			Class mapComponentType = extractGenericComponentType(bp);
+			if (mapComponentType != Object.class) {
 				value = convertType(value, mapComponentType);
 			}
-			map.put(indexString, value);
+			map.put(key, value);
 			return;
 		}
 

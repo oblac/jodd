@@ -53,7 +53,7 @@ class BeanProperty {
 	MethodDescriptor method;
 	FieldDescriptor field;
 	String index;
-	
+
 	// ---------------------------------------------------------------- toString
 
 	@Override

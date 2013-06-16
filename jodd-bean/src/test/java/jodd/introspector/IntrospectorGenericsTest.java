@@ -2,6 +2,7 @@
 
 package jodd.introspector;
 
+import jodd.datetime.JStopWatch;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 

@@ -10,18 +10,20 @@ import java.util.HashMap;
  */
 class Fields {
 
+	private final ClassDescriptor classDescriptor;
 	private final HashMap<String, FieldDescriptor> fieldsMap;
 
 	private int count;				// count
 	private Field[] allFields;		// cache
 
-	Fields(int maxFields) {
+	Fields(ClassDescriptor classDescriptor, int maxFields) {
+		this.classDescriptor = classDescriptor;
 		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
 		count = 0;
 	}
 
-	void addField(String name, Field field, Class implClass) {
-		fieldsMap.put(name, new FieldDescriptor(field, implClass));
+	void addField(String name, Field field) {
+		fieldsMap.put(name, new FieldDescriptor(classDescriptor, field));
 
 		// reset cache
 		allFields = null;

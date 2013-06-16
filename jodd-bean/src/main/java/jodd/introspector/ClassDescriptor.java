@@ -126,16 +126,16 @@ public class ClassDescriptor {
 
 		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
 
-		Fields publicFields = new Fields(fields.length);
-		Fields allFields = new Fields(fields.length);
+		Fields publicFields = new Fields(this, fields.length);
+		Fields allFields = new Fields(this, fields.length);
 
 		for (Field field : fields) {
 			String fName = field.getName();
 			if (ReflectUtil.isPublic(field)) {
-				publicFields.addField(fName, field, type);
+				publicFields.addField(fName, field);
 			}
 			ReflectUtil.forceAccess(field);
-			allFields.addField(fName, field, type);
+			allFields.addField(fName, field);
 		}
 
 		this.publicFields = publicFields;
@@ -197,17 +197,19 @@ public class ClassDescriptor {
 		if (allMethods != null) {
 			return;
 		}
-		Methods publicMethods = new Methods();
-		Methods allMethods = new Methods();
 
 		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+
+		Methods publicMethods = new Methods(this, methods.length);
+		Methods allMethods = new Methods(this, methods.length);
+
 		for (Method method : methods) {
 			String methodName = method.getName();
 			if (ReflectUtil.isPublic(method)) {
-				publicMethods.addMethod(methodName, method, type);
+				publicMethods.addMethod(methodName, method);
 			}
 			ReflectUtil.forceAccess(method);
-			allMethods.addMethod(methodName, method, type);
+			allMethods.addMethod(methodName, method);
 		}
 
 		this.allMethods = allMethods;
@@ -289,8 +291,8 @@ public class ClassDescriptor {
 		if (publicProperties != null) {
 			return;
 		}
-		Properties publicProperties = new Properties();
-		Properties allProperties = new Properties();
+		Properties publicProperties = new Properties(this);
+		Properties allProperties = new Properties(this);
 
 		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 		for (Method method : methods) {
@@ -313,10 +315,10 @@ public class ClassDescriptor {
 
 			if (add == true) {
 				if (ReflectUtil.isPublic(method)) {
-					publicProperties.addMethod(methodName, method, type);
+					publicProperties.addMethod(methodName, method);
 				}
 				ReflectUtil.forceAccess(method);
-				allProperties.addMethod(methodName, method, type);
+				allProperties.addMethod(methodName, method);
 			}
 		}
 
@@ -417,8 +419,8 @@ public class ClassDescriptor {
 		if (allCtors != null) {
 			return;
 		}
-		Ctors publicCtors = new Ctors();
-		Ctors allCtors = new Ctors();
+		Ctors publicCtors = new Ctors(this);
+		Ctors allCtors = new Ctors(this);
 
 		publicCtors.addCtors(type.getConstructors());
 		allCtors.addCtors(type.getDeclaredConstructors());

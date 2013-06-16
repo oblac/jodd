@@ -15,15 +15,21 @@ import static jodd.util.ReflectUtil.NO_PARAMETERS;
  */
 class Properties {
 
-	private Methods getters = new Methods();
+	private final Methods getters;
 	private String[] getterNames;
-	private Methods setters = new Methods();
+	private final Methods setters;
 	private String[] setterNames;
+
+	Properties(ClassDescriptor classDescriptor) {
+		this.getters = new Methods(classDescriptor, 0);
+		this.setters = new Methods(classDescriptor, 0);
+	}
 
 	/**
 	 * Adds getter or setter to collection.
 	 */
-	void addMethod(String name, Method method, Class implClass) {
+	void addMethod(String name, Method method) {
+
 		getterNames = null;
 		setterNames = null;
 
@@ -47,10 +53,10 @@ class Properties {
 				}
 			}
 
-			getters.addMethod(name, method, implClass);
+			getters.addMethod(name, method);
 		} else if (name.charAt(0) == '+') {
 			name = name.substring(1);
-			setters.addMethod(name, method, implClass);
+			setters.addMethod(name, method);
 		} else {
 			throw new IllegalArgumentException();
 		}

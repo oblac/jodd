@@ -13,15 +13,27 @@ import java.lang.reflect.Type;
  */
 public class FieldDescriptor {
 
+	protected final ClassDescriptor classDescriptor;
 	protected final Field field;
+	protected final Type type;
 	protected final Class rawType;
 	protected final Class rawComponentType;
+	protected final Class rawKeyComponentType;
 
-	public FieldDescriptor(Field field, Class implClass) {
+	public FieldDescriptor(ClassDescriptor classDescriptor, Field field) {
+		this.classDescriptor = classDescriptor;
 		this.field = field;
-		Type type = field.getGenericType();
-		this.rawType = ReflectUtil.getRawType(type, implClass);
-		this.rawComponentType = ReflectUtil.getComponentType(type, implClass);
+		this.type = field.getGenericType();
+		this.rawType = ReflectUtil.getRawType(type, classDescriptor.getType());
+		this.rawComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType());
+		this.rawKeyComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType(), 0);
+	}
+
+	/**
+	 * Returns parent class descriptor.
+	 */
+	public ClassDescriptor getClassDescriptor() {
+		return classDescriptor;
 	}
 
 	/**
@@ -44,6 +56,21 @@ public class FieldDescriptor {
 	 */
 	public Class getRawComponentType() {
 		return rawComponentType;
+	}
+
+	/**
+	 * Returns fields raw component type. Returns <code>null</code>
+	 * if field has no component type.
+	 */
+	public Class getRawKeyComponentType() {
+		return rawKeyComponentType;
+	}
+
+	/**
+	 * Resolves raw component type for given index. This value is NOT cached.
+	 */
+	public Class resolveRawComponentType(int index) {
+		return ReflectUtil.getComponentType(type, classDescriptor.getType(), index);
 	}
 
 }

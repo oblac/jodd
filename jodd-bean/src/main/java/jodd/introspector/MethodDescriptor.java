@@ -13,24 +13,36 @@ import java.lang.reflect.Type;
  */
 public class MethodDescriptor {
 
+	protected final ClassDescriptor classDescriptor;
 	protected final Method method;
-	protected final Class[] rawParameterTypes;
+	protected final Type returnType;
 	protected final Class rawReturnType;
 	protected final Class rawReturnComponentType;
+	protected final Class rawReturnKeyComponentType;
+	protected final Class[] rawParameterTypes;
 
-	public MethodDescriptor(Method method, Class implClass) {
+	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
+		this.classDescriptor = classDescriptor;
 		this.method = method;
-		Type type = method.getGenericReturnType();
-		this.rawReturnType = ReflectUtil.getRawType(type, implClass);
-		this.rawReturnComponentType = ReflectUtil.getComponentType(type, implClass);
+		this.returnType = method.getGenericReturnType();
+		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
+		this.rawReturnComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType());
+		this.rawReturnKeyComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType(), 0);
 
 		Type[] params = method.getGenericParameterTypes();
 		rawParameterTypes = new Class[params.length];
 
 		for (int i = 0; i < params.length; i++) {
-			type = params[i];
-			rawParameterTypes[i] = ReflectUtil.getRawType(type, implClass);
+			Type type = params[i];
+			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
 		}
+	}
+
+	/**
+	 * Returns parent class descriptor.
+	 */
+	public ClassDescriptor getClassDescriptor() {
+		return classDescriptor;
 	}
 
 	/**
@@ -54,6 +66,23 @@ public class MethodDescriptor {
 	 */
 	public Class getRawReturnComponentType() {
 		return rawReturnComponentType;
+	}
+
+	/**
+	 * Returns raw component type of return type.
+	 * May be <code>null</code> if return type does not have
+	 * components.
+	 */
+	public Class getRawReturnKeyComponentType() {
+		return rawReturnKeyComponentType;
+	}
+
+	/**
+	 * Resolves raw return component type for given index.
+	 * This value is NOT cached.
+	 */
+	public Class resolveRawReturnComponentType(int index) {
+		return ReflectUtil.getComponentType(returnType, classDescriptor.getType(), index);
 	}
 
 	/**

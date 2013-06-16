@@ -9,10 +9,15 @@ import java.lang.reflect.Constructor;
  */
 class Ctors {
 
+	private final ClassDescriptor classDescriptor;
+
 	private Constructor[] allCtors;
 	private Class[][] allArgs;
 	private Constructor defaultCtor;
-	private int count;
+
+	Ctors(ClassDescriptor classDescriptor) {
+		this.classDescriptor = classDescriptor;
+	}
 
 	/**
 	 * Add all ctors at once.
@@ -28,7 +33,6 @@ class Ctors {
 			if (allArgs[i].length == 0) {
 				defaultCtor = ctor;
 			}
-			count++;
 		}
 	}
 

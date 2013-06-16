@@ -28,12 +28,12 @@ class BeanUtilUtil {
 
 	/**
 	 * Converts object to destination type. Invoked before the
-	 * value is set into destination.
+	 * value is set into destination. Throws <code>ClassCastException</code>
+	 * if conversion fails.
 	 */
 	@SuppressWarnings("unchecked")
 	protected Object convertType(Object value, Class type) {
-		value = typeConverterManager.convertType(value, type);
-		return value;
+		return typeConverterManager.convertType(value, type);
 	}
 
 	
@@ -261,16 +261,50 @@ class BeanUtilUtil {
 	// ---------------------------------------------------------------- generic and type
 
 	/**
-	 * Extracts generic parameter types.
+	 * Extracts generic component type of a property. Returns <code>Object.class</code>
+	 * when property does not have component.
 	 */
-	protected Class extractGenericType(BeanProperty bp) {
+	protected Class extractGenericComponentType(BeanProperty bp) {
+		Class componentType = null;
+
 		if (bp.field != null) {
-			return bp.field.getRawComponentType();
+			componentType = bp.field.getRawComponentType();
+		} else if (bp.method != null) {
+			componentType = bp.method.getRawReturnComponentType();
 		}
-		if (bp.method != null) {
-			return bp.method.getRawReturnComponentType();
+
+		if (componentType == null) {
+			componentType = Object.class;
 		}
-		return null;
+		return componentType;
+	}
+
+	/**
+	 * Converts <b>Map</b> index to key type. If conversion fails, original value will be returned.
+	 */
+	protected Object convertIndexToMapKey(Object index, BeanProperty bp) {
+		Class indexType = null;
+
+		if (bp.field != null) {
+			indexType = bp.field.getRawKeyComponentType();
+		} else if (bp.method != null) {
+			indexType = bp.method.getRawReturnKeyComponentType();
+		}
+
+		// check if set
+		if (indexType == null) {
+			indexType = Object.class;	// marker for no generic type
+		}
+
+		if (indexType == Object.class) {
+			return index;
+		}
+
+		try {
+			return convertType(index, indexType);
+		} catch (ClassCastException ignore) {
+			return index;
+		}
 	}
 
 	/**
