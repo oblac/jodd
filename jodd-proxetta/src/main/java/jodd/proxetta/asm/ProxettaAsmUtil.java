@@ -128,6 +128,15 @@ public class ProxettaAsmUtil {
 	}
 
 	/**
+	 * Loads all method arguments before INVOKESTATIC call.
+	 */
+	public static void loadStaticMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
+		for (int i = 0; i < msign.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, msign, i);
+		}
+	}
+
+	/**
 	 * Loads all method arguments before INVOKEVIRTUAL call.
 	 */
 	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {

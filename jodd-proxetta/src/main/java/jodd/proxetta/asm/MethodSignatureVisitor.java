@@ -46,6 +46,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	protected ClassInfo targetClassInfo;
 	protected int hierarchyLevel;
+	protected boolean isStatic;
 
 	// ---------------------------------------------------------------- ctors
 
@@ -57,6 +58,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	public MethodSignatureVisitor(String methodName, final int access, String classname, String description, String signature, ClassInfo targetClassInfo) {
 		this();
 		this.isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
+		this.isStatic = (access & Opcodes.ACC_STATIC) != 0;
 		this.methodName = methodName;
 		this.access = access;
 		this.classname = classname;

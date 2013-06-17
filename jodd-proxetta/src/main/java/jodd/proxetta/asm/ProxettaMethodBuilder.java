@@ -113,11 +113,19 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * Continues the creation of the very first method in calling chain that simply delegates invocation to the first proxy method.
 	 * This method mirrors the target method.
 	 */
-	protected void createFirstChainDelegate_Continue(TargetMethodData td) {
+	protected void createFirstChainDelegate_Continue(TargetMethodData tmd) {
 		methodVisitor.visitCode();
-		loadSpecialMethodArguments(methodVisitor, td.msign);
-		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, td.firstMethodName(), td.msign.getDescription());
-		visitReturn(methodVisitor, td.msign, false);
+
+		if (tmd.msign.isStatic) {
+			loadStaticMethodArguments(methodVisitor, tmd.msign);
+			methodVisitor.visitMethodInsn(INVOKESTATIC, wd.thisReference, tmd.firstMethodName(), tmd.msign.getDescription());
+		} else {
+			loadSpecialMethodArguments(methodVisitor, tmd.msign);
+			methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, tmd.firstMethodName(), tmd.msign.getDescription());
+		}
+
+		visitReturn(methodVisitor, tmd.msign, false);
+
 		methodVisitor.visitMaxs(0, 0);
 		methodVisitor.visitEnd();
 	}
