@@ -11,4 +11,8 @@ public class CalcImpl extends CalcImplBase implements Calc {
 	public void customMethod() {
 		System.out.println("custom");
 	}
+
+	public static void main(String[] args) {
+		System.out.println(args);
+	}
 }

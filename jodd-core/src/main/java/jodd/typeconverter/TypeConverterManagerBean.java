@@ -190,7 +190,14 @@ public class TypeConverterManagerBean {
 
 		if (Jodd.isUploadLoaded()) {
 			try {
-				Class<?> managerAddon = ClassLoaderUtil.loadClass("jodd.typeconverter.UploadTypeConverterManagerAddon");
+				// we are forcing usage of classloader that loaded this class
+				// it is the same class loader that loaded Jodd, therefore
+				// let it load addon, too
+				// this is important in cases when different class loading
+				// strategy is used, i.e. when using parent-last strategy.
+				Class<?> managerAddon = ClassLoaderUtil.loadClass(
+						"jodd.typeconverter.UploadTypeConverterManagerAddon",
+						this.getClass().getClassLoader());
 
 				ReflectUtil.invoke(managerAddon, "registerDefaults", this);
 			} catch (Exception ex) {

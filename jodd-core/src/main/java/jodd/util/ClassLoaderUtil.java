@@ -122,7 +122,7 @@ public class ClassLoaderUtil {
 	/**
 	 * @see #findClass(String, java.net.URL[], ClassLoader)
 	 */
-	public static Class findClass(String className, File[] classPath) {
+	public static Class findClass(String className, File[] classPath, ClassLoader parent) {
 		URL[] urls = new URL[classPath.length];
 		for (int i = 0; i < classPath.length; i++) {
 			File file = classPath[i];
@@ -134,16 +134,11 @@ public class ClassLoaderUtil {
 		return findClass(className, urls, null);
 	}
 
-
-	/**
-	 * @see #findClass(String, java.net.URL[], ClassLoader)
-	 */
-	public static Class findClass(String className, URL[] classPath) {
-		return findClass(className, classPath, null);
-	}
-
 	/**
 	 * Finds and loads class on classpath even if it was already loaded.
+	 * @param className class name to find
+	 * @param classPath classpath
+	 * @param parent optional parent class loader, may be <code>null</code>
 	 */
 	public static Class findClass(String className, URL[] classPath, ClassLoader parent) {
 		URLClassLoader tempClassLoader = parent != null ? new URLClassLoader(classPath, parent) : new URLClassLoader(classPath);

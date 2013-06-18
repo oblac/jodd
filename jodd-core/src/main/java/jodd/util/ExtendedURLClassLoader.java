@@ -11,8 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Class loader that offers two loading strategies: parent-first and parent-last.
+ * Class loader that offers two loading strategies: <b>parent-first</b> and <b>parent-last</b>.
  * Extends <code>URLClassLoader</code> (for now:) to provide just minimal set of modifications.
+ * <p>
+ * When <b>parent-last</b> strategy is used, be aware how you use {@link ClassLoaderUtil} as
+ * it is designed to follow <b>parent-first</b> strategy.
  */
 public class ExtendedURLClassLoader extends URLClassLoader {
 
@@ -22,7 +25,8 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	protected boolean parentFirst;
 
 	/**
-	 * Creates class loader with parent-first loading strategy.
+	 * Creates class loader with <b>parent-first</b> loading strategy.
+	 * This is aligned how java class loaders work.
 	 */
 	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent) {
 		this(classpath, parent, true);
@@ -52,7 +56,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	/**
 	 * Controls whether class lookup is delegated to the parent loader first
 	 * or after this loader. Use with extreme caution as setting this to
-	 * false violates the class loader hierarchy.
+	 * false (i.e. to <b>parent-last</b>) violates the class loader hierarchy.
 	 */
 	public void setParentFirst(boolean parentFirst) {
 		this.parentFirst = parentFirst;
