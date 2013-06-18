@@ -18,10 +18,10 @@ BeanUtil:
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Madvoc:
-	- Action methods with arguments
+	- Action methods with arguments @tbd
 	- Add result methods: ok(), redirect() etc.
-		There are two places where to add: in #jodd-joy and in #jodd-madvoc .
-	- Manual registration of ActionConfig, using fluent interface @soon
+		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
+	- Manual registration of ActionConfig, using fluent interface @soon @hot
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
 	- MadvocServletFilter, consume action path, like load static content @tbd
@@ -30,18 +30,18 @@ Madvoc:
 		For example, it may choose if extension is "json" or not based on class name.
 	- Error 404 to contain info about missing page @tbd
 	- Add JSONResult(returnCode, jsonString) @soon @review
-	- Prevent memory leak for un-existing pages in that special mode @hot
+	- Prevent memory leak for un-existing pages in suplement mode @hot
 	- Cache interceptor @github(27) @tbd @soon
-	- Add Madvoc Package @next @tbd
+	- Multiple roots mapped to different paths @next
 EMail:
 	- Add IMAP support @soon
-	- Add suport for eml body parts @next
+	- Add suport for EML body parts @next
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
 JTX:
 	- Add 'Rollback on' feature… that does rollback only on certain exception types.
-	- Thread timeout
+	- Add Thread timeout in separate class
 	- How to explicilty specify TX scope in annotation @tbd
 	- Check nested TX, once again @test
 Proxetta:

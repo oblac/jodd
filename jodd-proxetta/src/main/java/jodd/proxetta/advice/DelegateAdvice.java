@@ -34,10 +34,26 @@ public class DelegateAdvice implements ProxyAdvice {
 		Class[] argTypes = ProxyTarget.createArgumentsClassArray();
 		Object[] args = ProxyTarget.createArgumentsArray();
 
+		// lookup method on target object class (and not #targetClass!()
 		Class type = _target.getClass();
 		Method method = type.getMethod(methodName, argTypes);
 
-		Object result = method.invoke(_target, args);
+		// remember context classloader
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+		Object result;
+		try {
+			// change class loader
+			Thread.currentThread().setContextClassLoader(type.getClassLoader());
+
+			// invoke
+			result = method.invoke(_target, args);
+		}
+		finally {
+			// return context classloader
+			Thread.currentThread().setContextClassLoader(contextClassLoader);
+
+		}
 
 		return ProxyTarget.returnValue(result);
 	}
