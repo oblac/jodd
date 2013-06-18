@@ -49,25 +49,17 @@ public class ActionMethodParser {
 	 */
 	public ActionConfig parse(Class<?> actionClass, Method actionMethod, String actionPath) {
 
-		Class<?> superClass = null;
-		if (actionClass.getAnnotation(MadvocAction.class) == null) {
-			superClass = actionClass.getSuperclass();
-			if ((superClass == Object.class) || (superClass.getAnnotation(MadvocAction.class) == null)) {
-				superClass = null;
-			}
-		}
-
 		// interceptors
 		Class<? extends ActionInterceptor>[] interceptorClasses = readMethodInterceptors(actionMethod);
 		if (interceptorClasses == null) {
-			interceptorClasses = readClassInterceptors(superClass != null ?  superClass : actionClass);
+			interceptorClasses = readClassInterceptors(actionClass);
 		}
 
 		// action path not specified, build it
-		String packageActionPath = readPackageActionPath(superClass != null ?  superClass : actionClass);
+		String packageActionPath = readPackageActionPath(actionClass);
 
 		// class annotation: class action path
-		String classActionPath = readClassActionPath(superClass != null ?  superClass : actionClass);
+		String classActionPath = readClassActionPath(actionClass);
 		if (classActionPath == null) {
 			return null;
 		}

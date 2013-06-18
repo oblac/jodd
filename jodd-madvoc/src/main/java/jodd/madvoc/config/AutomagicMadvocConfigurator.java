@@ -156,9 +156,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		}
 
 		if (actionClass.getAnnotation(MadvocAction.class) == null) {
-			if (actionClass.getSuperclass().getAnnotation(MadvocAction.class) == null) {
-				return;
-			}
+			return;
 		}
 
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
