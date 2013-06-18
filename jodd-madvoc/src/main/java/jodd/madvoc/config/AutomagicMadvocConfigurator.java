@@ -112,24 +112,40 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	/**
 	 * Determines if class should be examined for Madvoc annotations.
 	 * Array, anonymous, primitive, interfaces and so on should be
-	 * ignored. 
+	 * ignored. Sometimes, checking may fail due to e.g. <code>NoClassDefFoundError</code>;
+	 * we should continue searching anyway.
 	 */
 	public boolean checkClass(Class clazz) {
-		return (clazz.isAnonymousClass() == false) &&
-				(clazz.isArray() == false) &&
-				(clazz.isEnum() == false) &&
-				(clazz.isInterface() == false) &&
-				(clazz.isLocalClass() == false) &&
-				((clazz.isMemberClass() ^ Modifier.isStatic(clazz.getModifiers())) == false) &&
-				(clazz.isPrimitive() == false);
+		try {
+			if (clazz.isAnonymousClass()) {
+				return false;
+			}
+			if (clazz.isArray() || clazz.isEnum()) {
+				return false;
+			}
+			if (clazz.isInterface()) {
+				return false;
+			}
+			if (clazz.isLocalClass()) {
+				return false;
+			}
+			if ((clazz.isMemberClass() ^ Modifier.isStatic(clazz.getModifiers()))) {
+				return false;
+			}
+			if (clazz.isPrimitive()) {
+				return false;
+			}
+			return true;
+		} catch (Throwable ignore) {
+			return false;
+		}
 	}
 
 	// ---------------------------------------------------------------- handlers
 
 	/**
 	 * Builds action configuration on founded action class.
-	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation
-	 * or extends a class annotated with the same annotation.
+	 * Action classes are annotated with {@link jodd.madvoc.meta.MadvocAction} annotation.
 	 */
 	@SuppressWarnings("NonConstantStringShouldBeStringBuffer")
 	protected void onActionClass(String className) throws ClassNotFoundException {
@@ -138,6 +154,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		if (checkClass(actionClass) == false) {
 			return; 
 		}
+
 		if (actionClass.getAnnotation(MadvocAction.class) == null) {
 			if (actionClass.getSuperclass().getAnnotation(MadvocAction.class) == null) {
 				return;
@@ -145,6 +162,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		}
 
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
+
 		Method[] allPublicMethods = cd.getAllMethods(false);
 		for (Method method : allPublicMethods) {
 			boolean hasAnnotation = false;
