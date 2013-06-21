@@ -79,7 +79,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
 		assertNotNull(cfg);
@@ -151,7 +151,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst.Boo1Action#foo");
 		assertNotNull(cfg);
@@ -180,7 +180,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst.Boo3Action#foo");
 		assertNotNull(cfg);
@@ -204,7 +204,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst2.Boo4Action#foo");
 		assertNotNull(cfg);
@@ -228,7 +228,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst2.Boo5Action#foo");
 		assertNotNull(cfg);
@@ -252,7 +252,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		webapp.registerMadvocComponents();
 		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		ActionConfig cfg = parse(actionMethodParser, "tst2.ReAction#hello");
 		assertNotNull(cfg);
@@ -272,7 +272,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		actionsManager.register(ReAction.class, "macro");
 		ActionConfig cfg = actionPathMapper.resolveActionConfig("/re/user/173/macro.html", "GET");
@@ -330,7 +330,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 
 		actionsManager.register(ReAction.class, "wild1");
 		actionsManager.register(ReAction.class, "wild2");
@@ -374,7 +374,7 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
 
 		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
-		madvocConfig.setRootPackageOf(this.getClass());
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
 		madvocConfig.setPathMacroClass(RegExpPathMacros.class);
 
 		actionsManager.register(ReAction.class, "duplo1");
@@ -399,6 +399,36 @@ public class ActionMethodParserTest extends MadvocTestCase {
 		assertEquals("sid", set.actionPathMacros.getNames()[0]);
 
 		assertEquals(2, actionsManager.getActionsCount());
+	}
+
+	@Test
+	public void testMarkerClass() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		RootPackages rootPackages = madvocConfig.getRootPackages();
+
+		String thisPackageName = this.getClass().getPackage().getName();
+
+		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3"));
+		ActionConfig cfg = parse(actionMethodParser, "tst3.JohnAction#hello");
+		assertEquals("/root", rootPackages.getPackageActionPath(thisPackageName + ".tst3"));
+		assertEquals("/root/john.hello.html", cfg.actionPath);
+
+		cfg = parse(actionMethodParser, "tst3.JimAction#hello");
+		assertEquals("/my-root/jim.my-hello.html", cfg.actionPath);
+
+		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl1"));
+		cfg = parse(actionMethodParser, "tst3.lvl1.EmaAction#hello");
+		assertEquals("/root/lvl1/ema.hello.html", cfg.actionPath);
+		assertEquals("/root/lvl1", rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl1"));
+
+		assertNull(rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl2"));
+		cfg = parse(actionMethodParser, "tst3.lvl2.DidyAction#hello");
+		assertEquals("/gig/didy.hello.html", cfg.actionPath);
+		assertEquals("/gig", rootPackages.getPackageActionPath(thisPackageName + ".tst3.lvl2"));
+
 	}
 
 }

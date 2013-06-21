@@ -58,7 +58,9 @@ public class ActionPathMapper {
 		ActionConfig cfg = actionsManager.lookup(actionPath, method);
 
 		if ((cfg == null) && madvocConfig.isActionPathMappingEnabled()) {
-			String packageRoot = madvocConfig.getRootPackage();
+
+			String packageRoot = madvocConfig.getRootPackages().findRootPackageForActionPath(actionPath);
+
 			if (packageRoot != null) {
 				cfg = registerActionPath(actionPath, packageRoot);
 //				cfg = actionsManager.lookup(actionPath, actionPathChunks);

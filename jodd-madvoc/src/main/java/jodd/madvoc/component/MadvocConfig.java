@@ -2,6 +2,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.RootPackages;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
@@ -36,7 +37,8 @@ public class MadvocConfig {
 		createDefaultAliases = false;
 		defaultExtension = "html";
 		supplementAction = null;//DefaultActionSupplement.class;
-		rootPackage = null;
+		rootPackages = new RootPackages();
+		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
 		actionPathMappingEnabled = false;
 		preventCaching = true;
@@ -243,29 +245,31 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- packageRoot
 
-	protected String rootPackage;
+	protected RootPackages rootPackages;
+	protected String madvocRootPackageClassName;
 
 	/**
-	 * Returns root package.
+	 * Returns root packages collection.
 	 */
-	public String getRootPackage() {
-		return rootPackage;
+	public RootPackages getRootPackages() {
+		return rootPackages;
 	}
 
 	/**
-	 * Sets root package.
+	 * Returns root package marker class name.
+	 * Returns <code>null</code> if these classes should be ignored.
 	 */
-	public void setRootPackage(String rootPackage) {
-		this.rootPackage = rootPackage;
+	public String getMadvocRootPackageClassName() {
+		return madvocRootPackageClassName;
 	}
 
 	/**
-	 * Sets root package equals to package of provided class.
+	 * Sets root package marker name. By setting it to <code>null</code>
+	 * this feature will be turned off.
 	 */
-	public void setRootPackageOf(Class clazz) {
-		setRootPackage(clazz.getPackage().getName());
+	public void setMadvocRootPackageClassName(String madvocRootPackageClassName) {
+		this.madvocRootPackageClassName = madvocRootPackageClassName;
 	}
-
 
 	// ---------------------------------------------------------------- duplicates
 
@@ -291,6 +295,10 @@ public class MadvocConfig {
 		return actionPathMappingEnabled;
 	}
 
+	/**
+	 * Defines if reverse action path mapping should be enabled. This means
+	 * that classes are not registered before, but searched in runtime.
+	 */
 	public void setActionPathMappingEnabled(boolean actionPathMappingEnabled) {
 		this.actionPathMappingEnabled = actionPathMappingEnabled;
 	}
@@ -399,7 +407,8 @@ public class MadvocConfig {
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
 				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
-				",\n\trootPackage='" + rootPackage + '\'' +
+				",\n\trootPackages=" + rootPackages +
+				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
 				",\n\tsupplementAction=" + supplementAction +
 				"\n}";

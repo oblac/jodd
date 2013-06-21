@@ -3,6 +3,7 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.RootPackages;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionAnnotation;
@@ -10,11 +11,14 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
 import jodd.petite.meta.PetiteInject;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Creates {@link ActionConfig action configurations} from action java method.
@@ -55,11 +59,13 @@ public class ActionMethodParser {
 			interceptorClasses = readClassInterceptors(actionClass);
 		}
 
+		HashMap<String, String> replacementMap = new HashMap<String, String>();
+
 		// action path not specified, build it
-		String packageActionPath = readPackageActionPath(actionClass);
+		String packageActionPath = readPackageActionPath(actionClass, replacementMap);
 
 		// class annotation: class action path
-		String classActionPath = readClassActionPath(actionClass);
+		String classActionPath = readClassActionPath(actionClass, replacementMap);
 		if (classActionPath == null) {
 			return null;
 		}
@@ -75,7 +81,7 @@ public class ActionMethodParser {
 
 		// read method annotation values
 		String actionMethodName = actionMethod.getName();
-		String methodActionPath = readMethodActionPath(actionMethodName, annotationData);
+		String methodActionPath = readMethodActionPath(actionMethodName, annotationData, replacementMap);
 		String extension = readMethodExtension(annotationData);
 		String alias = readMethodAlias(annotationData);
 		String httpMethod = readMethodHttpMethod(annotationData);
@@ -83,7 +89,8 @@ public class ActionMethodParser {
 
 		if (methodActionPath != null) {
 			// additional changes
-			methodActionPath = StringUtil.replace(methodActionPath, REPL_EXTENSION, extension);
+			replacementMap.put(REPL_EXTENSION, extension);
+
 			// check for defaults
 			for (String path : madvocConfig.getDefaultActionMethodNames()) {
 				if (methodActionPath.equals(path)) {
@@ -94,9 +101,15 @@ public class ActionMethodParser {
 		}
 
 		if (actionPath == null) {
-			// finally, build the action pat if it is not already specified
+			// finally, build the action path if it is not already specified
 			actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension, httpMethod);
 		}
+
+		// apply replacements
+		for (Map.Entry<String, String> entry : replacementMap.entrySet()) {
+			actionPath = StringUtil.replace(actionPath, entry.getKey(), entry.getValue());
+		}
+
 		 
 		// register alias
 		if (alias != null) {
@@ -192,35 +205,99 @@ public class ActionMethodParser {
 	 * If annotation is not set on package-level, class package will be used for
 	 * package action path part.
 	 */
-	protected String readPackageActionPath(Class actionClass) {
-		final String packageRoot = madvocConfig.getRootPackage();
+	protected String readPackageActionPath(Class actionClass, Map<String, String> replacementMap) {
 
-		if (packageRoot == null) {
-			return null;
+		Package actionPackage = actionClass.getPackage();
+		String actionPackageName = actionPackage.getName();
+
+		final RootPackages rootPackages = madvocConfig.getRootPackages();
+
+		String packagePath = rootPackages.getPackageActionPath(actionPackageName);
+
+		if (packagePath == null) {
+
+			packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
+
+			String rootPackage = null;
+
+			if (packagePath != null) {
+				rootPackage = rootPackages.findRootPackageForActionPath(packagePath);
+			}
+
+			// try locating marker class
+			{
+				String packageName = actionPackageName;
+				String madvocRootPackageClassName = madvocConfig.getMadvocRootPackageClassName();
+
+				if (madvocRootPackageClassName != null) {
+					while (true) {
+						String className = packageName + '.' + madvocRootPackageClassName;
+						try {
+							Class<?> madvocRootPackageClass = ClassLoaderUtil.loadClass(className, actionClass.getClassLoader());
+
+							// class found, find the mapping
+							String mapping = StringPool.EMPTY;
+							MadvocAction madvocAction = madvocRootPackageClass.getAnnotation(MadvocAction.class);
+
+							if (madvocAction != null) {
+								mapping = madvocAction.value();
+							}
+
+							// register root package - so not to lookup twice
+							madvocConfig.getRootPackages().addRootPackage(packageName, mapping);
+
+							// repeat lookup
+							packagePath = rootPackages.findPackagePathForActionPackage(actionPackageName);
+
+							break;
+						} catch (ClassNotFoundException ignore) {
+
+							// continue
+							int dotNdx = packageName.lastIndexOf('.');
+							if (dotNdx == -1) {
+								break;
+							}
+
+							packageName = packageName.substring(0, dotNdx);
+
+							if (rootPackage != null) {
+								// don't go beyond found root package
+								if (packageName.equals(rootPackage)) {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			rootPackages.registerPackageActionPath(actionPackageName, packagePath);
 		}
 
-		// read annotation
-		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getPackage().getAnnotation(MadvocAction.class);
+
+		// read package-level annotation
+
+		MadvocAction madvocActionAnnotation = actionPackage.getAnnotation(MadvocAction.class);
+
 		String packageActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
+
 		if (StringUtil.isEmpty(packageActionPath)) {
 			packageActionPath = null;
 		}
 
-		// build name from package
-		String packagePath = actionClass.getPackage().getName();
-		if (packagePath.length() > packageRoot.length()) {
-			packagePath = StringUtil.cutPrefix(packagePath, packageRoot + '.');
-		} else {
-			packagePath = StringUtil.cutPrefix(packagePath, packageRoot);
-		}
-		packagePath = packagePath.replace('.', '/');
-
-		// decide
+		// package-level annotation overrides everything
+		// if not set, resolve value
 		if (packageActionPath == null) {
+			// no package-level annotation
+			if (packagePath == null) {
+				// no root package path, just return
+				return null;
+			}
 			packageActionPath = packagePath;
-		} else {
-			packageActionPath = StringUtil.replace(packageActionPath, REPL_PACKAGE, packagePath);
 		}
+
+		replacementMap.put(REPL_PACKAGE, StringUtil.stripChar(packagePath, '/'));
+
 		return StringUtil.surround(packageActionPath, StringPool.SLASH);
 	}
 
@@ -232,7 +309,7 @@ public class ActionMethodParser {
 	 * <p>
 	 * If this method returns <code>null</code> class will be ignored.
 	 */
-	protected String readClassActionPath(Class actionClass) {
+	protected String readClassActionPath(Class actionClass, Map<String, String> replacementMap) {
 		// read annotation
 		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
 		String classActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
@@ -244,34 +321,30 @@ public class ActionMethodParser {
 		name = StringUtil.uncapitalize(name);
 		name = MadvocUtil.stripLastCamelWord(name);
 
-		// decide
 		if (classActionPath == null) {
 			classActionPath = name;
-		} else {
-			classActionPath = StringUtil.replace(classActionPath, REPL_CLASS, name);
 		}
+
+		replacementMap.put(REPL_CLASS, name);
 		return classActionPath;
 	}
 
 	/**
 	 * Reads action method.
 	 */
-	protected String readMethodActionPath(String methodName, ActionAnnotationData annotationData) {
+	protected String readMethodActionPath(String methodName, ActionAnnotationData annotationData, Map<String, String> replacementMap) {
 		// read annotation
 		String methodActionPath = annotationData != null ? annotationData.getValue() : null;
 
-		// decide
 		if (methodActionPath == null) {
 			methodActionPath = methodName;
 		} else {
-
 			if (methodActionPath.equals(Action.NONE)) {
 				return null;
-
 			}
-			methodActionPath = StringUtil.replace(methodActionPath, REPL_METHOD, methodName);
 		}
 
+		replacementMap.put(REPL_METHOD, methodName);
 		return methodActionPath;
 	}
 
