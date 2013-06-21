@@ -32,7 +32,7 @@ Madvoc:
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Prevent memory leak for un-existing pages in suplement mode @hot
 	- Cache interceptor @github(27) @tbd @soon
-	- Multiple roots mapped to different paths @next
+	- Multiple roots mapped to different paths @done @v3.4.5
 EMail:
 	- Add IMAP support @soon
 	- Add suport for EML body parts @next
@@ -68,7 +68,8 @@ Joy:
 	- Don't encode text tags in resource bundles
 	- Pager, do sort @review
 	- AppCore, add optional scanning so to allow manual registration @next
-	- Update gradle example in quickstarts @soon
 Quickstart:
-	- Add gradle for easier start @next
-	- Use empty project to create a blog example and make a video @soon
+	- Add gradle for easier start: madvoc @done @v3.4.5
+	- Add gradle for easier start: webapp1 @next
+	- Use empty project to create a blog/twitter example and make a video @soon
+	- Add log DEBUG @next

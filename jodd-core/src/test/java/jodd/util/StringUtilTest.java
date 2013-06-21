@@ -788,6 +788,12 @@ public class StringUtilTest {
 		assertEquals("qwe", StringUtil.stripLeadingChar("qwe", '4'));
 		assertEquals("qw", StringUtil.stripTrailingChar("qwe", 'e'));
 		assertEquals("qwe", StringUtil.stripTrailingChar("qwe", '4'));
+		assertEquals("", StringUtil.stripChar("", '4'));
+		assertEquals("", StringUtil.stripChar("4", '4'));
+		assertEquals("2", StringUtil.stripChar("424", '4'));
+		assertEquals("23", StringUtil.stripChar("423", '4'));
+		assertEquals("23", StringUtil.stripChar("4234", '4'));
+
 	}
 
 	@Test
