@@ -270,7 +270,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			String name = parameters[i].toString();
 
 			String value = parameters[i + 1].toString();
-			query(name, value == null ? null : value);
+			query.put(name, value == null ? null : value);
 		}
 		return this;
 	}
@@ -280,7 +280,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest query(Map<String, String> queryMap) {
 		for (Map.Entry<String, String> entry : queryMap.entrySet()) {
-			query(entry.getKey(), entry.getValue());
+			query.put(entry.getKey(), entry.getValue());
 		}
 		return this;
 	}

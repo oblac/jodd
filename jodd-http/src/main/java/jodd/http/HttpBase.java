@@ -296,6 +296,18 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * Sets many form parameters at once.
+	 */
+	public T form(Map<String, Object> formMap) {
+		initForm();
+
+		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
+			form.put(entry.getKey(), entry.getValue());
+		}
+		return (T) this;
+	}
+
+	/**
 	 * Return map of form parameters.
 	 */
 	public Map<String, Object> form() {
