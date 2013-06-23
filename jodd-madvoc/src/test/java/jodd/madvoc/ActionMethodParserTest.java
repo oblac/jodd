@@ -431,4 +431,22 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 	}
 
+	@Test
+	public void testZqq() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
+		ActionPathMapper actionPathMapper = webapp.getComponent(ActionPathMapper.class);
+		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		madvocConfig.getRootPackages().addRootPackageOf(this.getClass());
+
+		actionsManager.register(ReAction.class, "zqq1");
+		actionsManager.register(ReAction.class, "zqq2");
+
+		ActionConfig cfg = actionPathMapper.resolveActionConfig("/config/dba.delete_multi", "GET");
+		assertNotNull(cfg);
+
+		assertEquals("/${entityName}/dba.delete_multi", cfg.getActionPath());
+	}
+
 }

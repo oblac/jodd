@@ -126,4 +126,49 @@ public class PathMacroTest {
 		assertEquals(-1, pathMacros.match("/user-17"));
 	}
 
+	@Test
+	public void testWildcardMatchContaining() {
+		PathMacros pathMacros1 = new WildcardPathMacros();
+		assertTrue(pathMacros1.init("/${entityName}/dba.delete"));
+		assertEquals("entityName", pathMacros1.getNames()[0]);
+
+		PathMacros pathMacros2 = new WildcardPathMacros();
+		assertTrue(pathMacros2.init("/${entityName}/dba.delete_multi"));
+		assertEquals("entityName", pathMacros2.getNames()[0]);
+
+		assertEquals(18, pathMacros2.match("/config/dba.delete_multi"));
+		assertEquals(-1, pathMacros1.match("/config/dba.delete_multi"));
+	}
+
+	@Test
+	public void testWildcardMatchContaining2() {
+		PathMacros pathMacros1 = new WildcardPathMacros();
+		assertTrue(pathMacros1.init("/dba.delete/${entityName}"));
+		assertEquals("entityName", pathMacros1.getNames()[0]);
+
+		PathMacros pathMacros2 = new WildcardPathMacros();
+		assertTrue(pathMacros2.init("/dba.delete_multi/${entityName}"));
+		assertEquals("entityName", pathMacros2.getNames()[0]);
+
+		assertEquals(18, pathMacros2.match("/dba.delete_multi/config"));
+		assertEquals(-1, pathMacros1.match("/dba.delete_multi/config"));
+	}
+
+	@Test
+	public void testWildcardMatchContainingWithTwo() {
+		PathMacros pathMacros1 = new WildcardPathMacros();
+		assertTrue(pathMacros1.init("/${entityName}/dba.delete${xxx}"));
+		assertEquals("entityName", pathMacros1.getNames()[0]);
+		assertEquals("xxx", pathMacros1.getNames()[1]);
+
+		PathMacros pathMacros2 = new WildcardPathMacros();
+		assertTrue(pathMacros2.init("/${entityName}/dba.delete_multi${xxx}"));
+		assertEquals("entityName", pathMacros2.getNames()[0]);
+		assertEquals("xxx", pathMacros2.getNames()[1]);
+
+		assertEquals(18, pathMacros2.match("/config/dba.delete_multiZZZ"));
+		// the following is still matching, but the number of non-matching chars is smaller
+		assertEquals(12, pathMacros1.match("/config/dba.delete_multiZZZ"));
+	}
+
 }

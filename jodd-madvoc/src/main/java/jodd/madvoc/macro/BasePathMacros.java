@@ -13,7 +13,7 @@ import jodd.util.StringUtil;
  */
 public abstract class BasePathMacros implements PathMacros {
 
-	protected final char SPLIT = ':';
+	protected static final char SPLIT = ':';
 
 	protected int macrosCount;
 	protected String[] names;		// macros names
@@ -189,6 +189,7 @@ public abstract class BasePathMacros implements PathMacros {
 			}
 
 			if (nextFixed == null) {
+				offset = ndx;
 				break;
 			}
 
@@ -197,6 +198,11 @@ public abstract class BasePathMacros implements PathMacros {
 			offset = ndx + nextFixedLength;
 
 			i = nexti;
+		}
+
+		if (offset != actionPath.length()) {
+			// action path is not consumed fully during this matching
+			return null;
 		}
 
 		return values;

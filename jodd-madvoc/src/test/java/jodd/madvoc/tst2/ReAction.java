@@ -43,4 +43,15 @@ public class ReAction {
 	public void duplo1() {
 	}
 
+
+	// ---------------------------------------------------------------- zqq #30
+
+	String entityName;
+
+	@Action(value = "/${entityName}/dba.delete", extension = "do")
+	public void zqq1() {}
+
+	@Action(value = "/${entityName}/dba.delete_multi", extension = "do")
+	public void zqq2() {}
+
 }
