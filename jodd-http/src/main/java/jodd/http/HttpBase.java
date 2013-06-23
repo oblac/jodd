@@ -285,9 +285,6 @@ public abstract class HttpBase<T> {
 	 */
 	public T form(String name, Object value, Object... parameters) {
 		initForm();
-		if (form == null) {
-			form = new HttpParamsMap();
-		}
 
 		form.put(name, value);
 		for (int i = 0; i < parameters.length; i += 2) {
