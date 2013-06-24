@@ -238,7 +238,7 @@ public class FindFile<T extends FindFile> {
 			if (sortComparators != null) {
 				this.files = folder.listFiles();
 
-				if ((sortComparators != null) && (this.files != null)) {
+				if (this.files != null) {
 					FastSort.sort(this.files, new MultiComparator<File>(sortComparators));
 				}
 
