@@ -84,7 +84,7 @@ public class FindFile2Test {
 				.setWalking(true)
 				.searchPath(dataRoot + "/beta")
 				.searchPath(dataRoot + "/sumo")
-				.setSearchPattern("**");
+				.include("**");
 
 		int count = 0;
 		while (ff.nextFile() != null) {
@@ -117,7 +117,7 @@ public class FindFile2Test {
 		wff.searchPath(dataRoot + "/sumo");
 
 		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
-		wff.setSearchPattern("**/sumo/*");
+		wff.include("**/sumo/*");
 		int count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -128,7 +128,7 @@ public class FindFile2Test {
 
 		wff
 			.setMatchType(WildcardFindFile.Match.FULL_PATH)
-			.setSearchPattern("**/sumo/**");
+			.include("**/sumo/**");
 		count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -137,7 +137,7 @@ public class FindFile2Test {
 
 		wff.reset();
 		wff.setMatchType(WildcardFindFile.Match.NAME);
-		wff.setSearchPattern("*.txt");
+		wff.include("*.txt");
 		count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -146,7 +146,7 @@ public class FindFile2Test {
 
 		wff.reset();
 		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
-		wff.setSearchPattern("/gamma/*");
+		wff.include("/gamma/*");
 		count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -155,7 +155,7 @@ public class FindFile2Test {
 
 		wff.reset();
 		wff.setMatchType(WildcardFindFile.Match.RELATIVE_PATH);
-		wff.setSearchPattern("/*a*.txt");
+		wff.include("/*a*.txt");
 		count = 0;
 		while (wff.nextFile() != null) {
 			count++;
@@ -192,7 +192,7 @@ public class FindFile2Test {
 		wff.searchPath(dataRoot + "/sumo");
 
 		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
-		wff.setSearchPattern("**/xxxxxxx/*");
+		wff.include("**/xxxxxxx/*");
 		int count = 0;
 		while (wff.nextFile() != null) {
 			count++;

@@ -2,7 +2,7 @@
 
 package jodd.io.findfile;
 
-import java.io.File;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -11,34 +11,21 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile<RegExpFindFile> {
 
-	private Pattern searchPattern;
-
-	public RegExpFindFile() {
-	}
-
-	public RegExpFindFile(String pattern) {
-		searchPattern = Pattern.compile(pattern);
-	}
-
-	/**
-	 * Returns regular expression search pattern.
-	 */
-	public Pattern getSearchPattern() {
-		return searchPattern;
-	}
-
-	/**
-	 * Sets regular expression search pattern.
-	 */
-	public RegExpFindFile setSearchPattern(Pattern searchPattern) {
-		this.searchPattern = searchPattern;
-		return this;
-	}
+	private HashMap<String, Pattern> searchPatterns;
 
 	@Override
-	protected boolean acceptFile(File file) {
-		String path = getMatchingFilePath(file);
+	protected boolean match(String path, String patternString) {
+		if (searchPatterns == null) {
+			searchPatterns = new HashMap<String, Pattern>();
+		}
 
-		return searchPattern.matcher(path).matches();
+		Pattern pattern = searchPatterns.get(patternString);
+
+		if (pattern == null) {
+			pattern = Pattern.compile(patternString);
+			searchPatterns.put(patternString, pattern);
+		}
+
+		return pattern.matcher(path).matches();
 	}
 }

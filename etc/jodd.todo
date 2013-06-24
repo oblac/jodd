@@ -9,9 +9,10 @@ General Tasks:
 		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
-	- Check FileUtil.move/copy dir/file variants @next @v3.4.5
+	- Check FileUtil.move/copy dir/file variants @soon
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
+	- FindFile with includes/excludes @v3.4.5 @done
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done

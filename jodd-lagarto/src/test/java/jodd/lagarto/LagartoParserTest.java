@@ -37,7 +37,7 @@ public class LagartoParserTest {
 
 	@Test
 	public void testHtmls() throws IOException {
-		FindFile ff = new WildcardFindFile("**/*.*ml");
+		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
 		boolean processed = false;
@@ -93,7 +93,7 @@ public class LagartoParserTest {
 	 */
 	@Test
 	public void testLiveHtmls() throws IOException {
-		FindFile ff = new WildcardFindFile("**/*.html");
+		FindFile ff = new WildcardFindFile().include("**/*.html");
 		ff.searchPath(testLiveRoot);
 		File file;
 		boolean processed = false;

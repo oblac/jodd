@@ -35,7 +35,7 @@ public class DecoraParserTest {
 	public void testDecoraParser() throws IOException {
 		DecoraParser decoraParser = new DecoraParser();
 
-		FindFile ff = new WildcardFindFile("*.*ml");
+		FindFile ff = new WildcardFindFile().include("*.*ml");
 		ff.searchPath(testDataRoot);
 		File file;
 		while ((file = ff.nextFile()) != null) {

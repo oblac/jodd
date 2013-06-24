@@ -11,6 +11,7 @@ import jodd.io.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,7 +25,6 @@ import java.util.NoSuchElementException;
  *
  * @see WildcardFindFile
  * @see RegExpFindFile
- * @see FilterFindFile
  */
 @SuppressWarnings("unchecked")
 public class FindFile<T extends FindFile> {
@@ -343,12 +343,94 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
+	// ---------------------------------------------------------------- matching
+
+	protected LinkedList<String> includes;
+	protected LinkedList<String> excludes;
+
 	/**
-	 * Called on each file entry (file or directory) and returns <code>true</code>
-	 * if file passes search criteria.
+	 * Defines include pattern.
+	 */
+	public T include(String pattern) {
+		if (includes == null) {
+			includes = new LinkedList<String>();
+		}
+		includes.add(pattern);
+		return (T) this;
+	}
+
+	/**
+	 * Defines include patterns.
+	 */
+	public T include(String... patterns) {
+		if (includes == null) {
+			includes = new LinkedList<String>();
+		}
+		Collections.addAll(includes, patterns);
+		return (T) this;
+	}
+
+	/**
+	 * Defines exclude pattern.
+	 */
+	public T exclude(String pattern) {
+		if (excludes == null) {
+			excludes = new LinkedList<String>();
+		}
+		excludes.add(pattern);
+		return (T) this;
+	}
+
+	/**
+	 * Defines exclude patterns.
+	 */
+	public T exclude(String... patterns) {
+		if (excludes == null) {
+			excludes = new LinkedList<String>();
+		}
+		Collections.addAll(excludes, patterns);
+		return (T) this;
+	}
+
+	/**
+	 * Determine if file is accepted, based on include and exclude
+	 * rules. Called on each file entry (file or directory) and
+	 * returns <code>true</code> if file passes search criteria.
+	 * Include rules are matched first, then exclude rules.
+	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
 	 */
 	protected boolean acceptFile(File file) {
+		String matchingFilePath = getMatchingFilePath(file);
+
+		if (includes != null) {
+			for (String pattern : includes) {
+				if (match(matchingFilePath, pattern) == false) {
+					return false;
+				}
+			}
+		}
+		if (excludes != null) {
+			for (String pattern : excludes) {
+				if (match(matchingFilePath, pattern) == true) {
+					return false;
+				}
+			}
+		}
 		return true;
+	}
+
+	/**
+	 * Defines matching logic for given pattern. Default implementation
+	 * simple checks if {@link #getMatchingFilePath(java.io.File) matching file name}
+	 * is equal to some pattern. Various implementation may define different matching logic.
+	 * @param path matched file path
+	 * @param pattern pattern to match against
+	 *
+	 * @see #getMatchingFilePath(java.io.File)
+	 * @see #acceptFile(java.io.File)
+	 */
+	protected boolean match(String path, String pattern) {
+		return path.equals(pattern);
 	}
 
 	/**
@@ -420,6 +502,8 @@ public class FindFile<T extends FindFile> {
 		pathListOriginal = null;
 		todoFiles = null;
 		lastFile = null;
+		includes = null;
+		excludes = null;
 	}
 
 	/**

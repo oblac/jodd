@@ -30,7 +30,8 @@ public class FindFileTest {
 
 	@Test
 	public void testWildcardFile() {
-		FindFile ff = new WildcardFindFile("**/*file/a*")
+		FindFile ff = new WildcardFindFile()
+				.include("**/*file/a*")
 				.setRecursive(true)
 				.setIncludeDirs(true)
 				.searchPath(dataRoot);
@@ -97,7 +98,8 @@ public class FindFileTest {
 
 	@Test
 	public void testWildcardPath() {
-		FindFile ff = new WildcardFindFile("**/file/*")
+		FindFile ff = new WildcardFindFile()
+				.include("**/file/*")
 				.setRecursive(true)
 				.setIncludeDirs(true)
 				.searchPath(dataRoot);
@@ -132,7 +134,8 @@ public class FindFileTest {
 
 	@Test
 	public void testRegexp() {
-		FindFile ff = new RegExpFindFile(".*/a[.].*")
+		FindFile ff = new RegExpFindFile()
+				.include(".*/a[.].*")
 				.setRecursive(true)
 				.setIncludeDirs(true)
 				.searchPath(dataRoot);
