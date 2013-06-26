@@ -118,7 +118,19 @@ public class PropsTest {
 		p.setActiveProfiles("deploy");
 		p.extractSubProps(prop, "db.*");
 		assertEquals(2, prop.size());
+	}
 
+	@Test
+	public void testDefaultProfile() {
+		Props p = new Props();
+		p.load(
+				"key1=hello\n" +
+				"key1<one>=Hi!\n" +
+				" \n" +
+				"@profiles=one");
+
+		assertEquals("Hi!", p.getValue("key1"));
+		assertEquals("Hi!", p.getValue("key1", "one"));
 	}
 
 	@Test

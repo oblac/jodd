@@ -303,7 +303,8 @@ public class Props implements Cloneable {
 	 * Returns value of property, using active profiles.
 	 */
 	public String getValue(final String key) {
-		return getValue(key, activeProfiles);
+		initialize();
+		return data.lookupValue(key, activeProfiles);
 	}
 
 
@@ -351,7 +352,8 @@ public class Props implements Cloneable {
 	 * Extracts props belonging to active profiles.
 	 */
 	public void extractProps(final Map target) {
-		extractProps(target, activeProfiles);
+		initialize();
+		data.extract(target, activeProfiles, null);
 	}
 
 	/**
