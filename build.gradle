@@ -341,7 +341,7 @@ task testReport(type: TestReport) {
 task release() {
 	group 'Project'
 	description 'Builds everything.'
-	
+
 	dependsOn buildModules
 	dependsOn testAll
 	dependsOn javadocAll
@@ -354,5 +354,5 @@ task release() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.5'
+	gradleVersion = '1.6'
 }

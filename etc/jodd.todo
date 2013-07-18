@@ -1,8 +1,7 @@
 General Tasks:
 	- Replace for-each loop with index loop, as it takes less space @tbd
 	- Add smart download in NetUtil
-	- migrate to gradle v1.6 @next @v3.4.5
-		Check if we can drop jacoco code in favor of 1.6 plugin
+	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
 	- Add more TypeConverters! @next @v3.4.5
@@ -13,6 +12,15 @@ General Tasks:
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
 	- FindFile with includes/excludes @v3.4.5 @done
+	- StringUtil.stripFromChar @next  strip everything from/up to the first char
+	- copy file was somewhat slow? @tbd @next
+Site/Documentation:
+	- Quickstarts page upgrade - everything is done automatically, via gradle @done
+	- improve <var> in docs
+	- migrate from google groups to nabble?getsatisfied? @tbd
+	- add blog? @tbd
+Jerry:
+	- Add smart html() method for nicer html output @soon @hot
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done
@@ -71,6 +79,6 @@ Joy:
 	- AppCore, add optional scanning so to allow manual registration @next
 Quickstart:
 	- Add gradle for easier start: madvoc @done @v3.4.5
-	- Add gradle for easier start: webapp1 @next
+	- Add gradle for easier start: webapp1 @done @v3.4.5
 	- Use empty project to create a blog/twitter example and make a video @soon
 	- Add log DEBUG @next
