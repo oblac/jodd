@@ -67,4 +67,23 @@ public class JerryParserTest {
 
 		assertEquals("<xml><book isbn=\"123\"><name>Foo</name><br/></book></xml>", doc.html());
 	}
+
+	@Test
+	public void testAttributeCaseSensitive() {
+		String str = "<div id='one' myAttr='aaa'>xxx</div>";
+
+		Jerry.JerryParser jerryParser = Jerry.jerry();
+
+		jerryParser.enableHtmlMode();
+
+		Jerry doc = jerryParser.parse(str);
+
+		assertEquals("<div id=\"one\" myattr=\"aaa\">xxx</div>", doc.html());
+
+		jerryParser.getDOMBuilder().setCaseSensitive(true);
+
+		doc = jerryParser.parse(str);
+
+		assertEquals("<div id=\"one\" myAttr=\"aaa\">xxx</div>", doc.html());
+	}
 }
