@@ -24,6 +24,10 @@ However, before sending a patch, please make sure that the following applies:
 * All tests checks pass.
 * You understand that we're super grateful for your patch!
 
+Adding something new?
+---------------------
+We do love to enhance Jodd with you to become more powerful! The best way to workout your idea is to discuss it first! Please, if you can, don't just throw us the code of a new feature; lets figure first together what would be the best approach regarding the current architecture and future plans, before any development. This way we all get sure that your idea is aligned with the codebase and you can enjoy your happy coding even more :)
+
 Want to write docs?
 -------------------
 Documentation is very valuable to us. So just send it anyway you like :)

@@ -66,7 +66,7 @@ Proxetta:
 	- Fix static methods call @done @v3.4.5
 DbOom:
 	- LoadById, load values into existing instance
-	- Generic finder method. Try to detect method arguments using MethRef? @next @v3.4.5
+	- Generic finder method. Try to detect method arguments using MethRef? @next @v3.4.6
 	- Add batch update
 	- Introduce #execute() interceptors? @tbd
 MethRef:
