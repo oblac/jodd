@@ -3,6 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParserEngine;
+import jodd.lagarto.Tag;
 import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
@@ -225,6 +226,85 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	 */
 	protected DOMBuilderTagVisitor createDOMDomBuilderTagVisitor() {
 		return new DOMBuilderTagVisitor(this);
+	}
+
+	// ---------------------------------------------------------------- factory
+
+	/**
+	 * Creates {@link CData tag}.
+	 */
+	public CData createCData(String cdata) {
+		return new CData(this, cdata);
+	}
+
+	/**
+	 * Creates {@link Comment}.
+	 * @see Comment#Comment(NodesConfig, String)
+	 */
+	public Comment createComment(String comment) {
+		return new Comment(this, comment);
+	}
+
+	/**
+	 * Creates conditional {@link Comment}.
+	 * @see Comment#Comment(NodesConfig, String, boolean, boolean, String)
+	 */
+	public Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
+		return new Comment(this, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
+	}
+
+	/**
+	 * Creates root {@link Document} node.
+	 */
+	public Document createDocument() {
+		return new Document(this);
+	}
+
+	/**
+	 * Creates {@link Element} node from a {@link Tag}.
+	 */
+	public Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
+		return new Element(this, tag, voidElement, selfClosed);
+	}
+
+	/**
+	 * Creates empty tag.
+	 */
+	public Element createElement(String name) {
+		return new Element(this, name, false, false);
+	}
+
+	/**
+	 * Creates empty {@link Element} node.
+	 */
+	public Element createElement(String tagName, boolean voidElement, boolean selfClosed) {
+		return new Element(this, tagName, voidElement, selfClosed);
+	}
+
+	/**
+	 * Creates {@link Text} node.
+	 */
+	public Text createText(String text) {
+		return new Text(this, text);
+	}
+
+	/**
+	 * Creates empty {@link Text} node.
+	 */
+	public Text createText() {
+		return new Text(this, null);
+	}
+
+	public DocumentType createDocumentType(String value, String publicId, String baseUri) {
+		return new DocumentType(this, value, publicId, baseUri);
+	}
+
+	public XmlDeclaration createXmlDeclaration(Tag tag) {
+		return new XmlDeclaration(this, tag);
+	}
+
+	public XmlDeclaration createXmlDeclaration(String string) {
+		return new XmlDeclaration(this, string);
 	}
 
 	// ---------------------------------------------------------------- OUT

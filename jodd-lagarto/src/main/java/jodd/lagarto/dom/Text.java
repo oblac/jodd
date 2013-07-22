@@ -10,18 +10,14 @@ import java.io.IOException;
 
 public class Text extends Node {
 
-	public Text() {
-		this(null);
-	}
-
-	public Text(String text) {
-		super(NodeType.TEXT, null, true);
+	protected Text(LagartoDOMBuilder domBuilder, String text) {
+		super(domBuilder, NodeType.TEXT, null);
 		this.nodeValue = text;
 	}
 
 	@Override
 	public Text clone() {
-		return cloneTo(new Text(nodeValue));
+		return cloneTo(new Text(domBuilder, nodeValue));
 	}
 	
 	protected Boolean blank;

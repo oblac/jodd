@@ -14,8 +14,8 @@ public class Element extends Node {
 	protected final boolean voidElement;
 	protected final boolean selfClosed;
 
-	public Element(Tag tag, boolean voidElement, boolean selfClosed, boolean caseSensitive) {
-		super(NodeType.ELEMENT, tag.getName(), caseSensitive);
+	protected Element(LagartoDOMBuilder domBuilder, Tag tag, boolean voidElement, boolean selfClosed) {
+		super(domBuilder, NodeType.ELEMENT, tag.getName());
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 
@@ -27,27 +27,20 @@ public class Element extends Node {
 		}
 	}
 
-	/**
-	 * Internal constructor.
-	 */
-	Element(String name) {
-		this(name, false, false, false);
-	}
-
 	// ---------------------------------------------------------------- clone
 
 	/**
 	 * Internal constructor.
 	 */
-	private Element(String name, boolean voidElement, boolean selfClosed, boolean caseSensitive) {
-		super(NodeType.ELEMENT, name, caseSensitive);
+	public Element(LagartoDOMBuilder domBuilder, String name, boolean voidElement, boolean selfClosed) {
+		super(domBuilder, NodeType.ELEMENT, name);
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 	}
 
 	@Override
 	public Element clone() {
-		return cloneTo(new Element(nodeName, voidElement, selfClosed, caseSensitive));
+		return cloneTo(new Element(domBuilder, nodeName, voidElement, selfClosed));
 	}
 
 	// ---------------------------------------------------------------- html

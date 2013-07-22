@@ -28,8 +28,10 @@ public class DomTreeTest {
 
 	@Test
 	public void testSpecialCases() {
-		Document document = new Document();
-		Element html = new Element("html");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+
+		Document document = domBuilder.createDocument();
+		Element html = domBuilder.createElement("html");
 		document.addChild(html);
 
 		assertEquals(0, html.getChildNodesCount());
@@ -54,12 +56,14 @@ public class DomTreeTest {
 
 	@Test
 	public void testDetach() {
-		Document document = new Document();
-		Element html = new Element("html");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+
+		Document document = domBuilder.createDocument();
+		Element html = domBuilder.createElement("html");
 		document.addChild(html);
-		Element div1 = new Element("div");
+		Element div1 = domBuilder.createElement("div");
 		html.addChild(div1);
-		Element div2 = new Element("div");
+		Element div2 = domBuilder.createElement("div");
 		div1.addChild(div2);
 
 		div1.detachFromParent();
@@ -72,15 +76,17 @@ public class DomTreeTest {
 
 	@Test
 	public void testInsertRemoveDeepLevel() {
-		Document document = new Document();
-		Element html = new Element("html");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+
+		Document document = domBuilder.createDocument();
+		Element html = domBuilder.createElement("html");
 		document.addChild(html);
 
-		Element div1 = new Element("div");
+		Element div1 = domBuilder.createElement("div");
 		html.addChild(div1);
-		Element div2 = new Element("div");
+		Element div2 = domBuilder.createElement("div");
 		html.addChild(div2);
-		Element div3 = new Element("div");
+		Element div3 = domBuilder.createElement("div");
 		html.addChild(div3);
 
 		assertEquals(2, div1.getDeepLevel());
@@ -146,7 +152,9 @@ public class DomTreeTest {
 
 	@Test
 	public void testAttributes() {
-		Element node = new Element("div");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+
+		Element node = domBuilder.createElement("div");
 
 		assertFalse(node.hasAttributes());
 		assertFalse(node.hasAttribute("id"));
@@ -172,26 +180,28 @@ public class DomTreeTest {
 
 	@Test
 	public void testChildren() {
-		Element node = new Element("div");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
 
-		Text textHello = new Text("hello");
+		Element node = domBuilder.createElement("div");
+
+		Text textHello = domBuilder.createText("hello");
 		node.addChild(textHello);
 
-		Element em = new Element("em");
+		Element em = domBuilder.createElement("em");
 		node.addChild(em);
-		Text textJodd = new Text("jodd");
+		Text textJodd = domBuilder.createText("jodd");
 		em.addChild(textJodd);
 
-		Text textHey = new Text("!");
+		Text textHey = domBuilder.createText("!");
 		node.addChild(textHey);
 
 		assertEquals(3, node.getChildNodesCount());
 		assertEquals(1, node.getChildElementsCount());
 		assertEquals(1, node.getChildElementsCount("em"));
 
-		Element b = new Element("b");
+		Element b = domBuilder.createElement("b");
 		node.addChild(b);
-		Text textJodd2 = new Text("fwk");
+		Text textJodd2 = domBuilder.createText("fwk");
 		b.addChild(textJodd2);
 
 		assertEquals(4, node.getChildNodesCount());
@@ -214,13 +224,15 @@ public class DomTreeTest {
 
 	@Test
 	public void testCssPath() {
-		Document document = new Document();
-		Element html = new Element("html");
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		
+		Document document = domBuilder.createDocument();
+		Element html = domBuilder.createElement("html");
 		document.addChild(html);
-		Element div1 = new Element("div");
+		Element div1 = domBuilder.createElement("div");
 		div1.setAttribute("id", "one");
 		html.addChild(div1);
-		Element div2 = new Element("div");
+		Element div2 = domBuilder.createElement("div");
 		div1.addChild(div2);
 
 		assertEquals("html div#one div", div2.getCssPath());
@@ -291,25 +303,27 @@ public class DomTreeTest {
 
 	@Test
 	public void testReindexOne() {
-		Document document = new Document();
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		
+		Document document = domBuilder.createDocument();
 
-		Element one = new Element("one");
+		Element one = domBuilder.createElement("one");
 		document.addChild(one);
 
 		assertEquals(1, document.childElementNodesCount);
 		assertEquals(0, one.siblingElementIndex);
 
-		Element two = new Element("two");
+		Element two = domBuilder.createElement("two");
 		document.addChild(two);
 
 		assertEquals(2, document.childElementNodesCount);
 		assertEquals(0, one.siblingElementIndex);
 		assertEquals(1, two.siblingElementIndex);
 
-		Text three = new Text("xxx");
+		Text three = domBuilder.createText("xxx");
 		document.addChild(three);
 
-		Element four = new Element("four");
+		Element four = domBuilder.createElement("four");
 		document.addChild(four);
 
 		assertEquals(3, document.childElementNodesCount);

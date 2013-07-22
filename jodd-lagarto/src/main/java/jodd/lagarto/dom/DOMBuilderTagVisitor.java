@@ -50,7 +50,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			log.debug("DomTree builder started.");
 		}
 
-		rootNode = new Document();
+		rootNode = domBuilder.createDocument();
 		parentNode = rootNode;
 		enabled = true;
 	}
@@ -103,7 +103,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			selfClosed = domBuilder.isSelfCloseVoidTags();
 		}
 		
-		Element element = new Element(tag, isVoid, selfClosed, domBuilder.isCaseSensitive());
+		Element element = domBuilder.createElement(tag, isVoid, selfClosed);
 
 		if (domBuilder.isCalculatePosition()) {
 			element.position = calculatePosition(tag);
@@ -329,7 +329,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = new Text(body.toString());
+			Node text = domBuilder.createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -343,7 +343,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = new Text(body.toString());
+			Node text = domBuilder.createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -357,7 +357,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = new Text(body.toString());
+			Node text = domBuilder.createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -373,7 +373,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.isIgnoreComments()) {
 			return;
 		}
-		Node node = new Comment(comment.toString());
+		Node node = domBuilder.createComment(comment.toString());
 		parentNode.addChild(node);
 	}
 
@@ -383,7 +383,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		String textValue = text.toString();
-		Node node = new Text(textValue);
+		Node node = domBuilder.createText(textValue);
 		parentNode.addChild(node);
 	}
 
@@ -392,7 +392,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		CData cdataNode = new CData(cdata.toString());
+		CData cdataNode = domBuilder.createCData(cdata.toString());
 		parentNode.addChild(cdataNode);
 	}
 
@@ -401,7 +401,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = new XmlDeclaration(tag, domBuilder.isCaseSensitive());
+		XmlDeclaration xmlDeclaration = domBuilder.createXmlDeclaration(tag);
 		parentNode.addChild(xmlDeclaration);
 	}
 
@@ -410,7 +410,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		DocumentType documentType = new DocumentType(name, publicId, baseUri);
+		DocumentType documentType = domBuilder.createDocumentType(name, publicId, baseUri);
 		parentNode.addChild(documentType);
 	}
 
@@ -429,7 +429,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			}
 
 			String additionalComment = comment != null ? comment.toString() : null;
-			Node commentNode = new Comment(expression.toString(), isStartingTag, isHidden, additionalComment);
+			Node commentNode = domBuilder.createConditionalComment(expression.toString(), isStartingTag, isHidden, additionalComment);
 
 			parentNode.addChild(commentNode);
 		}

@@ -7,13 +7,13 @@ package jodd.lagarto.dom;
  */
 public class Document extends Node {
 
-	public Document() {
-		super(NodeType.DOCUMENT, null, true);
+	protected Document(LagartoDOMBuilder domBuilder) {
+		super(domBuilder, NodeType.DOCUMENT, null);
 	}
 	
 	@Override
 	public Document clone() {
-		return cloneTo(new Document());
+		return cloneTo(new Document(domBuilder));
 	}
 
 }

@@ -24,8 +24,9 @@ public abstract class Node implements Cloneable {
 	// node values
 
 	protected final String nodeName;
+	protected final String nodeRawName;
 	protected final NodeType nodeType;
-	protected final boolean caseSensitive;
+	protected final LagartoDOMBuilder domBuilder;
 	protected String nodeValue;
 
 	// attributes
@@ -53,9 +54,17 @@ public abstract class Node implements Cloneable {
 	protected int deepLevel;
 	protected LagartoLexer.Position position;
 
-	protected Node(NodeType nodeType, String nodeName, boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
-		this.nodeName = caseSensitive ? nodeName : nodeName.toLowerCase();
+	/**
+	 * Creates new node.
+	 */
+	protected Node(LagartoDOMBuilder domBuilder, NodeType nodeType, String nodeName) {
+		this.domBuilder = domBuilder;
+		this.nodeRawName = nodeName;
+		if (nodeName != null) {
+			this.nodeName = domBuilder.isCaseSensitive() ? nodeName : nodeName.toLowerCase();
+		} else {
+			this.nodeName = null;
+		}
 		this.nodeType = nodeType;
 	}
 
@@ -105,10 +114,17 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Returns node name or <code>null</code> if name is not available.
+	 * Returns nodes name or <code>null</code> if name is not available.
 	 */
 	public String getNodeName() {
 		return nodeName;
+	}
+
+	/**
+	 * Returns nodes raw name - exactly as it was given in the input.
+	 */
+	public String getNodeRawName() {
+		return nodeRawName;
 	}
 
 	/**
@@ -123,6 +139,14 @@ public abstract class Node implements Cloneable {
 	 */
 	public void setNodeValue(String value) {
 		this.nodeValue = value;
+	}
+
+	/**
+	 * Returns used {@link LagartoDOMBuilder dom builder} that
+	 * created this node.
+	 */
+	public LagartoDOMBuilder getDomBuilder() {
+		return domBuilder;
 	}
 
 	// ---------------------------------------------------------------- tree
@@ -303,7 +327,7 @@ public abstract class Node implements Cloneable {
 		}
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name)) {
+			if (attr.getName().equals(name)) {
 				return true;
 			}
 		}
@@ -327,9 +351,14 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return null;
 		}
+
+		if (!domBuilder.isCaseSensitive()) {
+			name = name.toLowerCase();
+		}
+
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name)) {
+			if (attr.getName().equals(name)) {
 				return attr;
 			}
 		}
@@ -341,9 +370,13 @@ public abstract class Node implements Cloneable {
 			return -1;
 		}
 
+		if (!domBuilder.isCaseSensitive()) {
+			name = name.toLowerCase();
+		}
+
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name)) {
+			if (attr.getName().equals(name)) {
 				return i;
 			}
 		}
@@ -365,19 +398,20 @@ public abstract class Node implements Cloneable {
 	public void setAttribute(String name, String value) {
 		initAttributes();
 
-		if (!caseSensitive) {
+		String rawAttributeName = name;
+		if (!domBuilder.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
 		// search if attribute with the same name exist
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name)) {
+			if (attr.getName().equals(name)) {
 				attr.setValue(value);
 				return;
 			}
 		}
-		attributes.add(new Attribute(name, value, true));
+		attributes.add(new Attribute(rawAttributeName, name, value, true));
 	}
 
 	/**

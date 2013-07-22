@@ -11,14 +11,14 @@ import java.io.IOException;
  */
 public class CData extends Node {
 
-	public CData(String cdata) {
-		super(NodeType.CDATA, null, true);
+	protected CData(LagartoDOMBuilder domBuilder, String cdata) {
+		super(domBuilder, NodeType.CDATA, null);
 		this.nodeValue = cdata;
 	}
 
 	@Override
 	public CData clone() {
-		return cloneTo(new CData(nodeValue));
+		return cloneTo(new CData(domBuilder, nodeValue));
 	}
 
 	@Override

@@ -18,8 +18,8 @@ public class Comment extends Node {
 	/**
 	 * Creates regular comment.
 	 */
-	public Comment(String comment) {
-		super(NodeType.COMMENT, null, true);
+	protected Comment(LagartoDOMBuilder domBuilder, String comment) {
+		super(domBuilder, NodeType.COMMENT, null);
 		this.nodeValue = comment;
 		this.conditionalDownlevelHidden = null;
 		this.isStartingTag = false;
@@ -29,8 +29,8 @@ public class Comment extends Node {
 	/**
 	 * Creates conditional comment.
 	 */
-	public Comment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
-		super(NodeType.COMMENT, null, true);
+	protected Comment(LagartoDOMBuilder domBuilder, String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
+		super(domBuilder, NodeType.COMMENT, null);
 		this.nodeValue = comment;
 		this.isStartingTag = isStartingTag;
 		this.conditionalDownlevelHidden = Boolean.valueOf(conditionalDownlevelHidden);
@@ -40,8 +40,8 @@ public class Comment extends Node {
 	@Override
 	public Comment clone() {
 		return cloneTo(conditionalDownlevelHidden == null ?
-				new Comment(nodeValue) :
-				new Comment(nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment));
+				new Comment(domBuilder, nodeValue) :
+				new Comment(domBuilder, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment));
 	}
 
 	/**

@@ -2,9 +2,14 @@
 
 package jodd.jerry;
 
+import jodd.lagarto.dom.Document;
+import jodd.lagarto.dom.Element;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class JerryParserTest {
 
@@ -70,20 +75,40 @@ public class JerryParserTest {
 
 	@Test
 	public void testAttributeCaseSensitive() {
-		String str = "<div id='one' myAttr='aaa'>xxx</div>";
+		String str = "<dIV id='one' myAttr='aaa'>xxx</div>";
 
 		Jerry.JerryParser jerryParser = Jerry.jerry();
-
 		jerryParser.enableHtmlMode();
 
+		// default
+
 		Jerry doc = jerryParser.parse(str);
+		Document document = (Document) doc.get(0);
+		Element divNode = (Element) document.getChild(0);
+		assertEquals("div", divNode.getNodeName());
+		assertNotNull(divNode.getAttribute("myattr"));
+		assertNotNull(divNode.getAttribute("myAttr"));
+
+		Element divNode2 = (Element) doc.$("div[myattr=aaa]").nodes[0];
+		assertSame(divNode, divNode2);
 
 		assertEquals("<div id=\"one\" myattr=\"aaa\">xxx</div>", doc.html());
+
+		// case sensitive
 
 		jerryParser.getDOMBuilder().setCaseSensitive(true);
 
 		doc = jerryParser.parse(str);
+		document = (Document) doc.get(0);
+		divNode = (Element) document.getChild(0);
+		assertEquals("dIV", divNode.getNodeName());
+		assertNull(divNode.getAttribute("myattr"));
 
-		assertEquals("<div id=\"one\" myAttr=\"aaa\">xxx</div>", doc.html());
+		assertEquals("<dIV id=\"one\" myAttr=\"aaa\">xxx</dIV>", doc.html());
+
+		divNode2 = (Element) doc.$("div[myattr=aaa]").nodes[0];
+		assertSame(divNode, divNode2);
+
+
 	}
 }

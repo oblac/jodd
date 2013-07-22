@@ -727,7 +727,7 @@ public class Jerry implements Iterable<Jerry> {
 	public Jerry text(String text) {
 		for (Node node : nodes) {
 			node.removeAllChilds();
-			Text textNode = new Text();
+			Text textNode = node.getDomBuilder().createText();
 			textNode.setTextContent(text);
 			node.addChild(textNode);
 		}

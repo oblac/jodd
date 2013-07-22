@@ -14,8 +14,8 @@ public class DocumentType extends Node {
 	protected final String publicId;
 	protected final String baseUri;
 
-	public DocumentType(String value, String publicId, String baseUri) {
-		super(NodeType.DOCUMENT_TYPE, null, true);
+	protected DocumentType(LagartoDOMBuilder domBuilder, String value, String publicId, String baseUri) {
+		super(domBuilder, NodeType.DOCUMENT_TYPE, null);
 		this.nodeValue = value;
 		this.publicId = publicId;
 		this.baseUri = baseUri;
@@ -23,7 +23,7 @@ public class DocumentType extends Node {
 
 	@Override
 	public DocumentType clone() {
-		return cloneTo(new DocumentType(nodeValue, publicId, baseUri));
+		return cloneTo(new DocumentType(domBuilder, nodeValue, publicId, baseUri));
 	}
 
 	public String getRootName() {

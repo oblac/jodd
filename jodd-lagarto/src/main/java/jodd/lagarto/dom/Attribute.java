@@ -13,22 +13,31 @@ import java.io.IOException;
  */
 public class Attribute implements Cloneable {
 
+	protected final String rawName;
 	protected final String name;
 	protected String value;
 	protected String[] splits;
 
-	public Attribute(String name, String value, boolean decode) {
+	public Attribute(String rawName, String name, String value, boolean decode) {
+		this.rawName = rawName;
 		this.name = name;
 		this.value = value != null ? (decode ? HtmlDecoder.decode(value) : value) : null;
 	}
 	
 	@Override
 	public Attribute clone() {
-		return new Attribute(name, value, false);
+		return new Attribute(rawName, name, value, false);
 	}
 
 	/**
-	 * Returns attribute name.
+	 * Returns attributes raw name.
+	 */
+	public String getRawName() {
+		return rawName;
+	}
+
+	/**
+	 * Returns attributes name.
 	 */
 	public String getName() {
 		return name;
@@ -46,13 +55,6 @@ public class Attribute implements Cloneable {
 	 */
 	public void setValue(String value) {
 		this.value = value;
-	}
-
-	/**
-	 * Returns <code>true</code> if attributes name equals to given name.
-	 */
-	public boolean equalsName(String name) {
-		return this.name.equals(name);
 	}
 
 	public void toHtml(Appendable appendable) throws IOException {

@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 public class XmlDeclaration extends Node {
 
-	public XmlDeclaration(Tag tag, boolean caseSensitive) {
-		super(NodeType.XML_DECLARATION, tag.getName(), caseSensitive);
+	protected XmlDeclaration(LagartoDOMBuilder domBuilder, Tag tag) {
+		super(domBuilder, NodeType.XML_DECLARATION, tag.getName());
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
@@ -22,17 +22,13 @@ public class XmlDeclaration extends Node {
 		}
 	}
 
-	public XmlDeclaration(String name) {
-		this(name, false);
-	}
-
-	public XmlDeclaration(String name, boolean caseSensitive) {
-		super(NodeType.XML_DECLARATION, name, caseSensitive);
+	protected XmlDeclaration(LagartoDOMBuilder domBuilder, String name) {
+		super(domBuilder, NodeType.XML_DECLARATION, name);
 	}
 
 	@Override
 	public XmlDeclaration clone() {
-		return cloneTo(new XmlDeclaration(nodeName, caseSensitive));
+		return cloneTo(new XmlDeclaration(domBuilder, nodeName));
 	}
 
 

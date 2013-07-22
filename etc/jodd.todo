@@ -19,8 +19,9 @@ Site/Documentation:
 	- improve <var> in docs
 	- migrate from google groups to nabble?getsatisfied? @tbd
 	- add blog? @tbd
-Jerry:
-	- Add smart html() method for nicer html output @soon @hot
+Lagarto/Jerry:
+	- Add smart html() class for nicer html output @next @v3.4.5 @hot
+	- Add reference to dom builder to each node @done @v3.4.5
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done
