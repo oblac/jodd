@@ -14,13 +14,11 @@ import java.io.IOException;
 public class Attribute implements Cloneable {
 
 	protected final String name;
-	protected final int nameHash;
 	protected String value;
 	protected String[] splits;
 
 	public Attribute(String name, String value, boolean decode) {
 		this.name = name;
-		this.nameHash = name.hashCode();
 		this.value = value != null ? (decode ? HtmlDecoder.decode(value) : value) : null;
 	}
 	
@@ -52,15 +50,9 @@ public class Attribute implements Cloneable {
 
 	/**
 	 * Returns <code>true</code> if attributes name equals to given name.
-	 * Uses name hash for better performances.
 	 */
-	public boolean equalsName(String name, int nameHash) {
-		if (this.nameHash == nameHash) {
-			if (this.name.equals(name)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean equalsName(String name) {
+		return this.name.equals(name);
 	}
 
 	public void toHtml(Appendable appendable) throws IOException {

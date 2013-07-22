@@ -157,7 +157,7 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Appends several child nodes at once.
-	 * Reindex is done after all children is added.
+	 * Reindex is done after all children are added.
 	 */
 	public void addChild(Node... nodes) {
 		for (Node node : nodes) {
@@ -180,7 +180,7 @@ public abstract class Node implements Cloneable {
 		try {
 			initChildNodes();
 			childNodes.add(index, node);
-		} catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ignore) {
 			throw new LagartoDOMException("Invalid node index: " + index);
 		}
 		reindexChildren();
@@ -217,7 +217,7 @@ public abstract class Node implements Cloneable {
 		Node node;
 		try {
 			node = childNodes.get(index);
-		} catch (IndexOutOfBoundsException ioobex) {
+		} catch (IndexOutOfBoundsException ignore) {
 			return null;
 		}
 		node.detachFromParent();
@@ -301,10 +301,9 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return false;
 		}
-		int nameHash = name.hashCode();
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name, nameHash)) {
+			if (attr.equalsName(name)) {
 				return true;
 			}
 		}
@@ -328,10 +327,9 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return null;
 		}
-		int nameHash = name.hashCode();
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name, nameHash)) {
+			if (attr.equalsName(name)) {
 				return attr;
 			}
 		}
@@ -342,10 +340,10 @@ public abstract class Node implements Cloneable {
 		if (attributes == null) {
 			return -1;
 		}
-		int nameHash = name.hashCode();
+
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name, nameHash)) {
+			if (attr.equalsName(name)) {
 				return i;
 			}
 		}
@@ -372,10 +370,9 @@ public abstract class Node implements Cloneable {
 		}
 
 		// search if attribute with the same name exist
-		int nameHash = name.hashCode();
 		for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 			Attribute attr = attributes.get(i);
-			if (attr.equalsName(name, nameHash)) {
+			if (attr.equalsName(name)) {
 				attr.setValue(value);
 				return;
 			}
