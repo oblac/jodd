@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.TagWriterUtil;
-
 import java.io.IOException;
 
 /**
@@ -40,6 +38,6 @@ public class DocumentType extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		TagWriterUtil.writeDoctype(appendable, nodeValue, publicId, baseUri);
+		domBuilder.getRenderer().renderDocumentType(this, appendable);
 	}
 }

@@ -31,21 +31,9 @@ public class XmlDeclaration extends Node {
 		return cloneTo(new XmlDeclaration(domBuilder, nodeName));
 	}
 
-
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		appendable.append("<?");
-		appendable.append(nodeName);
-
-		int attrCount = getAttributesCount();
-		if (attrCount != 0) {
-			for (int i = 0; i < attrCount; i++) {
-				Attribute attr = getAttribute(i);
-				appendable.append(' ');
-				attr.toHtml(appendable);
-			}
-		}
-		appendable.append("?>");
+		getDomBuilder().getRenderer().renderXmlDeclaration(this, appendable);
 	}
 
 }

@@ -68,6 +68,6 @@ public class Text extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		appendable.append(nodeValue);
+		getDomBuilder().getRenderer().renderText(this, appendable);
 	}
 }

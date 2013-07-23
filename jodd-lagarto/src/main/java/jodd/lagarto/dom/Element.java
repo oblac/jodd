@@ -61,39 +61,7 @@ public class Element extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		appendable.append('<');
-		appendable.append(nodeName);
-
-		int attrCount = getAttributesCount();
-
-		if (attrCount != 0) {
-			for (int i = 0; i < attrCount; i++) {
-				Attribute attr = getAttribute(i);
-				appendable.append(' ');
-				attr.toHtml(appendable);
-			}
-		}
-
-		int childCount = getChildNodesCount();
-
-		if (selfClosed && childCount == 0) {
-			appendable.append("/>");
-			return;
-		}
-
-		appendable.append('>');
-
-		if (voidElement) {
-			return;
-		}
-
-		if (childCount != 0) {
-			toInnerHtml(appendable);
-		}
-
-		appendable.append("</");
-		appendable.append(nodeName);
-		appendable.append('>');
+		getDomBuilder().getRenderer().renderElement(this, appendable);
 	}
 
 	@Override

@@ -3,10 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.util.HtmlDecoder;
-import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
-
-import java.io.IOException;
 
 /**
  * Elements attribute.
@@ -55,16 +52,6 @@ public class Attribute implements Cloneable {
 	 */
 	public void setValue(String value) {
 		this.value = value;
-	}
-
-	public void toHtml(Appendable appendable) throws IOException {
-		appendable.append(name);
-		if (value != null) {
-			appendable.append('=');
-			appendable.append('\"');
-			appendable.append(HtmlEncoder.text(value));
-			appendable.append('\"');
-		}
 	}
 
 	// ---------------------------------------------------------------- splits

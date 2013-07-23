@@ -35,6 +35,21 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	protected String conditionalCommentExpression;
 	protected String[] voidTags = HTML5_VOID_TAGS;
 	protected boolean impliedEndTags;
+	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
+
+	/**
+	 * Returns {@link LagartoNodeHtmlRenderer} instance that generates HTML output.
+	 */
+	public LagartoNodeHtmlRenderer getRenderer() {
+		return renderer;
+	}
+
+	/**
+	 * Sets new renderer.
+	 */
+	public void setRenderer(LagartoNodeHtmlRenderer renderer) {
+		this.renderer = renderer;
+	}
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
 		return ignoreWhitespacesBetweenTags;
@@ -159,6 +174,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		impliedEndTags = true;							// some tags end is implied
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
+		renderer.reset();
 		return this;
 	}
 
@@ -174,6 +190,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
+		renderer.reset();
 		return this;
 	}
 
@@ -189,6 +206,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = false;				// disable IE conditional comments
 		conditionalCommentExpression = null;			// don't use
+		renderer.reset();
 		return this;
 	}
 

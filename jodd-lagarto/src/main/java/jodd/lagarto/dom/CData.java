@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.TagWriterUtil;
-
 import java.io.IOException;
 
 /**
@@ -23,6 +21,7 @@ public class CData extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		TagWriterUtil.writeCData(appendable, nodeValue);
+		domBuilder.getRenderer().renderCData(this, appendable);
 	}
+
 }

@@ -984,9 +984,7 @@ public abstract class Node implements Cloneable {
 	 * Generates HTML by appending it to the provided <code>Appendable</code>.
 	 */
 	public void toHtml(Appendable appendable) throws IOException {
-		if (nodeValue != null) {
-			appendable.append(nodeValue);
-		}
+		domBuilder.getRenderer().renderNodeValue(this, appendable);
 		toInnerHtml(appendable);
 	}
 

@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.TagWriterUtil;
-
 import java.io.IOException;
 
 /**
@@ -63,11 +61,7 @@ public class Comment extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		if (conditionalDownlevelHidden == null) {
-			TagWriterUtil.writeComment(appendable, nodeValue);
-		} else {
-			TagWriterUtil.writeConditionalComment(appendable, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment);
-		}
+		domBuilder.getRenderer().renderComment(this, appendable);
 	}
 
 }
