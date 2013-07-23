@@ -75,12 +75,12 @@ public class JerryParserTest {
 
 	@Test
 	public void testAttributeCaseSensitive() {
-		String str = "<dIV id='one' myAttr='aaa'>xxx</div>";
+		String str = "<dIV id='one' myAttr='aaa'>xxx</dIV>";
 
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 		jerryParser.enableHtmlMode();
 
-		// default
+		// default, case not sensitive
 
 		Jerry doc = jerryParser.parse(str);
 		Document document = (Document) doc.get(0);
@@ -106,9 +106,8 @@ public class JerryParserTest {
 
 		assertEquals("<dIV id=\"one\" myAttr=\"aaa\">xxx</dIV>", doc.html());
 
-		divNode2 = (Element) doc.$("div[myattr=aaa]").nodes[0];
+		assertEquals(0, doc.$("div[myattr=aaa]").nodes.length);
+		divNode2 = (Element) doc.$("dIV[myAttr=aaa]").nodes[0];
 		assertSame(divNode, divNode2);
-
-
 	}
 }

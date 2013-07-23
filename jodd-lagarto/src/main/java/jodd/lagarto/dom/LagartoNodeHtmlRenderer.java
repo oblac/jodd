@@ -177,6 +177,9 @@ public class LagartoNodeHtmlRenderer {
 		this.attrNonHtmlCase = attrNonHtmlCase;
 	}
 
+	/**
+	 * Resets all cases to default.
+	 */
 	public void reset() {
 		tagHtmlCase = Case.DEFAULT;
 		tagNonHtmlCase = Case.DEFAULT;
@@ -223,7 +226,7 @@ public class LagartoNodeHtmlRenderer {
 			// deal with all attributes the same way
 			caseValue = attrHtmlCase;
 		} else {
-			boolean isHtmlAttribute = htmlNames.isHtmlTag(attribute.getRawName());
+			boolean isHtmlAttribute = htmlNames.isHtmlAttribute(attribute.getRawName());
 
 			if (isHtmlAttribute) {
 				caseValue = attrHtmlCase;
@@ -291,7 +294,7 @@ public class LagartoNodeHtmlRenderer {
 		}
 
 		if (childCount != 0) {
-			element.toInnerHtml(appendable);
+			renderElementBody(element, appendable);
 		}
 
 		appendable.append("</");
@@ -299,5 +302,11 @@ public class LagartoNodeHtmlRenderer {
 		appendable.append('>');
 	}
 
+	/**
+	 * Renders element body.
+	 */
+	protected void renderElementBody(Element element, Appendable appendable) throws IOException {
+		element.toInnerHtml(appendable);
+	}
 
 }

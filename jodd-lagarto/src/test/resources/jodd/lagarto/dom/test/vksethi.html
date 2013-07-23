@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<SCRIPT>
+            /* block comment */
+			function testMe() {
+				alert("Hey");
+			}
+		</SCRIPT>
+	</head>
+	<body attrib_NAME="111" ROCKING-NAME="222">
+		<p> ... Your HTML content here ...</p>
+		<DIV id="333">
+        aaa
+        <![CDATA[
+            function foo(a,b)
+            {
+                return 0;
+            }
+        ]]>
+		</DIV>
+
+		<div ID="789" my_ATTRIB1="testing">attribute testing going on</div>
+
+		<div xml-attrib="xml-content testing" ID="a2">
+            <SHIPORDER id="999" NAME="XML-NAME" BIGATT="big attribute" BIG-ATT="BIG ONE" ABC-def="ABC def ">
+                <TITLE>dontchange</TITLE>
+                <orderperson>John Smith</orderperson>
+                <shipto>
+                    <name>Olga Nordmann</name>
+                    <city>4000 Stanger</city>
+                    <country>Norway</country>
+                </shipto>
+                <item>
+                    <title>
+                        <![CDATA[
+                            <<< * >>>
+                        ]]>
+                    </title>
+                    <quantity>1</quantity>
+                    <price>9.90</price>
+                </item>
+            </SHIPORDER>
+        </div>
+    </body>
+</html>
