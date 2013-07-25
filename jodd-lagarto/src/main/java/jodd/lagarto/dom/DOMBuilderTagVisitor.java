@@ -281,11 +281,53 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	/**
-	 * Fixes all unclosed tags up to matching parent.
+	 * Fixes all unclosed tags up to matching parent. This may work in two ways, in general:
+	 * <li>A) closing tags as soon as possible</li>
+	 * <li>B) closing tags as late as possible</li>
+	 * <p>
+	 * Solution A means that missing end tag will be added right after the starting tag, making
+	 * the invalid tag as one with no body. Solution B means that missing end tag will be added
+	 * just before parent tag is closed, making the whole inner content its tag body.
+	 * <p>
+	 * There is no right solution, but according to browsers (e.g. Chrome), solution B seems
+	 * to be used for this.
 	 */
+	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
+		while (true) {
+			if (parentNode == matchingParent) {
+				parentNode = parentNode.getParentNode();
+				break;
+			}
+
+			Node parentParentNode = parentNode.getParentNode();
+
+			if (implRules.implicitlyCloseParentTagOnNewTag(parentParentNode.getNodeName(), parentNode.getNodeName())) {
+				// break the tree: detach this node and append it after parent
+
+				parentNode.detachFromParent();
+
+				parentParentNode.getParentNode().addChild(parentNode);
+			}
+
+			// debug message
+
+			String positionString = StringPool.EMPTY;
+			if (parentNode.position != null) {
+				positionString = parentNode.position.toString();
+			}
+
+			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + positionString);
+
+			// continue looping
+			parentNode = parentParentNode;
+		}
+
+/*
+	// solution A
 	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
 		LinkedList<Node> finalNodes = new LinkedList<Node>();
 
+		mainloop:
 		while (true) {
 
 			if (parentNode == matchingParent) {
@@ -294,6 +336,31 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			}
 
 			Node parentParentNode = parentNode.getParentNode();
+
+			// check implicit rules to determine if this node (parentNode)
+			// has to be fixed, or we can simply leave it as it is, meaning
+			// it would be closed by one of its missing parent nodes.
+
+			String[] parentsWithMissingEnds = implRules.findMissingParentTagEnds(parentNode.getNodeName());
+			if (parentsWithMissingEnds != null) {
+				// this node might be implicitly closed by missing end tag of one of its parents
+				// check if one of the parents equals to any missing node
+
+				Node thisNode = parentParentNode;
+
+				while (true) {
+					if (StringUtil.equalsOne(thisNode.getNodeName(), parentsWithMissingEnds) != -1) {
+						parentNode = parentParentNode;
+						continue mainloop;
+					}
+
+					if (thisNode == matchingParent) {
+						break;	// nothing found, close it immediately
+					}
+					thisNode = thisNode.getParentNode();
+				}
+
+			}
 
 			parentNode.detachFromParent();
 
@@ -316,6 +383,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		matchingParent.addChild(newChilds);
+*/
 	}
 
 	// ---------------------------------------------------------------- tree

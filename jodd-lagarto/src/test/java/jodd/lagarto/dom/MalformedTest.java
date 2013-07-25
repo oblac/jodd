@@ -2,6 +2,7 @@
 
 package jodd.lagarto.dom;
 
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -118,6 +119,75 @@ public class MalformedTest {
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><div></div></body>", doc.getHtml());
 		assertTrue(doc.check());
+	}
+
+	@Test
+	public void testSpanDivOverTable() {
+		String content = "<span><div><table><tr><td>text</span>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<span><div><table><tr><td>text</td></tr></table></div></span>", doc.getHtml());
+		assertTrue(doc.check());
+	}
+
+	@Test
+	public void testDivSpanOverTable() {
+		String content = "<div><span><table><tr><td>text</div>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		Document doc = lagartoDOMBuilder.parse(content);
+		assertEquals("<div><span><table><tr><td>text</td></tr></table></span></div>", doc.getHtml());
+		assertTrue(doc.check());
+	}
+
+	@Test
+	public void testTableInTableInTable() {
+		String html =
+				"<table>" +
+				"    <tr>" +
+				"        <td>111</td>" +
+				"    </tr>" +
+				"    <tr>" +
+				"        <td>" +
+				"            <table>" +
+				"                <tr>" +
+				"                    <td>222" +
+				"                        <table>" +
+				"                            <tr>" +
+				"                                <td>333</td>" +
+				"                            </td>" +
+				"                        </table>" +
+				"            </table>" +
+				"</table>";
+		html = StringUtil.removeChars(html, ' ');
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		Document doc = lagartoDOMBuilder.parse(html);
+		String out =
+				"<table>" +
+				"    <tr>" +
+				"        <td>111</td>" +
+				"    </tr>" +
+				"    <tr>" +
+				"        <td>" +
+				"            <table>" +
+				"                <tr>" +
+				"                    <td>222" +
+				"                        <table>" +
+				"                            <tr>" +
+				"                                <td>333</td>" +
+				"                            </tr>" +
+				"                        </table>" +
+				"                    </td>" +
+				"                </tr>" +
+				"            </table>" +
+				"        </td>" +
+				"    </tr>" +
+				"</table>";
+
+		out = StringUtil.removeChars(out, ' ');
+		assertEquals(out, doc.getHtml());
+		assertTrue(doc.check());
+
 	}
 
 }

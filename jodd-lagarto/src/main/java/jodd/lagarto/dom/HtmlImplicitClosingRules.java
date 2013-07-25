@@ -117,12 +117,12 @@ public class HtmlImplicitClosingRules {
 		parentNodeName = parentNodeName.toLowerCase();
 		nodeName = nodeName.toLowerCase();
 
-		// body and html tag closes all.
+		// body and html tag closes all
 		if (nodeName.equals("body") || nodeName.equals("html")) {
 			return true;
 		}
 
-		for (int i = 0; i < IMPLIED_ON_END.length; i+=2) {
+		for (int i = 0; i < IMPLIED_ON_END.length; i += 2) {
 			if (StringUtil.equalsOne(nodeName, IMPLIED_ON_END[i]) != -1) {
 				if (StringUtil.equalsOne(parentNodeName, IMPLIED_ON_END[i + 1]) != -1) {
 					return true;
