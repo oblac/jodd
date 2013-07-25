@@ -54,73 +54,33 @@ public class LagartoNodeHtmlRendererTest {
 
 		// raw, default
 		renderer.setTagCase(RAW);
-		renderer.setAttrCase(DEFAULT);
+		renderer.setAttributeCase(DEFAULT);
 		assertEquals("<html><boDY><div id=\"z\" foobar=\"aAa\">some Text</div></boDY></html>", document.getHtml());
 
 		// raw, raw
 		renderer.setTagCase(RAW);
-		renderer.setAttrCase(RAW);
+		renderer.setAttributeCase(RAW);
 		assertEquals(html, document.getHtml());
 
 		// default, raw
 		renderer.setTagCase(DEFAULT);
-		renderer.setAttrCase(RAW);
+		renderer.setAttributeCase(RAW);
 		assertEquals("<html><body><div id=\"z\" fooBar=\"aAa\">some Text</div></body></html>", document.getHtml());
 
 		// default, default
 		renderer.setTagCase(DEFAULT);
-		renderer.setAttrCase(DEFAULT);
+		renderer.setAttributeCase(DEFAULT);
 		assertEquals("<html><body><div id=\"z\" foobar=\"aAa\">some Text</div></body></html>", document.getHtml());
 
 		// lowercase, uppercase
 		renderer.setTagCase(LOWERCASE);
-		renderer.setAttrCase(UPPERCASE);
+		renderer.setAttributeCase(UPPERCASE);
 		assertEquals("<html><body><div ID=\"z\" FOOBAR=\"aAa\">some Text</div></body></html>", document.getHtml());
 
 		// uppercase, lowercase
 		renderer.setTagCase(UPPERCASE);
-		renderer.setAttrCase(LOWERCASE);
+		renderer.setAttributeCase(LOWERCASE);
 		assertEquals("<HTML><BODY><DIV id=\"z\" foobar=\"aAa\">some Text</DIV></BODY></HTML>", document.getHtml());
-	}
-
-	@Test
-	public void testPartialTag() {
-		String html = "<dIV id=\"z\" fooBar=\"aAa\"><sUM>some Text</sUM></dIV>";
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
-
-		// case insensitive -> lowercase
-		Document document = domBuilder.parse(html);
-		LagartoNodeHtmlRenderer renderer = domBuilder.getRenderer();
-
-		// raw, default
-		renderer.setTagHtmlCase(RAW);
-		renderer.setTagNonHtmlCase(DEFAULT);
-		assertEquals("<dIV id=\"z\" foobar=\"aAa\"><sum>some Text</sum></dIV>", document.getHtml());
-
-		// default, raw
-		renderer.setTagHtmlCase(DEFAULT);
-		renderer.setTagNonHtmlCase(RAW);
-		assertEquals("<div id=\"z\" foobar=\"aAa\"><sUM>some Text</sUM></div>", document.getHtml());
-	}
-
-	@Test
-	public void testPartialAttribute() {
-		String html = "<dIV id=\"z\" fooBar=\"aAa\"><sUM>some Text</sUM></dIV>";
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
-
-		// case insensitive -> lowercase
-		Document document = domBuilder.parse(html);
-		LagartoNodeHtmlRenderer renderer = domBuilder.getRenderer();
-
-		// raw, default
-		renderer.setAttrHtmlCase(RAW);
-		renderer.setAttrNonHtmlCase(DEFAULT);
-		assertEquals("<div id=\"z\" foobar=\"aAa\"><sum>some Text</sum></div>", document.getHtml());
-
-		// default, raw
-		renderer.setAttrHtmlCase(DEFAULT);
-		renderer.setAttrNonHtmlCase(RAW);
-		assertEquals("<div id=\"z\" fooBar=\"aAa\"><sum>some Text</sum></div>", document.getHtml());
 	}
 
 	// ---------------------------------------------------------------- vsethi test
@@ -141,14 +101,21 @@ public class LagartoNodeHtmlRendererTest {
 		}
 
 		protected void configHtml() {
-			setTagHtmlCase(LOWERCASE);
-			setTagNonHtmlCase(RAW);
-			setAttrHtmlCase(LOWERCASE);
-			setAttrNonHtmlCase(RAW);
+			setTagCase(LOWERCASE);
+			setAttributeCase(LOWERCASE);
 		}
 		protected void configXML() {
 			setTagCase(RAW);
-			setAttrCase(RAW);
+			setAttributeCase(RAW);
+		}
+
+		@Override
+		protected String resolveAttributeName(Node node, Attribute attribute) {
+			String attributeName = attribute.getRawName();
+			if (attributeName.contains("_") || attributeName.contains("-")) {
+				return attributeName;
+			}
+			return super.resolveAttributeName(node, attribute);
 		}
 
 		@Override

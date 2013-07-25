@@ -109,110 +109,56 @@ public class LagartoNodeHtmlRenderer {
 		UPPERCASE,
 	}
 
-	protected HtmlNames htmlNames = new HtmlNames();
+	/**
+	 * Letter case of tag names.
+	 */
+	protected Case tagCase = Case.DEFAULT;
 
 	/**
-	 * Letter case of known HTML tag names.
+	 * Letter case of attributes names.
 	 */
-	protected Case tagHtmlCase = Case.DEFAULT;
-	/**
-	 * Letter case of non-HTML tag names.
-	 */
-	protected Case tagNonHtmlCase = Case.DEFAULT;
-
-	/**
-	 * Letter case of known HTML attributes names.
-	 */
-	protected Case attrHtmlCase = Case.DEFAULT;
-	/**
-	 * Letter case of non-HTML attributes names.
-	 */
-	protected Case attrNonHtmlCase = Case.DEFAULT;
+	protected Case attributeCase = Case.DEFAULT;
 
 	/**
 	 * Sets {@link Case case} of tag names.
 	 */
 	public void setTagCase(Case tagCase) {
-		this.tagHtmlCase = tagCase;
-		this.tagNonHtmlCase = tagCase;
+		this.tagCase = tagCase;
+	}
+
+	public Case getTagCase() {
+		return tagCase;
 	}
 
 	/**
 	 * Sets {@link Case case} of attribute names.
 	 */
-	public void setAttrCase(Case attrCase) {
-		this.attrHtmlCase = attrCase;
-		this.attrNonHtmlCase = attrCase;
+	public void setAttributeCase(Case attributeCase) {
+		this.attributeCase = attributeCase;
 	}
 
-	public Case getTagHtmlCase() {
-		return tagHtmlCase;
-	}
-
-	public void setTagHtmlCase(Case tagHtmlCase) {
-		this.tagHtmlCase = tagHtmlCase;
-	}
-
-	public Case getTagNonHtmlCase() {
-		return tagNonHtmlCase;
-	}
-
-	public void setTagNonHtmlCase(Case tagNonHtmlCase) {
-		this.tagNonHtmlCase = tagNonHtmlCase;
-	}
-
-	public Case getAttrHtmlCase() {
-		return attrHtmlCase;
-	}
-
-	public void setAttrHtmlCase(Case attrHtmlCase) {
-		this.attrHtmlCase = attrHtmlCase;
-	}
-
-	public Case getAttrNonHtmlCase() {
-		return attrNonHtmlCase;
-	}
-
-	public void setAttrNonHtmlCase(Case attrNonHtmlCase) {
-		this.attrNonHtmlCase = attrNonHtmlCase;
+	public Case getAttributeCase() {
+		return attributeCase;
 	}
 
 	/**
 	 * Resets all cases to default.
 	 */
 	public void reset() {
-		tagHtmlCase = Case.DEFAULT;
-		tagNonHtmlCase = Case.DEFAULT;
-		attrHtmlCase = Case.DEFAULT;
-		attrNonHtmlCase = Case.DEFAULT;
+		tagCase = Case.DEFAULT;
+		attributeCase = Case.DEFAULT;
 	}
 
 	/**
 	 * Renders node name.
 	 */
 	protected String resolveNodeName(Node node) {
-		Case caseValue;
-
-		if (tagHtmlCase == tagNonHtmlCase) {
-			// deal with all tags the same way
-			caseValue = tagHtmlCase;
-		} else {
-			boolean isHtmlTag = htmlNames.isHtmlTag(node.getNodeRawName());
-
-			if (isHtmlTag) {
-				caseValue = tagHtmlCase;
-			} else {
-				caseValue = tagNonHtmlCase;
-			}
-		}
-
-		switch (caseValue) {
+		switch (tagCase) {
 			case DEFAULT: return node.getNodeName();
 			case RAW: return node.getNodeRawName();
 			case LOWERCASE: return node.getNodeRawName().toLowerCase();
 			case UPPERCASE: return node.getNodeRawName().toUpperCase();
 		}
-
 		return null;
 	}
 
@@ -220,28 +166,12 @@ public class LagartoNodeHtmlRenderer {
 	 * Renders attribute name.
 	 */
 	protected String resolveAttributeName(Node node, Attribute attribute) {
-		Case caseValue;
-
-		if (attrHtmlCase == attrNonHtmlCase) {
-			// deal with all attributes the same way
-			caseValue = attrHtmlCase;
-		} else {
-			boolean isHtmlAttribute = htmlNames.isHtmlAttribute(attribute.getRawName());
-
-			if (isHtmlAttribute) {
-				caseValue = attrHtmlCase;
-			} else {
-				caseValue = attrNonHtmlCase;
-			}
-		}
-
-		switch (caseValue) {
+		switch (attributeCase) {
 			case DEFAULT: return attribute.getName();
 			case RAW: return attribute.getRawName();
 			case LOWERCASE: return attribute.getRawName().toLowerCase();
 			case UPPERCASE: return attribute.getRawName().toUpperCase();
 		}
-
 		return null;
 	}
 
