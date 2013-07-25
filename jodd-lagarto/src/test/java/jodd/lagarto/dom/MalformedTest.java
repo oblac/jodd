@@ -3,12 +3,26 @@
 package jodd.lagarto.dom;
 
 import jodd.util.StringUtil;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MalformedTest {
+
+	protected String testDataRoot;
+
+	@Before
+	public void setUp() throws Exception {
+		if (testDataRoot != null) {
+			return;
+		}
+		URL data = NodeSelectorTest.class.getResource("test");
+		testDataRoot = data.getFile();
+	}
 
 	@Test
 	public void testOneNode() {
@@ -187,7 +201,43 @@ public class MalformedTest {
 		out = StringUtil.removeChars(out, ' ');
 		assertEquals(out, doc.getHtml());
 		assertTrue(doc.check());
+	}
 
+	@Test
+	public void testFormClosesAll() {
+		String html = "<html>\n" +
+				"<body>\n" +
+				"<form>\n" +
+				"<table>\n" +
+				"<tr>\n" +
+				"<td>\n" +
+				"<table>\n" +
+				"<div>\n" +
+				"<tr>\n" +
+				"<td>\n" +
+				"<div>\n" +
+				"</form></body></html>";
+
+		html = StringUtil.removeChars(html, ' ');
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		Document doc = lagartoDOMBuilder.parse(html);
+		String out = "<html>\n" +
+				"<body>\n" +
+				"<form>\n" +
+				"<table>\n" +
+				"<tr>\n" +
+				"<td>\n" +
+				"<table>\n" +
+				"<div>\n" +
+				"<tr>\n" +
+				"<td>\n" +
+				"<div>\n" +
+				"</div></td></tr></div></table></td></tr></table></form></body></html>";
+
+		out = StringUtil.removeChars(out, ' ');
+		assertEquals(out, doc.getHtml());
+		assertTrue(doc.check());
 	}
 
 }

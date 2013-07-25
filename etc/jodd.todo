@@ -19,9 +19,11 @@ Site/Documentation:
 	- improve <var> in docs
 	- migrate from google groups to nabble?getsatisfied? @tbd
 	- add blog? @tbd
+	- improve SEO somehow
 Lagarto/Jerry:
-	- Add smart html() class for nicer html output @next @v3.4.5 @hot
+	- Add smart html() class for nicer html output @next @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
+	- Add alternative parser per real HTML rules, that produces browser-quality code @next @hot
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done

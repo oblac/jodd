@@ -286,11 +286,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	 * <li>B) closing tags as late as possible</li>
 	 * <p>
 	 * Solution A means that missing end tag will be added right after the starting tag, making
-	 * the invalid tag as one with no body. Solution B means that missing end tag will be added
-	 * just before parent tag is closed, making the whole inner content its tag body.
+	 * the invalid tag without the body. Solution B means that missing end tag will be added
+	 * just before parent tag is closed, making the whole inner content as its tag body.
 	 * <p>
-	 * There is no right solution, but according to browsers (e.g. Chrome), solution B seems
-	 * to be used for this.
+	 * These are just generic solutions, and solution B is the closest to the rules.
 	 */
 	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
 		while (true) {
@@ -321,69 +320,6 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			// continue looping
 			parentNode = parentParentNode;
 		}
-
-/*
-	// solution A
-	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
-		LinkedList<Node> finalNodes = new LinkedList<Node>();
-
-		mainloop:
-		while (true) {
-
-			if (parentNode == matchingParent) {
-				parentNode = parentNode.getParentNode();
-				break;
-			}
-
-			Node parentParentNode = parentNode.getParentNode();
-
-			// check implicit rules to determine if this node (parentNode)
-			// has to be fixed, or we can simply leave it as it is, meaning
-			// it would be closed by one of its missing parent nodes.
-
-			String[] parentsWithMissingEnds = implRules.findMissingParentTagEnds(parentNode.getNodeName());
-			if (parentsWithMissingEnds != null) {
-				// this node might be implicitly closed by missing end tag of one of its parents
-				// check if one of the parents equals to any missing node
-
-				Node thisNode = parentParentNode;
-
-				while (true) {
-					if (StringUtil.equalsOne(thisNode.getNodeName(), parentsWithMissingEnds) != -1) {
-						parentNode = parentParentNode;
-						continue mainloop;
-					}
-
-					if (thisNode == matchingParent) {
-						break;	// nothing found, close it immediately
-					}
-					thisNode = thisNode.getParentNode();
-				}
-
-			}
-
-			parentNode.detachFromParent();
-
-			String positionString = StringPool.EMPTY;
-			if (parentNode.position != null) {
-				positionString = parentNode.position.toString();
-			}
-
-			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + positionString);
-
-			finalNodes.addFirst(parentNode);
-			parentNode = parentParentNode;
-		}
-
-		Node[] newChilds = new Node[finalNodes.size()];
-
-		for (int i = 0; i < finalNodes.size(); i++) {
-			Node node = finalNodes.get(i);
-			newChilds[i] = node;
-		}
-
-		matchingParent.addChild(newChilds);
-*/
 	}
 
 	// ---------------------------------------------------------------- tree

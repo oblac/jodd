@@ -23,7 +23,9 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	 * http://dev.w3.org/html5/spec/Overview.html#void-elements
 	 */
 	public static final String[] HTML5_VOID_TAGS = {
-			"area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"};
+			"area", "base", "br", "col", "embed", "hr", "img", "input",
+			"keygen", "link", "menuitem", "meta", "param", "source",
+			"track", "wbr"};
 
 	// ---------------------------------------------------------------- IN flags
 
