@@ -4,7 +4,7 @@ General Tasks:
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
-	- Add more TypeConverters! @next @v3.4.5
+	- Add more TypeConverters! @next @v3.4.6
 		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
@@ -12,7 +12,7 @@ General Tasks:
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
 	- FindFile with includes/excludes @v3.4.5 @done
-	- StringUtil.stripFromChar @next  strip everything from/up to the first char
+	- StringUtil.stripFromChar @next  strips everything from/up to the first char
 	- copy file was somewhat slow? @tbd @next
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
@@ -21,7 +21,7 @@ Site/Documentation:
 	- add blog? @tbd
 	- improve SEO somehow
 Lagarto/Jerry:
-	- Add smart html() class for nicer html output @next @v3.4.5
+	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
 	- Add alternative parser per real HTML rules, that produces browser-quality code @next @hot
 BeanUtil:
