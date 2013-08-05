@@ -2,6 +2,7 @@
 
 package jodd.jerry;
 
+import jodd.lagarto.dom.LagartoDOMBuilder;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -40,7 +41,7 @@ public class JerryMiscTest {
 	public void testAppend1() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableHtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
@@ -55,7 +56,7 @@ public class JerryMiscTest {
 	public void testAppend2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableXmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 
@@ -70,7 +71,7 @@ public class JerryMiscTest {
 	public void testAppend3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableXhtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXhtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book><name>Foo</name></book></xml>");
 

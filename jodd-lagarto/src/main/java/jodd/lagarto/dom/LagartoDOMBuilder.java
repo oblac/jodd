@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
-public class LagartoDOMBuilder extends LagartoParserEngine {
+public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder {
 
 	public LagartoDOMBuilder() {
 		enableHtmlMode();
@@ -234,18 +234,11 @@ public class LagartoDOMBuilder extends LagartoParserEngine {
 	 * Parses the content.
 	 */
 	protected Document doParse() {
-		DOMBuilderTagVisitor domBuilderTagVisitor = createDOMDomBuilderTagVisitor();
+		DOMBuilderTagVisitor domBuilderTagVisitor = new DOMBuilderTagVisitor(this);
 
 		parse(domBuilderTagVisitor);
 
 		return domBuilderTagVisitor.getDocument();
-	}
-
-	/**
-	 * Creates {@link DOMBuilderTagVisitor}.
-	 */
-	protected DOMBuilderTagVisitor createDOMDomBuilderTagVisitor() {
-		return new DOMBuilderTagVisitor(this);
 	}
 
 	// ---------------------------------------------------------------- factory

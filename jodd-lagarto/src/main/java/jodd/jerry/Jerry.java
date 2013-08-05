@@ -2,6 +2,7 @@
 
 package jodd.jerry;
 
+import jodd.lagarto.dom.DOMBuilder;
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
@@ -69,7 +70,7 @@ public class Jerry implements Iterable<Jerry> {
 	 */
 	public static class JerryParser {
 
-		protected final LagartoDOMBuilder domBuilder;
+		protected final DOMBuilder domBuilder;
 
 		public JerryParser() {
 			this.domBuilder = createLagartoDOMBuilder();
@@ -83,32 +84,23 @@ public class Jerry implements Iterable<Jerry> {
 		}
 
 		/**
-		 * Returns builder for additional configuration.
+		 * Returns {@link DOMBuilder} for additional configuration.
 		 */
-		public LagartoDOMBuilder getDOMBuilder() {
+		public DOMBuilder getDOMBuilder() {
 			return domBuilder;
 		}
 
-		public JerryParser enableHtmlMode() {
-			domBuilder.enableHtmlMode();
-			return this;
-		}
-
-		public JerryParser enableXhtmlMode() {
-			domBuilder.enableXhtmlMode();
-			return this;
-		}
-
-		public JerryParser enableXmlMode() {
-			domBuilder.enableXmlMode();
-			return this;
-		}
-
+		/**
+		 * Invokes parsing on {@link DOMBuilder}.
+		 */
 		public Jerry parse(CharSequence content) {
 			Document doc = domBuilder.parse(content);
 			return new Jerry(domBuilder, doc);
 		}
 
+		/**
+		 * Invokes parsing on {@link DOMBuilder}.
+		 */
 		public Jerry parse(CharBuffer content) {
 			Document doc = domBuilder.parse(content);
 			return new Jerry(domBuilder, doc);
@@ -127,12 +119,12 @@ public class Jerry implements Iterable<Jerry> {
 
 	protected final Jerry parent;
 	protected final Node[] nodes;
-	protected final LagartoDOMBuilder builder;
+	protected final DOMBuilder builder;
 
 	/**
 	 * Creates root Jerry.
 	 */
-	protected Jerry(LagartoDOMBuilder builder, Node... nodes) {
+	protected Jerry(DOMBuilder builder, Node... nodes) {
 		this.parent = null;
 		this.nodes = nodes;
 		this.builder = builder;

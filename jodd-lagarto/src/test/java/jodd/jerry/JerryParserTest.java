@@ -4,6 +4,7 @@ package jodd.jerry;
 
 import jodd.lagarto.dom.Document;
 import jodd.lagarto.dom.Element;
+import jodd.lagarto.dom.LagartoDOMBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +18,7 @@ public class JerryParserTest {
 	public void testJerryParserCreation() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableXmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml>   <book isbn='123'> <name>Foo<br></name>   </book></xml>");
 
@@ -32,7 +33,7 @@ public class JerryParserTest {
 	public void testAppendContent() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableHtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
@@ -47,7 +48,7 @@ public class JerryParserTest {
 	public void testAppendContent2() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableXmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
@@ -62,7 +63,7 @@ public class JerryParserTest {
 	public void testAppendContent3() {
 		Jerry.JerryParser jerryParser = Jerry.jerry();
 
-		jerryParser.enableXhtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXhtmlMode();
 
 		Jerry doc = jerryParser.parse("<xml><book isbn='123'><name>Foo</name></book></xml>");
 
@@ -78,7 +79,7 @@ public class JerryParserTest {
 		String str = "<dIV id='one' myAttr='aaa'>xxx</dIV>";
 
 		Jerry.JerryParser jerryParser = Jerry.jerry();
-		jerryParser.enableHtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
 
 		// default, case not sensitive
 
@@ -96,7 +97,7 @@ public class JerryParserTest {
 
 		// case sensitive
 
-		jerryParser.getDOMBuilder().setCaseSensitive(true);
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).setCaseSensitive(true);
 
 		doc = jerryParser.parse(str);
 		document = (Document) doc.get(0);

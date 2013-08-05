@@ -227,7 +227,7 @@ public class ParsingProblemsTest {
 
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 
-		jerryParser.enableXmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableXmlMode();
 
 		Jerry jerry = jerryParser.parse(FileUtil.readString(file));
 
@@ -250,8 +250,8 @@ public class ParsingProblemsTest {
 		String expectedResult = FileUtil.readString(file);
 
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
-		jerryParser.enableHtmlMode();
-		jerryParser.getDOMBuilder().setEnableConditionalComments(false);
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).setEnableConditionalComments(false);
 
 		Jerry jerry = jerryParser.parse(expectedResult);
 		String result = jerry.html();

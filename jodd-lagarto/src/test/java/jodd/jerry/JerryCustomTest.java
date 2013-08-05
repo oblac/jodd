@@ -2,6 +2,7 @@
 
 package jodd.jerry;
 
+import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class JerryCustomTest {
 
 		Jerry.JerryParser jerry = Jerry.jerry();
 
-		jerry.getDOMBuilder().setConditionalCommentExpression("if gt IE 9");
+		((LagartoDOMBuilder) jerry.getDOMBuilder()).setConditionalCommentExpression("if gt IE 9");
 
 		Jerry doc = jerry.parse(
 				"<html>" +
