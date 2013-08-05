@@ -2,15 +2,12 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoLexer;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
 import jodd.util.StringPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedList;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
@@ -60,14 +57,12 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 			if (!domBuilder.isImpliedEndTags()) {
 				if (log.isWarnEnabled()) {
-					String positionString = StringPool.EMPTY;
-					if (parentNode.position != null) {
-						positionString = parentNode.position.toString();
-					}
-					log.warn("Some unclosed tags are closed: <" + parentNode.getNodeName() + "> " + positionString);
+					log.warn("Some unclosed tags are closed: <" +
+							parentNode.getNodeName() + "> " +
+							parentNode.getPositionString());
 				}
 			}
-				// nothing to fix here, assuming all tags are implicitly closed on EOF
+			// nothing to fix here, assuming all tags are implicitly closed on EOF
 		}
 
 		// remove whitespaces
@@ -103,13 +98,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			selfClosed = domBuilder.isSelfCloseVoidTags();
 		}
 		
-		Element element = domBuilder.createElement(tag, isVoid, selfClosed);
-
-		if (domBuilder.isCalculatePosition()) {
-			element.position = calculatePosition(tag);
-		}
-
-		return element;
+		return domBuilder.createElement(tag, isVoid, selfClosed);
 	}
 
 	public void tag(Tag tag) {
@@ -137,11 +126,9 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							String positionString = StringPool.EMPTY;
-							if (parentNode.position != null) {
-								positionString = parentNode.position.toString();
-							}
-							log.debug("Implicitly closed tag <" + node.getNodeName() + "> " + positionString);
+							log.debug("Implicitly closed tag <" +
+									node.getNodeName() + "> " +
+									parentNode.getPositionString());
 						}
 					}
 				}
@@ -171,7 +158,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 					String positionString = StringPool.EMPTY;
 					if (domBuilder.isCalculatePosition()) {
-						positionString = calculatePosition(tag).toString();
+						positionString = domBuilder.calculatePosition(tag).toString();
 					}
 					error("Orphan closed tag ignored: </" + tagName + "> " + positionString);
 					break;
@@ -184,11 +171,8 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							String positionString = StringPool.EMPTY;
-							if (parentNode.position != null) {
-								positionString = parentNode.position.toString();
-							}
-							log.debug("Implicitly closed tag <" + tagName + "> " + positionString);
+							log.debug("Implicitly closed tag <" +
+									tagName + "> " + parentNode.getPositionString());
 						}
 
 						if (parentNode == matchingParent) {
@@ -310,12 +294,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 			// debug message
 
-			String positionString = StringPool.EMPTY;
-			if (parentNode.position != null) {
-				positionString = parentNode.position.toString();
-			}
-
-			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + positionString);
+			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + parentNode.getPositionString());
 
 			// continue looping
 			parentNode = parentParentNode;
@@ -442,47 +421,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- error
 
 	public void error(String message) {
-		if (domBuilder.isCollectErrors()) {
-			if (domBuilder.errors == null) {
-				domBuilder.errors = new LinkedList<String>();
-			}
-			domBuilder.errors.add(message);
-		}
+		domBuilder.addError(message);
+
 		if (log.isWarnEnabled()) {
 			log.warn(message);
 		}
-	}
-
-
-	/**
-	 * Calculates position of a tag.
-	 */
-	protected LagartoLexer.Position calculatePosition(Tag tag) {
-		LagartoLexer lexer = domBuilder.getLexer();
-
-		LagartoLexer.Position position = lexer.currentPosition();
-
-		int column = position.column;
-
-		if (tag.getName() != null) {
-			column -= tag.getName().length();
-		}
-		for (int i = 0; i < tag.getAttributeCount(); i++) {
-			column -= tag.getAttributeName(i).length();
-			String value = tag.getAttributeValue(i);
-			if (value != null) {
-				column -= value.length();
-				column--;	// for '='
-			}
-			column--;		// for attribute separation
-		}
-
-		int diff = position.column - column;
-
-		position.column = column;
-		position.offset -= diff;
-
-		return position;
 	}
 
 }

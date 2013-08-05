@@ -2,11 +2,13 @@
 
 package jodd.lagarto.dom;
 
+import jodd.lagarto.LagartoLexer;
 import jodd.lagarto.LagartoParserEngine;
 import jodd.lagarto.Tag;
 import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -252,7 +254,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 
 	/**
 	 * Creates {@link Comment}.
-	 * @see Comment#Comment(NodesConfig, String)
+	 * @see Comment#Comment(LagartoDOMBuilder, String)
 	 */
 	public Comment createComment(String comment) {
 		return new Comment(this, comment);
@@ -260,7 +262,7 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 
 	/**
 	 * Creates conditional {@link Comment}.
-	 * @see Comment#Comment(NodesConfig, String, boolean, boolean, String)
+	 * @see Comment#Comment(LagartoDOMBuilder, String, boolean, boolean, String)
 	 */
 	public Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
 		return new Comment(this, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
@@ -277,7 +279,13 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	 * Creates {@link Element} node from a {@link Tag}.
 	 */
 	public Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
-		return new Element(this, tag, voidElement, selfClosed);
+		Element element = new Element(this, tag, voidElement, selfClosed);
+
+		if (isCalculatePosition()) {
+			element.position = calculatePosition(tag);
+		}
+
+		return element;
 	}
 
 	/**
@@ -323,8 +331,21 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	// ---------------------------------------------------------------- OUT
 
 	protected List<String> errors;
-
 	protected long elapsed;
+
+	/**
+	 * Add new error message to the {@link #getErrors() errors list}.
+	 * If errors are {@link #isCollectErrors() not collected} error
+	 * message is ignored.
+	 */
+	public void addError(String message) {
+		if (collectErrors) {
+			if (errors == null) {
+				errors = new LinkedList<String>();
+			}
+			errors.add(message);
+		}
+	}
 
 	/**
 	 * Returns list of warnings and errors occurred during parsing.
@@ -341,5 +362,39 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	public long getParsingTime() {
 		return elapsed;
 	}
+
+	// ---------------------------------------------------------------- position
+
+	/**
+	 * Calculates position of a tag.
+	 */
+	protected LagartoLexer.Position calculatePosition(Tag tag) {
+		LagartoLexer lexer = getLexer();
+
+		LagartoLexer.Position position = lexer.currentPosition();
+
+		int column = position.column;
+
+		if (tag.getName() != null) {
+			column -= tag.getName().length();
+		}
+		for (int i = 0; i < tag.getAttributeCount(); i++) {
+			column -= tag.getAttributeName(i).length();
+			String value = tag.getAttributeValue(i);
+			if (value != null) {
+				column -= value.length();
+				column--;	// for '='
+			}
+			column--;		// for attribute separation
+		}
+
+		int diff = position.column - column;
+
+		position.column = column;
+		position.offset -= diff;
+
+		return position;
+	}
+
 
 }

@@ -3,6 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoLexer;
+import jodd.util.StringPool;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1012,6 +1013,19 @@ public abstract class Node implements Cloneable {
 	public LagartoLexer.Position getPosition() {
 		return position;
 	}
+
+	/**
+	 * Returns {@link #getPosition() node position} as a string,
+	 * ready to be appended to a message. If position is not
+	 * calculated, returns an empty string.
+	 */
+	public String getPositionString() {
+		if (parentNode.position != null) {
+			return parentNode.position.toString();
+		}
+		return StringPool.EMPTY;
+	}
+
 
 	/**
 	 * Returns CSS path to this node from document root.
