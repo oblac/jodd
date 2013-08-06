@@ -27,7 +27,7 @@ public abstract class Node implements Cloneable {
 	protected final String nodeName;
 	protected final String nodeRawName;
 	protected final NodeType nodeType;
-	protected final Document ownerDocument;	// root document node
+	protected Document ownerDocument;	// root document node
 	protected String nodeValue;
 
 	// attributes
@@ -174,7 +174,7 @@ public abstract class Node implements Cloneable {
 		node.detachFromParent();
 		node.parentNode = this;
 		node.deepLevel = deepLevel + 1;
-		initChildNodes();
+		initChildNodes(node);
 		childNodes.add(node);
 		reindexChildrenOnAdd(1);
 	}
@@ -188,7 +188,7 @@ public abstract class Node implements Cloneable {
 			node.detachFromParent();
 			node.parentNode = this;
 			node.deepLevel = deepLevel + 1;
-			initChildNodes();
+			initChildNodes(node);
 			childNodes.add(node);
 		}
 		reindexChildrenOnAdd(nodes.length);
@@ -202,7 +202,7 @@ public abstract class Node implements Cloneable {
 		node.parentNode = this;
 		node.deepLevel = deepLevel + 1;
 		try {
-			initChildNodes();
+			initChildNodes(node);
 			childNodes.add(index, node);
 		} catch (IndexOutOfBoundsException ignore) {
 			throw new LagartoDOMException("Invalid node index: " + index);
@@ -778,10 +778,29 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Initializes child nodes list when needed.
+	 * Also fix owner document for new node, if needed.
 	 */
-	protected void initChildNodes() {
+	protected void initChildNodes(Node newNode) {
 		if (childNodes == null) {
 			childNodes = new ArrayList<Node>();
+		}
+		if (ownerDocument != null) {
+			if (newNode.ownerDocument != ownerDocument) {
+				changeOwnerDocument(newNode, ownerDocument);
+			}
+		}
+	}
+
+	/**
+	 * Changes owner document for given node and all its children.
+	 */
+	protected void changeOwnerDocument(Node node, Document ownerDocument) {
+		node.ownerDocument = ownerDocument;
+
+		int childCount = node.getChildNodesCount();
+		for (int i = 0; i < childCount; i++) {
+			Node child = node.getChild(i);
+			changeOwnerDocument(child, ownerDocument);
 		}
 	}
 

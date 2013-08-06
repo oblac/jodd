@@ -2,6 +2,7 @@
 
 package jodd.jerry;
 
+import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class JerryMiscTest {
 
@@ -134,5 +136,22 @@ public class JerryMiscTest {
 		}
 
 		assertEquals("", result);
+	}
+
+	@Test
+	public void testHtmlNodesOwner() {
+		Jerry doc = Jerry.jerry().parse("<div>1<div id='x'>2</div>3</div>");
+
+		doc.$("#x").html("<span>wow</span>");
+
+		assertEquals("<div>1<div id=\"x\"><span>wow</span></div>3</div>", doc.html());
+
+		Element divx = (Element) doc.get(0).getChildElement(0).getChildElement(0);
+
+		assertSame(doc.get(0), divx.getOwnerDocument());
+		assertEquals("span", divx.getChildElement(0).getNodeName());
+
+		assertSame(doc.get(0), divx.getChildElement(0).getOwnerDocument());
+		assertSame(doc.get(0), divx.getChildElement(0).getChild(0).getOwnerDocument());
 	}
 }

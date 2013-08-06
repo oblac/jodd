@@ -283,7 +283,8 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		lagartoParser.setEnableConditionalComments(enableConditionalComments);
 		lagartoParser.setCalculatePosition(calculatePosition);
 
-		DOMBuilderTagVisitor domBuilderTagVisitor = new DOMBuilderTagVisitor(this);
+		LagartoDOMBuilderTagVisitor domBuilderTagVisitor =
+				new LagartoDOMBuilderTagVisitor(this);
 
 		lagartoParser.parse(domBuilderTagVisitor);
 

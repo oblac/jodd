@@ -24,6 +24,7 @@ import java.util.Set;
 /**
  * Jerry is JQuery in Java.
  */
+@SuppressWarnings("MethodNamesDifferingOnlyByCase")
 public class Jerry implements Iterable<Jerry> {
 
 	@SuppressWarnings("CloneableClassWithoutClone")
@@ -745,7 +746,11 @@ public class Jerry implements Iterable<Jerry> {
 
 		for (Node node : nodes) {
 			node.removeAllChilds();
+
+			// clone to preserve for next iteration
+			// as nodes will be detached from parent
 			Document workingDoc = doc.clone();
+
 			node.addChild(workingDoc.getChildNodes());
 		}
 		return this;
