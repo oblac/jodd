@@ -19,7 +19,6 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	protected final LagartoDOMBuilder domBuilder;
 	protected final HtmlImplicitClosingRules implRules = new HtmlImplicitClosingRules();
 
-	private long startTime;
 	protected Document rootNode;
 	protected Node parentNode;
 	/**
@@ -42,12 +41,11 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- start/end
 
 	public void start() {
-		startTime = System.currentTimeMillis();
 		if (log.isDebugEnabled()) {
 			log.debug("DomTree builder started.");
 		}
 
-		rootNode = domBuilder.createDocument();
+		rootNode = createDocument();
 		parentNode = rootNode;
 		enabled = true;
 	}
@@ -71,10 +69,10 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		// elapsed
-		domBuilder.elapsed = System.currentTimeMillis() - startTime;
+		rootNode.end();
 
 		if (log.isDebugEnabled()) {
-			log.debug("LagartoDom tree created in " + domBuilder.elapsed + " ms.");
+			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms.");
 		}
 	}
 
@@ -98,7 +96,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			selfClosed = domBuilder.isSelfCloseVoidTags();
 		}
 		
-		return domBuilder.createElement(tag, isVoid, selfClosed);
+		return createElement(tag, isVoid, selfClosed);
 	}
 
 	public void tag(Tag tag) {
@@ -158,7 +156,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 
 					String positionString = StringPool.EMPTY;
 					if (domBuilder.isCalculatePosition()) {
-						positionString = domBuilder.calculatePosition(tag).toString();
+						positionString = tag.calculateTagPosition().toString();
 					}
 					error("Orphan closed tag ignored: </" + tagName + "> " + positionString);
 					break;
@@ -242,7 +240,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	protected Node findMatchingParentOpenTag(String tagName) {
 		Node parent = parentNode;
 		
-		if (domBuilder.isCaseSensitive() == false) {
+		if (rootNode.isLowercase()) {
 			tagName = tagName.toLowerCase();
 		}
 		
@@ -251,7 +249,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			String parentNodeName = parent.getNodeName();
 
 			if (parentNodeName != null) {
-				if (domBuilder.isCaseSensitive() == false) {
+				if (rootNode.isLowercase()) {
 					parentNodeName = parentNodeName.toLowerCase();
 				}
 			}
@@ -312,7 +310,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = domBuilder.createText(body.toString());
+			Node text = createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -326,7 +324,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = domBuilder.createText(body.toString());
+			Node text = createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -340,7 +338,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = domBuilder.createText(body.toString());
+			Node text = createText(body.toString());
 			node.addChild(text);
 		}
 	}
@@ -356,7 +354,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.isIgnoreComments()) {
 			return;
 		}
-		Node node = domBuilder.createComment(comment.toString());
+		Node node = createComment(comment.toString());
 		parentNode.addChild(node);
 	}
 
@@ -366,7 +364,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		String textValue = text.toString();
-		Node node = domBuilder.createText(textValue);
+		Node node = createText(textValue);
 		parentNode.addChild(node);
 	}
 
@@ -375,7 +373,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		CData cdataNode = domBuilder.createCData(cdata.toString());
+		CData cdataNode = createCData(cdata.toString());
 		parentNode.addChild(cdataNode);
 	}
 
@@ -384,7 +382,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = domBuilder.createXmlDeclaration(tag);
+		XmlDeclaration xmlDeclaration = createXmlDeclaration(tag);
 		parentNode.addChild(xmlDeclaration);
 	}
 
@@ -393,7 +391,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		DocumentType documentType = domBuilder.createDocumentType(name, publicId, baseUri);
+		DocumentType documentType = createDocumentType(name, publicId, baseUri);
 		parentNode.addChild(documentType);
 	}
 
@@ -412,7 +410,7 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 			}
 
 			String additionalComment = comment != null ? comment.toString() : null;
-			Node commentNode = domBuilder.createConditionalComment(expression.toString(), isStartingTag, isHidden, additionalComment);
+			Node commentNode = createConditionalComment(expression.toString(), isStartingTag, isHidden, additionalComment);
 
 			parentNode.addChild(commentNode);
 		}
@@ -421,11 +419,89 @@ public class DOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- error
 
 	public void error(String message) {
-		domBuilder.addError(message);
+		rootNode.addError(message);
 
 		if (log.isWarnEnabled()) {
 			log.warn(message);
 		}
+	}
+
+	// ---------------------------------------------------------------- factory
+
+	/**
+	 * Creates root {@link Document} node.
+	 */
+	protected Document createDocument() {
+		return new Document(
+				!domBuilder.isCaseSensitive(),
+				domBuilder.isCollectErrors(),
+				domBuilder.getRenderer());
+	}
+
+	/**
+	 * Creates {@link CData tag}.
+	 */
+	protected CData createCData(String cdata) {
+		return new CData(rootNode, cdata);
+	}
+
+	/**
+	 * Creates {@link Comment}.
+	 * @see Comment#Comment(Document, String)
+	 */
+	protected Comment createComment(String comment) {
+		return new Comment(rootNode, comment);
+	}
+
+	/**
+	 * Creates conditional {@link Comment}.
+	 * @see Comment#Comment(Document, String, boolean, boolean, String)
+	 */
+	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
+		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
+	}
+
+
+	/**
+	 * Creates {@link Element} node from a {@link Tag}.
+	 */
+	protected Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
+		Element element = new Element(rootNode, tag, voidElement, selfClosed);
+
+		if (domBuilder.isCalculatePosition()) {
+			element.position = tag.calculateTagPosition();
+		}
+
+		return element;
+	}
+
+	/**
+	 * Creates empty tag.
+	 */
+	protected Element createElement(String name) {
+		return new Element(rootNode, name, false, false);
+	}
+
+	/**
+	 * Creates empty {@link Element} node.
+	 */
+	protected Element createElement(String tagName, boolean voidElement, boolean selfClosed) {
+		return new Element(rootNode, tagName, voidElement, selfClosed);
+	}
+
+	/**
+	 * Creates {@link Text} node.
+	 */
+	protected Text createText(String text) {
+		return new Text(rootNode, text);
+	}
+
+	protected DocumentType createDocumentType(String value, String publicId, String baseUri) {
+		return new DocumentType(rootNode, value, publicId, baseUri);
+	}
+
+	protected XmlDeclaration createXmlDeclaration(Tag tag) {
+		return new XmlDeclaration(rootNode, tag);
 	}
 
 }

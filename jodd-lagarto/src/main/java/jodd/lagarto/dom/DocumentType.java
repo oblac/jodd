@@ -12,8 +12,8 @@ public class DocumentType extends Node {
 	protected final String publicId;
 	protected final String baseUri;
 
-	protected DocumentType(LagartoDOMBuilder domBuilder, String value, String publicId, String baseUri) {
-		super(domBuilder, NodeType.DOCUMENT_TYPE, null);
+	public DocumentType(Document ownerDocument, String value, String publicId, String baseUri) {
+		super(ownerDocument, NodeType.DOCUMENT_TYPE, null);
 		this.nodeValue = value;
 		this.publicId = publicId;
 		this.baseUri = baseUri;
@@ -21,7 +21,7 @@ public class DocumentType extends Node {
 
 	@Override
 	public DocumentType clone() {
-		return cloneTo(new DocumentType(domBuilder, nodeValue, publicId, baseUri));
+		return cloneTo(new DocumentType(ownerDocument, nodeValue, publicId, baseUri));
 	}
 
 	public String getRootName() {
@@ -38,6 +38,6 @@ public class DocumentType extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		domBuilder.getRenderer().renderDocumentType(this, appendable);
+		ownerDocument.getRenderer().renderDocumentType(this, appendable);
 	}
 }

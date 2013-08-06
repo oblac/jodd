@@ -28,10 +28,9 @@ public class DomTreeTest {
 
 	@Test
 	public void testSpecialCases() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		Document document = new Document();
 
-		Document document = domBuilder.createDocument();
-		Element html = domBuilder.createElement("html");
+		Element html = new Element(document, "html");
 		document.addChild(html);
 
 		assertEquals(0, html.getChildNodesCount());
@@ -56,14 +55,13 @@ public class DomTreeTest {
 
 	@Test
 	public void testDetach() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		Document document = new Document();
 
-		Document document = domBuilder.createDocument();
-		Element html = domBuilder.createElement("html");
+		Element html = new Element(document, "html");
 		document.addChild(html);
-		Element div1 = domBuilder.createElement("div");
+		Element div1 = new Element(document, "div");
 		html.addChild(div1);
-		Element div2 = domBuilder.createElement("div");
+		Element div2 = new Element(document, "div");
 		div1.addChild(div2);
 
 		div1.detachFromParent();
@@ -76,17 +74,16 @@ public class DomTreeTest {
 
 	@Test
 	public void testInsertRemoveDeepLevel() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		Document document = new Document();
 
-		Document document = domBuilder.createDocument();
-		Element html = domBuilder.createElement("html");
+		Element html = new Element(document, "html");
 		document.addChild(html);
 
-		Element div1 = domBuilder.createElement("div");
+		Element div1 = new Element(document, "div");
 		html.addChild(div1);
-		Element div2 = domBuilder.createElement("div");
+		Element div2 = new Element(document, "div");
 		html.addChild(div2);
-		Element div3 = domBuilder.createElement("div");
+		Element div3 = new Element(document, "div");
 		html.addChild(div3);
 
 		assertEquals(2, div1.getDeepLevel());
@@ -152,9 +149,9 @@ public class DomTreeTest {
 
 	@Test
 	public void testAttributes() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		Document document = new Document();
 
-		Element node = domBuilder.createElement("div");
+		Element node = new Element(document, "div");
 
 		assertFalse(node.hasAttributes());
 		assertFalse(node.hasAttribute("id"));
@@ -180,28 +177,28 @@ public class DomTreeTest {
 
 	@Test
 	public void testChildren() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		Document document = new Document();
 
-		Element node = domBuilder.createElement("div");
+		Element node = new Element(document, "div");
 
-		Text textHello = domBuilder.createText("hello");
+		Text textHello = new Text(document, "hello");
 		node.addChild(textHello);
 
-		Element em = domBuilder.createElement("em");
+		Element em = new Element(document, "em");
 		node.addChild(em);
-		Text textJodd = domBuilder.createText("jodd");
+		Text textJodd = new Text(document, "jodd");
 		em.addChild(textJodd);
 
-		Text textHey = domBuilder.createText("!");
+		Text textHey = new Text(document, "!");
 		node.addChild(textHey);
 
 		assertEquals(3, node.getChildNodesCount());
 		assertEquals(1, node.getChildElementsCount());
 		assertEquals(1, node.getChildElementsCount("em"));
 
-		Element b = domBuilder.createElement("b");
+		Element b = new Element(document, "b");
 		node.addChild(b);
-		Text textJodd2 = domBuilder.createText("fwk");
+		Text textJodd2 = new Text(document, "fwk");
 		b.addChild(textJodd2);
 
 		assertEquals(4, node.getChildNodesCount());
@@ -224,15 +221,14 @@ public class DomTreeTest {
 
 	@Test
 	public void testCssPath() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
-		
-		Document document = domBuilder.createDocument();
-		Element html = domBuilder.createElement("html");
+		Document document = new Document();
+
+		Element html = new Element(document, "html");
 		document.addChild(html);
-		Element div1 = domBuilder.createElement("div");
+		Element div1 = new Element(document, "div");
 		div1.setAttribute("id", "one");
 		html.addChild(div1);
-		Element div2 = domBuilder.createElement("div");
+		Element div2 = new Element(document, "div");
 		div1.addChild(div2);
 
 		assertEquals("html div#one div", div2.getCssPath());
@@ -303,27 +299,25 @@ public class DomTreeTest {
 
 	@Test
 	public void testReindexOne() {
-		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
-		
-		Document document = domBuilder.createDocument();
+		Document document = new Document();
 
-		Element one = domBuilder.createElement("one");
+		Element one = new Element(document, "one");
 		document.addChild(one);
 
 		assertEquals(1, document.childElementNodesCount);
 		assertEquals(0, one.siblingElementIndex);
 
-		Element two = domBuilder.createElement("two");
+		Element two = new Element(document, "two");
 		document.addChild(two);
 
 		assertEquals(2, document.childElementNodesCount);
 		assertEquals(0, one.siblingElementIndex);
 		assertEquals(1, two.siblingElementIndex);
 
-		Text three = domBuilder.createText("xxx");
+		Text three = new Text(document, "xxx");
 		document.addChild(three);
 
-		Element four = domBuilder.createElement("four");
+		Element four = new Element(document, "four");
 		document.addChild(four);
 
 		assertEquals(3, document.childElementNodesCount);

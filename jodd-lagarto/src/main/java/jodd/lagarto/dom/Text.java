@@ -10,14 +10,14 @@ import java.io.IOException;
 
 public class Text extends Node {
 
-	protected Text(LagartoDOMBuilder domBuilder, String text) {
-		super(domBuilder, NodeType.TEXT, null);
+	public Text(Document ownerDocument, String text) {
+		super(ownerDocument, NodeType.TEXT, null);
 		this.nodeValue = text;
 	}
 
 	@Override
 	public Text clone() {
-		return cloneTo(new Text(domBuilder, nodeValue));
+		return cloneTo(new Text(ownerDocument, nodeValue));
 	}
 	
 	protected Boolean blank;
@@ -68,6 +68,6 @@ public class Text extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		getDomBuilder().getRenderer().renderText(this, appendable);
+		ownerDocument.getRenderer().renderText(this, appendable);
 	}
 }

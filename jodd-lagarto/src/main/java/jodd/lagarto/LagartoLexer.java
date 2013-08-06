@@ -29,7 +29,6 @@ public final class LagartoLexer extends Lexer {
 	 * Calculates {@link Position current position}: offset, line and column.
 	 */
 	public Position currentPosition() {
-
 		int position = position();
 
 		int line;

@@ -2,19 +2,15 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoLexer;
-import jodd.lagarto.LagartoParserEngine;
-import jodd.lagarto.Tag;
+import jodd.lagarto.LagartoParser;
 import jodd.util.StringUtil;
 
 import java.nio.CharBuffer;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
-public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder {
+public class LagartoDOMBuilder implements DOMBuilder {
 
 	public LagartoDOMBuilder() {
 		enableHtmlMode();
@@ -29,8 +25,11 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 			"keygen", "link", "menuitem", "meta", "param", "source",
 			"track", "wbr"};
 
-	// ---------------------------------------------------------------- IN flags
+	// ---------------------------------------------------------------- flags
 
+	protected boolean parseSpecialTagsAsCdata;
+	protected boolean enableConditionalComments;
+	protected boolean calculatePosition;
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean caseSensitive;
 	protected boolean ignoreComments;
@@ -40,6 +39,30 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	protected String[] voidTags = HTML5_VOID_TAGS;
 	protected boolean impliedEndTags;
 	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
+
+	public boolean isParseSpecialTagsAsCdata() {
+		return parseSpecialTagsAsCdata;
+	}
+
+	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+	}
+
+	public boolean isEnableConditionalComments() {
+		return enableConditionalComments;
+	}
+
+	public void setEnableConditionalComments(boolean enableConditionalComments) {
+		this.enableConditionalComments = enableConditionalComments;
+	}
+
+	public boolean isCalculatePosition() {
+		return calculatePosition;
+	}
+
+	public void setCalculatePosition(boolean calculatePosition) {
+		this.calculatePosition = calculatePosition;
+	}
 
 	/**
 	 * Returns {@link LagartoNodeHtmlRenderer} instance that generates HTML output.
@@ -167,6 +190,25 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	// ---------------------------------------------------------------- quick settings
 
 	/**
+	 * Enables debug mode. Performances are lost.
+	 */
+	public LagartoDOMBuilder enableDebug() {
+		collectErrors = true;
+		calculatePosition = true;
+		return this;
+	}
+
+	/**
+	 * Disables debug mode.
+	 */
+	public LagartoDOMBuilder disableDebug() {
+		collectErrors = false;
+		calculatePosition = false;
+		return this;
+	}
+
+
+	/**
 	 * Enables HTML5 parsing mode.
 	 */
 	public LagartoDOMBuilder enableHtmlMode() {
@@ -220,181 +262,32 @@ public class LagartoDOMBuilder extends LagartoParserEngine implements DOMBuilder
 	 * Creates DOM tree from provided content.
 	 */
 	public Document parse(CharSequence content) {
-		initialize(CharBuffer.wrap(content));
-		return doParse();
+		LagartoParser lagartoParser = new LagartoParser(content);
+		return doParse(lagartoParser);
 	}
 
 	/**
 	 * Creates DOM tree from the provided content.
 	 */
 	public Document parse(CharBuffer content) {
-		initialize(content);
-		return doParse();
+		LagartoParser lagartoParser = new LagartoParser(content);
+		return doParse(lagartoParser);
 	}
 
 	/**
-	 * Parses the content.
+	 * Parses the content using provided lagarto parser.
 	 */
-	protected Document doParse() {
+	protected Document doParse(LagartoParser lagartoParser) {
+		// parser flags
+		lagartoParser.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);
+		lagartoParser.setEnableConditionalComments(enableConditionalComments);
+		lagartoParser.setCalculatePosition(calculatePosition);
+
 		DOMBuilderTagVisitor domBuilderTagVisitor = new DOMBuilderTagVisitor(this);
 
-		parse(domBuilderTagVisitor);
+		lagartoParser.parse(domBuilderTagVisitor);
 
 		return domBuilderTagVisitor.getDocument();
 	}
-
-	// ---------------------------------------------------------------- factory
-
-	/**
-	 * Creates {@link CData tag}.
-	 */
-	public CData createCData(String cdata) {
-		return new CData(this, cdata);
-	}
-
-	/**
-	 * Creates {@link Comment}.
-	 * @see Comment#Comment(LagartoDOMBuilder, String)
-	 */
-	public Comment createComment(String comment) {
-		return new Comment(this, comment);
-	}
-
-	/**
-	 * Creates conditional {@link Comment}.
-	 * @see Comment#Comment(LagartoDOMBuilder, String, boolean, boolean, String)
-	 */
-	public Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
-		return new Comment(this, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
-	}
-
-	/**
-	 * Creates root {@link Document} node.
-	 */
-	public Document createDocument() {
-		return new Document(this);
-	}
-
-	/**
-	 * Creates {@link Element} node from a {@link Tag}.
-	 */
-	public Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
-		Element element = new Element(this, tag, voidElement, selfClosed);
-
-		if (isCalculatePosition()) {
-			element.position = calculatePosition(tag);
-		}
-
-		return element;
-	}
-
-	/**
-	 * Creates empty tag.
-	 */
-	public Element createElement(String name) {
-		return new Element(this, name, false, false);
-	}
-
-	/**
-	 * Creates empty {@link Element} node.
-	 */
-	public Element createElement(String tagName, boolean voidElement, boolean selfClosed) {
-		return new Element(this, tagName, voidElement, selfClosed);
-	}
-
-	/**
-	 * Creates {@link Text} node.
-	 */
-	public Text createText(String text) {
-		return new Text(this, text);
-	}
-
-	/**
-	 * Creates empty {@link Text} node.
-	 */
-	public Text createText() {
-		return new Text(this, null);
-	}
-
-	public DocumentType createDocumentType(String value, String publicId, String baseUri) {
-		return new DocumentType(this, value, publicId, baseUri);
-	}
-
-	public XmlDeclaration createXmlDeclaration(Tag tag) {
-		return new XmlDeclaration(this, tag);
-	}
-
-	public XmlDeclaration createXmlDeclaration(String string) {
-		return new XmlDeclaration(this, string);
-	}
-
-	// ---------------------------------------------------------------- OUT
-
-	protected List<String> errors;
-	protected long elapsed;
-
-	/**
-	 * Add new error message to the {@link #getErrors() errors list}.
-	 * If errors are {@link #isCollectErrors() not collected} error
-	 * message is ignored.
-	 */
-	public void addError(String message) {
-		if (collectErrors) {
-			if (errors == null) {
-				errors = new LinkedList<String>();
-			}
-			errors.add(message);
-		}
-	}
-
-	/**
-	 * Returns list of warnings and errors occurred during parsing.
-	 * Returns <code>null</code> if parsing was successful; or if
-	 * errors are {@link #setCollectErrors(boolean) not collected}.
-	 */
-	public List<String> getErrors() {
-		return errors;
-	}
-
-	/**
-	 * Returns elapsed parsing time in milliseconds.
-	 */
-	public long getParsingTime() {
-		return elapsed;
-	}
-
-	// ---------------------------------------------------------------- position
-
-	/**
-	 * Calculates position of a tag.
-	 */
-	protected LagartoLexer.Position calculatePosition(Tag tag) {
-		LagartoLexer lexer = getLexer();
-
-		LagartoLexer.Position position = lexer.currentPosition();
-
-		int column = position.column;
-
-		if (tag.getName() != null) {
-			column -= tag.getName().length();
-		}
-		for (int i = 0; i < tag.getAttributeCount(); i++) {
-			column -= tag.getAttributeName(i).length();
-			String value = tag.getAttributeValue(i);
-			if (value != null) {
-				column -= value.length();
-				column--;	// for '='
-			}
-			column--;		// for attribute separation
-		}
-
-		int diff = position.column - column;
-
-		position.column = column;
-		position.offset -= diff;
-
-		return position;
-	}
-
 
 }

@@ -26,6 +26,7 @@ class ParsedTag implements Tag {
 	private String[] attrValues = new String[10];
 
 	// input data
+	private final LagartoLexer lexer;
 	private final CharBuffer input;
 	private int position;
 	private int length;
@@ -36,7 +37,8 @@ class ParsedTag implements Tag {
 
 	// ---------------------------------------------------------------- internal
 
-	ParsedTag(CharBuffer input) {
+	ParsedTag(LagartoLexer lexer, CharBuffer input) {
+		this.lexer = lexer;
 		this.input = input;
 	}
 
@@ -297,4 +299,37 @@ class ParsedTag implements Tag {
 		appendTo(sb);
 		return sb.toString();
 	}
+
+
+	// ---------------------------------------------------------------- position
+
+	/**
+	 * Calculates approx position of a tag from current position.
+	 */
+	public LagartoLexer.Position calculateTagPosition() {
+		LagartoLexer.Position position = lexer.currentPosition();
+
+		int column = position.column;
+
+		if (getName() != null) {
+			column -= getName().length();
+		}
+		for (int i = 0; i < getAttributeCount(); i++) {
+			column -= getAttributeName(i).length();
+			String value = getAttributeValue(i);
+			if (value != null) {
+				column -= value.length();
+				column--;	// for '='
+			}
+			column--;		// for attribute separation
+		}
+
+		int diff = position.column - column;
+
+		position.column = column;
+		position.offset -= diff;
+
+		return position;
+	}
+
 }

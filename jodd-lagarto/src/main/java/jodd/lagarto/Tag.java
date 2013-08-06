@@ -72,6 +72,11 @@ public interface Tag {
 	int getTagPosition();
 
 	/**
+	 * Calculates current position of a tag .
+	 */
+	LagartoLexer.Position calculateTagPosition();
+
+	/**
 	 * Returns tag length in the input source.
 	 */
 	int getTagLength();

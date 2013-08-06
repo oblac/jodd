@@ -142,12 +142,9 @@ public class LagartoNodeHtmlRendererTest {
 		for (int i = 0; i < 2; i++) {
 			// this does not change anything with html output
 			domBuilder.setCaseSensitive(i == 1);
-
-			// case insensitive -> lowercase
-			Document document = domBuilder.parse(html);
-
-			// custom renderer
 			domBuilder.setRenderer(new CustomRenderer());
+
+			Document document = domBuilder.parse(html);
 
 			String htmlOut = document.getHtml();
 			assertEquals(htmlExpected, htmlOut);

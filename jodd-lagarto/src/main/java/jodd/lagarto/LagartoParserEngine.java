@@ -43,7 +43,7 @@ public abstract class LagartoParserEngine {
 	protected void initialize(CharBuffer input) {
 		this.input = input;
 		this.lexer = new LagartoLexer(input);
-		this.tag = new ParsedTag(input);
+		this.tag = new ParsedTag(lexer, input);
 
 		this.buffering = false;
 		this.buffTextStart = 0;
@@ -52,12 +52,6 @@ public abstract class LagartoParserEngine {
 		this.lastToken = Token.UNKNOWN;
 	}
 
-	/**
-	 * Returns Lagarto lexer.
-	 */
-	public LagartoLexer getLexer() {
-		return lexer;
-	}
 	// ---------------------------------------------------------------- properties
 
 	protected boolean enableConditionalComments = true;

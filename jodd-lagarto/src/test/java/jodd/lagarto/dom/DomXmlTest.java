@@ -139,7 +139,7 @@ public class DomXmlTest {
 		lagartoDOMBuilder.setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
-		List<String> errors = lagartoDOMBuilder.getErrors();
+		List<String> errors = doc.getErrors();
 
 		assertEquals(1, errors.size());
 		assertTrue(errors.get(0).contains("[1:5 @5]"));

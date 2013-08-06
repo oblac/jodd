@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 public class XmlDeclaration extends Node {
 
-	protected XmlDeclaration(LagartoDOMBuilder domBuilder, Tag tag) {
-		super(domBuilder, NodeType.XML_DECLARATION, tag.getName());
+	public XmlDeclaration(Document ownerDocument, Tag tag) {
+		super(ownerDocument, NodeType.XML_DECLARATION, tag.getName());
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
@@ -22,18 +22,18 @@ public class XmlDeclaration extends Node {
 		}
 	}
 
-	protected XmlDeclaration(LagartoDOMBuilder domBuilder, String name) {
-		super(domBuilder, NodeType.XML_DECLARATION, name);
+	public XmlDeclaration(Document ownerDocument, String name) {
+		super(ownerDocument, NodeType.XML_DECLARATION, name);
 	}
 
 	@Override
 	public XmlDeclaration clone() {
-		return cloneTo(new XmlDeclaration(domBuilder, nodeName));
+		return cloneTo(new XmlDeclaration(ownerDocument, nodeName));
 	}
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		getDomBuilder().getRenderer().renderXmlDeclaration(this, appendable);
+		ownerDocument.getRenderer().renderXmlDeclaration(this, appendable);
 	}
 
 }

@@ -719,7 +719,7 @@ public class Jerry implements Iterable<Jerry> {
 	public Jerry text(String text) {
 		for (Node node : nodes) {
 			node.removeAllChilds();
-			Text textNode = node.getDomBuilder().createText();
+			Text textNode = new Text(node.getOwnerDocument(), null);
 			textNode.setTextContent(text);
 			node.addChild(textNode);
 		}

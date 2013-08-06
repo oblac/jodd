@@ -14,8 +14,8 @@ public class Element extends Node {
 	protected final boolean voidElement;
 	protected final boolean selfClosed;
 
-	protected Element(LagartoDOMBuilder domBuilder, Tag tag, boolean voidElement, boolean selfClosed) {
-		super(domBuilder, NodeType.ELEMENT, tag.getName());
+	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
+		super(ownerNode, NodeType.ELEMENT, tag.getName());
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 
@@ -29,18 +29,19 @@ public class Element extends Node {
 
 	// ---------------------------------------------------------------- clone
 
-	/**
-	 * Internal constructor.
-	 */
-	public Element(LagartoDOMBuilder domBuilder, String name, boolean voidElement, boolean selfClosed) {
-		super(domBuilder, NodeType.ELEMENT, name);
+	public Element(Document ownerDocument, String name) {
+		this(ownerDocument, name, false, false);
+	}
+
+	public Element(Document ownerDocument, String name, boolean voidElement, boolean selfClosed) {
+		super(ownerDocument, NodeType.ELEMENT, name);
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 	}
 
 	@Override
 	public Element clone() {
-		return cloneTo(new Element(domBuilder, nodeName, voidElement, selfClosed));
+		return cloneTo(new Element(ownerDocument, nodeName, voidElement, selfClosed));
 	}
 
 	// ---------------------------------------------------------------- html
@@ -61,7 +62,7 @@ public class Element extends Node {
 
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
-		getDomBuilder().getRenderer().renderElement(this, appendable);
+		ownerDocument.getRenderer().renderElement(this, appendable);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * DOM node.
  */
-@SuppressWarnings("ForLoopReplaceableByForEach")
+@SuppressWarnings({"ForLoopReplaceableByForEach", "ClassReferencesSubclass"})
 public abstract class Node implements Cloneable {
 
 	/**
@@ -27,7 +27,7 @@ public abstract class Node implements Cloneable {
 	protected final String nodeName;
 	protected final String nodeRawName;
 	protected final NodeType nodeType;
-	protected final LagartoDOMBuilder domBuilder;
+	protected final Document ownerDocument;	// root document node
 	protected String nodeValue;
 
 	// attributes
@@ -58,11 +58,11 @@ public abstract class Node implements Cloneable {
 	/**
 	 * Creates new node.
 	 */
-	protected Node(LagartoDOMBuilder domBuilder, NodeType nodeType, String nodeName) {
-		this.domBuilder = domBuilder;
+	protected Node(Document document, NodeType nodeType, String nodeName) {
+		this.ownerDocument = document;
 		this.nodeRawName = nodeName;
 		if (nodeName != null) {
-			this.nodeName = domBuilder.isCaseSensitive() ? nodeName : nodeName.toLowerCase();
+			this.nodeName = document.isLowercase() ? nodeName.toLowerCase() : nodeName;
 		} else {
 			this.nodeName = null;
 		}
@@ -143,11 +143,10 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Returns used {@link LagartoDOMBuilder dom builder} that
-	 * created this node.
+	 * Returns owner document, root node for this DOM tree.
 	 */
-	public LagartoDOMBuilder getDomBuilder() {
-		return domBuilder;
+	public Document getOwnerDocument() {
+		return ownerDocument;
 	}
 
 	// ---------------------------------------------------------------- tree
@@ -353,7 +352,7 @@ public abstract class Node implements Cloneable {
 			return null;
 		}
 
-		if (!domBuilder.isCaseSensitive()) {
+		if (ownerDocument.isLowercase()) {
 			name = name.toLowerCase();
 		}
 
@@ -371,7 +370,7 @@ public abstract class Node implements Cloneable {
 			return -1;
 		}
 
-		if (!domBuilder.isCaseSensitive()) {
+		if (ownerDocument.isLowercase()) {
 			name = name.toLowerCase();
 		}
 
@@ -400,7 +399,7 @@ public abstract class Node implements Cloneable {
 		initAttributes();
 
 		String rawAttributeName = name;
-		if (!domBuilder.isCaseSensitive()) {
+		if (ownerDocument.isLowercase()) {
 			name = name.toLowerCase();
 		}
 
@@ -985,7 +984,7 @@ public abstract class Node implements Cloneable {
 	 * Generates HTML by appending it to the provided <code>Appendable</code>.
 	 */
 	public void toHtml(Appendable appendable) throws IOException {
-		domBuilder.getRenderer().renderNodeValue(this, appendable);
+		ownerDocument.getRenderer().renderNodeValue(this, appendable);
 		toInnerHtml(appendable);
 	}
 

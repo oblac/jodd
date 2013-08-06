@@ -16,7 +16,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><p>para #1</p><p> para <b>#2</b></p></body>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setImpliedEndTags(false);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><p>para #1</p><p> para <b>#2</b></p></body>", doc.getHtml());
-		assertEquals(2, lagartoDOMBuilder.getErrors().size());
+		assertEquals(2, doc.getErrors().size());
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><dl><dt>item #1</dt><dd>desc #1</dd><dt>item #2</dt><dd>dec #2</dd></dl></body>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><ul><li>item1<ul><li>item2</li></ul></li></ul></body>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<body><ol><li>item1<ol><li>item2</li></ol></li></ol></body>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tr><th>cell #1</th><th>cell #2</th></tr><tr><td>cell #3</td><td>cell #4</td></tr></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><thead><tr><td>col#1</td><td>col #2</td></tr></thead><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><tbody><tr><td>cell #1</td><td>cell #2</td></tr><tr><td>cell #3</td><td>cell #4</td></tr></tbody><tfoot><tr><td>sum #1</td><td>sum #2</td></tr></tfoot></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><colgroup></colgroup><colgroup></colgroup><thead></thead></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><colgroup></colgroup><colgroup></colgroup><tbody></tbody></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<table><colgroup><col></colgroup><colgroup></colgroup><tr><td></td></tr></table>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<html><head>head</head><body>body</body></html>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -167,7 +167,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<html><body>body</body></html>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 	@Test
@@ -177,7 +177,7 @@ public class HtmlImplicitClosingRuleTest {
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(content);
 		assertEquals("<form><select><optgroup><option>option#1</option></optgroup><optgroup><option>option#2</option></optgroup></select></form>", doc.getHtml());
-		assertNull(lagartoDOMBuilder.getErrors());
+		assertNull(doc.getErrors());
 	}
 
 
