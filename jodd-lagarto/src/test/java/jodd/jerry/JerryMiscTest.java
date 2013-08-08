@@ -146,7 +146,7 @@ public class JerryMiscTest {
 
 		assertEquals("<div>1<div id=\"x\"><span>wow</span></div>3</div>", doc.html());
 
-		Element divx = (Element) doc.get(0).getChildElement(0).getChildElement(0);
+		Element divx = doc.get(0).getChildElement(0).getChildElement(0);
 
 		assertSame(doc.get(0), divx.getOwnerDocument());
 		assertEquals("span", divx.getChildElement(0).getNodeName());

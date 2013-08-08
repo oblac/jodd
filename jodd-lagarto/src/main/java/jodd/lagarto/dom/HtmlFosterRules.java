@@ -1,0 +1,203 @@
+//  Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
+
+package jodd.lagarto.dom;
+
+import jodd.util.StringUtil;
+
+import java.util.LinkedList;
+
+/**
+ * Simplified HTML foster rules for tables.
+ */
+public class HtmlFosterRules {
+
+	public static final String[] FOSTER_TABLE_ELEMENTS = new String[] {
+		"table", "tbody", "tfoot", "thead", "tr"
+	};
+
+	public static final String[] TABLE_ELEMENTS = new String[] {
+		"table", "tbody", "tfoot", "thead", "th" ,"tr", "td", "caption", "colgroup", "col"
+	};
+
+	/**
+	 * Returns <code>true</code> if provided element is one of the table-related elements.
+	 */
+	protected boolean isOneOfTableElements(Element element) {
+		String elementName = element.getNodeName().toLowerCase();
+
+		return StringUtil.equalsOne(elementName, TABLE_ELEMENTS) != -1;
+	}
+
+	/**
+	 * Returns <code>true</code> if given node is a table element.
+	 */
+	protected boolean isTableElement(Node node) {
+		if (node.getNodeType() != Node.NodeType.ELEMENT) {
+			return false;
+		}
+		String elementName = node.getNodeName().toLowerCase();
+
+		return elementName.equals("table");
+	}
+
+	/**
+	 * Returns <code>true</code> if parent node is one of the table elements.
+	 */
+	protected boolean isParentNodeOneOfFosterTableElements(Node parentNode) {
+		if (parentNode == null) {
+			return false;
+		}
+		if (parentNode.getNodeName() == null) {
+			return false;
+		}
+		String nodeName = parentNode.getNodeName().toLowerCase();
+
+		return StringUtil.equalsOne(nodeName, FOSTER_TABLE_ELEMENTS) != -1;
+	}
+
+	/**
+	 * Finds the last table in stack of open elements.
+	 */
+	protected Element findLastTable(Node node) {
+		Node tableNode = node;
+
+		while (tableNode != null) {
+			if (tableNode.getNodeType() == Node.NodeType.ELEMENT) {
+				String tableNodeName = tableNode.getNodeName().toLowerCase();
+
+				if (tableNodeName.equals("table")) {
+					break;
+				}
+			}
+			tableNode = tableNode.getParentNode();
+		}
+
+		return (Element) tableNode;
+	}
+
+	// ---------------------------------------------------------------- core
+
+	protected LinkedList<Element> lastTables = new LinkedList<Element>();
+	protected LinkedList<Element> fosterElements = new LinkedList<Element>();
+	protected LinkedList<Text> fosterTexts = new LinkedList<Text>();
+
+	/**
+	 * Fixes foster elements.
+	 */
+	public void fixFosterElements(Document document) {
+		findFosterNodes(document);
+		fixElements();
+		fixText();
+	}
+
+	/**
+	 * Finds foster elements.
+	 */
+	protected void findFosterNodes(Node node) {
+		boolean isTable = false;
+
+		if (!lastTables.isEmpty()) {
+			// if inside table
+			if (node.getNodeType() == Node.NodeType.TEXT) {
+				String value = node.getNodeValue();
+				if (!StringUtil.isBlank(value)) {
+					if (isParentNodeOneOfFosterTableElements(node.getParentNode())) {
+						fosterTexts.add((Text) node);
+					}
+				}
+			}
+		}
+
+		if (node.getNodeType() == Node.NodeType.ELEMENT) {
+			Element element = (Element) node;
+
+			isTable = isTableElement(node);
+
+			if (isTable) {
+				// if node is a table, add it to the stack-of-last-tables
+				lastTables.add(element);
+			} else {
+				// otherwise...
+
+				// ...if inside the table
+				if (!lastTables.isEmpty()) {
+					// check this and parent
+					Node parentNode = node.getParentNode();
+					if (
+							isParentNodeOneOfFosterTableElements(parentNode) &&
+							!isOneOfTableElements(element)
+							) {
+						// foster element found
+						fosterElements.add(element);
+					}
+
+				} else {
+					// ...if not inside the table, just keep going
+				}
+			}
+		}
+
+		int childs = node.getChildNodesCount();
+
+		for (int i = 0; i < childs; i++) {
+			Node childNode = node.getChild(i);
+			findFosterNodes(childNode);
+		}
+
+		if (isTable) {
+			lastTables.removeLast();
+		}
+	}
+
+	/**
+	 * Performs the fix for elements.
+	 */
+	protected void fixElements() {
+		for (Element fosterElement : fosterElements) {
+			// find parent table
+			Element lastTable = findLastTable(fosterElement);
+			Node fosterElementParent = fosterElement.getParentNode();
+
+			// filter our foster element
+			Node[] fosterChilds = fosterElement.getChildNodes();
+			for (Node fosterChild : fosterChilds) {
+				if (fosterChild.getNodeType() == Node.NodeType.ELEMENT) {
+					if (isOneOfTableElements((Element) fosterChild)) {
+						// move all child table elements outside
+						// the foster element
+						fosterChild.detachFromParent();
+						fosterElementParent.insertBefore(fosterChild, fosterElement);
+					}
+				}
+			}
+
+			// finally, move foster element above the table
+			fosterElement.detachFromParent();
+			lastTable.getParentNode().insertBefore(fosterElement, lastTable);
+		}
+	}
+
+	protected void fixText() {
+		for (Text fosterText : fosterTexts) {
+			// find parent table
+			Element lastTable = findLastTable(fosterText);
+
+			// move foster element above the table
+			fosterText.detachFromParent();
+
+			Node tablesPreviousNode = lastTable.getPreviousSibling();
+			if (tablesPreviousNode.getNodeType() == Node.NodeType.TEXT) {
+				// append to previous text node
+				Text textNode = (Text) tablesPreviousNode;
+
+				String text = textNode.getNodeValue();
+
+				textNode.setNodeValue(text + fosterText.getNodeValue());
+			} else {
+				// insert text node before the table
+				lastTable.getParentNode().insertBefore(fosterText, lastTable);
+			}
+		}
+	}
+
+}

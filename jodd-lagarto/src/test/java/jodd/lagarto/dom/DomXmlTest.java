@@ -44,7 +44,7 @@ public class DomXmlTest {
 		Element peopleList = (Element) doc.getChild(1);
 		assertEquals(1, peopleList.getChildNodesCount());
 
-		Element person = (Element) peopleList.getFirstChildElement();
+		Element person = peopleList.getFirstChildElement();
 		assertEquals(3, person.getChildNodesCount());
 
 		Element name = (Element) person.getChild(0);

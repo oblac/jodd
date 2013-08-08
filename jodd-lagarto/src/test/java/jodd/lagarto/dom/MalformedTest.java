@@ -2,10 +2,13 @@
 
 package jodd.lagarto.dom;
 
+import jodd.io.FileUtil;
 import jodd.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
@@ -154,90 +157,80 @@ public class MalformedTest {
 	}
 
 	@Test
-	public void testTableInTableInTable() {
-		String html =
-				"<table>" +
-				"    <tr>" +
-				"        <td>111</td>" +
-				"    </tr>" +
-				"    <tr>" +
-				"        <td>" +
-				"            <table>" +
-				"                <tr>" +
-				"                    <td>222" +
-				"                        <table>" +
-				"                            <tr>" +
-				"                                <td>333</td>" +
-				"                            </td>" +
-				"                        </table>" +
-				"            </table>" +
-				"</table>";
-		html = StringUtil.removeChars(html, ' ');
+	public void testTableInTableInTable() throws IOException {
+		String html = read("tableInTable.html", false);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(html);
-		String out =
-				"<table>" +
-				"    <tr>" +
-				"        <td>111</td>" +
-				"    </tr>" +
-				"    <tr>" +
-				"        <td>" +
-				"            <table>" +
-				"                <tr>" +
-				"                    <td>222" +
-				"                        <table>" +
-				"                            <tr>" +
-				"                                <td>333</td>" +
-				"                            </tr>" +
-				"                        </table>" +
-				"                    </td>" +
-				"                </tr>" +
-				"            </table>" +
-				"        </td>" +
-				"    </tr>" +
-				"</table>";
 
-		out = StringUtil.removeChars(out, ' ');
-		assertEquals(out, doc.getHtml());
+		String out = read("tableInTable-out.html", true);
+
+		assertEquals(out, html(doc));
 		assertTrue(doc.check());
 	}
 
 	@Test
-	public void testFormClosesAll() {
-		String html = "<html>\n" +
-				"<body>\n" +
-				"<form>\n" +
-				"<table>\n" +
-				"<tr>\n" +
-				"<td>\n" +
-				"<table>\n" +
-				"<div>\n" +
-				"<tr>\n" +
-				"<td>\n" +
-				"<div>\n" +
-				"</form></body></html>";
-
-		html = StringUtil.removeChars(html, ' ');
+	public void testFormClosesAll() throws IOException {
+		String html = read("formClosesAll.html", false);
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableDebug();
 		Document doc = lagartoDOMBuilder.parse(html);
-		String out = "<html>\n" +
-				"<body>\n" +
-				"<form>\n" +
-				"<table>\n" +
-				"<tr>\n" +
-				"<td>\n" +
-				"<table>\n" +
-				"<div>\n" +
-				"<tr>\n" +
-				"<td>\n" +
-				"<div>\n" +
-				"</div></td></tr></div></table></td></tr></table></form></body></html>";
+		html = html(doc);
 
-		out = StringUtil.removeChars(out, ' ');
-		assertEquals(out, doc.getHtml());
+		String out = read("formClosesAll-out1.html", true);
+		assertEquals(out, html);
 		assertTrue(doc.check());
+
+		lagartoDOMBuilder.setUseFosterRules(true);
+		doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		out = read("formClosesAll-out2.html", true);
+		assertEquals(out, html);
+	}
+
+	@Test
+	public void testFoster1() {
+		String html = "A<table>B<tr>C</tr>D</table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setUseFosterRules(true);
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("ABCD<table><tr></tr></table>", html);
+	}
+
+	@Test
+	public void testFoster2() {
+		String html = "A<table><tr> B</tr> C</table>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.setUseFosterRules(true);
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("ABC<table><tr></tr></table>", html);
+	}
+
+	// ---------------------------------------------------------------- util
+
+	/**
+	 * Reads test file and returns its content optionally stripped.
+	 */
+	protected String read(String filename, boolean strip) throws IOException {
+		String data = FileUtil.readString(new File(testDataRoot, filename));
+		if (strip) {
+			data = StringUtil.removeChars(data, " \r\n\t");
+		}
+		return data;
+	}
+
+	/**
+	 * Parses HTML and returns the stripped html.
+	 */
+	protected String html(Document document) {
+		String html = document.getHtml();
+		return StringUtil.removeChars(html, " \r\n\t");
 	}
 
 }

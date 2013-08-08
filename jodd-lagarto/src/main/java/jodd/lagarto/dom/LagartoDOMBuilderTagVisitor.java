@@ -73,6 +73,12 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		// elapsed
 		rootNode.end();
 
+		// foster
+		if (domBuilder.isUseFosterRules()) {
+			HtmlFosterRules fosterRules = new HtmlFosterRules();
+			fosterRules.fixFosterElements(rootNode);
+		}
+
 		if (log.isDebugEnabled()) {
 			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms.");
 		}

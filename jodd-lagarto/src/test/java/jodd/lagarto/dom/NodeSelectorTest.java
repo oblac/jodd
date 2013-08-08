@@ -279,7 +279,7 @@ public class NodeSelectorTest {
 		assertNotNull(html);
 
 		Node body = new NodeSelector(html).selectFirst("body");
-		Element h1 = (Element) body.getFirstChildElement();
+		Element h1 = body.getFirstChildElement();
 		assertEquals("h1", h1.getNodeName());
 
 		Node comment1 = body.getFirstChild().getNextSibling();

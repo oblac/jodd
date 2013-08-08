@@ -40,6 +40,21 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	protected boolean impliedEndTags;
 	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
 
+	// special flags
+	protected boolean useFosterRules;
+
+	/**
+	 * Returns <code>true</code> if {@link HtmlFosterRules foster rules}
+	 * should be used.
+	 */
+	public boolean isUseFosterRules() {
+		return useFosterRules;
+	}
+
+	public void setUseFosterRules(boolean useFosterRules) {
+		this.useFosterRules = useFosterRules;
+	}
+
 	public boolean isParseSpecialTagsAsCdata() {
 		return parseSpecialTagsAsCdata;
 	}
