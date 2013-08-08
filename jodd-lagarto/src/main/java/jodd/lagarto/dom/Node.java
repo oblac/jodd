@@ -1038,8 +1038,8 @@ public abstract class Node implements Cloneable {
 	 * calculated, returns an empty string.
 	 */
 	public String getPositionString() {
-		if (parentNode.position != null) {
-			return parentNode.position.toString();
+		if (position != null) {
+			return position.toString();
 		}
 		return StringPool.EMPTY;
 	}
