@@ -181,7 +181,7 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Appends several child nodes at once.
-	 * Reindex is done after all children are added.
+	 * Reindex is done only once, after all children are added.
 	 */
 	public void addChild(Node... nodes) {
 		for (Node node : nodes) {
@@ -211,6 +211,26 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
+	 * Inserts several nodes at ones. Reindex is done onl once,
+	 * after all children are added.
+	 */
+	public void insertChild(Node[] nodes, int index) {
+		for (Node node : nodes) {
+			node.detachFromParent();
+			node.parentNode = this;
+			node.deepLevel = deepLevel + 1;
+			try {
+				initChildNodes(node);
+				childNodes.add(index, node);
+				index++;
+			} catch (IndexOutOfBoundsException ignore) {
+				throw new LagartoDOMException("Invalid node index: " + index);
+			}
+		}
+		reindexChildren();
+	}
+
+	/**
 	 * Inserts node before provided node.
 	 */
 	public void insertBefore(Node newChild, Node refChild) {
@@ -227,6 +247,18 @@ public abstract class Node implements Cloneable {
 			refChild.parentNode.addChild(newChild);
 		} else {
 			refChild.parentNode.insertChild(newChild, siblingIndex);
+		}
+	}
+
+	/**
+	 * Inserts several child nodes after referent node.
+	 */
+	public void insertAfter(Node[] newChilds, Node refChild) {
+		int siblingIndex = refChild.getSiblingIndex() + 1;
+		if (siblingIndex == refChild.parentNode.getChildNodesCount()) {
+			refChild.parentNode.addChild(newChilds);
+		} else {
+			refChild.parentNode.insertChild(newChilds, siblingIndex);
 		}
 	}
 

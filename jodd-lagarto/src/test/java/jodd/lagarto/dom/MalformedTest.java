@@ -264,6 +264,51 @@ public class MalformedTest {
 		assertEquals(1, doc.getErrors().size());
 	}
 
+	@Test
+	public void testCrazySpan() throws IOException {
+		String html = read("spancrazy.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("spancrazy-out.html", true);
+		assertEquals(out, html);
+		assertEquals(3, doc.getErrors().size());
+	}
+
+	@Test
+	public void testFosterForm() throws IOException {
+		String html = read("fosterForm.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("fosterForm-out.html", true);
+		assertEquals(out, html);
+		assertNull(doc.getErrors());
+	}
+
+	@Test
+	public void testListCrazy() throws IOException {
+		String html = read("listcrazy.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("listcrazy-out.html", true);
+		assertEquals(out, html);
+		assertEquals(1, doc.getErrors().size());
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**

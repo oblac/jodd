@@ -203,7 +203,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 				// matching tag found, but it is not a regular situation
 				// therefore close all unclosed tags in between
-				fixUnclosedTagsUpToMatchingParent(matchingParent);
+				fixUnclosedTagsUpToMatchingParent(tag, matchingParent);
 
 				break;
 
@@ -279,17 +279,30 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	/**
-	 * Fixes all unclosed tags up to matching parent. This may work in two ways, in general:
-	 * <li>A) closing tags as soon as possible</li>
-	 * <li>B) closing tags as late as possible</li>
-	 * <p>
-	 * Solution A means that missing end tag will be added right after the starting tag, making
-	 * the invalid tag without the body. Solution B means that missing end tag will be added
+	 * Fixes all unclosed tags up to matching parent. Missing end tags will be added
 	 * just before parent tag is closed, making the whole inner content as its tag body.
 	 * <p>
-	 * These are just generic solutions, and solution B is the closest to the rules.
+	 * This is just a generic solutions, closest to the rules.
 	 */
-	protected void fixUnclosedTagsUpToMatchingParent(Node matchingParent) {
+	protected void fixUnclosedTagsUpToMatchingParent(Tag tag, Node matchingParent) {
+		if (domBuilder.isUnclosedTagAsOrphanCheck()) {
+			Node thisNode = parentNode;
+			while (thisNode != matchingParent) {
+				String thisNodeName = thisNode.getNodeName().toLowerCase();
+				if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
+
+					String positionString = StringPool.EMPTY;
+					if (domBuilder.isCalculatePosition()) {
+						positionString = tag.calculateTagPosition().toString();
+					}
+
+					error("Orphan closed tag ignored: </" + tag.getName() + "> " + positionString);
+					return;
+				}
+				thisNode = thisNode.getParentNode();
+			}
+		}
+
 		while (true) {
 			if (parentNode == matchingParent) {
 				parentNode = parentNode.getParentNode();

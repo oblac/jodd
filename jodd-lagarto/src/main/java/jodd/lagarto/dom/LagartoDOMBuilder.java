@@ -42,6 +42,15 @@ public class LagartoDOMBuilder implements DOMBuilder {
 
 	// special flags
 	protected boolean useFosterRules;
+	protected boolean unclosedTagAsOrphanCheck;
+
+	public boolean isUnclosedTagAsOrphanCheck() {
+		return unclosedTagAsOrphanCheck;
+	}
+
+	public void setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
+		this.unclosedTagAsOrphanCheck = unclosedTagAsOrphanCheck;
+	}
 
 	/**
 	 * Returns <code>true</code> if {@link HtmlFosterRules foster rules}
@@ -219,6 +228,17 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	public LagartoDOMBuilder disableDebug() {
 		collectErrors = false;
 		calculatePosition = false;
+		return this;
+	}
+
+	/**
+	 * Enables {@link #enableHtmlMode() html mode} with additional
+	 * and somewhat experimental rules.
+	 */
+	public LagartoDOMBuilder enableHtmlPlusMode() {
+		enableHtmlMode();
+		useFosterRules = true;
+		unclosedTagAsOrphanCheck = true;
 		return this;
 	}
 

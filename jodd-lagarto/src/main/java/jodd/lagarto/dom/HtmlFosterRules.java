@@ -91,9 +91,11 @@ public class HtmlFosterRules {
 	}
 
 	/**
-	 * Finds foster elements.
+	 * Finds foster elements. Returns <code>true</code> if there was no change in
+	 * DOM tree of the parent element. Otherwise, returns <code>false</code>
+	 * meaning that parent will scan its childs again.
 	 */
-	protected void findFosterNodes(Node node) {
+	protected boolean findFosterNodes(Node node) {
 		boolean isTable = false;
 
 		if (!lastTables.isEmpty()) {
@@ -127,7 +129,21 @@ public class HtmlFosterRules {
 							isParentNodeOneOfFosterTableElements(parentNode) &&
 							!isOneOfTableElements(element)
 							) {
-						// foster element found
+
+						if (element.getNodeName().toLowerCase().equals("form")) {
+							if (element.getChildNodesCount() > 0) {
+								// if form element, take all its child nodes
+								// and add after the from element
+								Node[] formChildNodes = element.getChildNodes();
+								parentNode.insertAfter(formChildNodes, element);
+								return false;
+							} else {
+								// empty form element, leave it where it is
+								return true;
+							}
+						}
+
+						// foster element found, remember it to process it later
 						fosterElements.add(element);
 					}
 
@@ -137,16 +153,24 @@ public class HtmlFosterRules {
 			}
 		}
 
-		int childs = node.getChildNodesCount();
+		allchilds:
+		while (true) {
+			int childs = node.getChildNodesCount();
+			for (int i = 0; i < childs; i++) {
+				Node childNode = node.getChild(i);
 
-		for (int i = 0; i < childs; i++) {
-			Node childNode = node.getChild(i);
-			findFosterNodes(childNode);
+				boolean done = findFosterNodes(childNode);
+				if (!done) {
+					continue allchilds;
+				}
+			}
+			break;
 		}
 
 		if (isTable) {
 			lastTables.removeLast();
 		}
+		return true;
 	}
 
 	/**
