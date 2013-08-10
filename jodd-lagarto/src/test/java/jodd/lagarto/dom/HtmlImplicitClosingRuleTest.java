@@ -20,13 +20,13 @@ public class HtmlImplicitClosingRuleTest {
 	}
 
 	@Test
-	public void testTagPNoImpl() {
+	public void testTagPNoImplRules() {
 		String content = "<body><p>para #1<p> para <b>#2</b></body>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.setCollectErrors(true);
 		lagartoDOMBuilder.setImpliedEndTags(false);
 		Document doc = lagartoDOMBuilder.parse(content);
-		assertEquals("<body><p>para #1</p><p> para <b>#2</b></p></body>", doc.getHtml());
+		assertEquals("<body><p>para #1<p> para <b>#2</b></p></p></body>", doc.getHtml());
 		assertEquals(2, doc.getErrors().size());
 	}
 

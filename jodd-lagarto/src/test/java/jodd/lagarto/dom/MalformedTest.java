@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MalformedTest {
@@ -210,6 +212,56 @@ public class MalformedTest {
 		html = html(doc);
 
 		assertEquals("ABC<table><tr></tr></table>", html);
+	}
+
+	@Test
+	public void testBodyEnd() {
+		String html = "<body><p>111</body>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableDebug();
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("<body><p>111</p></body>", html);
+		assertNull(doc.getErrors());
+	}
+
+	@Test
+	public void testBodyEndWithError() {
+		String html = "<body><p>111<h1>222</body>";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableDebug();
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("<body><p>111</p><h1>222</h1></body>", html);
+		assertNotNull(doc.getErrors());
+		assertEquals(1, doc.getErrors().size());
+	}
+
+	@Test
+	public void testEOF() {
+		String html = "<body><p>111";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableDebug();
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("<body><p>111</p></body>", html);
+		assertNull(doc.getErrors());
+	}
+
+	@Test
+	public void testEOFWithError() {
+		String html = "<body><p>111<h1>222";
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableDebug();
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		assertEquals("<body><p>111</p><h1>222</h1></body>", html);
+		assertNotNull(doc.getErrors());
+		assertEquals(1, doc.getErrors().size());
 	}
 
 	// ---------------------------------------------------------------- util

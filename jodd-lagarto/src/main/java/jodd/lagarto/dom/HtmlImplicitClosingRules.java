@@ -104,6 +104,12 @@ public class HtmlImplicitClosingRules {
 
 			new String[] {"select"},
 			new String[] {"optgroup"},
+
+			new String[] {"body"},
+			new String[] {"dd", "dt", "li", "optgroup", "option", "p", "tbody", "td", "tfoot", "th", "thead", "tr", "html"},
+
+			new String[] {"html"},
+			new String[] {"dd", "dt", "li", "optgroup", "option", "p", "tbody", "td", "tfoot", "th", "thead", "tr", "body"},
 	};
 
 	/**
@@ -117,11 +123,6 @@ public class HtmlImplicitClosingRules {
 		parentNodeName = parentNodeName.toLowerCase();
 		nodeName = nodeName.toLowerCase();
 
-		// body and html tag closes all
-		if (nodeName.equals("body") || nodeName.equals("html")) {
-			return true;
-		}
-
 		for (int i = 0; i < IMPLIED_ON_END.length; i += 2) {
 			if (StringUtil.equalsOne(nodeName, IMPLIED_ON_END[i]) != -1) {
 				if (StringUtil.equalsOne(parentNodeName, IMPLIED_ON_END[i + 1]) != -1) {
@@ -131,5 +132,24 @@ public class HtmlImplicitClosingRules {
 		}
 
 		return false;
+	}
+
+	// ---------------------------------------------------------------- eof
+
+	public static final String[] CLOSED_ON_EOF = new String[] {
+			"dd", "dt", "li", "p", "tbody", "td", "tfoot", "th", "thead", "tr", "body", "html"
+	};
+
+	/**
+	 * Returns <code>true</code> if tag should be closed on EOF.
+	 */
+	public boolean implicitlyCloseTagOnEOF(String nodeName) {
+		if (nodeName == null) {
+			return false;
+		}
+
+		nodeName = nodeName.toLowerCase();
+
+		return StringUtil.equalsOne(nodeName, CLOSED_ON_EOF) != -1;
 	}
 }

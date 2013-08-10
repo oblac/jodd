@@ -55,14 +55,22 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	public void end() {
 		if (parentNode != rootNode) {
 
-			if (!domBuilder.isImpliedEndTags()) {
-				if (log.isWarnEnabled()) {
-					log.warn("Some unclosed tags are closed: <" +
-							parentNode.getNodeName() + "> " +
-							parentNode.getPositionString());
+			Node thisNode = parentNode;
+
+			while (thisNode != rootNode) {
+				if (domBuilder.isImpliedEndTags()) {
+					if (implRules.implicitlyCloseTagOnEOF(thisNode.getNodeName())) {
+						thisNode = thisNode.getParentNode();
+						continue;
+					}
 				}
+
+				error("Unclosed tag closed: <" +
+						thisNode.getNodeName() + "> " +
+						thisNode.getPositionString());
+
+				thisNode = thisNode.getParentNode();
 			}
-			// nothing to fix here, assuming all tags are implicitly closed on EOF
 		}
 
 		// remove whitespaces
@@ -70,14 +78,14 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			removeLastChildNodeIfEmptyText(parentNode, true);
 		}
 
-		// elapsed
-		rootNode.end();
-
 		// foster
 		if (domBuilder.isUseFosterRules()) {
 			HtmlFosterRules fosterRules = new HtmlFosterRules();
 			fosterRules.fixFosterElements(rootNode);
 		}
+
+		// elapsed
+		rootNode.end();
 
 		if (log.isDebugEnabled()) {
 			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms.");
@@ -290,12 +298,15 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			Node parentParentNode = parentNode.getParentNode();
 
-			if (implRules.implicitlyCloseParentTagOnNewTag(parentParentNode.getNodeName(), parentNode.getNodeName())) {
-				// break the tree: detach this node and append it after parent
+			if (domBuilder.isImpliedEndTags()) {
+				if (implRules.implicitlyCloseParentTagOnNewTag(
+						parentParentNode.getNodeName(), parentNode.getNodeName())) {
+					// break the tree: detach this node and append it after parent
 
-				parentNode.detachFromParent();
+					parentNode.detachFromParent();
 
-				parentParentNode.getParentNode().addChild(parentNode);
+					parentParentNode.getParentNode().addChild(parentNode);
+				}
 			}
 
 			// debug message
