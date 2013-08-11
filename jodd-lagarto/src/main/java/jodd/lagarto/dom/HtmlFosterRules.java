@@ -130,7 +130,8 @@ public class HtmlFosterRules {
 							!isOneOfTableElements(element)
 							) {
 
-						if (element.getNodeName().toLowerCase().equals("form")) {
+						String elementNodeName = element.getNodeName().toLowerCase();
+						if (elementNodeName.equals("form")) {
 							if (element.getChildNodesCount() > 0) {
 								// if form element, take all its child nodes
 								// and add after the from element
@@ -139,6 +140,15 @@ public class HtmlFosterRules {
 								return false;
 							} else {
 								// empty form element, leave it where it is
+								return true;
+							}
+						}
+
+						if (elementNodeName.equals("input")) {
+							String inputType = element.getAttribute("type");
+
+							if (inputType.equals("hidden")) {
+								// input hidden elements remains as they are
 								return true;
 							}
 						}

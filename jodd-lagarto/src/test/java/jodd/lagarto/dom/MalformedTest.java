@@ -198,7 +198,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.setUseFosterRules(true);
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("ABCD<table><tr></tr></table>", html);
 	}
@@ -209,7 +209,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.setUseFosterRules(true);
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("ABC<table><tr></tr></table>", html);
 	}
@@ -220,7 +220,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("<body><p>111</p></body>", html);
 		assertNull(doc.getErrors());
@@ -232,7 +232,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("<body><p>111</p><h1>222</h1></body>", html);
 		assertNotNull(doc.getErrors());
@@ -245,7 +245,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("<body><p>111</p></body>", html);
 		assertNull(doc.getErrors());
@@ -257,7 +257,7 @@ public class MalformedTest {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableDebug();
 		Document doc = lagartoDOMBuilder.parse(html);
-		html = html(doc);
+		html = html1(doc);
 
 		assertEquals("<body><p>111</p><h1>222</h1></body>", html);
 		assertNotNull(doc.getErrors());
@@ -309,6 +309,20 @@ public class MalformedTest {
 		assertEquals(1, doc.getErrors().size());
 	}
 
+	@Test
+	public void testTable1() throws IOException {
+		String html = read("table1.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("table1-out.html", true);
+		assertEquals(out, html);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**
@@ -318,6 +332,7 @@ public class MalformedTest {
 		String data = FileUtil.readString(new File(testDataRoot, filename));
 		if (strip) {
 			data = StringUtil.removeChars(data, " \r\n\t");
+			data = StringUtil.replace(data, ">", ">\n");
 		}
 		return data;
 	}
@@ -327,7 +342,14 @@ public class MalformedTest {
 	 */
 	protected String html(Document document) {
 		String html = document.getHtml();
-		return StringUtil.removeChars(html, " \r\n\t");
+		html = StringUtil.removeChars(html, " \r\n\t");
+		html = StringUtil.replace(html, ">", ">\n");
+		return html;
+	}
+	protected String html1(Document document) {
+		String html = document.getHtml();
+		html = StringUtil.removeChars(html, " \r\n\t");
+		return html;
 	}
 
 }
