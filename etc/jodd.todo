@@ -23,7 +23,8 @@ Site/Documentation:
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
-	- Add alternative parser per real HTML rules, that produces browser-quality code @next @hot
+	- Add alternative parser per real HTML rules, that produces browser-quality code @hot @tbd
+	- Improve LagartoDOM parser @v3.4.6 @done
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done

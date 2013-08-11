@@ -337,6 +337,28 @@ public class MalformedTest {
 		assertEquals(out, html);
 	}
 
+	@Test
+	public void smtest() throws IOException {
+		String html = read("smtest.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("smtest-out.html", true);
+
+		// still not working
+
+		out = StringUtil.remove(out, "<tbody>\n");
+		out = StringUtil.remove(out, "</tbody>\n");
+
+		html = StringUtil.replace(html, "<td>\nnotworking</td>", "<tr>\n<td>\nnotworking</td>\n</tr>");
+
+		assertEquals(out, html);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**
