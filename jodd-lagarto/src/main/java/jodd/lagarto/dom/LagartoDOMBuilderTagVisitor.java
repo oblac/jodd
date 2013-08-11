@@ -282,24 +282,36 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Fixes all unclosed tags up to matching parent. Missing end tags will be added
 	 * just before parent tag is closed, making the whole inner content as its tag body.
 	 * <p>
+	 * Tags that can be closed implicitly are checked and closed.
+	 * <p>
+	 * There is optional check for detecting orphan tags inside the
+	 * table or lists. If set, tags can be closed beyond the border of the
+	 * table and the list and it is reported as orphan tag.
+	 * <p>
 	 * This is just a generic solutions, closest to the rules.
 	 */
 	protected void fixUnclosedTagsUpToMatchingParent(Tag tag, Node matchingParent) {
 		if (domBuilder.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
-			while (thisNode != matchingParent) {
-				String thisNodeName = thisNode.getNodeName().toLowerCase();
-				if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
 
-					String positionString = StringPool.EMPTY;
-					if (domBuilder.isCalculatePosition()) {
-						positionString = tag.calculateTagPosition().toString();
+			if (!tag.getName().equals("table")) {
+
+				// check if there is table or list between this node
+				// and matching parent
+				while (thisNode != matchingParent) {
+					String thisNodeName = thisNode.getNodeName().toLowerCase();
+					if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
+
+						String positionString = StringPool.EMPTY;
+						if (domBuilder.isCalculatePosition()) {
+							positionString = tag.calculateTagPosition().toString();
+						}
+
+						error("Orphan closed tag ignored: </" + tag.getName() + "> " + positionString);
+						return;
 					}
-
-					error("Orphan closed tag ignored: </" + tag.getName() + "> " + positionString);
-					return;
+					thisNode = thisNode.getParentNode();
 				}
-				thisNode = thisNode.getParentNode();
 			}
 		}
 

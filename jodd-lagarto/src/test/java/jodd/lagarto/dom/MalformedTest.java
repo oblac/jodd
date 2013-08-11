@@ -323,6 +323,20 @@ public class MalformedTest {
 		assertEquals(out, html);
 	}
 
+	@Test
+	public void testTable2() throws IOException {
+		String html = read("table2.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableHtmlPlusMode();
+		lagartoDOMBuilder.enableDebug();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+		html = html(doc);
+
+		String out = read("table2-out.html", true);
+		assertEquals(out, html);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**
