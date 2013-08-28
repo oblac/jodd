@@ -359,6 +359,19 @@ public class MalformedTest {
 		assertEquals(out, html);
 	}
 
+	@Test
+	public void testDecodingQuotes() throws IOException {
+		String html = read("decode.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+
+		html = html(doc);
+		String out = read("decode-out.html", true);
+
+		assertEquals(out, html);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**
@@ -367,10 +380,15 @@ public class MalformedTest {
 	protected String read(String filename, boolean strip) throws IOException {
 		String data = FileUtil.readString(new File(testDataRoot, filename));
 		if (strip) {
-			data = StringUtil.removeChars(data, " \r\n\t");
-			data = StringUtil.replace(data, ">", ">\n");
+			data = strip(data);
 		}
 		return data;
+	}
+
+	protected String strip(String string) {
+		string = StringUtil.removeChars(string, " \r\n\t");
+		string = StringUtil.replace(string, ">", ">\n");
+		return string;
 	}
 
 	/**
@@ -378,8 +396,7 @@ public class MalformedTest {
 	 */
 	protected String html(Document document) {
 		String html = document.getHtml();
-		html = StringUtil.removeChars(html, " \r\n\t");
-		html = StringUtil.replace(html, ">", ">\n");
+		html = strip(html);
 		return html;
 	}
 	protected String html1(Document document) {
