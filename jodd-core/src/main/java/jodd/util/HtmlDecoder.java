@@ -96,7 +96,8 @@ mainloop:
 				String encodeToken = html.substring(ndx + 1, lastIndex);
 				Character replacement = ENTITY_MAP.get(encodeToken);
 				if (replacement == null) {
-					result.append(encodeToken);
+					result.append('&');
+					lastIndex = ndx + 1;
 				} else {
 					result.append(replacement.charValue());
 					lastIndex++;

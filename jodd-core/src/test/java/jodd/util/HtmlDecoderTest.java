@@ -69,4 +69,13 @@ public class HtmlDecoderTest {
 		assertEquals(1, s.length());
 		assertEquals(0xC1, s.charAt(0));
 	}
+
+	@Test
+	public void testDecodeNotFound() {
+		String s = "switchTab(&quot;Senthil1&quot;);showWorkFlow(&quot;/xyz/abc.jsp?strWorkId=1691&archived=0&quot;);";
+
+		String out = HtmlDecoder.decode(s);
+
+		assertEquals("switchTab(\"Senthil1\");showWorkFlow(\"/xyz/abc.jsp?strWorkId=1691&archived=0\");", out);
+	}
 }
