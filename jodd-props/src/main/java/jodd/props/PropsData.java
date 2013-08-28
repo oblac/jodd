@@ -71,9 +71,9 @@ public class PropsData implements Cloneable {
 	/**
 	 * Puts key-value pair into the map, with respect of appending duplicate properties
 	 */
-	protected void put(final Map<String, PropsValue> map, final String key, final String value) {
+	protected void put(final Map<String, PropsValue> map, final String key, final String value, final boolean append) {
 		String realValue = value;
-		if (appendDuplicateProps) {
+		if (append || appendDuplicateProps) {
 			PropsValue pv = map.get(key);
 			if (pv != null) {
 				realValue = pv.value + APPEND_SEPARATOR + realValue;
@@ -94,8 +94,8 @@ public class PropsData implements Cloneable {
 	/**
 	 * Adds base property.
 	 */
-	public void putBaseProperty(final String key, final String value) {
-		put(baseProperties, key, value);
+	public void putBaseProperty(final String key, final String value, final boolean append) {
+		put(baseProperties, key, value, append);
 	}
 
 	/**
@@ -127,13 +127,13 @@ public class PropsData implements Cloneable {
 	/**
 	 * Adds profile property.
 	 */
-	public void putProfileProperty(final String key, final String value, final String profile) {
+	public void putProfileProperty(final String key, final String value, final String profile, final boolean append) {
 		Map<String, PropsValue> map = profileProperties.get(profile);
 		if (map == null) {
 			map = new HashMap<String, PropsValue>();
 			profileProperties.put(profile, map);
 		}
-		put(map, key, value);
+		put(map, key, value, append);
 	}
 
 	/**

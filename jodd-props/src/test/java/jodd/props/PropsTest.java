@@ -382,6 +382,43 @@ public class PropsTest {
 		assertEquals("aaa", p.getValue("email.header"));
 	}
 
+	@Test
+	public void testAppend() {
+		Props p = new Props();
+		p.setAppendDuplicateProps(true);
+		p.load("foo=123\nfoo=456");
+		assertEquals("123,456", p.getValue("foo"));
+
+		p = new Props();
+		p.load("foo=123\nfoo+=456");
+		assertEquals("123,456", p.getValue("foo"));
+	}
+
+	@Test
+	public void testAppend2() {
+		Props p = new Props();
+		p.setAppendDuplicateProps(false);
+		p.load("foo=one\nfoo=two\nfoo+=three");
+		assertEquals("two,three", p.getValue("foo"));
+
+		p = new Props();
+		p.setAppendDuplicateProps(true);
+		p.load("foo=one\nfoo=two\nfoo+=three");
+		assertEquals("one,two,three", p.getValue("foo"));
+
+		p = new Props();
+		p.setAppendDuplicateProps(false);
+		p.load("foo=one\nfoo=two\nfoo+=three\nfoo=four");
+		assertEquals("four", p.getValue("foo"));
+	}
+
+	@Test
+	public void testAppendEof() {
+		Props p = new Props();
+		p.setAppendDuplicateProps(false);
+		p.load("foo=one\nfoo=two\nfoo+");
+		assertEquals("two", p.getValue("foo"));
+	}
 
 	// ---------------------------------------------------------------- util
 

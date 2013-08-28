@@ -96,6 +96,7 @@ public class PropsParser implements Cloneable {
 		boolean insideSection = false;
 		String currentSection = null;
 		String key = null;
+		boolean quickAppend = false;
 		final StringBuilder sb = new StringBuilder();
 
 		final int len = in.length();
@@ -178,6 +179,14 @@ public class PropsParser implements Cloneable {
 						break;
 
 					// assignment operator
+					case '+':
+						if (ndx == len || in.charAt(ndx) != '=') {
+							sb.append(c);
+							break;
+						}
+						// fall down
+						quickAppend = true;
+						ndx++;
 					case '=':
 					case ':':
 						if (key == null) {
@@ -191,9 +200,10 @@ public class PropsParser implements Cloneable {
 
 					case '\r':
 					case '\n':
-						add(currentSection, key, sb, true);
+						add(currentSection, key, sb, true, quickAppend);
 						sb.setLength(0);
 						key = null;
+						quickAppend = false;
 						break;
 
 					case ' ':
@@ -218,9 +228,10 @@ public class PropsParser implements Cloneable {
 								state = ParseState.VALUE;
 							}
 						} else {
-							add(currentSection, key, sb, true);
+							add(currentSection, key, sb, true, quickAppend);
 							sb.setLength(0);
 							key = null;
+							quickAppend = false;
 
 							// end of value, continue to text
 							state = ParseState.TEXT;
@@ -249,9 +260,10 @@ public class PropsParser implements Cloneable {
 									sb.append(in, ndx, endIndex);
 
 									// append
-									add(currentSection, key, sb, false);
+									add(currentSection, key, sb, false, quickAppend);
 									sb.setLength(0);
 									key = null;
+									quickAppend = false;
 
 									// end of value, continue to text
 									state = ParseState.TEXT;
@@ -264,14 +276,17 @@ public class PropsParser implements Cloneable {
 		}
 
 		if (key != null) {
-			add(currentSection, key, sb, true);
+			add(currentSection, key, sb, true, quickAppend);
 		}
 	}
 
 	/**
 	 * Adds accumulated value to key and current section.
 	 */
-	protected void add(final String section, final String key, final StringBuilder value, final boolean trim) {
+	protected void add(
+			final String section, final String key,
+			final StringBuilder value, final boolean trim, final boolean append) {
+
 		// ignore lines without : or =
 		if (key == null) {
 			return;
@@ -297,17 +312,17 @@ public class PropsParser implements Cloneable {
 			return;
 		}
 
-		add(fullKey, v);
+		add(fullKey, v, append);
 	}
 
 	/**
 	 * Adds key-value to properties and profiles.
 	 */
-	protected void add(final String key, final String value) {
+	protected void add(final String key, final String value, final boolean append) {
 		String fullKey = key;
 		int ndx = fullKey.indexOf(PROFILE_LEFT);
 		if (ndx == -1) {
-			propsData.putBaseProperty(fullKey, value);
+			propsData.putBaseProperty(fullKey, value, append);
 			return;
 		}
 
@@ -339,7 +354,7 @@ public class PropsParser implements Cloneable {
 
 		// add value to extracted profiles
 		for (final String p : keyProfiles) {
-			propsData.putProfileProperty(fullKey, value, p);
+			propsData.putProfileProperty(fullKey, value, p, append);
 		}
 	}
 
