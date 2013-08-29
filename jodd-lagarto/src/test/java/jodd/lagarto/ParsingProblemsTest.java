@@ -83,7 +83,13 @@ public class ParsingProblemsTest {
 		document = lagartoDOMBuilder.parse(html);
 		assertTrue(document.check());
 
+		document.getRenderer().setAttributeValuePreserveSingleQuote(false);
+
 		assertEquals("<a href=\"../org/w3c/dom/&#039;http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list&#039;\">xxx</a>", document.getHtml());
+
+		document.getRenderer().setAttributeValuePreserveSingleQuote(true);
+
+		assertEquals("<a href=\"../org/w3c/dom/'http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list'\">xxx</a>", document.getHtml());
 	}
 
 	@Test

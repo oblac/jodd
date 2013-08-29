@@ -372,6 +372,19 @@ public class MalformedTest {
 		assertEquals(out, html);
 	}
 
+	@Test
+	public void testQuotes() throws IOException {
+		String html = read("quotes.html", false);
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+
+		Document doc = lagartoDOMBuilder.parse(html);
+
+		html = html(doc);
+		String out = read("quotes-out.html", true);
+
+		assertEquals(out, html);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	/**

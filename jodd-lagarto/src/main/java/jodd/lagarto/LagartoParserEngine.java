@@ -21,8 +21,6 @@ public abstract class LagartoParserEngine {
 
 	private static final Logger log = LoggerFactory.getLogger(LagartoParserEngine.class);
 
-	private static final String HTML_QUOTE = "&quot;";
-
 	private CharSequence input;
 	private LagartoLexer lexer;
 	private ParsedTag tag;
@@ -587,10 +585,10 @@ loop:	while (true) {
 				charSequence = charSequence.subSequence(1, charSequence.length() - 1);
 				String attributeValue = charSequence.toString();
 				if (quote == '\'') {
-					attributeValue = StringUtil.replace(attributeValue, StringPool.QUOTE, HTML_QUOTE);
+					attributeValue = StringUtil.replace(attributeValue, StringPool.QUOTE, StringPool.HTML_QUOTE);
 				}
 				tag.addAttribute(attributeName, attributeValue);
-			} else if (token == Token.WORD) {
+			} else if (token == Token.WORD || token == Token.SLASH) {
 				// attribute value is not quoted, take everything until the space or tag end as a value
 				String attributeValue = text().toString();
 				while (true) {
@@ -603,7 +601,7 @@ loop:	while (true) {
 					}
 				}
 				tag.addAttribute(attributeName, attributeValue);
-			} else if (token == Token.SLASH || token == Token.GT) {
+			} else if (token == Token.GT) {
 				stepBack(token);
 			} else if (token != Token.EOF) {
 				error("Invalid attribute: " + attributeName);
