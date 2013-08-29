@@ -8,9 +8,9 @@ package jodd.util;
  */
 public class HtmlEncoder {
 
+	protected static final char[][] ATTR = new char[64][];
 	protected static final char[][] TEXT = new char[64][];
 	protected static final char[][] BLOCK = new char[64][];
-	private static final String NBSP = "&nbsp;";
 
 	/**
 	 * Creates HTML lookup tables for faster encoding.
@@ -31,9 +31,29 @@ public class HtmlEncoder {
 		System.arraycopy(TEXT, 0, BLOCK, 0, 64);
 		BLOCK['\n']	= "<br/>".toCharArray();     // ascii 10, new line
 		BLOCK['\r']	= "<br/>".toCharArray();     // ascii 13, carriage return
+
+		// attr table
+		System.arraycopy(TEXT, 0, ATTR, 0, 64);
+		ATTR['\''] = "'".toCharArray();
 	}
 
 	// ---------------------------------------------------------------- encode text
+
+	/**
+	 * Encodes HTML attribute value string to safe text. It is assumed that attribute value
+	 * is quoted with the double quotes. The following characters are replaced:
+	 * <ul>
+	 * <li>" with &amp;quot;</li>
+	 * <li>&amp; with &amp;amp;</li>
+	 * <li>&lt; with &amp;lt;</li>
+	 * <li>&gt; with &amp;gt;</li>
+	 * </ul>
+	 * @see #text(String)
+	 * @see #block(String)
+	 */
+	public static String attribute(String value) {
+		return encode(value, ATTR);
+	}
 
 	/**
 	 * Encodes a string to HTML-safe text. The following characters are replaced:
@@ -44,9 +64,17 @@ public class HtmlEncoder {
 	 * <li>&lt; with &amp;lt;</li>
 	 * <li>&gt; with &amp;gt;</li>
 	 * </ul>
+	 * @see #attribute(String)
 	 * @see #block(String)
 	 */
 	public static String text(String text) {
+		return encode(text, TEXT);
+	}
+
+	/**
+	 * Encoder.
+	 */
+	private static String encode(String text, char[][] array) {
 		int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StringPool.EMPTY;
@@ -55,7 +83,7 @@ public class HtmlEncoder {
 		for (int i = 0; i < len; i++) {
 			char c = text.charAt(i);
 			if (c < 64) {
-				buffer.append(TEXT[c]);
+				buffer.append(array[c]);
 			} else {
 				buffer.append(c);
 			}
@@ -129,7 +157,7 @@ public class HtmlEncoder {
 				if (prevSpace == false) {
 					buffer.append(' ');
 				} else {
-					buffer.append(NBSP);
+					buffer.append(StringPool.HTML_NBSP);
 				}
 				prevSpace = !prevSpace;
 				continue;
