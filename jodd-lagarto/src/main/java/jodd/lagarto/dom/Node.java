@@ -537,6 +537,18 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
+	 * Returns a child node with given hierarchy.
+	 * Just a shortcut for successive calls of {@link #getChild(int)}.
+	 */
+	public Node getChild(int... indexes) {
+		Node node = this;
+		for (int index : indexes) {
+			node = node.getChild(index);
+		}
+		return node;
+	}
+
+	/**
 	 * Returns a child element node at given index.
 	 */
 	public Element getChildElement(int index) {

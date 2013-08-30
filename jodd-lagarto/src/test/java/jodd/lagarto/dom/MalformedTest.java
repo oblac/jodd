@@ -362,14 +362,34 @@ public class MalformedTest {
 	@Test
 	public void testDecodingQuotes() throws IOException {
 		String html = read("decode.html", false);
-		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		Document doc = lagartoDOMBuilder.parse(html);
+
+		Element td1 = (Element) doc.getChild(0, 1, 1, 1, 1);
+		String td1attr = td1.getAttribute("onclick");
+
+		Element td2 = (Element) doc.getChild(0, 1, 1, 3, 1);
+		String td2attr = td2.getAttribute("onclick");
 
 		html = html(doc);
 		String out = read("decode-out.html", true);
 
 		assertEquals(out, html);
+
+		// now re-parse the generated html
+
+		String newHtml = doc.getHtml();
+
+		lagartoDOMBuilder = new LagartoDOMBuilder();
+		doc = lagartoDOMBuilder.parse(newHtml);
+
+		td1 = (Element) doc.getChild(0, 1, 1, 1, 1);
+		assertEquals(td1attr, td1.getAttribute("onclick"));
+
+		td2 = (Element) doc.getChild(0, 1, 1, 3, 1);
+		assertEquals(td2attr, td2.getAttribute("onclick"));
+
 	}
 
 	@Test
