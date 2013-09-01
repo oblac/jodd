@@ -145,7 +145,7 @@ public class JoddJspFunctions {
 	}
 
 	public static String url(String value, String encoding, HttpServletRequest request, HttpServletResponse response) {
-		String result = ServletUtil.resolveUrl(URLCoder.encodeUrl(value, encoding), request);
+		String result = ServletUtil.resolveUrl(URLCoder.encodeUri(value, encoding), request);
 		if (ServletUtil.isAbsoluteUrl(result) == false) {
 			result = response.encodeURL(result);        // rewrite relative URLs
 		}

@@ -14,15 +14,19 @@ General Tasks:
 	- FindFile with includes/excludes @v3.4.5 @done
 	- StringUtil.stripFromChar @next  strips everything from/up to the first char
 	- copy file was somewhat slow? @tbd @next
+	- URLCoder improvded @done @v3.4.6
+	- ReThink log dependency @tbd
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- improve <var> in docs
 	- migrate from google groups to nabble?getsatisfied? @tbd
 	- add blog? @tbd
 	- improve SEO somehow
+	- add sitemap
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
+	- Add htmlPlus() mode @done @v3.4.6
 	- Add alternative parser per real HTML rules, that produces browser-quality code @hot @tbd
 	- Improve LagartoDOM parser @v3.4.6 @done
 BeanUtil:
@@ -34,7 +38,7 @@ Madvoc:
 	- Action methods with arguments @tbd
 	- Add result methods: ok(), redirect() etc.
 		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
-	- Manual registration of ActionConfig, using fluent interface @soon @hot
+	- Manual registration of ActionConfig, using fluent interface @hot @next
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
 	- MadvocServletFilter, consume action path, like load static content @tbd
@@ -70,7 +74,7 @@ Proxetta:
 	- Fix static methods call @done @v3.4.5
 DbOom:
 	- LoadById, load values into existing instance
-	- Generic finder method. Try to detect method arguments using MethRef? @next @v3.4.6
+	- Generic finder method. Try to detect method arguments using MethRef? @next
 	- Add batch update
 	- Introduce #execute() interceptors? @tbd
 MethRef:
@@ -81,8 +85,11 @@ Joy:
 	- Don't encode text tags in resource bundles
 	- Pager, do sort @review
 	- AppCore, add optional scanning so to allow manual registration @next
-Quickstart:
+Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5
+	- Add gradle for examples: @v3.4.6
+	- Upgrade to gradle v1.7 @next
 	- Use empty project to create a blog/twitter example and make a video @soon
-	- Add log DEBUG @next
+	- Add log DEBUG in examples.quickstart @next
+	- sitemap generator for @sitebuilder @soon

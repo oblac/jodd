@@ -76,7 +76,9 @@ public abstract class AuthorizationInterceptor extends ActionInterceptor {
 		if (targetUrl == null) {
 			targetUrl = StringPool.EMPTY;
 		} else {
-			targetUrl = URLCoder.build().param(AuthAction.LOGIN_SUCCESS_PATH, targetUrl).toString();
+			targetUrl =
+					'?' + URLCoder.encodeQueryParam(AuthAction.LOGIN_SUCCESS_PATH) +
+					'=' + URLCoder.encodeQueryParam(targetUrl);
 		}
 		return REDIRECT + AppAction.ALIAS_LOGIN + targetUrl;
 	}

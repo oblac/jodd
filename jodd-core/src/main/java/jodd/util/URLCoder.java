@@ -4,272 +4,439 @@ package jodd.util;
 
 import jodd.JoddCore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static jodd.util.CharUtil.isAlpha;
+import static jodd.util.CharUtil.isDigit;
+import static jodd.util.CharUtil.isPchar;
+import static jodd.util.CharUtil.isSubDelimiter;
+import static jodd.util.CharUtil.isUnreserved;
 
 /**
- * Encodes URLs better, significantly faster and more convenient.
- * This encoder handles <b>path</b> and <p>queries</p> differently,
- * as defined by the specification!
+ * Encodes URLs correctly, significantly faster and more convenient.
  * <p>
- * There are several ways how <code>URLCoder</code> can be used.
- * <p>
- * The simplest way - but somewhat not correct (in certain usecases) -
- * is to use {@link #encodeUrl(String)} and provide full URL.
- *
- * <p>
- * The precise way would be building target URL using
- * {@link #encodePath(String)} and {@link #encodeQuery(String)} methods.
- * for each URL element. For example:
- * <code>
- * String targetUrl = encodePath("http://jodd.org") + "&" +
- * 		encodeQuery("param") + "=" + encodeQuery("value");
- * </code>
- *
- * <p>
- * However, this is not the most user-friendly way. The user-friendly way
- * is using the {@link Builder builder} class with fluent interface.
+ * Here is an example of full URL:
+ * {@literal https://jodd:ddoj@www.jodd.org:8080/file;p=1?q=2#third}.
+ * It consist of:
+ * <ul>
+ *     <li>scheme (https)</li>
+ *     <li>user (jodd)</li>
+ *     <li>password (nodd)</li>
+ *     <li>password (ddoj)</li>
+ *     <li>host (www.jodd.org)</li>
+ *     <li>port (8080)</li>
+ *     <li>path (file)</li>
+ *     <li>path parameter (p=1)</li>
+ *     <li>query parameter (q=2)</li>
+ *     <li>fragment (third)</li>
+ * </ul>
+ * Each URL part has its own encoding rules.
  */
 public class URLCoder {
 
-	protected static final char[][] URL_CHARS = new char[256][];
-	protected static final char[][] URI_CHARS = new char[128][];
+	private static final String SCHEME_PATTERN = "([^:/?#]+):";
 
-	static {
-		for (char c = 0; c < URL_CHARS.length; c++) {
-			try {
-				URL_CHARS[c] = URLEncoder.encode(String.valueOf(c), StringPool.ISO_8859_1).toCharArray();
-			} catch (UnsupportedEncodingException ueex) {
-				ueex.printStackTrace();
-			}
-			if (c < URI_CHARS.length) {
-				try {
-					URI uri = new URI("a", "", '/' + String.valueOf(c), null, null);
-					URI_CHARS[c] = uri.toString().substring(5).toCharArray();
-				} catch (URISyntaxException usex) {
-					usex.printStackTrace();
-				}
-			}
-		}
-	}
+	private static final String HTTP_PATTERN = "(http|https):";
 
-	/**
-	 * @see #encodeUrl
-	 */
-	public static String encodeUrl(String url) {
-		return URLCoder.encodeUrl(url, JoddCore.encoding);
-	}
+	private static final String USERINFO_PATTERN = "([^@/]*)";
+
+	private static final String HOST_PATTERN = "([^/?#:]*)";
+
+	private static final String PORT_PATTERN = "(\\d*)";
+
+	private static final String PATH_PATTERN = "([^?#]*)";
+
+	private static final String QUERY_PATTERN = "([^#]*)";
+
+	private static final String LAST_PATTERN = "(.*)";
+
+	// Regex patterns that matches URIs. See RFC 3986, appendix B
+
+	private static final Pattern URI_PATTERN = Pattern.compile(
+			"^(" + SCHEME_PATTERN + ")?" + "(//(" + USERINFO_PATTERN + "@)?" + HOST_PATTERN + "(:" + PORT_PATTERN +
+					")?" + ")?" + PATH_PATTERN + "(\\?" + QUERY_PATTERN + ")?" + "(#" + LAST_PATTERN + ")?");
+
+	private static final Pattern HTTP_URL_PATTERN = Pattern.compile(
+			'^' + HTTP_PATTERN + "(//(" + USERINFO_PATTERN + "@)?" + HOST_PATTERN + "(:" + PORT_PATTERN + ")?" + ")?" +
+					PATH_PATTERN + "(\\?" + LAST_PATTERN + ")?");
 
 	/**
-	 * Faster smart URL encoding. URL is parsed after the '?' sign.
-	 * Both parameter name and values are parsed.
+	 * Enumeration to identify the parts of a URI.
 	 * <p>
-	 * <b>Note</b>: This method is NOT 100% correct: it can't make a
-	 * difference between <code>'&'</code> char in parameter value and
-	 * <code>'&'</code> used as a delimiter.
+	 * Contains methods to indicate whether a given character is valid in a specific URI component.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>
 	 */
-	public static String encodeUrl(String url, String encoding) {
-		int paramNdx = url.indexOf('?');
-		if (paramNdx == -1) {
-			return encodePath(url);
-		}
+	enum URIPart {
 
-		StringBuilder result = new StringBuilder(url.length() >> 1);
-		appendPath(result, url.substring(0, paramNdx));
-		result.append('?');
-		paramNdx++;
-
-		while (true) {
-			int ampNdx = url.indexOf('&', paramNdx);
-			String q;
-			if (ampNdx == -1) {
-				q = url.substring(paramNdx);
-			} else {
-				q = url.substring(paramNdx, ampNdx);
+		SCHEME {
+			@Override
+			public boolean isValid(char c) {
+				return isAlpha(c) || isDigit(c) || c == '+' || c == '-' || c == '.';
 			}
-			int eqNdx = q.indexOf('=');
-			if (eqNdx == -1) {
-				appendQuery(result, q, encoding);
-			} else {
-				String name = q.substring(0, eqNdx);
-				appendQuery(result, name, encoding);
-				result.append('=');
-				String value = q.substring(eqNdx + 1);
-				if (value.length() > 0) {
-					appendQuery(result, value, encoding);
+		},
+//		AUTHORITY {
+//			@Override
+//			public boolean isValid(char c) {
+//				return isUnreserved(c) || isSubDelimiter(c) || c == ':' || c == '@';
+//			}
+//		},
+		USER_INFO {
+			@Override
+			public boolean isValid(char c) {
+				return isUnreserved(c) || isSubDelimiter(c) || c == ':';
+			}
+		},
+		HOST {
+			@Override
+			public boolean isValid(char c) {
+				return isUnreserved(c) || isSubDelimiter(c);
+			}
+		},
+		PORT {
+			@Override
+			public boolean isValid(char c) {
+				return isDigit(c);
+			}
+		},
+		PATH {
+			@Override
+			public boolean isValid(char c) {
+				return isPchar(c) || c == '/';
+			}
+		},
+		PATH_SEGMENT {
+			@Override
+			public boolean isValid(char c) {
+				return isPchar(c);
+			}
+		},
+		QUERY {
+			@Override
+			public boolean isValid(char c) {
+				return isPchar(c) || c == '/' || c == '?';
+			}
+		},
+		QUERY_PARAM {
+			@Override
+			public boolean isValid(char c) {
+				if (c == '=' || c == '+' || c == '&') {
+					return false;
 				}
+				return isPchar(c) || c == '/' || c == '?';
 			}
-			if (ampNdx == -1) {
-				break;
+		},
+		FRAGMENT {
+			@Override
+			public boolean isValid(char c) {
+				return isPchar(c) || c == '/' || c == '?';
 			}
-			result.append('&');
-			paramNdx = ampNdx + 1;
-		}
-		return result.toString();
+		};
+
+		/**
+		 * Indicates whether the given character is allowed in this URI component.
+		 *
+		 * @return <code>true</code> if the character is allowed; {@code false} otherwise
+		 */
+		public abstract boolean isValid(char c);
+
 	}
 
-	// ---------------------------------------------------------------- query
 
-	protected static void appendQuery(StringBuilder result, String value, String encoding) {
+	// ---------------------------------------------------------------- util methods
+
+	private static String encodeUriComponent(String source, String encoding, URIPart uriPart) {
+		if (source == null) {
+			return null;
+		}
+
 		byte[] bytes;
 		try {
-			bytes = value.getBytes(encoding);
-		} catch (UnsupportedEncodingException ueex) {
-			throw new IllegalArgumentException(ueex.toString());
-		}
-		for (byte b : bytes) {
-			int i = b & 0xFF;
-			result.append(URL_CHARS[i]);
-		}
-	}
-
-	/**
-	 * Encodes <b>query</b> part of the URL.
-	 */
-	public static String encodeQuery(String value, String encoding) {
-		StringBuilder sb = new StringBuilder(value.length());
-		appendQuery(sb, value, encoding);
-		return sb.toString();
-	}
-
-	/**
-	 * Encodes <b>query</b> part of the URL.
-	 */
-	public static String encodeQuery(String value) {
-		return encodeQuery(value, JoddCore.encoding);
-	}
-
-	// ---------------------------------------------------------------- path
-
-	protected static void appendPath(StringBuilder result, String value) {
-		int len = value.length();
-
-		for (int i = 0; i < len; i++) {
-			char c = value.charAt(i);
-			if (c < 128) {
-				result.append(URI_CHARS[c]);
-			} else {
-				// quoteNon7bit
-				if ((Character.isSpaceChar(c) || Character.isISOControl(c))) {
-					appendEncoded(result, c);
-				} else {
-					result.append(c);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Encodes <b>path</b> part of the URL.
-	 */
-	public static String encodePath(String value) {
-		StringBuilder sb = new StringBuilder(value.length());
-		appendPath(sb, value);
-		return sb.toString();
-	}
-
-
-	// ---------------------------------------------------------------- util
-
-	private static void appendEncoded(StringBuilder sb, char c) {
-		byte[] bytes;
-		try {
-			bytes = String.valueOf(c).getBytes("UTF-8");
+			bytes = encodeBytes(source.getBytes(encoding), uriPart);
 		} catch (UnsupportedEncodingException ignore) {
-			return;
+			return null;
 		}
-		for (byte b : bytes) {
-			int i = b & 0xFF;
-			if (i >= 0x80) {
-				sb.append('%');
-				sb.append(HEX_DIGITS[i >> 4]);
-				sb.append(HEX_DIGITS[i & 0x0F]);
-			} else {
-				sb.append((char) i);
-			}
+
+		char[] chars = new char[bytes.length];
+		for (int i = 0; i < bytes.length; i++) {
+			chars[i] = (char) bytes[i];
 		}
+		return new String(chars);
 	}
 
-	private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
+	private static byte[] encodeBytes(byte[] source, URIPart uriPart) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length);
+		for (byte b : source) {
+			if (b < 0) {
+				b += 256;
+			}
+			if (uriPart.isValid((char) b)) {
+				bos.write(b);
+			} else {
+				bos.write('%');
+				char hex1 = Character.toUpperCase(Character.forDigit((b >> 4) & 0xF, 16));
+				char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, 16));
+				bos.write(hex1);
+				bos.write(hex2);
+			}
+		}
+		return bos.toByteArray();
+	}
+
+	// ---------------------------------------------------------------- main methods
+
+	/**
+	 * Encodes the given URI scheme with the given encoding.
+	 */
+	public static String encodeScheme(String scheme, String encoding) {
+		return encodeUriComponent(scheme, encoding, URIPart.SCHEME);
+	}
+	public static String encodeScheme(String scheme) {
+		return encodeUriComponent(scheme, JoddCore.encoding, URIPart.SCHEME);
+	}
+
+/*	/**
+	 * Encodes the given URI authority with the given encoding.
+	 *
+
+	public static String encodeAuthority(String authority, String encoding) {
+		return encodeUriComponent(authority, encoding, URIPart.AUTHORITY);
+	}
+	public static String encodeAuthority(String authority) {
+		return encodeUriComponent(authority, JoddCore.encoding, URIPart.AUTHORITY);
+	}
+*/
+
+	/**
+	 * Encodes the given URI user info with the given encoding.
+	 */
+	public static String encodeUserInfo(String userInfo, String encoding) {
+		return encodeUriComponent(userInfo, encoding, URIPart.USER_INFO);
+	}
+	public static String encodeUserInfo(String userInfo) {
+		return encodeUriComponent(userInfo, JoddCore.encoding, URIPart.USER_INFO);
+	}
+
+	/**
+	 * Encodes the given URI host with the given encoding.
+	 */
+	public static String encodeHost(String host, String encoding) {
+		return encodeUriComponent(host, encoding, URIPart.HOST);
+	}
+	public static String encodeHost(String host) {
+		return encodeUriComponent(host, JoddCore.encoding, URIPart.HOST);
+	}
+
+	/**
+	 * Encodes the given URI port with the given encoding.
+	 */
+	public static String encodePort(String port, String encoding) {
+		return encodeUriComponent(port, encoding, URIPart.PORT);
+	}
+	public static String encodePort(String port) {
+		return encodeUriComponent(port, JoddCore.encoding, URIPart.PORT);
+	}
+
+	/**
+	 * Encodes the given URI path with the given encoding.
+	 */
+	public static String encodePath(String path, String encoding) {
+		return encodeUriComponent(path, encoding, URIPart.PATH);
+	}
+	public static String encodePath(String path) {
+		return encodeUriComponent(path, JoddCore.encoding, URIPart.PATH);
+	}
+
+	/**
+	 * Encodes the given URI path segment with the given encoding.
+	 */
+	public static String encodePathSegment(String segment, String encoding) {
+		return encodeUriComponent(segment, encoding, URIPart.PATH_SEGMENT);
+	}
+	public static String encodePathSegment(String segment) {
+		return encodeUriComponent(segment, JoddCore.encoding, URIPart.PATH_SEGMENT);
+	}
+
+	/**
+	 * Encodes the given URI query with the given encoding.
+	 */
+	public static String encodeQuery(String query, String encoding) {
+		return encodeUriComponent(query, encoding, URIPart.QUERY);
+	}
+	public static String encodeQuery(String query) {
+		return encodeUriComponent(query, JoddCore.encoding, URIPart.QUERY);
+	}
+
+	/**
+	 * Encodes the given URI query parameter with the given encoding.
+	 */
+	public static String encodeQueryParam(String queryParam, String encoding) {
+		return encodeUriComponent(queryParam, encoding, URIPart.QUERY_PARAM);
+	}
+	public static String encodeQueryParam(String queryParam) {
+		return encodeUriComponent(queryParam, JoddCore.encoding, URIPart.QUERY_PARAM);
+	}
+
+	/**
+	 * Encodes the given URI fragment with the given encoding.
+	 */
+	public static String encodeFragment(String fragment, String encoding) {
+		return encodeUriComponent(fragment, encoding, URIPart.FRAGMENT);
+	}
+	public static String encodeFragment(String fragment) {
+		return encodeUriComponent(fragment, JoddCore.encoding, URIPart.FRAGMENT);
+	}
+
+
+	// ---------------------------------------------------------------- url
+
+	public static String encodeUri(String uri) {
+		return encodeUri(uri, JoddCore.encoding);
+	}
+	/**
+	 * Encodes the given source URI into an encoded String. All various URI components are
+	 * encoded according to their respective valid character sets.
+	 * <p>This method does <b>not</b> attempt to encode "=" and "&"
+	 * characters in query parameter names and query parameter values because they cannot
+	 * be parsed in a reliable way.
+	 */
+	public static String encodeUri(String uri, String encoding) {
+		Matcher m = URI_PATTERN.matcher(uri);
+		if (m.matches()) {
+			String scheme = m.group(2);
+			String authority = m.group(3);
+			String userinfo = m.group(5);
+			String host = m.group(6);
+			String port = m.group(8);
+			String path = m.group(9);
+			String query = m.group(11);
+			String fragment = m.group(13);
+
+			return encodeUriComponents(scheme, authority, userinfo, host, port, path, query, fragment, encoding);
+		}
+		throw new IllegalArgumentException("Invalid URI: " + uri);
+	}
+
+	public static String encodeHttpUrl(String httpUrl) {
+		return encodeHttpUrl(httpUrl, JoddCore.encoding);
+	}
+
+	/**
+	 * Encodes the given HTTP URI into an encoded String. All various URI components are
+	 * encoded according to their respective valid character sets.
+	 * <p>This method does <b>not</b> support fragments ({@code #}),
+	 * as these are not supposed to be sent to the server, but retained by the client.
+	 * <p>This method does <b>not</b> attempt to encode "=" and "&"
+	 * characters in query parameter names and query parameter values because they cannot
+	 * be parsed in a reliable way.
+	 */
+	public static String encodeHttpUrl(String httpUrl, String encoding) {
+		Matcher m = HTTP_URL_PATTERN.matcher(httpUrl);
+		if (m.matches()) {
+			String scheme = m.group(1);
+			String authority = m.group(2);
+			String userinfo = m.group(4);
+			String host = m.group(5);
+			String portString = m.group(7);
+			String path = m.group(8);
+			String query = m.group(10);
+
+			return encodeUriComponents(scheme, authority, userinfo, host, portString, path, query, null, encoding);
+		}
+		throw new IllegalArgumentException("Invalid HTTP URL: " + httpUrl);
+	}
+
+	private static String encodeUriComponents(
+			String scheme, String authority, String userInfo,
+			String host, String port, String path, String query,
+			String fragment, String encoding) {
+
+		StringBuilder sb = new StringBuilder();
+
+		if (scheme != null) {
+			sb.append(encodeScheme(scheme, encoding));
+			sb.append(':');
+		}
+
+		if (authority != null) {
+			sb.append("//");
+			if (userInfo != null) {
+				sb.append(encodeUserInfo(userInfo, encoding));
+				sb.append('@');
+			}
+			if (host != null) {
+				sb.append(encodeHost(host, encoding));
+			}
+			if (port != null) {
+				sb.append(':');
+				sb.append(encodePort(port, encoding));
+			}
+		}
+
+		sb.append(encodePath(path, encoding));
+
+		if (query != null) {
+			sb.append('?');
+			sb.append(encodeQuery(query, encoding));
+		}
+
+		if (fragment != null) {
+			sb.append('#');
+			sb.append(encodeFragment(fragment, encoding));
+		}
+
+		return sb.toString();
+	}
 
 	// ---------------------------------------------------------------- builder
 
 	/**
 	 * Creates URL builder for user-friendly way of building URLs.
+	 * Provided path is {@link #encodeUri(String) encoded}.
 	 */
-	public static Builder build() {
-		return new Builder(JoddCore.encoding);
+	public static Builder build(String path) {
+		return build(path, true);
+	}
+
+	/**
+	 * Creates URL builder with given path that can be optionally encoded.
+	 */
+	public static Builder build(String path, boolean encodePath) {
+		return new Builder(path, encodePath, JoddCore.encoding);
 	}
 
 	public static class Builder {
-
 		protected final StringBuilder url;
 		protected final String encoding;
 		protected boolean hasParams;
 
-		public Builder(String encoding) {
-			url = new StringBuilder();
-			this.hasParams = false;
+		public Builder(String path,  boolean encodePath, String encoding) {
 			this.encoding = encoding;
-		}
-
-		/**
-		 * Defines path.
-		 */
-		public Builder path(String value) {
-			if (hasParams) {
-				throw new IllegalArgumentException("Path element can't come after query parameters");
-			}
-			appendPath(url, value);
-			return this;
-		}
-
-		/**
-		 * Appends new parameter to url.
-		 */
-		public Builder param(String name, Object value) {
-			return param(name, value == null ? null : value.toString());
-		}
-
-		/**
-		 * Appends new parameter to url.
-		 */
-		public Builder param(String name, String value) {
-			url.append(hasParams ? '&' : '?');
-			hasParams = true;
-			appendQuery(url, name, encoding);
-			if ((value != null) && (value.length() > 0)) {
-				url.append('=');
-				appendQuery(url, value, encoding);
-			}
-			return this;
-		}
-
-		public Builder param(String nameValue) {
-			url.append(hasParams ? '&' : '?');
-
-			hasParams = true;
-
-			int eqNdx = nameValue.indexOf('=');
-			String name;
-			String value = null;
-
-			if (eqNdx == -1) {
-				name = nameValue;
+			url = new StringBuilder();
+			if (encodePath) {
+				url.append(encodeUri(path, encoding));
 			} else {
-				name = nameValue.substring(0, eqNdx);
-				value = nameValue.substring(eqNdx + 1);
+				url.append(path);
 			}
+			this.hasParams = url.indexOf(StringPool.QUESTION_MARK) != -1;
+		}
 
-			appendQuery(url, name, encoding);
+		/**
+		 * Appends new query parameter to the url.
+		 */
+		public Builder queryParam(String name, String value) {
+			url.append(hasParams ? '&' : '?');
+			hasParams = true;
+
+			url.append(encodeQueryParam(name, encoding));
 
 			if ((value != null) && (value.length() > 0)) {
 				url.append('=');
-				appendQuery(url, value, encoding);
+				url.append(encodeQueryParam(value, encoding));
 			}
-
 			return this;
 		}
 

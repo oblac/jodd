@@ -58,7 +58,7 @@ public class MadvocUtil {
 
 		int ndx = name.length() - 1;
 		while (ndx >= 0) {
-			if (CharUtil.isUppercaseLetter(name.charAt(ndx)) == true) {
+			if (CharUtil.isUppercaseAlpha(name.charAt(ndx)) == true) {
 				break;
 			}
 			ndx--;

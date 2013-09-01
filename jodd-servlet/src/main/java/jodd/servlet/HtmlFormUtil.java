@@ -302,7 +302,7 @@ public class HtmlFormUtil {
 	public static String name2id(String name) {
 		char[] str = name.toCharArray();
 		for (int i = 0; i < str.length; i++) {
-			if (CharUtil.isLetterOrDigit(str[i]) == false) {
+			if (CharUtil.isAlphaOrDigit(str[i]) == false) {
 				str[i] = '_';
 			}
 		}

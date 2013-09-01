@@ -37,13 +37,13 @@ public class HttpUtil {
 				query.append('&');
 			}
 
-			key = URLCoder.encodeQuery(key, encoding);
+			key = URLCoder.encodeQueryParam(key, encoding);
 			query.append(key);
 
 			if (value != null) {
 				query.append('=');
 				if (value instanceof String) {
-					String valueString = URLCoder.encodeQuery((String) value, encoding);
+					String valueString = URLCoder.encodeQueryParam((String) value, encoding);
 					query.append(valueString);
 				} else {
 					String[] values = (String[]) value;

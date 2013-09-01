@@ -87,7 +87,7 @@ class TemplateParser {
 		if ((c == '+') && (template.charAt(index - 1) == '.')) {
 			return true;
 		}
-		return isDigit(c) || isLetter(c) || (c == '_') || (c == '.');
+		return isDigit(c) || isAlpha(c) || (c == '_') || (c == '.');
 	}
 
 
