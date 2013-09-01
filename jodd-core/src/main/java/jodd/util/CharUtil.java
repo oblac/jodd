@@ -248,7 +248,7 @@ public class CharUtil {
 	 * Returns <code>true</code> if specified character is lowercase ASCII.
 	 * If user uses only ASCIIs, it is much much faster.
 	 */
-	public static boolean isLowercaseLetter(char c) {
+	public static boolean isLowercaseAlpha(char c) {
 		return (c >= 'a') && (c <= 'z');
 	}
 
@@ -256,29 +256,88 @@ public class CharUtil {
 	 * Returns <code>true</code> if specified character is uppercase ASCII.
 	 * If user uses only ASCIIs, it is much much faster.
 	 */
-	public static boolean isUppercaseLetter(char c) {
+	public static boolean isUppercaseAlpha(char c) {
 		return (c >= 'A') && (c <= 'Z');
 	}
 
-	public static boolean isLetter(char c) {
-		return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
-	}
-
-	public static boolean isDigit(char c) {
-		return (c >= '0') && (c <= '9');
-	}
-
-	public static boolean isLetterOrDigit(char c) {
-		return isDigit(c) || isLetter(c);
+	public static boolean isAlphaOrDigit(char c) {
+		return isDigit(c) || isAlpha(c);
 	}
 
 	public static boolean isWordChar(char c) {
-		return isDigit(c) || isLetter(c) || (c == '_');
+		return isDigit(c) || isAlpha(c) || (c == '_');
 	}
 
 	public static boolean isPropertyNameChar(char c) {
-		return isDigit(c) || isLetter(c) || (c == '_') || (c == '.') || (c == '[') || (c == ']');
+		return isDigit(c) || isAlpha(c) || (c == '_') || (c == '.') || (c == '[') || (c == ']');
 	}
+
+	// ---------------------------------------------------------------- RFC
+
+	/**
+	 * Indicates whether the given character is in the {@code ALPHA} set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	public static boolean isAlpha(char c) {
+		return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
+	}
+
+	/**
+	 * Indicates whether the given character is in the {@code DIGIT} set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	public static boolean isDigit(char c) {
+		return c >= '0' && c <= '9';
+	}
+
+	/**
+	 * Indicates whether the given character is in the <i>gen-delims</i> set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	public static boolean isGenericDelimiter(int c) {
+		return c == ':' || c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@';
+	}
+
+	/**
+	 * Indicates whether the given character is in the <i>sub-delims</i> set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isSubDelimiter(int c) {
+		return c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' || c == ')' || c == '*' || c == '+' ||
+				c == ',' || c == ';' || c == '=';
+	}
+
+	/**
+	 * Indicates whether the given character is in the <i>reserved</i> set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isReserved(char c) {
+		return isGenericDelimiter(c) || isReserved(c);
+	}
+
+	/**
+	 * Indicates whether the given character is in the <i>unreserved</i> set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isUnreserved(char c) {
+		return isAlpha(c) || isDigit(c) || c == '-' || c == '.' || c == '_' || c == '~';
+	}
+
+	/**
+	 * Indicates whether the given character is in the <i>pchar</i> set.
+	 *
+	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+	 */
+	protected static boolean isPchar(char c) {
+		return isUnreserved(c) || isSubDelimiter(c) || c == ':' || c == '@';
+	}
+
 
 	// ---------------------------------------------------------------- conversions
 
@@ -286,7 +345,7 @@ public class CharUtil {
 	 * Uppers lowercase ASCII char.
 	 */
 	public static char toUpperAscii(char c) {
-		if (isLowercaseLetter(c)) {
+		if (isLowercaseAlpha(c)) {
 			c -= (char) 0x20;
 		}
 		return c;
@@ -297,7 +356,7 @@ public class CharUtil {
 	 * Lowers uppercase ASCII char.
 	 */
 	public static char toLowerAscii(char c) {
-		if (isUppercaseLetter(c)) {
+		if (isUppercaseAlpha(c)) {
 			c += (char) 0x20;
 		}
 		return c;

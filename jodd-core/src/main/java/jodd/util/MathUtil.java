@@ -15,7 +15,7 @@ public class MathUtil {
 		if ((digit >= '0') && (digit <= '9')) {
 			return digit - '0';
 		}
-		if (CharUtil.isLowercaseLetter(digit)) {
+		if (CharUtil.isLowercaseAlpha(digit)) {
 			return 10 + digit - 'a';
 		}
 		return 10 + digit - 'A';
