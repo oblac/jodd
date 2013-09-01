@@ -4,6 +4,7 @@ package jodd.util;
 
 import jodd.JoddCore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -21,39 +22,35 @@ public class URLDecoder {
 	/**
 	 * Decodes URL elements.
 	 */
-	public static String decode(String url, String encoding) {
+	public static String decode(String source, String encoding) {
+		int length = source.length();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
 
-		int queryIndex = url.indexOf('?');
-		if (queryIndex != -1) {
-			url = url.substring(0, queryIndex) + url.substring(queryIndex).replace('+', ' ');
-		}
+		boolean changed = false;
 
-		int ndx = url.indexOf('%');
-		if (ndx == -1) {
-			return url;
-		}
-
-		StringBuilder result = new StringBuilder(url.length());
-
-		int lastIndex = 0;
-		int len = url.length();
-		while (ndx != -1) {
-			result.append(url.substring(lastIndex, ndx));
-			ndx++;
-			if (ndx + 2 <= len) {
-				int value = MathUtil.parseDigit(url.charAt(ndx));
-				value <<= 4;
-				value += MathUtil.parseDigit(url.charAt(ndx + 1));
-
-				result.append((char) value);
-				lastIndex = ndx + 2;
+		for (int i = 0; i < length; i++) {
+			int ch = source.charAt(i);
+			if (ch == '%') {
+				if ((i + 2) < length) {
+					char hex1 = source.charAt(i + 1);
+					char hex2 = source.charAt(i + 2);
+					int u = Character.digit(hex1, 16);
+					int l = Character.digit(hex2, 16);
+					if (u == -1 || l == -1) {
+						throw new IllegalArgumentException("Invalid sequence: " + source.substring(i));
+					}
+					bos.write((char) ((u << 4) + l));
+					i += 2;
+					changed = true;
+				} else {
+					throw new IllegalArgumentException("Invalid sequence: " + source.substring(i));
+				}
+			} else {
+				bos.write(ch);
 			}
-			ndx = url.indexOf('%', lastIndex);
 		}
-		result.append(url.substring(lastIndex));
-
 		try {
-			return new String(result.toString().getBytes(StringPool.ISO_8859_1), encoding);
+			return changed ? new String(bos.toByteArray(), encoding) : source;
 		} catch (UnsupportedEncodingException ignore) {
 			return null;
 		}
