@@ -105,15 +105,19 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			.append(statusPhrase)
 			.append(CRLF);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
+		for (Map.Entry<String, String[]> entry : headers.entrySet()) {
 			String headerName = entry.getKey();
 
 			headerName = HttpUtil.prepareHeaderParameterName(headerName);
 
-			response.append(headerName);
-			response.append(": ");
-			response.append(entry.getValue());
-			response.append(CRLF);
+			String[] values = entry.getValue();
+
+			for (String value : values) {
+				response.append(headerName);
+				response.append(": ");
+				response.append(value);
+				response.append(CRLF);
+			}
 		}
 
 		response.append(CRLF);

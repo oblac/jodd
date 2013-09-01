@@ -10,6 +10,7 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
+import jodd.util.ArraysUtil;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
 import jodd.util.StringPool;
@@ -40,7 +41,7 @@ public abstract class HttpBase<T> {
 	public static final String HEADER_ETAG = "ETag";
 
 	protected String httpVersion = "HTTP/1.1";
-	protected Map<String, String> headers = new LinkedHashMap<String, String>();
+	protected Map<String, String[]> headers = new LinkedHashMap<String, String[]>();
 
 	protected HttpParamsMap form;	// holds form data (when used)
 	protected String body;			// holds raw body string (always)
@@ -66,15 +67,31 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Returns value of header parameter.
+	 * If multiple headers with the same names exist,
+	 * the first value will be returned.
 	 */
 	public String header(String name) {
+		String key = name.trim().toLowerCase();
+
+		String[] values = headers.get(key);
+
+		if (values == null) {
+			return null;
+		}
+		return values[0];
+	}
+
+	/**
+	 * Returns all values for given header name.
+	 */
+	public String[] headers(String name) {
 		String key = name.trim().toLowerCase();
 
 		return headers.get(key);
 	}
 
 	/**
-	 * Removes header parameter.
+	 * Removes all header parameters for given name.
 	 */
 	public void removeHeader(String name) {
 		String key = name.trim().toLowerCase();
@@ -99,7 +116,28 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		headers.put(key, value);
+		headers.put(key, new String[]{value});
+		return (T) this;
+	}
+
+	/**
+	 * Adds header value. Headers with the same name are NOT overwritten.
+	 */
+	public T addHeader(String name, String value) {
+		String key = name.trim().toLowerCase();
+
+		value = value.trim();
+
+		String[] existingValues = headers(key);
+
+		if (existingValues == null) {
+			header(name, value);
+		} else {
+			String[] newValue = ArraysUtil.append(existingValues, value);
+
+			headers.put(key, newValue);
+		}
+
 		return (T) this;
 	}
 
@@ -109,7 +147,7 @@ public abstract class HttpBase<T> {
 	protected void _header(String name, String value) {
 		String key = name.trim().toLowerCase();
 		value = value.trim();
-		headers.put(key, value);
+		headers.put(key, new String[] {value});
 	}
 
 	/**
@@ -566,7 +604,7 @@ public abstract class HttpBase<T> {
 
 			int ndx = line.indexOf(':');
 			if (ndx != -1) {
-				header(line.substring(0, ndx), line.substring(ndx + 1));
+				addHeader(line.substring(0, ndx), line.substring(ndx + 1));
 			} else {
 				throw new HttpException("Invalid header: " + line);
 			}

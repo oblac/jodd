@@ -455,6 +455,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		httpTransport.close();
 
+		httpTransport = null;
+
 		return httpResponse;
 	}
 
@@ -513,15 +515,19 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			.append(httpVersion)
 			.append(CRLF);
 
-		for (Map.Entry<String, String> entry : headers.entrySet()) {
+		for (Map.Entry<String, String[]> entry : headers.entrySet()) {
 			String headerName = entry.getKey();
 
 			headerName = HttpUtil.prepareHeaderParameterName(headerName);
 
-			builder.append(headerName);
-			builder.append(": ");
-			builder.append(entry.getValue());
-			builder.append(CRLF);
+			String[] values = entry.getValue();
+
+			for (String value : values) {
+				builder.append(headerName);
+				builder.append(": ");
+				builder.append(value);
+				builder.append(CRLF);
+			}
 		}
 
 		builder.append(CRLF);
