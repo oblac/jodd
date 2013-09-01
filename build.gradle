@@ -220,7 +220,7 @@ configure(javaBundleModules()) {
 	}
 
 	test {
-		testReport = false
+		reports.html.enabled=true
 		systemProperties = System.properties
 		jvmArgs "-javaagent:${configurations.codeCoverage.asPath}=destfile=${project.buildDir.path}/coverage-results/jacoco.exec,sessionid=HSServ,append=false,excludes=*Test:*.?:*Foo*:*.data.*:*.tst*:*\$*",
 			'-Djacoco=true',
@@ -354,5 +354,5 @@ task release() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.6'
+	gradleVersion = '1.7'
 }

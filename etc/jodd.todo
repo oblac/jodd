@@ -89,7 +89,7 @@ Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5
 	- Add gradle for examples: @v3.4.6
-	- Upgrade to gradle v1.7 @next
+	- Upgrade to gradle v1.7 @done @v3.4.6
 	- Use empty project to create a blog/twitter example and make a video @soon
 	- Add log DEBUG in examples.quickstart @next
 	- sitemap generator for @sitebuilder @soon
