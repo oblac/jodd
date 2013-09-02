@@ -24,7 +24,6 @@ import static jodd.util.CharUtil.isUnreserved;
  * <ul>
  *     <li>scheme (https)</li>
  *     <li>user (jodd)</li>
- *     <li>password (nodd)</li>
  *     <li>password (ddoj)</li>
  *     <li>host (www.jodd.org)</li>
  *     <li>port (8080)</li>
@@ -33,7 +32,10 @@ import static jodd.util.CharUtil.isUnreserved;
  *     <li>query parameter (q=2)</li>
  *     <li>fragment (third)</li>
  * </ul>
- * Each URL part has its own encoding rules.
+ * Each URL part has its own encoding rules. The <b>only</b> correct way of
+ * encoding URLs is to encode each part separately, and then to concatenate
+ * results. For easier query building you can use {@link #build(String) builder}.
+ * It provides fluent interface for defining query parameters.
  */
 public class URLCoder {
 
@@ -148,6 +150,9 @@ public class URLCoder {
 
 	// ---------------------------------------------------------------- util methods
 
+	/**
+	 * Encodes single URI component.
+	 */
 	private static String encodeUriComponent(String source, String encoding, URIPart uriPart) {
 		if (source == null) {
 			return null;
@@ -167,6 +172,9 @@ public class URLCoder {
 		return new String(chars);
 	}
 
+	/**
+	 * Encodes byte array using allowed characters from {@link URIPart}.
+	 */
 	private static byte[] encodeBytes(byte[] source, URIPart uriPart) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length);
 		for (byte b : source) {
@@ -293,6 +301,9 @@ public class URLCoder {
 
 	// ---------------------------------------------------------------- url
 
+	/**
+	 * @see #encodeUri(String, String)
+	 */
 	public static String encodeUri(String uri) {
 		return encodeUri(uri, JoddCore.encoding);
 	}
@@ -320,10 +331,12 @@ public class URLCoder {
 		throw new IllegalArgumentException("Invalid URI: " + uri);
 	}
 
+	/**
+	 * @see #encodeHttpUrl(String, String)
+	 */
 	public static String encodeHttpUrl(String httpUrl) {
 		return encodeHttpUrl(httpUrl, JoddCore.encoding);
 	}
-
 	/**
 	 * Encodes the given HTTP URI into an encoded String. All various URI components are
 	 * encoded according to their respective valid character sets.
@@ -395,7 +408,8 @@ public class URLCoder {
 
 	/**
 	 * Creates URL builder for user-friendly way of building URLs.
-	 * Provided path is {@link #encodeUri(String) encoded}.
+	 * Provided path is parsed and {@link #encodeUri(String) encoded}.
+	 * @see #build(String, boolean)
 	 */
 	public static Builder build(String path) {
 		return build(path, true);
@@ -403,6 +417,12 @@ public class URLCoder {
 
 	/**
 	 * Creates URL builder with given path that can be optionally encoded.
+	 * Since most of the time path is valid and does not require to be encoded,
+	 * use this method to gain some performance. When encoding flag is turned off,
+	 * provided path is used without processing.
+	 * <p>
+	 * The purpose of builder is to help with query parameters. All other URI parts
+	 * should be set previously or after the URL is built.
 	 */
 	public static Builder build(String path, boolean encodePath) {
 		return new Builder(path, encodePath, JoddCore.encoding);
@@ -441,7 +461,7 @@ public class URLCoder {
 		}
 
 		/**
-		 * Returns built URL.
+		 * Returns full URL.
 		 */
 		@Override
 		public String toString() {
