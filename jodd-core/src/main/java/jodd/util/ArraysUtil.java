@@ -261,18 +261,11 @@ public class ArraysUtil {
 	 */
 	public static <T> T[] resize(T[] buffer, int newSize) {
 		Class<T> componentType = (Class<T>) buffer.getClass().getComponentType();
-		return resize(buffer, newSize, componentType);
-	}
-		
-	/**
-	 * Resizes an array.
-	 */
-	@SuppressWarnings({"unchecked"})
-	public static <T> T[] resize(T[] buffer, int newSize, Class<?> componentType) {
 		T[] temp = (T[]) Array.newInstance(componentType, newSize);
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
+		
 
 	/**
 	 * Resizes a <code>String</code> array.
@@ -362,7 +355,7 @@ public class ArraysUtil {
 	 * Appends an element to array.
 	 */
 	public static <T> T[] append(T[] buffer, T newElement) {
-		T[] t = resize(buffer, buffer.length + 1, newElement.getClass());
+		T[] t = resize(buffer, buffer.length + 1);
 		t[buffer.length] = newElement;
 		return t;
 	}

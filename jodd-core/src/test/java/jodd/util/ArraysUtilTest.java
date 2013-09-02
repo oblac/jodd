@@ -20,6 +20,7 @@ public class ArraysUtilTest {
 
 	Long[] xx;
 	Long[] yy;
+	Object[] oo;
 
 	@Before
 	public void setUp() throws Exception {
@@ -166,6 +167,19 @@ public class ArraysUtilTest {
 		assertArrayEquals(new int[]{1, 2, 5}, ArraysUtil.remove(x, 2, 2));
 		assertArrayEquals(new int[]{1}, ArraysUtil.remove(x, 1, 4));
 		assertArrayEquals(new long[]{1, 3, 4, 5}, ArraysUtil.values(ArraysUtil.remove(xx, 1, 1)));
+	}
+
+	@Test
+	public void testSuperType() {
+		oo = new Object[] {Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(5)};
+
+		oo = ArraysUtil.append(oo, Integer.valueOf(7));
+
+		assertEquals(4, oo.length);
+
+		oo = ArraysUtil.append(oo, "xxx");
+
+		assertEquals(5, oo.length);
 	}
 
 }
