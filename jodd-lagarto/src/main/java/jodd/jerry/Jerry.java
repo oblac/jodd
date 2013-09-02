@@ -14,6 +14,7 @@ import jodd.util.StringUtil;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -870,6 +871,114 @@ public class Jerry implements Iterable<Jerry> {
 				throw new UnsupportedOperationException();
 			}
 		};
+	}
+
+	// ---------------------------------------------------------------- form
+
+	/**
+	 * Processes all forms, collects all form parameters and calls back the
+	 * {@link JerryFormHandler}.
+	 */
+	public Jerry form(String formCssSelector, JerryFormHandler jerryFormHandler) {
+		Jerry form = find(formCssSelector);
+
+		// process each form
+		for (Node node : form.nodes) {
+			Jerry singleForm = new Jerry(this, node);
+
+			final Map<String, String[]> parameters = new HashMap<String, String[]>();
+
+			// process all input elements
+
+			singleForm.$("input").each(new JerryFunction() {
+				public boolean onNode(Jerry $inputTag, int index) {
+
+					String type = $inputTag.attr("type");
+
+					boolean isCheckbox = type.equals("checkbox");
+					boolean isRadio = type.equals("radio");
+
+					if (isRadio || isCheckbox) {
+						if ($inputTag.nodes[0].hasAttribute("checked") == false) {
+							return true;
+						}
+					}
+
+					String name = $inputTag.attr("name");
+					if (name == null) {
+						return true;
+					}
+
+					String tagValue = $inputTag.attr("value");
+
+					if (tagValue == null) {
+						if (isCheckbox) {
+							tagValue = "on";
+						}
+					}
+
+					// add tag value
+					String[] value = parameters.get(name);
+
+					if (value == null) {
+						value = new String[] {tagValue};
+					} else {
+						value = ArraysUtil.append(value, tagValue);
+					}
+
+					parameters.put(name, value);
+					return true;
+				}
+			});
+
+			// process all select elements
+
+			singleForm.$("select").each(new JerryFunction() {
+				public boolean onNode(Jerry $selectTag, int index) {
+					final String name = $selectTag.attr("name");
+
+					$selectTag.$("option").each(new JerryFunction() {
+						public boolean onNode(Jerry $optionTag, int index) {
+							if ($optionTag.nodes[0].hasAttribute("selected")) {
+								String tagValue = $optionTag.attr("value");
+
+								// add tag value
+								String[] value = parameters.get(name);
+
+								if (value == null) {
+									value = new String[] {tagValue};
+								} else {
+									value = ArraysUtil.append(value, tagValue);
+								}
+
+								parameters.put(name, value);
+							}
+							return true;
+						}
+					});
+
+					return true;
+				}
+			});
+
+			// process all text areas
+
+			singleForm.$("textarea").each(new JerryFunction() {
+				public boolean onNode(Jerry $textarea, int index) {
+					String name = $textarea.attr("name");
+					String value = $textarea.text();
+
+					parameters.put(name, new String[] {value});
+					return true;
+				}
+			});
+
+			// done
+
+			jerryFormHandler.onForm(singleForm, parameters);
+		}
+
+		return this;
 	}
 
 	// ---------------------------------------------------------------- internal

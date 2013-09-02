@@ -10,6 +10,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
 import static org.junit.Assert.assertEquals;
@@ -520,6 +522,32 @@ public class JerryTest {
 		assertEquals(htmlOK, actualHtml(doc));
 	}
 
+	@Test
+	public void testForm() {
+		String html = readFile("form.html");
+
+		Jerry doc = jerry(html);
+
+		final Map<String, String[]> params = new HashMap<String, String[]>();
+
+		doc.form("#myform", new JerryFormHandler() {
+			public void onForm(Jerry form, Map<String, String[]> parameters) {
+				params.putAll(parameters);
+			}
+		});
+
+		assertEquals(6, params.size());
+
+		assertEquals("text!", params.get("n_text")[0]);
+		assertEquals("password!", params.get("n_password")[0]);
+		assertEquals("on", params.get("n_checkbox1")[0]);
+		assertEquals("check1!", params.get("n_checkbox2")[0]);
+		assertEquals("check2!", params.get("n_checkbox2")[1]);
+		assertEquals("sel2!", params.get("n_select")[0]);
+		assertEquals("sel3!", params.get("n_select")[1]);
+		assertEquals("textarea!", params.get("n_textarea")[0]);
+	}
+
 	// ---------------------------------------------------------------- tools
 
 	private String actualHtml(Jerry $) {
@@ -529,7 +557,7 @@ public class JerryTest {
 	private String readFile(String fileName) {
 		try {
 			return FileUtil.readString(new File(testDataRoot, fileName));
-		} catch (IOException ioex) {
+		} catch (IOException ignore) {
 			return null;
 		}
 	}
