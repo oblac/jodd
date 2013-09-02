@@ -4,7 +4,7 @@ General Tasks:
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
-	- Add more TypeConverters! @next @v3.4.6
+	- Add more TypeConverters! @next @v3.4.7
 		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
@@ -14,7 +14,7 @@ General Tasks:
 	- FindFile with includes/excludes @v3.4.5 @done
 	- StringUtil.stripFromChar @next  strips everything from/up to the first char
 	- copy file was somewhat slow? @tbd @next
-	- URLCoder improvded @done @v3.4.6
+	- URLCoder improvded @done @v3.4.7
 	- ReThink log dependency @tbd
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
@@ -26,9 +26,10 @@ Site/Documentation:
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
-	- Add htmlPlus() mode @done @v3.4.6
+	- Add htmlPlus() mode @done @v3.4.7
+	- Add form() for handling forms @done @v3.4.7
 	- Add alternative parser per real HTML rules, that produces browser-quality code @hot @tbd
-	- Improve LagartoDOM parser @v3.4.6 @done
+	- Improve LagartoDOM parser @v3.4.7 @done
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done
@@ -88,8 +89,8 @@ Joy:
 Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5
-	- Add gradle for examples: @v3.4.6
-	- Upgrade to gradle v1.7 @done @v3.4.6
+	- Add gradle for examples: @v3.4.7
+	- Upgrade to gradle v1.7 @done @v3.4.7
 	- Use empty project to create a blog/twitter example and make a video @soon
 	- Add log DEBUG in examples.quickstart @next
 	- sitemap generator for @sitebuilder @soon
