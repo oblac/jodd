@@ -1,0 +1,123 @@
+//  Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
+
+package jodd.http;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Emulates HTTP Browser and persist cookies between requests.
+ */
+public class HttpBrowser {
+
+	protected HttpRequest httpRequest;
+	protected HttpResponse httpResponse;
+	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
+
+	/**
+	 * Returns last used request.
+	 */
+	public HttpRequest getHttpRequest() {
+		return httpRequest;
+	}
+
+	/**
+	 * Returns last received {@link HttpResponse HTTP response} object.
+	 */
+	public HttpResponse getHttpResponse() {
+		return httpResponse;
+	}
+
+	/**
+	 * Returns last response HTML page.
+	 */
+	public String getPage() {
+		if (httpResponse == null) {
+			return null;
+		}
+		return httpResponse.bodyText();
+	}
+
+	/**
+	 * Sends new request as a browser. Before sending,
+	 * all browser cookies are added to the request.
+	 * After sending, the cookies are read from the response.
+	 * Moreover, status codes 301 and 302 are automatically
+	 * handled.
+	 */
+	public void sendRequest(HttpRequest httpRequest) {
+		// send request
+
+		while (true) {
+			this.httpRequest = httpRequest;
+			this.httpResponse = null;
+
+			addCookies(httpRequest);
+
+			// send request
+			System.out.println(httpRequest);
+			this.httpResponse = httpRequest.send();
+
+			readCookies(httpResponse);
+
+			// 301: moved permanently
+			if (httpResponse.statusCode() == 301) {
+				String newPath = httpResponse.header("location");
+
+				httpRequest = HttpRequest.get(newPath);
+
+				continue;
+			}
+
+			// 302: redirect
+			if (httpResponse.statusCode() == 302) {
+				String newPath = httpResponse.header("location");
+
+				httpRequest = HttpRequest.get(newPath);
+
+				continue;
+			}
+			break;
+		}
+	}
+
+	/**
+	 * Reads cookies from response.
+	 */
+	protected void readCookies(HttpResponse httpResponse) {
+		String[] newCookies = httpResponse.headers("set-cookie");
+
+		if (newCookies != null) {
+			for (String cookieValue : newCookies) {
+				Cookie cookie = new Cookie(cookieValue);
+
+				cookies.put(cookie.getName(), cookie);
+			}
+		}
+	}
+
+	/**
+	 * Add cookies to the request.
+	 */
+	protected void addCookies(HttpRequest httpRequest) {
+		// prepare all cookies
+
+		StringBuilder cookieString = new StringBuilder();
+		boolean first = true;
+
+		if (!cookies.isEmpty()) {
+			for (Cookie cookie: cookies.values()) {
+				if (!first) {
+					cookieString.append("; ");
+				}
+				first = false;
+				cookieString.append(cookie.getName());
+				cookieString.append('=');
+				cookieString.append(cookie.getValue());
+			}
+
+			httpRequest.header("cookie", cookieString.toString(), true);
+		}
+	}
+
+}
