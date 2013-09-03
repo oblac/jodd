@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.StringPool.CRLF;
@@ -105,12 +104,10 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			.append(statusPhrase)
 			.append(CRLF);
 
-		for (Map.Entry<String, String[]> entry : headers.entrySet()) {
-			String headerName = entry.getKey();
+		for (String key : headers.keySet()) {
+			String[] values = headers.getStrings(key);
 
-			headerName = HttpUtil.prepareHeaderParameterName(headerName);
-
-			String[] values = entry.getValue();
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
 
 			for (String value : values) {
 				response.append(headerName);

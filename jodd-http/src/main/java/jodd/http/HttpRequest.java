@@ -255,7 +255,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * Adds query parameter.
 	 */
 	public HttpRequest query(String name, String value) {
-		query.put(name, value);
+		query.add(name, value);
 		return this;
 	}
 
@@ -270,7 +270,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			String name = parameters[i].toString();
 
 			String value = parameters[i + 1].toString();
-			query.put(name, value == null ? null : value);
+			query.add(name, value == null ? null : value);
 		}
 		return this;
 	}
@@ -280,16 +280,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 */
 	public HttpRequest query(Map<String, String> queryMap) {
 		for (Map.Entry<String, String> entry : queryMap.entrySet()) {
-			query.put(entry.getKey(), entry.getValue());
+			query.add(entry.getKey(), entry.getValue());
 		}
 		return this;
 	}
 
 	/**
-	 * Returns backend map of query parameters. Values can be <code>null</code>,
-	 * <code>String</code> or <code>String[]</code>.
+	 * Returns backend map of query parameters.
 	 */
-	public Map<String, Object> query() {
+	public Map<String, Object[]> query() {
 		return query;
 	}
 
@@ -302,7 +301,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Removes query parameters.
+	 * Removes query parameters for given name.
 	 */
 	public HttpRequest removeQuery(String name) {
 		query.remove(name);
@@ -398,7 +397,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		String base64 = Base64.encodeToString(data);
 
-		header("Authorization", "Basic " + base64);
+		header("Authorization", "Basic " + base64, true);
 
 		return this;
 	}
@@ -415,7 +414,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			hostPort += StringPool.COLON + port;
 		}
 
-		header(HEADER_HOST, hostPort);
+		header(HEADER_HOST, hostPort, true);
 		return this;
 	}
 
@@ -515,12 +514,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			.append(httpVersion)
 			.append(CRLF);
 
-		for (Map.Entry<String, String[]> entry : headers.entrySet()) {
-			String headerName = entry.getKey();
+		for (String key : headers.keySet()) {
+			String[] values = headers.getStrings(key);
 
-			headerName = HttpUtil.prepareHeaderParameterName(headerName);
-
-			String[] values = entry.getValue();
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
 
 			for (String value : values) {
 				builder.append(headerName);

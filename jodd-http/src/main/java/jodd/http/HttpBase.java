@@ -10,7 +10,6 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
-import jodd.util.ArraysUtil;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
 import jodd.util.StringPool;
@@ -22,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -41,7 +39,7 @@ public abstract class HttpBase<T> {
 	public static final String HEADER_ETAG = "ETag";
 
 	protected String httpVersion = "HTTP/1.1";
-	protected Map<String, String[]> headers = new LinkedHashMap<String, String[]>();
+	protected HttpParamsMap headers = new HttpParamsMap();
 
 	protected HttpParamsMap form;	// holds form data (when used)
 	protected String body;			// holds raw body string (always)
@@ -73,12 +71,12 @@ public abstract class HttpBase<T> {
 	public String header(String name) {
 		String key = name.trim().toLowerCase();
 
-		String[] values = headers.get(key);
+		Object value = headers.getFirst(key);
 
-		if (values == null) {
+		if (value == null) {
 			return null;
 		}
-		return values[0];
+		return value.toString();
 	}
 
 	/**
@@ -87,7 +85,7 @@ public abstract class HttpBase<T> {
 	public String[] headers(String name) {
 		String key = name.trim().toLowerCase();
 
-		return headers.get(key);
+		return headers.getStrings(key);
 	}
 
 	/**
@@ -100,13 +98,23 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Sets header parameter. Existing parameter is overwritten.
+	 * Adds header parameter. If a header with the same name exist,
+	 * it will not be overwritten, but the new header with the same
+	 * name is going to be added.
 	 * The order of header parameters is preserved.
 	 * Also detects 'Content-Type' header and extracts
 	 * {@link #mediaType() media type} and {@link #charset() charset}
 	 * values.
 	 */
 	public T header(String name, String value) {
+		return header(name, value, false);
+	}
+
+	/**
+	 * Adds or sets header parameter.
+	 * @see #header(String, String)
+	 */
+	public T header(String name, String value, boolean overwrite) {
 		String key = name.trim().toLowerCase();
 
 		value = value.trim();
@@ -116,55 +124,42 @@ public abstract class HttpBase<T> {
 			charset = HttpUtil.extractContentTypeCharset(value);
 		}
 
-		headers.put(key, new String[]{value});
-		return (T) this;
-	}
-
-	/**
-	 * Adds header value. Headers with the same name are NOT overwritten.
-	 */
-	public T addHeader(String name, String value) {
-		String key = name.trim().toLowerCase();
-
-		value = value.trim();
-
-		String[] existingValues = headers(key);
-
-		if (existingValues == null) {
-			header(name, value);
+		if (overwrite == true) {
+			headers.set(key, value);
 		} else {
-			String[] newValue = ArraysUtil.append(existingValues, value);
-
-			headers.put(key, newValue);
+			headers.add(key, value);
 		}
-
 		return (T) this;
 	}
 
 	/**
 	 * Internal direct header setting.
 	 */
-	protected void _header(String name, String value) {
+	protected void _header(String name, String value, boolean overwrite) {
 		String key = name.trim().toLowerCase();
 		value = value.trim();
-		headers.put(key, new String[] {value});
+		if (overwrite) {
+			headers.set(key, value);
+		} else {
+			headers.add(key, value);
+		}
 	}
 
 	/**
-	 * Sets <code>int</code> value as header parameter,
+	 * Adds <code>int</code> value as header parameter,
 	 * @see #header(String, String)
 	 */
 	public T header(String name, int value) {
-		_header(name, String.valueOf(value));
+		_header(name, String.valueOf(value), false);
 		return (T) this;
 	}
 
 	/**
-	 * Sets date value as header parameter.
+	 * Adds date value as header parameter.
 	 * @see #header(String, String)
 	 */
 	public T header(String name, long millis) {
-		_header(name, TimeUtil.formatHttpDate(millis));
+		_header(name, TimeUtil.formatHttpDate(millis), false);
 		return (T) this;
 	}
 
@@ -228,7 +223,7 @@ public abstract class HttpBase<T> {
 	 * and {@link #charset() charset} are overridden.
 	 */
 	public T contentType(String contentType) {
-		header(HEADER_CONTENT_TYPE, contentType);
+		header(HEADER_CONTENT_TYPE, contentType, true);
 		return (T) this;
 	}
 
@@ -257,7 +252,7 @@ public abstract class HttpBase<T> {
 			contentType += ";charset=" + charset;
 		}
 
-		_header(HEADER_CONTENT_TYPE, contentType);
+		_header(HEADER_CONTENT_TYPE, contentType, true);
 		return (T) this;
 	}
 
@@ -275,7 +270,7 @@ public abstract class HttpBase<T> {
 	 * Sets the full "Content-Length" header.
 	 */
 	public T contentLength(int value) {
-		header(HEADER_CONTENT_LENGTH, value);
+		_header(HEADER_CONTENT_LENGTH, String.valueOf(value), true);
 		return (T) this;
 	}
 
@@ -297,7 +292,7 @@ public abstract class HttpBase<T> {
 	 * Sets "Accept-Encoding" header.
 	 */
 	public T acceptEncoding(String encodings) {
-		header(HEADER_ACCEPT_ENCODING, encodings);
+		header(HEADER_ACCEPT_ENCODING, encodings, true);
 		return (T) this;
 	}
 
@@ -310,11 +305,24 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Sets the form parameter.
+	 * Adds the form parameter. Existing parameter will not be overwritten.
 	 */
 	public T form(String name, Object value) {
 		initForm();
-		form.put(name, value);
+		form.add(name, value);
+		return (T) this;
+	}
+
+	/**
+	 * Sets form parameter. Optionally overwrite existing one.
+	 */
+	public T form(String name, Object value, boolean overwrite) {
+		initForm();
+		if (overwrite) {
+			form.set(name, value);
+		} else {
+			form.add(name, value);
+		}
 		return (T) this;
 	}
 
@@ -324,11 +332,11 @@ public abstract class HttpBase<T> {
 	public T form(String name, Object value, Object... parameters) {
 		initForm();
 
-		form.put(name, value);
+		form.add(name, value);
 		for (int i = 0; i < parameters.length; i += 2) {
 			name = parameters[i].toString();
 
-			form.put(name, parameters[i + 1]);
+			form.add(name, parameters[i + 1]);
 		}
 		return (T) this;
 	}
@@ -340,7 +348,7 @@ public abstract class HttpBase<T> {
 		initForm();
 
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
-			form.put(entry.getKey(), entry.getValue());
+			form.add(entry.getKey(), entry.getValue());
 		}
 		return (T) this;
 	}
@@ -348,7 +356,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Return map of form parameters.
 	 */
-	public Map<String, Object> form() {
+	public Map<String, Object[]> form() {
 		return form;
 	}
 
@@ -464,13 +472,18 @@ public abstract class HttpBase<T> {
 	 * Returns <code>true</code> if form contains non-string elements (i.e. files).
 	 */
 	protected boolean isFormMultipart() {
-		for (Object o : form.values()) {
-			Class type = o.getClass();
-
-			if (type.equals(String.class) || type.equals(String[].class)) {
+		for (Object[] values : form.values()) {
+			if (values == null) {
 				continue;
 			}
-			return true;
+
+			for (Object value : values) {
+				Class type = value.getClass();
+
+				if (type.equals(File.class)) {
+					return true;
+				}
+			}
 		}
 	    return false;
 	}
@@ -506,49 +519,44 @@ public abstract class HttpBase<T> {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (Map.Entry<String, Object> entry : form.entrySet()) {
+		for (Map.Entry<String, Object[]> entry : form.entrySet()) {
 
 			sb.append("--");
 			sb.append(boundary);
 			sb.append(CRLF);
 
 			String name = entry.getKey();
-			Object value =  entry.getValue();
-			Class type = value.getClass();
+			Object[] values = entry.getValue();
 
-			if (type == String.class) {
-				sb.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
-				sb.append(CRLF);
-				sb.append(value);
-			} else if (type == String[].class) {
-				String[] array = (String[]) value;
-				for (String v : array) {
+			for (Object value : values) {
+				if (value instanceof String) {
+					String string = (String) value;
 					sb.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
 					sb.append(CRLF);
-					sb.append(v);
+					sb.append(string);
+				} else if (value instanceof File) {
+					File file = (File) value;
+					String fileName = FileNameUtil.getName(file.getName());
+
+					sb.append("Content-Disposition: form-data; name=\"").append(name);
+					sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
+
+					String mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
+					sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
+					sb.append("Content-Transfer-Encoding: binary").append(CRLF);
+					sb.append(CRLF);
+
+					try {
+						char[] chars = FileUtil.readChars(file, StringPool.ISO_8859_1);
+						sb.append(chars);
+					} catch (IOException ioex) {
+						throw new HttpException(ioex);
+					}
+				} else {
+					throw new HttpException("Unsupported parameter type: " + value.getClass().getName());
 				}
-			} else if (type == File.class) {
-				File file = (File) value;
-				String fileName = FileNameUtil.getName(file.getName());
-
-				sb.append("Content-Disposition: form-data; name=\"").append(name);
-				sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
-
-				String mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
-				sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
-				sb.append("Content-Transfer-Encoding: binary").append(CRLF);
 				sb.append(CRLF);
-
-				try {
-					char[] chars = FileUtil.readChars(file, StringPool.ISO_8859_1);
-					sb.append(chars);
-				} catch (IOException ioex) {
-					throw new HttpException(ioex);
-				}
-			} else {
-				throw new HttpException("Unsupported parameter type: " + type.getName());
 			}
-			sb.append(CRLF);
 		}
 
 		sb.append("--").append(boundary).append("--");
@@ -604,7 +612,7 @@ public abstract class HttpBase<T> {
 
 			int ndx = line.indexOf(':');
 			if (ndx != -1) {
-				addHeader(line.substring(0, ndx), line.substring(ndx + 1));
+				header(line.substring(0, ndx), line.substring(ndx + 1));
 			} else {
 				throw new HttpException("Invalid header: " + line);
 			}
@@ -715,7 +723,7 @@ public abstract class HttpBase<T> {
 			for (String paramName : multipartParser.getParameterNames()) {
 				String[] values = multipartParser.getParameterValues(paramName);
 				if (values.length == 1) {
-					form.put(paramName, values[0]);
+					form.add(paramName, values[0]);
 				} else {
 					form.put(paramName, values);
 				}
@@ -725,7 +733,7 @@ public abstract class HttpBase<T> {
 			for (String paramName : multipartParser.getFileParameterNames()) {
 				FileUpload[] values = multipartParser.getFiles(paramName);
 				if (values.length == 1) {
-					form.put(paramName, values[0]);
+					form.add(paramName, values[0]);
 				} else {
 					form.put(paramName, values);
 				}

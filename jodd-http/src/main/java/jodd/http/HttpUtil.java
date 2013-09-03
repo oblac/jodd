@@ -29,39 +29,33 @@ public class HttpUtil {
 		StringBand query = new StringBand(queryMapSize * 4);
 
 		int count = 0;
-		for (Map.Entry<String, Object> entry : queryMap.entrySet()) {
+		for (Map.Entry<String, Object[]> entry : queryMap.entrySet()) {
 			String key = entry.getKey();
-			Object value = entry.getValue();
-
-			if (count != 0) {
-				query.append('&');
-			}
+			Object[] values = entry.getValue();
 
 			key = URLCoder.encodeQueryParam(key, encoding);
-			query.append(key);
 
-			if (value != null) {
-				query.append('=');
-				if (value instanceof String) {
-					String valueString = URLCoder.encodeQueryParam((String) value, encoding);
-					query.append(valueString);
-				} else {
-					String[] values = (String[]) value;
-					for (int i = 0; i < values.length; i++) {
-						String s = values[i];
+			if (values == null) {
+				if (count != 0) {
+					query.append('&');
+				}
 
-						if (i != 0) {
-							query.append('&');
-							query.append(key);
-							query.append('=');
-						}
-						query.append(s);
-
+				query.append(key);
+				count++;
+			} else {
+				for (Object value : values) {
+					if (count != 0) {
+						query.append('&');
 					}
+
+					query.append(key);
+					count++;
+					query.append('=');
+
+					String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
+					query.append(valueString);
 				}
 			}
-
-			count++;
 		}
 
 		return query.toString();
@@ -79,7 +73,7 @@ public class HttpUtil {
 			ndx = query.indexOf('=', ndx2);
 			if (ndx == -1) {
 				if (ndx2 < query.length()) {
-					queryMap.put(query.substring(ndx2), null);
+					queryMap.add(query.substring(ndx2), null);
 				}
 				break;
 			}
@@ -102,7 +96,7 @@ public class HttpUtil {
 				value = URLDecoder.decode(value);
 			}
 
-			queryMap.put(name, value);
+			queryMap.add(name, value);
 
 			ndx2 = ndx + 1;
 		}
