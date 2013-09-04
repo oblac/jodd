@@ -10,9 +10,8 @@ import java.util.LinkedHashMap;
  * Map of HTTP parameters, either query or form.
  * It detects duplicate values and does not overwrite them, but
  * store them as an array.
- * todo rename to HttpValueMap
  */
-public class HttpParamsMap extends LinkedHashMap<String, Object[]> {
+public class HttpValuesMap extends LinkedHashMap<String, Object[]> {
 
 	/**
 	 * Sets parameter value.

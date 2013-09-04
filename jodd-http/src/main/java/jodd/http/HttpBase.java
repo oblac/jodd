@@ -39,9 +39,9 @@ public abstract class HttpBase<T> {
 	public static final String HEADER_ETAG = "ETag";
 
 	protected String httpVersion = "HTTP/1.1";
-	protected HttpParamsMap headers = new HttpParamsMap();
+	protected HttpValuesMap headers = new HttpValuesMap();
 
-	protected HttpParamsMap form;	// holds form data (when used)
+	protected HttpValuesMap form;	// holds form data (when used)
 	protected String body;			// holds raw body string (always)
 
 	// ---------------------------------------------------------------- properties
@@ -300,7 +300,7 @@ public abstract class HttpBase<T> {
 
 	protected void initForm() {
 		if (form == null) {
-			form = new HttpParamsMap();
+			form = new HttpValuesMap();
 		}
 	}
 
@@ -707,7 +707,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = new HttpParamsMap();
+			form = new HttpValuesMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 

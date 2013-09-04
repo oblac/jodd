@@ -28,7 +28,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected int port = 80;
 	protected String method = "GET";
 	protected String path = StringPool.SLASH;
-	protected HttpParamsMap query;
+	protected HttpValuesMap query;
 
 	// ---------------------------------------------------------------- properties
 
@@ -241,7 +241,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			query = HttpUtil.parseQuery(queryString, true);
 		} else {
-			query = new HttpParamsMap();
+			query = new HttpValuesMap();
 		}
 
 		this.path = path;
