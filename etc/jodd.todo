@@ -12,7 +12,7 @@ General Tasks:
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
 	- FindFile with includes/excludes @v3.4.5 @done
-	- StringUtil.stripFromChar @next  strips everything from/up to the first char
+	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
 	- copy file was somewhat slow? @tbd @next
 	- URLCoder improvded @done @v3.4.7
 	- ReThink log dependency @tbd
@@ -22,13 +22,16 @@ Site/Documentation:
 	- migrate from google groups to nabble?getsatisfied? @tbd
 	- add blog? @tbd
 	- improve SEO somehow
-	- add sitemap
+	- fix line number # anchors @next @sitebuilder
+	- sitemap generator for @sitebuilder @soon
+	- better and various collection builder for @sitebuilder @next
+	- add end event for @sitebuilder @next
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
 	- Add htmlPlus() mode @done @v3.4.7
 	- Add form() for handling forms @done @v3.4.7
-	- Add alternative parser per real HTML rules, that produces browser-quality code @hot @tbd
+	- Add alternative strict HTML parser, that produces browser-quality code @hot @tbd
 	- Improve LagartoDOM parser @v3.4.7 @done
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
@@ -89,8 +92,7 @@ Joy:
 Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5
-	- Add gradle for examples: @v3.4.7
+	- Add gradle for examples @done @v3.4.7
 	- Upgrade to gradle v1.7 @done @v3.4.7
 	- Use empty project to create a blog/twitter example and make a video @soon
 	- Add log DEBUG in examples.quickstart @next
-	- sitemap generator for @sitebuilder @soon

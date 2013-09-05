@@ -948,4 +948,15 @@ public class StringUtilTest {
 
 		assertEquals("23", StringUtil.substring("123", -2, 0));
 	}
+
+	@Test
+	public void testStripFromToChar() {
+		assertEquals("1", StringUtil.stripFromChar("1234", '2'));
+		assertEquals("", StringUtil.stripFromChar("1234", '1'));
+		assertEquals("1234", StringUtil.stripFromChar("1234", 'X'));
+
+		assertEquals("234", StringUtil.stripToChar("1234", '2'));
+		assertEquals("1234", StringUtil.stripToChar("1234", '1'));
+		assertEquals("1234", StringUtil.stripToChar("1234", 'X'));
+	}
 }

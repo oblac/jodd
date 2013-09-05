@@ -1771,6 +1771,34 @@ public class StringUtil {
 		return string.substring(left, right);
 	}
 
+	/**
+	 * Strips everything up to the first appearance of given char.
+	 * Character IS included in the returned string.
+	 */
+	public static String stripToChar(String string, char c) {
+		int ndx = string.indexOf(c);
+
+		if (ndx == -1) {
+			return string;
+		}
+
+		return string.substring(ndx);
+	}
+
+	/**
+	 * Strips everything from the first appearance of given char.
+	 * Character IS NOT included in the returned string.
+	 */
+	public static String stripFromChar(String string, char c) {
+		int ndx = string.indexOf(c);
+
+		if (ndx == -1) {
+			return string;
+		}
+
+		return string.substring(0, ndx);
+	}
+
 
 	/**
 	 * Trims array of strings. <code>null</code> array elements are ignored.
