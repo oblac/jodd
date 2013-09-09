@@ -6,6 +6,7 @@ import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 
@@ -15,6 +16,8 @@ import java.lang.reflect.Method;
  * Madvoc configurator for manual configuration.
  */
 public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
+
+	public static final String NONE = Action.NONE;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -37,15 +40,6 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		resultsManager.register(resultClass);
 	}
 
-	// ---------------------------------------------------------------- path alias
-
-	/**
-	 * Defines action path alias.
-	 */
-	public void actionPathAlias(String alias, String path) {
-		actionsManager.registerPathAlias(alias, path);
-	}
-
 	// ---------------------------------------------------------------- actions
 
 	/**
@@ -57,37 +51,48 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 
 	public class ActionBuilder {
 		String method;
+		String actionPath;
 		String path;
 		Class actionClass;
 		Method actionClassMethod;
 		String actionMethodString;
 		String extension;
 		String resultType;
+		String alias;
 		Class<? extends ActionInterceptor>[] actionInterceptors;
 
-		ActionBuilder() {
-			extension = madvocConfig.getDefaultExtension();
-		}
-
 		/**
-		 * Defines action path, without the extension.
+		 * Defines action path, with the extension.
 		 */
 		public ActionBuilder path(String path) {
 			this.path = path;
+			this.actionPath = path;
+
+			int ndx = path.lastIndexOf('.');
+			if (ndx == -1) {
+				this.extension = NONE;
+			} else {
+				if (extension == null) {
+					// modify extension if not already set
+					this.extension = path.substring(ndx + 1);
+					this.actionPath = path.substring(0, ndx);
+				}
+			}
 			return this;
 		}
 
 		/**
-		 * Defines HTTP method name and action path, without the extension.
+		 * Defines HTTP method name and action path.
+		 * @see #path(String)
 		 */
 		public ActionBuilder path(String method, String path) {
 			this.method = method;
-			this.path = path;
-			return this;
+			return path(path);
 		}
 
 		/**
-		 * Defines the extension.
+		 * Defines just the extension. If called before
+		 * {@link #path(String)}, path will not be parsed for one.
 		 */
 		public ActionBuilder extension(String extension) {
 			this.extension = extension;
@@ -155,6 +160,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
+		 * Defines path alias.
+		 */
+		public ActionBuilder alias(String aliasPath) {
+			this.alias = aliasPath;
+			return this;
+		}
+
+		/**
 		 * Binds and finalize action configuration.
 		 */
 		public void bind() {
@@ -169,6 +182,10 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 							extension, resultType);
 
 			actionsManager.registerAction(actionConfig);
+
+			if (alias != null) {
+				actionsManager.registerPathAlias(actionPath, alias);
+			}
 		}
 
 	}

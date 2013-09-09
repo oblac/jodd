@@ -17,7 +17,7 @@ public class ManualRegistrationTest {
 	public static class ManualRegistration extends ManualMadvocConfigurator {
 		public void configure() {
 			action().path("/hello").mapTo(BooAction.class, "foo1").result(TextResult.class).bind();
-			action().path("/world").mapTo(BooAction.class, "foo2").interceptedBy(EchoInterceptor.class).result(TextResult.class).bind();
+			action().path("/world").mapTo(BooAction.class, "foo2").interceptedBy(EchoInterceptor.class).extension(NONE).result(TextResult.class).bind();
 		}
 	}
 
