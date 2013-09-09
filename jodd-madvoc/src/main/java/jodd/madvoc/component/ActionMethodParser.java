@@ -2,6 +2,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.introspector.ClassIntrospector;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
 import jodd.madvoc.interceptor.ActionInterceptor;
@@ -41,10 +43,31 @@ public class ActionMethodParser {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
+	// ---------------------------------------------------------------- resolve method
+
+	/**
+	 * Resolves action method for given string ane method name.
+	 */
+	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
+		Method method = ClassIntrospector.lookup(actionClass).getMethod(methodName, false);
+		if (method == null) {
+			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method: " + methodName);
+		}
+		return method;
+	}
+
 	// ---------------------------------------------------------------- parse
 
 	public ActionConfig parse(Class<?> actionClass, Method actionMethod) {
 		return parse(actionClass, actionMethod, null);
+	}
+
+	/**
+	 * @see #parse(Class, java.lang.reflect.Method, String)
+	 */
+	public ActionConfig parse(Class<?> actionClass, String actionMethodName, String actionPath) {
+		Method method = resolveActionMethod(actionClass, actionMethodName);
+		return parse(actionClass, method, actionPath);
 	}
 
 	/**
@@ -404,7 +427,7 @@ public class ActionMethodParser {
 	/**
 	 * Creates new instance of action configuration.
 	 */
-	protected ActionConfig createActionConfig(
+	public ActionConfig createActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
 			Class<? extends ActionInterceptor>[] interceptorClasses,

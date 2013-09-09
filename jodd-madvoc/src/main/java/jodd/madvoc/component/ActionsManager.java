@@ -2,7 +2,6 @@
 
 package jodd.madvoc.component;
 
-import jodd.introspector.ClassIntrospector;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.MadvocException;
@@ -127,11 +126,7 @@ public class ActionsManager {
 	 * Registers action with provided action path, class and method name.
 	 */
 	public ActionConfig register(Class actionClass, String actionMethod, String actionPath) {
-		Method method = ClassIntrospector.lookup(actionClass).getMethod(actionMethod, false);
-		if (method == null) {
-			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method: " + actionMethod);
-		}
-		return registerAction(actionClass, method, actionPath);
+		return registerAction(actionClass, actionMethod, actionPath);
 	}
 
 	public ActionConfig register(Class actionClass, Method actionMethod, String actionPath) {
@@ -149,17 +144,36 @@ public class ActionsManager {
 	 * exception will be thrown. Returns created {@link ActionConfig}.
 	 */
 	protected ActionConfig registerAction(Class actionClass, Method actionMethod, String actionPath) {
-		ActionConfig cfg = actionMethodParser.parse(actionClass, actionMethod, actionPath);
-		if (cfg == null) {
+		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionPath);
+		if (actionConfig == null) {
 			return null;
 		}
+		return registerAction(actionConfig);
+	}
+
+	/**
+	 * @see #registerAction(Class, java.lang.reflect.Method, String)
+	 */
+	protected ActionConfig registerAction(Class actionClass, String actionMethodName, String actionPath) {
+		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethodName, actionPath);
+		if (actionConfig == null) {
+			return null;
+		}
+		return registerAction(actionConfig);
+	}
+
+	/**
+	 * Registers manually created {@link ActionConfig action configurations}.
+	 */
+	public ActionConfig registerAction(ActionConfig actionConfig) {
+		String actionPath = actionConfig.actionPath;
 
 		if (log.isDebugEnabled()) {
-			log.debug("Registering Madvoc action: " + cfg.actionPath + " to: " +
-					cfg.actionClass.getName() + '#' + cfg.actionClassMethod.getName());
+			log.debug("Registering Madvoc action: " + actionConfig.actionPath + " to: " +
+					actionConfig.actionClass.getName() + '#' + actionConfig.actionClassMethod.getName());
 		}
 
-		ActionConfigSet set = createActionConfigSet(cfg.actionPath);
+		ActionConfigSet set = createActionConfigSet(actionConfig.actionPath);
 
 		if (set.actionPathMacros != null) {
 			// new action patch contain macros
@@ -177,25 +191,25 @@ public class ActionsManager {
 			}
 		} else {
 			// action path is without macros
-			if (map.containsKey(cfg.actionPath) == false) {
-				map.put(cfg.actionPath, set);
+			if (map.containsKey(actionConfig.actionPath) == false) {
+				map.put(actionConfig.actionPath, set);
 			} else {
-				set = map.get(cfg.actionPath);
+				set = map.get(actionConfig.actionPath);
 			}
 
 		}
-		boolean isDuplicate = set.add(cfg);
+		boolean isDuplicate = set.add(actionConfig);
 
 		if (madvocConfig.isDetectDuplicatePathsEnabled()) {
 			if (isDuplicate) {
-				throw new MadvocException("Duplicate action path for " + cfg);
+				throw new MadvocException("Duplicate action path for " + actionConfig);
 			}
 		}
 
 		if (isDuplicate == false) {
 			actionsCount++;
 		}
-		return cfg;
+		return actionConfig;
 	}
 
 	/**

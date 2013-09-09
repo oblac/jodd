@@ -57,12 +57,14 @@ public class ResultsManager {
 	/**
 	 * Returns currently registered action for result class.
 	 */
-/*
 	public ActionResult lookup(Class<? extends ActionResult> resultClass) {
-		ActionResult result = createResult(resultClass);
-		return results.get(result.getType());
+		for (ActionResult actionResult : results.values()) {
+			if (actionResult.getClass() == resultClass) {
+				return actionResult;
+			}
+		}
+		return null;
 	}
-*/
 
 	/**
 	 * Returns an action result handler for specified result type.
