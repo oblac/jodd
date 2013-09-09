@@ -42,7 +42,7 @@ Madvoc:
 	- Action methods with arguments @tbd
 	- Add result methods: ok(), redirect() etc.
 		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
-	- Manual registration of ActionConfig, using fluent interface @hot @next
+	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
 	- MadvocServletFilter, consume action path, like load static content @tbd
