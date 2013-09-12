@@ -12,7 +12,7 @@ import javax.mail.URLName;
 import java.util.Properties;
 
 /**
- * Pop3 SSL server.
+ * POP3 SSL server.
  */
 public class Pop3SslServer extends Pop3Server {
 
