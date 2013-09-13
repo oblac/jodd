@@ -3,23 +3,13 @@
 package jodd.mail;
 
 import jodd.JoddMail;
-import jodd.io.FastByteArrayOutputStream;
-import jodd.io.StreamUtil;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
-import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.internet.MimePart;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.Enumeration;
 
 /**
  * Encapsulates email receiving session. Prepares and receives message(s).
@@ -255,7 +245,7 @@ public class ReceiveMailSession {
 				if (flagsToSet != null) {
 					msg.setFlags(flagsToSet, true);
 				}
-				emails[i] = message2Email(msg);
+				emails[i] = new ReceivedEmail(msg);
 
 				if (flagsToSet == null && emails[i].isSeen() == false) {
 					msg.setFlag(Flags.Flag.SEEN, false);
@@ -263,97 +253,8 @@ public class ReceiveMailSession {
 			}
 
 			return emails;
-		}catch (MessagingException msex) {
+		} catch (MessagingException msex) {
 			throw new MailException("Unable to fetch messages", msex);
-		} catch (IOException ioex) {
-			throw new MailException("Unable to read message content", ioex);
-		}
-	}
-
-
-	/**
-	 * Convert java <code>Message</code> to a {@link ReceivedEmail}.
-	 */
-	@SuppressWarnings({"unchecked"})
-	protected ReceivedEmail message2Email(Message msg) throws MessagingException, IOException {
-		ReceivedEmail email = new ReceivedEmail();
-
-		// flags
-		email.setFlags(msg.getFlags());
-
-		// msg no
-		email.setMessageNumber(msg.getMessageNumber());
-
-		// standard stuff
-		email.setFrom(msg.getFrom()[0].toString());
-		email.setTo(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.TO)));
-		email.setCc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.CC)));
-		email.setBcc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.BCC)));
-		email.setSubject(msg.getSubject());
-		Date recvDate = msg.getReceivedDate();
-		if (recvDate == null) {
-			recvDate = new Date();
-		}
-		email.setReceiveDate(recvDate);
-		email.setSentDate(msg.getSentDate());
-
-		// copy headers
-		Enumeration<Header> headers = msg.getAllHeaders();
-		while (headers.hasMoreElements()) {
-			Header header = headers.nextElement();
-			email.setHeader(header.getName(), header.getValue());
-		}
-
-		// content
-		processPart(email, msg);
-
-		return email;
-	}
-
-
-	/**
-	 * Process single part of received message. All parts are simple added to the message, i.e. hierarchy is not saved.
-	 */
-	protected void processPart(ReceivedEmail email, Part part) throws IOException, MessagingException {
-		Object content = part.getContent();
-
-		if (content instanceof String) {
-			String stringContent = (String) content;
-
-			String disposition = part.getDisposition();
-			if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
-				String contentType = part.getContentType();
-
-				String mimeType = EmailUtil.extractMimeType(contentType);
-				String encoding = EmailUtil.extractEncoding(contentType);
-				String fileName = part.getFileName();
-				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
-
-				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(encoding));
-			} else {
-				String contentType = part.getContentType();
-				String encoding = EmailUtil.extractEncoding(contentType);
-				String mimeType = EmailUtil.extractMimeType(contentType);
-
-				email.addMessage(stringContent, mimeType, encoding);
-			}
-		} else if (content instanceof Multipart) {
-			Multipart mp = (Multipart) content;
-			int count = mp.getCount();
-			for (int i = 0; i < count; i++) {
-				Part innerPart = mp.getBodyPart(i);
-				processPart(email, innerPart);
-			}
-		} else if (content instanceof InputStream) {
-			String fileName = part.getFileName();
-			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
-			String mimeType = EmailUtil.extractMimeType(part.getContentType());
-
-			InputStream is = (InputStream) content;
-			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
-			StreamUtil.copy(is, fbaos);
-
-			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
 	}
 
