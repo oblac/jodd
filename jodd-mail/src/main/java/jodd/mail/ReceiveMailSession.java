@@ -2,14 +2,10 @@
 
 package jodd.mail;
 
-import jodd.JoddCore;
 import jodd.JoddMail;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
-import jodd.util.CharUtil;
-import jodd.util.StringPool;
 
-import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
@@ -27,11 +23,11 @@ import java.util.Enumeration;
 
 /**
  * Encapsulates email receiving session. Prepares and receives message(s).
+ * Some methods do not work on POP3 servers.
  */
 public class ReceiveMailSession {
 
 	protected static final String DEFAULT_FOLDER = "INBOX";
-	protected static final String STR_CHARSET = "charset=";
 
 	protected final Session session;
 	protected final Store store;
@@ -113,6 +109,8 @@ public class ReceiveMailSession {
 		useFolder(DEFAULT_FOLDER);
 	}
 
+	// ---------------------------------------------------------------- message count
+
 	/**
 	 * Returns number of messages.
 	 */
@@ -123,12 +121,12 @@ public class ReceiveMailSession {
 		try {
 			return folder.getMessageCount();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to read number of messages", mex);
+			throw new MailException(mex);
 		}
 	}
 
 	/**
-	 * Returns the number of new messages. Not available for the POP3. 
+	 * Returns the number of new messages.
 	 */
 	public int getNewMessageCount() {
 		if (folder == null) {
@@ -137,7 +135,35 @@ public class ReceiveMailSession {
 		try {
 			return folder.getNewMessageCount();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to read number of new messages", mex);
+			throw new MailException(mex);
+		}
+	}
+
+	/**
+	 * Returns the number of unread messages.
+	 */
+	public int getUnreadMessageCount() {
+		if (folder == null) {
+			useDefaultFolder();
+		}
+		try {
+			return folder.getUnreadMessageCount();
+		} catch (MessagingException mex) {
+			throw new MailException(mex);
+		}
+	}
+
+	/**
+	 * Returns the number of deleted messages.
+	 */
+	public int getDeletedMessageCount() {
+		if (folder == null) {
+			useDefaultFolder();
+		}
+		try {
+			return folder.getDeletedMessageCount();
+		} catch (MessagingException mex) {
+			throw new MailException(mex);
 		}
 	}
 
@@ -260,9 +286,9 @@ public class ReceiveMailSession {
 
 		// standard stuff
 		email.setFrom(msg.getFrom()[0].toString());
-		email.setTo(address2String(msg.getRecipients(Message.RecipientType.TO)));
-		email.setCc(address2String(msg.getRecipients(Message.RecipientType.CC)));
-		email.setBcc(address2String(msg.getRecipients(Message.RecipientType.BCC)));
+		email.setTo(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.TO)));
+		email.setCc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.CC)));
+		email.setBcc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.BCC)));
 		email.setSubject(msg.getSubject());
 		Date recvDate = msg.getReceivedDate();
 		if (recvDate == null) {
@@ -295,15 +321,21 @@ public class ReceiveMailSession {
 			String stringContent = (String) content;
 
 			String disposition = part.getDisposition();
-			if (disposition != null && disposition.equals(Part.ATTACHMENT)) {
-				String mimeType = extractMimeType(part.getContentType());
+			if (disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+				String contentType = part.getContentType();
+
+				String mimeType = EmailUtil.extractMimeType(contentType);
+				String encoding = EmailUtil.extractEncoding(contentType);
 				String fileName = part.getFileName();
 				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 
-				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(JoddCore.encoding));
+				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(encoding));
 			} else {
 				String contentType = part.getContentType();
-				email.addMessage(stringContent, extractMimeType(contentType), extractEncoding(contentType));
+				String encoding = EmailUtil.extractEncoding(contentType);
+				String mimeType = EmailUtil.extractMimeType(contentType);
+
+				email.addMessage(stringContent, mimeType, encoding);
 			}
 		} else if (content instanceof Multipart) {
 			Multipart mp = (Multipart) content;
@@ -315,7 +347,7 @@ public class ReceiveMailSession {
 		} else if (content instanceof InputStream) {
 			String fileName = part.getFileName();
 			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
-			String mimeType = extractMimeType(part.getContentType());
+			String mimeType = EmailUtil.extractMimeType(part.getContentType());
 
 			InputStream is = (InputStream) content;
 			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
@@ -324,69 +356,6 @@ public class ReceiveMailSession {
 			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
 	}
-
-	/**
-	 * Extracts mime type from parts content type.
-	 */
-	protected String extractMimeType(String contentType) {
-		int ndx = contentType.indexOf(';');
-		String mime;
-		if (ndx != -1) {
-			mime = contentType.substring(0, ndx);
-		} else {
-			mime = contentType;
-		}
-		return mime;
-	}
-
-	/**
-	 * Parses content type for encoding.
-	 */
-	protected String extractEncoding(String contentType) {
-		int ndx = contentType.indexOf(';');
-		String charset = ndx != -1 ? contentType.substring(ndx + 1) : StringPool.EMPTY;
-		String encoding = null;
-
-		ndx = charset.indexOf(STR_CHARSET);
-		if (ndx != -1) {
-			ndx += STR_CHARSET.length();
-			int len = charset.length();
-
-			if (charset.charAt(ndx) == '"') {
-				ndx++;
-			}
-			int start = ndx;
-
-			while (ndx < len) {
-				char c = charset.charAt(ndx);
-				if ((c == '"') || (CharUtil.isWhitespace(c) == true)) {
-					break;
-				}
-				ndx++;
-			}
-			encoding = charset.substring(start, ndx);
-		}
-		return encoding;
-	}
-
-	/**
-	 * Converts mail address to string.
-	 */
-	protected String[] address2String(Address[] addresses) {
-		if (addresses == null) {
-			return null;
-		}
-		if (addresses.length == 0) {
-			return null;
-		}
-		String[] res = new String[addresses.length];
-		for (int i = 0; i < addresses.length; i++) {
-			Address address = addresses[i];
-			res[i] = address.toString();
-		}
-		return res;
-	}
-
 
 	// ---------------------------------------------------------------- close
 
@@ -410,7 +379,7 @@ public class ReceiveMailSession {
 		try {
 			store.close();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to close session", mex);
+			throw new MailException(mex);
 		}
 	}
 
