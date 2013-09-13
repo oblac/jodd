@@ -57,7 +57,7 @@ Madvoc:
 EMail:
 	- Add IMAP support @done @v3.4.7
 	- Add suport for EML attachments @done @v3.4.7
-	- Add util to parse EML?
+	- Add util to parse EML! @done @v3.4.7
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
