@@ -2,12 +2,35 @@
 
 package jodd.mail;
 
+import jodd.datetime.JDateTime;
+import org.junit.Before;
 import org.junit.Test;
 
+import javax.mail.MessagingException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class EmailUtilTest {
+
+	protected String testDataRoot;
+
+	@Before
+	public void setUp() throws Exception {
+		if (testDataRoot != null) {
+			return;
+		}
+		URL data = EmailUtilTest.class.getResource("test");
+		testDataRoot = data.getFile();
+	}
+
 
 	@Test
 	public void testExtractContentType() {
@@ -26,5 +49,75 @@ public class EmailUtilTest {
 		contentType = "TEXT/PLAIN; charset=US-ASCII; name=example.eml";
 		assertEquals("TEXT/PLAIN", EmailUtil.extractMimeType(contentType));
 		assertEquals("US-ASCII", EmailUtil.extractEncoding(contentType));
+	}
+
+	@Test
+	public void testParseEML() throws FileNotFoundException, MessagingException {
+		File emlFile = new File(testDataRoot, "example.eml");
+
+		ReceivedEmail email = EmailUtil.parseEML(emlFile);
+
+		assertEquals("Example <from@example.com>", email.getFrom());
+		assertEquals("to@example.com", email.getTo()[0]);
+		assertEquals("test!", email.getSubject());
+
+		JDateTime jdt = new JDateTime(2010, 3, 27, 13, 11, 21, 0);
+		assertEquals(jdt.convertToDate(), email.getSentDate());
+
+		Map<String, String> headers = email.getAllHeaders();
+		assertEquals("1.0", headers.get("MIME-Version"));
+
+		List<EmailMessage> messages = email.getAllMessages();
+		assertEquals(2, messages.size());
+
+		EmailMessage msg1 = messages.get(0);
+		assertEquals("Test", msg1.getContent().trim());
+		assertEquals("text/plain", msg1.getMimeType());
+		assertEquals("us-ascii", msg1.getEncoding());
+
+		EmailMessage msg2 = messages.get(1);
+		assertTrue(msg2.getContent().contains("Test<o:p>"));
+		assertEquals("text/html", msg2.getMimeType());
+		assertEquals("us-ascii", msg2.getEncoding());
+
+		List<EmailAttachment> attachments = email.getAttachments();
+		assertNull(attachments);
+
+		List<ReceivedEmail> attachedMessages = email.getAttachedMessages();
+		assertNotNull(attachedMessages);
+		assertEquals(1, attachedMessages.size());
+
+		email = attachedMessages.get(0);
+
+		// attached message
+
+		assertEquals("Example <from@example.com>", email.getFrom());
+		assertEquals("to@example.com", email.getTo()[0]);
+		assertEquals("test", email.getSubject());
+
+		jdt = new JDateTime(2010, 3, 27, 13, 9, 46, 0);
+		assertEquals(jdt.convertToDate(), email.getSentDate());
+
+		headers = email.getAllHeaders();
+		assertEquals("1.0", headers.get("MIME-Version"));
+
+		messages = email.getAllMessages();
+		assertEquals(2, messages.size());
+
+		msg1 = messages.get(0);
+		assertEquals("test", msg1.getContent().trim());
+		assertEquals("text/plain", msg1.getMimeType());
+		assertEquals("us-ascii", msg1.getEncoding());
+
+		msg2 = messages.get(1);
+		assertTrue(msg2.getContent().contains("test</TITLE>"));
+		assertEquals("text/html", msg2.getMimeType());
+		assertEquals("us-ascii", msg2.getEncoding());
+
+		attachments = email.getAttachments();
+		assertNull(attachments);
+
+		attachedMessages = email.getAttachedMessages();
+		assertNull(attachedMessages);
 	}
 }
