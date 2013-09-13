@@ -4,6 +4,7 @@ package jodd.mail;
 
 import jodd.mail.att.ByteArrayAttachment;
 
+import javax.mail.Flags;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,18 +14,8 @@ import java.util.List;
  */
 public class ReceivedEmail extends CommonEmail {
 
-	public static final int ANSWERED 	= 1;
-	public static final int DELETED 	= 2;
-	public static final int DRAFT 		= 4;
-	public static final int FLAGGED 	= 8;
-	public static final int RECENT 		= 16;
-	public static final int SEEN 		= 32;
-	public static final int USER 		= 0x80000000;
-
-
-	// ---------------------------------------------------------------- number and flag
-
 	protected int messageNumber;
+	protected Flags flags;
 
 	public int getMessageNumber() {
 		return messageNumber;
@@ -34,26 +25,54 @@ public class ReceivedEmail extends CommonEmail {
 		this.messageNumber = messageNumber;
 	}
 
-	protected int flags;
-
-	public int getFlags() {
+	public Flags getFlags() {
 		return flags;
 	}
 
-	public void setFlags(int flags) {
+	public void setFlags(Flags flags) {
 		this.flags = flags;
 	}
 
-	public void addFlags(int flag) {
-		this.flags |= flag;
+	/**
+	 * Returns <code>true</code> if message is answered.
+	 */
+	public boolean isAnswered() {
+		return flags.contains(Flags.Flag.ANSWERED);
 	}
 
-	public void removeFlags(int flag) {
-		this.flags &= ~flag;
+	/**
+	 * Returns <code>true</code> if message is deleted.
+	 */
+	public boolean isDeleted() {
+		return flags.contains(Flags.Flag.DELETED);
 	}
 
-	public boolean hasFlags(int flags) {
-		return (this.flags & flags) != 0;
+	/**
+	 * Returns <code>true</code> if message is draft.
+	 */
+	public boolean isDraf() {
+		return flags.contains(Flags.Flag.DRAFT);
+	}
+
+	/**
+	 * Returns <code>true</code> is message is flagged.
+	 */
+	public boolean isFlagged() {
+		return flags.contains(Flags.Flag.FLAGGED);
+	}
+
+	/**
+	 * Returns <code>true</code> if message is recent.
+	 */
+	public boolean isRecent() {
+		return flags.contains(Flags.Flag.RECENT);
+	}
+
+	/**
+	 * Returns <code>true</code> if message is seen.
+	 */
+	public boolean isSeen() {
+		return flags.contains(Flags.Flag.SEEN);
 	}
 
 	// ---------------------------------------------------------------- date

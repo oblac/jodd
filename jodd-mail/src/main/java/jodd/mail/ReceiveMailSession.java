@@ -65,6 +65,26 @@ public class ReceiveMailSession {
 	// ---------------------------------------------------------------- folders
 
 	/**
+	 * Returns list of all folders. You can use these names in
+	 * {@link #useFolder(String)} method.
+	 */
+	public String[] getAllFolders() {
+		Folder[] folders;
+		try {
+			folders = store.getDefaultFolder().list( "*" );
+		} catch (MessagingException msex) {
+			throw new MailException("Unable to connect to folder", msex);
+		}
+		String[] folderNames = new String[folders.length];
+
+		for (int i = 0; i < folders.length; i++) {
+			Folder folder = folders[i];
+			folderNames[i] = folder.getFullName();
+		}
+		return folderNames;
+	}
+
+	/**
 	 * Opens new folder and closes previously opened folder.
 	 */
 	public void useFolder(String folderName) {
@@ -124,65 +144,116 @@ public class ReceiveMailSession {
 	// ---------------------------------------------------------------- receive emails
 
 	/**
-	 * Receives all emails. Received messages are marked as 'seen' or deleted.
-	 * @param delete if <code>true</code>, received messages will be deleted
-	 * @return array of received messages
+	 * Receives all emails. Messages are not modified. However, servers
+	 * do may set SEEN flag anyway, so we force messages to remain
+	 * unseen.
 	 */
-	public ReceivedEmail[] receiveEmail(boolean delete) {
+	public ReceivedEmail[] receiveEmail() {
+		return receive(null, null);
+	}
+	/**
+	 * Receives all emails that matches given {@link EmailFilter filter}.
+	 * Messages are not modified. However, servers do may set SEEN flag anyway,
+	 * so we force messages to remain unseen.
+	 */
+	public ReceivedEmail[] receiveEmail(EmailFilter emailFilter) {
+		return receive(emailFilter, null);
+	}
+
+	/**
+	 * Receives all emails and mark all messages as 'seen' (ie 'read').
+	 */
+	public ReceivedEmail[] receiveEmailAndMarkSeen() {
+		return receiveEmailAndMarkSeen(null);
+	}
+	/**
+	 * Receives all emails that matches given {@link EmailFilter filter}
+	 * and mark them as 'seen' (ie 'read').
+	 */
+	public ReceivedEmail[] receiveEmailAndMarkSeen(EmailFilter emailFilter) {
+		Flags flags = new Flags();
+		flags.add(Flags.Flag.SEEN);
+		return receive(emailFilter, flags);
+	}
+
+	/**
+	 * Receives all emails and mark all messages as 'seen' and 'deleted'.
+	 */
+	public ReceivedEmail[] receiveEmailAndDelete() {
+		return receiveEmailAndDelete(null);
+	}
+
+	/**
+	 * Receives all emails that matches given {@link EmailFilter filter} and
+	 * mark all messages as 'seen' and 'deleted'.
+	 */
+	public ReceivedEmail[] receiveEmailAndDelete(EmailFilter emailFilter) {
+		Flags flags = new Flags();
+		flags.add(Flags.Flag.SEEN);
+		flags.add(Flags.Flag.DELETED);
+		return receive(emailFilter, flags);
+	}
+
+	/**
+	 * Receives all emails that matches given {@link EmailFilter filter}
+	 * and set given flags. Both filter and flags to set are optional.
+	 * If flags to set is not provided, it forces 'seen' flag to be unset.
+	 */
+	public ReceivedEmail[] receive(EmailFilter filter, Flags flagsToSet) {
 		if (folder == null) {
 			useDefaultFolder();
 		}
-		ReceivedEmail[] emails;
+
+		Message[] messages;
+
+		// todo add FetchProfile option for just headers
+
 		try {
-			Message[] messages = folder.getMessages();
+			if (filter == null) {
+				messages = folder.getMessages();
+			} else {
+				messages = folder.search(filter.getSearchTerm());
+			}
+
 			if (messages.length == 0) {
 				return null;
 			}
-			emails = new ReceivedEmail[messages.length];
+
+			// process messages
+
+			ReceivedEmail[] emails = new ReceivedEmail[messages.length];
+
 			for (int i = 0; i < messages.length; i++) {
 				Message msg = messages[i];
 
-				if (delete) {
-					msg.setFlag(Flags.Flag.DELETED, true);
-				} else {
-					msg.setFlag(Flags.Flag.SEEN, true);
+				if (flagsToSet != null) {
+					msg.setFlags(flagsToSet, true);
 				}
 				emails[i] = message2Email(msg);
+
+				if (flagsToSet == null && emails[i].isSeen() == false) {
+					msg.setFlag(Flags.Flag.SEEN, false);
+				}
 			}
-		} catch (MessagingException msex) {
-			throw new MailException("Unable to read messages", msex);
+
+			return emails;
+		}catch (MessagingException msex) {
+			throw new MailException("Unable to fetch messages", msex);
 		} catch (IOException ioex) {
 			throw new MailException("Unable to read message content", ioex);
 		}
-		return emails;
 	}
 
 
+	/**
+	 * Convert java <code>Message</code> to a {@link ReceivedEmail}.
+	 */
 	@SuppressWarnings({"unchecked"})
 	protected ReceivedEmail message2Email(Message msg) throws MessagingException, IOException {
 		ReceivedEmail email = new ReceivedEmail();
+
 		// flags
-		if (msg.isSet(Flags.Flag.ANSWERED)) {
-			email.addFlags(ReceivedEmail.ANSWERED);
-		}
-		if (msg.isSet(Flags.Flag.DELETED)) {
-			email.addFlags(ReceivedEmail.DELETED);
-		}
-		if (msg.isSet(Flags.Flag.DRAFT)) {
-			email.addFlags(ReceivedEmail.DRAFT);
-		}
-		if (msg.isSet(Flags.Flag.FLAGGED)) {
-			email.addFlags(ReceivedEmail.FLAGGED);
-		}
-		if (msg.isSet(Flags.Flag.RECENT)) {
-			email.addFlags(ReceivedEmail.RECENT);
-		}
-		if (msg.isSet(Flags.Flag.SEEN)) {
-			email.addFlags(ReceivedEmail.SEEN);
-		}
-		if (msg.isSet(Flags.Flag.USER)) {
-			email.addFlags(ReceivedEmail.USER);
-		}
+		email.setFlags(msg.getFlags());
 
 		// msg no
 		email.setMessageNumber(msg.getMessageNumber());
