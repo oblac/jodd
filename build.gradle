@@ -8,8 +8,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.4.6-SNAPSHOT'
-//version = '3.4.5'
+//version = '3.4.8-SNAPSHOT'
+version = '3.4.7'
 
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
