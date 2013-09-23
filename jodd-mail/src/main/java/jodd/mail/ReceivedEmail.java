@@ -5,6 +5,7 @@ package jodd.mail;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.StreamUtil;
 import jodd.mail.att.ByteArrayAttachment;
+import jodd.util.StringPool;
 
 import javax.mail.Flags;
 import javax.mail.Header;
@@ -90,11 +91,19 @@ public class ReceivedEmail extends CommonEmail {
 				String fileName = part.getFileName();
 				String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 
+				if (encoding == null) {
+					encoding = StringPool.US_ASCII;
+				}
+
 				email.addAttachment(fileName, mimeType, contentId, stringContent.getBytes(encoding));
 			} else {
 				String contentType = part.getContentType();
 				String encoding = EmailUtil.extractEncoding(contentType);
 				String mimeType = EmailUtil.extractMimeType(contentType);
+
+				if (encoding == null) {
+					encoding = StringPool.US_ASCII;
+				}
 
 				email.addMessage(stringContent, mimeType, encoding);
 			}

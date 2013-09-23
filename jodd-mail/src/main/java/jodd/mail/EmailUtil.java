@@ -38,7 +38,8 @@ public class EmailUtil {
 	}
 
 	/**
-	 * Parses content type for encoding.
+	 * Parses content type for encoding. May return <code>null</code>
+	 * if encoding is not specified in content type.
 	 */
 	public static String extractEncoding(String contentType) {
 		int ndx = contentType.indexOf(';');
