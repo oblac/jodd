@@ -9,6 +9,7 @@ import org.junit.Test;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -119,5 +120,34 @@ public class EmailUtilTest {
 
 		attachedMessages = email.getAttachedMessages();
 		assertNull(attachedMessages);
+	}
+
+	@Test
+	public void testParseEMLCyrilic() throws FileNotFoundException, MessagingException, UnsupportedEncodingException {
+		File emlFile = new File(testDataRoot, "cyrilic.eml");
+
+		ReceivedEmail email = EmailUtil.parseEML(emlFile);
+
+		assertEquals("Tijana <tijan@gmail.com>", email.getFrom());
+		assertEquals("testapp1@esolut.ions", email.getTo()[0]);
+		assertEquals("testtest", email.getSubject());
+
+		List<EmailMessage> messages = email.getAllMessages();
+
+		assertEquals(2, messages.size());
+
+		assertEquals("text/plain", messages.get(0).getMimeType());
+		assertEquals("", messages.get(0).getContent().trim());
+
+		assertEquals("text/html", messages.get(1).getMimeType());
+		assertEquals("<div dir=\"ltr\"><br></div>", messages.get(1).getContent().trim());
+
+		List<EmailAttachment> attachments = email.getAttachments();
+
+		assertEquals(1, attachments.size());
+
+		EmailAttachment att = attachments.get(0);
+
+		assertEquals("Copy of РЕКРЕАТИВНА ЕСТЕТСКА ГИМНАСТИКА-флајер - 4.docx", att.getName());
 	}
 }

@@ -7,10 +7,12 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
 import javax.activation.DataSource;
+import javax.mail.internet.MimeUtility;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Email attachment.
@@ -26,7 +28,11 @@ public abstract class EmailAttachment {
 	 * Content id may be <code>null</code> if attachment is not embedded.
 	 */
 	protected EmailAttachment(String name, String contentId) {
-		this.name = name;
+		try {
+			this.name = MimeUtility.decodeText(name);
+		} catch (UnsupportedEncodingException ueex) {
+			throw new MailException(ueex);
+		}
 		this.contentId = contentId;
 	}
 
@@ -38,12 +44,22 @@ public abstract class EmailAttachment {
 		return new EmailAttachmentBuilder();
 	}
 
-
 	/**
 	 * Returns attachment name.
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Returns encoded attachment name.
+	 */
+	public String getEncodedName() {
+		try {
+			return MimeUtility.encodeText(name);
+		} catch (UnsupportedEncodingException ueex) {
+			throw new MailException(ueex);
+		}
 	}
 
 	/**

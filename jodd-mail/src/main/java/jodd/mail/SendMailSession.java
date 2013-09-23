@@ -221,7 +221,7 @@ public class SendMailSession {
 	protected MimeBodyPart createAttachmentBodyPart(EmailAttachment attachment) throws MessagingException {
 		MimeBodyPart attBodyPart = new MimeBodyPart();
 
-		String attachmentName = attachment.getName();
+		String attachmentName = attachment.getEncodedName();
 		if (attachmentName == null) {
 			throw new MessagingException("No attachment name");
 		}
