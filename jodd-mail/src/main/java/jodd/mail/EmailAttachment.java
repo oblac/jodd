@@ -26,12 +26,17 @@ public abstract class EmailAttachment {
 	/**
 	 * Creates new attachment with given name and content id for inline attachments.
 	 * Content id may be <code>null</code> if attachment is not embedded.
+	 * Email name may be <code>null</code> as well.
 	 */
 	protected EmailAttachment(String name, String contentId) {
-		try {
-			this.name = MimeUtility.decodeText(name);
-		} catch (UnsupportedEncodingException ueex) {
-			throw new MailException(ueex);
+		if (name != null) {
+			try {
+				this.name = MimeUtility.decodeText(name);
+			} catch (UnsupportedEncodingException ueex) {
+				throw new MailException(ueex);
+			}
+		} else {
+			this.name = null;
 		}
 		this.contentId = contentId;
 	}
@@ -45,16 +50,19 @@ public abstract class EmailAttachment {
 	}
 
 	/**
-	 * Returns attachment name.
+	 * Returns attachment name. May be <code>null</code>.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Returns encoded attachment name.
+	 * Returns encoded attachment name. May be <code>null</code>.
 	 */
 	public String getEncodedName() {
+		if (name == null) {
+			return null;
+		}
 		try {
 			return MimeUtility.encodeText(name);
 		} catch (UnsupportedEncodingException ueex) {

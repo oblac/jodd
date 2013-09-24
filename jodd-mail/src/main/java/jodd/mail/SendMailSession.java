@@ -222,10 +222,9 @@ public class SendMailSession {
 		MimeBodyPart attBodyPart = new MimeBodyPart();
 
 		String attachmentName = attachment.getEncodedName();
-		if (attachmentName == null) {
-			throw new MessagingException("No attachment name");
+		if (attachmentName != null) {
+			attBodyPart.setFileName(attachmentName);
 		}
-		attBodyPart.setFileName(attachmentName);
 
 		attBodyPart.setDataHandler(new DataHandler(attachment.getDataSource()));
 		if (attachment.isInline()) {
