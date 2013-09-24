@@ -150,4 +150,60 @@ public class EmailUtilTest {
 
 		assertEquals("Copy of РЕКРЕАТИВНА ЕСТЕТСКА ГИМНАСТИКА-флајер - 4.docx", att.getName());
 	}
+
+	@Test
+	public void testSimpleEML() throws FileNotFoundException, MessagingException {
+		File emlFile = new File(testDataRoot, "simple.eml");
+
+		ReceivedEmail email = EmailUtil.parseEML(emlFile);
+
+		assertEquals("sender@emailhost.com", email.getFrom());
+		assertEquals("recipient@emailhost.com", email.getTo()[0]);
+		assertEquals("Email subject", email.getSubject());
+
+		List<EmailMessage> messages = email.getAllMessages();
+
+		assertEquals(1, messages.size());
+
+		assertEquals("text/html", messages.get(0).getMimeType());
+		assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
+
+		List<EmailAttachment> attachments = email.getAttachments();
+
+		assertEquals(2, attachments.size());
+
+		EmailAttachment att = attachments.get(0);
+		assertEquals("AM22831 Cover Sheet.pdf", att.getName());
+
+		att = attachments.get(1);
+		assertEquals("AM22831 Manufacturing Status.xls", att.getName());
+	}
+
+	@Test
+	public void testSimpleNullEML() throws FileNotFoundException, MessagingException {
+		File emlFile = new File(testDataRoot, "simple-null.eml");
+
+		ReceivedEmail email = EmailUtil.parseEML(emlFile);
+
+		assertNull(email.getFrom());
+		assertEquals("recipient@emailhost.com", email.getTo()[0]);
+		assertEquals("Email subject", email.getSubject());
+
+		List<EmailMessage> messages = email.getAllMessages();
+
+		assertEquals(1, messages.size());
+
+		assertEquals("text/html", messages.get(0).getMimeType());
+		assertEquals("<p><strong>Project Name: Some Project and the body continues...</p>", messages.get(0).getContent().trim());
+
+		List<EmailAttachment> attachments = email.getAttachments();
+
+		assertEquals(2, attachments.size());
+
+		EmailAttachment att = attachments.get(0);
+		assertNull(att.getName());
+
+		att = attachments.get(1);
+		assertNull(att.getName());
+	}
 }

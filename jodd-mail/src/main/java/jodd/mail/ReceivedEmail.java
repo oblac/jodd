@@ -7,6 +7,7 @@ import jodd.io.StreamUtil;
 import jodd.mail.att.ByteArrayAttachment;
 import jodd.util.StringPool;
 
+import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Header;
 import javax.mail.Message;
@@ -49,8 +50,14 @@ public class ReceivedEmail extends CommonEmail {
 		// msg no
 		setMessageNumber(msg.getMessageNumber());
 
-		// standard stuff
-		setFrom(msg.getFrom()[0].toString());
+		// single from
+		Address[] addresses = msg.getFrom();
+
+		if (addresses != null && addresses.length > 0) {
+			setFrom(addresses[0].toString());
+		}
+
+		// common field
 		setTo(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.TO)));
 		setCc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.CC)));
 		setBcc(EmailUtil.address2String(msg.getRecipients(Message.RecipientType.BCC)));
