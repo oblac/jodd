@@ -8,10 +8,11 @@ task bundleJar(type: Jar) {
 
 	baseName = 'jodd-' + project.version
 	destinationDir = new File(buildDir, 'lib')
-	
+
 	javaBundleModules().each {submodule ->
 		from submodule.sourceSets.main.output
 	}
+
 	manifest.attributes << commonManifest
 	manifest {
 		attributes 'Implementation-Title': 'Jodd Bundle'
@@ -23,6 +24,15 @@ task bundleJar(type: Jar) {
 		attributes 'Export-Package' : 'jodd.*'
 		attributes 'Import-Package' : '*;resolution:=optional'
 	}
+}
+
+task bundleSourcesJar(type: Jar, dependsOn: bundleJar) {
+
+	baseName = 'jodd-' + project.version
+	destinationDir = new File(buildDir, 'lib')
+
+	classifier = 'sources'
+	from javaBundleModules().sourceSets.main.allSource
 }
 
 task bundleMobileJar(type: Jar) {
@@ -93,7 +103,7 @@ task distroZip(type: Zip) {
 
 	baseName = 'jodd-' + project.version
 	destinationDir = new File(buildDir, 'zip')
-	
+
 	this.tasks.withType(Jar).each { jar ->
 		from jar
 	}
@@ -114,6 +124,7 @@ task distroZip(type: Zip) {
 
 artifacts {
 	bundleJar
+	bundleSourcesJar
 	bundleMobileJar
 	distroZip
 }
@@ -121,5 +132,5 @@ artifacts {
 task build {
 	group 'Project'
 	description 'Builds bundle jars.'
-	dependsOn distroZip	
+	dependsOn distroZip
 }
