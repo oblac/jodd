@@ -98,7 +98,8 @@ public abstract class DefaultAppCore {
 	protected boolean isWebApplication;
 
 	/**
-	 * Props profiles.
+	 * Props profiles. If set, overrides any default profile set
+	 * in the props files.
 	 */
 	protected String[] appPropsProfiles;
 
@@ -267,12 +268,16 @@ public abstract class DefaultAppCore {
 	 * Stops the application.
 	 */
 	public void stop() {
-		log.info("shutting down...");
+		if (log != null) {
+			log.info("shutting down...");
+		}
 
 		stopApp();
 		stopDb();
 
-		log.info("app stopped");
+		if (log != null) {
+			log.info("app stopped");
+		}
 	}
 
 	// ---------------------------------------------------------------- props
@@ -315,12 +320,14 @@ public abstract class DefaultAppCore {
 
 		appProps = createProps();
 
-		appProps.setActiveProfiles(appPropsProfiles);
-
 		appProps.loadSystemProperties("sys");
 		appProps.loadEnvironment("env");
 
 		PropsUtil.loadFromClasspath(appProps, appPropsNamePattern);
+
+		if (appPropsProfiles != null) {
+			appProps.setActiveProfiles(appPropsProfiles);
+		}
 	}
 
 	/**
