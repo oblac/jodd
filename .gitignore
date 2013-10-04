@@ -8,3 +8,4 @@
 build
 target
 /classes/
+/gradle.properties

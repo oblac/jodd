@@ -103,6 +103,7 @@ configure(javaModules()) {
 		options.encoding = 'UTF-8'
 	}
 	compileJava.options.debug = true
+	compileJava.options.fork = true
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
 		classifier = 'sources'
@@ -354,5 +355,5 @@ task release() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.7'
+	gradleVersion = '1.8'
 }
