@@ -567,9 +567,13 @@ public abstract class DefaultAppCore {
 			log.info("database shutdown");
 		}
 
-		jtxManager.close();
+		if (jtxManager != null) {
+			jtxManager.close();
+		}
 
-		connectionProvider.close();
+		if (connectionProvider != null) {
+			connectionProvider.close();
+		}
 	}
 
 	// ---------------------------------------------------------------- init
