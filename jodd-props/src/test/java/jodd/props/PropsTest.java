@@ -420,6 +420,28 @@ public class PropsTest {
 		assertEquals("two", p.getValue("foo"));
 	}
 
+	@Test
+	public void testActiveProfileBeforeInit() {
+		Props p =  new Props();
+		p.setActiveProfiles("xxx");
+		p.load("foo=one");
+		assertNotNull(p.getActiveProfiles());
+		assertEquals("xxx", p.getActiveProfiles()[0]);
+	}
+
+	@Test
+	public void testDoubleInitialization() {
+		Props p =  new Props();
+		p.setValue("bar", "two.${foo}.${wer}");
+		p.setValue("foo", "one");
+
+		assertEquals("two.one.${wer}", p.getValue("bar"));
+
+		p.setValue("wer", "zero");
+
+		assertEquals("two.one.zero", p.getValue("bar"));
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {

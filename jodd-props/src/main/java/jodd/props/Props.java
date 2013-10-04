@@ -103,7 +103,11 @@ public class Props implements Cloneable {
 	// ---------------------------------------------------------------- configuration
 
 	/**
-	 * Overrides active profiles.
+	 * Sets new active profiles and overrides existing ones.
+	 * By setting <code>null</code>, no active profile will be set.
+	 * <pr>
+	 * Note that if some props file is loaded <b>after</b>
+	 * this method, it might override this value in the same way.
 	 */
 	public void setActiveProfiles(final String... activeProfiles) {
 		initialize();
@@ -401,17 +405,21 @@ public class Props implements Cloneable {
 
 	/**
 	 * Resolves active profiles from property.
+	 * If default active property is not defined, nothing happens.
+	 * Otherwise,
 	 */
 	protected void resolveActiveProfiles() {
 		if (activeProfilesProp == null) {
 			activeProfiles = null;
 			return;
 		}
+
 		final PropsValue pv = data.getBaseProperty(activeProfilesProp);
 		if (pv == null) {
-			activeProfiles = null;
+			// no active profile set as the property, exit
 			return;
 		}
+
 		final String value = pv.getValue();
 		if (StringUtil.isBlank(value)) {
 			activeProfiles = null;
