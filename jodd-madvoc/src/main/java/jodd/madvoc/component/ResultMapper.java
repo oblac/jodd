@@ -164,6 +164,11 @@ public class ResultMapper {
 			resultPath = resolveAlias(resultPath);
 		}
 
+		String resultPathPrefix = madvocConfig.getResultPathPrefix();
+		if (resultPathPrefix != null) {
+			resultPath = resultPathPrefix + resultPath;
+		}
+
 		return resultPath;
 	}
 

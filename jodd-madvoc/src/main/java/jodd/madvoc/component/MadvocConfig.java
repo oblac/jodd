@@ -46,6 +46,7 @@ public class MadvocConfig {
 		strictExtensionStripForResultPath = false;
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
+		resultPathPrefix = null;
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -336,6 +337,7 @@ public class MadvocConfig {
 	// ---------------------------------------------------------------- result
 
 	protected boolean strictExtensionStripForResultPath;
+	protected String resultPathPrefix;
 
 	public boolean isStrictExtensionStripForResultPath() {
 		return strictExtensionStripForResultPath;
@@ -349,6 +351,17 @@ public class MadvocConfig {
 		this.strictExtensionStripForResultPath = strictExtensionStripForResultPath;
 	}
 
+	public String getResultPathPrefix() {
+		return resultPathPrefix;
+	}
+
+	/**
+	 * Defines result path prefix that will be added to all relative result paths.
+	 * If set to <code>null</code> will be ignored.
+	 */
+	public void setResultPathPrefix(String resultPathPrefix) {
+		this.resultPathPrefix = resultPathPrefix;
+	}
 
 	// ---------------------------------------------------------------- attributes names
 

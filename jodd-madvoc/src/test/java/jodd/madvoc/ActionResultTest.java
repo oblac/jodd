@@ -42,6 +42,37 @@ public class ActionResultTest extends MadvocTestCase {
 	}
 
 	@Test
+	public void testMethodWithPrefix() {
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
+		MadvocConfig madvocConfig = webapp.getComponent(MadvocConfig.class);
+		ActionMethodParser actionMethodParser = webapp.getComponent(ActionMethodParser.class);
+
+		madvocConfig.setResultPathPrefix("/WEB-INF");
+
+		ActionConfig cfg = parse(actionMethodParser, "tst.BooAction#foo");
+		assertEquals("/boo.foo.html", cfg.actionPath);
+
+		String resultPath = resultMapper.resolveResultPath(cfg, "ok");
+		assertEquals("/WEB-INF/boo.foo.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "doo.ok");
+		assertEquals("/WEB-INF/boo.foo.doo.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "#ok");
+		assertEquals("/WEB-INF/boo.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "#");
+		assertEquals("/WEB-INF/boo", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "#doo.ok");
+		assertEquals("/WEB-INF/boo.doo.ok", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, null);
+		assertEquals("/WEB-INF/boo.foo", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "/xxx");
+		assertEquals("/xxx", resultPath);
+		resultPath = resultMapper.resolveResultPath(cfg, "/xxx.ext");
+		assertEquals("/xxx.ext", resultPath);
+	}
+
+	@Test
 	public void testMethod1() {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
