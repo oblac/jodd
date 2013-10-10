@@ -4,8 +4,12 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.util.CsvUtil;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Converts given object to an array. This converter is specific, as it
@@ -13,10 +17,12 @@ import java.lang.reflect.Array;
  * Conversion rules:
  * <ul>
  * <li><code>null</code> value is returned as <code>null</code></li>
- * <li>source non-array value is created to single element array</li>
+ * <li>source non-array value is checked for <code>Collections</code></li>
+ * <li>if non-array element can't be resolved, it is converted to single element array</li>
  * <li>source array is converted to target array, by converting each element</li>
  * </ul>
  */
+@SuppressWarnings("unchecked")
 public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 	protected final TypeConverterManagerBean typeConverterManagerBean;
@@ -34,12 +40,13 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 		Class valueClass = value.getClass();
 
-		// source value itself is not an array
 		if (valueClass.isArray() == false) {
-			return convertToSingleElementArray(value);
+			// source is not an array
+	        return convertValueToArray(value);
 		}
 
-		return convertArray(value);
+		// source is an array
+		return convertArrayToArray(value);
 	}
 
 	/**
@@ -50,107 +57,168 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	}
 
 	/**
-	 * Creates an array with single element.
+	 * Creates new array of target component type.
+	 * Default implementation uses reflection.
 	 */
-	@SuppressWarnings("unchecked")
-	protected T[] convertToSingleElementArray(Object value) {
-		Object singleElementArray = Array.newInstance(targetComponentType, 1);
-
-		Array.set(singleElementArray, 0, convertType(value));
-
-		return (T[]) singleElementArray;
+	protected T[] createArray(int length) {
+		return (T[]) Array.newInstance(targetComponentType, length);
 	}
 
 	/**
-	 * Converts array value.
+	 * Creates an array with single element.
 	 */
-	@SuppressWarnings("unchecked")
-	protected T[] convertArray(Object value) {
+	protected T[] convertToSingleElementArray(Object value) {
+		T[] singleElementArray = createArray(1);
+
+		singleElementArray[0] = convertType(value);
+
+		return singleElementArray;
+	}
+
+	/**
+	 * Converts non-array value to array. Detects various
+	 * collection types and iterates them to make conversion
+	 * and to create target array.
+ 	 */
+	protected T[] convertValueToArray(Object value) {
+		if (value instanceof List) {
+			List list = (List) value;
+			T[] target = createArray(list.size());
+
+			for (int i = 0; i < list.size(); i++) {
+				Object element = list.get(i);
+				target[i] = convertType(element);
+			}
+
+			return target;
+		}
+
+		if (value instanceof Collection) {
+			Collection collection = (Collection) value;
+			T[] target = createArray(collection.size());
+
+			int i = 0;
+			for (Object element : collection) {
+				target[i] = convertType(element);
+				i++;
+			}
+
+			return target;
+		}
+
+		if (value instanceof Iterable) {
+			Iterable iterable = (Iterable) value;
+			List<T> list = new ArrayList<T>();
+
+			for (Object element : iterable) {
+				list.add(convertType(element));
+			}
+
+			T[] target = createArray(list.size());
+			return list.toArray(target);
+		}
+
+		if (value instanceof CharSequence) {
+			String[] strings = CsvUtil.toStringArray(value.toString());
+			return convertArrayToArray(strings);
+		}
+
+		// everything else:
+		return convertToSingleElementArray(value);
+	}
+
+	/**
+	 * Converts array value to array.
+	 */
+	protected T[] convertArrayToArray(Object value) {
 		Class valueComponentType = value.getClass().getComponentType();
 
-		if (targetComponentType == valueComponentType) {
+		if (valueComponentType == targetComponentType) {
+			// equal types, no conversion needed
 			return (T[]) value;
 		}
 
-		Object result;
+		T[] result;
 
 		if (valueComponentType.isPrimitive()) {
-			if (valueComponentType == int.class) {
-				int[] array = (int[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == long.class) {
-				long[] array = (long[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == float.class) {
-				float[] array = (float[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == double.class) {
-				double[] array = (double[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == short.class) {
-				short[] array = (short[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == byte.class) {
-				byte[] array = (byte[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == char.class) {
-				char[] array = (char[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else if (valueComponentType == boolean.class) {
-				boolean [] array = (boolean[]) value;
-				T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
-				for (int i = 0; i < array.length; i++) {
-					objArray[i] = convertType(array[i]);
-				}
-				result = objArray;
-			}
-			else {
-				throw new IllegalArgumentException();
-			}
+			// convert primitive array to target array
+			result = convertPrimitiveArrayToArray(value, valueComponentType);
 		} else {
+			// convert object array to target array
 			Object[] array = (Object[]) value;
-			T[] objArray = (T[]) Array.newInstance(targetComponentType, array.length);
+			result = createArray(array.length);
+
 			for (int i = 0; i < array.length; i++) {
-				objArray[i] = convertType(array[i]);
+				result[i] = convertType(array[i]);
 			}
-			result = objArray;
 		}
-		return (T[]) result;
+
+		return result;
+	}
+
+	/**
+	 * Converts primitive array to target array.
+	 */
+	protected T[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+		T[] result = null;
+
+		if (primitiveComponentType == int.class) {
+			int[] array = (int[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == long.class) {
+			long[] array = (long[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == float.class) {
+			float[] array = (float[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == double.class) {
+			double[] array = (double[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == short.class) {
+			short[] array = (short[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == byte.class) {
+			byte[] array = (byte[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == char.class) {
+			char[] array = (char[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		else if (primitiveComponentType == boolean.class) {
+			boolean[] array = (boolean[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+		return result;
 	}
 
 }

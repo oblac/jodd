@@ -2,111 +2,83 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.TypeConverter;
-import jodd.util.CsvUtil;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to <code>String[]</code>.
- * Conversion rules:
- * <ul>
- * <li>an object array is converted to <code>String[]</code> array.</li>
- * <li>primitive arrays are converted to string arrays, element by element</li>
- * <li><code>Class[]</code> is converted to array of class names.</li>
- * <li>simple object is created to <code>String[]</code> array from CSV representation of <code>toString</code>.</li>
- * </ul>
+ * Based on {@link ArrayConverter}, but optimized for String arrays.
  */
-public class StringArrayConverter implements TypeConverter<String[]> {
+public class StringArrayConverter extends ArrayConverter<String> {
 
-	public String[] convert(Object value) {
-		if (value == null) {
-			return null;
-		}
-		
-		Class type = value.getClass();
-		if (type.isArray() == false) {
-			// special case #1
-			if (type == Class.class) {
-				return new String[] {((Class)value).getName()};
-			}
-			return CsvUtil.toStringArray(value.toString());
-		}
+	public StringArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		super(typeConverterManagerBean, String.class);
+	}
 
-		// handle arrays
-		if (type == String[].class) {
-			return (String[]) value;
-		}
+	@Override
+	protected String[] createArray(int length) {
+		return new String[length];
+	}
 
-		if (type == int[].class) {
-			int[] values = (int[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == long[].class) {
-			long[] values = (long[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == double[].class) {
-			double[] values = (double[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == byte[].class) {
-			byte[] values = (byte[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == float[].class) {
-			float[] values = (float[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == boolean[].class) {
-			boolean[] values = (boolean[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
-		if (type == short[].class) {
-			short[] values = (short[]) value;
-			String[] result = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				result[i] = String.valueOf(values[i]);
-			}
-			return result;
-		}
+	@Override
+	protected String[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+		String[] result = null;
 
-		Object[] values = (Object[]) value;
-		String[] result = new String[values.length];
-		for (int i = 0; i < values.length; i++) {
-			Object v = values[i];
-			if (v != null) {
-				// special case #1
-				if (v.getClass() == Class.class) {
-					result[i] = ((Class)v).getName();
-					continue;
-				}
-				result[i] = v.toString();
+		if (primitiveComponentType == int.class) {
+			int[] array = (int[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == long.class) {
+			long[] array = (long[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == float.class) {
+			float[] array = (float[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == double.class) {
+			double[] array = (double[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == short.class) {
+			short[] array = (short[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == byte.class) {
+			byte[] array = (byte[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == char.class) {
+			char[] array = (char[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
+			}
+		}
+		else if (primitiveComponentType == boolean.class) {
+			boolean[] array = (boolean[]) value;
+			result = createArray(array.length);
+			for (int i = 0; i < array.length; i++) {
+				result[i] = String.valueOf(array[i]);
 			}
 		}
 		return result;
 	}
-
 }
