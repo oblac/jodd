@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.util.StringUtil;
 
 /**
  * Converts given object to <code>Character</code>.
@@ -13,6 +14,7 @@ import jodd.typeconverter.TypeConverter;
  * <li>object of destination type is simply casted</li>
  * <li><code>Number</code> is converted to <code>char</code> value</li>
  * <li>finally, <code>toString()</code> value of length 1 is converted to <code>char</code></li>
+ * <li>if string is longer, and made of digits, try to convert it to int first</li>
  * </ul>
  */
 public class CharacterConverter implements TypeConverter<Character> {
@@ -31,7 +33,15 @@ public class CharacterConverter implements TypeConverter<Character> {
 		try {
 			String s = value.toString();
 			if (s.length() != 1) {
-				throw new TypeConversionException(value);
+				s = s.trim();
+				if (StringUtil.containsOnlyDigitsAndSigns(s)) {
+					try {
+						char c = (char) Integer.parseInt(s);
+						return Character.valueOf(c);
+					} catch (NumberFormatException nfex) {
+						throw new TypeConversionException(value, nfex);
+					}
+				}
 			}
 			return Character.valueOf(s.charAt(0));
 		} catch (IndexOutOfBoundsException ioobex) {

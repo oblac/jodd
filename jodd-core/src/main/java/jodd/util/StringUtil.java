@@ -340,6 +340,22 @@ public class StringUtil {
 	}
 
 	/**
+	 * Returns <code>true</code> if string {@link #containsOnlyDigits(String) contains only digits}
+	 * or signs plus or minus.
+	 */
+	public static boolean containsOnlyDigitsAndSigns(String string) {
+		int size = string.length();
+		for (int i = 0; i < size; i++) {
+			char c = string.charAt(i);
+			if ((CharUtil.isDigit(c) == false) && (c != '-') && (c != '+')) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	/**
 	 * Determines if a string is not empty.
 	 */
 	public static boolean isNotEmpty(String string) {
