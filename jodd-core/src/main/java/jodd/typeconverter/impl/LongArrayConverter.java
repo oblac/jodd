@@ -40,7 +40,7 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 	 * Converts type using type converter manager.
 	 */
 	protected long convertType(Object value) {
-		return typeConverterManagerBean.convertType(value, long.class);
+		return typeConverterManagerBean.convertType(value, long.class).longValue();
 	}
 
 	/**
