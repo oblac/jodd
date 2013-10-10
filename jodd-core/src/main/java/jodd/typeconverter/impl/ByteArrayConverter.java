@@ -2,128 +2,200 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.ConvertBean;
-import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.CsvUtil;
 
-import java.sql.Blob;
-import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Converts given object to <code>byte[]</code>.
- * Conversion rules:
- * <ul>
- * <li><code>null</code> value is returned as <code>null</code></li>
- * <li>Blob values are converted directly</li>
- * <li>string is considered as CSV value and split before conversion</li>
- * <li>single value is returned as 1-length array wrapped over converted value</li>
- * <li>native arrays are converted directly</li>
- * <li>object arrays is converted element by element</li>
- * </ul>
  */
 public class ByteArrayConverter implements TypeConverter<byte[]> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverterManagerBean typeConverterManagerBean;
 
-	public ByteArrayConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	public ByteArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		this.typeConverterManagerBean = typeConverterManagerBean;
 	}
 
 	public byte[] convert(Object value) {
 		if (value == null) {
 			return null;
 		}
-		Class type = value.getClass();
 
-		if (type.isArray() == false) {
-			// blob
-			if (value instanceof Blob) {
-				Blob blob = (Blob) value;
-				try {
-					long length = blob.length();
-					if (length > Integer.MAX_VALUE) {
-						throw new TypeConversionException("Blob is too big.");
-					}
-					return blob.getBytes(1, (int) length);
-				} catch (SQLException sex) {
-					throw new TypeConversionException(value, sex);
-				}
-			}
+		Class valueClass = value.getClass();
 
-			// string
-			if (type == String.class) {
-				String[] values = CsvUtil.toStringArray(value.toString());
-				return convertArray(values);
-			}
-
-			// single value
-			return new byte[] {convertBean.toByteValue(value)};
+		if (valueClass.isArray() == false) {
+			// source is not an array
+			return convertValueToArray(value);
 		}
 
-		if (type.getComponentType().isPrimitive()) {
-			// primitive arrays
-			if (type == byte[].class) {
-				return (byte[]) value;
-			}
-			if (type == int[].class) {
-				int[] values = (int[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) values[i];
-				}
-				return results;
-			}
-			if (type == long[].class) {
-				long[] values = (long[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) values[i];
-				}
-				return results;
-			}
-			if (type == double[].class) {
-				double[] values = (double[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) values[i];
-				}
-				return results;
-			}
-			if (type == float[].class) {
-				float[] values = (float[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) values[i];
-				}
-				return results;
-			}
-			if (type == boolean[].class) {
-				boolean[] values = (boolean[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) (values[i] == true ? 1 : 0);
-				}
-				return results;
-			}
-			if (type == short[].class) {
-				short[] values = (short[]) value;
-				byte[] results = new byte[values.length];
-				for (int i = 0; i < values.length; i++) {
-					results[i] = (byte) values[i];
-				}
-				return results;
-			}
-		}
-
-		// array
-		return convertArray((Object[]) value);
+		// source is an array
+		return convertArrayToArray(value);
 	}
 
-	protected byte[] convertArray(Object[] values) {
-		byte[] result = new byte[values.length];
-		for (int i = 0; i < values.length; i++) {
-			result[i] = convertBean.toByteValue(values[i]);
+	/**
+	 * Converts type using type converter manager.
+	 */
+	protected byte convertType(Object value) {
+		return typeConverterManagerBean.convertType(value, byte.class).byteValue();
+	}
+
+	/**
+	 * Creates an array with single element.
+	 */
+	protected byte[] convertToSingleElementArray(Object value) {
+		return new byte[] {convertType(value)};
+	}
+
+	/**
+	 * Converts non-array value to array. Detects various
+	 * collection types and iterates them to make conversion
+	 * and to create target array.
+ 	 */
+	protected byte[] convertValueToArray(Object value) {
+		if (value instanceof List) {
+			List list = (List) value;
+			byte[] target = new byte[list.size()];
+
+			for (int i = 0; i < list.size(); i++) {
+				Object element = list.get(i);
+				target[i] = convertType(element);
+			}
+
+			return target;
+		}
+
+		if (value instanceof Collection) {
+			Collection collection = (Collection) value;
+			byte[] target = new byte[collection.size()];
+
+			int i = 0;
+			for (Object element : collection) {
+				target[i] = convertType(element);
+				i++;
+			}
+
+			return target;
+		}
+
+		if (value instanceof Iterable) {
+			Iterable iterable = (Iterable) value;
+
+            int count = 0;
+			for (Object element : iterable) {
+				count++;
+			}
+
+			byte[] target = new byte[count];
+			int i = 0;
+			for (Object element : iterable) {
+				target[i] = convertType(element);
+            	i++;
+            }
+
+			return target;
+		}
+
+		if (value instanceof CharSequence) {
+			String[] strings = CsvUtil.toStringArray(value.toString());
+			return convertArrayToArray(strings);
+		}
+
+		// everything else:
+		return convertToSingleElementArray(value);
+	}
+
+	/**
+	 * Converts array value to array.
+	 */
+	protected byte[] convertArrayToArray(Object value) {
+		Class valueComponentType = value.getClass().getComponentType();
+
+		if (valueComponentType == byte.class) {
+			// equal types, no conversion needed
+			return (byte[]) value;
+		}
+
+		byte[] result;
+
+		if (valueComponentType.isPrimitive()) {
+			// convert primitive array to target array
+			result = convertPrimitiveArrayToArray(value, valueComponentType);
+		} else {
+			// convert object array to target array
+			Object[] array = (Object[]) value;
+			result = new byte[array.length];
+
+			for (int i = 0; i < array.length; i++) {
+				result[i] = convertType(array[i]);
+			}
+		}
+
+		return result;
+	}
+
+
+	/**
+	 * Converts primitive array to target array.
+	 */
+	protected byte[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
+		byte[] result = null;
+
+		if (primitiveComponentType == byte[].class) {
+			return (byte[]) value;
+		}
+
+		if (primitiveComponentType == int.class) {
+			int[] array = (int[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == long.class) {
+			long[] array = (long[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == float.class) {
+			float[] array = (float[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == double.class) {
+			double[] array = (double[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == short.class) {
+			short[] array = (short[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == char.class) {
+			char[] array = (char[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) array[i];
+			}
+		}
+		else if (primitiveComponentType == boolean.class) {
+			boolean[] array = (boolean[]) value;
+			result = new byte[array.length];
+			for (int i = 0; i < array.length; i++) {
+				result[i] = (byte) (array[i] ? 1 : 0);
+			}
 		}
 		return result;
 	}
