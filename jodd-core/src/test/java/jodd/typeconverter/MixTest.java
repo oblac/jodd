@@ -5,17 +5,11 @@ package jodd.typeconverter;
 import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Blob;
-
-import static jodd.typeconverter.TypeConverterTestHelper.arrb;
 import static jodd.typeconverter.TypeConverterTestHelper.arri;
 import static jodd.typeconverter.TypeConverterTestHelper.arro;
 import static jodd.typeconverter.TypeConverterTestHelper.iterableo;
 import static jodd.typeconverter.TypeConverterTestHelper.listo;
 import static jodd.typeconverter.TypeConverterTestHelper.seto;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class MixTest {
