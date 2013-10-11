@@ -1,7 +1,8 @@
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.http;
 
 import org.apache.catalina.startup.Tomcat;
-
 
 /**
  * Madvoc Tomcat Server.

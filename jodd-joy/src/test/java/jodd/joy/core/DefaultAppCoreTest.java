@@ -4,7 +4,7 @@ package jodd.joy.core;
 
 import jodd.petite.PetiteContainer;
 import jodd.props.Props;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
