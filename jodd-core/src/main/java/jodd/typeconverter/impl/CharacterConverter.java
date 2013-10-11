@@ -34,13 +34,15 @@ public class CharacterConverter implements TypeConverter<Character> {
 			String s = value.toString();
 			if (s.length() != 1) {
 				s = s.trim();
-				if (StringUtil.containsOnlyDigitsAndSigns(s)) {
-					try {
-						char c = (char) Integer.parseInt(s);
-						return Character.valueOf(c);
-					} catch (NumberFormatException nfex) {
-						throw new TypeConversionException(value, nfex);
-					}
+				if (!StringUtil.containsOnlyDigitsAndSigns(s)) {
+					throw new TypeConversionException(value);
+				}
+
+				try {
+					char c = (char) Integer.parseInt(s);
+					return Character.valueOf(c);
+				} catch (NumberFormatException nfex) {
+					throw new TypeConversionException(value, nfex);
 				}
 			}
 			return Character.valueOf(s.charAt(0));

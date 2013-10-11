@@ -302,7 +302,7 @@ class BeanUtilUtil {
 
 		try {
 			return convertType(index, indexType);
-		} catch (ClassCastException ignore) {
+		} catch (Exception ignore) {
 			return index;
 		}
 	}

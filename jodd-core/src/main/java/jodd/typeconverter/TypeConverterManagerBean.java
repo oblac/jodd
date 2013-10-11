@@ -11,7 +11,6 @@ import jodd.mutable.MutableInteger;
 import jodd.mutable.MutableLong;
 import jodd.mutable.MutableShort;
 import jodd.typeconverter.impl.ArrayConverter;
-import jodd.typeconverter.impl.ArrayNumberConverter;
 import jodd.typeconverter.impl.BigDecimalConverter;
 import jodd.typeconverter.impl.BigIntegerConverter;
 import jodd.typeconverter.impl.BooleanArrayConverter;
@@ -99,7 +98,7 @@ public class TypeConverterManagerBean {
 	@SuppressWarnings( {"UnnecessaryFullyQualifiedName"})
 	public void registerDefaults() {
 		register(String.class, new StringConverter());
-		register(String[].class, new StringArrayConverter());
+		register(String[].class, new StringArrayConverter(this));
 
 		IntegerConverter integerConverter = new IntegerConverter();
 		register(Integer.class, integerConverter);
@@ -139,35 +138,36 @@ public class TypeConverterManagerBean {
 		register(Character.class, characterConverter);
 		register(char.class, characterConverter);
 
-		register(byte[].class, new ByteArrayConverter(convertBean));
-		register(short[].class, new ShortArrayConverter(convertBean));
-		register(int[].class, new IntegerArrayConverter(convertBean));
-		register(long[].class, new LongArrayConverter(convertBean));
-		register(float[].class, new FloatArrayConverter(convertBean));
-		register(double[].class, new DoubleArrayConverter(convertBean));
-		register(boolean[].class, new BooleanArrayConverter(convertBean));
-		register(char[].class, new CharacterArrayConverter(convertBean));
+		register(byte[].class, new ByteArrayConverter(this));
+		register(short[].class, new ShortArrayConverter(this));
+		register(int[].class, new IntegerArrayConverter(this));
+		register(long[].class, new LongArrayConverter(this));
+		register(float[].class, new FloatArrayConverter(this));
+		register(double[].class, new DoubleArrayConverter(this));
+		register(boolean[].class, new BooleanArrayConverter(this));
+		register(char[].class, new CharacterArrayConverter(this));
 
-		register(Integer[].class, new ArrayNumberConverter<Integer>(this, Integer.class));
-		register(Long[].class, new ArrayNumberConverter<Long>(this, Long.class));
-		register(Byte[].class, new ArrayNumberConverter<Byte>(this, Byte.class));
-		register(Short[].class, new ArrayNumberConverter<Short>(this, Short.class));
-		register(Float[].class, new ArrayNumberConverter<Float>(this, Float.class));
-		register(Double[].class, new ArrayNumberConverter<Double>(this, Double.class));
-		register(Boolean[].class, new ArrayNumberConverter<Boolean>(this, Boolean.class));
-		register(Character[].class, new ArrayNumberConverter<Character>(this, Character.class));
+		// we don't really need these, but converters will be cached and not created every time
+		register(Integer[].class, new ArrayConverter<Integer>(this, Integer.class));
+		register(Long[].class, new ArrayConverter<Long>(this, Long.class));
+		register(Byte[].class, new ArrayConverter<Byte>(this, Byte.class));
+		register(Short[].class, new ArrayConverter<Short>(this, Short.class));
+		register(Float[].class, new ArrayConverter<Float>(this, Float.class));
+		register(Double[].class, new ArrayConverter<Double>(this, Double.class));
+		register(Boolean[].class, new ArrayConverter<Boolean>(this, Boolean.class));
+		register(Character[].class, new ArrayConverter<Character>(this, Character.class));
 
-		register(MutableInteger[].class, new ArrayNumberConverter<MutableInteger>(this, MutableInteger.class));
-		register(MutableLong[].class, new ArrayNumberConverter<MutableLong>(this, MutableLong.class));
-		register(MutableByte[].class, new ArrayNumberConverter<MutableByte>(this, MutableByte.class));
-		register(MutableShort[].class, new ArrayNumberConverter<MutableShort>(this, MutableShort.class));
-		register(MutableFloat[].class, new ArrayNumberConverter<MutableFloat>(this, MutableFloat.class));
-		register(MutableDouble[].class, new ArrayNumberConverter<MutableDouble>(this, MutableDouble.class));
+		register(MutableInteger[].class, new ArrayConverter<MutableInteger>(this, MutableInteger.class));
+		register(MutableLong[].class, new ArrayConverter<MutableLong>(this, MutableLong.class));
+		register(MutableByte[].class, new ArrayConverter<MutableByte>(this, MutableByte.class));
+		register(MutableShort[].class, new ArrayConverter<MutableShort>(this, MutableShort.class));
+		register(MutableFloat[].class, new ArrayConverter<MutableFloat>(this, MutableFloat.class));
+		register(MutableDouble[].class, new ArrayConverter<MutableDouble>(this, MutableDouble.class));
 
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
-		register(BigDecimal[].class, new ArrayNumberConverter<BigDecimal>(this, BigDecimal.class));
-		register(BigInteger[].class, new ArrayNumberConverter<BigInteger>(this, BigInteger.class));
+		register(BigDecimal[].class, new ArrayConverter<BigDecimal>(this, BigDecimal.class));
+		register(BigInteger[].class, new ArrayConverter<BigInteger>(this, BigInteger.class));
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());
@@ -180,7 +180,7 @@ public class TypeConverterManagerBean {
 		register(File.class, new FileConverter());
 
 		register(Class.class, new ClassConverter());
-		register(Class[].class, new ClassArrayConverter(convertBean));
+		register(Class[].class, new ClassArrayConverter(this));
 
 		register(URI.class, new URIConverter());
 		register(URL.class, new URLConverter());
@@ -218,6 +218,9 @@ public class TypeConverterManagerBean {
 		converters.put(type, typeConverter);
 	}
 
+	/**
+	 * Un-registers converter for given type.
+	 */
 	public void unregister(Class type) {
 		convertBean.register(type, null);
 		converters.remove(type);
@@ -236,7 +239,7 @@ public class TypeConverterManagerBean {
 	}
 
 	// ---------------------------------------------------------------- convert
-	
+
 	/**
 	 * Converts an object to destination type. If type is registered, it's
 	 * {@link TypeConverter} will be used. If not, it scans of destination is
@@ -250,11 +253,7 @@ public class TypeConverterManagerBean {
 		TypeConverter converter = lookup(destinationType);
 
 		if (converter != null) {
-			try {
-				return (T) converter.convert(value);
-			} catch (TypeConversionException tcex) {
-				throw new ClassCastException("Unable to convert to type: " + destinationType.getName() + '\n' + tcex.toString());
-			}
+			return (T) converter.convert(value);
 		}
 
 		// no converter
@@ -287,7 +286,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// fail
-		throw new ClassCastException("Unable to cast to type: " + destinationType.getName());
+		throw new TypeConversionException("Unable to convert to type: " + destinationType.getName());
 	}
 
 }

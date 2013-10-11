@@ -2,8 +2,7 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.typeconverter.ConvertBean;
-import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to <code>Class</code> array.
@@ -16,34 +15,15 @@ import jodd.typeconverter.TypeConverter;
  * then each element is converted</li>
  * </ul>
  */
-public class ClassArrayConverter implements TypeConverter<Class[]> {
+public class ClassArrayConverter extends ArrayConverter<Class> {
 
-	protected final ConvertBean convertBean;
-
-	public ClassArrayConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	public ClassArrayConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		super(typeConverterManagerBean, Class.class);
 	}
 
-	public Class[] convert(Object value) {
-		if (value == null) {
-			return null;
-		}
-
-		Class type = value.getClass();
-		if (type == Class[].class) {
-			return (Class[]) value;
-		}
-
-		if (type == Class.class) {
-			return new Class[] {(Class) value};
-		}
-		
-		String[] classNames = convertBean.toStringArray(value);
-		Class[] result = new Class[classNames.length];
-		for (int i = 0; i < classNames.length; i++) {
-			result[i] = convertBean.toClass(classNames[i]);
-		}
-		return result;
+	@Override
+	protected Class[] createArray(int length) {
+		return new Class[length];
 	}
 
 }

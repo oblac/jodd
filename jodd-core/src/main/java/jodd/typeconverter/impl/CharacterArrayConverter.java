@@ -5,7 +5,6 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.CsvUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -101,8 +100,15 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = CsvUtil.toStringArray(value.toString());
-			return convertArrayToArray(strings);
+			CharSequence charSequence = (CharSequence) value;
+
+			char[] result = new char[charSequence.length()];
+
+			for (int i = 0; i < result.length; i++) {
+				result[i] = charSequence.charAt(i);
+			}
+
+			return result;
 		}
 
 		// everything else:

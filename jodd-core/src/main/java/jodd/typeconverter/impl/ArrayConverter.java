@@ -58,7 +58,8 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 	/**
 	 * Creates new array of target component type.
-	 * Default implementation uses reflection.
+	 * Default implementation uses reflection to create
+	 * an array of target type. Override it for better performances.
 	 */
 	protected T[] createArray(int length) {
 		return (T[]) Array.newInstance(targetComponentType, length);
