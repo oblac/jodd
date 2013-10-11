@@ -13,7 +13,7 @@ public class StringArrayConverterTest {
 
 	@Test
 	public void testConversion() {
-		StringArrayConverter stringArrayConverter = new StringArrayConverter();
+		StringArrayConverter stringArrayConverter = (StringArrayConverter) TypeConverterManager.lookup(String[].class);
 
 		assertNull(stringArrayConverter.convert(null));
 

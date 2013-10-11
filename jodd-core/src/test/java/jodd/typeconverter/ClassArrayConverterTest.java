@@ -2,7 +2,6 @@
 
 package jodd.typeconverter;
 
-import jodd.typeconverter.impl.ClassArrayConverter;
 import org.junit.Test;
 
 import static jodd.typeconverter.TypeConverterTestHelper.arrc;
@@ -13,7 +12,7 @@ public class ClassArrayConverterTest {
 	@Test
 	@SuppressWarnings({"unchecked"})
 	public void testConversion() {
-		ClassArrayConverter classArrayConverter = (ClassArrayConverter) TypeConverterManager.lookup(Class[].class);
+		TypeConverter<Class[]> classArrayConverter = TypeConverterManager.lookup(Class[].class);
 
 		assertNull(classArrayConverter.convert(null));
 

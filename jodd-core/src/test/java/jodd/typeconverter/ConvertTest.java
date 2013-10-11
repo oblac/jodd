@@ -131,7 +131,7 @@ public class ConvertTest {
 		try {
 			barr = Convert.toBooleanArray(array);
 			fail();
-		} catch (TypeConversionException tcex) {
+		} catch (Exception ignore) {
 		}
 
 		// create new boolean type converter
