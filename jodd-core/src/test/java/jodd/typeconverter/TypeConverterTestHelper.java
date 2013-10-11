@@ -39,6 +39,16 @@ public final class TypeConverterTestHelper {
 		return v;
 	}
 
+	public static byte[] arrb(int... v) {
+		byte[] bytes = new byte[v.length];
+
+		for (int i = 0; i < bytes.length; i++) {
+			bytes[i] = (byte) v[i];
+		}
+
+		return bytes;
+	}
+
 	public static short[] arrs(short... v) {
 		return v;
 	}

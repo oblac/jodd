@@ -4,13 +4,17 @@ package jodd.typeconverter;
 
 import org.junit.Test;
 
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
 
+import static jodd.typeconverter.TypeConverterTestHelper.arrb;
 import static jodd.typeconverter.TypeConverterTestHelper.arri;
 import static jodd.typeconverter.TypeConverterTestHelper.arro;
 import static jodd.typeconverter.TypeConverterTestHelper.iterableo;
 import static jodd.typeconverter.TypeConverterTestHelper.listo;
 import static jodd.typeconverter.TypeConverterTestHelper.seto;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class MixTest {
@@ -248,6 +252,48 @@ public class MixTest {
 		chars = TypeConverterManager.convertType(iterableo(Integer.valueOf(123), "-12"), char[].class);
 		assertEquals(123, chars[0]);
 		assertEquals(65524, chars[1]);
+	}
+
+	@Test
+	public void testBlob() {
+		byte[] bytes = TypeConverterManager.convertType(new Blob() {
+			public long length() {
+				return 10;
+			}
+
+			public byte[] getBytes(long pos, int length) {
+				return arrb(1,2,3,4,5,6,7,6,5,4);
+			}
+
+			public InputStream getBinaryStream() {
+				return null;
+			}
+
+			public long position(byte[] pattern, long start) {
+				return -1;
+			}
+
+			public long position(Blob pattern, long start) {
+				return -1;
+			}
+
+			public int setBytes(long pos, byte[] bytes) {
+				return -1;
+			}
+
+			public int setBytes(long pos, byte[] bytes, int offset, int len) {
+				return -1;
+			}
+
+			public OutputStream setBinaryStream(long pos) {
+				return null;
+			}
+
+			public void truncate(long len) {
+			}
+		}, byte[].class);
+
+		assertArrayEquals(arrb(1,2,3,4,5,6,7,6,5,4), bytes);
 	}
 
 /*	@Test

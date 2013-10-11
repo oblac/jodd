@@ -2,10 +2,16 @@
 
 package jodd.typeconverter.impl;
 
+import jodd.io.FileUtil;
+import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.CsvUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,10 +58,31 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 
 	/**
 	 * Converts non-array value to array. Detects various
-	 * collection types and iterates them to make conversion
+	 * types and collections, iterates them to make conversion
 	 * and to create target array.
  	 */
 	protected byte[] convertValueToArray(Object value) {
+		if (value instanceof Blob) {
+			Blob blob = (Blob) value;
+			try {
+				long length = blob.length();
+				if (length > Integer.MAX_VALUE) {
+					throw new TypeConversionException("Blob is too big.");
+				}
+				return blob.getBytes(1, (int) length);
+			} catch (SQLException sex) {
+				throw new TypeConversionException(value, sex);
+			}
+		}
+
+		if (value instanceof File) {
+			try {
+				return FileUtil.readBytes((File) value);
+			} catch (IOException ioex) {
+				throw new TypeConversionException(value, ioex);
+			}
+		}
+
 		if (value instanceof List) {
 			List list = (List) value;
 			byte[] target = new byte[list.size()];
