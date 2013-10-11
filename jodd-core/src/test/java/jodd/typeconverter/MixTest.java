@@ -256,48 +256,6 @@ public class MixTest {
 	}
 
 	@Test
-	public void testBlob() {
-		byte[] bytes = TypeConverterManager.convertType(new Blob() {
-			public long length() {
-				return 10;
-			}
-
-			public byte[] getBytes(long pos, int length) {
-				return arrb(1,2,3,4,5,6,7,6,5,4);
-			}
-
-			public InputStream getBinaryStream() {
-				return null;
-			}
-
-			public long position(byte[] pattern, long start) {
-				return -1;
-			}
-
-			public long position(Blob pattern, long start) {
-				return -1;
-			}
-
-			public int setBytes(long pos, byte[] bytes) {
-				return -1;
-			}
-
-			public int setBytes(long pos, byte[] bytes, int offset, int len) {
-				return -1;
-			}
-
-			public OutputStream setBinaryStream(long pos) {
-				return null;
-			}
-
-			public void truncate(long len) {
-			}
-		}, byte[].class);
-
-		assertArrayEquals(arrb(1,2,3,4,5,6,7,6,5,4), bytes);
-	}
-
-	@Test
 	public void testMultipleArrays() {
 		MutableInteger[] mutableIntegers = TypeConverterManager.convertType(arri(1,2,3,4), MutableInteger[].class);
 
