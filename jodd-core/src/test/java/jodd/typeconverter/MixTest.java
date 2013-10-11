@@ -4,6 +4,8 @@ package jodd.typeconverter;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static jodd.typeconverter.TypeConverterTestHelper.arri;
 import static jodd.typeconverter.TypeConverterTestHelper.arro;
 import static jodd.typeconverter.TypeConverterTestHelper.iterableo;
@@ -225,8 +227,7 @@ public class MixTest {
 		char[] chars;
 
 		chars = TypeConverterManager.convertType("123, -12", char[].class);
-		assertEquals(123, chars[0]);
-		assertEquals(65524, chars[1]);
+		assertEquals("123, -12", new String(chars));
 
 		chars = TypeConverterManager.convertType(arri(1,23), char[].class);
 		assertEquals(1, chars[0]);
@@ -248,5 +249,11 @@ public class MixTest {
 		assertEquals(123, chars[0]);
 		assertEquals(65524, chars[1]);
 	}
+
+/*	@Test
+	public void testToList() {
+		TypeConverterManager.convertType(arri(1,2,3), List.class);
+	}
+*/
 
 }

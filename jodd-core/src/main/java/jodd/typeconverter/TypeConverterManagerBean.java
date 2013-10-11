@@ -262,11 +262,6 @@ public class TypeConverterManagerBean {
 			return null;
 		}
 
-		// check same instances
-		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
-			return (T) value;
-		}
-
 		// handle destination arrays
 		if (destinationType.isArray()) {
 			ArrayConverter<T> arrayConverter = new ArrayConverter(this, destinationType.getComponentType());
@@ -283,6 +278,11 @@ public class TypeConverterManagerBean {
 					return (T) e;
 				}
 			}
+		}
+
+		// check same instances
+		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+			return (T) value;
 		}
 
 		// fail
