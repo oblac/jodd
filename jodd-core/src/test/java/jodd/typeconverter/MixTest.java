@@ -2,6 +2,7 @@
 
 package jodd.typeconverter;
 
+import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -294,6 +295,17 @@ public class MixTest {
 		}, byte[].class);
 
 		assertArrayEquals(arrb(1,2,3,4,5,6,7,6,5,4), bytes);
+	}
+
+	@Test
+	public void testMultipleArrays() {
+		MutableInteger[] mutableIntegers = TypeConverterManager.convertType(arri(1,2,3,4), MutableInteger[].class);
+
+		assertEquals(4, mutableIntegers.length);
+		assertEquals(1, mutableIntegers[0].intValue());
+		assertEquals(2, mutableIntegers[1].intValue());
+		assertEquals(3, mutableIntegers[2].intValue());
+		assertEquals(4, mutableIntegers[3].intValue());
 	}
 
 /*	@Test

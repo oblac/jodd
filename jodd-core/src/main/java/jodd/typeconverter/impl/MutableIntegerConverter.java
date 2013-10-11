@@ -3,18 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableInteger;
-import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to an {@link MutableInteger}.
  */
 public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverter<Integer> typeConverter;
 
-	public MutableIntegerConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	@SuppressWarnings("unchecked")
+	public MutableIntegerConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		typeConverter = typeConverterManagerBean.lookup(Integer.class);
 	}
 
 	public MutableInteger convert(Object value) {
@@ -26,7 +27,7 @@ public class MutableIntegerConverter implements TypeConverter<MutableInteger> {
 			return (MutableInteger) value;
 		}
 
-		return new MutableInteger(convertBean.toIntValue(value));
+		return new MutableInteger(typeConverter.convert(value));
 	}
 
 }

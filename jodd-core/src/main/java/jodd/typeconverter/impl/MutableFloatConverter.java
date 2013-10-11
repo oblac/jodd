@@ -3,18 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableFloat;
-import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to {@link MutableFloat}.
  */
 public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverter<Float> typeConverter;
 
-	public MutableFloatConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	@SuppressWarnings("unchecked")
+	public MutableFloatConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		typeConverter = typeConverterManagerBean.lookup(Float.class);
 	}
 
 	public MutableFloat convert(Object value) {
@@ -26,7 +27,7 @@ public class MutableFloatConverter implements TypeConverter<MutableFloat> {
 			return (MutableFloat) value;
 		}
 
-		return new MutableFloat(convertBean.toFloatValue(value));
+		return new MutableFloat(typeConverter.convert(value));
 	}
 
 }

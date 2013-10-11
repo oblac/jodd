@@ -3,18 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableByte;
-import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to {@link MutableByte}.
  */
 public class MutableByteConverter implements TypeConverter<MutableByte> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverter<Byte> typeConverter;
 
-	public MutableByteConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	@SuppressWarnings("unchecked")
+	public MutableByteConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		typeConverter = typeConverterManagerBean.lookup(Byte.class);
 	}
 
 	public MutableByte convert(Object value) {
@@ -26,7 +27,7 @@ public class MutableByteConverter implements TypeConverter<MutableByte> {
 			return (MutableByte) value;
 		}
 
-		return new MutableByte(convertBean.toByteValue(value));
+		return new MutableByte(typeConverter.convert(value));
 	}
 
 }

@@ -3,18 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableShort;
-import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to {@link MutableShort}.
  */
 public class MutableShortConverter implements TypeConverter<MutableShort> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverter<Short> typeConverter;
 
-	public MutableShortConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	@SuppressWarnings("unchecked")
+	public MutableShortConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		typeConverter = typeConverterManagerBean.lookup(Short.class);
 	}
 
 	public MutableShort convert(Object value) {
@@ -26,7 +27,7 @@ public class MutableShortConverter implements TypeConverter<MutableShort> {
 			return (MutableShort) value;
 		}
 
-		return new MutableShort(convertBean.toShortValue(value));
+		return new MutableShort(typeConverter.convert(value));
 	}
 
 }

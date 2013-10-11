@@ -3,18 +3,19 @@
 package jodd.typeconverter.impl;
 
 import jodd.mutable.MutableLong;
-import jodd.typeconverter.ConvertBean;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManagerBean;
 
 /**
  * Converts given object to a {@link MutableLong}.
  */
 public class MutableLongConverter implements TypeConverter<MutableLong> {
 
-	protected final ConvertBean convertBean;
+	protected final TypeConverter<Long> typeConverter;
 
-	public MutableLongConverter(ConvertBean convertBean) {
-		this.convertBean = convertBean;
+	@SuppressWarnings("unchecked")
+	public MutableLongConverter(TypeConverterManagerBean typeConverterManagerBean) {
+		typeConverter = typeConverterManagerBean.lookup(Long.class);
 	}
 
 	public MutableLong convert(Object value) {
@@ -26,6 +27,6 @@ public class MutableLongConverter implements TypeConverter<MutableLong> {
 			return (MutableLong) value;
 		}
 
-		return new MutableLong(convertBean.toLongValue(value));
+		return new MutableLong(typeConverter.convert(value));
 	}
 }
