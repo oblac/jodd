@@ -2,6 +2,7 @@
 
 package jodd.lagarto.dom;
 
+import jodd.lagarto.LagartoParserContext;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
@@ -40,13 +41,17 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- start/end
 
-	public void start() {
+	protected LagartoParserContext parserContext;
+
+	public void start(LagartoParserContext parserContext) {
 		if (log.isDebugEnabled()) {
 			log.debug("DomTree builder started.");
 		}
 
+		this.parserContext = parserContext;
+
 		if (rootNode == null) {
-		rootNode = createDocument();
+			rootNode = createDocument();
 		}
 		parentNode = rootNode;
 		enabled = true;
@@ -479,7 +484,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		return new Document(
 				!domBuilder.isCaseSensitive(),
 				domBuilder.isCollectErrors(),
-				domBuilder.getRenderer());
+				domBuilder.getRenderer(),
+				parserContext
+				);
 	}
 
 	/**

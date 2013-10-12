@@ -277,6 +277,8 @@ public abstract class LagartoParserEngine {
 	 * Parses HTML DOCTYPE directive.
 	 */
 	protected void parseDoctype() throws IOException {
+		int start = lexer.position();
+
 		flushText();
 		skipWhiteSpace();
 
@@ -284,7 +286,6 @@ public abstract class LagartoParserEngine {
 		boolean isPublic = false;
 		String publicId = null;
 		String uri = null;
-		int start = lexer.position();
 
 		int i = 0;
 		while (true) {
@@ -650,21 +651,20 @@ loop:	while (true) {
 	 */
 	protected void parseSpecialTag(int state) throws IOException {
 
-		int position = lexer.position();
-		int start = position + 1;
+		int start = lexer.position() + 1;
 		nextToken();
 		int end = start + lexer.length();
 		switch(state) {
 			case Lexer.XMP:
-				ctx.offset = position;
+				ctx.offset = tag.getTagPosition();
 				visitor.xmp(tag, input.subSequence(start, end - 6));
 				break;
 			case Lexer.SCRIPT:
-				ctx.offset = position;
+				ctx.offset = tag.getTagPosition();
 				visitor.script(tag, input.subSequence(start, end - 9));
 				break;
 			case Lexer.STYLE:
-				ctx.offset = position;
+				ctx.offset = tag.getTagPosition();
 				visitor.style(tag, input.subSequence(start, end - 8));
 				break;
 		}
