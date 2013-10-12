@@ -48,8 +48,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		return unclosedTagAsOrphanCheck;
 	}
 
-	public void setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
+	public LagartoDOMBuilder setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
 		this.unclosedTagAsOrphanCheck = unclosedTagAsOrphanCheck;
+		return this;
 	}
 
 	/**
@@ -60,32 +61,36 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		return useFosterRules;
 	}
 
-	public void setUseFosterRules(boolean useFosterRules) {
+	public LagartoDOMBuilder setUseFosterRules(boolean useFosterRules) {
 		this.useFosterRules = useFosterRules;
+		return this;
 	}
 
 	public boolean isParseSpecialTagsAsCdata() {
 		return parseSpecialTagsAsCdata;
 	}
 
-	public void setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
+	public LagartoDOMBuilder setParseSpecialTagsAsCdata(boolean parseSpecialTagsAsCdata) {
 		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
+		return this;
 	}
 
 	public boolean isEnableConditionalComments() {
 		return enableConditionalComments;
 	}
 
-	public void setEnableConditionalComments(boolean enableConditionalComments) {
+	public LagartoDOMBuilder setEnableConditionalComments(boolean enableConditionalComments) {
 		this.enableConditionalComments = enableConditionalComments;
+		return this;
 	}
 
 	public boolean isCalculatePosition() {
 		return calculatePosition;
 	}
 
-	public void setCalculatePosition(boolean calculatePosition) {
+	public LagartoDOMBuilder setCalculatePosition(boolean calculatePosition) {
 		this.calculatePosition = calculatePosition;
+		return this;
 	}
 
 	/**
@@ -98,8 +103,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Sets new renderer.
 	 */
-	public void setRenderer(LagartoNodeHtmlRenderer renderer) {
+	public LagartoDOMBuilder setRenderer(LagartoNodeHtmlRenderer renderer) {
 		this.renderer = renderer;
+		return this;
 	}
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
@@ -109,8 +115,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Specifies if whitespaces between open/closed tags should be ignored.
 	 */
-	public void setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
+	public LagartoDOMBuilder setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
 		this.ignoreWhitespacesBetweenTags = ignoreWhitespacesBetweenTags;
+		return this;
 	}
 
 	public boolean isCaseSensitive() {
@@ -120,8 +127,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Specifies if tag names are case sensitive.
 	 */
-	public void setCaseSensitive(boolean caseSensitive) {
+	public LagartoDOMBuilder setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
+		return this;
 	}
 
 	public boolean isIgnoreComments() {
@@ -131,8 +139,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Specifies if comments should be ignored in DOM tree.
 	 */
-	public void setIgnoreComments(boolean ignoreComments) {
+	public LagartoDOMBuilder setIgnoreComments(boolean ignoreComments) {
 		this.ignoreComments = ignoreComments;
+		return this;
 	}
 
 	public String[] getVoidTags() {
@@ -142,8 +151,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Sets void tags. If <code>null</code>, void tags are not used.
 	 */
-	public void setVoidTags(String... voidTags) {
+	public LagartoDOMBuilder setVoidTags(String... voidTags) {
 		this.voidTags = voidTags;
+		return this;
 	}
 
 	/**
@@ -174,8 +184,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Specifies if void tags should be self closed.
 	 */
-	public void setSelfCloseVoidTags(boolean selfCloseVoidTags) {
+	public LagartoDOMBuilder setSelfCloseVoidTags(boolean selfCloseVoidTags) {
 		this.selfCloseVoidTags = selfCloseVoidTags;
+		return this;
 	}
 
 	public boolean isCollectErrors() {
@@ -185,16 +196,18 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Enables error collection during parsing.
 	 */
-	public void setCollectErrors(boolean collectErrors) {
+	public LagartoDOMBuilder setCollectErrors(boolean collectErrors) {
 		this.collectErrors = collectErrors;
+		return this;
 	}
 
 	public String getConditionalCommentExpression() {
 		return conditionalCommentExpression;
 	}
 
-	public void setConditionalCommentExpression(String conditionalCommentExpression) {
+	public LagartoDOMBuilder setConditionalCommentExpression(String conditionalCommentExpression) {
 		this.conditionalCommentExpression = conditionalCommentExpression;
+		return this;
 	}
 
 	public boolean isImpliedEndTags() {
@@ -207,8 +220,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * are dealing with 'straight' html that uses closes
 	 * tags, consider switching this flag off.
 	 */
-	public void setImpliedEndTags(boolean impliedEndTags) {
+	public LagartoDOMBuilder setImpliedEndTags(boolean impliedEndTags) {
 		this.impliedEndTags = impliedEndTags;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- quick settings
