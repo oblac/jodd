@@ -15,13 +15,13 @@ public class TagAdapterWrapper implements TagVisitor {
 		this.target = target;
 	}
 
-	public void start() {
-		visitor.start();
-		target.start();
+	public void start(LagartoParserContext parserContext) {
+		visitor.start(parserContext);
+		target.start(parserContext);
 	}
 
 	public void end() {
-		visitor.start();
+		visitor.end();
 		target.end();
 	}
 

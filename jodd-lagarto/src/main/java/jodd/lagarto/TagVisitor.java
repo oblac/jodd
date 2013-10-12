@@ -7,12 +7,14 @@ package jodd.lagarto;
  */
 public interface TagVisitor {
 
-	// ---------------------------------------------------------------- start
+	// ---------------------------------------------------------------- state
 
 	/**
-	 * Invoked on very beginning of the visiting.
+	 * Invoked on very beginning of the visiting. Provides
+	 * {@link LagartoParserContext parser context} that
+	 * gives some information during the parsing process.
 	 */
-	void start();
+	void start(LagartoParserContext parserContext);
 
 	/**
 	 * Invoked at the end, after all content is visited.
@@ -20,7 +22,7 @@ public interface TagVisitor {
 	void end();
 
 
-	// ---------------------------------------------------------------- common
+	// ---------------------------------------------------------------- parsing
 
 	/**
 	 * Invoked on {@link Tag tag} (open, close or empty).

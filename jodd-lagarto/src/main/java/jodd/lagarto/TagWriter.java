@@ -34,7 +34,7 @@ public class TagWriter implements TagVisitor {
 
 	// ---------------------------------------------------------------- visitor
 
-	public void start() {
+	public void start(LagartoParserContext parserContext) {
 	}
 
 	public void end() {
