@@ -24,6 +24,7 @@ public abstract class LagartoParserEngine {
 	private CharSequence input;
 	private LagartoLexer lexer;
 	private ParsedTag tag;
+	private LagartoParserContext ctx;
 	private TagVisitor visitor;
 
 	private Token lastToken = Token.UNKNOWN;
@@ -42,6 +43,7 @@ public abstract class LagartoParserEngine {
 		this.input = input;
 		this.lexer = new LagartoLexer(input);
 		this.tag = new ParsedTag(lexer, input);
+		this.ctx = new LagartoParserContext(input);
 
 		this.buffering = false;
 		this.buffTextStart = 0;
@@ -106,21 +108,22 @@ public abstract class LagartoParserEngine {
 	protected void parse(TagVisitor visitor) {
 		this.visitor = visitor;
 
-		long time = 0;
+		this.ctx.startTime = System.currentTimeMillis();
+
 		if (log.isDebugEnabled()) {
 			log.debug("parsing started");
-			time = System.currentTimeMillis();
 		}
 		try {
 			parse();
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
-		}
-		if (log.isDebugEnabled()) {
-			if (time != 0) {
-				time = System.currentTimeMillis() - time;
+		} finally {
+			this.ctx.endTime = System.currentTimeMillis();
+			this.ctx.elapsedTime = this.ctx.endTime - this.ctx.startTime;
+
+			if (log.isDebugEnabled()) {
+				log.debug("parsing done in " + this.ctx.elapsedTime + "ms.");
 			}
-			log.debug("parsing done in " + time + "ms.");
 		}
 	}
 
@@ -134,7 +137,7 @@ public abstract class LagartoParserEngine {
 		lexer.setParseSpecialTagsAsCdata(this.parseSpecialTagsAsCdata);
 
 		// start
-		visitor.start();
+		visitor.start(ctx);
 
 		while (true) {
 			Token token = nextToken();
@@ -182,6 +185,7 @@ public abstract class LagartoParserEngine {
 	 */
 	protected void flushText() {
 		if (buffering) {
+			ctx.offset = buffTextStart;
 			visitor.text(input.subSequence(buffTextStart, buffTextEnd));
 			buffering = false;
 		}
@@ -210,7 +214,8 @@ public abstract class LagartoParserEngine {
 	protected void parseCommentOrConditionalComment() throws IOException {
 		flushText();
 
-		int start = lexer.position() + 4;		// skip "<!--"
+		int lexerPosition = lexer.position();
+		int start = lexerPosition + 4;		// skip "<!--"
 		int end = start + lexer.length() - 7;	// skip "-->"
 
 		if (
@@ -233,6 +238,7 @@ public abstract class LagartoParserEngine {
 				additionalComment = input.subSequence(ccend, end + 3);
 			}
 
+			ctx.offset = lexerPosition;
 			visitor.condComment(input.subSequence(start + 1, expressionEnd), true, true, additionalComment);
 
 			// calculate push back to the end of the starting tag
@@ -248,6 +254,7 @@ public abstract class LagartoParserEngine {
 			return;
 		}
 
+		ctx.offset = lexerPosition;
 		visitor.comment(input.subSequence(start, end));
 	}
 
@@ -256,8 +263,13 @@ public abstract class LagartoParserEngine {
 	 */
 	protected void parseCDATA() throws IOException {
 		flushText();
-		int start = lexer.position() + 9;
+
+		int position = lexer.position();
+
+		int start = position + 9;
 		int end = start + lexer.length() - 12;
+
+		ctx.offset = position;
 		visitor.cdata(input.subSequence(start, end));
 	}
 
@@ -272,6 +284,7 @@ public abstract class LagartoParserEngine {
 		boolean isPublic = false;
 		String publicId = null;
 		String uri = null;
+		int start = lexer.position();
 
 		int i = 0;
 		while (true) {
@@ -301,9 +314,11 @@ public abstract class LagartoParserEngine {
 				case 3:
 					uri = lexer.yytext(1, 1);
 					break;
-				}
+			}
 			i++;
 		}
+
+		ctx.offset = start;
 		visitor.doctype(name, publicId, uri);
 	}
 
@@ -339,6 +354,7 @@ public abstract class LagartoParserEngine {
 			i++;
 		}
 
+		ctx.offset = start;
 		visitor.condComment(input.subSequence(textStart, textEnd), true, false, null);
 	}
 
@@ -373,6 +389,7 @@ public abstract class LagartoParserEngine {
 		if (enableConditionalComments == false) {
 			if (isDownlevelHidden) {
 				// +4 and -3 to skip the <!-- and the --> the same way the parseCommentOrConditionalComment() method does.
+				ctx.offset = start;
 				visitor.comment(input.subSequence(start + 4, end - 3));
 			} else {
 				error("Conditional comments disabled");
@@ -385,6 +402,7 @@ public abstract class LagartoParserEngine {
 			additionalComment = input.subSequence(start, textStart - 3);
 		}
 
+		ctx.offset = start;
 		visitor.condComment(input.subSequence(textStart, textEnd), false, isDownlevelHidden, additionalComment);
 	}
 
@@ -493,10 +511,14 @@ loop:	while (true) {
 					return;
 				default:
 					// unexpected token, try to skip it!
-					String tokenText = text().toString();
-					if (tokenText == null) {
+					String tokenText;
+					CharSequence charSequence = text();
+					if (charSequence != null) {
+						tokenText = charSequence.toString();
+					} else {
 						tokenText = lexer.yytext();
 					}
+
 					error("Tag <" + tagName + "> invalid token: " + tokenText);
 					nextToken();	// there was a stepBack, so move forward
 					if (tokenText.length() > 1) {
@@ -545,7 +567,10 @@ loop:	while (true) {
 				if (type.isStartingTag()) {
 					tag.increaseDeepLevel();
 				}
+
+				ctx.offset = start;
 				visitor.tag(tag);
+
 				if (type.isEndingTag()) {
 					tag.decreaseDeepLevel();
 				}
@@ -556,7 +581,10 @@ loop:	while (true) {
 				tag.defineTag(type, start, len2);
 				tag.setTagMarks("<?", "?>");
 				tag.increaseDeepLevel();
+
+				ctx.offset = start;
 				visitor.xml(tag);
+
 				tag.decreaseDeepLevel();
 				break;
 			case EOF:
@@ -621,17 +649,22 @@ loop:	while (true) {
 	 * Parses special tags.
 	 */
 	protected void parseSpecialTag(int state) throws IOException {
-		int start = lexer.position() + 1;
+
+		int position = lexer.position();
+		int start = position + 1;
 		nextToken();
 		int end = start + lexer.length();
 		switch(state) {
 			case Lexer.XMP:
+				ctx.offset = position;
 				visitor.xmp(tag, input.subSequence(start, end - 6));
 				break;
 			case Lexer.SCRIPT:
+				ctx.offset = position;
 				visitor.script(tag, input.subSequence(start, end - 9));
 				break;
 			case Lexer.STYLE:
+				ctx.offset = position;
 				visitor.style(tag, input.subSequence(start, end - 8));
 				break;
 		}
