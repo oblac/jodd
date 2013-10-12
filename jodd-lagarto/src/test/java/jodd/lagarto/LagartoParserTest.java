@@ -138,7 +138,7 @@ public class LagartoParserTest {
 		final StringBuilder out2 = new StringBuilder();
 		TagVisitor visitor = new TagVisitor() {
 
-			public void start() {
+			public void start(LagartoParserContext parserContext) {
 			}
 
 			public void end() {

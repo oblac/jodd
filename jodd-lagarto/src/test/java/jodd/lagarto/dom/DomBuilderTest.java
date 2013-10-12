@@ -24,6 +24,7 @@ public class DomBuilderTest {
 		assertEquals("html", html.getNodeName());
 		assertEquals(1, html.getChildNodesCount());
 		assertEquals(0, html.getAttributesCount());
+		assertEquals(0, html.getOffset());
 
 		Element body = (Element) html.getFirstChild();
 		assertEquals(Node.NodeType.ELEMENT, body.getNodeType());
@@ -32,6 +33,7 @@ public class DomBuilderTest {
 		assertEquals(1, body.getChildNodesCount());
 		assertNull(body.getAttribute("id"));
 		assertEquals(0, body.getAttributesCount());
+		assertEquals(6, body.getOffset());
 
 		Element p = (Element) body.getChild(0);
 		assertNotNull(p);
@@ -39,6 +41,7 @@ public class DomBuilderTest {
 		assertEquals(3, p.getChildNodesCount());
 		assertEquals("w173", p.getAttribute("id"));
 		assertEquals(1, p.getAttributesCount());
+		assertEquals(12, p.getOffset());
 
 		Attribute attr = p.getAttribute(0);
 		assertEquals("id", attr.getName());
@@ -48,13 +51,16 @@ public class DomBuilderTest {
 		Text t = (Text) p.getChild(0);
 		assertEquals(Node.NodeType.TEXT, t.getNodeType());
 		assertEquals("Hello", t.getNodeValue());
+		assertEquals(25, t.getOffset());
 
 		Element br = (Element) p.getChild(1);
 		assertEquals(0, br.getChildNodesCount());
 		assertEquals(0, br.getAttributesCount());
+		assertEquals(30, br.getOffset());
 
 		t = (Text) p.getChild(2);
 		assertEquals("Jodd", t.getNodeValue());
+		assertEquals(34, t.getOffset());
 
 		String generated = root.getHtml();
 
@@ -62,6 +68,33 @@ public class DomBuilderTest {
 
 		assertTrue(root.check());
 	}
+
+	@Test
+	public void testAllTypesOffset() {
+		String page = "<!DOCTYPE html><html>text<!--comment--><xmp></xmp><style type>xx</style>";
+
+		Document root = new LagartoDOMBuilder().parse(page);
+		assertEquals(-1, root.getOffset());
+
+		DocumentType documentType = (DocumentType) root.getChild(0);
+		assertEquals(0, documentType.getOffset());
+
+		Element html = (Element) root.getChild(1);
+		assertEquals(15, html.getOffset());
+
+		Text text = (Text) html.getChild(0);
+		assertEquals(21, text.getOffset());
+
+		Comment comment = (Comment) html.getChild(1);
+		assertEquals(25, comment.getOffset());
+
+		Element xmp = (Element) html.getChild(2);
+		assertEquals(39, xmp.getOffset());
+
+		Element style = (Element) html.getChild(3);
+		assertEquals(50, style.getOffset());
+	}
+
 
 	@Test
 	public void testClone() {
