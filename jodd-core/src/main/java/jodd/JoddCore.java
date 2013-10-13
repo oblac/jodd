@@ -2,6 +2,7 @@
 
 package jodd;
 
+import jodd.io.FileUtilParams;
 import jodd.util.StringPool;
 
 /**
@@ -24,5 +25,10 @@ public class JoddCore {
 	 * Default IO buffer size (16 KB).
 	 */
 	public static int ioBufferSize = 16384;
+
+	/**
+	 * Default parameters used in {@link jodd.io.FileUtil} operations.
+	 */
+	public static FileUtilParams fileUtilParams = new FileUtilParams();
 
 }

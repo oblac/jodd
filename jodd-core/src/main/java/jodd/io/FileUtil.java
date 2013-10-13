@@ -4,6 +4,7 @@ package jodd.io;
 
 import jodd.JoddCore;
 import jodd.util.StringPool;
+import jodd.util.SystemUtil;
 import jodd.util.URLDecoder;
 
 import java.io.BufferedWriter;
@@ -23,6 +24,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
+
+import static jodd.JoddCore.fileUtilParams;
 
 /**
  * File utilities.
@@ -173,15 +176,12 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- params
 
-	// default global FileUtilParams
-	public static FileUtilParams defaultParams = new FileUtilParams();
-
 	/**
 	 * Creates new {@link FileUtilParams} instance by cloning current default params.
 	 */
 	public static FileUtilParams cloneParams() {
 		try {
-			return defaultParams.clone();
+			return fileUtilParams.clone();
 		} catch (CloneNotSupportedException ignore) {
 			return null;
 		}
@@ -200,7 +200,7 @@ public class FileUtil {
 	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static void copyFile(String src, String dest) throws IOException {
-		copyFile(file(src), file(dest), defaultParams);
+		copyFile(file(src), file(dest), fileUtilParams);
 	}
 	/**
 	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
@@ -212,7 +212,7 @@ public class FileUtil {
 	 * @see #copyFile(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static void copyFile(File src, File dest) throws IOException {
-		copyFile(src, dest, defaultParams);
+		copyFile(src, dest, fileUtilParams);
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class FileUtil {
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static File copyFileToDir(String src, String destDir) throws IOException {
-		return copyFileToDir(file(src), file(destDir), defaultParams);
+		return copyFileToDir(file(src), file(destDir), fileUtilParams);
 	}
 	/**
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
@@ -299,7 +299,7 @@ public class FileUtil {
 	 * @see #copyFileToDir(java.io.File, java.io.File, FileUtilParams)
 	 */
 	public static File copyFileToDir(File src, File destDir) throws IOException {
-		return copyFileToDir(src, destDir, defaultParams);
+		return copyFileToDir(src, destDir, fileUtilParams);
 	}
 	/**
 	 * Copies a file to folder with specified copy params and returns copied destination.
@@ -318,7 +318,7 @@ public class FileUtil {
 
 
 	public static void copyDir(String srcDir, String destDir) throws IOException {
-		copyDir(file(srcDir), file(destDir), defaultParams);
+		copyDir(file(srcDir), file(destDir), fileUtilParams);
 	}
 
 	public static void copyDir(String srcDir, String destDir, FileUtilParams params) throws IOException {
@@ -326,7 +326,7 @@ public class FileUtil {
 	}
 
 	public static void copyDir(File srcDir, File destDir) throws IOException {
-		copyDir(srcDir, destDir, defaultParams);
+		copyDir(srcDir, destDir, fileUtilParams);
 	}
 
 	/**
@@ -401,7 +401,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- move file
 
 	public static void moveFile(String src, String dest) throws IOException {
-		moveFile(file(src), file(dest), defaultParams);
+		moveFile(file(src), file(dest), fileUtilParams);
 	}
 
 	public static void moveFile(String src, String dest, FileUtilParams params) throws IOException {
@@ -409,7 +409,7 @@ public class FileUtil {
 	}
 
 	public static void moveFile(File src, File dest) throws IOException {
-		moveFile(src, dest, defaultParams);
+		moveFile(src, dest, fileUtilParams);
 	}
 
 	public static void moveFile(File src, File dest, FileUtilParams params) throws IOException {
@@ -428,8 +428,10 @@ public class FileUtil {
 			dest.delete();
 		}
 
-		if (src.renameTo(dest) == false) {
-			throw new IOException("Move failed: '" + src + "' to '" + dest + '\'');
+		final boolean rename = src.renameTo(dest);
+		if (!rename) {
+			doCopyFile(src, dest, params);
+			src.delete();
 		}
 	}
 
@@ -437,14 +439,14 @@ public class FileUtil {
 
 
 	public static void moveFileToDir(String src, String destDir) throws IOException {
-		moveFileToDir(file(src), file(destDir), defaultParams);
+		moveFileToDir(file(src), file(destDir), fileUtilParams);
 	}
 	public static void moveFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
 		moveFileToDir(file(src), file(destDir), params);
 	}
 
 	public static void moveFileToDir(File src, File destDir) throws IOException {
-		moveFileToDir(src, destDir, defaultParams);
+		moveFileToDir(src, destDir, fileUtilParams);
 	}
 	public static void moveFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
@@ -473,8 +475,10 @@ public class FileUtil {
 			dest.mkdir();
 		}
 
-		if (src.renameTo(dest) == false) {
-			throw new IOException("Move failed: '" + src + "' to '" + dest + '\'');
+		final boolean rename = src.renameTo(dest);
+		if (!rename) {
+			doCopyDirectory(src, dest, params());
+			deleteDir(src);
 		}
 	}
 
@@ -500,13 +504,13 @@ public class FileUtil {
 	// ---------------------------------------------------------------- delete dir
 
 	public static void deleteDir(String dest) throws IOException {
-		deleteDir(file(dest), defaultParams);
+		deleteDir(file(dest), fileUtilParams);
 	}
 	public static void deleteDir(String dest, FileUtilParams params) throws IOException {
 		deleteDir(file(dest), params);
 	}
 	public static void deleteDir(File dest) throws IOException {
-		deleteDir(dest, defaultParams);
+		deleteDir(dest, fileUtilParams);
 	}
 	/**
 	 * Deletes a directory.
@@ -521,13 +525,13 @@ public class FileUtil {
 
 
 	public static void cleanDir(String dest) throws IOException {
-		cleanDir(file(dest), defaultParams);
+		cleanDir(file(dest), fileUtilParams);
 	}
 	public static void cleanDir(String dest, FileUtilParams params) throws IOException {
 		cleanDir(file(dest), params);
 	}
 	public static void cleanDir(File dest) throws IOException {
-		cleanDir(dest, defaultParams);
+		cleanDir(dest, fileUtilParams);
 	}
 
 	/**
@@ -607,11 +611,11 @@ public class FileUtil {
 	}
 
 	public static char[] readChars(String fileName) throws IOException {
-		return readChars(file(fileName), defaultParams.encoding);
+		return readChars(file(fileName), fileUtilParams.encoding);
 	}
 
 	public static char[] readChars(File file) throws IOException {
-		return readChars(file, defaultParams.encoding);
+		return readChars(file, fileUtilParams.encoding);
 	}
 
 	public static char[] readChars(String fileName, String encoding) throws IOException {
@@ -736,7 +740,7 @@ public class FileUtil {
 
 
 	public static String readString(String source) throws IOException {
-		return readString(file(source), defaultParams.encoding);
+		return readString(file(source), fileUtilParams.encoding);
 	}
 
 	public static String readString(String source, String encoding) throws IOException {
@@ -744,7 +748,7 @@ public class FileUtil {
 	}
 
 	public static String readString(File source) throws IOException {
-		return readString(source, defaultParams.encoding);
+		return readString(source, fileUtilParams.encoding);
 	}
 
 	/**
@@ -778,7 +782,7 @@ public class FileUtil {
 
 
 	public static void writeString(String dest, String data) throws IOException {
-		outString(file(dest), data, defaultParams.encoding, false);
+		outString(file(dest), data, fileUtilParams.encoding, false);
 	}
 
 	public static void writeString(String dest, String data, String encoding) throws IOException {
@@ -786,7 +790,7 @@ public class FileUtil {
 	}
 
 	public static void writeString(File dest, String data) throws IOException {
-		outString(dest, data, defaultParams.encoding, false);
+		outString(dest, data, fileUtilParams.encoding, false);
 	}
 
 	public static void writeString(File dest, String data, String encoding) throws IOException {
@@ -795,7 +799,7 @@ public class FileUtil {
 
 
 	public static void appendString(String dest, String data) throws IOException {
-		outString(file(dest), data, defaultParams.encoding, true);
+		outString(file(dest), data, fileUtilParams.encoding, true);
 	}
 
 	public static void appendString(String dest, String data, String encoding) throws IOException {
@@ -803,7 +807,7 @@ public class FileUtil {
 	}
 
 	public static void appendString(File dest, String data) throws IOException {
-		outString(dest, data, defaultParams.encoding, true);
+		outString(dest, data, fileUtilParams.encoding, true);
 	}
 
 	public static void appendString(File dest, String data, String encoding) throws IOException {
@@ -852,13 +856,13 @@ public class FileUtil {
 
 
 	public static String[] readLines(String source) throws IOException {
-		return readLines(file(source), defaultParams.encoding);
+		return readLines(file(source), fileUtilParams.encoding);
 	}
 	public static String[] readLines(String source, String encoding) throws IOException {
 		return readLines(file(source), encoding);
 	}
 	public static String[] readLines(File source) throws IOException {
-		return readLines(source, defaultParams.encoding);
+		return readLines(source, fileUtilParams.encoding);
 	}
 
 	/**
@@ -1088,7 +1092,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart copy
 
 	public static void copy(String src, String dest) throws IOException {
-		copy(file(src), file(dest), defaultParams);
+		copy(file(src), file(dest), fileUtilParams);
 	}
 
 	public static void copy(String src, String dest, FileUtilParams params) throws IOException {
@@ -1096,7 +1100,7 @@ public class FileUtil {
 	}
 
 	public static void copy(File src, File dest) throws IOException {
-		copy(src, dest, defaultParams);
+		copy(src, dest, fileUtilParams);
 	}
 	/**
 	 * Smart copy. If source is a directory, copy it to destination.
@@ -1118,7 +1122,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart move
 
 	public static void move(String src, String dest) throws IOException {
-		move(file(src), file(dest), defaultParams);
+		move(file(src), file(dest), fileUtilParams);
 	}
 
 	public static void move(String src, String dest, FileUtilParams params) throws IOException {
@@ -1126,7 +1130,7 @@ public class FileUtil {
 	}
 
 	public static void move(File src, File dest) throws IOException {
-		move(src, dest, defaultParams);
+		move(src, dest, fileUtilParams);
 	}
 	/**
 	 * Smart move. If source is a directory, move it to destination.
@@ -1149,7 +1153,7 @@ public class FileUtil {
 	// ---------------------------------------------------------------- smart delete
 
 	public static void delete(String dest) throws IOException {
-		delete(file(dest), defaultParams);
+		delete(file(dest), fileUtilParams);
 	}
 
 	public static void delete(String dest, FileUtilParams params) throws IOException {
@@ -1157,7 +1161,7 @@ public class FileUtil {
 	}
 
 	public static void delete(File dest) throws IOException {
-		delete(dest, defaultParams);
+		delete(dest, fileUtilParams);
 	}
 
 	/**
@@ -1292,6 +1296,29 @@ public class FileUtil {
 				}
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------- symlink
+
+	/**
+	 * Determines whether the specified file is a symbolic link rather than an actual file.
+	 * Always returns <code>false</code> on Windows.
+	 */
+	public static boolean isSymlink(final File file) throws IOException {
+		if (SystemUtil.isHostWindows()) {
+			return false;
+		}
+
+		File fileInCanonicalDir;
+
+		if (file.getParent() == null) {
+			fileInCanonicalDir = file;
+		} else {
+			File canonicalDir = file.getParentFile().getCanonicalFile();
+			fileInCanonicalDir = new File(canonicalDir, file.getName());
+		}
+
+		return !fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile());
 	}
 
 }
