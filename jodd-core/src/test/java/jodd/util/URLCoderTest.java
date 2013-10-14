@@ -22,7 +22,7 @@ import static jodd.util.URLCoder.encodeUserInfo;
 import static jodd.util.URLDecoder.decode;
 import static org.junit.Assert.assertEquals;
 
-public class URLCoderTest {	
+public class URLCoderTest {
 	
 	@Test
 	public void testEncodeScheme() {
@@ -176,20 +176,11 @@ public class URLCoderTest {
 	}
 
 	@Test
-	public void testPathAll() throws URISyntaxException {
-		for (char c = 0; c < 128; c++) {
-			String s = new URI("a", "a", "/" + c, null, null).toString();
-			assertEquals(s.substring(6), URLCoder.encodePath(String.valueOf(c)));
-		}
-	}
-
-	@Test
 	public void testUrlBuilder() {
 		assertEquals("http://jodd.org", URLCoder.build("http://jodd.org").toString());
 		assertEquals("http://jodd.org?param=jodd%26java", URLCoder.build("http://jodd.org").queryParam("param", "jodd&java").toString());
 		assertEquals("http://jodd.org?pa%20ram=jodd%2Bjava", URLCoder.build("http://jodd.org").queryParam("pa ram", "jodd+java").toString());
 		assertEquals("/foo?foo=one&bar=two", URLCoder.build("/foo").queryParam("foo", "one").queryParam("bar", "two").toString());
 	}
-
 
 }
