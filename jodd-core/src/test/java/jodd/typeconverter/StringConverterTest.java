@@ -18,7 +18,7 @@ public class StringConverterTest {
 		assertNull(stringConverter.convert(null));
 
 		assertEquals("123", stringConverter.convert("123"));
-		assertEquals("AB", stringConverter.convert(arrb((byte) 65, (byte) 66)));
+		assertEquals("AB", stringConverter.convert(arrb(65, 66)));
 		assertEquals("Ab", stringConverter.convert(arrc('A', 'b')));
 		assertEquals("One,two", stringConverter.convert(arrs("One", "two")));
 		assertEquals("123", stringConverter.convert(Integer.valueOf(123)));

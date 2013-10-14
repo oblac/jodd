@@ -35,10 +35,6 @@ public final class TypeConverterTestHelper {
 		return v;
 	}
 
-	public static byte[] arrb(byte... v) {
-		return v;
-	}
-
 	public static byte[] arrb(int... v) {
 		byte[] bytes = new byte[v.length];
 
@@ -49,8 +45,14 @@ public final class TypeConverterTestHelper {
 		return bytes;
 	}
 
-	public static short[] arrs(short... v) {
-		return v;
+	public static short[] arrs(int... v) {
+		short[] shorts = new short[v.length];
+
+		for (int i = 0; i < shorts.length; i++) {
+			shorts[i] = (short) v[i];
+		}
+
+		return shorts;
 	}
 
 	public static char[] arrc(char... v) {
