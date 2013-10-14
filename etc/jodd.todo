@@ -4,10 +4,8 @@ General Tasks:
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
-	- Add more TypeConverters! @next @v3.4.8
+	- Add more TypeConverters! @next @v3.4.8 @done
 		See that json lib used in other project - nice list of possible converters		
-	- TypeConversions: custom types @next @v3.4.8
-	- TypeConversions: collections @next @v3.4.8
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
 	- Check FileUtil.move/copy dir/file variants @soon
@@ -30,7 +28,7 @@ Site/Documentation:
 	- sitemap generator
 	- description meta tag add
 	- fix line number # anchors @next @sitebuilder
-	- write about manual Madvoc @next @v3.4.8
+	- write about manual Madvoc configuration @next
 	- improve <var> in docs
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
@@ -65,7 +63,7 @@ EMail:
 	- Add suport for EML attachments @done @v3.4.7
 	- Add util to parse EML! @done @v3.4.7
 	- Fix various NPEs @done @v3.4.8
-	- Add callback method for receive() @next @v3.4.8
+	- Add callback method for receive() @next @v3.4.9
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
