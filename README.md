@@ -80,3 +80,5 @@ Every other time:
 + send us a pull request (PR)
 
 We will pickup up from there:)
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
