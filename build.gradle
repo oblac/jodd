@@ -8,8 +8,8 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '3.4.9-SNAPSHOT'
-version = '3.4.8'
+version = '3.4.9-SNAPSHOT'
+//version = '3.4.8'
 
 ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
@@ -37,7 +37,12 @@ ext {
 							'org.apache.tomcat.embed:tomcat-embed-core:7.0.40',
 							'org.apache.tomcat.embed:tomcat-embed-jasper:7.0.40',
 							'org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.40',
-							'org.apache.tomcat.embed:tomcat-embed-logging-log4j:7.0.40']
+							'org.apache.tomcat.embed:tomcat-embed-logging-log4j:7.0.40'],
+
+		// Animal Sniffer Ant Task and Java 1.5 API signature file
+		// not using 1.9 for the time being due to MANIMALSNIFFER-34
+		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.8',
+		java15_signature: 'org.codehaus.mojo.signature:java15:1.0@signature',
 	]
 
 	// common manifest data
@@ -101,6 +106,7 @@ configure(javaModules()) {
 
 	tasks.withType(Compile) {
 		options.encoding = 'UTF-8'
+		options.compilerArgs << "-Xlint:-options"
 	}
 	compileJava.options.debug = true
 	compileJava.options.fork = true
@@ -207,6 +213,44 @@ configure(javaModules()) {
 				stylesheetFile = file('src/main/javadoc/jodd.css')
 				source = '1.5'
 			}
+		}
+	}
+
+	// Animal Sniffer
+	configurations {
+		animalSniffer
+		javaApiSignature
+	}
+
+	dependencies {
+		animalSniffer(lib.animal_sniffer)
+    	javaApiSignature(lib.java15_signature)
+    }
+
+	// copy the resolved Animal Sniffer signature dependency artifact to a known location and name
+	task copyJavaApiSignature(type: Copy) {
+		from configurations.javaApiSignature
+		into "$buildDir/javaApiSignature/"
+		rename '.*signature', 'javaApi.signature'
+	}
+
+	// prepare the Animal Sniffer signature copy every time (before) we compile
+	compileJava.dependsOn copyJavaApiSignature
+
+	// and then after compilation, run the Animal Sniffer tool
+	compileJava << {
+		print "$buildDir/javaApiSignature/"
+		ant.taskdef(
+				name: 'animalSniffer',
+				classname: 'org.codehaus.mojo.animal_sniffer.ant.CheckSignatureTask',
+				classpath: configurations.animalSniffer.asPath
+		)
+
+		ant.animalSniffer(
+				signature: "$buildDir/javaApiSignature/javaApi.signature",
+				classpath: sourceSets.main.compileClasspath.asPath) {
+			path(path: sourceSets.main.output.classesDir)
+			ignore(className: "java.nio.CharBuffer")
 		}
 	}
 }
