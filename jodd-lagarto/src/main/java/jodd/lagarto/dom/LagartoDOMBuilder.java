@@ -39,6 +39,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	protected String[] voidTags = HTML5_VOID_TAGS;
 	protected boolean impliedEndTags;
 	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
+	protected int parsingErrorLogLevel = 4;
 
 	// special flags
 	protected boolean useFosterRules;
@@ -223,6 +224,32 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	public LagartoDOMBuilder setImpliedEndTags(boolean impliedEndTags) {
 		this.impliedEndTags = impliedEndTags;
 		return this;
+	}
+
+	/**
+	 * Returns parsing error log level as a integer.
+	 */
+	public int getParsingErrorLogLevel() {
+		return parsingErrorLogLevel;
+	}
+
+	/**
+	 * Sets parsing error log level as a name.
+	 */
+	public void setParsingErrorLogLevelName(String logLevel) {
+		logLevel = logLevel.trim().toUpperCase();
+
+		if (logLevel.equals("ERROR")) {
+			parsingErrorLogLevel = 5;
+		} else if (logLevel.equals("WARN")) {
+			parsingErrorLogLevel = 4;
+		} else if (logLevel.equals("INFO")) {
+			parsingErrorLogLevel = 3;
+		} else if (logLevel.equals("DEBUG")) {
+			parsingErrorLogLevel = 2;
+		} else if (logLevel.equals("TRACE")) {
+			parsingErrorLogLevel = 1;
+		}
 	}
 
 	// ---------------------------------------------------------------- quick settings

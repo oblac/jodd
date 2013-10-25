@@ -39,7 +39,11 @@ public class StuckTest {
 		StringOutputStream out = new StringOutputStream("UTF-8");
 		StreamUtil.copy(in, out);
 
-		Jerry doc = Jerry.jerry(out.toString());
+
+		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
+//		LagartoDOMBuilder lagartoDOMBuilder = (LagartoDOMBuilder) jerryParser.getDOMBuilder();
+//		lagartoDOMBuilder.setParsingErrorLogLevelName("ERROR");
+		Jerry doc = jerryParser.parse(out.toString());
 
 		// parse
 		try {

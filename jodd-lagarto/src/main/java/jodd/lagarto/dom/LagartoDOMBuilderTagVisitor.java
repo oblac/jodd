@@ -470,9 +470,14 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	public void error(String message) {
 		rootNode.addError(message);
 
-		if (log.isWarnEnabled()) {
-			log.warn(message);
+		switch (domBuilder.getParsingErrorLogLevel()) {
+			case 5: log.error(message); break;
+			case 4: log.warn(message); break;
+			case 3: log.info(message); break;
+			case 2: log.debug(message); break;
+			case 1: log.trace(message); break;
 		}
+
 	}
 
 	// ---------------------------------------------------------------- factory
