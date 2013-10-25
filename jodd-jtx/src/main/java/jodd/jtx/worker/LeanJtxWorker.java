@@ -67,9 +67,8 @@ public class LeanJtxWorker {
 		if (tx == null) {
 			return false;
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("commit tx");
-		}
+		log.debug("commit tx");
+
 		tx.commit();
 		return true;
 	}
@@ -85,15 +84,13 @@ public class LeanJtxWorker {
 			if (tx == null) {
 				return false;
 			}
-			if (log.isDebugEnabled()) {
-				log.debug("set rollback only tx");
-			}
+			log.debug("set rollback only tx");
+
 			tx.setRollbackOnly(cause);
 			return false;
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("rollback tx");
-		}
+		log.debug("rollback tx");
+
 		tx.rollback();
 		return true;
 	}

@@ -45,9 +45,8 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	public DbSession beginTransaction(JtxTransactionMode jtxMode, boolean active) {
 		DbSession session = new DbSession(connectionProvider);
 		if (active) {
-			if (log.isDebugEnabled()) {
-				log.debug("begin jtx");
-			}
+			log.debug("begin jtx");
+
 			session.beginTransaction(JtxDbUtil.convertToDbMode(jtxMode));
 		}
 		return session;
@@ -58,9 +57,8 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	 */
 	public void commitTransaction(DbSession resource) {
 		if (resource.isTransactionActive()) {
-			if (log.isDebugEnabled()) {
-				log.debug("commit jtx");
-			}
+			log.debug("commit jtx");
+
 			resource.commitTransaction();
 		}
 		resource.closeSession();
@@ -72,9 +70,8 @@ public class DbJtxResourceManager implements JtxResourceManager<DbSession> {
 	public void rollbackTransaction(DbSession resource) {
 		try {
 			if (resource.isTransactionActive()) {
-				if (log.isDebugEnabled()) {
-					log.debug("rollback tx");
-				}
+				log.debug("rollback tx");
+
 				resource.rollbackTransaction();
 			}
 		} catch (Exception ex) {

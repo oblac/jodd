@@ -42,7 +42,9 @@ public abstract class AuthorizationInterceptor extends ActionInterceptor {
 		}
 
 		if (authorize(actionRequest, userSession) == false) {
-			log.info("access denied for: " + userSession);
+			if (log.isInfoEnabled()) {
+				log.info("access denied for: " + userSession);
+			}
 
 			servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -53,7 +55,9 @@ public abstract class AuthorizationInterceptor extends ActionInterceptor {
 			}
 		}
 
-		log.info("access granted for: " + userSession);
+		if (log.isInfoEnabled()) {
+			log.info("access granted for: " + userSession);
+		}
 
 		return actionRequest.invoke();
 	}

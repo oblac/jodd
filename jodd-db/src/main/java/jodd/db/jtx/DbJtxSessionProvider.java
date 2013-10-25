@@ -30,9 +30,7 @@ public class DbJtxSessionProvider implements DbSessionProvider {
 	 * Returns session from JTX transaction manager and started transaction.
 	 */
 	public DbSession getDbSession() {
-		if (log.isDebugEnabled()) {
-			log.debug("Requesting db TX manager session");
-		}
+		log.debug("Requesting db TX manager session");
 
 		DbJtxTransaction jtx = (DbJtxTransaction) jtxTxManager.getTransaction();
 

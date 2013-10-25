@@ -109,10 +109,8 @@ public abstract class LagartoParserEngine {
 		this.visitor = visitor;
 
 		this.ctx.startTime = System.currentTimeMillis();
+		log.debug("parsing started");
 
-		if (log.isDebugEnabled()) {
-			log.debug("parsing started");
-		}
 		try {
 			parse();
 		} catch (IOException ioex) {

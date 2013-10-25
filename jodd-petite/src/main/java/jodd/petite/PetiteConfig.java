@@ -160,9 +160,7 @@ public class PetiteConfig {
 	 */
 	public void setUseParamo(boolean useParamo) {
 		if (Jodd.isProxettaLoaded() == false) {
-			if (log.isWarnEnabled()) {
-				log.warn("Feature not available without Proxetta");
-			}
+			log.warn("Feature not available without Proxetta");
 			return;
 		}
 		this.useParamo = useParamo;
@@ -183,9 +181,7 @@ public class PetiteConfig {
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
 		if (Jodd.isProxettaLoaded() == false) {
-			if (log.isWarnEnabled()) {
-				log.warn("Feature not available without Proxetta");
-			}
+			log.warn("Feature not available without Proxetta");
 			return;
 		}
 		this.wireScopedProxy = wireScopedProxy;
@@ -204,9 +200,7 @@ public class PetiteConfig {
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
 		if (Jodd.isProxettaLoaded() == false) {
-			if (log.isWarnEnabled()) {
-				log.warn("Feature not available without Proxetta");
-			}
+			log.warn("Feature not available without Proxetta");
 			return;
 		}
 		this.detectMixedScopes = detectMixedScopes;

@@ -18,9 +18,7 @@ public class ThreadDbSessionProvider implements DbSessionProvider {
 	 * {@inheritDoc}
 	 */
 	public DbSession getDbSession() {
-		if (log.isDebugEnabled()) {
-			log.debug("Requesting thread session");
-		}
+		log.debug("Requesting thread session");
 
 		DbSession session = ThreadDbSessionHolder.get();
 

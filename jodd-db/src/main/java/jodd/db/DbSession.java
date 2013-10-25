@@ -44,9 +44,8 @@ public class DbSession {
 	 * Creates new database session with default transaction mode and in autocommit mode.
 	 */
 	public DbSession(ConnectionProvider connectionProvider) {
-		if (log.isDebugEnabled()) {
-			log.debug("Creating new db session");
-		}
+		log.debug("Creating new db session");
+
 		if (connectionProvider == null) {
 			connectionProvider = dbManager.connectionProvider;
 			if (connectionProvider == null) {
@@ -67,9 +66,8 @@ public class DbSession {
 	 * Closed session is no longer available for usage.
 	 */
 	public void closeSession() {
-		if (log.isDebugEnabled()) {
-			log.debug("Closing db session");
-		}
+		log.debug("Closing db session");
+
 		List<SQLException> allsexs = null;
 		for (DbQueryBase query : queries) {
             List<SQLException> sexs = query.closeQuery();
@@ -217,9 +215,8 @@ public class DbSession {
 	 * Starts a transaction.
 	 */
 	public void beginTransaction(DbTransactionMode mode) {
-		if (log.isDebugEnabled()) {
-			log.debug("Beginning transaction");
-		}
+		log.debug("Beginning transaction");
+
 		checkClosedTx();
 		this.txMode = mode;
 		openTx();
@@ -237,9 +234,8 @@ public class DbSession {
 	 * Transaction mode is closed.
 	 */
 	public void commitTransaction() {
-		if (log.isDebugEnabled()) {
-			log.debug("Committing transaction");
-		}
+		log.debug("Committing transaction");
+
 		checkActiveTx();
 		try {
 			connection.commit();
@@ -254,9 +250,8 @@ public class DbSession {
 	 * Roll back the current transaction. Transaction mode is closed.
 	 */
 	public void rollbackTransaction() {
-		if (log.isDebugEnabled()) {
-			log.debug("Rolling-back transaction");
-		}
+		log.debug("Rolling-back transaction");
+
 		checkActiveTx();
 		try {
 			connection.rollback();

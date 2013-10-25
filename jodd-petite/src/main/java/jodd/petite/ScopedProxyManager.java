@@ -39,9 +39,7 @@ public class ScopedProxyManager {
 	protected Map<String, Object> proxies = new HashMap<String, Object>();
 
 	public ScopedProxyManager() {
-		if (log.isDebugEnabled()) {
-			log.debug("ScopedProxyManager created");
-		}
+		log.debug("ScopedProxyManager created");
 	}
 
 	/**

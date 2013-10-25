@@ -55,9 +55,8 @@ public abstract class AuthenticationInterceptor extends ActionInterceptor {
 
 		// LOGOUT
 		if (isLogoutAction(actionPath) == true) {
-			if (log.isDebugEnabled()) {
-				log.debug("logout user");
-			}
+			log.debug("logout user");
+
 			closeAuthSession(servletRequest, servletResponse);
 			return resultLogoutSuccess();
 		}
@@ -91,9 +90,8 @@ public abstract class AuthenticationInterceptor extends ActionInterceptor {
 			userSession = loginViaCookie(cookieData);
 
 			if (userSession != null) {
-				if (log.isDebugEnabled()) {
-					log.debug("login with cookie");
-				}
+				log.debug("login with cookie");
+
 				startAuthSession(servletRequest, servletResponse, userSession, false);
 
 				if (isLoginAction(actionPath)) {
@@ -110,9 +108,8 @@ public abstract class AuthenticationInterceptor extends ActionInterceptor {
 		if (isRegisterAction(actionPath)) {
 			Object newUserSession = AuthUtil.getNewUserSession(servletRequest);
 			if (newUserSession != null) {
-				if (log.isDebugEnabled()) {
-					log.debug("new user session created");
-				}
+				log.debug("new user session created");
+
 				startAuthSession(servletRequest, servletResponse, newUserSession, true);
 				return resultRegistrationSuccess();
 			}

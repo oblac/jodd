@@ -44,9 +44,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	protected LagartoParserContext parserContext;
 
 	public void start(LagartoParserContext parserContext) {
-		if (log.isDebugEnabled()) {
-			log.debug("DomTree builder started.");
-		}
+		log.debug("DomTree builder started.");
 
 		this.parserContext = parserContext;
 
