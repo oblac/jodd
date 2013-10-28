@@ -23,7 +23,7 @@ class Fields {
 	}
 
 	void addField(String name, Field field) {
-		fieldsMap.put(name, new FieldDescriptor(classDescriptor, field));
+		fieldsMap.put(name, classDescriptor.createFieldDescriptor(field));
 
 		// reset cache
 		allFields = null;

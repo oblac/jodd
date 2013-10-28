@@ -113,6 +113,13 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- fields
 
+	/**
+	 * Creates new {@code FieldDescriptor}.
+	 */
+	protected FieldDescriptor createFieldDescriptor(Field field) {
+		return new FieldDescriptor(this, field);
+	}
+
 	protected Fields publicFields;
 	protected Fields allFields;
 
