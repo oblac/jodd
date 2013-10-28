@@ -49,7 +49,7 @@ class BeanUtilUtil {
 
 			value = convertType(value, paramTypes[0]);
 
-			md.getMethod().invoke(bean, value);
+			md.invoke(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke setter: " +
 					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
@@ -62,7 +62,7 @@ class BeanUtilUtil {
 	 */
 	protected Object invokeGetter(Object bean, MethodDescriptor md) {
 		try {
-			return md.getMethod().invoke(bean);
+			return md.invoke(bean);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke getter: " +
 					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
