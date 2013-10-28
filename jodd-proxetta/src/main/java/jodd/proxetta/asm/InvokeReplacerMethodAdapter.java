@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.asm.MethodAdapter;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
@@ -117,10 +117,10 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 
 		switch (opcode) {
 			case INVOKEINTERFACE:
-				desc = prependArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
+				desc = prependArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_OBJECT);
 				break;
 			case INVOKEVIRTUAL:
-				desc = prependArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
+				desc = prependArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_OBJECT);
 				break;
 			case INVOKESTATIC:
 				break;
@@ -130,23 +130,23 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 
 		// additional arguments
 		if (ir.isPassOwnerName()) {
-			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
+			desc = appendArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(exOwner);
 		}
 		if (ir.isPassMethodName()) {
-			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
+			desc = appendArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(methodInfo.getMethodName());
 		}
 		if (ir.isPassMethodSignature()) {
-			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_STRING);
+			desc = appendArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 			super.visitLdcInsn(methodInfo.getSignature());
 		}
 		if (ir.isPassTargetClass()) {
-			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_CLASS);
+			desc = appendArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_CLASS);
 			super.mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
 		}
 		if (ir.isPassThis()) {
-			desc = appendArgument(desc, AsmConst.L_SIGNATURE_JAVA_LANG_OBJECT);
+			desc = appendArgument(desc, AsmUtil.L_SIGNATURE_JAVA_LANG_OBJECT);
 			super.mv.visitVarInsn(ALOAD, 0);
 		}
 

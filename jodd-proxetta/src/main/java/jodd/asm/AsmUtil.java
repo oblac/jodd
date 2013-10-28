@@ -9,6 +9,64 @@ import jodd.mutable.MutableInteger;
  */
 public class AsmUtil {
 
+	// types
+
+	public static final int TYPE_BYTE           = 'B';
+	public static final int TYPE_CHAR           = 'C';
+	public static final int TYPE_DOUBLE         = 'D';
+	public static final int TYPE_FLOAT          = 'F';
+	public static final int TYPE_INT            = 'I';
+	public static final int TYPE_LONG           = 'J';
+	public static final int TYPE_REFERENCE      = 'L';
+	public static final int TYPE_SHORT          = 'S';
+	public static final int TYPE_BOOLEAN        = 'Z';
+	public static final int TYPE_VOID           = 'V';
+	public static final int TYPE_ARRAY          = '[';
+//	public static final int TYPE_STRING         = 's';
+//	public static final int TYPE_ENUM           = 'e';
+//	public static final int TYPE_CLASS          = 'c';
+	public static final int TYPE_ANNOTATION     = '@';
+
+	// access flags
+
+	public static final int ACC_PUBLIC = 0x0001;        // class, field, method
+	public static final int ACC_PRIVATE = 0x0002;       // class, field, method
+	public static final int ACC_PROTECTED = 0x0004;     // class, field, method
+	public static final int ACC_STATIC = 0x0008;        // field, method
+	public static final int ACC_FINAL = 0x0010;         // class, field, method
+	public static final int ACC_SUPER = 0x0020;         // class
+	public static final int ACC_SYNCHRONIZED = 0x0020;  // method
+	public static final int ACC_VOLATILE = 0x0040;      // field
+	public static final int ACC_BRIDGE = 0x0040;        // method
+	public static final int ACC_VARARGS = 0x0080;       // method
+	public static final int ACC_TRANSIENT = 0x0080;     // field
+	public static final int ACC_NATIVE = 0x0100;        // method
+	public static final int ACC_INTERFACE = 0x0200;     // class
+	public static final int ACC_ABSTRACT = 0x0400;      // class, method
+	public static final int ACC_STRICT = 0x0800;        // method
+	public static final int ACC_SYNTHETIC = 0x1000;     // class, field, method
+	public static final int ACC_ANNOTATION = 0x2000;    // class
+	public static final int ACC_ENUM = 0x4000;          // class(?) field inner
+
+
+	// signatures
+
+	public static final String SIGNATURE_JAVA_LANG_OBJECT 		= "java/lang/Object";
+	public static final String SIGNATURE_JAVA_LANG_CLASS 		= "java/lang/Class";
+	public static final String SIGNATURE_JAVA_LANG_BYTE 		= "java/lang/Byte";
+	public static final String SIGNATURE_JAVA_LANG_CHARACTER 	= "java/lang/Character";
+	public static final String SIGNATURE_JAVA_LANG_SHORT 		= "java/lang/Short";
+	public static final String SIGNATURE_JAVA_LANG_INTEGER 		= "java/lang/Integer";
+	public static final String SIGNATURE_JAVA_LANG_BOOLEAN 		= "java/lang/Boolean";
+	public static final String SIGNATURE_JAVA_LANG_LONG 		= "java/lang/Long";
+	public static final String SIGNATURE_JAVA_LANG_FLOAT 		= "java/lang/Float";
+	public static final String SIGNATURE_JAVA_LANG_DOUBLE 		= "java/lang/Double";
+	public static final String SIGNATURE_JAVA_LANG_VOID 		= "java/lang/Void";
+
+	public static final String L_SIGNATURE_JAVA_LANG_OBJECT 	= "Ljava/lang/Object;";
+	public static final String L_SIGNATURE_JAVA_LANG_STRING 	= "Ljava/lang/String;";
+	public static final String L_SIGNATURE_JAVA_LANG_CLASS 		= "Ljava/lang/Class;";
+
 	private static final String INVALID_BASE_TYPE = "Invalid base type: ";
 	private static final String INVALID_TYPE_DESCRIPTION = "Invalid type description: ";
 
@@ -54,7 +112,7 @@ public class AsmUtil {
 	 * Converts type reference to java-name.
 	 */
 	public static String typeref2Name(String desc) {
-		if (desc.charAt(0) != AsmConst.TYPE_REFERENCE) {
+		if (desc.charAt(0) != TYPE_REFERENCE) {
 			throw new IllegalArgumentException(INVALID_TYPE_DESCRIPTION + desc);
 		}
 		String name = desc.substring(1, desc.length() - 1);

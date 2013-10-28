@@ -2,7 +2,7 @@
 
 package jodd.proxetta.pointcuts;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxyPointcut;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.AnnotationInfo;
@@ -21,7 +21,7 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method is public.
 	 */
 	public boolean isPublic(MethodInfo methodInfo) {
-		return (methodInfo.getAccessFlags() & AsmConst.ACC_PUBLIC) != 0;
+		return (methodInfo.getAccessFlags() & AsmUtil.ACC_PUBLIC) != 0;
 	}
 
 	/**
@@ -125,7 +125,7 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method is declared in <code>Object</code> class (root class).
 	 */
 	public boolean isRootMethod(MethodInfo methodInfo) {
-		return AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(methodInfo.getDeclaredClassName());
+		return AsmUtil.SIGNATURE_JAVA_LANG_OBJECT.equals(methodInfo.getDeclaredClassName());
 	}
 
 	/**
@@ -162,14 +162,14 @@ public abstract class ProxyPointcutSupport implements ProxyPointcut {
 	 * Returns <code>true</code> if method's return type is <code>void</code>.
 	 */
 	public boolean hasNoReturnValue(MethodInfo methodInfo) {
-		return methodInfo.getReturnOpcodeType() == AsmConst.TYPE_VOID;
+		return methodInfo.getReturnOpcodeType() == AsmUtil.TYPE_VOID;
 	}
 
 	/**
 	 * Returns <code>true</code> if method has a return type.
 	 */
 	public boolean hasReturnValue(MethodInfo methodInfo) {
-		return methodInfo.getReturnOpcodeType() != AsmConst.TYPE_VOID;
+		return methodInfo.getReturnOpcodeType() != AsmUtil.TYPE_VOID;
 	}
 
 

@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.asm.MethodAdapter;
 import jodd.asm4.FieldVisitor;
 import jodd.asm4.Label;
@@ -156,7 +156,7 @@ final class ProxyAspectData {
 						throw new ProxettaException("Invalid static initialization block description for advice: " + advice.getName());
 					}
 					name = clinitMethodName + methodDivider + aspectIndex;
-					access |= AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL;
+					access |= AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL;
 					wd.addAdviceClinitMethod(name);
 					return new MethodAdapter(wd.dest.visitMethod(access, name, desc, signature, exceptions)) {
 

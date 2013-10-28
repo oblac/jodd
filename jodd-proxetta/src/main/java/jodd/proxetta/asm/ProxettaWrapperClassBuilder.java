@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxyAspect;
 import jodd.asm4.ClassVisitor;
 import jodd.asm4.FieldVisitor;
@@ -53,11 +53,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// no superclass
-		wd.superName = AsmConst.SIGNATURE_JAVA_LANG_OBJECT;
+		wd.superName = AsmUtil.SIGNATURE_JAVA_LANG_OBJECT;
 
 		// change access of destination
-		access &= ~AsmConst.ACC_ABSTRACT;
-		access &= ~AsmConst.ACC_INTERFACE;
+		access &= ~AsmUtil.ACC_ABSTRACT;
+		access &= ~AsmUtil.ACC_INTERFACE;
 
 		// write destination class
 		if (targetClassOrInterface.isInterface()) {
@@ -87,7 +87,7 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		// create new field wrapper field and store it's reference into work-data
 		wd.wrapperRef = targetFieldName;
 		wd.wrapperType = 'L' + name + ';';
-		FieldVisitor fv  = wd.dest.visitField(AsmConst.ACC_PUBLIC, wd.wrapperRef, wd.wrapperType, null, null);
+		FieldVisitor fv  = wd.dest.visitField(AsmUtil.ACC_PUBLIC, wd.wrapperRef, wd.wrapperType, null, null);
 		fv.visitEnd();
 
 		createEmptyCtor();
@@ -97,10 +97,10 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 	 * Created empty default constructor.
 	 */
 	protected void createEmptyCtor() {
-		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PUBLIC, INIT, "()V", null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PUBLIC, INIT, "()V", null, null);
 		mv.visitCode();
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmConst.SIGNATURE_JAVA_LANG_OBJECT, INIT, "()V");
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT, INIT, "()V");
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();

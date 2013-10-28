@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.asm4.MethodVisitor;
 import jodd.asm4.AnnotationVisitor;
 import jodd.asm4.Type;
@@ -95,7 +95,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	protected void createFirstChainDelegate_Start() {
 		// check invalid access flags
 		int access = msign.getAccessFlags();
-		if ((access & AsmConst.ACC_FINAL) != 0) {   // detect final
+		if ((access & AsmUtil.ACC_FINAL) != 0) {   // detect final
 			throw new ProxettaException("Unable to create proxy for final method: " + msign +". Remove final modifier or change the pointcut definition.");
 		}
 
@@ -278,7 +278,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmConst.SIGNATURE_JAVA_LANG_OBJECT);
+									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT);
 									for (int i = 0; i < argsCount; i++) {
 										mv.visitInsn(DUP);
 										pushInt(mv, i);
@@ -291,7 +291,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								if (isCreateArgumentsClassArrayMethod(mname, mdesc)) {     // [R11]
 									int argsCount = td.msign.getArgumentsCount();
 									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmConst.SIGNATURE_JAVA_LANG_CLASS);
+									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_CLASS);
 									for (int i = 0; i < argsCount; i++) {
 										mv.visitInsn(DUP);
 										pushInt(mv, i);

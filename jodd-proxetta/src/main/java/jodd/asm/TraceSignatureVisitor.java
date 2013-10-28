@@ -184,7 +184,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {
     }
 
     public void visitClassType(final String name) {
-        if (AsmConst.SIGNATURE_JAVA_LANG_OBJECT.equals(name)) {
+        if (AsmUtil.SIGNATURE_JAVA_LANG_OBJECT.equals(name)) {
             // Map<java.lang.Object,java.util.List>
             // or
             // abstract public V get(Object key); (seen in Dictionary.class)

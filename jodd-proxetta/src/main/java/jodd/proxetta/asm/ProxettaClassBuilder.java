@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.proxetta.ProxettaException;
 import jodd.asm4.ClassVisitor;
 import jodd.asm4.MethodVisitor;
@@ -74,7 +74,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		wd.init(name, superName, this.suffix, this.reqProxyClassName);
 
 		// change access of destination
-		access &= ~AsmConst.ACC_ABSTRACT;
+		access &= ~AsmUtil.ACC_ABSTRACT;
 
 		// write destination class
 		wd.dest.visit(version, access, wd.thisReference, signature, wd.superName, null);
@@ -156,7 +156,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 */
 	protected void makeStaticInitBlock() {
 		if (wd.adviceClinits != null) {
-			MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_STATIC, CLINIT, DESC_VOID, null, null);
+			MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_STATIC, CLINIT, DESC_VOID, null, null);
 			mv.visitCode();
 			for (String name : wd.adviceClinits) {
 				mv.visitMethodInsn(INVOKESTATIC, wd.thisReference, name, DESC_VOID);
@@ -172,7 +172,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 	 * This created init method is called from each destination's constructor.
 	 */
 	protected void makeProxyConstructor() {
-		MethodVisitor mv = wd.dest.visitMethod(AsmConst.ACC_PRIVATE | AsmConst.ACC_FINAL, initMethodName, DESC_VOID, null, null);
+		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PRIVATE | AsmUtil.ACC_FINAL, initMethodName, DESC_VOID, null, null);
 		mv.visitCode();
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {

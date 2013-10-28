@@ -5,29 +5,30 @@ General Tasks:
 	- add efficient text searches
 		Check various algorithms, like BM etc.
 	- Add more TypeConverters! @next @v3.4.8 @done
-		See that json lib used in other project - nice list of possible converters		
+		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
-	- Check FileUtil.move/copy dir/file variants @soon
+	- Check FileUtil.move/copy dir/file variants
+		Try to see which variant is the fastest one. Noticed a slow execution in @sitegenerator
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
 	- FindFile with includes/excludes @v3.4.5 @done
 	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
-	- copy file was somewhat slow? @tbd @next
 	- URLCoder improvded @done @v3.4.7
-	- ReThink log dependency @tbd
+	- ReThink log dependency @soon 
+		SLF4J has week interface - ie it does not have general log methods - but it has many with specific Markers.
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
-	- migrate from google groups to nabble?getsatisfied? @tbd
+	- migrate from google groups to nabble? getsatisfied? anything? @tbd
 	- add blog? @tbd
-	- improve SEO somehow
+	- improve SEO
 	SiteGenerator:
 	- add global props to javascript
 	- add start and end events, to perform something
 	- load *md structure from root in maps, get(relative) returns sorted list of file names
 	- sitemap generator
 	- description meta tag add
-	- fix line number # anchors @next @sitebuilder
+	- fix line number # anchors @next @sitegenerator
 	- write about manual Madvoc configuration @next
 	- improve <var> in docs
 Lagarto/Jerry:
@@ -35,7 +36,7 @@ Lagarto/Jerry:
 	- Add reference to dom builder to each node @done @v3.4.5
 	- Add htmlPlus() mode @done @v3.4.7
 	- Add form() for handling forms @done @v3.4.7
-	- Add alternative strict HTML parser, that produces browser-quality code @hot @tbd
+	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
 BeanUtil:
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
@@ -50,10 +51,10 @@ Madvoc:
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
 	- MadvocServletFilter, consume action path, like load static content @tbd
-	- Check AnnotatedFieldInterceptor @test
+	- Check AnnotatedFieldInterceptor, how it works @test
 	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
 		For example, it may choose if extension is "json" or not based on class name.
-	- Error 404 to contain info about missing page @tbd
+	- Error 404 to contain info about missing page @next @v3.4.9
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Prevent memory leak for un-existing pages in suplement mode @hot
 	- Cache interceptor @github(27) @tbd @soon
@@ -67,6 +68,7 @@ EMail:
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
+	- Add caches on method level, annotation based
 JTX:
 	- Add 'Rollback on' feature… that does rollback only on certain exception types.
 	- Add Thread timeout in separate class
@@ -90,7 +92,7 @@ DbOom:
 	- Introduce #execute() interceptors? @tbd
 MethRef:
 	- Return property name instead of method name.
-		For exampl, if method is getFoo() this would return just "foo".
+		For example, if method is getFoo() this would return just "foo".
 Joy:
 	- Localization arguments, {0}, {1}…
 	- Don't encode text tags in resource bundles

@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm.AsmConst;
+import jodd.asm.AsmUtil;
 import jodd.asm4.MethodVisitor;
 import jodd.asm4.ClassReader;
 import jodd.asm4.AnnotationVisitor;
@@ -118,7 +118,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.targetClassname = name.substring(lastSlash + 1);
 		this.hierarchyLevel = 1;
 
-		this.isTargetIntreface = (access & AsmConst.ACC_INTERFACE) != 0;
+		this.isTargetIntreface = (access & AsmUtil.ACC_INTERFACE) != 0;
 		if (this.isTargetIntreface) {
 			nextInterfaces = new HashSet<String>();
 			if (interfaces != null) {
@@ -145,7 +145,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		if ((access & AsmConst.ACC_FINAL) != 0) {
+		if ((access & AsmUtil.ACC_FINAL) != 0) {
 			return null;	// skip finals
 		}
 		MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, thisReference);
@@ -284,10 +284,10 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			}
 			MethodSignatureVisitor msign = createMethodSignature(access, name, desc, signature, thisReference);
 			int acc = msign.getAccessFlags();
-			if ((acc & AsmConst.ACC_PUBLIC) == 0) {   	// skip non-public
+			if ((acc & AsmUtil.ACC_PUBLIC) == 0) {   	// skip non-public
 				return null;
 			}
-			if ((access & AsmConst.ACC_FINAL) != 0) {		// skip finals
+			if ((access & AsmUtil.ACC_FINAL) != 0) {		// skip finals
 				return null;
 			}
 			if (allMethodSignatures.contains(msign.getSignature())) {		// skip overridden method by some in above classes
