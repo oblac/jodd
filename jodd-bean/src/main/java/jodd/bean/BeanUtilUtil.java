@@ -78,7 +78,7 @@ class BeanUtilUtil {
 
 			value = convertType(value, type);
 
-			fd.getField().set(bean, value);
+			fd.set(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to set field: " +
 					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
@@ -90,7 +90,7 @@ class BeanUtilUtil {
 	 */
 	protected Object getFieldValue(Object bean, FieldDescriptor fd) {
 		try {
-			return fd.getField().get(bean);
+			return fd.get(bean);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to get field " +
 					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
