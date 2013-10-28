@@ -41,7 +41,7 @@ class Methods {
 		}
 		methodsMap.put(name, mds);
 
-		mds[mds.length - 1] = new MethodDescriptor(classDescriptor, method);
+		mds[mds.length - 1] = classDescriptor.createMethodDescriptor(method);
 
 		// increment count
 		count++;

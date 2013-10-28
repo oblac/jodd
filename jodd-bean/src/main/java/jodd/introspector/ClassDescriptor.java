@@ -187,6 +187,13 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- methods
 
+	/**
+	 * Creates new {@code MethodDescriptor}.
+	 */
+	protected MethodDescriptor createMethodDescriptor(Method method) {
+		return new MethodDescriptor(this, method);
+	}
+
 	protected Methods publicMethods;
 	protected Methods allMethods;
 
