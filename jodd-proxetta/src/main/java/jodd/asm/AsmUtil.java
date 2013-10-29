@@ -270,8 +270,11 @@ public class AsmUtil {
 			if (type == void.class) {
 				return "V";
 			}
-			if (type == char.class) {
+			if (type == byte.class) {
 				return "B";
+			}
+			if (type == char.class) {
+				return "C";
 			}
 		}
 

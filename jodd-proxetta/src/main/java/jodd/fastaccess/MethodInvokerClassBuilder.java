@@ -24,12 +24,11 @@ public class MethodInvokerClassBuilder {
 	 * Creates a new {@link MethodInvoker} class and an instance.
 	 * @see #create(java.lang.reflect.Method)
 	 */
-	public static MethodInvoker createNewInstane(Method method) throws IllegalAccessException, InstantiationException {
+	public static MethodInvoker createNewInstance(Method method) throws IllegalAccessException, InstantiationException {
 		Class<MethodInvoker> methodInvokerClass = create(method);
 
 		return methodInvokerClass.newInstance();
 	}
-
 
 	/**
 	 * Creates a {@link MethodInvoker} implementation class for given method.

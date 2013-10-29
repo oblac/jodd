@@ -21,7 +21,7 @@ public class FastAccessibleIntrospector extends AccessibleIntrospector {
 				final MethodInvoker methodInvokerInstance;
 
 				try {
-					methodInvokerInstance = MethodInvokerClassBuilder.createNewInstane(method);
+					methodInvokerInstance = MethodInvokerClassBuilder.createNewInstance(method);
 				} catch (Exception ex) {
 					throw new FastAccessException(ex);
 				}
