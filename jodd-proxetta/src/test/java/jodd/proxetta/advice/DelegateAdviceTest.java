@@ -22,6 +22,11 @@ public class DelegateAdviceTest {
 		assertNotEquals(newCalc.getClass(), calc.getClass());
 
 		assertEquals(calc.calculate(2, 8), newCalc.calculate(2, 8));
+		assertEquals(calc.calculate(2L, 8L), newCalc.calculate(2L, 8L));
+		assertEquals(calc.calculate(2.5d, 8.5d), newCalc.calculate(2.5d, 8.5d), 0.1);
+		assertEquals(calc.calculate(2.5f, 8.5f), newCalc.calculate(2.5f, 8.5f), 0.1);
+		assertEquals(calc.calculate((byte)2, (byte)8), newCalc.calculate((byte)2, (byte)8));
+		assertEquals(calc.calculate((short)2, (short)8), newCalc.calculate((short)2, (short)8));
 
 		try {
 			newCalc.hello();

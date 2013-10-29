@@ -6,6 +6,7 @@ import jodd.asm4.MethodVisitor;
 import jodd.mutable.MutableInteger;
 
 import static jodd.asm4.Opcodes.CHECKCAST;
+import static jodd.asm4.Opcodes.INVOKESTATIC;
 import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
 
 /**
@@ -341,5 +342,37 @@ public class AsmUtil {
 	public static void charValue(MethodVisitor mv) {
 		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_CHARACTER);
 		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C");
+	}
+
+	public static void valueOfInteger(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_INTEGER, "valueOf", "(I)Ljava/lang/Integer;");
+	}
+
+	public static void valueOfLong(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_LONG, "valueOf", "(J)Ljava/lang/Long;");
+	}
+
+	public static void valueOfFloat(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_FLOAT, "valueOf", "(F)Ljava/lang/Float;");
+	}
+
+	public static void valueOfDouble(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_DOUBLE, "valueOf", "(D)Ljava/lang/Double;");
+	}
+
+	public static void valueOfByte(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_BYTE, "valueOf", "(B)Ljava/lang/Byte;");
+	}
+
+	public static void valueOfShort(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_SHORT, "valueOf", "(S)Ljava/lang/Short;");
+	}
+
+	public static void valueOfBoolean(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_BOOLEAN, "valueOf", "(Z)Ljava/lang/Boolean;");
+	}
+
+	public static void valueOfCharacter(MethodVisitor mv) {
+		mv.visitMethodInsn(INVOKESTATIC, SIGNATURE_JAVA_LANG_CHARACTER, "valueOf", "(C)Ljava/lang/Character;");
 	}
 }

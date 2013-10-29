@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 import static jodd.asm4.Opcodes.CHECKCAST;
-import static jodd.asm4.Opcodes.INVOKESTATIC;
 import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
 
 /**
@@ -137,21 +136,21 @@ public class MethodInvokerClassBuilder {
 			mv.visitInsn(Opcodes.ACONST_NULL);
 		} else if (returnType.isPrimitive()) {
 			if (returnType == int.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_INTEGER, "valueOf", "(I)Ljava/lang/Integer;");
+				AsmUtil.valueOfInteger(mv);
 			} else if (returnType == long.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_LONG, "valueOf", "(J)Ljava/lang/Long;");
+				AsmUtil.valueOfLong(mv);
 			} else if (returnType == float.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_FLOAT, "valueOf", "(F)Ljava/lang/Float;");
+				AsmUtil.valueOfFloat(mv);
 			} else if (returnType == double.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_DOUBLE, "valueOf", "(D)Ljava/lang/Double;");
+				AsmUtil.valueOfDouble(mv);
 			} else if (returnType == byte.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_BYTE, "valueOf", "(B)Ljava/lang/Byte;");
+				AsmUtil.valueOfByte(mv);
 			} else if (returnType == short.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_SHORT, "valueOf", "(S)Ljava/lang/Short;");
+				AsmUtil.valueOfShort(mv);
 			} else if (returnType == boolean.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_BOOLEAN, "valueOf", "(Z)Ljava/lang/Boolean;");
+				AsmUtil.valueOfBoolean(mv);
 			} else if (returnType == char.class) {
-				mv.visitMethodInsn(INVOKESTATIC, AsmUtil.SIGNATURE_JAVA_LANG_CHARACTER, "valueOf", "(C)Ljava/lang/Character;");
+				AsmUtil.valueOfCharacter(mv);
 			}
 		}
 		mv.visitInsn(Opcodes.ARETURN);
