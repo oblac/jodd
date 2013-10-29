@@ -4,10 +4,8 @@ import jodd.asm.AsmUtil;
 import jodd.asm4.ClassWriter;
 import jodd.asm4.MethodVisitor;
 import jodd.asm4.Opcodes;
-import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 
 /**
@@ -39,12 +37,6 @@ public class FieldInvokerClassBuilder {
 		classCounter++;
 
 		byte[] classBytes = define(field, className);
-
-		try {
-			FileUtil.writeBytes("/Users/igor/A.class", classBytes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		return (Class<FieldInvoker>) ClassLoaderUtil.defineClass(className, classBytes);
 	}

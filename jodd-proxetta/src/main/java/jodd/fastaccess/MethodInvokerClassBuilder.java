@@ -4,10 +4,8 @@ import jodd.asm.AsmUtil;
 import jodd.asm4.ClassWriter;
 import jodd.asm4.MethodVisitor;
 import jodd.asm4.Opcodes;
-import jodd.io.FileUtil;
 import jodd.util.ClassLoaderUtil;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 import static jodd.asm4.Opcodes.CHECKCAST;
@@ -42,12 +40,6 @@ public class MethodInvokerClassBuilder {
 		classCounter++;
 
 		byte[] classBytes = define(method, className);
-
-		try {
-			FileUtil.writeBytes("/Users/igor/A.class", classBytes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		return (Class<MethodInvoker>) ClassLoaderUtil.defineClass(className, classBytes);
 	}
