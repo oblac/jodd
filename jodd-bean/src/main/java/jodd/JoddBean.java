@@ -2,6 +2,9 @@
 
 package jodd;
 
+import jodd.introspector.AccessibleIntrospector;
+import jodd.introspector.Introspector;
+
 /**
  * Jodd BEAN module.
  */
@@ -16,5 +19,10 @@ public class JoddBean {
 	 * Field name prefix.
 	 */
 	public static String fieldPrefix;
+
+	/**
+	 * Default {@link Introspector} implementation.
+	 */
+	public static Introspector introspector = new AccessibleIntrospector();
 
 }
