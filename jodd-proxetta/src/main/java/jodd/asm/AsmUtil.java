@@ -2,7 +2,11 @@
 
 package jodd.asm;
 
+import jodd.asm4.MethodVisitor;
 import jodd.mutable.MutableInteger;
+
+import static jodd.asm4.Opcodes.CHECKCAST;
+import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
 
 /**
  * Generic ASM utils.
@@ -223,12 +227,26 @@ public class AsmUtil {
 	// ---------------------------------------------------------------- type
 
 	/**
+	 * Converts class name ("foo.Bar") to signature ("foo/bar").
+	 */
+	public static String typeToSignature(String className) {
+		return className.replace('.', '/');
+	}
+
+	/**
+	 * Converts class name ("foo.Bar") to asm name ("foo/bar").
+	 */
+	public static String typeToSignature(Class type) {
+		return type.getName().replace('.', '/');
+	}
+
+	/**
 	 * Converts type to type ref.
 	 */
 	public static String typeToTyperef(Class type) {
 		if (type.isArray() == false) {
 			if (type.isPrimitive() == false) {
-				return 'L' + type.getName().replace('.', '/') + ';';
+				return 'L' + typeToSignature(type) + ';';
 			}
 			if (type == int.class) {
 				return "I";
@@ -259,4 +277,69 @@ public class AsmUtil {
 		return type.getName();
 	}
 
+	// ---------------------------------------------------------------- boxing
+
+	/**
+	 * Converts <code>Integer</code> object to an <code>int</code>.
+	 */
+	public static void intValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_INTEGER);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_INTEGER, "intValue", "()I");
+	}
+
+	/**
+	 * Converts <code>Long</code> object to a <code>long</code>.
+	 */
+	public static void longValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_LONG);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_LONG, "longValue", "()J");
+	}
+
+	/**
+	 * Converts <code>Float</code> object to a <code>float</code>.
+	 */
+	public static void floatValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_FLOAT);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_FLOAT, "floatValue", "()F");
+	}
+
+	/**
+	 * Converts <code>Double</code> object to a <code>double</code>.
+	 */
+	public static void doubleValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_DOUBLE);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_DOUBLE, "doubleValue", "()D");
+	}
+
+	/**
+	 * Converts <code>Byte</code> object to a <code>byte</code>.
+	 */
+	public static void byteValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_BYTE);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_BYTE, "byteValue", "()B");
+	}
+
+	/**
+	 * Converts <code>Short</code> object to a <code>short</code>.
+	 */
+	public static void shortValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_SHORT);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_SHORT, "shortValue", "()S");
+	}
+
+	/**
+	 * Converts <code>Boolean</code> object to a <code>boolean</code>.
+	 */
+	public static void booleanValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_BOOLEAN);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_BOOLEAN, "booleanValue", "()Z");
+	}
+
+	/**
+	 * Converts <code>Character</code> object to a <code>char</code>.
+	 */
+	public static void charValue(MethodVisitor mv) {
+		mv.visitTypeInsn(CHECKCAST, SIGNATURE_JAVA_LANG_CHARACTER);
+		mv.visitMethodInsn(INVOKEVIRTUAL, SIGNATURE_JAVA_LANG_CHARACTER, "charValue", "()C");
+	}
 }
