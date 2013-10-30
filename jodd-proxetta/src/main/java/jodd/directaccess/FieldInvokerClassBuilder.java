@@ -1,4 +1,4 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 import jodd.asm.AsmUtil;
 import jodd.asm4.ClassWriter;

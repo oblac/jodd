@@ -1,4 +1,4 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 /**
  * Field invoker.

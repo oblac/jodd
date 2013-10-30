@@ -1,10 +1,10 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 import jodd.mutable.MutableInteger;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 
-import static jodd.fastaccess.MethodInvokerClassBuilder.createNewInstance;
+import static jodd.directaccess.MethodInvokerClassBuilder.createNewInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

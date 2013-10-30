@@ -1,4 +1,4 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 import jodd.introspector.AccessibleIntrospector;
 import jodd.introspector.ClassDescriptor;
@@ -9,17 +9,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Fast {@link jodd.introspector.AccessibleIntrospector}
+ * Direct version of {@link jodd.introspector.AccessibleIntrospector}
+ * that does not use reflection to access methods and fields.
  */
-public class FastAccessibleIntrospector extends AccessibleIntrospector {
+public class DirectAccessibleIntrospector extends AccessibleIntrospector {
 
 	@Override
 	protected ClassDescriptor describeClass(final Class type) {
 
-		// fast class descriptor
+		// direct class descriptor
 		return new ClassDescriptor(type, true) {
 
-			// fast method descriptor
+			// direct method descriptor
 			@Override
 			protected MethodDescriptor createMethodDescriptor(Method method) {
 
@@ -28,7 +29,7 @@ public class FastAccessibleIntrospector extends AccessibleIntrospector {
 				try {
 					methodInvoker = MethodInvokerClassBuilder.createNewInstance(method);
 				} catch (Exception ex) {
-					throw new FastAccessException(ex);
+					throw new IllegalArgumentException(ex);
 				}
 
 				return new MethodDescriptor(this, method) {
@@ -39,7 +40,7 @@ public class FastAccessibleIntrospector extends AccessibleIntrospector {
 				};
 			}
 
-			// fast field descriptor
+			// direct field descriptor
 			@Override
 			protected FieldDescriptor createFieldDescriptor(Field field) {
 				final FieldInvoker fieldInvoker;
@@ -47,7 +48,7 @@ public class FastAccessibleIntrospector extends AccessibleIntrospector {
 				try {
 					fieldInvoker = FieldInvokerClassBuilder.createNewInstance(field);
 				} catch (Exception ex) {
-					throw new FastAccessException(ex);
+					throw new IllegalArgumentException(ex);
 				}
 
 				return new FieldDescriptor(this, field) {

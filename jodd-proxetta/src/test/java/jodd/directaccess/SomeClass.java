@@ -1,4 +1,4 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 import jodd.datetime.JDateTime;
 import jodd.mutable.MutableInteger;

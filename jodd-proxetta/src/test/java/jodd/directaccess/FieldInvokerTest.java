@@ -1,8 +1,8 @@
-package jodd.fastaccess;
+package jodd.directaccess;
 
 import org.junit.Test;
 
-import static jodd.fastaccess.FieldInvokerClassBuilder.createNewInstance;
+import static jodd.directaccess.FieldInvokerClassBuilder.createNewInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
