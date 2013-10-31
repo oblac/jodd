@@ -49,7 +49,7 @@ class BeanUtilUtil {
 
 			value = convertType(value, paramTypes[0]);
 
-			md.invokeSetter(bean, value);
+			md.getMethod().invoke(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke setter: " +
 					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
@@ -62,7 +62,7 @@ class BeanUtilUtil {
 	 */
 	protected Object invokeGetter(Object bean, MethodDescriptor md) {
 		try {
-			return md.invoke(bean, null);
+			return md.getMethod().invoke(bean, null);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to invoke getter: " +
 					bean.getClass().getSimpleName() + '#' + md.getMethod().getName() + "()", ex);
@@ -78,7 +78,7 @@ class BeanUtilUtil {
 
 			value = convertType(value, type);
 
-			fd.set(bean, value);
+			fd.getField().set(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to set field: " +
 					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);
@@ -90,7 +90,7 @@ class BeanUtilUtil {
 	 */
 	protected Object getFieldValue(Object bean, FieldDescriptor fd) {
 		try {
-			return fd.get(bean);
+			return fd.getField().get(bean);
 		} catch (Exception ex) {
 			throw new BeanException("Unable to get field " +
 					bean.getClass().getSimpleName() + '#' + fd.getField().getName(), ex);

@@ -4,7 +4,6 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -91,22 +90,6 @@ public class MethodDescriptor {
 	 */
 	public Class[] getRawParameterTypes() {
 		return rawParameterTypes;
-	}
-
-	// ---------------------------------------------------------------- invoke
-
-	/**
-	 * Invokes method on given target.
-	 */
-	public Object invoke(Object target, Object... parameters) throws InvocationTargetException, IllegalAccessException {
-		return method.invoke(target, parameters);
-	}
-
-	/**
-	 * Invokes setter method (with one argument) on given target.
-	 */
-	public void invokeSetter(Object target, Object parameter) throws InvocationTargetException, IllegalAccessException {
-		method.invoke(target, parameter);
 	}
 
 }

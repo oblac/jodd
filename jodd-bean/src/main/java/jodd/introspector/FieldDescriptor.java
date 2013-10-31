@@ -73,20 +73,4 @@ public class FieldDescriptor {
 		return ReflectUtil.getComponentType(type, classDescriptor.getType(), index);
 	}
 
-	// ---------------------------------------------------------------- invoke
-
-	/**
-	 * Sets field value.
-	 */
-	public void set(Object target, Object value) throws IllegalAccessException {
-		field.set(target, value);
-	}
-
-	/**
-	 * Returns field value.
-	 */
-	public Object get(Object target) throws IllegalAccessException {
-		return field.get(target);
-	}
-
 }
