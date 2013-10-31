@@ -32,7 +32,7 @@ public class FieldInvokerClassBuilder {
 	@SuppressWarnings("unchecked")
 	public static Class<FieldInvoker> create(Field field) {
 
-		String className = FieldInvokerClassBuilder.class.getPackage().getName() + ".FieldInvoker$" + field.getName() + '$' + classCounter;
+		String className = FieldInvoker.class.getName() + '$' + field.getName() + '$' + classCounter;
 
 		classCounter++;
 

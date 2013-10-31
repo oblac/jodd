@@ -35,7 +35,7 @@ public class MethodInvokerClassBuilder {
 	@SuppressWarnings("unchecked")
 	public static Class<MethodInvoker> create(Method method) {
 
-		String className = MethodInvokerClassBuilder.class.getPackage().getName() + ".MethodInvoker$" + method.getName() + '$' + classCounter;
+		String className = MethodInvoker.class.getName() + '$' + method.getName() + '$' + classCounter;
 
 		classCounter++;
 

@@ -25,6 +25,7 @@ public class DirectAccessibleIntrospector extends AccessibleIntrospector {
 			protected MethodDescriptor createMethodDescriptor(Method method) {
 
 				final MethodInvoker methodInvoker;
+				final SetterMethodInvoker setterMethodInvoker;
 
 				try {
 					methodInvoker = MethodInvokerClassBuilder.createNewInstance(method);
@@ -32,10 +33,25 @@ public class DirectAccessibleIntrospector extends AccessibleIntrospector {
 					throw new IllegalArgumentException(ex);
 				}
 
+				if (method.getParameterTypes().length == 1) {
+					try {
+						setterMethodInvoker = SetterMethodInvokerClassBuilder.createNewInstance(method);
+					} catch (Exception ex) {
+						throw new IllegalArgumentException(ex);
+					}
+				} else {
+					setterMethodInvoker = null;
+				}
+
 				return new MethodDescriptor(this, method) {
 					@Override
 					public Object invoke(Object target, Object... parameters) {
 						return methodInvoker.invoke(target, parameters);
+					}
+
+					@Override
+					public void invokeSetter(Object target, Object parameter) {
+						setterMethodInvoker.invoke(target, parameter);
 					}
 				};
 			}

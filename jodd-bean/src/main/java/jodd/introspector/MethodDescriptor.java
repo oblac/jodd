@@ -102,4 +102,11 @@ public class MethodDescriptor {
 		return method.invoke(target, parameters);
 	}
 
+	/**
+	 * Invokes setter method (with one argument) on given target.
+	 */
+	public void invokeSetter(Object target, Object parameter) throws InvocationTargetException, IllegalAccessException {
+		method.invoke(target, parameter);
+	}
+
 }
