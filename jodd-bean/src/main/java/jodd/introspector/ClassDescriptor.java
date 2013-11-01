@@ -150,39 +150,6 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns the field identified by name or <code>null</code> if not found.
-	 *
-	 * @param name	field name
-	 * @param declared whether to look at non-public ones.
-	 */
-	public Field getField(String name, boolean declared) {
-		inspectFields();
-
-		Fields fields = declared ? allFields : publicFields;
-		return fields.getField(name);
-	}
-
-	/**
-	 * Returns the total number of fields.
-	 */
-	public int getFieldsCount(boolean declared) {
-		inspectFields();
-
-		Fields fields = declared ? allFields : publicFields;
-		return fields.getCount();
-	}
-
-	/**
-	 * Returns an array of all fields.
-	 */
-	public Field[] getAllFields(boolean declared) {
-		inspectFields();
-
-		Fields fields = declared ? allFields : publicFields;
-		return fields.getAllFields();
-	}
-
-	/**
 	 * Returns field descriptor.
 	 */
 	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
@@ -190,6 +157,16 @@ public class ClassDescriptor {
 
 		Fields fields = declared ? allFields : publicFields;
 		return fields.getFieldDescriptor(name);
+	}
+
+	/**
+	 * Returns all field descriptors.
+	 */
+	public FieldDescriptor[] getAllFieldDescriptors(boolean declared) {
+		inspectFields();
+
+		Fields fields = declared ? allFields : publicFields;
+		return fields.getAllFields();
 	}
 
 	// ---------------------------------------------------------------- methods
@@ -336,14 +313,14 @@ public class ClassDescriptor {
 					publicProperties.addMethod(propertyName, method);
 
 					MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), false);
-					// todo remove substring(1) jer nece biti potreban
+					// todo remove substring(1)!
 					publicProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
 				}
 				ReflectUtil.forceAccess(method);
 				allProperties.addMethod(propertyName, method);
 
 				MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
-				// todo remove substring(1) jer nece biti potreban
+				// todo remove substring(1)!
 				allProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
 			}
 		}
@@ -381,7 +358,7 @@ public class ClassDescriptor {
 		return propertyDescriptor.getReadMethodDescriptor();
 	}
 
-	// TODO REVIEW REVIEW REVIEW SVE OVO DOLE, DA CD VRACA SAMO DESCRIPTORE!!!
+	// TODO REVIEW REVIEW REVIEW
 
 	/**
 	 * Returns bean setter identified by name.

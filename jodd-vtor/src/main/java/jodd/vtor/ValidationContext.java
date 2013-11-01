@@ -4,6 +4,7 @@ package jodd.vtor;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -74,9 +75,9 @@ public class ValidationContext {
 		if (list == null) {
 			list = new ArrayList<Check>();
 			ClassDescriptor cd = ClassIntrospector.lookup(target);
-			Field[] fields = cd.getAllFields(true);
-			for (Field field : fields) {
-				collectFieldAnnotationChecks(list, field);
+			FieldDescriptor[] fields = cd.getAllFieldDescriptors(true);
+			for (FieldDescriptor fieldDescriptor : fields) {
+				collectFieldAnnotationChecks(list, fieldDescriptor.getField());
 			}
 			cache.put(target, list);
 		}

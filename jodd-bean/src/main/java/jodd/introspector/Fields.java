@@ -13,65 +13,40 @@ class Fields {
 	private final ClassDescriptor classDescriptor;
 	private final HashMap<String, FieldDescriptor> fieldsMap;
 
-	private int count;				// count
-	private Field[] allFields;		// cache
+	private FieldDescriptor[] allFields;		// cache
 
 	Fields(ClassDescriptor classDescriptor, int maxFields) {
 		this.classDescriptor = classDescriptor;
 		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
-		count = 0;
 	}
 
 	void addField(String name, Field field) {
 		fieldsMap.put(name, classDescriptor.createFieldDescriptor(field));
 
-		// reset cache
-		allFields = null;
-		// increment count
-		count++;
+		allFields = null;	// reset cache
 	}
 
 	// ---------------------------------------------------------------- get
 
 	/**
-	 * Returns field with given name or <code>null</code>
-	 * if field not found.
-	 */
-	Field getField(String name) {
-		FieldDescriptor fieldDescriptor = fieldsMap.get(name);
-
-		if (fieldDescriptor == null) {
-			return null;
-		}
-
-		return fieldDescriptor.getField();
-	}
-
-	/**
-	 * Returns {@link FieldDescriptor field descriptor}.
+	 * Returns {@link FieldDescriptor field descriptor} for given field name
+	 * or <code>null</code> if field does not exist.
 	 */
 	FieldDescriptor getFieldDescriptor(String name) {
 		return fieldsMap.get(name);
 	}
 
 	/**
-	 * Returns number of fields in this collection.
-	 */
-	int getCount() {
-		return count;
-	}
-
-	/**
 	 * Returns all fields of this collection. Returns empty array
 	 * if no fields exist. Initialized lazy.
 	 */
-	Field[] getAllFields() {
+	FieldDescriptor[] getAllFields() {
 		if (allFields == null) {
-			Field[] allFieldsNew = new Field[fieldsMap.size()];
+			FieldDescriptor[] allFieldsNew = new FieldDescriptor[fieldsMap.size()];
 
 			int ndx = 0;
 			for (FieldDescriptor fieldDescriptor : fieldsMap.values()) {
-				allFieldsNew[ndx] = fieldDescriptor.getField();
+				allFieldsNew[ndx] = fieldDescriptor;
 				ndx++;
 			}
 

@@ -2,6 +2,7 @@
 
 package jodd.madvoc.interceptor;
 
+import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.ActionRequest;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -56,9 +57,11 @@ public abstract class AnnotatedFieldsInterceptor extends ActionInterceptor {
 		Field[] fields = annotatedField.get(type);
 		if (fields == null) {
 			ClassDescriptor cd = ClassIntrospector.lookup(type);
-			Field[] allFields = cd.getAllFields(true);
+			FieldDescriptor[] allFields = cd.getAllFieldDescriptors(true);
 			List<Field> fieldlist = new ArrayList<Field>();
-			for (Field field : allFields) {
+			for (FieldDescriptor fieldDescriptor : allFields) {
+				Field field = fieldDescriptor.getField();
+
 				Annotation ann = field.getAnnotation(fieldAnnotation);
 				if (ann != null) {
 					fieldlist.add(field);

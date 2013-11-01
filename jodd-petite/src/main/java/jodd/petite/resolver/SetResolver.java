@@ -4,6 +4,7 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.SetInjectionPoint;
 import jodd.petite.meta.PetiteInject;
@@ -32,9 +33,11 @@ public class SetResolver {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<SetInjectionPoint>();
-		Field[] allFields = cd.getAllFields(true);
+		FieldDescriptor[] allFields = cd.getAllFieldDescriptors(true);
 
-		for (Field field : allFields) {
+		for (FieldDescriptor fieldDescriptor : allFields) {
+			Field field = fieldDescriptor.getField();
+
 			PetiteInject ref = field.getAnnotation(PetiteInject.class);
 			if ((autowire == false) && (ref == null)) {
 				continue;

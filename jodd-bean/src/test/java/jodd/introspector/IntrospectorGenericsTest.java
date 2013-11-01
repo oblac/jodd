@@ -2,7 +2,6 @@
 
 package jodd.introspector;
 
-import jodd.datetime.JStopWatch;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 
@@ -33,8 +32,8 @@ public class IntrospectorGenericsTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
-		assertEquals(0, cd.getFieldsCount(false));
-		assertEquals(3, cd.getFieldsCount(true));
+		assertEquals(0, cd.getAllFieldDescriptors(false).length);
+		assertEquals(3, cd.getAllFieldDescriptors(true).length);
 
 		FieldDescriptor fd = cd.getFieldDescriptor("f", true);
 		FieldDescriptor fd2 = cd.getFieldDescriptor("f2", true);

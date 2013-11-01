@@ -2,6 +2,7 @@
 
 package jodd.madvoc.injector;
 
+import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
@@ -306,7 +307,7 @@ public class ScopeDataResolver {
 	 */
 	protected ScopeData inspectScopeData(Class actionClass, ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
-		Field[] fields = cd.getAllFields(true);
+		FieldDescriptor[] fields = cd.getAllFieldDescriptors(true);
 		Method[] methods = cd.getAllMethods(true);
 
 		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(fields.length + methods.length);
@@ -314,7 +315,9 @@ public class ScopeDataResolver {
 
 
 		// fields
-		for (Field field : fields) {
+		for (FieldDescriptor fieldDescriptor : fields) {
+			Field field = fieldDescriptor.getField();
+
 			Class fieldType = ReflectUtil.getRawType(field.getGenericType(), actionClass);
 
 			In in = field.getAnnotation(In.class);

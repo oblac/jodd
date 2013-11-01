@@ -10,6 +10,7 @@ import jodd.db.oom.DbSqlGenerator;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -47,10 +48,13 @@ public class DbEntitySearcher implements DbSqlGenerator {
 		StringBuilder query = new StringBuilder("select * from ");
 		query.append(ded.getTableName());
 
-		Field[] fields = entityClassDescriptor.getAllFields(true);
+		FieldDescriptor[] fields = entityClassDescriptor.getAllFieldDescriptors(true);
 		boolean firstCondition = true;
 		boolean hasCondition = false;
-		for (Field field : fields) {
+
+		for (FieldDescriptor fieldDescriptor : fields) {
+			Field field = fieldDescriptor.getField();
+
 			Object value;
 			try {
 				value = field.get(entity);

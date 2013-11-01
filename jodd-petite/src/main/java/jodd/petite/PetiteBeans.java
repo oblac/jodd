@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
@@ -14,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -369,11 +369,14 @@ public abstract class PetiteBeans {
 		String[] references = reference == null ? null : new String[] {reference};
 
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		Field field = cd.getField(property, true);
-		if (field == null) {
+		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
+		if (fieldDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
-		PropertyInjectionPoint pip = injectionPointFactory.createPropertyInjectionPoint(field, references);
+
+		PropertyInjectionPoint pip =
+				injectionPointFactory.createPropertyInjectionPoint(fieldDescriptor.getField(), references);
+
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
 
@@ -386,11 +389,14 @@ public abstract class PetiteBeans {
 	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		Field field = cd.getField(property, true);
-		if (field == null) {
+		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
+		if (fieldDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
-		SetInjectionPoint sip = injectionPointFactory.createSetInjectionPoint(field);
+
+		SetInjectionPoint sip =
+				injectionPointFactory.createSetInjectionPoint(fieldDescriptor.getField());
+
 		beanDefinition.addSetInjectionPoint(sip);
 	}
 

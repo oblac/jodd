@@ -5,6 +5,7 @@ package jodd.db.oom;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.util.FastSort;
 
 import java.lang.reflect.Field;
@@ -99,10 +100,13 @@ public class DbEntityDescriptor {
 	 * Resolves list of all columns and properties.
 	 */
 	private void resolveColumnsAndProperties(Class type) {
-		Field[] fields = ClassIntrospector.lookup(type).getAllFields(true);
+		FieldDescriptor[] fields = ClassIntrospector.lookup(type).getAllFieldDescriptors(true);
 		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
 		int idcount = 0;
-		for (Field field : fields) {
+
+		for (FieldDescriptor fieldDescriptor : fields) {
+			Field field = fieldDescriptor.getField();
+
 			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated, columnNamingStrategy);
 			if (dec != null) {
 				decList.add(dec);
