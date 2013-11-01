@@ -39,6 +39,10 @@ Lagarto/Jerry:
 	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
 BeanUtil:
+	- Add `PopertyDescriptor` @v3.4.9
+	- Join maps of public and all methods! @v3.4.9
+	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9
+	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.9
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done
 Props:

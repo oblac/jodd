@@ -5,6 +5,8 @@ package jodd.introspector;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
 import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
@@ -15,14 +17,78 @@ import static jodd.util.ReflectUtil.NO_PARAMETERS;
  */
 class Properties {
 
+	private final ClassDescriptor classDescriptor;
+	private final Map<String, PropertyDescriptor> propertyDescriptors;
+
 	private final Methods getters;
 	private String[] getterNames;
 	private final Methods setters;
 	private String[] setterNames;
 
 	Properties(ClassDescriptor classDescriptor) {
+		this.classDescriptor = classDescriptor;
+
 		this.getters = new Methods(classDescriptor, 0);
 		this.setters = new Methods(classDescriptor, 0);
+
+		this.propertyDescriptors = new HashMap<String, PropertyDescriptor>();
+	}
+
+	/**
+	 * Adds a setter and/or getter method to the property.
+	 * If property is already defined, it will be updated (by new instance of
+	 * {@link PropertyDescriptor}).
+	 */
+	void addProperty(String name, MethodDescriptor methodDescriptor, boolean isSetter) {
+		// todo remove
+		getterNames = null;
+		setterNames = null;
+
+		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
+		MethodDescriptor getterMethod = isSetter ? null : methodDescriptor;
+
+		PropertyDescriptor existing = propertyDescriptors.get(name);
+
+		if (existing == null) {
+			// new property, just add it
+			PropertyDescriptor propertyDescriptor =
+					new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
+
+			propertyDescriptors.put(name, propertyDescriptor);
+			return;
+		}
+
+		if (!isSetter) {
+			// use existing setter
+			setterMethod = existing.getWriteMethodDescriptor();
+
+			// check existing
+			MethodDescriptor existingMethodDescriptor = existing.getReadMethodDescriptor();
+			if (existingMethodDescriptor != null) {
+				// check for special case of double get/is
+
+				// getter with the same name already exist
+				String methodName = methodDescriptor.getMethod().getName();
+				String existingMethodName = existingMethodDescriptor.getMethod().getName();
+
+				if (
+						existingMethodName.startsWith(METHOD_IS_PREFIX) &&
+						methodName.startsWith(METHOD_GET_PREFIX)) {
+
+					// ignore getter when ister exist
+					return;
+				}
+			}
+		} else {
+			// setter
+			// use existing getter
+			getterMethod = existing.getReadMethodDescriptor();
+		}
+
+		PropertyDescriptor propertyDescriptor =
+				new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
+
+		propertyDescriptors.put(name, propertyDescriptor);
 	}
 
 	/**
@@ -37,11 +103,11 @@ class Properties {
 			name = name.substring(1);
 
 			// check for special case of double get/is
-			Method existingMethod = getters.getMethod(name, NO_PARAMETERS);
-			if (existingMethod != null) {
+			Method existingGetterMethod = getters.getMethod(name, NO_PARAMETERS);
+			if (existingGetterMethod != null) {
 				// getter with the same name already exist
 				String methodName = method.getName();
-				String existingMethodName = existingMethod.getName();
+				String existingMethodName = existingGetterMethod.getName();
 				if (
 						existingMethodName.startsWith(METHOD_GET_PREFIX) &&
 						methodName.startsWith(METHOD_IS_PREFIX)) {
@@ -110,6 +176,13 @@ class Properties {
 			setterNames = names;
 		}
 		return setterNames;
+	}
+
+	/**
+	 * Returns {@link PropertyDescriptor property descriptor}.
+	 */
+	PropertyDescriptor getProperty(String name) {
+		return propertyDescriptors.get(name);
 	}
 
 }

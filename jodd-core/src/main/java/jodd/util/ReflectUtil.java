@@ -783,7 +783,8 @@ public class ReflectUtil {
 	}
 
 	/**
-	 * Returns beans property getter name or <code>null</code> if method is not a real getter.
+	 * Returns property name from a getter method.
+	 * Returns <code>null</code> if method is not a real getter.
 	 */
 	public static String getBeanPropertyGetterName(Method method) {
 		int prefixLength = getBeanPropertyGetterPrefixLength(method);

@@ -293,7 +293,7 @@ public class ClassDescriptor {
 		return methods.getAllMethods();
 	}
 
-	// ---------------------------------------------------------------- beans
+	// ---------------------------------------------------------------- properties
 
 	protected Properties publicProperties;
 	protected Properties allProperties;
@@ -311,34 +311,77 @@ public class ClassDescriptor {
 		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 		for (Method method : methods) {
 			if (Modifier.isStatic(method.getModifiers())) {
-				continue;			// ignore static
+				continue;			// ignore static methods
 			}
-			boolean add = false;
 
-			String methodName = ReflectUtil.getBeanPropertyGetterName(method);
-			if (methodName != null) {
-				methodName = '-' + methodName;
+			boolean add = false;
+			boolean issetter = false;
+
+			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+			if (propertyName != null) {
+				propertyName = '-' + propertyName;
 				add = true;
+				issetter = false;
 			} else {
-				methodName = ReflectUtil.getBeanPropertySetterName(method);
-				if (methodName != null) {
-					methodName = '+' + methodName;
+				propertyName = ReflectUtil.getBeanPropertySetterName(method);
+				if (propertyName != null) {
+					propertyName = '+' + propertyName;
 					add = true;
+					issetter = true;
 				}
 			}
 
 			if (add == true) {
 				if (ReflectUtil.isPublic(method)) {
-					publicProperties.addMethod(methodName, method);
+					publicProperties.addMethod(propertyName, method);
+
+					MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), false);
+					// todo remove substring(1) jer nece biti potreban
+					publicProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
 				}
 				ReflectUtil.forceAccess(method);
-				allProperties.addMethod(methodName, method);
+				allProperties.addMethod(propertyName, method);
+
+				MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
+				// todo remove substring(1) jer nece biti potreban
+				allProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
 			}
 		}
 
 		this.allProperties = allProperties;
 		this.publicProperties = publicProperties;
 	}
+
+	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
+		inspectProperties();
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getProperty(name);
+	}
+
+	public MethodDescriptor getPropertySetter(String name, boolean declared) {
+		inspectProperties();
+
+		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(name, declared);
+		if (propertyDescriptor == null) {
+			return null;
+		}
+
+		return propertyDescriptor.getWriteMethodDescriptor();
+	}
+
+	public MethodDescriptor getPropertyGetter(String name, boolean declared) {
+		inspectProperties();
+
+		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(name, declared);
+		if (propertyDescriptor == null) {
+			return null;
+		}
+
+		return propertyDescriptor.getReadMethodDescriptor();
+	}
+
+	// TODO REVIEW REVIEW REVIEW SVE OVO DOLE, DA CD VRACA SAMO DESCRIPTORE!!!
 
 	/**
 	 * Returns bean setter identified by name.
@@ -353,12 +396,14 @@ public class ClassDescriptor {
 	/**
 	 * Returns bean setter {@link MethodDescriptor} identified by name.
 	 */
+/*
 	public MethodDescriptor getBeanSetterMethodDescriptor(String name, boolean declared) {
 		inspectProperties();
 
 		Properties properties = declared ? allProperties : publicProperties;
 		return properties.getSetters().getMethodDescriptor(name);
 	}
+*/
 
 	/**
 	 * Returns an array of all bean setters.
@@ -393,12 +438,14 @@ public class ClassDescriptor {
 	/**
 	 * Returns {@link MethodDescriptor} for bean setter identified by name.
 	 */
+/*
 	public MethodDescriptor getBeanGetterMethodDescriptor(String name, boolean declared) {
 		inspectProperties();
 
 		Properties properties = declared ? allProperties : publicProperties;
 		return properties.getGetters().getMethodDescriptor(name);
 	}
+*/
 
 	/**
 	 * Returns all bean getters.

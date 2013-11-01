@@ -72,7 +72,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetterMethodDescriptor(bp.name, declared);
+		bp.method = bp.cd.getPropertyGetter(bp.name, declared);
 		if (bp.method != null) {
 			return true;
 		}
@@ -117,7 +117,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getBeanGetterMethodDescriptor(bp.name, declared);
+		bp.method = bp.cd.getPropertyGetter(bp.name, declared);
 		if (bp.method != null) {
 			Object result = invokeGetter(bp.bean, bp.method);
 			if ((result == null) && (bp.forced == true)) {
@@ -168,9 +168,16 @@ public class BeanUtilBean extends BeanUtilUtil {
 	protected void setSimpleProperty(BeanProperty bp, Object value, boolean declared) {
 
 		// try: setProperty(value)
-		MethodDescriptor method = bp.cd.getBeanSetterMethodDescriptor(bp.name, declared);
-		if (method != null) {
-			invokeSetter(bp.bean, method, value);
+/*
+		MethodDescriptor methodDescriptor = bp.cd.getBeanSetterMethodDescriptor(bp.name, declared);
+		if (methodDescriptor != null) {
+			invokeSetter(bp.bean, methodDescriptor, value);
+			return;
+		}
+*/
+		MethodDescriptor setterMethodDescriptor = bp.cd.getPropertySetter(bp.name, declared);
+		if (setterMethodDescriptor != null) {
+			invokeSetter(bp.bean, setterMethodDescriptor, value);
 			return;
 		}
 
