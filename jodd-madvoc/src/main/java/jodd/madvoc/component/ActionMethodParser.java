@@ -3,6 +3,7 @@
 package jodd.madvoc.component;
 
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
@@ -49,11 +50,11 @@ public class ActionMethodParser {
 	 * Resolves action method for given string ane method name.
 	 */
 	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
-		Method method = ClassIntrospector.lookup(actionClass).getMethod(methodName, false);
-		if (method == null) {
+		MethodDescriptor methodDescriptor = ClassIntrospector.lookup(actionClass).getMethodDescriptor(methodName, false);
+		if (methodDescriptor == null) {
 			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method: " + methodName);
 		}
-		return method;
+		return methodDescriptor.getMethod();
 	}
 
 	// ---------------------------------------------------------------- parse

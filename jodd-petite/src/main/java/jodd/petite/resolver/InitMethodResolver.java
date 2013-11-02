@@ -2,6 +2,7 @@
 
 package jodd.petite.resolver;
 
+import jodd.introspector.MethodDescriptor;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.petite.PetiteException;
 import jodd.petite.InitMethodPoint;
@@ -23,9 +24,11 @@ public class InitMethodResolver {
 		// lookup methods
 		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
 		ClassDescriptor cd = new ClassDescriptor(type, false);
-		Method[] allMethods = cd.getAllMethods(true);
+		MethodDescriptor[] allMethods = cd.getAllMethods(true);
 
-		for (Method method : allMethods) {
+		for (MethodDescriptor methodDescriptor : allMethods) {
+			Method method = methodDescriptor.getMethod();
+
 			PetiteInitMethod petiteInitMethod = method.getAnnotation(PetiteInitMethod.class);
 			if (petiteInitMethod == null) {
 				continue;

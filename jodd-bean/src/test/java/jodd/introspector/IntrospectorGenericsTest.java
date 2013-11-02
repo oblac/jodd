@@ -71,15 +71,15 @@ public class IntrospectorGenericsTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
-		assertEquals(0, cd.getMethodsCount(false));
-		assertEquals(3, cd.getMethodsCount(true));
+		assertEquals(0, cd.getAllMethods(false).length);
+		assertEquals(3, cd.getAllMethods(true).length);
 
 		Class[] params = new Class[] {Object.class, String.class, List.class, List.class, List.class};
 
 		Method m = MethodParameterType.class.getDeclaredMethod("m", params);
 		assertNotNull(m);
 
-		Method m2 = cd.getMethod("m", params, true);
+		Method m2 = cd.getMethodDescriptor("m", params, true).getMethod();
 		assertNotNull(m2);
 		assertEquals(m, m2);
 
@@ -111,7 +111,7 @@ public class IntrospectorGenericsTest {
 
 		assertEquals(0, Foo.class.getDeclaredMethods().length);
 
-		Method[] allm = cd1.getAllMethods(true);
+		MethodDescriptor[] allm = cd1.getAllMethods(true);
 
 		assertEquals(3, allm.length);
 
@@ -125,7 +125,5 @@ public class IntrospectorGenericsTest {
 		assertArrayEquals(params2, md3.getRawParameterTypes());
 		assertEquals(List.class, md3.getRawReturnType());
 		assertEquals(Integer.class, md3.getRawReturnComponentType());
-
-
 	}
 }

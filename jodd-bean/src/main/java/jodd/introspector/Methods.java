@@ -17,10 +17,9 @@ class Methods {
 
 	private final ClassDescriptor classDescriptor;
 	private final HashMap<String, MethodDescriptor[]> methodsMap;
-	private int count;
 
 	// cache
-	private Method[] allMethods;
+	private MethodDescriptor[] allMethods;
 
 	Methods(ClassDescriptor classDescriptor, int maxMethods) {
 		this.classDescriptor = classDescriptor;
@@ -28,7 +27,6 @@ class Methods {
 			maxMethods = 16;
 		}
 		this.methodsMap = new HashMap<String, MethodDescriptor[]>(maxMethods);
-		this.count = 0;
 	}
 
 	void addMethod(String name, Method method) {
@@ -43,9 +41,6 @@ class Methods {
 
 		mds[mds.length - 1] = classDescriptor.createMethodDescriptor(method);
 
-		// increment count
-		count++;
-
 		// reset cache
 		allMethods = null;
 	}
@@ -54,15 +49,8 @@ class Methods {
 
 	/**
 	 * Returns a method that matches given name and parameter types.
+	 * Returns <code>null</code> if method is not found.
 	 */
-	Method getMethod(String name, Class[] paramTypes) {
-		MethodDescriptor methodDescriptor = getMethodDescriptor(name, paramTypes);
-		if (methodDescriptor == null) {
-			return null;
-		}
-		return methodDescriptor.getMethod();
-	}
-
 	MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
@@ -78,22 +66,10 @@ class Methods {
 	}
 
 	/**
-	 * Returns single method with given name, if one and only one such method exists.
+	 * Returns method descriptor for given name. If more then one methods with
+	 * the same name exists, one method will be returned (not determined which one).
 	 * Returns <code>null</code> if no method exist in this collection by given name.
-	 * @see #getMethodDescriptor(String)
-	 */
-	Method getMethod(String name) {
-		MethodDescriptor methodDescriptor = getMethodDescriptor(name);
-		if (methodDescriptor == null) {
-			return null;
-		}
-		return methodDescriptor.getMethod();
-	}
-
-	/**
-	 * Returns method descriptor for given name.
-	 * Returns <code>null</code> if no method exist in this collection by given name.
-	 * @see #getMethod(String)
+	 * @see #getMethodDescriptor(String, Class[])
 	 */
 	MethodDescriptor getMethodDescriptor(String name) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
@@ -107,37 +83,26 @@ class Methods {
 	}
 
 	/**
-	 * Returns all methods for given name. Not cached.
+	 * Returns all methods for given name. Returns <code>null</code> if method not found.
 	 */
-	Method[] getAllMethods(String name) {
-		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
-		if (methodDescriptors == null) {
-			return new Method[0];
-		}
-
-		List<Method> allMethodsList = new ArrayList<Method>();
-
-		for (MethodDescriptor methodDescriptor : methodDescriptors) {
-			allMethodsList.add(methodDescriptor.getMethod());
-		}
-
-		return allMethodsList.toArray(new Method[allMethodsList.size()]);
+	MethodDescriptor[] getAllMethodDescriptors(String name) {
+		return methodsMap.get(name);
 	}
 
 	/**
 	 * Returns all methods. Cached. Lazy.
 	 */
-	Method[] getAllMethods() {
+	MethodDescriptor[] getAllMethods() {
 		if (allMethods == null) {
-			List<Method> allMethodsList = new ArrayList<Method>();
+			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
 				for (MethodDescriptor methodDescriptor : methodDescriptors) {
-					allMethodsList.add(methodDescriptor.getMethod());
+					allMethodsList.add(methodDescriptor);
 				}
 			}
 
-			allMethods = allMethodsList.toArray(new Method[allMethodsList.size()]);
+			allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
 		}
 		return allMethods;
 	}
@@ -146,20 +111,7 @@ class Methods {
 	 * Returns number of methods in this collection.
 	 */
 	int getCount() {
-		return count;
+		return getAllMethods().length;
 	}
 
-	/**
-	 * Remove all methods for given name.
-	 */
-	void removeMethods(String name) {
-		MethodDescriptor[] removed = methodsMap.remove(name);
-
-		if (removed != null) {
-			// clear cache
-			allMethods = null;
-			// update count
-			count -= removed.length;
-		}
-	}
 }

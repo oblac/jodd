@@ -5,6 +5,7 @@ package jodd.petite;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
@@ -415,15 +416,18 @@ public abstract class PetiteBeans {
 
 		Method method = null;
 		if (arguments == null) {
-			Method[] methods = cd.getAllMethods(methodName, true);
+			MethodDescriptor[] methods = cd.getAllMethods(methodName, true);
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
 					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + beanDefinition.type.getName() + '#' + methodName);
 				}
-				method = methods[0];
+				method = methods[0].getMethod();
 			}
 		} else {
-			method = cd.getMethod(methodName, arguments, true);
+			MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
+			if (md != null) {
+				method = md.getMethod();
+			}
 		}
 		if (method == null) {
 			throw new PetiteException("Method not found: " + beanDefinition.type.getName() + '#' + methodName);
@@ -453,11 +457,11 @@ public abstract class PetiteBeans {
 
 		int i;
 		for (i = 0; i < initMethodNames.length; i++) {
-			Method m = cd.getMethod(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
-			if (m == null) {
+			MethodDescriptor md = cd.getMethodDescriptor(initMethodNames[i], ReflectUtil.NO_PARAMETERS, true);
+			if (md == null) {
 				throw new PetiteException("Init method not found: " + beanDefinition.type.getName() + '#' + initMethodNames[i]);
 			}
-			initMethodPoints[i] = new InitMethodPoint(m, i, invocationStrategy);
+			initMethodPoints[i] = new InitMethodPoint(md.getMethod(), i, invocationStrategy);
 		}
 
 		beanDefinition.addInitMethodPoints(initMethodPoints);
@@ -483,13 +487,13 @@ public abstract class PetiteBeans {
 		Class beanType = beanDefinition.type;
 
 		ClassDescriptor cd = ClassIntrospector.lookup(beanType);
-		Method method = cd.getMethod(methodName, arguments, true);
+		MethodDescriptor md = cd.getMethodDescriptor(methodName, arguments, true);
 
-		if (method == null) {
+		if (md == null) {
 			throw new PetiteException("Provider method not found: " + methodName);
 		}
 
-		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, beanName, method);
+		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, beanName, md.getMethod());
 
 		providers.put(providerName, providerDefinition);
 	}
@@ -504,13 +508,13 @@ public abstract class PetiteBeans {
 	 */
 	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		Method method = cd.getMethod(staticMethodName, arguments, true);
+		MethodDescriptor md = cd.getMethodDescriptor(staticMethodName, arguments, true);
 
-		if (method == null) {
+		if (md == null) {
 			throw new PetiteException("Provider method not found: " + staticMethodName);
 		}
 
-		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, method);
+		ProviderDefinition providerDefinition = new ProviderDefinition(providerName, md.getMethod());
 
 		providers.put(providerName, providerDefinition);
 	}

@@ -208,37 +208,15 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns methods count.
+	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
-	public int getMethodsCount(boolean declared) {
+	public MethodDescriptor getMethodDescriptor(String name, boolean declared) {
 		inspectMethods();
 
 		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getCount();
+		return methods.getMethodDescriptor(name);
 	}
 
-	/**
-	 * Returns the method identified by name or <code>null</code> if not found.
-	 *
-	 * @param name	method name
-	 * @param declared whether to look at non-public ones.
-	 */
-	public Method getMethod(String name, boolean declared) {
-		inspectMethods();
-
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getMethod(name);
-	}
-
-	/**
-	 * Returns the method identified by name and parameters.
-	 */
-	public Method getMethod(String name, Class[] params, boolean declared) {
-		inspectMethods();
-
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getMethod(name, params);
-	}
 
 	/**
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
@@ -253,17 +231,17 @@ public class ClassDescriptor {
 	/**
 	 * Returns an array of all methods with the same name.
 	 */
-	public Method[] getAllMethods(String name, boolean declared) {
+	public MethodDescriptor[] getAllMethods(String name, boolean declared) {
 		inspectMethods();
 
 		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getAllMethods(name);
+		return methods.getAllMethodDescriptors(name);
 	}
 
 	/**
 	 * Returns an array of all methods.
 	 */
-	public Method[] getAllMethods(boolean declared) {
+	public MethodDescriptor[] getAllMethods(boolean declared) {
 		inspectMethods();
 
 		Methods methods = declared ? allMethods : publicMethods;
@@ -296,13 +274,11 @@ public class ClassDescriptor {
 
 			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
 			if (propertyName != null) {
-				propertyName = '-' + propertyName;
 				add = true;
 				issetter = false;
 			} else {
 				propertyName = ReflectUtil.getBeanPropertySetterName(method);
 				if (propertyName != null) {
-					propertyName = '+' + propertyName;
 					add = true;
 					issetter = true;
 				}
@@ -310,23 +286,25 @@ public class ClassDescriptor {
 
 			if (add == true) {
 				if (ReflectUtil.isPublic(method)) {
-					publicProperties.addMethod(propertyName, method);
-
 					MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), false);
-					// todo remove substring(1)!
-					publicProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
+					publicProperties.addProperty(propertyName, methodDescriptor, issetter);
 				}
 				ReflectUtil.forceAccess(method);
-				allProperties.addMethod(propertyName, method);
 
 				MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
-				// todo remove substring(1)!
-				allProperties.addProperty(propertyName.substring(1), methodDescriptor, issetter);
+				allProperties.addProperty(propertyName, methodDescriptor, issetter);
 			}
 		}
 
 		this.allProperties = allProperties;
 		this.publicProperties = publicProperties;
+	}
+
+	public PropertyDescriptor[] getAllPropertyDescriptors(boolean declared) {
+		inspectProperties();
+
+		Properties properties = declared ? allProperties : publicProperties;
+		return properties.getAllProperties();
 	}
 
 	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
@@ -335,6 +313,8 @@ public class ClassDescriptor {
 		Properties properties = declared ? allProperties : publicProperties;
 		return properties.getProperty(name);
 	}
+
+
 
 	public MethodDescriptor getPropertySetter(String name, boolean declared) {
 		inspectProperties();
@@ -357,93 +337,6 @@ public class ClassDescriptor {
 
 		return propertyDescriptor.getReadMethodDescriptor();
 	}
-
-	// TODO REVIEW REVIEW REVIEW
-
-	/**
-	 * Returns bean setter identified by name.
-	 */
-	public Method getBeanSetter(String name, boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getSetters().getMethod(name);
-	}
-
-	/**
-	 * Returns bean setter {@link MethodDescriptor} identified by name.
-	 */
-/*
-	public MethodDescriptor getBeanSetterMethodDescriptor(String name, boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getSetters().getMethodDescriptor(name);
-	}
-*/
-
-	/**
-	 * Returns an array of all bean setters.
-	 */
-	public Method[] getAllBeanSetters(boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getSetters().getAllMethods();
-	}
-
-	/**
-	 * Returns an array of all bean setters names.
-	 */
-	public String[] getAllBeanSetterNames(boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getSetterNames();
-	}
-
-	/**
-	 * Returns bean getter identified by name.
-	 */
-	public Method getBeanGetter(String name, boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getGetters().getMethod(name);
-	}
-
-	/**
-	 * Returns {@link MethodDescriptor} for bean setter identified by name.
-	 */
-/*
-	public MethodDescriptor getBeanGetterMethodDescriptor(String name, boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getGetters().getMethodDescriptor(name);
-	}
-*/
-
-	/**
-	 * Returns all bean getters.
-	 */
-	public Method[] getAllBeanGetters(boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getGetters().getAllMethods();
-	}
-
-	/**
-	 * Returns all bean getters names.
-	 */
-	public String[] getAllBeanGetterNames(boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getGetterNames();
-	}
-
 
 	// ---------------------------------------------------------------- ctors
 

@@ -4,6 +4,7 @@ package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.PropertyDescriptor;
 import jodd.util.ArraysUtil;
 
 import java.util.Map;
@@ -37,6 +38,26 @@ public abstract class BeanVisitor {
 
 	// ---------------------------------------------------------------- util
 
+	protected String[] getAllBeanGetterNames(Class type, boolean declared) {
+		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
+
+		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors(declared);
+
+		String[] names = new String[propertyDescriptors.length];
+
+		for (int i = 0; i < propertyDescriptors.length; i++) {
+			PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
+
+			if (propertyDescriptor.getReadMethodDescriptor() != null) {
+				names[i] = propertyDescriptor.getName();
+			} else {
+				names[i] = null;
+			}
+		}
+
+		return names;
+	}
+
 	/**
 	 * Returns an array of bean properties. If bean is a <code>Map</code>,
 	 * all its keys will be returned.
@@ -54,9 +75,7 @@ public abstract class BeanVisitor {
 				ndx++;
 			}
 		} else {
-			ClassDescriptor classDescriptor = ClassIntrospector.lookup(bean.getClass());
-
-			properties = classDescriptor.getAllBeanGetterNames(declared);
+			properties = getAllBeanGetterNames(bean.getClass(), declared);
 		}
 
 		return properties;
@@ -69,6 +88,10 @@ public abstract class BeanVisitor {
 		String[] properties = resolveProperties(source, false);
 
 		for (String name : properties) {
+			if (name == null) {
+				continue;
+			}
+
 			if (excludeNames != null) {
 				if (ArraysUtil.contains(excludeNames, name) == true) {
 					continue;

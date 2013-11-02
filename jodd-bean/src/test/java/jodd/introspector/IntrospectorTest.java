@@ -9,7 +9,8 @@ import jodd.introspector.tst.Bc;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.Assert.*;
 
@@ -19,16 +20,30 @@ public class IntrospectorTest {
 	public void testBasic() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 		assertNotNull(cd);
-		Method[] getters = cd.getAllBeanGetters(false);
-		assertEquals(2, getters.length);
-		assertNotNull(cd.getBeanGetter("fooProp", false));
-		assertNotNull(cd.getBeanGetter("something", false));
-		assertNull(cd.getBeanGetter("FooProp", false));
-		assertNull(cd.getBeanGetter("Something", false));
-		assertNull(cd.getBeanGetter("notExisting", false));
+		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors(false);
+		assertEquals(2, properties.length);
 
-		Method[] setters = cd.getAllBeanSetters(false);
-		assertEquals(1, setters.length);
+		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
+			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		PropertyDescriptor pd = properties[0];
+		assertEquals("fooProp", pd.getName());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNotNull(pd.getWriteMethodDescriptor());
+
+		pd = properties[1];
+		assertEquals("something", pd.getName());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNull(pd.getWriteMethodDescriptor());
+
+		assertNotNull(cd.getPropertyDescriptor("fooProp", false));
+		assertNotNull(cd.getPropertyDescriptor("something", false));
+		assertNull(cd.getPropertyDescriptor("FooProp", false));
+		assertNull(cd.getPropertyDescriptor("Something", false));
+		assertNull(cd.getPropertyDescriptor("notExisting", false));
 	}
 
 	@Test
@@ -36,23 +51,41 @@ public class IntrospectorTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 		assertNotNull(cd);
 
-		Method[] getters = cd.getAllBeanGetters(false);
-		assertEquals(2, getters.length);
-		getters = cd.getAllBeanGetters(true);
-		assertEquals(3, getters.length);
-		assertNotNull(cd.getBeanGetter("fooProp", false));
-		assertNotNull(cd.getBeanGetter("something", false));
-		assertNull(cd.getBeanGetter("FooProp", false));
-		assertNull(cd.getBeanGetter("Something", false));
-		assertNull(cd.getBeanGetter("notExisting", false));
+		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors(false);
+		assertEquals(2, properties.length);
 
-		assertNotNull(cd.getBeanGetter("boo", true));
-		assertNull(cd.getBeanGetter("boo", false));
+		properties = cd.getAllPropertyDescriptors(true);
+		assertEquals(3, properties.length);
 
-		Method[] setters = cd.getAllBeanSetters(false);
-		assertEquals(1, setters.length);
-		setters = cd.getAllBeanSetters(true);
-		assertEquals(2, setters.length);
+		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
+			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		PropertyDescriptor pd = properties[0];
+		assertEquals("boo", pd.getName());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNotNull(pd.getWriteMethodDescriptor());
+
+		pd = properties[1];
+		assertEquals("fooProp", pd.getName());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNotNull(pd.getWriteMethodDescriptor());
+
+		pd = properties[2];
+		assertEquals("something", pd.getName());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNull(pd.getWriteMethodDescriptor());
+
+		assertNotNull(cd.getPropertyDescriptor("fooProp", false));
+		assertNotNull(cd.getPropertyDescriptor("something", false));
+		assertNull(cd.getPropertyDescriptor("FooProp", false));
+		assertNull(cd.getPropertyDescriptor("Something", false));
+		assertNull(cd.getPropertyDescriptor("notExisting", false));
+
+		assertNotNull(cd.getPropertyDescriptor("boo", true));
+		assertNull(cd.getPropertyDescriptor("boo", false));
 	}
 
 	@Test

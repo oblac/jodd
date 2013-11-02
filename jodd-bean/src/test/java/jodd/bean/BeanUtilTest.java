@@ -5,6 +5,7 @@ package jodd.bean;
 import jodd.bean.data.*;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.PropertyDescriptor;
 import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
@@ -1332,12 +1333,12 @@ public class BeanUtilTest {
 		assertTrue((Boolean) value);
 
 		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
-		assertEquals(1, cd.getAllBeanGetterNames(false).length);
-		assertEquals(1, cd.getAllBeanGetters(false).length);
-		assertEquals("isFlag", cd.getAllBeanGetters(false)[0].getName());
-		assertEquals("isFlag", cd.getBeanGetter("flag", false).getName());
-		assertEquals(1, cd.getAllBeanSetterNames(false).length);
-		assertEquals(1, cd.getAllBeanSetters(false).length);
+
+		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors(true);
+
+		assertEquals(1, propertyDescriptors.length);
+		assertEquals("flag", propertyDescriptors[0].getName());
+		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
 		assertEquals(3, cd.getAllMethods(false).length);
 
 		GetIsBool i2 = new GetIsBool();
@@ -1346,12 +1347,8 @@ public class BeanUtilTest {
 		assertTrue((Boolean) value);
 
 		cd = ClassIntrospector.lookup(GetIsBool.class);
-		assertEquals(1, cd.getAllBeanGetterNames(false).length);
-		assertEquals(1, cd.getAllBeanGetters(false).length);
-		assertEquals("isFlag", cd.getAllBeanGetters(false)[0].getName());
-		assertEquals("isFlag", cd.getBeanGetter("flag", false).getName());
-		assertEquals(1, cd.getAllBeanSetterNames(false).length);
-		assertEquals(1, cd.getAllBeanSetters(false).length);
+		assertEquals("flag", propertyDescriptors[0].getName());
+		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
 		assertEquals(3, cd.getAllMethods(false).length);
 	}
 

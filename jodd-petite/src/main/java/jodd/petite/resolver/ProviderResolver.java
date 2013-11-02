@@ -4,6 +4,7 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.petite.BeanDefinition;
 import jodd.petite.ProviderDefinition;
 import jodd.petite.meta.PetiteProvider;
@@ -26,11 +27,13 @@ public class ProviderResolver {
 		Class type = beanDefinition.getType();
 
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		Method[] methods = cd.getAllMethods(true);
+		MethodDescriptor[] methods = cd.getAllMethods(true);
 
 		List<ProviderDefinition> list = new ArrayList<ProviderDefinition>();
 
-		for (Method method : methods) {
+		for (MethodDescriptor methodDescriptor : methods) {
+			Method method = methodDescriptor.getMethod();
+
 			PetiteProvider petiteProvider = method.getAnnotation(PetiteProvider.class);
 			if (petiteProvider == null) {
 				continue;

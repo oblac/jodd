@@ -13,7 +13,8 @@ class Fields {
 	private final ClassDescriptor classDescriptor;
 	private final HashMap<String, FieldDescriptor> fieldsMap;
 
-	private FieldDescriptor[] allFields;		// cache
+	// cache
+	private FieldDescriptor[] allFields;
 
 	Fields(ClassDescriptor classDescriptor, int maxFields) {
 		this.classDescriptor = classDescriptor;
@@ -42,15 +43,15 @@ class Fields {
 	 */
 	FieldDescriptor[] getAllFields() {
 		if (allFields == null) {
-			FieldDescriptor[] allFieldsNew = new FieldDescriptor[fieldsMap.size()];
+			FieldDescriptor[] allFields = new FieldDescriptor[fieldsMap.size()];
 
-			int ndx = 0;
+			int index = 0;
 			for (FieldDescriptor fieldDescriptor : fieldsMap.values()) {
-				allFieldsNew[ndx] = fieldDescriptor;
-				ndx++;
+				allFields[index] = fieldDescriptor;
+				index++;
 			}
 
-			allFields = allFieldsNew;
+			this.allFields = allFields;
 		}
 		return allFields;
 	}

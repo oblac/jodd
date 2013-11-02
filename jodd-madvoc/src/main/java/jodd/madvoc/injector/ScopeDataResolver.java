@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
@@ -308,7 +309,7 @@ public class ScopeDataResolver {
 	protected ScopeData inspectScopeData(Class actionClass, ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 		FieldDescriptor[] fields = cd.getAllFieldDescriptors(true);
-		Method[] methods = cd.getAllMethods(true);
+		MethodDescriptor[] methods = cd.getAllMethods(true);
 
 		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(fields.length + methods.length);
 		List<ScopeData.Out> listOut = new ArrayList<ScopeData.Out>(fields.length + methods.length);
@@ -354,7 +355,9 @@ public class ScopeDataResolver {
 		}
 
 		// methods
-		for (Method method : methods) {
+		for (MethodDescriptor methodDescriptor : methods) {
+			Method method = methodDescriptor.getMethod();
+
 			String propertyName = ReflectUtil.getBeanPropertySetterName(method);
 			if (propertyName != null) {
 				In in = method.getAnnotation(In.class);

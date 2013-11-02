@@ -4,6 +4,7 @@ package jodd.madvoc.config;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.io.findfile.ClassFinder;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.WebApplication;
@@ -161,8 +162,10 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 
-		Method[] allPublicMethods = cd.getAllMethods(false);
-		for (Method method : allPublicMethods) {
+		MethodDescriptor[] allPublicMethods = cd.getAllMethods(false);
+		for (MethodDescriptor methodDescriptor : allPublicMethods) {
+			Method method = methodDescriptor.getMethod();
+
 			boolean hasAnnotation = false;
 			for (ActionAnnotation<?> actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
 				if (actionAnnotation.hasAnnotation(method)) {

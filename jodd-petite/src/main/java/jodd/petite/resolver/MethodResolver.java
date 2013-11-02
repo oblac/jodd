@@ -4,6 +4,7 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.MethodInjectionPoint;
 import jodd.petite.PetiteUtil;
@@ -28,9 +29,11 @@ public class MethodResolver {
 		// lookup methods
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<MethodInjectionPoint> list = new ArrayList<MethodInjectionPoint>();
-		Method[] allMethods = cd.getAllMethods(true);
+		MethodDescriptor[] allMethods = cd.getAllMethods(true);
 
-		for (Method method : allMethods) {
+		for (MethodDescriptor methodDescriptor : allMethods) {
+			Method method = methodDescriptor.getMethod();
+
 			PetiteInject ref = method.getAnnotation(PetiteInject.class);
 			if (ref == null) {
 				continue;

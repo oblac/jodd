@@ -2,9 +2,6 @@
 
 package jodd.bean;
 
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
-
 /**
  * Powerful tool for copying properties from one bean into another.
  * @see BeanVisitor
@@ -50,9 +47,7 @@ public class BeanCopy extends BeanVisitor {
 	 * of given template class.
 	 */
 	public BeanCopy includeAs(Class template) {
-		ClassDescriptor cd = ClassIntrospector.lookup(template);
-
-		String[] properties = cd.getAllBeanGetterNames(false);
+		String[] properties = getAllBeanGetterNames(template, false);
 
 		include(properties);
 
