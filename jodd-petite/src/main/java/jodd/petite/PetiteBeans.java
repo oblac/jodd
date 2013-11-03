@@ -416,7 +416,7 @@ public abstract class PetiteBeans {
 
 		Method method = null;
 		if (arguments == null) {
-			MethodDescriptor[] methods = cd.getAllMethods(methodName, true);
+			MethodDescriptor[] methods = cd.getAllMethodDescriptors(methodName);
 			if (methods != null && methods.length > 0) {
 				if (methods.length > 1) {
 					throw new PetiteException(methods.length + " suitable methods found as injection points for: " + beanDefinition.type.getName() + '#' + methodName);

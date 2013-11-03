@@ -5,6 +5,7 @@ package jodd.bean;
 import jodd.bean.data.*;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.mutable.MutableInteger;
 import org.junit.Test;
@@ -1339,7 +1340,12 @@ public class BeanUtilTest {
 		assertEquals(1, propertyDescriptors.length);
 		assertEquals("flag", propertyDescriptors[0].getName());
 		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
-		assertEquals(3, cd.getAllMethods(false).length);
+		MethodDescriptor[] mds = cd.getAllMethodDescriptors();
+		int c = 0;
+		for (MethodDescriptor md : mds) {
+			if (md.isPublic()) c++;
+		}
+		assertEquals(3, c);
 
 		GetIsBool i2 = new GetIsBool();
 		value = BeanUtil.getProperty(i2, "flag");
@@ -1349,7 +1355,12 @@ public class BeanUtilTest {
 		cd = ClassIntrospector.lookup(GetIsBool.class);
 		assertEquals("flag", propertyDescriptors[0].getName());
 		assertEquals("isFlag", propertyDescriptors[0].getReadMethodDescriptor().getMethod().getName());
-		assertEquals(3, cd.getAllMethods(false).length);
+		mds = cd.getAllMethodDescriptors();
+		c = 0;
+		for (MethodDescriptor md : mds) {
+			if (md.isPublic()) c++;
+		}
+		assertEquals(3, c);
 	}
 
 	@Test

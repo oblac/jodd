@@ -15,6 +15,7 @@ public class MethodDescriptor {
 
 	protected final ClassDescriptor classDescriptor;
 	protected final Method method;
+	protected final boolean isPublic;
 	protected final Type returnType;
 	protected final Class rawReturnType;
 	protected final Class rawReturnComponentType;
@@ -28,6 +29,9 @@ public class MethodDescriptor {
 		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
 		this.rawReturnComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType());
 		this.rawReturnKeyComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType(), 0);
+
+		this.isPublic = ReflectUtil.isPublic(method);
+		ReflectUtil.forceAccess(method);
 
 		Type[] params = method.getGenericParameterTypes();
 		rawParameterTypes = new Class[params.length];
@@ -50,6 +54,13 @@ public class MethodDescriptor {
 	 */
 	public Method getMethod() {
 		return method;
+	}
+
+	/**
+	 * Returns <code>true</code> if method is public.
+	 */
+	public boolean isPublic() {
+		return isPublic;
 	}
 
 	/**

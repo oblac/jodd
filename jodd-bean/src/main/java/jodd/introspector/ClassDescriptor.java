@@ -4,7 +4,6 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Constructor;
@@ -160,50 +159,28 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- methods
 
-	/**
-	 * Creates new {@code MethodDescriptor}.
-	 */
-	protected MethodDescriptor createMethodDescriptor(Method method) {
-		return new MethodDescriptor(this, method);
-	}
+	private Methods methods;
 
-	protected Methods publicMethods;
-	protected Methods allMethods;
-
-	/**
-	 * Inspect methods and create methods cache.
-	 */
-	protected void inspectMethods() {
-		if (allMethods != null) {
-			return;
+	protected Methods getMethods() {
+		if (methods == null) {
+			methods = new Methods(this);
 		}
-
-		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
-
-		Methods publicMethods = new Methods(this, methods.length);
-		Methods allMethods = new Methods(this, methods.length);
-
-		for (Method method : methods) {
-			String methodName = method.getName();
-			if (ReflectUtil.isPublic(method)) {
-				publicMethods.addMethod(methodName, method);
-			}
-			ReflectUtil.forceAccess(method);
-			allMethods.addMethod(methodName, method);
-		}
-
-		this.allMethods = allMethods;
-		this.publicMethods = publicMethods;
+		return methods;
 	}
 
 	/**
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
 	public MethodDescriptor getMethodDescriptor(String name, boolean declared) {
-		inspectMethods();
+		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
 
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getMethodDescriptor(name);
+		if (methodDescriptor != null) {
+			if (!declared && !methodDescriptor.isPublic()) {
+				return null;
+			}
+		}
+
+		return methodDescriptor;
 	}
 
 
@@ -211,30 +188,29 @@ public class ClassDescriptor {
 	 * Returns {@link MethodDescriptor method descriptor} identified by name and parameters.
 	 */
 	public MethodDescriptor getMethodDescriptor(String name, Class[] params, boolean declared) {
-		inspectMethods();
+		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
 
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getMethodDescriptor(name, params);
+		if (methodDescriptor != null) {
+			if (!declared && !methodDescriptor.isPublic()) {
+				return null;
+			}
+		}
+
+		return methodDescriptor;
 	}
 
 	/**
 	 * Returns an array of all methods with the same name.
 	 */
-	public MethodDescriptor[] getAllMethods(String name, boolean declared) {
-		inspectMethods();
-
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getAllMethodDescriptors(name);
+	public MethodDescriptor[] getAllMethodDescriptors(String name) {
+		return getMethods().getAllMethodDescriptors(name);
 	}
 
 	/**
 	 * Returns an array of all methods.
 	 */
-	public MethodDescriptor[] getAllMethods(boolean declared) {
-		inspectMethods();
-
-		Methods methods = declared ? allMethods : publicMethods;
-		return methods.getAllMethods();
+	public MethodDescriptor[] getAllMethodDescriptors() {
+		return getMethods().getAllMethods();
 	}
 
 	// ---------------------------------------------------------------- properties

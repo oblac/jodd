@@ -162,8 +162,12 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 
-		MethodDescriptor[] allPublicMethods = cd.getAllMethods(false);
-		for (MethodDescriptor methodDescriptor : allPublicMethods) {
+		MethodDescriptor[] allMethodDescriptors = cd.getAllMethodDescriptors();
+		for (MethodDescriptor methodDescriptor : allMethodDescriptors) {
+			if (!methodDescriptor.isPublic()) {
+				continue;
+			}
+			// just public methods
 			Method method = methodDescriptor.getMethod();
 
 			boolean hasAnnotation = false;

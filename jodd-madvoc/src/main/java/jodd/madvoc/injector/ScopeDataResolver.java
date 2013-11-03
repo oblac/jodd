@@ -309,7 +309,7 @@ public class ScopeDataResolver {
 	protected ScopeData inspectScopeData(Class actionClass, ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 		FieldDescriptor[] fields = cd.getAllFieldDescriptors();
-		MethodDescriptor[] methods = cd.getAllMethods(true);
+		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
 		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(fields.length + methods.length);
 		List<ScopeData.Out> listOut = new ArrayList<ScopeData.Out>(fields.length + methods.length);

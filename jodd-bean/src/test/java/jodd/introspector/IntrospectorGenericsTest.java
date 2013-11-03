@@ -5,7 +5,6 @@ package jodd.introspector;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +79,15 @@ public class IntrospectorGenericsTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(MethodParameterType.class);
 
 		assertEquals(MethodParameterType.class, cd.getType());
-		assertEquals(0, cd.getAllMethods(false).length);
-		assertEquals(3, cd.getAllMethods(true).length);
+		assertEquals(3, cd.getAllMethodDescriptors().length);
+
+		MethodDescriptor[] mds = cd.getAllMethodDescriptors();
+		int mc = 0;
+		for (MethodDescriptor md : mds) {
+			if (md.isPublic()) mc++;
+		}
+		assertEquals(0, mc);
+
 
 		Class[] params = new Class[] {Object.class, String.class, List.class, List.class, List.class};
 
@@ -120,7 +126,7 @@ public class IntrospectorGenericsTest {
 
 		assertEquals(0, Foo.class.getDeclaredMethods().length);
 
-		MethodDescriptor[] allm = cd1.getAllMethods(true);
+		MethodDescriptor[] allm = cd1.getAllMethodDescriptors();
 
 		assertEquals(3, allm.length);
 

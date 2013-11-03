@@ -27,7 +27,7 @@ public class ProviderResolver {
 		Class type = beanDefinition.getType();
 
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		MethodDescriptor[] methods = cd.getAllMethods(true);
+		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
 		List<ProviderDefinition> list = new ArrayList<ProviderDefinition>();
 

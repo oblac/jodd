@@ -13,37 +13,53 @@ import java.util.List;
 /**
  * Methods collection.
  */
-class Methods {
+public class Methods {
 
-	private final ClassDescriptor classDescriptor;
-	private final HashMap<String, MethodDescriptor[]> methodsMap;
+	protected final ClassDescriptor classDescriptor;
+	protected final HashMap<String, MethodDescriptor[]> methodsMap;
 
 	// cache
 	private MethodDescriptor[] allMethods;
 
-	Methods(ClassDescriptor classDescriptor, int maxMethods) {
+	public Methods(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		if (maxMethods == 0) {
-			maxMethods = 16;
-		}
-		this.methodsMap = new HashMap<String, MethodDescriptor[]>(maxMethods);
+		this.methodsMap = inspectMethods();
 	}
 
-	void addMethod(String name, Method method) {
-		MethodDescriptor[] mds = methodsMap.get(name);
+	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
+		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		Class type = classDescriptor.getType();
 
-		if (mds == null) {
-			mds = new MethodDescriptor[1];
-		} else {
-			mds = ArraysUtil.resize(mds, mds.length + 1);
+		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+
+		HashMap<String, MethodDescriptor[]> map = new HashMap<String, MethodDescriptor[]>(methods.length);
+
+		for (Method method : methods) {
+			String methodName = method.getName();
+
+			MethodDescriptor[] mds = map.get(methodName);
+
+			if (mds == null) {
+				mds = new MethodDescriptor[1];
+			} else {
+				mds = ArraysUtil.resize(mds, mds.length + 1);
+			}
+
+			map.put(methodName, mds);
+
+			mds[mds.length - 1] = createMethodDescriptor(method);
 		}
-		methodsMap.put(name, mds);
 
-		mds[mds.length - 1] = classDescriptor.createMethodDescriptor(method);
-
-		// reset cache
-		allMethods = null;
+		return map;
 	}
+
+	/**
+	 * Creates new {@code MethodDescriptor}.
+	 */
+	protected MethodDescriptor createMethodDescriptor(Method method) {
+		return new MethodDescriptor(classDescriptor, method);
+	}
+
 
 	// ---------------------------------------------------------------- get
 
@@ -51,7 +67,7 @@ class Methods {
 	 * Returns a method that matches given name and parameter types.
 	 * Returns <code>null</code> if method is not found.
 	 */
-	MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
+	public MethodDescriptor getMethodDescriptor(String name, Class[] paramTypes) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
@@ -71,7 +87,7 @@ class Methods {
 	 * Returns <code>null</code> if no method exist in this collection by given name.
 	 * @see #getMethodDescriptor(String, Class[])
 	 */
-	MethodDescriptor getMethodDescriptor(String name) {
+	public MethodDescriptor getMethodDescriptor(String name) {
 		MethodDescriptor[] methodDescriptors = methodsMap.get(name);
 		if (methodDescriptors == null) {
 			return null;
@@ -85,14 +101,14 @@ class Methods {
 	/**
 	 * Returns all methods for given name. Returns <code>null</code> if method not found.
 	 */
-	MethodDescriptor[] getAllMethodDescriptors(String name) {
+	public MethodDescriptor[] getAllMethodDescriptors(String name) {
 		return methodsMap.get(name);
 	}
 
 	/**
 	 * Returns all methods. Cached. Lazy.
 	 */
-	MethodDescriptor[] getAllMethods() {
+	public MethodDescriptor[] getAllMethods() {
 		if (allMethods == null) {
 			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
 
@@ -105,13 +121,6 @@ class Methods {
 			allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
 		}
 		return allMethods;
-	}
-
-	/**
-	 * Returns number of methods in this collection.
-	 */
-	int getCount() {
-		return getAllMethods().length;
 	}
 
 }
