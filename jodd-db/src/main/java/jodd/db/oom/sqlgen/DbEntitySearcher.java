@@ -48,7 +48,7 @@ public class DbEntitySearcher implements DbSqlGenerator {
 		StringBuilder query = new StringBuilder("select * from ");
 		query.append(ded.getTableName());
 
-		FieldDescriptor[] fields = entityClassDescriptor.getAllFieldDescriptors(true);
+		FieldDescriptor[] fields = entityClassDescriptor.getAllFieldDescriptors();
 		boolean firstCondition = true;
 		boolean hasCondition = false;
 

@@ -33,7 +33,7 @@ public class PropertyResolver {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
-		FieldDescriptor[] allFields = cd.getAllFieldDescriptors(true);
+		FieldDescriptor[] allFields = cd.getAllFieldDescriptors();
 
 		for (FieldDescriptor fieldDescriptor : allFields) {
 			Field field = fieldDescriptor.getField();

@@ -33,7 +33,7 @@ public class SetResolver {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<SetInjectionPoint> list = new ArrayList<SetInjectionPoint>();
-		FieldDescriptor[] allFields = cd.getAllFieldDescriptors(true);
+		FieldDescriptor[] allFields = cd.getAllFieldDescriptors();
 
 		for (FieldDescriptor fieldDescriptor : allFields) {
 			Field field = fieldDescriptor.getField();

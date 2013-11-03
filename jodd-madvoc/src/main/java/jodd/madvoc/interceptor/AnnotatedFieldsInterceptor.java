@@ -57,7 +57,7 @@ public abstract class AnnotatedFieldsInterceptor extends ActionInterceptor {
 		Field[] fields = annotatedField.get(type);
 		if (fields == null) {
 			ClassDescriptor cd = ClassIntrospector.lookup(type);
-			FieldDescriptor[] allFields = cd.getAllFieldDescriptors(true);
+			FieldDescriptor[] allFields = cd.getAllFieldDescriptors();
 			List<Field> fieldlist = new ArrayList<Field>();
 			for (FieldDescriptor fieldDescriptor : allFields) {
 				Field field = fieldDescriptor.getField();

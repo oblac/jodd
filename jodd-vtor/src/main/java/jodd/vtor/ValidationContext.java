@@ -75,7 +75,7 @@ public class ValidationContext {
 		if (list == null) {
 			list = new ArrayList<Check>();
 			ClassDescriptor cd = ClassIntrospector.lookup(target);
-			FieldDescriptor[] fields = cd.getAllFieldDescriptors(true);
+			FieldDescriptor[] fields = cd.getAllFieldDescriptors();
 			for (FieldDescriptor fieldDescriptor : fields) {
 				collectFieldAnnotationChecks(list, fieldDescriptor.getField());
 			}

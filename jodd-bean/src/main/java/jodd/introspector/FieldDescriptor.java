@@ -19,7 +19,12 @@ public class FieldDescriptor {
 	protected final Class rawType;
 	protected final Class rawComponentType;
 	protected final Class rawKeyComponentType;
+	protected final boolean isPublic;
 
+	/**
+	 * Creates new field descriptor and resolve all additional field data.
+	 * Also, forces access to a field.
+	 */
 	public FieldDescriptor(ClassDescriptor classDescriptor, Field field) {
 		this.classDescriptor = classDescriptor;
 		this.field = field;
@@ -27,6 +32,9 @@ public class FieldDescriptor {
 		this.rawType = ReflectUtil.getRawType(type, classDescriptor.getType());
 		this.rawComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType());
 		this.rawKeyComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType(), 0);
+		this.isPublic = ReflectUtil.isPublic(field);
+
+		ReflectUtil.forceAccess(field);
 	}
 
 	/**
@@ -41,6 +49,13 @@ public class FieldDescriptor {
 	 */
 	public Field getField() {
 		return field;
+	}
+
+	/**
+	 * Returns <code>true</code> if field is public.
+	 */
+	public boolean isPublic() {
+		return isPublic;
 	}
 
 	/**

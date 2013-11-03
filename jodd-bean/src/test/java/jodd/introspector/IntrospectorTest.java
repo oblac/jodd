@@ -114,4 +114,21 @@ public class IntrospectorTest {
 		ctor = cd.getCtor(new Class[]{String.class}, true);
 		assertNotNull(ctor);
 	}
+
+	@Test
+	public void testSameFieldDifferentClass() {
+		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
+
+		FieldDescriptor fd = cd.getFieldDescriptor("shared", false);
+		assertNull(fd);
+
+		fd = cd.getFieldDescriptor("shared", true);
+		assertNotNull(fd);
+
+		ClassDescriptor cd2 = ClassIntrospector.lookup(Bbean.class);
+		FieldDescriptor fd2 = cd2.getFieldDescriptor("shared", true);
+
+		assertNotEquals(fd, fd2);
+		assertEquals(fd.getField(), fd2.getField());
+	}
 }

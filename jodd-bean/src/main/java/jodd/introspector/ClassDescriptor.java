@@ -54,16 +54,26 @@ public class ClassDescriptor {
 		return type;
 	}
 
+	/**
+	 * Returns <code>true</code> if this class descriptor
+	 * works with only accessible fields and methods.
+	 */
+	public boolean isAccessibleOnly() {
+		return accessibleOnly;
+	}
 
 	/**
-	 * Increases descriptor usage.
+	 * Increases usage count.
 	 */
 	protected void increaseUsageCount() {
 		usageCount++;
 	}
 
 	/**
-	 * Returns number of class description usages.
+	 * Returns number of class descriptor usages. That is number
+	 * of times when class descriptor for some class has been
+	 * lookuped. Higher usage count means that some class is
+	 * more frequently being used.
 	 */
 	public int getUsageCount() {
 		return usageCount;
@@ -113,60 +123,39 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- fields
 
-	/**
-	 * Creates new {@code FieldDescriptor}.
-	 */
-	protected FieldDescriptor createFieldDescriptor(Field field) {
-		return new FieldDescriptor(this, field);
-	}
-
-	protected Fields publicFields;
-	protected Fields allFields;
+	private Fields fields;
 
 	/**
-	 * Inspect class fields and create fields cache.
+	 * Returns {@link Fields fields collection}.
+	 * Creates new collection on first usage.
 	 */
-	protected void inspectFields() {
-		if (allFields != null) {
-			return;
+	protected Fields getFields() {
+		if (fields == null) {
+			fields = new Fields(this);
 		}
-
-		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
-
-		Fields publicFields = new Fields(this, fields.length);
-		Fields allFields = new Fields(this, fields.length);
-
-		for (Field field : fields) {
-			String fName = field.getName();
-			if (ReflectUtil.isPublic(field)) {
-				publicFields.addField(fName, field);
-			}
-			ReflectUtil.forceAccess(field);
-			allFields.addField(fName, field);
-		}
-
-		this.publicFields = publicFields;
-		this.allFields = allFields;
+		return fields;
 	}
 
 	/**
 	 * Returns field descriptor.
 	 */
 	public FieldDescriptor getFieldDescriptor(String name, boolean declared) {
-		inspectFields();
+		FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
 
-		Fields fields = declared ? allFields : publicFields;
-		return fields.getFieldDescriptor(name);
+		if (fieldDescriptor != null) {
+			if (!declared && !fieldDescriptor.isPublic()) {
+				return null;
+			}
+		}
+
+		return fieldDescriptor;
 	}
 
 	/**
-	 * Returns all field descriptors.
+	 * Returns all field descriptors, including declared ones.
 	 */
-	public FieldDescriptor[] getAllFieldDescriptors(boolean declared) {
-		inspectFields();
-
-		Fields fields = declared ? allFields : publicFields;
-		return fields.getAllFields();
+	public FieldDescriptor[] getAllFieldDescriptors() {
+		return getFields().getAllFieldDescriptors();
 	}
 
 	// ---------------------------------------------------------------- methods

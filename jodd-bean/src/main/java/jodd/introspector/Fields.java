@@ -2,30 +2,57 @@
 
 package jodd.introspector;
 
+import jodd.util.ReflectUtil;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
- * Fields collection.
+ * Collection of {@link FieldDescriptor field descriptors}.
  */
-class Fields {
+public class Fields {
 
-	private final ClassDescriptor classDescriptor;
-	private final HashMap<String, FieldDescriptor> fieldsMap;
+	protected final ClassDescriptor classDescriptor;
+	protected final HashMap<String, FieldDescriptor> fieldsMap;
 
 	// cache
 	private FieldDescriptor[] allFields;
 
-	Fields(ClassDescriptor classDescriptor, int maxFields) {
+	/**
+	 * Creates new fields collection.
+	 */
+	public Fields(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		fieldsMap = new HashMap<String, FieldDescriptor>(maxFields);
+		this.fieldsMap = inspectFields();
 	}
 
-	void addField(String name, Field field) {
-		fieldsMap.put(name, classDescriptor.createFieldDescriptor(field));
+	/**
+	 * Inspects fields and returns map of {@link FieldDescriptor field descriptors}.
+	 */
+	protected HashMap<String, FieldDescriptor> inspectFields() {
+		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		Class type = classDescriptor.getType();
 
-		allFields = null;	// reset cache
+		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
+
+		HashMap<String, FieldDescriptor> map = new HashMap<String, FieldDescriptor>(fields.length);
+
+		for (Field field : fields) {
+			String fieldName = field.getName();
+
+			map.put(fieldName, createFieldDescriptor(field));
+		}
+
+		return map;
 	}
+
+	/**
+	 * Creates new {@code FieldDescriptor}.
+	 */
+	protected FieldDescriptor createFieldDescriptor(Field field) {
+		return new FieldDescriptor(classDescriptor, field);
+	}
+
 
 	// ---------------------------------------------------------------- get
 
@@ -33,7 +60,7 @@ class Fields {
 	 * Returns {@link FieldDescriptor field descriptor} for given field name
 	 * or <code>null</code> if field does not exist.
 	 */
-	FieldDescriptor getFieldDescriptor(String name) {
+	public FieldDescriptor getFieldDescriptor(String name) {
 		return fieldsMap.get(name);
 	}
 
@@ -41,7 +68,7 @@ class Fields {
 	 * Returns all fields of this collection. Returns empty array
 	 * if no fields exist. Initialized lazy.
 	 */
-	FieldDescriptor[] getAllFields() {
+	public FieldDescriptor[] getAllFieldDescriptors() {
 		if (allFields == null) {
 			FieldDescriptor[] allFields = new FieldDescriptor[fieldsMap.size()];
 
