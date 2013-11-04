@@ -40,6 +40,7 @@ public class FindFile2Test {
 		ff.setIncludeDirs(true);
 		ff.setIncludeFiles(true);
 		ff.setRecursive(true);
+		ff.sortByName();
 		ff.setWalking(true);
 		ff.searchPath(dataRoot);
 

@@ -13,7 +13,6 @@ import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
 import jodd.util.testdata2.En;
 import org.junit.Test;
-import sun.reflect.Reflection;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -448,7 +447,7 @@ public class ReflectUtilTest {
 		assertFalse(ReflectUtil.isSubclass(Long.class, long.class));
 	}
 
-	@Test
+/*	@Test
 	public void testGetCallerClass() {
 		assertFalse(Reflection.getCallerClass(0).equals(ReflectUtil.getCallerClass(0)));
 
@@ -476,7 +475,7 @@ public class ReflectUtilTest {
 
 		field.set(null, value);
 	}
-
+*/
 	// ---------------------------------------------------------------- field concrete type
 
 	public static class BaseClass<A, B> {
