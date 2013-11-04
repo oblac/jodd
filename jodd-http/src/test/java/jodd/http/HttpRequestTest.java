@@ -4,6 +4,7 @@ package jodd.http;
 
 import jodd.io.FileUtil;
 import jodd.upload.FileUpload;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -176,6 +177,31 @@ public class HttpRequestTest {
 		assertEquals(params2.get("one"), params2.get("one"));
 	}
 
+	@Test
+	public void testNegativeContentLength() {
+		HttpRequest request = HttpRequest.get("http://jodd.org/?id=173");
+		request.contentLength(-123);
+
+		byte[] bytes = request.toByteArray();
+		try {
+			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+			assertNull(request2.body());
+		} catch (Exception ex) {
+			Assert.fail(ex.toString());
+		}
+
+		// the same test but with missing content length
+
+		request = HttpRequest.get("http://jodd.org/?id=173");
+
+		bytes = request.toByteArray();
+		try {
+			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
+			assertNull(request2.body());
+		} catch (Exception ex) {
+			Assert.fail(ex.toString());
+		}
+	}
 
 	@Test
 	public void testFileUpload() throws IOException {

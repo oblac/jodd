@@ -630,15 +630,17 @@ public abstract class HttpBase<T> {
 		if (contentLen != null) {
 			int len = Integer.parseInt(contentLen);
 
-			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(len);
+			if (len > 0) {
+				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(len);
 
-			try {
-				StreamUtil.copy(reader, fastCharArrayWriter, len);
-			} catch (IOException ioex) {
-				throw new HttpException(ioex);
+				try {
+					StreamUtil.copy(reader, fastCharArrayWriter, len);
+				} catch (IOException ioex) {
+					throw new HttpException(ioex);
+				}
+
+				bodyString = fastCharArrayWriter.toString();
 			}
-
-			bodyString = fastCharArrayWriter.toString();
 		}
 
 		// chunked encoding
