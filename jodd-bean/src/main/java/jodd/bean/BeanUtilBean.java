@@ -72,7 +72,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getPropertyGetter(bp.name, declared);
+		bp.method = bp.cd.getPropertyGetterDescriptor(bp.name, declared);
 		if (bp.method != null) {
 			return true;
 		}
@@ -117,7 +117,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: getProperty() or isProperty()
 		bp.field = null;
-		bp.method = bp.cd.getPropertyGetter(bp.name, declared);
+		bp.method = bp.cd.getPropertyGetterDescriptor(bp.name, declared);
 		if (bp.method != null) {
 			Object result = invokeGetter(bp.bean, bp.method);
 			if ((result == null) && (bp.forced == true)) {
@@ -175,7 +175,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			return;
 		}
 */
-		MethodDescriptor setterMethodDescriptor = bp.cd.getPropertySetter(bp.name, declared);
+		MethodDescriptor setterMethodDescriptor = bp.cd.getPropertySetterDescriptor(bp.name, declared);
 		if (setterMethodDescriptor != null) {
 			invokeSetter(bp.bean, setterMethodDescriptor, value);
 			return;

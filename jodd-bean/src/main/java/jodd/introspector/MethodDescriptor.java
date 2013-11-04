@@ -64,6 +64,16 @@ public class MethodDescriptor {
 	}
 
 	/**
+	 * Returns <code>true</code> if field matches required declared flag.
+	 */
+	public boolean matchDeclared(boolean declared) {
+		if (!declared) {
+			return isPublic;
+		}
+		return true;
+	}
+
+	/**
 	 * Returns raw return type.
 	 */
 	public Class getRawReturnType() {

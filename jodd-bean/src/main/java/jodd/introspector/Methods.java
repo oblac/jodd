@@ -108,7 +108,7 @@ public class Methods {
 	/**
 	 * Returns all methods. Cached. Lazy.
 	 */
-	public MethodDescriptor[] getAllMethods() {
+	public MethodDescriptor[] getAllMethodDescriptors() {
 		if (allMethods == null) {
 			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
 

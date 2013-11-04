@@ -6,6 +6,7 @@ import jodd.introspector.tst.Abean;
 import jodd.introspector.tst.Ac;
 import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Bc;
+import jodd.introspector.tst.Cbean;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -20,8 +21,12 @@ public class IntrospectorTest {
 	public void testBasic() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Abean.class);
 		assertNotNull(cd);
-		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors(false);
-		assertEquals(2, properties.length);
+		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
+		int c = 0;
+		for (PropertyDescriptor property : properties) {
+			if (property.isPublic()) c++;
+		}
+		assertEquals(2, c);
 
 		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
 			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
@@ -51,10 +56,14 @@ public class IntrospectorTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 		assertNotNull(cd);
 
-		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors(false);
-		assertEquals(2, properties.length);
+		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
+		int c = 0;
+		for (PropertyDescriptor property : properties) {
+			if (property.isPublic()) c++;
+		}
+		assertEquals(2, c);
 
-		properties = cd.getAllPropertyDescriptors(true);
+		properties = cd.getAllPropertyDescriptors();
 		assertEquals(3, properties.length);
 
 		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
@@ -130,5 +139,47 @@ public class IntrospectorTest {
 
 		assertNotEquals(fd, fd2);
 		assertEquals(fd.getField(), fd2.getField());
+	}
+
+	@Test
+	public void testPropertyMatches() {
+		ClassDescriptor cd = ClassIntrospector.lookup(Cbean.class);
+
+		PropertyDescriptor pd;
+
+		pd = cd.getPropertyDescriptor("s1", false);
+		assertNull(pd);
+
+		pd = cd.getPropertyDescriptor("s1", true);
+		assertFalse(pd.isPublic());
+		assertTrue(pd.getReadMethodDescriptor().isPublic());
+		assertFalse(pd.getWriteMethodDescriptor().isPublic());
+
+		assertNotNull(cd.getPropertyGetterDescriptor("s1", false));
+		assertNull(cd.getPropertySetterDescriptor("s1", false));
+
+
+		pd = cd.getPropertyDescriptor("s2", false);
+		assertNull(pd);
+
+		pd = cd.getPropertyDescriptor("s2", true);
+		assertFalse(pd.isPublic());
+		assertFalse(pd.getReadMethodDescriptor().isPublic());
+		assertTrue(pd.getWriteMethodDescriptor().isPublic());
+
+		assertNull(cd.getPropertyGetterDescriptor("s2", false));
+		assertNotNull(cd.getPropertySetterDescriptor("s2", false));
+
+
+		pd = cd.getPropertyDescriptor("s3", false);
+		assertNotNull(pd);
+
+		pd = cd.getPropertyDescriptor("s3", true);
+		assertTrue(pd.isPublic());
+		assertTrue(pd.getReadMethodDescriptor().isPublic());
+		assertTrue(pd.getWriteMethodDescriptor().isPublic());
+
+		assertNotNull(cd.getPropertyGetterDescriptor("s3", false));
+		assertNotNull(cd.getPropertySetterDescriptor("s3", false));
 	}
 }

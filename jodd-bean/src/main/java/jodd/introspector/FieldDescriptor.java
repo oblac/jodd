@@ -59,6 +59,16 @@ public class FieldDescriptor {
 	}
 
 	/**
+	 * Returns <code>true</code> if field matches required declared flag.
+	 */
+	public boolean matchDeclared(boolean declared) {
+		if (!declared) {
+			return isPublic;
+		}
+		return true;
+	}
+
+	/**
 	 * Returns fields raw type.
 	 */
 	public Class getRawType() {

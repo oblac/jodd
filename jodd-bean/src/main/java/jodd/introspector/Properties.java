@@ -2,8 +2,11 @@
 
 package jodd.introspector;
 
+import jodd.util.ReflectUtil;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Map;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
 import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
@@ -11,38 +14,72 @@ import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
 /**
  * Bean properties collection.
  */
-class Properties {
+public class Properties {
 
-	private final ClassDescriptor classDescriptor;
-	private final Map<String, PropertyDescriptor> propertyDescriptors;
+	protected final ClassDescriptor classDescriptor;
+	protected final HashMap<String, PropertyDescriptor> propertyDescriptors;
 
 	// cache
-	protected PropertyDescriptor[] allProperties;
+	private PropertyDescriptor[] allProperties;
 
-	Properties(ClassDescriptor classDescriptor) {
+	public Properties(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
-		this.propertyDescriptors = new HashMap<String, PropertyDescriptor>();
+		this.propertyDescriptors = inspectProperties();
 	}
+
+	protected HashMap<String, PropertyDescriptor> inspectProperties() {
+		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		Class type = classDescriptor.getType();
+
+		HashMap<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+
+		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		for (Method method : methods) {
+			if (Modifier.isStatic(method.getModifiers())) {
+				continue;			// ignore static methods
+			}
+
+			boolean add = false;
+			boolean issetter = false;
+
+			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+			if (propertyName != null) {
+				add = true;
+				issetter = false;
+			} else {
+				propertyName = ReflectUtil.getBeanPropertySetterName(method);
+				if (propertyName != null) {
+					add = true;
+					issetter = true;
+				}
+			}
+
+			if (add == true) {
+				MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
+				addProperty(map, propertyName, methodDescriptor, issetter);
+			}
+		}
+
+		return map;
+	}
+
 
 	/**
 	 * Adds a setter and/or getter method to the property.
 	 * If property is already defined, it will be updated (by new instance of
 	 * {@link PropertyDescriptor}).
 	 */
-	void addProperty(String name, MethodDescriptor methodDescriptor, boolean isSetter) {
-		allProperties = null;
-
+	protected void addProperty(HashMap<String, PropertyDescriptor> map, String name, MethodDescriptor methodDescriptor, boolean isSetter) {
 		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
 		MethodDescriptor getterMethod = isSetter ? null : methodDescriptor;
 
-		PropertyDescriptor existing = propertyDescriptors.get(name);
+		PropertyDescriptor existing = map.get(name);
 
 		if (existing == null) {
 			// new property, just add it
-			PropertyDescriptor propertyDescriptor =
-					new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
+			PropertyDescriptor propertyDescriptor = createPropertyDescriptor(name, getterMethod, setterMethod);
 
-			propertyDescriptors.put(name, propertyDescriptor);
+			map.put(name, propertyDescriptor);
 			return;
 		}
 
@@ -73,10 +110,16 @@ class Properties {
 			getterMethod = existing.getReadMethodDescriptor();
 		}
 
-		PropertyDescriptor propertyDescriptor =
-				new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
+		PropertyDescriptor propertyDescriptor =  createPropertyDescriptor(name, getterMethod, setterMethod);
 
-		propertyDescriptors.put(name, propertyDescriptor);
+		map.put(name, propertyDescriptor);
+	}
+
+	/**
+	 * Creates new {@link PropertyDescriptor}.
+	 */
+	protected PropertyDescriptor createPropertyDescriptor(String name, MethodDescriptor getterMethod, MethodDescriptor setterMethod) {
+		return new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
 	}
 
 	// ---------------------------------------------------------------- get
@@ -84,11 +127,11 @@ class Properties {
 	/**
 	 * Returns {@link PropertyDescriptor property descriptor}.
 	 */
-	PropertyDescriptor getProperty(String name) {
+	public PropertyDescriptor getPropertyDescriptor(String name) {
 		return propertyDescriptors.get(name);
 	}
 
-	PropertyDescriptor[] getAllProperties() {
+	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		if (allProperties == null) {
 			PropertyDescriptor[] allProperties = new PropertyDescriptor[propertyDescriptors.size()];
 

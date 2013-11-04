@@ -138,7 +138,7 @@ class BeanUtilUtil {
 		if (index >= len) {
 			Object newArray = Array.newInstance(componentType, index + 1);
 			System.arraycopy(array, 0, newArray, 0, len);
-			MethodDescriptor setter = bp.cd.getPropertySetter(bp.name, true);
+			MethodDescriptor setter = bp.cd.getPropertySetterDescriptor(bp.name, true);
 			if (setter != null) {
 				invokeSetter(bp.bean, setter, newArray);
 			} else {
@@ -232,7 +232,7 @@ class BeanUtilUtil {
 	 * It uses default constructor!
 	 */
 	protected Object createBeanProperty(BeanProperty bp) {
-		MethodDescriptor setter = bp.cd.getPropertySetter(bp.name, true);
+		MethodDescriptor setter = bp.cd.getPropertySetterDescriptor(bp.name, true);
 		FieldDescriptor field = null;
 		Class type;
 		if (setter != null) {

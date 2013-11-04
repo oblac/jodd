@@ -4,6 +4,7 @@ package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.ArraysUtil;
 
@@ -41,17 +42,18 @@ public abstract class BeanVisitor {
 	protected String[] getAllBeanGetterNames(Class type, boolean declared) {
 		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
 
-		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors(declared);
+		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
 		String[] names = new String[propertyDescriptors.length];
 
 		for (int i = 0; i < propertyDescriptors.length; i++) {
 			PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
 
-			if (propertyDescriptor.getReadMethodDescriptor() != null) {
-				names[i] = propertyDescriptor.getName();
-			} else {
-				names[i] = null;
+			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+			if (getter != null) {
+				if (getter.matchDeclared(declared)) {
+					names[i] = propertyDescriptor.getName();
+				}
 			}
 		}
 

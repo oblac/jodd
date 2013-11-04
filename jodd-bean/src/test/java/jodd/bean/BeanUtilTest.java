@@ -1335,7 +1335,7 @@ public class BeanUtilTest {
 
 		ClassDescriptor cd = ClassIntrospector.lookup(IsGetBool.class);
 
-		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors(true);
+		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
 
 		assertEquals(1, propertyDescriptors.length);
 		assertEquals("flag", propertyDescriptors[0].getName());

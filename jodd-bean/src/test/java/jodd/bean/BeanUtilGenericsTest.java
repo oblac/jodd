@@ -18,7 +18,7 @@ public class BeanUtilGenericsTest {
 		Woof woof = new Woof();
 		Class type = woof.getClass();
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors(true);
+		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		assertNotNull(properties);
 		assertEquals(7, properties.length);
 	}

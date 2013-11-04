@@ -4,8 +4,6 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.List;
@@ -142,7 +140,7 @@ public class ClassDescriptor {
 		FieldDescriptor fieldDescriptor = getFields().getFieldDescriptor(name);
 
 		if (fieldDescriptor != null) {
-			if (!declared && !fieldDescriptor.isPublic()) {
+			if (!fieldDescriptor.matchDeclared(declared)) {
 				return null;
 			}
 		}
@@ -175,7 +173,7 @@ public class ClassDescriptor {
 		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
 
 		if (methodDescriptor != null) {
-			if (!declared && !methodDescriptor.isPublic()) {
+			if (!methodDescriptor.matchDeclared(declared)) {
 				return null;
 			}
 		}
@@ -191,7 +189,7 @@ public class ClassDescriptor {
 		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
 
 		if (methodDescriptor != null) {
-			if (!declared && !methodDescriptor.isPublic()) {
+			if (!methodDescriptor.matchDeclared(declared)) {
 				return null;
 			}
 		}
@@ -210,97 +208,62 @@ public class ClassDescriptor {
 	 * Returns an array of all methods.
 	 */
 	public MethodDescriptor[] getAllMethodDescriptors() {
-		return getMethods().getAllMethods();
+		return getMethods().getAllMethodDescriptors();
 	}
 
 	// ---------------------------------------------------------------- properties
 
-	protected Properties publicProperties;
-	protected Properties allProperties;
+	private Properties properties;
 
-	/**
-	 * Inspect methods and create properties cache.
-	 */
-	protected void inspectProperties() {
-		if (publicProperties != null) {
-			return;
+	protected Properties getProperties() {
+		if (properties == null) {
+			properties = new Properties(this);
 		}
-		Properties publicProperties = new Properties(this);
-		Properties allProperties = new Properties(this);
-
-		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
-		for (Method method : methods) {
-			if (Modifier.isStatic(method.getModifiers())) {
-				continue;			// ignore static methods
-			}
-
-			boolean add = false;
-			boolean issetter = false;
-
-			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
-			if (propertyName != null) {
-				add = true;
-				issetter = false;
-			} else {
-				propertyName = ReflectUtil.getBeanPropertySetterName(method);
-				if (propertyName != null) {
-					add = true;
-					issetter = true;
-				}
-			}
-
-			if (add == true) {
-				if (ReflectUtil.isPublic(method)) {
-					MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), false);
-					publicProperties.addProperty(propertyName, methodDescriptor, issetter);
-				}
-				ReflectUtil.forceAccess(method);
-
-				MethodDescriptor methodDescriptor = getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
-				allProperties.addProperty(propertyName, methodDescriptor, issetter);
-			}
-		}
-
-		this.allProperties = allProperties;
-		this.publicProperties = publicProperties;
-	}
-
-	public PropertyDescriptor[] getAllPropertyDescriptors(boolean declared) {
-		inspectProperties();
-
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getAllProperties();
+		return properties;
 	}
 
 	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
-		inspectProperties();
+		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
-		Properties properties = declared ? allProperties : publicProperties;
-		return properties.getProperty(name);
-	}
-
-
-
-	public MethodDescriptor getPropertySetter(String name, boolean declared) {
-		inspectProperties();
-
-		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(name, declared);
-		if (propertyDescriptor == null) {
-			return null;
+		if (propertyDescriptor != null) {
+			if (!propertyDescriptor.matchDeclared(declared)) {
+				return null;
+			}
 		}
 
-		return propertyDescriptor.getWriteMethodDescriptor();
+		return propertyDescriptor;
 	}
 
-	public MethodDescriptor getPropertyGetter(String name, boolean declared) {
-		inspectProperties();
+	public PropertyDescriptor[] getAllPropertyDescriptors() {
+		return getProperties().getAllPropertyDescriptors();
+	}
 
-		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(name, declared);
-		if (propertyDescriptor == null) {
-			return null;
+	public MethodDescriptor getPropertySetterDescriptor(String name, boolean declared) {
+		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
+
+		if (propertyDescriptor != null) {
+			MethodDescriptor setter = propertyDescriptor.getWriteMethodDescriptor();
+			if (setter != null) {
+				if (setter.matchDeclared(declared)) {
+					return setter;
+				}
+			}
 		}
+		return null;
+	}
 
-		return propertyDescriptor.getReadMethodDescriptor();
+	public MethodDescriptor getPropertyGetterDescriptor(String name, boolean declared) {
+		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
+
+		if (propertyDescriptor != null) {
+			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+			if (getter != null) {
+				if (getter.matchDeclared(declared)) {
+					return getter;
+				}
+			}
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------- ctors
