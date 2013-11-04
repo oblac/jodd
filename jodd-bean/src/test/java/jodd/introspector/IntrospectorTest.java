@@ -100,27 +100,36 @@ public class IntrospectorTest {
 	@Test
 	public void testCtors() {
 		ClassDescriptor cd = ClassIntrospector.lookup(Ac.class);
-		Constructor[] ctors = cd.getAllCtors(false);
-		assertEquals(1, ctors.length);
-		ctors = cd.getAllCtors(true);
+		CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
+		int c = 0;
+		for (CtorDescriptor ctor : ctors) {
+			if (ctor.isPublic()) c++;
+		}
+		assertEquals(1, c);
+		ctors = cd.getAllCtorDescriptors();
 		assertEquals(2, ctors.length);
-		assertNotNull(cd.getDefaultCtor(true));
-		assertNull(cd.getDefaultCtor());
+		assertNotNull(cd.getDefaultCtorDescriptor(true));
+		assertNull(cd.getDefaultCtorDescriptor(false));
 
-		Constructor ctor = cd.getCtor(new Class[]{Integer.class}, true);
+		Constructor ctor = cd.getCtorDescriptor(new Class[] {Integer.class}, true).getConstructor();
 		assertNotNull(ctor);
 
 		cd = ClassIntrospector.lookup(Bc.class);
-		ctors = cd.getAllCtors(false);
-		assertEquals(1, ctors.length);
-		ctors = cd.getAllCtors(true);
-		assertEquals(1, ctors.length);
-		assertNull(cd.getDefaultCtor());
-		assertNull(cd.getDefaultCtor(true));
+		ctors = cd.getAllCtorDescriptors();
+		c = 0;
+		for (CtorDescriptor ccc : ctors) {
+			if (ccc.isPublic()) c++;
+		}
+		assertEquals(1, c);
 
-		ctor = cd.getCtor(new Class[]{Integer.class}, true);
-		assertNull(ctor);
-		ctor = cd.getCtor(new Class[]{String.class}, true);
+		ctors = cd.getAllCtorDescriptors();
+		assertEquals(1, ctors.length);
+		assertNull(cd.getDefaultCtorDescriptor(false));
+		assertNull(cd.getDefaultCtorDescriptor(true));
+
+		CtorDescriptor ctorDescriptor = cd.getCtorDescriptor(new Class[] {Integer.class}, true);
+		assertNull(ctorDescriptor);
+		ctor = cd.getCtorDescriptor(new Class[] {String.class}, true).getConstructor();
 		assertNotNull(ctor);
 	}
 

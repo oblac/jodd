@@ -7,33 +7,43 @@ import java.lang.reflect.Constructor;
 /**
  * Constructors collection.
  */
-class Ctors {
+public class Ctors {
 
-	private final ClassDescriptor classDescriptor;
+	protected final ClassDescriptor classDescriptor;
+	protected final CtorDescriptor[] allCtors;
+	protected CtorDescriptor defaultCtor;
 
-	private Constructor[] allCtors;
-	private Class[][] allArgs;
-	private Constructor defaultCtor;
-
-	Ctors(ClassDescriptor classDescriptor) {
+	public Ctors(ClassDescriptor classDescriptor) {
 		this.classDescriptor = classDescriptor;
+
+		this.allCtors = inspectConstructors();
 	}
 
 	/**
 	 * Add all ctors at once.
 	 */
-	void addCtors(Constructor... ctors) {
-		allCtors = ctors;
-		allArgs = new Class[allCtors.length][];
+	protected CtorDescriptor[] inspectConstructors() {
+		Class type = classDescriptor.getType();
+		Constructor[] ctors = type.getDeclaredConstructors();
+
+		CtorDescriptor[] allCtors = new CtorDescriptor[ctors.length];
 
 		for (int i = 0; i < ctors.length; i++) {
 			Constructor ctor = ctors[i];
-			allArgs[i] = ctor.getParameterTypes();
 
-			if (allArgs[i].length == 0) {
-				defaultCtor = ctor;
+			CtorDescriptor ctorDescriptor = createCtorDescriptor(ctor);
+			allCtors[i] = ctorDescriptor;
+
+			if (ctorDescriptor.isDefault()) {
+				defaultCtor = ctorDescriptor;
 			}
 		}
+
+		return allCtors;
+	}
+
+	protected CtorDescriptor createCtorDescriptor(Constructor ctor) {
+		return new CtorDescriptor(classDescriptor, ctor);
 	}
 
 	// ---------------------------------------------------------------- get
@@ -41,41 +51,37 @@ class Ctors {
 	/**
 	 * Returns default (no-args) ctor.
 	 */
-	Constructor getDefaultCtor() {
+	public CtorDescriptor getDefaultCtor() {
 		return defaultCtor;
 	}
 
 	/**
 	 * Returns ctor for given argument types.
 	 */
-	Constructor getCtor(Class[] args) {
+	public CtorDescriptor getCtorDescriptor(Class... args) {
 		ctors:
-		for (int i = 0; i < allArgs.length; i++) {
-			Class[] arg = allArgs[i];
+		for (CtorDescriptor ctorDescriptor : allCtors) {
+			Class[] arg = ctorDescriptor.getParameters();
+
 			if (arg.length != args.length) {
 				continue;
 			}
+
 			for (int j = 0; j < arg.length; j++) {
 				if (arg[j] != args[j]) {
 					continue ctors;
 				}
 			}
-			return allCtors[i];
+
+			return ctorDescriptor;
 		}
 		return null;
 	}
 
 	/**
-	 * Returns ctor count.
+	 * Returns all constructor descriptors.
 	 */
-	int getCount() {
-		return allCtors.length;
-	}
-
-	/**
-	 * Returns all ctors.
-	 */
-	Constructor[] getAllCtors() {
+	CtorDescriptor[] getAllCtorDescriptors() {
 		return allCtors;
 	}
 

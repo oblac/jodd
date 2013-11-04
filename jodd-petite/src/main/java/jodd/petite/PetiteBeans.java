@@ -4,6 +4,7 @@ package jodd.petite;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.CtorDescriptor;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
@@ -340,15 +341,19 @@ public abstract class PetiteBeans {
 		Constructor constructor = null;
 
 		if (paramTypes == null) {
-			Constructor[] ctors = cd.getAllCtors(true);
+			CtorDescriptor[] ctors = cd.getAllCtorDescriptors();
 			if (ctors != null && ctors.length > 0) {
 				if (ctors.length > 1) {
 					throw new PetiteException(ctors.length + " suitable constructor found as injection point for: " + beanDefinition.type.getName());
 				}
-				constructor = ctors[0];
+				constructor = ctors[0].getConstructor();
 			}
 		} else {
-			constructor = cd.getCtor(paramTypes, true);
+			CtorDescriptor ctorDescriptor = cd.getCtorDescriptor(paramTypes, true);
+
+			if (ctorDescriptor != null) {
+				constructor = ctorDescriptor.getConstructor();
+			}
 		}
 
 		if (constructor == null) {

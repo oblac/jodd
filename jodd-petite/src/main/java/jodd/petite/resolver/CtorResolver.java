@@ -4,6 +4,7 @@ package jodd.petite.resolver;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.CtorDescriptor;
 import jodd.petite.CtorInjectionPoint;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.PetiteException;
@@ -32,12 +33,14 @@ public class CtorResolver {
 	 */
 	public CtorInjectionPoint resolve(Class type, boolean useAnnotation) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		Constructor[] allCtors = cd.getAllCtors(true);
+		CtorDescriptor[] allCtors = cd.getAllCtorDescriptors();
 		Constructor foundedCtor = null;
 		Constructor defaultCtor = null;
 		String refValues = null;
 
-		for (Constructor<?> ctor : allCtors) {
+		for (CtorDescriptor ctorDescriptor : allCtors) {
+			Constructor<?> ctor = ctorDescriptor.getConstructor();
+
 			Class<?>[] paramTypes = ctor.getParameterTypes();
 			if (paramTypes.length == 0) {
 				defaultCtor = ctor;	// detects default ctors
@@ -57,7 +60,7 @@ public class CtorResolver {
 		}
 		if (foundedCtor == null) {
 			if (allCtors.length == 1) {
-				foundedCtor = allCtors[0];
+				foundedCtor = allCtors[0].getConstructor();
 			} else {
 				foundedCtor = defaultCtor;
 			}

@@ -4,7 +4,6 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.List;
 import java.util.Set;
@@ -268,41 +267,25 @@ public class ClassDescriptor {
 
 	// ---------------------------------------------------------------- ctors
 
-	protected Ctors publicCtors;
-	protected Ctors allCtors;
+	private Ctors ctors;
 
-	/**
-	 * Inspect class ctors and create ctors cache.
-	 */
-	protected void inspectCtors() {
-		if (allCtors != null) {
-			return;
+	protected Ctors getCtors() {
+		if (ctors == null) {
+			ctors = new Ctors(this);
 		}
-		Ctors publicCtors = new Ctors(this);
-		Ctors allCtors = new Ctors(this);
-
-		publicCtors.addCtors(type.getConstructors());
-		allCtors.addCtors(type.getDeclaredConstructors());
-
-		Constructor[] ctors = allCtors.getAllCtors();
-		for (Constructor ctor : ctors) {
-			if (ReflectUtil.isPublic(ctor) == false) {
-				ReflectUtil.forceAccess(ctor);
-			}
-		}
-
-		this.publicCtors = publicCtors;
-		this.allCtors = allCtors;
+		return ctors;
 	}
 
 	/**
 	 * Returns the default ctor or <code>null</code> if not found.
 	 */
-	public Constructor getDefaultCtor(boolean declared) {
-		inspectCtors();
+	public CtorDescriptor getDefaultCtorDescriptor(boolean declared) {
+		CtorDescriptor defaultCtor = getCtors().getDefaultCtor();
 
-		Ctors ctors = declared ? allCtors : publicCtors;
-		return ctors.getDefaultCtor();
+		if (defaultCtor != null && defaultCtor.matchDeclared(declared)) {
+			return defaultCtor;
+		}
+		return null;
 	}
 
 	/**
@@ -311,40 +294,20 @@ public class ClassDescriptor {
 	 * @param args	ctor arguments
 	 * @param declared whether to look at non-public ones.
 	 */
-	public Constructor getCtor(Class[] args, boolean declared) {
-		inspectCtors();
+	public CtorDescriptor getCtorDescriptor(Class[] args, boolean declared) {
+		CtorDescriptor ctorDescriptor = getCtors().getCtorDescriptor(args);
 
-		Ctors ctors = declared ? allCtors : publicCtors;
-		return ctors.getCtor(args);
+		if (ctorDescriptor != null && ctorDescriptor.matchDeclared(declared)) {
+			return ctorDescriptor;
+		}
+		return null;
 	}
 
 	/**
-	 * Returns the public default ctor or <code>null</code> if not found.
+	 * Returns an array of all {@link CtorDescriptor constructor descriptors}.
 	 */
-	public Constructor getDefaultCtor() {
-		inspectCtors();
-
-		return publicCtors.getDefaultCtor();
-	}
-
-	/**
-	 * Returns the total number of constructors.
-	 */
-	public int getCtorsCount(boolean declared) {
-		inspectCtors();
-
-		Ctors ctors = declared ? allCtors : publicCtors;
-		return ctors.getCount();
-	}
-
-	/**
-	 * Returns an array of all ctors.
-	 */
-	public Constructor[] getAllCtors(boolean declared) {
-		inspectCtors();
-
-		Ctors ctors = declared ? allCtors : publicCtors;
-		return ctors.getAllCtors();
+	public CtorDescriptor[] getAllCtorDescriptors() {
+		return getCtors().getAllCtorDescriptors();
 	}
 
 }
