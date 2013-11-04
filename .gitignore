@@ -3,7 +3,7 @@
 *.iml
 .idea
 /user.*
-.*
+.gitignore
 .gradle
 build
 target
