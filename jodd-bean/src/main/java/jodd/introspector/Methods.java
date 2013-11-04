@@ -26,6 +26,9 @@ public class Methods {
 		this.methodsMap = inspectMethods();
 	}
 
+	/**
+	 * Inspects types methods and return map of {@link MethodDescriptor method descriptors}.
+	 */
 	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
 		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
 		Class type = classDescriptor.getType();

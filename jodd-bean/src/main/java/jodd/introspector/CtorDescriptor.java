@@ -9,46 +9,32 @@ import java.lang.reflect.Constructor;
 /**
  * Constructor descriptor.
  */
-public class CtorDescriptor {
+public class CtorDescriptor extends Descriptor {
 
-	protected final ClassDescriptor classDescriptor;
 	protected final Constructor constructor;
 	protected final Class[] parameters;
-	protected final boolean isPublic;
 
 	public CtorDescriptor(ClassDescriptor classDescriptor, Constructor constructor) {
-		this.classDescriptor = classDescriptor;
+		super(classDescriptor, ReflectUtil.isPublic(constructor));
 		this.constructor = constructor;
 		this.parameters = constructor.getParameterTypes();
-		this.isPublic = ReflectUtil.isPublic(constructor);
 
 		ReflectUtil.forceAccess(constructor);
 	}
 
-	public ClassDescriptor getClassDescriptor() {
-		return classDescriptor;
-	}
-
+	/**
+	 * Returns constructor.
+	 */
 	public Constructor getConstructor() {
 		return constructor;
 	}
 
+	/**
+	 * Returns constructors parameters. The returned array
+	 * is not cloned.
+	 */
 	public Class[] getParameters() {
 		return parameters;
-	}
-
-	public boolean isPublic() {
-		return isPublic;
-	}
-
-	/**
-	 * Returns <code>true</code> if descriptor matches required declared flag.
-	 */
-	public boolean matchDeclared(boolean declared) {
-		if (!declared) {
-			return isPublic;
-		}
-		return true;
 	}
 
 	/**

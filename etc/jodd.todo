@@ -45,7 +45,7 @@ BeanUtil:
 	- Remove 2 introspector implementations @v3.4.9
 	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.9
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
-	- Add abstract descriptor class @v3.4.9
+	- Add abstract descriptor class @v3.4.9 @done
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
 	- Use new raw type info in BeanUtil @v3.4.5 @done
 Props:

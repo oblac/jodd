@@ -11,11 +11,9 @@ import java.lang.reflect.Type;
  * Method descriptor.  Holds additional method data,
  * that might be specific to implementation class.
  */
-public class MethodDescriptor {
+public class MethodDescriptor extends Descriptor {
 
-	protected final ClassDescriptor classDescriptor;
 	protected final Method method;
-	protected final boolean isPublic;
 	protected final Type returnType;
 	protected final Class rawReturnType;
 	protected final Class rawReturnComponentType;
@@ -23,14 +21,13 @@ public class MethodDescriptor {
 	protected final Class[] rawParameterTypes;
 
 	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
-		this.classDescriptor = classDescriptor;
+		super(classDescriptor, ReflectUtil.isPublic(method));
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
 		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
 		this.rawReturnComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType());
 		this.rawReturnKeyComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType(), 0);
 
-		this.isPublic = ReflectUtil.isPublic(method);
 		ReflectUtil.forceAccess(method);
 
 		Type[] params = method.getGenericParameterTypes();
@@ -43,34 +40,10 @@ public class MethodDescriptor {
 	}
 
 	/**
-	 * Returns parent class descriptor.
-	 */
-	public ClassDescriptor getClassDescriptor() {
-		return classDescriptor;
-	}
-
-	/**
 	 * Returns method.
 	 */
 	public Method getMethod() {
 		return method;
-	}
-
-	/**
-	 * Returns <code>true</code> if method is public.
-	 */
-	public boolean isPublic() {
-		return isPublic;
-	}
-
-	/**
-	 * Returns <code>true</code> if field matches required declared flag.
-	 */
-	public boolean matchDeclared(boolean declared) {
-		if (!declared) {
-			return isPublic;
-		}
-		return true;
 	}
 
 	/**

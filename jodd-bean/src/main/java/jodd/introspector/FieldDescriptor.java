@@ -11,37 +11,27 @@ import java.lang.reflect.Type;
  * Field descriptor. Holds additional field data,
  * that might be specific to implementation class.
  */
-public class FieldDescriptor {
+public class FieldDescriptor extends Descriptor {
 
-	protected final ClassDescriptor classDescriptor;
 	protected final Field field;
 	protected final Type type;
 	protected final Class rawType;
 	protected final Class rawComponentType;
 	protected final Class rawKeyComponentType;
-	protected final boolean isPublic;
 
 	/**
 	 * Creates new field descriptor and resolve all additional field data.
 	 * Also, forces access to a field.
 	 */
 	public FieldDescriptor(ClassDescriptor classDescriptor, Field field) {
-		this.classDescriptor = classDescriptor;
+		super(classDescriptor, ReflectUtil.isPublic(field));
 		this.field = field;
 		this.type = field.getGenericType();
 		this.rawType = ReflectUtil.getRawType(type, classDescriptor.getType());
 		this.rawComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType());
 		this.rawKeyComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType(), 0);
-		this.isPublic = ReflectUtil.isPublic(field);
 
 		ReflectUtil.forceAccess(field);
-	}
-
-	/**
-	 * Returns parent class descriptor.
-	 */
-	public ClassDescriptor getClassDescriptor() {
-		return classDescriptor;
 	}
 
 	/**
@@ -49,23 +39,6 @@ public class FieldDescriptor {
 	 */
 	public Field getField() {
 		return field;
-	}
-
-	/**
-	 * Returns <code>true</code> if field is public.
-	 */
-	public boolean isPublic() {
-		return isPublic;
-	}
-
-	/**
-	 * Returns <code>true</code> if field matches required declared flag.
-	 */
-	public boolean matchDeclared(boolean declared) {
-		if (!declared) {
-			return isPublic;
-		}
-		return true;
 	}
 
 	/**

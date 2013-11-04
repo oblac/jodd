@@ -10,11 +10,10 @@ import java.util.Set;
 import java.util.Collection;
 
 /**
- * A descriptor class for all methods/fields/constructors of a class.
+ * A descriptor class for all methods/fields/properties/constructors of a class.
  * Static methods/fields are ignored.
- * Hash table is pre-built to speed up query.
  * <p>
- * Descriptors are 'lazy': various internal caches are created only on request.
+ * Descriptors are 'lazy': various internal caches are created on first request.
  * <p>
  * Throughout this class, public members are defined as members
  * defined with "public" keyword and declared in a public type.
@@ -123,7 +122,7 @@ public class ClassDescriptor {
 
 	/**
 	 * Returns {@link Fields fields collection}.
-	 * Creates new collection on first usage.
+	 * Creates new fields collection on first usage.
 	 */
 	protected Fields getFields() {
 		if (fields == null) {
@@ -158,6 +157,10 @@ public class ClassDescriptor {
 
 	private Methods methods;
 
+	/**
+	 * Returns methods collection.
+	 * Creates new collection on first access.
+	 */
 	protected Methods getMethods() {
 		if (methods == null) {
 			methods = new Methods(this);
@@ -214,6 +217,10 @@ public class ClassDescriptor {
 
 	private Properties properties;
 
+	/**
+	 * Returns properties collection.
+	 * Creates new collection on first access.
+	 */
 	protected Properties getProperties() {
 		if (properties == null) {
 			properties = new Properties(this);
@@ -221,6 +228,10 @@ public class ClassDescriptor {
 		return properties;
 	}
 
+	/**
+	 * Returns property descriptor. Declared flag is matched on both read and write
+	 * methods.
+	 */
 	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
 		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
@@ -233,10 +244,17 @@ public class ClassDescriptor {
 		return propertyDescriptor;
 	}
 
+	/**
+	 * Returns all properties descriptors.
+	 */
 	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		return getProperties().getAllPropertyDescriptors();
 	}
 
+	/**
+	 * Returns {@link MethodDescriptor method descriptor} of a setter (i.e. write method).
+	 * Note that <code>declared</code> flag is matched on setter, not on a property.
+	 */
 	public MethodDescriptor getPropertySetterDescriptor(String name, boolean declared) {
 		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
@@ -251,6 +269,10 @@ public class ClassDescriptor {
 		return null;
 	}
 
+	/**
+	 * Returns {@link MethodDescriptor method descriptor} of a getter (i.e. read method).
+	 * Note that <code>declared</code> flag is matched on getter, not on a property.
+	 */
 	public MethodDescriptor getPropertyGetterDescriptor(String name, boolean declared) {
 		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
@@ -269,6 +291,10 @@ public class ClassDescriptor {
 
 	private Ctors ctors;
 
+	/**
+	 * Returns constructors collection.
+	 * Creates new collection of first access.
+	 */
 	protected Ctors getCtors() {
 		if (ctors == null) {
 			ctors = new Ctors(this);
@@ -290,9 +316,6 @@ public class ClassDescriptor {
 
 	/**
 	 * Returns the constructor identified by arguments or <code>null</code> if not found.
-	 *
-	 * @param args	ctor arguments
-	 * @param declared whether to look at non-public ones.
 	 */
 	public CtorDescriptor getCtorDescriptor(Class[] args, boolean declared) {
 		CtorDescriptor ctorDescriptor = getCtors().getCtorDescriptor(args);

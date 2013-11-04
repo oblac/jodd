@@ -27,6 +27,9 @@ public class Properties {
 		this.propertyDescriptors = inspectProperties();
 	}
 
+	/**
+	 * Inspects all properties of target type.
+	 */
 	protected HashMap<String, PropertyDescriptor> inspectProperties() {
 		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
 		Class type = classDescriptor.getType();
@@ -66,8 +69,7 @@ public class Properties {
 
 	/**
 	 * Adds a setter and/or getter method to the property.
-	 * If property is already defined, it will be updated (by new instance of
-	 * {@link PropertyDescriptor}).
+	 * If property is already defined, the new, updated, definition will be created.
 	 */
 	protected void addProperty(HashMap<String, PropertyDescriptor> map, String name, MethodDescriptor methodDescriptor, boolean isSetter) {
 		MethodDescriptor setterMethod = isSetter ? methodDescriptor : null;
@@ -116,7 +118,9 @@ public class Properties {
 	}
 
 	/**
-	 * Creates new {@link PropertyDescriptor}.
+	 * Creates new {@link PropertyDescriptor}. Note that this method may be called
+	 * up to three times (depends on use case) for the same property. Each time when
+	 * a property is updated, a new definition is created with updated information.
 	 */
 	protected PropertyDescriptor createPropertyDescriptor(String name, MethodDescriptor getterMethod, MethodDescriptor setterMethod) {
 		return new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
@@ -131,6 +135,9 @@ public class Properties {
 		return propertyDescriptors.get(name);
 	}
 
+	/**
+	 * Returns all property descriptors.
+	 */
 	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		if (allProperties == null) {
 			PropertyDescriptor[] allProperties = new PropertyDescriptor[propertyDescriptors.size()];
