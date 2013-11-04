@@ -29,17 +29,17 @@ import java.util.Collection;
 public class ClassDescriptor {
 
 	protected final Class type;
-	protected final boolean accessibleOnly;
+	protected final boolean scanAccessible;
 	protected int usageCount;
 
-	public ClassDescriptor(Class type, boolean accessibleOnly) {
+	public ClassDescriptor(Class type, boolean scanAccessible) {
 		this.type = type;
 		isArray = type.isArray();
 		isMap = ReflectUtil.isSubclass(type, Map.class);
 		isList = ReflectUtil.isSubclass(type, List.class);
 		isSet = ReflectUtil.isSubclass(type, Set.class);
 		isCollection = ReflectUtil.isSubclass(type, Collection.class);
-		this.accessibleOnly = accessibleOnly;
+		this.scanAccessible = scanAccessible;
 	}
 
 	/**
@@ -51,10 +51,11 @@ public class ClassDescriptor {
 
 	/**
 	 * Returns <code>true</code> if this class descriptor
-	 * works with only accessible fields and methods.
+	 * works with accessible fields/methods/constructors or with
+	 * all supported.
 	 */
-	public boolean isAccessibleOnly() {
-		return accessibleOnly;
+	public boolean isScanAccessible() {
+		return scanAccessible;
 	}
 
 	/**

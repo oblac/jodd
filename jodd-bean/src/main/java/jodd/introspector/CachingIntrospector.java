@@ -6,18 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default {@link jodd.introspector.Introspector introspector} caches all class descriptors.
- * Only <b>accessible</b> methods and fields are examined.
+ * Default {@link jodd.introspector.Introspector introspector} that caches all class descriptors.
+ * It can examine either <b>accessible</b> or <b>supported</b> fields/methods/constructors.
  * <p>
- * It does not provide any more subtle logic behind, therefore, it should not be used
- * in environments with dynamic class re-loading.
+ * It simply caches <b>all</b> class descriptors.
  *
  * todo: add optional max value for total number of class descriptors stored in cache
- * @see SupportedIntrospector
  */
-public class AccessibleIntrospector implements Introspector {
+public class CachingIntrospector implements Introspector {
 
-	protected final Map<Class, ClassDescriptor> cache = new HashMap<Class, ClassDescriptor>();
+	protected final Map<Class, ClassDescriptor> cache;
+	protected final boolean scanAccessible;
+
+	/**
+	 * Creates new caching {@link Introspector}. It may scan
+	 * <b>accessible</b> or <b>supported</b> fields, methods or
+	 * constructors.
+	 */
+	public CachingIntrospector(boolean scanAccessible) {
+		this.cache = new HashMap<Class, ClassDescriptor>();
+		this.scanAccessible = scanAccessible;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -47,7 +56,7 @@ public class AccessibleIntrospector implements Introspector {
 	 * that examines all accessible methods and fields.
 	 */
 	protected ClassDescriptor describeClass(Class type) {
-		return new ClassDescriptor(type, true);
+		return new ClassDescriptor(type, scanAccessible);
 	}
 
 	/**

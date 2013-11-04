@@ -30,10 +30,10 @@ public class Methods {
 	 * Inspects types methods and return map of {@link MethodDescriptor method descriptors}.
 	 */
 	protected HashMap<String, MethodDescriptor[]> inspectMethods() {
-		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 
 		HashMap<String, MethodDescriptor[]> map = new HashMap<String, MethodDescriptor[]>(methods.length);
 

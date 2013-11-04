@@ -2,7 +2,7 @@
 
 package jodd;
 
-import jodd.introspector.AccessibleIntrospector;
+import jodd.introspector.CachingIntrospector;
 import jodd.introspector.Introspector;
 
 /**
@@ -23,6 +23,6 @@ public class JoddBean {
 	/**
 	 * Default {@link Introspector} implementation.
 	 */
-	public static Introspector introspector = new AccessibleIntrospector();
+	public static Introspector introspector = new CachingIntrospector(true);
 
 }

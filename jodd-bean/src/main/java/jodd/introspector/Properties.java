@@ -31,12 +31,12 @@ public class Properties {
 	 * Inspects all properties of target type.
 	 */
 	protected HashMap<String, PropertyDescriptor> inspectProperties() {
-		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
 		HashMap<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
 
-		Method[] methods = accessibleOnly ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
+		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 		for (Method method : methods) {
 			if (Modifier.isStatic(method.getModifiers())) {
 				continue;			// ignore static methods

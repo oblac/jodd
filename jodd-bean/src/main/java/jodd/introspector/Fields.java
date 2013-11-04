@@ -30,10 +30,10 @@ public class Fields {
 	 * Inspects fields and returns map of {@link FieldDescriptor field descriptors}.
 	 */
 	protected HashMap<String, FieldDescriptor> inspectFields() {
-		boolean accessibleOnly = classDescriptor.isAccessibleOnly();
+		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		Field[] fields = accessibleOnly ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
+		Field[] fields = scanAccessible ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
 
 		HashMap<String, FieldDescriptor> map = new HashMap<String, FieldDescriptor>(fields.length);
 
