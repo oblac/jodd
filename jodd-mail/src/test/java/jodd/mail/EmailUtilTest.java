@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,7 +63,11 @@ public class EmailUtilTest {
 		assertEquals("to@example.com", email.getTo()[0]);
 		assertEquals("test!", email.getSubject());
 
-		JDateTime jdt = new JDateTime(2010, 3, 27, 13, 11, 21, 0);
+		// the time is specified in GMT zone
+		JDateTime jdt = new JDateTime(2010, 3, 27, 12, 11, 21, 0);
+		jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
+
+		// compare
 		assertEquals(jdt.convertToDate(), email.getSentDate());
 
 		Map<String, String> headers = email.getAllHeaders();
@@ -96,7 +101,8 @@ public class EmailUtilTest {
 		assertEquals("to@example.com", email.getTo()[0]);
 		assertEquals("test", email.getSubject());
 
-		jdt = new JDateTime(2010, 3, 27, 13, 9, 46, 0);
+		jdt = new JDateTime(2010, 3, 27, 12, 9, 46, 0);
+		jdt.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getDefault());
 		assertEquals(jdt.convertToDate(), email.getSentDate());
 
 		headers = email.getAllHeaders();
