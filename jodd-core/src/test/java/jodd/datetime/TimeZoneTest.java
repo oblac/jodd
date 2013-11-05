@@ -101,4 +101,14 @@ public class TimeZoneTest {
 		assertEquals(cestTimeZone.inDaylightTime(date), jDateTime.isInDaylightTime());
 	}
 
+	@Test
+	public void testChangeTimezones() {
+		TimeZone gmtTZ = TimeZone.getTimeZone("GMT");
+		TimeZone gmt3TZ = TimeZone.getTimeZone("GMT+3");
+
+		JDateTime jdt = new JDateTime(2010, 3, 27, 12, 11, 21, 0);
+		jdt.changeTimeZone(gmtTZ, gmt3TZ);
+		assertEquals(15, jdt.getHour());
+	}
+
 }

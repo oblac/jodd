@@ -1329,6 +1329,15 @@ public class JDateTime implements Comparable, Cloneable {
 	}
 
 	/**
+	 * Changes time zone. Equivalent to:
+	 * <code>setTimeZone(from); changeTimeZone(to);</code>
+	 */
+	public void changeTimeZone(TimeZone from, TimeZone to) {
+		this.timezone = from;
+		changeTimeZone(to);
+	}
+
+	/**
 	 * Sets time zone <b>without</b> changing the time.
 	 */
 	public void setTimeZone(TimeZone timezone) {
