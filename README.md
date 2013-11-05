@@ -1,13 +1,20 @@
 Jodd
 ====
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
+
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
-Official web site (site, documentation, information): http://jodd.org/
+:stars: **Jodd = tools + ioc + mvc + db + aop + tx + html < 1.3M**
 
-GitHub page (short overview of micro frameworks): http://oblac.github.io/jodd
+Read about **Jodd**:
 
-Invitation web site (just visual effects): http://joddframework.org
++ Official web site (site, documentation, information): http://jodd.org/
+
++ GitHub page (short overview of micro frameworks): http://oblac.github.io/jodd
+
++ Invitation web site (just visual effects): http://joddframework.org
 
 
 ## Jodd Modules
@@ -81,4 +88,4 @@ Every other time:
 
 We will pickup up from there:)
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+:cloud::heart::tomato:
