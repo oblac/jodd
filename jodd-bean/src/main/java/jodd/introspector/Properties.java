@@ -12,7 +12,10 @@ import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
 import static jodd.util.ReflectUtil.METHOD_IS_PREFIX;
 
 /**
- * Bean properties collection.
+ * Bean properties collection. Property in Java is defined as a pair of
+ * read and write method. In Jodd, property can be extended with field
+ * definition. Moreover, properties will include just single fields.
+ * This behavior can be controlled via {@link ClassDescriptor}.
  */
 public class Properties {
 
@@ -61,6 +64,28 @@ public class Properties {
 				MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
 				addProperty(map, propertyName, methodDescriptor, issetter);
 			}
+		}
+
+		if (classDescriptor.isIncludeFieldsAsProperties()) {
+			FieldDescriptor[] fieldDescriptors = classDescriptor.getAllFieldDescriptors();
+			String prefix = classDescriptor.getPropertyFieldPrefix();
+
+			for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
+				String name = fieldDescriptor.getField().getName();
+
+				if (prefix != null) {
+					if (!name.startsWith(prefix)) {
+						continue;
+					}
+					name = name.substring(prefix.length());
+				}
+
+				if (!map.containsKey(name)) {
+					// add missing field as a potential property
+					map.put(name, createPropertyDescriptor(name, fieldDescriptor));
+				}
+			}
+
 		}
 
 		return map;
@@ -112,7 +137,7 @@ public class Properties {
 			getterMethod = existing.getReadMethodDescriptor();
 		}
 
-		PropertyDescriptor propertyDescriptor =  createPropertyDescriptor(name, getterMethod, setterMethod);
+		PropertyDescriptor propertyDescriptor = createPropertyDescriptor(name, getterMethod, setterMethod);
 
 		map.put(name, propertyDescriptor);
 	}
@@ -124,6 +149,13 @@ public class Properties {
 	 */
 	protected PropertyDescriptor createPropertyDescriptor(String name, MethodDescriptor getterMethod, MethodDescriptor setterMethod) {
 		return new PropertyDescriptor(classDescriptor, name, getterMethod, setterMethod);
+	}
+
+	/**
+	 * Creates new field-only {@link PropertyDescriptor}. It will be invoked only once.
+	 */
+	protected PropertyDescriptor createPropertyDescriptor(String name, FieldDescriptor fieldDescriptor) {
+			return new PropertyDescriptor(classDescriptor, name, fieldDescriptor);
 	}
 
 	// ---------------------------------------------------------------- get

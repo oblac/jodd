@@ -5,13 +5,14 @@ package jodd.introspector;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 
 /**
  * Field descriptor. Holds additional field data,
  * that might be specific to implementation class.
  */
-public class FieldDescriptor extends Descriptor {
+public class FieldDescriptor extends Descriptor implements Getter, Setter {
 
 	protected final Field field;
 	protected final Type type;
@@ -69,6 +70,40 @@ public class FieldDescriptor extends Descriptor {
 	 */
 	public Class resolveRawComponentType(int index) {
 		return ReflectUtil.getComponentType(type, classDescriptor.getType(), index);
+	}
+
+	// ---------------------------------------------------------------- getter/setter
+
+	public Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException {
+		return field.get(target);
+	}
+
+	public Class getGetterRawType() {
+		return getRawType();
+	}
+
+	public Class getGetterRawComponentType() {
+		return getRawComponentType();
+	}
+
+	public Class getGetterRawKeyComponentType() {
+		return getRawKeyComponentType();
+	}
+
+	public void invokeSetter(Object target, Object argument) throws IllegalAccessException {
+		field.set(target, argument);
+	}
+
+	public Class getSetterRawType() {
+		return getRawType();
+	}
+
+
+	// ---------------------------------------------------------------- toString
+
+	@Override
+	public String toString() {
+		return classDescriptor.getType().getSimpleName() + '#' + field.getName();
 	}
 
 }

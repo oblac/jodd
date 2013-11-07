@@ -16,13 +16,8 @@ public class JoddBean {
 	public static String thisRef = "*this";
 
 	/**
-	 * Field name prefix.
-	 */
-	public static String fieldPrefix;
-
-	/**
 	 * Default {@link Introspector} implementation.
 	 */
-	public static Introspector introspector = new CachingIntrospector(true);
+	public static Introspector introspector = new CachingIntrospector();
 
 }

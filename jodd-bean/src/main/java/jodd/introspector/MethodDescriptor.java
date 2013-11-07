@@ -4,6 +4,7 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -11,7 +12,7 @@ import java.lang.reflect.Type;
  * Method descriptor.  Holds additional method data,
  * that might be specific to implementation class.
  */
-public class MethodDescriptor extends Descriptor {
+public class MethodDescriptor extends Descriptor implements Getter, Setter {
 
 	protected final Method method;
 	protected final Type returnType;
@@ -84,6 +85,39 @@ public class MethodDescriptor extends Descriptor {
 	 */
 	public Class[] getRawParameterTypes() {
 		return rawParameterTypes;
+	}
+
+	// ---------------------------------------------------------------- getter/setter
+
+	public Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException {
+		return method.invoke(target, null);
+	}
+
+	public Class getGetterRawType() {
+		return getRawReturnType();
+	}
+
+	public Class getGetterRawComponentType() {
+		return getRawReturnComponentType();
+	}
+
+	public Class getGetterRawKeyComponentType() {
+		return getRawReturnKeyComponentType();
+	}
+
+	public void invokeSetter(Object target, Object argument) throws IllegalAccessException, InvocationTargetException {
+		method.invoke(target, argument);
+	}
+
+	public Class getSetterRawType() {
+		return getRawParameterTypes()[0];
+	}
+
+	// ---------------------------------------------------------------- toString
+
+	@Override
+	public String toString() {
+		return classDescriptor.getType().getSimpleName() + '#' + method.getName() + "()";
 	}
 
 }

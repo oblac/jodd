@@ -61,7 +61,7 @@ public class WeakIntrospector implements Introspector {
 	 * Describes a class by creating a new instance of {@link ClassDescriptor}.
 	 */
 	protected ClassDescriptor describeClass(Class type) {
-		return new ClassDescriptor(type, true);
+		return new ClassDescriptor(type, true, true, true, null);
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class InitMethodResolver {
 
 		// lookup methods
 		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
-		ClassDescriptor cd = new ClassDescriptor(type, false);
+		ClassDescriptor cd = new ClassDescriptor(type, false, false, false, null);
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 
 		for (MethodDescriptor methodDescriptor : allMethods) {

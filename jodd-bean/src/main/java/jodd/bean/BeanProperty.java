@@ -4,8 +4,9 @@ package jodd.bean;
 
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.FieldDescriptor;
-import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
+import jodd.introspector.Getter;
+import jodd.introspector.Setter;
 
 /**
  * Represents a bean named property. Contains two information:
@@ -13,12 +14,12 @@ import jodd.introspector.MethodDescriptor;
  * <li>Bean instance (and cached class descriptor)</li>
  * <li>Property name</li>
  * </ol>
- * Should be used only by {@link BeanUtil} and similar utils.
+ * Used only internally by {@link BeanUtil} and similar utils.
  */
 class BeanProperty {
 
 	BeanProperty(Object bean, String propertyName, boolean forced) {
-		this.name = propertyName;
+		setName(propertyName);
 		setBean(bean);
 		this.last = true;
 		this.first = true;
@@ -30,10 +31,18 @@ class BeanProperty {
 
 	final String fullName;  // initial name
 	Object bean;
-	ClassDescriptor cd;
+	private ClassDescriptor cd;
 	String name;        // property name
 	boolean last;       // is it a last property (when nested)
 	boolean first;		// is it first property (when nested)
+
+	/**
+	 * Sets current property name.
+	 */
+	public void setName(String name) {
+		this.name = name;
+		this.updateProperty = true;
+	}
 
 	/**
 	 * Sets new bean instance.
@@ -42,6 +51,7 @@ class BeanProperty {
 		this.bean = bean;
 		this.cd = (bean == null ? null : ClassIntrospector.lookup(bean.getClass()));
 		this.first = false;
+		this.updateProperty = true;
 	}
 
 	// ---------------------------------------------------------------- flags
@@ -50,8 +60,50 @@ class BeanProperty {
 
 	// ---------------------------------------------------------------- simple properties
 
-	MethodDescriptor method;
-	FieldDescriptor field;
+	// indicates that property descriptor has to be updated
+	// since there was some property-related change of BeanProperty state
+	private boolean updateProperty = true;
+
+	// most recent property descriptor
+	private PropertyDescriptor propertyDescriptor;
+
+	/**
+	 * Loads property descriptor, if property was updated.
+	 */
+	private void loadPropertyDescriptor() {
+		if (updateProperty) {
+			if (cd == null) {
+				propertyDescriptor = null;
+			} else {
+				propertyDescriptor = cd.getPropertyDescriptor(name, true);
+			}
+			updateProperty = false;
+		}
+	}
+
+	/**
+	 * Returns getter.
+	 */
+	public Getter getGetter(boolean declared) {
+		loadPropertyDescriptor();
+		return propertyDescriptor != null ? propertyDescriptor.getGetter(declared) : null;
+	}
+
+	/**
+	 * Returns setter.
+	 */
+	public Setter getSetter(boolean declared) {
+		loadPropertyDescriptor();
+		return propertyDescriptor != null ? propertyDescriptor.getSetter(declared) : null;
+	}
+
+	/**
+	 * Returns <code>true</code> if class is a map.
+	 */
+	public boolean isMap() {
+		return cd.isMap();
+	}
+
 	String index;
 
 	// ---------------------------------------------------------------- toString

@@ -17,15 +17,28 @@ public class CachingIntrospector implements Introspector {
 
 	protected final Map<Class, ClassDescriptor> cache;
 	protected final boolean scanAccessible;
+	protected final boolean enhancedProperties;
+	protected final boolean includeFieldsAsProperties;
+	protected final String propertyFieldPrefix;
+
+	/**
+	 * Default constructor.
+	 */
+	public CachingIntrospector() {
+		this(true, true, true, null);
+	}
 
 	/**
 	 * Creates new caching {@link Introspector}. It may scan
 	 * <b>accessible</b> or <b>supported</b> fields, methods or
 	 * constructors.
 	 */
-	public CachingIntrospector(boolean scanAccessible) {
+	public CachingIntrospector(boolean scanAccessible, boolean enhancedProperties, boolean includeFieldsAsProperties, String propertyFieldPrefix) {
 		this.cache = new HashMap<Class, ClassDescriptor>();
 		this.scanAccessible = scanAccessible;
+		this.enhancedProperties = enhancedProperties;
+		this.includeFieldsAsProperties = includeFieldsAsProperties;
+		this.propertyFieldPrefix = propertyFieldPrefix;
 	}
 
 	/**
@@ -56,7 +69,7 @@ public class CachingIntrospector implements Introspector {
 	 * that examines all accessible methods and fields.
 	 */
 	protected ClassDescriptor describeClass(Class type) {
-		return new ClassDescriptor(type, scanAccessible);
+		return new ClassDescriptor(type, scanAccessible, enhancedProperties, includeFieldsAsProperties, propertyFieldPrefix);
 	}
 
 	/**

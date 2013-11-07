@@ -24,6 +24,7 @@ public class IntrospectorTest {
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
 		for (PropertyDescriptor property : properties) {
+			if (property.isFieldOnlyDescriptor()) continue;
 			if (property.isPublic()) c++;
 		}
 		assertEquals(2, c);
@@ -38,11 +39,19 @@ public class IntrospectorTest {
 		assertEquals("fooProp", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
+		assertNotNull(pd.getFieldDescriptor());
 
 		pd = properties[1];
+		assertEquals("shared", pd.getName());
+		assertNull(pd.getReadMethodDescriptor());
+		assertNull(pd.getWriteMethodDescriptor());
+		assertNotNull(pd.getFieldDescriptor());
+
+		pd = properties[2];
 		assertEquals("something", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNull(pd.getWriteMethodDescriptor());
+		assertNull(pd.getFieldDescriptor());
 
 		assertNotNull(cd.getPropertyDescriptor("fooProp", false));
 		assertNotNull(cd.getPropertyDescriptor("something", false));
@@ -59,12 +68,18 @@ public class IntrospectorTest {
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
 		for (PropertyDescriptor property : properties) {
+			if (property.isFieldOnlyDescriptor()) continue;
 			if (property.isPublic()) c++;
 		}
 		assertEquals(2, c);
 
-		properties = cd.getAllPropertyDescriptors();
-		assertEquals(3, properties.length);
+		c = 0;
+		for (PropertyDescriptor property : properties) {
+			if (property.isFieldOnlyDescriptor()) continue;
+			c++;
+		}
+		assertEquals(3, c);
+		assertEquals(4, properties.length);
 
 		Arrays.sort(properties, new Comparator<PropertyDescriptor>() {
 			public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
@@ -76,16 +91,29 @@ public class IntrospectorTest {
 		assertEquals("boo", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
+		assertNotNull(pd.getFieldDescriptor());
+		assertFalse(pd.isFieldOnlyDescriptor());
 
 		pd = properties[1];
 		assertEquals("fooProp", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
+		assertNull(pd.getFieldDescriptor()); 	// null since field is not visible
+		assertFalse(pd.isFieldOnlyDescriptor());
 
 		pd = properties[2];
+		assertEquals("shared", pd.getName());
+		assertNull(pd.getReadMethodDescriptor());
+		assertNull(pd.getWriteMethodDescriptor());
+		assertNotNull(pd.getFieldDescriptor());
+		assertTrue(pd.isFieldOnlyDescriptor());
+
+		pd = properties[3];
 		assertEquals("something", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNull(pd.getWriteMethodDescriptor());
+		assertNull(pd.getFieldDescriptor());
+		assertFalse(pd.isFieldOnlyDescriptor());
 
 		assertNotNull(cd.getPropertyDescriptor("fooProp", false));
 		assertNotNull(cd.getPropertyDescriptor("something", false));
@@ -164,8 +192,8 @@ public class IntrospectorTest {
 		assertTrue(pd.getReadMethodDescriptor().isPublic());
 		assertFalse(pd.getWriteMethodDescriptor().isPublic());
 
-		assertNotNull(cd.getPropertyGetterDescriptor("s1", false));
-		assertNull(cd.getPropertySetterDescriptor("s1", false));
+		assertNotNull(getPropertyGetterDescriptor(cd, "s1", false));
+		assertNull(getPropertySetterDescriptor(cd, "s1", false));
 
 
 		pd = cd.getPropertyDescriptor("s2", false);
@@ -176,8 +204,8 @@ public class IntrospectorTest {
 		assertFalse(pd.getReadMethodDescriptor().isPublic());
 		assertTrue(pd.getWriteMethodDescriptor().isPublic());
 
-		assertNull(cd.getPropertyGetterDescriptor("s2", false));
-		assertNotNull(cd.getPropertySetterDescriptor("s2", false));
+		assertNull(getPropertyGetterDescriptor(cd, "s2", false));
+		assertNotNull(getPropertySetterDescriptor(cd, "s2", false));
 
 
 		pd = cd.getPropertyDescriptor("s3", false);
@@ -188,7 +216,35 @@ public class IntrospectorTest {
 		assertTrue(pd.getReadMethodDescriptor().isPublic());
 		assertTrue(pd.getWriteMethodDescriptor().isPublic());
 
-		assertNotNull(cd.getPropertyGetterDescriptor("s3", false));
-		assertNotNull(cd.getPropertySetterDescriptor("s3", false));
+		assertNotNull(getPropertyGetterDescriptor(cd, "s3", false));
+		assertNotNull(getPropertySetterDescriptor(cd, "s3", false));
 	}
+
+
+	MethodDescriptor getPropertySetterDescriptor(ClassDescriptor cd, String name, boolean declared) {
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(name, true);
+
+		if (propertyDescriptor != null) {
+			MethodDescriptor setter = propertyDescriptor.getWriteMethodDescriptor();
+
+			if ((setter != null) && setter.matchDeclared(declared)) {
+				return setter;
+			}
+		}
+		return null;
+	}
+
+	MethodDescriptor getPropertyGetterDescriptor(ClassDescriptor cd, String name, boolean declared) {
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(name, true);
+
+		if (propertyDescriptor != null) {
+			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+
+			if ((getter != null) && getter.matchDeclared(declared)) {
+				return getter;
+			}
+		}
+		return null;
+	}
+
 }

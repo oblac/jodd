@@ -30,16 +30,23 @@ public class ClassDescriptor {
 
 	protected final Class type;
 	protected final boolean scanAccessible;
+	protected final boolean extendedProperties;
+	protected final boolean includeFieldsAsProperties;
+	protected final String propertyFieldPrefix;
 	protected int usageCount;
 
-	public ClassDescriptor(Class type, boolean scanAccessible) {
+	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String propertyFieldPrefix) {
 		this.type = type;
+		this.scanAccessible = scanAccessible;
+		this.extendedProperties = extendedProperties;
+		this.includeFieldsAsProperties = includeFieldsAsProperties;
+		this.propertyFieldPrefix = propertyFieldPrefix;
+
 		isArray = type.isArray();
 		isMap = ReflectUtil.isSubclass(type, Map.class);
 		isList = ReflectUtil.isSubclass(type, List.class);
 		isSet = ReflectUtil.isSubclass(type, Set.class);
 		isCollection = ReflectUtil.isSubclass(type, Collection.class);
-		this.scanAccessible = scanAccessible;
 	}
 
 	/**
@@ -56,6 +63,29 @@ public class ClassDescriptor {
 	 */
 	public boolean isScanAccessible() {
 		return scanAccessible;
+	}
+
+	/**
+	 * Returns <code>true</code> if properties in this class descriptor
+	 * are extended and include field description.
+	 */
+	public boolean isExtendedProperties() {
+		return extendedProperties;
+	}
+
+	/**
+	 * Include fields as properties.
+	 */
+	public boolean isIncludeFieldsAsProperties() {
+		return includeFieldsAsProperties;
+	}
+
+	/**
+	 * Returns property field prefix. May be <code>null</code>
+	 * if prefix is not set.
+	 */
+	public String getPropertyFieldPrefix() {
+		return propertyFieldPrefix;
 	}
 
 	/**
@@ -175,10 +205,8 @@ public class ClassDescriptor {
 	public MethodDescriptor getMethodDescriptor(String name, boolean declared) {
 		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name);
 
-		if (methodDescriptor != null) {
-			if (!methodDescriptor.matchDeclared(declared)) {
-				return null;
-			}
+		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
+			return methodDescriptor;
 		}
 
 		return methodDescriptor;
@@ -191,13 +219,11 @@ public class ClassDescriptor {
 	public MethodDescriptor getMethodDescriptor(String name, Class[] params, boolean declared) {
 		MethodDescriptor methodDescriptor = getMethods().getMethodDescriptor(name, params);
 
-		if (methodDescriptor != null) {
-			if (!methodDescriptor.matchDeclared(declared)) {
-				return null;
-			}
+		if ((methodDescriptor != null) && methodDescriptor.matchDeclared(declared)) {
+			return methodDescriptor;
 		}
 
-		return methodDescriptor;
+		return null;
 	}
 
 	/**
@@ -236,13 +262,11 @@ public class ClassDescriptor {
 	public PropertyDescriptor getPropertyDescriptor(String name, boolean declared) {
 		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
 
-		if (propertyDescriptor != null) {
-			if (!propertyDescriptor.matchDeclared(declared)) {
-				return null;
-			}
+		if ((propertyDescriptor != null) && propertyDescriptor.matchDeclared(declared)) {
+			return propertyDescriptor;
 		}
 
-		return propertyDescriptor;
+		return null;
 	}
 
 	/**
@@ -250,42 +274,6 @@ public class ClassDescriptor {
 	 */
 	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		return getProperties().getAllPropertyDescriptors();
-	}
-
-	/**
-	 * Returns {@link MethodDescriptor method descriptor} of a setter (i.e. write method).
-	 * Note that <code>declared</code> flag is matched on setter, not on a property.
-	 */
-	public MethodDescriptor getPropertySetterDescriptor(String name, boolean declared) {
-		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
-
-		if (propertyDescriptor != null) {
-			MethodDescriptor setter = propertyDescriptor.getWriteMethodDescriptor();
-			if (setter != null) {
-				if (setter.matchDeclared(declared)) {
-					return setter;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns {@link MethodDescriptor method descriptor} of a getter (i.e. read method).
-	 * Note that <code>declared</code> flag is matched on getter, not on a property.
-	 */
-	public MethodDescriptor getPropertyGetterDescriptor(String name, boolean declared) {
-		PropertyDescriptor propertyDescriptor = getProperties().getPropertyDescriptor(name);
-
-		if (propertyDescriptor != null) {
-			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
-			if (getter != null) {
-				if (getter.matchDeclared(declared)) {
-					return getter;
-				}
-			}
-		}
-		return null;
 	}
 
 	// ---------------------------------------------------------------- ctors
@@ -309,7 +297,7 @@ public class ClassDescriptor {
 	public CtorDescriptor getDefaultCtorDescriptor(boolean declared) {
 		CtorDescriptor defaultCtor = getCtors().getDefaultCtor();
 
-		if (defaultCtor != null && defaultCtor.matchDeclared(declared)) {
+		if ((defaultCtor != null) && defaultCtor.matchDeclared(declared)) {
 			return defaultCtor;
 		}
 		return null;
@@ -321,7 +309,7 @@ public class ClassDescriptor {
 	public CtorDescriptor getCtorDescriptor(Class[] args, boolean declared) {
 		CtorDescriptor ctorDescriptor = getCtors().getCtorDescriptor(args);
 
-		if (ctorDescriptor != null && ctorDescriptor.matchDeclared(declared)) {
+		if ((ctorDescriptor != null) && ctorDescriptor.matchDeclared(declared)) {
 			return ctorDescriptor;
 		}
 		return null;
