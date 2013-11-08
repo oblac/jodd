@@ -63,7 +63,7 @@ nonascii  =[^\0-\177]
 unicode   =\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?
 escape    ={unicode}|\\[^\n\r\f0-9a-f]
 nmchar    =[_a-zA-Z0-9-]|{nonascii}|{escape}
-//num       =[0-9]+|[0-9]*\.[0-9]+		// not used
+num       =[0-9]+|[0-9]*\.[0-9]+
 string    ={string1}|{string2}
 string1   =\"([^\n\r\f\"]|\\{nl}|{nonascii}|{escape})*\"
 string2   =\'([^\n\r\f\']|\\{nl}|{nonascii}|{escape})*\'
@@ -71,8 +71,8 @@ nl        =\n|\r\n|\r|\f
 whitespace=[ \t\r\n\f]
 w         ={whitespace}*
 ww        ={whitespace}+
-//integer   =[0-9]+						// not used
-//dimension ={num}{ident}				// not used
+integer   =[0-9]+
+dimension ={num}{ident}
 
 
 // additional lexer states
@@ -91,8 +91,8 @@ ww        ={whitespace}+
 	"["				{ stateAttr(); }
 	"#"{name}		{ cssSelector.addIdSelector(yytext(1)); }
 	"."{ident}		{ cssSelector.addClassSelector(yytext(1)); }
-	":"{ident}"("	{ pseudoFnName = yytext(1,1); statePseudoFn(); }
-	":"{ident}		{ cssSelector.addPseudoClassSelector(yytext(1)); }
+	":"(":")?{ident}"("		{ pseudoFnName = yytext(yycharat(1) == ':' ? 2 : 1,1); statePseudoFn(); }
+	":"(":")?{ident}		{ cssSelector.addPseudoClassSelector(yytext( yycharat(1) == ':' ? 2 : 1 )); }
 	.				{ yypushback(1); stateCombinator(); }
 }
 
@@ -115,33 +115,13 @@ ww        ={whitespace}+
 	.				{ throw new CSSellyException("Invalid combinator <"+ yytext() +">.", yystate(), line(), column()); }
 }
 
-/*
 <PSEUDO_FN> {
 	(
 		{w}
-// variant #1: simple
-//		( "+" | "-" | {dimension} | {num} | {string} | {ident} )+
-
-// variant #2: more precise
-//		(
-//			( ("-" | "+")? {integer}? "n" ( {w} ("-" | "+") {w} {integer} )? )
-//			| ("-" | "+")? {integer}
-//			| "odd"
-//         	| "even"
-//		)
-
-		{w}
+		(( "+" | "-" | {dimension} | {num} | {string} | {ident} )+ {w})+
 	)
 	")"				{ cssSelector.addPseudoFunctionSelector(pseudoFnName, yytext(0, 1)); stateSelector(); }
 }
-*/
-
-<PSEUDO_FN> {
-// variant #3: allow all
-	~")"				{ cssSelector.addPseudoFunctionSelector(pseudoFnName, yytext(0, 1)); stateSelector(); }
-}
-
-
 
 
 // fallback rule, when nothing else matches

@@ -1,3 +1,7 @@
+#!/bin/sh
+
+set -e
+
 PRJ_ROOT=../../../../../../
 
 java -jar $PRJ_ROOT/etc/jflex/JFlex-1.4.3-fixes.jar -d . csselly.flex
