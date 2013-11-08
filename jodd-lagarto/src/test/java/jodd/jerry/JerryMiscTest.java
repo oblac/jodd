@@ -154,4 +154,15 @@ public class JerryMiscTest {
 		assertSame(doc.get(0), divx.getChildElement(0).getOwnerDocument());
 		assertSame(doc.get(0), divx.getChildElement(0).getChild(0).getOwnerDocument());
 	}
+
+	@Test
+	public void testContains() {
+		Jerry doc = Jerry.jerry().parse("<body>aaa<p>foo 401(k) bar</p>xxx</body>");
+
+		Jerry p = doc.$("p:contains('401(k)')");
+		assertEquals(1, p.size());
+
+		p = doc.$("p:contains('402(k)')");
+		assertEquals(0, p.size());
+	}
 }

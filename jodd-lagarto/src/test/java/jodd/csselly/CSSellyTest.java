@@ -333,4 +333,29 @@ public class CSSellyTest {
 		assertEquals("foo:bar", attributeSelector.getValue());
 
 	}
+
+	@Test
+	public void testDoubleColon() {
+		CSSelly lexer = new CSSelly("foo::image");
+		List<CssSelector> selectors = lexer.parse();
+
+		assertEquals(1, selectors.size());
+		CssSelector cssSelector = selectors.get(0);
+
+		PseudoClassSelector pseudoClassSelector = (PseudoClassSelector) cssSelector.getSelector(0);
+
+		assertEquals("image", pseudoClassSelector.getPseudoClass().getPseudoClassName());
+
+
+		lexer = new CSSelly("foo::contains(xxx)");
+		selectors = lexer.parse();
+
+		assertEquals(1, selectors.size());
+		cssSelector = selectors.get(0);
+
+		PseudoFunctionSelector pseudoFunctionSelector = (PseudoFunctionSelector) cssSelector.getSelector(0);
+
+		assertEquals("contains", pseudoFunctionSelector.getPseudoFunction().getPseudoFunctionName());
+
+	}
 }
