@@ -37,10 +37,23 @@ public class NodeSelector {
 
 			List<CssSelector> selectors = csselly.parse();
 
-			List<Node> selectedNodes = select(rootNode, selectors);
+			for (Node selectedNode : select(rootNode, selectors)) {
+				if (!results.contains(selectedNode)) {
+					results.add(selectedNode);
+				}
+			}
+		}
+		return results;
+	}
 
-			for (Node selectedNode : selectedNodes) {
-				if (results.contains(selectedNode) == false) {
+	public LinkedList<Node> select(List<List<CssSelector>> selectorsList) {
+		
+		LinkedList<Node> results = new LinkedList<Node>();
+
+		for (List<CssSelector> selectors : selectorsList) {
+
+			for (Node selectedNode : select(rootNode, selectors)) {
+				if (!results.contains(selectedNode)) {
 					results.add(selectedNode);
 				}
 			}
