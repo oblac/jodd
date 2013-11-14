@@ -2,6 +2,8 @@
 
 package jodd.lagarto.dom;
 
+import jodd.csselly.CSSelly;
+import jodd.csselly.CssSelector;
 import jodd.io.FileUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +11,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -313,6 +316,24 @@ public class NodeSelectorTest {
 		assertEquals(9, nodes.size());
 
 		assertTrue(document.check());
+	}
+
+	@Test
+	public void testCollectionOfSelectors() throws IOException {
+		NodeSelector nodeSelector = createNodeFilter();
+
+		List<CssSelector> selectors1 = new CSSelly("body").parse();
+		List<CssSelector> selectors2 = new CSSelly("p").parse();
+
+		List<List<CssSelector>> collection = new ArrayList<List<CssSelector>>();
+		collection.add(selectors1);
+		collection.add(selectors2);
+
+		List<Node> nodes = nodeSelector.select(collection);
+
+		assertEquals(5, nodes.size());
+
+		assertEquals("body", nodes.get(0).nodeName);
 	}
 
 
