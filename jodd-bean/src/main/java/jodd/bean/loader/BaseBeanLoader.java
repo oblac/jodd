@@ -10,7 +10,7 @@ import jodd.bean.BeanUtilBean;
  */
 public abstract class BaseBeanLoader implements BeanLoader {
 
-	private BeanUtilBean beanUtilBean = BeanUtil.getDefaultBeanUtilBean();
+	private BeanUtilBean beanUtilBean = BeanUtil.getBeanUtilBean();
 
 	protected boolean ignoreNulls;
 

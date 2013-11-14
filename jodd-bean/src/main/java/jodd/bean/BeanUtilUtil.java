@@ -2,7 +2,9 @@
 
 package jodd.bean;
 
+import jodd.JoddBean;
 import jodd.introspector.Getter;
+import jodd.introspector.Introspector;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
@@ -16,18 +18,40 @@ import java.util.List;
  */
 class BeanUtilUtil {
 
+	protected Introspector introspector = JoddBean.introspector;
 	protected TypeConverterManagerBean typeConverterManager = TypeConverterManager.getDefaultTypeConverterManager();
 
 	/**
-	 * Sets custom {@link TypeConverterManagerBean type converter manager}.
+	 * Sets {@link Introspector introspector} implementation.
+	 */
+	public void setIntrospector(Introspector introspector) {
+		this.introspector = introspector;
+	}
+
+	/**
+	 * Returns {@link Introspector introspector} implementation.
+	 */
+	public Introspector getIntrospector() {
+		return introspector;
+	}
+
+	/**
+	 * Sets {@link TypeConverterManagerBean type converter manager} implementation.
 	 */
 	public void setTypeConverterManager(TypeConverterManagerBean typeConverterManager) {
 		this.typeConverterManager = typeConverterManager;
 	}
 
 	/**
+	 * Returns {@link TypeConverterManagerBean type converter manager} implementation.
+	 */
+	public TypeConverterManagerBean getTypeConverterManager() {
+		return typeConverterManager;
+	}
+
+	/**
 	 * Converts object to destination type. Invoked before the
-	 * value is set into destination. Throws <code>ClassCastException</code>
+	 * value is set into destination. Throws <code>TypeConversionException</code>
 	 * if conversion fails.
 	 */
 	@SuppressWarnings("unchecked")

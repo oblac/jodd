@@ -41,8 +41,9 @@ Lagarto/Jerry:
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done
-	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9
-	- Remove 2 introspector implementations @v3.4.9
+	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
+	- Remove 2 introspector implementations @v3.4.9 @done
+	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
 	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.9
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
 	- Add abstract descriptor class @v3.4.9 @done

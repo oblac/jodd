@@ -2,8 +2,8 @@
 
 package jodd.bean;
 
-import jodd.introspector.ClassIntrospector;
 import jodd.introspector.ClassDescriptor;
+import jodd.introspector.Introspector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.Setter;
@@ -19,6 +19,7 @@ import jodd.introspector.Setter;
 class BeanProperty {
 
 	BeanProperty(Object bean, String propertyName, boolean forced) {
+		this.introspector = BeanUtil.getBeanUtilBean().getIntrospector();
 		setName(propertyName);
 		setBean(bean);
 		this.last = true;
@@ -30,6 +31,7 @@ class BeanProperty {
 	// ---------------------------------------------------------------- bean and descriptor
 
 	final String fullName;  // initial name
+	final Introspector introspector;
 	Object bean;
 	private ClassDescriptor cd;
 	String name;        // property name
@@ -49,7 +51,7 @@ class BeanProperty {
 	 */
 	public void setBean(Object bean) {
 		this.bean = bean;
-		this.cd = (bean == null ? null : ClassIntrospector.lookup(bean.getClass()));
+		this.cd = (bean == null ? null : introspector.lookup(bean.getClass()));
 		this.first = false;
 		this.updateProperty = true;
 	}

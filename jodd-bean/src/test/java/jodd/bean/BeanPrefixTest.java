@@ -35,12 +35,12 @@ public class BeanPrefixTest {
 
 		Assert.assertEquals("bar", bar);
 
-		JoddBean.introspector = new CachingIntrospector(true, true, true, "_");
+		BeanUtil.getBeanUtilBean().setIntrospector(new CachingIntrospector(true, true, true, "_"));
 
 		bar = BeanUtil.getProperty(lifeBean, "bar").toString();
 
 		Assert.assertEquals("_bar", bar);
 
-		JoddBean.introspector = new CachingIntrospector();
+		BeanUtil.getBeanUtilBean().setIntrospector(JoddBean.introspector);
 	}
 }

@@ -36,9 +36,9 @@ public class BeanUtil {
 	private static final BeanUtilBean BEAN_UTIL_BEAN = new BeanUtilBean();
 
 	/**
-	 * Returns default {@link BeanUtilBean}.
+	 * Returns {@link BeanUtilBean} implementation.
 	 */
-	public static BeanUtilBean getDefaultBeanUtilBean() {
+	public static BeanUtilBean getBeanUtilBean() {
 		return BEAN_UTIL_BEAN;
 	}
 
