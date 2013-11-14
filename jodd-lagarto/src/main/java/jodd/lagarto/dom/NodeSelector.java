@@ -7,6 +7,7 @@ import jodd.csselly.Combinator;
 import jodd.csselly.CssSelector;
 import jodd.util.StringUtil;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,29 +38,37 @@ public class NodeSelector {
 
 			List<CssSelector> selectors = csselly.parse();
 
-			for (Node selectedNode : select(rootNode, selectors)) {
-				if (!results.contains(selectedNode)) {
-					results.add(selectedNode);
-				}
-			}
+			processSelectors(results, selectors);
 		}
 		return results;
 	}
 
-	public LinkedList<Node> select(List<List<CssSelector>> selectorsList) {
-		
+	/**
+	 * Selected nodes using pre-parsed CSS selectors. Take in consideration
+	 * collection type for results grouping order.
+	 */
+	public LinkedList<Node> select(Collection<List<CssSelector>> selectorsCollection) {
 		LinkedList<Node> results = new LinkedList<Node>();
 
-		for (List<CssSelector> selectors : selectorsList) {
-
-			for (Node selectedNode : select(rootNode, selectors)) {
-				if (!results.contains(selectedNode)) {
-					results.add(selectedNode);
-				}
-			}
+		for (List<CssSelector> selectors : selectorsCollection) {
+			processSelectors(results, selectors);
 		}
 		return results;
 	}
+
+	/**
+	 * Process selectors and keep adding results.
+	 */
+	protected void processSelectors(LinkedList<Node> results, List<CssSelector> selectors) {
+		List<Node> selectedNodes = select(rootNode, selectors);
+
+		for (Node selectedNode : selectedNodes) {
+			if (!results.contains(selectedNode)) {
+				results.add(selectedNode);
+			}
+		}
+	}
+
 
 	/**
 	 * Creates {@link CSSelly} instance for parsing files.
@@ -79,13 +88,18 @@ public class NodeSelector {
 		return selectedNodes.get(0);
 	}
 
-
+	/**
+	 * Selects nodes using {@link NodeFilter node filter}.
+	 */
 	public LinkedList<Node> select(NodeFilter nodeFilter) {
 		LinkedList<Node> nodes = new LinkedList<Node>();
 		walk(rootNode, nodeFilter, nodes);
 		return nodes;
 	}
 
+	/**
+	 * Selects nodes using {@link NodeFilter node filter} and return the very first one.
+	 */
 	public Node selectFirst(NodeFilter nodeFilter) {
 		List<Node> selectedNodes = select(nodeFilter);
 		if (selectedNodes.isEmpty()) {
