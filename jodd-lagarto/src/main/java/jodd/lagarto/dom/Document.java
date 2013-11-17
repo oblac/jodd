@@ -5,7 +5,7 @@ package jodd.lagarto.dom;
 import jodd.lagarto.LagartoParserContext;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,7 +69,7 @@ public class Document extends Node {
 	public void addError(String message) {
 		if (collectErrors) {
 			if (errors == null) {
-				errors = new LinkedList<String>();
+				errors = new ArrayList<String>();
 			}
 			errors.add(message);
 		}

@@ -4,7 +4,7 @@ package jodd.lagarto.dom;
 
 import jodd.util.StringUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Simplified HTML foster rules for tables.
@@ -77,9 +77,9 @@ public class HtmlFosterRules {
 
 	// ---------------------------------------------------------------- core
 
-	protected LinkedList<Element> lastTables = new LinkedList<Element>();
-	protected LinkedList<Element> fosterElements = new LinkedList<Element>();
-	protected LinkedList<Text> fosterTexts = new LinkedList<Text>();
+	protected ArrayList<Element> lastTables = new ArrayList<Element>();
+	protected ArrayList<Element> fosterElements = new ArrayList<Element>();
+	protected ArrayList<Text> fosterTexts = new ArrayList<Text>();
 
 	/**
 	 * Fixes foster elements.
@@ -178,7 +178,11 @@ public class HtmlFosterRules {
 		}
 
 		if (isTable) {
-			lastTables.removeLast();
+			// remove last element
+			int size = lastTables.size();
+			if (size > 0) {
+				lastTables.remove(size - 1);	// no array copy occurs when the last element is removed
+			}
 		}
 		return true;
 	}
