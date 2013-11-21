@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxStatus.STATUS_ACTIVE;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * {@link JtxTransaction} manager is responsible for handling transaction
@@ -26,10 +26,10 @@ public class JtxTransactionManager {
 	protected boolean ignoreScope;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
-	protected final ThreadLocal<LinkedList<JtxTransaction>> txStack = new ThreadLocal<LinkedList<JtxTransaction>>() {
+	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<ArrayList<JtxTransaction>>() {
 		@Override
-		protected synchronized LinkedList<JtxTransaction> initialValue() {
-			return new LinkedList<JtxTransaction>();
+		protected synchronized ArrayList<JtxTransaction> initialValue() {
+			return new ArrayList<JtxTransaction>();
 		}
 	};
 
@@ -120,7 +120,7 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions of the specified status associated with current thread.
 	 */
 	public int totalThreadTransactionsWithStatus(JtxStatus status) {
-		LinkedList<JtxTransaction> txlist = txStack.get();
+		ArrayList<JtxTransaction> txlist = txStack.get();
 		int count = 0;
 		for (JtxTransaction tx : txlist) {
 			if (tx.getStatus() == status) {
@@ -164,11 +164,11 @@ public class JtxTransactionManager {
 	 * by this transaction manager.
 	 */
 	public JtxTransaction getTransaction() {
-		LinkedList<JtxTransaction> txlist = txStack.get();
+		ArrayList<JtxTransaction> txlist = txStack.get();
 		if (txlist.isEmpty() == true) {
 			return null;
 		}
-		return txlist.getLast();
+		return txlist.get(txlist.size() - 1);	// get last
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class JtxTransactionManager {
 	 */
 	protected void associateTransaction(JtxTransaction tx) {
 		totalTransactions++;
-		txStack.get().addLast(tx);
+		txStack.get().add(tx);	// add last
 	}
 
 	protected int totalTransactions;
