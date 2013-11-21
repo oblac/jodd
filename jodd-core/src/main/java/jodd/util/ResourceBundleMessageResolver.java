@@ -2,9 +2,9 @@
 
 package jodd.util;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class ResourceBundleMessageResolver {
 
 	protected Locale fallbackLocale = LocaleUtil.getLocale("en");
 	protected String fallbackBundlename = "messages";
-	protected List<String> defaultBundles = new LinkedList<String>();
+	protected List<String> defaultBundles = new ArrayList<String>();
 	protected boolean cacheResourceBundles = true;
 
 	public void addDefaultBundle(String bundleName) {

@@ -8,13 +8,13 @@ import jodd.util.MultiComparator;
 import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
 import jodd.io.FileUtil;
+import jodd.util.collection.JoddArrayList;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -345,15 +345,15 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected LinkedList<String> includes;
-	protected LinkedList<String> excludes;
+	protected ArrayList<String> includes;
+	protected ArrayList<String> excludes;
 
 	/**
 	 * Defines include pattern.
 	 */
 	public T include(String pattern) {
 		if (includes == null) {
-			includes = new LinkedList<String>();
+			includes = new ArrayList<String>();
 		}
 		includes.add(pattern);
 		return (T) this;
@@ -364,7 +364,7 @@ public class FindFile<T extends FindFile> {
 	 */
 	public T include(String... patterns) {
 		if (includes == null) {
-			includes = new LinkedList<String>();
+			includes = new ArrayList<String>();
 		}
 		Collections.addAll(includes, patterns);
 		return (T) this;
@@ -375,7 +375,7 @@ public class FindFile<T extends FindFile> {
 	 */
 	public T exclude(String pattern) {
 		if (excludes == null) {
-			excludes = new LinkedList<String>();
+			excludes = new ArrayList<String>();
 		}
 		excludes.add(pattern);
 		return (T) this;
@@ -386,7 +386,7 @@ public class FindFile<T extends FindFile> {
 	 */
 	public T exclude(String... patterns) {
 		if (excludes == null) {
-			excludes = new LinkedList<String>();
+			excludes = new ArrayList<String>();
 		}
 		Collections.addAll(excludes, patterns);
 		return (T) this;
@@ -460,10 +460,10 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- next file
 
-	protected LinkedList<File> pathList;
-	protected LinkedList<File> pathListOriginal;
-	protected LinkedList<File> todoFolders;
-	protected LinkedList<FilesIterator> todoFiles;
+	protected JoddArrayList<File> pathList;
+	protected JoddArrayList<File> pathListOriginal;
+	protected JoddArrayList<File> todoFolders;
+	protected JoddArrayList<FilesIterator> todoFiles;
 
 	protected File lastFile;
 	protected File rootFile;
@@ -487,7 +487,7 @@ public class FindFile<T extends FindFile> {
 			return;
 		}
 		if (pathList == null) {
-			pathList = new LinkedList<File>();
+			pathList = new JoddArrayList<File>();
 		}
 
 		pathList.add(path);
@@ -600,16 +600,16 @@ public class FindFile<T extends FindFile> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void init() {
-		todoFiles = new LinkedList<FilesIterator>();
-		todoFolders = new LinkedList<File>();
+		todoFiles = new JoddArrayList<FilesIterator>();
+		todoFolders = new JoddArrayList<File>();
 
 		if (pathList == null) {
-			pathList = new LinkedList<File>();
+			pathList = new JoddArrayList<File>();
 			return;
 		}
 
 		if (pathListOriginal == null) {
-			pathListOriginal = (LinkedList<File>) pathList.clone();
+			pathListOriginal = (JoddArrayList<File>) pathList.clone();
 		}
 		String[] files = new String[pathList.size()];
 

@@ -6,9 +6,9 @@ import jodd.io.StreamUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 
@@ -112,9 +112,9 @@ public class MimeTypes {
 	 * @param useWildcard if set, mime types are wildcard patterns
 	 */
 	public static String[] findExtensionsByMimeTypes(String mimeType, boolean useWildcard) {
-		LinkedList<String> extensions = new LinkedList<String>();
-		mimeType = mimeType.toLowerCase();
+		ArrayList<String> extensions = new ArrayList<String>();
 
+		mimeType = mimeType.toLowerCase();
 		String[] mimeTypes = StringUtil.splitc(mimeType, ", ");
 
 		for (Map.Entry<String, String> entry : MIME_TYPE_MAP.entrySet()) {
