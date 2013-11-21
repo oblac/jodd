@@ -3,7 +3,8 @@
 package jodd.htmlstapler;
 
 import jodd.util.ArraysUtil;
-import java.util.LinkedList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static jodd.htmlstapler.HtmlStaplerBundlesManager.Strategy.ACTION_MANAGED;
@@ -48,13 +49,13 @@ public class BundleAction {
 			newAction = (bundleId == null);
 
 			if (newAction) {
-				sources = new LinkedList<String>();
+				sources = new ArrayList<String>();
 			}
 		} else {
 			bundleId = BUNDLE_ID_MARKER + bundleContentType;
 			bundleIdMark = bundleId.toCharArray();
 			newAction = true;
-			sources = new LinkedList<String>();
+			sources = new ArrayList<String>();
 		}
 
 		firstScriptTag = true;

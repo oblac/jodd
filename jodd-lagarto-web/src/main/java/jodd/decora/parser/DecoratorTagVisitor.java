@@ -7,7 +7,7 @@ import jodd.lagarto.EmptyTagVisitor;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Visitor that detect Decora tags in the decorator.
@@ -19,7 +19,7 @@ import java.util.LinkedList;
  */
 public class DecoratorTagVisitor extends EmptyTagVisitor {
 
-	protected LinkedList<DecoraTag> decoraTags = new LinkedList<DecoraTag>();
+	protected ArrayList<DecoraTag> decoraTags = new ArrayList<DecoraTag>();
 
 	/**
 	 * Returns an array of founded Decora tags.
