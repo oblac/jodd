@@ -9,7 +9,7 @@ import jodd.lagarto.dom.NodeFilter;
 import jodd.lagarto.dom.NodeListFilter;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,7 +106,7 @@ public class PseudoFunctionSelector<E> extends Selector implements NodeFilter, N
 	/**
 	 * Accepts node within selected results. Invoked after results are matched.
 	 */
-	public boolean accept(LinkedList<Node> currentResults, Node node, int index) {
+	public boolean accept(List<Node> currentResults, Node node, int index) {
 		return pseudoFunction.match(currentResults, node, index, parsedExpression);
 	}
 

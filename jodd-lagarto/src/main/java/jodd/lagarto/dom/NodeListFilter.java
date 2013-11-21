@@ -2,9 +2,9 @@
 
 package jodd.lagarto.dom;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface NodeListFilter {
 
-	boolean accept(LinkedList<Node> currentResults, Node node, int index);
+	boolean accept(List<Node> currentResults, Node node, int index);
 }

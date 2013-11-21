@@ -10,7 +10,7 @@ import jodd.lagarto.dom.NodeFilter;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jodd.csselly.selector.Match.EQUALS;
@@ -41,7 +41,7 @@ public class CssSelector implements NodeFilter {
 			element = StringPool.STAR;
 		}
 		this.element = unescape(element);
-		this.selectors = new LinkedList<Selector>();
+		this.selectors = new ArrayList<Selector>();
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class CssSelector implements NodeFilter {
 	/**
 	 * Accepts node within current results.
 	 */
-	public boolean accept(LinkedList<Node> currentResults, Node node, int index) {
+	public boolean accept(List<Node> currentResults, Node node, int index) {
 		// match attributes
 		int totalSelectors = selectorsCount();
 		for (int i = 0; i < totalSelectors; i++) {

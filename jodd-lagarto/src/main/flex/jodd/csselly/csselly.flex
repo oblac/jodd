@@ -1,6 +1,6 @@
 package jodd.csselly;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.nio.CharBuffer;
 %%
 
@@ -49,7 +49,7 @@ import java.nio.CharBuffer;
 		return new String(zzBuffer, startIndex, zzMarkedPos - endIndexOffset - startIndex);
 	}
 
-	LinkedList<CssSelector> selectors = new LinkedList<CssSelector>();
+	ArrayList<CssSelector> selectors = new ArrayList<CssSelector>();
 	CssSelector cssSelector;
 	String pseudoFnName;
 %}

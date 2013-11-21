@@ -40,9 +40,9 @@ public class CSSelly {
 			}
 
 			// fixes last combinator
-			CssSelector last = lexer.selectors.getLast();
+			CssSelector last = lexer.selectors.get(lexer.selectors.size() - 1);
 			if (last.getCombinator() == Combinator.DESCENDANT) {
-				lexer.selectors.getLast().setCombinator(null);
+				last.setCombinator(null);
 			}
 
 			// set previous css selector

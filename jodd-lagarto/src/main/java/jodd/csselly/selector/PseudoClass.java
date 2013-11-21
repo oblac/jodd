@@ -4,7 +4,7 @@ package jodd.csselly.selector;
 
 import jodd.lagarto.dom.Node;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Pseudo classes.
@@ -113,8 +113,11 @@ public abstract class PseudoClass {
 		}
 
 		@Override
-		public boolean match(LinkedList<Node> currentResults, Node node, int index) {
-			Node firstNode = currentResults.getFirst();
+		public boolean match(List<Node> currentResults, Node node, int index) {
+			if (currentResults.isEmpty()) {
+				return false;
+			}
+			Node firstNode = currentResults.get(0);	// getFirst();
 			if (firstNode == null) {
 				return false;
 			}
@@ -134,8 +137,12 @@ public abstract class PseudoClass {
 		}
 
 		@Override
-		public boolean match(LinkedList<Node> currentResults, Node node, int index) {
-			Node lastNode = currentResults.getLast();
+		public boolean match(List<Node> currentResults, Node node, int index) {
+			int size = currentResults.size();
+			if (size == 0) {
+				return false;
+			}
+			Node lastNode = currentResults.get(size - 1); // getLast();
 			if (lastNode == null) {
 				return false;
 			}
@@ -359,7 +366,7 @@ public abstract class PseudoClass {
 		}
 
 		@Override
-		public boolean match(LinkedList<Node> currentResults, Node node, int index) {
+		public boolean match(List<Node> currentResults, Node node, int index) {
 			return index % 2 == 0;
 		}
 	}
@@ -374,7 +381,7 @@ public abstract class PseudoClass {
 		}
 
 		@Override
-		public boolean match(LinkedList<Node> currentResults, Node node, int index) {
+		public boolean match(List<Node> currentResults, Node node, int index) {
 			return index % 2 != 0;
 		}
 	}
@@ -390,7 +397,7 @@ public abstract class PseudoClass {
 	/**
 	 * Returns <code>true</code> if node matches the pseudoclass within current results.
 	 */
-	public boolean match(LinkedList<Node> currentResults, Node node, int index) {
+	public boolean match(List<Node> currentResults, Node node, int index) {
 		return true;
 	}
 
