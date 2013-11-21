@@ -15,9 +15,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -150,8 +151,8 @@ public class SendMailSession {
 		}
 
 		// message data and attachments
-		LinkedList<EmailMessage> messages = email.getAllMessages();
-		LinkedList<EmailAttachment> attachments = email.getAttachments();
+		List<EmailMessage> messages = email.getAllMessages();
+		List<EmailAttachment> attachments = email.getAttachments();
 		int totalMessages = messages.size();
 
 		if ((attachments == null) && (totalMessages == 1)) {
@@ -173,7 +174,7 @@ public class SendMailSession {
 
 			for (EmailMessage emailMessage : messages) {
 				// detect embedded attachments
-				LinkedList<EmailAttachment> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
+				List<EmailAttachment> embeddedAttachments = filterEmbeddedAttachments(attachments, emailMessage);
 
 				MimeBodyPart bodyPart = new MimeBodyPart();
 
@@ -237,12 +238,12 @@ public class SendMailSession {
 	/**
 	 * Filters out the list of embedded attachments for given message. If none found, returns <code>null</code>.
 	 */
-	protected LinkedList<EmailAttachment> filterEmbeddedAttachments(LinkedList<EmailAttachment> attachments, EmailMessage emailMessage) {
+	protected List<EmailAttachment> filterEmbeddedAttachments(List<EmailAttachment> attachments, EmailMessage emailMessage) {
 		if (attachments == null) {
 			return null;
 		}
 
-		LinkedList<EmailAttachment> embeddedAttachments = null;
+		List<EmailAttachment> embeddedAttachments = null;
 
 		Iterator<EmailAttachment> iterator = attachments.iterator();
 
@@ -252,7 +253,7 @@ public class SendMailSession {
 			if (emailAttachment.isEmbeddedInto(emailMessage)) {
 
 				if (embeddedAttachments == null) {
-					embeddedAttachments = new LinkedList<EmailAttachment>();
+					embeddedAttachments = new ArrayList<EmailAttachment>();
 				}
 
 				embeddedAttachments.add(emailAttachment);

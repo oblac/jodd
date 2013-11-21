@@ -4,8 +4,9 @@ package jodd.mail;
 
 import jodd.util.MimeTypes;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * E-mail holds all parts of an email and handle attachments.
@@ -106,12 +107,12 @@ public class Email extends CommonEmail {
 
 	// ---------------------------------------------------------------- attachments
 
-	protected LinkedList<EmailAttachment> attachments;
+	protected ArrayList<EmailAttachment> attachments;
 
 	/**
 	 * Returns an array of attachments or <code>null</code> if no attachment enclosed with this email. 
 	 */
-	public LinkedList<EmailAttachment> getAttachments() {
+	public List<EmailAttachment> getAttachments() {
 		return attachments;
 	}
 
@@ -120,7 +121,7 @@ public class Email extends CommonEmail {
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
-			attachments = new LinkedList<EmailAttachment>();
+			attachments = new ArrayList<EmailAttachment>();
 		}
 		attachments.add(emailAttachment);
 		return this;
@@ -133,8 +134,9 @@ public class Email extends CommonEmail {
 		attach(emailAttachment);
 
 		if (emailAttachment.isInline()) {
-			if (!messages.isEmpty()) {
-				emailAttachment.setEmbeddedMessage(messages.getLast());
+			int size = messages.size();
+			if (size > 0) {
+				emailAttachment.setEmbeddedMessage(messages.get(size - 1));		// get last message
 			}
 		}
 		return this;

@@ -4,9 +4,10 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -142,12 +143,12 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- message
 
-	protected LinkedList<EmailMessage> messages = new LinkedList<EmailMessage>();
+	protected List<EmailMessage> messages = new ArrayList<EmailMessage>();
 
 	/**
 	 * Returns all messages.
 	 */
-	public LinkedList<EmailMessage> getAllMessages() {
+	public List<EmailMessage> getAllMessages() {
 		return messages;
 	}
 
