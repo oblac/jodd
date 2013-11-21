@@ -5,8 +5,8 @@ package jodd.vtor;
 import jodd.bean.BeanUtil;
 import jodd.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class Vtor {
 			return;
 		}
 		if (violations == null) {
-			violations = new LinkedList<Violation>();
+			violations = new ArrayList<Violation>();
 		}
 		violations.add(v);
 	}

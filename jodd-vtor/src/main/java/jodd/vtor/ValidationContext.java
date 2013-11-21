@@ -12,7 +12,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class ValidationContext {
 		String name = check.getName();
 		List<Check> list = map.get(name);
 		if (list == null) {
-			list = new LinkedList<Check>();
+			list = new ArrayList<Check>();
 			map.put(name, list);
 		}
 		list.add(check);
