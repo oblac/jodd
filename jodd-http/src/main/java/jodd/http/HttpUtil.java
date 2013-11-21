@@ -79,7 +79,7 @@ public class HttpUtil {
 			}
 			String name = query.substring(ndx2, ndx);
 			if (decode) {
-				name = URLDecoder.decode(name);
+				name = URLDecoder.decodeQuery(name);
 			}
 
 			ndx2 = ndx + 1;
@@ -93,7 +93,7 @@ public class HttpUtil {
 			String value = query.substring(ndx2, ndx);
 
 			if (decode) {
-				value = URLDecoder.decode(value);
+				value = URLDecoder.decodeQuery(value);
 			}
 
 			queryMap.add(name, value);

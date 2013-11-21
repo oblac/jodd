@@ -5,8 +5,6 @@ package jodd.util;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import static jodd.util.URLCoder.encodeFragment;
 import static jodd.util.URLCoder.encodeHost;
@@ -20,6 +18,7 @@ import static jodd.util.URLCoder.encodeScheme;
 import static jodd.util.URLCoder.encodeUri;
 import static jodd.util.URLCoder.encodeUserInfo;
 import static jodd.util.URLDecoder.decode;
+import static jodd.util.URLDecoder.decodeQuery;
 import static org.junit.Assert.assertEquals;
 
 public class URLCoderTest {
@@ -97,6 +96,8 @@ public class URLCoderTest {
 		assertEquals("T\u014dky\u014d", decode("T%C5%8Dky%C5%8D"));
 		assertEquals("/Z\u00fcrich", decode("/Z%C3%BCrich"));
 		assertEquals("T\u014dky\u014d", decode("T\u014dky\u014d"));
+		assertEquals("foo+bar", decode("foo+bar"));
+		assertEquals("foo bar", decodeQuery("foo+bar"));
 	}
 
 	@Test
