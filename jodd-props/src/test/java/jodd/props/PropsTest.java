@@ -442,6 +442,32 @@ public class PropsTest {
 		assertEquals("two.one.zero", p.getValue("bar"));
 	}
 
+	@Test
+	public void testCategoriesInValues() {
+		Props p =  new Props();
+		p.load(	"[section]\n" +
+				"foo = aaa, [bbb:ccc]\n" +
+				"bar = teapot");
+
+		assertEquals("aaa, [bbb:ccc]", p.getValue("section.foo"));
+		assertEquals("teapot", p.getValue("section.bar"));
+	}
+
+	@Test
+	public void testDuplicatedValue() {
+		Props p = new Props();
+		p.setValue("foo", "bar");
+		p.setValue("foo", "aaa", "prof1");
+		p.setValue("foo", "bbb", "prof2");
+
+		assertEquals("bar", p.getValue("foo"));
+		assertEquals("aaa", p.getValue("foo", "prof1"));
+		assertEquals("bbb", p.getValue("foo", "prof2"));
+
+		assertEquals("aaa", p.getValue("foo", "prof1", "prof2"));
+		assertEquals("bbb", p.getValue("foo", "prof2", "prof1"));
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {

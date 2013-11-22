@@ -22,15 +22,16 @@ Site/Documentation:
 	- migrate from google groups to nabble? getsatisfied? anything? @tbd
 	- add blog? @tbd
 	- improve SEO
+	- write about manual Madvoc config @next
 	SiteGenerator:
 	- add global props to javascript
 	- add start and end events, to perform something
 	- load *md structure from root in maps, get(relative) returns sorted list of file names
 	- sitemap generator
 	- description meta tag add
-	- fix line number # anchors @next @sitegenerator
-	- write about manual Madvoc configuration @next
+	- fix line number # anchors @next
 	- improve <var> in docs
+	- migrate to nanoc ?
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
@@ -51,6 +52,10 @@ BeanUtil:
 	- Use new raw type info in BeanUtil @v3.4.5 @done
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
+Props-plugin:
+	- Add += operator
+	- Check when categories are listed in values, do not recognize them as categories but test
+		Categories must start on empty or whitespaced line
 Madvoc:
 	- Action methods with arguments @tbd
 	- Add result methods: ok(), redirect() etc.
