@@ -2,8 +2,13 @@
 
 package jodd.jerry;
 
+import jodd.csselly.selector.PseudoClass;
+import jodd.csselly.selector.PseudoClassSelector;
+import jodd.csselly.selector.PseudoFunction;
+import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
+import jodd.lagarto.dom.Node;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -165,4 +170,57 @@ public class JerryMiscTest {
 		p = doc.$("p:contains('402(k)')");
 		assertEquals(0, p.size());
 	}
+
+	@Test
+	public void testCustomPseudoClass() {
+		PseudoClassSelector.registerPseudoClass(MyPseudoClass.class);
+
+		Jerry doc = Jerry.jerry().parse("<body><p jodd-attr='1'>found</p><p>not found</p></body>");
+
+		Jerry p = doc.$("p:jjjjj");
+		assertEquals(1, p.size());
+		assertEquals("found", p.text());
+	}
+
+	public static class MyPseudoClass extends PseudoClass {
+		@Override
+		public boolean match(Node node) {
+			return node.hasAttribute("jodd-attr");
+		}
+
+		@Override
+		public String getPseudoClassName() {
+			return "jjjjj";
+		}
+	}
+
+	@Test
+	public void testCustomPseudoFunction() {
+		PseudoFunctionSelector.registerPseudoFunction(MyPseudoFunction.class);
+
+		Jerry doc = Jerry.jerry().parse("<body><p>not found</p><div>This!</div></body>");
+
+		Jerry p = doc.$(":super-fn(3)");
+		assertEquals(1, p.size());
+		assertEquals("This!", p.text());
+	}
+
+	public static class MyPseudoFunction extends PseudoFunction {
+		@Override
+		public Object parseExpression(String expression) {
+			return Integer.valueOf(expression);
+		}
+
+		@Override
+		public boolean match(Node node, Object expression) {
+			Integer size = (Integer) expression;
+			return node.getNodeName().length() == size.intValue();
+		}
+
+		@Override
+		public String getPseudoFunctionName() {
+			return "super-fn";
+		}
+	}
+
 }
