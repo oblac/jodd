@@ -43,7 +43,7 @@ public class FileUploadHeader {
 				fileName = formFileName;
 			} else {
 				path = formFileName.substring(0, ls);
-				fileName = formFileName.substring(ls);
+				fileName = formFileName.substring(ls + 1);
 			}
 			if (fileName.length() > 0) {
 				this.contentType = getContentType(dataHeader);
