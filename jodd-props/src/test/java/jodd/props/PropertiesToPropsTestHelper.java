@@ -55,7 +55,7 @@ public class PropertiesToPropsTestHelper {
 		}
 	}
 
-	// todo: implement equals and hashCode in Jodd Props, PropsData and PropsValue then use assertEqualProps
+	// todo: implement equals and hashCode in Jodd Props, PropsData and PropsEntry then use assertEqualProps
 	public static void assertEqualProps(final String actual, final String expectedResourceFileName) {
 		final Props actualProps = new Props();
 		actualProps.load(actual);

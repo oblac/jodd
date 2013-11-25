@@ -1,0 +1,249 @@
+package jodd.props;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+/**
+ * Props iterator builder. Should be used with: {@link jodd.props.Props#entries()}.
+ */
+public final class PropsEntries {
+
+	private final PropsIterator propsIterator;
+	private final Props props;
+
+	public PropsEntries(Props props) {
+		this.props = props;
+		this.propsIterator = new PropsIterator();
+	}
+
+	/**
+	 * Enables profile to iterate.
+	 */
+	public PropsEntries profile(String profile) {
+		addProfiles(profile);
+		return this;
+	}
+	/**
+	 * Enables profiles to iterate.
+	 */
+	public PropsEntries profile(String... profiles) {
+		if (profiles == null) {
+			return this;
+		}
+		for (String profile : profiles) {
+			addProfiles(profile);
+		}
+		return this;
+	}
+
+	/**
+	 * Enables active profiles to iterate over.
+	 */
+	public PropsEntries activeProfiles() {
+		profile(props.activeProfiles);
+		return this;
+	}
+
+	private void addProfiles(String profile) {
+		if (propsIterator.profiles == null) {
+			propsIterator.profiles = new ArrayList<String>();
+		}
+		propsIterator.profiles.add(profile);
+	}
+
+	/**
+	 * Enables section to iterate.
+	 */
+	public PropsEntries section(String section) {
+		addSection(section);
+		return this;
+	}
+	/**
+	 * Enables sections to iterate.
+	 */
+	public PropsEntries section(String... section) {
+		for (String s : section) {
+			addSection(s);
+		}
+		return this;
+	}
+
+	private void addSection(String section) {
+		if (propsIterator.sections == null) {
+			propsIterator.sections = new ArrayList<String>();
+		}
+		propsIterator.sections.add(section + '.');
+	}
+
+	/**
+	 * Skips duplicate keys (defined in different profiles) which value is not
+	 * used for setting current key value.
+	 */
+	public PropsEntries skipDuplicatesByValue() {
+		propsIterator.skipDuplicatesByValue = true;
+		propsIterator.skipDuplicatesByPosition = false;
+		return this;
+	}
+
+	/**
+	 * Skips all keys after first definition, even if value is set later.
+	 */
+	public PropsEntries skipDuplicatesByPosition() {
+		propsIterator.skipDuplicatesByPosition = true;
+		propsIterator.skipDuplicatesByValue = false;
+		return this;
+	}
+
+	/**
+	 * Returns populated iterator.
+	 */
+	public Iterator<PropsEntry> iterator() {
+		return propsIterator;
+	}
+
+	// ---------------------------------------------------------------- iterator
+
+	/**
+	 * Props iterator.
+	 */
+	private class PropsIterator implements Iterator<PropsEntry> {
+		private PropsEntry next = props.data.first;
+		private boolean firstTime = true;
+		private List<String> profiles;
+		private List<String> sections;
+		private boolean skipDuplicatesByValue;
+		private boolean skipDuplicatesByPosition;
+		private Set<String> keys;
+
+		public boolean hasNext() {
+			if (firstTime) {
+				start();
+			}
+			return next != null;
+		}
+
+		/**
+		 * Starts with the iterator.
+		 */
+		private void start() {
+			firstTime = false;
+
+			while (!accept(next)) {
+				if (next == null) {
+					break;
+				}
+				next = next.next;		// funny :)))
+			}
+		}
+
+		/**
+		 * Accepts an entry and returns <code>true</code>
+		 * if entry should appear in this iteration.
+		 */
+		private boolean accept(PropsEntry entry) {
+			if (entry == null) {
+				return false;
+			}
+			if (profiles != null) {
+				if (entry.getProfile() != null) {
+					boolean found = false;
+					for (String profile : profiles) {
+						if (entry.getProfile().equals(profile)) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						return false;
+					}
+				}
+			} else {
+				// ignore all profile keys if only a base profile is active
+				if (entry.getProfile() != null) {
+					return false;
+				}
+			}
+
+			if (sections != null) {
+				boolean found = false;
+				for (String section : sections) {
+					if (entry.getKey().startsWith(section)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					return false;
+				}
+			}
+
+			if (profiles != null) {
+				if (skipDuplicatesByValue) {
+					String thisProfile = entry.getProfile();
+
+					// iterate all profiles before this one
+					for (String profile : profiles) {
+						if (profile.equals(thisProfile)) {
+							// if we came to this point, there is no
+							// property defined in higher profile
+							// therefore this one is the most important
+							return true;
+						}
+
+						// check if key exist in higher profile
+						Map<String, PropsEntry> profileMap = props.data.profileProperties.get(profile);
+						if (profileMap == null) {
+							continue;
+						}
+						if (profileMap.containsKey(entry.getKey())) {
+							// duplicate key exist in higher profile, therefore this one is less important
+							return false;
+						}
+					}
+				}
+				if (skipDuplicatesByPosition) {
+					if (keys == null) {
+						keys = new HashSet<String>();
+					}
+					if (keys.add(entry.getKey()) == false) {
+						return false;		// the key was already there
+					}
+				}
+			}
+
+			return true;
+		}
+
+		public PropsEntry next() {
+			if (firstTime) {
+				start();
+			}
+
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
+
+			PropsEntry returnValue =  next;
+
+			while (next != null) {
+				next = next.next;
+
+				if (accept(next)) {
+					break;
+				}
+			}
+
+			return returnValue;
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+}

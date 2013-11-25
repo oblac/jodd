@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -110,7 +111,7 @@ public class Props implements Cloneable {
 	 * this method, it might override this value in the same way.
 	 */
 	public void setActiveProfiles(final String... activeProfiles) {
-		initialize();
+		initialized = false;
 		this.activeProfiles = activeProfiles;
 	}
 
@@ -414,7 +415,7 @@ public class Props implements Cloneable {
 			return;
 		}
 
-		final PropsValue pv = data.getBaseProperty(activeProfilesProp);
+		final PropsEntry pv = data.getBaseProperty(activeProfilesProp);
 		if (pv == null) {
 			// no active profile set as the property, exit
 			return;
@@ -428,6 +429,37 @@ public class Props implements Cloneable {
 
 		activeProfiles = Convert.toStringArray(value);
 		StringUtil.trimAll(activeProfiles);
+	}
+
+	// ---------------------------------------------------------------- iterator
+
+	/**
+	 * Returns all profiles names.
+	 */
+	public String[] getAllProfiles() {
+		String[] profiles = new String[data.profileProperties.size()];
+
+		int index = 0;
+		for (String profileName : data.profileProperties.keySet()) {
+			profiles[index] = profileName;
+			index++;
+		}
+		return profiles;
+	}
+
+	/**
+	 * Returns {@link PropsEntries builder} for entries {@link #iterator() itertor}.
+	 */
+	public PropsEntries entries() {
+		initialize();
+		return new PropsEntries(this);
+	}
+
+	/**
+	 * Returns iterator for active profiles.
+	 */
+	public Iterator<PropsEntry> iterator() {
+		return entries().activeProfiles().iterator();
 	}
 
 }

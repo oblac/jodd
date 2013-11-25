@@ -10,6 +10,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
@@ -466,6 +468,113 @@ public class PropsTest {
 
 		assertEquals("aaa", p.getValue("foo", "prof1", "prof2"));
 		assertEquals("bbb", p.getValue("foo", "prof2", "prof1"));
+	}
+
+	@Test
+	public void testIteratorEmpty() {
+		Props p = new Props();
+
+		Iterator<PropsEntry> it = p.iterator();
+
+		assertFalse(it.hasNext());
+
+		try {
+			it.next();
+			fail();
+		} catch (Exception ignore) {
+		}
+	}
+
+	@Test
+	public void testIteratorSkip() {
+		Props p = new Props();
+
+		p.load("zorg<prof2>=zero\n" +
+				"foo=one\n" +
+				"bar=two\n" +
+				"foo<prof1>=zero");
+
+		Iterator<PropsEntry> it = p.iterator();
+
+		assertTrue(it.hasNext());
+
+		PropsEntry pe = it.next();
+		assertEquals("foo", pe.getKey());
+		pe = it.next();
+		assertEquals("bar", pe.getKey());
+
+		assertFalse(it.hasNext());
+		try {
+			it.next();
+			fail();
+		} catch (Exception ignore) {
+		}
+
+		p.setActiveProfiles("prof1", "prof2");
+
+		it = p.iterator();
+		assertEquals("zorg", it.next().getKey());
+		assertEquals("foo", it.next().getKey());
+		assertEquals("bar", it.next().getKey());
+		assertEquals("foo", it.next().getKey());
+		assertFalse(it.hasNext());
+
+		it = p.entries().activeProfiles().skipDuplicatesByValue().iterator();
+
+		assertEquals("zorg", it.next().getKey());
+		assertEquals("bar", it.next().getKey());
+		assertEquals("foo", it.next().getKey());
+		assertFalse(it.hasNext());
+
+		it = p.entries().profile("prof1").skipDuplicatesByValue().iterator();
+		assertEquals("bar", it.next().getKey());
+		assertEquals("foo", it.next().getKey());
+		assertFalse(it.hasNext());
+
+
+		it = p.entries().activeProfiles().skipDuplicatesByPosition().iterator();
+
+		assertEquals("zorg", it.next().getKey());
+		assertEquals("foo", it.next().getKey());
+		assertEquals("bar", it.next().getKey());
+		assertFalse(it.hasNext());
+
+		it = p.entries().profile("prof1").skipDuplicatesByPosition().iterator();
+		assertEquals("foo", it.next().getKey());
+		assertEquals("bar", it.next().getKey());
+		assertFalse(it.hasNext());
+	}
+
+	@Test
+	public void testIteratorSections() {
+		Props p = new Props();
+
+		p.load("aaa.zorg<prof2>=zero\n" +
+				"bbb.foo=one\n" +
+				"ccc.bar=two\n" +
+				"bbb.foo<prof1>=zero");
+
+
+		p.setActiveProfiles("prof1", "prof2");
+
+		Iterator<PropsEntry> it = p.entries().section("bbb").profile("prof1", "prof2").iterator();
+		assertEquals("bbb.foo", it.next().getKey());
+		assertEquals("bbb.foo", it.next().getKey());
+		assertFalse(it.hasNext());
+	}
+
+	@Test
+	public void testGetAllProfiles() {
+		Props p = new Props();
+
+		p.load("zorg<prof2>=zero\n" +
+				"foo=one\n" +
+				"bar=two\n" +
+				"foo<prof1>=zero");
+
+		String[] profiles = p.getAllProfiles();
+		Arrays.sort(profiles);
+		assertArrayEquals(new String[] {"prof1", "prof2"}, profiles);
 	}
 
 	// ---------------------------------------------------------------- util
