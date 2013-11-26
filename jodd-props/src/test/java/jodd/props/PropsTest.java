@@ -577,6 +577,22 @@ public class PropsTest {
 		assertArrayEquals(new String[] {"prof1", "prof2"}, profiles);
 	}
 
+	@Test
+	public void testChangeActiveProfile() {
+		Props p = new Props();
+
+		p.load("foo=one\n" +
+				"bar=two\n" +
+				"foo<prof1>=aaa\n" +
+				"foo<prof2>=bbb\n");
+
+		p.setActiveProfiles("prof1");
+		assertEquals("aaa", p.getValue("foo"));
+
+		p.setActiveProfiles("prof2");
+		assertEquals("bbb", p.getValue("foo"));
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {
