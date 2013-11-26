@@ -30,8 +30,8 @@ ext {
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'postgresql:postgresql:9.1-901-1.jdbc4',
 		mysql:			'mysql:mysql-connector-java:5.1.21',
-		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.5.10.201208310627:runtime@jar',
-		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.5.10.201208310627',
+		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.6.3.201306030806:runtime@jar',
+		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.6.3.201306030806',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
 		tomcat_embed:	[	'org.apache.tomcat:tomcat-catalina:7.0.40',
 							'org.apache.tomcat.embed:tomcat-embed-core:7.0.40',
@@ -144,6 +144,7 @@ configure(javaModules()) {
 	}
 
 	task integrationTest(type: Test, dependsOn: jar) {
+		group 'Build'
 		testClassesDir = sourceSets.integrationTest.output.classesDir
 		classpath = sourceSets.integrationTest.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
@@ -336,7 +337,8 @@ task javadocAll(type: Javadoc) {
 
 task coverageReportAll() {
 	dependsOn buildModules
-	group 'Documentation'
+	group 'Reporting'
+	description 'Generates coverage report for tests.'
 
 	ant.taskdef(
 		name:'jacocoreport',
@@ -375,7 +377,8 @@ task coverageReportAll() {
 }
 
 task testReport(type: TestReport) {
-	group 'Documentation'
+	group 'Reporting'
+	description 'Generates tests report.'
 
 	destinationDir = file("$buildDir/reports/tests")
 	reportOn javaBundleModules()*.test
@@ -400,5 +403,5 @@ task release() {
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.8'
+	gradleVersion = '1.9'
 }
