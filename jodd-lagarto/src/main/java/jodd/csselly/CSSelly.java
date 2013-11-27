@@ -3,9 +3,11 @@
 package jodd.csselly;
 
 import jodd.io.CharBufferReader;
+import jodd.util.StringUtil;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +62,21 @@ public class CSSelly {
 		}
 	}
 
+	/**
+	 * Parses string of selectors (separated with <b>,</b>). Returns
+	 * list of {@link CssSelector} lists in the same order.
+	 */
+	public static List<List<CssSelector>> parse(String query) {
+		String[] singleQueries = StringUtil.splitc(query, ',');
+		List<List<CssSelector>> selectors = new ArrayList<List<CssSelector>>(singleQueries.length);
+
+		for (String singleQuery: singleQueries) {
+			selectors.add(new CSSelly(singleQuery).parse());
+		}
+
+		return selectors;
+	}
+
 	// ---------------------------------------------------------------- toString
 
 	/**
@@ -72,4 +89,5 @@ public class CSSelly {
 		}
 		return out.toString();
 	}
+
 }
