@@ -5,7 +5,6 @@ package jodd.lagarto.dom;
 import jodd.csselly.CSSelly;
 import jodd.csselly.Combinator;
 import jodd.csselly.CssSelector;
-import jodd.util.StringUtil;
 import jodd.util.collection.JoddArrayList;
 
 import java.util.ArrayList;
@@ -30,18 +29,8 @@ public class NodeSelector {
 	 * Selects nodes using CSS3 selector query.
 	 */
 	public List<Node> select(String query) {
-		String[] singleQueries = StringUtil.splitc(query, ',');
-		
-		List<Node> results = new ArrayList<Node>();
-
-		for (String singleQuery : singleQueries) {
-			CSSelly csselly = createCSSelly(singleQuery);
-
-			List<CssSelector> selectors = csselly.parse();
-
-			processSelectors(results, selectors);
-		}
-		return results;
+		Collection<List<CssSelector>> selectorsCollection = CSSelly.parse(query);
+		return select(selectorsCollection);
 	}
 
 	/**
@@ -50,7 +39,6 @@ public class NodeSelector {
 	 */
 	public List<Node> select(Collection<List<CssSelector>> selectorsCollection) {
 		List<Node> results = new ArrayList<Node>();
-
 		for (List<CssSelector> selectors : selectorsCollection) {
 			processSelectors(results, selectors);
 		}
@@ -68,14 +56,6 @@ public class NodeSelector {
 				results.add(selectedNode);
 			}
 		}
-	}
-
-
-	/**
-	 * Creates {@link CSSelly} instance for parsing files.
-	 */
-	protected CSSelly createCSSelly(String cssQuery) {
-		return new CSSelly(cssQuery);
 	}
 
 	/**
