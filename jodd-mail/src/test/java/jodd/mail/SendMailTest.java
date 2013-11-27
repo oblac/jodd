@@ -67,6 +67,25 @@ public class SendMailTest {
 	}
 
 	@Test
+	public void testSimpleTextWithCyrilic() throws MessagingException, IOException {
+		Email email = Email.create()
+				.from("Тијана Милановић <t@gmail.com>")
+				.to("Јодд <i@jodd.com>")
+				.subject("Здраво!")
+				.addText("шта радиш?");
+
+		Message message = createMessage(email);
+
+		String content = (String) message.getContent();
+
+		assertEquals("шта радиш?", content);
+		assertTrue(message.getDataHandler().getContentType().contains("text/plain"));
+
+		assertEquals("=?UTF-8?B?0KLQuNGY0LDQvdCwINCc0LjQu9Cw0L3QvtCy0LjRmw==?= <t@gmail.com>", message.getFrom()[0].toString());
+		assertEquals("=?UTF-8?B?0IjQvtC00LQ=?= <i@jodd.com>", message.getRecipients(Message.RecipientType.TO)[0].toString());
+	}
+
+	@Test
 	public void testTextHtml() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from")
@@ -144,6 +163,8 @@ public class SendMailTest {
 		assertEmail(email);
 	}
 
+	// ---------------------------------------------------------------- util
+
 	private void assertEmail(Email email) throws MessagingException, IOException {
 		Message message = createMessage(email);
 
@@ -201,4 +222,5 @@ public class SendMailTest {
 		StreamUtil.copy(dataSource.getInputStream(), baos);
 		return baos.toByteArray();
 	}
+
 }

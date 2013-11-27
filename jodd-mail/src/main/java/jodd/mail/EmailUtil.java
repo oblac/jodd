@@ -5,15 +5,19 @@ package jodd.mail;
 import jodd.io.StringInputStream;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -84,6 +88,36 @@ public class EmailUtil {
 			res[i] = address.toString();
 		}
 		return res;
+	}
+
+	/**
+	 * Converts string to <code>InternetAddress</code> while taking care of encoding.
+	 * The email can be given in following form:
+	 * <ul>
+	 *     <li>"email" - the whole string is an email</li>
+	 *     <li>"personal <email>" - first part of the string is personal, and
+	 *     		the other part is email, surrounded with &lt; and &gt;</li>
+	 * </ul>
+	 */
+	public static InternetAddress string2Address(String address) throws AddressException {
+		address = address.trim();
+
+		if (StringUtil.endsWithChar(address, '>') == false) {
+			return new InternetAddress(address);
+		}
+
+		int ndx = address.lastIndexOf('<');
+		if (ndx == -1) {
+			throw new AddressException("Invalid address: " + address);
+		}
+
+		try {
+			return new InternetAddress(
+					address.substring(ndx + 1, address.length() - 1),
+					address.substring(0, ndx - 1).trim());
+		} catch (UnsupportedEncodingException ueex) {
+			throw new AddressException(ueex.toString());
+		}
 	}
 
 	/**
