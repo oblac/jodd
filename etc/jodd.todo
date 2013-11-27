@@ -29,9 +29,7 @@ Site/Documentation:
 	- load *md structure from root in maps, get(relative) returns sorted list of file names
 	- sitemap generator
 	- description meta tag add
-	- fix line number # anchors @next
 	- improve <var> in docs
-	- migrate to nanoc ?
 Lagarto/Jerry:
 	- Add simple html() renderer for nicer html output @done @v3.4.5
 	- Add reference to dom builder to each node @done @v3.4.5
