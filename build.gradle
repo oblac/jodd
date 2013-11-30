@@ -1,5 +1,5 @@
-
 description = '''
+
 	Jodd is an open-source Java utility library and set of micro frameworks.
 	Jodd tools enriches JDK with many powerful and feature rich utilities.
 	It helps with everyday task, makes code more robust and reliable.
@@ -15,11 +15,13 @@ ext {
 	gradleScriptDir = "${rootProject.projectDir}/gradle"
 
 	// libraries
+	tomcatVersion = '7.0.47'
+
 	lib = [
 		mail:			'javax.mail:mail:1.4.5',
 		activation:		'javax.activation:activation:1.1.1',
 		servlet:		'javax.servlet:javax.servlet-api:3.0.1',
-		jsp:			'javax.servlet.jsp:jsp-api:2.0',
+		jsp:			'javax.servlet.jsp:jsp-api:2.2',
 		log:			'org.slf4j:slf4j-api:1.7.2',
 		simpleLog:		'org.slf4j:slf4j-simple:1.7.2',
 //		asm:			'org.ow2.asm:asm:4.1',
@@ -33,11 +35,16 @@ ext {
 		jacoco_agent:	'org.jacoco:org.jacoco.agent:0.6.3.201306030806:runtime@jar',
 		jacoco_ant: 	'org.jacoco:org.jacoco.ant:0.6.3.201306030806',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
-		tomcat_embed:	[	'org.apache.tomcat:tomcat-catalina:7.0.40',
-							'org.apache.tomcat.embed:tomcat-embed-core:7.0.40',
-							'org.apache.tomcat.embed:tomcat-embed-jasper:7.0.40',
-							'org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.40',
-							'org.apache.tomcat.embed:tomcat-embed-logging-log4j:7.0.40'],
+		//el_api:		'javax.el:el-api:2.2',
+		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
+		tomcat_embed:	[
+							"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
+							"org.apache.tomcat:tomcat-jasper-el:${tomcatVersion}",
+							"org.apache.tomcat:tomcat-catalina:${tomcatVersion}",
+							"org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+							"org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}",
+							"org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"],
 
 		// Animal Sniffer Ant Task and Java 1.5 API signature file
 		// not using 1.9 for the time being due to MANIMALSNIFFER-34
@@ -130,23 +137,24 @@ configure(javaModules()) {
 	// integration tests
 
 	sourceSets {
-		integrationTest {
-			java.srcDir file('src/integration-test/java')
-			resources.srcDir file('src/integration-test/resources')
+		testIntegration {
+			java.srcDir file('src/test-integration/java')
+			resources.srcDir file('src/test-integration/resources')
 		}
 	}
 
 	dependencies {
-		integrationTestCompile sourceSets.main.output
-		integrationTestCompile configurations.testCompile
-		integrationTestCompile sourceSets.test.output
-		integrationTestRuntime configurations.testRuntime
+		testIntegrationCompile sourceSets.main.output
+		testIntegrationCompile configurations.testCompile
+		testIntegrationCompile sourceSets.test.output
+		testIntegrationRuntime configurations.testRuntime
 	}
 
-	task integrationTest(type: Test, dependsOn: jar) {
-		group 'Build'
-		testClassesDir = sourceSets.integrationTest.output.classesDir
-		classpath = sourceSets.integrationTest.runtimeClasspath
+	task testIntegration(type: Test, dependsOn: jar) {
+		group 'verification'
+		description 'Runs the integration tests.'
+		testClassesDir = sourceSets.testIntegration.output.classesDir
+		classpath = sourceSets.testIntegration.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
 	}
 
@@ -266,7 +274,7 @@ configure(javaBundleModules()) {
 	}
 
 	test {
-		reports.html.enabled=true
+		reports.html.enabled = true
 		systemProperties = System.properties
 		jvmArgs "-javaagent:${configurations.codeCoverage.asPath}=destfile=${project.buildDir.path}/coverage-results/jacoco.exec,sessionid=HSServ,append=false,excludes=*Test:*.?:*Foo*:*.data.*:*.tst*:*\$*",
 			'-Djacoco=true',
@@ -296,7 +304,7 @@ task buildModules {
 }
 
 task testAll {
-	dependsOn javaModules().integrationTest
+	dependsOn javaModules().testIntegration
 }
 
 task clean(type: Delete) {
@@ -382,6 +390,7 @@ task testReport(type: TestReport) {
 
 	destinationDir = file("$buildDir/reports/tests")
 	reportOn javaBundleModules()*.test
+	reportOn javaBundleModules()*.testIntegration
 }
 
 

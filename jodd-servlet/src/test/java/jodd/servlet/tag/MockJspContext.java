@@ -2,6 +2,8 @@
 
 package jodd.servlet.tag;
 
+import javax.el.ELContext;
+
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.el.ExpressionEvaluator;
@@ -54,7 +56,7 @@ public class MockJspContext extends JspContext {
 	}
 
 	@Override
-	public Enumeration getAttributeNamesInScope(int i) {
+	public Enumeration<String> getAttributeNamesInScope(int i) {
 		return null;
 	}
 
@@ -70,6 +72,11 @@ public class MockJspContext extends JspContext {
 
 	@Override
 	public VariableResolver getVariableResolver() {
+		return null;
+	}
+
+	@Override
+	public ELContext getELContext() {
 		return null;
 	}
 

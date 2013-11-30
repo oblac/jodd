@@ -12,5 +12,6 @@ dependencies {
 	
 	testCompile lib.junit
 	testCompile lib.mockito
+	testCompile lib.el_api
 }
 provided = [lib.servlet, lib.jsp]
