@@ -20,3 +20,12 @@ dependencies {
 	testCompile lib.tomcat_embed
 }
 provided = [lib.servlet, lib.jsp]
+
+
+// run madvoc integration tests only through the suite
+// so we can control the embedded web server
+
+testIntegration {
+	scanForTestClasses false
+	include 'jodd/madvoc/*Suite.class'
+}

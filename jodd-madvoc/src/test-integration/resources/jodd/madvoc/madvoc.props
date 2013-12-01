@@ -1,0 +1,3 @@
+madvocConfig.requestScopeInjectorConfig.injectAttributes=true
+madvocConfig.requestScopeInjectorConfig.injectParameters=true
+madvocConfig.defaultExtension=html

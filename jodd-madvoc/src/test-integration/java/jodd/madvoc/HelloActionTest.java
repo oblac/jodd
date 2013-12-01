@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SimpleTest {
+public class HelloActionTest {
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -24,8 +24,8 @@ public class SimpleTest {
 
 	@Test
 	public void testHelloAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/hello.html").send();
-		assertEquals("hello", response.bodyText().trim());
+		HttpResponse response = HttpRequest.get("localhost:8080/hello.world.html?name=Jupiter&data=3").send();
+		assertEquals("Hello world planet Jupiter and Universe", response.bodyText().trim());
 	}
 
 }

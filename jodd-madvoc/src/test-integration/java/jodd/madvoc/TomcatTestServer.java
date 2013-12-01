@@ -2,9 +2,7 @@
 
 package jodd.madvoc;
 
-import jodd.exception.UncheckedException;
 import jodd.io.FileUtil;
-import jodd.io.FileUtilParams;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
@@ -14,44 +12,6 @@ import java.net.URL;
  * Embedded Tomcat server for integration tests.
  */
 public class TomcatTestServer {
-
-	private static int counter;
-	private static TomcatTestServer server;
-
-	/**
-	 * Starts Tomcat.
-	 */
-	public static void startTomcat() {
-		if (counter == 0) {
-			server = new TomcatTestServer();
-			try {
-				server.start();
-				System.out.println("Tomcat test server started");
-			} catch (Exception e) {
-				throw new UncheckedException(e);
-			}
-		}
-		counter++;
-	}
-
-	/**
-	 * Stops Tomcat.
-	 */
-	public static void stopTomcat() {
-		counter--;
-		if (counter < 0) {
-			throw new UncheckedException("Negative counter");
-		}
-		if (counter == 0) {
-			try {
-				server.stop();
-			} catch (Exception ignore) {
-			} finally {
-				System.out.println("Tomcat test server stopped");
-			}
-			server = null;
-		}
-	}
 
 	// ---------------------------------------------------------------- instance
 
@@ -90,6 +50,7 @@ public class TomcatTestServer {
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
 		// jsp
+
 		File jspFolder = new File(webXmlFile.getParent(), "jsp");
 		FileUtil.copyDir(jspFolder, webRoot);
 
@@ -102,6 +63,13 @@ public class TomcatTestServer {
 
 		File classes = new File(webInfFolder, "classes");
 		classes.mkdirs();
+
+		// classes/madvoc.props
+
+		URL madvocPropsUrl = TestServer.class.getResource("madvoc.props");
+		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
+
+		FileUtil.copyFile(madvocPropsFile, new File(classes, "madvoc.props"));
 	}
 
 	public void stop() throws Exception {
