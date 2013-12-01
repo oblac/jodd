@@ -35,8 +35,6 @@ public class TomcatTestServer {
 		webRoot = FileUtil.createTempDirectory("jodd-madvoc", "test-int");
 		webRoot.deleteOnExit();
 
-		System.out.println(webRoot);
-
 		// web-inf
 
 		File webInfFolder = new File(webRoot, "WEB-INF");
@@ -75,6 +73,6 @@ public class TomcatTestServer {
 	public void stop() throws Exception {
 		tomcat.stop();
 		tomcat.destroy();
-		webRoot.delete();
+		FileUtil.deleteDir(webRoot);
 	}
 }

@@ -16,7 +16,6 @@ import jodd.util.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
-import java.io.UnsupportedEncodingException;
 
 
 /**
