@@ -593,6 +593,19 @@ public class PropsTest {
 		assertEquals("bbb", p.getValue("foo"));
 	}
 
+	@Test
+	public void testWeirdKey() {
+		Props p = new Props();
+
+		p.load("org.jodd.Foo@Bar=one\n" +
+				"org.jodd.Foo@*Bar=two\n" +
+				"org.jodd.Foo@*Bar\\#me=three\n");
+
+		assertEquals("one", p.getValue("org.jodd.Foo@Bar"));
+		assertEquals("two", p.getValue("org.jodd.Foo@*Bar"));
+		assertEquals("three", p.getValue("org.jodd.Foo@*Bar#me"));
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {

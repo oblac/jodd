@@ -93,6 +93,8 @@ public class PropsParser implements Cloneable {
 	 */
 	public void parse(final String in) {
 		ParseState state = ParseState.TEXT;
+		ParseState stateOnEscape = null;
+
 		boolean insideSection = false;
 		String currentSection = null;
 		String key = null;
@@ -111,7 +113,7 @@ public class PropsParser implements Cloneable {
 					state = ParseState.TEXT;
 				}
 			} else if (state == ParseState.ESCAPE) {
-				state = ParseState.VALUE;
+				state = stateOnEscape;//ParseState.VALUE;
 				switch (c) {
 					case '\r':
 					case '\n':
@@ -153,6 +155,12 @@ public class PropsParser implements Cloneable {
 				}
 			} else if (state == ParseState.TEXT) {
 				switch (c) {
+					case '\\':
+						// escape char, take the next char as is
+						stateOnEscape = state;
+						state = ParseState.ESCAPE;
+						break;
+
 					// start section
 					case '[':
 						sb.setLength(0);
@@ -217,6 +225,7 @@ public class PropsParser implements Cloneable {
 				switch (c) {
 					case '\\':
 						// escape char, take the next char as is
+						stateOnEscape = state;
 						state = ParseState.ESCAPE;
 						break;
 
