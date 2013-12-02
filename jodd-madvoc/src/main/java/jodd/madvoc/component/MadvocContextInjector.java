@@ -33,17 +33,23 @@ public class MadvocContextInjector {
 	}
 
 	/**
-	 * Performs context injection.
+	 * Performs Madvoc context injection.
 	 */
-	public void injectContext(Object target) {
+	public void injectMadvocContext(Object target) {
 		madvocContextScopeInjector.inject(target);
-		madvocParamsInjector.inject(target);
+	}
+
+	/**
+	 * Performs Madvoc params injection.
+	 */
+	public void injectMadvocParams(Object target) {
+		madvocParamsInjector.inject(target, target.getClass().getName());
 	}
 
 	/**
 	 * Outjects context.
 	 */
-	public void outjectContext(Object target) {
+	public void outjectMadvocContext(Object target) {
 		madvocContextScopeInjector.outject(target);
 	}
 

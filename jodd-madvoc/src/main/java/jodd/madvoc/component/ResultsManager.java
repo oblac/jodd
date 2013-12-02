@@ -37,19 +37,28 @@ public class ResultsManager {
 	 * result with same type doesn't exist. Otherwise, returns existing result and created one will be ignored.
 	 */
 	public ActionResult register(Class<? extends ActionResult> resultClass) {
-		ActionResult result = createResult(resultClass);
+		return register(createResult(resultClass));
+	}
+
+	/**
+	 * Registers new action result instance.
+	 */
+	public ActionResult register(ActionResult result) {
 		ActionResult existing = lookup(result.getType());
 		if (existing != null) {
+			Class resultClass = result.getClass();
 			if (existing.getClass().equals(resultClass) == false) {
-				throw new MadvocException("Madvoc result with the same result type '" + result.getType() + "' already registered: "
-						+ resultClass.getSimpleName());
+				throw new MadvocException(
+						"Madvoc result with the same result type '" + result.getType() +
+						"' already registered: " + resultClass.getSimpleName());
 			}
 			result = existing;
 		} else {
 			results.put(result.getType(), result);
 		}
 
-		madvocContextInjector.injectContext(result);
+		madvocContextInjector.injectMadvocContext(result);
+		madvocContextInjector.injectMadvocParams(result);
 
 		return result;
 	}
@@ -73,8 +82,6 @@ public class ResultsManager {
 	public ActionResult lookup(String resultType) {
 		return results.get(resultType);
 	}
-
-
 
 	// ---------------------------------------------------------------- create
 

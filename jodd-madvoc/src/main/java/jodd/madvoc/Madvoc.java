@@ -2,16 +2,17 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.MadvocController;
+import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.config.AutomagicMadvocConfigurator;
+import jodd.madvoc.config.MadvocConfigurator;
 import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
-import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.component.ResultsManager;
-import jodd.madvoc.component.ActionsManager;
-import jodd.madvoc.component.MadvocConfig;
-import jodd.madvoc.config.MadvocConfigurator;
-import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,6 +199,13 @@ public class Madvoc {
 			throw new MadvocException("No Madvoc configuration component found.");
 		}
 		webapp.init(madvocConfig, servletContext);
+
+		// interceptors
+		InterceptorsManager interceptorsManager = webapp.getComponent(InterceptorsManager.class);
+		if (interceptorsManager == null) {
+			throw new MadvocException("No Madvoc interceptors manager component found.");
+		}
+		webapp.initInterceptors(interceptorsManager);
 
 		// actions
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);

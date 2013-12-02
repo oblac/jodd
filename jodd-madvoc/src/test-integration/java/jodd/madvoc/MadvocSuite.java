@@ -14,7 +14,8 @@ import org.junit.runners.Suite;
 		SimpleTest.class,
 		RawActionTest.class,
 		UrlActionTest.class,
-		OneTwoActionTest.class
+		OneTwoActionTest.class,
+		IntcptActionTest.class
 })
 public class MadvocSuite {
 

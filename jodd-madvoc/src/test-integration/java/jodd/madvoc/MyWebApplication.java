@@ -2,6 +2,8 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.InterceptorsManager;
+
 public class MyWebApplication extends WebApplication {
 
 	@Override
@@ -9,5 +11,10 @@ public class MyWebApplication extends WebApplication {
 		super.registerMadvocComponents();
 
 		registerComponent(MyRewriter.class);
+	}
+
+	@Override
+	protected void initInterceptors(InterceptorsManager interceptorsManager) {
+		interceptorsManager.register("ServletConfigAltInterceptor", new ServletConfigAltInterceptor());
 	}
 }

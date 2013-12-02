@@ -12,17 +12,19 @@ public class MadvocParamsInjectorTest {
 	@Test
 	public void testInjection() {
 		PetiteContainer madpc = new PetiteContainer();
+		String baseName = FooBean.class.getName();
 
 		madpc.defineParameter("foo", "1");
-		madpc.defineParameter(FooBean.class.getName() + ".integer", "173");
-		madpc.defineParameter(FooBean.class.getName() + ".string", "jodd");
-		madpc.defineParameter(FooBean.class.getName(), "huh");
+
+		madpc.defineParameter(baseName + ".integer", "173");
+		madpc.defineParameter(baseName + ".string", "jodd");
+		madpc.defineParameter(baseName, "huh");
 
 		MadvocParamsInjector madvocParamsInjector = new MadvocParamsInjector(madpc);
 
 		FooBean fooBean = new FooBean();
 
-		madvocParamsInjector.inject(fooBean);
+		madvocParamsInjector.inject(fooBean, baseName);
 
 		assertEquals(173, fooBean.getInteger().intValue());
 		assertEquals("jodd", fooBean.getString());

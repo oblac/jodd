@@ -221,20 +221,20 @@ public class MadvocController {
 	/**
 	 * Initializes action configuration on first use. Resolves all interceptors and injects context parameters.
 	 */
-	protected void initializeActionConfig(ActionConfig cfg) {
-		Class<? extends ActionInterceptor>[] interceptorClasses = cfg.interceptorClasses;
+	protected void initializeActionConfig(ActionConfig actionConfig) {
+		Class<? extends ActionInterceptor>[] interceptorClasses = actionConfig.interceptorClasses;
 		if (interceptorClasses == null) {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
 		}
 
-		cfg.interceptors = interceptorsManager.resolveAll(interceptorClasses);
+		actionConfig.interceptors = interceptorsManager.resolveAll(interceptorClasses);
 
-		for (ActionInterceptor interceptor : cfg.interceptors) {
+		for (ActionInterceptor interceptor : actionConfig.interceptors) {
 			if (interceptor.isInitialized() == false) {
 				initializeInterceptor(interceptor);
 			}
 		}
-		cfg.initialized();
+		actionConfig.initialized();
 	}
 
 	/**

@@ -1,0 +1,1 @@
+param: ${foo} = ${param.foo}

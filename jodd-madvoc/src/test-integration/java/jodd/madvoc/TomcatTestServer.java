@@ -67,7 +67,7 @@ public class TomcatTestServer {
 		URL madvocPropsUrl = TestServer.class.getResource("madvoc.props");
 		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
 
-		FileUtil.copyFile(madvocPropsFile, new File(classes, "madvoc.props"));
+		FileUtil.copyFileToDir(madvocPropsFile, classes);
 	}
 
 	public void stop() throws Exception {

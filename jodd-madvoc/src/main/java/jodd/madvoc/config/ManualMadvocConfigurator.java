@@ -149,7 +149,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
-		 * Defines and, optionally, registers resut type.
+		 * Defines and, optionally, registers result type.
 		 */
 		public ActionBuilder result(Class<? extends ActionResult> resultClass) {
 			ActionResult actionResult = resultsManager.lookup(resultClass);

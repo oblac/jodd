@@ -77,7 +77,12 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		madvocContextInjector.injectContext(target);
+		madvocContextInjector.injectMadvocContext(target);
+
+		// no need to inject madvoc params, as this can be slow
+		// and its better to use some single data object instead
+		//madvocContextInjector.injectMadvocParams(target);
+
 		servletContextInjector.injectContext(target, servletRequest, servletResponse);
 
 		sessionScopeInjector.inject(target, servletRequest);
@@ -96,7 +101,7 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		madvocContextInjector.outjectContext(target);
+		madvocContextInjector.outjectMadvocContext(target);
 		servletContextInjector.outjectContext(target, servletRequest, servletResponse);
 
 		sessionScopeInjector.outject(target, servletRequest);

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Manager for Madvoc interceptors. By default, all interceptors are pooled so there will be only one
- * instance per its type.
+ * Manager for Madvoc interceptors. By default, all interceptors are cached,
+ * so there will be only one instance per its type.
  */
 public class InterceptorsManager {
 
@@ -28,26 +28,36 @@ public class InterceptorsManager {
  	protected MadvocContextInjector madvocContextInjector;
 	
 	public InterceptorsManager() {
-		interceptors = new HashMap<Class<? extends ActionInterceptor>, ActionInterceptor>();
+		interceptors = new HashMap<String, ActionInterceptor>();
 	}
 
 	// ---------------------------------------------------------------- container
 
-	protected Map<Class<? extends ActionInterceptor>, ActionInterceptor> interceptors;
+	protected Map<String, ActionInterceptor> interceptors;
 
 	/**
 	 * Returns all action results. Should be used with care.
 	 */
-	public Map<Class<? extends ActionInterceptor>, ActionInterceptor> getAllActionInterceptors() {
+	public Map<String, ActionInterceptor> getAllActionInterceptors() {
 		return interceptors;
 	}
 
+	/**
+	 * Registers interceptor instance for given name. Interceptor
+	 * instance gets injected with {@link MadvocContextInjector}.
+	 */
+	public void register(String interceptorName, ActionInterceptor actionInterceptor) {
+		madvocContextInjector.injectMadvocContext(actionInterceptor);
+		madvocContextInjector.injectMadvocParams(actionInterceptor);
+
+		interceptors.put(interceptorName, actionInterceptor);
+	}
 
 	/**
 	 * Looks up for existing interceptor. Returns <code>null</code> if interceptor is not already registered.
 	 */
-	public ActionInterceptor lookup(Class<? extends ActionInterceptor> interceptorClass) {
-		return interceptors.get(interceptorClass);
+	public ActionInterceptor lookup(String interceptorName) {
+		return interceptors.get(interceptorName);
 	}
 
 	/**
@@ -55,13 +65,17 @@ public class InterceptorsManager {
 	 * Does not expand the interceptors.
 	 */
 	public ActionInterceptor resolve(Class<? extends ActionInterceptor> interceptorClass) {
-		ActionInterceptor interceptor = lookup(interceptorClass);
+		String interceptorClassName = interceptorClass.getName();
+
+		ActionInterceptor interceptor = lookup(interceptorClassName);
+
 		if (interceptor == null) {
 			interceptor = createInterceptor(interceptorClass);
 
-			madvocContextInjector.injectContext(interceptor);
+			madvocContextInjector.injectMadvocContext(interceptor);
+			madvocContextInjector.injectMadvocParams(interceptor);
 
-			interceptors.put(interceptorClass, interceptor);
+			interceptors.put(interceptorClassName, interceptor);
 		}
 		return interceptor;
 	}

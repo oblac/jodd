@@ -199,6 +199,14 @@ public class WebApplication {
 	 * Hook for manually registered actions.
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
+	protected void initInterceptors(InterceptorsManager interceptorsManager) {
+		log.debug("Initializing Madvoc interceptors");
+	}
+
+	/**
+	 * Hook for manually registered actions.
+	 */
+	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initActions(ActionsManager actionManager) {
 		log.debug("Initializing Madvoc actions");
 	}

@@ -19,17 +19,19 @@ public class MadvocParamsInjector {
 		madvocPetiteParamManager = madpc.getParamManager();
 	}
 
-	public void inject(Object target) {
-		String className = target.getClass().getName();
-
-		String[] params = madvocPetiteParamManager.resolve(className, true);
+	/**
+	 * Injects all matching parameters to target instance.
+	 * Matching parameters are named as given base name.
+	 */
+	public void inject(Object target, String baseName) {
+		String[] params = madvocPetiteParamManager.resolve(baseName, true);
 
 		for (String param : params) {
 			Object value = madvocPetiteParamManager.get(param);
 
-			String propertyName = param.substring(className.length() + 1);
+			String propertyName = param.substring(baseName.length() + 1);
 
-			BeanUtil.setDeclaredPropertySilent(target, propertyName, value);
+			BeanUtil.setDeclaredProperty(target, propertyName, value);
 		}
 	}
 
