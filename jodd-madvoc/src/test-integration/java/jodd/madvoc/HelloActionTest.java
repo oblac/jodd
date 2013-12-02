@@ -54,4 +54,25 @@ public class HelloActionTest {
 		assertEquals("chain:9", response.bodyText().trim());
 	}
 
+	@Test
+	public void testMany() {
+		HttpResponse response = HttpRequest.get(
+				"localhost:8080/hello.many.html?" +
+				"ppp[0].name=Aaa&ppp[0].data=1&ppp[1].name=Bbb&ppp[1].data=2&ppp[2].name=Ccc&ppp[2].data=3").send();
+		assertEquals(
+				"0 Aaa-1\n" +
+				"1 Bbb-2\n" +
+				"2 Ccc-3\n" +
+				"0 Aaa-1\n" +
+				"1 Bbb-2\n" +
+				"2 Ccc-3\n" +
+				"{0=Person{name='Aaa', data=1}, 1=Person{name='Bbb', data=2}, 2=Person{name='Ccc', data=3}}", response.bodyText().trim());
+	}
+
+	@Test
+	public void testBackBack() {
+		HttpResponse response = HttpRequest.get("localhost:8080/hello.backback.html").send();
+		assertEquals("default.big", response.bodyText().trim());
+	}
+
 }

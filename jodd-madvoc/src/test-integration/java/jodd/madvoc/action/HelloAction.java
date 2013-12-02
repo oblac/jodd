@@ -12,6 +12,8 @@ import jodd.mutable.MutableInteger;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @MadvocAction
 public class HelloAction {
@@ -98,5 +100,59 @@ public class HelloAction {
 		chain++;
 	}
 
+	// ----------------------------------------------------------------
+
+	@In("ppp")
+	List<Person> plist;
+
+	@In("ppp")
+	Person[] parray;
+
+	@In("ppp")
+	LinkedHashMap<String, Person> pmap;
+
+	@Out
+	String result;
+
+	@Action
+	public String many() {
+		System.out.println("default action name");
+		StringBuilder sb = new StringBuilder();
+
+		if (plist == null) {
+			sb.append('-');
+		} else {
+			for (int i = 0; i < plist.size(); i++) {
+				sb.append(i).append(' ').append(plist.get(i).getName()).append('-').append(plist.get(i).getData());
+				sb.append('\n');
+			}
+		}
+
+		if (parray == null) {
+			sb.append('-');
+		} else {
+			for (int i = 0; i < parray.length; i++) {
+				sb.append(i).append(' ').append(parray[i].getName()).append('-').append(parray[i].getData());
+				sb.append('\n');
+			}
+		}
+
+		if (pmap == null) {
+			sb.append('-');
+		} else {
+			sb.append(pmap);
+		}
+
+		result = sb.toString();
+
+		return "ok";
+	}
+
+	// ----------------------------------------------------------------
+
+	@Action
+	public String backback() {
+		return "##default.big";
+	}
 
 }

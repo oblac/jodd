@@ -11,7 +11,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 		HelloActionTest.class,
-		SimpleTest.class
+		SimpleTest.class,
+		RawActionTest.class,
+		UrlActionTest.class,
+		OneTwoActionTest.class
 })
 public class MadvocSuite {
 

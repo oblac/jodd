@@ -12,6 +12,10 @@
 			<param-name>madvoc.configurator</param-name>
 			<param-value>jodd.madvoc.MadvocTestIntegrationConfig</param-value>
 		</init-param>
+		<init-param>
+			<param-name>madvoc.webapp</param-name>
+			<param-value>jodd.madvoc.MyWebApplication</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>madvoc</filter-name>
