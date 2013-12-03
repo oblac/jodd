@@ -60,23 +60,35 @@ public class HttpBrowser {
 
 			readCookies(httpResponse);
 
+			int statusCode = httpResponse.statusCode();
+
 			// 301: moved permanently
-			if (httpResponse.statusCode() == 301) {
+			if (statusCode == 301) {
 				String newPath = httpResponse.header("location");
 
 				httpRequest = HttpRequest.get(newPath);
-
 				continue;
 			}
 
-			// 302: redirect
-			if (httpResponse.statusCode() == 302) {
+			// 302: redirect, 303: see other
+			if (statusCode == 302 || statusCode == 303) {
 				String newPath = httpResponse.header("location");
 
 				httpRequest = HttpRequest.get(newPath);
-
 				continue;
 			}
+
+			// 307: temporary redirect
+			if (statusCode == 307) {
+				String newPath = httpResponse.header("location");
+
+				String originalMethod = httpRequest.method();
+				httpRequest = new HttpRequest()
+						.method(originalMethod)
+						.set(newPath);
+				continue;
+			}
+
 			break;
 		}
 	}
