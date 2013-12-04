@@ -19,7 +19,6 @@ public class ActionRequest {
 
 	protected final ActionConfig config;
 	protected final String actionPath;
-	protected final String[] actionPathChunks;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 
@@ -85,13 +84,6 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Returns action path chunks.
-	 */
-	public String[] getActionPathChunks() {
-		return actionPathChunks;
-	}
-
-	/**
 	 * Returns <code>true</code> if action request was already executed.
 	 */
 	public boolean isExecuted() {
@@ -139,7 +131,6 @@ public class ActionRequest {
 	 */
 	public ActionRequest(String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		this.actionPath = actionPath;
-		this.actionPathChunks = MadvocUtil.splitActionPath(actionPath);
 		this.config = config;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
