@@ -50,7 +50,7 @@ class DbQueryParser {
 	IntArrayList getNamedParameterIndices(String name) {
 		IntArrayList positions = namedParameterLocationMap.get(name);
 		if (positions == null) {
-			throw new DbSqlException("Named parameter '" + name + "' not found.");
+			throw new DbSqlException("Named parameter not found: " + name);
 		}
 		return positions;
 	}
@@ -97,7 +97,7 @@ class DbQueryParser {
 					try {
 						Integer.parseInt(param);
 					} catch (NumberFormatException nfex) {
-						throw new DbSqlException("Positional parameter '" + nfex + "' is not an integral ordinal.", nfex);
+						throw new DbSqlException("Positional parameter is not an integral ordinal: " + nfex, nfex);
 					}
 					paramCount++;
 					storeNamedParameter(param, paramCount);

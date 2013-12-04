@@ -57,7 +57,7 @@ public class MatchChunk extends SqlChunk {
 		}
 		int eq = expression.indexOf('=');
 		if (eq == -1) {
-			throw new DbSqlBuilderException("Template not formed properly, expected 'match' equality: {tableRef=objectRef}.");
+			throw new DbSqlBuilderException("Template syntax error, expected 'match' equality: {tableRef=objectRef}.");
 		}
 		tableRef = expression.substring(0, eq).trim();
 		objectRef = expression.substring(eq + 1, lastNdx).trim();

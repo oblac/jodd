@@ -159,7 +159,7 @@ public class StringTemplateParser {
 			ndx += startLen;
 			int ndx2 = template.indexOf(macroEnd, ndx);
 			if (ndx2 == -1) {
-				throw new IllegalArgumentException("Invalid string template, unclosed macro at: " + (ndx - startLen));
+				throw new IllegalArgumentException("Invalid template, unclosed macro at: " + (ndx - startLen));
 			}
 
 			// detect inner macros, there is no escaping

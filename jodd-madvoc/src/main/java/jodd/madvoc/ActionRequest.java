@@ -148,7 +148,7 @@ public class ActionRequest {
 	 */
 	public Object invoke() throws Exception {
 		if (executed == true) {
-			throw new MadvocException("Action '" + config.actionPath + "' has already been invoked.");
+			throw new MadvocException("Action already invoked: " + config.actionPath);
 		}
 		// interceptors
 		if (interceptorIndex < totalInterceptors) {

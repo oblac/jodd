@@ -98,7 +98,7 @@ class TemplateParser {
 	protected int findMacroEnd(String template, int fromIndex) {
 		int endIndex = template.indexOf('}', fromIndex);
 		if (endIndex == -1) {
-			throw new DbSqlBuilderException("Template not formed properly, some macros are not closed. Error at: '..." + template.substring(fromIndex));
+			throw new DbSqlBuilderException("Template syntax error, some macros are not closed. Error at: '..." + template.substring(fromIndex));
 		}
 		return endIndex;
 	}

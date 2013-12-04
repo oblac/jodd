@@ -103,7 +103,7 @@ s	 */
 		try {
 			preparedStatement.clearParameters();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to clear parameters", sex);
+			throw new DbSqlException(sex);
 		}
 	}
 
