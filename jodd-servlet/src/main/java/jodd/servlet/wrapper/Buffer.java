@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 
 /**
  * Facade for both <code>PrintWriter</code> and <code>ServletOutputStream</code> of servlet response.
+ * Uses fast {@link jodd.io.FastCharArrayWriter char array writter} and
+ * {@link jodd.servlet.filter.FastByteArrayServletOutputStream byte output stream}.
  */
 public class Buffer {
 
@@ -28,7 +30,13 @@ public class Buffer {
 				throw new IllegalStateException("Can't call getWriter() after getOutputStream()");
 			}
 			bufferedWriter = new FastCharArrayWriter();
-			outWriter = new PrintWriter(bufferedWriter);
+			outWriter = new PrintWriter(bufferedWriter) {
+				@Override
+				public void close() {
+					// do not close the print writer after rendering
+					// since it will remove reference to bufferedWriter
+				}
+			};
 		}
 		return outWriter;
 	}

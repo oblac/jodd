@@ -26,7 +26,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	protected Buffer buffer;
 
 	public BufferResponseWrapper(HttpServletResponse originalResponse) {
-		this (originalResponse, new LastModifiedData());
+		this(originalResponse, new LastModifiedData());
 	}
 
 	public BufferResponseWrapper(HttpServletResponse originalResponse, LastModifiedData lastModifiedData) {
@@ -163,11 +163,11 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 		if (buffer == null) {
 			return null;
 		}
-		
+
 		if (!buffer.isUsingStream()) {
 			return buffer.toCharArray();
 		}
-		
+
 		byte[] content = buffer.toByteArray();
 		String encoding = getContentTypeEncoding();
 
@@ -239,8 +239,9 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	/**
-	 * Writes unmodified buffered content original output stream, using either output stream or writer.
-	 * May be used for writing the unmodified response.
+	 * Writes (unmodified) buffered content, using either output stream or writer.
+	 * May be used for writing the unmodified response. Of course, you may
+	 * {@link #print(String) modify} buffered data by altering the buffer content.
 	 */
 	public void writeContentToResponse() throws IOException {
 		if (buffer == null) {
@@ -281,7 +282,7 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 		}
 		return contentTypeResolver.getMimeType();
 	}
-	
+
 	/**
 	 * Determines if some content type has to be buffered. By default returns <code>true</code>.
 	 * @param contentType full content-type, e.g. "text/html; charset=utf-8"
@@ -443,4 +444,27 @@ public class BufferResponseWrapper extends HttpServletResponseWrapper {
 		return statusCode == 200;
 	}
 
+	// ---------------------------------------------------------------- alter buffer
+
+	/**
+	 * Appends string to the buffer.
+	 */
+	public void print(String string) throws IOException {
+		if (isBufferStreamBased()) {
+			String encoding = getContentTypeEncoding();
+			byte[] bytes;
+
+			if (encoding == null) {
+				bytes = string.getBytes();
+			} else {
+				bytes = string.getBytes(encoding);
+			}
+
+			buffer.getOutputStream().write(bytes);
+			return;
+		}
+
+		// make sure at least writer is initialized
+		buffer.getWriter().write(string);
+	}
 }
