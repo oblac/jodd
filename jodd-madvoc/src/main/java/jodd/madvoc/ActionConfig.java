@@ -19,20 +19,20 @@ public class ActionConfig {
 	public final String actionMethod;
 	public final String actionPathExtension;
 	public final boolean pathEndsWithExtension;
-	public final Class<? extends ActionInterceptor>[] interceptorClasses;
 	public final String resultType;
 	//public final Class<?>[] actionParamTypes;
 
 	// run-time data
 	protected ActionConfigSet actionConfigSet;
 	public boolean initialized;
-	public ActionInterceptor[] interceptors;
-	public ActionFilter[] filters;
+	public final ActionFilter[] filters;
+	public final ActionInterceptor[] interceptors;
 
 	public ActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
-			Class<? extends ActionInterceptor>[] interceptors,
+			ActionFilter[] filters,
+			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
 			String actionPathExtension,
@@ -44,7 +44,9 @@ public class ActionConfig {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.actionPathExtension = actionPathExtension;
-		this.interceptorClasses = interceptors;
+
+		this.filters = filters;
+		this.interceptors = interceptors;
 
 		this.pathEndsWithExtension = actionPathExtension != null && actionPath.endsWith('.' + actionPathExtension);
 		this.resultType = resultType;
@@ -96,13 +98,6 @@ public class ActionConfig {
 	 */
 	public String getActionMethod() {
 		return actionMethod;
-	}
-
-	/**
-	 * Returns interceptors classes.
-	 */
-	public Class<? extends ActionInterceptor>[] getInterceptorClasses() {
-		return interceptorClasses;
 	}
 
 	/**

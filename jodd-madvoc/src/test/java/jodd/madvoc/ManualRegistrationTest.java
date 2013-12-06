@@ -25,7 +25,7 @@ public class ManualRegistrationTest {
 			action()
 					.path("/world")
 					.mapTo(BooAction.class, "foo2")
-					.interceptedBy(EchoInterceptor.class)
+					.interceptedBy(new EchoInterceptor())
 					.extension(NONE)
 					.result(TextResult.class)
 					.bind();

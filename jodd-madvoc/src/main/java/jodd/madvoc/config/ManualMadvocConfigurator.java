@@ -7,6 +7,7 @@ import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
@@ -61,7 +62,8 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		String extension;
 		String resultType;
 		String alias;
-		Class<? extends ActionInterceptor>[] actionInterceptors;
+		ActionFilter[] actionFilters;
+		ActionInterceptor[] actionInterceptors;
 
 		/**
 		 * Defines action path, with the extension.
@@ -134,8 +136,16 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		/**
 		 * Defines set of interceptors.
 		 */
-		public ActionBuilder interceptedBy(Class<? extends ActionInterceptor>... interceptors) {
+		public ActionBuilder interceptedBy(ActionInterceptor... interceptors) {
 			this.actionInterceptors = interceptors;
+			return this;
+		}
+
+		/**
+		 * Defines set of filters.
+		 */
+		public ActionBuilder filtereBy(ActionFilter... filters) {
+			this.actionFilters = filters;
 			return this;
 		}
 
@@ -180,8 +190,8 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
-							actionInterceptors, path, method,
-							extension, resultType);
+							actionFilters, actionInterceptors,
+							path, method, extension, resultType);
 
 			actionsManager.registerAction(actionConfig);
 

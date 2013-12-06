@@ -4,8 +4,9 @@ package jodd.madvoc;
 
 import jodd.madvoc.action.IntcptAction;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.interceptor.BaseActionInterceptor;
 
-public class AppendingInterceptor extends ActionInterceptor {
+public class AppendingInterceptor extends BaseActionInterceptor {
 
 	public static class Hey extends AppendingInterceptor {
 	}
@@ -19,7 +20,6 @@ public class AppendingInterceptor extends ActionInterceptor {
 		this.addon = addon;
 	}
 
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object result =  actionRequest.invoke();
 

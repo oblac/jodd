@@ -9,6 +9,9 @@ import jodd.exception.UncheckedException;
  */
 public class MadvocException extends UncheckedException {
 
+	public MadvocException() {
+	}
+
 	public MadvocException(Throwable t) {
 		super(t);
 	}

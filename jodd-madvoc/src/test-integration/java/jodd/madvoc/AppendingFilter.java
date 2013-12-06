@@ -3,12 +3,13 @@
 package jodd.madvoc;
 
 import jodd.madvoc.filter.ActionFilter;
+import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.util.ArraysUtil;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class AppendingFilter extends ActionFilter {
+public class AppendingFilter extends BaseActionInterceptor implements ActionFilter {
 
 	/*
 	@Override
@@ -29,7 +30,6 @@ public class AppendingFilter extends ActionFilter {
 		return result;
 	}*/
 
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletResponse httpResponse = actionRequest.getHttpServletResponse();
 

@@ -46,16 +46,11 @@ public abstract class ActionResult {
 	}
 
 	/**
-	 * Marks that interceptor is initialized.
+	 * Initializes the result.
 	 */
-	public final void initialized() {
+	public void init() {
 		initialized = true;
 	}
-
-	/**
-	 * Invoked on result initialization.
-	 */
-	public void init() {}
 
 
 	@Override

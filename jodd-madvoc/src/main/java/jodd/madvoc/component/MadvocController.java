@@ -5,7 +5,6 @@ package jodd.madvoc.component;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
@@ -33,12 +32,6 @@ public class MadvocController {
 
 	@PetiteInject
 	protected ActionPathRewriter actionPathRewriter;
-
-	@PetiteInject
-	protected InterceptorsManager interceptorsManager;
-
-	@PetiteInject
-	protected ServletContextInjector servletContextInjector;
 
 	@PetiteInject
 	protected ResultsManager resultsManager;
@@ -171,26 +164,13 @@ public class MadvocController {
 			throw new MadvocException("Unable to find action result type: " + resultType);
 		}
 		if (result.isInitialized() == false) {
-			initializeResult(result, actionRequest);
+			resultsManager.initializeResult(result, actionRequest);
 		}
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
 		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
 		result.render(actionRequest, resultObject, resultValue, resultPath);
-	}
-
-	/**
-	 * Initializes action result.
-	 */
-	protected void initializeResult(ActionResult result, ActionRequest actionRequest) {
-		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse httpServletResponse = actionRequest.getHttpServletResponse();
-
-		servletContextInjector.injectContext(result, httpServletRequest, httpServletResponse);
-
-		result.initialized();
-		result.init();
 	}
 
 	// ---------------------------------------------------------------- create
@@ -211,46 +191,10 @@ public class MadvocController {
 	}
 
 	/**
-	 * Initializes action configuration on first use. Resolves all interceptors and injects context parameters.
+	 * Initializes action configuration on first use. Internally, it does nothing.
 	 */
-	// todo remove this moment on action config creation to early warn about missconfiguration
 	protected void initializeActionConfig(ActionConfig actionConfig) {
-		Class<? extends ActionInterceptor>[] interceptorClasses = actionConfig.interceptorClasses;
-		if (interceptorClasses == null) {
-			interceptorClasses = madvocConfig.getDefaultInterceptors();
-		}
-
-		if (interceptorClasses != null) {
-
-			ActionInterceptor[] allInterceptors = interceptorsManager.resolveAll(interceptorClasses);
-
-			actionConfig.filters = interceptorsManager.extractActionFilters(allInterceptors);
-			actionConfig.interceptors = interceptorsManager.extractActionInterceptor(allInterceptors);
-
-			for (ActionInterceptor interceptor : actionConfig.filters) {
-				if (interceptor.isInitialized() == false) {
-					initializeInterceptor(interceptor);
-				}
-			}
-
-			for (ActionInterceptor interceptor : actionConfig.interceptors) {
-				if (interceptor.isInitialized() == false) {
-					initializeInterceptor(interceptor);
-				}
-			}
-		}
-
 		actionConfig.initialized();
-	}
-
-	/**
-	 * Initializes action interceptor.
-	 */
-	protected void initializeInterceptor(ActionInterceptor interceptor) {
-		servletContextInjector.injectContext(interceptor, applicationContext);
-
-		interceptor.initialized();
-		interceptor.init();
 	}
 
 	// ---------------------------------------------------------------- create

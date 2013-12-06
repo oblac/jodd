@@ -7,6 +7,7 @@ import jodd.introspector.MethodDescriptor;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionAnnotation;
@@ -40,6 +41,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
+
+	@PetiteInject
+	protected InterceptorsManager interceptorsManager;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -82,7 +86,34 @@ public class ActionMethodParser {
 		if (interceptorClasses == null) {
 			interceptorClasses = readClassInterceptors(actionClass);
 		}
+		if (interceptorClasses == null) {
+			interceptorClasses = madvocConfig.getDefaultInterceptors();
+		}
 
+		ActionInterceptor[] actionInterceptors = interceptorsManager.resolveAll(interceptorClasses);
+		ActionFilter[] actionFilters;
+		try {
+			actionFilters = interceptorsManager.extractActionFilters(actionInterceptors);
+			actionInterceptors = interceptorsManager.extractActionInterceptors(actionInterceptors);
+		} catch (MadvocException ignore) {
+			throw new MadvocException("Action Filters must be defined before Interceptors: " + actionClass.getName() + '#' + actionMethod.getName());
+		}
+
+		for (ActionInterceptor filter : actionFilters) {
+			if (filter.isInitialized() == false) {
+				interceptorsManager.initializeInterceptor(filter);
+			}
+		}
+
+		for (ActionInterceptor interceptor : actionInterceptors) {
+			if (interceptor.isInitialized() == false) {
+				interceptorsManager.initializeInterceptor(interceptor);
+			}
+		}
+
+
+
+		// actions
 		HashMap<String, String> replacementMap = new HashMap<String, String>();
 
 		// action path not specified, build it
@@ -133,7 +164,6 @@ public class ActionMethodParser {
 		for (Map.Entry<String, String> entry : replacementMap.entrySet()) {
 			actionPath = StringUtil.replace(actionPath, entry.getKey(), entry.getValue());
 		}
-
 		 
 		// register alias
 		if (alias != null) {
@@ -143,7 +173,12 @@ public class ActionMethodParser {
 			alias = actionClass.getName() + '#' + actionMethod.getName();
 			actionsManager.registerPathAlias(alias, actionPath);
 		}
-		return createActionConfig(actionClass, actionMethod, interceptorClasses, actionPath, httpMethod, extension, resultType);
+
+		return createActionConfig(
+				actionClass, actionMethod,
+				actionFilters, actionInterceptors,
+				actionPath, httpMethod, extension,
+				resultType);
 	}
 
 	/**
@@ -431,7 +466,8 @@ public class ActionMethodParser {
 	public ActionConfig createActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
-			Class<? extends ActionInterceptor>[] interceptorClasses,
+			ActionFilter[] filters,
+			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
 			String actionPathExtension,
@@ -441,7 +477,8 @@ public class ActionMethodParser {
 		return new ActionConfig(
 				actionClass,
 				actionClassMethod,
-				interceptorClasses,
+				filters,
+				interceptors,
 				actionPath,
 				actionMethod,
 				actionPathExtension,

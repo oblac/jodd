@@ -24,7 +24,13 @@ import java.util.Arrays;
 public class InterceptorsManager {
 
 	@PetiteInject
+	protected MadvocController madvocController;
+
+	@PetiteInject
 	protected MadvocConfig madvocConfig;
+
+	@PetiteInject
+	protected ServletContextInjector servletContextInjector;
 
 	@PetiteInject
  	protected MadvocContextInjector madvocContextInjector;
@@ -98,17 +104,27 @@ public class InterceptorsManager {
 		return result;
 	}
 
+	// ---------------------------------------------------------------- extract
+
 	/**
 	 * Extracts all action filters from the array of action interceptors.
+	 * Filters <b>must</b> be defined first and if not, an exception will be thrown.
 	 */
 	public ActionFilter[] extractActionFilters(ActionInterceptor[] actionInterceptors) {
 		ActionFilter[] result = new ActionFilter[actionInterceptors.length];
 
 		int index = 0;
+		boolean stream = true;
+
 		for (ActionInterceptor interceptor : actionInterceptors) {
 			if (interceptor instanceof ActionFilter) {
+				if (stream == false) {
+					throw new MadvocException();
+				}
 				result[index] = (ActionFilter) interceptor;
 				index++;
+			} else {
+				stream = false;
 			}
 		}
 
@@ -117,20 +133,41 @@ public class InterceptorsManager {
 
 	/**
 	 * Removes all action filters from the array of action interceptors.
+	 * Filters must be defined first in the given array, otherwise an exception
+	 * wll be thrown.
 	 */
-	public ActionInterceptor[] extractActionInterceptor(ActionInterceptor[] actionInterceptors) {
+	public ActionInterceptor[] extractActionInterceptors(ActionInterceptor[] actionInterceptors) {
 		ActionInterceptor[] result = new ActionInterceptor[actionInterceptors.length];
 
 		int index = 0;
+		boolean stream = true;
+
 		for (ActionInterceptor interceptor : actionInterceptors) {
 			if ((interceptor instanceof ActionFilter) == false) {
+				stream = false;
 				result[index] = interceptor;
 				index++;
+			} else {
+				if (stream == false) {
+					throw new MadvocException();
+				}
 			}
 		}
 
 		return ArraysUtil.subarray(result, 0, index);
 	}
+
+	// ---------------------------------------------------------------- init
+
+	/**
+	 * Initializes action interceptor.
+	 */
+	protected void initializeInterceptor(ActionInterceptor interceptor) {
+		servletContextInjector.injectContext(interceptor, madvocController.getApplicationContext());
+
+		interceptor.init();
+	}
+
 
 	// ---------------------------------------------------------------- expander
 

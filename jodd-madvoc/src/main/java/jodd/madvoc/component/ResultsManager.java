@@ -2,10 +2,13 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -16,6 +19,9 @@ public class ResultsManager {
 
 	@PetiteInject
  	protected MadvocContextInjector madvocContextInjector;
+
+	@PetiteInject
+	protected ServletContextInjector servletContextInjector;
 
 	public ResultsManager() {
 		this.results = new HashMap<String, ActionResult>();
@@ -82,6 +88,21 @@ public class ResultsManager {
 	public ActionResult lookup(String resultType) {
 		return results.get(resultType);
 	}
+
+	// ---------------------------------------------------------------- init
+
+	/**
+	 * Initializes action result.
+	 */
+	protected void initializeResult(ActionResult result, ActionRequest actionRequest) {
+		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse httpServletResponse = actionRequest.getHttpServletResponse();
+
+		servletContextInjector.injectContext(result, httpServletRequest, httpServletResponse);
+
+		result.init();
+	}
+
 
 	// ---------------------------------------------------------------- create
 
