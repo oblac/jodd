@@ -3,9 +3,11 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 import jodd.madvoc.interceptor.ActionInterceptorStack;
+import jodd.util.ArraysUtil;
 import jodd.util.ReflectUtil;
 import jodd.petite.meta.PetiteInject;
 
@@ -94,6 +96,40 @@ public class InterceptorsManager {
 			result[i] = resolve(interceptorClasses[i]);
 		}
 		return result;
+	}
+
+	/**
+	 * Extracts all action filters from the array of action interceptors.
+	 */
+	public ActionFilter[] extractActionFilters(ActionInterceptor[] actionInterceptors) {
+		ActionFilter[] result = new ActionFilter[actionInterceptors.length];
+
+		int index = 0;
+		for (ActionInterceptor interceptor : actionInterceptors) {
+			if (interceptor instanceof ActionFilter) {
+				result[index] = (ActionFilter) interceptor;
+				index++;
+			}
+		}
+
+		return ArraysUtil.subarray(result, 0, index);
+	}
+
+	/**
+	 * Removes all action filters from the array of action interceptors.
+	 */
+	public ActionInterceptor[] extractActionInterceptor(ActionInterceptor[] actionInterceptors) {
+		ActionInterceptor[] result = new ActionInterceptor[actionInterceptors.length];
+
+		int index = 0;
+		for (ActionInterceptor interceptor : actionInterceptors) {
+			if ((interceptor instanceof ActionFilter) == false) {
+				result[index] = interceptor;
+				index++;
+			}
+		}
+
+		return ArraysUtil.subarray(result, 0, index);
 	}
 
 	// ---------------------------------------------------------------- expander

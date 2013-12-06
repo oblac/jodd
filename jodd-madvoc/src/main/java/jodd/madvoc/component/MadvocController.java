@@ -118,19 +118,11 @@ public class MadvocController {
 			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			invokeAndRender(actionRequest);
+			actionRequest.invoke();
 
 			actionPath = actionRequest.getNextActionPath();
 		}
 		return null;
-	}
-
-	/**
-	 * Invokes action request (interceptors and action method) and renders result.
-	 */
-	protected void invokeAndRender(ActionRequest actionRequest) throws Exception {
-		Object resultValueObject = actionRequest.invoke();
-		render(actionRequest, resultValueObject);
 	}
 
 
@@ -221,19 +213,33 @@ public class MadvocController {
 	/**
 	 * Initializes action configuration on first use. Resolves all interceptors and injects context parameters.
 	 */
+	// todo remove this moment on action config creation to early warn about missconfiguration
 	protected void initializeActionConfig(ActionConfig actionConfig) {
 		Class<? extends ActionInterceptor>[] interceptorClasses = actionConfig.interceptorClasses;
 		if (interceptorClasses == null) {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
 		}
 
-		actionConfig.interceptors = interceptorsManager.resolveAll(interceptorClasses);
+		if (interceptorClasses != null) {
 
-		for (ActionInterceptor interceptor : actionConfig.interceptors) {
-			if (interceptor.isInitialized() == false) {
-				initializeInterceptor(interceptor);
+			ActionInterceptor[] allInterceptors = interceptorsManager.resolveAll(interceptorClasses);
+
+			actionConfig.filters = interceptorsManager.extractActionFilters(allInterceptors);
+			actionConfig.interceptors = interceptorsManager.extractActionInterceptor(allInterceptors);
+
+			for (ActionInterceptor interceptor : actionConfig.filters) {
+				if (interceptor.isInitialized() == false) {
+					initializeInterceptor(interceptor);
+				}
+			}
+
+			for (ActionInterceptor interceptor : actionConfig.interceptors) {
+				if (interceptor.isInitialized() == false) {
+					initializeInterceptor(interceptor);
+				}
 			}
 		}
+
 		actionConfig.initialized();
 	}
 
@@ -262,6 +268,7 @@ public class MadvocController {
 
 	/**
 	 * Creates new action request.
+	 * @param actionPath		action path
 	 * @param actionConfig		action configuration
 	 * @param action			action object
 	 * @param servletRequest	http request
@@ -269,7 +276,7 @@ public class MadvocController {
 	 * @return action request
 	 */
 	protected ActionRequest createActionRequest(String actionPath, ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		return new ActionRequest(actionPath, actionConfig, action, servletRequest, servletResponse);
+		return new ActionRequest(this, actionPath, actionConfig, action, servletRequest, servletResponse);
 	}
 
 }

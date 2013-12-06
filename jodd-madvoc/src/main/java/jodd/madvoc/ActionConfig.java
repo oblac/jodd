@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ public class ActionConfig {
 	protected ActionConfigSet actionConfigSet;
 	public boolean initialized;
 	public ActionInterceptor[] interceptors;
+	public ActionFilter[] filters;
 
 	public ActionConfig(
 			Class actionClass,
