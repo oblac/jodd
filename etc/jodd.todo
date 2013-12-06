@@ -1,4 +1,5 @@
 General Tasks:
+	- Game over? @tbd
 	- Replace for-each loop with index loop, as it takes less space @tbd
 	- Add smart download in NetUtil
 	- migrate to gradle v1.6 @done @v3.4.5
@@ -14,7 +15,7 @@ General Tasks:
 	- getRawTypes() added @v3.4.5 @done
 	- FindFile with includes/excludes @v3.4.5 @done
 	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
-	- URLCoder improvded @done @v3.4.7
+	- URLCoder improved @done @v3.4.7
 	- ReThink log dependency @soon 
 		SLF4J has week interface - ie it does not have general log methods - but it has many with specific Markers.
 Site/Documentation:
@@ -43,7 +44,7 @@ BeanUtil:
 	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
 	- Remove 2 introspector implementations @v3.4.9 @done
 	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
-	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.9
+	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.10
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
 	- Add abstract descriptor class @v3.4.9 @done
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
@@ -56,7 +57,7 @@ Props-plugin:
 		Categories must start on empty or whitespaced line
 Madvoc:
 	- Action methods with arguments @tbd
-	- Add result methods: ok(), redirect() etc.
+	- Add result methods: ok(), redirect(), back() for better usability of the code etc.
 		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
 	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
 	- Add Convertes, that convert input text automatically
@@ -65,25 +66,27 @@ Madvoc:
 	- Check AnnotatedFieldInterceptor, how it works @test
 	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
 		For example, it may choose if extension is "json" or not based on class name.
-	- Error 404 to contain info about missing page @next @v3.4.9
+	- Error 404 to contain info about missing page @next @v3.4.10
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Prevent memory leak for un-existing pages in suplement mode @hot
-	- Cache interceptor @github(27) @tbd @soon
 	- Multiple roots mapped to different paths @done @v3.4.5
 EMail:
 	- Add IMAP support @done @v3.4.7
-	- Add suport for EML attachments @done @v3.4.7
+	- Add support for EML attachments @done @v3.4.7
 	- Add util to parse EML! @done @v3.4.7
 	- Fix various NPEs @done @v3.4.8
-	- Add callback method for receive() @next @v3.4.9
+	- Add callback method for receive() @next @v3.4.10
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
-	- Add caches on method level, annotation based
+	- Add caches on method level, annotation based.
+		Each cache has an id, each one can be evicted, use annotations or manual config
+	- Add Madvoc filter for storing caching response for some time
+		Configurable, eg. 1 cache setting per actionString (class#method) or from additional annotation etc.
 JTX:
 	- Add 'Rollback on' feature… that does rollback only on certain exception types.
 	- Add Thread timeout in separate class
-	- How to explicilty specify TX scope in annotation @tbd
+	- How to explicitly specify TX scope in annotation @tbd
 	- Check nested TX, once again @test
 Proxetta:
 	- Add proxy detection and return super class. @done @v3.4.5
@@ -100,6 +103,7 @@ DbOom:
 	- LoadById, load values into existing instance
 	- Generic finder method. Try to detect method arguments using MethRef? @next
 	- Add batch update
+	- Faster HashMaps for small amount of tables - in templates?
 	- Introduce #execute() interceptors? @tbd
 MethRef:
 	- Return property name instead of method name.
