@@ -2,30 +2,16 @@
 
 package jodd.lagarto;
 
-import java.nio.CharBuffer;
-
 /**
  * Lagarto parser context, holder of various
- * data during the parsing.
+ * data needed for whole parsing process.
  */
 public class LagartoParserContext {
 
-	protected final CharBuffer input;
 	protected long startTime;
 	protected long endTime;
 	protected long elapsedTime;
 	protected int offset;
-
-	public LagartoParserContext(CharBuffer input) {
-		this.input = input;
-	}
-
-	/**
-	 * Returns parsing source.
-	 */
-	public CharBuffer getInput() {
-		return input;
-	}
 
 	/**
 	 * Returns time when parsing started.

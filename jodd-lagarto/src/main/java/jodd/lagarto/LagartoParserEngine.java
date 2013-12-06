@@ -43,7 +43,7 @@ public abstract class LagartoParserEngine {
 		this.input = input;
 		this.lexer = new LagartoLexer(input);
 		this.tag = new ParsedTag(lexer, input);
-		this.ctx = new LagartoParserContext(input);
+		this.ctx = new LagartoParserContext();
 
 		this.buffering = false;
 		this.buffTextStart = 0;
