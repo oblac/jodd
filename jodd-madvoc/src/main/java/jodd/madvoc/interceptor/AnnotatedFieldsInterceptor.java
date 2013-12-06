@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Performs some operation on all annotated fields. Helpful with injection of
  * application context into action objects.
  */
-public abstract class AnnotatedFieldsInterceptor extends ActionInterceptor {
+public abstract class AnnotatedFieldsInterceptor extends BaseActionInterceptor {
 
 	protected final Class<Annotation> fieldAnnotation;
 
@@ -26,7 +26,6 @@ public abstract class AnnotatedFieldsInterceptor extends ActionInterceptor {
 		this.fieldAnnotation = fieldAnnotation;
 	}
 
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.getAction();
 		Class actionType = action.getClass();
@@ -58,19 +57,20 @@ public abstract class AnnotatedFieldsInterceptor extends ActionInterceptor {
 		if (fields == null) {
 			ClassDescriptor cd = ClassIntrospector.lookup(type);
 			FieldDescriptor[] allFields = cd.getAllFieldDescriptors();
-			List<Field> fieldlist = new ArrayList<Field>();
+
+			List<Field> fieldList = new ArrayList<Field>();
 			for (FieldDescriptor fieldDescriptor : allFields) {
 				Field field = fieldDescriptor.getField();
 
 				Annotation ann = field.getAnnotation(fieldAnnotation);
 				if (ann != null) {
-					fieldlist.add(field);
+					fieldList.add(field);
 				}
 			}
-			if (fieldlist.isEmpty()) {
+			if (fieldList.isEmpty()) {
 				fields = EMPTY_FIELD;
 			} else {
-				fields = fieldlist.toArray(new Field[fieldlist.size()]);
+				fields = fieldList.toArray(new Field[fieldList.size()]);
 			}
 			annotatedField.put(type, fields);
 		}

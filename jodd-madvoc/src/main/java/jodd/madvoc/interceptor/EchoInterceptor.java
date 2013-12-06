@@ -9,12 +9,11 @@ import jodd.util.StringUtil;
  * Simple interceptor that measures time and prints out information about invoked actions.
  * User may inherit it and change the way message is printed.
  */
-public class EchoInterceptor extends ActionInterceptor {
+public class EchoInterceptor extends BaseActionInterceptor {
 
 	/**
 	 * Measure action invocation time.
 	 */
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		printBefore(actionRequest);
 		long startTime = System.currentTimeMillis();

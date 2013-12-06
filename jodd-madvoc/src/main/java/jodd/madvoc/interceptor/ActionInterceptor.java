@@ -7,44 +7,27 @@ import jodd.madvoc.ActionRequest;
 /**
  * Action interceptor.
  */
-public abstract class ActionInterceptor {
-
-	protected boolean enabled = true;
-
-	protected boolean initialized;
+public interface ActionInterceptor {
 
 	/**
 	 * Returns <code>true</code> if interceptor is initialized.
 	 */
-	public final boolean isInitialized() {
-	    return initialized;
-	}
-
-	/**
-	 * Marks that interceptor is initialized.
-	 */
-	public final void initialized() {
-		initialized = true;
-	}
+	boolean isInitialized();
 
 	/**
 	 * Returns <code>true</code> if interceptor is enabled.
 	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
+	boolean isEnabled();
 
 	/**
 	 * Defines if interceptor is enabled.
 	 */
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+	void setEnabled(boolean enabled);
 
 	/**
-	 * Invoked on interceptor initialization.
+	 * Initializes interceptor.
 	 */
-	public void init() {}
+	void init();
 
 	/**
 	 * Invokes interceptor using <code>enabled</code> information.
@@ -52,21 +35,11 @@ public abstract class ActionInterceptor {
 	 * When interceptor is enabled, it will be invoked before the next
 	 * one (or the action).
 	 */
-	public final Object invoke(ActionRequest actionRequest) throws Exception {
-		if (enabled) {
-			return intercept(actionRequest);
-		} else {
-			return actionRequest.invoke();
-		}
-	}
+	Object invoke(ActionRequest actionRequest) throws Exception;
 
 	/**
 	 * Intercepts action requests.
 	 */
-	public abstract Object intercept(ActionRequest actionRequest) throws Exception;
+	Object intercept(ActionRequest actionRequest) throws Exception;
 
-	@Override
-	public String toString() {
-		return "interceptor: " + super.toString();
-	}
 }

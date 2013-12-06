@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * <li>performs the outjection.</li>
  * </ul>
  */
-public class ServletConfigInterceptor extends ActionInterceptor {
+public class ServletConfigInterceptor extends BaseActionInterceptor {
 
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
@@ -52,7 +52,6 @@ public class ServletConfigInterceptor extends ActionInterceptor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 

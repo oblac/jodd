@@ -14,12 +14,11 @@ import jodd.madvoc.ActionRequest;
  * be set, as desired, on the actual object loaded from the database.
  * @see PrepareAndIdInjectorInterceptor
  */
-public class PrepareInterceptor extends ActionInterceptor {
+public class PrepareInterceptor extends BaseActionInterceptor {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		Object action = actionRequest.getAction();
 		if (action instanceof Preparable) {

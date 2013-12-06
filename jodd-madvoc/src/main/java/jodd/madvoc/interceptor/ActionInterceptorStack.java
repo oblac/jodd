@@ -10,7 +10,7 @@ import jodd.madvoc.MadvocException;
  * an {@link jodd.madvoc.meta.InterceptedBy} annotation. It is only
  * used for grouping and will be not really added to the interceptors.
  */
-public abstract class ActionInterceptorStack extends ActionInterceptor {
+public abstract class ActionInterceptorStack extends BaseActionInterceptor {
 
 	protected Class<? extends ActionInterceptor>[] interceptors;
 
@@ -31,7 +31,6 @@ public abstract class ActionInterceptorStack extends ActionInterceptor {
 	/**
 	 * Interceptor is not used since this is just an interceptor container.
 	 */
-	@Override
 	public final String intercept(ActionRequest actionRequest) throws Exception {
 		throw new MadvocException("Interceptor stack can not be invoked as an interceptor.");
 	}

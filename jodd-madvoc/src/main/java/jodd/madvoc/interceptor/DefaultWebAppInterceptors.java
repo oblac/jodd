@@ -11,9 +11,8 @@ import jodd.madvoc.component.MadvocConfig;
  * It will be replaced with the result of {@link MadvocConfig#getDefaultInterceptors()}
  * during action registration.
  */
-public final class DefaultWebAppInterceptors extends ActionInterceptor {
+public final class DefaultWebAppInterceptors extends BaseActionInterceptor {
 
-	@Override
 	public String intercept(ActionRequest actionRequest) throws Exception {
 		throw new MadvocException(this.getClass().getSimpleName() + " must be used only for actions configuration.");
 	}

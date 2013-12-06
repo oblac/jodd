@@ -4,7 +4,7 @@ package jodd.joy.auth;
 
 import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.URLCoder;
 import jodd.util.StringPool;
@@ -25,11 +25,10 @@ import static jodd.joy.madvoc.action.AppAction.REDIRECT;
  * to particular "roles". Principals (i.e. users) who are associated with one or more of
  * these roles will have access to those resources.
  */
-public abstract class AuthorizationInterceptor extends ActionInterceptor {
+public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthorizationInterceptor.class);
 
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();

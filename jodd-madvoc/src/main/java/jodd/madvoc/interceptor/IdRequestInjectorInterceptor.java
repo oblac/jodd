@@ -13,7 +13,7 @@ import jodd.madvoc.meta.In;
  * Injects only ID request attributes and parameters that ends with '.id'.
  * @see PrepareAndIdInjectorInterceptor
  */
-public class IdRequestInjectorInterceptor extends ActionInterceptor {
+public class IdRequestInjectorInterceptor extends BaseActionInterceptor {
 
 	protected static final String ATTR_NAME_ID_SUFFIX = ".id";
 
@@ -39,7 +39,6 @@ public class IdRequestInjectorInterceptor extends ActionInterceptor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		injectIdsFromRequest(actionRequest);
 		return actionRequest.invoke();

@@ -9,5 +9,6 @@ import jodd.madvoc.interceptor.ActionInterceptor;
  * that will be called before the action invocation and after the rendering phase.
  * This behavior is similar to servlet filters. This is just a marker class.
  */
-public abstract class ActionFilter extends ActionInterceptor {
+public interface ActionFilter extends ActionInterceptor {
+
 }

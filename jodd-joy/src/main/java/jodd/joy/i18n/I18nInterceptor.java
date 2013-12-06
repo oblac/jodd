@@ -3,7 +3,7 @@
 package jodd.joy.i18n;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.proxetta.ProxettaUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Prepares bundle name for current request.
  */
-public class I18nInterceptor extends ActionInterceptor {
+public class I18nInterceptor extends BaseActionInterceptor {
 
-	@Override
 	public Object intercept(ActionRequest actionRequest) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 
