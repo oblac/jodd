@@ -2,11 +2,10 @@
 
 package jodd.csselly;
 
-import jodd.io.CharBufferReader;
 import jodd.util.StringUtil;
+import jodd.util.UnsafeUtil;
 
 import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +19,12 @@ public class CSSelly {
 
 	protected final CSSellyLexer lexer;
 
-	public CSSelly(CharSequence charSequence) {
-		this(CharBuffer.wrap(charSequence));
+	public CSSelly(String input) {
+		this(UnsafeUtil.getChars(input));
 	}
 
-	public CSSelly(CharBuffer input) {
-		this.lexer = new CSSellyLexer(new CharBufferReader(input));
+	public CSSelly(char[] input) {
+		this.lexer = new CSSellyLexer(input);
 	}
 
 	// ---------------------------------------------------------------- parse

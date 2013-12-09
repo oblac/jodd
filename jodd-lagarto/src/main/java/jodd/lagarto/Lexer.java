@@ -540,22 +540,6 @@ abstract class Lexer {
 		this.parseSpecialTagsAsCdata = parseSpecialTagsAsCdata;
 	}
 
-
-/*
-  Lexer(java.io.Reader in) {
-    this.zzReader = in;
-  }
-
-  /**
-   * Creates a new scanner.
-   * There is also java.io.Reader version of this constructor.
-   *
-   * @param   in  the java.io.Inputstream to read input from.
-   */
-  Lexer(java.io.InputStream in) {
-    this(new java.io.InputStreamReader(in));
-  }
-
   /** 
    * Unpacks the compressed character translation table.
    *
@@ -582,10 +566,6 @@ abstract class Lexer {
    */
   Lexer(char[] input) {
     this.zzChars = input;
-  }
-
-  private Lexer(java.io.Reader in) {
-	// ignore
   }
 
   /**
