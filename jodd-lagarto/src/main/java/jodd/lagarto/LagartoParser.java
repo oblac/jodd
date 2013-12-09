@@ -2,7 +2,7 @@
 
 package jodd.lagarto;
 
-import java.nio.CharBuffer;
+import jodd.util.UnsafeUtil;
 
 /**
  * Parses HTML/XML content using {@link TagVisitor}.
@@ -10,15 +10,11 @@ import java.nio.CharBuffer;
 public class LagartoParser extends LagartoParserEngine {
 
 	public LagartoParser(char[] charArray) {
-		this(CharBuffer.wrap(charArray));
+		initialize(charArray);
 	}
 
-	public LagartoParser(CharSequence charSequence) {
-		this(CharBuffer.wrap(charSequence));
-	}
-
-	public LagartoParser(CharBuffer input) {
-		initialize(input);
+	public LagartoParser(String string) {
+		initialize(UnsafeUtil.getChars(string));
 	}
 
 	// ---------------------------------------------------------------- parse

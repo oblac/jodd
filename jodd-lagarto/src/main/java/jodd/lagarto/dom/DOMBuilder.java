@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.nio.CharBuffer;
-
 /**
  * DOM Builder. Generic interface for DOM builder
  * implementation.
@@ -13,11 +11,11 @@ public interface DOMBuilder {
 	/**
 	 * Parses content and returns root {@link Document document node}.
 	 */
-	Document parse(CharSequence content);
+	Document parse(char[] content);
 
 	/**
 	 * Parses content and returns root {@link Document document node}.
 	 */
-	Document parse(CharBuffer content);
+	Document parse(String content);
 
 }

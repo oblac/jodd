@@ -5,7 +5,8 @@ package jodd.lagarto;
 import jodd.util.ArraysUtil;
 
 import java.io.IOException;
-import java.nio.CharBuffer;
+
+import static jodd.lagarto.LagartoParserUtil.subSequence;
 
 /**
  * Reusable, parsed {@link Tag tag} implementation.
@@ -27,7 +28,7 @@ class ParsedTag implements Tag {
 
 	// input data
 	private final LagartoLexer lexer;
-	private final CharBuffer input;
+	private final char[] input;
 	private int position;
 	private int length;
 
@@ -37,9 +38,9 @@ class ParsedTag implements Tag {
 
 	// ---------------------------------------------------------------- internal
 
-	ParsedTag(LagartoLexer lexer, CharBuffer input) {
+	ParsedTag(LagartoLexer lexer) {
 		this.lexer = lexer;
-		this.input = input;
+		this.input = lexer.getInput();
 	}
 
 	// 1
@@ -290,7 +291,7 @@ class ParsedTag implements Tag {
 		if (forceBuild) {
 			appendTo(out);
 		} else {
-			out.append(input.subSequence(position, position + length));
+			out.append(subSequence(input, position, position + length));
 		}
 	}
 

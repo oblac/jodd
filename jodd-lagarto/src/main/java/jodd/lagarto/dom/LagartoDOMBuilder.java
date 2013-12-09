@@ -5,8 +5,6 @@ package jodd.lagarto.dom;
 import jodd.lagarto.LagartoParser;
 import jodd.util.StringUtil;
 
-import java.nio.CharBuffer;
-
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
@@ -337,7 +335,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Creates DOM tree from provided content.
 	 */
-	public Document parse(CharSequence content) {
+	public Document parse(char[] content) {
 		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}
@@ -345,7 +343,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	/**
 	 * Creates DOM tree from the provided content.
 	 */
-	public Document parse(CharBuffer content) {
+	public Document parse(String content) {
 		LagartoParser lagartoParser = new LagartoParser(content);
 		return doParse(lagartoParser);
 	}

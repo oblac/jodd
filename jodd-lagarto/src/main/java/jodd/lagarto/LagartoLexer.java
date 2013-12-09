@@ -2,22 +2,24 @@
 
 package jodd.lagarto;
 
-import jodd.io.CharBufferReader;
-
-import java.nio.CharBuffer;
-
 /**
  * Lagarto lexer.
  */
 public final class LagartoLexer extends Lexer {
 
-	private final CharSequence input;
+	private final char[] input;
 
-	public LagartoLexer(CharBuffer input) {
-		super(new CharBufferReader(input));
+	public LagartoLexer(char[] input) {
+		super(input);
 		this.input = input;
 	}
 
+	/**
+	 * Returns input buffer.
+	 */
+	public char[] getInput() {
+		return input;
+	}
 
 	// ---------------------------------------------------------------- position
 
@@ -46,7 +48,7 @@ public final class LagartoLexer extends Lexer {
 		}
 
 		while (offset < position) {
-			char c = input.charAt(offset);
+			char c = input[offset];
 
 			if (c == '\n') {
 				line++;

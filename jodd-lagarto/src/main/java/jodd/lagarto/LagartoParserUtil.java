@@ -2,6 +2,8 @@
 
 package jodd.lagarto;
 
+import java.nio.CharBuffer;
+
 /**
  * Lagarto parser util.
  */
@@ -10,16 +12,16 @@ public class LagartoParserUtil {
 	/**
 	 * Returns <code>true</code> if character sequence region starts with provided string.
 	 */
-	public static boolean regionStartWith(CharSequence charSequence, int start, int end, String matchingString) {
+	public static boolean regionStartWith(char[] chars, int start, int end, char[] matchingString) {
 		int len = end - start;
-		int targetLen = matchingString.length();
+		int targetLen = matchingString.length;
 
 		if (targetLen > len) {
 			return false;
 		}
 
 		for (int i = 0; i < targetLen; i++) {
-			if (charSequence.charAt(start) != matchingString.charAt(i)) {
+			if (chars[start] != matchingString[i]) {
 				return false;
 			}
 			start++;
@@ -32,9 +34,9 @@ public class LagartoParserUtil {
 	 * Returns the index of matching character in character sequence region.
 	 * Returns <code>-1</code> if character is not found.
 	 */
-	public static int regionIndexOf(CharSequence charSequence, int start, int end, char matchingChar) {
+	public static int regionIndexOf(char[] chars, int start, int end, char matchingChar) {
 		for (int i = start; i < end; i++) {
-			if (charSequence.charAt(i) == matchingChar) {
+			if (chars[i] == matchingChar) {
 				return i;
 			}
 		}
@@ -45,8 +47,8 @@ public class LagartoParserUtil {
 	 * Returns the index of matching string in character sequence region.
 	 * Returns <code>-1</code> if matching string is not found.
 	 */
-	public static int regionIndexOf(CharSequence charSequence, int start, int end, String match) {
-		int matchLength = match.length();
+	public static int regionIndexOf(char[] chars, int start, int end, char[] match) {
+		int matchLength = match.length;
 
 		if (start + matchLength > end) {
 			return -1;
@@ -58,13 +60,21 @@ public class LagartoParserUtil {
 		for (int i = start; i < upToIndex; i++) {
 
 			for (int j = 0; j < matchLength; j++) {
-				if (charSequence.charAt(i + j) != match.charAt(j)) {
+				if (chars[i + j] != match[j]) {
 					continue outloop;
 				}
 			}
 			return i;
 		}
 		return -1;
+	}
+
+	/**
+	 * Creates a <code>CharSequence</code> on given char array region.
+	 * Returned sequence is just a 'view' of the input char array.
+	 */
+	public static CharSequence subSequence(char[] chars, int from, int to) {
+		return CharBuffer.wrap(chars, from, to - from);
 	}
 
 }

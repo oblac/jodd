@@ -8,20 +8,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.CharBuffer;
+
+import static jodd.lagarto.LagartoParserUtil.subSequence;
 
 /**
  * Lagarto HTML/XML parser engine. Usage consist of two steps:
  * <ul>
- * <li>{@link #initialize(java.nio.CharBuffer) initalization} with provided content</li>
+ * <li>{@link #initialize(char[])}  initalization} with provided content</li>
  * <li>actual {@link #parse(TagVisitor) parsing} the content</li>
  * </ul>
  */
 public abstract class LagartoParserEngine {
-
 	private static final Logger log = LoggerFactory.getLogger(LagartoParserEngine.class);
 
-	private CharSequence input;
+	private static final char[] COMMENT_IF = "[if".toCharArray();
+	private static final char[] COMMENT_ENDIF = "<![endif]".toCharArray();
+
+	private char[] input;
 	private LagartoLexer lexer;
 	private ParsedTag tag;
 	private LagartoParserContext ctx;
@@ -39,10 +42,10 @@ public abstract class LagartoParserEngine {
 	/**
 	 * Initializes parser engine by providing the content.
 	 */
-	protected void initialize(CharBuffer input) {
+	protected void initialize(char[] input) {
 		this.input = input;
 		this.lexer = new LagartoLexer(input);
-		this.tag = new ParsedTag(lexer, input);
+		this.tag = new ParsedTag(lexer);
 		this.ctx = new LagartoParserContext();
 
 		this.buffering = false;
@@ -184,7 +187,7 @@ public abstract class LagartoParserEngine {
 	protected void flushText() {
 		if (buffering) {
 			ctx.offset = buffTextStart;
-			visitor.text(input.subSequence(buffTextStart, buffTextEnd));
+			visitor.text(subSequence(input, buffTextStart, buffTextEnd));
 			buffering = false;
 		}
 	}
@@ -218,7 +221,7 @@ public abstract class LagartoParserEngine {
 
 		if (
 				(enableConditionalComments) &&
-				(LagartoParserUtil.regionStartWith(input, start, end, "[if"))
+				(LagartoParserUtil.regionStartWith(input, start, end, COMMENT_IF))
 		){
 			// conditional comment start
 
@@ -230,14 +233,14 @@ public abstract class LagartoParserEngine {
 
 			// cc start tag ends either with "]>" or at very next "-->"
 
-			int commentEnd = LagartoParserUtil.regionIndexOf(input, ccend, end, "<![endif]");
+			int commentEnd = LagartoParserUtil.regionIndexOf(input, ccend, end, COMMENT_ENDIF);
 
 			if (commentEnd == -1) {
-				additionalComment = input.subSequence(ccend, end + 3);
+				additionalComment = subSequence(input, ccend, end + 3);
 			}
 
 			ctx.offset = lexerPosition;
-			visitor.condComment(input.subSequence(start + 1, expressionEnd), true, true, additionalComment);
+			visitor.condComment(subSequence(input, start + 1, expressionEnd), true, true, additionalComment);
 
 			// calculate push back to the end of the starting tag
 
@@ -253,7 +256,7 @@ public abstract class LagartoParserEngine {
 		}
 
 		ctx.offset = lexerPosition;
-		visitor.comment(input.subSequence(start, end));
+		visitor.comment(subSequence(input, start, end));
 	}
 
 	/**
@@ -268,7 +271,7 @@ public abstract class LagartoParserEngine {
 		int end = start + lexer.length() - 12;
 
 		ctx.offset = position;
-		visitor.cdata(input.subSequence(start, end));
+		visitor.cdata(subSequence(input, start, end));
 	}
 
 	/**
@@ -341,12 +344,12 @@ public abstract class LagartoParserEngine {
 
 		int i = start + 2;
 		while (i < end) {
-			if (input.charAt(i) == '[') {
+			if (input[i] == '[') {
 				i++;
 				textStart = i;
 				continue;
 			}
-			if (input.charAt(i) == ']') {
+			if (input[i] == ']') {
 				textEnd = i;
 				break;
 			}
@@ -354,7 +357,7 @@ public abstract class LagartoParserEngine {
 		}
 
 		ctx.offset = start;
-		visitor.condComment(input.subSequence(textStart, textEnd), true, false, null);
+		visitor.condComment(subSequence(input, textStart, textEnd), true, false, null);
 	}
 
 	/**
@@ -370,12 +373,12 @@ public abstract class LagartoParserEngine {
 
 		int i = start + 2;
 		while (i < end) {
-			if (input.charAt(i) == '[') {
+			if (input[i] == '[') {
 				i++;
 				textStart = i;
 				continue;
 			}
-			if (input.charAt(i) == ']') {
+			if (input[i] == ']') {
 				textEnd = i;
 				break;
 			}
@@ -389,7 +392,7 @@ public abstract class LagartoParserEngine {
 			if (isDownlevelHidden) {
 				// +4 and -3 to skip the <!-- and the --> the same way the parseCommentOrConditionalComment() method does.
 				ctx.offset = start;
-				visitor.comment(input.subSequence(start + 4, end - 3));
+				visitor.comment(subSequence(input, start + 4, end - 3));
 			} else {
 				error("Conditional comments disabled");
 			}
@@ -398,11 +401,11 @@ public abstract class LagartoParserEngine {
 
 		CharSequence additionalComment = null;
 		if (hasExtra) {
-			additionalComment = input.subSequence(start, textStart - 3);
+			additionalComment = subSequence(input, start, textStart - 3);
 		}
 
 		ctx.offset = start;
-		visitor.condComment(input.subSequence(textStart, textEnd), false, isDownlevelHidden, additionalComment);
+		visitor.condComment(subSequence(input, textStart, textEnd), false, isDownlevelHidden, additionalComment);
 	}
 
 	/**
@@ -655,15 +658,15 @@ loop:	while (true) {
 		switch(state) {
 			case Lexer.XMP:
 				ctx.offset = tag.getTagPosition();
-				visitor.xmp(tag, input.subSequence(start, end - 6));
+				visitor.xmp(tag, subSequence(input, start, end - 6));
 				break;
 			case Lexer.SCRIPT:
 				ctx.offset = tag.getTagPosition();
-				visitor.script(tag, input.subSequence(start, end - 9));
+				visitor.script(tag, subSequence(input, start, end - 9));
 				break;
 			case Lexer.STYLE:
 				ctx.offset = tag.getTagPosition();
-				visitor.style(tag, input.subSequence(start, end - 8));
+				visitor.style(tag, subSequence(input, start, end - 8));
 				break;
 		}
 	}

@@ -11,7 +11,6 @@ import jodd.lagarto.dom.Text;
 import jodd.util.ArraysUtil;
 import jodd.util.StringUtil;
 
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,14 +53,14 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Parses input sequence and creates new <code>Jerry</code>.
 	 */
-	public static Jerry jerry(CharSequence content) {
+	public static Jerry jerry(char[] content) {
 		return jerry().parse(content);
 	}
 
 	/**
 	 * Parses input content and creates new <code>Jerry</code>.
 	 */
-	public static Jerry jerry(CharBuffer content) {
+	public static Jerry jerry(String content) {
 		return jerry().parse(content);
 	}
 
@@ -95,7 +94,7 @@ public class Jerry implements Iterable<Jerry> {
 		/**
 		 * Invokes parsing on {@link DOMBuilder}.
 		 */
-		public Jerry parse(CharSequence content) {
+		public Jerry parse(char[] content) {
 			Document doc = domBuilder.parse(content);
 			return new Jerry(domBuilder, doc);
 		}
@@ -103,7 +102,7 @@ public class Jerry implements Iterable<Jerry> {
 		/**
 		 * Invokes parsing on {@link DOMBuilder}.
 		 */
-		public Jerry parse(CharBuffer content) {
+		public Jerry parse(String content) {
 			Document doc = domBuilder.parse(content);
 			return new Jerry(domBuilder, doc);
 		}
