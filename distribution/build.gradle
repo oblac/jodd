@@ -87,6 +87,7 @@ task bundleMobileJar(type: Jar) {
 	exclude 'jodd/util/collection/Joined*'
 	exclude 'jodd/util/ref/*'
 	exclude 'jodd/util/sort/*'
+	exclude 'jodd/util/UnsafeUtil.class'
 
 	manifest.attributes << commonManifest
 	manifest {

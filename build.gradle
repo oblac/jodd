@@ -273,6 +273,7 @@ configure(javaModules()) {
 				classpath: sourceSets.main.compileClasspath.asPath) {
 			path(path: sourceSets.main.output.classesDir)
 			ignore(className: "java.nio.CharBuffer")
+			ignore(className: "sun.misc.Unsafe")
 		}
 	}
 }
