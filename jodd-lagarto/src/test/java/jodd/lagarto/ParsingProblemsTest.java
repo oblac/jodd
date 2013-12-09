@@ -36,7 +36,7 @@ public class ParsingProblemsTest {
 	public void testInvalidTag() {
 		String html = "<html>text1<=>text2</html>";
 
-		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(html));
+		LagartoParser lagartoParser = new LagartoParser(html);
 
 		final StringBuilder sb = new StringBuilder();
 

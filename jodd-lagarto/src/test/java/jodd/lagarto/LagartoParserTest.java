@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.CharBuffer;
 
 import static jodd.util.StringPool.NEWLINE;
 import static org.junit.Assert.*;
@@ -46,7 +45,7 @@ public class LagartoParserTest {
 			File file;
 			while ((file = ff.nextFile()) != null) {
 				processed = true;
-				System.out.println("+" + file.getName());
+				System.out.println('+' + file.getName());
 				String content = FileUtil.readString(file);
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
 
@@ -100,7 +99,7 @@ public class LagartoParserTest {
 		while ((file = ff.nextFile()) != null) {
 			processed = true;
 			String name = file.getName();
-			System.out.println("+" + name);
+			System.out.println('+' + name);
 			String content = FileUtil.readString(file);
 			String errors = "";
 			try {
@@ -120,13 +119,13 @@ public class LagartoParserTest {
 	}
 
 	private String parseEmpty(String content) {
-		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(content));
+		LagartoParser lagartoParser = new LagartoParser(content);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
 			@Override
 			public void error(String message) {
 				errors.append(message);
-				errors.append("\n");
+				errors.append('\n');
 			}
 		});
 		return errors.toString();
@@ -263,7 +262,7 @@ public class LagartoParserTest {
 		TagWriter writer1 = new TagWriter(out, false);
 		TagWriter writer2 = new TagWriter(out2, true);
 
-		LagartoParser lagartoParser = new LagartoParser(CharBuffer.wrap(content));
+		LagartoParser lagartoParser = new LagartoParser(content);
 
 		TagAdapterWrapper taw = new TagAdapterWrapper(visitor,
 				new TagAdapterWrapper(writer1, writer2));
