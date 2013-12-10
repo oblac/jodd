@@ -298,10 +298,10 @@ public abstract class LagartoParserEngine {
 
 			switch (i) {
 				case 0:
-					name = text().toString();
+					name = textString();
 					break;
 				case 1:
-					if (text().toString().equals("PUBLIC")) {
+					if (textString().equals("PUBLIC")) {
 						isPublic = true;
 					}
 					break;
@@ -432,7 +432,7 @@ public abstract class LagartoParserEngine {
 
 			switch (token) {
 				case WORD:					// tag name
-					String tagName = text().toString();
+					String tagName = textString();
 					if (acceptTag(tagName)) {
 						parseTagAndAttributes(tagToken, tagName, type, start);
 					} else {
@@ -600,7 +600,7 @@ loop:	while (true) {
 	 */
 	protected void parseAttribute() throws IOException {
 		nextToken();
-		String attributeName = text().toString();
+		String attributeName = textString();
 		skipWhiteSpace();
 
 		Token token = nextToken();
@@ -620,7 +620,7 @@ loop:	while (true) {
 				tag.addAttribute(attributeName, attributeValue);
 			} else if (token == Token.WORD || token == Token.SLASH) {
 				// attribute value is not quoted, take everything until the space or tag end as a value
-				String attributeValue = text().toString();
+				String attributeValue = textString();
 				while (true) {
 					Token next = nextToken();
 					if (next != Token.WHITESPACE && next != Token.GT) {
@@ -724,6 +724,18 @@ loop:	while (true) {
 			return lexer.xxtext();
 		} else {
 			return lastText;
+		}
+	}
+
+	/**
+	 * Returns current text as a <code>String</code>
+	 * without creating a <code>CharSequence</code> first.
+	 */
+	protected String textString() {
+		if (lastToken == Token.UNKNOWN) {
+			return lexer.yytext();
+		} else {
+			return lastText.toString();
 		}
 	}
 
