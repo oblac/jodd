@@ -5,9 +5,11 @@ package jodd.madvoc.action;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
@@ -33,8 +35,11 @@ public class ListMadvocConfig {
 	protected ActionsManager actionsManager;
 
 	@In(scope = ScopeType.CONTEXT)
+	protected FiltersManager filtersManager;
+
+	@In(scope = ScopeType.CONTEXT)
 	protected InterceptorsManager interceptorsManager;
-	
+
 	@In(scope = ScopeType.CONTEXT)
 	protected ResultsManager resultsManager;
 
@@ -47,8 +52,14 @@ public class ListMadvocConfig {
 	@Out
 	protected List<ActionInterceptor> interceptors;
 
+	@Out
+	protected List<ActionFilter> filters;
+
+	/**
+	 * Collects all interceptors.
+	 */
 	protected void collectActionInterceptors() {
-		Collection<ActionInterceptor> interceptorValues = interceptorsManager.getAllActionInterceptors().values();
+		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAll().values();
 		interceptors = new ArrayList<ActionInterceptor>();
 		interceptors.addAll(interceptorValues);
 		Collections.sort(interceptors, new Comparator<ActionInterceptor>() {
@@ -58,6 +69,23 @@ public class ListMadvocConfig {
 		});
 	}
 
+	/**
+	 * Collects all filters.
+	 */
+	protected void collectActionFilters() {
+		Collection<? extends ActionFilter> filterValues = filtersManager.getAll().values();
+		filters = new ArrayList<ActionFilter>();
+		filters.addAll(filterValues);
+		Collections.sort(filters, new Comparator<ActionFilter>() {
+			public int compare(ActionFilter a1, ActionFilter a2) {
+				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
+			}
+		});
+	}
+
+	/**
+	 * Collects all action results.
+	 */
 	protected void collectActionResults() {
 		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults().values();
 		results = new ArrayList<ActionResult>();
@@ -69,9 +97,11 @@ public class ListMadvocConfig {
 		});
 	}
 
+	/**
+	 * Collects all action configurations.
+	 */
 	protected void collectActionConfigs() {
 		actions = actionsManager.getAllActionConfigurations();
-
 		Collections.sort(actions, new Comparator<ActionConfig>() {
 			public int compare(ActionConfig a1, ActionConfig a2) {
 				return a1.actionPath.compareTo(a2.actionPath);

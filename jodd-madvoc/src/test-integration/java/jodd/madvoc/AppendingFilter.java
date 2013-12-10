@@ -2,14 +2,12 @@
 
 package jodd.madvoc;
 
-import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.interceptor.BaseActionInterceptor;
+import jodd.madvoc.filter.BaseActionFilter;
 import jodd.servlet.wrapper.BufferResponseWrapper;
-import jodd.util.ArraysUtil;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class AppendingFilter extends BaseActionInterceptor implements ActionFilter {
+public class AppendingFilter extends BaseActionFilter {
 
 	/*
 	@Override
@@ -30,7 +28,7 @@ public class AppendingFilter extends BaseActionInterceptor implements ActionFilt
 		return result;
 	}*/
 
-	public Object intercept(ActionRequest actionRequest) throws Exception {
+	public Object filter(ActionRequest actionRequest) throws Exception {
 		HttpServletResponse httpResponse = actionRequest.getHttpServletResponse();
 
 		BufferResponseWrapper wrapper = new BufferResponseWrapper(httpResponse);

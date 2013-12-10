@@ -23,4 +23,5 @@ public @interface InterceptedBy {
 	 * Array of action interceptors.
 	 */
 	Class<? extends ActionInterceptor>[] value();
+
 }

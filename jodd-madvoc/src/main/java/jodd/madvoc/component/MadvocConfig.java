@@ -3,6 +3,7 @@
 package jodd.madvoc.component;
 
 import jodd.madvoc.RootPackages;
+import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
@@ -33,6 +34,7 @@ public class MadvocConfig {
 		fileUploadFactory = new AdaptiveFileUploadFactory();
 		defaultResultType = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
+		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
 		createDefaultAliases = false;
 		defaultExtension = "html";
@@ -166,9 +168,10 @@ public class MadvocConfig {
 		this.defaultActionMethodNames = defaultActionMethodNames;
 	}
 
-	// ---------------------------------------------------------------- default interceptors
+	// ---------------------------------------------------------------- default interceptors & filters
 
 	protected Class<? extends ActionInterceptor>[] defaultInterceptors;
+	protected Class<? extends ActionFilter>[] defaultFilters;
 
 	/**
 	 * Returns default interceptors.
@@ -182,6 +185,20 @@ public class MadvocConfig {
 	 */
 	public void setDefaultInterceptors(Class<? extends ActionInterceptor>... defaultInterceptors) {
 		this.defaultInterceptors = defaultInterceptors;
+	}
+
+	/**
+	 * Returns default filters.
+	 */
+	public Class<? extends ActionFilter>[] getDefaultFilters() {
+		return defaultFilters;
+	}
+
+	/**
+	 * Set default filters.
+	 */
+	public void setDefaultFilters(Class<? extends ActionFilter>[] defaultFilters) {
+		this.defaultFilters = defaultFilters;
 	}
 
 	// ---------------------------------------------------------------- default result type

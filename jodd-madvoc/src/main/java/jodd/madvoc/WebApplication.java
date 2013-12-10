@@ -3,6 +3,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionPathMacroManager;
+import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocContextInjector;
 import jodd.madvoc.component.ResultsManager;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
  * Web application contains all configurations and holds all managers and controllers of one web application.
  * Custom implementations may override this class to enhance several different functionality.
  */
+@SuppressWarnings({"UnusedDeclaration"})
 public class WebApplication {
 
 	private static Logger log;
@@ -158,6 +160,7 @@ public class WebApplication {
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
 		registerComponent(InterceptorsManager.class);
+		registerComponent(FiltersManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);
 		registerComponent(ResultsManager.class);
@@ -190,23 +193,28 @@ public class WebApplication {
 	 * When running web application out from container,
 	 * <code>servletContext</code> may be null
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		log.debug("Initializing Madvoc");
 	}
 
 	/**
-	 * Hook for manually registered actions.
+	 * Hook for filters.
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
+	protected void initFilters(FiltersManager filtersManager) {
+		log.debug("Initializing Madvoc filters");
+	}
+
+	/**
+	 * Hook for interceptors.
+	 */
 	protected void initInterceptors(InterceptorsManager interceptorsManager) {
 		log.debug("Initializing Madvoc interceptors");
 	}
 
+
 	/**
-	 * Hook for manually registered actions.
+	 * Hook for actions manager. Allows manual registration of the actions.
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initActions(ActionsManager actionManager) {
 		log.debug("Initializing Madvoc actions");
 	}
@@ -214,7 +222,6 @@ public class WebApplication {
 	/**
 	 * Hook for manually registered results.
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected void initResults(ResultsManager actionManager) {
 		log.debug("Initializing Madvoc results");
 	}
@@ -222,7 +229,6 @@ public class WebApplication {
 	/**
 	 * Invoked on web application destroy.
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected void destroy(MadvocConfig madvocConfig) {
 		log.debug("Destroying Madvoc");
 	}

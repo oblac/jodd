@@ -50,6 +50,7 @@ public class PetiteWebApplication extends WebApplication {
 		registerComponent("petiteContainer", petiteContainer);
 
 		registerComponent(PetiteMadvocController.class);
+		registerComponent(PetiteFilterManager.class);
 		registerComponent(PetiteInterceptorManager.class);
 		registerComponent(PetiteResultsManager.class);
 	}

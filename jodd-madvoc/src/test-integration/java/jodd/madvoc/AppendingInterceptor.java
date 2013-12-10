@@ -3,7 +3,6 @@
 package jodd.madvoc;
 
 import jodd.madvoc.action.IntcptAction;
-import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 
 public class AppendingInterceptor extends BaseActionInterceptor {

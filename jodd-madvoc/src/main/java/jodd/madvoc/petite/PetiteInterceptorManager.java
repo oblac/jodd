@@ -19,7 +19,7 @@ public class PetiteInterceptorManager extends InterceptorsManager {
 	 * Acquires interceptor from Petite container.
 	 */
 	@Override
-	protected ActionInterceptor createInterceptor(Class<? extends ActionInterceptor> interceptorClass) {
-		return petiteContainer.createBean(interceptorClass);
+	protected <R extends ActionInterceptor> R createWrapper(Class<R> wrapperClass) {
+		return petiteContainer.createBean(wrapperClass);
 	}
 }

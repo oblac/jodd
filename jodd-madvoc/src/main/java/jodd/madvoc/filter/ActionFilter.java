@@ -2,13 +2,17 @@
 
 package jodd.madvoc.filter;
 
-import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ActionWrapper;
 
 /**
- * Action filter is an {@link jodd.madvoc.interceptor.ActionInterceptor interceptor}
- * that will be called before the action invocation and after the rendering phase.
- * This behavior is similar to servlet filters. This is just a marker class.
+ * Action filter is a wrapper that is invoked before action and after the rendering.
  */
-public interface ActionFilter extends ActionInterceptor {
+public interface ActionFilter extends ActionWrapper {
+
+	/**
+	 * Filters action requests.
+	 */
+	Object filter(ActionRequest actionRequest) throws Exception;
 
 }

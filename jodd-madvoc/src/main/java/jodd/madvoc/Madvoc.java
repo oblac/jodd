@@ -3,6 +3,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
@@ -199,6 +200,13 @@ public class Madvoc {
 			throw new MadvocException("No Madvoc configuration component found.");
 		}
 		webapp.init(madvocConfig, servletContext);
+
+		// filters
+		FiltersManager filtersManager = webapp.getComponent(FiltersManager.class);
+		if (filtersManager == null) {
+			throw new MadvocException("No Madvoc filers manager component found.");
+		}
+		webapp.initFilters(filtersManager);
 
 		// interceptors
 		InterceptorsManager interceptorsManager = webapp.getComponent(InterceptorsManager.class);

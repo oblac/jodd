@@ -11,6 +11,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionAnnotation;
+import jodd.madvoc.meta.FilteredBy;
 import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
@@ -44,6 +45,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected InterceptorsManager interceptorsManager;
+
+	@PetiteInject
+	protected FiltersManager filtersManager;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -91,26 +95,34 @@ public class ActionMethodParser {
 		}
 
 		ActionInterceptor[] actionInterceptors = interceptorsManager.resolveAll(interceptorClasses);
-		ActionFilter[] actionFilters;
-		try {
-			actionFilters = interceptorsManager.extractActionFilters(actionInterceptors);
-			actionInterceptors = interceptorsManager.extractActionInterceptors(actionInterceptors);
-		} catch (MadvocException ignore) {
-			throw new MadvocException("Action Filters must be defined before Interceptors: " + actionClass.getName() + '#' + actionMethod.getName());
-		}
 
-		for (ActionInterceptor filter : actionFilters) {
-			if (filter.isInitialized() == false) {
-				interceptorsManager.initializeInterceptor(filter);
+		if (actionInterceptors != null) {
+			for (ActionInterceptor interceptor : actionInterceptors) {
+				if (interceptor.isInitialized() == false) {
+					interceptorsManager.initializeWrapper(interceptor);
+				}
 			}
 		}
 
-		for (ActionInterceptor interceptor : actionInterceptors) {
-			if (interceptor.isInitialized() == false) {
-				interceptorsManager.initializeInterceptor(interceptor);
-			}
+
+		// filters
+		Class<? extends ActionFilter>[] filterClasses = readMethodFilters(actionMethod);
+		if (filterClasses == null) {
+			filterClasses = readClassFilters(actionClass);
+		}
+		if (filterClasses == null) {
+			filterClasses = madvocConfig.getDefaultFilters();
 		}
 
+		ActionFilter[] actionFilters = filtersManager.resolveAll(filterClasses);
+
+		if (actionFilters != null) {
+			for (ActionFilter filter : actionFilters) {
+				if (filter.isInitialized() == false) {
+					filtersManager.initializeWrapper(filter);
+				}
+			}
+		}
 
 
 		// actions
@@ -249,6 +261,38 @@ public class ActionMethodParser {
 		InterceptedBy interceptedBy = actionMethod.getAnnotation(InterceptedBy.class);
 		if (interceptedBy != null) {
 			result = interceptedBy.value();
+			if (result.length == 0) {
+				result = null;
+			}
+		}
+		return result;
+	}
+
+	// ---------------------------------------------------------------- filters
+
+	/**
+	 * Reads class filters when method filters are not available.
+	 */
+	protected Class<? extends ActionFilter>[] readClassFilters(Class actionClass) {
+		Class<? extends ActionFilter>[] result = null;
+		FilteredBy filteredBy = ((Class<?>)actionClass).getAnnotation(FilteredBy.class);
+		if (filteredBy != null) {
+			result = filteredBy.value();
+			if (result.length == 0) {
+				result = null;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Reads method filters.
+	 */
+	protected Class<? extends ActionFilter>[] readMethodFilters(Method actionMethod) {
+		Class<? extends ActionFilter>[] result = null;
+		FilteredBy filteredBy = actionMethod.getAnnotation(FilteredBy.class);
+		if (filteredBy != null) {
+			result = filteredBy.value();
 			if (result.length == 0) {
 				result = null;
 			}
