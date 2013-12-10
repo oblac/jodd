@@ -173,7 +173,7 @@ public abstract class LagartoParserEngine {
 					parseCCEnd();
 					break;
 				default:
-					error("Unexpected root token: " + token);
+					error(new StringBuilder("Unexpected root token: ").append(token));
 					break;
 			}
 		}
@@ -332,8 +332,8 @@ public abstract class LagartoParserEngine {
 	protected void parseRevealedCCStart() throws IOException {
 		flushText();
 
-		if (enableConditionalComments == false) {
-			error("Conditional comments disabled");
+		if (!enableConditionalComments) {
+			error(new StringBuilder("Conditional comments disabled"));
 			return;
 		}
 
@@ -388,13 +388,13 @@ public abstract class LagartoParserEngine {
 		boolean isDownlevelHidden = (end - textEnd) == 4;
 		boolean hasExtra = (textStart - start) > 3;
 
-		if (enableConditionalComments == false) {
+		if (!enableConditionalComments) {
 			if (isDownlevelHidden) {
 				// +4 and -3 to skip the <!-- and the --> the same way the parseCommentOrConditionalComment() method does.
 				ctx.offset = start;
 				visitor.comment(subSequence(input, start + 4, end - 3));
 			} else {
-				error("Conditional comments disabled");
+				error(new StringBuilder("Conditional comments disabled"));
 			}
 			return;
 		}
@@ -447,7 +447,7 @@ public abstract class LagartoParserEngine {
 					parseText(start, lexer.position());
 					break;
 				default:
-					error("Invalid token in tag <" + text() + '>');
+					error(new StringBuilder("Invalid token in tag <").append(text()).append('>'));
 
 					// step back and parse tag as text
 					parseAsText(start);
@@ -456,7 +456,7 @@ public abstract class LagartoParserEngine {
 		} catch (LagartoException lex) {
 			// if exception occurs during tag parsing
 			// step back and parse tag as text
-			error(lex.getMessage());
+			error(new StringBuilder(lex.getMessage()));
 
 			parseAsText(start);
 		}
@@ -521,7 +521,7 @@ loop:	while (true) {
 						tokenText = lexer.yytext();
 					}
 
-					error("Tag <" + tagName + "> invalid token: " + tokenText);
+					error(new StringBuilder("Tag <").append(tagName).append("> invalid token: ").append(tokenText));
 					nextToken();	// there was a stepBack, so move forward
 					if (tokenText.length() > 1) {
 						lexer.yypushback(tokenText.length() - 1);
@@ -535,15 +535,15 @@ loop:	while (true) {
 		// since the same method is used for XML directive and for TAG, check
 		if (tagToken == Token.LT && token == Token.XML_GT) {
 			token = Token.GT;
-			error("Unmatched tag <" + tagName + "?>");
+			error(new StringBuilder("Unmatched tag <").append(tagName).append("?>"));
 		} else if (tagToken == Token.XML_LT && token == Token.GT) {
 			token = Token.XML_GT;
-			error("Unmatched tag <?" + tagName + '>');
+			error(new StringBuilder("Unmatched tag <?").append(tagName).append('>'));
 		}
 
 		switch (token) {
 			default:
-				error("Expected end of tag for <" + tagName + '>');
+				error(new StringBuilder("Expected end of tag for <").append(tagName).append('>'));
 				// continue as tag
 //				onTag(type, tagName, start, lexer.position() - start + 1);
 //				break;
@@ -634,16 +634,16 @@ loop:	while (true) {
 			} else if (token == Token.GT) {
 				stepBack(token);
 			} else if (token != Token.EOF) {
-				error("Invalid attribute: " + attributeName);
+				error(new StringBuilder("Invalid attribute: ").append(attributeName));
 			}
 		} else if (token == Token.SLASH || token == Token.GT || token == Token.WORD) {
 			tag.addAttribute(attributeName, null);
 			stepBack(token);
 		} else if (token == Token.QUOTE) {
-			error("Orphan attribute: " + text());
+			error(new StringBuilder("Orphan attribute: ").append(text()));
 			tag.addAttribute(attributeName, null);
 		} else if (token != Token.EOF) {
-			error("Invalid attribute: " + attributeName);
+			error(new StringBuilder("Invalid attribute: ").append(attributeName));
 		}
 	}
 
@@ -744,28 +744,24 @@ loop:	while (true) {
 	/**
 	 * Prepares error message and reports it to the visitor.
 	 */
-	protected void error(String message) {
+	protected void error(StringBuilder message) {
 		int line = lexer.line();
 		int column = lexer.column();
 
-		if (message == null) {
-			message = StringPool.EMPTY;
-		}
-
 		if (line != -1) {
 			// position is detected by jflex
-			message += " [" + line + ':' + column + ']';
+			message.append(" [").append(line).append(':').append(column).append(']');
 		} else {
 			int position = lexer.position();
 
-			if (calculatePosition == false) {
-				message += " [@" + position + ']';
-			} else {
+			if (calculatePosition) {
 				LagartoLexer.Position currentPosition = lexer.currentPosition();
-				message += ' ' + currentPosition.toString();
+				message.append(' ').append(currentPosition.toString());
+			} else {
+				message.append(" [@").append(position).append(']');
 			}
 		}
-		visitor.error(message);
+		visitor.error(message.toString());
 	}
 
 }
