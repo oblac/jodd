@@ -116,6 +116,7 @@ configure(javaModules()) {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 	apply plugin: 'idea'
+	apply plugin: 'eclipse'
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'
