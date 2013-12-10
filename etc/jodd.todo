@@ -27,7 +27,7 @@ Site/Documentation:
 	SiteGenerator:
 	- add global props to javascript
 	- add start and end events, to perform something
-	- load *md structure from root in maps, get(relative) returns sorted list of file names
+	- load *md structure from root in maps, get(relative) returns sorted list of file names @done
 	- sitemap generator
 	- description meta tag add
 	- improve <var> in docs
@@ -38,6 +38,8 @@ Lagarto/Jerry:
 	- Add form() for handling forms @done @v3.4.7
 	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
+	- Think about removing circ dep Node <-> Document
+	- Find JFLex faster alternaitve?
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done
