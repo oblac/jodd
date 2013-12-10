@@ -16,4 +16,13 @@ dependencies {
 	testCompile lib.mysql
 	testCompile lib.postgresql
 }
+
 optional = ['jodd-jtx', 'jodd-proxetta']
+
+// run db integration tests only through the suite
+// so we can control the embedded web server
+
+testIntegration {
+	scanForTestClasses false
+	include 'jodd/db/oom/*Suite.class'
+}

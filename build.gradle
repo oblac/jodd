@@ -115,6 +115,7 @@ configure(javaModules()) {
 	apply plugin: 'osgi'
 	apply plugin: 'maven'
 	apply plugin: 'signing'
+	apply plugin: 'idea'
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'
@@ -143,25 +144,29 @@ configure(javaModules()) {
 	// integration tests
 
 	sourceSets {
-		testIntegration {
-			java.srcDir file('src/test-integration/java')
-			resources.srcDir file('src/test-integration/resources')
+		testInt
+	}
+	idea {
+		module {
+			testSourceDirs += file('src/testInt/java')
+			testSourceDirs += file('src/testInt/resources')
+			scopes.TEST.plus += configurations.testIntCompile
 		}
 	}
 
 	dependencies {
-		testIntegrationCompile sourceSets.main.output
-		testIntegrationCompile configurations.testCompile
-		testIntegrationCompile sourceSets.test.output
-		testIntegrationRuntime configurations.testRuntime
+		testIntCompile sourceSets.main.output
+		testIntCompile configurations.testCompile
+		testIntCompile sourceSets.test.output
+		testIntRuntime configurations.testRuntime
 	}
 
 	task testIntegration(type: Test, dependsOn: jar) {
 		group 'verification'
 		description 'Runs the integration tests.'
 
-		testClassesDir = sourceSets.testIntegration.output.classesDir
-		classpath = sourceSets.testIntegration.runtimeClasspath
+		testClassesDir = sourceSets.testInt.output.classesDir
+		classpath = sourceSets.testInt.runtimeClasspath
 		systemProperties['jar.path'] = jar.archivePath
 	}
 
