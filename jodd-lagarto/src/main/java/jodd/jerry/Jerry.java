@@ -74,14 +74,10 @@ public class Jerry implements Iterable<Jerry> {
 		protected final DOMBuilder domBuilder;
 
 		public JerryParser() {
-			this.domBuilder = createLagartoDOMBuilder();
+			this.domBuilder = new LagartoDOMBuilder();
 		}
-
-		/**
-		 * Creates <code>LagartoDomBuilder</code> for parsing.
-		 */
-		protected LagartoDOMBuilder createLagartoDOMBuilder() {
-			return new LagartoDOMBuilder();
+		public JerryParser(DOMBuilder domBuilder) {
+			this.domBuilder = domBuilder;
 		}
 
 		/**
@@ -114,6 +110,14 @@ public class Jerry implements Iterable<Jerry> {
 	 */
 	public static JerryParser jerry() {
 		return new JerryParser();
+	}
+
+	/**
+	 * Creates new {@link jodd.jerry.Jerry.JerryParser Jerry runner} with
+	 * provided implementation of {@link jodd.lagarto.dom.DOMBuilder}.
+	 */
+	public static JerryParser jerry(DOMBuilder domBuilder) {
+		return new JerryParser(domBuilder);
 	}
 
 	// ---------------------------------------------------------------- ctor

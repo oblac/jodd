@@ -14,7 +14,7 @@ import static jodd.lagarto.LagartoParserUtil.subSequence;
 /**
  * Lagarto HTML/XML parser engine. Usage consist of two steps:
  * <ul>
- * <li>{@link #initialize(char[])}  initalization} with provided content</li>
+ * <li>{@link #initialize(char[])} initialization} with provided content</li>
  * <li>actual {@link #parse(TagVisitor) parsing} the content</li>
  * </ul>
  */
@@ -497,10 +497,6 @@ loop:	while (true) {
 			stepBack(token);
 
 			switch (token) {
-				case SLASH:
-					type = TagType.SELF_CLOSING;	// an empty tag, no body
-					nextToken();
-					break loop;
 				case GT:
 					break loop;
 				case XML_GT:
@@ -511,6 +507,16 @@ loop:	while (true) {
 				case EOF:
 					parseText(start, lexer.position());
 					return;
+				case SLASH:
+					nextToken();
+					// check if next token is GT
+					Token nextToken = nextToken();
+					stepBack(nextToken);
+					if (nextToken == Token.GT) {
+						type = TagType.SELF_CLOSING;	// an empty tag, no body
+						break loop;
+					}
+					break;
 				default:
 					// unexpected token, try to skip it!
 					String tokenText;

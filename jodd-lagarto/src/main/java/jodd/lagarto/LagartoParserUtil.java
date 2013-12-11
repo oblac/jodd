@@ -74,7 +74,13 @@ public class LagartoParserUtil {
 	 * Returned sequence is just a 'view' of the input char array.
 	 */
 	public static CharSequence subSequence(char[] chars, int from, int to) {
-		return CharBuffer.wrap(chars, from, to - from);
+		int len = to - from;
+		if (len == 0) {
+			return EMPTY_CHAR_SEQUENCE;
+		}
+		return CharBuffer.wrap(chars, from, len);
 	}
+
+	private static final CharSequence EMPTY_CHAR_SEQUENCE = CharBuffer.wrap(new char[0]);
 
 }

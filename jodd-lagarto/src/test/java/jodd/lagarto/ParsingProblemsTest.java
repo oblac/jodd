@@ -15,7 +15,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.CharBuffer;
 
 import static org.junit.Assert.*;
 
@@ -264,4 +263,29 @@ public class ParsingProblemsTest {
 
 		assertEquals(expectedResult, result);
 	}
+
+	@Test
+	public void testKelkoo() throws Exception {
+		File file = new File(testDataRoot, "kelkoo.html");
+		Jerry jerry;
+		try {
+			jerry = Jerry.jerry().parse(FileUtil.readString(file));
+		} catch (Exception ex) {
+			fail(ex.toString());
+			throw ex;
+		}
+
+		Element script = (Element) jerry.$("script").get(0);
+
+		assertEquals("script", script.getNodeName());
+		assertEquals(6, script.getAttributesCount());
+
+		assertEquals("src", script.getAttribute(0).getName());
+		assertEquals("data-config", script.getAttribute(1).getName());
+		assertEquals("ext\\u00e9rieur|barbecue,", script.getAttribute(2).getName());
+		assertEquals("planchaaccessoires\":\"http:\\", script.getAttribute(3).getName());
+		assertEquals("www.kelkoo.fr\"}'", script.getAttribute(4).getName());
+		assertEquals("data-adsense-append", script.getAttribute(5).getName());
+	}
+
 }
