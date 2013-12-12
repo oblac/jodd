@@ -4,9 +4,9 @@ package jodd.util;
 
 /**
  * <code>StringBand</code> is a faster alternative to <code>StringBuilder</code>.
- * Instead of adding strings, they are stored in internal array. Only at the
- * end of concatenation, when <code>toString</code> is invoked, strings are
- * joined together.
+ * Instead of adding strings, they are stored in an internal array. Only at the
+ * end of concatenation, when <code>toString()</code> is invoked, strings are
+ * joined together in a very fast manner.
  * <p>
  * To make <code>StringBand</code> even faster, predict the number of <b>joined</b>
  * strings (and not the final string size)!
@@ -221,29 +221,26 @@ public class StringBand {
 	/**
 	 * Joins together all strings into one.
 	 */
-	@SuppressWarnings("CallToStringConcatCanBeReplacedByOperator")
 	public String toString() {
 
 		// special cases
 		if (index == 0) {
 			return StringPool.EMPTY;
 		}
-		if (index == 1) {
-			return array[0];
-		}
-		if (index == 2) {
-			return array[0].concat(array[1]);
-		}
-		if (index == 3) {
-			return array[0].concat(array[1]).concat(array[2]);
-		}
 
 		// join strings
-		StringBuilder sb = new StringBuilder(length);
+		char[] destination = new char[length];
+		int start = 0;
 		for (int i = 0; i < index; i++) {
-			sb.append(array[i]);
+			String s = array[i];
+
+			int len = s.length();
+			s.getChars(0, len, destination, start);
+
+			start += len;
 		}
-		return sb.toString();
+
+		return new String(destination);
 	}
 
 	// ---------------------------------------------------------------- utils
