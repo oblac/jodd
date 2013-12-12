@@ -29,6 +29,42 @@ public class FindFileTest {
 	}
 
 	@Test
+	public void testTwoAccept() {
+		FindFile ff = new WildcardFindFile()
+						.include("**/*file/a.png")
+						.include("**/*file/a.txt")
+						.setRecursive(true)
+						.setIncludeDirs(true)
+						.searchPath(dataRoot);
+
+		int countFiles = 0;
+		int countDirs = 0;
+
+		File f;
+		while ((f = ff.nextFile()) != null) {
+			if (f.isDirectory() == true) {
+				countDirs++;
+			} else {
+				countFiles++;
+				String path = f.getAbsolutePath();
+				path = FileNameUtil.separatorsToUnix(path);
+				if (path.startsWith("/") == false) {
+					path = '/' + path;
+				}
+				boolean matched =
+						path.equals(dataRoot + "/file/a.png") ||
+								path.equals(dataRoot + "/file/a.txt");
+
+				assertTrue(matched);
+
+			}
+		}
+
+		assertEquals(0, countDirs);
+		assertEquals(2, countFiles);
+	}
+
+	@Test
 	public void testWildcardFile() {
 		FindFile ff = new WildcardFindFile()
 				.include("**/*file/a*")

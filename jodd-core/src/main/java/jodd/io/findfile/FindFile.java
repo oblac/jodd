@@ -396,25 +396,31 @@ public class FindFile<T extends FindFile> {
 	 * Determine if file is accepted, based on include and exclude
 	 * rules. Called on each file entry (file or directory) and
 	 * returns <code>true</code> if file passes search criteria.
-	 * Include rules are matched first, then exclude rules.
+	 * If exclude rules exist, file is matched against them.
+	 * If file matches one of the exclude rules, it will not be accepted.
+	 * Then the file matches includes rules, if they exist.
+	 * If file matches one of the includes rules, it will be accepted,
+	 * otherwise it will be rejected.
 	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
 	 */
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		if (includes != null) {
-			for (String pattern : includes) {
-				if (match(matchingFilePath, pattern) == false) {
-					return false;
-				}
-			}
-		}
 		if (excludes != null) {
 			for (String pattern : excludes) {
 				if (match(matchingFilePath, pattern) == true) {
 					return false;
 				}
 			}
+		}
+
+		if (includes != null) {
+			for (String pattern : includes) {
+				if (match(matchingFilePath, pattern) == true) {
+					return true;
+				}
+			}
+			return false;
 		}
 		return true;
 	}
