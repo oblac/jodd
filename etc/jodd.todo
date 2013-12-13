@@ -1,6 +1,7 @@
 General Tasks:
 	- Game over? @tbd
-	- Replace for-each loop with index loop, as it takes less space @tbd
+		Every once in a while, I take my head out of the clouds and do a reality check.
+	- Replace for-each loop with index loop, as it takes less space and is faster @tbd
 	- Add smart download in NetUtil
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
@@ -9,7 +10,7 @@ General Tasks:
 		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
-	- Check FileUtil.move/copy dir/file variants
+	- Check FileUtil.move/copy dir/file variants to be more performant
 		Try to see which variant is the fastest one. Noticed a slow execution in @sitegenerator
 	- ArraysUtil, remove merge for join @v3.4.5 @done
 	- getRawTypes() added @v3.4.5 @done
@@ -26,7 +27,7 @@ Site/Documentation:
 	- write about manual Madvoc config @next
 	SiteGenerator:
 	- add global props to javascript
-	- add start and end events, to perform something
+	- move next/prev logic to javascript @next
 	- load *md structure from root in maps, get(relative) returns sorted list of file names @done
 	- sitemap generator
 	- description meta tag add
@@ -40,6 +41,7 @@ Lagarto/Jerry:
 	- Improve LagartoDOM parser @v3.4.7 @done
 	- Think about removing circ dep Node <-> Document
 	- Find JFLex faster alternaitve?
+	- Use StringBand() @next
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done
