@@ -9,7 +9,7 @@ import jodd.proxetta.ProxyAspect;
 /**
  * Proxetta that creates proxies.
  */
-public class ProxyProxetta extends Proxetta {
+public class ProxyProxetta extends Proxetta<ProxyProxetta> {
 
 	protected final ProxyAspect[] aspects;
 

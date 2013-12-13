@@ -538,7 +538,6 @@ public abstract class DefaultAppCore {
 		petite.addBean(PETITE_DB, dbManager);
 
 		DbOomManager dbOomManager = DbOomManager.getInstance();
-		DbOomManager.setInstance(dbOomManager);
 		petite.addBean(PETITE_DBOOM, dbOomManager);
 
 		// automatic configuration

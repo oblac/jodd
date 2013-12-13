@@ -27,7 +27,8 @@ package jodd.proxetta;
  * </ul>
  * @see ProxettaBuilder
  */
-public abstract class Proxetta {
+@SuppressWarnings("unchecked")
+public abstract class Proxetta<T extends Proxetta> {
 
 	// ---------------------------------------------------------------- properties
 
@@ -42,8 +43,9 @@ public abstract class Proxetta {
 	 * matching pointcuts. If <code>false</code>, new proxy class will be created only if there is at least one
 	 * matching pointcut - otherwise, original class will be returned.
 	 */
-	public void setForced(boolean forced) {
+	public T setForced(boolean forced) {
 		this.forced = forced;
+		return (T) this;
 	}
 
 	public boolean isForced() {
@@ -55,8 +57,9 @@ public abstract class Proxetta {
 	 * Specifies classloaders for loading created classes.
 	 * If classloader not specified, default one will be used.
 	 */
-	public void setClassLoader(ClassLoader classLoader) {
+	public T setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
+		return (T) this;
 	}
 
 	/**
@@ -76,8 +79,9 @@ public abstract class Proxetta {
 	 * <p>
 	 * This prevents "<code>java.lang.LinkageError: duplicate class definition</code>" errors.
 	 */
-	public void setVariableClassName(boolean variableClassName) {
+	public T setVariableClassName(boolean variableClassName) {
 		this.variableClassName = variableClassName;
+		return (T) this;
 	}
 
 	public boolean isVariableClassName() {
@@ -90,8 +94,9 @@ public abstract class Proxetta {
 	 * Warning: when class name suffix is not used, full classname has to be
 	 * specified that differs from target class name.
 	 */
-	public void setClassNameSuffix(String suffix) {
+	public T setClassNameSuffix(String suffix) {
 		this.classNameSuffix = suffix;
+		return (T) this;
 	}
 
 	public String getClassNameSuffix() {
@@ -102,8 +107,9 @@ public abstract class Proxetta {
 	 * Specifies the debug folder where all created classes will be
 	 * written to, for debugging purposes.
 	 */
-	public void setDebugFolder(String debugFolder) {
+	public T setDebugFolder(String debugFolder) {
 		this.debugFolder = debugFolder;
+		return (T) this;
 	}
 
 	public String getDebugFolder() {

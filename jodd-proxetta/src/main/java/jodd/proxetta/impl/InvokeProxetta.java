@@ -9,7 +9,7 @@ import jodd.proxetta.Proxetta;
 /**
  * Proxetta that does method (i.e. invocation) replacements.
  */
-public class InvokeProxetta extends Proxetta {
+public class InvokeProxetta extends Proxetta<InvokeProxetta> {
 
 	protected final InvokeAspect[] invokeAspects;
 
