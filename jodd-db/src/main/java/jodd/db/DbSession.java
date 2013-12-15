@@ -69,13 +69,15 @@ public class DbSession {
 		log.debug("Closing db session");
 
 		List<SQLException> allsexs = null;
-		for (DbQueryBase query : queries) {
-            List<SQLException> sexs = query.closeQuery();
-			if (sexs != null) {
-				if (allsexs == null) {
-					allsexs = new ArrayList<SQLException>();
+		if (queries != null) {
+			for (DbQueryBase query : queries) {
+				List<SQLException> sexs = query.closeQuery();
+				if (sexs != null) {
+					if (allsexs == null) {
+						allsexs = new ArrayList<SQLException>();
+					}
+					allsexs.addAll(sexs);
 				}
-				allsexs.addAll(sexs);
 			}
 		}
 		if (connection != null) {
