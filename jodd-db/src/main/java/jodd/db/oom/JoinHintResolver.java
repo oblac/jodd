@@ -53,6 +53,7 @@ public class JoinHintResolver {
 		Object[] result = new Object[context.size()];
 		int count = 0;
 		for (int i = 0; i < hints.length; i++) {
+
 			String hint = hints[i];
 			int ndx = hint.indexOf('.');
 			if (ndx != -1) {
@@ -60,6 +61,11 @@ public class JoinHintResolver {
 				Object value = context.get(key);
 				if (value == null) {
 					throw new DbOomException("Hint key not found:" + key);
+				}
+
+				// don't merge nulls
+				if (data[i] == null) {
+					continue;
 				}
 
 				String hintPropertyName = hint.substring(ndx + 1);

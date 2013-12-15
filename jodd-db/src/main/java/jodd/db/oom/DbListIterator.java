@@ -42,6 +42,7 @@ class DbListIterator<T> implements Iterator<T> {
 	protected T newElement;
 	protected int count;
 	protected boolean last;
+	protected Boolean hasNext;
 
 	public void remove() {
 		throw new UnsupportedOperationException();
@@ -52,6 +53,40 @@ class DbListIterator<T> implements Iterator<T> {
 	 * available.
 	 */
 	public boolean hasNext() {
+		if (hasNext == null) {
+			hasNext = Boolean.valueOf(moveToNext());
+		}
+		return hasNext.booleanValue();
+	}
+
+	/**
+	 * Returns next mapped object.
+	 */
+	public T next() {
+		if (hasNext == null) {
+			hasNext = Boolean.valueOf(moveToNext());
+		}
+
+		if (!entityAwareMode) {
+			hasNext = null;
+			return newElement;
+		}
+
+		count++;
+
+		T result = previousElement;
+
+		previousElement = newElement;
+
+		hasNext = null;
+		return result;
+	}
+
+
+	/**
+	 * Moves to next element.
+	 */
+	private boolean moveToNext() {
 		if (last) {
 			// last has been set to true, so no more rows to iterate - close everything
 
@@ -107,23 +142,6 @@ class DbListIterator<T> implements Iterator<T> {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Returns next mapped object.
-	 */
-	public T next() {
-		if (!entityAwareMode) {
-			return newElement;
-		}
-
-		count++;
-
-		T result = previousElement;
-
-		previousElement = newElement;
-
-		return result;
 	}
 
 }
