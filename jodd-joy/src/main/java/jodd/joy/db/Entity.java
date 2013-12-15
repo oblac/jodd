@@ -2,6 +2,10 @@
 
 package jodd.joy.db;
 
+import jodd.util.HashCode;
+
+import static jodd.util.HashCode.SEED;
+
 /**
  * Abstract entity.
  */
@@ -37,8 +41,10 @@ public abstract class Entity {
 
 	@Override
 	public int hashCode() {
-		long value = getEntityId();
-		return (int)(value ^ (value >>> 32));
+		int hash = SEED;
+		hash = HashCode.hash(hash, getEntityId());
+		hash = HashCode.hash(hash, getClass());
+		return hash;
 	}
 
 	@Override
@@ -46,7 +52,7 @@ public abstract class Entity {
 		if (this == o) {
 			return true;
 		}
-		if (o instanceof Entity == false) {
+		if (o.getClass() != this.getClass()) {
 			return false;
 		}
 		Entity entity = (Entity) o;

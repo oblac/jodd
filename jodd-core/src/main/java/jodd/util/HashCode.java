@@ -9,7 +9,8 @@ package jodd.util;
  * Usage scenario:<br>
  * <pre>
  * int result = HashCodeUtil.SEED;
- * result = HashCodeUtil.hash(result, fIsDecrepit);
+ * result = HashCodeUtil.hash(result, value1);
+ * result = HashCodeUtil.hash(result, value2);
  * ...
  * return result;
  * </pre>
