@@ -11,8 +11,6 @@ import java.util.ArrayList;
  */
 public class JStopWatch {
 
-	private static final ThreadLocal<JStopWatch> THREAD_LOCAL = new ThreadLocal<JStopWatch>();
-
 	/**
 	 * Optional stopwatch name.
 	 */
@@ -38,50 +36,20 @@ public class JStopWatch {
 	 */
 	protected boolean running;
 
-	// ---------------------------------------------------------------- thread
-
-	/**
-	 * Puts current stopwatch in current thread.
-	 */
-	protected void assignToCurrentThread() {
-		THREAD_LOCAL.set(this);
-	}
-
-	/**
-	 * Returns thread-assigned stop watch.
-	 */
-	public static JStopWatch getThreadStopWatch() {
-		return THREAD_LOCAL.get();
-	}
-
 	// ---------------------------------------------------------------- ctors
 
 	/**
 	 * Starts the stopwatch.
 	 */
 	public JStopWatch() {
-		this(false);
-	}
-
-	public JStopWatch(boolean putInThread) {
-		this("#jStopWatch", putInThread);
+		this("#jStopWatch");
 	}
 
 	/**
 	 * Starts the named stopwatch.
 	 */
 	public JStopWatch(String name) {
-		this(name, false);
-	}
-
-	/**
-	 * Starts the stopwatch.
-	 */
-	public JStopWatch(String name, boolean assignToCurrentThread) {
 		this.name = name;
-		if (assignToCurrentThread) {
-			assignToCurrentThread();
-		}
 		start();
 	}
 
