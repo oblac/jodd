@@ -269,34 +269,6 @@ public class ServletUtil {
 		servletContext.setAttribute(contextPathVariableName, ctxPath);
 	}
 
-	// ---------------------------------------------------------------- page context thread
-
-	/**
-	 * Stores page context in current thread.
-	 * @see PageContextThreadLocal
-	 */
-	public static void storePageContextInThread(PageContext pageContext) {
-		PageContextThreadLocal.set(pageContext);
-	}
-
-	/**
-	 * Returns {@link #storePageContextInThread(javax.servlet.jsp.PageContext) previously stored}
-	 * page context from the current thread.
-	 */
-	public static PageContext getPageContextFromThread() {
-		return PageContextThreadLocal.get();
-	}
-
-	/**
-	 * Returns context path using page context from current thread.
-	 * @see PageContextThreadLocal
-	 */
-	public static String getContextPath() {
-		PageContext pageContext = PageContextThreadLocal.get();
-		return getContextPath(pageContext);
-	}
-
-
 	// ---------------------------------------------------------------- attributes and values
 
 	/**

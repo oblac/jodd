@@ -11,18 +11,7 @@
 	<short-name>joddfn</short-name>
 	<uri>/joddfn</uri>
 
-	<!-- page context -->
-
-	<function>
-		<description>
-			Stores page context into thread local variable.
-			Required for all alternative JSP tags/functions that
-			doesn't have the PageContext as an argument.
-		</description>
-		<name>storePageContextInThread</name>
-		<function-class>jodd.servlet.ServletUtil</function-class>
-		<function-signature>void storePageContextInThread(javax.servlet.jsp.PageContext)</function-signature>
-	</function>
+	<!-- servlet context -->
 
 	<function>
 		<description>
@@ -32,24 +21,6 @@
 		<name>storeContextPath</name>
 		<function-class>jodd.servlet.ServletUtil</function-class>
 		<function-signature>void storeContextPath(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<description>
-			Renders context path from page context stored in current thread.
-		</description>
-		<name>ctx</name>
-		<function-class>jodd.servlet.ServletUtil</function-class>
-		<function-signature>java.lang.String getContextPath()</function-signature>
-	</function>
-
-	<function>
-		<description>
-			Initializes page context.
-		</description>
-		<name>initPage</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>void initPage(javax.servlet.jsp.PageContext)</function-signature>
 	</function>
 
 	<!-- html encoder -->
@@ -85,11 +56,6 @@
 		<name>url</name>
 		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
 		<function-signature>java.lang.String url(java.lang.String,javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>url1</name>
-		<function-class>jodd.servlet.jspfn.JoddJspFunctions</function-class>
-		<function-signature>java.lang.String url1(java.lang.String)</function-signature>
 	</function>
 	<function>
 		<name>urlPath</name>
@@ -176,11 +142,6 @@
 		<name>prepareCsrfToken</name>
 		<function-class>jodd.servlet.CsrfShield</function-class>
 		<function-signature>java.lang.String prepareCsrfToken(javax.servlet.jsp.PageContext)</function-signature>
-	</function>
-	<function>
-		<name>prepareCsrfToken1</name>
-		<function-class>jodd.servlet.CsrfShield</function-class>
-		<function-signature>java.lang.String prepareCsrfToken()</function-signature>
 	</function>
 
 </taglib>

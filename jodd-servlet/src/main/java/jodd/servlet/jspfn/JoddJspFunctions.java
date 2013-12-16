@@ -21,22 +21,6 @@ import static jodd.util.StringPool.EMPTY;
  */
 public class JoddJspFunctions {
 
-	private static final String CTX_VAR_NAME = "CTX";
-
-	/**
-	 * Performs page initialization. The following is done:
-	 * <ul>
-	 * <li>PageContextThreadLocal is set</li>
-	 * <li>CTX request attribute is set with context path value</li>
-	 * <li>CTX context attribute is set with context path value</li>
-	 * </ul>
-	 */
-	public static void initPage(PageContext pageContext) {
-		ServletUtil.storePageContextInThread(pageContext);
-		ServletUtil.storeContextPath(pageContext, CTX_VAR_NAME);
-	}
-
-
 	// ---------------------------------------------------------------- string manipulation
 
 	public static String toUpperCase(String input) {
@@ -127,10 +111,6 @@ public class JoddJspFunctions {
 	}
 
 	// ---------------------------------------------------------------- url
-
-	public static String url1(String value) {
-		return url(value, ServletUtil.getPageContextFromThread());
-	}
 
 	public static String url(String value, PageContext pageContext) {
 		return url(value, JoddCore.encoding, (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());

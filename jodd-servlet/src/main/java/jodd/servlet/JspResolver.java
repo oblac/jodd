@@ -4,7 +4,6 @@ package jodd.servlet;
 
 import jodd.JoddBean;
 import jodd.bean.BeanUtil;
-import jodd.bean.BeanUtilBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -66,14 +65,6 @@ public class JspResolver {
 		return result(name, thisRef, value);
 	}
 
-	/**
-	 * Resolves value from scope using page context of this thread.
-	 */
-	public static Object resolveValue(String name) {
-		return value(name, ServletUtil.getPageContextFromThread());
-	}
-
-
 	// ---------------------------------------------------------------- resolves attributes
 
 
@@ -109,10 +100,6 @@ public class JspResolver {
 		}
 		return result(name, thisRef, value);
 
-	}
-
-	public static Object resolveAttribute(String attributeName) {
-		return attribute(attributeName, ServletUtil.getPageContextFromThread());
 	}
 
 	// ---------------------------------------------------------------- tools

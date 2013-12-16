@@ -50,10 +50,6 @@ public class CsrfShield {
 		return prepareCsrfToken(pageContext.getSession());
 	}
 
-	public static String prepareCsrfToken() {
-		return prepareCsrfToken(ServletUtil.getPageContextFromThread());
-	}
-
 	/**
 	 * @see #prepareCsrfToken(javax.servlet.http.HttpSession, int)
 	 */
