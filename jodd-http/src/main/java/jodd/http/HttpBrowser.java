@@ -55,7 +55,6 @@ public class HttpBrowser {
 			addCookies(httpRequest);
 
 			// send request
-			System.out.println(httpRequest);
 			this.httpResponse = httpRequest.send();
 
 			readCookies(httpResponse);
