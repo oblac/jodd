@@ -15,7 +15,7 @@ public class RequestContextListener implements ServletRequestListener {
 
 	public void requestInitialized(ServletRequestEvent requestEvent) {
 		if ((requestEvent.getServletRequest() instanceof HttpServletRequest) == false) {
-			throw new IllegalArgumentException("Request is not an HttpServletRequest: " + requestEvent.getServletRequest());
+			throw new IllegalArgumentException("Request is not a HttpServletRequest: " + requestEvent.getServletRequest());
 		}
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();
 		requestHolder.set(request);

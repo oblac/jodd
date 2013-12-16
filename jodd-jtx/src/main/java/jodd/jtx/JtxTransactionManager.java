@@ -14,7 +14,12 @@ import java.util.HashMap;
 
 /**
  * {@link JtxTransaction} manager is responsible for handling transaction
- * propagation and resource managers. It also holds various configuration data. .
+ * propagation and resource managers. Holds various JTX configuration data.
+ * <p>
+ * Note that transactions are hold inside a thread-local transaction stack.
+ * Therefore, if one transaction is created after the other during the
+ * same thread, the second transaction will be aware that it is 'after'
+ * the first one.
  */
 public class JtxTransactionManager {
 
@@ -26,12 +31,7 @@ public class JtxTransactionManager {
 	protected boolean ignoreScope;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
-	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<ArrayList<JtxTransaction>>() {
-		@Override
-		protected synchronized ArrayList<JtxTransaction> initialValue() {
-			return new ArrayList<JtxTransaction>();
-		}
-	};
+	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<ArrayList<JtxTransaction>>();
 
 	/**
 	 * Creates new transaction manager.
@@ -113,7 +113,11 @@ public class JtxTransactionManager {
 	 * Returns total number of transactions associated with current thread.
 	 */
 	public int totalThreadTransactions() {
-		return txStack.get().size();
+		ArrayList<JtxTransaction> txList = txStack.get();
+		if (txList == null) {
+			return 0;
+		}
+		return txList.size();
 	}
 
 	/**
@@ -121,6 +125,9 @@ public class JtxTransactionManager {
 	 */
 	public int totalThreadTransactionsWithStatus(JtxStatus status) {
 		ArrayList<JtxTransaction> txlist = txStack.get();
+		if (txlist == null) {
+			return 0;
+		}
 		int count = 0;
 		for (JtxTransaction tx : txlist) {
 			if (tx.getStatus() == status) {
@@ -142,7 +149,11 @@ public class JtxTransactionManager {
 	 * is associated with current thread.
 	 */
 	public boolean isAssociatedWithThread(JtxTransaction tx) {
-		return txStack.get().contains(tx);
+		ArrayList<JtxTransaction> txList = txStack.get();
+		if (txList == null) {
+			return false;
+		}
+		return txList.contains(tx);
 	}
 
 	// ---------------------------------------------------------------- thread work
@@ -150,11 +161,25 @@ public class JtxTransactionManager {
 	/**
 	 * Removes transaction association with current thread.
 	 * Transaction should be properly handled (committed or rolledback)
-	 * before removing from current thread. 
+	 * before removing from current thread.
+	 * Also removes thread list from this thread.
 	 */
 	protected boolean removeTransaction(JtxTransaction tx) {
-		totalTransactions--;
-		return txStack.get().remove(tx);
+		ArrayList<JtxTransaction> txList = txStack.get();
+		if (txList == null) {
+			return false;
+		}
+
+		boolean removed = txList.remove(tx);
+		if (removed) {
+			totalTransactions--;
+		}
+
+		if (txList.isEmpty()) {
+			txStack.remove();
+		}
+
+		return removed;
 	}
 
 
@@ -165,6 +190,9 @@ public class JtxTransactionManager {
 	 */
 	public JtxTransaction getTransaction() {
 		ArrayList<JtxTransaction> txlist = txStack.get();
+		if (txlist == null) {
+			return null;
+		}
 		if (txlist.isEmpty() == true) {
 			return null;
 		}
@@ -176,7 +204,12 @@ public class JtxTransactionManager {
 	 */
 	protected void associateTransaction(JtxTransaction tx) {
 		totalTransactions++;
-		txStack.get().add(tx);	// add last
+		ArrayList<JtxTransaction> txList = txStack.get();
+		if (txList == null) {
+			txList = new ArrayList<JtxTransaction>();
+			txStack.set(txList);
+		}
+		txList.add(tx);	// add last
 	}
 
 	protected int totalTransactions;
