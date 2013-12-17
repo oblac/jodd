@@ -147,4 +147,47 @@ public class DomXmlTest {
 
 		assertTrue(doc.check());
 	}
+
+	@Test
+	public void testAddDeleteModifyNode() throws IOException {
+		File file = new File(testDataRoot, "people.xml");
+		String xmlContent = FileUtil.readString(file);
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+		Document xml = lagartoDOMBuilder.parse(xmlContent);
+
+		// find all persons
+		NodeSelector nodeSelector = new NodeSelector(xml);
+		List<Node> persons = nodeSelector.select("person");
+
+		assertEquals(1, persons.size());
+		Node man = persons.get(0);
+		assertEquals("Fred Bloggs", man.getChild(0).getTextContent());
+
+		// update
+		man.getChild(0).getChild(0).setNodeValue("Just Joe");
+
+		// append
+		Element newPerson = new Element(xml, "person", false, false);
+		newPerson.addChild(new Element(xml, "name", false, false));
+		newPerson.getChild(0).addChild(new Text(xml, "Just Maria"));
+
+		man.getParentNode().addChild(newPerson);
+
+		xmlContent = xml.getHtml();	// yeah, its XML content
+
+		assertEquals(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+				"<people_list>" +
+					"<person>" +
+						"<name>Just Joe</name>" +
+						"<birthdate>2008-11-27</birthdate>" +
+						"<gender>Male</gender>" +
+					"</person>" +
+					"<person>" +
+						"<name>Just Maria</name>" +
+					"</person>" +
+				"</people_list>", xmlContent);
+	}
 }
