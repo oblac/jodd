@@ -19,14 +19,15 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	private int currentBufferIndex = -1;
 	private E[] currentBuffer;
 	private int offset;
-	private int count;
+	private int size;
+	private final int minChunkLen;
 
 	/**
 	 * Creates a new <code>E</code> buffer. The buffer capacity is
 	 * initially 1024 bytes, though its size increases if necessary.
 	 */
 	public FastBuffer() {
-		this(1024);
+		this.minChunkLen = 1024;
 	}
 
 	/**
@@ -40,39 +41,30 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 		if (size < 0) {
 			throw new IllegalArgumentException("Invalid size: " + size);
 		}
-		needNewBuffer(size);
+		this.minChunkLen = size;
 	}
 
-	private void needNewBuffer(int newCount) {
-		if (currentBufferIndex < buffersCount - 1) {	// recycling old buffer
-			offset = 0;
-			currentBufferIndex++;
-			currentBuffer = buffers[currentBufferIndex];
-		} else {										// creating new buffer
-			int newBufferSize;
-			if (currentBuffer == null) {
-				newBufferSize = newCount;
-			} else {
-				newBufferSize = Math.max(
-						currentBuffer.length << 1,
-						newCount - count);		// this will give no free additional space
+	/**
+	 * Prepares next chunk to match new size.
+	 * The minimal length of new chunk is <code>minChunkLen</code>.
+	 */
+	private void needNewBuffer(int newSize) {
+		int delta = newSize - size;
+		int newBufferSize = Math.max(minChunkLen, delta);
 
-			}
+		currentBufferIndex++;
+		currentBuffer = (E[]) new Object[newBufferSize];
+		offset = 0;
 
-			currentBufferIndex++;
-			currentBuffer = (E[]) new Object[newBufferSize];
-			offset = 0;
-
-			// add buffer
-			if (currentBufferIndex >= buffers.length) {
-				int newLen = buffers.length << 1;
-				E[][] newBuffers = (E[][]) new Object[newLen][];
-                System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
-                buffers = newBuffers;
-			}
-			buffers[currentBufferIndex] = currentBuffer;
-			buffersCount++;
+		// add buffer
+		if (currentBufferIndex >= buffers.length) {
+			int newLen = buffers.length << 1;
+			E[][] newBuffers = (E[][]) new Object[newLen][];
+			System.arraycopy(buffers, 0, newBuffers, 0, buffers.length);
+			buffers = newBuffers;
 		}
+		buffers[currentBufferIndex] = currentBuffer;
+		buffersCount++;
 	}
 
 	/**
@@ -81,27 +73,38 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	public FastBuffer<E> append(E[] array, int off, int len) {
 		int end = off + len;
 		if ((off < 0)
-				|| (off > array.length)
 				|| (len < 0)
-				|| (end > array.length)
-				|| (end < 0)) {
+				|| (end > array.length)) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (len == 0) {
 			return this;
 		}
-		int newCount = count + len;
+		int newSize = size + len;
 		int remaining = len;
-		while (remaining > 0) {
+
+		if (currentBuffer != null) {
+			// first try to fill current buffer
 			int part = Math.min(remaining, currentBuffer.length - offset);
 			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
 			remaining -= part;
 			offset += part;
-			count += part;
-			if (remaining > 0) {
-				needNewBuffer(newCount);
-			}
+			size += part;
 		}
+
+		if (remaining > 0) {
+			// still some data left
+			// ask for new buffer
+			needNewBuffer(newSize);
+
+			// then copy remaining
+			// but this time we are sure that it will fit
+			int part = Math.min(remaining, currentBuffer.length - offset);
+			System.arraycopy(array, end - remaining, currentBuffer, offset, part);
+			offset += part;
+			size += part;
+		}
+
 		return this;
 	}
 
@@ -116,13 +119,13 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Appends single <code>E</code> to buffer.
 	 */
 	public FastBuffer<E> append(E element) {
-		if (offset == currentBuffer.length) {
-			needNewBuffer(count + 1);
+		if ((currentBuffer == null) || (offset == currentBuffer.length)) {
+			needNewBuffer(size + 1);
 		}
 
 		currentBuffer[offset] = element;
 		offset++;
-		count++;
+		size++;
 
 		return this;
 	}
@@ -131,6 +134,9 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Appends another fast buffer to this one.
 	 */
 	public FastBuffer<E> append(FastBuffer<E> buff) {
+		if (buff.size == 0) {
+			return this;
+		}
 		for (int i = 0; i < buff.currentBufferIndex; i++) {
 			append(buff.buffers[i]);
 		}
@@ -142,14 +148,14 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Returns buffer size.
 	 */
 	public int size() {
-		return count;
+		return size;
 	}
 
 	/**
 	 * Tests if this buffer has no elements.
 	 */
 	public boolean isEmpty() {
-		return count == 0;
+		return size == 0;
 	}
 
 	/**
@@ -179,29 +185,32 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Resets the buffer content.
 	 */
 	public void clear() {
-		count = 0;
+		size = 0;
 		offset = 0;
-		currentBufferIndex = 0;
-		currentBuffer = buffers[currentBufferIndex];
-		buffersCount = 1;
+		currentBufferIndex = -1;
+		currentBuffer = null;
+		buffersCount = 0;
 	}
 
 	/**
 	 * Creates <code>E</code> array from buffered content.
 	 */
 	public E[] toArray() {
-		int remaining = count;
 		int pos = 0;
-		E[] array = (E[]) new Object[count];
-		for (E[] buf : buffers) {
-			int c = Math.min(buf.length, remaining);
-			System.arraycopy(buf, 0, array, pos, c);
-			pos += c;
-			remaining -= c;
-			if (remaining == 0) {
-				break;
-			}
+		E[] array = (E[]) new Object[size];
+
+		if (currentBufferIndex == -1) {
+			return array;
 		}
+
+		for (int i = 0; i < currentBufferIndex; i++) {
+			int len = buffers[i].length;
+			System.arraycopy(buffers[i], 0, array, pos, len);
+			pos += len;
+		}
+
+		System.arraycopy(buffers[currentBufferIndex], 0, array, pos, offset);
+
 		return array;
 	}
 
@@ -242,7 +251,7 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 	 * Returns <code>E</code> element at given index.
 	 */
 	public E get(int index) {
-		if (index >= count) {
+		if ((index >= size) || (index < 0)) {
 			throw new IndexOutOfBoundsException();
 		}
 		int ndx = 0;
@@ -276,11 +285,11 @@ public class FastBuffer<E> implements RandomAccess, Iterable<E> {
 			int iteratorOffset;
 
 			public boolean hasNext() {
-				return iteratorIndex < count;
+				return iteratorIndex < size;
 			}
 
 			public E next() {
-				if (iteratorIndex >= count) {
+				if (iteratorIndex >= size) {
 					throw new NoSuchElementException();
 				}
 				E[] buf = buffers[iteratorBufferIndex];
