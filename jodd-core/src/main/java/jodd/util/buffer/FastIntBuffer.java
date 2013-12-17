@@ -2,6 +2,8 @@ package jodd.util.buffer;
 
 /**
  * Fast, fast <code>int</code> buffer.
+ * This buffer implementation does not store all data
+ * in single array, but in array of chunks.
  */
 public class FastIntBuffer {
 

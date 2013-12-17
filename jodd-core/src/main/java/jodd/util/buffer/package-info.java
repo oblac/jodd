@@ -2,5 +2,7 @@
 
 /**
  * Fast, fast buffers.
+ * This buffer implementation does not store all data
+ * in single array, but in array of chunks.
  */
 package jodd.util.buffer;

@@ -8,6 +8,8 @@ import java.util.RandomAccess;
 
 /**
  * Fast, fast <code>E</code> buffer with additional features.
+ * This buffer implementation does not store all data
+ * in single array, but in array of chunks.
  */
 @SuppressWarnings("unchecked")
 public class FastBuffer<E> implements RandomAccess, Iterable<E> {

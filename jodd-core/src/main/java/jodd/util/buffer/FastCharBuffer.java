@@ -4,6 +4,8 @@ package jodd.util.buffer;
 
 /**
  * Fast, fast <code>char</code> buffer with some additional features.
+ * This buffer implementation does not store all data
+ * in single array, but in array of chunks.
  */
 public class FastCharBuffer implements CharSequence, Appendable {
 
@@ -291,13 +293,46 @@ public class FastCharBuffer implements CharSequence, Appendable {
 		return new StringBuilder(len).append(toArray(start, len));
 	}
 
-	// ---------------------------------------------------------------- additional appenders
+	// ---------------------------------------------------------------- additional
 
 	/**
 	 * Appends string content to buffer.
 	 */
 	public FastCharBuffer append(String string) {
-		return append(string.toCharArray());
+		int len = string.length();
+		if (len == 0) {
+			return this;
+		}
+
+		int end = offset + len;
+		int newSize = size + len;
+		int remaining = len;
+		int start = 0;
+
+		if (currentBuffer != null) {
+			// first try to fill current buffer
+			int part = Math.min(remaining, currentBuffer.length - offset);
+			string.getChars(0, part, currentBuffer, offset);
+			remaining -= part;
+			offset += part;
+			size += part;
+			start += part;
+		}
+
+		if (remaining > 0) {
+			// still some data left
+			// ask for new buffer
+			needNewBuffer(newSize);
+
+			// then copy remaining
+			// but this time we are sure that it will fit
+			int part = Math.min(remaining, currentBuffer.length - offset);
+			string.getChars(start, start + part, currentBuffer, offset);
+			offset += part;
+			size += part;
+		}
+
+		return this;
 	}
 
 	/**
