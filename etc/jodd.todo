@@ -42,6 +42,7 @@ Lagarto/Jerry:
 	- Think about removing circ dep Node <-> Document
 	- Find JFLex faster alternaitve?
 	- Use StringBand() @next
+	- Make Node api for adding more user friendly @next
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done

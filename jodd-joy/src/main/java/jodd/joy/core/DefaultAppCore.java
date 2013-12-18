@@ -237,7 +237,6 @@ public abstract class DefaultAppCore {
 	 * Starts the application and performs all initialization.
 	 */
 	public void start() {
-
 		init();
 
 		ready();
@@ -451,14 +450,22 @@ public abstract class DefaultAppCore {
 		petite.addBean(PETITE_SCAN, appScanner);
 
 		// automagic configuration
-		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
-		appScanner.configure(pcfg);
-		pcfg.configure(petite);
+		registerPetiteContainerBeans(petite);
 
 		// add AppCore instance to Petite
 		petite.addBean(PETITE_CORE, this);
 
 		petite.addBean(PETITE_PROPS, appProps);
+	}
+
+	/**
+	 * Configures Petite container. By default scans the class path
+	 * for petite beans and registers them automagically.
+	 */
+	protected void registerPetiteContainerBeans(PetiteContainer petiteContainer) {
+		AutomagicPetiteConfigurator pcfg = new AutomagicPetiteConfigurator();
+		appScanner.configure(pcfg);
+		pcfg.configure(petiteContainer);
 	}
 
 	/**
@@ -541,6 +548,14 @@ public abstract class DefaultAppCore {
 		petite.addBean(PETITE_DBOOM, dbOomManager);
 
 		// automatic configuration
+		registerDbEntities(dbOomManager);
+	}
+
+	/**
+	 * Registers DbOom entities. By default, scans the
+	 * class path and register entities automagically.
+	 */
+	protected void registerDbEntities(DbOomManager dbOomManager) {
 		AutomagicDbOomConfigurator dbcfg = new AutomagicDbOomConfigurator();
 		appScanner.configure(dbcfg);
 		dbcfg.configure(dbOomManager);
