@@ -74,7 +74,7 @@ public abstract class LagartoParserEngine {
 	}
 
 	/**
-	 * Resolves current position on {@link #error(String) parsing errors}
+	 * Resolves current position on {@link #error(StringBuilder)} parsing errors}
 	 * and for DOM elements. Note: this makes processing SLOW!
 	 * JFlex may be used to track current line and row, but that brings
 	 * overhead, and can't be easily disabled. By enabling this property,
