@@ -168,7 +168,16 @@ public class ActionRequest {
 		Object actionResult = invokeAction();
 
 		if (execState == 2) {
+			// all interceptor finished the job
 			if (interceptorIndex > 0) {
+				interceptorIndex--;
+			} else {
+				madvocController.render(this, actionResult);
+				execState = 3;
+			}
+		} else if (execState == 1) {
+			// some interceptor interrupted the flow
+			if (interceptorIndex > 1) {
 				interceptorIndex--;
 			} else {
 				madvocController.render(this, actionResult);
