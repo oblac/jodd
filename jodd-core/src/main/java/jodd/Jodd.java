@@ -13,6 +13,7 @@ public class Jodd {
 		httpLoaded = checkModule("http");
 		jtxLoaded = checkModule("jtx");
 		lagartoLoaded = checkModule("lagarto");
+		logLoaded = checkModule("log");
 		madvocLoaded = checkModule("madvoc");
 		mailLoaded = checkModule("mail");
 		petiteLoaded = checkModule("petite");
@@ -24,7 +25,7 @@ public class Jodd {
 	}
 
 	/**
-	 * Checks if some Jodd module is loaded.
+	 * Checks if Jodd module is loaded.
 	 */
 	private static boolean checkModule(String moduleName) {
 		ClassLoader classLoader = Jodd.class.getClassLoader();
@@ -45,6 +46,7 @@ public class Jodd {
 	private static final boolean httpLoaded;
 	private static final boolean jtxLoaded;
 	private static final boolean lagartoLoaded;
+	private static final boolean logLoaded;
 	private static final boolean madvocLoaded;
 	private static final boolean mailLoaded;
 	private static final boolean petiteLoaded;
@@ -74,6 +76,10 @@ public class Jodd {
 
 	public static boolean isLagartoLoaded() {
 		return lagartoLoaded;
+	}
+
+	public static boolean isLogLoaded() {
+		return logLoaded;
 	}
 
 	public static boolean isMadvocLoaded() {

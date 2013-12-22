@@ -1,0 +1,14 @@
+
+ext.moduleName = 'Jodd Log'
+ext.moduleDescription = 'Jodd Log is simple logging facade.'
+
+dependencies {
+	compile lib.log_slf4j
+	compile lib.log_jcl
+
+	testCompile project(':jodd-core')
+	testCompile lib.junit
+	testCompile lib.simpleLog
+}
+provided = [lib.log_slf4j, lib.log_jcl]
+optional = [lib.log_slf4j, lib.log_jcl]
