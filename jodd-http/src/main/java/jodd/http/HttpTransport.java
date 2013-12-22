@@ -11,39 +11,44 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 /**
- * Socket adapter for {@link HttpRequest}.
+ * Socket adapter used by {@link HttpRequest}.
  */
 public class HttpTransport {
 
 	protected Socket socket;
-	protected HttpRequest httpRequest;
 
  	/**
-	 * Creates new socket from current host and port.
+	 * Creates new socket from current {@link jodd.http.HttpRequest request}.
+	 * @see #createSocket(javax.net.SocketFactory, String, int)
 	 */
 	public Socket open(HttpRequest httpRequest) throws IOException {
-		this.httpRequest = httpRequest;
-
 		if (httpRequest.protocol().equals("https")) {
-			SocketFactory ssocketFactory = SSLSocketFactory.getDefault();
-			SSLSocket sslSocket = (SSLSocket) ssocketFactory.createSocket(httpRequest.host(), 443);
+			SSLSocket sslSocket = (SSLSocket) createSocket(
+					SSLSocketFactory.getDefault(), httpRequest.host(), 443);
 			sslSocket.startHandshake();
 
 			this.socket = sslSocket;
 		}
 		else {
-			this.socket = new Socket(httpRequest.host(), httpRequest.port());
+			this.socket = createSocket(
+					SocketFactory.getDefault(), httpRequest.host(), httpRequest.port());
 		}
 
 		return socket;
 	}
 
 	/**
+	 * Creates a socket with provided socket factory.
+	 */
+	protected Socket createSocket(SocketFactory socketFactory, String host, int port) throws IOException {
+		return socketFactory.createSocket(host, port);
+	}
+
+	/**
 	 * Opens sockets output stream and sends request data to it.
 	 * Returns parsed response.
 	 */
-	public HttpResponse send() throws IOException {
-
+	public HttpResponse send(HttpRequest httpRequest) throws IOException {
 		OutputStream outputStream = socket.getOutputStream();
 
 		httpRequest.sendTo(outputStream);

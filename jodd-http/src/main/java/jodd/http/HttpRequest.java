@@ -423,10 +423,11 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected HttpTransport httpTransport;
 
 	/**
-	 * Opens transport i.e. connection. Returns used {@link HttpTransport} implementation.
+	 * Opens transport using provided implementation
+	 * of {@link jodd.http.HttpTransport}.
 	 */
-	public HttpTransport open() {
-		httpTransport = new HttpTransport();
+	public HttpTransport open(HttpTransport httpTransport) {
+		this.httpTransport = httpTransport;
 
 		try {
 			httpTransport.open(this);
@@ -438,7 +439,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Opens request if not already open, sends request, reads response and closes the request.
+	 * Opens transport i.e. connection. Returns used {@link HttpTransport} implementation.
+	 */
+	public HttpTransport open() {
+		return this.open(new HttpTransport());
+	}
+
+	/**
+	 * {@link #open() Opens request} if not already open, sends request,
+	 * reads response and closes the request.
 	 */
 	public HttpResponse send() {
 		if (httpTransport == null) {
@@ -447,7 +456,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		HttpResponse httpResponse;
 		try {
-			httpResponse = httpTransport.send();
+			httpResponse = httpTransport.send(this);
 		} catch (IOException ioex) {
 			throw new HttpException(ioex);
 		}

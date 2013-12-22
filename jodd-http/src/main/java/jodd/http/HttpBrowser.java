@@ -92,6 +92,8 @@ public class HttpBrowser {
 		}
 	}
 
+	// ---------------------------------------------------------------- cookies
+
 	/**
 	 * Reads cookies from response.
 	 */

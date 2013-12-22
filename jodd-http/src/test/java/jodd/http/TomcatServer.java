@@ -5,7 +5,7 @@ package jodd.http;
 import org.apache.catalina.startup.Tomcat;
 
 /**
- * Madvoc Tomcat Server.
+ * Tomcat Server.
  */
 public class TomcatServer extends TestServer {
 
