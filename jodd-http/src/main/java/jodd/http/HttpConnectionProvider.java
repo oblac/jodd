@@ -9,6 +9,12 @@ import java.io.IOException;
  */
 public interface HttpConnectionProvider {
 
+	/**
+	 * Specifies {@link ProxyInfo proxy} for provide to use.
+	 */
+	public void useProxy(ProxyInfo proxyInfo);
+
+
  	/**
 	 * Creates new {@link HttpConnection}
 	 * from {@link jodd.http.HttpRequest request}.

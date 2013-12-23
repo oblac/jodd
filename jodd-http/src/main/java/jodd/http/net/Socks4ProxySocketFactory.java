@@ -3,6 +3,7 @@
 package jodd.http.net;
 
 import jodd.http.HttpException;
+import jodd.http.ProxyInfo;
 
 import javax.net.SocketFactory;
 import java.io.IOException;

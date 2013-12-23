@@ -22,7 +22,15 @@ public class HttpBrowser {
 	}
 
 	/**
+	 * Defines proxy for a browser.
+	 */
+	public void setProxyInfo(ProxyInfo proxyInfo) {
+		httpConnectionProvider.useProxy(proxyInfo);
+	}
+
+	/**
 	 * Defines {@link jodd.http.HttpConnectionProvider} for this browser session.
+	 * Resets the previous proxy definition, if set.
 	 */
 	public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
@@ -146,5 +154,4 @@ public class HttpBrowser {
 			httpRequest.header("cookie", cookieString.toString(), true);
 		}
 	}
-
 }

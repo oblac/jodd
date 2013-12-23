@@ -1,8 +1,6 @@
 // Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.http.net;
-
-import javax.net.SocketFactory;
+package jodd.http;
 
 /**
  * Proxy information.
@@ -98,20 +96,4 @@ public class ProxyInfo {
 		return proxyPassword;
 	}
 
-	/**
-	 * Returns socket factory based on socket
-	 */
-	public SocketFactory getSocketFactory() {
-		switch (proxyType) {
-			case NONE:
-				return SocketFactory.getDefault();
-			case HTTP:
-				return new HTTPProxySocketFactory(this);
-			case SOCKS4:
-				return new Socks4ProxySocketFactory(this);
-			case SOCKS5:
-				return new Socks5ProxySocketFactory(this);
-		}
-		return null;
-	}
 }

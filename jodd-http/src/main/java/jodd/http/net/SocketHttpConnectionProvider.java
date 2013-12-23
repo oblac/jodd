@@ -5,6 +5,7 @@ package jodd.http.net;
 import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
 import jodd.http.HttpRequest;
+import jodd.http.ProxyInfo;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -42,7 +43,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 			socket = sslSocket;
 		} else {
-			SocketFactory socketFactory = proxy.getSocketFactory();
+			SocketFactory socketFactory = getSocketFactory(proxy);
 
 			socket = createSocket(socketFactory, httpRequest.host(), httpRequest.port());
 		}
@@ -55,6 +56,23 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 */
 	protected Socket createSocket(SocketFactory socketFactory, String host, int port) throws IOException {
 		return socketFactory.createSocket(host, port);
+	}
+
+	/**
+	 * Returns socket factory based on proxy type.
+	 */
+	public SocketFactory getSocketFactory(ProxyInfo proxy) {
+		switch (proxy.getProxyType()) {
+			case NONE:
+				return SocketFactory.getDefault();
+			case HTTP:
+				return new HTTPProxySocketFactory(proxy);
+			case SOCKS4:
+				return new Socks4ProxySocketFactory(proxy);
+			case SOCKS5:
+				return new Socks5ProxySocketFactory(proxy);
+		}
+		return null;
 	}
 
 }
