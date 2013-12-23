@@ -2,6 +2,8 @@
 
 package jodd;
 
+import jodd.http.HttpConnectionProvider;
+import jodd.http.net.SocketHttpConnectionProvider;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
 
@@ -9,6 +11,11 @@ import jodd.util.StringPool;
  * Jodd HTTP module.
  */
 public class JoddHttp {
+
+	/**
+	 * Default HTTP transport provider.
+	 */
+	public static HttpConnectionProvider httpConnectionProvider = new SocketHttpConnectionProvider();
 
 	/**
 	 * Default HTTP query parameters encoding (UTF-8).

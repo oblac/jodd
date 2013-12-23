@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -420,50 +421,65 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- send
 
-	protected HttpTransport httpTransport;
+	protected HttpConnection httpConnection;
 
 	/**
-	 * Opens transport using provided implementation
-	 * of {@link jodd.http.HttpTransport}.
+	 * Returns {@link HttpConnection} that is going to be
+	 * used for sending this request. Value is available
+	 * ONLY after calling {@link #open()} and before {@link #send()}.
 	 */
-	public HttpTransport open(HttpTransport httpTransport) {
-		this.httpTransport = httpTransport;
+	public HttpConnection httpConnection() {
+		return httpConnection;
+	}
 
+	/**
+	 * Opens a new {@link HttpConnection connection} using
+	 * {@link jodd.JoddHttp#httpConnectionProvider default connection provider}.
+	 */
+	public HttpRequest open() {
+		return open(JoddHttp.httpConnectionProvider);
+	}
+
+	/**
+	 * Opens a new {@link jodd.http.HttpConnection connection}
+	 * using given {@link jodd.http.HttpConnectionProvider}.
+	 */
+	public HttpRequest open(HttpConnectionProvider httpConnectionProvider) {
 		try {
-			httpTransport.open(this);
+			httpConnection = httpConnectionProvider.createHttpConnection(this);
 		} catch (IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
-		return httpTransport;
+		return this;
 	}
 
 	/**
-	 * Opens transport i.e. connection. Returns used {@link HttpTransport} implementation.
-	 */
-	public HttpTransport open() {
-		return this.open(new HttpTransport());
-	}
-
-	/**
-	 * {@link #open() Opens request} if not already open, sends request,
+	 * {@link #open() Opens connection} if not already open, sends request,
 	 * reads response and closes the request.
 	 */
 	public HttpResponse send() {
-		if (httpTransport == null) {
+		if (httpConnection == null) {
 			open();
 		}
 
+		// sends data
 		HttpResponse httpResponse;
 		try {
-			httpResponse = httpTransport.send(this);
+			OutputStream outputStream = httpConnection.getOutputStream();
+
+			sendTo(outputStream);
+
+			InputStream inputStream = httpConnection.getInputStream();
+
+			httpResponse = HttpResponse.readFrom(inputStream);
 		} catch (IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
-		httpTransport.close();
+		httpConnection.close();
 
-		httpTransport = null;
+		httpConnection = null;
 
 		return httpResponse;
 	}

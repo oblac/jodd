@@ -60,7 +60,7 @@ public class PeriodTest {
 	@Test
 	public void testOneDay() {
 		JDateTime jdt1 = new JDateTime();
-		JDateTime jdt2 = new JDateTime();
+		JDateTime jdt2 = jdt1.clone();
 		jdt2.addDay(1);
 
 		Period period = new Period(jdt2, jdt1);
