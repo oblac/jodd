@@ -3,8 +3,9 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.petite.PetiteWebApplication;
 
-public class MyWebApplication extends WebApplication {
+public class MyWebApplication extends PetiteWebApplication {
 
 	@Override
 	public void registerMadvocComponents() {

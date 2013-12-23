@@ -28,4 +28,8 @@
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+	<listener>
+		<listener-class>jodd.servlet.RequestContextListener</listener-class>
+	</listener>
+
 </web-app>

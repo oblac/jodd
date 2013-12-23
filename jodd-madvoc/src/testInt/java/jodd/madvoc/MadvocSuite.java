@@ -3,6 +3,7 @@
 package jodd.madvoc;
 
 import jodd.exception.UncheckedException;
+import jodd.petite.scope.SessionScope;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -17,7 +18,8 @@ import org.junit.runners.Suite;
 		OneTwoActionTest.class,
 		IntcptActionTest.class,
 		RestActionTest.class,
-		FilterTest.class
+		FilterTest.class,
+		SessionScopeTest.class
 })
 public class MadvocSuite {
 
