@@ -5,9 +5,9 @@ package jodd.madvoc.injector;
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ScopeType;
 import jodd.servlet.CsrfShield;
-import jodd.servlet.HttpServletContextMap;
-import jodd.servlet.HttpServletRequestMap;
-import jodd.servlet.HttpSessionMap;
+import jodd.servlet.map.HttpServletContextMap;
+import jodd.servlet.map.HttpServletRequestMap;
+import jodd.servlet.map.HttpSessionMap;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
 

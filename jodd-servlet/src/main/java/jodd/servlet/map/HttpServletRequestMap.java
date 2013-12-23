@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet;
+package jodd.servlet.map;
 
 import jodd.util.CollectionUtil;
 import jodd.util.collection.StringKeyedMapAdapter;
