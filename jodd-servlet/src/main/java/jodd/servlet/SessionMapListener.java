@@ -10,14 +10,13 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-
 /**
  * Holds a Map of HttpSessions for sharing between the portlet and servlet.
  * The Map uses weak references to the HttpSession objects to ensure this
  * class does not cause any memory leaks if a session is not removed from
  * the map at the appropriate time.
  */
-public class SessionMappingListener implements HttpSessionListener {
+public class SessionMapListener implements HttpSessionListener {
 
     @SuppressWarnings({"unchecked"})
     private static final Map<String, HttpSession> sessionMap = new ReferenceMap(ReferenceType.STRONG, ReferenceType.WEAK);
