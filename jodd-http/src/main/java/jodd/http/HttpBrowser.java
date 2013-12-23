@@ -2,6 +2,8 @@
 
 package jodd.http;
 
+import jodd.JoddHttp;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,9 +12,21 @@ import java.util.Map;
  */
 public class HttpBrowser {
 
+	protected HttpConnectionProvider httpConnectionProvider;
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
 	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
+
+	public HttpBrowser() {
+		httpConnectionProvider = JoddHttp.httpConnectionProvider;
+	}
+
+	/**
+	 * Defines {@link jodd.http.HttpConnectionProvider} for this browser session.
+	 */
+	public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+		this.httpConnectionProvider = httpConnectionProvider;
+	}
 
 	/**
 	 * Returns last used request.
@@ -55,7 +69,7 @@ public class HttpBrowser {
 			addCookies(httpRequest);
 
 			// send request
-			this.httpResponse = httpRequest.send();
+			this.httpResponse = httpRequest.open(httpConnectionProvider).send();
 
 			readCookies(httpResponse);
 
