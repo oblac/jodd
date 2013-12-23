@@ -13,17 +13,17 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Socket-based {@link jodd.http.HttpConnectionProvider transport provider}.
+ * Socket factory for HTTP proxy.
  */
 public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
-	protected SocketFactory socketFactory = SocketFactory.getDefault();
+	protected ProxyInfo proxy = ProxyInfo.directProxy();
 
 	/**
 	 * Defines proxy to use for created sockets.
 	 */
-	public void useProxy(String proxyHost, int proxyPort) {
-		socketFactory = new ProxySocketFactory(proxyHost, proxyPort);
+	public void useProxy(ProxyInfo proxyInfo) {
+		proxy = proxyInfo;
 	}
 
 	/**
@@ -42,6 +42,8 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 
 			socket = sslSocket;
 		} else {
+			SocketFactory socketFactory = proxy.getSocketFactory();
+
 			socket = createSocket(socketFactory, httpRequest.host(), httpRequest.port());
 		}
 

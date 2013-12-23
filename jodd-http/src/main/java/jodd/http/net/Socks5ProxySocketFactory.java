@@ -1,0 +1,199 @@
+// Copyright (c) 2003-2013, Jodd Team (jodd.org). All Rights Reserved.
+
+package jodd.http.net;
+
+import jodd.http.HttpException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import javax.net.SocketFactory;
+
+/**
+ * Socket factory for SOCKS5 proxy.
+ *
+ * See: http://www.ietf.org/rfc/rfc1928.txt
+ */
+public class Socks5ProxySocketFactory extends SocketFactory {
+
+	private ProxyInfo proxy;
+
+	public Socks5ProxySocketFactory(ProxyInfo proxy) {
+		this.proxy = proxy;
+	}
+
+	public Socket createSocket(String host, int port) throws IOException {
+		return createSocks5ProxySocket(host, port);
+	}
+
+	public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+		return createSocks5ProxySocket(host, port);
+	}
+
+	public Socket createSocket(InetAddress host, int port) throws IOException {
+		return createSocks5ProxySocket(host.getHostAddress(), port);
+	}
+
+	public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+		return createSocks5ProxySocket(address.getHostAddress(), port);
+	}
+
+	private Socket createSocks5ProxySocket(String host, int port) throws IOException {
+		Socket socket = null;
+		String proxyAddress = proxy.getProxyAddress();
+		int proxyPort = proxy.getProxyPort();
+		String user = proxy.getProxyUsername();
+		String passwd = proxy.getProxyPassword();
+
+		try {
+			socket = new Socket(proxyAddress, proxyPort);
+			InputStream in = socket.getInputStream();
+			OutputStream out = socket.getOutputStream();
+
+			socket.setTcpNoDelay(true);
+
+			byte[] buf = new byte[1024];
+			int index = 0;
+
+			// 1) VERSION IDENT/METHOD SELECTION
+
+			buf[index++] = 5;
+
+			buf[index++] = 2;
+			buf[index++] = 0; // NO AUTHENTICATION REQUIRED
+			buf[index++] = 2; // USERNAME/PASSWORD
+
+			out.write(buf, 0, index);
+
+			// 2) RESPONSE
+			// in.read(buf, 0, 2);
+			fill(in, buf, 2);
+
+			boolean check = false;
+			switch ((buf[1]) & 0xff) {
+				case 0: // NO AUTHENTICATION REQUIRED
+					check = true;
+					break;
+				case 2: // USERNAME/PASSWORD
+					if (user == null || passwd == null) {
+						break;
+					}
+
+					// 3) USER/PASS REQUEST
+
+					index = 0;
+					buf[index++] = 1;
+					buf[index++] = (byte) (user.length());
+					System.arraycopy(user.getBytes(), 0, buf, index, user.length());
+
+					index += user.length();
+					buf[index++] = (byte) (passwd.length());
+					System.arraycopy(passwd.getBytes(), 0, buf, index, passwd.length());
+					index += passwd.length();
+
+					out.write(buf, 0, index);
+
+					// 4) RESPONSE, VERIFIED
+					// in.read(buf, 0, 2);
+					fill(in, buf, 2);
+					if (buf[1] == 0) {
+						check = true;
+					}
+					break;
+				default:
+			}
+
+			if (!check) {
+				try {
+					socket.close();
+				} catch (Exception ignore) {
+				}
+				throw new HttpException(ProxyInfo.ProxyType.SOCKS5, "check failed");
+			}
+
+			// 5) CONNECT
+
+			index = 0;
+			buf[index++] = 5;
+			buf[index++] = 1; // CONNECT
+			buf[index++] = 0;
+
+			byte[] hostb = host.getBytes();
+			int len = hostb.length;
+			buf[index++] = 3; // DOMAINNAME
+			buf[index++] = (byte) (len);
+			System.arraycopy(hostb, 0, buf, index, len);
+
+			index += len;
+			buf[index++] = (byte) (port >>> 8);
+			buf[index++] = (byte) (port & 0xff);
+
+			out.write(buf, 0, index);
+
+			// 6) RESPONSE
+
+			// in.read(buf, 0, 4);
+			fill(in, buf, 4);
+
+			if (buf[1] != 0) {
+				try {
+					socket.close();
+				} catch (Exception ignore) {
+				}
+				throw new HttpException(ProxyInfo.ProxyType.SOCKS5, "proxy returned " + buf[1]);
+			}
+
+			switch (buf[3] & 0xff) {
+				case 1:
+					// in.read(buf, 0, 6);
+					fill(in, buf, 6);
+					break;
+				case 3:
+					// in.read(buf, 0, 1);
+					fill(in, buf, 1);
+					// in.read(buf, 0, buf[0]+2);
+					fill(in, buf, (buf[0] & 0xff) + 2);
+					break;
+				case 4:
+					// in.read(buf, 0, 18);
+					fill(in, buf, 18);
+					break;
+				default:
+			}
+			return socket;
+
+		} catch (RuntimeException rttex) {
+			closeSocket(socket);
+			throw rttex;
+		} catch (Exception ex) {
+			closeSocket(socket);
+			throw new HttpException(ProxyInfo.ProxyType.SOCKS5, ex.toString(), ex);
+		}
+	}
+
+	private void fill(InputStream in, byte[] buf, int len) throws IOException {
+		int s = 0;
+		while (s < len) {
+			int i = in.read(buf, s, len - s);
+			if (i <= 0) {
+				throw new HttpException(ProxyInfo.ProxyType.SOCKS5, "stream is closed");
+			}
+			s += i;
+		}
+	}
+
+	/**
+	 * Closes socket silently.
+	 */
+	private void closeSocket(Socket socket) {
+		try {
+			if (socket != null) {
+				socket.close();
+			}
+		} catch (Exception ignore) {
+		}
+	}
+
+}

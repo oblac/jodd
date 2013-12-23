@@ -17,7 +17,15 @@ public class HttpException extends UncheckedException {
 		super(message);
 	}
 
+	public HttpException(Object networkObject, String message) {
+		super(networkObject.toString() + ": " + message);
+	}
+
 	public HttpException(String message, Throwable t) {
 		super(message, t);
+	}
+
+	public HttpException(Object networkObject, String message, Throwable t) {
+		super(networkObject.toString() + ": " + message, t);
 	}
 }
