@@ -15,14 +15,14 @@ public class RequestContextListener implements ServletRequestListener {
 
 	public void requestInitialized(ServletRequestEvent requestEvent) {
 		if ((requestEvent.getServletRequest() instanceof HttpServletRequest) == false) {
-			throw new IllegalArgumentException("Request is not a HttpServletRequest: " + requestEvent.getServletRequest());
+			throw new IllegalArgumentException("Not a HttpServletRequest: " + requestEvent.getServletRequest());
 		}
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();
 		requestHolder.set(request);
 	}
 
 	public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-		requestHolder.set(null);
+		requestHolder.remove();
 	}
 
 	/**

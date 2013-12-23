@@ -10,7 +10,6 @@ import jodd.petite.scope.ThreadLocalScope;
 import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Zoo;
-import jodd.servlet.HttpSessionListenerBroadcaster;
 import org.junit.Test;
 
 import java.util.concurrent.Semaphore;
@@ -69,7 +68,6 @@ public class ScopeTest {
 		Class[] acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
 		assertEquals(2, acceptedClasses.length);
 
-		new HttpSessionListenerBroadcaster();
 		SessionScope sessionScope = pc.resolveScope(SessionScope.class);
 
 		acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");

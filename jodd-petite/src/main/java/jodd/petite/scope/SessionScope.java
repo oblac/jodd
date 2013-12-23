@@ -4,74 +4,58 @@ package jodd.petite.scope;
 
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
-import jodd.servlet.HttpSessionListenerBroadcaster;
 import jodd.servlet.RequestContextListener;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Session scope stores unique object instances per single http session.
  * Upon creation, new session listener is registered (dynamically) that will
  * keep track on active sessions. {@link RequestContextListener} is used for accessing
- * the request and {@link HttpSessionListenerBroadcaster} is used for listening
- * session lifecycle.
+ * the request and the session. Session-scoped beans are stored in the session.
  */
 public class SessionScope implements Scope {
 
-	protected Map<String, Map<String, Object>> sessionInstances = new WeakHashMap<String, Map<String, Object>>();
-
-	protected final HttpSessionListenerBroadcaster sessionListeners;
+	private static final String ATTR_NAME = SessionScope.class.getName() + ".map";
 
 	/**
 	 * Session scope.
 	 */
 	public SessionScope(PetiteContainer petiteContainer) {
-		sessionListeners = HttpSessionListenerBroadcaster.getInstance();
-
-		if (sessionListeners == null) {
-			throw new PetiteException(HttpSessionListenerBroadcaster.class.getSimpleName() + " not available.");
-		}
-
-		sessionListeners.registerListener(new HttpSessionListener() {
-			public void sessionCreated(HttpSessionEvent httpSessionEvent) {
-				sessionInstances.put(httpSessionEvent.getSession().getId(), new HashMap<String, Object>());
-			}
-			public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-				sessionInstances.remove(httpSessionEvent.getSession().getId());
-			}
-		});
-
 		// register session scope on first usage
 		ThreadLocalScope threadLocalScope = petiteContainer.resolveScope(ThreadLocalScope.class);
 		threadLocalScope.acceptScope(SessionScope.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object lookup(String name) {
-		String sessionId = getHttpSessionId();
-		Map<String, Object> map = sessionInstances.get(sessionId);
+		HttpSession session = getCurrentHttpSession();
+		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
 		if (map == null) {
 			return null;
 		}
 		return map.get(name);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void register(String name, Object bean) {
-		String sessionId = getHttpSessionId();
-		Map<String, Object> map = sessionInstances.get(sessionId);
+		HttpSession session = getCurrentHttpSession();
+		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
 		if (map == null) {
 			map = new HashMap<String, Object>();
-			sessionInstances.put(sessionId, map);
+			session.setAttribute(ATTR_NAME, map);
 		}
 		map.put(name, bean);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void remove(String name) {
-		for (Map<String, Object> map : sessionInstances.values()) {
+		HttpSession session = getCurrentHttpSession();
+		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
+		if (map != null) {
 			map.remove(name);
 		}
 	}
@@ -88,7 +72,6 @@ public class SessionScope implements Scope {
 		}
 
 		return false;
-
 	}
 
 	// ---------------------------------------------------------------- util
@@ -96,12 +79,12 @@ public class SessionScope implements Scope {
 	/**
 	 * Returns request from current thread.
 	 */
-	protected String getHttpSessionId() {
+	protected HttpSession getCurrentHttpSession() {
 		HttpServletRequest request = RequestContextListener.getRequest();
 		if (request == null) {
-			throw new PetiteException("No HTTP request bound to the current thread. Maybe RequestContextListener is not available?");
+			throw new PetiteException("No HTTP request bound to the current thread. Is RequestContextListener registered?");
 		}
-		return request.getSession().getId();
+		return request.getSession();
 	}
 
 }
