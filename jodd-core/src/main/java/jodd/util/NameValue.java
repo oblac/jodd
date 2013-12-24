@@ -4,7 +4,6 @@ package jodd.util;
 
 /**
  * Simple name-value holder.
- * @see Tuple2
  */
 public class NameValue<N, V> {
 
