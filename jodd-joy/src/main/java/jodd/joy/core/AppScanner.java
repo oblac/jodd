@@ -4,8 +4,8 @@ package jodd.joy.core;
 
 import jodd.io.findfile.ClassFinder;
 import jodd.typeconverter.Convert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * <code>AppScanner</code> defines entries that will be included/excluded in

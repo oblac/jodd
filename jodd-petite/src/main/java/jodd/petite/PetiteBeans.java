@@ -13,8 +13,8 @@ import jodd.petite.scope.Scope;
 import jodd.props.Props;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

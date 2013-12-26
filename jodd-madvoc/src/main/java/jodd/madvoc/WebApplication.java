@@ -23,8 +23,8 @@ import java.lang.reflect.Modifier;
 import java.util.Properties;
 
 import jodd.props.Props;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * Web application contains all configurations and holds all managers and controllers of one web application.

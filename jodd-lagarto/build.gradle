@@ -4,9 +4,7 @@ ext.moduleDescription = 'Jodd Lagarto is fast and versatile all purpose HTML par
 
 dependencies {
 	compile project(':jodd-core')
-
-	compile lib.log
+	compile project(':jodd-log')
 
 	testCompile lib.junit
-	testCompile lib.simpleLog
 }

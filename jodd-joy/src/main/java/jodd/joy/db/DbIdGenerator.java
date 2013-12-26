@@ -7,8 +7,8 @@ import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbOomQuery;
 import jodd.mutable.MutableLong;
 import jodd.petite.meta.PetiteBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -5,8 +5,8 @@ package jodd.lagarto.filter;
 import jodd.io.FileNameUtil;
 import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

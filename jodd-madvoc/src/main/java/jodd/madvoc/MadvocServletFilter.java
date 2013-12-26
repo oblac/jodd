@@ -5,8 +5,8 @@ package jodd.madvoc;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.MadvocController;
 import jodd.servlet.DispatcherUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

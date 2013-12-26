@@ -9,8 +9,7 @@ dependencies {
 	compile project(':jodd-upload')
 	compile project(':jodd-servlet')
 	compile project(':jodd-petite')
-
-	compile lib.log
+	compile project(':jodd-log')
 
 	compile lib.servlet
 	compile lib.jsp

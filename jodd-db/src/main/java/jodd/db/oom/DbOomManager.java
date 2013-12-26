@@ -7,8 +7,8 @@ import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 
 import java.sql.ResultSet;

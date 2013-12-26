@@ -10,8 +10,8 @@ import static jodd.db.oom.DbOomQuery.query;
 import jodd.db.DbQuery;
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.meta.PetiteInject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.util.List;
 

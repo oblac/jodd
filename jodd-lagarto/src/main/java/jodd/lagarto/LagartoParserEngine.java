@@ -4,8 +4,8 @@ package jodd.lagarto;
 
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.io.IOException;
 

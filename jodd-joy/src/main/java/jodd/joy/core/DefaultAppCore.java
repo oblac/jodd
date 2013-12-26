@@ -30,8 +30,8 @@ import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.pointcuts.MethodAnnotationPointcut;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;

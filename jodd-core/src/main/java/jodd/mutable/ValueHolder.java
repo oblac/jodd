@@ -4,7 +4,6 @@ package jodd.mutable;
 
 /**
  * Generic mutable value holder for holding objects.
- * $Id$
  */
 public class ValueHolder<T> {
 

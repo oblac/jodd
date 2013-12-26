@@ -13,8 +13,8 @@ import jodd.servlet.DispatcherUtil;
 import jodd.servlet.ServletUtil;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;

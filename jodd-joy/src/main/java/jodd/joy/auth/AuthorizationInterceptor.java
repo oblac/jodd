@@ -8,8 +8,8 @@ import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.DispatcherUtil;
 import jodd.util.URLCoder;
 import jodd.util.StringPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -14,8 +14,8 @@ import jodd.props.Props;
 import jodd.props.PropsUtil;
 import jodd.typeconverter.Convert;
 import jodd.util.ClassLoaderUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;

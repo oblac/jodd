@@ -10,8 +10,8 @@ import jodd.petite.meta.PetiteInject;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.collection.SortedArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

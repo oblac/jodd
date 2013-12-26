@@ -7,8 +7,7 @@ dependencies {
 	compile project(':jodd-bean')
 	compile project(':jodd-jtx')
 	compile project(':jodd-proxetta')
-
-	compile lib.log
+	compile project(':jodd-log')
 
 	testCompile lib.junit
 	testCompile lib.hsqldb

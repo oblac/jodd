@@ -7,8 +7,8 @@ import jodd.servlet.DispatcherUtil;
 import jodd.servlet.wrapper.BufferResponseWrapper;
 import jodd.servlet.wrapper.LastModifiedData;
 import jodd.util.ClassLoaderUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

@@ -2,8 +2,8 @@
 
 package jodd.jtx;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import static jodd.jtx.JtxIsolationLevel.*;
 import static jodd.jtx.JtxStatus.STATUS_ACTIVE;

@@ -7,8 +7,8 @@ import jodd.io.StringInputStream;
 import jodd.util.collection.IntArrayList;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

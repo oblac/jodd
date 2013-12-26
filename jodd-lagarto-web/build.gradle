@@ -5,8 +5,7 @@ ext.moduleDescription = 'Jodd Lagarto for Web is Lagarto addons for web environm
 dependencies {
 	compile project(':jodd-lagarto')
 	compile project(':jodd-servlet')
-
-	compile lib.log
+	compile project(':jodd-log')
 
 	compile lib.servlet
 

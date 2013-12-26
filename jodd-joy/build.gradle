@@ -11,8 +11,7 @@ dependencies {
 	compile project(':jodd-db')
 	compile project(':jodd-proxetta')
 	compile project(':jodd-mail')
-
-	compile lib.log
+	compile project(':jodd-log')
 
 	testCompile lib.junit
 	testCompile lib.hsqldb

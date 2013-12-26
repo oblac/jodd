@@ -7,8 +7,8 @@ import jodd.jtx.JtxTransactionMode;
 import jodd.jtx.JtxException;
 import jodd.db.connection.ConnectionProvider;
 import jodd.db.DbSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * Database {@link jodd.jtx.JtxResourceManager} manages life-cycle of {@link jodd.db.DbSession} resources.

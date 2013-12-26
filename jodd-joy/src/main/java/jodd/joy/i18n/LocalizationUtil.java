@@ -4,8 +4,8 @@ package jodd.joy.i18n;
 
 import jodd.util.ResourceBundleMessageResolver;
 import jodd.util.LocaleUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;

@@ -7,8 +7,8 @@ import jodd.petite.PetiteException;
 import jodd.petite.meta.PetiteBean;
 import jodd.io.findfile.ClassFinder;
 import jodd.util.ClassLoaderUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;

@@ -3,8 +3,8 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;

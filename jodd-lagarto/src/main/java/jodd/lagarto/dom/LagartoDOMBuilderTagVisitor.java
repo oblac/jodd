@@ -7,8 +7,8 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagVisitor;
 import jodd.util.StringPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * Lagarto tag visitor that builds DOM tree.

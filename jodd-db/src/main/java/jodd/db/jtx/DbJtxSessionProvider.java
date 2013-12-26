@@ -6,8 +6,8 @@ import jodd.db.DbSessionProvider;
 import jodd.db.DbSession;
 import jodd.db.DbSqlException;
 import jodd.jtx.JtxTransactionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * Returns session from the db {@link JtxTransactionManager transaction manager},

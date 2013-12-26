@@ -6,8 +6,8 @@ import jodd.Jodd;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.SingletonScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 
 /**
  * Petite configuration.
