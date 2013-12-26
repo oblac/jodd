@@ -1,13 +1,12 @@
 General Tasks:
 	- Game over? @tbd
 		Every once in a while, I take my head out of the clouds and do a reality check.
-	- Replace for-each loop with index loop, as it takes less space and is faster @tbd
+	- Replace for-each loop with index/while loop, as it takes less space and is faster @tbd
 	- Add smart download in NetUtil
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
 	- Add more TypeConverters! @next @v3.4.8 @done
-		See that json lib used in other project - nice list of possible converters
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
 	- Check FileUtil.move/copy dir/file variants to be more performant
@@ -17,8 +16,7 @@ General Tasks:
 	- FindFile with includes/excludes @v3.4.5 @done
 	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
 	- URLCoder improved @done @v3.4.7
-	- ReThink log dependency @soon 
-		SLF4J has week interface - ie it does not have general log methods - but it has many with specific Markers.
+	- ReThink log dependency @done
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- migrate from google groups to nabble? getsatisfied? anything? @tbd
@@ -39,17 +37,17 @@ Lagarto/Jerry:
 	- Add form() for handling forms @done @v3.4.7
 	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
-	- Think about removing circ dep Node <-> Document
+	- Think about removing circluar dep Node <-> Document
 	- Find JFLex faster alternaitve?
 	- Use StringBand() @next
-	- Make Node api for adding more user friendly @next
+	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done
 	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
 	- Remove 2 introspector implementations @v3.4.9 @done
 	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
-	- Special case when getter is in subclass and setter is in superclass (with and without overding) @v3.4.10
+	- Special case when getter is in subclass and setter is in superclass (with and without overding) @next
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
 	- Add abstract descriptor class @v3.4.9 @done
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
@@ -71,7 +69,7 @@ Madvoc:
 	- Check AnnotatedFieldInterceptor, how it works @test
 	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
 		For example, it may choose if extension is "json" or not based on class name.
-	- Error 404 to contain info about missing page @next @v3.4.10
+	- Error 404 to contain info about missing page @next
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Prevent memory leak for un-existing pages in suplement mode @hot
 	- Multiple roots mapped to different paths @done @v3.4.5
@@ -80,7 +78,7 @@ EMail:
 	- Add support for EML attachments @done @v3.4.7
 	- Add util to parse EML! @done @v3.4.7
 	- Fix various NPEs @done @v3.4.8
-	- Add callback method for receive() @next @v3.4.10
+	- Add callback method for receive() @next
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
@@ -117,7 +115,7 @@ Joy:
 	- Localization arguments, {0}, {1}…
 	- Don't encode text tags in resource bundles
 	- Pager, do sort @review
-	- AppCore, add optional scanning, so to allow manual registration @next
+	- AppCore, add optional scanning, so to allow manual registration @done
 Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5

@@ -3,6 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParser;
+import jodd.log.Logger;
 import jodd.util.StringUtil;
 
 /**
@@ -37,7 +38,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	protected String[] voidTags = HTML5_VOID_TAGS;
 	protected boolean impliedEndTags;
 	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
-	protected int parsingErrorLogLevel = 4;
+	protected Logger.Level parsingErrorLogLevel = Logger.Level.WARN;
 
 	// special flags
 	protected boolean useFosterRules;
@@ -225,9 +226,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	}
 
 	/**
-	 * Returns parsing error log level as a integer.
+	 * Returns parsing error log level.
 	 */
-	public int getParsingErrorLogLevel() {
+	public Logger.Level getParsingErrorLogLevel() {
 		return parsingErrorLogLevel;
 	}
 
@@ -237,17 +238,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	public void setParsingErrorLogLevelName(String logLevel) {
 		logLevel = logLevel.trim().toUpperCase();
 
-		if (logLevel.equals("ERROR")) {
-			parsingErrorLogLevel = 5;
-		} else if (logLevel.equals("WARN")) {
-			parsingErrorLogLevel = 4;
-		} else if (logLevel.equals("INFO")) {
-			parsingErrorLogLevel = 3;
-		} else if (logLevel.equals("DEBUG")) {
-			parsingErrorLogLevel = 2;
-		} else if (logLevel.equals("TRACE")) {
-			parsingErrorLogLevel = 1;
-		}
+		parsingErrorLogLevel = Logger.Level.valueOf(logLevel);
 	}
 
 	// ---------------------------------------------------------------- quick settings
