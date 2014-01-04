@@ -5,12 +5,14 @@ package jodd.db.oom;
 import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
-import jodd.db.oom.tst.Tester;
 import jodd.db.pool.CoreConnectionPool;
 import jodd.util.SystemUtil;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Abstract common DB integration test class.
+ */
 public abstract class DbBaseTest {
 
 	public static final String DB_NAME = "jodd-test";
@@ -29,9 +31,7 @@ public abstract class DbBaseTest {
 
 	protected void connect() {
 		connectionPool.init();
-
 		DbManager.getInstance().setConnectionProvider(connectionPool);
-		dboom.registerEntity(Tester.class);
 	}
 
 	// ---------------------------------------------------------------- dbaccess

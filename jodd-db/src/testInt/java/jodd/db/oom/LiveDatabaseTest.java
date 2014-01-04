@@ -91,7 +91,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 	// ---------------------------------------------------------------- test
 
 	@Test
-	public void testDb() throws Exception {
+	public void testLiveDb() throws Exception {
 
 		for (int i = 0; i < 2; i++) {
 			boolean strict = i == 0;
@@ -101,6 +101,9 @@ public class LiveDatabaseTest extends DbBaseTest {
 				init(strict);
 				db.initDb();
 				connect();
+
+				dboom.registerEntity(Tester.class);
+
 				db.createTables();
 
 				try {

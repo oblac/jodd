@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-		LiveDatabaseTest.class
+		LiveDatabaseTest.class,
+		LiveMapperDbTest.class
 })
 public class DbSuite {
 }
