@@ -122,7 +122,7 @@ public class LiveMapperDbTest extends DbBaseTest {
 		tester2.id = 1;
 		tester2.name = "Hello";
 		tester2.value = Integer.valueOf(123);
-		tester2.time = new JDateTime(2014, 1, 30, 10, 42, 34, 987).convertToSqlTimestamp();
+		tester2.time = new JDateTime(2014, 1, 30, 10, 42, 34, 0).convertToSqlTimestamp();
 
 		DbOomQuery dbOomQuery = DbOomQuery.query(session, DbEntitySql.insert(tester2));
 		dbOomQuery.setGeneratedKey();
@@ -143,6 +143,9 @@ public class LiveMapperDbTest extends DbBaseTest {
 		assertNotNull(tester21);
 
 		assertEquals(tester2.id, tester21.id);
+		assertEquals(tester2.value, tester21.value);
+		assertEquals(tester2.name, tester21.name);
+		assertEquals(tester2.time, tester21.time);
 
 		session.closeSession();
 	}
