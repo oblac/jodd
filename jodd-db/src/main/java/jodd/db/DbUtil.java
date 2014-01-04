@@ -2,6 +2,7 @@
 
 package jodd.db;
 
+import jodd.db.type.SqlType;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.TypeConverterManager;
 
@@ -123,7 +124,11 @@ public class DbUtil {
 				break;
 
 			default:
-				preparedStatement.setObject(index, value, targetSqlType);
+				if (targetSqlType != SqlType.DB_SQLTYPE_NOT_AVAILABLE) {
+					preparedStatement.setObject(index, value, targetSqlType);
+				} else {
+					preparedStatement.setObject(index, value);
+				}
 		}
 
 

@@ -14,6 +14,19 @@ import java.sql.ResultSet;
  */
 public abstract class SqlType<T> {
 
+	/**
+	 * Indicator for not yet resolved DB SQL type.
+	 */
+	public static final int DB_SQLTYPE_UNKNOWN = Integer.MAX_VALUE;
+
+	/**
+	 * Indicator for unavailable DB SQL type. Used usually when sql type is not
+	 * available by JDBC meta data or when column can not be matched
+	 * (due to case-mismatching).
+	 */
+	public static final int DB_SQLTYPE_NOT_AVAILABLE = Integer.MIN_VALUE;
+
+
 	protected Class<T> sqlType;
 
 	@SuppressWarnings({"unchecked"})

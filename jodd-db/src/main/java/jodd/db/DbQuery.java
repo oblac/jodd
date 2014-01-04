@@ -947,7 +947,7 @@ s	 */
 			sqlType = SqlTypeManager.lookup(value.getClass());
 		}
 		try {
-			if (sqlType != null) {
+			if ((sqlType != null) && (dbSqlType != SqlType.DB_SQLTYPE_NOT_AVAILABLE)) {
 				sqlType.storeValue(preparedStatement, index, value, dbSqlType);
 			} else {
 				DbUtil.setPreparedStatementObject(preparedStatement, index, value, dbSqlType);

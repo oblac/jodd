@@ -7,6 +7,7 @@ import jodd.db.DbSession;
 import jodd.db.DbUtil;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
+import jodd.db.type.SqlType;
 import jodd.util.StringUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -142,7 +143,7 @@ public class DbOomQuery extends DbQuery {
 	 * Resolves column db sql type and populates it in column descriptor if missing.
 	 */
 	protected void resolveColumnDbSqlType(Connection connection, DbEntityColumnDescriptor dec) {
-		if (dec.dbSqlType != DbEntityColumnDescriptor.DB_SQLTYPE_UNKNOWN) {
+		if (dec.dbSqlType != SqlType.DB_SQLTYPE_UNKNOWN) {
 			return;
 		}
 		ResultSet rs = null;
@@ -153,13 +154,13 @@ public class DbOomQuery extends DbQuery {
 			if (rs.next()) {
 				dec.dbSqlType = rs.getInt("DATA_TYPE");
 			} else {
-				dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
+				dec.dbSqlType = SqlType.DB_SQLTYPE_NOT_AVAILABLE;
 				if (log.isWarnEnabled()) {
 					log.warn("Column SQL type not available: " + ded.toString() + '.' + dec.getColumnName());
 				}
 			}
 		} catch (SQLException sex) {
-			dec.dbSqlType = DbEntityColumnDescriptor.DB_SQLTYPE_NOT_AVAILABLE;
+			dec.dbSqlType = SqlType.DB_SQLTYPE_NOT_AVAILABLE;
 			if (log.isWarnEnabled()) {
 				log.warn("Column SQL type not resolved: " + ded.toString() + '.' + dec.getColumnName(), sex);
 			}
