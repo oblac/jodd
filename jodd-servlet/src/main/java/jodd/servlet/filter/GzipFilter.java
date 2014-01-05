@@ -6,6 +6,7 @@ import jodd.io.FileNameUtil;
 import jodd.servlet.ServletUtil;
 import jodd.typeconverter.Convert;
 import jodd.typeconverter.TypeConversionException;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
@@ -36,7 +37,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <li><code>extensions</code> - when <b>match</b> is set to all resources,
  * this parameter defines list of URI extensions that should be gzipped.
- * By default set to: <code>html, htm, css, js</code>.
+ * By default set to: <code>html, htm, css, js</code>. Use '<b>*</b>' to
+ * match all extensions.
  * </li>
  *
  * <li><code>exclude</code> - comma separated string patterns to be excluded
@@ -114,7 +116,7 @@ public class GzipFilter implements Filter {
 		// match string
 		String uriMatch = config.getInitParameter("match");
 
-		if ((uriMatch != null) && (uriMatch.equals("*") == false)) {
+		if ((uriMatch != null) && (uriMatch.equals(StringPool.STAR) == false)) {
 			matches = StringUtil.splitc(uriMatch, ',');
 			for (int i = 0; i < matches.length; i++) {
 				matches[i] = matches[i].trim();
@@ -145,7 +147,11 @@ public class GzipFilter implements Filter {
 		String urlExtensions = config.getInitParameter("extensions");
 
 		if (urlExtensions != null) {
-			extensions = StringUtil.splitc(urlExtensions, ", ");
+			if (urlExtensions.equals(StringPool.STAR)) {
+				extensions = null;
+			} else {
+				extensions = StringUtil.splitc(urlExtensions, ", ");
+			}
 		} else {
 			extensions = new String[] {"html", "htm", "js", "css"};
 		}
@@ -153,8 +159,6 @@ public class GzipFilter implements Filter {
 	}
 
 	public void destroy() {
-		matches = null;
-		excludes = null;
 	}
 
 	/**
@@ -185,7 +189,10 @@ public class GzipFilter implements Filter {
 
 		// check uri
 
-		if (matches == null) {							// match=*
+		if (matches == null) {					// match == *
+			if (extensions == null) {			// extensions == *
+				return true;
+			}
 			// extension
 			String extension = FileNameUtil.getExtension(uri);
 
