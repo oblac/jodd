@@ -2,6 +2,7 @@
 
 package jodd.db.oom;
 
+import jodd.datetime.JDateTime;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
@@ -18,4 +19,6 @@ public class Tester2 {
 	public Integer value;
 	@DbColumn
 	public Timestamp time;
+	@DbColumn
+	public JDateTime time2;
 }

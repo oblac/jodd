@@ -95,7 +95,7 @@ public abstract class DbBaseTest {
 	 */
 	public abstract class PostgreSqlDbAccess extends DbAccess {
 
-		public final void initDb() {
+		public void initDb() {
 			connectionPool.setDriver("org.postgresql.Driver");
 			connectionPool.setUrl("jdbc:postgresql://localhost/" + DB_NAME);
 			connectionPool.setUser("postgres");
