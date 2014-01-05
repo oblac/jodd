@@ -147,7 +147,7 @@ public class GzipFilter implements Filter {
 		if (urlExtensions != null) {
 			extensions = StringUtil.splitc(urlExtensions, ", ");
 		} else {
-			extensions = new String[] {"html", "html", "js", "css"};
+			extensions = new String[] {"html", "htm", "js", "css"};
 		}
 
 	}
