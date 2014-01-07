@@ -171,6 +171,7 @@ public class PropsTest {
 	@Test
 	public void testMacros() throws IOException {
 		Props p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
 
 		assertEquals("/app/data", p.getValue("data.path"));
@@ -184,6 +185,32 @@ public class PropsTest {
 		p.extractProps(prop, "@prof2");
 		assertEquals("/foo/data3", prop.getProperty("data.path"));
 	}
+
+	@Test
+	public void testMacrosNew() throws IOException {
+		Props p = new Props();
+		p.load(readDataFile("test2.props"));
+
+		assertEquals("/app/data", p.getValue("data.path"));
+		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
+		assertEquals("/app/data3", p.getValue("data.path", "@prof2"));
+
+		assertEquals("/app/re", p.getValue("data.path", "@p1"));
+		assertEquals("/app/re", p.getValue("data.path", "@p2"));
+
+		Properties prop = new Properties();
+		p.extractProps(prop, "@prof2");
+		assertEquals("/app/data3", prop.getProperty("data.path"));
+
+		// activate profiles
+
+		p.setActiveProfiles("@prof2");
+		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
+
+		p.setActiveProfiles("@p1", "@p2");
+		assertEquals("/roo/re", p.getValue("data.path", "@p2"));
+	}
+
 
 	@Test
 	public void testMacros2() throws IOException {
@@ -237,6 +264,7 @@ public class PropsTest {
 	@Test
 	public void testClone() throws IOException {
 		Props p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
 
 		Props p2 = p.clone();
@@ -604,6 +632,185 @@ public class PropsTest {
 		assertEquals("one", p.getValue("org.jodd.Foo@Bar"));
 		assertEquals("two", p.getValue("org.jodd.Foo@*Bar"));
 		assertEquals("three", p.getValue("org.jodd.Foo@*Bar#me"));
+	}
+
+	@Test
+	public void testMultipleProfilesAtOnce() {
+		Props p = new Props();
+		p.load(
+				"foo.one=111\n" +
+				"foo.one<pr1>=111222\n" +
+				"foo.one<pr2>=111222333\n"
+		);
+
+		p.setActiveProfiles(null);
+		assertEquals("111", p.getValue("foo.one"));
+
+		p.setActiveProfiles("pr1");
+		assertEquals("111222", p.getValue("foo.one"));
+
+		p.setActiveProfiles("pr2");
+		assertEquals("111222333", p.getValue("foo.one"));
+
+		p.setActiveProfiles("pr1", "pr2");
+		assertEquals("111222", p.getValue("foo.one"));
+
+		p.setActiveProfiles("pr2", "pr1");
+		assertEquals("111222333", p.getValue("foo.one"));
+	}
+
+	@Test
+	public void testMacrosAndProfiles() {
+		Props p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(true);
+		p.load(
+				"one=111\n" +
+				"one<pr1>=111222\n" +
+				"one<pr2>=111222333\n" +
+				"wow=${one}"
+		);
+
+		p.setActiveProfiles(null);
+		assertEquals("111", p.getValue("wow"));
+
+		p.setActiveProfiles("pr1");
+		assertEquals("111222", p.getValue("wow"));
+
+		p.setActiveProfiles("pr2");
+		assertEquals("111222333", p.getValue("wow"));
+
+		p.setActiveProfiles("pr1", "pr2");
+		assertEquals("111222", p.getValue("wow"));
+	}
+
+	@Test
+	public void testMacrosAndProfilesAsBefore() {
+		Props p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(false);
+		p.load(
+				"one=111\n" +
+				"one<pr1>=111222\n" +
+				"one<pr2>=111222333\n" +
+				"wow=${one}"
+		);
+
+		p.setActiveProfiles(null);
+		assertEquals("111", p.getValue("wow"));
+
+		p.setActiveProfiles("pr1");
+		assertEquals("111", p.getValue("wow"));
+
+		p.setActiveProfiles("pr2");
+		assertEquals("111", p.getValue("wow"));
+
+		p.setActiveProfiles("pr1", "pr2");
+		assertEquals("111", p.getValue("wow"));
+
+		// wow needs to be defined in a profile to get the profile value in macro
+
+		p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(false);
+		p.load(
+				"one=111\n" +
+				"one<pr1>=111222\n" +
+				"one<pr2>=111222333\n" +
+				"wow<pr1>=${one}"
+		);
+
+		p.setActiveProfiles(null);
+		assertEquals(null, p.getValue("wow"));
+
+		p.setActiveProfiles("pr1");
+		assertEquals("111222", p.getValue("wow"));
+
+		p.setActiveProfiles("pr2");
+		assertEquals(null, p.getValue("wow"));
+
+		p.setActiveProfiles("pr1", "pr2");
+		assertEquals("111222", p.getValue("wow"));
+
+
+		p = new Props();
+		p.setUseActiveProfilesWhenResolvingMacros(false);
+		p.load(
+				"one=111\n" +
+				"one<pr1>=111222\n" +
+				"one<pr2>=111222333\n" +
+				"wow<pr1><pr2>=${one}"
+		);
+
+		p.setActiveProfiles(null);
+		assertEquals(null, p.getValue("wow"));
+
+		p.setActiveProfiles("pr1");
+		assertEquals("111222", p.getValue("wow"));
+
+		p.setActiveProfiles("pr2");
+		assertEquals("111222333", p.getValue("wow"));
+
+		p.setActiveProfiles("pr1", "pr2");
+		assertEquals("111222", p.getValue("wow"));
+	}
+
+	@Test
+	public void testCopy() {
+		Props p = new Props();
+
+		p.load("foo.one=111\n" +
+				"fig.two=222\n" +
+				"bar <= foo, fig");
+
+		assertEquals("111", p.getValue("foo.one"));
+		assertEquals("222", p.getValue("fig.two"));
+		assertEquals("111", p.getValue("bar.one"));
+		assertEquals("222", p.getValue("bar.two"));
+	}
+
+	@Test
+	public void testCopyWithProfiles() {
+		Props p = new Props();
+		p.load(
+				"foo.one=111\n" +
+				"foo.one<pr1>=111111\n" +
+				"foo.one<pr2>=111111111\n" +
+				"fig.two<pr2>=222\n" +
+				"bar <= foo, fig");
+
+		assertEquals("111", p.getValue("foo.one"));
+		assertEquals(null, p.getValue("fig.two"));
+		assertEquals("111", p.getValue("bar.one"));
+		assertEquals(null, p.getValue("bar.two"));
+
+		p = new Props();
+		p.load(
+				"foo.one=111\n" +
+				"foo.one<pr1>=111111\n" +
+				"foo.one<pr2>=111111111\n" +
+				"fig.two<pr2>=222\n" +
+				"bar<pr1> <= foo, fig");
+
+		p.setActiveProfiles("pr1");
+		
+		assertEquals("111111", p.getValue("foo.one"));
+		assertEquals(null, p.getValue("fig.two"));
+		assertEquals("111111", p.getValue("bar.one"));
+		assertEquals(null, p.getValue("bar.two"));
+
+		p = new Props();
+		p.load(
+				"foo.one=111\n" +
+				"foo.one<pr1>=111111\n" +
+				"foo.one<pr2>=111111111\n" +
+				"fig.two<pr2>=222\n" +
+				"bar<pr1><pr2> <= foo, fig\n"
+		);
+
+		p.setActiveProfiles("pr1", "pr2");
+
+		assertEquals("111111", p.getValue("foo.one"));
+		assertEquals("222", p.getValue("fig.two"));
+		assertEquals("111111", p.getValue("bar.one"));
+		assertEquals("222", p.getValue("bar.two"));
 	}
 
 	// ---------------------------------------------------------------- util
