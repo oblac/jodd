@@ -7,6 +7,8 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@link Props} parser.
@@ -89,6 +91,15 @@ public class PropsParser implements Cloneable {
 	}
 
 	/**
+	 * Different assignment operators.
+	 */
+	protected enum Operator {
+		ASSIGN,
+		QUICK_APPEND,
+		COPY
+	}
+
+	/**
 	 * Loads properties.
 	 */
 	public void parse(final String in) {
@@ -98,7 +109,7 @@ public class PropsParser implements Cloneable {
 		boolean insideSection = false;
 		String currentSection = null;
 		String key = null;
-		boolean quickAppend = false;
+		Operator operator = Operator.ASSIGN;
 		final StringBuilder sb = new StringBuilder();
 
 		final int len = in.length();
@@ -186,15 +197,25 @@ public class PropsParser implements Cloneable {
 						state = ParseState.COMMENT;
 						break;
 
+					// copy operator
+					case '<':
+						if (ndx == len || in.charAt(ndx) != '=') {
+							sb.append(c);
+							break;
+						}
+						operator = Operator.COPY;
+						//ndx++;
+						continue;
+
 					// assignment operator
 					case '+':
 						if (ndx == len || in.charAt(ndx) != '=') {
 							sb.append(c);
 							break;
 						}
-						// fall down
-						quickAppend = true;
-						ndx++;
+						operator = Operator.QUICK_APPEND;
+						//ndx++;
+						continue;
 					case '=':
 					case ':':
 						if (key == null) {
@@ -208,10 +229,10 @@ public class PropsParser implements Cloneable {
 
 					case '\r':
 					case '\n':
-						add(currentSection, key, sb, true, quickAppend);
+						add(currentSection, key, sb, true, operator);
 						sb.setLength(0);
 						key = null;
-						quickAppend = false;
+						operator = Operator.ASSIGN;
 						break;
 
 					case ' ':
@@ -237,10 +258,10 @@ public class PropsParser implements Cloneable {
 								state = ParseState.VALUE;
 							}
 						} else {
-							add(currentSection, key, sb, true, quickAppend);
+							add(currentSection, key, sb, true, operator);
 							sb.setLength(0);
 							key = null;
-							quickAppend = false;
+							operator = Operator.ASSIGN;
 
 							// end of value, continue to text
 							state = ParseState.TEXT;
@@ -269,10 +290,10 @@ public class PropsParser implements Cloneable {
 									sb.append(in, ndx, endIndex);
 
 									// append
-									add(currentSection, key, sb, false, quickAppend);
+									add(currentSection, key, sb, false, operator);
 									sb.setLength(0);
 									key = null;
-									quickAppend = false;
+									operator = Operator.ASSIGN;
 
 									// end of value, continue to text
 									state = ParseState.TEXT;
@@ -285,16 +306,18 @@ public class PropsParser implements Cloneable {
 		}
 
 		if (key != null) {
-			add(currentSection, key, sb, true, quickAppend);
+			add(currentSection, key, sb, true, operator);
 		}
 	}
+
+	// ---------------------------------------------------------------- add
 
 	/**
 	 * Adds accumulated value to key and current section.
 	 */
 	protected void add(
 			final String section, final String key,
-			final StringBuilder value, final boolean trim, final boolean append) {
+			final StringBuilder value, final boolean trim, final Operator operator) {
 
 		// ignore lines without : or =
 		if (key == null) {
@@ -321,17 +344,17 @@ public class PropsParser implements Cloneable {
 			return;
 		}
 
-		add(fullKey, v, append);
+		extractProfilesAndAdd(fullKey, v, operator);
 	}
 
 	/**
-	 * Adds key-value to properties and profiles.
+	 * Extracts profiles from the key name and adds key-value to them.
 	 */
-	protected void add(final String key, final String value, final boolean append) {
+	protected void extractProfilesAndAdd(final String key, final String value, final Operator operator) {
 		String fullKey = key;
 		int ndx = fullKey.indexOf(PROFILE_LEFT);
 		if (ndx == -1) {
-			propsData.putBaseProperty(fullKey, value, append);
+			justAdd(fullKey, value, null, operator);
 			return;
 		}
 
@@ -362,9 +385,53 @@ public class PropsParser implements Cloneable {
 		}
 
 		// add value to extracted profiles
-		for (final String p : keyProfiles) {
-			propsData.putProfileProperty(fullKey, value, p, append);
+		justAdd(fullKey, value, keyProfiles, operator);
+	}
+
+	/**
+	 * Core key-value addition.
+	 */
+	protected void justAdd(final String key, final String value, final ArrayList<String> keyProfiles, final Operator operator) {
+		if (operator == Operator.COPY) {
+			HashMap<String,Object> target = new HashMap<String, Object>();
+
+			String[] profiles = null;
+			if (keyProfiles != null) {
+				profiles = keyProfiles.toArray(new String[keyProfiles.size()]);
+			}
+
+			String[] sources = StringUtil.splitc(value, ',');
+			for (String source : sources) {
+				source = source.trim();
+				String[] wildcards = new String[] {source + ".*"};
+				propsData.extract(target, profiles, wildcards);
+
+				for (Map.Entry<String, Object> entry : target.entrySet()) {
+					String entryKey = entry.getKey();
+					String suffix = entryKey.substring(source.length());
+
+					String newKey = key + suffix;
+					if (profiles == null) {
+						propsData.putBaseProperty(newKey, "${" + entryKey + "}", false);
+					} else {
+						for (final String p : keyProfiles) {
+							propsData.putProfileProperty(newKey, "${" + entryKey + "}", p, false);
+						}
+					}
+				}
+			}
+			return;
 		}
+
+		boolean append = operator == Operator.QUICK_APPEND;
+		if (keyProfiles == null) {
+			propsData.putBaseProperty(key, value, append);
+			return;
+		}
+		for (final String p : keyProfiles) {
+			propsData.putProfileProperty(key, value, p, append);
+		}
+
 	}
 
 }

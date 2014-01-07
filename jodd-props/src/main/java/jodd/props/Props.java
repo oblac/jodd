@@ -107,8 +107,9 @@ public class Props implements Cloneable {
 	 * Sets new active profiles and overrides existing ones.
 	 * By setting <code>null</code>, no active profile will be set.
 	 * <pr>
-	 * Note that if some props file is loaded <b>after</b>
-	 * this method, it might override this value in the same way.
+	 * Note that if some props are loaded <b>after</b>
+	 * this method call, they might override active profiles
+	 * by using special property for active profiles (<code>@profiles</code>).
 	 */
 	public void setActiveProfiles(final String... activeProfiles) {
 		initialized = false;
@@ -166,6 +167,13 @@ public class Props implements Cloneable {
 	 */
 	public void setIgnoreMissingMacros(boolean ignoreMissingMacros) {
 		data.ignoreMissingMacros = ignoreMissingMacros;
+	}
+
+	/**
+	 * Defines if macros should be resolved using active profiles.
+	 */
+	public void setUseActiveProfilesWhenResolvingMacros(boolean useActiveProfilesWhenResolvingMacros) {
+		data.useActiveProfilesWhenResolvingMacros = useActiveProfilesWhenResolvingMacros;
 	}
 
 	// ---------------------------------------------------------------- load
@@ -395,8 +403,8 @@ public class Props implements Cloneable {
 			synchronized (this) {
 				if (initialized == false) {
 
-					data.resolveMacros();
 					resolveActiveProfiles();
+					data.resolveMacros(activeProfiles);
 
 					initialized = true;
 				}
@@ -405,9 +413,10 @@ public class Props implements Cloneable {
 	}
 
 	/**
-	 * Resolves active profiles from property.
+	 * Resolves active profiles from special property.
+	 * This property can be only a base property!
 	 * If default active property is not defined, nothing happens.
-	 * Otherwise,
+	 * Otherwise, it will replace currently active profiles.
 	 */
 	protected void resolveActiveProfiles() {
 		if (activeProfilesProp == null) {
