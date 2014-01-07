@@ -42,6 +42,12 @@ public class PropsData implements Cloneable {
 	 */
 	protected boolean skipEmptyProps = true;
 
+	/**
+	 * When set, macros will be resolved using active profiles.
+	 * Otherwise, macros will be resolved within defined profile.
+	 */
+	protected boolean useActiveProfilesWhenResolvingMacros = true;
+
 	public PropsData() {
 		this(new HashMap<String, PropsEntry>(), new HashMap<String, Map<String, PropsEntry>>());
 	}
@@ -67,6 +73,7 @@ public class PropsData implements Cloneable {
 		pd.appendDuplicateProps = appendDuplicateProps;
 		pd.ignoreMissingMacros = ignoreMissingMacros;
 		pd.skipEmptyProps = skipEmptyProps;
+		pd.useActiveProfilesWhenResolvingMacros = useActiveProfilesWhenResolvingMacros;
 		return pd;
 	}
 
@@ -198,8 +205,10 @@ public class PropsData implements Cloneable {
 
 	/**
 	 * Resolves all macros in this props set. Called once on initialization.
+	 * There are two ways how macros can be resolved: using active profiles
+	 * or using a profile of a property that is being resolved.
 	 */
-	public void resolveMacros() {
+	public void resolveMacros(String[] activeProfiles) {
 		// create string template parser that will be used internally
 		StringTemplateParser stringTemplateParser = new StringTemplateParser();
 		stringTemplateParser.setResolveEscapes(false);
@@ -214,12 +223,18 @@ public class PropsData implements Cloneable {
 		// start parsing
 		int loopCount = 0;
 		while (loopCount++ < MAX_INNER_MACROS) {
-			boolean replaced = resolveMacros(this.baseProperties, null, stringTemplateParser);
+			boolean replaced = resolveMacros(
+					this.baseProperties,
+					useActiveProfilesWhenResolvingMacros ? activeProfiles : null,
+					stringTemplateParser);
 
 			for (final Map.Entry<String, Map<String, PropsEntry>> entry : profileProperties.entrySet()) {
 				String profile = entry.getKey();
 
-				replaced = resolveMacros(entry.getValue(), profile, stringTemplateParser) || replaced;
+				replaced = resolveMacros(
+						entry.getValue(),
+						useActiveProfilesWhenResolvingMacros ? activeProfiles : new String[] {profile},
+						stringTemplateParser) || replaced;
 			}
 
 			if (!replaced) {
@@ -228,12 +243,16 @@ public class PropsData implements Cloneable {
 		}
 	}
 
-	protected boolean resolveMacros(final Map<String, PropsEntry> map, final String profile, StringTemplateParser stringTemplateParser) {
+	protected boolean resolveMacros(
+			final Map<String, PropsEntry> map,
+			final String[] profiles,
+			StringTemplateParser stringTemplateParser) {
+
 		boolean replaced = false;
 
 		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
 			public String resolve(String macroName) {
-				return lookupValue(macroName, profile);
+				return lookupValue(macroName, profiles);
 			}
 		};
 
