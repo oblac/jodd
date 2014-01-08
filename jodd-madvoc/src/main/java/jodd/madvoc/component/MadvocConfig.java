@@ -38,7 +38,6 @@ public class MadvocConfig {
 		defaultActionMethodNames = new String[] {"view", "execute"};
 		createDefaultAliases = false;
 		defaultExtension = "html";
-		supplementAction = null;//DefaultActionSupplement.class;
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
@@ -235,32 +234,6 @@ public class MadvocConfig {
 		this.createDefaultAliases = createDefaultAliases;
 	}
 
-	// ---------------------------------------------------------------- supplement action
-
-	protected Class supplementAction;
-
-	/**
-	 * Returns supplement action class for action requests that are not registered explicitly.
-	 */
-	public Class getSupplementAction() {
-		return supplementAction;
-	}
-
-	/**
-	 * Specifies new supplement action. If set to <code>null</code> supplement actions
-	 * will not be used.
-	 */
-	public void setSupplementAction(Class supplementAction) {
-		this.supplementAction = supplementAction;
-	}
-
-	/**
-	 * Disable supplement actions.
-	 */
-	public void disableSupplementAction() {
-		this.supplementAction = null;
-	}
-
 	// ---------------------------------------------------------------- packageRoot
 
 	protected RootPackages rootPackages;
@@ -440,7 +413,6 @@ public class MadvocConfig {
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
-				",\n\tsupplementAction=" + supplementAction +
 				"\n}";
 	}
 

@@ -66,10 +66,6 @@ public class ActionPathMapper {
 //				cfg = actionsManager.lookup(actionPath, actionPathChunks);
 			}
 		}
-		if ((cfg == null) && madvocConfig.getSupplementAction() != null) {
-			cfg = registerSupplementAction(actionPath);
-//			cfg = actionsManager.lookup(actionPath, actionPathChunks);
-		}
 		return cfg;
 	}
 
@@ -136,19 +132,6 @@ public class ActionPathMapper {
 			methodName = defaultMethodName2;
 		}
 		return packageName + StringPool.DOT + StringUtil.capitalize(className) + StringPool.HASH + methodName;
-	}
-
-
-	/**
-	 * Registers supplement action for all actions that ends with default extension.
-	 */
-	protected ActionConfig registerSupplementAction(String actionPath) {
-		if (madvocConfig.getSupplementAction() != null) {
-			if (actionPath.endsWith('.' + madvocConfig.getDefaultExtension())) {
-				return actionsManager.register(madvocConfig.getSupplementAction(), defaultMethodName1, actionPath);
-			}
-		}
-		return null;
 	}
 
 }

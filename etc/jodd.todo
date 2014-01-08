@@ -19,10 +19,8 @@ General Tasks:
 	- ReThink log dependency @done
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
-	- migrate from google groups to nabble? getsatisfied? anything? @tbd
 	- add blog? @tbd
 	- improve SEO
-	- write about manual Madvoc config @next
 	SiteGenerator:
 	- add global props to javascript
 	- move next/prev logic to javascript @next
@@ -38,7 +36,7 @@ Lagarto/Jerry:
 	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
 	- Think about removing circluar dep Node <-> Document
-	- Find JFLex faster alternaitve?
+	- Find JFLex faster alternative?
 	- Use StringBand() @next
 	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
@@ -56,6 +54,7 @@ Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 Props-plugin:
 	- Add += operator
+	- Add <= operator
 	- Check when categories are listed in values, do not recognize them as categories but test
 		Categories must start on empty or whitespaced line
 Madvoc:
@@ -71,7 +70,6 @@ Madvoc:
 		For example, it may choose if extension is "json" or not based on class name.
 	- Error 404 to contain info about missing page @next
 	- Add JSONResult(returnCode, jsonString) @soon @review
-	- Prevent memory leak for un-existing pages in suplement mode @hot
 	- Multiple roots mapped to different paths @done @v3.4.5
 EMail:
 	- Add IMAP support @done @v3.4.7
@@ -121,5 +119,4 @@ Other Projects:
 	- Add gradle for easier start: webapp1 @done @v3.4.5
 	- Add gradle for examples @done @v3.4.7
 	- Upgrade to gradle v1.7 @done @v3.4.7
-	- Use empty project to create a blog/twitter example and make a video @soon
 	- Add log DEBUG in examples.quickstart @next
