@@ -813,6 +813,22 @@ public class PropsTest {
 		assertEquals("222", p.getValue("bar.two"));
 	}
 
+	@Test
+	public void testCopyEmpty() {
+		Props p = new Props();
+
+		p.load("foo.one=111\n" +
+				"fig.two=222\n" +
+				"[bar]\n" +
+				"<= foo, fig");
+
+		assertEquals("111", p.getValue("foo.one"));
+		assertEquals("222", p.getValue("fig.two"));
+		assertEquals("111", p.getValue("bar.one"));
+		assertEquals("222", p.getValue("bar.two"));
+	}
+
+
 	// ---------------------------------------------------------------- util
 
 	private String readDataFile(String fileName) throws IOException {

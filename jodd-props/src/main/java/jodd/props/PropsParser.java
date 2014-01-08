@@ -326,7 +326,11 @@ public class PropsParser implements Cloneable {
 		String fullKey = key;
 
 		if (section != null) {
-			fullKey = section + '.' + fullKey;
+			if (fullKey.length() != 0) {
+				fullKey = section + '.' + fullKey;
+			} else {
+				fullKey = section;
+			}
 		}
 		String v = value.toString();
 
