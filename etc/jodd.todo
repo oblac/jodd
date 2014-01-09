@@ -17,6 +17,7 @@ General Tasks:
 	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
 	- URLCoder improved @done @v3.4.7
 	- ReThink log dependency @done
+	- Add classLoading strategy @tbd @next
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- add blog? @tbd
@@ -58,7 +59,7 @@ Props-plugin:
 	- Check when categories are listed in values, do not recognize them as categories but test
 		Categories must start on empty or whitespaced line
 Madvoc:
-	- Action methods with arguments @tbd
+	- Action methods with arguments @tbd @next
 	- Add result methods: ok(), redirect(), back() for better usability of the code etc.
 		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
 	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
