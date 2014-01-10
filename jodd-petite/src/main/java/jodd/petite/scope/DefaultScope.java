@@ -2,6 +2,7 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteException;
 
 /**
@@ -18,7 +19,7 @@ public final class DefaultScope implements Scope {
 		return null;
 	}
 
-	public void register(String name, Object bean) {
+	public void register(BeanDefinition beanDefinition, Object bean) {
 	}
 
 	public void remove(String name) {
@@ -26,5 +27,8 @@ public final class DefaultScope implements Scope {
 
 	public boolean accept(Scope referenceScope) {
 		return false;
+	}
+
+	public void shutdown() {
 	}
 }

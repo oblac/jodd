@@ -28,7 +28,7 @@ public class SessionMonitor implements HttpSessionListener {
 	 * Creates new session monitor.
 	 */
 	public SessionMonitor() {
-		if (sessionMonitor != null) {
+		if (sessionMonitor == null) {
 			sessionMonitor = this;
 			listeners = new CopyOnWriteArrayList<HttpSessionListener>();
 			sessionMap = new ReferenceMap<String, HttpSession>(ReferenceType.STRONG, ReferenceType.WEAK);

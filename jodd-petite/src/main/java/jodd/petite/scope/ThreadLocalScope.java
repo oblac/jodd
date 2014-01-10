@@ -2,6 +2,8 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.BeanData;
+import jodd.petite.BeanDefinition;
 import jodd.util.ArraysUtil;
 
 import java.util.HashMap;
@@ -10,27 +12,33 @@ import java.util.Map;
 /**
  * Thread local Petite bean scope. Holds beans in thread local scopes.
  */
-public class ThreadLocalScope implements Scope {
+public class ThreadLocalScope implements Scope {		// todo make it shutdownAware
 
-	protected static ThreadLocal<Map<String, Object>> context = new ThreadLocal<Map<String, Object>>() {
+	protected static ThreadLocal<Map<String, BeanData>> context = new ThreadLocal<Map<String, BeanData>>() {
 		@Override
-		protected synchronized Map<String, Object> initialValue() {
-			return new HashMap<String, Object>();
+		protected synchronized Map<String, BeanData> initialValue() {
+			return new HashMap<String, BeanData>();
 		}
 	};
 
 	public Object lookup(String name) {
-		Map<String, Object> threadLocalMap = context.get();
-		return threadLocalMap.get(name);
+		Map<String, BeanData> threadLocalMap = context.get();
+		BeanData beanData = threadLocalMap.get(name);
+		if (beanData == null) {
+			return null;
+		}
+		return beanData.getBean();
 	}
 
-	public void register(String name, Object bean) {
-		Map<String, Object> threadLocalMap = context.get();
-		threadLocalMap.put(name, bean);
+	public void register(BeanDefinition beanDefinition, Object bean) {
+		BeanData beanData = new BeanData(beanDefinition, bean);
+		Map<String, BeanData> threadLocalMap = context.get();
+		threadLocalMap.put(beanDefinition.getName(), beanData);
+		// warn for destroy methods!
 	}
 
 	public void remove(String name) {
-		Map<String, Object> threadLocalMap = context.get();
+		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.remove(name);
 	}
 
@@ -64,4 +72,6 @@ public class ThreadLocalScope implements Scope {
 			//SessionScope.class,
 	};
 
+	public void shutdown() {
+	}
 }

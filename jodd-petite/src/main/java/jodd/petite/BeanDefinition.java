@@ -31,6 +31,7 @@ public class BeanDefinition {
 	protected SetInjectionPoint[] sets;
 	protected MethodInjectionPoint[] methods;
 	protected InitMethodPoint[] initMethods;
+	protected DestroyMethodPoint[] destroyMethods;
 	protected String[] params;
 
 	// ---------------------------------------------------------------- definition getters
@@ -104,6 +105,13 @@ public class BeanDefinition {
 	}
 
 	/**
+	 * Returns destroy method points.
+	 */
+	public DestroyMethodPoint[] getDestroyMethodPoints() {
+		return destroyMethods;
+	}
+
+	/**
 	 * Returns parameters.
 	 */
 	public String[] getParams() {
@@ -120,10 +128,10 @@ public class BeanDefinition {
 	}
 
 	/**
-	 * Delegates to {@link jodd.petite.scope.Scope#register(String, Object)}.
+	 * Delegates to {@link jodd.petite.scope.Scope#register(jodd.petite.BeanDefinition, Object)}.
 	 */
 	protected void scopeRegister(Object object) {
-		scope.register(name, object);
+		scope.register(this, object);
 	}
 
 	/**
@@ -179,6 +187,17 @@ public class BeanDefinition {
 			initMethods = methods;
 		} else {
 			initMethods = ArraysUtil.join(initMethods, methods);
+		}
+	}
+
+	/**
+	 * Adds destroy methods.
+	 */
+	protected void addDestroyMethodPoints(DestroyMethodPoint[] methods) {
+		if (destroyMethods == null) {
+			destroyMethods = methods;
+		} else {
+			destroyMethods = ArraysUtil.join(destroyMethods, methods);
 		}
 	}
 

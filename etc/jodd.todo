@@ -53,6 +53,9 @@ BeanUtil:
 	- Use new raw type info in BeanUtil @v3.4.5 @done
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
+
+Petite:
+	- remove default scope configuration @next as totally not needed
 Props-plugin:
 	- Add += operator
 	- Add <= operator

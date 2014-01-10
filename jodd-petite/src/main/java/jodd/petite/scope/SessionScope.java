@@ -2,12 +2,19 @@
 
 package jodd.petite.scope;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
+import jodd.petite.BeanData;
+import jodd.petite.BeanDefinition;
 import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.servlet.RequestContextListener;
+import jodd.servlet.SessionMonitor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,9 +24,42 @@ import java.util.Map;
  * keep track on active sessions. {@link RequestContextListener} is used for accessing
  * the request and the session. Session-scoped beans are stored in the session.
  */
-public class SessionScope implements Scope {
+public class SessionScope extends ShutdownAwareScope {
 
-	private static final String ATTR_NAME = SessionScope.class.getName() + ".map";
+	private static Logger log = LoggerFactory.getLogger(SessionScope.class);
+
+	// ---------------------------------------------------------------- session map
+
+	protected static final String ATTR_NAME = SessionScope.class.getName() + ".map";
+
+	/**
+	 * Returns instance map from http session.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Map<String, BeanData> getSessionMap(HttpSession session) {
+		return (Map<String, BeanData>) session.getAttribute(ATTR_NAME);
+	}
+
+	/**
+	 * Removes session map from the session.
+	 */
+	protected void removeSessionMap(HttpSession session) {
+		session.removeAttribute(ATTR_NAME);
+	}
+
+	/**
+	 * Creates session map and store it in the session.
+	 */
+	protected Map<String, BeanData> createSessionMap(HttpSession session) {
+		Map<String, BeanData> map = new HashMap<String, BeanData>();
+		session.setAttribute(ATTR_NAME, map);
+		return map;
+	}
+
+
+	// ---------------------------------------------------------------- scope
+
+	protected SessionMonitor sessionMonitor;
 
 	/**
 	 * Session scope.
@@ -28,33 +68,64 @@ public class SessionScope implements Scope {
 		// register session scope on first usage
 		ThreadLocalScope threadLocalScope = petiteContainer.resolveScope(ThreadLocalScope.class);
 		threadLocalScope.acceptScope(SessionScope.class);
+
+		sessionMonitor = SessionMonitor.getInstance();
+		if (sessionMonitor == null) {
+			if (log.isWarnEnabled()) {
+				log.warn("No SessionMonitor registered for SessionScope");
+			}
+		} else {
+			// todo register only ONE listener
+			sessionMonitor.registerListener(new HttpSessionListener() {
+				public void sessionCreated(HttpSessionEvent se) {
+					// ignore
+				}
+
+				public void sessionDestroyed(HttpSessionEvent se) {
+					HttpSession httpSession = se.getSession();
+					Map<String, BeanData> map = getSessionMap(httpSession);
+					if (map == null) {
+						return;
+					}
+
+					for (BeanData beanData : map.values()) {
+						destroyBean(beanData);
+					}
+				}
+			});
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object lookup(String name) {
 		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
+		Map<String, BeanData> map = getSessionMap(session);
 		if (map == null) {
 			return null;
 		}
-		return map.get(name);
-	}
 
-	@SuppressWarnings("unchecked")
-	public void register(String name, Object bean) {
-		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
-		if (map == null) {
-			map = new HashMap<String, Object>();
-			session.setAttribute(ATTR_NAME, map);
+		BeanData beanData = map.get(name);
+		if (beanData == null) {
+			return null;
 		}
-		map.put(name, bean);
+		return beanData.getBean();
 	}
 
-	@SuppressWarnings("unchecked")
+	public void register(BeanDefinition beanDefinition, Object bean) {
+		HttpSession session = getCurrentHttpSession();
+		Map<String, BeanData> map = getSessionMap(session);
+		if (map == null) {
+			map = createSessionMap(session);
+		}
+
+		BeanData beanData = new BeanData(beanDefinition, bean);
+		map.put(beanDefinition.getName(), beanData);
+
+		registerDestroyableBeans(beanData);
+	}
+
 	public void remove(String name) {
 		HttpSession session = getCurrentHttpSession();
-		Map<String, Object> map = (Map<String, Object>) session.getAttribute(ATTR_NAME);
+		Map<String, BeanData> map = getSessionMap(session);
 		if (map != null) {
 			map.remove(name);
 		}

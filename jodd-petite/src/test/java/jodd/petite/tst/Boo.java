@@ -2,6 +2,7 @@
 
 package jodd.petite.tst;
 
+import jodd.petite.meta.PetiteDestroyMethod;
 import jodd.petite.meta.PetiteInject;
 import jodd.petite.meta.PetiteInitMethod;
 
@@ -25,9 +26,13 @@ public class Boo {
 	}
 
 	private int count;
+	private int count2;
 
 	public int getCount() {
 		return count;
+	}
+	public int getCount2() {
+		return count2;
 	}
 
 	@PetiteInitMethod
@@ -61,6 +66,14 @@ public class Boo {
 		orders.add("second");
 	}
 
+	@PetiteDestroyMethod
+	void ciao() {
+		count2++;
+	}
+	@PetiteDestroyMethod
+	void buy() {
+		count2++;
+	}
 
 	@PetiteInject
 	public final Zoo zoo = null;

@@ -2,6 +2,10 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.BeanData;
+import jodd.petite.BeanDefinition;
+import jodd.petite.PetiteUtil;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -11,14 +15,19 @@ import java.util.HashMap;
  */
 public class SingletonScope implements Scope {
 
-	protected Map<String, Object> instances = new HashMap<String, Object>();
+	protected Map<String, BeanData> instances = new HashMap<String, BeanData>();
 
 	public Object lookup(String name) {
-		return instances.get(name);
+		BeanData beanData = instances.get(name);
+		if (beanData == null) {
+			return null;
+		}
+		return beanData.getBean();
 	}
 
-	public void register(String name, Object bean) {
-		instances.put(name, bean);
+	public void register(BeanDefinition beanDefinition, Object bean) {
+		BeanData beanData = new BeanData(beanDefinition, bean);
+		instances.put(beanDefinition.getName(), beanData);
 	}
 
 	public void remove(String name) {
@@ -30,5 +39,15 @@ public class SingletonScope implements Scope {
 	 */
 	public boolean accept(Scope referenceScope) {
 		return (referenceScope.getClass() == SingletonScope.class);
+	}
+
+	/**
+	 * Iterate all beans and invokes destroy methods
+	 */
+	public void shutdown() {
+		for (BeanData beanData : instances.values()) {
+			BeanDefinition beanDefinition = beanData.getBeanDefinition();
+			PetiteUtil.callDestroyMethods(beanData);
+		}
 	}
 }

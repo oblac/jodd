@@ -2,9 +2,12 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.BeanDefinition;
+
 /**
  * Prototype scope doesn't pool any beans, so each time bean is requested,
- * a new instance will be created.
+ * a new instance will be created. Prototype scope does not call
+ * destroy methods.
  */
 public class ProtoScope implements Scope {
 
@@ -12,7 +15,7 @@ public class ProtoScope implements Scope {
 		return null;
 	}
 
-	public void register(String name, Object bean) {
+	public void register(BeanDefinition beanDefinition, Object bean) {
 	}
 
 	public void remove(String name) {
@@ -23,5 +26,8 @@ public class ProtoScope implements Scope {
 	 */
 	public boolean accept(Scope referenceScope) {
 		return true;
+	}
+
+	public void shutdown() {
 	}
 }

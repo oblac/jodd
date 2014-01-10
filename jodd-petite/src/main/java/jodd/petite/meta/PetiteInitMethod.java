@@ -11,13 +11,11 @@ import java.lang.annotation.ElementType;
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
 
 /**
- * Points to the Petite bean implementation. If used on an interfaces, Petite will
- * resolve specified implementation. If used on package, all interfaces marked with PetiteBean
- * will be resolved to real implementation.
+ * Points to the Petite bean init method.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.PACKAGE})
+@Target({ElementType.METHOD})
 public @interface PetiteInitMethod {
 
 	/**

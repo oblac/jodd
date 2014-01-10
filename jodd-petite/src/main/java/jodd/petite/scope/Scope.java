@@ -2,6 +2,8 @@
 
 package jodd.petite.scope;
 
+import jodd.petite.BeanDefinition;
+
 /**
  * Petite container bean scope. Scopes actually represents wrapper over none, one or many internal
  * bean pools. Which pool is used depends on scopes behaviour and external data.
@@ -11,20 +13,21 @@ package jodd.petite.scope;
 public interface Scope {
 
 	/**
-	 * Lookups for bean name. It may happens that lookup is performed
-	 * <b>before</b> the {@link #register(String, Object) registration},
-	 * therefore it should returns <code>null</code> if object is not
-	 * yet registered.
+	 * Lookups for bean name. Returns <code>null</code> if bean is not
+	 * found or yet registered.
 	 */
 	Object lookup(String name);
 
 	/**
 	 * Registers the bean within the current scope.
+	 * Usually registers it by its name from {@link jodd.petite.BeanDefinition}.
+	 * Also it may register destroy methods of a bean within this scope.
 	 */
-	void register(String name, Object bean);
+	void register(BeanDefinition beanDefinition, Object bean);
 
 	/**
-	 * Removes the bean from the scope entirely.
+	 * Removes the bean from the scope entirely. Destroy methods are <b>not</b>
+	 * called as it is assumed that bean is destroyed manually.
 	 */
 	void remove(String name);
 
@@ -40,5 +43,11 @@ public interface Scope {
 	 * this method should return <code>true</code>.
 	 */
 	boolean accept(Scope referenceScope);
+
+	/**
+	 * Shutdowns the scope by removing all beans and calling
+	 * destroy methods.
+	 */
+	void shutdown();
 
 }

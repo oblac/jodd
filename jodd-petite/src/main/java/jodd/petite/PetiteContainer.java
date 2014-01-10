@@ -5,6 +5,7 @@ package jodd.petite;
 import jodd.Jodd;
 import jodd.bean.BeanUtil;
 import jodd.petite.meta.InitMethodInvocationStrategy;
+import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 
 import java.util.Collection;
@@ -227,11 +228,14 @@ public class PetiteContainer extends PetiteBeans {
 	}
 
 	/**
-	 * Invokes all init methods.
+	 * Invokes all init methods, if they exist. Also resolves destroy methods.
 	 */
 	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
+		}
+		if (def.destroyMethods == null) {
+			def.destroyMethods = petiteResolvers.resolveDestroyMethodPoint(bean);
 		}
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {
@@ -524,6 +528,17 @@ public class PetiteContainer extends PetiteBeans {
 			return BeanUtil.getDeclaredProperty(bean, name.substring(ndx + 1));
 		} catch (Exception ex) {
 			throw new PetiteException("Unable to set bean property: " + name, ex);
+		}
+	}
+
+	// ---------------------------------------------------------------- shutdown
+
+	/**
+	 * Shutdowns container.
+	 */
+	public void shutdown() {
+		for (Scope scope : scopes.values()) {
+			scope.shutdown();
 		}
 	}
 

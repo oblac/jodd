@@ -3,6 +3,7 @@
 package jodd.petite;
 
 import jodd.petite.resolver.CtorResolver;
+import jodd.petite.resolver.DestroyMethodResolver;
 import jodd.petite.resolver.InitMethodResolver;
 import jodd.petite.resolver.MethodResolver;
 import jodd.petite.resolver.PropertyResolver;
@@ -19,6 +20,7 @@ public class PetiteResolvers {
 	protected MethodResolver methodResolver;
 	protected SetResolver setResolver;
 	protected InitMethodResolver initMethodResolver;
+	protected DestroyMethodResolver destroyMethodResolver;
 	protected ProviderResolver providerResolver;
 
 	public PetiteResolvers(InjectionPointFactory injectionPointFactory) {
@@ -27,6 +29,7 @@ public class PetiteResolvers {
 		methodResolver = new MethodResolver(injectionPointFactory);
 		setResolver = new SetResolver(injectionPointFactory);
 		initMethodResolver = new InitMethodResolver();
+		destroyMethodResolver = new DestroyMethodResolver();
 		providerResolver = new ProviderResolver();
 	}
 
@@ -65,6 +68,13 @@ public class PetiteResolvers {
 	 */
 	public InitMethodPoint[] resolveInitMethodPoint(Object bean) {
 		return initMethodResolver.resolve(bean);
+	}
+
+	/**
+	 * Resolves destroy method points.
+	 */
+	public DestroyMethodPoint[] resolveDestroyMethodPoint(Object bean) {
+		return destroyMethodResolver.resolve(bean);
 	}
 
 	/**

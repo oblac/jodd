@@ -29,8 +29,6 @@ public class PetiteUtil {
 			t = ctor.newInstance(petiteContainer);
 		} catch (NoSuchMethodException nsmex) {
 			// ignore
-		} catch (Exception ex) {
-			throw ex;
 		}
 
 		// if first try failed, try default ctor
@@ -39,6 +37,20 @@ public class PetiteUtil {
 		}
 
 		return t;
+	}
+
+	/**
+	 * Calls destroy methods on given BeanData.
+	 */
+	public static void callDestroyMethods(BeanData beanData) {
+		DestroyMethodPoint[] dmp = beanData.getBeanDefinition().getDestroyMethodPoints();
+		for (DestroyMethodPoint destroyMethodPoint : dmp) {
+			try {
+				destroyMethodPoint.method.invoke(beanData.getBean());
+			} catch (Exception ex) {
+				throw new PetiteException("Unable to invoke destroy method: " + destroyMethodPoint.method, ex);
+			}
+		}
 	}
 
 	/**
