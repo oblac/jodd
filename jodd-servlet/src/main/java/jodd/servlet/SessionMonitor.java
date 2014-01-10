@@ -8,6 +8,7 @@ import jodd.util.ref.ReferenceType;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -91,6 +92,15 @@ public class SessionMonitor implements HttpSessionListener {
 	 */
 	public HttpSession getSession(String sessionId) {
 		return sessionMap.get(sessionId);
+	}
+
+	/**
+	 * Returns iterator for all stored session IDs.
+	 * Keep in mind that session may <b>NOT</b> longer
+	 * exist during the iteration!
+	 */
+	public Iterator<String> iterator() {
+		return sessionMap.keySet().iterator();
 	}
 
 }
