@@ -70,7 +70,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 				try {
 					StringInputStream in = new StringInputStream(body, StringInputStream.Mode.STRIP);
 					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-					StringOutputStream out = new StringOutputStream();
+					StringOutputStream out = new StringOutputStream(StringPool.ISO_8859_1);
 
 					StreamUtil.copy(gzipInputStream, out);
 
