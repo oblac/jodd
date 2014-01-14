@@ -331,7 +331,41 @@ public class PetiteRegistry {
 
 	// ---------------------------------------------------------------- destroy
 
-	// todo add destroy registration
+	/**
+	 * Starts registration of destroy method.
+	 */
+	public BeanDestroy destroy(String beanName) {
+		petiteContainer.lookupExistingBeanDefinition(beanName);
+		return new BeanDestroy(beanName);
+	}
+
+	public class BeanDestroy {
+
+		protected final String beanName;
+		protected String[] methods;
+
+		private BeanDestroy(String beanName) {
+			this.beanName = beanName;
+		}
+
+		/**
+		 * Defines destroy methods.
+		 */
+		public BeanDestroy methods(String... methods) {
+			if (methods.length == 0) {
+				methods = null;
+			}
+			this.methods = methods;
+			return this;
+		}
+
+		/**
+		 * Registers destroy methods.
+		 */
+		public void register() {
+			petiteContainer.registerPetiteDestroyMethods(beanName, methods);
+		}
+	}
 
 	// ---------------------------------------------------------------- provider
 

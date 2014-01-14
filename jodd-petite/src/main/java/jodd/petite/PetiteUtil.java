@@ -40,7 +40,8 @@ public class PetiteUtil {
 	}
 
 	/**
-	 * Calls destroy methods on given BeanData.
+	 * Calls destroy methods on given BeanData. Destroy methods are called
+	 * without any order.
 	 */
 	public static void callDestroyMethods(BeanData beanData) {
 		DestroyMethodPoint[] dmp = beanData.getBeanDefinition().getDestroyMethodPoints();

@@ -42,12 +42,12 @@ public class SingletonScope implements Scope {
 	}
 
 	/**
-	 * Iterate all beans and invokes destroy methods
+	 * Iterate all beans and invokes registered destroy methods.
 	 */
 	public void shutdown() {
 		for (BeanData beanData : instances.values()) {
-			BeanDefinition beanDefinition = beanData.getBeanDefinition();
 			PetiteUtil.callDestroyMethods(beanData);
 		}
+		instances.clear();
 	}
 }

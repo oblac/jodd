@@ -11,8 +11,11 @@ import java.util.Map;
 
 /**
  * Thread local Petite bean scope. Holds beans in thread local scopes.
+ * Be careful with this scope, if you do not have control on threads!
+ * For example, app servers may have a thread pools, so threads may not
+ * finish when expected. ThreadLocalScope can not invoke destroy methods.
  */
-public class ThreadLocalScope implements Scope {		// todo make it shutdownAware
+public class ThreadLocalScope implements Scope {
 
 	protected static ThreadLocal<Map<String, BeanData>> context = new ThreadLocal<Map<String, BeanData>>() {
 		@Override
@@ -34,7 +37,6 @@ public class ThreadLocalScope implements Scope {		// todo make it shutdownAware
 		BeanData beanData = new BeanData(beanDefinition, bean);
 		Map<String, BeanData> threadLocalMap = context.get();
 		threadLocalMap.put(beanDefinition.getName(), beanData);
-		// warn for destroy methods!
 	}
 
 	public void remove(String name) {
@@ -74,4 +76,5 @@ public class ThreadLocalScope implements Scope {		// todo make it shutdownAware
 
 	public void shutdown() {
 	}
+
 }

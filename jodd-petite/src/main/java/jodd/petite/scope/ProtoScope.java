@@ -11,13 +11,22 @@ import jodd.petite.BeanDefinition;
  */
 public class ProtoScope implements Scope {
 
+	/**
+	 * Returns <code>null</code> as no bean instance is stored.
+	 */
 	public Object lookup(String name) {
 		return null;
 	}
 
+	/**
+	 * Does nothing, as bean instances are not stored.
+	 */
 	public void register(BeanDefinition beanDefinition, Object bean) {
 	}
 
+	/**
+	 * Does nothing.
+	 */
 	public void remove(String name) {
 	}
 
@@ -28,6 +37,10 @@ public class ProtoScope implements Scope {
 		return true;
 	}
 
+	/**
+	 * Does nothing.
+	 */
 	public void shutdown() {
 	}
+
 }

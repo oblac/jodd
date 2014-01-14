@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base {@link Scope} class for scopes that implement shutdown routine.
+ * Base {@link Scope} class for scopes that collect
+ * destroyable beans and implement shutdown routine.
  */
 public abstract class ShutdownAwareScope implements Scope {
 
@@ -64,6 +65,8 @@ public abstract class ShutdownAwareScope implements Scope {
 		for (BeanData destroyableBean : destroyableBeans) {
 			PetiteUtil.callDestroyMethods(destroyableBean);
 		}
+
+		destroyableBeans.clear();
 	}
 
 }

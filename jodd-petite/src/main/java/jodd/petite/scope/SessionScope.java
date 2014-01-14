@@ -16,13 +16,15 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Session scope stores unique object instances per single http session.
  * Upon creation, new session listener is registered (dynamically) that will
  * keep track on active sessions. {@link RequestContextListener} is used for accessing
- * the request and the session. Session-scoped beans are stored in the session.
+ * the request and the session. {@link jodd.servlet.SessionMonitor} is used for
+ * calling destroyable methods and for cleaning the sessions on the end.
  */
 public class SessionScope extends ShutdownAwareScope {
 
@@ -48,7 +50,7 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	/**
-	 * Creates session map and store it in the session.
+	 * Creates session map and stores it in the session.
 	 */
 	protected Map<String, BeanData> createSessionMap(HttpSession session) {
 		Map<String, BeanData> map = new HashMap<String, BeanData>();
@@ -61,6 +63,8 @@ public class SessionScope extends ShutdownAwareScope {
 
 	protected SessionMonitor sessionMonitor;
 
+	protected HttpSessionListener sessionListener;
+
 	/**
 	 * Session scope.
 	 */
@@ -72,11 +76,11 @@ public class SessionScope extends ShutdownAwareScope {
 		sessionMonitor = SessionMonitor.getInstance();
 		if (sessionMonitor == null) {
 			if (log.isWarnEnabled()) {
-				log.warn("No SessionMonitor registered for SessionScope");
+				log.warn("SessionMonitor not available");
 			}
+			sessionListener = null;
 		} else {
-			// todo register only ONE listener
-			sessionMonitor.registerListener(new HttpSessionListener() {
+			sessionListener = new HttpSessionListener() {
 				public void sessionCreated(HttpSessionEvent se) {
 					// ignore
 				}
@@ -92,7 +96,41 @@ public class SessionScope extends ShutdownAwareScope {
 						destroyBean(beanData);
 					}
 				}
-			});
+			};
+
+			sessionMonitor.registerListener(sessionListener);
+		}
+	}
+
+	/**
+	 * Shutdowns the Session scope. Does 3 things:
+	 * <ul>
+	 *     <li>removes session listener from <code>SessionMonitor</code></li>
+	 *     <li>calls destroyable methods</li>
+	 *     <li>cleans all sessions from stored beans</li>
+	 * </ul>
+	 */
+	@Override
+	public void shutdown() {
+		// remove listener
+		if (sessionListener != null) {
+			sessionMonitor.removeListener(sessionListener);
+			sessionListener = null;
+		}
+
+		// call destroyable methods
+		super.shutdown();
+
+		// clean all sessions
+		if (sessionMonitor != null) {
+			Iterator<String> sessions = sessionMonitor.iterator();
+			while (sessions.hasNext()) {
+				String sessionId = sessions.next();
+				HttpSession session = sessionMonitor.getSession(sessionId);
+				if (session != null) {
+					removeSessionMap(session);
+				}
+			}
 		}
 	}
 
