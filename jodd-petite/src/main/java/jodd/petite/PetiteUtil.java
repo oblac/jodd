@@ -4,7 +4,6 @@ package jodd.petite;
 
 import jodd.petite.meta.PetiteBean;
 import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
 import jodd.typeconverter.Convert;
 import jodd.util.StringUtil;
 
@@ -99,11 +98,12 @@ public class PetiteUtil {
 	}
 
 	/**
-	 * Resolves bean's scope type from the annotation. Returns default scope if annotation doesn't exist.
+	 * Resolves bean's scope type from the annotation. Returns <code>null</code>
+	 * if annotation doesn't exist.
 	 */
 	public static Class<? extends Scope> resolveBeanScopeType(Class type) {
 		PetiteBean petiteBean = ((Class<?>) type).getAnnotation(PetiteBean.class);
-		return petiteBean != null ? petiteBean.scope() : DefaultScope.class;
+		return petiteBean != null ? petiteBean.scope() : null;
 	}
 
 	/**

@@ -3,9 +3,6 @@
 package jodd.petite;
 
 import jodd.Jodd;
-import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
-import jodd.petite.scope.SingletonScope;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -17,7 +14,6 @@ public class PetiteConfig {
 	private static final Logger log = LoggerFactory.getLogger(PetiteConfig.class);
 
 	public PetiteConfig() {
-		defaultScope = SingletonScope.class;
 		defaultWiringMode = WiringMode.STRICT;
 		detectDuplicatedBeanNames = false;
 		resolveReferenceParameters = true;
@@ -30,26 +26,6 @@ public class PetiteConfig {
 		useParamo = Jodd.isProxettaLoaded();
 		wireScopedProxy = false;
 		detectMixedScopes = false;
-	}
-
-	protected Class<? extends Scope> defaultScope;
-	/**
-	 * Returns default scope type.
-	 */
-	public Class<? extends Scope> getDefaultScope() {
-		return defaultScope;
-	}
-	/**
-	 * Sets default scope type.
-	 */
-	public void setDefaultScope(Class<? extends Scope> defaultScope) {
-		if (defaultScope == DefaultScope.class) {
-			throw new PetiteException("Invalid default Petite scope: scope must be a concrete scope implementation.");
-		}
-		if (defaultScope == null) {
-			throw new PetiteException("Invalid default Petite scope: null.");
-		}
-		this.defaultScope = defaultScope;
 	}
 
 	// ----------------------------------------------------------------

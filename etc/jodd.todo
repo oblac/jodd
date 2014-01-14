@@ -6,7 +6,7 @@ General Tasks:
 	- migrate to gradle v1.6 @done @v3.4.5
 	- add efficient text searches
 		Check various algorithms, like BM etc.
-	- Add more TypeConverters! @next @v3.4.8 @done
+	- Add more TypeConverters! @v3.4.8 @done
 	- Add ExtendedURLClassLoader @v3.4.5 @done
 	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
 	- Check FileUtil.move/copy dir/file variants to be more performant
@@ -55,7 +55,7 @@ Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 
 Petite:
-	- remove default scope configuration @next as totally not needed
+	- remove default scope configuration as totally not needed @v3.5 @done
 	- add request Scope @next
 Props-plugin:
 	- Add += operator

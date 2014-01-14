@@ -3,8 +3,8 @@
 package jodd.petite.meta;
 
 import jodd.petite.scope.Scope;
-import jodd.petite.scope.DefaultScope;
 import jodd.petite.WiringMode;
+import jodd.petite.scope.SingletonScope;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -26,9 +26,9 @@ public @interface PetiteBean {
 	String value() default "";
 
 	/**
-	 * Bean scope,
+	 * Bean scope, {@link jodd.petite.scope.SingletonScope singleton} by default.
 	 */
-	Class<? extends Scope> scope() default DefaultScope.class;
+	Class<? extends Scope> scope() default SingletonScope.class;
 
 	/**
 	 * Wiring mode.

@@ -8,8 +8,8 @@ import jodd.introspector.CtorDescriptor;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
-import jodd.petite.scope.DefaultScope;
 import jodd.petite.scope.Scope;
+import jodd.petite.scope.SingletonScope;
 import jodd.props.Props;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
@@ -140,6 +140,7 @@ public abstract class PetiteBeans {
 
 	/**
 	 * Lookups for first founded {@link BeanDefinition bean definition}.
+	 * Returns <code>null</code> if none of the beans is found.
 	 */
 	protected BeanDefinition lookupBeanDefinitions(String... names) {
 		for (String name : names) {
@@ -152,7 +153,8 @@ public abstract class PetiteBeans {
 	}
 
 	/**
-	 * Lookups for existing bean. Throws exception if bean is not found.
+	 * Lookups for existing {@link jodd.petite.BeanDefinition bean definition}.
+	 * Throws exception if bean is not found.
 	 */
 	protected BeanDefinition lookupExistingBeanDefinition(String name) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(name);
@@ -206,8 +208,8 @@ public abstract class PetiteBeans {
 		if (scopeType == null) {
 			scopeType = PetiteUtil.resolveBeanScopeType(type);
 		}
-		if (scopeType == DefaultScope.class) {
-			scopeType = petiteConfig.getDefaultScope();
+		if (scopeType == null) {
+			scopeType = SingletonScope.class;
 		}
 		BeanDefinition existing = removeBean(name);
 		if (existing != null) {
