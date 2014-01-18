@@ -455,6 +455,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * Assignees provided {@link jodd.http.HttpConnection} for communication.
+	 * It does not actually opens it until the {@link #send() sending}.
+	 */
+	public HttpRequest open(HttpConnection httpConnection) {
+		this.httpConnection = httpConnection;
+		return this;
+	}
+
+	/**
 	 * {@link #open() Opens connection} if not already open, sends request,
 	 * reads response and closes the request.
 	 */
