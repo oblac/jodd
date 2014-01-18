@@ -6,10 +6,10 @@ dependencies {
 	compile project(':jodd-core')
 	compile project(':jodd-bean')
 	compile project(':jodd-props')
+	compile project(':jodd-log')
 
 	compile project(':jodd-servlet')
 	compile project(':jodd-proxetta')
-	compile project(':jodd-log')
 
 	testCompile lib.junit
 	testCompile lib.mockito

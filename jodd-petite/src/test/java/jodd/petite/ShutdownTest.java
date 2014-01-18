@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
-import static jodd.servlet.ServletsMockitoUtil.createHttpSessionEvent;
-import static jodd.servlet.ServletsMockitoUtil.createRequest;
-import static jodd.servlet.ServletsMockitoUtil.createServletRequestEvent;
-import static jodd.servlet.ServletsMockitoUtil.createSession;
+import static jodd.petite.ServletsMockitoUtil.createHttpSessionEvent;
+import static jodd.petite.ServletsMockitoUtil.createRequest;
+import static jodd.petite.ServletsMockitoUtil.createServletRequestEvent;
+import static jodd.petite.ServletsMockitoUtil.createSession;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

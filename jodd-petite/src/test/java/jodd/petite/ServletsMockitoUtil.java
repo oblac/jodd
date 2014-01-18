@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.servlet;
+package jodd.petite;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
