@@ -4,27 +4,43 @@ package jodd.format;
 
 /**
  * Printf.
+ * @see jodd.format.PrintfFormat
  */
 public class Printf {
 
 	// ---------------------------------------------------------------- primitives
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(byte)
+	 */
 	public static String str(String format, byte value) {
 		return new PrintfFormat(format).form(value);
 	}
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(char)
+	 */
 	public static String str(String format, char value) {
 		return new PrintfFormat(format).form(value);
 	}
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(short)
+	 */
 	public static String str(String format, short value) {
 		return new PrintfFormat(format).form(value);
 	}
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(int)
+	 */
 	public static String str(String format, int value) {
 		return new PrintfFormat(format).form(value);
 	}
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(long)
+	 */
 	public static String str(String format, long value) {
 		return new PrintfFormat(format).form(value);
 	}
@@ -33,6 +49,9 @@ public class Printf {
 		return new PrintfFormat(format).form(value);
 	}
 
+	/**
+	 * @see jodd.format.PrintfFormat#form(double)
+	 */
 	public static String str(String format, double value) {
 		return new PrintfFormat(format).form(value);
 	}
@@ -61,6 +80,8 @@ public class Printf {
 		return format;
 	}
 
+	// ---------------------------------------------------------------- private
+
 	private static String print(PrintfFormat pf, String format, Object param) {
 		pf.reinit(format);
 		if (param instanceof Number) {
@@ -72,10 +93,13 @@ public class Printf {
 				format = pf.form(((Double) param).doubleValue());
 			} else if (param instanceof Float) {
 				format = pf.form(((Float) param).floatValue());
+			} else if (param instanceof Byte) {
+				format = pf.form(((Byte) param).byteValue());
+			} else if (param instanceof Short) {
+				format = pf.form(((Short) param).shortValue());
 			} else {
 				format = pf.form(((Number)param).intValue());
 			}
-
 		} else if (param instanceof Character) {
 				format = pf.form(((Character) param).charValue());
 		} else {
