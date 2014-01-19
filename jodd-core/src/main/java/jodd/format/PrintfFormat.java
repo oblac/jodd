@@ -420,10 +420,22 @@ public class PrintfFormat {
 	 * Formats a character into a string (like sprintf in C).
 	 */
 	public String form(char value) {
-		if (fmt != 'c') {
-			throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not 'c'.");
+		switch(fmt) {
+			case 'c':
+				return alternate ? "\\u" + form((short) value) : pad(String.valueOf(value));
+			case 'd':
+			case 'i':
+			case 'u':
+			case 'o':
+			case 'x':
+			case 'X':
+			case 'b':
+			case 'l':
+			case 'L':
+				return form((short) value);
+			default:
+				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not 'cdiuoxXblL'.");
 		}
-		return pad(String.valueOf(value));
 	}
 
 	/**
@@ -473,6 +485,8 @@ public class PrintfFormat {
 		int s = 0;
 
 		switch (fmt) {
+			case 'c':
+				return form((char) x);
 			case 'd':
 				if (x < 0) {
 					r = Long.toString(x).substring(1);
@@ -543,6 +557,8 @@ public class PrintfFormat {
 		int s = 0;
 
 		switch (fmt) {
+			case 'c':
+				return form((char) x);
 			case 'd':
 			case 'i':
 				if (x < 0) {
@@ -610,6 +626,8 @@ public class PrintfFormat {
 		int s = 0;
 
 		switch (fmt) {
+			case 'c':
+				return form((char) value);
 			case 'd':
 			case 'i':
 				if (value < 0) {
@@ -650,7 +668,7 @@ public class PrintfFormat {
 				r = (value == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'diuoxXblL'.");
+				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'cdiuoxXblL'.");
 		}
 		return pad(sign(s, r));
 	}

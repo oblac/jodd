@@ -196,6 +196,13 @@ public class FormatTest {
 	@Test
 	public void testChar() {
 		assertEquals("A", Printf.str("%c", 'A'));
+		assertEquals("c", Printf.str("%c", 'c'));
+		assertEquals("65", Printf.str("%d", 'A'));
+		assertEquals("41", Printf.str("%x", 'A'));
+		assertEquals("101", Printf.str("%o", 'A'));
+		assertEquals("0xdb00", Printf.str("%#x", '\udb00'));
+		assertEquals("A", Printf.str("%c", 65));
+		assertEquals("A", Printf.str("%c", (byte)65));
 		assertEquals("--- A ---", Printf.str("--- %c ---", 'A'));
 	}
 
