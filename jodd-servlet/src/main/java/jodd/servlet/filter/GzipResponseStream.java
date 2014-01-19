@@ -186,11 +186,14 @@ public class GzipResponseStream extends ServletOutputStream {
 		writeToGZip(b, off, len);
 	}
 
+	/**
+	 * Writes byte array to gzip output stream. Creates new <code>GZIPOutputStream</code>
+	 * if not created yet. Also sets the "Content-Encoding" header.
+	 */
 	public void writeToGZip(byte b[], int off, int len) throws IOException {
-
 		if (gzipstream == null) {
 			gzipstream = new GZIPOutputStream(output);
-			response.addHeader("Content-Encoding", "gzip");
+			response.setHeader("Content-Encoding", "gzip");
 		}
 		gzipstream.write(b, off, len);
 
