@@ -43,8 +43,9 @@ public class PrintfFormat {
 	 *               <dt> 0 <dd> show leading zeroes
 	 *               <dt> - <dd> align left in the field
 	 *               <dt> space <dd> prepend a space in front of positive numbers
-	 *               <dt> # <dd> use "alternate" format. Add 0 or 0x for octal or hexadecimal numbers.
-	 *               Don't suppress trailing zeroes in general floating point format.
+	 *               <dt> # <dd> use "alternate" format. Add 0 or 0x for octal or hexadecimal numbers;
+	 *               add 0b for binary numbers.  Don't suppress trailing zeroes in general floating 
+	 *               point format.
 	 *               <dt> , <dd> groups decimal values by thousands (for 'diuxXb' formats)
 	 *               </dl>
 	 *
@@ -334,6 +335,21 @@ public class PrintfFormat {
 		}
 		return new String(buffer);
 	}
+	
+	private String getAltPrefixFor(char fmt, String currentPrefix) {
+		switch(fmt) {
+			case 'x':
+				return "0x";
+			case 'X':
+				return "0X";
+			case 'b':
+				return "0b";
+			case 'B':
+				return "0B";
+			default:
+				return currentPrefix;
+		}
+	}
 
 	protected String sign(int s, String r) {
 		String p = StringPool.EMPTY;
@@ -347,12 +363,12 @@ public class PrintfFormat {
 				p = StringPool.SPACE;
 			}
 		} else {
-			if (fmt == 'o' && alternate && r.length() > 0 && r.charAt(0) != '0') {
-				p = "0";
-			} else if (fmt == 'x' && alternate) {
-				p = "0x";
-			} else if (fmt == 'X' && alternate) {
-				p = "0X";
+			if (alternate) {
+				if (fmt == 'o' && r.length() > 0 && r.charAt(0) != '0') {
+					p = "0";
+				} else {
+					p = getAltPrefixFor(fmt, p);
+				}
 			}
 		}
 
@@ -502,6 +518,7 @@ public class PrintfFormat {
 				r = groupDigits(r, 4, ' ');
 				break;
 			case 'b':
+			case 'B':
 				r = Long.toBinaryString(x);
 				r = groupDigits(r, 8, ' ');
 				break;
@@ -555,6 +572,7 @@ public class PrintfFormat {
 				r = groupDigits(r, 4, ' ');
 				break;
 			case 'b':
+			case 'B':
 				r = Integer.toBinaryString(x);
 				r = groupDigits(r, 8, ' ');
 				break;
@@ -621,6 +639,7 @@ public class PrintfFormat {
 				r = groupDigits(r, 4, ' ');
 				break;
 			case 'b':
+			case 'B':
 				r = Integer.toBinaryString(value & unsignedMask);
 				r = groupDigits(r, 8, ' ');
 				break;

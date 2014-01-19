@@ -10,13 +10,18 @@ public class FormatTest {
 
 	@Test
 	public void testByte() {
+		assertEquals("0b010001", Printf.str("%#08b", 0x11));
 		byte b = Byte.MAX_VALUE;
 		assertEquals("127", Printf.str("%i", b));
 		assertEquals("127", Printf.str("%u", b));
 		assertEquals("7f", Printf.str("%x", b));
 		assertEquals("7F", Printf.str("%X", b));
 		assertEquals("1111111", Printf.str("%b", b));
+		assertEquals("0b1111111", Printf.str("%#b", b));
+		assertEquals("0B1111111", Printf.str("%#B", b));
 		assertEquals("01111111", Printf.str("%08b", b));
+		assertEquals("0b01111111", Printf.str("%#010b", b));
+		assertEquals("0B01111111", Printf.str("%#010B", b));
 		assertEquals("177", Printf.str("%o", b));
 
 		b = -1;
@@ -25,7 +30,11 @@ public class FormatTest {
 		assertEquals("ff", Printf.str("%x", b));
 		assertEquals("FF", Printf.str("%X", b));
 		assertEquals("11111111", Printf.str("%b", b));
+		assertEquals("0b11111111", Printf.str("%#b", b));
+		assertEquals("0B11111111", Printf.str("%#B", b));
 		assertEquals("11111111", Printf.str("%08b", b));
+		assertEquals("0b11111111", Printf.str("%#08b", b));
+		assertEquals("0B11111111", Printf.str("%#08B", b));
 		assertEquals("377", Printf.str("%o", b));
 
 		b = Byte.MIN_VALUE;
@@ -34,7 +43,11 @@ public class FormatTest {
 		assertEquals("80", Printf.str("%x", b));
 		assertEquals("80", Printf.str("%X", b));
 		assertEquals("10000000", Printf.str("%b", b));
+		assertEquals("0b10000000", Printf.str("%#b", b));
+		assertEquals("0B10000000", Printf.str("%#B", b));
 		assertEquals("10000000", Printf.str("%08b", b));
+		assertEquals("0b10000000", Printf.str("%#08b", b));
+		assertEquals("0B10000000", Printf.str("%#08B", b));
 		assertEquals("200", Printf.str("%o", b));
 	}
 
@@ -46,6 +59,8 @@ public class FormatTest {
 		assertEquals("7fff", Printf.str("%x", s));
 		assertEquals("7FFF", Printf.str("%X", s));
 		assertEquals("111111111111111", Printf.str("%b", s));
+		assertEquals("0b111111111111111", Printf.str("%#b", s));
+		assertEquals("0B111111111111111", Printf.str("%#B", s));
 		assertEquals("77777", Printf.str("%o", s));
 
 		s = -1;
@@ -54,6 +69,8 @@ public class FormatTest {
 		assertEquals("ffff", Printf.str("%x", s));
 		assertEquals("FFFF", Printf.str("%X", s));
 		assertEquals("1111111111111111", Printf.str("%b", s));
+		assertEquals("0b1111111111111111", Printf.str("%#b", s));
+		assertEquals("0B1111111111111111", Printf.str("%#B", s));
 		assertEquals("177777", Printf.str("%o", s));
 
 		s = Short.MIN_VALUE;
@@ -62,6 +79,8 @@ public class FormatTest {
 		assertEquals("8000", Printf.str("%x", s));
 		assertEquals("8000", Printf.str("%X", s));
 		assertEquals("1000000000000000", Printf.str("%b", s));
+		assertEquals("0b1000000000000000", Printf.str("%#b", s));
+		assertEquals("0B1000000000000000", Printf.str("%#B", s));
 		assertEquals("100000", Printf.str("%o", s));
 	}
 
@@ -410,6 +429,22 @@ public class FormatTest {
 		assertEquals("11111111 11111111 11111111 11110011", Printf.str("%,b", -13));
 		assertEquals("1111111111111111111111111111111111111111111111111111111111110011", Printf.str("%b", -13L));
 		assertEquals("11111111 11111111 11111111 11111111 11111111 11111111 11111111 11110011", Printf.str("%,b", -13L));
+
+		assertEquals("0b1", Printf.str("%#b", 1));
+		assertEquals("0b11", Printf.str("%#b", 3));
+		assertEquals("0b1101", Printf.str("%#b", 13));
+		assertEquals("0b11111111111111111111111111110011", Printf.str("%#b", -13));
+		assertEquals("0b11111111 11111111 11111111 11110011", Printf.str("%,#b", -13));
+		assertEquals("0b1111111111111111111111111111111111111111111111111111111111110011", Printf.str("%#b", -13L));
+		assertEquals("0b11111111 11111111 11111111 11111111 11111111 11111111 11111111 11110011", Printf.str("%,#b", -13L));
+
+		assertEquals("0B1", Printf.str("%#B", 1));
+		assertEquals("0B11", Printf.str("%#B", 3));
+		assertEquals("0B1101", Printf.str("%#B", 13));
+		assertEquals("0B11111111111111111111111111110011", Printf.str("%#B", -13));
+		assertEquals("0B11111111 11111111 11111111 11110011", Printf.str("%,#B", -13));
+		assertEquals("0B1111111111111111111111111111111111111111111111111111111111110011", Printf.str("%#B", -13L));
+		assertEquals("0B11111111 11111111 11111111 11111111 11111111 11111111 11111111 11110011", Printf.str("%,#B", -13L));
 	}
 
 	@Test
