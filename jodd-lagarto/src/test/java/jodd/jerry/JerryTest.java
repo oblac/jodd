@@ -548,6 +548,26 @@ public class JerryTest {
 		assertEquals("textarea!", params.get("n_textarea")[0]);
 	}
 
+	@Test
+	public void testHtmlAll() {
+		Jerry j = Jerry.jerry("<div><span>1</span></div><div><span>2</span></div>");
+
+		assertEquals(j.htmlAll(true), j.htmlAll(false));
+
+		j = j.$("div");
+		assertEquals("<span>1</span>", j.html());
+		assertEquals("<span>1</span><span>2</span>", j.htmlAll(false));
+		assertEquals("<div><span>1</span></div><div><span>2</span></div>", j.htmlAll(true));
+
+		Jerry j2 = j.find("span");
+		assertEquals(2, j2.length());
+
+		assertEquals("12", j2.text());
+		assertEquals("1", j2.html());
+		assertEquals("12", j2.htmlAll(false));
+		assertEquals("<span>1</span><span>2</span>", j2.htmlAll(true));
+	}
+
 	// ---------------------------------------------------------------- tools
 
 	private String actualHtml(Jerry $) {

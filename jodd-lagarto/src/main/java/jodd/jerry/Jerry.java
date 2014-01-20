@@ -744,12 +744,27 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Gets the HTML contents of the first element in the set of matched elements.
 	 * Content is raw, not HTML decoded.
+	 * @see #htmlAll(boolean)
 	 */
 	public String html() {
 		if (nodes.length == 0) {
 			return null;
 		}
 		return nodes[0].getInnerHtml();
+	}
+
+	/**
+	 * Gets the combined HTML contents of each element in the set of
+	 * matched elements, including their descendants.
+	 * @see #html()
+	 * @param setIncluded if <code>true</code> than sets node are included in the output
+	 */
+	public String htmlAll(boolean setIncluded) {
+		StringBuilder sb = new StringBuilder();
+		for (Node node : nodes) {
+			sb.append(setIncluded ? node.getHtml() : node.getInnerHtml());
+		}
+		return sb.toString();
 	}
 
 	/**
