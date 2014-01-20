@@ -136,7 +136,7 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
-	 * Creates parent Jerry.
+	 * Creates child Jerry.
 	 */
 	protected Jerry(Jerry parent, Node... nodes) {
 		this.parent = parent;
@@ -144,16 +144,22 @@ public class Jerry implements Iterable<Jerry> {
 		this.builder = parent.builder;
 	}
 
+	/**
+	 * Creates child Jerry.
+	 */
 	protected Jerry(Jerry parent, Node[] nodes1, Node[] nodes2) {
 		this.parent = parent;
 		this.nodes = ArraysUtil.join(nodes1, nodes2);
 		this.builder = parent.builder;
 	}
 
+	/**
+	 * Creates child Jerry.
+	 */
 	protected Jerry(Jerry parent, List<Node> nodeList) {
 		this(parent, nodeList.toArray(new Node[nodeList.size()]));
 	}
-	
+
 	// ---------------------------------------------------------------- this
 
 	/**
@@ -171,21 +177,26 @@ public class Jerry implements Iterable<Jerry> {
 	}
 
 	/**
-	 * Returns node at given index.
+	 * Returns node at given index. Returns <code>null</code>
+	 * if index is out of bounds.
 	 */
 	public Node get(int index) {
+		if ((index < 0) || (index >= nodes.length)) {
+			return null;
+		}
 		return nodes[index];
 	}
 
 	/**
 	 * Retrieve all DOM elements matched by this set.
+	 * Warning: returned array is not a clone!
 	 */
 	public Node[] get() {
 		return nodes;
 	}
 
 	/**
-	 * Searches for a given Node from among the matched elements.
+	 * Searches for a given <code>Node</code> from among the matched elements.
 	 */
 	public int index(Node element) {
 		int index = 0;
@@ -196,25 +207,6 @@ public class Jerry implements Iterable<Jerry> {
 			index++;
 		}
 		return -1;
-	}
-
-	/**
-	 * Checks if this Jerry is build on document node only and returns <code>true</code>
-	 * if so. Some operations are not allowed on document node.
-	 */
-	private boolean checkDocumentNode(boolean throwExceptionOnDocumentNode) {
-		if (nodes.length != 1) {
-			return false;
-		}
-		Node node = nodes[0];
-		if (node.getNodeType() != Node.NodeType.DOCUMENT) {
-			return false;
-		}
-
-		if (throwExceptionOnDocumentNode) {
-			throw new UnsupportedOperationException("Illegal operation on document node");
-		}
-		return true;
 	}
 
 	// ---------------------------------------------------------------- Traversing
@@ -556,7 +548,6 @@ public class Jerry implements Iterable<Jerry> {
 		if (nodes.length == 0) {
 			return null;
 		}
-		checkDocumentNode(true);
 		return nodes[0].getAttribute(name);
 	}
 
@@ -564,7 +555,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more attributes for the set of matched elements.
 	 */
 	public Jerry attr(String name, String value) {
-		checkDocumentNode(true);
 		for (Node node : nodes) {
 			node.setAttribute(name, value);
 		}
@@ -575,13 +565,11 @@ public class Jerry implements Iterable<Jerry> {
 	 * Removes an attribute from each element in the set of matched elements.
 	 */
 	public Jerry removeAttr(String name) {
-		checkDocumentNode(true);
 		for (Node node : nodes) {
 			node.removeAttribute(name);
 		}
 		return this;
 	}
-
 
 	/**
 	 * Gets the value of a style property for the first element
@@ -592,7 +580,6 @@ public class Jerry implements Iterable<Jerry> {
 		if (nodes.length == 0) {
 			return null;
 		}
-		checkDocumentNode(true);
 
 		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
@@ -609,8 +596,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
 	public Jerry css(String propertyName, String value) {
-		checkDocumentNode(true);
-
 		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
 		for (Node node : nodes) {
@@ -628,8 +613,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
 	public Jerry css(String... css) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			String styleAttrValue = node.getAttribute("style");
 			Map<String, String> styles = createPropertiesMap(styleAttrValue, ';', ':');
@@ -649,8 +632,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Adds the specified class(es) to each of the set of matched elements.
 	 */
 	public Jerry addClass(String... classNames) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -673,8 +654,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Determines whether any of the matched elements are assigned the given class.
 	 */
 	public boolean hasClass(String... classNames) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -693,8 +672,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * from each element in the set of matched elements.
 	 */
 	public Jerry removeClass(String... classNames) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -719,8 +696,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * the value of the switch argument.
 	 */
 	public Jerry toggleClass(String... classNames) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -757,8 +732,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets the content of each element in the set of matched elements to the specified text.
 	 */
 	public Jerry text(String text) {
-		checkDocumentNode(true);
-
 		for (Node node : nodes) {
 			node.removeAllChilds();
 			Text textNode = new Text(node.getOwnerDocument(), null);
@@ -783,8 +756,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets the HTML contents of each element in the set of matched elements.
 	 */
 	public Jerry html(String html) {
-		checkDocumentNode(true);
-
 		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
@@ -867,8 +838,6 @@ public class Jerry implements Iterable<Jerry> {
 	 * Returns the original set of elements for chaining purposes.
 	 */
 	public Jerry wrap(String html) {
-		checkDocumentNode(true);
-
 		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {

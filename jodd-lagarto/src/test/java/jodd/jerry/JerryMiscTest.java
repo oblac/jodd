@@ -226,19 +226,14 @@ public class JerryMiscTest {
 
 	@Test
 	public void testCreateElementError() {
-		Jerry j = Jerry.jerry("<span></span>");
-		try {
-			j.attr("id", "test");
-			fail();
-		} catch (UnsupportedOperationException ex) {
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			fail();
-		}
+		Jerry j = Jerry.jerry("1<span>2</span>3<span></span>4");
 
-		j.$("span").attr("id", "test");
+		j.attr("id", "test");
+		assertEquals("1<span>2</span>3<span></span>4", j.html());
 
-		assertEquals("<span id=\"test\"></span>", j.html());
+		j.$("*").attr("id", "test");
+
+		assertEquals("1<span id=\"test\">2</span>3<span id=\"test\"></span>4", j.html());
 	}
 
 }

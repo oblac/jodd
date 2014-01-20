@@ -559,6 +559,7 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Returns a child element node at given index.
+	 * If index is out of bounds, <code>null</code> is returned.
 	 */
 	public Element getChildElement(int index) {
 		initChildElementNodes();

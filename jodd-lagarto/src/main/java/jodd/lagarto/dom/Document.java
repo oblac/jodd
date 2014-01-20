@@ -84,6 +84,15 @@ public class Document extends Node {
 		return errors;
 	}
 
+	// ---------------------------------------------------------------- attr
+
+	/**
+	 * Document node does not have attributes.
+	 */
+	@Override
+	public void setAttribute(String name, String value) {
+	}
+
 	// ---------------------------------------------------------------- getter
 
 	/**
