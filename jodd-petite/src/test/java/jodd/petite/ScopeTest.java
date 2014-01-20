@@ -2,8 +2,8 @@
 
 package jodd.petite;
 
-import jodd.bean.BeanUtil;
 import jodd.petite.scope.ProtoScope;
+import jodd.petite.scope.RequestScope;
 import jodd.petite.scope.SessionScope;
 import jodd.petite.scope.SingletonScope;
 import jodd.petite.scope.ThreadLocalScope;
@@ -54,25 +54,33 @@ public class ScopeTest {
 	}
 
 	@Test
-	public void testSessionScopeAccepted() {
-		PetiteContainer pc = new PetiteContainer();
+	public void testScopeAccept() {
+		final PetiteContainer pc = new PetiteContainer();
 
-		ThreadLocalScope threadLocalScope = pc.resolveScope(ThreadLocalScope.class);
 		SingletonScope singletonScope = pc.resolveScope(SingletonScope.class);
 		ProtoScope protoScope = pc.resolveScope(ProtoScope.class);
-
-		assertTrue(threadLocalScope.accept(singletonScope));
-		assertTrue(threadLocalScope.accept(threadLocalScope));
-		assertFalse(threadLocalScope.accept(protoScope));
-
-		Class[] acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
-		assertEquals(2, acceptedClasses.length);
-
 		SessionScope sessionScope = pc.resolveScope(SessionScope.class);
+		RequestScope requestScope = pc.resolveScope(RequestScope.class);
 
-		acceptedClasses = (Class[]) BeanUtil.getDeclaredProperty(threadLocalScope, "acceptedScopes");
-		assertEquals(3, acceptedClasses.length);
-		assertTrue(threadLocalScope.accept(sessionScope));
+		assertTrue(singletonScope.accept(singletonScope));
+		assertFalse(singletonScope.accept(protoScope));
+		assertFalse(singletonScope.accept(sessionScope));
+		assertFalse(singletonScope.accept(requestScope));
+
+		assertTrue(protoScope.accept(singletonScope));
+		assertTrue(protoScope.accept(protoScope));
+		assertTrue(protoScope.accept(sessionScope));
+		assertTrue(protoScope.accept(requestScope));
+
+		assertTrue(sessionScope.accept(singletonScope));
+		assertFalse(sessionScope.accept(protoScope));
+		assertTrue(sessionScope.accept(sessionScope));
+		assertFalse(sessionScope.accept(requestScope));
+
+		assertTrue(requestScope.accept(singletonScope));
+		assertFalse(requestScope.accept(protoScope));
+		assertTrue(requestScope.accept(sessionScope));
+		assertTrue(requestScope.accept(requestScope));
 	}
 
 }

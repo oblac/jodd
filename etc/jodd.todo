@@ -18,6 +18,7 @@ General Tasks:
 	- URLCoder improved @done @v3.4.7
 	- ReThink log dependency @done
 	- Add classLoading strategy @tbd @next
+	- Update ReferenceMap @next
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- add blog? @tbd
@@ -56,7 +57,7 @@ Props:
 
 Petite:
 	- remove default scope configuration as totally not needed @v3.5 @done
-	- add request Scope @next
+	- add request Scope @v3.5 @done
 Props-plugin:
 	- Add += operator
 	- Add <= operator

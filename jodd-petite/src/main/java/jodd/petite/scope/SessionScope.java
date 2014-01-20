@@ -6,7 +6,6 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.petite.BeanData;
 import jodd.petite.BeanDefinition;
-import jodd.petite.PetiteContainer;
 import jodd.petite.PetiteException;
 import jodd.servlet.RequestContextListener;
 import jodd.servlet.SessionMonitor;
@@ -43,14 +42,14 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	/**
-	 * Removes session map from the session.
+	 * Removes instance map from the session.
 	 */
 	protected void removeSessionMap(HttpSession session) {
 		session.removeAttribute(ATTR_NAME);
 	}
 
 	/**
-	 * Creates session map and stores it in the session.
+	 * Creates instance map and stores it in the session.
 	 */
 	protected Map<String, BeanData> createSessionMap(HttpSession session) {
 		Map<String, BeanData> map = new HashMap<String, BeanData>();
@@ -68,11 +67,7 @@ public class SessionScope extends ShutdownAwareScope {
 	/**
 	 * Session scope.
 	 */
-	public SessionScope(PetiteContainer petiteContainer) {
-		// register session scope on first usage
-		ThreadLocalScope threadLocalScope = petiteContainer.resolveScope(ThreadLocalScope.class);
-		threadLocalScope.acceptScope(SessionScope.class);
-
+	public SessionScope() {
 		sessionMonitor = SessionMonitor.getInstance();
 		if (sessionMonitor == null) {
 			if (log.isWarnEnabled()) {
