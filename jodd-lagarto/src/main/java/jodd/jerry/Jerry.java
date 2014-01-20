@@ -198,6 +198,25 @@ public class Jerry implements Iterable<Jerry> {
 		return -1;
 	}
 
+	/**
+	 * Checks if this Jerry is build on document node only and returns <code>true</code>
+	 * if so. Some operations are not allowed on document node.
+	 */
+	private boolean checkDocumentNode(boolean throwExceptionOnDocumentNode) {
+		if (nodes.length != 1) {
+			return false;
+		}
+		Node node = nodes[0];
+		if (node.getNodeType() != Node.NodeType.DOCUMENT) {
+			return false;
+		}
+
+		if (throwExceptionOnDocumentNode) {
+			throw new UnsupportedOperationException("Illegal operation on document node");
+		}
+		return true;
+	}
+
 	// ---------------------------------------------------------------- Traversing
 
 	/**
@@ -537,6 +556,7 @@ public class Jerry implements Iterable<Jerry> {
 		if (nodes.length == 0) {
 			return null;
 		}
+		checkDocumentNode(true);
 		return nodes[0].getAttribute(name);
 	}
 
@@ -544,6 +564,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more attributes for the set of matched elements.
 	 */
 	public Jerry attr(String name, String value) {
+		checkDocumentNode(true);
 		for (Node node : nodes) {
 			node.setAttribute(name, value);
 		}
@@ -554,6 +575,7 @@ public class Jerry implements Iterable<Jerry> {
 	 * Removes an attribute from each element in the set of matched elements.
 	 */
 	public Jerry removeAttr(String name) {
+		checkDocumentNode(true);
 		for (Node node : nodes) {
 			node.removeAttribute(name);
 		}
@@ -564,12 +586,13 @@ public class Jerry implements Iterable<Jerry> {
 	/**
 	 * Gets the value of a style property for the first element
 	 * in the set of matched elements. Returns <code>null</code>
-	 * if set s empty.
+	 * if set is empty.
 	 */
 	public String css(String propertyName) {
 		if (nodes.length == 0) {
 			return null;
 		}
+		checkDocumentNode(true);
 
 		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
@@ -586,6 +609,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
 	public Jerry css(String propertyName, String value) {
+		checkDocumentNode(true);
+
 		propertyName = StringUtil.fromCamelCase(propertyName, '-');
 
 		for (Node node : nodes) {
@@ -603,6 +628,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets one or more CSS properties for the set of matched elements.
 	 */
 	public Jerry css(String... css) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			String styleAttrValue = node.getAttribute("style");
 			Map<String, String> styles = createPropertiesMap(styleAttrValue, ';', ':');
@@ -622,6 +649,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Adds the specified class(es) to each of the set of matched elements.
 	 */
 	public Jerry addClass(String... classNames) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -644,6 +673,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Determines whether any of the matched elements are assigned the given class.
 	 */
 	public boolean hasClass(String... classNames) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -662,6 +693,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * from each element in the set of matched elements.
 	 */
 	public Jerry removeClass(String... classNames) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -686,6 +719,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * the value of the switch argument.
 	 */
 	public Jerry toggleClass(String... classNames) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
@@ -722,6 +757,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets the content of each element in the set of matched elements to the specified text.
 	 */
 	public Jerry text(String text) {
+		checkDocumentNode(true);
+
 		for (Node node : nodes) {
 			node.removeAllChilds();
 			Text textNode = new Text(node.getOwnerDocument(), null);
@@ -746,6 +783,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Sets the HTML contents of each element in the set of matched elements.
 	 */
 	public Jerry html(String html) {
+		checkDocumentNode(true);
+
 		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {
@@ -828,6 +867,8 @@ public class Jerry implements Iterable<Jerry> {
 	 * Returns the original set of elements for chaining purposes.
 	 */
 	public Jerry wrap(String html) {
+		checkDocumentNode(true);
+
 		final Document doc = builder.parse(html);
 
 		for (Node node : nodes) {

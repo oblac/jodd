@@ -16,6 +16,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 public class JerryMiscTest {
 
@@ -221,6 +222,23 @@ public class JerryMiscTest {
 		public String getPseudoFunctionName() {
 			return "super-fn";
 		}
+	}
+
+	@Test
+	public void testCreateElementError() {
+		Jerry j = Jerry.jerry("<span></span>");
+		try {
+			j.attr("id", "test");
+			fail();
+		} catch (UnsupportedOperationException ex) {
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			fail();
+		}
+
+		j.$("span").attr("id", "test");
+
+		assertEquals("<span id=\"test\"></span>", j.html());
 	}
 
 }
