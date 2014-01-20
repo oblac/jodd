@@ -16,6 +16,8 @@ public class FormatTest {
 		assertEquals("127", Printf.str("%u", b));
 		assertEquals("7f", Printf.str("%x", b));
 		assertEquals("7F", Printf.str("%X", b));
+		assertEquals("0x7f", Printf.str("%#x", b));
+		assertEquals("0X7F", Printf.str("%#X", b));
 		assertEquals("1111111", Printf.str("%b", b));
 		assertEquals("0b1111111", Printf.str("%#b", b));
 		assertEquals("0B1111111", Printf.str("%#B", b));
@@ -29,6 +31,8 @@ public class FormatTest {
 		assertEquals("255", Printf.str("%u", b));
 		assertEquals("ff", Printf.str("%x", b));
 		assertEquals("FF", Printf.str("%X", b));
+		assertEquals("0xff", Printf.str("%#x", b));
+		assertEquals("0XFF", Printf.str("%#X", b));
 		assertEquals("11111111", Printf.str("%b", b));
 		assertEquals("0b11111111", Printf.str("%#b", b));
 		assertEquals("0B11111111", Printf.str("%#B", b));
@@ -58,6 +62,8 @@ public class FormatTest {
 		assertEquals("32767", Printf.str("%u", s));
 		assertEquals("7fff", Printf.str("%x", s));
 		assertEquals("7FFF", Printf.str("%X", s));
+		assertEquals("0x7fff", Printf.str("%#x", s));
+		assertEquals("0X7FFF", Printf.str("%#X", s));
 		assertEquals("111111111111111", Printf.str("%b", s));
 		assertEquals("0b111111111111111", Printf.str("%#b", s));
 		assertEquals("0B111111111111111", Printf.str("%#B", s));
@@ -68,6 +74,8 @@ public class FormatTest {
 		assertEquals("65535", Printf.str("%u", s));
 		assertEquals("ffff", Printf.str("%x", s));
 		assertEquals("FFFF", Printf.str("%X", s));
+		assertEquals("0xffff", Printf.str("%#x", s));
+		assertEquals("0XFFFF", Printf.str("%#X", s));
 		assertEquals("1111111111111111", Printf.str("%b", s));
 		assertEquals("0b1111111111111111", Printf.str("%#b", s));
 		assertEquals("0B1111111111111111", Printf.str("%#B", s));
