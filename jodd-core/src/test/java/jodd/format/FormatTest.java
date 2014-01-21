@@ -255,7 +255,7 @@ public class FormatTest {
 		assertEquals("1.7", Printf.str("%3.1f", 1.7));
 		assertEquals(" 1.7", Printf.str("%4.1f", 1.7));
 		assertEquals("1.70", Printf.str("%4.2f", 1.7));
-		assertEquals("1.79", Printf.str("%4.2f", 1.79999999999));
+		assertEquals("1.80", Printf.str("%4.2f", 1.79999999999));
 
 		assertEquals("17.3", Printf.str("%1.1f", 17.3));
 		assertEquals("17.3", Printf.str("%2.1f", 17.3));
@@ -469,6 +469,17 @@ public class FormatTest {
 		String result = Printf.str("%i %3.2f %X", Integer.valueOf(173), Double.valueOf(1.73), Long.valueOf(10));
 
 		assertEquals("173 1.73 A", result);
+	}
+
+	@Test
+	public void testDoublesRound() {
+		assertEquals(Printf.str("%1.0f", 0.50), "1");
+		assertEquals(Printf.str("%2.1f", 0.1499), "0.1");
+		assertEquals(Printf.str("%2.1f", 0.15), "0.2");
+
+		assertEquals(Printf.str("%1.0f", 0.51), "1");
+		assertEquals(Printf.str("%2.1f", 0.1501), "0.2");
+		assertEquals(Printf.str("%3.2f", 1.0099), "1.01");
 	}
 
 }

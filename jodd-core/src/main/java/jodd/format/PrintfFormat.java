@@ -10,7 +10,7 @@ import java.math.BigInteger;
  * Fast simple and yet useful formatting.
  */
 public class PrintfFormat {
-	
+
 	protected int width;
 	protected int precision;
 	protected StringBuilder pre;
@@ -270,7 +270,7 @@ public class PrintfFormat {
 			return expFormat(d);
 		}
 		if (precision == 0) {
-			return (long) (d /*+ 0.5*/) + (removeTrailing ? "" : StringPool.DOT);	// no rounding
+			return Long.toString(Math.round(d));
 		}
 
 		long whole = (long) d;
@@ -288,7 +288,7 @@ public class PrintfFormat {
 			leadingZeroesStr.append('0');
 		}
 
-		long l = (long) (factor * fr /*+ 0.5*/);		// no rounding
+		long l = Math.round(factor * fr);
 		if (l >= factor) {
 			l = 0;
 			whole++;
@@ -668,6 +668,5 @@ public class PrintfFormat {
 
 		return pad(s);
 	}
-
 
 }
