@@ -160,21 +160,36 @@ public class HttpUtil {
 	}
 
 	/**
-	 * @see #extractContentTypeParameter(String, String)
+	 * @see #extractHeaderParameter(String, String, char)
 	 */
 	public static String extractContentTypeCharset(String contentType) {
-		return extractContentTypeParameter(contentType, "charset");
+		return extractHeaderParameter(contentType, "charset", ';');
 	}
 
+	// ---------------------------------------------------------------- keep-alive
+
 	/**
-	 * Extracts "Content Type" parameter. Returns <code>null</code>
+	 * Extract keep-alive timeout.
+	 */
+	public static String extractKeepAliveTimeout(String keepAlive) {
+		return extractHeaderParameter(keepAlive, "timeout", ',');
+	}
+
+	public static String extractKeepAliveMax(String keepAlive) {
+		return extractHeaderParameter(keepAlive, "max", ',');
+	}
+
+	// ---------------------------------------------------------------- header
+
+	/**
+	 * Extracts header parameter. Returns <code>null</code>
 	 * if parameter not found.
 	 */
-	public static String extractContentTypeParameter(String contentType, String parameter) {
+	public static String extractHeaderParameter(String header, String parameter, char separator) {
 		int index = 0;
 
 		while (true) {
-			index = contentType.indexOf(';', index);
+			index = header.indexOf(separator, index);
 
 			if (index == -1) {
 				return null;
@@ -183,17 +198,17 @@ public class HttpUtil {
 			index++;
 
 			// skip whitespaces
-			while (contentType.charAt(index) == ' ') {
+			while (header.charAt(index) == ' ') {
 				index++;
 			}
 
-			int eqNdx = contentType.indexOf('=', index);
+			int eqNdx = header.indexOf('=', index);
 
 			if (eqNdx == -1) {
 				return null;
 			}
 
-			String paramName = contentType.substring(index, eqNdx);
+			String paramName = header.substring(index, eqNdx);
 
 			eqNdx++;
 
@@ -202,12 +217,12 @@ public class HttpUtil {
 				continue;
 			}
 
-			int endIndex = contentType.indexOf(';', eqNdx);
+			int endIndex = header.indexOf(';', eqNdx);
 
 			if (endIndex == -1) {
-				return contentType.substring(eqNdx);
+				return header.substring(eqNdx);
 			} else {
-				return contentType.substring(eqNdx, endIndex);
+				return header.substring(eqNdx, endIndex);
 			}
 		}
 	}

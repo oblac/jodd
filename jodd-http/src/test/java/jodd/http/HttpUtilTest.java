@@ -19,33 +19,33 @@ public class HttpUtilTest {
 		String contentType = "text/html";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
-		assertEquals(null, HttpUtil.extractContentTypeParameter(contentType, "charset"));
+		assertEquals(null, HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
 
 		contentType = "text/html; charset=ISO-8859-4";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
-		assertEquals("ISO-8859-4", HttpUtil.extractContentTypeParameter(contentType, "charset"));
+		assertEquals("ISO-8859-4", HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
 
 		contentType = "text/html;charset=ISO-8859-4";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
-		assertEquals("ISO-8859-4", HttpUtil.extractContentTypeParameter(contentType, "charset"));
+		assertEquals("ISO-8859-4", HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
 
 		contentType = "text/html; pre=foo; charset=ISO-8859-4";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
-		assertEquals("ISO-8859-4", HttpUtil.extractContentTypeParameter(contentType, "charset"));
+		assertEquals("ISO-8859-4", HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
 
 
 		contentType = "text/html; pre=foo; charset=ISO-8859-4; post=bar";
 
 		assertEquals("text/html", HttpUtil.extractMediaType(contentType));
-		assertEquals("ISO-8859-4", HttpUtil.extractContentTypeParameter(contentType, "charset"));
-		assertEquals("foo", HttpUtil.extractContentTypeParameter(contentType, "pre"));
-		assertEquals(null, HttpUtil.extractContentTypeParameter(contentType, "na"));
+		assertEquals("ISO-8859-4", HttpUtil.extractHeaderParameter(contentType, "charset", ';'));
+		assertEquals("foo", HttpUtil.extractHeaderParameter(contentType, "pre", ';'));
+		assertEquals(null, HttpUtil.extractHeaderParameter(contentType, "na", ';'));
 	}
 
 }

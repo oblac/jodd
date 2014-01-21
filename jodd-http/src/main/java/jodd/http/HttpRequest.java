@@ -422,6 +422,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	// ---------------------------------------------------------------- send
 
 	protected HttpConnection httpConnection;
+	protected HttpConnectionProvider httpConnectionProvider;
+
+	/**
+	 * Returns http connection provider that was used for creating
+	 * current http connection.
+	 */
+	public HttpConnectionProvider httpConnectionProvider() {
+		return httpConnectionProvider;
+	}
 
 	/**
 	 * Returns {@link HttpConnection} that is going to be
@@ -445,8 +454,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * using given {@link jodd.http.HttpConnectionProvider}.
 	 */
 	public HttpRequest open(HttpConnectionProvider httpConnectionProvider) {
+		if (this.httpConnection != null) {
+			throw new HttpException("Connection already opened");
+		}
 		try {
-			httpConnection = httpConnectionProvider.createHttpConnection(this);
+			this.httpConnectionProvider = httpConnectionProvider;
+			this.httpConnection = httpConnectionProvider.createHttpConnection(this);
 		} catch (IOException ioex) {
 			throw new HttpException(ioex);
 		}
@@ -459,13 +472,67 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * It does not actually opens it until the {@link #send() sending}.
 	 */
 	public HttpRequest open(HttpConnection httpConnection) {
+		if (this.httpConnection != null) {
+			throw new HttpException("Connection already opened");
+		}
 		this.httpConnection = httpConnection;
+		this.httpConnectionProvider = null;
+		return this;
+	}
+
+	/**
+	 * Continues using the same keep-alive connection.
+	 * Don't use any variant of <code>open()</code> when
+	 * continuing the communication!
+	 * First it checks if "Connection" header exist in the response
+	 * and if it is equal to "Keep-Alive" value. Then it
+	 * checks the "Keep-Alive" headers "max" parameter.
+	 * If its value is positive, then the existing {@link jodd.http.HttpConnection}
+	 * from the request will be reused. If max value is 1,
+	 * connection will be sent with "Connection: Close" header, indicating
+	 * its the last request. When new connection is created, the
+	 * same {@link jodd.http.HttpConnectionProvider} that was used for
+	 * creating initial connection is used for opening the new connection.
+	 */
+	public HttpRequest keepAliveContinue(HttpResponse httpResponse) {
+		boolean keepAlive = httpResponse.connectionKeepAlive();
+
+		if (keepAlive) {
+			HttpConnection previousConnection = httpResponse.getHttpRequest().httpConnection;
+
+			if (previousConnection != null) {
+				int max = httpResponse.keepAliveMax();
+				if (max <= 0) {
+					// close previous connection
+					httpResponse.close();
+				} else {
+					// keep using the connection!
+					this.httpConnection = previousConnection;
+					this.httpConnectionProvider = httpResponse.getHttpRequest().httpConnectionProvider();
+					// if it is the last counter (max == 1) then
+					// mark connection to be closed, otherwise keep it alive
+					connectionKeepAlive(max > 1);
+				}
+			}
+		} else {
+			// close previous connection
+			httpResponse.close();
+
+			// close previous response and force keep alive on new request
+			connectionKeepAlive(true);
+		}
+
+		// if connection is not opened, open it using previous connection provider
+		if (httpConnection == null) {
+			open(httpResponse.getHttpRequest().httpConnectionProvider());
+		}
 		return this;
 	}
 
 	/**
 	 * {@link #open() Opens connection} if not already open, sends request,
-	 * reads response and closes the request.
+	 * reads response and closes the request. If keep-alive mode is enabled
+	 * connection will not be closed.
 	 */
 	public HttpResponse send() {
 		if (httpConnection == null) {
@@ -482,13 +549,23 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			InputStream inputStream = httpConnection.getInputStream();
 
 			httpResponse = HttpResponse.readFrom(inputStream);
+
+			httpResponse.assignHttpRequest(this);
 		} catch (IOException ioex) {
 			throw new HttpException(ioex);
 		}
 
-		httpConnection.close();
+		// checks if communication is keep alive
+		// only if both request and response defines the "Connection" header
+		// since server may set this header in response even if we didn't set it in request
+		boolean keepAlive = this.connectionKeepAlive() && httpResponse.connectionKeepAlive();
+		int keepAliveMax = httpResponse.keepAliveMax();
 
-		httpConnection = null;
+		if (keepAlive == false || keepAliveMax == 0) {
+			// closes connection if keep alive is false or if counter reaches 0
+			httpConnection.close();
+			httpConnection = null;
+		}
 
 		return httpResponse;
 	}

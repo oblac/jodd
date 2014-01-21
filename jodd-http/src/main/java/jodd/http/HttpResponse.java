@@ -172,4 +172,36 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return httpResponse;
 	}
 
+	// ---------------------------------------------------------------- request
+
+	protected HttpRequest httpRequest;
+
+	/**
+	 * Binds {@link jodd.http.HttpRequest} to this response.
+	 */
+	void assignHttpRequest(HttpRequest httpRequest) {
+		this.httpRequest = httpRequest;
+	}
+
+	/**
+	 * Returns {@link jodd.http.HttpRequest} that created this response.
+	 */
+	public HttpRequest getHttpRequest() {
+		return httpRequest;
+	}
+
+	/**
+	 * Closes requests connection if it was open.
+	 * Should be called when using keep-alive connections.
+	 * Otherwise, connection will be already closed.
+	 */
+	public HttpResponse close() {
+		HttpConnection httpConnection = httpRequest.httpConnection;
+		if (httpConnection != null) {
+			httpConnection.close();
+			httpRequest.httpConnection = null;
+		}
+		return this;
+	}
+
 }

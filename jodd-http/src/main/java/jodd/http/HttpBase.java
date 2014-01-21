@@ -256,6 +256,69 @@ public abstract class HttpBase<T> {
 		return (T) this;
 	}
 
+	// ---------------------------------------------------------------- keep-alive
+
+	/**
+	 * Defines "Connection" header as "Keep-Alive" or "Close".
+	 */
+	public T connectionKeepAlive(boolean keepAlive) {
+		if (keepAlive) {
+			header("Connection", "Keep-Alive");
+		} else {
+			header("Connection", "Close");
+		}
+		return (T) this;
+	}
+
+	/**
+	 * Returns <code>true</code> if "Connection" header is keep-alive.
+	 * Returns <code>false</code> if header value has other value
+	 * or it is not set.
+	 */
+	public boolean connectionKeepAlive() {
+		String connection = header("Connection");
+		if (connection == null) {
+			return false;
+		}
+		return connection.equalsIgnoreCase("Keep-Alive");
+	}
+
+	/**
+	 * Returns "Keep-Alive" header value.
+	 */
+	public String keepAlive() {
+		return header("Keep-Alive");
+	}
+
+	/**
+	 * Returns keep-alive timeout if exist.
+	 * Returns <code>-1</code> if doesn't.
+	 */
+	public int keepAliveTimeout() {
+		String keepAlive = keepAlive();
+		if (keepAlive == null) {
+			return -1;
+		}
+
+		String value = HttpUtil.extractKeepAliveTimeout(keepAlive);
+		return Integer.parseInt(value);
+	}
+
+	/**
+	 * Returns keep-alive max counter if exist.
+	 * Returns <code>-1</code> if doesn't.
+	 */
+	public int keepAliveMax() {
+		String keepAlive = keepAlive();
+		if (keepAlive == null) {
+			return -1;
+		}
+
+		String value = HttpUtil.extractKeepAliveMax(keepAlive);
+		return Integer.parseInt(value);
+	}
+
+
 	// ---------------------------------------------------------------- common headers
 
 	/**

@@ -16,9 +16,24 @@ public class HttpBrowser {
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
 	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
+	protected boolean keepAlive;
 
 	public HttpBrowser() {
 		httpConnectionProvider = JoddHttp.httpConnectionProvider;
+	}
+
+	/**
+	 * Returns <code>true</code> if keep alive is used.
+	 */
+	public boolean isKeepAlive() {
+		return keepAlive;
+	}
+
+	/**
+	 * Defines that persistent HTTP connection should be used.
+	 */
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
 	}
 
 	/**
@@ -60,24 +75,35 @@ public class HttpBrowser {
 		return httpResponse.bodyText();
 	}
 
+
 	/**
 	 * Sends new request as a browser. Before sending,
 	 * all browser cookies are added to the request.
 	 * After sending, the cookies are read from the response.
 	 * Moreover, status codes 301 and 302 are automatically
-	 * handled.
+	 * handled. Returns very last response.
 	 */
-	public void sendRequest(HttpRequest httpRequest) {
+	public HttpResponse sendRequest(HttpRequest httpRequest) {
 		// send request
 
 		while (true) {
 			this.httpRequest = httpRequest;
+			HttpResponse previouseResponse = this.httpResponse;
 			this.httpResponse = null;
 
 			addCookies(httpRequest);
 
 			// send request
-			this.httpResponse = httpRequest.open(httpConnectionProvider).send();
+			if (keepAlive == false) {
+				this.httpResponse = httpRequest.open(httpConnectionProvider).send();
+			} else {
+				// keeping alive
+				if (previouseResponse == null) {
+					this.httpResponse = httpRequest.open(httpConnectionProvider).connectionKeepAlive(true).send();
+				} else {
+					this.httpResponse = httpRequest.keepAliveContinue(previouseResponse).send();
+				}
+			}
 
 			readCookies(httpResponse);
 
@@ -111,6 +137,18 @@ public class HttpBrowser {
 			}
 
 			break;
+		}
+		return this.httpResponse;
+	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * Closes browser explicitly, needed when keep-alive connection is used.
+	 */
+	public void close() {
+		if (httpResponse != null) {
+			httpResponse.close();
 		}
 	}
 
