@@ -4,6 +4,8 @@ package jodd;
 
 import jodd.io.FileUtilParams;
 import jodd.util.StringPool;
+import jodd.util.cl.ClassLoaderStrategy;
+import jodd.util.cl.DefaultClassLoaderStrategy;
 
 /**
  * Jodd CORE module.
@@ -30,5 +32,10 @@ public class JoddCore {
 	 * Default parameters used in {@link jodd.io.FileUtil} operations.
 	 */
 	public static FileUtilParams fileUtilParams = new FileUtilParams();
+
+	/**
+	 * Default class loader strategy.
+	 */
+	public static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
 
 }

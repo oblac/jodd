@@ -3,6 +3,7 @@
 package jodd.util;
 
 import jodd.io.FileUtil;
+import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.Test;
 
 import java.io.File;

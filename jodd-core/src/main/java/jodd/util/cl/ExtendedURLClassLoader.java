@@ -1,6 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.util;
+package jodd.util.cl;
+
+import jodd.util.SystemUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,7 +16,7 @@ import java.util.List;
  * Class loader that offers two loading strategies: <b>parent-first</b> and <b>parent-last</b>.
  * Extends <code>URLClassLoader</code> (for now:) to provide just minimal set of modifications.
  * <p>
- * When <b>parent-last</b> strategy is used, be aware how you use {@link ClassLoaderUtil} as
+ * When <b>parent-last</b> strategy is used, be aware how you use {@link jodd.util.ClassLoaderUtil} as
  * it is designed to follow <b>parent-first</b> strategy.
  */
 public class ExtendedURLClassLoader extends URLClassLoader {

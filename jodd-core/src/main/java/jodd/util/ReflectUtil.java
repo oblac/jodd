@@ -2,6 +2,8 @@
 
 package jodd.util;
 
+import jodd.util.cl.ClassLoaderStrategy;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
@@ -32,12 +34,6 @@ public class ReflectUtil {
 
 	/** Empty class array. */
 	public static final Class[] NO_PARAMETERS = new Class[0];
-
-	/** Empty object array. */
-	public static final Object[] NO_ARGUMENTS = new Object[0];
-
-	/** Empty type array. */
-	public static final Type[] NO_TYPES = new Type[0];
 
 	public static final String METHOD_GET_PREFIX = "get";
 	public static final String METHOD_IS_PREFIX = "is";
@@ -1159,6 +1155,38 @@ public class ReflectUtil {
 		}
 
 		String className = stackTraceElements[framesToSkip].getClassName();
+
+		try {
+			return Thread.currentThread().getContextClassLoader().loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			throw new UnsupportedOperationException(className + " not found.");
+		}
+	}
+
+	/**
+	 * Smart variant of {@link #getCallerClass(int)} that skips all relevant Jodd calls.
+	 * However, this one does not use the security manager.
+	 */
+	public static Class getCallerClass() {
+		String className = null;
+		StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+
+		for (StackTraceElement stackTraceElement : stackTraceElements) {
+			className = stackTraceElement.getClassName();
+			String methodName = stackTraceElement.getMethodName();
+
+			if (methodName.equals("loadClass")) {
+				if (className.contains(ClassLoaderStrategy.class.getSimpleName())) {
+					continue;
+				}
+				if (className.equals(ClassLoaderUtil.class.getName())) {
+					continue;
+				}
+			} else if (methodName.equals("getCallerClass")) {
+				continue;
+			}
+			break;
+		}
 
 		try {
 			return Thread.currentThread().getContextClassLoader().loadClass(className);
