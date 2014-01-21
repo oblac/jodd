@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentMap;
 @SuppressWarnings("unchecked")
 public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
 
-	protected ConcurrentMap<Object, Object> delegate;
+	protected transient ConcurrentMap<Object, Object> delegate;
 
 	protected final ReferenceType keyReferenceType;
 	protected final ReferenceType valueReferenceType;
@@ -58,20 +58,17 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 
 	@Override
 	public V get(final Object key) {
-		Object valueReference = delegate.get(makeKeyReferenceAware(key));
+		Object referenceAwareKey = makeKeyReferenceAware(key);
+		Object valueReference = delegate.get(referenceAwareKey);
 		return dereferenceValue(valueReference);
-	}
-
-	private V execute(Strategy strategy, K key, V value) {
-		Object keyReference = referenceKey(key);
-		return (V) strategy.execute(
-				this, keyReference, referenceValue(keyReference, value)
-		);
 	}
 
 	@Override
 	public V put(K key, V value) {
-		return execute(PutStrategy.PUT, key, value);
+		Object referenceKey = referenceKey(key);
+		Object referenceValue = referenceValue(referenceKey, value);
+		return dereferenceValue(delegate.put(referenceKey, referenceValue));
+		//return (V) PutStrategy.PUT.execute(this, referenceKey, referenceValue);
 	}
 
 	@Override
@@ -120,7 +117,18 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 	}
 
 	public V putIfAbsent(K key, V value) {
-		return execute(PutStrategy.PUT_IF_ABSENT, key, value);
+		Object referenceKey = referenceKey(key);
+		Object referenceValue = referenceValue(referenceKey, value);
+
+		Object existingValueReference;
+		Object existingValue;
+		do {
+			existingValueReference = delegate.putIfAbsent(referenceKey, referenceValue);
+			existingValue = dereferenceValue(existingValueReference);
+		} while (isExpired(existingValueReference, existingValue));
+
+		return (V) existingValue;
+		//return (V) PutStrategy.PUT_IF_ABSENT.execute(this, referenceKey, referenceValue);
 	}
 
 	public boolean remove(Object key, Object value) {
@@ -134,7 +142,27 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 	}
 
 	public V replace(K key, V value) {
-		return execute(PutStrategy.REPLACE, key, value);
+		Object referenceKey = referenceKey(key);
+		Object referenceValue = referenceValue(referenceKey, value);
+
+		// ensure that the existing value is not collected
+		do {
+			Object existingValueReference;
+			Object existingValue;
+			do {
+				existingValueReference = delegate.get(referenceKey);
+				existingValue = dereferenceValue(existingValueReference);
+			} while (isExpired(existingValueReference, existingValue));
+
+			if (existingValueReference == null) {
+				return (V) Boolean.valueOf(false);  // nothing to replace
+			}
+
+			if (delegate.replace(referenceKey, existingValueReference, referenceValue)) {
+				return (V) existingValue;       // existingValue did not expire since we still have a reference to it
+			}
+		} while (true);
+		//return (V) PutStrategy.REPLACE.execute(this, referenceKey, referenceValue);
 	}
 
 	// ---------------------------------------------------------------- conversions
@@ -431,56 +459,6 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 		public static ReferenceQueue<Object> getInstance() {
 			return instance;
 		}
-	}
-
-
-	// ---------------------------------------------------------------- put strategy
-
-	protected interface Strategy {
-		Object execute(ReferenceMap map, Object keyReference, Object valueReference);
-	}
-
-	private enum PutStrategy implements Strategy {
-		PUT {
-			public Object execute(ReferenceMap map, Object keyReference, Object valueReference) {
-				return map.dereferenceValue(
-						map.delegate.put(keyReference, valueReference));
-			}
-		},
-
-		REPLACE {
-			public Object execute(ReferenceMap map, Object keyReference, Object valueReference) {
-				// ensure that the existing value is not collected
-				do {
-					Object existingValueReference;
-					Object existingValue;
-					do {
-						existingValueReference = map.delegate.get(keyReference);
-						existingValue = map.dereferenceValue(existingValueReference);
-					} while (isExpired(existingValueReference, existingValue));
-
-					if (existingValueReference == null) {
-						return Boolean.valueOf(false);  // nothing to replace
-					}
-
-					if (map.delegate.replace(keyReference, existingValueReference, valueReference)) {
-						return existingValue;       // existingValue did not expire since we still have a reference to it
-					}
-				} while (true);
-			}
-		},
-
-		PUT_IF_ABSENT {
-			public Object execute(ReferenceMap map, Object keyReference, Object valueReference) {
-				Object existingValueReference;
-				Object existingValue;
-				do {
-					existingValueReference = map.delegate.putIfAbsent(keyReference, valueReference);
-					existingValue = map.dereferenceValue(existingValueReference);
-				} while (isExpired(existingValueReference, existingValue));
-				return existingValue;
-			}
-		},
 	}
 
 	// ---------------------------------------------------------------- map entry set
