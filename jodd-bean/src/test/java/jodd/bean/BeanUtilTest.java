@@ -1345,4 +1345,30 @@ public class BeanUtilTest {
 		assertEquals(Status.STARTED, enumBean.getStatus());
 	}
 
+	@Test
+	public void testSubSup1() {
+		SupBean supBean = new SupBean();
+		//BeanUtil.setProperty(supBean, "v1", "V1");
+		String v = (String) BeanUtil.getProperty(supBean, "v1");
+
+		assertEquals("v1sup", v);
+
+		supBean = new SubBean();
+		BeanUtil.setProperty(supBean, "v1", "V1");
+		v = (String) BeanUtil.getProperty(supBean, "v1");
+
+		assertEquals("V1sup", v);
+	}
+
+	@Test
+	public void testSubSup2() {
+		SupBean supBean = new SubBean();
+		BeanUtil.setProperty(supBean, "v2", "V2");
+		//String v = (String) BeanUtil.getProperty(supBean, "v2");
+
+		String v = (String) BeanUtil.getProperty(supBean, "v2");
+
+		assertEquals("V2sub", v);
+	}
+
 }

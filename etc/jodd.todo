@@ -17,7 +17,7 @@ General Tasks:
 	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
 	- URLCoder improved @done @v3.4.7
 	- ReThink log dependency @done
-	- Add classLoading strategy @tbd @next
+	- Add classLoading strategy @tbd @done
 	- Update ReferenceMap @next @done
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
@@ -47,7 +47,7 @@ BeanUtil:
 	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
 	- Remove 2 introspector implementations @v3.4.9 @done
 	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
-	- Special case when getter is in subclass and setter is in superclass (with and without overding) @next
+	- Special case when getter is in subclass and setter is in superclass (with and without overding) @next @done
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
 	- Add abstract descriptor class @v3.4.9 @done
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done

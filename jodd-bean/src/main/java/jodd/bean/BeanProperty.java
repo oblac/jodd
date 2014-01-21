@@ -112,6 +112,6 @@ class BeanProperty {
 
 	@Override
 	public String toString() {
-		return '\'' + fullName + "' (actual:'" + bean.getClass().getSimpleName() + '#' + name + "', forced=" + forced + ')';
+		return fullName + " (" + bean.getClass().getSimpleName() + '#' + name + ", forced=" + forced + ')';
 	}
 }
