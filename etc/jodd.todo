@@ -18,7 +18,7 @@ General Tasks:
 	- URLCoder improved @done @v3.4.7
 	- ReThink log dependency @done
 	- Add classLoading strategy @tbd @done
-	- Update ReferenceMap @next @done
+	- Update ReferenceMap @done @v3.5
 Site/Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- add blog? @tbd
@@ -47,7 +47,7 @@ BeanUtil:
 	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
 	- Remove 2 introspector implementations @v3.4.9 @done
 	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
-	- Special case when getter is in subclass and setter is in superclass (with and without overding) @next @done
+	- Special case when getter is in subclass and setter is in superclass (with and without overding) @done
 	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
 	- Add abstract descriptor class @v3.4.9 @done
 	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
@@ -74,7 +74,6 @@ Madvoc:
 	- Check AnnotatedFieldInterceptor, how it works @test
 	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
 		For example, it may choose if extension is "json" or not based on class name.
-	- Error 404 to contain info about missing page @next
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Multiple roots mapped to different paths @done @v3.4.5
 EMail:
