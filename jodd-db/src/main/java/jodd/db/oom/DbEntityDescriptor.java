@@ -6,7 +6,7 @@ import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
-import jodd.util.FastSort;
+import jodd.util.sort.FastSort;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -64,7 +64,7 @@ Props-plugin:
 	- Check when categories are listed in values, do not recognize them as categories but test
 		Categories must start on empty or whitespaced line
 Madvoc:
-	- Action methods with arguments @tbd @next
+	- Action methods with arguments @tbd
 	- Add result methods: ok(), redirect(), back() for better usability of the code etc.
 		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
 	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done

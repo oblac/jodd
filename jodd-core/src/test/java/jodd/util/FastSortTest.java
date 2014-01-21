@@ -24,7 +24,7 @@ public class FastSortTest {
 
 		String[] expected = strings.clone();
 
-		FastSort.sort(strings);
+		jodd.util.sort.FastSort.sort(strings);
 		Arrays.sort(expected);
 
 		for (int i = 0, stringsLength = strings.length; i < stringsLength; i++) {
@@ -42,7 +42,7 @@ public class FastSortTest {
 
 		String[] expected = strings.clone();
 
-		FastSort.sort(strings, new Comparator<String>() {
+		jodd.util.sort.FastSort.sort(strings, new Comparator<String>() {
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
 			}

@@ -3,7 +3,7 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
-import jodd.util.FastSort;
+import jodd.util.sort.FastSort;
 import jodd.util.MultiComparator;
 import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
