@@ -61,7 +61,9 @@ public abstract class DbPager {
 
 		String countSql = buildCountSql(sql);
 		dbsql = sql(countSql);
-		long count = query(dbsql).executeCountAndClose();
+		query = query(dbsql);
+		query.setMap(params);
+		long count = query.executeCountAndClose();
 
 		return new PageData<T>(page, (int) count, pageSize, list);
 	}
