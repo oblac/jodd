@@ -530,6 +530,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
+	 * Prepares this request before finally sending it. By default, it
+	 * adds "Connection: Close" header if "Connection" header is missing.
+	 */
+	protected void prepareRequestOnSend() {
+		if (header(HEADER_CONNECTION) == null) {
+			connectionKeepAlive(false);
+		}
+	}
+
+	/**
 	 * {@link #open() Opens connection} if not already open, sends request,
 	 * reads response and closes the request. If keep-alive mode is enabled
 	 * connection will not be closed.
@@ -538,6 +548,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (httpConnection == null) {
 			open();
 		}
+
+		prepareRequestOnSend();
 
 		// sends data
 		HttpResponse httpResponse;
@@ -559,10 +571,16 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// only if both request and response defines the "Connection" header
 		// since server may set this header in response even if we didn't set it in request
 		boolean keepAlive = this.connectionKeepAlive() && httpResponse.connectionKeepAlive();
-		int keepAliveMax = httpResponse.keepAliveMax();
 
-		if (keepAlive == false || keepAliveMax == 0) {
-			// closes connection if keep alive is false or if counter reaches 0
+		if (keepAlive == true) {
+			int keepAliveMax = httpResponse.keepAliveMax();
+			if (keepAliveMax == 0) {
+				keepAlive = false;
+			}
+		}
+
+		if (keepAlive == false) {
+			// closes connection if keep alive is false, or if counter reached 0
 			httpConnection.close();
 			httpConnection = null;
 		}

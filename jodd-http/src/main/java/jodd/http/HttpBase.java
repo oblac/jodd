@@ -37,8 +37,13 @@ public abstract class HttpBase<T> {
 	public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
 	public static final String HEADER_HOST = "Host";
 	public static final String HEADER_ETAG = "ETag";
+	public static final String HEADER_CONNECTION = "Connection";
+	public static final String HEADER_KEEP_ALIVE = "Keep-Alive";
+	public static final String HEADER_CLOSE = "Close";
+	public static final String HTTP_1_0 = "HTTP/1.0";
+	public static final String HTTP_1_1 = "HTTP/1.1";
 
-	protected String httpVersion = "HTTP/1.1";
+	protected String httpVersion = HTTP_1_1;
 	protected HttpValuesMap headers = new HttpValuesMap();
 
 	protected HttpValuesMap form;	// holds form data (when used)
@@ -66,7 +71,8 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns value of header parameter.
 	 * If multiple headers with the same names exist,
-	 * the first value will be returned.
+	 * the first value will be returned. Returns <code>null</code>
+	 * if header doesn't exist.
 	 */
 	public String header(String name) {
 		String key = name.trim().toLowerCase();
@@ -260,34 +266,36 @@ public abstract class HttpBase<T> {
 
 	/**
 	 * Defines "Connection" header as "Keep-Alive" or "Close".
+	 * Existing value is overwritten.
 	 */
 	public T connectionKeepAlive(boolean keepAlive) {
 		if (keepAlive) {
-			header("Connection", "Keep-Alive");
+			header(HEADER_CONNECTION, HEADER_KEEP_ALIVE, true);
 		} else {
-			header("Connection", "Close");
+			header(HEADER_CONNECTION, HEADER_CLOSE, true);
 		}
 		return (T) this;
 	}
 
 	/**
-	 * Returns <code>true</code> if "Connection" header is keep-alive.
-	 * Returns <code>false</code> if header value has other value
-	 * or it is not set.
+	 * Returns <code>true</code> if "Connection" header is "keep-alive".
+	 * Returns <code>false</code> if header value has other value (e.g. "Close")
+	 * or it is not set. Important: if not specified, HTTP adds the "Connection"
+	 * header, set to "close".
 	 */
 	public boolean connectionKeepAlive() {
-		String connection = header("Connection");
+		String connection = header(HEADER_CONNECTION);
 		if (connection == null) {
 			return false;
 		}
-		return connection.equalsIgnoreCase("Keep-Alive");
+		return connection.equalsIgnoreCase(HEADER_KEEP_ALIVE);
 	}
 
 	/**
 	 * Returns "Keep-Alive" header value.
 	 */
 	public String keepAlive() {
-		return header("Keep-Alive");
+		return header(HEADER_KEEP_ALIVE);
 	}
 
 	/**
