@@ -2,6 +2,7 @@
 
 package jodd.mail;
 
+import jodd.JoddCore;
 import jodd.io.StringInputStream;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
@@ -101,9 +102,14 @@ public class EmailUtil {
 	 */
 	public static InternetAddress string2Address(String address) throws AddressException {
 		address = address.trim();
+		String charset = JoddCore.encoding;
 
 		if (StringUtil.endsWithChar(address, '>') == false) {
-			return new InternetAddress(address);
+			try {
+				return new InternetAddress(address, null, charset);
+			} catch (UnsupportedEncodingException ueex) {
+				throw new AddressException(ueex.toString());
+			}
 		}
 
 		int ndx = address.lastIndexOf('<');
@@ -114,7 +120,7 @@ public class EmailUtil {
 		try {
 			return new InternetAddress(
 					address.substring(ndx + 1, address.length() - 1),
-					address.substring(0, ndx - 1).trim());
+					address.substring(0, ndx - 1).trim(), charset);
 		} catch (UnsupportedEncodingException ueex) {
 			throw new AddressException(ueex.toString());
 		}
