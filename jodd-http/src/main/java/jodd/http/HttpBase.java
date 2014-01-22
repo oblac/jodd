@@ -277,8 +277,12 @@ public abstract class HttpBase<T> {
 	 */
 	public boolean connectionKeepAlive() {
 		String connection = header("Connection");
-		if (connection == null && httpVersion().equalsIgnoreCase("HTTP/1.0")) {
-			return false;
+		if (connection == null) {
+			if(httpVersion().equalsIgnoreCase("HTTP/1.0")) {
+	      return false;
+			} else {
+	      return true;
+			}
 		}
 		return connection.equalsIgnoreCase("close");
 	}
