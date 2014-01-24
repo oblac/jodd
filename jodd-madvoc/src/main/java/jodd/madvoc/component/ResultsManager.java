@@ -2,13 +2,10 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -22,6 +19,9 @@ public class ResultsManager {
 
 	@PetiteInject
 	protected ServletContextInjector servletContextInjector;
+
+	@PetiteInject
+	protected MadvocController madvocController;
 
 	public ResultsManager() {
 		this.results = new HashMap<String, ActionResult>();
@@ -94,15 +94,11 @@ public class ResultsManager {
 	/**
 	 * Initializes action result.
 	 */
-	protected void initializeResult(ActionResult result, ActionRequest actionRequest) {
-		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse httpServletResponse = actionRequest.getHttpServletResponse();
-
-		servletContextInjector.injectContext(result, httpServletRequest, httpServletResponse);
+	protected void initializeResult(ActionResult result) {
+		servletContextInjector.injectContext(result, madvocController.getApplicationContext());
 
 		result.init();
 	}
-
 
 	// ---------------------------------------------------------------- create
 
@@ -116,4 +112,5 @@ public class ResultsManager {
 			throw new MadvocException("Unable to create Madvoc action result: " + actionResultClass, ex);
 		}
 	}
+
 }

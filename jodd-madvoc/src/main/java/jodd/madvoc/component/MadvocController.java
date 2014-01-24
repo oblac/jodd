@@ -164,7 +164,7 @@ public class MadvocController {
 			throw new MadvocException("Unable to find action result type: " + resultType);
 		}
 		if (result.isInitialized() == false) {
-			resultsManager.initializeResult(result, actionRequest);
+			resultsManager.initializeResult(result);
 		}
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
