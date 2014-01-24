@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Helper action that returns sorted list of all registered action configurations,
- * action results and interceptors. It can be subclasses or used independently.
+ * action results and interceptors. It can be extended as an Madvoc action or used independently.
  */
 public class ListMadvocConfig {
 
@@ -59,7 +59,7 @@ public class ListMadvocConfig {
 	 * Collects all interceptors.
 	 */
 	protected void collectActionInterceptors() {
-		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAll().values();
+		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
 		interceptors = new ArrayList<ActionInterceptor>();
 		interceptors.addAll(interceptorValues);
 		Collections.sort(interceptors, new Comparator<ActionInterceptor>() {
@@ -73,7 +73,7 @@ public class ListMadvocConfig {
 	 * Collects all filters.
 	 */
 	protected void collectActionFilters() {
-		Collection<? extends ActionFilter> filterValues = filtersManager.getAll().values();
+		Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
 		filters = new ArrayList<ActionFilter>();
 		filters.addAll(filterValues);
 		Collections.sort(filters, new Comparator<ActionFilter>() {
@@ -87,7 +87,7 @@ public class ListMadvocConfig {
 	 * Collects all action results.
 	 */
 	protected void collectActionResults() {
-		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults().values();
+		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
 		results = new ArrayList<ActionResult>();
 		results.addAll(resultsValues);
 		Collections.sort(results, new Comparator<ActionResult>() {

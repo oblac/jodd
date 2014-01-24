@@ -11,8 +11,10 @@ import jodd.util.ReflectUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base wrapper manager implements common logic of a wrapper.
@@ -40,10 +42,12 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	protected Map<String, T> wrappers;
 
 	/**
-	 * Returns all action wrappers. Should be used with care.
+	 * Returns all action wrappers.
 	 */
-	public Map<String, ? extends T> getAll() {
-		return wrappers;
+	protected Set<T> getAll() {
+		Set<T> set = new HashSet<T>(wrappers.size());
+		set.addAll(wrappers.values());
+		return set;
 	}
 
 	/**

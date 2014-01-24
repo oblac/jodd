@@ -5,6 +5,8 @@ package jodd.madvoc.component;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.filter.DefaultWebAppFilters;
 
+import java.util.Set;
+
 /**
  * Manager for Madvoc filters.
  * @see jodd.madvoc.component.InterceptorsManager
@@ -24,6 +26,13 @@ public class FiltersManager extends WrapperManager<ActionFilter> {
 	@Override
 	protected Class<? extends ActionFilter>[] getDefaultWrappers() {
 		return madvocConfig.getDefaultFilters();
+	}
+
+	/**
+	 * Returns all filters.
+	 */
+	public Set<ActionFilter> getAllFilters() {
+		return super.getAll();
 	}
 
 }
