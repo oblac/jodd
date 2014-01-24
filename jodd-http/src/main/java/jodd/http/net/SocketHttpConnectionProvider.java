@@ -35,9 +35,9 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 		Socket socket;
 
-		if (httpRequest.protocol().equals("https")) {
+		if (httpRequest.protocol().equalsIgnoreCase("https")) {
 			SSLSocket sslSocket = (SSLSocket) createSocket(
-					SSLSocketFactory.getDefault(), httpRequest.host(), 443);
+					SSLSocketFactory.getDefault(), httpRequest.host(), httpRequest.port());
 
 			sslSocket.startHandshake();
 

@@ -48,4 +48,33 @@ public class HttpUtilTest {
 		assertEquals(null, HttpUtil.extractHeaderParameter(contentType, "na", ';'));
 	}
 
+	@Test
+	public void testDefaultPort() {
+		HttpRequest request;
+
+		request = HttpRequest.get("jodd.org");
+		assertEquals("http", request.protocol());
+		assertEquals(80, request.port());
+
+		request = HttpRequest.get("jodd.org:80");
+		assertEquals("http", request.protocol());
+		assertEquals(80, request.port());
+
+		request = HttpRequest.get("jodd.org:801");
+		assertEquals("http", request.protocol());
+		assertEquals(801, request.port());
+
+		request = HttpRequest.get("http://jodd.org");
+		assertEquals("http", request.protocol());
+		assertEquals(80, request.port());
+
+		request = HttpRequest.get("https://jodd.org");
+		assertEquals("https", request.protocol());
+		assertEquals(443, request.port());
+
+		request = HttpRequest.get("https://jodd.org:8443");
+		assertEquals("https", request.protocol());
+		assertEquals(8443, request.port());
+	}
+
 }

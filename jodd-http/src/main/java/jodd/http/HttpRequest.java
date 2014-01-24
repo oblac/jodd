@@ -24,9 +24,11 @@ import static jodd.util.StringPool.SPACE;
  */
 public class HttpRequest extends HttpBase<HttpRequest> {
 
+	private static final int DEFAULT_PORT = -1;
+
 	protected String protocol = "http";
 	protected String host = "localhost";
-	protected int port = 80;
+	protected int port = DEFAULT_PORT;
 	protected String method = "GET";
 	protected String path = StringPool.SLASH;
 	protected HttpValuesMap query;
@@ -64,9 +66,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Returns request port number.
+	 * Returns request port number. When port is not
+	 * explicitly defined, returns default port for
+	 * current protocol.
 	 */
 	public int port() {
+		if (port == DEFAULT_PORT) {
+			if (protocol == null) {
+				return 80;
+			}
+			if (protocol.equalsIgnoreCase("https")) {
+				return 443;
+			}
+			return 80;
+		}
 		return port;
 	}
 
@@ -122,7 +135,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			ndx = host.indexOf(':');
 
 			if (ndx == -1) {
-				port = 80;
+				port = DEFAULT_PORT;
 			} else {
 				port = Integer.parseInt(host.substring(ndx + 1));
 				host = host.substring(0, ndx);
@@ -369,7 +382,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			url.append(host);
 		}
 
-		if (port != 80) {
+		if (port != DEFAULT_PORT) {
 			url.append(':');
 			url.append(port);
 		}
@@ -411,7 +424,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpRequest setHostHeader() {
 		String hostPort = this.host;
 
-		if (port != 80) {
+		if (port != DEFAULT_PORT) {
 			hostPort += StringPool.COLON + port;
 		}
 
