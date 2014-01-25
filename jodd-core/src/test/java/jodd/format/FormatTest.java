@@ -204,6 +204,10 @@ public class FormatTest {
 		assertEquals("A", Printf.str("%c", 65));
 		assertEquals("A", Printf.str("%c", (byte)65));
 		assertEquals("--- A ---", Printf.str("--- %c ---", 'A'));
+        assertEquals("A", Printf.str("%c", 65));
+		assertEquals("A", Printf.str("%c", (byte) 65));
+		assertEquals("A", Printf.str("%c", (short) 65));
+		assertEquals("A", Printf.str("%c", new Integer(65)));
 	}
 
 
@@ -263,7 +267,12 @@ public class FormatTest {
 		assertEquals(" 1.7", Printf.str("%4.1f", 1.7));
 		assertEquals("1.70", Printf.str("%4.2f", 1.7));
 		assertEquals("1.80", Printf.str("%4.2f", 1.79999999999));
-
+        
+        assertEquals("0", Printf.str("%1.0f", 0.50));
+		assertEquals("1", Printf.str("%1.0f", 0.51)); 
+		assertEquals("1.01", Printf.str("%3.2f", 1.0051));
+		assertEquals("1.01", Printf.str("%3.2f", 1.0099));
+        
 		assertEquals("17.3", Printf.str("%1.1f", 17.3));
 		assertEquals("17.3", Printf.str("%2.1f", 17.3));
 		assertEquals("17.3", Printf.str("%3.1f", 17.3));
