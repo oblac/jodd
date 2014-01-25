@@ -72,7 +72,9 @@ public class KeepAliveTest {
 
 		// ->
 		HttpRequest request = HttpRequest.get("http://jodd.org");
+		assertEquals("Close", request.header("Connection"));
 		request.connectionKeepAlive(true);
+		assertTrue(request.connectionKeepAlive());
 
 		// <-
 		HttpResponse response = request.open(httpConnectionProvider).send();

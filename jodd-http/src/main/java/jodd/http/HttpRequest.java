@@ -33,6 +33,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected String path = StringPool.SLASH;
 	protected HttpValuesMap query;
 
+	// ---------------------------------------------------------------- init
+
+	public HttpRequest() {
+		initRequest();
+	}
+
+	/**
+	 * Prepares request on creation. By default, it just
+	 * adds "Connection: Close" header.
+	 */
+	protected void initRequest() {
+		connectionKeepAlive(false);
+	}
+
 	// ---------------------------------------------------------------- properties
 
 	/**
@@ -543,16 +557,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Prepares this request before finally sending it. By default, it
-	 * adds "Connection: Close" header if "Connection" header is missing.
-	 */
-	protected void prepareRequestOnSend() {
-		if (header(HEADER_CONNECTION) == null) {
-			connectionKeepAlive(false);
-		}
-	}
-
-	/**
 	 * {@link #open() Opens connection} if not already open, sends request,
 	 * reads response and closes the request. If keep-alive mode is enabled
 	 * connection will not be closed.
@@ -561,8 +565,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (httpConnection == null) {
 			open();
 		}
-
-		prepareRequestOnSend();
 
 		// sends data
 		HttpResponse httpResponse;
