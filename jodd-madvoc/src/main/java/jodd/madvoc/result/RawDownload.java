@@ -3,6 +3,7 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.meta.RenderWith;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 /**
  * Download data for raw results.
  */
+@RenderWith(RawResult.class)
 public class RawDownload extends RawResultData {
 
 	public RawDownload(InputStream inputStream, String downloadFileName, String mimeType, int length) {

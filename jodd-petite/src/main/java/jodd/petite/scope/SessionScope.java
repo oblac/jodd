@@ -157,6 +157,9 @@ public class SessionScope extends ShutdownAwareScope {
 	}
 
 	public void remove(String name) {
+		if (totalRegisteredDestroyableBeans() == 0) {
+			return;
+		}
 		HttpSession session = getCurrentHttpSession();
 		Map<String, BeanData> map = getSessionMap(session);
 		if (map != null) {

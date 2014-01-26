@@ -18,7 +18,7 @@ import java.net.URL;
  * 
  * @see ServletRedirectResult
  */
-public class ServletDispatcherResult extends BaseActionResult {
+public class ServletDispatcherResult extends BaseActionResult<String> {
 
 	public static final String NAME = "dispatch";
 	protected static final String EXTENSION = ".jsp";
@@ -32,7 +32,7 @@ public class ServletDispatcherResult extends BaseActionResult {
 	 * Does its forward via a RequestDispatcher. If the dispatch fails a 404 error
 	 * will be sent back in the http response, what will produce error 500.
 	 */
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
@@ -49,7 +49,7 @@ public class ServletDispatcherResult extends BaseActionResult {
 			}
 			int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(resultPath);
 			if (dotNdx == -1) {
-				response.sendError(SC_NOT_FOUND, "Result '" + originalResultPath + EXTENSION + "' or any its variant not found.");
+				response.sendError(SC_NOT_FOUND, "Result not resolved: " + originalResultPath + EXTENSION);
 				return;
 			}
 			resultPath = resultPath.substring(0, dotNdx);
@@ -57,7 +57,7 @@ public class ServletDispatcherResult extends BaseActionResult {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(target);
 		if (dispatcher == null) {
-			response.sendError(SC_NOT_FOUND, "Result '" + target + "' not found.");	// this should never happened
+			response.sendError(SC_NOT_FOUND, "Result not found: " + target);	// this should never happened
 			return;
 		}
 

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Process move results.
  */
-public class MoveResult extends BaseActionResult {
+public class MoveResult extends BaseActionResult<String> {
 
 	public static final String NAME = "move";
 
@@ -37,7 +37,7 @@ public class MoveResult extends BaseActionResult {
 	/**
 	 * Saves action in the session under some id that is added as request parameter.
 	 */
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = httpServletRequest.getSession();
 

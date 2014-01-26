@@ -12,7 +12,7 @@ import java.io.OutputStream;
 /**
  * Generic JSON result.
  */
-public class JSONResult extends BaseActionResult {
+public class JSONResult extends BaseActionResult<String> {
 
 	public static final String NAME = "json";
 
@@ -20,7 +20,7 @@ public class JSONResult extends BaseActionResult {
 		super(NAME);
 	}
 
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String encoding = response.getCharacterEncoding();

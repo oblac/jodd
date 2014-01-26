@@ -15,7 +15,7 @@ import jodd.servlet.DispatcherUtil;
  * 
  * @see ServletDispatcherResult
  */
-public class ServletRedirectResult extends BaseActionResult {
+public class ServletRedirectResult extends BaseActionResult<String> {
 
 	public static final String NAME = "redirect";
 
@@ -28,7 +28,7 @@ public class ServletRedirectResult extends BaseActionResult {
 	/**
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 		resultPath = beanTemplateParser.parse(resultPath, actionRequest.getAction());

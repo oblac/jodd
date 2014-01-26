@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Simply sends redirect to an external location.
  */
-public class ServletUrlRedirectResult extends BaseActionResult  {
+public class ServletUrlRedirectResult extends BaseActionResult<String> {
 
 	public static final String NAME = "url";
 
@@ -22,7 +22,7 @@ public class ServletUrlRedirectResult extends BaseActionResult  {
 	/**
 	 * Redirects to the external location.
 	 */
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
 		resultValue = beanTemplateParser.parse(resultValue, actionRequest.getAction());
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 		response.sendRedirect(resultValue);

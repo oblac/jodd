@@ -1,13 +1,15 @@
 package jodd.madvoc.result;
 
+import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
 
 /**
  * Base implementation of {@link jodd.madvoc.result.ActionResult Action result}.
  */
-public abstract class BaseActionResult implements ActionResult {
+public abstract class BaseActionResult<T> implements ActionResult<T> {
 
 	protected final String resultType;
+	protected final Class<T> resultValueType;
 	protected boolean initialized;
 
 	/**
@@ -15,6 +17,7 @@ public abstract class BaseActionResult implements ActionResult {
 	 */
 	protected BaseActionResult(String resultType) {
 		this.resultType = resultType;
+		this.resultValueType = ReflectUtil.getGenericSupertype(this.getClass());
 	}
 
 	/**
@@ -22,6 +25,7 @@ public abstract class BaseActionResult implements ActionResult {
 	 */
 	protected BaseActionResult() {
 		this.resultType = null;
+		this.resultValueType = ReflectUtil.getGenericSupertype(this.getClass());
 	}
 
 	/**
@@ -29,6 +33,13 @@ public abstract class BaseActionResult implements ActionResult {
 	 */
 	public String getResultType() {
 		return resultType;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<T> getResultValueType() {
+		return resultValueType;
 	}
 
 	/**

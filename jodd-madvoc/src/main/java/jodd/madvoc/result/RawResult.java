@@ -19,36 +19,24 @@ import java.io.IOException;
  * Content type and charset encoding (e.g. set by Madvoc) is ignored
  * and new values should be set here. Output is closed after writing.
  */
-public class RawResult extends BaseActionResult {
-
-	public static final String NAME = "raw";
-
-	public RawResult() {
-		super(NAME);
-	}
+public class RawResult extends BaseActionResult<RawResultData> {
 
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws IOException {
-		if (resultObject == null) {
+	public void render(ActionRequest actionRequest, RawResultData resultValue, String resultPath) throws IOException {
+		if (resultValue == null) {
 			return;
 		}
-		if (resultObject instanceof RawResultData != true) {
-			String encoding = madvocConfig.getEncoding();
-			resultObject = new RawData(resultValue.getBytes(encoding));
-		}
-
-		RawResultData result = (RawResultData) resultObject;
 
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		// reset content type and prepare response
 		// since we are using MadvocResponseWrapper, the charset will be reset as well.
-		ServletUtil.prepareResponse(response, result.getDownloadFileName(), result.getMimeType(), result.getContentLength());
+		ServletUtil.prepareResponse(response, resultValue.getDownloadFileName(), resultValue.getMimeType(), resultValue.getContentLength());
 
 		// write out
-		InputStream contentInputStream = result.getContentInputStream();
+		InputStream contentInputStream = resultValue.getContentInputStream();
 		OutputStream out = response.getOutputStream();
 
 		StreamUtil.copy(contentInputStream, out);

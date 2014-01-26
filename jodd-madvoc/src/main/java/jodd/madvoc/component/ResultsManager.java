@@ -116,7 +116,7 @@ public class ResultsManager {
 		try {
 			return actionResultClass.newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Invalid Madvoc action result: " + actionResultClass, ex);
+			throw new MadvocException("Unable to create Madvoc action result: " + actionResultClass, ex);
 		}
 	}
 

@@ -40,6 +40,16 @@ public abstract class ShutdownAwareScope implements Scope {
 	}
 
 	/**
+	 * Returns number of destroyable beans that have been registered.
+	 */
+	protected int totalRegisteredDestroyableBeans() {
+		if (destroyableBeans == null) {
+			return 0;
+		}
+		return destroyableBeans.size();
+	}
+
+	/**
 	 * Removes destroyable bean from the list and calls it destroy methods.
 	 * If bean is not destroyable, does nothing.
 	 */

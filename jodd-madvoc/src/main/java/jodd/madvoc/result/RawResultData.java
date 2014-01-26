@@ -2,14 +2,15 @@
 
 package jodd.madvoc.result;
 
+import jodd.madvoc.meta.RenderWith;
+
 import java.io.InputStream;
 
 /**
  * Holder for Raw results.
  */
+@RenderWith(RawResult.class)
 public abstract class RawResultData {
-
-	private static final String RESULT = RawResult.NAME + ':';
 
 	protected final InputStream inputStream;
 	protected final String downloadFileName;
@@ -51,8 +52,4 @@ public abstract class RawResultData {
 		return length;
 	}
 
-	@Override
-	public String toString() {
-		return RESULT;
-	}
 }

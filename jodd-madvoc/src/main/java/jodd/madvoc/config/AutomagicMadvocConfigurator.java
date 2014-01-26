@@ -136,6 +136,10 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			if (clazz.isPrimitive()) {
 				return false;
 			}
+			int modifiers = clazz.getModifiers();
+			if (Modifier.isAbstract(modifiers)) {
+				return false;
+			}
 			return true;
 		} catch (Throwable ignore) {
 			return false;
@@ -190,7 +194,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	@SuppressWarnings({"unchecked"})
 	protected void onResultClass(String className) throws ClassNotFoundException {
 		Class resultClass = ClassLoaderUtil.loadClass(className);
-		if (resultClass.equals(ActionResult.class)) {
+		if (checkClass(resultClass) == false) {
 			return;
 		}
 		if (ReflectUtil.isSubclass(resultClass, ActionResult.class) == true) {

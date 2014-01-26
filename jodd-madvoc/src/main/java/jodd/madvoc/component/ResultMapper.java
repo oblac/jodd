@@ -172,5 +172,4 @@ public class ResultMapper {
 		return resultPath;
 	}
 
-
 }

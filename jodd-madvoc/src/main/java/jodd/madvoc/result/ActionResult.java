@@ -10,7 +10,7 @@ import jodd.madvoc.ActionRequest;
  * may have a result type, a string identification of the type
  * used when actions return string result.
  */
-public interface ActionResult {
+public interface ActionResult<T> {
 
 	/**
 	 * Returns the type of this action result.
@@ -20,15 +20,19 @@ public interface ActionResult {
 	 */
 	String getResultType();
 
+	/**
+	 * Returns type of result value, passed to the {@link #render(jodd.madvoc.ActionRequest, Object, String) render method}
+	 * and defined by generics.
+	 */
+	Class<T> getResultValueType();
 
 	/**
 	 * Renders result on given action result value.
 	 * @param actionRequest action request
-	 * @param resultObject reference to action method result, may be null
-	 * @param resultValue string representation of result, may be null
+	 * @param resultValue action method result, may be <code>null</code>
 	 * @param resultPath result path
 	 */
-	void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception;
+	void render(ActionRequest actionRequest, T resultValue, String resultPath) throws Exception;
 
 	/**
 	 * Returns <code>true</code> if result is initialized.

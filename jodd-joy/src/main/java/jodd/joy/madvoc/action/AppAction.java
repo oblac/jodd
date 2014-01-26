@@ -30,7 +30,6 @@ public abstract class AppAction {
 	public static final String CHAIN = "chain:";
 	public static final String JSON = "json:";
 	public static final String MOVE = "move:";
-	public static final String RAW = "raw:";
 	public static final String NONE = "none:";
 	public static final String VTOR_JSON = "vtor-json:";
 

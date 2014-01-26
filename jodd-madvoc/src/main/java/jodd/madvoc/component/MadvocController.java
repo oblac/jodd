@@ -5,11 +5,13 @@ package jodd.madvoc.component;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.typeconverter.TypeConverterManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -124,53 +126,95 @@ public class MadvocController {
 	/**
 	 * Invokes a result after the action invocation.
 	 * <p>
-	 * Result value consist of two parts: type and value. Result type is optional and, if exists, it is separated
-	 * by semi-colon from the value. If type is not specified, the annotation value will be used first,
-	 * and then the default result type if still not defined. Result type defines which
+	 * Results may be objects that specify which action result will be used
+	 * to render the result.
+	 * <p>
+	 * Result value may consist of two parts: type and value. Result type is optional and, if exists, it is separated
+	 * by semi-colon from the value. If type is not specified
+	 * then the default result type if still not defined. Result type defines which
 	 * {@link ActionResult} should be used for rendering the value.
 	 * <p>
 	 * Result value is first checked against aliased values. Then, it is resolved and then passed
 	 * to the founded {@link ActionResult}.
 	 *
-	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object, String, String)
+	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object, String)
 	 */
+	@SuppressWarnings("unchecked")
 	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
-		String resultValue = resultObject != null ? resultObject.toString() : null;
-		String resultType = null;
+		ActionResult actionResult;
+		String resultPath;
 
-		// first check result value
-		if (resultValue != null) {
-			int columnIndex = resultValue.indexOf(':');
-
-			if (columnIndex != -1) {
-				resultType = resultValue.substring(0, columnIndex);
-
-				resultValue = resultValue.substring(columnIndex + 1);
-			}
+		RenderWith renderWith = null;
+		if (resultObject != null) {
+			renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
 		}
 
-		// result type still not set, read config
-		if (resultType == null) {
-			resultType = actionRequest.getActionConfig().getResultType();
+		if (renderWith != null) {
+			// render with annotation exist, lookup the action result type
+			Class<? extends ActionResult> actionResultClass = renderWith.value();
+			actionResult = resultsManager.lookup(actionResultClass);
 
-			// result type still not defined, use default
+			if (actionResult == null) {
+				// register action result if by any chance it didn't get registered
+				actionResult = resultsManager.register(actionResultClass);
+			}
+
+			resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), null);
+		} else {
+			String resultValue = resultObject != null ? resultObject.toString() : null;
+			String resultType = null;
+
+			// first check result value
+			if (resultValue != null) {
+				int columnIndex = resultValue.indexOf(':');
+
+				if (columnIndex != -1) {
+					resultType = resultValue.substring(0, columnIndex);
+
+					resultValue = resultValue.substring(columnIndex + 1);
+				}
+			}
+
+			// result type is still not set, read config
 			if (resultType == null) {
-				resultType = madvocConfig.getDefaultResultType();
+				resultType = actionRequest.getActionConfig().getResultType();		// todo remove result type from action config!!!
+
+				// result type still not defined, use default
+				if (resultType == null) {
+					resultType = madvocConfig.getDefaultResultType();
+				}
+			}
+
+			actionResult = resultsManager.lookup(resultType);
+
+			if (actionResult == null) {
+				throw new MadvocException("Action result not found: " + resultType);
+			}
+
+			resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
+
+			// convert remaining of the string to result object
+			try {
+				Class targetClass = actionResult.getResultValueType();
+				if (targetClass == String.class) {
+					resultObject = resultValue;
+				} else {
+					resultObject = TypeConverterManager.convertType(resultValue, targetClass);
+				}
+			} catch (Exception ex) {
+				resultObject = resultValue;
 			}
 		}
 
-		ActionResult result = resultsManager.lookup(resultType);
-		if (result == null) {
-			throw new MadvocException("Action result not found: " + resultType);
-		}
-		if (result.isInitialized() == false) {
-			resultsManager.initializeResult(result);
+
+		if (actionResult.isInitialized() == false) {
+			resultsManager.initializeResult(actionResult);
 		}
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
-		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
-		result.render(actionRequest, resultObject, resultValue, resultPath);
+
+		actionResult.render(actionRequest, resultObject, resultPath);
 	}
 
 	// ---------------------------------------------------------------- create

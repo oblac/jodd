@@ -2,7 +2,6 @@
 
 package jodd.madvoc.action;
 
-
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.result.RawData;
@@ -23,7 +22,7 @@ public class RawAction {
 
 	@Action
 	public String text() {
-		return "raw:some raw txt";
+		return "text:some raw txt";
 	}
 
 	@Action(extension = Action.NONE)
