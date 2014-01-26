@@ -278,59 +278,22 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns <code>true</code> if "Connection" header is "keep-alive".
-	 * Returns <code>false</code> if header value has other value (e.g. "Close")
-	 * or it is not set. Important: if not specified, HTTP adds the "Connection"
-	 * header, set to "close".
+	 * Returns <code>true</code> if connection is persistent.
+	 * If "Connection" header does not exist, returns <code>true</code>
+	 * for HTTP 1.1 and <code>false</code> for HTTP 1.0. If
+	 * "Connection" header exist, checks if it is equal to "Close".
+	 * <p>
+	 * In HTTP 1.1, all connections are considered persistent unless declared otherwise.
+	 * Under HTTP 1.0, there is no official specification for how keepalive operates.
 	 */
-	public boolean connectionKeepAlive() {
+	public boolean isConnectionPersistent() {
 		String connection = header(HEADER_CONNECTION);
 		if (connection == null) {
-		  if(httpVersion.equalsIgnoreCase(HTTP_1_0)) {
-		    return false;
-		  } else {
-			  return true;
-		  }
+			return !httpVersion.equalsIgnoreCase(HTTP_1_0);
 		}
 
 		return !connection.equalsIgnoreCase(HEADER_CLOSE);
 	}
-
-	/**
-	 * Returns "Keep-Alive" header value.
-	 */
-	public String keepAlive() {
-		return header(HEADER_KEEP_ALIVE);
-	}
-
-	/**
-	 * Returns keep-alive timeout if exist.
-	 * Returns <code>-1</code> if doesn't.
-	 */
-	public int keepAliveTimeout() {
-		String keepAlive = keepAlive();
-		if (keepAlive == null) {
-			return -1;
-		}
-
-		String value = HttpUtil.extractKeepAliveTimeout(keepAlive);
-		return Integer.parseInt(value);
-	}
-
-	/**
-	 * Returns keep-alive max counter if exist.
-	 * Returns <code>-1</code> if doesn't.
-	 */
-	public int keepAliveMax() {
-		String keepAlive = keepAlive();
-		if (keepAlive == null) {
-			return -1;
-		}
-
-		String value = HttpUtil.extractKeepAliveMax(keepAlive);
-		return Integer.parseInt(value);
-	}
-
 
 	// ---------------------------------------------------------------- common headers
 

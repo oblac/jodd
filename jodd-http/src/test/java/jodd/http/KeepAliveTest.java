@@ -74,54 +74,49 @@ public class KeepAliveTest {
 		HttpRequest request = HttpRequest.get("http://jodd.org");
 		assertEquals("Close", request.header("Connection"));
 		request.connectionKeepAlive(true);
-		assertTrue(request.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
 
 		// <-
 		HttpResponse response = request.open(httpConnectionProvider).send();
 		HttpConnection connection = request.httpConnection();
 
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(2, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		currentResponse = 1;
 
 		// ->
 		request = HttpRequest.get("http://jodd.org");
-		response = request.keepAliveContinue(response).send();
+		response = request.keepAlive(response, true).send();
 
 		// <-
 		assertSame(connection, request.httpConnection());
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(1, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		currentResponse = 2;
 
 		// -> LAST request
 		request = HttpRequest.get("http://jodd.org");
-		response = request.keepAliveContinue(response).send();
+		response = request.keepAlive(response, true).send();
 
 		// <-
 		assertNull(request.httpConnection()); // connection is closed
-		assertFalse(request.connectionKeepAlive());
-		assertEquals("Close", request.header("Connection"));
-		assertEquals(-1, response.keepAliveMax());
-		assertFalse(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertFalse(response.isConnectionPersistent());
 
 		currentResponse = 0;
 
 		// -> AFTER THE LAST, STARTS EVERYTHING AGAIN
 
 		request = HttpRequest.get("http://jodd.org");
-		response = request.keepAliveContinue(response).send();
+		response = request.keepAlive(response, true).send();		// should be false for the last connection, but ok.
 
 		// <-
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(2, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		// CLOSE
@@ -146,9 +141,8 @@ public class KeepAliveTest {
 		HttpResponse response = browser.getHttpResponse();
 		HttpConnection connection = request.httpConnection();
 
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(2, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		currentResponse = 1;
@@ -159,9 +153,8 @@ public class KeepAliveTest {
 
 		// <-
 		assertSame(connection, request.httpConnection());
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(1, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		currentResponse = 2;
@@ -172,10 +165,8 @@ public class KeepAliveTest {
 
 		// <-
 		assertNull(request.httpConnection()); // connection is closed
-		assertFalse(request.connectionKeepAlive());
-		assertEquals("Close", request.header("Connection"));
-		assertEquals(-1, response.keepAliveMax());
-		assertFalse(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertFalse(response.isConnectionPersistent());
 
 		currentResponse = 0;
 
@@ -185,9 +176,8 @@ public class KeepAliveTest {
 		response = browser.sendRequest(request);
 
 		// <-
-		assertTrue(request.connectionKeepAlive());
-		assertEquals(2, response.keepAliveMax());
-		assertTrue(response.connectionKeepAlive());
+		assertTrue(request.isConnectionPersistent());
+		assertTrue(response.isConnectionPersistent());
 		assertNotNull(request.httpConnection());
 
 		// CLOSE

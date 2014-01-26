@@ -520,34 +520,35 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * its the last request. When new connection is created, the
 	 * same {@link jodd.http.HttpConnectionProvider} that was used for
 	 * creating initial connection is used for opening the new connection.
+	 *
+	 * @param doContinue set it to <code>false</code> to indicate the last connection
 	 */
-	public HttpRequest keepAliveContinue(HttpResponse httpResponse) {
-		boolean keepAlive = httpResponse.connectionKeepAlive();
-
+	public HttpRequest keepAlive(HttpResponse httpResponse, boolean doContinue) {
+		boolean keepAlive = httpResponse.isConnectionPersistent();
 		if (keepAlive) {
 			HttpConnection previousConnection = httpResponse.getHttpRequest().httpConnection;
 
 			if (previousConnection != null) {
-				int max = httpResponse.keepAliveMax();
-				if (max <= 0) {
-					// close previous connection
-					httpResponse.close();
-				} else {
-					// keep using the connection!
-					this.httpConnection = previousConnection;
-					this.httpConnectionProvider = httpResponse.getHttpRequest().httpConnectionProvider();
-					// if it is the last counter (max == 1) then
-					// mark connection to be closed, otherwise keep it alive
-					connectionKeepAlive(max > 1);
-				}
+				// keep using the connection!
+				this.httpConnection = previousConnection;
+				this.httpConnectionProvider = httpResponse.getHttpRequest().httpConnectionProvider();
 			}
+
+			//keepAlive = true; (already set)
 		} else {
 			// close previous connection
 			httpResponse.close();
 
-			// close previous response and force keep alive on new request
-			connectionKeepAlive(true);
+			// force keep-alive on new request
+			keepAlive = true;
 		}
+
+		// if we don't want to continue with this persistent session, mark this connection as closed
+		if (doContinue == false) {
+			keepAlive = false;
+		}
+
+		connectionKeepAlive(keepAlive);
 
 		// if connection is not opened, open it using previous connection provider
 		if (httpConnection == null) {
@@ -582,17 +583,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			throw new HttpException(ioex);
 		}
 
-		// checks if communication is keep alive
-		// only if both request and response defines the "Connection" header
-		// since server may set this header in response even if we didn't set it in request
-		boolean keepAlive = this.connectionKeepAlive() && httpResponse.connectionKeepAlive();
-
-		if (keepAlive == true) {
-			int keepAliveMax = httpResponse.keepAliveMax();
-			if (keepAliveMax == 0) {
-				keepAlive = false;
-			}
-		}
+		boolean keepAlive = httpResponse.isConnectionPersistent();
 
 		if (keepAlive == false) {
 			// closes connection if keep alive is false, or if counter reached 0
@@ -611,6 +602,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * resulting string is created.
 	 */
 	public String toString() {
+		return toString(true);
+	}
+
+	/**
+	 * Returns full request or just headers.
+	 * Useful for debugging.
+	 */
+	public String toString(boolean fullRequest) {
 
 		// INITIALIZATION
 
@@ -671,12 +670,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			}
 		}
 
-		builder.append(CRLF);
+		if (fullRequest) {
+			builder.append(CRLF);
 
-		if (form != null) {
-			builder.append(formString);
-		} else if (body != null) {
-			builder.append(body);
+			if (form != null) {
+				builder.append(formString);
+			} else if (body != null) {
+				builder.append(body);
+			}
 		}
 
 		return builder.toString();

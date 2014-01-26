@@ -89,6 +89,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 	 * String representation of the HTTP response.
 	 */
 	public String toString() {
+		return toString(true);
+	}
+
+	/**
+	 * Returns full response or just headers.
+	 * Useful for debugging.
+	 */
+	public String toString(boolean fullResponse) {
 		// form
 
 		String formString = formString();
@@ -117,12 +125,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			}
 		}
 
-		response.append(CRLF);
+		if (fullResponse) {
+			response.append(CRLF);
 
-		if (form != null) {
-			response.append(formString);
-		} else if (body != null) {
-			response.append(body);
+			if (form != null) {
+				response.append(formString);
+			} else if (body != null) {
+				response.append(body);
+			}
 		}
 
 		return response.toString();

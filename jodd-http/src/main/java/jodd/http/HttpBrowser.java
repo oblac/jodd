@@ -101,7 +101,7 @@ public class HttpBrowser {
 				if (previouseResponse == null) {
 					this.httpResponse = httpRequest.open(httpConnectionProvider).connectionKeepAlive(true).send();
 				} else {
-					this.httpResponse = httpRequest.keepAliveContinue(previouseResponse).send();
+					this.httpResponse = httpRequest.keepAlive(previouseResponse, true).send();
 				}
 			}
 
