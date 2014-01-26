@@ -63,7 +63,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 	@Override
 	public void end() {
 		if (currentRegions != 0) {
-			throw new DecoraException("Some regions are not defined correctly.");
+			throw new DecoraException("Some regions are not defined correctly");
 		}
 	}
 }

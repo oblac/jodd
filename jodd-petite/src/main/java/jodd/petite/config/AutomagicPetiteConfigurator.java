@@ -51,7 +51,7 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to scan classpath.", ex);
+			throw new PetiteException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
 		log.info("Petite configured in " + elapsed + " ms. Total beans: " + petiteContainer.getTotalBeans());

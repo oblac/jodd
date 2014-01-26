@@ -684,7 +684,7 @@ loop:	while (true) {
 	 */
 	private void stepBack(Token next) {
 		if (lastToken != Token.UNKNOWN) {
-			throw new LagartoException("Only one step back allowed.");
+			throw new LagartoException("Only one step back allowed");
 		}
 		lastToken = next;
 		if (next == Token.WORD || next == Token.QUOTE || next == Token.SLASH || next == Token.EQUALS) {

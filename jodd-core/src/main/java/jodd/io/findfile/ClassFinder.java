@@ -252,7 +252,7 @@ public abstract class ClassFinder {
 			zipFile = new ZipFile(file);
 		} catch (IOException ioex) {
 			if (ignoreException == false) {
-				throw new FindFileException("Unable to open zip: " + file.getName(), ioex);
+				throw new FindFileException("Invalid zip: " + file.getName(), ioex);
 			}
 			return;
 		}
@@ -374,7 +374,7 @@ public abstract class ClassFinder {
 		try {
 			onEntry(entryData);
 		} catch (Exception ex) {
-			throw new FindFileException("Unable to scan entry: " + entryData, ex);
+			throw new FindFileException("Scan entry error: " + entryData, ex);
 		}
 	}
 
@@ -416,7 +416,7 @@ public abstract class ClassFinder {
 			int index = ArraysUtil.indexOf(data, bytes);
 			return index != -1;
 		} catch (IOException ioex) {
-			throw new FindFileException("Unable to read.", ioex);
+			throw new FindFileException("Read error", ioex);
 		}
 	}
 
@@ -483,7 +483,7 @@ public abstract class ClassFinder {
 					inputStream = zipFile.getInputStream(zipEntry);
 					return inputStream;
 				} catch (IOException ioex) {
-					throw new FindFileException("Unable to get input stream: '" + zipFile.getName()
+					throw new FindFileException("Input stream error: '" + zipFile.getName()
 							+ "', entry: '" + zipEntry.getName() + "'." , ioex);
 				}
 			}

@@ -146,7 +146,7 @@ public class SqlTypeManager {
 			try {
 				sqlType = sqlTypeClass.newInstance();
 			} catch (Exception ex) {
-				throw new DbSqlException("Unable to create sql type: " + sqlTypeClass.getSimpleName(), ex);
+				throw new DbSqlException("SQL type not found: " + sqlTypeClass.getSimpleName(), ex);
 			}
 			sqlTypes.put(sqlTypeClass, sqlType);
 		}

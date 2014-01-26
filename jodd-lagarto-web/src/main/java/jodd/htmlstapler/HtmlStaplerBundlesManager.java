@@ -330,7 +330,7 @@ public class HtmlStaplerBundlesManager {
 		try {
 			createBundle(contextPath, actionPath, bundleId, sources);
 		} catch (IOException ioex) {
-			throw new HtmlStaplerException("Can't create bundle.", ioex);
+			throw new HtmlStaplerException("Can't create bundle", ioex);
 		}
 		return bundleId;
 	}

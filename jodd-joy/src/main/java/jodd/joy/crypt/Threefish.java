@@ -215,7 +215,7 @@ public class Threefish extends BlockCipher {
 					r = R16;
 					break;
 				default:
-					throw new RuntimeException("Internal error: invalid threefish key");
+					throw new RuntimeException("Invalid threefish key");
 			}
 
 			this.k = new long[nw + 1];

@@ -91,7 +91,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		try {
 			ResultSetMetaData rsMetaData = resultSet.getMetaData();
 			if (rsMetaData == null) {
-				throw new DbOomException("JDBC driver does not provide meta-data.");
+				throw new DbOomException("JDBC driver does not provide meta-data");
 			}
 
 			totalColumns = rsMetaData.getColumnCount();
@@ -163,7 +163,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
 			}
 		} catch (SQLException sex) {
-			throw new DbOomException("Unable to read ResultSet meta-data.", sex);
+			throw new DbOomException("Read ResultSet meta-data failed", sex);
 		}
 	}
 
@@ -183,7 +183,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableName == null) {
 				// maybe JDBC driver does not support it
-				throw new DbOomException("Table name not available in driver meta-data.");
+				throw new DbOomException("Table name not available in driver meta-data");
 			}
 
 			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
@@ -260,7 +260,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					cachedColumnValue = TypeConverterManager.convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
-				throw new DbOomException("Unable to read value for column #" + (colNdx + 1), sex);
+				throw new DbOomException("Invalid value for column #" + (colNdx + 1), sex);
 			}
 			cachedColumnNdx = colNdx;
 		}

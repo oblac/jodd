@@ -192,7 +192,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		try {
 		    return wrapperClass.newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create Madvoc wrapper: " + wrapperClass, ex);
+			throw new MadvocException("Invalid Madvoc wrapper: " + wrapperClass, ex);
 		}
 	}
 

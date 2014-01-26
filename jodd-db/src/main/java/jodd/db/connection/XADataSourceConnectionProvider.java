@@ -40,7 +40,7 @@ public class XADataSourceConnectionProvider implements ConnectionProvider {
 			}
 			return xaConnection.getConnection();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to get connection from XA datasource.", sex);
+			throw new DbSqlException("Unable to get connection from XA datasource", sex);
 		}
 	}
 

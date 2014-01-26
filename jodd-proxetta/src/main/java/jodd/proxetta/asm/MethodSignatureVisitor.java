@@ -288,7 +288,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 				typeName = getArrayDepthString() + typeName;
 			}
 			if (type == 'V') {
-				throw new ProxettaException("Method argument can't be void.");
+				throw new ProxettaException("Method argument can't be void");
 			}
 			argumentsCount++;
 			argumentsOpcodeType.add(type);

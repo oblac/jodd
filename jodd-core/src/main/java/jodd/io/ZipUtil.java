@@ -51,7 +51,7 @@ public class ZipUtil {
 	 */
 	public static void zlib(File file) throws IOException {
 		if (file.isDirectory() == true) {
-			throw new IOException("Cant zlib a folder");
+			throw new IOException("Can't zlib folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
 		Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
@@ -78,7 +78,7 @@ public class ZipUtil {
 	 */
 	public static void gzip(File file) throws IOException {
 		if (file.isDirectory() == true) {
-			throw new IOException("Cant gzip a folder");
+			throw new IOException("Can't gzip folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
 		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file.getAbsolutePath() + GZIP_EXT));
@@ -176,7 +176,7 @@ public class ZipUtil {
 			if (entry.isDirectory()) {
 				if (!file.mkdirs()) {
 					if (file.isDirectory() == false) {
-						throw new IOException("Error creating directory: " + file);
+						throw new IOException("Failed to create directory: " + file);
 					}
 				}
 			} else {
@@ -184,7 +184,7 @@ public class ZipUtil {
 				if (parent != null && !parent.exists()) {
 					if (!parent.mkdirs()) {
 						if (file.isDirectory() == false) {
-							throw new IOException("Error creating directory: " + parent);
+							throw new IOException("Failed to create directory: " + parent);
 						}
 					}
 				}

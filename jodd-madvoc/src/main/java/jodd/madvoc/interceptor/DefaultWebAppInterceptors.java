@@ -14,6 +14,6 @@ import jodd.madvoc.component.MadvocConfig;
 public final class DefaultWebAppInterceptors extends BaseActionInterceptor {
 
 	public String intercept(ActionRequest actionRequest) throws Exception {
-		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker.");
+		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 }

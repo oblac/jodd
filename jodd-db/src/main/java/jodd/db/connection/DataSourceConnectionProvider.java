@@ -58,7 +58,7 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
 				return dataSource.getConnection();
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to get connection from datasource.", sex);
+			throw new DbSqlException("Invalid datasource connection", sex);
 		}
 	}
 

@@ -37,7 +37,7 @@ public class ActionPathMacroManager {
 		try {
 			return madvocConfig.getPathMacroClass().newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create PathMacros instance.", ex);
+			throw new MadvocException("PathMacro class error", ex);
 		}
 	}
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
- * May start and work with transactions, after commiting/rolling back
+ * May start and work with transactions, after committing/rolling back
  * DbSession goes back to auto-commit mode.
  * <p>
  * All invoked queries are stored within one session and closed implicitly
@@ -49,7 +49,7 @@ public class DbSession {
 		if (connectionProvider == null) {
 			connectionProvider = dbManager.connectionProvider;
 			if (connectionProvider == null) {
-				throw new DbSqlException("Connection provider is not available.");
+				throw new DbSqlException("Connection provider is not available");
 			}
 		}
 		this.connectionProvider = connectionProvider;
@@ -82,14 +82,14 @@ public class DbSession {
 		}
 		if (connection != null) {
 			if (txActive == true) {
-				throw new DbSqlException("Transaction was not closed before closing the session.");
+				throw new DbSqlException("TX was not closed before closing the session");
 			}
 			connectionProvider.closeConnection(connection);
 			connection = null;
 		}
 		queries = null;
 		if (allsexs != null) {
-			throw new DbSqlException("Unable to close DbSession.", allsexs);
+			throw new DbSqlException("Closing DbSession failed", allsexs);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class DbSession {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to open non-transactional connection.", sex);
+				throw new DbSqlException("Failed to open non-transactional connection", sex);
 			}
 		}
 	}
@@ -196,7 +196,7 @@ public class DbSession {
 			}
 			connection.setReadOnly(txMode.isReadOnly());
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to open and prepare transaction.", sex);
+			throw new DbSqlException("Open TX failed", sex);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class DbSession {
 		try {
 			connection.setAutoCommit(true);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to prepare connection", sex);
+			throw new DbSqlException("Close TX failed", sex);
 		}
 	}
 
@@ -242,7 +242,7 @@ public class DbSession {
 		try {
 			connection.commit();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to commit transaction.", sex);
+			throw new DbSqlException("Commit TX failed", sex);
 		} finally {
 			closeTx();
 		}
@@ -258,7 +258,7 @@ public class DbSession {
 		try {
 			connection.rollback();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to rollback transaction.", sex);
+			throw new DbSqlException("Rollback TX failed", sex);
 		} finally {
 			closeTx();
 		}
@@ -269,21 +269,21 @@ public class DbSession {
 
 	protected void checkOpenSession() {
 		if (queries == null) {
-			throw new DbSqlException("Session is closed.");
+			throw new DbSqlException("Session is closed");
 		}
 	}
 
 	protected void checkClosedTx() {
 		checkOpenSession();
 		if (txActive == true) {
-			throw new DbSqlException("Transaction already started for this session.");
+			throw new DbSqlException("TX already started for this session");
 		}
 	}
 
 	protected void checkActiveTx() {
 		checkOpenSession();
 		if (txActive == false) {
-			throw new DbSqlException("Transaction not available for this session.");
+			throw new DbSqlException("TX not available for this session");
 		}
 	}
 }

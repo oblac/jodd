@@ -33,7 +33,7 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	 */
 	protected int getArgumentIndex() {
 		if (isPrevious == false) {
-			throw new ProxettaException("Unexpected previous instruction type used for setting argument index.");
+			throw new ProxettaException("Unexpected previous instruction type used for setting argument index");
 		}
 		int argIndex;
 		switch (opcode) {
@@ -47,7 +47,7 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 			case SIPUSH:
 				argIndex = operand; break;
 			default:
-				throw new ProxettaException("Unexpected previous instruction used for setting argument index.");
+				throw new ProxettaException("Unexpected previous instruction used for setting argument index");
 		}
 		return argIndex;
 	}

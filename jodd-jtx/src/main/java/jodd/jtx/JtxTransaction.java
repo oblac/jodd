@@ -166,7 +166,7 @@ public class JtxTransaction {
 	public void setRollbackOnly(Throwable th) {
 		if (isNoTransaction() == false) {
 			if ((status != STATUS_MARKED_ROLLBACK) && (status != STATUS_ACTIVE)) {
-				throw new JtxException("There is no active transaction that can be marked as rollback only.");
+				throw new JtxException("TNo active TX that can be marked as rollback only");
 			}
 		}
 		rollbackCause = th;
@@ -191,7 +191,7 @@ public class JtxTransaction {
 		}
 		if (this.deadline - System.currentTimeMillis() < 0) {
 			setRollbackOnly();
-			throw new JtxException("Transaction timed out, marked as rollback only.");
+			throw new JtxException("TX timed out, marked as rollback only");
 		}
 	}
 
@@ -236,9 +236,9 @@ public class JtxTransaction {
 				}
 			} else if (isActive() == false) {
 				if (isCompleted()) {
-					throw new JtxException("Transaction is already completed, commit or rollback should be called once per transaction.");
+					throw new JtxException("TX is already completed, commit or rollback should be called once per TX");
 				}
-				throw new JtxException("No active transaction to " + (doCommit ? "commit." : "rollback."));
+				throw new JtxException("No active TX to " + (doCommit ? "commit" : "rollback"));
 			}
 		}
 		if (doCommit == true) {
@@ -274,7 +274,7 @@ public class JtxTransaction {
 		}
 		if (lastException != null) {
 			setRollbackOnly(lastException);
-			throw new JtxException("Commit failed: one or more transaction resources couldn't commit a transaction.", lastException);
+			throw new JtxException("Commit failed: one or more TX resources couldn't commit a TX", lastException);
 		}
 		txManager.removeTransaction(this);
 		status = STATUS_COMMITTED;
@@ -302,10 +302,10 @@ public class JtxTransaction {
 		status = STATUS_ROLLEDBACK;
 		if (lastException != null) {
 			status = STATUS_UNKNOWN;
-			throw new JtxException("Rollback failed: one or more transaction resources couldn't rollback a transaction.", lastException);
+			throw new JtxException("Rollback failed: one or more TX resources couldn't rollback a TX", lastException);
 		}
 		if (wasForced) {
-			throw new JtxException("Transaction rolled back because it has been marked as rollback-only.", rollbackCause);
+			throw new JtxException("TX rolled back because it has been marked as rollback-only", rollbackCause);
 		}
 	}
 
@@ -317,20 +317,20 @@ public class JtxTransaction {
 	 */
 	public <E> E requestResource(Class<E> resourceType) {
 		if (isCompleted()) {
-			throw new JtxException("Transaction is already completed, resource are not available after commit or rollback.");
+			throw new JtxException("TX is already completed, resource are not available after commit or rollback");
 		}
 		if (isRollbackOnly()) {
-			throw new JtxException("Transaction is marked as rollback only, resource are not available.", rollbackCause);
+			throw new JtxException("TX is marked as rollback only, resource are not available", rollbackCause);
 		}
 		if (!isNoTransaction() && !isActive()) {
-			throw new JtxException("Resources are not available since transaction is not active.");
+			throw new JtxException("Resources are not available since TX is not active");
 		}
 		checkTimeout();
 		E resource = lookupResource(resourceType);
 		if (resource == null) {
 			int maxResources = txManager.getMaxResourcesPerTransaction();
 			if ((maxResources != -1) && (resources.size() >= maxResources)) {
-				throw new JtxException("Transaction already has attached max. number of resources.");
+				throw new JtxException("TX already has attached max. number of resources");
 			}
 			JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
 			resource = resourceManager.beginTransaction(mode, isActive());

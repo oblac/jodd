@@ -286,7 +286,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// fail
-		throw new TypeConversionException("Unable to convert to type: " + destinationType.getName());
+		throw new TypeConversionException("Conversion failed: " + destinationType.getName());
 	}
 
 }

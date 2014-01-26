@@ -90,7 +90,7 @@ public abstract class EmailAttachment {
 	 */
 	public void setEmbeddedMessage(EmailMessage emailMessage) {
 		if (isInline() == false) {
-			throw new MailException("Only inline attachments may be embedded.");
+			throw new MailException("Only inline attachments may be embedded");
 		}
 		targetMessage = emailMessage;
 	}

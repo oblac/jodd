@@ -204,11 +204,11 @@ public class DbOomManager {
 		}
 
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Type '" + existing.getType() + "' already registered.");
+			throw new DbOomException("Type registration failed! Type already registered: " + existing.getType());
 		}
 		existing = entityNamesMap.put(ded.getEntityName(), ded);
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity class: " + existing.getType());
+			throw new DbOomException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
 	}
@@ -222,7 +222,7 @@ public class DbOomManager {
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
 		if (existing != null) {
-			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity class: " + existing.getType());
+			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
 	}
@@ -403,7 +403,7 @@ public class DbOomManager {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOomException("Unable to create new entity instance using default constructor for type: " + type, ex);
+			throw new DbOomException("Invalid entity type: " + type, ex);
 		}
 	}
 

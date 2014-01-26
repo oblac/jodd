@@ -124,7 +124,6 @@ public class Iso8601JdtFormatter extends AbstractFormatter {
 		}
 	}
 
-
 	@Override
 	protected void parseValue(int patternIndex, String value, DateTimeStamp destination) {
 		int v = Integer.parseInt(value);
@@ -137,7 +136,7 @@ public class Iso8601JdtFormatter extends AbstractFormatter {
 			case 10:	destination.second = v; break;
 			case 11:	destination.millisecond = v; break;
 			default:
-				throw new IllegalArgumentException("Parsing template failed: " + new String(patterns[patternIndex]));
+				throw new IllegalArgumentException("Invalid template: " + new String(patterns[patternIndex]));
 		}
 	}
 }

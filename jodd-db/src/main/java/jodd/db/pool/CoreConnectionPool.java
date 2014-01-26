@@ -170,7 +170,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * {@inheritDoc}
 	 */
 	public synchronized void init() {
-		log.info("core connection pool initialization");
+		if (log.isInfoEnabled()) {
+			log.info("Core connection pool initialization");
+		}
 		try {
 			Class.forName(driver);
 		} catch (ClassNotFoundException cnfex) {
@@ -186,7 +188,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 				Connection conn = DriverManager.getConnection(url, user, password); 
 				availableConnections.add(new ConnectionData(conn));
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to get database connection.", sex);
+				throw new DbSqlException("No database connection", sex);
 			}
 		}
 	}
@@ -198,7 +200,7 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 */
 	public synchronized Connection getConnection() {
 		if (availableConnections == null) {
-			throw new DbSqlException("Connection pool is not initialized.");
+			throw new DbSqlException("Connection pool is not initialized");
 		}
 		if (availableConnections.isEmpty() == false) {
 			int lastIndex = availableConnections.size() - 1;
@@ -211,25 +213,31 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			long now = System.currentTimeMillis();
 			boolean isValid = isConnectionValid(existingConnection, now);
 			if (isValid == false) {
-				log.debug("pooled connection is not valid, resetting");
+				if (log.isDebugEnabled()) {
+					log.debug("Pooled connection not valid, resetting");
+				}
 
 				notifyAll();				 // freed up a spot for anybody waiting
 				return getConnection();
 			} else {
-				log.debug("returning valid pooled connection");
+				if (log.isDebugEnabled()) {
+					log.debug("Returning valid pooled connection");
+				}
 
 				busyConnections.add(existingConnection);
 				existingConnection.lastUsed = now;
 				return existingConnection.connection;
 			}
 		}
-		log.debug("no more available connections");
+		if (log.isDebugEnabled()) {
+			log.debug("No more available connections");
+		}
 
 		// no available connections
 		if (((availableConnections.size() + busyConnections.size()) < maxConnections) && !connectionPending) {
 			makeBackgroundConnection();
 		} else if (!waitIfBusy) {
-			throw new DbSqlException("Connection limit of " + maxConnections + " connections reached.");
+			throw new DbSqlException("Connection limit reached: " + maxConnections);
 		}
 		// wait for either a new conn to be established (if you called makeBackgroundConnection) or for
 		// an existing conn to be freed up.
@@ -328,7 +336,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 	 * regarding when the connections are closed.
 	 */
 	public synchronized void close() {
-		log.info("core connection pool shutdown");
+		if (log.isInfoEnabled()) {
+			log.info("Core connection pool shutdown");
+		}
 		closeConnections(availableConnections);
 		availableConnections = new ArrayList<ConnectionData>(maxConnections);
 		closeConnections(busyConnections);

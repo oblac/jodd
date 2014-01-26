@@ -161,7 +161,7 @@ public class MadvocController {
 
 		ActionResult result = resultsManager.lookup(resultType);
 		if (result == null) {
-			throw new MadvocException("Unable to find action result type: " + resultType);
+			throw new MadvocException("Action result not found: " + resultType);
 		}
 		if (result.isInitialized() == false) {
 			resultsManager.initializeResult(result);
@@ -206,7 +206,7 @@ public class MadvocController {
 		try {
 			return actionClass.newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create Madvoc action.", ex);
+			throw new MadvocException("Invalid Madvoc action", ex);
 		}
 	}
 

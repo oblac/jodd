@@ -85,7 +85,7 @@ public class ClassLoaderUtil {
 			ReflectUtil.invokeDeclared(URLClassLoader.class, classLoader, "addURL",
 					new Class[]{URL.class}, new Object[]{url});
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Unable to add URL: " + url, ex);
+			throw new IllegalArgumentException("Add URL failed: " + url, ex);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class ClassLoaderUtil {
 					new Class[] {String.class, byte[].class, int.class, int.class},
 					new Object[] {className, classData, Integer.valueOf(0), Integer.valueOf(classData.length)});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to define class: " + className, th);
+			throw new RuntimeException("Define class failed: " + className, th);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class ClassLoaderUtil {
 					new Class[] {String.class},
 					new Object[] {className});
 		} catch (Throwable th) {
-			throw new RuntimeException("Unable to find class: " + className, th);
+			throw new RuntimeException("Class not found: " + className, th);
 		}
 	}
 

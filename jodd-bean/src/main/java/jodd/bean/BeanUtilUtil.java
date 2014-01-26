@@ -73,7 +73,7 @@ class BeanUtilUtil {
 
 			setter.invokeSetter(bean, value);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to set: " + setter, ex);
+			throw new BeanException("Setter failed: " + setter, ex);
 		}
 	}
 
@@ -93,7 +93,7 @@ class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
-				throw new BeanException("Unable to create array element: " + bp.name + '[' + index + ']', bp, ex);
+				throw new BeanException("Invalid array element: " + bp.name + '[' + index + ']', bp, ex);
 			}
 			Array.set(array, index, value);
 		}
@@ -121,7 +121,7 @@ class BeanUtilUtil {
 
 			Setter setter = bp.getSetter(true);
 			if (setter == null) {
-				throw new BeanException("Unable to find setter or field named as: " + bp.name, bp);
+				throw new BeanException("Setter or field not found: " + bp.name, bp);
 			}
 
 			invokeSetter(setter, bp.bean, newArray);
@@ -221,7 +221,7 @@ class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
-			throw new BeanException("Unable to create property: " + bp.name, bp, ex);
+			throw new BeanException("Invalid property: " + bp.name, bp, ex);
 		}
 
 		invokeSetter(setter, bp.bean, newInstance);

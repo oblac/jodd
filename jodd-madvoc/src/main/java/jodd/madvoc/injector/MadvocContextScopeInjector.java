@@ -40,6 +40,6 @@ public class MadvocContextScopeInjector extends BaseScopeInjector {
 		if (outjectData == null) {
 			return;
 		}
-		throw new MadvocException("Madvoc context can't be outjected.");
+		throw new MadvocException("Madvoc context can't be outjected");
 	}
 }

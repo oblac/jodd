@@ -197,35 +197,35 @@ public class Madvoc {
 		webapp.registerMadvocComponents();
 		madvocConfig = webapp.getComponent(MadvocConfig.class);
 		if (madvocConfig == null) {
-			throw new MadvocException("No Madvoc configuration component found.");
+			throw new MadvocException("Madvoc configuration not found");
 		}
 		webapp.init(madvocConfig, servletContext);
 
 		// filters
 		FiltersManager filtersManager = webapp.getComponent(FiltersManager.class);
 		if (filtersManager == null) {
-			throw new MadvocException("No Madvoc filers manager component found.");
+			throw new MadvocException("Madvoc filers manager not found");
 		}
 		webapp.initFilters(filtersManager);
 
 		// interceptors
 		InterceptorsManager interceptorsManager = webapp.getComponent(InterceptorsManager.class);
 		if (interceptorsManager == null) {
-			throw new MadvocException("No Madvoc interceptors manager component found.");
+			throw new MadvocException("Madvoc interceptors manager not found");
 		}
 		webapp.initInterceptors(interceptorsManager);
 
 		// actions
 		ActionsManager actionsManager = webapp.getComponent(ActionsManager.class);
 		if (actionsManager == null) {
-			throw new MadvocException("No Madvoc actions manager component found.");
+			throw new MadvocException("Madvoc actions manager not found");
 		}
 		webapp.initActions(actionsManager);
 
 		// results
 		ResultsManager resultsManager = webapp.getComponent(ResultsManager.class);
 		if (resultsManager == null) {
-			throw new MadvocException("No Madvoc results manager component found.");
+			throw new MadvocException("Madvoc results manager not found");
 		}
 		webapp.initResults(resultsManager);
 
@@ -236,7 +236,7 @@ public class Madvoc {
 		// prepare web application
 		madvocController = webapp.getComponent(MadvocController.class);
 		if (madvocController == null) {
-			throw new MadvocException("No Madvoc controller component found.");
+			throw new MadvocException("Madvoc controller not found");
 		}
 		madvocController.init(servletContext);
 	}
@@ -258,7 +258,7 @@ public class Madvoc {
 	 */
 	protected WebApplication createWebApplication() {
 		if ((webAppClassName != null) && (webAppClass != null)) {
-			throw new MadvocException("Ambiguous WebApplication setting.");
+			throw new MadvocException("Ambiguous WebApplication setting");
 		}
 		if ((webAppClassName == null) && (webAppClass == null)) {
 			return new WebApplication();
@@ -298,7 +298,7 @@ public class Madvoc {
 	 */
 	protected MadvocConfigurator loadMadvocConfig() {
 		if ((madvocConfiguratorClassName != null) && (madvocConfiguratorClass != null)) {
-			throw new MadvocException("Ambiguous MadvocConfigurator setting.");
+			throw new MadvocException("Ambiguous MadvocConfigurator setting");
 		}
 		if ((madvocConfiguratorClassName == null) && (madvocConfiguratorClass == null)) {
 			log.info("Configuring Madvoc using default automagic configurator");

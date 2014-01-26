@@ -37,7 +37,7 @@ public class MultipartRequestInputStream extends BufferedInputStream {
 	public void skipBytes(int i) throws IOException {
 		long len = super.skip(i);
 		if (len != i) {
-			throw new IOException("Unable to skip data in HTTP request");
+			throw new IOException("Failed to skip data in HTTP request");
 		}
 	}
 

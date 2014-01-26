@@ -76,7 +76,7 @@ public class ImapServer implements ReceiveMailSessionProvider {
 		try {
 			store = getStore(session);
 		} catch (NoSuchProviderException nspex) {
-			throw new MailException("Unable to create IMAP session", nspex);
+			throw new MailException("Failed to create IMAP session", nspex);
 		}
 		return new ReceiveMailSession(session, store);
 	}

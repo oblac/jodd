@@ -181,7 +181,7 @@ public class FindFile<T extends FindFile> {
 		try {
 			file = new File(searchPath);
 		} catch (Exception ex) {
-			throw new FindFileException("Invalid URI: " + searchPath, ex);
+			throw new FindFileException("URI error: " + searchPath, ex);
 		}
 
 		addPath(file);
@@ -205,7 +205,7 @@ public class FindFile<T extends FindFile> {
 	public T searchPath(URL searchPath) {
 		File file = FileUtil.toFile(searchPath);
 		if (file == null) {
-			throw new FindFileException("Invalid URL: " + searchPath);
+			throw new FindFileException("URL error: " + searchPath);
 		}
 		addPath(file);
 		return (T) this;

@@ -13,7 +13,7 @@ import jodd.madvoc.MadvocException;
 public final class DefaultWebAppFilters extends BaseActionFilter {
 
 	public String filter(ActionRequest actionRequest) throws Exception {
-		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker.");
+		throw new MadvocException(this.getClass().getSimpleName() + " is just a marker");
 	}
 
 }

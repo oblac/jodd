@@ -113,7 +113,7 @@ public class ScopeDataResolver {
 			}
 */
 		} else {
-			throw new MadvocException("IN data are available only for Class.");
+			throw new MadvocException("IN data are available only for Class");
 		}
 		if (count == 0) {
 			scopeData = EMPTY_SCOPEDATA;
@@ -329,7 +329,7 @@ public class ScopeDataResolver {
 			InOut inout = field.getAnnotation(InOut.class);
 			if (inout != null) {
 				if (in != null) {
-					throw new MadvocException("InOut field annotation cannot be used together with In: " + field.getDeclaringClass() + '#' + field.getName());
+					throw new MadvocException("InOut field annotation cannot be used with In: " + field.getDeclaringClass() + '#' + field.getName());
 				}
 				ii = inspectIn(inout, scopeType, field.getName(), field.getType());
 				if (ii != null) {
@@ -345,7 +345,7 @@ public class ScopeDataResolver {
 			inout = field.getAnnotation(InOut.class);
 			if (inout != null) {
 				if (out != null) {
-					throw new MadvocException("InOut field annotation cannot be used together with Out: " + field.getDeclaringClass() + '#' + field.getName());
+					throw new MadvocException("InOut field annotation cannot be used with Out: " + field.getDeclaringClass() + '#' + field.getName());
 				}
 				oi = inspectOut(inout, scopeType, field.getName(), field.getType());
 				if (oi != null) {
@@ -368,7 +368,7 @@ public class ScopeDataResolver {
 				InOut inout = method.getAnnotation(InOut.class);
 				if (inout != null) {
 					if (in != null) {
-						throw new MadvocException("InOut method annotation cannot be used together with In: " + method.getDeclaringClass() + '#' + method.getName());
+						throw new MadvocException("InOut method annotation cannot be used with In: " + method.getDeclaringClass() + '#' + method.getName());
 					}
 					ii = inspectIn(inout, scopeType, propertyName, method.getParameterTypes()[0]);
 					if (ii != null) {
@@ -387,7 +387,7 @@ public class ScopeDataResolver {
 				InOut inout = method.getAnnotation(InOut.class);
 				if (inout != null) {
 					if (out != null) {
-						throw new MadvocException("InOut method annotation cannot be used together with Out: " + method.getDeclaringClass() + '#' + method.getName());
+						throw new MadvocException("InOut method annotation cannot be used with Out: " + method.getDeclaringClass() + '#' + method.getName());
 					}
 					oi = inspectOut(inout, scopeType, propertyName, method.getReturnType());
 					if (oi != null) {

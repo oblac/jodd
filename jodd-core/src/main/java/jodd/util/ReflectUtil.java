@@ -994,7 +994,7 @@ public class ReflectUtil {
 				index = ArraysUtil.indexOf(rawInterface.getTypeParameters(), typeVariable);
 
 				if (index < 0) {
-					throw new IllegalArgumentException("Can't resolve type variable:" + typeVariable);
+					throw new IllegalArgumentException("Invalid type variable:" + typeVariable);
 				}
 
 				final Type type = i < genericInterfaces.length ? genericInterfaces[i] : rawType.getGenericSuperclass();

@@ -140,7 +140,7 @@ public class EmailAttachmentBuilder {
 		if (sourceFile != null) {
 			return createFileAttachment();
 		}
-		throw new MailException("No source.");
+		throw new MailException("No source");
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class EmailAttachmentBuilder {
 		}
 
 		if (count > 0) {
-			throw new MailException("Attachment source already specified.");
+			throw new MailException("Attachment source already specified");
 		}
 	}
 

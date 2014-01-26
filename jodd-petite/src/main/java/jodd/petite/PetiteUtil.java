@@ -48,7 +48,7 @@ public class PetiteUtil {
 			try {
 				destroyMethodPoint.method.invoke(beanData.getBean());
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to invoke destroy method: " + destroyMethodPoint.method, ex);
+				throw new PetiteException("Invalid destroy method: " + destroyMethodPoint.method, ex);
 			}
 		}
 	}

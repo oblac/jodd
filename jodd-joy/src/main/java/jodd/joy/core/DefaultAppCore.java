@@ -178,7 +178,7 @@ public abstract class DefaultAppCore {
 	protected void resolveAppDir(String classPathFileName) {
 		URL url = ClassLoaderUtil.getResourceUrl(classPathFileName);
 		if (url == null) {
-			throw new AppException("Unable to resolve app dirs, missing: " + classPathFileName);
+			throw new AppException("Failed to resolve app dir, missing: " + classPathFileName);
 		}
 		String protocol = url.getProtocol();
 

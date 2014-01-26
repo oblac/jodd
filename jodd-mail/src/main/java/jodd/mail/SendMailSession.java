@@ -53,7 +53,7 @@ public class SendMailSession {
 		try {
 			mailTransport.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect", msex);
+			throw new MailException("Failed to connect", msex);
 		}
 	}
 
@@ -65,12 +65,12 @@ public class SendMailSession {
 		try {
 			msg = createMessage(mail, mailSession);
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to prepare email message: " + mail, mex);
+			throw new MailException("Failed to prepare email: " + mail, mex);
 		}
 		try {
 			mailTransport.sendMessage(msg, msg.getAllRecipients());
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to send email message: " + mail, mex);
+			throw new MailException("Failed to send email: " + mail, mex);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class SendMailSession {
 		try {
 			mailTransport.close();
 		} catch (MessagingException mex) {
-			throw new MailException("Unable to close session", mex);
+			throw new MailException("Failed to close session", mex);
 		}
 	}
 

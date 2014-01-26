@@ -35,7 +35,7 @@ public abstract class IdEntity extends Entity {
 				return;
 			}
 		}
-		throw new DbOomException("No @DbId field.");
+		throw new DbOomException("No @DbId field");
 	}
 
 	@Override

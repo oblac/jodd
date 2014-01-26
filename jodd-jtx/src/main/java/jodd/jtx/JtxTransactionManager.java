@@ -261,7 +261,7 @@ public class JtxTransactionManager {
 			case PROPAGATION_NOT_SUPPORTED: return propNotSupported(currentTx, mode, scope);
 			case PROPAGATION_NEVER: return propNever(currentTx, mode, scope);
 		}
-		throw new JtxException("Invalid transaction propagation value (" + mode.getPropagationBehavior().value() + ')');
+		throw new JtxException("Invalid TX propagation value: " + mode.getPropagationBehavior().value());
 	}
 
 	/**
@@ -296,12 +296,12 @@ public class JtxTransactionManager {
 		if (destIsolationLevel != ISOLATION_DEFAULT) {
 			JtxIsolationLevel currentIsolationLevel = sourceMode.getIsolationLevel();
 			if (currentIsolationLevel != destIsolationLevel) {
-				throw new JtxException("Participating transaction specifies isolation level '" + destIsolationLevel +
-						"' which is incompatible with existing transaction: '" + currentIsolationLevel + "'.");
+				throw new JtxException("Participating TX specifies isolation level: " + destIsolationLevel +
+						" which is incompatible with existing TX: " + currentIsolationLevel);
 			}
 		}
 		if ((destMode.isReadOnly() == false) && (sourceMode.isReadOnly())) {
-			throw new JtxException("Participating transaction is not marked as read-only, but existing transaction is.");
+			throw new JtxException("Participating TX is not marked as read-only, but existing TX is");
 		}
 	}
 
@@ -361,7 +361,7 @@ public class JtxTransactionManager {
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
-			throw new JtxException("No existing transaction found for transaction marked with propagation 'mandatory'.");
+			throw new JtxException("No existing TX found for TX marked with propagation 'mandatory'");
 		}
 		continueTx(currentTx, mode);
 		return currentTx;
@@ -393,7 +393,7 @@ public class JtxTransactionManager {
 	 */
 	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx != null) && (currentTx.isNoTransaction() == false)) {
-			throw new JtxException("Existing transaction found for transaction marked with propagation 'never'.");
+			throw new JtxException("Existing TX found for TX marked with propagation 'never'");
 		}
 		if (currentTx == null) {
 			currentTx = createNewTransaction(mode, scope, false);
@@ -408,7 +408,7 @@ public class JtxTransactionManager {
 	 */
 	public void registerResourceManager(JtxResourceManager resourceManager) {
 		if ((oneResourceManager == true) && (resourceManagers.isEmpty() == false)) {
-			throw new JtxException("Transaction manager allows only one resource manager.");
+			throw new JtxException("TX manager allows only one resource manager");
 		}
 		this.resourceManagers.put(resourceManager.getResourceType(), resourceManager);
 	}

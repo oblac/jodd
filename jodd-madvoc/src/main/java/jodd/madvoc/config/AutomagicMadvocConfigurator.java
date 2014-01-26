@@ -80,7 +80,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to scan classpath.", ex); 
+			throw new MadvocException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
 		log.info("Madvoc configured in " + elapsed + " ms. Total actions: " + actionsManager.getActionsCount());
@@ -97,13 +97,13 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			try {
 				onActionClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Unable to load Madvoc action class: " + entryName, cnfex);
+				throw new MadvocException("Invalid Madvoc action class: " + entryName, cnfex);
 			}
 		} else if (entryName.endsWith(resultClassSuffix) == true) {
 			try {
 				onResultClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Unable to load Madvoc result class: " + entryName, cnfex);
+				throw new MadvocException("Invalid Madvoc result class: " + entryName, cnfex);
 			}
 		}
 	}

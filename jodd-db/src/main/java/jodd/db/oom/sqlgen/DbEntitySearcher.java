@@ -34,7 +34,7 @@ public class DbEntitySearcher implements DbSqlGenerator {
 		this.dbOomManager = DbOomManager.getInstance();
 		this.ded = dbOomManager.lookupType(entity.getClass());
 		if (ded == null) {
-			throw new DbSqlException("Type '" + entity.getClass() + "' is not an database entity.");
+			throw new DbSqlException("Invalid database entry type: " + entity.getClass());
 		}
 		entityClassDescriptor = ClassIntrospector.lookup(entity.getClass());
 	}
@@ -59,7 +59,7 @@ public class DbEntitySearcher implements DbSqlGenerator {
 			try {
 				value = field.get(entity);
 			} catch (IllegalAccessException iaex) {
-				throw new DbSqlException("Unable to read value of property: " + field.getName(), iaex);
+				throw new DbSqlException("Invalid property: " + field.getName(), iaex);
 			}
 			if (value != null) {
 				if (firstCondition) {

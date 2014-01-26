@@ -116,7 +116,7 @@ public class DbEntityDescriptor {
 			}
 		}
 		if (decList.isEmpty()) {
-			throw new DbOomException("Entity '" + type + "' doesn't have any column mappings.");
+			throw new DbOomException("No column mappings in entity: " + type);
 		}
 		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
 		FastSort.sort(columnDescriptors);
@@ -212,9 +212,9 @@ public class DbEntityDescriptor {
 	private void ensureSingleIdColumn() {
 		init();
 		if (idColumnDescriptors == null) {
-			throw new DbOomException("Entity '" + entityName + "' has no identity column.");
+			throw new DbOomException("No identity column in entity: " + entityName);
 		} else if (idColumnDescriptors.length > 1) {
-			throw new DbOomException("Entity '" + entityName + "' has more then one (" + idColumnDescriptors.length + ") identity columns.");
+			throw new DbOomException("More then one identity column in entity: " + entityName);
 		}
 
 	}

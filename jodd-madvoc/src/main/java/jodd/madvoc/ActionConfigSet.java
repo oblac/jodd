@@ -53,7 +53,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	 */
 	public boolean add(ActionConfig cfg) {
 		if (cfg.actionPath.equals(this.actionPath) == false) {
-			throw new MadvocException("Invalid configuration.");
+			throw new MadvocException("Invalid configuration");
 		}
 
 		cfg.actionConfigSet = this;

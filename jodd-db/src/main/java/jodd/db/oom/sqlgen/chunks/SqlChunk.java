@@ -132,7 +132,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupName(String entityName) {
 		DbEntityDescriptor ded = templateData.getDbOomManager().lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
+			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
 		return ded;
 	}
@@ -143,7 +143,7 @@ public abstract class SqlChunk implements Cloneable {
 	protected DbEntityDescriptor lookupType(Class entity) {
 		DbEntityDescriptor ded = templateData.getDbOomManager().lookupType(entity);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid or not-persistent entity type: " + entity.getName());
+			throw new DbSqlBuilderException("Invalid or not-persistent entity: " + entity.getName());
 		}
 		return ded;
 	}

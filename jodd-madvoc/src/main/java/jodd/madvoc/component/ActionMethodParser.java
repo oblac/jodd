@@ -60,7 +60,7 @@ public class ActionMethodParser {
 	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
 		MethodDescriptor methodDescriptor = ClassIntrospector.lookup(actionClass).getMethodDescriptor(methodName, false);
 		if (methodDescriptor == null) {
-			throw new MadvocException("Provided action class '" + actionClass.getSimpleName() + "' doesn't contain public method: " + methodName);
+			throw new MadvocException("Action class '" + actionClass.getSimpleName() + "' doesn't have public method: " + methodName);
 		}
 		return methodDescriptor.getMethod();
 	}

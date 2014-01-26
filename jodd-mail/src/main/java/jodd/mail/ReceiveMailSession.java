@@ -44,7 +44,7 @@ public class ReceiveMailSession {
 		try {
 			store.connect();
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to open session", msex);
+			throw new MailException("Open session error", msex);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class ReceiveMailSession {
 		try {
 			folders = store.getDefaultFolder().list( "*" );
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect to folder", msex);
+			throw new MailException("Failed to connect to folder", msex);
 		}
 		String[] folderNames = new String[folders.length];
 
@@ -78,7 +78,7 @@ public class ReceiveMailSession {
 		try {
 			folder = store.getFolder(folderName);
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to connect to folder: " + folderName, msex);
+			throw new MailException("Failed to connect to folder: " + folderName, msex);
 		}
 		try {
 			folder.open(Folder.READ_WRITE);
@@ -86,7 +86,7 @@ public class ReceiveMailSession {
 			try {
 				folder.open(Folder.READ_ONLY);
 			} catch (MessagingException msex) {
-				throw new MailException("Unable to open folder: " + folderName, msex);
+				throw new MailException("Failed to open folder: " + folderName, msex);
 			}
 		}
 	}
@@ -254,7 +254,7 @@ public class ReceiveMailSession {
 
 			return emails;
 		} catch (MessagingException msex) {
-			throw new MailException("Unable to fetch messages", msex);
+			throw new MailException("Failed to fetch messages", msex);
 		}
 	}
 

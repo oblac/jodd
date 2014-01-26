@@ -100,7 +100,7 @@ public class PetiteContainer extends PetiteBeans {
 		try {
 			bean = def.ctor.constructor.newInstance(args);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to create new bean instance '" + def.type.getName() + "' using constructor: " + def.ctor.constructor, ex);
+			throw new PetiteException("Failed to create new bean instance '" + def.type.getName() + "' using constructor: " + def.ctor.constructor, ex);
 		}
 
 		if (def.name != null) {
@@ -244,7 +244,7 @@ public class PetiteContainer extends PetiteBeans {
 			try {
 				initMethod.method.invoke(bean);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to invoke init method: " + initMethod, ex);
+				throw new PetiteException("Invalid init method: " + initMethod, ex);
 			}
 		}
 	}
@@ -429,7 +429,7 @@ public class PetiteContainer extends PetiteBeans {
 			try {
 				return provider.method.invoke(bean);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to invoked provider method: " + provider.method.getName(), ex);
+				throw new PetiteException("Invalid provider method: " + provider.method.getName(), ex);
 			}
 		}
 
@@ -507,7 +507,7 @@ public class PetiteContainer extends PetiteBeans {
 		try {
 			BeanUtil.setDeclaredProperty(bean, name.substring(ndx + 1), value);
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: " + name, ex);
+			throw new PetiteException("Invalid bean property: " + name, ex);
 		}
 	}
 
@@ -527,7 +527,7 @@ public class PetiteContainer extends PetiteBeans {
 		try {
 			return BeanUtil.getDeclaredProperty(bean, name.substring(ndx + 1));
 		} catch (Exception ex) {
-			throw new PetiteException("Unable to set bean property: " + name, ex);
+			throw new PetiteException("Invalid bean property: " + name, ex);
 		}
 	}
 

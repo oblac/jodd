@@ -108,7 +108,7 @@ public abstract class PetiteBeans {
 			try {
 				scope = PetiteUtil.newInstance(scopeType, (PetiteContainer) this);
 			} catch (Exception ex) {
-				throw new PetiteException("Unable to create Petite scope: " + scopeType.getName(), ex);
+				throw new PetiteException("Invalid Petite scope: " + scopeType.getName(), ex);
 			}
 
 			registerScope(scopeType, scope);
@@ -230,7 +230,7 @@ public abstract class PetiteBeans {
 
 		// check if type is valid
 		if ((type != null) && (type.isInterface() == true)) {
-			throw new PetiteException("Unable to register interface: " + type.getName());
+			throw new PetiteException("Failed to register interface: " + type.getName());
 		}
 
 		// register

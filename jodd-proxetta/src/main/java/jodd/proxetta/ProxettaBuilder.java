@@ -173,7 +173,7 @@ public abstract class ProxettaBuilder {
 		try {
 			classReader = new ClassReader(targetInputStream);
 		} catch (IOException ioex) {
-			throw new ProxettaException("Error reading class input stream.", ioex);
+			throw new ProxettaException("Error reading class input stream", ioex);
 		}
 
 		// reads information
@@ -263,7 +263,7 @@ public abstract class ProxettaBuilder {
 
 			return ClassLoaderUtil.defineClass(getProxyClassName(), bytes, classLoader);
 		} catch (Exception ex) {
-			throw new ProxettaException("Class definition failed.", ex);
+			throw new ProxettaException("Class definition failed", ex);
 		}
 	}
 
@@ -276,7 +276,7 @@ public abstract class ProxettaBuilder {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new ProxettaException("Unable to create new instance of Proxetta class.", ex);
+			throw new ProxettaException("Invalid Proxetta class", ex);
 		}
 	}
 

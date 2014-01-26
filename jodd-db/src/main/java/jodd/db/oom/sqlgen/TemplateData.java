@@ -161,7 +161,7 @@ public abstract class TemplateData {
 		}
 		TableRefData t = new TableRefData(ded, tableAlias);
 		if (tableRefs.put(tableReference, t) != null) {
-			throw new DbSqlBuilderException("Duplicated table reference detected: " + tableReference);
+			throw new DbSqlBuilderException("Duplicated table reference: " + tableReference);
 		}
 	}
 
@@ -241,7 +241,7 @@ public abstract class TemplateData {
 	protected DbEntityDescriptor lookupName(String entityName) {
 		DbEntityDescriptor ded = dbOomManager.lookupName(entityName);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Entity name '" + entityName + "' is not registered with DbOomManager.");
+			throw new DbSqlBuilderException("Entity name not registered: " + entityName);
 		}
 		return ded;
 	}
@@ -263,7 +263,7 @@ public abstract class TemplateData {
 	protected DbEntityDescriptor lookupTableRef(String tableRef) {
 		DbEntityDescriptor ded = getTableDescriptor(tableRef);
 		if (ded == null) {
-			throw new DbSqlBuilderException("Invalid table reference: '" + tableRef + "', not used in this query.");
+			throw new DbSqlBuilderException("Table reference not used in this query: " + tableRef);
 		}
 		return ded;
 	}

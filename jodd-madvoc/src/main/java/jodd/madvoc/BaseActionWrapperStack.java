@@ -34,7 +34,7 @@ public abstract class BaseActionWrapperStack<T extends ActionWrapper> extends Ba
 	 * Throws an exception, as stack can not be invoked.
 	 */
 	public Object invoke(ActionRequest actionRequest) throws Exception {
-		throw new MadvocException("Wrapper stack can not be invoked.");
+		throw new MadvocException("Wrapper stack can not be invoked");
 	}
 
 }

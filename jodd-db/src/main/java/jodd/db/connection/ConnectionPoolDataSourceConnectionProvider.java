@@ -37,12 +37,12 @@ public class ConnectionPoolDataSourceConnectionProvider implements ConnectionPro
 		try {
 			pconn = cpds.getPooledConnection();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to get pooled connection.", sex);
+			throw new DbSqlException("Invalid pooled connection", sex);
 		}
 		try {
 			return pconn.getConnection();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to get connection from pooled connection.", sex);
+			throw new DbSqlException("Invalid pooled connection", sex);
 		}
 	}
 

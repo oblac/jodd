@@ -53,7 +53,7 @@ public class VtorJsonResult extends BaseActionResult {
 
 		Object action = actionRequest.getAction();
 		if (action instanceof AppAction == false) {
-			throw new MadvocException("Not an app action!");
+			throw new MadvocException("Not App action");
 		}
 		AppAction appAction = (AppAction) action;
 

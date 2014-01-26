@@ -201,7 +201,7 @@ public class ColumnsSelectChunk extends SqlChunk {
 			String columnName = dec == null ? null : dec.getColumnName();
 			//String columnName = ded.getColumnName(columnRef);
 			if (columnName == null) {
-				throw new DbSqlBuilderException("Unable to resolve column reference: " + tableRef + '.' + columnRef);
+				throw new DbSqlBuilderException("Invalid column reference: " + tableRef + '.' + columnRef);
 			}
 			if (useTableReference) {
 				appendColumnName(out, ded, columnName);

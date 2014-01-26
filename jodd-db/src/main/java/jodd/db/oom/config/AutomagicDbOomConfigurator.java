@@ -52,10 +52,12 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {
-			throw new DbOomException("Unable to scan classpath.", ex);
+			throw new DbOomException("Scan classpath error", ex);
 		}
 		elapsed = System.currentTimeMillis() - elapsed;
-		log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
+		if (log.isInfoEnabled()) {
+			log.info("DbOomManager configured in " + elapsed + " ms. Total entities: " + dbOomManager.getTotalNames());
+		}
 	}
 
 	/**
@@ -83,7 +85,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		try {
 			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
-			throw new DbOomException("Unable to load class: " + entryName, cnfex);
+			throw new DbOomException("Entry class not found: " + entryName, cnfex);
 		}
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
@@ -97,7 +99,7 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	}
 
 	/**
-	 * Loads class from classname using default classloader.
+	 * Loads class from class name using default classloader.
 	 */
 	protected Class loadClass(String className) throws ClassNotFoundException {
 		return ClassLoaderUtil.loadClass(className);

@@ -424,7 +424,7 @@ public class ReferenceMap<K, V> extends AbstractMap<K, V> implements ConcurrentM
 			try {
 				((InternalReference) reference).finalizeReferent();
 			} catch (Throwable t) {
-				throw new IllegalStateException("Unable to clean up after reference", t);
+				throw new IllegalStateException("Clean up after reference error", t);
 			}
 		}
 

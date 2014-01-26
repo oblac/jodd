@@ -116,7 +116,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 			try {
 				result = getter.invokeGetter(bp.bean);
 			} catch (Exception ex) {
-				throw new BeanException("Unable to invoke getter: " + getter, ex);
+				throw new BeanException("Getter failed: " + getter, ex);
 			}
 
 			if ((result == null) && (bp.forced == true)) {
@@ -272,7 +272,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 				try {
 					value = ReflectUtil.newInstance(listComponentType);
 				} catch (Exception ex) {
-					throw new BeanException("Unable to create list element: " + bp.name + '[' + index + ']', bp, ex);
+					throw new BeanException("Invalid list element: " + bp.name + '[' + index + ']', bp, ex);
 				}
 				//noinspection unchecked
 				list.set(index, value);
@@ -298,7 +298,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 					try {
 						value = ReflectUtil.newInstance(mapComponentType);
 					} catch (Exception ex) {
-						throw new BeanException("Unable to create map element: " + bp.name + '[' + indexString + ']', bp, ex);
+						throw new BeanException("Invalid map element: " + bp.name + '[' + indexString + ']', bp, ex);
 					}
 
 					//noinspection unchecked

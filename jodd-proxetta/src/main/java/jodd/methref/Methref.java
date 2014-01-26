@@ -84,7 +84,7 @@ public class Methref<C> {
 			if (dummy instanceof String) {
 				return (String) dummy;
 			}
-			throw new MethrefException("It seems that method reference was not collected with 'method()'.");
+			throw new MethrefException("Method reference was not collected using 'method()'");
 		}
 		return ref();
 	}
@@ -101,7 +101,7 @@ public class Methref<C> {
 			f.setAccessible(true);
 			return f.get(instance).toString();
 		} catch (Exception ex) {
-			throw new MethrefException("Unable to find injected field.", ex);
+			throw new MethrefException("Injected field not found", ex);
 		}
 	}
 

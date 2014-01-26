@@ -44,7 +44,7 @@ public class MadvocServletFilter implements Filter {
 			try {
 				madvoc.startNewWebApplication(servletContext);
 			} catch (Exception ex) {
-				throw new ServletException("Unable to start Madvoc web application.", ex);
+				throw new ServletException("Madvoc web application error", ex);
 			}
 		}
 

@@ -214,7 +214,7 @@ abstract class DbQueryBase {
 					statement = connection.createStatement(type, concurrencyType);
 				}
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to create statement.", sex);
+				throw new DbSqlException("Create statement error", sex);
 			}
 			return;
 		}
@@ -251,7 +251,7 @@ abstract class DbQueryBase {
 				}
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to create prepared statement.", sex);
+			throw new DbSqlException("Create prepared statement error", sex);
 		}
 		preparedStatement = (PreparedStatement) statement;
 	}
@@ -302,7 +302,7 @@ abstract class DbQueryBase {
 	public void closeAllResultSets() {
 		List<SQLException> sexs = closeQueryResultSets();
 		if (sexs != null) {
-			throw new DbSqlException("Unable to close associated ResultSets.", sexs);
+			throw new DbSqlException("Close associated ResultSets error", sexs);
 		}
 	}
 
@@ -338,7 +338,7 @@ abstract class DbQueryBase {
 			this.session.detachQuery(this);
 		}
 		if (sexs != null) {
-			throw new DbSqlException("Unable to close query.", sexs);
+			throw new DbSqlException("Close query error", sexs);
 		}
 	}
 
@@ -352,12 +352,12 @@ abstract class DbQueryBase {
 			return;
 		}
 		if (resultSets.remove(rs) == false) {
-			throw new DbSqlException("Provided ResultSet is not created by this query and should be not closed in this way.");
+			throw new DbSqlException("Provided ResultSet is not created by this query.");
 		}
 		try {
 			rs.close();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to close the result set.", sex);
+			throw new DbSqlException("Close result set error", sex);
 		} finally {
 			totalOpenResultSetCount--;
 		}
@@ -542,7 +542,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setFetchSize(fetchSize);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set fetch size of: " + fetchSize, sex);
+				throw new DbSqlException("Unable to set fetch size: " + fetchSize, sex);
 			}
 		}
 	}
@@ -569,7 +569,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setMaxRows(maxRows);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set max rows of: " + maxRows, sex);
+				throw new DbSqlException("Unable to set max rows: " + maxRows, sex);
 			}
 		}
 	}
@@ -610,7 +610,7 @@ abstract class DbQueryBase {
 			rs.setFetchSize(fetchSize);
 		} catch (SQLException sex) {
 			DbUtil.close(rs);
-			throw new DbSqlException("Unable to execute query.", sex);
+			throw new DbSqlException("Query execution failed", sex);
 		}
 		saveResultSet(rs);
 		totalOpenResultSetCount++;
@@ -665,7 +665,7 @@ abstract class DbQueryBase {
 				result = preparedStatement.executeUpdate();
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to execute the query.", sex);
+			throw new DbSqlException("Query execution failed", sex);
 		}
 		if (closeQuery) {
 			close();
@@ -721,7 +721,7 @@ abstract class DbQueryBase {
 
 			return firstLong;
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to execute count query.", sex);
+			throw new DbSqlException("Count query failed", sex);
 		} finally {
 			DbUtil.close(rs);
 			if (close) {
@@ -738,13 +738,13 @@ abstract class DbQueryBase {
 	public ResultSet getGeneratedColumns() {
 		checkInitialized();
 		if (generatedColumns == null) {
-			throw new DbSqlException("No column is specified as auto-generated.");
+			throw new DbSqlException("No column is specified as auto-generated");
 		}
 		ResultSet rs;
 		try {
 			rs = statement.getGeneratedKeys();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to return generated keys.", sex);
+			throw new DbSqlException("No generated keys", sex);
 		}
 		saveResultSet(rs);
 		totalOpenResultSetCount++;
@@ -760,7 +760,7 @@ abstract class DbQueryBase {
 		try {
 			return DbUtil.getFirstLong(rs);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Unable to get generated key as long value.", sex);
+			throw new DbSqlException("No generated key as long", sex);
 		} finally {
 			DbUtil.close(rs);
 			resultSets.remove(rs);
