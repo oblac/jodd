@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
  * Marker for action methods. It is not necessary to mark a method, however, this annotation 
  * may be used to specify non-default action path. Moreover, this annotation may be used
  * to mark custom annotations!
+ * @see jodd.madvoc.meta.ActionAnnotationData
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -46,11 +47,5 @@ public @interface Action {
 	 * Defines action method (such as HTTP request method: GET, POST....).
 	 */
 	String method() default "";
-
-	/**
-	 * Defines action result type, so it does not have to be specified in method return value.
-	 * Useful for custom annotations.
-	 */
-	String result() default "";
 
 }

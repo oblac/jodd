@@ -16,10 +16,10 @@ public class ManualRegistrationTest {
 
 	public static class ManualRegistration extends ManualMadvocConfigurator {
 		public void configure() {
+			result(TextResult.class);
 			action()
 					.path("/hello")
 					.mapTo(BooAction.class, "foo1")
-					.result(TextResult.class)
 					.bind();
 
 			action()
@@ -27,7 +27,6 @@ public class ManualRegistrationTest {
 					.mapTo(BooAction.class, "foo2")
 					.interceptedBy(new EchoInterceptor())
 					.extension(NONE)
-					.result(TextResult.class)
 					.bind();
 		}
 	}

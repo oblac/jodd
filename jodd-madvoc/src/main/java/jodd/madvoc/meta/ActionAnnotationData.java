@@ -15,7 +15,6 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 	protected String extension;
 	protected String alias;
 	protected String method;
-	protected String result;
 
 	protected ActionAnnotationData(A annotation) {
 		super(annotation);
@@ -37,7 +36,4 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 		return method;
 	}
 
-	public String getResult() {
-		return result;
-	}
 }

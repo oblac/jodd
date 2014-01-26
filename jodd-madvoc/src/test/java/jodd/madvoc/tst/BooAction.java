@@ -22,7 +22,7 @@ public class BooAction {
 	@Action("/xxx")
 	public void foo4() {}
 
-	@Action(value = "/xxx", extension = "not used!", method = "DELETE", result = "rt")
+	@Action(value = "/xxx", extension = "not used!", method = "DELETE")
 	public void foo41() {}
 
 	@Action(value = "/xxx.[ext]", alias = "dude", method = "POST")

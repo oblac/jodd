@@ -60,7 +60,6 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		Method actionClassMethod;
 		String actionMethodString;
 		String extension;
-		String resultType;
 		String alias;
 		ActionFilter[] actionFilters;
 		ActionInterceptor[] actionInterceptors;
@@ -150,28 +149,6 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
-		 * Defines result type. Note that result class must be
-		 * already {@link #result(Class) registered.}
-		 */
-		public ActionBuilder result(String resultType) {
-			this.resultType = resultType;
-			return this;
-		}
-
-		/**
-		 * Defines and, optionally, registers result type.
-		 */
-		public ActionBuilder result(Class<? extends ActionResult> resultClass) {
-			ActionResult actionResult = resultsManager.lookup(resultClass);
-
-			if (actionResult == null) {
-				actionResult = resultsManager.register(resultClass);
-			}
-			resultType = actionResult.getResultType();
-			return this;
-		}
-
-		/**
 		 * Defines path alias.
 		 */
 		public ActionBuilder alias(String aliasPath) {
@@ -191,7 +168,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
-							path, method, extension, resultType);
+							path, method, extension);
 
 			actionsManager.registerAction(actionConfig);
 

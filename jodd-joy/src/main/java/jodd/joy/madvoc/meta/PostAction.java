@@ -27,6 +27,4 @@ public @interface PostAction {
 
 	String alias() default "";
 
-	String result() default "";
-
 }

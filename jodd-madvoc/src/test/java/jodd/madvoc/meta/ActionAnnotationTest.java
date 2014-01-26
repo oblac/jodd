@@ -15,7 +15,7 @@ public class ActionAnnotationTest {
 	public void hello() {
 	}
 
-	@Action(value =  "value", method = "method", alias = "alias", extension = "ext", result = "result")
+	@Action(value =  "value", method = "method", alias = "alias", extension = "ext")
 	public void hello2() {
 	}
 
@@ -46,7 +46,6 @@ public class ActionAnnotationTest {
 		assertNull(annotationData.alias);
 		assertNull(annotationData.extension);
 		assertNull(annotationData.method);
-		assertNull(annotationData.result);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello2");
@@ -55,7 +54,6 @@ public class ActionAnnotationTest {
 		assertEquals("alias", annotationData.alias);
 		assertEquals("ext", annotationData.extension);
 		assertEquals("method", annotationData.method);
-		assertEquals("result", annotationData.result);
 		assertEquals("value", annotationData.value);
 	}
 
@@ -70,7 +68,6 @@ public class ActionAnnotationTest {
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("EXT", annotationData.extension);
 		assertEquals("METHOD", annotationData.method);
-		assertNull(annotationData.result);
 		assertNull(annotationData.value);
 
 		method = this.getClass().getMethod("hello4");
@@ -79,7 +76,6 @@ public class ActionAnnotationTest {
 		assertEquals("ALIAS", annotationData.alias);
 		assertEquals("eee", annotationData.extension);
 		assertEquals("METHOD", annotationData.method);
-		assertNull(annotationData.result);
 		assertNull(annotationData.value);
 	}
 
@@ -95,7 +91,6 @@ public class ActionAnnotationTest {
 		assertNull(annotationData.extension);
 		assertEquals("METHOD", annotationData.method);
 		assertEquals("VAL", annotationData.value);
-		assertNull(annotationData.result);
 
 		method = this.getClass().getMethod("hello6");
 		annotationData = actionAnnotation.readAnnotationData(method);
@@ -104,6 +99,5 @@ public class ActionAnnotationTest {
 		assertNull(annotationData.extension);
 		assertEquals("mmm", annotationData.method);
 		assertEquals("VAL", annotationData.value);
-		assertNull(annotationData.result);
 	}
 }

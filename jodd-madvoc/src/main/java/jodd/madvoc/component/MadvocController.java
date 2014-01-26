@@ -175,14 +175,9 @@ public class MadvocController {
 				}
 			}
 
-			// result type is still not set, read config
+			// result type still not defined, use default
 			if (resultType == null) {
-				resultType = actionRequest.getActionConfig().getResultType();		// todo remove result type from action config!!!
-
-				// result type still not defined, use default
-				if (resultType == null) {
-					resultType = madvocConfig.getDefaultResultType();
-				}
+				resultType = madvocConfig.getDefaultResultType();
 			}
 
 			actionResult = resultsManager.lookup(resultType);

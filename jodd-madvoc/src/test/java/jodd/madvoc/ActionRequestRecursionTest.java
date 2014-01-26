@@ -156,7 +156,7 @@ public class ActionRequestRecursionTest {
 				Action.class,
 				ReflectUtil.findMethod(Action.class, "view"),
 				actionFilters, actionInterceptors,
-				"path", "method", "extension", "view");
+				"path", "method", "extension");
 
 		return new MyActionRequest(
 				madvocController, "actionPath", actionConfig, action, null, null);

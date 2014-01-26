@@ -11,8 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * JSON action annotation. Extension is set to <b>json</b>
- * and result type to <b>json</b>.
+ * JSON action annotation. Extension is set to <b>json</b>.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -25,7 +24,5 @@ public @interface JSONAction {
 	String alias() default "";
 
 	String method() default "";
-
-	String result() default "json";
 
 }

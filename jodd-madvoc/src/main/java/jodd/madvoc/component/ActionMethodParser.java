@@ -152,7 +152,6 @@ public class ActionMethodParser {
 		String extension = readMethodExtension(annotationData);
 		String alias = readMethodAlias(annotationData);
 		String httpMethod = readMethodHttpMethod(annotationData);
-		String resultType = readResultType(annotationData);
 
 		if (methodActionPath != null) {
 			// additional changes
@@ -189,8 +188,7 @@ public class ActionMethodParser {
 		return createActionConfig(
 				actionClass, actionMethod,
 				actionFilters, actionInterceptors,
-				actionPath, httpMethod, extension,
-				resultType);
+				actionPath, httpMethod, extension);
 	}
 
 	/**
@@ -491,17 +489,6 @@ public class ActionMethodParser {
 		return method;
 	}
 
-	/**
-	 * Reads method's result type.
-	 */
-	private String readResultType(ActionAnnotationData annotationData) {
-		String resultType = null;
-		if (annotationData != null) {
-			resultType = annotationData.getResult();
-		}
-		return resultType;
-	}
-
 	// ---------------------------------------------------------------- create action configuration
 
 	/**
@@ -514,8 +501,7 @@ public class ActionMethodParser {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
-			String actionPathExtension,
-			String resultType)
+			String actionPathExtension)
 	{
 
 		return new ActionConfig(
@@ -525,8 +511,7 @@ public class ActionMethodParser {
 				interceptors,
 				actionPath,
 				actionMethod,
-				actionPathExtension,
-				resultType);
+				actionPathExtension);
 	}
 
 }

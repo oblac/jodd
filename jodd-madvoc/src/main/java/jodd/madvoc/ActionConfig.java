@@ -19,7 +19,6 @@ public class ActionConfig {
 	public final String actionMethod;
 	public final String actionPathExtension;
 	public final boolean pathEndsWithExtension;
-	public final String resultType;
 	//public final Class<?>[] actionParamTypes;
 
 	// run-time data
@@ -35,8 +34,7 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
-			String actionPathExtension,
-	        String resultType)
+			String actionPathExtension)
 	{
 
 		this.actionClass = actionClass;
@@ -49,7 +47,6 @@ public class ActionConfig {
 		this.interceptors = interceptors;
 
 		this.pathEndsWithExtension = actionPathExtension != null && actionPath.endsWith('.' + actionPathExtension);
-		this.resultType = resultType;
 
 //		Class<?>[] paramTypes = actionMethod.getParameterTypes();
 //		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
@@ -127,13 +124,6 @@ public class ActionConfig {
 
 	public ActionConfigSet getActionConfigSet() {
 		return actionConfigSet;
-	}
-
-	/**
-	 * Returns result type or <code>null</code> if not specified.
-	 */
-	public String getResultType() {
-		return resultType;
 	}
 
 	// ---------------------------------------------------------------- to string
