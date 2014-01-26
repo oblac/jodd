@@ -7,7 +7,7 @@ import jodd.madvoc.ActionRequest;
 /**
  * None result processing, for direct outputs.
  */
-public class NoneResult extends ActionResult {
+public class NoneResult extends BaseActionResult {
 	
 	public static final String NAME = "none";
 	
@@ -18,7 +18,6 @@ public class NoneResult extends ActionResult {
 	/**
 	 * Executes result on given action result value.
 	 */
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		// none, direct output
 	}

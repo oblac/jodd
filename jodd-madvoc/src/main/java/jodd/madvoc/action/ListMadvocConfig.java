@@ -92,7 +92,7 @@ public class ListMadvocConfig {
 		results.addAll(resultsValues);
 		Collections.sort(results, new Comparator<ActionResult>() {
 			public int compare(ActionResult a1, ActionResult a2) {
-				return a1.getType().compareTo(a2.getType());
+				return a1.getClass().getSimpleName().compareTo(a2.getClass().getSimpleName());
 			}
 		});
 	}

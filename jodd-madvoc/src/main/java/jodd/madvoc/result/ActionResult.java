@@ -5,56 +5,40 @@ package jodd.madvoc.result;
 import jodd.madvoc.ActionRequest;
 
 /**
- * Action result for specified result type. Action results are singletons for the web application.
+ * Action result renders the returned value from an action.
+ * Results are singletons for the web application. Results
+ * may have a result type, a string identification of the type
+ * used when actions return string result.
  */
-public abstract class ActionResult {
-
-	protected String type;
-
-	/**
-	 * Creates new action result.
-	 */
-	protected ActionResult(String type) {
-		this.type = type;
-	}
+public interface ActionResult {
 
 	/**
 	 * Returns the type of this action result.
+	 * Returned type can be <code>null</code> for results
+	 * that does not need to be found using string identification;
+	 * i.e. when action does not return a string result.
 	 */
-	public String getType() {
-		return type;
-	}
+	String getResultType();
 
 
 	/**
-	 * Executes result on given action result value.
+	 * Renders result on given action result value.
 	 * @param actionRequest action request
 	 * @param resultObject reference to action method result, may be null
 	 * @param resultValue string representation of result, may be null
 	 * @param resultPath result path
 	 */
-	public abstract void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception;
-
-
-	protected boolean initialized;
+	void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception;
 
 	/**
-	 * Returns <code>true</code> if interceptor is initialized.
+	 * Returns <code>true</code> if result is initialized.
 	 */
-	public final boolean isInitialized() {
-	    return initialized;
-	}
+	boolean isInitialized();
 
 	/**
-	 * Initializes the result.
+	 * Initializes the result. After this call,
+	 * {@link #isInitialized()} returns <code>true</code>.
 	 */
-	public void init() {
-		initialized = true;
-	}
+	void init();
 
-
-	@Override
-	public String toString() {
-		return "result: " + type;
-	}
 }

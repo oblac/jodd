@@ -9,7 +9,7 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
-import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.result.BaseActionResult;
 import jodd.util.CharUtil;
 import jodd.util.MimeTypes;
 import jodd.vtor.Violation;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * vtor json result.
  */
-public class VtorJsonResult extends ActionResult {
+public class VtorJsonResult extends BaseActionResult {
 
 	public static final String NAME = "vtor-json";
 
@@ -47,7 +47,6 @@ public class VtorJsonResult extends ActionResult {
 	protected MadvocConfig madvocConfig;
 
 
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();

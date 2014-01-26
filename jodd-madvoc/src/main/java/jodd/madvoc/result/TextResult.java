@@ -14,7 +14,7 @@ import java.io.OutputStream;
  * Useful for JSON responses, when resulting string is built
  * in the action.
  */
-public class TextResult extends ActionResult {
+public class TextResult extends BaseActionResult {
 
 	public static final String NAME = "text";
 
@@ -22,7 +22,6 @@ public class TextResult extends ActionResult {
 		super(NAME);
 	}
 
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 

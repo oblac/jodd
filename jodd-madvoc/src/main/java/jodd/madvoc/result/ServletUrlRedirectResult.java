@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Simply sends redirect to an external location.
  */
-public class ServletUrlRedirectResult extends ActionResult  {
+public class ServletUrlRedirectResult extends BaseActionResult  {
 
 	public static final String NAME = "url";
 
-	private static BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
+	protected BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
 
 	public ServletUrlRedirectResult() {
 		super(NAME);
@@ -22,7 +22,6 @@ public class ServletUrlRedirectResult extends ActionResult  {
 	/**
 	 * Redirects to the external location.
 	 */
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		resultValue = beanTemplateParser.parse(resultValue, actionRequest.getAction());
 		HttpServletResponse response = actionRequest.getHttpServletResponse();

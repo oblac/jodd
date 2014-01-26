@@ -10,7 +10,7 @@ import jodd.madvoc.ActionRequest;
  * happens after the complete execution of current one: after all interceptors and this result has been
  * finished.
  */
-public class ChainResult extends ActionResult {
+public class ChainResult extends BaseActionResult {
 
 	public static final String NAME = "chain";
 
@@ -21,7 +21,6 @@ public class ChainResult extends ActionResult {
 	/**
 	 * Simply sets the next action request for the chain.
 	 */
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		actionRequest.setNextActionPath(resultPath);
 	}

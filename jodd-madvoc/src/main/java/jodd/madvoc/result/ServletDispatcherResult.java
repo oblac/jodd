@@ -18,7 +18,7 @@ import java.net.URL;
  * 
  * @see ServletRedirectResult
  */
-public class ServletDispatcherResult extends ActionResult {
+public class ServletDispatcherResult extends BaseActionResult {
 
 	public static final String NAME = "dispatch";
 	protected static final String EXTENSION = ".jsp";
@@ -27,13 +27,11 @@ public class ServletDispatcherResult extends ActionResult {
 		super(NAME);
 	}
 
-
 	/**
 	 * Dispatches to the JSP location created from result value and JSP extension.
 	 * Does its forward via a RequestDispatcher. If the dispatch fails a 404 error
 	 * will be sent back in the http response, what will produce error 500.
 	 */
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
@@ -71,7 +69,6 @@ public class ServletDispatcherResult extends ActionResult {
 			dispatcher.forward(request, response);
 		}
 	}
-
 
 	/**
 	 * Locates target.

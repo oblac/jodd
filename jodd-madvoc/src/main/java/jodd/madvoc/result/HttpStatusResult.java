@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Sets HTTP status or error code.
  */
-public class HttpStatusResult extends ActionResult {
+public class HttpStatusResult extends BaseActionResult {
 
 	public static final String NAME = "http";
 
@@ -18,7 +18,6 @@ public class HttpStatusResult extends ActionResult {
 		super(NAME);
 	}
 
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 		boolean isError = false;

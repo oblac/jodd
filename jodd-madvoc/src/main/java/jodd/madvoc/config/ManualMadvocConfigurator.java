@@ -167,7 +167,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 			if (actionResult == null) {
 				actionResult = resultsManager.register(resultClass);
 			}
-			resultType = actionResult.getType();
+			resultType = actionResult.getResultType();
 			return this;
 		}
 

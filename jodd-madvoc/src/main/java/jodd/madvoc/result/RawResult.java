@@ -19,7 +19,7 @@ import java.io.IOException;
  * Content type and charset encoding (e.g. set by Madvoc) is ignored
  * and new values should be set here. Output is closed after writing.
  */
-public class RawResult extends ActionResult {
+public class RawResult extends BaseActionResult {
 
 	public static final String NAME = "raw";
 
@@ -30,7 +30,6 @@ public class RawResult extends ActionResult {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	@Override
 	public void render(ActionRequest actionRequest, Object resultObject, String resultValue, String resultPath) throws IOException {
 		if (resultObject == null) {
 			return;
