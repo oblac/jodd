@@ -828,6 +828,22 @@ public class PropsTest {
 		assertEquals("222", p.getValue("bar.two"));
 	}
 
+	@Test
+	public void testIssue78() {
+		String data =
+				"@profiles=o\n" +
+				"\n" +
+				"prefix<o> = is Good\n" +
+				"prefix<l> = is very Good\n" +
+				"\n" +
+				"[user]\n" +
+				"name = jodd ${prefix}";
+
+		Props props = new Props();
+		props.load(data);
+
+		assertEquals("jodd is Good", props.getValue("user.name"));
+	}
 
 	// ---------------------------------------------------------------- util
 
