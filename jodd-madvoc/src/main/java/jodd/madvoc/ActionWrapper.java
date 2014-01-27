@@ -9,12 +9,6 @@ package jodd.madvoc;
 public interface ActionWrapper {
 
 	/**
-	 * Returns <code>true</code> if wrapper is initialized.
-	 * @see #init()
-	 */
-	boolean isInitialized();
-
-	/**
 	 * Returns <code>true</code> if wrapper is enabled.
 	 */
 	boolean isEnabled();
@@ -25,8 +19,7 @@ public interface ActionWrapper {
 	void setEnabled(boolean enabled);
 
 	/**
-	 * Initializes wrapper. After this method ends,
-	 * {@link #isInitialized()} returns <code>true</code>.
+	 * Initializes wrapper once everything is injected.
 	 */
 	void init();
 

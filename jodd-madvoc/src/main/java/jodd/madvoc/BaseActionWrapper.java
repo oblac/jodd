@@ -9,15 +9,6 @@ public abstract class BaseActionWrapper implements ActionWrapper {
 
 	protected boolean enabled = true;
 
-	protected boolean initialized;
-
-	/**
-	 * Returns <code>true</code> if interceptor is initialized.
-	 */
-	public final boolean isInitialized() {
-	    return initialized;
-	}
-
 	/**
 	 * Returns <code>true</code> if interceptor is enabled.
 	 */
@@ -33,10 +24,9 @@ public abstract class BaseActionWrapper implements ActionWrapper {
 	}
 
 	/**
-	 * Invoked on interceptor initialization.
+	 * {@inheritDoc}
 	 */
 	public void init() {
-		initialized = true;
 	}
 
 }

@@ -34,7 +34,6 @@ public class MadvocContextScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-
 	public void outject(Object target) {
 		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
 		if (outjectData == null) {

@@ -24,7 +24,7 @@ public class RawResult extends BaseActionResult<RawResultData> {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
-	public void render(ActionRequest actionRequest, RawResultData resultValue, String resultPath) throws IOException {
+	public void render(ActionRequest actionRequest, RawResultData resultValue) throws IOException {
 		if (resultValue == null) {
 			return;
 		}

@@ -96,15 +96,6 @@ public class ActionMethodParser {
 
 		ActionInterceptor[] actionInterceptors = interceptorsManager.resolveAll(interceptorClasses);
 
-		if (actionInterceptors != null) {
-			for (ActionInterceptor interceptor : actionInterceptors) {
-				if (interceptor.isInitialized() == false) {
-					interceptorsManager.initializeWrapper(interceptor);
-				}
-			}
-		}
-
-
 		// filters
 		Class<? extends ActionFilter>[] filterClasses = readMethodFilters(actionMethod);
 		if (filterClasses == null) {
@@ -115,15 +106,6 @@ public class ActionMethodParser {
 		}
 
 		ActionFilter[] actionFilters = filtersManager.resolveAll(filterClasses);
-
-		if (actionFilters != null) {
-			for (ActionFilter filter : actionFilters) {
-				if (filter.isInitialized() == false) {
-					filtersManager.initializeWrapper(filter);
-				}
-			}
-		}
-
 
 		// actions
 		HashMap<String, String> replacementMap = new HashMap<String, String>();

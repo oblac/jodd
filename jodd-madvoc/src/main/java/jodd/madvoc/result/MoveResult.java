@@ -5,6 +5,7 @@ package jodd.madvoc.result;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.util.URLCoder;
 import jodd.servlet.DispatcherUtil;
@@ -27,6 +28,9 @@ public class MoveResult extends BaseActionResult<String> {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
+	@In(scope = ScopeType.CONTEXT)
+	protected ResultMapper resultMapper;
+
 	/**
 	 * Returns unique id, random long value.
 	 */
@@ -37,7 +41,9 @@ public class MoveResult extends BaseActionResult<String> {
 	/**
 	 * Saves action in the session under some id that is added as request parameter.
 	 */
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
+
 		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = httpServletRequest.getSession();
 

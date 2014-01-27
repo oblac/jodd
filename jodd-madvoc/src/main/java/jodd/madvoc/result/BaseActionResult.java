@@ -10,7 +10,6 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 
 	protected final String resultType;
 	protected final Class<T> resultValueType;
-	protected boolean initialized;
 
 	/**
 	 * Creates new action result that has a string identification.
@@ -43,17 +42,9 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	}
 
 	/**
-	 * Returns <code>true</code> if interceptor is initialized.
-	 */
-	public final boolean isInitialized() {
-	    return initialized;
-	}
-
-	/**
-	 * Initializes the result.
+	 * {@inheritDoc}
 	 */
 	public void init() {
-		initialized = true;
 	}
 
 	@Override

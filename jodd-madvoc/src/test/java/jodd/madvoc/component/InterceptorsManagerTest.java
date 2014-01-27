@@ -4,14 +4,11 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocTestCase;
-import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.filter.EchoFilter;
 import jodd.madvoc.interceptor.*;
 import jodd.petite.PetiteContainer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 public class InterceptorsManagerTest extends MadvocTestCase {
@@ -66,6 +63,10 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.madvocContextInjector.madpc = new PetiteContainer();
 		im.madvocContextInjector.createInjectors();
 
+		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.createInjectors();
+		im.madvocController = new MadvocController();
+
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				TestStack.class,
 				DefaultWebAppInterceptors.class,
@@ -104,6 +105,10 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.madvocContextInjector = new MadvocContextInjector();
 		im.madvocContextInjector.madpc = madpc;
 		im.madvocContextInjector.createInjectors();
+
+		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.createInjectors();
+		im.madvocController = new MadvocController();
 
 		Class<? extends ActionInterceptor>[] in = new Class[] {
 			TestConfigurableStack.class,
@@ -161,6 +166,10 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.madvocContextInjector = new MadvocContextInjector();
 		im.madvocContextInjector.madpc = new PetiteContainer();
 		im.madvocContextInjector.createInjectors();
+
+		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.createInjectors();
+		im.madvocController = new MadvocController();
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				DefaultWebAppInterceptors.class,

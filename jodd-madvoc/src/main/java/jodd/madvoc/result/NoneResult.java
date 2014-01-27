@@ -18,7 +18,7 @@ public class NoneResult extends BaseActionResult<String> {
 	/**
 	 * Executes result on given action result value.
 	 */
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		// none, direct output
 	}
 }

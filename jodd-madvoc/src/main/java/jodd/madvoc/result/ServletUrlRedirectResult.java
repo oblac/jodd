@@ -4,6 +4,7 @@ package jodd.madvoc.result;
 
 import jodd.bean.BeanTemplateParser;
 import jodd.madvoc.ActionRequest;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -22,7 +23,7 @@ public class ServletUrlRedirectResult extends BaseActionResult<String> {
 	/**
 	 * Redirects to the external location.
 	 */
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		resultValue = beanTemplateParser.parse(resultValue, actionRequest.getAction());
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 		response.sendRedirect(resultValue);

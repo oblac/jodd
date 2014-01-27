@@ -3,6 +3,9 @@
 package jodd.madvoc.result;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ResultMapper;
+import jodd.madvoc.meta.In;
 
 /**
  * Process chain results. Chaining is very similar to forwarding, except it is done
@@ -18,10 +21,15 @@ public class ChainResult extends BaseActionResult<String> {
 		super(NAME);
 	}
 
+	@In(scope = ScopeType.CONTEXT)
+	protected ResultMapper resultMapper;
+
 	/**
 	 * Sets the {@link jodd.madvoc.ActionRequest#setNextActionPath(String) next action request} for the chain.
 	 */
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
+
 		actionRequest.setNextActionPath(resultPath);
 	}
 

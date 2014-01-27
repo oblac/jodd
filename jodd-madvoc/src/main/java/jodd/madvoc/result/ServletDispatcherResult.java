@@ -4,6 +4,9 @@ package jodd.madvoc.result;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocUtil;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ResultMapper;
+import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
 
 import javax.servlet.RequestDispatcher;
@@ -27,12 +30,18 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 		super(NAME);
 	}
 
+	@In(scope = ScopeType.CONTEXT)
+	protected ResultMapper resultMapper;
+
+
 	/**
 	 * Dispatches to the JSP location created from result value and JSP extension.
 	 * Does its forward via a RequestDispatcher. If the dispatch fails a 404 error
 	 * will be sent back in the http response, what will produce error 500.
 	 */
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
+		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
+
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 

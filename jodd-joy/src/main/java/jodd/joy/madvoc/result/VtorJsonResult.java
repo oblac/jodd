@@ -46,7 +46,7 @@ public class VtorJsonResult extends BaseActionResult<String> {
 	protected MadvocConfig madvocConfig;
 
 
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 

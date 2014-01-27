@@ -38,9 +38,6 @@ public class MadvocController {
 	@PetiteInject
 	protected ResultsManager resultsManager;
 
-	@PetiteInject
-	protected ResultMapper resultMapper;
-
 	protected ServletContext applicationContext;
 
 	/**
@@ -137,30 +134,42 @@ public class MadvocController {
 	 * Result value is first checked against aliased values. Then, it is resolved and then passed
 	 * to the founded {@link ActionResult}.
 	 *
-	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object, String)
+	 * @see ActionResult#render(jodd.madvoc.ActionRequest, Object)
 	 */
 	@SuppressWarnings("unchecked")
 	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
 		ActionResult actionResult;
-		String resultPath;
 
-		RenderWith renderWith = null;
-		if (resultObject != null) {
-			renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
+		// [1] try to lookup the result class
+
+		Class<? extends ActionResult> actionResultClass = null;
+
+		if (resultObject != null && resultObject.getClass() != String.class) {
+//			if (resultObject instanceof Result) {
+//				// special class
+//				Result result = (Result) resultObject;
+//				actionResultClass = result.getActionResult();
+//				resultObject = result.getResultValue();
+//			} else {
+				// try annotation
+				RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
+				if (renderWith != null) {
+					actionResultClass = renderWith.value();
+				}
+//			}
 		}
 
-		if (renderWith != null) {
-			// render with annotation exist, lookup the action result type
-			Class<? extends ActionResult> actionResultClass = renderWith.value();
+		if (actionResultClass != null) {
+			// result class is known, lookup the action result type
 			actionResult = resultsManager.lookup(actionResultClass);
 
 			if (actionResult == null) {
-				// register action result if by any chance it didn't get registered
+				// register action result if by any chance it wasn't registered yet
 				actionResult = resultsManager.register(actionResultClass);
 			}
 
-			resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), null);
 		} else {
+			// result class is not known, lookup it from returned string
 			String resultValue = resultObject != null ? resultObject.toString() : null;
 			String resultType = null;
 
@@ -181,12 +190,9 @@ public class MadvocController {
 			}
 
 			actionResult = resultsManager.lookup(resultType);
-
 			if (actionResult == null) {
 				throw new MadvocException("Action result not found: " + resultType);
 			}
-
-			resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
 
 			// convert remaining of the string to result object
 			try {
@@ -201,15 +207,12 @@ public class MadvocController {
 			}
 		}
 
-
-		if (actionResult.isInitialized() == false) {
-			resultsManager.initializeResult(actionResult);
-		}
+		// finally, invoke result
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
 
-		actionResult.render(actionRequest, resultObject, resultPath);
+		actionResult.render(actionRequest, resultObject);
 	}
 
 	// ---------------------------------------------------------------- create

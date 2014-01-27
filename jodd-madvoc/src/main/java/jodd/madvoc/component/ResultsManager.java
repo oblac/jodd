@@ -74,8 +74,7 @@ public class ResultsManager {
 
 		allResults.put(result.getClass(), result);
 
-		madvocContextInjector.injectMadvocContext(result);
-		madvocContextInjector.injectMadvocParams(result);
+		initializeResult(result);
 
 		return result;
 	}
@@ -103,7 +102,10 @@ public class ResultsManager {
 	 * Initializes action result.
 	 */
 	protected void initializeResult(ActionResult result) {
+		madvocContextInjector.injectMadvocContext(result);
+		madvocContextInjector.injectMadvocParams(result);
 		servletContextInjector.injectContext(result, madvocController.getApplicationContext());
+
 		result.init();
 	}
 

@@ -21,7 +21,7 @@ public interface ActionResult<T> {
 	String getResultType();
 
 	/**
-	 * Returns type of result value, passed to the {@link #render(jodd.madvoc.ActionRequest, Object, String) render method}
+	 * Returns type of result value, passed to the {@link #render(jodd.madvoc.ActionRequest, Object) render method}
 	 * and defined by generics.
 	 */
 	Class<T> getResultValueType();
@@ -30,18 +30,11 @@ public interface ActionResult<T> {
 	 * Renders result on given action result value.
 	 * @param actionRequest action request
 	 * @param resultValue action method result, may be <code>null</code>
-	 * @param resultPath result path
 	 */
-	void render(ActionRequest actionRequest, T resultValue, String resultPath) throws Exception;
+	void render(ActionRequest actionRequest, T resultValue) throws Exception;
 
 	/**
-	 * Returns <code>true</code> if result is initialized.
-	 */
-	boolean isInitialized();
-
-	/**
-	 * Initializes the result. After this call,
-	 * {@link #isInitialized()} returns <code>true</code>.
+	 * Initializes the result.
 	 */
 	void init();
 

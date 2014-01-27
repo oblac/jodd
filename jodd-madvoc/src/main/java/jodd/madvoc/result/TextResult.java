@@ -22,7 +22,7 @@ public class TextResult extends BaseActionResult<String> {
 		super(NAME);
 	}
 
-	public void render(ActionRequest actionRequest, String resultValue, String resultPath) throws Exception {
+	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
 
 		String encoding = response.getCharacterEncoding();

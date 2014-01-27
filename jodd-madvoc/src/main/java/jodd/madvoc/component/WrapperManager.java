@@ -80,8 +80,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		if (wrapper == null) {
 			wrapper = createWrapper(wrapperClass);
 
-			madvocContextInjector.injectMadvocContext(wrapper);
-			madvocContextInjector.injectMadvocParams(wrapper);
+			initializeWrapper(wrapper);
 
 			wrappers.put(wrapperClassName, wrapper);
 		}
@@ -116,11 +115,12 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Initializes action wrapper.
 	 */
 	protected void initializeWrapper(T wrapper) {
+		madvocContextInjector.injectMadvocContext(wrapper);
+		madvocContextInjector.injectMadvocParams(wrapper);
 		servletContextInjector.injectContext(wrapper, madvocController.getApplicationContext());
 
 		wrapper.init();
 	}
-
 
 	// ---------------------------------------------------------------- expander
 
