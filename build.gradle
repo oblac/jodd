@@ -161,13 +161,15 @@ configure(javaModules()) {
 	sourceSets {
 		testInt
 	}
-	idea {
-		module {
-			testSourceDirs += file('src/testInt/java')
-			testSourceDirs += file('src/testInt/resources')
-			scopes.TEST.plus += configurations.testIntCompile
-		}
-	}
+
+	// idea fix no more needed since 13.0.2
+//	idea {
+//		module {
+//			testSourceDirs += file('src/testInt/java')
+//			testSourceDirs += file('src/testInt/resources')
+//			scopes.TEST.plus += configurations.testIntCompile
+//		}
+//	}
 
 	dependencies {
 		testIntCompile sourceSets.main.output
