@@ -3,14 +3,29 @@
 package jodd.madvoc;
 
 /**
- * Parameters scope for injection ({@link jodd.madvoc.meta.In}) and outjection ({@link jodd.madvoc.meta.Out}).
+ * Parameters scope for injection ({@link jodd.madvoc.meta.In})
+ * and outjection ({@link jodd.madvoc.meta.Out}).
  */
 public enum ScopeType {
-
+	/**
+	 * Request attributes and parameters.
+	 */
 	REQUEST(0),
+	/**
+	 * Session attributes.
+	 */
 	SESSION(1),
+	/**
+	 * Servlet context attributes.
+	 */
 	APPLICATION(2),
+	/**
+	 * Madvoc context.
+	 */
 	CONTEXT(3),
+	/**
+	 * Servlet-related stuff.
+	 */
 	SERVLET(4);
 
 	private int value;

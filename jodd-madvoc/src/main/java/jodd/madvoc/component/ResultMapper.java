@@ -9,7 +9,16 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
 /**
- * Maps action results to result path. Invoked just before the result itself.
+ * Mapper from action results paths to result path. Certain set of results
+ * defines path where to forward/redirect etc. This mapper converts
+ * result path to real path. Result path may contain some macros that
+ * will be resolved. Here are the macros that can be used:
+ * <ul>
+ *     <li>[class] - replaced with path defined by this class</li>
+ *     <li>[method] - replaced with path defined by this method</li>
+ *     <li>&lt;alias&gt; - replaced with alias value</li>
+ *     <li># - strips words from path</li>
+ * </ul>
  */
 public class ResultMapper {
 
@@ -68,11 +77,10 @@ public class ResultMapper {
 	/**
 	 * Resolves result path from action configuration and result value.
 	 * By default, the result value is appended to the class action path and method action path.
-	 * If result value starts with path prefix, it represent complete path.
-	 * Although result value may be <code>null</code>, result is never <code>null</code>.
+	 * If result value starts with path prefix '/', it represent a complete path.
+	 * Although result value may be <code>null</code>, result path is never <code>null</code>.
 	 */
 	public String resolveResultPath(ActionConfig cfg, String resultValue) {
-
 		boolean aliasResolved = false;
 
 		if (resultValue != null) {

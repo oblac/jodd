@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Dispatches to a JSP page.
@@ -33,11 +32,10 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 	@In(scope = ScopeType.CONTEXT)
 	protected ResultMapper resultMapper;
 
-
 	/**
 	 * Dispatches to the JSP location created from result value and JSP extension.
-	 * Does its forward via a RequestDispatcher. If the dispatch fails a 404 error
-	 * will be sent back in the http response, what will produce error 500.
+	 * Does its forward via a RequestDispatcher. If the dispatch fails, a 404 error
+	 * will be sent back in the http response.
 	 */
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
 		String resultPath = resultMapper.resolveResultPath(actionRequest.getActionConfig(), resultValue);
@@ -49,18 +47,17 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 		String originalResultPath = resultPath;
 		while (true) {
 			target = resultPath + EXTENSION;
-			try {
-				if (locateTarget(request, target) != null) {
-					break;
-				}
-			} catch (MalformedURLException muex) {
-				// ignore
+
+			if (targetExist(request, target)) {
+				break;
 			}
+
 			int dotNdx = MadvocUtil.lastIndexOfDotAfterSlash(resultPath);
 			if (dotNdx == -1) {
 				response.sendError(SC_NOT_FOUND, "Result not resolved: " + originalResultPath + EXTENSION);
 				return;
 			}
+
 			resultPath = resultPath.substring(0, dotNdx);
 		}
 
@@ -80,10 +77,14 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 	}
 
 	/**
-	 * Locates target.
+	 * Returns <code>true</code> if target exists.
 	 */
-	protected URL locateTarget(HttpServletRequest request, String target) throws Exception {
-		return request.getSession().getServletContext().getResource(target);
+	protected boolean targetExist(HttpServletRequest request, String target) {
+		try {
+			return request.getSession().getServletContext().getResource(target) != null;
+		} catch (MalformedURLException ignore) {
+			return false;
+		}
 	}
 
 }
