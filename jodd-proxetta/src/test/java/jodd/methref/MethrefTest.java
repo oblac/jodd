@@ -11,34 +11,34 @@ public class MethrefTest {
 
 	@Test
 	public void testString() {
-		assertEquals("foo", Methref.sref(Str.class).foo());
-		assertEquals("foo2", Methref.sref(Str.class).foo2(null, null));
+		assertEquals("foo", Methref.onto(Str.class).foo());
+		assertEquals("foo2", Methref.onto(Str.class).foo2(null, null));
 	}
 
 	@Test
 	public void testNonString() {
-		Methref<Str> m = Methref.on(Str.class);
-		assertEquals("redirect:boo", "redirect:" + m.ref(m.method().boo()));
-		assertEquals("foo", m.ref(m.method().foo()));
+		Methref<Str> mref = Methref.on(Str.class);
+		assertEquals("redirect:boo", "redirect:" + mref.ref(mref.to().boo()));
+		assertEquals("foo", mref.ref(mref.to().foo()));
 	}
 
 	@Test
 	public void testPrimitives() {
-		Methref<Str> m = Methref.on(Str.class);
-		assertEquals("izoo", m.ref(m.method().izoo()));
-		assertEquals("fzoo", m.ref(m.method().fzoo()));
-		assertEquals("dzoo", m.ref(m.method().dzoo()));
-		assertEquals("lzoo", m.ref(m.method().lzoo()));
-		assertEquals("bzoo", m.ref(m.method().bzoo()));
-		assertEquals("szoo", m.ref(m.method().szoo()));
-		assertEquals("czoo", m.ref(m.method().czoo()));
-		assertEquals("yzoo", m.ref(m.method().yzoo()));
+		Methref<Str> mref = Methref.on(Str.class);
+		assertEquals("izoo", mref.ref(mref.to().izoo()));
+		assertEquals("fzoo", mref.ref(mref.to().fzoo()));
+		assertEquals("dzoo", mref.ref(mref.to().dzoo()));
+		assertEquals("lzoo", mref.ref(mref.to().lzoo()));
+		assertEquals("bzoo", mref.ref(mref.to().bzoo()));
+		assertEquals("szoo", mref.ref(mref.to().szoo()));
+		assertEquals("czoo", mref.ref(mref.to().czoo()));
+		assertEquals("yzoo", mref.ref(mref.to().yzoo()));
 	}
 
 	@Test
-	public void testVoid() {
+	public void testVoidOrTwoSteps() {
 		Methref<Str> m = Methref.on(Str.class);
-		m.method().voo();
+		m.to().voo();
 		assertEquals("voo", m.ref());
 	}
 }

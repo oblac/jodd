@@ -2,7 +2,6 @@
 
 package jodd.methref;
 
-import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -18,26 +17,10 @@ public class MethrefProxetta {
 	public static final String METHREF_CLASSNAME_SUFFIX = "$Methref";
 
 	public MethrefProxetta() {
-		ProxyAspect aspectAll = new ProxyAspect(MethrefAdvice.class, new AllMethodsPointcut() {
-			@Override
-			public boolean apply(MethodInfo methodInfo) {
-				if (methodInfo.getReturnType().equals(String.class.getName())) {
-					return false;
-				}
-				return super.apply(methodInfo);
-			}
-		});
-		ProxyAspect aspectStr = new ProxyAspect(MethrefStringAdvice.class, new AllMethodsPointcut() {
-			@Override
-			public boolean apply(MethodInfo methodInfo) {
-				if (methodInfo.getReturnType().equals(String.class.getName()) == false) {
-					return false;
-				}
-				return super.apply(methodInfo);
-			}
-		});
+		ProxyAspect aspects = new ProxyAspect(MethrefAdvice.class, new AllMethodsPointcut());
 
-		proxetta = ProxyProxetta.withAspects(aspectAll, aspectStr);
+		proxetta = ProxyProxetta.withAspects(aspects);
+
 		proxetta.setClassNameSuffix(METHREF_CLASSNAME_SUFFIX);
 	}
 
@@ -45,7 +28,7 @@ public class MethrefProxetta {
 	 * Generates new class.
 	 */
 	public Class defineProxy(Class target) {
-		ProxyProxettaBuilder builder =  proxetta.builder();
+		ProxyProxettaBuilder builder = proxetta.builder();
 		builder.setTarget(target);
 		return builder.define();
 	}
