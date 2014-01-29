@@ -130,13 +130,24 @@ public class DispatcherUtil {
 
 
 	/**
-	 * Performs redirection to specified page.
+	 * Performs redirection (302) to specified url.
 	 */
 	public static void redirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
 		if (url.startsWith(StringPool.SLASH) == true) {
 			url = ServletUtil.getContextPath(request) + url;
 		}
 		response.sendRedirect(response.encodeRedirectURL(url));
+	}
+
+	/**
+	 * Performs permanent redirection (301) to specified url.
+	 */
+	public static void redirectPermanent(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+		if (url.startsWith(StringPool.SLASH) == true) {
+			url = ServletUtil.getContextPath(request) + url;
+		}
+		response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		response.setHeader("Location", url);
 	}
 
 

@@ -39,7 +39,6 @@ Lagarto/Jerry:
 	- Improve LagartoDOM parser @v3.4.7 @done
 	- Think about removing circluar dep Node <-> Document
 	- Find JFLex faster alternative?
-	- Use StringBand() @next
 	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
 	- Add `PopertyDescriptor` @v3.4.9 @done
@@ -76,6 +75,7 @@ Madvoc:
 		For example, it may choose if extension is "json" or not based on class name.
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Multiple roots mapped to different paths @done @v3.4.5
+	- Cache results for ServletDispatcherResult#targetExist to speed up @soon
 EMail:
 	- Add IMAP support @done @v3.4.7
 	- Add support for EML attachments @done @v3.4.7
