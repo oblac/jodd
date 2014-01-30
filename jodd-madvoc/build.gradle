@@ -10,6 +10,7 @@ dependencies {
 	compile project(':jodd-servlet')
 	compile project(':jodd-petite')
 	compile project(':jodd-log')
+	compile project(':jodd-proxetta')
 
 	compile lib.servlet
 	compile lib.jsp
@@ -17,8 +18,10 @@ dependencies {
 	testCompile project(':jodd-http')
 	testCompile lib.junit
 	testCompile lib.tomcat_embed
+	testCompile lib.mockito
 }
 provided = [lib.servlet, lib.jsp]
+optional = ['jodd-proxetta']
 
 
 // run madvoc integration tests only through the suite
