@@ -3,9 +3,7 @@ Jodd
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
-<script data-gittip-username="jodder"
-        data-gittip-widget="button"
-        src="//gttp.co/v1.js"></script>
+[tip jar](http://gittip.com/jodder)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
