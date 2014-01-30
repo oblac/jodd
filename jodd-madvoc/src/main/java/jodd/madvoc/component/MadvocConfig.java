@@ -36,7 +36,7 @@ public class MadvocConfig {
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		createDefaultAliases = false;
+		createDefaultAliases = false;		// todo remove and make default
 		defaultExtension = "html";
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
@@ -44,7 +44,6 @@ public class MadvocConfig {
 		actionPathMappingEnabled = false;
 		preventCaching = true;
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
-		strictExtensionStripForResultPath = false;
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
 		resultPathPrefix = null;
@@ -280,7 +279,7 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- mapping
 
-	protected boolean actionPathMappingEnabled;
+	protected boolean actionPathMappingEnabled;		// todo remove
 
 	public boolean isActionPathMappingEnabled() {
 		return actionPathMappingEnabled;
@@ -326,27 +325,18 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- result
 
-	protected boolean strictExtensionStripForResultPath;
 	protected String resultPathPrefix;
 
-	public boolean isStrictExtensionStripForResultPath() {
-		return strictExtensionStripForResultPath;
-	}
-
 	/**
-	 * Specifies if action path extension should be stripped only if it is equal
-	 * to defined one, during result path creation.
+	 * Returns default prefix for all result paths.
+	 * Returns <code>null</code> when not used.
 	 */
-	public void setStrictExtensionStripForResultPath(boolean strictExtensionStripForResultPath) {
-		this.strictExtensionStripForResultPath = strictExtensionStripForResultPath;
-	}
-
 	public String getResultPathPrefix() {
 		return resultPathPrefix;
 	}
 
 	/**
-	 * Defines result path prefix that will be added to all relative result paths.
+	 * Defines result path prefix that will be added to all result paths.
 	 * If set to <code>null</code> will be ignored.
 	 */
 	public void setResultPathPrefix(String resultPathPrefix) {
@@ -412,7 +402,6 @@ public class MadvocConfig {
 				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
-				",\n\tstrictExtensionStripForResultPath=" + strictExtensionStripForResultPath +
 				"\n}";
 	}
 

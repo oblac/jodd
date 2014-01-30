@@ -6,9 +6,11 @@ import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.exception.ExceptionUtil;
+import jodd.madvoc.result.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 
@@ -217,6 +219,25 @@ public class ActionRequest {
 			throw ExceptionUtil.extractTargetException(itex);
 		}
 	}
+
+
+	// ---------------------------------------------------------------- result
+
+	/**
+	 * Returns result field value if such exist.
+	 */
+	public Result getResult() {
+		Field resultField = config.resultField;
+		if (resultField != null) {
+			try {
+				return (Result) resultField.get(action);
+			} catch (IllegalAccessException ignore) {
+				return null;
+			}
+		}
+		return null;
+	}
+
 
 
 }

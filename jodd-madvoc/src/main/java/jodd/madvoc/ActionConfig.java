@@ -2,9 +2,14 @@
 
 package jodd.madvoc;
 
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.Result;
+import jodd.util.ReflectUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -17,13 +22,12 @@ public class ActionConfig {
 	public final Method actionClassMethod;
 	public final String actionPath;
 	public final String actionMethod;
-	public final String actionPathExtension;
-	public final boolean pathEndsWithExtension;
+	public final Field resultField;
+	//public final String[] actionPathElements;
 	//public final Class<?>[] actionParamTypes;
 
 	// run-time data
 	protected ActionConfigSet actionConfigSet;
-	public boolean initialized;
 	public final ActionFilter[] filters;
 	public final ActionInterceptor[] interceptors;
 
@@ -34,22 +38,37 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
-			String actionPathExtension)
+			String[] actionPathElements)
 	{
-
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
-		this.actionPathExtension = actionPathExtension;
+		//this.actionPathElements = actionPathElements;		// ignore for now
 
 		this.filters = filters;
 		this.interceptors = interceptors;
 
-		this.pathEndsWithExtension = actionPathExtension != null && actionPath.endsWith('.' + actionPathExtension);
+		this.resultField = findResultField(actionClass);
 
 //		Class<?>[] paramTypes = actionMethod.getParameterTypes();
 //		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
+	}
+
+	// ---------------------------------------------------------------- result
+
+	/**
+	 * Finds result field in the action class.
+	 */
+	protected Field findResultField(Class actionClass) {
+		FieldDescriptor[] fields = ClassIntrospector.lookup(actionClass).getAllFieldDescriptors();
+		for (FieldDescriptor fd : fields) {
+			Field field = fd.getField();
+			if (ReflectUtil.isSubclass(field.getType(), Result.class)) {
+				return field;
+			}
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------- getters
@@ -76,39 +95,10 @@ public class ActionConfig {
 	}
 
 	/**
-	 * Returns action path extension.
-	 */
-	public String getActionPathExtension() {
-		return actionPathExtension;
-	}
-
-	/**
-	 * Returns <code>true</code> if {@link #getActionPath() action path}
-	 * ends with {@link #getActionPathExtension() action path extension}.
-	 */
-	public boolean isPathEndsWithExtension() {
-		return pathEndsWithExtension;
-	}
-
-	/**
 	 * Returns action method.
 	 */
 	public String getActionMethod() {
 		return actionMethod;
-	}
-
-	/**
-	 * Returns <code>true</code> if class is initialized.
-	 */
-	public boolean isInitialized() {
-		return initialized;
-	}
-
-	/**
-	 * Marks configuration as initialized.
-	 */
-	public void initialized() {
-		initialized = true;
 	}
 
 	/**

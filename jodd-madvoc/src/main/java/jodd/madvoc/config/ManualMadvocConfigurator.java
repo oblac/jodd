@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 
 /**
  * Madvoc configurator for manual configuration.
+ * // todo remove as we have full manual binding
  */
 public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 
@@ -55,32 +56,18 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 	public class ActionBuilder {
 		String method;
 		String actionPath;
-		String path;
 		Class actionClass;
 		Method actionClassMethod;
 		String actionMethodString;
-		String extension;
 		String alias;
 		ActionFilter[] actionFilters;
 		ActionInterceptor[] actionInterceptors;
 
 		/**
-		 * Defines action path, with the extension.
+		 * Defines action path.
 		 */
 		public ActionBuilder path(String path) {
-			this.path = path;
 			this.actionPath = path;
-
-			int ndx = path.lastIndexOf('.');
-			if (ndx == -1) {
-				this.extension = NONE;
-			} else {
-				if (extension == null) {
-					// modify extension if not already set
-					this.extension = path.substring(ndx + 1);
-					this.actionPath = path.substring(0, ndx);
-				}
-			}
 			return this;
 		}
 
@@ -91,15 +78,6 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		public ActionBuilder path(String method, String path) {
 			this.method = method;
 			return path(path);
-		}
-
-		/**
-		 * Defines just the extension. If called before
-		 * {@link #path(String)}, path will not be parsed for one.
-		 */
-		public ActionBuilder extension(String extension) {
-			this.extension = extension;
-			return this;
 		}
 
 		/**
@@ -168,7 +146,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
-							path, method, extension);
+							actionPath, method, null);
 
 			actionsManager.registerAction(actionConfig);
 

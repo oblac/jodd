@@ -7,6 +7,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
+import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.log.Logger;
@@ -145,18 +146,20 @@ public class MadvocController {
 		Class<? extends ActionResult> actionResultClass = null;
 
 		if (resultObject != null && resultObject.getClass() != String.class) {
-//			if (resultObject instanceof Result) {
-//				// special class
-//				Result result = (Result) resultObject;
-//				actionResultClass = result.getActionResult();
-//				resultObject = result.getResultValue();
-//			} else {
-				// try annotation
-				RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
-				if (renderWith != null) {
-					actionResultClass = renderWith.value();
+			// try annotation
+			RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
+			if (renderWith != null) {
+				actionResultClass = renderWith.value();
+			}
+		} else if (resultObject == null) {
+			Result result = actionRequest.getResult();
+			if (result != null) {
+				actionResultClass = result.getActionResult();
+				resultObject = result.getResultValue();
+				if (resultObject == null) {
+					resultObject = result.value();
 				}
-//			}
+			}
 		}
 
 		if (actionResultClass != null) {
@@ -219,24 +222,10 @@ public class MadvocController {
 
 	/**
 	 * Resolves action config from action path and http method. Returns <code>null</code>
-	 * if action config not found. Performs initialization of founded action config,
-	 * if necessary.
+	 * if action config not found.
 	 */
 	protected ActionConfig resolveActionConfig(String actionPath, String httpMethod) {
-		ActionConfig actionConfig = actionPathMapper.resolveActionConfig(actionPath, httpMethod);
-		if (actionConfig != null) {
-			if (actionConfig.initialized == false) {
-				initializeActionConfig(actionConfig);
-			}
-		}
-		return actionConfig;
-	}
-
-	/**
-	 * Initializes action configuration on first use. Internally, it does nothing.
-	 */
-	protected void initializeActionConfig(ActionConfig actionConfig) {
-		actionConfig.initialized();
+		return actionPathMapper.resolveActionConfig(actionPath, httpMethod);
 	}
 
 	// ---------------------------------------------------------------- create
