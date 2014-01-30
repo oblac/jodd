@@ -12,10 +12,13 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.servlet.DispatcherUtil;
 
+import java.io.IOException;
+
 /**
  * Simply redirects to a page using <code>RequestDispatcher</code>.
  * 
  * @see ServletDispatcherResult
+ * @see jodd.madvoc.result.ServletUrlRedirectResult
  */
 public class ServletRedirectResult extends BaseActionResult<String> {
 
@@ -25,6 +28,10 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 
 	public ServletRedirectResult() {
 		super(NAME);
+	}
+
+	protected ServletRedirectResult(String name) {
+		super(name);
 	}
 
 	@In(scope = ScopeType.CONTEXT)
@@ -42,7 +49,11 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 		String path = resultPath;
 		path = beanTemplateParser.parse(path, actionRequest.getAction());
 
-		DispatcherUtil.redirect(request, response, path);	// todo add redirect permanent result
+		redirect(request, response, path);
+	}
+
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
+		DispatcherUtil.redirect(request, response, path);
 	}
 
 }

@@ -44,6 +44,17 @@ public class Result {
 		return resultValue;
 	}
 
+	/**
+	 * Wraps action class and returns <code>MethRef</code> object
+	 * (proxified target) so user can choose the method.
+	 */
+	protected <T> T wrapAction(Class<T> target) {
+		this.target = target;
+		this.methref = Methref.on(target);
+		this.resultValue = null;
+		return (T) methref.to();
+	}
+
 	// ---------------------------------------------------------------- forward
 
 	/**
@@ -68,18 +79,16 @@ public class Result {
 	 * Forward to action method of provided action.
 	 */
 	public <T> T forwardTo(Class<T> target) {
-		this.target = target;
 		actionResult = ServletDispatcherResult.class;
-		methref = Methref.on(target);
-		resultValue = null;
-		return (T) methref.to();
+		return wrapAction(target);
 	}
 
 	/**
 	 * Forward to action method of current action class.
 	 */
 	public <T> T forwardTo(T target) {
-		return (T) forwardTo(target.getClass());
+		actionResult = ServletDispatcherResult.class;
+		return (T) wrapAction(target.getClass());
 	}
 
 	/**
@@ -105,18 +114,16 @@ public class Result {
 	 * Redirect to specified path.
 	 */
 	public <T> T redirectTo(Class<T> target) {
-		this.target = target;
 		actionResult = ServletRedirectResult.class;
-		methref = Methref.on(target);
-		resultValue = null;
-		return (T) methref.to();
+		return wrapAction(target);
 	}
 
 	/**
 	 * Redirect to method of this class.
 	 */
 	public <T> T redirectTo(T target) {
-		return (T) redirectTo(target.getClass());
+		actionResult = ServletRedirectResult.class;
+		return (T) wrapAction(target.getClass());
 	}
 
 	/**
@@ -127,9 +134,16 @@ public class Result {
 		methref = null;
 	}
 
-	// ---------------------------------------------------------------- chain
+	/**
+	 * Permanent redirection to given path.
+	 */
+	public void urlTo(String path) {
+		actionResult = ServletUrlRedirectResult.class;
+		resultValue = path;
+		methref = null;
+	}
 
-		// ---------------------------------------------------------------- redirect
+	// ---------------------------------------------------------------- chain
 
 	/**
 	 * Basic chain to path.
@@ -144,18 +158,16 @@ public class Result {
 	 * Chains to specified path.
 	 */
 	public <T> T chainTo(Class<T> target) {
-		this.target = target;
 		actionResult = ChainResult.class;
-		methref = Methref.on(target);
-		resultValue = null;
-		return (T) methref.to();
+		return wrapAction(target);
 	}
 
 	/**
 	 * Chains to method of this class.
 	 */
 	public <T> T chainTo(T target) {
-		return (T) chainTo(target.getClass());
+		actionResult = ChainResult.class;
+		return (T) wrapAction(target.getClass());
 	}
 
 

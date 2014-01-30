@@ -42,7 +42,6 @@ public class ResultMapper {
 
 	/**
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.
-	 * todo move to ActionsManager ?
 	 */
 	protected String resolveAlias(String value) {
 		StringBuilder result = new StringBuilder(value.length());

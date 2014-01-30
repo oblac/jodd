@@ -47,4 +47,14 @@ public class OneTwoActionTest {
 		assertEquals("value = [777]", response.bodyText());
 	}
 
+	@Test
+	public void testOneRedirectPermanentAction() {
+		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.perm.html").send();
+		assertNull(response.bodyText());
+		assertEquals(301, response.statusCode());
+
+		String redirectLocation = response.header("location");
+		assertEquals("/two.html?value=444", redirectLocation);
+	}
+
 }

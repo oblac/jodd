@@ -16,4 +16,10 @@ public class OneRedirectAction {
 		return "redirect:/<two>?value=${value}";
 	}
 
+	@Action
+	public String perm() {
+		value = "444";
+		return "url:/<two>?value=${value}";
+	}
+
 }
