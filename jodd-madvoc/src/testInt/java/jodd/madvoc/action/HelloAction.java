@@ -152,7 +152,7 @@ public class HelloAction {
 
 	@Action
 	public String backback() {
-		return "##default.big";
+		return "###default.big";
 	}
 
 }

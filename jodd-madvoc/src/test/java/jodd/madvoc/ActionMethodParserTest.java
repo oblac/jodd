@@ -97,7 +97,6 @@ public class ActionMethodParserTest extends MadvocTestCase {
 
 		cfg = parse(actionMethodParser, "tst.BooAction#foo4");
 		assertEquals("/xxx", cfg.actionPath);
-		assertEquals("html", cfg.actionPathExtension);
 		assertNull(cfg.actionMethod);
 
 		cfg = parse(actionMethodParser, "tst.BooAction#foo41");

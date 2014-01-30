@@ -19,7 +19,8 @@ import org.junit.runners.Suite;
 		IntcptActionTest.class,
 		RestActionTest.class,
 		FilterTest.class,
-		SessionScopeTest.class
+		SessionScopeTest.class,
+		AlphaTest.class
 })
 public class MadvocSuite {
 

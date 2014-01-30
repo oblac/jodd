@@ -3,7 +3,10 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.InterceptorsManager;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.petite.PetiteWebApplication;
+
+import javax.servlet.ServletContext;
 
 public class MyWebApplication extends PetiteWebApplication {
 
@@ -17,5 +20,11 @@ public class MyWebApplication extends PetiteWebApplication {
 	@Override
 	protected void initInterceptors(InterceptorsManager interceptorsManager) {
 		interceptorsManager.register("ServletConfigAltInterceptor", new ServletConfigAltInterceptor());
+	}
+
+	@Override
+	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
+		super.init(madvocConfig, servletContext);
+		madvocConfig.setCreateDefaultAliases(true);
 	}
 }

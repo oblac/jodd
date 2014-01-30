@@ -28,7 +28,7 @@ public class IntcptAction {
 	@Action
 	@InterceptedBy({EchoInterceptor.class, ServletConfigAltInterceptor.class})
 	public String in2() {
-		return "#in1";
+		return "##in1";
 	}
 
 	// ----------------------------------------------------------------
