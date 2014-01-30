@@ -39,12 +39,14 @@ public class ActionsManager {
 	protected int actionsCount;
 	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
 	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
+	protected final HashMap<String, ActionConfig> configs;		// another map of all action configs
 	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
 		this.map = new HashMap<String, ActionConfigSet>();
 		this.list = new SortedArrayList<ActionConfigSet>(new ActionConfigSetComparator());
 		this.pathAliases = new HashMap<String, String>();
+		this.configs = new HashMap<String, ActionConfig>();
 	}
 
 	/**
@@ -170,7 +172,7 @@ public class ActionsManager {
 
 		if (log.isDebugEnabled()) {
 			log.debug("Registering Madvoc action: " + actionConfig.actionPath + " to: " +
-					actionConfig.actionClass.getName() + '#' + actionConfig.actionClassMethod.getName());
+					actionConfig.getActionString());
 		}
 
 		ActionConfigSet set = createActionConfigSet(actionConfig.actionPath);
@@ -205,6 +207,10 @@ public class ActionsManager {
 				throw new MadvocException("Duplicate action path for " + actionConfig);
 			}
 		}
+
+		// finally
+
+		configs.put(actionConfig.getActionString(), actionConfig);
 
 		if (isDuplicate == false) {
 			actionsCount++;
@@ -283,6 +289,15 @@ public class ActionsManager {
 		ActionConfigSet set = list.get(lastMatched);
 
 		return set.lookup(method);
+	}
+
+	/**
+	 * Lookups action config for given action class and method string (aka 'action string').
+	 * The action string has the following format: <code>className#methodName</code>.
+	 * @see jodd.madvoc.ActionConfig#getActionString()
+	 */
+	public ActionConfig lookup(String actionString) {
+		return configs.get(actionString);
 	}
 
 	// ---------------------------------------------------------------- aliases

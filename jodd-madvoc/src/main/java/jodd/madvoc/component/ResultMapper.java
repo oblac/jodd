@@ -2,6 +2,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ResultPath;
 import jodd.petite.meta.PetiteInject;
 import jodd.madvoc.MadvocUtil;
@@ -26,6 +27,20 @@ public class ResultMapper {
 	protected MadvocConfig madvocConfig;
 
 	/**
+	 * Lookups value as an alias and, if not found, as a default alias.
+	 */
+	protected String lookupAlias(String alias) {
+		String value = actionsManager.lookupPathAlias(alias);
+		if (value == null) {
+			ActionConfig cfg = actionsManager.lookup(alias);
+			if (cfg != null) {
+				value = cfg.actionPath;
+			}
+		}
+		return value;
+	}
+
+	/**
 	 * Returns resolved alias result value or passed on, if alias doesn't exist.
 	 * todo move to ActionsManager ?
 	 */
@@ -39,7 +54,7 @@ public class ResultMapper {
 				// alias markers not found
 				if (i == 0) {
 					// try whole string as an alias
-					String alias = actionsManager.lookupPathAlias(value);
+					String alias = lookupAlias(value);
 					return (alias != null ? alias : value);
 				} else {
 					result.append(value.substring(i));
@@ -54,7 +69,7 @@ public class ResultMapper {
 			String alias = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
 
 			// process alias
-			alias = actionsManager.lookupPathAlias(alias);
+			alias = lookupAlias(alias);
 			if (alias != null) {
 				result.append(alias);
 			}

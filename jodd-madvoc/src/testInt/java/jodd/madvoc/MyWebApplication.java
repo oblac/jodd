@@ -25,6 +25,5 @@ public class MyWebApplication extends PetiteWebApplication {
 	@Override
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		super.init(madvocConfig, servletContext);
-		madvocConfig.setCreateDefaultAliases(true);
 	}
 }

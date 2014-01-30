@@ -36,7 +36,6 @@ public class MadvocConfig {
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
-		createDefaultAliases = false;		// todo remove and make default
 		defaultExtension = "html";
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
@@ -216,22 +215,6 @@ public class MadvocConfig {
 		return defaultResultType;
 	}
 
-	// ---------------------------------------------------------------- path aliases
-
-	protected boolean createDefaultAliases;
-
-	public boolean isCreateDefaultAliases() {
-		return createDefaultAliases;
-	}
-
-	/**
-	 * Specifies if default aliases should be created for all
-	 * action paths.
-	 */
-	public void setCreateDefaultAliases(boolean createDefaultAliases) {
-		this.createDefaultAliases = createDefaultAliases;
-	}
-
 	// ---------------------------------------------------------------- packageRoot
 
 	protected RootPackages rootPackages;
@@ -371,7 +354,6 @@ public class MadvocConfig {
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
 				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
-				",\n\tcreateDefaultAliases=" + createDefaultAliases +
 				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
 				",\n\tdefaultExtension='" + defaultExtension + '\'' +
 				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
