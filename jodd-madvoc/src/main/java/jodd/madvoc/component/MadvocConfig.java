@@ -41,7 +41,6 @@ public class MadvocConfig {
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
-		actionPathMappingEnabled = false;
 		preventCaching = true;
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 		attributeMoveId = "_m_move_id";
@@ -277,22 +276,6 @@ public class MadvocConfig {
 		this.detectDuplicatePathsEnabled = detectDuplicatePathsEnabled;
 	}
 
-	// ---------------------------------------------------------------- mapping
-
-	protected boolean actionPathMappingEnabled;		// todo remove
-
-	public boolean isActionPathMappingEnabled() {
-		return actionPathMappingEnabled;
-	}
-
-	/**
-	 * Defines if reverse action path mapping should be enabled. This means
-	 * that classes are not registered before, but searched in runtime.
-	 */
-	public void setActionPathMappingEnabled(boolean actionPathMappingEnabled) {
-		this.actionPathMappingEnabled = actionPathMappingEnabled;
-	}
-
 	// ---------------------------------------------------------------- caching
 
 	protected boolean preventCaching;
@@ -386,7 +369,6 @@ public class MadvocConfig {
 	public String toString() {
 		return "MadvocConfig{" +
 				"\n\tactionAnnotations=" + (actionAnnotations == null ? null : toString(actionAnnotations)) +
-				",\n\tactionPathMappingEnabled=" + actionPathMappingEnabled +
 				",\n\tapplyCharacterEncoding=" + applyCharacterEncoding +
 				",\n\tattributeMoveId='" + attributeMoveId + '\'' +
 				",\n\tcreateDefaultAliases=" + createDefaultAliases +

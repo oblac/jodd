@@ -31,7 +31,7 @@ public class MadvocController {
 	protected MadvocConfig madvocConfig;
 
 	@PetiteInject
-	protected ActionPathMapper actionPathMapper;
+	protected ActionsManager actionsManager;
 
 	@PetiteInject
 	protected ActionPathRewriter actionPathRewriter;
@@ -81,7 +81,7 @@ public class MadvocController {
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
 			// resolve action configuration
-			ActionConfig actionConfig = resolveActionConfig(actionPath, httpMethod);
+			ActionConfig actionConfig = actionsManager.lookup(actionPath, httpMethod);
 			if (actionConfig == null) {
 				return actionPath;
 			}
@@ -216,16 +216,6 @@ public class MadvocController {
 		}
 
 		actionResult.render(actionRequest, resultObject);
-	}
-
-	// ---------------------------------------------------------------- create
-
-	/**
-	 * Resolves action config from action path and http method. Returns <code>null</code>
-	 * if action config not found.
-	 */
-	protected ActionConfig resolveActionConfig(String actionPath, String httpMethod) {
-		return actionPathMapper.resolveActionConfig(actionPath, httpMethod);
 	}
 
 	// ---------------------------------------------------------------- create

@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 
 /**
  * Madvoc configurator for manual configuration.
- * // todo remove as we have full manual binding
  */
 public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 

@@ -8,7 +8,6 @@ import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocContextInjector;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionPathMapper;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.MadvocConfig;
@@ -155,7 +154,6 @@ public class WebApplication {
 		log.debug("Registering Madvoc components");
 
 		registerComponent(ActionMethodParser.class);
-		registerComponent(ActionPathMapper.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
