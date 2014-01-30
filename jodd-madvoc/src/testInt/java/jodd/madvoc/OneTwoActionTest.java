@@ -48,6 +48,18 @@ public class OneTwoActionTest {
 	}
 
 	@Test
+	public void testOneMoveGoAction() {
+		HttpResponse response = HttpRequest.get("localhost:8080/oneMove.go.html").send();
+		assertNull(response.bodyText());
+		assertEquals(302, response.statusCode());
+
+		String redirectLocation = response.header("location");
+
+		response = HttpRequest.get(redirectLocation).send();
+		assertEquals("value = [888]", response.bodyText());
+	}
+
+	@Test
 	public void testOneRedirectPermanentAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.perm.html").send();
 		assertNull(response.bodyText());

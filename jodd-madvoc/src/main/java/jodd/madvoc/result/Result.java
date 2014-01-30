@@ -170,6 +170,32 @@ public class Result {
 		return (T) wrapAction(target.getClass());
 	}
 
+	// ---------------------------------------------------------------- move
+
+	/**
+	 * Basic move to path.
+	 */
+	public void moveTo(String path) {
+		actionResult = MoveResult.class;
+		resultValue = path;
+		methref = null;
+	}
+
+	/**
+	 * Moves to specified path.
+	 */
+	public <T> T moveTo(Class<T> target) {
+		actionResult = MoveResult.class;
+		return wrapAction(target);
+	}
+
+	/**
+	 * Moves to method of this class.
+	 */
+	public <T> T moveTo(T target) {
+		actionResult = MoveResult.class;
+		return (T) wrapAction(target.getClass());
+	}
 
 	// ---------------------------------------------------------------- other results
 
