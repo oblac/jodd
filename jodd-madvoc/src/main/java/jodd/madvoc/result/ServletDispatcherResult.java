@@ -55,13 +55,20 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 
 			ServletContext servletContext = request.getSession().getServletContext();
 
-			String path = resultPath.getPath();
+			String actionPath = resultPath.getPath();
+			String path = actionPath;
 			String value = resultPath.getValue();
 
 			while (true) {
 				// variant #1: with value
 				if (path == null) {
-					target = value + EXTENSION;
+					// only value remains
+					int lastSlashNdx = actionPath.lastIndexOf('/');
+					if (lastSlashNdx != -1) {
+						target = actionPath.substring(0, lastSlashNdx + 1) + value + EXTENSION;
+					} else {
+						target = '/' + value + EXTENSION;
+					}
 				} else {
 					target = path + '.' + value + EXTENSION;
 				}

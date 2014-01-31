@@ -6,10 +6,8 @@ import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApplication;
-import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.component.ResultMapper;
-import jodd.madvoc.component.ResultsManager;
 import jodd.util.ReflectUtil;
 import org.junit.Test;
 
@@ -44,20 +42,36 @@ public class ServletDispatcherResultTest {
 		ResultMapper resultMapper = webapp.getComponent(ResultMapper.class);
 		BeanUtil.setDeclaredProperty(sdr, "resultMapper", resultMapper);
 
-		ActionRequest actionRequest = createActionRequest();
+		ActionRequest actionRequest = createActionRequest("/hello.world.html");
 		sdr.render(actionRequest, "ok");
 
-		assertEquals(
-				"[/hello.world.html.ok.jsp, " +
+		assertEquals("[" +
+				"/hello.world.html.ok.jsp, " +
 				"/hello.world.html.jsp, " +
 				"/hello.world.ok.jsp, " +
 				"/hello.world.jsp, " +
 				"/hello.ok.jsp, " +
 				"/hello.jsp, " +
-				"ok.jsp]", targets.toString());
+				"/ok.jsp" +
+				"]", targets.toString());
+
+		targets.clear();
+
+		actionRequest = createActionRequest("/pak/hello.world.html");
+		sdr.render(actionRequest, "ok");
+
+		assertEquals("[" +
+				"/pak/hello.world.html.ok.jsp, " +
+				"/pak/hello.world.html.jsp, " +
+				"/pak/hello.world.ok.jsp, " +
+				"/pak/hello.world.jsp, " +
+				"/pak/hello.ok.jsp, " +
+				"/pak/hello.jsp, " +
+				"/pak/ok.jsp" +
+				"]", targets.toString());
 	}
 
-	protected ActionRequest createActionRequest() {
+	protected ActionRequest createActionRequest(String actionPath) {
 		HttpServletRequest servletRequest = mock(HttpServletRequest.class);
 		HttpServletResponse servletResponse = mock(HttpServletResponse.class);
 		HttpSession httpSession = mock(HttpSession.class);
@@ -73,7 +87,7 @@ public class ServletDispatcherResultTest {
 				Action.class,
 				ReflectUtil.findMethod(Action.class, "view"),
 				null, null,
-				"/hello.world.html", "GET", null);
+				actionPath, "GET", null);
 
 		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
 	}

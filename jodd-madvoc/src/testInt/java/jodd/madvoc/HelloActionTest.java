@@ -24,6 +24,15 @@ public class HelloActionTest {
 	}
 
 	@Test
+	public void testHelloAction() {
+		HttpResponse response = HttpRequest.get("localhost:8080/hello.html").send();
+		assertEquals("hello", response.bodyText().trim());
+
+		response = HttpRequest.get("localhost:8080/pac/hello.html").send();
+		assertEquals("HELLO", response.bodyText().trim());
+	}
+
+	@Test
 	public void testHelloWorldAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/hello.world.html?name=Jupiter&data=3").send();
 		assertEquals("Hello world planet Jupiter and Universe 3", response.bodyText().trim());
