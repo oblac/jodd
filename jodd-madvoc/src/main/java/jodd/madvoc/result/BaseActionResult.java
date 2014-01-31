@@ -49,7 +49,7 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 
 	@Override
 	public String toString() {
-		return "result: " + getClass().getSimpleName() +
+		return "Result: " + getClass().getSimpleName() +
 				(resultType != null ? StringPool.COLON + resultType : StringPool.EMPTY);
 	}
 

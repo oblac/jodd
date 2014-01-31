@@ -2,6 +2,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
@@ -15,6 +17,8 @@ import java.util.Set;
  * Manager for Madvoc results.
  */
 public class ResultsManager {
+
+	private static final Logger log = LoggerFactory.getLogger(ResultsManager.class);
 
 	@PetiteInject
  	protected MadvocContextInjector madvocContextInjector;
@@ -62,14 +66,28 @@ public class ResultsManager {
 		if (resultType != null) {
 			ActionResult existing = lookup(resultType);
 			if (existing != null) {
-				Class resultClass = result.getClass();
-				if (existing.getClass().equals(resultClass) == false) {
-					throw new MadvocException("Duplicate Madvoc result: " + result);
+				Class<? extends ActionResult> resultClass = result.getClass();
+				Class<? extends ActionResult> existingClass = existing.getClass();
+				if (existingClass.equals(resultClass) == false) {
+					// existing class is different from current class
+					if (resultClass.getPackage().equals(ActionResult.class.getPackage())) {
+						Class<? extends ActionResult> temp = existingClass;
+						existingClass = resultClass;
+						resultClass = temp;
+						result = lookup(resultClass);
+					}
+					if ((existingClass.getPackage().equals(ActionResult.class.getPackage()) == false)) {
+						// only throw exception if there are more then one replacement
+						throw new MadvocException("Duplicate result: " + result);
+					} else {
+						if (log.isDebugEnabled()) {
+							log.debug(existingClass.getSimpleName() + " result replaced with " + resultClass.getSimpleName());
+						}
+					}
 				}
-				result = existing;
-			} else {
-				stringResults.put(result.getResultType(), result);
+				allResults.remove(existingClass);	// remove existing as it will be replaced
 			}
+			stringResults.put(result.getResultType(), result);
 		}
 
 		allResults.put(result.getClass(), result);
@@ -118,7 +136,7 @@ public class ResultsManager {
 		try {
 			return actionResultClass.newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("Unable to create Madvoc action result: " + actionResultClass, ex);
+			throw new MadvocException("Invalid Madvoc result: " + actionResultClass, ex);
 		}
 	}
 
