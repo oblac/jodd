@@ -19,8 +19,6 @@ Read about **Jodd**:
 
 + Frameworks site (coming soon!): http://joddframework.org
 
-:rocket:
-
 ## Jodd Modules
 
 **Jodd** is split into many modules, so choose what to use.
@@ -45,8 +43,6 @@ and some micro frameworks:
 + `jodd-vtor` - validation framework.
 
 Read more in our [official documentation](http://jodd.org/doc).
-
-:zap:
 
 ## Jodd Bundle
 
@@ -93,4 +89,4 @@ Every other time:
 
 We will pickup up from there:)
 
-:tomato:
+:surfer: :rocket: :tomato:
