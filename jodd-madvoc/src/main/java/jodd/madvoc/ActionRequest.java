@@ -26,6 +26,7 @@ public class ActionRequest {
 	protected final String actionPath;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
+	protected Result result;
 
 	protected Object[] params;
 	protected final int totalInterceptors;
@@ -125,6 +126,14 @@ public class ActionRequest {
 	public void setActionParams(Object[] params) {
 		this.params = params;
 	}
+
+	/**
+	 * Returns result object if exist in action, otherwise returns <code>null</code>.
+	 */
+	public Result getResult() {
+		return result;
+	}
+
 	// ---------------------------------------------------------------- ctor
 
 	/**
@@ -142,8 +151,31 @@ public class ActionRequest {
 		filterIndex = 0;
 		execState = 0;
 		this.action = action;
+		this.result = findResult();
 	}
 
+	/**
+	 * Returns result field value if such exist. If field exists
+	 * and it's value is <code>null</code> it will be created.
+	 */
+	protected Result findResult() {
+		Field resultField = config.resultField;
+		if (resultField != null) {
+			try {
+				Result result = (Result) resultField.get(action);
+
+				if (result == null) {
+					result = (Result) resultField.getType().newInstance();
+					resultField.set(action, result);
+				}
+
+				return result;
+			} catch (Exception ignore) {
+				return null;
+			}
+		}
+		return null;
+	}
 
 	// ---------------------------------------------------------------- invoke
 
@@ -219,25 +251,5 @@ public class ActionRequest {
 			throw ExceptionUtil.extractTargetException(itex);
 		}
 	}
-
-
-	// ---------------------------------------------------------------- result
-
-	/**
-	 * Returns result field value if such exist.
-	 */
-	public Result getResult() {
-		Field resultField = config.resultField;
-		if (resultField != null) {
-			try {
-				return (Result) resultField.get(action);
-			} catch (IllegalAccessException ignore) {
-				return null;
-			}
-		}
-		return null;
-	}
-
-
 
 }

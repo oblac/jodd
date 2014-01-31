@@ -5,12 +5,11 @@ package jodd.madvoc.action;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Out;
-import jodd.madvoc.result.Result;
 
 @MadvocAction
 public class OneMoveAction {
 
-	Result result = new Result();
+	MyResult result;
 
 	@Out
 	String value;
