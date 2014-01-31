@@ -64,8 +64,6 @@ Props-plugin:
 		Categories must start on empty or whitespaced line
 Madvoc:
 	- Action methods with arguments @tbd
-	- Add result methods: ok(), redirect(), back() for better usability of the code etc.
-		There are two places where to add: in #jodd-joy and in #jodd-madvoc. See which spot is better.
 	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
@@ -75,7 +73,7 @@ Madvoc:
 		For example, it may choose if extension is "json" or not based on class name.
 	- Add JSONResult(returnCode, jsonString) @soon @review
 	- Multiple roots mapped to different paths @done @v3.4.5
-	- Cache results for ServletDispatcherResult#targetExist to speed up @soon
+	- Cache results for ServletDispatcherResult#targetExist to speed up @done
 EMail:
 	- Add IMAP support @done @v3.4.7
 	- Add support for EML attachments @done @v3.4.7

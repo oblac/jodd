@@ -2,14 +2,11 @@
 
 package jodd.madvoc.result;
 
-import jodd.madvoc.meta.RenderWith;
-
 import java.io.InputStream;
 
 /**
  * Holder for Raw results.
  */
-@RenderWith(RawResult.class)
 public abstract class RawResultData {
 
 	protected final InputStream inputStream;

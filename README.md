@@ -13,10 +13,13 @@ Read about **Jodd**:
 
 + Official web site (site, documentation, information): http://jodd.org/
 
-+ GitHub page (short overview of micro frameworks): http://oblac.github.io/jodd
++ GitHub page (overview of micro frameworks): http://oblac.github.io/jodd
 
-+ Invitation web site (just visual effects): http://joddframework.org
++ One-page love: http://jodd.org/about
 
++ Frameworks site (coming soon!): http://joddframework.org
+
+:rocket:
 
 ## Jodd Modules
 
@@ -43,6 +46,7 @@ and some micro frameworks:
 
 Read more in our [official documentation](http://jodd.org/doc).
 
+:zap:
 
 ## Jodd Bundle
 

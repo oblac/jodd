@@ -15,7 +15,7 @@ import jodd.util.StringUtil;
  * will be resolved. Here are the macros that can be used:
  * <ul>
  *     <li>&lt;alias&gt; - replaced with alias value</li>
- *     <li># - strips words from path</li>
+ *     <li># - strips words from path (goes 'back')</li>
  * </ul>
  */
 public class ResultMapper {
@@ -94,12 +94,15 @@ public class ResultMapper {
 	 */
 	public ResultPath resolveResultPath(String path, String value) {
 
+		boolean absolutePath = false;
+
 		if (value != null) {
 			// [*] resolve alias in value
 			value = resolveAlias(value);
 
 			// [*] absolute paths
 			if (StringUtil.startsWithChar(value, '/')) {
+				absolutePath = true;
 				int dotNdx = value.indexOf("..");
 				if (dotNdx != -1) {
 					path = value.substring(0, dotNdx);
@@ -150,9 +153,11 @@ public class ResultMapper {
 			}
 		}
 
-		String resultPathPrefix = madvocConfig.getResultPathPrefix();
-		if (resultPathPrefix != null) {
-			path = resultPathPrefix + path;
+		if (!absolutePath) {
+			String resultPathPrefix = madvocConfig.getResultPathPrefix();
+			if (resultPathPrefix != null) {
+				path = resultPathPrefix + path;
+			}
 		}
 
 		return new ResultPath(path, value);

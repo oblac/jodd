@@ -132,10 +132,10 @@ public class ActionResultTest extends MadvocTestCase {
 		assertEquals("/WEB-INF/boo.foo", resultPath.getPathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx");
-		assertEquals("/WEB-INF/xxx", resultPath.getPathValue());
+		assertEquals("/xxx", resultPath.getPathValue());
 
 		resultPath = resultMapper.resolveResultPath(path, "/xxx.ext");
-		assertEquals("/WEB-INF/xxx.ext", resultPath.getPathValue());
+		assertEquals("/xxx.ext", resultPath.getPathValue());
 	}
 
 	@Test
