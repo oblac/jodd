@@ -169,6 +169,14 @@ public class HtmlTag {
 	protected boolean changed;
 
 	/**
+	 * Return all attributes.
+	 */
+	public Map<String, String> getAttributes() {
+		resolveAttributes();
+		return attributes;
+	}
+
+	/**
 	 * Returns attribute value or <code>null</code> if
 	 * attribute value doesn't exist.
 	 */

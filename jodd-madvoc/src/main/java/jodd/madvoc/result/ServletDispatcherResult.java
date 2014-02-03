@@ -49,11 +49,10 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();
+		ServletContext servletContext = request.getSession().getServletContext();
 
 		if (target == null) {
 			ResultPath resultPath = resultMapper.resolveResultPath(actionRequest.getActionPath(), resultValue);
-
-			ServletContext servletContext = request.getSession().getServletContext();
 
 			String actionPath = resultPath.getPath();
 			String path = actionPath;
@@ -106,7 +105,9 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 			targetCache.put(actionAndResultPath, target);
 		}
 
-		// the target exists
+		// the target exists, continue
+
+		target = processTarget(servletContext, target);
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(target);
 		if (dispatcher == null) {
@@ -133,6 +134,13 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 		} catch (MalformedURLException ignore) {
 			return false;
 		}
+	}
+
+	/**
+	 * Processes target and returns a new target location of located JSP file.
+	 */
+	protected String processTarget(ServletContext servletContext, String target) {
+		return target;
 	}
 
 }
