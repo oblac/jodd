@@ -114,7 +114,7 @@ task distroZip(type: Zip) {
 
 	addonModules.each{ addon->
 		rootProject.project(addon).tasks.withType(Jar).each { jar ->
-			if (!jar.name.contains('sources') && !jar.name.contains('javadoc')) {
+			if (!jar.name.contains('javadoc')) {
 				from jar
 			}
 		}
