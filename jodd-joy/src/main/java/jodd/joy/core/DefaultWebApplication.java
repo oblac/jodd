@@ -2,7 +2,7 @@
 
 package jodd.joy.core;
 
-import jodd.joy.madvoc.ProxettaAwareActionsManager;
+import jodd.madvoc.proxetta.ProxettaAwareActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.AutomagicMadvocConfigurator;
 import jodd.madvoc.config.MadvocConfigurator;
