@@ -80,6 +80,17 @@ public class HtmlTagTest {
 		assertEquals(body, tag.toString());
 	}
 
+	@Test
+	public void testAttributes2() {
+		String body = "<select name=John value='f\\'oo'>";
+		HtmlTag tag = new HtmlTag(body);
+		assertFalse(tag.isEndTag());
+		assertFalse(tag.isClosedTag());
+
+		assertEquals("John", tag.getAttribute("name"));
+		assertEquals("f\\'oo", tag.getAttribute("value"));
+	}
+
 
 	@Test
 	public void testAddValue() {

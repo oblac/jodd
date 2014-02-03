@@ -148,7 +148,7 @@ public class HtmlTag {
 			start++;
 		}
 		if (start == lastIndex) {
-			return "";          // tag name not found
+			return StringPool.EMPTY;          // tag name not found
 		}
 
 		int end = start;
@@ -172,7 +172,7 @@ public class HtmlTag {
 	 * Return all attributes.
 	 */
 	public Map<String, String> getAttributes() {
-		resolveAttributes();
+		parseAttributes();
 		return attributes;
 	}
 
@@ -181,7 +181,7 @@ public class HtmlTag {
 	 * attribute value doesn't exist.
 	 */
 	public String getAttribute(String attrName) {
-		resolveAttributes();
+		parseAttributes();
 		return attributes.get(attrName);
 	}
 
@@ -189,7 +189,7 @@ public class HtmlTag {
 	 * Returns <code>true</code> if attribute is included in the tag.
 	 */
 	public boolean hasAttribute(String attrName) {
-		resolveAttributes();
+		parseAttributes();
 		return attributes.containsKey(attrName);
 	}
 
@@ -197,7 +197,7 @@ public class HtmlTag {
 	 * Removes attribute from the tag.
 	 */
 	public void removeAttribute(String attrName) {
-		resolveAttributes();
+		parseAttributes();
 		changed = true;
 		attributes.remove(attrName);
 	}
@@ -209,7 +209,7 @@ public class HtmlTag {
 	 * be added. If value is not specified, it will be set to an empty string.
 	 */
 	public void setAttribute(String name, String value) {
-		resolveAttributes();
+		parseAttributes();
 		changed = true;
 		attributes.put(name.toLowerCase(), HtmlEncoder.text(value));
 	}
@@ -220,7 +220,7 @@ public class HtmlTag {
 	 * will be added.
 	 */
 	public void setAttribute(String name) {
-		resolveAttributes();
+		parseAttributes();
 		changed = true;
 		attributes.put(name.toLowerCase(), null);
 	}
@@ -229,7 +229,7 @@ public class HtmlTag {
 	 * Returns total number of attributes.
 	 */
 	public int totalAttributes() {
-		resolveAttributes();
+		parseAttributes();
 		return attributes.size();
 	}
 
@@ -237,7 +237,7 @@ public class HtmlTag {
 	/**
 	 * Resolves attributes from tag's body.
 	 */
-	protected void resolveAttributes() {
+	protected void parseAttributes() {
 		if (attributes != null) {
 			return;
 		}
@@ -307,12 +307,17 @@ public class HtmlTag {
 
 			char quote = tag.charAt(start);
 			if ((quote != '"') && (quote != '\'')) {
-				quote = 0;
+				quote = ' ';
+			} else {
+				start++;
 			}
-			start++;
 			end = start;
 			while (end < lastIndex) {
 				if (tag.charAt(end) == quote) {
+					if (quote != ' ' && tag.charAt(end - 1) == '\\') {
+						end++;
+						continue;
+					}
 					break;
 				}
 				end++;
