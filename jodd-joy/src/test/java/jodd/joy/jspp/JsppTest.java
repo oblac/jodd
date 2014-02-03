@@ -15,12 +15,12 @@ public class JsppTest {
 		Jspp jspp = new Jspp() {
 			@Override
 			protected String loadMacro(String macroName) {
-				return "Hello $name";
+				return "Hello ${name}";
 			}
 		};
 
 		String result = jspp.process(content);
 
-		assertEquals("<h1>hello</h1>Hello $nameHello jpp", result);
+		assertEquals("<h1>hello</h1>Hello ${name}Hello jpp", result);
 	}
 }
