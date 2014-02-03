@@ -55,6 +55,9 @@ public class ServletDispatcherResultTest {
 				"/ok.jsp" +
 				"]", targets.toString());
 
+
+		// folder
+
 		targets.clear();
 
 		actionRequest = createActionRequest("/pak/hello.world.html");
@@ -68,6 +71,19 @@ public class ServletDispatcherResultTest {
 				"/pak/hello.ok.jsp, " +
 				"/pak/hello.jsp, " +
 				"/pak/ok.jsp" +
+				"]", targets.toString());
+
+		// null result
+
+		targets.clear();
+
+		actionRequest = createActionRequest("/hello.world.html");
+		sdr.render(actionRequest, null);
+
+		assertEquals("[" +
+				"/hello.world.html.jsp, " +
+				"/hello.world.jsp, " +
+				"/hello.jsp" +
 				"]", targets.toString());
 	}
 

@@ -60,20 +60,22 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 
 			while (true) {
 				// variant #1: with value
-				if (path == null) {
-					// only value remains
-					int lastSlashNdx = actionPath.lastIndexOf('/');
-					if (lastSlashNdx != -1) {
-						target = actionPath.substring(0, lastSlashNdx + 1) + value + EXTENSION;
+				if (value != null) {
+					if (path == null) {
+						// only value remains
+						int lastSlashNdx = actionPath.lastIndexOf('/');
+						if (lastSlashNdx != -1) {
+							target = actionPath.substring(0, lastSlashNdx + 1) + value + EXTENSION;
+						} else {
+							target = '/' + value + EXTENSION;
+						}
 					} else {
-						target = '/' + value + EXTENSION;
+						target = path + '.' + value + EXTENSION;
 					}
-				} else {
-					target = path + '.' + value + EXTENSION;
-				}
 
-				if (targetExist(servletContext, target)) {
-					break;
+					if (targetExist(servletContext, target)) {
+						break;
+					}
 				}
 
 				// variant #1: without value
