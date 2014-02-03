@@ -2,6 +2,8 @@
 
 package jodd.madvoc.result;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.ResultPath;
@@ -20,11 +22,13 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 
 /**
- * Dispatcher.
+ * Servlet Dispatcher.
  * 
  * @see ServletRedirectResult
  */
 public class ServletDispatcherResult extends BaseActionResult<String> {
+
+	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherResult.class);
 
 	public static final String NAME = "dispatch";
 	protected static final String EXTENSION = ".jsp";
@@ -44,7 +48,7 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 	 * will be sent back in the http response.
 	 */
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String actionAndResultPath = actionRequest.getActionPath() + (resultValue != null ? ' ' + resultValue : StringPool.EMPTY);
+		String actionAndResultPath = actionRequest.getActionPath() + (resultValue != null ? ':' + resultValue : StringPool.EMPTY);
 		String target = targetCache.get(actionAndResultPath);
 
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
@@ -52,6 +56,9 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 		ServletContext servletContext = request.getSession().getServletContext();
 
 		if (target == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("target not found: " + actionAndResultPath);
+			}
 			ResultPath resultPath = resultMapper.resolveResultPath(actionRequest.getActionPath(), resultValue);
 
 			String actionPath = resultPath.getPath();
@@ -103,6 +110,10 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 				}
 			}
 
+			if (log.isDebugEnabled()) {
+				log.debug("target found: " + target);
+			}
+
 			// store target in cache
 			targetCache.put(actionAndResultPath, target);
 		}
@@ -128,9 +139,12 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 	}
 
 	/**
-	 * Returns <code>true</code> if target exists. Results are cached for performances.
+	 * Returns <code>true</code> if target exists.
 	 */
 	protected boolean targetExist(ServletContext servletContext, String target) {
+		if (log.isDebugEnabled()) {
+			log.debug("target check: " + target);
+		}
 		try {
 			return servletContext.getResource(target) != null;
 		} catch (MalformedURLException ignore) {

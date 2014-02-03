@@ -19,7 +19,8 @@ import java.io.IOException;
  * Use it as base class for custom version of
  * {@link jodd.madvoc.result.ServletDispatcherResult}. It works
  * only for <b>exploded</b> deployed web apps; in other case
- * convert files manually before the deployment.
+ * convert files manually before the deployment. Also, in production
+ * convert all files manually or on application startup.
  */
 public abstract class ServletDispatcherResultWithJspp extends ServletDispatcherResult {
 
@@ -47,16 +48,14 @@ public abstract class ServletDispatcherResultWithJspp extends ServletDispatcherR
 			throw new MadvocException("Real path not found: " + target);
 		}
 		File jspFile = new File(jspPath);
+		File targetFile = new File(convertToNewName(jspPath));
 
 		target = convertToNewName(target);
 
-		if (jspFile.exists()) {
-			// jspFile exist, pre-process it
+		if (!targetFile.exists() || FileUtil.isNewer(jspFile, targetFile)) {
 			if (log.isDebugEnabled()) {
 				log.debug("JSPP target: " + target);
 			}
-
-			File targetFile = new File(convertToNewName(jspPath));
 
 			if (jspp == null) {
 				jspp = createJspp(servletContext);
@@ -68,12 +67,6 @@ public abstract class ServletDispatcherResultWithJspp extends ServletDispatcherR
 				throw new JsppException(ioex);
 			}
 
-			// delete JSP file to indicate that conversion is done
-			try {
-				FileUtil.delete(jspFile);
-			} catch (IOException ioex) {
-				throw new JsppException(ioex);
-			}
 		} else {
 			if (log.isDebugEnabled()) {
 				log.debug("JSPP ok: " + target);
