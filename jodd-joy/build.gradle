@@ -17,6 +17,7 @@ dependencies {
 	testCompile lib.junit
 	testCompile lib.hsqldb
 	testCompile lib.tomcat_embed
+	testCompile lib.mockito
 }
 
 // run joy integration tests only through the suite
