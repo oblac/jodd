@@ -60,7 +60,7 @@ public class JoinHintResolver {
 				String key = hint.substring(0, ndx);
 				Object value = context.get(key);
 				if (value == null) {
-					throw new DbOomException("Hint key not found:" + key);
+					throw new DbOomException("Hint value missing: " + key);
 				}
 
 				// don't merge nulls
