@@ -57,10 +57,6 @@ public class DbQuery extends DbQueryBase {
 	public DbQuery(Connection conn, String sqlString) {
 		this.connection = conn;
 		this.sqlString = sqlString;
-
-		if (log.isDebugEnabled()) {
-			log.debug("DbQuery: " + sqlString);
-		}
 	}
 
 	/**
@@ -71,10 +67,6 @@ public class DbQuery extends DbQueryBase {
 
 		this.session.attachQuery(this);
 		this.sqlString = sqlString;
-
-		if (log.isDebugEnabled()) {
-			log.debug("DbQuery: " + sqlString);
-		}
 	}
 
 	/**
@@ -994,7 +986,7 @@ s	 */
 	public void setObjects(String[] names, Object[] values) {
 		init();
 		if (names.length != values.length) {
-			throw new DbSqlException("Different number of parameter names and values.");
+			throw new DbSqlException("Different number of parameter names and values");
 		}
 		for (int i = 0; i < names.length; i++) {
 			setObject(names[i], values[i]);
