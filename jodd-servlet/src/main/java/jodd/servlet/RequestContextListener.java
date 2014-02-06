@@ -7,16 +7,13 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Store request in the current thread and all childs threads, so it can be easily accessible.
+ * Bounds request to the current thread (and all children threads).
  */
 public class RequestContextListener implements ServletRequestListener {
 
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new InheritableThreadLocal<HttpServletRequest>();
 
 	public void requestInitialized(ServletRequestEvent requestEvent) {
-		if ((requestEvent.getServletRequest() instanceof HttpServletRequest) == false) {
-			throw new IllegalArgumentException("Not a HttpServletRequest: " + requestEvent.getServletRequest());
-		}
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();
 		requestHolder.set(request);
 	}
@@ -26,9 +23,11 @@ public class RequestContextListener implements ServletRequestListener {
 	}
 
 	/**
-	 * Returns current http servlet request.
+	 * Returns current HTTP servlet request. May return <code>null</code>
+	 * is request was not bound to the thread.
 	 */
 	public static HttpServletRequest getRequest() {
 		return requestHolder.get();
 	}
+
 }

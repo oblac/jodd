@@ -2,14 +2,12 @@
 
 package jodd.servlet;
 
-import jodd.util.ref.ReferenceMap;
-import jodd.util.ref.ReferenceType;
-
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -31,7 +29,7 @@ public class SessionMonitor implements HttpSessionListener {
 		if (sessionMonitor == null) {
 			sessionMonitor = this;
 			listeners = new CopyOnWriteArrayList<HttpSessionListener>();
-			sessionMap = new ReferenceMap<String, HttpSession>(ReferenceType.STRONG, ReferenceType.WEAK);
+			sessionMap = new ConcurrentHashMap<String, HttpSession>();
 		}
 	}
 
@@ -101,6 +99,16 @@ public class SessionMonitor implements HttpSessionListener {
 	 */
 	public Iterator<String> iterator() {
 		return sessionMap.keySet().iterator();
+	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * Destroys this session monitor by removing all collected resources.
+	 */
+	public void destroy() {
+		listeners.clear();
+		sessionMap.clear();
 	}
 
 }
