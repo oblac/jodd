@@ -273,6 +273,7 @@ public abstract class DefaultAppCore {
 
 		stopApp();
 		stopDb();
+		stopPetite();
 
 		if (log != null) {
 			log.info("app stopped");
@@ -474,6 +475,15 @@ public abstract class DefaultAppCore {
 	 */
 	protected PetiteContainer createPetiteContainer() {
 		return new ProxettaAwarePetiteContainer(proxetta);
+	}
+
+	/**
+	 * Stops Petite container.
+	 */
+	protected void stopPetite() {
+		if (petite != null) {
+			petite.shutdown();
+		}
 	}
 
 	// ---------------------------------------------------------------- database

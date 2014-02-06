@@ -46,8 +46,8 @@ public class LocalizationUtil {
 
 	// ---------------------------------------------------------------- session/request
 
-	public static final String REQUEST_BUNDLE_NAME_ATTR = ResourceBundleMessageResolver.class.getName() + ".bundleName";
-	public static final String SESSION_LOCALE_ATTR = ResourceBundleMessageResolver.class.getName() + ".locale";
+	public static final String REQUEST_BUNDLE_NAME_ATTR = ResourceBundleMessageResolver.class.getName() + ".BUNDLE.";
+	public static final String SESSION_LOCALE_ATTR = ResourceBundleMessageResolver.class.getName() + ".LOCALE.";
 
 	/**
 	 * Sets bundle name for provided servlet request.
