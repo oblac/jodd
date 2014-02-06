@@ -17,6 +17,16 @@ package jodd.util;
  */
 public class HashCode {
 
+	private static final int C1 = 0xcc9e2d51;
+	private static final int C2 = 0x1b873593;
+
+	/**
+	 * Smear hash code.
+	 */
+	public static int smear(int hashCode) {
+		return C2 * Integer.rotateLeft(hashCode * C1, 15);
+	}
+
 	/**
 	 * An initial hash code value to which is added contributions from fields.
 	 * Using a non-zero value decreases collisions of hash code values.
