@@ -51,7 +51,7 @@ public abstract class ShutdownAwareScope implements Scope {
 
 	/**
 	 * Removes destroyable bean from the list and calls it destroy methods.
-	 * If bean is not destroyable, does nothing.
+	 * If bean is not destroyable, does nothing. Bean gets destroyed only once.
 	 */
 	protected void destroyBean(BeanData beanData) {
 		if (destroyableBeans == null) {
@@ -60,8 +60,9 @@ public abstract class ShutdownAwareScope implements Scope {
 		if (isBeanDestroyable(beanData) == false) {
 			return;
 		}
-		destroyableBeans.remove(beanData);
-		PetiteUtil.callDestroyMethods(beanData);
+		if (destroyableBeans.remove(beanData)) {
+			PetiteUtil.callDestroyMethods(beanData);
+		}
 	}
 
 	/**

@@ -2,27 +2,30 @@
 
 package jodd.petite;
 
+import jodd.petite.scope.SessionScope;
 import jodd.petite.tst.Boo;
 import jodd.petite.tst.Foo;
 import jodd.petite.tst.Ses;
 import jodd.petite.tst.Zoo;
 import jodd.servlet.RequestContextListener;
-import jodd.servlet.SessionMonitor;
 import org.junit.Test;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionBindingEvent;
 
-import static jodd.petite.ServletsMockitoUtil.createHttpSessionEvent;
+import static jodd.petite.ServletsMockitoUtil.createHttpSessionBindingEvent;
 import static jodd.petite.ServletsMockitoUtil.createRequest;
 import static jodd.petite.ServletsMockitoUtil.createServletRequestEvent;
 import static jodd.petite.ServletsMockitoUtil.createSession;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class ShutdownTest {
+
+	public static final String ATTR_NAME = SessionScope.class.getName() + ".SESSION_BEANS.";
 
 	@Test
 	public void testSingletonDestroyMethods() {
@@ -46,27 +49,34 @@ public class ShutdownTest {
 		HttpSession session = createSession("S1");
 		HttpServletRequest request = createRequest(session);
 		ServletRequestEvent requestEvent = createServletRequestEvent(request);
-		HttpSessionEvent sessionEvent = createHttpSessionEvent(session);
+		HttpSessionBindingEvent event = createHttpSessionBindingEvent(session);
 
 		// jodd
-		new SessionMonitor();
-		SessionMonitor sessionMonitor = SessionMonitor.getInstance();
 		RequestContextListener requestContextListener = new RequestContextListener();
 
 		// start session, init request
-		sessionMonitor.sessionCreated(sessionEvent);
 		requestContextListener.requestInitialized(requestEvent);
 
 		// petite
 		PetiteContainer pc = new PetiteContainer();
 		pc.registerPetiteBean(Ses.class, null, null, null, false);
 
+		// callback not yet added
+		SessionScope.SessionBeans sessionBeans = (SessionScope.SessionBeans) session.getAttribute(ATTR_NAME);
+		assertNull(sessionBeans);
+
 		Ses ses = (Ses) pc.getBean("ses");
 		assertNotNull(ses);
+
+		// callback added
+		sessionBeans = (SessionScope.SessionBeans) session.getAttribute(ATTR_NAME);
+		assertNotNull(sessionBeans);
+
 		ses.setValue("jodd");
 
 		// session expired
-		sessionMonitor.sessionDestroyed(sessionEvent);
+		sessionBeans.valueUnbound(event);
+
 		assertEquals("-jodd", ses.getValue());
 
 		pc.shutdown();
@@ -80,15 +90,12 @@ public class ShutdownTest {
 		HttpSession session = createSession("S2");
 		HttpServletRequest request = createRequest(session);
 		ServletRequestEvent requestEvent = createServletRequestEvent(request);
-		HttpSessionEvent sessionEvent = createHttpSessionEvent(session);
+		HttpSessionBindingEvent event = createHttpSessionBindingEvent(session);
 
 		// jodd
-		new SessionMonitor();
-		SessionMonitor sessionMonitor = SessionMonitor.getInstance();
 		RequestContextListener requestContextListener = new RequestContextListener();
 
 		// start session, init request
-		sessionMonitor.sessionCreated(sessionEvent);
 		requestContextListener.requestInitialized(requestEvent);
 
 		// petite

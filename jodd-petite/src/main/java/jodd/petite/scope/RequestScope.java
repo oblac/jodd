@@ -18,7 +18,7 @@ public class RequestScope implements Scope {
 
 	// ---------------------------------------------------------------- request map
 
-	protected static final String ATTR_NAME = RequestScope.class.getName() + ".map";
+	protected static final String ATTR_NAME = RequestScope.class.getName() + ".MAP.";
 
 	/**
 	 * Returns instance map from http request.

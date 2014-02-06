@@ -8,6 +8,7 @@ import org.mockito.stubbing.Answer;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,5 +65,11 @@ public class ServletsMockitoUtil {
 		HttpSessionEvent sessionEvent = mock(HttpSessionEvent.class);
 		when(sessionEvent.getSession()).thenReturn(session);
 		return sessionEvent;
+	}
+
+	public static HttpSessionBindingEvent createHttpSessionBindingEvent(HttpSession session) {
+		HttpSessionBindingEvent sessionBindingEvent = mock(HttpSessionBindingEvent.class);
+		when(sessionBindingEvent.getSession()).thenReturn(session);
+		return sessionBindingEvent;
 	}
 }
