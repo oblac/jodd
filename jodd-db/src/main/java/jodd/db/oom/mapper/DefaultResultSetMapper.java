@@ -202,10 +202,30 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		return classes.toArray(new Class[classes.size()]);
 	}
 
-	// ---------------------------------------------------------------- parse objects
+	// ---------------------------------------------------------------- cache
 
+	protected DbEntityDescriptor[] cachedDbEntityDescriptors;
 	protected Class[] cachedUsedTypes;
 	protected String[] cachedTypesTableNames;
+	protected String[][] cachedMappedNames;
+
+	/**
+	 * Resolves {@link jodd.db.oom.DbEntityDescriptor} for all given types,
+	 * so not to repeat every time.
+	 */
+	protected DbEntityDescriptor[] resolveDbEntityDescriptors(Class[] types) {
+		if (cachedDbEntityDescriptors == null) {
+			DbEntityDescriptor[] descs = new DbEntityDescriptor[types.length];
+			for (int i = 0; i < types.length; i++) {
+				Class type = types[i];
+				if (type != null) {
+					descs[i] = dbOomManager.lookupType(type);
+				}
+			}
+			cachedDbEntityDescriptors = descs;
+		}
+		return cachedDbEntityDescriptors;
+	}
 
 	/**
 	 * Creates table names for all specified types.
@@ -213,31 +233,63 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * Type name will be <code>null</code> for simple names, i.e. for all those
 	 * types that returns <code>null</code> when used by {@link jodd.db.oom.DbOomManager#lookupType(Class)}.
 	 */
-	protected String[] createTypesTableNames(Class[] types) {
+	protected String[] resolveTypesTableNames(Class[] types) {
 		if (types != cachedUsedTypes) {
-			cachedTypesTableNames = new String[types.length];
-			for (int i = 0; i < types.length; i++) {
-				if (types[i] == null) {
-					cachedTypesTableNames[i] = null;
-					continue;
-				}
-				DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
-				if (ded != null) {
-					String tableName = ded.getTableName();
-					if (!strictCompare) {
-						tableName = tableName.toUpperCase();
-					}
-					cachedTypesTableNames[i] = tableName;
-				}
-			}
+			cachedTypesTableNames = createTypesTableNames(types);
 			cachedUsedTypes = types;			
 		}
 		return cachedTypesTableNames;
 	}
 
+	/**
+	 * Resolved mapped type names for each type.
+	 */
+	protected String[][] resolveMappedTypesTableNames(Class[] types) {
+		if (cachedMappedNames == null) {
+			String[][] names = new String[types.length][];
+			for (int i = 0; i < types.length; i++) {
+				Class type = types[i];
+				if (type != null) {
+					DbEntityDescriptor ded = cachedDbEntityDescriptors[i];
+					if (ded != null) {
+						Class[] mappedTypes = ded.getMappedTypes();
+						if (mappedTypes != null) {
+							names[i] = createTypesTableNames(mappedTypes);
+						}
+					}
+				}
+			}
+			cachedMappedNames = names;
+		}
+		return cachedMappedNames;
+	}
+
+	/**
+	 * Creates table names for given types.
+	 */
+	protected String[] createTypesTableNames(Class[] types) {
+		String[] names = new String[types.length];
+		for (int i = 0; i < types.length; i++) {
+			if (types[i] == null) {
+				names[i] = null;
+				continue;
+			}
+			DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
+			if (ded != null) {
+				String tableName = ded.getTableName();
+				if (!strictCompare) {
+					tableName = tableName.toUpperCase();
+				}
+				names[i] = tableName;
+			}
+		}
+		return names;
+	}
 
 	protected int cachedColumnNdx;
 	protected Object cachedColumnValue;
+
+	// ---------------------------------------------------------------- parse object
 
 	/**
 	 * Reads column value from result set. Since this method may be called more then once for
@@ -276,7 +328,9 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		int totalTypes = types.length;
 		Object[] result = new Object[totalTypes];
 		boolean[] resultUsage = new boolean[totalTypes];
-		String[] typesTableNames = createTypesTableNames(types);
+		DbEntityDescriptor[] dbEntityDescriptors = resolveDbEntityDescriptors(types);
+		String[] typesTableNames = resolveTypesTableNames(types);
+		String[][] mappedNames = resolveMappedTypesTableNames(types);
 
 		int currentResult = 0;
 		cachedColumnNdx = -1;
@@ -292,7 +346,8 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			Class currentType = types[currentResult];
 			if (currentType == null) {
 				colNdx++;
-				currentResult++; resultColumns.clear();
+				currentResult++;
+				resultColumns.clear();
 				continue;
 			}
 
@@ -309,11 +364,35 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				currentResult++; resultColumns.clear();
 				continue;
 			}
-			if ((tableName == null) || (resultTableName.equals(tableName) == true)) {
+
+			// match table
+			boolean tableMatched = false;
+
+			if (tableName == null) {
+				tableMatched = true;
+			} else if (resultTableName.equals(tableName) == true) {
+				tableMatched = true;
+			} else {
+				String[] mapped = mappedNames[currentResult];
+				if (mapped != null) {
+					for (String m : mapped) {
+						if (m.equals(tableName)) {
+							tableMatched = true;
+							break;
+						}
+					}
+				}
+			}
+
+			if (tableMatched) {
 				if (resultColumns.contains(columnName) == false) {
-					DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+					//DbEntityDescriptor ded = dbOomManager.lookupType(currentType);
+					DbEntityDescriptor ded = dbEntityDescriptors[currentResult];
+
 					DbEntityColumnDescriptor dec = ded.findByColumnName(columnName);
 					String propertyName = (dec == null ? null : dec.getPropertyName());
+
+					// check if a property that matches column name exist
 					if (propertyName != null) {
 
 						// if current entity instance does not exist (i.e. we are at the first column
