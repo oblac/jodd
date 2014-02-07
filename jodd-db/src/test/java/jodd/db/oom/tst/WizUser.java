@@ -8,19 +8,19 @@ import jodd.db.oom.meta.DbMapTo;
 import jodd.db.oom.meta.DbTable;
 
 @DbTable
-public class Wizard {
+@DbMapTo({Wizard.class, User.class})
+public class WizUser {
 
-	@DbId
-	public long wizardId;
+	@DbColumn
+	public long userId;
+
+//	@DbColumn
+//	public long wizardId;
+
 	@DbColumn
 	public int level;
 
-	// ---------------------------------------------------------------- user
-
-	public User user;
-
-	public String getName() {
-		return user.name;
-	}
+	@DbColumn
+	public String name;
 
 }

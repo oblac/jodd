@@ -7,6 +7,7 @@ import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.tst.User;
+import jodd.db.oom.tst.WizUser;
 import jodd.db.oom.tst.Wizard;
 import org.junit.After;
 import org.junit.Before;
@@ -68,6 +69,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 		assertEquals(1, user.userId);
 		assertEquals("Gandalf", user.name);
 
+		// select custom value into target entity
 		dbOomQuery = sql("select $C{u.userId}, 'Sauron' as u.name from $T{User u}").query();
 		user = dbOomQuery.findAndClose(User.class);
 
@@ -90,7 +92,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 
 		assertEquals(243, ((Integer) object[1]).intValue());
 
-		// withHints!
+		// with manual hints!
 
 		dbOomQuery = sql("select $C{u.*}, 243 as exp from $T{User u}").query();
 
@@ -111,7 +113,17 @@ public class CompositeTest extends DbHsqldbTestCase {
 		assertEquals(1, wizard.wizardId);
 		assertEquals(7, wizard.level);
 		assertEquals("Gandalf", wizard.getName());
-	}
 
+		// all in one class!
+
+		dbOomQuery = sql("select $C{w.%}, $C{u.*} from $T{Wizard w} inner join $T{User u} on $w.wizardId=$u.userId").query();
+		WizUser wizUser = dbOomQuery.findAndClose(WizUser.class);
+
+		assertNotNull(wizUser);
+		//assertEquals(1, wizUser.wizardId);
+		assertEquals(7, wizUser.level);
+		assertEquals(1, wizUser.userId);
+		assertEquals("Gandalf", wizUser.name);
+	}
 
 }
