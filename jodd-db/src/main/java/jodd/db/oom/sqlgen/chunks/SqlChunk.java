@@ -17,6 +17,7 @@ public abstract class SqlChunk implements Cloneable {
 	public static final int COLS_ONLY_EXISTING = 1;     // using only existing columns i.e. that are not-null
 	public static final int COLS_ONLY_IDS = 2;          // using only identity columns
 	public static final int COLS_ALL = 3;               // using all available columns
+	public static final int COLS_ALL_BUT_ID = 4;        // using all available columns except the identity column
 	public static final int COLS_NA_MULTI = 0;          // using explicit reference.
 
 	protected final int chunkType;                      // chunk type

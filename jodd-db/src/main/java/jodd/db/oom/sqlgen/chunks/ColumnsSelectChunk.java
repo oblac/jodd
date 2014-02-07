@@ -33,6 +33,7 @@ import jodd.util.StringUtil;
  * <li><code>$C{tableRef}</code> is rendered as FOO.col1, FOO.col2,...</li>
  * <li><code>$C{tableRef.*}</code> is equal to above, renders all entity columns</li>
  * <li><code>$C{tableRef.+}</code> renders to only identity columns</li>
+ * <li><code>$C{tableRef.%}</code> renders all but identity columns</li>
  * <li><code>$C{tableRef.colRef}</code> is rendered as FOO.column</li>
  * <li><code>$C{tableRef.[colRef1,colRef2|...]}</code> is rendered as FOO.column1, FOO.column2,..., support id sign (+)</li>
  * <li><code>$C{entityRef.colRef}</code> renders to FOO$column</li>
@@ -116,6 +117,10 @@ public class ColumnsSelectChunk extends SqlChunk {
 				this.columnRef = null;
 				this.columnRefArr = null;
 				this.includeColumns = COLS_ONLY_IDS;
+			} else if (reference.equals(StringPool.PERCENT)) {
+				this.columnRef = null;
+				this.columnRefArr = null;
+				this.includeColumns = COLS_ALL_BUT_ID;
 			} else if (
 					reference.length() != 0
 					&& reference.charAt(0) == '['
@@ -176,6 +181,9 @@ public class ColumnsSelectChunk extends SqlChunk {
 			boolean withIds = (columnRefArr != null) && ArraysUtil.contains(columnRefArr, StringPool.PLUS);
 			for (DbEntityColumnDescriptor dec : decList) {
 				if ((includeColumns == COLS_ONLY_IDS) && (dec.isId() == false)) {
+					continue;
+				}
+				if ((includeColumns == COLS_ALL_BUT_ID) && (dec.isId() == true)) {
 					continue;
 				}
 				if ((includeColumns == COLS_NA_MULTI) 
