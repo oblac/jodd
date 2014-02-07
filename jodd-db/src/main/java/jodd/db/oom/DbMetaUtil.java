@@ -4,6 +4,7 @@ package jodd.db.oom;
 
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbMapTo;
 import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
@@ -107,4 +108,14 @@ public class DbMetaUtil {
 		return new DbEntityColumnDescriptor(dbEntityDescriptor, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
 	}
 
+	/**
+	 * Resolves mapped types from {@link jodd.db.oom.meta.DbMapTo} annotation.
+	 */
+	public static Class[] resolveMappedTypes(Class type) {
+		DbMapTo dbMapTo = (DbMapTo) type.getAnnotation(DbMapTo.class);
+		if (dbMapTo == null) {
+			return null;
+		}
+		return dbMapTo.value();
+	}
 }

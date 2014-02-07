@@ -2,8 +2,6 @@
 
 package jodd.db.oom.meta;
 
-import jodd.db.type.SqlType;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,21 +9,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Field marker for ID columns, not necessary to use, but might be helpful.
+ * Marker for 'composed' entities. They are mapped to more then one
+ * resulting table.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface DbId {
+@Target({ElementType.TYPE})
+public @interface DbMapTo {
 
 	/**
-	 * ID column name.
+	 * List of entities object is composed of.
 	 */
-	String value() default "";
-
-	/**
-	 * SqlType class.
-	 */
-	Class<SqlType> sqlType() default SqlType.class;
+	Class[] value();
 
 }

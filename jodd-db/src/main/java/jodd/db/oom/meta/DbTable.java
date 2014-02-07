@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link jodd.db.oom.DbOomManager} table (or view) name.
+ * Class marker for entity mapped to a table or a view.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

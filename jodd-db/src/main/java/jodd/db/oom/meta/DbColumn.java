@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link jodd.db.oom.DbOomManager} column mapping.
+ * Fields marker for mapped columns.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

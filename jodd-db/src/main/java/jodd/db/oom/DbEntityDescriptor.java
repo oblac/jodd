@@ -25,6 +25,7 @@ public class DbEntityDescriptor {
 		this.tableName = DbMetaUtil.resolveTableName(type, tableNamingStrategy);
 		this.columnNamingStrategy = columnNamingStrategy;
 		this.strictCompare = strictCompare;
+		this.mappedTypes = DbMetaUtil.resolveMappedTypes(type);
 	}
 
 	// ---------------------------------------------------------------- type and table
@@ -36,6 +37,7 @@ public class DbEntityDescriptor {
 	private final String schemaName;
 	private final ColumnNamingStrategy columnNamingStrategy;
 	private final boolean strictCompare;
+	private final Class[] mappedTypes;
 
 	/**
 	 * Returns entity type.
@@ -70,6 +72,13 @@ public class DbEntityDescriptor {
 	 */
 	public String getSchemaName() {
 		return schemaName;
+	}
+
+	/**
+	 * Returns mapped types.
+	 */
+	public Class[] getMappedTypes() {
+		return mappedTypes;
 	}
 
 	// ---------------------------------------------------------------- columns and fields
