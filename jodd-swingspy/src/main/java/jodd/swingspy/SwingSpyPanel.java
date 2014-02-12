@@ -218,8 +218,8 @@ public class SwingSpyPanel extends JPanel {
 	}
 
 	private static String htmlSafe(String str) {
-		str = str.replace("<", "&gt;");
-		str = str.replace(">", "&lt;");
+		str = str.replace(">", "&gt;");
+		str = str.replace("<", "&lt;");
 		str = str.replace(" ", "&nbsp;");
 		str = str.replace("\n", "<br>");
 		return str;
