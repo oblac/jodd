@@ -101,6 +101,17 @@ public class CompositeTest extends DbHsqldbTestCase {
 		assertEquals(1, user.userId);
 		assertEquals("Gandalf", user.name);
 		assertEquals(243, user.exp);
+
+
+		// with text hints!
+
+		dbOomQuery = sql("select $C{u.*}, 243 as $C{u.exp:.exp} from $T{User u}").query();
+
+		user = dbOomQuery.findAndClose(User.class, Integer.class);
+
+		assertEquals(1, user.userId);
+		assertEquals("Gandalf", user.name);
+		assertEquals(243, user.exp);
 	}
 
 	@Test
