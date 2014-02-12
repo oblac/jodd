@@ -7,10 +7,8 @@ package jodd.joy.page;
  */
 public class PageRequest {
 
-	public static int defaultPageSize = 10;
-
 	protected int page = 1;
-	protected int size = defaultPageSize;
+	protected int size = 10;
 	protected String pagerId;
 	protected int sort;
 
@@ -45,16 +43,24 @@ public class PageRequest {
 		this.size = size;
 	}
 
+	// ---------------------------------------------------------------- sort
+
 	/**
-	 * Returns sort index.
+	 * Returns sort 1-based index of column that should be sorted.
 	 * If <code>0</code>, nothing should be sorted.
 	 * Positive values represents ascending order,
 	 * negative values descending.
+	 * <p>
+	 * By using the index we also hide the real column names.
 	 */
 	public int getSort() {
 		return sort;
 	}
 
+	/**
+	 * Returns sort index.
+	 * @see #getSort()
+	 */
 	public void setSort(int sort) {
 		this.sort = sort;
 	}
@@ -85,7 +91,7 @@ public class PageRequest {
 		return "PageRequest{" +
 				"page=" + page +
 				", size=" + size +
-				", size=" + size +
+				", sort=" + sort +
 				", pagerId=" + pagerId +
 				'}';
 	}

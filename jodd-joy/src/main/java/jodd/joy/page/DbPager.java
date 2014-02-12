@@ -18,33 +18,83 @@ import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 public abstract class DbPager {
 
 	/**
-	 * Performs the pagination.
+	 * Returns default page request when passed one is <code>null</code>.
+	 * This usually happens on initial page view, when no page request is created.
+	 * Returned <code>PageRequest</code> defines <i>global</i> defaults.
 	 */
-	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, String[] sortColumns, Class[] target) {
-		PageData<T> pageData = page(sql, pageRequest.getPage(), pageRequest.getSize(), params, pageRequest.getSort(), sortColumns, target);
-
-		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
-			if (pageData.currentPage != pageRequest.getPage()) {
-				// out of bounds
-				int newPage = pageData.getCurrentPage();
-				pageData = page(sql, newPage, pageRequest.getSize(), params, pageRequest.getSort(), sortColumns, target);
-			}
-		}
-		return pageData;
+	protected PageRequest getDefaultPageRequest() {
+		return new PageRequest();
 	}
 
 	/**
-	 * Pages given page. No fix in case of out-of-bounds.
+	 * Performs the pagination with given {@link jodd.joy.page.PageRequest}.
+	 *
+	 * @param pageRequest page request, may be <code>null</code>, then the {@link #getDefaultPageRequest() default page request} will be used
+	 * @param sql SQL query that lists <b>all</b> items
+	 * @param params SQL query parameters or <code>null</code>
+	 * @param sortColumns array of all column names
+	 * @param target db entities for mapping (as usual in DbOom)
+	 *
+	 * @see #page(String, java.util.Map, int, int, String, boolean, Class[])
 	 */
-	protected <T> PageData<T> page(String sql, int page, int pageSize, Map params, int sort, String[] sortColumns, Class[] target) {
+	public <T> PageData<T> page(PageRequest pageRequest, String sql, Map params, String[] sortColumns, Class[] target) {
+		if (pageRequest == null) {
+			pageRequest = getDefaultPageRequest();
+		}
+
+		// check sort
+
+		String sortColumName = null;
+		boolean ascending = true;
+
+		int sort = pageRequest.getSort();
 		if (sort != 0) {
-			boolean ascending = sort > 0;
+			ascending = sort > 0;
 			if (!ascending) {
 				sort = -sort;
 			}
 			int index = sort - 1;
 
-			sql = buildOrderSql(sql, sortColumns[index], ascending);
+			if (index >= sortColumns.length) {
+				index = 1;
+			}
+			sortColumName = sortColumns[index];
+		}
+
+		// page
+
+		int page = pageRequest.getPage();
+		int pageSize = pageRequest.getSize();
+
+		PageData<T> pageData = page(sql, params, page, pageSize, sortColumName, ascending, target);
+
+		// fix the out-of-bounds
+
+		if (pageData.getItems().isEmpty() && pageData.currentPage != 0) {
+			if (pageData.currentPage != page) {
+				// out of bounds
+				int newPage = pageData.getCurrentPage();
+				pageData = page(sql, params, newPage, pageSize, sortColumName, ascending, target);
+			}
+		}
+
+		return pageData;
+	}
+
+	/**
+	 * Pages given page.
+	 *
+	 * @param sql sql query that lists <b>all</b> items
+	 * @param params map of SQL parameters
+	 * @param page current page to show
+	 * @param pageSize number of items to show
+	 * @param sortColumnName name of sorting column, <code>null</code> for no sorting
+	 * @param ascending <code>true</code> for ascending order
+	 * @param target db entities for mapping (sa usual in DbOom)
+	 */
+	protected <T> PageData<T> page(String sql, Map params, int page, int pageSize, String sortColumnName, boolean ascending, Class[] target) {
+		if (sortColumnName != null) {
+			sql = buildOrderSql(sql, sortColumnName, ascending);
 		}
 
 		int from = (page - 1) * pageSize;

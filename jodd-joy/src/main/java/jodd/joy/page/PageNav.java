@@ -3,8 +3,7 @@
 package jodd.joy.page;
 
 /**
- * Moderate page navigator.
- * Like altavista.
+ * Moderate page navigator. Like altavista.
  */
 public class PageNav {
 
@@ -12,7 +11,6 @@ public class PageNav {
 
 	protected int from;
 	protected int to;
-
 
 	public PageNav(PageData pageData) {
 		this(pageData.getTotalPages(), pageData.getCurrentPage(), DEFAULT_SHOWN);
