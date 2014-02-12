@@ -4,7 +4,7 @@ package jodd.joy.db;
 
 import jodd.db.oom.meta.DbId;
 
-public abstract class DbEntity extends Entity {
+public abstract class DbTestEntity extends Entity {
 
 	@DbId
 	protected Long id;

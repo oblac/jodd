@@ -6,7 +6,7 @@ import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
 
 @DbTable
-public class Girl extends DbEntity {
+public class Girl extends DbTestEntity {
 
 	@DbColumn
 	protected String name;

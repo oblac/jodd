@@ -166,7 +166,6 @@ public class PageDataTest {
 
 		PageData pageData = new PageData(1, 100, 0);
 		assertEquals(1, pageData.getCurrentPage());
-
 	}
 
 }

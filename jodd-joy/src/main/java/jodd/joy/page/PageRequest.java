@@ -7,10 +7,19 @@ package jodd.joy.page;
  */
 public class PageRequest {
 
+	/**
+	 * Default page size.
+	 */
+	public static int defaultPageSize = 10;
+	/**
+	 * Default sort index.
+	 */
+	public static int defaultSortIndex = 0;
+
 	protected int page = 1;
-	protected int size = 10;
+	protected int size = defaultPageSize;
 	protected String pagerId;
-	protected int sort;
+	protected int sort = defaultSortIndex;
 
 	/**
 	 * Returns requested page number.
