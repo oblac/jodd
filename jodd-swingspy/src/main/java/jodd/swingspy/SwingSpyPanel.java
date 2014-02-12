@@ -291,7 +291,7 @@ public class SwingSpyPanel extends JPanel {
 					createImageIcon(packageName + "label.png"),
 					createImageIcon(packageName + "list.png"),
 					createImageIcon(packageName + "panel.png"),
-					createImageIcon(packageName + "progressBar.png"),
+					createImageIcon(packageName + "progressbar.png"),
 					createImageIcon(packageName + "radioButton.png"),
 					createImageIcon(packageName + "scrollbar.png"),
 					createImageIcon(packageName + "scrollPane.png"),
