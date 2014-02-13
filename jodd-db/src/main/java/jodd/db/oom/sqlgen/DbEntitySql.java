@@ -143,6 +143,14 @@ public class DbEntitySql {
 	/**
 	 * Creates SELECT criteria for the entity matched by non-null values.
 	 */
+	public static DbSqlBuilder find(Class target, Object matchEntity) {
+		String tableRef = createTableRefName(target);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(target, tableRef)._(WHERE).match(tableRef, matchEntity);
+	}
+
+	/**
+	 * Creates SELECT criteria for the entity matched by non-null values.
+	 */
 	public static DbSqlBuilder find(Object entity) {
 		String tableRef = createTableRefName(entity);
 		return sql()._(SELECT).column(tableRef)._(FROM).table(entity, tableRef)._(WHERE).match(tableRef, entity);

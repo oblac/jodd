@@ -6,16 +6,8 @@ import jodd.db.oom.DbOomException;
 
 public class DbSqlBuilderException extends DbOomException {
 
-	public DbSqlBuilderException(Throwable t) {
-		super(t);
-	}
-
 	public DbSqlBuilderException(String message) {
 		super(message);
-	}
-
-	public DbSqlBuilderException(String message, Throwable t) {
-		super(message, t);
 	}
 
 	protected String queryString;

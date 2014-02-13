@@ -80,9 +80,23 @@ public class MatchChunk extends SqlChunk {
 				continue;
 			}
 			String property = dec.getPropertyName();
-			Object value = BeanUtil.getDeclaredProperty(data, property);
+
+			Object value = BeanUtil.getDeclaredPropertySilently(data, property);
+
 			if ((includeColumns == COLS_ONLY_EXISTING) && (value == null)) {
 				continue;
+			}
+
+			if (includeColumns == COLS_ONLY_EXISTING) {
+				if (value == null) {
+					continue;
+				}
+				// special case for ID column
+				if (dec.isId() && value instanceof Number) {
+					if (((Number) value).longValue() == 0) {
+						continue;
+					}
+				}
 			}
 			if (count > 0) {
 				out.append(AND);
