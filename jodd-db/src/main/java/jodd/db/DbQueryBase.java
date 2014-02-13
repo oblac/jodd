@@ -57,7 +57,7 @@ abstract class DbQueryBase {
 	 */
 	protected void checkNotClosed() {
 		if (queryState == QUERY_CLOSED) {
-			throw new DbSqlException("Query is closed. Operation may be performed only on active queries.");
+			throw new DbSqlException(this, "Query is closed. Operation may be performed only on active queries.");
 		}
 	}
 
@@ -68,7 +68,7 @@ abstract class DbQueryBase {
 		if (queryState != QUERY_CREATED) {
 			String message = (queryState == QUERY_INITIALIZED ?
 									"Query is already initialized." : "Query is closed.");
-			throw new DbSqlException(message + " Operation may be performed only on created queries.");
+			throw new DbSqlException(this, message + " Operation may be performed only on created queries.");
 		}
 	}
 
@@ -79,7 +79,7 @@ abstract class DbQueryBase {
 		if (queryState != QUERY_INITIALIZED) {
 			String message = (queryState == QUERY_CREATED ?
 									"Query is just created and not yet initialized." : "Query is closed.");
-			throw new DbSqlException(message + " Operation may be performed only on initialized queries.");
+			throw new DbSqlException(this, message + " Operation may be performed only on initialized queries.");
 		}
 	}
 
@@ -214,7 +214,7 @@ abstract class DbQueryBase {
 					statement = connection.createStatement(type, concurrencyType);
 				}
 			} catch (SQLException sex) {
-				throw new DbSqlException("Create statement error", sex);
+				throw new DbSqlException(this, "Create statement error", sex);
 			}
 			return;
 		}
@@ -251,7 +251,7 @@ abstract class DbQueryBase {
 				}
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Create prepared statement error", sex);
+			throw new DbSqlException(this, "Create prepared statement error", sex);
 		}
 		preparedStatement = (PreparedStatement) statement;
 	}
@@ -352,12 +352,12 @@ abstract class DbQueryBase {
 			return;
 		}
 		if (resultSets.remove(rs) == false) {
-			throw new DbSqlException("Provided ResultSet is not created by this query.");
+			throw new DbSqlException(this, "Provided ResultSet is not created by this query.");
 		}
 		try {
 			rs.close();
 		} catch (SQLException sex) {
-			throw new DbSqlException("Close result set error", sex);
+			throw new DbSqlException(this, "Close result set error", sex);
 		} finally {
 			totalOpenResultSetCount--;
 		}
@@ -542,7 +542,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setFetchSize(fetchSize);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set fetch size: " + fetchSize, sex);
+				throw new DbSqlException(this, "Unable to set fetch size: " + fetchSize, sex);
 			}
 		}
 	}
@@ -569,7 +569,7 @@ abstract class DbQueryBase {
 			try {
 				statement.setMaxRows(maxRows);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Unable to set max rows: " + maxRows, sex);
+				throw new DbSqlException(this, "Unable to set max rows: " + maxRows, sex);
 			}
 		}
 	}
@@ -610,7 +610,7 @@ abstract class DbQueryBase {
 			rs.setFetchSize(fetchSize);
 		} catch (SQLException sex) {
 			DbUtil.close(rs);
-			throw new DbSqlException("Query execution failed", sex);
+			throw new DbSqlException(this, "Query execution failed", sex);
 		}
 		saveResultSet(rs);
 		totalOpenResultSetCount++;
@@ -665,7 +665,7 @@ abstract class DbQueryBase {
 				result = preparedStatement.executeUpdate();
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Query execution failed", sex);
+			throw new DbSqlException(this, "Query execution failed", sex);
 		}
 		if (closeQuery) {
 			close();
@@ -721,7 +721,7 @@ abstract class DbQueryBase {
 
 			return firstLong;
 		} catch (SQLException sex) {
-			throw new DbSqlException("Count query failed", sex);
+			throw new DbSqlException(this, "Count query failed", sex);
 		} finally {
 			DbUtil.close(rs);
 			if (close) {
@@ -738,13 +738,13 @@ abstract class DbQueryBase {
 	public ResultSet getGeneratedColumns() {
 		checkInitialized();
 		if (generatedColumns == null) {
-			throw new DbSqlException("No column is specified as auto-generated");
+			throw new DbSqlException(this, "No column is specified as auto-generated");
 		}
 		ResultSet rs;
 		try {
 			rs = statement.getGeneratedKeys();
 		} catch (SQLException sex) {
-			throw new DbSqlException("No generated keys", sex);
+			throw new DbSqlException(this, "No generated keys", sex);
 		}
 		saveResultSet(rs);
 		totalOpenResultSetCount++;
@@ -760,7 +760,7 @@ abstract class DbQueryBase {
 		try {
 			return DbUtil.getFirstLong(rs);
 		} catch (SQLException sex) {
-			throw new DbSqlException("No generated key as long", sex);
+			throw new DbSqlException(this, "No generated key as long", sex);
 		} finally {
 			DbUtil.close(rs);
 			resultSets.remove(rs);

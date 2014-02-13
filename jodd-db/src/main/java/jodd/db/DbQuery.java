@@ -103,11 +103,11 @@ s	 */
 	// ---------------------------------------------------------------- methods for setting statement parameters
 
 	private void throwSetParamError(int index, Exception ex) {
-		throw new DbSqlException("Invalid SQL parameter with index: " + index, ex);
+		throw new DbSqlException(this, "Invalid SQL parameter with index: " + index, ex);
 	}
 
 	private void throwSetParamError(String param, Exception ex) {
-		throw new DbSqlException("Invalid SQL parameter with name: " + param, ex);
+		throw new DbSqlException(this, "Invalid SQL parameter with name: " + param, ex);
 	}
 
 	// ---------------------------------------------------------------- null
@@ -117,7 +117,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Failed to set null to parameter: " + index, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
 	}
 
@@ -129,7 +129,7 @@ s	 */
 				preparedStatement.setNull(positions.get(i), type);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Failed to set null to parameter: " + param, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
 
 	}
@@ -139,7 +139,7 @@ s	 */
 		try {
 			preparedStatement.setNull(index, type, typeName);
 		} catch (SQLException sex) {
-			throw new DbSqlException("Failed to set null to parameter: " + index, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + index, sex);
 		}
 	}
 
@@ -151,7 +151,7 @@ s	 */
 				preparedStatement.setNull(positions.get(i), value, typeName);
 			}
 		} catch (SQLException sex) {
-			throw new DbSqlException("Failed to set null to parameter: " + param, sex);
+			throw new DbSqlException(this, "Failed to set null to parameter: " + param, sex);
 		}
 	}
 
@@ -986,7 +986,7 @@ s	 */
 	public void setObjects(String[] names, Object[] values) {
 		init();
 		if (names.length != values.length) {
-			throw new DbSqlException("Different number of parameter names and values");
+			throw new DbSqlException(this, "Different number of parameter names and values");
 		}
 		for (int i = 0; i < names.length; i++) {
 			setObject(names[i], values[i]);

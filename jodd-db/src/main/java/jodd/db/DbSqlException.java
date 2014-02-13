@@ -21,6 +21,10 @@ public class DbSqlException extends UncheckedException {
 		super(message);
 	}
 
+	public DbSqlException(DbQueryBase dbQuery, String message) {
+		super(message + "\nQuery: " + dbQuery.getQueryString());
+	}
+
 	public DbSqlException(String message, Throwable t) {
 		super(message, t);
 	}
@@ -32,4 +36,9 @@ public class DbSqlException extends UncheckedException {
 	public DbSqlException(String message, List<SQLException> sexs) {
 		this(message, ExceptionUtil.rollupSqlExceptions(sexs));
 	}
+
+	public DbSqlException(DbQueryBase dbQuery, String message, Throwable t) {
+		super(message + "\nQuery: " + dbQuery.getQueryString(), t);
+	}
+
 }

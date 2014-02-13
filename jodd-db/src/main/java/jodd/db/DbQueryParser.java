@@ -17,7 +17,6 @@ class DbQueryParser {
 	public static final String SQL_SEPARATORS = " \n\r\f\t,()=<>&|+-=/*'^![]#~\\";
 
 	boolean prepared;
-
 	String sql;
 
 	// ---------------------------------------------------------------- ctors
@@ -50,7 +49,7 @@ class DbQueryParser {
 	IntArrayList getNamedParameterIndices(String name) {
 		IntArrayList positions = namedParameterLocationMap.get(name);
 		if (positions == null) {
-			throw new DbSqlException("Named parameter not found: " + name);
+			throw new DbSqlException("Named parameter not found: " + name + "\nQuery: " + sql);
 		}
 		return positions;
 	}
