@@ -38,8 +38,7 @@ public abstract class IdEntity extends Entity {
 		throw new DbOomException("No @DbId field");
 	}
 
-	@Override
-	protected long getEntityId() {
+	public long getEntityId() {
 		try {
 			return Convert.toLongValue(idField.get(this));
 		} catch (IllegalAccessException iaex) {
@@ -47,8 +46,7 @@ public abstract class IdEntity extends Entity {
 		}
 	}
 
-	@Override
-	protected void setEntityId(long id) {
+	public void setEntityId(long id) {
 		try {
 			idField.set(this, Long.valueOf(id));
 		} catch (IllegalAccessException iaex) {

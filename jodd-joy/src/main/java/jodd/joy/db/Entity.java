@@ -9,29 +9,17 @@ import static jodd.util.HashCode.SEED;
 /**
  * Abstract entity.
  */
-public abstract class Entity {
+public abstract class Entity implements DbEntity {
 
 	/**
-	 * Returns entity ID. Value 0 means that entity
-	 * is not stored in the persistence layer.
-	 */
-	protected abstract long getEntityId();
-
-	/**
-	 * Sets entity ID.
-	 */
-	protected abstract void setEntityId(long id);
-
-	/**
-	 * Returns <code>true</code> if entity is persisted, i.e.
-	 * {@link #getEntityId() ID} is not <code>0</code>
+	 * {@inheritDoc}
 	 */
 	public boolean isPersistent() {
 		return getEntityId() != 0;
 	}
 
 	/**
-	 * Detaches entity by setting ID to <code>0</code>.
+	 * {@inheritDoc}
 	 */
 	public void detach() {
 		setEntityId(0);
@@ -69,4 +57,5 @@ public abstract class Entity {
 	public String toString() {
 		return "Entity{" + this.getClass().getSimpleName() + ':' + getEntityId() + '}';
 	}
+
 }
