@@ -16,14 +16,16 @@ import java.util.Map;
 import static jodd.db.oom.DbOomQuery.query;
 
 /**
- * Database next-ID in-memory generator.
+ * Database in-memory next ID generator.
+ * It finds the last id (max) for every entity on first use.
+ * Then it just keeps the count in the memory.
  */
 @PetiteBean
 public class DbIdGenerator {
 
 	private static final Logger log = LoggerFactory.getLogger(DbIdGenerator.class);
 
-	protected Map<Class<? extends Entity>, MutableLong> entityIdsMap = new HashMap<Class<? extends Entity>, MutableLong>();
+	protected Map<Class<? extends DbEntity>, MutableLong> entityIdsMap = new HashMap<Class<? extends DbEntity>, MutableLong>();
 
 	/**
 	 * Resets all stored data.
@@ -33,19 +35,11 @@ public class DbIdGenerator {
 	}
 
 	/**
-	 * Returns the next ID for given entity.
-	 */
-	public long nextId(Entity entity) {
-		Class<? extends Entity> entityType = entity.getClass();
-		return nextId(entityType);
-	}
-
-	/**
 	 * Returns next ID for given entity type.
 	 * On the first call, it finds the max value of all IDs and stores it.
 	 * On later calls, stored id is incremented and returned.
 	 */
-	public synchronized long nextId(Class<? extends Entity> entityType) {
+	public synchronized long nextId(Class<? extends DbEntity> entityType) {
 		MutableLong lastId = entityIdsMap.get(entityType);
 		if (lastId == null) {
 			DbOomManager dbOomManager = DbOomManager.getInstance();
@@ -63,9 +57,12 @@ public class DbIdGenerator {
 			}
 
 			lastId = new MutableLong(lastLong);
+
+			entityIdsMap.put(entityType, lastId);
 		}
 
 		lastId.value++;
 		return lastId.value;
 	}
+
 }
