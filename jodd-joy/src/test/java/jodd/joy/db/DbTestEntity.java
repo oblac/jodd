@@ -17,15 +17,13 @@ public abstract class DbTestEntity extends Entity {
 		this.id = id;
 	}
 
-	@Override
-	protected long getEntityId() {
+	public long getEntityId() {
 		if (id == null) {
 			return 0;
 		}
 		return id.longValue();
 	}
 
-	@Override
 	public void setEntityId(long id) {
 		if (id == 0) {
 			this.id = null;

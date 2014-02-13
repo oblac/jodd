@@ -14,7 +14,6 @@ public abstract class DbHsqldbTestCase {
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
-
 	@Before
 	public void setUp() throws Exception {
 		cp = new CoreConnectionPool();
@@ -43,7 +42,7 @@ public abstract class DbHsqldbTestCase {
 
 		sql = "create table BOY (" +
 				"ID			integer	not null," +
-				"GIRL_ID		integer	null," +
+				"GIRL_ID	integer	null," +
 				"NAME	varchar(20)	null," +
 				"primary key (ID)," +
 				"FOREIGN KEY (GIRL_ID) REFERENCES GIRL (ID)" +

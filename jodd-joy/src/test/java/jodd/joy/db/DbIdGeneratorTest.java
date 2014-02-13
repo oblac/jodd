@@ -45,9 +45,12 @@ public class DbIdGeneratorTest extends DbHsqldbTestCase {
 
 		assertEquals(3, appDao.count(Girl.class));
 
-		assertNotNull(appDao.findById(Girl.class, Long.valueOf(1)));
-		assertNotNull(appDao.findById(Girl.class, Long.valueOf(2)));
-		assertNotNull(appDao.findById(Girl.class, Long.valueOf(3)));
+		assertNotNull(appDao.findById(Girl.class, 1));
+		assertNotNull(appDao.findById(Girl.class, 2));
+		assertNotNull(appDao.findById(Girl.class, 3));
+
+		session.closeSession();
+		ThreadDbSessionHolder.remove();
 	}
 
 }

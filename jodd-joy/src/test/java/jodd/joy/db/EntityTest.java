@@ -10,7 +10,7 @@ import static org.junit.Assert.assertFalse;
 public class EntityTest {
 
 	@Test
-	public void testEntities() {
+	public void testEqualEntities() {
 		Foo foo = new Foo();
 		Bar bar = new Bar();
 
@@ -20,18 +20,14 @@ public class EntityTest {
 		assertFalse(foo.equals(bar));
 	}
 
-
-
 	public static class Foo extends Entity {
 		long id;
 
-		@Override
-		protected long getEntityId() {
+		public long getEntityId() {
 			return id;
 		}
 
-		@Override
-		protected void setEntityId(long id) {
+		public void setEntityId(long id) {
 			this.id = id;
 		}
 	}
