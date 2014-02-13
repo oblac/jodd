@@ -2,6 +2,7 @@
 
 package jodd.db.oom;
 
+import jodd.db.DbQuery;
 import jodd.db.DbSqlException;
 
 /**
@@ -17,7 +18,16 @@ public class DbOomException extends DbSqlException {
 		super(message);
 	}
 
+	public DbOomException(DbQuery dbQuery, String message) {
+		super(dbQuery, message);
+	}
+
 	public DbOomException(String message, Throwable t) {
 		super(message, t);
 	}
+
+	public DbOomException(DbQuery dbQuery, String message, Throwable t) {
+		super(dbQuery, message, t);
+	}
+
 }

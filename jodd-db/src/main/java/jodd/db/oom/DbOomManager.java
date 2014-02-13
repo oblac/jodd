@@ -2,16 +2,12 @@
 
 package jodd.db.oom;
 
-import jodd.db.oom.mapper.DefaultResultSetMapper;
-import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.util.StringUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
-
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -358,17 +354,10 @@ public class DbOomManager {
 	/**
 	 * Defines if entities have to be cached in result set.
 	 * When cached, more memory is consumed during the existence of
-	 * {@link ResultSetMapper}.
+	 * {@link jodd.db.oom.mapper.ResultSetMapper}.
 	 */
 	public void setCacheEntitiesInResultSet(boolean cacheEntitiesInResultSet) {
 		this.cacheEntitiesInResultSet = cacheEntitiesInResultSet;
-	}
-
-	/**
-	 * Creates a new instance of {@link jodd.db.oom.mapper.ResultSetMapper}.
-	 */
-	public ResultSetMapper createResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities) {
-		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- db list
@@ -403,7 +392,7 @@ public class DbOomManager {
 		try {
 			return type.newInstance();
 		} catch (Exception ex) {
-			throw new DbOomException("Invalid entity type: " + type, ex);
+			throw new DbOomException(ex);
 		}
 	}
 

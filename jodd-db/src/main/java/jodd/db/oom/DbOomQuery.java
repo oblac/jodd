@@ -5,6 +5,7 @@ package jodd.db.oom;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbUtil;
+import jodd.db.oom.mapper.DefaultResultSetMapper;
 import jodd.db.oom.mapper.ResultSetMapper;
 import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.db.type.SqlType;
@@ -230,7 +231,7 @@ public class DbOomQuery extends DbQuery {
 	protected ResultSetMapper createResultSetMapper(ResultSet resultSet) {
 		Map<String, ColumnData> columnAliases = sqlgen != null ? sqlgen.getColumnData() : null;
 
-		return dbOomManager.createResultSetMapper(resultSet, columnAliases, cacheEntities);
+		return new DefaultResultSetMapper(resultSet, columnAliases, cacheEntities, this);
 	}
 
 	// ---------------------------------------------------------------- db list

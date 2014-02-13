@@ -8,6 +8,7 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomManager;
 import jodd.db.oom.DbOomException;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbOomQuery;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
 import jodd.typeconverter.TypeConverterManager;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 	protected final DbOomManager dbOomManager;
+	protected final DbOomQuery dbOomQuery;
 	protected final boolean cacheEntities;
 	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
@@ -80,11 +82,12 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * @param resultSet JDBC result set
 	 * @param columnAliases alias names for columns, if exist
 	 * @param cacheEntities flag if entities should be cached
-	 * @param oomManager DbOom manager instance
+	 * @param dbOomQuery query that created this mapper.
 	 */
-	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomManager oomManager) {
+	public DefaultResultSetMapper(ResultSet resultSet, Map<String, ColumnData> columnAliases, boolean cacheEntities, DbOomQuery dbOomQuery) {
 		super(resultSet);
-		this.dbOomManager = oomManager;
+		this.dbOomQuery = dbOomQuery;
+		this.dbOomManager = dbOomQuery.getManager();
 		this.cacheEntities = cacheEntities;
 		this.strictCompare = dbOomManager.isStrictCompare();
 		//this.resultColumns = new HashSet<String>();
@@ -163,7 +166,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
 			}
 		} catch (SQLException sex) {
-			throw new DbOomException("Read ResultSet meta-data failed", sex);
+			throw new DbOomException(dbOomQuery, "Reading ResultSet meta-data failed", sex);
 		}
 	}
 
@@ -183,7 +186,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableName == null) {
 				// maybe JDBC driver does not support it
-				throw new DbOomException("Table name not available in driver meta-data");
+				throw new DbOomException(dbOomQuery, "Table name not available in driver meta-data");
 			}
 
 			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
@@ -192,7 +195,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 				DbEntityDescriptor ded = dbOomManager.lookupTableName(tableName);
 				if (ded == null) {
-					throw new DbOomException("Table name not registered: " + tableName);
+					throw new DbOomException(dbOomQuery, "Table name not registered: " + tableName);
 				}
 
 				classes.add(ded.getType());
@@ -312,7 +315,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					cachedColumnValue = TypeConverterManager.convertType(cachedColumnValue, destinationType);
 				}
 			} catch (SQLException sex) {
-				throw new DbOomException("Invalid value for column #" + (colNdx + 1), sex);
+				throw new DbOomException(dbOomQuery, "Invalid value for column #" + (colNdx + 1), sex);
 			}
 			cachedColumnNdx = colNdx;
 		}
