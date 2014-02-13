@@ -462,11 +462,29 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		for (int i = 0; i < result.length; i++) {
 			Object object = result[i];
 
-			Object cachedObject = entitiesCache.get(object);
+			if (object == null) {
+				continue;
+			}
+
+			DbEntityDescriptor ded = cachedDbEntityDescriptors[i];
+
+			if (ded == null) {	// not a type, continue
+				continue;
+			}
+
+			// calculate key
+			Object key;
+			if (ded.hasIdColumn()) {
+				key = ded.getKeyValue(object);
+			} else {
+				key = object;
+			}
+
+			Object cachedObject = entitiesCache.get(key);
 
 			if (cachedObject == null) {
 				// object is not in the cache, add it
-				entitiesCache.put(object, object);
+				entitiesCache.put(key, object);
 			} else {
 				// object is in the cache, replace it
 				result[i] = cachedObject;

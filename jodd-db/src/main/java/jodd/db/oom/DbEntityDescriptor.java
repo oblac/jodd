@@ -2,10 +2,12 @@
 
 package jodd.db.oom;
 
+import jodd.bean.BeanUtil;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.util.StringPool;
 import jodd.util.sort.FastSort;
 
 import java.lang.reflect.Field;
@@ -218,6 +220,13 @@ public class DbEntityDescriptor {
 		return idColumnDescriptors == null ? 0 : idColumnDescriptors.length;
 	}
 
+	/**
+	 * Returns <code>true</code> if entity has one ID column.
+	 */
+	public boolean hasIdColumn() {
+		return getIdColumnsCount() == 1;
+	}
+
 	private void ensureSingleIdColumn() {
 		init();
 		if (idColumnDescriptors == null) {
@@ -225,7 +234,6 @@ public class DbEntityDescriptor {
 		} else if (idColumnDescriptors.length > 1) {
 			throw new DbOomException("More then one identity column in entity: " + entityName);
 		}
-
 	}
 
 	/**
@@ -245,7 +253,32 @@ public class DbEntityDescriptor {
 		ensureSingleIdColumn();
 		return idColumnDescriptors[0].getPropertyName();
 	}
-	
+
+	/**
+	 * Returns ID value for given entity instance.
+	 */
+	public Object getIdValue(Object object) {
+		String propertyName = getIdPropertyName();
+		return BeanUtil.getDeclaredProperty(object, propertyName);
+	}
+
+	/**
+	 * Sets ID value for given entity.
+	 */
+	public void setIdValue(Object object, Object value) {
+		String propertyName = getIdPropertyName();
+		BeanUtil.setDeclaredProperty(object, propertyName, value);
+	}
+
+	/**
+	 * Returns unique key for this entity. Returned key
+	 * is built from entity class and id value.
+	 */
+	public String getKeyValue(Object object) {
+		Object idValue = getIdValue(object);
+		return type.getName().concat(StringPool.COLON).concat(idValue.toString());
+	}
+
 	// ---------------------------------------------------------------- toString
 	
 	public String toString() {
