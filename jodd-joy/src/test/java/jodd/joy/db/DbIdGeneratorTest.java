@@ -17,7 +17,7 @@ public class DbIdGeneratorTest extends DbHsqldbTestCase {
 		ThreadDbSessionHolder.set(session);
 
 		AppDao appDao = new AppDao();
-		appDao.setGeneratedKeys(false);
+		appDao.setKeysGeneratedByDatabase(false);
 		appDao.dbIdGenerator = new DbIdGenerator();
 
 		Girl girl = new Girl();

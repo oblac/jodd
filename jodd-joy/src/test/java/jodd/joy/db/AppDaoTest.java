@@ -22,7 +22,7 @@ public class AppDaoTest extends DbHsqldbTestCase {
 		ThreadDbSessionHolder.set(session);
 
 		AppDao appDao = new AppDao();
-		appDao.setGeneratedKeys(false);
+		appDao.setKeysGeneratedByDatabase(false);
 		DbIdGenerator didg = new DbIdGenerator();
 		BeanUtil.setDeclaredProperty(appDao, "dbIdGenerator", didg);
 
