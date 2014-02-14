@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.joy.db;
+package jodd.db.oom.dao;
 
 import jodd.db.oom.meta.DbColumn;
 

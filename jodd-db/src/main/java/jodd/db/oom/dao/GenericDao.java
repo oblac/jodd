@@ -15,7 +15,6 @@ import java.util.List;
 import static jodd.db.oom.DbOomQuery.query;
 import static jodd.db.oom.sqlgen.DbEntitySql.findByColumn;
 import static jodd.db.oom.sqlgen.DbEntitySql.insert;
-import static jodd.db.oom.sqlgen.DbEntitySql.updateAll;
 
 /**
  * Generic DAO. Contains many convenient wrappers.
@@ -46,7 +45,7 @@ public class GenericDao {
 	/**
 	 * Returns <code>true</code> if entity is persistent.
 	 */
-	protected boolean isPersistent(DbEntityDescriptor ded, Object entity) {
+	protected <E> boolean isPersistent(DbEntityDescriptor<E> ded, E entity) {
 		Object key = ded.getIdValue(entity);
 
 		if (key == null) {
@@ -65,7 +64,7 @@ public class GenericDao {
 	/**
 	 * Sets new ID value for entity.
 	 */
-	protected void setEntityId(DbEntityDescriptor ded, Object entity, long newValue) {
+	protected <E> void setEntityId(DbEntityDescriptor<E> ded, E entity, long newValue) {
 		ded.setIdValue(entity, Long.valueOf(newValue));
 	}
 
@@ -104,7 +103,7 @@ public class GenericDao {
 			}
 			q.close();
 		} else {
-			query(updateAll(entity)).executeUpdateAndClose();
+			query(DbEntitySql.updateAll(entity)).executeUpdateAndClose();
 		}
 		return entity;
 	}
@@ -130,11 +129,37 @@ public class GenericDao {
 	// ---------------------------------------------------------------- update
 
 	/**
-	 * Updates single property. Also modifies the entity bean.
+	 * Updates single entity.
 	 */
-	public <E> E updateProperty(E entity, String name, Object value) {
+	public void update(Object entity) {
+		query(DbEntitySql.updateAll(entity)).executeUpdateAndClose();
+	}
+
+	/**
+	 * Updates all entities.
+	 * @see #update(Object)
+	 */
+	public void updateAll(Collection entities) {
+		for (Object entity : entities) {
+			update(entity);
+		}
+	}
+
+	/**
+	 * Updates single property in database and in the bean.
+	 */
+	public <E> E updateProperty(E entity, String name, Object newValue) {
+		query(DbEntitySql.updateColumn(entity, name, newValue)).executeUpdateAndClose();
+		BeanUtil.setDeclaredProperty(entity, name, newValue);
+		return entity;
+	}
+
+	/**
+	 * Updates property in the database by storing the current property value.
+	 */
+	public <E> E updateProperty(E entity, String name) {
+		Object value = BeanUtil.getDeclaredProperty(entity, name);
 		query(DbEntitySql.updateColumn(entity, name, value)).executeUpdateAndClose();
-		BeanUtil.setDeclaredProperty(entity, name, value);
 		return entity;
 	}
 
@@ -158,7 +183,7 @@ public class GenericDao {
 	 * Finds one entity for given criteria.
 	 */
 	@SuppressWarnings({"unchecked"})
-	public <E> E findOne(E criteria) {
+	public <E> E findOne(Object criteria) {
 		return (E) query(DbEntitySql.find(criteria)).findAndClose(criteria.getClass());
 	}
 
@@ -209,7 +234,7 @@ public class GenericDao {
 	/**
 	 * Counts number of all entities.
 	 */
-	public <E> long count(Class<E> entityType) {
+	public long count(Class entityType) {
 		return query(DbEntitySql.count(entityType)).executeCountAndClose();
 	}
 
