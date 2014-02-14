@@ -7,7 +7,7 @@ import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 
 @DbTable
-public class Boy extends IdEntity {
+public class Boy {
 
 	@DbId
 	long id;

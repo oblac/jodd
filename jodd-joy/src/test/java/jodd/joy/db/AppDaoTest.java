@@ -84,7 +84,7 @@ public class AppDaoTest extends DbHsqldbTestCase {
 		Girl girl2 = new Girl();
 		girl2.setName("Lina");
 		girl2.setSpeciality("crazy");
-		girl2.setEntityId(didg.nextId(Girl.class));
+		girl2.setId(Long.valueOf(didg.nextId(Girl.class)));
 
 		appDao.save(girl2);
 		count = appDao.count(Girl.class);
@@ -92,7 +92,7 @@ public class AppDaoTest extends DbHsqldbTestCase {
 
 		Girl emma = appDao.findOneByProperty(Girl.class, "name", "Emma");
 		assertNotNull(emma);
-		assertEquals(1, emma.getEntityId());
+		assertEquals(1, emma.getId().longValue());
 
 		Girl none = appDao.findOneByProperty(Girl.class, "name", "Www");
 		assertNull(none);
