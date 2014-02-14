@@ -235,4 +235,21 @@ public class JerryMiscTest {
 		assertEquals("1<span id=\"test\">2</span>3<span id=\"test\"></span>4", j.html());
 	}
 
+	@Test
+	public void testCustomerDetails() {
+		Jerry doc = Jerry.jerry("<p>to<br>{customerDetails}</p>");
+
+		doc.$("p").each(new JerryFunction() {
+			public boolean onNode(Jerry $this, int index) {
+				String innerHtml = $this.html();
+				innerHtml = innerHtml.replace("{customerDetails}", "Jodd <b>rocks</b>");
+				$this.html(innerHtml);
+				return true;
+			}
+		});
+
+		String newHtml = doc.html();
+		assertEquals("<p>to<br>Jodd <b>rocks</b></p>", newHtml);
+	}
+
 }
