@@ -14,6 +14,7 @@ public class KeyTest {
 	@Test
 	public void testEqualEntities() {
 		DbOomManager dbOomManager = DbOomManager.getInstance();
+		dbOomManager.reset();
 
 		DbEntityDescriptor<Foo> fooded = dbOomManager.registerEntity(Foo.class);
 		DbEntityDescriptor<Bar> barded = dbOomManager.registerEntity(Bar.class);
