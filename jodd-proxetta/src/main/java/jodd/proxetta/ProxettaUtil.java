@@ -16,7 +16,6 @@ public class ProxettaUtil {
 	 * If not, returns given class as result.
 	 */
 	public static Class getTargetClass(Class proxy) {
-
 		String name = proxy.getName();
 
 		if (name.endsWith(JoddProxetta.proxyClassNameSuffix)) {

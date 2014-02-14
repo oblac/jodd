@@ -2,6 +2,8 @@
 
 package jodd.methref;
 
+import jodd.proxetta.ProxettaUtil;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -19,11 +21,14 @@ public class Methref<C> {
 
 	/**
 	 * Creates new proxified instance of target.
-	 * Proxy instances are cached.
+	 * Proxy instances are cached. If given target is also
+	 * proxified, it's real target will be used.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public Methref(Class<C> target) {
-		Object proxy = (C) cache.get(target);
+		target = ProxettaUtil.getTargetClass(target);
+
+		Object proxy = cache.get(target);
 
 		if (proxy == null) {
 			Class<C> proxifiedTarget = proxetta.defineProxy(target);
@@ -62,7 +67,6 @@ public class Methref<C> {
 	public C to() {
 		return instance;
 	}
-
 
 	// ---------------------------------------------------------------- ref
 

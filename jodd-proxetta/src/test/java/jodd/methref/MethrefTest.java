@@ -2,10 +2,14 @@
 
 package jodd.methref;
 
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.data.Str;
+import jodd.proxetta.impl.ProxyProxetta;
+import jodd.proxetta.pointcuts.AllTopMethodsPointcut;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class MethrefTest {
 
@@ -40,5 +44,22 @@ public class MethrefTest {
 		Methref<Str> m = Methref.on(Str.class);
 		m.to().voo();
 		assertEquals("voo", m.ref());
+	}
+
+	@Test
+	public void testMethRefOnProxifiedClass() {
+		Methref<? extends Oink> m = Methref.on(Oink.class);
+		m.to().woink();
+		assertEquals("woink", m.ref());
+
+		ProxyAspect a1 = new ProxyAspect(DummyAdvice.class, new AllTopMethodsPointcut());
+		ProxyProxetta pp = ProxyProxetta.withAspects(a1);
+		Oink oink = (Oink) pp.builder(Oink.class).newInstance();
+
+		assertFalse(oink.getClass().equals(Oink.class));
+
+		m = Methref.on(oink.getClass());
+		m.to().woink();
+		assertEquals("woink", m.ref());
 	}
 }

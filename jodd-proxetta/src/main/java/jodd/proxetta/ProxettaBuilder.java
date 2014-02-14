@@ -166,7 +166,7 @@ public abstract class ProxettaBuilder {
 	 */
 	protected void process() {
 		if (targetInputStream == null) {
-			throw new ProxettaException("Target not defined");
+			throw new ProxettaException("Target missing");
 		}
 		// create class reader
 		ClassReader classReader;
