@@ -9,6 +9,7 @@ import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -242,7 +243,7 @@ public class JerryMiscTest {
 		doc.$("p").each(new JerryFunction() {
 			public boolean onNode(Jerry $this, int index) {
 				String innerHtml = $this.html();
-				innerHtml = innerHtml.replace("{customerDetails}", "Jodd <b>rocks</b>");
+				innerHtml = StringUtil.replace(innerHtml, "{customerDetails}", "Jodd <b>rocks</b>");
 				$this.html(innerHtml);
 				return true;
 			}

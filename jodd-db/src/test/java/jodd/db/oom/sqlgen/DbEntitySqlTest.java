@@ -223,28 +223,28 @@ public class DbEntitySqlTest {
 
 		Girl g = new Girl(1, "sanja", "c++");
 		DbSqlBuilder b = DbEntitySql.count(g);
-		assertEquals("select count(1) from GIRL Girl where (Girl.ID=:girl.id and Girl.NAME=:girl.name and Girl.SPECIALITY=:girl.speciality)",
+		assertEquals("select count(*) from GIRL Girl where (Girl.ID=:girl.id and Girl.NAME=:girl.name and Girl.SPECIALITY=:girl.speciality)",
 				b.generateQuery());
 		checkGirl(b);
 
 		BadGirl bg = new BadGirl();
 		b = DbEntitySql.count(bg);
-		assertEquals("select count(1) from GIRL BadGirl where (1=1)",
+		assertEquals("select count(*) from GIRL BadGirl where (1=1)",
 				b.generateQuery());
 
 		bg = new BadGirl(Integer.valueOf(2), null, ".net");
 		b = DbEntitySql.count(bg);
-		assertEquals("select count(1) from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.SPECIALITY=:badGirl.foospeciality)",
+		assertEquals("select count(*) from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl1(b);
 
 		b = DbEntitySql.countAll(bg);
-		assertEquals("select count(1) from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.NAME=:badGirl.fooname and BadGirl.SPECIALITY=:badGirl.foospeciality)",
+		assertEquals("select count(*) from GIRL BadGirl where (BadGirl.ID=:badGirl.fooid and BadGirl.NAME=:badGirl.fooname and BadGirl.SPECIALITY=:badGirl.foospeciality)",
 				b.generateQuery());
 		checkBadGirl2(b);
 
 		b = DbEntitySql.count(BadGirl.class);
-		assertEquals("select count(1) from GIRL BadGirl",
+		assertEquals("select count(*) from GIRL BadGirl",
 				b.generateQuery());
 
 	}

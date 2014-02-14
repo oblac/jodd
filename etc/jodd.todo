@@ -114,10 +114,12 @@ MethRef:
 Joy:
 	- Localization arguments, {0}, {1}…
 	- Don't encode text tags in resource bundles
-	- Pager, do sort @review
+	- Pager - refactor to be more user friendly when user has to write custom code
 	- AppCore, add optional scanning, so to allow manual registration @done
+	- Jspp with tag body
 	- Jspp.processAll()
 		Process all files in target folder, enable debug mode in WebApp.
+
 Other Projects:
 	- Add gradle for easier start: madvoc @done @v3.4.5
 	- Add gradle for easier start: webapp1 @done @v3.4.5

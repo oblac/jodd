@@ -152,18 +152,39 @@ public abstract class DbPager {
 	}
 
 	/**
-	 * Removes the first part of the sql up to the 'from'.
+	 * Removes the first part of the sql up to the relevant 'from'.
+	 * Tries to detect sub-queries in the 'select' part.
 	 */
 	protected String removeToFrom(String sql) {
-		int ndx = StringUtil.indexOfIgnoreCase(sql, "from");
-		if (ndx != -1) {
-			sql = sql.substring(ndx);
+		int from = 0;
+		int fromCount = 1;
+		int selectCount = 0;
+		int lastNdx = 0;
+		while (true) {
+			int ndx = StringUtil.indexOfIgnoreCase(sql, "from", from);
+			if (ndx == -1) {
+				break;
+			}
+
+			// count selects in left part
+			String left = sql.substring(lastNdx, ndx);
+			selectCount += StringUtil.countIgnoreCase(left, "select");
+
+			if (fromCount >= selectCount) {
+				sql = sql.substring(ndx);
+				break;
+			}
+
+			// find next 'from'
+			lastNdx = ndx;
+			from = ndx + 4;
+			fromCount++;
 		}
 		return sql;
 	}
 
 	/**
-	 * Removes everything from last last order by.
+	 * Removes everything from last "order by".
 	 */
 	protected String removeLastOrderBy(String sql) {
 		int ndx = StringUtil.lastIndexOfIgnoreCase(sql, "order by");
