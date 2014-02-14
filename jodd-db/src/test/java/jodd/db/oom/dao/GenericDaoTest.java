@@ -5,6 +5,8 @@ package jodd.db.oom.dao;
 import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.ThreadDbSessionHolder;
+import jodd.db.oom.DbOomManager;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,7 +16,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class GenericDaoTest  extends DbHsqldbTestCase {
+public class GenericDaoTest extends DbHsqldbTestCase {
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+
+		DbOomManager.resetAll();
+		DbOomManager dbOom = DbOomManager.getInstance();
+		dbOom.registerEntity(Girl.class);
+		dbOom.registerEntity(Boy.class);
+	}
 
 	@Test
 	public void testAppDao1() {
