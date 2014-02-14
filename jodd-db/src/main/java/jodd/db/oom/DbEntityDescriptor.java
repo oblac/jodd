@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Holds all information about some entity type, such as table name and {@link DbEntityColumnDescriptor columns data}.
  */
-public class DbEntityDescriptor {
+public class DbEntityDescriptor<E> {
 
-	public DbEntityDescriptor(Class type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy, boolean strictCompare) {
+	public DbEntityDescriptor(Class<E> type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy, boolean strictCompare) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
@@ -32,7 +32,7 @@ public class DbEntityDescriptor {
 
 	// ---------------------------------------------------------------- type and table
 
-	private final Class type;
+	private final Class<E> type;
 	private final String entityName;
 	private final boolean isAnnotated;
 	private final String tableName;
@@ -44,7 +44,7 @@ public class DbEntityDescriptor {
 	/**
 	 * Returns entity type.
 	 */
-	public Class getType() {
+	public Class<E> getType() {
 		return type;
 	}
 
@@ -257,7 +257,7 @@ public class DbEntityDescriptor {
 	/**
 	 * Returns ID value for given entity instance.
 	 */
-	public Object getIdValue(Object object) {
+	public Object getIdValue(E object) {
 		String propertyName = getIdPropertyName();
 		return BeanUtil.getDeclaredProperty(object, propertyName);
 	}
@@ -265,7 +265,7 @@ public class DbEntityDescriptor {
 	/**
 	 * Sets ID value for given entity.
 	 */
-	public void setIdValue(Object object, Object value) {
+	public void setIdValue(E object, Object value) {
 		String propertyName = getIdPropertyName();
 		BeanUtil.setDeclaredProperty(object, propertyName, value);
 	}
@@ -274,7 +274,7 @@ public class DbEntityDescriptor {
 	 * Returns unique key for this entity. Returned key
 	 * is built from entity class and id value.
 	 */
-	public String getKeyValue(Object object) {
+	public String getKeyValue(E object) {
 		Object idValue = getIdValue(object);
 		return type.getName().concat(StringPool.COLON).concat(idValue.toString());
 	}

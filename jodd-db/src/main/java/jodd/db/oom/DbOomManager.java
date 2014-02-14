@@ -152,12 +152,12 @@ public class DbOomManager {
 	 * Some types are <b>not</b> entities, i.e. domain objects. Instead, primitive entities
 	 * are simply mapped to one column. 
 	 */
-	public DbEntityDescriptor lookupType(Class type) {
+	public <E> DbEntityDescriptor<E> lookupType(Class<E> type) {
 		String typeName = type.getName();
 		if (StringUtil.startsWithOne(typeName, primitiveEntitiesPrefixes) != -1) {
 			return null;
 		}
-		DbEntityDescriptor ded = descriptorsMap.get(type);
+		DbEntityDescriptor<E> ded = descriptorsMap.get(type);
 		if (ded == null) {
 			ded = registerType(type);
 		}
@@ -191,9 +191,9 @@ public class DbOomManager {
 	/**
 	 * Registers just type and entity names. Enough for most usages.
 	 */
-	public DbEntityDescriptor registerType(Class type) {
-		DbEntityDescriptor ded = createDbEntityDescriptor(type);
-		DbEntityDescriptor existing = descriptorsMap.put(type, ded);
+	public <E> DbEntityDescriptor<E> registerType(Class<E> type) {
+		DbEntityDescriptor<E> ded = createDbEntityDescriptor(type);
+		DbEntityDescriptor<E> existing = descriptorsMap.put(type, ded);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Register " + type.getName() + " as " + ded.getTableName());
@@ -213,8 +213,8 @@ public class DbOomManager {
 	 * Registers entity. {@link #registerType(Class) Registers types} and table names.
 	 * Throw exception is type is already registered.
 	 */
-	public DbEntityDescriptor registerEntity(Class type) {
-		DbEntityDescriptor ded = registerType(type);
+	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type) {
+		DbEntityDescriptor<E> ded = registerType(type);
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
 		if (existing != null) {
@@ -226,7 +226,7 @@ public class DbOomManager {
 	/**
 	 * Registers entity. Existing entity will be removed if exist, so no exception will be thrown. 
 	 */
-	public DbEntityDescriptor registerEntity(Class type, boolean force) {
+	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type, boolean force) {
 		if (force == true) {
 			removeEntity(type);
 		}
@@ -234,10 +234,10 @@ public class DbOomManager {
 	}
 
 	/**
-	 * Removes entity.
+	 * Removes entity and returns removed descriptor.
 	 */
-	public DbEntityDescriptor removeEntity(Class type) {
-		DbEntityDescriptor ded = descriptorsMap.remove(type);
+	public <E> DbEntityDescriptor<E> removeEntity(Class<E> type) {
+		DbEntityDescriptor<E> ded = descriptorsMap.remove(type);
 		if (ded == null) {
 			ded = createDbEntityDescriptor(type);
 		}
@@ -250,8 +250,8 @@ public class DbOomManager {
 	/**
 	 * Creates {@link DbEntityDescriptor}.
 	 */
-	protected DbEntityDescriptor createDbEntityDescriptor(Class type) {
-		return new DbEntityDescriptor(type, schemaName, tableNames, columnNames, strictCompare);
+	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
+		return new DbEntityDescriptor<E>(type, schemaName, tableNames, columnNames, strictCompare);
 	}
 
 
