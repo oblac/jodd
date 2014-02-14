@@ -31,12 +31,12 @@ public class HsqlDbPager extends DbPager {
 	}
 
 	/**
-	 * Builds count sql using COUNT(1).
+	 * Builds count sql using COUNT(*).
 	 */
 	@Override
 	protected String buildCountSql(String sql) {
 		sql = removeToFrom(sql);
 		sql = removeLastOrderBy(sql);
-		return "select count(1) " + sql;
+		return "select count(*) " + sql;
 	}
 }

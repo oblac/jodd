@@ -23,7 +23,7 @@ public class DbEntitySql {
 	private static final String SELECT = "select ";
 	private static final String FROM = " from ";
 	private static final String SET = " set ";
-	private static final String SELECT_COUNT_1_FROM = "select count(1) from ";
+	private static final String SELECT_COUNT_1_FROM = "select count(*) from ";
 
 	// ---------------------------------------------------------------- insert
 
