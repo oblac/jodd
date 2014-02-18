@@ -2,7 +2,6 @@
 
 package jodd.joy.madvoc.action;
 
-import jodd.joy.page.PageRequest;
 import jodd.util.StringUtil;
 import jodd.vtor.Vtor;
 import jodd.vtor.Violation;
@@ -117,21 +116,6 @@ public abstract class AppAction {
 		if (vtor == null) {
 			vtor = new Vtor();
 		}
-	}
-
-	// ---------------------------------------------------------------- paging
-
-	/**
-	 * Applies page size on given page request.
-	 */
-	protected PageRequest applyPageSize(PageRequest pageRequest, int pageSize) {
-		if (pageSize != 0) {
-			if (pageRequest == null) {
-				pageRequest = new PageRequest();
-				pageRequest.setSize(pageSize);
-			}
-		}
-		return pageRequest;
 	}
 
 }

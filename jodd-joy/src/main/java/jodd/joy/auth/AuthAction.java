@@ -2,7 +2,6 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.meta.Action;
 
 /**
@@ -13,7 +12,7 @@ import jodd.madvoc.meta.Action;
  * <p>
  * Usually <code>LoginAction</code> extends this class.
  */
-public abstract class AuthAction extends AppAction {
+public abstract class AuthAction {
 
 	public static final String LOGIN_ACTION_PATH = "/j_login";
 	public static final String LOGOUT_ACTION_PATH = "/j_logout";
@@ -24,10 +23,12 @@ public abstract class AuthAction extends AppAction {
 	public static final String LOGIN_TOKEN = "j_token";
 	public static final String LOGIN_SUCCESS_PATH = "j_path";
 
+	public static final String ALIAS_INDEX = "<index>";
+
 	/**
 	 * Login hook.
 	 */
-	@Action(value = LOGIN_ACTION_PATH, method = METHOD_POST)
+	@Action(value = LOGIN_ACTION_PATH, method = "POST")
 	public final void login() {
 	}
 

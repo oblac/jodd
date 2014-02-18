@@ -24,7 +24,7 @@ import static jodd.joy.madvoc.action.AppAction.REDIRECT;
  * authenticates himself by successfully associating his "principal"
  * (often a username) with his "credentials" (often a password).
  */
-public abstract class AuthenticationInterceptor extends BaseActionInterceptor {
+public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
@@ -124,13 +124,13 @@ public abstract class AuthenticationInterceptor extends BaseActionInterceptor {
 		String token = servletRequest.getParameter(AuthAction.LOGIN_TOKEN);
 		// check token
 		if (CsrfShield.checkCsrfToken(session, token) == false) {
-			log.warn("csrf token validation failed.");
+			log.warn("csrf token validation failed");
 			return resultLoginFailed(2);
 		}
 
 		userSession = loginViaRequest(servletRequest);
 		if (userSession == null) {
-			log.warn("login failed.");
+			log.warn("login failed");
 			return resultLoginFailed(1);
 		}
 
@@ -239,14 +239,13 @@ public abstract class AuthenticationInterceptor extends BaseActionInterceptor {
 	/**
 	 * Tries to login user with cookie data. Returns session object, otherwise returns <code>null</code>.
 	 */
-	protected abstract Object loginViaCookie(String[] cookieData);
-
+	protected abstract U loginViaCookie(String[] cookieData);
 
 	/**
 	 * Tires to login user with form data. Returns session object, otherwise returns <code>null</code>.
 	 * By default, calls {@link #loginUsernamePassword(String, String)}.
 	 */
-	protected Object loginViaRequest(HttpServletRequest servletRequest) {
+	protected U loginViaRequest(HttpServletRequest servletRequest) {
 		String username = servletRequest.getParameter(AuthAction.LOGIN_USERNAME);
 		String password = servletRequest.getParameter(AuthAction.LOGIN_PASSWORD);
 
@@ -257,15 +256,16 @@ public abstract class AuthenticationInterceptor extends BaseActionInterceptor {
 
 	/**
 	 * Tries to login a user using username and password.
-	 * Returns <code>true</code> if login is successful, otherwise returns <code>false</code>.
+	 * Returns session object if login was successful.
 	 *
 	 * @param username entered user name from login form
 	 * @param password entered raw password
 	 */
-	protected abstract Object loginUsernamePassword(String username, String password);
+	protected abstract U loginUsernamePassword(String username, String password);
 
 	/**
 	 * Prepares cookie data from session object.
 	 */
 	protected abstract String[] createCookieData(Object userSession);
+
 }
