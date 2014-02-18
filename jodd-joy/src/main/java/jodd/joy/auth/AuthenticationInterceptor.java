@@ -58,7 +58,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 		}
 
 		// any other page then logout
-		Object userSession = AuthUtil.getUserSession(session);
+		U userSession = (U) AuthUtil.getUserSession(session);
 		if (userSession != null) {
 			// USER IS LOGGED IN
 			if (isLoginAction(actionPath)) {
@@ -102,7 +102,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 
 		// REGISTER USER
 		if (isRegisterAction(actionPath)) {
-			Object newUserSession = AuthUtil.getNewUserSession(servletRequest);
+			U newUserSession = (U) AuthUtil.getNewUserSession(servletRequest);
 			if (newUserSession != null) {
 				log.debug("new user session created");
 
@@ -149,7 +149,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 	 * @param userSession created session object
 	 * @param isNew if <code>true</code> indicated the session is new (i.e. user is either registered or signed in), if <code>false</code> means that session is continued (i.e. user is signed in via cookie).
 	 */
-	protected void startAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse, Object userSession, boolean isNew) {
+	protected void startAuthSession(HttpServletRequest servletRequest, HttpServletResponse servletResponse, U userSession, boolean isNew) {
 		AuthUtil.startUserSession(servletRequest, userSession);
 		if (useCookie == false) {
 			return;
@@ -263,6 +263,6 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 	/**
 	 * Prepares cookie data from session object.
 	 */
-	protected abstract String[] createCookieData(Object userSession);
+	protected abstract String[] createCookieData(U userSession);
 
 }
