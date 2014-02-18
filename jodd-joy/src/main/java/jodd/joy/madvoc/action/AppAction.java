@@ -34,10 +34,6 @@ public abstract class AppAction {
 
 	public static final String ALIAS_INDEX = "<index>";
 	public static final String ALIAS_INDEX_NAME = "index";
-	public static final String ALIAS_LOGIN = "<login>";
-	public static final String ALIAS_LOGIN_NAME = "login";
-	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
-	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
 	/**
 	 * Creates alias. 

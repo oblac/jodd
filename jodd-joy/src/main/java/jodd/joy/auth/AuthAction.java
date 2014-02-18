@@ -24,6 +24,10 @@ public abstract class AuthAction {
 	public static final String LOGIN_SUCCESS_PATH = "j_path";
 
 	public static final String ALIAS_INDEX = "<index>";
+	public static final String ALIAS_LOGIN = "<login>";
+	public static final String ALIAS_LOGIN_NAME = "login";
+	public static final String ALIAS_ACCESS_DENIED = "<accessDenied>";
+	public static final String ALIAS_ACCESS_DENIED_NAME = "accessDenied";
 
 	/**
 	 * Login hook.
