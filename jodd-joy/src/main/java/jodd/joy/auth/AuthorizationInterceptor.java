@@ -2,7 +2,6 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.DispatcherUtil;
@@ -14,8 +13,6 @@ import jodd.log.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import static jodd.joy.madvoc.action.AppAction.REDIRECT;
 
 /**
  * Authorization checking interceptor. Usually invoked after {@link AuthenticationInterceptor}.
@@ -66,7 +63,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 	 * Prepares result for access denied page.
 	 */
 	protected Object resultAccessDenied() {
-		return REDIRECT + AppAction.ALIAS_ACCESS_DENIED;
+		return "redirect:" + AuthAction.ALIAS_ACCESS_DENIED;
 	}
 
 
@@ -83,7 +80,7 @@ public abstract class AuthorizationInterceptor extends BaseActionInterceptor {
 					'?' + URLCoder.encodeQueryParam(AuthAction.LOGIN_SUCCESS_PATH) +
 					'=' + URLCoder.encodeQueryParam(targetUrl);
 		}
-		return REDIRECT + AppAction.ALIAS_LOGIN + targetUrl;
+		return "redirect:" + AuthAction.ALIAS_LOGIN + targetUrl;
 	}
 
 

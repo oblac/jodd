@@ -2,7 +2,6 @@
 
 package jodd.joy.madvoc.meta;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.meta.Action;
 
 import java.lang.annotation.Documented;
@@ -18,7 +17,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-@Action(method = AppAction.METHOD_POST)
+@Action(method = "POST")
 public @interface PostAction {
 
 	String value() default "";

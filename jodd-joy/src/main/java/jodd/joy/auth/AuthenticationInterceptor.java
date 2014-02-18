@@ -2,7 +2,6 @@
 
 package jodd.joy.auth;
 
-import jodd.joy.madvoc.action.AppAction;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.interceptor.BaseActionInterceptor;
 import jodd.servlet.CsrfShield;
@@ -13,8 +12,6 @@ import jodd.log.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import static jodd.joy.madvoc.action.AppAction.REDIRECT;
 
 /**
  * Authentication checking interceptor. Usually invoked before {@link AuthorizationInterceptor}.
@@ -209,21 +206,21 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 		if (StringUtil.isEmpty(path)) {
 			path = AuthAction.ALIAS_INDEX;
 		}
-		return REDIRECT + path;
+		return "redirect:" + path;
 	}
 
 	/**
 	 * Prepares result for logout success page.
 	 */
 	protected Object resultLogoutSuccess() {
-		return REDIRECT + AuthAction.ALIAS_INDEX;
+		return "redirect:" + AuthAction.ALIAS_INDEX;
 	}
 
 	/**
 	 * Prepares result for registration success page.
 	 */
 	protected Object resultRegistrationSuccess() {
-		return REDIRECT + AuthAction.ALIAS_INDEX;
+		return "redirect:" + AuthAction.ALIAS_INDEX;
 	}
 
 
@@ -231,7 +228,7 @@ public abstract class AuthenticationInterceptor<U> extends BaseActionInterceptor
 	 * Prepares result for login failed page.
 	 */
 	protected Object resultLoginFailed(int reason) {
-		return REDIRECT + AppAction.ALIAS_LOGIN + "?err=" + reason;
+		return "redirect:" + AuthAction.ALIAS_LOGIN + "?err=" + reason;
 	}
 
 	// ---------------------------------------------------------------- abstracts

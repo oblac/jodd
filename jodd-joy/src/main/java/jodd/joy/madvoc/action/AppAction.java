@@ -2,6 +2,7 @@
 
 package jodd.joy.madvoc.action;
 
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.vtor.Vtor;
 import jodd.vtor.Violation;
@@ -15,14 +16,6 @@ public abstract class AppAction {
 
 	public static final String BACK = "#";
 	public static final String OK = "ok";
-
-	public static final String METHOD_POST = "POST";
-	public static final String METHOD_GET = "GET";
-	public static final String METHOD_PUT = "PUT";
-	public static final String METHOD_HEAD = "HEAD";
-	public static final String METHOD_DELETE = "DELETE";
-	public static final String METHOD_TRACE = "TRACE";
-	public static final String METHOD_OPTIONS = "OPTIONS";
 
 	public static final String REDIRECT = "redirect:";
 	public static final String DISPATCH = "dispatch:";
@@ -39,7 +32,7 @@ public abstract class AppAction {
 	 * Creates alias. 
 	 */
 	protected String alias(String target) {
-		return '<' + target + '>';
+		return StringPool.LEFT_CHEV.concat(target).concat(StringPool.RIGHT_CHEV);
 	}
 
 	/**
