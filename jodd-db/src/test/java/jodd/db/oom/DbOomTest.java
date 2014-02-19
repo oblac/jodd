@@ -539,17 +539,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		DbOomQuery f = DbEntitySql.find(girl).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=:girl.id)", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id)", f.toString());
 		f.init();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=0)", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=0)", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select BadGirl.ID, BadGirl.NAME, BadGirl.SPECIALITY from GIRL BadGirl where (1=1)", f.toString());
+		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (1=1)", f.toString());
 		f.close();
 		f = DbEntitySql.find(badBoy).aliasColumnsAs(null).query();
 		f.setDebugMode();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where (1=1)", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (1=1)", f.toString());
 		f.close();
 
 		girl.name = "Monica";
@@ -559,17 +559,17 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f = DbEntitySql.find(girl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select Girl.ID, Girl.NAME, Girl.SPECIALITY from GIRL Girl where (Girl.ID=0 and Girl.NAME='Monica')", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=0 and Girl_.NAME='Monica')", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadGirl.ID, BadGirl.NAME, BadGirl.SPECIALITY from GIRL BadGirl where (BadGirl.NAME='Anna')", f.toString());
+		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where (BadGirl_.NAME='Anna')", f.toString());
 		f.close();
 		f = DbEntitySql.find(badBoy).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where (BadBoy.NAME='David')", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where (BadBoy_.NAME='David')", f.toString());
 		f.close();
 
 		// ---------------------------------------------------------------- whole round
@@ -628,13 +628,13 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f = DbEntitySql.findByColumn(BadBoy.class, "girlId", badGirl.fooid).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where BadBoy.GIRL_ID=3", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 		f.close();
 
 		f = DbEntitySql.findForeign(BadBoy.class, badGirl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select BadBoy.ID, BadBoy.GIRL_ID, BadBoy.NAME from BOY BadBoy where BadBoy.GIRL_ID=3", f.toString());
+		assertEquals("select BadBoy_.ID, BadBoy_.GIRL_ID, BadBoy_.NAME from BOY BadBoy_ where BadBoy_.GIRL_ID=3", f.toString());
 
 		f.close();
 
