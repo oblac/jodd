@@ -195,7 +195,7 @@ public abstract class TemplateData {
 		if (columnData == null) {
 			columnData = new HashMap<String, ColumnData>();
 		}
-		columnData.put(tableRef, new ColumnData(tableName));
+		columnData.put(tableRef.toLowerCase(), new ColumnData(tableName));
 	}
 
 	public String registerColumnDataForColumnCode(String tableName, String column) {
@@ -203,7 +203,7 @@ public abstract class TemplateData {
 			columnData = new HashMap<String, ColumnData>();
 		}
 		String code = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
-		columnData.put(code, new ColumnData(tableName, column));
+		columnData.put(code.toLowerCase(), new ColumnData(tableName, column));
 		return code;
 	}
 

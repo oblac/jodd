@@ -105,23 +105,28 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			tableNames = new String[totalColumns];
 
 			for (int i = 0; i < totalColumns; i++) {
-				String columnName = rsMetaData.getColumnName(i + 1);
+				String columnName = rsMetaData.getColumnLabel(i + 1);
+
+				if (columnName == null) {
+					columnName = rsMetaData.getColumnName(i + 1);
+				}
+
 				String tableName = null;
 
 				// resolve column and table name
 				int sepNdx = columnName.indexOf(dbOomManager.getColumnAliasSeparator());
 				if (sepNdx != -1) {
-					// column alias exist, result set is ignored and columnAliases contains table data.
+					// column alias exist, result set is ignored and columnAliases contains table data
 					tableName = columnName.substring(0, sepNdx);
 					if (columnAliases != null) {
-						ColumnData columnData = columnAliases.get(tableName);
+						ColumnData columnData = columnAliases.get(tableName.toLowerCase());
 						if (columnData != null) {
 							tableName = columnData.getTableName();
 						}
 					}
 					columnName = columnName.substring(sepNdx + 1);
 				} else {
-					// column alias does not exist, table name is read from columnAliases and result set (if available).
+					// column alias does not exist, table name is read from columnAliases and result set (if available)
 					if (columnAliases != null) {
 						ColumnData columnData = columnAliases.get(columnName.toLowerCase());
 						if (columnData != null) {
