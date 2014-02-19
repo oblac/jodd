@@ -243,7 +243,7 @@ public class DbEntitySql {
 	protected static String createTableRefName(Object entity) {
 		Class type = entity.getClass();
 		type = (type == Class.class ? (Class) entity : type);
-		return type.getSimpleName();
+		return (type.getSimpleName() + '_');
 	}
 
 }
