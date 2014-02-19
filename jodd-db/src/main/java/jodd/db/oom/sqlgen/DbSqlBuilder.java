@@ -285,6 +285,10 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return addChunk(new TableChunk(entity, alias));
 	}
 
+	public DbSqlBuilder table(Object entity, String alias, String tableReference) {
+		return addChunk(new TableChunk(entity, alias, tableReference));
+	}
+
 	public DbSqlBuilder table(Object entity) {
 		return addChunk(new TableChunk(entity));
 	}

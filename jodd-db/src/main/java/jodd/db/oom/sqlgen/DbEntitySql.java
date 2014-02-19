@@ -86,7 +86,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder delete(Object entity) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(DELETE_FROM).table(entity, null)._(WHERE).match(tableRef, entity);
+		return sql()._(DELETE_FROM).table(entity, null, tableRef)._(WHERE).match(tableRef, entity);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder deleteByAll(Object entity) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(DELETE_FROM).table(entity, null)._(WHERE).matchAll(tableRef, entity);
+		return sql()._(DELETE_FROM).table(entity, null, tableRef)._(WHERE).matchAll(tableRef, entity);
 	}
 
 	// ---------------------------------------------------------------- delete by id
@@ -104,7 +104,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder deleteById(Object entity) {
 		String tableRef = createTableRefName(entity);
-		return sql()._(DELETE_FROM).table(entity, null)._(WHERE).matchIds(tableRef, entity);
+		return sql()._(DELETE_FROM).table(entity, null, tableRef)._(WHERE).matchIds(tableRef, entity);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class DbEntitySql {
 	 */
 	public static DbSqlBuilder deleteById(Object entityType, Number id) {
 		String tableRef = createTableRefName(entityType);
-		return sql()._(DELETE_FROM).table(entityType, null)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
+		return sql()._(DELETE_FROM).table(entityType, null, tableRef)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
 	}
 
 
@@ -239,6 +239,9 @@ public class DbEntitySql {
 
 	/**
 	 * Creates table reference name from entity type.
+	 * Always appends an underscore to reference name in order
+	 * to circumvent SQL compatibility issues when entity class name
+	 * equals to a reserved word.
 	 */
 	protected static String createTableRefName(Object entity) {
 		Class type = entity.getClass();

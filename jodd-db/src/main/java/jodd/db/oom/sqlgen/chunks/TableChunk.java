@@ -18,12 +18,14 @@ public class TableChunk extends SqlChunk {
 	protected final Class entity;
 	protected final String entityName;
 	protected final String tableAlias;
+	protected final String tableReference;
 
 	public TableChunk(Object entity) {
 		super(CHUNK_TABLE);
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = this.entity.getSimpleName();
+		this.tableReference = null;
 	}
 
 	public TableChunk(Object entity, String alias) {
@@ -31,17 +33,27 @@ public class TableChunk extends SqlChunk {
 		this.entity = resolveClass(entity);
 		this.entityName = null;
 		this.tableAlias = alias;
+		this.tableReference = null;
+	}
+
+	public TableChunk(Object entity, String alias, String tableReference) {
+		super(CHUNK_TABLE);
+		this.entity = resolveClass(entity);
+		this.entityName = null;
+		this.tableAlias = alias;
+		this.tableReference = tableReference;
 	}
 
 	public TableChunk(String entityName, String alias) {
-		this(null, entityName, alias);
+		this(null, entityName, alias, null);
 	}
 
-	protected TableChunk(Class entity, String entityName, String tableAlias) {
+	protected TableChunk(Class entity, String entityName, String tableAlias, String tableReference) {
 		super(CHUNK_TABLE);
 		this.entity = entity;
 		this.entityName = entityName;
 		this.tableAlias = tableAlias;
+		this.tableReference = tableReference;
 	}
 
 	public TableChunk(String tableRef) {
@@ -57,6 +69,7 @@ public class TableChunk extends SqlChunk {
 			this.entityName = tableRef;
 			this.tableAlias = null;
 		}
+		this.tableReference = null;
 	}
 
 	// ---------------------------------------------------------------- process
@@ -79,7 +92,11 @@ public class TableChunk extends SqlChunk {
 				ded = lookupName(entityName);
 			}
 		}
-		String tableReference = tableAlias;
+		String tableReference = this.tableReference;
+
+		if (tableReference == null) {
+			tableReference = tableAlias;
+		}
 		if (tableReference == null) {
 			tableReference = entityName;
 		}
@@ -102,6 +119,6 @@ public class TableChunk extends SqlChunk {
 
 	@Override
 	public SqlChunk clone() {
-		return new TableChunk(entity,  entityName, tableAlias);
+		return new TableChunk(entity,  entityName, tableAlias, tableReference);
 	}
 }

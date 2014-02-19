@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * Simple entity searcher. It may be applied directly on entity objects, but developers
- * may create so-called search objects - that extends entity objects and adds more fields
+ * may create so-called search objects - that extends entity objects and adds more fields.
  */
 public class DbEntitySearcher implements DbSqlGenerator {
 
