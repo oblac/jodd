@@ -7,6 +7,7 @@ import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.ColumnData;
 import jodd.db.oom.ColumnAliasType;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.NamedValuesHashMap;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -193,18 +194,18 @@ public abstract class TemplateData {
 
 	public void registerColumnDataForTableRef(String tableRef, String tableName) {
 		if (columnData == null) {
-			columnData = new HashMap<String, ColumnData>();
+			columnData = new NamedValuesHashMap<ColumnData>();
 		}
-		columnData.put(tableRef.toLowerCase(), new ColumnData(tableName));
+		columnData.put(tableRef, new ColumnData(tableName));
 	}
 
 	public String registerColumnDataForColumnCode(String tableName, String column) {
 		if (columnData == null) {
-			columnData = new HashMap<String, ColumnData>();
+			columnData = new NamedValuesHashMap<ColumnData>();
 		}
-		String code = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
-		columnData.put(code.toLowerCase(), new ColumnData(tableName, column));
-		return code;
+		String columnCode = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
+		columnData.put(columnCode, new ColumnData(tableName, column));
+		return columnCode;
 	}
 
 

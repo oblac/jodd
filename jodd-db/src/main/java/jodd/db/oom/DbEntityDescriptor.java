@@ -19,14 +19,13 @@ import java.util.List;
  */
 public class DbEntityDescriptor<E> {
 
-	public DbEntityDescriptor(Class<E> type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy, boolean strictCompare) {
+	public DbEntityDescriptor(Class<E> type, String schemaName, TableNamingStrategy tableNamingStrategy, ColumnNamingStrategy columnNamingStrategy) {
 		this.type = type;
 		this.entityName = type.getSimpleName();
 		this.isAnnotated = DbMetaUtil.resolveIsAnnotated(type);
 		this.schemaName = DbMetaUtil.resolveSchemaName(type, schemaName);
 		this.tableName = DbMetaUtil.resolveTableName(type, tableNamingStrategy);
 		this.columnNamingStrategy = columnNamingStrategy;
-		this.strictCompare = strictCompare;
 		this.mappedTypes = DbMetaUtil.resolveMappedTypes(type);
 	}
 
@@ -38,7 +37,6 @@ public class DbEntityDescriptor<E> {
 	private final String tableName;
 	private final String schemaName;
 	private final ColumnNamingStrategy columnNamingStrategy;
-	private final boolean strictCompare;
 	private final Class[] mappedTypes;
 
 	/**
@@ -147,24 +145,16 @@ public class DbEntityDescriptor<E> {
 	// ---------------------------------------------------------------- finders
 
 	/**
-	 * Finds column descriptor by column name.
+	 * Finds column descriptor by column name. Case is ignored.
 	 */
 	public DbEntityColumnDescriptor findByColumnName(String columnName) {
 		if (columnName == null) {
 			return null;
 		}
 		init();
-		if (strictCompare) {
-			for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-				if (columnDescriptor.columnName.equals(columnName) == true) {
-					return columnDescriptor;
-				}
-			}
-		} else {
-			for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
-				if (columnDescriptor.columnName.equalsIgnoreCase(columnName) == true) {
-					return columnDescriptor;
-				}
+		for (DbEntityColumnDescriptor columnDescriptor : columnDescriptors) {
+			if (columnDescriptor.columnName.equalsIgnoreCase(columnName) == true) {
+				return columnDescriptor;
 			}
 		}
 		return null;

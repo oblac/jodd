@@ -92,25 +92,20 @@ public class LiveDatabaseTest extends DbBaseTest {
 
 	@Test
 	public void testLiveDb() throws Exception {
+		for (DbAccess db : databases) {
+			System.out.println("\t" + db.getClass().getSimpleName());
+			init();
+			db.initDb();
+			connect();
 
-		for (int i = 0; i < 2; i++) {
-			boolean strict = i == 0;
-			System.out.println("strict: " + strict);
-			for (DbAccess db : databases) {
-				System.out.println("\t" + db.getClass().getSimpleName());
-				init(strict);
-				db.initDb();
-				connect();
+			dboom.registerEntity(Tester.class);
 
-				dboom.registerEntity(Tester.class);
+			db.createTables();
 
-				db.createTables();
-
-				try {
-					workoutEntity();
-				} finally {
-					db.close();
-				}
+			try {
+				workoutEntity();
+			} finally {
+				db.close();
 			}
 		}
 	}

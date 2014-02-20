@@ -67,7 +67,6 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	protected final DbOomManager dbOomManager;
 	protected final DbOomQuery dbOomQuery;
 	protected final boolean cacheEntities;
-	protected final boolean strictCompare;
 	protected final int totalColumns;			// total number of columns
 	protected final String[] columnNames;		// list of all column names
 	protected final int[] columnDbSqlTypes;		// list of all column db types
@@ -89,12 +88,12 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 		this.dbOomQuery = dbOomQuery;
 		this.dbOomManager = dbOomQuery.getManager();
 		this.cacheEntities = cacheEntities;
-		this.strictCompare = dbOomManager.isStrictCompare();
+
 		//this.resultColumns = new HashSet<String>();
 		try {
 			ResultSetMetaData rsMetaData = resultSet.getMetaData();
 			if (rsMetaData == null) {
-				throw new DbOomException("JDBC driver does not provide meta-data");
+				throw new DbOomException("No ResultSet meta-data");
 			}
 
 			totalColumns = rsMetaData.getColumnCount();
@@ -119,7 +118,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 					// column alias exist, result set is ignored and columnAliases contains table data
 					tableName = columnName.substring(0, sepNdx);
 					if (columnAliases != null) {
-						ColumnData columnData = columnAliases.get(tableName.toLowerCase());
+						ColumnData columnData = columnAliases.get(tableName);
 						if (columnData != null) {
 							tableName = columnData.getTableName();
 						}
@@ -128,7 +127,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 				} else {
 					// column alias does not exist, table name is read from columnAliases and result set (if available)
 					if (columnAliases != null) {
-						ColumnData columnData = columnAliases.get(columnName.toLowerCase());
+						ColumnData columnData = columnAliases.get(columnName);
 						if (columnData != null) {
 							tableName = columnData.getTableName();
 							columnName = columnData.getColumnName();
@@ -153,19 +152,13 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 				if (columnName != null) {
 					columnName = columnName.trim();
-
-					if (!strictCompare) {
-						columnName = columnName.toUpperCase();
-					}
+					columnName = columnName.toUpperCase();
 				}
 				columnNames[i] = columnName;
 
 				if (tableName != null) {
 					tableName = tableName.trim();
-
-					if (!strictCompare) {
-						tableName = tableName.toUpperCase();
-					}
+					tableName = tableName.toUpperCase();
 				}
 				tableNames[i] = tableName;
 				columnDbSqlTypes[i] = rsMetaData.getColumnType(i + 1);
@@ -191,7 +184,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			if (tableName == null) {
 				// maybe JDBC driver does not support it
-				throw new DbOomException(dbOomQuery, "Table name not available in driver meta-data");
+				throw new DbOomException(dbOomQuery, "Table name missing in meta-data");
 			}
 
 			if ((tableName.equals(lastTableName) == false) || (resultColumns.contains(columnName) == true)) {
@@ -285,9 +278,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			DbEntityDescriptor ded = dbOomManager.lookupType(types[i]);
 			if (ded != null) {
 				String tableName = ded.getTableName();
-				if (!strictCompare) {
-					tableName = tableName.toUpperCase();
-				}
+				tableName = tableName.toUpperCase();
 				names[i] = tableName;
 			}
 		}
@@ -480,6 +471,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 			// calculate key
 			Object key;
 			if (ded.hasIdColumn()) {
+				//noinspection unchecked
 				key = ded.getKeyValue(object);
 			} else {
 				key = object;

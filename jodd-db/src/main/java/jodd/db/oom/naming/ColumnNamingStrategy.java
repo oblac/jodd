@@ -62,13 +62,13 @@ public class ColumnNamingStrategy extends BaseNamingStrategy {
 	}
 
 	/**
-	 * Applies table naming strategy to given table name hint.
-	 * Returns full table name.
+	 * Applies column naming strategy to given column name hint.
+	 * Returns full column name.
 	 */
 	public String applyToColumnName(String columnName) {
-		String entityName = convertColumnNameToPropertyName(columnName);
+		String propertyName = convertColumnNameToPropertyName(columnName);
 
-		return convertPropertyNameToColumnName(entityName);
+		return convertPropertyNameToColumnName(propertyName);
 	}
 
 }

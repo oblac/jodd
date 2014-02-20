@@ -60,7 +60,6 @@ public class DbOomManager {
 	protected String schemaName;
 	protected TableNamingStrategy tableNames = new TableNamingStrategy();
 	protected ColumnNamingStrategy columnNames = new ColumnNamingStrategy();
-	protected boolean strictCompare = true;
 
 	/**
 	 * Returns current table name strategy.
@@ -90,17 +89,6 @@ public class DbOomManager {
 		this.columnNames = columnNames;
 	}
 
-	public boolean isStrictCompare() {
-		return strictCompare;
-	}
-
-	/**
-	 * Enables strict comparison of table and column names.
-	 */
-	public void setStrictCompare(boolean strictCompare) {
-		this.strictCompare = strictCompare;
-	}
-
 	// ---------------------------------------------------------------- registration
 
 	protected String[] primitiveEntitiesPrefixes = new String[] {
@@ -127,23 +115,7 @@ public class DbOomManager {
 
 	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<Class, DbEntityDescriptor>();
 	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<String, DbEntityDescriptor>();
-	protected Map<String, DbEntityDescriptor> tableNamesMap = new HashMap<String, DbEntityDescriptor>() {
-		@Override
-		public DbEntityDescriptor put(String key, DbEntityDescriptor value) {
-			if (!strictCompare) {
-				key = key.toUpperCase();
-			}
-			return super.put(key, value);
-		}
-
-		@Override
-		public DbEntityDescriptor get(Object key) {
-			if (!strictCompare) {
-				key = ((String)key).toUpperCase();
-			}
-			return super.get(key);
-		}
-	};
+	protected Map<String, DbEntityDescriptor> tableNamesMap = new NamedValuesHashMap<DbEntityDescriptor>();
 
 	/**
 	 * Lookups {@link DbEntityDescriptor} for some type and registers the type if is new.
@@ -182,7 +154,7 @@ public class DbOomManager {
 
 	/**
 	 * Lookups for {@link jodd.db.oom.DbEntityDescriptor} that was registered with this manager.
-	 * Returns <code>null</code> if table name not found.
+	 * Returns <code>null</code> if table name not found. Lookup is case-insensitive.
 	 */
 	public DbEntityDescriptor lookupTableName(String tableName) {
 		return tableNamesMap.get(tableName);
@@ -251,7 +223,7 @@ public class DbOomManager {
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
-		return new DbEntityDescriptor<E>(type, schemaName, tableNames, columnNames, strictCompare);
+		return new DbEntityDescriptor<E>(type, schemaName, tableNames, columnNames);
 	}
 
 

@@ -6,7 +6,11 @@ import jodd.db.DbManager;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.util.SystemUtil;
+import jodd.exception.UncheckedException;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
+import jodd.log.impl.NOPLogger;
+import jodd.log.impl.NOPLoggerFactory;
 
 import static org.junit.Assert.assertTrue;
 
@@ -20,11 +24,31 @@ public abstract class DbBaseTest {
 	protected CoreConnectionPool connectionPool;
 	protected DbOomManager dboom;
 
-	protected void init(boolean strictCompare) {
+	protected void init() {
+		LoggerFactory.setLoggerFactory(new NOPLoggerFactory() {
+			@Override
+			public Logger getLogger(String name) {
+				return new NOPLogger("") {
+					@Override
+					public boolean isWarnEnabled() {
+						return true;
+					}
+
+					@Override
+					public void warn(String message) {
+						throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
+					}
+
+					@Override
+					public void warn(String message, Throwable throwable) {
+						throw new UncheckedException("NO WARNINGS ALLOWED: " + message);
+					}
+				};
+			}
+		});
 		DbOomManager.resetAll();
 
 		dboom = DbOomManager.getInstance();
-		dboom.setStrictCompare(strictCompare);
 
 		connectionPool = new CoreConnectionPool();
 	}
@@ -78,14 +102,9 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
-			if (dboom.isStrictCompare()) {
-				if (SystemUtil.isHostWindows() || SystemUtil.isHostMac()) {
-					dboom.getTableNames().setLowercase(true);
-				} else {
-					dboom.getTableNames().setUppercase(true);
-				}
-				dboom.getColumnNames().setUppercase(true);
-			}
+			// doesn't matter for mysql
+			dboom.getTableNames().setLowercase(true);
+			dboom.getColumnNames().setLowercase(true);
 		}
 
 	}
@@ -101,10 +120,8 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("postgres");
 			connectionPool.setPassword("root!");
 
-			if (dboom.isStrictCompare()) {
-				dboom.getTableNames().setLowercase(true);
-				dboom.getColumnNames().setLowercase(true);
-			}
+			dboom.getTableNames().setLowercase(true);
+			dboom.getColumnNames().setLowercase(true);
 		}
 	}
 
@@ -120,10 +137,8 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("sa");
 			connectionPool.setPassword("");
 
-			if (dboom.isStrictCompare()) {
-				dboom.getTableNames().setUppercase(true);
-				dboom.getColumnNames().setUppercase(true);
-			}
+			dboom.getTableNames().setUppercase(true);
+			dboom.getColumnNames().setUppercase(true);
 		}
 	}
 

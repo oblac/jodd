@@ -5,9 +5,6 @@ package jodd.db.oom;
 import jodd.datetime.JDateTime;
 import jodd.db.DbSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
-import jodd.log.impl.SimpleLoggerFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -103,26 +100,21 @@ public class LiveMapperDbTest extends DbBaseTest {
 
 	@Test
 	public void testLiveMapperDb() throws Exception {
-		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.INFO));
-		for (int i = 0; i < 2; i++) {
-			boolean strict = i == 0;
-			System.out.println("strict: " + strict);
-			for (DbAccess db : databases) {
-				System.out.println("\t" + db.getClass().getSimpleName());
-				init(strict);
-				db.initDb();
-				connect();
+		for (DbAccess db : databases) {
+			System.out.println("\t" + db.getClass().getSimpleName());
+			init();
+			db.initDb();
+			connect();
 
-				dboom.registerEntity(Tester2.class);
+			dboom.registerEntity(Tester2.class);
 
-				db.createTables();
+			db.createTables();
 
-				try {
-					Tester2 tester2 = insertEntry();
-					loadEntry(tester2);
-				} finally {
-					db.close();
-				}
+			try {
+				Tester2 tester2 = insertEntry();
+				loadEntry(tester2);
+			} finally {
+				db.close();
 			}
 		}
 	}
