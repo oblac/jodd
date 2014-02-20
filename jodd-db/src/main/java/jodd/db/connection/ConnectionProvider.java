@@ -26,7 +26,7 @@ public interface ConnectionProvider {
 	Connection getConnection();
 
 	/**
-	 * Dispose of a used connection.
+	 * Dispose of a used {@link #getConnection() connection}.
 	 */
 	void closeConnection(Connection connection);
 

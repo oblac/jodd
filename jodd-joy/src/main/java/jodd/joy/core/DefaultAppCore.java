@@ -36,6 +36,9 @@ import jodd.log.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 /**
  * Default application core. Contains init points to
@@ -534,9 +537,12 @@ public abstract class DefaultAppCore {
 		log.info("database initialization");
 
 		// connection pool
-		petite.registerPetiteBean(CoreConnectionPool.class, PETITE_DBPOOL, null, null, false);
+		Class<? extends ConnectionProvider> connectionProviderClass = getConnectionProviderType();
+		petite.registerPetiteBean(connectionProviderClass, PETITE_DBPOOL, null, null, false);
 		connectionProvider = (ConnectionProvider) petite.getBean(PETITE_DBPOOL);
 		connectionProvider.init();
+
+		checkConnectionProvider();
 
 		// transactions manager
 		jtxManager = createJtxTransactionManager(connectionProvider);
@@ -578,6 +584,33 @@ public abstract class DefaultAppCore {
 		return new DbJtxTransactionManager(connectionProvider);
 	}
 
+	/**
+	 * Returns <code>ConnectionProvider</code> implementation.
+	 */
+	protected Class<? extends ConnectionProvider> getConnectionProviderType() {
+		return CoreConnectionPool.class;
+	}
+
+	/**
+	 * Checks if connection provider can return a connection.
+	 */
+	protected void checkConnectionProvider() {
+		Connection connection = connectionProvider.getConnection();
+		try {
+			DatabaseMetaData databaseMetaData = connection.getMetaData();
+			String name = databaseMetaData.getDatabaseProductName();
+			String version = databaseMetaData.getDatabaseProductVersion();
+
+			if (log.isInfoEnabled()) {
+				log.info("Connected to database: " + name + " v" + version);
+			}
+
+		} catch (SQLException sex) {
+			log.error("DB connection failed: ", sex);
+		} finally {
+			connectionProvider.closeConnection(connection);
+		}
+	}
 
 	/**
 	 * Closes database resources at the end.
