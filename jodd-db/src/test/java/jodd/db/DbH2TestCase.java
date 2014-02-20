@@ -4,6 +4,7 @@ package jodd.db;
 
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
+import jodd.log.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 
@@ -12,9 +13,9 @@ public abstract class DbH2TestCase {
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
-
 	@Before
 	public void setUp() throws Exception {
+		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
 		if (dbtxm != null) {
 			return;
 		}
@@ -48,7 +49,6 @@ public abstract class DbH2TestCase {
 	protected void executeCount(DbSession session, String s) {
 		new DbQuery(session, s).executeCountAndClose();
 	}
-
 
 }
 

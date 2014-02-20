@@ -4,6 +4,7 @@ package jodd.db;
 
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
+import jodd.log.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
 
@@ -12,9 +13,10 @@ public abstract class DbHsqldbTestCase {
 	protected DbJtxTransactionManager dbtxm;
 	protected CoreConnectionPool cp;
 
-
 	@Before
 	public void setUp() throws Exception {
+		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
+
 		cp = new CoreConnectionPool();
 		cp.setDriver("org.hsqldb.jdbcDriver");
 		cp.setUrl("jdbc:hsqldb:mem:test");
