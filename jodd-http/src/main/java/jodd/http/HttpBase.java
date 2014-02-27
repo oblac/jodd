@@ -418,6 +418,7 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns <b>raw</b> body as received or set (always in ISO-8859-1 encoding).
 	 * If body content is a text, use {@link #bodyText()} to get it converted.
+	 * Returns <code>null</code> if body is not specified!
 	 */
 	public String body() {
 		return body;
@@ -443,6 +444,9 @@ public abstract class HttpBase<T> {
 	 * the same raw body content is returned.
 	 */
 	public String bodyText() {
+		if (body == null) {
+			return null;
+		}
 		if (charset != null) {
 			return StringUtil.convertCharset(body, StringPool.ISO_8859_1, charset);
 		}
