@@ -3,21 +3,22 @@ Jodd
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
-[tip jar](http://gittip.com/jodder)
+[Donate](http://gittip.com/jodder)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
-**Jodd = tools + ioc + mvc + db + aop + tx + html < 1.3M**
+**Jodd = tools + ioc + mvc + db + aop + tx + html < 1.4M**
 
 Read about **Jodd**:
 
 + Official web site (site, documentation, information): http://jodd.org/
 
-+ GitHub page (overview of micro frameworks): http://oblac.github.io/jodd
++ GitHub page (5 min overview): http://oblac.github.io/jodd
+
++ Jodd micro-frameworks (30 min overview): http://joddframework.org
 
 + One-page love: http://jodd.org/about
 
-+ Frameworks site (coming soon!): http://joddframework.org
 
 ## Jodd Modules
 
@@ -47,46 +48,63 @@ Read more in our [official documentation](http://jodd.org/doc).
 ## Jodd Bundle
 
 If you are already using many **Jodd** jars, you can simply
-just use the _bundle_ jar. It's a single jar that bind all modules:)
+just use the _bundle_ jar. It's a single jar with
+all modules included :)
 
 
 ## Building Jodd from source
 
-**Jodd** uses [Gradle](http://gradle.org/) build system. Good thing is that
-you don't have to install anything; the only prerequisites are
-[Git](http://help.github.com/set-up-git-redirect) and Java JDK.
+**Jodd** is built with [Gradle](http://gradle.org/) on JDK6,
+targeting Java 1.5. You don't have to install anything,
+the only prerequisites are [Git](http://help.github.com/set-up-git-redirect)
+and Java JDK.
 
 ### Check out sources
+
+Simply clone **Jodd** Git repo:
 
     git clone https://github.com/oblac/jodd.git jodd
 
 ### Compile and test, build jars
 
+You can build the project with:
+
     gradlew build
+
+This will build all jars and run all unit tests.
+To skip the tests (for faster build), execute:
+
+    gradlew build -x test
 
 ### Build full release with reports
 
+To generate full release, including running integration tests and generating various reports:
+
     gradlew release
+
+For integration tests you will need also to set up databases named: 'jodd-test' on local MySql (access: root/root!) and PostgreSQL (postgres/root!).
 
 ### Install Jodd into your local Maven
 
     gradlew install
 
-## Contributing
+## Contribute
 
 Feel free to contribute! Follow these steps:
 
 First time only:
+
 + fork the **Jodd** repo (`upstream`) to your GitHub account (`origin`).
 + clone `origin` as your `local` repo
 
 Every other time:
+
 + update both `origin` and `local` repos from `upstream`
 + create new branch for a feature or bug fix
 + commit often :)
 + once when work is done, push local changes to your `origin`
 + send us a pull request (PR)
 
-We will pickup up from there:)
+We will pickup up from there :)
 
 :surfer: :rocket: :tomato:

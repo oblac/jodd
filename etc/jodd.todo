@@ -25,7 +25,7 @@ Site/Documentation:
 	- improve SEO
 	SiteGenerator:
 	- add global props to javascript
-	- move next/prev logic to javascript @next
+	- move next/prev logic to javascript @done
 	- load *md structure from root in maps, get(relative) returns sorted list of file names @done
 	- sitemap generator
 	- description meta tag add
@@ -109,8 +109,7 @@ DbOom:
 	- Faster HashMaps for small amount of tables - in templates?
 	- Introduce #execute() interceptors? @tbd
 MethRef:
-	- Return property name instead of method name.
-		For example, if method is getFoo() this would return just "foo".
+	- Return property name instead of method name. @done
 Joy:
 	- Localization arguments, {0}, {1}…
 	- Don't encode text tags in resource bundles
@@ -125,4 +124,4 @@ Other Projects:
 	- Add gradle for easier start: webapp1 @done @v3.4.5
 	- Add gradle for examples @done @v3.4.7
 	- Upgrade to gradle v1.7 @done @v3.4.7
-	- Add log DEBUG in examples.quickstart @next
+	- Add log DEBUG in examples.quickstart @done
