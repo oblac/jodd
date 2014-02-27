@@ -713,22 +713,16 @@ public abstract class HttpBase<T> {
 			bodyString = fastCharArrayWriter.toString();
 		}
 
-		// no body
+		// no body yet - special case
 		if (bodyString == null) {
-
-			if (httpVersion().equals("HTTP/1.0")) {
-				// in HTTP 1.0 body ends when stream closes
-				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
-				try {
-					StreamUtil.copy(reader, fastCharArrayWriter);
-				} catch (IOException ioex) {
-					throw new HttpException(ioex);
-				}
-				bodyString = fastCharArrayWriter.toString();
-			} else {
-				body = null;
-				return;
+			// body ends when stream closes
+			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
+			try {
+				StreamUtil.copy(reader, fastCharArrayWriter);
+			} catch (IOException ioex) {
+				throw new HttpException(ioex);
 			}
+			bodyString = fastCharArrayWriter.toString();
 		}
 
 		// BODY READY - PARSE BODY

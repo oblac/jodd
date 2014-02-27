@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class GoogleMapsTest {
@@ -30,6 +31,18 @@ public class GoogleMapsTest {
 		} catch (Exception ex) {
 			fail(ex.toString());
 		}
+
+		assertEquals("", httpResponse.bodyText());
+	}
+
+	@Test
+	public void testNoContentLength() throws IOException {
+		URL data = RawTest.class.getResource("3-response.txt");
+		String fileContent = FileUtil.readString(data.getFile());
+
+		HttpResponse httpResponse = HttpResponse.readFrom(new StringInputStream(fileContent, StringInputStream.Mode.ASCII));
+
+		assertEquals("Body!", httpResponse.bodyText());
 	}
 
 }

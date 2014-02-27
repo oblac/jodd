@@ -185,7 +185,7 @@ public class HttpRequestTest {
 		byte[] bytes = request.toByteArray();
 		try {
 			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-			assertNull(request2.body());
+			assertEquals("", request2.body());
 		} catch (Exception ex) {
 			Assert.fail(ex.toString());
 		}
@@ -197,7 +197,7 @@ public class HttpRequestTest {
 		bytes = request.toByteArray();
 		try {
 			HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-			assertNull(request2.body());
+			assertEquals("", request2.body());
 		} catch (Exception ex) {
 			Assert.fail(ex.toString());
 		}
