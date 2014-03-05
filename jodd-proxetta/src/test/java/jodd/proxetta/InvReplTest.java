@@ -59,7 +59,6 @@ public class InvReplTest {
 
 	}
 
-
 	@Test
 	public void testSuper() {
 		InvokeProxetta proxetta = initProxetta();
@@ -79,6 +78,31 @@ public class InvReplTest {
 			fail();
 		} catch (ProxettaException ignore) {
 		}
+	}
+
+	@Test
+	public void testCurrentTimeMillis() {
+		TimeClass timeClass = (TimeClass) InvokeProxetta.withAspects(new InvokeAspect() {
+			@Override
+			public boolean apply(MethodInfo methodInfo) {
+				return methodInfo.isTopLevelMethod();
+			}
+
+			@Override
+			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+				if (
+						invokeInfo.getClassName().equals("java.lang.System") &&
+						invokeInfo.getMethodName().equals("currentTimeMillis")
+					) {
+					return InvokeReplacer.with(MySystem.class, "currentTimeMillis");
+				}
+				return null;
+			}
+		}).builder(TimeClass.class).newInstance();
+
+		long time = timeClass.time();
+
+		assertEquals(10823, time);
 	}
 
 
