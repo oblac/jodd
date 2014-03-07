@@ -31,8 +31,9 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 	private static final Logger log = LoggerFactory.getLogger(ServletDispatcherResult.class);
 
 	public static final String NAME = "dispatch";
-	protected static final String EXTENSION = ".jsp";
 	protected HashMap<String, String> targetCache;
+
+	protected String[] extensions = new String[] {".jspf", ".jsp"};
 
 	public ServletDispatcherResult() {
 		super(NAME);
@@ -65,33 +66,38 @@ public class ServletDispatcherResult extends BaseActionResult<String> {
 			String path = actionPath;
 			String value = resultPath.getValue();
 
+			loop:
 			while (true) {
-				// variant #1: with value
-				if (value != null) {
-					if (path == null) {
-						// only value remains
-						int lastSlashNdx = actionPath.lastIndexOf('/');
-						if (lastSlashNdx != -1) {
-							target = actionPath.substring(0, lastSlashNdx + 1) + value + EXTENSION;
+				for (String ext : extensions) {
+					// variant #1: with value
+					if (value != null) {
+						if (path == null) {
+							// only value remains
+							int lastSlashNdx = actionPath.lastIndexOf('/');
+							if (lastSlashNdx != -1) {
+								target = actionPath.substring(0, lastSlashNdx + 1) + value + ext;
+							} else {
+								target = '/' + value + ext;
+							}
 						} else {
-							target = '/' + value + EXTENSION;
+							target = path + '.' + value + ext;
 						}
-					} else {
-						target = path + '.' + value + EXTENSION;
-					}
 
-					if (targetExist(servletContext, target)) {
-						break;
+						if (targetExist(servletContext, target)) {
+							break loop;
+						}
 					}
 				}
 
-				// variant #1: without value
+				for (String ext : extensions) {
+					// variant #2: without value
 
-				if (path != null) {
-					target = path + EXTENSION;
+					if (path != null) {
+						target = path + ext;
 
-					if (targetExist(servletContext, target)) {
-						break;
+						if (targetExist(servletContext, target)) {
+							break loop;
+						}
 					}
 				}
 

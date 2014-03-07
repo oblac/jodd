@@ -46,12 +46,19 @@ public class ServletDispatcherResultTest {
 		sdr.render(actionRequest, "ok");
 
 		assertEquals("[" +
+				"/hello.world.html.ok.jspf, " +
 				"/hello.world.html.ok.jsp, " +
+				"/hello.world.html.jspf, " +
 				"/hello.world.html.jsp, " +
+				"/hello.world.ok.jspf, " +
 				"/hello.world.ok.jsp, " +
+				"/hello.world.jspf, " +
 				"/hello.world.jsp, " +
+				"/hello.ok.jspf, " +
 				"/hello.ok.jsp, " +
+				"/hello.jspf, " +
 				"/hello.jsp, " +
+				"/ok.jspf, " +
 				"/ok.jsp" +
 				"]", targets.toString());
 
@@ -64,12 +71,19 @@ public class ServletDispatcherResultTest {
 		sdr.render(actionRequest, "ok");
 
 		assertEquals("[" +
+				"/pak/hello.world.html.ok.jspf, " +
 				"/pak/hello.world.html.ok.jsp, " +
+				"/pak/hello.world.html.jspf, " +
 				"/pak/hello.world.html.jsp, " +
+				"/pak/hello.world.ok.jspf, " +
 				"/pak/hello.world.ok.jsp, " +
+				"/pak/hello.world.jspf, " +
 				"/pak/hello.world.jsp, " +
+				"/pak/hello.ok.jspf, " +
 				"/pak/hello.ok.jsp, " +
+				"/pak/hello.jspf, " +
 				"/pak/hello.jsp, " +
+				"/pak/ok.jspf, " +
 				"/pak/ok.jsp" +
 				"]", targets.toString());
 
@@ -81,8 +95,11 @@ public class ServletDispatcherResultTest {
 		sdr.render(actionRequest, null);
 
 		assertEquals("[" +
+				"/hello.world.html.jspf, " +
 				"/hello.world.html.jsp, " +
+				"/hello.world.jspf, " +
 				"/hello.world.jsp, " +
+				"/hello.jspf, " +
 				"/hello.jsp" +
 				"]", targets.toString());
 	}
