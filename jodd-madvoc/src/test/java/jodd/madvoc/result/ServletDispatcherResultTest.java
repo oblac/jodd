@@ -33,7 +33,7 @@ public class ServletDispatcherResultTest {
 
 		ServletDispatcherResult sdr = new ServletDispatcherResult() {
 			@Override
-			protected boolean targetExist(ServletContext servletContext, String target) {
+			protected boolean targetExists(ActionRequest actionRequest, String target) {
 				targets.add(target);
 				return false;
 			}

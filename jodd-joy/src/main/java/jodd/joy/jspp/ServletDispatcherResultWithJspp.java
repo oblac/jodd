@@ -6,6 +6,7 @@ import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.util.StringUtil;
@@ -41,7 +42,9 @@ public abstract class ServletDispatcherResultWithJspp extends ServletDispatcherR
 	}
 
 	@Override
-	protected String processTarget(ServletContext servletContext, String target) {
+	protected String processTarget(ActionRequest actionRequest, String target) {
+		ServletContext servletContext = actionRequest.getHttpServletRequest().getServletContext();
+
 		String jspPath = servletContext.getRealPath(target);
 
 		if (jspPath == null) {
