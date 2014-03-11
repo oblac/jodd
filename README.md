@@ -1,7 +1,6 @@
 Jodd
 ====
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/oblac/jodd/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
 [Donate](http://gittip.com/jodder)
 
