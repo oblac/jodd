@@ -22,42 +22,69 @@ public class Email extends CommonEmail {
 
 	// ---------------------------------------------------------------- from, to, cc, bcc
 
+	/**
+	 * @see #setFrom(String)
+	 */
 	public Email from(String from) {
 		setFrom(from);
 		return this;
 	}
 
+	/**
+	 * @see #setTo(String...)
+	 */
 	public Email to(String to) {
 		setTo(to);
 		return this;
 	}
+	/**
+	 * @see #setTo(String...)
+	 */
 	public Email to(String... tos) {
 		setTo(tos);
 		return this;
 	}
 
+	/**
+	 * @see #setReplyTo(String...)
+	 */
 	public Email replyTo(String replyTo) {
 		setReplyTo(replyTo);
 		return this;
 	}
+	/**
+	 * @see #setReplyTo(String...)
+	 */
 	public Email replyTo(String... replyTos) {
 		setReplyTo(replyTos);
 		return this;
 	}
 
+	/**
+	 * @see #setCc(String...)
+	 */
 	public Email cc(String cc) {
 		setCc(cc);
 		return this;
 	}
+	/**
+	 * @see #setCc(String...)
+	 */
 	public Email cc(String... ccs) {
 		setCc(ccs);
 		return this;
 	}
 
+	/**
+	 * @see #setBcc(String...)
+	 */
 	public Email bcc(String bcc) {
 		setBcc(bcc);
 		return this;
 	}
+	/**
+	 * @see #setBcc(String...)
+	 */
 	public Email bcc(String... bccs) {
 		setBcc(bccs);
 		return this;
