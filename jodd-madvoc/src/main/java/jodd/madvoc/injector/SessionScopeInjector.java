@@ -21,18 +21,18 @@ public class SessionScopeInjector extends BaseScopeInjector {
 		if (injectData == null) {
 			return;
 		}
+
 		HttpSession session = servletRequest.getSession();
 		Enumeration attributeNames = session.getAttributeNames();
+
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
+
 			for (ScopeData.In in : injectData) {
 				String name = getMatchedPropertyName(in, attrName);
 				if (name != null) {
 					Object attrValue = session.getAttribute(attrName);
 					setTargetProperty(target, name, attrValue, in.create);
-					if (in.remove) {
-						session.removeAttribute(attrName);
-					}
 				}
 			}
 		}

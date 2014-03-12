@@ -29,9 +29,6 @@ public class ApplicationScopeInjector extends BaseScopeInjector {
 				if (name != null) {
 					Object attrValue = context.getAttribute(attrName);
 					setTargetProperty(target, name, attrValue, in.create);
-					if (in.remove) {
-						context.removeAttribute(attrName);
-					}
 				}
 			}
 		}

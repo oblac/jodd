@@ -185,9 +185,6 @@ public class RequestScopeInjector extends BaseScopeInjector {
 				if (name != null) {
 					Object attrValue = servletRequest.getAttribute(attrName);
 					setTargetProperty(target, name, attrValue, in.create);
-					if (in.remove) {
-						servletRequest.removeAttribute(attrName);
-					}
 				}
 			}
 		}

@@ -29,12 +29,6 @@ public @interface In {
 	ScopeType scope() default ScopeType.REQUEST;
 
 	/**
-	 * Specifies if property should be removed from the scope.
-	 * Sometimes it is not possible to do so.
-	 */
-	boolean remove() default false;
-
-	/**
 	 * Specifies non-default parameter name.
 	 */
 	String value() default "";

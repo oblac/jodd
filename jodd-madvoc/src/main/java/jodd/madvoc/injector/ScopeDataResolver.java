@@ -35,14 +35,14 @@ public class ScopeDataResolver {
 	// ---------------------------------------------------------------- main
 
 	/**
-	 * Lookups INput data for given object and scope type.
+	 * Lookups INput data for given action class and scope type.
 	 * Returns <code>null</code> if no data is found.
 	 */
 	public ScopeData.In[] lookupInData(Class actionClass, ScopeType scopeType) {
 		return lookupIn(actionClass, scopeType);
 	}
 	/**
-	 * Lookups INput data for given method and scope type.
+	 * Lookups INput data for given action method and scope type.
 	 * Returns <code>null</code> if no data is found.
 	 */
 /*
@@ -113,7 +113,7 @@ public class ScopeDataResolver {
 			}
 */
 		} else {
-			throw new MadvocException("IN data are available only for Class");
+			throw new MadvocException("Invalid type: " + key);
 		}
 		if (count == 0) {
 			scopeData = EMPTY_SCOPEDATA;
@@ -227,7 +227,6 @@ public class ScopeDataResolver {
 		fillNameTarget(ii, in.value(), propertyName);
 		ii.type = propertyType;
 		ii.create = in.create();
-		ii.remove = in.remove();
 		return ii;
 	}
 
@@ -243,7 +242,6 @@ public class ScopeDataResolver {
 		ii.target = null;
 		ii.type = propertyType;
 		ii.create = false;
-		ii.remove = false;
 		return ii;
 	}
 
@@ -263,7 +261,6 @@ public class ScopeDataResolver {
 		fillNameTarget(ii, inOut.value(), propertyName);
 		ii.type = propertyType;
 		ii.create = inOut.create();
-		ii.remove = inOut.remove();
 		return ii;
 	}
 

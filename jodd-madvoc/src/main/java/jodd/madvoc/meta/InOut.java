@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Shortcut for both In and Out annotations on one single field.
+ * Shortcut for both {@link In} and {@link Out} annotations on one single field.
  */
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
@@ -27,12 +27,6 @@ public @interface InOut {
 	 * Specifies parameter scope.
 	 */
 	ScopeType scope() default ScopeType.REQUEST;
-
-	/**
-	 * Specifies if property should be removed from the scope.
-	 * Sometimes it is not possible to do so.
-	 */
-	boolean remove() default false;
 
 	/**
 	 * Specifies non-default parameter name.
