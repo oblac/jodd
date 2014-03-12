@@ -2,6 +2,7 @@
 
 package jodd.io;
 
+import jodd.JoddCore;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import org.junit.Before;
@@ -41,6 +42,49 @@ public class StreamUtilTest {
 		StreamUtil.close(out);
 		StreamUtil.close(in);
 	}
+
+	@Test
+	public void testCopyWithSize() {
+		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		StringOutputStream out = new StringOutputStream();
+		try {
+			StreamUtil.copy(in, out, 3);
+		} catch (IOException ioex) {
+			fail("StreamUtil.copy " + ioex.toString());
+		}
+		assertEquals("inp", out.toString());
+		StreamUtil.close(out);
+		StreamUtil.close(in);
+
+		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		out = new StringOutputStream();
+		try {
+			StreamUtil.copy(in, out, 5);
+		} catch (IOException ioex) {
+			fail("StreamUtil.copy " + ioex.toString());
+		}
+		assertEquals("input", out.toString());
+		StreamUtil.close(out);
+		StreamUtil.close(in);
+
+		int temp = JoddCore.ioBufferSize;
+
+		JoddCore.ioBufferSize = 3;
+		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		out = new StringOutputStream();
+		try {
+			StreamUtil.copy(in, out, 5);
+		} catch (IOException ioex) {
+			fail("StreamUtil.copy " + ioex.toString());
+		}
+		assertEquals("input", out.toString());
+		StreamUtil.close(out);
+		StreamUtil.close(in);
+
+		JoddCore.ioBufferSize = temp;
+
+	}
+
 
 	@Test
 	public void testCompare() {

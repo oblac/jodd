@@ -117,14 +117,16 @@ public class StreamUtil {
 	 * Copies specified number of bytes from input stream to output stream using buffer.
 	 */
 	public static int copy(InputStream input, OutputStream output, int byteCount) throws IOException {
-		byte buffer[] = new byte[ioBufferSize];
+		int bufferSize = (byteCount > ioBufferSize) ? ioBufferSize : byteCount;
+
+		byte buffer[] = new byte[bufferSize];
 		int count = 0;
 		int read;
 		while (byteCount > 0) {
-			if (byteCount < ioBufferSize) {
+			if (byteCount < bufferSize) {
 				read = input.read(buffer, 0, byteCount);
 			} else {
-				read = input.read(buffer, 0, ioBufferSize);
+				read = input.read(buffer, 0, bufferSize);
 			}
 			if (read == -1) {
 				break;
@@ -183,14 +185,16 @@ public class StreamUtil {
 	 * Copies specified number of characters from reader to writer using buffer.
 	 */
 	public static int copy(Reader input, Writer output, int charCount) throws IOException {
-		char buffer[] = new char[ioBufferSize];
+		int bufferSize = (charCount > ioBufferSize) ? ioBufferSize : charCount;
+
+		char buffer[] = new char[bufferSize];
 		int count = 0;
 		int read;
 		while (charCount > 0) {
-			if (charCount < ioBufferSize) {
+			if (charCount < bufferSize) {
 				read = input.read(buffer, 0, charCount);
 			} else {
-				read = input.read(buffer, 0, ioBufferSize);
+				read = input.read(buffer, 0, bufferSize);
 			}
 			if (read == -1) {
 				break;
