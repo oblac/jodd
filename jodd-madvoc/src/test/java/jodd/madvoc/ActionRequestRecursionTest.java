@@ -154,7 +154,7 @@ public class ActionRequestRecursionTest {
 		Action action = new Action();
 		ActionConfig actionConfig = new ActionConfig(
 				Action.class,
-				ReflectUtil.findMethod(Action.class, "view"),
+				ReflectUtil.findMethod(Action.class, "view"), null,
 				actionFilters, actionInterceptors,
 				"path", "method", null);
 

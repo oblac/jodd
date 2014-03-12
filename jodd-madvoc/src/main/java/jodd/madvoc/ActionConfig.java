@@ -24,7 +24,8 @@ public class ActionConfig {
 	public final String actionMethod;
 	public final Field resultField;
 	//public final String[] actionPathElements;
-	//public final Class<?>[] actionParamTypes;
+	public final String[] actionParamNames;
+	public final Class<?>[] actionParamTypes;
 
 	// run-time data
 	protected ActionConfigSet actionConfigSet;
@@ -34,6 +35,7 @@ public class ActionConfig {
 	public ActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
+			String[] actionParamNames,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
 			String actionPath,
@@ -51,8 +53,9 @@ public class ActionConfig {
 
 		this.resultField = findResultField(actionClass);
 
-//		Class<?>[] paramTypes = actionMethod.getParameterTypes();
-//		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
+		Class<?>[] paramTypes = actionClassMethod.getParameterTypes();
+		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
+		this.actionParamNames = actionParamNames;
 	}
 
 	// ---------------------------------------------------------------- result

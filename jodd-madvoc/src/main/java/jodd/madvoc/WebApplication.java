@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.ActionParameterNamesResolver;
 import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.FiltersManager;
 import jodd.madvoc.component.InterceptorsManager;
@@ -157,6 +158,7 @@ public class WebApplication {
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
+		registerComponent(ActionParameterNamesResolver.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(FiltersManager.class);
 		registerComponent(MadvocConfig.class);

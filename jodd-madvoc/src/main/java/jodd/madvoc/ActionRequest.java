@@ -28,7 +28,7 @@ public class ActionRequest {
 	protected HttpServletResponse servletResponse;
 	protected Result result;
 
-	protected Object[] params;
+	protected final Object[] params;
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
 	protected int filterIndex;
@@ -121,13 +121,6 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Sets values for action method parameters.
-	 */
-	public void setActionParams(Object[] params) {
-		this.params = params;
-	}
-
-	/**
 	 * Returns result object if exist in action, otherwise returns <code>null</code>.
 	 */
 	public Result getResult() {
@@ -152,6 +145,11 @@ public class ActionRequest {
 		execState = 0;
 		this.action = action;
 		this.result = findResult();
+		if (config.actionParamNames != null) {
+			this.params = new Object[config.actionParamNames.length];
+		} else {
+			this.params = null;
+		}
 	}
 
 	/**
