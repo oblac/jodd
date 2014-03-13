@@ -2,8 +2,9 @@
 
 package jodd.madvoc.interceptor;
 
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.injector.RequestScopeInjector;
-import jodd.madvoc.injector.ScopeData;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
@@ -20,11 +21,14 @@ public class IdRequestInjectorInterceptor extends BaseActionInterceptor {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocConfig madvocConfig;
 
+	@In(scope = ScopeType.CONTEXT)
+	protected ScopeDataResolver scopeDataResolver;
+
 	protected RequestScopeInjector requestInjector;
 
 	@Override
 	public void init() {
-		requestInjector = new RequestScopeInjector(madvocConfig) {
+		requestInjector = new RequestScopeInjector(madvocConfig, scopeDataResolver) {
 			@Override
 			protected String getMatchedPropertyName(ScopeData.In in, String attrName) {
 				if (attrName.endsWith(ATTR_NAME_ID_SUFFIX) == false) {

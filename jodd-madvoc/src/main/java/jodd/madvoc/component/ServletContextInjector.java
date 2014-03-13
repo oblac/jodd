@@ -6,6 +6,7 @@ import jodd.madvoc.ActionRequest;
 import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.madvoc.injector.ApplicationScopeInjector;
+import jodd.petite.meta.PetiteInject;
 
 import javax.servlet.ServletContext;
 
@@ -20,13 +21,16 @@ import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
  */
 public class ServletContextInjector {
 
+	@PetiteInject
+	ScopeDataResolver scopeDataResolver;
+
 	protected ApplicationScopeInjector applicationScopeInjector;
 	protected ServletContextScopeInjector servletContextScopeInjector;
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
-		applicationScopeInjector = new ApplicationScopeInjector();
-		servletContextScopeInjector = new ServletContextScopeInjector();
+		applicationScopeInjector = new ApplicationScopeInjector(scopeDataResolver);
+		servletContextScopeInjector = new ServletContextScopeInjector(scopeDataResolver);
 	}
 
 	/**

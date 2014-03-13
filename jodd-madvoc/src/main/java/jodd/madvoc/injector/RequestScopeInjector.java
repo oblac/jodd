@@ -4,8 +4,10 @@ package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.result.MoveResult;
 import jodd.servlet.upload.MultipartRequestWrapper;
 import jodd.upload.FileUpload;
@@ -27,8 +29,8 @@ import java.util.Enumeration;
 public class RequestScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector {
 
-	public RequestScopeInjector(MadvocConfig madvocConfig) {
-		super(ScopeType.REQUEST);
+	public RequestScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.REQUEST, scopeDataResolver);
 		this.encoding = madvocConfig.getEncoding();
 		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
 		this.attributeMoveId = madvocConfig.getAttributeMoveId();

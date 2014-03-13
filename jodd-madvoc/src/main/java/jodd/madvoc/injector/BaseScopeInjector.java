@@ -4,22 +4,24 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ScopeDataResolver;
 
 /**
  * Abstract base class for HTTP scopes injection.
  */
 public abstract class BaseScopeInjector {
 
-	protected static final ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
-
+	protected final ScopeDataResolver scopeDataResolver;
 	protected final ScopeType scopeType;
 
 	/**
 	 * Creates scope injector for provided {@link jodd.madvoc.ScopeType}.
 	 */
-	protected BaseScopeInjector(ScopeType scopeType) {
+	protected BaseScopeInjector(ScopeType scopeType, ScopeDataResolver scopeDataResolver) {
 		this.scopeType = scopeType;
+		this.scopeDataResolver = scopeDataResolver;
 	}
 
 	// ---------------------------------------------------------------- beanutil
@@ -83,28 +85,28 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupInData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
 	 */
 	public ScopeData.In[] lookupInData(ActionConfig actionConfig) {
 		return scopeDataResolver.lookupInData(actionConfig, scopeType);
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}.
 	 */
 	public ScopeData.In[] lookupInData(Class type) {
 		return scopeDataResolver.lookupInData(type, scopeType);
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupOutData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
 	 */
 	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig) {
 		return scopeDataResolver.lookupOutData(actionConfig, scopeType);
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)}.
 	 */
 	public ScopeData.Out[] lookupOutData(Class type) {
 		return scopeDataResolver.lookupOutData(type, scopeType);

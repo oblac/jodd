@@ -2,7 +2,9 @@
 
 package jodd.madvoc.injector;
 
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.Out;
 import org.junit.Test;
@@ -19,13 +21,9 @@ public class ScopeDataResolverTest {
 	public void testInAnnotations() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData[] scopeDatas = scopeDataResolver.inspectScopeData(Action.class);
-		assertEquals(ScopeType.values().length, scopeDatas.length);
+		ScopeData.In[] in1 = scopeDataResolver.lookupInData(Action.class, ScopeType.REQUEST);
 
-		ScopeData in1 = scopeDatas[ScopeType.REQUEST.value()];
-		assertEquals(1, in1.in.length);
-
-		ScopeData.In in = in1.in[0];
+		ScopeData.In in = in1[0];
 
 		assertEquals("input", in.name);
 		assertEquals(String.class, in.type);
@@ -45,21 +43,17 @@ public class ScopeDataResolverTest {
 	public void testGenericAction() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData[] scopeDatas = scopeDataResolver.inspectScopeData(GenAction.class);
-		assertEquals(ScopeType.values().length, scopeDatas.length);
+		ScopeData.In[] in1 = scopeDataResolver.lookupInData(GenAction.class, ScopeType.REQUEST);
+		ScopeData.Out[] out1 = scopeDataResolver.lookupOutData(GenAction.class, ScopeType.REQUEST);
 
-		ScopeData in1 = scopeDatas[ScopeType.REQUEST.value()];
-		assertEquals(1, in1.in.length);
-
-		ScopeData.In in = in1.in[0];
-		ScopeData.Out out = in1.out[0];
+		ScopeData.In in = in1[0];
+		ScopeData.Out out = out1[0];
 
 		assertEquals("input", in.name);
 		assertEquals(String.class, in.type);
 
 		assertEquals("output", out.name);
 		assertEquals(Integer.class, out.type);
-
 	}
 
 }

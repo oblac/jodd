@@ -61,9 +61,11 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 
 		im.madvocContextInjector = new MadvocContextInjector();
 		im.madvocContextInjector.madpc = new PetiteContainer();
+		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
 		im.madvocContextInjector.createInjectors();
 
 		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
 		im.servletContextInjector.createInjectors();
 		im.madvocController = new MadvocController();
 
@@ -104,9 +106,11 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		);
 		im.madvocContextInjector = new MadvocContextInjector();
 		im.madvocContextInjector.madpc = madpc;
+		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
 		im.madvocContextInjector.createInjectors();
 
 		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
 		im.servletContextInjector.createInjectors();
 		im.madvocController = new MadvocController();
 
@@ -165,9 +169,11 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 
 		im.madvocContextInjector = new MadvocContextInjector();
 		im.madvocContextInjector.madpc = new PetiteContainer();
+		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
 		im.madvocContextInjector.createInjectors();
 
 		im.servletContextInjector = new ServletContextInjector();
+		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
 		im.servletContextInjector.createInjectors();
 		im.madvocController = new MadvocController();
 

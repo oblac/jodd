@@ -5,6 +5,7 @@ package jodd.madvoc.interceptor;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocContextInjector;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.madvoc.component.ServletContextInjector;
 import jodd.madvoc.injector.ActionPathMacroInjector;
 import jodd.madvoc.injector.RequestScopeInjector;
@@ -37,14 +38,17 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	@In(scope = ScopeType.CONTEXT)
 	protected MadvocContextInjector madvocContextInjector;
 
+	@In(scope = ScopeType.CONTEXT)
+	protected ScopeDataResolver scopeDataResolver;
+
 	protected RequestScopeInjector requestScopeInjector;
 	protected SessionScopeInjector sessionScopeInjector;
 	protected ActionPathMacroInjector actionPathMacroInjector;
 
 	@Override
 	public void init() {
-		requestScopeInjector = new RequestScopeInjector(madvocConfig);
-		sessionScopeInjector = new SessionScopeInjector();
+		requestScopeInjector = new RequestScopeInjector(madvocConfig, scopeDataResolver);
+		sessionScopeInjector = new SessionScopeInjector(scopeDataResolver);
 		actionPathMacroInjector = new ActionPathMacroInjector();
 	}
 

@@ -3,7 +3,9 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.petite.PetiteContainer;
 
 /**
@@ -13,8 +15,8 @@ import jodd.petite.PetiteContainer;
 public class MadvocContextScopeInjector extends BaseScopeInjector
 		implements ContextInjector<PetiteContainer> {
 
-	public MadvocContextScopeInjector() {
-		super(ScopeType.CONTEXT);
+	public MadvocContextScopeInjector(ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.CONTEXT, scopeDataResolver);
 	}
 
 	public void injectContext(Object target, PetiteContainer madpc) {

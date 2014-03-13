@@ -4,7 +4,9 @@ package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ScopeDataResolver;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.map.HttpServletContextMap;
 import jodd.servlet.map.HttpServletRequestMap;
@@ -42,8 +44,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 	public static final String CSRF_NAME = "csrfTokenValid";
 
-	public ServletContextScopeInjector() {
-		super(ScopeType.SERVLET);
+	public ServletContextScopeInjector(ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.SERVLET, scopeDataResolver);
 	}
 
 	/**

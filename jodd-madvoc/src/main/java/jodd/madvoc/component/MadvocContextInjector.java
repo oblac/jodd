@@ -22,12 +22,16 @@ public class MadvocContextInjector {
 	@PetiteInject
 	protected PetiteContainer madpc;
 
+	@PetiteInject
+	protected ScopeDataResolver scopeDataResolver;
+
+
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
 	protected MadvocParamsInjector madvocParamsInjector;
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
-		madvocContextScopeInjector = new MadvocContextScopeInjector();
+		madvocContextScopeInjector = new MadvocContextScopeInjector(scopeDataResolver);
 		madvocParamsInjector = new MadvocParamsInjector(madpc);
 	}
 

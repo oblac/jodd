@@ -3,7 +3,9 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.ScopeDataResolver;
 
 import javax.servlet.ServletContext;
 import java.util.Enumeration;
@@ -14,8 +16,8 @@ import java.util.Enumeration;
 public class ApplicationScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector, ContextInjector<ServletContext> {
 
-	public ApplicationScopeInjector() {
-		super(ScopeType.APPLICATION);
+	public ApplicationScopeInjector(ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.APPLICATION, scopeDataResolver);
 	}
 
 	public void inject(ActionRequest actionRequest) {
