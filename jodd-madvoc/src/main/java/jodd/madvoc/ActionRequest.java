@@ -10,6 +10,7 @@ import jodd.madvoc.result.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
@@ -145,11 +146,7 @@ public class ActionRequest {
 		execState = 0;
 		this.action = action;
 		this.result = findResult();
-		if (config.actionParamNames != null) {
-			this.params = new Object[config.actionParamNames.length];
-		} else {
-			this.params = null;
-		}
+		this.params = createActionMethodArguments();
 	}
 
 	/**
@@ -173,6 +170,36 @@ public class ActionRequest {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Creates action method arguments.
+	 */
+	protected Object[] createActionMethodArguments() {
+		if (!config.hasArguments) {
+			return null;
+		}
+		Class[] types = config.getActionClassMethod().getParameterTypes();
+
+		Object[] params = new Object[types.length];
+
+		for (int i = 0; i < params.length; i++) {
+			Class type = types[i];
+
+			try {
+				if (type.getEnclosingClass() == null) {
+					// static class
+					params[i] = type.newInstance();
+				} else {
+					// member class
+					Constructor ctor = type.getDeclaredConstructor(config.getActionClass());
+					params[i] = ctor.newInstance(action);
+				}
+			} catch (Exception ex) {
+				throw new MadvocException(ex);
+			}
+		}
+		return params;
 	}
 
 	// ---------------------------------------------------------------- invoke

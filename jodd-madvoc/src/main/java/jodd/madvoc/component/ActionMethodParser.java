@@ -48,9 +48,6 @@ public class ActionMethodParser {
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
-	@PetiteInject
-	protected ActionParameterNamesResolver actionParameterNamesResolver;
-
 	// ---------------------------------------------------------------- resolve method
 
 	/**
@@ -167,14 +164,8 @@ public class ActionMethodParser {
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 
-		// parameter names
-		String[] actionParamNames = null;
-		if (actionMethod.getParameterTypes().length > 0) {
-			actionParamNames = actionParameterNamesResolver.resolveActionParameterNames(actionMethod);
-		}
-
 		return createActionConfig(
-				actionClass, actionMethod, actionParamNames,
+				actionClass, actionMethod,
 				actionFilters, actionInterceptors,
 				actionPath, httpMethod, actionPathElements);
 	}
@@ -485,7 +476,6 @@ public class ActionMethodParser {
 	public ActionConfig createActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
-			String[] actionParamNames,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
 			String actionPath,
@@ -496,7 +486,6 @@ public class ActionMethodParser {
 		return new ActionConfig(
 				actionClass,
 				actionClassMethod,
-				actionParamNames,
 				filters,
 				interceptors,
 				actionPath,

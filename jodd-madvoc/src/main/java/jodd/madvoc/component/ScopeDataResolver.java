@@ -11,13 +11,10 @@ import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
-import jodd.util.ArraysUtil;
 import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.util.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +34,29 @@ public class ScopeDataResolver {
 
 	protected Map<Object, ScopeData[]> scopeMap = new HashMap<Object, ScopeData[]>();
 
+
+	// ---------------------------------------------------------------- action config
+
+	/**
+	 * Lookups INput data for given action config. Returns <code>null</code>
+	 * if scope data is not found.
+	 */
+	public ScopeData.In[] lookupInData(ActionConfig actionConfig, ScopeType scopeType) {
+		return lookupInData(actionConfig.getActionClass(), scopeType);
+	}
+
+	/**
+	 * Lookups OUTput data for given object and scope type.
+	 * Returns <code>null</code> if no data is found.
+	 */
+	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig, ScopeType scopeType) {
+		return lookupOutData(actionConfig.getActionClass(), scopeType);
+	}
+
 	// ---------------------------------------------------------------- bean
 
 	public ScopeData.In[] lookupInData(Class type, ScopeType scopeType) {
-		ScopeData scopeData = lookup(type, null, scopeType);
+		ScopeData scopeData = lookup(type, scopeType);
 
 		if (scopeData == null) {
 			return null;
@@ -50,45 +66,7 @@ public class ScopeDataResolver {
 	}
 
 	public ScopeData.Out[] lookupOutData(Class type, ScopeType scopeType) {
-		ScopeData scopeData = lookup(type, null, scopeType);
-
-		if (scopeData == null) {
-			return null;
-		}
-
-		return scopeData.out;
-	}
-
-	// ---------------------------------------------------------------- action config
-
-	/**
-	 * Lookups INput data for given action config. Returns <code>null</code>
-	 * if scope data is not found.
-	 */
-	public ScopeData.In[] lookupInData(ActionConfig actionConfig, ScopeType scopeType) {
-		Method method = actionConfig.getActionClassMethod();
-		if (actionConfig.hasActionMethodArguments() == false) {
-			method = null;
-		}
-		ScopeData scopeData = lookup(actionConfig.getActionClass(), method, scopeType);
-
-		if (scopeData == null) {
-			return null;
-		}
-
-		return scopeData.in;
-	}
-
-	/**
-	 * Lookups OUTput data for given object and scope type.
-	 * Returns <code>null</code> if no data is found.
-	 */
-	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig, ScopeType scopeType) {
-		Method method = actionConfig.getActionClassMethod();
-		if (actionConfig.hasActionMethodArguments() == false) {
-			method = null;
-		}
-		ScopeData scopeData = lookup(actionConfig.getActionClass(), method, scopeType);
+		ScopeData scopeData = lookup(type, scopeType);
 
 		if (scopeData == null) {
 			return null;
@@ -103,16 +81,16 @@ public class ScopeDataResolver {
 	 * Lookups cashed scope data. If scope data doesn't exist,
 	 * <code>null</code> is returned.
 	 */
-	protected ScopeData lookup(Class type, Method method, ScopeType scopeType) {
-		ScopeData[] scopeDataForClass = scopeMap.get(type);
+	protected ScopeData lookup(Class type, ScopeType scopeType) {
+		ScopeData[] scopeData = scopeMap.get(type);
 
-		if (scopeDataForClass == null) {
-			scopeDataForClass = inspectScopeData(type);
+		if (scopeData == null) {
+			scopeData = inspectScopeData(type);
 
-			scopeMap.put(type, scopeDataForClass);
+			scopeMap.put(type, scopeData);
 		}
 
-		ScopeData[] scopeDataForMethod = EMPTY_SCOPEDATA;
+/*		ScopeData[] scopeDataForMethod = EMPTY_SCOPEDATA;
 
 		if (method != null) {
 			scopeDataForMethod = scopeMap.get(method);
@@ -141,12 +119,16 @@ public class ScopeDataResolver {
 				scopeData = scopeDataForClass;
 			} else {
 				// both data exist, join
-				scopeData = ArraysUtil.join(scopeDataForClass, scopeDataForMethod);
+				// join each field, too expensive!
 			}
+		}
+*/
+
+		if (scopeData.length == 0) {
+			return null;
 		}
 
 		// scope type
-
 		ScopeData sd = scopeData[scopeType.value()];
 
 		if (sd == null) {
@@ -162,28 +144,31 @@ public class ScopeDataResolver {
 	 * Inspects and returns scope data for all available scopes.
 	 */
 	protected ScopeData[] inspectScopeData(Object key) {
-		ScopeType[] allScopeTypes = ScopeType.values();
+		final ScopeType[] allScopeTypes = ScopeType.values();
 
 		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
 
 		int count = 0;
 		if (key instanceof Class) {
 			for (ScopeType scopeType : allScopeTypes) {
-				ScopeData sd = inspectScopeData((Class) key, scopeType);
+				ScopeData sd = inspectClassScopeData((Class) key, scopeType);
 				if (sd != null) {
 					count++;
 				}
 				scopeData[scopeType.value()] = sd;
 			}
-		} else if (key instanceof Method) {
+		}
+
+		/*else if (key instanceof Method) {
 			for (ScopeType scopeType : allScopeTypes) {
-				ScopeData sd = inspectMethodScopeData((Method) key, null, scopeType);
+				ScopeData sd = inspectMethodScopeData((Method) key, scopeType);
 				if (sd != null) {
 					count++;
 				}
 				scopeData[scopeType.value()] = sd;
 			}
-		} else {
+		} */
+		else {
 			throw new MadvocException("Invalid type: " + key);
 		}
 		if (count == 0) {
@@ -194,15 +179,14 @@ public class ScopeDataResolver {
 	}
 
 
-	// ---------------------------------------------------------------- method data
+	// ---------------------------------------------------------------- inspect method
 
 	/**
 	 * Inspects all method parameters for scope data.
 	 */
-	protected ScopeData inspectMethodScopeData(
-			Method method,
-			String[] methodParameterNames,
-			ScopeType scopeType) {
+/*	protected ScopeData inspectMethodScopeData(Method method, ScopeType scopeType) {
+
+		String[] methodParameterNames = actionParameterNamesResolver.resolveActionParameterNames(method);
 
 		Annotation[][] annotations = method.getParameterAnnotations();
 		Class<?>[] types = method.getParameterTypes();
@@ -221,7 +205,6 @@ public class ScopeDataResolver {
 			Class type = types[i];
 			String name = methodParameterNames[i];
 
-			boolean hasAnnotation = false;
 			for (Annotation annotation : paramAnnotations) {
 
 				if (annotation instanceof In) {
@@ -229,17 +212,17 @@ public class ScopeDataResolver {
 					if (sd.in[i] != null) {
 						incount++;
 					}
-					hasAnnotation = true;
 				} else if (annotation instanceof Out) {
 					sd.out[i] = inspectOut((Out) annotation, scopeType, StringUtil.uncapitalize(type.getSimpleName()), type);
-					outcount++;
+					if (sd.out[i] != null) {
+						outcount++;
+					}
 				}
 			}
+		}
 
-			// annotations not available!
-			if ((hasAnnotation == false)) {
-				throw new MadvocException("Unamrked parameter in: " + method);
-			}
+		if (incount == 0 && outcount == 0) {
+			return null;
 		}
 		if (incount == 0) {
 			sd.in = null;
@@ -249,10 +232,9 @@ public class ScopeDataResolver {
 		}
 		return sd;
 	}
+*/
 
-
-
-	// ---------------------------------------------------------------- inspect
+	// ---------------------------------------------------------------- inspect class
 
 	/**
 	 * Fills value and property name.
@@ -358,7 +340,7 @@ public class ScopeDataResolver {
 	 * Inspect action for all In/Out annotations.
 	 * Returns <code>null</code> if there are no In and Out data.
 	 */
-	protected ScopeData inspectScopeData(Class actionClass, ScopeType scopeType) {
+	protected ScopeData inspectClassScopeData(Class actionClass, ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
 		FieldDescriptor[] fields = cd.getAllFieldDescriptors();
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();

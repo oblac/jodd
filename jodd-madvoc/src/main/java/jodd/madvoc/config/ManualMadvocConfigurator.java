@@ -4,7 +4,6 @@ package jodd.madvoc.config;
 
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.component.ActionMethodParser;
-import jodd.madvoc.component.ActionParameterNamesResolver;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
@@ -34,9 +33,6 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 
 	@PetiteInject
 	protected ResultsManager resultsManager;
-
-	@PetiteInject
-	protected ActionParameterNamesResolver actionParameterNamesResolver;
 
 	// ---------------------------------------------------------------- results
 
@@ -145,15 +141,9 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 				actionClassMethod = actionMethodParser.resolveActionMethod(actionClass, actionMethodString);
 			}
 
-			String[] actionParamNames = null;
-			if (actionClassMethod.getParameterTypes().length > 0) {
-				actionParamNames = actionParameterNamesResolver.resolveActionParameterNames(actionClassMethod);
-			}
-
-
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
-							actionClass, actionClassMethod, actionParamNames,
+							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
 							actionPath, method, null);
 

@@ -25,10 +25,9 @@ public class ArgsTest {
 	@Test
 	public void testArgs() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/args.hello.html").send();
+		response = HttpRequest.get("localhost:8080/args.hello.html?id=1").send();
 
-		// todo
-		//assertEquals("Args!", response.bodyText().trim());
+		assertEquals("+ mad null", response.bodyText().trim());
 	}
 
 }

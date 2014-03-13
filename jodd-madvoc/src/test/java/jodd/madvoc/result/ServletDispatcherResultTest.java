@@ -118,7 +118,7 @@ public class ServletDispatcherResultTest {
 		Object action = new Object();
 		ActionConfig actionConfig = new ActionConfig(
 				Action.class,
-				ReflectUtil.findMethod(Action.class, "view"), null,
+				ReflectUtil.findMethod(Action.class, "view"),
 				null, null,
 				actionPath, "GET", null);
 

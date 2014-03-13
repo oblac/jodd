@@ -23,9 +23,8 @@ public class ActionConfig {
 	public final String actionPath;
 	public final String actionMethod;
 	public final Field resultField;
+	public final boolean hasArguments;
 	//public final String[] actionPathElements;
-	public final String[] actionParamNames;
-	public final Class<?>[] actionParamTypes;
 
 	// run-time data
 	protected ActionConfigSet actionConfigSet;
@@ -35,7 +34,6 @@ public class ActionConfig {
 	public ActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
-			String[] actionParamNames,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
 			String actionPath,
@@ -46,16 +44,13 @@ public class ActionConfig {
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
+		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		//this.actionPathElements = actionPathElements;		// ignore for now
 
 		this.filters = filters;
 		this.interceptors = interceptors;
 
 		this.resultField = findResultField(actionClass);
-
-		Class<?>[] paramTypes = actionClassMethod.getParameterTypes();
-		this.actionParamTypes = paramTypes.length != 0 ? paramTypes : null;
-		this.actionParamNames = actionParamNames;
 	}
 
 	// ---------------------------------------------------------------- result
@@ -112,20 +107,10 @@ public class ActionConfig {
 		return interceptors;
 	}
 
-//	public Class<?>[] getActionParamTypes() {
-//		return actionParamTypes;
-//	}
-
 	public ActionConfigSet getActionConfigSet() {
 		return actionConfigSet;
 	}
 
-	/**
-	 * Returns <code>true</code> if action method has arguments.
-	 */
-	public boolean hasActionMethodArguments() {
-		return actionParamTypes != null;
-	}
 
 	// ---------------------------------------------------------------- to string
 
