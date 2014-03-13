@@ -27,8 +27,7 @@ public class MadvocContextInjector {
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
-		// need to have init method, so it can be called after the madpc is injected
-		madvocContextScopeInjector = new MadvocContextScopeInjector(madpc);
+		madvocContextScopeInjector = new MadvocContextScopeInjector();
 		madvocParamsInjector = new MadvocParamsInjector(madpc);
 	}
 
@@ -36,21 +35,14 @@ public class MadvocContextInjector {
 	 * Performs Madvoc context injection.
 	 */
 	public void injectMadvocContext(Object target) {
-		madvocContextScopeInjector.inject(target);
+		madvocContextScopeInjector.injectContext(target, madpc);
 	}
 
 	/**
 	 * Performs Madvoc params injection.
 	 */
 	public void injectMadvocParams(Object target) {
-		madvocParamsInjector.inject(target, target.getClass().getName());
-	}
-
-	/**
-	 * Outjects context.
-	 */
-	public void outjectMadvocContext(Object target) {
-		madvocContextScopeInjector.outject(target);
+		madvocParamsInjector.injectContext(target, target.getClass().getName());
 	}
 
 }

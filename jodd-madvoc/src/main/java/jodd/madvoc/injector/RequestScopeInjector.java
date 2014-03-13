@@ -24,7 +24,8 @@ import java.util.Enumeration;
  * instance can be used in the Madvoc application. That's why
  * configuration is being cloned on injector creation.
  */
-public class RequestScopeInjector extends BaseScopeInjector {
+public class RequestScopeInjector extends BaseScopeInjector
+		implements Injector, Outjector {
 
 	public RequestScopeInjector(MadvocConfig madvocConfig) {
 		super(ScopeType.REQUEST);
@@ -230,8 +231,6 @@ public class RequestScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-
-
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
@@ -275,38 +274,46 @@ public class RequestScopeInjector extends BaseScopeInjector {
 	/**
 	 * Outjects all request data from move result source, if exist.
 	 */
-	protected void outjectMoveSource(HttpServletRequest servletRequest) {
+	protected void outjectMoveSource(ActionRequest actionRequest) {
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
 		String moveId = servletRequest.getParameter(attributeMoveId);
 		if (moveId != null) {
 			HttpSession session = servletRequest.getSession();
 			ActionRequest sourceRequest = (ActionRequest) session.getAttribute(moveId);
 			session.removeAttribute(moveId);
 			if (sourceRequest != null) {
-				outject(sourceRequest.getAction(), servletRequest);
+				outjectAfterMove(sourceRequest.getAction(), servletRequest);
 			}
 		}
 	}
 
 	/**
-	 * Prepares stuff before {@link #inject(Object, javax.servlet.http.HttpServletRequest) injection}.
+	 * Prepares stuff before {@link #inject(jodd.madvoc.ActionRequest)} injection}.
 	 * Preparation should be invoked only once per request. It includes the following:
 	 * <ul>
 	 * <li>copying parameters to attributes</li>
 	 * <li>handling of move results by outjection the move source.</li>
 	 * </ul>
 	 */
-	public void prepare(HttpServletRequest servletRequest) {
+	public void prepare(ActionRequest actionRequest) {
+		// todo remove copyParamsToAttributes
 		if (config.copyParamsToAttributes == true) {
+			HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 			ServletUtil.copyParamsToAttributes(servletRequest, config.trimParams, config.treatEmptyParamsAsNull, config.ignoreEmptyRequestParams);
 		}
-		outjectMoveSource(servletRequest);
+		outjectMoveSource(actionRequest);
 	}
 
-	public void inject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.In[] injectData = lookupInData(target.getClass());
+	public void inject(ActionRequest actionRequest) {
+		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
 		if (injectData == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
 		if (config.injectAttributes == true) {
 			injectAttributes(target, injectData, servletRequest);
 		}
@@ -318,14 +325,31 @@ public class RequestScopeInjector extends BaseScopeInjector {
 
 	// ---------------------------------------------------------------- outject
 
-	public void outject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
+	public void outject(ActionRequest actionRequest) {
+		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
 		if (outjectData == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
 		for (ScopeData.Out out : outjectData) {
 			Object value = getTargetProperty(target, out);
 			servletRequest.setAttribute(out.name, value);
 		}
 	}
+
+	protected void outjectAfterMove(Object target, HttpServletRequest servletRequest) {
+		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
+		if (outjectData == null) {
+			return;
+		}
+
+		for (ScopeData.Out out : outjectData) {
+			Object value = getTargetProperty(target, out);
+			servletRequest.setAttribute(out.name, value);
+		}
+	}
+
 }

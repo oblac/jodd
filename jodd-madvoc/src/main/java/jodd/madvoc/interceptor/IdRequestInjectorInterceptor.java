@@ -48,7 +48,7 @@ public class IdRequestInjectorInterceptor extends BaseActionInterceptor {
 	 * Injects IDs from request. Invoked before action request is invoked.
 	 */
 	protected void injectIdsFromRequest(ActionRequest actionRequest) {
-		requestInjector.inject(actionRequest.getAction(), actionRequest.getHttpServletRequest());
+		requestInjector.inject(actionRequest);
 	}
 
 }

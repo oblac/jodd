@@ -11,7 +11,7 @@ import jodd.petite.PetiteContainer;
  * Invoked on creation of all singleton instances, like interceptors etc.
  * Used to configure various Madvoc classes that are created in lazy manner.
  */
-public class MadvocParamsInjector {
+public class MadvocParamsInjector implements ContextInjector<String> {
 
 	protected final ParamManager madvocPetiteParamManager;
 
@@ -23,7 +23,7 @@ public class MadvocParamsInjector {
 	 * Injects all matching parameters to target instance.
 	 * Matching parameters are named as given base name.
 	 */
-	public void inject(Object target, String baseName) {
+	public void injectContext(Object target, String baseName) {
 		String[] params = madvocPetiteParamManager.resolve(baseName, true);
 
 		for (String param : params) {

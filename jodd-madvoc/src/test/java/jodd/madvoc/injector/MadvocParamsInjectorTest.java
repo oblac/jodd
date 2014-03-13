@@ -24,7 +24,7 @@ public class MadvocParamsInjectorTest {
 
 		FooBean fooBean = new FooBean();
 
-		madvocParamsInjector.inject(fooBean, baseName);
+		madvocParamsInjector.injectContext(fooBean, baseName);
 
 		assertEquals(173, fooBean.getInteger().intValue());
 		assertEquals("jodd", fooBean.getString());

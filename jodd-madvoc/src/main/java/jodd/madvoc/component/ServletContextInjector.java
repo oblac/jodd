@@ -2,12 +2,11 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.injector.ServletContextScopeInjector;
 import jodd.petite.meta.PetiteInitMethod;
 import jodd.madvoc.injector.ApplicationScopeInjector;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_DEFINE;
@@ -33,26 +32,26 @@ public class ServletContextInjector {
 	/**
 	 * Performs default context injection.
 	 */
-	public void injectContext(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		servletContextScopeInjector.inject(target, servletRequest, servletResponse);
-		applicationScopeInjector.inject(target, servletRequest.getSession().getServletContext());
+	public void inject(ActionRequest actionRequest) {
+		servletContextScopeInjector.inject(actionRequest);
+		applicationScopeInjector.inject(actionRequest);
 	}
 
 	/**
 	 * Performs context injection when only servlet context is available. Should be called for all
-	 * global instances (such as interceptors).
+	 * global instances (such as interceptors, results, etc).
 	 */
 	public void injectContext(Object target, ServletContext servletContext) {
-		servletContextScopeInjector.inject(target, servletContext);
-		applicationScopeInjector.inject(target, servletContext);
+		servletContextScopeInjector.injectContext(target, servletContext);
+		applicationScopeInjector.injectContext(target, servletContext);
 	}
 
 	/**
 	 * Outjects context.
 	 */
-	public void outjectContext(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		servletContextScopeInjector.outject(target, servletResponse);
-		applicationScopeInjector.outject(target, servletRequest.getSession().getServletContext());
+	public void outject(ActionRequest actionRequest) {
+		servletContextScopeInjector.outject(actionRequest);
+		applicationScopeInjector.outject(actionRequest);
 	}
 
 }

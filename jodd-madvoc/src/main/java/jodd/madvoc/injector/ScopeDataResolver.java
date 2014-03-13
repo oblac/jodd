@@ -4,11 +4,13 @@ package jodd.madvoc.injector;
 
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
+import jodd.util.ArraysUtil;
 import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -32,63 +34,131 @@ public class ScopeDataResolver {
 
 	protected Map<Object, ScopeData[]> scopeMap = new HashMap<Object, ScopeData[]>();
 
-	// ---------------------------------------------------------------- main
+	// ---------------------------------------------------------------- bean
 
-	/**
-	 * Lookups INput data for given action class and scope type.
-	 * Returns <code>null</code> if no data is found.
-	 */
-	public ScopeData.In[] lookupInData(Class actionClass, ScopeType scopeType) {
-		return lookupIn(actionClass, scopeType);
-	}
-	/**
-	 * Lookups INput data for given action method and scope type.
-	 * Returns <code>null</code> if no data is found.
-	 */
-/*
-	public ScopeData.In[] lookupInData(Method actionMethod, ScopeType scopeType) {
-		return lookupIn(actionMethod, scopeType);
-	}
-*/
+	public ScopeData.In[] lookupInData(Class type, ScopeType scopeType) {
+		ScopeData scopeData = lookup(type, null, scopeType);
 
-	protected ScopeData.In[] lookupIn(Object key, ScopeType scopeType) {
-		ScopeData[] scopeData = scopeMap.get(key);
 		if (scopeData == null) {
-			scopeData = inspectAllScopeData(key);
-		}
-		if (scopeData.length == 0) {
 			return null;
 		}
-		ScopeData sd = scopeData[scopeType.value()];
-		if (sd == null) {
+
+		return scopeData.in;
+	}
+
+	public ScopeData.Out[] lookupOutData(Class type, ScopeType scopeType) {
+		ScopeData scopeData = lookup(type, null, scopeType);
+
+		if (scopeData == null) {
 			return null;
 		}
-		return sd.in;
+
+		return scopeData.out;
+	}
+
+	// ---------------------------------------------------------------- action config
+
+	/**
+	 * Lookups INput data for given action config. Returns <code>null</code>
+	 * if scope data is not found.
+	 */
+	public ScopeData.In[] lookupInData(ActionConfig actionConfig, ScopeType scopeType) {
+		Method method = actionConfig.getActionClassMethod();
+		if (actionConfig.hasActionMethodArguments() == false) {
+			method = null;
+		}
+		ScopeData scopeData = lookup(actionConfig.getActionClass(), method, scopeType);
+
+		if (scopeData == null) {
+			return null;
+		}
+
+		return scopeData.in;
 	}
 
 	/**
 	 * Lookups OUTput data for given object and scope type.
 	 * Returns <code>null</code> if no data is found.
 	 */
-	public ScopeData.Out[] lookupOutData(Class actionClass, ScopeType scopeType) {
-		ScopeData[] scopeData = scopeMap.get(actionClass);
-		if (scopeData == null) {
-			scopeData = inspectAllScopeData(actionClass);
+	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig, ScopeType scopeType) {
+		Method method = actionConfig.getActionClassMethod();
+		if (actionConfig.hasActionMethodArguments() == false) {
+			method = null;
 		}
-		if (scopeData.length == 0) {
+		ScopeData scopeData = lookup(actionConfig.getActionClass(), method, scopeType);
+
+		if (scopeData == null) {
 			return null;
 		}
+
+		return scopeData.out;
+	}
+
+	// ---------------------------------------------------------------- main lookup
+
+	/**
+	 * Lookups cashed scope data. If scope data doesn't exist,
+	 * <code>null</code> is returned.
+	 */
+	protected ScopeData lookup(Class type, Method method, ScopeType scopeType) {
+		ScopeData[] scopeDataForClass = scopeMap.get(type);
+
+		if (scopeDataForClass == null) {
+			scopeDataForClass = inspectScopeData(type);
+
+			scopeMap.put(type, scopeDataForClass);
+		}
+
+		ScopeData[] scopeDataForMethod = EMPTY_SCOPEDATA;
+
+		if (method != null) {
+			scopeDataForMethod = scopeMap.get(method);
+
+			if (scopeDataForMethod == null) {
+				scopeDataForMethod = inspectScopeData(method);
+
+				scopeMap.put(method, scopeDataForMethod);
+			}
+		}
+
+		// scope data
+
+		ScopeData[] scopeData;
+
+		if (scopeDataForClass.length == 0) {
+			if (scopeDataForMethod.length == 0) {
+				// nothing found
+				return null;
+			}
+			// only method data
+			scopeData = scopeDataForMethod;
+		} else {
+			if (scopeDataForMethod.length == 0) {
+				// only class data
+				scopeData = scopeDataForClass;
+			} else {
+				// both data exist, join
+				scopeData = ArraysUtil.join(scopeDataForClass, scopeDataForMethod);
+			}
+		}
+
+		// scope type
+
 		ScopeData sd = scopeData[scopeType.value()];
+
 		if (sd == null) {
 			return null;
 		}
-		return sd.out;
+
+		return sd;
 	}
+
+	// ---------------------------------------------------------------- common
 
 	/**
 	 * Inspects and returns scope data for all available scopes.
 	 */
-	protected ScopeData[] inspectAllScopeData(Object key) {
+	protected ScopeData[] inspectScopeData(Object key) {
 		ScopeType[] allScopeTypes = ScopeType.values();
 
 		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
@@ -118,7 +188,7 @@ public class ScopeDataResolver {
 		if (count == 0) {
 			scopeData = EMPTY_SCOPEDATA;
 		}
-		scopeMap.put(key, scopeData);
+
 		return scopeData;
 	}
 

@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class OneTwoActionTest {
 
@@ -26,7 +25,7 @@ public class OneTwoActionTest {
 	@Test
 	public void testOneRedirectAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.html").send();
-		assertNull(response.bodyText());
+		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
 		String redirectLocation = response.header("location");
@@ -38,7 +37,7 @@ public class OneTwoActionTest {
 	@Test
 	public void testOneMoveAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/oneMove.html").send();
-		assertNull(response.bodyText());
+		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
 		String redirectLocation = response.header("location");
@@ -50,7 +49,7 @@ public class OneTwoActionTest {
 	@Test
 	public void testOneMoveGoAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/oneMove.go.html").send();
-		assertNull(response.bodyText());
+		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
 		String redirectLocation = response.header("location");
@@ -62,7 +61,7 @@ public class OneTwoActionTest {
 	@Test
 	public void testOneRedirectPermanentAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.perm.html").send();
-		assertNull(response.bodyText());
+		assertEquals("", response.bodyText());
 		assertEquals(301, response.statusCode());
 
 		String redirectLocation = response.header("location");

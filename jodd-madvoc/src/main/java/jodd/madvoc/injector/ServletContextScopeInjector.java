@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.map.HttpServletContextMap;
@@ -27,7 +28,8 @@ import javax.servlet.http.HttpSession;
  * <li>cookies</li>
  * </ul>
  */
-public class ServletContextScopeInjector extends BaseScopeInjector {
+public class ServletContextScopeInjector extends BaseScopeInjector
+		implements Injector, Outjector, ContextInjector<ServletContext> {
 
 	public static final String REQUEST_NAME = "request";
 	public static final String SESSION_NAME = "session";
@@ -44,12 +46,20 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 		super(ScopeType.SERVLET);
 	}
 
+	/**
+	 * Injects servlet context scope data.
+	 */
 	@SuppressWarnings({"ConstantConditions"})
-	public void inject(Object target, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-		ScopeData.In[] injectData = lookupInData(target.getClass());
+	public void inject(ActionRequest actionRequest) {
+		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
 		if (injectData == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
+
 		for (ScopeData.In in : injectData) {
 			Class fieldType = in.type;
 			Object value = null;
@@ -111,7 +121,10 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-	public void inject(Object target, ServletContext servletContext) {
+	/**
+	 * Injects just context.
+	 */
+	public void injectContext(Object target, ServletContext servletContext) {
 		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
@@ -138,12 +151,14 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-
-	public void outject(Object target, HttpServletResponse servletResponse) {
-		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
+	public void outject(ActionRequest actionRequest) {
+		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
 		if (outjectData == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
+		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		for (ScopeData.Out out : outjectData) {
 			if (out.name.startsWith(COOKIE_NAME)) {
@@ -153,8 +168,5 @@ public class ServletContextScopeInjector extends BaseScopeInjector {
 				}
 			}
 		}
-
-
-
 	}
 }

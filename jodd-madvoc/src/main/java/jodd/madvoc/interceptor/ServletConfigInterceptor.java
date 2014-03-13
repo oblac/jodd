@@ -15,7 +15,6 @@ import jodd.servlet.ServletUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Configures actions and applies some servlet configuration prior action execution.
@@ -73,8 +72,6 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 */
 	protected void inject(ActionRequest actionRequest) {
 		Object target = actionRequest.getAction();
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		madvocContextInjector.injectMadvocContext(target);
 
@@ -82,30 +79,26 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 		// and its better to use some single data object instead
 		//madvocContextInjector.injectMadvocParams(target);
 
-		servletContextInjector.injectContext(target, servletRequest, servletResponse);
+		servletContextInjector.inject(actionRequest);
 
-		sessionScopeInjector.inject(target, servletRequest);
+		sessionScopeInjector.inject(actionRequest);
 
-		requestScopeInjector.prepare(servletRequest);
-		requestScopeInjector.inject(target, servletRequest);
+		requestScopeInjector.prepare(actionRequest);
+		requestScopeInjector.inject(actionRequest);
 
-		actionPathMacroInjector.inject(target, actionRequest);
+		actionPathMacroInjector.inject(actionRequest);
 	}
 
 	/**
 	 * Performs outjection.
 	 */
 	protected void outject(ActionRequest actionRequest) {
-		Object target = actionRequest.getAction();
-		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
-		madvocContextInjector.outjectMadvocContext(target);
-		servletContextInjector.outjectContext(target, servletRequest, servletResponse);
+		servletContextInjector.outject(actionRequest);
 
-		sessionScopeInjector.outject(target, servletRequest);
+		sessionScopeInjector.outject(actionRequest);
 
-		requestScopeInjector.outject(target, servletRequest);
+		requestScopeInjector.outject(actionRequest);
 	}
 
 }

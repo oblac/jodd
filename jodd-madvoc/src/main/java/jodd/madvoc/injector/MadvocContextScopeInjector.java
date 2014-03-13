@@ -3,7 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeType;
 import jodd.petite.PetiteContainer;
 
@@ -11,16 +10,14 @@ import jodd.petite.PetiteContainer;
  * Madvoc context injector. Injects beans from Madvocs internal container,
  * i.e. Madvocs components.
  */
-public class MadvocContextScopeInjector extends BaseScopeInjector {
+public class MadvocContextScopeInjector extends BaseScopeInjector
+		implements ContextInjector<PetiteContainer> {
 
-	protected final PetiteContainer madpc;
-
-	public MadvocContextScopeInjector(PetiteContainer madpc) {
+	public MadvocContextScopeInjector() {
 		super(ScopeType.CONTEXT);
-		this.madpc = madpc;
 	}
 
-	public void inject(Object target) {
+	public void injectContext(Object target, PetiteContainer madpc) {
 		ScopeData.In[] injectData = lookupInData(target.getClass());
 		if (injectData == null) {
 			return;
@@ -34,11 +31,4 @@ public class MadvocContextScopeInjector extends BaseScopeInjector {
 		}
 	}
 
-	public void outject(Object target) {
-		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
-		if (outjectData == null) {
-			return;
-		}
-		throw new MadvocException("Madvoc context can't be outjected");
-	}
 }

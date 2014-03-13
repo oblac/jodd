@@ -2,6 +2,7 @@
 
 package jodd.madvoc.injector;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -10,19 +11,22 @@ import java.util.Enumeration;
 /**
  * Servlet session scope injector.
  */
-public class SessionScopeInjector extends BaseScopeInjector {
+public class SessionScopeInjector extends BaseScopeInjector implements Injector, Outjector {
 
 	public SessionScopeInjector() {
 		super(ScopeType.SESSION);
 	}
 
-	public void inject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.In[] injectData = lookupInData(target.getClass());
+	public void inject(ActionRequest actionRequest) {
+		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
 		if (injectData == null) {
 			return;
 		}
 
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
+
 		Enumeration attributeNames = session.getAttributeNames();
 
 		while (attributeNames.hasMoreElements()) {
@@ -39,11 +43,15 @@ public class SessionScopeInjector extends BaseScopeInjector {
 
 	}
 
-	public void outject(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
+	public void outject(ActionRequest actionRequest) {
+		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
 		if (outjectData == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
+		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
+
 		HttpSession session = servletRequest.getSession();
 		for (ScopeData.Out out : outjectData) {
 			Object value = getTargetProperty(target, out);

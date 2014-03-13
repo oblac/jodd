@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeType;
 
 /**
@@ -82,17 +83,31 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
 	 */
-	public ScopeData.In[] lookupInData(Class actionClass) {
-		return scopeDataResolver.lookupInData(actionClass, scopeType);
+	public ScopeData.In[] lookupInData(ActionConfig actionConfig) {
+		return scopeDataResolver.lookupInData(actionConfig, scopeType);
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)} 
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}.
 	 */
-	public ScopeData.Out[] lookupOutData(Class actionClass) {
-		return scopeDataResolver.lookupOutData(actionClass, scopeType);
+	public ScopeData.In[] lookupInData(Class type) {
+		return scopeDataResolver.lookupInData(type, scopeType);
+	}
+
+	/**
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
+	 */
+	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig) {
+		return scopeDataResolver.lookupOutData(actionConfig, scopeType);
+	}
+
+	/**
+	 * Delegates to {@link jodd.madvoc.injector.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)}.
+	 */
+	public ScopeData.Out[] lookupOutData(Class type) {
+		return scopeDataResolver.lookupOutData(type, scopeType);
 	}
 
 }

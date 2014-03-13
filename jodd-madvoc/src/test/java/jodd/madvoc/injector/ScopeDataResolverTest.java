@@ -19,7 +19,7 @@ public class ScopeDataResolverTest {
 	public void testInAnnotations() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData[] scopeDatas = scopeDataResolver.inspectAllScopeData(Action.class);
+		ScopeData[] scopeDatas = scopeDataResolver.inspectScopeData(Action.class);
 		assertEquals(ScopeType.values().length, scopeDatas.length);
 
 		ScopeData in1 = scopeDatas[ScopeType.REQUEST.value()];
@@ -45,7 +45,7 @@ public class ScopeDataResolverTest {
 	public void testGenericAction() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData[] scopeDatas = scopeDataResolver.inspectAllScopeData(GenAction.class);
+		ScopeData[] scopeDatas = scopeDataResolver.inspectScopeData(GenAction.class);
 		assertEquals(ScopeType.values().length, scopeDatas.length);
 
 		ScopeData in1 = scopeDatas[ScopeType.REQUEST.value()];

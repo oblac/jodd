@@ -11,15 +11,17 @@ import jodd.util.StringUtil;
 /**
  * Injects macro values from action path into the action bean.
  */
-public class ActionPathMacroInjector {
+public class ActionPathMacroInjector implements Injector {
 
-	public void inject(Object target, ActionRequest actionRequest) {
+	public void inject(ActionRequest actionRequest) {
 		ActionConfig config = actionRequest.getActionConfig();
 		ActionConfigSet set = config.getActionConfigSet();
 
 		if (set.actionPathMacros == null) {
 			return;
 		}
+
+		Object target = actionRequest.getAction();
 
 		String[] names = set.actionPathMacros.getNames();
 		String[] values = set.actionPathMacros.extract(actionRequest.getActionPath());

@@ -120,6 +120,13 @@ public class ActionConfig {
 		return actionConfigSet;
 	}
 
+	/**
+	 * Returns <code>true</code> if action method has arguments.
+	 */
+	public boolean hasActionMethodArguments() {
+		return actionParamTypes != null;
+	}
+
 	// ---------------------------------------------------------------- to string
 
 	/**
