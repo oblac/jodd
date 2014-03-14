@@ -3,7 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
@@ -85,13 +84,6 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupInData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
-	 */
-	public ScopeData.In[] lookupInData(ActionConfig actionConfig) {
-		return scopeDataResolver.lookupInData(actionConfig, scopeType);
-	}
-
-	/**
 	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}.
 	 */
 	public ScopeData.In[] lookupInData(Class type) {
@@ -99,10 +91,24 @@ public abstract class BaseScopeInjector {
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupOutData(jodd.madvoc.ActionConfig, jodd.madvoc.ScopeType)}.
+	 * Lookups scope data for many targets.
 	 */
-	public ScopeData.Out[] lookupOutData(ActionConfig actionConfig) {
-		return scopeDataResolver.lookupOutData(actionConfig, scopeType);
+	public ScopeData.In[][] lookupInData(Object[] targets) {
+		ScopeData.In[][] scopes = new ScopeData.In[targets.length][];
+
+		boolean allNulls = true;
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			scopes[i] = scopeDataResolver.lookupInData(target.getClass(), scopeType);
+			if (scopes[i] != null) {
+				allNulls = false;
+			}
+		}
+
+		if (allNulls) {
+			return null;
+		}
+		return scopes;
 	}
 
 	/**
@@ -111,5 +117,27 @@ public abstract class BaseScopeInjector {
 	public ScopeData.Out[] lookupOutData(Class type) {
 		return scopeDataResolver.lookupOutData(type, scopeType);
 	}
+
+	/**
+	 * Lookups scope data for many targets.
+	 */
+	public ScopeData.Out[][] lookupOutData(Object[] targets) {
+		ScopeData.Out[][] scopes = new ScopeData.Out[targets.length][];
+
+		boolean allNulls = true;
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			scopes[i] = scopeDataResolver.lookupOutData(target.getClass(), scopeType);
+			if (scopes[i] != null) {
+				allNulls = false;
+			}
+		}
+
+		if (allNulls) {
+			return null;
+		}
+		return scopes;
+	}
+
 
 }

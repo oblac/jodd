@@ -179,15 +179,24 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject request attributes.
 	 */
-	protected void injectAttributes(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
+	protected void injectAttributes(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
-			for (ScopeData.In in : injectData) {
-				String name = getMatchedPropertyName(in, attrName);
-				if (name != null) {
-					Object attrValue = servletRequest.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue, in.create);
+
+			for (int i = 0; i < targets.length; i++) {
+				Object target = targets[i];
+				ScopeData.In[] scopes = injectData[i];
+				if (scopes == null) {
+					continue;
+				}
+
+				for (ScopeData.In in : scopes) {
+					String name = getMatchedPropertyName(in, attrName);
+					if (name != null) {
+						Object attrValue = servletRequest.getAttribute(attrName);
+						setTargetProperty(target, name, attrValue, in.create);
+					}
 				}
 			}
 		}
@@ -197,7 +206,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * Inject request parameters. Parameters with the same name as one of request attributes
 	 * are simply ignored.
 	 */
-	protected void injectParameters(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
+	protected void injectParameters(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
@@ -205,29 +214,38 @@ public class RequestScopeInjector extends BaseScopeInjector
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
-			for (ScopeData.In in : injectData) {
-				String name = getMatchedPropertyName(in, paramName);
-				if (name != null) {
-					String[] paramValues = servletRequest.getParameterValues(paramName);
-					paramValues = ServletUtil.prepareParameters(
-							paramValues,
-							config.trimParams,
-							config.treatEmptyParamsAsNull,
-							config.ignoreEmptyRequestParams);
 
-					if (paramValues == null) {
-						continue;
-					}
-					if (encode) {
-						for (int i = 0; i < paramValues.length; i++) {
-							String p = paramValues[i];
-							if (p != null) {
-								paramValues[i] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
+			for (int i = 0; i < targets.length; i++) {
+				Object target = targets[i];
+				ScopeData.In[] scopes = injectData[i];
+				if (scopes == null) {
+					continue;
+				}
+
+				for (ScopeData.In in : scopes) {
+					String name = getMatchedPropertyName(in, paramName);
+					if (name != null) {
+						String[] paramValues = servletRequest.getParameterValues(paramName);
+						paramValues = ServletUtil.prepareParameters(
+								paramValues,
+								config.trimParams,
+								config.treatEmptyParamsAsNull,
+								config.ignoreEmptyRequestParams);
+
+						if (paramValues == null) {
+							continue;
+						}
+						if (encode) {
+							for (int j = 0; j < paramValues.length; j++) {
+								String p = paramValues[j];
+								if (p != null) {
+									paramValues[j] = StringUtil.convertCharset(p, StringPool.ISO_8859_1, encoding);
+								}
 							}
 						}
+						Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
+						setTargetProperty(target, name, value, in.create);
 					}
-					Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
-					setTargetProperty(target, name, value, in.create);
 				}
 			}
 		}
@@ -236,7 +254,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
-	protected void injectUploadedFiles(Object target, ScopeData.In[] injectData, HttpServletRequest servletRequest) {
+	protected void injectUploadedFiles(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		if ((servletRequest instanceof MultipartRequestWrapper) == false) {
 			return;
 		}
@@ -250,23 +268,32 @@ public class RequestScopeInjector extends BaseScopeInjector
 			if (servletRequest.getAttribute(paramName) != null) {
 				continue;
 			}
-			for (ScopeData.In in : injectData) {
-				String name = getMatchedPropertyName(in, paramName);
-				if (name != null) {
-					FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 
-					if (config.ignoreInvalidUploadFiles) {
-						for (int i = 0; i < paramValues.length; i++) {
-							FileUpload paramValue = paramValues[i];
+			for (int i = 0; i < targets.length; i++) {
+				Object target = targets[i];
+				ScopeData.In[] scopes = injectData[i];
+				if (scopes == null) {
+					continue;
+				}
 
-							if ((paramValue.isValid() == false) || (paramValue.isUploaded() == false)) {
-								paramValues[i] = null;
+				for (ScopeData.In in : scopes) {
+					String name = getMatchedPropertyName(in, paramName);
+					if (name != null) {
+						FileUpload[] paramValues = multipartRequest.getFiles(paramName);
+
+						if (config.ignoreInvalidUploadFiles) {
+							for (int j = 0; j < paramValues.length; j++) {
+								FileUpload paramValue = paramValues[j];
+
+								if ((paramValue.isValid() == false) || (paramValue.isUploaded() == false)) {
+									paramValues[j] = null;
+								}
 							}
 						}
-					}
 
-					Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
-					setTargetProperty(target, name, value, in.create);
+						Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
+						setTargetProperty(target, name, value, in.create);
+					}
 				}
 			}
 		}
@@ -308,37 +335,46 @@ public class RequestScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.In[][] injectData = lookupInData(targets);
 		if (injectData == null) {
 			return;
 		}
-
-		Object target = actionRequest.getAction();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		if (config.injectAttributes == true) {
-			injectAttributes(target, injectData, servletRequest);
+			injectAttributes(targets, injectData, servletRequest);
 		}
 		if (config.injectParameters == true) {
-			injectParameters(target, injectData, servletRequest);
-			injectUploadedFiles(target, injectData, servletRequest);
+			injectParameters(targets, injectData, servletRequest);
+			injectUploadedFiles(targets, injectData, servletRequest);
 		}
 	}
 
 	// ---------------------------------------------------------------- outject
 
 	public void outject(ActionRequest actionRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.Out[][] outjectData = lookupOutData(targets);
 		if (outjectData == null) {
 			return;
 		}
 
-		Object target = actionRequest.getAction();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		for (ScopeData.Out out : outjectData) {
-			Object value = getTargetProperty(target, out);
-			servletRequest.setAttribute(out.name, value);
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			ScopeData.Out[] scopes = outjectData[i];
+			if (scopes == null) {
+				continue;
+			}
+
+			for (ScopeData.Out out : scopes) {
+				Object value = getTargetProperty(target, out);
+				servletRequest.setAttribute(out.name, value);
+			}
 		}
 	}
 

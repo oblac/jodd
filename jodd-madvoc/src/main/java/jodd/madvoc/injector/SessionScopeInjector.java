@@ -21,12 +21,13 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.In[][] injectData = lookupInData(targets);
 		if (injectData == null) {
 			return;
 		}
 
-		Object target = actionRequest.getAction();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
@@ -35,30 +36,46 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
-			for (ScopeData.In in : injectData) {
-				String name = getMatchedPropertyName(in, attrName);
-				if (name != null) {
-					Object attrValue = session.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue, in.create);
+			for (int i = 0; i < targets.length; i++) {
+				Object target = targets[i];
+				ScopeData.In[] scopes = injectData[i];
+				if (scopes == null) {
+					continue;
+				}
+
+				for (ScopeData.In in : scopes) {
+					String name = getMatchedPropertyName(in, attrName);
+					if (name != null) {
+						Object attrValue = session.getAttribute(attrName);
+						setTargetProperty(target, name, attrValue, in.create);
+					}
 				}
 			}
 		}
-
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.Out[][] outjectData = lookupOutData(targets);
 		if (outjectData == null) {
 			return;
 		}
 
-		Object target = actionRequest.getAction();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-
 		HttpSession session = servletRequest.getSession();
-		for (ScopeData.Out out : outjectData) {
-			Object value = getTargetProperty(target, out);
-			session.setAttribute(out.name, value);
+
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			ScopeData.Out[] scopes = outjectData[i];
+			if (scopes == null) {
+				continue;
+			}
+
+			for (ScopeData.Out out : scopes) {
+				Object value = getTargetProperty(target, out);
+				session.setAttribute(out.name, value);
+			}
 		}
 	}
 }

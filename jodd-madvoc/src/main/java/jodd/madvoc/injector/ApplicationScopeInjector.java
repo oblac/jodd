@@ -21,15 +21,35 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		ScopeData.In[] injectData = lookupInData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.In[][] injectData = lookupInData(targets);
 		if (injectData == null) {
 			return;
 		}
-
-		Object target = actionRequest.getAction();
 		ServletContext servletContext = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
-		inject(target, servletContext, injectData);
+		Enumeration attributeNames = servletContext.getAttributeNames();
+
+		while (attributeNames.hasMoreElements()) {
+			String attrName = (String) attributeNames.nextElement();
+
+			for (int i = 0; i < targets.length; i++) {
+				Object target = targets[i];
+				ScopeData.In[] scopes = injectData[i];
+				if (scopes == null) {
+					continue;
+				}
+
+				for (ScopeData.In in : scopes) {
+					String name = getMatchedPropertyName(in, attrName);
+					if (name != null) {
+						Object attrValue = servletContext.getAttribute(attrName);
+						setTargetProperty(target, name, attrValue, in.create);
+					}
+				}
+			}
+		}
 	}
 
 	public void injectContext(Object target, ServletContext servletContext) {
@@ -37,11 +57,9 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		if (injectData == null) {
 			return;
 		}
-		inject(target, servletContext, injectData);
-	}
 
-	protected void inject(Object target, ServletContext servletContext, ScopeData.In[] injectData) {
 		Enumeration attributeNames = servletContext.getAttributeNames();
+
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 			for (ScopeData.In in : injectData) {
@@ -55,17 +73,26 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(actionRequest.getActionConfig());
+		Object[] targets = actionRequest.getTargets();
+
+		ScopeData.Out[][] outjectData = lookupOutData(targets);
 		if (outjectData == null) {
 			return;
 		}
 
-		Object target = actionRequest.getAction();
 		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
-		for (ScopeData.Out out : outjectData) {
-			Object value = getTargetProperty(target, out);
-			context.setAttribute(out.name, value);
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			ScopeData.Out[] scopes = outjectData[i];
+			if (scopes == null) {
+				continue;
+			}
+
+			for (ScopeData.Out out : scopes) {
+				Object value = getTargetProperty(target, out);
+				context.setAttribute(out.name, value);
+			}
 		}
 	}
 }

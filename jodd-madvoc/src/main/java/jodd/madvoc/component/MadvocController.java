@@ -240,7 +240,13 @@ public class MadvocController {
 	 * @param servletResponse	http response
 	 * @return action request
 	 */
-	protected ActionRequest createActionRequest(String actionPath, ActionConfig actionConfig, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	protected ActionRequest createActionRequest(
+			String actionPath,
+			ActionConfig actionConfig,
+			Object action,
+			HttpServletRequest servletRequest,
+			HttpServletResponse servletResponse) {
+
 		return new ActionRequest(this, actionPath, actionConfig, action, servletRequest, servletResponse);
 	}
 

@@ -23,13 +23,14 @@ import java.lang.reflect.InvocationTargetException;
 public class ActionRequest {
 
 	protected final MadvocController madvocController;
-	protected final ActionConfig config;
+	protected final ActionConfig actionConfig;
 	protected final String actionPath;
 	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 	protected Result result;
 
 	protected final Object[] params;
+	protected final Object[] targets;
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
 	protected int filterIndex;
@@ -76,7 +77,7 @@ public class ActionRequest {
 	 * Returns {@link ActionConfig action configuration}.
 	 */
 	public ActionConfig getActionConfig() {
-		return config;
+		return actionConfig;
 	}
 
 	/**
@@ -128,25 +129,52 @@ public class ActionRequest {
 		return result;
 	}
 
+	/**
+	 * Returns all injection targets.
+	 */
+	public Object[] getTargets() {
+		return targets;
+	}
 	// ---------------------------------------------------------------- ctor
 
 	/**
-	 * Creates new action request and action object.
+	 * Creates new action request and initializes it.
 	 */
-	public ActionRequest(MadvocController madvocController, String actionPath, ActionConfig config, Object action, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+	public ActionRequest(
+			MadvocController madvocController,
+			String actionPath,
+			ActionConfig actionConfig,
+			Object action,
+			HttpServletRequest servletRequest,
+			HttpServletResponse servletResponse) {
+
 		this.madvocController = madvocController;
 		this.actionPath = actionPath;
-		this.config = config;
+		this.actionConfig = actionConfig;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
-		totalInterceptors = (this.config.interceptors != null ? this.config.interceptors.length : 0);
+		totalInterceptors = (this.actionConfig.interceptors != null ? this.actionConfig.interceptors.length : 0);
 		interceptorIndex = 0;
-		totalFilters = (this.config.filters != null ? this.config.filters.length : 0);
+		totalFilters = (this.actionConfig.filters != null ? this.actionConfig.filters.length : 0);
 		filterIndex = 0;
 		execState = 0;
 		this.action = action;
 		this.result = findResult();
 		this.params = createActionMethodArguments();
+		this.targets = makeTargets();
+	}
+
+	/**
+	 * Joins action and parameters into one array.
+	 */
+	protected Object[] makeTargets() {
+		if (params == null) {
+			return new Object[] {action};
+		}
+		Object[] target = new Object[params.length + 1];
+		target[0] = action;
+		System.arraycopy(params, 0, target, 1, params.length);
+		return target;
 	}
 
 	/**
@@ -154,7 +182,7 @@ public class ActionRequest {
 	 * and it's value is <code>null</code> it will be created.
 	 */
 	protected Result findResult() {
-		Field resultField = config.resultField;
+		Field resultField = actionConfig.resultField;
 		if (resultField != null) {
 			try {
 				Result result = (Result) resultField.get(action);
@@ -176,10 +204,10 @@ public class ActionRequest {
 	 * Creates action method arguments.
 	 */
 	protected Object[] createActionMethodArguments() {
-		if (!config.hasArguments) {
+		if (!actionConfig.hasArguments) {
 			return null;
 		}
-		Class[] types = config.getActionClassMethod().getParameterTypes();
+		Class[] types = actionConfig.getActionClassMethod().getParameterTypes();
 
 		Object[] params = new Object[types.length];
 
@@ -192,7 +220,7 @@ public class ActionRequest {
 					params[i] = type.newInstance();
 				} else {
 					// member class
-					Constructor ctor = type.getDeclaredConstructor(config.getActionClass());
+					Constructor ctor = type.getDeclaredConstructor(actionConfig.getActionClass());
 					params[i] = ctor.newInstance(action);
 				}
 			} catch (Exception ex) {
@@ -210,13 +238,13 @@ public class ActionRequest {
 	 */
 	public Object invoke() throws Exception {
 		if (execState >= 2) {
-			throw new MadvocException("Action already invoked: " + config.actionPath);
+			throw new MadvocException("Action already invoked: " + actionConfig.actionPath);
 		}
 
 		if (execState == 0) {
 			// filters
 			if (filterIndex < totalFilters) {
-				ActionFilter filter = config.filters[filterIndex];
+				ActionFilter filter = actionConfig.filters[filterIndex];
 				filterIndex++;
 				return filter.invoke(this);
 			}
@@ -254,7 +282,7 @@ public class ActionRequest {
 	protected Object invokeAction() throws Exception {
 		// interceptors
 		if (interceptorIndex < totalInterceptors) {
-			ActionInterceptor interceptor = config.interceptors[interceptorIndex];
+			ActionInterceptor interceptor = actionConfig.interceptors[interceptorIndex];
 			interceptorIndex++;
 			return interceptor.invoke(this);
 		}
@@ -271,7 +299,7 @@ public class ActionRequest {
 	 */
 	protected Object invokeActionMethod() throws Exception {
 		try {
-			return config.actionClassMethod.invoke(action, params);
+			return actionConfig.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw ExceptionUtil.extractTargetException(itex);
 		}
