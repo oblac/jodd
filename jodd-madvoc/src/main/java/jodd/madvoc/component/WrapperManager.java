@@ -50,16 +50,6 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		return set;
 	}
 
-	/**
-	 * Registers wrapper instance for given name. Wrapper
-	 * instance gets injected with {@link MadvocContextInjector}.
-	 */
-	public <R extends T> void register(String name, R actionWrapper) {
-		madvocContextInjector.injectMadvocContext(actionWrapper);
-		madvocContextInjector.injectMadvocParams(actionWrapper);
-
-		wrappers.put(name, actionWrapper);
-	}
 
 	/**
 	 * Looks up for existing wrapper. Returns <code>null</code> if wrapper is not already registered.
