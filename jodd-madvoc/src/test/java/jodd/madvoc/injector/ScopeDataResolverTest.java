@@ -21,7 +21,7 @@ public class ScopeDataResolverTest {
 	public void testInAnnotations() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData.In[] in1 = scopeDataResolver.lookupInData(Action.class, ScopeType.REQUEST);
+		ScopeData.In[] in1 = scopeDataResolver.resolveInData(Action.class, ScopeType.REQUEST);
 
 		ScopeData.In in = in1[0];
 
@@ -43,8 +43,8 @@ public class ScopeDataResolverTest {
 	public void testGenericAction() {
 		ScopeDataResolver scopeDataResolver = new ScopeDataResolver();
 
-		ScopeData.In[] in1 = scopeDataResolver.lookupInData(GenAction.class, ScopeType.REQUEST);
-		ScopeData.Out[] out1 = scopeDataResolver.lookupOutData(GenAction.class, ScopeType.REQUEST);
+		ScopeData.In[] in1 = scopeDataResolver.resolveInData(GenAction.class, ScopeType.REQUEST);
+		ScopeData.Out[] out1 = scopeDataResolver.resolveOutData(GenAction.class, ScopeType.REQUEST);
 
 		ScopeData.In in = in1[0];
 		ScopeData.Out out = out1[0];

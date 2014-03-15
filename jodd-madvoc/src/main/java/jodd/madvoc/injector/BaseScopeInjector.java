@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ScopeDataResolver;
@@ -84,60 +85,31 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupInData(Class, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#resolveInData(Class, jodd.madvoc.ScopeType)}.
 	 */
-	public ScopeData.In[] lookupInData(Class type) {
-		return scopeDataResolver.lookupInData(type, scopeType);
+	public ScopeData.In[] resolveInData(Class type) {
+		return scopeDataResolver.resolveInData(type, scopeType);
 	}
 
 	/**
 	 * Lookups scope data for many targets.
 	 */
-	public ScopeData.In[][] lookupInData(Object[] targets) {
-		ScopeData.In[][] scopes = new ScopeData.In[targets.length][];
-
-		boolean allNulls = true;
-		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
-			scopes[i] = scopeDataResolver.lookupInData(target.getClass(), scopeType);
-			if (scopes[i] != null) {
-				allNulls = false;
-			}
-		}
-
-		if (allNulls) {
-			return null;
-		}
-		return scopes;
+	public ScopeData.In[][] lookupInData(ActionRequest actionRequest) {
+		return actionRequest.getActionConfig().ins[scopeType.value()];
 	}
 
 	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#lookupOutData(Class, jodd.madvoc.ScopeType)}.
+	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#resolveOutData(Class, jodd.madvoc.ScopeType)}.
 	 */
-	public ScopeData.Out[] lookupOutData(Class type) {
-		return scopeDataResolver.lookupOutData(type, scopeType);
+	public ScopeData.Out[] resolveOutData(Class type) {
+		return scopeDataResolver.resolveOutData(type, scopeType);
 	}
 
 	/**
 	 * Lookups scope data for many targets.
 	 */
-	public ScopeData.Out[][] lookupOutData(Object[] targets) {
-		ScopeData.Out[][] scopes = new ScopeData.Out[targets.length][];
-
-		boolean allNulls = true;
-		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
-			scopes[i] = scopeDataResolver.lookupOutData(target.getClass(), scopeType);
-			if (scopes[i] != null) {
-				allNulls = false;
-			}
-		}
-
-		if (allNulls) {
-			return null;
-		}
-		return scopes;
+	public ScopeData.Out[][] lookupOutData(ActionRequest actionRequest) {
+		return actionRequest.getActionConfig().outs[scopeType.value()];
 	}
-
 
 }

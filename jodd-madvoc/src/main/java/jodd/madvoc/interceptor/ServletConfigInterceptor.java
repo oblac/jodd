@@ -75,9 +75,7 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 * Performs injection.
 	 */
 	protected void inject(ActionRequest actionRequest) {
-		Object target = actionRequest.getAction();
-
-		madvocContextInjector.injectMadvocContext(target);
+		madvocContextInjector.inject(actionRequest);
 
 		// no need to inject madvoc params, as this can be slow
 		// and its better to use some single data object instead
@@ -87,7 +85,7 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 
 		sessionScopeInjector.inject(actionRequest);
 
-		requestScopeInjector.prepare(actionRequest);
+		requestScopeInjector.prepare(actionRequest);		// todo check if needed
 		requestScopeInjector.inject(actionRequest);
 
 		actionPathMacroInjector.inject(actionRequest);

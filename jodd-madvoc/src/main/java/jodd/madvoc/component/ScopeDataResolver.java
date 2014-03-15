@@ -14,32 +14,28 @@ import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
 /**
- * Collection of {@link jodd.madvoc.ScopeData scope data} of certain type.
- * For each action class and action method it holds an array of ScopeData objects.
- * Each element of that array represents data for one ScopeType.
- * Some elements might be <code>null</code> as well.
+ * Resolver for {@link jodd.madvoc.ScopeData scope data} for certain types.
+ * It does not cache anything as Scope data is cached in {@link jodd.madvoc.ActionConfig}.
+ * Resolving only happens during the initialization, and it might be repeated for
+ * certain types (as there is no cache), but that is acceptable to reduce memory
+ * usage (no cache) and several lookups (for each interceptor) during every request.
  */
 public class ScopeDataResolver {
-
-	private static final ScopeData[] EMPTY_SCOPEDATA = new ScopeData[0];
-
-	protected Map<Object, ScopeData[]> scopeMap = new HashMap<Object, ScopeData[]>();
 
 	// ---------------------------------------------------------------- bean
 
 	/**
-	 * Lookups for {@link jodd.madvoc.ScopeData.In} data for given type and scope type.
+	 * Resolves for {@link jodd.madvoc.ScopeData.In} data in given type for
+	 * provided scope type.
 	 */
-	public ScopeData.In[] lookupInData(Class type, ScopeType scopeType) {
-		ScopeData[] scopeData = lookupScopeData(type);
+	public ScopeData.In[] resolveInData(Class type, ScopeType scopeType) {
+		ScopeData[] scopeData = resolveScopeData(type);
 		if (scopeData == null) {
 			return null;
 		}
@@ -53,10 +49,11 @@ public class ScopeDataResolver {
 	}
 
 	/**
-	 * Lookups for {@link jodd.madvoc.ScopeData.Out} data for given type and scope type.
+	 * Resolves for {@link jodd.madvoc.ScopeData.Out} data in given type for
+	 * provided scope type.
 	 */
-	public ScopeData.Out[] lookupOutData(Class type, ScopeType scopeType) {
-		ScopeData[] scopeData = lookupScopeData(type);
+	public ScopeData.Out[] resolveOutData(Class type, ScopeType scopeType) {
+		ScopeData[] scopeData = resolveScopeData(type);
 		if (scopeData == null) {
 			return null;
 		}
@@ -70,19 +67,13 @@ public class ScopeDataResolver {
 	}
 
 	/**
-	 * Lookups for cached scope data of all scope types. Returns <code>null</code>
-	 * if no scope data exist.
+	 * Resolve scope data in given type for all scope types.
+	 * Returns <code>null</code> if no scope data exist.
 	 */
-	public ScopeData[] lookupScopeData(Class type) {
-		ScopeData[] scopeData = scopeMap.get(type);
+	public ScopeData[] resolveScopeData(Class type) {
+		ScopeData[] scopeData = inspectScopeData(type);
 
 		if (scopeData == null) {
-			scopeData = inspectScopeData(type);
-
-			scopeMap.put(type, scopeData);
-		}
-
-		if (scopeData.length == 0) {
 			return null;
 		}
 
@@ -123,7 +114,7 @@ public class ScopeDataResolver {
 			throw new MadvocException("Invalid type: " + key);
 		}
 		if (count == 0) {
-			scopeData = EMPTY_SCOPEDATA;
+			return null;
 		}
 
 		return scopeData;

@@ -72,7 +72,7 @@ public class MadvocSuite {
 		if (server == null) {
 			return;
 		}
-		if (isSuite) {	// dont stop tomcat if it we are still running in the suite!
+		if (isSuite) {	// don't stop tomcat if it we are still running in the suite!
 			return;
 		}
 		try {

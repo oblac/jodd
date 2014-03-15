@@ -2,6 +2,7 @@
 
 package jodd.madvoc.component;
 
+import jodd.madvoc.ActionRequest;
 import jodd.madvoc.injector.MadvocContextScopeInjector;
 import jodd.madvoc.injector.MadvocParamsInjector;
 import jodd.petite.PetiteContainer;
@@ -25,13 +26,12 @@ public class MadvocContextInjector {
 	@PetiteInject
 	protected ScopeDataResolver scopeDataResolver;
 
-
 	protected MadvocContextScopeInjector madvocContextScopeInjector;
 	protected MadvocParamsInjector madvocParamsInjector;
 
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
-		madvocContextScopeInjector = new MadvocContextScopeInjector(scopeDataResolver);
+		madvocContextScopeInjector = new MadvocContextScopeInjector(scopeDataResolver, madpc);
 		madvocParamsInjector = new MadvocParamsInjector(madpc);
 	}
 
@@ -40,6 +40,10 @@ public class MadvocContextInjector {
 	 */
 	public void injectMadvocContext(Object target) {
 		madvocContextScopeInjector.injectContext(target, madpc);
+	}
+
+	public void inject(ActionRequest actionRequest) {
+		madvocContextScopeInjector.inject(actionRequest);
 	}
 
 	/**

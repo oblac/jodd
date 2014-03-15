@@ -7,6 +7,8 @@ import jodd.introspector.MethodDescriptor;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
+import jodd.madvoc.ScopeData;
+import jodd.madvoc.ScopeType;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
@@ -16,6 +18,7 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
+import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import jodd.util.StringPool;
@@ -47,6 +50,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
+
+	@PetiteInject
+	protected ScopeDataResolver scopeDataResolver;
 
 	// ---------------------------------------------------------------- resolve method
 
@@ -472,6 +478,7 @@ public class ActionMethodParser {
 
 	/**
 	 * Creates new instance of action configuration.
+	 * Initialize caches.
 	 */
 	public ActionConfig createActionConfig(
 			Class actionClass,
@@ -482,6 +489,36 @@ public class ActionMethodParser {
 			String actionMethod,
 			String[] pathElements)
 	{
+		// find ins and outs
+
+		Class[] paramTypes = actionClassMethod.getParameterTypes();
+		Class[] types = ArraysUtil.insert(paramTypes, actionClass, 0);
+
+		ScopeData.In[][][] ins;
+		ScopeData.Out[][][] outs;
+
+		ins = new ScopeData.In[ScopeType.values().length][][];
+		outs = new ScopeData.Out[ScopeType.values().length][][];
+
+		for (int i = 0; i < ScopeType.values().length; i++) {
+			ins[i] = new ScopeData.In[types.length][];
+			outs[i] = new ScopeData.Out[types.length][];
+
+			for (int j = 0; j < types.length; j++) {
+				Class type = types[j];
+
+				ScopeData[] scopeData = scopeDataResolver.resolveScopeData(type);
+				if (scopeData == null) {
+					continue;
+				}
+
+				if (scopeData[i] != null) {
+					ins[i][j] = scopeData[i].in;
+					outs[i][j] = scopeData[i].out;
+				}
+			}
+		}
+
 
 		return new ActionConfig(
 				actionClass,
@@ -490,6 +527,8 @@ public class ActionMethodParser {
 				interceptors,
 				actionPath,
 				actionMethod,
+				ins,
+				outs,
 				pathElements);
 	}
 

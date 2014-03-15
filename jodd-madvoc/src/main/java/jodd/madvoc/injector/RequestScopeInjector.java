@@ -337,7 +337,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	public void inject(ActionRequest actionRequest) {
 		Object[] targets = actionRequest.getTargets();
 
-		ScopeData.In[][] injectData = lookupInData(targets);
+		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
@@ -357,7 +357,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	public void outject(ActionRequest actionRequest) {
 		Object[] targets = actionRequest.getTargets();
 
-		ScopeData.Out[][] outjectData = lookupOutData(targets);
+		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
@@ -379,7 +379,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	}
 
 	protected void outjectAfterMove(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = lookupOutData(target.getClass());
+		ScopeData.Out[] outjectData = resolveOutData(target.getClass());
 		if (outjectData == null) {
 			return;
 		}

@@ -120,7 +120,7 @@ public class ServletDispatcherResultTest {
 				Action.class,
 				ReflectUtil.findMethod(Action.class, "view"),
 				null, null,
-				actionPath, "GET", null);
+				actionPath, "GET", null, null, null);
 
 		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
 	}

@@ -23,7 +23,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	public void inject(ActionRequest actionRequest) {
 		Object[] targets = actionRequest.getTargets();
 
-		ScopeData.In[][] injectData = lookupInData(targets);
+		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
@@ -57,7 +57,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	public void outject(ActionRequest actionRequest) {
 		Object[] targets = actionRequest.getTargets();
 
-		ScopeData.Out[][] outjectData = lookupOutData(targets);
+		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}

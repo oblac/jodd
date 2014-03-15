@@ -2,22 +2,23 @@
 
 package jodd.madvoc;
 
-import jodd.JoddLog;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.log.impl.SimpleLoggerFactory;
 import jodd.madvoc.action.HelloAction;
-import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
+import jodd.madvoc.config.MadvocConfigurator;
+import jodd.madvoc.injector.BaseScopeInjector;
 import jodd.madvoc.petite.PetiteWebApplication;
 
 import javax.servlet.ServletContext;
+import java.util.HashSet;
 
 public class MyWebApplication extends PetiteWebApplication {
 
-//	public MyWebApplication() {
-//		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
-//	}
+	public MyWebApplication() {
+		LoggerFactory.setLoggerFactory(new SimpleLoggerFactory(Logger.Level.DEBUG));
+	}
 
 	@Override
 	public void registerMadvocComponents() {
@@ -27,14 +28,16 @@ public class MyWebApplication extends PetiteWebApplication {
 	}
 
 	@Override
-	protected void initInterceptors(InterceptorsManager interceptorsManager) {
-		interceptorsManager.register("ServletConfigAltInterceptor", new ServletConfigAltInterceptor());
-	}
-
-	@Override
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		super.init(madvocConfig, servletContext);
 
 		madvocConfig.getRootPackages().addRootPackageOf(HelloAction.class);
+	}
+
+	@Override
+	public void configure(MadvocConfigurator configurator) {
+		super.configure(configurator);
+
+		BaseScopeInjector.set = new HashSet<String>();
 	}
 }

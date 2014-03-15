@@ -23,6 +23,11 @@ public class ActionConfig {
 	public final String actionPath;
 	public final String actionMethod;
 	public final Field resultField;
+
+	// scope data information matrix: [scope-type][target-index][founded ins/outs]
+	public final ScopeData.In[][][] ins;
+	public final ScopeData.Out[][][] outs;
+
 	public final boolean hasArguments;
 	//public final String[] actionPathElements;
 
@@ -38,6 +43,8 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
+			ScopeData.In[][][] ins,
+			ScopeData.Out[][][] outs,
 			String[] actionPathElements)
 	{
 		this.actionClass = actionClass;
@@ -46,6 +53,9 @@ public class ActionConfig {
 		this.actionMethod = actionMethod;
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		//this.actionPathElements = actionPathElements;		// ignore for now
+
+		this.ins = ins;
+		this.outs = outs;
 
 		this.filters = filters;
 		this.interceptors = interceptors;
