@@ -8,11 +8,9 @@ import jodd.log.impl.SimpleLoggerFactory;
 import jodd.madvoc.action.HelloAction;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.config.MadvocConfigurator;
-import jodd.madvoc.injector.BaseScopeInjector;
 import jodd.madvoc.petite.PetiteWebApplication;
 
 import javax.servlet.ServletContext;
-import java.util.HashSet;
 
 public class MyWebApplication extends PetiteWebApplication {
 
@@ -37,7 +35,5 @@ public class MyWebApplication extends PetiteWebApplication {
 	@Override
 	public void configure(MadvocConfigurator configurator) {
 		super.configure(configurator);
-
-		BaseScopeInjector.set = new HashSet<String>();
 	}
 }
