@@ -55,19 +55,18 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 	@SuppressWarnings({"unchecked"})
 	@Test
 	public void testExpandStack() {
+		InjectorsManager injectorsManager = new InjectorsManager();
+		injectorsManager.scopeDataResolver = new ScopeDataResolver();
+		injectorsManager.madvocConfig = new MadvocConfig();
+		injectorsManager.madpc = new PetiteContainer();
+		injectorsManager.createInjectors();
+
 		InterceptorsManager im = new InterceptorsManager();
-		im.madvocConfig = new MadvocConfig();
+		im.contextInjectorComponent = new ContextInjectorComponent();
+		im.contextInjectorComponent.injectorsManager = injectorsManager;
+		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
-
-		im.madvocContextInjector = new MadvocContextInjector();
-		im.madvocContextInjector.madpc = new PetiteContainer();
-		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
-		im.madvocContextInjector.createInjectors();
-
-		im.servletContextInjector = new ServletContextInjector();
-		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
-		im.servletContextInjector.createInjectors();
-		im.madvocController = new MadvocController();
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				TestStack.class,
@@ -93,8 +92,15 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 	@SuppressWarnings({"unchecked"})
 	@Test
 	public void testExpandConfigurableStack() {
+		InjectorsManager injectorsManager = new InjectorsManager();
+		injectorsManager.scopeDataResolver = new ScopeDataResolver();
+		injectorsManager.madvocConfig = new MadvocConfig();
+
 		InterceptorsManager im = new InterceptorsManager();
-		im.madvocConfig = new MadvocConfig();
+		im.contextInjectorComponent = new ContextInjectorComponent();
+		im.contextInjectorComponent.injectorsManager = injectorsManager;
+		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
 		PetiteContainer madpc = new PetiteContainer();
@@ -104,15 +110,9 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 				ServletConfigInterceptor.class.getName() + "," +
 				LogEchoInterceptor.class.getName()
 		);
-		im.madvocContextInjector = new MadvocContextInjector();
-		im.madvocContextInjector.madpc = madpc;
-		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
-		im.madvocContextInjector.createInjectors();
 
-		im.servletContextInjector = new ServletContextInjector();
-		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
-		im.servletContextInjector.createInjectors();
-		im.madvocController = new MadvocController();
+		injectorsManager.madpc = madpc;
+		injectorsManager.createInjectors();
 
 		Class<? extends ActionInterceptor>[] in = new Class[] {
 			TestConfigurableStack.class,
@@ -163,19 +163,18 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 	@SuppressWarnings({"unchecked"})
 	@Test
 	public void testExpandStack2() {
+		InjectorsManager injectorsManager = new InjectorsManager();
+		injectorsManager.scopeDataResolver = new ScopeDataResolver();
+		injectorsManager.madvocConfig = new MadvocConfig();
+		injectorsManager.madpc = new PetiteContainer();
+		injectorsManager.createInjectors();
+
 		InterceptorsManager im = new InterceptorsManager();
-		im.madvocConfig = new MadvocConfig();
+		im.contextInjectorComponent = new ContextInjectorComponent();
+		im.contextInjectorComponent.injectorsManager = injectorsManager;
+		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
-
-		im.madvocContextInjector = new MadvocContextInjector();
-		im.madvocContextInjector.madpc = new PetiteContainer();
-		im.madvocContextInjector.scopeDataResolver = new ScopeDataResolver();
-		im.madvocContextInjector.createInjectors();
-
-		im.servletContextInjector = new ServletContextInjector();
-		im.servletContextInjector.scopeDataResolver = im.madvocContextInjector.scopeDataResolver;
-		im.servletContextInjector.createInjectors();
-		im.madvocController = new MadvocController();
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
 				DefaultWebAppInterceptors.class,

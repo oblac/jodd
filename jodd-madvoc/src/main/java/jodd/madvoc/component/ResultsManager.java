@@ -21,13 +21,7 @@ public class ResultsManager {
 	private static final Logger log = LoggerFactory.getLogger(ResultsManager.class);
 
 	@PetiteInject
- 	protected MadvocContextInjector madvocContextInjector;
-
-	@PetiteInject
-	protected ServletContextInjector servletContextInjector;
-
-	@PetiteInject
-	protected MadvocController madvocController;
+	protected ContextInjectorComponent contextInjectorComponent;
 
 	public ResultsManager() {
 		this.stringResults = new HashMap<String, ActionResult>();
@@ -125,9 +119,7 @@ public class ResultsManager {
 	 * Initializes action result.
 	 */
 	protected void initializeResult(ActionResult result) {
-		madvocContextInjector.injectMadvocContext(result);
-		madvocContextInjector.injectMadvocParams(result);
-		servletContextInjector.injectContext(result, madvocController.getApplicationContext());
+		contextInjectorComponent.injectContext(result);
 
 		result.init();
 	}

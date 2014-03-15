@@ -22,16 +22,10 @@ import java.util.Set;
 public abstract class WrapperManager<T extends ActionWrapper> {
 
 	@PetiteInject
-	protected MadvocController madvocController;
+	protected ContextInjectorComponent contextInjectorComponent;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
-
-	@PetiteInject
-	protected ServletContextInjector servletContextInjector;
-
-	@PetiteInject
- 	protected MadvocContextInjector madvocContextInjector;
 
 	protected WrapperManager() {
 		wrappers = new HashMap<String, T>();
@@ -105,9 +99,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Initializes action wrapper.
 	 */
 	protected void initializeWrapper(T wrapper) {
-		madvocContextInjector.injectMadvocContext(wrapper);
-		madvocContextInjector.injectMadvocParams(wrapper);
-		servletContextInjector.injectContext(wrapper, madvocController.getApplicationContext());
+		contextInjectorComponent.injectContext(wrapper);
 
 		wrapper.init();
 	}

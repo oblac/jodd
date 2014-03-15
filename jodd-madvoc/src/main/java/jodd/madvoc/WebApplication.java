@@ -3,9 +3,10 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.ActionPathMacroManager;
+import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.InterceptorsManager;
-import jodd.madvoc.component.MadvocContextInjector;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
@@ -14,7 +15,6 @@ import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.component.ActionPathRewriter;
 import jodd.madvoc.component.ScopeDataResolver;
-import jodd.madvoc.component.ServletContextInjector;
 import jodd.madvoc.config.MadvocConfigurator;
 import jodd.petite.PetiteContainer;
 
@@ -158,14 +158,14 @@ public class WebApplication {
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
+		registerComponent(ContextInjectorComponent.class);
+		registerComponent(InjectorsManager.class);
 		registerComponent(InterceptorsManager.class);
 		registerComponent(FiltersManager.class);
 		registerComponent(MadvocConfig.class);
 		registerComponent(MadvocController.class);
 		registerComponent(ResultsManager.class);
 		registerComponent(ResultMapper.class);
-		registerComponent(ServletContextInjector.class);
-		registerComponent(MadvocContextInjector.class);
 		registerComponent(ScopeDataResolver.class);
 	}
 
@@ -230,6 +230,7 @@ public class WebApplication {
 	 * Called when Madvoc is up and ready.
 	 */
 	protected void ready() {
+		log.info("Madvoc is ready");
 	}
 
 	/**

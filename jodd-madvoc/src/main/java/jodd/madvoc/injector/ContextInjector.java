@@ -3,7 +3,7 @@
 package jodd.madvoc.injector;
 
 /**
- * Context injector.
+ * Context injector. Context is injected only during the initialization.
  */
 public interface ContextInjector<C> {
 

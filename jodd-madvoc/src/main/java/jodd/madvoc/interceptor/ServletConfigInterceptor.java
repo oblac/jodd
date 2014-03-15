@@ -4,12 +4,7 @@ package jodd.madvoc.interceptor;
 
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocContextInjector;
-import jodd.madvoc.component.ScopeDataResolver;
-import jodd.madvoc.component.ServletContextInjector;
-import jodd.madvoc.injector.ActionPathMacroInjector;
-import jodd.madvoc.injector.RequestScopeInjector;
-import jodd.madvoc.injector.SessionScopeInjector;
+import jodd.madvoc.component.InjectorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.In;
 import jodd.servlet.ServletUtil;
@@ -33,24 +28,7 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	protected MadvocConfig madvocConfig;
 
 	@In(scope = ScopeType.CONTEXT)
-	protected ServletContextInjector servletContextInjector;
-
-	@In(scope = ScopeType.CONTEXT)
-	protected MadvocContextInjector madvocContextInjector;
-
-	@In(scope = ScopeType.CONTEXT)
-	protected ScopeDataResolver scopeDataResolver;
-
-	protected RequestScopeInjector requestScopeInjector;
-	protected SessionScopeInjector sessionScopeInjector;
-	protected ActionPathMacroInjector actionPathMacroInjector;
-
-	@Override
-	public void init() {
-		requestScopeInjector = new RequestScopeInjector(madvocConfig, scopeDataResolver);
-		sessionScopeInjector = new SessionScopeInjector(scopeDataResolver);
-		actionPathMacroInjector = new ActionPathMacroInjector();
-	}
+	protected InjectorsManager injectorsManager;
 
 	/**
 	 * {@inheritDoc}
@@ -66,8 +44,11 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 
 		// do it
 		inject(actionRequest);
+
 		Object result = actionRequest.invoke();
+
 		outject(actionRequest);
+
 		return result;
 	}
 
@@ -75,20 +56,22 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 * Performs injection.
 	 */
 	protected void inject(ActionRequest actionRequest) {
-		madvocContextInjector.inject(actionRequest);
+
+		injectorsManager.getMadvocContextScopeInjector().inject(actionRequest);
 
 		// no need to inject madvoc params, as this can be slow
 		// and its better to use some single data object instead
 		//madvocContextInjector.injectMadvocParams(target);
 
-		servletContextInjector.inject(actionRequest);
+		injectorsManager.getServletContextScopeInjector().inject(actionRequest);
+		injectorsManager.getApplicationScopeInjector().inject(actionRequest);
 
-		sessionScopeInjector.inject(actionRequest);
+		injectorsManager.getSessionScopeInjector().inject(actionRequest);
 
-		requestScopeInjector.prepare(actionRequest);		// todo check if needed
-		requestScopeInjector.inject(actionRequest);
+		injectorsManager.getRequestScopeInjector().prepare(actionRequest);		// todo check if needed
+		injectorsManager.getRequestScopeInjector().inject(actionRequest);
 
-		actionPathMacroInjector.inject(actionRequest);
+		injectorsManager.getActionPathMacroInjector().inject(actionRequest);
 	}
 
 	/**
@@ -96,11 +79,12 @@ public class ServletConfigInterceptor extends BaseActionInterceptor {
 	 */
 	protected void outject(ActionRequest actionRequest) {
 
-		servletContextInjector.outject(actionRequest);
+		injectorsManager.getServletContextScopeInjector().outject(actionRequest);
+		injectorsManager.getApplicationScopeInjector().outject(actionRequest);
 
-		sessionScopeInjector.outject(actionRequest);
+		injectorsManager.getSessionScopeInjector().outject(actionRequest);
 
-		requestScopeInjector.outject(actionRequest);
+		injectorsManager.getRequestScopeInjector().outject(actionRequest);
 	}
 
 }

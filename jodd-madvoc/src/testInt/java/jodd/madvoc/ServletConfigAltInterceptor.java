@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 
 public class ServletConfigAltInterceptor extends ServletConfigInterceptor {
@@ -9,9 +10,15 @@ public class ServletConfigAltInterceptor extends ServletConfigInterceptor {
 	@Override
 	public void init() {
 		super.init();
-		requestScopeInjector.getConfig().setCopyParamsToAttributes(true);
-		requestScopeInjector.getConfig().setInjectParameters(false);
-		requestScopeInjector.getConfig().setTreatEmptyParamsAsNull(true);
+
+		injectorsManager = this.injectorsManager.clone();
+
+		RequestScopeInjector requestScopeInjector = injectorsManager.getRequestScopeInjector();
+		RequestScopeInjector.Config requestScopeInjectorConfig = requestScopeInjector.getConfig();
+
+		requestScopeInjectorConfig.setCopyParamsToAttributes(true);
+		requestScopeInjectorConfig.setInjectParameters(false);
+		requestScopeInjectorConfig.setTreatEmptyParamsAsNull(true);
 	}
 
 }

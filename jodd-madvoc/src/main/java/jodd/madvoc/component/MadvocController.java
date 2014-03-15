@@ -43,6 +43,8 @@ public class MadvocController {
 
 	/**
 	 * Initializes controller by providing application context.
+	 * Application context can be <code>null</code>
+	 * if application is not started in web environment (eg tests).
 	 */
 	public void init(ServletContext servletContext) {
 		this.applicationContext = servletContext;
