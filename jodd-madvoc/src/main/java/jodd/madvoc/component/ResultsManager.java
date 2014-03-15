@@ -63,6 +63,8 @@ public class ResultsManager {
 	public ActionResult register(ActionResult result) {
 		String resultType = result.getResultType();
 
+		boolean existingResult = false;
+
 		if (resultType != null) {
 			ActionResult existing = lookup(resultType);
 			if (existing != null) {
@@ -75,6 +77,7 @@ public class ResultsManager {
 						existingClass = resultClass;
 						resultClass = temp;
 						result = lookup(resultClass);
+						existingResult = true;
 					}
 					if ((existingClass.getPackage().equals(ActionResult.class.getPackage()) == false)) {
 						// only throw exception if there are more then one replacement
@@ -92,7 +95,9 @@ public class ResultsManager {
 
 		allResults.put(result.getClass(), result);
 
-		initializeResult(result);
+		if (!existingResult) {
+			initializeResult(result);
+		}
 
 		return result;
 	}
