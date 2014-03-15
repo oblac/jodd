@@ -53,12 +53,12 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	 */
 	@SuppressWarnings({"ConstantConditions"})
 	public void inject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
+
+		Object[] targets = actionRequest.getTargets();
 
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
@@ -163,13 +163,12 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
 
+		Object[] targets = actionRequest.getTargets();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		for (int i = 0; i < targets.length; i++) {

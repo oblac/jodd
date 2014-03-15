@@ -21,13 +21,12 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
 
+		Object[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
@@ -55,13 +54,12 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
 
+		Object[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 

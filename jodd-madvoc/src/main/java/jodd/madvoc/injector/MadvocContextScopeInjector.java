@@ -38,12 +38,12 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
+
+		Object[] targets = actionRequest.getTargets();
 
 		for (int i = 0; i < targets.length; i++) {
 			Object target = targets[i];

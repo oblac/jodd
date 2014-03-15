@@ -312,7 +312,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 			ActionRequest sourceRequest = (ActionRequest) session.getAttribute(moveId);
 			session.removeAttribute(moveId);
 			if (sourceRequest != null) {
-				outjectAfterMove(sourceRequest.getAction(), servletRequest);
+				outjectAfterMove(sourceRequest);
 			}
 		}
 	}
@@ -355,13 +355,12 @@ public class RequestScopeInjector extends BaseScopeInjector
 	// ---------------------------------------------------------------- outject
 
 	public void outject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
 
+		Object[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		for (int i = 0; i < targets.length; i++) {
@@ -378,15 +377,26 @@ public class RequestScopeInjector extends BaseScopeInjector
 		}
 	}
 
-	protected void outjectAfterMove(Object target, HttpServletRequest servletRequest) {
-		ScopeData.Out[] outjectData = resolveOutData(target.getClass());
+	protected void outjectAfterMove(ActionRequest sourceRequest) {
+		ScopeData.Out[][] outjectData = lookupOutData(sourceRequest);
 		if (outjectData == null) {
 			return;
 		}
 
-		for (ScopeData.Out out : outjectData) {
-			Object value = getTargetProperty(target, out);
-			servletRequest.setAttribute(out.name, value);
+		Object[] targets = sourceRequest.getTargets();
+		HttpServletRequest servletRequest = sourceRequest.getHttpServletRequest();
+
+		for (int i = 0; i < targets.length; i++) {
+			Object target = targets[i];
+			ScopeData.Out[] scopes = outjectData[i];
+			if (scopes == null) {
+				continue;
+			}
+
+			for (ScopeData.Out out : scopes) {
+				Object value = getTargetProperty(target, out);
+				servletRequest.setAttribute(out.name, value);
+			}
 		}
 	}
 

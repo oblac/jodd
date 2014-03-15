@@ -73,13 +73,12 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
-
 		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
 
+		Object[] targets = actionRequest.getTargets();
 		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
 		for (int i = 0; i < targets.length; i++) {
