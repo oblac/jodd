@@ -191,7 +191,7 @@ public class WebApplication {
 	/**
 	 * Initializes web application custom configuration.
 	 * When running web application out from container,
-	 * <code>servletContext</code> may be null
+	 * <code>servletContext</code> may be <code>null</code>.
 	 */
 	protected void init(MadvocConfig madvocConfig, ServletContext servletContext) {
 		log.debug("Initializing Madvoc");
@@ -227,12 +227,17 @@ public class WebApplication {
 	}
 
 	/**
+	 * Called when Madvoc is up and ready.
+	 */
+	protected void ready() {
+	}
+
+	/**
 	 * Invoked on web application destroy.
 	 */
 	protected void destroy(MadvocConfig madvocConfig) {
 		log.debug("Destroying Madvoc");
 	}
-
 
 	// ---------------------------------------------------------------- configurator
 

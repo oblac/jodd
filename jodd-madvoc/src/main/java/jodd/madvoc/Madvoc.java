@@ -239,6 +239,9 @@ public class Madvoc {
 			throw new MadvocException("Madvoc controller not found");
 		}
 		madvocController.init(servletContext);
+
+		// web app is ready
+		webapp.ready();
 	}
 
 	/**
