@@ -489,6 +489,13 @@ public class ActionMethodParser {
 			String actionMethod,
 			String[] pathElements)
 	{
+
+		// uppercase
+
+		if (actionMethod != null) {
+			actionMethod = actionMethod.toUpperCase();
+		}
+
 		// find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();

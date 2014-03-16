@@ -235,6 +235,7 @@ public class ActionsManager {
 	 * If action path is not registered, it is split into chunks
 	 * and match against macros.
 	 * Returns <code>null</code> if action path is not registered.
+	 * <code>method</code> must be in uppercase.
 	 */
 	public ActionConfig lookup(String actionPath, String method) {
 

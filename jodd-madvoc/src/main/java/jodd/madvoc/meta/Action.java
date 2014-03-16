@@ -26,6 +26,19 @@ public @interface Action {
 	 */
 	String NONE = StringPool.HASH;
 
+	// see: http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods
+
+	String ANY = "";
+	String GET = "GET";
+	String HEAD = "HEAD";
+	String POST = "POST";
+	String PUT = "PUT";
+	String DELETE = "DELETE";
+	String TRACE = "TRACE";
+	String OPTIONS = "OPTIONS";
+	String CONNECT = "CONNECT";
+	String PATCH = "PATCH";
+
 	/**
 	 * Action path value. If equals to {@link #NONE} action method name
 	 * will not be part of the created action path.
@@ -45,6 +58,7 @@ public @interface Action {
 
 	/**
 	 * Defines action method (such as HTTP request method: GET, POST....).
+	 * Ignore it or use {@link #ANY} to ignore the method.
 	 */
 	String method() default "";
 

@@ -80,6 +80,7 @@ public class MadvocController {
 
 			// build action path
 			String httpMethod = servletRequest.getMethod().toUpperCase();
+
 			actionPath = actionPathRewriter.rewrite(servletRequest, actionPath, httpMethod);
 
 			// resolve action configuration
