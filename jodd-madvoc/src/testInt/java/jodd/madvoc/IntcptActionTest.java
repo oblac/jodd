@@ -30,7 +30,7 @@ public class IntcptActionTest {
 
 	@Test
 	public void testIn2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in2.html?foo=173&foo2=").send();
+		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in2.html?foo=173&foo2=173").send();
 		assertEquals("param: 173 = 173", response.bodyText().trim());
 	}
 

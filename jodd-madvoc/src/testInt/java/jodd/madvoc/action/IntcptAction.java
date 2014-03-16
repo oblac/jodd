@@ -4,7 +4,6 @@ package jodd.madvoc.action;
 
 import jodd.madvoc.AppendingInterceptor;
 import jodd.madvoc.MyInterceptorStack;
-import jodd.madvoc.ServletConfigAltInterceptor;
 import jodd.madvoc.interceptor.DefaultWebAppInterceptors;
 import jodd.madvoc.interceptor.EchoInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
@@ -25,9 +24,13 @@ public class IntcptAction {
 	@In
 	String foo2;
 
+	@Out
+	String foo;
+
 	@Action
-	@InterceptedBy({EchoInterceptor.class, ServletConfigAltInterceptor.class})
+	@InterceptedBy({EchoInterceptor.class, ServletConfigInterceptor.class})
 	public String in2() {
+		foo = foo2;
 		return "##in1";
 	}
 

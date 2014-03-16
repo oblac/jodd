@@ -64,7 +64,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 		protected boolean treatEmptyParamsAsNull;
 		protected boolean injectAttributes = true;
 		protected boolean injectParameters = true;
-		protected boolean copyParamsToAttributes;
 		protected boolean trimParams;
 		protected boolean encodeGetParams;
 		protected boolean ignoreInvalidUploadFiles = true;
@@ -109,19 +108,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 		public void setInjectParameters(boolean injectParameters) {
 			this.injectParameters = injectParameters;
 		}
-
-		public boolean isCopyParamsToAttributes() {
-			return copyParamsToAttributes;
-		}
-		/**
-		 * Specifies if request parameters will to be copied to attributes.
-		 * Usually, when this flag is set to <code>true</code>, {@link #setInjectAttributes(boolean) injectOnlyAttributes}
-		 * is also set to <code>true</code>.
-		 */
-		public void setCopyParamsToAttributes(boolean copyParamsToAttributes) {
-			this.copyParamsToAttributes = copyParamsToAttributes;
-		}
-
 
 		public boolean isTrimParams() {
 			return trimParams;
@@ -326,11 +312,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * </ul>
 	 */
 	public void prepare(ActionRequest actionRequest) {
-		// todo remove copyParamsToAttributes
-		if (config.copyParamsToAttributes == true) {
-			HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
-			ServletUtil.copyParamsToAttributes(servletRequest, config.trimParams, config.treatEmptyParamsAsNull, config.ignoreEmptyRequestParams);
-		}
 		outjectMoveSource(actionRequest);
 	}
 
