@@ -816,7 +816,7 @@ s	 */
 			String paramName = (String) it.next();
 			if (paramName.startsWith(beanName) == true) {
 				String propertyName = paramName.substring(beanName.length());
-				if (BeanUtil.hasDeclaredProperty(bean, propertyName) == true) {
+				if (BeanUtil.hasDeclaredRootProperty(bean, propertyName) == true) {
 					Object value = BeanUtil.getDeclaredProperty(bean, propertyName);
 					setObject(paramName, value);
 				}

@@ -534,6 +534,21 @@ public class BeanUtilBean extends BeanUtilUtil {
 	}
 
 	/**
+	 * Returns <code>true</code> if bean has only a root property.
+	 * If yes, this means that property may be injected into the bean.
+	 * If not, bean does not contain the property.
+	 */
+	public boolean hasRootProperty(Object bean, String name) {
+		int dotNdx = indexOfDot(name);
+		if (dotNdx != -1) {
+			name = name.substring(0, dotNdx);
+		}
+		BeanProperty beanProperty = new BeanProperty(bean, name, false);
+		extractIndex(beanProperty);
+		return hasSimpleProperty(beanProperty, false);
+	}
+
+	/**
 	 * Returns <code>true</code> if bean has a declared property.
 	 */
 	public boolean hasDeclaredProperty(Object bean, String name) {
@@ -542,6 +557,21 @@ public class BeanUtilBean extends BeanUtilUtil {
 			return false;
 		}
 		return hasIndexProperty(beanProperty, true);
+	}
+
+	/**
+	 * Returns <code>true</code> if bean has only a declared root property.
+	 * If yes, this means that property may be injected into the bean.
+	 * If not, bean does not contain the property.
+	 */
+	public boolean hasDeclaredRootProperty(Object bean, String name) {
+		int dotNdx = indexOfDot(name);
+		if (dotNdx != -1) {
+			name = name.substring(0, dotNdx);
+		}
+		BeanProperty beanProperty = new BeanProperty(bean, name, false);
+		extractIndex(beanProperty);
+		return hasSimpleProperty(beanProperty, true);
 	}
 
 	// ---------------------------------------------------------------- type

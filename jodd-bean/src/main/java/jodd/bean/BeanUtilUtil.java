@@ -144,6 +144,7 @@ class BeanUtilUtil {
 
 	/**
 	 * Finds the very first next dot. Ignores dots between index brackets.
+	 * Returns <code>-1</code> when dot is not found.
 	 */
 	protected int indexOfDot(String name) {
 		int ndx = 0;

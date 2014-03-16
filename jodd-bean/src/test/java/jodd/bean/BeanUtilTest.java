@@ -768,15 +768,17 @@ public class BeanUtilTest {
 		String value2 = "nesttest";
 		assertEquals(String.class, BeanUtil.getDeclaredPropertyType(cbean, "bbean.abean.fooProp"));
 		assertTrue(BeanUtil.hasDeclaredProperty(cbean, "bbean.abean.fooProp"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(cbean, "bbean.abean.fooProp"));
 		BeanUtil.setProperty(cbean, "bbean.abean.fooProp", value);
-		assertEquals(value, (String) BeanUtil.getProperty(cbean, "bbean.abean.fooProp"));
+		assertEquals(value, BeanUtil.getProperty(cbean, "bbean.abean.fooProp"));
 		Bbean bbean = (Bbean) BeanUtil.getProperty(cbean, "bbean");
 		assertTrue(BeanUtil.hasDeclaredProperty(bbean, "abean.fooProp"));
-		assertEquals(value, (String) BeanUtil.getProperty(bbean, "abean.fooProp"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(bbean, "abean.fooProp"));
+		assertEquals(value, BeanUtil.getProperty(bbean, "abean.fooProp"));
 		Abean abean = (Abean) BeanUtil.getProperty(bbean, "abean");
-		assertEquals(value, (String) BeanUtil.getProperty(abean, "fooProp"));
+		assertEquals(value,  BeanUtil.getProperty(abean, "fooProp"));
 		BeanUtil.setProperty(bbean, "abean.fooProp", value2);
-		assertEquals(value2, (String) BeanUtil.getProperty(bbean, "abean.fooProp"));
+		assertEquals(value2, BeanUtil.getProperty(bbean, "abean.fooProp"));
 	}
 
 	@Test
@@ -803,6 +805,7 @@ public class BeanUtilTest {
 		assertEquals(173, ((Integer) BeanUtil.getProperty(abean, "mval")).intValue());
 		assertEquals(1, ((Integer) BeanUtil.getProperty(abean, "mval2")).intValue());
 		assertTrue(BeanUtil.hasDeclaredProperty(cbean, "bbean.abean.mval"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(cbean, "bbean.abean.mval"));
 		BeanUtil.setProperty(cbean, "bbean.abean.mval", new Integer(3));
 		assertEquals(3, ((Integer) BeanUtil.getProperty(abean, "mval")).intValue());
 		assertEquals(3, ((Integer) BeanUtil.getProperty(cbean, "bbean.abean.mval")).intValue());
@@ -839,15 +842,18 @@ public class BeanUtilTest {
 		assertEquals("John", (String) m.get("Foo"));
 		assertNull(m.get("foo"));
 		assertFalse(BeanUtil.hasDeclaredProperty(m, "foo"));
+		assertFalse(BeanUtil.hasDeclaredRootProperty(m, "foo"));
 		BeanUtil.setProperty(m, "foo", new HashMap());
 		assertTrue(BeanUtil.hasDeclaredProperty(m, "foo"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(m, "foo"));
 		assertFalse(BeanUtil.hasDeclaredProperty(m, "foo.Name"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(m, "foo.Name"));
 		BeanUtil.setProperty(m, "foo.Name", "Doe");
-		assertEquals("John", (String) m.get("Foo"));
+		assertEquals("John", m.get("Foo"));
 		assertEquals("Doe", ((HashMap) m.get("foo")).get("Name"));
 		assertNull("Doe", ((HashMap) m.get("foo")).get("name"));
-		assertEquals("John", (String) BeanUtil.getProperty(m, "Foo"));
-		assertEquals("Doe", (String) BeanUtil.getProperty(m, "foo.Name"));
+		assertEquals("John", BeanUtil.getProperty(m, "Foo"));
+		assertEquals("Doe", BeanUtil.getProperty(m, "foo.Name"));
 		try {
 			assertNull(BeanUtil.getProperty(m, "foo.name"));
 			fail();
@@ -940,8 +946,10 @@ public class BeanUtilTest {
 		FooBean4 fb4 = new FooBean4();
 		Dummy dummy = new Dummy();
 		assertTrue(BeanUtil.hasDeclaredProperty(fb4, "data[0].bbean.abean.fooProp"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(fb4, "data[0].bbean.abean.fooProp"));
 		assertEquals("xxx", BeanUtil.getProperty(fb4, "data[0].bbean.abean.fooProp"));
 		assertTrue(BeanUtil.hasDeclaredProperty(fb4, "data[1].bbean.abean.fooProp"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(fb4, "data[1].bbean.abean.fooProp"));
 		assertEquals("yyy", BeanUtil.getProperty(fb4, "data[1].bbean.abean.fooProp"));
 
 		assertTrue(BeanUtil.hasDeclaredProperty(fb4, "data[2].bbean.abean.fooProp"));
@@ -957,6 +965,7 @@ public class BeanUtilTest {
 		BeanUtil.setProperty(fb4, "list[1]", "eee");
 
 		assertFalse(BeanUtil.hasDeclaredProperty(fb4, "list[1].bbean.abean.fooProp"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(fb4, "list[1].bbean.abean.fooProp"));
 		assertTrue(BeanUtil.hasDeclaredProperty(fb4, "list[1]"));
 		assertEquals("eee", BeanUtil.getProperty(fb4, "list[1]"));
 		assertTrue(BeanUtil.hasDeclaredProperty(dummy, "fb.data[0].bbean.abean.fooProp"));
@@ -980,7 +989,9 @@ public class BeanUtilTest {
 		XBean x = new XBean();
 		assertTrue(BeanUtil.hasDeclaredProperty(x, "y"));
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "y.foo"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(x, "y.foo"));
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "y[23].foo"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(x, "y[23].foo"));
 		try {
 			BeanUtil.setProperty(x, "y.foo", "yyy");
 			fail();
@@ -994,6 +1005,7 @@ public class BeanUtilTest {
 
 		assertNotNull(x.getYy());
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "yy[2].foo"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(x, "yy[2].foo"));
 		try {
 			BeanUtil.setProperty(x, "yy[2].foo", "yyy");
 			fail();
@@ -1006,6 +1018,7 @@ public class BeanUtilTest {
 		assertEquals("xxx", x.getYy()[2].getFoo());
 
 		assertFalse(BeanUtil.hasDeclaredProperty(x, "yy[20].foo"));
+		assertTrue(BeanUtil.hasDeclaredRootProperty(x, "yy[20].foo"));
 		BeanUtil.setPropertyForced(x, "yy[20].foo", "zzz");
 		assertTrue(BeanUtil.hasDeclaredProperty(x, "yy[20].foo"));
 		assertEquals("zzz", x.getYy()[20].getFoo());
@@ -1016,6 +1029,7 @@ public class BeanUtilTest {
 	public void testSilent() {
 		FooBean fb = new FooBean();
 		assertFalse(BeanUtil.hasDeclaredProperty(fb, "notexisting"));
+		assertFalse(BeanUtil.hasDeclaredRootProperty(fb, "notexisting"));
 		try {
 			BeanUtil.setProperty(fb, "notexisting", null);
 			fail();

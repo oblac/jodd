@@ -140,8 +140,16 @@ public class BeanUtil {
 		return BEAN_UTIL_BEAN.hasProperty(bean, name);
 	}
 
+	public static boolean hasRootProperty(Object bean, String name) {
+		return BEAN_UTIL_BEAN.hasRootProperty(bean, name);
+	}
+
 	public static boolean hasDeclaredProperty(Object bean, String name) {
 		return BEAN_UTIL_BEAN.hasDeclaredProperty(bean, name);
+	}
+
+	public static boolean hasDeclaredRootProperty(Object bean, String name) {
+		return BEAN_UTIL_BEAN.hasDeclaredRootProperty(bean, name);
 	}
 
 	// ---------------------------------------------------------------- type
