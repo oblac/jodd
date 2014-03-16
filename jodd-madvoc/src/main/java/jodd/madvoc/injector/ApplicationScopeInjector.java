@@ -45,7 +45,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 					String name = getMatchedPropertyName(in, attrName);
 					if (name != null) {
 						Object attrValue = servletContext.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue, in.create);
+						setTargetProperty(target, name, attrValue);
 					}
 				}
 			}
@@ -66,7 +66,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 				String name = getMatchedPropertyName(in, attrName);
 				if (name != null) {
 					Object attrValue = servletContext.getAttribute(attrName);
-					setTargetProperty(target, name, attrValue, in.create);
+					setTargetProperty(target, name, attrValue);
 				}
 			}
 		}

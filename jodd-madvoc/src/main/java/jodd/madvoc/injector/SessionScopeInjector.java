@@ -46,7 +46,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 					String name = getMatchedPropertyName(in, attrName);
 					if (name != null) {
 						Object attrValue = session.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue, in.create);
+						setTargetProperty(target, name, attrValue);
 					}
 				}
 			}

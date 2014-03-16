@@ -19,11 +19,6 @@ import java.lang.annotation.Target;
 public @interface In {
 
 	/**
-	 * Specifies if fields should be created if not found.
-	 */
-	boolean create() default true;
-
-	/**
 	 * Specifies parameter scope.
 	 */
 	ScopeType scope() default ScopeType.REQUEST;

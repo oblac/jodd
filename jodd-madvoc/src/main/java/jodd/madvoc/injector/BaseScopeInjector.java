@@ -29,12 +29,8 @@ public abstract class BaseScopeInjector {
 	/**
 	 * Sets target bean property, optionally creates instance if doesn't exist.
 	 */
-	protected void setTargetProperty(Object target, String name, Object attrValue, boolean create) {
-		if (create == true) {
-			BeanUtil.setDeclaredPropertyForcedSilent(target, name, attrValue);
-		} else {
-			BeanUtil.setDeclaredPropertySilent(target, name, attrValue);
-		}
+	protected void setTargetProperty(Object target, String name, Object attrValue) {
+		BeanUtil.setDeclaredPropertyForcedSilent(target, name, attrValue);
 	}
 
 	/**

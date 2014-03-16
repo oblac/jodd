@@ -182,7 +182,6 @@ public class ScopeDataResolver {
 		ScopeData.In ii = new ScopeData.In();
 		fillNameTarget(ii, in.value(), propertyName);
 		ii.type = propertyType;
-		ii.create = in.create();
 		return ii;
 	}
 
@@ -201,7 +200,6 @@ public class ScopeDataResolver {
 		ScopeData.In ii = new ScopeData.In();
 		fillNameTarget(ii, inOut.value(), propertyName);
 		ii.type = propertyType;
-		ii.create = inOut.create();
 		return ii;
 	}
 

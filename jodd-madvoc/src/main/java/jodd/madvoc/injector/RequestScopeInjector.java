@@ -181,7 +181,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 					String name = getMatchedPropertyName(in, attrName);
 					if (name != null) {
 						Object attrValue = servletRequest.getAttribute(attrName);
-						setTargetProperty(target, name, attrValue, in.create);
+						setTargetProperty(target, name, attrValue);
 					}
 				}
 			}
@@ -230,7 +230,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 							}
 						}
 						Object value = (paramValues.length != 1 ? paramValues : paramValues[0]);
-						setTargetProperty(target, name, value, in.create);
+						setTargetProperty(target, name, value);
 					}
 				}
 			}
@@ -278,7 +278,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 						}
 
 						Object value = (paramValues.length == 1 ? paramValues[0] : paramValues);
-						setTargetProperty(target, name, value, in.create);
+						setTargetProperty(target, name, value);
 					}
 				}
 			}
