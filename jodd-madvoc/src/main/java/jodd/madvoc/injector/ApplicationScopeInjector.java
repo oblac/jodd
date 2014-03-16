@@ -52,8 +52,8 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		}
 	}
 
-	public void injectContext(Object target, ServletContext servletContext) {
-		ScopeData.In[] injectData = resolveInData(target.getClass());
+	public void injectContext(Object target, ScopeData[] scopeData, ServletContext servletContext) {
+		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
 		}

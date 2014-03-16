@@ -28,44 +28,6 @@ import java.lang.reflect.Field;
  */
 public class ScopeDataResolver {
 
-	// ---------------------------------------------------------------- bean
-
-	/**
-	 * Resolves for {@link jodd.madvoc.ScopeData.In} data in given type for
-	 * provided scope type.
-	 */
-	public ScopeData.In[] resolveInData(Class type, ScopeType scopeType) {
-		ScopeData[] scopeData = resolveScopeData(type);
-		if (scopeData == null) {
-			return null;
-		}
-
-		ScopeData sd = scopeData[scopeType.value()];
-		if (sd == null) {
-			return null;
-		}
-
-		return sd.in;
-	}
-
-	/**
-	 * Resolves for {@link jodd.madvoc.ScopeData.Out} data in given type for
-	 * provided scope type.
-	 */
-	public ScopeData.Out[] resolveOutData(Class type, ScopeType scopeType) {
-		ScopeData[] scopeData = resolveScopeData(type);
-		if (scopeData == null) {
-			return null;
-		}
-
-		ScopeData sd = scopeData[scopeType.value()];
-		if (sd == null) {
-			return null;
-		}
-
-		return sd.out;
-	}
-
 	/**
 	 * Resolve scope data in given type for all scope types.
 	 * Returns <code>null</code> if no scope data exist.

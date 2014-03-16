@@ -2,6 +2,7 @@
 
 package jodd.madvoc.injector;
 
+import jodd.madvoc.ScopeData;
 import jodd.petite.PetiteContainer;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class MadvocParamsInjectorTest {
 
 		FooBean fooBean = new FooBean();
 
-		madvocParamsInjector.injectContext(fooBean, baseName);
+		madvocParamsInjector.injectContext(fooBean, null, baseName);
 
 		assertEquals(173, fooBean.getInteger().intValue());
 		assertEquals("jodd", fooBean.getString());

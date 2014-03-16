@@ -23,8 +23,8 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 		this.madpc = madpc;
 	}
 
-	public void injectContext(Object target, PetiteContainer madpc) {
-		ScopeData.In[] injectData = resolveInData(target.getClass());
+	public void injectContext(Object target, ScopeData[] scopeData, PetiteContainer madpc) {
+		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
 		}

@@ -3,6 +3,7 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.madvoc.ScopeData;
 import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
 
@@ -22,8 +23,9 @@ public class MadvocParamsInjector implements ContextInjector<String> {
 	/**
 	 * Injects all matching parameters to target instance.
 	 * Matching parameters are named as given base name.
+	 * @param scopeData scope data is not used!
 	 */
-	public void injectContext(Object target, String baseName) {
+	public void injectContext(Object target, ScopeData[] scopeData, String baseName) {
 		String[] params = madvocPetiteParamManager.resolve(baseName, true);
 
 		for (String param : params) {

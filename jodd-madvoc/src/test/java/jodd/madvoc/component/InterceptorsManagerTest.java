@@ -65,6 +65,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
@@ -100,6 +101,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
@@ -173,6 +175,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
+		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
 

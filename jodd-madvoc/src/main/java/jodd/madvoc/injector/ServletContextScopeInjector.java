@@ -135,8 +135,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	/**
 	 * Injects just context.
 	 */
-	public void injectContext(Object target, ServletContext servletContext) {
-		ScopeData.In[] injectData = resolveInData(target.getClass());
+	public void injectContext(Object target, ScopeData[] scopeData, ServletContext servletContext) {
+		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
 		}

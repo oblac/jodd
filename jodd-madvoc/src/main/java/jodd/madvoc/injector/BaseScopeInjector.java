@@ -85,10 +85,18 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#resolveInData(Class, jodd.madvoc.ScopeType)}.
+	 * Returns IN data for current scope type.
 	 */
-	public ScopeData.In[] resolveInData(Class type) {
-		return scopeDataResolver.resolveInData(type, scopeType);
+	public ScopeData.In[] lookupInData(ScopeData[] scopeData) {
+		if (scopeData == null) {
+			return null;
+		}
+		ScopeData sd = scopeData[scopeType.value()];
+		if (sd == null) {
+			return null;
+		}
+
+		return sd.in;
 	}
 
 	/**
@@ -96,13 +104,6 @@ public abstract class BaseScopeInjector {
 	 */
 	public ScopeData.In[][] lookupInData(ActionRequest actionRequest) {
 		return actionRequest.getActionConfig().ins[scopeType.value()];
-	}
-
-	/**
-	 * Delegates to {@link jodd.madvoc.component.ScopeDataResolver#resolveOutData(Class, jodd.madvoc.ScopeType)}.
-	 */
-	public ScopeData.Out[] resolveOutData(Class type) {
-		return scopeDataResolver.resolveOutData(type, scopeType);
 	}
 
 	/**
