@@ -27,7 +27,7 @@ public class ArgsTest {
 		HttpResponse response;
 		response = HttpRequest.get("localhost:8080/args.hello.html?id=1").send();
 
-		assertEquals("+ mad 1", response.bodyText().trim());
+		assertEquals("+ mad 1voc + jodd 1", response.bodyText().trim());
 	}
 
 }

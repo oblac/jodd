@@ -1,1 +1,1 @@
-+ ${name}
++ ${name}${out} + ${value}

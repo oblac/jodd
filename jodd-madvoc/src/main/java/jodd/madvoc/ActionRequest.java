@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 
 /**
@@ -215,8 +216,8 @@ public class ActionRequest {
 			Class type = types[i];
 
 			try {
-				if (type.getEnclosingClass() == null) {
-					// static class
+				if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
+					// regular or static class
 					params[i] = type.newInstance();
 				} else {
 					// member class

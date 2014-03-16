@@ -15,11 +15,18 @@ public class ArgsAction {
 		@Out String out;
 	}
 
+	public static class Data2 {
+		@In Integer id;
+		@Out String value;
+	}
+
 	@Out
 	String name;
 
 	@Action
-	public void hello(Hello hello) {
+	public void hello(Hello hello, Data2 data) {
 		name = "mad " + hello.id;
+		hello.out = "voc";
+		data.value = "jodd " + data.id;
 	}
 }
