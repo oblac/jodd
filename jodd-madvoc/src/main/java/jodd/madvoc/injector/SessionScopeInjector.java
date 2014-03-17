@@ -5,6 +5,7 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 
 import javax.servlet.http.HttpSession;
@@ -16,8 +17,8 @@ import java.util.Enumeration;
  */
 public class SessionScopeInjector extends BaseScopeInjector implements Injector, Outjector {
 
-	public SessionScopeInjector(ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.SESSION, scopeDataResolver);
+	public SessionScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.SESSION, madvocConfig, scopeDataResolver);
 	}
 
 	public void inject(ActionRequest actionRequest) {

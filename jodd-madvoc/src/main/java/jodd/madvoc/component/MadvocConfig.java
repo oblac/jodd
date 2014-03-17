@@ -45,6 +45,7 @@ public class MadvocConfig {
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
 		resultPathPrefix = null;
+		injectionErrorThrowsException = false;
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -342,6 +343,21 @@ public class MadvocConfig {
 		this.pathMacroClass = pathMacroClass;
 	}
 
+	// ---------------------------------------------------------------- injection
+
+	protected boolean injectionErrorThrowsException;
+
+	public boolean isInjectionErrorThrowsException() {
+		return injectionErrorThrowsException;
+	}
+
+	/**
+	 * Defines if injection errors throws exceptions.
+	 * By default the warning will be logged.
+	 */
+	public void setInjectionErrorThrowsException(boolean injectionErrorThrowsException) {
+		this.injectionErrorThrowsException = injectionErrorThrowsException;
+	}
 
 	// ---------------------------------------------------------------- toString
 
@@ -364,6 +380,7 @@ public class MadvocConfig {
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
 				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
+				",\n\tinjectionErrorThrowsException=" + injectionErrorThrowsException +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				"\n}";

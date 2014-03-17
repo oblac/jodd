@@ -30,7 +30,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector {
 
 	public RequestScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.REQUEST, scopeDataResolver);
+		super(ScopeType.REQUEST, madvocConfig, scopeDataResolver);
 		this.encoding = madvocConfig.getEncoding();
 		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
 		this.attributeMoveId = madvocConfig.getAttributeMoveId();
@@ -41,13 +41,6 @@ public class RequestScopeInjector extends BaseScopeInjector
 	protected final String encoding;
 	protected final Config config;
 	protected final String attributeMoveId;
-
-	/**
-	 * Returns encoding used inside. The same as Madvoc encoding.
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
 
 	/**
 	 * Returns request scope configuration.

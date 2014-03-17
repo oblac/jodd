@@ -13,6 +13,7 @@ import jodd.madvoc.meta.In;
 /**
  * Injects only ID request attributes and parameters that ends with '.id'.
  * @see PrepareAndIdInjectorInterceptor
+ * todo remove? ".id" is not uniqe, i.e. property may be named "userId" or add both types
  */
 public class IdRequestInjectorInterceptor extends BaseActionInterceptor {
 

@@ -3,9 +3,13 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
+import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 
 /**
@@ -13,14 +17,18 @@ import jodd.madvoc.component.ScopeDataResolver;
  */
 public abstract class BaseScopeInjector {
 
+	private static final Logger log = LoggerFactory.getLogger(BaseScopeInjector.class);
+
 	protected final ScopeDataResolver scopeDataResolver;
 	protected final ScopeType scopeType;
+	protected final MadvocConfig madvocConfig;
 
 	/**
 	 * Creates scope injector for provided {@link jodd.madvoc.ScopeType}.
 	 */
-	protected BaseScopeInjector(ScopeType scopeType, ScopeDataResolver scopeDataResolver) {
+	protected BaseScopeInjector(ScopeType scopeType, MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
 		this.scopeType = scopeType;
+		this.madvocConfig = madvocConfig;
 		this.scopeDataResolver = scopeDataResolver;
 	}
 
@@ -30,7 +38,19 @@ public abstract class BaseScopeInjector {
 	 * Sets target bean property, optionally creates instance if doesn't exist.
 	 */
 	protected void setTargetProperty(Object target, String name, Object attrValue) {
-		BeanUtil.setDeclaredPropertyForcedSilent(target, name, attrValue);
+		if (BeanUtil.hasDeclaredRootProperty(target, name)) {
+			try {
+				BeanUtil.setDeclaredPropertyForced(target, name, attrValue);
+			} catch (Exception ex) {
+				if (madvocConfig.isInjectionErrorThrowsException()) {
+					throw new MadvocException(ex);
+				} else {
+					if (log.isWarnEnabled()) {
+						log.warn("Injection failed: " + name + ". " + ex.toString());
+					}
+				}
+			}
+		}
 	}
 
 	/**

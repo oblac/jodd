@@ -22,6 +22,7 @@ import org.junit.runners.Suite;
 		SessionScopeTest.class,
 		AlphaTest.class,
 		ArgsTest.class,
+		//TypesTest.class,
 })
 public class MadvocSuite {
 

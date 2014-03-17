@@ -6,6 +6,7 @@ import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.petite.PetiteContainer;
 
@@ -18,8 +19,8 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 
 	protected final PetiteContainer madpc;
 
-	public MadvocContextScopeInjector(ScopeDataResolver scopeDataResolver, PetiteContainer madpc) {
-		super(ScopeType.CONTEXT, scopeDataResolver);
+	public MadvocContextScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver, PetiteContainer madpc) {
+		super(ScopeType.CONTEXT, madvocConfig, scopeDataResolver);
 		this.madpc = madpc;
 	}
 
