@@ -22,6 +22,7 @@ import jodd.typeconverter.impl.CharacterArrayConverter;
 import jodd.typeconverter.impl.CharacterConverter;
 import jodd.typeconverter.impl.ClassArrayConverter;
 import jodd.typeconverter.impl.ClassConverter;
+import jodd.typeconverter.impl.CollectionConverter;
 import jodd.typeconverter.impl.DateConverter;
 import jodd.typeconverter.impl.DoubleArrayConverter;
 import jodd.typeconverter.impl.DoubleConverter;
@@ -61,6 +62,7 @@ import java.net.URL;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -250,6 +252,10 @@ public class TypeConverterManagerBean {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <T> T convertType(Object value, Class<T> destinationType) {
+		if (destinationType == Object.class) {
+			// no conversion :)
+			return (T) value;
+		}
 		TypeConverter converter = lookup(destinationType);
 
 		if (converter != null) {
@@ -283,6 +289,15 @@ public class TypeConverterManagerBean {
 		// check same instances
 		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
 			return (T) value;
+		}
+
+		// collection
+		if (ReflectUtil.isInterfaceImpl(destinationType, Collection.class)) {
+			// component type is unknown because of Java's type-erasure
+			CollectionConverter<T> collectionConverter =
+					new CollectionConverter(this, destinationType, Object.class);
+
+			return (T) collectionConverter.convert(value);
 		}
 
 		// fail

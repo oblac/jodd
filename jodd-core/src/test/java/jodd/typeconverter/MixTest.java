@@ -3,14 +3,23 @@
 package jodd.typeconverter;
 
 import jodd.mutable.MutableInteger;
+import jodd.typeconverter.impl.CollectionConverter;
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import static jodd.typeconverter.TypeConverterTestHelper.arri;
+import static jodd.typeconverter.TypeConverterTestHelper.arrl;
 import static jodd.typeconverter.TypeConverterTestHelper.arro;
 import static jodd.typeconverter.TypeConverterTestHelper.iterableo;
 import static jodd.typeconverter.TypeConverterTestHelper.listo;
 import static jodd.typeconverter.TypeConverterTestHelper.seto;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MixTest {
 
@@ -260,10 +269,43 @@ public class MixTest {
 		assertEquals(4, mutableIntegers[3].intValue());
 	}
 
-/*	@Test
-	public void testToList() {
-		TypeConverterManager.convertType(arri(1,2,3), List.class);
+	@Test
+	public void testCollections() {
+		List list1 = TypeConverterManager.convertType(arri(1,2,3), List.class);
+		assertEquals(listo(1,2,3), list1);
+
+		list1 = TypeConverterManager.convertType("1,2,3", List.class);
+		assertEquals(listo("1","2","3"), list1);
+
+		Set set1 = TypeConverterManager.convertType(arrl(1, 2, 3), LinkedHashSet.class);
+		assertTrue(set1 instanceof LinkedHashSet);
+		Iterator i = set1.iterator();
+		assertEquals(Long.valueOf(1), i.next());
+		assertEquals(Long.valueOf(2), i.next());
+		assertEquals(Long.valueOf(3), i.next());
+
+		list1 = TypeConverterManager.convertType("hello", List.class);
+		assertEquals(listo("hello"), list1);
+
+		list1 = TypeConverterManager.convertType(Long.valueOf(4), List.class);
+		assertEquals(listo(Long.valueOf(4)), list1);
 	}
-*/
+
+	@Test
+	public void testCollectionsWithComponentType() {
+		TypeConverterManagerBean tcm = TypeConverterManager.getDefaultTypeConverterManager();
+
+		CollectionConverter cc = new CollectionConverter(tcm, List.class, String.class);
+		List<String> list1 = (List<String>) cc.convert(arri(1, 2, 3));
+		assertNotEquals(listo(1, 2, 3), list1);
+		assertEquals(listo("1", "2", "3"), list1);
+
+		list1 = (List<String>) cc.convert("1,2,3");
+		assertEquals(listo("1","2","3"), list1);
+
+		cc = new CollectionConverter(tcm, List.class, Integer.class);
+		list1 = (List<String>) cc.convert("1,2,3");
+		assertEquals(listo(1, 2, 3), list1);
+	}
 
 }

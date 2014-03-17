@@ -160,6 +160,7 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 	/**
 	 * Converts primitive array to target array.
 	 */
+	@SuppressWarnings("AutoBoxing")
 	protected T[] convertPrimitiveArrayToArray(Object value, Class primitiveComponentType) {
 		T[] result = null;
 
