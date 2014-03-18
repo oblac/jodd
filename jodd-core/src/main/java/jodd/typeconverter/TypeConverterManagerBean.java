@@ -304,4 +304,28 @@ public class TypeConverterManagerBean {
 		throw new TypeConversionException("Conversion failed: " + destinationType.getName());
 	}
 
+	/**
+	 * Special case of {@link #convertType(Object, Class)} when target is collection and
+	 * when component type is known.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection<T>> destinationType, Class componentType) {
+		if (value == null) {
+			return null;
+		}
+
+		// check same instances
+		if (ReflectUtil.isInstanceOf(value, destinationType) == true) {
+			return (Collection<T>) value;
+		}
+
+		if (componentType == null) {
+			componentType = Object.class;
+		}
+
+		CollectionConverter collectionConverter = new CollectionConverter(destinationType, componentType);
+
+		return collectionConverter.convert(value);
+	}
+
 }

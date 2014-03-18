@@ -2,6 +2,8 @@
 
 package jodd.typeconverter;
 
+import java.util.Collection;
+
 /**
  * Provides dynamic object conversion to a type.
  * Contains a map of registered converters. User may add new converter.
@@ -56,6 +58,13 @@ public class TypeConverterManager {
 	 */
 	public static <T> T convertType(Object value, Class<T> destinationType) {
 		return TYPE_CONVERTER_MANAGER_BEAN.convertType(value, destinationType);
+	}
+
+	/**
+	 * Special conversion to collections, when component type is known.
+	 */
+	public static <T> Collection<T> convertToCollection(Object value, Class<? extends Collection<T>> destinationType, Class componentType) {
+		return TYPE_CONVERTER_MANAGER_BEAN.convertToCollection(value, destinationType, componentType);
 	}
 
 }

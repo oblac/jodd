@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.CsvUtil;
 
@@ -22,6 +23,12 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 	protected final TypeConverterManagerBean typeConverterManagerBean;
 	protected final Class<? extends Collection> collectionType;
 	protected final Class<T> targetComponentType;
+
+	public CollectionConverter(
+			Class<? extends Collection> collectionType,
+			Class<T> targetComponentType) {
+		this(TypeConverterManager.getDefaultTypeConverterManager(), collectionType, targetComponentType);
+	}
 
 	public CollectionConverter(
 			TypeConverterManagerBean typeConverterManagerBean,
