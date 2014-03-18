@@ -98,6 +98,9 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 		return getRawType();
 	}
 
+	public Class getSetterRawComponentType() {
+		return getRawComponentType();
+	}
 
 	// ---------------------------------------------------------------- toString
 

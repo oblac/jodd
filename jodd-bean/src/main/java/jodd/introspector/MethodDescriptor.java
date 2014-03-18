@@ -20,6 +20,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	protected final Class rawReturnComponentType;
 	protected final Class rawReturnKeyComponentType;
 	protected final Class[] rawParameterTypes;
+	protected final Class[] rawParameterComponentTypes;
 
 	public MethodDescriptor(ClassDescriptor classDescriptor, Method method) {
 		super(classDescriptor, ReflectUtil.isPublic(method));
@@ -32,11 +33,17 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 		ReflectUtil.forceAccess(method);
 
 		Type[] params = method.getGenericParameterTypes();
+		Type[] genericParams = method.getGenericParameterTypes();
+
 		rawParameterTypes = new Class[params.length];
+		rawParameterComponentTypes = genericParams.length == 0 ? null : new Class[params.length];
 
 		for (int i = 0; i < params.length; i++) {
 			Type type = params[i];
 			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
+			if (rawParameterComponentTypes != null) {
+				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType());
+			}
 		}
 	}
 
@@ -87,6 +94,14 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 		return rawParameterTypes;
 	}
 
+	/**
+	 * Returns raw parameter component types. Returns <code>null</code>
+	 * if data does not exist.
+	 */
+	public Class[] getRawParameterComponentTypes() {
+		return rawParameterComponentTypes;
+	}
+
 	// ---------------------------------------------------------------- getter/setter
 
 	public Object invokeGetter(Object target) throws InvocationTargetException, IllegalAccessException {
@@ -111,6 +126,14 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 
 	public Class getSetterRawType() {
 		return getRawParameterTypes()[0];
+	}
+
+	public Class getSetterRawComponentType() {
+		Class[] ts = getRawParameterComponentTypes();
+		if (ts == null) {
+			return null;
+		}
+		return ts[0];
 	}
 
 	// ---------------------------------------------------------------- toString

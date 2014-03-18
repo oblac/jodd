@@ -13,4 +13,6 @@ public interface Setter {
 
 	Class getSetterRawType();
 
+	Class getSetterRawComponentType();
+
 }

@@ -11,6 +11,7 @@ import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,22 +60,37 @@ class BeanUtilUtil {
 		return typeConverterManager.convertType(value, type);
 	}
 
+	/**
+	 * Convert to collection.
+	 */
+	protected Object convertToCollection(Object value, Class destinationType, Class componentType) {
+		return typeConverterManager.convertToCollection(value, destinationType, componentType);
+	}
+
 	
 	// ---------------------------------------------------------------- accessors
 
 	/**
 	 * Invokes setter, but first converts type to match the setter type.
 	 */
-	protected void invokeSetter(Setter setter, Object bean, Object value) {
+	protected Object invokeSetter(Setter setter, Object bean, Object value) {
 		try {
 			Class type = setter.getSetterRawType();
 
-			value = convertType(value, type);
+			if (ReflectUtil.isInterfaceImpl(type, Collection.class)) {
+				Class componentType = setter.getSetterRawComponentType();
+
+				value = convertToCollection(value, type, componentType);
+			} else {
+				// no collections
+				value = convertType(value, type);
+			}
 
 			setter.invokeSetter(bean, value);
 		} catch (Exception ex) {
 			throw new BeanException("Setter failed: " + setter, ex);
 		}
+		return value;
 	}
 
 	// ---------------------------------------------------------------- forced
@@ -124,7 +140,7 @@ class BeanUtilUtil {
 				throw new BeanException("Setter or field not found: " + bp.name, bp);
 			}
 
-			invokeSetter(setter, bp.bean, newArray);
+			newArray = invokeSetter(setter, bp.bean, newArray);
 
 			array = newArray;
 		}
@@ -225,7 +241,7 @@ class BeanUtilUtil {
 			throw new BeanException("Invalid property: " + bp.name, bp, ex);
 		}
 
-		invokeSetter(setter, bp.bean, newInstance);
+		newInstance = invokeSetter(setter, bp.bean, newInstance);
 
 		return newInstance;
 	}
