@@ -25,7 +25,7 @@ public class TypesTest {
 	@Test
 	public void testTypesOne() {
 		HttpResponse response = HttpRequest.get("localhost:8080/types.one.html").query("listA","1,2,3").send();
-		assertEquals("1,2,3,4", response.bodyText().trim());
+		assertEquals("+ [1, 2, 3]2", response.bodyText().trim());
 	}
 
 }

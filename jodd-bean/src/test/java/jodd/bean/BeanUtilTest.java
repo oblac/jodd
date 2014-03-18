@@ -1385,4 +1385,26 @@ public class BeanUtilTest {
 		assertEquals("V2sub", v);
 	}
 
+	@Test
+	public void testCollections() {
+		MixBean mixBean = new MixBean();
+		BeanUtil.setProperty(mixBean, "data", "1,2,3");
+
+		assertNotNull(mixBean.data);
+		assertEquals(3, mixBean.data.size());
+		assertEquals(1, mixBean.data.get(0).intValue());
+
+		BeanUtil.setProperty(mixBean, "data2", "1,2,3,4");
+
+		assertNotNull(mixBean.getData2());
+		assertEquals(4, mixBean.getData2().size());
+		assertEquals(1, mixBean.getData2().get(0).intValue());
+
+		BeanUtil.setProperty(mixBean, "data5", "1,2,3,4,5");
+
+		assertNotNull(mixBean.getData5());
+		assertEquals(5, mixBean.getData5().size());
+		assertEquals(1, mixBean.getData5().get(0).intValue());
+	}
+
 }

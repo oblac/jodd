@@ -21,6 +21,7 @@ public class TypesAction {
 	@Action
 	public void one() {
 		result = listA.toString();
+		result += (listA.get(0).intValue() + 1);
 	}
 
 }
