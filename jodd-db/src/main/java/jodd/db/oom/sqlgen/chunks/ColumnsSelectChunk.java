@@ -266,10 +266,4 @@ public class ColumnsSelectChunk extends SqlChunk {
 		}
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new ColumnsSelectChunk(tableRef, columnRef, columnRefArr, includeColumns, hint);
-	}
 }

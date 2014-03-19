@@ -112,10 +112,4 @@ public class MatchChunk extends SqlChunk {
 		out.append(')');
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new MatchChunk(tableRef, objectRef, data, includeColumns);
-	}
 }

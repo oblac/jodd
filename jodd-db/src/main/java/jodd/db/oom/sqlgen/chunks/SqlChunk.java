@@ -11,7 +11,7 @@ import jodd.util.CharUtil;
 /**
  * SQL chunk defines part of the SQL query that can be processed.
  */
-public abstract class SqlChunk implements Cloneable {
+public abstract class SqlChunk {
 
 	public static final int COLS_NA = 0;                // using explicit reference.
 	public static final int COLS_ONLY_EXISTING = 1;     // using only existing columns i.e. that are not-null
@@ -238,14 +238,5 @@ public abstract class SqlChunk implements Cloneable {
 			appendMissingSpace(out);
 		}
 	}
-
-
-	// ---------------------------------------------------------------- clone
-
-	/**
-	 * Clones all parsed chunk data to an instance that is ready for processing.
-	 */
-	@Override
-	public abstract SqlChunk clone();
 
 }

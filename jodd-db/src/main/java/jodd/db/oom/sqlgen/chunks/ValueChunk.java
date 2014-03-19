@@ -54,10 +54,4 @@ public class ValueChunk extends SqlChunk {
 		defineParameter(out, name, value, null);
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new ValueChunk(name, value, objReference);
-	}
 }

@@ -18,8 +18,6 @@ import jodd.db.oom.sqlgen.chunks.UpdateSetChunk;
 import jodd.db.oom.sqlgen.chunks.MatchChunk;
 import jodd.db.DbSession;
 import jodd.util.StringPool;
-import jodd.cache.Cache;
-import jodd.cache.LRUCache;
 
 import java.util.Map;
 
@@ -60,29 +58,10 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	}
 
 	/**
-	 * Template constructor that uses cache.
+	 * Template constructor.
 	 */
 	public static DbSqlBuilder sql(String template) {
-		if (cache == null) {
-			return new DbSqlBuilder().append(template);
-		}
-		SqlChunk cachedChunk = cache.get(template);
-		if (cachedChunk == null) {
-			DbSqlBuilder dbsql = new DbSqlBuilder().append(template);
-			if (dbsql.totalChunks >= cacheThreshold) {
-				cachedChunk = cloneAllChunks(dbsql.firstChunk);
-				cache.put(template, cachedChunk);
-			}
-			return dbsql;
-		}
-		DbSqlBuilder dbsql = new DbSqlBuilder();
-		SqlChunk cloned = cloneAllChunks(cachedChunk);
-		dbsql.firstChunk = cloned;
-		while (cloned != null) {
-			dbsql.lastChunk = cloned;
-			cloned = cloned.getNextChunk();
-		}
-		return dbsql;
+		return new DbSqlBuilder().append(template);
 	}
 
 	/**
@@ -94,53 +73,6 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 		return this;
 	}
 
-
-	// ---------------------------------------------------------------- cache & clone
-
-	protected static Cache<String, SqlChunk> cache = new LRUCache<String, SqlChunk>(100);
-
-	protected static int cacheThreshold = 3;
-
-	/**
-	 * Sets the minimal number of sql chunks that query must contains so to be cached. 
-	 */
-	public static void setCacheThreshold(int ct) {
-		if (ct < 1) {
-			throw new DbSqlBuilderException("Cache threshold less then 1: " + ct);
-		}
-		cacheThreshold = ct;
-	}
-
-	/**
-	 * Sets new cache size. Zero or negative value turns the cache off. 
-	 */
-	public static void setCacheSize(int size) {
-		if (size <= 0) {
-			cache = null;
-		} else {
-			cache = new LRUCache<String, SqlChunk>(size);
-		}
-	}
-
-
-	/**
-	 * Clones all chunks.
-	 */
-	protected static SqlChunk cloneAllChunks(SqlChunk chunk) {
-		if (chunk == null) {
-			return null;
-		}
-		SqlChunk first = chunk.clone();
-		SqlChunk previous = first;
-		chunk = chunk.getNextChunk();
-		while (chunk != null) {
-			SqlChunk cloned = chunk.clone();
-			cloned.insertChunkAfter(previous);
-			previous = cloned;
-			chunk = chunk.getNextChunk();
-		}
-		return first;
-	}
 
 	// ---------------------------------------------------------------- settings
 

@@ -30,10 +30,4 @@ public class ColumnValueChunk extends ValueChunk {
 		super.defineParameter(query, name, value, dec);
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new ColumnValueChunk(name, value, objReference);
-	}
 }

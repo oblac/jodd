@@ -71,10 +71,4 @@ public class UpdateSetChunk extends SqlChunk {
 		}
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new UpdateSetChunk(tableRef, data, includeNulls);
-	}
 }

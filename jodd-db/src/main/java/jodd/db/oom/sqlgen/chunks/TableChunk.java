@@ -115,10 +115,4 @@ public class TableChunk extends SqlChunk {
 		}
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new TableChunk(entity,  entityName, tableAlias, tableReference);
-	}
 }

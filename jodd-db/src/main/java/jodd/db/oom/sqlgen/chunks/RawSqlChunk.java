@@ -19,10 +19,4 @@ public class RawSqlChunk extends SqlChunk {
 		out.append(sql);
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new RawSqlChunk(sql);
-	}
 }

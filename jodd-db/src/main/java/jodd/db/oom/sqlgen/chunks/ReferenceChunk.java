@@ -97,11 +97,4 @@ public class ReferenceChunk extends SqlChunk {
 		}
 	}
 
-
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new ReferenceChunk(tableRef, columnRef, onlyId);
-	}
 }

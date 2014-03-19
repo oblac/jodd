@@ -64,10 +64,4 @@ public class InsertChunk extends SqlChunk {
 				.append(col).append(") values (").append(val).append(')');
 	}
 
-	// ---------------------------------------------------------------- clone
-
-	@Override
-	public SqlChunk clone() {
-		return new InsertChunk(entityName, entityType, data);
-	}
 }
