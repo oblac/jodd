@@ -6,6 +6,7 @@ import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
+import jodd.db.oom.sqlgen.ParsedSql;
 import jodd.db.oom.tst.Boy2;
 import jodd.db.oom.tst.Girl;
 import org.junit.Before;
@@ -26,7 +27,27 @@ public class DbHintTest extends DbHsqldbTestCase {
 		DbOomManager dbOom = DbOomManager.getInstance();
 		dbOom.registerEntity(Boy2.class);
 		dbOom.registerEntity(Girl.class);
+
+		q1 = sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
+
+		q2 = sql("select $C{boy.*}, $C{boy.girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
+
+		q3 = sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirlsCount from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
+
+		q4 = sql("select $C{boy.*}, $C{boy.girlAlt:girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
+
+		q5 = sql("select $C{boy.*}, $C{boy.girlAlt:girl.*}, (select count (1) from $T{Girl girl2}) as $C{boy.totalGirls:.totalGirlsCount} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
+
+		q6 = sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id,name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id").parse();
 	}
+
+	ParsedSql q1;
+	ParsedSql q2;
+	ParsedSql q3;
+	ParsedSql q4;
+	ParsedSql q5;
+	ParsedSql q6;
+
 
 	@Test
 	public void testHint() {
@@ -40,8 +61,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// select without hint
 
-		DbOomQuery dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		DbOomQuery dbOomQuery = new DbOomQuery(q1);
 
 		Object[] result = dbOomQuery.find(Boy2.class, Girl.class);
 
@@ -56,8 +76,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// select with t-sql hint
 
-		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery = new DbOomQuery(q2);
 
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
@@ -70,8 +89,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// select with external hints
 
-		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{girl.*}, (select count (1) from $T{Girl girl2}) as totalGirlsCount from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery = new DbOomQuery(q3);
 		dbOomQuery.withHints("boy", "boy.girlAlt", "boy.totalGirls");
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
@@ -84,8 +102,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery = new DbOomQuery(q4);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
@@ -97,8 +114,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girlAlt:girl.*}, (select count (1) from $T{Girl girl2}) as $C{boy.totalGirls:.totalGirlsCount} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery = new DbOomQuery(q5);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class, Integer.class);
 
 		assertEquals(1, boy2.id);
@@ -111,8 +127,7 @@ public class DbHintTest extends DbHsqldbTestCase {
 		
 		// same select with t-sql hints
 
-		dbOomQuery = new DbOomQuery(
-				sql("select $C{boy.*}, $C{boy.girlAlt:girl.[id,name]} from $T{Boy2 boy} join $T{Girl girl} on $boy.id=$girl.id"));
+		dbOomQuery = new DbOomQuery(q6);
 		boy2 = dbOomQuery.find(Boy2.class, Girl.class);
 
 		assertEquals(1, boy2.id);
