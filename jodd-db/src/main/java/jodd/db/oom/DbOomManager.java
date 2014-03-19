@@ -172,11 +172,11 @@ public class DbOomManager {
 		}
 
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Type already registered: " + existing.getType());
+			throw new DbOomException("Type already registered: " + existing.getType());
 		}
 		existing = entityNamesMap.put(ded.getEntityName(), ded);
 		if (existing != null) {
-			throw new DbOomException("Type registration failed! Name '" + ded.getEntityName() + "' already mapped to an entity: " + existing.getType());
+			throw new DbOomException("Name '" + ded.getEntityName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
 	}

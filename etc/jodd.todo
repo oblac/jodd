@@ -62,7 +62,7 @@ Props-plugin:
 	- Check when categories are listed in values, do not recognize them as categories but test
 		Categories must start on empty or whitespaced line
 Madvoc:
-	- Action methods with arguments @tbd
+	- Action methods with arguments @done @v3.5.1
 	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
 	- Add Convertes, that convert input text automatically
 		For example, convert "1,473.00" into "1473"
