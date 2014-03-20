@@ -10,12 +10,12 @@ import jodd.madvoc.meta.Out;
 @MadvocAction
 public class ArgsAction {
 
-	public class Hello {
+	class Hello {
 		@In Integer id;
 		@Out String out;
 	}
 
-	public static class Data2 {
+	static class Data2 {
 		@In Integer id;
 		@Out String value;
 	}

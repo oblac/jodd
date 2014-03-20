@@ -218,10 +218,13 @@ public class ActionRequest {
 			try {
 				if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
 					// regular or static class
-					params[i] = type.newInstance();
+					Constructor ctor = type.getDeclaredConstructor(null);
+					ctor.setAccessible(true);
+					params[i] = ctor.newInstance();
 				} else {
 					// member class
 					Constructor ctor = type.getDeclaredConstructor(actionConfig.getActionClass());
+					ctor.setAccessible(true);
 					params[i] = ctor.newInstance(action);
 				}
 			} catch (Exception ex) {
