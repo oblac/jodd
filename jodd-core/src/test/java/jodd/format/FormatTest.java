@@ -28,6 +28,7 @@ public class FormatTest {
 
 		b = -1;
 		assertEquals("-1", Printf.str("%i", b));
+		assertEquals("ff", Printf.str("%x", Integer.valueOf(-1).byteValue()));
 		assertEquals("255", Printf.str("%u", b));
 		assertEquals("ff", Printf.str("%x", b));
 		assertEquals("FF", Printf.str("%X", b));
@@ -80,6 +81,7 @@ public class FormatTest {
 		assertEquals("0b1111111111111111", Printf.str("%#b", s));
 		assertEquals("0B1111111111111111", Printf.str("%#B", s));
 		assertEquals("177777", Printf.str("%o", s));
+		assertEquals("ffff", Printf.str("%x", Integer.valueOf(-1).shortValue()));
 
 		s = Short.MIN_VALUE;
 		assertEquals("-32768", Printf.str("%i", s));
@@ -207,7 +209,13 @@ public class FormatTest {
 		assertEquals("A", Printf.str("%c", 65));
 		assertEquals("A", Printf.str("%c", (byte) 65));
 		assertEquals("A", Printf.str("%c", (short) 65));
-		assertEquals("A", Printf.str("%c", new Integer(65)));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65)));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65).byteValue()));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65).shortValue()));
+		assertEquals("A", Printf.str("%c", new Character('A')));
+		assertEquals("65", Printf.str("%d", new Character('A')));
+		assertEquals("41", Printf.str("%x", new Character('A')));
+		assertEquals("101", Printf.str("%o", new Character('A')));
 	}
 
 
