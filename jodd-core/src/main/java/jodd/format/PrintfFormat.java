@@ -422,7 +422,7 @@ public class PrintfFormat {
 	public String form(char value) {
 		switch(fmt) {
 			case 'c':
-				return alternate ? "\\u" + form((short) value) : pad(String.valueOf(value));
+				return alternate ? "\\u" + pad(Printf.str("%x", (short) value)) : pad(String.valueOf(value));
 			case 'd':
 			case 'i':
 			case 'u':
