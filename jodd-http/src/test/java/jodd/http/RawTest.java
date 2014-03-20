@@ -70,4 +70,26 @@ public class RawTest {
 				"chunks.", body.replace("\r\n", "\n"));
 	}
 
+
+	@Test
+	public void testRawResponse5() throws IOException {
+		URL data = RawTest.class.getResource("5-response.txt");
+
+		String fileContent = FileUtil.readString(data.getFile());
+
+		fileContent = StringUtil.replace(fileContent, "\n", "\r\n");
+
+		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
+
+		String body = response.bodyText();
+
+		assertEquals(
+				"Wikipedia in\n" +
+				"\n" +
+				"chunks.", body.replace("\r\n", "\n"));
+
+		assertEquals("TheData", response.header("SomeAfterHeader"));
+	}
+
+
 }

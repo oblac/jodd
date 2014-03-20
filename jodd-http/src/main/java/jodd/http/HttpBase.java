@@ -695,15 +695,15 @@ public abstract class HttpBase<T> {
 				while (true) {
 					String line = reader.readLine();
 
-					if (StringUtil.isBlank(line)) {
-						break;
-					}
-
 					int len = Integer.parseInt(line, 16);
 
-					if (len != 0) {
+					if (len > 0) {
 						StreamUtil.copy(reader, fastCharArrayWriter, len);
 						reader.readLine();
+					} else {
+						// end reached, read trailing headers, if there is any
+						readHeaders(reader);
+						break;
 					}
 				}
 			} catch (IOException ioex) {
