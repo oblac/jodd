@@ -28,6 +28,7 @@ public class FormatTest {
 
 		b = -1;
 		assertEquals("-1", Printf.str("%i", b));
+		assertEquals("ff", Printf.str("%x", Integer.valueOf(-1).byteValue()));
 		assertEquals("255", Printf.str("%u", b));
 		assertEquals("ff", Printf.str("%x", b));
 		assertEquals("FF", Printf.str("%X", b));
@@ -80,6 +81,7 @@ public class FormatTest {
 		assertEquals("0b1111111111111111", Printf.str("%#b", s));
 		assertEquals("0B1111111111111111", Printf.str("%#B", s));
 		assertEquals("177777", Printf.str("%o", s));
+		assertEquals("ffff", Printf.str("%x", Integer.valueOf(-1).shortValue()));
 
 		s = Short.MIN_VALUE;
 		assertEquals("-32768", Printf.str("%i", s));
@@ -196,7 +198,24 @@ public class FormatTest {
 	@Test
 	public void testChar() {
 		assertEquals("A", Printf.str("%c", 'A'));
+		assertEquals("c", Printf.str("%c", 'c'));
+		assertEquals("65", Printf.str("%d", 'A'));
+		assertEquals("41", Printf.str("%x", 'A'));
+		assertEquals("101", Printf.str("%o", 'A'));
+		assertEquals("0xdb00", Printf.str("%#x", '\udb00'));
+		assertEquals("A", Printf.str("%c", 65));
+		assertEquals("A", Printf.str("%c", (byte)65));
 		assertEquals("--- A ---", Printf.str("--- %c ---", 'A'));
+		assertEquals("A", Printf.str("%c", 65));
+		assertEquals("A", Printf.str("%c", (byte) 65));
+		assertEquals("A", Printf.str("%c", (short) 65));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65)));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65).byteValue()));
+		assertEquals("A", Printf.str("%c", Integer.valueOf(65).shortValue()));
+		assertEquals("A", Printf.str("%c", new Character('A')));
+		assertEquals("65", Printf.str("%d", new Character('A')));
+		assertEquals("41", Printf.str("%x", new Character('A')));
+		assertEquals("101", Printf.str("%o", new Character('A')));
 	}
 
 
@@ -256,7 +275,12 @@ public class FormatTest {
 		assertEquals(" 1.7", Printf.str("%4.1f", 1.7));
 		assertEquals("1.70", Printf.str("%4.2f", 1.7));
 		assertEquals("1.80", Printf.str("%4.2f", 1.79999999999));
-
+		assertEquals("0", Printf.str("%1.0f", 0.4999));
+		assertEquals("1", Printf.str("%1.0f", 0.50));
+		assertEquals("1", Printf.str("%1.0f", 0.51)); 
+		assertEquals("1.01", Printf.str("%3.2f", 1.0051));
+		assertEquals("1.01", Printf.str("%3.2f", 1.0099));
+        
 		assertEquals("17.3", Printf.str("%1.1f", 17.3));
 		assertEquals("17.3", Printf.str("%2.1f", 17.3));
 		assertEquals("17.3", Printf.str("%3.1f", 17.3));
