@@ -4,7 +4,7 @@ package jodd.madvoc.interceptor;
 
 /**
  * Preparable actions will have their <code>prepare()</code> method called if
- * intercepted by {@link PrepareInterceptor}.
+ * intercepted by {@link PreparableInterceptor}.
  */
 public interface Preparable {
 
