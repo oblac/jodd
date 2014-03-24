@@ -70,6 +70,7 @@ public class DbUtil {
 	/**
 	 * Sets prepared statement object using target SQL type.
 	 * Here Jodd makes conversion and not JDBC driver.
+	 * See: http://www.tutorialspoint.com/jdbc/jdbc-data-types.htm
 	 */
 	public static void setPreparedStatementObject(PreparedStatement preparedStatement, int index, Object value, int targetSqlType) throws SQLException {
 		if (value == null) {
@@ -78,16 +79,15 @@ public class DbUtil {
 
 		switch (targetSqlType) {
 			case Types.VARCHAR:
+			case Types.LONGVARCHAR:
+			case Types.CHAR:
 				preparedStatement.setString(index, Convert.toString(value));
 				break;
 
 			case Types.INTEGER:
-			case Types.NUMERIC:
-				preparedStatement.setInt(index, Convert.toIntValue(value));
-				break;
-
 			case Types.SMALLINT:
-				preparedStatement.setShort(index, Convert.toShortValue(value));
+			case Types.TINYINT:
+				preparedStatement.setInt(index, Convert.toIntValue(value));
 				break;
 
 			case Types.BIGINT:
@@ -95,22 +95,24 @@ public class DbUtil {
 				break;
 
 			case Types.BOOLEAN:
+			case Types.BIT:
 				preparedStatement.setBoolean(index, Convert.toBooleanValue(value));
-				break;
-
-			case Types.CHAR:
-				preparedStatement.setString(index, String.valueOf(Convert.toCharValue(value)));
 				break;
 
 			case Types.DATE:
 				preparedStatement.setDate(index, TypeConverterManager.convertType(value, java.sql.Date.class));
 				break;
 
+			case Types.NUMERIC:
 			case Types.DECIMAL:
-			case Types.REAL:
+				preparedStatement.setBigDecimal(index, Convert.toBigDecimal(value));
+				break;
+
+			case Types.DOUBLE:
 				preparedStatement.setDouble(index, Convert.toDoubleValue(value));
 				break;
 
+			case Types.REAL:
 			case Types.FLOAT:
 				preparedStatement.setFloat(index, Convert.toFloatValue(value));
 			    break;
@@ -123,6 +125,11 @@ public class DbUtil {
 				preparedStatement.setTimestamp(index, TypeConverterManager.convertType(value, Timestamp.class));
 				break;
 
+			case Types.BINARY:
+			case Types.VARBINARY:
+				preparedStatement.setBytes(index, TypeConverterManager.convertType(value, byte[].class));
+				break;
+
 			default:
 				if (targetSqlType != SqlType.DB_SQLTYPE_NOT_AVAILABLE) {
 					preparedStatement.setObject(index, value, targetSqlType);
@@ -130,7 +137,6 @@ public class DbUtil {
 					preparedStatement.setObject(index, value);
 				}
 		}
-
 
 	}
 
