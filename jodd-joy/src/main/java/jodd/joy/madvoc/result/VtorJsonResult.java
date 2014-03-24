@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * vtor json result.
+ * VTor validation result as JSON string.
  */
 public class VtorJsonResult extends BaseActionResult<String> {
 
