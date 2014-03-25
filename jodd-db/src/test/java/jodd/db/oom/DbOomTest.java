@@ -39,8 +39,8 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- insert
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().autoClose().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbOomQuery q2 = new DbOomQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
@@ -48,10 +48,10 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertEquals("insert into GIRL (ID, NAME) values (:girl.id, :girl.name)", q2.getQueryString());
 		q2.init();
 		assertEquals("insert into GIRL (ID, NAME) values (3, 'Monica')", q2.getQueryString());
-		assertEquals(1, q2.executeUpdateAndClose());
+		assertEquals(1, q2.autoClose().executeUpdate());
 		assertTrue(q2.isClosed());
 
-		assertEquals(1, DbEntitySql.insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new BadBoy(Integer.valueOf(1), "Johny", Integer.valueOf(3))).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbQuery dq = new DbQuery("select count(*) from GIRL where id>:id");
@@ -61,7 +61,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		//dq.reset();
 		dq.setInteger("id", 10);
 		assertEquals(1, session.getTotalQueries());
-		assertEquals(0, dq.executeCountAndClose());
+		assertEquals(0, dq.autoClose().executeCount());
 
 		assertEquals(0, session.getTotalQueries());
 
@@ -577,30 +577,30 @@ public class DbOomTest extends DbHsqldbTestCase {
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(2);
 		f = DbEntitySql.findById(badGirl).query();
-		list = f.listAndClose(BadGirl.class);
+		list = f.autoClose().list(BadGirl.class);
 		assertTrue(f.isClosed());
 		assertEquals(1, list.size());
 		checkBadGirl2((BadGirl) list.get(0));
 
 		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		count = (int) f.autoClose().executeCount();
 		assertEquals(1, count);
 		assertTrue(f.isClosed());
 
 
 		DbSqlGenerator g = DbEntitySql.deleteById(badGirl);
-		f = new DbOomQuery(g);
-		f.executeUpdateAndClose();
+		f = new DbOomQuery(g).autoClose();
+		f.executeUpdate();
 		assertTrue(f.isClosed());
 
 		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		count = (int) f.autoClose().executeCount();
 		assertEquals(0, count);
 		assertTrue(f.isClosed());
 
 		badGirl.fooid = null;
-		f = DbEntitySql.count(badGirl).query();
-		count = (int) f.executeCountAndClose();
+		f = DbEntitySql.count(badGirl).query().autoClose();
+		count = (int) f.executeCount();
 		assertEquals(2, count);
 		assertTrue(f.isClosed());
 
@@ -640,8 +640,8 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		badGirl = new BadGirl();
 		badGirl.fooid = Integer.valueOf(3);
-		BadGirl bbgg = DbEntitySql.findById(badGirl).query().findAndClose(BadGirl.class);
-		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().listAndClose(BadBoy.class);
+		BadGirl bbgg = DbEntitySql.findById(badGirl).query().find(BadGirl.class);
+		bbgg.boys = DbEntitySql.findForeign(BadBoy.class, bbgg).query().list(BadBoy.class);
 
 		assertNotNull(bbgg);
 		assertEquals(3, bbgg.fooid.intValue());

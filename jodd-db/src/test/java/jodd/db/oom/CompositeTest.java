@@ -53,7 +53,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 		query.executeUpdate();
 
 		query = new DbQuery("insert into WIZARD values(1, 7);");
-		query.executeUpdateAndClose();
+		query.executeUpdate();
 	}
 
 	@After
@@ -64,14 +64,14 @@ public class CompositeTest extends DbHsqldbTestCase {
 	@Test
 	public void testCustomName() {
 		DbOomQuery dbOomQuery = sql("select $C{u.*} from $T{User u}").query();
-		User user = dbOomQuery.findAndClose(User.class);
+		User user = dbOomQuery.find(User.class);
 
 		assertEquals(1, user.userId);
 		assertEquals("Gandalf", user.name);
 
 		// select custom value into target entity
 		dbOomQuery = sql("select $C{u.userId}, 'Sauron' as u.name from $T{User u}").query();
-		user = dbOomQuery.findAndClose(User.class);
+		user = dbOomQuery.find(User.class);
 
 		assertEquals(1, user.userId);
 		assertEquals("Sauron", user.name);
@@ -82,7 +82,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 		// default
 
 		DbOomQuery dbOomQuery = sql("select $C{u.*}, 243 from $T{User u}").query();
-		Object[] object = dbOomQuery.findAndClose(User.class, Integer.class);
+		Object[] object = dbOomQuery.find(User.class, Integer.class);
 
 		assertEquals(2, object.length);
 		User user = (User) object[0];
@@ -96,7 +96,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 
 		dbOomQuery = sql("select $C{u.*}, 243 as exp from $T{User u}").query();
 
-		user = dbOomQuery.withHints("u", "u.exp").findAndClose(User.class, Integer.class);
+		user = dbOomQuery.withHints("u", "u.exp").find(User.class, Integer.class);
 
 		assertEquals(1, user.userId);
 		assertEquals("Gandalf", user.name);
@@ -107,7 +107,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 
 		dbOomQuery = sql("select $C{u.*}, 243 as $C{u.exp:.exp} from $T{User u}").query();
 
-		user = dbOomQuery.findAndClose(User.class, Integer.class);
+		user = dbOomQuery.find(User.class, Integer.class);
 
 		assertEquals(1, user.userId);
 		assertEquals("Gandalf", user.name);
@@ -118,7 +118,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 	public void testExtend() {
 		DbOomQuery dbOomQuery = sql("select $C{w.*}, $C{w.user:u.*} from $T{Wizard w} inner join $T{User u} on $w.wizardId=$u.userId").query();
 
-		Wizard wizard = dbOomQuery.findAndClose(/*Wizard.class, User.class*/);
+		Wizard wizard = dbOomQuery.find(/*Wizard.class, User.class*/);
 
 		assertNotNull(wizard);
 		assertEquals(1, wizard.wizardId);
@@ -128,7 +128,7 @@ public class CompositeTest extends DbHsqldbTestCase {
 		// all in one class!
 
 		dbOomQuery = sql("select $C{w.%}, $C{u.*} from $T{Wizard w} inner join $T{User u} on $w.wizardId=$u.userId").query();
-		WizUser wizUser = dbOomQuery.findAndClose(WizUser.class);
+		WizUser wizUser = dbOomQuery.find(WizUser.class);
 
 		assertNotNull(wizUser);
 		//assertEquals(1, wizUser.wizardId);

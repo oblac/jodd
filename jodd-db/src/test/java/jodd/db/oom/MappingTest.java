@@ -60,7 +60,7 @@ public class MappingTest extends DbHsqldbTestCase {
 		SqlTypeManager.register(Boo.class, BooSqlType.class);
 		SqlTypeManager.register(FooWeight.class, FooWeigthSqlType.class);
 
-		List<Foo> foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);
+		List<Foo> foos = new DbOomQuery("select * from FOO").list(Foo.class);
 		assertEquals(1, foos.size());
 		Foo foo = foos.get(0);
 		assertEquals(1, foo.id);
@@ -104,14 +104,14 @@ public class MappingTest extends DbHsqldbTestCase {
 		foo.jdt1.setYear(3000);
 		foo.jdt2.setDay(3);
 		foo.jdt2.setYear(2900);
-		doq.executeUpdateAndClose();
+		doq.executeUpdate();
 
 
 		doq = new DbOomQuery(DbEntitySql.updateColumn(foo, "timestamp2", new JDateTime("2010-02-02 20:20:20.222")));
 
-		doq.executeUpdateAndClose();
+		doq.executeUpdate();
 
-		foos = new DbOomQuery("select * from FOO").listAndClose(Foo.class);
+		foos = new DbOomQuery("select * from FOO").list(Foo.class);
 		assertEquals(1, foos.size());
 		foo = foos.get(0);
 		assertEquals(1, foo.id);

@@ -30,7 +30,7 @@ public class DbEnumTest extends DbHsqldbTestCase {
 		String sql = "create table ENUMERATOR(ID int, NAME varchar(20), STATUS int)";
 
 		DbQuery query = new DbQuery(sql);
-		query.executeUpdateAndClose();
+		query.executeUpdate();
 
 		Enumerator e = new Enumerator();
 		e.id = 2;
@@ -39,7 +39,7 @@ public class DbEnumTest extends DbHsqldbTestCase {
 
 		DbSqlGenerator gen = insert(e);
 		query = new DbOomQuery(gen);
-		query.executeUpdateAndClose();
+		query.executeUpdate();
 
 		session.closeSession();
 	}

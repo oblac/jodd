@@ -55,9 +55,9 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 		// prepare data
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().executeUpdateAndClose());
-		assertEquals(1, DbEntitySql.insert(new Boy2(1, "John", 1)).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Boy2(1, "John", 1)).query().executeUpdate());
 
 		// select without hint
 

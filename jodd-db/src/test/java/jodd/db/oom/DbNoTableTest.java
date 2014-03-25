@@ -32,12 +32,12 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 	public void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().executeUpdateAndClose());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one
 		DbOomQuery q = new DbOomQuery(DbSqlBuilder.sql("select $C{g.id} + 10, UCASE($C{g.name}) from $T{Girl g}"));
-		Object[] row = (Object[]) q.find(Integer.class, String.class);
+		Object[] row = q.find(Integer.class, String.class);
 
 		assertEquals(Integer.valueOf(11), row[0]);
 		assertEquals("ANNA", row[1]);
@@ -61,7 +61,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		dbSqlBuilder.reset();
 
 		q = new DbOomQuery(dbSqlBuilder);
-		row = (Object[]) q.find(Bean1.class, Girl.class);
+		row = q.find(Bean1.class, Girl.class);
 
 		Bean1 bean1 = (Bean1) row[0];
 		Girl girl = (Girl) row[1];
@@ -86,7 +86,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 		dbSqlBuilder.reset();
 
 		q = new DbOomQuery(dbSqlBuilder);
-		row = (Object[]) q.find(Bean1.class, Girl.class);
+		row = q.find(Bean1.class, Girl.class);
 
 		bean1 = (Bean1) row[0];
 		girl = (Girl) row[1];

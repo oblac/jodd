@@ -33,9 +33,9 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 
 		// insert two records
 		DbQuery query = new DbQuery(session, "insert into GIRL values(4, 'Jeniffer', 'fighting')");
-		assertEquals(1, query.executeUpdateAndClose());
+		assertEquals(1, query.executeUpdate());
 		query = new DbQuery(session, "insert into GIRL values(5, 'Annita', 'bartender')");
-		assertEquals(1, query.executeUpdateAndClose());
+		assertEquals(1, query.executeUpdate());
 
 		// rollback
 		tx.rollback();
@@ -44,7 +44,7 @@ public class DbTransactionTest extends DbHsqldbTestCase {
 		session = new DbSession(cp);
 
 		DbQuery query2 = new DbQuery(session, "select count(*) from GIRL");
-		long count = query2.executeCountAndClose();
+		long count = query2.executeCount();
 
 		assertEquals(0, count);
 		session.closeSession();
