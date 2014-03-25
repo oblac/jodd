@@ -10,8 +10,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Encapsulates db connection. Initially works in auto-commit mode.
@@ -68,15 +66,17 @@ public class DbSession {
 	public void closeSession() {
 		log.debug("Closing db session");
 
-		List<SQLException> allsexs = null;
+		SQLException sqlException = null;
+
 		if (queries != null) {
 			for (DbQueryBase query : queries) {
-				List<SQLException> sexs = query.closeQuery();
-				if (sexs != null) {
-					if (allsexs == null) {
-						allsexs = new ArrayList<SQLException>();
+				SQLException sex = query.closeQuery();
+				if (sex != null) {
+					if (sqlException == null) {
+						sqlException = sex;
+					} else {
+						sqlException.setNextException(sex);
 					}
-					allsexs.addAll(sexs);
 				}
 			}
 		}
@@ -88,8 +88,8 @@ public class DbSession {
 			connection = null;
 		}
 		queries = null;
-		if (allsexs != null) {
-			throw new DbSqlException("Closing DbSession failed", allsexs);
+		if (sqlException != null) {
+			throw new DbSqlException("Closing DbSession failed", sqlException);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class DbSession {
 
 	/**
 	 * Bag of all queries attached to this session. Explicitly closed queries
-	 * remains in the set. If <code>null</code> session is closed.
+	 * remains in the set. If <code>null</code>, session is closed.
 	 * If not <code>null</code>, but empty, session is still considered as open.
 	 */
 	protected Set<DbQueryBase> queries;
@@ -162,7 +162,7 @@ public class DbSession {
 			try {
 				connection.setAutoCommit(true);
 			} catch (SQLException sex) {
-				throw new DbSqlException("Failed to open non-transactional connection", sex);
+				throw new DbSqlException("Failed to open non-TX connection", sex);
 			}
 		}
 	}

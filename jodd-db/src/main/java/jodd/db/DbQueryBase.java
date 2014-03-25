@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -78,7 +76,7 @@ abstract class DbQueryBase {
 	protected void checkInitialized() {
 		if (queryState != QUERY_INITIALIZED) {
 			String message = (queryState == QUERY_CREATED ?
-									"Query is just created and not yet initialized." : "Query is closed.");
+									"Query is created but not yet initialized." : "Query is closed.");
 			throw new DbSqlException(this, message + " Operation may be performed only on initialized queries.");
 		}
 	}
@@ -274,18 +272,22 @@ abstract class DbQueryBase {
 
 	/**
 	 * Closes all result sets opened by this query. Query remains active.
+	 * Returns <code>SQLException</code> (stacked with all exceptions)
+	 * or <code>null</code>.
 	 */
-	private List<SQLException> closeQueryResultSets() {
-		List<SQLException> sexs = null;
+	private SQLException closeQueryResultSets() {
+		SQLException sqlException = null;
+
 		if (resultSets != null) {
 			for (ResultSet rs : resultSets) {
 				try {
 					rs.close();
 				} catch (SQLException sex) {
-					if (sexs == null) {
-						sexs = new ArrayList<SQLException>();
+					if (sqlException == null) {
+						sqlException = sex;
+					} else {
+						sqlException.setNextException(sex);
 					}
-					sexs.add(sex);
 				} finally {
 					totalOpenResultSetCount--;
 				}
@@ -293,38 +295,39 @@ abstract class DbQueryBase {
 			resultSets.clear();
 			resultSets = null;
 		}
-		return sexs;
+		return sqlException;
 	}
 
 	/**
 	 * Closes all result sets created by this query. Query remains active.
 	 */
 	public void closeAllResultSets() {
-		List<SQLException> sexs = closeQueryResultSets();
-		if (sexs != null) {
-			throw new DbSqlException("Close associated ResultSets error", sexs);
+		SQLException sex = closeQueryResultSets();
+		if (sex != null) {
+			throw new DbSqlException("Close associated ResultSets error", sex);
 		}
 	}
 
 	/**
 	 * Closes all assigned result sets and then closes the query. Query becomes closed.
 	 */
-	protected List<SQLException> closeQuery() {
-		List<SQLException> sexs = closeQueryResultSets();
+	protected SQLException closeQuery() {
+		SQLException sqlException = closeQueryResultSets();
 		if (statement != null) {
 			try {
 				statement.close();
 			} catch (SQLException sex) {
-				if (sexs == null) {
-					sexs = new ArrayList<SQLException>();
+				if (sqlException == null) {
+					sqlException = sex;
+				} else {
+					sqlException.setNextException(sex);
 				}
-				sexs.add(sex);
 			}
 			statement = null;
 		}
 		query = null;
 		queryState = QUERY_CLOSED;
-		return sexs;
+		return sqlException;
 	}
 
 	/**
@@ -332,18 +335,18 @@ abstract class DbQueryBase {
 	 */
 	@SuppressWarnings({"ClassReferencesSubclass"})
 	public void close() {
-		List<SQLException> sexs = closeQuery();
+		SQLException sqlException = closeQuery();
 		connection = null;
 		if (this.session != null) {
 			this.session.detachQuery(this);
 		}
-		if (sexs != null) {
-			throw new DbSqlException("Close query error", sexs);
+		if (sqlException != null) {
+			throw new DbSqlException("Close query error", sqlException);
 		}
 	}
 
 	/**
-	 * Closes single result set that was created by this query, It is not necessary to close result sets
+	 * Closes single result set that was created by this query. It is not necessary to close result sets
 	 * explicitly, since {@link DbQueryBase#close()} method closes all created result sets.
 	 * Query remains active.
 	 */
@@ -352,7 +355,7 @@ abstract class DbQueryBase {
 			return;
 		}
 		if (resultSets.remove(rs) == false) {
-			throw new DbSqlException(this, "Provided ResultSet is not created by this query.");
+			throw new DbSqlException(this, "ResultSet is not created by this query");
 		}
 		try {
 			rs.close();

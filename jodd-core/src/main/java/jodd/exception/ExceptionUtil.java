@@ -5,7 +5,7 @@ package jodd.exception;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.sql.SQLException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -191,7 +191,7 @@ public class ExceptionUtil {
      * and making it a child of the previous using the <code>setNextException</code>
      * method of SQLException.
      */
-	public static SQLException rollupSqlExceptions(List<SQLException> exceptions) {
+	public static SQLException rollupSqlExceptions(Collection<SQLException> exceptions) {
 		SQLException parent = null;
 		for (SQLException exception : exceptions) {
 			if (parent != null) {
