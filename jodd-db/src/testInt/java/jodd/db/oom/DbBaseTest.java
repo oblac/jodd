@@ -71,7 +71,7 @@ public abstract class DbBaseTest {
 			String sql = getCreateTableSql();
 
 			DbQuery query = new DbQuery(session, sql);
-			query.executeUpdateAndClose();
+			query.executeUpdate();
 
 			session.closeSession();
 			assertTrue(query.isClosed());
@@ -81,7 +81,7 @@ public abstract class DbBaseTest {
 			DbSession session = new DbSession();
 
 			DbQuery query = new DbQuery(session, "drop table " + getTableName());
-			query.executeUpdateAndClose();
+			query.executeUpdate();
 
 			session.closeSession();
 			assertTrue(query.isClosed());

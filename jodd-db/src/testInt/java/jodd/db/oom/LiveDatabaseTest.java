@@ -131,28 +131,28 @@ public class LiveDatabaseTest extends DbBaseTest {
 		assertEquals(1, tester.getId().longValue());
 
 		tester.setName("seven");
-		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.updateAll(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester.setName("SEVEN");
-		DbOomQuery.query(session, DbEntitySql.update(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.update(tester)).executeUpdate();
 		assertDb(session, "{1,SEVEN,7}");
 
 		tester.setName("seven");
-		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.updateColumn(tester, "name")).executeUpdate();
 		assertDb(session, "{1,seven,7}");
 
 		tester = new Tester();
 		tester.setId(Long.valueOf(2));
 		tester.setName("two");
 		tester.setValue(Integer.valueOf(2));
-		DbOomQuery.query(session, DbEntitySql.insert(tester)).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.insert(tester)).executeUpdate();
 		assertDb(session, "{1,seven,7}{2,two,2}");
 
-		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(2, count);
 
-		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).findAndClose(Tester.class);
+		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
@@ -160,7 +160,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
@@ -168,7 +168,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
 						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
@@ -176,7 +176,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
 						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
-				.findAndClose(Tester.class);
+				.find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
@@ -184,20 +184,20 @@ public class LiveDatabaseTest extends DbBaseTest {
 				.query(session, DbEntitySql
 						.findById(Tester.class, Integer.valueOf(2))
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))    // fixes POSTGRESQL
-				.findAndClose();
+				.find();
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = new Tester();
 		tester.setName("seven");
-		tester = DbOomQuery.query(session, DbEntitySql.find(tester)).findAndClose(Tester.class);
+		tester = DbOomQuery.query(session, DbEntitySql.find(tester)).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).findAndClose(Tester.class);
+		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, Integer.valueOf(1))).executeUpdateAndClose();
+		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, Integer.valueOf(1))).executeUpdate();
 
-		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCountAndClose();
+		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(1, count);
 
 		session.closeSession();

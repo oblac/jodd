@@ -7,8 +7,6 @@ import jodd.io.StringInputStream;
 import jodd.util.collection.IntArrayList;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,8 +46,6 @@ import java.util.Map;
  * </ul>
  */
 public class DbQuery extends DbQueryBase {
-
-	private static final Logger log = LoggerFactory.getLogger(DbQuery.class);
 
 	/**
 	 * Creates new query,
@@ -992,4 +988,16 @@ s	 */
 			setObject(names[i], values[i]);
 		}
 	}
+
+	// ---------------------------------------------------------------- close
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DbQuery autoClose() {
+		super.autoClose();
+		return this;
+	}
+
 }

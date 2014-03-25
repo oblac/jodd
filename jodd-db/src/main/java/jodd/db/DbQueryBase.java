@@ -270,6 +270,17 @@ abstract class DbQueryBase {
 
 	// ---------------------------------------------------------------- close
 
+	protected boolean autoClose;
+
+	/**
+	 * Defines that query should be automatically closed immediately after using.
+	 * Should be called before actual statement execution.
+	 */
+	public <Q extends DbQueryBase> Q autoClose() {
+		autoClose = true;
+		return (Q) this;
+	}
+
 	/**
 	 * Closes all result sets opened by this query. Query remains active.
 	 * Returns <code>SQLException</code> (stacked with all exceptions)
@@ -626,19 +637,12 @@ abstract class DbQueryBase {
 	}
 
 	/**
-	 * Executes UPDATE, INSERT or DELETE queries. Query is not closed afterwards.
+	 * Executes UPDATE, INSERT or DELETE queries. Query is not closed afterwards
+	 * unless {@link #autoClose() auto close mode} is set.
 	 * @see Statement#executeUpdate(String)
 	 */
 	public int executeUpdate() {
-		return executeUpdate(false);
-	}
-
-	/**
-	 * Executes UPDATE, INSERT or DELETE queries and closes query afterwards.
-	 * @see Statement#executeUpdate(String)
-	 */
-	public int executeUpdateAndClose() {
-		return executeUpdate(true);
+		return executeUpdate(autoClose);
 	}
 
 	/**
@@ -682,19 +686,14 @@ abstract class DbQueryBase {
 	}
 
 	/**
-	 * Special execute() for 'select count(*)' queries. Query <b>is not</b> closed after the execution.
-	 * It doesn't check if query is really a count query. If result set returns zero rows, (what is very unlikely),
-	 * it returns <code>-1</code>.
+	 * Special execute() for 'select count(*)' queries. Query is not closed after the execution
+	 * unless {@link #autoClose() auto-close mode} is set.
+	 * Doesn't check if query is really a count query, so it would work for any
+	 * query that has number in the first column of result.
+	 * If result set returns zero rows (very unlikely), returns <code>-1</code>.
 	 */
 	public long executeCount() {
-		return executeCount(false);
-	}
-
-	/**
-	 * Executes count queries and closes afterwards.
-	 */
-	public long executeCountAndClose() {
-		return executeCount(true);
+		return executeCount(autoClose);
 	}
 
 	/**

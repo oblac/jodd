@@ -103,7 +103,7 @@ public class GenericDao {
 			}
 			q.close();
 		} else {
-			query(DbEntitySql.updateAll(entity)).executeUpdateAndClose();
+			query(DbEntitySql.updateAll(entity)).autoClose().executeUpdate();
 		}
 		return entity;
 	}
@@ -113,7 +113,7 @@ public class GenericDao {
 	 */
 	public void save(Object entity) {
 		DbQuery q = query(insert(entity));
-		q.executeUpdateAndClose();
+		q.autoClose().executeUpdate();
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class GenericDao {
 	 * Updates single entity.
 	 */
 	public void update(Object entity) {
-		query(DbEntitySql.updateAll(entity)).executeUpdateAndClose();
+		query(DbEntitySql.updateAll(entity)).autoClose().executeUpdate();
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class GenericDao {
 	 * Updates single property in database and in the bean.
 	 */
 	public <E> E updateProperty(E entity, String name, Object newValue) {
-		query(DbEntitySql.updateColumn(entity, name, newValue)).executeUpdateAndClose();
+		query(DbEntitySql.updateColumn(entity, name, newValue)).autoClose().executeUpdate();
 		BeanUtil.setDeclaredProperty(entity, name, newValue);
 		return entity;
 	}
@@ -159,7 +159,7 @@ public class GenericDao {
 	 */
 	public <E> E updateProperty(E entity, String name) {
 		Object value = BeanUtil.getDeclaredProperty(entity, name);
-		query(DbEntitySql.updateColumn(entity, name, value)).executeUpdateAndClose();
+		query(DbEntitySql.updateColumn(entity, name, value)).autoClose().executeUpdate();
 		return entity;
 	}
 
@@ -169,14 +169,14 @@ public class GenericDao {
 	 * Finds single entity by its id.
 	 */
 	public <E> E findById(Class<E> entityType, long id) {
-		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).findAndClose(entityType);
+		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).autoClose().find(entityType);
 	}
 
 	/**
 	 * Finds single entity by matching property.
 	 */
 	public <E> E findOneByProperty(Class<E> entityType, String name, Object value) {
-		return query(findByColumn(entityType, name, value)).findAndClose(entityType);
+		return query(findByColumn(entityType, name, value)).autoClose().find(entityType);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class GenericDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E> E findOne(Object criteria) {
-		return (E) query(DbEntitySql.find(criteria)).findAndClose(criteria.getClass());
+		return (E) query(DbEntitySql.find(criteria)).autoClose().find(criteria.getClass());
 	}
 
 	/**
@@ -192,14 +192,14 @@ public class GenericDao {
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <E> List<E> find(Object criteria) {
-		return query(DbEntitySql.find(criteria)).listAndClose(criteria.getClass());
+		return query(DbEntitySql.find(criteria)).autoClose().list(criteria.getClass());
 	}
 
 	/**
 	 * Finds list of entities matching given criteria.
 	 */
 	public <E> List<E> find(Class<E> entityType, Object criteria) {
-		return query(DbEntitySql.find(entityType, criteria)).listAndClose(entityType);
+		return query(DbEntitySql.find(entityType, criteria)).autoClose().list(entityType);
 	}
 
 	// ---------------------------------------------------------------- delete
@@ -208,7 +208,7 @@ public class GenericDao {
 	 * Deleted single entity by its id.
 	 */
 	public void deleteById(Class entityType, long id) {
-		query(DbEntitySql.deleteById(entityType, Long.valueOf(id))).executeUpdateAndClose();
+		query(DbEntitySql.deleteById(entityType, Long.valueOf(id))).autoClose().executeUpdate();
 	}
 
 	/**
@@ -216,7 +216,7 @@ public class GenericDao {
 	 */
 	public void deleteById(Object entity) {
 		if (entity != null) {
-			query(DbEntitySql.deleteById(entity)).executeUpdateAndClose();
+			query(DbEntitySql.deleteById(entity)).autoClose().executeUpdate();
 		}
 	}
 
@@ -235,7 +235,7 @@ public class GenericDao {
 	 * Counts number of all entities.
 	 */
 	public long count(Class entityType) {
-		return query(DbEntitySql.count(entityType)).executeCountAndClose();
+		return query(DbEntitySql.count(entityType)).autoClose().executeCount();
 	}
 
 	// ---------------------------------------------------------------- related
@@ -244,7 +244,7 @@ public class GenericDao {
 	 * Finds related entity.
 	 */
 	public <E> List<E> findRelated(Class<E> target, Object source) {
-		return query(DbEntitySql.findForeign(target, source)).listAndClose(target);
+		return query(DbEntitySql.findForeign(target, source)).autoClose().list(target);
 	}
 
 	// ---------------------------------------------------------------- list
@@ -253,7 +253,7 @@ public class GenericDao {
 	 * List all entities.
 	 */
 	public <E> List<E> listAll(Class<E> target) {
-		return query(DbEntitySql.from(target)).listAndClose(target);
+		return query(DbEntitySql.from(target)).autoClose().list(target);
 	}
 
 }

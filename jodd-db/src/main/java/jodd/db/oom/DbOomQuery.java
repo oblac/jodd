@@ -253,16 +253,10 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- iterator
 
 	public <T> Iterator<T> iterate(Class... types) {
-		return iterate(types, false);
-	}
-	public <T> Iterator<T> iterateAndClose(Class... types) {
-		return iterate(types, true);
+		return iterate(types, autoClose);
 	}
 	public <T> Iterator<T> iterate() {
-		return iterate(null, false);
-	}
-	public <T> Iterator<T> iterateAndClose() {
-		return iterate(null, true);
+		return iterate(null, autoClose);
 	}
 	protected <T> Iterator<T> iterate(Class[] types, boolean close) {
 		return new DbListIterator<T>(this, types, close);
@@ -271,28 +265,16 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- list
 
 	public <T> List<T> list(Class... types) {
-		return list(types, -1, false);
-	}
-	public <T> List<T> listAndClose(Class... types) {
-		return list(types, -1, true);
+		return list(types, -1, autoClose);
 	}
 	public <T> List<T> list() {
-		return list(null, -1, false);
-	}
-	public <T> List<T> listAndClose() {
-		return list(null, -1, true);
+		return list(null, -1, autoClose);
 	}
 	public <T> List<T> list(int max, Class... types) {
-		return list(types, max, false);
-	}
-	public <T> List<T> listAndClose(int max, Class... types) {
-		return list(types, max, true);
+		return list(types, max, autoClose);
 	}
 	public <T> List<T> list(int max) {
-		return list(null, max, false);
-	}
-	public <T> List<T> listAndClose(int max) {
-		return list(null, max, true);
+		return list(null, max, autoClose);
 	}
 	/**
 	 * Iterates result set, maps rows to classes and populates resulting array list.
@@ -351,28 +333,16 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- set
 
 	public <T> Set<T> listSet(Class... types) {
-		return listSet(types, -1, false);
-	}
-	public <T> Set<T> listSetAndClose(Class... types) {
-		return listSet(types, -1, true);
+		return listSet(types, -1, autoClose);
 	}
 	public <T> Set<T> listSet() {
-		return listSet(null, -1, false);
-	}
-	public <T> Set<T> listSetAndClose() {
-		return listSet(null, -1, true);
+		return listSet(null, -1, autoClose);
 	}
 	public <T> Set<T> listSet(int max, Class... types) {
-		return listSet(types, max, false);
-	}
-	public <T> Set<T> listSetAndClose(int max, Class... types) {
-		return listSet(types, max, true);
+		return listSet(types, max, autoClose);
 	}
 	public <T> Set<T> listSet(int max) {
-		return listSet(null, max, false);
-	}
-	public <T> Set<T> listSetAndClose(int max) {
-		return listSet(null, max, true);
+		return listSet(null, max, autoClose);
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
@@ -424,16 +394,10 @@ public class DbOomQuery extends DbQuery {
 	// ---------------------------------------------------------------- find
 
 	public <T> T find(Class... types) {
-		return find(types, false, null);
-	}
-	public <T> T findAndClose(Class... types) {
-		return find(types, true, null);
+		return find(types, autoClose, null);
 	}
 	public <T> T find() {
-		return find(null, false, null);
-	}
-	public <T> T findAndClose() {
-		return find(null, true, null);
+		return find(null, autoClose, null);
 	}
 	protected <T> T find(Class[] types, boolean close, ResultSet resultSet) {
 		if (resultSet == null) {
@@ -470,6 +434,15 @@ public class DbOomQuery extends DbQuery {
 	}
 
 	// ---------------------------------------------------------------- util
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DbOomQuery autoClose() {
+		super.autoClose();
+		return this;
+	}
 
 	/**
 	 * Closes results set or whole query.

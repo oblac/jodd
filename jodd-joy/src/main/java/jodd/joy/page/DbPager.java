@@ -107,13 +107,15 @@ public abstract class DbPager {
 		query.setFetchSize(pageSize);
 		query.setMap(params);
 
-		List<T> list = query.listAndClose(pageSize, target);
+		List<T> list = query.list(pageSize, target);
+		query.close();
 
 		String countSql = buildCountSql(sql);
 		dbsql = sql(countSql);
 		query = query(dbsql);
 		query.setMap(params);
-		long count = query.executeCountAndClose();
+		long count = query.executeCount();
+		query.close();
 
 		return new PageData<T>(page, (int) count, pageSize, list);
 	}

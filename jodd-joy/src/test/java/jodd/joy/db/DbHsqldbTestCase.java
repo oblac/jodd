@@ -62,15 +62,15 @@ public abstract class DbHsqldbTestCase {
 	// ---------------------------------------------------------------- helpers
 
 	protected int executeUpdate(DbSession session, String s) {
-		return new DbQuery(session, s).executeUpdateAndClose();
+		return new DbQuery(session, s).autoClose().executeUpdate();
 	}
 
 	protected void executeUpdate(String sql) {
-		new DbQuery(sql).executeUpdateAndClose();
+		new DbQuery(sql).autoClose().executeUpdate();
 	}
 
 	protected long executeCount(DbSession session, String s) {
-		return new DbQuery(session, s).executeCountAndClose();
+		return new DbQuery(session, s).autoClose().executeCount();
 	}
 
 

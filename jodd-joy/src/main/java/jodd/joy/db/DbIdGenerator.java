@@ -50,7 +50,7 @@ public class DbIdGenerator {
 
 			DbOomQuery dbOomQuery = query("select max(" + idColumn + ") from " + tableName);
 
-			long lastLong = dbOomQuery.executeCountAndClose();
+			long lastLong = dbOomQuery.autoClose().executeCount();
 
 			if (log.isDebugEnabled()) {
 				log.debug("Last id for " + entityType.getName() + " is " + lastLong);
