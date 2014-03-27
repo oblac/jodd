@@ -518,8 +518,10 @@ public class FormatTest {
 	@Test
 	public void testAlternateChar() {
 		assertEquals("\\u41", Printf.str("%#c", 'A'));
-		assertEquals("\\u1234", Printf.str("%#c", '\u1234'));
+		assertEquals("\\u1a34", Printf.str("%#c", '\u1A34'));
 		assertEquals("\\uff00", Printf.str("%#c", '\uFF00'));
+		assertEquals("\\u1A34", Printf.str("%#C", '\u1A34'));
+		assertEquals("\\uFF00", Printf.str("%#C", '\uFF00'));
 		assertEquals("A", Printf.str("%c", 'A'));
 		assertEquals("\u1234", Printf.str("%c", '\u1234'));
 		assertEquals("\uFF00", Printf.str("%c", '\uFF00'));

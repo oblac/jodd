@@ -424,6 +424,8 @@ public class PrintfFormat {
 		switch(fmt) {
 			case 'c':
 				return alternate ? "\\u" + Integer.toHexString((int) value & 0xFFFF) : pad(String.valueOf(value));
+			case 'C':
+				return alternate ? "\\u" + Integer.toHexString((int) value & 0xFFFF).toUpperCase() : pad(String.valueOf(value));
 			case 'd':
 			case 'i':
 			case 'u':
@@ -435,7 +437,7 @@ public class PrintfFormat {
 			case 'L':
 				return form((short) value);
 			default:
-				throw newIllegalArgumentException("cdiuoxXblL");
+				throw newIllegalArgumentException("cCdiuoxXblL");
 		}
 	}
 
