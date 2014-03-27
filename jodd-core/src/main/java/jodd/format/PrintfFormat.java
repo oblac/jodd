@@ -434,7 +434,7 @@ public class PrintfFormat {
 			case 'L':
 				return form((short) value);
 			default:
-				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not 'cdiuoxXblL'.");
+				throw newIllegalArgumentException("cdiuoxXblL");
 		}
 	}
 
@@ -448,7 +448,7 @@ public class PrintfFormat {
 		if (fmt == 'L') {
 			return pad(value ? "TRUE" : "FALSE");
 		}
-		throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'bB'.");
+		throw newIllegalArgumentException("lL");
 
 	}
 
@@ -472,7 +472,7 @@ public class PrintfFormat {
 		} else if (fmt == 'e' || fmt == 'E' || fmt == 'g' || fmt == 'G') {
 			r = expFormat(x);
 		} else {
-			throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'feEgG'.");
+			throw newIllegalArgumentException("feEgG");
 		}
 		return pad(sign(s, r));
 	}
@@ -543,7 +543,7 @@ public class PrintfFormat {
 				r = (x == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'diuoxXblL'.");
+				throw new IllegalArgumentException("cdiuoxXbBlL");
 		}
 
 		return pad(sign(s, r));
@@ -599,7 +599,7 @@ public class PrintfFormat {
 				r = (x == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'diuoxXblL'.");
+				throw newIllegalArgumentException("cdiuoxXbBlL");
 		}
 		return pad(sign(s, r));
 	}
@@ -668,7 +668,7 @@ public class PrintfFormat {
 				r = (value == 0 ? "FALSE" : "TRUE");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of 'cdiuoxXblL'.");
+				throw newIllegalArgumentException("cdiuoxXblL");
 		}
 		return pad(sign(s, r));
 	}
@@ -678,13 +678,20 @@ public class PrintfFormat {
 	 */
 	public String form(String s) {
 		if (fmt != 's') {
-			throw new IllegalArgumentException("Invalid format: '" + fmt + "' is not 's'.");
+			throw newIllegalArgumentException("s");
 		}
 		if (precision >= 0 && precision < s.length()) {
 			s = s.substring(0, precision);
 		}
 
 		return pad(s);
+	}
+
+	/**
+	 * Creates <code>IllegalArgumentException</code> with message.
+	 */
+	protected IllegalArgumentException newIllegalArgumentException(String allowedFormats) {
+		return new IllegalArgumentException("Invalid format: '" + fmt + "' is not one of '" + allowedFormats + "'");
 	}
 
 }
