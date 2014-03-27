@@ -515,4 +515,14 @@ public class FormatTest {
 		assertTrue(Printf.str("%p", new Integer(1)).length() > 4);
 	}
 
+	@Test
+	public void testAlternateChar() {
+		assertEquals("\\u41", Printf.str("%#c", 'A'));
+		assertEquals("\\u1234", Printf.str("%#c", '\u1234'));
+		assertEquals("\\uff00", Printf.str("%#c", '\uFF00'));
+		assertEquals("A", Printf.str("%c", 'A'));
+		assertEquals("\u1234", Printf.str("%c", '\u1234'));
+		assertEquals("\uFF00", Printf.str("%c", '\uFF00'));
+	}
+
 }
