@@ -5,6 +5,7 @@ package jodd.format;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FormatTest {
 
@@ -264,6 +265,8 @@ public class FormatTest {
 		assertEquals("% q", Printf.str("%% %s", new String[]{"q"}));
 		assertEquals("% q ", Printf.str("%% %s ", new String[]{"q"}));
 		assertEquals(" % q ", Printf.str(" %% %s ", new String[]{"q"}));
+
+		assertEquals("null", Printf.str("%s", (Object)null));
 	}
 
 	@Test
@@ -489,7 +492,7 @@ public class FormatTest {
 	}
 
 	@Test
-	public void testObjects() {
+	public void testNumbers() {
 		String result = Printf.str("%i %3.2f %X", Integer.valueOf(173), Double.valueOf(1.73), Long.valueOf(10));
 
 		assertEquals("173 1.73 A", result);
@@ -504,6 +507,12 @@ public class FormatTest {
 		assertEquals(Printf.str("%1.0f", 0.51), "1");
 		assertEquals(Printf.str("%2.1f", 0.1501), "0.2");
 		assertEquals(Printf.str("%3.2f", 1.0099), "1.01");
+	}
+
+	@Test
+	public void testObject() {
+		assertTrue(Printf.str("%p", new Object()).length() > 4);
+		assertTrue(Printf.str("%p", new Integer(1)).length() > 4);
 	}
 
 }

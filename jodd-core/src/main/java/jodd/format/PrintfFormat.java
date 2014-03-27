@@ -21,7 +21,7 @@ public class PrintfFormat {
 	protected boolean showSpace;
 	protected boolean leftAlign;
 	protected boolean groupDigits;
-	protected char fmt;	                // one of cdeEfgGiosxXos
+	protected char fmt;	                // one of cdeEfgGiosxXos...
 	protected boolean countSignInLen;
 	private static final BigInteger bgInt = new BigInteger("9223372036854775808");  // 2^63
 
@@ -68,9 +68,10 @@ public class PrintfFormat {
 	 *               <dt>x <dd> unsigned long or integer in hexadecimal,
 	 *               <dt>o <dd> unsigned long or integer in octal,
 	 *               <dt>b <dd> unsigned long or integer in binary,
-	 *               <dt>s <dd> string,
+	 *               <dt>s <dd> string (actually, <code>toString()</code> value of an object),
 	 *               <dt>c <dd> character,
-	 *               <dt>l, L <dd> boolean in lower or upper case (for booleans and int/longs).
+	 *               <dt>l, L <dd> boolean in lower or upper case (for booleans and int/longs),
+	 *               <dt>p <dd> identity hash code of an object (pointer :).
 	 *               </dl>
 	 *               </ul>
 	 */
@@ -674,17 +675,51 @@ public class PrintfFormat {
 	}
 
 	/**
-	 * Formats a string into a larger string (like sprintf in C).
+	 * Formats a object into a string depending on format (like sprintf in C).
+	 * If object is a numeric type and format is not one object formats (like 's' or 'p')
+	 * it will be converted to primitive and formatted as such.
 	 */
-	public String form(String s) {
-		if (fmt != 's') {
-			throw newIllegalArgumentException("s");
-		}
-		if (precision >= 0 && precision < s.length()) {
-			s = s.substring(0, precision);
+	public String form(Object object) {
+		switch (fmt) {
+			case 's' :
+				String s = object == null ? StringPool.NULL : object.toString();
+				if (precision >= 0 && precision < s.length()) {
+					s = s.substring(0, precision);
+				}
+				return pad(s);
+			case 'p' :
+				return Integer.toString(System.identityHashCode(object));
 		}
 
-		return pad(s);
+		// check for numeric type
+		if (object instanceof Number) {
+			Number number = (Number) object;
+			if (object instanceof Integer) {
+				return form(number.intValue());
+			}
+			if (object instanceof Long) {
+				return form(number.longValue());
+			}
+			if (object instanceof Double) {
+				return form(number.doubleValue());
+			}
+			if (object instanceof Float) {
+				return form(number.floatValue());
+			}
+			if (object instanceof Byte) {
+				return form(number.byteValue());
+			}
+			if (object instanceof Short) {
+				return form(number.shortValue());
+			} else {
+				return form(number.intValue());
+			}
+		} else if (object instanceof Character) {
+			return form(((Character) object).charValue());
+		}
+
+		// throw exception about invalid 'object'-formats
+		throw newIllegalArgumentException("sp");
 	}
 
 	/**
