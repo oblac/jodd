@@ -13,10 +13,6 @@ import java.lang.reflect.AccessibleObject;
  */
 public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader<A, ActionAnnotationData<A>> {
 
-	public ActionAnnotation() {
-		super(null, Action.class);
-	}
-
 	public ActionAnnotation(Class<A> annotationClass) {
 		super(annotationClass, Action.class);
 	}
@@ -45,6 +41,8 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ad.method = readString(annotation, "method");
 
+		ad.async = readBoolean(annotation, "async");
+
 		return ad;
 	}
 
@@ -60,6 +58,17 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 		}
 
 		return value;
+	}
+
+	/**
+	 * Reads boolean element from the annotation.
+	 */
+	private boolean readBoolean(A annotation, String name) {
+		Boolean value = (Boolean) readElement(annotation, name);
+		if (value == null) {
+			return false;
+		}
+		return value.booleanValue();
 	}
 
 }

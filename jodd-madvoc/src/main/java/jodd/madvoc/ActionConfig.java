@@ -23,6 +23,7 @@ public class ActionConfig {
 	public final String actionPath;
 	public final String actionMethod;
 	public final Field resultField;
+	public final boolean async;
 
 	// scope data information matrix: [scope-type][target-index][founded ins/outs]
 	public final ScopeData.In[][][] ins;
@@ -43,6 +44,7 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
+			boolean async,
 			ScopeData.In[][][] ins,
 			ScopeData.Out[][][] outs,
 			String[] actionPathElements)
@@ -53,6 +55,7 @@ public class ActionConfig {
 		this.actionMethod = actionMethod;
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		//this.actionPathElements = actionPathElements;		// ignore for now
+		this.async = async;
 
 		this.ins = ins;
 		this.outs = outs;
@@ -115,6 +118,13 @@ public class ActionConfig {
 	 */
 	public ActionInterceptor[] getInterceptors() {
 		return interceptors;
+	}
+
+	/**
+	 * Returns <code>true</code> if action is asynchronous.
+	 */
+	public boolean isAsync() {
+		return async;
 	}
 
 	public ActionConfigSet getActionConfigSet() {

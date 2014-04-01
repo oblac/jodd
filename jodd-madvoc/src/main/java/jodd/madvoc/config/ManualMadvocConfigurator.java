@@ -61,6 +61,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		String alias;
 		ActionFilter[] actionFilters;
 		ActionInterceptor[] actionInterceptors;
+		boolean async;
 
 		/**
 		 * Defines action path.
@@ -134,6 +135,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
+		 * Defines async execution flag.
+		 */
+		public ActionBuilder async(boolean async) {
+			this.async = async;
+			return this;
+		}
+
+		/**
 		 * Binds and finalize action configuration.
 		 */
 		public void bind() {
@@ -145,7 +154,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
-							actionPath, method, null);
+							actionPath, method, async, null);
 
 			actionsManager.registerAction(actionConfig);
 

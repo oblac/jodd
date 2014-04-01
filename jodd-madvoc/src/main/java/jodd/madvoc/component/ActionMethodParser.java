@@ -137,6 +137,7 @@ public class ActionMethodParser {
 		String extension = readMethodExtension(annotationData);
 		String alias = readMethodAlias(annotationData);
 		String httpMethod = readMethodHttpMethod(annotationData);
+		boolean async = readMethodAsyncFlag(annotationData);
 
 		if (methodActionPath != null) {
 			// additional changes
@@ -173,7 +174,8 @@ public class ActionMethodParser {
 		return createActionConfig(
 				actionClass, actionMethod,
 				actionFilters, actionInterceptors,
-				actionPath, httpMethod, actionPathElements);
+				actionPath, httpMethod,
+				async, actionPathElements);
 	}
 
 	/**
@@ -474,6 +476,17 @@ public class ActionMethodParser {
 		return method;
 	}
 
+	/**
+	 * Reads method's async flag.
+	 */
+	private boolean readMethodAsyncFlag(ActionAnnotationData annotationData) {
+		boolean sync = false;
+		if (annotationData != null) {
+			sync = annotationData.isAsync();
+		}
+		return sync;
+	}
+
 	// ---------------------------------------------------------------- create action configuration
 
 	/**
@@ -487,6 +500,7 @@ public class ActionMethodParser {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
+			boolean async,
 			String[] pathElements)
 	{
 
@@ -534,6 +548,7 @@ public class ActionMethodParser {
 				interceptors,
 				actionPath,
 				actionMethod,
+				async,
 				ins,
 				outs,
 				pathElements);

@@ -37,6 +37,7 @@ public class ActionsManager {
 	protected MadvocConfig madvocConfig;
 
 	protected int actionsCount;
+	protected boolean asyncMode;
 	protected final HashMap<String, ActionConfigSet> map;		// map of all action paths w/o macros
 	protected final SortedArrayList<ActionConfigSet> list;		// list of all action paths with macros
 	protected final HashMap<String, ActionConfig> configs;		// another map of all action configs
@@ -47,6 +48,7 @@ public class ActionsManager {
 		this.list = new SortedArrayList<ActionConfigSet>(new ActionConfigSetComparator());
 		this.pathAliases = new HashMap<String, String>();
 		this.configs = new HashMap<String, ActionConfig>();
+		this.asyncMode = false;
 	}
 
 	/**
@@ -87,6 +89,14 @@ public class ActionsManager {
 	 */
 	public int getActionsCount() {
 		return actionsCount;
+	}
+
+	/**
+	 * Returns <code>true</code> if at least one action has
+	 * async mode turned on.
+	 */
+	public boolean isAsyncModeOn() {
+		return asyncMode;
 	}
 
 	// ---------------------------------------------------------------- register variations
@@ -215,6 +225,12 @@ public class ActionsManager {
 		if (isDuplicate == false) {
 			actionsCount++;
 		}
+
+		// async check
+		if (actionConfig.isAsync()) {
+			asyncMode = true;
+		}
+
 		return actionConfig;
 	}
 

@@ -14,9 +14,14 @@ import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.typeconverter.TypeConverterManager;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Madvoc controller invokes actions for action path and renders action results.
@@ -41,6 +46,8 @@ public class MadvocController {
 
 	protected ServletContext applicationContext;
 
+	protected Executor executor;
+
 	/**
 	 * Initializes controller by providing application context.
 	 * Application context can be <code>null</code>
@@ -48,6 +55,24 @@ public class MadvocController {
 	 */
 	public void init(ServletContext servletContext) {
 		this.applicationContext = servletContext;
+
+		if (actionsManager.isAsyncModeOn()) {
+			executor = createAsyncExecutor();
+		}
+	}
+
+	/**
+	 * Creates async executor.
+	 */
+	protected Executor createAsyncExecutor() {
+		MadvocConfig.AsyncConfig asyncConfig = madvocConfig.getAsyncConfig();
+
+		return new ThreadPoolExecutor(
+				asyncConfig.getCorePoolSize(),
+				asyncConfig.getMaximumPoolSize(),
+				asyncConfig.getKeepAliveTimeMillis(),
+				TimeUnit.MILLISECONDS,
+				new LinkedBlockingQueue<Runnable>(asyncConfig.getQueueCapacity()));
 	}
 
 	/**
@@ -114,11 +139,43 @@ public class MadvocController {
 			actionRequest.setPreviousActionRequest(previousRequest);
 
 			// invoke and render
-			actionRequest.invoke();
+			if (actionConfig.isAsync()) {
+				AsyncContext asyncContext = servletRequest.startAsync();
+				executor.execute(new ActionRequestInvoker(asyncContext, actionRequest));
+			} else {
+				actionRequest.invoke();
+			}
 
 			actionPath = actionRequest.getNextActionPath();
 		}
 		return null;
+	}
+
+	/**
+	 * Async request invoker.
+	 */
+	public static class ActionRequestInvoker implements Runnable {
+
+		private final ActionRequest actionRequest;
+		private final AsyncContext asyncContext;
+
+		public ActionRequestInvoker(AsyncContext asyncContext, ActionRequest actionRequest) {
+			this.actionRequest = actionRequest;
+			this.asyncContext = asyncContext;
+		}
+
+		public void run() {
+			try {
+				if (log.isDebugEnabled()) {
+					log.debug("Async call to: " + actionRequest);
+				}
+				actionRequest.invoke();
+			} catch (Exception ex) {
+				log.error("Invoking action path failed: " , ex);
+			} finally {
+				asyncContext.complete();
+			}
+		}
 	}
 
 

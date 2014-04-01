@@ -46,6 +46,7 @@ public class MadvocConfig {
 		pathMacroClass = WildcardPathMacros.class;
 		resultPathPrefix = null;
 		injectionErrorThrowsException = false;
+		asyncConfig = new AsyncConfig();
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -359,6 +360,62 @@ public class MadvocConfig {
 		this.injectionErrorThrowsException = injectionErrorThrowsException;
 	}
 
+	// ---------------------------------------------------------------- async
+
+	public static class AsyncConfig {
+
+		protected int corePoolSize = 10;
+		protected int maximumPoolSize = 25;
+		protected long keepAliveTimeMillis = 50000L;
+		protected int queueCapacity = 100;
+
+		public int getCorePoolSize() {
+			return corePoolSize;
+		}
+
+		public void setCorePoolSize(int corePoolSize) {
+			this.corePoolSize = corePoolSize;
+		}
+
+		public int getMaximumPoolSize() {
+			return maximumPoolSize;
+		}
+
+		public void setMaximumPoolSize(int maximumPoolSize) {
+			this.maximumPoolSize = maximumPoolSize;
+		}
+
+		public long getKeepAliveTimeMillis() {
+			return keepAliveTimeMillis;
+		}
+
+		public void setKeepAliveTimeMillis(long keepAliveTimeMillis) {
+			this.keepAliveTimeMillis = keepAliveTimeMillis;
+		}
+
+		public int getQueueCapacity() {
+			return queueCapacity;
+		}
+
+		public void setQueueCapacity(int queueCapacity) {
+			this.queueCapacity = queueCapacity;
+		}
+
+		@Override
+		public String toString() {
+			return "AsyncConfig{" + corePoolSize + " of " + maximumPoolSize + " in " + queueCapacity + " for " + keepAliveTimeMillis + "ms}";
+		}
+	}
+
+	protected AsyncConfig asyncConfig;
+
+	/**
+	 * Returns asynchronous configuration.
+	 */
+	public AsyncConfig getAsyncConfig() {
+		return asyncConfig;
+	}
+
 	// ---------------------------------------------------------------- toString
 
 	/**
@@ -383,6 +440,7 @@ public class MadvocConfig {
 				",\n\tinjectionErrorThrowsException=" + injectionErrorThrowsException +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
+				",\n\tasyncConfig='" + asyncConfig + '\'' +
 				"\n}";
 	}
 

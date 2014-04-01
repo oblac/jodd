@@ -87,9 +87,7 @@ public class MadvocServletFilter implements Filter {
 
 			actionPath = madvocController.invoke(actionPath, request, madvocResponse);
 		} catch (Exception ex) {
-			log.error("Exception while invoking action path: " + actionPath, ex);
-
-			ex.printStackTrace();
+			log.error("Invoking action path failed: " + actionPath, ex);
 
 			throw new ServletException(ex);
 		}
