@@ -15,12 +15,12 @@ package jodd.servlet.tag;
  * <li>odd: true if (index + 1) % 2 == 1</li>
  * </ul>
  * <p>Example</p>
- * <pre>
- *   &lt;re:iter status="status" value='%{0, 1}'&gt;
- *      Index: &lt;s:property value="%{#status.index}" /&gt; &lt;br /&gt;
- *      Count: &lt;s:property value="%{#status.count}" /&gt; &lt;br /&gt;
- *   &lt;/re:iter>
- * </pre>
+ * <pre>{@code
+ *   <re:iter status="status" value='%{0, 1}'>
+ *      Index: <s:property value="%{#status.index}" /> <br>
+ *      Count: <s:property value="%{#status.count}" /> <br>
+ *   </re:iter>
+ * }</pre>
  * <p>will print</p>
  * <pre>
  *      Index: 0

@@ -21,7 +21,7 @@ import jodd.util.StringUtil;
  * There are some special values for propertyName
  * <ul>
  * <li>wildcard (*), all table columns will be listed</li>
- * <li>id sign (+), all table id columns will be listed</li?
+ * <li>id sign (+), all table id columns will be listed</li>
  * </ul>
  * <p>
  * If previous chunk is also a column chunk, comma separator will be added in between.

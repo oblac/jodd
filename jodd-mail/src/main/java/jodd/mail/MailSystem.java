@@ -5,7 +5,7 @@ package jodd.mail;
 /**
  * Defines mail system behavior. Override this class if you have special needs or
  * simply set parameters manually, but <b>before</b> first Mail use.
- * Be sure to use java mail >= v1.4.4.
+ * Be sure to use java mail {@literal >=} v1.4.4.
  */
 public class MailSystem {
 

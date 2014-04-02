@@ -29,14 +29,14 @@ public abstract class CommonEmail {
 
 	/**
 	 * Sets the FROM address. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt</code>.
+	 * like this: <code>"Name &lt;email&gt;</code>.
 	 */
 	public void setFrom(String from) {
 		this.from = from;
 	}
 	/**
 	 * Returns FROM address. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt</code>.
+	 * like this: <code>"Name &lt;email&gt;</code>.
 	 */
 	public String getFrom() {
 		return from;
@@ -48,7 +48,7 @@ public abstract class CommonEmail {
 
 	/**
 	 * Sets TO addresses. Addresses may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt</code>.
+	 * like this: <code>"Name &lt;email&gt;</code>.
 	 */
 	public void setTo(String... tos) {
 		if (tos == null) {
@@ -59,7 +59,7 @@ public abstract class CommonEmail {
 
 	/**
 	 * Returns TO addresses. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt</code>.
+	 * like this: <code>"Name &lt;email&gt;</code>.
 	 */
 	public String[] getTo() {
 		return to;
@@ -71,7 +71,7 @@ public abstract class CommonEmail {
 
 	/**
 	 * Sets REPLY-TO addresses. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt</code>.
+	 * like this: <code>"Name &lt;email&gt;</code>.
 	 */
 	public void setReplyTo(String... replyTo) {
 		if (replyTo == null) {

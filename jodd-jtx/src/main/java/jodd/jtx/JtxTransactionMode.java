@@ -37,10 +37,10 @@ s	 */
 
 	/**
 	 * Propagation required.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2 (same session, new tx)
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationRequired() {
 		this.propagationBehavior = PROPAGATION_REQUIRED;
@@ -49,10 +49,10 @@ s	 */
 
 	/**
 	 * Propagation supports.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationSupports() {
 		this.propagationBehavior = PROPAGATION_SUPPORTS;
@@ -61,10 +61,10 @@ s	 */
 
 	/**
 	 * Propagation mandatory.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> Error
 	 * T1 -> T1 (same session, join tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationMandatory() {
 		this.propagationBehavior = PROPAGATION_MANDATORY;
@@ -73,10 +73,10 @@ s	 */
 
 	/**
 	 * Propagation requires new.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2 (same session, new tx)
 	 * T1 -> T2  (new session, new tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationRequiresNew() {
 		this.propagationBehavior = PROPAGATION_REQUIRES_NEW;
@@ -85,10 +85,10 @@ s	 */
 
 	/**
 	 * Propagation not supported.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> None (new session, no tx)
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationNotSupported() {
 		this.propagationBehavior = PROPAGATION_NOT_SUPPORTED;
@@ -96,10 +96,10 @@ s	 */
 	}
 	/**
 	 * Propagation never.
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None (same session)
 	 * T1 -> Error
-	 * </pre>
+	 * }</pre>
 	 */
 	public JtxTransactionMode propagationNever() {
 		this.propagationBehavior = PROPAGATION_NEVER;

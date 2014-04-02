@@ -106,7 +106,7 @@ public class Props implements Cloneable {
 	/**
 	 * Sets new active profiles and overrides existing ones.
 	 * By setting <code>null</code>, no active profile will be set.
-	 * <pr>
+	 * <p>
 	 * Note that if some props are loaded <b>after</b>
 	 * this method call, they might override active profiles
 	 * by using special property for active profiles (<code>@profiles</code>).

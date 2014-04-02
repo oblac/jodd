@@ -241,7 +241,7 @@ public class JtxTransactionManager {
 
 	/**
 	 * Requests transaction with specified {@link JtxTransactionMode mode}.
-	 * Depending on propagation behavior, it will return either <b>existing<b> or <b>new</b> transaction.
+	 * Depending on propagation behavior, it will return either <b>existing</b> or <b>new</b> transaction.
 	 * Only one transaction can be opened over one scope.
 	 * The exception may be thrown indicating propagation mismatch.
 	 */
@@ -308,10 +308,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: REQUIRED
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2
 	 * T1   -> T1 (cont.)
-	 * </pre>
+	 * }</pre>
 	 */
 	protected JtxTransaction propRequired(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx == null) || (currentTx.isNoTransaction() == true)) {
@@ -324,10 +324,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: REQUIRES_NEW
-	 * <pre>
+	 * <pre>{@code
 	 * None -> T2
 	 * T1   -> T2
-	 * </pre>
+	 * }</pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected JtxTransaction propRequiresNew(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
@@ -336,10 +336,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: SUPPORTS
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None
 	 * T1   -> T1 (cont.)
-	 * </pre>
+	 * }</pre>
 	 */
 	protected JtxTransaction propSupports(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx != null) && (currentTx.isNoTransaction() != true)) {
@@ -353,10 +353,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: MANDATORY
-	 * <pre>
+	 * <pre>{@code
 	 * None -> Error
 	 * T1   -> T1 (cont.)
-	 * </pre>
+	 * }</pre>
 	 */
 	@SuppressWarnings({"UnusedDeclaration"})
 	protected JtxTransaction propMandatory(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
@@ -369,10 +369,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: NOT_SUPPORTED
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None
 	 * T1   -> None
-	 * </pre>
+	 * }</pre>
 	 */
 	protected JtxTransaction propNotSupported(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if (currentTx == null) {
@@ -386,10 +386,10 @@ public class JtxTransactionManager {
 
 	/**
 	 * Propagation: NEVER
-	 * <pre>
+	 * <pre>{@code
 	 * None -> None
 	 * T1   -> Error
-	 * </pre>
+	 * }</pre>
 	 */
 	protected JtxTransaction propNever(JtxTransaction currentTx, JtxTransactionMode mode, Object scope) {
 		if ((currentTx != null) && (currentTx.isNoTransaction() == false)) {

@@ -106,7 +106,7 @@ public class HtmlTag {
 	}
 
 	/**
-	 * Returns <code>true</code> if tag is closed (ends with '/&gt;').
+	 * Returns <code>true</code> if tag is closed (ends with '{@literal />}').
 	 */
 	public boolean isClosedTag() {
 		return isClosedTag;
@@ -205,7 +205,7 @@ public class HtmlTag {
 
 	/**
 	 * Adds attribute and its value to a tag. Attribute is added to the end of
-	 * the tag, just before closing '>'. If name is not specified, nothing will
+	 * the tag, just before closing '{@literal >}'. If name is not specified, nothing will
 	 * be added. If value is not specified, it will be set to an empty string.
 	 */
 	public void setAttribute(String name, String value) {
@@ -216,7 +216,7 @@ public class HtmlTag {
 
 	/**
 	 * Adds single attribute without value to a tag. Attribute is added to the
-	 * end of the tag, just before closing '>'. If name is not specified, nothing
+	 * end of the tag, just before closing '{@literal >}'. If name is not specified, nothing
 	 * will be added.
 	 */
 	public void setAttribute(String name) {

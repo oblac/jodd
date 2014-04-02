@@ -20,8 +20,8 @@ import java.io.PrintWriter;
  * may be called more times, and its on servlet container how to deal with character encodings.
  * For example, if user set content type with following values:
  * <ul>
- *     <ol><code>text/html;charset="UTF-8"</code></ol>
- *     <ol><code>image/png"</code></ol>
+ *     <li>text/html;charset="UTF-8"</li>
+ *     <li>image/png</li>
  * </ul>
  * the question is would the second call reset the character or not. Tomcat 6-7, for example,
  * does not reset the charset on content type change. In our opinion this is an error

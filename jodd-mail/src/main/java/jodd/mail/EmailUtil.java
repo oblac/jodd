@@ -96,7 +96,7 @@ public class EmailUtil {
 	 * The email can be given in following form:
 	 * <ul>
 	 *     <li>"email" - the whole string is an email</li>
-	 *     <li>"personal <email>" - first part of the string is personal, and
+	 *     <li>"personal {@literal <email>}" - first part of the string is personal, and
 	 *     		the other part is email, surrounded with &lt; and &gt;</li>
 	 * </ul>
 	 */

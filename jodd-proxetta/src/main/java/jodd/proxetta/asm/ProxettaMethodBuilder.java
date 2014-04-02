@@ -50,7 +50,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	// ---------------------------------------------------------------- visits
 
 	/**
-	 * Copies target method annotations
+	 * Copies target method annotations.
 	 */
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
@@ -136,7 +136,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 	 * Creates proxy methods over target method, For each matched proxy, new proxy method is created
 	 * by taking advice bytecode and replaces usages of {@link jodd.proxetta.ProxyTarget}.
 	 * <p>
-	 * Invocation chain example: name -> name$p0 -> name$p1 -> name$p4 -> super
+	 * Invocation chain example: {@code name -> name$p0 -> name$p1 -> name$p4 -> super}.
 	 */
 	public void createProxyMethod(final TargetMethodData td) {
 		final ProxyAspectData aspectData = td.getProxyData();
