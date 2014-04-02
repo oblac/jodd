@@ -20,7 +20,7 @@ ext {
 	// libraries
 
 	tomcatVersion = '7.0.47'
-	jacocoVersion = '0.6.3.201306030806'
+	jacocoVersion = '0.7.0.201403182114'
 
 	lib = [
 		mail:			'javax.mail:mail:1.4.5',
@@ -56,7 +56,7 @@ ext {
 
 		// Animal Sniffer Ant Task and Java 1.5 API signature file
 		// not using 1.9 for the time being due to MANIMALSNIFFER-34
-		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.8',
+		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.11',
 		java15_signature: 'org.codehaus.mojo.signature:java15:1.0@signature',
 	]
 
