@@ -7,7 +7,7 @@ import java.util.Comparator;
 /**
  * Fast sort.
  * <p>
- * In JDK < v7, implementation of merge sort (implemented in <code>Arrays.sort</code>) is
+ * In JDK {@literal <} v7, implementation of merge sort (implemented in <code>Arrays.sort</code>) is
  * not the best one: there is redundant object array cloning, many small methods that
  * can be inlined etc.
  * <p>

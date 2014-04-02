@@ -691,8 +691,8 @@ public class NanoHTTPD
 		}
 
 		/**
-		 * Decodes the percent encoding scheme. <br/>
-		 * For example: "an+example%20string" -> "an example string"
+		 * Decodes the percent encoding scheme.
+		 * For example: {@code "an+example%20string" -> "an example string"}
 		 */
 		private String decodePercent( String str ) throws InterruptedException
 		{

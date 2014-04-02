@@ -165,7 +165,7 @@ public interface Tag {
 
 	/**
 	 * Get the complete tag.
-	 * <p/>
+	 * <p>
 	 * This is a bit slower method in that it needs to construct a String and generates tag always.
 	 * Use it for debugging purposes.
 	 */

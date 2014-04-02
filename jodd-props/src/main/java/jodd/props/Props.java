@@ -21,7 +21,7 @@ import java.util.Properties;
 
 /**
  * Super properties: fast, configurable, supports (ini) sections, profiles.
- * <p/>
+ * <p>
  * Basic parsing rules:
  * <ul>
  * <li> By default, props files are UTF8 encoded.
@@ -34,20 +34,20 @@ import java.util.Properties;
  * <li> \\uXXXX is encoded as character
  * <li> \t, \r and \f are encoded as characters
  * </ul>
- * <p/>
+ * <p>
  * Sections rules:
  * <ul>
  * <li> Section names are enclosed between [ and ].
  * <li> Properties following a section header belong to that section. Section name is added as a prefix to section properties.
  * <li> Section ends with empty section definition [] or with new section start
  * </ul>
- * <p/>
+ * <p>
  * Profiles rules:
  * <ul>
  * <li> Profile names are enclosed between &lt; and &gt; in property key.
  * <li> Each property key may contain zero, one or more profile definitions.
  * </ul>
- * <p/>
+ * <p>
  * Macro rules:
  * <ul>
  * <li> Profile values may contain references to other properties using ${ and }

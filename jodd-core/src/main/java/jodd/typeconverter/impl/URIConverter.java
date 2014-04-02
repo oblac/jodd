@@ -13,7 +13,7 @@ import java.net.URL;
 /**
  * Convert given object to <code>URI</code>.
  * Conversion rules:
- * <ul></ul>
+ * <ul>
  * <li><code>null</code> value is returned as <code>null</code></li>
  * <li>object of destination type is simply casted</li>
  * <li><code>File</code> is converted</li>

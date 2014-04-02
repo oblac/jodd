@@ -310,7 +310,7 @@ public class URLCoder {
 	/**
 	 * Encodes the given source URI into an encoded String. All various URI components are
 	 * encoded according to their respective valid character sets.
-	 * <p>This method does <b>not</b> attempt to encode "=" and "&"
+	 * <p>This method does <b>not</b> attempt to encode "=" and "{@literal &}"
 	 * characters in query parameter names and query parameter values because they cannot
 	 * be parsed in a reliable way.
 	 */
@@ -342,7 +342,7 @@ public class URLCoder {
 	 * encoded according to their respective valid character sets.
 	 * <p>This method does <b>not</b> support fragments ({@code #}),
 	 * as these are not supposed to be sent to the server, but retained by the client.
-	 * <p>This method does <b>not</b> attempt to encode "=" and "&"
+	 * <p>This method does <b>not</b> attempt to encode "=" and "{@literal &}"
 	 * characters in query parameter names and query parameter values because they cannot
 	 * be parsed in a reliable way.
 	 */
