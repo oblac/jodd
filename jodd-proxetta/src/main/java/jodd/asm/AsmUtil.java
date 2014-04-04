@@ -2,12 +2,12 @@
 
 package jodd.asm;
 
-import jodd.asm4.MethodVisitor;
+import jodd.asm5.MethodVisitor;
 import jodd.mutable.MutableInteger;
 
-import static jodd.asm4.Opcodes.CHECKCAST;
-import static jodd.asm4.Opcodes.INVOKESTATIC;
-import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm5.Opcodes.CHECKCAST;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 
 /**
  * Generic ASM utils.

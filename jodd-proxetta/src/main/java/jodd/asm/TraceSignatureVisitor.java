@@ -3,8 +3,8 @@
 package jodd.asm;
 
 import jodd.util.StringUtil;
-import jodd.asm4.Opcodes;
-import jodd.asm4.signature.SignatureVisitor;
+import jodd.asm5.Opcodes;
+import jodd.asm5.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} that prints a disassembled view of the signature

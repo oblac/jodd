@@ -9,7 +9,7 @@ import jodd.proxetta.ProxettaUtil;
 import jodd.proxetta.asm.ProxettaWrapperClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
-import jodd.asm4.ClassReader;
+import jodd.asm5.ClassReader;
 
 /**
  * Creates wrapper using ASM library.

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package jodd.asm4;
+package jodd.asm5;
 
 /**
  * A non standard class, field, method or code attribute.

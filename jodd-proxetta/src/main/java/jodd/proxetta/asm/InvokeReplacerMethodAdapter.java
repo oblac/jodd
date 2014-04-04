@@ -10,18 +10,18 @@ import jodd.proxetta.InvokeReplacer;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
 import jodd.util.StringPool;
-import jodd.asm4.Label;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.Type;
+import jodd.asm5.Label;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.Type;
 
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
-import static jodd.asm4.Opcodes.ALOAD;
-import static jodd.asm4.Opcodes.DUP;
-import static jodd.asm4.Opcodes.INVOKEINTERFACE;
-import static jodd.asm4.Opcodes.INVOKESPECIAL;
-import static jodd.asm4.Opcodes.INVOKESTATIC;
-import static jodd.asm4.Opcodes.INVOKEVIRTUAL;
-import static jodd.asm4.Opcodes.NEW;
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.DUP;
+import static jodd.asm5.Opcodes.INVOKEINTERFACE;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.asm5.Opcodes.INVOKESTATIC;
+import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
+import static jodd.asm5.Opcodes.NEW;
 
 /**
  * Invocation replacer method adapter.

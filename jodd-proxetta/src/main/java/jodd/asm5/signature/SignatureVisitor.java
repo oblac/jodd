@@ -27,9 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package jodd.asm4.signature;
+package jodd.asm5.signature;
 
-import jodd.asm4.Opcodes;
+import jodd.asm5.Opcodes;
 
 /**
  * A visitor to visit a generic signature. The methods of this interface must be
@@ -73,7 +73,7 @@ public abstract class SignatureVisitor {
 
     /**
      * The ASM API version implemented by this visitor. The value of this field
-     * must be one of {@link Opcodes#ASM4}.
+     * must be one of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
     protected final int api;
 
@@ -82,9 +82,12 @@ public abstract class SignatureVisitor {
      * 
      * @param api
      *            the ASM API version implemented by this visitor. Must be one
-     *            of {@link Opcodes#ASM4}.
+     *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
     public SignatureVisitor(final int api) {
+        if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
+            throw new IllegalArgumentException();
+        }
         this.api = api;
     }
 

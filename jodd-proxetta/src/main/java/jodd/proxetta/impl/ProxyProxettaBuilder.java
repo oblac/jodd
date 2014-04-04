@@ -6,7 +6,7 @@ import jodd.proxetta.ProxettaBuilder;
 import jodd.proxetta.asm.ProxettaClassBuilder;
 import jodd.proxetta.asm.TargetClassInfoReader;
 import jodd.proxetta.asm.WorkData;
-import jodd.asm4.ClassReader;
+import jodd.asm5.ClassReader;
 
 import java.io.InputStream;
 

@@ -4,10 +4,10 @@ package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
 import jodd.util.StringBand;
-import jodd.asm4.Label;
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.Type;
-import static jodd.asm4.Opcodes.*;
+import jodd.asm5.Label;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.Type;
+import static jodd.asm5.Opcodes.*;
 import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
 import static jodd.JoddProxetta.*;
