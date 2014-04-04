@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package jodd.asm4.signature;
+package jodd.asm5.signature;
 
 /**
  * A type signature parser to make a signature visitor visit an existing
@@ -60,10 +60,10 @@ public class SignatureReader {
      * constructor (see {@link #SignatureReader(String) SignatureReader}). This
      * method is intended to be called on a {@link SignatureReader} that was
      * created using a <i>ClassSignature</i> (such as the <code>signature</code>
-     * parameter of the {@link jodd.asm4.ClassVisitor#visit
+     * parameter of the {@link jodd.asm5.ClassVisitor#visit
      * ClassVisitor.visit} method) or a <i>MethodTypeSignature</i> (such as the
      * <code>signature</code> parameter of the
-     * {@link jodd.asm4.ClassVisitor#visitMethod
+     * {@link jodd.asm5.ClassVisitor#visitMethod
      * ClassVisitor.visitMethod} method).
      * 
      * @param v
@@ -119,8 +119,8 @@ public class SignatureReader {
      * method is intended to be called on a {@link SignatureReader} that was
      * created using a <i>FieldTypeSignature</i>, such as the
      * <code>signature</code> parameter of the
-     * {@link jodd.asm4.ClassVisitor#visitField ClassVisitor.visitField}
-     * or {@link jodd.asm4.MethodVisitor#visitLocalVariable
+     * {@link jodd.asm5.ClassVisitor#visitField ClassVisitor.visitField}
+     * or {@link jodd.asm5.MethodVisitor#visitLocalVariable
      * MethodVisitor.visitLocalVariable} methods.
      * 
      * @param v

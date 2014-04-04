@@ -2,11 +2,11 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm4.MethodVisitor;
-import jodd.asm4.AnnotationVisitor;
-import static jodd.asm4.Opcodes.INVOKESPECIAL;
-import static jodd.asm4.Opcodes.ALOAD;
-import static jodd.asm4.Opcodes.RETURN;
+import jodd.asm5.MethodVisitor;
+import jodd.asm5.AnnotationVisitor;
+import static jodd.asm5.Opcodes.INVOKESPECIAL;
+import static jodd.asm5.Opcodes.ALOAD;
+import static jodd.asm5.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
 import static jodd.JoddProxetta.initMethodName;

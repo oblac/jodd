@@ -40,6 +40,7 @@ Lagarto/Jerry:
 	- Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @soon
 	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
+	- Allow index to be set as: 'foo.list.0.more' (alt for: foo.list[0].more). @v3.5.2
 	- Add `PopertyDescriptor` @v3.4.9 @done
 	- Join maps of public and all methods! @v3.4.9 @done
 	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
@@ -107,7 +108,6 @@ DbOom:
 	- Generic finder method. Try to detect method arguments using MethRef? @next
 	- Add batch update
 	- Faster HashMaps for small amount of tables - in templates?
-	- Introduce #execute() interceptors? @tbd
 MethRef:
 	- Return property name instead of method name. @done
 Joy:
@@ -125,3 +125,4 @@ Other Projects:
 	- Add gradle for examples @done @v3.4.7
 	- Upgrade to gradle v1.7 @done @v3.4.7
 	- Add log DEBUG in examples.quickstart @done
+	- rename .dot folders to _ @done in site builder

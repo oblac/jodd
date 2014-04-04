@@ -4,8 +4,8 @@ package jodd.proxetta.asm;
 
 import jodd.asm.ClassAdapter;
 import jodd.proxetta.InvokeAspect;
-import jodd.asm4.ClassVisitor;
-import jodd.asm4.MethodVisitor;
+import jodd.asm5.ClassVisitor;
+import jodd.asm5.MethodVisitor;
 
 import java.util.ArrayList;
 import java.util.List;

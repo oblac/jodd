@@ -2,8 +2,8 @@
 
 package jodd.asm;
 
-import jodd.asm4.ClassVisitor;
-import jodd.asm4.Opcodes;
+import jodd.asm5.ClassVisitor;
+import jodd.asm5.Opcodes;
 
 /**
  * Empty class visitor.

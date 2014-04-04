@@ -12,7 +12,7 @@ import jodd.proxetta.pointcuts.ProxyPointcutSupport;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.SystemUtil;
 import org.junit.Test;
-import jodd.asm4.Type;
+import jodd.asm5.Type;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

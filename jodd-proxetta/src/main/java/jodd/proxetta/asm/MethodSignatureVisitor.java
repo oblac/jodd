@@ -2,8 +2,8 @@
 
 package jodd.proxetta.asm;
 
-import jodd.asm4.signature.SignatureVisitor;
-import jodd.asm4.Opcodes;
+import jodd.asm5.signature.SignatureVisitor;
+import jodd.asm5.Opcodes;
 import jodd.util.collection.CharArrayList;
 import jodd.util.collection.IntArrayList;
 import jodd.mutable.MutableInteger;
