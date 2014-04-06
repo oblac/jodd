@@ -3,7 +3,6 @@
 package jodd.madvoc;
 
 import jodd.exception.UncheckedException;
-import jodd.petite.scope.SessionScope;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -23,6 +22,7 @@ import org.junit.runners.Suite;
 		AlphaTest.class,
 		ArgsTest.class,
 		TypesTest.class,
+		ExcTest.class,
 })
 public class MadvocSuite {
 
