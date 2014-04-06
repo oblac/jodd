@@ -16,7 +16,7 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	 */
 	protected BaseActionResult(String resultType) {
 		this.resultType = resultType;
-		this.resultValueType = ReflectUtil.getGenericSupertype(this.getClass());
+		this.resultValueType = resolveResultValueType();
 	}
 
 	/**
@@ -24,7 +24,24 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	 */
 	protected BaseActionResult() {
 		this.resultType = null;
-		this.resultValueType = ReflectUtil.getGenericSupertype(this.getClass());
+		this.resultValueType = resolveResultValueType();
+	}
+
+	/**
+	 * Resolves {@link #getResultValueType() result value type} by finding the
+	 * first superclass that has this value defined in generics.
+	 */
+	protected Class<T> resolveResultValueType() {
+		Class clazz = this.getClass();
+
+		while (clazz.getSuperclass() != BaseActionResult.class) {
+			Class<T> rvt = ReflectUtil.getGenericSupertype(clazz);
+			if (rvt != null) {
+				return rvt;
+			}
+			clazz = clazz.getSuperclass();
+		}
+		return ReflectUtil.getGenericSupertype(clazz);
 	}
 
 	/**
