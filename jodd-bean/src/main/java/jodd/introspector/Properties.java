@@ -6,6 +6,8 @@ import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import static jodd.util.ReflectUtil.METHOD_GET_PREFIX;
@@ -179,6 +181,12 @@ public class Properties {
 				allProperties[index] = propertyDescriptor;
 				index++;
 			}
+
+			Arrays.sort(allProperties, new Comparator<PropertyDescriptor>() {
+				public int compare(PropertyDescriptor pd1, PropertyDescriptor pd2) {
+					return pd1.getName().compareTo(pd2.getName());
+				}
+			});
 
 			this.allProperties = allProperties;
 		}

@@ -7,6 +7,9 @@ import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,12 +119,18 @@ public class Methods {
 			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
-				for (MethodDescriptor methodDescriptor : methodDescriptors) {
-					allMethodsList.add(methodDescriptor);
-				}
+				Collections.addAll(allMethodsList, methodDescriptors);
 			}
 
-			allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+			MethodDescriptor[] allMethods = allMethodsList.toArray(new MethodDescriptor[allMethodsList.size()]);
+
+			Arrays.sort(allMethods, new Comparator<MethodDescriptor>() {
+				public int compare(MethodDescriptor md1, MethodDescriptor md2) {
+					return md1.getMethod().getName().compareTo(md2.getMethod().getName());
+				}
+			});
+
+			this.allMethods = allMethods;
 		}
 		return allMethods;
 	}

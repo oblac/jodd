@@ -5,6 +5,8 @@ package jodd.introspector;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -77,6 +79,12 @@ public class Fields {
 				allFields[index] = fieldDescriptor;
 				index++;
 			}
+
+			Arrays.sort(allFields, new Comparator<FieldDescriptor>() {
+				public int compare(FieldDescriptor fd1, FieldDescriptor fd2) {
+					return fd1.getField().getName().compareTo(fd2.getField().getName());
+				}
+			});
 
 			this.allFields = allFields;
 		}
