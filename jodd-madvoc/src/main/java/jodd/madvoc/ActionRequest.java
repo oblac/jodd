@@ -256,10 +256,16 @@ public class ActionRequest {
 
 		execState = 1;
 
-		Object actionResult = invokeAction();
+		Object actionResult;
+		try {
+			actionResult = invokeAction();
+		} catch (Exception ex) {
+			interceptorIndex--;
+			throw ex;
+		}
 
 		if (execState == 2) {
-			// all interceptor finished the job
+			// all interceptor finished the job, action was invoked
 			if (interceptorIndex > 0) {
 				interceptorIndex--;
 			} else {
@@ -267,7 +273,7 @@ public class ActionRequest {
 				execState = 3;
 			}
 		} else if (execState == 1) {
-			// some interceptor interrupted the flow
+			// some interceptor interrupted the flow, action was not invoked
 			if (interceptorIndex > 1) {
 				interceptorIndex--;
 			} else {
