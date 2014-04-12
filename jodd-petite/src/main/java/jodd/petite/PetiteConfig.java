@@ -2,7 +2,7 @@
 
 package jodd.petite;
 
-import jodd.Jodd;
+import jodd.JoddPetite;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class PetiteConfig {
 		        PetiteReference.TYPE_SHORT_NAME,
 				PetiteReference.TYPE_FULL_NAME
 		};
-		useParamo = Jodd.isProxettaLoaded();
+		useParamo = JoddPetite.useProxetta;
 		wireScopedProxy = false;
 		detectMixedScopes = false;
 	}
@@ -135,7 +135,7 @@ public class PetiteConfig {
 	 * always <code>false</code>).
 	 */
 	public void setUseParamo(boolean useParamo) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (JoddPetite.useProxetta == false) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -156,7 +156,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setWireScopedProxy(boolean wireScopedProxy) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (JoddPetite.useProxetta == false) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}
@@ -175,7 +175,7 @@ public class PetiteConfig {
 	 * Only available with Proxetta.
 	 */
 	public void setDetectMixedScopes(boolean detectMixedScopes) {
-		if (Jodd.isProxettaLoaded() == false) {
+		if (JoddPetite.useProxetta == false) {
 			log.warn("Feature not available without Proxetta");
 			return;
 		}

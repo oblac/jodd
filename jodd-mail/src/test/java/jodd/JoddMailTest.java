@@ -4,21 +4,23 @@ package jodd;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static jodd.Jodd.*;
 
 public class JoddMailTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertEquals(false, Jodd.isBeanLoaded());
-		assertEquals(false, Jodd.isHttpLoaded());
-		assertEquals(false, Jodd.isMadvocLoaded());
-		assertEquals(true, Jodd.isMailLoaded());
-		assertEquals(false, Jodd.isPetiteLoaded());
-		assertEquals(false, Jodd.isPropsLoaded());
-		assertEquals(false, Jodd.isProxettaLoaded());
-		assertEquals(false, Jodd.isServletLoaded());
-		assertEquals(false, Jodd.isUploadLoaded());
-		assertEquals(false, Jodd.isVtorLoaded());
+		assertFalse(Jodd.isModuleLoaded(BEAN));
+		assertFalse(Jodd.isModuleLoaded(HTTP));
+		assertFalse(Jodd.isModuleLoaded(MADVOC));
+		assertTrue(Jodd.isModuleLoaded(MAIL));
+		assertFalse(Jodd.isModuleLoaded(PETITE));
+		assertFalse(Jodd.isModuleLoaded(PROPS));
+		assertFalse(Jodd.isModuleLoaded(PROXETTA));
+		assertFalse(Jodd.isModuleLoaded(SERVLET));
+		assertFalse(Jodd.isModuleLoaded(UPLOAD));
+		assertFalse(Jodd.isModuleLoaded(VTOR));
 	}
 }

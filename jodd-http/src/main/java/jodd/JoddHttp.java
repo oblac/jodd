@@ -12,6 +12,10 @@ import jodd.util.StringPool;
  */
 public class JoddHttp {
 
+	static {
+		Jodd.module();
+	}
+
 	/**
 	 * Default HTTP transport provider.
 	 */

@@ -13,6 +13,10 @@ import jodd.util.cl.DefaultClassLoaderStrategy;
  */
 public class JoddCore {
 
+	static {
+		Jodd.module();
+	}
+
 	/**
 	 * Default temp file prefix.
 	 */

@@ -7,6 +7,10 @@ package jodd;
  */
 public class JoddProxetta {
 
+	static {
+		Jodd.module();
+	}
+
 	/**
 	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */

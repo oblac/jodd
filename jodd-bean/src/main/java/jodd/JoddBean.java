@@ -10,6 +10,10 @@ import jodd.introspector.Introspector;
  */
 public class JoddBean {
 
+	static {
+		Jodd.module();
+	}
+
 	/**
 	 * Name of 'this' references.
 	 */

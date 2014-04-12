@@ -51,7 +51,6 @@ import jodd.typeconverter.impl.StringConverter;
 import jodd.typeconverter.impl.TimeZoneConverter;
 import jodd.typeconverter.impl.URIConverter;
 import jodd.typeconverter.impl.URLConverter;
-import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 
 import java.io.File;
@@ -190,21 +189,8 @@ public class TypeConverterManagerBean {
 		register(Locale.class, new LocaleConverter());
 		register(TimeZone.class, new TimeZoneConverter());
 
-		if (Jodd.isUploadLoaded()) {
-			try {
-				// we are forcing usage of classloader that loaded this class
-				// it is the same class loader that loaded Jodd, therefore
-				// let it load addon, too
-				// this is important in cases when different class loading
-				// strategy is used, i.e. when using parent-last strategy.
-				Class<?> managerAddon = ClassLoaderUtil.loadClass(
-						"jodd.typeconverter.UploadTypeConverterManagerAddon",
-						this.getClass().getClassLoader());
-
-				ReflectUtil.invoke(managerAddon, "registerDefaults", this);
-			} catch (Exception ex) {
-				throw new TypeConversionException(ex);
-			}
+		if (Jodd.isModuleLoaded(Jodd.UPLOAD)) {
+			Jodd.bind(Jodd.UPLOAD, this);
 		}
 	}
 

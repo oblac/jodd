@@ -2,115 +2,130 @@
 
 package jodd;
 
+import jodd.exception.UncheckedException;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 /**
  * Jodd!
  */
 public class Jodd {
 
-	static {
-		beanLoaded = checkModule("bean");
-		dbLoaded = checkModule("db");
-		httpLoaded = checkModule("http");
-		jtxLoaded = checkModule("jtx");
-		lagartoLoaded = checkModule("lagarto");
-		logLoaded = checkModule("log");
-		madvocLoaded = checkModule("madvoc");
-		mailLoaded = checkModule("mail");
-		petiteLoaded = checkModule("petite");
-		propsLoaded = checkModule("props");
-		proxettaLoaded = checkModule("proxetta");
-		servletLoaded = checkModule("servlet");
-		uploadLoaded = checkModule("upload");
-		vtorLoaded = checkModule("vtor");
-	}
+	public static final int CORE 		= 0;
+	public static final int BEAN 		= 1;
+	public static final int DB 			= 2;
+	public static final int HTTP 		= 3;
+	public static final int JTX 		= 4;
+	public static final int LAGARTO 	= 5;
+	public static final int LOG 		= 6;
+	public static final int MADVOC 		= 7;
+	public static final int MAIL 		= 8;
+	public static final int PETITE 		= 9;
+	public static final int PROPS 		= 10;
+	public static final int PROXETTA 	= 11;
+	public static final int SERVLET 	= 12;
+	public static final int UPLOAD 		= 13;
+	public static final int VTOR 		= 14;
+
+	private static final boolean[] LOADED;
+	private static final Object[] MODULES;
 
 	/**
-	 * Checks if Jodd module is loaded.
+	 * Initializes the Jodd modules.
+	 * It does not do anything as all initialization is done
+	 * in the static block.
 	 */
-	private static boolean checkModule(String moduleName) {
-		ClassLoader classLoader = Jodd.class.getClassLoader();
+	static void module() {
+	}
 
-		moduleName = moduleName.substring(0, 1).toUpperCase() +
-				moduleName.substring(1, moduleName.length()).toLowerCase();
 
-		try {
-			classLoader.loadClass("jodd.Jodd" + moduleName);
-			return true;
-		} catch (ClassNotFoundException cnfex) {
-			return false;
+	static {
+		final Field[] fields = Jodd.class.getFields();
+
+		LOADED = new boolean[fields.length];
+		MODULES = new Object[fields.length];
+
+		final ClassLoader classLoader = Jodd.class.getClassLoader();
+
+		for (Field field : fields) {
+			int index;
+
+			try {
+				index = ((Integer) field.get(null)).intValue();
+			} catch (IllegalAccessException iaex) {
+				throw new UncheckedException(iaex);
+			}
+
+			String moduleName = field.getName();
+
+			moduleName = moduleName.substring(0, 1).toUpperCase() +
+					moduleName.substring(1, moduleName.length()).toLowerCase();
+
+			String moduleClass = "jodd.Jodd" + moduleName;
+
+			try {
+				MODULES[index] = classLoader.loadClass(moduleClass);
+			} catch (ClassNotFoundException cnfex) {
+				continue;
+			}
+
+			LOADED[index] = true;
+		}
+
+		// create module instances after all classes being loaded
+
+		for (int i = 0; i < MODULES.length; i++) {
+			Class type = (Class) MODULES[i];
+
+			if (type != null) {
+				try {
+					MODULES[i] = type.newInstance();
+				} catch (Exception ex) {
+					throw new UncheckedException(ex);
+				}
+			}
 		}
 	}
 
-	private static final boolean beanLoaded;
-	private static final boolean dbLoaded;
-	private static final boolean httpLoaded;
-	private static final boolean jtxLoaded;
-	private static final boolean lagartoLoaded;
-	private static final boolean logLoaded;
-	private static final boolean madvocLoaded;
-	private static final boolean mailLoaded;
-	private static final boolean petiteLoaded;
-	private static final boolean propsLoaded;
-	private static final boolean proxettaLoaded;
-	private static final boolean servletLoaded;
-	private static final boolean uploadLoaded;
-	private static final boolean vtorLoaded;
+	// ---------------------------------------------------------------- checkers
 
-	// ---------------------------------------------------------------- getters
-
-	public static boolean isBeanLoaded() {
-		return beanLoaded;
+	/**
+	 * Returns <code>true</code> if module is loaded.
+	 */
+	public static boolean isModuleLoaded(int moduleNdx) {
+		return LOADED[moduleNdx];
 	}
 
-	public static boolean isDbLoaded() {
-		return dbLoaded;
+	/**
+	 * Returns module instance if module is loaded.
+	 */
+	public static Object getModule(int moduleNdx) {
+		return MODULES[moduleNdx];
 	}
 
-	public static boolean isHttpLoaded() {
-		return httpLoaded;
+	// ---------------------------------------------------------------- activate
+
+	/**
+	 * Invokes <code>bind</code> method on module instance.
+	 */
+	public static void bind(int moduleNdx, Object... arguments) {
+		Object module = MODULES[moduleNdx];
+
+		Class[] types = new Class[arguments.length];
+
+		for (int i = 0; i < arguments.length; i++) {
+			Object argument = arguments[i];
+			types[i] = argument.getClass();
+		}
+
+		try {
+			Method method = module.getClass().getMethod("bind", types);
+
+			method.invoke(module, arguments);
+		} catch (Exception ex) {
+			throw new UncheckedException(ex);
+		}
 	}
 
-	public static boolean isJtxLoaded() {
-		return jtxLoaded;
-	}
-
-	public static boolean isLagartoLoaded() {
-		return lagartoLoaded;
-	}
-
-	public static boolean isLogLoaded() {
-		return logLoaded;
-	}
-
-	public static boolean isMadvocLoaded() {
-		return madvocLoaded;
-	}
-
-	public static boolean isMailLoaded() {
-		return mailLoaded;
-	}
-
-	public static boolean isPetiteLoaded() {
-		return petiteLoaded;
-	}
-
-	public static boolean isPropsLoaded() {
-		return propsLoaded;
-	}
-
-	public static boolean isProxettaLoaded() {
-		return proxettaLoaded;
-	}
-
-	public static boolean isServletLoaded() {
-		return servletLoaded;
-	}
-
-	public static boolean isUploadLoaded() {
-		return uploadLoaded;
-	}
-
-	public static boolean isVtorLoaded() {
-		return vtorLoaded;
-	}
 }

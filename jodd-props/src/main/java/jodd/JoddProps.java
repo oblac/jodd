@@ -6,4 +6,9 @@ package jodd;
  * Jodd PROPS module.
  */
 public class JoddProps {
+
+	static {
+		Jodd.module();
+	}
+
 }

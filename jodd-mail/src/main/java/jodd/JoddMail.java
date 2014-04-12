@@ -9,6 +9,10 @@ import jodd.mail.MailSystem;
  */
 public class JoddMail {
 
+	static {
+		Jodd.module();
+	}
+
 	/**
 	 * Mail system properties for fine-tuning the java Mail behavior.
 	 */

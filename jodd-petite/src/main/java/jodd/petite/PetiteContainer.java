@@ -2,7 +2,7 @@
 
 package jodd.petite;
 
-import jodd.Jodd;
+import jodd.JoddPetite;
 import jodd.bean.BeanUtil;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
@@ -46,7 +46,7 @@ public class PetiteContainer extends PetiteBeans {
 	public PetiteContainer(PetiteConfig config) {
 		super(config);
 
-		if (Jodd.isProxettaLoaded()) {
+		if (JoddPetite.useProxetta) {
 			scopedProxyManager = new ScopedProxyManager();
 		} else {
 			scopedProxyManager = null;
@@ -55,7 +55,7 @@ public class PetiteContainer extends PetiteBeans {
 		if (log.isDebugEnabled()) {
 			log.debug("Petite container created.");
 
-			if (Jodd.isProxettaLoaded()) {
+			if (JoddPetite.useProxetta) {
 				log.debug("Petite proxy features enabled.");
 			} else {
 				log.debug("Petite proxy features not available.");

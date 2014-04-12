@@ -6,4 +6,16 @@ package jodd;
  * Jodd PETITE module.
  */
 public class JoddPetite {
+
+	static {
+		Jodd.module();
+
+		useProxetta = Jodd.isModuleLoaded(Jodd.PROXETTA);
+	}
+
+	/**
+	 * Defines if Proxetta should be used.
+	 */
+	public static boolean useProxetta;
+
 }
