@@ -27,8 +27,15 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 		this.method = method;
 		this.returnType = method.getGenericReturnType();
 		this.rawReturnType = ReflectUtil.getRawType(returnType, classDescriptor.getType());
-		this.rawReturnComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType());
-		this.rawReturnKeyComponentType = ReflectUtil.getComponentType(returnType, classDescriptor.getType(), 0);
+
+		Class[] componentTypes = ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
+		if (componentTypes != null) {
+			this.rawReturnComponentType = componentTypes[componentTypes.length - 1];
+			this.rawReturnKeyComponentType = componentTypes[0];
+		} else {
+			this.rawReturnComponentType = null;
+			this.rawReturnKeyComponentType = null;
+		}
 
 		ReflectUtil.forceAccess(method);
 
@@ -80,11 +87,11 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	}
 
 	/**
-	 * Resolves raw return component type for given index.
+	 * Resolves raw return component types
 	 * This value is NOT cached.
 	 */
-	public Class resolveRawReturnComponentType(int index) {
-		return ReflectUtil.getComponentType(returnType, classDescriptor.getType(), index);
+	public Class[] resolveRawReturnComponentTypes() {
+		return ReflectUtil.getComponentTypes(returnType, classDescriptor.getType());
 	}
 
 	/**

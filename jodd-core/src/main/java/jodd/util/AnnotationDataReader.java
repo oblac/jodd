@@ -42,7 +42,12 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	@SuppressWarnings( {"unchecked"})
 	protected AnnotationDataReader(Class<A> annotationClass, Class<? extends Annotation> defaultAnnotationClass) {
 		if (annotationClass == null) {
-			annotationClass = ReflectUtil.getGenericSupertype(this.getClass(), 0);
+			Class[] genericSupertypes = ReflectUtil.getGenericSupertypes(this.getClass());
+
+			if (genericSupertypes != null) {
+				annotationClass = genericSupertypes[0];
+			}
+
 			if (annotationClass == null || annotationClass == Annotation.class) {
 				throw new IllegalArgumentException("Missing annotation from generics supertype");
 			}

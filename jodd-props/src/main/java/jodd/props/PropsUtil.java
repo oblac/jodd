@@ -48,7 +48,7 @@ public class PropsUtil {
 	}
 
 	/**
-	 * Convert Java Properties to Jodd Props format
+	 * Convert Java Properties to Jodd Props format.
 	 *
 	 * @param writer     Writer to write Props formatted file content to
 	 * @param properties Properties to convert to Props format
@@ -60,7 +60,7 @@ public class PropsUtil {
 	}
 
 	/**
-	 * Convert Java Properties to Jodd Props format
+	 * Convert Java Properties to Jodd Props format.
 	 *
 	 * @param writer     Writer to write Props formatted file content to
 	 * @param properties Properties to convert to Props format

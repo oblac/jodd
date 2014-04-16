@@ -505,8 +505,9 @@ public class ReflectUtilTest {
 		Field f5 = ConcreteClass.class.getField("f5");
 		Field array1 = BaseClass.class.getField("array1");
 
-		assertEquals(String.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 0));
-		assertEquals(Integer.class, ReflectUtil.getGenericSupertype(ConcreteClass.class, 1));
+		Class[] genericSupertypes = ReflectUtil.getGenericSupertypes(ConcreteClass.class);
+		assertEquals(String.class, genericSupertypes[0]);
+		assertEquals(Integer.class, genericSupertypes[1]);
 
 		assertEquals(String.class, ReflectUtil.getRawType(f1.getGenericType(), ConcreteClass.class));
 		assertEquals(Integer.class, ReflectUtil.getRawType(f2.getGenericType(), ConcreteClass.class));

@@ -78,7 +78,7 @@ public class IntrospectorGenericsTest {
 
 		assertEquals(Map.class, fd3.getRawType());
 		assertEquals(Integer.class, fd3.getRawComponentType());
-		assertEquals(String.class, ReflectUtil.getComponentType(fd3.getField().getGenericType(), cd.getType(), 0));
+		assertEquals(String.class, ReflectUtil.getComponentTypes(fd3.getField().getGenericType(), cd.getType())[0]);
 	}
 
 	@Test

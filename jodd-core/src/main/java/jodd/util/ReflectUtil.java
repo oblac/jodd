@@ -826,19 +826,30 @@ public class ReflectUtil {
 
 	// ---------------------------------------------------------------- generics
 
-	public static Class getComponentType(Type type) {
-		return getComponentType(type, null, -1);
-	}
-
-	public static Class getComponentType(Type type, Class implClass) {
-		return getComponentType(type, implClass, -1);
-	}
-
-	public static Class getComponentType(Type type, int index) {
-		return getComponentType(type, null, index);
-	}
 	/**
-	 * Returns the component type of the given type.
+	 * Returns single component type.
+	 */
+	public static Class getComponentType(Type type) {
+			return getComponentType(type, null);
+		}
+
+	/**
+	 * Returns single component type.
+	 */
+	public static Class getComponentType(Type type, Class implClass) {
+		Class[] componentTypes = getComponentTypes(type, implClass);
+		if (componentTypes == null) {
+			return null;
+		}
+		return componentTypes[componentTypes.length - 1];
+	}
+
+	public static Class[] getComponentTypes(Type type) {
+		return getComponentTypes(type, null);
+	}
+
+	/**
+	 * Returns the component types of the given type.
 	 * Returns <code>null</code> if given type does not have a single
 	 * component type. For example the following types all have the
 	 * component-type MyClass:
@@ -849,48 +860,56 @@ public class ReflectUtil {
 	 * <li>Bar&lt;? super MyClass&gt;</li>
 	 * <li>&lt;T extends MyClass&gt; T[]</li>
 	 * </ul>
-	 *
-	 * Index represents the index of component type, when class supports more then one.
-	 * For example, <code>Map&lt;A, B&gt;</code> has 2 component types. If index is 0 or positive,
-	 * than it represents order of component type. If the value is negative, then it represents
-	 * component type counted from the end! Therefore, the default value of <code>-1</code>
-	 * always returns the <b>last</b> component type.
 	 */
-	public static Class getComponentType(Type type, Class implClass, int index) {
+	public static Class[] getComponentTypes(Type type, Class implClass) {
 		if (type instanceof Class) {
 			Class clazz = (Class) type;
 			if (clazz.isArray()) {
-				return clazz.getComponentType();
+				return new Class[] {clazz.getComponentType()};
 			}
 		} else if (type instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) type;
+
 			Type[] generics = pt.getActualTypeArguments();
-			if (index < 0) {
-				index = generics.length + index;
+
+			if (generics.length == 0) {
+				return null;
 			}
-			if (index < generics.length) {
-				return getRawType(generics[index], implClass);
+
+			Class[] types = new Class[generics.length];
+
+			for (int i = 0; i < generics.length; i++) {
+				types[i] = getRawType(generics[i], implClass);
 			}
+			return types;
 		} else if (type instanceof GenericArrayType) {
 			GenericArrayType gat = (GenericArrayType) type;
-			return getRawType(gat.getGenericComponentType(), implClass);
+
+			Class rawType = getRawType(gat.getGenericComponentType(), implClass);
+			if (rawType == null) {
+				return null;
+			}
+
+			return new Class[] {rawType};
 		}
 		return null;
 	}
 
 	/**
-	 * Returns generic supertype for given class and 0-based index.
-	 * @see #getComponentType(java.lang.reflect.Type, int)
+	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
-	public static Class getGenericSupertype(Class type, int index) {
-		return getComponentType(type.getGenericSuperclass(), null, index);
+	public static Class[] getGenericSupertypes(Class type) {
+		return getComponentTypes(type.getGenericSuperclass());
 	}
 
-	/**
-	 * @see #getComponentType(java.lang.reflect.Type)
-	 */
 	public static Class getGenericSupertype(Class type) {
-		return getComponentType(type.getGenericSuperclass());
+		Class[] componentTypes = getComponentTypes(type.getGenericSuperclass());
+
+		if (componentTypes == null) {
+			return null;
+		}
+
+		return componentTypes[0];
 	}
 
 

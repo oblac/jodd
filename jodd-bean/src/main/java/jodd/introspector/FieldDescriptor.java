@@ -29,8 +29,15 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 		this.field = field;
 		this.type = field.getGenericType();
 		this.rawType = ReflectUtil.getRawType(type, classDescriptor.getType());
-		this.rawComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType());
-		this.rawKeyComponentType = ReflectUtil.getComponentType(type, classDescriptor.getType(), 0);
+
+		Class[] componentTypes = ReflectUtil.getComponentTypes(type, classDescriptor.getType());
+		if (componentTypes != null) {
+			this.rawComponentType = componentTypes[componentTypes.length - 1];
+			this.rawKeyComponentType = componentTypes[0];
+		} else {
+			this.rawComponentType = null;
+			this.rawKeyComponentType = null;
+		}
 
 		ReflectUtil.forceAccess(field);
 	}
@@ -68,8 +75,8 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	/**
 	 * Resolves raw component type for given index. This value is NOT cached.
 	 */
-	public Class resolveRawComponentType(int index) {
-		return ReflectUtil.getComponentType(type, classDescriptor.getType(), index);
+	public Class[] resolveRawComponentTypes() {
+		return ReflectUtil.getComponentTypes(type, classDescriptor.getType());
 	}
 
 	// ---------------------------------------------------------------- getter/setter
