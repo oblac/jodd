@@ -152,13 +152,13 @@ public class LiveDatabaseTest extends DbBaseTest {
 		long count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(2, count);
 
-		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, Integer.valueOf(2))).find(Tester.class);
+		tester = DbOomQuery.query(session, DbEntitySql.findById(Tester.class, 2)).find(Tester.class);
 		assertNotNull(tester);
 		assertEquals("{2,two,2}", tester.toString());
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))
 				.find(Tester.class);
 		assertNotNull(tester);
@@ -166,7 +166,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_REFERENCE))
 				.find(Tester.class);
 		assertNotNull(tester);
@@ -174,7 +174,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.TABLE_NAME))
 				.find(Tester.class);
 		assertNotNull(tester);
@@ -182,7 +182,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 
 		tester = DbOomQuery
 				.query(session, DbEntitySql
-						.findById(Tester.class, Integer.valueOf(2))
+						.findById(Tester.class, 2)
 						.aliasColumnsAs(ColumnAliasType.COLUMN_CODE))    // fixes POSTGRESQL
 				.find();
 		assertEquals("{2,two,2}", tester.toString());
@@ -195,7 +195,7 @@ public class LiveDatabaseTest extends DbBaseTest {
 		DbOomQuery.query(session, DbEntitySql.findByColumn(Tester.class, "name", "seven")).find(Tester.class);
 		assertEquals("{1,seven,7}", tester.toString());
 
-		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, Integer.valueOf(1))).executeUpdate();
+		DbOomQuery.query(session, DbEntitySql.deleteById(Tester.class, 1)).executeUpdate();
 
 		count = DbOomQuery.query(session, DbEntitySql.count(Tester.class)).executeCount();
 		assertEquals(1, count);

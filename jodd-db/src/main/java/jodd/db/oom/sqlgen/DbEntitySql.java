@@ -5,6 +5,7 @@ package jodd.db.oom.sqlgen;
 import jodd.bean.BeanUtil;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbOomManager;
+import jodd.util.StringPool;
 
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static jodd.util.StringPool.EQUALS;
@@ -110,11 +111,12 @@ public class DbEntitySql {
 	/**
 	 * Creates DELETE query that deletes entity by ID.
 	 */
-	public static DbSqlBuilder deleteById(Object entityType, Number id) {
+	public static DbSqlBuilder deleteById(Object entityType, long id) {
 		String tableRef = createTableRefName(entityType);
-		return sql()._(DELETE_FROM).table(entityType, null, tableRef)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
+		return sql().
+				_(DELETE_FROM).table(entityType, null, tableRef).
+				_(WHERE).refId(tableRef)._(EQUALS).columnValue(Long.valueOf(id));
 	}
-
 
 	// ---------------------------------------------------------------- from
 
@@ -202,9 +204,10 @@ public class DbEntitySql {
 	/**
 	 * Creates SELECT criteria for the entity matched by id.
 	 */
-	public static DbSqlBuilder findById(Object entityType, Number id) {
+	public static DbSqlBuilder findById(Object entityType, long id) {
 		String tableRef = createTableRefName(entityType);
-		return sql()._(SELECT).column(tableRef)._(FROM).table(entityType, tableRef)._(WHERE).refId(tableRef)._(EQUALS).columnValue(id);
+		return sql()._(SELECT).column(tableRef)._(FROM).table(entityType, tableRef)
+				._(WHERE).refId(tableRef)._(EQUALS).columnValue(Long.valueOf(id));
 	}
 
 	// ---------------------------------------------------------------- count
@@ -232,6 +235,20 @@ public class DbEntitySql {
 	public static DbSqlBuilder countAll(Object entity) {
 		String tableRef = createTableRefName(entity);
 		return sql()._(SELECT_COUNT_1_FROM).table(entity, tableRef)._(WHERE).matchAll(tableRef, entity);
+	}
+
+	// ---------------------------------------------------------------- increase
+
+	/**
+	 * Creates UPDATE that increases/decreases column by some delta value.
+	 */
+	public static DbSqlBuilder increaseColumn(Class entity, long id, String columnRef, long delta, boolean increase) {
+		String tableRef = createTableRefName(entity);
+
+		return sql()._(UPDATE).table(entity, null, tableRef)._(SET)
+				.ref(null, columnRef)._(EQUALS).ref(null, columnRef)
+				._(increase ? StringPool.PLUS : StringPool.DASH)
+				.columnValue(Long.valueOf(delta))._(WHERE).refId(tableRef)._(EQUALS).columnValue(Long.valueOf(id));
 	}
 
 

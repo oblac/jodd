@@ -169,7 +169,7 @@ public class GenericDao {
 	 * Finds single entity by its id.
 	 */
 	public <E> E findById(Class<E> entityType, long id) {
-		return query(DbEntitySql.findById(entityType, Long.valueOf(id))).autoClose().find(entityType);
+		return query(DbEntitySql.findById(entityType, id)).autoClose().find(entityType);
 	}
 
 	/**
@@ -208,15 +208,24 @@ public class GenericDao {
 	 * Deleted single entity by its id.
 	 */
 	public void deleteById(Class entityType, long id) {
-		query(DbEntitySql.deleteById(entityType, Long.valueOf(id))).autoClose().executeUpdate();
+		query(DbEntitySql.deleteById(entityType, id)).autoClose().executeUpdate();
 	}
 
 	/**
-	 * Delete single object by its id.
+	 * Delete single object by its id. Resets ID value.
 	 */
 	public void deleteById(Object entity) {
 		if (entity != null) {
-			query(DbEntitySql.deleteById(entity)).autoClose().executeUpdate();
+			int result = query(DbEntitySql.deleteById(entity)).autoClose().executeUpdate();
+
+			if (result != 0) {
+				// now reset the ID value
+				DbOomManager dboom = DbOomManager.getInstance();
+				Class type = entity.getClass();
+				DbEntityDescriptor ded = dboom.lookupType(type);
+
+				setEntityId(ded, entity, 0);
+			}
 		}
 	}
 
@@ -236,6 +245,23 @@ public class GenericDao {
 	 */
 	public long count(Class entityType) {
 		return query(DbEntitySql.count(entityType)).autoClose().executeCount();
+	}
+
+
+	// ---------------------------------------------------------------- increase
+
+	/**
+	 * Increases a property.
+	 */
+	public void increaseProperty(Class entityType, long id, String name, long delta) {
+		query(DbEntitySql.increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
+	}
+
+	/**
+	 * Decreases a property.
+	 */
+	public void decreaseProperty(Class entityType, long id, String name, long delta) {
+		query(DbEntitySql.increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
 	}
 
 	// ---------------------------------------------------------------- related

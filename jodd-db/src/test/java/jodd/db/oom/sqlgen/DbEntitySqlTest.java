@@ -61,7 +61,7 @@ public class DbEntitySqlTest {
 	protected void checkBadGirl4(DbSqlBuilder b) {
 		Map<String, ParameterValue> params = b.getQueryParameters();
 		assertEquals(1, params.entrySet().size());
-		assertEquals(Integer.valueOf(2), params.get("p0").getValue());
+		assertEquals("2", params.get("p0").getValue().toString());
 	}
 
 	protected void checkGirl1(DbSqlBuilder b) {
@@ -147,7 +147,7 @@ public class DbEntitySqlTest {
 				b.generateQuery());
 		checkBadGirl3(b);
 
-		b = DbEntitySql.deleteById(bg, Integer.valueOf(2));
+		b = DbEntitySql.deleteById(bg, 2);
 		assertEquals(
 				"delete from GIRL where GIRL.ID=:p0",
 				b.generateQuery());
@@ -212,7 +212,7 @@ public class DbEntitySqlTest {
 				b.generateQuery());
 		checkBadGirl3(b);
 
-		b = DbEntitySql.findById(bg, Integer.valueOf(2));
+		b = DbEntitySql.findById(bg, 2);
 		assertEquals("select BadGirl_.ID, BadGirl_.NAME, BadGirl_.SPECIALITY from GIRL BadGirl_ where BadGirl_.ID=:p0",
 				b.generateQuery());
 		checkBadGirl4(b);
@@ -245,6 +245,18 @@ public class DbEntitySqlTest {
 
 		b = DbEntitySql.count(BadGirl.class);
 		assertEquals("select count(*) from GIRL BadGirl_",
+				b.generateQuery());
+
+	}
+
+	@Test
+	public void testIncreaseDecrease() {
+		DbSqlBuilder b = DbEntitySql.increaseColumn(BadBoy.class, 1, "nejm", 5, true);
+		assertEquals("update BOY set NAME=NAME+:p0 where BOY.ID=:p1",
+				b.generateQuery());
+
+		b = DbEntitySql.increaseColumn(BadBoy.class, 1, "nejm", 5, false);
+		assertEquals("update BOY set NAME=NAME-:p0 where BOY.ID=:p1",
 				b.generateQuery());
 
 	}
