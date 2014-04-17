@@ -7,6 +7,7 @@ dependencies {
 	compile project(':jodd-bean')
 	compile project(':jodd-jtx')
 	compile project(':jodd-proxetta')
+	compile project(':jodd-props')
 	compile project(':jodd-log')
 
 	testCompile lib.junit
@@ -16,7 +17,7 @@ dependencies {
 	testCompile lib.postgresql
 }
 
-optional = ['jodd-jtx', 'jodd-proxetta']
+optional = ['jodd-jtx', 'jodd-proxetta', 'jodd-props']
 
 // run db integration tests only through the suite
 // so we can control the embedded web server

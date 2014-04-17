@@ -17,7 +17,7 @@ public class DbMiscTest extends DbHsqldbTestCase {
 	public void testBig() throws Exception {
 		DbSession session = new DbSession(cp);
 
-		DbQuery query = new DbQuery(session, "select count(*) from GIRL");
+		DbQuery query = new DbQuery(session, "girlCount");
 		assertEquals(0, query.executeCount());
 		assertEquals(1, executeUpdate(session, "insert into GIRL values(1, 'Anna', 'seduction')"));
 		assertEquals(1, query.executeCount());

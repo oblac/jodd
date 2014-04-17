@@ -3,6 +3,7 @@
 package jodd.db;
 
 import jodd.bean.BeanUtil;
+import jodd.db.sqlmap.SqlMap;
 import jodd.io.StringInputStream;
 import jodd.util.collection.IntArrayList;
 import jodd.db.type.SqlTypeManager;
@@ -48,11 +49,11 @@ import java.util.Map;
 public class DbQuery extends DbQueryBase {
 
 	/**
-	 * Creates new query,
+	 * Creates new query.
 	 */
 	public DbQuery(Connection conn, String sqlString) {
 		this.connection = conn;
-		this.sqlString = sqlString;
+		this.sqlString = preprocessSql(sqlString);
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class DbQuery extends DbQueryBase {
 		initSession(session);
 
 		this.session.attachQuery(this);
-		this.sqlString = sqlString;
+		this.sqlString = preprocessSql(sqlString);
 	}
 
 	/**
@@ -70,6 +71,30 @@ public class DbQuery extends DbQueryBase {
 	 */
 	public DbQuery(String sqlString) {
 		this((DbSession)null, sqlString);
+	}
+
+	// ---------------------------------------------------------------- sql map
+
+	/**
+	 * Pre-process SQL before using it.
+	 */
+	protected String preprocessSql(String sqlString) {
+		// quickly detect if sql string is a key
+		if (sqlString.indexOf(' ') != -1) {
+			return sqlString;
+		}
+
+		SqlMap sqlMap = DbManager.getInstance().getSqlMap();
+
+		if (sqlMap != null) {
+			String sqlFromMap = sqlMap.getQuery(sqlString);
+
+			if (sqlFromMap != null) {
+				sqlString = sqlFromMap.trim();
+			}
+		}
+
+		return sqlString;
 	}
 
 	// ---------------------------------------------------------------- additional statement parameters

@@ -19,7 +19,7 @@ public class JoddDbTest {
 		assertFalse(Jodd.isModuleLoaded(MAIL));
 		assertTrue(Jodd.isModuleLoaded(JTX));
 		assertFalse(Jodd.isModuleLoaded(PETITE));
-		assertFalse(Jodd.isModuleLoaded(PROPS));
+		assertTrue(Jodd.isModuleLoaded(PROPS));
 		assertTrue(Jodd.isModuleLoaded(PROXETTA));
 		assertFalse(Jodd.isModuleLoaded(SERVLET));
 		assertFalse(Jodd.isModuleLoaded(UPLOAD));

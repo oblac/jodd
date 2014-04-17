@@ -3,6 +3,8 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
+import jodd.db.sqlmap.DbPropsSqlMap;
+import jodd.db.sqlmap.SqlMap;
 
 /**
  * Db manager. Holds default Db configuration.
@@ -170,5 +172,20 @@ public class DbManager {
 
 	public void setTransactionMode(DbTransactionMode transactionMode) {
 		this.transactionMode = transactionMode;
+	}
+
+	// ---------------------------------------------------------------- sql map
+
+	protected SqlMap sqlMap;
+
+	/**
+	 * Returns {@link jodd.db.sqlmap.SqlMap} instance. May be <code>null</code>.
+	 */
+	public SqlMap getSqlMap() {
+		return sqlMap;
+	}
+
+	public void setSqlMap(SqlMap sqlMap) {
+		this.sqlMap = sqlMap;
 	}
 }
