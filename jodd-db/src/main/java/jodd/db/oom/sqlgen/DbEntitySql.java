@@ -242,13 +242,13 @@ public class DbEntitySql {
 	/**
 	 * Creates UPDATE that increases/decreases column by some delta value.
 	 */
-	public static DbSqlBuilder increaseColumn(Class entity, long id, String columnRef, long delta, boolean increase) {
+	public static DbSqlBuilder increaseColumn(Class entity, long id, String columnRef, Number delta, boolean increase) {
 		String tableRef = createTableRefName(entity);
 
 		return sql()._(UPDATE).table(entity, null, tableRef)._(SET)
 				.ref(null, columnRef)._(EQUALS).ref(null, columnRef)
 				._(increase ? StringPool.PLUS : StringPool.DASH)
-				.columnValue(Long.valueOf(delta))._(WHERE).refId(tableRef)._(EQUALS).columnValue(Long.valueOf(id));
+				.columnValue(delta)._(WHERE).refId(tableRef)._(EQUALS).columnValue(Long.valueOf(id));
 	}
 
 

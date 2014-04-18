@@ -253,14 +253,14 @@ public class GenericDao {
 	/**
 	 * Increases a property.
 	 */
-	public void increaseProperty(Class entityType, long id, String name, long delta) {
+	public void increaseProperty(Class entityType, long id, String name, Number delta) {
 		query(DbEntitySql.increaseColumn(entityType, id, name, delta, true)).autoClose().executeUpdate();
 	}
 
 	/**
 	 * Decreases a property.
 	 */
-	public void decreaseProperty(Class entityType, long id, String name, long delta) {
+	public void decreaseProperty(Class entityType, long id, String name, Number delta) {
 		query(DbEntitySql.increaseColumn(entityType, id, name, delta, false)).autoClose().executeUpdate();
 	}
 
