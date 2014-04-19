@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -730,6 +732,68 @@ abstract class DbQueryBase {
 				close();
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------- result set mapper
+
+	/**
+	 * {@link #execute() Executes} the query, iterates result set and
+	 * {@link QueryMapper map} each row.
+	 */
+	public <T> List<T> list(QueryMapper<T> queryMapper) {
+		ResultSet resultSet = execute();
+
+		List<T> list = new ArrayList<T>();
+
+		try {
+			while (resultSet.next()) {
+				list.add(queryMapper.process(resultSet));
+			}
+		} catch (SQLException sex) {
+			throw new DbSqlException(sex);
+		} finally {
+			DbUtil.close(resultSet);
+		}
+		return list;
+	}
+
+	/**
+	 * {@link #execute() Executes} the query and maps single result row.
+	 */
+	public <T> T find(QueryMapper<T> queryMapper) {
+		ResultSet resultSet = execute();
+
+		try {
+			if (resultSet.next()) {
+				return queryMapper.process(resultSet);
+			}
+		} catch (SQLException sex) {
+			throw new DbSqlException(sex);
+		} finally {
+			DbUtil.close(resultSet);
+		}
+		return null;
+	}
+
+	/**
+	 * {@link #execute() Executes} the query, iterates all rows and
+	 * maps them.
+	 */
+	public <T> Set<T> listSet(QueryMapper<T> queryMapper) {
+		ResultSet resultSet = execute();
+
+		Set<T> set = new HashSet<T>();
+
+		try {
+			while (resultSet.next()) {
+				set.add(queryMapper.process(resultSet));
+			}
+		} catch (SQLException sex) {
+			throw new DbSqlException(sex);
+		} finally {
+			DbUtil.close(resultSet);
+		}
+		return set;
 	}
 
 	// ---------------------------------------------------------------- generated keys

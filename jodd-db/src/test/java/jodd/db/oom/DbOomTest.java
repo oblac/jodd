@@ -6,12 +6,15 @@ import jodd.db.DbHsqldbTestCase;
 import jodd.db.DbQuery;
 import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
+import jodd.db.QueryMapper;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.DbSqlBuilder;
 import jodd.db.oom.tst.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -74,6 +77,19 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl1(girl);
 		assertTrue(q.isActive());
 
+		girl = q.find(new QueryMapper<Girl>() {
+			public Girl process(ResultSet resultSet) throws SQLException {
+				Girl _girl = new Girl();
+				_girl.id = resultSet.getInt("ID");
+				_girl.name = resultSet.getString("NAME");
+				_girl.speciality = resultSet.getString("SPECIALITY");
+				return _girl;
+			}
+		});
+
+		checkGirl1(girl);
+		assertTrue(q.isActive());
+
 		IdName idName = q.find(IdName.class);
 		assertNotNull(idName);
 		assertEquals(1, idName.id);
@@ -89,6 +105,21 @@ public class DbOomTest extends DbHsqldbTestCase {
 		girl = listGirl.get(1);
 		checkGirl2(girl);
 
+		listGirl = q.list(
+			new QueryMapper<Girl>() {
+				public Girl process(ResultSet resultSet) throws SQLException {
+					Girl _girl = new Girl();
+					_girl.id = resultSet.getInt("ID");
+					_girl.name = resultSet.getString("NAME");
+					_girl.speciality = resultSet.getString("SPECIALITY");
+					return _girl;
+				}
+			}
+		);
+
+		assertEquals(3, listGirl.size());
+		girl = listGirl.get(1);
+		checkGirl2(girl);
 
 		listGirl = q.list();
 		assertEquals(3, listGirl.size());

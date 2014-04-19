@@ -176,8 +176,6 @@ s	 */
 		}
 	}
 
-
-
 	// ---------------------------------------------------------------- int
 
 	public void setInteger(int index, int value) {
