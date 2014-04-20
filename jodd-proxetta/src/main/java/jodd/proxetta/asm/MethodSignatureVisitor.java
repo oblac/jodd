@@ -195,7 +195,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return argumentsOpcodeType.get(index);
 	}
 
-	protected String getArgumentTypeName(int i) {
+	public String getArgumentTypeName(int i) {
 		return argumentsTypeNames.get(i);
 	}
 

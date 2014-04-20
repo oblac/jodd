@@ -17,9 +17,6 @@ import static jodd.asm5.Opcodes.POP2;
 import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 import static jodd.asm5.Opcodes.INVOKEINTERFACE;
 import static jodd.asm5.Opcodes.INVOKESTATIC;
-import static jodd.asm5.Opcodes.ANEWARRAY;
-import static jodd.asm5.Opcodes.DUP;
-import static jodd.asm5.Opcodes.AASTORE;
 import static jodd.asm5.Opcodes.ALOAD;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
@@ -28,6 +25,7 @@ import static jodd.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.proxetta.ProxyTargetReplacement;
 
 import java.util.List;
 
@@ -245,15 +243,14 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									return;
 								} else
 
-								if (isArgumentsCountMethod(mname, mdesc)) {        // [R2]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
+								if (isArgumentsCountMethod(mname, mdesc)) {		// [R2]
+									ProxyTargetReplacement.argumentsCount(mv, td.msign);
 									return;
 								} else
 
 								if (isArgumentTypeMethod(mname, mdesc)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
+									checkArgumentIndex(td.msign, argIndex);
 									mv.visitInsn(POP);
 									loadMethodArgumentClass(mv, td.msign, argIndex);
 									return;
@@ -261,7 +258,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isArgumentMethod(mname, mdesc)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
+									checkArgumentIndex(td.msign, argIndex);
 									mv.visitInsn(POP);
 									loadMethodArgumentAsObject(mv, td.msign, argIndex);
 									return;
@@ -269,35 +266,19 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isSetArgumentMethod(mname, mdesc)) {           // [R5]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex, aspectData.advice);
+									checkArgumentIndex(td.msign, argIndex);
 									mv.visitInsn(POP);
 									storeMethodArgumentFromObject(mv, td.msign, argIndex);
 									return;
 								} else
 
 								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT);
-									for (int i = 0; i < argsCount; i++) {
-										mv.visitInsn(DUP);
-										pushInt(mv, i);
-										loadMethodArgumentAsObject(mv, td.msign, i + 1);
-										mv.visitInsn(AASTORE);
-									}
+									ProxyTargetReplacement.createArgumentsArray(mv, td.msign);
 									return;
 								} else
 
 								if (isCreateArgumentsClassArrayMethod(mname, mdesc)) {     // [R11]
-									int argsCount = td.msign.getArgumentsCount();
-									pushInt(mv, argsCount);
-									mv.visitTypeInsn(ANEWARRAY, AsmUtil.SIGNATURE_JAVA_LANG_CLASS);
-									for (int i = 0; i < argsCount; i++) {
-										mv.visitInsn(DUP);
-										pushInt(mv, i);
-										loadMethodArgumentClass(mv, td.msign, i + 1);
-										mv.visitInsn(AASTORE);
-									}
+									ProxyTargetReplacement.createArgumentsClassArray(mv, td.msign);
 									return;
 								} else
 
@@ -312,22 +293,22 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								} else
 
 								if (isTargetMethodNameMethod(mname, mdesc)) {  // [R10]
-									mv.visitLdcInsn(td.msign.getMethodName());
+									ProxyTargetReplacement.targetMethodName(mv, td.msign);
 									return;
 								} else
 
 								if (isTargetMethodSignatureMethod(mname, mdesc)) {
-									mv.visitLdcInsn(td.msign.getSignature());
+									ProxyTargetReplacement.targetMethodSignature(mv, td.msign);
 									return;
 								} else
 
 								if (isTargetMethodDescriptionMethod(mname, mdesc)) {
-									mv.visitLdcInsn(td.msign.getDescription());
+									ProxyTargetReplacement.targetMethodDescription(mv, td.msign);
 									return;
 								} else
 
 								if (isReturnTypeMethod(mname, mdesc)) {        // [R11]
-									loadMethodReturnClass(mv, td.msign);
+									ProxyTargetReplacement.returnType(mv, td.msign);
 									return;
 								} else
 

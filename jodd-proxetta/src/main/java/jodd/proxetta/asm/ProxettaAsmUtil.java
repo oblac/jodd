@@ -9,7 +9,6 @@ import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
 import static jodd.asm5.Opcodes.*;
-import jodd.proxetta.ProxyAdvice;
 import jodd.proxetta.ProxettaException;
 import static jodd.JoddProxetta.*;
 import jodd.util.StringPool;
@@ -50,9 +49,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Validates argument index.
 	 */
-	public static void checkArgumentIndex(MethodSignatureVisitor msign, int argIndex, Class<? extends ProxyAdvice> advice) {
-		if ((argIndex < 1) || (argIndex > msign.getArgumentsCount())) {
-			throw new ProxettaException("Invalid argument index: '" + argIndex + "' used in advice: " + advice.getName());
+	public static void checkArgumentIndex(MethodInfo methodInfo, int argIndex) {
+		if ((argIndex < 1) || (argIndex > methodInfo.getArgumentsCount())) {
+			throw new ProxettaException("Invalid argument index: " + argIndex);
 		}
 	}
 
@@ -74,12 +73,8 @@ public class ProxettaAsmUtil {
 
 	// ---------------------------------------------------------------- load
 
-	public static void loadMethodArgumentClass(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		loadClass(mv, msign.getArgumentOpcodeType(index), msign.getArgumentTypeName(index));
-	}
-
-	public static void loadMethodReturnClass(MethodVisitor mv, MethodSignatureVisitor msign) {
-		loadClass(mv, msign.getReturnOpcodeType(), msign.getReturnTypeName());
+	public static void loadMethodArgumentClass(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		loadClass(mv, methodInfo.getArgumentOpcodeType(index), methodInfo.getArgumentTypeName(index));
 	}
 
 	public static void loadClass(MethodVisitor mv, int type, String typeName) {

@@ -50,6 +50,8 @@ public interface MethodInfo {
 
 	char getArgumentOpcodeType(int index);
 
+	String getArgumentTypeName(int index);
+
 	int getArgumentOffset(int index);
 
 	/**
