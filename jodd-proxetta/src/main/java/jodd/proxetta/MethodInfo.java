@@ -50,6 +50,8 @@ public interface MethodInfo {
 
 	char getArgumentOpcodeType(int index);
 
+	int getArgumentOffset(int index);
+
 	/**
 	 * Returns return type opcode.
 	 * For example, returns 'V' for void etc.

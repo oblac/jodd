@@ -72,7 +72,8 @@ public class InvokeClassBuilder extends ClassAdapter {
 		InvokeAspect[] nextAspects = new InvokeAspect[applicableAspects.size()];
 		nextAspects = applicableAspects.toArray(nextAspects);
 
-		return new InvokeReplacerMethodAdapter(super.visitMethod(access, name, desc, signature, exceptions), msign, wd, nextAspects);
+		return new InvokeReplacerMethodAdapter(
+				super.visitMethod(access, name, desc, signature, exceptions), msign, wd, nextAspects);
 	}
 
 }

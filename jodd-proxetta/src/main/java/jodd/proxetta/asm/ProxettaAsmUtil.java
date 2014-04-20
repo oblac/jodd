@@ -3,6 +3,7 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
+import jodd.proxetta.MethodInfo;
 import jodd.util.StringBand;
 import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
@@ -176,9 +177,9 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void loadMethodArgumentAsObject(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void loadMethodArgumentAsObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;

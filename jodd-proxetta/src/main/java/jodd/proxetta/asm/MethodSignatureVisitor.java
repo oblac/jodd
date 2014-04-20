@@ -199,8 +199,8 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return argumentsTypeNames.get(i);
 	}
 
-	protected int getArgumentOffset(int i) {
-		return argumentsOffset.get(i);
+	public int getArgumentOffset(int index) {
+		return argumentsOffset.get(index);
 	}
 
 	protected int getAllArgumentsSize() {
