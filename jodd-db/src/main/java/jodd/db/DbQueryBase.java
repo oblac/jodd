@@ -747,13 +747,18 @@ abstract class DbQueryBase {
 
 		try {
 			while (resultSet.next()) {
-				list.add(queryMapper.process(resultSet));
+				T t = queryMapper.process(resultSet);
+				if (t == null) {
+					break;
+				}
+				list.add(t);
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(sex);
 		} finally {
 			DbUtil.close(resultSet);
 		}
+
 		return list;
 	}
 
@@ -786,7 +791,11 @@ abstract class DbQueryBase {
 
 		try {
 			while (resultSet.next()) {
-				set.add(queryMapper.process(resultSet));
+				T t = queryMapper.process(resultSet);
+				if (t == null) {
+					break;
+				}
+				set.add(t);
 			}
 		} catch (SQLException sex) {
 			throw new DbSqlException(sex);

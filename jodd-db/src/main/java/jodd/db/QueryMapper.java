@@ -12,6 +12,7 @@ public interface QueryMapper<T> {
 
 	/**
 	 * Processes <b>single</b> result sets row.
+	 * Returns <code>null</code> to stop iterations.
 	 */
 	T process(ResultSet resultSet) throws SQLException;
 
