@@ -7,6 +7,8 @@ package jodd.proxetta;
  */
 public class InvokeReplacer {
 
+	public static final InvokeReplacer NONE = new InvokeReplacer();
+
 	protected final String owner;
 	protected final String methodName;
 
@@ -15,8 +17,13 @@ public class InvokeReplacer {
 	}
 
 	public InvokeReplacer(String classCanonicalName, String methodName) {
-		owner = classCanonicalName.replace('.', '/');
+		this.owner = classCanonicalName.replace('.', '/');
 		this.methodName = methodName;
+	}
+
+	InvokeReplacer() {
+		this.owner = null;
+		this.methodName = null;
 	}
 
 	public static InvokeReplacer with(String classCanonicalName, String methodName) {
@@ -108,5 +115,12 @@ public class InvokeReplacer {
 	public InvokeReplacer passTargetClass(boolean passTargetClass) {
 		this.passTargetClass = passTargetClass;
 		return this;
+	}
+
+	/**
+	 * Returns <code>true</code> if this <code>InvokeReplaces</code> is {@link #NONE}.
+	 */
+	public boolean isNone() {
+		return owner == null;
 	}
 }

@@ -3,12 +3,12 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.asm.MethodAdapter;
 import jodd.proxetta.InvokeAspect;
 import jodd.proxetta.InvokeInfo;
 import jodd.proxetta.InvokeReplacer;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
+import jodd.proxetta.ProxyTargetReplacement;
 import jodd.util.StringPool;
 import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
@@ -22,11 +22,13 @@ import static jodd.asm5.Opcodes.INVOKESPECIAL;
 import static jodd.asm5.Opcodes.INVOKESTATIC;
 import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 import static jodd.asm5.Opcodes.NEW;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
 
 /**
  * Invocation replacer method adapter.
  */
-public class InvokeReplacerMethodAdapter extends MethodAdapter {
+public class InvokeReplacerMethodAdapter extends IntArgHistoryMethodAdapter {
 
 	protected final WorkData wd;
 	protected final MethodInfo methodInfo;
@@ -104,7 +106,70 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 			}
 		}
 
-		if (ir == null) {
+		if (ir == null || ir.isNone()) {
+
+			if (ProxettaAsmUtil.isCreateArgumentsArrayMethod(name, desc)) {
+				ProxyTargetReplacement.createArgumentsArray(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isCreateArgumentsClassArrayMethod(name, desc)) {
+				ProxyTargetReplacement.createArgumentsClassArray(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isArgumentsCountMethod(name, desc)) {
+				ProxyTargetReplacement.argumentsCount(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isTargetMethodNameMethod(name, desc)) {
+				ProxyTargetReplacement.targetMethodName(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isTargetMethodDescriptionMethod(name, desc)) {
+				ProxyTargetReplacement.targetMethodDescription(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isTargetMethodSignatureMethod(name, desc)) {
+				ProxyTargetReplacement.targetMethodSignature(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isReturnTypeMethod(name, desc)) {
+				ProxyTargetReplacement.returnType(mv, methodInfo);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (ProxettaAsmUtil.isTargetClassMethod(name, desc)) {
+				ProxyTargetReplacement.targetClass(mv, wd.superReference);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (isArgumentTypeMethod(name, desc)) {
+				int argIndex = this.getArgumentIndex();
+				ProxyTargetReplacement.argumentType(mv, methodInfo, argIndex);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (isArgumentMethod(name, desc)) {
+				int argIndex = this.getArgumentIndex();
+				ProxyTargetReplacement.argument(mv, methodInfo, argIndex);
+				wd.proxyApplied = true;
+				return;
+			}
+
 			super.visitMethodInsn(opcode, owner, name, desc);
 			return;
 		}
@@ -169,7 +234,7 @@ public class InvokeReplacerMethodAdapter extends MethodAdapter {
 			InvokeInfo invokeInfo = new InvokeInfo(type, INIT, StringPool.EMPTY);
 			for (InvokeAspect aspect : aspects) {
 				InvokeReplacer ir = aspect.pointcut(invokeInfo);
-				if (ir != null) {
+				if (ir != null && !ir.isNone()) {
 					newInvokeReplacer = ir;
 
 					// new pointcut found, skip the new instruction and the following dup.

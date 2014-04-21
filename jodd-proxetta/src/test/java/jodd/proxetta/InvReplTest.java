@@ -105,6 +105,27 @@ public class InvReplTest {
 		assertEquals(10823, time);
 	}
 
+	@Test
+	public void testWimp() {
+		Wimp wimp = (Wimp) InvokeProxetta.withAspects(new InvokeAspect() {
+			@Override
+			public boolean apply(MethodInfo methodInfo) {
+				return methodInfo.isTopLevelMethod();
+			}
+
+			@Override
+			public InvokeReplacer pointcut(InvokeInfo invokeInfo) {
+				return InvokeReplacer.NONE;
+			}
+		}).builder(Wimp.class).newInstance();
+
+		int i = wimp.foo();
+		assertEquals(0, i);
+
+		String names = wimp.aaa(3, null, null);
+		assertEquals("int3WelcomeToJodd", names);
+	}
+
 
 	protected InvokeProxetta initProxetta() {
 		InvokeProxetta fp = InvokeProxetta.withAspects(
