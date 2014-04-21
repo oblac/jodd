@@ -5,7 +5,6 @@ package jodd.proxetta.asm;
 import jodd.asm.AsmUtil;
 import jodd.asm5.MethodVisitor;
 import jodd.asm5.AnnotationVisitor;
-import jodd.asm5.Type;
 
 import static jodd.asm5.Opcodes.ACC_ABSTRACT;
 import static jodd.asm5.Opcodes.ACC_NATIVE;
@@ -250,17 +249,13 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isArgumentTypeMethod(mname, mdesc)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex);
-									mv.visitInsn(POP);
-									loadMethodArgumentClass(mv, td.msign, argIndex);
+									ProxyTargetReplacement.argumentType(mv, td.msign, argIndex);
 									return;
 								} else
 
 								if (isArgumentMethod(mname, mdesc)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
-									checkArgumentIndex(td.msign, argIndex);
-									mv.visitInsn(POP);
-									loadMethodArgumentAsObject(mv, td.msign, argIndex);
+									ProxyTargetReplacement.argument(mv, td.msign, argIndex);
 									return;
 								} else
 
@@ -288,7 +283,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								} else
 
 								if (isTargetClassMethod(mname, mdesc)) {       // [R9]
-									mv.visitLdcInsn(Type.getType('L' + wd.superReference + ';'));
+									ProxyTargetReplacement.targetClass(mv, wd.superReference);
 									return;
 								} else
 

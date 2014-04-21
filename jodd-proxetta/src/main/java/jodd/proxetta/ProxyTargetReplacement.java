@@ -4,11 +4,14 @@ package jodd.proxetta;
 
 import jodd.asm.AsmUtil;
 import jodd.asm5.MethodVisitor;
+import jodd.asm5.Type;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 
 import static jodd.asm5.Opcodes.AASTORE;
 import static jodd.asm5.Opcodes.ANEWARRAY;
 import static jodd.asm5.Opcodes.DUP;
+import static jodd.asm5.Opcodes.POP;
+import static jodd.proxetta.asm.ProxettaAsmUtil.checkArgumentIndex;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArgumentAsObject;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadMethodArgumentClass;
 import static jodd.proxetta.asm.ProxettaAsmUtil.pushInt;
@@ -27,24 +30,21 @@ public class ProxyTargetReplacement {
 	}
 
 	/**
-	 * Visits replacement code for {@link ProxyTarget#targetMethodName()}.
+	 * Visits replacement code for {@link ProxyTarget#argumentType(int)}.
 	 */
-	public static void targetMethodName(MethodVisitor mv, MethodInfo methodInfo) {
-		mv.visitLdcInsn(methodInfo.getMethodName());
+	public static void argumentType(MethodVisitor mv, MethodInfo methodInfo, int argIndex) {
+		checkArgumentIndex(methodInfo, argIndex);
+		mv.visitInsn(POP);
+		loadMethodArgumentClass(mv, methodInfo, argIndex);
 	}
 
 	/**
-	 * Visits replacement code for {@link ProxyTarget#targetMethodSignature()}.
+	 * Visits replacement code for {@link ProxyTarget#argument(int)}.
 	 */
-	public static void targetMethodSignature(MethodVisitor mv, MethodInfo methodInfo) {
-		mv.visitLdcInsn(methodInfo.getSignature());
-	}
-
-	/**
-	 * Visits replacement code for {@link ProxyTarget#targetMethodDescription()}.
-	 */
-	public static void targetMethodDescription(MethodVisitor mv, MethodInfo methodInfo) {
-		mv.visitLdcInsn(methodInfo.getDescription());
+	public static void argument(MethodVisitor mv, MethodInfo methodInfo, int argIndex) {
+		checkArgumentIndex(methodInfo, argIndex);
+		mv.visitInsn(POP);
+		loadMethodArgumentAsObject(mv, methodInfo, argIndex);
 	}
 
 	/**
@@ -84,4 +84,31 @@ public class ProxyTargetReplacement {
 		ProxettaAsmUtil.loadClass(mv, methodInfo.getReturnOpcodeType(), methodInfo.getReturnTypeName());
 	}
 
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetMethodName()}.
+	 */
+	public static void targetMethodName(MethodVisitor mv, MethodInfo methodInfo) {
+		mv.visitLdcInsn(methodInfo.getMethodName());
+	}
+
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetMethodSignature()}.
+	 */
+	public static void targetMethodSignature(MethodVisitor mv, MethodInfo methodInfo) {
+		mv.visitLdcInsn(methodInfo.getSignature());
+	}
+
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetMethodDescription()}.
+	 */
+	public static void targetMethodDescription(MethodVisitor mv, MethodInfo methodInfo) {
+		mv.visitLdcInsn(methodInfo.getDescription());
+	}
+
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetClass()}.
+	 */
+	public static void targetClass(MethodVisitor mv, String superReference) {
+		mv.visitLdcInsn(Type.getType('L' + superReference + ';'));
+	}
 }
