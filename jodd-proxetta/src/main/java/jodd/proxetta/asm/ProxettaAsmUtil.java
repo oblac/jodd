@@ -116,37 +116,37 @@ public class ProxettaAsmUtil {
 	/**
 	 * Loads all method arguments before INVOKESPECIAL call.
 	 */
-	public static void loadSpecialMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
+	public static void loadSpecialMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
 		mv.visitVarInsn(ALOAD, 0);
-		for (int i = 1; i <= msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads all method arguments before INVOKESTATIC call.
 	 */
-	public static void loadStaticMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
-		for (int i = 0; i < msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+	public static void loadStaticMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+		for (int i = 0; i < methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads all method arguments before INVOKEVIRTUAL call.
 	 */
-	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodSignatureVisitor msign) {
-		for (int i = 1; i <= msign.getArgumentsCount(); i++) {
-			loadMethodArgument(mv, msign, i);
+	public static void loadVirtualMethodArguments(MethodVisitor mv, MethodInfo methodInfo) {
+		for (int i = 1; i <= methodInfo.getArgumentsCount(); i++) {
+			loadMethodArgument(mv, methodInfo, i);
 		}
 	}
 
 	/**
 	 * Loads one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void loadMethodArgument(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void loadMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;
@@ -220,9 +220,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Stores one argument. Index is 1-based. No conversion occurs.
 	 */
-	public static void storeMethodArgument(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int offset = msign.getArgumentOffset(index);
-		int type = msign.getArgumentOpcodeType(index);
+	public static void storeMethodArgument(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int offset = methodInfo.getArgumentOffset(index);
+		int type = methodInfo.getArgumentOpcodeType(index);
 		switch (type) {
 			case 'V':
 				break;
@@ -255,9 +255,9 @@ public class ProxettaAsmUtil {
 	}
 
 
-	public static void storeMethodArgumentFromObject(MethodVisitor mv, MethodSignatureVisitor msign, int index) {
-		int type = msign.getArgumentOpcodeType(index);
-		int offset = msign.getArgumentOffset(index);
+	public static void storeMethodArgumentFromObject(MethodVisitor mv, MethodInfo methodInfo, int index) {
+		int type = methodInfo.getArgumentOpcodeType(index);
+		int offset = methodInfo.getArgumentOffset(index);
 		storeValue(mv, offset, type);
 	}
 
@@ -307,8 +307,8 @@ public class ProxettaAsmUtil {
 	/**
 	 * Visits return opcodes.
 	 */
-	public static void visitReturn(MethodVisitor mv, MethodSignatureVisitor msign, boolean isLast) {
-		switch (msign.getReturnOpcodeType()) {
+	public static void visitReturn(MethodVisitor mv, MethodInfo methodInfo, boolean isLast) {
+		switch (methodInfo.getReturnOpcodeType()) {
 			case 'V':
 				if (isLast == true) {
 					mv.visitInsn(POP);
@@ -445,9 +445,9 @@ public class ProxettaAsmUtil {
 	/**
 	 * Prepares return value.
 	 */
-	public static void prepareReturnValue(MethodVisitor mv, MethodSignatureVisitor msign, int varOffset) {
-		varOffset += msign.getAllArgumentsSize();
-		switch (msign.getReturnOpcodeType()) {
+	public static void prepareReturnValue(MethodVisitor mv, MethodInfo methodInfo, int varOffset) {
+		varOffset += methodInfo.getAllArgumentsSize();
+		switch (methodInfo.getReturnOpcodeType()) {
 			case 'V':
 				mv.visitInsn(ACONST_NULL);
 				break;
@@ -479,10 +479,10 @@ public class ProxettaAsmUtil {
 		}
 	}
 
-	public static void castToReturnType(MethodVisitor mv, MethodSignatureVisitor msign) {
+	public static void castToReturnType(MethodVisitor mv, MethodInfo methodInfo) {
 		final String returnType;
 
-		char returnOpcodeType = msign.getReturnOpcodeType();
+		char returnOpcodeType = methodInfo.getReturnOpcodeType();
 
 		switch (returnOpcodeType) {
 			case 'I':
@@ -510,10 +510,10 @@ public class ProxettaAsmUtil {
 				returnType = AsmUtil.SIGNATURE_JAVA_LANG_CHARACTER;
 				break;
 			case '[':
-				returnType = msign.getReturnTypeName();
+				returnType = methodInfo.getReturnTypeName();
 				break;
 			default:
-				returnType = msign.getReturnType().replace('.', '/');
+				returnType = methodInfo.getReturnType().replace('.', '/');
 				break;
 		}
 
@@ -662,6 +662,15 @@ public class ProxettaAsmUtil {
 	public static boolean isReturnValueMethod(String name, String desc) {
 		if (name.equals("returnValue")) {
 			if (desc.equals("(Ljava/lang/Object;)Ljava/lang/Object;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isInfoMethod(String name, String desc) {
+		if (name.equals("info")) {
+			if (desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
 				return true;
 			}
 		}

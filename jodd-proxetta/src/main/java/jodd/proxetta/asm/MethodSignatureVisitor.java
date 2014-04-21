@@ -203,7 +203,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		return argumentsOffset.get(index);
 	}
 
-	protected int getAllArgumentsSize() {
+	public int getAllArgumentsSize() {
 		return argumentsWords;
 	}
 

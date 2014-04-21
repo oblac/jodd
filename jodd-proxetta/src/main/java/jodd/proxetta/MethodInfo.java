@@ -54,6 +54,8 @@ public interface MethodInfo {
 
 	int getArgumentOffset(int index);
 
+	public int getAllArgumentsSize();
+
 	/**
 	 * Returns return type opcode.
 	 * For example, returns 'V' for void etc.
