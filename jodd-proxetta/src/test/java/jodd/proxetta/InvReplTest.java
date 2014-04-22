@@ -122,8 +122,11 @@ public class InvReplTest {
 		int i = wimp.foo();
 		assertEquals(0, i);
 
-		String names = wimp.aaa(3, null, null);
-		assertEquals("int3WelcomeToJodd", names);
+		String txt = wimp.aaa(3, null, null);
+		assertEquals("int3WelcomeToJodd", txt);
+
+		txt = wimp.ccc(3, "XXX", 1, null);
+		assertEquals(">4:String:4long:4XXX:ccc:Wimp", txt);
 	}
 
 
