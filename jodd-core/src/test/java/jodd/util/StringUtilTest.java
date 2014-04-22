@@ -959,4 +959,44 @@ public class StringUtilTest {
 		assertEquals("1234", StringUtil.stripToChar("1234", '1'));
 		assertEquals("1234", StringUtil.stripToChar("1234", 'X'));
 	}
+
+
+	@Test
+	public void testFormatPara() {
+		String txt = "123 567 90AB";
+		String p = StringUtil.formatParagraph(txt, 6, false);
+		assertEquals("123 56\n7 90AB\n", p);
+
+		p = StringUtil.formatParagraph(txt, 4, false);
+		assertEquals("123\n567\n90AB\n", p);
+
+		txt = "123  67 90AB";
+		p = StringUtil.formatParagraph(txt, 4, false);
+		assertEquals("123\n67\n90AB\n", p);
+
+		txt = "123 567 90AB";
+		p = StringUtil.formatParagraph(txt, 6, true);
+		assertEquals("123\n567\n90AB\n", p);
+
+		txt = "123  67 90AB";
+		p = StringUtil.formatParagraph(txt, 4, true);
+		assertEquals("123\n67\n90AB\n", p);
+		txt = "123  67 90ABCDE";
+		p = StringUtil.formatParagraph(txt, 4, true);
+		assertEquals("123\n67\n90AB\nCDE\n", p);
+
+		txt = "1234567";
+		p = StringUtil.formatParagraph(txt, 4, true);
+		assertEquals("1234\n567\n", p);
+		p = StringUtil.formatParagraph(txt, 4, false);
+		assertEquals("1234\n567\n", p);
+
+	}
+
+	@Test
+	public void testTabsToSpaces() {
+		String s = StringUtil.convertTabsToSpaces("q\tqa\t", 3);
+		assertEquals("q  qa ", s);
+	}
+
 }
