@@ -7,6 +7,7 @@ import jodd.typeconverter.Convert;
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 
 /**
  * Various String utilities.
@@ -2562,6 +2563,123 @@ public class StringUtil {
 		}
 		result.append(line.substring(last_tab_index));
 		return result.toString();
+	}
+
+	// ---------------------------------------------------------------- case change
+
+	/**
+	 * Converts all of the characters in the string to lower case, based on the
+	 * portal instance's default locale.
+	 *
+	 * @param  s the string to convert
+	 * @return the string, converted to lower case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toLowerCase(String s) {
+		return toLowerCase(s, null);
+	}
+
+
+	/**
+	 * Converts all of the characters in the string to lower case, based on the
+	 * locale. More efficient than <code>String.toLowerCase</code>.
+	 *
+	 * @param  s the string to convert
+	 * @param  locale apply this locale's rules, if <code>null</code> default locale is used
+	 * @return the string, converted to lower case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toLowerCase(String s, Locale locale) {
+		if (s == null) {
+			return null;
+		}
+
+		StringBuilder sb = null;
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			if (c > 127) {
+				// found non-ascii char, fallback to the slow unicode detection
+
+				if (locale == null) {
+					locale = Locale.getDefault();
+				}
+
+				return s.toLowerCase(locale);
+			}
+
+			if ((c >= 'A') && (c <= 'Z')) {
+				if (sb == null) {
+					sb = new StringBuilder(s);
+				}
+
+				sb.setCharAt(i, (char)(c + 32));
+			}
+		}
+
+		if (sb == null) {
+			return s;
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Converts all of the characters in the string to upper case, based on the
+	 * portal instance's default locale.
+	 *
+	 * @param  s the string to convert
+	 * @return the string, converted to upper case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toUpperCase(String s) {
+		return toUpperCase(s, null);
+	}
+
+	/**
+	 * Converts all of the characters in the string to upper case, based on the
+	 * locale.
+	 *
+	 * @param  s the string to convert
+	 * @param  locale apply this locale's rules
+	 * @return the string, converted to upper case, or <code>null</code> if the
+	 *         string is <code>null</code>
+	 */
+	public static String toUpperCase(String s, Locale locale) {
+		if (s == null) {
+			return null;
+		}
+
+		StringBuilder sb = null;
+
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+
+			if (c > 127) {
+				// found non-ascii char, fallback to the slow unicode detection
+
+				if (locale == null) {
+					locale = Locale.getDefault();
+				}
+
+				return s.toUpperCase(locale);
+			}
+
+			if ((c >= 'a') && (c <= 'z')) {
+				if (sb == null) {
+					sb = new StringBuilder(s);
+				}
+
+				sb.setCharAt(i, (char)(c - 32));
+			}
+		}
+
+		if (sb == null) {
+			return s;
+		}
+
+		return sb.toString();
 	}
 
 }
