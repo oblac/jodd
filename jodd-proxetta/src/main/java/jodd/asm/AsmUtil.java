@@ -80,8 +80,7 @@ public class AsmUtil {
 	/**
 	 * Converts bytecode-like description to java class name that can be loaded
 	 * with a classloader. Uses less-known feature of class loaders for loading
-	 * array classes. For base types returns the one-letter string that can be used
-	 * with {@link #loadBaseTypeClass(String)}.
+	 * array classes.
 	 *
 	 * @see #typedescToSignature(String, jodd.mutable.MutableInteger)
 	 */
@@ -122,27 +121,6 @@ public class AsmUtil {
 		}
 		String name = desc.substring(1, desc.length() - 1);
 		return name.replace('/', '.');
-	}
-
-	/**
-	 * Loads base class type.
-	 */
-	public static Class loadBaseTypeClass(String desc) throws ClassNotFoundException {
-		if (desc.length() != 1) {
-			throw new ClassNotFoundException(INVALID_BASE_TYPE + desc);
-		}
-		switch (desc.charAt(0)) {
-			case 'B': return byte.class;
-			case 'C': return char.class;
-			case 'D': return double.class;
-			case 'F': return float.class;
-			case 'I': return int.class;
-			case 'J': return long.class;
-			case 'S': return short.class;
-			case 'Z': return boolean.class;
-			case 'V': return void.class;
-			default: throw new ClassNotFoundException(INVALID_BASE_TYPE + desc);
-		}
 	}
 
 	// ---------------------------------------------------------------- description

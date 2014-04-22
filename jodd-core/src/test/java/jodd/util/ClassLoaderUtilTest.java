@@ -2,11 +2,15 @@
 
 package jodd.util;
 
+import jodd.JoddCore;
+import jodd.util.cl.DefaultClassLoaderStrategy;
+import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 import static org.junit.Assert.*;
 
@@ -49,7 +53,7 @@ public class ClassLoaderUtilTest {
 	}
 
 	@Test
-	public void testLoadClass() throws ClassNotFoundException {
+	public void testLoadClass() throws Exception {
 		try {
 			ClassLoaderUtil.loadClass("not.existing.class");
 		} catch (ClassNotFoundException cnfex) {
@@ -84,6 +88,37 @@ public class ClassLoaderUtilTest {
 
 		assertEquals(Integer[][].class, ClassLoaderUtil.loadClass("java.lang.Integer[][]"));
 		assertEquals(int[][].class, ClassLoaderUtil.loadClass("int[][]"));
+
+		String dummyClassName = Dummy.class.getName();
+		assertEquals(Dummy.class, ClassLoaderUtil.loadClass(dummyClassName));
+
+		assertEquals(Dummy[].class, ClassLoaderUtil.loadClass(dummyClassName + "[]"));
+		assertEquals(Dummy[][].class, ClassLoaderUtil.loadClass(dummyClassName + "[][]"));
+
+		// special case
+
+		DefaultClassLoaderStrategy defaultClassLoaderStrategy = (DefaultClassLoaderStrategy) JoddCore.classLoaderStrategy;
+
+		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(true);
+
+		URLClassLoader parentClassloader = (URLClassLoader)this.getClass().getClassLoader();
+		URL[] urls = parentClassloader.getURLs();
+		ExtendedURLClassLoader excl = new ExtendedURLClassLoader(urls, parentClassloader, false);
+
+		Class dummyClass = ClassLoaderUtil.loadClass(dummyClassName, excl);
+		assertFalse(Dummy.class == dummyClass); // classes are NOT the same as they are loaded by different class loaders
+		assertEquals(Dummy.class.getName(), dummyClass.getName());
+
+		// special case with array!
+
+		Class dummyClassArray = ClassLoaderUtil.loadClass(dummyClassName + "[]", excl);
+		assertFalse(Dummy[].class == dummyClassArray);
+		assertEquals(Dummy[].class.getName(), dummyClassArray.getName());
+
+		defaultClassLoaderStrategy.setLoadArrayClassByComponentTypes(false);
+	}
+
+	public static class Dummy {
 	}
 
 }

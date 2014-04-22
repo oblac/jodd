@@ -5,6 +5,7 @@ package jodd.util.cl;
 import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -16,7 +17,6 @@ import java.util.Arrays;
  * <li>provided class loader (if any)</li>
  * <li><code>Thread.currentThread().getContextClassLoader()}</code></li>
  * <li>caller classloader</li>
- * <li>using <code>Class.forName</code></li>
  * </ul>
  */
 public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
@@ -40,13 +40,38 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 			'Z', 'B', 'C', 'D', 'F', 'I', 'J', 'S'
 	};
 
+	// ---------------------------------------------------------------- flags
+
+	protected boolean loadArrayClassByComponentTypes = false;
+
 	/**
-	 * Prepares classname for loading.
+	 * Returns arrays class loading strategy.
 	 */
-	public static String prepareClassnameForLoading(String className) {
+	public boolean isLoadArrayClassByComponentTypes() {
+		return loadArrayClassByComponentTypes;
+	}
+
+	/**
+	 * Defines arrays class loading strategy.
+	 * If <code>false</code> (default), classes will be loaded by <code>Class.forName</code>.
+	 * If <code>true</code>, classes will be loaded by reflection and component types.
+	 */
+	public void setLoadArrayClassByComponentTypes(boolean loadArrayClassByComponentTypes) {
+		this.loadArrayClassByComponentTypes = loadArrayClassByComponentTypes;
+	}
+
+	// ---------------------------------------------------------------- names
+
+	/**
+	 * Prepares classname for loading, respecting the arrays.
+	 * Returns <code>null</code> if class name is not an array.
+	 */
+	public static String prepareArrayClassnameForLoading(String className) {
 		int bracketCount = StringUtil.count(className, '[');
+
 		if (bracketCount == 0) {
-			return className;
+			// not an array
+			return null;
 		}
 
 		String brackets = StringUtil.repeat('[', bracketCount);
@@ -76,13 +101,15 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 		return Arrays.binarySearch(PRIMITIVE_TYPE_NAMES, className);
 	}
 
+	// ---------------------------------------------------------------- load
 
-
-
+	/**
+	 * Loads class by name.
+	 */
 	public Class loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-		className = prepareClassnameForLoading(className);
+		String arrayClassName = prepareArrayClassnameForLoading(className);
 
-		if ((className.indexOf('.') == -1) || (className.indexOf('[') == -1)) {
+		if ((className.indexOf('.') == -1) && (arrayClassName == null)) {
 			// maybe a primitive
 			int primitiveNdx = getPrimitiveClassNameIndex(className);
 			if (primitiveNdx >= 0) {
@@ -91,19 +118,22 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 		}
 
 		// try #1 - using provided class loader
-		try {
-			if (classLoader != null) {
-				return classLoader.loadClass(className);
+		if (classLoader != null) {
+			Class klass = loadClass(className, arrayClassName, classLoader);
+
+			if (klass != null) {
+				return klass;
 			}
-		} catch (ClassNotFoundException ignore) {
 		}
 
 		// try #2 - using thread class loader
 		ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
 		if ((currentThreadClassLoader != null) && (currentThreadClassLoader != classLoader)) {
-			try {
-				return currentThreadClassLoader.loadClass(className);
-			} catch (ClassNotFoundException ignore) {
+			Class klass = loadClass(className, arrayClassName, currentThreadClassLoader);
+
+			if (klass != null) {
+				return klass;
 			}
 		}
 
@@ -113,20 +143,77 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 		ClassLoader callerClassLoader = callerClass.getClassLoader();
 
 		if ((callerClassLoader != classLoader) && (callerClassLoader != currentThreadClassLoader)) {
+			Class klass = loadClass(className, arrayClassName, callerClassLoader);
+
+			if (klass != null) {
+				return klass;
+			}
+		}
+
+		// try #4 - everything failed, try alternative array loader
+		if (arrayClassName != null) {
 			try {
-				return callerClassLoader.loadClass(className);
+				return loadArrayClassByComponentType(className, classLoader);
 			} catch (ClassNotFoundException ignore) {
 			}
 		}
 
-		// try #4 - using Class.forName(). We must use this since for JDK >= 6
-		// arrays will be not loaded using classloader, but only with forName.
+		throw new ClassNotFoundException("Class not found: " + className);
+	}
+
+	/**
+	 * Loads a class using provided class loader.
+	 * If class is an array, it will be first loaded using the <code>Class.forName</code>!
+	 * We must use this since for JDK >= 6 arrays will be not loaded using classloader,
+	 * but only with <code>forName</code> method. However, array loading strategy can be
+	 * {@link #setLoadArrayClassByComponentTypes(boolean) changed}.
+	 */
+	protected Class loadClass(String className, String arrayClassName, ClassLoader classLoader) {
+		if (arrayClassName != null) {
+			try {
+				if (loadArrayClassByComponentTypes) {
+					return loadArrayClassByComponentType(className, classLoader);
+				} else {
+					return Class.forName(arrayClassName, true, classLoader);
+				}
+			} catch (ClassNotFoundException ignore) {
+			}
+		}
+
 		try {
-			return Class.forName(className);
+			return classLoader.loadClass(className);
 		} catch (ClassNotFoundException ignore) {
 		}
 
-		throw new ClassNotFoundException("Class not found: " + className);
+		return null;
+	}
+
+	/**
+	 * Loads array class using component type.
+	 */
+	protected Class loadArrayClassByComponentType(String className, ClassLoader classLoader) throws ClassNotFoundException {
+		int ndx = className.indexOf('[');
+		int multi = StringUtil.count(className, '[');
+
+		String componentTypeName = className.substring(0, ndx);
+
+		Class componentType = loadClass(componentTypeName, classLoader);
+
+		if (multi == 1) {
+			return Array.newInstance(componentType, 0).getClass();
+		}
+
+		int[] multiSizes;
+
+		if (multi == 2) {
+			multiSizes = new int[] {0, 0};
+		} else if (multi == 3) {
+			multiSizes = new int[] {0, 0, 0};
+		} else {
+			multiSizes = (int[]) Array.newInstance(int.class, multi);
+		}
+
+		return Array.newInstance(componentType, multiSizes).getClass();
 	}
 
 }
