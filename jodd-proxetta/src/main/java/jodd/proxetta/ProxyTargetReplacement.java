@@ -147,27 +147,27 @@ public class ProxyTargetReplacement {
 		// return type
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 		returnType(mv, methodInfo);
-		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "returnType", "Ljava/lang/Class;");
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "returnType", AsmUtil.L_SIGNATURE_JAVA_LANG_CLASS);
 
 		// target method name
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 		targetMethodName(mv, methodInfo);
-		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodName", "Ljava/lang/String;");
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodName", AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 
 		// target method name
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 		targetMethodDescription(mv, methodInfo);
-		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodDescription", "Ljava/lang/String;");
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodDescription", AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 
 		// target method name
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 		targetMethodSignature(mv, methodInfo);
-		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodSignature", "Ljava/lang/String;");
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodSignature", AsmUtil.L_SIGNATURE_JAVA_LANG_STRING);
 
 		// target class
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 		targetClass(mv, methodInfo);
-		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetClass", "Ljava/lang/Class;");
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetClass", AsmUtil.L_SIGNATURE_JAVA_LANG_CLASS);
 
 		// the end
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
