@@ -3,8 +3,7 @@
 package jodd.proxetta;
 
 /**
- * Method info provides various information about the method.
- * Used in {@link jodd.proxetta.ProxyPointcut pointcut} definitions.
+ * Method info provides various information about a method.
  */
 public interface MethodInfo {
 
@@ -19,6 +18,9 @@ public interface MethodInfo {
 	 */
 	String getReturnType();
 
+	/**
+	 * Returns type name for return type.
+	 */
 	String getReturnTypeName();
 
 	/**
@@ -50,10 +52,21 @@ public interface MethodInfo {
 
 	char getArgumentOpcodeType(int index);
 
+	/**
+	 * Returns type name of given argument.
+	 */
 	String getArgumentTypeName(int index);
 
+	/**
+	 * Returns offset of an argument in local variables.
+	 */
 	int getArgumentOffset(int index);
 
+	/**
+	 * Returns size of all arguments on stack.
+	 * It is not equal to argument count, as some types
+	 * takes 2 places, like <code>long</code>.
+	 */
 	public int getAllArgumentsSize();
 
 	/**
@@ -62,6 +75,9 @@ public interface MethodInfo {
 	 */
 	char getReturnOpcodeType();
 
+	/**
+	 * Returns method access flags.
+	 */
 	int getAccessFlags();
 
 	/**
@@ -100,4 +116,5 @@ public interface MethodInfo {
 	 * Returns hierarchy level, starting from top class as 1.
 	 */
 	int getHierarchyLevel();
+
 }

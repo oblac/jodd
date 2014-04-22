@@ -4,6 +4,7 @@ package jodd.proxetta;
 
 import jodd.asm.AsmUtil;
 import jodd.asm5.MethodVisitor;
+import jodd.asm5.Opcodes;
 import jodd.asm5.Type;
 import jodd.proxetta.asm.ProxettaAsmUtil;
 
@@ -20,6 +21,8 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.pushInt;
  * Replacements methods for {@link jodd.proxetta.ProxyTarget} methods.
  */
 public class ProxyTargetReplacement {
+
+	public static final String PROXY_TARGET_INFO = "jodd/proxetta/ProxyTargetInfo";
 
 	/**
 	 * Visits replacement code for {@link ProxyTarget#argumentsCount()}.
@@ -108,7 +111,65 @@ public class ProxyTargetReplacement {
 	/**
 	 * Visits replacement code for {@link ProxyTarget#targetClass()}.
 	 */
-	public static void targetClass(MethodVisitor mv, String superReference) {
-		mv.visitLdcInsn(Type.getType('L' + superReference + ';'));
+	public static void targetClass(MethodVisitor mv, MethodInfo methodInfo) {
+		ClassInfo classInfo = methodInfo.getClassInfo();
+		mv.visitLdcInsn(Type.getType('L' + classInfo.getReference() + ';'));
+	}
+
+	/**
+	 * Visits replacement code for {@link ProxyTarget#info()}.
+	 */
+	public static void info(MethodVisitor mv, MethodInfo methodInfo) {
+		mv.visitTypeInsn(Opcodes.NEW, PROXY_TARGET_INFO);
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, PROXY_TARGET_INFO, "<init>", "()V", false);
+
+		int argsOff = methodInfo.getAllArgumentsSize();
+		argsOff++;
+
+		mv.visitVarInsn(Opcodes.ASTORE, argsOff);
+
+		// argument count
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		argumentsCount(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "argumentCount", "I");
+
+		// arguments class
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		createArgumentsClassArray(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "argumentsClasses", "[Ljava/lang/Class;");
+
+		// arguments
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		createArgumentsArray(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "arguments", "[Ljava/lang/Object;");
+
+		// return type
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		returnType(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "returnType", "Ljava/lang/Class;");
+
+		// target method name
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		targetMethodName(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodName", "Ljava/lang/String;");
+
+		// target method name
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		targetMethodDescription(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodDescription", "Ljava/lang/String;");
+
+		// target method name
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		targetMethodSignature(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetMethodSignature", "Ljava/lang/String;");
+
+		// target class
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
+		targetClass(mv, methodInfo);
+		mv.visitFieldInsn(Opcodes.PUTFIELD, PROXY_TARGET_INFO, "targetClass", "Ljava/lang/Class;");
+
+		// the end
+		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 	}
 }

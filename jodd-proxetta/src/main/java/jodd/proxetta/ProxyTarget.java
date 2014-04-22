@@ -140,4 +140,13 @@ public final class ProxyTarget {
 		throw new ProxettaException();
 	}
 
+	// ---------------------------------------------------------------- info
+
+	/**
+	 * Inserts populated {@link jodd.proxetta.ProxyTargetInfo} instance.
+	 */
+	public static ProxyTargetInfo info() {
+		throw new ProxettaException();
+	}
+
 }

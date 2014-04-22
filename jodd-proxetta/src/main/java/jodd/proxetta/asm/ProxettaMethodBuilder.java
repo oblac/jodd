@@ -283,7 +283,8 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 								} else
 
 								if (isTargetClassMethod(mname, mdesc)) {       // [R9]
-									ProxyTargetReplacement.targetClass(mv, wd.superReference);
+									ProxyTargetReplacement.targetClass(mv, td.msign);
+									//ProxyTargetReplacement.targetClass(mv, wd.superReference);
 									return;
 								} else
 
@@ -299,6 +300,11 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 
 								if (isTargetMethodDescriptionMethod(mname, mdesc)) {
 									ProxyTargetReplacement.targetMethodDescription(mv, td.msign);
+									return;
+								} else
+
+								if (isInfoMethod(mname, mdesc)) {
+									ProxyTargetReplacement.info(mv, td.msign);
 									return;
 								} else
 

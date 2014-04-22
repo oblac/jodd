@@ -24,6 +24,7 @@ import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 import static jodd.asm5.Opcodes.NEW;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
 
 /**
  * Invocation replacer method adapter.
@@ -151,7 +152,7 @@ public class InvokeReplacerMethodAdapter extends IntArgHistoryMethodAdapter {
 			}
 
 			if (ProxettaAsmUtil.isTargetClassMethod(name, desc)) {
-				ProxyTargetReplacement.targetClass(mv, wd.superReference);
+				ProxyTargetReplacement.targetClass(mv, methodInfo);
 				wd.proxyApplied = true;
 				return;
 			}
@@ -166,6 +167,12 @@ public class InvokeReplacerMethodAdapter extends IntArgHistoryMethodAdapter {
 			if (isArgumentMethod(name, desc)) {
 				int argIndex = this.getArgumentIndex();
 				ProxyTargetReplacement.argument(mv, methodInfo, argIndex);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (isInfoMethod(name, desc)) {
+				ProxyTargetReplacement.info(mv, methodInfo);
 				wd.proxyApplied = true;
 				return;
 			}
