@@ -4,7 +4,7 @@ package jodd.db;
 
 import jodd.db.jtx.DbJtxTransactionManager;
 import jodd.db.pool.CoreConnectionPool;
-import jodd.db.sqlmap.DbPropsSqlMap;
+import jodd.db.querymap.DbPropsQueryMap;
 import jodd.log.LoggerFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +16,7 @@ public abstract class DbHsqldbTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		DbManager.getInstance().setSqlMap(new DbPropsSqlMap());
+		DbManager.getInstance().setQueryMap(new DbPropsQueryMap());
 
 		LoggerFactory.setLoggerFactory(new TestLoggerFactory());
 

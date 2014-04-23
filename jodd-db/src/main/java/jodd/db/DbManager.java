@@ -3,8 +3,7 @@
 package jodd.db;
 
 import jodd.db.connection.ConnectionProvider;
-import jodd.db.sqlmap.DbPropsSqlMap;
-import jodd.db.sqlmap.SqlMap;
+import jodd.db.querymap.QueryMap;
 
 /**
  * Db manager. Holds default Db configuration.
@@ -176,16 +175,16 @@ public class DbManager {
 
 	// ---------------------------------------------------------------- sql map
 
-	protected SqlMap sqlMap;
+	protected QueryMap queryMap;
 
 	/**
-	 * Returns {@link jodd.db.sqlmap.SqlMap} instance. May be <code>null</code>.
+	 * Returns {@link jodd.db.querymap.QueryMap} instance. May be <code>null</code>.
 	 */
-	public SqlMap getSqlMap() {
-		return sqlMap;
+	public QueryMap getQueryMap() {
+		return queryMap;
 	}
 
-	public void setSqlMap(SqlMap sqlMap) {
-		this.sqlMap = sqlMap;
+	public void setQueryMap(QueryMap queryMap) {
+		this.queryMap = queryMap;
 	}
 }

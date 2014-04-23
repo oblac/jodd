@@ -3,9 +3,9 @@
 package jodd.db;
 
 import jodd.bean.BeanUtil;
-import jodd.db.sqlmap.SqlMap;
 import jodd.io.StringInputStream;
 import jodd.util.collection.IntArrayList;
+import jodd.db.querymap.QueryMap;
 import jodd.db.type.SqlTypeManager;
 import jodd.db.type.SqlType;
 
@@ -84,10 +84,10 @@ public class DbQuery extends DbQueryBase {
 			return sqlString;
 		}
 
-		SqlMap sqlMap = DbManager.getInstance().getSqlMap();
+		QueryMap queryMap = DbManager.getInstance().getQueryMap();
 
-		if (sqlMap != null) {
-			String sqlFromMap = sqlMap.getQuery(sqlString);
+		if (queryMap != null) {
+			String sqlFromMap = queryMap.getQuery(sqlString);
 
 			if (sqlFromMap != null) {
 				sqlString = sqlFromMap.trim();
