@@ -182,6 +182,18 @@ public abstract class PetiteBeans {
 	// ---------------------------------------------------------------- register beans
 
 	/**
+	 * Creates {@link jodd.petite.BeanDefinition} on
+	 * {@link #registerPetiteBean(Class, String, Class, WiringMode, boolean) bean registration}.
+	 * This is a hook for modifying the bean data, like passing proxifed class etc.
+	 * By default returns new instance of {@link jodd.petite.BeanDefinition}.
+	 */
+	protected BeanDefinition createBeanDefinitionForRegistration(
+			String name, Class type, Scope scope, WiringMode wiringMode) {
+
+		return new BeanDefinition(name, type, scope, wiringMode);
+	}
+
+	/**
 	 * Registers or defines a bean.
 	 *
 	 * @param type bean type, must be specified
@@ -197,7 +209,7 @@ public abstract class PetiteBeans {
 			boolean define) {
 
 		if (name == null) {
-			name = PetiteUtil.resolveBeanName(type, petiteConfig.getUseFullTypeNames());
+			name = resolveBeanName(type);
 		}
 		if (wiringMode == null) {
 			wiringMode = PetiteUtil.resolveBeanWiringMode(type);
@@ -211,6 +223,8 @@ public abstract class PetiteBeans {
 		if (scopeType == null) {
 			scopeType = SingletonScope.class;
 		}
+
+		// remove existing bean
 		BeanDefinition existing = removeBean(name);
 		if (existing != null) {
 			if (petiteConfig.getDetectDuplicatedBeanNames()) {
@@ -219,6 +233,13 @@ public abstract class PetiteBeans {
 						existing.type.getName() + "' is already registered with the name: " + name);
 			}
 		}
+
+		// check if type is valid
+		if (type.isInterface() == true) {
+			throw new PetiteException("Failed to register interface: " + type.getName());
+		}
+
+		// registration
 		if (log.isDebugEnabled()) {
 			log.debug("Registering bean: " + name +
 					" of type: " + type.getSimpleName() +
@@ -226,16 +247,9 @@ public abstract class PetiteBeans {
 					" using wiring mode: " + wiringMode.toString());
 		}
 
-		// registering
-
-		// check if type is valid
-		if ((type != null) && (type.isInterface() == true)) {
-			throw new PetiteException("Failed to register interface: " + type.getName());
-		}
-
 		// register
 		Scope scope = resolveScope(scopeType);
-		BeanDefinition beanDefinition = new BeanDefinition(name, type, scope, wiringMode);
+		BeanDefinition beanDefinition = createBeanDefinitionForRegistration(name, type, scope, wiringMode);
 		beans.put(name, beanDefinition);
 
 		// providers

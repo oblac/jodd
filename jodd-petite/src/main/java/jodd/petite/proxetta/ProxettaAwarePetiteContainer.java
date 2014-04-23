@@ -27,17 +27,15 @@ public class ProxettaAwarePetiteContainer extends PetiteContainer {
 	 * Applies proxetta on bean class before bean registration.
 	 */
 	@Override
-	public BeanDefinition registerPetiteBean(Class type, String name, Class<? extends Scope> scopeType, WiringMode wiringMode, boolean define) {
+	protected BeanDefinition createBeanDefinitionForRegistration(String name, Class type, Scope scope, WiringMode wiringMode) {
 		if (proxetta != null) {
-			if (name == null) {
-				name = resolveBeanName(type);
-			}
-
 			ProxyProxettaBuilder builder = proxetta.builder();
+
 			builder.setTarget(type);
 
 			type = builder.define();
 		}
-		return super.registerPetiteBean(type, name, scopeType, wiringMode, define);
+
+		return super.createBeanDefinitionForRegistration(name, type, scope, wiringMode);
 	}
 }
