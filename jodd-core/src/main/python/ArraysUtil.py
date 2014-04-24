@@ -1,14 +1,16 @@
 
 f = open('ArraysUtil.java', 'w')
 f.write('''
+// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+
 package jodd.util;
 
 import java.lang.reflect.Array;
 import static jodd.util.StringPool.NULL;
 
 /**
- * More array utilities.
- * <b>DO NOT MODIFY: this source is generated.</b> 
+ * Array utilities.
+ * <b>DO NOT MODIFY: this source is generated.</b>
  */
 public class ArraysUtil {
 
@@ -19,6 +21,27 @@ prim_types = ['byte', 'char', 'short', 'int', 'long', 'float', 'double', 'boolea
 big_types = ['Byte', 'Character', 'Short', 'Integer', 'Long', 'Float', 'Double', 'Boolean']
 prim_types_safe = ['byte', 'char', 'short', 'int', 'long', 'boolean']
 
+f.write('\n\t// ---------------------------------------------------------------- wrap')
+f.write('''
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static <T> T[] wrap(T... elements) {
+		return elements;
+	}
+''')
+template = '''
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static $T[] wrap($T... elements) {
+		return elements;
+	}
+'''
+for type in prim_types:
+	data = template.replace('$T', type)
+	f.write(data)
 
 f.write('\n\n\t// ---------------------------------------------------------------- join')
 f.write('''
@@ -29,7 +52,7 @@ f.write('''
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] join(T[]... arrays) {
 		Class<T> componentType = (Class<T>) arrays.getClass().getComponentType().getComponentType();
-		return join(componentType, arrays);	
+		return join(componentType, arrays);
 	}
 
 	/**
@@ -39,7 +62,7 @@ f.write('''
 	public static <T> T[] join(Class<T> componentType, T[][] arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
-		}		
+		}
 		int length = 0;
 		for (T[] array : arrays) {
 			length += array.length;
@@ -95,7 +118,7 @@ f.write('''
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
-		
+
 '''
 )
 template = '''

@@ -6,11 +6,75 @@ import java.lang.reflect.Array;
 import static jodd.util.StringPool.NULL;
 
 /**
- * More array utilities.
+ * Array utilities.
  * <b>DO NOT MODIFY: this source is generated.</b> 
  */
 public class ArraysUtil {
 
+	// ---------------------------------------------------------------- wrap
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static <T> T[] wrap(T... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static byte[] wrap(byte... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static char[] wrap(char... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static short[] wrap(short... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static int[] wrap(int... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static long[] wrap(long... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static float[] wrap(float... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static double[] wrap(double... elements) {
+		return elements;
+	}
+
+	/**
+	 * Wraps elements into an array.
+	 */
+	public static boolean[] wrap(boolean... elements) {
+		return elements;
+	}
 
 
 	// ---------------------------------------------------------------- join
