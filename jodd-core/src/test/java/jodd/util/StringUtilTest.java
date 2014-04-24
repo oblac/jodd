@@ -4,8 +4,6 @@ package jodd.util;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
 import static org.junit.Assert.*;
@@ -997,6 +995,18 @@ public class StringUtilTest {
 	public void testTabsToSpaces() {
 		String s = StringUtil.convertTabsToSpaces("q\tqa\t", 3);
 		assertEquals("q  qa ", s);
+	}
+
+	@Test
+	public void testMerge() {
+		String s = StringUtil.merge(ArraysUtil.wrap("1", "2", "3"), ".");
+		assertEquals("1.2.3", s);
+
+		s = StringUtil.merge(ArraysUtil.wrap("1"), ".");
+		assertEquals("1", s);
+
+		s = StringUtil.merge(new String[0], ".");
+		assertEquals("", s);
 	}
 
 }

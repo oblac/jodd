@@ -2682,4 +2682,32 @@ public class StringUtil {
 		return sb.toString();
 	}
 
+	// ---------------------------------------------------------------- merge
+
+	/**
+	 * Merges the elements of the array into a string representing a
+	 * delimited list of its values.
+	 */
+	public static String merge(Object[] array, String delimiter) {
+		if (array == null) {
+			return null;
+		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		StringBand sb = new StringBand(2 * array.length - 1);
+
+		for (int i = 0; i < array.length; i++) {
+			if (i != 0) {
+				sb.append(delimiter);
+			}
+
+			sb.append(String.valueOf(array[i]));
+		}
+
+		return sb.toString();
+	}
+
 }
