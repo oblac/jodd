@@ -8,14 +8,15 @@ package jodd.joy.auth;
 public interface UserAuth {
 
 	/**
-	 * Returns users id.
+	 * Returns users ID used for authentication.
+	 * Usually it is the same as users own ID.
 	 */
-	public long getUserId();
+	public long getUserAuthId();
 
 	/**
 	 * Returns hashed password.
 	 * Usually this is the value that is
-	 * store in the database.
+	 * stored in the database.
 	 */
 	public String getHashedPassword();
 
