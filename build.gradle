@@ -100,14 +100,18 @@ subprojects {
 }
 
 def javaModules() {
-	subprojects.findAll { it.name.contains('jodd-') }
+	subprojects.findAll {
+		it.name.contains('jodd-') &&
+		!it.name.equals('jodd-bom')
+	}
 }
 
 def javaBundleModules() {
 	rootProject.subprojects.findAll {
 		it.name.contains('jodd-') &&
 		!it.name.equals('jodd-swingspy') &&
-		!it.name.equals('jodd-joy')
+		!it.name.equals('jodd-joy') &&
+		!it.name.equals('jodd-bom')
 	}
 }
 
