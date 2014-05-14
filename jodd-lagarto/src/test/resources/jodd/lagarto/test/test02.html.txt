@@ -1,1 +1,2 @@
+wrn:[EOF: table [1:6 @6]
 txt:[<table]

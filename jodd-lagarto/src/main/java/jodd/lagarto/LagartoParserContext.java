@@ -5,6 +5,7 @@ package jodd.lagarto;
 /**
  * Lagarto parser context, holder of various
  * data needed for whole parsing process.
+ * // todo do we need this?
  */
 public class LagartoParserContext {
 
@@ -40,4 +41,5 @@ public class LagartoParserContext {
 	public int getOffset() {
 		return offset;
 	}
+
 }

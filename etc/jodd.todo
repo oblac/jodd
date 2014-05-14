@@ -38,6 +38,14 @@ Lagarto/Jerry:
 	- Improve LagartoDOM parser @v3.4.7 @done
 	- Think about removing circluar dep Node <-> Document
 	- Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @soon
+		- Additional tests!
+		- empty quoted String for attribute, eg: <foo a="">
+		- comment that starts but never ends
+		- doctype with small cases
+		- error tag like <>
+		- test all find() cases when it returns -1
+		- <script> opened and never closed
+	- Use new faster parser for the form tag !!!
 	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
 	- Allow index to be set as: 'foo.list.0.more' (alt for: foo.list[0].more). @v3.5.2

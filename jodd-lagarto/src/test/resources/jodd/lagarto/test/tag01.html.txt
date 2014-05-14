@@ -1,0 +1,5 @@
+com:[?d?]
+txt:[a]
+com:[?e]
+txt:[b]
+com:[x]

@@ -1,0 +1,2 @@
+tag:gat:1<<gat one="two=/">
+tag:cat:2<<cat tom>

@@ -43,11 +43,17 @@ class ParsedTag implements Tag {
 		this.input = lexer.getInput();
 	}
 
+	ParsedTag(char[] input) {
+		this.lexer = null;
+		this.input = input;
+	}
+
 	// 1
 	void startTag(String name) {
 		this.name = name;
 		this.idNdx = -1;
 		this.attributesCount = 0;
+		this.type = null;
 	}
 
 	// 2
