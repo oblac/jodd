@@ -103,7 +103,7 @@ class BeanProperty {
 	 * Returns <code>true</code> if class is a map.
 	 */
 	public boolean isMap() {
-		return cd.isMap();
+		return cd != null && cd.isMap();
 	}
 
 	String index;
