@@ -58,7 +58,7 @@ public class Cookie {
 
 			String name;
 			String value;
-			if (ndx2 != -1) {
+			if (ndx2 != -1 && ndx2 < ndx) {
 				name = cookie.substring(from, ndx2).trim();
 				value = cookie.substring(ndx2 + 1, ndx).trim();
 			} else {
