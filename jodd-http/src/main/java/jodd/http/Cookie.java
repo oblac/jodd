@@ -209,7 +209,7 @@ public class Cookie {
 	 * only over a secure protocol, or <code>false</code> if the
 	 * browser can send cookies using any protocol.
 	 */
-	public boolean getSecure() {
+	public boolean isSecure() {
 		return secure;
 	}
 
