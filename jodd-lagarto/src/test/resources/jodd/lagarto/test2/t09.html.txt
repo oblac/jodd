@@ -1,0 +1,2 @@
+txt:[ttt]
+wrn:[Parse error: EOF [1:11 @10]

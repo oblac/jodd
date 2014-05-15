@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 public class LagartoParserTest {
 
 	protected String testDataRoot;
+	protected String testDataRoot2;
 	protected String testLiveRoot;
 
 	@Before
@@ -30,18 +31,30 @@ public class LagartoParserTest {
 		URL data = LagartoParserTest.class.getResource("test");
 		testDataRoot = data.getFile();
 
+		data = LagartoParserTest.class.getResource("test2");
+		testDataRoot2 = data.getFile();
+
 		data = LagartoParserTest.class.getResource("live");
 		testLiveRoot = data.getFile();
 	}
 
 	@Test
 	public void testHtmls() throws IOException {
+		_testHtmls(testDataRoot);
+	}
+
+	@Test
+	public void testHtmls2() throws IOException {
+		_testHtmls(testDataRoot2);
+	}
+
+	private void _testHtmls(String root) throws IOException {
 		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
 		boolean processed = false;
 		while (reps-- > 0) {
-			ff.searchPath(testDataRoot);
+			ff.searchPath(root);
 			File file;
 			while ((file = ff.nextFile()) != null) {
 				processed = true;
@@ -64,9 +77,9 @@ public class LagartoParserTest {
 				boolean isXml = file.getName().endsWith(".xml");
 
 				String[] results = _parse(content, isXml);
-				String result = results[0];
-				String result2 = results[1];
-				String result3 = results[2];
+				String result = results[0];		// parsing result
+				String result2 = results[1];	// tag writer (no rebuild)
+				String result3 = results[2];	// tag writer (rebuild)
 
 				expectedResult = StringUtil.removeChars(expectedResult, '\r');
 				result = StringUtil.removeChars(result, '\r').trim();
@@ -128,7 +141,7 @@ public class LagartoParserTest {
 	}
 
 	private String _parseEmpty(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+		LagartoParser2 lagartoParser = new LagartoParser2(content);
 		lagartoParser.setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {

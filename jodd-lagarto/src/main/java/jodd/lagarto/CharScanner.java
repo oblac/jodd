@@ -173,46 +173,6 @@ public class CharScanner {
 		return charSequence(start, ndx);
 	}
 
-	public final CharSequence readEscapedUntilAnyOf(char[] stopChars, char escapeChar) {
-		int start = ndx;
-
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (_matchAny(c, stopChars)) {
-				int previousPosition = ndx - 1;
-
-				if (input[previousPosition] != escapeChar) {
-					break;
-				}
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
-	public final CharSequence readEscapedUntil(char stopChar, char escapeChar) {
-		int start = ndx;
-
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (c == stopChar) {
-				int previousPosition = ndx - 1;
-
-				if (input[previousPosition] != escapeChar) {
-					break;
-				}
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
 	// ---------------------------------------------------------------- skip
 
 	/**
@@ -405,14 +365,23 @@ public class CharScanner {
 	}
 
 	/**
-	 * Creates char sub-sequence from input.
+	 * Creates char sub-sequence from the input.
 	 */
 	public final CharSequence charSequence(int from, int to) {
 		int len = to - from;
 		if (len == 0) {
-			return null;
+			return EMPTY_CHAR_SEQUENCE;
 		}
 		return CharBuffer.wrap(input, from, len);
+	}
+
+	private static CharSequence EMPTY_CHAR_SEQUENCE = CharBuffer.wrap(new char[0]);
+
+	/**
+	 * Creates substring from the input.
+	 */
+	public final String substring(int from, int to) {
+		return new String(input, from, to - from);
 	}
 
 	// ---------------------------------------------------------------- position
@@ -425,7 +394,7 @@ public class CharScanner {
 	 * Returns <code>true</code> if EOF.
 	 */
 	public final boolean isEOF() {
-		return ndx == total;
+		return ndx >= total;
 	}
 
 	public Position position() {
@@ -465,7 +434,7 @@ public class CharScanner {
 		lastLine = line;
 		lastLastNewLineOffset = lastNewLineOffset;
 
-		return new Position(position, line, position - lastNewLineOffset);
+		return new Position(position, line, position - lastNewLineOffset + 1);
 	}
 
 	/**
@@ -473,21 +442,15 @@ public class CharScanner {
 	 */
 	public static class Position {
 
-		public int offset;
-		public int line;
-		public int column;
+		private final int offset;
+		private final int line;
+		private final int column;
 
 		public Position(int offset, int line, int column) {
 			this.offset = offset;
 			this.line = line;
 			this.column = column;
 		}
-		public Position(int line, int column) {
-			this.offset = -1;
-			this.line = line;
-			this.column = column;
-		}
-
 		public Position(int offset) {
 			this.offset = offset;
 			this.line = -1;

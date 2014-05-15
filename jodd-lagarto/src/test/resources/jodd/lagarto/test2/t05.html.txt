@@ -1,0 +1,2 @@
+txt:[text]
+wrn:[Parse error: EOF [1:8 @7]

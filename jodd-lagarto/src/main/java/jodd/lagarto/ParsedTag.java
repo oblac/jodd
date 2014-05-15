@@ -15,7 +15,7 @@ class ParsedTag implements Tag {
 
 	private static final String ATTR_NAME_ID = "id";
 	// tag info
-	private String name;
+	protected String name;
 	private int idNdx;
 	private TagType type;
 	private String tagStart;
@@ -48,12 +48,24 @@ class ParsedTag implements Tag {
 		this.input = input;
 	}
 
-	// 1
-	void startTag(String name) {
-		this.name = name;
+	/**
+	 * Resets the tag.
+	 */
+	public void reset(int start) {
+		this.position = start;
+		this.name = null;
 		this.idNdx = -1;
 		this.attributesCount = 0;
-		this.type = null;
+		this.length = 0;
+		this.modified = false;
+		this.type = TagType.START;
+		this.tagStart = type.getStartString();
+		this.tagEnd = type.getEndString();
+	}
+
+	void defineEnd(int lastNdx) {
+		this.length = lastNdx - position;
+		this.modified = false;
 	}
 
 	// 2

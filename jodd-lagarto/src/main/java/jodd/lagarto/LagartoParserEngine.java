@@ -487,7 +487,7 @@ public abstract class LagartoParserEngine {
 	 * Parses full tag.
 	 */
 	protected void parseTagAndAttributes(Token tagToken, String tagName, TagType type, int start) throws IOException {
-		tag.startTag(tagName);
+		tag.setName(tagName);
 
 		Token token;
 

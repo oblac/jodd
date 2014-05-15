@@ -2,16 +2,17 @@
 
 package jodd.lagarto;
 
-import jodd.util.ArraysUtil;
-import jodd.util.CharUtil;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 import jodd.util.UnsafeUtil;
 
-import java.nio.CharBuffer;
+import static jodd.util.CharUtil.equalsOne;
+import static jodd.util.CharUtil.isAlpha;
 
 /**
  * HTML/XML content parser using {@link TagVisitor} for callbacks.
+ * Differences from: http://www.w3.org/TR/html5/
+ * <ul>
+ * <li>no {@code &} parsing in DATA_STATE.
  */
 public class LagartoParser2 extends CharScanner {
 
@@ -38,6 +39,7 @@ public class LagartoParser2 extends CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		super.initialize(input);
+		textStartNdx = textEndNdx = -1;
 		this.ctx = new LagartoParserContext();
 		this.tag = new ParsedTag(input);
 	}
@@ -92,131 +94,750 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- parse
 
+	protected boolean parsing;
+
 	/**
 	 * Parses content and callback provided {@link TagVisitor}.
 	 */
 	public void parse(TagVisitor visitor) {
 		this.visitor = visitor;
 
-		parseStart();
+		visitor.start(ctx);
 
-		while (ndx < total) {
-			parseText();
+		parsing = true;
+
+		while (parsing) {
+			state.parse();
 		}
 
-		parseEnd();
-	}
-
-	// ---------------------------------------------------------------- start & end
-
-	/**
-	 * Fires up the start event with provided parsing context.
-	 */
-	protected void parseStart() {
-		visitor.start(ctx);
-	}
-
-	/**
-	 * Flushes remaining text and visits the end.
-	 */
-	protected void parseEnd() {
 		flushText();
 
 		visitor.end();
 	}
 
-	// ---------------------------------------------------------------- text
+	// ---------------------------------------------------------------- start & end
+
 
 	/**
-	 * The main loop, parses the text. Switches to different states.
+	 * Optimized data state.
 	 */
-	protected void parseText() {
-		int textStart = ndx;
-
-		skipUntil(TAG_START);
-
-		visitText(textStart);
-
-		if (enableConditionalComments) {
-			if (match(COND_COMMENT_START)) {
-				parseCCRevealedStart();
+	protected State DATA_STATE =  new State() {
+		public void parse() {
+			if (isEOF()) {
+				parsing = false;
 				return;
 			}
 
-			if (match(COND_COMMENT_ENDIF)) {
-				parseCCEnd(null);
+			int tagStartNdx = find('<');
+
+			if (tagStartNdx == -1) {
+				tagStartNdx = total;
+			}
+
+			emitText(ndx, tagStartNdx);
+
+			if (!isEOF()) {
+				state = TAG_OPEN_STATE;
+			} else {
+				parsing = false;
+			}
+		}
+	};
+
+	protected State TAG_OPEN_STATE = new State() {
+		public void parse() {
+			tag.reset(ndx);
+
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitText(ndx - 1, ndx);
 				return;
 			}
 
-			if (match(COMMENT_START)) {
-				parseCCComment();
+			char c = input[ndx];
+
+			if (c == '!') {
+				state = MARKUP_DECLARATION_OPEN;
+				return;
+			}
+			if (c == '/') {
+				state = END_TAG_OPEN_STATE;
+				return;
+			}
+			if (isAlpha(c)) {
+				state = TAG_NAME;
+				return;
+			}
+			if (c == '?') {
+				errorInvalidToken();
+				state = BOGUS_COMMENT;
 				return;
 			}
 
-		} else {
-			if (match(COMMENT_START)) {
-				parseComment();
+			errorInvalidToken();
+			state = DATA_STATE;
+			ndx++;
+			emitText(ndx - 2, ndx);
+		}
+	};
+
+	protected State END_TAG_OPEN_STATE = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (isAlpha(c)) {
+				tag.setType(TagType.END);
+				state = TAG_NAME;
+				return;
+			}
+
+			errorInvalidToken();
+			state = BOGUS_COMMENT;
+		}
+	};
+
+	protected State TAG_NAME = new State() {
+		public void parse() {
+			int nameNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					state = BEFORE_ATTRIBUTE_NAME;
+					tag.setName(substring(nameNdx, ndx));
+					break;
+				}
+
+				if (c == '/') {
+					state = SELF_CLOSING_START_TAG;
+					tag.setName(substring(nameNdx, ndx));
+					break;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					tag.setName(substring(nameNdx, ndx));
+					ndx++;
+					emitTag();
+					break;
+				}
+			}
+		}
+	};
+
+	protected State BEFORE_ATTRIBUTE_NAME = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '/') {
+					state = SELF_CLOSING_START_TAG;
+					return;
+				}
+
+				if (equalsOne(c, ATTR_INVALID_1)) {
+					errorInvalidToken();
+				}
+
+				state = ATTRIBUTE_NAME;
 				return;
 			}
 		}
+	};
 
-		if (matchIgnoreCase(DOCTYPE_START)) {
-			parseDoctype();
-			return;
-		}
+	protected State ATTRIBUTE_NAME = new State() {
+		public void parse() {
+			attrStartNdx = ndx;
 
-		if (xmlMode) {
-			if (matchIgnoreCase(CDATA_START)) {
-				parseCData();
-				return;
-			}
-			if (match(TAG_XML_START)) {
-				parseTag(true);
-				return;
-			}
-		} else {
-			if (match(TAG_XML_COMM_START)) {
-				parseXmlComment(false);
-				return;
-			}
-			if (match(TAG_XML_START)) {
-				parseXmlComment(true);
-				return;
-			}
-		}
+			while (true) {
+				ndx++;
 
-		if (match(TAG_START)) {		// WARN: must be the last condition, as it contains itself in above matching targets
-			parseTag(false);
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					attrEndNdx = ndx;
+					state = AFTER_ATTRIBUTE_NAME;
+					return;
+				}
+
+				if (c == '/') {
+					attrEndNdx = ndx;
+					_addAttribute();
+					state = SELF_CLOSING_START_TAG;
+					return;
+				}
+
+				if (c == '=') {
+					attrEndNdx = ndx;
+					state = BEFORE_ATTRIBUTE_VALUE;
+					return;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					attrEndNdx = ndx;
+					_addAttribute();
+					ndx++;
+					emitTag();
+					return;
+				}
+
+				if (equalsOne(c, ATTR_INVALID_2)) {
+					errorInvalidToken();
+				}
+			}
 		}
-	}
+	};
+
+	protected State AFTER_ATTRIBUTE_NAME  = new State() {
+		public void parse() {
+			while(true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '/') {
+					state = SELF_CLOSING_START_TAG;
+					return;
+				}
+				if (c == '=') {
+					state = BEFORE_ATTRIBUTE_VALUE;
+					return;
+				}
+				if (c == '>') {
+					state = DATA_STATE;	// todo da li treba ndx++?
+					emitTag();
+					return;
+				}
+				if (equalsOne(c, ATTR_INVALID_2)) {
+					errorInvalidToken();
+				}
+
+				_addAttribute();
+				state = ATTRIBUTE_NAME;
+				return;
+			}
+		}
+	};
+
+
+	protected State BEFORE_ATTRIBUTE_VALUE = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '\"') {
+					state = ATTR_VALUE_DOUBLE_QUOTED;
+					return;
+				}
+				if (c == '\'') {
+					state = ATTR_VALUE_SINGLE_QUOTED;
+					return;
+				}
+				if (c == '>') {
+					errorInvalidToken();
+					state = DATA_STATE;
+					//todo emitText(ndx);
+					return;
+				}
+				if (equalsOne(c, ATTR_INVALID_3)) {
+					errorInvalidToken();
+				}
+
+				state = ATTR_VALUE_UNQUOTED;
+				return;
+			}
+		}
+	};
+
+	protected State ATTR_VALUE_UNQUOTED = new State() {
+		public void parse() {
+			attrValueStartNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					_addAttributeWithValue();
+					state = BEFORE_ATTRIBUTE_NAME;
+					return;
+				}
+
+				if (c == '>') {
+					_addAttributeWithValue();
+					state = DATA_STATE;
+					ndx++;
+					emitTag();
+					return;
+				}
+
+				if (equalsOne(c, ATTR_INVALID_4)) {
+					errorInvalidToken();
+				}
+			}
+		}
+	};
+
+	protected State ATTR_VALUE_SINGLE_QUOTED = new State() {
+		public void parse() {
+			attrValueStartNdx = ndx + 1;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '\'') {
+					_addAttributeWithValue();
+					state = AFTER_ATTRIBUTE_VALUE_QUOTED;
+					return;
+				}
+				// append
+			}
+		}
+	};
+
+	protected State ATTR_VALUE_DOUBLE_QUOTED = new State() {
+		public void parse() {
+			attrValueStartNdx = ndx + 1;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '"') {
+					_addAttributeWithValue();
+					state = AFTER_ATTRIBUTE_VALUE_QUOTED;
+					return;
+				}
+				// append
+			}
+		}
+	};
+
+
+	protected State AFTER_ATTRIBUTE_VALUE_QUOTED = new State() {
+		public void parse() {
+			attrValueStartNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					state = BEFORE_ATTRIBUTE_NAME;
+					return;
+				}
+
+				if (c == '/') {
+					state = SELF_CLOSING_START_TAG;
+					return;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					ndx++;
+					emitTag();
+					return;
+				}
+
+				errorInvalidToken();
+				state = BEFORE_ATTRIBUTE_NAME;
+			}
+		}
+	};
+
+	protected State SELF_CLOSING_START_TAG = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '>') {
+				tag.setType(TagType.SELF_CLOSING);
+				state = DATA_STATE;
+				ndx++;
+				emitTag();
+				return;
+			}
+
+			errorInvalidToken();
+
+			state = BEFORE_ATTRIBUTE_NAME;
+			ndx--;
+		}
+	};
+
+	// ---------------------------------------------------------------- special
+
+	protected State BOGUS_COMMENT = new State() {
+		public void parse() {
+			int tagEndNdx = find('>');
+
+			if (tagEndNdx == -1) {
+				tagEndNdx = total;
+			}
+
+			emitComment(ndx, tagEndNdx);
+
+			state = DATA_STATE;
+			ndx++;
+		}
+	};
+
+	protected State MARKUP_DECLARATION_OPEN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = BOGUS_COMMENT;
+				return;
+			}
+
+			if (match(COMMENT_DASH, false)) {
+				state = COMMENT_START;
+				ndx++;
+				return;
+			}
+
+			//if (match(DOCTYPE))
+
+			errorInvalidToken();
+			state = BOGUS_COMMENT;
+		}
+	};
+
+	// ---------------------------------------------------------------- comments
+
+	protected int commentStart;
+
+	protected State COMMENT_START = new State() {
+		public void parse() {
+			ndx++;
+			commentStart = ndx;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '-') {
+				state = COMMENT_START_DASH;
+				return;
+			}
+
+			if (c == '>') {
+				errorInvalidToken();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			state = COMMENT;
+		}
+	};
+
+	protected State COMMENT_START_DASH = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '-') {
+				state = COMMENT_END;
+				return;
+			}
+			if (c == '>') {
+				errorInvalidToken();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+			}
+
+			state = COMMENT;
+		}
+	};
+
+	protected State COMMENT = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					emitComment(commentStart, ndx);
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					state = COMMENT_END_DASH;
+					return;
+				}
+			}
+		}
+	};
+
+	protected State COMMENT_END_DASH = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '-') {
+				state = COMMENT_END;
+				return;
+			}
+
+			state = COMMENT;
+		}
+	};
+
+	protected State COMMENT_END = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '>') {
+				state = DATA_STATE;
+				emitComment(commentStart, ndx - 2);
+				return;
+			}
+
+			if (c == '!') {
+				errorInvalidToken();
+				state = COMMENT_END_BANG;
+				return;
+			}
+
+			if (c == '-') {
+				errorInvalidToken();
+			} else {
+				errorInvalidToken();
+				state = COMMENT;
+			}
+		}
+	};
+
+	protected State COMMENT_END_BANG = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				emitComment(commentStart, ndx);
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '-') {
+				state = COMMENT_END_DASH;
+				return;
+			}
+			if (c == '>') {
+				state = DATA_STATE;
+				emitComment(commentStart, ndx - 3);
+				return;
+			}
+			state = COMMENT;
+		}
+	};
+
+	// ---------------------------------------------------------------- DOCTYPE
+
+	// ---------------------------------------------------------------- emit
 
 	protected int textStartNdx = -1;
 	protected int textEndNdx = -1;
+	protected int attrStartNdx = -1;
+	protected int attrEndNdx = -1;
+	protected int attrValueStartNdx = -1;
 
-	/**
-	 * Stores text buffer for visiting. Checks if it is appended to the previous buffer.
-	 * If so, the buffer grows. Otherwise, previous buffer gets visited, and the new
-	 * buffer gets stored.
-	 */
-	protected void visitText(int startNdx) {
-		if (textStartNdx != -1) {
-			if (startNdx == textEndNdx) {
-				// continue visiting, join with previous buffer
-				startNdx = textStartNdx;
-			} else {
-				// flush previous buffer
-				flushText();
-			}
+	private void _addAttribute() {
+		tag.addAttribute(substring(attrStartNdx, attrEndNdx), null);
+		attrStartNdx = -1;
+		attrEndNdx = -1;
+	}
+
+	private void _addAttributeWithValue() {
+		tag.addAttribute(substring(attrStartNdx, attrEndNdx), substring(attrValueStartNdx, ndx));
+		attrStartNdx = -1;
+		attrEndNdx = -1;
+		attrValueStartNdx = -1;
+	}
+
+	protected void emitTag() {
+		flushText();
+
+		tag.defineEnd(ndx);
+
+		if (tag.getType().isStartingTag()) {
+			tag.increaseDeepLevel();
 		}
 
-		textStartNdx = startNdx;
-		textEndNdx = ndx;
+		visitor.tag(tag);
+
+		if (tag.getType().isEndingTag()) {
+			tag.decreaseDeepLevel();
+		}
+
+	}
+
+	protected void emitComment(int from, int to) {
+		flushText();
+
+		CharSequence comment = charSequence(from, to);
+		visitor.comment(comment);
+
+		commentStart = -1;
+		ndx++;
+	}
+
+
+	/**
+	 * Consumes text from current index to given index.
+	 * Pointer moves to a new location.
+	 */
+	protected void emitText(int from, int to) {
+		if (textStartNdx != -1) {
+			if (from != textEndNdx) {
+				flushText();	// previous block is not continuous, flush it
+				textStartNdx = from;
+			}
+		} else {
+			textStartNdx = from;
+		}
+		textEndNdx = to;
+		ndx = to;
 	}
 
 	/**
-	 * Flushes {@link #visitText(int) stored text buffer}. Does nothing
-	 * if buffer does not exist or it is empty. Must be called before
-	 * every non-text visit method!
+	 * Flushes text buffer. Does nothing if buffer does not exist
+	 * or it is empty. Must be called before every non-text visit method!
 	 */
 	protected void flushText() {
 		if (textStartNdx == -1) {
@@ -230,407 +851,23 @@ public class LagartoParser2 extends CharScanner {
 		textStartNdx = -1;
 	}
 
-	// ---------------------------------------------------------------- tag
-
-	/**
-	 * Parses a tag.
-	 */
-	protected void parseTag(boolean isXmlTag) {
-		int tagStart = ndx - 1;
-
-		TagType tagType = TagType.START;
-
-		if (match(TAG_SLASH)) {
-			tagType = TagType.END;
-		}
-
-		skipAnyOf(WHITEPSPACES);
-
-		CharSequence tagName = readUntilAnyOf(TAG_NAME_ENDS);
-
-		if (tagName == null) {
-			// ERR: nothing has been read as tag name, treat tag as text
-			// todo EOF
-			visitText(tagStart);
-			return;
-		}
-
-		if (!isValidTagName(tagName)) {
-			// ERR: not a valid tag name
-			visitText(tagStart);
-			return;
-		}
-
-		tag.startTag(tagName.toString());
-
-		while (true) {
-			skipAnyOf(WHITEPSPACES);
-
-			if (isXmlTag) {
-				if (match(TAG_XML_END)) {
-					break;
-				}
-			} else {
-				if (match(TAG_SLASH_END)) {
-					tagType = TagType.SELF_CLOSING;
-					break;    // end of tag
-				}
-				if (match(TAG_END)) {
-					break;    // end of tag
-				}
-			}
-
-			CharSequence attrName = readUntilAnyOf(ATTR_NAME_ENDS);
-
-			if (attrName == null) {
-				// ERR: no end tag, and no attribute name, continue as text
-				if (isEOF()) {
-					error("EOF: " + tagName);
-					visitText(tagStart);
-					return;
-				}
-
-				error("Invalid token: " + input[ndx]);
-				ndx++;
-				continue;
-			}
-
-			skipAnyOf(WHITEPSPACES);
-
-			if (match(EQUALS)) {	// attribute value
-				skipAnyOf(WHITEPSPACES);
-
-				String attrValue = readAttributeValue();
-
-				tag.addAttribute(attrName.toString(), attrValue);
-			} else {
-				tag.addAttribute(attrName.toString(), null);
-			}
-		}
-
-		if (isXmlTag) {
-			tagStart--;
-			int len = ndx - tagStart;
-			tag.defineTag(tagType, tagStart, len);
-
-			visitXmlTag();
-		} else {
-			int len = ndx - tagStart;
-			tag.defineTag(tagType, tagStart, len);
-
-			if (equalsIgnoreCase(tagName, "SCRIPT")) {
-				visitBlockTag(tagType, TAG_SCRIPT_END, 0);
-			} else if (equalsIgnoreCase(tagName, "STYLE")) {
-				visitBlockTag(tagType, TAG_STYLE_END, 1);
-			} else if (equalsIgnoreCase(tagName, "XMP")) {
-				visitBlockTag(tagType, TAG_XMP_END, 2);
-			} else {
-				visitTag(tagType);
-			}
-		}
-	}
-
-	/**
-	 * Returns <code>true</code> if tag name is valid.
-	 */
-	protected boolean isValidTagName(CharSequence tagName) {
-		return CharUtil.isAlpha(tagName.charAt(0));
-	}
-
-	/**
-	 * Visits a tag.
-	 */
-	protected void visitTag(TagType tagType) {
-		flushText();
-
-		if (tagType.isStartingTag()) {
-			tag.increaseDeepLevel();
-		}
-
-		visitor.tag(tag);
-
-		if (tagType.isEndingTag()) {
-			tag.decreaseDeepLevel();
-		}
-	}
-
-	/**
-	 * Visits a XML definition tag.
-	 */
-	protected void visitXmlTag() {
-		flushText();
-
-		tag.setTagMarks("<?", "?>");
-
-		tag.increaseDeepLevel();
-
-		visitor.xml(tag);
-
-		tag.decreaseDeepLevel();
-	}
-
-	/**
-	 * Visits special, block tags.
-	 */
-	protected void visitBlockTag(TagType tagType, char[] endTag, int tagId) {
-		flushText();
-
-		if (tagType.isEndingTag()) {
-			//todo what to do?
-			return;
-		}
-
-		// we need to grab everything until the end of tag
-		CharSequence body = readUntilIgnoreCase(endTag);
-		if (body == null) {
-			body = EMPTY_CHAR_SEQUENCE;
-		}
-
-		tag.increaseDeepLevel();
-
-		switch(tagId) {
-			case 0:
-				visitor.script(tag, body);
-				break;
-			case 1:
-				visitor.style(tag, body);
-				break;
-			case 2:
-				visitor.xmp(tag, body);
-		}
-
-		tag.decreaseDeepLevel();
-
-		ndx = find(TAG_END);
-		ndx++;
-	}
-
-
-	// ---------------------------------------------------------------- comment
-
-	/**
-	 * Parses simple comment.
-	 */
-	protected void parseComment() {
-		flushText();
-
-		CharSequence comment = readUntil(COMMENT_END);
-
-		if (comment == null) {
-			comment = EMPTY_CHAR_SEQUENCE;
-		}
-
-		visitor.comment(comment);
-
-		ndx += COMMENT_END.length;
-	}
-
-	/**
-	 * Parses conditional comments.
-	 */
-	protected void parseCCComment() {
-		flushText();
-
-		// match: <!--[if
-		if (match(COND_COMMENT_IF)) {
-			ndx -= 2;	// to include "if" in the expression
-
-			CharSequence expression = readUntil(COND_COMMENT_END);
-			ndx += COND_COMMENT_END.length;
-
-			// check if this is the end of the conditional comment
-			CharSequence additionalComment = null;
-
-			{
-				int commentEnd = find(COMMENT_END);
-				if (commentEnd != -1) {
-					int condCommentEndif = find(COND_COMMENT_ENDIF, commentEnd);
-
-					if (condCommentEndif == -1) {
-						// no, this is not the end, there is additional comment
-						// additional comment includes everything including the COMMENT_END
-						int to = commentEnd + COMMENT_END.length;
-						additionalComment = charSequence(ndx, to);
-						ndx = to;
-					}
-				}
-			}
-
-			visitor.condComment(expression, true, true, additionalComment);
-			return;
-		}
-
-		// match: <!--xxx<![endif
-		int commentEnd = find(COMMENT_END);
-		int condCommentEndif = find(COND_COMMENT_ENDIF, commentEnd);
-
-		if (condCommentEndif == -1) {
-			// regular comment
-			CharSequence comment = charSequence(ndx, commentEnd);
-			if (comment == null) {
-				comment = EMPTY_CHAR_SEQUENCE;
-			}
-			visitor.comment(comment);
-			ndx = commentEnd + COMMENT_END.length;
-		} else {
-			// conditional comment end
-
-			CharSequence additionalComment = charSequence(ndx - 4, condCommentEndif);
-			ndx = condCommentEndif + COND_COMMENT_ENDIF.length;
-
-			parseCCEnd(additionalComment);
-		}
-	}
-
-	protected void parseCCRevealedStart() {
-		flushText();
-
-		ndx -= 2;	// move back over "if"
-
-		CharSequence text = readUntil(COND_COMMENT_END);
-		ndx += COND_COMMENT_END.length;
-
-		visitor.condComment(text, true, false, null);
-	}
-
-	protected void parseCCEnd(CharSequence comment) {
-		flushText();
-
-		boolean hidden = false;
-
-		if (match(COMMENT_END)) {
-			hidden = true;
-		} else {
-			match(TAG_END);
-		}
-
-		visitor.condComment("endif", false, hidden, comment);
-	}
-
-	protected void parseXmlComment(boolean decrease) {
-		flushText();
-
-		if (decrease) {
-			ndx--;
-		}
-
-		CharSequence comment = readUntil(TAG_END);
-
-		ndx++;
-
-		if (comment == null) {
-			comment = EMPTY_CHAR_SEQUENCE;
-		}
-
-		visitor.comment(comment);
-	}
-
-	// ---------------------------------------------------------------- doctype
-
-	protected void parseDoctype() {
-		String name = null;
-		boolean isPublic = false;
-		String publicId = null;
-		String uri = null;
-
-		int i = 0;
-
-		while(true) {
-			skipAnyOf(WHITEPSPACES);
-
-			if (match(TAG_END)) {
-				break;
-			}
-
-			CharSequence attr = readAttributeValue();
-
-			switch (i) {
-				case 0:
-					name = attr.toString();
-					break;
-				case 1:
-					if (equalsIgnoreCase(attr, "PUBLIC")) {
-						isPublic = true;
-					}
-					break;
-				case 2:
-					if (isPublic) {
-						publicId = attr.toString();
-					} else {
-						uri = attr.toString();
-						break;
-					}
-					break;
-				case 3:
-					uri = attr.toString();
-					break;
-			}
-
-			i++;
-		}
-		flushText();
-
-		visitor.doctype(name, publicId, uri);
-	}
-
-	// ---------------------------------------------------------------- CData
-
-	protected void parseCData() {
-		flushText();
-
-		CharSequence charSequence = readUntil(CDATA_END);
-
-		if (charSequence == null) {
-			charSequence = EMPTY_CHAR_SEQUENCE;
-		}
-
-		visitor.cdata(charSequence);
-
-		ndx += CDATA_END.length;
-	}
-
-	// ---------------------------------------------------------------- util
-
-	/**
-	 * Reads attribute value.
-	 */
-	protected String readAttributeValue() {
-		String attrValue;
-
-		if (match(ATTR_QUOTE_1)) {
-			CharSequence value = readUntil(ATTR_QUOTE_1);
-			if (value == null) {
-				attrValue = StringPool.EMPTY;
-			} else {
-				attrValue = value.toString();
-				attrValue = StringUtil.replace(attrValue, StringPool.QUOTE, StringPool.HTML_QUOTE);
-			}
-			ndx++;
-		} else if (match(ATTR_QUOTE_2)) {
-			CharSequence value = readUntil(ATTR_QUOTE_2);
-			if (value == null) {
-				attrValue = StringPool.EMPTY;
-			} else {
-				attrValue = value.toString();
-			}
-			ndx++;
-		} else {
-			CharSequence value = readUntilAnyOf(ATTR_NON_QUOTED_VALUE_ENDS);
-			if (value == null) {
-				return null;
-			}
-			attrValue = value.toString();
-		}
-
-		return attrValue;
-	}
-
 	// ---------------------------------------------------------------- error
+
+	protected void errorEOF() {
+		_error("Parse error: EOF");
+	}
+
+	protected void errorInvalidToken() {
+		_error("Parse error: invalid token");
+	}
 
 	/**
 	 * Prepares error message and reports it to the visitor.
+	 * todo add text that surrounds the error position
 	 */
-	protected void error(String message) {
+	protected void _error(String message) {
+		flushText();
+
 		int position = ndx;
 
 		if (calculatePosition) {
@@ -650,41 +887,14 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- const data
 
-	private static final char[] WHITEPSPACES = "\n\r \t\b\f".toCharArray();
-	private static final char[] QUOTES = "\"'".toCharArray();
+	protected State state = DATA_STATE;
 
-	private static final char[] TAG_NAME_ENDS = ArraysUtil.join("/>=".toCharArray(), QUOTES, WHITEPSPACES);
-	private static final char[] ATTR_NAME_ENDS = ArraysUtil.join("/>=".toCharArray(), QUOTES, WHITEPSPACES);
-	private static final char[] ATTR_NON_QUOTED_VALUE_ENDS = ArraysUtil.join(">".toCharArray(), WHITEPSPACES);
+	private static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
+	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
+	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
+	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
+	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
+	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
+	private static final char[] DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
 
-	private static final char TAG_START = '<';
-	private static final char TAG_SLASH = '/';
-	private static final char TAG_END = '>';
-	private static final char[] TAG_SLASH_END = "/>".toCharArray();
-	private static final char[] TAG_XML_START = "<?".toCharArray();
-	private static final char[] TAG_XML_END = "?>".toCharArray();
-	private static final char[] TAG_XML_COMM_START = "<!".toCharArray();
-
-	private static final char EQUALS = '=';
-	private static final char ATTR_QUOTE_1 = '\'';
-	private static final char ATTR_QUOTE_2 = '"';
-
-	private static final char[] COMMENT_START = "<!--".toCharArray();
-	private static final char[] COMMENT_END = "-->".toCharArray();
-
-	private static final char[] DOCTYPE_START = "<!DOCTYPE".toCharArray();
-	private static final char[] CDATA_START = "<![CDATA[".toCharArray();
-	private static final char[] CDATA_END = "]]>".toCharArray();
-
-	private static final char[] COND_COMMENT_IF = "[if".toCharArray();
-	private static final char[] COND_COMMENT_ENDIF = "<![endif]".toCharArray();
-
-	private static final char[] COND_COMMENT_START = "<![if".toCharArray();
-	private static final char[] COND_COMMENT_END = "]>".toCharArray();
-
-	private static final char[] TAG_SCRIPT_END = "</SCRIPT".toCharArray();
-	private static final char[] TAG_STYLE_END = "</STYLE".toCharArray();
-	private static final char[] TAG_XMP_END = "</XMP".toCharArray();
-
-	private static final CharSequence EMPTY_CHAR_SEQUENCE = CharBuffer.wrap(new char[0]);
 }

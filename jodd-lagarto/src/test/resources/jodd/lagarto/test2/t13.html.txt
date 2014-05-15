@@ -1,0 +1,6 @@
+wrn:[Parse error: invalid token [1:3 @2]
+com:[-]
+wrn:[Parse error: invalid token [2:5 @9]
+com:[]
+wrn:[Parse error: EOF [3:10 @20]
+com:[s>end]
