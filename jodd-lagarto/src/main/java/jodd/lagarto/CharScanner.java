@@ -18,7 +18,7 @@ public class CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		this.input = input;
-		this.ndx = 0;
+		this.ndx = -1;
 		this.total = input.length;
 	}
 

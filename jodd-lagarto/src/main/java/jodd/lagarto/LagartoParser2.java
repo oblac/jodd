@@ -2,6 +2,7 @@
 
 package jodd.lagarto;
 
+import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
@@ -13,6 +14,8 @@ import static jodd.util.CharUtil.isAlpha;
  * Differences from: http://www.w3.org/TR/html5/
  * <ul>
  * <li>no {@code &} parsing in DATA_STATE.
+ * <li>no check for ` in some attributes state // todo check this
+ * <li>tag name case is not changed
  */
 public class LagartoParser2 extends CharScanner {
 
@@ -123,6 +126,8 @@ public class LagartoParser2 extends CharScanner {
 	 */
 	protected State DATA_STATE =  new State() {
 		public void parse() {
+			ndx++;
+
 			if (isEOF()) {
 				parsing = false;
 				return;
@@ -137,14 +142,14 @@ public class LagartoParser2 extends CharScanner {
 			emitText(ndx, tagStartNdx);
 
 			if (!isEOF()) {
-				state = TAG_OPEN_STATE;
+				state = TAG_OPEN;
 			} else {
 				parsing = false;
 			}
 		}
 	};
 
-	protected State TAG_OPEN_STATE = new State() {
+	protected State TAG_OPEN = new State() {
 		public void parse() {
 			tag.reset(ndx);
 
@@ -164,7 +169,7 @@ public class LagartoParser2 extends CharScanner {
 				return;
 			}
 			if (c == '/') {
-				state = END_TAG_OPEN_STATE;
+				state = END_TAG_OPEN;
 				return;
 			}
 			if (isAlpha(c)) {
@@ -179,12 +184,12 @@ public class LagartoParser2 extends CharScanner {
 
 			errorInvalidToken();
 			state = DATA_STATE;
-			ndx++;
-			emitText(ndx - 2, ndx);
+			emitText(ndx - 1, ndx);
+			ndx--;
 		}
 	};
 
-	protected State END_TAG_OPEN_STATE = new State() {
+	protected State END_TAG_OPEN = new State() {
 		public void parse() {
 			ndx++;
 
@@ -237,7 +242,6 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '>') {
 					state = DATA_STATE;
 					tag.setName(substring(nameNdx, ndx));
-					ndx++;
 					emitTag();
 					break;
 				}
@@ -315,7 +319,6 @@ public class LagartoParser2 extends CharScanner {
 					state = DATA_STATE;
 					attrEndNdx = ndx;
 					_addAttribute();
-					ndx++;
 					emitTag();
 					return;
 				}
@@ -353,7 +356,7 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 				if (c == '>') {
-					state = DATA_STATE;	// todo da li treba ndx++?
+					state = DATA_STATE;
 					emitTag();
 					return;
 				}
@@ -367,7 +370,6 @@ public class LagartoParser2 extends CharScanner {
 			}
 		}
 	};
-
 
 	protected State BEFORE_ATTRIBUTE_VALUE = new State() {
 		public void parse() {
@@ -434,7 +436,6 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '>') {
 					_addAttributeWithValue();
 					state = DATA_STATE;
-					ndx++;
 					emitTag();
 					return;
 				}
@@ -524,7 +525,6 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '>') {
 					state = DATA_STATE;
-					ndx++;
 					emitTag();
 					return;
 				}
@@ -550,7 +550,6 @@ public class LagartoParser2 extends CharScanner {
 			if (c == '>') {
 				tag.setType(TagType.SELF_CLOSING);
 				state = DATA_STATE;
-				ndx++;
 				emitTag();
 				return;
 			}
@@ -769,6 +768,524 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- DOCTYPE
 
+	// ---------------------------------------------------------------- SCRIPT
+
+	protected int scriptStartNdx = -1;
+	protected int scriptEndNdx = -1;
+
+	protected State SCRIPT_DATA = new State() {
+		public void parse() {
+
+			while(true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '<') {
+					scriptEndNdx = ndx;
+					state = SCRIPT_DATA_LESS_THAN_SIGN;
+					return;
+				}
+			}
+		}
+	};
+
+	protected State SCRIPT_DATA_LESS_THAN_SIGN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				state = SCRIPT_DATA;
+				ndx--;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '/') {
+				state = SCRIPT_DATA_END_TAG_OPEN;
+				return;
+			}
+			if (c == '!') {
+				if (scriptEscape == null) {
+					// create script escape states only if really needed
+					scriptEscape = new SriptEscape();
+				}
+				state = scriptEscape.SCRIPT_DATA_ESCAPE_START;
+				return;
+			}
+			state = SCRIPT_DATA;
+		}
+	};
+
+	protected int scriptEndTagName = -1;
+
+	protected State SCRIPT_DATA_END_TAG_OPEN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				state = SCRIPT_DATA;
+				ndx--;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (isAlpha(c)) {
+				state = SCRIPT_DATA_END_TAG_NAME;
+				scriptEndTagName = ndx;
+				return;
+			}
+
+			state = SCRIPT_DATA;
+		}
+	};
+
+	protected State SCRIPT_DATA_END_TAG_NAME = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = SCRIPT_DATA;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						state = BEFORE_ATTRIBUTE_NAME;
+					} else {
+						state = SCRIPT_DATA;
+					}
+					return;
+				}
+				if (c == '/') {
+					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						state = SELF_CLOSING_START_TAG;
+					} else {
+						state = SCRIPT_DATA;
+					}
+					return;
+				}
+				if (c == '>') {
+					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						state = DATA_STATE;
+						emitScript(scriptStartNdx, scriptEndNdx);
+					} else {
+						state = SCRIPT_DATA;
+					}
+					return;
+				}
+				if (isAlpha(c)) {
+					continue;
+				}
+				state = SCRIPT_DATA;
+				return;
+			}
+		}
+	};
+
+	// ---------------------------------------------------------------- SCRIPT ESCAPE
+
+	protected SriptEscape scriptEscape = null;
+
+	/**
+	 * Since escaping states inside the SCRIPT tag are rare, we want to use them
+	 * lazy, only when really needed. Therefore, they are all grouped inside separate
+	 * class that will be instantiated only if needed.
+	 */
+	protected class SriptEscape {
+
+		protected State SCRIPT_DATA_ESCAPE_START = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					state = SCRIPT_DATA;
+					ndx--;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					state = SCRIPT_DATA_ESCAPE_START_DASH;
+					return;
+				}
+
+				state = SCRIPT_DATA;
+			}
+		};
+
+		protected State SCRIPT_DATA_ESCAPE_START_DASH = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					state = SCRIPT_DATA;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					state = SCRIPT_DATA_ESCAPED_DASH_DASH;
+					return;
+				}
+
+				state = SCRIPT_DATA;
+			}
+		};
+
+		protected State SCRIPT_DATA_ESCAPED_DASH_DASH = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					return;
+				}
+
+				if (c == '<') {
+					state = SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN;
+					return;
+				}
+
+				if (c == '>') {
+					state = SCRIPT_DATA;
+					return;
+				}
+
+				state = SCRIPT_DATA_ESCAPED;
+			}
+		};
+
+		protected int doubleEscapedNdx = -1;
+
+		protected State SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					state = SCRIPT_DATA_ESCAPED;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '/') {
+					doubleEscapedNdx = -1;
+					state = SCRIPT_DATA_ESCAPED_END_TAG_OPEN;
+					return;
+				}
+
+				if (isAlpha(c)) {
+					doubleEscapedNdx = ndx;
+					state = SCRIPT_DATA_DOUBLE_ESCAPE_START;
+					return;
+				}
+
+				state = SCRIPT_DATA_ESCAPED;
+			}
+		};
+
+		protected State SCRIPT_DATA_ESCAPED = new State() {
+			public void parse() {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						emitScript(scriptStartNdx, ndx);
+						state = DATA_STATE;        // todo 8.2.4.22 -> order is not consistent, should be error first.
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (c == '-') {
+						state = SCRIPT_DATA_ESCAPED_DASH;
+						break;
+					}
+
+					if (c == '<') {
+						state = SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN;
+						return;
+					}
+				}
+			}
+		};
+
+
+		protected State SCRIPT_DATA_ESCAPED_DASH = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					state = SCRIPT_DATA_ESCAPED_DASH_DASH;
+					return;
+				}
+
+				if (c == '<') {
+					state = SCRIPT_DATA_ESCAPED_DASH_DASH;
+					return;
+				}
+
+				state = SCRIPT_DATA_ESCAPED;
+			}
+		};
+
+		protected State SCRIPT_DATA_ESCAPED_END_TAG_OPEN = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					state = SCRIPT_DATA_ESCAPED;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (isAlpha(c)) {
+					//todo Create a new end tag token,
+					state = SCRIPT_DATA_ESCAPED_END_TAG_NAME;
+				}
+
+				state = SCRIPT_DATA_ESCAPED;
+			}
+		};
+
+		protected State SCRIPT_DATA_ESCAPED_END_TAG_NAME = new State() {
+			public void parse() {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						state = SCRIPT_DATA_ESCAPED;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES)) {
+						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+							state = BEFORE_ATTRIBUTE_NAME;
+						} else {
+							state = SCRIPT_DATA_ESCAPED;
+						}
+						return;
+					}
+					if (c == '/') {
+						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+							state = SELF_CLOSING_START_TAG;
+						} else {
+							state = SCRIPT_DATA_ESCAPED;
+						}
+						return;
+					}
+					if (c == '>') {
+						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+							state = DATA_STATE;
+							emitTag();
+						} else {
+							state = SCRIPT_DATA_ESCAPED;
+						}
+						return;
+					}
+					if (isAlpha(c)) {
+						continue;
+					}
+					state = SCRIPT_DATA_ESCAPED;
+					return;
+				}
+			}
+		};
+
+		// ---------------------------------------------------------------- SCRIPT DOUBLE ESCAPE
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPE_START = new State() {
+			public void parse() {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						state = SCRIPT_DATA_ESCAPED;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
+						if (isAppropriateTagName(SCRIPT, doubleEscapedNdx, ndx)) {
+							state = SCRIPT_DATA_DOUBLE_ESCAPED;
+						} else {
+							state = SCRIPT_DATA_ESCAPED;
+						}
+						return;
+					}
+
+					if (isAlpha(c)) {
+						continue;
+					}
+					state = SCRIPT_DATA_ESCAPED;
+					return;
+				}
+			}
+		};
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPED = new State() {
+			public void parse() {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (c == '-') {
+						state = SCRIPT_DATA_DOUBLE_ESCAPED_DASH;
+						return;
+					}
+
+					if (c == '<') {
+						state = SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN;
+						return;
+					}
+				}
+			}
+		};
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPED_DASH = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '-') {
+					state = SCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH;
+					return;
+				}
+				if (c == '<') {
+					state = SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN;
+					return;
+				}
+				state = SCRIPT_DATA_DOUBLE_ESCAPED;
+			}
+		};
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH = new State() {
+			public void parse() {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (c == '-') {
+						continue;
+					}
+
+					if (c == '<') {
+						state = SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN;
+						return;
+					}
+					if (c == '>') {
+						state = SCRIPT_DATA;
+						return;
+					}
+					state = SCRIPT_DATA_DOUBLE_ESCAPED;
+					return;
+				}
+			}
+		};
+
+		protected int doubleEscapedEndTag = -1;
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN = new State() {
+			public void parse() {
+				ndx++;
+
+				if (!isEOF()) {                        // todo implement this pattern everywhere possible to reduce code!
+					char c = input[ndx];
+
+					if (c == '/') {
+						state = SCRIPT_DATA_DOUBLE_ESCAPE_END;
+						return;
+					}
+				}
+
+				state = SCRIPT_DATA_DOUBLE_ESCAPED;
+			}
+		};
+
+		protected State SCRIPT_DATA_DOUBLE_ESCAPE_END = new State() {
+			public void parse() {
+				doubleEscapedEndTag = ndx + 1;
+
+				while (true) {
+					ndx++;
+
+					if (!isEOF()) {
+						char c = input[ndx];
+
+						if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
+							if (isAppropriateTagName(SCRIPT, doubleEscapedEndTag, ndx)) {
+								state = SCRIPT_DATA_ESCAPED;
+							} else {
+								state = SCRIPT_DATA_DOUBLE_ESCAPED;
+							}
+							return;
+						}
+						if (isAlpha(c)) {
+							continue;
+						}
+					}
+
+					state = SCRIPT_DATA_DOUBLE_ESCAPED;
+					return;
+				}
+			}
+		};
+	}
+
 	// ---------------------------------------------------------------- emit
 
 	protected int textStartNdx = -1;
@@ -793,9 +1310,17 @@ public class LagartoParser2 extends CharScanner {
 	protected void emitTag() {
 		flushText();
 
-		tag.defineEnd(ndx);
+		tag.defineEnd(ndx + 1);
 
 		if (tag.getType().isStartingTag()) {
+
+
+			if (tag.matchTagName(SCRIPT)) {
+				scriptStartNdx = ndx + 1;
+				state = SCRIPT_DATA;
+				return;
+			}
+
 			tag.increaseDeepLevel();
 		}
 
@@ -804,7 +1329,6 @@ public class LagartoParser2 extends CharScanner {
 		if (tag.getType().isEndingTag()) {
 			tag.decreaseDeepLevel();
 		}
-
 	}
 
 	protected void emitComment(int from, int to) {
@@ -814,7 +1338,6 @@ public class LagartoParser2 extends CharScanner {
 		visitor.comment(comment);
 
 		commentStart = -1;
-		ndx++;
 	}
 
 
@@ -851,6 +1374,16 @@ public class LagartoParser2 extends CharScanner {
 		textStartNdx = -1;
 	}
 
+	protected void emitScript(int from, int to) {
+		tag.increaseDeepLevel();
+
+		visitor.script(tag, substring(from, to));		// todo da li ovo treba specijalno?
+
+		tag.decreaseDeepLevel();
+		scriptStartNdx = -1;
+		scriptEndNdx = -1;
+	}
+
 	// ---------------------------------------------------------------- error
 
 	protected void errorEOF() {
@@ -885,16 +1418,41 @@ public class LagartoParser2 extends CharScanner {
 		visitor.error(message);
 	}
 
+	// ---------------------------------------------------------------- util
+
+	private boolean isAppropriateTagName(char[] lowerCaseNameToMatch, int from, int to) {
+		int len = to - from;
+
+		if (len != lowerCaseNameToMatch.length) {
+			return false;
+		}
+
+		for (int i = from, k = 0; i < to; i++, k++) {
+			char c = input[i];
+
+			c = CharUtil.toLowerAscii(c);
+
+			if (c != lowerCaseNameToMatch[k]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+
 	// ---------------------------------------------------------------- const data
 
 	protected State state = DATA_STATE;
 
-	private static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
+	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
 	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
 	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
 	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
 	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
 	private static final char[] DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
+	private static final char[] SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 
 }

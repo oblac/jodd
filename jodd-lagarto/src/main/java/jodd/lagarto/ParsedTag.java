@@ -3,10 +3,12 @@
 package jodd.lagarto;
 
 import jodd.util.ArraysUtil;
+import jodd.util.CharUtil;
 
 import java.io.IOException;
 
 import static jodd.lagarto.LagartoParserUtil.subSequence;
+import static jodd.util.CharUtil.equalsOne;
 
 /**
  * Reusable, parsed {@link Tag tag} implementation.
@@ -28,8 +30,9 @@ class ParsedTag implements Tag {
 
 	// input data
 	private final LagartoLexer lexer;
-	private final char[] input;
-	private int position;
+	private final char[] input;		// todo NEMOJ da pravis isecak - ali kada pravi DOM ne sme da se koristi
+	private int startIndex;
+	private int endIndex;
 	private int length;
 
 	// state
@@ -52,7 +55,7 @@ class ParsedTag implements Tag {
 	 * Resets the tag.
 	 */
 	public void reset(int start) {
-		this.position = start;
+		this.startIndex = start;
 		this.name = null;
 		this.idNdx = -1;
 		this.attributesCount = 0;
@@ -64,14 +67,15 @@ class ParsedTag implements Tag {
 	}
 
 	void defineEnd(int lastNdx) {
-		this.length = lastNdx - position;
+		this.endIndex = lastNdx;
+		this.length = lastNdx - startIndex;
 		this.modified = false;
 	}
 
 	// 2
 	void defineTag(TagType type, int start, int length) {
 		this.type = type;
-		this.position = start;
+		this.startIndex = start;
 		this.length = length;
 		this.modified = false;
 		this.tagStart = type.getStartString();
@@ -89,6 +93,27 @@ class ParsedTag implements Tag {
 	void setTagMarks(String start, String end) {
 		this.tagStart = start;
 		this.tagEnd = end;
+	}
+
+
+	public boolean matchTagName(char[] tagNameLowercase) {
+		int len = tagNameLowercase.length;
+		int tagNameLen = name.length();
+
+		if (len != tagNameLen) {
+			return false;
+		}
+
+		int i = startIndex + 1;
+
+		int ndx = 0;
+		while (ndx < len) {
+			if (CharUtil.toLowerAscii(input[i]) != tagNameLowercase[ndx]) {
+				return false;
+			}
+			ndx++; i++;
+		}
+		return true;
 	}
 
 
@@ -157,11 +182,11 @@ class ParsedTag implements Tag {
 
 	// ---------------------------------------------------------------- advanced
 
-	public int getTagPosition() {
-		return position;
+	public int getTagPosition() {		//  todo  remove from public API
+		return startIndex;
 	}
 
-	public int getTagLength() {
+	public int getTagLength() {			//  todo  remove from public API
 		return length;
 	}
 
@@ -309,7 +334,7 @@ class ParsedTag implements Tag {
 		if (forceBuild) {
 			appendTo(out);
 		} else {
-			out.append(subSequence(input, position, position + length));
+			out.append(subSequence(input, startIndex, endIndex));
 		}
 	}
 
