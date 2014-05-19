@@ -52,10 +52,11 @@ class ParsedTag implements Tag {
 	}
 
 	/**
-	 * Resets the tag.
+	 * Starts the tag with the index of first '<'.
+	 * Resets all tag data.
 	 */
-	public void reset(int start) {
-		this.startIndex = start;
+	public void start(int startIndex) {
+		this.startIndex = startIndex;
 		this.name = null;
 		this.idNdx = -1;
 		this.attributesCount = 0;
@@ -66,13 +67,18 @@ class ParsedTag implements Tag {
 		this.tagEnd = type.getEndString();
 	}
 
-	void defineEnd(int lastNdx) {
-		this.endIndex = lastNdx;
-		this.length = lastNdx - startIndex;
+	/**
+	 * Defines tag end with index of last '>'.
+	 * Sets the modification flag to <code>false</code>.
+	 */
+	void end(int endIndex) {
+		this.endIndex = endIndex;
+		this.length = endIndex - startIndex;
 		this.modified = false;
 	}
 
 	// 2
+	@Deprecated
 	void defineTag(TagType type, int start, int length) {
 		this.type = type;
 		this.startIndex = start;

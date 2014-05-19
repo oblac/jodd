@@ -140,6 +140,7 @@ public class LagartoParser2 extends CharScanner {
 			}
 
 			emitText(ndx, tagStartNdx);
+			ndx = tagStartNdx;
 
 			if (!isEOF()) {
 				state = TAG_OPEN;
@@ -151,7 +152,7 @@ public class LagartoParser2 extends CharScanner {
 
 	protected State TAG_OPEN = new State() {
 		public void parse() {
-			tag.reset(ndx);
+			tag.start(ndx);
 
 			ndx++;
 
@@ -594,10 +595,135 @@ public class LagartoParser2 extends CharScanner {
 				return;
 			}
 
-			//if (match(DOCTYPE))
+			//if (match(DOCTYPE))		// todo DOCTYPE
 
 			errorInvalidToken();
 			state = BOGUS_COMMENT;
+		}
+	};
+
+	// ---------------------------------------------------------------- RAWTEXT
+
+	protected int rawTextStart;		// todo prodji sve varijable i vidi da li se koriste!
+	protected char[] rawTagName;
+	protected int rawTextEnd;
+
+	protected State RAWTEXT = new State() {
+		public void parse() {
+			rawTextStart = ndx + 1;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '<') {
+					rawTextEnd = ndx;
+					state = RAWTEXT_LESS_THAN_SIGN;
+					return;
+				}
+			}
+		}
+	};
+
+	protected State RAWTEXT_LESS_THAN_SIGN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (!isEOF()) {
+				char c = input[ndx];
+
+				if (c == '/') {
+					state = RAWTEXT_END_TAG_OPEN;
+					return;
+				}
+			}
+
+			state = RAWTEXT;
+		}
+	};
+
+	protected State RAWTEXT_END_TAG_OPEN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (!isEOF()) {
+				char c = input[ndx];
+				if (isAlpha(c)) {
+					state = RAWTEXT_END_TAG_NAME;
+					return;
+				}
+			}
+
+			state = RAWTEXT;
+		}
+	};
+
+	int rawtextEndTagNameStartNdx = -1;
+
+	protected State RAWTEXT_END_TAG_NAME = new State() {
+		public void parse() {
+			rawtextEndTagNameStartNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (!isEOF()) {
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES)) {
+						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+							emitText(rawTextStart, rawTextEnd);
+							state = BEFORE_ATTRIBUTE_NAME;
+							tag.start(rawTextEnd);
+							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+							tag.setType(TagType.END);
+						} else {
+							state = RAWTEXT;
+						}
+						return;
+					}
+
+					if (c == '/') {
+						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+							emitText(rawTextStart, rawTextEnd);
+							state = SELF_CLOSING_START_TAG;
+							tag.start(rawTextEnd);
+							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+							tag.setType(TagType.SELF_CLOSING);
+						} else {
+							state = RAWTEXT;
+						}
+						return;
+					}
+
+					if (c == '>') {
+						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+							emitText(rawTextStart, rawTextEnd);
+							state = DATA_STATE;
+							tag.start(rawTextEnd);
+							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+							tag.setType(TagType.END);
+							tag.end(ndx);
+							emitTag();
+						} else {
+							state = RAWTEXT;
+						}
+						return;
+					}
+					if (isAlpha(c)) {
+						continue;
+					}
+				}
+
+				state = RAWTEXT;
+				return;
+			}
 		}
 	};
 
@@ -1310,15 +1436,21 @@ public class LagartoParser2 extends CharScanner {
 	protected void emitTag() {
 		flushText();
 
-		tag.defineEnd(ndx + 1);
+		tag.end(ndx + 1);
 
 		if (tag.getType().isStartingTag()) {
-
 
 			if (tag.matchTagName(SCRIPT)) {
 				scriptStartNdx = ndx + 1;
 				state = SCRIPT_DATA;
 				return;
+			}
+
+			// detect RAWTEXT tags
+
+			if (tag.matchTagName(XMP)) {
+				state = RAWTEXT;
+				rawTagName = XMP;
 			}
 
 			tag.increaseDeepLevel();
@@ -1355,7 +1487,6 @@ public class LagartoParser2 extends CharScanner {
 			textStartNdx = from;
 		}
 		textEndNdx = to;
-		ndx = to;
 	}
 
 	/**
@@ -1375,6 +1506,8 @@ public class LagartoParser2 extends CharScanner {
 	}
 
 	protected void emitScript(int from, int to) {
+		flushText();
+
 		tag.increaseDeepLevel();
 
 		visitor.script(tag, substring(from, to));		// todo da li ovo treba specijalno?
@@ -1453,6 +1586,7 @@ public class LagartoParser2 extends CharScanner {
 	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
 	private static final char[] DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
 	private static final char[] SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] XMP = new char[] {'x', 'm', 'p'};
 	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 
 }

@@ -49,7 +49,7 @@ public class LagartoParserTest {
 	}
 
 	private void _testHtmls(String root) throws IOException {
-		FindFile ff = new WildcardFindFile().include("**/*.*ml");
+		FindFile ff = new WildcardFindFile().include("**/*21.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
 		boolean processed = false;
