@@ -8,7 +8,6 @@ import jodd.util.CharUtil;
 import java.io.IOException;
 
 import static jodd.lagarto.LagartoParserUtil.subSequence;
-import static jodd.util.CharUtil.equalsOne;
 
 /**
  * Reusable, parsed {@link Tag tag} implementation.
