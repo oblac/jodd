@@ -61,8 +61,8 @@ public class TagAdapter implements TagVisitor {
 		target.xml(tag);
 	}
 
-	public void doctype(String name, String publicId, String baseUri) {
-		target.doctype(name, publicId, baseUri);
+	public void doctype(Doctype doctype) {
+		target.doctype(doctype);
 	}
 
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {

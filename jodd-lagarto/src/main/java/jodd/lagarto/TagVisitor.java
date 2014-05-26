@@ -70,10 +70,9 @@ public interface TagVisitor {
 	void xml(Tag tag);
 
 	/**
-	 * Invoked on DOCTYPE directive. If <code>publicId</code> is <code>null</code>, it is a SYSTEM
-	 * directive, otherwise it is PUBLIC.
+	 * Invoked on DOCTYPE directive.
 	 */
-	void doctype(String name, String publicId, String baseUri);
+	void doctype(Doctype doctype);
 
 	/**
 	 * Invoked on IE conditional comment. The <code>expression</code> if unmodified expression.

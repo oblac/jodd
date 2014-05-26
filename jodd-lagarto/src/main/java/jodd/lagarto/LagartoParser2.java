@@ -15,13 +15,26 @@ import static jodd.util.CharUtil.isAlpha;
  * <ul>
  * <li>no {@code &} parsing in DATA_STATE.
  * <li>no check for ` in some attributes state // todo check this
- * <li>tag name case is not changed
+ * <li>tag name case (and other entities) is not changed
+ * </ul>
+ *
+ * What should be changed in SPEC:
+ * <ul>
+ * <li>TOKENIZER is the one who should deal with all state changes,
+ * 		not the tree builder!</li>
+ * <li>Recognize two type of states, one that iterates and one that
+ * doesn't</li>
+ * <li>Order of error/state change must be always the same.</li>
+ * <li>TOKENIZER should NOT change the tag names letter case.
+ * Tokenizer should not change the source in any way.</li>
+ * </ul>
  */
 public class LagartoParser2 extends CharScanner {
 
 	protected TagVisitor visitor;
 	protected LagartoParserContext ctx;
 	protected ParsedTag tag;
+	protected ParsedDoctype doctype;
 
 	/**
 	 * Creates parser on char array.
@@ -45,6 +58,7 @@ public class LagartoParser2 extends CharScanner {
 		textStartNdx = textEndNdx = -1;
 		this.ctx = new LagartoParserContext();
 		this.tag = new ParsedTag(input);
+		this.doctype = new ParsedDoctype(input);
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -595,7 +609,11 @@ public class LagartoParser2 extends CharScanner {
 				return;
 			}
 
-			//if (match(DOCTYPE))		// todo DOCTYPE
+			if (match(_DOCTYPE, false)) {
+				state = DOCTYPE;
+				ndx += _DOCTYPE.length - 1;
+				return;
+			}
 
 			errorInvalidToken();
 			state = BOGUS_COMMENT;
@@ -894,6 +912,607 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- DOCTYPE
 
+	protected State DOCTYPE = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (equalsOne(c, TAG_WHITESPACES)) {
+				state = BEFORE_DOCTYPE_NAME;
+				return;
+			}
+
+			errorInvalidToken();
+			state = BEFORE_DOCTYPE_NAME;
+			ndx--;
+		}
+	};
+
+	protected State BEFORE_DOCTYPE_NAME = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '>') {
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				state = DOCTYPE_NAME;
+				return;
+			}
+		}
+	};
+
+	protected State DOCTYPE_NAME = new State() {
+		public void parse() {
+			int nameStartNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setName(nameStartNdx, ndx);
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					state = AFTER_DOCUMENT_NAME;
+					doctype.setName(nameStartNdx, ndx);
+					return;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					doctype.setName(nameStartNdx, ndx);
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State AFTER_DOCUMENT_NAME = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				if (matchCaseInsensitiveWithUpper(_PUBLIC, false)) {		// todo check all matches usage if ignore case or not
+					ndx += _PUBLIC.length - 1;
+					state = AFTER_DOCTYPE_PUBLIC_KEYWORD;
+					return;
+				}
+				if (matchCaseInsensitiveWithUpper(_SYSTEM, false)) {
+					ndx += _SYSTEM.length - 1;
+					state = AFTER_DOCTYPE_SYSTEM_KEYWORD;
+					return;
+				}
+
+				errorInvalidToken();
+				state = BOGUS_DOCTYPE;
+				doctype.setQuirksMode(true);
+				return;
+			}
+		}
+	};
+
+	protected int doctypeIdNameStart;
+
+	protected State AFTER_DOCTYPE_PUBLIC_KEYWORD = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (equalsOne(c, TAG_WHITESPACES)) {
+				state = BEFORE_DOCTYPE_PUBLIC_IDENTIFIER;
+				return;
+			}
+
+			if (c == '\"') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE_QUOTED;
+				return;
+			}
+
+			if (c == '\'') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_PUBLIC_IDENTIFIER_SINGLE_QUOTED;
+				return;
+			}
+
+			if (c == '>') {
+				errorInvalidToken();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			errorInvalidToken();
+			state = BOGUS_DOCTYPE;
+			doctype.setQuirksMode(true);
+		}
+	};
+
+	protected State BEFORE_DOCTYPE_PUBLIC_IDENTIFIER = new State() {
+		public void parse() {
+			while(true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '\"') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE_QUOTED;
+					return;
+				}
+
+				if (c == '\'') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_PUBLIC_IDENTIFIER_SINGLE_QUOTED;
+					return;
+				}
+
+				if (c == '>') {
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				errorInvalidToken();
+				doctype.setQuirksMode(true);
+				state = BOGUS_DOCTYPE;
+				return;
+			}
+		}
+	};
+
+	protected State DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE_QUOTED = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+				}
+
+				char c = input[ndx];
+
+				if (c == '\"') {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					state = AFTER_DOCTYPE_PUBLIC_IDENTIFIER;
+					return;
+				}
+
+				if (c == '>') {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State DOCTYPE_PUBLIC_IDENTIFIER_SINGLE_QUOTED = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+				}
+
+				char c = input[ndx];
+
+				if (c == '\'') {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					state = AFTER_DOCTYPE_PUBLIC_IDENTIFIER;
+					return;
+				}
+
+				if (c == '>') {
+					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State AFTER_DOCTYPE_PUBLIC_IDENTIFIER = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (equalsOne(c, TAG_WHITESPACES)) {
+				state = BETWEEN_DOCTYPE_PUBLIC_AND_SYSTEM_IDENTIFIERS;
+				return;
+			}
+
+			if (c == '>') {
+				state = DATA_STATE;
+				emitDoctype();
+				return;
+			}
+
+			if (c == '\"') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
+				return;
+			}
+
+			if (c == '\'') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
+				return;
+			}
+
+			errorInvalidToken();
+			doctype.setQuirksMode(true);
+			state = BOGUS_DOCTYPE;
+		}
+	};
+
+	protected State BETWEEN_DOCTYPE_PUBLIC_AND_SYSTEM_IDENTIFIERS = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				if (c == '\"') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
+					return;
+				}
+
+				if (c == '\'') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
+					return;
+				}
+
+				errorInvalidToken();
+				doctype.setQuirksMode(true);
+				state = BOGUS_DOCTYPE;
+				return;
+			}
+		}
+	};
+
+
+	protected State BOGUS_DOCTYPE = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '>') {
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State AFTER_DOCTYPE_SYSTEM_KEYWORD = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (equalsOne(c, TAG_WHITESPACES)) {
+				state = BEFORE_DOCTYPE_SYSTEM_IDENTIFIER;
+				return;
+			}
+
+			if (c == '\"') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
+				return;
+			}
+
+			if (c == '\'') {
+				errorInvalidToken();
+				doctypeIdNameStart = ndx + 1;
+				state = DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
+				return;
+			}
+
+			if (c == '>') {
+				errorInvalidToken();
+				state = DATA_STATE;
+				doctype.setQuirksMode(true);
+				emitDoctype();
+				return;
+			}
+
+			errorInvalidToken();
+			state = BOGUS_DOCTYPE;
+			doctype.setQuirksMode(true);
+		}
+	};
+
+	protected State BEFORE_DOCTYPE_SYSTEM_IDENTIFIER = new State() {
+		public void parse() {
+			while(true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '\"') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
+					return;
+				}
+
+				if (c == '\'') {
+					doctypeIdNameStart = ndx + 1;
+					state = DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
+					return;
+				}
+
+				if (c == '>') {
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				errorInvalidToken();
+				doctype.setQuirksMode(true);
+				state = BOGUS_DOCTYPE;
+				return;
+			}
+		}
+	};
+
+	protected State DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+				}
+
+				char c = input[ndx];
+
+				if (c == '\"') {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					state = AFTER_DOCTYPE_SYSTEM_IDENTIFIER;
+					return;
+				}
+
+				if (c == '>') {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+				}
+
+				char c = input[ndx];
+
+				if (c == '\'') {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					state = AFTER_DOCTYPE_SYSTEM_IDENTIFIER;
+					return;
+				}
+
+				if (c == '>') {
+					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					errorInvalidToken();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+			}
+		}
+	};
+
+	protected State AFTER_DOCTYPE_SYSTEM_IDENTIFIER = new State() {
+		public void parse() {
+			while(true) {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					doctype.setQuirksMode(true);
+					emitDoctype();
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					continue;
+				}
+
+				if (c == '>') {
+					state = DATA_STATE;
+					emitDoctype();
+					return;
+				}
+
+				errorInvalidToken();
+				state = BOGUS_DOCTYPE;
+				// does NOT set the quirks mode!
+			}
+		}
+	};
+
+
 	// ---------------------------------------------------------------- SCRIPT
 
 	protected int scriptStartNdx = -1;
@@ -986,7 +1605,7 @@ public class LagartoParser2 extends CharScanner {
 				char c = input[ndx];
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
-					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 						state = BEFORE_ATTRIBUTE_NAME;
 					} else {
 						state = SCRIPT_DATA;
@@ -994,7 +1613,7 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 				if (c == '/') {
-					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 						state = SELF_CLOSING_START_TAG;
 					} else {
 						state = SCRIPT_DATA;
@@ -1002,7 +1621,7 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 				if (c == '>') {
-					if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 						state = DATA_STATE;
 						emitScript(scriptStartNdx, scriptEndNdx);
 					} else {
@@ -1217,7 +1836,7 @@ public class LagartoParser2 extends CharScanner {
 					char c = input[ndx];
 
 					if (equalsOne(c, TAG_WHITESPACES)) {
-						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 							state = BEFORE_ATTRIBUTE_NAME;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -1225,7 +1844,7 @@ public class LagartoParser2 extends CharScanner {
 						return;
 					}
 					if (c == '/') {
-						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 							state = SELF_CLOSING_START_TAG;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -1233,7 +1852,7 @@ public class LagartoParser2 extends CharScanner {
 						return;
 					}
 					if (c == '>') {
-						if (isAppropriateTagName(SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
 							state = DATA_STATE;
 							emitTag();
 						} else {
@@ -1265,7 +1884,7 @@ public class LagartoParser2 extends CharScanner {
 					char c = input[ndx];
 
 					if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
-						if (isAppropriateTagName(SCRIPT, doubleEscapedNdx, ndx)) {
+						if (isAppropriateTagName(_SCRIPT, doubleEscapedNdx, ndx)) {
 							state = SCRIPT_DATA_DOUBLE_ESCAPED;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -1393,7 +2012,7 @@ public class LagartoParser2 extends CharScanner {
 						char c = input[ndx];
 
 						if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
-							if (isAppropriateTagName(SCRIPT, doubleEscapedEndTag, ndx)) {
+							if (isAppropriateTagName(_SCRIPT, doubleEscapedEndTag, ndx)) {
 								state = SCRIPT_DATA_ESCAPED;
 							} else {
 								state = SCRIPT_DATA_DOUBLE_ESCAPED;
@@ -1440,7 +2059,7 @@ public class LagartoParser2 extends CharScanner {
 
 		if (tag.getType().isStartingTag()) {
 
-			if (tag.matchTagName(SCRIPT)) {
+			if (tag.matchTagName(_SCRIPT)) {
 				scriptStartNdx = ndx + 1;
 				state = SCRIPT_DATA;
 				return;
@@ -1448,9 +2067,9 @@ public class LagartoParser2 extends CharScanner {
 
 			// detect RAWTEXT tags
 
-			if (tag.matchTagName(XMP)) {
+			if (tag.matchTagName(_XMP_NAME)) {
 				state = RAWTEXT;
-				rawTagName = XMP;
+				rawTagName = _XMP_NAME;
 			}
 
 			tag.increaseDeepLevel();
@@ -1510,11 +2129,19 @@ public class LagartoParser2 extends CharScanner {
 
 		tag.increaseDeepLevel();
 
-		visitor.script(tag, substring(from, to));		// todo da li ovo treba specijalno?
+		visitor.script(tag, substring(from, to));		// todo da li za ovo treba specijalna visit metoda kao sto sada ima?
 
 		tag.decreaseDeepLevel();
 		scriptStartNdx = -1;
 		scriptEndNdx = -1;
+	}
+
+	protected void emitDoctype() {
+		flushText();
+
+		visitor.doctype(doctype);
+
+		doctype.reset();
 	}
 
 	// ---------------------------------------------------------------- error
@@ -1579,14 +2206,16 @@ public class LagartoParser2 extends CharScanner {
 	protected State state = DATA_STATE;
 
 	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
+	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
 	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
 	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
 	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
 	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
-	private static final char[] DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
-	private static final char[] SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] XMP = new char[] {'x', 'm', 'p'};
-	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
+	private static final char[] _DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
+	private static final char[] _SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] _XMP_NAME = new char[] {'x', 'm', 'p'};
+	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
+	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
 
 }

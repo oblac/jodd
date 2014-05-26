@@ -10,30 +10,31 @@ import java.io.IOException;
 public class DocumentType extends Node {
 
 	protected final String publicId;
-	protected final String baseUri;
+	protected final String systemId;
 
-	public DocumentType(Document ownerDocument, String value, String publicId, String baseUri) {
+	public DocumentType(Document ownerDocument, String value, String publicId, String systemId) {
 		super(ownerDocument, NodeType.DOCUMENT_TYPE, null);
 		this.nodeValue = value;
 		this.publicId = publicId;
-		this.baseUri = baseUri;
+		this.systemId = systemId;
 	}
 
 	@Override
 	public DocumentType clone() {
-		return cloneTo(new DocumentType(ownerDocument, nodeValue, publicId, baseUri));
+		return cloneTo(new DocumentType(
+				ownerDocument, nodeValue, publicId, systemId));
 	}
 
 	public String getRootName() {
 		return nodeValue;
 	}
 
-	public String getPublicId() {
+	public String getPublicIdentifier() {
 		return publicId;
 	}
 
-	public String getBaseUri() {
-		return baseUri;
+	public String getSystemIdentifier() {
+		return systemId;
 	}
 
 	@Override

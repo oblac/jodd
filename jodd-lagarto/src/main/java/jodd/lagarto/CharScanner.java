@@ -110,98 +110,6 @@ public class CharScanner {
 		return charSequence(start, ndx);
 	}
 
-	/**
-	 * Reads text from current position until any of stop chars.
-	 * If text is not found, returns <code>null</code>.
-	 */
-	public final CharSequence readUntilAnyOf(char[] stopChars) {
-		int start = ndx;
-
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (_matchAny(c, stopChars)) {
-				break;
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
-	public final CharSequence readUntil(char[] target) {
-		int start = ndx;
-
-		while (ndx < total) {
-			if (match(target, false)) {
-				break;
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
-	public final CharSequence readUntilIgnoreCase(char[] target) {
-		int start = ndx;
-
-		while (ndx < total) {
-			if (matchIgnoreCase(target, false)) {
-				break;
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
-
-	public final CharSequence readUntil(char stopChar) {
-		int start = ndx;
-
-		while (ndx < total) {
-			if (match(stopChar, false)) {
-				break;
-			}
-
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
-	}
-
-	// ---------------------------------------------------------------- skip
-
-	/**
-	 * Skips and consumes all characters.
-	 */
-	public final void skipAnyOf(char[] charsToSkip) {
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (!_matchAny(c, charsToSkip)) {
-				return;
-			}
-
-			ndx++;
-		}
-	}
-
-	public final void skipUntil(char charToMatch) {
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (c == charToMatch) {
-				return;
-			}
-
-			ndx++;
-		}
-	}
-
 	// ---------------------------------------------------------------- match
 
 	public final boolean match(char[] target) {
@@ -233,20 +141,26 @@ public class CharScanner {
 	}
 
 	public final boolean matchIgnoreCase(char[] target) {
-		return matchIgnoreCase(target, true);
+		return matchCaseInsensitiveWithUpper(target, true);
 	}
 
-	public final boolean matchIgnoreCase(char[] target, boolean consume) {
-		if (ndx + target.length > total) {
+	/**
+	 * todo ovaj method pretrvara char u upper case i radi match sa targetom koji je vec u uppercase zbog performansi
+	 * @param uppercaseTarget
+	 * @param consume
+	 * @return
+	 */
+	public final boolean matchCaseInsensitiveWithUpper(char[] uppercaseTarget, boolean consume) {
+		if (ndx + uppercaseTarget.length > total) {
 			return false;
 		}
 
 		int j = ndx;
 
-		for (int i = 0; i < target.length; i++, j++) {
+		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
 			char c = _toUppercase(input[j]);
 
-			if (c != target[i]) {
+			if (c != uppercaseTarget[i]) {
 				return false;
 			}
 		}
@@ -281,26 +195,6 @@ public class CharScanner {
 		return false;
 	}
 
-	/**
-	 * Returns <code>true</code> if current char matches
-	 * any of provided targets. Current char gets consumed
-	 * if it was matched.
-	 */
-	public final boolean matchAny(char[] target, boolean consume) {
-		char c = input[ndx];
-
-		for (char targetChar : target) {
-			if (c == targetChar) {
-				if (consume) {
-					ndx++;
-				}
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	// ---------------------------------------------------------------- utils
 
 	/**
@@ -318,6 +212,7 @@ public class CharScanner {
 	/**
 	 * Converts ASCII char to uppercase.
 	 * Simple and fast.
+	 * todo use CharUtil
 	 */
 	private static char _toUppercase(char c) {
 		if ((c >= 'a') && (c <= 'z')) {

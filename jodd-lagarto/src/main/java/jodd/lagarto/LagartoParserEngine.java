@@ -321,7 +321,7 @@ public abstract class LagartoParserEngine {
 		}
 
 		ctx.offset = start;
-		visitor.doctype(name, publicId, uri);
+		//visitor.doctype(name, publicId, uri);
 	}
 
 	/**

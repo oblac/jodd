@@ -51,7 +51,9 @@ public class LagartoNodeHtmlRenderer {
 	 */
 	public void renderDocumentType(DocumentType documentType, Appendable appendable) throws IOException {
 		TagWriterUtil.writeDoctype(appendable,
-				documentType.nodeValue, documentType.publicId, documentType.baseUri);
+				documentType.nodeValue,
+				documentType.publicId,
+				documentType.systemId);
 	}
 
 	/**

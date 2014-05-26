@@ -49,21 +49,30 @@ public class TagWriterUtil {
 		appendable.append("]]>");
 	}
 
-	public static void writeDoctype(Appendable appendable, String name, String publicId, String baseUri) throws IOException {
+	public static void writeDoctype(
+			Appendable appendable,
+			CharSequence name,
+			CharSequence publicIdentifier,
+			CharSequence systemIdentifier) throws IOException {
+
 		appendable.append("<!DOCTYPE ");
 		if (name != null) {
 			appendable.append(name);
 		}
-		if (publicId != null || baseUri != null) {
-			if (publicId != null) {
-				appendable.append(" PUBLIC \"").append(publicId).append('"');
-			} else {
-				appendable.append(" SYSTEM");
-			}
-			if (baseUri != null) {
-				appendable.append(" \"").append(baseUri).append('"');
-			}
+
+		if (publicIdentifier != null) {
+			appendable.append(" PUBLIC");
+		} else if (systemIdentifier != null) {
+			appendable.append(" SYSTEM");
 		}
+
+		if (publicIdentifier != null) {
+			appendable.append(" \"").append(publicIdentifier).append('"');
+		}
+		if (systemIdentifier != null) {
+			appendable.append(" \"").append(systemIdentifier).append('"');
+		}
+
 		appendable.append('>');
 	}
 }

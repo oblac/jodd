@@ -2,6 +2,7 @@
 
 package jodd.lagarto.dom;
 
+import jodd.lagarto.Doctype;
 import jodd.lagarto.LagartoParserContext;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
@@ -433,12 +434,12 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(xmlDeclaration);
 	}
 
-	public void doctype(String name, String publicId, String baseUri) {
+	public void doctype(Doctype doctype) {
 		if (!enabled) {
 			return;
 		}
 
-		DocumentType documentType = createDocumentType(name, publicId, baseUri);
+		DocumentType documentType = createDocumentType(doctype);
 		parentNode.addChild(documentType);
 	}
 
@@ -471,6 +472,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	// ---------------------------------------------------------------- factory
+
+	// todo inline methods used only once
 
 	/**
 	 * Creates root {@link Document} node.
@@ -542,12 +545,27 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		return new Text(rootNode, text);
 	}
 
-	protected DocumentType createDocumentType(String value, String publicId, String baseUri) {
-		return new DocumentType(rootNode, value, publicId, baseUri);
+	protected DocumentType createDocumentType(Doctype doctype) {
+		return new DocumentType(rootNode,
+				toString(doctype.getName()),
+				toString(doctype.getPublicIdentifier()),
+				toString(doctype.getSystemIdentifier())
+		);
 	}
 
 	protected XmlDeclaration createXmlDeclaration(Tag tag) {
 		return new XmlDeclaration(rootNode, tag);
+	}
+
+
+	/**
+	 * Todo move to JoddScript!
+	 */
+	protected String toString(Object value) {
+		if (value == null) {
+			return null;
+		}
+		return value.toString();
 	}
 
 }

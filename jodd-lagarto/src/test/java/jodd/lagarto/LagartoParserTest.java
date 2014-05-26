@@ -49,7 +49,7 @@ public class LagartoParserTest {
 	}
 
 	private void _testHtmls(String root) throws IOException {
-		FindFile ff = new WildcardFindFile().include("**/*21.*ml");
+		FindFile ff = new WildcardFindFile().include("**/*.*ml");
 		long reps = 1;
 		JStopWatch jsw = new JStopWatch();
 		boolean processed = false;
@@ -256,9 +256,9 @@ public class LagartoParserTest {
 				result.append("cdt:[").append(cdata).append(']').append(NEWLINE);
 			}
 
-			public void doctype(String name, String publicId, String baseUri) {
-				result.append("doc:[").append(name).append(' ');
-				result.append(publicId).append(' ').append(baseUri).append(']').append(NEWLINE);
+			public void doctype(Doctype doctype) {
+				result.append("doc:[").append(doctype.getName()).append(' ');
+				result.append(doctype.getPublicIdentifier()).append(' ').append(doctype.getSystemIdentifier()).append(']').append(NEWLINE);
 			}
 
 			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {

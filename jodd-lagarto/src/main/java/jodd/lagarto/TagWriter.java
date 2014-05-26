@@ -116,9 +116,13 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void doctype(String name, String publicId, String baseUri) {
+	public void doctype(Doctype doctype) {
 		try {
-			TagWriterUtil.writeDoctype(appendable, name, publicId, baseUri);
+			TagWriterUtil.writeDoctype(
+					appendable,
+					doctype.getName(),
+					doctype.getPublicIdentifier(),
+					doctype.getSystemIdentifier());
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
