@@ -140,26 +140,30 @@ public class LagartoParser2 extends CharScanner {
 	 */
 	protected State DATA_STATE =  new State() {
 		public void parse() {
-			ndx++;
+			int textStart = ndx + 1;
 
-			if (isEOF()) {
-				parsing = false;
-				return;
-			}
+			while (true) {
+				ndx++;
 
-			int tagStartNdx = find('<');
+				if (isEOF()) {
+					if (textStart < total) {
+						emitText(textStart, total);
+					}
+					parsing = false;
+					return;
+				}
 
-			if (tagStartNdx == -1) {
-				tagStartNdx = total;
-			}
+				char c = input[ndx];
 
-			emitText(ndx, tagStartNdx);
-			ndx = tagStartNdx;
+				if (c == '<') {
+					emitText(textStart, ndx);
+					state = TAG_OPEN;
+					return;
+				}
 
-			if (!isEOF()) {
-				state = TAG_OPEN;
-			} else {
-				parsing = false;
+				if (c == '&') {
+					// todo WHAT TO DO?
+				}
 			}
 		}
 	};
@@ -580,7 +584,7 @@ public class LagartoParser2 extends CharScanner {
 
 	protected State BOGUS_COMMENT = new State() {
 		public void parse() {
-			int tagEndNdx = find('>');
+			int tagEndNdx = find('>', total);
 
 			if (tagEndNdx == -1) {
 				tagEndNdx = total;
@@ -2067,9 +2071,12 @@ public class LagartoParser2 extends CharScanner {
 
 			// detect RAWTEXT tags
 
-			if (tag.matchTagName(_XMP_NAME)) {
-				state = RAWTEXT;
-				rawTagName = _XMP_NAME;
+			for (char[] rawtextTagName : RAWTEXT_TAGS) {
+				if (tag.matchTagName(rawtextTagName)) {
+					state = RAWTEXT;
+					rawTagName = rawtextTagName;
+					break;
+				}
 			}
 
 			tag.increaseDeepLevel();
@@ -2199,8 +2206,6 @@ public class LagartoParser2 extends CharScanner {
 		return true;
 	}
 
-
-
 	// ---------------------------------------------------------------- const data
 
 	protected State state = DATA_STATE;
@@ -2214,8 +2219,18 @@ public class LagartoParser2 extends CharScanner {
 	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
 	private static final char[] _DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
 	private static final char[] _SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] _XMP_NAME = new char[] {'x', 'm', 'p'};
+	private static final char[] _XMP = new char[] {'x', 'm', 'p'};
+	private static final char[] _STYLE = new char[] {'s', 't', 'y', 'l', 'e'};
+	private static final char[] _IFRAME = new char[] {'i', 'f', 'r', 'a', 'm', 'e'};
+	private static final char[] _NOFRAMES = new char[] {'n', 'o', 'f', 'r', 'a', 'm', 'e', 's'};
+	private static final char[] _NOEMBED = new char[] {'n', 'o', 'e', 'm', 'b', 'e', 'd'};
+	private static final char[] _NOSCRIPT = new char[] {'n', 'o', 's', 'c', 'r', 'i', 'p', 't'};
 	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
 	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+
+	// 'script' is handled by its states todo check this!
+	private static final char[][] RAWTEXT_TAGS = new char[][] {
+			_XMP, _STYLE, _IFRAME, _NOEMBED, _NOFRAMES, _NOSCRIPT,
+	};
 
 }

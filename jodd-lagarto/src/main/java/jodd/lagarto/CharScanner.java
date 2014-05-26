@@ -25,89 +25,27 @@ public class CharScanner {
 	// ---------------------------------------------------------------- find
 
 	/**
-	 * Finds index of target block from current position.
-	 * Returns index of founded block (it is not consumed).
-	 * Returns <code>-1</code> if block is not found.
-	 */
-	public final int find(char[] target) {
-		return find(target, total);
-	}
-
-	public final int find(char target) {
-		return find(target, total);
-	}
-
-	/**
-	 * Finds index of target block from current position up to some limit.
-	 * Returns index of founded block (it is not consumed).
-	 * Returns <code>-1</code> if block is not found.
-	 */
-	public final int find(char[] target, int end) {
-		int start = ndx;
-
-		while (ndx < end) {
-			if (match(target, false)) {
-				break;
-			}
-			ndx++;
-		}
-
-		int foundNdx = ndx;
-		ndx = start;
-
-		if (foundNdx == end) {
-			return -1;
-		}
-
-		return foundNdx;
-	}
-
-	/**
 	 * Finds character from current position up to some limit.
 	 * Returns index of founded char (it is not consumed).
 	 * Returns <code>-1</code> if block is not found.
 	 */
 	public final int find(char target, int end) {
-		int start = ndx;
+		int index = ndx;
 
-		while (ndx < end) {
-			char c = input[ndx];
+		while (index < end) {
+			char c = input[index];
 
 			if (c == target) {
 				break;
 			}
-			ndx++;
+			index++;
 		}
 
-		int foundNdx = ndx;
-		ndx = start;
-
-		if (foundNdx == end) {
+		if (index == end) {
 			return -1;
 		}
 
-		return foundNdx;
-	}
-
-	// ---------------------------------------------------------------- read
-
-	/**
-	 * Reads and consumes only allowed characters from current position.
-	 * Returns <code>null</code> if nothing is consumed.
-	 */
-	public final CharSequence read(char[] allowedChars) {
-		int start = ndx;
-
-		while (ndx < total) {
-			char c = input[ndx];
-
-			if (!_matchAny(c, allowedChars)) {
-				break;
-			}
-			ndx++;
-		}
-
-		return charSequence(start, ndx);
+		return index;
 	}
 
 	// ---------------------------------------------------------------- match
@@ -172,42 +110,7 @@ public class CharScanner {
 		return true;
 	}
 
-	public final boolean match(char target) {
-		return match(target, true);
-	}
-
-	/**
-	 * Returns <code>true</code> if current char matches
-	 * the target char. Current char gets consumed if
-	 * it was matched.
-	 */
-	public final boolean match(char target, boolean consume) {
-		if (ndx >= total) {
-			return false;
-		}
-		if (input[ndx] == target) {
-			if (consume) {
-				ndx++;
-			}
-			return true;
-		}
-
-		return false;
-	}
-
 	// ---------------------------------------------------------------- utils
-
-	/**
-	 * Checks if char matches to any character in provided array.
-	 */
-	private static boolean _matchAny(char c, char[] target) {
-		for (char t : target) {
-			if (c == t) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Converts ASCII char to uppercase.
@@ -234,24 +137,6 @@ public class CharScanner {
 
 		for (int i = 0; i < len; i++) {
 			if (one.charAt(i) != two.charAt(i)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Returns <code>true</code> if two sequences are equal regarding the case.
-	 */
-	public final boolean equalsIgnoreCase(CharSequence one, CharSequence two) {
-		int len = one.length();
-		if (len != two.length()) {
-			return false;
-		}
-
-		for (int i = 0; i < len; i++) {
-			if (_toUppercase(one.charAt(i)) != _toUppercase(two.charAt(i))) {
 				return false;
 			}
 		}
