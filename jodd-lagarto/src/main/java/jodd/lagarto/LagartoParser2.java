@@ -14,7 +14,6 @@ import static jodd.util.CharUtil.isAlpha;
  * Differences from: http://www.w3.org/TR/html5/
  * <ul>
  * <li>no {@code &} parsing in DATA_STATE.
- * <li>no check for ` in some attributes state // todo check this
  * <li>tag name case (and other entities) is not changed
  * </ul>
  *
@@ -136,7 +135,7 @@ public class LagartoParser2 extends CharScanner {
 
 
 	/**
-	 * Optimized data state.
+	 * 12.2.4.1 Data state
 	 */
 	protected State DATA_STATE =  new State() {
 		public void parse() {
@@ -162,7 +161,7 @@ public class LagartoParser2 extends CharScanner {
 				}
 
 				if (c == '&') {
-					// todo WHAT TO DO?
+					// todo
 				}
 			}
 		}
@@ -290,6 +289,12 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 
+				if (c == '>') {
+					state = DATA_STATE;
+					emitTag();
+					return;
+				}
+
 				if (equalsOne(c, ATTR_INVALID_1)) {
 					errorInvalidToken();
 				}
@@ -349,7 +354,7 @@ public class LagartoParser2 extends CharScanner {
 		}
 	};
 
-	protected State AFTER_ATTRIBUTE_NAME  = new State() {
+	protected State AFTER_ATTRIBUTE_NAME = new State() {
 		public void parse() {
 			while(true) {
 				ndx++;
@@ -415,10 +420,15 @@ public class LagartoParser2 extends CharScanner {
 					state = ATTR_VALUE_SINGLE_QUOTED;
 					return;
 				}
+				if (c == '&') {
+					state = ATTR_VALUE_UNQUOTED;
+					ndx--;
+					return;
+				}
 				if (c == '>') {
 					errorInvalidToken();
 					state = DATA_STATE;
-					//todo emitText(ndx);
+					emitTag();
 					return;
 				}
 				if (equalsOne(c, ATTR_INVALID_3)) {
@@ -450,6 +460,10 @@ public class LagartoParser2 extends CharScanner {
 					_addAttributeWithValue();
 					state = BEFORE_ATTRIBUTE_NAME;
 					return;
+				}
+
+				if (c == '&') {
+					// todo
 				}
 
 				if (c == '>') {
@@ -486,7 +500,9 @@ public class LagartoParser2 extends CharScanner {
 					state = AFTER_ATTRIBUTE_VALUE_QUOTED;
 					return;
 				}
-				// append
+				if (c == '&') {
+					// todo
+				}
 			}
 		}
 	};
@@ -511,7 +527,9 @@ public class LagartoParser2 extends CharScanner {
 					state = AFTER_ATTRIBUTE_VALUE_QUOTED;
 					return;
 				}
-				// append
+				if (c == '&') {
+					// todo
+				}
 			}
 		}
 	};
@@ -584,7 +602,7 @@ public class LagartoParser2 extends CharScanner {
 
 	protected State BOGUS_COMMENT = new State() {
 		public void parse() {
-			int tagEndNdx = find('>', total);
+			int tagEndNdx = find('>', total); 		// todo remove find
 
 			if (tagEndNdx == -1) {
 				tagEndNdx = total;
@@ -613,11 +631,13 @@ public class LagartoParser2 extends CharScanner {
 				return;
 			}
 
-			if (match(_DOCTYPE, false)) {
+			if (matchCaseInsensitiveWithUpper(_DOCTYPE, false)) {
 				state = DOCTYPE;
 				ndx += _DOCTYPE.length - 1;
 				return;
 			}
+
+			// todo cdata see: 12.2.4.45
 
 			errorInvalidToken();
 			state = BOGUS_COMMENT;
@@ -627,13 +647,11 @@ public class LagartoParser2 extends CharScanner {
 	// ---------------------------------------------------------------- RAWTEXT
 
 	protected int rawTextStart;		// todo prodji sve varijable i vidi da li se koriste!
-	protected char[] rawTagName;
 	protected int rawTextEnd;
+	protected char[] rawTagName;
 
 	protected State RAWTEXT = new State() {
 		public void parse() {
-			rawTextStart = ndx + 1;
-
 			while (true) {
 				ndx++;
 
@@ -657,13 +675,16 @@ public class LagartoParser2 extends CharScanner {
 		public void parse() {
 			ndx++;
 
-			if (!isEOF()) {
-				char c = input[ndx];
+			if (isEOF()) {
+				state = RAWTEXT;
+				return;
+			}
 
-				if (c == '/') {
-					state = RAWTEXT_END_TAG_OPEN;
-					return;
-				}
+			char c = input[ndx];
+
+			if (c == '/') {
+				state = RAWTEXT_END_TAG_OPEN;
+				return;
 			}
 
 			state = RAWTEXT;
@@ -674,76 +695,217 @@ public class LagartoParser2 extends CharScanner {
 		public void parse() {
 			ndx++;
 
-			if (!isEOF()) {
-				char c = input[ndx];
-				if (isAlpha(c)) {
-					state = RAWTEXT_END_TAG_NAME;
-					return;
-				}
+			if (isEOF()) {
+				state = RAWTEXT;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (isAlpha(c)) {
+				state = RAWTEXT_END_TAG_NAME;
+				return;
 			}
 
 			state = RAWTEXT;
 		}
 	};
 
-	int rawtextEndTagNameStartNdx = -1;
-
 	protected State RAWTEXT_END_TAG_NAME = new State() {
 		public void parse() {
-			rawtextEndTagNameStartNdx = ndx;
+			int rawtextEndTagNameStartNdx = ndx;
 
 			while (true) {
 				ndx++;
 
-				if (!isEOF()) {
-					char c = input[ndx];
+				if (isEOF()) {
+					state = RAWTEXT;
+					return;
+				}
 
-					if (equalsOne(c, TAG_WHITESPACES)) {
-						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-							emitText(rawTextStart, rawTextEnd);
-							state = BEFORE_ATTRIBUTE_NAME;
-							tag.start(rawTextEnd);
-							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
-							tag.setType(TagType.END);
-						} else {
-							state = RAWTEXT;
-						}
-						return;
-					}
+				char c = input[ndx];
 
-					if (c == '/') {
-						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-							emitText(rawTextStart, rawTextEnd);
-							state = SELF_CLOSING_START_TAG;
-							tag.start(rawTextEnd);
-							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
-							tag.setType(TagType.SELF_CLOSING);
-						} else {
-							state = RAWTEXT;
-						}
-						return;
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+						emitText(rawTextStart, rawTextEnd);
+						state = BEFORE_ATTRIBUTE_NAME;
+						tag.start(rawTextEnd);
+						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setType(TagType.END);
+					} else {
+						state = RAWTEXT;
 					}
+					return;
+				}
 
-					if (c == '>') {
-						if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-							emitText(rawTextStart, rawTextEnd);
-							state = DATA_STATE;
-							tag.start(rawTextEnd);
-							tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
-							tag.setType(TagType.END);
-							tag.end(ndx);
-							emitTag();
-						} else {
-							state = RAWTEXT;
-						}
-						return;
+				if (c == '/') {
+					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+						emitText(rawTextStart, rawTextEnd);
+						state = SELF_CLOSING_START_TAG;
+						tag.start(rawTextEnd);
+						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setType(TagType.SELF_CLOSING);
+					} else {
+						state = RAWTEXT;
 					}
-					if (isAlpha(c)) {
-						continue;
+					return;
+				}
+
+				if (c == '>') {
+					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
+						emitText(rawTextStart, rawTextEnd);
+						state = DATA_STATE;
+						tag.start(rawTextEnd);
+						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setType(TagType.END);
+						tag.end(ndx);
+						emitTag();
+					} else {
+						state = RAWTEXT;
 					}
+					return;
+				}
+				if (isAlpha(c)) {
+					continue;
 				}
 
 				state = RAWTEXT;
+				return;
+			}
+		}
+	};
+
+	// ---------------------------------------------------------------- RCDATA
+
+	protected int rcdataStart;
+	protected int rcdataEnd;
+	protected char[] rcdataTagName;
+
+	protected State RCDATA = new State() {
+		public void parse() {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '<') {
+					rcdataEnd = ndx;
+					state = RCDATA_LESS_THAN_SIGN;
+					return;
+				}
+
+				if (c == '&') {
+					// todo
+				}
+			}
+		}
+	};
+
+	protected State RCDATA_LESS_THAN_SIGN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				state = RCDATA;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (c == '/') {
+				state = RCDATA_END_TAG_OPEN;
+				return;
+			}
+
+			state = RCDATA;
+		}
+	};
+
+	protected State RCDATA_END_TAG_OPEN = new State() {
+		public void parse() {
+			ndx++;
+
+			if (isEOF()) {
+				state = RCDATA;
+				return;
+			}
+
+			char c = input[ndx];
+
+			if (isAlpha(c)) {
+				state = RCDATA_END_TAG_NAME;
+				return;
+			}
+
+			state = RCDATA;
+		}
+	};
+
+	protected State RCDATA_END_TAG_NAME = new State() {
+		public void parse() {
+			int rcdataEndTagNameStartNdx = ndx;
+
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					state = RCDATA;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (equalsOne(c, TAG_WHITESPACES)) {
+					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
+						emitText(rcdataStart, rcdataEnd);
+						state = BEFORE_ATTRIBUTE_NAME;
+						tag.start(rcdataEnd);
+						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setType(TagType.END);
+					} else {
+						state = RCDATA;
+					}
+					return;
+				}
+
+				if (c == '/') {
+					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
+						emitText(rcdataStart, rcdataEnd);
+						state = SELF_CLOSING_START_TAG;
+						tag.start(rcdataEnd);
+						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setType(TagType.SELF_CLOSING);
+					} else {
+						state = RCDATA;
+					}
+					return;
+				}
+
+				if (c == '>') {
+					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
+						emitText(rcdataStart, rcdataEnd);
+						state = DATA_STATE;
+						tag.start(rcdataEnd);
+						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setType(TagType.END);
+						tag.end(ndx);
+						emitTag();
+					} else {
+						state = RCDATA;
+					}
+					return;
+				}
+
+				if (isAlpha(c)) {
+					continue;
+				}
+
+				state = RCDATA;
 				return;
 			}
 		}
@@ -1992,13 +2154,16 @@ public class LagartoParser2 extends CharScanner {
 			public void parse() {
 				ndx++;
 
-				if (!isEOF()) {                        // todo implement this pattern everywhere possible to reduce code!
-					char c = input[ndx];
+				if (isEOF()) {
+					state = SCRIPT_DATA_DOUBLE_ESCAPED;
+					return;
+				}
 
-					if (c == '/') {
-						state = SCRIPT_DATA_DOUBLE_ESCAPE_END;
-						return;
-					}
+				char c = input[ndx];
+
+				if (c == '/') {
+					state = SCRIPT_DATA_DOUBLE_ESCAPE_END;
+					return;
 				}
 
 				state = SCRIPT_DATA_DOUBLE_ESCAPED;
@@ -2012,20 +2177,23 @@ public class LagartoParser2 extends CharScanner {
 				while (true) {
 					ndx++;
 
-					if (!isEOF()) {
-						char c = input[ndx];
+					if (isEOF()) {
+						state = SCRIPT_DATA_DOUBLE_ESCAPED;
+						return;
+					}
 
-						if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
-							if (isAppropriateTagName(_SCRIPT, doubleEscapedEndTag, ndx)) {
-								state = SCRIPT_DATA_ESCAPED;
-							} else {
-								state = SCRIPT_DATA_DOUBLE_ESCAPED;
-							}
-							return;
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
+						if (isAppropriateTagName(_SCRIPT, doubleEscapedEndTag, ndx)) {
+							state = SCRIPT_DATA_ESCAPED;
+						} else {
+							state = SCRIPT_DATA_DOUBLE_ESCAPED;
 						}
-						if (isAlpha(c)) {
-							continue;
-						}
+						return;
+					}
+					if (isAlpha(c)) {
+						continue;
 					}
 
 					state = SCRIPT_DATA_DOUBLE_ESCAPED;
@@ -2044,13 +2212,19 @@ public class LagartoParser2 extends CharScanner {
 	protected int attrValueStartNdx = -1;
 
 	private void _addAttribute() {
-		tag.addAttribute(substring(attrStartNdx, attrEndNdx), null);
-		attrStartNdx = -1;
-		attrEndNdx = -1;
+		_addAttribute(substring(attrStartNdx, attrEndNdx), null);
 	}
 
 	private void _addAttributeWithValue() {
-		tag.addAttribute(substring(attrStartNdx, attrEndNdx), substring(attrValueStartNdx, ndx));
+		_addAttribute(substring(attrStartNdx, attrEndNdx), substring(attrValueStartNdx, ndx));
+	}
+
+	private void _addAttribute(String attrName, String attrValue) {
+		if (tag.hasAttribute(attrName, false)) {
+			_error("Ignored duplicated attribute: " + attrName);
+		} else {
+			tag.addAttribute(attrName, attrValue);
+		}
 		attrStartNdx = -1;
 		attrEndNdx = -1;
 		attrValueStartNdx = -1;
@@ -2074,7 +2248,19 @@ public class LagartoParser2 extends CharScanner {
 			for (char[] rawtextTagName : RAWTEXT_TAGS) {
 				if (tag.matchTagName(rawtextTagName)) {
 					state = RAWTEXT;
+					rawTextStart = ndx + 1;
 					rawTagName = rawtextTagName;
+					break;
+				}
+			}
+
+			// detect RCDATA tag
+
+			for (char[] rcdataTextTagName : RCDATA_TAGS) {
+				if (tag.matchTagName(rcdataTextTagName)) {
+					state = RCDATA;
+					rcdataStart = ndx + 1;
+					rcdataTagName = rcdataTextTagName;
 					break;
 				}
 			}
@@ -2136,7 +2322,7 @@ public class LagartoParser2 extends CharScanner {
 
 		tag.increaseDeepLevel();
 
-		visitor.script(tag, substring(from, to));		// todo da li za ovo treba specijalna visit metoda kao sto sada ima?
+		visitor.script(tag, substring(from, to));		// todo da li za script() treba specijalna visit metoda kao sto sada ima?
 
 		tag.decreaseDeepLevel();
 		scriptStartNdx = -1;
@@ -2163,7 +2349,7 @@ public class LagartoParser2 extends CharScanner {
 
 	/**
 	 * Prepares error message and reports it to the visitor.
-	 * todo add text that surrounds the error position
+	 * todo in the error message, add text that surrounds the error position
 	 */
 	protected void _error(String message) {
 		flushText();
@@ -2225,12 +2411,18 @@ public class LagartoParser2 extends CharScanner {
 	private static final char[] _NOFRAMES = new char[] {'n', 'o', 'f', 'r', 'a', 'm', 'e', 's'};
 	private static final char[] _NOEMBED = new char[] {'n', 'o', 'e', 'm', 'b', 'e', 'd'};
 	private static final char[] _NOSCRIPT = new char[] {'n', 'o', 's', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] _TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
+	private static final char[] _TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
 	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
 	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
 
 	// 'script' is handled by its states todo check this!
-	private static final char[][] RAWTEXT_TAGS = new char[][] {
+	private static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
 			_XMP, _STYLE, _IFRAME, _NOEMBED, _NOFRAMES, _NOSCRIPT,
+	};
+
+	private static final char[][] RCDATA_TAGS = new char[][] {
+			_TEXTAREA, _TITLE
 	};
 
 }
