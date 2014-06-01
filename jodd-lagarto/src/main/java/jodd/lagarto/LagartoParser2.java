@@ -6,6 +6,8 @@ import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
+import java.nio.CharBuffer;
+
 import static jodd.util.CharUtil.equalsOne;
 import static jodd.util.CharUtil.isAlpha;
 
@@ -54,10 +56,12 @@ public class LagartoParser2 extends CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		super.initialize(input);
-		textStartNdx = textEndNdx = -1;
+		this.textStartNdx = textEndNdx = -1;
 		this.ctx = new LagartoParserContext();
 		this.tag = new ParsedTag(input);
 		this.doctype = new ParsedDoctype(input);
+		this.text = new char[1024];
+		this.textLen = 0;
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -133,21 +137,19 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- start & end
 
+	protected char[] text;
+	protected int textLen;
 
 	/**
-	 * 12.2.4.1 Data state
+	 * Data state.
 	 */
 	protected State DATA_STATE =  new State() {
 		public void parse() {
-			int textStart = ndx + 1;
 
 			while (true) {
 				ndx++;
 
 				if (isEOF()) {
-					if (textStart < total) {
-						emitText(textStart, total);
-					}
 					parsing = false;
 					return;
 				}
@@ -155,7 +157,6 @@ public class LagartoParser2 extends CharScanner {
 				char c = input[ndx];
 
 				if (c == '<') {
-					emitText(textStart, ndx);
 					state = TAG_OPEN;
 					return;
 				}
@@ -163,9 +164,23 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '&') {
 					// todo
 				}
+
+				emitChar(c);
 			}
 		}
 	};
+
+	/**
+	 * Emits characters into the local buffer.
+	 * Text will be emitted only on {@link #flushText()}.
+	 */
+	protected void emitChar(char c) {
+		if (textLen == text.length) {
+			// todo resize array
+		}
+		text[textLen] = c;
+		textLen++;
+	}
 
 	protected State TAG_OPEN = new State() {
 		public void parse() {
@@ -176,7 +191,7 @@ public class LagartoParser2 extends CharScanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitText(ndx - 1, ndx);
+				emitChar('<');
 				return;
 			}
 
@@ -202,7 +217,8 @@ public class LagartoParser2 extends CharScanner {
 
 			errorInvalidToken();
 			state = DATA_STATE;
-			emitText(ndx - 1, ndx);
+			emitChar('<');
+
 			ndx--;
 		}
 	};
@@ -774,6 +790,16 @@ public class LagartoParser2 extends CharScanner {
 			}
 		}
 	};
+
+	/**
+	 * Similar to {@link #emitChar(char)}, emits mulitple chars at once.
+	 */
+	private void emitText(int from, int to) {
+		while (from < to) {
+			emitChar(input[from]);
+			from++;
+		}
+	}
 
 	// ---------------------------------------------------------------- RCDATA
 
@@ -2284,37 +2310,17 @@ public class LagartoParser2 extends CharScanner {
 		commentStart = -1;
 	}
 
-
-	/**
-	 * Consumes text from current index to given index.
-	 * Pointer moves to a new location.
-	 */
-	protected void emitText(int from, int to) {
-		if (textStartNdx != -1) {
-			if (from != textEndNdx) {
-				flushText();	// previous block is not continuous, flush it
-				textStartNdx = from;
-			}
-		} else {
-			textStartNdx = from;
-		}
-		textEndNdx = to;
-	}
-
 	/**
 	 * Flushes text buffer. Does nothing if buffer does not exist
 	 * or it is empty. Must be called before every non-text visit method!
 	 */
 	protected void flushText() {
-		if (textStartNdx == -1) {
-			return;		// nothing to flush
+		if (textLen != 0) {
+			char[] textToEmit = new char[textLen];
+			System.arraycopy(text, 0, textToEmit, 0, textLen);
+			visitor.text(CharBuffer.wrap(textToEmit));	// todo wrap or toString()
 		}
-
-		if (textStartNdx != textEndNdx) {
-			visitor.text(charSequence(textStartNdx, textEndNdx));
-		}
-
-		textStartNdx = -1;
+		textLen = 0;
 	}
 
 	protected void emitScript(int from, int to) {
