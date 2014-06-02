@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class HtmlDecoder {
 
-	private static final Map<String, Character> ENTITY_MAP;
+	private static final Map<String, char[]> ENTITY_MAP;
 
 	static {
 		Properties entityReferences = new Properties();
@@ -37,19 +37,34 @@ public class HtmlDecoder {
 			StreamUtil.close(is);
 		}
 
-		ENTITY_MAP = new HashMap<String, Character>(entityReferences.size());
+		ENTITY_MAP = new HashMap<String, char[]>(entityReferences.size());
 
 		Enumeration keys = entityReferences.propertyNames();
 		while (keys.hasMoreElements()) {
 			String name = (String) keys.nextElement();
-			String hex = entityReferences.getProperty(name);
-			int value = Integer.parseInt(hex, 16);
-			ENTITY_MAP.put(name, Character.valueOf((char) value));
+			String values = entityReferences.getProperty(name);
+			String[] array = StringUtil.splitc(values, ',');
+
+			char[] chars;
+
+			String hex = array[0];
+			char value = (char) Integer.parseInt(hex, 16);
+
+			if (array.length == 2) {
+				String hex2 = array[1];
+				char value2 = (char) Integer.parseInt(hex2, 16);
+
+				chars = new char[]{value, value2};
+			} else {
+				chars = new char[]{value};
+			}
+
+			ENTITY_MAP.put(name, chars);
 		}
 	}
 
 	/**
-	 * Decodes HTML text.
+	 * Decodes HTML text. Assumes that all character references are properly closed with semi-colon.
 	 */
 	public static String decode(String html) {
 
@@ -94,12 +109,13 @@ mainloop:
 			} else {
 				// token
 				String encodeToken = html.substring(ndx + 1, lastIndex);
-				Character replacement = ENTITY_MAP.get(encodeToken);
+
+				char[] replacement = ENTITY_MAP.get(encodeToken);
 				if (replacement == null) {
 					result.append('&');
 					lastIndex = ndx + 1;
 				} else {
-					result.append(replacement.charValue());
+					result.append(replacement);
 					lastIndex++;
 				}
 			}

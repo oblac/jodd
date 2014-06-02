@@ -78,4 +78,13 @@ public class HtmlDecoderTest {
 
 		assertEquals("switchTab(\"Senthil1\");showWorkFlow(\"/xyz/abc.jsp?strWorkId=1691&archived=0\");", out);
 	}
+
+	@Test
+	public void testEmitTwoChars() {
+		String s = "Hey&acE;!";
+
+		String out = HtmlDecoder.decode(s);
+
+		assertEquals("Hey\u223E\u0333!", out);
+	}
 }
