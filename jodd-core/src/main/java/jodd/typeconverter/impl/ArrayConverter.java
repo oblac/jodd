@@ -122,12 +122,20 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = CsvUtil.toStringArray(value.toString());
+			String[] strings = convertStringToArray(value.toString());
 			return convertArrayToArray(strings);
 		}
 
 		// everything else:
 		return convertToSingleElementArray(value);
+	}
+
+	/**
+	 * Converts string to array, for the {@link #convertValueToArray(Object)} method.
+	 * By default, the string is converted into an array using {@link jodd.util.CsvUtil}.
+	 */
+	protected String[] convertStringToArray(String value) {
+		return CsvUtil.toStringArray(value);
 	}
 
 	/**

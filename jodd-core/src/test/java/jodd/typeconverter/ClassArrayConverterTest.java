@@ -27,7 +27,7 @@ public class ClassArrayConverterTest {
 		} catch (TypeConversionException ignore) {
 		}
 
-		assertEq(arrc(Integer.class, String.class), classArrayConverter.convert("java.lang.Integer\n  java.lang.String  \n\n#java.lang.Long"));
+		assertEq(arrc(Integer.class, String.class), classArrayConverter.convert("java.lang.Integer\n\n  java.lang.String  \n\n#java.lang.Long"));
 	}
 
 	private void assertEq(Class<String>[] arr1, Class[] arr2) {
