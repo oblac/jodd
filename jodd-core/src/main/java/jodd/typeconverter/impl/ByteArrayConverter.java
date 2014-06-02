@@ -7,6 +7,7 @@ import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
+import jodd.util.collection.ByteArrayList;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,19 +112,13 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-            int count = 0;
+			ByteArrayList byteArrayList = new ByteArrayList();
 			for (Object element : iterable) {
-				count++;
-			}
-
-			byte[] target = new byte[count];
-			int i = 0;
-			for (Object element : iterable) {
-				target[i] = convertType(element);
-            	i++;
+				byte convertedValue = convertType(element);
+				byteArrayList.add(convertedValue);
             }
 
-			return target;
+			return byteArrayList.toArray();
 		}
 
 		if (value instanceof CharSequence) {

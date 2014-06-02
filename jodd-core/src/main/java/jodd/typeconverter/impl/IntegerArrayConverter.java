@@ -5,9 +5,9 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
+import jodd.util.collection.IntArrayList;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -84,21 +84,14 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			int count = 0;
-			Iterator iterator = iterable.iterator();
-			while (iterator.hasNext()) {
-				iterator.next();
-				count++;
-			}
+			IntArrayList intArrayList = new IntArrayList();
 
-			int[] target = new int[count];
-			int i = 0;
 			for (Object element : iterable) {
-				target[i] = convertType(element);
-				i++;
+				int convertedValue = convertType(element);
+				intArrayList.add(convertedValue);
 			}
 
-			return target;
+			return intArrayList.toArray();
 		}
 
 		if (value instanceof CharSequence) {

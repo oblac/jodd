@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
+import jodd.util.collection.LongArrayList;
 
 import java.util.Collection;
 import java.util.List;
@@ -84,19 +85,14 @@ public class LongArrayConverter implements TypeConverter<long[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-            int count = 0;
-			for (Object element : iterable) {
-				count++;
-			}
+			LongArrayList longArrayList = new LongArrayList();
 
-			long[] target = new long[count];
-			int i = 0;
 			for (Object element : iterable) {
-				target[i] = convertType(element);
-            	i++;
+				long convertedValue = convertType(element);
+            	longArrayList.add(convertedValue);
             }
 
-			return target;
+			return longArrayList.toArray();
 		}
 
 		if (value instanceof CharSequence) {

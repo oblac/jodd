@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
+import jodd.util.collection.ShortArrayList;
 
 import java.util.Collection;
 import java.util.List;
@@ -84,19 +85,14 @@ public class ShortArrayConverter implements TypeConverter<short[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-            int count = 0;
-			for (Object element : iterable) {
-				count++;
-			}
+			ShortArrayList shortArrayList = new ShortArrayList();
 
-			short[] target = new short[count];
-			int i = 0;
 			for (Object element : iterable) {
-				target[i] = convertType(element);
-            	i++;
+				short convertedValue = convertType(element);
+            	shortArrayList.add(convertedValue);
             }
 
-			return target;
+			return shortArrayList.toArray();
 		}
 
 		if (value instanceof CharSequence) {

@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
+import jodd.util.collection.CharArrayList;
 
 import java.util.Collection;
 import java.util.List;
@@ -84,19 +85,13 @@ public class CharacterArrayConverter implements TypeConverter<char[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-            int count = 0;
+			CharArrayList charArrayList = new CharArrayList();
 			for (Object element : iterable) {
-				count++;
-			}
-
-			char[] target = new char[count];
-			int i = 0;
-			for (Object element : iterable) {
-				target[i] = convertType(element);
-            	i++;
+				char convertedValue = convertType(element);
+				charArrayList.add(convertedValue);
             }
 
-			return target;
+			return charArrayList.toArray();
 		}
 
 		if (value instanceof CharSequence) {
