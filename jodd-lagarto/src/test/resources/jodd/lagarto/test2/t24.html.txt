@@ -1,0 +1,6 @@
+wrn:[Parse error: invalid character reference [1:6 @5]
+txt:[€]
+wrn:[Parse error: invalid character reference [1:12 @11]
+txt:[]
+wrn:[Parse error: invalid character reference [1:17 @16]
+txt:[@a]

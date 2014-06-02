@@ -10,6 +10,7 @@ import java.nio.CharBuffer;
 
 import static jodd.util.CharUtil.equalsOne;
 import static jodd.util.CharUtil.isAlpha;
+import static jodd.util.CharUtil.isDigit;
 
 /**
  * HTML/XML content parser using {@link TagVisitor} for callbacks.
@@ -162,13 +163,172 @@ public class LagartoParser2 extends CharScanner {
 				}
 
 				if (c == '&') {
-					// todo
+					consumeCharacterReference();
+					continue;
 				}
 
 				emitChar(c);
 			}
 		}
 	};
+
+	protected void consumeCharacterReference() {
+		int unconsumeNdx = ndx;
+
+		ndx++;
+
+		if (isEOF()) {
+			return;
+		}
+
+		char c = input[ndx];
+
+		if (equalsOne(c, CONTINUE_CHARS)) {
+			ndx = unconsumeNdx;
+			return;
+		}
+
+		if (c == '#') {
+			ndx++;
+
+			if (isEOF()) {
+				ndx = unconsumeNdx;
+				return;
+			}
+
+			c = input[ndx];
+
+			int value = 0;
+			int digitCount = 0;
+
+			if (c == 'X' || c == 'x') {
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						ndx = unconsumeNdx;
+						return;
+					}
+
+					c = input[ndx];
+
+					if (isDigit(c)) {
+						value *= 16;
+						value += c - '0';
+						digitCount++;
+					} else if ((c >= 'a') && (c <= 'f')) {
+						value *= 16;
+						value += c - 'a' + 10;
+						digitCount++;
+					} else if ((c >= 'A') && (c <= 'F')) {
+						value *= 16;
+						value += c - 'A' + 10;
+						digitCount++;
+					} else {
+						break;
+					}
+				}
+			} else {
+				while (isDigit(c)) {
+					value *= 10;
+					value += c - '0';
+
+					ndx++;
+
+					if (isEOF()) {
+						ndx = unconsumeNdx;
+						return;
+					}
+
+					c = input[ndx];
+					digitCount++;
+				}
+			}
+
+			if (digitCount == 0) {
+				// no character matches the range
+				errorCharReference();
+				ndx = unconsumeNdx;
+				return;
+			}
+
+			if (c != ';') {
+				errorCharReference();
+				ndx--;	// go back, as pointer is on the next char
+			}
+
+			boolean isErr = true;
+			switch (value) {
+				case 0: c = REPLACEMENT_CHAR; break;
+				case 0x80: c = '\u20AC'; break;
+				case 0x81: c = '\u0081'; break;
+				case 0x82: c = '\u201A'; break;
+				case 0x83: c = '\u0192'; break;
+				case 0x84: c = '\u201E'; break;
+				case 0x85: c = '\u2026'; break;
+				case 0x86: c = '\u2020'; break;
+				case 0x87: c = '\u2021'; break;
+				case 0x88: c = '\u02C6'; break;
+				case 0x89: c = '\u2030'; break;
+				case 0x8A: c = '\u0160'; break;
+				case 0x8B: c = '\u2039'; break;
+				case 0x8C: c = '\u0152'; break;
+				case 0x8D: c = '\u008D'; break;
+				case 0x8E: c = '\u017D'; break;
+				case 0x8F: c = '\u008F'; break;
+				case 0x90: c = '\u0090'; break;
+				case 0x91: c = '\u2018'; break;
+				case 0x92: c = '\u2019'; break;
+				case 0x93: c = '\u201C'; break;
+				case 0x94: c = '\u201D'; break;
+				case 0x95: c = '\u2022'; break;
+				case 0x96: c = '\u2013'; break;
+				case 0x97: c = '\u2014'; break;
+				case 0x98: c = '\u02DC'; break;
+				case 0x99: c = '\u2122'; break;
+				case 0x9A: c = '\u0161'; break;
+				case 0x9B: c = '\u203A'; break;
+				case 0x9C: c = '\u0153'; break;
+				case 0x9D: c = '\u009D'; break;
+				case 0x9E: c = '\u017E'; break;
+				case 0x9F: c = '\u0178'; break;
+				default:
+					isErr = false;
+			}
+
+			if (isErr) {
+				errorCharReference();
+				emitChar(c);
+				return;
+			}
+
+			if (((value >= 0xD800) && (value <= 0xDFF)) || (value > 0x10FFFF)) {
+				errorCharReference();
+				emitChar(REPLACEMENT_CHAR);
+				return;
+			}
+
+			c = (char) value;
+
+			emitChar(c);
+
+			if (
+				((c >= 0x0001) && (c <= 0x0008)) ||
+				((c >= 0x000D) && (c <= 0x001F)) ||
+				((c >= 0x007F) && (c <= 0x009F)) ||
+				((c >= 0xFDD0) && (c <= 0xFDEF))
+			) {
+				errorCharReference();
+				return;
+			}
+
+			if (equalsOne(c, INVALID_CHARS)) {
+				errorCharReference();
+			}
+
+			return;
+		}
+	}
 
 	/**
 	 * Emits characters into the local buffer.
@@ -2353,6 +2513,10 @@ public class LagartoParser2 extends CharScanner {
 		_error("Parse error: invalid token");
 	}
 
+	protected void errorCharReference() {
+		_error("Parse error: invalid character reference");
+	}
+
 	/**
 	 * Prepares error message and reports it to the visitor.
 	 * todo in the error message, add text that surrounds the error position
@@ -2404,6 +2568,7 @@ public class LagartoParser2 extends CharScanner {
 
 	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
 	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
+	private static final char[] CONTINUE_CHARS = new char[] {'\t', '\n', '\r', ' ', '<', '&'};
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
 	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
 	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
@@ -2430,5 +2595,12 @@ public class LagartoParser2 extends CharScanner {
 	private static final char[][] RCDATA_TAGS = new char[][] {
 			_TEXTAREA, _TITLE
 	};
+
+	protected static final char REPLACEMENT_CHAR = '\uFFFD';
+	protected static final char[] INVALID_CHARS = new char[] {'\u000B', '\uFFFE', '\uFFFF'};
+	//, '\u1FFFE', '\u1FFFF', '\u2FFFE', '\u2FFFF', '\u3FFFE', '\u3FFFF', '\u4FFFE,
+	//	'\u4FFFF', '\u5FFFE', '\u5FFFF', '\u6FFFE', '\u6FFFF', '\u7FFFE', '\u7FFFF', '\u8FFFE', '\u8FFFF', '\u9FFFE,
+	//	'\u9FFFF', '\uAFFFE', '\uAFFFF', '\uBFFFE', '\uBFFFF', '\uCFFFE', '\uCFFFF', '\uDFFFE', '\uDFFFF', '\uEFFFE,
+	//	'\uEFFFF', '\uFFFFE', '\uFFFFF', '\u10FFFE', '\u10FFFF',
 
 }

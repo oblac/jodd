@@ -293,6 +293,13 @@ public class CharUtil {
 	}
 
 	/**
+	 * Indicates whether the given character is the hexadecimal digit.
+	 */
+	public static boolean isHexDigit(char c) {
+		return (c >= '0' && c <= '9') || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F'));
+	}
+
+	/**
 	 * Indicates whether the given character is in the <i>gen-delims</i> set.
 	 *
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
