@@ -26,7 +26,7 @@ public class ByteArrayConverterTest {
 		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(arrd(1.99, 7.99, 3.22)));
 		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(arrs("1", "7", "3")));
 		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(arrs(" 1 ", " 7 ", " 3 ")));
-		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(" 1 ,  7 ,  3 "));
+		assertEq(arrb(1, 7, 3), byteArrayConverter.convert(" 1 ;  7 ;  3 "));
 	}
 
 	@Test

@@ -28,6 +28,7 @@ public class DoubleArrayConverterTest {
 		assertEq(arrd(1.73, 10.22), doubleArrayConverter.convert(arrs("1.73", "10.22")));
 		assertEq(arrd(1.73, 10.22), doubleArrayConverter.convert(arrs(" 1.73 ", " 10.22 ")));
 		assertEq(arrd(1.73, 10), doubleArrayConverter.convert(arro("1.73", Integer.valueOf(10))));
+		assertEq(arrd(1.73, 10), doubleArrayConverter.convert("1.73 \n 10"));
 	}
 
 	private void assertEq(double[] arr1, double[] arr2) {

@@ -32,6 +32,7 @@ public class BooleanArrayConverterTest {
 		assertEq(arrl(true, false, true), booleanArrayConverter.convert(arrf(-7.0f, 0.0f, 3.0f)));
 		assertEq(arrl(true, false, true), booleanArrayConverter.convert(arrs("true", "0", "yes")));
 		assertEq(arrl(true, false, true), booleanArrayConverter.convert(arrs(" true ", "0", " yes ")));
+		assertEq(arrl(true, false, true), booleanArrayConverter.convert(" true , 0,  yes "));
 	}
 
 	@Test

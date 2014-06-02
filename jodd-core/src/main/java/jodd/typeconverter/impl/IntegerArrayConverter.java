@@ -4,7 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.CsvUtil;
+import jodd.util.StringUtil;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -102,7 +102,7 @@ public class IntegerArrayConverter implements TypeConverter<int[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = CsvUtil.toStringArray(value.toString());
+			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 

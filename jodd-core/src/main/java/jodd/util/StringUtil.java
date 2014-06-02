@@ -595,10 +595,25 @@ public class StringUtil {
 	 * @return array of tokens
 	 */
 	public static String[] splitc(String src, String d) {
-		if ((d.length() == 0) || (src.length() == 0) ) {
+		if ((d.length() == 0) || (src.length() == 0)) {
 			return new String[] {src};
 		}
-		char[] delimiters = d.toCharArray();
+		return splitc(src, d.toCharArray());
+	}
+	/**
+	 * Splits a string in several parts (tokens) that are separated by delimiter
+	 * characters. Delimiter may contains any number of character and it is
+	 * always surrounded by two strings.
+	 *
+	 * @param src			source to examine
+	 * @param delimiters	char array with delimiter characters
+	 *
+	 * @return array of tokens
+	 */
+	public static String[] splitc(String src, char[] delimiters) {
+		if ((delimiters.length == 0) || (src.length() == 0) ) {
+			return new String[] {src};
+		}
 		char[] srcc = src.toCharArray();
 
 		int maxparts = srcc.length + 1;

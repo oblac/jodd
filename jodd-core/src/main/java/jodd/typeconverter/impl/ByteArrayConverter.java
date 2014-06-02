@@ -6,7 +6,7 @@ import jodd.io.FileUtil;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.util.CsvUtil;
+import jodd.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,7 +127,7 @@ public class ByteArrayConverter implements TypeConverter<byte[]> {
 		}
 
 		if (value instanceof CharSequence) {
-			String[] strings = CsvUtil.toStringArray(value.toString());
+			String[] strings = StringUtil.splitc(value.toString(), ArrayConverter.NUMBER_DELIMITERS);
 			return convertArrayToArray(strings);
 		}
 

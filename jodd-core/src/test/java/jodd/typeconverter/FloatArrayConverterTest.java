@@ -28,6 +28,7 @@ public class FloatArrayConverterTest {
 		assertEq(arrf((float) 1.73, (float) 10.22), floatArrayConverter.convert(arrs("1.73", "10.22")));
 		assertEq(arrf((float) 1.73, (float) 10.22), floatArrayConverter.convert(arrs(" 1.73 ", " 10.22 ")));
 		assertEq(arrf((float) 1.73, 10), floatArrayConverter.convert(arro("1.73", 10)));
+		assertEq(arrf((float) 1.73, 10), floatArrayConverter.convert("1.73 \n 10"));
 	}
 
 	private void assertEq(float[] arr1, float[] arr2) {

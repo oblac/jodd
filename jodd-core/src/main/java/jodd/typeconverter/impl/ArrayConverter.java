@@ -25,6 +25,8 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ArrayConverter<T> implements TypeConverter<T[]> {
 
+	public static final char[] NUMBER_DELIMITERS = new char[] {',', ';', '\n'};
+
 	protected final TypeConverterManagerBean typeConverterManagerBean;
 	protected final Class<T> targetComponentType;
 

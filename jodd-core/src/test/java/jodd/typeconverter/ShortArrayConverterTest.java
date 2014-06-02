@@ -24,6 +24,7 @@ public class ShortArrayConverterTest {
 		assertEq(arrs(173, 1022), shortArrayConverter.convert(arrs("173", "1022")));
 		assertEq(arrs(173, 1022), shortArrayConverter.convert(arrs(" 173 ", " 1022 ")));
 		assertEq(arrs(173, 10), shortArrayConverter.convert(arro("173", Integer.valueOf(10))));
+		assertEq(arrs(173, 10), shortArrayConverter.convert("173,10"));
 	}
 
 	private void assertEq(short[] arr1, short[] arr2) {
