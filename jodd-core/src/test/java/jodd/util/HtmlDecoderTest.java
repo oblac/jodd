@@ -87,4 +87,16 @@ public class HtmlDecoderTest {
 
 		assertEquals("Hey\u223E\u0333!", out);
 	}
+
+	@Test
+	public void testDetectName() {
+		char[] str = "&nbsp;".toCharArray();
+		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
+
+		str = "&nbsppppp".toCharArray();
+		assertEquals("nbsp", HtmlDecoder.detectName(str, 1));
+
+		str = "&nb".toCharArray();
+		assertEquals(null, HtmlDecoder.detectName(str, 1));
+	}
 }

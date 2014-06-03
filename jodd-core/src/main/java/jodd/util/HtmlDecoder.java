@@ -4,7 +4,6 @@ package jodd.util;
 
 import jodd.io.StreamUtil;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -24,15 +23,12 @@ public class HtmlDecoder {
 		String propertiesName = HtmlDecoder.class.getSimpleName() + ".properties";
 
 		InputStream is = HtmlDecoder.class.getResourceAsStream(propertiesName);
-		if (is == null) {
-			throw new IllegalStateException("Missing: " + propertiesName);
-		}
 
 		try {
 			entityReferences.load(is);
 		}
-		catch (IOException ioex) {
-			throw new IllegalStateException(ioex.getMessage());
+		catch (Exception ex) {
+			throw new IllegalStateException(ex.getMessage());
 		} finally {
 			StreamUtil.close(is);
 		}
@@ -123,6 +119,46 @@ mainloop:
 		}
 		result.append(html.substring(lastIndex));
 		return result.toString();
+	}
+
+	/**
+	 * Detects HTML name on given location, after the {@code &} sign.
+	 */
+	public static String detectName(char[] input, int ndx) {
+		char[] sb = new char[40];
+		int len = input.length;
+
+		// add first char as there is no ref name with length 1
+		if (ndx + 1 >= len) {
+			return null;
+		}
+		sb[0] = input[ndx];
+		ndx++;
+		int offset = 1;
+
+		while (true) {
+			char c = input[ndx];
+
+			if (c == ';') {
+				return null;
+			}
+
+			sb[offset++] = c;
+
+			String name = new String(sb, 0, offset);
+
+			char[] ref = ENTITY_MAP.get(name);
+
+			if (ref != null) {
+				return name;
+			}
+
+			ndx++;
+
+			if (ndx == len) {
+				return null;
+			}
+		}
 	}
 
 }
