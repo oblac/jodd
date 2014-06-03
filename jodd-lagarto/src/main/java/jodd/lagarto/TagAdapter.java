@@ -33,10 +33,6 @@ public class TagAdapter implements TagVisitor {
 		target.tag(tag);
 	}
 
-	public void style(Tag tag, CharSequence body) {
-		target.style(tag, body);
-	}
-
 	public void script(Tag tag, CharSequence body) {
 		target.script(tag, body);
 	}

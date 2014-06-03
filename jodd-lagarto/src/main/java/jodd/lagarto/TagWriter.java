@@ -41,18 +41,6 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void style(Tag tag, CharSequence body) {
-		try {
-			tag.writeTo(appendable);
-			if (body != null) {
-				appendable.append(body);
-			}
-			appendable.append("</style>");
-		} catch (IOException ioex) {
-			throw new LagartoException(ioex);
-		}
-	}
-
 	public void script(Tag tag, CharSequence body) {
 		try {
 			tag.writeTo(appendable);

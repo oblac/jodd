@@ -349,20 +349,6 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- tree
 
-	public void style(Tag tag, CharSequence body) {
-		if (!enabled) {
-			return;
-		}
-
-		Element node = createElementNode(tag);
-		parentNode.addChild(node);
-
-		if (body.length() != 0) {
-			Node text = createText(body.toString());
-			node.addChild(text);
-		}
-	}
-
 	public void script(Tag tag, CharSequence body) {
 		if (!enabled) {
 			return;

@@ -19,9 +19,6 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void script(Tag tag, CharSequence body) {
 	}
 
-	public void style(Tag tag, CharSequence body) {
-	}
-
 	public void comment(CharSequence comment) {
 	}
 

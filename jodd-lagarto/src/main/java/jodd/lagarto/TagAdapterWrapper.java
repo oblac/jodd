@@ -30,11 +30,6 @@ public class TagAdapterWrapper implements TagVisitor {
 		target.tag(tag);
 	}
 
-	public void style(Tag tag, CharSequence body) {
-		visitor.style(tag, body);
-		target.style(tag, body);
-	}
-
 	public void script(Tag tag, CharSequence body) {
 		visitor.script(tag, body);
 		target.script(tag, body);

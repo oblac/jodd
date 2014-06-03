@@ -38,11 +38,6 @@ public interface TagVisitor {
 	void script(Tag tag, CharSequence body);
 
 	/**
-	 * Invoked on <b>style</b> tag.
-	 */
-	void style(Tag tag, CharSequence body);
-
-	/**
 	 * Invoked on comment.
 	 */
 	void comment(CharSequence comment);
