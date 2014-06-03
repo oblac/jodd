@@ -7,8 +7,6 @@ import jodd.util.CharUtil;
 
 import java.io.IOException;
 
-import static jodd.lagarto.LagartoParserUtil.subSequence;
-
 /**
  * Reusable, parsed {@link Tag tag} implementation.
  */
@@ -29,10 +27,10 @@ class ParsedTag implements Tag {
 
 	// input data
 	private final LagartoLexer lexer;
-	private final char[] input;		// todo NEMOJ da pravis isecak - ali kada pravi DOM ne sme da se koristi
-	private int startIndex;
-	private int endIndex;
-	private int length;
+
+	private int tagStartIndex;
+	private int tagEndIndex;
+	private int tagLength;
 
 	// state
 	private int deepLevel;
@@ -42,12 +40,10 @@ class ParsedTag implements Tag {
 
 	ParsedTag(LagartoLexer lexer) {
 		this.lexer = lexer;
-		this.input = lexer.getInput();
 	}
 
 	ParsedTag(char[] input) {
 		this.lexer = null;
-		this.input = input;
 	}
 
 	/**
@@ -55,11 +51,11 @@ class ParsedTag implements Tag {
 	 * Resets all tag data.
 	 */
 	public void start(int startIndex) {
-		this.startIndex = startIndex;
+		this.tagStartIndex = startIndex;
 		this.name = null;
 		this.idNdx = -1;
 		this.attributesCount = 0;
-		this.length = 0;
+		this.tagLength = 0;
 		this.modified = false;
 		this.type = TagType.START;
 		this.tagStart = type.getStartString();
@@ -71,8 +67,8 @@ class ParsedTag implements Tag {
 	 * Sets the modification flag to <code>false</code>.
 	 */
 	void end(int endIndex) {
-		this.endIndex = endIndex;
-		this.length = endIndex - startIndex;
+		this.tagEndIndex = endIndex;
+		this.tagLength = endIndex - tagStartIndex;
 		this.modified = false;
 	}
 
@@ -80,8 +76,6 @@ class ParsedTag implements Tag {
 	@Deprecated
 	void defineTag(TagType type, int start, int length) {
 		this.type = type;
-		this.startIndex = start;
-		this.length = length;
 		this.modified = false;
 		this.tagStart = type.getStartString();
 		this.tagEnd = type.getEndString();
@@ -109,14 +103,12 @@ class ParsedTag implements Tag {
 			return false;
 		}
 
-		int i = startIndex + 1;
-
 		int ndx = 0;
 		while (ndx < len) {
-			if (CharUtil.toLowerAscii(input[i]) != tagNameLowercase[ndx]) {
+			if (CharUtil.toLowerAscii(name.charAt(ndx)) != tagNameLowercase[ndx]) {
 				return false;
 			}
-			ndx++; i++;
+			ndx++;
 		}
 		return true;
 	}
@@ -188,11 +180,11 @@ class ParsedTag implements Tag {
 	// ---------------------------------------------------------------- advanced
 
 	public int getTagPosition() {		//  todo  remove from public API
-		return startIndex;
+		return tagStartIndex;
 	}
 
 	public int getTagLength() {			//  todo  remove from public API
-		return length;
+		return tagLength;
 	}
 
 	// ---------------------------------------------------------------- write
@@ -329,22 +321,11 @@ class ParsedTag implements Tag {
 	}
 
 	public void writeTo(Appendable out) throws IOException {
-		writeTo(out, false);
-	}
-
-	public void writeTo(Appendable out, boolean forceBuild) throws IOException {
-		if (modified) {
-			forceBuild = true;
-		}
-		if (forceBuild) {
-			appendTo(out);
-		} else {
-			out.append(subSequence(input, startIndex, endIndex));
-		}
+		appendTo(out);
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder(length);
+		StringBuilder sb = new StringBuilder();
 		appendTo(sb);
 		return sb.toString();
 	}

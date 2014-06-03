@@ -939,6 +939,8 @@ public class LagartoParser2 extends CharScanner {
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
 						textEmitChars(rawTextStart, rawTextEnd);
+						emitText();
+
 						state = BEFORE_ATTRIBUTE_NAME;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -952,6 +954,8 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '/') {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
 						textEmitChars(rawTextStart, rawTextEnd);
+						emitText();
+
 						state = SELF_CLOSING_START_TAG;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -965,6 +969,8 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '>') {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
 						textEmitChars(rawTextStart, rawTextEnd);
+						emitText();
+
 						state = DATA_STATE;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -988,8 +994,7 @@ public class LagartoParser2 extends CharScanner {
 
 	// ---------------------------------------------------------------- RCDATA
 
-	protected int rcdataStart;
-	protected int rcdataEnd;
+	protected int rcdataTagStart = -1;
 	protected char[] rcdataTagName;
 
 	protected State RCDATA = new State() {
@@ -1005,7 +1010,7 @@ public class LagartoParser2 extends CharScanner {
 				char c = input[ndx];
 
 				if (c == '<') {
-					rcdataEnd = ndx;
+					rcdataTagStart = ndx;
 					state = RCDATA_LESS_THAN_SIGN;
 					return;
 				}
@@ -1013,6 +1018,8 @@ public class LagartoParser2 extends CharScanner {
 				if (c == '&') {
 					consumeCharacterReference();
 				}
+
+				textEmitChar(c);
 			}
 		}
 	};
@@ -1034,6 +1041,8 @@ public class LagartoParser2 extends CharScanner {
 			}
 
 			state = RCDATA;
+			textEmitChar('<');
+			textEmitChar(c);
 		}
 	};
 
@@ -1054,6 +1063,9 @@ public class LagartoParser2 extends CharScanner {
 			}
 
 			state = RCDATA;
+			textEmitChar('<');
+			textEmitChar('/');
+			textEmitChar(c);
 		}
 	};
 
@@ -1073,9 +1085,10 @@ public class LagartoParser2 extends CharScanner {
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						textEmitChars(rcdataStart, rcdataEnd);
+						emitText();
+
 						state = BEFORE_ATTRIBUTE_NAME;
-						tag.start(rcdataEnd);
+						tag.start(rcdataTagStart);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 					} else {
@@ -1086,9 +1099,10 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '/') {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						textEmitChars(rcdataStart, rcdataEnd);
+						emitText();
+
 						state = SELF_CLOSING_START_TAG;
-						tag.start(rcdataEnd);
+						tag.start(rcdataTagStart);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.SELF_CLOSING);
 					} else {
@@ -1099,9 +1113,10 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '>') {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						textEmitChars(rcdataStart, rcdataEnd);
+						emitText();
+
 						state = DATA_STATE;
-						tag.start(rcdataEnd);
+						tag.start(rcdataTagStart);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 						tag.end(ndx);
@@ -2509,7 +2524,7 @@ public class LagartoParser2 extends CharScanner {
 			for (char[] rcdataTextTagName : RCDATA_TAGS) {
 				if (tag.matchTagName(rcdataTextTagName)) {
 					state = RCDATA;
-					rcdataStart = ndx + 1;
+					rcdataTagStart = ndx + 1;
 					rcdataTagName = rcdataTextTagName;
 					break;
 				}

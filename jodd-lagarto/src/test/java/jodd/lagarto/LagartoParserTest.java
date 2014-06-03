@@ -6,6 +6,7 @@ import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
+import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,44 +65,26 @@ public class LagartoParserTest {
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
 
 				String formattedOut = null;
-				File formatted = new File(file.getAbsolutePath() + ".htm");
+				File formatted = new File(file.getAbsolutePath() + "-fmt.htm");
 				if (formatted.exists()) {
 					formattedOut = FileUtil.readString(formatted);
-				}
-				String formattedOut2 = null;
-				formatted = new File(file.getAbsolutePath() + "-fmt.htm");
-				if (formatted.exists()) {
-					formattedOut2 = FileUtil.readString(formatted);
 				}
 
 				boolean isXml = file.getName().endsWith(".xml");
 
 				String[] results = _parse(content, isXml);
 				String result = results[0];		// parsing result
-				String result2 = results[1];	// tag writer (no rebuild)
-				String result3 = results[2];	// tag writer (rebuild)
+				String result2 = results[1];	// tag writer
 
 				expectedResult = StringUtil.removeChars(expectedResult, '\r');
 				result = StringUtil.removeChars(result, '\r').trim();
 
 				assertEquals(expectedResult, result);
 
-				if (
-						!file.getName().equals("test05.html") &&
-						!file.getName().equals("tag01.html")
-
-					) {
-					if (formattedOut != null) {
-						assertEquals(formattedOut, result2);
-					} else {
-						assertEquals(content, result2);
-					}
-				}
-
-				if (formattedOut2 != null) {
-					assertEquals(formattedOut2, result3);
+				if (formattedOut != null) {
+					assertEquals(formattedOut, result2);
 				} else {
-					assertEquals(content, result3);
+					assertEquals(content, result2);
 				}
 			}
 		}
@@ -157,7 +140,6 @@ public class LagartoParserTest {
 	private String[] _parse(String content, boolean isXml) {
 		final StringBuilder result = new StringBuilder();
 		final StringBuilder out = new StringBuilder();
-		final StringBuilder out2 = new StringBuilder();
 
 		TagVisitor visitor = new TagVisitor() {
 
@@ -183,7 +165,7 @@ public class LagartoParserTest {
 				}
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
@@ -194,7 +176,7 @@ public class LagartoParserTest {
 				result.append("xml:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 
 					}
@@ -206,7 +188,7 @@ public class LagartoParserTest {
 				result.append("xmp:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
@@ -220,7 +202,7 @@ public class LagartoParserTest {
 				result.append("css:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
@@ -234,7 +216,7 @@ public class LagartoParserTest {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
 					try {
-						tag.writeTo(result, true);
+						tag.writeTo(result);
 					} catch (IOException ignored) {
 					}
 				}
@@ -283,8 +265,7 @@ public class LagartoParserTest {
 				result.append("wrn:[").append(message).append(NEWLINE);
 			}
 		};
-		TagWriter writer1 = new TagWriter(out, false);
-		TagWriter writer2 = new TagWriter(out2, true);
+		TagWriter tagWriter = new TagWriter(out);
 
 		//LagartoParser lagartoParser = new LagartoParser(content);
 		LagartoParser2 lagartoParser = new LagartoParser2(content);
@@ -294,11 +275,11 @@ public class LagartoParserTest {
 			lagartoParser.setXmlMode(true);
 		}
 
-		TagAdapterWrapper taw = new TagAdapterWrapper(visitor,
-				new TagAdapterWrapper(writer1, writer2));
+		TagAdapterWrapper taw = new TagAdapterWrapper(visitor, tagWriter);
 
 		lagartoParser.parse(taw);
-		return new String[]{result.toString(), out.toString(), out2.toString()};
+
+		return new String[]{result.toString(), out.toString()};
 	}
 
 }

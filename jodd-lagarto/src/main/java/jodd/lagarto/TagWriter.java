@@ -11,17 +11,10 @@ import java.io.IOException;
  */
 public class TagWriter implements TagVisitor {
 
-	protected final boolean forceBuild;
 	protected Appendable appendable;
 
 	public TagWriter(Appendable appendable) {
 		this.appendable = appendable;
-		this.forceBuild = false;
-	}
-
-	public TagWriter(Appendable appendable, boolean forceBuild) {
-		this.appendable = appendable;
-		this.forceBuild = forceBuild;
 	}
 
 	public void setOutput(Appendable out) {
@@ -42,7 +35,7 @@ public class TagWriter implements TagVisitor {
 
 	public void tag(Tag tag) {
 		try {
-			tag.writeTo(appendable, forceBuild);
+			tag.writeTo(appendable);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -50,7 +43,7 @@ public class TagWriter implements TagVisitor {
 
 	public void xmp(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(appendable, forceBuild);
+			tag.writeTo(appendable);
 			if (body != null) {
 				appendable.append(body);
 			}
@@ -62,7 +55,7 @@ public class TagWriter implements TagVisitor {
 
 	public void style(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(appendable, forceBuild);
+			tag.writeTo(appendable);
 			if (body != null) {
 				appendable.append(body);
 			}
@@ -74,7 +67,7 @@ public class TagWriter implements TagVisitor {
 
 	public void script(Tag tag, CharSequence body) {
 		try {
-			tag.writeTo(appendable, forceBuild);
+			tag.writeTo(appendable);
 			if (body != null) {
 				appendable.append(body);
 			}
@@ -110,7 +103,7 @@ public class TagWriter implements TagVisitor {
 
 	public void xml(Tag tag) {
 		try {
-			tag.writeTo(appendable, forceBuild);
+			tag.writeTo(appendable);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
