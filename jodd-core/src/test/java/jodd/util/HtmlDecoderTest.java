@@ -101,5 +101,8 @@ public class HtmlDecoderTest {
 
 		str = "&acE".toCharArray();
 		assertEquals("acE", HtmlDecoder.detectName(str, 1));
+
+		str = "&notit".toCharArray();
+		assertEquals("not", HtmlDecoder.detectName(str, 1));
 	}
 }

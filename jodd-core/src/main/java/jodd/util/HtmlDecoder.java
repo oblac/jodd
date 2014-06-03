@@ -153,6 +153,7 @@ mainloop:
 		int firstIndex = 0;
 		int lastIndex = ENTITY_NAMES.length - 1;
 		int len = input.length;
+		char[] lastName = null;
 
 		BinarySearchBase binarySearch = new BinarySearchBase() {
 			@Override
@@ -170,24 +171,29 @@ mainloop:
 		while (true) {
 			ptr.c = input[ndx];
 
-			if (ptr.c == ';') {
-				return null;
+			if (!CharUtil.isAlphaOrDigit(ptr.c)) {
+				return lastName != null ? new String(lastName) : null;
 			}
 
 			firstIndex = binarySearch.findFirst(firstIndex, lastIndex);
 			if (firstIndex < 0) {
-				return null;
+				return lastName != null ? new String(lastName) : null;
+			}
+
+			char[] element = ENTITY_NAMES[firstIndex];
+
+			if (element.length == ptr.offset + 1) {
+				// total match, remember position, continue for finding the longer name
+				lastName = ENTITY_NAMES[firstIndex];
 			}
 
 			lastIndex = binarySearch.findLast(firstIndex, lastIndex);
 
 			if (firstIndex == lastIndex) {
 				// only one element found, check the rest
-				char[] element = ENTITY_NAMES[firstIndex];
-
 				for (int i = ptr.offset; i < element.length; i++) {
 					if (element[i] != input[ndx]) {
-						return null;
+						return lastName != null ? new String(lastName) : null;
 					}
 					ndx++;
 				}
@@ -198,7 +204,7 @@ mainloop:
 
 			ndx++;
 			if (ndx == len) {
-				return null;
+				return lastName != null ? new String(lastName) : null;
 			}
 		}
 	}
