@@ -98,5 +98,8 @@ public class HtmlDecoderTest {
 
 		str = "&nb".toCharArray();
 		assertEquals(null, HtmlDecoder.detectName(str, 1));
+
+		str = "&acE".toCharArray();
+		assertEquals("acE", HtmlDecoder.detectName(str, 1));
 	}
 }

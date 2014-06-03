@@ -5,6 +5,8 @@ package jodd.util;
 import jodd.io.StreamUtil;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.Properties;
 public class HtmlDecoder {
 
 	private static final Map<String, char[]> ENTITY_MAP;
+	private static final char[][] ENTITY_NAMES;
 
 	static {
 		Properties entityReferences = new Properties();
@@ -57,6 +60,21 @@ public class HtmlDecoder {
 
 			ENTITY_MAP.put(name, chars);
 		}
+
+		// create sorted list of entry names
+
+		ENTITY_NAMES = new char[ENTITY_MAP.size()][];
+
+		int i = 0;
+		for (String name : ENTITY_MAP.keySet()) {
+			ENTITY_NAMES[i++] = name.toCharArray();
+		}
+
+		Arrays.sort(ENTITY_NAMES, new Comparator<char[]>() {
+			public int compare(char[] o1, char[] o2) {
+				return new String(o1).compareTo(new String(o2));
+			}
+		});
 	}
 
 	/**
@@ -121,44 +139,75 @@ mainloop:
 		return result.toString();
 	}
 
+	private static final class Ptr {
+		public int offset;
+		public char c;
+	}
+
 	/**
-	 * Detects HTML name on given location, after the {@code &} sign.
+	 * Detects the longest character reference name on given position in char array.
 	 */
-	public static String detectName(char[] input, int ndx) {
-		char[] sb = new char[40];
+	public static String detectName(final char[] input, int ndx) {
+		final Ptr ptr = new Ptr();
+
+		int firstIndex = 0;
+		int lastIndex = ENTITY_NAMES.length - 1;
 		int len = input.length;
 
-		// add first char as there is no ref name with length 1
-		if (ndx + 1 >= len) {
-			return null;
-		}
-		sb[0] = input[ndx];
-		ndx++;
-		int offset = 1;
+		BinarySearchBase binarySearch = new BinarySearchBase() {
+			@Override
+			protected int compare(int index) {
+				char[] name = ENTITY_NAMES[index];
+
+				if (ptr.offset >= name.length) {
+					return -1;
+				}
+
+				return name[ptr.offset] - ptr.c;
+			}
+		};
 
 		while (true) {
-			char c = input[ndx];
+			ptr.c = input[ndx];
 
-			if (c == ';') {
+			if (ptr.c == ';') {
 				return null;
 			}
 
-			sb[offset++] = c;
-
-			String name = new String(sb, 0, offset);
-
-			char[] ref = ENTITY_MAP.get(name);
-
-			if (ref != null) {
-				return name;
+			firstIndex = binarySearch.findFirst(firstIndex, lastIndex);
+			if (firstIndex < 0) {
+				return null;
 			}
 
-			ndx++;
+			lastIndex = binarySearch.findLast(firstIndex, lastIndex);
 
+			if (firstIndex == lastIndex) {
+				// only one element found, check the rest
+				char[] element = ENTITY_NAMES[firstIndex];
+
+				for (int i = ptr.offset; i < element.length; i++) {
+					if (element[i] != input[ndx]) {
+						return null;
+					}
+					ndx++;
+				}
+				return new String(element);
+			}
+
+			ptr.offset++;
+
+			ndx++;
 			if (ndx == len) {
 				return null;
 			}
 		}
+	}
+
+	/**
+	 * Returns replacement chars for given character reference.
+	 */
+	public static char[] lookup(String name) {
+		return ENTITY_MAP.get(name);
 	}
 
 }
