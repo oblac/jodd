@@ -16,9 +16,6 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void tag(Tag tag) {
 	}
 
-	public void xmp(Tag tag, CharSequence body) {
-	}
-
 	public void script(Tag tag, CharSequence body) {
 	}
 

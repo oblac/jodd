@@ -344,7 +344,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 */
 	protected Document doParse(LagartoParser lagartoParser) {
 		// parser flags
-		lagartoParser.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);
+		//lagartoParser.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);		// todo?
 		lagartoParser.setEnableConditionalComments(enableConditionalComments);
 		lagartoParser.setCalculatePosition(calculatePosition);
 

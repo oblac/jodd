@@ -6,7 +6,6 @@ import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.io.findfile.FindFile;
 import jodd.io.findfile.WildcardFindFile;
-import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -124,7 +123,7 @@ public class LagartoParserTest {
 	}
 
 	private String _parseEmpty(String content) {
-		LagartoParser2 lagartoParser = new LagartoParser2(content);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
@@ -267,8 +266,7 @@ public class LagartoParserTest {
 		};
 		TagWriter tagWriter = new TagWriter(out);
 
-		//LagartoParser lagartoParser = new LagartoParser(content);
-		LagartoParser2 lagartoParser = new LagartoParser2(content);
+		LagartoParser lagartoParser = new LagartoParser(content);
 		lagartoParser.setCalculatePosition(true);
 
 		if (isXml) {

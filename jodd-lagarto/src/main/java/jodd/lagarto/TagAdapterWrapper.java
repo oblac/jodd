@@ -30,11 +30,6 @@ public class TagAdapterWrapper implements TagVisitor {
 		target.tag(tag);
 	}
 
-	public void xmp(Tag tag, CharSequence body) {
-		visitor.xmp(tag, body);
-		target.xmp(tag, body);
-	}
-
 	public void style(Tag tag, CharSequence body) {
 		visitor.style(tag, body);
 		target.style(tag, body);

@@ -12,6 +12,7 @@ import java.nio.CharBuffer;
  * on 12/9/13 7:49 AM from the specification file
  * <tt>lexer.flex</tt>
  */
+@Deprecated
 abstract class Lexer {
 
   /** This character denotes the end of file */

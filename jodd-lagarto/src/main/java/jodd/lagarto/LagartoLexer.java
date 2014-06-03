@@ -5,6 +5,7 @@ package jodd.lagarto;
 /**
  * Lagarto lexer.
  */
+@Deprecated
 public final class LagartoLexer extends Lexer {
 
 	private final char[] input;

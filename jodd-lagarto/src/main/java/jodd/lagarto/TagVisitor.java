@@ -33,11 +33,6 @@ public interface TagVisitor {
 	void tag(Tag tag);
 
 	/**
-	 * Invoked on <b>xmp</b> tag.
-	 */
-	void xmp(Tag tag, CharSequence body);
-
-	/**
 	 * Invoked on <b>script</b> tag.
 	 */
 	void script(Tag tag, CharSequence body);
