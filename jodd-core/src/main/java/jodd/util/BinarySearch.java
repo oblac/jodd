@@ -48,6 +48,42 @@ public abstract class BinarySearch<E> {
 		};
 	}
 
+	/**
+	 * Creates binary search wrapper over an array.
+	 */
+	public static <T extends Comparable> BinarySearch<T> forArray(final T[] array) {
+		return new BinarySearch<T>() {
+			@Override
+			@SuppressWarnings( {"unchecked"})
+			protected int compare(int index, T element) {
+				return array[index].compareTo(element);
+			}
+
+			@Override
+			protected int getLastIndex() {
+				return array.length - 1;
+			}
+		};
+	}
+
+	/**
+	 * Creates binary search wrapper over an array with given comparator.
+	 */
+	public static <T> BinarySearch<T> forArray(final T[] array, final Comparator<T> comparator) {
+		return new BinarySearch<T>() {
+			@Override
+			@SuppressWarnings( {"unchecked"})
+			protected int compare(int index, T element) {
+				return comparator.compare(array[index], element);
+			}
+
+			@Override
+			protected int getLastIndex() {
+				return array.length - 1;
+			}
+		};
+	}
+
 	// ---------------------------------------------------------------- abstract
 
 	/**
@@ -67,10 +103,6 @@ public abstract class BinarySearch<E> {
 	 */
 	public int find(E element) {
 		return find(element, 0, getLastIndex());
-	}
-
-	public int find(E element, int low) {
-		return find(element, low, getLastIndex());
 	}
 
 	/**
@@ -101,10 +133,6 @@ public abstract class BinarySearch<E> {
 	 */
 	public int findFirst(E o) {
 		return findFirst(o, 0, getLastIndex());
-	}
-
-	public int findFirst(E o, int low) {
-		return findFirst(o, low, getLastIndex());
 	}
 
 	/**
@@ -142,10 +170,6 @@ public abstract class BinarySearch<E> {
 	 */
 	public int findLast(E o) {
 		return findLast(o, 0, getLastIndex());
-	}
-
-	public int findLast(E o, int low) {
-		return findLast(o, low, getLastIndex());
 	}
 
 	/**

@@ -89,13 +89,13 @@ public class BinarySearchTest {
 	@Test
 	public void testFindRange() {
 		assertEquals(3, listBinarySearch.findFirst("ddd"));
-		assertEquals(5, listBinarySearch.findLast("ddd", 3));
+		assertEquals(5, listBinarySearch.findLast("ddd", 3, 9));
 
 		assertEquals(7, listBinarySearch.findFirst("iii"));
-		assertEquals(8, listBinarySearch.findLast("iii"), 7);
+		assertEquals(8, listBinarySearch.findLast("iii", 7, 9));
 
 		assertEquals(2, listBinarySearch.findFirst("ccc"));
-		assertEquals(2, listBinarySearch.findLast("ccc", 2));
+		assertEquals(2, listBinarySearch.findLast("ccc", 2, 9));
 
 	}
 }
