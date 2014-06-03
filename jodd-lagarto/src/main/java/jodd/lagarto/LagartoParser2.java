@@ -2,7 +2,9 @@
 
 package jodd.lagarto;
 
+import jodd.util.ArraysUtil;
 import jodd.util.CharUtil;
+import jodd.util.HtmlDecoder;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
@@ -57,7 +59,6 @@ public class LagartoParser2 extends CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		super.initialize(input);
-		this.textStartNdx = textEndNdx = -1;
 		this.ctx = new LagartoParserContext();
 		this.tag = new ParsedTag(input);
 		this.doctype = new ParsedDoctype(input);
@@ -131,26 +132,23 @@ public class LagartoParser2 extends CharScanner {
 			state.parse();
 		}
 
-		flushText();
+		emitText();
 
 		visitor.end();
 	}
 
 	// ---------------------------------------------------------------- start & end
 
-	protected char[] text;
-	protected int textLen;
-
 	/**
 	 * Data state.
 	 */
 	protected State DATA_STATE =  new State() {
 		public void parse() {
-
 			while (true) {
 				ndx++;
 
 				if (isEOF()) {
+					emitText();
 					parsing = false;
 					return;
 				}
@@ -158,6 +156,7 @@ public class LagartoParser2 extends CharScanner {
 				char c = input[ndx];
 
 				if (c == '<') {
+					emitText();
 					state = TAG_OPEN;
 					return;
 				}
@@ -167,10 +166,26 @@ public class LagartoParser2 extends CharScanner {
 					continue;
 				}
 
-				emitChar(c);
+				textEmitChar(c);
 			}
 		}
 	};
+
+	protected void consumeCharacterReference(char allowedChar) {
+		ndx++;
+		if (isEOF()) {
+			return;
+		}
+
+		char c = input[ndx];
+
+		if (c == allowedChar) {
+			ndx--;
+			return;
+		}
+
+		consumeCharacterReference();
+	}
 
 	protected void consumeCharacterReference() {
 		int unconsumeNdx = ndx;
@@ -189,157 +204,171 @@ public class LagartoParser2 extends CharScanner {
 		}
 
 		if (c == '#') {
-			ndx++;
+			_consumeNumber(unconsumeNdx);
+		} else {
+			String name = HtmlDecoder.detectName(input, ndx);
 
-			if (isEOF()) {
+			if (name == null) {
+				// this error is not quite as by the spec. The spec says that
+				// only a sequence of alphanumeric chars ending with semicolon
+				// gives na error
+				errorCharReference();
 				ndx = unconsumeNdx;
 				return;
 			}
+
+			// missing legacy attribute thing
+
+			ndx += name.length();
+
+			textEmitChars(HtmlDecoder.lookup(name));
 
 			c = input[ndx];
 
-			int value = 0;
-			int digitCount = 0;
-
-			if (c == 'X' || c == 'x') {
-				while (true) {
-					ndx++;
-
-					if (isEOF()) {
-						ndx = unconsumeNdx;
-						return;
-					}
-
-					c = input[ndx];
-
-					if (isDigit(c)) {
-						value *= 16;
-						value += c - '0';
-						digitCount++;
-					} else if ((c >= 'a') && (c <= 'f')) {
-						value *= 16;
-						value += c - 'a' + 10;
-						digitCount++;
-					} else if ((c >= 'A') && (c <= 'F')) {
-						value *= 16;
-						value += c - 'A' + 10;
-						digitCount++;
-					} else {
-						break;
-					}
-				}
-			} else {
-				while (isDigit(c)) {
-					value *= 10;
-					value += c - '0';
-
-					ndx++;
-
-					if (isEOF()) {
-						ndx = unconsumeNdx;
-						return;
-					}
-
-					c = input[ndx];
-					digitCount++;
-				}
-			}
-
-			if (digitCount == 0) {
-				// no character matches the range
-				errorCharReference();
-				ndx = unconsumeNdx;
-				return;
-			}
-
 			if (c != ';') {
 				errorCharReference();
-				ndx--;	// go back, as pointer is on the next char
+				ndx--;
 			}
-
-			boolean isErr = true;
-			switch (value) {
-				case 0: c = REPLACEMENT_CHAR; break;
-				case 0x80: c = '\u20AC'; break;
-				case 0x81: c = '\u0081'; break;
-				case 0x82: c = '\u201A'; break;
-				case 0x83: c = '\u0192'; break;
-				case 0x84: c = '\u201E'; break;
-				case 0x85: c = '\u2026'; break;
-				case 0x86: c = '\u2020'; break;
-				case 0x87: c = '\u2021'; break;
-				case 0x88: c = '\u02C6'; break;
-				case 0x89: c = '\u2030'; break;
-				case 0x8A: c = '\u0160'; break;
-				case 0x8B: c = '\u2039'; break;
-				case 0x8C: c = '\u0152'; break;
-				case 0x8D: c = '\u008D'; break;
-				case 0x8E: c = '\u017D'; break;
-				case 0x8F: c = '\u008F'; break;
-				case 0x90: c = '\u0090'; break;
-				case 0x91: c = '\u2018'; break;
-				case 0x92: c = '\u2019'; break;
-				case 0x93: c = '\u201C'; break;
-				case 0x94: c = '\u201D'; break;
-				case 0x95: c = '\u2022'; break;
-				case 0x96: c = '\u2013'; break;
-				case 0x97: c = '\u2014'; break;
-				case 0x98: c = '\u02DC'; break;
-				case 0x99: c = '\u2122'; break;
-				case 0x9A: c = '\u0161'; break;
-				case 0x9B: c = '\u203A'; break;
-				case 0x9C: c = '\u0153'; break;
-				case 0x9D: c = '\u009D'; break;
-				case 0x9E: c = '\u017E'; break;
-				case 0x9F: c = '\u0178'; break;
-				default:
-					isErr = false;
-			}
-
-			if (isErr) {
-				errorCharReference();
-				emitChar(c);
-				return;
-			}
-
-			if (((value >= 0xD800) && (value <= 0xDFF)) || (value > 0x10FFFF)) {
-				errorCharReference();
-				emitChar(REPLACEMENT_CHAR);
-				return;
-			}
-
-			c = (char) value;
-
-			emitChar(c);
-
-			if (
-				((c >= 0x0001) && (c <= 0x0008)) ||
-				((c >= 0x000D) && (c <= 0x001F)) ||
-				((c >= 0x007F) && (c <= 0x009F)) ||
-				((c >= 0xFDD0) && (c <= 0xFDEF))
-			) {
-				errorCharReference();
-				return;
-			}
-
-			if (equalsOne(c, INVALID_CHARS)) {
-				errorCharReference();
-			}
-
-			return;
 		}
 	}
 
-	/**
-	 * Emits characters into the local buffer.
-	 * Text will be emitted only on {@link #flushText()}.
-	 */
-	protected void emitChar(char c) {
-		if (textLen == text.length) {
-			// todo resize array
+	private void _consumeNumber(int unconsumeNdx) {
+		ndx++;
+
+		if (isEOF()) {
+			ndx = unconsumeNdx;
+			return;
 		}
-		text[textLen] = c;
-		textLen++;
+
+		char c = input[ndx];
+
+		int value = 0;
+		int digitCount = 0;
+
+		if (c == 'X' || c == 'x') {
+			while (true) {
+				ndx++;
+
+				if (isEOF()) {
+					ndx = unconsumeNdx;
+					return;
+				}
+
+				c = input[ndx];
+
+				if (isDigit(c)) {
+					value *= 16;
+					value += c - '0';
+					digitCount++;
+				} else if ((c >= 'a') && (c <= 'f')) {
+					value *= 16;
+					value += c - 'a' + 10;
+					digitCount++;
+				} else if ((c >= 'A') && (c <= 'F')) {
+					value *= 16;
+					value += c - 'A' + 10;
+					digitCount++;
+				} else {
+					break;
+				}
+			}
+		} else {
+			while (isDigit(c)) {
+				value *= 10;
+				value += c - '0';
+
+				ndx++;
+
+				if (isEOF()) {
+					ndx = unconsumeNdx;
+					return;
+				}
+
+				c = input[ndx];
+				digitCount++;
+			}
+		}
+
+		if (digitCount == 0) {
+			// no character matches the range
+			errorCharReference();
+			ndx = unconsumeNdx;
+			return;
+		}
+
+		if (c != ';') {
+			errorCharReference();
+			ndx--;	// go back, as pointer is on the next char
+		}
+
+		boolean isErr = true;
+		switch (value) {
+			case 0: c = REPLACEMENT_CHAR; break;
+			case 0x80: c = '\u20AC'; break;
+			case 0x81: c = '\u0081'; break;
+			case 0x82: c = '\u201A'; break;
+			case 0x83: c = '\u0192'; break;
+			case 0x84: c = '\u201E'; break;
+			case 0x85: c = '\u2026'; break;
+			case 0x86: c = '\u2020'; break;
+			case 0x87: c = '\u2021'; break;
+			case 0x88: c = '\u02C6'; break;
+			case 0x89: c = '\u2030'; break;
+			case 0x8A: c = '\u0160'; break;
+			case 0x8B: c = '\u2039'; break;
+			case 0x8C: c = '\u0152'; break;
+			case 0x8D: c = '\u008D'; break;
+			case 0x8E: c = '\u017D'; break;
+			case 0x8F: c = '\u008F'; break;
+			case 0x90: c = '\u0090'; break;
+			case 0x91: c = '\u2018'; break;
+			case 0x92: c = '\u2019'; break;
+			case 0x93: c = '\u201C'; break;
+			case 0x94: c = '\u201D'; break;
+			case 0x95: c = '\u2022'; break;
+			case 0x96: c = '\u2013'; break;
+			case 0x97: c = '\u2014'; break;
+			case 0x98: c = '\u02DC'; break;
+			case 0x99: c = '\u2122'; break;
+			case 0x9A: c = '\u0161'; break;
+			case 0x9B: c = '\u203A'; break;
+			case 0x9C: c = '\u0153'; break;
+			case 0x9D: c = '\u009D'; break;
+			case 0x9E: c = '\u017E'; break;
+			case 0x9F: c = '\u0178'; break;
+			default:
+				isErr = false;
+		}
+
+		if (isErr) {
+			errorCharReference();
+			textEmitChar(c);
+			return;
+		}
+
+		if (((value >= 0xD800) && (value <= 0xDFF)) || (value > 0x10FFFF)) {
+			errorCharReference();
+			textEmitChar(REPLACEMENT_CHAR);
+			return;
+		}
+
+		c = (char) value;
+
+		textEmitChar(c);
+
+		if (
+			((c >= 0x0001) && (c <= 0x0008)) ||
+			((c >= 0x000D) && (c <= 0x001F)) ||
+			((c >= 0x007F) && (c <= 0x009F)) ||
+			((c >= 0xFDD0) && (c <= 0xFDEF))
+		) {
+			errorCharReference();
+			return;
+		}
+
+		if (equalsOne(c, INVALID_CHARS)) {
+			errorCharReference();
+		}
 	}
 
 	protected State TAG_OPEN = new State() {
@@ -351,7 +380,7 @@ public class LagartoParser2 extends CharScanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitChar('<');
+				textEmitChar('<');
 				return;
 			}
 
@@ -377,7 +406,7 @@ public class LagartoParser2 extends CharScanner {
 
 			errorInvalidToken();
 			state = DATA_STATE;
-			emitChar('<');
+			textEmitChar('<');
 
 			ndx--;
 		}
@@ -619,7 +648,8 @@ public class LagartoParser2 extends CharScanner {
 
 	protected State ATTR_VALUE_UNQUOTED = new State() {
 		public void parse() {
-			attrValueStartNdx = ndx;
+			textStart();
+			textEmitChar(input[ndx]);
 
 			while (true) {
 				ndx++;
@@ -639,7 +669,8 @@ public class LagartoParser2 extends CharScanner {
 				}
 
 				if (c == '&') {
-					// todo
+					consumeCharacterReference('>');
+					continue;
 				}
 
 				if (c == '>') {
@@ -652,13 +683,15 @@ public class LagartoParser2 extends CharScanner {
 				if (equalsOne(c, ATTR_INVALID_4)) {
 					errorInvalidToken();
 				}
+
+				textEmitChar(c);
 			}
 		}
 	};
 
 	protected State ATTR_VALUE_SINGLE_QUOTED = new State() {
 		public void parse() {
-			attrValueStartNdx = ndx + 1;
+			textStart();
 
 			while (true) {
 				ndx++;
@@ -677,16 +710,18 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 				if (c == '&') {
-					// todo
+					consumeCharacterReference('\'');
+					continue;
 				}
+
+				textEmitChar(c);
 			}
 		}
 	};
 
 	protected State ATTR_VALUE_DOUBLE_QUOTED = new State() {
 		public void parse() {
-			attrValueStartNdx = ndx + 1;
-
+			textStart();
 			while (true) {
 				ndx++;
 
@@ -704,8 +739,10 @@ public class LagartoParser2 extends CharScanner {
 					return;
 				}
 				if (c == '&') {
-					// todo
+					consumeCharacterReference('\"');
 				}
+
+				textEmitChar(c);
 			}
 		}
 	};
@@ -713,8 +750,6 @@ public class LagartoParser2 extends CharScanner {
 
 	protected State AFTER_ATTRIBUTE_VALUE_QUOTED = new State() {
 		public void parse() {
-			attrValueStartNdx = ndx;
-
 			while (true) {
 				ndx++;
 
@@ -903,7 +938,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-						emitText(rawTextStart, rawTextEnd);
+						textEmitChars(rawTextStart, rawTextEnd);
 						state = BEFORE_ATTRIBUTE_NAME;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -916,7 +951,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '/') {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-						emitText(rawTextStart, rawTextEnd);
+						textEmitChars(rawTextStart, rawTextEnd);
 						state = SELF_CLOSING_START_TAG;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -929,7 +964,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '>') {
 					if (isAppropriateTagName(rawTagName, rawtextEndTagNameStartNdx, ndx)) {
-						emitText(rawTextStart, rawTextEnd);
+						textEmitChars(rawTextStart, rawTextEnd);
 						state = DATA_STATE;
 						tag.start(rawTextEnd);
 						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
@@ -950,16 +985,6 @@ public class LagartoParser2 extends CharScanner {
 			}
 		}
 	};
-
-	/**
-	 * Similar to {@link #emitChar(char)}, emits mulitple chars at once.
-	 */
-	private void emitText(int from, int to) {
-		while (from < to) {
-			emitChar(input[from]);
-			from++;
-		}
-	}
 
 	// ---------------------------------------------------------------- RCDATA
 
@@ -986,7 +1011,7 @@ public class LagartoParser2 extends CharScanner {
 				}
 
 				if (c == '&') {
-					// todo
+					consumeCharacterReference();
 				}
 			}
 		}
@@ -1048,7 +1073,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						emitText(rcdataStart, rcdataEnd);
+						textEmitChars(rcdataStart, rcdataEnd);
 						state = BEFORE_ATTRIBUTE_NAME;
 						tag.start(rcdataEnd);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
@@ -1061,7 +1086,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '/') {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						emitText(rcdataStart, rcdataEnd);
+						textEmitChars(rcdataStart, rcdataEnd);
 						state = SELF_CLOSING_START_TAG;
 						tag.start(rcdataEnd);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
@@ -1074,7 +1099,7 @@ public class LagartoParser2 extends CharScanner {
 
 				if (c == '>') {
 					if (isAppropriateTagName(rcdataTagName, rcdataEndTagNameStartNdx, ndx)) {
-						emitText(rcdataStart, rcdataEnd);
+						textEmitChars(rcdataStart, rcdataEnd);
 						state = DATA_STATE;
 						tag.start(rcdataEnd);
 						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
@@ -2389,20 +2414,61 @@ public class LagartoParser2 extends CharScanner {
 		};
 	}
 
-	// ---------------------------------------------------------------- emit
+	// ---------------------------------------------------------------- text
 
-	protected int textStartNdx = -1;
-	protected int textEndNdx = -1;
+	protected char[] text;
+	protected int textLen;
+
+	/**
+	 * Emits characters into the local buffer.
+	 * Text will be emitted only on {@link #flushText()}.
+	 */
+	protected void textEmitChar(char c) {
+		if (textLen == text.length) {
+			ArraysUtil.resize(text, textLen << 1);
+		}
+		text[textLen] = c;
+		textLen++;
+	}
+
+	/**
+	 * Resets text buffer.
+	 */
+	protected void textStart() {
+		textLen = 0;
+	}
+
+	protected void textEmitChars(int from, int to) {
+		while (from < to) {
+			textEmitChar(input[from]);
+			from++;
+		}
+	}
+
+	protected void textEmitChars(char[] buffer) {
+		for (char aBuffer : buffer) {
+			textEmitChar(aBuffer);
+		}
+	}
+
+	protected CharBuffer textWrap() {	// todo detect 0
+		char[] textToEmit = new char[textLen];
+		System.arraycopy(text, 0, textToEmit, 0, textLen);
+		return CharBuffer.wrap(textToEmit); 	// todo wrap or toString()
+	}
+
+
+	// ---------------------------------------------------------------- attr
+
 	protected int attrStartNdx = -1;
 	protected int attrEndNdx = -1;
-	protected int attrValueStartNdx = -1;
 
 	private void _addAttribute() {
 		_addAttribute(substring(attrStartNdx, attrEndNdx), null);
 	}
 
 	private void _addAttributeWithValue() {
-		_addAttribute(substring(attrStartNdx, attrEndNdx), substring(attrValueStartNdx, ndx));
+		_addAttribute(substring(attrStartNdx, attrEndNdx), textWrap().toString());
 	}
 
 	private void _addAttribute(String attrName, String attrValue) {
@@ -2413,12 +2479,10 @@ public class LagartoParser2 extends CharScanner {
 		}
 		attrStartNdx = -1;
 		attrEndNdx = -1;
-		attrValueStartNdx = -1;
+		textLen = 0;
 	}
 
 	protected void emitTag() {
-		flushText();
-
 		tag.end(ndx + 1);
 
 		if (tag.getType().isStartingTag()) {
@@ -2462,8 +2526,6 @@ public class LagartoParser2 extends CharScanner {
 	}
 
 	protected void emitComment(int from, int to) {
-		flushText();
-
 		CharSequence comment = charSequence(from, to);
 		visitor.comment(comment);
 
@@ -2471,21 +2533,16 @@ public class LagartoParser2 extends CharScanner {
 	}
 
 	/**
-	 * Flushes text buffer. Does nothing if buffer does not exist
-	 * or it is empty. Must be called before every non-text visit method!
+	 * Emits text if there is some content.
 	 */
-	protected void flushText() {
+	protected void emitText() {
 		if (textLen != 0) {
-			char[] textToEmit = new char[textLen];
-			System.arraycopy(text, 0, textToEmit, 0, textLen);
-			visitor.text(CharBuffer.wrap(textToEmit));	// todo wrap or toString()
+			visitor.text(textWrap());
 		}
 		textLen = 0;
 	}
 
 	protected void emitScript(int from, int to) {
-		flushText();
-
 		tag.increaseDeepLevel();
 
 		visitor.script(tag, substring(from, to));		// todo da li za script() treba specijalna visit metoda kao sto sada ima?
@@ -2496,8 +2553,6 @@ public class LagartoParser2 extends CharScanner {
 	}
 
 	protected void emitDoctype() {
-		flushText();
-
 		visitor.doctype(doctype);
 
 		doctype.reset();
@@ -2522,8 +2577,6 @@ public class LagartoParser2 extends CharScanner {
 	 * todo in the error message, add text that surrounds the error position
 	 */
 	protected void _error(String message) {
-		flushText();
-
 		int position = ndx;
 
 		if (calculatePosition) {
