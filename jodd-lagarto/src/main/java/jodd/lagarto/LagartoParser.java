@@ -747,39 +747,37 @@ public class LagartoParser extends CharScanner {
 		}
 	};
 
-
 	protected State AFTER_ATTRIBUTE_VALUE_QUOTED = new State() {
 		public void parse() {
-			while (true) {
-				ndx++;
+			ndx++;
 
-				if (isEOF()) {
-					errorEOF();
-					state = DATA_STATE;
-					return;
-				}
-
-				char c = input[ndx];
-
-				if (equalsOne(c, TAG_WHITESPACES)) {
-					state = BEFORE_ATTRIBUTE_NAME;
-					return;
-				}
-
-				if (c == '/') {
-					state = SELF_CLOSING_START_TAG;
-					return;
-				}
-
-				if (c == '>') {
-					state = DATA_STATE;
-					emitTag();
-					return;
-				}
-
-				errorInvalidToken();
-				state = BEFORE_ATTRIBUTE_NAME;
+			if (isEOF()) {
+				errorEOF();
+				state = DATA_STATE;
+				return;
 			}
+
+			char c = input[ndx];
+
+			if (equalsOne(c, TAG_WHITESPACES)) {
+				state = BEFORE_ATTRIBUTE_NAME;
+				return;
+			}
+
+			if (c == '/') {
+				state = SELF_CLOSING_START_TAG;
+				return;
+			}
+
+			if (c == '>') {
+				state = DATA_STATE;
+				emitTag();
+				return;
+			}
+
+			errorInvalidToken();
+			state = BEFORE_ATTRIBUTE_NAME;
+			ndx--;
 		}
 	};
 
