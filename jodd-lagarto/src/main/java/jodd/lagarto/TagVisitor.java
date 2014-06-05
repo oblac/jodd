@@ -65,10 +65,19 @@ public interface TagVisitor {
 	void doctype(Doctype doctype);
 
 	/**
-	 * Invoked on IE conditional comment. The <code>expression</code> if unmodified expression.
-	 * <code>comment</code> is optional additional comment and may be <code>null</code>.
+	 * Invoked on IE conditional comment. By default, the parser does <b>not</b>
+	 * process the conditional comments, so you need to turn them on. Once conditional
+	 * comments are enabled, this even will be fired.
+	 * <p>
+	 * The following conditional comments are recognized:
+	 * {@code
+	 * <!--[if IE 6]>one<![endif]-->
+	 * <!--[if IE 6]><!-->two<!---<![endif]-->
+	 * <!--[if IE 6]>three<!--xx<![endif]-->
+	 * <![if IE 6]>four<![endif]>
+	 * }
 	 */
-	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment);
+	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag);
 
 	// ---------------------------------------------------------------- errors
 

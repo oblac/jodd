@@ -42,7 +42,7 @@ public class LagartoNodeHtmlRenderer {
 		} else {
 			TagWriterUtil.writeConditionalComment(
 					appendable, nodeValue, comment.isStartingTag,
-					comment.conditionalDownlevelHidden.booleanValue(), comment.additionalComment);
+					comment.conditionalDownlevelHidden.booleanValue(), comment.isHiddenEndTag);
 		}
 	}
 

@@ -81,9 +81,9 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 
 	@Override
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 		insideConditionalComment = isStartingTag;
-		super.condComment(expression, isStartingTag, isHidden, comment);
+		super.condComment(expression, isStartingTag, isHidden, isHiddenEndTag);
 	}
 
 	// ---------------------------------------------------------------- end

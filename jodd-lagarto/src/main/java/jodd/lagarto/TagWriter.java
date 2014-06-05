@@ -97,9 +97,9 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 		try {
-			TagWriterUtil.writeConditionalComment(appendable, expression, isStartingTag, isHidden, comment);
+			TagWriterUtil.writeConditionalComment(appendable, expression, isStartingTag, isHidden, isHiddenEndTag);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}

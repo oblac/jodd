@@ -34,7 +34,7 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void doctype(Doctype doctype) {
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 	}
 
 	public void error(String message) {

@@ -415,7 +415,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(documentType);
 	}
 
-	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 		String defaultExpression = domBuilder.getConditionalCommentExpression();
 
 		if (defaultExpression != null) {
@@ -429,8 +429,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				return;
 			}
 
-			String additionalComment = comment != null ? comment.toString() : null;
-			Node commentNode = createConditionalComment(expression.toString(), isStartingTag, isHidden, additionalComment);
+			Node commentNode = createConditionalComment(expression.toString(), isStartingTag, isHidden, isHiddenEndTag);
 
 			parentNode.addChild(commentNode);
 		}
@@ -478,8 +477,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates conditional {@link Comment}.
 	 * @see Comment#Comment(Document, String, boolean, boolean, String)
 	 */
-	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
-		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, additionalComment);
+	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, boolean isHiddenEndTag) {
+		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, isHiddenEndTag);
 	}
 
 

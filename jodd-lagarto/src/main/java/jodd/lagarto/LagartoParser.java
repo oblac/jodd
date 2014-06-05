@@ -18,8 +18,9 @@ import static jodd.util.CharUtil.isDigit;
  * HTML/XML content parser using {@link TagVisitor} for callbacks.
  * Differences from: http://www.w3.org/TR/html5/
  * <ul>
- * <li>no {@code &} parsing in DATA_STATE.
  * <li>tag name case (and other entities) is not changed
+ * <li>tokenization continues without going into tree buidling</li>
+ * <li>conditional comments added</li>
  * </ul>
  *
  * What should be changed in SPEC:
@@ -811,7 +812,7 @@ public class LagartoParser extends CharScanner {
 
 	protected State BOGUS_COMMENT = new State() {
 		public void parse() {
-			int tagEndNdx = find('>', total); 		// todo remove find
+			int tagEndNdx = find('>', ndx, total); 		// todo remove find
 
 			if (tagEndNdx == -1) {
 				tagEndNdx = total;
@@ -834,16 +835,57 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 
-			if (match(COMMENT_DASH, false)) {
+			if (match(_COMMENT_DASH)) {
 				state = COMMENT_START;
 				ndx++;
 				return;
 			}
 
-			if (matchCaseInsensitiveWithUpper(_DOCTYPE, false)) {
+			if (matchCaseInsensitiveWithUpper(_DOCTYPE)) {
 				state = DOCTYPE;
 				ndx += _DOCTYPE.length - 1;
 				return;
+			}
+
+			if (enableConditionalComments) {
+				// CC: downlevel-revealed starting
+				if (match(_CC_IF)) {
+					int ccEndNdx = find(_CC_END, ndx + _CC_IF.length, total);
+
+					if (ccEndNdx == -1) {
+						// todo
+					}
+
+					CharSequence expression = charSequence(ndx + 1, ccEndNdx);
+
+					visitor.condComment(expression, true, false, false);
+
+					ndx = ccEndNdx + 1;
+					state = DATA_STATE;
+					return;
+				}
+
+				// CC: downlevel-* ending tag
+				if (match(_CC_ENDIF)) {
+					ndx += _CC_ENDIF.length;
+
+					int ccEndNdx = find('>', ndx, total);
+
+					if (ccEndNdx == -1) {
+						// todo
+					}
+
+					if (match(_COMMENT_DASH, ccEndNdx - 2)) {
+						// downlevel-hidden ending tag
+						visitor.condComment(_ENDIF, false, true, false);
+					} else {
+						visitor.condComment(_ENDIF, false, false, false);
+					}
+
+					ndx = ccEndNdx;
+					state = DATA_STATE;
+					return;
+				}
 			}
 
 			// todo cdata see: 12.2.4.45
@@ -1419,12 +1461,12 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 
-				if (matchCaseInsensitiveWithUpper(_PUBLIC, false)) {		// todo check all matches usage if ignore case or not
+				if (matchCaseInsensitiveWithUpper(_PUBLIC)) {		// todo check all matches usage if ignore case or not
 					ndx += _PUBLIC.length - 1;
 					state = AFTER_DOCTYPE_PUBLIC_KEYWORD;
 					return;
 				}
-				if (matchCaseInsensitiveWithUpper(_SYSTEM, false)) {
+				if (matchCaseInsensitiveWithUpper(_SYSTEM)) {
 					ndx += _SYSTEM.length - 1;
 					state = AFTER_DOCTYPE_SYSTEM_KEYWORD;
 					return;
@@ -2538,8 +2580,37 @@ public class LagartoParser extends CharScanner {
 		}
 	}
 
+	/**
+	 * Emits a comment. Also checks for conditional comments!
+	 */
 	protected void emitComment(int from, int to) {
+		if (enableConditionalComments) {
+			// CC: downlevel-hidden starting
+			if (match(_CC_IF, from)) {
+				int endBracketNdx = find(']', from + 3, to);
+
+				CharSequence expression = charSequence(from + 1, endBracketNdx);
+
+				ndx = endBracketNdx + 1;
+				// todo check the '>'
+
+				visitor.condComment(expression, true, true, false);
+
+				state = DATA_STATE;
+				return;
+			}
+
+			if (match(_CC_ENDIF2, to - _CC_ENDIF2.length)) {
+				// CC: downlevel-hidden ending
+				visitor.condComment(_ENDIF, false, true, true);
+
+				state = DATA_STATE;
+				return;
+			}
+		}
+
 		CharSequence comment = charSequence(from, to);
+
 		visitor.comment(comment);
 
 		commentStart = -1;
@@ -2632,14 +2703,14 @@ public class LagartoParser extends CharScanner {
 
 	protected State state = DATA_STATE;
 
-	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
+	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};	//todo why publici?
 	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 	private static final char[] CONTINUE_CHARS = new char[] {'\t', '\n', '\r', ' ', '<', '&'};
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
 	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
 	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
 	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
-	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
+	private static final char[] _COMMENT_DASH = new char[] {'-', '-'};
 	private static final char[] _DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
 	private static final char[] _SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
 	private static final char[] _XMP = new char[] {'x', 'm', 'p'};
@@ -2652,6 +2723,12 @@ public class LagartoParser extends CharScanner {
 	private static final char[] _TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
 	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
 	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+
+	private static final char[] _CC_IF = new char[] {'[', 'i', 'f', ' '};
+	private static final char[] _CC_ENDIF = new char[] {'[', 'e', 'n', 'd', 'i', 'f', ']'};
+	private static final char[] _CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
+	private static final char[] _CC_END = new char[] {']', '>'};
+
 
 	// 'script' is handled by its states todo check this!
 	private static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
@@ -2668,5 +2745,7 @@ public class LagartoParser extends CharScanner {
 	//	'\u4FFFF', '\u5FFFE', '\u5FFFF', '\u6FFFE', '\u6FFFF', '\u7FFFE', '\u7FFFF', '\u8FFFE', '\u8FFFF', '\u9FFFE,
 	//	'\u9FFFF', '\uAFFFE', '\uAFFFF', '\uBFFFE', '\uBFFFF', '\uCFFFE', '\uCFFFF', '\uDFFFE', '\uDFFFF', '\uEFFFE,
 	//	'\uEFFFF', '\uFFFFE', '\uFFFFF', '\u10FFFE', '\u10FFFF',
+
+	private static final CharSequence _ENDIF = "endif";
 
 }

@@ -11,7 +11,7 @@ public class Comment extends Node {
 
 	protected final Boolean conditionalDownlevelHidden;
 	protected final boolean isStartingTag;
-	protected final String additionalComment;
+	protected final boolean isHiddenEndTag;
 
 	/**
 	 * Creates regular comment.
@@ -21,25 +21,25 @@ public class Comment extends Node {
 		this.nodeValue = comment;
 		this.conditionalDownlevelHidden = null;
 		this.isStartingTag = false;
-		this.additionalComment = null;
+		this.isHiddenEndTag = false;
 	}
 
 	/**
 	 * Creates conditional comment.
 	 */
-	public Comment(Document ownerDocument, String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, String additionalComment) {
+	public Comment(Document ownerDocument, String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, boolean isHiddenEndTag) {
 		super(ownerDocument, NodeType.COMMENT, null);
 		this.nodeValue = comment;
 		this.isStartingTag = isStartingTag;
 		this.conditionalDownlevelHidden = Boolean.valueOf(conditionalDownlevelHidden);
-		this.additionalComment = additionalComment;
+		this.isHiddenEndTag = isHiddenEndTag;
 	}
 
 	@Override
 	public Comment clone() {
 		return cloneTo(conditionalDownlevelHidden == null ?
 				new Comment(ownerDocument, nodeValue) :
-				new Comment(ownerDocument, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), additionalComment));
+				new Comment(ownerDocument, nodeValue, isStartingTag, conditionalDownlevelHidden.booleanValue(), isHiddenEndTag));
 	}
 
 	/**

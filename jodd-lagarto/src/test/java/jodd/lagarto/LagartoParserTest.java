@@ -183,34 +183,6 @@ public class LagartoParserTest {
 				result.append(NEWLINE);
 			}
 
-			public void xmp(Tag tag, CharSequence bodyM) {
-				result.append("xmp:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
-				}
-				String body = bodyM.toString();
-				body = StringUtil.removeChars(body, "\r\n\t\b");
-				result.append('[').append(body).append(']');
-				result.append(NEWLINE);
-			}
-
-			public void style(Tag tag, CharSequence bodyM) {
-				result.append("css:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-					}
-				}
-				String body = bodyM.toString();
-				body = StringUtil.removeChars(body, "\r\n\t\b");
-				result.append('[').append(body).append(']');
-				result.append(NEWLINE);
-			}
-
 			public void script(Tag tag, CharSequence bodyM) {
 				result.append("scr:").append(tag.getDeepLevel());
 				if (tag.getAttributeCount() > 0) {
@@ -242,12 +214,10 @@ public class LagartoParserTest {
 				result.append(doctype.getPublicIdentifier()).append(' ').append(doctype.getSystemIdentifier()).append(']').append(NEWLINE);
 			}
 
-			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, CharSequence comment) {
+			public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
 				result.append(isStartingTag ? "CC" : "cc").append(isHidden ? 'H' : 'S');
+				result.append(isHiddenEndTag ? "h" : "");
 				result.append(":[").append(expression).append(']');
-				if (comment != null) {
-					result.append(comment.length());
-				}
 				result.append(NEWLINE);
 
 			}

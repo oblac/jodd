@@ -2,6 +2,8 @@
 
 package jodd.lagarto;
 
+import jodd.util.CharUtil;
+
 import java.nio.CharBuffer;
 
 /**
@@ -29,8 +31,8 @@ public class CharScanner {
 	 * Returns index of founded char (it is not consumed).
 	 * Returns <code>-1</code> if block is not found.
 	 */
-	public final int find(char target, int end) {
-		int index = ndx;
+	public final int find(char target, int from, int end) {
+		int index = from;
 
 		while (index < end) {
 			char c = input[index];
@@ -48,17 +50,27 @@ public class CharScanner {
 		return index;
 	}
 
-	// ---------------------------------------------------------------- match
+	public final int find(char[] target, int from, int end) {
+		int index = from;
 
-	public final boolean match(char[] target) {
-		return match(target, true);
+		while (index < end) {
+			if (match(target, index)) {
+				break;
+			}
+			index++;
+		}
+
+		if (index == end) {
+			return -1;
+		}
+
+		return index;
 	}
 
-	/**
-	 * Matches current location to a target.
-	 * If match is positive, the target is consumed.
-	 */
-	public final boolean match(char[] target, boolean consume) {
+
+	// ---------------------------------------------------------------- match
+
+	public final boolean match(char[] target, int ndx) {
 		if (ndx + target.length > total) {
 			return false;
 		}
@@ -71,24 +83,21 @@ public class CharScanner {
 			}
 		}
 
-		if (consume) {
-			ndx = j;
-		}
-
 		return true;
 	}
 
-	public final boolean matchIgnoreCase(char[] target) {
-		return matchCaseInsensitiveWithUpper(target, true);
+	/**
+	 * Matches current location to a target.
+	 * If match is positive, the target is consumed.
+	 */
+	public final boolean match(char[] target) {
+		return match(target, ndx);
 	}
 
 	/**
 	 * todo ovaj method pretrvara char u upper case i radi match sa targetom koji je vec u uppercase zbog performansi
-	 * @param uppercaseTarget
-	 * @param consume
-	 * @return
 	 */
-	public final boolean matchCaseInsensitiveWithUpper(char[] uppercaseTarget, boolean consume) {
+	public final boolean matchCaseInsensitiveWithUpper(char[] uppercaseTarget) {
 		if (ndx + uppercaseTarget.length > total) {
 			return false;
 		}
@@ -96,32 +105,14 @@ public class CharScanner {
 		int j = ndx;
 
 		for (int i = 0; i < uppercaseTarget.length; i++, j++) {
-			char c = _toUppercase(input[j]);
+			char c = CharUtil.toUpperAscii(input[j]);
 
 			if (c != uppercaseTarget[i]) {
 				return false;
 			}
 		}
 
-		if (consume) {
-			ndx = j;
-		}
-
 		return true;
-	}
-
-	// ---------------------------------------------------------------- utils
-
-	/**
-	 * Converts ASCII char to uppercase.
-	 * Simple and fast.
-	 * todo use CharUtil
-	 */
-	private static char _toUppercase(char c) {
-		if ((c >= 'a') && (c <= 'z')) {
-			c -= 32;
-		}
-		return c;
 	}
 
 	// ---------------------------------------------------------------- char sequences
