@@ -71,7 +71,7 @@ public class CharScanner {
 	// ---------------------------------------------------------------- match
 
 	public final boolean match(char[] target, int ndx) {
-		if (ndx + target.length > total) {
+		if (ndx + target.length >= total) {
 			return false;
 		}
 

@@ -831,16 +831,16 @@ public class LagartoParser extends CharScanner {
 
 	protected State BOGUS_COMMENT = new State() {
 		public void parse() {
-			int tagEndNdx = find('>', ndx, total); 		// todo remove find
+			int commentEndNdx = find('>', ndx, total); 		// todo remove find
 
-			if (tagEndNdx == -1) {
-				tagEndNdx = total;
+			if (commentEndNdx == -1) {
+				commentEndNdx = total;
 			}
 
-			emitComment(ndx, tagEndNdx);
+			emitComment(ndx, commentEndNdx);
 
 			state = DATA_STATE;
-			ndx++;
+			ndx = commentEndNdx;
 		}
 	};
 
@@ -2833,7 +2833,7 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 
-			if (match(_CC_ENDIF2, to - _CC_ENDIF2.length)) {
+			if (to > _CC_ENDIF2.length && match(_CC_ENDIF2, to - _CC_ENDIF2.length)) {
 				// CC: downlevel-hidden ending
 				visitor.condComment(_ENDIF, false, true, true);
 
