@@ -171,15 +171,8 @@ public class LagartoParserTest {
 				result.append(NEWLINE);
 			}
 
-			public void xml(Tag tag) {
-				result.append("xml:").append(tag.getDeepLevel());
-				if (tag.getAttributeCount() > 0) {
-					try {
-						tag.writeTo(result);
-					} catch (IOException ignored) {
-
-					}
-				}
+			public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+				result.append("xml:").append(version).append(":").append(encoding).append(":").append(standalone);
 				result.append(NEWLINE);
 			}
 

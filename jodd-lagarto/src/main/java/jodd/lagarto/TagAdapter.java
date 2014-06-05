@@ -49,8 +49,8 @@ public class TagAdapter implements TagVisitor {
 		target.cdata(cdata);
 	}
 
-	public void xml(Tag tag) {
-		target.xml(tag);
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+		target.xml(version, encoding, standalone);
 	}
 
 	public void doctype(Doctype doctype) {

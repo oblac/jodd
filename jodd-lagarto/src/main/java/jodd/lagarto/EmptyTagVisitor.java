@@ -28,7 +28,7 @@ public class EmptyTagVisitor implements TagVisitor {
 	public void cdata(CharSequence cdata) {
 	}
 
-	public void xml(Tag tag) {
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 	}
 
 	public void doctype(Doctype doctype) {

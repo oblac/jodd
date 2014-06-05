@@ -397,12 +397,12 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(cdataNode);
 	}
 
-	public void xml(Tag tag) {
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 		if (!enabled) {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = createXmlDeclaration(tag);
+		XmlDeclaration xmlDeclaration = createXmlDeclaration(version, encoding, standalone);
 		parentNode.addChild(xmlDeclaration);
 	}
 
@@ -524,8 +524,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		);
 	}
 
-	protected XmlDeclaration createXmlDeclaration(Tag tag) {
-		return new XmlDeclaration(rootNode, tag);
+	protected XmlDeclaration createXmlDeclaration(CharSequence version, CharSequence encoding, CharSequence standalone) {
+		return new XmlDeclaration(rootNode, version, encoding, standalone);
 	}
 
 

@@ -50,9 +50,9 @@ public class TagAdapterWrapper implements TagVisitor {
 		target.cdata(cdata);
 	}
 
-	public void xml(Tag tag) {
-		visitor.xml(tag);
-		target.xml(tag);
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
+		visitor.xml(version, encoding, standalone);
+		target.xml(version, encoding, standalone);
 	}
 
 	public void doctype(Doctype doctype) {

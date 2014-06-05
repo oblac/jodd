@@ -77,9 +77,9 @@ public class TagWriter implements TagVisitor {
 		}
 	}
 
-	public void xml(Tag tag) {
+	public void xml(CharSequence version, CharSequence encoding, CharSequence standalone) {
 		try {
-			tag.writeTo(appendable);
+			TagWriterUtil.writeXml(appendable, version, encoding, standalone);
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}

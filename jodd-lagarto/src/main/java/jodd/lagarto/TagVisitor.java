@@ -57,7 +57,7 @@ public interface TagVisitor {
 	/**
 	 * Invoked on <b>xml</b> declaration.
 	 */
-	void xml(Tag tag);
+	void xml(CharSequence version, CharSequence encoding, CharSequence standalone);
 
 	/**
 	 * Invoked on DOCTYPE directive.

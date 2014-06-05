@@ -138,6 +138,15 @@ public class LagartoParser extends CharScanner {
 		visitor.end();
 	}
 
+	// ---------------------------------------------------------------- flags
+
+	protected int rawTextStart;		// todo prodji sve varijable i vidi da li se koriste!
+	protected int rawTextEnd;
+	protected char[] rawTagName;
+	protected int rcdataTagStart = -1;
+	protected char[] rcdataTagName;
+
+
 	// ---------------------------------------------------------------- start & end
 
 	/**
@@ -398,6 +407,16 @@ public class LagartoParser extends CharScanner {
 			if (isAlpha(c)) {
 				state = TAG_NAME;
 				return;
+			}
+			if (xmlMode) {
+				if (match(_XML)) {
+					ndx += _XML.length - 1;
+					if (xmlDeclaration == null) {
+						xmlDeclaration = new XmlDeclaration();
+					}
+					state = xmlDeclaration.XML_BETWEEN;
+					return;
+				}
 			}
 			if (c == '?') {
 				errorInvalidToken();
@@ -897,10 +916,6 @@ public class LagartoParser extends CharScanner {
 
 	// ---------------------------------------------------------------- RAWTEXT
 
-	protected int rawTextStart;		// todo prodji sve varijable i vidi da li se koriste!
-	protected int rawTextEnd;
-	protected char[] rawTagName;
-
 	protected State RAWTEXT = new State() {
 		public void parse() {
 			while (true) {
@@ -1033,9 +1048,6 @@ public class LagartoParser extends CharScanner {
 	};
 
 	// ---------------------------------------------------------------- RCDATA
-
-	protected int rcdataTagStart = -1;
-	protected char[] rcdataTagName;
 
 	protected State RCDATA = new State() {
 		public void parse() {
@@ -1991,7 +2003,7 @@ public class LagartoParser extends CharScanner {
 			if (c == '!') {
 				if (scriptEscape == null) {
 					// create script escape states only if really needed
-					scriptEscape = new SriptEscape();
+					scriptEscape = new ScriptEscape();
 				}
 				state = scriptEscape.SCRIPT_DATA_ESCAPE_START;
 				return;
@@ -2072,14 +2084,14 @@ public class LagartoParser extends CharScanner {
 
 	// ---------------------------------------------------------------- SCRIPT ESCAPE
 
-	protected SriptEscape scriptEscape = null;
+	protected ScriptEscape scriptEscape = null;
 
 	/**
 	 * Since escaping states inside the SCRIPT tag are rare, we want to use them
 	 * lazy, only when really needed. Therefore, they are all grouped inside separate
 	 * class that will be instantiated only if needed.
 	 */
-	protected class SriptEscape {
+	protected class ScriptEscape {
 
 		protected State SCRIPT_DATA_ESCAPE_START = new State() {
 			public void parse() {
@@ -2469,6 +2481,193 @@ public class LagartoParser extends CharScanner {
 		};
 	}
 
+	// ---------------------------------------------------------------- xml
+
+	protected XmlDeclaration xmlDeclaration = null;
+
+	protected class XmlDeclaration {
+
+		protected int xmlAttrCount = 0;
+		protected int xmlAttrStartNdx = -1;
+		protected CharSequence version;
+		protected CharSequence encoding;
+		protected CharSequence standalone;
+
+		protected void reset() {
+			xmlAttrCount = 0;
+			xmlAttrStartNdx = -1;
+			version = encoding = standalone = null;
+		}
+
+		protected State XML_BETWEEN = new State() {
+			public void parse() {
+
+				while (true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES)) {
+						continue;
+					}
+
+					if (c == '?') {
+						state = XML_CLOSE;
+						return;
+					}
+
+					switch (xmlAttrCount) {
+						case 0:
+							if (match(_XML_VERSION)) {
+								ndx += _XML_VERSION.length - 1;
+								state = AFTER_XML_ATTRIBUTE_NAME;
+								return;
+							}
+							break;
+						case 1:
+							if (match(_XML_ENCODING)) {
+								ndx += _XML_ENCODING.length - 1;
+								state = AFTER_XML_ATTRIBUTE_NAME;
+								return;
+							}
+							break;
+						case 2:
+							if (match(_XML_STANDALONE)) {
+								ndx += _XML_STANDALONE.length - 1;
+								state = AFTER_XML_ATTRIBUTE_NAME;
+								return;
+							}
+							break;
+					}
+
+					errorInvalidToken();
+					state = DATA_STATE;
+				}
+			}
+		};
+
+		protected State AFTER_XML_ATTRIBUTE_NAME = new State() {
+			public void parse() {
+				while(true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES)) {
+						continue;
+					}
+
+					if (c == '=') {
+						state = BEFORE_XML_ATTRIBUTE_VALUE;
+						return;
+					}
+
+					errorInvalidToken();
+					state = DATA_STATE;
+					return;
+				}
+			}
+		};
+
+		protected State BEFORE_XML_ATTRIBUTE_VALUE = new State() {
+			public void parse() {
+				while(true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (equalsOne(c, TAG_WHITESPACES)) {
+						continue;
+					}
+
+					if (c == '\"') {
+						state = XML_ATTRIBUTE_VALUE;
+						return;
+					}
+
+					errorInvalidToken();
+					state = DATA_STATE;
+					return;
+				}
+			}
+		};
+
+		protected State XML_ATTRIBUTE_VALUE = new State() {
+			public void parse() {
+				xmlAttrStartNdx = ndx + 1;
+
+				while(true) {
+					ndx++;
+
+					if (isEOF()) {
+						errorEOF();
+						state = DATA_STATE;
+						return;
+					}
+
+					char c = input[ndx];
+
+					if (c == '\"') {
+						CharSequence value = charSequence(xmlAttrStartNdx, ndx);
+
+						switch (xmlAttrCount) {
+							case 0: version = value; break;
+							case 1: encoding = value; break;
+							case 2: standalone = value; break;
+						}
+
+						xmlAttrCount++;
+
+						state = XML_BETWEEN;
+						return;
+					}
+				}
+			}
+		};
+
+
+		protected State XML_CLOSE = new State() {
+			public void parse() {
+				ndx++;
+
+				if (isEOF()) {
+					errorEOF();
+					state = DATA_STATE;
+					return;
+				}
+
+				char c = input[ndx];
+
+				if (c == '>') {
+					emitXml();
+					state = DATA_STATE;
+					return;
+				}
+
+				errorInvalidToken();
+				state = DATA_STATE;
+			}
+		};
+	}
+
 	// ---------------------------------------------------------------- text
 
 	protected char[] text;
@@ -2642,6 +2841,12 @@ public class LagartoParser extends CharScanner {
 		doctype.reset();
 	}
 
+	protected void emitXml() {
+		visitor.xml(xmlDeclaration.version, xmlDeclaration.encoding, xmlDeclaration.standalone);
+
+		xmlDeclaration.reset();
+	}
+
 	// ---------------------------------------------------------------- error
 
 	protected void errorEOF() {
@@ -2723,6 +2928,11 @@ public class LagartoParser extends CharScanner {
 	private static final char[] _TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
 	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
 	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+
+	private static final char[] _XML = new char[] {'?', 'x', 'm', 'l'};
+	private static final char[] _XML_VERSION = new char[] {'v', 'e', 'r', 's', 'i', 'o', 'n'};
+	private static final char[] _XML_ENCODING = new char[] {'e', 'n', 'c', 'o', 'd', 'i', 'n', 'g'};
+	private static final char[] _XML_STANDALONE = new char[] {'s', 't', 'a', 'n', 'd', 'a', 'l', 'o', 'n', 'e'};
 
 	private static final char[] _CC_IF = new char[] {'[', 'i', 'f', ' '};
 	private static final char[] _CC_ENDIF = new char[] {'[', 'e', 'n', 'd', 'i', 'f', ']'};

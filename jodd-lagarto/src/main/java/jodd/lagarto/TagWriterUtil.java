@@ -74,4 +74,19 @@ public class TagWriterUtil {
 
 		appendable.append('>');
 	}
+
+	public static void writeXml(Appendable appendable, CharSequence version, CharSequence encoding, CharSequence standalone) throws IOException {
+		appendable.append("<?xml");
+
+		if (version != null) {
+			appendable.append(" version=\"").append(version).append("\"");
+		}
+		if (encoding != null) {
+			appendable.append(" encoding=\"").append(encoding).append("\"");
+		}
+		if (standalone != null) {
+			appendable.append(" standalone=\"").append(standalone).append("\"");
+		}
+		appendable.append("?>");
+	}
 }

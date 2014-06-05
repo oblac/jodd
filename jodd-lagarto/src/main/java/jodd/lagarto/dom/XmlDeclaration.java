@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.Tag;
-
 import java.io.IOException;
 
 /**
@@ -11,19 +9,32 @@ import java.io.IOException;
  */
 public class XmlDeclaration extends Node {
 
-	public XmlDeclaration(Document ownerDocument, Tag tag) {
-		super(ownerDocument, NodeType.XML_DECLARATION, tag.getName());
+	protected String version;
+	protected String encoding;
+	protected String standalone;
 
-		int attrCount = tag.getAttributeCount();
-		for (int i = 0; i < attrCount; i++) {
-			String key = tag.getAttributeName(i);
-			String value = tag.getAttributeValue(i);
-			setAttribute(key, value);
-		}
+	public XmlDeclaration(Document ownerDocument, CharSequence version, CharSequence encoding, CharSequence standalone) {
+		super(ownerDocument, NodeType.XML_DECLARATION, "xml");
+
+		this.version = version.toString();
+		this.encoding = encoding.toString();
+		this.standalone = encoding.toString();
 	}
 
 	public XmlDeclaration(Document ownerDocument, String name) {
 		super(ownerDocument, NodeType.XML_DECLARATION, name);
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public String getStandalone() {
+		return standalone;
 	}
 
 	@Override
