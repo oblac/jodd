@@ -831,7 +831,7 @@ public class LagartoParser extends CharScanner {
 
 	protected State BOGUS_COMMENT = new State() {
 		public void parse() {
-			int commentEndNdx = find('>', ndx, total); 		// todo remove find
+			int commentEndNdx = find('>', ndx, total);
 
 			if (commentEndNdx == -1) {
 				commentEndNdx = total;
