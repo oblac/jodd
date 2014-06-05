@@ -907,7 +907,18 @@ public class LagartoParser extends CharScanner {
 				}
 			}
 
-			// todo cdata see: 12.2.4.45
+			if (xmlMode) {
+				if (match(_CDATA)) {
+					ndx += _CDATA.length - 1;
+
+					if (xmlDeclaration == null) {
+						xmlDeclaration = new XmlDeclaration();
+					}
+
+					state = xmlDeclaration.CDATA;
+					return;
+				}
+			}
 
 			errorInvalidToken();
 			state = BOGUS_COMMENT;
@@ -2666,6 +2677,29 @@ public class LagartoParser extends CharScanner {
 				state = DATA_STATE;
 			}
 		};
+
+		// ---------------------------------------------------------------- CDATA
+
+		protected State CDATA = new State() {
+			public void parse() {
+				ndx++;
+
+				int cdataEndNdx = find(_CDATA_END, ndx, total);
+
+				if (cdataEndNdx == -1) {
+					cdataEndNdx = total;
+				}
+
+				CharSequence cdata = charSequence(ndx, cdataEndNdx);
+
+				emitCData(cdata);
+
+				ndx = cdataEndNdx + 2;
+
+				state = DATA_STATE;
+			}
+		};
+
 	}
 
 	// ---------------------------------------------------------------- text
@@ -2847,6 +2881,10 @@ public class LagartoParser extends CharScanner {
 		xmlDeclaration.reset();
 	}
 
+	protected void emitCData(CharSequence charSequence) {
+		visitor.cdata(charSequence);
+	}
+
 	// ---------------------------------------------------------------- error
 
 	protected void errorEOF() {
@@ -2928,6 +2966,8 @@ public class LagartoParser extends CharScanner {
 	private static final char[] _TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
 	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
 	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+	private static final char[] _CDATA = new char[] {'[', 'C', 'D', 'A', 'T', 'A', '['};
+	private static final char[] _CDATA_END = new char[] {']', ']', '>'};
 
 	private static final char[] _XML = new char[] {'?', 'x', 'm', 'l'};
 	private static final char[] _XML_VERSION = new char[] {'v', 'e', 'r', 's', 'i', 'o', 'n'};
