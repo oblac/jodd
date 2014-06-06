@@ -651,6 +651,7 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 				if (c == '>') {
+					_addAttribute();
 					errorInvalidToken();
 					state = DATA_STATE;
 					emitTag();

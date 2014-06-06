@@ -1,4 +1,6 @@
+wrn:[Parse error: invalid token [1:6 @5]
 tag:foo:1<<foo <b>
 txt:[b]
 tag:b:1>
+wrn:[Parse error: invalid token [2:2 @16]
 txt:[<>]
