@@ -2,7 +2,6 @@
 
 package jodd.lagarto.adapter;
 
-import jodd.lagarto.LagartoParserContext;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
 import jodd.lagarto.TagType;
@@ -26,10 +25,10 @@ public class StripHtmlTagAdapter extends TagAdapter {
 	protected boolean strip;
 
 	@Override
-	public void start(LagartoParserContext parserContext) {
+	public void start() {
 		strippedCharsCount = 0;
 		strip = true;
-		super.start(parserContext);
+		super.start();
 	}
 
 	/**

@@ -37,9 +37,9 @@ import static jodd.util.CharUtil.isDigit;
 public class LagartoParser extends CharScanner {
 
 	protected TagVisitor visitor;
-	protected LagartoParserContext ctx;
 	protected ParsedTag tag;
 	protected ParsedDoctype doctype;
+	protected long parsingTime;
 
 	/**
 	 * Creates parser on char array.
@@ -60,11 +60,11 @@ public class LagartoParser extends CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		super.initialize(input);
-		this.ctx = new LagartoParserContext();
 		this.tag = new ParsedTag(input);
 		this.doctype = new ParsedDoctype(input);
 		this.text = new char[1024];
 		this.textLen = 0;
+		this.parsingTime = -1;
 	}
 
 	// ---------------------------------------------------------------- properties
@@ -123,9 +123,11 @@ public class LagartoParser extends CharScanner {
 	 * Parses content and callback provided {@link TagVisitor}.
 	 */
 	public void parse(TagVisitor visitor) {
+		this.parsingTime = System.currentTimeMillis();
+
 		this.visitor = visitor;
 
-		visitor.start(ctx);
+		visitor.start();
 
 		parsing = true;
 
@@ -136,16 +138,24 @@ public class LagartoParser extends CharScanner {
 		emitText();
 
 		visitor.end();
+
+		this.parsingTime = System.currentTimeMillis() - parsingTime;
+	}
+
+	/**
+	 * Returns parsing time in ms.
+	 */
+	public long getParsingTime() {
+		return parsingTime;
 	}
 
 	// ---------------------------------------------------------------- flags
 
-	protected int rawTextStart;		// todo prodji sve varijable i vidi da li se koriste!
+	protected int rawTextStart;
 	protected int rawTextEnd;
 	protected char[] rawTagName;
 	protected int rcdataTagStart = -1;
 	protected char[] rcdataTagName;
-
 
 	// ---------------------------------------------------------------- start & end
 
@@ -2213,7 +2223,7 @@ public class LagartoParser extends CharScanner {
 					if (isEOF()) {
 						errorEOF();
 						emitScript(scriptStartNdx, ndx);
-						state = DATA_STATE;        // todo 8.2.4.22 -> order is not consistent, should be error first.
+						state = DATA_STATE;
 						return;
 					}
 
@@ -2740,12 +2750,14 @@ public class LagartoParser extends CharScanner {
 		}
 	}
 
-	protected CharBuffer textWrap() {	// todo detect 0
+	protected CharBuffer textWrap() {
+		if (textLen == 0) {
+			return EMPTY_CHAR_BUFFER;
+		}
 		char[] textToEmit = new char[textLen];
 		System.arraycopy(text, 0, textToEmit, 0, textLen);
 		return CharBuffer.wrap(textToEmit); 	// todo wrap or toString()
 	}
-
 
 	// ---------------------------------------------------------------- attr
 
@@ -2943,11 +2955,13 @@ public class LagartoParser extends CharScanner {
 		return true;
 	}
 
-	// ---------------------------------------------------------------- const data
+	// ---------------------------------------------------------------- state
 
 	protected State state = DATA_STATE;
 
-	public static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};	//todo why publici?
+	// ---------------------------------------------------------------- const data
+
+	private static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
 	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 	private static final char[] CONTINUE_CHARS = new char[] {'\t', '\n', '\r', ' ', '<', '&'};
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};

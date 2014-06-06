@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoParserContext;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +17,9 @@ public class Document extends Node {
 	protected final boolean collectErrors;
 	protected final LagartoNodeHtmlRenderer renderer;
 	protected List<String> errors;
-	protected LagartoParserContext parserContext;
 
 	public Document() {
-		this(true, false, new LagartoNodeHtmlRenderer(), null);
+		this(true, false, new LagartoNodeHtmlRenderer());
 	}
 
 	/**
@@ -30,20 +27,18 @@ public class Document extends Node {
 	 * @param lowercase	should all names be converted to lowercase
 	 * @param collectErrors	should we collect errors during the parsing
 	 * @param renderer renderer instance
-	 * @param parserContext {@link LagartoParserContext parser context}
 	 */
-	public Document(boolean lowercase, boolean collectErrors, LagartoNodeHtmlRenderer renderer, LagartoParserContext parserContext) {
+	public Document(boolean lowercase, boolean collectErrors, LagartoNodeHtmlRenderer renderer) {
 		super(null, NodeType.DOCUMENT, null);
 		this.lowercase = lowercase;
 		this.renderer = renderer;
 		this.collectErrors = collectErrors;
 		this.elapsedTime = System.currentTimeMillis();
-		this.parserContext = parserContext;
 	}
 	
 	@Override
 	public Document clone() {
-		Document document = cloneTo(new Document(lowercase, collectErrors, renderer, parserContext));
+		Document document = cloneTo(new Document(lowercase, collectErrors, renderer));
 		document.elapsedTime = this.elapsedTime;
 		return document;
 	}
@@ -125,13 +120,4 @@ public class Document extends Node {
 		return renderer;
 	}
 
-	/**
-	 * Returns current offset during the parsing.
-	 */
-	public int getCurrentOffset() {
-		if (parserContext == null) {
-			return -1;
-		}
-		return parserContext.getOffset();
-	}
 }

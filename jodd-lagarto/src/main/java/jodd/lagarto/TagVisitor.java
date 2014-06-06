@@ -10,11 +10,9 @@ public interface TagVisitor {
 	// ---------------------------------------------------------------- state
 
 	/**
-	 * Invoked on very beginning of the visiting. Provides
-	 * {@link LagartoParserContext parser context} that
-	 * gives some information during the parsing process.
+	 * Invoked on very beginning of the visiting.
 	 */
-	void start(LagartoParserContext parserContext);
+	void start();
 
 	/**
 	 * Invoked at the end, after all content is visited.

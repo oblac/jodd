@@ -21,8 +21,8 @@ public class TagAdapter implements TagVisitor {
 		return target;
 	}
 
-	public void start(LagartoParserContext parserContext) {
-		target.start(parserContext);
+	public void start() {
+		target.start();
 	}
 
 	public void end() {

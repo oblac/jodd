@@ -27,7 +27,6 @@ public abstract class Node implements Cloneable {
 	protected final String nodeName;
 	protected final String nodeRawName;
 	protected final NodeType nodeType;
-	protected final int offset;
 	protected Document ownerDocument;	// root document node
 	protected String nodeValue;
 
@@ -60,13 +59,6 @@ public abstract class Node implements Cloneable {
 	 * Creates new node.
 	 */
 	protected Node(Document document, NodeType nodeType, String nodeName) {
-		this(document, nodeType, nodeName, document != null ? document.getCurrentOffset() : -1);
-	}
-
-	/**
-	 * Creates new node.
-	 */
-	protected Node(Document document, NodeType nodeType, String nodeName, int offset) {
 		this.ownerDocument = document;
 		this.nodeRawName = nodeName;
 		if (nodeName != null) {
@@ -75,7 +67,6 @@ public abstract class Node implements Cloneable {
 			this.nodeName = null;
 		}
 		this.nodeType = nodeType;
-		this.offset = offset;
 	}
 
 	// ---------------------------------------------------------------- clone
@@ -1068,21 +1059,6 @@ public abstract class Node implements Cloneable {
 				childNode.toHtml(appendable);
 			}
 		}
-	}
-
-	// ---------------------------------------------------------------- position
-
-	/**
-	 * Returns offset position of the node in the original source.
-	 * Note: offset may <b>NOT</b> implemented for all node types.
-	 * Returns <code>-1</code> if value is not available.
-	 * If you move/detach the node, this value will <b>NOT</b> change.
-	 * Moreover, since nodes may move from their location due to
-	 * HTML rules, this value should not be used for determining
-	 * nodes order.
-	 */
-	public int getOffset() {
-		return offset;
 	}
 
 	/**

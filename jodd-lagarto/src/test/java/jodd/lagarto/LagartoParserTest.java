@@ -142,7 +142,7 @@ public class LagartoParserTest {
 
 		TagVisitor visitor = new TagVisitor() {
 
-			public void start(LagartoParserContext parserContext) {
+			public void start() {
 			}
 
 			public void end() {

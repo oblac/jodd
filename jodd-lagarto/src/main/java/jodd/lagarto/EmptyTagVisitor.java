@@ -7,7 +7,7 @@ package jodd.lagarto;
  */
 public class EmptyTagVisitor implements TagVisitor {
 
-	public void start(LagartoParserContext parserContext) {
+	public void start() {
 	}
 
 	public void end() {

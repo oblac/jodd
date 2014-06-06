@@ -27,11 +27,10 @@ public class CharScanner {
 	// ---------------------------------------------------------------- find
 
 	/**
-	 * Finds character from current position up to some limit.
-	 * Returns index of founded char (it is not consumed).
-	 * Returns <code>-1</code> if block is not found.
+	 * Finds a character in some range and returns its index.
+	 * Returns <code>-1</code> if character is not found.
 	 */
-	public final int find(char target, int from, int end) {
+	protected final int find(char target, int from, int end) {
 		int index = from;
 
 		while (index < end) {
@@ -50,7 +49,11 @@ public class CharScanner {
 		return index;
 	}
 
-	public final int find(char[] target, int from, int end) {
+	/**
+	 * Finds character buffer in some range and returns its index.
+	 * Returns <code>-1</code> if character is not found.
+	 */
+	protected final int find(char[] target, int from, int end) {
 		int index = from;
 
 		while (index < end) {
@@ -70,7 +73,10 @@ public class CharScanner {
 
 	// ---------------------------------------------------------------- match
 
-	public final boolean match(char[] target, int ndx) {
+	/**
+	 * Matches char buffer with content on given location.
+	 */
+	protected final boolean match(char[] target, int ndx) {
 		if (ndx + target.length >= total) {
 			return false;
 		}
@@ -87,8 +93,7 @@ public class CharScanner {
 	}
 
 	/**
-	 * Matches current location to a target.
-	 * If match is positive, the target is consumed.
+	 * Matches char buffer with content at current location.
 	 */
 	public final boolean match(char[] target) {
 		return match(target, ndx);
@@ -118,40 +123,22 @@ public class CharScanner {
 	// ---------------------------------------------------------------- char sequences
 
 	/**
-	 * Returns <code>true</code> if two sequences are equal.
-	 */
-	public final boolean equals(CharSequence one, CharSequence two) {
-		int len = one.length();
-		if (len != two.length()) {
-			return false;
-		}
-
-		for (int i = 0; i < len; i++) {
-			if (one.charAt(i) != two.charAt(i)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Creates char sub-sequence from the input.
 	 */
-	public final CharSequence charSequence(int from, int to) {
+	protected final CharSequence charSequence(int from, int to) {
 		int len = to - from;
 		if (len == 0) {
-			return EMPTY_CHAR_SEQUENCE;
+			return EMPTY_CHAR_BUFFER;
 		}
 		return CharBuffer.wrap(input, from, len);
 	}
 
-	private static CharSequence EMPTY_CHAR_SEQUENCE = CharBuffer.wrap(new char[0]);
+	protected static CharBuffer EMPTY_CHAR_BUFFER = CharBuffer.wrap(new char[0]);
 
 	/**
 	 * Creates substring from the input.
 	 */
-	public final String substring(int from, int to) {
+	protected final String substring(int from, int to) {
 		return new String(input, from, to - from);
 	}
 
@@ -164,18 +151,21 @@ public class CharScanner {
 	/**
 	 * Returns <code>true</code> if EOF.
 	 */
-	public final boolean isEOF() {
+	protected final boolean isEOF() {
 		return ndx >= total;
 	}
 
-	public Position position() {
+	/**
+	 * Returns current {@link jodd.lagarto.CharScanner.Position}.
+	 */
+	protected Position position() {
 		return position(ndx);
 	}
 
 	/**
 	 * Calculates {@link Position current position}: offset, line and column.
 	 */
-	public Position position(int position) {
+	protected Position position(int position) {
 		int line;
 		int offset;
 		int lastNewLineOffset;
@@ -222,6 +212,7 @@ public class CharScanner {
 			this.line = line;
 			this.column = column;
 		}
+
 		public Position(int offset) {
 			this.offset = offset;
 			this.line = -1;
