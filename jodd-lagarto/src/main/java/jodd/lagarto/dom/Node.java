@@ -2,9 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.lagarto.LagartoLexer;
-import jodd.util.StringPool;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,6 @@ public abstract class Node implements Cloneable {
 	// position information
 
 	protected int deepLevel;
-	protected LagartoLexer.Position position;
 
 	/**
 	 * Creates new node.
@@ -1066,25 +1062,6 @@ public abstract class Node implements Cloneable {
 	 */
 	public int getDeepLevel() {
 		return deepLevel;
-	}
-
-	/**
-	 * Returns node position, if position is calculated, otherwise <code>null</code>.
-	 */
-	public LagartoLexer.Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * Returns {@link #getPosition() node position} as a string,
-	 * ready to be appended to a message. If position is not
-	 * calculated, returns an empty string.
-	 */
-	public String getPositionString() {
-		if (position != null) {
-			return position.toString();
-		}
-		return StringPool.EMPTY;
 	}
 
 

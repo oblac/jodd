@@ -156,13 +156,6 @@ public class CharScanner {
 	}
 
 	/**
-	 * Returns current {@link jodd.lagarto.CharScanner.Position}.
-	 */
-	protected Position position() {
-		return position(ndx);
-	}
-
-	/**
 	 * Calculates {@link Position current position}: offset, line and column.
 	 */
 	protected Position position(int position) {

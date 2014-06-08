@@ -64,9 +64,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 					}
 				}
 
-				error("Unclosed tag closed: <" +
-						thisNode.getNodeName() + "> " +
-						thisNode.getPositionString());
+				error("Unclosed tag closed: <" + thisNode.getNodeName() + ">");
 
 				thisNode = thisNode.getParentNode();
 			}
@@ -139,9 +137,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							log.debug("Implicitly closed tag <" +
-									node.getNodeName() + "> " +
-									parentNode.getPositionString());
+							log.debug("Implicitly closed tag <" + node.getNodeName() + "> ");
 						}
 					}
 				}
@@ -169,11 +165,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 				if (matchingParent == null) {			// matching open tag not found, remove it
 
-					String positionString = StringPool.EMPTY;
-					if (domBuilder.isCalculatePosition()) {
-						positionString = tag.calculateTagPosition().toString();
-					}
-					error("Orphan closed tag ignored: </" + tagName + "> " + positionString);
+					error("Orphan closed tag ignored: </" + tagName + "> " + tag.getTagPosition());
 					break;
 				}
 
@@ -184,8 +176,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 						parentNode = parentNode.getParentNode();
 
 						if (log.isDebugEnabled()) {
-							log.debug("Implicitly closed tag <" +
-									tagName + "> " + parentNode.getPositionString());
+							log.debug("Implicitly closed tag <" + tagName + ">");
 						}
 
 						if (parentNode == matchingParent) {
@@ -301,9 +292,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 					String thisNodeName = thisNode.getNodeName().toLowerCase();
 					if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
 
-						String positionString = StringPool.EMPTY;
-						if (domBuilder.isCalculatePosition()) {
-							positionString = tag.calculateTagPosition().toString();
+						String positionString = tag.getPosition();
+						if (positionString == null) {
+							positionString = StringPool.EMPTY;
 						}
 
 						error("Orphan closed tag ignored: </" + tag.getName() + "> " + positionString);
@@ -335,7 +326,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			// debug message
 
-			error("Unclosed tag closed: <" + parentNode.getNodeName() + "> " + parentNode.getPositionString());
+			error("Unclosed tag closed: <" + parentNode.getNodeName() + ">");
 
 			// continue looping
 			parentNode = parentParentNode;
@@ -469,7 +460,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	/**
 	 * Creates conditional {@link Comment}.
-	 * @see Comment#Comment(Document, String, boolean, boolean, String)
+	 * @see Comment#Comment(Document, String, boolean, boolean, boolean)
 	 */
 	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, boolean isHiddenEndTag) {
 		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, isHiddenEndTag);
@@ -480,13 +471,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates {@link Element} node from a {@link Tag}.
 	 */
 	protected Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
-		Element element = new Element(rootNode, tag, voidElement, selfClosed);
-
-		if (domBuilder.isCalculatePosition()) {
-			element.position = tag.calculateTagPosition();
-		}
-
-		return element;
+		return new Element(rootNode, tag, voidElement, selfClosed);
 	}
 
 	/**

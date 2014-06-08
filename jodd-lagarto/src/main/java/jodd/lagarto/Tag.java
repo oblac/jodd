@@ -72,14 +72,14 @@ public interface Tag {
 	int getTagPosition();
 
 	/**
-	 * Calculates current position of a tag .
-	 */
-	LagartoLexer.Position calculateTagPosition();
-
-	/**
 	 * Returns tag length in the input source.
 	 */
 	int getTagLength();
+
+	/**
+	 * Returns tag position or <code>null</code> if position is not calculated.
+	 */
+	public String getPosition();
 
 	// ---------------------------------------------------------------- write
 
@@ -140,12 +140,6 @@ public interface Tag {
 	 */
 	boolean isModified();
 
-	/**
-	 * Force {@link #isModified()} to be <code>true</code>.
-	 * Used when tags needs to be regenerated.
-	 */
-	void setModified();
-
 	// ---------------------------------------------------------------- output
 
 	/**
@@ -155,11 +149,8 @@ public interface Tag {
 
 
 	/**
-	 * Get the complete tag.
-	 * <p>
-	 * This is a bit slower method in that it needs to construct a String and generates tag always.
-	 * Use it for debugging purposes.
+	 * Get the complete tag as a string.
 	 */
 	String toString();
-}
 
+}

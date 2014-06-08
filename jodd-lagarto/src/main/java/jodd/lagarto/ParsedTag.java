@@ -13,38 +13,28 @@ import java.io.IOException;
 class ParsedTag implements Tag {
 
 	private static final String ATTR_NAME_ID = "id";
+
 	// tag info
 	protected String name;
 	private int idNdx;
 	private TagType type;
 	private String tagStart;
-	private String tagEnd;
+	private String tagEnd;	// todo make statics
 
 	// attributes
 	private int attributesCount;
 	private String[] attrNames = new String[10];
 	private String[] attrValues = new String[10];
 
-	// input data
-	private final LagartoLexer lexer;
-
 	private int tagStartIndex;
-	private int tagEndIndex;
 	private int tagLength;
+	private String position;
 
 	// state
 	private int deepLevel;
 	private boolean modified;
 
 	// ---------------------------------------------------------------- internal
-
-	ParsedTag(LagartoLexer lexer) {
-		this.lexer = lexer;
-	}
-
-	ParsedTag(char[] input) {
-		this.lexer = null;
-	}
 
 	/**
 	 * Starts the tag with the index of first '<'.
@@ -67,18 +57,8 @@ class ParsedTag implements Tag {
 	 * Sets the modification flag to <code>false</code>.
 	 */
 	void end(int endIndex) {
-		this.tagEndIndex = endIndex;
 		this.tagLength = endIndex - tagStartIndex;
 		this.modified = false;
-	}
-
-	// 2
-	@Deprecated
-	void defineTag(TagType type, int start, int length) {
-		this.type = type;
-		this.modified = false;
-		this.tagStart = type.getStartString();
-		this.tagEnd = type.getEndString();
 	}
 
 	void increaseDeepLevel() {
@@ -89,11 +69,11 @@ class ParsedTag implements Tag {
 		deepLevel--;
 	}
 
+	// todo remove!
 	void setTagMarks(String start, String end) {
 		this.tagStart = start;
 		this.tagEnd = end;
 	}
-
 
 	public boolean matchTagName(char[] tagNameLowercase) {
 		int len = tagNameLowercase.length;
@@ -177,14 +157,22 @@ class ParsedTag implements Tag {
 		return getAttributeIndex(name, caseSensitive) > -1;
 	}
 
-	// ---------------------------------------------------------------- advanced
+	// ---------------------------------------------------------------- position
 
-	public int getTagPosition() {		//  todo  remove from public API
+	public int getTagPosition() {
 		return tagStartIndex;
 	}
 
 	public int getTagLength() {			//  todo  remove from public API
 		return tagLength;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(CharScanner.Position position) {
+		this.position = position.toString();
 	}
 
 	// ---------------------------------------------------------------- write
@@ -270,10 +258,6 @@ class ParsedTag implements Tag {
 		return modified;
 	}
 
-	public void setModified() {
-		modified = true;
-	}
-
 	// ---------------------------------------------------------------- util
 
 	private void ensureLength() {
@@ -328,38 +312,6 @@ class ParsedTag implements Tag {
 		StringBuilder sb = new StringBuilder();
 		appendTo(sb);
 		return sb.toString();
-	}
-
-
-	// ---------------------------------------------------------------- position
-
-	/**
-	 * Calculates approx position of a tag from current position.
-	 */
-	public LagartoLexer.Position calculateTagPosition() {
-		LagartoLexer.Position position = lexer.currentPosition();
-
-		int column = position.column;
-
-		if (getName() != null) {
-			column -= getName().length();
-		}
-		for (int i = 0; i < getAttributeCount(); i++) {
-			column -= getAttributeName(i).length();
-			String value = getAttributeValue(i);
-			if (value != null) {
-				column -= value.length();
-				column--;	// for '='
-			}
-			column--;		// for attribute separation
-		}
-
-		int diff = position.column - column;
-
-		position.column = column;
-		position.offset -= diff;
-
-		return position;
 	}
 
 }

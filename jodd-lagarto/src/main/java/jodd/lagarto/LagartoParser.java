@@ -60,7 +60,7 @@ public class LagartoParser extends CharScanner {
 	 */
 	protected void initialize(char[] input) {
 		super.initialize(input);
-		this.tag = new ParsedTag(input);
+		this.tag = new ParsedTag();
 		this.doctype = new ParsedDoctype(input);
 		this.text = new char[1024];
 		this.textLen = 0;
@@ -2786,6 +2786,10 @@ public class LagartoParser extends CharScanner {
 	protected void emitTag() {
 		tag.end(ndx + 1);
 
+		if (calculatePosition) {
+			tag.setPosition(position(tag.getTagPosition()));
+		}
+
 		if (tag.getType().isStartingTag()) {
 
 			if (tag.matchTagName(_SCRIPT)) {
@@ -2917,17 +2921,15 @@ public class LagartoParser extends CharScanner {
 	 * todo in the error message, add text that surrounds the error position
 	 */
 	protected void _error(String message) {
-		int position = ndx;
-
 		if (calculatePosition) {
-			Position currentPosition = position();
+			Position currentPosition = position(ndx);
 			message = message
 					.concat(StringPool.SPACE)
 					.concat(currentPosition.toString());
 		} else {
 			message = message
 					.concat(" [@")
-					.concat(Integer.toString(position))
+					.concat(Integer.toString(ndx))
 					.concat(StringPool.RIGHT_SQ_BRACKET);
 		}
 
