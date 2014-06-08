@@ -105,19 +105,12 @@ public class LagartoParserTest {
 			String name = file.getName();
 			System.out.println('+' + name);
 			String content = FileUtil.readString(file);
-			String errors = "";
 			try {
-				errors = _parseEmpty(content);
+				_parseEmpty(content);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				fail(ex.toString());
 			}
-
-			if (name.equals("Answers.com.html") || name.equals("Yahoo!.html")) {
-				System.out.println(errors);
-				continue;
-			}
-			assertEquals(0, errors.length());
 		}
 		assertTrue(processed);
 	}

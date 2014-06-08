@@ -167,10 +167,10 @@ public class DomTreeTest {
 		assertTrue(node.hasAttribute("foo"));
 		assertNull(node.getAttribute("foo"));
 
-		assertFalse(node.isAttributeIncluding("class", "one"));
+		assertFalse(node.isAttributeContaining("class", "one"));
 		node.setAttribute("class", "  one two  three  ");
-		assertTrue(node.isAttributeIncluding("class", "two"));
-		assertTrue(node.isAttributeIncluding("class", "three"));
+		assertTrue(node.isAttributeContaining("class", "two"));
+		assertTrue(node.isAttributeContaining("class", "three"));
 
 		assertEquals(3, node.getAttributesCount());
 	}
@@ -250,6 +250,10 @@ public class DomTreeTest {
 		html = StringUtil.replace(html, "'", "");
 		document = new LagartoDOMBuilder().enableXhtmlMode().parse(html);
 		innerHtml = document.getHtml();
+		innerHtml = StringUtil.replace(innerHtml, "»", "&raquo;");
+		innerHtml = StringUtil.replace(innerHtml, " ", "&nbsp;");
+		innerHtml = StringUtil.replace(innerHtml, "·", "&middot;");
+
 		assertEquals(html, innerHtml);
 		assertTrue(document.check());
 
@@ -258,11 +262,18 @@ public class DomTreeTest {
 		html = StringUtil.replace(html, " />", "/>");
 		html = StringUtil.replace(html, "\" >", "\">");
 		html = StringUtil.replace(html, "'", "");
+		html = StringUtil.replace(html, "&#32;", " ");
 		LagartoDOMBuilder builder = new LagartoDOMBuilder();
 		builder.setSelfCloseVoidTags(true);                        // use self-closing tags!
 		builder.setConditionalCommentExpression(null);
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
+		innerHtml = StringUtil.replace(innerHtml, "»", "&raquo;");
+		innerHtml = StringUtil.replace(innerHtml, " ", "&nbsp;");
+		innerHtml = StringUtil.replace(innerHtml, "·", "&middot;");
+		innerHtml = StringUtil.replace(innerHtml, "’", "&#8217;");
+		innerHtml = StringUtil.replace(innerHtml, "©", "&copy;");
+
 		assertEquals(html, innerHtml);
 		assertTrue(document.check());
 
@@ -277,9 +288,10 @@ public class DomTreeTest {
 		Element div = (Element) nodeSelector.selectFirst("div.ysites-col");
 		Element h2 = (Element) div.getFirstChild();
 
-		assertEquals(1, h2.getAttributesCount());
+		assertEquals(2, h2.getAttributesCount());
 		assertEquals("y-ftr-txt-hdr  ", h2.getAttribute("class"));
-		assertTrue(h2.isAttributeIncluding("class", "y-ftr-txt-hdr"));
+		assertTrue(h2.isAttributeContaining("class", "y-ftr-txt-hdr"));
+		assertTrue(h2.hasAttribute("\""));
 
 		assertTrue(document.check());
 	}

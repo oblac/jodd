@@ -57,9 +57,9 @@ public class Attribute implements Cloneable {
 	// ---------------------------------------------------------------- splits
 
 	/**
-	 * Returns true if attribute is including some value.
+	 * Returns true if attribute is containing some value.
 	 */
-	public boolean isIncluding(String include) {
+	public boolean isContaining(String include) {
 		if (value == null) {
 			return false;
 		}

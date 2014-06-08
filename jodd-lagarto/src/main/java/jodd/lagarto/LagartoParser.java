@@ -149,14 +149,6 @@ public class LagartoParser extends CharScanner {
 		return parsingTime;
 	}
 
-	// ---------------------------------------------------------------- flags
-
-	protected int rawTextStart;
-	protected int rawTextEnd;
-	protected char[] rawTagName;
-	protected int rcdataTagStart = -1;
-	protected char[] rcdataTagName;
-
 	// ---------------------------------------------------------------- start & end
 
 	/**
@@ -193,6 +185,7 @@ public class LagartoParser extends CharScanner {
 
 	protected void consumeCharacterReference(char allowedChar) {
 		ndx++;
+
 		if (isEOF()) {
 			return;
 		}
@@ -204,17 +197,21 @@ public class LagartoParser extends CharScanner {
 			return;
 		}
 
-		consumeCharacterReference();
+		_consumeCharacterReference();
 	}
 
 	protected void consumeCharacterReference() {
-		int unconsumeNdx = ndx;
-
 		ndx++;
 
 		if (isEOF()) {
 			return;
 		}
+
+		_consumeCharacterReference();
+	}
+
+	private void _consumeCharacterReference() {
+		int unconsumeNdx = ndx - 1;
 
 		char c = input[ndx];
 
@@ -233,6 +230,7 @@ public class LagartoParser extends CharScanner {
 				// only a sequence of alphanumeric chars ending with semicolon
 				// gives na error
 				errorCharReference();
+				textEmitChar('&');
 				ndx = unconsumeNdx;
 				return;
 			}
@@ -769,8 +767,10 @@ public class LagartoParser extends CharScanner {
 					state = AFTER_ATTRIBUTE_VALUE_QUOTED;
 					return;
 				}
+
 				if (c == '&') {
 					consumeCharacterReference('\"');
+					continue;
 				}
 
 				textEmitChar(c);
@@ -938,6 +938,10 @@ public class LagartoParser extends CharScanner {
 
 	// ---------------------------------------------------------------- RAWTEXT
 
+	protected int rawTextStart;
+	protected int rawTextEnd;
+	protected char[] rawTagName;
+
 	protected State RAWTEXT = new State() {
 		public void parse() {
 			while (true) {
@@ -1070,6 +1074,9 @@ public class LagartoParser extends CharScanner {
 	};
 
 	// ---------------------------------------------------------------- RCDATA
+
+	protected int rcdataTagStart = -1;
+	protected char[] rcdataTagName;
 
 	protected State RCDATA = new State() {
 		public void parse() {
@@ -1983,6 +1990,7 @@ public class LagartoParser extends CharScanner {
 
 	protected int scriptStartNdx = -1;
 	protected int scriptEndNdx = -1;
+	protected int scriptEndTagName = -1;
 
 	protected State SCRIPT_DATA = new State() {
 		public void parse() {
@@ -2033,8 +2041,6 @@ public class LagartoParser extends CharScanner {
 			state = SCRIPT_DATA;
 		}
 	};
-
-	protected int scriptEndTagName = -1;
 
 	protected State SCRIPT_DATA_END_TAG_OPEN = new State() {
 		public void parse() {
@@ -2115,6 +2121,9 @@ public class LagartoParser extends CharScanner {
 	 */
 	protected class ScriptEscape {
 
+		protected int doubleEscapedNdx = -1;
+		protected int doubleEscapedEndTag = -1;
+
 		protected State SCRIPT_DATA_ESCAPE_START = new State() {
 			public void parse() {
 				ndx++;
@@ -2185,8 +2194,6 @@ public class LagartoParser extends CharScanner {
 				state = SCRIPT_DATA_ESCAPED;
 			}
 		};
-
-		protected int doubleEscapedNdx = -1;
 
 		protected State SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN = new State() {
 			public void parse() {
@@ -2447,8 +2454,6 @@ public class LagartoParser extends CharScanner {
 				}
 			}
 		};
-
-		protected int doubleEscapedEndTag = -1;
 
 		protected State SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN = new State() {
 			public void parse() {
@@ -2719,12 +2724,11 @@ public class LagartoParser extends CharScanner {
 	protected int textLen;
 
 	/**
-	 * Emits characters into the local buffer.
-	 * Text will be emitted only on {@link #flushText()}.
+	 * Emits characters into the local text buffer.
 	 */
 	protected void textEmitChar(char c) {
 		if (textLen == text.length) {
-			ArraysUtil.resize(text, textLen << 1);
+			text = ArraysUtil.resize(text, textLen << 1);
 		}
 		text[textLen] = c;
 		textLen++;
@@ -2996,10 +3000,8 @@ public class LagartoParser extends CharScanner {
 	private static final char[] _CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
 	private static final char[] _CC_END = new char[] {']', '>'};
 
-
-	// 'script' is handled by its states todo check this!
-	private static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
-			_XMP, _STYLE, _IFRAME, _NOEMBED, _NOFRAMES, _NOSCRIPT,
+	public static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
+			_XMP, _STYLE, _IFRAME, _NOEMBED, _NOFRAMES, _NOSCRIPT, _SCRIPT
 	};
 
 	private static final char[][] RCDATA_TAGS = new char[][] {
@@ -3015,4 +3017,5 @@ public class LagartoParser extends CharScanner {
 
 	private static final CharSequence _ENDIF = "endif";
 
+	// todo add PLANETEXT!
 }

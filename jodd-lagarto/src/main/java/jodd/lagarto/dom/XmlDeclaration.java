@@ -16,9 +16,9 @@ public class XmlDeclaration extends Node {
 	public XmlDeclaration(Document ownerDocument, CharSequence version, CharSequence encoding, CharSequence standalone) {
 		super(ownerDocument, NodeType.XML_DECLARATION, "xml");
 
-		this.version = version.toString();
-		this.encoding = encoding.toString();
-		this.standalone = encoding.toString();
+		this.version = version != null ? version.toString() : null;		// todo to JoddScript
+		this.encoding = encoding != null ? encoding.toString() : null;
+		this.standalone = standalone != null ?  standalone.toString() : null;
 	}
 
 	public XmlDeclaration(Document ownerDocument, String name) {

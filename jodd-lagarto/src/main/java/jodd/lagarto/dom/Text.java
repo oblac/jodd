@@ -2,6 +2,7 @@
 
 package jodd.lagarto.dom;
 
+import jodd.lagarto.TagUtil;
 import jodd.util.HtmlDecoder;
 import jodd.util.HtmlEncoder;
 import jodd.util.StringUtil;
@@ -33,18 +34,26 @@ public class Text extends Node {
 	}
 
 	/**
-	 * Sets HTML text, but encodes it first.
+	 * Sets HTML text, but decodes it first.
 	 */
 	public void setTextContent(String text) {
-		nodeValue = HtmlEncoder.text(text);
+		nodeValue = HtmlDecoder.decode(text);		// todo do we need this?
 	}
 
 	/**
-	 * Returns decoded HTML text.
+	 * Returns encoded HTML text.
 	 */
 	@Override
 	public String getTextContent() {
-		return HtmlDecoder.decode(nodeValue);
+		Node parentNode = getParentNode();
+
+		String nodeName = parentNode.getNodeName();
+
+		if (nodeName != null && TagUtil.isRawTagName(nodeName)) {
+			return nodeValue;
+		}
+
+		return HtmlEncoder.text(nodeValue);
 	}
 
 	/**

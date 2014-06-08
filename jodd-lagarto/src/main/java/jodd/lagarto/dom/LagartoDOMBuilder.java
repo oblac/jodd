@@ -37,6 +37,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	protected String conditionalCommentExpression;
 	protected String[] voidTags = HTML5_VOID_TAGS;
 	protected boolean impliedEndTags;
+	protected boolean xmlMode;
 	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
 	protected Logger.Level parsingErrorLogLevel = Logger.Level.WARN;
 
@@ -241,6 +242,14 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		parsingErrorLogLevel = Logger.Level.valueOf(logLevel);
 	}
 
+	public boolean isXmlMode() {
+		return xmlMode;
+	}
+
+	public void setXmlMode(boolean xmlMode) {
+		this.xmlMode = xmlMode;
+	}
+
 	// ---------------------------------------------------------------- quick settings
 
 	/**
@@ -285,6 +294,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		impliedEndTags = true;							// some tags end is implied
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
+		xmlMode = false;								// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -301,6 +311,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = true;				// enable IE conditional comments
 		conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
+		xmlMode = false;								// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -317,6 +328,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		impliedEndTags = false;							// no implied tag ends
 		enableConditionalComments = false;				// disable IE conditional comments
 		conditionalCommentExpression = null;			// don't use
+		xmlMode = true;									// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -347,6 +359,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		//lagartoParser.setParseSpecialTagsAsCdata(parseSpecialTagsAsCdata);		// todo?
 		lagartoParser.setEnableConditionalComments(enableConditionalComments);
 		lagartoParser.setCalculatePosition(calculatePosition);
+		lagartoParser.setXmlMode(xmlMode);
 
 		LagartoDOMBuilderTagVisitor domBuilderTagVisitor =
 				new LagartoDOMBuilderTagVisitor(this);

@@ -450,14 +450,14 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Returns <code>true</code> if attribute includes some word.
+	 * Returns <code>true</code> if attribute containing some word.
 	 */
-	public boolean isAttributeIncluding(String name, String word) {
+	public boolean isAttributeContaining(String name, String word) {
 		Attribute attr = getAttributeInstance(name);
 		if (attr == null) {
 			return false;
 		}
-		return attr.isIncluding(word);
+		return attr.isContaining(word);
 	}
 
 	// ---------------------------------------------------------------- children count

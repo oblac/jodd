@@ -60,7 +60,7 @@ public class LagartoNodeHtmlRenderer {
 	 * Renders {@link Text text} nodes.
 	 */
 	public void renderText(Text text, Appendable appendable) throws IOException {
-		String nodeValue = text.getNodeValue();
+		String nodeValue = text.getTextContent();
 
 		appendable.append(nodeValue);
 	}
@@ -69,20 +69,8 @@ public class LagartoNodeHtmlRenderer {
 	 * Renders {@link XmlDeclaration} nodes.
 	 */
 	public void renderXmlDeclaration(XmlDeclaration xmlDeclaration, Appendable appendable) throws IOException {
-		String nodeName = xmlDeclaration.getNodeName();
-
-		appendable.append("<?");
-		appendable.append(nodeName);
-
-		int attrCount = xmlDeclaration.getAttributesCount();
-		if (attrCount != 0) {
-			for (int i = 0; i < attrCount; i++) {
-				Attribute attr = xmlDeclaration.getAttribute(i);
-				appendable.append(' ');
-				renderAttribute(xmlDeclaration, attr, appendable);
-			}
-		}
-		appendable.append("?>");
+		TagWriterUtil.writeXml(appendable,
+				xmlDeclaration.getVersion(), xmlDeclaration.getEncoding(), xmlDeclaration.getStandalone());
 	}
 
 

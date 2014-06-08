@@ -238,7 +238,8 @@ public class DomBuilderTest {
 
 		document = lagartoDOMBuilder.parse("<HTML><bOdY at='qWe' AT='zxc'></body></html>");
 		innerHtml = document.getHtml();
-		assertEquals("<html><body at=\"zxc\"></body></html>", innerHtml);
+		// only the first attribute is used
+		assertEquals("<html><body at=\"qWe\"></body></html>", innerHtml);
 		assertTrue(document.check());
 	}
 
@@ -255,23 +256,24 @@ public class DomBuilderTest {
 
 		Text text = (Text) document.getFirstChild().getFirstChild();
 
-		assertEquals("a&lt;b", text.getNodeValue());
-		assertEquals("a<b", text.getTextContent());
+		assertEquals("a<b", text.getNodeValue());
+		assertEquals("a&lt;b", text.getTextContent());
 		assertTrue(document.check());
 	}
 
 	@Test
 	public void testXmlDec() {
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		Document document = lagartoDOMBuilder.parse("<?html?><div?></div>");
+		lagartoDOMBuilder.enableXmlMode();
+		Document document = lagartoDOMBuilder.parse("<?xml version=\"1.0\"?><div?></div>");
 
 		XmlDeclaration xml = (XmlDeclaration) document.getFirstChild();
 		assertEquals(0, xml.getAttributesCount());
-		assertEquals("html", xml.getNodeName());
+		assertEquals("xml", xml.getNodeName());
 
 		Element div = (Element) xml.getNextSibling();
 		assertEquals(0, div.getAttributesCount());
-		assertEquals("div", div.getNodeName());
+		assertEquals("div?", div.getNodeName());
 
 		assertTrue(document.check());
 	}
@@ -283,11 +285,11 @@ public class DomBuilderTest {
 
 		Element div = (Element) document.getFirstChild();
 		assertEquals("div", div.getNodeName());
-		assertEquals(3, div.getAttributesCount());
+		assertEquals(4, div.getAttributesCount());
 		assertTrue(div.hasAttribute("qwe"));
 		assertTrue(div.hasAttribute("foo"));
 		assertTrue(div.hasAttribute("zoo"));
-		assertFalse(div.hasAttribute("'8989'"));
+		assertTrue(div.hasAttribute("'8989'"));
 
 		assertTrue(document.check());
 	}

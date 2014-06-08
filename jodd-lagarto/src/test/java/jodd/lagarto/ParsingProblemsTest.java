@@ -61,7 +61,7 @@ public class ParsingProblemsTest {
 			fail();
 		}
 
-		assertEquals("html text1<=>text2 html ", sb.toString());
+		assertEquals("html text1 <=>text2 html ", sb.toString());
 	}
 
 	@Test
@@ -122,13 +122,13 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-//		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.setCalculatePosition(true);
 		lagartoDOMBuilder.setCollectErrors(true);
 		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(document.check());
 
 		// (1564 open DTs + 1564 open DDs) 1 open P
-		assertEquals(1, document.getErrors().size());
+		assertEquals(19, document.getErrors().size());
 
 		Jerry doc = Jerry.jerry(FileUtil.readString(file));
 		assertEquals(16, doc.$("td.NavBarCell1").size());
