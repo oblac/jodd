@@ -2,6 +2,8 @@
 
 package jodd.lagarto.dom;
 
+import jodd.util.JoddScript;
+
 import java.io.IOException;
 
 /**
@@ -16,13 +18,9 @@ public class XmlDeclaration extends Node {
 	public XmlDeclaration(Document ownerDocument, CharSequence version, CharSequence encoding, CharSequence standalone) {
 		super(ownerDocument, NodeType.XML_DECLARATION, "xml");
 
-		this.version = version != null ? version.toString() : null;		// todo to JoddScript
-		this.encoding = encoding != null ? encoding.toString() : null;
-		this.standalone = standalone != null ?  standalone.toString() : null;
-	}
-
-	public XmlDeclaration(Document ownerDocument, String name) {
-		super(ownerDocument, NodeType.XML_DECLARATION, name);
+		this.version = JoddScript.toString(version);
+		this.encoding = JoddScript.toString(encoding);
+		this.standalone = JoddScript.toString(standalone);
 	}
 
 	public String getVersion() {
@@ -39,7 +37,7 @@ public class XmlDeclaration extends Node {
 
 	@Override
 	public XmlDeclaration clone() {
-		return cloneTo(new XmlDeclaration(ownerDocument, nodeName));
+		return cloneTo(new XmlDeclaration(ownerDocument, version, encoding, standalone));
 	}
 
 	@Override

@@ -36,7 +36,6 @@ public class ParsedDoctype implements Doctype {
 		this.systemIdentifier = systemIdentifier;
 	}
 
-
 	// ---------------------------------------------------------------- get
 
 	/**
@@ -66,7 +65,5 @@ public class ParsedDoctype implements Doctype {
 	public CharSequence getSystemIdentifier() {
 		return systemIdentifier;
 	}
-
-	// ---------------------------------------------------------------- util
 
 }

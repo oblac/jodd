@@ -7,4 +7,5 @@ tag:i:2<
 tag:b:3<
 txt:[bold]
 wrn:[Parse error: invalid token [3:16 @99]
-tag:b<:3></b< i>
+wrn:[Ignored end tag attribute [3:17 @100]
+tag:b<:3>

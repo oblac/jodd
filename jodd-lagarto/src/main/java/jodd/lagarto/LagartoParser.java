@@ -2762,13 +2762,16 @@ public class LagartoParser extends Scanner {
 
 	protected CharSequence textWrap() {
 		if (textLen == 0) {
-			return EMPTY_CHAR_BUFFER;
+			return emitStrings ? StringPool.EMPTY : EMPTY_CHAR_BUFFER;
 		}
+
+		if (emitStrings) {
+			return new String(text, 0, textLen);
+		}
+
 		char[] textToEmit = new char[textLen];
-
 		System.arraycopy(text, 0, textToEmit, 0, textLen);
-
-		return CharBuffer.wrap(textToEmit); 	// todo wrap or toString()
+		return CharBuffer.wrap(textToEmit);
 	}
 
 	// ---------------------------------------------------------------- attr
@@ -2785,11 +2788,16 @@ public class LagartoParser extends Scanner {
 	}
 
 	private void _addAttribute(CharSequence attrName, CharSequence attrValue) {
-		if (tag.hasAttribute(attrName)) {
-			_error("Ignored duplicated attribute: " + attrName);
+		if (tag.getType() == TagType.END) {
+			_error("Ignored end tag attribute");
 		} else {
-			tag.addAttribute(attrName, attrValue);
+			if (tag.hasAttribute(attrName)) {
+				_error("Ignored duplicated attribute: " + attrName);
+			} else {
+				tag.addAttribute(attrName, attrValue);
+			}
 		}
+
 		attrStartNdx = -1;
 		attrEndNdx = -1;
 		textLen = 0;
