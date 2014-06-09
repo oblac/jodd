@@ -193,8 +193,8 @@ public class JDateTime implements Comparable, Cloneable {
 	/**
 	 * Loads current date time information.
 	 */
-	public void setDateTimeStamp(DateTimeStamp dts) {
-		set(dts.year, dts.month, dts.day, dts.hour, dts.minute, dts.second, dts.millisecond);
+	public JDateTime setDateTimeStamp(DateTimeStamp dts) {
+		return set(dts.year, dts.month, dts.day, dts.hour, dts.minute, dts.second, dts.millisecond);
 	}
 
 	/**
