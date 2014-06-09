@@ -113,7 +113,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			return null;
 		}
 
-		return new LagartoParsingProcessor() {
+		return new LagartoParsingProcessor(true) {
 			@Override
 			protected char[] parse(TagWriter rootTagWriter, HttpServletRequest request) {
 

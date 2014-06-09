@@ -5,7 +5,9 @@ package jodd.lagarto.dom;
 import jodd.lagarto.Doctype;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
+import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
+import jodd.util.JoddScript;
 import jodd.util.StringPool;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -99,7 +101,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates new element with correct configuration.
 	 */
 	protected Element createElementNode(Tag tag) {
-		boolean isVoid = domBuilder.isVoidTag(tag.getName());
+		boolean isVoid = domBuilder.isVoidTag(tag.getName().toString());		// todo remove toString?
 		boolean selfClosed = false;
 
 		if (domBuilder.hasVoidTags()) {
@@ -158,7 +160,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 					removeLastChildNodeIfEmptyText(parentNode, true);
 				}
 
-				String tagName = tag.getName();
+				String tagName = tag.getName().toString();
 
 				Node matchingParent = findMatchingParentOpenTag(tagName);
 
@@ -288,7 +290,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
 
-			if (!tag.getName().equals("table")) {
+			if (!TagUtil.equalsIgnoreCase(tag.getName(), "table")) {
 
 				// check if there is table or list between this node
 				// and matching parent
@@ -402,9 +404,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		DocumentType documentType = new DocumentType(rootNode,
-				toString(doctype.getName()),
-				toString(doctype.getPublicIdentifier()),
-				toString(doctype.getSystemIdentifier())
+				JoddScript.toString(doctype.getName()),
+				JoddScript.toString(doctype.getPublicIdentifier()),
+				JoddScript.toString(doctype.getSystemIdentifier())
 		);
 		parentNode.addChild(documentType);
 	}
@@ -434,18 +436,6 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	public void error(String message) {
 		rootNode.addError(message);
 		log.log(domBuilder.getParsingErrorLogLevel(), message);
-	}
-
-	// ---------------------------------------------------------------- factory
-
-	/**
-	 * Todo move to JoddScript!
-	 */
-	protected String toString(Object value) {
-		if (value == null) {
-			return null;
-		}
-		return value.toString();
 	}
 
 }

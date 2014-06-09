@@ -3,6 +3,7 @@
 package jodd.decora.parser;
 
 import jodd.lagarto.Tag;
+import jodd.lagarto.TagUtil;
 
 /**
  * Decora tag, defined by the name and its position in decorator file.
@@ -91,13 +92,14 @@ public class DecoraTag {
 	/**
 	 * Returns <code>true</code> if provided tag
 	 * matches decorator tag.
+	 * todo check!
 	 */
 	public boolean isMatchedTag(Tag tag) {
-		if (name.equals(tag.getName()) == false) {
+		if (tag.nameEquals(name) == false) {
 			return false;
 		}
 		if (id != null) {
-			if (id.equals(tag.getId()) == false) {
+			if (TagUtil.equalsIgnoreCase(id, tag.getId()) == false) {
 				return false;
 			}
 		}

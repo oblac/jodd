@@ -59,17 +59,6 @@ public class ObjectUtil {
 		return obj1.equals(obj2);
 	}
 
-	/**
-	 * Non-symmetric utility for comparing the types of two objects. Might be useful for {@link Object#equals(Object)}
-	 * if <code>instanceof</code> is not used.
-	 *
-	 * @param object <code>equals()</code> argument
-	 * @param thiz current class that overrides <code>equals()</code>
-	 */
-	public static boolean equalsType(Object object, Object thiz) {
-		return (object != null) && (object.getClass().equals(thiz.getClass()));
-	}
-
 
 	// ---------------------------------------------------------------- clone
 

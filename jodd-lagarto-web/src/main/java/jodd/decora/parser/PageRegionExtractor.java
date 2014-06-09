@@ -33,7 +33,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 		if (tag.getType() == TagType.END) {
 			if (currentRegions > 0) {
 				for (DecoraTag decoraTag : decoraTags) {
-					if (decoraTag.isRegionStarted() && decoraTag.getName().equals(tag.getName())) {
+					if (decoraTag.isRegionStarted() && tag.nameEquals(decoraTag.getName())) {
 
 						decoraTag.endRegion(tag.getTagPosition(), tag.getTagLength());
 

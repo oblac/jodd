@@ -68,13 +68,6 @@ public class Text extends Node {
 		}
 	}
 
-	/**
-	 * Sets HTML text, but encodes it first.
-	 */
-	public void setTextStrict(String text) {
-		nodeValue = HtmlEncoder.strict(text);
-	}
-
 	@Override
 	public void toHtml(Appendable appendable) throws IOException {
 		ownerDocument.getRenderer().renderText(this, appendable);

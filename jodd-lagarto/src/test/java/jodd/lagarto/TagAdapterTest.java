@@ -31,7 +31,7 @@ public class TagAdapterTest {
 	public void testCleanHtml() throws IOException {
 		File ff = new File(testAdapterRoot, "clean.html");
 
-		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff));
+		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff), false);
 
 		StringBuilder out = new StringBuilder();
 		TagWriter tagWriter = new TagWriter(out);
@@ -47,7 +47,7 @@ public class TagAdapterTest {
 	public void testTwoAdapters() throws IOException {
 		File ff = new File(testAdapterRoot, "two.html");
 
-		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff));
+		LagartoParser lagartoParser = new LagartoParser(FileUtil.readString(ff), false);
 		StringBuilder out = new StringBuilder();
 		TagWriter tagWriter = new TagWriter(out);
 
@@ -55,10 +55,10 @@ public class TagAdapterTest {
 			@Override
 			public void tag(Tag tag) {
 				if (tag.getType().isStartingTag()) {
-					String tagname = tag.getName();
+					String tagname = tag.getName().toString();
 					if (tagname.equals("title")) {
-						String id = tag.getAttributeValue("id", false);
-						tag.setAttribute("id", false, String.valueOf(Integer.parseInt(id) + 1));
+						String id = tag.getAttributeValue("id").toString();
+						tag.setAttribute("id", String.valueOf(Integer.parseInt(id) + 1));
 					}
 				}
 				super.tag(tag);
@@ -70,7 +70,7 @@ public class TagAdapterTest {
 			@Override
 			public void tag(Tag tag) {
 				if (tag.getType().isStartingTag()) {
-					String tagname = tag.getName();
+					String tagname = tag.getName().toString();
 					if (tagname.equals("title")) {
 						tag.addAttribute("id", "172");
 					}

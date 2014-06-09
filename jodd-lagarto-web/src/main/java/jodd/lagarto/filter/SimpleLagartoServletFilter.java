@@ -48,13 +48,18 @@ public abstract class SimpleLagartoServletFilter extends LagartoServletFilter {
 		protected LagartoParser lagartoParser;
 		protected FastCharArrayWriter fastCharArrayWriter;
 		protected TagWriter tagWriter;
+		protected boolean emitStrings;
+
+		protected LagartoParsingProcessor(boolean emitStrings) {
+			this.emitStrings = emitStrings;
+		}
 
 		/**
 		 * Initialize processor by creating new Lagarto and root TagWriter.
 		 */
 		public void init(char[] content) {
 			// create Lagarto
-			lagartoParser = new LagartoParser(content);
+			lagartoParser = new LagartoParser(content, emitStrings);
 
 			// prepare root tag writer
 			fastCharArrayWriter = new FastCharArrayWriter();

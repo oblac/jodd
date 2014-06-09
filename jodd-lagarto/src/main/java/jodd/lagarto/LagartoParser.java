@@ -24,7 +24,7 @@ import static jodd.util.CharUtil.isDigit;
  * <li>xml mode added</li>
  * </ul>
  */
-public class LagartoParser extends CharScanner {
+public class LagartoParser extends Scanner {
 
 	protected TagVisitor visitor;
 	protected ParsedTag tag;
@@ -34,16 +34,18 @@ public class LagartoParser extends CharScanner {
 	/**
 	 * Creates parser on char array.
 	 */
-	public LagartoParser(char[] charArray) {
-			initialize(charArray);
-		}
+	public LagartoParser(char[] charArray, boolean emitStrings) {
+		super(emitStrings);
+		initialize(charArray);
+	}
 
 	/**
 	 * Creates parser on a String.
 	 */
-	public LagartoParser(String string) {
-			initialize(UnsafeUtil.getChars(string));
-		}
+	public LagartoParser(String string, boolean emitStrings) {
+		super(emitStrings);
+		initialize(UnsafeUtil.getChars(string));
+	}
 
 	/**
 	 * Initializes parser.
@@ -61,6 +63,7 @@ public class LagartoParser extends CharScanner {
 
 	protected boolean xmlMode = false;
 	protected boolean enableConditionalComments = true;
+	protected boolean caseSensitive = false;
 	protected boolean calculatePosition;
 
 	public boolean isEnableConditionalComments() {
@@ -90,6 +93,17 @@ public class LagartoParser extends CharScanner {
 		this.xmlMode = xmlMode;
 	}
 
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	/**
+	 * Sets the case-sensitive flag for various matching.
+	 */
+	public void setCaseSensitive(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
+
 	/**
 	 * Resolves current position on {@link #error(String)} parsing errors}
 	 * and for DOM elements. Note: this makes processing SLOW!
@@ -113,6 +127,8 @@ public class LagartoParser extends CharScanner {
 	 * Parses content and callback provided {@link TagVisitor}.
 	 */
 	public void parse(TagVisitor visitor) {
+		tag.init(caseSensitive);
+
 		this.parsingTime = System.currentTimeMillis();
 
 		this.visitor = visitor;
@@ -407,8 +423,8 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 			if (xmlMode) {
-				if (match(_XML)) {
-					ndx += _XML.length - 1;
+				if (match(XML)) {
+					ndx += XML.length - 1;
 					if (xmlDeclaration == null) {
 						xmlDeclaration = new XmlDeclaration();
 					}
@@ -470,19 +486,19 @@ public class LagartoParser extends CharScanner {
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					state = BEFORE_ATTRIBUTE_NAME;
-					tag.setName(substring(nameNdx, ndx));
+					tag.setName(charSequence(nameNdx, ndx));
 					break;
 				}
 
 				if (c == '/') {
 					state = SELF_CLOSING_START_TAG;
-					tag.setName(substring(nameNdx, ndx));
+					tag.setName(charSequence(nameNdx, ndx));
 					break;
 				}
 
 				if (c == '>') {
 					state = DATA_STATE;
-					tag.setName(substring(nameNdx, ndx));
+					tag.setName(charSequence(nameNdx, ndx));
 					emitTag();
 					break;
 				}
@@ -855,22 +871,22 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 
-			if (match(_COMMENT_DASH)) {
+			if (match(COMMENT_DASH)) {
 				state = COMMENT_START;
 				ndx++;
 				return;
 			}
 
-			if (matchUpperCase(_DOCTYPE)) {
+			if (matchUpperCase(T_DOCTYPE)) {
 				state = DOCTYPE;
-				ndx += _DOCTYPE.length - 1;
+				ndx += T_DOCTYPE.length - 1;
 				return;
 			}
 
 			if (enableConditionalComments) {
 				// CC: downlevel-revealed starting
-				if (match(_CC_IF)) {
-					int ccEndNdx = find(_CC_END, ndx + _CC_IF.length, total);
+				if (match(CC_IF)) {
+					int ccEndNdx = find(CC_END, ndx + CC_IF.length, total);
 
 					if (ccEndNdx == -1) {
 						// todo
@@ -886,8 +902,8 @@ public class LagartoParser extends CharScanner {
 				}
 
 				// CC: downlevel-* ending tag
-				if (match(_CC_ENDIF)) {
-					ndx += _CC_ENDIF.length;
+				if (match(CC_ENDIF)) {
+					ndx += CC_ENDIF.length;
 
 					int ccEndNdx = find('>', ndx, total);
 
@@ -895,7 +911,7 @@ public class LagartoParser extends CharScanner {
 						// todo
 					}
 
-					if (match(_COMMENT_DASH, ccEndNdx - 2)) {
+					if (match(COMMENT_DASH, ccEndNdx - 2)) {
 						// downlevel-hidden ending tag
 						visitor.condComment(_ENDIF, false, true, false);
 					} else {
@@ -909,8 +925,8 @@ public class LagartoParser extends CharScanner {
 			}
 
 			if (xmlMode) {
-				if (match(_CDATA)) {
-					ndx += _CDATA.length - 1;
+				if (match(CDATA)) {
+					ndx += CDATA.length - 1;
 
 					if (xmlDeclaration == null) {
 						xmlDeclaration = new XmlDeclaration();
@@ -1014,7 +1030,7 @@ public class LagartoParser extends CharScanner {
 
 						state = BEFORE_ATTRIBUTE_NAME;
 						tag.start(rawTextEnd);
-						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rawtextEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 					} else {
 						state = RAWTEXT;
@@ -1029,7 +1045,7 @@ public class LagartoParser extends CharScanner {
 
 						state = SELF_CLOSING_START_TAG;
 						tag.start(rawTextEnd);
-						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rawtextEndTagNameStartNdx, ndx));
 						tag.setType(TagType.SELF_CLOSING);
 					} else {
 						state = RAWTEXT;
@@ -1044,7 +1060,7 @@ public class LagartoParser extends CharScanner {
 
 						state = DATA_STATE;
 						tag.start(rawTextEnd);
-						tag.setName(substring(rawtextEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rawtextEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 						tag.end(ndx);
 						emitTag();
@@ -1160,7 +1176,7 @@ public class LagartoParser extends CharScanner {
 
 						state = BEFORE_ATTRIBUTE_NAME;
 						tag.start(rcdataTagStart);
-						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 					} else {
 						state = RCDATA;
@@ -1174,7 +1190,7 @@ public class LagartoParser extends CharScanner {
 
 						state = SELF_CLOSING_START_TAG;
 						tag.start(rcdataTagStart);
-						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.SELF_CLOSING);
 					} else {
 						state = RCDATA;
@@ -1188,7 +1204,7 @@ public class LagartoParser extends CharScanner {
 
 						state = DATA_STATE;
 						tag.start(rcdataTagStart);
-						tag.setName(substring(rcdataEndTagNameStartNdx, ndx));
+						tag.setName(charSequence(rcdataEndTagNameStartNdx, ndx));
 						tag.setType(TagType.END);
 						tag.end(ndx);
 						emitTag();
@@ -1492,13 +1508,13 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 
-				if (matchUpperCase(_PUBLIC)) {
-					ndx += _PUBLIC.length - 1;
+				if (matchUpperCase(A_PUBLIC)) {
+					ndx += A_PUBLIC.length - 1;
 					state = AFTER_DOCTYPE_PUBLIC_KEYWORD;
 					return;
 				}
-				if (matchUpperCase(_SYSTEM)) {
-					ndx += _SYSTEM.length - 1;
+				if (matchUpperCase(A_SYSTEM)) {
+					ndx += A_SYSTEM.length - 1;
 					state = AFTER_DOCTYPE_SYSTEM_KEYWORD;
 					return;
 				}
@@ -2067,7 +2083,7 @@ public class LagartoParser extends CharScanner {
 				char c = input[ndx];
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
-					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 						state = BEFORE_ATTRIBUTE_NAME;
 					} else {
 						state = SCRIPT_DATA;
@@ -2075,7 +2091,7 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 				if (c == '/') {
-					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 						state = SELF_CLOSING_START_TAG;
 					} else {
 						state = SCRIPT_DATA;
@@ -2083,7 +2099,7 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 				if (c == '>') {
-					if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+					if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 						state = DATA_STATE;
 						emitScript(scriptStartNdx, scriptEndNdx);
 					} else {
@@ -2299,7 +2315,7 @@ public class LagartoParser extends CharScanner {
 					char c = input[ndx];
 
 					if (equalsOne(c, TAG_WHITESPACES)) {
-						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 							state = BEFORE_ATTRIBUTE_NAME;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -2307,7 +2323,7 @@ public class LagartoParser extends CharScanner {
 						return;
 					}
 					if (c == '/') {
-						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 							state = SELF_CLOSING_START_TAG;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -2315,7 +2331,7 @@ public class LagartoParser extends CharScanner {
 						return;
 					}
 					if (c == '>') {
-						if (isAppropriateTagName(_SCRIPT, scriptEndTagName, ndx)) {
+						if (isAppropriateTagName(T_SCRIPT, scriptEndTagName, ndx)) {
 							state = DATA_STATE;
 							emitTag();
 						} else {
@@ -2347,7 +2363,7 @@ public class LagartoParser extends CharScanner {
 					char c = input[ndx];
 
 					if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
-						if (isAppropriateTagName(_SCRIPT, doubleEscapedNdx, ndx)) {
+						if (isAppropriateTagName(T_SCRIPT, doubleEscapedNdx, ndx)) {
 							state = SCRIPT_DATA_DOUBLE_ESCAPED;
 						} else {
 							state = SCRIPT_DATA_ESCAPED;
@@ -2480,7 +2496,7 @@ public class LagartoParser extends CharScanner {
 					char c = input[ndx];
 
 					if (equalsOne(c, TAG_WHITESPACES_OR_END)) {
-						if (isAppropriateTagName(_SCRIPT, doubleEscapedEndTag, ndx)) {
+						if (isAppropriateTagName(T_SCRIPT, doubleEscapedEndTag, ndx)) {
 							state = SCRIPT_DATA_ESCAPED;
 						} else {
 							state = SCRIPT_DATA_DOUBLE_ESCAPED;
@@ -2541,22 +2557,22 @@ public class LagartoParser extends CharScanner {
 
 					switch (xmlAttrCount) {
 						case 0:
-							if (match(_XML_VERSION)) {
-								ndx += _XML_VERSION.length - 1;
+							if (match(XML_VERSION)) {
+								ndx += XML_VERSION.length - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
 							break;
 						case 1:
-							if (match(_XML_ENCODING)) {
-								ndx += _XML_ENCODING.length - 1;
+							if (match(XML_ENCODING)) {
+								ndx += XML_ENCODING.length - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
 							break;
 						case 2:
-							if (match(_XML_STANDALONE)) {
-								ndx += _XML_STANDALONE.length - 1;
+							if (match(XML_STANDALONE)) {
+								ndx += XML_STANDALONE.length - 1;
 								state = AFTER_XML_ATTRIBUTE_NAME;
 								return;
 							}
@@ -2690,7 +2706,7 @@ public class LagartoParser extends CharScanner {
 			public void parse() {
 				ndx++;
 
-				int cdataEndNdx = find(_CDATA_END, ndx, total);
+				int cdataEndNdx = find(CDATA_END, ndx, total);
 
 				if (cdataEndNdx == -1) {
 					cdataEndNdx = total;
@@ -2761,15 +2777,15 @@ public class LagartoParser extends CharScanner {
 	protected int attrEndNdx = -1;
 
 	private void _addAttribute() {
-		_addAttribute(substring(attrStartNdx, attrEndNdx), null);
+		_addAttribute(charSequence(attrStartNdx, attrEndNdx), null);
 	}
 
 	private void _addAttributeWithValue() {
-		_addAttribute(substring(attrStartNdx, attrEndNdx), textWrap().toString());
+		_addAttribute(charSequence(attrStartNdx, attrEndNdx), textWrap().toString());
 	}
 
-	private void _addAttribute(String attrName, String attrValue) {
-		if (tag.hasAttribute(attrName, false)) {
+	private void _addAttribute(CharSequence attrName, CharSequence attrValue) {
+		if (tag.hasAttribute(attrName)) {
 			_error("Ignored duplicated attribute: " + attrName);
 		} else {
 			tag.addAttribute(attrName, attrValue);
@@ -2788,7 +2804,7 @@ public class LagartoParser extends CharScanner {
 
 		if (tag.getType().isStartingTag()) {
 
-			if (tag.matchTagName(_SCRIPT)) {
+			if (tag.matchTagName(T_SCRIPT)) {
 				scriptStartNdx = ndx + 1;
 				state = SCRIPT_DATA;
 				return;
@@ -2832,7 +2848,7 @@ public class LagartoParser extends CharScanner {
 	protected void emitComment(int from, int to) {
 		if (enableConditionalComments) {
 			// CC: downlevel-hidden starting
-			if (match(_CC_IF, from)) {
+			if (match(CC_IF, from)) {
 				int endBracketNdx = find(']', from + 3, to);
 
 				CharSequence expression = charSequence(from + 1, endBracketNdx);
@@ -2846,7 +2862,7 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 
-			if (to > _CC_ENDIF2.length && match(_CC_ENDIF2, to - _CC_ENDIF2.length)) {
+			if (to > CC_ENDIF2.length && match(CC_ENDIF2, to - CC_ENDIF2.length)) {
 				// CC: downlevel-hidden ending
 				visitor.condComment(_ENDIF, false, true, true);
 
@@ -2875,7 +2891,7 @@ public class LagartoParser extends CharScanner {
 	protected void emitScript(int from, int to) {
 		tag.increaseDeepLevel();
 
-		visitor.script(tag, substring(from, to));		// todo da li za script() treba specijalna visit metoda kao sto sada ima?
+		visitor.script(tag, charSequence(from, to));		// todo da li za script() treba specijalna visit metoda kao sto sada ima?
 
 		tag.decreaseDeepLevel();
 		scriptStartNdx = -1;
@@ -2956,52 +2972,59 @@ public class LagartoParser extends CharScanner {
 	// ---------------------------------------------------------------- state
 
 	protected State state = DATA_STATE;
-
-	// ---------------------------------------------------------------- const data
-
+	
+	// ---------------------------------------------------------------- names
+	
 	private static final char[] TAG_WHITESPACES = new char[] {'\t', '\n', '\r', ' '};
 	private static final char[] TAG_WHITESPACES_OR_END = new char[] {'\t', '\n', '\r', ' ', '/', '>'};
 	private static final char[] CONTINUE_CHARS = new char[] {'\t', '\n', '\r', ' ', '<', '&'};
+
 	private static final char[] ATTR_INVALID_1 = new char[] {'\"', '\'', '<', '='};
 	private static final char[] ATTR_INVALID_2 = new char[] {'\"', '\'', '<'};
 	private static final char[] ATTR_INVALID_3 = new char[] {'<', '=', '`'};
 	private static final char[] ATTR_INVALID_4 = new char[] {'"', '\'', '<', '=', '`'};
-	private static final char[] _COMMENT_DASH = new char[] {'-', '-'};
-	private static final char[] _DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
-	private static final char[] _SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] _XMP = new char[] {'x', 'm', 'p'};
-	private static final char[] _STYLE = new char[] {'s', 't', 'y', 'l', 'e'};
-	private static final char[] _IFRAME = new char[] {'i', 'f', 'r', 'a', 'm', 'e'};
-	private static final char[] _NOFRAMES = new char[] {'n', 'o', 'f', 'r', 'a', 'm', 'e', 's'};
-	private static final char[] _NOEMBED = new char[] {'n', 'o', 'e', 'm', 'b', 'e', 'd'};
-	private static final char[] _NOSCRIPT = new char[] {'n', 'o', 's', 'c', 'r', 'i', 'p', 't'};
-	private static final char[] _TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
-	private static final char[] _TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
-	private static final char[] _PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
-	private static final char[] _SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
-	private static final char[] _CDATA = new char[] {'[', 'C', 'D', 'A', 'T', 'A', '['};
-	private static final char[] _CDATA_END = new char[] {']', ']', '>'};
 
-	private static final char[] _XML = new char[] {'?', 'x', 'm', 'l'};
-	private static final char[] _XML_VERSION = new char[] {'v', 'e', 'r', 's', 'i', 'o', 'n'};
-	private static final char[] _XML_ENCODING = new char[] {'e', 'n', 'c', 'o', 'd', 'i', 'n', 'g'};
-	private static final char[] _XML_STANDALONE = new char[] {'s', 't', 'a', 'n', 'd', 'a', 'l', 'o', 'n', 'e'};
+	private static final char[] COMMENT_DASH = new char[] {'-', '-'};
 
-	private static final char[] _CC_IF = new char[] {'[', 'i', 'f', ' '};
-	private static final char[] _CC_ENDIF = new char[] {'[', 'e', 'n', 'd', 'i', 'f', ']'};
-	private static final char[] _CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
-	private static final char[] _CC_END = new char[] {']', '>'};
+	private static final char[] T_DOCTYPE = new char[] {'D', 'O', 'C', 'T', 'Y', 'P', 'E'};
+	private static final char[] T_SCRIPT = new char[] {'s', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] T_XMP = new char[] {'x', 'm', 'p'};
+	private static final char[] T_STYLE = new char[] {'s', 't', 'y', 'l', 'e'};
+	private static final char[] T_IFRAME = new char[] {'i', 'f', 'r', 'a', 'm', 'e'};
+	private static final char[] T_NOFRAMES = new char[] {'n', 'o', 'f', 'r', 'a', 'm', 'e', 's'};
+	private static final char[] T_NOEMBED = new char[] {'n', 'o', 'e', 'm', 'b', 'e', 'd'};
+	private static final char[] T_NOSCRIPT = new char[] {'n', 'o', 's', 'c', 'r', 'i', 'p', 't'};
+	private static final char[] T_TEXTAREA = new char[] {'t', 'e', 'x', 't', 'a', 'r', 'e', 'a'};
+	private static final char[] T_TITLE = new char[] {'t', 'i', 't', 'l', 'e'};
 
+	private static final char[] A_PUBLIC = new char[] {'P', 'U', 'B', 'L', 'I', 'C'};
+	private static final char[] A_SYSTEM = new char[] {'S', 'Y', 'S', 'T', 'E', 'M'};
+
+	private static final char[] CDATA = new char[] {'[', 'C', 'D', 'A', 'T', 'A', '['};
+	private static final char[] CDATA_END = new char[] {']', ']', '>'};
+
+	private static final char[] XML = new char[] {'?', 'x', 'm', 'l'};
+	private static final char[] XML_VERSION = new char[] {'v', 'e', 'r', 's', 'i', 'o', 'n'};
+	private static final char[] XML_ENCODING = new char[] {'e', 'n', 'c', 'o', 'd', 'i', 'n', 'g'};
+	private static final char[] XML_STANDALONE = new char[] {'s', 't', 'a', 'n', 'd', 'a', 'l', 'o', 'n', 'e'};
+
+	private static final char[] CC_IF = new char[] {'[', 'i', 'f', ' '};
+	private static final char[] CC_ENDIF = new char[] {'[', 'e', 'n', 'd', 'i', 'f', ']'};
+	private static final char[] CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
+	private static final char[] CC_END = new char[] {']', '>'};
+
+	// todo make private
 	public static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
-			_XMP, _STYLE, _IFRAME, _NOEMBED, _NOFRAMES, _NOSCRIPT, _SCRIPT
+			T_XMP, T_STYLE, T_IFRAME, T_NOEMBED, T_NOFRAMES, T_NOSCRIPT, T_SCRIPT
 	};
 
 	private static final char[][] RCDATA_TAGS = new char[][] {
-			_TEXTAREA, _TITLE
+			T_TEXTAREA, T_TITLE
 	};
 
-	protected static final char REPLACEMENT_CHAR = '\uFFFD';
-	protected static final char[] INVALID_CHARS = new char[] {'\u000B', '\uFFFE', '\uFFFF'};
+	private static final char REPLACEMENT_CHAR = '\uFFFD';
+
+	private static final char[] INVALID_CHARS = new char[] {'\u000B', '\uFFFE', '\uFFFF'};
 	//, '\u1FFFE', '\u1FFFF', '\u2FFFE', '\u2FFFF', '\u3FFFE', '\u3FFFF', '\u4FFFE,
 	//	'\u4FFFF', '\u5FFFE', '\u5FFFF', '\u6FFFE', '\u6FFFF', '\u7FFFE', '\u7FFFF', '\u8FFFE', '\u8FFFF', '\u9FFFE,
 	//	'\u9FFFF', '\uAFFFE', '\uAFFFF', '\uBFFFE', '\uBFFFF', '\uCFFFE', '\uCFFFF', '\uDFFFE', '\uDFFFF', '\uEFFFE,

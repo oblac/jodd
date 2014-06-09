@@ -3,17 +3,24 @@
 package jodd.lagarto;
 
 import jodd.util.CharUtil;
+import jodd.util.StringPool;
 
 import java.nio.CharBuffer;
 
 /**
- * Scanner over a char buffer.
+ * Utility scanner over a char buffer.
  */
-class CharScanner {
+class Scanner {
+
+	protected final boolean emitStrings;
 
 	protected char[] input;
 	protected int ndx = 0;
 	protected int total;
+
+	Scanner(boolean emitStrings) {
+		this.emitStrings = emitStrings;
+	}
 
 	/**
 	 * Initializes scanner.
@@ -124,24 +131,19 @@ class CharScanner {
 	// ---------------------------------------------------------------- char sequences
 
 	/**
-	 * Creates char sub-sequence from the input.
+	 * Creates char sub-sequence from the input. It may return a <code>String</code>
+	 * of <code>CharBuffer</code>. Use <code>String</code> for DOM builder,
+	 * but for visitor use <code>CharBuffer</code> for better performances.
 	 */
 	protected final CharSequence charSequence(int from, int to) {
 		int len = to - from;
 		if (len == 0) {
-			return EMPTY_CHAR_BUFFER;
+			return emitStrings ? StringPool.EMPTY : EMPTY_CHAR_BUFFER;
 		}
-		return CharBuffer.wrap(input, from, len);
+		return emitStrings ? new String(input, from, to - from) : CharBuffer.wrap(input, from, len);
 	}
 
 	protected static CharBuffer EMPTY_CHAR_BUFFER = CharBuffer.wrap(new char[0]);
-
-	/**
-	 * Creates substring from the input.
-	 */
-	protected final String substring(int from, int to) {
-		return new String(input, from, to - from);
-	}
 
 	// ---------------------------------------------------------------- position
 

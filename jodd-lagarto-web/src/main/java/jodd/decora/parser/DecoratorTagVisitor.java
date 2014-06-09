@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * If decorator content is static, array of decora tags can be cached
  * adn {@link jodd.decora.parser.DecoraTag#duplicate() duplicated} to
  * skip parsing decorator again.
+ * // todo check toString() and CharSequence
  */
 public class DecoratorTagVisitor extends EmptyTagVisitor {
 
@@ -40,16 +41,16 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 
 	@Override
 	public void tag(Tag tag) {
-		String tagName = tag.getName();
+		String tagName = tag.getName().toString();
 
 		if (tagName.startsWith("decora:") ) {
 			onDecoraTag(tag);
 			return;
 		}
 		if (tag.getType().isStartingTag()) {
-			String id = tag.getId();
+			CharSequence id = tag.getId();
 
-			if (id != null && id.startsWith("decora-")) {
+			if (id != null && id.toString().startsWith("decora-")) {
 				onIdAttrStart(tag);
 			}
 		} else {
@@ -66,7 +67,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	 * Handle decora tags.
 	 */
 	protected void onDecoraTag(Tag tag) {
-		String tagName = tag.getName();
+		String tagName = tag.getName().toString();
 
 		if (tag.getType() == TagType.SELF_CLOSING) {
 			checkNestedDecoraTags();
@@ -95,7 +96,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	 * Handle open and empty ID attribute tags.
 	 */
 	protected void onIdAttrStart(Tag tag) {
-		String id = tag.getId().substring(7);
+		String id = tag.getId().toString().substring(7);
 		String tagName;
 		String idName;
 
@@ -125,7 +126,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			decoraTagStart = tag.getTagPosition();
 			decoraTagDefaultValueStart = tag.getTagPosition() + tag.getTagLength();
 
-			closingTagName = tag.getName();
+			closingTagName = tag.getName().toString();
 			closingTagDeepLevel = tag.getDeepLevel();
 		}
 	}
@@ -139,8 +140,8 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	// ---------------------------------------------------------------- define
 
 	/**
-	 * Defines decora tag position inside decorator content.
-	 * Resets current decora tag tracking.
+	 * Defines Decora tag position inside decorator content.
+	 * Resets current Decora tag tracking.
 	 */
 	protected void defineDecoraTag() {
 		DecoraTag decoraTag =

@@ -12,19 +12,20 @@ import java.io.IOException;
  */
 class ParsedTag implements Tag {
 
-	private static final String ATTR_NAME_ID = "id";
+	private static final char[] ATTR_NAME_ID = new char[] {'i', 'd'};
+
+	// global
+	private boolean caseSensitive;
 
 	// tag info
-	protected String name;
+	private CharSequence name;
 	private int idNdx;
 	private TagType type;
-	private String tagStart;
-	private String tagEnd;
 
 	// attributes
 	private int attributesCount;
-	private String[] attrNames = new String[10];
-	private String[] attrValues = new String[10];
+	private CharSequence[] attrNames = new CharSequence[10];
+	private CharSequence[] attrValues = new CharSequence[10];
 
 	private int tagStartIndex;
 	private int tagLength;
@@ -35,6 +36,13 @@ class ParsedTag implements Tag {
 	private boolean modified;
 
 	// ---------------------------------------------------------------- internal
+
+	/**
+	 * Initializes the instance.
+	 */
+	public void init(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+	}
 
 	/**
 	 * Starts the tag with the index of first '<'.
@@ -48,8 +56,6 @@ class ParsedTag implements Tag {
 		this.tagLength = 0;
 		this.modified = false;
 		this.type = TagType.START;
-		this.tagStart = type.getStartString();
-		this.tagEnd = type.getEndString();
 	}
 
 	/**
@@ -93,11 +99,15 @@ class ParsedTag implements Tag {
 
 	// ---------------------------------------------------------------- read
 
-	public String getName() {
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	public CharSequence getName() {
 		return name;
 	}
 
-	public String getId() {
+	public CharSequence getId() {
 		if (idNdx == -1) {
 			return null;
 		}
@@ -116,42 +126,42 @@ class ParsedTag implements Tag {
 		return attributesCount;
 	}
 
-	public String getAttributeName(int index) {
+	public CharSequence getAttributeName(int index) {
 		if (index >= attributesCount) {
 			throw new IndexOutOfBoundsException();
 		}
 		return attrNames[index];
 	}
 
-	public String getAttributeValue(int index) {
+	public CharSequence getAttributeValue(int index) {
 		if (index >= attributesCount) {
 			throw new IndexOutOfBoundsException();
 		}
 		return attrValues[index];
 	}
 
-	public String getAttributeValue(String name, boolean caseSensitive) {
+	public CharSequence getAttributeValue(CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
-			String current = attrNames[i];
-			if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {
+			CharSequence current = attrNames[i];
+			if (caseSensitive ? name.equals(current) : TagUtil.equalsIgnoreCase(name, current)) {
 				return attrValues[i];
 			}
 		}
 		return null;
 	}
 
-	public int getAttributeIndex(String name, boolean caseSensitive) {
+	public int getAttributeIndex(CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
-			String current = attrNames[i];
-			if (caseSensitive ? name.equals(current) : name.equalsIgnoreCase(current)) {
+			CharSequence current = attrNames[i];
+			if (caseSensitive ? name.equals(current) : TagUtil.equalsIgnoreCase(name, current)) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public boolean hasAttribute(String name, boolean caseSensitive) {
-		return getAttributeIndex(name, caseSensitive) > -1;
+	public boolean hasAttribute(CharSequence name) {
+		return getAttributeIndex(name) > -1;
 	}
 
 	// ---------------------------------------------------------------- position
@@ -160,7 +170,7 @@ class ParsedTag implements Tag {
 		return tagStartIndex;
 	}
 
-	public int getTagLength() {			//  todo  remove from public API
+	public int getTagLength() {
 		return tagLength;
 	}
 
@@ -168,13 +178,13 @@ class ParsedTag implements Tag {
 		return position;
 	}
 
-	public void setPosition(CharScanner.Position position) {
+	public void setPosition(Scanner.Position position) {
 		this.position = position.toString();
 	}
 
 	// ---------------------------------------------------------------- write
 
-	public void setName(String tagName) {
+	public void setName(CharSequence tagName) {
 		this.name = tagName;
 		modified = true;
 	}
@@ -182,11 +192,9 @@ class ParsedTag implements Tag {
 	public void setType(TagType type) {
 		this.type = type;
 		modified = true;
-		tagStart = type.getStartString();
-		tagEnd = type.getEndString();
 	}
 
-	public void addAttribute(String name, String value) {
+	public void addAttribute(CharSequence name, CharSequence value) {
 		ensureLength();
 		attrNames[attributesCount] = name;
 		setAttrVal(attributesCount, name, value);
@@ -194,8 +202,8 @@ class ParsedTag implements Tag {
 		modified = true;
 	}
 
-	public void setAttribute(String name, boolean caseSensitive, String value) {
-		int index = getAttributeIndex(name, caseSensitive);
+	public void setAttribute(CharSequence name, CharSequence value) {
+		int index = getAttributeIndex(name);
 		if (index == -1) {
 			addAttribute(name, value);
 		} else {
@@ -204,7 +212,7 @@ class ParsedTag implements Tag {
 		modified = true;
 	}
 
-	public void setAttributeValue(int index, String value) {
+	public void setAttributeValue(int index, CharSequence value) {
 		if (index >= attributesCount) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -212,15 +220,15 @@ class ParsedTag implements Tag {
 		modified = true;
 	}
 
-	public void setAttributeValue(String name, boolean caseSensitive, String value) {
-		int index = getAttributeIndex(name, caseSensitive);
+	public void setAttributeValue(CharSequence name, CharSequence value) {
+		int index = getAttributeIndex(name);
 		if (index != -1) {
 			setAttrVal(index, name, value);
 		}
 		modified = true;
 	}
 
-	public void setAttributeName(int index, String name) {
+	public void setAttributeName(int index, CharSequence name) {
 		if (index >= attributesCount) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -239,8 +247,8 @@ class ParsedTag implements Tag {
 		modified = true;
 	}
 
-	public void removeAttribute(String name, boolean caseSensitive) {
-		int index = getAttributeIndex(name, caseSensitive);
+	public void removeAttribute(CharSequence name) {
+		int index = getAttributeIndex(name);
 		if (index != -1) {
 			removeAttribute(index);
 		}
@@ -255,6 +263,16 @@ class ParsedTag implements Tag {
 		return modified;
 	}
 
+	// ---------------------------------------------------------------- match
+
+	public boolean nameEquals(char[] chars) {
+		return caseSensitive ? TagUtil.equals(name, chars) : TagUtil.equalsIgnoreCase(name, chars);
+	}
+
+	public boolean nameEquals(CharSequence charSequence) {
+		return caseSensitive ? TagUtil.equals(name, charSequence) : TagUtil.equalsIgnoreCase(name, charSequence);
+	}
+
 	// ---------------------------------------------------------------- util
 
 	private void ensureLength() {
@@ -264,16 +282,16 @@ class ParsedTag implements Tag {
 		}
 	}
 
-	private void setAttrVal(int index, String name, String value) {
+	private void setAttrVal(int index, CharSequence name, CharSequence value) {
 		if (idNdx == -1) {
-			if (name.equalsIgnoreCase(ATTR_NAME_ID)) {
+			if (TagUtil.equalsToLowercase(name, ATTR_NAME_ID)) {
 				idNdx = index;
 			}
 		}
 		attrValues[index] = value;
 	}
 
-	private void setAttrVal(int index, String value) {
+	private void setAttrVal(int index, CharSequence value) {
 		attrValues[index] = value;
 	}
 
@@ -281,13 +299,15 @@ class ParsedTag implements Tag {
 
 	private void appendTo(Appendable out) {
 		try {
-			out.append(tagStart);
+			out.append(type.getStartString());
+
 			out.append(name);
+
 			if (attributesCount > 0) {
 				for (int i = 0; i < attributesCount; i++) {
 					out.append(' ');
 					out.append(attrNames[i]);
-  					String value = attrValues[i];
+					CharSequence value = attrValues[i];
 					if (value != null) {
 						out.append('=').append('"');
 						out.append(value);
@@ -295,7 +315,8 @@ class ParsedTag implements Tag {
 					}
 				}
 			}
-			out.append(tagEnd);
+
+			out.append(type.getEndString());
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}

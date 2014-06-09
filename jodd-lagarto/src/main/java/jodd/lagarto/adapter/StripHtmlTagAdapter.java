@@ -39,15 +39,15 @@ public class StripHtmlTagAdapter extends TagAdapter {
 		strippedCharsCount += comment.length() + 7;
 	}
 
+	private static char[] PRE = new char[] {'p', 'r', 'e'};
+
 	@Override
 	public void tag(Tag tag) {
-		String tagName = tag.getName();
-
-		if (tag.getType() == TagType.START && tagName.equals("pre")) {
+		if (tag.getType() == TagType.START && tag.nameEquals(PRE)) {
 			strip = false;
 		}
 
-		if (tag.getType() == TagType.END && tagName.equals("pre")) {
+		if (tag.getType() == TagType.END && tag.nameEquals(PRE)) {
 			strip = true;
 		}
 

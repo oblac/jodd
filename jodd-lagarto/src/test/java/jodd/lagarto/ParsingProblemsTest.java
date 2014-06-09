@@ -35,7 +35,7 @@ public class ParsingProblemsTest {
 	public void testInvalidTag() {
 		String html = "<html>text1<=>text2</html>";
 
-		LagartoParser lagartoParser = new LagartoParser(html);
+		LagartoParser lagartoParser = new LagartoParser(html, false);
 
 		final StringBuilder sb = new StringBuilder();
 
@@ -159,6 +159,7 @@ public class ParsingProblemsTest {
 		s = StringUtil.remove(s, ' ');
 		s = StringUtil.remove(s, '\r');
 		s = StringUtil.remove(s, '\u00A0');
+		s = StringUtil.remove(s, "&nbsp;");
 		assertEquals(
 				"---\n" +
 						"Overview\n" +

@@ -4,6 +4,7 @@ package jodd.htmlstapler;
 
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
+import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
 
 /**
@@ -34,12 +35,12 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	@Override
 	public void script(Tag tag, CharSequence body) {
 		if (insideConditionalComment == false) {
-			String src = tag.getAttributeValue("src", false);
+			String src = tag.getAttributeValue("src").toString();
 
 			if (jsBundleAction.acceptLink(src)) {
 				String link = jsBundleAction.processLink(src);
 				if (link != null) {
-					tag.setAttributeValue("src", false, link);
+					tag.setAttributeValue("src", link);
 					super.script(tag, body);
 				}
 				return;
@@ -50,22 +51,24 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 
 	// ---------------------------------------------------------------- css
 
+	private static final char[] T_LINK = new char[] {'l', 'i', 'n', 'k'};
+
 	@Override
 	public void tag(Tag tag) {
 		if (insideConditionalComment == false) {
-			if (tag.getName().equalsIgnoreCase("link")) {
-				String type = tag.getAttributeValue("type", false);
+			if (tag.nameEquals(T_LINK)) {
+				CharSequence type = tag.getAttributeValue("type");
 
-				if (type != null && type.equalsIgnoreCase("text/css") == true) {
-					String media = tag.getAttributeValue("media", false);
+				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css") == true) {
+					String media = tag.getAttributeValue("media").toString();
 
 					if (media == null || media.contains("screen")) {
-						String href = tag.getAttributeValue("href", false);
+						String href = tag.getAttributeValue("href").toString();
 
 						if (cssBundleAction.acceptLink(href)) {
 							String link = cssBundleAction.processLink(href);
 							if (link != null) {
-								tag.setAttribute("href", false, link);
+								tag.setAttribute("href", link);
 								super.tag(tag);
 							}
 							return;

@@ -9,12 +9,17 @@ import java.io.IOException;
  */
 public interface Tag {
 
+	/**
+	 * Returns case-sensitive flag for various name matching.
+	 */
+	boolean isCaseSensitive();
+
 	// ---------------------------------------------------------------- read
 
 	/**
 	 * Returns tags name.
 	 */
-	String getName();
+	CharSequence getName();
 
 	/**
 	 * Returns {@link TagType type of tag} (e.g. open, close, etc).
@@ -23,10 +28,10 @@ public interface Tag {
 
 	/**
 	 * Returns <b>id</b> attribute value of a tag.
-	 * Implementations may simply call {@link #getAttributeValue(String, boolean)}
+	 * Implementations may simply call {@link #getAttributeValue(java.lang.CharSequence)}
 	 * or to cache this value for better performances.
 	 */
-	String getId();
+	CharSequence getId();
 
 	/**
 	 * Returns 1-based deep level of a tag from the root.
@@ -41,28 +46,28 @@ public interface Tag {
 	/**
 	 * Returns attribute name.
 	 */
-	String getAttributeName(int index);
+	CharSequence getAttributeName(int index);
 
 	/**
 	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 */
-	String getAttributeValue(int index);
+	CharSequence getAttributeValue(int index);
 
 	/**
 	 * Returns attribute value or <code>null</code> for an empty attribute,
 	 * Returns <code>null</code> also if attribute name does not exist.
 	 */
-	String getAttributeValue(String name, boolean caseSensitive);
+	CharSequence getAttributeValue(CharSequence name);
 
 	/**
 	 * Returns attribute index or <code>-1</code> if not found.
 	 */
-	int getAttributeIndex(String name, boolean caseSensitive);
+	int getAttributeIndex(CharSequence name);
 
 	/**
 	 * Detects if an attribute is present.
 	 */
-	boolean hasAttribute(String name, boolean caseSensitive);
+	boolean hasAttribute(CharSequence name);
 
 	// ---------------------------------------------------------------- advanced
 
@@ -77,7 +82,7 @@ public interface Tag {
 	int getTagLength();
 
 	/**
-	 * Returns tag position or <code>null</code> if position is not calculated.
+	 * Returns tag position string or <code>null</code> if position is not calculated.
 	 */
 	public String getPosition();
 
@@ -86,7 +91,7 @@ public interface Tag {
 	/**
 	 * Sets new tag name.
 	 */
-	void setName(String tagName);
+	void setName(CharSequence tagName);
 
 	/**
 	 * Sets new tag type.
@@ -97,28 +102,28 @@ public interface Tag {
 	 * Adds new attribute without checking if it already exist
 	 * thus allowing duplicate attributes.
 	 */
-	void addAttribute(String name, String value);
+	void addAttribute(CharSequence name, CharSequence value);
 
 	/**
 	 * Sets new attribute value. If attribute already exist, it's value is changed.
 	 * If attribute does not exist, it will be added to the list.
 	 */
-	void setAttribute(String name, boolean caseSensitive, String value);
+	void setAttribute(CharSequence name, CharSequence value);
 
 	/**
 	 * Sets value for attribute at specific index.
 	 */
-	void setAttributeValue(int index, String value);
+	void setAttributeValue(int index, CharSequence value);
 
 	/**
 	 * Sets value for attribute at specific index.
 	 */
-	void setAttributeValue(String name, boolean caseSensitive, String value);
+	void setAttributeValue(CharSequence name, CharSequence value);
 
 	/**
 	 * Changes attribute name on specific index.
 	 */
-	void setAttributeName(int index, String name);
+	void setAttributeName(int index, CharSequence name);
 
 	/**
 	 * Removes attribute.
@@ -128,7 +133,7 @@ public interface Tag {
 	/**
 	 * Removes attribute.
 	 */
-	void removeAttribute(String name, boolean caseSensitive);
+	void removeAttribute(CharSequence name);
 
 	/**
 	 * Removes all attributes.
@@ -140,13 +145,21 @@ public interface Tag {
 	 */
 	boolean isModified();
 
+	// ---------------------------------------------------------------- match
+
+	/**
+	 * Returns <code>true</code> if name equals to given chars.
+	 */
+	boolean nameEquals(char[] chars);
+
+	boolean nameEquals(CharSequence charSequence);
+
 	// ---------------------------------------------------------------- output
 
 	/**
 	 * Writes the tag to the output.
 	 */
 	void writeTo(Appendable out) throws IOException;
-
 
 	/**
 	 * Get the complete tag as a string.

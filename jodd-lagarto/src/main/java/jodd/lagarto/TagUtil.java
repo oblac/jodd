@@ -6,8 +6,10 @@ import jodd.util.CharUtil;
 
 import static jodd.lagarto.LagartoParser.RAWTEXT_TAGS;
 
+// todo add to stringutil?
 public class TagUtil {
 
+	// todo remove in favor of boolean flag in tag!
 	public static boolean isRawTagName(CharSequence name) {
 		for (char[] RAWTEXT_TAG : RAWTEXT_TAGS) {
 			if (equalsToLowercase(name, RAWTEXT_TAG)) {
@@ -17,7 +19,6 @@ public class TagUtil {
 		return false;
 	}
 
-	// todo to string util
 	public static boolean equals(CharSequence charSequence, char[] chars) {
 		if (charSequence.length() != chars.length) {
 			return false;
@@ -32,7 +33,22 @@ public class TagUtil {
 		return true;
 	}
 
-	// todo to string util
+	public static boolean equals(CharSequence charSequence1, CharSequence charSequence2) {
+		int len = charSequence1.length();
+
+		if (len != charSequence2.length()) {
+			return false;
+		}
+
+		for (int i = 0; i < len; i++) {
+			if (charSequence1.charAt(i) != charSequence2.charAt(i)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public static boolean equalsToLowercase(CharSequence charSequence, char[] chars) {
 		if (charSequence.length() != chars.length) {
 			return false;
@@ -50,5 +66,49 @@ public class TagUtil {
 
 		return true;
 	}
+
+	public static boolean equalsIgnoreCase(CharSequence charSequence1, CharSequence charSequence2) {
+		int len = charSequence1.length();
+
+		if (len != charSequence2.length()) {
+			return false;
+		}
+
+		for (int i = 0; i < len; i++) {
+			char c1 = charSequence1.charAt(i);
+			c1 = CharUtil.toLowerAscii(c1);
+
+			char c2 = charSequence2.charAt(i);
+			c2 = CharUtil.toLowerAscii(c2);
+
+			if (c1 != c2) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean equalsIgnoreCase(CharSequence charSequence1, char[] chars2) {
+		int len = charSequence1.length();
+
+		if (len != chars2.length) {
+			return false;
+		}
+
+		for (int i = 0; i < len; i++) {
+			char c1 = charSequence1.charAt(i);
+			c1 = CharUtil.toLowerAscii(c1);
+
+			char c2 = chars2[i];
+			c2 = CharUtil.toLowerAscii(c2);
+
+			if (c1 != c2) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 
 }

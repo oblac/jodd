@@ -29,7 +29,7 @@ public class JerryMiscTest {
 
 		assertEquals(9, div.text().length());
 		assertEquals("Одјави се", div.text());
-		assertEquals(57, div.html().length());
+		assertEquals(9, div.html().length());
 	}
 
 	@Test

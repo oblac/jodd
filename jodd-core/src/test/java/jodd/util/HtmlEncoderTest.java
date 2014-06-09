@@ -33,8 +33,7 @@ public class HtmlEncoderTest {
 		html = "";
 		assertEquals("", HtmlEncoder.block(html));
 
-		html = null;
-		assertEquals("", HtmlEncoder.block(html));
+		assertEquals("", HtmlEncoder.block(null));
 
 		html = new String(new char[]{128, 257});
 		assertEquals(html, HtmlEncoder.block(html));
@@ -49,81 +48,10 @@ public class HtmlEncoderTest {
 		assertEquals("<br/><br/>", HtmlEncoder.block(html));
 	}
 
-
-	@Test
-	public void testEncodeTextStrict() {
-		String html = "< & \" ' > \r\n \n  \t";
-
-		assertEquals("&lt; &amp; &quot; &#039; &gt; <br/> <br/> &nbsp;\t", HtmlEncoder.strict(html));
-
-		html = "";
-		assertEquals("", HtmlEncoder.strict(html));
-
-		html = null;
-		assertEquals("", HtmlEncoder.strict(html));
-
-		html = new String(new char[]{128, 257});
-		assertEquals(html, HtmlEncoder.strict(html));
-
-		html = "\r\n\n\r";
-		assertEquals("<br/><br/><br/>", HtmlEncoder.strict(html));
-
-		html = "\r\n\r\n";
-		assertEquals("<br/><br/>", HtmlEncoder.strict(html));
-
-		html = "\n\r";
-		assertEquals("<br/><br/>", HtmlEncoder.strict(html));
-
-
-		html = " ";
-		assertEquals(" ", HtmlEncoder.strict(html));
-		html = "  ";
-		assertEquals(" &nbsp;", HtmlEncoder.strict(html));
-		html = "   ";
-		assertEquals(" &nbsp; ", HtmlEncoder.strict(html));
-		html = "    ";
-		assertEquals(" &nbsp; &nbsp;", HtmlEncoder.strict(html));
-		html = "     ";
-		assertEquals(" &nbsp; &nbsp; ", HtmlEncoder.strict(html));
-
-		html = " a";
-		assertEquals(" a", HtmlEncoder.strict(html));
-		html = "  a";
-		assertEquals(" &nbsp;a", HtmlEncoder.strict(html));
-		html = "   a";
-		assertEquals(" &nbsp; a", HtmlEncoder.strict(html));
-		html = "    a";
-		assertEquals(" &nbsp; &nbsp;a", HtmlEncoder.strict(html));
-		html = "     a";
-		assertEquals(" &nbsp; &nbsp; a", HtmlEncoder.strict(html));
-
-		html = "a ";
-		assertEquals("a ", HtmlEncoder.strict(html));
-		html = "a  ";
-		assertEquals("a &nbsp;", HtmlEncoder.strict(html));
-		html = "a   ";
-		assertEquals("a &nbsp; ", HtmlEncoder.strict(html));
-		html = "a    ";
-		assertEquals("a &nbsp; &nbsp;", HtmlEncoder.strict(html));
-		html = "a     ";
-		assertEquals("a &nbsp; &nbsp; ", HtmlEncoder.strict(html));
-
-		html = " a ";
-		assertEquals(" a ", HtmlEncoder.strict(html));
-		html = "  a  ";
-		assertEquals(" &nbsp;a &nbsp;", HtmlEncoder.strict(html));
-		html = " a  ";
-		assertEquals(" a &nbsp;", HtmlEncoder.strict(html));
-		html = "  a ";
-		assertEquals(" &nbsp;a ", HtmlEncoder.strict(html));
-		html = "  a b   c  d e";
-		assertEquals(" &nbsp;a b &nbsp; c &nbsp;d e", HtmlEncoder.strict(html));
-	}
-
 	@Test
 	public void testNbsp() {
 		assertEquals(" ", HtmlEncoder.text(" "));
-		assertEquals("\u00a0", HtmlEncoder.text("\u00a0"));
+		assertEquals("&nbsp;", HtmlEncoder.text("\u00a0"));
 		assertEquals("\u00a0", HtmlDecoder.decode("&nbsp;"));
 	}
 

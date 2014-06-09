@@ -339,7 +339,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from provided content.
 	 */
 	public Document parse(char[] content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+		LagartoParser lagartoParser = new LagartoParser(content, false);		// todo USE TRUE, but dont change until its tested
 		return doParse(lagartoParser);
 	}
 
@@ -347,7 +347,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from the provided content.
 	 */
 	public Document parse(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content);
+		LagartoParser lagartoParser = new LagartoParser(content, false);		// todo USE TRUE, but dont change until its tested
 		return doParse(lagartoParser);
 	}
 
@@ -360,6 +360,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		lagartoParser.setEnableConditionalComments(enableConditionalComments);
 		lagartoParser.setCalculatePosition(calculatePosition);
 		lagartoParser.setXmlMode(xmlMode);
+		lagartoParser.setCaseSensitive(caseSensitive);	// todo check where it is used in dom builder
 
 		LagartoDOMBuilderTagVisitor domBuilderTagVisitor =
 				new LagartoDOMBuilderTagVisitor(this);

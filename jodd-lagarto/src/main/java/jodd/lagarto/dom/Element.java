@@ -3,6 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.Tag;
+import jodd.util.JoddScript;
 
 import java.io.IOException;
 
@@ -15,14 +16,14 @@ public class Element extends Node {
 	protected final boolean selfClosed;
 
 	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
-		super(ownerNode, NodeType.ELEMENT, tag.getName());
+		super(ownerNode, NodeType.ELEMENT, tag.getName().toString());
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
-			String key = tag.getAttributeName(i);
-			String value = tag.getAttributeValue(i);
+			String key = JoddScript.toString(tag.getAttributeName(i));
+			String value = JoddScript.toString(tag.getAttributeValue(i));
 			setAttribute(key, value);
 		}
 	}
@@ -69,4 +70,5 @@ public class Element extends Node {
 	public String toString() {
 		return '<' + nodeName + '>';
 	}
+
 }

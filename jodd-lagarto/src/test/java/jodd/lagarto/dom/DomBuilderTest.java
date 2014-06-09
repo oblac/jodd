@@ -252,7 +252,7 @@ public class DomBuilderTest {
 		assertEquals("q\u00A0w", foo);
 
 		div.setAttribute("foo", "q\u00A0w\u00A0e");
-		assertEquals("<div foo=\"q\u00A0w\u00A0e\">a&lt;b</div>", document.getHtml());
+		assertEquals("<div foo=\"q&nbsp;w&nbsp;e\">a&lt;b</div>", document.getHtml());
 
 		Text text = (Text) document.getFirstChild().getFirstChild();
 
