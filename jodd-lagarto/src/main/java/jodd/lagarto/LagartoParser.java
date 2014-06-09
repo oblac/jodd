@@ -53,7 +53,7 @@ public class LagartoParser extends Scanner {
 	protected void initialize(char[] input) {
 		super.initialize(input);
 		this.tag = new ParsedTag();
-		this.doctype = new ParsedDoctype(input);
+		this.doctype = new ParsedDoctype();
 		this.text = new char[1024];
 		this.textLen = 0;
 		this.parsingTime = -1;
@@ -1459,7 +1459,7 @@ public class LagartoParser extends Scanner {
 				if (isEOF()) {
 					errorEOF();
 					state = DATA_STATE;
-					doctype.setName(nameStartNdx, ndx);
+					doctype.setName(charSequence(nameStartNdx, ndx));
 					doctype.setQuirksMode(true);
 					emitDoctype();
 					return;
@@ -1469,13 +1469,13 @@ public class LagartoParser extends Scanner {
 
 				if (equalsOne(c, TAG_WHITESPACES)) {
 					state = AFTER_DOCUMENT_NAME;
-					doctype.setName(nameStartNdx, ndx);
+					doctype.setName(charSequence(nameStartNdx, ndx));
 					return;
 				}
 
 				if (c == '>') {
 					state = DATA_STATE;
-					doctype.setName(nameStartNdx, ndx);
+					doctype.setName(charSequence(nameStartNdx, ndx));
 					emitDoctype();
 					return;
 				}
@@ -1628,7 +1628,7 @@ public class LagartoParser extends Scanner {
 				ndx++;
 
 				if (isEOF()) {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorEOF();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1638,13 +1638,13 @@ public class LagartoParser extends Scanner {
 				char c = input[ndx];
 
 				if (c == '\"') {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					state = AFTER_DOCTYPE_PUBLIC_IDENTIFIER;
 					return;
 				}
 
 				if (c == '>') {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorInvalidToken();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1661,7 +1661,7 @@ public class LagartoParser extends Scanner {
 				ndx++;
 
 				if (isEOF()) {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorEOF();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1671,13 +1671,13 @@ public class LagartoParser extends Scanner {
 				char c = input[ndx];
 
 				if (c == '\'') {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					state = AFTER_DOCTYPE_PUBLIC_IDENTIFIER;
 					return;
 				}
 
 				if (c == '>') {
-					doctype.setPublicIdentifier(doctypeIdNameStart, ndx);
+					doctype.setPublicIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorInvalidToken();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1899,7 +1899,7 @@ public class LagartoParser extends Scanner {
 				ndx++;
 
 				if (isEOF()) {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorEOF();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1909,13 +1909,13 @@ public class LagartoParser extends Scanner {
 				char c = input[ndx];
 
 				if (c == '\"') {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					state = AFTER_DOCTYPE_SYSTEM_IDENTIFIER;
 					return;
 				}
 
 				if (c == '>') {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorInvalidToken();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1932,7 +1932,7 @@ public class LagartoParser extends Scanner {
 				ndx++;
 
 				if (isEOF()) {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorEOF();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
@@ -1942,13 +1942,13 @@ public class LagartoParser extends Scanner {
 				char c = input[ndx];
 
 				if (c == '\'') {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					state = AFTER_DOCTYPE_SYSTEM_IDENTIFIER;
 					return;
 				}
 
 				if (c == '>') {
-					doctype.setSystemIdentifier(doctypeIdNameStart, ndx);
+					doctype.setSystemIdentifier(charSequence(doctypeIdNameStart, ndx));
 					errorInvalidToken();
 					state = DATA_STATE;
 					doctype.setQuirksMode(true);
