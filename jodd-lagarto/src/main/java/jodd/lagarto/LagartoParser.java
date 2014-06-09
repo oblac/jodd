@@ -2814,6 +2814,7 @@ public class LagartoParser extends Scanner {
 
 			for (char[] rawtextTagName : RAWTEXT_TAGS) {
 				if (tag.matchTagName(rawtextTagName)) {
+					tag.setRawTag(true);
 					state = RAWTEXT;
 					rawTextStart = ndx + 1;
 					rawTagName = rawtextTagName;
@@ -2891,7 +2892,8 @@ public class LagartoParser extends Scanner {
 	protected void emitScript(int from, int to) {
 		tag.increaseDeepLevel();
 
-		visitor.script(tag, charSequence(from, to));		// todo da li za script() treba specijalna visit metoda kao sto sada ima?
+		tag.setRawTag(true);
+		visitor.script(tag, charSequence(from, to));		// todo remove #script()
 
 		tag.decreaseDeepLevel();
 		scriptStartNdx = -1;
@@ -3013,8 +3015,8 @@ public class LagartoParser extends Scanner {
 	private static final char[] CC_ENDIF2 = new char[] {'<', '!', '[', 'e', 'n', 'd', 'i', 'f', ']'};
 	private static final char[] CC_END = new char[] {']', '>'};
 
-	// todo make private
-	public static final char[][] RAWTEXT_TAGS = new char[][] {		// CDATA
+	// CDATA
+	private static final char[][] RAWTEXT_TAGS = new char[][] {
 			T_XMP, T_STYLE, T_IFRAME, T_NOEMBED, T_NOFRAMES, T_NOSCRIPT, T_SCRIPT
 	};
 

@@ -4,20 +4,8 @@ package jodd.lagarto;
 
 import jodd.util.CharUtil;
 
-import static jodd.lagarto.LagartoParser.RAWTEXT_TAGS;
-
 // todo add to stringutil?
 public class TagUtil {
-
-	// todo remove in favor of boolean flag in tag!
-	public static boolean isRawTagName(CharSequence name) {
-		for (char[] RAWTEXT_TAG : RAWTEXT_TAGS) {
-			if (equalsToLowercase(name, RAWTEXT_TAG)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public static boolean equals(CharSequence charSequence, char[] chars) {
 		if (charSequence.length() != chars.length) {

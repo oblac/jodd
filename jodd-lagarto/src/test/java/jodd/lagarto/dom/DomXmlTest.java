@@ -168,8 +168,8 @@ public class DomXmlTest {
 		man.getChild(0).getChild(0).setNodeValue("Just Joe");
 
 		// append
-		Element newPerson = new Element(xml, "person", false, false);
-		newPerson.addChild(new Element(xml, "name", false, false));
+		Element newPerson = new Element(xml, "person", false, false, false);
+		newPerson.addChild(new Element(xml, "name", false, false, false));
 		newPerson.getChild(0).addChild(new Text(xml, "Just Maria"));
 
 		man.getParentNode().addChild(newPerson);

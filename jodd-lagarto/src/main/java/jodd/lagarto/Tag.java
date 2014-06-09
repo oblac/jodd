@@ -9,10 +9,17 @@ import java.io.IOException;
  */
 public interface Tag {
 
+	// ---------------------------------------------------------------- flags
+
 	/**
 	 * Returns case-sensitive flag for various name matching.
 	 */
 	boolean isCaseSensitive();
+
+	/**
+	 * Returns <code>true</code> if tag should parse inner text content as RAWTEXT.
+	 */
+	boolean isRawTag();
 
 	// ---------------------------------------------------------------- read
 

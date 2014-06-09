@@ -231,7 +231,19 @@ public class LagartoNodeHtmlRenderer {
 		}
 
 		if (childCount != 0) {
-			renderElementBody(element, appendable);
+			if (element.isRawTag()) {
+				for (int i = 0; i < childCount; i++) {
+					Node childNode = element.getChild(i);
+
+					if (childNode.getNodeType() == Node.NodeType.TEXT) {
+						appendable.append(childNode.getNodeValue());
+					} else {
+						// todo error
+					}
+				}
+			} else {
+				renderElementBody(element, appendable);
+			}
 		}
 
 		appendable.append("</");

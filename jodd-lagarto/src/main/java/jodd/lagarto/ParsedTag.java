@@ -14,8 +14,9 @@ class ParsedTag implements Tag {
 
 	private static final char[] ATTR_NAME_ID = new char[] {'i', 'd'};
 
-	// global
+	// flags
 	private boolean caseSensitive;
+	private boolean rawTag;
 
 	// tag info
 	private CharSequence name;
@@ -56,6 +57,7 @@ class ParsedTag implements Tag {
 		this.tagLength = 0;
 		this.modified = false;
 		this.type = TagType.START;
+		this.rawTag = false;
 	}
 
 	/**
@@ -96,12 +98,21 @@ class ParsedTag implements Tag {
 		return true;
 	}
 
-
-	// ---------------------------------------------------------------- read
+	// ---------------------------------------------------------------- flags
 
 	public boolean isCaseSensitive() {
 		return caseSensitive;
 	}
+
+	public boolean isRawTag() {
+		return rawTag;
+	}
+
+	public void setRawTag(boolean isRawTag) {
+		this.rawTag = isRawTag;
+	}
+
+	// ---------------------------------------------------------------- read
 
 	public CharSequence getName() {
 		return name;

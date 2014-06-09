@@ -14,11 +14,13 @@ public class Element extends Node {
 
 	protected final boolean voidElement;
 	protected final boolean selfClosed;
+	protected final boolean rawTag;
 
 	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
 		super(ownerNode, NodeType.ELEMENT, tag.getName().toString());
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
+		this.rawTag = tag.isRawTag();
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
@@ -31,18 +33,19 @@ public class Element extends Node {
 	// ---------------------------------------------------------------- clone
 
 	public Element(Document ownerDocument, String name) {
-		this(ownerDocument, name, false, false);
+		this(ownerDocument, name, false, false, false);
 	}
 
-	public Element(Document ownerDocument, String name, boolean voidElement, boolean selfClosed) {
+	public Element(Document ownerDocument, String name, boolean voidElement, boolean selfClosed, boolean rawTag) {
 		super(ownerDocument, NodeType.ELEMENT, name);
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
+		this.rawTag = rawTag;
 	}
 
 	@Override
 	public Element clone() {
-		return cloneTo(new Element(ownerDocument, nodeName, voidElement, selfClosed));
+		return cloneTo(new Element(ownerDocument, nodeName, voidElement, selfClosed, rawTag));
 	}
 
 	// ---------------------------------------------------------------- html
@@ -59,6 +62,13 @@ public class Element extends Node {
 	 */
 	public boolean isSelfClosed() {
 		return selfClosed;
+	}
+
+	/**
+	 * Returns <code>true</code> if tags content is RAW text.
+	 */
+	public boolean isRawTag() {
+		return rawTag;
 	}
 
 	@Override
