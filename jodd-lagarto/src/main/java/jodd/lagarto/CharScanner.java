@@ -9,7 +9,7 @@ import java.nio.CharBuffer;
 /**
  * Scanner over a char buffer.
  */
-public class CharScanner {
+class CharScanner {
 
 	protected char[] input;
 	protected int ndx = 0;
@@ -93,16 +93,17 @@ public class CharScanner {
 	}
 
 	/**
-	 * Matches char buffer with content at current location.
+	 * Matches char buffer with content at current location case-sensitive.
 	 */
 	public final boolean match(char[] target) {
 		return match(target, ndx);
 	}
 
 	/**
-	 * todo ovaj method pretrvara char u upper case i radi match sa targetom koji je vec u uppercase zbog performansi
+	 * Matches char buffer given in uppercase with content at current location, that will
+	 * be converted to upper case to make case-insensitive matching.
 	 */
-	public final boolean matchCaseInsensitiveWithUpper(char[] uppercaseTarget) {
+	public final boolean matchUpperCase(char[] uppercaseTarget) {
 		if (ndx + uppercaseTarget.length > total) {
 			return false;
 		}

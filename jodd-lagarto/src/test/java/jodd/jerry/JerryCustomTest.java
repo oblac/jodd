@@ -27,7 +27,7 @@ public class JerryCustomTest {
 		String html = doc.html();
 		html = StringUtil.removeChars(html, " \n\r");
 
-		assertEquals("<html><body></body></html>", html);
+		assertEquals("<html>xxx--&gt;<body></body></html>", html);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class JerryCustomTest {
 		String html = doc.html();
 		html = StringUtil.removeChars(html, " \n\r");
 
-		assertEquals("<html><body></body></html>", html);
+		assertEquals("<html><!----><body></body></html>", html);
 	}
 
 	@Test

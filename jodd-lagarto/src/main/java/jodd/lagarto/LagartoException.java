@@ -13,19 +13,8 @@ public class LagartoException extends UncheckedException {
 		super("Parsing error.", t);
 	}
 
-	public LagartoException() {
-		super("Parsing error.");
-	}
-
 	public LagartoException(String message) {
 		super(message);
 	}
 
-	public LagartoException(String message, int state, int line, int column) {
-		this(message + " (state: " + state + (line != -1 ? " error at: " + line + ':' + column : "" + ')'));
-	}
-
-	public LagartoException(String message, Throwable t) {
-		super(message, t);
-	}
 }

@@ -13,19 +13,11 @@ public class CSSellyException extends LagartoException {
 		super(t);
 	}
 
-	public CSSellyException() {
-		super();
-	}
-
 	public CSSellyException(String message) {
 		super(message);
 	}
 
-	public CSSellyException(String message, Throwable t) {
-		super(message, t);
-	}
-
 	public CSSellyException(String message, int state, int line, int column) {
-		super(message, state, line, column);
+		super(message + " (state: " + state + (line != -1 ? " error at: " + line + ':' + column : "" + ')'));
 	}
 }

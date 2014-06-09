@@ -18,20 +18,10 @@ import static jodd.util.CharUtil.isDigit;
  * HTML/XML content parser using {@link TagVisitor} for callbacks.
  * Differences from: http://www.w3.org/TR/html5/
  * <ul>
- * <li>tag name case (and other entities) is not changed
- * <li>tokenization continues without going into tree buidling</li>
+ * <li>tag name case (and case of other entities) is not changed
+ * <li>whole tokenization is done here, without going into the tree building</li>
  * <li>conditional comments added</li>
- * </ul>
- *
- * What should be changed in SPEC:
- * <ul>
- * <li>TOKENIZER is the one who should deal with all state changes,
- * 		not the tree builder!</li>
- * <li>Recognize two type of states, one that iterates and one that
- * doesn't</li>
- * <li>Order of error/state change must be always the same.</li>
- * <li>TOKENIZER should NOT change the tag names letter case.
- * Tokenizer should not change the source in any way.</li>
+ * <li>xml mode added</li>
  * </ul>
  */
 public class LagartoParser extends CharScanner {
@@ -871,7 +861,7 @@ public class LagartoParser extends CharScanner {
 				return;
 			}
 
-			if (matchCaseInsensitiveWithUpper(_DOCTYPE)) {
+			if (matchUpperCase(_DOCTYPE)) {
 				state = DOCTYPE;
 				ndx += _DOCTYPE.length - 1;
 				return;
@@ -1502,12 +1492,12 @@ public class LagartoParser extends CharScanner {
 					return;
 				}
 
-				if (matchCaseInsensitiveWithUpper(_PUBLIC)) {		// todo check all matches usage if ignore case or not
+				if (matchUpperCase(_PUBLIC)) {
 					ndx += _PUBLIC.length - 1;
 					state = AFTER_DOCTYPE_PUBLIC_KEYWORD;
 					return;
 				}
-				if (matchCaseInsensitiveWithUpper(_SYSTEM)) {
+				if (matchUpperCase(_SYSTEM)) {
 					ndx += _SYSTEM.length - 1;
 					state = AFTER_DOCTYPE_SYSTEM_KEYWORD;
 					return;
@@ -2754,12 +2744,14 @@ public class LagartoParser extends CharScanner {
 		}
 	}
 
-	protected CharBuffer textWrap() {
+	protected CharSequence textWrap() {
 		if (textLen == 0) {
 			return EMPTY_CHAR_BUFFER;
 		}
 		char[] textToEmit = new char[textLen];
+
 		System.arraycopy(text, 0, textToEmit, 0, textLen);
+
 		return CharBuffer.wrap(textToEmit); 	// todo wrap or toString()
 	}
 

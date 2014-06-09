@@ -45,7 +45,11 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		log.debug("DomTree builder started.");
 
 		if (rootNode == null) {
-			rootNode = createDocument();
+			rootNode = new Document(
+					!domBuilder.isCaseSensitive(),
+					domBuilder.isCollectErrors(),
+					domBuilder.getRenderer()
+			);
 		}
 		parentNode = rootNode;
 		enabled = true;
@@ -108,8 +112,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			// XML, no voids, lookup the flag
 			selfClosed = domBuilder.isSelfCloseVoidTags();
 		}
-		
-		return createElement(tag, isVoid, selfClosed);
+
+		return new Element(rootNode, tag, isVoid, selfClosed);
 	}
 
 	public void tag(Tag tag) {
@@ -344,7 +348,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
-			Node text = createText(body.toString());
+			Node text = new Text(rootNode, body.toString());
 			node.addChild(text);
 		}
 	}
@@ -360,7 +364,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.isIgnoreComments()) {
 			return;
 		}
-		Node node = createComment(comment.toString());
+		Node node = new Comment(rootNode, comment.toString());
 		parentNode.addChild(node);
 	}
 
@@ -370,7 +374,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		String textValue = text.toString();
-		Node node = createText(textValue);
+		Node node = new Text(rootNode, textValue);
 		parentNode.addChild(node);
 	}
 
@@ -379,7 +383,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		CData cdataNode = createCData(cdata.toString());
+		CData cdataNode = new CData(rootNode, cdata.toString());
 		parentNode.addChild(cdataNode);
 	}
 
@@ -388,7 +392,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		XmlDeclaration xmlDeclaration = createXmlDeclaration(version, encoding, standalone);
+		XmlDeclaration xmlDeclaration = new XmlDeclaration(rootNode, version, encoding, standalone);
 		parentNode.addChild(xmlDeclaration);
 	}
 
@@ -397,7 +401,11 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		DocumentType documentType = createDocumentType(doctype);
+		DocumentType documentType = new DocumentType(rootNode,
+				toString(doctype.getName()),
+				toString(doctype.getPublicIdentifier()),
+				toString(doctype.getSystemIdentifier())
+		);
 		parentNode.addChild(documentType);
 	}
 
@@ -415,7 +423,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				return;
 			}
 
-			Node commentNode = createConditionalComment(expression.toString(), isStartingTag, isHidden, isHiddenEndTag);
+			Node commentNode = new Comment(rootNode, expression.toString(), isStartingTag, isHidden, isHiddenEndTag);
 
 			parentNode.addChild(commentNode);
 		}
@@ -429,84 +437,6 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	// ---------------------------------------------------------------- factory
-
-	// todo inline methods used only once
-
-	/**
-	 * Creates root {@link Document} node.
-	 */
-	protected Document createDocument() {
-		return new Document(
-				!domBuilder.isCaseSensitive(),
-				domBuilder.isCollectErrors(),
-				domBuilder.getRenderer()
-				);
-	}
-
-	/**
-	 * Creates {@link CData tag}.
-	 */
-	protected CData createCData(String cdata) {
-		return new CData(rootNode, cdata);
-	}
-
-	/**
-	 * Creates {@link Comment}.
-	 * @see Comment#Comment(Document, String)
-	 */
-	protected Comment createComment(String comment) {
-		return new Comment(rootNode, comment);
-	}
-
-	/**
-	 * Creates conditional {@link Comment}.
-	 * @see Comment#Comment(Document, String, boolean, boolean, boolean)
-	 */
-	protected Comment createConditionalComment(String comment, boolean isStartingTag, boolean conditionalDownlevelHidden, boolean isHiddenEndTag) {
-		return new Comment(rootNode, comment, isStartingTag, conditionalDownlevelHidden, isHiddenEndTag);
-	}
-
-
-	/**
-	 * Creates {@link Element} node from a {@link Tag}.
-	 */
-	protected Element createElement(Tag tag, boolean voidElement, boolean selfClosed) {
-		return new Element(rootNode, tag, voidElement, selfClosed);
-	}
-
-	/**
-	 * Creates empty tag.
-	 */
-	protected Element createElement(String name) {
-		return new Element(rootNode, name, false, false);
-	}
-
-	/**
-	 * Creates empty {@link Element} node.
-	 */
-	protected Element createElement(String tagName, boolean voidElement, boolean selfClosed) {
-		return new Element(rootNode, tagName, voidElement, selfClosed);
-	}
-
-	/**
-	 * Creates {@link Text} node.
-	 */
-	protected Text createText(String text) {
-		return new Text(rootNode, text);
-	}
-
-	protected DocumentType createDocumentType(Doctype doctype) {
-		return new DocumentType(rootNode,
-				toString(doctype.getName()),
-				toString(doctype.getPublicIdentifier()),
-				toString(doctype.getSystemIdentifier())
-		);
-	}
-
-	protected XmlDeclaration createXmlDeclaration(CharSequence version, CharSequence encoding, CharSequence standalone) {
-		return new XmlDeclaration(rootNode, version, encoding, standalone);
-	}
-
 
 	/**
 	 * Todo move to JoddScript!

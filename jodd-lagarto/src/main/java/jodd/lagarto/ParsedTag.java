@@ -19,7 +19,7 @@ class ParsedTag implements Tag {
 	private int idNdx;
 	private TagType type;
 	private String tagStart;
-	private String tagEnd;	// todo make statics
+	private String tagEnd;
 
 	// attributes
 	private int attributesCount;
@@ -69,12 +69,9 @@ class ParsedTag implements Tag {
 		deepLevel--;
 	}
 
-	// todo remove!
-	void setTagMarks(String start, String end) {
-		this.tagStart = start;
-		this.tagEnd = end;
-	}
-
+	/**
+	 * Match tag name to given name in <b>lowercase</b>.
+	 */
 	public boolean matchTagName(char[] tagNameLowercase) {
 		int len = tagNameLowercase.length;
 		int tagNameLen = name.length();

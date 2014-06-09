@@ -13,14 +13,8 @@ public class LagartoDOMException extends LagartoException {
 		super(t);
 	}
 
-	public LagartoDOMException() {
-	}
-
 	public LagartoDOMException(String message) {
 		super(message);
 	}
 
-	public LagartoDOMException(String message, Throwable t) {
-		super(message, t);
-	}
 }
