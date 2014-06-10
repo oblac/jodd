@@ -37,7 +37,7 @@ public class LagartoNodeHtmlRendererTest {
 		assertEquals("<html><body><div id=\"z\" foobar=\"aAa\">some Text</div></body></html>", htmlOut);
 
 		// case sensitive -> raw
-		domBuilder.setCaseSensitive(true);
+		domBuilder.getConfig().setCaseSensitive(true);
 		document = domBuilder.parse(html);
 		htmlOut = document.getHtml();
 		assertEquals(html, htmlOut);
@@ -141,7 +141,7 @@ public class LagartoNodeHtmlRendererTest {
 		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
 		for (int i = 0; i < 2; i++) {
 			// this does not change anything with html output
-			domBuilder.setCaseSensitive(i == 1);
+			domBuilder.getConfig().setCaseSensitive(i == 1);
 			domBuilder.setRenderer(new CustomRenderer());
 
 			Document document = domBuilder.parse(html);

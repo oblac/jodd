@@ -184,7 +184,7 @@ public class MalformedTest {
 		assertEquals(out, html);
 		assertTrue(doc.check());
 
-		lagartoDOMBuilder.setUseFosterRules(true);
+		lagartoDOMBuilder.getConfig().setUseFosterRules(true);
 		doc = lagartoDOMBuilder.parse(html);
 		html = html(doc);
 
@@ -196,7 +196,7 @@ public class MalformedTest {
 	public void testFoster1() {
 		String html = "A<table>B<tr>C</tr>D</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setUseFosterRules(true);
+		lagartoDOMBuilder.getConfig().setUseFosterRules(true);
 		Document doc = lagartoDOMBuilder.parse(html);
 		html = html1(doc);
 
@@ -207,7 +207,7 @@ public class MalformedTest {
 	public void testFoster2() {
 		String html = "A<table><tr> B</tr> C</table>";
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setUseFosterRules(true);
+		lagartoDOMBuilder.getConfig().setUseFosterRules(true);
 		Document doc = lagartoDOMBuilder.parse(html);
 		html = html1(doc);
 

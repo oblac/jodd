@@ -53,7 +53,7 @@ public class JerryCustomTest {
 
 		Jerry.JerryParser jerry = Jerry.jerry();
 
-		((LagartoDOMBuilder) jerry.getDOMBuilder()).setConditionalCommentExpression("if gt IE 9");
+		((LagartoDOMBuilder) jerry.getDOMBuilder()).getConfig().setConditionalCommentExpression("if gt IE 9");
 
 		Jerry doc = jerry.parse(
 				"<html>" +

@@ -18,10 +18,12 @@ import static jodd.util.CharUtil.isDigit;
  * HTML/XML content parser using {@link TagVisitor} for callbacks.
  * Differences from: http://www.w3.org/TR/html5/
  * <ul>
- * <li>tag name case (and case of other entities) is not changed
- * <li>whole tokenization is done here, without going into the tree building</li>
+ * <li>text is emitted as a block of text.</li>
+ * <li>tag name case (and case of other entities) is not changed, but caseSensitive
+ * information exist.
+ * <li>whole tokenization is done here, without going into the tree building.</li>
  * <li>conditional comments added</li>
- * <li>xml mode added</li>
+ * <li>xml states added</li>
  * </ul>
  */
 public class LagartoParser extends Scanner {
@@ -59,64 +61,22 @@ public class LagartoParser extends Scanner {
 		this.parsingTime = -1;
 	}
 
-	// ---------------------------------------------------------------- properties
+	// ---------------------------------------------------------------- configuration
 
-	protected boolean xmlMode = false;
-	protected boolean enableConditionalComments = true;
-	protected boolean caseSensitive = false;
-	protected boolean calculatePosition;
+	protected LagartoParserConfig config = new LagartoParserConfig();
 
-	public boolean isEnableConditionalComments() {
-		return enableConditionalComments;
+	/**
+	 * Returns {@link jodd.lagarto.LagartoParserConfig configuration} for the parser.
+	 */
+	public LagartoParserConfig getConfig() {
+		return config;
 	}
 
 	/**
-	 * Enables detection of IE conditional comments. If not enabled,
-	 * downlevel-hidden cond. comments will be treated as regular comment,
-	 * while revealed cond. comments will be treated as an error.
+	 * Sets parser configuration.
 	 */
-	public void setEnableConditionalComments(boolean enableConditionalComments) {
-		this.enableConditionalComments = enableConditionalComments;
-	}
-
-	/**
-	 * Returns <code>true</code> if XML mode is enabled.
-	 */
-	public boolean isXmlMode() {
-		return xmlMode;
-	}
-
-	/**
-	 * Enables XML mode when some XML-only events.
-	 */
-	public void setXmlMode(boolean xmlMode) {
-		this.xmlMode = xmlMode;
-	}
-
-	public boolean isCaseSensitive() {
-		return caseSensitive;
-	}
-
-	/**
-	 * Sets the case-sensitive flag for various matching.
-	 */
-	public void setCaseSensitive(boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
-	}
-
-	/**
-	 * Resolves current position on {@link #error(String)} parsing errors}
-	 * and for DOM elements. Note: this makes processing SLOW!
-	 * JFlex may be used to track current line and row, but that brings
-	 * overhead, and can't be easily disabled. By enabling this property,
-	 * position will be calculated manually only on errors.
-	 */
-	public void setCalculatePosition(boolean calculatePosition) {
-		this.calculatePosition = calculatePosition;
-	}
-
-	public boolean isCalculatePosition() {
-		return calculatePosition;
+	public void setConfig(LagartoParserConfig config) {
+		this.config = config;
 	}
 
 	// ---------------------------------------------------------------- parse
@@ -127,7 +87,7 @@ public class LagartoParser extends Scanner {
 	 * Parses content and callback provided {@link TagVisitor}.
 	 */
 	public void parse(TagVisitor visitor) {
-		tag.init(caseSensitive);
+		tag.init(config.caseSensitive);
 
 		this.parsingTime = System.currentTimeMillis();
 
@@ -149,7 +109,7 @@ public class LagartoParser extends Scanner {
 	}
 
 	/**
-	 * Returns parsing time in ms.
+	 * Returns parsing time in milliseconds.
 	 */
 	public long getParsingTime() {
 		return parsingTime;
@@ -422,7 +382,7 @@ public class LagartoParser extends Scanner {
 				state = TAG_NAME;
 				return;
 			}
-			if (xmlMode) {
+			if (config.parseXmlTags) {
 				if (match(XML)) {
 					ndx += XML.length - 1;
 					if (xmlDeclaration == null) {
@@ -883,7 +843,7 @@ public class LagartoParser extends Scanner {
 				return;
 			}
 
-			if (enableConditionalComments) {
+			if (config.enableConditionalComments) {
 				// CC: downlevel-revealed starting
 				if (match(CC_IF)) {
 					int ccEndNdx = find(CC_END, ndx + CC_IF.length, total);
@@ -924,7 +884,7 @@ public class LagartoParser extends Scanner {
 				}
 			}
 
-			if (xmlMode) {
+			if (config.parseXmlTags) {
 				if (match(CDATA)) {
 					ndx += CDATA.length - 1;
 
@@ -974,7 +934,7 @@ public class LagartoParser extends Scanner {
 			ndx++;
 
 			if (isEOF()) {
-				state = RAWTEXT;
+				state =  RAWTEXT;
 				return;
 			}
 
@@ -2806,7 +2766,7 @@ public class LagartoParser extends Scanner {
 	protected void emitTag() {
 		tag.end(ndx + 1);
 
-		if (calculatePosition) {
+		if (config.calculatePosition) {
 			tag.setPosition(position(tag.getTagPosition()));
 		}
 
@@ -2820,24 +2780,26 @@ public class LagartoParser extends Scanner {
 
 			// detect RAWTEXT tags
 
-			for (char[] rawtextTagName : RAWTEXT_TAGS) {
-				if (tag.matchTagName(rawtextTagName)) {
-					tag.setRawTag(true);
-					state = RAWTEXT;
-					rawTextStart = ndx + 1;
-					rawTagName = rawtextTagName;
-					break;
+			if (config.enableRawTextModes) {
+				for (char[] rawtextTagName : RAWTEXT_TAGS) {
+					if (tag.matchTagName(rawtextTagName)) {
+						tag.setRawTag(true);
+						state = RAWTEXT;
+						rawTextStart = ndx + 1;
+						rawTagName = rawtextTagName;
+						break;
+					}
 				}
-			}
 
-			// detect RCDATA tag
+				// detect RCDATA tag
 
-			for (char[] rcdataTextTagName : RCDATA_TAGS) {
-				if (tag.matchTagName(rcdataTextTagName)) {
-					state = RCDATA;
-					rcdataTagStart = ndx + 1;
-					rcdataTagName = rcdataTextTagName;
-					break;
+				for (char[] rcdataTextTagName : RCDATA_TAGS) {
+					if (tag.matchTagName(rcdataTextTagName)) {
+						state = RCDATA;
+						rcdataTagStart = ndx + 1;
+						rcdataTagName = rcdataTextTagName;
+						break;
+					}
 				}
 			}
 
@@ -2855,7 +2817,7 @@ public class LagartoParser extends Scanner {
 	 * Emits a comment. Also checks for conditional comments!
 	 */
 	protected void emitComment(int from, int to) {
-		if (enableConditionalComments) {
+		if (config.enableConditionalComments) {
 			// CC: downlevel-hidden starting
 			if (match(CC_IF, from)) {
 				int endBracketNdx = find(']', from + 3, to);
@@ -2943,7 +2905,7 @@ public class LagartoParser extends Scanner {
 	 * todo in the error message, add text that surrounds the error position
 	 */
 	protected void _error(String message) {
-		if (calculatePosition) {
+		if (config.calculatePosition) {
 			Position currentPosition = position(ndx);
 			message = message
 					.concat(StringPool.SPACE)

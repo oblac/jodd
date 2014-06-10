@@ -2,8 +2,14 @@
 
 package jodd.lagarto;
 
+/**
+ * Parsing state.
+ */
 public interface State {
 
+	/**
+	 * Parses content.
+	 */
 	public void parse();
 
 }

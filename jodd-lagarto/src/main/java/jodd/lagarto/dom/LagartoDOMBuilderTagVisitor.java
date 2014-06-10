@@ -48,8 +48,8 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 		if (rootNode == null) {
 			rootNode = new Document(
-					!domBuilder.isCaseSensitive(),
-					domBuilder.isCollectErrors(),
+					!domBuilder.config.isCaseSensitive(),
+					domBuilder.config.isCollectErrors(),
 					domBuilder.getRenderer()
 			);
 		}
@@ -63,7 +63,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			Node thisNode = parentNode;
 
 			while (thisNode != rootNode) {
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					if (implRules.implicitlyCloseTagOnEOF(thisNode.getNodeName())) {
 						thisNode = thisNode.getParentNode();
 						continue;
@@ -77,12 +77,12 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		// remove whitespaces
-		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, true);
 		}
 
 		// foster
-		if (domBuilder.isUseFosterRules()) {
+		if (domBuilder.config.isUseFosterRules()) {
 			HtmlFosterRules fosterRules = new HtmlFosterRules();
 			fosterRules.fixFosterElements(rootNode);
 		}
@@ -101,18 +101,18 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates new element with correct configuration.
 	 */
 	protected Element createElementNode(Tag tag) {
-		boolean isVoid = domBuilder.isVoidTag(tag.getName().toString());		// todo remove toString?
+		boolean isVoid = domBuilder.config.isVoidTag(tag.getName().toString());		// todo remove toString?
 		boolean selfClosed = false;
 
-		if (domBuilder.hasVoidTags()) {
+		if (domBuilder.config.hasVoidTags()) {
 			// HTML ad XHTML
 			if (isVoid) {
 				// it's void tag, lookup the flag
-				selfClosed = domBuilder.isSelfCloseVoidTags();
+				selfClosed = domBuilder.config.isSelfCloseVoidTags();
 			}
 		} else {
 			// XML, no voids, lookup the flag
-			selfClosed = domBuilder.isSelfCloseVoidTags();
+			selfClosed = domBuilder.config.isSelfCloseVoidTags();
 		}
 
 		return new Element(rootNode, tag, isVoid, selfClosed);
@@ -128,13 +128,13 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 		switch (tagType) {
 			case START:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
 				node = createElementNode(tag);
 
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					while (true) {
 						String parentNodeName = parentNode.getNodeName();
 						if (!implRules.implicitlyCloseParentTagOnNewTag(parentNodeName, node.getNodeName())) {
@@ -156,7 +156,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case END:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, true);
 				}
 
@@ -176,7 +176,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				}
 
 				// try to close it implicitly
-				if (domBuilder.isImpliedEndTags()) {
+				if (domBuilder.config.isImpliedEndTags()) {
 					boolean fixed = false;
 					while (implRules.implicitlyCloseParentTagOnTagEnd(parentNode.getNodeName(), tagName)) {
 						parentNode = parentNode.getParentNode();
@@ -204,7 +204,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				break;
 
 			case SELF_CLOSING:
-				if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+				if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 					removeLastChildNodeIfEmptyText(parentNode, false);
 				}
 
@@ -287,7 +287,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * This is just a generic solutions, closest to the rules.
 	 */
 	protected void fixUnclosedTagsUpToMatchingParent(Tag tag, Node matchingParent) {
-		if (domBuilder.isUnclosedTagAsOrphanCheck()) {
+		if (domBuilder.config.isUnclosedTagAsOrphanCheck()) {
 			Node thisNode = parentNode;
 
 			if (!TagUtil.equalsIgnoreCase(tag.getName(), "table")) {
@@ -319,7 +319,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 			Node parentParentNode = parentNode.getParentNode();
 
-			if (domBuilder.isImpliedEndTags()) {
+			if (domBuilder.config.isImpliedEndTags()) {
 				if (implRules.implicitlyCloseParentTagOnNewTag(
 						parentParentNode.getNodeName(), parentNode.getNodeName())) {
 					// break the tree: detach this node and append it after parent
@@ -360,10 +360,10 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		if (domBuilder.isIgnoreWhitespacesBetweenTags()) {
+		if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
-		if (domBuilder.isIgnoreComments()) {
+		if (domBuilder.config.isIgnoreComments()) {
 			return;
 		}
 		Node node = new Comment(rootNode, comment.toString());
@@ -412,7 +412,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
-		String defaultExpression = domBuilder.getConditionalCommentExpression();
+		String defaultExpression = domBuilder.config.getConditionalCommentExpression();
 
 		if (defaultExpression != null) {
 			String expressionString = expression.toString().trim();
@@ -435,7 +435,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	public void error(String message) {
 		rootNode.addError(message);
-		log.log(domBuilder.getParsingErrorLogLevel(), message);
+		log.log(domBuilder.config.getParsingErrorLogLevel(), message);
 	}
 
 }

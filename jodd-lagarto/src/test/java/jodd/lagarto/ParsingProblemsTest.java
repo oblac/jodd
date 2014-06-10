@@ -69,7 +69,7 @@ public class ParsingProblemsTest {
 		String html = "<a href=123>xxx</a>";
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		Document document = lagartoDOMBuilder.parse(html);
 
 		assertEquals("<a href=\"123\">xxx</a>", document.getHtml());
@@ -78,7 +78,7 @@ public class ParsingProblemsTest {
 		html = "<a href=../org/w3c/dom/'http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/#element-list'>xxx</a>";
 
 		lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 		document = lagartoDOMBuilder.parse(html);
 		assertTrue(document.check());
 
@@ -96,8 +96,8 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4-v0.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
@@ -109,8 +109,8 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4-v1.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
 
@@ -122,8 +122,8 @@ public class ParsingProblemsTest {
 		File file = new File(testDataRoot, "index-4.html");
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
-		lagartoDOMBuilder.setCalculatePosition(true);
-		lagartoDOMBuilder.setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
 		Document document = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(document.check());
 
@@ -216,7 +216,7 @@ public class ParsingProblemsTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(FileUtil.readString(file));
 		assertTrue(doc.check());
@@ -257,7 +257,7 @@ public class ParsingProblemsTest {
 
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).enableHtmlMode();
-		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).setEnableConditionalComments(false);
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).getConfig().setEnableConditionalComments(false);
 
 		Jerry jerry = jerryParser.parse(expectedResult);
 		String result = jerry.html();

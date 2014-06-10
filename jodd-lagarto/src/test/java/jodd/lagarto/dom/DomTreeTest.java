@@ -264,8 +264,8 @@ public class DomTreeTest {
 		html = StringUtil.replace(html, "'", "");
 		html = StringUtil.replace(html, "&#32;", " ");
 		LagartoDOMBuilder builder = new LagartoDOMBuilder();
-		builder.setSelfCloseVoidTags(true);                        // use self-closing tags!
-		builder.setConditionalCommentExpression(null);
+		builder.getConfig().setSelfCloseVoidTags(true);                        // use self-closing tags!
+		builder.getConfig().setConditionalCommentExpression(null);
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
 		innerHtml = StringUtil.replace(innerHtml, "»", "&raquo;");

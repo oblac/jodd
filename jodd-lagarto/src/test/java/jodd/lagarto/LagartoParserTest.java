@@ -117,7 +117,7 @@ public class LagartoParserTest {
 
 	private String _parseEmpty(String content) {
 		LagartoParser lagartoParser = new LagartoParser(content, false);
-		lagartoParser.setCalculatePosition(true);
+		lagartoParser.getConfig().setCalculatePosition(true);
 		final StringBuilder errors = new StringBuilder();
 		lagartoParser.parse(new EmptyTagVisitor() {
 			@Override
@@ -223,10 +223,10 @@ public class LagartoParserTest {
 		TagWriter tagWriter = new TagWriter(out);
 
 		LagartoParser lagartoParser = new LagartoParser(content, false);
-		lagartoParser.setCalculatePosition(true);
+		lagartoParser.getConfig().setCalculatePosition(true);
 
 		if (isXml) {
-			lagartoParser.setXmlMode(true);
+			lagartoParser.getConfig().setParseXmlTags(true);
 		}
 
 		TagAdapterWrapper taw = new TagAdapterWrapper(visitor, tagWriter);

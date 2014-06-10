@@ -97,7 +97,7 @@ public class JerryParserTest {
 
 		// case sensitive
 
-		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).setCaseSensitive(true);
+		((LagartoDOMBuilder) jerryParser.getDOMBuilder()).getConfig().setCaseSensitive(true);
 
 		doc = jerryParser.parse(str);
 		document = (Document) doc.get(0);

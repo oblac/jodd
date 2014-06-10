@@ -78,7 +78,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setSelfCloseVoidTags(true);
+		lagartoDOMBuilder.getConfig().setSelfCloseVoidTags(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -104,7 +104,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -119,7 +119,7 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 
@@ -134,9 +134,9 @@ public class DomXmlTest {
 
 		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
 		lagartoDOMBuilder.enableXmlMode();
-		lagartoDOMBuilder.setIgnoreComments(true);
-		lagartoDOMBuilder.setCollectErrors(true);
-		lagartoDOMBuilder.setCalculatePosition(true);
+		lagartoDOMBuilder.getConfig().setIgnoreComments(true);
+		lagartoDOMBuilder.getConfig().setCollectErrors(true);
+		lagartoDOMBuilder.getConfig().setCalculatePosition(true);
 
 		Document doc = lagartoDOMBuilder.parse(xmlContent);
 		List<String> errors = doc.getErrors();
