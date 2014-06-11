@@ -32,6 +32,7 @@ public class SystemUtil {
 	public static final String SUN_BOOT_CLASS_PATH = "sun.boot.class.path";
 
 	private static int javaVersionNumber;
+	private static final String WORKING_FOLDER;
 
 	static {
 
@@ -74,6 +75,12 @@ public class SystemUtil {
 			javaVersionNumber++;
 		} catch (Throwable ignore) {
 		}
+
+		// working folder
+
+		File workingDir = new File(StringPool.EMPTY);
+
+		WORKING_FOLDER = workingDir.getAbsolutePath();
 	}
 
 	private static String[] jrePackages;
@@ -164,10 +171,10 @@ public class SystemUtil {
 
 	/**
 	 * Returns current working folder.
-	 * Just a better name for {@link #getUserDir()}.
+	 * This is <b>NOT</b> a user folder.
 	 */
 	public static String getWorkingFolder() {
-		return System.getProperty(USER_DIR);
+		return WORKING_FOLDER;
 	}
 
 	/**
