@@ -19,7 +19,12 @@ public interface TagVisitor {
 	 */
 	void end();
 
-	// ---------------------------------------------------------------- parsing
+	// ---------------------------------------------------------------- html
+
+	/**
+	 * Invoked on DOCTYPE directive.
+	 */
+	void doctype(Doctype doctype);
 
 	/**
 	 * Invoked on {@link Tag tag} (open, close or empty).
@@ -44,23 +49,6 @@ public interface TagVisitor {
 	 */
 	void text(CharSequence text);
 
-	// ---------------------------------------------------------------- special
-
-	/**
-	 * Invoked on CDATA sequence.
-	 */
-	void cdata(CharSequence cdata);
-
-	/**
-	 * Invoked on <b>xml</b> declaration.
-	 */
-	void xml(CharSequence version, CharSequence encoding, CharSequence standalone);
-
-	/**
-	 * Invoked on DOCTYPE directive.
-	 */
-	void doctype(Doctype doctype);
-
 	/**
 	 * Invoked on IE conditional comment. By default, the parser does <b>not</b>
 	 * process the conditional comments, so you need to turn them on. Once conditional
@@ -75,6 +63,18 @@ public interface TagVisitor {
 	 * }
 	 */
 	void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag);
+
+	// ---------------------------------------------------------------- xml
+
+	/**
+	 * Invoked on <b>xml</b> declaration.
+	 */
+	void xml(CharSequence version, CharSequence encoding, CharSequence standalone);
+
+	/**
+	 * Invoked on CDATA sequence.
+	 */
+	void cdata(CharSequence cdata);
 
 	// ---------------------------------------------------------------- errors
 

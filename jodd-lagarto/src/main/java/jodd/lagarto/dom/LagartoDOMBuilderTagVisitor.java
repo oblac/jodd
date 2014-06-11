@@ -14,6 +14,17 @@ import jodd.log.LoggerFactory;
 
 /**
  * Lagarto tag visitor that builds DOM tree.
+ * It (still) does not build the tree <i>fully</i> by the HTML specs,
+ * however, it works good enough for any sane HTML out there.
+ * In the default mode, the tree builder does <b>not</b> change
+ * the order of the elements, so the returned tree reflects
+ * the input. So if the input contains crazy stuff, the tree will
+ * be weird, too :)
+ * <p>
+ * In experimental <i>html-plus</i> mode we do have some
+ * further HTML5 rules implemented, that according to some rules
+ * may change the node position. However, not all rules are
+ * implemented (yet) and this is still just experimental.
  */
 public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 

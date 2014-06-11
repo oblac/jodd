@@ -15,16 +15,29 @@ import static jodd.util.CharUtil.isAlpha;
 import static jodd.util.CharUtil.isDigit;
 
 /**
- * HTML/XML content parser using {@link TagVisitor} for callbacks.
- * Differences from: http://www.w3.org/TR/html5/
+ * HTML/XML content parser/tokenizer using {@link TagVisitor} for callbacks.
+ * Works by the HTML5 specs for tokenization, as described
+ * on <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/tokenization.html">WhatWG</a>.
+ * Differences from the specs:
+ *
  * <ul>
- * <li>text is emitted as a block of text.</li>
- * <li>tag name case (and case of other entities) is not changed, but caseSensitive
- * information exist.
- * <li>whole tokenization is done here, without going into the tree building.</li>
+ * <li>text is emitted as a block of text, and not character by character.</li>
+ * <li>tags name case (and letter case of other entities) is not changed, but case-sensitive
+ * information exist for matching.
+ * <li>the whole tokenization process is implemented here, without going into the tree building.
+ * This applies for switching to the RAWTEXT state.
+ * </li>
+ * <li>script tag is emitted separately</li>
  * <li>conditional comments added</li>
- * <li>xml states added</li>
+ * <li>xml states and callbacks added</li>
  * </ul>
+ *
+ * <p>
+ * There are two ways how text is passed back to the visitor.
+ * By default it is passed as <code>CharBuffer</code>, which
+ * gives excellent performances. However, if you need more <code>Strings</code>
+ * than enable it, and all text will be strings. This is faster
+ * then first converting to char buffer and then to strings.
  */
 public class LagartoParser extends Scanner {
 
@@ -849,7 +862,7 @@ public class LagartoParser extends Scanner {
 					int ccEndNdx = find(CC_END, ndx + CC_IF.length, total);
 
 					if (ccEndNdx == -1) {
-						// todo
+						ccEndNdx = total;
 					}
 
 					CharSequence expression = charSequence(ndx + 1, ccEndNdx);
@@ -868,7 +881,7 @@ public class LagartoParser extends Scanner {
 					int ccEndNdx = find('>', ndx, total);
 
 					if (ccEndNdx == -1) {
-						// todo
+						ccEndNdx = total;
 					}
 
 					if (match(COMMENT_DASH, ccEndNdx - 2)) {
@@ -2254,7 +2267,7 @@ public class LagartoParser extends Scanner {
 				char c = input[ndx];
 
 				if (isAlpha(c)) {
-					//todo Create a new end tag token,
+					// todo Create a new end tag token?
 					state = SCRIPT_DATA_ESCAPED_END_TAG_NAME;
 				}
 
@@ -2825,7 +2838,12 @@ public class LagartoParser extends Scanner {
 				CharSequence expression = charSequence(from + 1, endBracketNdx);
 
 				ndx = endBracketNdx + 1;
-				// todo check the '>'
+
+				char c = input[ndx];
+
+				if (c != '>') {
+					errorInvalidToken();
+				}
 
 				visitor.condComment(expression, true, true, false);
 
@@ -2863,7 +2881,7 @@ public class LagartoParser extends Scanner {
 		tag.increaseDeepLevel();
 
 		tag.setRawTag(true);
-		visitor.script(tag, charSequence(from, to));		// todo remove #script()
+		visitor.script(tag, charSequence(from, to));
 
 		tag.decreaseDeepLevel();
 		scriptStartNdx = -1;
@@ -2902,7 +2920,6 @@ public class LagartoParser extends Scanner {
 
 	/**
 	 * Prepares error message and reports it to the visitor.
-	 * todo in the error message, add text that surrounds the error position
 	 */
 	protected void _error(String message) {
 		if (config.calculatePosition) {
@@ -3004,5 +3021,4 @@ public class LagartoParser extends Scanner {
 
 	private static final CharSequence _ENDIF = "endif";
 
-	// todo add PLANETEXT!
 }
