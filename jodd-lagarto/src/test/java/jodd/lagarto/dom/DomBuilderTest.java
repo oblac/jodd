@@ -64,27 +64,6 @@ public class DomBuilderTest {
 	}
 
 	@Test
-	public void testAllTypesOffset() {
-		// todo
-		String page = "<!DOCTYPE html><html>text<!--comment--><xmp></xmp><style type>xx</style>";
-
-		Document root = new LagartoDOMBuilder().parse(page);
-
-		DocumentType documentType = (DocumentType) root.getChild(0);
-
-		Element html = (Element) root.getChild(1);
-
-		Text text = (Text) html.getChild(0);
-
-		Comment comment = (Comment) html.getChild(1);
-
-		Element xmp = (Element) html.getChild(2);
-
-		Element style = (Element) html.getChild(3);
-	}
-
-
-	@Test
 	public void testClone() {
 		String page = "<html><body><p id=\"w173\">Hello<br>Jodd</p></body></html>";
 		Document root = new LagartoDOMBuilder().parse(page);

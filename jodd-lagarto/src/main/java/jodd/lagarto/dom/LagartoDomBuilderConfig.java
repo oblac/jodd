@@ -33,6 +33,8 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	protected boolean useFosterRules;
 	protected boolean unclosedTagAsOrphanCheck;
 
+	// ---------------------------------------------------------------- access
+
 	public boolean isUnclosedTagAsOrphanCheck() {
 		return unclosedTagAsOrphanCheck;
 	}

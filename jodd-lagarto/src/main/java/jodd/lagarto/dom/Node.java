@@ -58,7 +58,7 @@ public abstract class Node implements Cloneable {
 		this.ownerDocument = document;
 		this.nodeRawName = nodeName;
 		if (nodeName != null) {
-			this.nodeName = document.isLowercase() ? nodeName.toLowerCase() : nodeName;
+			this.nodeName = ownerDocument.config.isCaseSensitive() ? nodeName : nodeName.toLowerCase();
 		} else {
 			this.nodeName = null;
 		}
@@ -97,7 +97,7 @@ public abstract class Node implements Cloneable {
 
 		return dest;
 	}
-	
+
 	@Override
 	public abstract Node clone();
 
@@ -380,7 +380,7 @@ public abstract class Node implements Cloneable {
 			return null;
 		}
 
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
@@ -398,7 +398,7 @@ public abstract class Node implements Cloneable {
 			return -1;
 		}
 
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 
@@ -427,7 +427,7 @@ public abstract class Node implements Cloneable {
 		initAttributes();
 
 		String rawAttributeName = name;
-		if (ownerDocument.isLowercase()) {
+		if (!ownerDocument.config.isCaseSensitive()) {
 			name = name.toLowerCase();
 		}
 

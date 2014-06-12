@@ -55,14 +55,10 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	// ---------------------------------------------------------------- start/end
 
 	public void start() {
-		log.debug("DomTree builder started.");
+		log.debug("DomTree builder started");
 
 		if (rootNode == null) {
-			rootNode = new Document(
-					!domBuilder.config.isCaseSensitive(),
-					domBuilder.config.isCollectErrors(),
-					domBuilder.getRenderer()
-			);
+			rootNode = new Document(domBuilder.config, domBuilder.getRenderer());
 		}
 		parentNode = rootNode;
 		enabled = true;
@@ -263,7 +259,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	protected Node findMatchingParentOpenTag(String tagName) {
 		Node parent = parentNode;
 		
-		if (rootNode.isLowercase()) {
+		if (!rootNode.config.isCaseSensitive()) {
 			tagName = tagName.toLowerCase();
 		}
 		
@@ -272,7 +268,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			String parentNodeName = parent.getNodeName();
 
 			if (parentNodeName != null) {
-				if (rootNode.isLowercase()) {
+				if (!rootNode.config.isCaseSensitive()) {
 					parentNodeName = parentNodeName.toLowerCase();
 				}
 			}

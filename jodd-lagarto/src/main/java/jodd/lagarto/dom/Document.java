@@ -8,37 +8,32 @@ import java.util.List;
 
 /**
  * Document node is always a root node.
- * Holds various DOM-related flags and information.
+ * Holds various DOM-related configuration and information.
  */
 public class Document extends Node {
 
 	protected long elapsedTime;
-	protected final boolean lowercase;
-	protected final boolean collectErrors;
+	protected final LagartoDomBuilderConfig config;
 	protected final LagartoNodeHtmlRenderer renderer;
 	protected List<String> errors;
 
 	public Document() {
-		this(true, false, new LagartoNodeHtmlRenderer());
+		this(new LagartoDomBuilderConfig(), new LagartoNodeHtmlRenderer());
 	}
 
 	/**
 	 * Document constructor with all relevant flags.
-	 * @param lowercase	should all names be converted to lowercase
-	 * @param collectErrors	should we collect errors during the parsing
-	 * @param renderer renderer instance
 	 */
-	public Document(boolean lowercase, boolean collectErrors, LagartoNodeHtmlRenderer renderer) {
+	public Document(LagartoDomBuilderConfig config, LagartoNodeHtmlRenderer renderer) {
 		super(null, NodeType.DOCUMENT, null);
-		this.lowercase = lowercase;
 		this.renderer = renderer;
-		this.collectErrors = collectErrors;
+		this.config = config;
 		this.elapsedTime = System.currentTimeMillis();
 	}
-	
+
 	@Override
 	public Document clone() {
-		Document document = cloneTo(new Document(lowercase, collectErrors, renderer));
+		Document document = cloneTo(new Document(config, renderer));
 		document.elapsedTime = this.elapsedTime;
 		return document;
 	}
@@ -62,7 +57,7 @@ public class Document extends Node {
 	 * If errors are not collected error, message is ignored.
 	 */
 	public void addError(String message) {
-		if (collectErrors) {
+		if (config.collectErrors) {
 			if (errors == null) {
 				errors = new ArrayList<String>();
 			}
@@ -98,19 +93,10 @@ public class Document extends Node {
 	}
 
 	/**
-	 * Returns <code>true</code> if node names should
-	 * be converted to lowercase. Otherwise, name remains
-	 * unchanged (ie equals to raw name).
+	 * Returns used {@link jodd.lagarto.dom.LagartoDomBuilderConfig}.
 	 */
-	public boolean isLowercase() {
-		return lowercase;
-	}
-
-	/**
-	 * Returns <code>true</code> if errors are collected.
-	 */
-	public boolean isCollectErrors() {
-		return collectErrors;
+	public LagartoDomBuilderConfig getConfig() {
+		return config;
 	}
 
 	/**
