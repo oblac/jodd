@@ -37,13 +37,7 @@ public class LagartoNodeHtmlRenderer {
 	public void renderComment(Comment comment, Appendable appendable) throws IOException {
 		String nodeValue = comment.getNodeValue();
 
-		if (comment.conditionalDownlevelHidden == null) {
-			TagWriterUtil.writeComment(appendable, nodeValue);
-		} else {
-			TagWriterUtil.writeConditionalComment(
-					appendable, nodeValue, comment.isStartingTag,
-					comment.conditionalDownlevelHidden.booleanValue(), comment.isHiddenEndTag);
-		}
+		TagWriterUtil.writeComment(appendable, nodeValue);
 	}
 
 	/**

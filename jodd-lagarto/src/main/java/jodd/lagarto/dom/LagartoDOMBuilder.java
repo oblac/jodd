@@ -82,8 +82,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.enabledVoidTags = true;							// list of void tags
 		config.selfCloseVoidTags = false;						// don't self close void tags
 		config.impliedEndTags = true;							// some tags end is implied
-		config.setEnableConditionalComments(true);				// enable IE conditional comments
-		config.conditionalCommentExpression = "if !IE";			// treat HTML as non-IE browser
+		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
 		config.setParseXmlTags(false);							// enable XML mode in parsing
 		renderer.reset();
 		return this;
@@ -99,8 +98,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.enabledVoidTags = true;							// list of void tags
 		config.selfCloseVoidTags = true;						// self close void tags
 		config.impliedEndTags = false;							// no implied tag ends
-		config.setEnableConditionalComments(true);				// enable IE conditional comments
-		config.conditionalCommentExpression = "if !IE";			// treat XHTML as non-IE browser
+		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
 		config.setParseXmlTags(false);							// enable XML mode in parsing
 		renderer.reset();
 		return this;
@@ -117,7 +115,6 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
 		config.impliedEndTags = false;							// no implied tag ends
 		config.setEnableConditionalComments(false);				// disable IE conditional comments
-		config.conditionalCommentExpression = null;				// don't use
 		config.setParseXmlTags(true);							// enable XML mode in parsing
 		renderer.reset();
 		return this;

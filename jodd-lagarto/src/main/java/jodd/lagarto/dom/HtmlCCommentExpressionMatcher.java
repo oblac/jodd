@@ -1,0 +1,101 @@
+// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
+
+package jodd.lagarto.dom;
+
+import jodd.util.StringUtil;
+
+/**
+ * Validates conditional comments expressions.
+ */
+public class HtmlCCommentExpressionMatcher {
+
+	/**
+	 * Matches conditional comment expression with current mode.
+	 * Returns <code>true</code> it conditional comment expression is positive,
+	 * otherwise returns <code>false</code>.
+	 */
+	protected boolean match(int ieVersion, String expression) {
+		expression = StringUtil.removeChars(expression, "()");
+		expression = expression.substring(3);
+
+		String[] andChunks = StringUtil.splitc(expression, '&');
+
+		boolean valid = true;
+
+		for (String andChunk : andChunks) {
+			String[] orChunks = StringUtil.splitc(andChunk, '|');
+
+			boolean innerValid = false;
+
+			for (String orChunk : orChunks) {
+				orChunk = orChunk.trim();
+
+				if (orChunk.startsWith("IE ")) {
+					String value = orChunk.substring(3);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion == number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+				if (orChunk.startsWith("!IE ")) {
+					String value = orChunk.substring(4);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion != number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+				if (orChunk.startsWith("lt IE ")) {
+					String value = orChunk.substring(6);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion < number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+				if (orChunk.startsWith("lte IE ")) {
+					String value = orChunk.substring(7);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion <= number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+				if (orChunk.startsWith("gt IE ")) {
+					String value = orChunk.substring(6);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion > number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+				if (orChunk.startsWith("gte IE ")) {
+					String value = orChunk.substring(7);
+					int number = Integer.parseInt(value);
+
+					if (ieVersion >= number) {
+						innerValid = true;
+						break;
+					}
+					continue;
+				}
+			}
+
+			valid = valid && innerValid;
+		}
+
+		return valid;
+	}
+
+}

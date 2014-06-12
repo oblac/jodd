@@ -447,24 +447,29 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	}
 
 	public void condComment(CharSequence expression, boolean isStartingTag, boolean isHidden, boolean isHiddenEndTag) {
-		String defaultExpression = domBuilder.config.getConditionalCommentExpression();
+		String expressionString = expression.toString().trim();
 
-		if (defaultExpression != null) {
-			String expressionString = expression.toString().trim();
-
-			if (expressionString.equals(defaultExpression) == false) {
-				enabled = expressionString.equals("endif");
-			}
-		} else {
-			if (!enabled) {
-				return;
-			}
-
-			Node commentNode = new Comment(rootNode, expression.toString(), isStartingTag, isHidden, isHiddenEndTag);
-
-			parentNode.addChild(commentNode);
+		if (expressionString.equals("endif")) {
+			enabled = true;
+			return;
 		}
+
+		if (expressionString.equals("if !IE")) {
+			enabled = false;
+			return;
+		}
+
+		Integer ieVersion = domBuilder.config.getCondCommentIEVersion();
+
+		if (htmlCCommentExpressionMatcher == null) {
+			htmlCCommentExpressionMatcher = new HtmlCCommentExpressionMatcher();
+		}
+
+		enabled = htmlCCommentExpressionMatcher.match(ieVersion.intValue(), expressionString);
 	}
+
+	protected HtmlCCommentExpressionMatcher htmlCCommentExpressionMatcher;
+
 
 	// ---------------------------------------------------------------- error
 

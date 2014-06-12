@@ -265,7 +265,7 @@ public class DomTreeTest {
 		html = StringUtil.replace(html, "&#32;", " ");
 		LagartoDOMBuilder builder = new LagartoDOMBuilder();
 		builder.getConfig().setSelfCloseVoidTags(true);                        // use self-closing tags!
-		builder.getConfig().setConditionalCommentExpression(null);
+		builder.getConfig().setEnableConditionalComments(true).setCondCommentIEVersion(6);
 		document = builder.parse(html);
 		innerHtml = document.getHtml();
 		innerHtml = StringUtil.replace(innerHtml, "»", "&raquo;");
@@ -273,6 +273,9 @@ public class DomTreeTest {
 		innerHtml = StringUtil.replace(innerHtml, "·", "&middot;");
 		innerHtml = StringUtil.replace(innerHtml, "’", "&#8217;");
 		innerHtml = StringUtil.replace(innerHtml, "©", "&copy;");
+
+		html = StringUtil.replace(html, "<!--[if lte IE 6]>", "");
+		html = StringUtil.replace(html, "<![endif]-->", "");
 
 		assertEquals(html, innerHtml);
 		assertTrue(document.check());
