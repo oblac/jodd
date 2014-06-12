@@ -32,9 +32,11 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	protected final LagartoDOMBuilder domBuilder;
 	protected final HtmlImplicitClosingRules implRules = new HtmlImplicitClosingRules();
+	protected HtmlVoidRules htmlVoidRules;
 
 	protected Document rootNode;
 	protected Node parentNode;
+
 	/**
 	 * While enabled, nodes will be added to the DOM tree.
 	 * Useful for skipping some tags.
@@ -54,6 +56,10 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 
 	// ---------------------------------------------------------------- start/end
 
+	/**
+	 * Starts with DOM building.
+	 * Creates root {@link jodd.lagarto.dom.Document} node.
+	 */
 	public void start() {
 		log.debug("DomTree builder started");
 
@@ -62,8 +68,15 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 		parentNode = rootNode;
 		enabled = true;
+
+		if (domBuilder.config.isEnabledVoidTags()) {
+			htmlVoidRules = new HtmlVoidRules();
+		}
 	}
 
+	/**
+	 * Finishes the tree building. Closes unclosed tags.
+	 */
 	public void end() {
 		if (parentNode != rootNode) {
 
@@ -108,11 +121,15 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 	 * Creates new element with correct configuration.
 	 */
 	protected Element createElementNode(Tag tag) {
-		boolean isVoid = domBuilder.config.isVoidTag(tag.getName().toString());		// todo remove toString?
+		boolean hasVoidTags = htmlVoidRules != null;
+
+		boolean isVoid = false;
 		boolean selfClosed = false;
 
-		if (domBuilder.config.hasVoidTags()) {
-			// HTML ad XHTML
+		if (hasVoidTags) {
+			isVoid = htmlVoidRules.isVoidTag(tag.getName());
+
+			// HTML and XHTML
 			if (isVoid) {
 				// it's void tag, lookup the flag
 				selfClosed = domBuilder.config.isSelfCloseVoidTags();
@@ -125,6 +142,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		return new Element(rootNode, tag, isVoid, selfClosed);
 	}
 
+	/**
+	 * Visits tags.
+	 */
 	public void tag(Tag tag) {
 		if (!enabled) {
 			return;
@@ -177,7 +197,6 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				}
 
 				if (matchingParent == null) {			// matching open tag not found, remove it
-
 					error("Orphan closed tag ignored: </" + tagName + "> " + tag.getTagPosition());
 					break;
 				}
@@ -185,6 +204,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				// try to close it implicitly
 				if (domBuilder.config.isImpliedEndTags()) {
 					boolean fixed = false;
+
 					while (implRules.implicitlyCloseParentTagOnTagEnd(parentNode.getNodeName(), tagName)) {
 						parentNode = parentNode.getParentNode();
 
@@ -264,7 +284,6 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 		
 		while (parent != null) {
-			
 			String parentNodeName = parent.getNodeName();
 
 			if (parentNodeName != null) {
@@ -354,6 +373,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		Element node = createElementNode(tag);
+
 		parentNode.addChild(node);
 
 		if (body.length() != 0) {
@@ -370,10 +390,13 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		if (domBuilder.config.isIgnoreWhitespacesBetweenTags()) {
 			removeLastChildNodeIfEmptyText(parentNode, false);
 		}
+
 		if (domBuilder.config.isIgnoreComments()) {
 			return;
 		}
+
 		Node node = new Comment(rootNode, comment.toString());
+
 		parentNode.addChild(node);
 	}
 
@@ -383,7 +406,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		String textValue = text.toString();
+
 		Node node = new Text(rootNode, textValue);
+
 		parentNode.addChild(node);
 	}
 
@@ -393,6 +418,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		CData cdataNode = new CData(rootNode, cdata.toString());
+
 		parentNode.addChild(cdataNode);
 	}
 
@@ -402,6 +428,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		XmlDeclaration xmlDeclaration = new XmlDeclaration(rootNode, version, encoding, standalone);
+
 		parentNode.addChild(xmlDeclaration);
 	}
 
@@ -415,6 +442,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				JoddScript.toString(doctype.getPublicIdentifier()),
 				JoddScript.toString(doctype.getSystemIdentifier())
 		);
+
 		parentNode.addChild(documentType);
 	}
 

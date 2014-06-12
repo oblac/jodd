@@ -4,7 +4,9 @@ package jodd.lagarto;
 
 import jodd.util.CharUtil;
 
-// todo add to stringutil?
+/**
+ * Some <code>CharSequence</code> utils.
+ */
 public class TagUtil {
 
 	public static boolean equals(CharSequence charSequence, char[] chars) {
@@ -55,24 +57,23 @@ public class TagUtil {
 		return true;
 	}
 
-	public static boolean equalsIgnoreCase(CharSequence charSequence1, CharSequence charSequence2) {
-		int len = charSequence1.length();
+	public static boolean equalsToLowercase(CharSequence charSequence, CharSequence name) {
+		int len = charSequence.length();
 
-		if (len != charSequence2.length()) {
+		if (len != name.length()) {
 			return false;
 		}
 
 		for (int i = 0; i < len; i++) {
-			char c1 = charSequence1.charAt(i);
-			c1 = CharUtil.toLowerAscii(c1);
+			char c = charSequence.charAt(i);
 
-			char c2 = charSequence2.charAt(i);
-			c2 = CharUtil.toLowerAscii(c2);
+			c = CharUtil.toLowerAscii(c);
 
-			if (c1 != c2) {
+			if (c != name.charAt(i)) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -98,5 +99,25 @@ public class TagUtil {
 		return true;
 	}
 
+	public static boolean equalsIgnoreCase(CharSequence charSequence1, CharSequence charSequence2) {
+		int len = charSequence1.length();
+
+		if (len != charSequence2.length()) {
+			return false;
+		}
+
+		for (int i = 0; i < len; i++) {
+			char c1 = charSequence1.charAt(i);
+			c1 = CharUtil.toLowerAscii(c1);
+
+			char c2 = charSequence2.charAt(i);
+			c2 = CharUtil.toLowerAscii(c2);
+
+			if (c1 != c2) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

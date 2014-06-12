@@ -4,9 +4,9 @@ package jodd.lagarto;
 
 /**
  * Configuration for {@link jodd.lagarto.LagartoParser}.
- * todo add fluent interface
  */
-public class LagartoParserConfig {
+@SuppressWarnings("unchecked")
+public class LagartoParserConfig<T extends LagartoParserConfig> {
 
 	protected boolean parseXmlTags = false;
 	protected boolean enableConditionalComments = true;
@@ -23,8 +23,9 @@ public class LagartoParserConfig {
 	 * downlevel-hidden cond. comments will be treated as regular comment,
 	 * while revealed cond. comments will be treated as an error.
 	 */
-	public void setEnableConditionalComments(boolean enableConditionalComments) {
+	public T setEnableConditionalComments(boolean enableConditionalComments) {
 		this.enableConditionalComments = enableConditionalComments;
+		return (T) this;
 	}
 
 	/**
@@ -37,8 +38,9 @@ public class LagartoParserConfig {
 	/**
 	 * Enables parsing of XML tags.
 	 */
-	public void setParseXmlTags(boolean parseXmlTags) {
+	public T setParseXmlTags(boolean parseXmlTags) {
 		this.parseXmlTags = parseXmlTags;
+		return (T) this;
 	}
 
 	public boolean isCaseSensitive() {
@@ -48,8 +50,9 @@ public class LagartoParserConfig {
 	/**
 	 * Sets the case-sensitive flag for various matching.
 	 */
-	public void setCaseSensitive(boolean caseSensitive) {
+	public T setCaseSensitive(boolean caseSensitive) {
 		this.caseSensitive = caseSensitive;
+		return (T) this;
 	}
 
 	public boolean isCalculatePosition() {
@@ -63,8 +66,9 @@ public class LagartoParserConfig {
 	 * overhead, and can't be easily disabled. By enabling this property,
 	 * position will be calculated manually only on errors.
 	 */
-	public void setCalculatePosition(boolean calculatePosition) {
+	public T setCalculatePosition(boolean calculatePosition) {
 		this.calculatePosition = calculatePosition;
+		return (T) this;
 	}
 
 	public boolean isEnableRawTextModes() {
@@ -74,8 +78,9 @@ public class LagartoParserConfig {
 	/**
 	 * Enables RAW (CDATA) and RCDATA text mode while parsing.
 	 */
-	public void setEnableRawTextModes(boolean enableRawTextModes) {
+	public T setEnableRawTextModes(boolean enableRawTextModes) {
 		this.enableRawTextModes = enableRawTextModes;
+		return (T) this;
 	}
 
 }

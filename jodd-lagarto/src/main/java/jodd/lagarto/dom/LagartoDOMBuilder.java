@@ -4,8 +4,6 @@ package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParser;
 
-import static jodd.lagarto.dom.LagartoDomBuilderConfig.*;
-
 /**
  * Lagarto DOM builder creates DOM tree from HTML, XHTML or XML content.
  */
@@ -80,13 +78,13 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	public LagartoDOMBuilder enableHtmlMode() {
 		config.ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
 		config.setCaseSensitive(false);							// HTML is case insensitive
-		config.setEnableRawTextModes(true);					// script and style tags are parsed as CDATA
-		config.voidTags = HTML5_VOID_TAGS;						// list of void tags
+		config.setEnableRawTextModes(true);						// script and style tags are parsed as CDATA
+		config.enabledVoidTags = true;							// list of void tags
 		config.selfCloseVoidTags = false;						// don't self close void tags
 		config.impliedEndTags = true;							// some tags end is implied
 		config.setEnableConditionalComments(true);				// enable IE conditional comments
-		config.conditionalCommentExpression = "if !IE";		// treat HTML as non-IE browser
-		config.setParseXmlTags(false);								// enable XML mode in parsing
+		config.conditionalCommentExpression = "if !IE";			// treat HTML as non-IE browser
+		config.setParseXmlTags(false);							// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -97,13 +95,13 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	public LagartoDOMBuilder enableXhtmlMode() {
 		config.ignoreWhitespacesBetweenTags = false;			// collect all whitespaces
 		config.setCaseSensitive(true);							// XHTML is case sensitive
-		config.setEnableRawTextModes(false);				// all tags are parsed in the same way
-		config.voidTags = HTML5_VOID_TAGS;						// list of void tags
+		config.setEnableRawTextModes(false);					// all tags are parsed in the same way
+		config.enabledVoidTags = true;							// list of void tags
 		config.selfCloseVoidTags = true;						// self close void tags
 		config.impliedEndTags = false;							// no implied tag ends
 		config.setEnableConditionalComments(true);				// enable IE conditional comments
-		config.conditionalCommentExpression = "if !IE";		// treat XHTML as non-IE browser
-		config.setParseXmlTags(false);								// enable XML mode in parsing
+		config.conditionalCommentExpression = "if !IE";			// treat XHTML as non-IE browser
+		config.setParseXmlTags(false);							// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -112,15 +110,15 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Enables XML parsing mode.
 	 */
 	public LagartoDOMBuilder enableXmlMode() {
-		config.ignoreWhitespacesBetweenTags = true;			// ignore whitespaces that are non content
+		config.ignoreWhitespacesBetweenTags = true;				// ignore whitespaces that are non content
 		config.setCaseSensitive(true);							// XML is case sensitive
-		config.setEnableRawTextModes(false);				// all tags are parsed in the same way
-		config.voidTags = null;								// there are no void tags
+		config.setEnableRawTextModes(false);					// all tags are parsed in the same way
+		config.enabledVoidTags = false;							// there are no void tags
 		config.selfCloseVoidTags = false;						// don't self close empty tags (can be changed!)
 		config.impliedEndTags = false;							// no implied tag ends
 		config.setEnableConditionalComments(false);				// disable IE conditional comments
-		config.conditionalCommentExpression = null;			// don't use
-		config.setParseXmlTags(true);									// enable XML mode in parsing
+		config.conditionalCommentExpression = null;				// don't use
+		config.setParseXmlTags(true);							// enable XML mode in parsing
 		renderer.reset();
 		return this;
 	}
@@ -131,7 +129,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from provided content.
 	 */
 	public Document parse(char[] content) {
-		LagartoParser lagartoParser = new LagartoParser(content, false);		// todo USE TRUE, but dont change until its tested
+		LagartoParser lagartoParser = new LagartoParser(content, true);
 		return doParse(lagartoParser);
 	}
 
@@ -139,7 +137,7 @@ public class LagartoDOMBuilder implements DOMBuilder {
 	 * Creates DOM tree from the provided content.
 	 */
 	public Document parse(String content) {
-		LagartoParser lagartoParser = new LagartoParser(content, false);		// todo USE TRUE, but dont change until its tested
+		LagartoParser lagartoParser = new LagartoParser(content, true);
 		return doParse(lagartoParser);
 	}
 

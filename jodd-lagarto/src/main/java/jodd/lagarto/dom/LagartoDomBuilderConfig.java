@@ -4,29 +4,19 @@ package jodd.lagarto.dom;
 
 import jodd.lagarto.LagartoParserConfig;
 import jodd.log.Logger;
-import jodd.util.StringUtil;
 
 /**
  * Additional configuration for {@link jodd.lagarto.dom.LagartoDOMBuilder}
  * based on {@link jodd.lagarto.LagartoParserConfig}.
  */
-public class LagartoDomBuilderConfig extends LagartoParserConfig {
-
-	/**
-	 * Default void tags.
-	 * http://dev.w3.org/html5/spec/Overview.html#void-elements
-	 */
-	public static final String[] HTML5_VOID_TAGS = {
-			"area", "base", "br", "col", "embed", "hr", "img", "input",
-			"keygen", "link", "menuitem", "meta", "param", "source",
-			"track", "wbr"};
+public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuilderConfig> {
 
 	protected boolean ignoreWhitespacesBetweenTags;
 	protected boolean ignoreComments;
 	protected boolean selfCloseVoidTags;
 	protected boolean collectErrors;
 	protected String conditionalCommentExpression;
-	protected String[] voidTags = HTML5_VOID_TAGS;
+	protected boolean enabledVoidTags = true;
 	protected boolean impliedEndTags;
 	protected Logger.Level parsingErrorLogLevel = Logger.Level.WARN;
 
@@ -39,8 +29,9 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 		return unclosedTagAsOrphanCheck;
 	}
 
-	public void setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
+	public LagartoDomBuilderConfig setUnclosedTagAsOrphanCheck(boolean unclosedTagAsOrphanCheck) {
 		this.unclosedTagAsOrphanCheck = unclosedTagAsOrphanCheck;
+		return this;
 	}
 
 	/**
@@ -51,8 +42,9 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 		return useFosterRules;
 	}
 
-	public void setUseFosterRules(boolean useFosterRules) {
+	public LagartoDomBuilderConfig setUseFosterRules(boolean useFosterRules) {
 		this.useFosterRules = useFosterRules;
+		return this;
 	}
 
 	public boolean isIgnoreWhitespacesBetweenTags() {
@@ -62,19 +54,9 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	/**
 	 * Specifies if whitespaces between open/closed tags should be ignored.
 	 */
-	public void setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
+	public LagartoDomBuilderConfig setIgnoreWhitespacesBetweenTags(boolean ignoreWhitespacesBetweenTags) {
 		this.ignoreWhitespacesBetweenTags = ignoreWhitespacesBetweenTags;
-	}
-
-	public boolean isCaseSensitive() {
-		return caseSensitive;
-	}
-
-	/**
-	 * Specifies if tag names are case sensitive.
-	 */
-	public void setCaseSensitive(boolean caseSensitive) {
-		this.caseSensitive = caseSensitive;
+		return this;
 	}
 
 	public boolean isIgnoreComments() {
@@ -84,40 +66,21 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	/**
 	 * Specifies if comments should be ignored in DOM tree.
 	 */
-	public void setIgnoreComments(boolean ignoreComments) {
+	public LagartoDomBuilderConfig setIgnoreComments(boolean ignoreComments) {
 		this.ignoreComments = ignoreComments;
+		return this;
 	}
 
-	public String[] getVoidTags() {
-		return voidTags;
-	}
-
-	/**
-	 * Sets void tags. If <code>null</code>, void tags are not used.
-	 */
-	public void setVoidTags(String... voidTags) {
-		this.voidTags = voidTags;
+	public boolean isEnabledVoidTags() {
+		return enabledVoidTags;
 	}
 
 	/**
-	 * Returns <code>true</code> if void tags are used.
-	 * Using void tags makes parsing a different.
+	 * Enables usage of void tags.
 	 */
-	public boolean hasVoidTags() {
-		return voidTags != null;
-	}
-
-	/**
-	 * Returns <code>true</code> if tag name is void.
-	 * If void tags are not defined, returns <code>false</code>
-	 * for any input.
-	 */
-	public boolean isVoidTag(String tagName) {
-		if (voidTags == null) {
-			return false;
-		}
-		tagName = tagName.toLowerCase();
-		return StringUtil.equalsOne(tagName, voidTags) != -1;
+	public LagartoDomBuilderConfig setEnabledVoidTags(boolean enabledVoidTags) {
+		this.enabledVoidTags = enabledVoidTags;
+		return this;
 	}
 
 	public boolean isSelfCloseVoidTags() {
@@ -127,8 +90,9 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	/**
 	 * Specifies if void tags should be self closed.
 	 */
-	public void setSelfCloseVoidTags(boolean selfCloseVoidTags) {
+	public LagartoDomBuilderConfig setSelfCloseVoidTags(boolean selfCloseVoidTags) {
 		this.selfCloseVoidTags = selfCloseVoidTags;
+		return this;
 	}
 
 	public boolean isCollectErrors() {
@@ -138,16 +102,18 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	/**
 	 * Enables error collection during parsing.
 	 */
-	public void setCollectErrors(boolean collectErrors) {
+	public LagartoDomBuilderConfig setCollectErrors(boolean collectErrors) {
 		this.collectErrors = collectErrors;
+		return this;
 	}
 
 	public String getConditionalCommentExpression() {
 		return conditionalCommentExpression;
 	}
 
-	public void setConditionalCommentExpression(String conditionalCommentExpression) {
+	public LagartoDomBuilderConfig setConditionalCommentExpression(String conditionalCommentExpression) {
 		this.conditionalCommentExpression = conditionalCommentExpression;
+		return this;
 	}
 
 	public boolean isImpliedEndTags() {
@@ -160,8 +126,9 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	 * are dealing with 'straight' html that uses closes
 	 * tags, consider switching this flag off.
 	 */
-	public void setImpliedEndTags(boolean impliedEndTags) {
+	public LagartoDomBuilderConfig setImpliedEndTags(boolean impliedEndTags) {
 		this.impliedEndTags = impliedEndTags;
+		return this;
 	}
 
 	/**
@@ -174,10 +141,12 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig {
 	/**
 	 * Sets parsing error log level as a name.
 	 */
-	public void setParsingErrorLogLevelName(String logLevel) {
+	public LagartoDomBuilderConfig setParsingErrorLogLevelName(String logLevel) {
 		logLevel = logLevel.trim().toUpperCase();
 
 		parsingErrorLogLevel = Logger.Level.valueOf(logLevel);
+
+		return this;
 	}
 
 }

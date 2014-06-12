@@ -81,8 +81,7 @@ public class LagartoNodeHtmlRenderer {
 	 */
 	public enum Case {
 		/**
-		 * Default case, depends on {@link LagartoDOMBuilder#setCaseSensitive(boolean) case sensitivity}
-		 * flag of builder. May be either lowercase or raw.
+		 * Default case, depends on parser case sensitivity.
 		 */
 		DEFAULT,
 		/**
@@ -238,7 +237,7 @@ public class LagartoNodeHtmlRenderer {
 					if (childNode.getNodeType() == Node.NodeType.TEXT) {
 						appendable.append(childNode.getNodeValue());
 					} else {
-						// todo error
+						childNode.toInnerHtml(appendable);
 					}
 				}
 			} else {
