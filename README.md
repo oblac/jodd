@@ -2,7 +2,6 @@ Jodd
 ====
 
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
-[Donate](http://gittip.com/jodder)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
