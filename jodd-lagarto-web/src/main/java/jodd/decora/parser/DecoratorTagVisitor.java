@@ -16,7 +16,6 @@ import java.util.ArrayList;
  * If decorator content is static, array of decora tags can be cached
  * adn {@link jodd.decora.parser.DecoraTag#duplicate() duplicated} to
  * skip parsing decorator again.
- * // todo check toString() and CharSequence
  */
 public class DecoratorTagVisitor extends EmptyTagVisitor {
 
@@ -48,9 +47,9 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			return;
 		}
 		if (tag.getType().isStartingTag()) {
-			CharSequence id = tag.getId();
+			String id = tag.getId().toString();
 
-			if (id != null && id.toString().startsWith("decora-")) {
+			if (id != null && id.startsWith("decora-")) {
 				onIdAttrStart(tag);
 			}
 		} else {

@@ -43,7 +43,6 @@ public class DecoraTag {
 		return new DecoraTag(name, id, start, end, defaultValueStart, defaultValueLength);
 	}
 
-
 	/**
 	 * Returns decora tag name.
 	 */
@@ -92,14 +91,13 @@ public class DecoraTag {
 	/**
 	 * Returns <code>true</code> if provided tag
 	 * matches decorator tag.
-	 * todo check!
 	 */
 	public boolean isMatchedTag(Tag tag) {
 		if (tag.nameEquals(name) == false) {
 			return false;
 		}
 		if (id != null) {
-			if (TagUtil.equalsIgnoreCase(id, tag.getId()) == false) {
+			if (TagUtil.equals(id, tag.getId()) == false) {
 				return false;
 			}
 		}

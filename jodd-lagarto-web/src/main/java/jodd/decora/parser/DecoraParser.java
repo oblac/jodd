@@ -29,7 +29,7 @@ public class DecoraParser {
 	 * Parses decorator.
 	 */
 	protected DecoraTag[] parseDecorator(char[] decoraContent) {
-		LagartoParser lagartoParser = new LagartoParser(decoraContent, false); 		// todo USE TRUE, but dont change until its tested
+		LagartoParser lagartoParser = new LagartoParser(decoraContent, true);
 		DecoratorTagVisitor visitor = new DecoratorTagVisitor();
 		lagartoParser.parse(visitor);
 		return visitor.getDecoraTags();
@@ -39,7 +39,7 @@ public class DecoraParser {
 	 * Parses page and extracts decora regions for replacements.
 	 */
 	protected void parsePage(char[] pageContent, DecoraTag[] decoraTags) {
-		LagartoParser lagartoParser = new LagartoParser(pageContent, false);		// todo USE TRUE, but dont change until its tested
+		LagartoParser lagartoParser = new LagartoParser(pageContent, true);
 		PageRegionExtractor writer = new PageRegionExtractor(decoraTags);
 		lagartoParser.parse(writer);
 	}
