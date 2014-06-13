@@ -17,7 +17,7 @@ public class Element extends Node {
 	protected final boolean rawTag;
 
 	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
-		super(ownerNode, NodeType.ELEMENT, tag.getName().toString());
+		super(ownerNode, NodeType.ELEMENT, JoddScript.toString(tag.getName()));
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 		this.rawTag = tag.isRawTag();

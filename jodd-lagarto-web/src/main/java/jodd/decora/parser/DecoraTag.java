@@ -97,7 +97,9 @@ public class DecoraTag {
 			return false;
 		}
 		if (id != null) {
-			if (TagUtil.equals(id, tag.getId()) == false) {
+			CharSequence tagId = tag.getId();
+
+			if (tagId != null && TagUtil.equals(id, tagId) == false) {
 				return false;
 			}
 		}
