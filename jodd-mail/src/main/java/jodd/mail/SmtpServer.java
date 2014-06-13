@@ -21,6 +21,10 @@ public class SmtpServer implements SendMailSessionProvider {
 	protected static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 	protected static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
 
+	protected static final String MAIL_SMTP_CONNECTIONTIMEOUT ="mail.smtp.connectiontimeout";
+	protected static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
+	protected static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
+
 	protected static final String PROTOCOL_SMTP = "smtp";
 
 	protected static final int DEFAULT_SMTP_PORT = 25;
@@ -29,6 +33,8 @@ public class SmtpServer implements SendMailSessionProvider {
 	protected final int port;
 	protected final Authenticator authenticator;
 	protected final Properties sessionProperties;
+
+	protected int timeout = 0;
 
 	/**
 	 * SMTP server defined with its host and default port.
@@ -70,6 +76,7 @@ public class SmtpServer implements SendMailSessionProvider {
 	 */
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
+
 		props.setProperty(MAIL_TRANSPORT_PROTOCOL, PROTOCOL_SMTP);
 		props.setProperty(MAIL_HOST, host);
 		props.setProperty(MAIL_SMTP_HOST, host);
@@ -77,7 +84,22 @@ public class SmtpServer implements SendMailSessionProvider {
 		if (authenticator != null) {
 			props.setProperty(MAIL_SMTP_AUTH, TRUE);
 		}
+
+		if (timeout > 0) {
+			String timeoutValue = String.valueOf(timeout);
+			props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
+			props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
+			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
+		}
+
 		return props;
+	}
+
+	/**
+	 * Defines timeout value in milliseconds for all mail-related operations.
+	 */
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 
 
