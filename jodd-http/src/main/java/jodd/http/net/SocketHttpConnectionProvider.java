@@ -2,10 +2,12 @@
 
 package jodd.http.net;
 
+import jodd.JoddHttp;
 import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
 import jodd.http.HttpRequest;
 import jodd.http.ProxyInfo;
+import jodd.util.StringUtil;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -36,26 +38,46 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		Socket socket;
 
 		if (httpRequest.protocol().equalsIgnoreCase("https")) {
-			SSLSocket sslSocket = (SSLSocket) createSocket(
-					SSLSocketFactory.getDefault(), httpRequest.host(), httpRequest.port());
+			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port());
 
 			sslSocket.startHandshake();
 
 			socket = sslSocket;
 		} else {
-			SocketFactory socketFactory = getSocketFactory(proxy);
-
-			socket = createSocket(socketFactory, httpRequest.host(), httpRequest.port());
+			socket = createSocket(httpRequest.host(), httpRequest.port());
 		}
 
 		return new SocketHttpConnection(socket);
 	}
 
 	/**
-	 * Creates a socket with provided socket factory.
+	 * Creates a socket using socket factory.
 	 */
-	protected Socket createSocket(SocketFactory socketFactory, String host, int port) throws IOException {
+	protected Socket createSocket(String host, int port) throws IOException {
+		SocketFactory socketFactory = getSocketFactory(proxy);
+
 		return socketFactory.createSocket(host, port);
+	}
+
+	/**
+	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
+	 */
+	protected SSLSocket createSSLSocket(String host, int port) throws IOException {
+		SocketFactory socketFactory = SSLSocketFactory.getDefault();
+
+		SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
+
+		String enabledProtocols = JoddHttp.defaultSecureEnabledProtocols;
+
+		if (enabledProtocols != null) {
+			String[] values = StringUtil.splitc(enabledProtocols, ',');
+
+			StringUtil.trimAll(values);
+
+			sslSocket.setEnabledProtocols(values);
+		}
+
+		return sslSocket;
 	}
 
 	/**

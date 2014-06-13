@@ -41,4 +41,10 @@ public class JoddHttp {
 	 */
 	public static String defaultBodyEncoding = StringPool.UTF_8;
 
+	/**
+	 * CSV of default enabled secured protocols. By default the value is
+	 * read from system property <code>https.protocols</code>.
+	 */
+	public static String defaultSecureEnabledProtocols = System.getProperty("https.protocols");
+
 }
