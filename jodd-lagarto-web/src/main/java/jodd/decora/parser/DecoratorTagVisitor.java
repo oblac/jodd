@@ -47,9 +47,9 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 			return;
 		}
 		if (tag.getType().isStartingTag()) {
-			String id = tag.getId().toString();
+			CharSequence id = tag.getId();
 
-			if (id != null && id.startsWith("decora-")) {
+			if (id != null && id.toString().startsWith("decora-")) {
 				onIdAttrStart(tag);
 			}
 		} else {
