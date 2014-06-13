@@ -322,6 +322,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 				// and matching parent
 				while (thisNode != matchingParent) {
 					String thisNodeName = thisNode.getNodeName().toLowerCase();
+
 					if (thisNodeName.equals("table") || thisNodeName.equals("ul") || thisNodeName.equals("ol")) {
 
 						String positionString = tag.getPosition();
@@ -459,13 +460,13 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		Integer ieVersion = domBuilder.config.getCondCommentIEVersion();
+		int ieVersion = domBuilder.config.getCondCommentIEVersion();
 
 		if (htmlCCommentExpressionMatcher == null) {
 			htmlCCommentExpressionMatcher = new HtmlCCommentExpressionMatcher();
 		}
 
-		enabled = htmlCCommentExpressionMatcher.match(ieVersion.intValue(), expressionString);
+		enabled = htmlCCommentExpressionMatcher.match(ieVersion, expressionString);
 	}
 
 	protected HtmlCCommentExpressionMatcher htmlCCommentExpressionMatcher;
