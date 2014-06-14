@@ -2,6 +2,7 @@ Jodd
 ====
 
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
+[![Coverage Status](https://coveralls.io/repos/oblac/jodd/badge.png?branch=master)](https://coveralls.io/r/oblac/jodd?branch=master)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 

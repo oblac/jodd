@@ -20,7 +20,7 @@ ext {
 	// libraries
 
 	tomcatVersion = '7.0.47'
-	jacocoVersion = '0.7.0.201403182114'
+	jacocoVersion = '0.7.1.201405082137'
 
 	lib = [
 		mail:			'javax.mail:mail:1.4.5',
@@ -412,7 +412,33 @@ task jacocoReport() {
 				}
 			}
 			html destdir: coverageDir
+			xml destfile: coverageDir + '/jodd-coverage.xml'
 		}
+	}
+}
+
+// Coveralls task should be invoked manually, since we have integration tests
+// that are executed only locally. After the release is build,
+// go to Travis Build History: https://travis-ci.org/oblac/jodd/builds
+// and select one of the jobs, then copy the job id from the URL line.
+// Paste the job id into the .coverals.yml and invoke this task
+// After few minutes, the coverage will appear here:
+// https://coveralls.io/r/oblac/jodd
+task coveralls() {
+	//dependsOn jacocoReport
+	group = 'Reporting'
+	description = 'Submits Jacoco reports to Coveralls.'
+
+	doLast {
+		List<File> targetSrcDirs = new ArrayList<File>()
+
+		for (main in javaBundleModulesSources) {
+			targetSrcDirs += main.java.srcDirs
+		}
+
+		CoverallsReporter coverallsReporter = new CoverallsReporter();
+
+		coverallsReporter.send(targetSrcDirs, file("build/reports/coverage/jodd-coverage.xml"))
 	}
 }
 
