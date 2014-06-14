@@ -14,7 +14,7 @@ public class HtmlCCommentExpressionMatcher {
 	 * Returns <code>true</code> it conditional comment expression is positive,
 	 * otherwise returns <code>false</code>.
 	 */
-	protected boolean match(int ieVersion, String expression) {
+	protected boolean match(float ieVersion, String expression) {
 		expression = StringUtil.removeChars(expression, "()");
 		expression = expression.substring(3);
 
@@ -32,7 +32,7 @@ public class HtmlCCommentExpressionMatcher {
 
 				if (orChunk.startsWith("IE ")) {
 					String value = orChunk.substring(3);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion == number) {
 						innerValid = true;
@@ -42,7 +42,7 @@ public class HtmlCCommentExpressionMatcher {
 				}
 				if (orChunk.startsWith("!IE ")) {
 					String value = orChunk.substring(4);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion != number) {
 						innerValid = true;
@@ -52,7 +52,7 @@ public class HtmlCCommentExpressionMatcher {
 				}
 				if (orChunk.startsWith("lt IE ")) {
 					String value = orChunk.substring(6);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion < number) {
 						innerValid = true;
@@ -62,7 +62,7 @@ public class HtmlCCommentExpressionMatcher {
 				}
 				if (orChunk.startsWith("lte IE ")) {
 					String value = orChunk.substring(7);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion <= number) {
 						innerValid = true;
@@ -72,7 +72,7 @@ public class HtmlCCommentExpressionMatcher {
 				}
 				if (orChunk.startsWith("gt IE ")) {
 					String value = orChunk.substring(6);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion > number) {
 						innerValid = true;
@@ -82,7 +82,7 @@ public class HtmlCCommentExpressionMatcher {
 				}
 				if (orChunk.startsWith("gte IE ")) {
 					String value = orChunk.substring(7);
-					int number = Integer.parseInt(value);
+					float number = Float.parseFloat(value);
 
 					if (ieVersion >= number) {
 						innerValid = true;

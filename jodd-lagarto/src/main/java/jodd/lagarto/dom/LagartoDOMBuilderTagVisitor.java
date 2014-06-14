@@ -460,7 +460,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 			return;
 		}
 
-		int ieVersion = domBuilder.config.getCondCommentIEVersion();
+		float ieVersion = domBuilder.config.getCondCommentIEVersion();
 
 		if (htmlCCommentExpressionMatcher == null) {
 			htmlCCommentExpressionMatcher = new HtmlCCommentExpressionMatcher();

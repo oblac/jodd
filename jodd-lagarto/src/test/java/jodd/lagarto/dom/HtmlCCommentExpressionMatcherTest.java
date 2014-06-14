@@ -14,26 +14,28 @@ public class HtmlCCommentExpressionMatcherTest {
 		HtmlCCommentExpressionMatcher m = new HtmlCCommentExpressionMatcher();
 
 		assertFalse(m.match(5, "if IE 6"));
-		assertTrue(m.match(6, "if IE 6"));
+		assertTrue(m.match(6, "if IE 6.0"));
 
 		assertTrue(m.match(5, "if !IE 6"));
-		assertFalse(m.match(6, "if !IE 6"));
+		assertFalse(m.match(6, "if !IE 6.0"));
 
 		assertTrue(m.match(5, "if lt IE 6"));
-		assertFalse(m.match(6, "if lt IE 6"));
+		assertFalse(m.match(6, "if lt IE 6.0"));
 		assertFalse(m.match(7, "if lt IE 6"));
 
 		assertTrue(m.match(5, "if lte IE 6"));
-		assertTrue(m.match(6, "if lte IE 6"));
-		assertFalse(m.match(7, "if lte IE 6"));
+		assertTrue(m.match(6, "if lte IE 6.0"));
+		assertFalse(m.match(7, "if lte IE 6.0"));
 
-		assertFalse(m.match(5, "if gt IE 6"));
+		assertFalse(m.match(5, "if gt IE 6.0"));
 		assertFalse(m.match(6, "if gt IE 6"));
 		assertTrue(m.match(7, "if gt IE 6"));
 
 		assertFalse(m.match(5, "if gte IE 6"));
 		assertTrue(m.match(6, "if gte IE 6"));
-		assertTrue(m.match(7, "if gte IE 6"));
+		assertTrue(m.match(7, "if gte IE 6.0"));
+
+		assertFalse(m.match(5.5f, "if gte IE 6"));
 	}
 
 	@Test

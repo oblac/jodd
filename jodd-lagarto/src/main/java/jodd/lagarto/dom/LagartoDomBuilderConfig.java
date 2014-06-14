@@ -15,7 +15,7 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	protected boolean ignoreComments;
 	protected boolean selfCloseVoidTags;
 	protected boolean collectErrors;
-	protected int condCommentIEVersion = 10;
+	protected float condCommentIEVersion = 10;
 	protected boolean enabledVoidTags = true;
 	protected boolean impliedEndTags;
 	protected Logger.Level parsingErrorLogLevel = Logger.Level.WARN;
@@ -107,11 +107,11 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return this;
 	}
 
-	public int getCondCommentIEVersion() {
+	public float getCondCommentIEVersion() {
 		return condCommentIEVersion;
 	}
 
-	public LagartoDomBuilderConfig setCondCommentIEVersion(int condCommentIEVersion) {
+	public LagartoDomBuilderConfig setCondCommentIEVersion(float condCommentIEVersion) {
 		this.condCommentIEVersion = condCommentIEVersion;
 		return this;
 	}
