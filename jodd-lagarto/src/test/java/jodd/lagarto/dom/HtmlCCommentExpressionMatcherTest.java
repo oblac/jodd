@@ -36,6 +36,10 @@ public class HtmlCCommentExpressionMatcherTest {
 		assertTrue(m.match(7, "if gte IE 6.0"));
 
 		assertFalse(m.match(5.5f, "if gte IE 6"));
+
+		assertTrue(m.match(5.4f, "if IE 5"));
+		assertTrue(m.match(5.6f, "if IE 5"));
+		assertFalse(m.match(5.5f, "if IE 5.6"));
 	}
 
 	@Test
@@ -51,5 +55,6 @@ public class HtmlCCommentExpressionMatcherTest {
 		assertFalse(m.match(7, "if (lt IE 6)|(lt IE 7)"));
 		assertTrue(m.match(7, "if (lt IE 6)|(lte IE 7)"));
 
+		assertTrue(m.match(6.5f, "if (IE 6)|(IE 7)"));
 	}
 }

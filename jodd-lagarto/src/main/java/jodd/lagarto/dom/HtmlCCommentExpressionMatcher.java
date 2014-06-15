@@ -34,7 +34,7 @@ public class HtmlCCommentExpressionMatcher {
 					String value = orChunk.substring(3);
 					float number = Float.parseFloat(value);
 
-					if (ieVersion == number) {
+					if (matchMajorNumber(ieVersion, number) || ieVersion == number) {
 						innerValid = true;
 						break;
 					}
@@ -98,4 +98,13 @@ public class HtmlCCommentExpressionMatcher {
 		return valid;
 	}
 
+	private boolean matchMajorNumber(float ieVersion, float number) {
+		int majorVersion = (int) number;
+
+		// comparing only major numbers
+		if (majorVersion == number) {
+			return (int)ieVersion == majorVersion;
+		}
+		return false;
+	}
 }
