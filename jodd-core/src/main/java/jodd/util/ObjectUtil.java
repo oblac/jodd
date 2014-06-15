@@ -15,49 +15,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.Enumeration;
-import java.lang.reflect.Array;
 
 /**
  * Various object utilities.
  */
 public class ObjectUtil {
-
-	/**
-	 * Safely compares two objects just like <code>equals()</code> would, except
-	 * it allows any of the 2 objects to be <code>null</code>.
-	 *
-	 * @return <code>true</code> if arguments are equal, otherwise <code>false</code>
-	 */
-	public static boolean equals(Object obj1, Object obj2) {
-		return (obj1 != null) ? (obj1.equals(obj2)) : (obj2 == null);
-	}
-
-	/**
-	 * Compares two objects or two object arrays. Useful for {@link Object#equals(Object)}.
-	 * @see #equals(Object, Object)
-	 */
-	public static boolean equalsEx(Object obj1, Object obj2) {
-		if (obj1 == null) {
-			return (obj2 == null);
-		}
-		if (obj2 == null) {
-			return false;
-		}
-
-		if (obj1.getClass().isArray()) {
-			if (obj2.getClass().isArray() == false) {
-				return false;
-			}
-			return Arrays.equals((Object[])obj1, (Object[])obj2);
-		}
-
-		return obj1.equals(obj2);
-	}
 
 
 	// ---------------------------------------------------------------- clone
@@ -80,7 +42,7 @@ public class ObjectUtil {
 	/**
 	 * Create object copy using serialization mechanism.
 	 */
-	public static Object cloneViaSerialization(Serializable obj) throws IOException, ClassNotFoundException {
+	public static <T extends Serializable> T cloneViaSerialization(T obj) throws IOException, ClassNotFoundException {
 		FastByteArrayOutputStream bos = new FastByteArrayOutputStream();
 		ObjectOutputStream out = null;
 		ObjectInputStream in = null;
@@ -99,7 +61,7 @@ public class ObjectUtil {
 			StreamUtil.close(out);
 			StreamUtil.close(in);
 		}
-		return objCopy;
+		return (T) objCopy;
 	}
 
 
@@ -200,101 +162,5 @@ public class ObjectUtil {
 	}
 
 
-	// ---------------------------------------------------------------- misc
-
-	/**
-	 * Returns length of the object.
-	 */
-	public static int length(Object obj) {
-		if (obj == null) {
-			return 0;
-		}
-		if (obj instanceof String) {
-			return ((String) obj).length();
-		}
-		if (obj instanceof Collection) {
-			return ((Collection) obj).size();
-		}
-		if (obj instanceof Map) {
-			return ((Map) obj).size();
-		}
-
-		int count;
-		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
-			count = 0;
-			while (iter.hasNext()) {
-				count++;
-				iter.next();
-			}
-			return count;
-		}
-		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
-			count = 0;
-			while (enumeration.hasMoreElements()) {
-				count++;
-				enumeration.nextElement();
-			}
-			return count;
-		}
-		if (obj.getClass().isArray() == true) {
-			return Array.getLength(obj);
-		}
-		return -1;
-	}
-
-	/**
-	 * Returns <code>true</code> if first argument contains provided element.
-	 * It works for strings, collections, maps and arrays.
-s	 */
-	public static boolean containsElement(Object obj, Object element) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj instanceof String) {
-			if (element == null) {
-				return false;
-			}
-			return ((String) obj).contains(element.toString());
-		}
-		if (obj instanceof Collection) {
-			return ((Collection) obj).contains(element);
-		}
-		if (obj instanceof Map) {
-			return ((Map) obj).values().contains(element);
-		}
-
-		if (obj instanceof Iterator) {
-			Iterator iter = (Iterator) obj;
-			while (iter.hasNext()) {
-				Object o = iter.next();
-				if (equals(o, element)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		if (obj instanceof Enumeration) {
-			Enumeration enumeration = (Enumeration) obj;
-			while (enumeration.hasMoreElements()) {
-				Object o = enumeration.nextElement();
-				if (equals(o, element)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		if (obj.getClass().isArray() == true) {
-			int len = Array.getLength(obj);
-			for (int i = 0; i < len; i++) {
-				Object o = Array.get(obj, i);
-				if (equals(o, element)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 }

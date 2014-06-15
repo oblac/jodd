@@ -3,7 +3,7 @@
 package jodd.lagarto.dom;
 
 import jodd.lagarto.Tag;
-import jodd.util.JoddScript;
+import jodd.util.Util;
 
 import java.io.IOException;
 
@@ -17,15 +17,15 @@ public class Element extends Node {
 	protected final boolean rawTag;
 
 	public Element(Document ownerNode, Tag tag, boolean voidElement, boolean selfClosed) {
-		super(ownerNode, NodeType.ELEMENT, JoddScript.toString(tag.getName()));
+		super(ownerNode, NodeType.ELEMENT, Util.toString(tag.getName()));
 		this.voidElement = voidElement;
 		this.selfClosed = selfClosed;
 		this.rawTag = tag.isRawTag();
 
 		int attrCount = tag.getAttributeCount();
 		for (int i = 0; i < attrCount; i++) {
-			String key = JoddScript.toString(tag.getAttributeName(i));
-			String value = JoddScript.toString(tag.getAttributeValue(i));
+			String key = Util.toString(tag.getAttributeName(i));
+			String value = Util.toString(tag.getAttributeValue(i));
 			setAttribute(key, value);
 		}
 	}

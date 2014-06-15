@@ -260,7 +260,7 @@ public class StringUtil {
 	 * @return <code>true</code> if strings are equal, otherwise <code>false</code>
 	 */
 	public static boolean equals(String s1, String s2) {
-		return ObjectUtil.equals(s1, s2);
+		return Util.equals(s1, s2);
 	}
 
 	/**
@@ -361,10 +361,9 @@ public class StringUtil {
 		return string != null && string.length() > 0;
 	}
 
-
 	/**
-	 * Converts safely an object to a string. If object is <code>null</code> it will be
-	 * not converted.
+	 * Converts safely an object to a string. If object is <code>null</code> it will not
+	 * be converted.
 	 */
 	public static String toString(Object obj) {
 		return Convert.toString(obj);

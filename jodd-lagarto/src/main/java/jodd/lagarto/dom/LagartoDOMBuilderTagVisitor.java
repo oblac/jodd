@@ -7,7 +7,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
-import jodd.util.JoddScript;
+import jodd.util.Util;
 import jodd.util.StringPool;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
@@ -439,9 +439,9 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		}
 
 		DocumentType documentType = new DocumentType(rootNode,
-				JoddScript.toString(doctype.getName()),
-				JoddScript.toString(doctype.getPublicIdentifier()),
-				JoddScript.toString(doctype.getSystemIdentifier())
+				Util.toString(doctype.getName()),
+				Util.toString(doctype.getPublicIdentifier()),
+				Util.toString(doctype.getSystemIdentifier())
 		);
 
 		parentNode.addChild(documentType);

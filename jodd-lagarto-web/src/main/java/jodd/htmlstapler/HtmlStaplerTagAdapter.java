@@ -6,7 +6,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagAdapter;
 import jodd.lagarto.TagUtil;
 import jodd.lagarto.TagVisitor;
-import jodd.util.JoddScript;
+import jodd.util.Util;
 
 /**
  * HTML Stapler tag adapter parses HTML page and collects all information
@@ -36,7 +36,7 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 	@Override
 	public void script(Tag tag, CharSequence body) {
 		if (insideConditionalComment == false) {
-			String src = JoddScript.toString(tag.getAttributeValue("src"));
+			String src = Util.toString(tag.getAttributeValue("src"));
 
 			if (src == null) {
 				super.script(tag, body);
@@ -66,10 +66,10 @@ public class HtmlStaplerTagAdapter extends TagAdapter {
 				CharSequence type = tag.getAttributeValue("type");
 
 				if (type != null && TagUtil.equalsIgnoreCase(type, "text/css") == true) {
-					String media = JoddScript.toString(tag.getAttributeValue("media"));
+					String media = Util.toString(tag.getAttributeValue("media"));
 
 					if (media == null || media.contains("screen")) {
-						String href = JoddScript.toString(tag.getAttributeValue("href"));
+						String href = Util.toString(tag.getAttributeValue("href"));
 
 						if (cssBundleAction.acceptLink(href)) {
 							String link = cssBundleAction.processLink(href);

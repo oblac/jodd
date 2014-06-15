@@ -2,28 +2,25 @@
 
 package jodd.util;
 
+import jodd.mutable.MutableInteger;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ObjectUtilTest {
 
 	@Test
-	public void testEquals() {
-		Object a = new Integer(173);
-		Object b = new Integer(1);
-		Object c = new Integer(173);
+	public void testCloneViaSerialization() throws Exception {
 
-		assertTrue(ObjectUtil.equals(a, a));
-		assertTrue(ObjectUtil.equals(a, c));
-		assertTrue(ObjectUtil.equals(c, a));
-		assertFalse(ObjectUtil.equals(a, b));
-		assertFalse(ObjectUtil.equals(b, a));
+		MutableInteger mu = new MutableInteger(183);
 
-		assertFalse(ObjectUtil.equals(a, null));
-		assertFalse(ObjectUtil.equals(null, a));
+		MutableInteger mu2 = ObjectUtil.cloneViaSerialization(mu);
 
-		assertTrue(ObjectUtil.equalsEx(null, null));
+		assertFalse(mu == mu2);
+		assertTrue(mu.equals(mu2));
+		assertEquals(mu.intValue(), mu2.intValue());
 	}
+
 }
