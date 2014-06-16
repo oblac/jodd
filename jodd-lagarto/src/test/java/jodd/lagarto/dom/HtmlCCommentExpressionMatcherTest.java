@@ -40,6 +40,26 @@ public class HtmlCCommentExpressionMatcherTest {
 		assertTrue(m.match(5.4f, "if IE 5"));
 		assertTrue(m.match(5.6f, "if IE 5"));
 		assertFalse(m.match(5.5f, "if IE 5.6"));
+
+		assertFalse(m.match(9.1f, "if !IE 9"));
+		assertFalse(m.match(9.1f, "if !IE 9.0"));
+		assertTrue(m.match(9.1f, "if !IE 9.2"));
+
+		assertFalse(m.match(9.1f, "if gt IE 9"));
+		assertFalse(m.match(9.1f, "if gt IE 9.0"));
+		assertTrue(m.match(9.1f, "if gt IE 9.01"));
+
+		assertFalse(m.match(9.1f, "if lt IE 9"));
+		assertFalse(m.match(9.1f, "if lt IE 9.0"));
+		assertTrue(m.match(9.1f, "if lt IE 9.2"));
+
+		assertTrue(m.match(9.1f, "if gte IE 9"));
+		assertTrue(m.match(9.1f, "if gte IE 9.0"));
+		assertFalse(m.match(9.1f, "if gte IE 9.2"));
+
+		assertTrue(m.match(9.1f, "if lte IE 9"));
+		assertTrue(m.match(9.1f, "if lte IE 9.0"));
+		assertFalse(m.match(9.1f, "if lte IE 9.01"));
 	}
 
 	@Test
