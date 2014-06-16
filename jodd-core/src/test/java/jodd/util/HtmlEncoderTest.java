@@ -2,6 +2,7 @@
 
 package jodd.util;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +13,9 @@ public class HtmlEncoderTest {
 	public void testEncode() {
 		String html = "< & \" ' > \r\n \n  \t";
 
-		assertEquals("&lt; &amp; &quot; &#039; &gt; \r\n \n  \t", HtmlEncoder.text(html));
+		assertEquals("&lt; &amp; \" ' &gt; \r\n \n  \t", HtmlEncoder.text(html));
+		assertEquals("&lt; &amp; &quot; ' &gt; \r\n \n  \t", HtmlEncoder.attribute(html));
+		assertEquals("&lt; &amp; &quot; &#39; &gt; \r\n \n  \t", HtmlEncoder.xml(html));
 
 		html = "";
 		assertEquals("", HtmlEncoder.text(html));
@@ -21,31 +24,12 @@ public class HtmlEncoderTest {
 		assertEquals("", HtmlEncoder.text(html));
 
 		html = new String(new char[]{128, 257});
-		assertEquals(html, HtmlEncoder.text(html));
-	}
 
-	@Test
-	public void testEncodeText() {
-		String html = "< & \" ' > \r\n \n  \t";
-
-		assertEquals("&lt; &amp; &quot; &#039; &gt; <br/> <br/>  \t", HtmlEncoder.block(html));
-
-		html = "";
-		assertEquals("", HtmlEncoder.block(html));
-
-		assertEquals("", HtmlEncoder.block(null));
-
-		html = new String(new char[]{128, 257});
-		assertEquals(html, HtmlEncoder.block(html));
-
-		html = "\r\n\n\r";
-		assertEquals("<br/><br/><br/>", HtmlEncoder.block(html));
-
-		html = "\r\n\r\n";
-		assertEquals("<br/><br/>", HtmlEncoder.block(html));
-
-		html = "\n\r";
-		assertEquals("<br/><br/>", HtmlEncoder.block(html));
+		try {
+			HtmlEncoder.text(html);
+			Assert.fail();
+		} catch (Exception ex) {
+		}
 	}
 
 	@Test

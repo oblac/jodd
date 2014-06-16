@@ -9,8 +9,11 @@ package jodd.util;
 public class HtmlEncoder {
 
 	private static final int LEN = 161;
+	private static final int LEN_XML = 0x40;
 	private static final char[][] TEXT = new char[LEN][];
-	private static final char[] NEW_LINE = "<br/>".toCharArray();
+	private static final char[][] TEXT_XML = new char[LEN_XML][];
+
+	private static final char[] QUOT = "&quot;".toCharArray();
 
 	/**
 	 * Creates HTML lookup tables for faster encoding.
@@ -19,14 +22,37 @@ public class HtmlEncoder {
 		for (int i = 0; i < LEN; i++) {
 			TEXT[i] = new char[] {(char) i};
 		}
+		for (int i = 0; i < LEN_XML; i++) {
+			TEXT_XML[i] = new char[] {(char) i};
+		}
 
-		// special HTML characters
-		TEXT['\'']	= "&#039;".toCharArray();	// apostrophe ('&apos;' doesn't work - it is not by the w3 specs)
-		TEXT['"']	= "&quot;".toCharArray();	// double quote
+		// HTML illegal chars
+
+		for (int i = 0; i <= 31; i++) {
+			if (i == 9 || i == 10 || i == 13) {
+				continue;
+			}
+			TEXT[i] = null;
+		}
+
+		TEXT[127] = null;
+
+		for (int i = 128; i <= 159; i++) {
+			TEXT[i] = null;
+		}
+
+		// HTML characters
 		TEXT['&']	= "&amp;".toCharArray();	// ampersand
 		TEXT['<']	= "&lt;".toCharArray();	    // lower than
 		TEXT['>']	= "&gt;".toCharArray();	    // greater than
 		TEXT[0xA0]	= "&nbsp;".toCharArray();	// non-breaking space
+
+		// XML characters
+		TEXT_XML['&']	= "&amp;".toCharArray();	// ampersand
+		TEXT_XML['\"']	= "&quot;".toCharArray();	// double-quote
+		TEXT_XML['\'']	= "&#39;".toCharArray();	// single-quote (&apos; is not working for all browsers)
+		TEXT_XML['<']	= "&lt;".toCharArray();	    // lower than
+		TEXT_XML['>']	= "&gt;".toCharArray();	    // greater than
 	}
 
 	// ---------------------------------------------------------------- encode text
@@ -41,40 +67,36 @@ public class HtmlEncoder {
 	 * <li>&gt; with &amp;gt;</li>
 	 * <li>\u00A0 with &amp;nbsp;</li>
 	 * </ul>
-	 * @see #text(String)
-	 * @see #block(String)
+	 *
+	 * Some characters are invalid by the spec and they can not be encoded.
+	 *
+	 * @see #text(CharSequence)
 	 */
-	public static String attribute(String value) {
-		int len;
-		if ((value == null) || ((len = value.length()) == 0)) {
-			return StringPool.EMPTY;
-		}
-		StringBuilder buffer = new StringBuilder(len + (len >> 2));
-		for (int i = 0; i < len; i++) {
-			char c = value.charAt(i);
-			if (c < LEN && c != '\'') {
-				buffer.append(TEXT[c]);
-			} else {
-				buffer.append(c);
-			}
-		}
-		return buffer.toString();
+	public static String attribute(CharSequence value) {
+		return _encodeHtml(value, '\"', QUOT);
 	}
 
 	/**
 	 * Encodes a string to HTML-safe text. The following characters are replaced:
 	 * <ul>
-	 * <li>' with &amp;#039; (&amp;apos; doesn't work in HTML4)</li>
-	 * <li>" with &amp;quot;</li>
 	 * <li>&amp; with &amp;amp;</li>
 	 * <li>&lt; with &amp;lt;</li>
 	 * <li>&gt; with &amp;gt;</li>
 	 * <li>\u00A0 with &nbsp;</li>
 	 * </ul>
-	 * @see #attribute(String)
-	 * @see #block(String)
+	 *
+	 * Some characters are invalid by the spec and they can not be encoded.
+	 *
+	 * @see #attribute(java.lang.CharSequence)
 	 */
-	public static String text(String text) {
+	public static String text(CharSequence text) {
+		return _encodeHtml(text, (char) 0, null);
+	}
+
+	/**
+	 * Encodes HTML.
+	 */
+	private static String _encodeHtml(CharSequence text, char addonChar, char[] addonCharReplacement) {
 		int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StringPool.EMPTY;
@@ -84,56 +106,50 @@ public class HtmlEncoder {
 		for (int i = 0; i < len; i++) {
 			char c = text.charAt(i);
 			if (c < LEN) {
-				buffer.append(TEXT[c]);
+				char[] encoded = TEXT[c];
+
+				if (encoded == null) {
+					continue;
+				}
+
+				if (c == addonChar) {
+					buffer.append(addonCharReplacement);
+				} else {
+					buffer.append(encoded);
+				}
 			} else {
+				if ((c >= 0xD800 && c <= 0xDFFF) || (c == 0xFFFE) || (c == 0xFFFF)) {
+					continue;
+				}
 				buffer.append(c);
 			}
 		}
 		return buffer.toString();
 	}
 
-	// ---------------------------------------------------------------- encode text block
+	// ---------------------------------------------------------------- xml
 
 	/**
-	 * Encodes text into HTML-safe block preserving paragraphs. Besides the {@link #text(String) default
-	 * special characters} the following are replaced, too:
-	 * <ul>
-	 * <li>\n with &lt;br&gt; or ignore, if previous \r already rendered</li>
-	 * <li>\r with &lt;br&gt;</li>
-	 * </ul>
-	 * <p>
-	 *  Method accepts any of CR, LF, or CR+LF as a line terminator.
+	 * Encodes XML string. In XML there are only 5 predefined character entities.
 	 */
-	public static String block(String text) {
+	public static String xml(CharSequence text) {
 		int len;
 		if ((text == null) || ((len = text.length()) == 0)) {
 			return StringPool.EMPTY;
 		}
+
 		StringBuilder buffer = new StringBuilder(len + (len >> 2));
-		char c, prev = 0;
-		for (int i = 0; i < len; i++, prev = c) {
-			c = text.charAt(i);
-			if (c < LEN) {
 
-				if (c == '\n') {
-					if (prev == '\r') {
-						continue;		// previously '\r' (CR) was encoded, so skip '\n' (LF)
-					}
-					buffer.append(NEW_LINE);
-					continue;
-				}
-
-				if (c == '\r') {
-					buffer.append(NEW_LINE);
-					continue;
-				}
-
-				buffer.append(TEXT[c]);
+		for (int i = 0; i < len; i++) {
+			char c = text.charAt(i);
+			if (c < LEN_XML) {
+				buffer.append(TEXT_XML[c]);
 			} else {
 				buffer.append(c);
 			}
 		}
 		return buffer.toString();
 	}
+
 
 }
