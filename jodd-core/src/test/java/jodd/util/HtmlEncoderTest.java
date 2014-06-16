@@ -2,7 +2,6 @@
 
 package jodd.util;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -25,11 +24,7 @@ public class HtmlEncoderTest {
 
 		html = new String(new char[]{128, 257});
 
-		try {
-			HtmlEncoder.text(html);
-			Assert.fail();
-		} catch (Exception ex) {
-		}
+		assertEquals("ā", HtmlEncoder.text(html));
 	}
 
 	@Test

@@ -289,8 +289,6 @@ public class DomBuilderTest {
 		FastCharArrayWriter charBuffer = new FastCharArrayWriter();
 		div.appendTextContent(charBuffer);
 
-		System.out.println(charBuffer.toString());
-
 		assertEquals(textContent, charBuffer.toString());
 	}
 
