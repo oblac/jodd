@@ -134,7 +134,17 @@ class ParsedTag implements Tag {
 	public CharSequence getAttributeValue(CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
 			CharSequence current = attrNames[i];
-			if (caseSensitive ? name.equals(current) : TagUtil.equalsIgnoreCase(name, current)) {
+			if (caseSensitive ? current.equals(name) : TagUtil.equalsIgnoreCase(current, name)) {
+				return attrValues[i];
+			}
+		}
+		return null;
+	}
+
+	public CharSequence getAttributeValue(char[] name) {
+		for (int i = 0; i < attributesCount; i++) {
+			CharSequence current = attrNames[i];
+			if (caseSensitive ? TagUtil.equals(current, name) : TagUtil.equalsIgnoreCase(current, name)) {
 				return attrValues[i];
 			}
 		}
@@ -144,7 +154,17 @@ class ParsedTag implements Tag {
 	public int getAttributeIndex(CharSequence name) {
 		for (int i = 0; i < attributesCount; i++) {
 			CharSequence current = attrNames[i];
-			if (caseSensitive ? name.equals(current) : TagUtil.equalsIgnoreCase(name, current)) {
+			if (caseSensitive ? current.equals(name) : TagUtil.equalsIgnoreCase(current, name)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public int getAttributeIndex(char[] name) {
+		for (int i = 0; i < attributesCount; i++) {
+			CharSequence current = attrNames[i];
+			if (caseSensitive ? TagUtil.equals(current, name) : TagUtil.equalsIgnoreCase(current, name)) {
 				return i;
 			}
 		}

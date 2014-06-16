@@ -66,10 +66,14 @@ public interface Tag {
 	 */
 	CharSequence getAttributeValue(CharSequence name);
 
+	CharSequence getAttributeValue(char[] name);
+
 	/**
 	 * Returns attribute index or <code>-1</code> if not found.
 	 */
 	int getAttributeIndex(CharSequence name);
+
+	int getAttributeIndex(char[] name);
 
 	/**
 	 * Detects if an attribute is present.
