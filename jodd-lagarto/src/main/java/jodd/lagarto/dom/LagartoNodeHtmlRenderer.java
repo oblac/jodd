@@ -124,19 +124,6 @@ public class LagartoNodeHtmlRenderer {
 		return attributeCase;
 	}
 
-	protected boolean attributeValuePreserveSingleQuote = true;
-
-	public boolean isAttributeValuePreserveSingleQuote() {
-		return attributeValuePreserveSingleQuote;
-	}
-
-	/**
-	 * Defines if attribute values should encode apostrophe or not.
-	 */
-	public void setAttributeValuePreserveSingleQuote(boolean attributeValuePreserveSingleQuote) {
-		this.attributeValuePreserveSingleQuote = attributeValuePreserveSingleQuote;
-	}
-
 	/**
 	 * Resets all cases to default.
 	 */
@@ -182,11 +169,7 @@ public class LagartoNodeHtmlRenderer {
 		if (value != null) {
 			appendable.append('=');
 			appendable.append('\"');
-			if (attributeValuePreserveSingleQuote) {
-				appendable.append(HtmlEncoder.attribute(value));
-			} else {
-				appendable.append(HtmlEncoder.text(value));
-			}
+			appendable.append(HtmlEncoder.attribute(value));
 			appendable.append('\"');
 		}
 	}

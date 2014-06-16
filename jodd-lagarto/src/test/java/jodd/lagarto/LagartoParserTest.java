@@ -63,10 +63,10 @@ public class LagartoParserTest {
 				String content = FileUtil.readString(file);
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
 
-				String formattedOut = null;
-				File formatted = new File(file.getAbsolutePath() + "-fmt.htm");
-				if (formatted.exists()) {
-					formattedOut = FileUtil.readString(formatted);
+				String formatted = null;
+				File formattedFile = new File(file.getAbsolutePath() + "-fmt.htm");
+				if (formattedFile.exists()) {
+					formatted = FileUtil.readString(formattedFile);
 				}
 
 				boolean isXml = file.getName().endsWith(".xml");
@@ -80,8 +80,8 @@ public class LagartoParserTest {
 
 				assertEquals(expectedResult, result);
 
-				if (formattedOut != null) {
-					assertEquals(formattedOut, result2);
+				if (formatted != null) {
+					assertEquals(formatted, result2);
 				} else {
 					assertEquals(content, result2);
 				}
@@ -220,7 +220,7 @@ public class LagartoParserTest {
 				result.append("wrn:[").append(message).append(NEWLINE);
 			}
 		};
-		TagWriter tagWriter = new TagWriter(out);
+
 
 		LagartoParser lagartoParser = new LagartoParser(content, false);
 		lagartoParser.getConfig().setCalculatePosition(true);
@@ -229,9 +229,9 @@ public class LagartoParserTest {
 			lagartoParser.getConfig().setParseXmlTags(true);
 		}
 
-		TagAdapterWrapper taw = new TagAdapterWrapper(visitor, tagWriter);
+		TagWriter tagWriter = new TagWriter(out);
 
-		lagartoParser.parse(taw);
+		lagartoParser.parse(new TagVisitorChain(visitor, tagWriter));
 
 		return new String[]{result.toString(), out.toString()};
 	}

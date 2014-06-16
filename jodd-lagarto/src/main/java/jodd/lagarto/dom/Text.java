@@ -8,11 +8,19 @@ import jodd.util.StringUtil;
 
 import java.io.IOException;
 
+/**
+ * Text node. Text value is stored as node value in decoded, readable form.
+ * There is also an option to get and set <b>html content</b> in
+ * raw, html form.
+ */
 public class Text extends Node {
+
+	protected String encodedText;
 
 	public Text(Document ownerDocument, String text) {
 		super(ownerDocument, NodeType.TEXT, null);
 		this.nodeValue = text;
+		this.encodedText = null;
 	}
 
 	@Override
@@ -33,9 +41,19 @@ public class Text extends Node {
 	}
 
 	/**
+	 * Sets the plain text as node value.
+	 */
+	@Override
+	public void setNodeValue(String value) {
+		encodedText = null;
+		super.setNodeValue(value);
+	}
+
+	/**
 	 * Sets HTML text, but decodes it first.
 	 */
 	public void setTextContent(String text) {
+		encodedText = text;
 		nodeValue = HtmlDecoder.decode(text);
 	}
 
@@ -44,7 +62,10 @@ public class Text extends Node {
 	 */
 	@Override
 	public String getTextContent() {
-		return HtmlEncoder.text(nodeValue);
+		if (encodedText == null) {
+			encodedText = HtmlEncoder.text(nodeValue);
+		}
+		return encodedText;
 	}
 
 	/**

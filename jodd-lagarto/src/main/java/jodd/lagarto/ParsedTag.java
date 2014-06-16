@@ -4,6 +4,7 @@ package jodd.lagarto;
 
 import jodd.util.ArraysUtil;
 import jodd.util.CharUtil;
+import jodd.util.HtmlEncoder;
 
 import java.io.IOException;
 
@@ -321,7 +322,7 @@ class ParsedTag implements Tag {
 					CharSequence value = attrValues[i];
 					if (value != null) {
 						out.append('=').append('"');
-						out.append(value);
+						out.append(HtmlEncoder.attribute(value));
 						out.append('"');
 					}
 				}

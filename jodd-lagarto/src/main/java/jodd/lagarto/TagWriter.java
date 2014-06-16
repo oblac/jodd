@@ -2,12 +2,12 @@
 
 package jodd.lagarto;
 
+import jodd.util.HtmlEncoder;
+
 import java.io.IOException;
 
 /**
  * Tag writer outputs content to destination.
- * As writer is usually called at the end of visitor chain,
- * it will not handle or warn about any errors.
  */
 public class TagWriter implements TagVisitor {
 
@@ -63,7 +63,7 @@ public class TagWriter implements TagVisitor {
 
 	public void text(CharSequence text) {
 		try {
-			appendable.append(text);
+			appendable.append(HtmlEncoder.text(text));
 		} catch (IOException ioex) {
 			throw new LagartoException(ioex);
 		}
@@ -107,4 +107,5 @@ public class TagWriter implements TagVisitor {
 
 	public void error(String message) {
 	}
+
 }

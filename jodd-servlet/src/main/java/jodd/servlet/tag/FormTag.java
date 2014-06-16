@@ -2,7 +2,6 @@
 package jodd.servlet.tag;
 
 import jodd.util.HtmlEncoder;
-import jodd.servlet.HtmlFormUtil;
 import jodd.servlet.HtmlTag;
 import jodd.servlet.JspResolver;
 import jodd.util.StringUtil;
@@ -34,7 +33,6 @@ public class FormTag extends BodyTagSupport {
 	private static final String NAME = "name";
 	private static final String OPTION = "option";
 	private static final String SELECTED = "selected";
-	private static final String IDREF = "@id(";
 
 	// ---------------------------------------------------------------- interface
 
@@ -206,19 +204,4 @@ public class FormTag extends BodyTagSupport {
 		return result.toString();
 	}
 
-	/**
-	 * Replaces the reference if found, otherwise returns <code>null</code>.
-	 */
-	protected static String replaceReference(String formId, String value) {
-		int ndx = value.indexOf(IDREF);
-		if (ndx == -1) {
-			return null;
-		}
-		int ndx2 = value.indexOf(')', ndx);
-		if (ndx2 == -1) {
-			throw new IllegalArgumentException("ID reference not closed: " + value);
-		}
-		String ref = value.substring(ndx + IDREF.length(), ndx2);
-		return value.substring(0, ndx) + formId + HtmlFormUtil.name2id(ref) + value.substring(ndx2 + 1);
-	}
 }
