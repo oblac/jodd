@@ -78,27 +78,6 @@ class ParsedTag implements Tag {
 		deepLevel--;
 	}
 
-	/**
-	 * Match tag name to given name in <b>lowercase</b>.
-	 */
-	public boolean matchTagName(char[] tagNameLowercase) {
-		int len = tagNameLowercase.length;
-		int tagNameLen = name.length();
-
-		if (len != tagNameLen) {
-			return false;
-		}
-
-		int ndx = 0;
-		while (ndx < len) {
-			if (CharUtil.toLowerAscii(name.charAt(ndx)) != tagNameLowercase[ndx]) {
-				return false;
-			}
-			ndx++;
-		}
-		return true;
-	}
-
 	// ---------------------------------------------------------------- flags
 
 	public boolean isCaseSensitive() {
@@ -283,6 +262,13 @@ class ParsedTag implements Tag {
 
 	public boolean nameEquals(CharSequence charSequence) {
 		return caseSensitive ? TagUtil.equals(name, charSequence) : TagUtil.equalsIgnoreCase(name, charSequence);
+	}
+
+	/**
+	 * Match tag name to given name in <b>lowercase</b>.
+	 */
+	public boolean matchTagName(char[] tagNameLowercase) {
+		return TagUtil.equalsToLowercase(name, tagNameLowercase);
 	}
 
 	// ---------------------------------------------------------------- util

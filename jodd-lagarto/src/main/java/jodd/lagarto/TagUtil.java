@@ -9,12 +9,29 @@ import jodd.util.CharUtil;
  */
 public class TagUtil {
 
-	public static boolean equals(CharSequence charSequence, char[] chars) {
-		if (charSequence.length() != chars.length) {
+	public static boolean equals(char[] a1, char[] a2) {
+		int length = a1.length;
+		if (a2.length != length) {
 			return false;
 		}
 
-		for (int i = 0; i < chars.length; i++) {
+		for (int i = 0; i < length; i++) {
+			if (a1[i] != a2[i]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean equals(CharSequence charSequence, char[] chars) {
+		int length = chars.length;
+
+		if (charSequence.length() != length) {
+			return false;
+		}
+
+		for (int i = 0; i < length; i++) {
 			if (charSequence.charAt(i) != chars[i]) {
 				return false;
 			}
@@ -40,11 +57,12 @@ public class TagUtil {
 	}
 
 	public static boolean equalsToLowercase(CharSequence charSequence, char[] chars) {
-		if (charSequence.length() != chars.length) {
+		int length = chars.length;
+		if (charSequence.length() != length) {
 			return false;
 		}
 
-		for (int i = 0; i < chars.length; i++) {
+		for (int i = 0; i < length; i++) {
 			char c = charSequence.charAt(i);
 
 			c = CharUtil.toLowerAscii(c);

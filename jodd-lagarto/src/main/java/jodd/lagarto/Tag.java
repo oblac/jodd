@@ -76,7 +76,7 @@ public interface Tag {
 	 */
 	boolean hasAttribute(CharSequence name);
 
-	// ---------------------------------------------------------------- advanced
+	// ---------------------------------------------------------------- position
 
 	/**
 	 * Returns tag position in the input source.
@@ -158,8 +158,17 @@ public interface Tag {
 	 * Returns <code>true</code> if name equals to given chars.
 	 */
 	boolean nameEquals(char[] chars);
-
+	/**
+	 * Returns <code>true</code> if name equals to given char sequence.
+	 */
 	boolean nameEquals(CharSequence charSequence);
+
+	/**
+	 * Matches tag name to given lowercase tag name.
+	 * Should be somewhat faster then {@link #nameEquals(char[])}
+	 * since only one name is getting converted to lower ascii.
+	 */
+	boolean matchTagName(char[] tagNameLowercase);
 
 	// ---------------------------------------------------------------- output
 
