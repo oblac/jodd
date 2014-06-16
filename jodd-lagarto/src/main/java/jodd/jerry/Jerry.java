@@ -795,7 +795,7 @@ public class Jerry implements Iterable<Jerry> {
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
-			node.addChild(workingDoc);
+			node.addChild(workingDoc.getChildNodes());
 		}
 		return this;
 	}
@@ -809,7 +809,7 @@ public class Jerry implements Iterable<Jerry> {
 
 		for (Node node : nodes) {
 			Document workingDoc = doc.clone();
-			node.insertBefore(workingDoc, node);
+			node.insertBefore(workingDoc.getChildNodes(), node);
 		}
 		return this;
 	}

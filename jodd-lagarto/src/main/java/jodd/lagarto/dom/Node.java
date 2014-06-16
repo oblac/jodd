@@ -235,6 +235,14 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
+	 * Inserts several child nodes before provided node.
+	 */
+	public void insertBefore(Node[] newChilds, Node refChild) {
+		int siblingIndex = refChild.getSiblingIndex();
+		refChild.parentNode.insertChild(newChilds, siblingIndex);
+	}
+
+	/**
 	 * Inserts node after provided node.
 	 */
 	public void insertAfter(Node newChild, Node refChild) {
