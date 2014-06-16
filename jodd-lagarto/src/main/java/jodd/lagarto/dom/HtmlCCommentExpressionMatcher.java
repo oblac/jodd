@@ -34,7 +34,7 @@ public class HtmlCCommentExpressionMatcher {
 					String value = orChunk.substring(3);
 					float number = Float.parseFloat(value);
 
-					if (matchMajorNumber(ieVersion, number) || ieVersion == number) {
+					if (versionToCompare(ieVersion, number) == number) {
 						innerValid = true;
 						break;
 					}
@@ -44,7 +44,7 @@ public class HtmlCCommentExpressionMatcher {
 					String value = orChunk.substring(4);
 					float number = Float.parseFloat(value);
 
-					if (ieVersion != number) {
+					if (versionToCompare(ieVersion, number) != number) {
 						innerValid = true;
 						break;
 					}
@@ -64,7 +64,7 @@ public class HtmlCCommentExpressionMatcher {
 					String value = orChunk.substring(7);
 					float number = Float.parseFloat(value);
 
-					if (ieVersion <= number) {
+					if (versionToCompare(ieVersion, number) <= number) {
 						innerValid = true;
 						break;
 					}
@@ -74,7 +74,7 @@ public class HtmlCCommentExpressionMatcher {
 					String value = orChunk.substring(6);
 					float number = Float.parseFloat(value);
 
-					if (ieVersion > number) {
+					if (versionToCompare(ieVersion, number) > number) {
 						innerValid = true;
 						break;
 					}
@@ -98,13 +98,9 @@ public class HtmlCCommentExpressionMatcher {
 		return valid;
 	}
 
-	private boolean matchMajorNumber(float ieVersion, float number) {
-		int majorVersion = (int) number;
-
-		// comparing only major numbers
-		if (majorVersion == number) {
-			return (int)ieVersion == majorVersion;
-		}
-		return false;
+	// If in expression IE version is represented as a natural number
+	// we should compare only major number
+	private float versionToCompare(float ieVersion, float number) {
+		return (int) number == number ? (int) ieVersion : ieVersion;
 	}
 }
