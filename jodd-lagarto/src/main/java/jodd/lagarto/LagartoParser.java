@@ -2702,15 +2702,25 @@ public class LagartoParser extends Scanner {
 	protected char[] text;
 	protected int textLen;
 
+  private void ensureCapacity() {
+		if (textLen == text.length) {
+			text = ArraysUtil.resize(text, textLen << 1);
+		}
+	}
+
+	private void ensureCapacity(int growth) {
+		int desiredLen = textLen + growth;
+		if (desiredLen > text.length) {
+			text = ArraysUtil.resize(text, Math.max(textLen << 1, desiredLen));
+		}
+	}
+
 	/**
 	 * Emits characters into the local text buffer.
 	 */
 	protected void textEmitChar(char c) {
-		if (textLen == text.length) {
-			text = ArraysUtil.resize(text, textLen << 1);
-		}
-		text[textLen] = c;
-		textLen++;
+		ensureCapacity();
+		text[textLen++] = c;
 	}
 
 	/**
@@ -2721,15 +2731,16 @@ public class LagartoParser extends Scanner {
 	}
 
 	protected void textEmitChars(int from, int to) {
+		ensureCapacity(to - from);
 		while (from < to) {
-			textEmitChar(input[from]);
-			from++;
+			text[textLen++] = input[from++];
 		}
 	}
 
 	protected void textEmitChars(char[] buffer) {
+		ensureCapacity(buffer.length);
 		for (char aBuffer : buffer) {
-			textEmitChar(aBuffer);
+			text[textLen++] = aBuffer;
 		}
 	}
 
