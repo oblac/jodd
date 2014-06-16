@@ -51,6 +51,12 @@ public class HelloActionTest {
 	}
 
 	@Test
+	public void testHelloReqReqAction() {
+		HttpResponse response = HttpRequest.get("localhost:8080/hello.reqreq.html?hey=YOU").body("Jodd").send();
+		assertEquals("Hello YOU GET Jodd", response.bodyText().trim());
+	}
+
+	@Test
 	public void testHelloNoJspAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/nohello.nojsp.html").send();
 		assertEquals(404, response.statusCode());

@@ -11,6 +11,7 @@ import jodd.madvoc.component.ScopeDataResolver;
 import jodd.servlet.CsrfShield;
 import jodd.servlet.map.HttpServletContextMap;
 import jodd.servlet.map.HttpServletRequestMap;
+import jodd.servlet.map.HttpServletRequestParamMap;
 import jodd.servlet.map.HttpSessionMap;
 import jodd.servlet.ServletUtil;
 import jodd.util.StringUtil;
@@ -20,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * Injects values from various Servlet contexts.
@@ -38,6 +40,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	public static final String SESSION_NAME = "session";
 	public static final String CONTEXT_NAME = "context";
 	public static final String REQUEST_MAP = "requestMap";
+	public static final String REQUEST_PARAM_MAP = "requestParamMap";
+	public static final String REQUEST_BODY = "requestBody";
 	public static final String SESSION_MAP = "sessionMap";
 	public static final String CONTEXT_MAP = "contextMap";
 
@@ -89,6 +93,16 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 				// names
 				if (in.name.equals(REQUEST_MAP)) {
 					value = new HttpServletRequestMap(servletRequest);
+				} else if (in.name.equals(REQUEST_PARAM_MAP)) {
+					value = new HttpServletRequestParamMap(servletRequest);
+				} else if (in.name.equals(REQUEST_BODY)) {
+					try {
+						value = ServletUtil.readRequestBody(servletRequest);
+					} catch (IOException e) {
+						value = e.toString();
+					}
+				} else if (in.name.equals(REQUEST_BODY)) {
+					value = new HttpServletRequestParamMap(servletRequest);
 				} else if (in.name.equals(SESSION_MAP)) {
 					value = new HttpSessionMap(servletRequest);
 				} else if (in.name.equals(CONTEXT_MAP)) {

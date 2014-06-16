@@ -40,12 +40,12 @@ public class HttpServletRequestParamMap extends StringKeyedMapAdapter {
 
 	@Override
 	protected void setAttribute(String key, Object value) {
-		throw new UnsupportedOperationException("Map is read-only");
+		throw new UnsupportedOperationException("Read-only map");
 	}
 
 	@Override
 	protected void removeAttribute(String key) {
-		throw new UnsupportedOperationException("Map is read-only");
+		throw new UnsupportedOperationException("Read-only map");
 	}
 
 	@Override

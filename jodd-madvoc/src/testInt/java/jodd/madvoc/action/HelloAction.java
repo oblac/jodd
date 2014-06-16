@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @MadvocAction
 public class HelloAction {
@@ -74,6 +75,29 @@ public class HelloAction {
 	public String direct() throws IOException {
 		servletResponse.getWriter().print("Direct stream output");
 		return "none:";
+	}
+
+	@In(scope = ScopeType.SERVLET)
+	Map<String, String> requestParamMap;
+
+	@In(scope = ScopeType.SERVLET)
+	@Out
+	String requestMethod;
+
+	static class ReqReqOut {
+		@Out
+		public String name;
+	}
+
+	@In(scope = ScopeType.SERVLET)
+	@Out
+	String requestBody;
+
+	@Action
+	public void reqreq(ReqReqOut reqReqOut) {
+		String hey = requestParamMap.get("hey");
+
+		reqReqOut.name = hey;
 	}
 
 	// ----------------------------------------------------------------
