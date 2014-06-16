@@ -81,7 +81,7 @@ public class Text extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderText(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.text(this);
 	}
 }

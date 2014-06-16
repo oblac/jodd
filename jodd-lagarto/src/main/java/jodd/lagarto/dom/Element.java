@@ -5,8 +5,6 @@ package jodd.lagarto.dom;
 import jodd.lagarto.Tag;
 import jodd.util.Util;
 
-import java.io.IOException;
-
 /**
  * Tag node.
  */
@@ -72,8 +70,8 @@ public class Element extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderElement(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.element(this);
 	}
 
 	@Override

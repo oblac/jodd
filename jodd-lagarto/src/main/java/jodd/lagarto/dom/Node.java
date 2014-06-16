@@ -1014,48 +1014,68 @@ public abstract class Node implements Cloneable {
 		}
 	}
 
+	// ---------------------------------------------------------------- visit
+
 	/**
 	 * Generates HTML.
 	 */
 	public String getHtml() {
-		StringBuilder sb = new StringBuilder();
-		try {
-			toHtml(sb);
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
+		LagartoDomBuilderConfig lagartoDomBuilderConfig;
+		if (ownerDocument == null) {
+			lagartoDomBuilderConfig = ((Document) this).getConfig();
+		} else {
+			lagartoDomBuilderConfig = ownerDocument.getConfig();
 		}
-		return sb.toString();
+
+		LagartoHtmlRenderer lagartoHtmlRenderer =
+				lagartoDomBuilderConfig.getLagartoHtmlRenderer();
+
+		return lagartoHtmlRenderer.toHtml(this, new StringBuilder());
 	}
 
 	/**
 	 * Generates inner HTML.
 	 */
 	public String getInnerHtml() {
-		StringBuilder sb = new StringBuilder();
-		try {
-			toInnerHtml(sb);
-		} catch (IOException ioex) {
-			throw new LagartoDOMException(ioex);
+		LagartoDomBuilderConfig lagartoDomBuilderConfig;
+		if (ownerDocument == null) {
+			lagartoDomBuilderConfig = ((Document) this).getConfig();
+		} else {
+			lagartoDomBuilderConfig = ownerDocument.getConfig();
 		}
-		return sb.toString();
+
+		LagartoHtmlRenderer lagartoHtmlRenderer =
+				lagartoDomBuilderConfig.getLagartoHtmlRenderer();
+
+		return lagartoHtmlRenderer.toInnerHtml(this, new StringBuilder());
 	}
 
 	/**
-	 * Generates HTML by appending it to the provided <code>Appendable</code>.
+	 * Visits the DOM tree.
 	 */
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderNodeValue(this, appendable);
-		toInnerHtml(appendable);
+	public void visit(NodeVisitor nodeVisitor) {
+		visitNode(nodeVisitor);
 	}
 
-	protected void toInnerHtml(Appendable appendable) throws IOException {
+	/**
+	 * Visits children nodes.
+	 */
+	protected void visitChildren(NodeVisitor nodeVisitor) {
 		if (childNodes != null) {
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node childNode = childNodes.get(i);
-				childNode.toHtml(appendable);
+				childNode.visit(nodeVisitor);
 			}
 		}
 	}
+
+	/**
+	 * Visits single node. Implementations just needs to call
+	 * the correct visitor callback function.
+	 */
+	protected abstract void visitNode(NodeVisitor nodeVisitor);
+
+	// ---------------------------------------------------------------- misc
 
 	/**
 	 * Returns deep level.

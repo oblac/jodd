@@ -13,10 +13,9 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		enableHtmlMode();
 	}
 
-	// ---------------------------------------------------------------- flags
+	// ---------------------------------------------------------------- config
 
 	protected LagartoDomBuilderConfig config = new LagartoDomBuilderConfig();
-	protected LagartoNodeHtmlRenderer renderer = new LagartoNodeHtmlRenderer();
 
 	public LagartoDomBuilderConfig getConfig() {
 		return config;
@@ -24,20 +23,6 @@ public class LagartoDOMBuilder implements DOMBuilder {
 
 	public void setConfig(LagartoDomBuilderConfig config) {
 		this.config = config;
-	}
-
-	/**
-	 * Returns {@link LagartoNodeHtmlRenderer} instance that generates HTML output.
-	 */
-	public LagartoNodeHtmlRenderer getRenderer() {
-		return renderer;
-	}
-
-	/**
-	 * Sets new renderer.
-	 */
-	public void setRenderer(LagartoNodeHtmlRenderer renderer) {
-		this.renderer = renderer;
 	}
 
 	// ---------------------------------------------------------------- quick settings
@@ -84,7 +69,6 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.impliedEndTags = true;							// some tags end is implied
 		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
 		config.setParseXmlTags(false);							// enable XML mode in parsing
-		renderer.reset();
 		return this;
 	}
 
@@ -100,7 +84,6 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.impliedEndTags = false;							// no implied tag ends
 		config.setEnableConditionalComments(false);				// don't enable IE conditional comments
 		config.setParseXmlTags(false);							// enable XML mode in parsing
-		renderer.reset();
 		return this;
 	}
 
@@ -116,7 +99,6 @@ public class LagartoDOMBuilder implements DOMBuilder {
 		config.impliedEndTags = false;							// no implied tag ends
 		config.setEnableConditionalComments(false);				// disable IE conditional comments
 		config.setParseXmlTags(true);							// enable XML mode in parsing
-		renderer.reset();
 		return this;
 	}
 

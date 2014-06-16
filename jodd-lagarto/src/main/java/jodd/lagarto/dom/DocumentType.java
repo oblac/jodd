@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.io.IOException;
-
 /**
  * Document type node.
  */
@@ -38,7 +36,7 @@ public class DocumentType extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderDocumentType(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.documentType(this);
 	}
 }

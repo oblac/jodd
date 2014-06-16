@@ -102,7 +102,7 @@ public class FormTagTest {
 	@Test
 	public void testTextarea() {
 		assertEquals("<textarea name='foo'>*foo*</textarea>", form("<textarea name='foo'></textarea>"));
-		assertEquals("<textarea name='foo'>*&quot;foo*</textarea>", form2("<textarea name='foo'></textarea>"));
+		assertEquals("<textarea name='foo'>*\"foo*</textarea>", form2("<textarea name='foo'></textarea>"));
 	}
 
 	@Test

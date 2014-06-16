@@ -8,65 +8,68 @@ import jodd.util.HtmlEncoder;
 import java.io.IOException;
 
 /**
- * Pretty HTML code generator from {@link Node}.
+ * {@link jodd.lagarto.dom.NodeVisitor} that renders DOM tree to string.
  */
-public class LagartoNodeHtmlRenderer {
+public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 
-	/**
-	 * Renders generic node value.
-	 */
-	public void renderNodeValue(Node node, Appendable appendable) throws IOException {
-		String nodeValue = node.getNodeValue();
+	protected final Appendable appendable;
 
-		if (nodeValue != null) {
-			appendable.append(nodeValue);
+	public LagartoHtmlRendererNodeVisitor(Appendable appendable) {
+		this.appendable = appendable;
+	}
+
+	public void cdata(CData cdata) {
+		String nodeValue = cdata.getNodeValue();
+		try {
+			TagWriterUtil.writeCData(appendable, nodeValue);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
 		}
 	}
 
-	/**
-	 * Renders {@link CData cdata}.
-	 */
-	public void renderCData(CData cdata, Appendable appendable) throws IOException {
-		String nodeValue = cdata.getNodeValue();
-		TagWriterUtil.writeCData(appendable, nodeValue);
-	}
-
-	/**
-	 * Renders {@link Comment comments}.
-	 */
-	public void renderComment(Comment comment, Appendable appendable) throws IOException {
+	public void comment(Comment comment) {
 		String nodeValue = comment.getNodeValue();
 
-		TagWriterUtil.writeComment(appendable, nodeValue);
+		try {
+			TagWriterUtil.writeComment(appendable, nodeValue);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
 	}
 
-	/**
-	 * Renders {@link DocumentType}.
-	 */
-	public void renderDocumentType(DocumentType documentType, Appendable appendable) throws IOException {
-		TagWriterUtil.writeDoctype(appendable,
-				documentType.nodeValue,
-				documentType.publicId,
-				documentType.systemId);
+	public void document(Document document) {
+		document.visitChildren(this);
 	}
 
-	/**
-	 * Renders {@link Text text} nodes.
-	 */
-	public void renderText(Text text, Appendable appendable) throws IOException {
+	public void documentType(DocumentType documentType) {
+		try {
+			TagWriterUtil.writeDoctype(appendable,
+					documentType.nodeValue,
+					documentType.publicId,
+					documentType.systemId);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
+	}
+
+	public void text(Text text) {
 		String nodeValue = text.getTextContent();
 
-		appendable.append(nodeValue);
+		try {
+			appendable.append(nodeValue);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
 	}
 
-	/**
-	 * Renders {@link XmlDeclaration} nodes.
-	 */
-	public void renderXmlDeclaration(XmlDeclaration xmlDeclaration, Appendable appendable) throws IOException {
-		TagWriterUtil.writeXml(appendable,
-				xmlDeclaration.getVersion(), xmlDeclaration.getEncoding(), xmlDeclaration.getStandalone());
+	public void xmlDeclaration(XmlDeclaration xmlDeclaration) {
+		try {
+			TagWriterUtil.writeXml(appendable,
+					xmlDeclaration.getVersion(), xmlDeclaration.getEncoding(), xmlDeclaration.getStandalone());
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
 	}
-
 
 	// ---------------------------------------------------------------- element
 
@@ -174,10 +177,15 @@ public class LagartoNodeHtmlRenderer {
 		}
 	}
 
-	/**
-	 * Renders single element.
-	 */
-	public void renderElement(Element element, Appendable appendable) throws IOException {
+	public void element(Element element) {
+		try {
+			_element(element);
+		} catch (IOException ioex) {
+			throw new LagartoDOMException(ioex);
+		}
+	}
+
+	protected void _element(Element element) throws IOException {
 		String nodeName = resolveNodeName(element);
 
 		appendable.append('<');
@@ -207,19 +215,7 @@ public class LagartoNodeHtmlRenderer {
 		}
 
 		if (childCount != 0) {
-			if (element.isRawTag()) {
-				for (int i = 0; i < childCount; i++) {
-					Node childNode = element.getChild(i);
-
-					if (childNode.getNodeType() == Node.NodeType.TEXT) {
-						appendable.append(childNode.getNodeValue());
-					} else {
-						childNode.toInnerHtml(appendable);
-					}
-				}
-			} else {
-				renderElementBody(element, appendable);
-			}
+			elementBody(element);
 		}
 
 		appendable.append("</");
@@ -227,11 +223,22 @@ public class LagartoNodeHtmlRenderer {
 		appendable.append('>');
 	}
 
-	/**
-	 * Renders element body.
-	 */
-	protected void renderElementBody(Element element, Appendable appendable) throws IOException {
-		element.toInnerHtml(appendable);
+	protected void elementBody(Element element) throws IOException {
+		int childCount = element.getChildNodesCount();
+
+		if (element.isRawTag()) {
+			for (int i = 0; i < childCount; i++) {
+				Node childNode = element.getChild(i);
+
+				if (childNode.getNodeType() == Node.NodeType.TEXT) {
+					appendable.append(childNode.getNodeValue());
+				} else {
+					childNode.visit(this);
+				}
+			}
+		} else {
+			element.visitChildren(this);
+		}
 	}
 
 }

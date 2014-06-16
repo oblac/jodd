@@ -211,7 +211,7 @@ public class HtmlTag {
 	public void setAttribute(String name, String value) {
 		parseAttributes();
 		changed = true;
-		attributes.put(name.toLowerCase(), HtmlEncoder.text(value));
+		attributes.put(name.toLowerCase(), HtmlEncoder.attribute(value));
 	}
 
 	/**

@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.io.IOException;
-
 /**
  * CDATA node.
  */
@@ -20,8 +18,7 @@ public class CData extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderCData(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.cdata(this);
 	}
-
 }

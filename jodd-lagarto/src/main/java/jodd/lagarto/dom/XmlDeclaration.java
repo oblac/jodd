@@ -4,8 +4,6 @@ package jodd.lagarto.dom;
 
 import jodd.util.Util;
 
-import java.io.IOException;
-
 /**
  * XML declaration node.
  */
@@ -41,8 +39,7 @@ public class XmlDeclaration extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderXmlDeclaration(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.xmlDeclaration(this);
 	}
-
 }

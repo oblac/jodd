@@ -2,8 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.io.IOException;
-
 /**
  * Comment node.
  */
@@ -23,8 +21,7 @@ public class Comment extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		ownerDocument.getRenderer().renderComment(this, appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.comment(this);
 	}
-
 }

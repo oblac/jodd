@@ -23,6 +23,8 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 	protected boolean useFosterRules;
 	protected boolean unclosedTagAsOrphanCheck;
 
+	protected LagartoHtmlRenderer lagartoHtmlRenderer = new LagartoHtmlRenderer();
+
 	// ---------------------------------------------------------------- access
 
 	public boolean isUnclosedTagAsOrphanCheck() {
@@ -149,4 +151,11 @@ public class LagartoDomBuilderConfig extends LagartoParserConfig<LagartoDomBuild
 		return this;
 	}
 
+	public LagartoHtmlRenderer getLagartoHtmlRenderer() {
+		return lagartoHtmlRenderer;
+	}
+
+	public void setLagartoHtmlRenderer(LagartoHtmlRenderer lagartoHtmlRenderer) {
+		this.lagartoHtmlRenderer = lagartoHtmlRenderer;
+	}
 }

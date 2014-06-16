@@ -2,7 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,26 +13,24 @@ public class Document extends Node {
 
 	protected long elapsedTime;
 	protected final LagartoDomBuilderConfig config;
-	protected final LagartoNodeHtmlRenderer renderer;
 	protected List<String> errors;
 
 	public Document() {
-		this(new LagartoDomBuilderConfig(), new LagartoNodeHtmlRenderer());
+		this(new LagartoDomBuilderConfig());
 	}
 
 	/**
 	 * Document constructor with all relevant flags.
 	 */
-	public Document(LagartoDomBuilderConfig config, LagartoNodeHtmlRenderer renderer) {
+	public Document(LagartoDomBuilderConfig config) {
 		super(null, NodeType.DOCUMENT, null);
-		this.renderer = renderer;
 		this.config = config;
 		this.elapsedTime = System.currentTimeMillis();
 	}
 
 	@Override
 	public Document clone() {
-		Document document = cloneTo(new Document(config, renderer));
+		Document document = cloneTo(new Document(config));
 		document.elapsedTime = this.elapsedTime;
 		return document;
 	}
@@ -46,8 +43,8 @@ public class Document extends Node {
 	}
 
 	@Override
-	public void toHtml(Appendable appendable) throws IOException {
-		super.toInnerHtml(appendable);
+	protected void visitNode(NodeVisitor nodeVisitor) {
+		nodeVisitor.document(this);
 	}
 
 	// ---------------------------------------------------------------- errors
@@ -97,13 +94,6 @@ public class Document extends Node {
 	 */
 	public LagartoDomBuilderConfig getConfig() {
 		return config;
-	}
-
-	/**
-	 * Returns renderer for nodes.
-	 */
-	public LagartoNodeHtmlRenderer getRenderer() {
-		return renderer;
 	}
 
 }

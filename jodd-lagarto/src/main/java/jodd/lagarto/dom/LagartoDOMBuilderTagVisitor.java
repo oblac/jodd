@@ -64,7 +64,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		log.debug("DomTree builder started");
 
 		if (rootNode == null) {
-			rootNode = new Document(domBuilder.config, domBuilder.getRenderer());
+			rootNode = new Document(domBuilder.config);
 		}
 		parentNode = rootNode;
 		enabled = true;
