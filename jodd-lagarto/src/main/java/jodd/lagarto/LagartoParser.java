@@ -2702,7 +2702,7 @@ public class LagartoParser extends Scanner {
 	protected char[] text;
 	protected int textLen;
 
-  private void ensureCapacity() {
+	private void ensureCapacity() {
 		if (textLen == text.length) {
 			text = ArraysUtil.resize(text, textLen << 1);
 		}

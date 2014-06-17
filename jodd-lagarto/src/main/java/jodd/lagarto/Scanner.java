@@ -38,8 +38,14 @@ class Scanner {
 	 * Returns <code>-1</code> if character is not found.
 	 */
 	protected final int find(char target, int from, int end) {
-		while (from < end && input[from++] != target) { }
-		return from == end? -1: from;
+		while (from < end) {
+			if (input[from] == target) {
+				break;
+			}
+			from++;
+		}
+
+		return (from == end) ? -1 : from;
 	}
 
 	/**
@@ -47,10 +53,15 @@ class Scanner {
 	 * Returns <code>-1</code> if character is not found.
 	 */
 	protected final int find(char[] target, int from, int end) {
-		while (from < end && !match(target, from++)) { }
-		return from == end? -1: from;
-	}
+		while (from < end) {
+			if (match(target, from)) {
+				break;
+			}
+			from++;
+		}
 
+		return (from == end) ? -1 : from;
+	}
 
 	// ---------------------------------------------------------------- match
 
