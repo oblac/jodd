@@ -14,7 +14,7 @@ public class HtmlCCommentExpressionMatcher {
 	 * Returns <code>true</code> it conditional comment expression is positive,
 	 * otherwise returns <code>false</code>.
 	 */
-	protected boolean match(float ieVersion, String expression) {
+	public boolean match(float ieVersion, String expression) {
 		expression = StringUtil.removeChars(expression, "()");
 		expression = expression.substring(3);
 
