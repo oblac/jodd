@@ -88,7 +88,11 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	@Override
 	protected boolean visitProperty(String name, Object value) {
-		BeanUtil.setPropertySilent(destination, name, value);
+		if (declared) {
+			BeanUtil.setDeclaredPropertySilent(destination, name, value);
+		} else {
+			BeanUtil.setPropertySilent(destination, name, value);
+		}
 
 		return true;
 	}
