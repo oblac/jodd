@@ -23,6 +23,7 @@ import org.junit.runners.Suite;
 		ArgsTest.class,
 		TypesTest.class,
 		ExcTest.class,
+		UserActionTest.class,
 })
 public class MadvocSuite {
 
