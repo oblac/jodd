@@ -8,13 +8,10 @@ import jodd.lagarto.LagartoParser;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.mutable.MutableInteger;
-import jodd.servlet.HtmlTag;
-import jodd.util.StringTemplateParser;
 import jodd.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * JSP pre-processor. Process input content and replace all macro calls

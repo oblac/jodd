@@ -12,9 +12,9 @@ import javax.servlet.jsp.PageContext;
  * Resolves values and attributes on JSP page.
  * May be used by it's static methods, but you need to provide
  * either <code>PageContext</code> or <code>ServletRequest</code>
- * every time. The other scenario is to create the instance
- * of <code>JspResolver</code> on top of the page, and then
- * use it later on.
+ * every time. The other approach is to create the instance
+ * of <code>JspResolver</code> on top of the page and then
+ * reuse it later on.
  */
 public class JspResolver {
 
