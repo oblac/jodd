@@ -12,6 +12,7 @@ dependencies {
 	compile project(':jodd-proxetta')
 	compile project(':jodd-mail')
 	compile project(':jodd-log')
+	compile project(':jodd-lagarto')
 
 	testCompile project(':jodd-http')
 	testCompile lib.junit

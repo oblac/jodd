@@ -3,6 +3,11 @@
 package jodd.joy.jspp;
 
 import jodd.io.FileUtil;
+import jodd.lagarto.EmptyTagVisitor;
+import jodd.lagarto.LagartoParser;
+import jodd.lagarto.Tag;
+import jodd.lagarto.TagType;
+import jodd.mutable.MutableInteger;
 import jodd.servlet.HtmlTag;
 import jodd.util.StringTemplateParser;
 import jodd.util.StringUtil;
@@ -17,7 +22,7 @@ import java.util.Map;
  */
 public class Jspp {
 
-	protected String tagPrefix = "pp:";
+	protected char[] tagPrefix = "pp:".toCharArray();
 	protected String macroExtension = ".jspf";
 	protected File jsppMacroFolder;
 	protected String macroPrefix = "${";
@@ -26,14 +31,14 @@ public class Jspp {
 	// ---------------------------------------------------------------- get/set
 
 	public String getTagPrefix() {
-		return tagPrefix;
+		return new String(tagPrefix);
 	}
 
 	/**
 	 * Defines macro tag prefix for JSP files.
 	 */
 	public void setTagPrefix(String tagPrefix) {
-		this.tagPrefix = tagPrefix;
+		this.tagPrefix = tagPrefix.toCharArray();
 	}
 
 	public String getMacroExtension() {
@@ -85,26 +90,44 @@ public class Jspp {
 	/**
 	 * Processes input JSP content and replace macros.
 	 */
-	public String process(String input) {
-		StringTemplateParser tagParser = createStringTemplateParser();
+	public String process(final String input) {
+		LagartoParser lagartoParser = new LagartoParser(input, true);
 
-		return tagParser.parse(input, new StringTemplateParser.MacroResolver() {
-			public String resolve(String macro) {
-				HtmlTag htmlTag = new HtmlTag("<" + macro + "/>");
-				String tagName = htmlTag.getTagName();
+		final MutableInteger lastPosition = new MutableInteger(0);
+		final StringBuilder sb = new StringBuilder();
 
-				String macroBody = loadMacro(tagName);
+		lagartoParser.parse(new EmptyTagVisitor() {
+			@Override
+			public void tag(Tag tag) {
+				if (tag.getType() == TagType.SELF_CLOSING) {
+					if (tag.matchTagNamePrefix(tagPrefix)) {
+						int tagStart = tag.getTagPosition();
 
-				Map<String, String> attributes = htmlTag.getAttributes();
+						sb.append(input.substring(lastPosition.getValue(), tagStart));
 
-				// replace attributes with values
-				for (Map.Entry<String, String> entry : attributes.entrySet()) {
-					String key = macroPrefix + entry.getKey() + macroSuffix;
-					macroBody = StringUtil.replace(macroBody, key, entry.getValue());
+						String tagName = tag.getName().toString();
+						tagName = tagName.substring(tagPrefix.length);
+
+						String macroBody = loadMacro(tagName);
+
+						int attrCount = tag.getAttributeCount();
+
+						for (int i = 0; i < attrCount; i++) {
+							String key = macroPrefix + tag.getAttributeName(i) + macroSuffix;
+							macroBody = StringUtil.replace(macroBody, key, tag.getAttributeValue(i).toString());
+						}
+
+						sb.append(macroBody);
+
+						lastPosition.setValue(tagStart + tag.getTagLength());
+					}
 				}
-				return macroBody;
 			}
 		});
+
+		sb.append(input.substring(lastPosition.getValue()));
+
+		return sb.toString();
 	}
 
 	/**
@@ -120,17 +143,6 @@ public class Jspp {
 			throw new JsppException(ioex);
 		}
 		return macroBody;
-	}
-
-	/**
-	 * Creates new string template parser.
-	 */
-	protected StringTemplateParser createStringTemplateParser() {
-		StringTemplateParser tagParser = new StringTemplateParser();
-		tagParser.setMacroStart("<" + tagPrefix);
-		tagParser.setMacroEnd("/>");
-		tagParser.setEscapeChar((char) 0);
-		return tagParser;
 	}
 
 }
