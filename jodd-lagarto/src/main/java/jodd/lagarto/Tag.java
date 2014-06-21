@@ -100,12 +100,12 @@ public interface Tag {
 	// ---------------------------------------------------------------- write
 
 	/**
-	 * Sets new tag name.
+	 * Sets tag name.
 	 */
 	void setName(CharSequence tagName);
 
 	/**
-	 * Sets new tag type.
+	 * Sets {@link jodd.lagarto.TagType tag type}.
 	 */
 	void setType(TagType type);
 
@@ -117,32 +117,36 @@ public interface Tag {
 
 	/**
 	 * Sets new attribute value. If attribute already exist, it's value is changed.
-	 * If attribute does not exist, it will be added to the list.
+	 * If attribute does not exist, it will be added to the tag.
 	 */
 	void setAttribute(CharSequence name, CharSequence value);
 
 	/**
-	 * Sets value for attribute at specific index.
+	 * Sets value for attribute at specific index. Throws exception
+	 * if index is invalid.
 	 */
 	void setAttributeValue(int index, CharSequence value);
 
 	/**
-	 * Sets value for attribute at specific index.
+	 * Sets value for attribute with given name. If attribute with given
+	 * name doesn't exist, nothing changes.
 	 */
 	void setAttributeValue(CharSequence name, CharSequence value);
 
 	/**
-	 * Changes attribute name on specific index.
+	 * Changes attribute name on specific index. Throws exception
+	 * if index is invalid.
 	 */
 	void setAttributeName(int index, CharSequence name);
 
 	/**
-	 * Removes attribute.
+	 * Removes attribute at given index. Throws exception
+	 * if index is invalid.
 	 */
 	void removeAttribute(int index);
 
 	/**
-	 * Removes attribute.
+	 * Removes attribute by given name.
 	 */
 	void removeAttribute(CharSequence name);
 
@@ -168,11 +172,16 @@ public interface Tag {
 	boolean nameEquals(CharSequence charSequence);
 
 	/**
-	 * Matches tag name to given lowercase tag name.
+	 * Matches tag name to given <b>lowercase</b> tag name.
 	 * Should be somewhat faster then {@link #nameEquals(char[])}
 	 * since only one name is getting converted to lower ascii.
 	 */
 	boolean matchTagName(char[] tagNameLowercase);
+
+	/**
+	 * Matches tag name to given <b>lowercase</b> prefix.
+	 */
+	boolean matchTagNamePrefix(char[] tagPrefix);
 
 	// ---------------------------------------------------------------- output
 

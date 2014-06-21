@@ -235,8 +235,8 @@ class ParsedTag implements Tag {
 		int index = getAttributeIndex(name);
 		if (index != -1) {
 			setAttrVal(index, name, value);
+			modified = true;
 		}
-		modified = true;
 	}
 
 	public void setAttributeName(int index, CharSequence name) {
@@ -290,6 +290,10 @@ class ParsedTag implements Tag {
 	public boolean matchTagName(char[] tagNameLowercase) {
 		return TagUtil.equalsToLowercase(name, tagNameLowercase);
 	}
+
+	public boolean matchTagNamePrefix(char[] tagNamePrefixLowercase) {
+			return TagUtil.startsWithLowercase(name, tagNamePrefixLowercase);
+		}
 
 	// ---------------------------------------------------------------- util
 

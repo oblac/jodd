@@ -5,9 +5,11 @@ package jodd.lagarto;
 import jodd.util.CharUtil;
 
 /**
- * Some <code>CharSequence</code> utils.
+ * Some <code>CharSequence</code> and <code>char[]</code> utils.
  */
 public class TagUtil {
+
+	// ---------------------------------------------------------------- equals
 
 	public static boolean equals(char[] a1, char[] a2) {
 		int length = a1.length;
@@ -56,6 +58,8 @@ public class TagUtil {
 		return true;
 	}
 
+	// ---------------------------------------------------------------- equals to lowercase
+
 	public static boolean equalsToLowercase(CharSequence charSequence, char[] chars) {
 		int length = chars.length;
 		if (charSequence.length() != length) {
@@ -94,6 +98,27 @@ public class TagUtil {
 
 		return true;
 	}
+
+	public static boolean startsWithLowercase(CharSequence charSequence, char[] chars) {
+		int length = chars.length;
+		if (charSequence.length() < length) {
+			return false;
+		}
+
+		for (int i = 0; i < length; i++) {
+			char c = charSequence.charAt(i);
+
+			c = CharUtil.toLowerAscii(c);
+
+			if (c != chars[i]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// ---------------------------------------------------------------- equals ignore case
 
 	public static boolean equalsIgnoreCase(CharSequence charSequence1, char[] chars2) {
 		int len = charSequence1.length();
