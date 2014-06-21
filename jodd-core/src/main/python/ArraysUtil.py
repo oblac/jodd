@@ -27,7 +27,7 @@ f.write('''
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static <T> T[] wrap(T... elements) {
+	public static <T> T[] array(T... elements) {
 		return elements;
 	}
 ''')
@@ -35,7 +35,7 @@ template = '''
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static $T[] wrap($T... elements) {
+	public static $T[] $Ts($T... elements) {
 		return elements;
 	}
 '''

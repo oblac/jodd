@@ -1,3 +1,4 @@
+
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.util;
@@ -7,7 +8,7 @@ import static jodd.util.StringPool.NULL;
 
 /**
  * Array utilities.
- * <b>DO NOT MODIFY: this source is generated.</b> 
+ * <b>DO NOT MODIFY: this source is generated.</b>
  */
 public class ArraysUtil {
 
@@ -16,63 +17,63 @@ public class ArraysUtil {
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static <T> T[] wrap(T... elements) {
+	public static <T> T[] array(T... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static byte[] wrap(byte... elements) {
+	public static byte[] bytes(byte... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static char[] wrap(char... elements) {
+	public static char[] chars(char... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static short[] wrap(short... elements) {
+	public static short[] shorts(short... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static int[] wrap(int... elements) {
+	public static int[] ints(int... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static long[] wrap(long... elements) {
+	public static long[] longs(long... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static float[] wrap(float... elements) {
+	public static float[] floats(float... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static double[] wrap(double... elements) {
+	public static double[] doubles(double... elements) {
 		return elements;
 	}
 
 	/**
 	 * Wraps elements into an array.
 	 */
-	public static boolean[] wrap(boolean... elements) {
+	public static boolean[] booleans(boolean... elements) {
 		return elements;
 	}
 
@@ -85,7 +86,7 @@ public class ArraysUtil {
 	@SuppressWarnings({"unchecked"})
 	public static <T> T[] join(T[]... arrays) {
 		Class<T> componentType = (Class<T>) arrays.getClass().getComponentType().getComponentType();
-		return join(componentType, arrays);	
+		return join(componentType, arrays);
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class ArraysUtil {
 	public static <T> T[] join(Class<T> componentType, T[][] arrays) {
 		if (arrays.length == 1) {
 			return arrays[0];
-		}		
+		}
 		int length = 0;
 		for (T[] array : arrays) {
 			length += array.length;
@@ -330,7 +331,7 @@ public class ArraysUtil {
 		System.arraycopy(buffer, 0, temp, 0, buffer.length >= newSize ? newSize : buffer.length);
 		return temp;
 	}
-		
+
 
 	/**
 	 * Resizes a <code>String</code> array.

@@ -999,10 +999,10 @@ public class StringUtilTest {
 
 	@Test
 	public void testMerge() {
-		String s = StringUtil.merge(ArraysUtil.wrap("1", "2", "3"), ".");
+		String s = StringUtil.merge(ArraysUtil.array("1", "2", "3"), ".");
 		assertEquals("1.2.3", s);
 
-		s = StringUtil.merge(ArraysUtil.wrap("1"), ".");
+		s = StringUtil.merge(ArraysUtil.array("1"), ".");
 		assertEquals("1", s);
 
 		s = StringUtil.merge(new String[0], ".");
