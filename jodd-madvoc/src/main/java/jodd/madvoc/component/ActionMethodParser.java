@@ -24,6 +24,7 @@ import jodd.util.StringUtil;
 import jodd.util.StringPool;
 import jodd.petite.meta.PetiteInject;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
@@ -88,9 +89,9 @@ public class ActionMethodParser {
 	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, String actionPath) {
 
 		// interceptors
-		Class<? extends ActionInterceptor>[] interceptorClasses = readMethodInterceptors(actionMethod);
+		Class<? extends ActionInterceptor>[] interceptorClasses = readActionInterceptors(actionMethod);
 		if (interceptorClasses == null) {
-			interceptorClasses = readClassInterceptors(actionClass);
+			interceptorClasses = readActionInterceptors(actionClass);
 		}
 		if (interceptorClasses == null) {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
@@ -99,9 +100,9 @@ public class ActionMethodParser {
 		ActionInterceptor[] actionInterceptors = interceptorsManager.resolveAll(interceptorClasses);
 
 		// filters
-		Class<? extends ActionFilter>[] filterClasses = readMethodFilters(actionMethod);
+		Class<? extends ActionFilter>[] filterClasses = readActionFilters(actionMethod);
 		if (filterClasses == null) {
-			filterClasses = readClassFilters(actionClass);
+			filterClasses = readActionFilters(actionClass);
 		}
 		if (filterClasses == null) {
 			filterClasses = madvocConfig.getDefaultFilters();
@@ -224,26 +225,11 @@ public class ActionMethodParser {
 	// ---------------------------------------------------------------- interceptors
 
 	/**
-	 * Reads class interceptors when method interceptors are not available.
+	 * Reads class or method annotation for action interceptors.
 	 */
-	protected Class<? extends ActionInterceptor>[] readClassInterceptors(Class actionClass) {
+	protected Class<? extends ActionInterceptor>[] readActionInterceptors(AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionInterceptor>[] result = null;
-		InterceptedBy interceptedBy = ((Class<?>)actionClass).getAnnotation(InterceptedBy.class);
-		if (interceptedBy != null) {
-			result = interceptedBy.value();
-			if (result.length == 0) {
-				result = null;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Reads method interceptors.
-	 */
-	protected Class<? extends ActionInterceptor>[] readMethodInterceptors(Method actionMethod) {
-		Class<? extends ActionInterceptor>[] result = null;
-		InterceptedBy interceptedBy = actionMethod.getAnnotation(InterceptedBy.class);
+		InterceptedBy interceptedBy = actionClassOrMethod.getAnnotation(InterceptedBy.class);
 		if (interceptedBy != null) {
 			result = interceptedBy.value();
 			if (result.length == 0) {
@@ -256,26 +242,11 @@ public class ActionMethodParser {
 	// ---------------------------------------------------------------- filters
 
 	/**
-	 * Reads class filters when method filters are not available.
+	 * Reads class or method annotation for action filters.
 	 */
-	protected Class<? extends ActionFilter>[] readClassFilters(Class actionClass) {
+	protected Class<? extends ActionFilter>[] readActionFilters(AnnotatedElement actionClassOrMethod) {
 		Class<? extends ActionFilter>[] result = null;
-		FilteredBy filteredBy = ((Class<?>)actionClass).getAnnotation(FilteredBy.class);
-		if (filteredBy != null) {
-			result = filteredBy.value();
-			if (result.length == 0) {
-				result = null;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Reads method filters.
-	 */
-	protected Class<? extends ActionFilter>[] readMethodFilters(Method actionMethod) {
-		Class<? extends ActionFilter>[] result = null;
-		FilteredBy filteredBy = actionMethod.getAnnotation(FilteredBy.class);
+		FilteredBy filteredBy = actionClassOrMethod.getAnnotation(FilteredBy.class);
 		if (filteredBy != null) {
 			result = filteredBy.value();
 			if (result.length == 0) {
