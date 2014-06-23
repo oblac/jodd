@@ -2,7 +2,7 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionId;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionNames;
 import jodd.util.StringPool;
 
@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  */
 public class DefaultActionPath extends BaseNamingStrategy {
 
-	public ActionId buildActionId(
+	public ActionDef buildActionDef(
 			Class actionClass,
 			Method actionMethod,
 			ActionNames actionNames) {
@@ -27,7 +27,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		String actionPath = classActionPath;
 
 		if (isAbsolutePath(methodActionPath)) {
-			return createActionId(methodActionPath, httpMethod, actionNames);
+			return createActionDef(methodActionPath, httpMethod, actionNames);
 		}
 
 		if (methodActionPath != null) {
@@ -45,7 +45,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		}
 
 		if (isAbsolutePath(actionPath)) {
-			return createActionId(actionPath, httpMethod, actionNames);
+			return createActionDef(actionPath, httpMethod, actionNames);
 		}
 
 		if (packageActionPath != null) {
@@ -54,7 +54,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 			actionPath = StringPool.SLASH + actionPath;
 		}
 
-		return createActionId(actionPath, httpMethod, actionNames);
+		return createActionDef(actionPath, httpMethod, actionNames);
 	}
 
 }

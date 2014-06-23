@@ -4,6 +4,7 @@ package jodd.madvoc.result;
 
 import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.WebApplication;
 import jodd.madvoc.component.MadvocController;
@@ -120,7 +121,7 @@ public class ServletDispatcherResultTest {
 				Action.class,
 				ReflectUtil.findMethod(Action.class, "view"),
 				null, null,
-				actionPath, "GET", false, null, null);
+				new ActionDef(actionPath, "GET"), false, null, null);
 
 		return new ActionRequest(madvocController, actionConfig.getActionPath(), actionConfig, action, servletRequest, servletResponse);
 	}

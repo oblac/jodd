@@ -17,7 +17,7 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
-import jodd.madvoc.ActionId;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.path.DefaultActionPath;
 import jodd.util.ArraysUtil;
@@ -53,9 +53,9 @@ public class ActionMethodParser {
 	protected ScopeDataResolver scopeDataResolver;
 
 	/**
-	 * Parses action class and method and creates {@link ActionId parsed action ID}.
+	 * Parses action class and method and creates {@link jodd.madvoc.ActionDef parsed action definition}.
 	 */
-	public ActionId parseActionId(final Class<?> actionClass, final Method actionMethod) {
+	public ActionDef parseActionDef(final Class<?> actionClass, final Method actionMethod) {
 
 		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
@@ -81,7 +81,7 @@ public class ActionMethodParser {
 			throw new MadvocException(ex);
 		}
 
-		return namingStrategy.buildActionId(actionClass, actionMethod, actionNames);
+		return namingStrategy.buildActionDef(actionClass, actionMethod, actionNames);
 	}
 
 	/**
@@ -90,9 +90,9 @@ public class ActionMethodParser {
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
-	 * @param actionId optional action id, usually <code>null</code> so to be parsed
+	 * @param actionDef optional action def, usually <code>null</code> so to be parsed
 	 */
-	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionId actionId) {
+	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionDef actionDef) {
 
 		// interceptors
 		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod);
@@ -100,21 +100,21 @@ public class ActionMethodParser {
 		// filters
 		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod);
 
-		// build action ID when not provided
-		if (actionId == null) {
-			actionId = parseActionId(actionClass, actionMethod);
+		// build action definition when not provided
+		if (actionDef == null) {
+			actionDef = parseActionDef(actionClass, actionMethod);
 		}
 
 		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
 
-		detectAndRegisterAlias(annotationData, actionId);
+		detectAndRegisterAlias(annotationData, actionDef);
 
 		final boolean async = parseMethodAsyncFlag(annotationData);
 
 		return createActionConfig(
 				actionClass, actionMethod,
 				actionFilters, actionInterceptors,
-				actionId.getActionPath(), actionId.getActionMethod(),		// todo send actionID instead
+				actionDef,
 				async);
 	}
 
@@ -135,11 +135,11 @@ public class ActionMethodParser {
 	/**
 	 * Detects if alias is defined in annotation and registers it if so.
 	 */
-	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionId actionId) {
+	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionDef actionDef) {
 		final String alias = parseMethodAlias(annotationData);
 
 		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionId.getActionPath(), StringPool.HASH);
+			String aliasPath = StringUtil.cutToIndexOf(actionDef.getActionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
 	}
@@ -442,16 +442,9 @@ public class ActionMethodParser {
 			Method actionClassMethod,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
-			String actionPath,
-			String actionMethod,
+			ActionDef actionDef,
 			boolean async)
 	{
-
-		// uppercase
-
-		if (actionMethod != null) {
-			actionMethod = actionMethod.toUpperCase();
-		}
 
 		// find ins and outs
 
@@ -488,8 +481,7 @@ public class ActionMethodParser {
 				actionClassMethod,
 				filters,
 				interceptors,
-				actionPath,
-				actionMethod,
+				actionDef,
 				async,
 				ins,
 				outs);

@@ -2,7 +2,7 @@
 
 package jodd.madvoc.proxetta;
 
-import jodd.madvoc.ActionId;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.ActionConfig;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -26,15 +26,15 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 
 	/**
 	 * Registers actions and applies proxetta on actions that are not already registered.
-	 * We need to define {@link jodd.madvoc.ActionId} before we apply the proxy, using
+	 * We need to define {@link jodd.madvoc.ActionDef} before we apply the proxy, using
 	 * target action class.
 	 */
 	@Override
-	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, ActionId actionId) {
+	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, ActionDef actionDef) {
 
 		if (proxetta != null) {
-			if (actionId == null) {
-				actionId = actionMethodParser.parseActionId(actionClass, actionMethod);
+			if (actionDef == null) {
+				actionDef = actionMethodParser.parseActionDef(actionClass, actionMethod);
 			}
 
 			// create proxy for action class if not already created
@@ -50,6 +50,6 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 			actionClass = existing;
 		}
 
-		return super.registerAction(actionClass, actionMethod, actionId);
+		return super.registerAction(actionClass, actionMethod, actionDef);
 	}
 }

@@ -3,19 +3,19 @@
 package jodd.madvoc;
 
 /**
- * Action ID is represented by action's path and http method.
+ * Action definition is represented by action's path and http method.
  */
-public class ActionId {
+public class ActionDef {
 
 	protected final String actionPath;
 	protected final String actionMethod;
 
-	public ActionId(String actionPath, String actionMethod) {
+	public ActionDef(String actionPath, String actionMethod) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 	}
 
-	public ActionId(String actionPath) {
+	public ActionDef(String actionPath) {
 		this.actionPath = actionPath;
 		this.actionMethod = null;
 	}

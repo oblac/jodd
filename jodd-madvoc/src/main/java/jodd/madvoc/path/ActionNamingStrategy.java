@@ -2,7 +2,7 @@
 
 package jodd.madvoc.path;
 
-import jodd.madvoc.ActionId;
+import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionNames;
 
 import java.lang.reflect.Method;
@@ -13,13 +13,13 @@ import java.lang.reflect.Method;
 public interface ActionNamingStrategy {
 
 	/**
-	 * Builds {@link jodd.madvoc.ActionId}.
+	 * Builds {@link jodd.madvoc.ActionDef}.
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
 	 * @param actionNames action names
 	 */
-	public ActionId buildActionId(
+	public ActionDef buildActionDef(
 			Class actionClass,
 			Method actionMethod,
 			ActionNames actionNames);

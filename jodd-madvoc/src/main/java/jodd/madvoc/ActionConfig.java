@@ -42,16 +42,15 @@ public class ActionConfig {
 			Method actionClassMethod,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
-			String actionPath,
-			String actionMethod,
+			ActionDef actionDef,
 			boolean async,
 			ScopeData.In[][][] ins,
 			ScopeData.Out[][][] outs)
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
-		this.actionPath = actionPath;
-		this.actionMethod = actionMethod;
+		this.actionPath = actionDef.getActionPath();
+		this.actionMethod = actionDef.getActionMethod() == null ? null : actionDef.getActionMethod().toUpperCase();
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.async = async;
 
