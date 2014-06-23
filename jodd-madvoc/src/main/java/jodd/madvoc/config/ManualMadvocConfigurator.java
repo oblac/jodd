@@ -60,6 +60,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		Method actionClassMethod;
 		String actionMethodString;
 		String alias;
+		String resultBasePath;
 		ActionFilter[] actionFilters;
 		ActionInterceptor[] actionInterceptors;
 		boolean async;
@@ -144,6 +145,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
+		 * Defines result base path.
+		 */
+		public ActionBuilder resultBase(String resultBasePath) {
+			this.resultBasePath = resultBasePath;
+			return this;
+		}
+
+		/**
 		 * Binds and finalize action configuration.
 		 */
 		public void bind() {
@@ -155,7 +164,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
-							new ActionDef(actionPath, method), async);
+							new ActionDef(actionPath, method, resultBasePath), async);
 
 			actionsManager.registerAction(actionConfig);
 

@@ -11,11 +11,10 @@ public class ActionDef {
 	protected final String actionMethod;
 	protected final String resultBasePath;
 
-
 	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
-		this.resultBasePath = resultBasePath;
+		this.resultBasePath = resultBasePath == null ? actionPath : resultBasePath;
 	}
 
 	public ActionDef(String actionPath, String actionMethod) {
