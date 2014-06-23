@@ -27,29 +27,40 @@ public class RestResourcePath extends BaseNamingStrategy {
 		}
 
 		String actionPath = classActionPath;
+		String resultPath = classActionPath;
 
 		if (isAbsolutePath(methodActionPath)) {
-			return createActionDef(methodActionPath, httpMethod, actionNames);
+			return createActionDef(methodActionPath, httpMethod, methodActionPath, actionNames);
 		}
 
 		if (methodActionPath != null) {
 			if (classActionPath.endsWith(StringPool.SLASH) == false) {
 				actionPath += StringPool.SLASH;
+				resultPath += StringPool.SLASH;
 			}
-			actionPath += methodActionPath; // method separator
+
+			actionPath += methodActionPath;
+
+			if (httpMethod != null) {
+				resultPath += httpMethod.toLowerCase();
+			} else {
+				resultPath += actionNames.getMethodName();
+			}
 		}
 
 		if (isAbsolutePath(actionPath)) {
-			return createActionDef(actionPath, httpMethod, actionNames);
+			return createActionDef(actionPath, httpMethod, resultPath, actionNames);
 		}
 
 		if (packageActionPath != null) {
 			actionPath = packageActionPath + actionPath;
+			resultPath = packageActionPath + resultPath;
 		} else {
 			actionPath = StringPool.SLASH + actionPath;
+			resultPath = StringPool.SLASH + resultPath;
 		}
 
-		return createActionDef(actionPath, httpMethod, actionNames);
+		return createActionDef(actionPath, httpMethod, resultPath, actionNames);
 	}
 
 	/**

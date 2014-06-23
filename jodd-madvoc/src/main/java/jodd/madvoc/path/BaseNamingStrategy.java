@@ -53,14 +53,18 @@ public abstract class BaseNamingStrategy implements ActionNamingStrategy {
 	 * Single point of {@link jodd.madvoc.ActionDef} creation.
 	 * Also performs the replacement of action path macros!
 	 */
-	protected ActionDef createActionDef(String path, String httpMethod, ActionNames actionNames) {
+	protected ActionDef createActionDef(String path, String httpMethod, String resultBasePath, ActionNames actionNames) {
 		path = replaceActionNameMacros(path, actionNames);
 
 		if (httpMethod != null) {
 			httpMethod = replaceActionNameMacros(httpMethod, actionNames);
 		}
 
-		return new ActionDef(path, httpMethod);
+		if (resultBasePath != null) {
+			resultBasePath = replaceActionNameMacros(resultBasePath, actionNames);
+		}
+
+		return new ActionDef(path, httpMethod, resultBasePath);
 	}
 
 	/**

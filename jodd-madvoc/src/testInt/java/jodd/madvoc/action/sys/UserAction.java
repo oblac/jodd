@@ -13,12 +13,10 @@ public class UserAction {
 	String id;
 
 	@RestAction(value = "${id}")
-	public String get() {
-		return "#get";
-	}
+	public void get() {}
 
 	@RestAction(value = "${id}")
 	public String post() {
-		return "#post";
+		return "#post";		// dont have to do this
 	}
 }

@@ -22,6 +22,7 @@ public class ActionConfig {
 	public final Method actionClassMethod;
 	public final String actionPath;
 	public final String actionMethod;
+	public final String resultBasePath;
 	public final Field resultField;
 	public final boolean async;
 
@@ -51,6 +52,7 @@ public class ActionConfig {
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionDef.getActionPath();
 		this.actionMethod = actionDef.getActionMethod() == null ? null : actionDef.getActionMethod().toUpperCase();
+		this.resultBasePath = actionDef.getResultBasePath();
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.async = async;
 
@@ -108,6 +110,13 @@ public class ActionConfig {
 	 */
 	public String getActionMethod() {
 		return actionMethod;
+	}
+
+	/**
+	 * Returns action result base path.
+	 */
+	public String getResultBasePath() {
+		return resultBasePath;
 	}
 
 	/**

@@ -27,7 +27,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		String actionPath = classActionPath;
 
 		if (isAbsolutePath(methodActionPath)) {
-			return createActionDef(methodActionPath, httpMethod, actionNames);
+			return createActionDef(methodActionPath, httpMethod, methodActionPath, actionNames);
 		}
 
 		if (methodActionPath != null) {
@@ -37,7 +37,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 			if (classActionPath.endsWith(StringPool.SLASH) == false) {
 				actionPath += StringPool.DOT;
 			}
-			actionPath += methodActionPath; // method separator
+			actionPath += methodActionPath;
 		} else {
 			if (extension != null) {
 				actionPath += '.' + extension;
@@ -45,7 +45,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 		}
 
 		if (isAbsolutePath(actionPath)) {
-			return createActionDef(actionPath, httpMethod, actionNames);
+			return createActionDef(actionPath, httpMethod, actionPath, actionNames);
 		}
 
 		if (packageActionPath != null) {
@@ -54,7 +54,7 @@ public class DefaultActionPath extends BaseNamingStrategy {
 			actionPath = StringPool.SLASH + actionPath;
 		}
 
-		return createActionDef(actionPath, httpMethod, actionNames);
+		return createActionDef(actionPath, httpMethod, actionPath, actionNames);
 	}
 
 }

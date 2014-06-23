@@ -41,7 +41,9 @@ public class ServletRedirectResult extends BaseActionResult<String> {
 	 * Redirects to the given location. Provided path is parsed, action is used as a value context.
 	 */
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultPath = resultMapper.resolveResultPathString(actionRequest.getActionPath(), resultValue);
+		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+
+		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 
 		HttpServletRequest request = actionRequest.getHttpServletRequest();
 		HttpServletResponse response = actionRequest.getHttpServletResponse();

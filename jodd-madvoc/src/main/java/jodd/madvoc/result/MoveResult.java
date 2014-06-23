@@ -42,7 +42,9 @@ public class MoveResult extends BaseActionResult<String> {
 	 * Saves action in the session under some id that is added as request parameter.
 	 */
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String resultPath = resultMapper.resolveResultPathString(actionRequest.getActionPath(), resultValue);
+		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+
+		String resultPath = resultMapper.resolveResultPathString(resultBasePath, resultValue);
 
 		HttpServletRequest httpServletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = httpServletRequest.getSession();

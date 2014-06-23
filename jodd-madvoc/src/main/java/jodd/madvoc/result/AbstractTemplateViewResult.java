@@ -41,7 +41,9 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 * will be sent back in the http response.
 	 */
 	public void render(ActionRequest actionRequest, String resultValue) throws Exception {
-		String actionAndResultPath = actionRequest.getActionPath() + (resultValue != null ? ':' + resultValue : StringPool.EMPTY);
+		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+
+		String actionAndResultPath = resultBasePath + (resultValue != null ? ':' + resultValue : StringPool.EMPTY);
 
 		String target = targetCache.get(actionAndResultPath);
 
@@ -73,7 +75,9 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 	 * Locates the target file from action path and the result value.
 	 */
 	protected String resolveTarget(ActionRequest actionRequest, String resultValue) {
-		ResultPath resultPath = resultMapper.resolveResultPath(actionRequest.getActionPath(), resultValue);
+		String resultBasePath = actionRequest.getActionConfig().getResultBasePath();
+
+		ResultPath resultPath = resultMapper.resolveResultPath(resultBasePath, resultValue);
 
 		String actionPath = resultPath.getPath();
 		String path = actionPath;

@@ -3,21 +3,29 @@
 package jodd.madvoc;
 
 /**
- * Action definition is represented by action's path and http method.
+ * Action definition is represented by action's path, http method and result base path.
  */
 public class ActionDef {
 
 	protected final String actionPath;
 	protected final String actionMethod;
+	protected final String resultBasePath;
+
+
+	public ActionDef(String actionPath, String actionMethod, String resultBasePath) {
+		this.actionPath = actionPath;
+		this.actionMethod = actionMethod;
+		this.resultBasePath = resultBasePath;
+	}
 
 	public ActionDef(String actionPath, String actionMethod) {
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
+		this.resultBasePath = actionPath;
 	}
 
 	public ActionDef(String actionPath) {
-		this.actionPath = actionPath;
-		this.actionMethod = null;
+		this(actionPath, null);
 	}
 
 	/**
@@ -32,5 +40,12 @@ public class ActionDef {
 	 */
 	public String getActionMethod() {
 		return actionMethod;
+	}
+
+	/**
+	 * Returns result base path.
+	 */
+	public String getResultBasePath() {
+		return resultBasePath;
 	}
 }
