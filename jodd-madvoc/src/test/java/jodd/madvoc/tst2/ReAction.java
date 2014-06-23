@@ -12,15 +12,15 @@ public class ReAction {
 	public void hello() {
 	}
 
-	@Action("user/${id}/[method]")
+	@Action("user/${id}/${:method}")
 	public void macro() {
 	}
 
-	@Action("user/image/${id}/${fmt}/[method]")
+	@Action("user/image/${id}/${fmt}/${:method}")
 	public void macro2() {
 	}
 
-	@Action(value = "users/${id}/[method]", extension = Action.NONE, method = "POST")
+	@Action(value = "users/${id}/${:method}", extension = Action.NONE, method = "POST")
 	public void macro3() {
 	}
 

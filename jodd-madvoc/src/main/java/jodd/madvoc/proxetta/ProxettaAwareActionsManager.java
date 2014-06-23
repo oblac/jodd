@@ -2,6 +2,7 @@
 
 package jodd.madvoc.proxetta;
 
+import jodd.madvoc.ActionId;
 import jodd.madvoc.component.ActionsManager;
 import jodd.madvoc.ActionConfig;
 import jodd.proxetta.impl.ProxyProxetta;
@@ -18,9 +19,6 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 	protected final ProxyProxetta proxetta;
 	protected final Map<Class, Class> proxyActionClasses;
 
-	public ProxettaAwareActionsManager() {
-		this(null);
-	}
 	public ProxettaAwareActionsManager(ProxyProxetta proxetta) {
 		this.proxetta = proxetta;
 		this.proxyActionClasses = new HashMap<Class, Class>();
@@ -28,23 +26,30 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 
 	/**
 	 * Registers actions and applies proxetta on actions that are not already registered.
+	 * We need to define {@link jodd.madvoc.ActionId} before we apply the proxy, using
+	 * target action class.
 	 */
 	@Override
-	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, String actionPath) {
+	protected synchronized ActionConfig registerAction(Class actionClass, Method actionMethod, ActionId actionId) {
+
 		if (proxetta != null) {
-			// create action path from existing class (if not already exist)
-			if (actionPath == null) {
-				ActionConfig cfg = actionMethodParser.parse(actionClass, actionMethod, actionPath);
-				actionPath = cfg.actionPath;
+			if (actionId == null) {
+				actionId = actionMethodParser.parseActionId(actionClass, actionMethod);
 			}
+
 			// create proxy for action class if not already created
+
 			Class existing = proxyActionClasses.get(actionClass);
+
 			if (existing == null) {
 				existing = proxetta.builder(actionClass).define();
+
 				proxyActionClasses.put(actionClass, existing);
 			}
+
 			actionClass = existing;
 		}
-		return super.registerAction(actionClass, actionMethod, actionPath);
+
+		return super.registerAction(actionClass, actionMethod, actionId);
 	}
 }

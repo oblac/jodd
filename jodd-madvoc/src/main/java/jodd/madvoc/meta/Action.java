@@ -2,6 +2,8 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.path.DefaultActionPath;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -47,12 +49,13 @@ public @interface Action {
 
 	/**
 	 * Action path extension. If equals to {@link #NONE} extension will be not
-	 * part of created action path.
+	 * part of created action path. If empty, default extension will be used
+	 * (defined in {@link jodd.madvoc.component.MadvocConfig}.
 	 */
 	String extension() default "";
 
 	/**
-	 * Defines alias.
+	 * Defines alias for this action.
 	 */
 	String alias() default "";
 
@@ -67,5 +70,10 @@ public @interface Action {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
+
+	/**
+	 * Defines action naming strategy for building action path.
+	 */
+	Class<? extends ActionNamingStrategy> path() default DefaultActionPath.class;
 
 }

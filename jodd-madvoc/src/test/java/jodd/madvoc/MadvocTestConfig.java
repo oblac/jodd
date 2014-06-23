@@ -21,7 +21,7 @@ public class MadvocTestConfig implements MadvocConfigurator {
 		resultsManager.register(TextResult.class);
 		resultsManager.register(RawResult.class);
 
-		actionsManager.register(ResultsTest.class, "madvocEncoding", "/textResultEncoding");
-		actionsManager.register(ResultsTest.class, "madvocRawImage", "/madvocRawImage");
+		actionsManager.register(ResultsTest.class, "madvocEncoding", new ActionId("/textResultEncoding"));
+		actionsManager.register(ResultsTest.class, "madvocRawImage", new ActionId("/madvocRawImage"));
 	}
 }

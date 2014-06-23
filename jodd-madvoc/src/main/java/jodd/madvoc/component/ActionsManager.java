@@ -2,8 +2,11 @@
 
 package jodd.madvoc.component;
 
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.MethodDescriptor;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionConfigSet;
+import jodd.madvoc.ActionId;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.macro.PathMacros;
 import jodd.petite.meta.PetiteInject;
@@ -102,6 +105,17 @@ public class ActionsManager {
 	// ---------------------------------------------------------------- register variations
 
 	/**
+	 * Resolves action method for given action class ane method name.
+	 */
+	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
+		MethodDescriptor methodDescriptor = ClassIntrospector.lookup(actionClass).getMethodDescriptor(methodName, false);
+		if (methodDescriptor == null) {
+			throw new MadvocException("Public method not found: " + actionClass.getSimpleName() + "#" + methodName);
+		}
+		return methodDescriptor.getMethod();
+	}
+
+	/**
 	 * Registers action with provided action signature.
 	 */
 	public ActionConfig register(String actionSignature) {
@@ -111,7 +125,7 @@ public class ActionsManager {
 	/**
 	 * Registers action with provided action signature.
 	 */
-	public ActionConfig register(String actionSignature, String actionPath) {
+	public ActionConfig register(String actionSignature, ActionId actionId) {
 		int ndx = actionSignature.indexOf('#');
 		if (ndx == -1) {
 			throw new MadvocException("Madvoc action signature syntax error: " + actionSignature);
@@ -124,50 +138,44 @@ public class ActionsManager {
 		} catch (ClassNotFoundException cnfex) {
 			throw new MadvocException("Madvoc action class not found: " + actionClassName, cnfex);
 		}
-		return register(actionClass, actionMethodName, actionPath);
-	}
-
-	/**
-	 * Registers action with provided action class and method name.
-	 */
-	public ActionConfig register(Class actionClass, String actionMethod) {
-		return register(actionClass, actionMethod, null);
-	}
-
-	/**
-	 * Registers action with provided action path, class and method name.
-	 */
-	public ActionConfig register(Class actionClass, String actionMethod, String actionPath) {
-		return registerAction(actionClass, actionMethod, actionPath);
-	}
-
-	public ActionConfig register(Class actionClass, Method actionMethod, String actionPath) {
-		return registerAction(actionClass, actionMethod, actionPath);
+		return register(actionClass, actionMethodName, actionId);
 	}
 
 	public ActionConfig register(Class actionClass, Method actionMethod) {
 		return registerAction(actionClass, actionMethod, null);
 	}
 
-	// ---------------------------------------------------------------- registration
-
-	/**
-	 * Registration main point. Optionally, if action path with the same name already exist,
-	 * exception will be thrown. Returns created {@link ActionConfig}.
-	 */
-	protected ActionConfig registerAction(Class actionClass, Method actionMethod, String actionPath) {
-		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionPath);
-		if (actionConfig == null) {
-			return null;
-		}
-		return registerAction(actionConfig);
+	public ActionConfig register(Class actionClass, Method actionMethod, ActionId actionId) {
+		return registerAction(actionClass, actionMethod, actionId);
 	}
 
 	/**
-	 * @see #registerAction(Class, java.lang.reflect.Method, String)
+	 * Registers action with provided action class and method name.
 	 */
-	protected ActionConfig registerAction(Class actionClass, String actionMethodName, String actionPath) {
-		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethodName, actionPath);
+	public ActionConfig register(Class actionClass, String actionMethodName) {
+		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
+		return registerAction(actionClass, actionMethod, null);
+	}
+
+	public ActionConfig register(Class actionClass, String actionMethodName, ActionId actionId) {
+		Method actionMethod = resolveActionMethod(actionClass, actionMethodName);
+		return registerAction(actionClass, actionMethod, actionId);
+	}
+
+	// ---------------------------------------------------------------- registration
+
+	/**
+	 * Registration main point. Does two things:
+	 * <ul>
+	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, jodd.madvoc.ActionId) parse action}
+	 *     and creates {@link jodd.madvoc.ActionConfig}</li>.
+	 *     <li>{@link #registerAction(jodd.madvoc.ActionConfig) registers} created {@link jodd.madvoc.ActionConfig}</li>
+	 * </ul>
+	 * Returns created {@link ActionConfig}.
+	 * @see #registerAction(jodd.madvoc.ActionConfig)
+	 */
+	protected ActionConfig registerAction(Class actionClass, Method actionMethod, ActionId actionId) {
+		ActionConfig actionConfig = actionMethodParser.parse(actionClass, actionMethod, actionId);
 		if (actionConfig == null) {
 			return null;
 		}
@@ -176,6 +184,8 @@ public class ActionsManager {
 
 	/**
 	 * Registers manually created {@link ActionConfig action configurations}.
+	 * Optionally, if action path with the same name already exist,
+	 * exception will be thrown.
 	 */
 	public ActionConfig registerAction(ActionConfig actionConfig) {
 		String actionPath = actionConfig.actionPath;

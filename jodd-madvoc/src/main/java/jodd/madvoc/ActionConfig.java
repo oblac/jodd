@@ -46,15 +46,13 @@ public class ActionConfig {
 			String actionMethod,
 			boolean async,
 			ScopeData.In[][][] ins,
-			ScopeData.Out[][][] outs,
-			String[] actionPathElements)
+			ScopeData.Out[][][] outs)
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
 		this.actionPath = actionPath;
 		this.actionMethod = actionMethod;
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
-		//this.actionPathElements = actionPathElements;		// ignore for now
 		this.async = async;
 
 		this.ins = ins;

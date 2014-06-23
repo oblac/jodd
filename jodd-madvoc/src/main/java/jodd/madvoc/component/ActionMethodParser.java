@@ -2,8 +2,7 @@
 
 package jodd.madvoc.component;
 
-import jodd.introspector.ClassIntrospector;
-import jodd.introspector.MethodDescriptor;
+import jodd.madvoc.ActionNames;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.MadvocUtil;
 import jodd.madvoc.RootPackages;
@@ -18,6 +17,9 @@ import jodd.madvoc.meta.InterceptedBy;
 import jodd.madvoc.meta.MadvocAction;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
+import jodd.madvoc.ActionId;
+import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.path.DefaultActionPath;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
@@ -31,14 +33,9 @@ import java.lang.reflect.Method;
  * Creates {@link ActionConfig action configurations} from action java method.
  * Reads all annotations and builds action path (i.e. configuration).
  * <p>
- * Invoked only during registration, therefore performance is not most important.
+ * Invoked only during registration, so performance is not critical.
  */
 public class ActionMethodParser {
-
-	protected static final String REPL_PACKAGE = "[package]";
-	protected static final String REPL_CLASS = "[class]";
-	protected static final String REPL_METHOD = "[method]";
-	protected static final String REPL_EXTENSION = "[ext]";
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -55,40 +52,99 @@ public class ActionMethodParser {
 	@PetiteInject
 	protected ScopeDataResolver scopeDataResolver;
 
-	// ---------------------------------------------------------------- resolve method
-
 	/**
-	 * Resolves action method for given string ane method name.
+	 * Parses action class and method and creates {@link ActionId parsed action ID}.
 	 */
-	public Method resolveActionMethod(Class<?> actionClass, String methodName) {
-		MethodDescriptor methodDescriptor = ClassIntrospector.lookup(actionClass).getMethodDescriptor(methodName, false);
-		if (methodDescriptor == null) {
-			throw new MadvocException("Action class '" + actionClass.getSimpleName() + "' doesn't have public method: " + methodName);
+	public ActionId parseActionId(final Class<?> actionClass, final Method actionMethod) {
+
+		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+
+		final ActionNames actionNames = new ActionNames();		// collector for all action names
+
+		readPackageActionPath(actionNames, actionClass);
+
+		readClassActionPath(actionNames, actionClass);
+
+		readMethodActionPath(actionNames, actionMethod.getName(), annotationData);
+
+		readMethodExtension(actionNames, annotationData);
+
+		readMethodHttpMethod(actionNames, annotationData);
+
+		final Class<? extends ActionNamingStrategy> actionPathNamingStrategy = parseMethodNamingStrategy(annotationData);
+
+		ActionNamingStrategy namingStrategy;
+
+		try {
+			namingStrategy = actionPathNamingStrategy.newInstance();
+		} catch (Exception ex) {
+			throw new MadvocException(ex);
 		}
-		return methodDescriptor.getMethod();
-	}
 
-	// ---------------------------------------------------------------- parse
-
-	public ActionConfig parse(Class<?> actionClass, Method actionMethod) {
-		return parse(actionClass, actionMethod, null);
+		return namingStrategy.buildActionId(actionClass, actionMethod, actionNames);
 	}
 
 	/**
-	 * @see #parse(Class, java.lang.reflect.Method, String)
+	 * Parses java action method annotation and returns its action configuration.
+	 * todo check when no annotation is used!!!!
+	 *
+	 * @param actionClass action class
+	 * @param actionMethod action method
+	 * @param actionId optional action id, usually <code>null</code> so to be parsed
 	 */
-	public ActionConfig parse(Class<?> actionClass, String actionMethodName, String actionPath) {
-		Method method = resolveActionMethod(actionClass, actionMethodName);
-		return parse(actionClass, method, actionPath);
-	}
-
-	/**
-	 * Parses java action method annotations and returns its action configuration.
-	 * Returns <code>null</code> if method is not a madvoc action.
-	 */
-	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, String actionPath) {
+	public ActionConfig parse(final Class<?> actionClass, final Method actionMethod, ActionId actionId) {
 
 		// interceptors
+		ActionInterceptor[] actionInterceptors = parseActionInterceptors(actionClass, actionMethod);
+
+		// filters
+		ActionFilter[] actionFilters = parseActionFilters(actionClass, actionMethod);
+
+		// build action ID when not provided
+		if (actionId == null) {
+			actionId = parseActionId(actionClass, actionMethod);
+		}
+
+		ActionAnnotationData annotationData = detectActionAnnotationData(actionMethod);
+
+		detectAndRegisterAlias(annotationData, actionId);
+
+		final boolean async = parseMethodAsyncFlag(annotationData);
+
+		return createActionConfig(
+				actionClass, actionMethod,
+				actionFilters, actionInterceptors,
+				actionId.getActionPath(), actionId.getActionMethod(),		// todo send actionID instead
+				async);
+	}
+
+	/**
+	 * Detects {@link jodd.madvoc.meta.ActionAnnotationData}.
+	 */
+	protected ActionAnnotationData detectActionAnnotationData(Method actionMethod) {
+		ActionAnnotationData annotationData = null;
+		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
+			annotationData = actionAnnotation.readAnnotationData(actionMethod);
+			if (annotationData != null) {
+				break;
+			}
+		}
+		return annotationData;
+	}
+
+	/**
+	 * Detects if alias is defined in annotation and registers it if so.
+	 */
+	protected void detectAndRegisterAlias(ActionAnnotationData annotationData, ActionId actionId) {
+		final String alias = parseMethodAlias(annotationData);
+
+		if (alias != null) {
+			String aliasPath = StringUtil.cutToIndexOf(actionId.getActionPath(), StringPool.HASH);
+			actionsManager.registerPathAlias(alias, aliasPath);
+		}
+	}
+
+	protected ActionInterceptor[] parseActionInterceptors(final Class<?> actionClass, final Method actionMethod) {
 		Class<? extends ActionInterceptor>[] interceptorClasses = readActionInterceptors(actionMethod);
 		if (interceptorClasses == null) {
 			interceptorClasses = readActionInterceptors(actionClass);
@@ -97,9 +153,10 @@ public class ActionMethodParser {
 			interceptorClasses = madvocConfig.getDefaultInterceptors();
 		}
 
-		ActionInterceptor[] actionInterceptors = interceptorsManager.resolveAll(interceptorClasses);
+		return interceptorsManager.resolveAll(interceptorClasses);
+	}
 
-		// filters
+	protected ActionFilter[] parseActionFilters(Class<?> actionClass, Method actionMethod) {
 		Class<? extends ActionFilter>[] filterClasses = readActionFilters(actionMethod);
 		if (filterClasses == null) {
 			filterClasses = readActionFilters(actionClass);
@@ -108,118 +165,7 @@ public class ActionMethodParser {
 			filterClasses = madvocConfig.getDefaultFilters();
 		}
 
-		ActionFilter[] actionFilters = filtersManager.resolveAll(filterClasses);
-
-		// actions
-		//HashMap<String, String> replacementMap = new HashMap<String, String>();
-		String[] actionPathElements = new String[4];
-
-		// action path not specified, build it
-		String packageActionPath = readPackageActionPath(actionClass, actionPathElements);
-
-		// class annotation: class action path
-		String classActionPath = readClassActionPath(actionClass, actionPathElements);
-		if (classActionPath == null) {
-			return null;
-		}
-
-		// method annotation: detect
-		ActionAnnotationData annotationData = null;
-		for (ActionAnnotation actionAnnotation : madvocConfig.getActionAnnotationInstances()) {
-			annotationData = actionAnnotation.readAnnotationData(actionMethod);
-			if (annotationData != null) {
-				break;
-			}
-		}
-
-		// read method annotation values
-		String actionMethodName = actionMethod.getName();
-		String methodActionPath = readMethodActionPath(actionMethodName, annotationData, actionPathElements);
-		String extension = readMethodExtension(annotationData);
-		String alias = readMethodAlias(annotationData);
-		String httpMethod = readMethodHttpMethod(annotationData);
-		boolean async = readMethodAsyncFlag(annotationData);
-
-		if (methodActionPath != null) {
-			// additional changes
-			actionPathElements[3] = extension;
-
-			// check for defaults
-			for (String path : madvocConfig.getDefaultActionMethodNames()) {
-				if (methodActionPath.equals(path)) {
-					methodActionPath = null;
-					break;
-				}
-			}
-		}
-
-		if (actionPath == null) {
-			// finally, build the action path if it is not already specified
-			actionPath = buildActionPath(packageActionPath, classActionPath, methodActionPath, extension, httpMethod);
-		}
-
-		// apply replacements
-		{
-			actionPath = StringUtil.replace(actionPath, REPL_PACKAGE, actionPathElements[0]);
-			actionPath = StringUtil.replace(actionPath, REPL_CLASS, actionPathElements[1]);
-			actionPath = StringUtil.replace(actionPath, REPL_METHOD, actionPathElements[2]);
-			actionPath = StringUtil.replace(actionPath, REPL_EXTENSION, actionPathElements[3]);
-		}
-		 
-		// register alias
-		if (alias != null) {
-			String aliasPath = StringUtil.cutToIndexOf(actionPath, StringPool.HASH);
-			actionsManager.registerPathAlias(alias, aliasPath);
-		}
-
-		return createActionConfig(
-				actionClass, actionMethod,
-				actionFilters, actionInterceptors,
-				actionPath, httpMethod,
-				async, actionPathElements);
-	}
-
-	/**
-	 * Builds action path. Method action path and extension may be <code>null</code>.
-	 * @param packageActionPath action path from package (optional)
-	 * @param classActionPath action path from class
-	 * @param methodActionPath action path from method (optional)
-	 * @param extension extension (optional)
-	 * @param httpMethod HTTP method name (not used by default)
-	 */
-	protected String buildActionPath(String packageActionPath, String classActionPath, String methodActionPath, String extension, String httpMethod) {
-		String pathSeparator = StringPool.SLASH;
-
-		String actionPath = classActionPath;
-
-		if (methodActionPath != null) {
-			if (methodActionPath.startsWith(pathSeparator)) {
-				return methodActionPath;    // absolute path
-			}
-			if (extension != null) {		// add extension
-				methodActionPath += '.' + extension;
-			}
-			if (classActionPath.endsWith(pathSeparator) == false) {
-				actionPath += StringPool.DOT;
-			}
-			actionPath += methodActionPath; // method separator
-		} else {
-			if (extension != null) {
-				actionPath += '.' + extension;
-			}
-		}
-
-		if (actionPath.startsWith(pathSeparator)) {
-			return actionPath;
-		}
-
-		if (packageActionPath != null) {
-			actionPath = packageActionPath + actionPath;
-		} else {
-			actionPath = pathSeparator + actionPath;
-		}
-
-		return actionPath;
+		return filtersManager.resolveAll(filterClasses);
 	}
 
 	// ---------------------------------------------------------------- interceptors
@@ -264,7 +210,7 @@ public class ActionMethodParser {
 	 * If annotation is not set on package-level, class package will be used for
 	 * package action path part.
 	 */
-	protected String readPackageActionPath(Class actionClass, String[] actionPathElements) {
+	protected void readPackageActionPath(ActionNames actionNames, Class actionClass) {
 
 		Package actionPackage = actionClass.getPackage();
 		String actionPackageName = actionPackage.getName();
@@ -350,14 +296,15 @@ public class ActionMethodParser {
 			// no package-level annotation
 			if (packagePath == null) {
 				// no root package path, just return
-				return null;
+				return;
 			}
 			packageActionPath = packagePath;
 		}
 
-		actionPathElements[0] = StringUtil.stripChar(packagePath, '/');
-
-		return StringUtil.surround(packageActionPath, StringPool.SLASH);
+		actionNames.setPackageNames(
+			StringUtil.stripChar(packagePath, '/'),
+			StringUtil.surround(packageActionPath, StringPool.SLASH)
+		);
 	}
 
 	/**
@@ -368,7 +315,7 @@ public class ActionMethodParser {
 	 * <p>
 	 * If this method returns <code>null</code> class will be ignored.
 	 */
-	protected String readClassActionPath(Class actionClass, String[] actionPathElements) {
+	protected void readClassActionPath(ActionNames actionNames, Class actionClass) {
 		// read annotation
 		MadvocAction madvocActionAnnotation = ((Class<?>)actionClass).getAnnotation(MadvocAction.class);
 		String classActionPath = madvocActionAnnotation != null ? madvocActionAnnotation.value().trim() : null;
@@ -384,14 +331,14 @@ public class ActionMethodParser {
 			classActionPath = name;
 		}
 
-		actionPathElements[1] = name;
-		return classActionPath;
+		actionNames.setClassNames(name, classActionPath);
 	}
 
 	/**
-	 * Reads action method.
+	 * Reads action method. Returns <code>null</code> if action method is {@link Action#NONE}
+	 * or if it is equals to {@link MadvocConfig#getDefaultActionMethodNames() default action names}.
 	 */
-	protected String readMethodActionPath(String methodName, ActionAnnotationData annotationData, String[] actionPathElements) {
+	protected void readMethodActionPath(ActionNames actionNames, String methodName, ActionAnnotationData annotationData) {
 		// read annotation
 		String methodActionPath = annotationData != null ? annotationData.getValue() : null;
 
@@ -399,18 +346,25 @@ public class ActionMethodParser {
 			methodActionPath = methodName;
 		} else {
 			if (methodActionPath.equals(Action.NONE)) {
-				return null;
+				return;
 			}
 		}
 
-		actionPathElements[2] = methodName;
-		return methodActionPath;
+		// check for defaults
+		for (String path : madvocConfig.getDefaultActionMethodNames()) {
+			if (methodActionPath.equals(path)) {
+				methodActionPath = null;
+				break;
+			}
+		}
+
+		actionNames.setMethodNames(methodName, methodActionPath);
 	}
 
 	/**
 	 * Reads method's extension.
 	 */
-	protected String readMethodExtension(ActionAnnotationData annotationData) {
+	protected void readMethodExtension(ActionNames actionNames, ActionAnnotationData annotationData) {
 		String extension = madvocConfig.getDefaultExtension();
 		if (annotationData != null) {
 			String annExtension = annotationData.getExtension();
@@ -418,17 +372,17 @@ public class ActionMethodParser {
 				if (annExtension.equals(Action.NONE)) {
 					extension = null;
 				} else {
-					extension = StringUtil.replace(annExtension, REPL_EXTENSION, extension);
+					extension = annExtension;
 				}
 			}
 		}
-		return extension;
+		actionNames.setExtension(extension);
 	}
 
 	/**
 	 * Reads method's alias value.
 	 */
-	protected String readMethodAlias(ActionAnnotationData annotationData) {
+	protected String parseMethodAlias(ActionAnnotationData annotationData) {
 		String alias = null;
 		if (annotationData != null) {
 			alias = annotationData.getAlias();
@@ -439,23 +393,42 @@ public class ActionMethodParser {
 	/**
 	 * Reads method's http method.
 	 */
-	private String readMethodHttpMethod(ActionAnnotationData annotationData) {
+	private void readMethodHttpMethod(ActionNames actionNames, ActionAnnotationData annotationData) {
 		String method = null;
 		if (annotationData != null) {
 			method = annotationData.getMethod();
 		}
-		return method;
+
+		actionNames.setHttpMethod(method);
 	}
 
 	/**
 	 * Reads method's async flag.
 	 */
-	private boolean readMethodAsyncFlag(ActionAnnotationData annotationData) {
+	private boolean parseMethodAsyncFlag(ActionAnnotationData annotationData) {
 		boolean sync = false;
 		if (annotationData != null) {
 			sync = annotationData.isAsync();
 		}
 		return sync;
+	}
+
+	/**
+	 * Reads method's action path naming strategy.
+	 */
+	@SuppressWarnings("unchecked")
+	private Class<? extends ActionNamingStrategy> parseMethodNamingStrategy(ActionAnnotationData annotationData) {
+		Class<? extends ActionNamingStrategy> actionNamingStrategyClass = null;
+
+		if (annotationData != null) {
+			actionNamingStrategyClass = annotationData.getPath();
+		}
+
+		if (actionNamingStrategyClass == null) {
+			actionNamingStrategyClass = DefaultActionPath.class;
+		}
+
+		return actionNamingStrategyClass;
 	}
 
 	// ---------------------------------------------------------------- create action configuration
@@ -471,8 +444,7 @@ public class ActionMethodParser {
 			ActionInterceptor[] interceptors,
 			String actionPath,
 			String actionMethod,
-			boolean async,
-			String[] pathElements)
+			boolean async)
 	{
 
 		// uppercase
@@ -511,7 +483,6 @@ public class ActionMethodParser {
 			}
 		}
 
-
 		return new ActionConfig(
 				actionClass,
 				actionClassMethod,
@@ -521,8 +492,7 @@ public class ActionMethodParser {
 				actionMethod,
 				async,
 				ins,
-				outs,
-				pathElements);
+				outs);
 	}
 
 }

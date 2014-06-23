@@ -147,14 +147,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		 */
 		public void bind() {
 			if (actionMethodString != null) {
-				actionClassMethod = actionMethodParser.resolveActionMethod(actionClass, actionMethodString);
+				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
 
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilters, actionInterceptors,
-							actionPath, method, async, null);
+							actionPath, method, async);
 
 			actionsManager.registerAction(actionConfig);
 

@@ -2,6 +2,7 @@
 
 package jodd.madvoc.meta;
 
+import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.util.AnnotationDataReader;
 import jodd.util.StringUtil;
 
@@ -42,6 +43,8 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 		ad.method = readString(annotation, "method");
 
 		ad.async = readBoolean(annotation, "async");
+
+		ad.path = (Class<? extends ActionNamingStrategy>) readElement(annotation, "path");
 
 		return ad;
 	}

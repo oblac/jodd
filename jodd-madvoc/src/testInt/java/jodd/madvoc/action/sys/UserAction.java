@@ -2,20 +2,23 @@
 
 package jodd.madvoc.action.sys;
 
-import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.MadvocAction;
+import jodd.madvoc.meta.RestAction;
 
-// todo ugly
-@MadvocAction("/[package]/")
+@MadvocAction
 public class UserAction {
 
 	@InOut
 	String id;
 
-	//@Action("/[package]/[class]/${id}")
-	@Action(value = "[class]/${id}", extension = Action.NONE)
-	public String view() {
-		return "#index";
+	@RestAction(value = "${id}")
+	public String get() {
+		return "#get";
+	}
+
+	@RestAction(value = "${id}")
+	public String post() {
+		return "#post";
 	}
 }

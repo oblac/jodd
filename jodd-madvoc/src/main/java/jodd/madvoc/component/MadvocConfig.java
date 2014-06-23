@@ -11,6 +11,7 @@ import jodd.madvoc.macro.PathMacros;
 import jodd.madvoc.macro.WildcardPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
+import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
@@ -28,7 +29,7 @@ public class MadvocConfig {
 
 	@SuppressWarnings({"unchecked"})
 	public MadvocConfig() {
-		setActionAnnotations(Action.class);
+		setActionAnnotations(Action.class, RestAction.class);
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();

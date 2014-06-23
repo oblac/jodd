@@ -12,7 +12,7 @@ public abstract class MadvocTestCase {
 
 	protected ActionConfig parse(ActionMethodParser actionMethodParser, String signature) {
 		Object[] data = resolveSignature(signature);
-		return actionMethodParser.parse((Class) data[0], (Method) data[1]);
+		return actionMethodParser.parse((Class) data[0], (Method) data[1], null);
 	}
 
 	protected Object[] resolveSignature(String signature) {
