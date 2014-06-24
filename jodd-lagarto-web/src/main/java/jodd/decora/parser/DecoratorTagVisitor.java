@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 /**
  * Visitor that detect Decora tags in the decorator.
- * Therefore, it determines decora tags position inside decorator file.
+ * Therefore, it determines Decora tags position inside decorator file.
  * <p>
- * If decorator content is static, array of decora tags can be cached
- * adn {@link jodd.decora.parser.DecoraTag#duplicate() duplicated} to
+ * If decorator content is static, array of Decora tags can be cached
+ * and {@link jodd.decora.parser.DecoraTag#duplicate() duplicated} to
  * skip parsing decorator again.
  */
 public class DecoratorTagVisitor extends EmptyTagVisitor {
@@ -63,7 +63,7 @@ public class DecoratorTagVisitor extends EmptyTagVisitor {
 	// ---------------------------------------------------------------- handlers
 
 	/**
-	 * Handle decora tags.
+	 * Handle Decora tags.
 	 */
 	protected void onDecoraTag(Tag tag) {
 		String tagName = tag.getName().toString();

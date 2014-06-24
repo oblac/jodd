@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Decora parser takes decorator and page content and produce the output content.
- * <p>
- * Decora parser may be used outside of container.
+ * Decora parser takes page content and puts it into decorator template, to produce the output.
+ * Important: Decora templates <b>do not</b> support <i>raw</i> tags, since Decora tags may be placed inside.
+ * Decora parser does not depend on servlets.
  */
 public class DecoraParser {
 
 	/**
-	 * Decorates page content with decorator content and outputs the result.
+	 * Decorates page content with decorator template and outputs the result.
 	 */
 	public void decorate(Writer writer, char[] pageContent, char[] decoraContent) throws IOException {
 		DecoraTag[] decoraTags = parseDecorator(decoraContent);
@@ -26,17 +26,19 @@ public class DecoraParser {
 	}
 
 	/**
-	 * Parses decorator.
+	 * Parses decorator and collects {@link jodd.decora.parser.DecoraTag Decora tags} used in template.
 	 */
 	protected DecoraTag[] parseDecorator(char[] decoraContent) {
 		LagartoParser lagartoParser = new LagartoParser(decoraContent, true);
+		lagartoParser.getConfig().setEnableRawTextModes(false);
+
 		DecoratorTagVisitor visitor = new DecoratorTagVisitor();
 		lagartoParser.parse(visitor);
 		return visitor.getDecoraTags();
 	}
 
 	/**
-	 * Parses page and extracts decora regions for replacements.
+	 * Parses page and extracts Decora regions for replacements.
 	 */
 	protected void parsePage(char[] pageContent, DecoraTag[] decoraTags) {
 		LagartoParser lagartoParser = new LagartoParser(pageContent, true);
