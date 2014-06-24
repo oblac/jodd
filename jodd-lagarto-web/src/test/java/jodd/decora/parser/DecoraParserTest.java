@@ -36,15 +36,12 @@ public class DecoraParserTest {
 		DecoraParser decoraParser = new DecoraParser();
 
 		FindFile ff = new WildcardFindFile().include("*.*ml");
+		ff.setMatchType(FindFile.Match.NAME);
 		ff.searchPath(testDataRoot);
+
 		File file;
 		while ((file = ff.nextFile()) != null) {
 
-/*
-if (file.getName().equals("common.html") == false) {
-	continue;
-}
-*/
 			System.out.println("+" + file.getName());
 
 			char[] page = FileUtil.readString(file).toCharArray();
