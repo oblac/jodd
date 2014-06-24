@@ -252,7 +252,7 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test', '*.?', '*Foo*', '*.data.*', '*.tst*', '*\$*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
