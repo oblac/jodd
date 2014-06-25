@@ -90,8 +90,6 @@ public class MadvocController {
 	 * Returns <code>null</code> if action path is consumed and has been invoked by this controller; otherwise
 	 * the action path string is returned (it might be different than original one, provided in arguments).
 	 * On first invoke, initializes the action configuration before further proceeding.
-	 *
-	 * @see jodd.madvoc.component.ActionMethodParser#buildActionPath(String, String, String, String, String)
 	 */
 	public String invoke(String actionPath, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
 		ActionRequest actionRequest = null;

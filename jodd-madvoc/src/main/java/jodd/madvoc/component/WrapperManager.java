@@ -5,6 +5,7 @@ package jodd.madvoc.component;
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.BaseActionWrapperStack;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.injector.Target;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ReflectUtil;
 
@@ -99,7 +100,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Initializes action wrapper.
 	 */
 	protected void initializeWrapper(T wrapper) {
-		contextInjectorComponent.injectContext(wrapper);
+		contextInjectorComponent.injectContext(new Target(wrapper));
 
 		wrapper.init();
 	}

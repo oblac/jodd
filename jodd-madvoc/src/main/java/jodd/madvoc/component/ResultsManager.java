@@ -5,6 +5,7 @@ package jodd.madvoc.component;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
+import jodd.madvoc.injector.Target;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
 
@@ -119,7 +120,7 @@ public class ResultsManager {
 	 * Initializes action result.
 	 */
 	protected void initializeResult(ActionResult result) {
-		contextInjectorComponent.injectContext(result);
+		contextInjectorComponent.injectContext(new Target(result));
 
 		result.init();
 	}

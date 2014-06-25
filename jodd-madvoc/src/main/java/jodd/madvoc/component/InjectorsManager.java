@@ -43,26 +43,10 @@ public class InjectorsManager {
 		sessionScopeInjector = new SessionScopeInjector(madvocConfig, scopeDataResolver);
 		actionPathMacroInjector = new ActionPathMacroInjector();
 		madvocContextScopeInjector = new MadvocContextScopeInjector(madvocConfig, scopeDataResolver, madpc);
-		madvocParamsInjector = new MadvocParamsInjector(madpc);
+		madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
 		applicationScopeInjector = new ApplicationScopeInjector(madvocConfig, scopeDataResolver);
 		servletContextScopeInjector = new ServletContextScopeInjector(madvocConfig, scopeDataResolver);
 	}
-
-	// ---------------------------------------------------------------- clone
-
-	/**
-	 * Clones <code>InjectorManager</code> and creates new set of injectors.
-	 */
-	@Override
-	public InjectorsManager clone() {
-		InjectorsManager injectorsManager = new InjectorsManager();
-		injectorsManager.madpc = this.madpc;
-		injectorsManager.madvocConfig = this.madvocConfig;
-		injectorsManager.scopeDataResolver = this.scopeDataResolver;
-		injectorsManager.createInjectors();
-		return injectorsManager;
-	}
-
 
 	// ---------------------------------------------------------------- getter
 
