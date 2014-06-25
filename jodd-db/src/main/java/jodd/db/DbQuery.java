@@ -4,6 +4,7 @@ package jodd.db;
 
 import jodd.bean.BeanUtil;
 import jodd.io.StringInputStream;
+import jodd.util.CharUtil;
 import jodd.util.collection.IntArrayList;
 import jodd.db.querymap.QueryMap;
 import jodd.db.type.SqlTypeManager;
@@ -76,11 +77,15 @@ public class DbQuery extends DbQueryBase {
 	// ---------------------------------------------------------------- sql map
 
 	/**
-	 * Pre-process SQL before using it.
+	 * Pre-process SQL before using it. If string starts with a non-ascii char
+	 * or it has no spaces, it will be loaded from the query map.
 	 */
 	protected String preprocessSql(String sqlString) {
 		// quickly detect if sql string is a key
-		if (sqlString.indexOf(' ') != -1) {
+		if (!CharUtil.isAlpha(sqlString.charAt(0))) {
+			sqlString = sqlString.substring(1);
+		}
+		else if (sqlString.indexOf(' ') != -1) {
 			return sqlString;
 		}
 
