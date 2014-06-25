@@ -6,7 +6,6 @@ import jodd.bean.BeanUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
@@ -37,31 +36,28 @@ public abstract class BaseScopeInjector {
 	/**
 	 * Sets target bean property, optionally creates instance if doesn't exist.
 	 */
-	protected void setTargetProperty(Object target, String name, Object attrValue) {
-		if (BeanUtil.hasDeclaredRootProperty(target, name)) {
-			try {
-				BeanUtil.setDeclaredPropertyForced(target, name, attrValue);
-			} catch (Exception ex) {
-				if (madvocConfig.isInjectionErrorThrowsException()) {
-					throw new MadvocException(ex);
-				} else {
-					if (log.isWarnEnabled()) {
-						log.warn("Injection failed: " + name + ". " + ex.toString());
-					}
-				}
-			}
-		}
+	protected void setTargetProperty(Target target, String name, Object value) {
+		target.writeValue(name, value, madvocConfig.isInjectionErrorThrowsException());
 	}
 
 	/**
 	 * Reads target property.
 	 */
-	protected Object getTargetProperty(Object target, ScopeData.Out out) {
-		if (out.target == null) {
-			return BeanUtil.getDeclaredProperty(target, out.name);
-		} else {
-			return BeanUtil.getDeclaredProperty(target, out.target);
+	protected Object getTargetProperty(Target target, ScopeData.Out out) {
+		final Object targetName = target.getName();
+
+		if (targetName == null) {
+			// case #1
+			Object targetValue = target.getValue();
+
+			if (out.target == null) {
+				return BeanUtil.getDeclaredProperty(targetValue, out.name);
+			} else {
+				return BeanUtil.getDeclaredProperty(targetValue, out.target);
+			}
 		}
+
+		return null;
 	}
 
 	// ---------------------------------------------------------------- matched property
