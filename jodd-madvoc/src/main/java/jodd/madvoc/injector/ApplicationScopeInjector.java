@@ -22,7 +22,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 
 		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
@@ -36,7 +36,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 			String attrName = (String) attributeNames.nextElement();
 
 			for (int i = 0; i < targets.length; i++) {
-				Object target = targets[i];
+				Target target = targets[i];
 				ScopeData.In[] scopes = injectData[i];
 				if (scopes == null) {
 					continue;
@@ -53,7 +53,7 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 		}
 	}
 
-	public void injectContext(Object target, ScopeData[] scopeData, ServletContext servletContext) {
+	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
 		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
@@ -79,11 +79,11 @@ public class ApplicationScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 		ServletContext context = actionRequest.getHttpServletRequest().getSession().getServletContext();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.Out[] scopes = outjectData[i];
 			if (scopes == null) {
 				continue;

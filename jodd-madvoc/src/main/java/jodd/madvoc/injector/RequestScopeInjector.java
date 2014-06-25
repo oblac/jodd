@@ -158,13 +158,13 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject request attributes.
 	 */
-	protected void injectAttributes(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectAttributes(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
 			for (int i = 0; i < targets.length; i++) {
-				Object target = targets[i];
+				Target target = targets[i];
 				ScopeData.In[] scopes = injectData[i];
 				if (scopes == null) {
 					continue;
@@ -185,7 +185,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * Inject request parameters. Parameters with the same name as one of request attributes
 	 * are simply ignored.
 	 */
-	protected void injectParameters(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectParameters(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
@@ -195,7 +195,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 			}
 
 			for (int i = 0; i < targets.length; i++) {
-				Object target = targets[i];
+				Target target = targets[i];
 				ScopeData.In[] scopes = injectData[i];
 				if (scopes == null) {
 					continue;
@@ -233,7 +233,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
-	protected void injectUploadedFiles(Object[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectUploadedFiles(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
 		if ((servletRequest instanceof MultipartRequestWrapper) == false) {
 			return;
 		}
@@ -249,7 +249,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 			}
 
 			for (int i = 0; i < targets.length; i++) {
-				Object target = targets[i];
+				Target target = targets[i];
 				ScopeData.In[] scopes = injectData[i];
 				if (scopes == null) {
 					continue;
@@ -309,7 +309,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 
 		ScopeData.In[][] injectData = lookupInData(actionRequest);
 		if (injectData == null) {
@@ -334,11 +334,11 @@ public class RequestScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.Out[] scopes = outjectData[i];
 			if (scopes == null) {
 				continue;
@@ -357,11 +357,11 @@ public class RequestScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = sourceRequest.getTargets();
+		Target[] targets = sourceRequest.getTargets();
 		HttpServletRequest servletRequest = sourceRequest.getHttpServletRequest();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.Out[] scopes = outjectData[i];
 			if (scopes == null) {
 				continue;

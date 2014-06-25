@@ -27,7 +27,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
@@ -37,7 +37,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 			String attrName = (String) attributeNames.nextElement();
 
 			for (int i = 0; i < targets.length; i++) {
-				Object target = targets[i];
+				Target target = targets[i];
 				ScopeData.In[] scopes = injectData[i];
 				if (scopes == null) {
 					continue;
@@ -60,12 +60,12 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpSession session = servletRequest.getSession();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.Out[] scopes = outjectData[i];
 			if (scopes == null) {
 				continue;

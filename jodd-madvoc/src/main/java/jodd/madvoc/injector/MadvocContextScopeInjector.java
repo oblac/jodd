@@ -2,7 +2,6 @@
 
 package jodd.madvoc.injector;
 
-import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
@@ -24,7 +23,7 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 		this.madpc = madpc;
 	}
 
-	public void injectContext(Object target, ScopeData[] scopeData, PetiteContainer madpc) {
+	public void injectContext(Target target, ScopeData[] scopeData, PetiteContainer madpc) {
 		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
@@ -33,7 +32,7 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 			Object value = madpc.getBean(in.name);
 			if (value != null) {
 				String property = in.target != null ? in.target : in.name;
-				BeanUtil.setDeclaredProperty(target, property, value);
+				setTargetProperty(target, property, value);
 			}
 		}
 	}
@@ -44,10 +43,10 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.In[] scopes = injectData[i];
 			if (scopes == null) {
 				continue;
@@ -57,7 +56,7 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 				Object value = madpc.getBean(in.name);
 				if (value != null) {
 					String property = in.target != null ? in.target : in.name;
-					BeanUtil.setDeclaredProperty(target, property, value);
+					setTargetProperty(target, property, value);
 				}
 			}
 

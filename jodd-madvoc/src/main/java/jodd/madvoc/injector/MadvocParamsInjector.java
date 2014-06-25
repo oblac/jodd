@@ -2,8 +2,8 @@
 
 package jodd.madvoc.injector;
 
-import jodd.bean.BeanUtil;
 import jodd.madvoc.ScopeData;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.ParamManager;
 import jodd.petite.PetiteContainer;
 
@@ -12,12 +12,12 @@ import jodd.petite.PetiteContainer;
  * Invoked on creation of all singleton instances, like interceptors etc.
  * Used to configure various Madvoc classes that are created in lazy manner.
  */
-public class MadvocParamsInjector implements ContextInjector<String> {
+public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 
-	protected final ParamManager madvocPetiteParamManager;
+	protected final MadvocConfig madvocConfig;
 
-	public MadvocParamsInjector(PetiteContainer madpc) {
-		madvocPetiteParamManager = madpc.getParamManager();
+	public MadvocParamsInjector(MadvocConfig madvocConfig) {
+		this.madvocConfig = madvocConfig;
 	}
 
 	/**
@@ -25,7 +25,12 @@ public class MadvocParamsInjector implements ContextInjector<String> {
 	 * Matching parameters are named as given base name.
 	 * @param scopeData scope data is not used!
 	 */
-	public void injectContext(Object target, ScopeData[] scopeData, String baseName) {
+	public void injectContext(Target target, ScopeData[] scopeData, PetiteContainer madpc) {
+		Class targetType = target.resolveType();
+		String baseName = targetType.getName();
+
+		ParamManager madvocPetiteParamManager = madpc.getParamManager();
+
 		String[] params = madvocPetiteParamManager.resolve(baseName, true);
 
 		for (String param : params) {
@@ -33,7 +38,7 @@ public class MadvocParamsInjector implements ContextInjector<String> {
 
 			String propertyName = param.substring(baseName.length() + 1);
 
-			BeanUtil.setDeclaredProperty(target, propertyName, value);
+			target.writeValue(propertyName, value, madvocConfig.isInjectionErrorThrowsException());
 		}
 	}
 

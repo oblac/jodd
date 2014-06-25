@@ -16,6 +16,6 @@ public interface ContextInjector<C> {
 	 * @param scopeData all scope data for target's type (shared during context initialization)
 	 * @param contextObject injection source or any key for retrieving context
 	 */
-	public void injectContext(Object target, ScopeData[] scopeData, C contextObject);
+	public void injectContext(Target target, ScopeData[] scopeData, C contextObject);
 
 }

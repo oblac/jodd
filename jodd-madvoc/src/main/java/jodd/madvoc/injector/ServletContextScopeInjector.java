@@ -63,13 +63,13 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.In[] scopes = injectData[i];
 			if (scopes == null) {
 				continue;
@@ -141,7 +141,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 				if (value != null) {
 					String property = in.target != null ? in.target : in.name;
-					BeanUtil.setDeclaredProperty(target, property, value);
+
+					setTargetProperty(target, property, value);
 				}
 			}
 		}
@@ -150,7 +151,7 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 	/**
 	 * Injects just context.
 	 */
-	public void injectContext(Object target, ScopeData[] scopeData, ServletContext servletContext) {
+	public void injectContext(Target target, ScopeData[] scopeData, ServletContext servletContext) {
 		ScopeData.In[] injectData = lookupInData(scopeData);
 		if (injectData == null) {
 			return;
@@ -172,7 +173,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 			if (value != null) {
 				String property = in.target != null ? in.target : in.name;
-				BeanUtil.setDeclaredProperty(target, property, value);
+
+				setTargetProperty(target, property, value);
 			}
 		}
 	}
@@ -183,11 +185,11 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 			return;
 		}
 
-		Object[] targets = actionRequest.getTargets();
+		Target[] targets = actionRequest.getTargets();
 		HttpServletResponse servletResponse = actionRequest.getHttpServletResponse();
 
 		for (int i = 0; i < targets.length; i++) {
-			Object target = targets[i];
+			Target target = targets[i];
 			ScopeData.Out[] scopes = outjectData[i];
 			if (scopes == null) {
 				continue;
@@ -195,7 +197,8 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 			for (ScopeData.Out out : scopes) {
 				if (out.name.startsWith(COOKIE_NAME)) {
-					Cookie cookie = (Cookie) BeanUtil.getDeclaredProperty(target, out.name);
+
+					Cookie cookie = (Cookie) getTargetProperty(target, out);
 					if (cookie != null) {
 						servletResponse.addCookie(cookie);
 					}
