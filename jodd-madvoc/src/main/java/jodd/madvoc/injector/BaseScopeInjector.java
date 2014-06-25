@@ -3,8 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
@@ -15,8 +13,6 @@ import jodd.madvoc.component.ScopeDataResolver;
  * Abstract base class for HTTP scopes injection.
  */
 public abstract class BaseScopeInjector {
-
-	private static final Logger log = LoggerFactory.getLogger(BaseScopeInjector.class);
 
 	protected final ScopeDataResolver scopeDataResolver;
 	protected final ScopeType scopeType;
