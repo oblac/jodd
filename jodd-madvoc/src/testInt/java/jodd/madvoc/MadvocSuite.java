@@ -24,6 +24,7 @@ import org.junit.runners.Suite;
 		TypesTest.class,
 		ExcTest.class,
 		UserActionTest.class,
+		AsyncTest.class,
 })
 public class MadvocSuite {
 
