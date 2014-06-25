@@ -4,6 +4,7 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
 import jodd.madvoc.filter.ActionFilter;
+import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.exception.ExceptionUtil;
 import jodd.madvoc.result.Result;
@@ -30,8 +31,7 @@ public class ActionRequest {
 	protected HttpServletResponse servletResponse;
 	protected Result result;
 
-	protected final Object[] params;
-	protected final Object[] targets;
+	protected final Target[] targets;
 	protected final int totalInterceptors;
 	protected int interceptorIndex;
 	protected int filterIndex;
@@ -133,7 +133,7 @@ public class ActionRequest {
 	/**
 	 * Returns all injection targets.
 	 */
-	public Object[] getTargets() {
+	public Target[] getTargets() {
 		return targets;
 	}
 	// ---------------------------------------------------------------- ctor
@@ -161,20 +161,25 @@ public class ActionRequest {
 		execState = 0;
 		this.action = action;
 		this.result = findResult();
-		this.params = createActionMethodArguments();
-		this.targets = makeTargets();
+
+		Object[] params = createActionMethodArguments();
+		this.targets = makeTargets(params);
 	}
 
 	/**
 	 * Joins action and parameters into one array.
 	 */
-	protected Object[] makeTargets() {
+	protected Target[] makeTargets(Object[] params) {
 		if (params == null) {
-			return new Object[] {action};
+			return new Target[] {new Target(action)};
 		}
-		Object[] target = new Object[params.length + 1];
-		target[0] = action;
-		System.arraycopy(params, 0, target, 1, params.length);
+		Target[] target = new Target[params.length + 1];
+
+		target[0] = new Target(action);
+
+		for (int i = 0; i < params.length; i++) {
+			target[i + 1] = new Target(params[i]);
+		}
 		return target;
 	}
 
@@ -308,11 +313,29 @@ public class ActionRequest {
 	 * After method invocation, all interceptors will finish, in opposite order. 
 	 */
 	protected Object invokeActionMethod() throws Exception {
+		Object[] params = extractParametersFromTargets();
 		try {
 			return actionConfig.actionClassMethod.invoke(action, params);
 		} catch(InvocationTargetException itex) {
 			throw ExceptionUtil.extractTargetException(itex);
 		}
+	}
+
+	/**
+	 * Collects all parameters from target into an array.
+	 */
+	protected Object[] extractParametersFromTargets() {
+		if (targets == null) {
+			return null;
+		}
+
+		Object[] values = new Object[targets.length - 1];
+
+		for (int i = 1; i < targets.length; i++) {
+			values[i - 1] = targets[i].getValue();
+		}
+
+		return values;
 	}
 
 }
