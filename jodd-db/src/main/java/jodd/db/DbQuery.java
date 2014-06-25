@@ -1017,6 +1017,64 @@ s	 */
 		}
 	}
 
+	// ---------------------------------------------------------------- batch
+
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, int[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setInteger(paramName, array[startingIndex]);
+			} else {
+				setNull(paramName, Types.INTEGER);
+			}
+			startingIndex++;
+		}
+	}
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, long[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setLong(paramName, array[startingIndex]);
+			} else {
+				setNull(paramName, Types.INTEGER);
+			}
+			startingIndex++;
+		}
+	}
+
+	/**
+	 * Sets batch parameters with given array of values.
+	 */
+	public void setBatch(String name, Object[] array, int startingIndex) {
+		init();
+		int batchSize = query.getBatchParameterSize(name);
+
+		for (int i = 1; i <= batchSize; i++) {
+			String paramName = name + '.' + i;
+
+			if (startingIndex < array.length) {
+				setObject(paramName, array[startingIndex]);
+			} else {
+				setObject(paramName, null);
+			}
+			startingIndex++;
+		}
+	}
+
 	// ---------------------------------------------------------------- close
 
 	/**

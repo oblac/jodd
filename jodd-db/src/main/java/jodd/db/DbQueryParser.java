@@ -2,6 +2,7 @@
 
 package jodd.db;
 
+import jodd.util.CharUtil;
 import jodd.util.StringUtil;
 import jodd.util.collection.IntArrayList;
 
@@ -27,7 +28,6 @@ class DbQueryParser {
 	DbQueryParser(String sql) {
 		parseSql(sql);
 	}
-
 
 	// ---------------------------------------------------------------- parameters
 
@@ -58,6 +58,32 @@ class DbQueryParser {
 		return namedParameterLocationMap.keySet().iterator();
 	}
 
+	// ---------------------------------------------------------------- batch
+
+	private Map<String, Integer> batchParams;
+
+	private void saveBatchParameter(String name, int size) {
+		if (batchParams == null) {
+			batchParams = new HashMap<String, Integer>();
+		}
+		batchParams.put(name, Integer.valueOf(size));
+	}
+
+	/**
+	 * Returns the size of batch parameter. Returns <code>0</code>
+	 * if parameter does not exist.
+	 */
+	protected int getBatchParameterSize(String name) {
+		if (batchParams == null) {
+			return 0;
+		}
+		Integer size = batchParams.get(name);
+		if (size == null) {
+			return 0;
+		}
+		return size.intValue();
+	}
+
 	// ---------------------------------------------------------------- parser
 
 	void parseSql(String sqlString) {
@@ -77,13 +103,56 @@ class DbQueryParser {
 				inQuote = true;
 			} else if (c == ':') {
 				int right = StringUtil.indexOfChars(sqlString, SQL_SEPARATORS, index + 1);
+				boolean batch = false;
+
 				if (right < 0) {
 					right = stringLength;
+				} else {
+					if (sqlString.charAt(right) == '!') {
+						batch = true;
+					}
 				}
+
 				String param = sqlString.substring(index + 1, right);
-				paramCount++;
-				storeNamedParameter(param, paramCount);
-				pureSql.append('?');
+
+				if (!batch) {
+					paramCount++;
+					storeNamedParameter(param, paramCount);
+					pureSql.append('?');
+				}
+				else {
+					// read batch size
+					right++;
+					int numStart = right;
+
+					while (right < stringLength) {
+						if (!CharUtil.isDigit(sqlString.charAt(right))) {
+							break;
+						}
+						right++;
+					}
+
+					String numberValue = sqlString.substring(numStart, right);
+					int batchSize;
+					try {
+						batchSize = Integer.parseInt(numberValue);
+					} catch (NumberFormatException nfex) {
+						throw new DbSqlException("Batch size is not an integer: " + numberValue, nfex);
+					}
+
+					saveBatchParameter(param, batchSize);
+
+					// create batch parameters
+					for (int i = 1; i <= batchSize; i++) {
+						if (i != 1) {
+							pureSql.append(',');
+						}
+						paramCount++;
+						storeNamedParameter(param + '.' + i, paramCount);
+						pureSql.append('?');
+					}
+				}
+
 				index = right;
 				continue;
 			} else if (c == '?') {		// either an ordinal or positional parameter
@@ -96,7 +165,7 @@ class DbQueryParser {
 					try {
 						Integer.parseInt(param);
 					} catch (NumberFormatException nfex) {
-						throw new DbSqlException("Positional parameter is not an integral ordinal: " + nfex, nfex);
+						throw new DbSqlException("Positional parameter is not an integer: " + param, nfex);
 					}
 					paramCount++;
 					storeNamedParameter(param, paramCount);
