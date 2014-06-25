@@ -27,6 +27,13 @@ public class ActionInterceptorStack extends BaseActionWrapperStack<ActionInterce
 	}
 
 	/**
+	 * Returns an array of interceptors.
+	 */
+	public Class<? extends ActionInterceptor>[] getInterceptors() {
+		return getWrappers();
+	}
+
+	/**
 	 * Interceptor is not used since this is just an interceptor container.
 	 */
 	public final Object intercept(ActionRequest actionRequest) throws Exception {

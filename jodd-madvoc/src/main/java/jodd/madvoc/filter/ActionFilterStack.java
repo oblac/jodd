@@ -25,6 +25,14 @@ public class ActionFilterStack extends BaseActionWrapperStack<ActionFilter> impl
 	}
 
 	/**
+	 * Returns an array of filters.
+	 */
+	public Class<? extends ActionFilter>[] getFilters() {
+		return getWrappers();
+	}
+
+
+	/**
 	 * Filter is not used since this is just an filter container.
 	 */
 	public final Object filter(ActionRequest actionRequest) throws Exception {
