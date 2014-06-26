@@ -66,6 +66,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
+		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
@@ -96,24 +97,24 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		InjectorsManager injectorsManager = new InjectorsManager();
 		injectorsManager.scopeDataResolver = new ScopeDataResolver();
 		injectorsManager.madvocConfig = new MadvocConfig();
+		injectorsManager.madpc = new PetiteContainer();
 
 		InterceptorsManager im = new InterceptorsManager();
 		im.contextInjectorComponent = new ContextInjectorComponent();
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
+		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class};
 
-		PetiteContainer madpc = new PetiteContainer();
-		madpc.defineParameter(
+		injectorsManager.madpc.defineParameter(
 				TestConfigurableStack.class.getName() + ".interceptors",
 				AnnotatedFieldsInterceptor.class.getName() + "," +
 				ServletConfigInterceptor.class.getName() + "," +
 				LogEchoInterceptor.class.getName()
 		);
 
-		injectorsManager.madpc = madpc;
 		injectorsManager.createInjectors();
 
 		Class<? extends ActionInterceptor>[] in = new Class[] {
@@ -176,6 +177,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.contextInjectorComponent.injectorsManager = injectorsManager;
 		im.contextInjectorComponent.madvocController = new MadvocController();
 		im.contextInjectorComponent.scopeDataResolver = injectorsManager.scopeDataResolver;
+		im.contextInjectorComponent.madpc = injectorsManager.madpc;
 		im.madvocConfig = injectorsManager.madvocConfig;
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, ServletConfigInterceptor.class, Test2Stack.class};
 

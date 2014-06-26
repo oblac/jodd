@@ -4,6 +4,7 @@ package jodd.madvoc;
 
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.ReflectUtil;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Method;
@@ -20,7 +21,7 @@ public abstract class MadvocTestCase {
 		try {
 			data[0] = this.getClass().getPackage().getName() + '.' + data[0];
 			Class c = ClassLoaderUtil.loadClass(data[0]);
-			Method m = c.getMethod(data[1]);
+			Method m = ReflectUtil.findMethod(c, data[1]);
 			return new Object[]{c, m};
 		} catch (Exception e) {
 			throw new RuntimeException(e);

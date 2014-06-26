@@ -2,7 +2,8 @@
 
 package jodd.madvoc.injector;
 
-import jodd.madvoc.ScopeData;
+import jodd.madvoc.WebApplication;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.petite.PetiteContainer;
 import org.junit.Test;
 
@@ -12,7 +13,12 @@ public class MadvocParamsInjectorTest {
 
 	@Test
 	public void testInjection() {
-		PetiteContainer madpc = new PetiteContainer();
+		WebApplication webapp = new WebApplication(true);
+		webapp.registerMadvocComponents();
+
+		PetiteContainer madpc = (PetiteContainer) webapp.getComponent(WebApplication.MADVOC_CONTAINER_NAME);
+		MadvocConfig madvocConfig = new MadvocConfig();
+
 		String baseName = FooBean.class.getName();
 
 		madpc.defineParameter("foo", "1");
@@ -21,11 +27,11 @@ public class MadvocParamsInjectorTest {
 		madpc.defineParameter(baseName + ".string", "jodd");
 		madpc.defineParameter(baseName, "huh");
 
-		MadvocParamsInjector madvocParamsInjector = new MadvocParamsInjector(madpc);
+		MadvocParamsInjector madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
 
 		FooBean fooBean = new FooBean();
 
-		madvocParamsInjector.injectContext(fooBean, null, baseName);
+		madvocParamsInjector.injectContext(new Target(fooBean), null, madpc);
 
 		assertEquals(173, fooBean.getInteger().intValue());
 		assertEquals("jodd", fooBean.getString());
