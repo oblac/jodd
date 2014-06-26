@@ -25,6 +25,27 @@ public class ArgsAction {
 		@Out String value;
 	}
 
+	public static class User {
+		long id;
+		String username;
+
+		public long getId() {
+			return id;
+		}
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+	}
+
 	@In
 	String who;
 
@@ -44,11 +65,16 @@ public class ArgsAction {
 			@InOut MutableInteger muti,
 			@In("hello") Data2 hello,
 			Hello hello2,
-			@In(scope = ScopeType.SERVLET)HttpServletRequest request) {
+			@In(scope = ScopeType.SERVLET)HttpServletRequest request,
+			@Out User user
+			) {
 
 		hello2.out = "bye-" + (request != null) + "-" + muti.intValue();
 
 		muti.value++;
+
+		user.id = 7;
+		user.username = "jojo";
 
 		this.name = who + "+" + name + "+" + hello.id + "+" + hello2.id;
 	}

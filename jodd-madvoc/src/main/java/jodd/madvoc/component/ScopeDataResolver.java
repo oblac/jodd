@@ -81,6 +81,24 @@ public class ScopeDataResolver {
 		return scopeData;
 	}
 
+	/**
+	 * Scans annotation and returns type of Madvoc annotations.
+	 */
+	public Class<? extends Annotation> detectAnnotationType(Annotation[] annotations) {
+		for (Annotation annotation : annotations) {
+			if (annotation instanceof In) {
+				return annotation.annotationType();
+			}
+			else if (annotation instanceof Out) {
+				return annotation.annotationType();
+			}
+			else if (annotation instanceof InOut) {
+				return annotation.annotationType();
+			}
+		}
+		return null;
+	}
+
 
 	// ---------------------------------------------------------------- inspect method
 
@@ -139,7 +157,8 @@ public class ScopeDataResolver {
 		if (value.length() > 0) {
 			ii.name = value;
 			ii.target = propertyName;
-		} else {
+		}
+		else {
 			ii.name = propertyName;
 			ii.target = null;
 		}
@@ -153,7 +172,8 @@ public class ScopeDataResolver {
 		if (value.length() > 0) {
 			oi.name = value;
 			oi.target = propertyName;
-		} else {
+		}
+		else {
 			oi.name = propertyName;
 			oi.target = null;
 		}

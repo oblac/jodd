@@ -7,6 +7,7 @@ import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.exception.ExceptionUtil;
+import jodd.madvoc.meta.Out;
 import jodd.madvoc.result.Result;
 
 import javax.servlet.http.HttpServletRequest;
@@ -195,24 +196,35 @@ public class ActionRequest {
 			return new Target[] {new Target(action)};
 		}
 
-		Object[] params = createActionMethodArguments();
-
-		Target[] target = new Target[params.length + 1];
+		ActionConfig.MethodParam[] methodParams = actionConfig.getMethodParams();
+		Target[] target = new Target[methodParams.length + 1];
 
 		target[0] = new Target(action);
 
-		for (int i = 0; i < params.length; i++) {
-			Class type = actionConfig.usedArgTypes[i];
+		for (int i = 0; i < methodParams.length; i++) {
+			ActionConfig.MethodParam mp = methodParams[i];
+
+			Class type = mp.getType();
 
 			Target t;
 
-			if (type == null) {
-				// non-annotated, value is known
-				t = new Target(params[i]);
+			if (mp.getAnnotationType() == null) {
+				// parameter is NOT annotated
+				t = new Target(createActionMethodArgument(type));
+			}
+			else if (mp.getAnnotationType() == Out.class) {
+				// parameter is annotated with *only* OUT annotation
+				// we need to create the output AND to save the type
+				t = new Target(createActionMethodArgument(type), type);
 			}
 			else {
-				// annotated type
-				t = new Target(type);
+				// parameter is annotated with any IN annotation
+				t = new Target(type) {
+					@Override
+					protected void createValueInstance() {
+						value = createActionMethodArgument(type);
+					}
+				};
 			}
 
 			target[i + 1] = t;
@@ -221,40 +233,24 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Creates some action method arguments.
-	 * When argument is annotated, it's instance will not be created.
-	 * When argument is NOT annotated, it will be created.
+	 * Creates action method arguments.
 	 */
-	protected Object[] createActionMethodArguments() {
-		Class[] types = actionConfig.getActionClassMethod().getParameterTypes();
-
-		Object[] params = new Object[types.length];
-
-		for (int i = 0; i < params.length; i++) {
-			Class type = types[i];
-
-			if (actionConfig.usedArgTypes[i] != null) {
-				// annotated argument, skip it!
-				continue;
+	protected Object createActionMethodArgument(Class type) {
+		try {
+			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
+				// regular or static class
+				Constructor ctor = type.getDeclaredConstructor(null);
+				ctor.setAccessible(true);
+				return ctor.newInstance();
+			} else {
+				// member class
+				Constructor ctor = type.getDeclaredConstructor(actionConfig.getActionClass());
+				ctor.setAccessible(true);
+				return ctor.newInstance(action);
 			}
-
-			try {
-				if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
-					// regular or static class
-					Constructor ctor = type.getDeclaredConstructor(null);
-					ctor.setAccessible(true);
-					params[i] = ctor.newInstance();
-				} else {
-					// member class
-					Constructor ctor = type.getDeclaredConstructor(actionConfig.getActionClass());
-					ctor.setAccessible(true);
-					params[i] = ctor.newInstance(action);
-				}
-			} catch (Exception ex) {
-				throw new MadvocException(ex);
-			}
+		} catch (Exception ex) {
+			throw new MadvocException(ex);
 		}
-		return params;
 	}
 
 	// ---------------------------------------------------------------- invoke

@@ -90,7 +90,7 @@ public class ActionMethodParser {
 
 	/**
 	 * Parses java action method annotation and returns its action configuration.
-	 * todo check when no annotation is used!!!!
+	 * todo check when no annotation is used!
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
@@ -453,6 +453,8 @@ public class ActionMethodParser {
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
+		ActionConfig.MethodParam[] params = new ActionConfig.MethodParam[paramTypes.length];
+
 		Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
 		String[] methodParamNames = null;
 
@@ -473,15 +475,14 @@ public class ActionMethodParser {
 					methodParamNames = actionMethodParamNameResolver.resolveParamNames(actionClassMethod);
 				}
 
-				// scan method arguments
 				int paramIndex = i - 1;
 
-				scopeData = scopeDataResolver.resolveScopeData(
-						methodParamNames[paramIndex], type, paramAnns[paramIndex]);
+				String paramName = methodParamNames[paramIndex];
 
-				if (scopeData == null) {
-					paramTypes[paramIndex] = null;
-				}
+				scopeData = scopeDataResolver.resolveScopeData(paramName, type, paramAnns[paramIndex]);
+
+				params[paramIndex] = new ActionConfig.MethodParam(
+						paramTypes[paramIndex], paramName, scopeDataResolver.detectAnnotationType(paramAnns[paramIndex]));
 			}
 
 			if (scopeData == null) {
@@ -510,7 +511,7 @@ public class ActionMethodParser {
 				actionDef,
 				async,
 				allScopeData,
-				paramTypes);
+				params);
 	}
 
 }

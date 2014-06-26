@@ -9,6 +9,7 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.result.Result;
 import jodd.util.ReflectUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -16,6 +17,41 @@ import java.lang.reflect.Method;
  * Action configuration and shared run-time data, used internally.
  */
 public class ActionConfig {
+
+	public static class MethodParam {
+
+		private final Class type;
+		private final String name;
+		private final Class<? extends Annotation> annotationType;
+
+		public MethodParam(Class type, String name, Class<? extends Annotation> annotationType) {
+			this.type = type;
+			this.name = name;
+			this.annotationType = annotationType;
+		}
+
+		/**
+		 * Returns parameter type.
+		 */
+		public Class getType() {
+			return type;
+		}
+
+		/**
+		 * Returns parameter name.
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * Returns parameter Madvoc annotation type, one of
+		 * {@link jodd.madvoc.meta.In}, {@link jodd.madvoc.meta.Out} or {@link jodd.madvoc.meta.InOut}.
+		 */
+		public Class<? extends Annotation> getAnnotationType() {
+			return annotationType;
+		}
+	}
 
 	// configuration
 	public final Class actionClass;
@@ -28,7 +64,7 @@ public class ActionConfig {
 
 	// scope data information matrix: [scope-type][target-index]
 	public final ScopeData[][] scopeData;
-	public Class[] usedArgTypes;
+	public final MethodParam[] methodParams;
 
 	public final boolean hasArguments;
 
@@ -45,7 +81,7 @@ public class ActionConfig {
 			ActionDef actionDef,
 			boolean async,
 			ScopeData[][] scopeData,
-			Class[] usedArgTypes
+			MethodParam[] methodParams
 			)
 	{
 		this.actionClass = actionClass;
@@ -60,7 +96,7 @@ public class ActionConfig {
 
 		this.filters = filters;
 		this.interceptors = interceptors;
-		this.usedArgTypes = usedArgTypes;
+		this.methodParams = methodParams;
 		this.resultField = findResultField(actionClass);
 	}
 
@@ -136,6 +172,12 @@ public class ActionConfig {
 		return actionConfigSet;
 	}
 
+	/**
+	 * Returns method parameters information, or <code>null</code> if method has no params.
+	 */
+	public MethodParam[] getMethodParams() {
+		return methodParams;
+	}
 
 	// ---------------------------------------------------------------- to string
 

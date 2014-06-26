@@ -10,27 +10,21 @@ import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Resolves method parameter names.
+ * Does not cache anything, as it is going to be called once per each method.
+ * One method will and should not be passed twice to this class!
  */
 public class ActionMethodParamNameResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ActionMethodParamNameResolver.class);
 
-	protected Map<Method, String[]> paramNames = new HashMap<Method, String[]>();
-
 	/**
 	 * Returns method parameter names.
 	 */
 	public String[] resolveParamNames(Method actionClassMethod) {
-		String[] names = paramNames.get(actionClassMethod);
-
-		if (names != null) {
-			return names;
-		}
+		String[] names;
 
 		if (!Jodd.isModuleLoaded(Jodd.PROXETTA)) {
 			if (log.isWarnEnabled()) {
@@ -47,8 +41,6 @@ public class ActionMethodParamNameResolver {
 				names[i] = methodParameters[i].getName();
 			}
 		}
-
-		paramNames.put(actionClassMethod, names);
 
 		return names;
 	}

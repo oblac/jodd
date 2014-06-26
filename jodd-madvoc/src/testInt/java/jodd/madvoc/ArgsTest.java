@@ -41,7 +41,7 @@ public class ArgsTest {
 				.query("muti", "7")
 				.send();
 
-		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8", response.bodyText().trim());
+		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
 	}
 
 }

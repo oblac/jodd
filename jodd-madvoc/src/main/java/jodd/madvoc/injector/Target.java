@@ -26,8 +26,12 @@ public class Target {
 	 * and action non-annotated arguments.
 	 */
 	public Target(Object value) {
-		this.type = null;
 		this.value = value;
+		this.type = null;
+	}
+	public Target(Object value, Class type) {
+		this.value = value;
+		this.type = type;
 	}
 
 	/**
