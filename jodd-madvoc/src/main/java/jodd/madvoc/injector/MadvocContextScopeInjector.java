@@ -38,7 +38,7 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		ScopeData.In[][] injectData = lookupInData(actionRequest);
+		ScopeData[] injectData = lookupScopeData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
@@ -47,7 +47,11 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 
 		for (int i = 0; i < targets.length; i++) {
 			Target target = targets[i];
-			ScopeData.In[] scopes = injectData[i];
+			if (injectData[i] == null) {
+				continue;
+			}
+			ScopeData.In[] scopes = injectData[i].in;
+
 			if (scopes == null) {
 				continue;
 			}

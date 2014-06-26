@@ -22,7 +22,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	}
 
 	public void inject(ActionRequest actionRequest) {
-		ScopeData.In[][] injectData = lookupInData(actionRequest);
+		ScopeData[] injectData = lookupScopeData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
@@ -38,7 +38,10 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 
 			for (int i = 0; i < targets.length; i++) {
 				Target target = targets[i];
-				ScopeData.In[] scopes = injectData[i];
+				if (injectData[i] == null) {
+					continue;
+				}
+				ScopeData.In[] scopes = injectData[i].in;
 				if (scopes == null) {
 					continue;
 				}
@@ -55,7 +58,7 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 	}
 
 	public void outject(ActionRequest actionRequest) {
-		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
+		ScopeData[] outjectData = lookupScopeData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
@@ -66,7 +69,10 @@ public class SessionScopeInjector extends BaseScopeInjector implements Injector,
 
 		for (int i = 0; i < targets.length; i++) {
 			Target target = targets[i];
-			ScopeData.Out[] scopes = outjectData[i];
+			if (outjectData[i] == null) {
+				continue;
+			}
+			ScopeData.Out[] scopes = outjectData[i].out;
 			if (scopes == null) {
 				continue;
 			}

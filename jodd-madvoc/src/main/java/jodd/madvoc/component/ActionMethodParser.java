@@ -453,16 +453,11 @@ public class ActionMethodParser {
 		// expand arguments array with action itself, on first position
 		Class[] types = ArraysUtil.insert(paramTypes, actionClass, 0);
 
-		ScopeData.In[][][] ins;
-		ScopeData.Out[][][] outs;
-
-		ins = new ScopeData.In[ScopeType.values().length][][];
-		outs = new ScopeData.Out[ScopeType.values().length][][];
+		ScopeData[][] scopeDatas = new ScopeData[ScopeType.values().length][];
 
 		// for all scope types...
 		for (int i = 0; i < ScopeType.values().length; i++) {
-			ins[i] = new ScopeData.In[types.length][];
-			outs[i] = new ScopeData.Out[types.length][];
+			scopeDatas[i] = new ScopeData[types.length];
 		}
 
 		// for all: action and method arguments...
@@ -478,8 +473,7 @@ public class ActionMethodParser {
 			// for all scope types...
 			for (int i = 0; i < ScopeType.values().length; i++) {
 				if (scopeData[i] != null) {
-					ins[i][j] = scopeData[i].in;
-					outs[i][j] = scopeData[i].out;
+					scopeDatas[i][j] = scopeData[i];
 				}
 			}
 		}
@@ -491,8 +485,7 @@ public class ActionMethodParser {
 				interceptors,
 				actionDef,
 				async,
-				ins,
-				outs);
+				scopeDatas);
 	}
 
 }

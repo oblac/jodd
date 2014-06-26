@@ -93,6 +93,13 @@ public abstract class BaseScopeInjector {
 	// ---------------------------------------------------------------- delegates
 
 	/**
+	 * Returns scope data from action request and for current scope type.
+	 */
+	public ScopeData[] lookupScopeData(ActionRequest actionRequest) {
+		return actionRequest.getActionConfig().scopeDatas[scopeType.value()];
+	}
+
+	/**
 	 * Returns IN data for current scope type.
 	 */
 	public ScopeData.In[] lookupInData(ScopeData[] scopeData) {
@@ -105,20 +112,6 @@ public abstract class BaseScopeInjector {
 		}
 
 		return sd.in;
-	}
-
-	/**
-	 * Lookups scope data for many targets.
-	 */
-	public ScopeData.In[][] lookupInData(ActionRequest actionRequest) {
-		return actionRequest.getActionConfig().ins[scopeType.value()];
-	}
-
-	/**
-	 * Lookups scope data for many targets.
-	 */
-	public ScopeData.Out[][] lookupOutData(ActionRequest actionRequest) {
-		return actionRequest.getActionConfig().outs[scopeType.value()];
 	}
 
 }

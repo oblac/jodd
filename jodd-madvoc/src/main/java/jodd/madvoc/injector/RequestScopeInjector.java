@@ -158,14 +158,17 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject request attributes.
 	 */
-	protected void injectAttributes(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectAttributes(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
 		Enumeration attributeNames = servletRequest.getAttributeNames();
 		while (attributeNames.hasMoreElements()) {
 			String attrName = (String) attributeNames.nextElement();
 
 			for (int i = 0; i < targets.length; i++) {
 				Target target = targets[i];
-				ScopeData.In[] scopes = injectData[i];
+				if (injectData[i] == null) {
+					continue;
+				}
+				ScopeData.In[] scopes = injectData[i].in;
 				if (scopes == null) {
 					continue;
 				}
@@ -185,7 +188,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * Inject request parameters. Parameters with the same name as one of request attributes
 	 * are simply ignored.
 	 */
-	protected void injectParameters(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectParameters(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
 		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 		while (paramNames.hasMoreElements()) {
@@ -196,7 +199,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 			for (int i = 0; i < targets.length; i++) {
 				Target target = targets[i];
-				ScopeData.In[] scopes = injectData[i];
+				if (injectData[i] == null) {
+					continue;
+				}
+				ScopeData.In[] scopes = injectData[i].in;
 				if (scopes == null) {
 					continue;
 				}
@@ -233,7 +239,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	/**
 	 * Inject uploaded files from multipart request parameters.
 	 */
-	protected void injectUploadedFiles(Target[] targets, ScopeData.In[][] injectData, HttpServletRequest servletRequest) {
+	protected void injectUploadedFiles(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
 		if ((servletRequest instanceof MultipartRequestWrapper) == false) {
 			return;
 		}
@@ -250,7 +256,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 			for (int i = 0; i < targets.length; i++) {
 				Target target = targets[i];
-				ScopeData.In[] scopes = injectData[i];
+				if (injectData[i] == null) {
+					continue;
+				}
+				ScopeData.In[] scopes = injectData[i].in;
 				if (scopes == null) {
 					continue;
 				}
@@ -311,7 +320,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	public void inject(ActionRequest actionRequest) {
 		Target[] targets = actionRequest.getTargets();
 
-		ScopeData.In[][] injectData = lookupInData(actionRequest);
+		ScopeData[] injectData = lookupScopeData(actionRequest);
 		if (injectData == null) {
 			return;
 		}
@@ -329,7 +338,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	// ---------------------------------------------------------------- outject
 
 	public void outject(ActionRequest actionRequest) {
-		ScopeData.Out[][] outjectData = lookupOutData(actionRequest);
+		ScopeData[] outjectData = lookupScopeData(actionRequest);
 		if (outjectData == null) {
 			return;
 		}
@@ -339,7 +348,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 		for (int i = 0; i < targets.length; i++) {
 			Target target = targets[i];
-			ScopeData.Out[] scopes = outjectData[i];
+			if (outjectData[i] == null) {
+				continue;
+			}
+			ScopeData.Out[] scopes = outjectData[i].out;
 			if (scopes == null) {
 				continue;
 			}
@@ -352,7 +364,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	}
 
 	protected void outjectAfterMove(ActionRequest sourceRequest) {
-		ScopeData.Out[][] outjectData = lookupOutData(sourceRequest);
+		ScopeData[] outjectData = lookupScopeData(sourceRequest);
 		if (outjectData == null) {
 			return;
 		}
@@ -362,7 +374,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 
 		for (int i = 0; i < targets.length; i++) {
 			Target target = targets[i];
-			ScopeData.Out[] scopes = outjectData[i];
+			if (outjectData[i] == null) {
+				continue;
+			}
+			ScopeData.Out[] scopes = outjectData[i].out;
 			if (scopes == null) {
 				continue;
 			}

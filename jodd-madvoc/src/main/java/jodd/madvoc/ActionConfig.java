@@ -26,9 +26,8 @@ public class ActionConfig {
 	public final Field resultField;
 	public final boolean async;
 
-	// scope data information matrix: [scope-type][target-index][founded ins/outs]
-	public final ScopeData.In[][][] ins;
-	public final ScopeData.Out[][][] outs;
+	// scope data information matrix: [scope-type][target-index]
+	public final ScopeData[][] scopeDatas;
 
 	public final boolean hasArguments;
 	//public final String[] actionPathElements;
@@ -45,8 +44,7 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			ActionDef actionDef,
 			boolean async,
-			ScopeData.In[][][] ins,
-			ScopeData.Out[][][] outs)
+			ScopeData[][] scopeDatas)
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
@@ -56,8 +54,7 @@ public class ActionConfig {
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.async = async;
 
-		this.ins = ins;
-		this.outs = outs;
+		this.scopeDatas = scopeDatas;
 
 		this.filters = filters;
 		this.interceptors = interceptors;
