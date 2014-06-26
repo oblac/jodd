@@ -3,7 +3,7 @@
 package jodd.madvoc;
 
 /**
- * Holds action data for a scope.
+ * Holds IN and OUT information for single scope.
  */
 public class ScopeData {
 
@@ -13,12 +13,12 @@ public class ScopeData {
 	public static class In {
 		public Class type;			// property type
 		public String name;			// property name
-		public String target;		// real input name, if different from 'name'
+		public String target;		// real property name, if different from 'name'
 	}
 	public static class Out {
 		public Class type;			// property type
 		public String name;			// property name
-		public String target;		// real output name, if different from 'name'
+		public String target;		// real property name, if different from 'name'
 	}
 
 }

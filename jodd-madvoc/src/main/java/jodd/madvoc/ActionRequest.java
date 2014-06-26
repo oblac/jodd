@@ -161,26 +161,7 @@ public class ActionRequest {
 		execState = 0;
 		this.action = action;
 		this.result = findResult();
-
-		Object[] params = createActionMethodArguments();
-		this.targets = makeTargets(params);
-	}
-
-	/**
-	 * Joins action and parameters into one array.
-	 */
-	protected Target[] makeTargets(Object[] params) {
-		if (params == null) {
-			return new Target[] {new Target(action)};
-		}
-		Target[] target = new Target[params.length + 1];
-
-		target[0] = new Target(action);
-
-		for (int i = 0; i < params.length; i++) {
-			target[i + 1] = new Target(params[i]);
-		}
-		return target;
+		this.targets = makeTargets();
 	}
 
 	/**
@@ -204,6 +185,26 @@ public class ActionRequest {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Joins action and parameters into one array of Targets.
+	 */
+	protected Target[] makeTargets() {
+		Object[] params = createActionMethodArguments();
+
+		if (params == null) {
+			return new Target[] {new Target(action)};
+		}
+
+		Target[] target = new Target[params.length + 1];
+
+		target[0] = new Target(action);
+
+		for (int i = 0; i < params.length; i++) {
+			target[i + 1] = new Target(params[i]);
+		}
+		return target;
 	}
 
 	/**

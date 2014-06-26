@@ -446,9 +446,11 @@ public class ActionMethodParser {
 			boolean async)
 	{
 
-		// find ins and outs
+		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
+
+		// expand arguments array with action itself, on first position
 		Class[] types = ArraysUtil.insert(paramTypes, actionClass, 0);
 
 		ScopeData.In[][][] ins;
@@ -457,13 +459,16 @@ public class ActionMethodParser {
 		ins = new ScopeData.In[ScopeType.values().length][][];
 		outs = new ScopeData.Out[ScopeType.values().length][][];
 
+		// for all scope types...
 		for (int i = 0; i < ScopeType.values().length; i++) {
 			ins[i] = new ScopeData.In[types.length][];
 			outs[i] = new ScopeData.Out[types.length][];
 
+			// for all: action and method arguments...
 			for (int j = 0; j < types.length; j++) {
 				Class type = types[j];
 
+				// read annotations inside the type
 				ScopeData[] scopeData = scopeDataResolver.resolveScopeData(type);
 				if (scopeData == null) {
 					continue;
