@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.madvoc.component.ActionMethodParamNameResolver;
 import jodd.madvoc.component.ActionPathMacroManager;
 import jodd.madvoc.component.ContextInjectorComponent;
 import jodd.madvoc.component.FiltersManager;
@@ -155,6 +156,7 @@ public class WebApplication {
 		log.debug("Registering Madvoc components");
 
 		registerComponent(ActionMethodParser.class);
+		registerComponent(ActionMethodParamNameResolver.class);
 		registerComponent(ActionPathRewriter.class);
 		registerComponent(ActionPathMacroManager.class);
 		registerComponent(ActionsManager.class);
