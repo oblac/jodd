@@ -14,6 +14,7 @@ import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.reflect.Method;
@@ -33,48 +34,46 @@ public class ScopeDataResolver {
 	 * Returns <code>null</code> if no scope data exist.
 	 */
 	public ScopeData[] resolveScopeData(Class type) {
-		ScopeData[] scopeData = inspectScopeData(type);
+		final ScopeType[] allScopeTypes = ScopeType.values();
 
-		if (scopeData == null) {
+		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
+
+		int count = 0;
+
+		for (ScopeType scopeType : allScopeTypes) {
+			ScopeData sd = inspectClassScopeData(type, scopeType);
+			if (sd != null) {
+				count++;
+			}
+			scopeData[scopeType.value()] = sd;
+		}
+
+		if (count == 0) {
 			return null;
 		}
 
 		return scopeData;
 	}
 
-	// ---------------------------------------------------------------- common
-
 	/**
-	 * Inspects and returns scope data for all available scopes.
+	 * Resolves scope data in given annotations for all scope types.
+	 * Returns <code>null</code> if no scope data exist.
 	 */
-	protected ScopeData[] inspectScopeData(Object key) {
+	public ScopeData[] resolveScopeData(String name, Class type, Annotation[] annotations) {
 		final ScopeType[] allScopeTypes = ScopeType.values();
 
 		ScopeData[] scopeData = new ScopeData[allScopeTypes.length];
 
 		int count = 0;
-		if (key instanceof Class) {
-			for (ScopeType scopeType : allScopeTypes) {
-				ScopeData sd = inspectClassScopeData((Class) key, scopeType);
-				if (sd != null) {
-					count++;
-				}
-				scopeData[scopeType.value()] = sd;
+
+		for (ScopeType scopeType : allScopeTypes) {
+			ScopeData sd = inspectMethodParameterScopeData(name, type, annotations, scopeType);
+			if (sd != null) {
+				count++;
 			}
+			scopeData[scopeType.value()] = sd;
 		}
 
-		/*else if (key instanceof Method) {
-			for (ScopeType scopeType : allScopeTypes) {
-				ScopeData sd = inspectMethodScopeData((Method) key, scopeType);
-				if (sd != null) {
-					count++;
-				}
-				scopeData[scopeType.value()] = sd;
-			}
-		} */
-		else {
-			throw new MadvocException("Invalid type: " + key);
-		}
 		if (count == 0) {
 			return null;
 		}
@@ -86,64 +85,43 @@ public class ScopeDataResolver {
 	// ---------------------------------------------------------------- inspect method
 
 	/**
-	 * Inspects all method parameters for scope data.
+	 * Inspects all method parameters for scope type.
 	 */
-/*	protected ScopeData inspectMethodScopeData(Method method, ScopeType scopeType) {
-
-		String[] methodParameterNames = actionParameterNamesResolver.resolveActionParameterNames(method);
-
-		Annotation[][] annotations = method.getParameterAnnotations();
-		Class<?>[] types = method.getParameterTypes();
-
-		int paramsCount = types.length;
-
+	protected ScopeData inspectMethodParameterScopeData(String name, Class type, Annotation[] annotations, ScopeType scopeType) {
 		ScopeData sd = new ScopeData();
-		sd.in = new ScopeData.In[paramsCount];
-		sd.out = new ScopeData.Out[paramsCount];
+		int count = 0;
 
-		int incount = 0, outcount = 0;
+		for (Annotation annotation : annotations) {
 
-		for (int i = 0; i < paramsCount; i++) {
-			Annotation[] paramAnnotations = annotations[i];
-
-			Class type = types[i];
-			String name = methodParameterNames[i];
-
-			for (Annotation annotation : paramAnnotations) {
-
-				if (annotation instanceof In) {
-					sd.in[i] = inspectIn((In) annotation, scopeType, name, type);
-					if (sd.in[i] != null) {
-						incount++;
-					}
-				} else if (annotation instanceof Out) {
-					sd.out[i] = inspectOut((Out) annotation, scopeType, StringUtil.uncapitalize(type.getSimpleName()), type);
-					if (sd.out[i] != null) {
-						outcount++;
-					}
+			if (annotation instanceof In) {
+				ScopeData.In scopeDataIn = inspectIn((In) annotation, scopeType, name, type);
+				if (scopeDataIn != null) {
+					count++;
+					sd.in = new ScopeData.In[] {scopeDataIn};
+				}
+			}
+			else if (annotation instanceof Out) {
+				ScopeData.Out scopeDataOut = inspectOut((Out) annotation, scopeType, name, type);
+				if (scopeDataOut != null) {
+					count++;
+					sd.out = new ScopeData.Out[] {scopeDataOut};
 				}
 			}
 		}
 
-		if (incount == 0 && outcount == 0) {
+		if (count == 0) {
 			return null;
 		}
-		if (incount == 0) {
-			sd.in = null;
-		}
-		if (outcount == 0) {
-			sd.out = null;
-		}
+
 		return sd;
 	}
-*/
 
 	// ---------------------------------------------------------------- inspect class
 
 	/**
-	 * Fills value and property name.
+	 * Saves value and property name.
 	 */
-	protected void fillNameTarget(ScopeData.In ii, String value, String propertyName) {
+	protected void saveNameTarget(ScopeData.In ii, String value, String propertyName) {
 		value = value.trim();
 		if (value.length() > 0) {
 			ii.name = value;
@@ -155,9 +133,9 @@ public class ScopeDataResolver {
 	}
 
 	/**
-	 * Fills value and property name.
+	 * Saves value and property name.
 	 */
-	protected void fillNameTarget(ScopeData.Out oi, String value, String propertyName) {
+	protected void saveNameTarget(ScopeData.Out oi, String value, String propertyName) {
 		value = value.trim();
 		if (value.length() > 0) {
 			oi.name = value;
@@ -180,7 +158,7 @@ public class ScopeDataResolver {
 			return null;
 		}
 		ScopeData.In ii = new ScopeData.In();
-		fillNameTarget(ii, in.value(), propertyName);
+		saveNameTarget(ii, in.value(), propertyName);
 		ii.type = propertyType;
 		return ii;
 	}
@@ -198,7 +176,7 @@ public class ScopeDataResolver {
 			return null;
 		}
 		ScopeData.In ii = new ScopeData.In();
-		fillNameTarget(ii, inOut.value(), propertyName);
+		saveNameTarget(ii, inOut.value(), propertyName);
 		ii.type = propertyType;
 		return ii;
 	}
@@ -215,7 +193,7 @@ public class ScopeDataResolver {
 			return null;
 		}
 		ScopeData.Out oi = new ScopeData.Out();
-		fillNameTarget(oi, out.value(), propertyName);
+		saveNameTarget(oi, out.value(), propertyName);
 		oi.type = propertyType;
 		return oi;
 	}
@@ -233,7 +211,7 @@ public class ScopeDataResolver {
 			return null;
 		}
 		ScopeData.Out oi = new ScopeData.Out();
-		fillNameTarget(oi, inOut.value(), propertyName);
+		saveNameTarget(oi, inOut.value(), propertyName);
 		oi.type = propertyType;
 		return oi;
 	}
