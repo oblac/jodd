@@ -461,8 +461,8 @@ public class ActionMethodParser {
 		}
 
 		// for all: action and method arguments...
-		for (int j = 0; j < types.length; j++) {
-			Class type = types[j];
+		for (int i = 0; i < types.length; i++) {
+			Class type = types[i];
 
 			// read annotations inside the type
 			ScopeData[] scopeData = scopeDataResolver.resolveScopeData(type);
@@ -471,9 +471,9 @@ public class ActionMethodParser {
 			}
 
 			// for all scope types...
-			for (int i = 0; i < ScopeType.values().length; i++) {
-				if (scopeData[i] != null) {
-					scopeDatas[i][j] = scopeData[i];
+			for (int j = 0; j < ScopeType.values().length; j++) {
+				if (scopeData[j] != null) {
+					scopeDatas[j][i] = scopeData[j];
 				}
 			}
 		}

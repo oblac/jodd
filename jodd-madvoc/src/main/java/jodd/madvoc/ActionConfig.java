@@ -27,10 +27,9 @@ public class ActionConfig {
 	public final boolean async;
 
 	// scope data information matrix: [scope-type][target-index]
-	public final ScopeData[][] scopeDatas;
+	public final ScopeData[][] scopeData;
 
 	public final boolean hasArguments;
-	//public final String[] actionPathElements;
 
 	// run-time data
 	protected ActionConfigSet actionConfigSet;
@@ -44,7 +43,7 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			ActionDef actionDef,
 			boolean async,
-			ScopeData[][] scopeDatas)
+			ScopeData[][] scopeData)
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
@@ -54,7 +53,7 @@ public class ActionConfig {
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
 		this.async = async;
 
-		this.scopeDatas = scopeDatas;
+		this.scopeData = scopeData;
 
 		this.filters = filters;
 		this.interceptors = interceptors;
