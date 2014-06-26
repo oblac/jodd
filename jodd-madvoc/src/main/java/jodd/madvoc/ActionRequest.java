@@ -202,7 +202,18 @@ public class ActionRequest {
 		target[0] = new Target(action);
 
 		for (int i = 0; i < params.length; i++) {
-			target[i + 1] = new Target(params[i]);
+			Class type = actionConfig.usedArgTypes[i];
+
+			Target t;
+
+			if (type == null) {
+				t = new Target(params[i]);
+			}
+			else {
+				t = new Target(type);
+			}
+
+			target[i + 1] = t;
 		}
 		return target;
 	}
@@ -220,6 +231,10 @@ public class ActionRequest {
 
 		for (int i = 0; i < params.length; i++) {
 			Class type = types[i];
+
+			if (actionConfig.usedArgTypes[i] != null) {
+				continue;
+			}
 
 			try {
 				if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {

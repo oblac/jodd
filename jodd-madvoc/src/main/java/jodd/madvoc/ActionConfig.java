@@ -28,6 +28,7 @@ public class ActionConfig {
 
 	// scope data information matrix: [scope-type][target-index]
 	public final ScopeData[][] scopeData;
+	public Class[] usedArgTypes;
 
 	public final boolean hasArguments;
 
@@ -43,7 +44,9 @@ public class ActionConfig {
 			ActionInterceptor[] interceptors,
 			ActionDef actionDef,
 			boolean async,
-			ScopeData[][] scopeData)
+			ScopeData[][] scopeData,
+			Class[] usedArgTypes
+			)
 	{
 		this.actionClass = actionClass;
 		this.actionClassMethod = actionClassMethod;
@@ -57,7 +60,7 @@ public class ActionConfig {
 
 		this.filters = filters;
 		this.interceptors = interceptors;
-
+		this.usedArgTypes = usedArgTypes;
 		this.resultField = findResultField(actionClass);
 	}
 

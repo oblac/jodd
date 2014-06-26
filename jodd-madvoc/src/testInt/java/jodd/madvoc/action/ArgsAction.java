@@ -16,9 +16,12 @@ public class ArgsAction {
 	}
 
 	static class Data2 {
-		@In Integer id;
+		@In int id;
 		@Out String value;
 	}
+
+	@In
+	String who;
 
 	@Out
 	String name;
@@ -29,4 +32,14 @@ public class ArgsAction {
 		hello.out = "voc";
 		data.value = "jodd " + data.id;
 	}
+
+	@Action
+	public void world(@In String name, @In("hello") Data2 hello) {
+		System.out.println(who);
+		System.out.println(name);
+		System.out.println(hello);
+
+		this.name = who + "+" + name + "+" + hello.id;
+	}
+
 }

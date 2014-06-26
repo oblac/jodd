@@ -30,4 +30,12 @@ public class ArgsTest {
 		assertEquals("+ mad 1voc + jodd 1", response.bodyText().trim());
 	}
 
+	@Test
+	public void testArgs2() {
+		HttpResponse response;
+		response = HttpRequest.get("localhost:8080/args.world.html?who=me&name=Jupiter&hello.id=1").send();
+
+		assertEquals("**me+Jupiter+1**", response.bodyText().trim());
+	}
+
 }

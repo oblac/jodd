@@ -26,6 +26,7 @@ import jodd.util.StringUtil;
 import jodd.util.StringPool;
 import jodd.petite.meta.PetiteInject;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
@@ -51,6 +52,9 @@ public class ActionMethodParser {
 
 	@PetiteInject
 	protected ScopeDataResolver scopeDataResolver;
+
+	@PetiteInject
+	protected ActionMethodParamNameResolver actionMethodParamNameResolver;
 
 	/**
 	 * Parses action class and method and creates {@link jodd.madvoc.ActionDef parsed action definition}.
@@ -449,32 +453,52 @@ public class ActionMethodParser {
 		// 1) find ins and outs
 
 		Class[] paramTypes = actionClassMethod.getParameterTypes();
+		Annotation[][] paramAnns = actionClassMethod.getParameterAnnotations();
+		String[] methodParamNames = null;
 
 		// expand arguments array with action itself, on first position
 		Class[] types = ArraysUtil.insert(paramTypes, actionClass, 0);
 
-		ScopeData[][] scopeDatas = new ScopeData[ScopeType.values().length][];
+		ScopeData[][] allScopeData = new ScopeData[ScopeType.values().length][];
 
-		// for all scope types...
-		for (int i = 0; i < ScopeType.values().length; i++) {
-			scopeDatas[i] = new ScopeData[types.length];
-		}
-
-		// for all: action and method arguments...
+		// for all elements: action and method arguments...
 		for (int i = 0; i < types.length; i++) {
 			Class type = types[i];
 
-			// read annotations inside the type
-			ScopeData[] scopeData = scopeDataResolver.resolveScopeData(type);
+			ScopeData[] scopeData = null;
+
+			if (i > 0) {
+				// lazy init to postpone bytecode usage, when method has no arguments
+				if (methodParamNames == null) {
+					methodParamNames = actionMethodParamNameResolver.resolveParamNames(actionClassMethod);
+				}
+
+				// scan method arguments
+				int paramIndex = i - 1;
+
+				scopeData = scopeDataResolver.resolveScopeData(
+						methodParamNames[paramIndex], type, paramAnns[paramIndex]);
+
+				if (scopeData == null) {
+					paramTypes[paramIndex] = null;
+				}
+			}
+
+			if (scopeData == null) {
+				// read annotations inside the type for all scope types
+				scopeData = scopeDataResolver.resolveScopeData(type);
+			}
+
 			if (scopeData == null) {
 				continue;
 			}
 
-			// for all scope types...
+			// for all scope types... merge
 			for (int j = 0; j < ScopeType.values().length; j++) {
-				if (scopeData[j] != null) {
-					scopeDatas[j][i] = scopeData[j];
+				if (allScopeData[j] == null) {
+					allScopeData[j] = new ScopeData[types.length];
 				}
+				allScopeData[j][i] = scopeData[j];
 			}
 		}
 
@@ -485,7 +509,8 @@ public class ActionMethodParser {
 				interceptors,
 				actionDef,
 				async,
-				scopeDatas);
+				allScopeData,
+				paramTypes);
 	}
 
 }
