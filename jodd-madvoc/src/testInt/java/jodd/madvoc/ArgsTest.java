@@ -33,9 +33,15 @@ public class ArgsTest {
 	@Test
 	public void testArgs2() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/args.world.html?who=me&name=Jupiter&hello.id=1").send();
+		response = HttpRequest.get("localhost:8080/args.world.html")
+				.query("who", "me")
+				.query("name", "Jupiter")
+				.query("hello.id", "1")
+				.query("id", "3")
+				.query("muti", "7")
+				.send();
 
-		assertEquals("**me+Jupiter+1**", response.bodyText().trim());
+		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8", response.bodyText().trim());
 	}
 
 }

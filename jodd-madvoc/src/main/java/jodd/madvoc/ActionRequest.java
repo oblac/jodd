@@ -191,11 +191,11 @@ public class ActionRequest {
 	 * Joins action and parameters into one array of Targets.
 	 */
 	protected Target[] makeTargets() {
-		Object[] params = createActionMethodArguments();
-
-		if (params == null) {
+		if (actionConfig.hasArguments == false) {
 			return new Target[] {new Target(action)};
 		}
+
+		Object[] params = createActionMethodArguments();
 
 		Target[] target = new Target[params.length + 1];
 
@@ -207,9 +207,11 @@ public class ActionRequest {
 			Target t;
 
 			if (type == null) {
+				// non-annotated, value is known
 				t = new Target(params[i]);
 			}
 			else {
+				// annotated type
 				t = new Target(type);
 			}
 
@@ -219,12 +221,11 @@ public class ActionRequest {
 	}
 
 	/**
-	 * Creates action method arguments.
+	 * Creates some action method arguments.
+	 * When argument is annotated, it's instance will not be created.
+	 * When argument is NOT annotated, it will be created.
 	 */
 	protected Object[] createActionMethodArguments() {
-		if (!actionConfig.hasArguments) {
-			return null;
-		}
 		Class[] types = actionConfig.getActionClassMethod().getParameterTypes();
 
 		Object[] params = new Object[types.length];
@@ -233,6 +234,7 @@ public class ActionRequest {
 			Class type = types[i];
 
 			if (actionConfig.usedArgTypes[i] != null) {
+				// annotated argument, skip it!
 				continue;
 			}
 

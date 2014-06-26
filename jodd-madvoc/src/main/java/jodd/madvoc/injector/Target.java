@@ -76,9 +76,18 @@ public class Target {
 
 	/**
 	 * Reads value from the target.
-	 * todo add ifs for all cases
 	 */
 	public Object readValue(String propertyName) {
+		if (type != null) {
+			int dotNdx = propertyName.indexOf('.');
+
+			if (dotNdx == -1) {
+				return value;
+			}
+
+			propertyName = propertyName.substring(dotNdx + 1);
+		}
+
 		return BeanUtil.getDeclaredProperty(value, propertyName);
 	}
 

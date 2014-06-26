@@ -107,6 +107,19 @@ public class ScopeDataResolver {
 					sd.out = new ScopeData.Out[] {scopeDataOut};
 				}
 			}
+			else if (annotation instanceof InOut) {
+				ScopeData.In scopeDataIn = inspectIn((InOut) annotation, scopeType, name, type);
+				if (scopeDataIn != null) {
+					count++;
+					sd.in = new ScopeData.In[] {scopeDataIn};
+				}
+
+				ScopeData.Out scopeDataOut = inspectOut((InOut) annotation, scopeType, name, type);
+				if (scopeDataOut != null) {
+					count++;
+					sd.out = new ScopeData.Out[] {scopeDataOut};
+				}
+			}
 		}
 
 		if (count == 0) {
