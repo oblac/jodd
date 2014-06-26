@@ -2,7 +2,6 @@
 
 package jodd.madvoc.injector;
 
-import jodd.bean.BeanUtil;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
@@ -27,7 +26,7 @@ public abstract class BaseScopeInjector {
 		this.scopeDataResolver = scopeDataResolver;
 	}
 
-	// ---------------------------------------------------------------- beanutil
+	// ---------------------------------------------------------------- target
 
 	/**
 	 * Sets target bean property, optionally creates instance if doesn't exist.
@@ -40,20 +39,11 @@ public abstract class BaseScopeInjector {
 	 * Reads target property.
 	 */
 	protected Object getTargetProperty(Target target, ScopeData.Out out) {
-		final Object targetName = target.getName();
-
-		if (targetName == null) {
-			// case #1
-			Object targetValue = target.getValue();
-
-			if (out.target == null) {
-				return BeanUtil.getDeclaredProperty(targetValue, out.name);
-			} else {
-				return BeanUtil.getDeclaredProperty(targetValue, out.target);
-			}
+		if (out.target == null) {
+			return target.readValue(out.name);
+		} else {
+			return target.readValue(out.target);
 		}
-
-		return null;
 	}
 
 	// ---------------------------------------------------------------- matched property
