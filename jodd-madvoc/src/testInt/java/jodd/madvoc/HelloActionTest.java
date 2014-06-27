@@ -39,6 +39,12 @@ public class HelloActionTest {
 	}
 
 	@Test
+	public void testHelloPlanetAction() {
+		HttpResponse response = HttpRequest.get("localhost:8080/hello.planet.html?name=Jupiter").send();
+		assertEquals("Hello planet Jupiter.", response.bodyText().trim());
+	}
+
+	@Test
 	public void testHelloBeanAction() {
 		HttpResponse response = HttpRequest.get("localhost:8080/hello.bean.html?p.name=Jupiter&p.data=3").send();
 		assertEquals("Person{name='Jupiter', data=3}", response.bodyText().trim());

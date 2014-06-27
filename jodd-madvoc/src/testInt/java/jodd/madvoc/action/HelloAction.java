@@ -49,6 +49,11 @@ public class HelloAction {
 		return "ok";
 	}
 
+	@Action
+	public String planet() {
+		return null;
+	}
+
 	// ----------------------------------------------------------------
 
 	@InOut("p")
