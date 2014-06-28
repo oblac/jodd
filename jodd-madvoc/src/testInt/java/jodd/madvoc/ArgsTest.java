@@ -44,4 +44,15 @@ public class ArgsTest {
 		assertEquals("**me+Jupiter+1+3**Jupiter**bye-true-7**8**jojo", response.bodyText().trim());
 	}
 
+	@Test
+	public void testArgs3() {
+		HttpResponse response;
+		response = HttpRequest.get("localhost:8080/args.user.html")
+				.query("user.id", "3")
+				.query("user.username", "Frank")
+				.send();
+
+		assertEquals("Hello Frank, you are number 3 or 1.", response.bodyText().trim());
+	}
+
 }

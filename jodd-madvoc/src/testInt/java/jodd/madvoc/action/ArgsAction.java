@@ -28,6 +28,11 @@ public class ArgsAction {
 	public static class User {
 		long id;
 		String username;
+		static int counter;
+
+		public User() {
+			counter++;
+		}
 
 		public long getId() {
 			return id;
@@ -43,6 +48,10 @@ public class ArgsAction {
 
 		public void setUsername(String username) {
 			this.username = username;
+		}
+
+		public int getCounter() {
+			return counter;
 		}
 	}
 
@@ -77,6 +86,10 @@ public class ArgsAction {
 		user.username = "jojo";
 
 		this.name = who + "+" + name + "+" + hello.id + "+" + hello2.id;
+	}
+
+	@Action
+	public void user(@InOut User user) {
 	}
 
 }
