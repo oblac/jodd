@@ -4,6 +4,7 @@ package jodd.madvoc;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
+import jodd.madvoc.action.ArgsAction;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,6 +33,7 @@ public class ArgsTest {
 
 	@Test
 	public void testArgs2() {
+		ArgsAction.User.counter = 0;
 		HttpResponse response;
 		response = HttpRequest.get("localhost:8080/args.world.html")
 				.query("who", "me")
@@ -46,6 +48,7 @@ public class ArgsTest {
 
 	@Test
 	public void testArgs3() {
+		ArgsAction.User.counter = 0;
 		HttpResponse response;
 		response = HttpRequest.get("localhost:8080/args.user.html")
 				.query("user.id", "3")

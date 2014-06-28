@@ -28,7 +28,7 @@ public class ArgsAction {
 	public static class User {
 		long id;
 		String username;
-		static int counter;
+		public static int counter;
 
 		public User() {
 			counter++;
