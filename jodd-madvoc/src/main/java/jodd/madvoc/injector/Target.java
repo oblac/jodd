@@ -115,7 +115,9 @@ public class Target {
 				return;
 			}
 
-			createValueInstance();
+			if (value == null) {
+				createValueInstance();
+			}
 
 			propertyName = propertyName.substring(dotNdx + 1);
 		}
