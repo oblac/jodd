@@ -376,4 +376,68 @@ public class BeanCopyTest {
 		fb.setFooStringA(new String[]{"214", "215"});
 		return fb;
 	}
+
+	public static class Source {
+		public String pub = "a1";
+
+		private int priv = 2;
+
+		public long getGetter() {
+			return 5;
+		}
+
+		private int _prop = 8;
+
+		public int getProp() {
+			return _prop;
+		}
+
+		protected String getMoo() {
+			return moo;
+		}
+
+		protected String moo = "wof";
+	}
+
+	@Test
+	public void testCopyWithFields() {
+		Source source = new Source();
+		HashMap dest = new HashMap();
+
+		BeanCopy.beans(source, dest).copy();
+
+		assertEquals(2, dest.size());
+		assertEquals("8", dest.get("prop").toString());
+		assertEquals("5", dest.get("getter").toString());
+
+		dest.clear();
+		BeanCopy.beans(source, dest).declared(true).copy();
+
+		assertEquals(3, dest.size());
+		assertEquals("8", dest.get("prop").toString());
+		assertEquals("5", dest.get("getter").toString());
+		assertEquals("wof", dest.get("moo").toString());
+
+
+		dest.clear();
+		BeanCopy.beans(source, dest).declared(false).includeFields(true).copy();
+
+		assertEquals(3, dest.size());
+		assertEquals("8", dest.get("prop").toString());
+		assertEquals("5", dest.get("getter").toString());
+		assertEquals("a1", dest.get("pub").toString());
+
+
+		dest.clear();
+		BeanCopy.beans(source, dest).declared(true).includeFields(true).copy();
+
+		assertEquals(6, dest.size());
+		assertEquals("8", dest.get("prop").toString());
+		assertEquals("5", dest.get("getter").toString());
+		assertEquals("a1", dest.get("pub").toString());
+		assertEquals("2", dest.get("priv").toString());
+		assertEquals("8", dest.get("_prop").toString());
+		assertEquals("wof", dest.get("moo").toString());
+
+	}
 }

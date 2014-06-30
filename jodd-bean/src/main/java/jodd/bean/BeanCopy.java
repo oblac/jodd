@@ -9,6 +9,7 @@ package jodd.bean;
 public class BeanCopy extends BeanVisitor {
 
 	protected Object destination;
+	protected boolean declaredTarget;
 
 	// ---------------------------------------------------------------- ctor
 
@@ -47,7 +48,7 @@ public class BeanCopy extends BeanVisitor {
 	 * of given template class.
 	 */
 	public BeanCopy includeAs(Class template) {
-		String[] properties = getAllBeanGetterNames(template, false);
+		String[] properties = getAllBeanPropertyNames(template, false);
 
 		include(properties);
 
@@ -69,6 +70,24 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	public BeanCopy declared(boolean declared) {
 		this.declared = declared;
+		this.declaredTarget = declared;
+		return this;
+	}
+
+	/**
+	 * Fine-tuning of the declared behaviour.
+	 */
+	public BeanCopy declared(boolean declaredSource, boolean declaredTarget) {
+		this.declared = declaredSource;
+		this.declaredTarget = declaredTarget;
+		return this;
+	}
+
+	/**
+	 * Defines if fields without getters should be copied too.
+	 */
+	public BeanCopy includeFields(boolean includeFields) {
+		this.includeFields = includeFields;
 		return this;
 	}
 
@@ -88,7 +107,7 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	@Override
 	protected boolean visitProperty(String name, Object value) {
-		if (declared) {
+		if (declaredTarget) {
 			BeanUtil.setDeclaredPropertySilent(destination, name, value);
 		} else {
 			BeanUtil.setPropertySilent(destination, name, value);

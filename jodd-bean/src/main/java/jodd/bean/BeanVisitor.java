@@ -4,10 +4,12 @@ package jodd.bean;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.ArraysUtil;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,35 +31,48 @@ public abstract class BeanVisitor {
 	 */
 	protected String[] includeNames;
 	/**
-	 * Flag for enabling declared properties, or just public one.
+	 * Flag for enabling declared properties, or just public ones.
 	 */
 	protected boolean declared;
 	/**
 	 * Defines if null values should be ignored.
 	 */
 	protected boolean ignoreNullValues;
+	/**
+	 * Defines if fields should be included.
+	 */
+	protected boolean includeFields;
 
 	// ---------------------------------------------------------------- util
 
-	protected String[] getAllBeanGetterNames(Class type, boolean declared) {
+	/**
+	 * Returns all bean property names.
+	 */
+	protected String[] getAllBeanPropertyNames(Class type, boolean declared) {
 		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
-		String[] names = new String[propertyDescriptors.length];
+		ArrayList<String> names = new ArrayList<String>(propertyDescriptors.length);
 
-		for (int i = 0; i < propertyDescriptors.length; i++) {
-			PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-
+		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
 			if (getter != null) {
 				if (getter.matchDeclared(declared)) {
-					names[i] = propertyDescriptor.getName();
+					names.add(propertyDescriptor.getName());
+				}
+			}
+			else if (includeFields) {
+				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
+				if (field != null) {
+					if (field.matchDeclared(declared)) {
+						names.add(field.getName());
+					}
 				}
 			}
 		}
 
-		return names;
+		return names.toArray(new String[names.size()]);
 	}
 
 	/**
@@ -77,7 +92,7 @@ public abstract class BeanVisitor {
 				ndx++;
 			}
 		} else {
-			properties = getAllBeanGetterNames(bean.getClass(), declared);
+			properties = getAllBeanPropertyNames(bean.getClass(), declared);
 		}
 
 		return properties;
@@ -87,7 +102,7 @@ public abstract class BeanVisitor {
 	 * Starts visiting properties.
 	 */
 	public void visit() {
-		String[] properties = resolveProperties(source, false);
+		String[] properties = resolveProperties(source, declared);
 
 		for (String name : properties) {
 			if (name == null) {
