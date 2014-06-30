@@ -23,6 +23,14 @@ public class CtorDescriptor extends Descriptor {
 	}
 
 	/**
+	 * Returns constructor name.
+	 */
+	@Override
+	public String getName() {
+		return constructor.getName();
+	}
+
+	/**
 	 * Returns constructor.
 	 */
 	public Constructor getConstructor() {

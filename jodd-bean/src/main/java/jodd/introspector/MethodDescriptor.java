@@ -55,6 +55,13 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 	}
 
 	/**
+	 * Returns method name.
+	 */
+	public String getName() {
+		return method.getName();
+	}
+
+	/**
 	 * Returns method.
 	 */
 	public Method getMethod() {

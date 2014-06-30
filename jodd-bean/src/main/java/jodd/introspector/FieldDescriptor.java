@@ -43,6 +43,15 @@ public class FieldDescriptor extends Descriptor implements Getter, Setter {
 	}
 
 	/**
+	 * Returns field name.
+	 * @return
+	 */
+	@Override
+	public String getName() {
+		return field.getName();
+	}
+
+	/**
 	 * Returns field.
 	 */
 	public Field getField() {

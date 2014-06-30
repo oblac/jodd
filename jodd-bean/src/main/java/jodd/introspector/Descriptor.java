@@ -39,4 +39,9 @@ public abstract class Descriptor {
 		return true;
 	}
 
+	/**
+	 * Returns the name of descriptors target.
+	 */
+	public abstract String getName();
+
 }
