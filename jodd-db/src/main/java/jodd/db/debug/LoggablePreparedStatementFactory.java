@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Factory for loggable prepared statements - a <code>PreparedStatement</code> with added logging capability.
@@ -66,6 +67,8 @@ public class LoggablePreparedStatementFactory {
 	protected static Method getQueryStringMethod;
 	protected static WrapperProxetta proxetta;
 
+	private static final ReentrantLock lock = new ReentrantLock();
+
 	/**
 	 * Returns {@link WrapperProxetta} used for building loggable prepared statements.
 	 * Initializes proxetta when called for the first time.
@@ -98,27 +101,34 @@ public class LoggablePreparedStatementFactory {
 	@SuppressWarnings("unchecked")
 	protected static PreparedStatement wrap(PreparedStatement preparedStatement, String sql) {
 		if (wrappedPreparedStatement == null) {
-			proxetta = getProxetta();
-
-			builder = proxetta.builder();
-
-			// use just interface
-			builder.setTarget(PreparedStatement.class);
-
-			// define different package
-			builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
-
-			wrappedPreparedStatement = builder.define();
-
-			// lookup fields
+			lock.lock();
 			try {
-				String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
-				sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
+				proxetta = getProxetta();
 
-				String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
-				getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
-			} catch (Exception ex) {
-				throw new DbSqlException(ex);
+				builder = proxetta.builder();
+
+				// use just interface
+				builder.setTarget(PreparedStatement.class);
+
+				// define different package
+				builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
+
+				wrappedPreparedStatement = builder.define();
+
+				// lookup fields
+				try {
+					String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
+					sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
+
+					String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
+					getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
+				}
+				catch (Exception ex) {
+					throw new DbSqlException(ex);
+				}
+			}
+			finally {
+				lock.unlock();
 			}
 		}
 
