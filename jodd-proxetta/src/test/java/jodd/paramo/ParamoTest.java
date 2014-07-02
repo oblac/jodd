@@ -2,6 +2,8 @@
 
 package jodd.paramo;
 
+import jodd.asm.TraceSignatureVisitor;
+import jodd.asm5.signature.SignatureReader;
 import jodd.paramo.data.Foo;
 import jodd.paramo.data.Generic;
 import jodd.paramo.data.NonGeneric;
@@ -152,6 +154,35 @@ public class ParamoTest {
 		assertEquals(1, mps.length);
 		assertEquals("zzz", mps[0].getName());
 		assertEquals("Ljava/util/Map<Ljava/lang/String;Ljodd/paramo/data/Bar<Ljava/lang/Long;>;>;", mps[0].getSignature());
+	}
+
+	@Test
+	public void testGenericsWildcards() {
+		Method m = ReflectUtil.findDeclaredMethod(Generic.class, "three");
+		MethodParameter[] mps = Paramo.resolveParameters(m);
+		assertEquals(3, mps.length);
+
+		assertEquals("comparable", mps[0].getName());
+		assertEquals("Ljava/lang/Comparable<*>;", mps[0].getSignature());
+		assertEquals("(java.lang.Comparable<?>)", resolveSignature(mps[0].getSignature()));
+
+
+		assertEquals("iterator", mps[1].getName());
+		assertEquals("Ljava/util/Iterator<+Ljava/lang/CharSequence;>;", mps[1].getSignature());
+		assertEquals("(java.util.Iterator<? extends java.lang.CharSequence>)", resolveSignature(mps[1].getSignature()));
+
+
+		assertEquals("list", mps[2].getName());
+		assertEquals("Ljava/util/List<-Ljava/lang/Integer;>;", mps[2].getSignature());
+		assertEquals("(java.util.List<? super java.lang.Integer>)", resolveSignature(mps[2].getSignature()));
+	}
+
+
+	private String resolveSignature(String signature) {
+		SignatureReader signatureReader = new SignatureReader("(" + signature + ")V");
+		StringBuffer sb = new StringBuffer();
+		signatureReader.accept(new TraceSignatureVisitor(sb, true));
+		return sb.toString();
 	}
 
 }

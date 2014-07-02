@@ -2,6 +2,8 @@
 
 package jodd.paramo.data;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Generic {
@@ -10,6 +12,9 @@ public class Generic {
 	}
 
 	public void two(Map<String, Bar<Long>> zzz) {
+	}
+
+	public void three(Comparable<?> comparable, Iterator<? extends CharSequence> iterator, List<? super Integer> list) {
 	}
 
 }
