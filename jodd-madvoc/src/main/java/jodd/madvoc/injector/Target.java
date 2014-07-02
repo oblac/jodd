@@ -152,6 +152,9 @@ public class Target {
 	 */
 	protected void handleException(String propertyName, boolean throwExceptionOnError, Exception ex) {
 		if (throwExceptionOnError) {
+			if (ex instanceof MadvocException) {
+				throw (MadvocException) ex;
+			}
 			throw new MadvocException(ex);
 		} else {
 			if (log.isWarnEnabled()) {
