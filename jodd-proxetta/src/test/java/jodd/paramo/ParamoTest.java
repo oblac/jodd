@@ -180,7 +180,7 @@ public class ParamoTest {
 
 	private String resolveSignature(String signature) {
 		SignatureReader signatureReader = new SignatureReader("(" + signature + ")V");
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		signatureReader.accept(new TraceSignatureVisitor(sb, true));
 		return sb.toString();
 	}

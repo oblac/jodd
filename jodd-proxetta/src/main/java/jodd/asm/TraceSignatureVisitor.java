@@ -17,6 +17,7 @@ import jodd.asm5.signature.SignatureVisitor;
  *    <li>added method <code>getExceptionsArray()</code></li>
  *    <li>public constructor change to accept <code>boolean</code></code></li>
  *    <li>use <code>AsmUtil</code> constants</li>
+ *    <li>use <code>StringBuilder</code> instead of <code>StringBuffer</code></li>
  * </ul>
  *
  * @author Eugene Kuleshov
@@ -24,7 +25,7 @@ import jodd.asm5.signature.SignatureVisitor;
  */
 public class TraceSignatureVisitor extends SignatureVisitor {
 
-	protected final StringBuffer declaration;       // jodd
+	protected final StringBuilder declaration;       // jodd
 
     protected boolean isInterface;                  // jodd
 
@@ -36,9 +37,9 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     private boolean seenInterface;
 
-    protected StringBuffer returnType;              // jodd
+    protected StringBuilder returnType;              // jodd
 
-    protected StringBuffer exceptions;              // jodd
+    protected StringBuilder exceptions;              // jodd
 
     /**
      * Stack used to keep track of class types that have arguments. Each element
@@ -57,13 +58,13 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     private String separator = "";
 
-    public TraceSignatureVisitor(final StringBuffer buf, boolean isInterface) {		// jodd
+    public TraceSignatureVisitor(final StringBuilder buf, boolean isInterface) {		// jodd
         super(Opcodes.ASM5);
         this.isInterface = isInterface;
         this.declaration = buf;
     }
 
-    protected TraceSignatureVisitor(final StringBuffer buf) {	// jodd
+    protected TraceSignatureVisitor(final StringBuilder buf) {	// jodd
         super(Opcodes.ASM5);
         this.declaration = buf;
     }
@@ -129,14 +130,14 @@ public class TraceSignatureVisitor extends SignatureVisitor {
             declaration.append('(');
         }
         declaration.append(')');
-        returnType = new StringBuffer();
+        returnType = new StringBuilder();
         return new TraceSignatureVisitor(returnType);
     }
 
     @Override
     public SignatureVisitor visitExceptionType() {
         if (exceptions == null) {
-            exceptions = new StringBuffer();
+            exceptions = new StringBuilder();
         } else {
             exceptions.append(", ");
         }

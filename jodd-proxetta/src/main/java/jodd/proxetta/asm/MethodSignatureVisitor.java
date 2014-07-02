@@ -68,14 +68,14 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	}
 
 	private MethodSignatureVisitor() {
-        super(new StringBuffer());
+        super(new StringBuilder());
     }
 
-	private MethodSignatureVisitor(final StringBuffer declaration) {
+	private MethodSignatureVisitor(final StringBuilder declaration) {
         super(declaration);
     }
 
-	private MethodSignatureVisitor(final StringBuffer buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
+	private MethodSignatureVisitor(final StringBuilder buf, MutableInteger returnOpcodeType, StringBuilder returnTypeName) {
 		this(buf);
 		this.returnOpcodeType = returnOpcodeType;
 		this.returnTypeName = returnTypeName;
