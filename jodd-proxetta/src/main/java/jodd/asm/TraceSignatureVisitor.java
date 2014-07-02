@@ -10,16 +10,17 @@ import jodd.asm5.signature.SignatureVisitor;
  * A {@link SignatureVisitor} that prints a disassembled view of the signature
  * it visits.
 
- * Changes made by igor (jodd):
+ * Changes made by Igor (http://jodd.org):
  * <ul>
- * <li>all private scopes made protected</li>
- * <li>getExceptionsArray added</li>
- * <li>constructor commented</li>
+ *    <li>removed <code>final</code> for the class</li>
+ *    <li>some <code>private</code> scopes made <code>protected</code></li>
+ *    <li>added method <code>getExceptionsArray()</code></li>
+ *    <li>public constructor change to accept <code>boolean</code></code></li>
+ *    <li>use <code>AsmUtil</code> constants</li>
  * </ul>
  *
  * @author Eugene Kuleshov
  * @author Eric Bruneton
- * @author Igor Spasic (jodd)
  */
 public class TraceSignatureVisitor extends SignatureVisitor {
 
@@ -27,13 +28,13 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     protected boolean isInterface;                  // jodd
 
-    protected boolean seenFormalParameter;          // jodd
+    private boolean seenFormalParameter;
 
-    protected boolean seenInterfaceBound;           // jodd
+    private boolean seenInterfaceBound;
 
-    protected boolean seenParameter;                // jodd
+    private boolean seenParameter;
 
-    protected boolean seenInterface;                // jodd
+    private boolean seenInterface;
 
     protected StringBuffer returnType;              // jodd
 
@@ -54,18 +55,16 @@ public class TraceSignatureVisitor extends SignatureVisitor {
      */
     protected int arrayStack;                       // jodd
 
-    protected String separator = "";                // jodd
+    private String separator = "";
 
-/*
-    public TraceSignatureVisitor(final int access) {	// jodd
-		super(Opcodes.ASM4);
-        isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
-        this.declaration = new StringBuffer();
+    public TraceSignatureVisitor(final StringBuffer buf, boolean isInterface) {		// jodd
+        super(Opcodes.ASM5);
+        this.isInterface = isInterface;
+        this.declaration = buf;
     }
-*/
 
-    protected TraceSignatureVisitor(final StringBuffer buf) {       // jodd
-		super(Opcodes.ASM4);
+    protected TraceSignatureVisitor(final StringBuffer buf) {	// jodd
+        super(Opcodes.ASM5);
         this.declaration = buf;
     }
 
@@ -148,34 +147,34 @@ public class TraceSignatureVisitor extends SignatureVisitor {
     @Override
     public void visitBaseType(final char descriptor) {
         switch (descriptor) {
-            case 'V':
-                declaration.append("void");
-                break;
-            case 'B':
-                declaration.append("byte");
-                break;
-            case 'J':
-                declaration.append("long");
-                break;
-            case 'Z':
-                declaration.append("boolean");
-                break;
-            case 'I':
-                declaration.append("int");
-                break;
-            case 'S':
-                declaration.append("short");
-                break;
-            case 'C':
-                declaration.append("char");
-                break;
-            case 'F':
-                declaration.append("float");
-                break;
-            // case 'D':
-            default:
-                declaration.append("double");
-                break;
+        case 'V':
+            declaration.append("void");
+            break;
+        case 'B':
+            declaration.append("byte");
+            break;
+        case 'J':
+            declaration.append("long");
+            break;
+        case 'Z':
+            declaration.append("boolean");
+            break;
+        case 'I':
+            declaration.append("int");
+            break;
+        case 'S':
+            declaration.append("short");
+            break;
+        case 'C':
+            declaration.append("char");
+            break;
+        case 'F':
+            declaration.append("float");
+            break;
+        // case 'D':
+        default:
+            declaration.append("double");
+            break;
         }
         endType();
     }
@@ -195,7 +194,7 @@ public class TraceSignatureVisitor extends SignatureVisitor {
 
     @Override
     public void visitClassType(final String name) {
-        if (AsmUtil.SIGNATURE_JAVA_LANG_OBJECT.equals(name)) {
+        if (AsmUtil.SIGNATURE_JAVA_LANG_OBJECT.equals(name)) {		// jodd
             // Map<java.lang.Object,java.util.List>
             // or
             // abstract public V get(Object key); (seen in Dictionary.class)
