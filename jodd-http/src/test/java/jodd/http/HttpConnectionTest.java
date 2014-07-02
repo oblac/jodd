@@ -39,7 +39,8 @@ public class HttpConnectionTest {
 		File file = FileUtil.createTempFile();
 		file.deleteOnExit();
 
-		FileUtil.writeString(file, "upload test");
+		FileUtil.writeString(file, "upload тест");
+		assertEquals("upload тест", FileUtil.readString(file));
 
 		HttpResponse response = HttpRequest
 				.post("http://localhost:8081/hello")
@@ -54,7 +55,7 @@ public class HttpConnectionTest {
 		assertEquals("12", echoTestServer.params.get("id"));
 		File uploadedFile = new File(echoTestServer.files.get("file").toString());
 		assertNotNull(uploadedFile);
-		assertEquals("upload test", FileUtil.readString(uploadedFile));
+		assertEquals("upload тест", FileUtil.readString(uploadedFile));
 
 		assertEquals("POST /hello", response.body());
 

@@ -4,12 +4,15 @@ package jodd.http;
 
 import jodd.JoddHttp;
 import jodd.datetime.TimeUtil;
+import jodd.http.up.ByteArrayUploadable;
+import jodd.http.up.FileUploadable;
+import jodd.http.up.Uploadable;
 import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
-import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
+import jodd.util.CharUtil;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
 import jodd.util.StringPool;
@@ -344,11 +347,39 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
+	 * Wraps non-Strings form values with {@link jodd.http.up.Uploadable uploadable content}.
+	 * Detects invalid types and throws an exception. So all uploadable values
+	 * are of the same type.
+	 */
+	protected Object wrapFormValue(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof CharSequence) {
+			return value.toString();
+		}
+		if (value instanceof File) {
+			return new FileUploadable((File) value);
+		}
+		if (value instanceof byte[]) {
+			return new ByteArrayUploadable((byte[]) value, null);
+		}
+		if (value instanceof Uploadable) {
+			return value;
+		}
+
+		throw new HttpException("Unsupported value type: " + value.getClass().getName());
+	}
+
+	/**
 	 * Adds the form parameter. Existing parameter will not be overwritten.
 	 */
 	public T form(String name, Object value) {
 		initForm();
+
+		value = wrapFormValue(value);
 		form.add(name, value);
+
 		return (T) this;
 	}
 
@@ -357,11 +388,15 @@ public abstract class HttpBase<T> {
 	 */
 	public T form(String name, Object value, boolean overwrite) {
 		initForm();
+
+		value = wrapFormValue(value);
+
 		if (overwrite) {
 			form.set(name, value);
 		} else {
 			form.add(name, value);
 		}
+
 		return (T) this;
 	}
 
@@ -371,11 +406,12 @@ public abstract class HttpBase<T> {
 	public T form(String name, Object value, Object... parameters) {
 		initForm();
 
-		form.add(name, value);
+		form(name, value);
+
 		for (int i = 0; i < parameters.length; i += 2) {
 			name = parameters[i].toString();
 
-			form.add(name, parameters[i + 1]);
+			form(name, parameters[i + 1]);
 		}
 		return (T) this;
 	}
@@ -387,13 +423,14 @@ public abstract class HttpBase<T> {
 		initForm();
 
 		for (Map.Entry<String, Object> entry : formMap.entrySet()) {
-			form.add(entry.getKey(), entry.getValue());
+			form(entry.getKey(), entry.getValue());
 		}
 		return (T) this;
 	}
 
 	/**
 	 * Return map of form parameters.
+	 * Note that all uploadable values are wrapped with {@link jodd.http.up.Uploadable}.
 	 */
 	public Map<String, Object[]> form() {
 		return form;
@@ -512,7 +549,7 @@ public abstract class HttpBase<T> {
 	// ---------------------------------------------------------------- body form
 
 	/**
-	 * Returns <code>true</code> if form contains non-string elements (i.e. files).
+	 * Returns <code>true</code> if form contains {@link jodd.http.up.Uploadable}.
 	 */
 	protected boolean isFormMultipart() {
 		for (Object[] values : form.values()) {
@@ -521,9 +558,7 @@ public abstract class HttpBase<T> {
 			}
 
 			for (Object value : values) {
-				Class type = value.getClass();
-
-				if (type.equals(File.class)) {
+				if (value instanceof Uploadable) {
 					return true;
 				}
 			}
@@ -577,26 +612,34 @@ public abstract class HttpBase<T> {
 					sb.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
 					sb.append(CRLF);
 					sb.append(string);
-				} else if (value instanceof File) {
-					File file = (File) value;
-					String fileName = FileNameUtil.getName(file.getName());
+				}
+				else if (value instanceof Uploadable) {
+					Uploadable uploadable = (Uploadable) value;
+
+					String fileName = uploadable.getFileName();
+					if (fileName == null) {
+						fileName = name;
+					}
 
 					sb.append("Content-Disposition: form-data; name=\"").append(name);
 					sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
 
-					String mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
+					String mimeType = uploadable.getMimeType();
+					if (mimeType == null) {
+						mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
+					}
 					sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
+
 					sb.append("Content-Transfer-Encoding: binary").append(CRLF);
 					sb.append(CRLF);
 
-					try {
-						char[] chars = FileUtil.readChars(file, StringPool.ISO_8859_1);
-						sb.append(chars);
-					} catch (IOException ioex) {
-						throw new HttpException(ioex);
+					byte[] bytes = uploadable.getBytes();
+					for (byte b : bytes) {
+						sb.append(CharUtil.toChar(b));
 					}
 				} else {
-					throw new HttpException("Unsupported parameter type: " + value.getClass().getName());
+					// should never happened!
+					throw new HttpException("Unsupported type");
 				}
 				sb.append(CRLF);
 			}
