@@ -2023,35 +2023,90 @@ public class StringUtil {
 	// ---------------------------------------------------------------- join
 
 	/**
-	 * Joins an array of strings into one string.
+	 * Joins an array of objects into one string without separators.
 	 */
-	public static String join(String... parts) {
-		StringBand sb = new StringBand(parts.length);
-		for (String part : parts) {
-			sb.append(part);
+	public static String join(Object... array) {
+		if (array == null) {
+			return null;
 		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+			sb.append(array[i]);
+		}
+
+		return sb.toString();
+	}
+	/**
+	 * Joins an array of objects into one string with separator.
+	 */
+	public static String join(Object[] array, char separator) {
+		if (array == null) {
+			return null;
+		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(array[i]);
+		}
+
+		return sb.toString();
+	}
+	/**
+	 * Joins an array of objects into one string with separator.
+	 */
+	public static String join(Object[] array, String separator) {
+		if (array == null) {
+			return null;
+		}
+
+		if (array.length == 0) {
+			return StringPool.EMPTY;
+		}
+
+		if (array.length == 1) {
+			return String.valueOf(array[0]);
+		}
+
+		final StringBuilder sb = new StringBuilder(array.length * 16);
+
+		for (int i = 0; i < array.length; i++) {
+
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			sb.append(array[i]);
+		}
+
 		return sb.toString();
 	}
 
-	/**
-	 * Joins list of iterable elements. Separator string
-	 * may be <code>null</code>.
-	 */
-	public static String join(Iterable<?> elements, String separator) {
-		if (elements == null) {
-			return EMPTY;
-		}
-		StringBand sb = new StringBand();
-		for (Object o : elements) {
-			if (sb.length() > 0) {
-				if (separator != null) {
-					sb.append(separator);
-				}
-			}
-			sb.append(o);
-		}
-		return sb.toString();
-	}
+
+
 
 	// ---------------------------------------------------------------- charset
 
@@ -2538,14 +2593,14 @@ public class StringUtil {
 			if (to >= total) {
 				to = total;
 			} else if (breakOnWhitespace) {
-				int ndx = StringUtil.lastIndexOfWhitespace(src, to - 1, from);
+				int ndx = lastIndexOfWhitespace(src, to - 1, from);
 				if (ndx != -1) {
 					to = ndx + 1;
 				}
 			}
-			int cutFrom = StringUtil.indexOfNonWhitespace(src, from, to);
+			int cutFrom = indexOfNonWhitespace(src, from, to);
 			if (cutFrom != -1) {
-				int cutTo = StringUtil.lastIndexOfNonWhitespace(src, to - 1, from) + 1;
+				int cutTo = lastIndexOfNonWhitespace(src, to - 1, from) + 1;
 				str.append(src.substring(cutFrom, cutTo));
 			}
 			str.append('\n');
@@ -2569,7 +2624,7 @@ public class StringUtil {
 			}
 			added_chars += tab_size - 1;
 			result.append(line.substring(last_tab_index, tab_index));
-			result.append(StringUtil.repeat(' ', tab_size));
+			result.append(repeat(' ', tab_size));
 			last_tab_index = tab_index+1;
 		}
 		if (last_tab_index == 0) {
@@ -2691,34 +2746,6 @@ public class StringUtil {
 
 		if (sb == null) {
 			return s;
-		}
-
-		return sb.toString();
-	}
-
-	// ---------------------------------------------------------------- merge
-
-	/**
-	 * Merges the elements of the array into a string representing a
-	 * delimited list of its values.
-	 */
-	public static String merge(Object[] array, String delimiter) {
-		if (array == null) {
-			return null;
-		}
-
-		if (array.length == 0) {
-			return StringPool.EMPTY;
-		}
-
-		StringBand sb = new StringBand(2 * array.length - 1);
-
-		for (int i = 0; i < array.length; i++) {
-			if (i != 0) {
-				sb.append(delimiter);
-			}
-
-			sb.append(String.valueOf(array[i]));
 		}
 
 		return sb.toString();

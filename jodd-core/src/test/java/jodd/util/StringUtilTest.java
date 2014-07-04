@@ -812,6 +812,15 @@ public class StringUtilTest {
 		assertEquals("123", StringUtil.join("1", "2", "3"));
 		assertEquals("13", StringUtil.join("1", "", "3"));
 		assertEquals("1null3", StringUtil.join("1", null, "3"));
+
+		String s = StringUtil.join(ArraysUtil.array("1", "2", "3"), ".");
+		assertEquals("1.2.3", s);
+
+		s = StringUtil.join(ArraysUtil.array("1"), '.');
+		assertEquals("1", s);
+
+		s = StringUtil.join(new String[0], ".");
+		assertEquals("", s);
 	}
 
 	@Test
@@ -995,18 +1004,6 @@ public class StringUtilTest {
 	public void testTabsToSpaces() {
 		String s = StringUtil.convertTabsToSpaces("q\tqa\t", 3);
 		assertEquals("q  qa ", s);
-	}
-
-	@Test
-	public void testMerge() {
-		String s = StringUtil.merge(ArraysUtil.array("1", "2", "3"), ".");
-		assertEquals("1.2.3", s);
-
-		s = StringUtil.merge(ArraysUtil.array("1"), ".");
-		assertEquals("1", s);
-
-		s = StringUtil.merge(new String[0], ".");
-		assertEquals("", s);
 	}
 
 }
