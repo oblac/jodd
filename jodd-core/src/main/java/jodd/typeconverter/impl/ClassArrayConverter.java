@@ -45,11 +45,11 @@ public class ClassArrayConverter extends ArrayConverter<Class> {
 		for (int i = 0; i < strings.length; i++) {
 			strings[count] = strings[i].trim();
 
-			if (strings[i].length() == 0) {
+			if (strings[count].length() == 0) {
 				continue;
 			}
 
-			if (!strings[i].startsWith(StringPool.HASH)) {
+			if (!strings[count].startsWith(StringPool.HASH)) {
 				count++;
 			}
 		}

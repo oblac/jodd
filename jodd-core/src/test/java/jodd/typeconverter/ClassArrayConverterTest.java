@@ -30,6 +30,21 @@ public class ClassArrayConverterTest {
 		assertEq(arrc(Integer.class, String.class), classArrayConverter.convert("java.lang.Integer\n\n  java.lang.String  \n\n#java.lang.Long"));
 	}
 
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testMoreClassArrayConversions() {
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n\r", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\n", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\r", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\r\r", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n\n\n", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\n", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r", Class[].class));
+
+		assertEq(arrc(String.class), TypeConverterManager.convertType("java.lang.String,\r\n\r", Class[].class));
+		assertEq(arrc(String.class), TypeConverterManager.convertType("\r\njava.lang.String,\r\n", Class[].class));
+	}
+
 	private void assertEq(Class<String>[] arr1, Class[] arr2) {
 		assertEquals(arr1.length, arr2.length);
 		for (int i = 0; i < arr1.length; i++) {
@@ -37,4 +52,3 @@ public class ClassArrayConverterTest {
 		}
 	}
 }
-
