@@ -332,7 +332,7 @@ class ParsedTag implements Tag {
 					CharSequence value = attrValues[i];
 					if (value != null) {
 						out.append('=').append('"');
-						out.append(HtmlEncoder.attribute(value));
+						out.append(HtmlEncoder.attributeDoubleQuoted(value));
 						out.append('"');
 					}
 				}

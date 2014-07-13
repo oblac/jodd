@@ -110,4 +110,11 @@ public class FormTagTest {
 		assertEquals("<select name=\"foo\"><option value=\"1\"/><option value=\"2\"></option><option value=\"*foo*\" selected/></select>", form("<select name='foo'><option value='1'/><option value='2'></option><option value='*foo*'/></select>"));
 	}
 
+	@Test
+	public void testParamLogType() {
+		assertEquals(
+				"<form><input type=\"hidden\" name=\"logTime>=\" value=\"*logTime>=*\"></form>",
+				form("<form><input type='hidden' name='logTime>='></form>"));
+	}
+
 }

@@ -172,7 +172,7 @@ public class LagartoHtmlRendererNodeVisitor implements NodeVisitor {
 		if (value != null) {
 			appendable.append('=');
 			appendable.append('\"');
-			appendable.append(HtmlEncoder.attribute(value));
+			appendable.append(HtmlEncoder.attributeDoubleQuoted(value));
 			appendable.append('\"');
 		}
 	}
