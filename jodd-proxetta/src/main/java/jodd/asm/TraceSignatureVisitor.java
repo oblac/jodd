@@ -15,7 +15,7 @@ import jodd.asm5.signature.SignatureVisitor;
  *    <li>removed <code>final</code> for the class</li>
  *    <li>some <code>private</code> scopes made <code>protected</code></li>
  *    <li>added method <code>getExceptionsArray()</code></li>
- *    <li>public constructor change to accept <code>boolean</code></code></li>
+ *    <li>public constructor change to accept <code>boolean</code></li>
  *    <li>use <code>AsmUtil</code> constants</li>
  *    <li>use <code>StringBuilder</code> instead of <code>StringBuffer</code></li>
  * </ul>

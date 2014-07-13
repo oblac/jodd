@@ -168,7 +168,7 @@ public class ActionsManager {
 	 * Registration main point. Does two things:
 	 * <ul>
 	 *     <li>{@link jodd.madvoc.component.ActionMethodParser#parse(Class, java.lang.reflect.Method, jodd.madvoc.ActionDef) parse action}
-	 *     and creates {@link jodd.madvoc.ActionConfig}</li>.
+	 *     and creates {@link jodd.madvoc.ActionConfig}</li>
 	 *     <li>{@link #registerAction(jodd.madvoc.ActionConfig) registers} created {@link jodd.madvoc.ActionConfig}</li>
 	 * </ul>
 	 * Returns created {@link ActionConfig}.

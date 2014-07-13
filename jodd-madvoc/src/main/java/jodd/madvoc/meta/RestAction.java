@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 public @interface RestAction {
 
 	/**
-	 * Action path value. If equals to {@link #NONE} action method name
+	 * Action path value. If equals to {@link Action#NONE} action method name
 	 * will not be part of the created action path.
 	 */
 	String value() default "";
@@ -36,7 +36,7 @@ public @interface RestAction {
 
 	/**
 	 * Defines action method (such as HTTP request method: GET, POST....).
-	 * Ignore it or use {@link #ANY} to ignore the method.
+	 * Ignore it or use {@link Action#ANY} to ignore the method.
 	 */
 	String method() default "";
 

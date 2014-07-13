@@ -32,7 +32,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	/**
 	 * Creates new connection from current {@link jodd.http.HttpRequest request}.
 	 *
-	 * @see #createSocket(javax.net.SocketFactory, String, int)
+	 * @see #createSocket(String, int)
 	 */
 	public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 		Socket socket;
@@ -51,7 +51,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	}
 
 	/**
-	 * Creates a socket using socket factory.
+	 * Creates a socket using {@link #getSocketFactory(jodd.http.ProxyInfo) socket factory}.
 	 */
 	protected Socket createSocket(String host, int port) throws IOException {
 		SocketFactory socketFactory = getSocketFactory(proxy);

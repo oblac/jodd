@@ -164,7 +164,7 @@ public class DefaultClassLoaderStrategy implements ClassLoaderStrategy {
 	/**
 	 * Loads a class using provided class loader.
 	 * If class is an array, it will be first loaded using the <code>Class.forName</code>!
-	 * We must use this since for JDK >= 6 arrays will be not loaded using classloader,
+	 * We must use this since for JDK {@literal >=} 6 arrays will be not loaded using classloader,
 	 * but only with <code>forName</code> method. However, array loading strategy can be
 	 * {@link #setLoadArrayClassByComponentTypes(boolean) changed}.
 	 */
