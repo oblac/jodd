@@ -17,6 +17,7 @@ public class HttpBrowser {
 	protected HttpResponse httpResponse;
 	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
 	protected boolean keepAlive;
+	protected long elapsedTime;
 
 	public HttpBrowser() {
 		httpConnectionProvider = JoddHttp.httpConnectionProvider;
@@ -84,6 +85,8 @@ public class HttpBrowser {
 	 * handled. Returns very last response.
 	 */
 	public HttpResponse sendRequest(HttpRequest httpRequest) {
+		elapsedTime = System.currentTimeMillis();
+
 		// send request
 
 		while (true) {
@@ -95,15 +98,17 @@ public class HttpBrowser {
 
 			// send request
 			if (keepAlive == false) {
-				this.httpResponse = httpRequest.open(httpConnectionProvider).send();
+				httpRequest.open(httpConnectionProvider);
 			} else {
 				// keeping alive
 				if (previouseResponse == null) {
-					this.httpResponse = httpRequest.open(httpConnectionProvider).connectionKeepAlive(true).send();
+					httpRequest.open(httpConnectionProvider).connectionKeepAlive(true);
 				} else {
-					this.httpResponse = httpRequest.keepAlive(previouseResponse, true).send();
+					httpRequest.keepAlive(previouseResponse, true);
 				}
 			}
+
+			this.httpResponse = httpRequest.send();
 
 			readCookies(httpResponse);
 
@@ -138,7 +143,17 @@ public class HttpBrowser {
 
 			break;
 		}
+
+		elapsedTime = System.currentTimeMillis() - elapsedTime;
+
 		return this.httpResponse;
+	}
+
+	/**
+	 * Returns elapsed time of last {@link #sendRequest(HttpRequest)} in milliseconds.
+	 */
+	public long getElapsedTime() {
+		return elapsedTime;
 	}
 
 	// ---------------------------------------------------------------- close
