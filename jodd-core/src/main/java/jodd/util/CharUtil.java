@@ -305,7 +305,18 @@ public class CharUtil {
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	public static boolean isGenericDelimiter(int c) {
-		return c == ':' || c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@';
+		switch (c) {
+			case ':':
+			case '/':
+			case '?':
+			case '#':
+			case '[':
+			case ']':
+			case '@':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -314,8 +325,22 @@ public class CharUtil {
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isSubDelimiter(int c) {
-		return c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' || c == ')' || c == '*' || c == '+' ||
-				c == ',' || c == ';' || c == '=';
+		switch (c) {
+			case '!':
+			case '$':
+			case '&':
+			case '\'':
+			case '(':
+			case ')':
+			case '*':
+			case '+':
+			case ',':
+			case ';':
+			case '=':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -324,7 +349,7 @@ public class CharUtil {
 	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
 	 */
 	protected static boolean isReserved(char c) {
-		return isGenericDelimiter(c) || isReserved(c);
+		return isGenericDelimiter(c) || isSubDelimiter(c);
 	}
 
 	/**
