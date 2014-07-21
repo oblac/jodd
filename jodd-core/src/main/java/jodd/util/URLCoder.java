@@ -125,7 +125,7 @@ public class URLCoder {
 		QUERY_PARAM {
 			@Override
 			public boolean isValid(char c) {
-				if (c == '=' || c == '+' || c == '&') {
+				if (c == '=' || c == '+' || c == '&' || c == ';') {
 					return false;
 				}
 				return isPchar(c) || c == '/' || c == '?';
