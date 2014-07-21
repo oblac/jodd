@@ -713,14 +713,16 @@ public abstract class HttpBase<T> {
 
 		// content length
 		String contentLen = contentLength();
-		if (contentLen != null) {
-			int len = Integer.parseInt(contentLen);
+		int contentLenValue = -1;
 
-			if (len > 0) {
-				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(len);
+		if (contentLen != null) {
+			contentLenValue = Integer.parseInt(contentLen);
+
+			if (contentLenValue > 0) {
+				FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter(contentLenValue);
 
 				try {
-					StreamUtil.copy(reader, fastCharArrayWriter, len);
+					StreamUtil.copy(reader, fastCharArrayWriter, contentLenValue);
 				} catch (IOException ioex) {
 					throw new HttpException(ioex);
 				}
@@ -757,7 +759,7 @@ public abstract class HttpBase<T> {
 		}
 
 		// no body yet - special case
-		if (bodyString == null) {
+		if (bodyString == null && contentLenValue != 0) {
 			// body ends when stream closes
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 			try {
