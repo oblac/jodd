@@ -171,6 +171,9 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			httpResponse.httpVersion(line.substring(0, ndx));
 
 			int ndx2 = line.indexOf(' ', ndx + 1);
+			if (ndx2 == -1) {
+				ndx2 = line.length();
+			}
 			httpResponse.statusCode(Integer.parseInt(line.substring(ndx, ndx2).trim()));
 
 			httpResponse.statusPhrase(line.substring(ndx2).trim());
