@@ -93,6 +93,29 @@ public class PropertyDescriptor extends Descriptor {
 		return (readMethodDescriptor == null) && (writeMethodDescriptor == null);
 	}
 
+
+	// ---------------------------------------------------------------- type
+	protected Class type;
+
+	/**
+	 * Returns property type.
+	 */
+	public Class getType() {
+		if (type == null) {
+			if (readMethodDescriptor != null) {
+				type = readMethodDescriptor.getMethod().getReturnType();
+			}
+			else if (writeMethodDescriptor != null) {
+				type = writeMethodDescriptor.getMethod().getParameterTypes()[0];
+			}
+			else if (fieldDescriptor != null) {
+				type = fieldDescriptor.getField().getType();
+			}
+		}
+
+		return type;
+	}
+
 	// ---------------------------------------------------------------- getters & setters
 
 	protected Getter[] getters;
