@@ -120,7 +120,32 @@ public class CharUtilTest {
 
 		dest = CharUtil.toByteArray(src, "UTF8");
 		assertEquals(5, dest.length);
+	}
 
+	@Test
+	public void testHexToInt() {
+		assertEquals(0, CharUtil.hex2int('0'));
+		assertEquals(1, CharUtil.hex2int('1'));
+		assertEquals(2, CharUtil.hex2int('2'));
+		assertEquals(3, CharUtil.hex2int('3'));
+		assertEquals(4, CharUtil.hex2int('4'));
+		assertEquals(5, CharUtil.hex2int('5'));
+		assertEquals(6, CharUtil.hex2int('6'));
+		assertEquals(7, CharUtil.hex2int('7'));
+		assertEquals(8, CharUtil.hex2int('8'));
+		assertEquals(9, CharUtil.hex2int('9'));
+		assertEquals(10, CharUtil.hex2int('A'));
+		assertEquals(10, CharUtil.hex2int('a'));
+		assertEquals(11, CharUtil.hex2int('B'));
+		assertEquals(11, CharUtil.hex2int('b'));
+		assertEquals(12, CharUtil.hex2int('C'));
+		assertEquals(12, CharUtil.hex2int('c'));
+		assertEquals(13, CharUtil.hex2int('D'));
+		assertEquals(13, CharUtil.hex2int('d'));
+		assertEquals(14, CharUtil.hex2int('E'));
+		assertEquals(14, CharUtil.hex2int('e'));
+		assertEquals(15, CharUtil.hex2int('F'));
+		assertEquals(15, CharUtil.hex2int('f'));
 	}
 
 }
