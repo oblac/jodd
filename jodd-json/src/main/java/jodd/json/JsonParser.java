@@ -122,7 +122,9 @@ public class JsonParser {
 
 		skipWhiteSpaces();
 
-		Object value = parseValue(null, null);
+		Class targetType = replaceWithPathType(null);
+
+		Object value = parseValue(targetType, null);
 
 		skipWhiteSpaces();
 
@@ -140,7 +142,6 @@ public class JsonParser {
 	 * Parses a JSON value.
 	 * @param targetType target type to convert, may be <code>null</code>
 	 * @param componentType component type for arrays, may be <code>null</code>
-	 * todo add conversions when target type != null
 	 */
 	protected Object parseValue(Class targetType, Class componentType) {
 
@@ -154,7 +155,12 @@ public class JsonParser {
 		switch (c) {
 			case '"':
 				ndx++;
-				return parseStringContent();
+				String string =  parseStringContent();
+
+				if (targetType != null) {
+					return convertType(string, targetType);
+				}
+				return string;
 
 			case '{':
 				ndx++;
@@ -175,12 +181,21 @@ public class JsonParser {
 			case '8':
 			case '9':
 			case '-':
-				return parseNumber();
+				Number number = parseNumber();
+
+				if (targetType != null) {
+					return convertType(number, targetType);
+				}
+				return number;
 
 			case 't':
 				ndx++;
 				if (match(T_RUE, ndx)) {
 					ndx += 3;
+
+					if (targetType != null) {
+						return convertType(Boolean.TRUE, targetType);
+					}
 					return Boolean.TRUE;
 				}
 				break;
@@ -189,6 +204,10 @@ public class JsonParser {
 				ndx++;
 				if (match(F_ALSE, ndx)) {
 					ndx += 4;
+
+					if (targetType != null) {
+						return convertType(Boolean.FALSE, targetType);
+					}
 					return Boolean.FALSE;
 				}
 				break;

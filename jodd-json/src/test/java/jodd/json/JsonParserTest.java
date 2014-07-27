@@ -86,6 +86,16 @@ public class JsonParserTest {
 	}
 
 	@Test
+	public void testSimpleConversions() {
+		JsonParser jsonParser = new JsonParser();
+
+		assertEquals(173, jsonParser.parse("\"173\"", Integer.class).intValue());
+		assertEquals("123", jsonParser.parse("123", String.class));
+		assertEquals(1, jsonParser.parse("true", Integer.class).intValue());
+		assertEquals(0, jsonParser.parse("false", Integer.class).intValue());
+	}
+
+	@Test
 	public void testSimpleMap() {
 		JsonParser jsonParser = new JsonParser();
 
