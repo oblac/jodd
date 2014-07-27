@@ -1,0 +1,15 @@
+{
+	"bar" : {
+		"amount" : 84
+	},
+	"numbers" : [19, 21],
+	"bars" : [
+		{"amount" : 5},
+		{"amount" : 305}
+	],
+	"inters" : [
+		{"sign" : "a"},
+		{"sign" : "b"},
+		{"sign" : "c"}
+	]
+}
