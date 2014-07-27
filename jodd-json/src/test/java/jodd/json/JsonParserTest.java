@@ -26,7 +26,7 @@ public class JsonParserTest {
 		if (dataRoot != null) {
 			return;
 		}
-		URL data = JsonParserTest.class.getResource(".");
+		URL data = JsonParserTest.class.getResource("data");
 		dataRoot = data.getFile();
 	}
 
