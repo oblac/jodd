@@ -105,6 +105,7 @@ public class JsonParser {
 	/**
 	 * Parses input JSON as given type.
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T parse(char[] input, Class<T> targetType) {
 		use(targetType);
 		return (T) parse(input);
@@ -127,7 +128,7 @@ public class JsonParser {
 
 		if (ndx != total) {
 			// must be at the end
-			syntaxError();
+			syntaxError("");
 		}
 
 		return value;
@@ -144,7 +145,7 @@ public class JsonParser {
 	protected Object parseValue(Class targetType, Class componentType) {
 
 		if (isEOF()) {
-			syntaxError();
+			syntaxErrorEOF();
 		}
 
 		// todo convert to switch!
@@ -180,7 +181,7 @@ public class JsonParser {
 			return Boolean.FALSE;
 		}
 
-		syntaxError();
+		syntaxError("Invalid char");
 		return null;
 	}
 
@@ -362,7 +363,7 @@ public class JsonParser {
 			skipWhiteSpaces();
 
 			if (isEOF()) {
-				syntaxError();
+				syntaxErrorEOF();
 			}
 
 			char c = input[ndx];
@@ -370,7 +371,7 @@ public class JsonParser {
 			switch (c) {
 				case ']': ndx++; break mainloop;
 				case ',': ndx++; break;
-				default: syntaxError();
+				default: syntaxError("Invalid char, expected ] or ,");
 			}
 
 		}
@@ -428,7 +429,7 @@ public class JsonParser {
 			setDeclaredPropertyForced(target, pd, key, value);
 
 			if (isEOF()) {
-				syntaxError();
+				syntaxErrorEOF();
 			}
 
 			char c = input[ndx];
@@ -436,7 +437,7 @@ public class JsonParser {
 			switch (c) {
 				case '}': ndx++; break mainloop;
 				case ',': ndx++; break;
-				default: syntaxError();
+				default: syntaxError("Invalid char, expected } or ,");
 			}
 
 		}
@@ -450,11 +451,11 @@ public class JsonParser {
 	 */
 	protected void consume(char c) {
 		if (isEOF()) {
-			syntaxError();
+			syntaxErrorEOF();
 		}
 
 		if (input[ndx] != c) {
-			syntaxError();
+			syntaxError("Invalid char. expected " + c);
 		}
 
 		ndx++;
@@ -621,11 +622,15 @@ public class JsonParser {
 
 	// ---------------------------------------------------------------- error
 
+	protected void syntaxErrorEOF() {
+		syntaxError("end of JSON reached");
+	}
+
 	/**
 	 * Throws {@link jodd.json.JsonException} indicating a syntax error.
 	 */
 	// todo add message about the error, if possible
-	protected void syntaxError() {
+	protected void syntaxError(String message) {
 		int from = ndx - 5;
 		if (from < 0) {
 			from = 0;
@@ -638,7 +643,7 @@ public class JsonParser {
 
 		String str = String.valueOf(input, from, to - from);
 
-		throw new JsonException("Syntax error at: " + ndx + " near: \"..." + str + "...\"");
+		throw new JsonException("Syntax error: " + message + "\noffset: " + ndx + " near: \"..." + str + "...\"");
 	}
 
 }
