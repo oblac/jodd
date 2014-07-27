@@ -576,6 +576,10 @@ public class JsonParser {
 			return new ArrayList();
 		}
 
+		if (targetType.isArray()) {
+			return new ArrayList();
+		}
+
 	    if (targetType == List.class) {
 			return new ArrayList();
 		}

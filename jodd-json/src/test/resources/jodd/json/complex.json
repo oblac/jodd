@@ -11,5 +11,11 @@
 		{"sign" : "a"},
 		{"sign" : "b"},
 		{"sign" : "c"}
+	],
+	"years" : [1975, 2001, 2013],
+	"bongos": [
+		{"amount" : 15},
+		{"amount" : 35},
+		{"amount" : 95}
 	]
 }

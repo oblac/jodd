@@ -248,6 +248,8 @@ public class JsonParserTest {
 		private List<Byte> numbers;
 		private List<Bar> bars;
 		private List<Inter> inters;
+		private int[] years;
+		private Bar[] bongos;
 
 		public Bar getBar() {
 			return bar;
@@ -280,6 +282,22 @@ public class JsonParserTest {
 		public void setInters(List<Inter> inters) {
 			this.inters = inters;
 		}
+
+		public int[] getYears() {
+			return years;
+		}
+
+		public void setYears(int[] years) {
+			this.years = years;
+		}
+
+		public Bar[] getBongos() {
+			return bongos;
+		}
+
+		public void setBongos(Bar[] bongos) {
+			this.bongos = bongos;
+		}
 	}
 
 	@Test
@@ -309,6 +327,18 @@ public class JsonParserTest {
 		assertEquals('a', inters.get(0).getSign());
 		assertEquals('b', inters.get(1).getSign());
 		assertEquals('c', inters.get(2).getSign());
+
+		int[] years = aaa.getYears();
+		assertEquals(3, years.length);
+		assertEquals(1975, years[0]);
+		assertEquals(2001, years[1]);
+		assertEquals(2013, years[2]);
+
+		Bar[] bongos = aaa.getBongos();
+		assertEquals(3, bongos.length);
+		assertEquals(15, bongos[0].getAmount().intValue());
+		assertEquals(35, bongos[1].getAmount().intValue());
+		assertEquals(95, bongos[2].getAmount().intValue());
 	}
 
 }
