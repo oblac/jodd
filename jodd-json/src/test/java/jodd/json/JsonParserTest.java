@@ -15,6 +15,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class JsonParserTest {
 
@@ -93,6 +94,19 @@ public class JsonParserTest {
 		assertEquals("123", jsonParser.parse("123", String.class));
 		assertEquals(1, jsonParser.parse("true", Integer.class).intValue());
 		assertEquals(0, jsonParser.parse("false", Integer.class).intValue());
+	}
+
+	@Test
+	public void testStringEscapes() {
+		JsonParser jsonParser = new JsonParser();
+
+		assertEquals("\n4", jsonParser.parse("\"\\n\\u0034\""));
+
+		try {
+			jsonParser.parse("\"\\u034\"");
+			fail();
+		} catch (Exception ex) {
+		}
 	}
 
 	@Test

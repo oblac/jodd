@@ -149,7 +149,6 @@ public class JsonParser {
 			syntaxErrorEOF();
 		}
 
-		// todo change signature to <T> for targetType
 		char c = input[ndx];
 
 		switch (c) {
@@ -248,17 +247,20 @@ public class JsonParser {
 				c = input[ndx];
 
 				switch (c) {
-					case '\"' : emitChar('\"'); break;
-					case '\\' : emitChar('\\'); break;
-					case '/' : emitChar('/'); break;
-					case 'b' : emitChar('\b'); break;
-					case 'f' : emitChar('\f'); break;
-					case 'n' : emitChar('\n'); break;
-					case 'r' : emitChar('\r'); break;
-					case 't' : emitChar('\t'); break;
-					case 'u' : //
+					case '\"' : c = '\"'; break;
+					case '\\' : c = '\\'; break;
+					case '/' : c = '/'; break;
+					case 'b' : c = '\b'; break;
+					case 'f' : c = '\f'; break;
+					case 'n' : c = '\n'; break;
+					case 'r' : c = '\r'; break;
+					case 't' : c = '\t'; break;
+					case 'u' :
+						ndx++;
+						c = parseUnicode();
+						break;
 					default:
-						// todo error?
+						syntaxError("Invalid escape char: " + c);
 				}
 			}
 
@@ -266,7 +268,6 @@ public class JsonParser {
 			ndx++;
 		}
 	}
-
 
 	/**
 	 * Appends single char to the text buffer.
@@ -293,6 +294,22 @@ public class JsonParser {
 		textLen = 0;
 
 		return s;
+	}
+
+	/**
+	 * Parses 4 characters and returns unicode character.
+	 */
+	protected char parseUnicode() {
+		if (ndx + 4 >= total) {
+			syntaxErrorEOF();
+		}
+
+		int i0 = CharUtil.hex2int(input[ndx++]);
+		int i1 = CharUtil.hex2int(input[ndx++]);
+		int i2 = CharUtil.hex2int(input[ndx++]);
+		int i3 = CharUtil.hex2int(input[ndx]);
+
+		return (char) ((i0 << 12) + (i1 << 8) + (i2 << 4) + i3);
 	}
 
 	// ---------------------------------------------------------------- number
@@ -660,7 +677,7 @@ public class JsonParser {
 	// ---------------------------------------------------------------- error
 
 	protected void syntaxErrorEOF() {
-		syntaxError("End of JSON reached");
+		syntaxError("End of JSON");
 	}
 
 	/**
