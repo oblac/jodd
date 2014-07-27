@@ -29,6 +29,9 @@ public class DoubleConverter implements TypeConverter<Double> {
 		if (value instanceof Number) {
 			return Double.valueOf(((Number)value).doubleValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Double.valueOf(1) : Double.valueOf(0);
+		}
 
 		try {
 			String stringValue = value.toString().trim();

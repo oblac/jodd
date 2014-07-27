@@ -29,6 +29,9 @@ public class FloatConverter implements TypeConverter<Float> {
 		if (value instanceof Number) {
 			return Float.valueOf(((Number)value).floatValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Float.valueOf(1) : Float.valueOf(0);
+		}
 
 		try {
 			String stringValue = value.toString().trim();

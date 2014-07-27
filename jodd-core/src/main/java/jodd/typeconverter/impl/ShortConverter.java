@@ -29,6 +29,10 @@ public class ShortConverter implements TypeConverter<Short> {
 		if (value instanceof Number) {
 			return Short.valueOf(((Number)value).shortValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Short.valueOf((short) 1) : Short.valueOf((short) 0);
+		}
+
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {

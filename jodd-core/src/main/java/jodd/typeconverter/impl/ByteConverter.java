@@ -28,6 +28,10 @@ public class ByteConverter implements TypeConverter<Byte> {
 		if (value instanceof Number) {
 			return Byte.valueOf(((Number)value).byteValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Byte.valueOf((byte) 1) : Byte.valueOf((byte) 0);
+		}
+
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {

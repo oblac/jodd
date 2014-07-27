@@ -29,6 +29,10 @@ public class IntegerConverter implements TypeConverter<Integer> {
 		if (value instanceof Number) {
 			return Integer.valueOf(((Number)value).intValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Integer.valueOf(1) : Integer.valueOf(0);
+		}
+
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {

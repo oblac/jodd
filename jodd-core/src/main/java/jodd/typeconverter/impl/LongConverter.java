@@ -29,6 +29,10 @@ public class LongConverter implements TypeConverter<Long> {
 		if (value instanceof Number) {
 			return Long.valueOf(((Number)value).longValue());
 		}
+		if (value instanceof Boolean) {
+			return ((Boolean) value).booleanValue() ? Long.valueOf(1L) : Long.valueOf(0L);
+		}
+
 		try {
 			String stringValue = value.toString().trim();
 			if (StringUtil.startsWithChar(stringValue, '+')) {
