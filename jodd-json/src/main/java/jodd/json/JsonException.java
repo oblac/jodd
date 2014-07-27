@@ -4,6 +4,9 @@ package jodd.json;
 
 import jodd.exception.UncheckedException;
 
+/**
+ * JSON exception.
+ */
 public class JsonException extends UncheckedException {
 
 	public JsonException(String message) {
@@ -12,5 +15,9 @@ public class JsonException extends UncheckedException {
 
 	public JsonException(Throwable t) {
 		super(t);
+	}
+
+	public JsonException(String message, Throwable t) {
+		super(message, t);
 	}
 }

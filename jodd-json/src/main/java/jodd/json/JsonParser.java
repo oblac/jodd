@@ -22,8 +22,8 @@ import java.util.Map;
  */
 public class JsonParser {
 
-	private static final char[] TRUE = new char[] {'t', 'r', 'u', 'e'};
-	private static final char[] FALSE = new char[] {'f', 'a', 'l', 's', 'e'};
+	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
+	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 
 	protected int ndx = 0;
 	protected char[] input;
@@ -148,40 +148,53 @@ public class JsonParser {
 			syntaxErrorEOF();
 		}
 
-		// todo convert to switch!
 		// todo change signature to <T> for targetType
 		char c = input[ndx];
 
-		if (c == '"') {
-			ndx++;
-			return parseStringContent();
+		switch (c) {
+			case '"':
+				ndx++;
+				return parseStringContent();
+
+			case '{':
+				ndx++;
+				return parseObjectContent(targetType);
+
+			case '[':
+				ndx++;
+				return parseArrayContent(targetType, componentType);
+
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case '-':
+				return parseNumber();
+
+			case 't':
+				ndx++;
+				if (match(T_RUE, ndx)) {
+					ndx += 3;
+					return Boolean.TRUE;
+				}
+				break;
+
+			case 'f':
+				ndx++;
+				if (match(F_ALSE, ndx)) {
+					ndx += 4;
+					return Boolean.FALSE;
+				}
+				break;
 		}
 
-		if (c == '{') {
-			ndx++;
-			return parseObjectContent(targetType);
-		}
-
-		if (c == '[') {
-			ndx++;
-			return parseArrayContent(targetType, componentType);
-		}
-
-		if (CharUtil.isDigit(c) || c == '-') {
-			return parseNumber();
-		}
-
-		if (match(TRUE, ndx)) {
-			ndx += 4;
-			return Boolean.TRUE;
-		}
-
-		if (match(FALSE, ndx)) {
-			ndx += 5;
-			return Boolean.FALSE;
-		}
-
-		syntaxError("Invalid char");
+		syntaxError("Invalid char: " + c);
 		return null;
 	}
 
@@ -617,19 +630,23 @@ public class JsonParser {
 			return value;
 		}
 
-		return TypeConverterManager.convertType(value, targetType);
+		try {
+			return TypeConverterManager.convertType(value, targetType);
+		}
+		catch (Exception ex) {
+			throw new JsonException("Type conversion failed", ex);
+		}
 	}
 
 	// ---------------------------------------------------------------- error
 
 	protected void syntaxErrorEOF() {
-		syntaxError("end of JSON reached");
+		syntaxError("End of JSON reached");
 	}
 
 	/**
 	 * Throws {@link jodd.json.JsonException} indicating a syntax error.
 	 */
-	// todo add message about the error, if possible
 	protected void syntaxError(String message) {
 		int from = ndx - 5;
 		if (from < 0) {
