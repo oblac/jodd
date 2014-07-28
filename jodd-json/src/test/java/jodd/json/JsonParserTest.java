@@ -220,7 +220,7 @@ public class JsonParserTest {
 	public void testSimpleObject() {
 		JsonParser jsonParser = new JsonParser();
 
-		Foo foo = jsonParser.use("inter", InterImpl.class)
+		Foo foo = jsonParser.map("inter", InterImpl.class)
 				.parse(
 						"{" +
 							"\"name\": \"jodd\"," +
@@ -306,7 +306,7 @@ public class JsonParserTest {
 		String json = FileUtil.readString(new File(dataRoot, "complex.json"));
 
 		Aaa aaa = jsonParser
-				.use("inters.values", InterImpl.class)
+				.map("inters.values", InterImpl.class)
 				.parse(json, Aaa.class);
 
 		assertNotNull(aaa);

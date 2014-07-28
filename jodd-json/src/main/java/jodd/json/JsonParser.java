@@ -43,38 +43,39 @@ public class JsonParser {
 		this.path = new Path();
 	}
 
-	// ---------------------------------------------------------------- use
+	// ---------------------------------------------------------------- mappings
 
-	protected Map<Path, Class> uses;
+	protected Map<Path, Class> mappings;
 
 	/**
-	 * Uses class for JSONs root.
+	 * Maps a class for JSONs root.
 	 */
-	public JsonParser use(Class target) {
-		return use(null, target);
+	public JsonParser map(Class target) {
+		return map(null, target);
 	}
 
 	/**
-	 * Uses class for given path. For arrays, append <code>values</code>
-	 * to the path to specify component type.
+	 * Maps a class to given path. For arrays, append <code>values</code>
+	 * to the path to specify component type (if not specified by
+	 * generics).
 	 */
-	public JsonParser use(String path, Class target) {
-		if (uses == null) {
-			uses = new HashMap<Path, Class>();
+	public JsonParser map(String path, Class target) {
+		if (mappings == null) {
+			mappings = new HashMap<Path, Class>();
 		}
-		uses.put(Path.parse(path), target);
+		mappings.put(Path.parse(path), target);
 		return this;
 	}
 
 	/**
-	 * Replaces type with specified type from the specified uses for current path.
+	 * Replaces type with mapped type for current path.
 	 */
-	protected Class replaceWithPathType(Class target) {
-		if (uses == null) {
+	protected Class replaceWithMappedTypeForPath(Class target) {
+		if (mappings == null) {
 			return target;
 		}
 
-		Class newType = uses.get(path);
+		Class newType = mappings.get(path);
 
 		if (newType == null) {
 			return target;
@@ -90,7 +91,7 @@ public class JsonParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T parse(String input, Class<T> targetType) {
-		use(targetType);
+		map(targetType);
 		return (T) parse(input);
 	}
 
@@ -107,7 +108,7 @@ public class JsonParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T parse(char[] input, Class<T> targetType) {
-		use(targetType);
+		map(targetType);
 		return (T) parse(input);
 	}
 
@@ -122,7 +123,7 @@ public class JsonParser {
 
 		skipWhiteSpaces();
 
-		Class targetType = replaceWithPathType(null);
+		Class targetType = replaceWithMappedTypeForPath(null);
 
 		Object value = parseValue(targetType, null);
 
@@ -383,10 +384,10 @@ public class JsonParser {
 	 * Parses arrays, once when open bracket has been consumed.
 	 */
 	protected Object parseArrayContent(Class targetType, Class componentType) {
-		targetType = replaceWithPathType(targetType);
+		targetType = replaceWithMappedTypeForPath(targetType);
 
 		path.push("values");
-		componentType = replaceWithPathType(componentType);
+		componentType = replaceWithMappedTypeForPath(componentType);
 		path.pop();
 
 		Object target = newArrayInstance(targetType);
@@ -434,7 +435,7 @@ public class JsonParser {
 	 * Parses object, once when open bracket has been consumed.
 	 */
 	protected Object parseObjectContent(Class targetType) {
-		targetType = replaceWithPathType(targetType);
+		targetType = replaceWithMappedTypeForPath(targetType);
 
 		Object target = newObjectInstance(targetType);
 
