@@ -111,7 +111,7 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	/**
 	 * Appends chunk to the list. Chunks <b>must</b> be added using this method.
 	 */
-	protected DbSqlBuilder addChunk(SqlChunk chunk) {
+	public DbSqlBuilder addChunk(SqlChunk chunk) {
 		if (lastChunk == null) {
 			lastChunk = firstChunk = chunk;
 		} else {
