@@ -58,4 +58,32 @@ public class SessionScopeTest {
 
 		assertEquals(out2, out3);
 	}
+
+	@Test
+	public void testSessionScopeWithInOut() {
+		HttpResponse response = HttpRequest.get("localhost:8080/sess.html?name=jodd").send();
+		String out = response.bodyText().trim();
+
+		int ndx = out.indexOf('>');
+		String sid = out.substring(ndx + 1);
+		assertEquals("Sess: jodd", out.substring(0, ndx).trim());
+
+		response = HttpRequest.get("localhost:8080/sess.two.html;jsessionid=" + sid).send();
+		out = response.bodyText().trim();
+
+		ndx = out.indexOf('>');
+		sid = out.substring(ndx + 1);
+		assertEquals("Sess: JODD", out.substring(0, ndx).trim());
+
+		response = HttpRequest.get("localhost:8080/sess.three.html;jsessionid=" + sid).send();
+		out = response.bodyText().trim();
+
+		ndx = out.indexOf('>');
+		sid = out.substring(ndx + 1);
+		assertEquals("Sess:", out.substring(0, ndx).trim());
+
+		response = HttpRequest.get("localhost:8080/sess.four.html;jsessionid=" + sid).send();
+		out = response.bodyText().trim();
+		assertEquals("ne:true", out.trim());
+	}
 }
