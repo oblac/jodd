@@ -105,7 +105,7 @@ public class JsonParserTest {
 		try {
 			jsonParser.parse("\"\\u034\"");
 			fail();
-		} catch (Exception ex) {
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -339,6 +339,63 @@ public class JsonParserTest {
 		assertEquals(15, bongos[0].getAmount().intValue());
 		assertEquals(35, bongos[1].getAmount().intValue());
 		assertEquals(95, bongos[2].getAmount().intValue());
+	}
+
+	// ---------------------------------------------------------------- complex maps
+
+	public static class User {
+		private String name;
+		private Map<String, Bar> bars;
+		private Map<String, Inter> inters;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public Map<String, Bar> getBars() {
+			return bars;
+		}
+
+		public void setBars(Map<String, Bar> bars) {
+			this.bars = bars;
+		}
+
+		public Map<String, Inter> getInters() {
+			return inters;
+		}
+
+		public void setInters(Map<String, Inter> inters) {
+			this.inters = inters;
+		}
+	}
+
+	@Test
+	public void testComplexMaps() throws IOException {
+		JsonParser jsonParser = new JsonParser();
+		String json = FileUtil.readString(new File(dataRoot, "complexMaps.json"));
+
+		User user = jsonParser
+				.map("inters.values", InterImpl.class)
+				.parse(json, User.class);
+
+		assertNotNull(user);
+
+		assertEquals("Mak", user.getName());
+
+		Map<String, Bar> bars = user.getBars();
+		assertEquals(2, bars.size());
+
+		assertEquals(12300, bars.get("123").getAmount().intValue());
+		assertEquals(45600, bars.get("456").getAmount().intValue());
+
+		Map<String, Inter> inters = user.getInters();
+		assertEquals(3, inters.size());
+
+
 	}
 
 }

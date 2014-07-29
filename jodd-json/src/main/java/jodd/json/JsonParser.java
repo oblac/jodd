@@ -19,11 +19,15 @@ import java.util.Map;
 
 /**
  * Simple, developer-friendly JSON parser.
+ *
+ * todo: add factory for Maps and Lists
  */
 public class JsonParser {
 
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
+
+	private static final String VALUES = "values";
 
 	protected int ndx = 0;
 	protected char[] input;
@@ -35,7 +39,7 @@ public class JsonParser {
 	}
 
 	/**
-	 * Resets parser, so it can be reused.
+	 * Resets JSON parser, so it can be reused.
 	 */
 	protected void reset() {
 		this.ndx = 0;
@@ -48,7 +52,7 @@ public class JsonParser {
 	protected Map<Path, Class> mappings;
 
 	/**
-	 * Maps a class for JSONs root.
+	 * Maps a class to JSONs root.
 	 */
 	public JsonParser map(Class target) {
 		return map(null, target);
@@ -142,7 +146,7 @@ public class JsonParser {
 	/**
 	 * Parses a JSON value.
 	 * @param targetType target type to convert, may be <code>null</code>
-	 * @param componentType component type for arrays, may be <code>null</code>
+	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
 	protected Object parseValue(Class targetType, Class componentType) {
 
@@ -164,7 +168,7 @@ public class JsonParser {
 
 			case '{':
 				ndx++;
-				return parseObjectContent(targetType);
+				return parseObjectContent(targetType, componentType);
 
 			case '[':
 				ndx++;
@@ -386,7 +390,7 @@ public class JsonParser {
 	protected Object parseArrayContent(Class targetType, Class componentType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
 
-		path.push("values");
+		path.push(VALUES);
 		componentType = replaceWithMappedTypeForPath(componentType);
 		path.pop();
 
@@ -434,7 +438,7 @@ public class JsonParser {
 	/**
 	 * Parses object, once when open bracket has been consumed.
 	 */
-	protected Object parseObjectContent(Class targetType) {
+	protected Object parseObjectContent(Class targetType, Class valueType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
 
 		Object target = newObjectInstance(targetType);
@@ -467,16 +471,28 @@ public class JsonParser {
 				}
 			}
 
-			path.push(key);
+			Object value;
 
-			Object value = parseValue(propertyType, componentType);
+			if (pd != null) {
+				path.push(key);
 
-			path.pop();
+				value = parseValue(propertyType, componentType);
+
+				path.pop();
+
+				injectValueIntoObject(target, pd, key, value);
+			}
+			else {
+				path.push(VALUES);
+
+				value = parseValue(valueType, null);
+
+				path.pop();
+
+				((Map) target).put(key, value);
+			}
 
 			skipWhiteSpaces();
-
-			// inject
-			setDeclaredPropertyForced(target, pd, key, value);
 
 			if (isEOF()) {
 				syntaxErrorEOF();
@@ -489,7 +505,6 @@ public class JsonParser {
 				case ',': ndx++; break;
 				default: syntaxError("Invalid char, expected } or ,");
 			}
-
 		}
 		return target;
 	}
@@ -562,6 +577,11 @@ public class JsonParser {
 		if (targetType == null) {
 			return new HashMap();
 		}
+
+		if (targetType == Map.class) {
+			return new HashMap();
+		}
+
 		try {
 			return targetType.newInstance();
 		} catch (Exception e) {
@@ -595,10 +615,14 @@ public class JsonParser {
 	/**
 	 * Resolves property type for given object.
 	 * Returns <code>null</code> when property type is unknown (either property is missing
-	 * or it is a map).
+	 * or targets type is a map).
 	 */
 	protected PropertyDescriptor resolveSimpleProperty(Class type, String key) {
 		if (type == null) {
+			return null;
+		}
+
+		if (type == Map.class) {
 			return null;
 		}
 
@@ -620,14 +644,14 @@ public class JsonParser {
 		Getter getter = pd.getGetter(true);
 
 		if (getter != null) {
-			componentType = getter.getGetterRawKeyComponentType();
+			componentType = getter.getGetterRawComponentType();
 		}
 
 		if (componentType == null) {
 			FieldDescriptor fieldDescriptor = pd.getFieldDescriptor();
 
 			if (fieldDescriptor != null) {
-				componentType = fieldDescriptor.getRawKeyComponentType();
+				componentType = fieldDescriptor.getRawComponentType();
 			}
 		}
 
@@ -635,14 +659,9 @@ public class JsonParser {
 	}
 
 	/**
-	 * Injects value into the target property.
+	 * Injects value into the targets property.
 	 */
-	protected void setDeclaredPropertyForced(Object target, PropertyDescriptor pd, String key, Object value) {
-		if (pd == null) {
-			((Map) target).put(key, value);
-			return;
-		}
-
+	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, String key, Object value) {
 		Class targetClass = pd.getType();
 
 		Object convertedValue = convertType(value, targetClass);
