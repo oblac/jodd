@@ -227,7 +227,7 @@ public class JsonParserTest {
 	public void testSimpleMap() {
 		JsonParser jsonParser = new JsonParser();
 
-		Object value = jsonParser.parse("{ \"one\" : true}");
+		Object value = jsonParser.parse("   { \"one\" : true}   ");
 
 		assertNotNull(value);
 		assertTrue(value instanceof Map);
@@ -508,8 +508,28 @@ public class JsonParserTest {
 
 		Map<String, Inter> inters = user.getInters();
 		assertEquals(3, inters.size());
+	}
 
+	@Test
+	public void testActionLabel() throws Exception {
+		JsonParser jsonParser = new JsonParser();
+		String json = FileUtil.readString(new File(dataRoot, "actionLabel.json"));
+		Map<String, Object> map;
+		try {
+			map = (Map<String, Object>) jsonParser.parse(json);
+		}
+		catch (Exception ex) {
+			fail(ex.toString());
+			throw ex;
+		}
 
+		map = (Map<String, Object>) map.get("menu");
+		assertEquals("SVG Viewer", map.get("header"));
+		List<String> items = (List<String>) map.get("items");
+
+		assertEquals(22, items.size());
+		assertNull(items.get(2));
+		assertNotNull(items.get(3));
 	}
 
 }
