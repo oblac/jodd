@@ -2,6 +2,7 @@
 
 package jodd.db.oom;
 
+import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class KeyTest {
 
 		DbEntityDescriptor<Foo> fooded = dbOomManager.registerEntity(Foo.class);
 		DbEntityDescriptor<Bar> barded = dbOomManager.registerEntity(Bar.class);
+		DbEntityDescriptor<User> userded = dbOomManager.registerEntity(User.class);
 
 		Foo foo = new Foo();
 		Bar bar = new Bar();
@@ -37,6 +39,10 @@ public class KeyTest {
 
 		assertFalse(keyFoo.equals(keyBar));
 		assertFalse(keyBarBar.equals(keyBar));
+
+		assertEquals("idid", userded.getIdColumnName());
+		assertEquals(User.class.getName() + ":null", userded.getKeyValue(new User()));
+
 	}
 
 	@DbTable
@@ -52,6 +58,15 @@ public class KeyTest {
 
 	public static class BarBar extends Bar {
 
+	}
+
+	public static class User {
+		@DbId("idid")
+		Integer id;
+		@DbColumn("bbb")
+		String aaa;
+		@DbColumn("bbb")
+		String bbb;
 	}
 
 }

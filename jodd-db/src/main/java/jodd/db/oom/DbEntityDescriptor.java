@@ -266,7 +266,10 @@ public class DbEntityDescriptor<E> {
 	 */
 	public String getKeyValue(E object) {
 		Object idValue = getIdValue(object);
-		return type.getName().concat(StringPool.COLON).concat(idValue.toString());
+
+		String idValueString = idValue == null ?  StringPool.NULL : idValue.toString();
+
+		return type.getName().concat(StringPool.COLON).concat(idValueString);
 	}
 
 	// ---------------------------------------------------------------- toString
