@@ -12,20 +12,26 @@ import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CharUtil;
 import jodd.util.UnsafeUtil;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Simple, developer-friendly JSON parser.
- *
+ * Simple, developer-friendly JSON parser. It focuses on easy usage
+ * and type mappings. Uses Jodd's type converters, so it is natural
+ * companion for Jodd projects.
+ * <p>
+ * See: http://www.ietf.org/rfc/rfc4627.txt
+ * <p>
  * todo: add factory for Maps and Lists
  */
 public class JsonParser {
 
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
+	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
 	private static final String VALUES = "values";
 
@@ -129,13 +135,21 @@ public class JsonParser {
 
 		Class targetType = replaceWithMappedTypeForPath(null);
 
-		Object value = parseValue(targetType, null);
+		Object value;
+
+		try {
+			value = parseValue(targetType, null);
+		}
+		catch (IndexOutOfBoundsException iofbex) {
+			syntaxError("End of JSON");
+			return null;
+		}
 
 		skipWhiteSpaces();
 
 		if (ndx != total) {
-			// must be at the end
-			syntaxError("");
+			syntaxError("Trailing chars");
+			return null;
 		}
 
 		return value;
@@ -149,10 +163,6 @@ public class JsonParser {
 	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
 	protected Object parseValue(Class targetType, Class componentType) {
-
-		if (isEOF()) {
-			syntaxErrorEOF();
-		}
 
 		char c = input[ndx];
 
@@ -192,11 +202,16 @@ public class JsonParser {
 				}
 				return number;
 
+			case 'n':
+				ndx++;
+				if (match(N_ULL)) {
+					return null;
+				}
+				break;
+
 			case 't':
 				ndx++;
-				if (match(T_RUE, ndx)) {
-					ndx += 3;
-
+				if (match(T_RUE)) {
 					if (targetType != null) {
 						return convertType(Boolean.TRUE, targetType);
 					}
@@ -206,9 +221,7 @@ public class JsonParser {
 
 			case 'f':
 				ndx++;
-				if (match(F_ALSE, ndx)) {
-					ndx += 4;
-
+				if (match(F_ALSE)) {
 					if (targetType != null) {
 						return convertType(Boolean.FALSE, targetType);
 					}
@@ -217,7 +230,7 @@ public class JsonParser {
 				break;
 		}
 
-		syntaxError("Invalid char: " + c);
+		syntaxError("Invalid char: " + input[ndx]);
 		return null;
 	}
 
@@ -305,10 +318,6 @@ public class JsonParser {
 	 * Parses 4 characters and returns unicode character.
 	 */
 	protected char parseUnicode() {
-		if (ndx + 4 >= total) {
-			syntaxErrorEOF();
-		}
-
 		int i0 = CharUtil.hex2int(input[ndx++]);
 		int i1 = CharUtil.hex2int(input[ndx++]);
 		int i2 = CharUtil.hex2int(input[ndx++]);
@@ -373,7 +382,18 @@ public class JsonParser {
 			longNumber = Double.valueOf(value).longValue();
 		}
 		else {
-			longNumber = Long.parseLong(value);
+			if (value.length() >= 19) {
+				// if string is 19 chars and longer, it can be over the limit
+				BigInteger bigInteger = new BigInteger(value);
+
+				if (isGreaterThenLong(bigInteger)) {
+					return bigInteger;
+				}
+				longNumber = bigInteger.longValue();
+			}
+			else {
+				longNumber = Long.parseLong(value);
+			}
 		}
 
 		if ((longNumber > 0 && longNumber <= Integer.MAX_VALUE) || (longNumber < 0 && longNumber >= Integer.MIN_VALUE)) {
@@ -381,6 +401,19 @@ public class JsonParser {
 		}
 		return Long.valueOf(longNumber);
 	}
+
+	private static boolean isGreaterThenLong(BigInteger bigInteger) {
+		if (bigInteger.compareTo(MAX_LONG) == 1) {
+			return true;
+		}
+		if (bigInteger.compareTo(MIN_LONG) == -1) {
+			return true;
+		}
+		return false;
+	}
+
+	private static BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
+	private static BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
 
 	// ---------------------------------------------------------------- array
 
@@ -404,6 +437,13 @@ public class JsonParser {
 		while (true) {
 			skipWhiteSpaces();
 
+			char c = input[ndx];
+
+			if (c == ']') {
+				ndx++;
+				return target;
+			}
+
 			Object value = parseValue(componentType, null);
 
 			if (componentType != null) {
@@ -416,11 +456,7 @@ public class JsonParser {
 
 			skipWhiteSpaces();
 
-			if (isEOF()) {
-				syntaxErrorEOF();
-			}
-
-			char c = input[ndx];
+			c = input[ndx];
 
 			switch (c) {
 				case ']': ndx++; break mainloop;
@@ -446,6 +482,13 @@ public class JsonParser {
 		mainloop:
 		while (true) {
 			skipWhiteSpaces();
+
+			char c = input[ndx];
+
+			if (c == '}') {
+				ndx++;
+				break;
+			}
 
 			String key = parseString();
 
@@ -494,11 +537,7 @@ public class JsonParser {
 
 			skipWhiteSpaces();
 
-			if (isEOF()) {
-				syntaxErrorEOF();
-			}
-
-			char c = input[ndx];
+			c = input[ndx];
 
 			switch (c) {
 				case '}': ndx++; break mainloop;
@@ -515,12 +554,8 @@ public class JsonParser {
 	 * Consumes char at current position. If char is different, throws the exception.
 	 */
 	protected void consume(char c) {
-		if (isEOF()) {
-			syntaxErrorEOF();
-		}
-
 		if (input[ndx] != c) {
-			syntaxError("Invalid char. expected " + c);
+			syntaxError("Invalid char, expected " + c);
 		}
 
 		ndx++;
@@ -552,17 +587,12 @@ public class JsonParser {
 	/**
 	 * Matches char buffer with content on given location.
 	 */
-	protected final boolean match(char[] target, int ndx) {
-		if (ndx + target.length > total) {
-			return false;
-		}
-
-		int j = ndx;
-
-		for (int i = 0; i < target.length; i++, j++) {
-			if (input[j] != target[i]) {
+	protected final boolean match(char[] target) {
+		for (char c : target) {
+			if (input[ndx] != c) {
 				return false;
 			}
+			ndx++;
 		}
 
 		return true;
@@ -699,10 +729,6 @@ public class JsonParser {
 	}
 
 	// ---------------------------------------------------------------- error
-
-	protected void syntaxErrorEOF() {
-		syntaxError("End of JSON");
-	}
 
 	/**
 	 * Throws {@link jodd.json.JsonException} indicating a syntax error.
