@@ -18,11 +18,11 @@ public class ParsedSql implements DbSqlGenerator {
 	protected final Map<String, ColumnData> columnData;
 	protected final String[] joinHints;
 
-	public ParsedSql(DbSqlBuilder dbSqlBuilder) {
-		generatedQuery = dbSqlBuilder.generateQuery();
-		queryParameters = dbSqlBuilder.getQueryParameters();
-		columnData = dbSqlBuilder.getColumnData();
-		joinHints = dbSqlBuilder.getJoinHints();
+	public ParsedSql(DbSqlGenerator dbSqlGenerator) {
+		generatedQuery = dbSqlGenerator.generateQuery();
+		queryParameters = dbSqlGenerator.getQueryParameters();
+		columnData = dbSqlGenerator.getColumnData();
+		joinHints = dbSqlGenerator.getJoinHints();
 	}
 
 	public String generateQuery() {
