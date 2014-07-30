@@ -3,9 +3,9 @@
 package jodd.http;
 
 import jodd.io.FileUtil;
-import jodd.io.StringInputStream;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -22,9 +22,9 @@ public class GoogleMapsTest {
 		                .send();
 		 */
 		URL data = RawTest.class.getResource("2-response.txt");
-		String fileContent = FileUtil.readString(data.getFile());
+		byte[] fileContent = FileUtil.readBytes(data.getFile());
 
-		HttpResponse httpResponse = HttpResponse.readFrom(new StringInputStream(fileContent, StringInputStream.Mode.ASCII));
+		HttpResponse httpResponse = HttpResponse.readFrom(new ByteArrayInputStream(fileContent));
 
 		try {
 			httpResponse.bodyText();
@@ -38,9 +38,9 @@ public class GoogleMapsTest {
 	@Test
 	public void testNoContentLength() throws IOException {
 		URL data = RawTest.class.getResource("3-response.txt");
-		String fileContent = FileUtil.readString(data.getFile());
+		byte[] fileContent = FileUtil.readBytes(data.getFile());
 
-		HttpResponse httpResponse = HttpResponse.readFrom(new StringInputStream(fileContent, StringInputStream.Mode.ASCII));
+		HttpResponse httpResponse = HttpResponse.readFrom(new ByteArrayInputStream(fileContent));
 
 		assertEquals("Body!", httpResponse.bodyText());
 	}

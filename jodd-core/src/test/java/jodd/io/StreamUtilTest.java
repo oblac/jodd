@@ -8,6 +8,7 @@ import jodd.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +33,7 @@ public class StreamUtilTest {
 
 	@Test
 	public void testCopy() {
-		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out);
@@ -46,7 +47,7 @@ public class StreamUtilTest {
 
 	@Test
 	public void testCopyWithSize() {
-		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		ByteArrayInputStream in = new ByteArrayInputStream("input".getBytes());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 3);
@@ -57,7 +58,7 @@ public class StreamUtilTest {
 		StreamUtil.close(out);
 		StreamUtil.close(in);
 
-		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		in = new ByteArrayInputStream("input".getBytes());
 		out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 5);
@@ -71,7 +72,7 @@ public class StreamUtilTest {
 		int temp = JoddCore.ioBufferSize;
 
 		JoddCore.ioBufferSize = 3;
-		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
+		in = new ByteArrayInputStream("input".getBytes());
 		out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 5);
@@ -97,7 +98,7 @@ public class StreamUtilTest {
 			if (file.length() == 10) {
 				content = StringUtil.remove(content, '\r');
 			}
-			StringInputStream in2 = new StringInputStream(content, StringInputStream.Mode.ASCII);
+			ByteArrayInputStream in2 = new ByteArrayInputStream(content.getBytes());
 			assertTrue(StreamUtil.compare(in1, in2));
 			StreamUtil.close(in2);
 			StreamUtil.close(in1);

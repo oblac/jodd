@@ -2,9 +2,9 @@
 
 package jodd.http;
 
-import jodd.io.StringInputStream;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public class KeepAliveTest {
 				}
 
 				public InputStream getInputStream() throws IOException {
-					return new StringInputStream(RESPONSES[currentResponse], StringInputStream.Mode.ASCII);
+					return new ByteArrayInputStream(RESPONSES[currentResponse].getBytes());
 				}
 
 				public void close() {

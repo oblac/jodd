@@ -3,7 +3,6 @@
 package jodd.mail;
 
 import jodd.JoddCore;
-import jodd.io.StringInputStream;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
@@ -15,6 +14,7 @@ import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -145,7 +145,12 @@ public class EmailUtil {
 		Properties props = System.getProperties();
 		Session session = Session.getDefaultInstance(props, null);
 
-		Message message = new MimeMessage(session, new StringInputStream(emlContent, StringInputStream.Mode.ASCII));
+		Message message = null;
+		try {
+			message = new MimeMessage(session, new ByteArrayInputStream(emlContent.getBytes(StringPool.US_ASCII)));
+		} catch (UnsupportedEncodingException ueex) {
+			throw new MessagingException(ueex.toString());
+		}
 
 		return new ReceivedEmail(message);
 	}

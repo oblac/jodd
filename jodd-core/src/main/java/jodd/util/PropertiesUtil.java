@@ -3,14 +3,13 @@
 package jodd.util;
 
 import jodd.io.StreamUtil;
-import jodd.io.StringInputStream;
 import jodd.io.findfile.ClassScanner;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.Map;
 
@@ -133,7 +132,7 @@ public class PropertiesUtil {
 	 * Loads properties from string.
 	 */
 	public static void loadFromString(Properties p, String data) throws IOException {
-		InputStream is = new StringInputStream(data, StringInputStream.Mode.ASCII);
+		ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes(StringPool.ISO_8859_1));
 		try {
 			p.load(is);
 		} finally {

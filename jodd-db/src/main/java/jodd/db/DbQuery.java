@@ -3,7 +3,6 @@
 package jodd.db;
 
 import jodd.bean.BeanUtil;
-import jodd.io.StringInputStream;
 import jodd.util.CharUtil;
 import jodd.util.collection.IntArrayList;
 import jodd.db.querymap.QueryMap;
@@ -756,7 +755,7 @@ s	 */
 
 	// ---------------------------------------------------------------- ascii streams
 
-	public void setAsciiStream(int index, StringInputStream stream) {
+	public void setAsciiStream(int index, InputStream stream) {
 		init();
 		try {
 			preparedStatement.setAsciiStream(index, stream, stream.available());
@@ -767,7 +766,7 @@ s	 */
 		}
 	}
 
-	public void setAsciiStream(String param, StringInputStream stream) {
+	public void setAsciiStream(String param, InputStream stream) {
 		init();
 		IntArrayList positions = query.getNamedParameterIndices(param);
 		try {
