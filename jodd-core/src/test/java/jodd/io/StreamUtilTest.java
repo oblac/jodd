@@ -8,6 +8,7 @@ import jodd.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +33,7 @@ public class StreamUtilTest {
 	@Test
 	public void testCopy() {
 		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
-		StringOutputStream out = new StringOutputStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out);
 		} catch (IOException ioex) {
@@ -46,7 +47,7 @@ public class StreamUtilTest {
 	@Test
 	public void testCopyWithSize() {
 		StringInputStream in = new StringInputStream("input", StringInputStream.Mode.ASCII);
-		StringOutputStream out = new StringOutputStream();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 3);
 		} catch (IOException ioex) {
@@ -57,7 +58,7 @@ public class StreamUtilTest {
 		StreamUtil.close(in);
 
 		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
-		out = new StringOutputStream();
+		out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 5);
 		} catch (IOException ioex) {
@@ -71,7 +72,7 @@ public class StreamUtilTest {
 
 		JoddCore.ioBufferSize = 3;
 		in = new StringInputStream("input", StringInputStream.Mode.ASCII);
-		out = new StringOutputStream();
+		out = new ByteArrayOutputStream();
 		try {
 			StreamUtil.copy(in, out, 5);
 		} catch (IOException ioex) {

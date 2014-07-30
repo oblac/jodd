@@ -3,9 +3,9 @@
 package jodd.http;
 
 import jodd.io.StringInputStream;
-import jodd.io.StringOutputStream;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,7 +53,7 @@ public class KeepAliveTest {
 		public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 			return new HttpConnection() {
 				public OutputStream getOutputStream() throws IOException {
-					return new StringOutputStream();
+					return new ByteArrayOutputStream();
 				}
 
 				public InputStream getInputStream() throws IOException {

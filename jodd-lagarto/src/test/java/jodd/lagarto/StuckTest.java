@@ -3,12 +3,12 @@
 package jodd.lagarto;
 
 import jodd.io.StreamUtil;
-import jodd.io.StringOutputStream;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,14 +36,14 @@ public class StuckTest {
 	public void testStuck() throws IOException {
 		File file = new File(testDataRoot, "stuck.html.gz");
 		InputStream in = new GZIPInputStream(new FileInputStream(file));
-		StringOutputStream out = new StringOutputStream("UTF-8");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		StreamUtil.copy(in, out);
-
+		in.close();
 
 		Jerry.JerryParser jerryParser = new Jerry.JerryParser();
 //		LagartoDOMBuilder lagartoDOMBuilder = (LagartoDOMBuilder) jerryParser.getDOMBuilder();
 //		lagartoDOMBuilder.setParsingErrorLogLevelName("ERROR");
-		Jerry doc = jerryParser.parse(out.toString());
+		Jerry doc = jerryParser.parse(out.toString("UTF-8"));
 
 		// parse
 		try {

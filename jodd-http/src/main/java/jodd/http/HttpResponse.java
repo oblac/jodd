@@ -3,11 +3,11 @@
 package jodd.http;
 
 import jodd.io.StreamUtil;
-import jodd.io.StringInputStream;
-import jodd.io.StringOutputStream;
 import jodd.util.StringPool;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,13 +68,14 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			if (body != null) {
 				removeHeader(HEADER_CONTENT_ENCODING);
 				try {
-					StringInputStream in = new StringInputStream(body, StringInputStream.Mode.STRIP);
+					ByteArrayInputStream in = new ByteArrayInputStream(body.getBytes(StringPool.ISO_8859_1));
 					GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-					StringOutputStream out = new StringOutputStream(StringPool.ISO_8859_1);
+
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 					StreamUtil.copy(gzipInputStream, out);
 
-					body(out.toString());
+					body(out.toString(StringPool.ISO_8859_1));
 				} catch (IOException ioex) {
 					throw new HttpException(ioex);
 				}

@@ -2,12 +2,11 @@
 
 package jodd.log;
 
-import jodd.io.StringOutputStream;
-import jodd.log.impl.JDKLoggerFactory;
 import jodd.log.impl.NOPLoggerFactory;
 import jodd.log.impl.SimpleLoggerFactory;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +23,7 @@ public class LoggerFactoryTest {
 		assertEquals("*", log.getName());
 
 		PrintStream out = System.out;
-		StringOutputStream sos = new StringOutputStream();
+		ByteArrayOutputStream sos = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(sos));
 
 		log.debug("nothing");
@@ -43,7 +42,7 @@ public class LoggerFactoryTest {
 		assertEquals("foo", log.getName());
 
 		PrintStream out = System.out;
-		StringOutputStream sos = new StringOutputStream();
+		ByteArrayOutputStream sos = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(sos));
 
 		log.debug("debug");
