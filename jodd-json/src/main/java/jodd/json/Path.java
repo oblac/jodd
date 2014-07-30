@@ -4,15 +4,13 @@ package jodd.json;
 
 import jodd.util.StringUtil;
 
-import java.util.Collections;
-import java.util.LinkedList;
-
 /**
  * Path to a property from JSON root.
  */
 public class Path {
 
-	protected LinkedList<String> path = new LinkedList<String>();
+	protected String[] paths = new String[8];
+	protected int index = 0;
 
 	/**
 	 * Parses input dot-separated string that represents a path.
@@ -31,14 +29,28 @@ public class Path {
 	 * Creates path from given path elements.
 	 */
 	public Path(String... fields) {
-		Collections.addAll(path, fields);
+		if (fields.length >= paths.length) {
+			paths = fields;
+		}
+		else {
+			System.arraycopy(fields, 0, paths, 0, fields.length);
+			index = fields.length;
+		}
 	}
 
 	/**
 	 * Push element to the path.
 	 */
 	public Path push(String field) {
-		path.add(field);
+		if (index == paths.length) {	// ensure size
+			String[] newPaths = new String[paths.length << 1];
+			System.arraycopy(paths, 0, newPaths, 0, paths.length);
+			paths = newPaths;
+		}
+
+		paths[index] = field;
+		index++;
+
 		return this;
 	}
 
@@ -46,14 +58,14 @@ public class Path {
 	 * Pop last element from the path.
 	 */
 	public String pop() {
-		return path.removeLast();
+		return paths[--index];
 	}
 
 	/**
 	 * Returns path length.
 	 */
 	public int length() {
-		return path.size();
+		return index;
 	}
 
 	public String toString() {
@@ -61,7 +73,8 @@ public class Path {
 
 		boolean afterFirst = false;
 
-		for (String current : path) {
+		for (int i = 0; i < index; i++) {
+			String current = paths[i];
 			if (afterFirst) {
 				builder.append('.');
 			}
@@ -83,15 +96,33 @@ public class Path {
 
 		Path path1 = (Path) o;
 
-		if (!path.equals(path1.path)) {
+		int length = path1.length();
+
+		if (this.length() != length) {
 			return false;
+		}
+
+		for (int i = 0; i < length; i++) {
+			Object o1 = path1.paths[i];
+			Object o2 = paths[i];
+
+			if (!(o1 == null ? o2 == null : o1.equals(o2))) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
 	public int hashCode() {
-		return path.hashCode();
+		int result = 1;
+
+		for (int i = 0; i < index; i++) {
+			Object element = paths[i];
+			result = 31 * result + (element == null ? 0 : element.hashCode());
+		}
+
+		return result;
 	}
 
 }
