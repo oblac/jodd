@@ -35,6 +35,7 @@ class CoverallsReporter {
 		// skip external DTD validation
 		// see http://xerces.apache.org/xerces2-j/features.html#nonvalidating.load-external-dtd
 		parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+		parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
 
 		// parse
 		Node report = parser.parse(jacocoReportFile)
