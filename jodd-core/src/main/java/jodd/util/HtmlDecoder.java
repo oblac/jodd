@@ -31,7 +31,7 @@ public class HtmlDecoder {
 			entityReferences.load(is);
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException(ex.getMessage());
+			throw new IllegalStateException(ex);
 		} finally {
 			StreamUtil.close(is);
 		}

@@ -22,11 +22,12 @@ General Tasks:
 	- ReThink log dependency @done
 	- Add classLoading strategy @tbd @done
 	- Update ReferenceMap @done @v3.5
-	- Add FileNameUtil.calculateRelativePath @3.5.3
-Site/Documentation:
+	- Add FileNameUtil.calculateRelativePath @3.6
+Documentation:
 	- Quickstarts page upgrade - everything is done automatically, via gradle @done
 	- add blog, like i have time :(
 	- improve SEO
+	- main page for each tool must be better @next
 	SiteGenerator:
 	- add global props to javascript
 	- move next/prev logic to javascript @done
@@ -41,14 +42,8 @@ Lagarto/Jerry:
 	- Add alternative strict HTML parser, that produces browser-quality code @hot
 	- Improve LagartoDOM parser @v3.4.7 @done
 	- Think about removing circluar dep Node <-> Document
-	- Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @v3.5.3
-		- empty quoted String for attribute, eg: <foo a="">
-		- comment that starts but never ends
-		- doctype with small cases
-		- error tag like <>
-		- test all find() cases when it returns -1
-		- <script> opened and never closed
-	- Use new faster parser for the form tag !!! @v3.5.3
+	- Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @v3.6 @done
+	- Use new faster parser for the form tag !!! @v3.6 @done
 	- Make Node api for adding Nodes more user friendly @next
 BeanUtil:
 	- Allow index to be set as: 'foo.list.0.more' (alt for: foo.list[0].more). @v3.5.3
@@ -91,6 +86,7 @@ EMail:
 	- Add util to parse EML! @done @v3.4.7
 	- Fix various NPEs @done @v3.4.8
 	- Add callback method for receive(), so users may control if there is an exception and continue fetching if there is one. @next
+	- Add UploadFile so user can download email attachments directly to e.g. disk instead to memory. @next 
 Cache:
 	- LFU, add optional count reduction
 	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
