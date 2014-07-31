@@ -103,28 +103,29 @@ public class LoggablePreparedStatementFactory {
 		if (wrappedPreparedStatement == null) {
 			lock.lock();
 			try {
-				proxetta = getProxetta();
+				if (wrappedPreparedStatement == null) {
+					proxetta = getProxetta();
 
-				builder = proxetta.builder();
+					builder = proxetta.builder();
 
-				// use just interface
-				builder.setTarget(PreparedStatement.class);
+					// use just interface
+					builder.setTarget(PreparedStatement.class);
 
-				// define different package
-				builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
+					// define different package
+					builder.setTargetProxyClassName(LoggablePreparedStatementFactory.class.getPackage().getName() + '.');
 
-				wrappedPreparedStatement = builder.define();
+					wrappedPreparedStatement = builder.define();
 
-				// lookup fields
-				try {
-					String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
-					sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
+					// lookup fields
+					try {
+						String fieldName = ProxettaAsmUtil.adviceFieldName("sqlTemplate", 0);
+						sqlTemplateField = wrappedPreparedStatement.getField(fieldName);
 
-					String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
-					getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
-				}
-				catch (Exception ex) {
-					throw new DbSqlException(ex);
+						String methodName = ProxettaAsmUtil.adviceMethodName("getQueryString", 0);
+						getQueryStringMethod = wrappedPreparedStatement.getMethod(methodName);
+					} catch (Exception ex) {
+						throw new DbSqlException(ex);
+					}
 				}
 			}
 			finally {
