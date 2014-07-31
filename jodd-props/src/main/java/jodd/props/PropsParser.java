@@ -388,6 +388,11 @@ public class PropsParser implements Cloneable {
 			fullKey = fullKey.substring(0, ndx) + right;
 		}
 
+		if (fullKey.startsWith(StringPool.DOT)) {
+			// check for special case when only profile is defined in section
+			fullKey = fullKey.substring(1);
+		}
+
 		// add value to extracted profiles
 		justAdd(fullKey, value, keyProfiles, operator);
 	}
