@@ -251,17 +251,51 @@ public class JsonParser {
 	 * Parses string content, once when starting quote has been consumer.
 	 */
 	protected String parseStringContent() {
+		int startNdx = ndx;
+
+		// roullout until the end of the string or the escape char
 		while (true) {
 			char c = input[ndx];
 
 			if (c == '\"') {
+				// no escapes found, just use existing folder
 				ndx++;
-				return emitText();
+				return new String(input, startNdx, ndx - startNdx - 1);
 			}
 
 			if (c == '\\') {
-				// escape
+				break;
+			}
+
+			ndx++;
+		}
+
+		// escapes found, proceed differently
+
+		textLen = ndx - startNdx;
+
+		if (textLen >= text.length) {
+			grow();
+		}
+
+		System.arraycopy(input, startNdx, text, 0, textLen);
+
+		// escape char, process everything until the end
+		while (true) {
+			char c = input[ndx];
+
+			if (c == '\"') {
+				// done
 				ndx++;
+				String str = new String(text, 0, textLen);
+				textLen = 0;
+				return str;
+			}
+
+			if (c == '\\') {
+				// escape char found
+				ndx++;
+
 				c = input[ndx];
 
 				switch (c) {
@@ -282,36 +316,31 @@ public class JsonParser {
 				}
 			}
 
-			emitChar(c);
+			text[textLen] = c;
+
+			textLen++;
+
+			if (textLen >= text.length) {
+				grow();
+			}
+
 			ndx++;
 		}
 	}
 
 	/**
-	 * Appends single char to the text buffer.
+	 * Grows text array.
 	 */
-	protected void emitChar(char c) {
-		if (textLen == text.length) {
-			// ensure size
-			int newSize = textLen + textLen >> 1;
+	protected void grow() {
+		int newSize = text.length << 1;
 
-			char[] newText = new char[newSize];
-			System.arraycopy(text, 0, newText, 0, text.length);
+		char[] newText = new char[newSize];
 
-			text = newText;
+		if (textLen > 0) {
+			System.arraycopy(text, 0, newText, 0, textLen);
 		}
-		text[textLen++] = c;
-	}
 
-	/**
-	 * Emits parsed text.
-	 */
-	protected String emitText() {
-		String s = new String(text, 0, textLen);
-
-		textLen = 0;
-
-		return s;
+		text = newText;
 	}
 
 	/**
@@ -461,7 +490,7 @@ public class JsonParser {
 			switch (c) {
 				case ']': ndx++; break mainloop;
 				case ',': ndx++; break;
-				default: syntaxError("Invalid char, expected ] or ,");
+				default: syntaxError("Invalid char: expected ] or ,");
 			}
 
 		}
@@ -523,7 +552,7 @@ public class JsonParser {
 
 				path.pop();
 
-				injectValueIntoObject(target, pd, key, value);
+				injectValueIntoObject(target, pd, value);
 			}
 			else {
 				path.push(VALUES);
@@ -542,7 +571,7 @@ public class JsonParser {
 			switch (c) {
 				case '}': ndx++; break mainloop;
 				case ',': ndx++; break;
-				default: syntaxError("Invalid char, expected } or ,");
+				default: syntaxError("Invalid char: expected } or ,");
 			}
 		}
 		return target;
@@ -555,7 +584,7 @@ public class JsonParser {
 	 */
 	protected void consume(char c) {
 		if (input[ndx] != c) {
-			syntaxError("Invalid char, expected " + c);
+			syntaxError("Invalid char: expected " + c);
 		}
 
 		ndx++;
@@ -691,7 +720,7 @@ public class JsonParser {
 	/**
 	 * Injects value into the targets property.
 	 */
-	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, String key, Object value) {
+	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, Object value) {
 		Class targetClass = pd.getType();
 
 		Object convertedValue = convertType(value, targetClass);

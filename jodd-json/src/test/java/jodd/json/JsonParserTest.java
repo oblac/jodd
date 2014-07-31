@@ -3,15 +3,20 @@
 package jodd.json;
 
 import jodd.io.FileUtil;
+import jodd.io.StreamUtil;
+import jodd.util.RandomStringUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +34,9 @@ public class JsonParserTest {
 			return;
 		}
 		URL data = JsonParserTest.class.getResource("data");
-		dataRoot = data.getFile();
+		if (data != null) {
+			dataRoot = data.getFile();
+		}
 	}
 
 	@Test
@@ -530,6 +537,55 @@ public class JsonParserTest {
 		assertEquals(22, items.size());
 		assertNull(items.get(2));
 		assertNotNull(items.get(3));
+	}
+
+	@Test
+	public void testCitmCatalog() throws Exception {
+		JsonParser jsonParser = new JsonParser();
+		FileInputStream fis = new FileInputStream(new File(dataRoot, "citm_catalog.json.gz"));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		StreamUtil.copy(new GZIPInputStream(fis), out);
+
+		String json = out.toString("UTF-8");
+
+		Map<String, Object> map;
+		try {
+			jsonParser.parse(json);
+			map = (Map<String, Object>) jsonParser.parse(json);
+		}
+		catch (Exception ex) {
+			fail(ex.toString());
+			throw ex;
+		}
+
+		assertNotNull(map);
+	}
+
+	@Test
+	public void testString() {
+		assertEquals("123", new JsonParser().parse("\"" + "123" + "\""));
+
+		assertEquals("12\n3", new JsonParser().parse("\"" + "12\\n3" + "\""));
+
+		String big = RandomStringUtil.randomAlpha(510);
+
+		String jbig = big + "\\n";
+		String rbig = big + "\n";
+
+		assertEquals(512, jbig.length());
+
+		assertEquals(rbig, new JsonParser().parse("\"" + jbig + "\""));
+
+		jbig += "x";
+		rbig += "x";
+
+		assertEquals(rbig, new JsonParser().parse("\"" + jbig + "\""));
+
+		jbig = "12" + jbig;
+		rbig = "12" + rbig;
+
+		assertEquals(rbig, new JsonParser().parse("\"" + jbig + "\""));
 	}
 
 }
