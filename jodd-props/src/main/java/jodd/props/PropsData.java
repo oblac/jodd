@@ -177,17 +177,17 @@ public class PropsData implements Cloneable {
 	 */
 	protected String lookupValue(final String key, final String... profiles) {
 		if (profiles != null) {
-			nextprofile:
 			for (String profile : profiles) {
 				while (true) {
 					final Map<String, PropsEntry> profileMap = this.profileProperties.get(profile);
-					if (profileMap == null) {
-						continue nextprofile;
+					if (profileMap != null) {
+						final PropsEntry value = profileMap.get(key);
+						if (value != null) {
+							return value.getValue();
+						}
 					}
-					final PropsEntry value = profileMap.get(key);
-					if (value != null) {
-						return value.getValue();
-					}
+
+					// go back with profile
 					final int ndx = profile.lastIndexOf('.');
 					if (ndx == -1) {
 						break;
