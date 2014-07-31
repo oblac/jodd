@@ -2,21 +2,16 @@
 
 package jodd.props;
 
-import jodd.io.FastCharArrayWriter;
-import jodd.io.StreamUtil;
-import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
 
-public class PropsTest {
+public class PropsTest extends BasePropsTest {
 
 	@Test
 	public void testBasic() throws IOException {
@@ -843,41 +838,6 @@ public class PropsTest {
 		props.load(data);
 
 		assertEquals("jodd is Good", props.getValue("user.name"));
-	}
-
-	// ---------------------------------------------------------------- util
-
-	private String readDataFile(String fileName) throws IOException {
-		String dataFolder = this.getClass().getPackage().getName() + ".data.";
-		dataFolder = dataFolder.replace('.', '/');
-
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
-		Writer out = new FastCharArrayWriter();
-		String encoding = "UTF-8";
-		if (fileName.endsWith(".properties")) {
-			encoding = "ISO-8859-1";
-		}
-		StreamUtil.copy(is, out, encoding);
-		StreamUtil.close(is);
-		return out.toString();
-	}
-
-	private Props loadProps(Props p, String fileName) throws IOException {
-		String dataFolder = this.getClass().getPackage().getName() + ".data.";
-		dataFolder = dataFolder.replace('.', '/');
-
-		InputStream is = ClassLoaderUtil.getResourceAsStream(dataFolder + fileName);
-		String encoding = "UTF-8";
-		if (fileName.endsWith(".properties")) {
-			encoding = "ISO-8859-1";
-		}
-		p.load(is, encoding);
-		return p;
-	}
-
-	private Props loadProps(String fileName) throws IOException {
-		Props p = new Props();
-		return loadProps(p, fileName);
 	}
 
 }
