@@ -462,7 +462,7 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns <b>raw</b> body bytes.
+	 * Returns <b>raw</b> body bytes. Returns <code>null</code> if body is not specified.
 	 */
 	public byte[] bodyBytes() {
 		if (body == null) {
@@ -478,11 +478,11 @@ public abstract class HttpBase<T> {
 	/**
 	 * Returns {@link #body() body content} as text. If {@link #charset() charset parameter}
 	 * of "Content-Type" header is defined, body string charset is converted, otherwise
-	 * the same raw body content is returned.
+	 * the same raw body content is returned. Never returns <code>null</code>.
 	 */
 	public String bodyText() {
 		if (body == null) {
-			return null;
+			return StringPool.EMPTY;
 		}
 		if (charset != null) {
 			return StringUtil.convertCharset(body, StringPool.ISO_8859_1, charset);
