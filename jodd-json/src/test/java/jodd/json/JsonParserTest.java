@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.Jodd;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.RandomStringUtil;
@@ -586,6 +587,11 @@ public class JsonParserTest {
 		rbig = "12" + rbig;
 
 		assertEquals(rbig, new JsonParser().parse("\"" + jbig + "\""));
+	}
+
+	@Test
+	public void testJsonModule() {
+		assertTrue(Jodd.isModuleLoaded(Jodd.JSON));
 	}
 
 }
