@@ -6,13 +6,15 @@ import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.component.ActionMethodParser;
 import jodd.madvoc.component.ActionsManager;
+import jodd.madvoc.component.FiltersManager;
+import jodd.madvoc.component.InterceptorsManager;
 import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ResultsManager;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
-import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Method;
 
@@ -20,8 +22,6 @@ import java.lang.reflect.Method;
  * Madvoc configurator for manual configuration.
  */
 public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
-
-	public static final String NONE = Action.NONE;
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
@@ -35,6 +35,12 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 	@PetiteInject
 	protected ResultsManager resultsManager;
 
+	@PetiteInject
+	protected FiltersManager filtersManager;
+
+	@PetiteInject
+	protected InterceptorsManager interceptorsManager;
+
 	// ---------------------------------------------------------------- results
 
 	/**
@@ -42,6 +48,24 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 	 */
 	public void result(Class<? extends ActionResult> resultClass) {
 		resultsManager.register(resultClass);
+	}
+
+	// ---------------------------------------------------------------- wrappers
+
+	/**
+	 * Returns interceptor instance for further configuration.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends ActionInterceptor> T interceptor(Class<T> actionInterceptorClass) {
+		return (T) interceptorsManager.resolve(actionInterceptorClass);
+	}
+
+	/**
+	 * Returns action filter instance for further configuration.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends ActionFilter> T filter(Class<T> actionFilterClass) {
+		return (T) filtersManager.resolve(actionFilterClass);
 	}
 
 	// ---------------------------------------------------------------- actions
@@ -61,8 +85,8 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		String actionMethodString;
 		String alias;
 		String resultBasePath;
-		ActionFilter[] actionFilters;
-		ActionInterceptor[] actionInterceptors;
+		Class<? extends ActionFilter>[] actionFilters;
+		Class<? extends ActionInterceptor>[] actionInterceptors;
 		boolean async;
 
 		/**
@@ -70,6 +94,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		 */
 		public ActionBuilder path(String path) {
 			this.actionPath = path;
+			return this;
+		}
+
+		/**
+		 * Defines HTTP method.
+		 */
+		public ActionBuilder httpMethod(String method) {
+			this.method = method;
 			return this;
 		}
 
@@ -113,18 +145,52 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
-		 * Defines set of interceptors.
+		 * Appends list of interceptors to the list of action interceptors.
 		 */
-		public ActionBuilder interceptedBy(ActionInterceptor... interceptors) {
-			this.actionInterceptors = interceptors;
+		public ActionBuilder interceptBy(Class<? extends ActionInterceptor>... interceptors) {
+			if (actionInterceptors == null) {
+				actionInterceptors = interceptors;
+			}
+			else {
+				actionInterceptors = ArraysUtil.join(actionInterceptors, interceptors);
+			}
+			return this;
+		}
+		/**
+		 * Appends single interceptor to the list of action interceptors.
+		 */
+		public ActionBuilder interceptBy(Class<? extends ActionInterceptor> interceptor) {
+			if (actionInterceptors == null) {
+				actionInterceptors = new Class[]{interceptor};
+			}
+			else {
+				actionInterceptors = ArraysUtil.append(actionInterceptors, interceptor);
+			}
 			return this;
 		}
 
 		/**
-		 * Defines set of filters.
+		 * Appends list of filter to the list of action filters.
 		 */
-		public ActionBuilder filtereBy(ActionFilter... filters) {
-			this.actionFilters = filters;
+		public ActionBuilder filterBy(Class<? extends ActionFilter>... filters) {
+			if (actionFilters == null) {
+				actionFilters = filters;
+			}
+			else {
+				actionFilters = ArraysUtil.join(actionFilters, filters);
+			}
+			return this;
+		}
+		/**
+		 * Appends single filter to the list of action filters.
+		 */
+		public ActionBuilder filterBy(Class<? extends ActionFilter> filter) {
+			if (actionFilters == null) {
+				actionFilters = new Class[]{filter};
+			}
+			else {
+				actionFilters = ArraysUtil.append(actionFilters, filter);
+			}
 			return this;
 		}
 
@@ -160,10 +226,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 				actionClassMethod = actionsManager.resolveActionMethod(actionClass, actionMethodString);
 			}
 
+			ActionFilter[] actionFilterInstances = filtersManager.resolveAll(actionFilters);
+
+			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionInterceptors);
+
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
-							actionFilters, actionInterceptors,
+							actionFilterInstances, actionInterceptorInstances,
 							new ActionDef(actionPath, method, resultBasePath), async);
 
 			actionsManager.registerAction(actionConfig);
@@ -173,6 +243,13 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 			}
 		}
 
+		/**
+		 * Returns <code>true</code> when minimum configuration is provided.
+		 * If so, you can call {@link #bind()} to complete the binding.
+		 */
+		public boolean isSet() {
+			return actionPath != null && actionMethodString != null;
+		}
 	}
 
 }
