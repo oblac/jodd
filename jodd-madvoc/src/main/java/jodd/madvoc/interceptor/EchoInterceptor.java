@@ -11,6 +11,27 @@ import jodd.util.StringUtil;
  */
 public class EchoInterceptor extends BaseActionInterceptor {
 
+	protected String prefixIn = "-----> ";
+	protected String prefixOut = "<----- ";
+
+	public String getPrefixIn() {
+		return prefixIn;
+	}
+
+	public void setPrefixIn(String prefixIn) {
+		this.prefixIn = prefixIn;
+	}
+
+	public String getPrefixOut() {
+		return prefixOut;
+	}
+
+	public void setPrefixOut(String prefixOut) {
+		this.prefixOut = prefixOut;
+	}
+
+	// ---------------------------------------------------------------- code
+
 	/**
 	 * Measure action invocation time.
 	 */
@@ -38,7 +59,8 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * the message is printed.
 	 */
 	protected void printBefore(ActionRequest request) {
-		StringBuilder message = new StringBuilder("----->");
+		StringBuilder message = new StringBuilder(prefixIn);
+
 		message.append(request.getActionPath()).append("   [").append(request.getActionConfig().getActionString()).append(']');
 		out(message.toString());
 	}
@@ -48,7 +70,8 @@ public class EchoInterceptor extends BaseActionInterceptor {
 	 * the message is printed.
 	 */
 	protected void printAfter(ActionRequest request, long executionTime, Object result) {
-		StringBuilder message = new StringBuilder("<----- ");
+		StringBuilder message = new StringBuilder(prefixOut);
+
 		String resultString = StringUtil.toSafeString(result);
 		if (resultString.length() > 70) {
 			resultString = resultString.substring(0, 70);
