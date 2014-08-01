@@ -63,6 +63,7 @@ public interface StringPool {
 	String RIGHT_CHEV       = ">";
 	String SEMICOLON        = ";";
 	String SINGLE_QUOTE     = "'";
+	String BACKTICK         = "`";
 	String SPACE            = " ";
 	String LEFT_SQ_BRACKET  = "[";
 	String RIGHT_SQ_BRACKET = "]";
