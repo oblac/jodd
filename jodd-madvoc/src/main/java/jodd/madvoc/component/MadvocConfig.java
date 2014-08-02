@@ -48,6 +48,7 @@ public class MadvocConfig {
 		resultPathPrefix = null;
 		injectionErrorThrowsException = false;
 		asyncConfig = new AsyncConfig();
+		routesFileName = "madvoc-routes.txt";
 	}
 
 	// ---------------------------------------------------------------- action method annotations
@@ -417,6 +418,18 @@ public class MadvocConfig {
 		return asyncConfig;
 	}
 
+	// ----------------------------------------------------------------
+
+	protected String routesFileName;
+
+	public String getRoutesFileName() {
+		return routesFileName;
+	}
+
+	public void setRoutesFileName(String routesFileName) {
+		this.routesFileName = routesFileName;
+	}
+
 	// ---------------------------------------------------------------- toString
 
 	/**
@@ -442,6 +455,7 @@ public class MadvocConfig {
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				",\n\tasyncConfig='" + asyncConfig + '\'' +
+				",\n\troutesFileName='" + routesFileName + '\'' +
 				"\n}";
 	}
 
