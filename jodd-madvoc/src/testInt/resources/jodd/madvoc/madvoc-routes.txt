@@ -1,0 +1,6 @@
+
+Map path: `/hello.html` to class and method: "jodd.madvoc.action.HelloAction#view"
+
+GET  /helloWorld.html -> jodd.madvoc.action.HelloAction#world
+
+Use jodd.madvoc.result.ServletDispatcherResult.class,

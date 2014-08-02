@@ -13,6 +13,12 @@ import java.net.URL;
  */
 public class TomcatTestServer {
 
+	private final String webXml;
+
+	public TomcatTestServer(String webXml) {
+		this.webXml = webXml;
+	}
+
 	// ---------------------------------------------------------------- instance
 
 	protected File webRoot;
@@ -42,9 +48,8 @@ public class TomcatTestServer {
 
 		// web.xml
 
-		URL webXmlUrl = TestServer.class.getResource("web-test-int.xml");
+		URL webXmlUrl = TestServer.class.getResource(webXml);
 		File webXmlFile = FileUtil.toFile(webXmlUrl);
-
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
 		// jsp
@@ -68,6 +73,13 @@ public class TomcatTestServer {
 		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
 
 		FileUtil.copyFileToDir(madvocPropsFile, classes);
+
+		// classes/madvoc-routes.txt
+
+		URL madvocRoutesUrl = TestServer.class.getResource("madvoc-routes.txt");
+		File madvocRoutesFile = FileUtil.toFile(madvocRoutesUrl);
+
+		FileUtil.copyFileToDir(madvocRoutesFile, classes);
 	}
 
 	public void stop() throws Exception {

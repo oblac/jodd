@@ -9,24 +9,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-		HelloActionTest.class,
-		SimpleTest.class,
-		RawActionTest.class,
-		UrlActionTest.class,
-		OneTwoActionTest.class,
-		IntcptActionTest.class,
-		RestActionTest.class,
-		FilterTest.class,
-		SessionScopeTest.class,
-		AlphaTest.class,
-		ArgsTest.class,
-		TypesTest.class,
-		ExcTest.class,
-		UserActionTest.class,
-		AsyncTest.class,
-		MoveTest.class
+	RouterTest.class
 })
-public class MadvocSuite extends MadvocSuiteBase {
+public class MadvocTwoSuite extends MadvocSuiteBase {
 
 	/**
 	 * Starts Tomcat after the suite.
@@ -47,7 +32,7 @@ public class MadvocSuite extends MadvocSuiteBase {
 	}
 
 	public static void startTomcat() {
-		startTomcat("web-test-int.xml");
+		startTomcat("web-test-2-int.xml");
 	}
 
 }

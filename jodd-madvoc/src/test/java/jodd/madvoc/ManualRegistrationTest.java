@@ -25,8 +25,10 @@ public class ManualRegistrationTest {
 			action()
 					.path("/world")
 					.mapTo(BooAction.class, "foo2")
-					.interceptedBy(new EchoInterceptor())
+					.interceptBy(EchoInterceptor.class)
 					.bind();
+
+			interceptor(EchoInterceptor.class).setPrefixIn("====> ");
 		}
 	}
 
