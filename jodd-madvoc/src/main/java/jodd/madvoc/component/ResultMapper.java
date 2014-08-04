@@ -2,6 +2,8 @@
 
 package jodd.madvoc.component;
 
+import jodd.log.Logger;
+import jodd.log.LoggerFactory;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ResultPath;
 import jodd.petite.meta.PetiteInject;
@@ -19,6 +21,8 @@ import jodd.util.StringUtil;
  * </ul>
  */
 public class ResultMapper {
+
+	private static final Logger log = LoggerFactory.getLogger(ResultMapper.class);
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -65,12 +69,18 @@ public class ResultMapper {
 			result.append(value.substring(i, ndx));
 			ndx++;
 			int ndx2 = value.indexOf('>', ndx);
-			String alias = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
+			String aliasName = (ndx2 == -1 ? value.substring(ndx) : value.substring(ndx, ndx2));
 
 			// process alias
-			alias = lookupAlias(alias);
+			String alias = lookupAlias(aliasName);
 			if (alias != null) {
 				result.append(alias);
+			}
+			else {
+				// alias not found
+				if (log.isWarnEnabled()) {
+					log.warn("Alias not found: " + aliasName);
+				}
 			}
 			i = ndx2 + 1;
 		}
