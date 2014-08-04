@@ -12,6 +12,7 @@ import jodd.util.sort.FastSort;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -113,12 +114,19 @@ public class DbEntityDescriptor<E> {
 		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
 		int idcount = 0;
 
+		HashSet<String> names = new HashSet<String>(fields.length);
+
 		for (FieldDescriptor fieldDescriptor : fields) {
 			Field field = fieldDescriptor.getField();
 
 			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated, columnNamingStrategy);
 			if (dec != null) {
+				if (names.add(dec.getColumnName()) == false) {
+					throw new DbOomException("Duplicate column name: " + dec.getColumnName());
+				}
+
 				decList.add(dec);
+
 				if (dec.isId) {
 					idcount++;
 				}

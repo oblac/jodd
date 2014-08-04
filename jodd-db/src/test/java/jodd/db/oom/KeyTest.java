@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 public class KeyTest {
 
@@ -43,6 +44,13 @@ public class KeyTest {
 		assertEquals("idid", userded.getIdColumnName());
 		assertEquals(User.class.getName() + ":null", userded.getKeyValue(new User()));
 
+		try {
+			DbEntityDescriptor<User2> user2 = dbOomManager.registerEntity(User2.class);
+			user2.getColumnDescriptors();
+			fail();
+		}
+		catch (Exception ignore) {}
+
 	}
 
 	@DbTable
@@ -61,6 +69,15 @@ public class KeyTest {
 	}
 
 	public static class User {
+		@DbId("idid")
+		Integer id;
+		@DbColumn("aaa")
+		String aaa;
+		@DbColumn("bbb")
+		String bbb;
+	}
+
+	public static class User2 {
 		@DbId("idid")
 		Integer id;
 		@DbColumn("bbb")
