@@ -11,6 +11,7 @@ import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -82,6 +83,10 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 		String actionPath = resultPath.getPath();
 		String path = actionPath;
 		String value = resultPath.getValue();
+
+		if (StringUtil.isEmpty(value)) {
+			value = null;
+		}
 
 		String target;
 
