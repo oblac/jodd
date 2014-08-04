@@ -11,6 +11,8 @@ import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
 import jodd.petite.meta.PetiteInject;
+import jodd.typeconverter.Convert;
+import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
@@ -21,18 +23,20 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * {@link jodd.madvoc.config.MadvocConfigurator} that reads
- * routes defined in external file <code>madvoc-routes.txt</code> (name can be
- * changed).
+ * routes defined in external file <code>madvoc-routes.txt</code>
+ * (name can be changed in @link MadvocConfig).
  */
 public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 
 	@PetiteInject
 	protected MadvocConfig madvocConfig;
 
+	/**
+	 * Reads Madvoc route configuration file and process it.
+	 */
 	public void configure() {
 		String fileName = madvocConfig.getRoutesFileName();
 
@@ -65,42 +69,79 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 	}
 
 	protected HashMap<String, Class<? extends ActionWrapper>> wrappers;
-	protected List<String> currentWrappers;
+	protected Class<? extends ActionWrapper>[] currentWrappers;
 
 	/**
-	 * Parses routes file.
+	 * Parses routes file. Splits content into lines.
+	 * If line ends with <code>\</code>, it will be joined to the previous line.
 	 */
 	protected void parse(String routes) throws Exception {
 		initDefaultWrappers();
 
-		String[] lines = StringUtil.split(routes, StringPool.NEWLINE);
+		ArrayList<String> lines = new ArrayList<String>();
 
-		for (String line : lines) {
-			line = line.trim();
+		String line = null;
 
-			if (StringUtil.isEmpty(line)) {
+		int start = 0;
+
+		while (start < routes.length()) {
+			int ndx = routes.indexOf('\n', start);
+
+			if (ndx == -1) {
+				ndx = routes.length();
+			}
+
+			String newLine = routes.substring(start, ndx).trim();
+
+			start = ndx + 1;
+
+			boolean join = false;
+
+			if (newLine.endsWith(StringPool.BACK_SLASH)) {
+				newLine = StringUtil.substring(newLine, 0, -1);
+				join = true;
+			}
+
+			if (line == null) {
+				line = newLine;
+			} else {
+				line += newLine;
+			}
+
+			if (join) {
 				continue;
 			}
 
-			parseLine(line);
+			if (!line.isEmpty()) {
+				lines.add(line);
+			}
+
+			line = null;
+		}
+
+		for (String aline : lines) {
+			parseLine(aline);
 		}
 	}
 
 	/**
-	 * Initializes default wrappers by storing theirs classes names.
+	 * Initializes default wrappers by storing theirs classes.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void initDefaultWrappers() throws Exception {
+		Class<? extends ActionWrapper>[] defaultWrappers = new Class[0];
+
 		wrappers = new HashMap<String, Class<? extends ActionWrapper>>();
-		currentWrappers = new ArrayList<String>();
 
 		Class<? extends ActionInterceptor>[] defaultWebAppInterceptorClasses
 				= madvocConfig.getDefaultInterceptors();
 
 		if (defaultWebAppInterceptorClasses != null) {
 			for (Class<? extends ActionWrapper> interceptorClass : defaultWebAppInterceptorClasses) {
-				currentWrappers.add(interceptorClass.getName());
 				wrappers.put(interceptorClass.getName(), interceptorClass);
 			}
+
+			defaultWrappers = ArraysUtil.join(defaultWrappers, defaultWebAppInterceptorClasses);
 		}
 
 		Class<? extends ActionFilter>[] defaultWebAppFilterClasses
@@ -108,10 +149,15 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 
 		if (defaultWebAppFilterClasses != null) {
 			for (Class<? extends ActionFilter> filterClass : defaultWebAppFilterClasses) {
-				currentWrappers.add(filterClass.getName());
 				wrappers.put(filterClass.getName(), filterClass);
 			}
+
+			defaultWrappers = ArraysUtil.join(defaultWrappers, defaultWebAppFilterClasses);
 		}
+
+		wrapperGroups = new HashMap<String, Class<? extends ActionWrapper>[]>();
+		wrapperGroups.put("default", defaultWrappers);
+		currentWrappers = defaultWrappers;
 	}
 
 	protected String[] IGNORED_FIXES = new String[] {
@@ -126,24 +172,60 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 			StringPool.EMPTY, StringPool.COLON,
 	};
 
+	protected HashMap<String, Class<? extends ActionWrapper>[]> wrapperGroups;
+
 	/**
-	 * Parses single route line.
+	 * Return wrapper classes for given wrapper group. Throws an exception
+	 * if group name is unknown.
+	 */
+	protected Class<? extends ActionWrapper>[] getWrappers(String name) {
+		Class<? extends ActionWrapper>[] wrappers = wrapperGroups.get(name);
+
+		if (wrappers == null) {
+			throw new MadvocException("Invalid wrappers name: " + name);
+		}
+
+		return wrappers;
+	}
+
+	/**
+	 * Parses single route line. The following rules are applied:
+	 * <ul>
+	 *     <li>if line starts with <code>#</code>, it's a comment</li>
+	 *     <li>if line starts with <code>@</code> it's a group definition (for wrappers)</li>
+	 *     <li>group area is defined by <code>[]</code></li>
+	 *     <li>paths start with <code>/</code></li>
+	 *     <li>flags, like <code>async</code> are defined in words that starts with a <code>#</code></li>
+	 *     <li>target class and method is given in this form: <code>className#methodName</code></li>
+	 *     <li>classes are defined by single word that ends with <code>.class</code>.
+	 *     		This applies only for results, for now.</li>
+	 *     <li>alias is defined by any other word.</li>
+	 * </ul>
 	 */
 	protected void parseLine(String line) throws Exception {
+
+		if (line.startsWith(StringPool.AT)) {
+			int ndx = line.indexOf('=');
+			if (ndx != -1) {
+				String groupName = line.substring(1, ndx);
+				line = line.substring(ndx + 1);
+				Class[] classes = Convert.toClassArray(line);
+
+				wrapperGroups.put(groupName, classes);
+				return;
+			}
+		}
+
+		if (line.startsWith(StringPool.HASH)) {
+			// comments
+			return;
+		}
+
 		if (line.startsWith(StringPool.LEFT_SQ_BRACKET) && line.endsWith(StringPool.RIGHT_SQ_BRACKET)) {
-			// interceptors and filters
+			// wrappers groups
 			line = StringUtil.substring(line, 1, -1);
 
-			currentWrappers.clear();
-
-			String[] wrapperNames = StringUtil.splitc(line, ',');
-
-			for (String wrapperName : wrapperNames) {
-				wrapperName = wrapperName.trim();
-
-				currentWrappers.add(wrapperName);
-			}
-
+			currentWrappers = getWrappers(line);
 			return;
 		}
 
@@ -152,15 +234,9 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 		String[] chunks = StringUtil.splitc(line, " \t");
 
 		ActionBuilder action = action();
+		Class<? extends ActionWrapper>[] wrappers = currentWrappers;
 
 		for (String chunk : chunks) {
-			// alias (between "<" and ">")
-			if (chunk.startsWith(StringPool.LEFT_CHEV) && chunk.endsWith(StringPool.RIGHT_CHEV)) {
-				String alias = StringUtil.substring(chunk, 1, -1);
-				action.alias(alias);
-				continue;
-			}
-
 			// detect pre/suf-fixes, remove them
 			for (int i = 0; i < IGNORED_FIXES.length; i += 2) {
 				String left = IGNORED_FIXES[i];
@@ -175,6 +251,12 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 			if (chunk.startsWith(StringPool.SLASH)) {
 				action.path(chunk);
 				continue;
+			}
+
+			// wrappers group (starts with '@')
+			if (chunk.startsWith(StringPool.AT)) {
+				String name = chunk.substring(1);
+				wrappers = getWrappers(name);
 			}
 
 			// flag (starts with '#')
@@ -230,12 +312,12 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				action.httpMethod(chunk);
 			}
 
-			// continue on anything else, we are not strict
+			// last remaining chunk is an alias
 		}
 
-		for (String currentWrapper : currentWrappers) {
-			Class<? extends ActionWrapper> wrapper = getWrapperClass(currentWrapper);
+		// process wrappers
 
+		for (Class<? extends ActionWrapper> wrapper : wrappers) {
 			if (ReflectUtil.isInterfaceImpl(wrapper, ActionInterceptor.class)) {
 				action.interceptBy((Class<? extends ActionInterceptor>) wrapper);
 			}
@@ -243,7 +325,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				action.filterBy((Class<? extends ActionFilter>) wrapper);
 			}
 			else {
-				throw new MadvocException("Invalid wrapper: " + currentWrapper);
+				throw new MadvocException("Invalid wrapper: " + wrapper.getName());
 			}
 		}
 
@@ -252,19 +334,4 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 		}
 	}
 
-	/**
-	 * Returns wrapper class for given name.
-	 */
-	@SuppressWarnings("unchecked")
-	protected Class<? extends ActionWrapper> getWrapperClass(String className) throws Exception {
-		Class<? extends ActionWrapper> actionWrapperClass = wrappers.get(className);
-
-		if (actionWrapperClass == null) {
-			actionWrapperClass = ClassLoaderUtil.loadClass(className);
-
-			wrappers.put(className, actionWrapperClass);
-		}
-
-		return actionWrapperClass;
-	}
 }

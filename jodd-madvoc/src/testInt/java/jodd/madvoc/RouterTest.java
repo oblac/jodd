@@ -2,6 +2,7 @@
 
 package jodd.madvoc;
 
+import jodd.bean.BeanUtil;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import org.junit.AfterClass;
@@ -24,13 +25,14 @@ public class RouterTest {
 
 	@Test
 	public void testRouterFile() {
-		System.out.println("RouterTest.testRouterFile");
-
 		HttpResponse response = HttpRequest.get("localhost:8080/hello.html").send();
 		assertEquals("hello", response.bodyText().trim());
 
 		response = HttpRequest.get("localhost:8080/helloWorld.html?name=Jupiter&data=3").send();
 		assertEquals("Hello world planet Jupiter and Universe 3", response.bodyText().trim());
+
+		response = HttpRequest.get("localhost:8080/re/view/234").send();
+		assertEquals("234", response.bodyText().trim());
 
 	}
 }
