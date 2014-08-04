@@ -11,6 +11,11 @@ GET  /helloWorld.html jodd.madvoc.action.HelloAction#world @default
 
 /re/view/${itemId} jodd.madvoc.action.RestAction#viewItem
 
+# alias test
+/alpha.ciao.html 	jodd.madvoc.action.AlphaAction#ciao
+/alpha.hello.html 	jodd.madvoc.action.AlphaAction#hello       hello
+
+
 
 # Results:
 

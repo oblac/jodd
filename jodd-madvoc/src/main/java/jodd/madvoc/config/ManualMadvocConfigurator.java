@@ -239,7 +239,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 			actionsManager.registerAction(actionConfig);
 
 			if (alias != null) {
-				actionsManager.registerPathAlias(actionPath, alias);
+				actionsManager.registerPathAlias(alias, actionPath);
 			}
 		}
 

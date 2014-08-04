@@ -257,6 +257,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 			if (chunk.startsWith(StringPool.AT)) {
 				String name = chunk.substring(1);
 				wrappers = getWrappers(name);
+				continue;
 			}
 
 			// flag (starts with '#')
@@ -294,6 +295,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				// detect result class
 				if (ReflectUtil.isInterfaceImpl(chunkClass, ActionResult.class)) {
 					result(chunkClass);
+					continue;
 				}
 			}
 
@@ -310,9 +312,11 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				) {
 
 				action.httpMethod(chunk);
+				continue;
 			}
 
 			// last remaining chunk is an alias
+			action.alias(chunk);
 		}
 
 		// process wrappers

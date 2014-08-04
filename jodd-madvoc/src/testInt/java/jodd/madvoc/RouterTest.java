@@ -33,5 +33,7 @@ public class RouterTest {
 		response = HttpRequest.get("localhost:8080/re/view/234").send();
 		assertEquals("234", response.bodyText().trim());
 
+		response = HttpRequest.get("localhost:8080/alpha.ciao.html").send();
+		assertEquals("alpha.hello.jsp", response.bodyText().trim());
 	}
 }
