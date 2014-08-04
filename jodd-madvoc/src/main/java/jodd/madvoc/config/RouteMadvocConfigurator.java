@@ -112,7 +112,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				continue;
 			}
 
-			if (!line.isEmpty()) {
+			if (!StringUtil.isEmpty(line)) {
 				lines.add(line);
 			}
 

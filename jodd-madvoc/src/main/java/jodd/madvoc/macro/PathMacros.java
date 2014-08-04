@@ -12,8 +12,11 @@ public interface PathMacros {
 	 * <code>true</code> if macros are found in the action
 	 * path. Otherwise, returns <code>false</code> and
 	 * the instance can be thrown away.
+	 * <p>
+	 * Separators is array of 3 strings that defines:
+	 * start, dividing string, and end of a macro.
 	 */
-	boolean init(String actionPath);
+	boolean init(String actionPath, String[] separators);
 
 	/**
 	 * Returns names of all macros.

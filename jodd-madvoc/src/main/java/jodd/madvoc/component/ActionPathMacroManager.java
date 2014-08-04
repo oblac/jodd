@@ -23,7 +23,7 @@ public class ActionPathMacroManager {
 	public PathMacros buildActionPathMacros(String actionPath) {
 		PathMacros pathMacros = createPathMacro();
 
-		if (pathMacros.init(actionPath) == false) {
+		if (pathMacros.init(actionPath, madvocConfig.getPathMacroSeparators()) == false) {
 			return null;
 		}
 
@@ -37,7 +37,7 @@ public class ActionPathMacroManager {
 		try {
 			return madvocConfig.getPathMacroClass().newInstance();
 		} catch (Exception ex) {
-			throw new MadvocException("PathMacro class error", ex);
+			throw new MadvocException(ex);
 		}
 	}
 

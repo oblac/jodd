@@ -13,8 +13,6 @@ import jodd.util.StringUtil;
  */
 public abstract class BasePathMacros implements PathMacros {
 
-	protected static final char SPLIT = ':';
-
 	protected int macrosCount;
 	protected String[] names;		// macros names
 	protected String[] patterns;	// macros patterns, if defined, elements may be null
@@ -23,8 +21,12 @@ public abstract class BasePathMacros implements PathMacros {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean init(final String actionPath) {
-		macrosCount = StringUtil.count(actionPath, StringPool.DOLLAR_LEFT_BRACE);
+	public boolean init(final String actionPath, String[] separators) {
+		String prefix = separators[0];
+		String split = separators[1];
+		String suffix = separators[2];
+
+		macrosCount = StringUtil.count(actionPath, prefix);
 
 		if (macrosCount == 0) {
 			return false;
@@ -39,7 +41,7 @@ public abstract class BasePathMacros implements PathMacros {
 
 		while (true) {
 
-			int[] ndx = StringUtil.indexOfRegion(actionPath, StringPool.DOLLAR_LEFT_BRACE, StringPool.RIGHT_BRACE, offset);
+			int[] ndx = StringUtil.indexOfRegion(actionPath, prefix, suffix, offset);
 
 			if (ndx == null) {
 				break;
@@ -52,7 +54,7 @@ public abstract class BasePathMacros implements PathMacros {
 			// name:pattern
 			String pattern = null;
 
-			int colonNdx = name.indexOf(SPLIT);
+			int colonNdx = name.indexOf(split);
 			if (colonNdx != -1) {
 				pattern = name.substring(colonNdx + 1).trim();
 

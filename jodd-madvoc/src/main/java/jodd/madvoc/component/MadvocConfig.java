@@ -20,6 +20,10 @@ import jodd.util.StringPool;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+import static jodd.util.StringPool.COLON;
+import static jodd.util.StringPool.DOLLAR_LEFT_BRACE;
+import static jodd.util.StringPool.RIGHT_BRACE;
+
 /**
  * Madvoc configuration. This is the single place where component configuration is stored.
  * New custom component that requires configuration may override and enhance this config
@@ -45,6 +49,7 @@ public class MadvocConfig {
 		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
+		pathMacroSeparators = new String[] {DOLLAR_LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
 		injectionErrorThrowsException = false;
 		asyncConfig = new AsyncConfig();
@@ -331,6 +336,7 @@ public class MadvocConfig {
 	// ---------------------------------------------------------------- path macro class
 
 	protected Class<? extends PathMacros> pathMacroClass;
+	protected String[] pathMacroSeparators;
 
 	/**
 	 * Returns current implementation for path macros.
@@ -344,6 +350,18 @@ public class MadvocConfig {
 	 */
 	public void setPathMacroClass(Class<? extends PathMacros> pathMacroClass) {
 		this.pathMacroClass = pathMacroClass;
+	}
+
+
+	public String[] getPathMacroSeparators() {
+		return pathMacroSeparators;
+	}
+
+	/**
+	 * Sets path macro separators.
+	 */
+	public void setPathMacroSeparators(String[] pathMacroSeparators) {
+		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
 	// ---------------------------------------------------------------- injection

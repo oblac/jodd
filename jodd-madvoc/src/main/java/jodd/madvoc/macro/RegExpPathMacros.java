@@ -13,8 +13,8 @@ public class RegExpPathMacros extends BasePathMacros {
 	protected Pattern[] regexpPattern;
 
 	@Override
-	public boolean init(String actionPath) {
-		boolean hasMacros = super.init(actionPath);
+	public boolean init(String actionPath, String[] separators) {
+		boolean hasMacros = super.init(actionPath, separators);
 		if (hasMacros) {
 			regexpPattern = new Pattern[macrosCount];
 		}
