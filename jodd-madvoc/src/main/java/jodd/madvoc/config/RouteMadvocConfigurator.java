@@ -247,8 +247,15 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				}
 			}
 
-			// action path (starts with '/')
+			// paths (starts with '/')
 			if (chunk.startsWith(StringPool.SLASH)) {
+				if (action.isSet()) {
+					// result base path is not the last path
+					action.resultBase(chunk);
+					continue;
+				}
+
+				// action path is first path
 				action.path(chunk);
 				continue;
 			}

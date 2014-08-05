@@ -230,11 +230,19 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 
 			ActionInterceptor[] actionInterceptorInstances = interceptorsManager.resolveAll(actionInterceptors);
 
+			ActionDef actionDef;
+			if (resultBasePath != null) {
+				actionDef = new ActionDef(actionPath, method, resultBasePath);
+			}
+			else {
+				actionDef = new ActionDef(actionPath, method);
+			}
+
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
 							actionFilterInstances, actionInterceptorInstances,
-							new ActionDef(actionPath, method, resultBasePath), async);
+							actionDef, async);
 
 			actionsManager.registerAction(actionConfig);
 
