@@ -3,7 +3,6 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.path.DefaultActionPath;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -73,7 +72,9 @@ public @interface Action {
 
 	/**
 	 * Defines action naming strategy for building action path.
+	 * When set to {@link jodd.madvoc.path.ActionNamingStrategy},
+	 * it will be defined from the {@link jodd.madvoc.component.MadvocConfig#getDefaultNamingStrategy()}.
 	 */
-	Class<? extends ActionNamingStrategy> path() default DefaultActionPath.class;
+	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 
 }

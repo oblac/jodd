@@ -19,7 +19,6 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.path.ActionNamingStrategy;
-import jodd.madvoc.path.DefaultActionPath;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
@@ -426,10 +425,14 @@ public class ActionMethodParser {
 
 		if (annotationData != null) {
 			actionNamingStrategyClass = annotationData.getPath();
+
+			if (actionNamingStrategyClass == ActionNamingStrategy.class) {
+				actionNamingStrategyClass = null;
+			}
 		}
 
 		if (actionNamingStrategyClass == null) {
-			actionNamingStrategyClass = DefaultActionPath.class;
+			actionNamingStrategyClass = madvocConfig.getDefaultNamingStrategy();
 		}
 
 		return actionNamingStrategyClass;

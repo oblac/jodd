@@ -12,6 +12,8 @@ import jodd.madvoc.macro.WildcardPathMacros;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.RestAction;
+import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.path.DefaultActionPath;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
@@ -42,6 +44,7 @@ public class MadvocConfig {
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
 		defaultExtension = "html";
+		defaultNamingStrategy = DefaultActionPath.class;
 		rootPackages = new RootPackages();
 		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
@@ -144,6 +147,7 @@ public class MadvocConfig {
 
 	protected String defaultExtension;
 	protected String[] defaultActionMethodNames;
+	protected Class<? extends ActionNamingStrategy> defaultNamingStrategy;
 
 	/**
 	 * Returns default action extension.
@@ -171,6 +175,17 @@ public class MadvocConfig {
 	 */
 	public void setDefaultActionMethodNames(String... defaultActionMethodNames) {
 		this.defaultActionMethodNames = defaultActionMethodNames;
+	}
+
+	public Class<? extends ActionNamingStrategy> getDefaultNamingStrategy() {
+		return defaultNamingStrategy;
+	}
+
+	/**
+	 * Specifies default {@link jodd.madvoc.path.ActionNamingStrategy} action naming strategy.
+	 */
+	public void setDefaultNamingStrategy(Class<? extends ActionNamingStrategy> defaultNamingStrategy) {
+		this.defaultNamingStrategy = defaultNamingStrategy;
 	}
 
 	// ---------------------------------------------------------------- default interceptors & filters
