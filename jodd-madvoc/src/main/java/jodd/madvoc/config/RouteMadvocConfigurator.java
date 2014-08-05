@@ -207,8 +207,8 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 		if (line.startsWith(StringPool.AT)) {
 			int ndx = line.indexOf('=');
 			if (ndx != -1) {
-				String groupName = line.substring(1, ndx);
-				line = line.substring(ndx + 1);
+				String groupName = line.substring(1, ndx).trim();
+				line = line.substring(ndx + 1).trim();
 				Class[] classes = Convert.toClassArray(line);
 
 				wrapperGroups.put(groupName, classes);

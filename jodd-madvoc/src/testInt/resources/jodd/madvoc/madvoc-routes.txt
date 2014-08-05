@@ -1,17 +1,20 @@
 
-@echo=	jodd.madvoc.interceptor.EchoInterceptor, \
+@echo =	jodd.madvoc.interceptor.EchoInterceptor, \
 		jodd.madvoc.interceptor.DefaultWebAppInterceptors
 
 
 [echo]
 
 `/hello.html` "jodd.madvoc.action.HelloAction#view"
-
 GET  /helloWorld.html jodd.madvoc.action.HelloAction#world @default
 
-/re/view/${itemId} jodd.madvoc.action.RestAction#viewItem
 
-/zigzag/${id} jodd.madvoc.action.ArgsAction#zigzag /zigzag
+# rest test
+
+		/re/view/${itemId} 		jodd.madvoc.action.RestAction#viewItem
+		/zigzag/${id} 			jodd.madvoc.action.ArgsAction#zigzag		/zigzag
+GET 	/sys/user/${id}			jodd.madvoc.action.sys.UserAction#get		/sys/user/get
+
 
 # alias test
 /alpha.ciao.html 	jodd.madvoc.action.AlphaAction#ciao

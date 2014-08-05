@@ -42,4 +42,10 @@ public class RouterTest {
 		HttpResponse response = HttpRequest.get("localhost:8080/zigzag/123").send();
 		assertEquals("zigzag 123", response.bodyText().trim());
 	}
+
+	@Test
+	public void testUserWithRoute() {
+		HttpResponse response = HttpRequest.get("localhost:8080/sys/user/456").send();
+		assertEquals("Huh 456.", response.bodyText().trim());
+	}
 }
