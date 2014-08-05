@@ -46,6 +46,9 @@ public @interface RestAction {
 	 */
 	boolean async() default false;
 
+	/**
+	 * Defines the way how mapping is done: using {@link jodd.madvoc.path.RestResourcePath}.
+	 */
 	Class<? extends ActionNamingStrategy> path() default RestResourcePath.class;
 
 }

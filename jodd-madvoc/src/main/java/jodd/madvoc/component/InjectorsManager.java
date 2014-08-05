@@ -41,7 +41,7 @@ public class InjectorsManager {
 	void createInjectors() {
 		requestScopeInjector = new RequestScopeInjector(madvocConfig, scopeDataResolver);
 		sessionScopeInjector = new SessionScopeInjector(madvocConfig, scopeDataResolver);
-		actionPathMacroInjector = new ActionPathMacroInjector();
+		actionPathMacroInjector = new ActionPathMacroInjector(madvocConfig, scopeDataResolver);
 		madvocContextScopeInjector = new MadvocContextScopeInjector(madvocConfig, scopeDataResolver, madpc);
 		madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
 		applicationScopeInjector = new ApplicationScopeInjector(madvocConfig, scopeDataResolver);
