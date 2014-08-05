@@ -5,6 +5,7 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.ClassLoaderUtil;
+import jodd.util.StringUtil;
 
 /**
  * Converts given object to <code>Class</code>.
@@ -26,7 +27,13 @@ public class ClassConverter implements TypeConverter<Class> {
 			return (Class) value;
 		}
 		try {
-			return ClassLoaderUtil.loadClass(value.toString().trim());
+			String className = value.toString().trim();
+
+			if (className.endsWith(".class")) {
+				className = StringUtil.substring(className, 0, -6);
+			}
+
+			return ClassLoaderUtil.loadClass(className);
 		} catch (ClassNotFoundException cnfex) {
 			throw new TypeConversionException(value, cnfex);
 		}
