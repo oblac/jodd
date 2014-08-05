@@ -11,6 +11,8 @@ GET  /helloWorld.html jodd.madvoc.action.HelloAction#world @default
 
 /re/view/${itemId} jodd.madvoc.action.RestAction#viewItem
 
+/zigzag/${id} jodd.madvoc.action.ArgsAction#zigzag /zigzag
+
 # alias test
 /alpha.ciao.html 	jodd.madvoc.action.AlphaAction#ciao
 /alpha.hello.html 	jodd.madvoc.action.AlphaAction#hello       hello

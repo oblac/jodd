@@ -36,4 +36,10 @@ public class RouterTest {
 		response = HttpRequest.get("localhost:8080/alpha.ciao.html").send();
 		assertEquals("alpha.hello.jsp", response.bodyText().trim());
 	}
+
+	@Test
+	public void testZigZag() {
+		HttpResponse response = HttpRequest.get("localhost:8080/zigzag/123").send();
+		assertEquals("zigzag 123", response.bodyText().trim());
+	}
 }

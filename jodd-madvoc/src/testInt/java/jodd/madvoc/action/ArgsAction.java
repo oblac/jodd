@@ -92,4 +92,9 @@ public class ArgsAction {
 	public void user(@InOut User user) {
 	}
 
+	public void zigzag(@InOut int id) {
+		System.out.println("ArgsAction.zigzag");
+		System.out.println("id = [" + id + "]");
+	}
+
 }
