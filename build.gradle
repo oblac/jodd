@@ -9,7 +9,7 @@ description = '''
 '''
 
 //version = '3.5.3-SNAPSHOT'
-version = '3.6-RC2'
+version = '3.6-RC2-SNAPSHOT'
 //version = '3.6.0'
 
 
@@ -87,19 +87,6 @@ allprojects {
 	}
 }
 
-subprojects {
-	// provided
-	configurations {
-		provided
-	}
-
-	tasks.withType(JavaCompile) {
-		sourceSets {
-			main { compileClasspath += configurations.provided }
-		}
-	}
-}
-
 def javaModules() {
 	subprojects.findAll {
 		it.name.contains('jodd-') &&
@@ -125,8 +112,17 @@ def javaMobileModules() {
 }
 
 
-
 // --- configuration ----------------------------------------------------------
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+// exclude folders from IDEA project
+idea {
+	module {
+		excludeDirs += file('.idea')
+	}
+}
 
 configure(javaModules()) {
 	apply plugin: 'java'
@@ -135,6 +131,7 @@ configure(javaModules()) {
 	apply plugin: 'signing'
 	apply plugin: 'idea'
 	apply plugin: 'eclipse'
+	apply from: "${gradleScriptDir}/provided.gradle"
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	group = 'org.jodd'

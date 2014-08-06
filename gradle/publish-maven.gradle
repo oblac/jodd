@@ -1,6 +1,3 @@
-ext.optional = []
-ext.provided = []
-
 signing {
 	if (project.hasProperty('JODD_ADMIN')) {
 		sign configurations.archives
@@ -43,12 +40,8 @@ def customizePom(pom, gradleProject) {
 			ext.artifactId = it.artifactId
 			ext.fulldep = it.groupId + ':' + it.artifactId + ':' + it.version
 
-			if (ext.artifactId in project.optional || ext.fulldep in project.optional) {
+			if (ext.artifactId in project.optionalDeps || ext.fulldep in project.optionalDeps) {
 				it.optional = true
-			}
-
-		 	if (ext.artifactId in project.provided || ext.fulldep in project.provided) {
-				it.scope = "provided"
 			}
 		}
 
