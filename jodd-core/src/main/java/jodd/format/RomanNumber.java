@@ -14,6 +14,9 @@ public class RomanNumber {
 	 * Converts to Roman number.
 	 */
 	public static String convertToRoman(int value) {
+		if (value <= 0) {
+			throw new IllegalArgumentException();
+		}
 		StringBuilder roman = new StringBuilder();
 		int n = value;
 		for (int i = 0; i < LETTERS.length; i++) {
