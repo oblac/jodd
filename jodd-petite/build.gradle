@@ -8,10 +8,11 @@ dependencies {
 	compile project(':jodd-props')
 	compile project(':jodd-log')
 
-	compile project(':jodd-servlet')
-	compile project(':jodd-proxetta')
+	compile project(':jodd-servlet'), optional
+	compile project(':jodd-proxetta'), optional
+
+	provided lib.servlet, optional
 
 	testCompile lib.junit
 	testCompile lib.mockito
 }
-optional = ['jodd-servlet', 'jodd-proxetta']

@@ -7,8 +7,8 @@ dependencies {
 	compile project(':jodd-servlet')
 	compile project(':jodd-log')
 
-	compile lib.servlet
+	provided lib.servlet
+	provided lib.jsp
 
 	testCompile lib.junit
 }
-provided = [lib.servlet]
