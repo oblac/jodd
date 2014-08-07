@@ -13,6 +13,7 @@ import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
+import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -648,7 +649,9 @@ public class JsonParser {
 		}
 
 		try {
-			return targetType.newInstance();
+			Constructor ctor = targetType.getDeclaredConstructor();
+			ctor.setAccessible(true);
+			return ctor.newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
@@ -740,7 +743,9 @@ public class JsonParser {
 			}
 			else {
 				FieldDescriptor fd = pd.getFieldDescriptor();
-				fd.getField().set(target, convertedValue);
+				if (fd != null) {
+					fd.getField().set(target, convertedValue);
+				}
 			}
 		} catch (Exception ex) {
 			throw new JsonException(ex);
@@ -773,14 +778,15 @@ public class JsonParser {
 	protected void syntaxError(String message) {
 		String left = "...";
 		String right = "...";
+		int offset = 10;
 
-		int from = ndx - 5;
+		int from = ndx - offset;
 		if (from < 0) {
 			from = 0;
 			left = StringPool.EMPTY;
 		}
 
-		int to = ndx + 5;
+		int to = ndx + offset;
 		if (to > input.length) {
 			to = input.length;
 			right = StringPool.EMPTY;
