@@ -10,6 +10,7 @@ import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CharUtil;
+import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
@@ -24,8 +25,6 @@ import java.util.Map;
  * companion for Jodd projects.
  * <p>
  * See: http://www.ietf.org/rfc/rfc4627.txt
- * <p>
- * todo: add factory for Maps and Lists
  */
 public class JsonParser {
 
@@ -33,6 +32,7 @@ public class JsonParser {
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
+	private static final String ARRAY = "array";
 	private static final String VALUES = "values";
 
 	protected int ndx = 0;
@@ -452,6 +452,10 @@ public class JsonParser {
 	protected Object parseArrayContent(Class targetType, Class componentType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
 
+		if (componentType == null && targetType != null && targetType.isArray()) {
+			componentType = targetType.getComponentType();
+		}
+
 		path.push(VALUES);
 		componentType = replaceWithMappedTypeForPath(componentType);
 		path.pop();
@@ -473,7 +477,11 @@ public class JsonParser {
 				return target;
 			}
 
+			path.push(ARRAY);
+
 			Object value = parseValue(componentType, null);
+
+			path.pop();
 
 			if (componentType != null) {
 				value = convertType(value, componentType);
@@ -493,6 +501,10 @@ public class JsonParser {
 				default: syntaxError("Invalid char: expected ] or ,");
 			}
 
+		}
+
+		if ((path.length() == 0) && (targetType != null)) {
+			target = convertType(target, targetType);
 		}
 
 		return target;
@@ -763,19 +775,26 @@ public class JsonParser {
 	 * Throws {@link jodd.json.JsonException} indicating a syntax error.
 	 */
 	protected void syntaxError(String message) {
+		String left = "...";
+		String right = "...";
+
 		int from = ndx - 5;
 		if (from < 0) {
 			from = 0;
+			left = StringPool.EMPTY;
 		}
 
 		int to = ndx + 5;
 		if (to > input.length) {
 			to = input.length;
+			right = StringPool.EMPTY;
 		}
 
 		String str = String.valueOf(input, from, to - from);
 
-		throw new JsonException("Syntax error: " + message + "\noffset: " + ndx + " near: \"..." + str + "...\"");
+		throw new JsonException(
+				"Syntax error: " + message + "\n" +
+				"offset: " + ndx + " near: \"" + left + str + right + "\"");
 	}
 
 }

@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import static jodd.util.ArraysUtil.ints;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -228,7 +230,6 @@ public class JsonParserTest {
 		map = (Map) jsonParser.parse("{ \"v\":1.7976931348623157E308}");
 		assertEquals(1, map.size());
 		assertEquals(1.7976931348623157E308, ((Double)map.get("v")).doubleValue(), 1e300);
-
 	}
 
 	@Test
@@ -274,6 +275,34 @@ public class JsonParserTest {
 		assertEquals(2, list.size());
 		assertEquals("A", list.get(0));
 		assertEquals("BB", list.get(1));
+	}
+
+	static class ArrHolder {
+		int[] pos;
+	}
+
+	@Test
+	public void testSimpleMatrix() {
+		JsonParser jsonParser = new JsonParser();
+
+		ArrHolder arrHolder = jsonParser.parse("{\"pos\":[1,2,3,4,5,6,7,8]}", ArrHolder.class);
+
+		assertArrayEquals(ints(1,2,3,4,5,6,7,8), arrHolder.pos);
+
+		jsonParser = new JsonParser();
+
+		int[] ints = jsonParser.parse("[1,2,3,4]", int[].class);
+
+		assertEquals(4, ints.length);
+		assertEquals(1, ints[0]);
+		assertEquals(4, ints[3]);
+
+		int[][] matrix  = jsonParser.parse("[[1,2,3],[7,8,9]]", int[][].class);
+
+		assertEquals(2, matrix.length);
+
+		assertArrayEquals(ints(1,2,3), matrix[0]);
+		assertArrayEquals(ints(7,8,9), matrix[1]);
 	}
 
 	// ---------------------------------------------------------------- object tree

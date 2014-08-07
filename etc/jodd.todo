@@ -60,6 +60,8 @@ BeanUtil:
 Props:
 	- Add new property "ignoreMacros" @v3.4.5 @done
 
+JSON:
+	- Add factories in `JsonParser` for various types.
 Petite:
 	- remove default scope configuration as totally not needed @v3.5 @done
 	- add request Scope @v3.5 @done
