@@ -460,11 +460,7 @@ public class JsonParser {
 		componentType = replaceWithMappedTypeForPath(componentType);
 		path.pop();
 
-		Object target = newArrayInstance(targetType);
-
-		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
-
-		boolean isList = cd.isList();
+		List target = newArrayInstance(targetType);
 
 		mainloop:
 		while (true) {
@@ -487,9 +483,7 @@ public class JsonParser {
 				value = convertType(value, componentType);
 			}
 
-			if (isList) {
-				((List) target).add(value);
-			}
+			target.add(value);
 
 			skipWhiteSpaces();
 
@@ -504,7 +498,7 @@ public class JsonParser {
 		}
 
 		if ((path.length() == 0) && (targetType != null)) {
-			target = convertType(target, targetType);
+			return convertType(target, targetType);
 		}
 
 		return target;
@@ -662,8 +656,10 @@ public class JsonParser {
 
 	/**
 	 * Creates new type for JSON array objects.
+	 * It should (?) always return a list, for performance reasons.
+	 * Later, the list will be converted into the target type.
 	 */
-	protected Object newArrayInstance(Class targetType) {
+	protected List newArrayInstance(Class targetType) {
 		if (targetType == null) {
 			return new ArrayList();
 		}
@@ -677,7 +673,7 @@ public class JsonParser {
 		}
 
 		try {
-			return targetType.newInstance();
+			return (List) targetType.newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
