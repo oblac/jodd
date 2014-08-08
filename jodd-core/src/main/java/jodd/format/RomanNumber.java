@@ -46,6 +46,10 @@ public class RomanNumber {
 	 * Checks if some string is valid roman number.
 	 */
 	public static boolean isValidRomanNumber(String roman) {
-		return roman.equals(convertToRoman(convertToArabic(roman)));
+		try {
+			return roman.equals(convertToRoman(convertToArabic(roman)));
+		} catch (IllegalArgumentException ignore) {
+			return false;
+		}
 	}
 }
