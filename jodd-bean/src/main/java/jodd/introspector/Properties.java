@@ -42,29 +42,37 @@ public class Properties {
 		HashMap<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
-		for (Method method : methods) {
-			if (Modifier.isStatic(method.getModifiers())) {
-				continue;			// ignore static methods
-			}
 
-			boolean add = false;
-			boolean issetter = false;
-
-			String propertyName = ReflectUtil.getBeanPropertyGetterName(method);
-			if (propertyName != null) {
-				add = true;
-				issetter = false;
-			} else {
-				propertyName = ReflectUtil.getBeanPropertySetterName(method);
-				if (propertyName != null) {
-					add = true;
-					issetter = true;
+		for (int iteration = 0; iteration < 2; iteration++) {
+			// first find the getters, and then the setters!
+			for (Method method : methods) {
+				if (Modifier.isStatic(method.getModifiers())) {
+					continue;            // ignore static methods
 				}
-			}
 
-			if (add == true) {
-				MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
-				addProperty(map, propertyName, methodDescriptor, issetter);
+				boolean add = false;
+				boolean issetter = false;
+
+				String propertyName;
+
+				if (iteration == 0) {
+					propertyName = ReflectUtil.getBeanPropertyGetterName(method);
+					if (propertyName != null) {
+						add = true;
+						issetter = false;
+					}
+				} else {
+					propertyName = ReflectUtil.getBeanPropertySetterName(method);
+					if (propertyName != null) {
+						add = true;
+						issetter = true;
+					}
+				}
+
+				if (add == true) {
+					MethodDescriptor methodDescriptor = classDescriptor.getMethodDescriptor(method.getName(), method.getParameterTypes(), true);
+					addProperty(map, propertyName, methodDescriptor, issetter);
+				}
 			}
 		}
 
@@ -112,6 +120,8 @@ public class Properties {
 			return;
 		}
 
+		// property exist
+
 		if (!isSetter) {
 			// use existing setter
 			setterMethod = existing.getWriteMethodDescriptor();
@@ -137,6 +147,11 @@ public class Properties {
 			// setter
 			// use existing getter
 			getterMethod = existing.getReadMethodDescriptor();
+
+			if (getterMethod.getMethod().getReturnType() != setterMethod.getMethod().getParameterTypes()[0]) {
+				// getter's type is different then setter's
+				return;
+			}
 		}
 
 		PropertyDescriptor propertyDescriptor = createPropertyDescriptor(name, getterMethod, setterMethod);

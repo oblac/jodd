@@ -7,6 +7,7 @@ import jodd.introspector.tst.Ac;
 import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Bc;
 import jodd.introspector.tst.Cbean;
+import jodd.introspector.tst.Overload;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -218,6 +219,21 @@ public class IntrospectorTest {
 
 		assertNotNull(getPropertyGetterDescriptor(cd, "s3", false));
 		assertNotNull(getPropertySetterDescriptor(cd, "s3", false));
+	}
+
+	@Test
+	public void testOverload() {
+		ClassDescriptor cd = ClassIntrospector.lookup(Overload.class);
+
+		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
+
+		assertEquals(1, pds.length);
+
+		PropertyDescriptor pd = pds[0];
+
+		assertNotNull(pd.getFieldDescriptor());
+		assertNotNull(pd.getReadMethodDescriptor());
+		assertNull(pd.getWriteMethodDescriptor());
 	}
 
 
