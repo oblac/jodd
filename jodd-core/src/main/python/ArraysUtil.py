@@ -635,8 +635,8 @@ f.write('\n\n\t// --------------------------------------------------------------
 f.write('''
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(Object[] array) {
 		if (array == null) {
@@ -645,7 +645,7 @@ f.write('''
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -655,8 +655,8 @@ f.write('''
 )
 template = '''
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString($T[] array) {
 		if (array == null) {
@@ -665,11 +665,41 @@ template = '''
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
 		return sb.toString();
+	}
+'''
+for type in types:
+	data = template.replace('$T', type)
+	f.write(data)
+
+f.write('''
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(Object[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = StringUtil.toString(array[i]);
+		}
+		return result;
+	}
+'''
+)
+template = '''
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray($T[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
 	}
 '''
 for type in types:

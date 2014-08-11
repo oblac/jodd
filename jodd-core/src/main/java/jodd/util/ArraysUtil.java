@@ -1,4 +1,3 @@
-
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
 package jodd.util;
@@ -11,6 +10,7 @@ import static jodd.util.StringPool.NULL;
  * <b>DO NOT MODIFY: this source is generated.</b>
  */
 public class ArraysUtil {
+
 
 	// ---------------------------------------------------------------- wrap
 
@@ -2030,8 +2030,8 @@ public class ArraysUtil {
 	// ---------------------------------------------------------------- toString
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(Object[] array) {
 		if (array == null) {
@@ -2040,7 +2040,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2048,8 +2048,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(String[] array) {
 		if (array == null) {
@@ -2058,7 +2058,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2066,8 +2066,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(byte[] array) {
 		if (array == null) {
@@ -2076,7 +2076,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2084,8 +2084,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(char[] array) {
 		if (array == null) {
@@ -2094,7 +2094,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2102,8 +2102,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(short[] array) {
 		if (array == null) {
@@ -2112,7 +2112,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2120,8 +2120,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(int[] array) {
 		if (array == null) {
@@ -2130,7 +2130,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2138,8 +2138,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(long[] array) {
 		if (array == null) {
@@ -2148,7 +2148,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2156,8 +2156,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(float[] array) {
 		if (array == null) {
@@ -2166,7 +2166,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2174,8 +2174,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(double[] array) {
 		if (array == null) {
@@ -2184,7 +2184,7 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
@@ -2192,8 +2192,8 @@ public class ArraysUtil {
 	}
 
 	/**
-	 * Converts an array to string. Elements are separated by comma and
-	 * an empty space. Returned string contains no brackets.
+	 * Converts an array to string. Elements are separated by comma.
+	 * Returned string contains no brackets.
 	 */
 	public static String toString(boolean[] array) {
 		if (array == null) {
@@ -2202,10 +2202,121 @@ public class ArraysUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < array.length; i++) {
 			if (i != 0) {
-				sb.append(',').append(' ');
+				sb.append(',');
 			}
 			sb.append(array[i]);
 		}
 		return sb.toString();
+	}
+
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(Object[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = StringUtil.toString(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(String[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(byte[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(char[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(short[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(int[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(long[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(float[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(double[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array to string array.
+	 */
+	public static String[] toStringArray(boolean[] array) {
+		String[] result = new String[array.length];
+		for (int i = 0; i < array.length; i++) {
+			result[i] = String.valueOf(array[i]);
+		}
+		return result;
 	}
 }
