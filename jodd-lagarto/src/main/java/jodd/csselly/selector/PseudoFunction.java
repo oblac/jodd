@@ -3,7 +3,6 @@
 package jodd.csselly.selector;
 
 import jodd.lagarto.dom.Node;
-import jodd.typeconverter.Convert;
 import jodd.util.StringUtil;
 
 import java.util.List;
@@ -109,7 +108,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression);
+			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
@@ -135,7 +134,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression);
+			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
@@ -157,7 +156,7 @@ public abstract class PseudoFunction<E> {
 
 		@Override
 		public Integer parseExpression(String expression) {
-			return Convert.toInteger(expression);
+			return Integer.valueOf(expression.trim());
 		}
 
 		@Override
