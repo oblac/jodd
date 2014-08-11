@@ -7,6 +7,8 @@ import jodd.typeconverter.impl.CalendarConverter;
 import org.junit.Test;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -65,5 +67,15 @@ public class CalendarConverterTest {
 		JDateTime jdt = new JDateTime(time);
 		Calendar calendar = calendarConverter.convert(jdt);
 		assertEquals(time, calendar.getTimeInMillis());
+	}
+
+	@Test
+	public void testCalendarDate() {
+		JDateTime jdt = new JDateTime();
+
+		CalendarConverter calendarConverter = new CalendarConverter();
+		Calendar gc = calendarConverter.convert(jdt);
+		DateFormat df = new SimpleDateFormat();
+		assertEquals(df.format(gc.getTime()), df.format(Convert.toDate(jdt)));
 	}
 }

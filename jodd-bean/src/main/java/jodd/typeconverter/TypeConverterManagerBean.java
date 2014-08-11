@@ -189,9 +189,7 @@ public class TypeConverterManagerBean {
 		register(Locale.class, new LocaleConverter());
 		register(TimeZone.class, new TimeZoneConverter());
 
-		if (Jodd.isModuleLoaded(Jodd.UPLOAD)) {
-			Jodd.bind(Jodd.UPLOAD, this);
-		}
+		Jodd.bind(Jodd.UPLOAD, this);
 	}
 
 	/**
