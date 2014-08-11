@@ -5,7 +5,6 @@ package jodd.jtx.meta;
 import jodd.jtx.JtxIsolationLevel;
 import jodd.jtx.JtxPropagationBehavior;
 import jodd.jtx.JtxTransactionMode;
-import jodd.typeconverter.Convert;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
@@ -43,11 +42,34 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 
 		td.isolation = (JtxIsolationLevel) readElement(annotation, "isolation");
 
-		td.readOnly = Convert.toBooleanValue(readElement(annotation, "readOnly"));
+		td.readOnly = readBoolean(annotation, "readOnly");
 
-		td.timeout = Convert.toIntValue(readStringElement(annotation, "timeout"));
+		td.timeout = readInt(annotation, "timeout");
 
 		return td;
+	}
+
+
+	/**
+	 * Reads boolean element from the annotation.
+	 */
+	private boolean readBoolean(A annotation, String name) {
+		Boolean value = (Boolean) readElement(annotation, name);
+		if (value == null) {
+			return false;
+		}
+		return value.booleanValue();
+	}
+
+	/**
+	 * Reads int element from the annotation.
+	 */
+	private int readInt(A annotation, String name) {
+		Integer value = (Integer) readElement(annotation, name);
+		if (value == null) {
+			return JtxTransactionMode.DEFAULT_TIMEOUT;
+		}
+		return value.intValue();
 	}
 
 }
