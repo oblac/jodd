@@ -12,13 +12,13 @@ import static org.junit.Assert.assertNull;
 public class StringConverterTest {
 
 	@Test
-	public void testManager() {
+	public void testStringConverter() {
 		StringConverter stringConverter = new StringConverter();
 
 		assertNull(stringConverter.convert(null));
 
 		assertEquals("123", stringConverter.convert("123"));
-		assertEquals("AB", stringConverter.convert(arrb(65, 66)));
+		assertEquals("65,66", stringConverter.convert(arrb(65, 66)));
 		assertEquals("Ab", stringConverter.convert(arrc('A', 'b')));
 		assertEquals("One,two", stringConverter.convert(arrs("One", "two")));
 		assertEquals("123", stringConverter.convert(Integer.valueOf(123)));

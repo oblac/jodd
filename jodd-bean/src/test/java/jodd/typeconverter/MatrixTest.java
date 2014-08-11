@@ -33,4 +33,38 @@ public class MatrixTest {
 		assertArrayEquals(ints(1,2,3), arr[0]);
 		assertArrayEquals(ints(9,8,7), arr[1]);
 	}
+
+	@Test
+	public void testStringToIntMatrix() {
+		String[][] strings = new String[][] {
+				{"123", "865"},
+				{"432", "345", "9832"}
+		};
+
+		int[][] arr = TypeConverterManager.convertType(strings, int[][].class);
+
+		assertEquals(2, arr.length);
+
+		assertArrayEquals(ints(123,865), arr[0]);
+		assertArrayEquals(ints(432,345,9832), arr[1]);
+	}
+
+	@Test
+	public void testIntToStringMatrix() {
+		int[][] values = new int[][] {
+				{123, 865},
+				{432, 345, 9832}
+		};
+
+		String[][] arr = TypeConverterManager.convertType(values, String[][].class);
+
+		assertEquals(2, arr.length);
+
+		assertEquals("123", arr[0][0]);
+		assertEquals("865", arr[0][1]);
+
+		assertEquals("432", arr[1][0]);
+		assertEquals("345", arr[1][1]);
+		assertEquals("9832", arr[1][2]);
+	}
 }
