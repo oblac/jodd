@@ -12,7 +12,7 @@ public class JoddHttpTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertFalse(Jodd.isModuleLoaded(BEAN));
+		assertTrue(Jodd.isModuleLoaded(BEAN));
 		assertTrue(Jodd.isModuleLoaded(HTTP));
 		assertFalse(Jodd.isModuleLoaded(MADVOC));
 		assertFalse(Jodd.isModuleLoaded(MAIL));

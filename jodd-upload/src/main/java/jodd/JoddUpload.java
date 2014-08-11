@@ -2,13 +2,7 @@
 
 package jodd;
 
-import jodd.typeconverter.TypeConverterManagerBean;
-import jodd.typeconverter.impl.FileConverter;
-import jodd.typeconverter.impl.FileUploadConverter;
-import jodd.typeconverter.impl.FileUploadToFileTypeConverter;
-import jodd.upload.FileUpload;
-
-import java.io.File;
+import jodd.typeconverter.impl.FileUploadBinder;
 
 /**
  * Jodd UPLOAD module.
@@ -19,12 +13,10 @@ public class JoddUpload {
 		Jodd.module();
 	}
 
-	public void bind(TypeConverterManagerBean typeConverterManagerBean) {
-		typeConverterManagerBean.register(FileUpload.class, new FileUploadConverter());
-
-		FileConverter fileConverter = (FileConverter) typeConverterManagerBean.lookup(File.class);
-
-		fileConverter.registerAddonConverter(new FileUploadToFileTypeConverter());
+	public void bind(Object typeConverterManagerBean) {
+		if (Jodd.isModuleLoaded(Jodd.BEAN)) {
+			FileUploadBinder.registerTypeConverter(typeConverterManagerBean);
+		}
 	}
 
 }

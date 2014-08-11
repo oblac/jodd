@@ -11,7 +11,7 @@ public class JoddUploadTest {
 
 	@Test
 	public void testLoadedModules() {
-		assertFalse(Jodd.isModuleLoaded(BEAN));
+		assertTrue(Jodd.isModuleLoaded(BEAN));
 		assertFalse(Jodd.isModuleLoaded(HTTP));
 		assertFalse(Jodd.isModuleLoaded(MADVOC));
 		assertFalse(Jodd.isModuleLoaded(MAIL));

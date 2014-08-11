@@ -2,9 +2,9 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.upload.FileUpload;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
+import jodd.upload.FileUpload;
 
 /**
  * Converts given object to {@link FileUpload}.
