@@ -143,6 +143,45 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 		return annotationValue;
 	}
 
+
+	/**
+	 * Reads string element from the annotation. Empty strings are detected
+	 * and default value is returned instead.
+	 */
+	protected String readString(A annotation, String name, String defaultValue) {
+		String value = readStringElement(annotation, name);
+
+		if (StringUtil.isEmpty(value)) {
+			value = defaultValue;
+		}
+
+		return value;
+	}
+
+
+	/**
+	 * Reads boolean element from the annotation.
+	 */
+	protected boolean readBoolean(A annotation, String name, boolean defaultValue) {
+		Boolean value = (Boolean) readElement(annotation, name);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value.booleanValue();
+	}
+
+
+	/**
+	 * Reads int element from the annotation.
+	 */
+	protected int readInt(A annotation, String name, int defaultValue) {
+		Integer value = (Integer) readElement(annotation, name);
+		if (value == null) {
+			return defaultValue;
+		}
+		return value.intValue();
+	}
+
 	// ---------------------------------------------------------------- annotation data
 
 	/**

@@ -15,9 +15,6 @@ import java.lang.reflect.AccessibleObject;
  */
 public class TransactionAnnotation<A extends Annotation> extends AnnotationDataReader<A, TransactionAnnotationData<A>> {
 
-	public TransactionAnnotation() {
-		super(null, Transaction.class);
-	}
 	public TransactionAnnotation(Class<A> annotationClass) {
 		super(annotationClass, Transaction.class);
 	}
@@ -42,34 +39,11 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 
 		td.isolation = (JtxIsolationLevel) readElement(annotation, "isolation");
 
-		td.readOnly = readBoolean(annotation, "readOnly");
+		td.readOnly = readBoolean(annotation, "readOnly", false);
 
-		td.timeout = readInt(annotation, "timeout");
+		td.timeout = readInt(annotation, "timeout", JtxTransactionMode.DEFAULT_TIMEOUT);
 
 		return td;
-	}
-
-
-	/**
-	 * Reads boolean element from the annotation.
-	 */
-	private boolean readBoolean(A annotation, String name) {
-		Boolean value = (Boolean) readElement(annotation, name);
-		if (value == null) {
-			return false;
-		}
-		return value.booleanValue();
-	}
-
-	/**
-	 * Reads int element from the annotation.
-	 */
-	private int readInt(A annotation, String name) {
-		Integer value = (Integer) readElement(annotation, name);
-		if (value == null) {
-			return JtxTransactionMode.DEFAULT_TIMEOUT;
-		}
-		return value.intValue();
 	}
 
 }

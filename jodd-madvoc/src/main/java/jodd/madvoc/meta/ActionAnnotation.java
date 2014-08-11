@@ -34,44 +34,20 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
 
-		ad.value = readString(annotation, "value");
+		ad.value = readString(annotation, "value", null);
 
-		ad.extension = readString(annotation, "extension");
+		ad.extension = readString(annotation, "extension", null);
 
-		ad.alias = readString(annotation, "alias");
+		ad.alias = readString(annotation, "alias", null);
 
-		ad.method = readString(annotation, "method");
+		ad.method = readString(annotation, "method", null);
 
-		ad.async = readBoolean(annotation, "async");
+		ad.async = readBoolean(annotation, "async", false);
 
 		ad.path = (Class<? extends ActionNamingStrategy>) readElement(annotation, "path");
 
 		return ad;
 	}
 
-	/**
-	 * Reads string element from the annotation. Converts
-	 * empty strings to <code>null</code>.
-	 */
-	private String readString(A annotation, String name) {
-		String value = readStringElement(annotation, name);
-
-		if (StringUtil.isEmpty(value)) {
-			value = null;
-		}
-
-		return value;
-	}
-
-	/**
-	 * Reads boolean element from the annotation.
-	 */
-	private boolean readBoolean(A annotation, String name) {
-		Boolean value = (Boolean) readElement(annotation, name);
-		if (value == null) {
-			return false;
-		}
-		return value.booleanValue();
-	}
 
 }
