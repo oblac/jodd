@@ -6,7 +6,6 @@ import jodd.io.FastCharArrayWriter;
 import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
-import jodd.typeconverter.Convert;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -436,7 +435,7 @@ public class Props implements Cloneable {
 			return;
 		}
 
-		activeProfiles = Convert.toStringArray(value);
+		activeProfiles = StringUtil.splitc(value, ',');
 		StringUtil.trimAll(activeProfiles);
 	}
 
