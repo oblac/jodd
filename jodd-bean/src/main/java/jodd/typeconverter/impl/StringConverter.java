@@ -2,12 +2,10 @@
 
 package jodd.typeconverter.impl;
 
-import jodd.JoddCore;
 import jodd.typeconverter.TypeConversionException;
 import jodd.typeconverter.TypeConverter;
 import jodd.util.CsvUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Clob;
 import java.sql.SQLException;
 
@@ -18,7 +16,6 @@ import java.sql.SQLException;
  * <li><code>null</code> value is returned as <code>null</code></li>
  * <li>for <code>CharSequence</code> type returns toString value</li>
  * <li><code>Class</code> returns cass name</li>
- * <li><code>byte[]</code> is used for creating UTF8 string</li>
  * <li><code>char[]</code> is used for creating string</li>
  * <li><code>Clob</code> is converted</li>
  * <li>finally, <code>toString()</code> value is returned.</li>
@@ -39,14 +36,6 @@ public class StringConverter implements TypeConverter<String> {
 			return ((Class) value).getName();
 		}
 		if (type.isArray()) {
-			if (type == byte[].class) {
-				byte[] valueArray = (byte[]) value;
-				try {
-					return new String(valueArray, 0, valueArray.length, JoddCore.encoding);
-				} catch (UnsupportedEncodingException ueex) {
-					throw new TypeConversionException(ueex);
-				}
-			}
 			if (type == char[].class) {
 				char[] charArray = (char[]) value;
 				return new String(charArray);
