@@ -4,6 +4,9 @@ package jodd.util;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jodd.util.StringPool.ISO_8859_1;
 import static jodd.util.StringPool.UTF_8;
 import static org.junit.Assert.*;
@@ -724,12 +727,23 @@ public class StringUtilTest {
 		assertNull(StringUtil.toString(null));
 		assertEquals("", StringUtil.toSafeString(null));
 		assertEquals("3", StringUtil.toSafeString(Long.valueOf(3)));
+	}
 
-		assertEquals("A, B", StringUtil.toString(new String[]{"A", "B"}));		// fixme no space!!!
-//		assertEquals("1,2", StringUtil.toString(new int[]{1,2}));
+	@Test
+	public void testToPrettyString() {
+		assertEquals("[A,B]", StringUtil.toPrettyString(new String[]{"A", "B"}));
+		assertEquals("[1,2]", StringUtil.toPrettyString(new int[]{1,2}));
 
-		assertEquals("A, B", StringUtil.toSafeString(new String[]{"A", "B"}));
-//		assertEquals("1,2", StringUtil.toSafeString(new int[]{1,2}));			// fixme -//-
+		assertEquals("[A,B]", StringUtil.toPrettyString(new String[]{"A", "B"}));
+		assertEquals("[1,2]", StringUtil.toPrettyString(new int[]{1,2}));
+
+		assertEquals("[[1,2],[3,4]]", StringUtil.toPrettyString(new int[][] {{1,2}, {3,4}}));
+
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(4);
+
+		assertEquals("{1,4}", StringUtil.toPrettyString(list));
 	}
 
 	@Test

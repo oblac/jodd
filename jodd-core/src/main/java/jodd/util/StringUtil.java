@@ -360,16 +360,11 @@ public class StringUtil {
 	}
 
 	/**
-	 * Converts safely an object to a string. If object is <code>null</code> it will not
-	 * be converted.
+	 * Converts safely an object to a string.
 	 */
 	public static String toString(Object value) {
 		if (value == null) {
 			return null;
-		}
-		if (value.getClass().isArray()) {
-			// tofix fail on byte[]?
-			return ArraysUtil.toString((Object[])value);
 		}
 		return value.toString();
 	}
@@ -383,28 +378,131 @@ public class StringUtil {
 			return EMPTY;
 		}
 
-		if (value.getClass().isArray()) {
-			return ArraysUtil.toString((Object[])value);
+		return value.toString();
+	}
+
+	/**
+	 * Converts object into pretty string. All arrays are iterated.
+	 */
+	public static String toPrettyString(Object value) {
+		if (value == null) {
+			return StringPool.NULL;
+		}
+
+		Class<?> type = value.getClass();
+
+		if (type.isArray()) {
+			Class componentType = type.getComponentType();
+
+			if (componentType.isPrimitive()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				if (componentType == int.class) {
+					sb.append(ArraysUtil.toString((int[]) value));
+				}
+				else if (componentType == long.class) {
+					sb.append(ArraysUtil.toString((long[]) value));
+				}
+				else if (componentType == double.class) {
+					sb.append(ArraysUtil.toString((double[]) value));
+				}
+				else if (componentType == float.class) {
+					sb.append(ArraysUtil.toString((float[]) value));
+				}
+				else if (componentType == boolean.class) {
+					sb.append(ArraysUtil.toString((boolean[]) value));
+				}
+				else if (componentType == short.class) {
+					sb.append(ArraysUtil.toString((short[]) value));
+				}
+				else if (componentType == byte.class) {
+					sb.append(ArraysUtil.toString((byte[]) value));
+				} else {
+					throw new IllegalArgumentException();
+				}
+				sb.append(']');
+				return sb.toString();
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+
+				Object[] array = (Object[]) value;
+				for (int i = 0; i < array.length; i++) {
+					if (i > 0) {
+						sb.append(',');
+					}
+					sb.append(toPrettyString(array[i]));
+				}
+				sb.append(']');
+				return sb.toString();
+			}
+		} else if (value instanceof Iterable) {
+			Iterable iterable = (Iterable) value;
+			StringBuilder sb = new StringBuilder();
+			sb.append('{');
+			int i = 0;
+			for (Object o : iterable) {
+				if (i > 0) {
+					sb.append(',');
+				}
+				sb.append(toPrettyString(o));
+				i++;
+			}
+			sb.append('}');
+			return sb.toString();
 		}
 
 		return value.toString();
 	}
 
+
 	/**
-	 * Converts array object to array of strings, where every element
-	 * is converted to a string.
-	 * to fix primitive[] and matrix
+	 * Converts an array object to array of strings, where every element
+	 * of input array is converted to a string. If input is not an array,
+	 * the result will still be an array with one element.
 	 */
 	public static String[] toStringArray(Object value) {
-		Object[] array = (Object[]) value;
-
-		String[] result = new String[array.length];
-
-		for (int i = 0; i < array.length; i++) {
-			Object o = array[i];
-			result[i] = toString(o);
+		if (value == null) {
+			return new String[0];
 		}
-		return result;
+		Class<?> type = value.getClass();
+
+		if (type.isArray() == false) {
+			return new String[] {value.toString()};
+		}
+
+		Class componentType = type.getComponentType();
+
+		if (componentType.isPrimitive()) {
+			if (componentType == int.class) {
+				return ArraysUtil.toStringArray((int[]) value);
+			}
+			else if (componentType == long.class) {
+				return ArraysUtil.toStringArray((long[]) value);
+			}
+			else if (componentType == double.class) {
+				return ArraysUtil.toStringArray((double[]) value);
+			}
+			else if (componentType == float.class) {
+				return ArraysUtil.toStringArray((float[]) value);
+			}
+			else if (componentType == boolean.class) {
+				return ArraysUtil.toStringArray((boolean[]) value);
+			}
+			else if (componentType == short.class) {
+				return ArraysUtil.toStringArray((short[]) value);
+			}
+			else if (componentType == byte.class) {
+				return ArraysUtil.toStringArray((byte[]) value);
+			}
+			else {
+				throw new IllegalArgumentException();
+			}
+		}
+		else {
+			return ArraysUtil.toStringArray((Object[]) value);
+		}
 	}
 
 	// ---------------------------------------------------------------- capitalize

@@ -571,28 +571,28 @@ public class ArraysUtilTest {
 	@Test
 	public void testToString() {
 		Assert.assertEquals("null", ArraysUtil.toString((int[]) null));
-		Assert.assertEquals("1, 2, 3", ArraysUtil.toString(new int[] { 1, 2, 3 }));
+		Assert.assertEquals("1,2,3", ArraysUtil.toString(new int[] { 1, 2, 3 }));
 
 		Assert.assertEquals("null", ArraysUtil.toString((Object[]) null));
-		Assert.assertEquals("1, null, 3.1",
+		Assert.assertEquals("1,null,3.1",
 				ArraysUtil.toString(new Object[] { Integer.valueOf(1), null, Double.valueOf(3.1) }));
 
 		Assert.assertEquals("null", ArraysUtil.toString((String[]) null));
-		Assert.assertEquals("foo, bar", ArraysUtil.toString(new String[] { "foo", "bar" }));
+		Assert.assertEquals("foo,bar", ArraysUtil.toString(new String[] { "foo", "bar" }));
 		Assert.assertEquals("null", ArraysUtil.toString((byte[]) null));
-		Assert.assertEquals("0, 1, 2", ArraysUtil.toString(new byte[] { 0, 1, 2 }));
+		Assert.assertEquals("0,1,2", ArraysUtil.toString(new byte[] { 0, 1, 2 }));
 		Assert.assertEquals("null", ArraysUtil.toString((char[]) null));
-		Assert.assertEquals("f, o, o", ArraysUtil.toString(new char[] { 'f', 'o', 'o' }));
+		Assert.assertEquals("f,o,o", ArraysUtil.toString(new char[] { 'f', 'o', 'o' }));
 		Assert.assertEquals("null", ArraysUtil.toString((short[]) null));
-		Assert.assertEquals("0, 1, 2", ArraysUtil.toString(new short[] { 0, 1, 2 }));
+		Assert.assertEquals("0,1,2", ArraysUtil.toString(new short[] { 0, 1, 2 }));
 		Assert.assertEquals("null", ArraysUtil.toString((long[]) null));
-		Assert.assertEquals("0, 1, 2", ArraysUtil.toString(new long[] { 0, 1, 2 }));
+		Assert.assertEquals("0,1,2", ArraysUtil.toString(new long[] { 0, 1, 2 }));
 		Assert.assertEquals("null", ArraysUtil.toString((float[]) null));
-		Assert.assertEquals("0.0, 1.0, 2.0", ArraysUtil.toString(new float[] { 0.0f, 1.0f, 2.0f }));
+		Assert.assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new float[] { 0.0f, 1.0f, 2.0f }));
 		Assert.assertEquals("null", ArraysUtil.toString((double[]) null));
-		Assert.assertEquals("0.0, 1.0, 2.0", ArraysUtil.toString(new double[] { 0.0, 1.0, 2.0 }));
+		Assert.assertEquals("0.0,1.0,2.0", ArraysUtil.toString(new double[] { 0.0, 1.0, 2.0 }));
 		Assert.assertEquals("null", ArraysUtil.toString((boolean[]) null));
-		Assert.assertEquals("true, false", ArraysUtil.toString(new boolean[] { true, false }));
+		Assert.assertEquals("true,false", ArraysUtil.toString(new boolean[] { true, false }));
 
 	}
 
