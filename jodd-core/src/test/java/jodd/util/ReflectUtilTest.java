@@ -2,8 +2,6 @@
 
 package jodd.util;
 
-import jodd.mutable.MutableInteger;
-import jodd.typeconverter.TypeConverterManager;
 import jodd.util.subclass.*;
 import jodd.util.testdata.A;
 import jodd.util.testdata.B;
@@ -11,7 +9,6 @@ import jodd.util.testdata.C;
 import jodd.util.testdata.JavaBean;
 import jodd.util.testdata2.D;
 import jodd.util.testdata2.E;
-import jodd.util.testdata2.En;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -339,34 +336,6 @@ public class ReflectUtilTest {
 		assertEquals(4, fs.length);
 		fs = ReflectUtil.getSupportedFields(E.class);
 		assertEquals(5, fs.length);
-	}
-
-
-	@Test
-	public void testCast() {
-
-		String s = "123";
-		Integer d = TypeConverterManager.convertType(s, Integer.class);
-		assertEquals(123, d.intValue());
-
-		s = TypeConverterManager.convertType(d, String.class);
-		assertEquals("123", s);
-
-		MutableInteger md = TypeConverterManager.convertType(s, MutableInteger.class);
-		assertEquals(123, md.intValue());
-
-		B b = new B();
-		A a = TypeConverterManager.convertType(b, A.class);
-		assertEquals(a, b);
-	}
-
-	@Test
-	public void testCastEnums() {
-
-		En en = TypeConverterManager.convertType("ONE", En.class);
-		assertEquals(En.ONE, en);
-		en = TypeConverterManager.convertType("TWO", En.class);
-		assertEquals(En.TWO, en);
 	}
 
 

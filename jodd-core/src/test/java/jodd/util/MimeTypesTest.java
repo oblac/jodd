@@ -2,7 +2,6 @@
 
 package jodd.util;
 
-import jodd.typeconverter.Convert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +27,7 @@ public class MimeTypesTest {
 	public void testFind() {
 		String[] extensionArray = MimeTypes.findExtensionsByMimeTypes("image/jpeg", false);
 
-		String extensions = Convert.toString(extensionArray) + ',';
+		String extensions = StringUtil.toString(extensionArray) + ',';
 
 		assertEquals(3, extensionArray.length);
 
@@ -46,7 +45,7 @@ public class MimeTypesTest {
 	public void testFindWithWildcards() {
 		String[] extensionArray = MimeTypes.findExtensionsByMimeTypes("image/*", true);
 
-		String extensions = Convert.toString(extensionArray) + ',';
+		String extensions = StringUtil.toString(extensionArray) + ',';
 
 		assertTrue(extensions.length() > 3);
 

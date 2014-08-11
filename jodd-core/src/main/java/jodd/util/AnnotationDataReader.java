@@ -2,8 +2,6 @@
 
 package jodd.util;
 
-import jodd.typeconverter.Convert;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 
@@ -126,7 +124,7 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 				return null;
 			}
 		}
-		String value = Convert.toString(annotationValue);
+		String value = StringUtil.toSafeString(annotationValue);
 		return value.trim();
 	}
 

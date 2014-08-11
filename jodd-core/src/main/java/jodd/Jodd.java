@@ -8,7 +8,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Jodd!
+ * Jodd! This is a module manager for jodd modules. On the very first access,
+ * all modules get loaded and information about available modules is set.
+ * After that, you may use the {@link #bind(int, Object...)} method to
+ * inter-connect modules; usually done when one module <i>optionally</i> depends
+ * on the other.
  */
 public class Jodd {
 
@@ -108,22 +112,28 @@ public class Jodd {
 	// ---------------------------------------------------------------- activate
 
 	/**
-	 * Invokes <code>bind</code> method on module instance.
+	 * Invokes <code>bind(Object)</code> or <code>bind(Object...)</code> method
+	 * on target module's instance, if module is loaded. If module is not loaded,
+	 * does nothing.
 	 */
-	public static void bind(int moduleNdx, Object... arguments) {
-		Object module = MODULES[moduleNdx];
-
-		Class[] types = new Class[arguments.length];
-
-		for (int i = 0; i < arguments.length; i++) {
-			Object argument = arguments[i];
-			types[i] = argument.getClass();
+	public static void bind(final int moduleNdx, final Object... arguments) {
+		if (!LOADED[moduleNdx]) {
+			// module not loaded
+			return;
 		}
 
-		try {
-			Method method = module.getClass().getMethod("bind", types);
+		Object module = MODULES[moduleNdx];
 
-			method.invoke(module, arguments);
+		try {
+			if (arguments.length == 1) {
+				Method method = module.getClass().getMethod("bind", Object.class);
+
+				method.invoke(module, arguments[0]);
+			} else {
+				Method method = module.getClass().getMethod("bind", Object[].class);
+
+				method.invoke(module, arguments);
+			}
 		} catch (Exception ex) {
 			throw new UncheckedException(ex);
 		}

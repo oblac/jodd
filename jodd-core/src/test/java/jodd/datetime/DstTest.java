@@ -2,7 +2,6 @@
 
 package jodd.datetime;
 
-import jodd.typeconverter.Convert;
 import org.junit.Test;
 
 import java.util.Date;
@@ -25,7 +24,7 @@ public class DstTest {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 2, 29, 0, 31, 0);
 
-		Date date = Convert.toDate(jdt);
+		Date date = jdt.convertToDate();
 		assertEquals(gc.getTime(), date);
 		assertFalse(englandTZ.inDaylightTime(date));
 		assertFalse(englandTZ.inDaylightTime(gc.getTime()));
@@ -44,7 +43,7 @@ public class DstTest {
 		// in the DST
 		assertEquals(3600000, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		date = Convert.toDate(jdt);
+		date = jdt.convertToDate();
 		assertEquals(gc.getTime(), date);
 
 		assertTrue(englandTZ.inDaylightTime(date));
@@ -87,7 +86,7 @@ public class DstTest {
 		assertEquals(englandTZ, jdt.getTimeZone());
 		GregorianCalendar gc = new GregorianCalendar(2009, 9, 25, 0, 31, 0);
 
-		Date date = Convert.toDate(jdt);
+		Date date = jdt.convertToDate();
 		assertEquals(gc.getTime(), date);
 		assertTrue(englandTZ.inDaylightTime(gc.getTime()));
 		assertTrue(englandTZ.inDaylightTime(date));
@@ -106,7 +105,7 @@ public class DstTest {
 		// after DST
 		assertEquals(0, TimeZoneUtil.getOffset(jdt, englandTZ));
 		assertEquals(gc.getTimeInMillis(), jdt.getTimeInMillis());
-		date = Convert.toDate(jdt);
+		date = jdt.convertToDate();
 		assertEquals(gc.getTime(), date);
 
 		assertFalse(englandTZ.inDaylightTime(date));

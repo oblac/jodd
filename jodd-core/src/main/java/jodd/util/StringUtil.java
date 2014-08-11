@@ -2,8 +2,6 @@
 
 package jodd.util;
 
-import jodd.typeconverter.Convert;
-
 import static jodd.util.StringPool.EMPTY;
 
 import java.io.UnsupportedEncodingException;
@@ -365,24 +363,48 @@ public class StringUtil {
 	 * Converts safely an object to a string. If object is <code>null</code> it will not
 	 * be converted.
 	 */
-	public static String toString(Object obj) {
-		return Convert.toString(obj);
+	public static String toString(Object value) {
+		if (value == null) {
+			return null;
+		}
+		if (value.getClass().isArray()) {
+			// tofix fail on byte[]?
+			return ArraysUtil.toString((Object[])value);
+		}
+		return value.toString();
 	}
 
 	/**
 	 * Converts safely an object to a string. If object is <code>null</code> an empty
 	 * string is returned.
 	 */
-	public static String toSafeString(Object obj) {
-		String value = Convert.toString(obj);
-		return value != null ? value : EMPTY;
+	public static String toSafeString(Object value) {
+		if (value == null) {
+			return EMPTY;
+		}
+
+		if (value.getClass().isArray()) {
+			return ArraysUtil.toString((Object[])value);
+		}
+
+		return value.toString();
 	}
 
 	/**
-	 * Converts an object to a String Array.
+	 * Converts array object to array of strings, where every element
+	 * is converted to a string.
+	 * to fix primitive[] and matrix
 	 */
-	public static String[] toStringArray(Object obj) {
-		return Convert.toStringArray(obj);
+	public static String[] toStringArray(Object value) {
+		Object[] array = (Object[]) value;
+
+		String[] result = new String[array.length];
+
+		for (int i = 0; i < array.length; i++) {
+			Object o = array[i];
+			result[i] = toString(o);
+		}
+		return result;
 	}
 
 	// ---------------------------------------------------------------- capitalize

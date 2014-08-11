@@ -5,15 +5,10 @@ package jodd.datetime;
 import jodd.datetime.format.Iso8601JdtFormatter;
 import jodd.datetime.format.JdtFormat;
 import jodd.datetime.format.JdtFormatter;
-import jodd.typeconverter.Convert;
-import jodd.typeconverter.impl.CalendarConverter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -84,12 +79,6 @@ public class FormatterTest {
 		JDateTime jdt = new JDateTime();
 		String s1 = fmt.convert(jdt, "YYYY-MM.DD");
 		assertEquals(s1, jdt.toString("YYYY-MM.DD"));
-
-		// gc
-		CalendarConverter calendarConverter = new CalendarConverter();
-		Calendar gc = calendarConverter.convert(jdt);
-		DateFormat df = new SimpleDateFormat();
-		assertEquals(df.format(gc.getTime()), df.format(Convert.toDate(jdt)));
 	}
 
 

@@ -725,9 +725,11 @@ public class StringUtilTest {
 		assertEquals("", StringUtil.toSafeString(null));
 		assertEquals("3", StringUtil.toSafeString(Long.valueOf(3)));
 
-		String[] arr = StringUtil.toStringArray("123, 234");
-		assertEquals("123", arr[0]);
-		assertEquals(" 234", arr[1]);
+		assertEquals("A, B", StringUtil.toString(new String[]{"A", "B"}));		// fixme no space!!!
+//		assertEquals("1,2", StringUtil.toString(new int[]{1,2}));
+
+		assertEquals("A, B", StringUtil.toSafeString(new String[]{"A", "B"}));
+//		assertEquals("1,2", StringUtil.toSafeString(new int[]{1,2}));			// fixme -//-
 	}
 
 	@Test
