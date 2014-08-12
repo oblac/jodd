@@ -5,6 +5,7 @@ package jodd.util;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -674,6 +675,31 @@ public class ArraysUtilTest {
 		assertBooleanArrayEquals(new boolean[] { true, false }, ArraysUtil.values(new Boolean[] { true, false }));
 		assertArrayEquals(new Boolean[] { true, false }, ArraysUtil.valuesOf(new boolean[] { true, false }));
 	}
+
+	@Test
+	public void testToStringArray() {
+		Assert.assertArrayEquals(new String[] {"1", null, "3.1"}, ArraysUtil.toStringArray((new Object[] {Integer.valueOf(1), null, Double.valueOf(3.1)})));
+		Assert.assertArrayEquals(new String[] {"1", "2", "3"}, ArraysUtil.toStringArray(new int[] {1, 2, 3}));
+		Assert.assertArrayEquals(new String[] {"foo", "bar"}, ArraysUtil.toStringArray(new String[] {"foo", "bar"}));
+		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new byte[] {0, 1, 2}));
+		Assert.assertArrayEquals(new String[] {"f", "o", "o"}, ArraysUtil.toStringArray(new char[] {'f', 'o', 'o'}));
+		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new short[] {0, 1, 2}));
+		Assert.assertArrayEquals(new String[] {"0", "1", "2"}, ArraysUtil.toStringArray(new long[] {0, 1, 2}));
+		Assert.assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new float[] {0.0f, 1.0f, 2.0f}));
+		Assert.assertArrayEquals(new String[] {"0.0", "1.0", "2.0"}, ArraysUtil.toStringArray(new double[] {0.0, 1.0, 2.0}));
+		Assert.assertArrayEquals(new String[] {"true", "false"}, ArraysUtil.toStringArray(new boolean[] {true, false}));
+
+		assertNull(ArraysUtil.toStringArray((Object[]) null));
+		assertNull(ArraysUtil.toStringArray((int[]) null));
+		assertNull(ArraysUtil.toStringArray((float[]) null));
+		assertNull(ArraysUtil.toStringArray((double[]) null));
+		assertNull(ArraysUtil.toStringArray((long[]) null));
+		assertNull(ArraysUtil.toStringArray((boolean[]) null));
+		assertNull(ArraysUtil.toStringArray((char[]) null));
+		assertNull(ArraysUtil.toStringArray((short[]) null));
+		assertNull(ArraysUtil.toStringArray((byte[]) null));
+	}
+
 	
 	private void assertBooleanArrayEquals(boolean[] arr1, boolean[] arr2){
 		assertEquals(arr1.length, arr2.length);

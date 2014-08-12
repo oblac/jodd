@@ -2214,6 +2214,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(Object[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = StringUtil.toString(array[i]);
@@ -2225,6 +2228,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(String[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2236,6 +2242,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(byte[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2247,6 +2256,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(char[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2258,6 +2270,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(short[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2269,6 +2284,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(int[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2280,6 +2298,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(long[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2291,6 +2312,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(float[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2302,6 +2326,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(double[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
@@ -2313,6 +2340,9 @@ public class ArraysUtil {
 	 * Converts an array to string array.
 	 */
 	public static String[] toStringArray(boolean[] array) {
+		if (array == null) {
+			return null;
+		}
 		String[] result = new String[array.length];
 		for (int i = 0; i < array.length; i++) {
 			result[i] = String.valueOf(array[i]);
