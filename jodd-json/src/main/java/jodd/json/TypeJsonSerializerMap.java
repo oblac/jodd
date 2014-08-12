@@ -6,6 +6,8 @@ import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
 import jodd.json.impl.CalendarJsonSerializer;
 import jodd.json.impl.CharSequenceJsonSerializer;
+import jodd.json.impl.CharacterJsonSerializer;
+import jodd.json.impl.ClassJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
@@ -73,9 +75,12 @@ public class TypeJsonSerializerMap {
 		map.put(Calendar.class, new CalendarJsonSerializer());
 		map.put(Enum.class, new EnumJsonSerializer());
 
-		// todo char
-		// todo class
+		jsonSerializer = new CharacterJsonSerializer();
 
+		map.put(Character.class, jsonSerializer);
+		map.put(char.class, jsonSerializer);
+
+		map.put(Class.class, new ClassJsonSerializer());
 	}
 
 	/**

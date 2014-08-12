@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.JoddJson;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
@@ -164,6 +165,22 @@ public class JsonSerializerTest {
 
 		json = new JsonSerializer().serialize(new StringBuffer(text));
 		assertEquals("\"Hello\"", json);
+	}
+
+	@Test
+	public void testChar() {
+		Character character = Character.valueOf('J');
+
+		String json = new JsonSerializer().serialize(character);
+
+		assertEquals("\"J\"", json);
+	}
+
+	@Test
+	public void testClass() {
+		String json = new JsonSerializer().serialize(JoddJson.class);
+
+		assertEquals("\"" + JoddJson.class.getName() + "\"", json);
 	}
 
 }
