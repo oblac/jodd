@@ -210,7 +210,7 @@ configure(javaModules()) {
 	}
 
 	javadoc {
-		exclude '**/asm4/**'
+		exclude '**/asm5/**'
 		afterEvaluate {
 			configure(options) {
 				windowTitle 'Jodd API Documentation'
@@ -249,7 +249,7 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
@@ -404,7 +404,7 @@ task jacocoReport() {
 				javaBundleModules().each {submodule ->
 					group(name: submodule.name) {
 						classfiles {
-							fileset dir: "${submodule.sourceSets.main.output.classesDir}"
+							fileset dir: "${submodule.sourceSets.main.output.classesDir}", excludes: "**/jodd/asm5/**"
 						}
 					}
 				}
