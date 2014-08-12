@@ -123,12 +123,12 @@ s	 */
 				clearMap(cl, loader, "resourceEntries");
 			} else {
 				if (log.isDebugEnabled()) {
-					log.debug("Class loader " + cl.getName() + " is not a Tomcat loader.");
+					log.debug("Class loader " + cl.getName() + " is not a Tomcat loader");
 				}
 			}
 		} catch (Exception ex) {
 			if (log.isWarnEnabled()) {
-				log.warn("Unable to clear Tomcat cache.", ex);
+				log.warn("Unable to clear Tomcat cache", ex);
 			}
 		}
 	}
@@ -140,7 +140,7 @@ s	 */
 		try {
 			clearMap(ResourceBundle.class, null, "cacheList");
 		} catch (Exception ex) {
-			log.warn("Unable to clear resource bundle cache.", ex);
+			log.warn("Unable to clear resource bundle cache", ex);
 		}
 	}
 

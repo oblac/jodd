@@ -53,12 +53,12 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("Petite container created.");
+			log.debug("Petite container created");
 
 			if (JoddPetite.useProxetta) {
-				log.debug("Petite proxy features enabled.");
+				log.debug("Petite proxy features enabled");
 			} else {
-				log.debug("Petite proxy features not available.");
+				log.debug("Petite proxy features not available");
 			}
 		}
 	}

@@ -126,7 +126,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 						public void end() {
 							super.end();
 							if (log.isDebugEnabled()) {
-								log.debug("Stripped: " + getStrippedCharsCount() + " chars.");
+								log.debug("Stripped: " + getStrippedCharsCount() + " chars");
 							}
 						}
 					};

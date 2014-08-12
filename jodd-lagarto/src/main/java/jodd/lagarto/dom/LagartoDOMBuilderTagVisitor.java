@@ -111,7 +111,7 @@ public class LagartoDOMBuilderTagVisitor implements TagVisitor {
 		rootNode.end();
 
 		if (log.isDebugEnabled()) {
-			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms.");
+			log.debug("LagartoDom tree created in " + rootNode.getElapsedTime() + " ms");
 		}
 	}
 
