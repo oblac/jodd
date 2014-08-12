@@ -254,7 +254,7 @@ public class ReflectUtil {
 	 * are examined against second class. Method is not symmetric.
 	 */
 	public static boolean isSubclass(Class thisClass, Class target) {
-		if (target.isInterface() != false) {
+		if (target.isInterface() == true) {
 			return isInterfaceImpl(thisClass, target);
 		}
 		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
