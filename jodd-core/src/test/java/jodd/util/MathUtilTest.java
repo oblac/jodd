@@ -40,4 +40,17 @@ public class MathUtilTest {
 		assertEquals(15, MathUtil.parseDigit('F'));
 		assertEquals(15, MathUtil.parseDigit('f'));
 	}
+
+	@Test
+	public void testRandom() {
+		assertTrue(0 == MathUtil.randomInt(0, 0));
+		int randomInt = MathUtil.randomInt(-10, 10);
+		assertTrue(randomInt < 10);
+		assertTrue(randomInt >= -10);
+
+		assertTrue(0 == MathUtil.randomLong(0, 0));
+		long randomLong = MathUtil.randomLong(-100000, 100000);
+		assertTrue(randomLong < 100000);
+		assertTrue(randomLong >= -100000);
+	}
 }
