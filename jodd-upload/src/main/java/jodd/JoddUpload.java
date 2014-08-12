@@ -2,7 +2,7 @@
 
 package jodd;
 
-import jodd.typeconverter.impl.FileUploadBinder;
+import jodd.upload.typeconverter.FileUploadBinder;
 
 /**
  * Jodd UPLOAD module.

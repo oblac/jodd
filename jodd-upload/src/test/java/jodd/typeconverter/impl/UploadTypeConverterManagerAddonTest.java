@@ -4,6 +4,7 @@ package jodd.typeconverter.impl;
 
 import jodd.typeconverter.TypeConverterManager;
 import jodd.upload.FileUpload;
+import jodd.upload.typeconverter.FileUploadConverter;
 import org.junit.Test;
 
 import java.io.File;

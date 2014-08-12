@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.typeconverter.impl;
+package jodd.upload.typeconverter;
 
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
