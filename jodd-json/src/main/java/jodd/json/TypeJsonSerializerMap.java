@@ -5,13 +5,13 @@ package jodd.json;
 import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
 import jodd.json.impl.CalendarJsonSerializer;
+import jodd.json.impl.CharSequenceJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
-import jodd.json.impl.StringJsonSerializer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,9 +39,11 @@ public class TypeJsonSerializerMap {
 
 		// strings
 
-		TypeJsonSerializer jsonSerializer = new StringJsonSerializer();
+		TypeJsonSerializer jsonSerializer = new CharSequenceJsonSerializer();
 
-		map.put(String.class, jsonSerializer);		// todo cover stringbuilder etc
+		map.put(String.class, jsonSerializer);
+		map.put(StringBuilder.class, jsonSerializer);
+		map.put(CharSequence.class, jsonSerializer);
 
 		// number
 

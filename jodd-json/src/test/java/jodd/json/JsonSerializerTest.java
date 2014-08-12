@@ -155,4 +155,15 @@ public class JsonSerializerTest {
 		assertEquals(json, jsonStr);
 	}
 
+	@Test
+	public void testStrings() {
+		String text = "Hello";
+
+		String json = new JsonSerializer().serialize(new StringBuilder(text));
+		assertEquals("\"Hello\"", json);
+
+		json = new JsonSerializer().serialize(new StringBuffer(text));
+		assertEquals("\"Hello\"", json);
+	}
+
 }
