@@ -3,9 +3,11 @@
 package jodd.json;
 
 import jodd.Jodd;
+import jodd.JoddJson;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.util.RandomStringUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,6 +42,11 @@ public class JsonParserTest {
 		if (data != null) {
 			dataRoot = data.getFile();
 		}
+	}
+
+	@After
+	public void tearDown() {
+		JoddJson.classMetadataName = null;
 	}
 
 	@Test
@@ -127,7 +134,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleConversions() {
-		JsonParser jsonParser = new JsonParser();
+		JsonParser<Number> jsonParser = new JsonParser<Number>();
 
 		assertEquals(173, jsonParser.parse("\"173\"", Integer.class).intValue());
 		assertEquals("123", jsonParser.parse("123", String.class));
@@ -283,21 +290,23 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleMatrix() {
-		JsonParser jsonParser = new JsonParser();
+		JsonParser<ArrHolder> jsonParser = new JsonParser<ArrHolder>();
 
 		ArrHolder arrHolder = jsonParser.parse("{\"pos\":[1,2,3,4,5,6,7,8]}", ArrHolder.class);
 
 		assertArrayEquals(ints(1,2,3,4,5,6,7,8), arrHolder.pos);
 
-		jsonParser = new JsonParser();
+		JsonParser<int[]> jsonParser2 = new JsonParser<int[]>();
 
-		int[] ints = jsonParser.parse("[1,2,3,4]", int[].class);
+		int[] ints = jsonParser2.parse("[1,2,3,4]", int[].class);
 
 		assertEquals(4, ints.length);
 		assertEquals(1, ints[0]);
 		assertEquals(4, ints[3]);
 
-		int[][] matrix  = jsonParser.parse("[[1,2,3],[7,8,9]]", int[][].class);
+		JsonParser<int[][]> jsonParser3 = new JsonParser<int[][]>();
+
+		int[][] matrix  = jsonParser3.parse("[[1,2,3],[7,8,9]]", int[][].class);
 
 		assertEquals(2, matrix.length);
 
@@ -369,11 +378,13 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleObject() {
-		JsonParser jsonParser = new JsonParser();
+		JsonParser<Foo> jsonParser = new JsonParser<Foo>();
 
-		Foo foo = jsonParser.map("inter", InterImpl.class)
+		Foo foo = jsonParser
+				.map("inter", InterImpl.class)
 				.parse(
 						"{" +
+							"\"aaa\": 123," +
 							"\"name\": \"jodd\"," +
 							"\"id\": \"173\"," +
 							"\"bar\": {" +
@@ -453,11 +464,13 @@ public class JsonParserTest {
 
 	@Test
 	public void testComplexObject() throws IOException {
-		JsonParser jsonParser = new JsonParser();
+		JoddJson.classMetadataName = "class";
+
+		JsonParser<Aaa> jsonParser = new JsonParser<Aaa>();
 		String json = FileUtil.readString(new File(dataRoot, "complex.json"));
 
 		Aaa aaa = jsonParser
-				.map("inters.values", InterImpl.class)
+				.map("numbers.values", Byte.class)
 				.parse(json, Aaa.class);
 
 		assertNotNull(aaa);
@@ -526,7 +539,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testComplexMaps() throws IOException {
-		JsonParser jsonParser = new JsonParser();
+		JsonParser<User> jsonParser = new JsonParser<User>();
 		String json = FileUtil.readString(new File(dataRoot, "complexMaps.json"));
 
 		User user = jsonParser
@@ -621,6 +634,20 @@ public class JsonParserTest {
 	@Test
 	public void testJsonModule() {
 		assertTrue(Jodd.isModuleLoaded(Jodd.JSON));
+	}
+
+	@Test
+	public void testInvalidJson() {
+		try {
+			new JsonParser().parse("\"" + "123" + "\",");
+			fail();
+		} catch (JsonException ignore) {
+		}
+		try {
+			new JsonParser().parse("{\"aa\":\"" + "123" + "\",}");
+			fail();
+		} catch (JsonException ignore) {
+		}
 	}
 
 }

@@ -1,0 +1,143 @@
+package jodd.json;
+
+import org.junit.Test;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static jodd.util.ArraysUtil.bytes;
+import static jodd.util.ArraysUtil.ints;
+import static org.junit.Assert.assertEquals;
+
+public class JsonSerializerTest {
+
+	public static class Foo {
+
+		protected String name;
+		protected Long id;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
+	public static class Bar {
+		private Foo foo;
+		private int number;
+
+		public Foo getFoo() {
+			return foo;
+		}
+
+		public void setFoo(Foo foo) {
+			this.foo = foo;
+		}
+
+		public int getNumber() {
+			return number;
+		}
+
+		public void setNumber(int number) {
+			this.number = number;
+		}
+	}
+
+	// ---------------------------------------------------------------- tests
+
+	@Test
+	public void testSimpleMap() {
+		Map map = new LinkedHashMap();
+
+		map.put("one", "uno");
+		map.put("two", "duo");
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		String json = jsonSerializer.serialize(map);
+
+		assertEquals("{\"one\":\"uno\",\"two\":\"duo\"}", json);
+
+		map = new LinkedHashMap();
+		map.put("one", Long.valueOf(173));
+		map.put("two", Double.valueOf(7.89));
+		map.put("three", Boolean.TRUE);
+		map.put("four", null);
+		map.put("five", "new\nline");
+
+		jsonSerializer = new JsonSerializer();
+		json = jsonSerializer.serialize(map);
+
+		assertEquals("{\"one\":173,\"two\":7.89,\"three\":true,\"four\":null,\"five\":\"new\\nline\"}", json);
+	}
+
+	@Test
+	public void testSimpleObjects() {
+		Foo foo = new Foo();
+		foo.setName("jodd");
+		foo.setId(Long.valueOf(976));
+
+		Bar bar = new Bar();
+		bar.setFoo(foo);
+		bar.setNumber(575);
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		String json = jsonSerializer.serialize(bar);
+
+		assertEquals("{\"foo\":{\"id\":976,\"name\":\"jodd\"},\"number\":575}", json);
+	}
+
+	@Test
+	public void testSimpleList() {
+		List list = new LinkedList();
+
+		list.add("one");
+		list.add(new Bar());
+		list.add(Double.valueOf(31E302));
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		String json = jsonSerializer.serialize(list);
+
+		assertEquals("[\"one\",{\"foo\":null,\"number\":0},3.1E303]", json);
+	}
+
+	@Test
+	public void testSimpleArray() {
+		int[] numbers = ints(1, 2, 3, 4, 5);
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		String json = jsonSerializer.serialize(numbers);
+
+		assertEquals("[1,2,3,4,5]", json);
+
+
+		byte[] numbers2 = bytes((byte)1, (byte)2, (byte)3, (byte)4, (byte)5);
+
+		json = jsonSerializer.serialize(numbers2);
+
+		assertEquals("[1,2,3,4,5]", json);
+
+
+		int[][] matrix = new int[][] {
+				ints(1,2,3),
+				ints(7,8,9)
+		};
+
+		json = jsonSerializer.serialize(matrix);
+
+		assertEquals("[[1,2,3],[7,8,9]]", json);
+	}
+
+}
