@@ -6,7 +6,7 @@ Jodd
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
-**Jodd = tools + ioc + mvc + db + aop + tx + html < 1.4M**
+**Jodd = tools + ioc + mvc + db + aop + tx + html < 1.5 Mb**
 
 Read about **Jodd**:
 
@@ -24,8 +24,8 @@ Read about **Jodd**:
 **Jodd** is split into many modules, so choose what to use.
 Some tools and utility modules are:
 
-+ `jodd-core` contains many utilities, including `JDateTime` and `Convert`.
-+ `jodd-bean`, our infamous `BeanUtil`.
++ `jodd-core` contains many utilities, including `JDateTime`.
++ `jodd-bean`, our infamous `BeanUtil`, type inspectors and converters.
 + `jodd-props` is the super-replacement for Java `Properties`.
 + `jodd-email` for easier email sending.
 + `jodd-upload`, handles HTTP uploads.
@@ -40,6 +40,7 @@ and some micro frameworks:
 + `jodd-lagarto-web` - `Lagarto` addon for web: `Decora`, `HtmlStapler` and more.
 + `jodd-proxetta` - dynamic proxies and `Paramo`.
 + `jodd-db` - thin database layer and object mapper.
++ `jodd-json` - light but powerful JSON parser and serializer.
 + `jodd-vtor` - validation framework.
 
 Read more in our [official documentation](http://jodd.org/doc).

@@ -142,4 +142,17 @@ public class JsonSerializerTest {
 		assertEquals("[[1,2,3],[7,8,9]]", json);
 	}
 
+	@Test
+	public void testEscapeChars() {
+		String json = "\"1\\\" 2\\\\ 3\\/ 4\\b 5\\f 6\\n 7\\r 8\\t\"";
+
+		String str = new JsonParser<String>().parse(json);
+
+		assertEquals("1\" 2\\ 3/ 4\b 5\f 6\n 7\r 8\t", str);
+
+		String jsonStr = new JsonSerializer().serialize(str);
+
+		assertEquals(json, jsonStr);
+	}
+
 }

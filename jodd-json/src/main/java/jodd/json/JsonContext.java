@@ -176,25 +176,15 @@ public class JsonContext {
 		for (int i = 0; i < len; i++) {
 			char c = value.charAt(i);
 
-			// todo check this!
 			switch (c) {
 				case '"':
-					write("\\u0022");
-					break;
-				case '&':
-					write("\\u0026");
-					break;
-				case '\'':
-					write("\\u0027");
-					break;
-				case '<':
-					write("\\u003c");
-					break;
-				case '>':
-					write("\\u003e");
+					write("\\\"");
 					break;
 				case '\\':
 					write("\\\\");
+					break;
+				case '/':
+					write("\\/");
 					break;
 				case '\b':
 					write("\\b");
