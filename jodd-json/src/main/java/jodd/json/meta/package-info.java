@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
 /**
- * Light, but powerful JSON parser and serializers.
+ * Annotations used by JSON serializer.
  */
-package jodd.json;
+package jodd.json.meta;

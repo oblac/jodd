@@ -1,6 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
 /**
- * Light, but powerful JSON parser and serializers.
+ * Various JSON serializer implementations.
  */
-package jodd.json;
+package jodd.json.impl;

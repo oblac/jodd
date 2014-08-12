@@ -68,18 +68,26 @@ public class Path {
 		return index;
 	}
 
+	/**
+	 * Returns path chunk at given index.
+	 */
+	public String get(int i) {
+		if (i >= index) {
+			throw new IndexOutOfBoundsException();
+		}
+		return paths[i];
+	}
+
 	public String toString() {
-		StringBuilder builder = new StringBuilder("[");
+		StringBuilder builder = new StringBuilder();
 
-		boolean afterFirst = false;
-
+		builder.append('[');
 		for (int i = 0; i < index; i++) {
 			String current = paths[i];
-			if (afterFirst) {
+			if (i > 0) {
 				builder.append('.');
 			}
 			builder.append(current);
-			afterFirst = true;
 		}
 
 		builder.append(']');

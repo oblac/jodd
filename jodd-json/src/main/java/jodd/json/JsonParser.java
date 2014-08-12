@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
@@ -10,6 +11,7 @@ import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CharUtil;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
@@ -27,14 +29,15 @@ import java.util.Map;
  * <p>
  * See: http://www.ietf.org/rfc/rfc4627.txt
  */
-public class JsonParser {
+public class JsonParser<D> {
 
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
-	private static final String ARRAY = "array";
 	private static final String VALUES = "values";
+
+	private static final MapToBean mapToBean = new MapToBean();
 
 	protected int ndx = 0;
 	protected char[] input;
@@ -61,7 +64,7 @@ public class JsonParser {
 	/**
 	 * Maps a class to JSONs root.
 	 */
-	public JsonParser map(Class target) {
+	public JsonParser<D> map(Class target) {
 		return map(null, target);
 	}
 
@@ -70,7 +73,7 @@ public class JsonParser {
 	 * to the path to specify component type (if not specified by
 	 * generics).
 	 */
-	public JsonParser map(String path, Class target) {
+	public JsonParser<D> map(String path, Class target) {
 		if (mappings == null) {
 			mappings = new HashMap<Path, Class>();
 		}
@@ -95,21 +98,46 @@ public class JsonParser {
 		return newType;
 	}
 
+	// ---------------------------------------------------------------- converters
+
+	protected Map<Path, ValueConverter> convs;
+
+	/**
+	 * Defines {@link jodd.json.ValueConverter} to use on given path.
+	 */
+	public JsonParser<D> use(String path, ValueConverter valueConverter) {
+		if (convs == null) {
+			convs = new HashMap<Path, ValueConverter>();
+		}
+		convs.put(Path.parse(path), valueConverter);
+		return this;
+	}
+
+	/**
+	 * Lookups for value converter for current path.
+	 */
+	protected ValueConverter lookupValueConverter() {
+		if (convs == null) {
+			return null;
+		}
+		return convs.get(path);
+	}
+
 	// ---------------------------------------------------------------- parse
 
 	/**
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T parse(String input, Class<T> targetType) {
+	public D parse(String input, Class<?> targetType) {
 		map(targetType);
-		return (T) parse(input);
+		return parse(input);
 	}
 
 	/**
 	 * Parses input JSON string.
 	 */
-	public Object parse(String input) {
+	public D parse(String input) {
 		char[] chars = UnsafeUtil.getChars(input);
 		return parse(chars);
 	}
@@ -118,15 +146,15 @@ public class JsonParser {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T parse(char[] input, Class<T> targetType) {
+	public D parse(char[] input, Class<?> targetType) {
 		map(targetType);
-		return (T) parse(input);
+		return parse(input);
 	}
 
 	/**
 	 * Parses input JSON char array.
 	 */
-	public Object parse(char[] input) {
+	public D parse(char[] input) {
 		this.input = input;
 		this.total = input.length;
 
@@ -153,7 +181,7 @@ public class JsonParser {
 			return null;
 		}
 
-		return value;
+		return (D) value;
 	}
 
 	// ---------------------------------------------------------------- parser
@@ -164,13 +192,19 @@ public class JsonParser {
 	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
 	protected Object parseValue(Class targetType, Class componentType) {
+		ValueConverter valueConverter;
 
 		char c = input[ndx];
 
 		switch (c) {
 			case '"':
 				ndx++;
-				String string =  parseStringContent();
+				String string = parseStringContent();
+
+				valueConverter = lookupValueConverter();
+				if (valueConverter != null) {
+					return valueConverter.convert(string);
+				}
 
 				if (targetType != null) {
 					return convertType(string, targetType);
@@ -198,6 +232,11 @@ public class JsonParser {
 			case '-':
 				Number number = parseNumber();
 
+				valueConverter = lookupValueConverter();
+				if (valueConverter != null) {
+					return valueConverter.convert(number);
+				}
+
 				if (targetType != null) {
 					return convertType(number, targetType);
 				}
@@ -206,6 +245,12 @@ public class JsonParser {
 			case 'n':
 				ndx++;
 				if (match(N_ULL)) {
+
+					valueConverter = lookupValueConverter();
+					if (valueConverter != null) {
+						return valueConverter.convert(null);
+					}
+
 					return null;
 				}
 				break;
@@ -213,6 +258,11 @@ public class JsonParser {
 			case 't':
 				ndx++;
 				if (match(T_RUE)) {
+					valueConverter = lookupValueConverter();
+					if (valueConverter != null) {
+						return valueConverter.convert(Boolean.TRUE);
+					}
+
 					if (targetType != null) {
 						return convertType(Boolean.TRUE, targetType);
 					}
@@ -223,6 +273,11 @@ public class JsonParser {
 			case 'f':
 				ndx++;
 				if (match(F_ALSE)) {
+					valueConverter = lookupValueConverter();
+					if (valueConverter != null) {
+						return valueConverter.convert(Boolean.FALSE);
+					}
+
 					if (targetType != null) {
 						return convertType(Boolean.FALSE, targetType);
 					}
@@ -458,10 +513,12 @@ public class JsonParser {
 		}
 
 		path.push(VALUES);
+
 		componentType = replaceWithMappedTypeForPath(componentType);
-		path.pop();
 
 		List target = newArrayInstance(targetType);
+
+		boolean koma = false;
 
 		mainloop:
 		while (true) {
@@ -470,15 +527,15 @@ public class JsonParser {
 			char c = input[ndx];
 
 			if (c == ']') {
+				if (koma) {
+					syntaxError("Trailing comma");
+				}
+
 				ndx++;
 				return target;
 			}
 
-			path.push(ARRAY);
-
 			Object value = parseValue(componentType, null);
-
-			path.pop();
 
 			if (componentType != null) {
 				value = convertType(value, componentType);
@@ -492,11 +549,13 @@ public class JsonParser {
 
 			switch (c) {
 				case ']': ndx++; break mainloop;
-				case ',': ndx++; break;
+				case ',': ndx++; koma = true; break;
 				default: syntaxError("Invalid char: expected ] or ,");
 			}
 
 		}
+
+		path.pop();
 
 		if ((path.length() == 0) && (targetType != null)) {
 			return convertType(target, targetType);
@@ -513,7 +572,32 @@ public class JsonParser {
 	protected Object parseObjectContent(Class targetType, Class valueType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
 
-		Object target = newObjectInstance(targetType);
+		Object target;
+		boolean isTargetTypeMap = true;
+		boolean isTargetRealTypeMap = true;
+		ClassDescriptor targetTypeClassDescriptor = null;
+
+		if (targetType != null) {
+			targetTypeClassDescriptor = ClassIntrospector.lookup(targetType);
+
+			// find if the target is really a map
+			// because when classMetadataName != null we are forcing
+			// map usage locally in this method
+
+			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
+		}
+
+		if (JoddJson.classMetadataName == null) {
+			// create instance of target type, no 'class' information
+			target = newObjectInstance(targetType);
+
+			isTargetTypeMap = isTargetRealTypeMap;
+		} else {
+			// all beans will be created first as a map
+			target = new HashMap();
+		}
+
+		boolean koma = false;
 
 		mainloop:
 		while (true) {
@@ -522,9 +606,15 @@ public class JsonParser {
 			char c = input[ndx];
 
 			if (c == '}') {
+				if (koma) {
+					syntaxError("Trailing comma");
+				}
+
 				ndx++;
 				break;
 			}
+
+			koma = false;
 
 			String key = parseString();
 
@@ -540,8 +630,10 @@ public class JsonParser {
 			Class propertyType = null;
 			Class componentType = null;
 
-			if (targetType != null) {
-				pd = resolveSimpleProperty(targetType, key);
+			// resolve simple property
+
+			if (!isTargetTypeMap) {
+				pd = targetTypeClassDescriptor.getPropertyDescriptor(key, true);
 
 				if (pd != null) {
 					propertyType = pd.getType();
@@ -552,17 +644,24 @@ public class JsonParser {
 
 			Object value;
 
-			if (pd != null) {
+			if (!isTargetTypeMap) {
 				path.push(key);
 
 				value = parseValue(propertyType, componentType);
 
 				path.pop();
 
-				injectValueIntoObject(target, pd, value);
+				if (pd != null) {
+					// only inject values if target property exist
+					injectValueIntoObject(target, pd, value);
+				}
 			}
 			else {
-				path.push(VALUES);
+				if (isTargetRealTypeMap) {
+					path.push(VALUES);
+				} else {
+					path.push(key);
+				}
 
 				value = parseValue(valueType, null);
 
@@ -577,10 +676,33 @@ public class JsonParser {
 
 			switch (c) {
 				case '}': ndx++; break mainloop;
-				case ',': ndx++; break;
+				case ',': ndx++; koma = true; break;
 				default: syntaxError("Invalid char: expected } or ,");
 			}
 		}
+
+		// convert Map to target type
+		if (JoddJson.classMetadataName != null) {
+			Map map = (Map) target;
+
+			String className = (String) map.get(JoddJson.classMetadataName);
+
+			if (className != null) {
+				try {
+					targetType = ClassLoaderUtil.loadClass(className);
+				} catch (ClassNotFoundException cnfex) {
+					throw new JsonException(cnfex);
+				}
+			}
+
+			// do conversion
+			Object newTarget = newObjectInstance(targetType);
+
+			mapToBean.map2bean(map, newTarget);
+
+			target = newTarget;
+		}
+
 		return target;
 	}
 
@@ -683,29 +805,6 @@ public class JsonParser {
 	}
 
 	/**
-	 * Resolves property type for given object.
-	 * Returns <code>null</code> when property type is unknown (either property is missing
-	 * or targets type is a map).
-	 */
-	protected PropertyDescriptor resolveSimpleProperty(Class type, String key) {
-		if (type == null) {
-			return null;
-		}
-
-		if (type == Map.class) {
-			return null;
-		}
-
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
-
-		if (cd.isMap()) {
-			return null;
-		}
-
-		return cd.getPropertyDescriptor(key, true);
-	}
-
-	/**
 	 * Resolves component type for given property descriptor.
 	 */
 	protected Class resolveComponentType(PropertyDescriptor pd) {
@@ -732,9 +831,13 @@ public class JsonParser {
 	 * Injects value into the targets property.
 	 */
 	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, Object value) {
-		Class targetClass = pd.getType();
+		Object convertedValue = value;
 
-		Object convertedValue = convertType(value, targetClass);
+		if (value != null) {
+			Class targetClass = pd.getType();
+
+			convertedValue = convertType(value, targetClass);
+		}
 
 		try {
 			Setter setter = pd.getSetter(true);
