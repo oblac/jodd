@@ -292,4 +292,11 @@ public class DomBuilderTest {
 		assertEquals(textContent, charBuffer.toString());
 	}
 
+    @Test
+    public void testDoubleDecode() {
+        LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+        Document document = lagartoDOMBuilder.parse("<div title=\"&amp;lt;root /&amp;gt;\">");
+        Element div = (Element) document.getFirstChild();
+        assertEquals("&lt;root /&gt;", div.getAttribute("title"));
+    }
 }
