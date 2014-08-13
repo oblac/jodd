@@ -2,7 +2,6 @@
 
 package jodd.lagarto.dom;
 
-import jodd.util.HtmlDecoder;
 import jodd.util.StringUtil;
 
 /**
@@ -15,15 +14,15 @@ public class Attribute implements Cloneable {
 	protected String value;
 	protected String[] splits;
 
-	public Attribute(String rawName, String name, String value, boolean decode) {
+	public Attribute(String rawName, String name, String value) {
 		this.rawName = rawName;
 		this.name = name;
-		this.value = value != null ? (decode ? HtmlDecoder.decode(value) : value) : null;
+		this.value = value;
 	}
 	
 	@Override
 	public Attribute clone() {
-		return new Attribute(rawName, name, value, false);
+		return new Attribute(rawName, name, value);
 	}
 
 	/**
