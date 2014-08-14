@@ -36,6 +36,8 @@ public class JsonSerializer {
 	protected Map<Path, TypeJsonSerializer> pathSerializersMap;
 	protected TypeJsonSerializerMap typeSerializersMap;
 	protected List<PathQuery> pathQueries;
+	protected String classMetadataName = JoddJson.classMetadataName;
+	protected boolean includeCollections = false;
 
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
@@ -90,8 +92,6 @@ public class JsonSerializer {
 		return this;
 	}
 
-	protected String classMetadataName = JoddJson.classMetadataName;
-
 	/**
 	 * Sets local class meta-data name.
 	 */
@@ -100,6 +100,13 @@ public class JsonSerializer {
 		return this;
 	}
 
+	/**
+	 * Defines if collections should be followed.
+	 */
+	public JsonSerializer includeCollections(boolean includeCollections) {
+		this.includeCollections = includeCollections;
+		return this;
+	}
 
 	// ---------------------------------------------------------------- serialize
 

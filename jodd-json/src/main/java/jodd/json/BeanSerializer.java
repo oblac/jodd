@@ -100,7 +100,7 @@ public class BeanSerializer {
 
 		// + all collections are not serialized by default
 
-		if (propertyType != null) {
+		if (propertyType != null && !jsonContext.jsonSerializer.includeCollections) {
 
 			ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
 
