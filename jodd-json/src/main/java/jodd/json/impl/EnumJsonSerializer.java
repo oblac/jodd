@@ -10,7 +10,6 @@ import jodd.json.TypeJsonSerializer;
  */
 public class EnumJsonSerializer implements TypeJsonSerializer<Enum>{
 
-	@Override
 	public void serialize(JsonContext jsonContext, Enum value) {
 		jsonContext.writeString(value.name());
 	}

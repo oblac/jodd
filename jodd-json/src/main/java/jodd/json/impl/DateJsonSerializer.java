@@ -12,7 +12,6 @@ import java.util.Date;
  */
 public class DateJsonSerializer implements TypeJsonSerializer<Date> {
 
-	@Override
 	public void serialize(JsonContext jsonContext, Date date) {
 		jsonContext.write(Long.toString(date.getTime()));
 	}

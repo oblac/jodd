@@ -10,7 +10,6 @@ import jodd.json.TypeJsonSerializer;
  */
 public class IterableJsonSerializer implements TypeJsonSerializer<Iterable> {
 
-	@Override
 	public void serialize(JsonContext jsonContext, Iterable iterable) {
 		jsonContext.writeOpenArray();
 

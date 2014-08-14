@@ -12,7 +12,6 @@ import java.lang.reflect.Array;
  */
 public class ArraysJsonSerializer implements TypeJsonSerializer<Object> {
 
-	@Override
 	public void serialize(JsonContext jsonContext, Object array) {
 		jsonContext.writeOpenArray();
 

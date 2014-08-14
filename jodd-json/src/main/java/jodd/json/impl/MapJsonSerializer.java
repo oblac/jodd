@@ -12,7 +12,6 @@ import java.util.Map;
  */
 public class MapJsonSerializer implements TypeJsonSerializer<Map> {
 
-	@Override
 	public void serialize(JsonContext jsonContext, Map map) {
 
 		jsonContext.writeOpenObject();

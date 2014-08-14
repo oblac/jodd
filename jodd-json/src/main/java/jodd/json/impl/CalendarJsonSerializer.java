@@ -12,7 +12,6 @@ import java.util.Calendar;
  */
 public class CalendarJsonSerializer implements TypeJsonSerializer<Calendar> {
 
-	@Override
 	public void serialize(JsonContext jsonContext, Calendar calendar) {
 		jsonContext.write(Long.toString(calendar.getTimeInMillis()));
 	}
