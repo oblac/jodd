@@ -123,6 +123,18 @@ public class JsonParser<D> {
 		return convs.get(path);
 	}
 
+	// ---------------------------------------------------------------- class meta data name
+
+	protected String classMetadataName = JoddJson.classMetadataName;
+
+	/**
+	 * Sets local class meta-data name.
+	 */
+	public JsonParser<D> setClassMetadataName(String name) {
+		classMetadataName = name;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- parse
 
 	/**
@@ -587,7 +599,7 @@ public class JsonParser<D> {
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
 		}
 
-		if (JoddJson.classMetadataName == null) {
+		if (classMetadataName == null) {
 			// create instance of target type, no 'class' information
 			target = newObjectInstance(targetType);
 
@@ -682,10 +694,10 @@ public class JsonParser<D> {
 		}
 
 		// convert Map to target type
-		if (JoddJson.classMetadataName != null) {
+		if (classMetadataName != null) {
 			Map map = (Map) target;
 
-			String className = (String) map.get(JoddJson.classMetadataName);
+			String className = (String) map.get(classMetadataName);
 
 			if (className != null) {
 				try {
@@ -698,7 +710,7 @@ public class JsonParser<D> {
 			// do conversion
 			Object newTarget = newObjectInstance(targetType);
 
-			mapToBean.map2bean(map, newTarget);
+			mapToBean.map2bean(map, newTarget, classMetadataName);
 
 			target = newTarget;
 		}

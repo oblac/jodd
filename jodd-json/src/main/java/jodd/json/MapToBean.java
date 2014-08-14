@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.bean.BeanUtil;
 import jodd.util.ReflectUtil;
 
@@ -17,12 +16,12 @@ public class MapToBean {
 	/**
 	 * Converts map to bean.
 	 */
-	public void map2bean(Map map, Object target) {
+	public void map2bean(Map map, Object target, String classMetadataName) {
 		for (Object key : map.keySet()) {
 			String keyName = key.toString();
 
-			if (JoddJson.classMetadataName != null) {
-				if (keyName.equals(JoddJson.classMetadataName)) {
+			if (classMetadataName != null) {
+				if (keyName.equals(classMetadataName)) {
 					continue;
 				}
 			}
@@ -36,7 +35,7 @@ public class MapToBean {
 					if (value instanceof Map && (ReflectUtil.isSubclass(propertyType, Map.class) == false)) {
 						Object newValue = newObjectInstance(propertyType);
 
-						map2bean((Map) value, newValue);
+						map2bean((Map) value, newValue, classMetadataName);
 
 						value = newValue;
 					}

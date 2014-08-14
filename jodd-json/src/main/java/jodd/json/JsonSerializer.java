@@ -2,6 +2,8 @@
 
 package jodd.json;
 
+import jodd.JoddJson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +89,17 @@ public class JsonSerializer {
 
 		return this;
 	}
+
+	protected String classMetadataName = JoddJson.classMetadataName;
+
+	/**
+	 * Sets local class meta-data name.
+	 */
+	public JsonSerializer setClassMetadataName(String name) {
+		classMetadataName = name;
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- serialize
 

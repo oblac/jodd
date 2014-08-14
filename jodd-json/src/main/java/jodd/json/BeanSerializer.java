@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.bean.BeanUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
@@ -25,6 +24,7 @@ public class BeanSerializer {
 	private final JsonContext jsonContext;
 	private final Object source;
 	private boolean declared;
+	private final String classMetadataName;
 
 	private int count;
 	private String[] includes;
@@ -35,6 +35,7 @@ public class BeanSerializer {
 		this.source = bean;
 		this.count = 0;
 		this.declared = false;
+		this.classMetadataName = jsonContext.jsonSerializer.classMetadataName;
 
 		Class type = bean.getClass();
 
@@ -50,9 +51,9 @@ public class BeanSerializer {
 
 		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
 
-		if (JoddJson.classMetadataName != null) {
+		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'
-			onProperty(JoddJson.classMetadataName, null);
+			onProperty(classMetadataName, null);
 		}
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();

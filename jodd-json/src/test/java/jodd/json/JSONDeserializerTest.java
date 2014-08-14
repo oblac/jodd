@@ -130,11 +130,9 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testDeserializeInterfaces() {
-		JoddJson.classMetadataName = "class";
-
 		Hero superman = creator.createSuperman();
-		String json = new JsonSerializer().include("powers").serialize(superman);
-		Hero jsonSuperMan = new JsonParser<Hero>().parse(json, Hero.class);
+		String json = new JsonSerializer().include("powers").setClassMetadataName("class").serialize(superman);
+		Hero jsonSuperMan = new JsonParser<Hero>().setClassMetadataName("class").parse(json, Hero.class);
 
 		assertNotNull(jsonSuperMan);
 		assertEquals(4, jsonSuperMan.getPowers().size());
@@ -363,7 +361,6 @@ public class JSONDeserializerTest {
 
 		Person newUser = new JsonParser<Person>()
 				.use("birthdate", new ValueConverter<String, Date>() {
-					@Override
 					public Date convert(String data) {
 						try {
 							return df.parse(data);
@@ -380,9 +377,9 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testMapWithEmbeddedObject() {
-		JoddJson.classMetadataName = "class";
 
 		Map<String, Network> networks = new JsonParser<Map<String, Network>>()
+				.setClassMetadataName("class")
 				.parse("{\"1\": {\"class\":\"" + Network.class.getName() + "\", \"name\": \"Jodd\"} }");
 
 		assertNotNull(networks);
@@ -589,7 +586,6 @@ public class JSONDeserializerTest {
 	}
 
 	public static class SimpleClassnameTransformer implements TypeJsonSerializer {
-		@Override
 		public void serialize(JsonContext jsonContext, Object value) {
 			String name = value.toString() + "***";
 			jsonContext.writeString(name);
