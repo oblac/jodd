@@ -30,12 +30,13 @@ import java.util.Map;
  * <p>
  * See: http://www.ietf.org/rfc/rfc4627.txt
  */
-public class JsonParser<D> {
+public class JsonParser {
 
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
+	private static final String KEYS = "keys";
 	private static final String VALUES = "values";
 
 	private static final MapToBean mapToBean = new MapToBean();
@@ -65,7 +66,7 @@ public class JsonParser<D> {
 	/**
 	 * Maps a class to JSONs root.
 	 */
-	public JsonParser<D> map(Class target) {
+	public JsonParser map(Class target) {
 		return map(null, target);
 	}
 
@@ -74,7 +75,7 @@ public class JsonParser<D> {
 	 * to the path to specify component type (if not specified by
 	 * generics).
 	 */
-	public JsonParser<D> map(String path, Class target) {
+	public JsonParser map(String path, Class target) {
 		if (mappings == null) {
 			mappings = new HashMap<Path, Class>();
 		}
@@ -106,7 +107,7 @@ public class JsonParser<D> {
 	/**
 	 * Defines {@link jodd.json.ValueConverter} to use on given path.
 	 */
-	public JsonParser<D> use(String path, ValueConverter valueConverter) {
+	public JsonParser use(String path, ValueConverter valueConverter) {
 		if (convs == null) {
 			convs = new HashMap<Path, ValueConverter>();
 		}
@@ -131,7 +132,7 @@ public class JsonParser<D> {
 	/**
 	 * Sets local class meta-data name.
 	 */
-	public JsonParser<D> setClassMetadataName(String name) {
+	public JsonParser setClassMetadataName(String name) {
 		classMetadataName = name;
 		return this;
 	}
@@ -142,7 +143,7 @@ public class JsonParser<D> {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public D parse(String input, Class<?> targetType) {
+	public <T> T parse(String input, Class<T> targetType) {
 		map(targetType);
 		return parse(input);
 	}
@@ -150,7 +151,7 @@ public class JsonParser<D> {
 	/**
 	 * Parses input JSON string.
 	 */
-	public D parse(String input) {
+	public <T> T parse(String input) {
 		char[] chars = UnsafeUtil.getChars(input);
 		return parse(chars);
 	}
@@ -159,7 +160,7 @@ public class JsonParser<D> {
 	 * Parses input JSON as given type.
 	 */
 	@SuppressWarnings("unchecked")
-	public D parse(char[] input, Class<?> targetType) {
+	public <T> T parse(char[] input, Class<?> targetType) {
 		map(targetType);
 		return parse(input);
 	}
@@ -167,7 +168,7 @@ public class JsonParser<D> {
 	/**
 	 * Parses input JSON char array.
 	 */
-	public D parse(char[] input) {
+	public <T> T parse(char[] input) {
 		this.input = input;
 		this.total = input.length;
 
@@ -180,7 +181,7 @@ public class JsonParser<D> {
 		Object value;
 
 		try {
-			value = parseValue(targetType, null);
+			value = parseValue(targetType, null, null);
 		}
 		catch (IndexOutOfBoundsException iofbex) {
 			syntaxError("End of JSON");
@@ -194,7 +195,7 @@ public class JsonParser<D> {
 			return null;
 		}
 
-		return (D) value;
+		return (T) value;
 	}
 
 	// ---------------------------------------------------------------- parser
@@ -204,7 +205,7 @@ public class JsonParser<D> {
 	 * @param targetType target type to convert, may be <code>null</code>
 	 * @param componentType component type for maps and arrays, may be <code>null</code>
 	 */
-	protected Object parseValue(Class targetType, Class componentType) {
+	protected Object parseValue(Class targetType, Class keyType, Class componentType) {
 		ValueConverter valueConverter;
 
 		char c = input[ndx];
@@ -226,7 +227,7 @@ public class JsonParser<D> {
 
 			case '{':
 				ndx++;
-				return parseObjectContent(targetType, componentType);
+				return parseObjectContent(targetType, keyType, componentType);
 
 			case '[':
 				ndx++;
@@ -548,7 +549,7 @@ public class JsonParser<D> {
 				return target;
 			}
 
-			Object value = parseValue(componentType, null);
+			Object value = parseValue(componentType, null, null);
 
 			if (componentType != null) {
 				value = convertType(value, componentType);
@@ -570,7 +571,7 @@ public class JsonParser<D> {
 
 		path.pop();
 
-		if ((path.length() == 0) && (targetType != null)) {
+		if (targetType != null) {
 			return convertType(target, targetType);
 		}
 
@@ -582,8 +583,12 @@ public class JsonParser<D> {
 	/**
 	 * Parses object, once when open bracket has been consumed.
 	 */
-	protected Object parseObjectContent(Class targetType, Class valueType) {
+	protected Object parseObjectContent(Class targetType, Class valueKeyType, Class valueType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
+
+		path.push(KEYS);
+		valueKeyType = replaceWithMappedTypeForPath(valueKeyType);
+		path.pop();
 
 		Object target;
 		boolean isTargetTypeMap = true;
@@ -641,6 +646,7 @@ public class JsonParser<D> {
 
 			PropertyDescriptor pd = null;
 			Class propertyType = null;
+			Class keyType = null;
 			Class componentType = null;
 
 			// resolve simple property
@@ -655,7 +661,7 @@ public class JsonParser<D> {
 
 				if (pd != null) {
 					propertyType = pd.getType();
-
+					keyType = resolveKeyType(pd);
 					componentType = resolveComponentType(pd);
 				}
 			}
@@ -663,9 +669,10 @@ public class JsonParser<D> {
 			Object value;
 
 			if (!isTargetTypeMap) {
+				// *** inject into bean
 				path.push(key);
 
-				value = parseValue(propertyType, componentType);
+				value = parseValue(propertyType, keyType, componentType);
 
 				path.pop();
 
@@ -675,17 +682,24 @@ public class JsonParser<D> {
 				}
 			}
 			else {
+				Object keyValue = key;
+
+				if (valueKeyType != null) {
+					keyValue = convertType(key, valueKeyType);
+				}
+
+				// *** add to map
 				if (isTargetRealTypeMap) {
 					path.push(VALUES);
 				} else {
 					path.push(key);
 				}
 
-				value = parseValue(valueType, null);
+				value = parseValue(valueType, null, null);
 
 				path.pop();
 
-				((Map) target).put(key, value);
+				((Map) target).put(keyValue, value);
 			}
 
 			skipWhiteSpaces();
@@ -820,6 +834,29 @@ public class JsonParser<D> {
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
+	}
+
+	/**
+	 * Resolves key type for given property descriptor.
+	 */
+	protected Class resolveKeyType(PropertyDescriptor pd) {
+		Class keyType = null;
+
+		Getter getter = pd.getGetter(true);
+
+		if (getter != null) {
+			keyType = getter.getGetterRawKeyComponentType();
+		}
+
+		if (keyType == null) {
+			FieldDescriptor fieldDescriptor = pd.getFieldDescriptor();
+
+			if (fieldDescriptor != null) {
+				keyType = fieldDescriptor.getRawKeyComponentType();
+			}
+		}
+
+		return keyType;
 	}
 
 	/**
