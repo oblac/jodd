@@ -44,7 +44,7 @@ public interface PathMacros {
 	/**
 	 * Extracts array of macro values for matched action path
 	 * for each {@link #getNames() name}. It is assumed
-	 * that path macro was previously {@link #init(String) initialized}
+	 * that path macro was previously {@link #init(String, String[])} initialized}
 	 * on this action path, i.e. input is not validated.
 	 * <p>
 	 * Returned array string of macro values may contain

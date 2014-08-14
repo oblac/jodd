@@ -3,7 +3,6 @@
 package jodd.lagarto;
 
 import jodd.util.ArraysUtil;
-import jodd.util.CharUtil;
 import jodd.util.HtmlEncoder;
 
 import java.io.IOException;

@@ -149,7 +149,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 	 * Initializes default wrappers by storing theirs classes.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void initDefaultWrappers() throws Exception {
+	protected void initDefaultWrappers() {
 		String defaultWrappers = "";
 
 		variables = new HashMap<String, String>();

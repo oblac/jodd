@@ -4,7 +4,6 @@ package jodd.madvoc.meta;
 
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.util.AnnotationDataReader;
-import jodd.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
