@@ -4,8 +4,6 @@ package jodd.io.findfile;
 
 import jodd.util.Wildcard;
 
-import java.io.File;
-
 /**
  * {@link FindFile} that matches file names using <code>*</code>, <code>?</code>
  * and <code>**</code> wildcards.
