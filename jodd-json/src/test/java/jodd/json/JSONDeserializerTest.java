@@ -60,7 +60,7 @@ public class JSONDeserializerTest {
 	public void testDeserializeNoIncludes() {
 		Person jodder = creator.createJodder();
 		String json = new JsonSerializer().serialize(jodder);
-		Person jsonJodder = new JsonParser<Person>().parse(json, Person.class);
+		Person jsonJodder = new JsonParser().parse(json, Person.class);
 
 		assertNotNull(jsonJodder);
 
@@ -109,7 +109,7 @@ public class JSONDeserializerTest {
 	public void testDeserializeWithIncludes() {
 		Person igor = creator.createJodder();
 		String json = new JsonSerializer().include("phones", "hobbies").serialize(igor);
-		Person jsonIgor = new JsonParser<Person>().parse(json, Person.class);
+		Person jsonIgor = new JsonParser().parse(json, Person.class);
 
 		assertEquals(2, jsonIgor.getPhones().size());
 		assertEquals(3, jsonIgor.getHobbies().size());
@@ -121,7 +121,7 @@ public class JSONDeserializerTest {
 		Employee dilbert = creator.createDilbert();
 
 		String json = new JsonSerializer().include("phones", "hobbies").serialize(dilbert);
-		Person jsonDilbert = new JsonParser<Employee>().parse(json, Employee.class);
+		Person jsonDilbert = new JsonParser().parse(json, Employee.class);
 
 		assertNotNull(jsonDilbert);
 		assertTrue(jsonDilbert instanceof Employee);
@@ -132,7 +132,7 @@ public class JSONDeserializerTest {
 	public void testDeserializeInterfaces() {
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().include("powers").setClassMetadataName("class").serialize(superman);
-		Hero jsonSuperMan = new JsonParser<Hero>().setClassMetadataName("class").parse(json, Hero.class);
+		Hero jsonSuperMan = new JsonParser().setClassMetadataName("class").parse(json, Hero.class);
 
 		assertNotNull(jsonSuperMan);
 		assertEquals(4, jsonSuperMan.getPowers().size());
@@ -148,7 +148,7 @@ public class JSONDeserializerTest {
 		Hero superman = creator.createSuperman();
 		String json = new JsonSerializer().exclude("*.class").serialize(superman);
 
-		Hero jsonSuperMan = new JsonParser<Hero>()
+		Hero jsonSuperMan = new JsonParser()
 				.map(Hero.class)
 				.map("lair", SecretLair.class)
 				.map("secretIdentity", SecretIdentity.class)
@@ -171,7 +171,7 @@ public class JSONDeserializerTest {
 				.exclude("*.class")
 				.include("powers.class")
 				.serialize(superman);
-		Hero jsonSuperMan = new JsonParser<Hero>().parse(json, Hero.class);
+		Hero jsonSuperMan = new JsonParser().parse(json, Hero.class);
 		assertHeroHasSuperPowers(jsonSuperMan);
 	}
 
@@ -192,7 +192,7 @@ public class JSONDeserializerTest {
 
 		json = StringUtil.remove(json, "***");
 
-		Hero jsonSuperMan = new JsonParser<Hero>()
+		Hero jsonSuperMan = new JsonParser()
 				.map("lair", SecretLair.class)
 				.map("secretIdentity", SecretIdentity.class)
 				.parse(json, Hero.class);
@@ -213,17 +213,17 @@ public class JSONDeserializerTest {
 		list.add(pedro);
 
 		String json = new JsonSerializer().serialize(list);
-		List<Person> people = new JsonParser<List<Person>>().parse(json);
+		List<Person> people = new JsonParser().parse(json);
 		assertEquals(ArrayList.class, people.getClass());
 
 		json = new JsonSerializer().exclude("*.class").serialize(list);
-		people = new JsonParser<List<Person>>().map("values", Person.class).parse(json);
+		people = new JsonParser().map("values", Person.class).parse(json);
 
 		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, people.size());
 		assertEquals(Person.class, people.get(0).getClass());
 
-		List<Map> peopleMap = new JsonParser<List<Map>>().parse(json);
+		List<Map> peopleMap = new JsonParser().parse(json);
 
 		assertEquals(ArrayList.class, peopleMap.getClass());
 		assertEquals(3, peopleMap.size());
@@ -240,7 +240,7 @@ public class JSONDeserializerTest {
 				.exclude("*.class")
 				.serialize(archenemies);
 
-		Pair<Hero, Villian> deserialArchEnemies = new JsonParser<Pair<Hero, Villian>>()
+		Pair<Hero, Villian> deserialArchEnemies = new JsonParser()
 				.map("first", Hero.class)
 				.map("second", Villian.class)
 				.parse(json, Pair.class);
@@ -263,7 +263,7 @@ public class JSONDeserializerTest {
 		String json = new JsonSerializer()
 				.serialize(archenemies);
 
-		Pair<Hero, Villian> deserialArchEnemies = new JsonParser<Pair<Hero, Villian>>()
+		Pair<Hero, Villian> deserialArchEnemies = new JsonParser()
 				.map("first", Hero.class)
 				.map("second", Villian.class)
 				.parse(json, Pair.class);
@@ -284,7 +284,7 @@ public class JSONDeserializerTest {
 		JoddJson.classMetadataName = "class";
 
 		String json = new JsonSerializer().exclude("*.class").serialize(creator.createJodder());
-		Map<String, Object> deserialized = new JsonParser<Map<String, Object>>().parse(json);
+		Map<String, Object> deserialized = new JsonParser().parse(json);
 
 		assertEquals("Igor", deserialized.get("firstname"));
 		assertEquals("Spasic", deserialized.get("lastname"));
@@ -295,7 +295,7 @@ public class JSONDeserializerTest {
 	@Test
 	public void testGeneralMapDeserialization2() {
 		String json = new JsonSerializer().serialize(creator.createJodder());
-		Map<String, Object> deserialized = new JsonParser<Map<String, Object>>().parse(json);
+		Map<String, Object> deserialized = new JsonParser().parse(json);
 
 		assertEquals("Igor", deserialized.get("firstname"));
 		assertEquals("Spasic", deserialized.get("lastname"));
@@ -316,7 +316,7 @@ public class JSONDeserializerTest {
 		list.add(pedro);
 
 		String json = new JsonSerializer().exclude("*.class").serialize(list);
-		List<Person> people = new JsonParser<List<Person>>()
+		List<Person> people = new JsonParser()
 				.map("values", Person.class).parse(json);
 		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, list.size());
@@ -336,7 +336,7 @@ public class JSONDeserializerTest {
 		list.add(pedro);
 
 		String json = new JsonSerializer().serialize(list);
-		List<Person> people = new JsonParser<List<Person>>()
+		List<Person> people = new JsonParser()
 				.map("values", Person.class).parse(json);
 		assertEquals(ArrayList.class, people.getClass());
 		assertEquals(3, list.size());
@@ -359,7 +359,7 @@ public class JSONDeserializerTest {
 			}
 		}).serialize(foo);
 
-		Person newUser = new JsonParser<Person>()
+		Person newUser = new JsonParser()
 				.use("birthdate", new ValueConverter<String, Date>() {
 					public Date convert(String data) {
 						try {
@@ -378,7 +378,7 @@ public class JSONDeserializerTest {
 	@Test
 	public void testMapWithEmbeddedObject() {
 
-		Map<String, Network> networks = new JsonParser<Map<String, Network>>()
+		Map<String, Network> networks = new JsonParser()
 				.setClassMetadataName("class")
 				.parse("{\"1\": {\"class\":\"" + Network.class.getName() + "\", \"name\": \"Jodd\"} }");
 
@@ -394,7 +394,7 @@ public class JSONDeserializerTest {
 	public void testMapWithEmbeddedObject2() {
 		JoddJson.classMetadataName = null;
 
-		Map<String, Pair<Phone, Network>> complex = new JsonParser<Map<String, Pair<Phone, Network>>>()
+		Map<String, Pair<Phone, Network>> complex = new JsonParser()
 				.map("values", Pair.class)
 				.map("values.first", Phone.class)
 				.map("values.second", Network.class)
@@ -417,7 +417,7 @@ public class JSONDeserializerTest {
 
 		Group group = new Group("brothers", igor, modesty);
 		String json = new JsonSerializer().include("people").exclude("*.class").serialize(group);
-		Group bro = new JsonParser<Group>().map(Group.class).parse(json);
+		Group bro = new JsonParser().map(Group.class).parse(json);
 
 		assertNotNull(bro);
 		assertEquals("brothers", bro.getGroupName());
@@ -428,7 +428,7 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testEmptyArray() {
-		Group group = new JsonParser<Group>().parse("{\"people\": [], \"groupName\": \"Nobody\" }", Group.class);
+		Group group = new JsonParser().parse("{\"people\": [], \"groupName\": \"Nobody\" }", Group.class);
 		assertEquals("Nobody", group.getGroupName());
 		assertEquals(0, group.getPeople().length);
 	}
@@ -438,7 +438,7 @@ public class JSONDeserializerTest {
 	public void testNullDeserialization() {
 		String input = "{\"property\": null, \"property2\":5, \"property3\":\"abc\"}";
 
-		JsonParser<Map<String, Object>> deserializer = new JsonParser<Map<String, Object>>();
+		JsonParser deserializer = new JsonParser();
 		deserializer.map(null, HashMap.class);
 		Map<String, Object> result = deserializer.parse(input);
 
@@ -457,7 +457,7 @@ public class JSONDeserializerTest {
 		dates.add(new Date(1986, 3, 21));
 
 		String json = new JsonSerializer().serialize(dates);
-		List<Date> jsonDates = new JsonParser<List<Date>>()
+		List<Date> jsonDates = new JsonParser()
 				.map(null, ArrayList.class)
 				.map("values", Date.class)
 				.parse(json);
@@ -467,7 +467,7 @@ public class JSONDeserializerTest {
 
 		List<? extends Number> numbers = Arrays.asList(1, 0.5, 100.4f, (short) 5);
 		json = new JsonSerializer().serialize(numbers);
-		List<Number> jsonNumbers = new JsonParser<List<Number>>().parse(json);
+		List<Number> jsonNumbers = new JsonParser().parse(json);
 
 		assertEquals(numbers.size(), jsonNumbers.size());
 		for (int i = 0; i < numbers.size(); i++) {
@@ -476,7 +476,7 @@ public class JSONDeserializerTest {
 
 		List<Boolean> bools = Arrays.asList(true, false, true, false, false);
 		json = new JsonSerializer().serialize(bools);
-		List<Boolean> jsonBools = new JsonParser<List<Boolean>>().parse(json);
+		List<Boolean> jsonBools = new JsonParser().parse(json);
 
 		assertEquals(bools.size(), jsonBools.size());
 		for (int i = 0; i < bools.size(); i++) {
@@ -495,7 +495,7 @@ public class JSONDeserializerTest {
 
 		String json = new JsonSerializer().serialize(p);
 
-		Person[] jsonP = new JsonParser<Person[]>().parse(json, Person[].class);
+		Person[] jsonP = new JsonParser().parse(json, Person[].class);
 
 		assertEquals(3, jsonP.length);
 		assertEquals("Igor", jsonP[0].getFirstname());
@@ -513,7 +513,7 @@ public class JSONDeserializerTest {
 		spiderman.superpower = "Creates Many Webs and Super Tough";
 
 		String json = new JsonSerializer().serialize(spiderman);
-		Spiderman jsonSpiderman = new JsonParser<Spiderman>().parse(json);
+		Spiderman jsonSpiderman = new JsonParser().parse(json);
 
 		assertEquals(spiderman.spideySense, jsonSpiderman.spideySense);
 		assertEquals(spiderman.superpower, jsonSpiderman.superpower);
@@ -521,11 +521,11 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testAutoTypeConvertToNumerical() {
-		Account account = new JsonParser<Account>()
+		Account account = new JsonParser()
 				.parse("{\"id\": \"5\", \"accountNumber\": \"1234567-123\"}", Account.class);
 		assertEquals(new Integer(5), account.getId());
 
-		XRayVision xray = new JsonParser<XRayVision>().parse("{ \"power\": \"2.3\" }", XRayVision.class);
+		XRayVision xray = new JsonParser().parse("{ \"power\": \"2.3\" }", XRayVision.class);
 		assertEquals(2.3f, xray.getPower(), DELTA);
 	}
 
@@ -547,7 +547,7 @@ public class JSONDeserializerTest {
 				"    }   \n" +
 				"  ]\n" +
 				"}";
-		Map<String, Object> page2 = new JsonParser<Map<String, Object>>().parse(json);
+		Map<String, Object> page2 = new JsonParser().parse(json);
 		assertEquals("http://localhost:9080/results/3", page2.get("oslc_cm:next"));
 		assertEquals(3, ((List) page2.get("oslc_cm:results")).size());
 	}
@@ -556,7 +556,7 @@ public class JSONDeserializerTest {
 	public void testPoint() {
 		JoddJson.classMetadataName = "__class";
 		String json = new JsonSerializer().serialize(new Point2D.Float(1.0f, 2.0f));
-		Point2D.Float point = new JsonParser<Point2D.Float>().parse(json);
+		Point2D.Float point = new JsonParser().parse(json);
 		assertEquals(1.0f, point.x, DELTA);
 		assertEquals(2.0f, point.y, DELTA);
 	}
@@ -578,7 +578,7 @@ public class JSONDeserializerTest {
 		Person hank = new Person("Hank", "Paulsen", cal.getTime(), null, null);
 
 		String json = new JsonSerializer().serialize(hank);
-		Person deHank = new JsonParser<Person>().parse(json, Person.class);
+		Person deHank = new JsonParser().parse(json, Person.class);
 
 		assertEquals(hank.getFirstname(), deHank.getFirstname());
 		assertEquals(hank.getLastname(), deHank.getLastname());

@@ -134,7 +134,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleConversions() {
-		JsonParser<Number> jsonParser = new JsonParser<Number>();
+		JsonParser jsonParser = new JsonParser();
 
 		assertEquals(173, jsonParser.parse("\"173\"", Integer.class).intValue());
 		assertEquals("123", jsonParser.parse("123", String.class));
@@ -290,13 +290,13 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleMatrix() {
-		JsonParser<ArrHolder> jsonParser = new JsonParser<ArrHolder>();
+		JsonParser jsonParser = new JsonParser();
 
 		ArrHolder arrHolder = jsonParser.parse("{\"pos\":[1,2,3,4,5,6,7,8]}", ArrHolder.class);
 
 		assertArrayEquals(ints(1,2,3,4,5,6,7,8), arrHolder.pos);
 
-		JsonParser<int[]> jsonParser2 = new JsonParser<int[]>();
+		JsonParser jsonParser2 = new JsonParser();
 
 		int[] ints = jsonParser2.parse("[1,2,3,4]", int[].class);
 
@@ -304,7 +304,7 @@ public class JsonParserTest {
 		assertEquals(1, ints[0]);
 		assertEquals(4, ints[3]);
 
-		JsonParser<int[][]> jsonParser3 = new JsonParser<int[][]>();
+		JsonParser jsonParser3 = new JsonParser();
 
 		int[][] matrix  = jsonParser3.parse("[[1,2,3],[7,8,9]]", int[][].class);
 
@@ -378,7 +378,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testSimpleObject() {
-		JsonParser<Foo> jsonParser = new JsonParser<Foo>();
+		JsonParser jsonParser = new JsonParser();
 
 		Foo foo = jsonParser
 				.map("inter", InterImpl.class)
@@ -466,7 +466,7 @@ public class JsonParserTest {
 	public void testComplexObject() throws IOException {
 		JoddJson.classMetadataName = "class";
 
-		JsonParser<Aaa> jsonParser = new JsonParser<Aaa>();
+		JsonParser jsonParser = new JsonParser();
 		String json = FileUtil.readString(new File(dataRoot, "complex.json"));
 
 		Aaa aaa = jsonParser
@@ -539,7 +539,7 @@ public class JsonParserTest {
 
 	@Test
 	public void testComplexMaps() throws IOException {
-		JsonParser<User> jsonParser = new JsonParser<User>();
+		JsonParser jsonParser = new JsonParser();
 		String json = FileUtil.readString(new File(dataRoot, "complexMaps.json"));
 
 		User user = jsonParser
@@ -566,7 +566,7 @@ public class JsonParserTest {
 		String json = FileUtil.readString(new File(dataRoot, "actionLabel.json"));
 		Map<String, Object> map;
 		try {
-			map = (Map<String, Object>) jsonParser.parse(json);
+			map = jsonParser.parse(json);
 		}
 		catch (Exception ex) {
 			fail(ex.toString());
@@ -584,13 +584,16 @@ public class JsonParserTest {
 
 	@Test
 	public void testCitmCatalog() throws Exception {
-		JsonParser jsonParser = new JsonParser();
 		FileInputStream fis = new FileInputStream(new File(dataRoot, "citm_catalog.json.gz"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		StreamUtil.copy(new GZIPInputStream(fis), out);
 
 		String json = out.toString("UTF-8");
+
+		fis.close();
+
+		JsonParser jsonParser = new JsonParser();
 
 		Map<String, Object> map;
 		try {
@@ -649,5 +652,54 @@ public class JsonParserTest {
 		} catch (JsonException ignore) {
 		}
 	}
+
+	@Test
+	public void testKeys() {
+		String json = "{\"123\" : \"name\"}";
+
+		Map<Long, String> map = new JsonParser().map("keys", Long.class).parse(json);
+
+		assertEquals(1, map.size());
+		assertEquals("name", map.get(Long.valueOf(123)));
+
+		json = "{\"eee\" : {\"123\" : \"name\"}}";
+
+		Map<String, Map<Long, String>> map2 = new JsonParser().map("values.keys", Long.class).parse(json);
+
+		assertEquals(1, map2.size());
+
+		map = map2.get("eee");
+		assertEquals(1, map.size());
+		assertEquals("name", map.get(Long.valueOf(123)));
+	}
+
+	public static class MapHolder {
+
+		Map<Long, Long[]> data;
+
+		public Map<Long, Long[]> getData() {
+			return data;
+		}
+
+		public void setData(Map<Long, Long[]> data) {
+			this.data = data;
+		}
+	}
+
+	@Test
+	public void testMapOfListArrays() {
+		String json = "{\"data\" : {\"123\" : [1,2,3]}}";
+
+		MapHolder mapHolder = new JsonParser().parse(json, MapHolder.class);
+
+		Map<Long, Long[]> data = mapHolder.getData();
+
+		assertEquals(1, data.size());
+
+		Long[] longs = data.get(Long.valueOf(123));
+
+		assertNotNull(longs);
+	}
+
 
 }

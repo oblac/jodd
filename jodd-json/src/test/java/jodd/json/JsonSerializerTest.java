@@ -147,7 +147,7 @@ public class JsonSerializerTest {
 	public void testEscapeChars() {
 		String json = "\"1\\\" 2\\\\ 3\\/ 4\\b 5\\f 6\\n 7\\r 8\\t\"";
 
-		String str = new JsonParser<String>().parse(json);
+		String str = new JsonParser().parse(json);
 
 		assertEquals("1\" 2\\ 3/ 4\b 5\f 6\n 7\r 8\t", str);
 

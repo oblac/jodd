@@ -20,7 +20,7 @@ public class AnnotationTest {
 
 		assertEquals("{\"lat\":65,\"lng\":12}", json);
 
-		Location jsonLocation = new JsonParser<Location>().parse(json, Location.class);
+		Location jsonLocation = new JsonParser().parse(json, Location.class);
 
 		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
 		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
@@ -37,7 +37,7 @@ public class AnnotationTest {
 
 		assertEquals("{\"class\":\"jodd.json.mock.Location\",\"lat\":65,\"lng\":12}", json);
 
-		Location jsonLocation = new JsonParser<Location>().setClassMetadataName("class").parse(json, Location.class);
+		Location jsonLocation = new JsonParser().setClassMetadataName("class").parse(json, Location.class);
 
 		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
 		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
