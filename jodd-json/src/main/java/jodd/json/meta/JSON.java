@@ -2,6 +2,8 @@
 
 package jodd.json.meta;
 
+import jodd.util.StringPool;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,6 +18,12 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface JSON {
+
+	/**
+	 * Defines different property name for annotated item.
+	 * Used both for serialization and parsing.
+	 */
+	public String name() default StringPool.EMPTY;
 
 	/**
 	 * Specifies if a property should be included or excluded from the JSON serialization.

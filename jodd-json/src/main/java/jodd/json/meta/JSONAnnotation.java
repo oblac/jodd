@@ -32,20 +32,10 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 
 		JSONAnnotationData<A> jad = new JSONAnnotationData<A>(annotation);
 
-		jad.included = readBoolean(annotation, "include");
+		jad.name = readString(annotation, "name", null);
+		jad.included = readBoolean(annotation, "include", true);
 
 		return jad;
-	}
-
-	/**
-	 * Reads boolean element from the annotation.
-	 */
-	private boolean readBoolean(A annotation, String name) {
-		Boolean value = (Boolean) readElement(annotation, name);
-		if (value == null) {
-			return true;
-		}
-		return value.booleanValue();
 	}
 
 }

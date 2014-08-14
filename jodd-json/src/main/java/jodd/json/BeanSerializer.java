@@ -19,12 +19,11 @@ import java.util.List;
  */
 public class BeanSerializer {
 
-	private static final JsonAnnotationManager jsonAnnotationManager = new JsonAnnotationManager();
-
 	private final JsonContext jsonContext;
 	private final Object source;
 	private boolean declared;
 	private final String classMetadataName;
+	private final Class type;
 
 	private int count;
 	private String[] includes;
@@ -37,7 +36,9 @@ public class BeanSerializer {
 		this.declared = false;
 		this.classMetadataName = jsonContext.jsonSerializer.classMetadataName;
 
-		Class type = bean.getClass();
+		type = bean.getClass();
+
+		JsonAnnotationManager jsonAnnotationManager = JsonAnnotationManager.getInstance();
 
 		includes = jsonAnnotationManager.lookupIncludes(type);
 		excludes = jsonAnnotationManager.lookupExcludes(type);
@@ -59,19 +60,28 @@ public class BeanSerializer {
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			String propertyName = null;
+			Class propertyType = null;
+
 			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
 			if (getter != null) {
 				if (getter.matchDeclared(declared)) {
-					onProperty(propertyDescriptor.getName(), propertyDescriptor.getType());
+					propertyName = propertyDescriptor.getName();
+					propertyType = propertyDescriptor.getType();
 				}
 			}
 			else {
 				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
 				if (field != null) {
 					if (field.matchDeclared(declared)) {
-						onProperty(propertyDescriptor.getName(), propertyDescriptor.getType());
+						propertyName = propertyDescriptor.getName();
+						propertyType = propertyDescriptor.getType();
 					}
 				}
+			}
+
+			if (propertyName != null) {
+				onProperty(propertyName, propertyType);
 			}
 		}
 	}
@@ -146,6 +156,10 @@ public class BeanSerializer {
 			value = source.getClass().getName();
 		} else {
 			value = BeanUtil.getProperty(source, propertyName);
+
+			// change name for properties
+
+			propertyName = JsonAnnotationManager.getInstance().resolveName(type, propertyName);
 		}
 
 		jsonContext.pushName(propertyName, count > 0);

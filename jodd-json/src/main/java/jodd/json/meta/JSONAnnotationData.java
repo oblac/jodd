@@ -11,10 +11,15 @@ import java.lang.annotation.Annotation;
  */
 public class JSONAnnotationData<A extends Annotation> extends AnnotationDataReader.AnnotationData<A> {
 
+	protected String name;
 	protected boolean included;
 
 	protected JSONAnnotationData(A annotation) {
 		super(annotation);
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public boolean isIncluded() {

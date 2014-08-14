@@ -9,6 +9,7 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
+import jodd.json.meta.JsonAnnotationManager;
 import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CharUtil;
 import jodd.util.ClassLoaderUtil;
@@ -643,6 +644,11 @@ public class JsonParser<D> {
 			Class componentType = null;
 
 			// resolve simple property
+
+			if (!isTargetRealTypeMap) {
+				// replace key with real property value
+				key = JsonAnnotationManager.getInstance().resolveRealName(targetType, key);
+			}
 
 			if (!isTargetTypeMap) {
 				pd = targetTypeClassDescriptor.getPropertyDescriptor(key, true);
