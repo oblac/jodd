@@ -142,7 +142,7 @@ public class DispatcherUtil {
 	/**
 	 * Performs permanent redirection (301) to specified url.
 	 */
-	public static void redirectPermanent(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+	public static void redirectPermanent(HttpServletRequest request, HttpServletResponse response, String url) {
 		if (url.startsWith(StringPool.SLASH) == true) {
 			url = ServletUtil.getContextPath(request) + url;
 		}

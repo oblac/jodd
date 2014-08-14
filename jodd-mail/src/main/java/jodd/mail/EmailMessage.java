@@ -3,7 +3,6 @@
 package jodd.mail;
 
 import jodd.JoddCore;
-import jodd.util.MimeTypes;
 
 /**
  * Represents e-mail message: string with mime type and encoding.
