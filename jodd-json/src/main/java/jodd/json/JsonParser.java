@@ -5,6 +5,7 @@ package jodd.json;
 import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.CtorDescriptor;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
@@ -16,7 +17,6 @@ import jodd.util.ClassLoaderUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
-import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -802,10 +802,11 @@ public class JsonParser {
 			return new HashMap();
 		}
 
+		ClassDescriptor cd = ClassIntrospector.lookup(targetType);
+
 		try {
-			Constructor ctor = targetType.getDeclaredConstructor();
-			ctor.setAccessible(true);
-			return ctor.newInstance();
+			CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
+			return ctorDescriptor.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
