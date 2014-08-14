@@ -35,11 +35,11 @@ public class JCLLogger implements Logger {
 
 	public void log(Level level, String message) {
 		switch (level) {
-			case TRACE: logger.trace(message); return;
-			case DEBUG: logger.debug(message); return;
-			case INFO: logger.info(message); return;
-			case WARN: logger.warn(message); return;
-			case ERROR: logger.error(message); return;
+			case TRACE: logger.trace(message); break;
+			case DEBUG: logger.debug(message); break;
+			case INFO: logger.info(message); break;
+			case WARN: logger.warn(message); break;
+			case ERROR: logger.error(message); break;
 		}
 	}
 
