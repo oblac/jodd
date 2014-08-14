@@ -173,6 +173,13 @@ configure(javaModules()) {
 //		}
 //	}
 
+	// use separate output folders for idea, don't mess with gradle
+	idea {
+		module {
+			inheritOutputDirs true
+		}
+	}
+
 	dependencies {
 		testIntCompile sourceSets.main.output
 		testIntCompile configurations.testCompile
