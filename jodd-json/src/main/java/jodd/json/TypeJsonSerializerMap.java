@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.datetime.JDateTime;
 import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
 import jodd.json.impl.CalendarJsonSerializer;
@@ -11,6 +12,7 @@ import jodd.json.impl.ClassJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
+import jodd.json.impl.JDateTimeSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
@@ -73,6 +75,7 @@ public class TypeJsonSerializerMap {
 		map.put(Boolean.class, new BooleanJsonSerializer());
 		map.put(Date.class, new DateJsonSerializer());
 		map.put(Calendar.class, new CalendarJsonSerializer());
+		map.put(JDateTime.class, new JDateTimeSerializer());
 		map.put(Enum.class, new EnumJsonSerializer());
 
 		jsonSerializer = new CharacterJsonSerializer();
