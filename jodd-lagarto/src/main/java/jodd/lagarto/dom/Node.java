@@ -447,7 +447,7 @@ public abstract class Node implements Cloneable {
 				return;
 			}
 		}
-		attributes.add(new Attribute(rawAttributeName, name, value, false));
+		attributes.add(new Attribute(rawAttributeName, name, value));
 	}
 
 	/**
