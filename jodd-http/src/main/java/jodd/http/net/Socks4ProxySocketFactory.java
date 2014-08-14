@@ -44,7 +44,7 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 	/**
 	 * Connects to the SOCKS4 proxy and returns proxified socket.
 	 */
-	private Socket createSocks4ProxySocket(String host, int port) throws IOException {
+	private Socket createSocks4ProxySocket(String host, int port) {
 		Socket socket = null;
 		String proxyHost = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();

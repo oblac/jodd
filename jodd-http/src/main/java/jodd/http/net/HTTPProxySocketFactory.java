@@ -44,7 +44,7 @@ public class HTTPProxySocketFactory extends SocketFactory {
 		return createHttpProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createHttpProxySocket(String host, int port) throws IOException {
+	private Socket createHttpProxySocket(String host, int port) {
 		Socket socket = null;
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();

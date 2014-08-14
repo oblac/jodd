@@ -41,7 +41,7 @@ public class Socks5ProxySocketFactory extends SocketFactory {
 		return createSocks5ProxySocket(address.getHostAddress(), port);
 	}
 
-	private Socket createSocks5ProxySocket(String host, int port) throws IOException {
+	private Socket createSocks5ProxySocket(String host, int port) {
 		Socket socket = null;
 		String proxyAddress = proxy.getProxyAddress();
 		int proxyPort = proxy.getProxyPort();
