@@ -574,6 +574,7 @@ public class JsonParser {
 				}
 
 				ndx++;
+				path.pop();
 				return target;
 			}
 
@@ -610,10 +611,6 @@ public class JsonParser {
 	protected Object parseObjectContent(Class targetType, Class valueKeyType, Class valueType) {
 		targetType = replaceWithMappedTypeForPath(targetType);
 
-		path.push(KEYS);
-		valueKeyType = replaceWithMappedTypeForPath(valueKeyType);
-		path.pop();
-
 		Object target;
 		boolean isTargetTypeMap = true;
 		boolean isTargetRealTypeMap = true;
@@ -627,6 +624,13 @@ public class JsonParser {
 			// map usage locally in this method
 
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
+		}
+
+		if (isTargetRealTypeMap) {
+			// resolve keys only for real maps
+			path.push(KEYS);
+			valueKeyType = replaceWithMappedTypeForPath(valueKeyType);
+			path.pop();
 		}
 
 		if (classMetadataName == null) {
@@ -736,6 +740,8 @@ public class JsonParser {
 				default: syntaxError("Invalid char: expected } or ,");
 			}
 		}
+
+		// done
 
 		// convert Map to target type
 		if (classMetadataName != null) {

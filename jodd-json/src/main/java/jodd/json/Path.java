@@ -126,7 +126,7 @@ public class Path {
 		int result = 1;
 
 		for (int i = 0; i < index; i++) {
-			Object element = paths[i];
+			String element = paths[i];
 			result = 31 * result + (element == null ? 0 : element.hashCode());
 		}
 
