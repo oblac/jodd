@@ -2,10 +2,10 @@
 
 package jodd.json;
 
-import jodd.bean.BeanUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.Getter;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
@@ -54,7 +54,7 @@ public class BeanSerializer {
 
 		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'
-			onProperty(classMetadataName, null);
+			onProperty(classMetadataName, null, null);
 		}
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
@@ -81,7 +81,7 @@ public class BeanSerializer {
 			}
 
 			if (propertyName != null) {
-				onProperty(propertyName, propertyType);
+				onProperty(propertyName, propertyType, propertyDescriptor);
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class BeanSerializer {
 	/**
 	 * Invoked on each property.
 	 */
-	protected boolean onProperty(String propertyName, Class propertyType) {
+	protected boolean onProperty(String propertyName, Class propertyType, PropertyDescriptor pd) {
 		Path currentPath = jsonContext.path;
 
 		currentPath.push(propertyName);
@@ -155,7 +155,7 @@ public class BeanSerializer {
 			// metadata - classname
 			value = source.getClass().getName();
 		} else {
-			value = BeanUtil.getProperty(source, propertyName);
+			value = readProperty(source, pd);
 
 			// change name for properties
 
@@ -173,4 +173,23 @@ public class BeanSerializer {
 
 		return true;
 	}
+
+	/**
+	 * Reads property using property descriptor.
+	 */
+	private Object readProperty(Object source, PropertyDescriptor propertyDescriptor) {
+		Getter getter = propertyDescriptor.getGetter(declared);
+
+		if (getter != null) {
+			try {
+				return getter.invokeGetter(source);
+			}
+			catch (Exception ex) {
+				throw new JsonException(ex);
+			}
+		}
+
+		return null;
+	}
+
 }

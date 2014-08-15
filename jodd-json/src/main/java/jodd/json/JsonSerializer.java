@@ -3,6 +3,8 @@
 package jodd.json;
 
 import jodd.JoddJson;
+import jodd.util.UnsafeUtil;
+import jodd.util.buffer.FastCharBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,10 +125,10 @@ public class JsonSerializer {
 	 * Serializes object into source.
 	 */
 	public String serialize(Object source) {
-		StringBuilder stringBuilder = new StringBuilder();
+		FastCharBuffer fastCharBuffer = new FastCharBuffer();
 
-		serialize(source, stringBuilder);
+		serialize(source, fastCharBuffer);
 
-		return stringBuilder.toString();
+		return UnsafeUtil.createString(fastCharBuffer.toArray());
 	}
 }
