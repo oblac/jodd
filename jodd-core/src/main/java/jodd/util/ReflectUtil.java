@@ -266,6 +266,14 @@ public class ReflectUtil {
 	}
 
 	/**
+	 * Returns <code>true</code> if provided class is equal or a subclass
+	 * to the target class.
+	 */
+	public static boolean isSubclassOrEqual(Class thisClass, Class target) {
+		return thisClass == target || isSubclass(thisClass, target);
+	}
+
+	/**
 	 * Returns <code>true</code> if provided class is interface implementation.
 	 */
 	public static boolean isInterfaceImpl(Class thisClass, Class targetInterface) {

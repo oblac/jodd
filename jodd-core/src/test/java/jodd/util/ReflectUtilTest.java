@@ -15,9 +15,11 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -207,6 +209,31 @@ public class ReflectUtilTest {
 		assertTrue(ReflectUtil.isSubclass(TFooBean.class, TFooIndyEx.class));
 		assertTrue(ReflectUtil.isSubclass(TFooBean2.class, TFooIndyEx.class));
 		assertTrue(ReflectUtil.isSubclass(TFooBean.class, TFooIndy.class));
+	}
+
+	@Test
+	public void testMatchInterfaces() {
+		assertTrue(ReflectUtil.isInterfaceImpl(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isInterfaceImpl(AbstractMap.class, Map.class));
+		assertFalse(ReflectUtil.isInterfaceImpl(Map.class, Map.class));
+		assertFalse(ReflectUtil.isInterfaceImpl(HashMap.class, AbstractMap.class));		// abstract map is not an interface
+		assertFalse(ReflectUtil.isInterfaceImpl(HashMap.class, HashMap.class));
+
+		assertTrue(ReflectUtil.isInstanceOf(new HashMap(), Map.class));
+		assertTrue(ReflectUtil.isInstanceOf(new HashMap(), AbstractMap.class));
+		assertTrue(ReflectUtil.isInstanceOf(new HashMap(), HashMap.class));
+
+		assertTrue(ReflectUtil.isSubclass(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isSubclass(HashMap.class, AbstractMap.class));
+		assertTrue(ReflectUtil.isSubclass(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isSubclass(HashMap.class, Map.class));
+		assertFalse(ReflectUtil.isSubclass(Map.class, Map.class));
+
+		assertTrue(ReflectUtil.isSubclassOrEqual(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isSubclassOrEqual(HashMap.class, AbstractMap.class));
+		assertTrue(ReflectUtil.isSubclassOrEqual(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isSubclassOrEqual(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isSubclassOrEqual(Map.class, Map.class));
 	}
 
 
