@@ -377,7 +377,6 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testMapWithEmbeddedObject() {
-
 		Map<String, Network> networks = new JsonParser()
 				.setClassMetadataName("class")
 				.parse("{\"1\": {\"class\":\"" + Network.class.getName() + "\", \"name\": \"Jodd\"} }");
@@ -409,6 +408,24 @@ public class JSONDeserializerTest {
 		assertEquals("404", complex.get("1").getFirst().getAreaCode());
 		assertEquals("Jodd", complex.get("1").getSecond().getName());
 	}
+
+	@Test
+	public void testListWithEmbeddedObject() {
+		List<Network> networks = new JsonParser()
+				.setClassMetadataName("class")
+				.parse("[" +
+						"	{\"class\":\"" + Network.class.getName() + "\", \"name\": \"Jodd\"}," +
+						"	{\"class\":\"" + Network.class.getName() + "\", \"name\": \"Mojo\"}" +
+						"]");
+
+		assertNotNull(networks);
+		assertEquals(2, networks.size());
+		Network network = networks.get(0);
+		assertEquals("Jodd", network.getName());
+		network = networks.get(1);
+		assertEquals("Mojo", network.getName());
+	}
+
 
 	@Test
 	public void testArrayType() {

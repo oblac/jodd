@@ -598,7 +598,7 @@ public class JsonParserTest {
 		Map<String, Object> map;
 		try {
 			jsonParser.parse(json);
-			map = (Map<String, Object>) jsonParser.parse(json);
+			map = jsonParser.parse(json);
 		}
 		catch (Exception ex) {
 			fail(ex.toString());
