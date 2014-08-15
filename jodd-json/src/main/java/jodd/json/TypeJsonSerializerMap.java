@@ -4,15 +4,21 @@ package jodd.json;
 
 import jodd.datetime.JDateTime;
 import jodd.json.impl.ArraysJsonSerializer;
+import jodd.json.impl.BooleanArrayJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
+import jodd.json.impl.ByteArrayJsonSerializer;
 import jodd.json.impl.CalendarJsonSerializer;
 import jodd.json.impl.CharSequenceJsonSerializer;
 import jodd.json.impl.CharacterJsonSerializer;
 import jodd.json.impl.ClassJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
+import jodd.json.impl.DoubleArrayJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
+import jodd.json.impl.FloatArrayJsonSerializer;
+import jodd.json.impl.IntArrayJsonSerializer;
 import jodd.json.impl.IterableJsonSerializer;
 import jodd.json.impl.JDateTimeSerializer;
+import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
@@ -39,6 +45,14 @@ public class TypeJsonSerializerMap {
 		map.put(Object.class, new ObjectJsonSerializer());
 		map.put(Map.class, new MapJsonSerializer());
 		map.put(Iterable.class, new IterableJsonSerializer());
+
+		// arrays
+		map.put(int[].class, new IntArrayJsonSerializer());
+		map.put(long[].class, new LongArrayJsonSerializer());
+		map.put(double[].class, new DoubleArrayJsonSerializer());
+		map.put(float[].class, new FloatArrayJsonSerializer());
+		map.put(boolean[].class, new BooleanArrayJsonSerializer());
+		map.put(byte[].class, new ByteArrayJsonSerializer());
 		map.put(Arrays.class, new ArraysJsonSerializer());
 
 		// strings
