@@ -4,7 +4,6 @@ package jodd.json;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
@@ -120,6 +119,9 @@ public class MapToBean {
 		return target;
 	}
 
+	/**
+	 * Converts type of all list elements to match the component type.
+	 */
 	private Object generifyList(List list, Class componentType) {
 		for (int i = 0; i < list.size(); i++) {
 			Object element = list.get(i);
@@ -138,6 +140,9 @@ public class MapToBean {
 		return list;
 	}
 
+	/**
+	 * Sets the property value.
+	 */
 	private void setValue(Object target, PropertyDescriptor pd, Object value) throws InvocationTargetException, IllegalAccessException {
 		Class propertyType;
 
@@ -149,18 +154,11 @@ public class MapToBean {
 			}
 			setter.invokeSetter(target, value);
 		}
-		else {
-			FieldDescriptor fd = pd.getFieldDescriptor();
-			if (fd != null) {
-				if (value != null) {
-					propertyType = fd.getRawType();
-					value = JsonParserUtil.convertType(value, propertyType);
-				}
-				fd.getField().set(target, value);
-			}
-		}
 	}
 
+	/**
+	 * Change map elements to match key and value types.
+	 */
 	protected <K,V> Map<K, V> generifyMap(Map<Object, Object> map, Class<K> keyType, Class<V> valueType) {
 
 		if (keyType == String.class) {
