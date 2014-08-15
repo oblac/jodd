@@ -3,6 +3,9 @@
 package jodd.introspector.tst;
 
 public class Bbean extends Abean {
+
+	public static final long serialVersionUID = 42L;
+
 	private Long boo;
 
 	Long getBoo() {

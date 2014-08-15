@@ -236,6 +236,13 @@ public class IntrospectorTest {
 		assertNull(pd.getWriteMethodDescriptor());
 	}
 
+	@Test
+	public void testSerialUid() {
+		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
+
+		assertNull(cd.getFieldDescriptor("serialVersionUID", true));
+	}
+
 
 	MethodDescriptor getPropertySetterDescriptor(ClassDescriptor cd, String name, boolean declared) {
 		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(name, true);

@@ -42,6 +42,10 @@ public class Fields {
 		for (Field field : fields) {
 			String fieldName = field.getName();
 
+			if (fieldName.equals("serialVersionUID")) {
+				continue;
+			}
+
 			map.put(fieldName, createFieldDescriptor(field));
 		}
 
