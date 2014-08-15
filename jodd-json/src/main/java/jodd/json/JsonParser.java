@@ -5,7 +5,6 @@ package jodd.json;
 import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.json.meta.JsonAnnotationManager;
@@ -861,12 +860,6 @@ public class JsonParser {
 			Setter setter = pd.getSetter(true);
 			if (setter != null) {
 				setter.invokeSetter(target, convertedValue);
-			}
-			else {
-				FieldDescriptor fd = pd.getFieldDescriptor();
-				if (fd != null) {
-					fd.getField().set(target, convertedValue);
-				}
 			}
 		} catch (Exception ex) {
 			throw new JsonException(ex);
