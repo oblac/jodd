@@ -245,7 +245,7 @@ public class JsonParser {
 			case '8':
 			case '9':
 			case '-':
-				Object number = parseNumber(targetType);
+				Object number = parseNumber();
 
 				valueConverter = lookupValueConverter();
 				if (valueConverter != null) {
@@ -433,7 +433,7 @@ public class JsonParser {
 	/**
 	 * Parses JSON numbers.
 	 */
-	protected Number parseNumber(Class targetType) {
+	protected Number parseNumber() {
 		int startIndex = ndx;
 
 		char c = input[ndx];
@@ -473,31 +473,6 @@ public class JsonParser {
 		}
 
 		String value = String.valueOf(input, startIndex, ndx - startIndex);
-
-		if (targetType != null) {
-			// convert to target type
-
-			if (targetType == Integer.class || targetType == int.class) {
-				return Integer.valueOf(value);
-			}
-			if (targetType == Long.class || targetType == long.class) {
-				return Long.valueOf(value);
-			}
-			if (targetType == Double.class || targetType == double.class) {
-				return Double.valueOf(value);
-			}
-			if (targetType == Float.class || targetType == float.class) {
-				return Float.valueOf(value);
-			}
-			if (targetType == Short.class || targetType == short.class) {
-				return Short.valueOf(value);
-			}
-			if (targetType == Byte.class || targetType == byte.class) {
-				return Byte.valueOf(value);
-			}
-		}
-
-		// try to guess
 
 		if (isDouble) {
 			return Double.valueOf(value);
@@ -597,7 +572,7 @@ public class JsonParser {
 		path.pop();
 
 		if (targetType != null) {
-			return convertListToArray(target, targetType, componentType);
+			return convertType(target, targetType);
 		}
 
 		return target;
@@ -949,54 +924,6 @@ public class JsonParser {
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);
 		}
-	}
-
-	/**
-	 * Converts list to target array. List's elements are already converted.
-	 */
-	protected Object convertListToArray(List list, Class targetType, Class componentType) {
-		if (!targetType.isArray()) {
-			return list;
-		}
-		int size = list.size();
-
-		// convert list to array
-		if (componentType == Long.class) {
-			Long[] array = new Long[size];
-			for (int i = 0; i < list.size(); i++) {
-				array[i] = (Long) list.get(i);
-			}
-			return array;
-		}
-		if (componentType == long.class) {
-			long[] array = new long[size];
-			for (int i = 0; i < list.size(); i++) {
-				Long number = (Long) list.get(i);
-				if (number != null) {
-					array[i] = number.longValue();
-				}
-			}
-			return array;
-		}
-		if (componentType == Integer.class) {
-			Integer[] array = new Integer[size];
-			for (int i = 0; i < list.size(); i++) {
-				array[i] = (Integer) list.get(i);
-			}
-			return array;
-		}
-		if (componentType == int.class) {
-			int[] array = new int[size];
-			for (int i = 0; i < list.size(); i++) {
-				Integer number = (Integer) list.get(i);
-				if (number != null) {
-					array[i] = number.intValue();
-				}
-			}
-			return array;
-		}
-
-		return convertType(list, targetType);
 	}
 
 	// ---------------------------------------------------------------- error
