@@ -6,6 +6,7 @@ import jodd.mutable.MutableInteger;
 import jodd.typeconverter.impl.CollectionConverter;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -306,6 +307,21 @@ public class MixTest {
 		cc = new CollectionConverter(tcm, List.class, Integer.class);
 		list1 = (List<String>) cc.convert("1,2,3");
 		assertEquals(listo(1, 2, 3), list1);
+	}
+
+	@Test
+	public void testListToArray() {
+		List<Long> list = new ArrayList<Long>();
+		list.add(1L);
+		list.add(9L);
+		list.add(2L);
+
+		Long[] array = TypeConverterManager.convertType(list, Long[].class);
+
+		assertEquals(3, array.length);
+		assertEquals(1, array[0].longValue());
+		assertEquals(9, array[1].longValue());
+		assertEquals(2, array[2].longValue());
 	}
 
 }

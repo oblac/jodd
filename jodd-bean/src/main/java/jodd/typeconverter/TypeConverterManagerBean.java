@@ -149,14 +149,54 @@ public class TypeConverterManagerBean {
 		register(char[].class, new CharacterArrayConverter(this));
 
 		// we don't really need these, but converters will be cached and not created every time
-		register(Integer[].class, new ArrayConverter<Integer>(this, Integer.class));
-		register(Long[].class, new ArrayConverter<Long>(this, Long.class));
-		register(Byte[].class, new ArrayConverter<Byte>(this, Byte.class));
-		register(Short[].class, new ArrayConverter<Short>(this, Short.class));
-		register(Float[].class, new ArrayConverter<Float>(this, Float.class));
-		register(Double[].class, new ArrayConverter<Double>(this, Double.class));
-		register(Boolean[].class, new ArrayConverter<Boolean>(this, Boolean.class));
-		register(Character[].class, new ArrayConverter<Character>(this, Character.class));
+		register(Integer[].class, new ArrayConverter<Integer>(this, Integer.class) {
+			@Override
+			protected Integer[] createArray(int length) {
+				return new Integer[length];
+			}
+		});
+		register(Long[].class, new ArrayConverter<Long>(this, Long.class) {
+			@Override
+			protected Long[] createArray(int length) {
+				return new Long[length];
+			}
+		});
+		register(Byte[].class, new ArrayConverter<Byte>(this, Byte.class) {
+			@Override
+			protected Byte[] createArray(int length) {
+				return new Byte[length];
+			}
+		});
+		register(Short[].class, new ArrayConverter<Short>(this, Short.class) {
+			@Override
+			protected Short[] createArray(int length) {
+				return new Short[length];
+			}
+		});
+		register(Float[].class, new ArrayConverter<Float>(this, Float.class) {
+			@Override
+			protected Float[] createArray(int length) {
+				return new Float[length];
+			}
+		});
+		register(Double[].class, new ArrayConverter<Double>(this, Double.class) {
+			@Override
+			protected Double[] createArray(int length) {
+				return new Double[length];
+			}
+		});
+		register(Boolean[].class, new ArrayConverter<Boolean>(this, Boolean.class) {
+			@Override
+			protected Boolean[] createArray(int length) {
+				return new Boolean[length];
+			}
+		});
+		register(Character[].class, new ArrayConverter<Character>(this, Character.class) {
+			@Override
+			protected Character[] createArray(int length) {
+				return new Character[length];
+			}
+		});
 
 		register(MutableInteger[].class, new ArrayConverter<MutableInteger>(this, MutableInteger.class));
 		register(MutableLong[].class, new ArrayConverter<MutableLong>(this, MutableLong.class));
