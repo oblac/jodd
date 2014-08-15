@@ -11,6 +11,7 @@ public class Path {
 
 	protected String[] paths = new String[8];
 	protected int index = 0;
+	protected Path altPath;
 
 	/**
 	 * Parses input dot-separated string that represents a path.
@@ -39,9 +40,34 @@ public class Path {
 	}
 
 	/**
+	 * Returns alternative path.
+	 */
+	public Path getAltPath() {
+		return altPath;
+	}
+
+	/**
 	 * Push element to the path.
 	 */
 	public Path push(String field) {
+		_push(field);
+
+		if (altPath != null) {
+			altPath.push(field);
+		}
+		return this;
+	}
+
+	public Path push(String field, String altField) {
+		_push(field);
+
+		if (altPath != null) {
+			altPath.push(altField);
+		}
+		return this;
+	}
+
+	private void _push(String field) {
 		if (index == paths.length) {	// ensure size
 			String[] newPaths = new String[paths.length << 1];
 			System.arraycopy(paths, 0, newPaths, 0, paths.length);
@@ -50,14 +76,15 @@ public class Path {
 
 		paths[index] = field;
 		index++;
-
-		return this;
 	}
 
 	/**
 	 * Pop last element from the path.
 	 */
-	public String pop() {
+	public String pop(){
+		if (altPath != null) {
+			altPath.pop();
+		}
 		return paths[--index];
 	}
 

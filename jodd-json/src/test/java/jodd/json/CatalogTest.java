@@ -42,10 +42,19 @@ public class CatalogTest {
 	}
 
 	@Test
-	public void testParseCatalog() throws IOException {
+	public void testParseCatalogAsObject() throws IOException {
 		String json = loadJSON();
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+
+		assertCatalog(catalog);
+	}
+
+	@Test
+	public void testParseCatalogAsObjectWithClassname() throws IOException {
+		String json = loadJSON();
+
+		Catalog catalog = new JsonParser().setClassMetadataName("class").parse(json, Catalog.class);
 
 		assertCatalog(catalog);
 	}
@@ -55,6 +64,24 @@ public class CatalogTest {
 		String json = loadJSON();
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+
+		String newJson = new JsonSerializer().includeCollections(true).serialize(catalog);
+
+		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
+
+		assertCatalog(jsonCatalog);
+	}
+
+	@Test
+	public void testParseCatalogAsMap() throws IOException {
+		String json = loadJSON();
+
+		Map catalog = new JsonParser()
+				.map("values.keys", Long.class)
+				.map("venueNames.keys", String.class)
+				.useAltPaths()
+				.parse(json);
+
 		String newJson = new JsonSerializer().includeCollections(true).serialize(catalog);
 
 		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);

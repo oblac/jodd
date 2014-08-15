@@ -41,6 +41,7 @@ public class JsonParser {
 	protected char[] input;
 	protected int total;
 	protected Path path;
+	protected boolean useAltPaths;
 	protected Class rootType;
 	protected MapToBean mapToBean;
 
@@ -55,10 +56,21 @@ public class JsonParser {
 		this.ndx = 0;
 		this.textLen = 0;
 		this.path = new Path();
+		if (useAltPaths) {
+			path.altPath = new Path();
+		}
 
 		if (classMetadataName != null) {
 			mapToBean = new MapToBean(classMetadataName);
 		}
+	}
+
+	/**
+	 * Enables usage of additional paths.
+	 */
+	public JsonParser useAltPaths() {
+		this.useAltPaths = true;
+		return this;
 	}
 
 	// ---------------------------------------------------------------- mappings
@@ -98,13 +110,31 @@ public class JsonParser {
 			return target;
 		}
 
-		Class newType = mappings.get(path);
+		Class newType;
 
-		if (newType == null) {
-			return target;
+		// first try alt paths
+
+		Path altPath = path.getAltPath();
+
+		if (altPath != null) {
+			if (!altPath.equals(path)) {
+				newType = mappings.get(altPath);
+
+				if (newType != null) {
+					return newType;
+				}
+			}
 		}
 
-		return newType;
+		// now check regular paths
+
+		newType = mappings.get(path);
+
+		if (newType != null) {
+			return newType;
+		}
+
+		return target;
 	}
 
 	// ---------------------------------------------------------------- converters
@@ -713,7 +743,7 @@ public class JsonParser {
 
 				// *** add to map
 				if (isTargetRealTypeMap) {
-					path.push(VALUES);
+					path.push(VALUES, key);
 				} else {
 					path.push(key);
 				}
