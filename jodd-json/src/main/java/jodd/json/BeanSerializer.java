@@ -4,9 +4,7 @@ package jodd.json;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
-import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.ArraysUtil;
@@ -63,21 +61,10 @@ public class BeanSerializer {
 			String propertyName = null;
 			Class propertyType = null;
 
-			MethodDescriptor getter = propertyDescriptor.getReadMethodDescriptor();
+			Getter getter = propertyDescriptor.getGetter(declared);
 			if (getter != null) {
-				if (getter.matchDeclared(declared)) {
-					propertyName = propertyDescriptor.getName();
-					propertyType = propertyDescriptor.getType();
-				}
-			}
-			else {
-				FieldDescriptor field = propertyDescriptor.getFieldDescriptor();
-				if (field != null) {
-					if (field.matchDeclared(declared)) {
-						propertyName = propertyDescriptor.getName();
-						propertyType = propertyDescriptor.getType();
-					}
-				}
+				propertyName = propertyDescriptor.getName();
+				propertyType = propertyDescriptor.getType();
 			}
 
 			if (propertyName != null) {
