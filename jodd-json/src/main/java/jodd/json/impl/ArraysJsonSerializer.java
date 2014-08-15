@@ -8,50 +8,35 @@ import jodd.json.TypeJsonSerializer;
 import java.lang.reflect.Array;
 
 /**
- * Arrays serializer.
+ * Arrays serializer. May be overridden for specific types for better performances.
  */
-public class ArraysJsonSerializer implements TypeJsonSerializer<Object> {
+public class ArraysJsonSerializer<K> implements TypeJsonSerializer<Object> {
+
+	/**
+	 * Returns array's length.
+	 */
+	protected int getLength(K[] array) {
+		return Array.getLength(array);
+	}
+
+	/**
+	 * Returns array's element at given index.
+	 */
+	protected K get(K[] array, int index) {
+		return (K) Array.get(array, index);
+	}
 
 	public void serialize(JsonContext jsonContext, Object array) {
 		jsonContext.writeOpenArray();
 
-		Class type = array.getClass();
+		int length = getLength((K[]) array);
 
-		if (type == int[].class) {
-			int[] ints = (int[]) array;
-			for (int i = 0; i < ints.length; i++) {
-				if (i > 0) {
-					jsonContext.writeComma();
-				}
-				jsonContext.write(Integer.toString(ints[i]));
+		for (int i = 0; i < length; i++) {
+			if (i > 0) {
+				jsonContext.writeComma();
 			}
-		}
-		else if (type == long[].class) {
-			long[] longs = (long[]) array;
-			for (int i = 0; i < longs.length; i++) {
-				if (i > 0) {
-					jsonContext.writeComma();
-				}
-				jsonContext.write(Long.toString(longs[i]));
-			}
-		}
-		else if (type == double[].class) {
-			double[] doubles = (double[]) array;
-			for (int i = 0; i < doubles.length; i++) {
-				if (i > 0) {
-					jsonContext.writeComma();
-				}
-				jsonContext.write(Double.toString(doubles[i]));
-			}
-		}
-		else {
-			int length = Array.getLength(array);
-			for (int i = 0; i < length; i++) {
-				if (i > 0) {
-					jsonContext.writeComma();
-				}
-				jsonContext.serialize(Array.get(array, i));
-			}
+
+			jsonContext.serialize(get((K[]) array, i));
 		}
 
 		jsonContext.writeCloseArray();

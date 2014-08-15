@@ -53,6 +53,29 @@ public class TypeJsonSerializerMap {
 		map.put(float[].class, new FloatArrayJsonSerializer());
 		map.put(boolean[].class, new BooleanArrayJsonSerializer());
 		map.put(byte[].class, new ByteArrayJsonSerializer());
+
+		map.put(Integer[].class, new ArraysJsonSerializer<Integer>() {
+			@Override
+			protected int getLength(Integer[] array) {
+				return array.length;
+			}
+
+			@Override
+			protected Integer get(Integer[] array, int index) {
+				return array[index];
+			}
+		});
+		map.put(Long[].class, new ArraysJsonSerializer<Long>() {
+			@Override
+			protected int getLength(Long[] array) {
+				return array.length;
+			}
+
+			@Override
+			protected Long get(Long[] array, int index) {
+				return array[index];
+			}
+		});
 		map.put(Arrays.class, new ArraysJsonSerializer());
 
 		// strings
