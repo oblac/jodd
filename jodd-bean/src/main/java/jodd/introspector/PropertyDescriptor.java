@@ -186,4 +186,52 @@ public class PropertyDescriptor extends Descriptor {
 		return null;
 	}
 
+	// ---------------------------------------------------------------- resolvers
+
+	/**
+	 * Resolves key type for given property descriptor.
+	 */
+	public Class resolveKeyType(boolean declared) {
+		Class keyType = null;
+
+		Getter getter = getGetter(declared);
+
+		if (getter != null) {
+			keyType = getter.getGetterRawKeyComponentType();
+		}
+
+		if (keyType == null) {
+			FieldDescriptor fieldDescriptor = getFieldDescriptor();
+
+			if (fieldDescriptor != null) {
+				keyType = fieldDescriptor.getRawKeyComponentType();
+			}
+		}
+
+		return keyType;
+	}
+
+	/**
+	 * Resolves component type for given property descriptor.
+	 */
+	public Class resolveComponentType(boolean declared) {
+		Class componentType = null;
+
+		Getter getter = getGetter(declared);
+
+		if (getter != null) {
+			componentType = getter.getGetterRawComponentType();
+		}
+
+		if (componentType == null) {
+			FieldDescriptor fieldDescriptor = getFieldDescriptor();
+
+			if (fieldDescriptor != null) {
+				componentType = fieldDescriptor.getRawComponentType();
+			}
+		}
+
+		return componentType;
+	}
+
 }
