@@ -4,11 +4,13 @@ package jodd.json;
 
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.ArraysUtil;
 
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -68,6 +70,15 @@ public class BeanSerializer {
 			}
 
 			if (propertyName != null) {
+				FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
+
+				if (fieldDescriptor != null) {
+					if (Modifier.isTransient(fieldDescriptor.getField().getModifiers())) {
+						// ignore properties with transient fields
+						continue;
+					}
+				}
+
 				onProperty(propertyName, propertyType, propertyDescriptor);
 			}
 		}
