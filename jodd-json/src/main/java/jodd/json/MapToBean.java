@@ -2,10 +2,18 @@
 
 package jodd.json;
 
-import jodd.bean.BeanUtil;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
+import jodd.introspector.FieldDescriptor;
+import jodd.introspector.PropertyDescriptor;
+import jodd.introspector.Setter;
+import jodd.typeconverter.TypeConverterManager;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,10 +21,44 @@ import java.util.Map;
  */
 public class MapToBean {
 
+	protected boolean declared = true;
+	protected final String classMetadataName;
+
+	public MapToBean(String classMetadataName) {
+		this.classMetadataName = classMetadataName;
+	}
+
 	/**
-	 * Converts map to bean.
+	 * Converts map to target type.
 	 */
-	public void map2bean(Map map, Object target, String classMetadataName) {
+	public Object map2bean(Map map, Class targetType) {
+		Object target = null;
+
+		// create targets type
+		String className = (String) map.get(classMetadataName);
+
+		if (className == null) {
+			if (targetType == null) {
+				// nothing to do, no information about target type found
+				target = map;
+			}
+		}
+		else {
+			try {
+				targetType = ClassLoaderUtil.loadClass(className);
+			} catch (ClassNotFoundException cnfex) {
+				throw new JsonException(cnfex);
+			}
+		}
+
+		if (target == null) {
+			target = JsonParserUtil.newObjectInstance(targetType);
+		}
+
+		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
+
+		boolean targetIsMap = target instanceof Map;
+
 		for (Object key : map.keySet()) {
 			String keyName = key.toString();
 
@@ -26,33 +68,150 @@ public class MapToBean {
 				}
 			}
 
+			PropertyDescriptor pd = cd.getPropertyDescriptor(keyName, declared);
+
+			if (!targetIsMap && pd == null) {
+				// target property does not exist, continue
+				continue;
+			}
+
+			// value is one of JSON basic types, like Number, Map, List...
 			Object value = map.get(key);
 
+			Class propertyType = pd == null ? null : pd.getType();
+			Class componentType = pd == null ? null : pd.resolveComponentType(true);
+
 			if (value != null) {
-				Class propertyType = BeanUtil.getDeclaredPropertyType(target, keyName);
+				if (value instanceof List) {
+					if (componentType != null && componentType != String.class) {
+						value = generifyList((List) value, componentType);
+					}
+				}
+				else if (value instanceof Map) {
+					// if the value we want to inject is a Map...
+					if (ReflectUtil.isSubclassOrEqual(propertyType, Map.class) == false) {
+						// ... and if target is NOT a map
+						value = map2bean((Map) value, propertyType);
+					}
+					else {
+						// target is also a Map, but we might need to generify it
+						Class keyType = pd == null ? null : pd.resolveKeyType(true);
 
-				if (propertyType != null) {
-					if (value instanceof Map && (ReflectUtil.isSubclass(propertyType, Map.class) == false)) {
-						Object newValue = newObjectInstance(propertyType);
-
-						map2bean((Map) value, newValue, classMetadataName);
-
-						value = newValue;
+						if (keyType != String.class || componentType != String.class) {
+							// generify
+							value = generifyMap((Map) value, keyType, componentType);
+						}
 					}
 				}
 			}
 
-			BeanUtil.setDeclaredPropertyForcedSilent(target, keyName, value);
+			if (targetIsMap) {
+				((Map)target).put(keyName, value);
+			}
+			else {
+				try {
+					setValue(target, pd, value);
+				} catch (Exception ignore) {
+					ignore.printStackTrace();
+				}
+			}
+		}
+
+		return target;
+	}
+
+	private Object generifyList(List list, Class componentType) {
+		for (int i = 0; i < list.size(); i++) {
+			Object element = list.get(i);
+
+			if (element != null) {
+				if (element instanceof Map) {
+					Object bean = map2bean((Map) element, componentType);
+					list.set(i, bean);
+				} else {
+					Object value = convert(element, componentType);
+					list.set(i, value);
+				}
+			}
+		}
+
+		return list;
+	}
+
+	private void setValue(Object target, PropertyDescriptor pd, Object value) throws InvocationTargetException, IllegalAccessException {
+		Class propertyType;
+
+		Setter setter = pd.getSetter(true);
+		if (setter != null) {
+			if (value != null) {
+				propertyType = setter.getSetterRawType();
+				value = JsonParserUtil.convertType(value, propertyType);
+			}
+			setter.invokeSetter(target, value);
+		}
+		else {
+			FieldDescriptor fd = pd.getFieldDescriptor();
+			if (fd != null) {
+				if (value != null) {
+					propertyType = fd.getRawType();
+					value = JsonParserUtil.convertType(value, propertyType);
+				}
+				fd.getField().set(target, value);
+			}
 		}
 	}
 
-	protected Object newObjectInstance(Class targetType) {
+	protected <K,V> Map<K, V> generifyMap(Map<Object, Object> map, Class<K> keyType, Class<V> valueType) {
+
+		if (keyType == String.class) {
+			// only value type is changed, we can make value replacements
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
+				Object value = entry.getValue();
+				Object newValue = convert(value, valueType);
+
+				if (value != newValue) {
+					entry.setValue(newValue);
+				}
+			}
+			return (Map<K, V>) map;
+		}
+
+		// key is changed too, we need a new map
+		Map<K, V> newMap = new HashMap<K, V>(map.size());
+
+		for (Map.Entry<Object, Object> entry : map.entrySet()) {
+			Object key = entry.getKey();
+			Object newKey = convert(key, keyType);
+
+			Object value = entry.getValue();
+			Object newValue = convert(value, valueType);
+
+			newMap.put((K)newKey, (V)newValue);
+		}
+
+		return newMap;
+	}
+
+	protected Object convert(Object value, Class targetType) {
+		Class valueClass = value.getClass();
+
+		if (valueClass == targetType) {
+			return value;
+		}
+
+		if (value instanceof Map) {
+			if (targetType == Map.class) {
+				return value;
+			}
+
+			return map2bean((Map) value, targetType);
+		}
+
 		try {
-			Constructor ctor = targetType.getDeclaredConstructor();
-			ctor.setAccessible(true);
-			return ctor.newInstance();
-		} catch (Exception e) {
-			throw new JsonException(e);
+			return TypeConverterManager.convertType(value, targetType);
+		}
+		catch (Exception ex) {
+			throw new JsonException("Type conversion failed", ex);
 		}
 	}
 

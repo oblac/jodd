@@ -5,15 +5,11 @@ package jodd.json;
 import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.CtorDescriptor;
 import jodd.introspector.FieldDescriptor;
-import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
 import jodd.json.meta.JsonAnnotationManager;
-import jodd.typeconverter.TypeConverterManager;
 import jodd.util.CharUtil;
-import jodd.util.ClassLoaderUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
@@ -22,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static jodd.json.JsonParserUtil.convertType;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -39,12 +37,12 @@ public class JsonParser {
 	private static final String KEYS = "keys";
 	private static final String VALUES = "values";
 
-	private static final MapToBean mapToBean = new MapToBean();
-
 	protected int ndx = 0;
 	protected char[] input;
 	protected int total;
 	protected Path path;
+	protected Class rootType;
+	protected MapToBean mapToBean;
 
 	public JsonParser() {
 		text = new char[512];
@@ -57,6 +55,10 @@ public class JsonParser {
 		this.ndx = 0;
 		this.textLen = 0;
 		this.path = new Path();
+
+		if (classMetadataName != null) {
+			mapToBean = new MapToBean(classMetadataName);
+		}
 	}
 
 	// ---------------------------------------------------------------- mappings
@@ -67,7 +69,8 @@ public class JsonParser {
 	 * Maps a class to JSONs root.
 	 */
 	public JsonParser map(Class target) {
-		return map(null, target);
+		rootType = target;
+		return this;
 	}
 
 	/**
@@ -76,6 +79,10 @@ public class JsonParser {
 	 * generics).
 	 */
 	public JsonParser map(String path, Class target) {
+		if (path == null) {
+			rootType = target;
+			return this;
+		}
 		if (mappings == null) {
 			mappings = new HashMap<Path, Class>();
 		}
@@ -145,7 +152,8 @@ public class JsonParser {
 	@SuppressWarnings("unchecked")
 	public <T> T parse(String input, Class<T> targetType) {
 		char[] chars = UnsafeUtil.getChars(input);
-		return _parse(chars, targetType);
+		rootType = targetType;
+		return _parse(chars);
 	}
 
 	/**
@@ -153,7 +161,7 @@ public class JsonParser {
 	 */
 	public <T> T parse(String input) {
 		char[] chars = UnsafeUtil.getChars(input);
-		return _parse(chars, null);
+		return _parse(chars);
 	}
 
 	/**
@@ -161,17 +169,19 @@ public class JsonParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T parse(char[] input, Class<?> targetType) {
-		return _parse(input, targetType);
+		rootType = targetType;
+		return _parse(input);
 	}
 
 	/**
 	 * Parses input JSON char array.
 	 */
 	public <T> T parse(char[] input) {
-		return _parse(input, null);
+		return _parse(input);
 	}
 
-	private <T> T _parse(char[] input, Class targetType) {
+
+	private <T> T _parse(char[] input) {
 		this.input = input;
 		this.total = input.length;
 
@@ -182,7 +192,7 @@ public class JsonParser {
 		Object value;
 
 		try {
-			value = parseValue(targetType, null, null);
+			value = parseValue(rootType, null, null);
 		}
 		catch (IndexOutOfBoundsException iofbex) {
 			syntaxError("End of JSON");
@@ -194,6 +204,18 @@ public class JsonParser {
 		if (ndx != total) {
 			syntaxError("Trailing chars");
 			return null;
+		}
+
+		// convert map to target type
+
+		if (classMetadataName != null && rootType == null) {
+			if (value instanceof Map) {
+				Map map = (Map) value;
+
+				value = mapToBean.map2bean(map, null);
+			} else if (value instanceof List) {
+				// todo
+			}
 		}
 
 		return (T) value;
@@ -610,7 +632,7 @@ public class JsonParser {
 
 		if (classMetadataName == null) {
 			// create instance of target type, no 'class' information
-			target = newObjectInstance(targetType);
+			target = JsonParserUtil.newObjectInstance(targetType);
 
 			isTargetTypeMap = isTargetRealTypeMap;
 		} else {
@@ -664,8 +686,8 @@ public class JsonParser {
 
 				if (pd != null) {
 					propertyType = pd.getType();
-					keyType = resolveKeyType(pd);
-					componentType = resolveComponentType(pd);
+					keyType = pd.resolveKeyType(true);
+					componentType = pd.resolveComponentType(true);
 				}
 			}
 
@@ -720,24 +742,7 @@ public class JsonParser {
 
 		// convert Map to target type
 		if (classMetadataName != null) {
-			Map map = (Map) target;
-
-			String className = (String) map.get(classMetadataName);
-
-			if (className != null) {
-				try {
-					targetType = ClassLoaderUtil.loadClass(className);
-				} catch (ClassNotFoundException cnfex) {
-					throw new JsonException(cnfex);
-				}
-			}
-
-			// do conversion
-			Object newTarget = newObjectInstance(targetType);
-
-			mapToBean.map2bean(map, newTarget, classMetadataName);
-
-			target = newTarget;
+			target = mapToBean.map2bean((Map) target, targetType);
 		}
 
 		return target;
@@ -796,28 +801,6 @@ public class JsonParser {
 	// ---------------------------------------------------------------- object tools
 
 	/**
-	 * Creates new object or a <code>HashMap</code> if type is not specified.
-	 */
-	protected Object newObjectInstance(Class targetType) {
-		if (targetType == null) {
-			return new HashMap();
-		}
-
-		if (targetType == Map.class) {
-			return new HashMap();
-		}
-
-		ClassDescriptor cd = ClassIntrospector.lookup(targetType);
-
-		try {
-			CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
-			return ctorDescriptor.getConstructor().newInstance();
-		} catch (Exception e) {
-			throw new JsonException(e);
-		}
-	}
-
-	/**
 	 * Creates new type for JSON array objects.
 	 * It should (?) always return a list, for performance reasons.
 	 * Later, the list will be converted into the target type.
@@ -832,52 +815,6 @@ public class JsonParser {
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
-	}
-
-	/**
-	 * Resolves key type for given property descriptor.
-	 */
-	protected Class resolveKeyType(PropertyDescriptor pd) {
-		Class keyType = null;
-
-		Getter getter = pd.getGetter(true);
-
-		if (getter != null) {
-			keyType = getter.getGetterRawKeyComponentType();
-		}
-
-		if (keyType == null) {
-			FieldDescriptor fieldDescriptor = pd.getFieldDescriptor();
-
-			if (fieldDescriptor != null) {
-				keyType = fieldDescriptor.getRawKeyComponentType();
-			}
-		}
-
-		return keyType;
-	}
-
-	/**
-	 * Resolves component type for given property descriptor.
-	 */
-	protected Class resolveComponentType(PropertyDescriptor pd) {
-		Class componentType = null;
-
-		Getter getter = pd.getGetter(true);
-
-		if (getter != null) {
-			componentType = getter.getGetterRawComponentType();
-		}
-
-		if (componentType == null) {
-			FieldDescriptor fieldDescriptor = pd.getFieldDescriptor();
-
-			if (fieldDescriptor != null) {
-				componentType = fieldDescriptor.getRawComponentType();
-			}
-		}
-
-		return componentType;
 	}
 
 	/**
@@ -905,24 +842,6 @@ public class JsonParser {
 			}
 		} catch (Exception ex) {
 			throw new JsonException(ex);
-		}
-	}
-
-	/**
-	 * Converts type of the given value.
-	 */
-	protected Object convertType(Object value, Class targetType) {
-		Class valueClass = value.getClass();
-
-		if (valueClass == targetType) {
-			return value;
-		}
-
-		try {
-			return TypeConverterManager.convertType(value, targetType);
-		}
-		catch (Exception ex) {
-			throw new JsonException("Type conversion failed", ex);
 		}
 	}
 
