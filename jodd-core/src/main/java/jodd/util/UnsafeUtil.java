@@ -56,39 +56,40 @@ public class UnsafeUtil {
 	 * If not, <code>toCharArray()</code> will be called.
 	 */
 	public static char[] getChars(String string) {
-		if (UNSAFE != null) {
-			char[] value = (char[]) UNSAFE.getObject(string, STRING_VALUE_FIELD_OFFSET);
+		if (UNSAFE == null) {
+			return string.toCharArray();
+		}
 
-			if (STRING_OFFSET_FIELD_OFFSET != -1) {
-				// old String version with offset and count
-				int offset = UNSAFE.getInt(string, STRING_OFFSET_FIELD_OFFSET);
-				int count = UNSAFE.getInt(string, STRING_COUNT_FIELD_OFFSET);
+		char[] value = (char[]) UNSAFE.getObject(string, STRING_VALUE_FIELD_OFFSET);
 
-				if (offset == 0 && count == value.length) {
-					// no need to copy
-					return value;
+		if (STRING_OFFSET_FIELD_OFFSET != -1) {
+			// old String version with offset and count
+			int offset = UNSAFE.getInt(string, STRING_OFFSET_FIELD_OFFSET);
+			int count = UNSAFE.getInt(string, STRING_COUNT_FIELD_OFFSET);
 
-				} else {
-					char result[] = new char[count];
-					System.arraycopy(value, offset, result, 0, count);
-					return result;
-				}
+			if (offset == 0 && count == value.length) {
+				// no need to copy
+				return value;
 
 			} else {
-				return value;
+				char result[] = new char[count];
+				System.arraycopy(value, offset, result, 0, count);
+				return result;
 			}
+
 		} else {
-			return string.toCharArray();
+			return value;
 		}
 	}
 
 	/**
-	 * Creates mutable strings from given char array.
+	 * Creates (mutable) string from given char array.
 	 */
-	public static String createMutableString(char[] chars) {
+	public static String createString(char[] chars) {
 		if (UNSAFE == null) {
-			return null;
+			return new String(chars);
 		}
+
 		String mutable = new String();
 		UNSAFE.putObject(mutable, STRING_VALUE_FIELD_OFFSET, chars);
 		if (STRING_COUNT_FIELD_OFFSET != -1) {
