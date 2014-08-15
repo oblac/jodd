@@ -144,8 +144,8 @@ public class JsonParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T parse(String input, Class<T> targetType) {
-		map(targetType);
-		return parse(input);
+		char[] chars = UnsafeUtil.getChars(input);
+		return _parse(chars, targetType);
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class JsonParser {
 	 */
 	public <T> T parse(String input) {
 		char[] chars = UnsafeUtil.getChars(input);
-		return parse(chars);
+		return _parse(chars, null);
 	}
 
 	/**
@@ -161,22 +161,23 @@ public class JsonParser {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T parse(char[] input, Class<?> targetType) {
-		map(targetType);
-		return parse(input);
+		return _parse(input, targetType);
 	}
 
 	/**
 	 * Parses input JSON char array.
 	 */
 	public <T> T parse(char[] input) {
+		return _parse(input, null);
+	}
+
+	private <T> T _parse(char[] input, Class targetType) {
 		this.input = input;
 		this.total = input.length;
 
 		reset();
 
 		skipWhiteSpaces();
-
-		Class targetType = replaceWithMappedTypeForPath(null);
 
 		Object value;
 
@@ -213,15 +214,15 @@ public class JsonParser {
 		switch (c) {
 			case '"':
 				ndx++;
-				String string = parseStringContent();
+				Object string = parseStringContent();
 
 				valueConverter = lookupValueConverter();
 				if (valueConverter != null) {
 					return valueConverter.convert(string);
 				}
 
-				if (targetType != null) {
-					return convertType(string, targetType);
+				if (targetType != null && targetType != String.class) {
+					string = convertType(string, targetType);
 				}
 				return string;
 
@@ -244,7 +245,7 @@ public class JsonParser {
 			case '8':
 			case '9':
 			case '-':
-				Number number = parseNumber();
+				Object number = parseNumber(targetType);
 
 				valueConverter = lookupValueConverter();
 				if (valueConverter != null) {
@@ -252,19 +253,17 @@ public class JsonParser {
 				}
 
 				if (targetType != null) {
-					return convertType(number, targetType);
+					number = convertType(number, targetType);
 				}
 				return number;
 
 			case 'n':
 				ndx++;
 				if (match(N_ULL)) {
-
 					valueConverter = lookupValueConverter();
 					if (valueConverter != null) {
 						return valueConverter.convert(null);
 					}
-
 					return null;
 				}
 				break;
@@ -272,30 +271,34 @@ public class JsonParser {
 			case 't':
 				ndx++;
 				if (match(T_RUE)) {
+					Object value = Boolean.TRUE;
+
 					valueConverter = lookupValueConverter();
 					if (valueConverter != null) {
-						return valueConverter.convert(Boolean.TRUE);
+						return valueConverter.convert(value);
 					}
 
 					if (targetType != null) {
-						return convertType(Boolean.TRUE, targetType);
+						value = convertType(value, targetType);
 					}
-					return Boolean.TRUE;
+					return value;
 				}
 				break;
 
 			case 'f':
 				ndx++;
 				if (match(F_ALSE)) {
+					Object value = Boolean.FALSE;
+
 					valueConverter = lookupValueConverter();
 					if (valueConverter != null) {
-						return valueConverter.convert(Boolean.FALSE);
+						return valueConverter.convert(value);
 					}
 
 					if (targetType != null) {
-						return convertType(Boolean.FALSE, targetType);
+						value = convertType(value, targetType);
 					}
-					return Boolean.FALSE;
+					return value;
 				}
 				break;
 		}
@@ -328,7 +331,7 @@ public class JsonParser {
 			char c = input[ndx];
 
 			if (c == '\"') {
-				// no escapes found, just use existing folder
+				// no escapes found, just use existing string
 				ndx++;
 				return new String(input, startNdx, ndx - startNdx - 1);
 			}
@@ -430,7 +433,7 @@ public class JsonParser {
 	/**
 	 * Parses JSON numbers.
 	 */
-	protected Number parseNumber() {
+	protected Number parseNumber(Class targetType) {
 		int startIndex = ndx;
 
 		char c = input[ndx];
@@ -449,7 +452,7 @@ public class JsonParser {
 
 			c = input[ndx];
 
-			if (CharUtil.isDigit(c)) {
+			if (c >= '0' && c <= '9') {
 				ndx++;
 				continue;
 			}
@@ -470,6 +473,31 @@ public class JsonParser {
 		}
 
 		String value = String.valueOf(input, startIndex, ndx - startIndex);
+
+		if (targetType != null) {
+			// convert to target type
+
+			if (targetType == Integer.class || targetType == int.class) {
+				return Integer.valueOf(value);
+			}
+			if (targetType == Long.class || targetType == long.class) {
+				return Long.valueOf(value);
+			}
+			if (targetType == Double.class || targetType == double.class) {
+				return Double.valueOf(value);
+			}
+			if (targetType == Float.class || targetType == float.class) {
+				return Float.valueOf(value);
+			}
+			if (targetType == Short.class || targetType == short.class) {
+				return Short.valueOf(value);
+			}
+			if (targetType == Byte.class || targetType == byte.class) {
+				return Byte.valueOf(value);
+			}
+		}
+
+		// try to guess
 
 		if (isDouble) {
 			return Double.valueOf(value);
@@ -511,8 +539,8 @@ public class JsonParser {
 		return false;
 	}
 
-	private static BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
-	private static BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
+	private static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
+	private static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
 
 	// ---------------------------------------------------------------- array
 
@@ -530,7 +558,7 @@ public class JsonParser {
 
 		componentType = replaceWithMappedTypeForPath(componentType);
 
-		List target = newArrayInstance(targetType);
+		List<Object> target = newArrayInstance(targetType);
 
 		boolean koma = false;
 
@@ -551,10 +579,6 @@ public class JsonParser {
 
 			Object value = parseValue(componentType, null, null);
 
-			if (componentType != null) {
-				value = convertType(value, componentType);
-			}
-
 			target.add(value);
 
 			skipWhiteSpaces();
@@ -572,7 +596,7 @@ public class JsonParser {
 		path.pop();
 
 		if (targetType != null) {
-			return convertType(target, targetType);
+			return convertListToArray(target, targetType, componentType);
 		}
 
 		return target;
@@ -817,17 +841,9 @@ public class JsonParser {
 	 * It should (?) always return a list, for performance reasons.
 	 * Later, the list will be converted into the target type.
 	 */
-	protected List newArrayInstance(Class targetType) {
-		if (targetType == null) {
-			return new ArrayList();
-		}
-
-		if (targetType.isArray()) {
-			return new ArrayList();
-		}
-
-	    if (targetType == List.class) {
-			return new ArrayList();
+	protected List<Object> newArrayInstance(Class targetType) {
+		if (targetType == null || targetType == List.class || targetType.isArray()) {
+			return new ArrayList<Object>();
 		}
 
 		try {
@@ -927,6 +943,54 @@ public class JsonParser {
 		catch (Exception ex) {
 			throw new JsonException("Type conversion failed", ex);
 		}
+	}
+
+	/**
+	 * Converts list to target array. List's elements are already converted.
+	 */
+	protected Object convertListToArray(List list, Class targetType, Class componentType) {
+		if (!targetType.isArray()) {
+			return list;
+		}
+		int size = list.size();
+
+		// convert list to array
+		if (componentType == Long.class) {
+			Long[] array = new Long[size];
+			for (int i = 0; i < list.size(); i++) {
+				array[i] = (Long) list.get(i);
+			}
+			return array;
+		}
+		if (componentType == long.class) {
+			long[] array = new long[size];
+			for (int i = 0; i < list.size(); i++) {
+				Long number = (Long) list.get(i);
+				if (number != null) {
+					array[i] = number.longValue();
+				}
+			}
+			return array;
+		}
+		if (componentType == Integer.class) {
+			Integer[] array = new Integer[size];
+			for (int i = 0; i < list.size(); i++) {
+				array[i] = (Integer) list.get(i);
+			}
+			return array;
+		}
+		if (componentType == int.class) {
+			int[] array = new int[size];
+			for (int i = 0; i < list.size(); i++) {
+				Integer number = (Integer) list.get(i);
+				if (number != null) {
+					array[i] = number.intValue();
+				}
+			}
+			return array;
+		}
+
+		return convertType(list, targetType);
 	}
 
 	// ---------------------------------------------------------------- error
