@@ -213,8 +213,6 @@ public class JsonParser {
 				Map map = (Map) value;
 
 				value = mapToBean.map2bean(map, null);
-			} else if (value instanceof List) {
-				// todo
 			}
 		}
 
