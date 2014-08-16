@@ -11,7 +11,6 @@ import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Modifier;
-import java.util.List;
 
 /**
  * Bean visitor that serializes properties of a bean.
@@ -99,19 +98,7 @@ public class BeanSerializer {
 
 		// + all collections are not serialized by default
 
-		if (include == true) {
-			if (propertyType != null && !jsonContext.jsonSerializer.includeCollections) {
-
-				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
-
-				if (propertyTypeClassDescriptor.isCollection()) {
-					include = false;
-				}
-				if (propertyTypeClassDescriptor.isMap()) {
-					include = false;
-				}
-			}
-		}
+		include = jsonContext.matchIgnoredPropertyTypes(propertyType, include);
 
 		// + annotations
 
@@ -128,23 +115,7 @@ public class BeanSerializer {
 
 		// + path queries: excludes/includes
 
-		List<PathQuery> pathQueries = jsonContext.jsonSerializer.pathQueries;
-
-		if (pathQueries != null) {
-			for (int iteration = 0; iteration < 2; iteration++) {
-				for (PathQuery pathQuery : pathQueries) {
-					if (iteration == 0 && !pathQuery.isWildcard()) {
-						continue;
-					}
-					if (iteration == 1 && pathQuery.isWildcard()) {
-						continue;
-					}
-					if (pathQuery.matches(currentPath)) {
-						include = pathQuery.isIncluded();
-					}
-				}
-			}
-		}
+		include = jsonContext.matchPathToQueries(include);
 
 		// done
 

@@ -111,6 +111,13 @@ public class JsonSerializer {
 		return this;
 	}
 
+	/**
+	 * Returns <code>true</code> if serialization is deep.
+	 */
+	public boolean isDeep() {
+		return includeCollections;
+	}
+
 	// ---------------------------------------------------------------- serialize
 
 	/**

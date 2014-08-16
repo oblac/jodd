@@ -2,10 +2,13 @@
 
 package jodd.json;
 
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.util.StringPool;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static jodd.util.StringPool.NULL;
@@ -118,7 +121,7 @@ public class JsonContext {
 		return b;
 	}
 
-	// ---------------------------------------------------------------- wirte
+	// ---------------------------------------------------------------- write
 
 	/**
 	 * Writes open object sign.
@@ -260,5 +263,54 @@ public class JsonContext {
 			throw new JsonException(ioex);
 		}
 	}
+
+	// ---------------------------------------------------------------- matchers
+
+	/**
+	 * Matches property types that are ignored by default.
+	 */
+	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean include) {
+		if (include == true) {
+			if (propertyType != null && !jsonSerializer.includeCollections) {
+				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
+
+				if (propertyTypeClassDescriptor.isCollection()) {
+					include = false;
+				}
+				if (propertyTypeClassDescriptor.isMap()) {
+					include = false;
+				}
+			}
+		}
+		return include;
+	}
+
+
+	/**
+	 * Matched current path to queries. If match is found, provided include
+	 * value may be changed.
+	 */
+	public boolean matchPathToQueries(boolean include) {
+		List<PathQuery> pathQueries = jsonSerializer.pathQueries;
+
+		if (pathQueries != null) {
+			for (int iteration = 0; iteration < 2; iteration++) {
+				for (PathQuery pathQuery : pathQueries) {
+					if (iteration == 0 && !pathQuery.isWildcard()) {
+						continue;
+					}
+					if (iteration == 1 && pathQuery.isWildcard()) {
+						continue;
+					}
+					if (pathQuery.matches(path)) {
+						include = pathQuery.isIncluded();
+					}
+				}
+			}
+		}
+
+		return include;
+	}
+
 
 }
