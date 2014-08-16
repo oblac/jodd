@@ -52,7 +52,7 @@ public class BeanSerializer {
 
 		if (classMetadataName != null) {
 			// process first 'meta' fields 'class'
-			onProperty(classMetadataName, null, null);
+			onProperty(classMetadataName, null, null, false);
 		}
 
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
@@ -65,19 +65,16 @@ public class BeanSerializer {
 			if (getter != null) {
 				propertyName = propertyDescriptor.getName();
 				propertyType = propertyDescriptor.getType();
-			}
 
-			if (propertyName != null) {
+				boolean isTransient = false;
+				// check for transient flag
 				FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
 
 				if (fieldDescriptor != null) {
-					if (Modifier.isTransient(fieldDescriptor.getField().getModifiers())) {
-						// ignore properties with transient fields
-						continue;
-					}
+					isTransient = Modifier.isTransient(fieldDescriptor.getField().getModifiers());
 				}
 
-				onProperty(propertyName, propertyType, propertyDescriptor);
+				onProperty(propertyName, propertyType, propertyDescriptor, isTransient);
 			}
 		}
 	}
@@ -85,7 +82,7 @@ public class BeanSerializer {
 	/**
 	 * Invoked on each property.
 	 */
-	protected boolean onProperty(String propertyName, Class propertyType, PropertyDescriptor pd) {
+	protected boolean onProperty(String propertyName, Class propertyType, PropertyDescriptor pd, boolean isTransient) {
 		Path currentPath = jsonContext.path;
 
 		currentPath.push(propertyName);
@@ -94,14 +91,25 @@ public class BeanSerializer {
 
 		boolean include = !typeData.strict;
 
+		// + don't include transient fields
+
+		if (isTransient) {
+			include = false;
+		}
+
 		// + all collections are not serialized by default
 
-		if (propertyType != null && !jsonContext.jsonSerializer.includeCollections) {
+		if (include == true) {
+			if (propertyType != null && !jsonContext.jsonSerializer.includeCollections) {
 
-			ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
+				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
 
-			if (propertyTypeClassDescriptor.isCollection()) {
-				include = false;
+				if (propertyTypeClassDescriptor.isCollection()) {
+					include = false;
+				}
+				if (propertyTypeClassDescriptor.isMap()) {
+					include = false;
+				}
 			}
 		}
 
