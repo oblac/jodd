@@ -24,6 +24,8 @@ public class ObjectJsonSerializer implements TypeJsonSerializer<Object> {
 		beanVisitor.serialize();
 
 		jsonContext.writeCloseObject();
+
+		jsonContext.unuseValue();
 	}
 
 }

@@ -30,7 +30,8 @@ import static org.junit.Assert.assertTrue;
 
 public class JSONSerializationTest {
 
-	private Person jodder, modesty, pedro;
+	private Person jodder;
+	private Person modesty;
 	private Map colors;
 	private List people;
 	private Network network;
@@ -42,7 +43,7 @@ public class JSONSerializationTest {
 	public void setUp() {
 		DataCreator dataCreator = new DataCreator();
 		pedroZip = new Zipcode("848485");
-		pedro = dataCreator.createPedro();
+		Person pedro = dataCreator.createPedro();
 		jodder = dataCreator.createJodder();
 		modesty = dataCreator.createModesty();
 		colors = dataCreator.createColorMap();

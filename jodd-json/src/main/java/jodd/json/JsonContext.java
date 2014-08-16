@@ -7,9 +7,8 @@ import jodd.introspector.ClassIntrospector;
 import jodd.util.StringPool;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static jodd.util.StringPool.NULL;
 
@@ -22,13 +21,13 @@ public class JsonContext {
 
 	protected final JsonSerializer jsonSerializer;
 	protected final Appendable out;
-	protected final Set<Integer> bag;
+	protected final List<Object> bag;
 	protected final Path path;
 
 	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable) {
 		this.jsonSerializer = jsonSerializer;
 		this.out = appendable;
-		this.bag = new HashSet<Integer>();
+		this.bag = new ArrayList<Object>();
 		this.path = new Path();
 	}
 
@@ -38,12 +37,29 @@ public class JsonContext {
 
 	/**
 	 * Returns <code>true</code> if object has been processed during serialization.
-	 * Used to prevent circular dependencies.
+	 * Used to prevent circular dependencies. Objects are matched using the identity.
 	 */
 	public boolean isUsed(Object value) {
-		int i = System.identityHashCode(value);
-		return bag.add(Integer.valueOf(i)) == false;
+		for (int i = 0; i < bag.size(); i++) {
+			Object o = bag.get(i);
+
+			if (o == value) {
+				return true;
+			}
+		}
+
+		bag.add(value);
+
+		return false;
 	}
+
+	/**
+	 * Removes object from current bag, indicating it is not anymore in the path.
+	 */
+	public void unuseValue() {
+		bag.remove(bag.size() - 1);
+	}
+
 
 	/**
 	 * Returns current path.
