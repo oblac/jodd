@@ -13,6 +13,7 @@ public class JSONAnnotationData<A extends Annotation> extends AnnotationDataRead
 
 	protected String name;
 	protected boolean included;
+	protected boolean strict;
 
 	protected JSONAnnotationData(A annotation) {
 		super(annotation);
@@ -24,5 +25,9 @@ public class JSONAnnotationData<A extends Annotation> extends AnnotationDataRead
 
 	public boolean isIncluded() {
 		return included;
+	}
+
+	public boolean isStrict() {
+		return strict;
 	}
 }

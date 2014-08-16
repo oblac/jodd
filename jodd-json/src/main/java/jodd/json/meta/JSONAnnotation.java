@@ -34,6 +34,7 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 
 		jad.name = readString(annotation, "name", null);
 		jad.included = readBoolean(annotation, "include", true);
+		jad.strict = readBoolean(annotation, "strict", false);
 
 		return jad;
 	}

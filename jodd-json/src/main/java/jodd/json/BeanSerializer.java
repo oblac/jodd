@@ -92,7 +92,7 @@ public class BeanSerializer {
 
 		// determine if name should be included/excluded
 
-		boolean include = true;
+		boolean include = !typeData.strict;
 
 		// + all collections are not serialized by default
 

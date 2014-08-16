@@ -174,7 +174,11 @@ public class JsonAnnotationManager {
 			excs = EMPTY;
 		}
 
-		return new TypeData(incs, excs, false);
+		// type
+
+		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotationData(type);
+
+		return new TypeData(incs, excs, data != null && data.isStrict());
 	}
 
 }

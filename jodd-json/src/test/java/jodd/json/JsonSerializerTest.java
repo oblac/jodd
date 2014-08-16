@@ -3,6 +3,8 @@
 package jodd.json;
 
 import jodd.JoddJson;
+import jodd.json.meta.JSON;
+import jodd.json.meta.JsonAnnotationManager;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
@@ -13,6 +15,8 @@ import java.util.Map;
 import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JsonSerializerTest {
 
@@ -181,6 +185,84 @@ public class JsonSerializerTest {
 		String json = new JsonSerializer().serialize(JoddJson.class);
 
 		assertEquals("\"" + JoddJson.class.getName() + "\"", json);
+	}
+
+	@JSON(strict = false)
+	public static class Cook {
+		// no annotation
+		private String aaa = "AAA";
+		private String bbb = "BBB";
+		private String ccc = "CCC";
+
+		public String getAaa() {
+			return aaa;
+		}
+
+		public void setAaa(String aaa) {
+			this.aaa = aaa;
+		}
+
+		@JSON(include = false)
+		public String getBbb() {
+			return bbb;
+		}
+
+		public void setBbb(String bbb) {
+			this.bbb = bbb;
+		}
+
+		@JSON(include = true)
+		public String getCcc() {
+			return ccc;
+		}
+
+		public void setCcc(String ccc) {
+			this.ccc = ccc;
+		}
+	}
+
+	@JSON(strict = true)
+	public static class MasterCook extends Cook {
+	}
+
+	@Test
+	public void testStrictMode() {
+		Cook cook = new Cook();
+		JsonAnnotationManager jam = JsonAnnotationManager.getInstance();
+
+		JsonAnnotationManager.TypeData typeData = jam.lookupTypeData(Cook.class);
+
+		assertEquals(1, typeData.includes.length);
+		assertEquals(1, typeData.excludes.length);
+
+		assertEquals("ccc", typeData.includes[0]);
+		assertEquals("bbb", typeData.excludes[0]);
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+
+		String json = jsonSerializer.serialize(cook);
+
+		assertTrue(json.contains("\"aaa\""));
+		assertFalse(json.contains("\"bbb\""));
+		assertTrue(json.contains("\"ccc\""));
+
+		// now, strict = true, serialize only annotated properties!
+
+		MasterCook masterCook = new MasterCook();
+
+		typeData = jam.lookupTypeData(MasterCook.class);
+
+		assertEquals(1, typeData.includes.length);
+		assertEquals(1, typeData.excludes.length);
+
+		assertEquals("ccc", typeData.includes[0]);
+		assertEquals("bbb", typeData.excludes[0]);
+
+		json = jsonSerializer.serialize(masterCook);
+
+		assertFalse(json.contains("\"aaa\""));
+		assertFalse(json.contains("\"bbb\""));
+		assertTrue(json.contains("\"ccc\""));
 	}
 
 }

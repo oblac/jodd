@@ -16,8 +16,15 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 public @interface JSON {
+
+	/**
+	 * Defines if JSON serialization of a class
+	 * works in a <b>strict</b> mode when only
+	 * fields with the annotation are serialized.
+	 */
+	public boolean strict() default false;
 
 	/**
 	 * Defines different property name for annotated item.

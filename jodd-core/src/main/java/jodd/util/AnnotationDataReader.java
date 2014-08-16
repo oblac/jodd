@@ -102,6 +102,19 @@ public abstract class AnnotationDataReader<A extends Annotation, D extends Annot
 	}
 
 	/**
+	 * Reads {@link AnnotationData annotation data} on provided type.
+	 * If annotation is not presented, <code>null</code> is returned.
+	 */
+	public D readAnnotationData(Class<?> type) {
+		A annotation = type.getAnnotation(annotationClass);
+		if (annotation == null) {
+			return null;
+		}
+
+		return createAnnotationData(annotation);
+	}
+
+	/**
 	 * Creates annotation data from given annotation.
 	 */
 	protected abstract D createAnnotationData(A annotation);
