@@ -23,9 +23,22 @@ public class JsonAnnotationManager {
 
 	private static final String[] EMPTY = new String[0];
 
-	private final Map<Class, String[]> includes = new HashMap<Class, String[]>();
-	private final Map<Class, String[]> excludes = new HashMap<Class, String[]>();
+	/**
+	 * Type data.
+	 */
+	public static class TypeData {
+		public final String[] includes;
+		public final String[] excludes;
+		public final boolean strict;
 
+		public TypeData(String[] includes, String[] excludes, boolean strict) {
+			this.includes = includes;
+			this.excludes = excludes;
+			this.strict = strict;
+		}
+	}
+
+	private final Map<Class, TypeData> typeDataMap = new HashMap<Class, TypeData>();
 	private final Map<String, String> names = new HashMap<String, String>();
 	private final Map<String, String> realNames = new HashMap<String, String>();
 
@@ -55,36 +68,21 @@ public class JsonAnnotationManager {
 	 * Returns all includes for given type. Returns an empty array
 	 * when no includes are defined.
 	 */
-	public String[] lookupIncludes(Class type) {
-		String[] incs = includes.get(type);
+	public TypeData lookupTypeData(Class type) {
+		TypeData typeData = typeDataMap.get(type);
 
-		if (incs == null) {
-			scanClassForAnnotations(type);
-			incs = includes.get(type);
+		if (typeData == null) {
+			typeData = scanClassForAnnotations(type);
+			typeDataMap.put(type, typeData);
 		}
 
-		return incs;
-	}
-
-	/**
-	 * Returns all excludes for given type. Returns an empty array
-	 * when no excludes are defined.
-	 */
-	public String[] lookupExcludes(Class type) {
-		String[] excs = excludes.get(type);
-
-		if (excs == null) {
-			scanClassForAnnotations(type);
-			excs = excludes.get(type);
-		}
-
-		return excs;
+		return typeData;
 	}
 
 	/**
 	 * Returns different name of a property if set by annotation.
 	 */
-	public String resolveName(Class type, String name) {
+	public String resolveJsonName(Class type, String name) {
 		String signature = type.getName().concat(StringPool.HASH).concat(name);
 
 		String newName = names.get(signature);
@@ -111,7 +109,7 @@ public class JsonAnnotationManager {
 		return jsonName;
 	}
 
-	private void scanClassForAnnotations(Class type) {
+	private TypeData scanClassForAnnotations(Class type) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
@@ -168,8 +166,6 @@ public class JsonAnnotationManager {
 			incs = EMPTY;
 		}
 
-		includes.put(type, incs);
-
 		String[] excs;
 
 		if (excludedList.size() > 0) {
@@ -178,7 +174,7 @@ public class JsonAnnotationManager {
 			excs = EMPTY;
 		}
 
-		excludes.put(type, excs);
+		return new TypeData(incs, excs, false);
 	}
 
 }

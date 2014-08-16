@@ -26,8 +26,7 @@ public class BeanSerializer {
 	private final Class type;
 
 	private int count;
-	private String[] includes;
-	private String[] excludes;
+	private JsonAnnotationManager.TypeData typeData;
 
 	public BeanSerializer(JsonContext jsonContext, Object bean) {
 		this.jsonContext = jsonContext;
@@ -40,8 +39,7 @@ public class BeanSerializer {
 
 		JsonAnnotationManager jsonAnnotationManager = JsonAnnotationManager.getInstance();
 
-		includes = jsonAnnotationManager.lookupIncludes(type);
-		excludes = jsonAnnotationManager.lookupExcludes(type);
+		typeData = jsonAnnotationManager.lookupTypeData(type);
 	}
 
 	/**
@@ -110,12 +108,12 @@ public class BeanSerializer {
 		// + annotations
 
 		if (include == true) {
-			if (ArraysUtil.contains(excludes, propertyName)) {
+			if (ArraysUtil.contains(typeData.excludes, propertyName)) {
 				include = false;
 			}
 		}
 		else {
-			if (ArraysUtil.contains(includes, propertyName)) {
+			if (ArraysUtil.contains(typeData.includes, propertyName)) {
 				include = true;
 			}
 		}
@@ -157,7 +155,7 @@ public class BeanSerializer {
 
 			// change name for properties
 
-			propertyName = JsonAnnotationManager.getInstance().resolveName(type, propertyName);
+			propertyName = JsonAnnotationManager.getInstance().resolveJsonName(type, propertyName);
 		}
 
 		jsonContext.pushName(propertyName, count > 0);
