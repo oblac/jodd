@@ -278,6 +278,10 @@ public class JSONSerializationTest {
 		wrapper.put("people", people);
 		String peopleJson = serializer.serialize(wrapper);
 		assertFalse(peopleJson.contains("["));
+
+		serializer.include("people.*");
+		peopleJson = serializer.serialize(wrapper);
+		assertTrue(peopleJson.contains("["));
 	}
 
 	@Test

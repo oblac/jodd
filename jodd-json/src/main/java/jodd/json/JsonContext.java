@@ -45,6 +45,14 @@ public class JsonContext {
 		return bag.add(Integer.valueOf(i)) == false;
 	}
 
+	/**
+	 * Returns current path.
+	 */
+	public Path getPath() {
+		return path;
+	}
+
+
 	// ---------------------------------------------------------------- serializer
 
 	/**
@@ -311,6 +319,5 @@ public class JsonContext {
 
 		return include;
 	}
-
 
 }
