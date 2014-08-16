@@ -19,13 +19,13 @@ public class JsonContext {
 
 	protected final JsonSerializer jsonSerializer;
 	protected final Appendable out;
-	protected final Set<Object> bag;
+	protected final Set<Integer> bag;
 	protected final Path path;
 
 	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable) {
 		this.jsonSerializer = jsonSerializer;
 		this.out = appendable;
-		this.bag = new HashSet<Object>();
+		this.bag = new HashSet<Integer>();
 		this.path = new Path();
 	}
 
@@ -38,7 +38,8 @@ public class JsonContext {
 	 * Used to prevent circular dependencies.
 	 */
 	public boolean isUsed(Object value) {
-		return bag.add(value) == false;
+		int i = System.identityHashCode(value);
+		return bag.add(Integer.valueOf(i)) == false;
 	}
 
 	// ---------------------------------------------------------------- serializer
