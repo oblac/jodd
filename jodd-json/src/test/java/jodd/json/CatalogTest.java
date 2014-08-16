@@ -65,7 +65,7 @@ public class CatalogTest {
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
 
-		String newJson = new JsonSerializer().includeCollections(true).serialize(catalog);
+		String newJson = new JsonSerializer().deep(true).serialize(catalog);
 
 		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
 
@@ -82,7 +82,7 @@ public class CatalogTest {
 				.useAltPaths()
 				.parse(json);
 
-		String newJson = new JsonSerializer().includeCollections(true).serialize(catalog);
+		String newJson = new JsonSerializer().deep(true).serialize(catalog);
 
 		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
 
