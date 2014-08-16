@@ -103,9 +103,10 @@ public class JsonSerializer {
 	}
 
 	/**
-	 * Defines if collections should be followed.
+	 * Defines if collections should be followed, i.e. to perform
+	 * deep serialization.
 	 */
-	public JsonSerializer includeCollections(boolean includeCollections) {
+	public JsonSerializer deep(boolean includeCollections) {
 		this.includeCollections = includeCollections;
 		return this;
 	}
