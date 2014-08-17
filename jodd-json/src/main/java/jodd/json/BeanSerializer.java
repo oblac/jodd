@@ -80,7 +80,7 @@ public class BeanSerializer {
 	/**
 	 * Invoked on each property.
 	 */
-	protected boolean onProperty(String propertyName, Class propertyType, PropertyDescriptor pd, boolean isTransient) {
+	protected void onProperty(String propertyName, Class propertyType, PropertyDescriptor pd, boolean isTransient) {
 		Path currentPath = jsonContext.path;
 
 		currentPath.push(propertyName);
@@ -120,7 +120,7 @@ public class BeanSerializer {
 
 		if (!include) {
 			currentPath.pop();
-			return true;
+			return;
 		}
 
 		Object value;
@@ -144,8 +144,6 @@ public class BeanSerializer {
 		}
 
 		currentPath.pop();
-
-		return true;
 	}
 
 	/**
