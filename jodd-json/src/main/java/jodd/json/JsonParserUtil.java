@@ -29,8 +29,12 @@ public class JsonParserUtil {
 
 		ClassDescriptor cd = ClassIntrospector.lookup(targetType);
 
+		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
+		if (ctorDescriptor == null) {
+			throw new JsonException("Default ctor not found for: " + targetType.getClass().getName());
+		}
+
 		try {
-			CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 			return ctorDescriptor.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
