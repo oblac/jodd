@@ -466,6 +466,45 @@ task release() {
 	dependsOn projectReport
 }
 
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.hasTask(release)) {
+
+		println ""
+		println "	You are about to run the 'release' task for Jodd project!"
+		println "	This task builds distribution artifacts, but also runs"
+		println "	integration tests and generates several reports (javadoc, code coverage...)"
+		println "	For running integration tests you need databases running;"
+		println "	please find more information here: http://jodd.org/code.html"
+		println ""
+		println "	Usually, you don't need to run this task. If you want to build"
+		println "	distribution jars and run all unit tests, then just run the "
+		println "	default 'build' task instead."
+		println ""
+
+		def char c
+
+		def console = System.console()
+		if (console) {
+			line = console.readLine('	> Do you want to continue? [y/N]: ')
+			line = line.trim()
+			c = line.charAt(0)
+		}
+		else {
+			println "	> Do you want to continue? [y/N]: "
+			println ""
+
+			// Can't use `console` because it does not work with Gradle Daemon
+			def DataInputStream dis = new DataInputStream(System.in);
+
+			c = dis.readByte()
+		}
+
+		if (!(c == 'Y' || c == 'y')) {
+			throw new StopExecutionException("Execution terminated by user")
+		}
+	}
+}
+
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
