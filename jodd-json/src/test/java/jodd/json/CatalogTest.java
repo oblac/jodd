@@ -60,6 +60,27 @@ public class CatalogTest {
 	}
 
 	@Test
+	public void testParseSerializeCatalogNotDeep() throws IOException {
+		String json = loadJSON();
+
+		Catalog catalog = new JsonParser().parse(json, Catalog.class);
+
+		String newJson = new JsonSerializer().deep(false).serialize(catalog);
+
+		Catalog jsonCatalog = new JsonParser().parse(newJson, Catalog.class);
+
+		assertNull(jsonCatalog.getPerformances());
+		assertNull(jsonCatalog.getAreaNames());
+		assertNull(jsonCatalog.getEvents());
+		assertNull(jsonCatalog.getAudienceSubCategoryNames());
+		assertNull(jsonCatalog.getSeatCategoryNames());
+		assertNull(jsonCatalog.getSubTopicNames());
+		assertNull(jsonCatalog.getTopicNames());
+		assertNull(jsonCatalog.getTopicSubTopics());
+		assertNull(jsonCatalog.getVenueNames());
+	}
+
+	@Test
 	public void testParseSerializeCatalog() throws IOException {
 		String json = loadJSON();
 
