@@ -33,6 +33,8 @@ public class ClassDescriptor {
 	protected final boolean extendedProperties;
 	protected final boolean includeFieldsAsProperties;
 	protected final String propertyFieldPrefix;
+	protected final Class[] interfaces;
+	protected final Class[] superclasses;
 	protected int usageCount;
 
 	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String propertyFieldPrefix) {
@@ -47,6 +49,9 @@ public class ClassDescriptor {
 		isList = (type == List.class) || ReflectUtil.isInterfaceImpl(type, List.class);
 		isSet = (type == Set.class) || ReflectUtil.isInterfaceImpl(type, Set.class);
 		isCollection = (type == Collection.class) || ReflectUtil.isInterfaceImpl(type, Collection.class);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(type);
+		superclasses = ReflectUtil.resolveAllSuperclasses(type);
 	}
 
 	/**
@@ -322,4 +327,22 @@ public class ClassDescriptor {
 		return getCtors().getAllCtorDescriptors();
 	}
 
+
+	// ---------------------------------------------------------------- interfaces
+
+	/**
+	 * Returns <b>all</b> interfaces of this class.
+	 */
+	public Class[] getAllInterfaces() {
+		return interfaces;
+	}
+
+	/**
+	 * Returns <b>all</b> superclasses of this class.
+	 * <code>Object.class</code> is <b>not</b> included in the
+	 * returned list.
+	 */
+	public Class[] getAllSuperclasses() {
+		return superclasses;
+	}
 }
