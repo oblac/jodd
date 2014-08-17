@@ -3,6 +3,8 @@
 package jodd.json;
 
 import jodd.datetime.JDateTime;
+import jodd.introspector.ClassDescriptor;
+import jodd.introspector.ClassIntrospector;
 import jodd.json.impl.ArraysJsonSerializer;
 import jodd.json.impl.BooleanArrayJsonSerializer;
 import jodd.json.impl.BooleanJsonSerializer;
@@ -137,29 +139,41 @@ public class TypeJsonSerializerMap {
 			return tjs;
 		}
 
-		if (type.isArray()) {
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+
+		// check array
+
+		if (cd.isArray()) {
 			return map.get(Arrays.class);
 		}
 
-		for (Class interfaze : type.getInterfaces()) {
-			tjs = lookup(interfaze);
+		// now iterate interfaces
+
+		Class[] interfaces = cd.getAllInterfaces();
+
+		for (Class interfaze : interfaces) {
+			tjs = map.get(interfaze);
 
 			if (tjs != null) {
 				return tjs;
 			}
 		}
 
-		Class superClass = type.getSuperclass();
+		// now iterate all superclases
 
-		if (superClass == null) {
-			return null;
+		Class[] superclasses = cd.getAllSuperclasses();
+
+		for (Class clazz : superclasses) {
+			tjs = map.get(clazz);
+
+			if (tjs != null) {
+				return tjs;
+			}
 		}
 
-		if (type.isInterface() && superClass == Object.class) {
-			return null;
-		}
+		// nothing found, go with the Object
 
-		return lookup(superClass);
+		return map.get(Object.class);
 	}
 
 }
