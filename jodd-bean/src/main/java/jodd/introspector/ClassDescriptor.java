@@ -45,10 +45,10 @@ public class ClassDescriptor {
 		this.propertyFieldPrefix = propertyFieldPrefix;
 
 		isArray = type.isArray();
-		isMap = (type == Map.class) || ReflectUtil.isInterfaceImpl(type, Map.class);
-		isList = (type == List.class) || ReflectUtil.isInterfaceImpl(type, List.class);
-		isSet = (type == Set.class) || ReflectUtil.isInterfaceImpl(type, Set.class);
-		isCollection = (type == Collection.class) || ReflectUtil.isInterfaceImpl(type, Collection.class);
+		isMap = ReflectUtil.isClassOf(type, Map.class);
+		isList = ReflectUtil.isClassOf(type, List.class);
+		isSet = ReflectUtil.isClassOf(type, Set.class);
+		isCollection = ReflectUtil.isClassOf(type, Collection.class);
 
 		interfaces = ReflectUtil.resolveAllInterfaces(type);
 		superclasses = ReflectUtil.resolveAllSuperclasses(type);

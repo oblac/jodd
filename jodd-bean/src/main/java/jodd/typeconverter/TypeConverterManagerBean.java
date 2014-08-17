@@ -316,7 +316,7 @@ public class TypeConverterManagerBean {
 		}
 
 		// collection
-		if (ReflectUtil.isInterfaceImpl(destinationType, Collection.class)) {
+		if (ReflectUtil.isClassOf(destinationType, Collection.class)) {
 			// component type is unknown because of Java's type-erasure
 			CollectionConverter<T> collectionConverter =
 					new CollectionConverter(this, destinationType, Object.class);
