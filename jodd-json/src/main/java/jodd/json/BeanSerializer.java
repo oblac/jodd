@@ -57,13 +57,11 @@ public class BeanSerializer {
 		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
 
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			String propertyName = null;
-			Class propertyType = null;
 
 			Getter getter = propertyDescriptor.getGetter(declared);
 			if (getter != null) {
-				propertyName = propertyDescriptor.getName();
-				propertyType = propertyDescriptor.getType();
+				String propertyName = propertyDescriptor.getName();
+				Class propertyType = propertyDescriptor.getType();
 
 				boolean isTransient = false;
 				// check for transient flag

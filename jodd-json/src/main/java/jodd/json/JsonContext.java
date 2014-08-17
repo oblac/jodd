@@ -31,6 +31,9 @@ public class JsonContext {
 		this.path = new Path();
 	}
 
+	/**
+	 * Returns {@link jodd.json.JsonSerializer}.
+	 */
 	public JsonSerializer getJsonSerializer() {
 		return jsonSerializer;
 	}
@@ -301,7 +304,7 @@ public class JsonContext {
 				if (propertyTypeClassDescriptor.isCollection()) {
 					include = false;
 				}
-				if (propertyTypeClassDescriptor.isMap()) {
+				else if (propertyTypeClassDescriptor.isMap()) {
 					include = false;
 				}
 			}

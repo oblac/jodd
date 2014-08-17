@@ -24,7 +24,7 @@ public class JsonAnnotationManager {
 	private static final String[] EMPTY = new String[0];
 
 	/**
-	 * Type data.
+	 * Type information read from annotations.
 	 */
 	public static class TypeData {
 		public final String[] includes;
@@ -109,6 +109,9 @@ public class JsonAnnotationManager {
 		return jsonName;
 	}
 
+	/**
+	 * Scans class for annotations and returns {@link jodd.json.meta.JsonAnnotationManager.TypeData}.
+	 */
 	private TypeData scanClassForAnnotations(Class type) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 
