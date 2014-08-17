@@ -250,57 +250,25 @@ public class ReflectUtil {
 	// ---------------------------------------------------------------- match classes
 
 	/**
-	 * Determines if first class match the destination and simulates kind
-	 * of <code>instanceof</code>. All subclasses and interface of first class
-	 * are examined against second class. Method is not symmetric.
+	 * Safe version of <code>isAssignableFrom</code> method that
+	 * returns <code>false</code> if one of the arguments is <code>null</code>.
 	 */
-	public static boolean isSubclass(Class thisClass, Class target) {
-		if (target.isInterface() == true) {
-			return isInterfaceImpl(thisClass, target);
+	public static boolean isClassOf(Class<?> lookupClass, Class<?> targetClass) {
+		if (targetClass == null || lookupClass == null) {
+			return false;
 		}
-		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
-			if (x == target) {
-				return true;
-			}
-		}
-		return false;
+		return targetClass.isAssignableFrom(lookupClass);
 	}
 
 	/**
-	 * Returns <code>true</code> if provided class is equal or a subclass
-	 * to the target class.
+	 * Safe version of <code>isInstance</code>, returns <code>false</code>
+	 * if any of the arguments is <code>null</code>.
 	 */
-	public static boolean isSubclassOrEqual(Class thisClass, Class target) {
-		return thisClass == target || isSubclass(thisClass, target);
-	}
-
-	/**
-	 * Returns <code>true</code> if provided class is interface implementation.
-	 */
-	public static boolean isInterfaceImpl(Class thisClass, Class targetInterface) {
-		for (Class x = thisClass; x != null; x = x.getSuperclass()) {
-			Class[] interfaces = x.getInterfaces();
-			for (Class i : interfaces) {
-				if (i == targetInterface) {
-					return true;
-				}
-				if (isInterfaceImpl(i, targetInterface)) {
-					return true;
-				}
-			}
+	public static boolean isInstanceOf(Object object, Class target) {
+		if (object == null || target == null) {
+			return false;
 		}
-		return false;
-	}
-
-	/**
-	 * Dynamic version of <code>instanceof</code>.
-	 *
-	 * @param o			object to match
-	 * @param target	target class
-	 * @return			<code>true</code> if object is an instance of target class
-	 */
-	public static boolean isInstanceOf(Object o, Class target) {
-		return isSubclass(o.getClass(), target);
+		return target.isInstance(object);
 	}
 
 	/**
