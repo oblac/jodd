@@ -44,7 +44,7 @@ public class PropertyResolver {
 			}
 
 			Class fieldType = field.getType();
-			if (fieldType == Collection.class || ReflectUtil.isSubclass(fieldType, Collection.class)) {
+			if (ReflectUtil.isClassOf(fieldType, Collection.class)) {
 				continue;
 			}
 
