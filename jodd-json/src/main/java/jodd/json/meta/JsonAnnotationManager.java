@@ -8,7 +8,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.StringPool;
+import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,16 +31,47 @@ public class JsonAnnotationManager {
 		public final String[] excludes;
 		public final boolean strict;
 
-		public TypeData(String[] includes, String[] excludes, boolean strict) {
+		public final String[] jsonNames;
+		public final String[] realNames;
+
+		public TypeData(String[] includes, String[] excludes, boolean strict, String[] jsonNames, String[] realNames) {
 			this.includes = includes;
 			this.excludes = excludes;
 			this.strict = strict;
+			this.jsonNames = jsonNames;
+			this.realNames = realNames;
+		}
+
+		/**
+		 * Resolves real name from JSON name.
+		 */
+		public String resolveRealName(String jsonName) {
+			if (jsonNames == null) {
+				return jsonName;
+			}
+			int jsonIndex = ArraysUtil.indexOf(jsonNames, jsonName);
+			if (jsonIndex == -1) {
+				return jsonName;
+			}
+			return realNames[jsonIndex];
+		}
+
+		/**
+		 * Resolves JSON name from real name.
+		 */
+		public String resolveJsonName(String realName) {
+			if (realNames == null) {
+				return realName;
+			}
+			int realIndex = ArraysUtil.indexOf(realNames, realName);
+			if (realIndex == -1) {
+				return realName;
+			}
+			return jsonNames[realIndex];
 		}
 	}
 
 	private final Map<Class, TypeData> typeDataMap = new HashMap<Class, TypeData>();
-	private final Map<String, String> names = new HashMap<String, String>();
-	private final Map<String, String> realNames = new HashMap<String, String>();
 
 	private static JsonAnnotationManager jsonAnnotationManager;
 
@@ -83,30 +114,18 @@ public class JsonAnnotationManager {
 	 * Returns different name of a property if set by annotation.
 	 */
 	public String resolveJsonName(Class type, String name) {
-		String signature = type.getName().concat(StringPool.HASH).concat(name);
+		TypeData typeData = lookupTypeData(type);
 
-		String newName = names.get(signature);
-
-		if (newName != null) {
-			return newName;
-		}
-
-		return name;
+		return typeData.resolveJsonName(name);
 	}
 
 	/**
 	 * Returns real property name for given JSON property.
 	 */
 	public String resolveRealName(Class type, String jsonName) {
-		String signature = type.getName().concat(StringPool.HASH).concat(jsonName);
+		TypeData typeData = lookupTypeData(type);
 
-		String realName = realNames.get(signature);
-
-		if (realName != null) {
-			return realName;
-		}
-
-		return jsonName;
+		return typeData.resolveRealName(jsonName);
 	}
 
 	/**
@@ -119,6 +138,8 @@ public class JsonAnnotationManager {
 
 		ArrayList<String> includedList = new ArrayList<String>();
 		ArrayList<String> excludedList = new ArrayList<String>();
+		ArrayList<String> jsonNames = new ArrayList<String>();
+		ArrayList<String> realNames = new ArrayList<String>();
 
 		jsonAnnotation = getJSONAnnotationReader();
 
@@ -145,9 +166,8 @@ public class JsonAnnotationManager {
 
 					String newPropertyName = data.getName();
 					if (newPropertyName != null) {
-						String signature = type.getName().concat(StringPool.HASH);
-						names.put(signature.concat(propertyName), newPropertyName);
-						realNames.put(signature.concat(newPropertyName), propertyName);
+						realNames.add(propertyName);
+						jsonNames.add(newPropertyName);
 
 						propertyName = newPropertyName;
 					}
@@ -177,11 +197,23 @@ public class JsonAnnotationManager {
 			excs = EMPTY;
 		}
 
+		String[] reals = null;
+
+		if (realNames.size() > 0) {
+			reals = realNames.toArray(new String[realNames.size()]);
+		}
+
+		String[] jsons = null;
+
+		if (jsonNames.size() > 0) {
+			jsons = jsonNames.toArray(new String[jsonNames.size()]);
+		}
+
 		// type
 
 		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotationData(type);
 
-		return new TypeData(incs, excs, data != null && data.isStrict());
+		return new TypeData(incs, excs, data != null && data.isStrict(), jsons, reals);
 	}
 
 }

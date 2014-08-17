@@ -6,6 +6,7 @@ import jodd.Jodd;
 import jodd.JoddJson;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
+import jodd.json.meta.JSON;
 import jodd.util.RandomStringUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -699,6 +700,31 @@ public class JsonParserTest {
 		Long[] longs = data.get(Long.valueOf(123));
 
 		assertNotNull(longs);
+	}
+
+
+	public static class Glista {
+
+		@JSON(name = "first_name")
+		private String firstName;
+
+		public String getFirstName() {
+			return firstName;
+		}
+
+		public void setFirstName(String firstName) {
+			this.firstName = firstName;
+		}
+	}
+
+	@Test
+	public void testAnnotationNameChangeFirstTime() {
+		String json = "{\"first_name\":\"Djordje\"}";
+
+		Glista jsonGlista = new JsonParser().parse(json, Glista.class);
+
+		assertEquals("Djordje", jsonGlista.getFirstName());
+
 	}
 
 

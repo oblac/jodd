@@ -25,7 +25,8 @@ public class BeanSerializer {
 	private final Class type;
 
 	private int count;
-	private JsonAnnotationManager.TypeData typeData;
+
+	private final JsonAnnotationManager.TypeData typeData;
 
 	public BeanSerializer(JsonContext jsonContext, Object bean) {
 		this.jsonContext = jsonContext;
@@ -132,7 +133,7 @@ public class BeanSerializer {
 
 			// change name for properties
 
-			propertyName = JsonAnnotationManager.getInstance().resolveJsonName(type, propertyName);
+			propertyName = typeData.resolveJsonName(propertyName);
 		}
 
 		jsonContext.pushName(propertyName, count > 0);
