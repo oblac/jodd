@@ -197,7 +197,7 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 		if (checkClass(resultClass) == false) {
 			return;
 		}
-		if (ReflectUtil.isSubclass(resultClass, ActionResult.class) == true) {
+		if (ReflectUtil.isClassOf(resultClass, ActionResult.class) == true) {
 			resultsManager.register(resultClass);
 		}
 	}

@@ -286,13 +286,13 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 				Class chunkClass = Convert.toClass(chunk);
 
 				// detect result class
-				if (ReflectUtil.isInterfaceImpl(chunkClass, ActionResult.class)) {
+				if (ReflectUtil.isClassOf(chunkClass, ActionResult.class)) {
 					result(chunkClass);
 					continue;
 				}
 
 				// detect wrapper
-				if (ReflectUtil.isInterfaceImpl(chunkClass, ActionWrapper.class)) {
+				if (ReflectUtil.isClassOf(chunkClass, ActionWrapper.class)) {
 					wrappers = ArraysUtil.append(wrappers, chunkClass);
 					continue;
 				}
@@ -328,10 +328,10 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 
 
 		for (Class<? extends ActionWrapper> wrapper : wrappers) {
-			if (ReflectUtil.isInterfaceImpl(wrapper, ActionInterceptor.class)) {
+			if (ReflectUtil.isClassOf(wrapper, ActionInterceptor.class)) {
 				action.interceptBy((Class<? extends ActionInterceptor>) wrapper);
 			}
-			else if (ReflectUtil.isInterfaceImpl(wrapper, ActionFilter.class)) {
+			else if (ReflectUtil.isClassOf(wrapper, ActionFilter.class)) {
 				action.filterBy((Class<? extends ActionFilter>) wrapper);
 			}
 			else {
@@ -377,7 +377,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 			Class type = Convert.toClass(chunk);
 
 			// check wrappers
-			if (ReflectUtil.isInterfaceImpl(type, ActionWrapper.class)) {
+			if (ReflectUtil.isClassOf(type, ActionWrapper.class)) {
 				wrappers = ArraysUtil.append(wrappers, type);
 			}
 		}

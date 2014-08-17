@@ -109,7 +109,7 @@ public class ActionConfig {
 		FieldDescriptor[] fields = ClassIntrospector.lookup(actionClass).getAllFieldDescriptors();
 		for (FieldDescriptor fd : fields) {
 			Field field = fd.getField();
-			if (ReflectUtil.isSubclass(field.getType(), Result.class)) {
+			if (ReflectUtil.isClassOf(field.getType(), Result.class)) {
 				field.setAccessible(true);
 				return field;
 			}
