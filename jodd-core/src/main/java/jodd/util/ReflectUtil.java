@@ -20,6 +20,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -300,6 +301,61 @@ public class ReflectUtil {
 	 */
 	public static boolean isInstanceOf(Object o, Class target) {
 		return isSubclass(o.getClass(), target);
+	}
+
+	/**
+	 * Resolves all interfaces of a type. No duplicates are returned.
+	 * Direct interfaces are prior the interfaces of subclasses in
+	 * the returned array.
+	 */
+	public static Class[] resolveAllInterfaces(Class type) {
+		Set<Class> bag = new LinkedHashSet<Class>();
+		_resolveAllInterfaces(type, bag);
+
+		return bag.toArray(new Class[bag.size()]);
+	}
+
+	private static void _resolveAllInterfaces(Class type, Set<Class> bag) {
+		// add types interfaces
+		Class[] interfaces = type.getInterfaces();
+		Collections.addAll(bag, interfaces);
+
+		// resolve interfaces of each interface
+		for (Class iface : interfaces) {
+			_resolveAllInterfaces(iface, bag);
+		}
+
+		// continue with super type
+		Class superClass = type.getSuperclass();
+
+		if (superClass == null) {
+			return;
+		}
+
+		if (superClass == Object.class) {
+			return;
+		}
+
+		_resolveAllInterfaces(type.getSuperclass(), bag);
+	}
+
+	/**
+	 * Resolves all super classes, from top (direct subclass) to down. <code>Object</code>
+	 * class is not included in the list.
+	 */
+	public static Class[] resolveAllSuperclasses(Class type) {
+		List<Class> list = new ArrayList<Class>();
+
+		while (true) {
+			type = type.getSuperclass();
+
+			if ((type == null) || (type == Object.class)) {
+				break;
+			}
+			list.add(type);
+		}
+
+		return list.toArray(new Class[list.size()]);
 	}
 
 	// ---------------------------------------------------------------- accessible methods
@@ -603,7 +659,6 @@ public class ReflectUtil {
 
 	// ---------------------------------------------------------------- create
 
-
 	/**
 	 * Creates new instances including for common mutable classes that do not have a default constructor.
 	 * more user-friendly. It examines if class is a map, list,
@@ -637,7 +692,7 @@ public class ReflectUtil {
 			if (type == char.class) {
 				return Character.valueOf((char) 0);
 			}
-			throw new IllegalArgumentException("Invalid primitive type: " + type);
+			throw new IllegalArgumentException("Invalid primitive: " + type);
 		}
 		if (type == Integer.class) {
 			return Integer.valueOf(0);
@@ -652,10 +707,10 @@ public class ReflectUtil {
 			return Boolean.FALSE;
 		}
 		if (type == Float.class) {
-			Float.valueOf(0);
+			return Float.valueOf(0);
 		}
 		if (type == Double.class) {
-			Double.valueOf(0);
+			return Double.valueOf(0);
 		}
 
 		if (type == Map.class) {

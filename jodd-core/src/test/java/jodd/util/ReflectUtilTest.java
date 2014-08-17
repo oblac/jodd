@@ -731,4 +731,104 @@ public class ReflectUtilTest {
 		assertEquals(List.class, ReflectUtil.getRawType(types[3], Mimple.class));
 		assertEquals(List.class, ReflectUtil.getRawType(types[4], Mimple.class));
 	}
+
+	public interface SomeGuy {}
+	public interface Cool extends SomeGuy {}
+	public interface Vigilante {}
+	public interface Flying extends Vigilante {}
+	public interface SuperMario extends Flying, Cool {};
+	public class User implements SomeGuy {}
+	public class SuperUser extends User implements Cool {}
+	public class SuperMan extends SuperUser implements Flying {}
+
+	@Test
+	public void testResolveAllInterfaces() {
+		Class[] interfaces = ReflectUtil.resolveAllInterfaces(HashMap.class);
+
+		assertTrue(interfaces.length >= 3);
+		assertTrue(ArraysUtil.contains(interfaces, Map.class));
+		assertTrue(ArraysUtil.contains(interfaces, Serializable.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cloneable.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperMan.class);
+
+		assertEquals(4, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cool.class));
+		assertTrue(ArraysUtil.contains(interfaces, Flying.class));
+		assertTrue(ArraysUtil.contains(interfaces, Vigilante.class));
+		assertTrue(ArraysUtil.indexOf(interfaces, Flying.class) < ArraysUtil.indexOf(interfaces, SomeGuy.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperUser.class);
+
+		assertEquals(2, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+		assertTrue(ArraysUtil.contains(interfaces, Cool.class));
+
+		interfaces = ReflectUtil.resolveAllInterfaces(User.class);
+
+		assertEquals(1, interfaces.length);
+		assertTrue(ArraysUtil.contains(interfaces, SomeGuy.class));
+
+
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SomeGuy.class);
+		assertEquals(0, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Cool.class);
+		assertEquals(1, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Vigilante.class);
+		assertEquals(0, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Flying.class);
+		assertEquals(1, interfaces.length);
+
+		interfaces = ReflectUtil.resolveAllInterfaces(SuperMario.class);
+		assertEquals(4, interfaces.length);
+
+
+
+		interfaces = ReflectUtil.resolveAllInterfaces(Object.class);
+		assertEquals(0, interfaces.length);
+		interfaces = ReflectUtil.resolveAllInterfaces(int.class);
+		assertEquals(0, interfaces.length);
+		interfaces = ReflectUtil.resolveAllInterfaces(int[].class);
+		assertEquals(2, interfaces.length);		// cloneable, serializable
+		interfaces = ReflectUtil.resolveAllInterfaces(Integer[].class);
+		assertEquals(2, interfaces.length);
+	}
+
+	@Test
+	public void testResolveAllSuperclsses() {
+		Class[] subclasses = ReflectUtil.resolveAllSuperclasses(User.class);
+		assertEquals(0, subclasses.length);
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperUser.class);
+		assertEquals(1, subclasses.length);
+		assertEquals(User.class, subclasses[0]);
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperMan.class);
+		assertEquals(2, subclasses.length);
+		assertEquals(SuperUser.class, subclasses[0]);
+		assertEquals(User.class, subclasses[1]);
+
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(Cool.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(Flying.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(SuperMario.class);
+		assertEquals(0, subclasses.length);
+
+
+		subclasses = ReflectUtil.resolveAllSuperclasses(Object.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(int.class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(int[].class);
+		assertEquals(0, subclasses.length);
+		subclasses = ReflectUtil.resolveAllSuperclasses(Integer[].class);
+		assertEquals(0, subclasses.length);
+	}
 }
