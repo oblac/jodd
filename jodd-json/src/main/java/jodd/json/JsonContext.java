@@ -301,7 +301,10 @@ public class JsonContext {
 			if (propertyType != null && !jsonSerializer.includeCollections) {
 				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
 
-				if (propertyTypeClassDescriptor.isCollection()) {
+				if (propertyTypeClassDescriptor.isArray()) {
+					include = false;
+				}
+				else if (propertyTypeClassDescriptor.isCollection()) {
 					include = false;
 				}
 				else if (propertyTypeClassDescriptor.isMap()) {
