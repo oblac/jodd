@@ -23,7 +23,7 @@ final class JtxResource<E> {
 	 * Returns <code>true</code> if resource is of provided resource type.
 	 */
 	public boolean isSameTypeAsResource(Class type) {
-		return ReflectUtil.isClassOf(type, resource.getClass());
+		return ReflectUtil.isTypeOf(type, resource.getClass());
 	}
 
 	// ---------------------------------------------------------------- delegates

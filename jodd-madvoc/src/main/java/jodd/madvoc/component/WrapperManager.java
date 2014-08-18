@@ -151,7 +151,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 				}
 				continue;
 			}
-			if (ReflectUtil.isClassOf(wrapperClass, BaseActionWrapperStack.class)) {
+			if (ReflectUtil.isTypeOf(wrapperClass, BaseActionWrapperStack.class)) {
 				BaseActionWrapperStack stack = (BaseActionWrapperStack) resolve(wrapperClass);
 				list.remove(i);
 				Class<? extends T>[] stackWrappers = stack.getWrappers();

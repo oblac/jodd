@@ -186,48 +186,48 @@ public class ReflectUtilTest {
 		TFooBean2 c = new TFooBean2();
 
 		assertTrue(TFooBean.class.isInstance(a));
-		assertTrue(ReflectUtil.isClassOf(TFooBean.class, a.getClass()));
-		assertTrue(ReflectUtil.isClassOf(TFooBean.class, b.getClass()));
-		assertTrue(ReflectUtil.isClassOf(a.getClass(), b.getClass()));
-		assertTrue(ReflectUtil.isClassOf(b.getClass(), a.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, a.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, b.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(a.getClass(), b.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(b.getClass(), a.getClass()));
 
-		assertTrue(ReflectUtil.isClassOf(TFooBean2.class, c.getClass()));
-		assertTrue(ReflectUtil.isClassOf(TFooBean2.class, TFooBean.class));
-		assertFalse(ReflectUtil.isClassOf(TFooBean.class, TFooBean2.class));
-		assertTrue(ReflectUtil.isClassOf(c.getClass(), TFooBean.class));
-		assertFalse(ReflectUtil.isClassOf(a.getClass(), TFooBean2.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, c.getClass()));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, TFooBean.class));
+		assertFalse(ReflectUtil.isTypeOf(TFooBean.class, TFooBean2.class));
+		assertTrue(ReflectUtil.isTypeOf(c.getClass(), TFooBean.class));
+		assertFalse(ReflectUtil.isTypeOf(a.getClass(), TFooBean2.class));
 
-		assertTrue(ReflectUtil.isClassOf(TFooBean.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, Serializable.class));
 		assertTrue(Serializable.class.isInstance(c));
 		//noinspection ConstantConditions
 		assertTrue(c instanceof Serializable);
 		assertTrue(ReflectUtil.isInstanceOf(c, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(TFooBean2.class, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(TFooBean2.class, Comparable.class));
-		assertFalse(ReflectUtil.isClassOf(TFooBean.class, Comparable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, Comparable.class));
+		assertFalse(ReflectUtil.isTypeOf(TFooBean.class, Comparable.class));
 
-		assertTrue(ReflectUtil.isClassOf(TFooBean.class, TFooIndyEx.class));
-		assertTrue(ReflectUtil.isClassOf(TFooBean2.class, TFooIndyEx.class));
-		assertTrue(ReflectUtil.isClassOf(TFooBean.class, TFooIndy.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, TFooIndyEx.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean2.class, TFooIndyEx.class));
+		assertTrue(ReflectUtil.isTypeOf(TFooBean.class, TFooIndy.class));
 	}
 
 	@Test
 	public void testMatchInterfaces() {
-		assertTrue(ReflectUtil.isClassOf(HashMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(AbstractMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(Map.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
 
 		assertTrue(ReflectUtil.isInstanceOf(new HashMap(), Map.class));
 
-		assertTrue(ReflectUtil.isClassOf(HashMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(AbstractMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(HashMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(Map.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
 
-		assertTrue(ReflectUtil.isClassOf(HashMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(AbstractMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(HashMap.class, Map.class));
-		assertTrue(ReflectUtil.isClassOf(Map.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(AbstractMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(HashMap.class, Map.class));
+		assertTrue(ReflectUtil.isTypeOf(Map.class, Map.class));
 	}
 
 
@@ -362,28 +362,28 @@ public class ReflectUtilTest {
 
 	@Test
 	public void testIsSubclassAndInterface() {
-		assertTrue(ReflectUtil.isClassOf(SBase.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(SBase.class, SBase.class));
 
-		assertTrue(ReflectUtil.isClassOf(SOne.class, SBase.class));
-		assertTrue(ReflectUtil.isClassOf(SOne.class, IOne.class));
-		assertTrue(ReflectUtil.isClassOf(SOne.class, IOne.class));
-		assertTrue(ReflectUtil.isClassOf(SOne.class, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(SOne.class, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(SOne.class, SOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(SOne.class, SOne.class));
 
-		assertTrue(ReflectUtil.isClassOf(STwo.class, SBase.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IOne.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IOne.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, Serializable.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, ITwo.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, ITwo.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IBase.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IBase.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IExtra.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, IExtra.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, STwo.class));
-		assertTrue(ReflectUtil.isClassOf(STwo.class, STwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, SBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IOne.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, Serializable.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, ITwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IBase.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, IExtra.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, STwo.class));
+		assertTrue(ReflectUtil.isTypeOf(STwo.class, STwo.class));
 	}
 
 	@Test
@@ -433,8 +433,8 @@ public class ReflectUtilTest {
 
 	@Test
 	public void testIsSubClassForCommonTypes() {
-		assertTrue(ReflectUtil.isClassOf(Long.class, Long.class));
-		assertFalse(ReflectUtil.isClassOf(Long.class, long.class));
+		assertTrue(ReflectUtil.isTypeOf(Long.class, Long.class));
+		assertFalse(ReflectUtil.isTypeOf(Long.class, long.class));
 	}
 
 /*	@Test

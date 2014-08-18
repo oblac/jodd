@@ -325,7 +325,7 @@ public abstract class PetiteBeans {
 		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
 			BeanDefinition beanDefinition = entry.getValue();
 
-			if (ReflectUtil.isClassOf(beanDefinition.type, type)) {
+			if (ReflectUtil.isTypeOf(beanDefinition.type, type)) {
 				String beanName = entry.getKey();
 				list.add(beanName);
 			}

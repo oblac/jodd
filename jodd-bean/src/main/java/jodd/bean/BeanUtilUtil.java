@@ -77,7 +77,7 @@ class BeanUtilUtil {
 		try {
 			Class type = setter.getSetterRawType();
 
-			if (ReflectUtil.isClassOf(type, Collection.class)) {
+			if (ReflectUtil.isTypeOf(type, Collection.class)) {
 				Class componentType = setter.getSetterRawComponentType();
 
 				value = convertToCollection(value, type, componentType);
