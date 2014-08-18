@@ -125,7 +125,7 @@ public class JSONSerializationTest {
 		assertAttributeMissing("type", json2);
 		assertStringValueMissing("PAGER", json2);
 
-		serializer.include("hobbies").excludeOnly("phones.areaCode", "phones.exchange", "phones.number");
+		serializer.include("hobbies").exclude(true, "phones.areaCode", "phones.exchange", "phones.number");
 
 		String json3 = serializer.serialize(jodder);
 		assertStringValue(Person.class.getName(), json3);

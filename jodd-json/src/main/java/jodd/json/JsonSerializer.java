@@ -103,21 +103,23 @@ public class JsonSerializer {
 	}
 
 	/**
-	 * Adds excludes, but each exclude also enables the
-	 * sub-expression. For example, exclude of 'aaa.bb.ccc'
-	 * also includes 'aaa.bb'.
+	 * Adds excludes with optional parent including. When parents are included,
+	 * for each exclude query its parent will be included.
+	 * For example, exclude of 'aaa.bb.ccc' would include it's parent: 'aaa.bb'.
 	 */
-	public JsonSerializer excludeOnly(String... excludes) {
+	public JsonSerializer exclude(boolean includeParent, String... excludes) {
 		if (pathQueries == null) {
 			pathQueries = new ArrayList<PathQuery>();
 		}
 		for (String exclude : excludes) {
-			int dotIndex = exclude.lastIndexOf('.');
-			if (dotIndex != -1) {
-				PathQuery pathQuery = new PathQuery(exclude.substring(0, dotIndex), true);
+			if (includeParent) {
+				int dotIndex = exclude.lastIndexOf('.');
+				if (dotIndex != -1) {
+					PathQuery pathQuery = new PathQuery(exclude.substring(0, dotIndex), true);
 
-				if (!pathQueries.contains(pathQuery)) {
-					pathQueries.add(pathQuery);
+					if (!pathQueries.contains(pathQuery)) {
+						pathQueries.add(pathQuery);
+					}
 				}
 			}
 
