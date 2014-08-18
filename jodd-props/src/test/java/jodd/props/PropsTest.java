@@ -166,7 +166,6 @@ public class PropsTest extends BasePropsTest {
 	@Test
 	public void testMacros() throws IOException {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
 
 		assertEquals("/app/data", p.getValue("data.path"));
@@ -188,14 +187,14 @@ public class PropsTest extends BasePropsTest {
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
-		assertEquals("/app/data3", p.getValue("data.path", "@prof2"));
+		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
 
-		assertEquals("/app/re", p.getValue("data.path", "@p1"));
+		assertEquals("/roo/re", p.getValue("data.path", "@p1"));
 		assertEquals("/app/re", p.getValue("data.path", "@p2"));
 
 		Properties prop = new Properties();
 		p.extractProps(prop, "@prof2");
-		assertEquals("/app/data3", prop.getProperty("data.path"));
+		assertEquals("/foo/data3", prop.getProperty("data.path"));
 
 		// activate profiles
 
@@ -203,7 +202,7 @@ public class PropsTest extends BasePropsTest {
 		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));
 
 		p.setActiveProfiles("@p1", "@p2");
-		assertEquals("/roo/re", p.getValue("data.path", "@p2"));
+		assertEquals("/app/re", p.getValue("data.path", "@p2"));
 	}
 
 
@@ -259,7 +258,6 @@ public class PropsTest extends BasePropsTest {
 	@Test
 	public void testClone() throws IOException {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(readDataFile("test2.props"));
 
 		Props p2 = p.clone();
@@ -657,7 +655,6 @@ public class PropsTest extends BasePropsTest {
 	@Test
 	public void testMacrosAndProfiles() {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(true);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -681,7 +678,6 @@ public class PropsTest extends BasePropsTest {
 	@Test
 	public void testMacrosAndProfilesAsBefore() {
 		Props p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -693,18 +689,18 @@ public class PropsTest extends BasePropsTest {
 		assertEquals("111", p.getValue("wow"));
 
 		p.setActiveProfiles("pr1");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222", p.getValue("wow"));
 
 		p.setActiveProfiles("pr2");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222333", p.getValue("wow"));
 
 		p.setActiveProfiles("pr1", "pr2");
-		assertEquals("111", p.getValue("wow"));
+		assertEquals("111222", p.getValue("wow"));
 
 		// wow needs to be defined in a profile to get the profile value in macro
+		// NOT ANYMORE!
 
 		p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
@@ -726,7 +722,6 @@ public class PropsTest extends BasePropsTest {
 
 
 		p = new Props();
-		p.setUseActiveProfilesWhenResolvingMacros(false);
 		p.load(
 				"one=111\n" +
 				"one<pr1>=111222\n" +
