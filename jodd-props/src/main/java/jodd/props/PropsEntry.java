@@ -3,7 +3,7 @@
 package jodd.props;
 
 /**
- * Holds original props value and generated one.
+ * Holds props value.
  */
 public class PropsEntry {
 
@@ -12,29 +12,39 @@ public class PropsEntry {
 	 */
 	protected final String value;
 
-	/**
-	 * Value with all macros resolved. May be <code>null</code> when
-	 * value doesn't contain anything to resolve.
-	 */
-	protected String resolved;
-
 	protected PropsEntry next;
 
 	protected final String key;
 
 	protected final String profile;
 
-	public PropsEntry(final String key, final String value, String profile) {
+	protected final boolean hasMacro;
+
+	protected final PropsData propsData;
+
+	public PropsEntry(String key, String value, String profile, PropsData propsData) {
 		this.value = value;
 		this.key = key;
 		this.profile = profile;
+		this.hasMacro = value.contains("${");
+		this.propsData = propsData;
 	}
 
 	/**
-	 * Returns either resolved or real value.
+	 * Returns the raw value. Macros are not replaced.
 	 */
 	public String getValue() {
-		return resolved != null ? resolved : value;
+		return value;
+	}
+
+	/**
+	 * Returns the property value, with replaced macros.
+	 */
+	public String getValue(String... profiles) {
+		if (hasMacro) {
+			return propsData.resolveMacros(value, profiles);
+		}
+		return value;
 	}
 
 	/**
@@ -51,9 +61,16 @@ public class PropsEntry {
 		return profile;
 	}
 
+	/**
+	 * Returns <code>true</code> if value has a macro to resolve.
+	 */
+	public boolean hasMacro() {
+		return hasMacro;
+	}
+
 	@Override
 	public String toString() {
-		return "PropsEntry{" + key + (profile != null ? '<' + profile + '>' : "") + '=' + value + (resolved == null ? "" : "}{" + resolved) + '}';
+		return "PropsEntry{" + key + (profile != null ? '<' + profile + '>' : "") + '=' + value + '}';
 	}
 
 }

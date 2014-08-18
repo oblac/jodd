@@ -168,13 +168,6 @@ public class Props implements Cloneable {
 		data.ignoreMissingMacros = ignoreMissingMacros;
 	}
 
-	/**
-	 * Defines if macros should be resolved using active profiles.
-	 */
-	public void setUseActiveProfilesWhenResolvingMacros(boolean useActiveProfilesWhenResolvingMacros) {
-		data.useActiveProfilesWhenResolvingMacros = useActiveProfilesWhenResolvingMacros;
-	}
-
 	// ---------------------------------------------------------------- load
 
 	/**
@@ -389,13 +382,16 @@ public class Props implements Cloneable {
 
 	// ---------------------------------------------------------------- initialize
 
+	/**
+	 * Extracts subset of properties.
+	 */
 	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
 		initialize();
 		data.extract(target, profiles, wildcardPatterns);
 	}
 
 	/**
-	 * Initializes props by replacing macros in values with the lookup values.
+	 * Initializes props. By default it only resolves active profiles.
 	 */
 	protected void initialize() {
 		if (initialized == false) {
@@ -403,7 +399,6 @@ public class Props implements Cloneable {
 				if (initialized == false) {
 
 					resolveActiveProfiles();
-					data.resolveMacros(activeProfiles);
 
 					initialized = true;
 				}
