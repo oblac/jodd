@@ -51,7 +51,7 @@ public class MapToBean {
 		}
 
 		if (target == null) {
-			target = JsonParserUtil.newObjectInstance(targetType);
+			target = JsonUtil.newObjectInstance(targetType);
 		}
 
 		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
@@ -150,7 +150,7 @@ public class MapToBean {
 		if (setter != null) {
 			if (value != null) {
 				propertyType = setter.getSetterRawType();
-				value = JsonParserUtil.convertType(value, propertyType);
+				value = JsonUtil.convertType(value, propertyType);
 			}
 			setter.invokeSetter(target, value);
 		}

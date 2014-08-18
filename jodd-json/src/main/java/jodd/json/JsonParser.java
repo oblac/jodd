@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static jodd.json.JsonParserUtil.convertType;
+import static jodd.json.JsonUtil.convertType;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -659,7 +659,7 @@ public class JsonParser {
 
 		if (classMetadataName == null) {
 			// create instance of target type, no 'class' information
-			target = JsonParserUtil.newObjectInstance(targetType);
+			target = JsonUtil.newObjectInstance(targetType);
 
 			isTargetTypeMap = isTargetRealTypeMap;
 		} else {

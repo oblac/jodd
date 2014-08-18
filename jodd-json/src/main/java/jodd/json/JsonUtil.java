@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Some common utilities.
  */
-public class JsonParserUtil {
+public class JsonUtil {
 
 	/**
 	 * Creates new object or a <code>HashMap</code> if type is not specified.
