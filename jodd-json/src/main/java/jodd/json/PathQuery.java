@@ -4,6 +4,8 @@ package jodd.json;
 
 import jodd.util.StringUtil;
 
+import java.util.Arrays;
+
 import static jodd.util.StringPool.*;
 
 /**
@@ -94,4 +96,34 @@ public class PathQuery {
 	public boolean isIncluded() {
 		return included;
 	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		PathQuery pathQuery = (PathQuery) o;
+
+		if (included != pathQuery.included) {
+			return false;
+		}
+		if (!Arrays.equals(expression, pathQuery.expression)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Arrays.hashCode(expression);
+		result = 31 * result + (included ? 1 : 0);
+		return result;
+	}
+
 }

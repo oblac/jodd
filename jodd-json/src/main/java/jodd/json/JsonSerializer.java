@@ -75,7 +75,11 @@ public class JsonSerializer {
 			pathQueries = new ArrayList<PathQuery>();
 		}
 		for (String include : includes) {
-			pathQueries.add(new PathQuery(include, true));
+			PathQuery pathQuery = new PathQuery(include, true);
+
+			if (!pathQueries.contains(pathQuery)) {
+				pathQueries.add(pathQuery);
+			}
 		}
 
 		return this;
@@ -87,8 +91,40 @@ public class JsonSerializer {
 		if (pathQueries == null) {
 			pathQueries = new ArrayList<PathQuery>();
 		}
-		for (String include : excludes) {
-			pathQueries.add(new PathQuery(include, false));
+		for (String exclude : excludes) {
+			PathQuery pathQuery = new PathQuery(exclude, false);
+
+			if (!pathQueries.contains(pathQuery)) {
+				pathQueries.add(pathQuery);
+			}
+		}
+
+		return this;
+	}
+
+	/**
+	 * Adds excludes, but each exclude also enables the
+	 * sub-expression. For example, exclude of 'aaa.bb.ccc'
+	 * also includes 'aaa.bb'.
+	 */
+	public JsonSerializer excludeOnly(String... excludes) {
+		if (pathQueries == null) {
+			pathQueries = new ArrayList<PathQuery>();
+		}
+		for (String exclude : excludes) {
+			int dotIndex = exclude.lastIndexOf('.');
+			if (dotIndex != -1) {
+				PathQuery pathQuery = new PathQuery(exclude.substring(0, dotIndex), true);
+
+				if (!pathQueries.contains(pathQuery)) {
+					pathQueries.add(pathQuery);
+				}
+			}
+
+			PathQuery pathQuery = new PathQuery(exclude, false);
+			if (!pathQueries.contains(pathQuery)) {
+				pathQueries.add(pathQuery);
+			}
 		}
 
 		return this;
