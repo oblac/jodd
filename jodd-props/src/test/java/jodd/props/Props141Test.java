@@ -21,6 +21,7 @@ public class Props141Test extends PropsTest {
 
 		assertNull(props.getValue(".key1", "ONE"));
 		assertEquals("value1#ONE", props.getValue("key1", "ONE"));
+		assertEquals("value1", props.getValue("key1", "qwe", null));
 	}
 
 	@Test
