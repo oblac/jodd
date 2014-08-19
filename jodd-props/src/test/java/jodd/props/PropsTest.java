@@ -265,8 +265,8 @@ public class PropsTest extends BasePropsTest {
 		Props p2 = p.clone();
 		p2.load(readDataFile("test.props"));
 
-		assertEquals(2, p.countTotalProperties());
-		assertEquals(19, p2.countTotalProperties());
+		assertEquals(3, p.countTotalProperties());
+		assertEquals(20, p2.countTotalProperties());
 
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));

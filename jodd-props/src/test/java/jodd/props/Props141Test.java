@@ -9,7 +9,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class Props141Test extends PropsTest {
+public class Props141Test extends BasePropsTest {
 
 	@Test
 	public void test141Simple() throws IOException {
