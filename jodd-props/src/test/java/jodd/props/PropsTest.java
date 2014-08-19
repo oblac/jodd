@@ -168,6 +168,8 @@ public class PropsTest extends BasePropsTest {
 		Props p = new Props();
 		p.load(readDataFile("test2.props"));
 
+		assertEquals("/roo/mypath", p.getValue("data.mypath"));
+
 		assertEquals("/app/data", p.getValue("data.path"));
 		assertEquals("/app/data2", p.getValue("data.path", "@prof1"));
 		assertEquals("/foo/data3", p.getValue("data.path", "@prof2"));

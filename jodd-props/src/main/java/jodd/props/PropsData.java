@@ -4,6 +4,7 @@ package jodd.props;
 
 import jodd.util.StringPool;
 import jodd.util.StringTemplateParser;
+import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
 import java.util.HashMap;
@@ -220,7 +221,21 @@ public class PropsData implements Cloneable {
 
 		final StringTemplateParser.MacroResolver macroResolver = new StringTemplateParser.MacroResolver() {
 			public String resolve(String macroName) {
-				return lookupValue(macroName, profiles);
+				String[] lookupProfiles = profiles;
+
+				int leftIndex = macroName.indexOf('<');
+				if (leftIndex != -1) {
+					int rightIndex = macroName.indexOf('>');
+
+					String profiles = macroName.substring(leftIndex + 1, rightIndex);
+					macroName = macroName.substring(0, leftIndex).concat(macroName.substring(rightIndex + 1));
+
+					lookupProfiles = StringUtil.splitc(profiles, ',');
+
+					StringUtil.trimAll(lookupProfiles);
+				}
+
+				return lookupValue(macroName, lookupProfiles);
 			}
 		};
 
