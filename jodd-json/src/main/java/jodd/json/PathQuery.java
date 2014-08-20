@@ -24,9 +24,9 @@ public class PathQuery {
 	protected final boolean wildcard;
 	protected final boolean included;
 
-	public PathQuery(String expresion, boolean included) {
-		expression = StringUtil.splitc(expresion, '.');
-		wildcard = expresion.indexOf('*') >= 0;
+	public PathQuery(String expression, boolean included) {
+		this.expression = StringUtil.splitc(expression, '.');
+		wildcard = expression.indexOf('*') >= 0;
 		this.included = included;
 	}
 
