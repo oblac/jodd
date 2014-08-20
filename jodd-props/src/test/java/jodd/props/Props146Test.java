@@ -85,7 +85,13 @@ public class Props146Test {
 				"key3=${key1<foo>}\n" +
 				"\n" +
 				"key4=${key1}\n" +
-				"key4<bar>=${key1<foo>}BAR";
+				"key4<bar>=${key1<foo>}BAR\n" +
+				"\n" +
+				"[group1]\n" +
+				"key=DEFAULT\n" +
+				"key<foo>=FOO\n" +
+				"[group2]\n" +
+				"<= group1<foo>";
 
 		Props props = new Props();
 		props.load(data);
@@ -100,6 +106,8 @@ public class Props146Test {
 		assertEquals("FOO", props.getValue("key4", "foo"));
 		assertEquals("FOOBAR", props.getValue("key4", "bar"));
 		assertEquals("DEFAULT", props.getValue("key4"));
+
+		assertEquals("FOO", props.getValue("group2.key"));		// == ${group1.key<foo>}
 
 	}
 
