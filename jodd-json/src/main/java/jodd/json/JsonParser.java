@@ -40,7 +40,7 @@ public class JsonParser {
 	protected char[] input;
 	protected int total;
 	protected Path path;
-	protected boolean useAltPaths;
+	protected boolean useAltPaths = JoddJson.useAltPathsByParser;
 	protected Class rootType;
 	protected MapToBean mapToBean;
 

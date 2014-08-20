@@ -39,7 +39,7 @@ public class JsonSerializer {
 	protected TypeJsonSerializerMap typeSerializersMap;
 	protected List<PathQuery> pathQueries;
 	protected String classMetadataName = JoddJson.classMetadataName;
-	protected boolean includeCollections = false;
+	protected boolean deep = JoddJson.deepSerialization;
 
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
@@ -145,7 +145,7 @@ public class JsonSerializer {
 	 * deep serialization.
 	 */
 	public JsonSerializer deep(boolean includeCollections) {
-		this.includeCollections = includeCollections;
+		this.deep = includeCollections;
 		return this;
 	}
 
@@ -153,7 +153,7 @@ public class JsonSerializer {
 	 * Returns <code>true</code> if serialization is deep.
 	 */
 	public boolean isDeep() {
-		return includeCollections;
+		return deep;
 	}
 
 	// ---------------------------------------------------------------- serialize

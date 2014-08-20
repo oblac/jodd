@@ -298,7 +298,7 @@ public class JsonContext {
 	 */
 	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean include) {
 		if (include == true) {
-			if (propertyType != null && !jsonSerializer.includeCollections) {
+			if (propertyType != null && !jsonSerializer.deep) {
 				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {

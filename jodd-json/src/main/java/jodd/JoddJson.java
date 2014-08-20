@@ -29,4 +29,17 @@ public class JoddJson {
 	 */
 	public static String classMetadataName = null;
 
+	/**
+	 * Defines default behavior of a {@link jodd.json.JsonSerializer}.
+	 * If set to <code>true</code>, objects will be serialized
+	 * deep, so all collections and arrays will get serialized.
+	 */
+	public static boolean deepSerialization = false;
+
+	/**
+	 * Defines if parser will use extended paths information
+	 * and path matching.
+	 */
+	public static boolean useAltPathsByParser = false;
+
 }
