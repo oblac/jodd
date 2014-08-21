@@ -7,14 +7,14 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
-import jodd.util.ArraysUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Visitor for bean properties.
+ * Visitor for bean properties. It extracts properties names
+ * from the source bean and then visits one by one.
  */
 public abstract class BeanVisitor {
 
@@ -99,6 +99,45 @@ public abstract class BeanVisitor {
 	}
 
 	/**
+	 * Accepts property and returns <code>true</code> if property should be visited.
+	 */
+	protected boolean acceptProperty(String propertyName) {
+		boolean included = true;
+
+		// check excluded
+		if (excludeNames != null) {
+			for (String excludeName : excludeNames) {
+				if (match(propertyName, excludeName, false)) {
+					// property is excluded, mark the flag
+					included = false;
+					break;
+				}
+			}
+		}
+
+		if (includeNames != null)  {
+			for (String includeName : includeNames) {
+				if (match(propertyName, includeName, true)) {
+					// property is included, hey!
+					return true;
+				}
+			}
+			// property was not included
+			return false;
+		}
+
+		return included;
+	}
+
+	/**
+	 * Matches property name with pattern.
+	 */
+	protected boolean match(String propertyName, String pattern, boolean included) {
+		return pattern.equals(propertyName);
+	}
+
+
+	/**
 	 * Starts visiting properties.
 	 */
 	public void visit() {
@@ -109,16 +148,8 @@ public abstract class BeanVisitor {
 				continue;
 			}
 
-			if (excludeNames != null) {
-				if (ArraysUtil.contains(excludeNames, name) == true) {
-					continue;
-				}
-			}
-
-			if (includeNames != null)  {
-				if (ArraysUtil.contains(includeNames, name) == false) {
-					continue;
-				}
+			if (!acceptProperty(name)) {
+				continue;
 			}
 
 			Object value;
@@ -142,4 +173,5 @@ public abstract class BeanVisitor {
 	 * visiting should continue, otherwise <code>false</code> to stop.
 	 */
 	protected abstract boolean visitProperty(String name, Object value);
+
 }
