@@ -6,7 +6,7 @@ Jodd
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
-**Jodd = tools + ioc + mvc + db + aop + tx + html < 1.5 Mb**
+**Jodd = tools + ioc + mvc + db + aop + tx + json + html < 1.5 Mb**
 
 Read about **Jodd**:
 
@@ -40,7 +40,7 @@ and some micro frameworks:
 + `jodd-lagarto-web` - `Lagarto` addon for web: `Decora`, `HtmlStapler` and more.
 + `jodd-proxetta` - dynamic proxies and `Paramo`.
 + `jodd-db` - thin database layer and object mapper.
-+ `jodd-json` - light but powerful JSON parser and serializer.
++ `jodd-json` - JSON parser and serializer.
 + `jodd-vtor` - validation framework.
 
 Read more in our [official documentation](http://jodd.org/doc).
@@ -107,4 +107,4 @@ Every other time:
 
 We will pickup up from there :)
 
-:surfer: :rocket: :tomato:
+:rocket:
