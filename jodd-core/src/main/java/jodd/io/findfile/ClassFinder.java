@@ -3,6 +3,7 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.InExRules;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 import jodd.util.ArraysUtil;
@@ -20,6 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
 
+import static jodd.util.InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER;
+import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
+
 /**
  * Simple utility that scans <code>URL</code>s for classes.
  * Its purpose is to help scanning class paths for some classes.
@@ -28,6 +32,7 @@ import java.io.FileNotFoundException;
  * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
  * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
  * wildcard matcher.
+ *
  * @see ClassScanner
  */
 public abstract class ClassFinder {
@@ -47,15 +52,21 @@ public abstract class ClassFinder {
 			"**/Java/Extensions/*.jar",
 			"**/Classes/*.jar"
 	};
+
+	protected final InExRules<String, String> rulesJars = createJarRules();
+
 	/**
-	 * Array of excluded jars.
+	 * Creates JAR rules. By default, excludes all system jars.
 	 */
-	protected String[] excludedJars;
-	/**
-	 * Array of jar file name patterns that are included in the search.
-	 * This rule is applied after the excluded rule.
-	 */
-	protected String[] includedJars;
+	protected InExRules<String, String> createJarRules() {
+		InExRules<String, String> rulesJars = new InExRules<String, String>(WILDCARD_PATH_RULE_MATCHER);
+
+		for (String systemJar : systemJars) {
+			rulesJars.exclude(systemJar, true);
+		}
+
+		return rulesJars;
+	}
 
 	/**
 	 * Returns system jars.
@@ -64,55 +75,55 @@ public abstract class ClassFinder {
 		return systemJars;
 	}
 
-	/**
-	 * Specifies system jars, that are always excluded first.
-	 */
-	public static void setSystemJars(String... newSystemJars) {
-		systemJars = newSystemJars;
-	}
-
-	public String[] getExcludedJars() {
-		return excludedJars;
-	}
-
 	public void setExcludedJars(String... excludedJars) {
-		this.excludedJars = excludedJars;
-	}
-
-	public String[] getIncludedJars() {
-		return includedJars;
+		for (String excludedJar : excludedJars) {
+			rulesJars.include(excludedJar);
+		}
 	}
 
 	public void setIncludedJars(String... includedJars) {
-		this.includedJars = includedJars;
+		for (String includedJar : includedJars) {
+			rulesJars.include(includedJar);
+		}
 	}
 
-	// ---------------------------------------------------------------- included packages
+	// ---------------------------------------------------------------- included entries
 
-	protected String[] includedEntries;    // array of included name patterns
-	protected String[] excludedEntries;    // array of excluded name patterns
+	protected final InExRules<String, String> rulesEntries = createEntriesRules();
 
-	public String[] getIncludedEntries() {
-		return includedEntries;
+	protected InExRules<String, String> createEntriesRules() {
+		return new InExRules<String, String>(WILDCARD_RULE_MATCHER);
 	}
 
 	/**
-	 * Sets included set of names that will be considered during configuration,
+	 * Sets included set of names that will be considered during configuration.
+	 * @see jodd.util.InExRules
 	 */
 	public void setIncludedEntries(String... includedEntries) {
-		this.includedEntries = includedEntries;
-	}
-
-	public String[] getExcludedEntries() {
-		return excludedEntries;
+		for (String includedEntry : includedEntries) {
+			rulesEntries.include(includedEntry);
+		}
 	}
 
 	/**
 	 * Sets excluded names that narrows included set of packages.
+	 * @see jodd.util.InExRules
 	 */
 	public void setExcludedEntries(String... excludedEntries) {
-		this.excludedEntries = excludedEntries;
+		for (String excludedEntry : excludedEntries) {
+			rulesEntries.exclude(excludedEntry);
+		}
 	}
+
+	/**
+	 * Sets excluded names that narrows included set of packages.
+	 * @see jodd.util.InExRules
+	 */
+	public void setExcludedImportantEntries(String... excludedEntries) {
+			for (String excludedEntry : excludedEntries) {
+				rulesEntries.exclude(excludedEntry, true);
+			}
+		}
 
 	// ---------------------------------------------------------------- implementation
 
@@ -202,25 +213,7 @@ public abstract class ClassFinder {
 		String path = jarFile.getAbsolutePath();
 		path = FileNameUtil.separatorsToUnix(path);
 
-		if (systemJars != null) {
-			int ndx = Wildcard.matchPathOne(path, systemJars);
-			if (ndx != -1) {
-				return false;
-			}
-		}
-		if (excludedJars != null) {
-			int ndx = Wildcard.matchPathOne(path, excludedJars);
-			if (ndx != -1) {
-				return false;
-			}
-		}
-		if (includedJars != null) {
-			int ndx = Wildcard.matchPathOne(path, includedJars);
-			if (ndx == -1) {
-				return false;
-			}
-		}
-		return true;
+		return rulesJars.match(path);
 	}
 	
 	/**
@@ -350,17 +343,7 @@ public abstract class ClassFinder {
 	 * @see #scanEntry(EntryData) 
 	 */
 	protected boolean acceptEntry(String entryName) {
-		if (excludedEntries != null) {
-			if (Wildcard.matchOne(entryName, excludedEntries) != -1) {
-				return false;
-			}
-		}
-		if (includedEntries != null) {
-			if (Wildcard.matchOne(entryName, includedEntries) == -1) {
-				return false;
-			}
-		}
-		return true;
+		return rulesEntries.match(entryName);
 	}
 
 

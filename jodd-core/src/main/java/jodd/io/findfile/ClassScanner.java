@@ -9,8 +9,7 @@ import java.io.File;
 
 /**
  * A class scanner, user-friendly version of {@link ClassFinder} a class scanner.
- * Since <code>ClassFinder</code> is an abstract class, it can not be used directly,
- * <code>ClassScanner</code> can.
+ * Offers public <code>scan()</code> methods that can be directly used.
  */
 public abstract class ClassScanner extends ClassFinder {
 
