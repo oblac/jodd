@@ -40,6 +40,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Defines if fields should be included.
 	 */
 	protected boolean includeFields;
+	/**
+	 * Initial matching mode.
+	 */
+	protected boolean blacklist = true;
 
 	// ---------------------------------------------------------------- util
 
@@ -107,7 +111,7 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 				continue;
 			}
 
-			if (!rules.match(name)) {
+			if (!rules.match(name, blacklist)) {
 				continue;
 			}
 

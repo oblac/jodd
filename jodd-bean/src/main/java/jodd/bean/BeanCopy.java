@@ -28,6 +28,14 @@ public class BeanCopy extends BeanVisitor {
 	// ---------------------------------------------------------------- properties
 
 	/**
+	 * Excludes all properties, i.e. enables blacklist mode.
+	 */
+	public BeanCopy excludeAll() {
+		blacklist = false;
+		return this;
+	}
+
+	/**
 	 * Defines excluded property names.
 	 */
 	public BeanCopy exclude(String... excludes) {
@@ -65,9 +73,11 @@ public class BeanCopy extends BeanVisitor {
 
 	/**
 	 * Defines included property names as public properties
-	 * of given template class.
+	 * of given template class. Sets to black list mode.
 	 */
 	public BeanCopy includeAs(Class template) {
+		blacklist = false;
+
 		String[] properties = getAllBeanPropertyNames(template, false);
 
 		include(properties);

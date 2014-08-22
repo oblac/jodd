@@ -98,7 +98,7 @@ public class BeanCopyTest {
 	public void testCopyIncludes() {
 		FooBean fb = createFooBean();
 		FooBean dest = new FooBean();
-		BeanCopy.beans(fb, dest).include("fooInteger", "fooLong").copy();
+		BeanCopy.beans(fb, dest).excludeAll().include("fooInteger", "fooLong").copy();
 
 		Integer v = (Integer) BeanUtil.getProperty(dest, "fooInteger");
 		assertEquals(201, v.intValue());
