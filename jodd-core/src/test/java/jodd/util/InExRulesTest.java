@@ -15,45 +15,66 @@ public class InExRulesTest {
 
 		// + exclude all
 		inExRules.reset();
+		inExRules.blacklist();						// default
 		inExRules.exclude("*");
 
 		assertFalse(inExRules.match("foo"));
 		assertFalse(inExRules.match("fight"));
 		assertFalse(inExRules.match("bar"));
 
-		// + exclude all, but one
+
+		// + exclude all (alt)
 		inExRules.reset();
-		inExRules.exclude("*");
+		inExRules.whitelist();
+
+		assertFalse(inExRules.match("foo"));
+		assertFalse(inExRules.match("fight"));
+		assertFalse(inExRules.match("bar"));
+
+
+
+		// + exclude all, but one (no alt)
+		inExRules.reset();
+		inExRules.whitelist();
 		inExRules.include("foo");
 
 		assertTrue(inExRules.match("foo"));
 		assertFalse(inExRules.match("fight"));
 		assertFalse(inExRules.match("bar"));
 
-		// + exclude all, but one (alt)
-		inExRules.reset();
-		inExRules.include("foo");
 
-		assertTrue(inExRules.match("foo"));
-		assertFalse(inExRules.match("fight"));
-		assertFalse(inExRules.match("bar"));
 
-		// + include all, but one
+		// + include all, but one (no alt)
 		inExRules.reset();
+		inExRules.blacklist();
 		inExRules.exclude("foo");
 
 		assertFalse(inExRules.match("foo"));
 		assertTrue(inExRules.match("fight"));
 		assertTrue(inExRules.match("bar"));
 
+
+
 		// + include all
 		inExRules.reset();
+		inExRules.blacklist();
 
 		assertTrue(inExRules.match("foo"));
 		assertTrue(inExRules.match("fight"));
 
+		// + include all (alt)
+		inExRules.reset();
+		inExRules.whitelist();
+		inExRules.include("*");
+
+		assertTrue(inExRules.match("foo"));
+		assertTrue(inExRules.match("fight"));
+
+
+
 		// + exclude some, but one
 		inExRules.reset();
+		inExRules.blacklist();
 		inExRules.exclude("f*");
 		inExRules.include("foo");
 
@@ -61,19 +82,24 @@ public class InExRulesTest {
 		assertFalse(inExRules.match("fight"));
 		assertTrue(inExRules.match("bar"));
 
+
+
 		// + include only some, but one
 		inExRules.reset();
-		inExRules.exclude("*");
+		inExRules.whitelist();
 		inExRules.include("f*");
-		inExRules.exclude("foo", true);
+		inExRules.exclude("foo");
 
 		assertFalse(inExRules.match("foo"));
 		assertTrue(inExRules.match("fight"));
 		assertTrue(inExRules.match("fravia"));
 		assertFalse(inExRules.match("bar"));
 
+
+
 		// + exclude only some, but one
 		inExRules.reset();
+		inExRules.blacklist();
 		inExRules.exclude("f*");
 		inExRules.include("foo");
 
@@ -81,6 +107,6 @@ public class InExRulesTest {
 		assertFalse(inExRules.match("fight"));
 		assertFalse(inExRules.match("fravia"));
 		assertTrue(inExRules.match("bar"));
-
 	}
+
 }
