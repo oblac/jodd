@@ -324,17 +324,23 @@ public class JsonContext {
 		List<PathQuery> pathQueries = jsonSerializer.pathQueries;
 
 		if (pathQueries != null) {
-			for (int iteration = 0; iteration < 2; iteration++) {
-				for (PathQuery pathQuery : pathQueries) {
-					if (iteration == 0 && !pathQuery.isWildcard()) {
-						continue;
-					}
-					if (iteration == 1 && pathQuery.isWildcard()) {
-						continue;
-					}
-					if (pathQuery.matches(path)) {
-						include = pathQuery.isIncluded();
-					}
+			// first iteration, just wildcards
+			for (PathQuery pathQuery : pathQueries) {
+				if (!pathQuery.isWildcard()) {
+					continue;
+				}
+				if (pathQuery.matches(path)) {
+					include = pathQuery.isIncluded();
+				}
+			}
+
+			// second iteration, non-wildcards
+			for (PathQuery pathQuery : pathQueries) {
+				if (pathQuery.isWildcard()) {
+					continue;
+				}
+				if (pathQuery.matches(path)) {
+					include = pathQuery.isIncluded();
 				}
 			}
 		}
