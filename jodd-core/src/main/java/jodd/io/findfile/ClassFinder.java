@@ -29,6 +29,9 @@ import static jodd.util.InExRuleMatcher.WILDCARD_RULE_MATCHER;
  * Its purpose is to help scanning class paths for some classes.
  * Content of Jar files is also examined.
  * <p>
+ * Scanning starts in included all mode (blacklist mode) for both jars and lists.
+ * User can set explicit excludes. Of course, mode can be changed.
+ * <p>
  * All paths are matched using {@link Wildcard#matchPath(String, String) path-style}
  * wildcard matcher. All entries are matched using {@link Wildcard#match(String, String) common-style}
  * wildcard matcher.
@@ -62,7 +65,7 @@ public abstract class ClassFinder {
 		InExRules<String, String> rulesJars = new InExRules<String, String>(WILDCARD_PATH_RULE_MATCHER);
 
 		for (String systemJar : systemJars) {
-			rulesJars.exclude(systemJar, true);
+			rulesJars.exclude(systemJar);
 		}
 
 		return rulesJars;
@@ -87,6 +90,14 @@ public abstract class ClassFinder {
 		}
 	}
 
+	public void setIncludeAllJarsMode() {
+		rulesJars.blacklist();
+	}
+
+	public void setExcludeAllJarsMode() {
+		rulesJars.whitelist();
+	}
+
 	// ---------------------------------------------------------------- included entries
 
 	protected final InExRules<String, String> rulesEntries = createEntriesRules();
@@ -105,6 +116,13 @@ public abstract class ClassFinder {
 		}
 	}
 
+	public void setIncludeAllEntriesMode() {
+		rulesEntries.blacklist();
+	}
+	public void setExcludeAllEntriesMode() {
+		rulesEntries.whitelist();
+	}
+
 	/**
 	 * Sets excluded names that narrows included set of packages.
 	 * @see jodd.util.InExRules
@@ -114,16 +132,6 @@ public abstract class ClassFinder {
 			rulesEntries.exclude(excludedEntry);
 		}
 	}
-
-	/**
-	 * Sets excluded names that narrows included set of packages.
-	 * @see jodd.util.InExRules
-	 */
-	public void setExcludedImportantEntries(String... excludedEntries) {
-			for (String excludedEntry : excludedEntries) {
-				rulesEntries.exclude(excludedEntry, true);
-			}
-		}
 
 	// ---------------------------------------------------------------- implementation
 
