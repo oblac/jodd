@@ -3,12 +3,11 @@
 package jodd.json;
 
 import jodd.JoddJson;
+import jodd.util.InExRules;
 import jodd.util.UnsafeUtil;
 import jodd.util.buffer.FastCharBuffer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +36,14 @@ public class JsonSerializer {
 
 	protected Map<Path, TypeJsonSerializer> pathSerializersMap;
 	protected TypeJsonSerializerMap typeSerializersMap;
-	protected List<PathQuery> pathQueries;
+
+	protected InExRules<Path, PathQuery> rules = new InExRules<Path, PathQuery>() {
+		@Override
+		public boolean accept(Path value, PathQuery rule, boolean include) {
+			return rule.matches(value);
+		}
+	};
+
 	protected String classMetadataName = JoddJson.classMetadataName;
 	protected boolean deep = JoddJson.deepSerialization;
 
@@ -68,37 +74,40 @@ public class JsonSerializer {
 	}
 
 	/**
-	 * Adds a list of included path queries.
+	 * Adds include path query.
 	 */
-	public JsonSerializer include(String... includes) {
-		if (pathQueries == null) {
-			pathQueries = new ArrayList<PathQuery>();
-		}
-		for (String include : includes) {
-			PathQuery pathQuery = new PathQuery(include, true);
-
-			if (!pathQueries.contains(pathQuery)) {
-				pathQueries.add(pathQuery);
-			}
-		}
+	public JsonSerializer include(String include) {
+		rules.include(new PathQuery(include, true));
 
 		return this;
 	}
+
+	/**
+	 * Adds a list of included path queries.
+	 */
+	public JsonSerializer include(String... includes) {
+		for (String include : includes) {
+			include(include);
+		}
+		return this;
+	}
+
+	/**
+	 * Adds exclude path query.
+	 */
+	public JsonSerializer exclude(String exclude) {
+		rules.exclude(new PathQuery(exclude, false));
+
+		return this;
+	}
+
 	/**
 	 * Adds a list of excluded path queries.
 	 */
 	public JsonSerializer exclude(String... excludes) {
-		if (pathQueries == null) {
-			pathQueries = new ArrayList<PathQuery>();
-		}
 		for (String exclude : excludes) {
-			PathQuery pathQuery = new PathQuery(exclude, false);
-
-			if (!pathQueries.contains(pathQuery)) {
-				pathQueries.add(pathQuery);
-			}
+			exclude(exclude);
 		}
-
 		return this;
 	}
 
@@ -108,25 +117,19 @@ public class JsonSerializer {
 	 * For example, exclude of 'aaa.bb.ccc' would include it's parent: 'aaa.bb'.
 	 */
 	public JsonSerializer exclude(boolean includeParent, String... excludes) {
-		if (pathQueries == null) {
-			pathQueries = new ArrayList<PathQuery>();
-		}
 		for (String exclude : excludes) {
 			if (includeParent) {
 				int dotIndex = exclude.lastIndexOf('.');
 				if (dotIndex != -1) {
 					PathQuery pathQuery = new PathQuery(exclude.substring(0, dotIndex), true);
 
-					if (!pathQueries.contains(pathQuery)) {
-						pathQueries.add(pathQuery);
-					}
+					rules.include(pathQuery);
 				}
 			}
 
 			PathQuery pathQuery = new PathQuery(exclude, false);
-			if (!pathQueries.contains(pathQuery)) {
-				pathQueries.add(pathQuery);
-			}
+
+			rules.exclude(pathQuery);
 		}
 
 		return this;

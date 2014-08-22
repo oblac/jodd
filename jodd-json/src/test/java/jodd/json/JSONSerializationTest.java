@@ -299,14 +299,12 @@ public class JSONSerializationTest {
 	public void testSetIncludes() {
 		JsonSerializer serializer = new JsonSerializer();
 		serializer.include("people.hobbies", "phones", "home", "people.resume");
-		List<PathQuery> includes = serializer.pathQueries;
 
-		assertFalse(includes.isEmpty());
-		assertEquals(4, includes.size());
-		assertEquals("[people.hobbies]", includes.get(0).toString());
-		assertEquals("[phones]", includes.get(1).toString());
-		assertEquals("[home]", includes.get(2).toString());
-		assertEquals("[people.resume]", includes.get(3).toString());
+		assertEquals(4, serializer.rules.count());
+		assertEquals("[people.hobbies]", serializer.rules.getRule(0).toString());
+		assertEquals("[phones]", serializer.rules.getRule(1).toString());
+		assertEquals("[home]", serializer.rules.getRule(2).toString());
+		assertEquals("[people.resume]", serializer.rules.getRule(3).toString());
 	}
 
 	@Test

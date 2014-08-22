@@ -321,31 +321,7 @@ public class JsonContext {
 	 * value may be changed.
 	 */
 	public boolean matchPathToQueries(boolean include) {
-		List<PathQuery> pathQueries = jsonSerializer.pathQueries;
-
-		if (pathQueries != null) {
-			// first iteration, just wildcards
-			for (PathQuery pathQuery : pathQueries) {
-				if (!pathQuery.isWildcard()) {
-					continue;
-				}
-				if (pathQuery.matches(path)) {
-					include = pathQuery.isIncluded();
-				}
-			}
-
-			// second iteration, non-wildcards
-			for (PathQuery pathQuery : pathQueries) {
-				if (pathQuery.isWildcard()) {
-					continue;
-				}
-				if (pathQuery.matches(path)) {
-					include = pathQuery.isIncluded();
-				}
-			}
-		}
-
-		return include;
+		return jsonSerializer.rules.apply(path, include);
 	}
 
 }
