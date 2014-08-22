@@ -17,9 +17,9 @@ public class RegExpFindFile extends FindFile<RegExpFindFile> {
 		return new InExRules<String, Object>() {
 
 			@Override
-			protected void addRule(Object rule, boolean include, boolean important) {
+			protected void addRule(Object rule, boolean include) {
 				Pattern pattern = Pattern.compile((String) rule);
-				super.addRule(pattern, include, important);
+				super.addRule(pattern, include);
 			}
 
 			@Override
