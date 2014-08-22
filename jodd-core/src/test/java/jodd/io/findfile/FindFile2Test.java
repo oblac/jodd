@@ -194,12 +194,12 @@ public class FindFile2Test {
 
 		wff.setMatchType(WildcardFindFile.Match.FULL_PATH);
 		wff.include("**/xxxxxxx/*");
+
 		int count = 0;
 		while (wff.nextFile() != null) {
 			count++;
 		}
 		assertEquals(0, count);
-
 	}
 
 

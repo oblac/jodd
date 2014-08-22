@@ -592,7 +592,7 @@ public class FindFile<T extends FindFile> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void init() {
-		if (rules.hasRules()) {
+		if (!rules.hasRules()) {
 			// if there are no rules applied, include all files in the output
 			includeAllMode();
 		}
