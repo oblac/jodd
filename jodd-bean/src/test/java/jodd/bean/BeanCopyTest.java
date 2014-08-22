@@ -4,7 +4,6 @@ package jodd.bean;
 
 import jodd.bean.data.FooBean;
 import jodd.bean.data.FooBeanString;
-import jodd.datetime.JDateTime;
 import jodd.util.Wildcard;
 import org.junit.Test;
 
@@ -446,7 +445,7 @@ public class BeanCopyTest {
 
 		private String name = "cow";
 		private Integer value = Integer.valueOf(7);
-		private long time = 100;
+		private long nick = 100;
 
 		public String getName() {
 			return name;
@@ -464,12 +463,12 @@ public class BeanCopyTest {
 			this.value = value;
 		}
 
-		public long getTime() {
-			return time;
+		public long getNick() {
+			return nick;
 		}
 
-		public void setTime(long time) {
-			this.time = time;
+		public void setNick(long nick) {
+			this.nick = nick;
 		}
 	}
 
@@ -480,21 +479,22 @@ public class BeanCopyTest {
 
 		BeanCopy beanCopy = new BeanCopy(moo, map) {
 			@Override
-			protected boolean match(String propertyName, String pattern, boolean included) {
+			public boolean accept(String propertyName, String pattern, boolean included) {
 				return Wildcard.match(propertyName, pattern);
 			}
 		};
 
 		// + exclude all
-
+		beanCopy.rules.reset();
+		map.clear();
 		beanCopy.exclude("*");
 		beanCopy.copy();
 
 		assertEquals(0, map.size());
 
-
 		// + exclude all but one
-
+		beanCopy.rules.reset();
+		map.clear();
 		beanCopy.exclude("*");
 		beanCopy.include("name");
 		beanCopy.copy();
@@ -503,34 +503,24 @@ public class BeanCopyTest {
 		assertEquals("cow", map.get("name"));
 
 		// + include all but one
-
-		beanCopy.exclude("time");
-		beanCopy.include(null);
+		beanCopy.rules.reset();
+		map.clear();
+		beanCopy.exclude("nick");
 		beanCopy.copy();
 
 		assertEquals(2, map.size());
 		assertEquals("cow", map.get("name"));
 		assertEquals("7", map.get("value").toString());
 
-		// + include one
-
-		beanCopy.exclude(null);
-		beanCopy.include("name");
-		beanCopy.copy();
-
-		assertEquals(1, map.size());
-		assertEquals("cow", map.get("name"));
-
 		// + include all
-
-		beanCopy.exclude(null);
-		beanCopy.include(null);
+		beanCopy.rules.reset();
+		map.clear();
 		beanCopy.copy();
 
 		assertEquals(3, map.size());
 		assertEquals("cow", map.get("name"));
 		assertEquals("7", map.get("value").toString());
-		assertEquals("100", map.get("time").toString());
+		assertEquals("100", map.get("nick").toString());
 
 	}
 }

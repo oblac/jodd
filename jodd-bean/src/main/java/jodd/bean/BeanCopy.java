@@ -30,16 +30,36 @@ public class BeanCopy extends BeanVisitor {
 	/**
 	 * Defines excluded property names.
 	 */
-	public BeanCopy exclude(String... exclude) {
-		excludeNames = exclude;
+	public BeanCopy exclude(String... excludes) {
+		for (String ex : excludes) {
+			rules.exclude(ex);
+		}
+		return this;
+	}
+
+	/**
+	 * Exclude a property.
+	 */
+	public BeanCopy exclude(String exclude) {
+		rules.exclude(exclude);
 		return this;
 	}
 
 	/**
 	 * Defines included property names.
 	 */
-	public BeanCopy include(String... include) {
-		includeNames = include;
+	public BeanCopy include(String... includes) {
+		for (String in : includes) {
+			rules.include(in);
+		}
+		return this;
+	}
+
+	/**
+	 * Include a property.
+	 */
+	public BeanCopy include(String include) {
+		rules.include(include);
 		return this;
 	}
 

@@ -7,6 +7,8 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
+import jodd.util.InExRuleMatcher;
+import jodd.util.InExRules;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,20 +18,16 @@ import java.util.Set;
  * Visitor for bean properties. It extracts properties names
  * from the source bean and then visits one by one.
  */
-public abstract class BeanVisitor {
+public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 
 	/**
 	 * Source bean.
 	 */
 	protected Object source;
 	/**
-	 * List of excluded property names.
+	 * Include/exclude rules.
 	 */
-	protected String[] excludeNames;
-	/**
-	 * List of included property names.
-	 */
-	protected String[] includeNames;
+	protected InExRules<String, String> rules = new InExRules<String, String>(this);
 	/**
 	 * Flag for enabling declared properties, or just public ones.
 	 */
@@ -99,45 +97,6 @@ public abstract class BeanVisitor {
 	}
 
 	/**
-	 * Accepts property and returns <code>true</code> if property should be visited.
-	 */
-	protected boolean acceptProperty(String propertyName) {
-		boolean included = true;
-
-		// check excluded
-		if (excludeNames != null) {
-			for (String excludeName : excludeNames) {
-				if (match(propertyName, excludeName, false)) {
-					// property is excluded, mark the flag
-					included = false;
-					break;
-				}
-			}
-		}
-
-		if (includeNames != null)  {
-			for (String includeName : includeNames) {
-				if (match(propertyName, includeName, true)) {
-					// property is included, hey!
-					return true;
-				}
-			}
-			// property was not included
-			return false;
-		}
-
-		return included;
-	}
-
-	/**
-	 * Matches property name with pattern.
-	 */
-	protected boolean match(String propertyName, String pattern, boolean included) {
-		return pattern.equals(propertyName);
-	}
-
-
-	/**
 	 * Starts visiting properties.
 	 */
 	public void visit() {
@@ -148,7 +107,7 @@ public abstract class BeanVisitor {
 				continue;
 			}
 
-			if (!acceptProperty(name)) {
+			if (!rules.match(name)) {
 				continue;
 			}
 
@@ -174,4 +133,10 @@ public abstract class BeanVisitor {
 	 */
 	protected abstract boolean visitProperty(String name, Object value);
 
+	/**
+	 * Compares property name to the rules.
+	 */
+	public boolean accept(String propertyName, String rule, boolean include) {
+		return propertyName.equals(rule);
+	}
 }
