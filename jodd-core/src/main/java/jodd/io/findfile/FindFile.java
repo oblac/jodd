@@ -3,7 +3,6 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
-import jodd.util.InExRuleMatcher;
 import jodd.util.InExRules;
 import jodd.util.sort.FastSort;
 import jodd.util.MultiComparator;
@@ -14,7 +13,6 @@ import jodd.util.collection.JoddArrayList;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.net.URI;
@@ -24,9 +22,13 @@ import java.util.NoSuchElementException;
 
 /**
  * Generic iterative file finder. Searches all files on specified search path.
+ * By default, it starts in whitelist mode, where everything is excluded.
+ * To search, you need to explicitly set include patterns. If no pattern is
+ * set, then the search starts in blacklist mode, where everything is included (search all).
  *
  * @see WildcardFindFile
  * @see RegExpFindFile
+ * @see jodd.util.InExRules
  */
 @SuppressWarnings("unchecked")
 public class FindFile<T extends FindFile> {
@@ -58,6 +60,7 @@ public class FindFile<T extends FindFile> {
 	protected boolean includeFiles = true;
 	protected boolean walking = true;
 	protected Match matchType = Match.FULL_PATH;
+	protected boolean blacklist = false;
 
 	public boolean isRecursive() {
 		return recursive;
@@ -375,17 +378,26 @@ public class FindFile<T extends FindFile> {
 	}
 
 	/**
+	 * Enables whitelist mode.
+	 */
+	public T excludeAllMode() {
+		blacklist = false;
+		return (T) this;
+	}
+
+	/**
+	 * Enables blacklist mode.
+	 */
+	public T includeAllMode() {
+		blacklist = true;
+		return (T) this;
+	}
+
+	/**
 	 * Defines exclude pattern.
 	 */
 	public T exclude(String pattern) {
 		rules.exclude(pattern);
-		return (T) this;
-	}
-	/**
-	 * Defines important exclude pattern.
-	 */
-	public T exclude(String pattern, boolean important) {
-		rules.exclude(pattern, important);
 		return (T) this;
 	}
 
@@ -409,7 +421,7 @@ public class FindFile<T extends FindFile> {
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		return rules.match(matchingFilePath);
+		return rules.match(matchingFilePath, blacklist);
 	}
 
 	/**
@@ -482,6 +494,7 @@ public class FindFile<T extends FindFile> {
 		todoFiles = null;
 		lastFile = null;
 		rules.reset();
+		blacklist = false;
 	}
 
 	/**
@@ -579,6 +592,11 @@ public class FindFile<T extends FindFile> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void init() {
+		if (rules.hasRules()) {
+			// if there are no rules applied, include all files in the output
+			includeAllMode();
+		}
+
 		todoFiles = new JoddArrayList<FilesIterator>();
 		todoFolders = new JoddArrayList<File>();
 

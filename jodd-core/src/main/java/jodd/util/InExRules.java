@@ -61,6 +61,16 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	}
 
 	/**
+	 * Returns <code>true</code> if rule engine has at least one rule set.
+	 */
+	public boolean hasRules() {
+		if (rules == null) {
+			return false;
+		}
+		return rules.size() > 0;
+	}
+
+	/**
 	 * Rule definition.
 	 */
 	public static class Rule<R> {
