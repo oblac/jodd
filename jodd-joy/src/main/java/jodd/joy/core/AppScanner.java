@@ -72,6 +72,8 @@ public class AppScanner {
 	 */
 	public void configure(ClassFinder classFinder) {
 
+		classFinder.setExcludeAllEntriesMode();
+
 		if (includedEntries == null) {
 			includedEntries = new String[] {
 					appCore.getClass().getPackage().getName() + ".*",
