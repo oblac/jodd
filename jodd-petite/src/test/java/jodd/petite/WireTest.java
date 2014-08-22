@@ -24,9 +24,9 @@ public class WireTest {
 	public void testContainer() {
 		PetiteContainer pc = new PetiteContainer();
 		AutomagicPetiteConfigurator configurator = new AutomagicPetiteConfigurator();
-		configurator.setExcludedEntries("*");
+		configurator.setExcludeAllEntriesMode();
 		configurator.setIncludedEntries("jodd.petite.*");
-		configurator.setExcludedImportantEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
+		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
 		configurator.configure(pc);
 
 		assertEquals(1, pc.getTotalBeans());
