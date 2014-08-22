@@ -3,6 +3,8 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.InExRuleMatcher;
+import jodd.util.InExRules;
 import jodd.util.sort.FastSort;
 import jodd.util.MultiComparator;
 import jodd.util.NaturalOrderComparator;
@@ -345,17 +347,20 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected ArrayList<String> includes;
-	protected ArrayList<String> excludes;
+	protected final InExRules rules = createRulesEngine();
+
+	/**
+	 * Creates rule engine.
+	 */
+	protected InExRules createRulesEngine() {
+		return new InExRules<String, String>();
+	}
 
 	/**
 	 * Defines include pattern.
 	 */
 	public T include(String pattern) {
-		if (includes == null) {
-			includes = new ArrayList<String>();
-		}
-		includes.add(pattern);
+		rules.include(pattern);
 		return (T) this;
 	}
 
@@ -363,10 +368,9 @@ public class FindFile<T extends FindFile> {
 	 * Defines include patterns.
 	 */
 	public T include(String... patterns) {
-		if (includes == null) {
-			includes = new ArrayList<String>();
+		for (String pattern : patterns) {
+			rules.include(pattern);
 		}
-		Collections.addAll(includes, patterns);
 		return (T) this;
 	}
 
@@ -374,10 +378,14 @@ public class FindFile<T extends FindFile> {
 	 * Defines exclude pattern.
 	 */
 	public T exclude(String pattern) {
-		if (excludes == null) {
-			excludes = new ArrayList<String>();
-		}
-		excludes.add(pattern);
+		rules.exclude(pattern);
+		return (T) this;
+	}
+	/**
+	 * Defines important exclude pattern.
+	 */
+	public T exclude(String pattern, boolean important) {
+		rules.exclude(pattern, important);
 		return (T) this;
 	}
 
@@ -385,10 +393,9 @@ public class FindFile<T extends FindFile> {
 	 * Defines exclude patterns.
 	 */
 	public T exclude(String... patterns) {
-		if (excludes == null) {
-			excludes = new ArrayList<String>();
+		for (String pattern : patterns) {
+			rules.exclude(pattern);
 		}
-		Collections.addAll(excludes, patterns);
 		return (T) this;
 	}
 
@@ -396,47 +403,13 @@ public class FindFile<T extends FindFile> {
 	 * Determine if file is accepted, based on include and exclude
 	 * rules. Called on each file entry (file or directory) and
 	 * returns <code>true</code> if file passes search criteria.
-	 * If exclude rules exist, file is matched against them.
-	 * If file matches one of the exclude rules, it will not be accepted.
-	 * Then the file matches includes rules, if they exist.
-	 * If file matches one of the includes rules, it will be accepted,
-	 * otherwise it will be rejected.
 	 * File is matched using {@link #getMatchingFilePath(java.io.File) matching file path}.
+	 * @see jodd.util.InExRules
 	 */
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		if (excludes != null) {
-			for (String pattern : excludes) {
-				if (match(matchingFilePath, pattern) == true) {
-					return false;
-				}
-			}
-		}
-
-		if (includes != null) {
-			for (String pattern : includes) {
-				if (match(matchingFilePath, pattern) == true) {
-					return true;
-				}
-			}
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Defines matching logic for given pattern. Default implementation
-	 * simple checks if {@link #getMatchingFilePath(java.io.File) matching file name}
-	 * is equal to some pattern. Various implementation may define different matching logic.
-	 * @param path matched file path
-	 * @param pattern pattern to match against
-	 *
-	 * @see #getMatchingFilePath(java.io.File)
-	 * @see #acceptFile(java.io.File)
-	 */
-	protected boolean match(String path, String pattern) {
-		return path.equals(pattern);
+		return rules.match(matchingFilePath);
 	}
 
 	/**
@@ -508,8 +481,7 @@ public class FindFile<T extends FindFile> {
 		pathListOriginal = null;
 		todoFiles = null;
 		lastFile = null;
-		includes = null;
-		excludes = null;
+		rules.reset();
 	}
 
 	/**
@@ -594,6 +566,7 @@ public class FindFile<T extends FindFile> {
 	/**
 	 * Performs scanning.
 	 */
+	@SuppressWarnings("StatementWithEmptyBody")
 	public void scan() {
 		while (nextFile() != null) {
 		}

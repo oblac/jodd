@@ -2,7 +2,8 @@
 
 package jodd.io.findfile;
 
-import java.util.HashMap;
+import jodd.util.InExRules;
+
 import java.util.regex.Pattern;
 
 /**
@@ -11,21 +12,21 @@ import java.util.regex.Pattern;
  */
 public class RegExpFindFile extends FindFile<RegExpFindFile> {
 
-	private HashMap<String, Pattern> searchPatterns;
-
 	@Override
-	protected boolean match(String path, String patternString) {
-		if (searchPatterns == null) {
-			searchPatterns = new HashMap<String, Pattern>();
-		}
+	protected InExRules createRulesEngine() {
+		return new InExRules<String, Object>() {
 
-		Pattern pattern = searchPatterns.get(patternString);
+			@Override
+			protected void addRule(Object rule, boolean include, boolean important) {
+				Pattern pattern = Pattern.compile((String) rule);
+				super.addRule(pattern, include, important);
+			}
 
-		if (pattern == null) {
-			pattern = Pattern.compile(patternString);
-			searchPatterns.put(patternString, pattern);
-		}
-
-		return pattern.matcher(path).matches();
+			@Override
+			public boolean accept(String path, Object pattern, boolean include) {
+				return ((Pattern) pattern).matcher(path).matches();
+			}
+		};
 	}
+
 }
