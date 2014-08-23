@@ -42,4 +42,15 @@ public class JoddJson {
 	 */
 	public static boolean useAltPathsByParser = false;
 
+	/**
+	 * List of excluded types for serialization.
+	 */
+	public static Class[] excludedTypes = null;
+
+	/**
+	 * List of excluded types names for serialization. Type name
+	 * can contain wildcards (<code>*</code> and <code>?</code>).
+	 */
+	public static String[] excludedTypeNames = null;
+
 }

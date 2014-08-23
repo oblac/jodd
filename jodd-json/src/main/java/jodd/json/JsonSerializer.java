@@ -3,6 +3,7 @@
 package jodd.json;
 
 import jodd.JoddJson;
+import jodd.util.ArraysUtil;
 import jodd.util.InExRules;
 import jodd.util.UnsafeUtil;
 import jodd.util.buffer.FastCharBuffer;
@@ -46,6 +47,8 @@ public class JsonSerializer {
 
 	protected String classMetadataName = JoddJson.classMetadataName;
 	protected boolean deep = JoddJson.deepSerialization;
+	protected Class[] excludedTypes = null;
+	protected String[] excludedTypeNames = null;
 
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
@@ -153,10 +156,30 @@ public class JsonSerializer {
 	}
 
 	/**
-	 * Returns <code>true</code> if serialization is deep.
+	 * Excludes type names. You can disable
+	 * serialization of properties that are of some type.
+	 * For example, you can disable properties of <code>InputStream</code>.
+	 * You can use wildcards to describe type names.
 	 */
-	public boolean isDeep() {
-		return deep;
+	public JsonSerializer excludeTypes(String... typeNames) {
+		if (excludedTypeNames == null) {
+			excludedTypeNames = typeNames;
+		} else {
+			excludedTypeNames = ArraysUtil.join(excludedTypeNames, typeNames);
+		}
+		return this;
+	}
+
+	/**
+	 * Excludes types. Supports interfaces and subclasses as well.
+	 */
+	public JsonSerializer excludeTypes(Class... types) {
+		if (excludedTypes == null) {
+			excludedTypes = types;
+		} else {
+			excludedTypes = ArraysUtil.join(excludedTypes, types);
+		}
+		return this;
 	}
 
 	// ---------------------------------------------------------------- serialize

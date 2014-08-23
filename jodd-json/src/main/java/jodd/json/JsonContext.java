@@ -2,9 +2,12 @@
 
 package jodd.json;
 
+import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
+import jodd.util.ReflectUtil;
 import jodd.util.StringPool;
+import jodd.util.Wildcard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,9 +47,8 @@ public class JsonContext {
 	 */
 	public boolean isUsed(Object value) {
 		for (int i = 0; i < bag.size(); i++) {
-			Object o = bag.get(i);
 
-			if (o == value) {
+			if (bag.get(i) == value) {
 				return true;
 			}
 		}
@@ -297,22 +299,65 @@ public class JsonContext {
 	 * Matches property types that are ignored by default.
 	 */
 	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean include) {
-		if (include == true) {
-			if (propertyType != null && !jsonSerializer.deep) {
+		if (!include) {
+			return false;
+		}
+
+		if (propertyType != null) {
+			if (!jsonSerializer.deep) {
 				ClassDescriptor propertyTypeClassDescriptor = ClassIntrospector.lookup(propertyType);
 
 				if (propertyTypeClassDescriptor.isArray()) {
-					include = false;
+					return false;
 				}
-				else if (propertyTypeClassDescriptor.isCollection()) {
-					include = false;
+				if (propertyTypeClassDescriptor.isCollection()) {
+					return false;
 				}
-				else if (propertyTypeClassDescriptor.isMap()) {
-					include = false;
+				if (propertyTypeClassDescriptor.isMap()) {
+					return false;
+				}
+			}
+
+			// still not excluded, continue with excluded types and type names
+
+			// + excluded types
+
+			if (JoddJson.excludedTypes != null) {
+				for (Class excludedType : JoddJson.excludedTypes) {
+					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
+						return false;
+					}
+				}
+			}
+			if (jsonSerializer.excludedTypes != null) {
+				for (Class excludedType : jsonSerializer.excludedTypes) {
+					if (ReflectUtil.isTypeOf(propertyType, excludedType)) {
+						return false;
+					}
+				}
+			}
+
+			// + exclude type names
+
+			String propertyTypeName = propertyType.getName();
+
+			if (JoddJson.excludedTypeNames != null) {
+				for (String excludedTypeName : JoddJson.excludedTypeNames) {
+					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
+						return false;
+					}
+				}
+			}
+			if (jsonSerializer.excludedTypeNames != null) {
+				for (String excludedTypeName : jsonSerializer.excludedTypeNames) {
+					if (Wildcard.match(propertyTypeName, excludedTypeName)) {
+						return false;
+					}
 				}
 			}
 		}
-		return include;
+
+		return true;
 	}
 
 
