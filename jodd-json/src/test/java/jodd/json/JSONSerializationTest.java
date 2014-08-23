@@ -6,6 +6,8 @@ import jodd.JoddJson;
 import jodd.json.mock.Address;
 import jodd.json.mock.Employee;
 import jodd.json.mock.Friend;
+import jodd.json.mock.Hill;
+import jodd.json.mock.Mountain;
 import jodd.json.mock.Network;
 import jodd.json.mock.Person;
 import jodd.json.mock.Phone;
@@ -572,6 +574,42 @@ public class JSONSerializationTest {
 		assertAttribute("phones", json);
 		assertAttributeMissing("exchange", json);
 	}
+
+	@Test
+	public void testSuperclass() {
+		Hill hill = new Hill();
+		hill.setHeight("qwe");
+		hill.setName("aaa");
+
+		String json = new JsonSerializer().serialize(hill);
+
+		assertAttribute("height", json);
+		assertAttributeMissing("name", json);
+
+		Mountain mountain = new Mountain();
+		mountain.setName("bbb");
+		mountain.setHeight("123");
+		mountain.setWild(true);
+
+		JoddJson.serializationSubclassAware = false;
+
+		JoddJson.annotationManager.reset();
+		json = new JsonSerializer().serialize(mountain);
+
+		assertAttribute("height", json);
+		assertAttribute("name", json);
+		assertAttribute("wild", json);
+
+		JoddJson.serializationSubclassAware = true;
+
+		JoddJson.annotationManager.reset();
+		json = new JsonSerializer().serialize(mountain);
+
+		assertAttribute("height", json);
+		assertAttributeMissing("name", json);
+		assertAttributeMissing("wild", json);
+	}
+
 
 	// ---------------------------------------------------------------- custom asserts
 
