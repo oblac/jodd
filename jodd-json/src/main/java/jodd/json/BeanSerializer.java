@@ -8,7 +8,6 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
 import jodd.json.meta.JsonAnnotationManager;
-import jodd.util.ArraysUtil;
 
 import java.lang.reflect.Modifier;
 
@@ -101,16 +100,7 @@ public class BeanSerializer {
 
 		// + annotations
 
-		if (include == true) {
-			if (ArraysUtil.contains(typeData.excludes, propertyName)) {
-				include = false;
-			}
-		}
-		else {
-			if (ArraysUtil.contains(typeData.includes, propertyName)) {
-				include = true;
-			}
-		}
+		include = typeData.rules.apply(propertyName, true, include);
 
 		// + path queries: excludes/includes
 

@@ -303,7 +303,7 @@ public class JSONSerializationTest {
 		JsonSerializer serializer = new JsonSerializer();
 		serializer.include("people.hobbies", "phones", "home", "people.resume");
 
-		assertEquals(4, serializer.rules.count());
+		assertEquals(4, serializer.rules.totalRules());
 		assertEquals("[people.hobbies]", serializer.rules.getRule(0).toString());
 		assertEquals("[phones]", serializer.rules.getRule(1).toString());
 		assertEquals("[home]", serializer.rules.getRule(2).toString());

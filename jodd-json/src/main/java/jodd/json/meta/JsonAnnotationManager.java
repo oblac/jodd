@@ -9,11 +9,13 @@ import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.ArraysUtil;
+import jodd.util.InExRules;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,22 +23,27 @@ import java.util.Map;
  */
 public class JsonAnnotationManager {
 
-	private static final String[] EMPTY = new String[0];
-
 	/**
 	 * Type information read from annotations.
 	 */
 	public static class TypeData {
-		public final String[] includes;
-		public final String[] excludes;
+		public final InExRules<String, String> rules;
 		public final boolean strict;
 
 		public final String[] jsonNames;
 		public final String[] realNames;
 
-		public TypeData(String[] includes, String[] excludes, boolean strict, String[] jsonNames, String[] realNames) {
-			this.includes = includes;
-			this.excludes = excludes;
+		public TypeData(List<String> includes, List<String> excludes, boolean strict, String[] jsonNames, String[] realNames) {
+			rules = new InExRules<String, String>();
+
+			for (String include : includes) {
+				rules.include(include);
+			}
+			for (String exclude : excludes) {
+				rules.exclude(exclude);
+			}
+
+
 			this.strict = strict;
 			this.jsonNames = jsonNames;
 			this.realNames = realNames;
@@ -181,21 +188,6 @@ public class JsonAnnotationManager {
 			}
 		}
 
-		String[] incs;
-
-		if (includedList.size() > 0) {
-			incs = includedList.toArray(new String[includedList.size()]);
-		} else {
-			incs = EMPTY;
-		}
-
-		String[] excs;
-
-		if (excludedList.size() > 0) {
-			excs = excludedList.toArray(new String[excludedList.size()]);
-		} else {
-			excs = EMPTY;
-		}
 
 		String[] reals = null;
 
@@ -213,7 +205,7 @@ public class JsonAnnotationManager {
 
 		JSONAnnotationData data = (JSONAnnotationData) jsonAnnotation.readAnnotationData(type);
 
-		return new TypeData(incs, excs, data != null && data.isStrict(), jsons, reals);
+		return new TypeData(includedList, excludedList, data != null && data.isStrict(), jsons, reals);
 	}
 
 }

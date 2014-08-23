@@ -232,11 +232,11 @@ public class JsonSerializerTest {
 
 		JsonAnnotationManager.TypeData typeData = jam.lookupTypeData(Cook.class);
 
-		assertEquals(1, typeData.includes.length);
-		assertEquals(1, typeData.excludes.length);
+		assertEquals(1, typeData.rules.totalIncludeRules());
+		assertEquals(1, typeData.rules.totalExcludeRules());
 
-		assertEquals("ccc", typeData.includes[0]);
-		assertEquals("bbb", typeData.excludes[0]);
+		assertEquals("ccc", typeData.rules.getRule(0));
+		assertEquals("bbb", typeData.rules.getRule(1));
 
 		JsonSerializer jsonSerializer = new JsonSerializer();
 
@@ -252,11 +252,11 @@ public class JsonSerializerTest {
 
 		typeData = jam.lookupTypeData(MasterCook.class);
 
-		assertEquals(1, typeData.includes.length);
-		assertEquals(1, typeData.excludes.length);
+		assertEquals(1, typeData.rules.totalIncludeRules());
+		assertEquals(1, typeData.rules.totalExcludeRules());
 
-		assertEquals("ccc", typeData.includes[0]);
-		assertEquals("bbb", typeData.excludes[0]);
+		assertEquals("ccc", typeData.rules.getRule(0));
+		assertEquals("bbb", typeData.rules.getRule(1));
 
 		json = jsonSerializer.serialize(masterCook);
 
