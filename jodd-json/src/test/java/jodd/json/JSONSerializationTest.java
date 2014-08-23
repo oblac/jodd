@@ -10,6 +10,7 @@ import jodd.json.mock.Network;
 import jodd.json.mock.Person;
 import jodd.json.mock.Phone;
 import jodd.json.mock.Spiderman;
+import jodd.json.mock.Surfer;
 import jodd.json.mock.TestClass2;
 import jodd.json.mock.TestClass3;
 import jodd.json.mock.Zipcode;
@@ -18,6 +19,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -515,6 +518,60 @@ public class JSONSerializationTest {
 		assertAttributeMissing("nicknamesAsArray", json);
 	}
 
+	@Test
+	public void testIncludesExcludes() throws FileNotFoundException {
+		Surfer surfer = Surfer.createSurfer();
+
+		String json = new JsonSerializer().serialize(surfer);
+
+		assertAttribute("name", json);
+		assertStringValue("jodd", json);
+		assertAttribute("id", json);
+		assertAttribute("split", json);
+		assertAttribute("skill", json);
+		assertAttribute("pipe", json);
+		assertAttributeMissing("phones", json);
+
+		// exclude pipe
+		json = new JsonSerializer().excludeTypes(InputStream.class).serialize(surfer);
+
+		assertAttribute("name", json);
+		assertStringValue("jodd", json);
+		assertAttribute("id", json);
+		assertAttribute("split", json);
+		assertAttribute("skill", json);
+		assertAttributeMissing("pipe", json);
+		assertAttributeMissing("phones", json);
+
+		// exclude pipe (alt)
+
+		json = new JsonSerializer().excludeTypes("*Stream").serialize(surfer);
+
+		assertAttribute("name", json);
+		assertStringValue("jodd", json);
+		assertAttribute("id", json);
+		assertAttribute("split", json);
+		assertAttribute("skill", json);
+		assertAttributeMissing("pipe", json);
+		assertAttributeMissing("phones", json);
+
+		// exclude s*, include phones
+		json = new JsonSerializer().exclude("split").include("phones").excludeTypes("*Stream").serialize(surfer);
+
+		assertAttribute("name", json);
+		assertStringValue("jodd", json);
+		assertAttribute("id", json);
+		assertAttributeMissing("split", json);
+		assertAttribute("skill", json);
+		assertAttributeMissing("pipe", json);
+		assertAttribute("phones", json);
+		assertAttribute("exchange", json);
+
+		json = new JsonSerializer().exclude("split").include("phones").exclude("phones.exchange").serialize(surfer);
+
+		assertAttribute("phones", json);
+		assertAttributeMissing("exchange", json);
+	}
 
 	// ---------------------------------------------------------------- custom asserts
 

@@ -25,7 +25,7 @@ public class Phone {
 			this.number = matcher.group(3);
 		}
 		else {
-			throw new IllegalArgumentException(number + " does not match one of these formats: (xxx) xxx-xxxx, xxx xxx-xxxx, or xxx xxx xxxx.");
+			throw new IllegalArgumentException();
 		}
 	}
 
