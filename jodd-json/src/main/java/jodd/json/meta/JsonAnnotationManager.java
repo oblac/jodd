@@ -23,6 +23,15 @@ import java.util.Map;
  */
 public class JsonAnnotationManager {
 
+	private final JSONAnnotation jsonAnnotation;
+	private final Map<Class, TypeData> typeDataMap;
+
+	@SuppressWarnings("unchecked")
+	public JsonAnnotationManager() {
+		typeDataMap = new HashMap<Class, TypeData>();
+		jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
+	}
+
 	/**
 	 * Type information read from annotations.
 	 */
@@ -78,28 +87,11 @@ public class JsonAnnotationManager {
 		}
 	}
 
-	private final Map<Class, TypeData> typeDataMap = new HashMap<Class, TypeData>();
-
-	private static JsonAnnotationManager jsonAnnotationManager;
-
 	/**
-	 * Returns singleton instance of annotation manager.
+	 * Resets type data map.
 	 */
-	public static JsonAnnotationManager getInstance() {
-		if (jsonAnnotationManager == null) {
-			jsonAnnotationManager = new JsonAnnotationManager();
-		}
-		return jsonAnnotationManager;
-	}
-
-
-	private JSONAnnotation jsonAnnotation;
-
-	protected JSONAnnotation getJSONAnnotationReader() {
-		if (jsonAnnotation == null) {
-			jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
-		}
-		return jsonAnnotation;
+	public void reset() {
+		typeDataMap.clear();
 	}
 
 	/**
@@ -110,11 +102,65 @@ public class JsonAnnotationManager {
 		TypeData typeData = typeDataMap.get(type);
 
 		if (typeData == null) {
+			if (JoddJson.serializationSubclassAware) {
+				typeData = findSubclassTypeData(type);
+			}
+
+			if (typeData == null) {
+				typeData = scanClassForAnnotations(type);
+				typeDataMap.put(type, typeData);
+			}
+		}
+
+		return typeData;
+	}
+
+	/**
+	 * Lookups type data and creates one if missing.
+	 */
+	protected TypeData _lookupTypeData(Class type) {
+		TypeData typeData = typeDataMap.get(type);
+
+		if (typeData == null) {
 			typeData = scanClassForAnnotations(type);
 			typeDataMap.put(type, typeData);
 		}
 
 		return typeData;
+	}
+
+	/**
+	 * Finds type data of first annotated superclass or interface.
+	 */
+	protected TypeData findSubclassTypeData(Class type) {
+		if (type.getAnnotation(JoddJson.jsonAnnotation) != null) {
+			// current type has annotation, dont find anything, let type data be created
+			return null;
+		}
+
+		ClassDescriptor cd = ClassIntrospector.lookup(type);
+
+		// lookup superclasses
+
+		Class[] superClasses = cd.getAllSuperclasses();
+
+		for (Class superClass : superClasses) {
+			if (superClass.getAnnotation(JoddJson.jsonAnnotation) != null) {
+				// annotated subclass founded!
+				return _lookupTypeData(superClass);
+			}
+		}
+
+		Class[] interfaces = cd.getAllInterfaces();
+
+		for (Class interfaze : interfaces) {
+			if (interfaze.getAnnotation(JoddJson.jsonAnnotation) != null) {
+				// annotated subclass founded!
+				return _lookupTypeData(interfaze);
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -147,8 +193,6 @@ public class JsonAnnotationManager {
 		ArrayList<String> excludedList = new ArrayList<String>();
 		ArrayList<String> jsonNames = new ArrayList<String>();
 		ArrayList<String> realNames = new ArrayList<String>();
-
-		jsonAnnotation = getJSONAnnotationReader();
 
 		for (PropertyDescriptor pd : pds) {
 			MethodDescriptor md = pd.getReadMethodDescriptor();
