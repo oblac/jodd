@@ -7,7 +7,6 @@ import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.introspector.Setter;
-import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
@@ -705,7 +704,7 @@ public class JsonParser {
 
 			if (!isTargetRealTypeMap) {
 				// replace key with real property value
-				key = JsonAnnotationManager.getInstance().resolveRealName(targetType, key);
+				key = JoddJson.annotationManager.resolveRealName(targetType, key);
 			}
 
 			if (!isTargetTypeMap) {

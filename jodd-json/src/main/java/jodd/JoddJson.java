@@ -3,6 +3,7 @@
 package jodd;
 
 import jodd.json.meta.JSON;
+import jodd.json.meta.JsonAnnotationManager;
 
 import java.lang.annotation.Annotation;
 
@@ -52,5 +53,16 @@ public class JoddJson {
 	 * can contain wildcards (<code>*</code> and <code>?</code>).
 	 */
 	public static String[] excludedTypeNames = null;
+
+	/**
+	 * When <code>true</code>, then search for first annotated
+	 * class or interface and use it's data.
+	 */
+	public static boolean serializationSubclassAware = true;
+
+	/**
+	 * Default JSON annotation manager.
+	 */
+	public static JsonAnnotationManager annotationManager = new JsonAnnotationManager();
 
 }

@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
@@ -36,9 +37,7 @@ public class BeanSerializer {
 
 		type = bean.getClass();
 
-		JsonAnnotationManager jsonAnnotationManager = JsonAnnotationManager.getInstance();
-
-		typeData = jsonAnnotationManager.lookupTypeData(type);
+		typeData = JoddJson.annotationManager.lookupTypeData(type);
 	}
 
 	/**
