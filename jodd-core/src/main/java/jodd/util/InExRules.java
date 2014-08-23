@@ -51,13 +51,27 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	}
 
 	/**
-	 * Returns total number of rules.
+	 * Returns total number of all rules.
 	 */
-	public int count() {
+	public int totalRules() {
 		if (rules == null) {
 			return 0;
 		}
 		return rules.size();
+	}
+
+	/**
+	 * Returns total number of include rules.
+	 */
+	public int totalIncludeRules() {
+		return includesCount;
+	}
+
+	/**
+	 * Returns total number of exclude rules.
+	 */
+	public int totalExcludeRules() {
+		return excludesCount;
 	}
 
 	/**
