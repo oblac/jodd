@@ -429,4 +429,13 @@ public class CharUtil {
 		}
 	}
 
+	/**
+	 * Converts integer digit to heck char.
+	 */
+	public static char int2hex(int i) {
+		return HEX_CHARS[i];
+	}
+
+	public static final char[] HEX_CHARS = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
 }
