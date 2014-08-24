@@ -16,23 +16,6 @@ import java.util.Map;
  */
 public class JsonSerializer {
 
-	// ---------------------------------------------------------------- defaults
-
-	protected static TypeJsonSerializerMap defaultSerializers;
-
-	static {
-		defaultSerializers = new TypeJsonSerializerMap();
-		defaultSerializers.registerDefaults();
-	}
-
-	/**
-	 * Returns default map of serializers.
-	 */
-	public static TypeJsonSerializerMap getDefaultSerializers() {
-		return defaultSerializers;
-	}
-
-
 	// ---------------------------------------------------------------- config
 
 	protected Map<Path, TypeJsonSerializer> pathSerializersMap;
@@ -68,7 +51,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer use(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
-			typeSerializersMap = new TypeJsonSerializerMap();
+			typeSerializersMap = new TypeJsonSerializerMap(false);
 		}
 
 		typeSerializersMap.register(type, typeJsonSerializer);

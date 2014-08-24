@@ -101,7 +101,7 @@ public class JsonContext extends JsonWriter {
 		// + globals
 
 		if (typeJsonSerializer == null) {
-			typeJsonSerializer = JsonSerializer.getDefaultSerializers().lookup(type);
+			typeJsonSerializer = JoddJson.defaultSerializers.lookup(type);
 		}
 
 		typeJsonSerializer.serialize(this, object);

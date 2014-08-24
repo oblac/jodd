@@ -2,6 +2,7 @@
 
 package jodd;
 
+import jodd.json.TypeJsonSerializerMap;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 
@@ -20,6 +21,11 @@ public class JoddJson {
 	 * Annotation used for marking the properties.
 	 */
 	public static Class<? extends Annotation> jsonAnnotation = JSON.class;
+
+	/**
+	 * Default JSON type serializers.
+	 */
+	public static TypeJsonSerializerMap defaultSerializers = new TypeJsonSerializerMap(true);
 
 	/**
 	 * Specifies if 'class' metadata is used. When set, class metadata

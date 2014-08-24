@@ -38,6 +38,15 @@ import java.util.Map;
  */
 public class TypeJsonSerializerMap {
 
+	/**
+	 * Creates new serializers map and optionally registers defaults.
+	 */
+	public TypeJsonSerializerMap(boolean registerDefaults) {
+		if (registerDefaults) {
+			registerDefaults();
+		}
+	}
+
 	protected HashMap<Class, TypeJsonSerializer> map = new HashMap<Class, TypeJsonSerializer>();
 
 	public void registerDefaults() {
