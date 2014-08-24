@@ -191,6 +191,14 @@ public class JsonWriter {
 		}
 	}
 
+	public void writeNumber(Number number) {
+		if (number == null) {
+			write(StringPool.NULL);
+			return;
+		}
+		write(number.toString());
+	}
+
 	/**
 	 * Appends char to the buffer. Used internally.
 	 */
