@@ -203,4 +203,13 @@ public class JsonSerializer {
 
 		return UnsafeUtil.createString(fastCharBuffer.toArray());
 	}
+
+	// ---------------------------------------------------------------- json context
+
+	/**
+	 * Creates new JSON context.
+	 */
+	public JsonContext createJsonContext(Appendable appendable) {
+		return new JsonContext(this, appendable);
+	}
 }
