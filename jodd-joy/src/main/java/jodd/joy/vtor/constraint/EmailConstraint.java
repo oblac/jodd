@@ -6,6 +6,9 @@ import jodd.mail.EmailAddress;
 import jodd.vtor.ValidationConstraint;
 import jodd.vtor.ValidationConstraintContext;
 
+/**
+ * Email address validator.
+ */
 public class EmailConstraint implements ValidationConstraint<Email> {
 
 	public void configure(Email annotation) {
@@ -15,6 +18,9 @@ public class EmailConstraint implements ValidationConstraint<Email> {
 		if (value == null) {
 			return true;
 		}
-		return EmailAddress.isValidText(value.toString());
+
+		EmailAddress emailAddress = new EmailAddress(value.toString());
+
+		return emailAddress.isValid();
 	}
 }
