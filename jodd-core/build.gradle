@@ -5,3 +5,9 @@ ext.moduleDescription = 'Jodd Core tools and utilities, including type converter
 dependencies {
 	testCompile lib.junit
 }
+
+jar {
+	manifest {
+		instruction 'Import-Package', '*;resolution:=optional'
+	}
+}
