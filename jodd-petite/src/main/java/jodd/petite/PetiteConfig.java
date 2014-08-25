@@ -2,7 +2,6 @@
 
 package jodd.petite;
 
-import jodd.JoddPetite;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
 

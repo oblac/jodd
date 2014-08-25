@@ -1,6 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.petite;
+
+import jodd.Jodd;
 
 /**
  * Jodd PETITE module.
@@ -8,7 +10,11 @@ package jodd;
 public class JoddPetite {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddPetite.class);
 
 		useProxetta = Jodd.isModuleLoaded(Jodd.PROXETTA);
 	}

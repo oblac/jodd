@@ -2,7 +2,6 @@
 
 package jodd.petite;
 
-import jodd.JoddPetite;
 import jodd.bean.BeanUtil;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;

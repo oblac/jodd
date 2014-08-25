@@ -2,7 +2,7 @@
 
 package jodd.props;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.io.findfile.ClassScanner;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;

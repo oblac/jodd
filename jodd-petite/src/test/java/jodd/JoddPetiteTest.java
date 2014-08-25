@@ -2,6 +2,7 @@
 
 package jodd;
 
+import jodd.petite.JoddPetite;
 import org.junit.Test;
 
 import static jodd.Jodd.*;
