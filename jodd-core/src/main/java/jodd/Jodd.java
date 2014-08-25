@@ -33,7 +33,6 @@ public class Jodd {
 	public static final int UPLOAD 			= ndx++;
 	public static final int VTOR 			= ndx++;
 
-	private static final boolean[] LOADED = new boolean[ndx];
 	private static final Object[] MODULES = new Object[ndx];
 	private static final String[] NAMES = new String[ndx];
 
@@ -72,7 +71,7 @@ public class Jodd {
 
 		MODULES[moduleId] = joddModuleClass;
 
-		updateModuleInstances();
+		updateModuleInstance(moduleId);
 	}
 
 	/**
@@ -111,7 +110,9 @@ public class Jodd {
 			}
 		}
 
-		updateModuleInstances();
+		for (int i = 0; i < MODULES.length; i++) {
+			updateModuleInstance(i);
+		}
 	}
 
 	/**
@@ -119,31 +120,26 @@ public class Jodd {
 	 * When new module is created, {@link JoddModule#start()}
 	 * will be called only once.
 	 */
-	private static void updateModuleInstances() {
-		for (int i = 0; i < MODULES.length; i++) {
-			Object module = MODULES[i];
+	private static void updateModuleInstance(int moduleId) {
+		Object module = MODULES[moduleId];
 
-			if (module == null) {
-				LOADED[i] = false;
-				continue;
-			}
+		if (module == null) {
+			return;
+		}
 
-			if (module instanceof Class) {
-				Class type = (Class) module;
-				try {
+		if (module instanceof Class) {
+			Class type = (Class) module;
+			try {
 
-					module = type.newInstance();
-					MODULES[i] = module;
-					LOADED[i] = true;
+				module = type.newInstance();
+				MODULES[moduleId] = module;
 
-					if (module instanceof JoddModule) {
-						((JoddModule) module).start();
-					}
-				} catch (Exception ex) {
-					MODULES[i] = null;
-					LOADED[i] = false;
-					throw new UncheckedException(ex);
+				if (module instanceof JoddModule) {
+					((JoddModule) module).start();
 				}
+			} catch (Exception ex) {
+				MODULES[moduleId] = null;
+				throw new UncheckedException(ex);
 			}
 		}
 	}
@@ -154,13 +150,13 @@ public class Jodd {
 	 * Returns <code>true</code> if module is loaded.
 	 */
 	public static boolean isModuleLoaded(int moduleNdx) {
-		return LOADED[moduleNdx];
+		return MODULES[moduleNdx] != null;
 	}
 
 	/**
 	 * Returns module instance if module is loaded. It may return:
 	 * <ul>
-	 *     <li>null - when module does not exist</li>
+	 *     <li>null - when module is not registered/li>
 	 *     <li>class - when module is registered, but not yet loaded</li>
 	 *     <li>object - when module is registered and loaded</li>
 	 * </ul>
