@@ -1,7 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.core;
 
+import jodd.Jodd;
 import jodd.io.FileUtilParams;
 import jodd.util.StringPool;
 import jodd.util.cl.ClassLoaderStrategy;
@@ -14,7 +15,11 @@ import jodd.util.cl.DefaultClassLoaderStrategy;
 public class JoddCore {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddCore.class);
 	}
 
 	/**

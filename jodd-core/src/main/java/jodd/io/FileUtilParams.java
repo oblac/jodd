@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 /**
  * {@link FileUtil File utilities} parameters.

@@ -2,9 +2,9 @@
 
 package jodd.io;
 
-import static jodd.JoddCore.ioBufferSize;
+import static jodd.core.JoddCore.ioBufferSize;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

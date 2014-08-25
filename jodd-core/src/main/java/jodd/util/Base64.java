@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 import java.util.Arrays;
 import java.io.UnsupportedEncodingException;

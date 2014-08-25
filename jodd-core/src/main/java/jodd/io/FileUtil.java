@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.util.StringPool;
 import jodd.util.SystemUtil;
 import jodd.util.URLDecoder;
@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 
-import static jodd.JoddCore.fileUtilParams;
+import static jodd.core.JoddCore.fileUtilParams;
 
 /**
  * File utilities.

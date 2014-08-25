@@ -2,7 +2,7 @@
 
 package jodd.util;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.Test;

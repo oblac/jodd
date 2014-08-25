@@ -2,7 +2,7 @@
 
 package jodd.io;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
 import org.junit.Before;
