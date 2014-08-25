@@ -34,7 +34,7 @@ public class FileConverter implements TypeConverter<File> {
 			addonFileConverters = new TypeConverter[0];
 		}
 
-		ArraysUtil.append(addonFileConverters, fileTypeConverter);
+		addonFileConverters = ArraysUtil.append(addonFileConverters, fileTypeConverter);
 	}
 
 	public File convert(Object value) {
