@@ -1,6 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.jtx;
+
+import jodd.Jodd;
 
 /**
  * Jodd JTX module.
@@ -8,7 +10,11 @@ package jodd;
 public class JoddJtx {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddJtx.class);
 	}
 
 }
