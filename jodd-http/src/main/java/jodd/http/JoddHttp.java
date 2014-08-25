@@ -1,7 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.http;
 
+import jodd.Jodd;
 import jodd.http.HttpConnectionProvider;
 import jodd.http.net.SocketHttpConnectionProvider;
 import jodd.util.MimeTypes;
@@ -13,7 +14,11 @@ import jodd.util.StringPool;
 public class JoddHttp {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddHttp.class);
 	}
 
 	/**

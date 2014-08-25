@@ -2,8 +2,6 @@
 
 package jodd.http;
 
-import jodd.JoddHttp;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 

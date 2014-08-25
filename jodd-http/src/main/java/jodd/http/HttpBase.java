@@ -2,7 +2,6 @@
 
 package jodd.http;
 
-import jodd.JoddHttp;
 import jodd.datetime.TimeUtil;
 import jodd.http.up.ByteArrayUploadable;
 import jodd.http.up.FileUploadable;

@@ -2,7 +2,7 @@
 
 package jodd.http.net;
 
-import jodd.JoddHttp;
+import jodd.http.JoddHttp;
 import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
 import jodd.http.HttpRequest;

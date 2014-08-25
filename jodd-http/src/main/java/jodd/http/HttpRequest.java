@@ -2,7 +2,6 @@
 
 package jodd.http;
 
-import jodd.JoddHttp;
 import jodd.util.Base64;
 import jodd.util.StringBand;
 import jodd.util.StringPool;
@@ -470,7 +469,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	/**
 	 * Opens a new {@link HttpConnection connection} using
-	 * {@link jodd.JoddHttp#httpConnectionProvider default connection provider}.
+	 * {@link JoddHttp#httpConnectionProvider default connection provider}.
 	 */
 	public HttpRequest open() {
 		return open(JoddHttp.httpConnectionProvider);
