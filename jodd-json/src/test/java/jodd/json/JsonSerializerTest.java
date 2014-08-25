@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 import org.junit.Test;

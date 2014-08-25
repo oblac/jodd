@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.util.ArraysUtil;
 import jodd.util.InExRules;
 import jodd.util.UnsafeUtil;

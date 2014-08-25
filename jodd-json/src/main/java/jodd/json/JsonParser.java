@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;

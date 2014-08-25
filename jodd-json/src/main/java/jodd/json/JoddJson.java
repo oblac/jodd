@@ -1,7 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.json;
 
+import jodd.Jodd;
 import jodd.json.TypeJsonSerializerMap;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
@@ -14,7 +15,11 @@ import java.lang.annotation.Annotation;
 public class JoddJson {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddJson.class);
 	}
 
 	/**

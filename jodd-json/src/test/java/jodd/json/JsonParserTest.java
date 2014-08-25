@@ -3,7 +3,6 @@
 package jodd.json;
 
 import jodd.Jodd;
-import jodd.JoddJson;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.meta.JSON;

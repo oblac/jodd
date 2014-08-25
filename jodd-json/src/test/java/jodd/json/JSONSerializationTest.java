@@ -2,7 +2,6 @@
 
 package jodd.json;
 
-import jodd.JoddJson;
 import jodd.json.mock.Address;
 import jodd.json.mock.Employee;
 import jodd.json.mock.Friend;

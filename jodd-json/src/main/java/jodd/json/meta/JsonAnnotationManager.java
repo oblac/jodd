@@ -2,7 +2,7 @@
 
 package jodd.json.meta;
 
-import jodd.JoddJson;
+import jodd.json.JoddJson;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
