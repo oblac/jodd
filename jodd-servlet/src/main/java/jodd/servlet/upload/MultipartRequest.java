@@ -2,7 +2,7 @@
 
 package jodd.servlet.upload;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.servlet.ServletUtil;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.MultipartStreamParser;

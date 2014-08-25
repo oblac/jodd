@@ -2,7 +2,7 @@
 
 package jodd.servlet.filter;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.typeconverter.Convert;
 
 import java.io.IOException;

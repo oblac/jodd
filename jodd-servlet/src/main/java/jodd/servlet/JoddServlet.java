@@ -1,6 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.servlet;
+
+import jodd.Jodd;
 
 /**
  * Jodd SERVLET module.
@@ -8,6 +10,10 @@ package jodd;
 public class JoddServlet {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddServlet.class);
 	}
 }

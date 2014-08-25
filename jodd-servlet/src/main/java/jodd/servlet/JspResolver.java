@@ -2,7 +2,7 @@
 
 package jodd.servlet;
 
-import jodd.JoddBean;
+import jodd.bean.JoddBean;
 import jodd.bean.BeanUtil;
 
 import javax.servlet.http.HttpServletRequest;
