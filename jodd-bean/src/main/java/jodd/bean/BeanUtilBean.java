@@ -2,7 +2,6 @@
 
 package jodd.bean;
 
-import jodd.JoddBean;
 import jodd.introspector.Getter;
 import jodd.introspector.Setter;
 import jodd.util.ReflectUtil;

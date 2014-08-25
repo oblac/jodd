@@ -1,9 +1,10 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.bean;
 
-import jodd.introspector.CachingIntrospector;
+import jodd.Jodd;
 import jodd.introspector.Introspector;
+import jodd.introspector.JoddIntrospector;
 
 /**
  * Jodd BEAN module.
@@ -11,7 +12,13 @@ import jodd.introspector.Introspector;
 public class JoddBean {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddBean.class);
+
+		introspector = JoddIntrospector.introspector;
 	}
 
 	/**
@@ -22,6 +29,6 @@ public class JoddBean {
 	/**
 	 * Default {@link Introspector} implementation.
 	 */
-	public static Introspector introspector = new CachingIntrospector();
+	public static Introspector introspector;
 
 }

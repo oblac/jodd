@@ -2,7 +2,6 @@
 
 package jodd.typeconverter;
 
-import jodd.Jodd;
 import jodd.datetime.JDateTime;
 import jodd.mutable.MutableByte;
 import jodd.mutable.MutableDouble;
@@ -228,8 +227,6 @@ public class TypeConverterManagerBean {
 
 		register(Locale.class, new LocaleConverter());
 		register(TimeZone.class, new TimeZoneConverter());
-
-		Jodd.bind(Jodd.UPLOAD, this);
 	}
 
 	/**
