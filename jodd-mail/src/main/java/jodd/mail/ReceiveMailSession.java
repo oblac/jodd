@@ -2,8 +2,6 @@
 
 package jodd.mail;
 
-import jodd.JoddMail;
-
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;

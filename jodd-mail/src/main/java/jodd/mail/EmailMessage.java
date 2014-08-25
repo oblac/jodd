@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 
 /**
  * Represents e-mail message: string with mime type and encoding.

@@ -2,7 +2,6 @@
 
 package jodd.mail;
 
-import jodd.JoddMail;
 import jodd.util.StringPool;
 
 import javax.activation.DataHandler;

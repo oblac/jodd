@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;

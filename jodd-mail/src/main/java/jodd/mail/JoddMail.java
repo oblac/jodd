@@ -1,7 +1,8 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd;
+package jodd.mail;
 
+import jodd.Jodd;
 import jodd.mail.MailSystem;
 
 /**
@@ -10,7 +11,11 @@ import jodd.mail.MailSystem;
 public class JoddMail {
 
 	static {
-		Jodd.module();
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddMail.class);
 	}
 
 	/**
