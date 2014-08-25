@@ -2,7 +2,7 @@
 
 package jodd.upload.impl;
 
-import jodd.JoddCore;
+import jodd.core.JoddCore;
 import jodd.io.FastByteArrayOutputStream;
 import jodd.io.FileUtil;
 import jodd.io.FileNameUtil;

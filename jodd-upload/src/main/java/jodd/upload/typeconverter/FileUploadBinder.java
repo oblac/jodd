@@ -2,6 +2,7 @@
 
 package jodd.upload.typeconverter;
 
+import jodd.typeconverter.TypeConverterManager;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.typeconverter.impl.FileConverter;
 import jodd.upload.FileUpload;
@@ -16,8 +17,8 @@ public class FileUploadBinder {
 	/**
 	 * Registers type converters.
 	 */
-	public static void registerTypeConverter(Object object) {
-		TypeConverterManagerBean typeConverterManagerBean = (TypeConverterManagerBean) object;
+	public static void registerTypeConverter() {
+		TypeConverterManagerBean typeConverterManagerBean = TypeConverterManager.getDefaultTypeConverterManager();
 
 		typeConverterManagerBean.register(FileUpload.class, new FileUploadConverter());
 
