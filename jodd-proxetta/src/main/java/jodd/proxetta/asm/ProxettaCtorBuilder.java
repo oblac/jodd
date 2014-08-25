@@ -9,7 +9,7 @@ import static jodd.asm5.Opcodes.ALOAD;
 import static jodd.asm5.Opcodes.RETURN;
 import static jodd.proxetta.asm.ProxettaAsmUtil.loadSpecialMethodArguments;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;
-import static jodd.JoddProxetta.initMethodName;
+import static jodd.proxetta.JoddProxetta.initMethodName;
 import jodd.asm.EmptyMethodVisitor;
 
 /**

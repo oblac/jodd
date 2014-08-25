@@ -20,7 +20,7 @@ import static jodd.asm5.Opcodes.ALOAD;
 import jodd.proxetta.ProxettaException;
 import jodd.proxetta.ProxyTarget;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.JoddProxetta.executeMethodName;
+import static jodd.proxetta.JoddProxetta.executeMethodName;
 import jodd.asm.AnnotationVisitorAdapter;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;

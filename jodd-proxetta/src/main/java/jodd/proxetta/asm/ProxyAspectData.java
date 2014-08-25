@@ -14,7 +14,7 @@ import static jodd.asm5.Opcodes.INVOKESPECIAL;
 import static jodd.asm5.Opcodes.INVOKEVIRTUAL;
 import static jodd.asm5.Opcodes.INVOKEINTERFACE;
 import static jodd.proxetta.asm.ProxettaAsmUtil.*;
-import static jodd.JoddProxetta.*;
+import static jodd.proxetta.JoddProxetta.*;
 import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxyAdvice;

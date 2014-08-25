@@ -3,7 +3,6 @@
 package jodd.proxetta;
 
 import jodd.io.FastByteArrayOutputStream;
-import jodd.JoddProxetta;
 import jodd.proxetta.impl.InvokeProxetta;
 import jodd.proxetta.inv.*;
 import jodd.util.ClassLoaderUtil;

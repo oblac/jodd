@@ -2,7 +2,7 @@
 
 package jodd.proxetta.impl;
 
-import jodd.JoddProxetta;
+import jodd.proxetta.JoddProxetta;
 import jodd.proxetta.Proxetta;
 import jodd.proxetta.ProxyAspect;
 

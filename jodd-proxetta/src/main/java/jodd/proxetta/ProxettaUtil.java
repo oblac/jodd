@@ -2,8 +2,6 @@
 
 package jodd.proxetta;
 
-import jodd.JoddProxetta;
-
 import java.lang.reflect.Field;
 
 /**

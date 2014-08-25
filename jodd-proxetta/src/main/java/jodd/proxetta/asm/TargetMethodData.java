@@ -2,7 +2,7 @@
 
 package jodd.proxetta.asm;
 
-import static jodd.JoddProxetta.methodDivider;
+import static jodd.proxetta.JoddProxetta.methodDivider;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import static jodd.asm5.Opcodes.INVOKESTATIC;
 import static jodd.asm5.Opcodes.RETURN;
 import static jodd.asm5.Opcodes.ALOAD;
 import static jodd.asm5.Opcodes.INVOKESPECIAL;
-import static jodd.JoddProxetta.initMethodName;
+import static jodd.proxetta.JoddProxetta.initMethodName;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.CLINIT;
 import static jodd.proxetta.asm.ProxettaAsmUtil.DESC_VOID;

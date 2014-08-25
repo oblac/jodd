@@ -10,7 +10,7 @@ import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
 import static jodd.asm5.Opcodes.*;
 import jodd.proxetta.ProxettaException;
-import static jodd.JoddProxetta.*;
+import static jodd.proxetta.JoddProxetta.*;
 import jodd.util.StringPool;
 import static jodd.util.StringPool.COLON;
 
