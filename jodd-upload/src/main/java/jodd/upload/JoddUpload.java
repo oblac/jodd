@@ -11,6 +11,8 @@ import jodd.upload.typeconverter.FileUploadBinder;
  */
 public class JoddUpload implements JoddModule {
 
+	// ---------------------------------------------------------------- module
+
 	static {
 		init();
 	}

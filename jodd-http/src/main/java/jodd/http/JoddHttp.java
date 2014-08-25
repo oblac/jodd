@@ -3,7 +3,6 @@
 package jodd.http;
 
 import jodd.Jodd;
-import jodd.http.HttpConnectionProvider;
 import jodd.http.net.SocketHttpConnectionProvider;
 import jodd.util.MimeTypes;
 import jodd.util.StringPool;
@@ -12,14 +11,6 @@ import jodd.util.StringPool;
  * Jodd HTTP module.
  */
 public class JoddHttp {
-
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddHttp.class);
-	}
 
 	/**
 	 * Default HTTP transport provider.
@@ -51,5 +42,15 @@ public class JoddHttp {
 	 * read from system property <code>https.protocols</code>.
 	 */
 	public static String defaultSecureEnabledProtocols = System.getProperty("https.protocols");
+
+	// ---------------------------------------------------------------- module
+
+	static {
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddHttp.class);
+	}
 
 }

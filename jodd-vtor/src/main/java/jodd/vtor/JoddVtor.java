@@ -9,6 +9,8 @@ import jodd.Jodd;
  */
 public class JoddVtor {
 
+	// ---------------------------------------------------------------- module
+
 	static {
 		init();
 	}

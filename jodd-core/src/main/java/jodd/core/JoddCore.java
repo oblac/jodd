@@ -14,14 +14,6 @@ import jodd.util.cl.DefaultClassLoaderStrategy;
  */
 public class JoddCore {
 
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddCore.class);
-	}
-
 	/**
 	 * Default temp file prefix.
 	 */
@@ -46,5 +38,15 @@ public class JoddCore {
 	 * Default class loader strategy.
 	 */
 	public static ClassLoaderStrategy classLoaderStrategy = new DefaultClassLoaderStrategy();
+
+	// ---------------------------------------------------------------- module
+
+	static {
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddCore.class);
+	}
 
 }

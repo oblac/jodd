@@ -9,6 +9,13 @@ import jodd.Jodd;
  */
 public class JoddPetite {
 
+	/**
+	 * Defines if Proxetta should be used.
+	 */
+	public static boolean useProxetta;
+
+	// ---------------------------------------------------------------- module
+
 	static {
 		init();
 	}
@@ -18,10 +25,5 @@ public class JoddPetite {
 
 		useProxetta = Jodd.isModuleLoaded(Jodd.PROXETTA);
 	}
-
-	/**
-	 * Defines if Proxetta should be used.
-	 */
-	public static boolean useProxetta;
 
 }

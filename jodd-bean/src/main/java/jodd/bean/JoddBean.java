@@ -11,16 +11,6 @@ import jodd.introspector.JoddIntrospector;
  */
 public class JoddBean {
 
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddBean.class);
-
-		introspector = JoddIntrospector.introspector;
-	}
-
 	/**
 	 * Name of 'this' references.
 	 */
@@ -30,5 +20,18 @@ public class JoddBean {
 	 * Default {@link Introspector} implementation.
 	 */
 	public static Introspector introspector;
+
+
+	// ---------------------------------------------------------------- module
+
+	static {
+		init();
+	}
+
+	public static void init() {
+		//JoddIntrospector.init();
+		Jodd.init(JoddBean.class);
+		introspector = JoddIntrospector.introspector;
+	}
 
 }

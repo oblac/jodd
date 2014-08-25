@@ -3,12 +3,18 @@
 package jodd.mail;
 
 import jodd.Jodd;
-import jodd.mail.MailSystem;
 
 /**
  * Jodd MAIL module.
  */
 public class JoddMail {
+
+	/**
+	 * Mail system properties for fine-tuning the java Mail behavior.
+	 */
+	public static MailSystem mailSystem = new MailSystem();
+
+	// ---------------------------------------------------------------- module
 
 	static {
 		init();
@@ -17,10 +23,5 @@ public class JoddMail {
 	public static void init() {
 		Jodd.init(JoddMail.class);
 	}
-
-	/**
-	 * Mail system properties for fine-tuning the java Mail behavior.
-	 */
-	public static MailSystem mailSystem = new MailSystem();
 
 }

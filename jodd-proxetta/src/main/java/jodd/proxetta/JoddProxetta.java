@@ -9,14 +9,6 @@ import jodd.Jodd;
  */
 public class JoddProxetta {
 
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddProxetta.class);
-	}
-
 	/**
 	 * {@link jodd.proxetta.ProxyAdvice#execute()}
 	 */
@@ -71,5 +63,15 @@ public class JoddProxetta {
 	 * Wrapper target field name.
 	 */
 	public static String wrapperTargetFieldName = "_target";
+
+	// ---------------------------------------------------------------- module
+
+	static {
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddProxetta.class);
+	}
 
 }

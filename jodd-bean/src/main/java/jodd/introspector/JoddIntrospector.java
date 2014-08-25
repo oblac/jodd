@@ -6,6 +6,13 @@ import jodd.Jodd;
 
 public class JoddIntrospector {
 
+	/**
+	 * Default {@link Introspector} implementation.
+	 */
+	public static Introspector introspector = new CachingIntrospector();
+
+	// ---------------------------------------------------------------- module
+
 	static {
 		init();
 	}
@@ -13,10 +20,5 @@ public class JoddIntrospector {
 	public static void init() {
 		Jodd.init(JoddIntrospector.class);
 	}
-
-	/**
-	 * Default {@link Introspector} implementation.
-	 */
-	public static Introspector introspector = new CachingIntrospector();
 
 }

@@ -3,7 +3,6 @@
 package jodd.json;
 
 import jodd.Jodd;
-import jodd.json.TypeJsonSerializerMap;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 
@@ -13,14 +12,6 @@ import java.lang.annotation.Annotation;
  * Jodd JSON module.
  */
 public class JoddJson {
-
-	static {
-		init();
-	}
-
-	public static void init() {
-		Jodd.init(JoddJson.class);
-	}
 
 	/**
 	 * Annotation used for marking the properties.
@@ -75,5 +66,15 @@ public class JoddJson {
 	 * Default JSON annotation manager.
 	 */
 	public static JsonAnnotationManager annotationManager = new JsonAnnotationManager();
+
+	// ---------------------------------------------------------------- module
+
+	static {
+		init();
+	}
+
+	public static void init() {
+		Jodd.init(JoddJson.class);
+	}
 
 }
