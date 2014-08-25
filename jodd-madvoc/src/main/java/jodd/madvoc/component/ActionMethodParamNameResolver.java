@@ -2,9 +2,9 @@
 
 package jodd.madvoc.component;
 
-import jodd.Jodd;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.JoddMadvoc;
 import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
@@ -26,7 +26,7 @@ public class ActionMethodParamNameResolver {
 	public String[] resolveParamNames(Method actionClassMethod) {
 		String[] names;
 
-		if (!Jodd.isModuleLoaded(Jodd.PROXETTA)) {
+		if (!JoddMadvoc.useProxetta) {
 			if (log.isWarnEnabled()) {
 				log.warn("Unable to resolve method names, using type short names instead. Add Proxetta to resolve this.");
 			}
