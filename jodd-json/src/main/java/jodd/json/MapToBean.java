@@ -17,13 +17,16 @@ import java.util.Map;
 
 /**
  * Map to bean converter.
+ * Used when parsing with class metadata enabled.
  */
 public class MapToBean {
 
 	protected boolean declared = true;
+	protected final JsonParserBase jsonParser;
 	protected final String classMetadataName;
 
-	public MapToBean(String classMetadataName) {
+	public MapToBean(JsonParserBase jsonParser, String classMetadataName) {
+		this.jsonParser = jsonParser;
 		this.classMetadataName = classMetadataName;
 	}
 
@@ -51,7 +54,7 @@ public class MapToBean {
 		}
 
 		if (target == null) {
-			target = JsonUtil.newObjectInstance(targetType);
+			target = jsonParser.newObjectInstance(targetType);
 		}
 
 		ClassDescriptor cd = ClassIntrospector.lookup(target.getClass());
@@ -150,7 +153,7 @@ public class MapToBean {
 		if (setter != null) {
 			if (value != null) {
 				propertyType = setter.getSetterRawType();
-				value = JsonUtil.convertType(value, propertyType);
+				value = jsonParser.convertType(value, propertyType);
 			}
 			setter.invokeSetter(target, value);
 		}

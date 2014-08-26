@@ -5,18 +5,14 @@ package jodd.json;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
-import jodd.introspector.Setter;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static jodd.json.JsonUtil.convertType;
 
 /**
  * Simple, developer-friendly JSON parser. It focuses on easy usage
@@ -25,7 +21,7 @@ import static jodd.json.JsonUtil.convertType;
  * <p>
  * See: http://www.ietf.org/rfc/rfc4627.txt
  */
-public class JsonParser {
+public class JsonParser extends JsonParserBase {
 
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
@@ -58,7 +54,7 @@ public class JsonParser {
 		}
 
 		if (classMetadataName != null) {
-			mapToBean = new MapToBean(classMetadataName);
+			mapToBean = createMapToBean(classMetadataName);
 		}
 	}
 
@@ -657,7 +653,7 @@ public class JsonParser {
 
 		if (classMetadataName == null) {
 			// create instance of target type, no 'class' information
-			target = JsonUtil.newObjectInstance(targetType);
+			target = newObjectInstance(targetType);
 
 			isTargetTypeMap = isTargetRealTypeMap;
 		} else {
@@ -823,46 +819,6 @@ public class JsonParser {
 		return true;
 	}
 
-	// ---------------------------------------------------------------- object tools
-
-	/**
-	 * Creates new type for JSON array objects.
-	 * It should (?) always return a list, for performance reasons.
-	 * Later, the list will be converted into the target type.
-	 */
-	protected List<Object> newArrayInstance(Class targetType) {
-		if (targetType == null || targetType == List.class || targetType.isArray()) {
-			return new ArrayList<Object>();
-		}
-
-		try {
-			return (List) targetType.newInstance();
-		} catch (Exception e) {
-			throw new JsonException(e);
-		}
-	}
-
-	/**
-	 * Injects value into the targets property.
-	 */
-	protected void injectValueIntoObject(Object target, PropertyDescriptor pd, Object value) {
-		Object convertedValue = value;
-
-		if (value != null) {
-			Class targetClass = pd.getType();
-
-			convertedValue = convertType(value, targetClass);
-		}
-
-		try {
-			Setter setter = pd.getSetter(true);
-			if (setter != null) {
-				setter.invokeSetter(target, convertedValue);
-			}
-		} catch (Exception ex) {
-			throw new JsonException(ex);
-		}
-	}
 
 	// ---------------------------------------------------------------- error
 
