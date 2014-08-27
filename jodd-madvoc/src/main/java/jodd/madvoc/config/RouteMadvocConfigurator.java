@@ -37,8 +37,8 @@ import java.util.Map;
  *     <li>if line starts with <code>@</code> and it contains a <code>=</code> sign,
  *     		it's a variable definition.
  *     		Variables are processed as they appear in the file.</li>
- *     <li>default area is defined by <code>[]</code></li>. Default area defines section
- *     		with the same wrappers.
+ *     <li>default area is defined by <code>[]</code>. Default area defines section
+ *     		with the same wrappers.</li>
  *     <li>paths start with <code>/</code>. Action path is first such path
  *     		and result path is last such path.
  *     </li>
