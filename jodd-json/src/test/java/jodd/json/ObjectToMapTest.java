@@ -27,7 +27,7 @@ public class ObjectToMapTest {
 
 		BeanSerializer beanSerializer = new BeanSerializer(jsonContext, hill) {
 			@Override
-			protected void onSerializableProperty(String propertyName, Object value) {
+			protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
 				target.put(propertyName, value);
 			}
 		};
@@ -46,7 +46,7 @@ public class ObjectToMapTest {
 		JsonContext jsonContext = new JsonSerializer().createJsonContext(null);
 		BeanSerializer beanSerializer = new BeanSerializer(jsonContext, jodder) {
 			@Override
-			protected void onSerializableProperty(String propertyName, Object value) {
+			protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
 				target.put(propertyName, value);
 			}
 		};
@@ -74,7 +74,7 @@ public class ObjectToMapTest {
 				.createJsonContext(null);
 		BeanSerializer beanSerializer = new BeanSerializer(jsonContext, jodder) {
 			@Override
-			protected void onSerializableProperty(String propertyName, Object value) {
+			protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
 				target.put(propertyName, value);
 			}
 		};

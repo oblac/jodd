@@ -2,137 +2,57 @@
 
 package jodd.json;
 
-import jodd.introspector.ClassDescriptor;
-import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.Getter;
 import jodd.introspector.PropertyDescriptor;
-import jodd.json.meta.JsonAnnotationManager;
-
-import java.lang.reflect.Modifier;
 
 /**
  * Bean visitor that serializes properties of a bean.
  * It analyzes the rules for inclusion/exclusion of a property.
  */
-public class BeanSerializer {
+public class BeanSerializer extends TypeJsonVisitor {
 
-	private final JsonContext jsonContext;
-	private final Object source;
-	private boolean declared;
-	private final String classMetadataName;
-	private final Class type;
-
-	private int count;
-
-	private final JsonAnnotationManager.TypeData typeData;
+	protected final Object source;
 
 	public BeanSerializer(JsonContext jsonContext, Object bean) {
-		this.jsonContext = jsonContext;
+		super(jsonContext, bean.getClass());
+
 		this.source = bean;
-		this.count = 0;
-		this.declared = false;
-		this.classMetadataName = jsonContext.jsonSerializer.classMetadataName;
-
-		type = bean.getClass();
-
-		typeData = JoddJson.annotationManager.lookupTypeData(type);
 	}
 
 	/**
 	 * Serializes a bean.
 	 */
 	public void serialize() {
-		Class type = source.getClass();
-
-		ClassDescriptor classDescriptor = ClassIntrospector.lookup(type);
-
-		if (classMetadataName != null) {
-			// process first 'meta' fields 'class'
-			onProperty(classMetadataName, null, null, false);
-		}
-
-		PropertyDescriptor[] propertyDescriptors = classDescriptor.getAllPropertyDescriptors();
-
-		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-
-			Getter getter = propertyDescriptor.getGetter(declared);
-			if (getter != null) {
-				String propertyName = propertyDescriptor.getName();
-				Class propertyType = propertyDescriptor.getType();
-
-				boolean isTransient = false;
-				// check for transient flag
-				FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
-
-				if (fieldDescriptor != null) {
-					isTransient = Modifier.isTransient(fieldDescriptor.getField().getModifiers());
-				}
-
-				onProperty(propertyName, propertyType, propertyDescriptor, isTransient);
-			}
-		}
+		visit();
 	}
 
 	/**
-	 * Invoked on each property. Properties are getting matched against the rules.
-	 * If property passes all the rules, it will be processed in
-	 * {@link #onSerializableProperty(String, Class, Object)}.
+	 * Reads property value and {@link #onSerializableProperty(String, Class, Object) serializes it}.
 	 */
-	protected void onProperty(String propertyName, Class propertyType, PropertyDescriptor pd, boolean isTransient) {
-		Path currentPath = jsonContext.path;
-
-		currentPath.push(propertyName);
-
-		// determine if name should be included/excluded
-
-		boolean include = !typeData.strict;
-
-		// + don't include transient fields
-
-		if (isTransient) {
-			include = false;
-		}
-
-		// + all collections are not serialized by default
-
-		include = jsonContext.matchIgnoredPropertyTypes(propertyType, include);
-
-		// + annotations
-
-		include = typeData.rules.apply(propertyName, true, include);
-
-		// + path queries: excludes/includes
-
-		include = jsonContext.matchPathToQueries(include);
-
-		// done
-
-		if (!include) {
-			currentPath.pop();
-			return;
-		}
-
+	@Override
+	protected final void onSerializableProperty(String propertyName, PropertyDescriptor propertyDescriptor) {
 		Object value;
 
-		if (propertyType == null) {
+		if (propertyDescriptor == null) {
 			// metadata - classname
 			value = source.getClass().getName();
 		} else {
-			value = readProperty(source, pd);
+			value = readProperty(source, propertyDescriptor);
 
 			// change name for properties
 
 			propertyName = typeData.resolveJsonName(propertyName);
 		}
 
-		onSerializableProperty(propertyName, propertyType, value);
-
-		currentPath.pop();
+		onSerializableProperty(
+				propertyName,
+				propertyDescriptor == null ? null : propertyDescriptor.getType(),
+				value);
 	}
 
 	/**
 	 * Invoked on serializable properties, that have passed all the rules.
+	 * Property type is <code>null</code> for metadata class name property.
 	 */
 	protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
 		jsonContext.pushName(propertyName, count > 0);
