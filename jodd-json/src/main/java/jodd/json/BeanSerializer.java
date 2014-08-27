@@ -76,7 +76,8 @@ public class BeanSerializer {
 
 	/**
 	 * Invoked on each property. Properties are getting matched against the rules.
-	 * If property passes all the rules, it will be processed in {@link #onSerializableProperty(String, Object)}.
+	 * If property passes all the rules, it will be processed in
+	 * {@link #onSerializableProperty(String, Class, Object)}.
 	 */
 	protected void onProperty(String propertyName, Class propertyType, PropertyDescriptor pd, boolean isTransient) {
 		Path currentPath = jsonContext.path;
@@ -125,7 +126,7 @@ public class BeanSerializer {
 			propertyName = typeData.resolveJsonName(propertyName);
 		}
 
-		onSerializableProperty(propertyName, value);
+		onSerializableProperty(propertyName, propertyType, value);
 
 		currentPath.pop();
 	}
@@ -133,8 +134,9 @@ public class BeanSerializer {
 	/**
 	 * Invoked on serializable properties, that have passed all the rules.
 	 */
-	protected void onSerializableProperty(String propertyName, Object value) {
+	protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
 		jsonContext.pushName(propertyName, count > 0);
+
 		jsonContext.serialize(value);
 
 		if (jsonContext.isNamePoped()) {
