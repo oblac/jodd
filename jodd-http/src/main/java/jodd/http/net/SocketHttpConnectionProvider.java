@@ -71,7 +71,7 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 			if (ex instanceof IOException) {
 				throw (IOException) ex;
 			} else {
-				throw new IOException(ex);
+				throw new IOException(ex.getMessage());
 			}
 		}
 
