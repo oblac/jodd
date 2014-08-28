@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * Method descriptor.  Holds additional method data,
+ * Method descriptor. Holds additional method data,
  * that might be specific to implementation class.
  */
 public class MethodDescriptor extends Descriptor implements Getter, Setter {

@@ -7,6 +7,7 @@ import jodd.introspector.tst.Ac;
 import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Bc;
 import jodd.introspector.tst.Cbean;
+import jodd.introspector.tst.Mojo;
 import jodd.introspector.tst.Overload;
 import org.junit.Test;
 
@@ -241,6 +242,29 @@ public class IntrospectorTest {
 		ClassDescriptor cd = ClassIntrospector.lookup(Bbean.class);
 
 		assertNull(cd.getFieldDescriptor("serialVersionUID", true));
+	}
+
+	@Test
+	public void testStaticFieldsForProperties() {
+		ClassDescriptor cd = ClassIntrospector.lookup(Mojo.class);
+
+		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
+		assertEquals(3, fieldDescriptors.length);
+
+		MethodDescriptor[] methodDescriptors = cd.getAllMethodDescriptors();
+		assertEquals(2, methodDescriptors.length);
+
+		PropertyDescriptor[] propertyDescriptor = cd.getAllPropertyDescriptors();
+		assertEquals(3, propertyDescriptor.length);
+
+		int count = 0;
+		for (PropertyDescriptor pd : propertyDescriptor) {
+			if (pd.isFieldOnlyDescriptor()) {
+				continue;
+			}
+			count++;
+		}
+		assertEquals(1, count);
 	}
 
 

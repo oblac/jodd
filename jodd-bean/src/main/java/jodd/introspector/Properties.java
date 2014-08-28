@@ -4,6 +4,7 @@ package jodd.introspector;
 
 import jodd.util.ReflectUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -81,7 +82,13 @@ public class Properties {
 			String prefix = classDescriptor.getPropertyFieldPrefix();
 
 			for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
-				String name = fieldDescriptor.getField().getName();
+				Field field = fieldDescriptor.getField();
+
+				if (Modifier.isStatic(field.getModifiers())) {
+					continue;            // ignore static fields
+				}
+
+				String name = field.getName();
 
 				if (prefix != null) {
 					if (!name.startsWith(prefix)) {
@@ -148,9 +155,18 @@ public class Properties {
 			// use existing getter
 			getterMethod = existing.getReadMethodDescriptor();
 
-			if (getterMethod.getMethod().getReturnType() != setterMethod.getMethod().getParameterTypes()[0]) {
-				// getter's type is different then setter's
-				return;
+			if (getterMethod != null) {
+				Class returnType = getterMethod.getMethod().getReturnType();
+
+				if (setterMethod != null) {
+					Class parameterType = setterMethod.getMethod().getParameterTypes()[0];
+
+					if (returnType != parameterType) {
+						// getter's type is different then setter's
+						return;
+					}
+
+				}
 			}
 		}
 
