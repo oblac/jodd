@@ -63,7 +63,17 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 * Creates a SSL socket. Enables default secure enabled protocols if specified..
 	 */
 	protected SSLSocket createSSLSocket(String host, int port) throws IOException {
-		SocketFactory socketFactory = SSLSocketFactory.getDefault();
+		SocketFactory socketFactory;
+		try {
+			socketFactory = getSSLSocketFactory();
+		}
+		catch (Exception ex) {
+			if (ex instanceof IOException) {
+				throw (IOException) ex;
+			} else {
+				throw new IOException(ex);
+			}
+		}
 
 		SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(host, port);
 
@@ -78,6 +88,15 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 		}
 
 		return sslSocket;
+	}
+
+	/**
+	 * Returns new SSL socket factory. Called from {@link #createSSLSocket(String, int)}.
+	 * May be overwritten to provide custom SSL socket factory by using e.g.
+	 * <code>SSLContext</code>. By default returns default SSL socket factory.
+	 */
+	protected SocketFactory getSSLSocketFactory() throws Exception {
+		return SSLSocketFactory.getDefault();
 	}
 
 	/**
