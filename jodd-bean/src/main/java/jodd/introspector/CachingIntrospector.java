@@ -10,8 +10,6 @@ import java.util.Map;
  * It can examine either <b>accessible</b> or <b>supported</b> fields/methods/constructors.
  * <p>
  * It simply caches <b>all</b> class descriptors.
- *
- * todo: add optional max value for total number of class descriptors stored in cache
  */
 public class CachingIntrospector implements Introspector {
 

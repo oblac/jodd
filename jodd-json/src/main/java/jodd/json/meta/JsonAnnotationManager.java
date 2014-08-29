@@ -23,13 +23,11 @@ import java.util.Map;
  */
 public class JsonAnnotationManager {
 
-	private final JSONAnnotation jsonAnnotation;
 	private final Map<Class, TypeData> typeDataMap;
 
 	@SuppressWarnings("unchecked")
 	public JsonAnnotationManager() {
 		typeDataMap = new HashMap<Class, TypeData>();
-		jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
 	}
 
 	/**
@@ -193,6 +191,8 @@ public class JsonAnnotationManager {
 		ArrayList<String> excludedList = new ArrayList<String>();
 		ArrayList<String> jsonNames = new ArrayList<String>();
 		ArrayList<String> realNames = new ArrayList<String>();
+
+		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
 
 		for (PropertyDescriptor pd : pds) {
 			MethodDescriptor md = pd.getReadMethodDescriptor();
