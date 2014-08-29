@@ -11,6 +11,20 @@ import java.lang.reflect.Field;
  * all modules get loaded and information about available modules is set.
  * In some environments such OSGI, however, classloader lookup does not work.
  * Then you need to manually initialize all Jodd components that are in use.
+ * <p>
+ * Each module class contains some static global configuration.
+ * Each module class has initialize itself in static block, so first access
+ * to the config will also initialize the module. First module initialization
+ * will trigger initialization of all modules (as defined in static block
+ * of this class). Each module has to have static method <code>init()</code>
+ * that register the module here. This method should be used when modules
+ * can not be found by classloader.
+ * <p>
+ * Important: static block and init methods <b>must</b> be declared <b>last</b>
+ * in the module class! Also, if module class contains some default instance
+ * (as part of the module's configuration), this instance must <b>not</b>
+ * use any other configuration in the constructor! Otherwise, that value
+ * could not be changed.
  */
 public class Jodd {
 
