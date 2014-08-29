@@ -95,7 +95,7 @@ public abstract class TypeJsonVisitor {
 
 		// + all collections are not serialized by default
 
-		include = jsonContext.matchIgnoredPropertyTypes(propertyType, include);
+		include = jsonContext.matchIgnoredPropertyTypes(propertyType, true, include);
 
 		// + annotations
 

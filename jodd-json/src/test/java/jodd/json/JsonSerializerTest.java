@@ -4,8 +4,11 @@ package jodd.json;
 
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +90,65 @@ public class JsonSerializerTest {
 		json = jsonSerializer.serialize(map);
 
 		assertEquals("{\"one\":173,\"two\":7.89,\"three\":true,\"four\":null,\"five\":\"new\\nline\"}", json);
+	}
+
+	public static class InBean {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		ArrayList<String> names = new ArrayList<String>();
+
+		public HashMap<String, Object> getParams() {
+			return params;
+		}
+
+		public void setParams(HashMap<String, Object> params) {
+			this.params = params;
+		}
+
+		public ArrayList<String> getNames() {
+			return names;
+		}
+
+		public void setNames(ArrayList<String> names) {
+			this.names = names;
+		}
+	}
+
+	@Test
+	public void testInMapVsInBeanbsInList() {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("myid", Integer.valueOf(4343));
+		ArrayList<String> names = new ArrayList<String>();
+		names.add("veqna");
+
+		// in map
+		LinkedHashMap<String, Object> rootMap = new LinkedHashMap<String, Object>();
+		rootMap.put("params", params);
+		rootMap.put("names", names);
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+		String json = jsonSerializer.serialize(rootMap);
+
+		Assert.assertEquals("{\"params\":{\"myid\":4343}}", json);
+
+		// in bean
+		InBean inBean = new InBean();
+		inBean.setParams(params);
+		inBean.setNames(names);
+
+		jsonSerializer = new JsonSerializer();
+		json = jsonSerializer.serialize(inBean);
+
+		Assert.assertEquals("{}", json);
+
+		// in list
+		ArrayList list = new ArrayList();
+		list.add(params);
+		list.add(names);
+
+		jsonSerializer = new JsonSerializer();
+		json = jsonSerializer.serialize(inBean);
+
+		Assert.assertEquals("{}", json);
 	}
 
 	@Test

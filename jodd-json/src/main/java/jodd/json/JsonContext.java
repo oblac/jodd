@@ -111,7 +111,7 @@ public class JsonContext extends JsonWriter {
 	/**
 	 * Matches property types that are ignored by default.
 	 */
-	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean include) {
+	public boolean matchIgnoredPropertyTypes(Class propertyType, boolean excludeMaps, boolean include) {
 		if (!include) {
 			return false;
 		}
@@ -126,8 +126,10 @@ public class JsonContext extends JsonWriter {
 				if (propertyTypeClassDescriptor.isCollection()) {
 					return false;
 				}
-				if (propertyTypeClassDescriptor.isMap()) {
-					return false;
+				if (excludeMaps) {
+					if (propertyTypeClassDescriptor.isMap()) {
+						return false;
+					}
 				}
 			}
 
