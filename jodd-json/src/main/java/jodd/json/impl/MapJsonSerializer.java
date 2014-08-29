@@ -22,10 +22,6 @@ public class MapJsonSerializer implements TypeJsonSerializer<Map<?, ?>> {
 		Path currentPath = jsonContext.getPath();
 
 		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			if (count > 0) {
-				jsonContext.writeComma();
-			}
-
 			final Object key = entry.getKey();
 			final Object value = entry.getValue();
 
@@ -43,7 +39,7 @@ public class MapJsonSerializer implements TypeJsonSerializer<Map<?, ?>> {
 
 				// + all collections are not serialized by default
 
-				include = jsonContext.matchIgnoredPropertyTypes(value.getClass(), include);
+				include = jsonContext.matchIgnoredPropertyTypes(value.getClass(), false, include);
 
 				// + path queries: excludes/includes
 
@@ -55,6 +51,10 @@ public class MapJsonSerializer implements TypeJsonSerializer<Map<?, ?>> {
 			if (!include) {
 				currentPath.pop();
 				continue;
+			}
+
+			if (count > 0) {
+				jsonContext.writeComma();
 			}
 
 			count++;
