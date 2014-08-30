@@ -275,6 +275,20 @@ public class DbSqlBuilderTest {
 			assertEquals("where (BOY.ID=:badBoy.ajdi) BOY", dbc.generateQuery());
 			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
 			assertEquals("where (b.ID=:badBoy.ajdi) BOY b", dbc.generateQuery());
+
+			bb.ajdi = null;
+			bb.nejm = "";
+			dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			assertEquals("where (1=1) BOY", dbc.generateQuery());
+			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
+			assertEquals("where (1=1) BOY b", dbc.generateQuery());
+
+			bb.ajdi = null;
+			bb.nejm = "foo";
+			dbc = sql()._("where ").match("BadBoy", bb)._(" ").table(bb, null);
+			assertEquals("where (BOY.NAME=:badBoy.nejm) BOY", dbc.generateQuery());
+			dbc = sql()._("where ").match("b", bb)._(" ").table(bb, "b");
+			assertEquals("where (b.NAME=:badBoy.nejm) BOY b", dbc.generateQuery());
 		}
 	}
 
