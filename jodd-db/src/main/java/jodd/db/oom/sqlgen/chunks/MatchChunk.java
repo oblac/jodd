@@ -57,7 +57,7 @@ public class MatchChunk extends SqlChunk {
 		}
 		int eq = expression.indexOf('=');
 		if (eq == -1) {
-			throw new DbSqlBuilderException("Template syntax error, expected 'match' equality: {tableRef=objectRef}.");
+			throw new DbSqlBuilderException("Syntax error, expected 'match' equality: {tableRef=objectRef}.");
 		}
 		tableRef = expression.substring(0, eq).trim();
 		objectRef = expression.substring(eq + 1, lastNdx).trim();
@@ -94,6 +94,12 @@ public class MatchChunk extends SqlChunk {
 				// special case for ID column
 				if (dec.isId() && value instanceof Number) {
 					if (((Number) value).longValue() == 0) {
+						continue;
+					}
+				}
+				// special case for strings
+				if (value instanceof CharSequence) {
+					if (StringUtil.isBlank((CharSequence) value)) {
 						continue;
 					}
 				}
