@@ -202,6 +202,7 @@ public class Properties {
 
 	/**
 	 * Returns all property descriptors.
+	 * Properties are sorted by name.
 	 */
 	public PropertyDescriptor[] getAllPropertyDescriptors() {
 		if (allProperties == null) {
