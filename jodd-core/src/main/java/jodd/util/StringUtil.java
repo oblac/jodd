@@ -264,7 +264,7 @@ public class StringUtil {
 	/**
 	 * Determines if a string is empty (<code>null</code> or zero-length).
 	 */
-	public static boolean isEmpty(String string) {
+	public static boolean isEmpty(CharSequence string) {
 		return ((string == null) || (string.length() == 0));
 	}
 
@@ -282,9 +282,9 @@ public class StringUtil {
 	}
 
 	/**
-	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(String)}).
+	 * Determines if a string is blank (<code>null</code> or {@link #containsOnlyWhitespaces(CharSequence)}).
 	 */
-	public static boolean isBlank(String string) {
+	public static boolean isBlank(CharSequence string) {
 		return ((string == null) || containsOnlyWhitespaces(string));
 	}
 
@@ -311,7 +311,7 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only white spaces.
 	 */
-	public static boolean containsOnlyWhitespaces(String string) {
+	public static boolean containsOnlyWhitespaces(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -325,7 +325,7 @@ public class StringUtil {
 	/**
 	 * Returns <code>true</code> if string contains only digits.
 	 */
-	public static boolean containsOnlyDigits(String string) {
+	public static boolean containsOnlyDigits(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -337,10 +337,10 @@ public class StringUtil {
 	}
 
 	/**
-	 * Returns <code>true</code> if string {@link #containsOnlyDigits(String) contains only digits}
+	 * Returns <code>true</code> if string {@link #containsOnlyDigits(CharSequence) contains only digits}
 	 * or signs plus or minus.
 	 */
-	public static boolean containsOnlyDigitsAndSigns(String string) {
+	public static boolean containsOnlyDigitsAndSigns(CharSequence string) {
 		int size = string.length();
 		for (int i = 0; i < size; i++) {
 			char c = string.charAt(i);
@@ -355,7 +355,7 @@ public class StringUtil {
 	/**
 	 * Determines if a string is not empty.
 	 */
-	public static boolean isNotEmpty(String string) {
+	public static boolean isNotEmpty(CharSequence string) {
 		return string != null && string.length() > 0;
 	}
 
