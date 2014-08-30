@@ -1,137 +1,145 @@
-General Tasks:
-	- Game over.
-		"Every once in a while, I take my head out of the clouds and do a reality check."
-		The purpose of Jodd is nothing else but to _help_ Java developers. Java doesn't have to be enterprise only.
-		Huge effort is invested in Jodd. But, after all these years, it is still an one-man show; still not getting much feedback on if Jodd really serves its purpose of being helpful. For an open-source project this means a dead-end. It's just matter of time when being stubborn becomes being stupid. Maybe that time is now, torn between the wish of improving and enhancing Jodd and the real life.
-		I am very sad.
-	- Replace for-each loop with index/while loop, as it takes less space and is faster @tbd
-	- Add smart download in NetUtil
-	- migrate to gradle v1.6 @done @v3.4.5
-	- Add efficient text searches
-		Check various algorithms, like BM etc.
-	- Add more TypeConverters! @v3.4.8 @done
-	- Add ExtendedURLClassLoader @v3.4.5 @done
-	- Improve CompositeIterator (performance, generics etc), remove Joined* @v3.4.5 @done
-	- Check FileUtil.move/copy dir/file variants to be more performant
-		Try to see which variant is the fastest one. Noticed a slow execution in @sitegenerator
-	- ArraysUtil, remove merge for join @v3.4.5 @done
-	- getRawTypes() added @v3.4.5 @done
-	- FindFile with includes/excludes @v3.4.5 @done
-	- StringUtil.stripFromChar strips everything from/up to the first char @done @v3.4.7
-	- URLCoder improved @done @v3.4.7
-	- ReThink log dependency @done
-	- Add classLoading strategy @tbd @done
-	- Update ReferenceMap @done @v3.5
-	- Add FileNameUtil.calculateRelativePath @3.6
-Documentation:
-	- Quickstarts page upgrade - everything is done automatically, via gradle @done
-	- add blog, like i have time :(
-	- improve SEO
-	- main page for each tool must be better @next
-	SiteGenerator:
-	- add global props to javascript
-	- move next/prev logic to javascript @done
-	- load *md structure from root in maps, get(relative) returns sorted list of file names @done
-	- sitemap generator
-	- description meta tag add
-Lagarto/Jerry:
-	- Add simple html() renderer for nicer html output @done @v3.4.5
-	- Add reference to dom builder to each node @done @v3.4.5
-	- Add htmlPlus() mode @done @v3.4.7
-	- Add form() for handling forms @done @v3.4.7
-	- Add alternative strict HTML parser, that produces browser-quality code @hot
-	- Improve LagartoDOM parser @v3.4.7 @done
-	- Think about removing circluar dep Node <-> Document
-	- Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @v3.6 @done
-	- Use new faster parser for the form tag !!! @v3.6 @done
-	- Make Node api for adding Nodes more user friendly @next
-BeanUtil:
-	- Allow index to be set as: 'foo.list.0.more' (alt for: foo.list[0].more). @v3.5.3
-	- Add `PopertyDescriptor` @v3.4.9 @done
-	- Join maps of public and all methods! @v3.4.9 @done
-	- Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
-	- Remove 2 introspector implementations @v3.4.9 @done
-	- Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
-	- Special case when getter is in subclass and setter is in superclass (with and without overding) @done
-	- Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
-	- Add abstract descriptor class @v3.4.9 @done
-	- add raw types info to Introspectors, improve and simplify Introspectors @v3.4.5 @done
-	- Use new raw type info in BeanUtil @v3.4.5 @done
-Props:
-	- Add new property "ignoreMacros" @v3.4.5 @done
+# Jodd TODOs
 
-JSON:
-	- Add factories in `JsonParser` for various types.
-Petite:
-	- remove default scope configuration as totally not needed @v3.5 @done
-	- add request Scope @v3.5 @done
-Props-plugin:
-	- Add += operator
-	- Add <= operator
-	- Check when categories are listed in values, do not recognize them as categories but test
+## General Tasks
+gen.todo
+
++ clone myself.
++ Game over?
+	"Every once in a while, I take my head out of the clouds and do a reality check."
+
+## Core
+core.todo
+
++ Add smart download in `NetUtil`
+	This would have some downloading options to tweak download better.
++ Add efficient text searches
+	Check various algorithms, like BM etc.
++ Add more TypeConverters! @v3.4.8 @done
++ Check `FileUtil.move`/`copy dir`/`file` variants to be more performant
+	Try to see which variant is the fastest one. Noticed a slow execution in @sitegenerator
++ Update ReferenceMap @done @v3.5
++ Add `FileNameUtil.calculateRelativePath` (see @liferay) @3.6
+
+## Documentation
+doc.todo
+
++ add blog, like I have time :(
++ improve SEO
++ main page for each tool must be better @next
+
+###	SiteGenerator
+sitegen.todo
+
++ add global props to javascript
++ sitemap generator
++ description meta tag add
+
+## Lagarto/Jerry
+lagarto.todo
+
++ Add alternative strict HTML parser, that produces browser-quality code @hot @done
++ Think about removing circular dep Node <-> Document
++ Find JFLex faster alternative - in fact, manual parsing may be faster?? see HtmlTag @v3.6 @done
++ Use new faster parser for the form tag !!! @v3.6 @done
++ Make Node api for adding Nodes more user friendly @next
+
+## BeanUtil
+beanutil.todo
+
++ Add `PopertyDescriptor` @v3.4.9 @done
++ Join maps of public and all methods! @v3.4.9 @done
++ Add settings in the `ClassDescriptor` so its possible to change the behavior. @v3.4.9 @done
++ Remove 2 introspector implementations @v3.4.9 @done
++ Dont use introspector from JoddBean.* but add a field in BeanProperty @v3.4.9 @done
++ Move all init to collections (from ClassDescriptor to Fields etc) @v3.4.9 @done
++ Add abstract descriptor class @v3.4.9 @done
+
+## Props
+props.todo
+
++ Add new property "ignoreMacros" @v3.4.5 @done
+
+## JSON
+json.todo
+
++ Add factories in `JsonParser` for various types.
+
+## Petite
+petite.todo
+
++ remove default scope configuration as totally not needed @v3.5 @done
+
+## Props-plugin
+pp.todo
+
++ Add `+=` operator
++ Add `<=` operator
++ Check when categories are listed in values, do not recognize them as categories but test
 		Categories must start on empty or whitespaced line
-Madvoc:
-	- Action methods with arguments @done @v3.5.1
-	- Manual registration of ActionConfig, using fluent interface @hot @v3.4.7 @done
-	- Add Convertes, that convert input text automatically
-		For example, convert "1,473.00" into "1473"
-	- MadvocServletFilter, consume action path, like load static content @tbd
-	- Check AnnotatedFieldInterceptor, how it works @test
-	- More flexible ActionMethodParser, i.e. point where action path is build @tbd
-		For example, it may choose if extension is "json" or not based on class name.
-	- Add JSONResult(returnCode, jsonString) @soon @review
-	- Multiple roots mapped to different paths @done @v3.4.5
-	- Cache results for ServletDispatcherResult#targetExist to speed up @done
-EMail:
-	- Add IMAP support @done @v3.4.7
-	- Add support for EML attachments @done @v3.4.7
-	- Add util to parse EML! @done @v3.4.7
-	- Fix various NPEs @done @v3.4.8
-	- Add callback method for receive(), so users may control if there is an exception and continue fetching if there is one. @next
-	- Add UploadFile so user can download email attachments directly to e.g. disk instead to memory. @next 
-Cache:
-	- LFU, add optional count reduction
-	- LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
-	- Add caches on method level, annotation based.
-		Each cache has an id, each one can be evicted, use annotations or manual config
-	- Add Madvoc filter for storing caching response for some time
-		Configurable, eg. 1 cache setting per actionString (class#method) or from additional annotation etc.
-JTX:
-	- Add 'Rollback on' feature… that does rollback only on certain exception types.
-	- Add Thread timeout in separate class
-	- How to explicitly specify TX scope in annotation @tbd
-	- Check nested TX, once again @test
-Proxetta:
-	- Add proxy detection and return super class. @done @v3.4.5
-		Since naming convention can be changed, maybe we can add public static field in every proxy that contains this information.
-	- Add statistics: number of proxified methods etc.
-	- Add delegating wrapper that wraps the instance of the same class, but loaded with different classloader @done @v3.4.5
-		So you don't have to use reflection manually - and its not a wrapper :) !
-	- Moved PetiteNaming to JoddPetite @done @v3.4.5
-	- Use $$ as divider @done @v3.4.5
-	- Add AOP detector for all various Proxetta types @done @v3.4.5
-	- Remove and fix raw signatures from proxy code @done @v3.4.5
-	- Fix static methods call @done @v3.4.5
-	- Add unique interface over all 3 proxy types, so they can be combined! @hot
-DbOom:
-	- LoadById, load values into existing instance
-	- Generic finder method. Try to detect method arguments using MethRef? @done
-	- Add batch update
-MethRef:
-	- Return property name instead of method name. @done
-Joy:
-	- Localization arguments, {0}, {1}…
-	- Don't encode text tags in resource bundles
-	- Pager - refactor to be more user friendly when user has to write custom code
-	- AppCore, add optional scanning, so to allow manual registration @done
-	- Jspp with tag body
-	- Jspp.processAll()
-		Process all files in target folder, enable debug mode in WebApp.
 
-Other Projects:
-	- Add gradle for easier start: madvoc @done @v3.4.5
-	- Add gradle for easier start: webapp1 @done @v3.4.5
-	- Add gradle for examples @done @v3.4.7
-	- Upgrade to gradle v1.7 @done @v3.4.7
-	- Add log DEBUG in examples.quickstart @done
-	- rename .dot folders to _ @done in site builder
+## Madvoc
+madvoc.todo
+
++ Action methods with arguments @done @v3.5.1
++ Add Convertes, that convert input text automatically
+		For example, convert "1,473.00" into "1473"
++ MadvocServletFilter, consume action path, like load static content @tbd
++ Check AnnotatedFieldInterceptor, how it works @test
++ More flexible ActionMethodParser, i.e. point where action path is build @tbd
+		For example, it may choose if extension is "json" or not based on class name.
++ Add JSONResult(returnCode, jsonString) @soon @review
++ Cache results for ServletDispatcherResult#targetExist to speed up @done
+
+## EMail
+email.todo
+
++ Add callback method for receive(), so users may control if there is an exception and continue fetching if there is one. @next
++ Add UploadFile so user can download email attachments directly to e.g. disk instead to memory. @next
+
+## Cache
+cache.todo
+
++ LFU, add optional count reduction
++ LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
++ Add caches on method level, annotation based.
+		Each cache has an id, each one can be evicted, use annotations or manual config
++ Add Madvoc filter for storing caching response for some time
+		Configurable, eg. 1 cache setting per actionString (class#method) or from additional annotation etc.
+
+## JTX
+jtx.todo
+
++ Add 'Rollback on' feature… that does rollback only on certain exception types.
++ Add Thread timeout in separate class
++ How to explicitly specify TX scope in annotation @tbd
++ Check nested TX, once again @test
+
+## Proxetta
+proxetta.todo
+
++ Add statistics: number of proxified methods etc.
++ Add unique interface over all 3 proxy types, so they can be combined! @hot
+
+## DbOom
+db.todo
+
++ LoadById, load values into existing instance
++ Generic finder method. Try to detect method arguments using MethRef? @done
++ Add batch update
++ Add matcher for `match()` method
+
+## MethRef
+methref.todo
+
++ Return property name instead of method name. @done
+
+## Joy
+joy.todo
+
++ Localization arguments, {0}, {1}…
++ Don't encode text tags in resource bundles
++ Pager - refactor to be more user friendly when user has to write custom code
++ AppCore, add optional scanning, so to allow manual registration @done
++ Jspp with tag body
++ Jspp.processAll()
+		Process all files in target folder, enable debug mode in WebApp.
