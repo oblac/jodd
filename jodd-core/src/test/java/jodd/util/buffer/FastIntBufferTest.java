@@ -2,10 +2,7 @@
 
 package jodd.util.buffer;
 
-import jodd.util.RandomStringUtil;
 import org.junit.Test;
-
-import java.util.Random;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -13,56 +10,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class FastCharBufferTest extends FastBufferTestBase {
-
-	@Test
-	public void testAppendString() {
-		FastCharBuffer fcb = new FastCharBuffer(10);
-
-		fcb.append("12345678");
-		fcb.append("ABCDEFGH");
-
-		assertEquals("12345678ABCDEFGH", fcb.toString());
-	}
-
-	@Test
-	public void testRandomAppends() {
-		StringBuilder sb = new StringBuilder(10);
-		FastCharBuffer fcb = new FastCharBuffer(10);
-
-		Random rnd = new Random();
-
-		int loop = 100;
-		while (loop-- > 0) {
-			String s = RandomStringUtil.randomAlphaNumeric(rnd.nextInt(20));
-
-			sb.append(s);
-			fcb.append(s);
-		}
-
-		assertEquals(sb.toString(), fcb.toString());
-	}
-
+public class FastIntBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testAppend() {
-		FastCharBuffer buff = new FastCharBuffer(3);
+		FastIntBuffer buff = new FastIntBuffer(3);
 
 		buff.append(buff);
-		buff.append((char)173);
-		buff.append(array((char)8,(char)98));
+		buff.append(173);
+		buff.append(array(8,98));
 
-		assertArrayEquals(array((char)173, (char)8, (char)98), buff.toArray());
+		assertArrayEquals(array(173, 8, 98), buff.toArray());
 
 		buff.append(buff);
 
-		assertArrayEquals(array((char)173, (char)8, (char)98, (char)173, (char)8, (char)98), buff.toArray());
+		assertArrayEquals(array(173, 8, 98, 173, 8, 98), buff.toArray());
 
-		buff.append(array((char)173, (char)5, (char)3), 1, 1);
+		buff.append(array(173, 5, 3), 1, 1);
 
-		assertArrayEquals(array((char)173, (char)8, (char)98, (char)173, (char)8, (char)98, (char)5), buff.toArray());
+		assertArrayEquals(array(173, 8, 98, 173, 8, 98, 5), buff.toArray());
 
-		FastCharBuffer buff2 = new FastCharBuffer(3);
+		FastIntBuffer buff2 = new FastIntBuffer(3);
 		buff2.append(buff);
 
 		assertEquals(7, buff2.toArray().length);
@@ -70,32 +38,32 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testChunks() {
-		FastCharBuffer buff = new FastCharBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		assertEquals(-1, buff.index());
 		assertEquals(0, buff.offset());
 
-		buff.append((char)1);
+		buff.append(1);
 
 		assertEquals(0, buff.index());
 		assertEquals(1, buff.offset());
 
-		buff.append((char)2);
+		buff.append(2);
 
 		assertEquals(2, buff.offset());
 
 		for (int i = 3; i <= SIZE; i++) {
-			buff.append((char)i);
+			buff.append(i);
 		}
 
 		assertEquals(0, buff.index());
 		assertEquals(SIZE, buff.offset());
 
-		buff.append((char)(SIZE + 1));
+		buff.append(SIZE + 1);
 		assertEquals(1, buff.index());
 		assertEquals(1, buff.offset());
 
-		char[] a = buff.array(0);
+		int[] a = buff.array(0);
 
 		for (int i = 1; i <= SIZE; i++) {
 			assertEquals(i, a[i - 1]);
@@ -104,29 +72,29 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testChunksOverflow() {
-		FastCharBuffer buff = new FastCharBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		assertEquals(-1, buff.index());
 		assertEquals(0, buff.offset());
 
-		char sum = 0;
+		int sum = 0;
 
 		for (int j = 0; j < COUNT; j++) {
 			for (int i = 1; i <= SIZE; i++) {
-				buff.append((char)i);
-				sum += (char)i;
+				buff.append(i);
+				sum += i;
 			}
 		}
 
 		assertEquals(15, buff.index());
 		assertEquals(1024, buff.offset());
 
-		buff.append((char)-1);
+		buff.append(-1);
 		sum--;
 		assertEquals(16, buff.index());
 		assertEquals(1, buff.offset());
 
-		char sum2 = 0;
+		int sum2 = 0;
 
 		for (int i = 0; i < buff.size(); i++) {
 			sum2 += buff.get(i);
@@ -137,11 +105,11 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testClear() {
-		FastCharBuffer buff = new FastCharBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		assertTrue(buff.isEmpty());
 
-		buff.append((char)1);
+		buff.append(1);
 
 		assertFalse(buff.isEmpty());
 
@@ -155,30 +123,30 @@ public class FastCharBufferTest extends FastBufferTestBase {
 		} catch (IndexOutOfBoundsException ignore) {
 		}
 
-		char[] arr = buff.toArray();
+		int[] arr = buff.toArray();
 
 		assertEquals(0, arr.length);
 	}
 
 	@Test
 	public void testToArray() {
-		FastCharBuffer buff = new FastCharBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		int sum = 0;
 
 		for (int j = 0; j < COUNT; j++) {
 			for (int i = 1; i <= SIZE; i++) {
-				buff.append((char)i);
+				buff.append(i);
 				sum += i;
 			}
 		}
 
-		buff.append((char)173);
+		buff.append(173);
 		sum += 173;
 
-		char[] array = buff.toArray();
+		int[] array = buff.toArray();
 		int sum2 = 0;
-		for (char l : array) {
+		for (int l : array) {
 			sum2 += l;
 		}
 
@@ -187,7 +155,7 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 		array = buff.toArray(1, buff.size() - 2);
 		sum2 = 0;
-		for (char l : array) {
+		for (int l : array) {
 			sum2 += l;
 		}
 
@@ -196,24 +164,23 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 	@Test
 	public void testToSubArray() {
-		FastCharBuffer buff = new FastCharBuffer();
+		FastIntBuffer buff = new FastIntBuffer();
 
 		int total = SIZE + (SIZE/2);
 
 		for (int i = 1; i <= total; i++) {
-			buff.append((char)i);
+			buff.append(i);
 		}
 
-		char[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
+		int[] array = buff.toArray(SIZE + 1, total - SIZE  - 1);
 
 		assertEquals(total - SIZE - 1, array.length);
 		assertEquals(SIZE + 2, array[0]);
 	}
 
 
-	protected char[] array(char... arr) {
+	protected int[] array(int... arr) {
 		return arr;
 	}
-
 
 }
