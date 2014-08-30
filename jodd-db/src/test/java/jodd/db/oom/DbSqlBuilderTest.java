@@ -317,4 +317,20 @@ public class DbSqlBuilderTest {
 		assertEquals("select bb.ID, bb.GIRL_ID, bb.NAME, bg.ID from BOY bb, GIRL bg where (bb.ID=:badBoy.ajdi) (bg.ID=:badGirl.fooid) or bb.ID=:p0", dbc.generateQuery());
 	}
 
+	@Test
+	public void testCriteria2() {
+		Girl girl = new Girl();
+		girl.speciality = "piano";
+
+		Girl girl_condition = new Girl();
+		girl_condition.speciality = "swim";
+
+		String tableRef = "ggg";
+
+		DbSqlBuilder dsb = sql()._("update ").table(girl, tableRef).set(tableRef, girl)._("where ").
+		           match(tableRef, "conditionRef").use("conditionRef",girl_condition);
+
+		assertEquals("update GIRL ggg set ID=:girl.id, SPECIALITY=:girl.speciality where (ggg.ID=:girl.id and ggg.SPECIALITY=:girl.speciality)", dsb.generateQuery());
+	}
+
 }
