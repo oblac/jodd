@@ -3,6 +3,8 @@
 package jodd.joy.madvoc.meta;
 
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.result.ActionResult;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -25,5 +27,11 @@ public @interface PostAction {
 	String extension() default Action.NONE;
 
 	String alias() default "";
+
+	boolean async() default false;
+
+	Class<? extends ActionResult> result() default ActionResult.class;
+
+	Class<? extends ActionNamingStrategy> path() default ActionNamingStrategy.class;
 
 }

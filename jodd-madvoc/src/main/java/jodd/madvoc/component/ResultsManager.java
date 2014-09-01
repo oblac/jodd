@@ -77,7 +77,7 @@ public class ResultsManager {
 			if (log.isDebugEnabled()) {
 				log.debug("ActionResult already registered: " + actionResultClass);
 			}
-			return allResults.get(actionResultClass);
+			return existingResult;
 		}
 
 		// + string hook
@@ -88,6 +88,7 @@ public class ResultsManager {
 			existingResult = stringResults.get(resultName);
 
 			if (existingResult != null) {
+				// the same result name exist
 				if (!resultMayReplaceExistingOne(actionResultClass)) {
 					if (log.isDebugEnabled()) {
 						log.debug("ActionResult already registered: " + actionResultClass);
@@ -111,7 +112,7 @@ public class ResultsManager {
 		Class resultValueType = result.getResultValueType();
 
 		if (resultValueType != null && resultValueType != String.class) {
-			existingResult = typeResults.get(resultName);
+			existingResult = typeResults.get(resultValueType);
 
 			if (existingResult != null) {
 				if (!resultMayReplaceExistingOne(actionResultClass)) {
@@ -195,6 +196,7 @@ public class ResultsManager {
 			if (result != null) {
 				// read Result, if used; if not, values will be null
 				Class<? extends ActionResult> actionResultClass = result.getActionResult();
+
 				resultObject = result.getResultValue();
 				if (resultObject == null) {
 					resultObject = result.value();
