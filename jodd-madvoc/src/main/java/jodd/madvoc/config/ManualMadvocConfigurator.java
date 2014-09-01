@@ -81,6 +81,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		String method;
 		String actionPath;
 		Class actionClass;
+		Class<? extends ActionResult> actionResult;
 		Method actionClassMethod;
 		String actionMethodString;
 		String alias;
@@ -203,6 +204,14 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		}
 
 		/**
+		 * Defines action result for this action.
+		 */
+		public ActionBuilder renderWith(Class<? extends ActionResult> actionResult) {
+			this.actionResult = actionResult;
+			return this;
+		}
+
+		/**
 		 * Defines async execution flag.
 		 */
 		public ActionBuilder async(boolean async) {
@@ -241,6 +250,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 			ActionConfig actionConfig =
 					actionMethodParser.createActionConfig(
 							actionClass, actionClassMethod,
+							actionResult,
 							actionFilterInstances, actionInterceptorInstances,
 							actionDef, async);
 
@@ -254,6 +264,7 @@ public abstract class ManualMadvocConfigurator implements MadvocConfigurator {
 		/**
 		 * Returns <code>true</code> when minimum configuration is provided.
 		 * If so, you can call {@link #bind()} to complete the binding.
+		 * This indicates that action path etc is already set in the line.
 		 */
 		public boolean isSet() {
 			return actionPath != null && actionMethodString != null;

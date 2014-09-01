@@ -4,6 +4,7 @@ package jodd.madvoc.component;
 
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
+import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.injector.Target;
@@ -206,7 +207,13 @@ public class ResultsManager {
 		}
 
 		if (actionResult == null) {
-			// + todo lookup @Action annotation
+			// + still not found, read @Action value
+			ActionConfig actionConfig = actionRequest.getActionConfig();
+
+			Class<? extends ActionResult> actionResultClass = actionConfig.getActionResult();
+			if (actionResultClass != null) {
+				actionResult = lookupAndRegisterIfMissing(actionResultClass);
+			}
 		}
 
 		if (actionResult == null && resultObject != null) {

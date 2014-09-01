@@ -45,8 +45,8 @@ import java.util.Map;
  *     <li>flags, like <code>async</code> are defined in words that starts with a <code>#</code>.</li>
  *     <li>target class and method is given in this form: <code>className#methodName</code>.</li>
  *     <li>classes are defined by single word that ends with <code>.class</code>. If class is
- *     		a result class, everything else will be ignored. If class is a wrapper, it overrides
- *     		default wrappers.</li>
+ *     		a result class, it will be either registered or set as actions result (if path already defined).
+ *     		If class is a wrapper, it overrides default wrappers.</li>
  *     <li>alias is defined by last unprocessed word.</li>
  * </ul>
  */
@@ -245,12 +245,12 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 			// paths (starts with '/')
 			if (chunk.startsWith(StringPool.SLASH)) {
 				if (action.isSet()) {
-					// result base path is not the last path
+					// result base path is the last path
 					action.resultBase(chunk);
 					continue;
 				}
 
-				// action path is first path
+				// action path is the first path
 				action.path(chunk);
 				continue;
 			}
@@ -287,7 +287,11 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 
 				// detect result class
 				if (ReflectUtil.isTypeOf(chunkClass, ActionResult.class)) {
-					result(chunkClass);
+					if (action.isSet()) {
+						action.renderWith(chunkClass);
+					} else {
+						result(chunkClass);
+					}
 					continue;
 				}
 

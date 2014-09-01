@@ -19,6 +19,7 @@ import jodd.madvoc.meta.Action;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.result.ActionResult;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
 import jodd.util.StringUtil;
@@ -89,7 +90,6 @@ public class ActionMethodParser {
 
 	/**
 	 * Parses java action method annotation and returns its action configuration.
-	 * todo check when no annotation is used!
 	 *
 	 * @param actionClass action class
 	 * @param actionMethod action method
@@ -114,8 +114,11 @@ public class ActionMethodParser {
 
 		final boolean async = parseMethodAsyncFlag(annotationData);
 
+		final Class<? extends ActionResult> actionResult = parseActionResult(annotationData);
+
 		return createActionConfig(
 				actionClass, actionMethod,
+				actionResult,
 				actionFilters, actionInterceptors,
 				actionDef,
 				async);
@@ -145,6 +148,16 @@ public class ActionMethodParser {
 			String aliasPath = StringUtil.cutToIndexOf(actionDef.getActionPath(), StringPool.HASH);
 			actionsManager.registerPathAlias(alias, aliasPath);
 		}
+	}
+
+	protected Class<? extends ActionResult> parseActionResult(ActionAnnotationData annotationData) {
+		Class<? extends ActionResult> actionResult = annotationData.getResult();
+
+		if (actionResult == ActionResult.class) {
+			return null;
+		}
+
+		return actionResult;
 	}
 
 	protected ActionInterceptor[] parseActionInterceptors(final Class<?> actionClass, final Method actionMethod) {
@@ -447,6 +460,7 @@ public class ActionMethodParser {
 	public ActionConfig createActionConfig(
 			Class actionClass,
 			Method actionClassMethod,
+			Class<? extends ActionResult> actionResult,
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
 			ActionDef actionDef,
@@ -512,6 +526,7 @@ public class ActionMethodParser {
 				filters,
 				interceptors,
 				actionDef,
+				actionResult,
 				async,
 				allScopeData,
 				params);
