@@ -2,14 +2,13 @@
 
 package jodd.madvoc.component;
 
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.ServletRedirectResult;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 public class ResultsManagerTest {
 
@@ -22,17 +21,14 @@ public class ResultsManagerTest {
 		};
 
 		resultsManager.register(new ServletRedirectResult());
-		resultsManager.register(new ServletRedirectResult());	// no exception
-		resultsManager.register(new MyRedirect1());	// no exception
+		resultsManager.register(new ServletRedirectResult());
+		resultsManager.register(new MyRedirect1());
 
 		assertNull(resultsManager.lookup(ServletRedirectResult.class));
 		assertEquals(MyRedirect1.class, resultsManager.lookup("redirect").getClass());
 
-		try {
-			resultsManager.register(new MyRedirect2());
-			fail();
-		} catch (MadvocException mex) {
-		}
+		resultsManager.register(new MyRedirect2());
+		assertEquals(MyRedirect2.class, resultsManager.lookup("redirect").getClass());
 
 		assertEquals(1, resultsManager.allResults.size());
 	}
@@ -46,17 +42,14 @@ public class ResultsManagerTest {
 		};
 
 		resultsManager.register(new MyRedirect1());
-		resultsManager.register(new MyRedirect1());				// no exception
-		resultsManager.register(new ServletRedirectResult());	// no exception
+		resultsManager.register(new MyRedirect1());
+		resultsManager.register(new ServletRedirectResult());
 
-		assertNull(resultsManager.lookup(ServletRedirectResult.class));
-		assertEquals(MyRedirect1.class, resultsManager.lookup("redirect").getClass());
+		assertNotNull(resultsManager.lookup(ServletRedirectResult.class));
+		assertEquals(ServletRedirectResult.class, resultsManager.lookup("redirect").getClass());
 
-		try {
-			resultsManager.register(new MyRedirect2());
-			fail();
-		} catch (MadvocException mex) {
-		}
+		resultsManager.register(new MyRedirect2());
+		assertEquals(MyRedirect2.class, resultsManager.lookup("redirect").getClass());
 
 		assertEquals(1, resultsManager.allResults.size());
 	}
