@@ -3,6 +3,7 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.result.ActionResult;
 import jodd.util.StringPool;
 
 import java.lang.annotation.Documented;
@@ -69,6 +70,12 @@ public @interface Action {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
+
+	/**
+	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
+	 * that is going to render the result object.
+	 */
+	Class<? extends ActionResult> result() default ActionResult.class;
 
 	/**
 	 * Defines action naming strategy for building action path.

@@ -18,7 +18,7 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	}
 
 	/**
-	 * Need to override to make java compiler happy.
+s	 * Need to override to make java compiler happy.
 	 */
 	@Override
 	public ActionAnnotationData<A> readAnnotationData(AccessibleObject accessibleObject) {
@@ -28,6 +28,7 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected ActionAnnotationData<A> createAnnotationData(A annotation) {
 
@@ -45,8 +46,9 @@ public class ActionAnnotation<A extends Annotation> extends AnnotationDataReader
 
 		ad.path = (Class<? extends ActionNamingStrategy>) readElement(annotation, "path");
 
+		ad.result = (Class<? extends jodd.madvoc.result.ActionResult>) readElement(annotation, "result");
+
 		return ad;
 	}
-
 
 }

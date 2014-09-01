@@ -3,6 +3,7 @@
 package jodd.madvoc.meta;
 
 import jodd.madvoc.path.ActionNamingStrategy;
+import jodd.madvoc.result.ActionResult;
 import jodd.util.AnnotationDataReader;
 
 import java.lang.annotation.Annotation;
@@ -17,6 +18,7 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 	protected String alias;
 	protected String method;
 	protected boolean async;
+	protected Class<? extends ActionResult> result;
 	protected Class<? extends ActionNamingStrategy> path;
 
 	protected ActionAnnotationData(A annotation) {
@@ -41,6 +43,10 @@ public class ActionAnnotationData<A extends Annotation> extends AnnotationDataRe
 
 	public boolean isAsync() {
 		return async;
+	}
+
+	public Class<? extends ActionResult> getResult() {
+		return result;
 	}
 
 	public Class<? extends ActionNamingStrategy> getPath() {

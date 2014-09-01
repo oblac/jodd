@@ -4,6 +4,7 @@ package jodd.madvoc.meta;
 
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.path.RestResourcePath;
+import jodd.madvoc.result.ActionResult;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -45,6 +46,12 @@ public @interface RestAction {
 	 * using Servlets 3.0 API.
 	 */
 	boolean async() default false;
+
+	/**
+	 * Defines {@link jodd.madvoc.result.ActionResult action result handler}
+	 * that is going to render the result object.
+	 */
+	Class<? extends ActionResult> result() default ActionResult.class;
 
 	/**
 	 * Defines the way how mapping is done: using {@link jodd.madvoc.path.RestResourcePath}.
