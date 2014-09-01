@@ -2,16 +2,21 @@
 
 package jodd.introspector;
 
+import jodd.bean.BeanUtil;
 import jodd.introspector.tst.Abean;
 import jodd.introspector.tst.Ac;
 import jodd.introspector.tst.Bbean;
 import jodd.introspector.tst.Bc;
 import jodd.introspector.tst.Cbean;
 import jodd.introspector.tst.Mojo;
+import jodd.introspector.tst.One;
+import jodd.introspector.tst.OneSub;
 import jodd.introspector.tst.Overload;
+import jodd.introspector.tst.TwoSub;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -100,7 +105,7 @@ public class IntrospectorTest {
 		assertEquals("fooProp", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
-		assertNull(pd.getFieldDescriptor()); 	// null since field is not visible
+		assertNotNull(pd.getFieldDescriptor());
 		assertFalse(pd.isFieldOnlyDescriptor());
 
 		pd = properties[2];
@@ -265,6 +270,135 @@ public class IntrospectorTest {
 			count++;
 		}
 		assertEquals(1, count);
+	}
+
+	@Test
+	public void testPropertiesOneClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.lookup(One.class);
+
+		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
+
+		assertEquals(3, propertyDescriptors.length);
+
+		assertEquals("fone", propertyDescriptors[0].getName());
+		assertEquals("ftwo", propertyDescriptors[1].getName());
+		assertEquals("not", propertyDescriptors[2].getName());
+
+		for (int i = 0; i < 3; i++) {
+			assertNull(propertyDescriptors[i].getWriteMethodDescriptor());
+			if (i != 2) {
+				assertNotNull(propertyDescriptors[i].getReadMethodDescriptor());
+			} else {
+				assertNull(propertyDescriptors[i].getReadMethodDescriptor());
+			}
+			assertNotNull(propertyDescriptors[i].getFieldDescriptor());
+		}
+
+		// change value
+
+		One one = new One();
+
+		Setter setter = propertyDescriptors[0].getSetter(true);
+
+		setter.invokeSetter(one, "one!");
+
+		assertEquals("one!", one.getFone());
+
+		// fields
+
+		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
+		assertEquals(3, fieldDescriptors.length);
+
+		// beanutil
+
+		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		assertEquals("!!!", one.getFone());
+
+		// change value 2
+
+		setter = propertyDescriptors[2].getSetter(true);
+		setter.invokeSetter(one, Long.valueOf("99"));
+		assertEquals(99, one.whynot());
+	}
+
+	@Test
+	public void testPropertiesOneSubClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.lookup(OneSub.class);
+
+		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
+
+		assertEquals(2, propertyDescriptors.length);
+
+		assertEquals("fone", propertyDescriptors[0].getName());
+		assertEquals("ftwo", propertyDescriptors[1].getName());
+
+		for (int i = 0; i < 2; i++) {
+			assertNull(propertyDescriptors[i].getWriteMethodDescriptor());
+			assertNotNull(propertyDescriptors[i].getReadMethodDescriptor());
+			assertNotNull(propertyDescriptors[i].getFieldDescriptor());
+		}
+
+		// change value
+
+		OneSub one = new OneSub();
+
+		Setter setter = propertyDescriptors[0].getSetter(true);
+
+		setter.invokeSetter(one, "one!");
+
+		assertEquals("one!", one.getFone());
+
+		// fields
+
+		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
+		assertEquals(1, fieldDescriptors.length);
+
+		assertEquals("ftwo", fieldDescriptors[0].getName());
+
+		// beanutil
+
+		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		assertEquals("!!!", one.getFone());
+	}
+
+	@Test
+	public void testPropertiesTwoSubClass() throws InvocationTargetException, IllegalAccessException {
+		ClassDescriptor cd = ClassIntrospector.lookup(TwoSub.class);
+
+		PropertyDescriptor[] propertyDescriptors = cd.getAllPropertyDescriptors();
+
+		assertEquals(2, propertyDescriptors.length);
+
+		assertEquals("fone", propertyDescriptors[0].getName());
+		assertEquals("ftwo", propertyDescriptors[1].getName());
+
+		for (int i = 0; i < 2; i++) {
+			assertNull(propertyDescriptors[i].getWriteMethodDescriptor());
+			assertNotNull(propertyDescriptors[i].getReadMethodDescriptor());
+			assertNotNull(propertyDescriptors[i].getFieldDescriptor());
+		}
+
+		// change value
+
+		TwoSub one = new TwoSub();
+
+		Setter setter = propertyDescriptors[0].getSetter(true);
+
+		setter.invokeSetter(one, "one!");
+
+		assertEquals("one!", one.getFone());
+
+		// fields
+
+		FieldDescriptor[] fieldDescriptors = cd.getAllFieldDescriptors();
+		assertEquals(1, fieldDescriptors.length);
+
+		assertEquals("ftwo", fieldDescriptors[0].getName());
+
+		// beanutil
+
+		BeanUtil.setDeclaredProperty(one, "fone", "!!!");
+		assertEquals("!!!", one.getFone());
 	}
 
 

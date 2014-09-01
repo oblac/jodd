@@ -3,7 +3,8 @@
 package jodd.introspector;
 
 /**
- * Property descriptor.
+ * Property descriptor. It consist of read, write and field descriptor.
+ * Only one of those three descriptors may exist.
  */
 public class PropertyDescriptor extends Descriptor {
 
@@ -42,7 +43,8 @@ public class PropertyDescriptor extends Descriptor {
 	}
 
 	/**
-	 * Locates property field.
+	 * Locates property field. Field is being searched also in all
+	 * superclasses of current class.
 	 */
 	protected FieldDescriptor findField(String fieldName) {
 		String prefix = classDescriptor.getPropertyFieldPrefix();
@@ -51,7 +53,30 @@ public class PropertyDescriptor extends Descriptor {
 			fieldName = prefix + fieldName;
 		}
 
-		return classDescriptor.getFieldDescriptor(fieldName, true);
+		FieldDescriptor fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
+
+		if (fieldDescriptor != null) {
+			return fieldDescriptor;
+		}
+
+		// field descriptor not found in this class
+		// try to locate it in the superclasses
+
+		Class[] superclasses = classDescriptor.getAllSuperclasses();
+
+		for (Class superclass : superclasses) {
+
+			ClassDescriptor classDescriptor = ClassIntrospector.lookup(superclass);
+
+			fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
+
+			if (fieldDescriptor != null) {
+				return fieldDescriptor;
+			}
+		}
+
+		// nothing found
+		return null;
 	}
 
 	/**
@@ -95,6 +120,7 @@ public class PropertyDescriptor extends Descriptor {
 
 
 	// ---------------------------------------------------------------- type
+
 	protected Class type;
 
 	/**
