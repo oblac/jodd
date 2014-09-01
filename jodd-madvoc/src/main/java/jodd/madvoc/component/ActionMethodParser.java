@@ -151,6 +151,10 @@ public class ActionMethodParser {
 	}
 
 	protected Class<? extends ActionResult> parseActionResult(ActionAnnotationData annotationData) {
+		if (annotationData == null) {
+			return null;
+		}
+
 		Class<? extends ActionResult> actionResult = annotationData.getResult();
 
 		if (actionResult == ActionResult.class) {

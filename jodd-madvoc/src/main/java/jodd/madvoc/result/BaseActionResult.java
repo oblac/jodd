@@ -10,14 +10,14 @@ import jodd.util.StringPool;
  */
 public abstract class BaseActionResult<T> implements ActionResult<T> {
 
-	protected final String resultType;
+	protected final String resultName;
 	protected final Class<T> resultValueType;
 
 	/**
 	 * Creates new action result that has a string identification.
 	 */
-	protected BaseActionResult(String resultType) {
-		this.resultType = resultType;
+	protected BaseActionResult(String resultName) {
+		this.resultName = resultName;
 		this.resultValueType = resolveResultValueType();
 	}
 
@@ -25,7 +25,7 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	 * Creates new action result without a string identification.
 	 */
 	protected BaseActionResult() {
-		this.resultType = null;
+		this.resultName = null;
 		this.resultValueType = resolveResultValueType();
 	}
 
@@ -49,8 +49,8 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getResultType() {
-		return resultType;
+	public String getResultName() {
+		return resultName;
 	}
 
 	/**
@@ -69,7 +69,9 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 	@Override
 	public String toString() {
 		return "Result: " + getClass().getSimpleName() +
-				(resultType != null ? StringPool.COLON + resultType : StringPool.EMPTY);
+				(resultName != null ? StringPool.COLON + resultName : StringPool.EMPTY) +
+				(resultValueType != null ? StringPool.COLON + resultValueType.getName() : StringPool.EMPTY)
+				;
 	}
 
 }

@@ -82,10 +82,10 @@ public class ResultsManager {
 
 		// + string hook
 
-		String resultType = result.getResultType();
+		String resultName = result.getResultName();
 
-		if (resultType != null) {
-			existingResult = stringResults.get(resultType);
+		if (resultName != null) {
+			existingResult = stringResults.get(resultName);
 
 			if (existingResult != null) {
 				if (!resultMayReplaceExistingOne(actionResultClass)) {
@@ -100,10 +100,10 @@ public class ResultsManager {
 			}
 
 			if (log.isInfoEnabled()) {
-				log.debug("ActionResult registered: " + resultType + " -> " + actionResultClass);
+				log.debug("ActionResult registered: " + resultName + " -> " + actionResultClass);
 			}
 
-			stringResults.put(resultType, result);
+			stringResults.put(resultName, result);
 		}
 
 		// + type result
@@ -111,7 +111,7 @@ public class ResultsManager {
 		Class resultValueType = result.getResultValueType();
 
 		if (resultValueType != null && resultValueType != String.class) {
-			existingResult = typeResults.get(resultType);
+			existingResult = typeResults.get(resultName);
 
 			if (existingResult != null) {
 				if (!resultMayReplaceExistingOne(actionResultClass)) {
@@ -235,28 +235,28 @@ public class ResultsManager {
 		}
 
 		if (actionResult == null) {
-			// + still not found, toString
+			// + still not found, toString()
 
 			String resultValue = resultObject != null ? resultObject.toString() : null;
-			String resultType = madvocConfig.getDefaultResultType();
+			String resultName = madvocConfig.getDefaultResultName();
 
 			// first check result value
 			if (resultValue != null) {
 				int columnIndex = resultValue.indexOf(':');
 
 				if (columnIndex != -1) {
-					resultType = resultValue.substring(0, columnIndex);
+					resultName = resultValue.substring(0, columnIndex);
 
 					resultValue = resultValue.substring(columnIndex + 1);
 				}
 			}
 
-			actionResult = stringResults.get(resultType);
+			actionResult = stringResults.get(resultName);
 
 			// convert remaining of the string to result object
 			try {
 				Class targetClass = actionResult.getResultValueType();
-				if (targetClass == String.class) {
+				if (targetClass == null || targetClass == String.class) {
 					resultObject = resultValue;
 				}
 				else {

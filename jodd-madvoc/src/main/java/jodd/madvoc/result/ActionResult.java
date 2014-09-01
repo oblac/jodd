@@ -13,17 +13,17 @@ import jodd.madvoc.ActionRequest;
 public interface ActionResult<T> {
 
 	/**
-	 * Returns the type of this action result.
-	 * Returned type can be <code>null</code> for results
-	 * that does not need to be found using string identification;
+	 * Returns the name of this action result.
+	 * Returned name can be <code>null</code> for results
+	 * that does not need to be found using string name identification;
 	 * i.e. when action does not return a string result.
 	 */
-	String getResultType();
+	String getResultName();
 
 	/**
 	 * Returns type of result value, passed to the {@link #render(jodd.madvoc.ActionRequest, Object) render method}
 	 * and defined by generics. Returns <code>null</code> when this action result does not need
-	 * to be registered for result value type.
+	 * to be registered for result value type (eg when used in @Action annotation).
 	 */
 	Class<T> getResultValueType();
 

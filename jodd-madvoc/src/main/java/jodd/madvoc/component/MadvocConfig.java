@@ -39,7 +39,7 @@ public class MadvocConfig {
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		defaultResultType = ServletDispatcherResult.NAME;
+		defaultResultName = ServletDispatcherResult.NAME;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
@@ -223,20 +223,20 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- default result type
 
-	protected String defaultResultType;
+	protected String defaultResultName;
 
 	/**
 	 * Specifies default result type.
 	 */
-	public void setDefaultResultType(String type) {
-		defaultResultType = type;
+	public void setDefaultResultName(String type) {
+		defaultResultName = type;
 	}
 
 	/**
 	 * Returns default action result type.
 	 */
-	public String getDefaultResultType() {
-		return defaultResultType;
+	public String getDefaultResultName() {
+		return defaultResultName;
 	}
 
 	// ---------------------------------------------------------------- packageRoot
@@ -477,7 +477,7 @@ public class MadvocConfig {
 				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
 				",\n\tdefaultExtension='" + defaultExtension + '\'' +
 				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
-				",\n\tdefaultResultType='" + defaultResultType + '\'' +
+				",\n\tdefaultResultType='" + defaultResultName + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +
