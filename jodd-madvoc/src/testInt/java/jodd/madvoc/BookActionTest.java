@@ -37,4 +37,12 @@ public class BookActionTest {
 
 		assertEquals("NewBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}
+
+	@Test
+	public void testBookPut() {
+		HttpResponse response;
+		response = HttpRequest.put("localhost:8080/book/123").send();
+
+		assertEquals("OldBook: 123:Songs of Distant Earth.", response.bodyText().trim());
+	}
 }

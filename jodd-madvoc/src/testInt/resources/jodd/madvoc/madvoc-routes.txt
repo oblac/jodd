@@ -22,6 +22,8 @@ GET 	/sys/user/${id}			@jma.sys.UserAction#get		/sys/user/get
 /alpha.ciao.html 	jodd.madvoc.action.AlphaAction#ciao
 /alpha.hello.html 	jodd.madvoc.action.AlphaAction#hello       hello
 
+# result test
+GET /book/${iban}	jodd.madvoc.action.BookAction#put	jodd.madvoc.action.BookActionResult.class
 
 
 # Results:

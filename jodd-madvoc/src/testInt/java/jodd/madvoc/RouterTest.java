@@ -48,4 +48,12 @@ public class RouterTest {
 		HttpResponse response = HttpRequest.get("localhost:8080/sys/user/456").send();
 		assertEquals("Huh 456.", response.bodyText().trim());
 	}
+
+	@Test
+	public void testBook() {
+		HttpResponse response;
+		response = HttpRequest.get("localhost:8080/book/123").send();
+
+		assertEquals("MyBook: 123:Songs of Distant Earth.", response.bodyText().trim());
+	}
 }

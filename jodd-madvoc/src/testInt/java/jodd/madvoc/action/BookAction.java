@@ -30,4 +30,15 @@ public class BookAction {
 		return book;
 	}
 
+	@jodd.madvoc.meta.RestAction(value = "${iban}", result = Book2ActionResult.class)
+	public Book put(@In long iban) {
+		Book book = new Book();
+
+		book.setIban(iban);
+		book.setName("Songs of Distant Earth");
+
+		// Book2ActionResult will render a book
+		return book;
+	}
+
 }
