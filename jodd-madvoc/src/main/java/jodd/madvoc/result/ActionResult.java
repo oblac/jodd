@@ -22,7 +22,8 @@ public interface ActionResult<T> {
 
 	/**
 	 * Returns type of result value, passed to the {@link #render(jodd.madvoc.ActionRequest, Object) render method}
-	 * and defined by generics.
+	 * and defined by generics. Returns <code>null</code> when this action result does not need
+	 * to be registered for result value type.
 	 */
 	Class<T> getResultValueType();
 

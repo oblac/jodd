@@ -6,6 +6,7 @@ import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
+import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.Result;
 import jodd.util.ReflectUtil;
 
@@ -56,6 +57,7 @@ public class ActionConfig {
 	// configuration
 	public final Class actionClass;
 	public final Method actionClassMethod;
+	public final Class<? extends ActionResult> actionResult;
 	public final String actionPath;
 	public final String actionMethod;
 	public final String resultBasePath;
@@ -79,6 +81,7 @@ public class ActionConfig {
 			ActionFilter[] filters,
 			ActionInterceptor[] interceptors,
 			ActionDef actionDef,
+			Class<? extends ActionResult> actionResult,
 			boolean async,
 			ScopeData[][] scopeData,
 			MethodParam[] methodParams
@@ -90,6 +93,7 @@ public class ActionConfig {
 		this.actionMethod = actionDef.getActionMethod() == null ? null : actionDef.getActionMethod().toUpperCase();
 		this.resultBasePath = actionDef.getResultBasePath();
 		this.hasArguments = actionClassMethod.getParameterTypes().length != 0;
+		this.actionResult = actionResult;
 		this.async = async;
 
 		this.scopeData = scopeData;
@@ -177,6 +181,14 @@ public class ActionConfig {
 	 */
 	public MethodParam[] getMethodParams() {
 		return methodParams;
+	}
+
+	/**
+	 * Returns action result class that will render the result.
+	 * may be <code>null</code>.
+	 */
+	public Class<? extends ActionResult> getActionResult() {
+		return actionResult;
 	}
 
 	// ---------------------------------------------------------------- to string
