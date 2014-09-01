@@ -91,6 +91,12 @@ public class AlphaAction {
 		result.text("some text");
 	}
 
+	// ---------------------------------------------------------------- no result!
+
+	@Action
+	public void noresult() {
+	}
+
 	// ---------------------------------------------------------------- chain
 
 	@InOut

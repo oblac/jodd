@@ -24,7 +24,9 @@ import org.junit.runners.Suite;
 		ExcTest.class,
 		UserActionTest.class,
 		AsyncTest.class,
-		MoveTest.class
+		MoveTest.class,
+		BookActionTest.class,
+		ResultsTest.class
 })
 public class MadvocSuite extends MadvocSuiteBase {
 

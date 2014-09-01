@@ -84,4 +84,10 @@ public class AlphaTest {
 		assertEquals("chain:9", response.bodyText().trim());
 	}
 
+	@Test
+	public void testNoResult() {
+		HttpResponse response = HttpRequest.get("localhost:8080/alpha.noresult.html").send();
+		assertEquals("noresult", response.bodyText().trim());
+	}
+
 }

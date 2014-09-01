@@ -31,11 +31,11 @@ public class ResultsManagerTest {
 		resultsManager.register(new ServletRedirectResult());	// ignore
 		resultsManager.register(new MyRedirect1());				// replace
 
-		assertNull(resultsManager.lookup(ServletRedirectResult.class));
-		assertEquals(MyRedirect1.class, resultsManager.lookup("redirect").getClass());
+		assertNull(resultsManager.allResults.get(ServletRedirectResult.class));
+		assertEquals(MyRedirect1.class, resultsManager.stringResults.get("redirect").getClass());
 
 		resultsManager.register(new MyRedirect2());				// replace
-		assertEquals(MyRedirect2.class, resultsManager.lookup("redirect").getClass());
+		assertEquals(MyRedirect2.class, resultsManager.stringResults.get("redirect").getClass());
 
 		assertEquals(1, resultsManager.allResults.size());
 	}
@@ -59,11 +59,11 @@ public class ResultsManagerTest {
 		resultsManager.register(new MyRedirect1());				// ignore
 		resultsManager.register(new ServletRedirectResult());	// ignore
 
-		assertNull(resultsManager.lookup(ServletRedirectResult.class));
-		assertEquals(MyRedirect1.class, resultsManager.lookup("redirect").getClass());
+		assertNull(resultsManager.allResults.get(ServletRedirectResult.class));
+		assertEquals(MyRedirect1.class, resultsManager.stringResults.get("redirect").getClass());
 
 		resultsManager.register(new MyRedirect2());				// ignore
-		assertEquals(MyRedirect2.class, resultsManager.lookup("redirect").getClass());
+		assertEquals(MyRedirect2.class, resultsManager.stringResults.get("redirect").getClass());
 
 		assertEquals(1, resultsManager.allResults.size());
 	}

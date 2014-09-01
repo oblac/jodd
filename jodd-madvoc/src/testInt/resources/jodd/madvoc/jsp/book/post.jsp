@@ -1,0 +1,1 @@
+NewBook: ${book.iban}:${book.name}.

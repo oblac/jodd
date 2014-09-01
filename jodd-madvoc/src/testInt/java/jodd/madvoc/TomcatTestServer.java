@@ -48,7 +48,7 @@ public class TomcatTestServer {
 
 		// web.xml
 
-		URL webXmlUrl = TestServer.class.getResource(webXml);
+		URL webXmlUrl = TomcatTestServer.class.getResource(webXml);
 		File webXmlFile = FileUtil.toFile(webXmlUrl);
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
@@ -69,14 +69,14 @@ public class TomcatTestServer {
 
 		// classes/madvoc.props
 
-		URL madvocPropsUrl = TestServer.class.getResource("madvoc.props");
+		URL madvocPropsUrl = TomcatTestServer.class.getResource("madvoc.props");
 		File madvocPropsFile = FileUtil.toFile(madvocPropsUrl);
 
 		FileUtil.copyFileToDir(madvocPropsFile, classes);
 
 		// classes/madvoc-routes.txt
 
-		URL madvocRoutesUrl = TestServer.class.getResource("madvoc-routes.txt");
+		URL madvocRoutesUrl = TomcatTestServer.class.getResource("madvoc-routes.txt");
 		File madvocRoutesFile = FileUtil.toFile(madvocRoutesUrl);
 
 		FileUtil.copyFileToDir(madvocRoutesFile, classes);
