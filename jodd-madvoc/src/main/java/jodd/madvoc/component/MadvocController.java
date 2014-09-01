@@ -5,14 +5,11 @@ package jodd.madvoc.component;
 import jodd.madvoc.ActionConfig;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.meta.RenderWith;
 import jodd.madvoc.result.ActionResult;
-import jodd.madvoc.result.Result;
 import jodd.petite.meta.PetiteInject;
 import jodd.servlet.ServletUtil;
 import jodd.log.Logger;
 import jodd.log.LoggerFactory;
-import jodd.typeconverter.TypeConverterManager;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
@@ -197,83 +194,17 @@ public class MadvocController {
 	 */
 	@SuppressWarnings("unchecked")
 	public void render(ActionRequest actionRequest, Object resultObject) throws Exception {
-		ActionResult actionResult;
+		ActionResult actionResult = resultsManager.lookup(actionRequest, resultObject);
 
-		// [1] try to lookup the result class
-
-		Class<? extends ActionResult> actionResultClass = null;
-
-		if (resultObject != null && resultObject.getClass() != String.class) {
-			// try annotation
-			RenderWith renderWith = resultObject.getClass().getAnnotation(RenderWith.class);
-			if (renderWith != null) {
-				actionResultClass = renderWith.value();
-			}
-		} else if (resultObject == null) {
-			Result result = actionRequest.getResult();
-			if (result != null) {
-				actionResultClass = result.getActionResult();
-				resultObject = result.getResultValue();
-				if (resultObject == null) {
-					resultObject = result.value();
-				}
-			}
+		if (actionResult == null) {
+			throw new MadvocException("Action result not found");
 		}
 
-		if (actionResultClass != null) {
-			// result class is known, lookup the action result type
-			actionResult = resultsManager.lookup(actionResultClass);
-
-			if (actionResult == null) {
-				// register action result if by any chance it wasn't registered yet
-				actionResult = resultsManager.register(actionResultClass);
-			}
-
-		} else {
-			// result class is not known, lookup it from returned string
-			String resultValue = resultObject != null ? resultObject.toString() : null;
-			String resultType = null;
-
-			// first check result value
-			if (resultValue != null) {
-				int columnIndex = resultValue.indexOf(':');
-
-				if (columnIndex != -1) {
-					resultType = resultValue.substring(0, columnIndex);
-
-					resultValue = resultValue.substring(columnIndex + 1);
-				}
-			}
-
-			// result type still not defined, use default
-			if (resultType == null) {
-				resultType = madvocConfig.getDefaultResultType();
-			}
-
-			actionResult = resultsManager.lookup(resultType);
-			if (actionResult == null) {
-				throw new MadvocException("Action result not found: " + resultType);
-			}
-
-			// convert remaining of the string to result object
-			try {
-				Class targetClass = actionResult.getResultValueType();
-				if (targetClass == String.class) {
-					resultObject = resultValue;
-				} else {
-					resultObject = TypeConverterManager.convertType(resultValue, targetClass);
-				}
-			} catch (Exception ex) {
-				resultObject = resultValue;
-			}
-		}
-
-		// finally, invoke result
 		if (madvocConfig.isPreventCaching()) {
 			ServletUtil.preventCaching(actionRequest.getHttpServletResponse());
 		}
 
-		actionResult.render(actionRequest, resultObject);
+		actionResult.render(actionRequest, actionRequest.getActionResult());
 	}
 
 	// ---------------------------------------------------------------- create

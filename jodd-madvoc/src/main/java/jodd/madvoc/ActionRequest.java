@@ -41,6 +41,7 @@ public class ActionRequest {
 	protected int execState;		// execution state
 
 	protected Object action;
+	protected Object actionResult;
 
 	protected String nextActionPath;
 	protected ActionRequest previousActionRequest;
@@ -137,6 +138,21 @@ public class ActionRequest {
 	public Target[] getTargets() {
 		return targets;
 	}
+
+	/**
+	 * Returns action result object.
+	 */
+	public Object getActionResult() {
+		return actionResult;
+	}
+
+	/**
+	 * Sets action result object.
+	 */
+	public void setActionResult(Object actionResult) {
+		this.actionResult = actionResult;
+	}
+
 	// ---------------------------------------------------------------- ctor
 
 	/**
