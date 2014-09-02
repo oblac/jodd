@@ -2,12 +2,13 @@
 
 package jodd.petite;
 
+import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.util.ReflectUtil;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Set injection point.
@@ -16,30 +17,42 @@ public class SetInjectionPoint<T> {
 
 	public static final SetInjectionPoint[] EMPTY = new SetInjectionPoint[0];
 
-	public final Field field;
+	public final PropertyDescriptor propertyDescriptor;
 
 	public final Class<T> type;
 
 	public final Class targetClass;
 
-	public SetInjectionPoint(Field field) {
-		this.field = field;
-		this.type = resolveSetType(field);
+	public SetInjectionPoint(PropertyDescriptor propertyDescriptor) {
+		this.propertyDescriptor = propertyDescriptor;
+		this.type = resolveSetType(propertyDescriptor);
 
-		this.targetClass = ReflectUtil.getComponentType(field.getGenericType());
+		// resolve component type
+		Class targetClass = null;
+
+		MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
+		FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
+
+		if (writeMethodDescriptor != null) {
+			targetClass = writeMethodDescriptor.getSetterRawComponentType();
+		}
+		if (targetClass == null && fieldDescriptor != null) {
+			targetClass = fieldDescriptor.getRawComponentType();
+		}
+
+		this.targetClass = targetClass;
+
 		if (targetClass == null) {
 			throw new PetiteException("Unknown Petite set component type " +
-					field.getDeclaringClass().getSimpleName() + '.' + field.getName());
+					type.getSimpleName() + '.' + propertyDescriptor.getName());
 		}
 	}
 
 	@SuppressWarnings({"unchecked"})
-	protected Class<T> resolveSetType(Field field) {
-		Class<T> type = (Class<T>) field.getType();
+	protected Class<T> resolveSetType(PropertyDescriptor propertyDescriptor) {
+		Class<T> type = (Class<T>) propertyDescriptor.getType();
 
-		if (type == Collection.class ||
-				type == Set.class ||
-				type == HashSet.class) {
+		if (ReflectUtil.isTypeOf(type, Collection.class)) {
 			return type;
 		}
 		throw new PetiteException("Unsupported Petite set type: " + type.getName());
