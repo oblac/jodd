@@ -31,7 +31,7 @@ public class IntrospectorTest {
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
 		for (PropertyDescriptor property : properties) {
-			if (property.isFieldOnlyDescriptor()) continue;
+			if (property.isFieldOnly()) continue;
 			if (property.isPublic()) c++;
 		}
 		assertEquals(2, c);
@@ -75,14 +75,14 @@ public class IntrospectorTest {
 		PropertyDescriptor[] properties = cd.getAllPropertyDescriptors();
 		int c = 0;
 		for (PropertyDescriptor property : properties) {
-			if (property.isFieldOnlyDescriptor()) continue;
+			if (property.isFieldOnly()) continue;
 			if (property.isPublic()) c++;
 		}
 		assertEquals(2, c);
 
 		c = 0;
 		for (PropertyDescriptor property : properties) {
-			if (property.isFieldOnlyDescriptor()) continue;
+			if (property.isFieldOnly()) continue;
 			c++;
 		}
 		assertEquals(3, c);
@@ -99,28 +99,28 @@ public class IntrospectorTest {
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
 		assertNotNull(pd.getFieldDescriptor());
-		assertFalse(pd.isFieldOnlyDescriptor());
+		assertFalse(pd.isFieldOnly());
 
 		pd = properties[1];
 		assertEquals("fooProp", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNotNull(pd.getWriteMethodDescriptor());
 		assertNotNull(pd.getFieldDescriptor());
-		assertFalse(pd.isFieldOnlyDescriptor());
+		assertFalse(pd.isFieldOnly());
 
 		pd = properties[2];
 		assertEquals("shared", pd.getName());
 		assertNull(pd.getReadMethodDescriptor());
 		assertNull(pd.getWriteMethodDescriptor());
 		assertNotNull(pd.getFieldDescriptor());
-		assertTrue(pd.isFieldOnlyDescriptor());
+		assertTrue(pd.isFieldOnly());
 
 		pd = properties[3];
 		assertEquals("something", pd.getName());
 		assertNotNull(pd.getReadMethodDescriptor());
 		assertNull(pd.getWriteMethodDescriptor());
 		assertNull(pd.getFieldDescriptor());
-		assertFalse(pd.isFieldOnlyDescriptor());
+		assertFalse(pd.isFieldOnly());
 
 		assertNotNull(cd.getPropertyDescriptor("fooProp", false));
 		assertNotNull(cd.getPropertyDescriptor("something", false));
@@ -264,7 +264,7 @@ public class IntrospectorTest {
 
 		int count = 0;
 		for (PropertyDescriptor pd : propertyDescriptor) {
-			if (pd.isFieldOnlyDescriptor()) {
+			if (pd.isFieldOnly()) {
 				continue;
 			}
 			count++;

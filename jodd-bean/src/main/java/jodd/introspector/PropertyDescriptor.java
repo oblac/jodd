@@ -111,13 +111,26 @@ public class PropertyDescriptor extends Descriptor {
 	}
 
 	/**
-	 * Returns <code>true</code> if this is extended property with
+	 * Returns <code>true</code> if this is an extended property with
 	 * only field definition and without getter and setter.
 	 */
-	public boolean isFieldOnlyDescriptor() {
+	public boolean isFieldOnly() {
 		return (readMethodDescriptor == null) && (writeMethodDescriptor == null);
 	}
 
+	/**
+	 * Returns <code>true</code> if this property has only a getter method.
+	 */
+	public boolean isGetterOnly() {
+		return (fieldDescriptor == null) && (writeMethodDescriptor == null);
+	}
+
+	/**
+	 * Returns <code>true</code> if this property has only a setter method.
+	 */
+	public boolean isSetterOnly() {
+		return (fieldDescriptor == null) && (readMethodDescriptor == null);
+	}
 
 	// ---------------------------------------------------------------- type
 
