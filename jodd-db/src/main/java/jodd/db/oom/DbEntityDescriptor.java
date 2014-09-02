@@ -6,11 +6,10 @@ import jodd.bean.BeanUtil;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
-import jodd.introspector.FieldDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.util.StringPool;
 import jodd.util.sort.FastSort;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -110,16 +109,17 @@ public class DbEntityDescriptor<E> {
 	 * Resolves list of all columns and properties.
 	 */
 	private void resolveColumnsAndProperties(Class type) {
-		FieldDescriptor[] fields = ClassIntrospector.lookup(type).getAllFieldDescriptors();
-		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(fields.length);
+		PropertyDescriptor[] allProperties = ClassIntrospector.lookup(type).getAllPropertyDescriptors();
+		List<DbEntityColumnDescriptor> decList = new ArrayList<DbEntityColumnDescriptor>(allProperties.length);
 		int idcount = 0;
 
-		HashSet<String> names = new HashSet<String>(fields.length);
+		HashSet<String> names = new HashSet<String>(allProperties.length);
 
-		for (FieldDescriptor fieldDescriptor : fields) {
-			Field field = fieldDescriptor.getField();
+		for (PropertyDescriptor propertyDescriptor : allProperties) {
 
-			DbEntityColumnDescriptor dec = DbMetaUtil.resolveColumnDescriptors(this, field, isAnnotated, columnNamingStrategy);
+			DbEntityColumnDescriptor dec =
+					DbMetaUtil.resolveColumnDescriptors(this, propertyDescriptor, isAnnotated, columnNamingStrategy);
+
 			if (dec != null) {
 				if (names.add(dec.getColumnName()) == false) {
 					throw new DbOomException("Duplicate column name: " + dec.getColumnName());

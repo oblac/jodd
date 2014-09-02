@@ -9,8 +9,7 @@ import jodd.db.oom.meta.DbTable;
 import jodd.db.oom.naming.ColumnNamingStrategy;
 import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.db.type.SqlType;
-
-import java.lang.reflect.Field;
+import jodd.introspector.PropertyDescriptor;
 
 /**
  * Meta-data resolving utils.
@@ -63,13 +62,13 @@ public class DbMetaUtil {
 	}
 
 	/**
-	 * Resolves column descriptor from field. If field is annotated value will be read
-	 * from annotation. If field is not annotated, then field will be ignored
-	 * if entity is annotated. Otherwise, column name is generated from the field name.
+	 * Resolves column descriptor from property. If property is annotated value will be read
+	 * from annotation. If property is not annotated, then property will be ignored
+	 * if entity is annotated. Otherwise, column name is generated from the property name.
 	 */
 	public static DbEntityColumnDescriptor resolveColumnDescriptors(
 			DbEntityDescriptor dbEntityDescriptor,
-			Field field,
+			PropertyDescriptor property,
 			boolean isAnnotated,
 			ColumnNamingStrategy columnNamingStrategy) {
 
@@ -77,13 +76,37 @@ public class DbMetaUtil {
 		boolean isId = false;
 		Class<? extends SqlType> sqlTypeClass = null;
 
-		DbId dbId = field.getAnnotation(DbId.class);
+		// read ID annotation
+
+		DbId dbId = null;
+
+		if (property.getFieldDescriptor() != null) {
+			dbId = property.getFieldDescriptor().getField().getAnnotation(DbId.class);
+		}
+		if (dbId == null && property.getReadMethodDescriptor() != null) {
+			dbId = property.getReadMethodDescriptor().getMethod().getAnnotation(DbId.class);
+		}
+		if (dbId == null && property.getWriteMethodDescriptor() != null) {
+			dbId = property.getWriteMethodDescriptor().getMethod().getAnnotation(DbId.class);
+		}
+
 		if (dbId != null) {
 			columnName = dbId.value().trim();
 			sqlTypeClass = dbId.sqlType();
 			isId = true;
 		} else {
-			DbColumn dbColumn = field.getAnnotation(DbColumn.class);
+			DbColumn dbColumn = null;
+
+			if (property.getFieldDescriptor() != null) {
+				dbColumn = property.getFieldDescriptor().getField().getAnnotation(DbColumn.class);
+			}
+			if (dbColumn == null && property.getReadMethodDescriptor() != null) {
+				dbColumn = property.getReadMethodDescriptor().getMethod().getAnnotation(DbColumn.class);
+			}
+			if (dbColumn == null && property.getWriteMethodDescriptor() != null) {
+				dbColumn = property.getWriteMethodDescriptor().getMethod().getAnnotation(DbColumn.class);
+			}
+
 			if (dbColumn != null) {
 				columnName = dbColumn.value().trim();
 				sqlTypeClass = dbColumn.sqlType();
@@ -95,7 +118,7 @@ public class DbMetaUtil {
 		}
 
 		if ((columnName == null) || (columnName.length() == 0)) {
-			columnName = columnNamingStrategy.convertPropertyNameToColumnName(field.getName());
+			columnName = columnNamingStrategy.convertPropertyNameToColumnName(property.getName());
 		} else {
 			if (!columnNamingStrategy.isStrictAnnotationNames()) {
 				columnName = columnNamingStrategy.applyToColumnName(columnName);
@@ -105,7 +128,8 @@ public class DbMetaUtil {
 			sqlTypeClass = null;
 		}
 
-		return new DbEntityColumnDescriptor(dbEntityDescriptor, columnName, field.getName(), field.getType(), isId, sqlTypeClass);
+		return new DbEntityColumnDescriptor(
+				dbEntityDescriptor, columnName, property.getName(), property.getType(), isId, sqlTypeClass);
 	}
 
 	/**
