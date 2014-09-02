@@ -38,14 +38,14 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		im.madvocConfig.defaultInterceptors = new Class[]{EchoInterceptor.class, LogEchoInterceptor.class, ServletConfigInterceptor.class};
 
 		Class<? extends ActionInterceptor>[] in = new Class[]{
-				AnnotatedFieldsInterceptor.class,
+				AnnotatedPropertyInterceptor.class,
 				DefaultWebAppInterceptors.class,
 				EchoInterceptor.class
 		};
 
 		Class<? extends ActionInterceptor>[] out = im.expand(in);
 		assertEquals(5, out.length);
-		assertEquals(AnnotatedFieldsInterceptor.class, out[0]);
+		assertEquals(AnnotatedPropertyInterceptor.class, out[0]);
 		assertEquals(EchoInterceptor.class, out[1]);
 		assertEquals(LogEchoInterceptor.class, out[2]);
 		assertEquals(ServletConfigInterceptor.class, out[3]);
@@ -78,7 +78,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 
 		Class<? extends ActionInterceptor>[] out = im.expand(in);
 		assertEquals(7, out.length);
-		assertEquals(AnnotatedFieldsInterceptor.class, out[0]);
+		assertEquals(AnnotatedPropertyInterceptor.class, out[0]);
 		assertEquals(LogEchoInterceptor.class, out[1]);
 
 		assertEquals(EchoInterceptor.class, out[2]);
@@ -110,7 +110,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 
 		injectorsManager.madpc.defineParameter(
 				TestConfigurableStack.class.getName() + ".interceptors",
-				AnnotatedFieldsInterceptor.class.getName() + "," +
+				AnnotatedPropertyInterceptor.class.getName() + "," +
 				ServletConfigInterceptor.class.getName() + "," +
 				LogEchoInterceptor.class.getName()
 		);
@@ -127,7 +127,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		assertEquals(6, out.length);		// 3 + 2 + 1
 
 		// assert: TestConfigurableStack => defined in madpc
-		assertEquals(AnnotatedFieldsInterceptor.class, out[0]);
+		assertEquals(AnnotatedPropertyInterceptor.class, out[0]);
 		assertEquals(ServletConfigInterceptor.class, out[1]);
 		assertEquals(LogEchoInterceptor.class, out[2]);
 
@@ -190,7 +190,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 		assertEquals(EchoInterceptor.class, out[0]);
 		assertEquals(ServletConfigInterceptor.class, out[1]);
 
-		assertEquals(AnnotatedFieldsInterceptor.class, out[2]);
+		assertEquals(AnnotatedPropertyInterceptor.class, out[2]);
 		assertEquals(LogEchoInterceptor.class, out[3]);
 
 	}
@@ -207,7 +207,7 @@ public class InterceptorsManagerTest extends MadvocTestCase {
 	public static class Test2Stack extends ActionInterceptorStack {
 		@SuppressWarnings({"unchecked"})
 		public Test2Stack() {
-			super(new Class[]{AnnotatedFieldsInterceptor.class, LogEchoInterceptor.class});
+			super(new Class[]{AnnotatedPropertyInterceptor.class, LogEchoInterceptor.class});
 		}
 	}
 	
