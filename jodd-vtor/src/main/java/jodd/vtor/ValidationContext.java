@@ -5,11 +5,12 @@ package jodd.vtor;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.util.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,23 +75,38 @@ public class ValidationContext {
 		if (list == null) {
 			list = new ArrayList<Check>();
 			ClassDescriptor cd = ClassIntrospector.lookup(target);
-			FieldDescriptor[] fields = cd.getAllFieldDescriptors();
-			for (FieldDescriptor fieldDescriptor : fields) {
-				collectFieldAnnotationChecks(list, fieldDescriptor.getField());
+
+			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+			for (PropertyDescriptor propertyDescriptor : allProperties) {
+				collectPropertyAnnotationChecks(list, propertyDescriptor);
 			}
+
 			cache.put(target, list);
 		}
 		addAll(list);
 	}
 
-
 	/**
-	 * Process all annotations of provided field.
+	 * Process all annotations of provided properties.
 	 */
-	protected void collectFieldAnnotationChecks(List<Check> annChecks, Field field) {
-		Annotation[] annotations = field.getAnnotations();
-		if (annotations.length > 0) {
-			collectAnnotationChecks(annChecks, field.getType(), field.getName(), annotations);
+	protected void collectPropertyAnnotationChecks(List<Check> annChecks, PropertyDescriptor propertyDescriptor) {
+		FieldDescriptor fd = propertyDescriptor.getFieldDescriptor();
+
+		if (fd != null) {
+			Annotation[] annotations = fd.getField().getAnnotations();
+			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
+		}
+
+		MethodDescriptor md = propertyDescriptor.getReadMethodDescriptor();
+		if (md != null) {
+			Annotation[] annotations = md.getMethod().getAnnotations();
+			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
+		}
+
+		md = propertyDescriptor.getWriteMethodDescriptor();
+		if (md != null) {
+			Annotation[] annotations = md.getMethod().getAnnotations();
+			collectAnnotationChecks(annChecks, propertyDescriptor.getType(), propertyDescriptor.getName(), annotations);
 		}
 	}
 
