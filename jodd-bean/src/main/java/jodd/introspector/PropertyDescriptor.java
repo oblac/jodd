@@ -137,18 +137,18 @@ public class PropertyDescriptor extends Descriptor {
 	protected Class type;
 
 	/**
-	 * Returns property type.
+	 * Returns property type. Raw types are detected.
 	 */
 	public Class getType() {
 		if (type == null) {
-			if (readMethodDescriptor != null) {
-				type = readMethodDescriptor.getMethod().getReturnType();
+			if (fieldDescriptor != null) {
+				type = fieldDescriptor.getRawType();
+			}
+			else if (readMethodDescriptor != null) {
+				type = readMethodDescriptor.getGetterRawType();
 			}
 			else if (writeMethodDescriptor != null) {
-				type = writeMethodDescriptor.getMethod().getParameterTypes()[0];
-			}
-			else if (fieldDescriptor != null) {
-				type = fieldDescriptor.getField().getType();
+				type = writeMethodDescriptor.getSetterRawType();
 			}
 		}
 
