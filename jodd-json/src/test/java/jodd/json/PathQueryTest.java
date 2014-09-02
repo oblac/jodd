@@ -29,6 +29,7 @@ public class PathQueryTest {
 	@Test
 	public void testPathMatchingDifferences() {
 		assertTrue(new PathQuery("one.two", true).matches(Path.parse("one")));
+		assertTrue(new PathQuery("one.two.three", true).matches(Path.parse("one")));
 		assertTrue(new PathQuery("one.two", true).matches(Path.parse("one.two")));
 		assertFalse(new PathQuery("one.two", true).matches(Path.parse("one.two.three")));
 
@@ -36,6 +37,5 @@ public class PathQueryTest {
 		assertTrue(new PathQuery("one.two", false).matches(Path.parse("one.two")));
 		assertFalse(new PathQuery("one.two", false).matches(Path.parse("one.two.three")));
 	}
-
 
 }

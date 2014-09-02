@@ -326,4 +326,45 @@ public class JsonSerializerTest {
 		assertTrue(json.contains("\"ccc\""));
 	}
 
+	@Test
+	public void testCuriousModeOfSerialization() {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		List<Integer> numbers = new ArrayList<Integer>();
+		numbers.add(Integer.valueOf(8));
+		numbers.add(Integer.valueOf(4));
+		numbers.add(Integer.valueOf(2));
+		map.put("array", numbers);
+		map.put("value", "BIG");
+
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		map.put("list", list);
+
+		Map<String, Object> val = new HashMap<String, Object>();
+		val.put("name", "Root");
+		val.put("value", "Hack");
+		list.add(val);
+
+		val = new HashMap<String, Object>();
+		val.put("name", "John");
+		val.put("value", "Protected");
+		list.add(val);
+
+		// serialize
+
+		JsonSerializer jsonSerializer = new JsonSerializer();
+
+		jsonSerializer.exclude("list");		// not applied
+		jsonSerializer.include("array");
+//		jsonSerializer.include("list");		// not needed, will be included by next two
+		jsonSerializer.include("list.name");
+		jsonSerializer.include("list.value");
+
+		String str = jsonSerializer.serialize(map);
+
+		Map<String, Object> result = new JsonParser().parse(str);
+
+		assertEquals(map, result);
+	}
+
 }
