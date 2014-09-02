@@ -5,12 +5,15 @@ package jodd.petite.resolver;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.FieldDescriptor;
+import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.petite.InjectionPointFactory;
 import jodd.petite.PropertyInjectionPoint;
 import jodd.petite.meta.PetiteInject;
 import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,24 +30,45 @@ public class PropertyResolver {
 	}
 
 	/**
-	 * Resolves all fields for given type.
+	 * Resolves all properties for given type.
 	 */
 	public PropertyInjectionPoint[] resolve(Class type, boolean autowire) {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		List<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
-		FieldDescriptor[] allFields = cd.getAllFieldDescriptors();
+		PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
 
-		for (FieldDescriptor fieldDescriptor : allFields) {
-			Field field = fieldDescriptor.getField();
+		for (PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {
 
-			PetiteInject ref = field.getAnnotation(PetiteInject.class);
-			if ((autowire == false) && (ref == null)) {
+			if (propertyDescriptor.isGetterOnly()) {
 				continue;
 			}
 
-			Class fieldType = field.getType();
-			if (ReflectUtil.isTypeOf(fieldType, Collection.class)) {
+			Class propertyType = propertyDescriptor.getType();
+			if (ReflectUtil.isTypeOf(propertyType, Collection.class)) {
+				continue;
+			}
+
+			MethodDescriptor writeMethodDescriptor = propertyDescriptor.getWriteMethodDescriptor();
+			FieldDescriptor fieldDescriptor = propertyDescriptor.getFieldDescriptor();
+
+			PetiteInject ref = null;
+
+			if (writeMethodDescriptor != null) {
+				Method method = writeMethodDescriptor.getMethod();
+
+				ref = method.getAnnotation(PetiteInject.class);
+			}
+
+			if (ref == null) {
+				if (fieldDescriptor != null) {
+					Field field = fieldDescriptor.getField();
+
+					ref = field.getAnnotation(PetiteInject.class);
+				}
+			}
+
+			if ((autowire == false) && (ref == null)) {
 				continue;
 			}
 
@@ -57,7 +81,7 @@ public class PropertyResolver {
 				}
 			}
 
-			list.add(injectionPointFactory.createPropertyInjectionPoint(field, refName));
+			list.add(injectionPointFactory.createPropertyInjectionPoint(propertyDescriptor, refName));
 		}
 
 		PropertyInjectionPoint[] fields;

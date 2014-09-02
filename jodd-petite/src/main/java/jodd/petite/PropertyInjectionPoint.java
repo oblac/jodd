@@ -2,7 +2,7 @@
 
 package jodd.petite;
 
-import java.lang.reflect.Field;
+import jodd.introspector.PropertyDescriptor;
 
 /**
  * Property injection point.
@@ -11,11 +11,11 @@ public class PropertyInjectionPoint {
 
 	public static final PropertyInjectionPoint[] EMPTY = new PropertyInjectionPoint[0]; 
 
-	public final Field field;
+	public final PropertyDescriptor propertyDescriptor;
 	public final String[] references;
 
-	PropertyInjectionPoint(Field field, String[] references) {
-		this.field = field;
+	PropertyInjectionPoint(PropertyDescriptor propertyDescriptor, String[] references) {
+		this.propertyDescriptor = propertyDescriptor;
 		this.references = references;
 	}
 
