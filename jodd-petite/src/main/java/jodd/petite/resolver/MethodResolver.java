@@ -9,6 +9,7 @@ import jodd.petite.InjectionPointFactory;
 import jodd.petite.MethodInjectionPoint;
 import jodd.petite.PetiteUtil;
 import jodd.petite.meta.PetiteInject;
+import jodd.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,10 +35,21 @@ public class MethodResolver {
 		for (MethodDescriptor methodDescriptor : allMethods) {
 			Method method = methodDescriptor.getMethod();
 
+			if (ReflectUtil.isBeanPropertySetter(method)) {
+				// ignore setters
+				continue;
+			}
+
+			if (method.getParameterTypes().length == 0) {
+				// ignore methods with no argument
+				continue;
+			}
+
 			PetiteInject ref = method.getAnnotation(PetiteInject.class);
 			if (ref == null) {
 				continue;
 			}
+
 			String[][] references = PetiteUtil.convertAnnValueToReferences(ref.value());
 			list.add(injectionPointFactory.createMethodInjectionPoint(method, references));
 		}
