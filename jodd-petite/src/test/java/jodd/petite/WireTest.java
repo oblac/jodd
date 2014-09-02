@@ -27,6 +27,8 @@ public class WireTest {
 		configurator.setExcludeAllEntriesMode();
 		configurator.setIncludedEntries("jodd.petite.*");
 		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
+		configurator.setExcludedEntries(
+				"jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses", "*Public*", "*Secret*");
 		configurator.configure(pc);
 
 		assertEquals(1, pc.getTotalBeans());
