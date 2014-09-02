@@ -2,23 +2,19 @@
 
 package jodd.madvoc.component;
 
-import jodd.introspector.FieldDescriptor;
-import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.MadvocException;
 import jodd.madvoc.meta.In;
 import jodd.madvoc.meta.InOut;
 import jodd.madvoc.meta.Out;
-import jodd.util.ReflectUtil;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.ArrayList;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 
 /**
  * Resolver for {@link jodd.madvoc.ScopeData scope data} for certain types.
@@ -255,93 +251,78 @@ public class ScopeDataResolver {
 	 */
 	protected ScopeData inspectClassScopeData(Class actionClass, ScopeType scopeType) {
 		ClassDescriptor cd = ClassIntrospector.lookup(actionClass);
-		FieldDescriptor[] fields = cd.getAllFieldDescriptors();
-		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
-		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(fields.length + methods.length);
-		List<ScopeData.Out> listOut = new ArrayList<ScopeData.Out>(fields.length + methods.length);
+		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
+
+		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(allProperties.length);
+		List<ScopeData.Out> listOut = new ArrayList<ScopeData.Out>(allProperties.length);
+
+		for (PropertyDescriptor pd : allProperties) {
+			// collect annotations
+
+			In in = null;
+
+			if (pd.getFieldDescriptor() != null) {
+				in = pd.getFieldDescriptor().getField().getAnnotation(In.class);
+			}
+			if (in == null && pd.getWriteMethodDescriptor() != null) {
+				in = pd.getWriteMethodDescriptor().getMethod().getAnnotation(In.class);
+			}
+			if (in == null && pd.getReadMethodDescriptor() != null) {
+				in = pd.getReadMethodDescriptor().getMethod().getAnnotation(In.class);
+			}
+
+			InOut inout = null;
+
+			if (pd.getFieldDescriptor() != null) {
+				inout = pd.getFieldDescriptor().getField().getAnnotation(InOut.class);
+			}
+			if (inout == null && pd.getWriteMethodDescriptor() != null) {
+				inout = pd.getWriteMethodDescriptor().getMethod().getAnnotation(InOut.class);
+			}
+			if (inout == null && pd.getReadMethodDescriptor() != null) {
+				inout = pd.getReadMethodDescriptor().getMethod().getAnnotation(InOut.class);
+			}
+
+			Out out = null;
+
+			if (pd.getFieldDescriptor() != null) {
+				out = pd.getFieldDescriptor().getField().getAnnotation(Out.class);
+			}
+			if (out == null && pd.getWriteMethodDescriptor() != null) {
+				out = pd.getWriteMethodDescriptor().getMethod().getAnnotation(Out.class);
+			}
+			if (out == null && pd.getReadMethodDescriptor() != null) {
+				out = pd.getReadMethodDescriptor().getMethod().getAnnotation(Out.class);
+			}
+
+			// checks
+
+			if (inout != null) {
+				if (in != null || out != null) {
+					throw new MadvocException("@InOut can not be used with @In or @Out: " + pd.getClassDescriptor().getClass() + '#' + pd.getName());
+				}
+			}
 
 
-		// fields
-		for (FieldDescriptor fieldDescriptor : fields) {
-			Field field = fieldDescriptor.getField();
+			// inspect all
 
-			Class fieldType = ReflectUtil.getRawType(field.getGenericType(), actionClass);
-
-			In in = field.getAnnotation(In.class);
-			ScopeData.In ii = inspectIn(in, scopeType, field.getName(), fieldType);
+			ScopeData.In ii = inspectIn(in, scopeType, pd.getName(), pd.getType());
 			if (ii != null) {
 				listIn.add(ii);
 			}
-			InOut inout = field.getAnnotation(InOut.class);
-			if (inout != null) {
-				if (in != null) {
-					throw new MadvocException("@InOut can not be used with @In: " + field.getDeclaringClass() + '#' + field.getName());
-				}
-				ii = inspectIn(inout, scopeType, field.getName(), field.getType());
-				if (ii != null) {
-					listIn.add(ii);
-				}
+			ii = inspectIn(inout, scopeType, pd.getName(), pd.getType());
+			if (ii != null) {
+				listIn.add(ii);
 			}
 
-			Out out = field.getAnnotation(Out.class);
-			ScopeData.Out oi = inspectOut(out, scopeType, field.getName(), fieldType);
+			ScopeData.Out oi = inspectOut(out, scopeType, pd.getName(), pd.getType());
 			if (oi != null) {
 				listOut.add(oi);
 			}
-			inout = field.getAnnotation(InOut.class);
-			if (inout != null) {
-				if (out != null) {
-					throw new MadvocException("@InOut can not be used with @Out: " + field.getDeclaringClass() + '#' + field.getName());
-				}
-				oi = inspectOut(inout, scopeType, field.getName(), field.getType());
-				if (oi != null) {
-					listOut.add(oi);
-				}
-			}
-		}
-
-		// methods
-		for (MethodDescriptor methodDescriptor : methods) {
-			Method method = methodDescriptor.getMethod();
-
-			String propertyName = ReflectUtil.getBeanPropertySetterName(method);
-			if (propertyName != null) {
-				In in = method.getAnnotation(In.class);
-				ScopeData.In ii = inspectIn(in, scopeType, propertyName, method.getParameterTypes()[0]);
-				if (ii != null) {
-					listIn.add(ii);
-				}
-				InOut inout = method.getAnnotation(InOut.class);
-				if (inout != null) {
-					if (in != null) {
-						throw new MadvocException("@InOut can not be used with @In: " + method.getDeclaringClass() + '#' + method.getName());
-					}
-					ii = inspectIn(inout, scopeType, propertyName, method.getParameterTypes()[0]);
-					if (ii != null) {
-						listIn.add(ii);
-					}
-				}
-			}
-
-			propertyName = ReflectUtil.getBeanPropertyGetterName(method);
-			if (propertyName != null) {
-				Out out = method.getAnnotation(Out.class);
-				ScopeData.Out oi = inspectOut(out, scopeType, propertyName, method.getReturnType());
-				if (oi != null) {
-					listOut.add(oi);
-				}
-				InOut inout = method.getAnnotation(InOut.class);
-				if (inout != null) {
-					if (out != null) {
-						throw new MadvocException("@InOut can not be used with @Out: " + method.getDeclaringClass() + '#' + method.getName());
-					}
-					oi = inspectOut(inout, scopeType, propertyName, method.getReturnType());
-					if (oi != null) {
-						listOut.add(oi);
-					}
-				}
-
+			oi = inspectOut(inout, scopeType, pd.getName(), pd.getType());
+			if (oi != null) {
+				listOut.add(oi);
 			}
 		}
 
