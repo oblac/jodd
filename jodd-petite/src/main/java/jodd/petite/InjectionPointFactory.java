@@ -2,13 +2,13 @@
 
 package jodd.petite;
 
+import jodd.introspector.PropertyDescriptor;
 import jodd.paramo.MethodParameter;
 import jodd.paramo.Paramo;
 import jodd.util.StringUtil;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -56,19 +56,19 @@ public class InjectionPointFactory {
 	/**
 	 * Creates new property injection point.
 	 */
-	public PropertyInjectionPoint createPropertyInjectionPoint(Field field, String[] references) {
+	public PropertyInjectionPoint createPropertyInjectionPoint(PropertyDescriptor propertyDescriptor, String[] references) {
 		if (references == null || references.length == 0) {
-			references = fieldDefaultReferences(field);
+			references = fieldDefaultReferences(propertyDescriptor);
 		}
 		removeDuplicateNames(references);
-		return new PropertyInjectionPoint(field, references);
+		return new PropertyInjectionPoint(propertyDescriptor, references);
 	}
 
 	/**
 	 * Creates new set injection point.
 	 */
-	public SetInjectionPoint createSetInjectionPoint(Field field) {
-		return new SetInjectionPoint(field);
+	public SetInjectionPoint createSetInjectionPoint(PropertyDescriptor propertyDescriptor) {
+		return new SetInjectionPoint(propertyDescriptor);
 	}
 
 	// ---------------------------------------------------------------- utils
@@ -76,15 +76,15 @@ public class InjectionPointFactory {
 	/**
 	 * Builds default field references.
 	 */
-	protected String[] fieldDefaultReferences(Field field) {
+	protected String[] fieldDefaultReferences(PropertyDescriptor propertyDescriptor) {
 		PetiteReference[] lookupReferences = petiteConfig.getLookupReferences();
 		String[] references = new String[lookupReferences.length];
 
 		for (int i = 0; i < references.length; i++) {
 			switch (lookupReferences[i]) {
-				case NAME:				references[i] = field.getName(); break;
-				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(field.getType().getSimpleName()); break;
-				case TYPE_FULL_NAME:	references[i] = field.getType().getName(); break;
+				case NAME:				references[i] = propertyDescriptor.getName(); break;
+				case TYPE_SHORT_NAME:	references[i] = StringUtil.uncapitalize(propertyDescriptor.getType().getSimpleName()); break;
+				case TYPE_FULL_NAME:	references[i] = propertyDescriptor.getType().getName(); break;
 			}
 		}
 		return references;

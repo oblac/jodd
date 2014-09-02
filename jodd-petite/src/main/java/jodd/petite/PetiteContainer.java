@@ -3,6 +3,7 @@
 package jodd.petite;
 
 import jodd.bean.BeanUtil;
+import jodd.introspector.Setter;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
@@ -118,14 +119,14 @@ public class PetiteContainer extends PetiteBeans {
 		if (def.wiringMode == WiringMode.NONE) {
 			return;
 		}
-		wireFields(bean, def, acquiredBeans);
+		wireProperties(bean, def, acquiredBeans);
 		wireMethods(bean, def, acquiredBeans);
 	}
 
 	/**
-	 * Wires fields.
+	 * Wires properties.
 	 */
-	protected void wireFields(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
+	protected void wireProperties(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
 		if (def.properties == null) {
 			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
@@ -152,11 +153,21 @@ public class PetiteContainer extends PetiteBeans {
 			if (value == null) {
 				if ((def.wiringMode == WiringMode.STRICT)) {
 					throw new PetiteException("Wiring failed. Beans references: '" +
-							Convert.toString(refNames) + "' not found for property: "+ def.type.getName() + '#' + pip.field.getName());
+							Convert.toString(refNames) + "' not found for property: "+ def.type.getName() +
+							'#' + pip.propertyDescriptor.getName());
 				}
 				continue;
 			}
-			BeanUtil.setDeclaredProperty(bean, pip.field.getName(), value);
+
+			// BeanUtil.setDeclaredProperty(bean, pip.propertyDescriptor.getName(), value);
+
+			Setter setter = pip.propertyDescriptor.getSetter(true);
+			try {
+				setter.invokeSetter(bean, value);
+			}
+			catch (Exception ex) {
+				throw new PetiteException("Wiring failed", ex);
+			}
 		}
 
 		// sets
@@ -176,7 +187,15 @@ public class PetiteContainer extends PetiteBeans {
 				}
 			}
 
-			BeanUtil.setDeclaredProperty(bean, sip.field.getName(), beans);
+			//BeanUtil.setDeclaredProperty(bean, sip.field.getName(), beans);
+
+			Setter setter = sip.propertyDescriptor.getSetter(true);
+			try {
+				setter.invokeSetter(bean, beans);
+			}
+			catch (Exception ex) {
+				throw new PetiteException("Wiring failed", ex);
+			}
 		}
 	}
 

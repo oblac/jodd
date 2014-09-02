@@ -5,8 +5,8 @@ package jodd.petite;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.CtorDescriptor;
-import jodd.introspector.FieldDescriptor;
 import jodd.introspector.MethodDescriptor;
+import jodd.introspector.PropertyDescriptor;
 import jodd.petite.meta.InitMethodInvocationStrategy;
 import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
@@ -263,7 +263,7 @@ public abstract class PetiteBeans {
 
 		// define
 		if (define) {
-			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(type);
+			beanDefinition.ctor = petiteResolvers.resolveCtorInjectionPoint(beanDefinition.getType());
 			beanDefinition.properties = PropertyInjectionPoint.EMPTY;
 			beanDefinition.methods = MethodInjectionPoint.EMPTY;
 			beanDefinition.initMethods = InitMethodPoint.EMPTY;
@@ -392,13 +392,13 @@ public abstract class PetiteBeans {
 		String[] references = reference == null ? null : new String[] {reference};
 
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
-		if (fieldDescriptor == null) {
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
 		PropertyInjectionPoint pip =
-				injectionPointFactory.createPropertyInjectionPoint(fieldDescriptor.getField(), references);
+				injectionPointFactory.createPropertyInjectionPoint(propertyDescriptor, references);
 
 		beanDefinition.addPropertyInjectionPoint(pip);
 	}
@@ -412,13 +412,14 @@ public abstract class PetiteBeans {
 	public void registerPetiteSetInjectionPoint(String beanName, String property) {
 		BeanDefinition beanDefinition = lookupExistingBeanDefinition(beanName);
 		ClassDescriptor cd = ClassIntrospector.lookup(beanDefinition.type);
-		FieldDescriptor fieldDescriptor = cd.getFieldDescriptor(property, true);
-		if (fieldDescriptor == null) {
+
+		PropertyDescriptor propertyDescriptor = cd.getPropertyDescriptor(property, true);
+
+		if (propertyDescriptor == null) {
 			throw new PetiteException("Property not found: " + beanDefinition.type.getName() + '#' + property);
 		}
 
-		SetInjectionPoint sip =
-				injectionPointFactory.createSetInjectionPoint(fieldDescriptor.getField());
+		SetInjectionPoint sip = injectionPointFactory.createSetInjectionPoint(propertyDescriptor);
 
 		beanDefinition.addSetInjectionPoint(sip);
 	}
