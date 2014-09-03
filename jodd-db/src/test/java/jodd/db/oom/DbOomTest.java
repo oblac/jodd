@@ -43,7 +43,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- insert
 
 		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
-		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().autoClose().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "piano")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		DbOomQuery q2 = new DbOomQuery(DbEntitySql.insert(new Girl(3, "Monica", null)));
@@ -749,7 +749,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(2, girl.id);
 		assertEquals("Sandra", girl.name);
-		assertEquals("spying", girl.speciality);
+		assertEquals("piano", girl.speciality);
 	}
 
 	private void checkGirl3(Girl girl) {
@@ -799,7 +799,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(2, girl.fooid.intValue());
 		assertEquals("Sandra", girl.fooname);
-		assertEquals("spying", girl.foospeciality);
+		assertEquals("piano", girl.foospeciality);
 	}
 
 

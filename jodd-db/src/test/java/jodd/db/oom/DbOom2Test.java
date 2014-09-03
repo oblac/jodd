@@ -43,7 +43,7 @@ public class DbOom2Test extends DbH2TestCase {
 		assertTrue(query.isClosed());
 
 		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(1, 'Anna', 'swim')");
-		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(2, 'Sandra', 'spying')");
+		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(2, 'Sandra', 'piano')");
 		executeUpdate(session, "insert into GIRL(NAME) values('Monica')");
 
 		session.closeSession();
