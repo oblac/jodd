@@ -127,7 +127,7 @@ public class GenericDaoTest extends DbHsqldbTestCase {
 		boyMatch = new Boy();
 		boyMatch.setName("Oleg");
 		dbBoys = dao.find(Boy.class, boyMatch);
-		assertEquals(0, dbBoys.size());		// this doesn't work since boy has girldId set to 0
+		assertEquals(1, dbBoys.size());
 
 		// correct way
 
