@@ -2731,12 +2731,20 @@ public class StringUtil {
 
 	/**
 	 * Converts all tabs on a line to spaces according to the provided tab width.
+	 * This is not a simple tab to spaces replacement, since the resulting
+	 * indentation remains the same.
 	 */
 	public static String convertTabsToSpaces(String line, int tabWidth) {
 		int tab_index, tab_size;
 		int last_tab_index = 0;
 		int added_chars = 0;
+
+		if (tabWidth == 0) {
+			return remove(line, '\t');
+		}
+
 		StringBuilder result = new StringBuilder();
+
 		while ((tab_index = line.indexOf('\t', last_tab_index)) != -1) {
 			tab_size = tabWidth - ((tab_index + added_chars) % tabWidth);
 			if (tab_size == 0) {
@@ -2747,9 +2755,11 @@ public class StringUtil {
 			result.append(repeat(' ', tab_size));
 			last_tab_index = tab_index+1;
 		}
+
 		if (last_tab_index == 0) {
 			return line;
 		}
+
 		result.append(line.substring(last_tab_index));
 		return result.toString();
 	}
