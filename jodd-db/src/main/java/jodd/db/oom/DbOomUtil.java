@@ -3,6 +3,7 @@
 package jodd.db.oom;
 
 import jodd.bean.BeanUtil;
+import jodd.util.StringUtil;
 
 /**
  * Some utilities.
@@ -41,13 +42,45 @@ public class DbOomUtil {
 		}
 	}
 
-
 	/**
 	 * Returns initial collections size when <code>max</code>
 	 * value is provided.
 	 */
 	public static int initialCollectionSize(int max) {
 		return max > 0 ? max : 10;
+	}
+
+	/**
+	 * Returns <code>true</code> if a value is considered empty i.e. not existing.
+	 */
+	public static boolean isEmptyColumnValue(DbEntityColumnDescriptor dec, Object value) {
+		if (value == null) {
+			return true;
+		}
+
+		// special case for ID column
+		if (dec.isId() && value instanceof Number) {
+			if (((Number) value).intValue() == 0) {
+				return true;
+			}
+		}
+
+		// special case for primitives
+		if (dec.getPropertyType().isPrimitive()) {
+			int n = ((Number) value).intValue();
+			if (n == 0) {
+				return true;
+			}
+		}
+
+		// special case for strings
+		if (value instanceof CharSequence) {
+			if (StringUtil.isBlank((CharSequence) value)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
