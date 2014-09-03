@@ -127,6 +127,8 @@ db.todo
 + Generic finder method. Try to detect method arguments using MethRef? @done
 + Add batch update
 + Add matcher for `match()` method
++ Add more matching wildcards for set, update etc. For now you can update only full object, and enable to update non-null parts, too. @next
++ Make constants  like`COLS_INCLUDE_ALL` to be `enum`.
 
 ## MethRef
 methref.todo

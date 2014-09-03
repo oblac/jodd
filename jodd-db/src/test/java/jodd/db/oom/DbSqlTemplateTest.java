@@ -281,18 +281,18 @@ public class DbSqlTemplateTest {
 		badBoy.ajdi = Integer.valueOf(4);
 		badBoy.girlId = Integer.valueOf(1);
 		st = sql("$T{boy b} where $M{b=boy}").use("boy", badBoy);
-		assertEquals("BOY b where (b.ID=:badBoy.ajdi and b.GIRL_ID=:badBoy.girlId)", st.generateQuery());
+		assertEquals("BOY b where (b.ID=:boy.ajdi and b.GIRL_ID=:boy.girlId)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertEquals(2, map.size());
-		assertEquals(Integer.valueOf(4), map.get("badBoy.ajdi").getValue());
-		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId").getValue());
+		assertEquals(Integer.valueOf(4), map.get("boy.ajdi").getValue());
+		assertEquals(Integer.valueOf(1), map.get("boy.girlId").getValue());
 
 		badBoy.ajdi = null;
 		st = sql("$T{boy b} where $M{b=boy.*}").use("boy", badBoy);
-		assertEquals("BOY b where (b.ID=:badBoy.ajdi and b.GIRL_ID=:badBoy.girlId and b.NAME=:badBoy.nejm)", st.generateQuery());
+		assertEquals("BOY b where (b.ID=:boy.ajdi and b.GIRL_ID=:boy.girlId and b.NAME=:boy.nejm)", st.generateQuery());
 		map = st.getQueryParameters();
 		assertEquals(3, map.size());
-		assertEquals(Integer.valueOf(1), map.get("badBoy.girlId").getValue());
+		assertEquals(Integer.valueOf(1), map.get("boy.girlId").getValue());
 	}
 
 

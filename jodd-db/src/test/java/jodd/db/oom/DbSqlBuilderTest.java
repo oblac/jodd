@@ -3,6 +3,7 @@
 package jodd.db.oom;
 
 import jodd.db.oom.sqlgen.DbSqlBuilder;
+import jodd.db.oom.sqlgen.ParameterValue;
 import jodd.db.oom.tst.BadBoy;
 import jodd.db.oom.tst.BadGirl;
 import jodd.db.oom.tst.Boy;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static jodd.db.oom.ColumnAliasType.*;
 import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
@@ -210,6 +212,8 @@ public class DbSqlBuilderTest {
 	@Test
 	public void testUpdateSet() {
 		Boy b = new Boy();
+		b.id = 1;
+		b.girlId = 2;
 
 		DbSqlBuilder dbc = sql().set("b", b).table("Boy", "b");
 		assertEquals("set GIRL_ID=:boy.girlId, ID=:boy.id BOY b", dbc.generateQuery());
@@ -246,6 +250,8 @@ public class DbSqlBuilderTest {
 	public void testWhere() {
 		{
 			Boy b = new Boy();
+			b.id = 1;
+			b.girlId = 2;
 			DbSqlBuilder dbc = sql().match("Boy", b)._(" ").table(b, null);
 			assertEquals("(BOY.GIRL_ID=:boy.girlId and BOY.ID=:boy.id) BOY", dbc.generateQuery());
 			dbc = sql().match("b", b)._(" ").table(b, "b");
@@ -330,7 +336,19 @@ public class DbSqlBuilderTest {
 		DbSqlBuilder dsb = sql()._("update ").table(girl, tableRef).set(tableRef, girl)._("where ").
 		           match(tableRef, "conditionRef").use("conditionRef",girl_condition);
 
-		assertEquals("update GIRL ggg set ID=:girl.id, SPECIALITY=:girl.speciality where (ggg.ID=:girl.id and ggg.SPECIALITY=:girl.speciality)", dsb.generateQuery());
+		String sql = dsb.generateQuery();
+
+		Map<String, ParameterValue> params = dsb.getQueryParameters();
+		assertEquals(2, params.size());
+
+		assertEquals("piano", params.get("girl.speciality").getValue());
+		assertEquals("swim", params.get("conditionRef.speciality").getValue());
+
+		assertEquals(
+				"update GIRL ggg set SPECIALITY=:girl.speciality " +
+				"where (ggg.SPECIALITY=:conditionRef.speciality)",
+				sql);
+
 	}
 
 }

@@ -415,6 +415,76 @@ public class DbOomTest extends DbHsqldbTestCase {
 		checkGirl3((Girl) ((Object[]) list.get(2))[0]);
 		checkBoy((Boy) ((Object[]) list.get(2))[1]);
 
+		// ---------------------------------------------------------------- match
+
+		girl = new Girl();
+		girl.id=1;
+		girl.speciality = "run";		// new values
+
+		Girl girl_condition = new Girl();
+		girl_condition.speciality = "swim";
+
+		String tableRef = "ggg";
+
+		DbSqlBuilder dsb = sql()
+				._("select * from ")
+				.table(girl, tableRef)
+				._(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		list = q.list(Girl.class);
+
+		assertEquals(1, list.size());
+		checkGirl1((Girl) list.get(0));		// swim
+
+		dsb = sql()
+				._("update ")
+				.table(girl, tableRef)
+				.set(tableRef, girl)
+				._(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		assertEquals(1, q.executeUpdate());
+
+		girl_condition.speciality = "run";
+
+		dsb = sql()
+				._("select * from ")
+				.table(girl, tableRef)
+				._(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+		list = q.list(Girl.class);
+
+		assertEquals(1, list.size());
+		assertEquals(1, ((Girl) list.get(0)).id);
+		assertEquals("run", ((Girl) list.get(0)).speciality);		// run
+
+		// go back to swim
+
+		girl.speciality = "swim";
+		girl_condition.speciality = "run";
+
+		dsb = sql()
+				._("update ")
+				.table(girl, tableRef)
+				.set(tableRef, girl)
+				._(" where ")
+				.match(tableRef, "conditionRef")
+				.use("conditionRef", girl_condition);
+
+		q = new DbOomQuery(dsb);
+
+		assertEquals(1, q.executeUpdate());
+
 
 		// ---------------------------------------------------------------- etc
 
@@ -565,6 +635,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		// ---------------------------------------------------------------- finder
 
 		girl = new Girl();
+		girl.id = 1;
 		badGirl = new BadGirl();
 		badBoy = new BadBoy();
 
@@ -572,7 +643,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f.setDebugMode();
 		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=:girl.id)", f.toString());
 		f.init();
-		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=0)", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1)", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).aliasColumnsAs(null).query();
 		f.setDebugMode();
@@ -590,7 +661,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		f = DbEntitySql.find(girl).query();
 		f.setDebugMode();
 		f.init();
-		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=0 and Girl_.NAME='Monica')", f.toString());
+		assertEquals("select Girl_.ID, Girl_.NAME, Girl_.SPECIALITY from GIRL Girl_ where (Girl_.ID=1 and Girl_.NAME='Monica')", f.toString());
 		f.close();
 		f = DbEntitySql.find(badGirl).query();
 		f.setDebugMode();
