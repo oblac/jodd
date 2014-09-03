@@ -2,11 +2,14 @@
 
 package jodd.util.collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 @SuppressWarnings("AutoBoxing")
 public class ArrayIteratorTest {
@@ -31,6 +34,13 @@ public class ArrayIteratorTest {
 		} catch (NoSuchElementException nseex) {
 			// ignore
 		}
+		
+		try {
+			ae.remove();
+			fail();
+		} catch (UnsupportedOperationException nseex) {
+			// ignore
+		}
 
 	}
 
@@ -53,4 +63,3 @@ public class ArrayIteratorTest {
 
 	}
 }
-

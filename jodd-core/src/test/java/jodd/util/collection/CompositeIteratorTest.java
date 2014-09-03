@@ -2,22 +2,39 @@
 
 package jodd.util.collection;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.Test;
 
 public class CompositeIteratorTest {
 
 	@Test
 	public void testNextWithOne() {
 		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		
+		try {
+			compositeIterator.next();
+			fail();
+		} catch (NoSuchElementException e) {
+			// ignore
+		}
+		
 		List<Integer> list = createList(4);
-		compositeIterator.add(list.iterator());
+		Iterator<Integer> iterator = list.iterator();
+		compositeIterator.add(iterator);
+		
+		try {
+			compositeIterator.add(iterator);
+			fail();
+		} catch (IllegalArgumentException iaex) {
+			// ignore
+		}
 
 		int count = list.size();
 		StringBuilder sb = new StringBuilder();

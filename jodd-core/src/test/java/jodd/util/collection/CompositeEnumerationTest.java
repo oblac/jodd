@@ -2,23 +2,42 @@
 
 package jodd.util.collection;
 
-import jodd.util.CollectionUtil;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
+import jodd.util.CollectionUtil;
+
+import org.junit.Test;
 
 public class CompositeEnumerationTest {
 
 	@Test
 	public void testNextWithOne() {
 		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>();
+		
+		try {
+			compositeEnumeration.nextElement();
+			fail();
+		} catch (NoSuchElementException e) {
+			// ignore
+		}
+		
 		List<Integer> list = createList(4);
-		compositeEnumeration.add(e(list.iterator()));
+		Enumeration<Integer> e = e(list.iterator());
+		compositeEnumeration.add(e);
+		
+		try {
+			compositeEnumeration.add(e);
+			fail();
+		} catch (IllegalArgumentException iaex) {
+			// ignore
+		}
 
 		int count = list.size();
 		StringBuilder sb = new StringBuilder();
