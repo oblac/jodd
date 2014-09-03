@@ -350,11 +350,11 @@ public class DbSqlBuilder extends TemplateData implements DbSqlGenerator {
 	// ---------------------------------------------------------------- update set
 
 	public DbSqlBuilder set(String tableRef, Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, false));
+		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ONLY_EXISTING));
 	}
 
 	public DbSqlBuilder setAll(String tableRef, Object values) {
-		return addChunk(new UpdateSetChunk(tableRef, values, true));
+		return addChunk(new UpdateSetChunk(tableRef, values, SqlChunk.COLS_ALL));
 	}
 
 	// ---------------------------------------------------------------- query factories

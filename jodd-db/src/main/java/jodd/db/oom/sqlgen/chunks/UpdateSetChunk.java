@@ -5,6 +5,7 @@ package jodd.db.oom.sqlgen.chunks;
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
 import jodd.bean.BeanUtil;
+import jodd.db.oom.DbOomUtil;
 import jodd.util.StringUtil;
 
 /**
@@ -17,13 +18,13 @@ public class UpdateSetChunk extends SqlChunk {
 	
 	protected final Object data;
 	protected final String tableRef;
-	protected final boolean includeNulls;
+	protected final int includeColumns;
 
-	public UpdateSetChunk(String tableRef, Object data, boolean includeNulls) {
+	public UpdateSetChunk(String tableRef, Object data, int includeColumns) {
 		super(CHUNK_UPDATE);
 		this.tableRef = tableRef;
 		this.data = data;
-		this.includeNulls = includeNulls;
+		this.includeColumns = includeColumns;
 	}
 
 	@Override
@@ -46,12 +47,17 @@ public class UpdateSetChunk extends SqlChunk {
 		for (DbEntityColumnDescriptor dec : decList) {
 			String property = dec.getPropertyName();
 			Object value = BeanUtil.getDeclaredProperty(data, property);
-			if ((includeNulls == false) && (value == null)) {
-				continue;
+
+			if (includeColumns == COLS_ONLY_EXISTING) {
+				if (DbOomUtil.isEmptyColumnValue(dec, value)) {
+					continue;
+				}
 			}
+
 			if (size > 0) {
 				out.append(',').append(' ');
 			}
+
 			size++;
 
 
