@@ -4,6 +4,7 @@ package jodd.db.oom.sqlgen.chunks;
 
 import jodd.db.oom.DbEntityDescriptor;
 import jodd.db.oom.DbEntityColumnDescriptor;
+import jodd.db.oom.DbOomUtil;
 import jodd.db.oom.sqlgen.DbSqlBuilderException;
 import jodd.util.StringUtil;
 import jodd.bean.BeanUtil;
@@ -88,20 +89,8 @@ public class MatchChunk extends SqlChunk {
 			}
 
 			if (includeColumns == COLS_ONLY_EXISTING) {
-				if (value == null) {
+				if (DbOomUtil.isEmptyColumnValue(dec, value)) {
 					continue;
-				}
-				// special case for ID column
-				if (dec.isId() && value instanceof Number) {
-					if (((Number) value).longValue() == 0) {
-						continue;
-					}
-				}
-				// special case for strings
-				if (value instanceof CharSequence) {
-					if (StringUtil.isBlank((CharSequence) value)) {
-						continue;
-					}
 				}
 			}
 			if (count > 0) {
@@ -109,7 +98,9 @@ public class MatchChunk extends SqlChunk {
 			}
 			count++;
 			out.append(table).append('.').append(dec.getColumnName()).append('=');
-			String propertyName = typeName + '.' + property;
+
+			String propertyName = objectRef != null ? objectRef : typeName;
+			propertyName += '.' + property;
 			defineParameter(out, propertyName, value, dec);
 		}
 		if (count == 0) {
