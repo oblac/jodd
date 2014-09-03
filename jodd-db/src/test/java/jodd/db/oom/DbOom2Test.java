@@ -42,7 +42,7 @@ public class DbOom2Test extends DbH2TestCase {
 		query.autoClose().executeUpdate();
 		assertTrue(query.isClosed());
 
-		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(1, 'Anna', 'seduction')");
+		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(1, 'Anna', 'swim')");
 		executeUpdate(session, "insert into GIRL(ID, NAME, SPECIALITY) values(2, 'Sandra', 'spying')");
 		executeUpdate(session, "insert into GIRL(NAME) values('Monica')");
 
@@ -187,7 +187,7 @@ public class DbOom2Test extends DbH2TestCase {
 		assertNotNull(girl);
 		assertEquals(1, girl.id);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 	}
 
 

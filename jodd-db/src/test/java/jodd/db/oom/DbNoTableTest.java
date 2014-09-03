@@ -32,7 +32,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 	public void testMappingNoTable() {
 		DbSession session = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().autoClose().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
 		// one
@@ -72,7 +72,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		assertNotNull(girl);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 		assertEquals(1, girl.id);
 
 
@@ -97,7 +97,7 @@ public class DbNoTableTest extends DbHsqldbTestCase {
 
 		assertNotNull(girl);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 		assertEquals(1, girl.id);
 
 		session.closeSession();

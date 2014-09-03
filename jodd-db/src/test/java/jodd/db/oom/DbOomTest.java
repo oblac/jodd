@@ -42,7 +42,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 
 		// ---------------------------------------------------------------- insert
 
-		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "seduction")).query().autoClose().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl(1, "Anna", "swim")).query().autoClose().executeUpdate());
 		assertEquals(1, DbEntitySql.insert(new Girl(2, "Sandra", "spying")).query().autoClose().executeUpdate());
 		assertEquals(0, session.getTotalQueries());
 
@@ -742,7 +742,7 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(1, girl.id);
 		assertEquals("Anna", girl.name);
-		assertEquals("seduction", girl.speciality);
+		assertEquals("swim", girl.speciality);
 	}
 
 	private void checkGirl2(Girl girl) {
@@ -763,14 +763,14 @@ public class DbOomTest extends DbHsqldbTestCase {
 		assertNotNull(girl);
 		assertEquals(1, girl.fooid.intValue());
 		assertEquals("Anna", girl.fooname);
-		assertEquals("seduction", girl.foospeciality);
+		assertEquals("swim", girl.foospeciality);
 	}
 
 	private void checkBadGirl1Alt(BadGirl girl) {
 		assertNotNull(girl);
 		assertEquals(1, girl.fooid.intValue());
 		assertEquals("Ticky", girl.fooname);
-		assertEquals("seduction", girl.foospeciality);
+		assertEquals("swim", girl.foospeciality);
 	}
 
 	private void checkGirl1Alt(Girl girl) {

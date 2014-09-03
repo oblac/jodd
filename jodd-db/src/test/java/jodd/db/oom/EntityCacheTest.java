@@ -52,7 +52,7 @@ public class EntityCacheTest extends DbHsqldbTestCase {
 
 		dbSession = new DbThreadSession(cp);
 
-		assertEquals(1, DbEntitySql.insert(new Girl2(1, "Anna", "seduction")).query().executeUpdate());
+		assertEquals(1, DbEntitySql.insert(new Girl2(1, "Anna", "swim")).query().executeUpdate());
 		assertEquals(1, DbEntitySql.insert(new Girl2(2, "Sandra", "spying")).query().executeUpdate());
 		assertEquals(1, DbEntitySql.insert(new Girl2(3, "Emma", "nothing")).query().executeUpdate());
 		assertEquals(1, DbEntitySql.insert(new Boy(1, "Johny", 2)).query().executeUpdate());
