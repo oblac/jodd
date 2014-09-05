@@ -24,6 +24,7 @@ public class JsonWriter {
 
 	protected String pushedName;
 	protected boolean pushedComma;
+	protected boolean isPushed;
 
 	/**
 	 * Stores name to temporary stack. Used when name's value may or may not be
@@ -33,18 +34,20 @@ public class JsonWriter {
 	public void pushName(String name, boolean withComma) {
 		pushedName = name;
 		pushedComma = withComma;
+		isPushed = true;
 	}
 
 	/**
 	 * Writes stored name to JSON string. Cleans storage.
 	 */
 	protected void popName() {
-		if (pushedName != null) {
+		if (isPushed) {
 			if (pushedComma) {
 				writeComma();
 			}
 			String name = pushedName;
 			pushedName = null;
+			isPushed = false;
 			writeName(name);
 		}
 	}
@@ -53,9 +56,9 @@ public class JsonWriter {
 	 * Returns <code>true</code> if {@link #pushName(String, boolean)}  pushed name}
 	 * has been {@link #popName() poped, i.e. used}.
 	 */
-	public boolean isNamePoped() {
-		boolean b = pushedName == null;
-		pushedName = null;
+	public boolean isNamePopped() {
+		boolean b = !isPushed;
+		isPushed = false;
 		return b;
 	}
 
