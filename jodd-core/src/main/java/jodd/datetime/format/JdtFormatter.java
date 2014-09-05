@@ -5,12 +5,14 @@ package jodd.datetime.format;
 import jodd.datetime.DateTimeStamp;
 import jodd.datetime.JDateTime;
 
+import java.io.Serializable;
+
 /**
  * Date time formatter performs conversion both from and to string representation of time.
  * 
  * @see AbstractFormatter
  */
-public interface JdtFormatter {
+public interface JdtFormatter extends Serializable {
 
 	/**
 	 * Converts date time to a string using specified format.

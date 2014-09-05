@@ -6,6 +6,7 @@ import jodd.datetime.format.JdtFormat;
 import jodd.datetime.format.JdtFormatter;
 import jodd.util.HashCode;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -105,7 +106,7 @@ import static jodd.util.HashCode.hash;
  * <p>
  * More info: <a href="http://en.wikipedia.org/wiki/Julian_Date">Julian Date on Wikipedia</a>
  */
-public class JDateTime implements Comparable, Cloneable {
+public class JDateTime implements Comparable, Cloneable, Serializable {
 
 	public static final String DEFAULT_FORMAT = "YYYY-MM-DD hh:mm:ss.mss";
 
