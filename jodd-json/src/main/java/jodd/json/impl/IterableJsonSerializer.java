@@ -3,14 +3,13 @@
 package jodd.json.impl;
 
 import jodd.json.JsonContext;
-import jodd.json.TypeJsonSerializer;
 
 /**
  * Iterable serializer.
  */
-public class IterableJsonSerializer implements TypeJsonSerializer<Iterable> {
+public class IterableJsonSerializer extends ValueJsonSerializer<Iterable> {
 
-	public void serialize(JsonContext jsonContext, Iterable iterable) {
+	public void serializeValue(JsonContext jsonContext, Iterable iterable) {
 		jsonContext.writeOpenArray();
 
 		int count = 0;

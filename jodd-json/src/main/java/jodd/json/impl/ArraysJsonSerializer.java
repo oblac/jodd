@@ -3,14 +3,13 @@
 package jodd.json.impl;
 
 import jodd.json.JsonContext;
-import jodd.json.TypeJsonSerializer;
 
 import java.lang.reflect.Array;
 
 /**
  * Arrays serializer. May be overridden for specific types for better performances.
  */
-public class ArraysJsonSerializer<K> implements TypeJsonSerializer<Object> {
+public class ArraysJsonSerializer<K> extends ValueJsonSerializer<Object> {
 
 	/**
 	 * Returns array's length.
@@ -26,7 +25,7 @@ public class ArraysJsonSerializer<K> implements TypeJsonSerializer<Object> {
 		return (K) Array.get(array, index);
 	}
 
-	public void serialize(JsonContext jsonContext, Object array) {
+	public void serializeValue(JsonContext jsonContext, Object array) {
 		jsonContext.writeOpenArray();
 
 		int length = getLength((K[]) array);

@@ -4,7 +4,6 @@ package jodd.json.impl;
 
 import jodd.json.JsonContext;
 import jodd.json.Path;
-import jodd.json.TypeJsonSerializer;
 import jodd.util.StringPool;
 
 import java.util.Map;
@@ -12,9 +11,9 @@ import java.util.Map;
 /**
  * Map serializer.
  */
-public class MapJsonSerializer implements TypeJsonSerializer<Map<?, ?>> {
+public class MapJsonSerializer extends ValueJsonSerializer<Map<?, ?>> {
 
-	public void serialize(JsonContext jsonContext, Map<?, ?> map) {
+	public void serializeValue(JsonContext jsonContext, Map<?, ?> map) {
 		jsonContext.writeOpenObject();
 
 		int count = 0;
@@ -53,19 +52,17 @@ public class MapJsonSerializer implements TypeJsonSerializer<Map<?, ?>> {
 				continue;
 			}
 
-			if (count > 0) {
-				jsonContext.writeComma();
-			}
-
-			count++;
-
 			if (key == null) {
-				jsonContext.writeName(null);
+				jsonContext.pushName(null, count > 0);
 			} else {
-				jsonContext.writeName(key.toString());
+				jsonContext.pushName(key.toString(), count > 0);
 			}
 
 			jsonContext.serialize(value);
+
+			if (jsonContext.isNamePopped()) {
+				count++;
+			}
 
 			currentPath.pop();
 		}
