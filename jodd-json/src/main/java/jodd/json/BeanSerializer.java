@@ -59,7 +59,7 @@ public class BeanSerializer extends TypeJsonVisitor {
 
 		jsonContext.serialize(value);
 
-		if (jsonContext.isNamePoped()) {
+		if (jsonContext.isNamePopped()) {
 			count++;
 		}
 	}
