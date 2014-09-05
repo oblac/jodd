@@ -20,13 +20,14 @@ public class JsonContext extends JsonWriter {
 	// ---------------------------------------------------------------- ctor
 
 	protected final JsonSerializer jsonSerializer;
-	protected final List<Object> bag;
+	protected final List<JsonValueContext> bag;
+	protected int bagSize = 0;
 	protected final Path path;
 
 	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable) {
 		super(appendable);
 		this.jsonSerializer = jsonSerializer;
-		this.bag = new ArrayList<Object>();
+		this.bag = new ArrayList<JsonValueContext>();
 		this.path = new Path();
 	}
 
@@ -37,18 +38,28 @@ public class JsonContext extends JsonWriter {
 		return jsonSerializer;
 	}
 
+	// ---------------------------------------------------------------- path and value context
+
 	/**
-	 * Returns <code>true</code> if object has been processed during serialization.
-	 * Used to prevent circular dependencies. Objects are matched using the identity.
+	 * Returns <code>true</code> if object has been already processed during the serialization.
+	 * Used to prevent circular dependencies. Objects are matched by identity.
 	 */
-	public boolean isUsed(Object value) {
-		for (int i = 0; i < bag.size(); i++) {
-			if (bag.get(i) == value) {
+	public boolean pushValue(Object value) {
+		for (int i = 0; i < bagSize; i++) {
+			JsonValueContext valueContext = bag.get(i);
+			if (valueContext.getValue() == value) {
 				return true;
 			}
 		}
 
-		bag.add(value);
+		if (bagSize == bag.size()) {
+			bag.add(new JsonValueContext(value));
+		}
+		else {
+			JsonValueContext jsonValueContext = bag.get(bagSize);
+			jsonValueContext.reuse(value);
+		}
+		bagSize++;
 
 		return false;
 	}
@@ -56,10 +67,22 @@ public class JsonContext extends JsonWriter {
 	/**
 	 * Removes object from current bag, indicating it is not anymore in the path.
 	 */
-	public void unuseValue() {
-		bag.remove(bag.size() - 1);
+	public void popValue() {
+		bagSize--;
+		bag.get(bagSize);
 	}
 
+	/**
+	 * Returns current {@link jodd.json.JsonValueContext value context}.
+	 * It may be <code>null</code> if value is not {@link #pushValue(Object) pushed} yet.
+	 */
+	public JsonValueContext peekValueContext() {
+		if (bagSize == 0) {
+			return null;
+		}
+
+		return bag.get(bagSize - 1);
+	}
 
 	/**
 	 * Returns current path.
@@ -68,6 +91,35 @@ public class JsonContext extends JsonWriter {
 		return path;
 	}
 
+	// ---------------------------------------------------------------- overwrite
+
+	/**
+	 * @{@inheritDoc}
+	 */
+	@Override
+	public void pushName(String name, boolean withComma) {
+		JsonValueContext valueContext = peekValueContext();
+
+		if (valueContext != null) {
+			valueContext.setPropertyName(name);
+		}
+
+		super.pushName(name, withComma);
+	}
+
+	/**
+	 * @{@inheritDoc}
+	 */
+	@Override
+	public void writeComma() {
+		JsonValueContext valueContext = peekValueContext();
+
+		if (valueContext != null) {
+			valueContext.incrementIndex();
+		}
+
+		super.writeComma();
+	}
 
 	// ---------------------------------------------------------------- serializer
 
