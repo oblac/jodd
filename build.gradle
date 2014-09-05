@@ -8,9 +8,9 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '3.5.3-SNAPSHOT'
-version = '3.6-RC2-SNAPSHOT'
-//version = '3.6.0'
+version = '3.6'
+//version = '3.6.1-SNAPSHOT'
+//version = '3.7-BETA'
 
 
 // --- properties -------------------------------------------------------------
@@ -55,8 +55,6 @@ ext {
 		jacoco_agent:	"org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime@jar",
 		jacoco_ant:		"org.jacoco:org.jacoco.ant:${jacocoVersion}",
 
-		// Animal Sniffer Ant Task and Java 1.5 API signature file
-		// not using 1.9 for the time being due to MANIMALSNIFFER-34
 		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.11',
 		java15_signature: 'org.codehaus.mojo.signature:java15:1.0@signature',
 	]
