@@ -49,6 +49,9 @@ public class TypeJsonSerializerMap {
 
 	protected HashMap<Class, TypeJsonSerializer> map = new HashMap<Class, TypeJsonSerializer>();
 
+	/**
+	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.
+	 */
 	public void registerDefaults() {
 
 		// main
@@ -141,6 +144,11 @@ public class TypeJsonSerializerMap {
 		map.put(type, typeJsonSerializer);
 	}
 
+	/**
+	 * Lookups for the {@link jodd.json.TypeJsonSerializer serializer} for given type.
+	 * If serializer not found, then all interfaces and subclasses of the type are checked.
+	 * Finally, if no serializer is found, object's serializer is returned.
+	 */
 	public TypeJsonSerializer lookup(Class type) {
 		TypeJsonSerializer tjs = map.get(type);
 
