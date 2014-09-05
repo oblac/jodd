@@ -18,6 +18,7 @@ import static jodd.util.ArraysUtil.bytes;
 import static jodd.util.ArraysUtil.ints;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class JsonSerializerTest {
@@ -62,6 +63,70 @@ public class JsonSerializerTest {
 
 		public void setNumber(int number) {
 			this.number = number;
+		}
+	}
+
+	public static class WhiteBar {
+		@JSON
+		private WhiteBar[] bars;
+		private int sum;
+
+		public WhiteBar[] getBars() {
+			return bars;
+		}
+
+		public void setBars(WhiteBar[] bars) {
+			this.bars = bars;
+		}
+
+		public int getSum() {
+			return sum;
+		}
+
+		public void setSum(int sum) {
+			this.sum = sum;
+		}
+	}
+
+	public static class White {
+		private int intensity;
+		private Black black;
+
+		public int getIntensity() {
+			return intensity;
+		}
+
+		public void setIntensity(int intensity) {
+			this.intensity = intensity;
+		}
+
+		public Black getBlack() {
+			return black;
+		}
+
+		public void setBlack(Black black) {
+			this.black = black;
+		}
+	}
+
+	public static class Black {
+		private int darkness;
+		private White white;
+
+		public int getDarkness() {
+			return darkness;
+		}
+
+		public void setDarkness(int darkness) {
+			this.darkness = darkness;
+		}
+
+		public White getWhite() {
+			return white;
+		}
+
+		public void setWhite(White white) {
+			this.white = white;
 		}
 	}
 
@@ -366,5 +431,65 @@ public class JsonSerializerTest {
 
 		assertEquals(map, result);
 	}
+
+	@Test
+	public void testCircularDependenciesBean() {
+		White white = new White();
+		white.setIntensity(20);
+
+		Black black = new Black();
+		black.setDarkness(80);
+
+		black.setWhite(white);
+
+		white.setBlack(black);
+
+		String json = new JsonSerializer().serialize(white);
+
+		White whiteNew = new JsonParser().parse(json, White.class);
+
+		assertEquals(white.getIntensity(), whiteNew.getIntensity());
+		assertEquals(white.getBlack().getDarkness(), whiteNew.getBlack().getDarkness());
+		assertNull(whiteNew.getBlack().getWhite());
+	}
+
+	@Test
+	public void testCircularDependenciesMap() {
+		Map<String, Object> white = new HashMap<String, Object>();
+		white.put("intensity", Integer.valueOf(20));
+
+		Map<String, Object> black = new HashMap<String, Object>();
+		black.put("darkness", Integer.valueOf(80));
+
+		black.put("white", white);
+		white.put("black", black);
+
+		String json = new JsonSerializer().serialize(white);
+
+		Map<String, Object> whiteNew = new JsonParser().parse(json);
+
+		assertEquals(white.get("intensity"), whiteNew.get("intensity"));
+		assertEquals(
+				((Map<String, Object>)(white.get("black"))).get("darkness"),
+				((Map<String, Object>)(whiteNew.get("black"))).get("darkness"));
+		assertNull(((Map<String, Object>) (whiteNew.get("black"))).get("black"));
+		assertFalse(((Map<String, Object>) (whiteNew.get("black"))).containsKey("white"));
+	}
+
+	@Test
+	public void testCircularDependenciesArray() {
+		WhiteBar[] whiteBars = new WhiteBar[1];
+
+		WhiteBar white = new WhiteBar();
+		white.setSum(1);
+		white.setBars(whiteBars);
+
+		whiteBars[0] = white;
+
+		String json = new JsonSerializer().serialize(whiteBars);
+
+		assertEquals("[{\"sum\":1}]", json);
+	}
+
 
 }
