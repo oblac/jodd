@@ -40,6 +40,8 @@ public class JsonContext extends JsonWriter {
 
 	// ---------------------------------------------------------------- path and value context
 
+	protected JsonValueContext lastValueContext = null;
+
 	/**
 	 * Returns <code>true</code> if object has been already processed during the serialization.
 	 * Used to prevent circular dependencies. Objects are matched by identity.
@@ -53,12 +55,14 @@ public class JsonContext extends JsonWriter {
 		}
 
 		if (bagSize == bag.size()) {
-			bag.add(new JsonValueContext(value));
+			lastValueContext = new JsonValueContext(value);
+			bag.add(lastValueContext);
 		}
 		else {
-			JsonValueContext jsonValueContext = bag.get(bagSize);
-			jsonValueContext.reuse(value);
+			lastValueContext = bag.get(bagSize);
+			lastValueContext.reuse(value);
 		}
+
 		bagSize++;
 
 		return false;
@@ -69,7 +73,11 @@ public class JsonContext extends JsonWriter {
 	 */
 	public void popValue() {
 		bagSize--;
-		bag.get(bagSize);
+		if (bagSize == 0) {
+			lastValueContext = null;
+		} else {
+			lastValueContext = bag.get(bagSize - 1);
+		}
 	}
 
 	/**
@@ -77,11 +85,7 @@ public class JsonContext extends JsonWriter {
 	 * It may be <code>null</code> if value is not {@link #pushValue(Object) pushed} yet.
 	 */
 	public JsonValueContext peekValueContext() {
-		if (bagSize == 0) {
-			return null;
-		}
-
-		return bag.get(bagSize - 1);
+		return lastValueContext;
 	}
 
 	/**
