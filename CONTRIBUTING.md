@@ -17,6 +17,7 @@ The best way to make sure your issue or feature is addressed is to submit a patc
 
 However, before sending a patch, please make sure that the following applies:
 
+* Your commit message starts with related module name in square brackets (e.g. `[petite]`)
 * Your commit message is descriptive.
 * Your patch doesn't have useless merge commits.
 * Your coding style is similar to ours.
