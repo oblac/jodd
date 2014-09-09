@@ -7,6 +7,7 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.meta.JSON;
 import jodd.util.RandomStringUtil;
+import jodd.util.StringUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -723,8 +724,18 @@ public class JsonParserTest {
 		Glista jsonGlista = new JsonParser().parse(json, Glista.class);
 
 		assertEquals("Djordje", jsonGlista.getFirstName());
-
 	}
 
+	@Test
+	public void testEscapeAtTheEndOfLongString() {
+		String s = StringUtil.repeat('A', 800);
+		String json = "\"" + s + "\\n\"";
+
+		try {
+			new JsonParser().parse(json);
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+	}
 
 }

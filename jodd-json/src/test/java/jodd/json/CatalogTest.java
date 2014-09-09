@@ -43,7 +43,7 @@ public class CatalogTest {
 
 	@Test
 	public void testParseCatalogAsObject() throws IOException {
-		String json = loadJSON();
+		String json = loadJSON("citm_catalog");
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
 
@@ -52,7 +52,7 @@ public class CatalogTest {
 
 	@Test
 	public void testParseCatalogAsObjectWithClassname() throws IOException {
-		String json = loadJSON();
+		String json = loadJSON("citm_catalog");
 
 		Catalog catalog = new JsonParser().setClassMetadataName("class").parse(json, Catalog.class);
 
@@ -61,7 +61,7 @@ public class CatalogTest {
 
 	@Test
 	public void testParseSerializeCatalogNotDeep() throws IOException {
-		String json = loadJSON();
+		String json = loadJSON("citm_catalog");
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
 
@@ -82,7 +82,7 @@ public class CatalogTest {
 
 	@Test
 	public void testParseSerializeCatalog() throws IOException {
-		String json = loadJSON();
+		String json = loadJSON("citm_catalog");
 
 		Catalog catalog = new JsonParser().parse(json, Catalog.class);
 
@@ -95,7 +95,7 @@ public class CatalogTest {
 
 	@Test
 	public void testParseCatalogAsMap() throws IOException {
-		String json = loadJSON();
+		String json = loadJSON("citm_catalog");
 
 		Map catalog = new JsonParser()
 				.map("values.keys", Long.class)
@@ -215,9 +215,24 @@ public class CatalogTest {
 		assertEquals("Salle Pleyel", map3.get("PLEYEL_PLEYEL"));
 	}
 
+	@Test
+	public void test20k() throws IOException {
+		String json = loadJSON("20k");
 
-	private String loadJSON() throws IOException {
-		FileInputStream fis = new FileInputStream(new File(dataRoot, "citm_catalog.json.gz"));
+		List<Map<String, Object>> array = new JsonParser().parse(json);
+
+		assertEquals(22, array.size());
+
+		for (int i = 0; i < 22; i++) {
+			Map<String, Object> map = array.get(i);
+
+			assertEquals(19, map.size());
+			assertEquals(i, ((Integer)map.get("id")).intValue());
+		}
+	}
+
+	private String loadJSON(String name) throws IOException {
+		FileInputStream fis = new FileInputStream(new File(dataRoot, name + ".json.gz"));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		StreamUtil.copy(new GZIPInputStream(fis), out);
