@@ -37,6 +37,7 @@ public class JsonParser extends JsonParserBase {
 	protected boolean useAltPaths = JoddJson.useAltPathsByParser;
 	protected Class rootType;
 	protected MapToBean mapToBean;
+	protected boolean looseMode;
 
 	public JsonParser() {
 		text = new char[512];
@@ -63,6 +64,19 @@ public class JsonParser extends JsonParserBase {
 	 */
 	public JsonParser useAltPaths() {
 		this.useAltPaths = true;
+		return this;
+	}
+
+	/**
+	 * Enables 'loose' mode for parsing. When 'loose' mode is enabled,
+	 * JSON parsers swallows also invalid JSONs:
+	 * <ul>
+	 *     <li>invalid escape character sequence is simply added to the output</li>
+	 *     <li>strings can be quoted with single-quotes</li>
+	 * </ul>
+	 */
+	public JsonParser looseMode(boolean looseMode) {
+		this.looseMode = looseMode;
 		return this;
 	}
 
@@ -255,9 +269,13 @@ public class JsonParser extends JsonParserBase {
 		char c = input[ndx];
 
 		switch (c) {
+			case '\'':
+				if (!looseMode) {
+					break;
+				}
 			case '"':
 				ndx++;
-				Object string = parseStringContent();
+				Object string = parseStringContent(c);
 
 				valueConverter = lookupValueConverter();
 				if (valueConverter != null) {
@@ -359,21 +377,27 @@ public class JsonParser extends JsonParserBase {
 	 * Parses a string.
 	 */
 	protected String parseString() {
-		consume('"');
-		return parseStringContent();
+		char quote = '\"';
+		if (looseMode) {
+			quote = consumeOneOf('\"', '\'');
+		} else {
+			consume(quote);
+		}
+
+		return parseStringContent(quote);
 	}
 
 	/**
 	 * Parses string content, once when starting quote has been consumer.
 	 */
-	protected String parseStringContent() {
+	protected String parseStringContent(final char quote) {
 		int startNdx = ndx;
 
-		// roullout until the end of the string or the escape char
+		// roll-out until the end of the string or the escape char
 		while (true) {
 			char c = input[ndx];
 
-			if (c == '\"') {
+			if (c == quote) {
 				// no escapes found, just use existing string
 				ndx++;
 				return new String(input, startNdx, ndx - startNdx - 1);
@@ -390,9 +414,7 @@ public class JsonParser extends JsonParserBase {
 
 		textLen = ndx - startNdx;
 
-		if (textLen >= text.length) {
-			grow();
-		}
+		growEmpty();
 
 		System.arraycopy(input, startNdx, text, 0, textLen);
 
@@ -400,7 +422,7 @@ public class JsonParser extends JsonParserBase {
 		while (true) {
 			char c = input[ndx];
 
-			if (c == '\"') {
+			if (c == quote) {
 				// done
 				ndx++;
 				String str = new String(text, 0, textLen);
@@ -428,7 +450,15 @@ public class JsonParser extends JsonParserBase {
 						c = parseUnicode();
 						break;
 					default:
-						syntaxError("Invalid escape char: " + c);
+						if (looseMode) {
+							if (c != '\'') {
+								c = '\\';
+								ndx--;
+							}
+						}
+						else {
+							syntaxError("Invalid escape char: " + c);
+						}
 				}
 			}
 
@@ -436,27 +466,38 @@ public class JsonParser extends JsonParserBase {
 
 			textLen++;
 
-			if (textLen >= text.length) {
-				grow();
-			}
+			growAndCopy();
 
 			ndx++;
 		}
 	}
 
 	/**
-	 * Grows text array.
+	 * Grows empty text array.
 	 */
-	protected void grow() {
-		int newSize = text.length << 1;
+	protected void growEmpty() {
+		if (textLen >= text.length) {
+			int newSize = textLen << 1;
 
-		char[] newText = new char[newSize];
-
-		if (textLen > 0) {
-			System.arraycopy(text, 0, newText, 0, textLen);
+			text = new char[newSize];
 		}
+	}
 
-		text = newText;
+	/**
+	 * Grows text array when {@code text.length == textLen}.
+	 */
+	protected void growAndCopy() {
+		if (textLen == text.length) {
+			int newSize = text.length << 1;
+
+			char[] newText = new char[newSize];
+
+			if (textLen > 0) {
+				System.arraycopy(text, 0, newText, 0, textLen);
+			}
+
+			text = newText;
+		}
 	}
 
 	/**
@@ -541,7 +582,7 @@ public class JsonParser extends JsonParserBase {
 			}
 		}
 
-		if ((longNumber > 0 && longNumber <= Integer.MAX_VALUE) || (longNumber < 0 && longNumber >= Integer.MIN_VALUE)) {
+		if ((longNumber >= Integer.MIN_VALUE) && (longNumber <= Integer.MAX_VALUE)) {
 			return Integer.valueOf((int) longNumber);
 		}
 		return Long.valueOf(longNumber);
@@ -780,6 +821,22 @@ public class JsonParser extends JsonParserBase {
 		}
 
 		ndx++;
+	}
+
+	/**
+	 * Consumes one of the allowed char at current position.
+	 * If char is different, throws the exception. Returns matched char.
+	 */
+	protected char consumeOneOf(char c1, char c2) {
+		char c = input[ndx];
+
+		if ((c != c1) && (c != c2)) {
+			syntaxError("Invalid char: expected " + c);
+		}
+
+		ndx++;
+
+		return c;
 	}
 
 	/**
