@@ -42,4 +42,19 @@ public class LooseTest {
 		assertEquals("BAR", map.get("foo"));
 	}
 
+	@Test
+	public void testUnquotes() {
+		Map<String, Object> map = new JsonParser().looseMode(true).parse("{foo: BAR , who : me}");
+
+		assertEquals(2, map.size());
+		assertEquals("BAR", map.get("foo"));
+		assertEquals("me", map.get("who"));
+
+		try {
+			new JsonParser().looseMode(true).parse("{foo: BAR , who : m\te}");
+			fail();
+		} catch (JsonException ignore) {
+		}
+	}
+
 }

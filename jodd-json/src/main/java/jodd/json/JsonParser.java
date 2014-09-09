@@ -73,6 +73,7 @@ public class JsonParser extends JsonParserBase {
 	 * <ul>
 	 *     <li>invalid escape character sequence is simply added to the output</li>
 	 *     <li>strings can be quoted with single-quotes</li>
+	 *     <li>strings can be unquoted, but may not contain escapes</li>
 	 * </ul>
 	 */
 	public JsonParser looseMode(boolean looseMode) {
@@ -364,6 +365,21 @@ public class JsonParser extends JsonParserBase {
 				break;
 		}
 
+		if (looseMode) {
+			// try to parse unquoted string
+			Object string = parseUnquotedStringContent();
+
+			valueConverter = lookupValueConverter();
+			if (valueConverter != null) {
+				return valueConverter.convert(string);
+			}
+
+			if (targetType != null && targetType != String.class) {
+				string = convertType(string, targetType);
+			}
+			return string;
+		}
+
 		syntaxError("Invalid char: " + input[ndx]);
 		return null;
 	}
@@ -380,6 +396,9 @@ public class JsonParser extends JsonParserBase {
 		char quote = '\"';
 		if (looseMode) {
 			quote = consumeOneOf('\"', '\'');
+			if (quote == 0) {
+				return parseUnquotedStringContent();
+			}
 		} else {
 			consume(quote);
 		}
@@ -511,6 +530,33 @@ public class JsonParser extends JsonParserBase {
 
 		return (char) ((i0 << 12) + (i1 << 8) + (i2 << 4) + i3);
 	}
+
+	// ---------------------------------------------------------------- un-quoted
+
+	private final static char[] UNQOUTED_DELIMETERS = ",:[]{}\\\"'".toCharArray();
+
+	/**
+	 * Parses un-quoted string content.
+	 */
+	protected String parseUnquotedStringContent() {
+		int startNdx = ndx;
+
+		while (true) {
+			char c = input[ndx];
+
+			if (c <= ' ' || CharUtil.equalsOne(c, UNQOUTED_DELIMETERS)) {
+				// done
+				int len = ndx - startNdx;
+
+				skipWhiteSpaces();
+
+				return new String(input, startNdx, len);
+			}
+
+			ndx++;
+		}
+	}
+
 
 	// ---------------------------------------------------------------- number
 
@@ -825,13 +871,14 @@ public class JsonParser extends JsonParserBase {
 
 	/**
 	 * Consumes one of the allowed char at current position.
-	 * If char is different, throws the exception. Returns matched char.
+	 * If char is different, return <code>0</code>.
+	 * If matched, returns matched char.
 	 */
 	protected char consumeOneOf(char c1, char c2) {
 		char c = input[ndx];
 
 		if ((c != c1) && (c != c2)) {
-			syntaxError("Invalid char: expected " + c);
+			return 0;
 		}
 
 		ndx++;
@@ -902,7 +949,7 @@ public class JsonParser extends JsonParserBase {
 		String str = String.valueOf(input, from, to - from);
 
 		throw new JsonException(
-				"Syntax error: " + message + "\n" +
+				"Syntax error! " + message + "\n" +
 				"offset: " + ndx + " near: \"" + left + str + right + "\"");
 	}
 
