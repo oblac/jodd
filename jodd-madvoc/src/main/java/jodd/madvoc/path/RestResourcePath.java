@@ -4,7 +4,10 @@ package jodd.madvoc.path;
 
 import jodd.madvoc.ActionDef;
 import jodd.madvoc.ActionNames;
+import jodd.madvoc.ScopeType;
+import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.meta.Action;
+import jodd.madvoc.meta.In;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
@@ -14,6 +17,9 @@ import java.lang.reflect.Method;
  * Naming strategy for REST resources.
  */
 public class RestResourcePath extends BaseNamingStrategy {
+
+	@In(scope = ScopeType.CONTEXT)
+	protected MadvocConfig madvocConfig;
 
 	public ActionDef buildActionDef(Class actionClass, Method actionMethod, ActionNames actionNames) {
 
@@ -34,6 +40,10 @@ public class RestResourcePath extends BaseNamingStrategy {
 		}
 
 		if (methodActionPath != null) {
+			if (httpMethod == null && methodActionPath.startsWith(madvocConfig.getPathMacroSeparators()[0])) {
+				methodActionPath = actionMethod.getName() + StringPool.SLASH + methodActionPath;
+			}
+
 			if (classActionPath.endsWith(StringPool.SLASH) == false) {
 				actionPath += StringPool.SLASH;
 				resultPath += StringPool.SLASH;
