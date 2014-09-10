@@ -9,6 +9,7 @@ import jodd.madvoc.RootPackages;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.filter.ActionFilter;
+import jodd.madvoc.injector.Target;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.ActionAnnotationData;
 import jodd.madvoc.meta.ActionAnnotation;
@@ -37,6 +38,9 @@ import java.lang.reflect.Method;
  * Invoked only during registration, so performance is not critical.
  */
 public class ActionMethodParser {
+
+	@PetiteInject
+	protected ContextInjectorComponent contextInjectorComponent;
 
 	@PetiteInject
 	protected ActionsManager actionsManager;
@@ -81,6 +85,8 @@ public class ActionMethodParser {
 
 		try {
 			namingStrategy = actionPathNamingStrategy.newInstance();
+
+			contextInjectorComponent.injectContext(new Target(namingStrategy));
 		} catch (Exception ex) {
 			throw new MadvocException(ex);
 		}
