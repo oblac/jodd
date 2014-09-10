@@ -260,7 +260,7 @@ public class ActionRequest {
 				return ctor.newInstance();
 			} else {
 				// member class
-				Constructor ctor = type.getDeclaredConstructor(actionConfig.getActionClass());
+				Constructor ctor = type.getDeclaredConstructor(type.getDeclaringClass());
 				ctor.setAccessible(true);
 				return ctor.newInstance(action);
 			}
