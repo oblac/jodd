@@ -34,7 +34,7 @@ public class PropsUtil {
 		};
 		scanner.setIncludeResources(true);
 		scanner.setIgnoreException(true);
-		scanner.setExcludeAllEntriesMode();
+		scanner.setExcludeAllEntries(true);
 		scanner.setIncludedEntries(patterns);
 		scanner.scanDefaultClasspath();
 	}

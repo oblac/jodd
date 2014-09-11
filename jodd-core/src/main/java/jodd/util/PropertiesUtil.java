@@ -195,7 +195,7 @@ public class PropertiesUtil {
 		};
 		scanner.setIncludeResources(true);
 		scanner.setIgnoreException(true);
-		scanner.setExcludeAllEntriesMode();
+		scanner.setExcludeAllEntries(true);
 		scanner.setIncludedEntries(rootTemplate);
 		scanner.scanDefaultClasspath();
 		return p;

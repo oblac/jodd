@@ -72,7 +72,7 @@ public class AppScanner {
 	 */
 	public void configure(ClassFinder classFinder) {
 
-		classFinder.setExcludeAllEntriesMode();
+		classFinder.setExcludeAllEntries(true);
 
 		if (includedEntries == null) {
 			includedEntries = new String[] {
