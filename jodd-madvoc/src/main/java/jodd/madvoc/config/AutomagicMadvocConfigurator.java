@@ -77,6 +77,8 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 	public void configure(File[] classpath) {
 		elapsed = System.currentTimeMillis();
 
+		rulesEntries.smartMode();
+
 		try {
 			scanPaths(classpath);
 		} catch (Exception ex) {

@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * Auto-magically reads classpath for domain objects annotated
+ * Auto-magically scans classpath for domain objects annotated with DbOom annotations.
  */
 public class AutomagicDbOomConfigurator extends ClassFinder {
 
@@ -48,6 +48,9 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 	 */
 	public void configure(DbOomManager dbOomManager, File[] classpath) {
 		this.dbOomManager = dbOomManager;
+
+		rulesEntries.smartMode();
+
 		elapsed = System.currentTimeMillis();
 		try {
 			scanPaths(classpath);

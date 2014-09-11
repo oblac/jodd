@@ -47,6 +47,9 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 	 */
 	public void configure(PetiteContainer petiteContainer, File[] classpath) {
 		this.container = petiteContainer;
+
+		rulesEntries.smartMode();
+
 		elapsed = System.currentTimeMillis();
 		try {
 			scanPaths(classpath);
