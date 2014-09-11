@@ -142,6 +142,7 @@ configure(javaModules()) {
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
 		options.compilerArgs << "-Xlint:-options"
+		options.incremental = true
 		//configurations.compile.transitive = false
 	}
 	compileJava.options.debug = true
@@ -470,7 +471,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 		println ""
 		println "	You are about to run the 'release' task for Jodd project!"
 		println "	This task builds distribution artifacts, but also runs"
-		println "	integration tests and generates several reports (javadoc, code coverage...)"
+		println "	integration tests and generates reports (javadoc, coverage...)"
 		println "	For running integration tests you need databases running;"
 		println "	please find more information here: http://jodd.org/code.html"
 		println ""
@@ -506,5 +507,5 @@ gradle.taskGraph.whenReady { taskGraph ->
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.0'
+	gradleVersion = '2.1'
 }
