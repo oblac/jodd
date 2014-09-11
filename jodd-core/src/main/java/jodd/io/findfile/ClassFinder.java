@@ -3,6 +3,7 @@
 package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
+import jodd.util.ClassLoaderUtil;
 import jodd.util.InExRules;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
@@ -408,6 +409,28 @@ public abstract class ClassFinder {
 			return index != -1;
 		} catch (IOException ioex) {
 			throw new FindFileException("Read error", ioex);
+		}
+	}
+
+	// ---------------------------------------------------------------- class loading
+
+	/**
+	 * Loads class by its name. If {@link #ignoreException} is set,
+	 * no exception is thrown, but <code>null</code> is returned.
+	 */
+	protected Class loadClass(String className) throws ClassNotFoundException {
+		try {
+			return ClassLoaderUtil.loadClass(className);
+		} catch (ClassNotFoundException cnfex) {
+			if (ignoreException) {
+				return null;
+			}
+			throw cnfex;
+		} catch (Error error) {
+			if (ignoreException) {
+				return null;
+			}
+			throw error;
 		}
 	}
 
