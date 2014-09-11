@@ -239,12 +239,6 @@ public abstract class ClassFinder {
 
 	/**
 	 * Returns <code>true</code> if some JAR file has to be accepted.
-	 * The following logic is provided by default, in given order:
-	 * <ul>
-	 * <li>system jars are excluded</li>
-	 * <li>excluded jars are excluded (if specified)</li>
-	 * <li>only included jars are included (if specified)</li>
-	 * </ul>
 	 */
 	protected boolean acceptJar(File jarFile) {
 		String path = jarFile.getAbsolutePath();
