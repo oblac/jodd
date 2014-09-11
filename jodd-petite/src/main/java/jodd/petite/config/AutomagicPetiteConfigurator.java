@@ -78,23 +78,22 @@ public class AutomagicPetiteConfigurator extends ClassFinder implements PetiteCo
 			return;
 		}
 		Class<?> beanClass;
+
 		try {
 			beanClass = loadClass(entryName);
 		} catch (ClassNotFoundException cnfex) {
 			throw new PetiteException("Unable to load class: " + cnfex, cnfex);
 		}
+
+		if (beanClass == null) {
+			return;
+		}
+
 		PetiteBean petiteBean = beanClass.getAnnotation(PetiteBean.class);
 		if (petiteBean == null) {
 			return;
 		}
 		container.registerPetiteBean(beanClass, null, null, null, false);
-	}
-
-	/**
-	 * Loads class from classname using default classloader.
-	 */
-	protected Class loadClass(String className) throws ClassNotFoundException {
-		return ClassLoaderUtil.loadClass(className);
 	}
 
 }

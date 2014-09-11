@@ -87,6 +87,11 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		} catch (ClassNotFoundException cnfex) {
 			throw new DbOomException("Entry class not found: " + entryName, cnfex);
 		}
+
+		if (beanClass == null) {
+			return;
+		}
+
 		DbTable dbTable = beanClass.getAnnotation(DbTable.class);
 		if (dbTable == null) {
 			return;
@@ -98,10 +103,4 @@ public class AutomagicDbOomConfigurator extends ClassFinder {
 		}
 	}
 
-	/**
-	 * Loads class from class name using default classloader.
-	 */
-	protected Class loadClass(String className) throws ClassNotFoundException {
-		return ClassLoaderUtil.loadClass(className);
-	}
 }
