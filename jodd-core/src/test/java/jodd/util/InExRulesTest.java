@@ -13,6 +13,9 @@ public class InExRulesTest {
 	public void testIncludeExcludes() {
 		InExRules<String, String> inExRules = new InExRules<String, String>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
 
+		assertTrue(inExRules.isBlacklist());
+		assertFalse(inExRules.isWhitelist());
+
 		// + exclude all
 		inExRules.reset();
 		inExRules.blacklist();						// default
@@ -107,6 +110,21 @@ public class InExRulesTest {
 		assertFalse(inExRules.match("fight"));
 		assertFalse(inExRules.match("fravia"));
 		assertTrue(inExRules.match("bar"));
+	}
+
+	@Test
+	public void testSmartMode() {
+		InExRules<String, String> inExRules = new InExRules<String, String>(InExRuleMatcher.WILDCARD_RULE_MATCHER);
+
+		assertTrue(inExRules.isBlacklist());
+		assertFalse(inExRules.isWhitelist());
+
+		inExRules.include("xxx");
+
+		inExRules.smartMode();
+
+		assertFalse(inExRules.isBlacklist());
+		assertTrue(inExRules.isWhitelist());
 	}
 
 }

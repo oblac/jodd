@@ -157,11 +157,42 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	}
 
 	/**
+	 * Returns <code>true</code> if blacklist mode is set.
+	 */
+	public boolean isBlacklist() {
+		return blacklist;
+	}
+
+	/**
 	 * Enables <i>whitelist</i> mode - everything is <b>excluded</b> by default,
 	 * and user set explicit includes.
 	 */
 	public void whitelist() {
 		blacklist = false;
+	}
+
+	/**
+	 * Returns <code>true</code> if whitelist mode is set.
+	 */
+	public boolean isWhitelist() {
+		return !blacklist;
+	}
+
+	/**
+	 * Sets blacklist or whitelist mode depending on rules.
+	 * If there are only include rules, then the {@link #whitelist() whitelist}
+	 * mode is set. If there are only excluded rules, then the
+	 * {@link #blacklist() blacklist} mode is set. If both are set
+	 * then nothing changes. Should be called <b>after</b> all the rules
+	 * are set, before matching starts.
+	 */
+	public void smartMode() {
+		if (excludesCount == 0 && includesCount > 0) {
+			whitelist();
+		}
+		else if (excludesCount > 0 && includesCount == 0) {
+			blacklist();
+		}
 	}
 
 	/**

@@ -68,7 +68,8 @@ public class AppScanner {
 
 	/**
 	 * Configures scanner class finder. Works for all three scanners:
-	 * Petite, DbOom and Madvoc.
+	 * Petite, DbOom and Madvoc. All scanners by default include all jars,
+	 * but exclude all entries.
 	 */
 	public void configure(ClassFinder classFinder) {
 
