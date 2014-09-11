@@ -91,12 +91,26 @@ public abstract class ClassFinder {
 		}
 	}
 
-	public void setIncludeAllJarsMode() {
-		rulesJars.blacklist();
+	/**
+	 * Sets white/black list mode for jars.
+	 */
+	public void setIncludeAllJars(boolean blacklist) {
+		if (blacklist) {
+			rulesJars.blacklist();
+		} else {
+			rulesJars.whitelist();
+		}
 	}
 
-	public void setExcludeAllJarsMode() {
-		rulesJars.whitelist();
+	/**
+	 * Sets white/black list mode for jars.
+	 */
+	public void setExcludeAllJars(boolean whitelist) {
+		if (whitelist) {
+			rulesJars.whitelist();
+		} else {
+			rulesJars.blacklist();
+		}
 	}
 
 	// ---------------------------------------------------------------- included entries
@@ -117,11 +131,25 @@ public abstract class ClassFinder {
 		}
 	}
 
-	public void setIncludeAllEntriesMode() {
-		rulesEntries.blacklist();
+	/**
+	 * Sets white/black list mode for entries.
+	 */
+	public void setIncludeAllEntries(boolean blacklist) {
+		if (blacklist) {
+			rulesEntries.blacklist();
+		} else {
+			rulesEntries.whitelist();
+		}
 	}
-	public void setExcludeAllEntriesMode() {
-		rulesEntries.whitelist();
+	/**
+	 * Sets white/black list mode for entries.
+	 */
+	public void setExcludeAllEntries(boolean whitelist) {
+		if (whitelist) {
+			rulesEntries.whitelist();
+		} else {
+			rulesEntries.blacklist();
+		}
 	}
 
 	/**
