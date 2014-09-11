@@ -60,7 +60,6 @@ public class FindFile<T extends FindFile> {
 	protected boolean includeFiles = true;
 	protected boolean walking = true;
 	protected Match matchType = Match.FULL_PATH;
-	protected boolean blacklist = false;
 
 	public boolean isRecursive() {
 		return recursive;
@@ -350,7 +349,7 @@ public class FindFile<T extends FindFile> {
 
 	// ---------------------------------------------------------------- matching
 
-	protected final InExRules rules = createRulesEngine();
+	protected final InExRules<String, String> rules = createRulesEngine();
 
 	/**
 	 * Creates rule engine.
@@ -380,16 +379,16 @@ public class FindFile<T extends FindFile> {
 	/**
 	 * Enables whitelist mode.
 	 */
-	public T excludeAllMode() {
-		blacklist = false;
+	public T excludeAll() {
+		rules.whitelist();
 		return (T) this;
 	}
 
 	/**
 	 * Enables blacklist mode.
 	 */
-	public T includeAllMode() {
-		blacklist = true;
+	public T includeAll() {
+		rules.blacklist();
 		return (T) this;
 	}
 
@@ -421,7 +420,7 @@ public class FindFile<T extends FindFile> {
 	protected boolean acceptFile(File file) {
 		String matchingFilePath = getMatchingFilePath(file);
 
-		return rules.match(matchingFilePath, blacklist);
+		return rules.match(matchingFilePath);
 	}
 
 	/**
@@ -494,7 +493,6 @@ public class FindFile<T extends FindFile> {
 		todoFiles = null;
 		lastFile = null;
 		rules.reset();
-		blacklist = false;
 	}
 
 	/**
@@ -502,7 +500,6 @@ public class FindFile<T extends FindFile> {
 	 * or <code>null</code> if no more files can be found.
 	 */
 	public File nextFile() {
-
 		if (todoFiles == null) {
 			init();
 		}
@@ -585,17 +582,13 @@ public class FindFile<T extends FindFile> {
 		}
 	}
 
-
 	/**
 	 * Initializes file walking.
 	 * Separates input files and folders.
 	 */
 	@SuppressWarnings("unchecked")
 	protected void init() {
-		if (!rules.hasRules()) {
-			// if there are no rules applied, include all files in the output
-			includeAllMode();
-		}
+		rules.smartMode();
 
 		todoFiles = new JoddArrayList<FilesIterator>();
 		todoFolders = new JoddArrayList<File>();
