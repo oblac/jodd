@@ -2,7 +2,7 @@
 
 package jodd.mail;
 
-import jodd.util.StringPool;
+import jodd.util.ArraysUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,107 +25,131 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- from
 
-	protected String from;
+	protected MailAddress from;
 
 	/**
-	 * Sets the FROM address. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt;</code>.
+	 * Sets the FROM address.
 	 */
-	public void setFrom(String from) {
+	public void setFrom(MailAddress from) {
 		this.from = from;
 	}
+
 	/**
-	 * Returns FROM address. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt;</code>.
+	 * Returns FROM {@link MailAddress address}.
 	 */
-	public String getFrom() {
+	public MailAddress getFrom() {
 		return from;
 	}
 
 	// ---------------------------------------------------------------- to
 
-	protected String[] to = StringPool.EMPTY_ARRAY;
+	protected MailAddress[] to = MailAddress.EMPTY_ARRAY;
 
 	/**
-	 * Sets TO addresses. Addresses may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt;</code>.
+	 * Sets TO addresses.
 	 */
-	public void setTo(String... tos) {
+	public void setTo(MailAddress... tos) {
 		if (tos == null) {
-			tos = StringPool.EMPTY_ARRAY;
+			tos = MailAddress.EMPTY_ARRAY;
 		}
 		to = tos;
 	}
 
 	/**
-	 * Returns TO addresses. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt;</code>.
+	 * Appends TO address.
 	 */
-	public String[] getTo() {
+	public void addTo(MailAddress to) {
+		this.to = ArraysUtil.append(this.to, to);
+	}
+
+	/**
+	 * Returns TO addresses.
+	 */
+	public MailAddress[] getTo() {
 		return to;
 	}
 
 	// ---------------------------------------------------------------- reply-to
 
-	protected String[] replyTo = StringPool.EMPTY_ARRAY;
+	protected MailAddress[] replyTo = MailAddress.EMPTY_ARRAY;
 
 	/**
-	 * Sets REPLY-TO addresses. Address may be specified with personal information
-	 * like this: <code>"Name &lt;email&gt;</code>.
+	 * Sets REPLY-TO addresses.
 	 */
-	public void setReplyTo(String... replyTo) {
+	public void setReplyTo(MailAddress... replyTo) {
 		if (replyTo == null) {
-			replyTo = StringPool.EMPTY_ARRAY;
+			replyTo = MailAddress.EMPTY_ARRAY;
 		}
 		this.replyTo = replyTo;
 	}
 
 	/**
+	 * Appends REPLY-TO address.
+	 */
+	public void addReplyTo(MailAddress to) {
+		this.replyTo = ArraysUtil.append(this.replyTo, to);
+	}
+
+	/**
 	 * Returns REPLY-TO addresses.
 	 */
-	public String[] getReplyTo() {
+	public MailAddress[] getReplyTo() {
 		return replyTo;
 	}
 
 	// ---------------------------------------------------------------- cc
 
-	protected String[] cc = StringPool.EMPTY_ARRAY;
+	protected MailAddress[] cc = MailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets CC addresses.
 	 */
-	public void setCc(String... ccs) {
+	public void setCc(MailAddress... ccs) {
 		if (ccs == null) {
-			ccs = StringPool.EMPTY_ARRAY;
+			ccs = MailAddress.EMPTY_ARRAY;
 		}
 		cc = ccs;
 	}
 
 	/**
+	 * Appends CC address.
+	 */
+	public void addCc(MailAddress to) {
+		this.cc = ArraysUtil.append(this.cc, to);
+	}
+
+	/**
 	 * Returns CC addresses.
 	 */
-	public String[] getCc() {
+	public MailAddress[] getCc() {
 		return cc;
 	}
 
 	// ---------------------------------------------------------------- bcc
 
-	protected String[] bcc = StringPool.EMPTY_ARRAY;
+	protected MailAddress[] bcc = MailAddress.EMPTY_ARRAY;
 
 	/**
 	 * Sets BCC addresses.
 	 */
-	public void setBcc(String... bccs) {
+	public void setBcc(MailAddress... bccs) {
 		if (bccs == null) {
-			bccs = StringPool.EMPTY_ARRAY;
+			bccs = MailAddress.EMPTY_ARRAY;
 		}
 		bcc = bccs;
 	}
 
 	/**
+	 * Appends BCC address.
+	 */
+	public void addBcc(MailAddress to) {
+		this.bcc = ArraysUtil.append(this.bcc, to);
+	}
+
+	/**
 	 * Returns BCC addresses.
 	 */
-	public String[] getBcc() {
+	public MailAddress[] getBcc() {
 		return bcc;
 	}
 
