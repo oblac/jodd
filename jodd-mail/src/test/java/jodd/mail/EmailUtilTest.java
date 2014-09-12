@@ -59,8 +59,8 @@ public class EmailUtilTest {
 
 		ReceivedEmail email = EmailUtil.parseEML(emlFile);
 
-		assertEquals("Example <from@example.com>", email.getFrom());
-		assertEquals("to@example.com", email.getTo()[0]);
+		assertEquals("Example <from@example.com>", email.getFrom().toString());
+		assertEquals("to@example.com", email.getTo()[0].toString());
 		assertEquals("test!", email.getSubject());
 
 		// the time is specified in GMT zone
@@ -97,8 +97,8 @@ public class EmailUtilTest {
 
 		// attached message
 
-		assertEquals("Example <from@example.com>", email.getFrom());
-		assertEquals("to@example.com", email.getTo()[0]);
+		assertEquals("Example <from@example.com>", email.getFrom().toString());
+		assertEquals("to@example.com", email.getTo()[0].toString());
 		assertEquals("test", email.getSubject());
 
 		jdt = new JDateTime(2010, 3, 27, 12, 9, 46, 0);
@@ -134,8 +134,8 @@ public class EmailUtilTest {
 
 		ReceivedEmail email = EmailUtil.parseEML(emlFile);
 
-		assertEquals("Tijana <tijan@gmail.com>", email.getFrom());
-		assertEquals("testapp1@esolut.ions", email.getTo()[0]);
+		assertEquals("Tijana <tijan@gmail.com>", email.getFrom().toString());
+		assertEquals("testapp1@esolut.ions", email.getTo()[0].toString());
 		assertEquals("testtest", email.getSubject());
 
 		List<EmailMessage> messages = email.getAllMessages();
@@ -163,8 +163,8 @@ public class EmailUtilTest {
 
 		ReceivedEmail email = EmailUtil.parseEML(emlFile);
 
-		assertEquals("sender@emailhost.com", email.getFrom());
-		assertEquals("recipient@emailhost.com", email.getTo()[0]);
+		assertEquals("sender@emailhost.com", email.getFrom().toString());
+		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
 		assertEquals("Email subject", email.getSubject());
 
 		List<EmailMessage> messages = email.getAllMessages();
@@ -192,7 +192,7 @@ public class EmailUtilTest {
 		ReceivedEmail email = EmailUtil.parseEML(emlFile);
 
 		assertNull(email.getFrom());
-		assertEquals("recipient@emailhost.com", email.getTo()[0]);
+		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
 		assertEquals("Email subject", email.getSubject());
 
 		List<EmailMessage> messages = email.getAllMessages();

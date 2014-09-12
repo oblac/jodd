@@ -26,9 +26,9 @@ public class SendMailTest {
 	public void testFromToBccCc() throws MessagingException, IOException {
 		Email email = Email.create()
 				.from("from")
-				.to("to1", "to2")
-				.cc("cc1", "cc2")
-				.bcc("bcc1", "bcc2");
+				.to("to1").to("Major Tom", "to2")
+				.cc("cc1").cc("Major Tom", "cc2")
+				.bcc("Major Tom", "bcc1").bcc("bcc2");
 
 		Message message = createMessage(email);
 
@@ -39,14 +39,14 @@ public class SendMailTest {
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.TO).length);
 		assertEquals("to1", message.getRecipients(Message.RecipientType.TO)[0].toString());
-		assertEquals("to2", message.getRecipients(Message.RecipientType.TO)[1].toString());
+		assertEquals("Major Tom <to2>", message.getRecipients(Message.RecipientType.TO)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.CC).length);
 		assertEquals("cc1", message.getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals("cc2", message.getRecipients(Message.RecipientType.CC)[1].toString());
+		assertEquals("Major Tom <cc2>", message.getRecipients(Message.RecipientType.CC)[1].toString());
 
 		assertEquals(2, message.getRecipients(Message.RecipientType.BCC).length);
-		assertEquals("bcc1", message.getRecipients(Message.RecipientType.BCC)[0].toString());
+		assertEquals("Major Tom <bcc1>", message.getRecipients(Message.RecipientType.BCC)[0].toString());
 		assertEquals("bcc2", message.getRecipients(Message.RecipientType.BCC)[1].toString());
 	}
 
@@ -142,9 +142,9 @@ public class SendMailTest {
 	public void testTextHtmlEmbedAttach2() throws MessagingException, IOException {
 		Email email = new Email();
 
-		email.setFrom("from");
-		email.setTo("to");
-		email.setSubject("sub");
+		email.from("from");
+		email.to("to");
+		email.subject("sub");
 
 		EmailMessage testMessage = new EmailMessage("Hello!", MimeTypes.MIME_TEXT_PLAIN);
 		email.addMessage(testMessage);
