@@ -2,17 +2,12 @@
 
 package jodd.mail;
 
-import jodd.core.JoddCore;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
-import jodd.util.StringUtil;
 
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -71,59 +66,6 @@ public class EmailUtil {
 			encoding = charset.substring(start, ndx);
 		}
 		return encoding;
-	}
-
-	/**
-	 * Converts mail address to strings.
-	 */
-	public static String[] address2String(Address[] addresses) {
-		if (addresses == null) {
-			return null;
-		}
-		if (addresses.length == 0) {
-			return null;
-		}
-		String[] res = new String[addresses.length];
-		for (int i = 0; i < addresses.length; i++) {
-			Address address = addresses[i];
-			res[i] = address.toString();
-		}
-		return res;
-	}
-
-	/**
-	 * Converts string to <code>InternetAddress</code> while taking care of encoding.
-	 * The email can be given in following form:
-	 * <ul>
-	 *     <li>"email" - the whole string is an email</li>
-	 *     <li>"personal {@literal <email>}" - first part of the string is personal, and
-	 *     		the other part is email, surrounded with &lt; and &gt;</li>
-	 * </ul>
-	 */
-	public static InternetAddress string2Address(String address) throws AddressException {
-		address = address.trim();
-		String charset = JoddCore.encoding;
-
-		if (StringUtil.endsWithChar(address, '>') == false) {
-			try {
-				return new InternetAddress(address, null, charset);
-			} catch (UnsupportedEncodingException ueex) {
-				throw new AddressException(ueex.toString());
-			}
-		}
-
-		int ndx = address.lastIndexOf('<');
-		if (ndx == -1) {
-			throw new AddressException("Invalid address: " + address);
-		}
-
-		try {
-			return new InternetAddress(
-					address.substring(ndx + 1, address.length() - 1),
-					address.substring(0, ndx - 1).trim(), charset);
-		} catch (UnsupportedEncodingException ueex) {
-			throw new AddressException(ueex.toString());
-		}
 	}
 
 	/**
