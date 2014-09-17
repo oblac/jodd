@@ -88,6 +88,8 @@ madvoc.todo
 + More flexible ActionMethodParser, i.e. point where action path is build @tbd
 		For example, it may choose if extension is "json" or not based on class name.
 + Add JSONResult(returnCode, jsonString) @soon @review
++ DefaultResult as a class, not as a string. @v3.6.1 @done(2014-09-17)
++ Why Decora can not handle the direct output? @v3.6.1
 + Cache results for ServletDispatcherResult#targetExist to speed up @done
 
 ## EMail

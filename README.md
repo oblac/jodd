@@ -1,8 +1,10 @@
 Jodd
 ====
 
+[![BSD License](http://img.shields.io/badge/license-BSD-orange.svg)](http://jodd.org/license.html)
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
 [![Coverage Status](https://coveralls.io/repos/oblac/jodd/badge.png?branch=master)](https://coveralls.io/r/oblac/jodd?branch=master)
+[![Stack Overflow](http://img.shields.io/badge/stack%20overflow-neat-ae3dd2.svg)](http://stackoverflow.com/questions/tagged/jodd)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 

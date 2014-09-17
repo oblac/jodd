@@ -14,6 +14,7 @@ import jodd.madvoc.meta.ActionAnnotation;
 import jodd.madvoc.meta.RestAction;
 import jodd.madvoc.path.ActionNamingStrategy;
 import jodd.madvoc.path.DefaultActionPath;
+import jodd.madvoc.result.ActionResult;
 import jodd.madvoc.result.ServletDispatcherResult;
 import jodd.upload.FileUploadFactory;
 import jodd.upload.impl.AdaptiveFileUploadFactory;
@@ -39,7 +40,7 @@ public class MadvocConfig {
 		encoding = StringPool.UTF_8;
 		applyCharacterEncoding = true;
 		fileUploadFactory = new AdaptiveFileUploadFactory();
-		defaultResultName = ServletDispatcherResult.NAME;
+		defaultActionResult = ServletDispatcherResult.class;
 		defaultInterceptors = new Class[] {ServletConfigInterceptor.class};
 		defaultFilters = null;
 		defaultActionMethodNames = new String[] {"view", "execute"};
@@ -223,20 +224,20 @@ public class MadvocConfig {
 
 	// ---------------------------------------------------------------- default result type
 
-	protected String defaultResultName;
+	protected Class<? extends ActionResult> defaultActionResult;
 
 	/**
-	 * Specifies default result type.
+	 * Specifies default action result.
 	 */
-	public void setDefaultResultName(String type) {
-		defaultResultName = type;
+	public void setDefaultActionResult(Class<? extends ActionResult> defaultActionResult) {
+		this.defaultActionResult = defaultActionResult;
 	}
 
 	/**
-	 * Returns default action result type.
+	 * Returns default action result.
 	 */
-	public String getDefaultResultName() {
-		return defaultResultName;
+	public Class<? extends ActionResult> getDefaultActionResult() {
+		return defaultActionResult;
 	}
 
 	// ---------------------------------------------------------------- packageRoot
@@ -477,7 +478,7 @@ public class MadvocConfig {
 				",\n\tdefaultActionMethodNames=" + (defaultActionMethodNames == null ? null : Arrays.asList(defaultActionMethodNames)) +
 				",\n\tdefaultExtension='" + defaultExtension + '\'' +
 				",\n\tdefaultInterceptors=" + (defaultInterceptors == null ? null : toString(defaultInterceptors)) +
-				",\n\tdefaultResultType='" + defaultResultName + '\'' +
+				",\n\tdefaultResultType='" + defaultActionResult.getName() + '\'' +
 				",\n\tdetectDuplicatePathsEnabled=" + detectDuplicatePathsEnabled +
 				",\n\tencoding='" + encoding + '\'' +
 				",\n\tfileUploadFactory=" + fileUploadFactory +

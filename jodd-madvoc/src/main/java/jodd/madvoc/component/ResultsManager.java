@@ -239,33 +239,49 @@ public class ResultsManager {
 		if (actionResult == null) {
 			// + still not found, toString()
 
-			String resultValue = resultObject != null ? resultObject.toString() : null;
-			String resultName = madvocConfig.getDefaultResultName();
+			ActionResult defaultActionResult = lookupAndRegisterIfMissing(madvocConfig.getDefaultActionResult());
 
-			// first check result value
-			if (resultValue != null) {
-				int columnIndex = resultValue.indexOf(':');
-
-				if (columnIndex != -1) {
-					resultName = resultValue.substring(0, columnIndex);
-
-					resultValue = resultValue.substring(columnIndex + 1);
-				}
+			if (stringResults.isEmpty()) {
+				// no string results registered, carry on with the defaults.
+				actionResult = defaultActionResult;
 			}
+			else {
+				String resultValue = resultObject != null ? resultObject.toString() : null;
+				String resultName = null;
 
-			actionResult = stringResults.get(resultName);
+				// first check result value
+				if (resultValue != null) {
+					int columnIndex = resultValue.indexOf(':');
 
-			// convert remaining of the string to result object
-			try {
-				Class targetClass = actionResult.getResultValueType();
-				if (targetClass == null || targetClass == String.class) {
-					resultObject = resultValue;
+					if (columnIndex != -1) {
+						resultName = resultValue.substring(0, columnIndex);
+
+						resultValue = resultValue.substring(columnIndex + 1);
+					}
+				}
+
+				if (resultName != null) {
+					actionResult = stringResults.get(resultName);
 				}
 				else {
-					resultObject = TypeConverterManager.convertType(resultValue, targetClass);
+					actionResult = defaultActionResult;
 				}
-			} catch (Exception ex) {
-				resultObject = resultValue;
+
+				if (actionResult.getResultName() != null) {
+					// convert remaining of the string to result object
+					// only when action result is string result
+					try {
+						Class targetClass = actionResult.getResultValueType();
+						if (targetClass == null || targetClass == String.class) {
+							resultObject = resultValue;
+						}
+						else {
+							resultObject = TypeConverterManager.convertType(resultValue, targetClass);
+						}
+					} catch (Exception ex) {
+						resultObject = resultValue;
+					}
+				}
 			}
 		}
 
