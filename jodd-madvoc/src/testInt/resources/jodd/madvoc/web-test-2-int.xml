@@ -16,7 +16,7 @@
 		</init-param>
 		<init-param>
 			<param-name>madvoc.webapp</param-name>
-			<param-value>jodd.madvoc.MyWebApplication</param-value>
+			<param-value>jodd.madvoc.MyWebApplication2</param-value>
 		</init-param>
 		<init-param>
 			<param-name>madvoc.params</param-name>
