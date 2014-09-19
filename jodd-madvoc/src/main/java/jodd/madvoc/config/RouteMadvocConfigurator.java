@@ -5,12 +5,10 @@ package jodd.madvoc.config;
 import jodd.io.StreamUtil;
 import jodd.madvoc.ActionWrapper;
 import jodd.madvoc.MadvocException;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.meta.Action;
 import jodd.madvoc.result.ActionResult;
-import jodd.petite.meta.PetiteInject;
 import jodd.typeconverter.Convert;
 import jodd.util.ArraysUtil;
 import jodd.util.ClassLoaderUtil;
@@ -51,9 +49,6 @@ import java.util.Map;
  * </ul>
  */
 public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
-
-	@PetiteInject
-	protected MadvocConfig madvocConfig;
 
 	protected HashMap<String, String> variables;
 	protected Class<? extends ActionWrapper>[] currentWrappers;
