@@ -24,6 +24,7 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	protected int operand;
 	protected boolean isPrevious;       // true only if previous opcode is of the correct type
 	protected boolean traceNext;        // true only to trace very next opcode
+	protected String[] strArgs = new String[2];
 
 	// ---------------------------------------------------------------- get index
 
@@ -50,6 +51,21 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 				throw new ProxettaException("Unexpected previous instruction used for setting argument index");
 		}
 		return argIndex;
+	}
+
+	/**
+	 * Returns last two string arguments.
+	 */
+	public String[] getLastTwoStringArguments() {
+		return strArgs;
+	}
+
+	/**
+	 * Adds string to a string-argument history.
+	 */
+	private void keepStringArgument(String string) {
+		strArgs[0] = strArgs[1];
+		strArgs[1] = string;
 	}
 
 	// ---------------------------------------------------------------- visitors
@@ -110,6 +126,11 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	public void visitLdcInsn(Object cst) {
 		isPrevious = false;
 		traceNext = false;
+
+		if (cst instanceof String) {
+			keepStringArgument((String) cst);
+		}
+
 		super.visitLdcInsn(cst);
 	}
 

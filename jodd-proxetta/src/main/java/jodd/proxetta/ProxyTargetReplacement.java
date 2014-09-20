@@ -172,4 +172,30 @@ public class ProxyTargetReplacement {
 		// the end
 		mv.visitVarInsn(Opcodes.ALOAD, argsOff);
 	}
+
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(String, String)}.
+	 */
+	public static void targetMethodAnnotation(MethodVisitor mv, MethodInfo methodInfo, String[] args) {
+		AnnotationInfo[] anns = methodInfo.getAnnotations();
+
+		if (anns != null) {
+			for (AnnotationInfo ann : anns) {
+				String annClassName = ann.getAnnotationClassname();
+
+				if (annClassName.equals(args[0])) {
+					Object elementValue = ann.getElement(args[1]);
+
+					if (elementValue instanceof String) {
+						mv.visitLdcInsn(elementValue);
+					}
+					// todo add more types
+				}
+			}
+		}
+
+		// no annotation found
+
+		mv.visitInsn(Opcodes.ACONST_NULL);
+	}
 }

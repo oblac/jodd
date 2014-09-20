@@ -317,6 +317,16 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									castToReturnType(mv, td.msign);
 									return;
 								}
+
+								if (isTargetMethodAnnotationMethod(mname, mdesc)) {
+									String[] args = getLastTwoStringArguments();
+
+									// pop current args
+									mv.visitInsn(POP);
+									mv.visitInsn(POP);
+
+									ProxyTargetReplacement.targetMethodAnnotation(mv, td.msign, args);
+								}
 							}
 						}
 						super.visitMethodInsn(opcode, string, mname, mdesc);
