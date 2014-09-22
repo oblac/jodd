@@ -184,85 +184,98 @@ public class ProxyTargetReplacement {
 		AnnotationInfo[] anns = methodInfo.getAnnotations();
 
 		if (anns != null) {
-			for (AnnotationInfo ann : anns) {
-				String annotationSignature = ann.getAnnotationSignature();
-				Method annotationMethod = null;
+			targetAnnotation(mv, anns, args);
+		}
+	}
 
-				if (annotationSignature.equals(args[0])) {
-					String elementName = args[1];
-					Object elementValue = ann.getElement(elementName);
+	/**
+	 * Visits replacement code for {@link ProxyTarget#targetClassAnnotation(Class, String)}.
+	 */
+	public static void targetClassAnnotation(MethodVisitor mv, ClassInfo classInfo, String[] args) {
+		AnnotationInfo[] anns = classInfo.getAnnotations();
+
+		if (anns != null) {
+			targetAnnotation(mv, anns, args);
+		} else {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+		}
+	}
+
+	private static void targetAnnotation(MethodVisitor mv, AnnotationInfo[] anns, String[] args) {
+		for (AnnotationInfo ann : anns) {
+			String annotationSignature = ann.getAnnotationSignature();
+			Method annotationMethod = null;
+
+			if (annotationSignature.equals(args[0])) {
+				String elementName = args[1];
+				Object elementValue = ann.getElement(elementName);
+
+				if (elementValue == null) {
+					// read default annotation
+					String annotationClass = ann.getAnnotationClassname();
+
+					try {
+						Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+
+						annotationMethod = annotation.getMethod(elementName);
+
+						elementValue = annotationMethod.getDefaultValue();
+					}
+					catch (Exception ignore) {
+						elementValue = null;
+					}
 
 					if (elementValue == null) {
-						// read default annotation
-						String annotationClass = ann.getAnnotationClassname();
-
-						try {
-							Class annotation = ClassLoaderUtil.loadClass(annotationClass);
-
-							annotationMethod = annotation.getMethod(elementName);
-
-							elementValue = annotationMethod.getDefaultValue();
-						}
-						catch (Exception ignore) {
-							elementValue = null;
-						}
-
-						if (elementValue == null) {
-							mv.visitInsn(Opcodes.ACONST_NULL);
-							return;
-						}
-					}
-
-					Class elementValueClass = elementValue.getClass();
-
-					if (!elementValueClass.isArray()) {
-						// non-arrays
-						ProxettaAsmUtil.visitElementValue(mv, elementValue, true);
-						return;
-					}
-					else {
-						// arrays
-						Class componentType = elementValueClass.getComponentType();
-
-						String annotationClass = ann.getAnnotationClassname();
-
-						try {
-							if (annotationMethod == null) {
-								Class annotation = ClassLoaderUtil.loadClass(annotationClass);
-
-								annotationMethod = annotation.getMethod(elementName);
-							}
-
-							componentType = annotationMethod.getReturnType().getComponentType();
-						}
-						catch (Exception ignore) {
-						}
-
-						int size = Array.getLength(elementValue);
-
-						ProxettaAsmUtil.pushInt(mv, size);
-
-						ProxettaAsmUtil.newArray(mv, componentType);
-
-						for (int i = 0; i < size; i++) {
-							mv.visitInsn(DUP);
-
-							ProxettaAsmUtil.pushInt(mv, i);
-
-							Object value = Array.get(elementValue, i);
-							ProxettaAsmUtil.visitElementValue(mv, value, false);
-
-							ProxettaAsmUtil.storeIntoArray(mv, componentType);
-						}
-
+						mv.visitInsn(Opcodes.ACONST_NULL);
 						return;
 					}
 				}
+
+				Class elementValueClass = elementValue.getClass();
+
+				if (!elementValueClass.isArray()) {
+					// non-arrays
+					ProxettaAsmUtil.visitElementValue(mv, elementValue, true);
+					return;
+				}
+				else {
+					// arrays
+					Class componentType = elementValueClass.getComponentType();
+
+					String annotationClass = ann.getAnnotationClassname();
+
+					try {
+						if (annotationMethod == null) {
+							Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+
+							annotationMethod = annotation.getMethod(elementName);
+						}
+
+						componentType = annotationMethod.getReturnType().getComponentType();
+					}
+					catch (Exception ignore) {
+					}
+
+					int size = Array.getLength(elementValue);
+
+					ProxettaAsmUtil.pushInt(mv, size);
+
+					ProxettaAsmUtil.newArray(mv, componentType);
+
+					for (int i = 0; i < size; i++) {
+						mv.visitInsn(DUP);
+
+						ProxettaAsmUtil.pushInt(mv, i);
+
+						Object value = Array.get(elementValue, i);
+						ProxettaAsmUtil.visitElementValue(mv, value, false);
+
+						ProxettaAsmUtil.storeIntoArray(mv, componentType);
+					}
+
+					return;
+				}
 			}
 		}
-
-		// no annotation found
-
-		mv.visitInsn(Opcodes.ACONST_NULL);
 	}
 }

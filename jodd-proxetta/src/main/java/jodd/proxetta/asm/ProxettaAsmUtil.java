@@ -872,4 +872,13 @@ public class ProxettaAsmUtil {
 		return false;
 	}
 
+	public static boolean isTargetClassAnnotationMethod(String name, String desc) {
+		if (name.equals("targetClassAnnotation")) {
+			if (desc.equals("(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

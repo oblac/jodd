@@ -1,5 +1,11 @@
 package jodd.proxetta.data;
 
+@HeroName(
+		value = "Silver",
+		secret = 89,
+		opacity = 99.222,
+		helpers = {"None", "None"},
+		enemies = {2,1000})
 public class Hero {
 
 	public static enum POWER {

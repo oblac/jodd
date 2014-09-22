@@ -46,6 +46,10 @@ public class HeroProxyAdvice implements ProxyAdvice {
 
 		name += subpowers[0];
 
+		String missing = (String)  targetMethodAnnotation(HeroName.class, "xxxxx");
+
+		name += missing;
+
 		return ProxyTarget.returnValue(name);
 	}
 }

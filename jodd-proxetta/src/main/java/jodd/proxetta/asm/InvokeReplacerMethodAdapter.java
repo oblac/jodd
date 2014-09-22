@@ -26,6 +26,7 @@ import static jodd.asm5.Opcodes.NEW;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetClassAnnotationMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodAnnotationMethod;
 
 /**
@@ -187,6 +188,18 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 				mv.visitInsn(POP);
 
 				ProxyTargetReplacement.targetMethodAnnotation(mv, methodInfo, args);
+				wd.proxyApplied = true;
+				return;
+			}
+
+			if (isTargetClassAnnotationMethod(name, desc)) {
+				String[] args = getLastTwoStringArguments();
+
+				// pop current two args
+				mv.visitInsn(POP);
+				mv.visitInsn(POP);
+
+				ProxyTargetReplacement.targetClassAnnotation(mv, methodInfo.getClassInfo(), args);
 				wd.proxyApplied = true;
 				return;
 			}
