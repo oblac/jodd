@@ -9,12 +9,16 @@ import static jodd.asm5.Opcodes.*;
 import jodd.proxetta.ProxettaException;
 
 /**
- * Method adapter that remembers previous opcode of 'insn' and 'intInsn' instructions.
- * Used to detect single (last) int argument value of a method call.
+ * Method adapter that tracks history of previous instructions.
+ * <ul>
+ * <li>that remembers previous opcode of 'insn' and 'intInsn' instructions.
+  * Used to detect single (last) int argument value of a method call.</li>
+ * <li>Stores last two arguments as strings</li>
+ * </ul>
  */
-abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
+abstract class HistoryMethodAdapter extends MethodAdapter {
 
-	protected IntArgHistoryMethodAdapter(MethodVisitor methodVisitor) {
+	protected HistoryMethodAdapter(MethodVisitor methodVisitor) {
 		super(methodVisitor);
 	}
 
@@ -24,6 +28,7 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	protected int operand;
 	protected boolean isPrevious;       // true only if previous opcode is of the correct type
 	protected boolean traceNext;        // true only to trace very next opcode
+	protected String[] strArgs = new String[2];
 
 	// ---------------------------------------------------------------- get index
 
@@ -50,6 +55,21 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 				throw new ProxettaException("Unexpected previous instruction used for setting argument index");
 		}
 		return argIndex;
+	}
+
+	/**
+	 * Returns last two string arguments.
+	 */
+	public String[] getLastTwoStringArguments() {
+		return strArgs;
+	}
+
+	/**
+	 * Adds last LDC arguments to {@link #getLastTwoStringArguments() string arguments}.
+	 */
+	private void keepStringArgument(Object value) {
+		strArgs[0] = strArgs[1];
+		strArgs[1] = value.toString();
 	}
 
 	// ---------------------------------------------------------------- visitors
@@ -110,6 +130,9 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	public void visitLdcInsn(Object cst) {
 		isPrevious = false;
 		traceNext = false;
+
+		keepStringArgument(cst);
+
 		super.visitLdcInsn(cst);
 	}
 
@@ -143,9 +166,12 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 
 	@Override
 	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+		//super.visitLocalVariable(name, desc, signature, start, end, index);
 	}
 
 	@Override
 	public void visitLineNumber(int line, Label start) {
+		//super.visitLineNumber(line, start);
 	}
+
 }

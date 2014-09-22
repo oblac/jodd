@@ -3,15 +3,20 @@
 package jodd.proxetta.asm;
 
 import jodd.asm.AsmUtil;
-import jodd.proxetta.MethodInfo;
-import jodd.util.StringBand;
 import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
-import static jodd.asm5.Opcodes.*;
+import jodd.proxetta.MethodInfo;
 import jodd.proxetta.ProxettaException;
-import static jodd.proxetta.JoddProxetta.*;
+import jodd.util.ReflectUtil;
+import jodd.util.StringBand;
 import jodd.util.StringPool;
+
+import static jodd.asm5.Opcodes.*;
+import static jodd.proxetta.JoddProxetta.fieldDivider;
+import static jodd.proxetta.JoddProxetta.fieldPrefix;
+import static jodd.proxetta.JoddProxetta.methodDivider;
+import static jodd.proxetta.JoddProxetta.methodPrefix;
 import static jodd.util.StringPool.COLON;
 
 /**
@@ -538,6 +543,187 @@ public class ProxettaAsmUtil {
 			.toString();
 	}
 
+	// ---------------------------------------------------------------- annotation work
+
+	/**
+	 * Visits non-array element value for annotation. Returns <code>true</code>
+	 * if value is successfully processed.
+	 */
+	public static void visitElementValue(MethodVisitor mv, Object elementValue, boolean boxPrimitives) {
+		if (elementValue instanceof String) {	// string
+			mv.visitLdcInsn(elementValue);
+			return;
+		}
+		if (elementValue instanceof Type) {		// class
+			mv.visitLdcInsn(elementValue);
+			return;
+		}
+		if (elementValue instanceof Class) {
+			mv.visitLdcInsn(Type.getType((Class) elementValue));
+			return;
+		}
+
+		// primitives
+
+		if (elementValue instanceof Integer) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfInteger(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Long) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfLong(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Short) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfShort(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Byte) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfByte(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Float) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfFloat(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Double) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfDouble(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Character) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfCharacter(mv);
+			}
+			return;
+		}
+		if (elementValue instanceof Boolean) {
+			mv.visitLdcInsn(elementValue);
+			if (boxPrimitives) {
+				AsmUtil.valueOfBoolean(mv);
+			}
+			return;
+		}
+
+		// enum
+
+		Class elementValueClass = elementValue.getClass();
+		Class enumClass = ReflectUtil.findEnum(elementValueClass);
+
+		if (enumClass != null) {
+			try {
+				String typeRef = AsmUtil.typeToTyperef(enumClass);
+
+				String name = (String) ReflectUtil.invoke(elementValue, "name");
+
+				mv.visitFieldInsn(GETSTATIC, typeRef, name, typeRef);
+
+				return;
+			} catch (Exception ignore) {
+			}
+		}
+
+		throw new ProxettaException("Unsupported annotation type: " + elementValue.getClass());
+	}
+
+	// ---------------------------------------------------------------- array
+
+	/**
+	 * Creates new array.
+	 */
+	public static void newArray(MethodVisitor mv, Class componentType) {
+		if (componentType == int.class) {
+			mv.visitIntInsn(NEWARRAY, T_INT);
+			return;
+		}
+		if (componentType == long.class) {
+			mv.visitIntInsn(NEWARRAY, T_LONG);
+			return;
+		}
+		if (componentType == float.class) {
+			mv.visitIntInsn(NEWARRAY, T_FLOAT);
+			return;
+		}
+		if (componentType == double.class) {
+			mv.visitIntInsn(NEWARRAY, T_DOUBLE);
+			return;
+		}
+		if (componentType == byte.class) {
+			mv.visitIntInsn(NEWARRAY, T_BYTE);
+			return;
+		}
+		if (componentType == short.class) {
+			mv.visitIntInsn(NEWARRAY, T_SHORT);
+			return;
+		}
+		if (componentType == boolean.class) {
+			mv.visitIntInsn(NEWARRAY, T_BOOLEAN);
+			return;
+		}
+		if (componentType == char.class) {
+			mv.visitIntInsn(NEWARRAY, T_CHAR);
+			return;
+		}
+
+		mv.visitTypeInsn(ANEWARRAY, AsmUtil.typeToSignature(componentType));
+	}
+
+	/**
+	 * Stores element on stack into an array.
+	 */
+	public static void storeIntoArray(MethodVisitor mv, Class componentType) {
+		if (componentType == int.class) {
+			mv.visitInsn(IASTORE);
+			return;
+		}
+		if (componentType == long.class) {
+			mv.visitInsn(LASTORE);
+			return;
+		}
+		if (componentType == float.class) {
+			mv.visitInsn(FASTORE);
+			return;
+		}
+		if (componentType == double.class) {
+			mv.visitInsn(DASTORE);
+			return;
+		}
+		if (componentType == byte.class) {
+			mv.visitInsn(BASTORE);
+			return;
+		}
+		if (componentType == short.class) {
+			mv.visitInsn(SASTORE);
+			return;
+		}
+		if (componentType == boolean.class) {
+			mv.visitInsn(BASTORE);
+			return;
+		}
+		if (componentType == char.class) {
+			mv.visitInsn(CASTORE);
+			return;
+		}
+
+		mv.visitInsn(AASTORE);
+	}
 
 	// ---------------------------------------------------------------- detect advice macros
 
@@ -671,6 +857,24 @@ public class ProxettaAsmUtil {
 	public static boolean isInfoMethod(String name, String desc) {
 		if (name.equals("info")) {
 			if (desc.equals("()Ljodd/proxetta/ProxyTargetInfo;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isTargetMethodAnnotationMethod(String name, String desc) {
+		if (name.equals("targetMethodAnnotation")) {
+			if (desc.equals("(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isTargetClassAnnotationMethod(String name, String desc) {
+		if (name.equals("targetClassAnnotation")) {
+			if (desc.equals("(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;")) {
 				return true;
 			}
 		}

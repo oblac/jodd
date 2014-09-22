@@ -6,6 +6,7 @@ import jodd.proxetta.data.*;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
 import jodd.proxetta.pointcuts.AllMethodsPointcut;
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -73,14 +74,14 @@ public class SubclassTest {
 		Foo foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta1", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		builder = proxyProxetta.builder();
 		builder.setTarget(Foo.class);
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Proxetta2", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Proxetta", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Ppp");
 		builder = proxyProxetta.builder();
@@ -88,7 +89,7 @@ public class SubclassTest {
 		foo = (Foo) builder.newInstance();
 
 		assertNotNull(foo);
-		assertEquals(Foo.class.getName() + "$$Ppp3", foo.getClass().getName());
+		assertEquals(Foo.class.getName() + "$$Ppp", StringUtil.substring(foo.getClass().getName(), 0, -1));
 
 		proxyProxetta.setClassNameSuffix("$$Proxetta");
 		proxyProxetta.setVariableClassName(false);

@@ -157,7 +157,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					return null;
 				}
 
-				return new IntArgHistoryMethodAdapter(mv) {
+				return new HistoryMethodAdapter(mv) {
 
 					@Override
 					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
@@ -240,24 +240,24 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 										visitReturn(mv, td.msign, false);
 									}
 									return;
-								} else
+								}
 
 								if (isArgumentsCountMethod(mname, mdesc)) {		// [R2]
 									ProxyTargetReplacement.argumentsCount(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isArgumentTypeMethod(mname, mdesc)) {      // [R3]
 									int argIndex = this.getArgumentIndex();
 									ProxyTargetReplacement.argumentType(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isArgumentMethod(mname, mdesc)) {           // [R4]
 									int argIndex = this.getArgumentIndex();
 									ProxyTargetReplacement.argument(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isSetArgumentMethod(mname, mdesc)) {           // [R5]
 									int argIndex = this.getArgumentIndex();
@@ -265,56 +265,78 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 									mv.visitInsn(POP);
 									storeMethodArgumentFromObject(mv, td.msign, argIndex);
 									return;
-								} else
+								}
 
 								if (isCreateArgumentsArrayMethod(mname, mdesc)) {  // [R6]
 									ProxyTargetReplacement.createArgumentsArray(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isCreateArgumentsClassArrayMethod(mname, mdesc)) {     // [R11]
 									ProxyTargetReplacement.createArgumentsClassArray(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethod(mname, mdesc)) {       // [R9.1]
 									mv.visitVarInsn(ALOAD, 0);
 									return;
-								} else
+								}
 
 								if (isTargetClassMethod(mname, mdesc)) {       // [R9]
 									ProxyTargetReplacement.targetClass(mv, td.msign);
 									//ProxyTargetReplacement.targetClass(mv, wd.superReference);
 									return;
-								} else
+								}
 
 								if (isTargetMethodNameMethod(mname, mdesc)) {  // [R10]
 									ProxyTargetReplacement.targetMethodName(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethodSignatureMethod(mname, mdesc)) {
 									ProxyTargetReplacement.targetMethodSignature(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isTargetMethodDescriptionMethod(mname, mdesc)) {
 									ProxyTargetReplacement.targetMethodDescription(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isInfoMethod(mname, mdesc)) {
 									ProxyTargetReplacement.info(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isReturnTypeMethod(mname, mdesc)) {        // [R11]
 									ProxyTargetReplacement.returnType(mv, td.msign);
 									return;
-								} else
+								}
 
 								if (isReturnValueMethod(mname, mdesc)) {
 									castToReturnType(mv, td.msign);
+									return;
+								}
+
+								if (isTargetMethodAnnotationMethod(mname, mdesc)) {
+									String[] args = getLastTwoStringArguments();
+
+									// pop current two args
+									mv.visitInsn(POP);
+									mv.visitInsn(POP);
+
+									ProxyTargetReplacement.targetMethodAnnotation(mv, td.msign, args);
+									return;
+								}
+
+								if (isTargetClassAnnotationMethod(mname, mdesc)) {
+									String[] args = getLastTwoStringArguments();
+
+									// pop current two args
+									mv.visitInsn(POP);
+									mv.visitInsn(POP);
+
+									ProxyTargetReplacement.targetClassAnnotation(mv, td.msign.getClassInfo(), args);
 									return;
 								}
 							}

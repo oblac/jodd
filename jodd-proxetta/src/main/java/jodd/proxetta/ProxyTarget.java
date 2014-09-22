@@ -140,6 +140,21 @@ public final class ProxyTarget {
 		throw new ProxettaException();
 	}
 
+	/**
+	 * Inserts targets method annotation value. Inserts <code>null</code>
+	 * if annotation or element is missing.
+	 */
+	public static Object targetMethodAnnotation(Class annotationClass, String element) {
+		throw new ProxettaException();
+	}
+	/**
+	 * Inserts targets class annotation value. Inserts <code>null</code>
+	 * if annotation or element is missing.
+	 */
+	public static Object targetClassAnnotation(Class annotationClass, String element) {
+		throw new ProxettaException();
+	}
+
 	// ---------------------------------------------------------------- info
 
 	/**

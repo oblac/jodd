@@ -134,7 +134,10 @@ final class ProxyAspectData {
 			 */
 			@Override
 			public void visitInnerClass(String name, String outerName, String innerName, int access) {
-				throw new ProxettaException("Proxetta doesn't allow inner classes in/for advice: " + advice.getName());
+				if (outerName.equals(adviceReference)) {
+					throw new ProxettaException("Proxetta doesn't allow inner classes in/for advice: " + advice.getName());
+				}
+				super.visitInnerClass(name, outerName, innerName, access);
 			}
 
 			/**

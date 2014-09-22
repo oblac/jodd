@@ -4,8 +4,10 @@ package jodd.proxetta;
 
 import jodd.proxetta.data.Abstra;
 import jodd.proxetta.data.Abstra2;
+import jodd.proxetta.data.Foo;
 import jodd.proxetta.data.FooProxyAdvice;
 import jodd.proxetta.data.Inter;
+import jodd.proxetta.data.InvalidAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import org.junit.Test;
 
@@ -54,6 +56,22 @@ public class AbstractsTest {
 			ProxyProxetta.withAspects(proxyAspect).builder(Inter.class).newInstance();
 			fail();
 		} catch (ProxettaException ignore) {
+		}
+	}
+
+	@Test
+	public void testAdviceWithInnerClass() {
+		ProxyAspect proxyAspect = new ProxyAspect(InvalidAdvice.class, new ProxyPointcut() {
+			public boolean apply(MethodInfo methodInfo) {
+				return true;
+			}
+		});
+
+		try {
+			ProxyProxetta.withAspects(proxyAspect).builder(Foo.class).newInstance();
+			fail();
+		} catch (ProxettaException ignore) {
+			System.out.println(ignore);
 		}
 
 	}
