@@ -98,7 +98,7 @@ public class JsonContext extends JsonWriter {
 	// ---------------------------------------------------------------- overwrite
 
 	/**
-	 * @{@inheritDoc}
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void pushName(String name, boolean withComma) {
@@ -112,7 +112,7 @@ public class JsonContext extends JsonWriter {
 	}
 
 	/**
-	 * @{@inheritDoc}
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeComma() {

@@ -189,7 +189,7 @@ public class EmailAddress {
 	 * WARNING: You may want to use getReturnPathAddress() instead if you're
 	 * looking for a clean version of the return path without CFWS, etc. See that
 	 * documentation first!
-	 * <p/>
+	 * <p>
 	 * Pull whatever's inside the angle brackets out, without alteration or cleaning.
 	 * This is more secure than a simple substring() since paths like:
 	 * <P><code>&lt;(my &gt; path) &gt;</code>

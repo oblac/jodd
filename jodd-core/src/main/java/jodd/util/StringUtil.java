@@ -270,7 +270,7 @@ public class StringUtil {
 
 	/**
 	 * Determines if string array contains empty strings.
-	 * @see #isEmpty(String) 
+	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isAllEmpty(String... strings) {
 		for (String string : strings) {

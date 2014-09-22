@@ -170,7 +170,7 @@ public class Jodd {
 	/**
 	 * Returns module instance if module is loaded. It may return:
 	 * <ul>
-	 *     <li>null - when module is not registered/li>
+	 *     <li>null - when module is not registered</li>
 	 *     <li>class - when module is registered, but not yet loaded</li>
 	 *     <li>object - when module is registered and loaded</li>
 	 * </ul>
