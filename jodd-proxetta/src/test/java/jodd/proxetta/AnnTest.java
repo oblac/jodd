@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 public class AnnTest {
 
 	@Test
-	public void testMethodAnnotations1() {
-		ProxyProxetta proxyProxetta = ProxyProxetta
+	public void testMethodAnnotationsProxy() {
+		ProxyProxetta proxetta = ProxyProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice.class,
 							new AllRealMethodsPointcut() {
@@ -33,7 +33,7 @@ public class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		ProxettaBuilder proxettaBuilder = proxyProxetta.builder();
+		ProxettaBuilder proxettaBuilder = proxetta.builder();
 		proxettaBuilder.setTarget(Hero.class);
 		Hero hero = (Hero) proxettaBuilder.newInstance();
 
@@ -41,8 +41,8 @@ public class AnnTest {
 	}
 
 	@Test
-	public void testMethodAnnotations2() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		WrapperProxetta proxyProxetta = WrapperProxetta
+	public void testMethodAnnotationsWrapper() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		WrapperProxetta proxetta = WrapperProxetta
 				.withAspects(
 					new ProxyAspect(HeroProxyAdvice.class,
 							new AllRealMethodsPointcut() {
@@ -57,7 +57,7 @@ public class AnnTest {
 				//.setDebugFolder("/Users/igor/")
 				;
 
-		WrapperProxettaBuilder proxettaBuilder = proxyProxetta.builder();
+		WrapperProxettaBuilder proxettaBuilder = proxetta.builder();
 		proxettaBuilder.setTarget(Hero.class);
 		Object hero = proxettaBuilder.newInstance();
 

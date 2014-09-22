@@ -14,6 +14,7 @@ import jodd.asm5.Label;
 import jodd.asm5.MethodVisitor;
 import jodd.asm5.Type;
 
+import static jodd.asm5.Opcodes.POP;
 import static jodd.proxetta.asm.ProxettaAsmUtil.INIT;
 import static jodd.asm5.Opcodes.ALOAD;
 import static jodd.asm5.Opcodes.DUP;
@@ -25,6 +26,7 @@ import static jodd.asm5.Opcodes.NEW;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isArgumentTypeMethod;
 import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
+import static jodd.proxetta.asm.ProxettaAsmUtil.isTargetMethodAnnotationMethod;
 
 /**
  * Invocation replacer method adapter.
@@ -176,6 +178,19 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 				wd.proxyApplied = true;
 				return;
 			}
+
+			if (isTargetMethodAnnotationMethod(name, desc)) {
+				String[] args = getLastTwoStringArguments();
+
+				// pop current two args
+				mv.visitInsn(POP);
+				mv.visitInsn(POP);
+
+				ProxyTargetReplacement.targetMethodAnnotation(mv, methodInfo, args);
+				wd.proxyApplied = true;
+				return;
+			}
+
 
 			super.visitMethodInsn(opcode, owner, name, desc);
 			return;
