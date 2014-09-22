@@ -67,7 +67,7 @@ public interface MethodInfo {
 	 * It is not equal to argument count, as some types
 	 * takes 2 places, like <code>long</code>.
 	 */
-	public int getAllArgumentsSize();
+	int getAllArgumentsSize();
 
 	/**
 	 * Returns return type opcode.

@@ -9,9 +9,14 @@ import static jodd.asm5.Opcodes.*;
 import jodd.proxetta.ProxettaException;
 
 /**
- * Method adapter that remembers previous opcode of 'insn' and 'intInsn' instructions.
- * Used to detect single (last) int argument value of a method call.
+ * Method adapter that tracks history of previous instructions.
+ * <ul>
+ * <li>that remembers previous opcode of 'insn' and 'intInsn' instructions.
+  * Used to detect single (last) int argument value of a method call.</li>
+ * <li>Stores last two arguments as strings</li>
+ * </ul>
  */
+// todo change name
 abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 
 	protected IntArgHistoryMethodAdapter(MethodVisitor methodVisitor) {
@@ -61,11 +66,11 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 	}
 
 	/**
-	 * Adds string to a string-argument history.
+	 * Adds last LDC arguments to {@link #getLastTwoStringArguments() string arguments}.
 	 */
-	private void keepStringArgument(String string) {
+	private void keepStringArgument(Object value) {
 		strArgs[0] = strArgs[1];
-		strArgs[1] = string;
+		strArgs[1] = value.toString();
 	}
 
 	// ---------------------------------------------------------------- visitors
@@ -127,9 +132,7 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 		isPrevious = false;
 		traceNext = false;
 
-		if (cst instanceof String) {
-			keepStringArgument((String) cst);
-		}
+		keepStringArgument(cst);
 
 		super.visitLdcInsn(cst);
 	}
@@ -164,9 +167,12 @@ abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
 
 	@Override
 	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+		//super.visitLocalVariable(name, desc, signature, start, end, index);
 	}
 
 	@Override
 	public void visitLineNumber(int line, Label start) {
+		//super.visitLineNumber(line, start);
 	}
+
 }

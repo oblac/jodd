@@ -7,6 +7,10 @@ import jodd.asm5.MethodVisitor;
 import jodd.asm5.Opcodes;
 import jodd.asm5.Type;
 import jodd.proxetta.asm.ProxettaAsmUtil;
+import jodd.util.ClassLoaderUtil;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 
 import static jodd.asm5.Opcodes.AASTORE;
 import static jodd.asm5.Opcodes.ANEWARRAY;
@@ -174,22 +178,85 @@ public class ProxyTargetReplacement {
 	}
 
 	/**
-	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(String, String)}.
+	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(Class, String)}.
 	 */
 	public static void targetMethodAnnotation(MethodVisitor mv, MethodInfo methodInfo, String[] args) {
 		AnnotationInfo[] anns = methodInfo.getAnnotations();
 
 		if (anns != null) {
 			for (AnnotationInfo ann : anns) {
-				String annClassName = ann.getAnnotationClassname();
+				String annotationSignature = ann.getAnnotationSignature();
+				Method annotationMethod = null;
 
-				if (annClassName.equals(args[0])) {
-					Object elementValue = ann.getElement(args[1]);
+				if (annotationSignature.equals(args[0])) {
+					String elementName = args[1];
+					Object elementValue = ann.getElement(elementName);
 
-					if (elementValue instanceof String) {
-						mv.visitLdcInsn(elementValue);
+					if (elementValue == null) {
+						// read default annotation
+						String annotationClass = ann.getAnnotationClassname();
+
+						try {
+							Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+
+							annotationMethod = annotation.getMethod(elementName);
+
+							elementValue = annotationMethod.getDefaultValue();
+						}
+						catch (Exception ignore) {
+							elementValue = null;
+						}
+
+						if (elementValue == null) {
+							mv.visitInsn(Opcodes.ACONST_NULL);
+							return;
+						}
 					}
-					// todo add more types
+
+					Class elementValueClass = elementValue.getClass();
+
+					if (!elementValueClass.isArray()) {
+						// non-arrays
+						ProxettaAsmUtil.visitElementValue(mv, elementValue, true);
+						return;
+					}
+					else {
+						// arrays
+						Class componentType = elementValueClass.getComponentType();
+
+						String annotationClass = ann.getAnnotationClassname();
+
+						try {
+							if (annotationMethod == null) {
+								Class annotation = ClassLoaderUtil.loadClass(annotationClass);
+
+								annotationMethod = annotation.getMethod(elementName);
+							}
+
+							componentType = annotationMethod.getReturnType().getComponentType();
+						}
+						catch (Exception ignore) {
+						}
+
+						int size = Array.getLength(elementValue);
+
+						ProxettaAsmUtil.pushInt(mv, size);
+
+						ProxettaAsmUtil.newArray(mv, componentType);
+
+						for (int i = 0; i < size; i++) {
+							mv.visitInsn(DUP);
+
+							ProxettaAsmUtil.pushInt(mv, i);
+
+							Object value = Array.get(elementValue, i);
+							ProxettaAsmUtil.visitElementValue(mv, value, false);
+
+							ProxettaAsmUtil.storeIntoArray(mv, componentType);
+						}
+
+						return;
+					}
 				}
 			}
 		}
