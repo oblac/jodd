@@ -46,7 +46,7 @@ public class SubclassTest {
 		assertNotNull(fooProxyClass);
 
 		Method[] methods = fooProxyClass.getMethods();
-		assertEquals(11, methods.length);
+		assertEquals(12, methods.length);
 		try {
 			fooProxyClass.getMethod("m1");
 		} catch (NoSuchMethodException nsmex) {
@@ -55,7 +55,7 @@ public class SubclassTest {
 
 
 		methods = fooProxyClass.getDeclaredMethods();
-		assertEquals(13, methods.length);
+		assertEquals(15, methods.length);
 		try {
 			fooProxyClass.getDeclaredMethod("m2");
 		} catch (NoSuchMethodException nsmex) {

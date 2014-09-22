@@ -234,10 +234,13 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	static class MethodAnnotationReader extends EmptyMethodVisitor {
 
 		final List<AnnotationInfo> methodAnns = new ArrayList<AnnotationInfo>();
+		final List<AnnotationInfo>[] methodParamsAnns;
+
 		final MethodSignatureVisitor msign;
 
 		MethodAnnotationReader(MethodSignatureVisitor msign) {
 			this.msign = msign;
+			this.methodParamsAnns = new ArrayList[msign.getAllArgumentsSize()];
 		}
 
 		@Override
@@ -248,9 +251,31 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		}
 
 		@Override
+		public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+			AnnotationReader ar = new AnnotationReader(desc, visible);
+			if (methodParamsAnns[parameter] == null) {
+				methodParamsAnns[parameter] = new ArrayList<AnnotationInfo>();
+			}
+
+			methodParamsAnns[parameter].add(ar);
+
+			return ar;
+		}
+
+		@Override
 		public void visitEnd() {
 			if (methodAnns.isEmpty() == false) {
 				msign.annotations = methodAnns.toArray(new AnnotationInfo[methodAnns.size()]);
+			}
+
+			msign.argumentsAnnotation = new AnnotationInfo[methodParamsAnns.length][];
+
+			for (int i = 0; i < methodParamsAnns.length; i++) {
+				List<AnnotationInfo> methodParamsAnn = methodParamsAnns[i];
+
+				if (methodParamsAnn != null) {
+					msign.argumentsAnnotation[i] = methodParamsAnn.toArray(new AnnotationInfo[methodParamsAnn.size()]);
+				}
 			}
 		}
 	}

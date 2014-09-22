@@ -16,4 +16,8 @@ public class Foo {
 
 	public String a2;
 
+	public String p1(@FooAnn String in) {
+		return in;
+	}
+
 }

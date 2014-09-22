@@ -41,6 +41,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected CharArrayList argumentsOpcodeType;
 	protected IntArrayList argumentsOffset;
 	protected List<String> argumentsTypeNames;
+	protected AnnotationInfo[][] argumentsAnnotation;
 
 	protected String declaredClassName;
 
@@ -201,6 +202,10 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 
 	public int getArgumentOffset(int index) {
 		return argumentsOffset.get(index);
+	}
+
+	public AnnotationInfo[] getArgumentAnnotations(int index) {
+		return argumentsAnnotation[index];
 	}
 
 	public int getAllArgumentsSize() {

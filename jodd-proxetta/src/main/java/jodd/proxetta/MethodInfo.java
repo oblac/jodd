@@ -63,6 +63,11 @@ public interface MethodInfo {
 	int getArgumentOffset(int index);
 
 	/**
+	 * Returns annotations for given argument.
+	 */
+	AnnotationInfo[] getArgumentAnnotations(int index);
+
+	/**
 	 * Returns size of all arguments on stack.
 	 * It is not equal to argument count, as some types
 	 * takes 2 places, like <code>long</code>.
