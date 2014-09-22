@@ -2,23 +2,12 @@
 
 package jodd.util;
 
+import jodd.Jodd;
+
 /**
  * Runtime utilities.
  */
 public class RuntimeUtil {
-
-	public static final Runtime RUNTIME = Runtime.getRuntime();
-
-	// ---------------------------------------------------------------- execution
-
-	/**
-	 * Returns current method signature.
-	 */
-	public static String currentMethod() {
-		StackTraceElement[] ste = new Exception().getStackTrace();
-		int ndx = (ste.length > 1) ? 1 : 0;
-		return new Exception().getStackTrace()[ndx].toString();
-	}
 
 	// ---------------------------------------------------------------- memory
 
@@ -26,14 +15,14 @@ public class RuntimeUtil {
 	 * Returns the amount of available memory (free memory plus never allocated memory).
 	 */
 	public static long availableMemory() {
-		return RUNTIME.freeMemory() + (RUNTIME.maxMemory() - RUNTIME.totalMemory());
+		return Runtime.getRuntime().freeMemory() + (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory());
 	}
 
 	/**
 	 * Returns the amount of available memory in percents.
 	 */
 	public static float availableMemoryPercent() {
-		return availableMemory() * 100.0f / RUNTIME.maxMemory();
+		return availableMemory() * 100.0f / Runtime.getRuntime().maxMemory();
 	}
 
 	/**
@@ -62,11 +51,11 @@ public class RuntimeUtil {
 	}
 
 	/**
-	 * Returns jodd location.
+	 * Returns Jodd {@link #classLocation(Class) location}.
 	 * @see #classLocation
 	 */
 	public static String joddLocation() {
-		return classLocation(RuntimeUtil.class);
+		return classLocation(Jodd.class);
 	}
 
 }
