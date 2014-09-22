@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.FileFilter;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
@@ -105,6 +106,21 @@ public class FileUtil {
 		String filename = url.getFile().replace('/', File.separatorChar);
 
 		return URLDecoder.decode(filename, JoddCore.encoding);
+	}
+
+	/**
+	 * Returns a file of either a folder or a containing archive.
+	 */
+	public static File toContainerFile(URL url) {
+		String protocol = url.getProtocol();
+		if (protocol.equals("file")) {
+			return toFile(url);
+		}
+
+		String path = url.getPath();
+
+		return new File(URI.create(
+				path.substring(0, path.lastIndexOf("!/"))));
 	}
 
 	// ---------------------------------------------------------------- mkdirs

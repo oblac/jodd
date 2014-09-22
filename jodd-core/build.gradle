@@ -4,6 +4,7 @@ ext.moduleDescription = 'Jodd Core tools and utilities, including type converter
 
 dependencies {
 	testCompile lib.junit
+	testCompile 'org.webjars:jquery:2.1.1'
 }
 
 jar {

@@ -3,10 +3,14 @@
 package jodd.util;
 
 import jodd.core.JoddCore;
+import jodd.io.FileUtil;
+import jodd.io.findfile.ClassScanner;
+import jodd.mutable.ValueHolder;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -121,4 +125,28 @@ public class ClassLoaderUtilTest {
 	public static class Dummy {
 	}
 
+	@Test
+	public void testWebJars() {
+		URL url = ClassLoaderUtil.getResourceUrl("/META-INF/resources/webjars/jquery");
+
+		File containerFile = FileUtil.toContainerFile(url);
+
+		final ValueHolder<String> jqueryName = new ValueHolder<String>();
+
+		ClassScanner classScanner = new ClassScanner() {
+			@Override
+			protected void onEntry(EntryData entryData) throws Exception {
+				if (entryData.getName().endsWith("jquery.js")) {
+					jqueryName.setValue(entryData.getName());
+				}
+			}
+		};
+
+		classScanner.setIncludeResources(true);
+		classScanner.scan(containerFile);
+
+		assertNotNull(url);
+
+		assertEquals("/META-INF/resources/webjars/jquery/2.1.1/jquery.js", jqueryName.getValue());
+	}
 }
