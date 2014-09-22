@@ -32,7 +32,7 @@ public class AnnTest {
 		proxettaBuilder.setTarget(Hero.class);
 		Hero hero = (Hero) proxettaBuilder.newInstance();
 
-		assertEquals("BatmanHero37W88.3CatWoman99", hero.name());
+		assertEquals("BatmanHero37W88.3CatWoman99speeeeedXRAY", hero.name());
 	}
 
 }

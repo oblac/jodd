@@ -2,6 +2,17 @@ package jodd.proxetta.data;
 
 public class Hero {
 
+	public static enum POWER {
+		STRENGTH,
+		XRAY,
+		SPEED {
+			@Override
+			public String toString() {
+				return "speeeeed";
+			}
+		}
+	}
+
 	@HeroName(
 			value = "Batman",
 			secret = 37,

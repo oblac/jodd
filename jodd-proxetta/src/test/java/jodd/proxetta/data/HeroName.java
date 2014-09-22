@@ -15,4 +15,8 @@ public @interface HeroName {
 	String[] helpers();
 
 	int[] enemies();
+
+	Hero.POWER power2() default Hero.POWER.SPEED;
+
+	Hero.POWER[] subpowers() default {Hero.POWER.XRAY};
 }
