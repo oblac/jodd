@@ -29,7 +29,7 @@ import static jodd.proxetta.asm.ProxettaAsmUtil.isInfoMethod;
 /**
  * Invocation replacer method adapter.
  */
-public class InvokeReplacerMethodAdapter extends IntArgHistoryMethodAdapter {
+public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 
 	protected final WorkData wd;
 	protected final MethodInfo methodInfo;

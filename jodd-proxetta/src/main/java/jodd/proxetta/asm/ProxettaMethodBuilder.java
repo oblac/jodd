@@ -157,7 +157,7 @@ public class ProxettaMethodBuilder extends EmptyMethodVisitor {
 					return null;
 				}
 
-				return new IntArgHistoryMethodAdapter(mv) {
+				return new HistoryMethodAdapter(mv) {
 
 					@Override
 					public void visitFieldInsn(int opcode, String owner, String name, String desc) {

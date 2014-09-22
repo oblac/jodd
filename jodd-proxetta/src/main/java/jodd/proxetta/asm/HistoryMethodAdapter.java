@@ -16,10 +16,9 @@ import jodd.proxetta.ProxettaException;
  * <li>Stores last two arguments as strings</li>
  * </ul>
  */
-// todo change name
-abstract class IntArgHistoryMethodAdapter extends MethodAdapter {
+abstract class HistoryMethodAdapter extends MethodAdapter {
 
-	protected IntArgHistoryMethodAdapter(MethodVisitor methodVisitor) {
+	protected HistoryMethodAdapter(MethodVisitor methodVisitor) {
 		super(methodVisitor);
 	}
 
