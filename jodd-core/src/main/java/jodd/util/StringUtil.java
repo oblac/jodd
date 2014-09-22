@@ -643,6 +643,7 @@ public class StringUtil {
 	 * allows to specify, e.g. <code>substring(1,-1)</code> to cut one character
 	 * from both ends of the string. If <code>fromIndex</code> is negative
 	 * and <code>toIndex</code> is 0, it will return last characters of the string.
+	 * Also, this method will never throw an exception if index is out of range.
 	 */
 	public static String substring(String string, int fromIndex, int toIndex) {
 		int len = string.length();
@@ -657,6 +658,18 @@ public class StringUtil {
 
 		if (toIndex < 0) {
 			toIndex = len + toIndex;
+		}
+
+		// safe net
+
+		if (fromIndex < 0) {
+			fromIndex = 0;
+		}
+		if (toIndex > len) {
+			toIndex = len;
+		}
+		if (fromIndex >= toIndex) {
+			return StringPool.EMPTY;
 		}
 
 		return string.substring(fromIndex, toIndex);

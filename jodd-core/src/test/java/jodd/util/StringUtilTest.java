@@ -1041,6 +1041,8 @@ public class StringUtilTest {
 	@Test
 	public void testSubstring() {
 		assertEquals("2", StringUtil.substring("123", 1, 2));
+		assertEquals("23", StringUtil.substring("123", 1, 2000));
+		assertEquals("123", StringUtil.substring("123", -1000, 2000));
 		assertEquals("", StringUtil.substring("123", 1, 1));
 
 		assertEquals("2", StringUtil.substring("123", 1, -1));
@@ -1050,6 +1052,12 @@ public class StringUtilTest {
 		assertEquals("2", StringUtil.substring("123", -2, -1));
 
 		assertEquals("23", StringUtil.substring("123", -2, 0));
+
+		assertEquals("AbCdE", StringUtil.substring("AbCdEf", 0, -1));
+		assertEquals("dEf", StringUtil.substring("AbCdEf", -3, 0));
+		assertEquals("dE", StringUtil.substring("AbCdEf", -3, -1));
+		assertEquals("AbCdE", StringUtil.substring("AbCdEf", -3000, -1));
+		assertEquals("", StringUtil.substring("AbCdEf", 1000, 2000));
 	}
 
 	@Test
