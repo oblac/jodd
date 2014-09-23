@@ -36,7 +36,24 @@ public class PropertyDescriptor extends Descriptor {
 		this.writeMethodDescriptor = writeMethod;
 
 		if (classDescriptor.isExtendedProperties()) {
-			this.fieldDescriptor = findField(propertyName);
+			String[] prefix = classDescriptor.getPropertyFieldPrefix();
+
+			FieldDescriptor fd = null;
+
+			if (prefix != null) {
+				for (String p : prefix) {
+					fd = findField(p + propertyName);
+
+					if (fd != null) {
+						break;
+					}
+				}
+			}
+			else {
+				fd = findField(propertyName);
+			}
+
+			this.fieldDescriptor = fd;
 		} else {
 			this.fieldDescriptor = null;
 		}
@@ -47,12 +64,6 @@ public class PropertyDescriptor extends Descriptor {
 	 * superclasses of current class.
 	 */
 	protected FieldDescriptor findField(String fieldName) {
-		String prefix = classDescriptor.getPropertyFieldPrefix();
-
-		if (prefix != null) {
-			fieldName = prefix + fieldName;
-		}
-
 		FieldDescriptor fieldDescriptor = classDescriptor.getFieldDescriptor(fieldName, true);
 
 		if (fieldDescriptor != null) {

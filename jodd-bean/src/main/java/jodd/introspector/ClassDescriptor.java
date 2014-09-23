@@ -32,12 +32,12 @@ public class ClassDescriptor {
 	protected final boolean scanAccessible;
 	protected final boolean extendedProperties;
 	protected final boolean includeFieldsAsProperties;
-	protected final String propertyFieldPrefix;
+	protected final String[] propertyFieldPrefix;
 	protected final Class[] interfaces;
 	protected final Class[] superclasses;
 	protected int usageCount;
 
-	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String propertyFieldPrefix) {
+	public ClassDescriptor(Class type, boolean scanAccessible, boolean extendedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
 		this.type = type;
 		this.scanAccessible = scanAccessible;
 		this.extendedProperties = extendedProperties;
@@ -86,10 +86,11 @@ public class ClassDescriptor {
 	}
 
 	/**
-	 * Returns property field prefix. May be <code>null</code>
-	 * if prefix is not set.
+	 * Returns property field prefixes. May be <code>null</code>
+	 * if prefixes are not set. If you need to access both prefixed
+	 * and non-prefixed fields, use empty string as one of the prefixes.
 	 */
-	public String getPropertyFieldPrefix() {
+	public String[] getPropertyFieldPrefix() {
 		return propertyFieldPrefix;
 	}
 

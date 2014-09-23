@@ -79,7 +79,7 @@ public class Properties {
 
 		if (classDescriptor.isIncludeFieldsAsProperties()) {
 			FieldDescriptor[] fieldDescriptors = classDescriptor.getAllFieldDescriptors();
-			String prefix = classDescriptor.getPropertyFieldPrefix();
+			String[] prefix = classDescriptor.getPropertyFieldPrefix();
 
 			for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
 				Field field = fieldDescriptor.getField();
@@ -91,10 +91,13 @@ public class Properties {
 				String name = field.getName();
 
 				if (prefix != null) {
-					if (!name.startsWith(prefix)) {
-						continue;
+					for (String p : prefix) {
+						if (!name.startsWith(p)) {
+							continue;
+						}
+						name = name.substring(p.length());
+						break;
 					}
-					name = name.substring(prefix.length());
 				}
 
 				if (!map.containsKey(name)) {

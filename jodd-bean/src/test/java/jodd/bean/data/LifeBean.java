@@ -18,4 +18,12 @@ public class LifeBean {
 	public String bar = "bar";
 	public String _bar = "_bar";
 
+
+	private String www = "http";
+	public String getWww() {
+		return www;
+	}
+	public void setWww(String www) {
+		this.www = www;
+	}
 }
