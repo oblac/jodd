@@ -481,6 +481,13 @@ public class ClassLoaderUtil {
 		return getResourceAsStream(getClassFileName(className));
 	}
 
+	/**
+	 * Opens a class of the specified name for reading using provided class loader.
+	 */
+	public static InputStream getClassAsStream(String className, ClassLoader classLoader) throws IOException {
+		return getResourceAsStream(getClassFileName(className), classLoader);
+	}
+
 	// ---------------------------------------------------------------- load class
 
 	/**
