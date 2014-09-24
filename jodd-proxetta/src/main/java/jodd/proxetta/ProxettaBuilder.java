@@ -177,7 +177,7 @@ public abstract class ProxettaBuilder {
 		}
 
 		// reads information
-		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader();
+		TargetClassInfoReader targetClassInfoReader = new TargetClassInfoReader(proxetta.getClassLoader());
 		classReader.accept(targetClassInfoReader, 0);
 
 		this.destClassWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);

@@ -39,11 +39,13 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected final Map<String, MethodSignatureVisitor> methodSignatures;
 	protected final List<ClassReader> superClassReaders;					// list of all super class readers
 	protected final Set<String> allMethodSignatures;
+	protected final ClassLoader classLoader;
 
-	public TargetClassInfoReader() {
+	public TargetClassInfoReader(ClassLoader classLoader) {
 		this.methodSignatures = new HashMap<String, MethodSignatureVisitor>();
 		this.superClassReaders = new ArrayList<ClassReader>();
 		this.allMethodSignatures = new HashSet<String>();
+		this.classLoader = classLoader;
 	}
 
 
@@ -175,7 +177,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			InputStream inputStream = null;
 			ClassReader cr = null;
 			try {
-				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername);
+				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername, classLoader);
 				cr = new ClassReader(inputStream);
 			} catch (IOException ioex) {
 				throw new ProxettaException("Unable to inspect super class: " + nextSupername, ioex);
@@ -199,7 +201,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 				InputStream inputStream = null;
 				ClassReader cr = null;
 				try {
-					inputStream = ClassLoaderUtil.getClassAsStream(next);
+					inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
 					cr = new ClassReader(inputStream);
 				} catch (IOException ioex) {
 					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
