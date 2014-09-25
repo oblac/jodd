@@ -547,10 +547,15 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- body form
 
+	protected boolean multipart = false;
+
 	/**
 	 * Returns <code>true</code> if form contains {@link jodd.http.up.Uploadable}.
 	 */
 	protected boolean isFormMultipart() {
+		if (multipart) {
+			return true;
+		}
 		for (Object[] values : form.values()) {
 			if (values == null) {
 				continue;
@@ -572,8 +577,6 @@ public abstract class HttpBase<T> {
 		if (form == null || form.isEmpty()) {
 			return StringPool.EMPTY;
 		}
-
-		// todo allow user to force usage of multipart
 
 		if (!isFormMultipart()) {
 			// determine form encoding

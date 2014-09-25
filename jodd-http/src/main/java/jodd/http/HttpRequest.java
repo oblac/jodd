@@ -276,6 +276,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	/**
+	 * Forces multipart requests. When set to <code>false</code>,
+	 * it will be {@link #isFormMultipart() detected} if request
+	 * should be multipart. By setting this to <code>true</code>
+	 * we are forcing usage of multipart request.
+	 */
+	public HttpRequest multipart(boolean multipart) {
+		this.multipart = true;
+		return this;
+	}
+
+
 	// ---------------------------------------------------------------- query
 
 	/**
