@@ -24,31 +24,31 @@ public class IntcptActionTest {
 
 	@Test
 	public void testIn1Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in1.html?foo=173").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in1.html?foo=173").send();
 		assertEquals("param:  = 173", response.bodyText().trim());
 	}
 
 	@Test
 	public void testIn2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.in2.html?foo=173&foo2=173").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.in2.html?foo=173&foo2=173").send();
 		assertEquals("param: 173 = 173", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppendingAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap.html").send();
 		assertEquals("value=appending<jodd>", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppending2Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap2.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap2.html").send();
 		assertEquals("value=appending2<heyp>", response.bodyText().trim());
 	}
 
 	@Test
 	public void testAppending3Action() {
-		HttpResponse response = HttpRequest.get("localhost:8080/cpt.inap3.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/cpt.inap3.html").send();
 		assertEquals("value=appending3<jodd>", response.bodyText().trim());
 	}
 

@@ -24,35 +24,35 @@ public class RouterTest {
 
 	@Test
 	public void testRouterFile() {
-		HttpResponse response = HttpRequest.get("localhost:8080/hello.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/hello.html").send();
 		assertEquals("hello", response.bodyText().trim());
 
-		response = HttpRequest.get("localhost:8080/helloWorld.html?name=Jupiter&data=3").send();
+		response = HttpRequest.get("localhost:8173/helloWorld.html?name=Jupiter&data=3").send();
 		assertEquals("Hello world planet Jupiter and Universe 3", response.bodyText().trim());
 
-		response = HttpRequest.get("localhost:8080/re/view/234").send();
+		response = HttpRequest.get("localhost:8173/re/view/234").send();
 		assertEquals("234", response.bodyText().trim());
 
-		response = HttpRequest.get("localhost:8080/alpha.ciao.html").send();
+		response = HttpRequest.get("localhost:8173/alpha.ciao.html").send();
 		assertEquals("alpha.hello.jsp", response.bodyText().trim());
 	}
 
 	@Test
 	public void testZigZag() {
-		HttpResponse response = HttpRequest.get("localhost:8080/zigzag/123").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/zigzag/123").send();
 		assertEquals("zigzag 123", response.bodyText().trim());
 	}
 
 	@Test
 	public void testUserWithRoute() {
-		HttpResponse response = HttpRequest.get("localhost:8080/sys/user/456").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/sys/user/456").send();
 		assertEquals("Huh 456.", response.bodyText().trim());
 	}
 
 	@Test
 	public void testBook() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/book/123").send();
+		response = HttpRequest.get("localhost:8173/book/123").send();
 
 		assertEquals("MyBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}

@@ -25,7 +25,7 @@ public class TagActionTest {
 	@Test
 	public void testDisableTag() {
 		HttpResponse response = HttpRequest
-				.get("localhost:8080/tag/disable/123")
+				.get("localhost:8173/tag/disable/123")
 				.send();
 		assertEquals("disable-Tag{123:jodd}", response.bodyText().trim());
 	}
@@ -33,7 +33,7 @@ public class TagActionTest {
 	@Test
 	public void testDeleteTag() {
 		HttpResponse response = HttpRequest
-				.get("localhost:8080/tag/delete/123")
+				.get("localhost:8173/tag/delete/123")
 				.send();
 		assertEquals("delete-Tag{123:jodd}", response.bodyText().trim());
 	}
@@ -41,7 +41,7 @@ public class TagActionTest {
 	@Test
 	public void testEditTag() {
 		HttpResponse response = HttpRequest
-				.get("localhost:8080/tag/edit/123")
+				.get("localhost:8173/tag/edit/123")
 				.query("tag.name", "ddoj")
 				.send();
 		assertEquals("edit-Tag{123:ddoj}", response.bodyText().trim());
@@ -50,7 +50,7 @@ public class TagActionTest {
 	@Test
 	public void testSaveTag() {
 		HttpResponse response = HttpRequest
-				.get("localhost:8080/tag/save/123")
+				.get("localhost:8173/tag/save/123")
 				.query("tag.name", "JODD")
 				.send();
 		assertEquals("save-Tag{123:JODD}", response.bodyText().trim());

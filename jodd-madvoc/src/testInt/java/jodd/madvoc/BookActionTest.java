@@ -25,7 +25,7 @@ public class BookActionTest {
 	@Test
 	public void testBookGet() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/book/123").send();
+		response = HttpRequest.get("localhost:8173/book/123").send();
 
 		assertEquals("MyBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}
@@ -33,7 +33,7 @@ public class BookActionTest {
 	@Test
 	public void testBookPost() {
 		HttpResponse response;
-		response = HttpRequest.post("localhost:8080/book/123").send();
+		response = HttpRequest.post("localhost:8173/book/123").send();
 
 		assertEquals("NewBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}
@@ -41,7 +41,7 @@ public class BookActionTest {
 	@Test
 	public void testBookPut() {
 		HttpResponse response;
-		response = HttpRequest.put("localhost:8080/book/123").send();
+		response = HttpRequest.put("localhost:8173/book/123").send();
 
 		assertEquals("OldBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}

@@ -24,7 +24,7 @@ public class OneTwoActionTest {
 
 	@Test
 	public void testOneRedirectAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/oneRedirect.html").send();
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
@@ -36,7 +36,7 @@ public class OneTwoActionTest {
 
 	@Test
 	public void testOneMoveAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/oneMove.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/oneMove.html").send();
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
@@ -48,7 +48,7 @@ public class OneTwoActionTest {
 
 	@Test
 	public void testOneMoveGoAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/oneMove.go.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/oneMove.go.html").send();
 		assertEquals("", response.bodyText());
 		assertEquals(302, response.statusCode());
 
@@ -60,7 +60,7 @@ public class OneTwoActionTest {
 
 	@Test
 	public void testOneRedirectPermanentAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/oneRedirect.perm.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/oneRedirect.perm.html").send();
 		assertEquals("", response.bodyText());
 		assertEquals(301, response.statusCode());
 

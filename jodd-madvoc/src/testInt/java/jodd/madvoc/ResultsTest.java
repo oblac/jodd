@@ -30,7 +30,7 @@ public class ResultsTest {
 
 	@Test
 	public void testRawResult() {
-		HttpResponse httpResponse = HttpRequest.get("localhost:8080/madvocRawImage").send();
+		HttpResponse httpResponse = HttpRequest.get("localhost:8173/madvocRawImage").send();
 		assertEquals(200, httpResponse.statusCode());
 		assertEquals("image/gif", httpResponse.contentType());
 		byte[] bytes = httpResponse.bodyBytes();
@@ -41,7 +41,7 @@ public class ResultsTest {
 
 	@Test
 	public void testEncoding() {
-		HttpResponse httpResponse = HttpRequest.get("localhost:8080/madvocEncoding").send();
+		HttpResponse httpResponse = HttpRequest.get("localhost:8173/madvocEncoding").send();
 		assertEquals(200, httpResponse.statusCode());
 		assertEquals("text/plain;charset=UTF-8", httpResponse.contentType());
 		assertEquals("this text contents chinese chars 中文", httpResponse.bodyText());

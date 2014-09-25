@@ -82,8 +82,8 @@ public class EncodingTest {
 	private void testRequestEncoding(int i) throws IOException {
 		HttpRequest request =
 				(i == 1 || i == 2) ?
-				HttpRequest.get("http://localhost:8080/echo?id=12"):
-				HttpRequest.post("http://localhost:8080/echo?id=12");
+				HttpRequest.get("http://localhost:8173/echo?id=12"):
+				HttpRequest.post("http://localhost:8173/echo?id=12");
 
 		String utf8String = (i == 1 || i == 3) ? "Hello!" : "хелло!";
 		byte[] utf8Bytes = utf8String.getBytes(StringPool.UTF_8);
@@ -135,7 +135,7 @@ public class EncodingTest {
 	private void testFormParams(int i) {
 		String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.post("http://localhost:8080/echo2");
+		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
 		request.formEncoding(encoding);
 
 		if (i == 3) {
@@ -180,7 +180,7 @@ public class EncodingTest {
 	private void testQueryParams(int i) throws IOException {
 		String encoding = i == 1 ?  "UTF-8" : "CP1251";
 
-		HttpRequest request = HttpRequest.get("http://localhost:8080/echo2");
+		HttpRequest request = HttpRequest.get("http://localhost:8173/echo2");
 		request.queryEncoding(encoding);
 
 		String value1 = "value";

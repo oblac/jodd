@@ -25,7 +25,7 @@ public class AsyncTest {
 	@Test
 	public void testAsync() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/async.html").send();
+		response = HttpRequest.get("localhost:8173/async.html").send();
 
 		assertEquals("async TASK!", response.bodyText().trim());
 	}

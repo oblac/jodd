@@ -35,7 +35,7 @@ public class HttpBrowserTest {
 		HttpBrowser httpBrowser = new HttpBrowser();
 
 		httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8080/echo?id=17").bodyText("hello"));
+				HttpRequest.get("localhost:8173/echo?id=17").bodyText("hello"));
 		HttpResponse httpResponse = httpBrowser.getHttpResponse();
 
 		assertNotNull(httpResponse);

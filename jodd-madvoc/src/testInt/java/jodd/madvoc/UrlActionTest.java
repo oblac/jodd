@@ -24,19 +24,19 @@ public class UrlActionTest {
 
 	@Test
 	public void testOneAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/foo/hello").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/foo/hello").send();
 		assertEquals("/foo/hello.ok.jsp", response.bodyText().trim());
 	}
 
 	@Test
 	public void testTwoAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/foo/boo.zoo/two.exec.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/foo/boo.zoo/two.exec.html").send();
 		assertEquals("/foo/boo.zoo/two.exec.jsp", response.bodyText().trim());
 	}
 
 	@Test
 	public void testUrlRewrite() {
-		HttpResponse response = HttpRequest.get("localhost:8080/f__o_o/h_e_l_l_o").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/f__o_o/h_e_l_l_o").send();
 		assertEquals("/foo/hello.ok.jsp", response.bodyText().trim());
 	}
 }

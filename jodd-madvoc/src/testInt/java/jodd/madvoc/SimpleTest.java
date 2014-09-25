@@ -24,7 +24,7 @@ public class SimpleTest {
 
 	@Test
 	public void testHelloAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/hello.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/hello.html").send();
 		assertEquals("hello", response.bodyText().trim());
 	}
 

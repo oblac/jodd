@@ -26,7 +26,7 @@ public class ArgsTest {
 	@Test
 	public void testArgs() {
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/args.hello.html?id=1").send();
+		response = HttpRequest.get("localhost:8173/args.hello.html?id=1").send();
 
 		assertEquals("+ mad 1voc + jodd 1", response.bodyText().trim());
 	}
@@ -35,7 +35,7 @@ public class ArgsTest {
 	public void testArgs2() {
 		ArgsAction.User.counter = 0;
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/args.world.html")
+		response = HttpRequest.get("localhost:8173/args.world.html")
 				.query("who", "me")
 				.query("name", "Jupiter")
 				.query("hello.id", "1")
@@ -50,7 +50,7 @@ public class ArgsTest {
 	public void testArgs3() {
 		ArgsAction.User.counter = 0;
 		HttpResponse response;
-		response = HttpRequest.get("localhost:8080/args.user.html")
+		response = HttpRequest.get("localhost:8173/args.user.html")
 				.query("user.id", "3")
 				.query("user.username", "Frank")
 				.send();

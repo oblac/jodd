@@ -30,7 +30,7 @@ public class TomcatTestServer {
 		String workingDir = System.getProperty("java.io.tmpdir");
 
 		tomcat = new Tomcat();
-		tomcat.setPort(8080);
+		tomcat.setPort(8173);
 		tomcat.setBaseDir(workingDir);
 		tomcat.addWebapp("/", webRoot.getAbsolutePath());
 

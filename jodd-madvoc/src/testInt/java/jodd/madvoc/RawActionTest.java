@@ -24,19 +24,19 @@ public class RawActionTest {
 
 	@Test
 	public void testRawAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/raw.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.html").send();
 		assertEquals("this is some raw direct result", response.bodyText().trim());
 	}
 
 	@Test
 	public void testRawTextAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/raw.text.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.text.html").send();
 		assertEquals("some raw txt", response.bodyText().trim());
 	}
 
 	@Test
 	public void testRawDownloadAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/raw.download").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/raw.download").send();
 		assertEquals("attachment;filename=\"jodd-download.txt\"", response.header("content-disposition"));
 		assertEquals("file from jodd.org!", response.bodyText().trim());
 	}

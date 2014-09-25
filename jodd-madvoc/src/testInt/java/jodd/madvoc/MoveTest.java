@@ -27,7 +27,7 @@ public class MoveTest {
 	public void testMoveWithFiles() {
 		HttpResponse response;
 		response = HttpRequest
-				.post("localhost:8080/mv/upload.html")
+				.post("localhost:8173/mv/upload.html")
 				.form("uploadFiles[0]", new ByteArrayUploadable(new byte[] {65, 66, 67}, "hello.txt"))
 				.form("uploadFiles[1]", new byte[] {75, 77, 78})
 				.form("uploadFileNames[0]", "a1")

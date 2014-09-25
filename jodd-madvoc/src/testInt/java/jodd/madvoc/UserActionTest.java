@@ -27,7 +27,7 @@ public class UserActionTest {
 	public void testUserActionGet() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 		HttpResponse response = httpBrowser.sendRequest(
-				HttpRequest.get("localhost:8080/sys/user/123"));
+				HttpRequest.get("localhost:8173/sys/user/123"));
 
 		assertEquals("Huh 123.", response.bodyText().trim());
 	}
@@ -36,7 +36,7 @@ public class UserActionTest {
 	public void testUserActionPost() {
 		HttpBrowser httpBrowser = new HttpBrowser();
 		HttpResponse response = httpBrowser.sendRequest(
-				HttpRequest.post("localhost:8080/sys/user/123"));
+				HttpRequest.post("localhost:8173/sys/user/123"));
 
 		assertEquals("Post 123.", response.bodyText().trim());
 	}

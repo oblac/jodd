@@ -24,7 +24,7 @@ public class FilterTest {
 
 	@Test
 	public void testFilterAction() {
-		HttpResponse response = HttpRequest.get("localhost:8080/filter.html").send();
+		HttpResponse response = HttpRequest.get("localhost:8173/filter.html").send();
 		assertEquals("Hello.peep!peep!", response.bodyText().trim());
 	}
 

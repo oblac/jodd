@@ -24,13 +24,13 @@ public class JsppLiveTest {
 
 	@Test
 	public void testSimpleJspp() {
-		HttpResponse response = HttpRequest.get("http://localhost:8080/hello.html").send();
+		HttpResponse response = HttpRequest.get("http://localhost:8173/hello.html").send();
 
 		assertEquals("Hello world Jupiter! zap!", response.bodyText());
 
 		// send it again
 
-		response = HttpRequest.get("http://localhost:8080/hello.html").send();
+		response = HttpRequest.get("http://localhost:8173/hello.html").send();
 
 		assertEquals("Hello world Jupiter! zap!", response.bodyText());
 	}

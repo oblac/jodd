@@ -26,7 +26,7 @@ public class ExcTest {
 	@Test
 	public void testException() {
 		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8080/exc.html"));
+		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.html"));
 
 		assertEquals("500!", response.bodyText().trim());
 	}
@@ -34,7 +34,7 @@ public class ExcTest {
 	@Test
 	public void testRedirect500() {
 		HttpBrowser httpBrowser = new HttpBrowser();
-		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8080/exc.red.html"));
+		HttpResponse response = httpBrowser.sendRequest(HttpRequest.get("localhost:8173/exc.red.html"));
 
 		assertEquals("500!", response.bodyText().trim());
 	}
