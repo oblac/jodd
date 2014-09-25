@@ -30,14 +30,14 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 		super(request);
 		req = request;
 		if (ServletUtil.isMultipartRequest(request)) {
-			mreq = MultipartRequest.getParsedInstance(request, fileUploadFactory, encoding);
+			mreq = MultipartRequest.getInstance(request, fileUploadFactory, encoding);
 		}
 	}
 
 	public MultipartRequestWrapper(HttpServletRequest request, FileUploadFactory fileUploadFactory) throws IOException {
 		super(request);
 		if (ServletUtil.isMultipartRequest(request)) {
-			mreq = MultipartRequest.getParsedInstance(request, fileUploadFactory);
+			mreq = MultipartRequest.getInstance(request, fileUploadFactory, null);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 	 * @see javax.servlet.http.HttpServletRequest#getParameterMap()
 	 */
 	@Override
-	public Map getParameterMap() {
+	public Map<String, String[]> getParameterMap() {
 		if (mreq == null) {
 			return super.getParameterMap();
 		}

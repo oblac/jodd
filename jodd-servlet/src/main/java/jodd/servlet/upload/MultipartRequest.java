@@ -63,28 +63,6 @@ public class MultipartRequest extends MultipartStreamParser {
 
 	// ---------------------------------------------------------------- constructors
 
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request) {
-		this(request, null, null);
-	}
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request, FileUploadFactory fileUploadFactory) {
-		this(request, fileUploadFactory, null);
-	}
-
-	/**
-	 * @see #MultipartRequest(javax.servlet.http.HttpServletRequest, FileUploadFactory, String)
-	 */
-	public MultipartRequest(HttpServletRequest request, String encoding) {
-		this(request, null, encoding);
-	}
-
 	/**
 	 * Creates new multi-part request with form encoding and file upload factory.
 	 * After construction stream is <b>not</b> yet parsed! Use {@link #parseMultipartRequest()} or
@@ -121,60 +99,25 @@ public class MultipartRequest extends MultipartStreamParser {
 	private static final String MREQ_ATTR_NAME = MultipartRequest.class.getName();
 
 	/**
-	 * Returns a new instance of MultipleRequest if it was not created before during current request.
+	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) {
+	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
 		MultipartRequest mreq = (MultipartRequest) request.getAttribute(MREQ_ATTR_NAME);
 		if (mreq == null) {
 			mreq = new MultipartRequest(request, fileUploadFactory, encoding);
 			request.setAttribute(MREQ_ATTR_NAME, mreq);
 		}
+		if (mreq.isParsed() == false) {
+			mreq.parseRequest();
+		}
 		return mreq;
 	}
 
 	/**
-	 * Returns parsed instance of MultipartRequest.
+	 * Returns new or existing instance of <code>MultipartRequest</code>.
 	 */
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory, String encoding) throws IOException {
-		MultipartRequest mreq = getInstance(request, fileUploadFactory, encoding);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-	public static MultipartRequest getInstance(HttpServletRequest request, String encoding) {
-		return getInstance(request, null, encoding);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, String encoding) throws IOException {
-		MultipartRequest mreq = getInstance(request, null, encoding);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-
-	public static MultipartRequest getInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory) {
-		return getInstance(request, fileUploadFactory, null);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request, FileUploadFactory fileUploadFactory) throws IOException {
-		MultipartRequest mreq = getInstance(request, fileUploadFactory, null);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
-	}
-
-	public static MultipartRequest getInstance(HttpServletRequest request) {
+	public static MultipartRequest getInstance(HttpServletRequest request) throws IOException {
 		return getInstance(request, null, null);
-	}
-	public static MultipartRequest getParsedInstance(HttpServletRequest request) throws IOException {
-		MultipartRequest mreq = getInstance(request, null, null);
-		if (mreq.isLoaded() == false) {
-			mreq.parseRequest();
-		}
-		return mreq;
 	}
 
 	// ---------------------------------------------------------------- load
