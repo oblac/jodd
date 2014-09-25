@@ -1,4 +1,3 @@
-
 ext.moduleName = 'Jodd Lagarto Web'
 ext.moduleDescription = 'Jodd Lagarto for Web is Lagarto addons for web environment: Decora, HtmlStapler and some filters.'
 
@@ -11,4 +10,6 @@ dependencies {
 	provided lib.jsp
 
 	testCompile lib.junit
+	testCompile lib.tomcat_embed
+	testCompile project(':jodd-http')
 }
