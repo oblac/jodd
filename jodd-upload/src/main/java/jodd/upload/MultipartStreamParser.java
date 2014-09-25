@@ -30,26 +30,25 @@ public class MultipartStreamParser {
 		this.fileUploadFactory = (fileUploadFactory == null ? new MemoryFileUploadFactory() : fileUploadFactory);
 	}
 
-	private boolean loaded;
+	private boolean parsed;
 
 	/**
 	 * Sets the loaded flag that indicates that input stream is loaded and parsed.
 	 * Throws an exception if stream already loaded.
 	 */
-	protected void setLoaded() throws IOException {
-		if (loaded == true) {
+	protected void setParsed() throws IOException {
+		if (parsed == true) {
 			throw new IOException("Multi-part request already parsed");
 		}
-		loaded = true;
+		parsed = true;
 	}
 
 	/**
 	 * Returns <code>true</code> if multi-part request is already loaded.
 	 */
-	public boolean isLoaded() {
-		return loaded;
+	public boolean isParsed() {
+		return parsed;
 	}
-
 
 	// ---------------------------------------------------------------- load and extract
 
@@ -96,7 +95,7 @@ public class MultipartStreamParser {
 	 * Extracts uploaded files and parameters from the request data.
 	 */
 	public void parseRequestStream(InputStream inputStream, String encoding) throws IOException {
-		setLoaded();
+		setParsed();
 
 		MultipartRequestInputStream input = new MultipartRequestInputStream(inputStream);
 		input.readBoundary();
