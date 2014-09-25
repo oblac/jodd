@@ -23,6 +23,7 @@ import jodd.util.StringPool;
 import jodd.util.MimeTypes;
 import jodd.io.FileNameUtil;
 import jodd.servlet.upload.MultipartRequestWrapper;
+import jodd.servlet.upload.MultipartRequest;
 import jodd.upload.FileUpload;
 import jodd.util.StringUtil;
 import jodd.util.URLCoder;
@@ -298,10 +299,15 @@ public class ServletUtil {
 		return request.getSession().getServletContext().getAttribute(name);
 	}
 
-
 	/**
-	 * Returns non-null value of property/attribute. Scopes are examined in the following
-	 * order: page (if exist), request, request parameters, session, application.
+	 * Returns value of property/attribute. The following value sets are looked up:
+	 * <ul>
+	 *     <li>page context attributes</li>
+	 *     <li>request attributes</li>
+	 *     <li>request parameters (multi-part request detected)</li>
+	 *     <li>session attributes</li>
+	 *     <li>context attributes</li>
+	 * </ul>
 	 */
 	public static Object value(PageContext pageContext, String name) {
 		Object value = pageContext.getAttribute(name);
@@ -310,20 +316,36 @@ public class ServletUtil {
 		}
 		return value((HttpServletRequest) pageContext.getRequest(), name);
 	}
-	
+
 	/**
-	 * Returns non-null value of property/attribute. Scopes are examined in the following
-	 * order: page (if exist), request, request parameters, session, application.
+	 * Returns value of property/attribute. The following value sets are looked up:
+	 * <ul>
+	 *     <li>request attributes</li>
+	 *     <li>request parameters (multi-part request detected)</li>
+	 *     <li>session attributes</li>
+	 *     <li>context attributes</li>
+	 * </ul>
 	 */
 	public static Object value(HttpServletRequest request, String name) {
 		Object value = request.getAttribute(name);
 		if (value != null) {
 			return value;
 		}
-		value = request.getParameter(name);
+
+		if (isMultipartRequest(request)) {
+			try {
+				MultipartRequest multipartRequest = MultipartRequest.getInstance(request);
+				value = multipartRequest.getParameter(name);
+			} catch (IOException ignore) {
+			}
+		}
+		else {
+			value = request.getParameter(name);
+		}
 		if (value != null) {
 			return value;
 		}
+
 		value = request.getSession().getAttribute(name);
 		if (value != null) {
 			return value;
@@ -428,10 +450,6 @@ public class ServletUtil {
 			u.delete(sessionStart, sessionEnd);
 		}
 		return u.toString();
-	}
-
-	public static String resolveUrl(String url, PageContext pageContext) {
-		return resolveUrl(url, (HttpServletRequest) pageContext.getRequest());
 	}
 
 	public static String resolveUrl(String url, HttpServletRequest request) {
