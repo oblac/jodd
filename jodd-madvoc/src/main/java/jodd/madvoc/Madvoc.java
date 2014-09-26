@@ -143,6 +143,8 @@ public class Madvoc {
 
 	// ---------------------------------------------------------------- lifecycle
 
+	protected ServletContext servletContext;
+
 	/**
 	 * Creates and starts new <code>Madvoc</code> web application.
 	 * <code>Madvoc</code> instance is stored in servlet context.
@@ -170,6 +172,8 @@ public class Madvoc {
 	private void start(ServletContext servletContext) { 
 
 		if (servletContext != null) {
+			this.servletContext = servletContext;
+
 			servletContext.setAttribute(MADVOC_ATTR, this);
 		}
 
@@ -249,6 +253,11 @@ public class Madvoc {
 	 */
 	public void stopWebApplication() {
 		log.info("Madvoc shutting down...");
+
+		if (servletContext != null) {
+			servletContext.removeAttribute(MADVOC_ATTR);
+		}
+
 		webapp.destroy(madvocConfig);
 	}
 
