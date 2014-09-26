@@ -16,6 +16,7 @@ public class HashCodeTest {
 		hash = HashCode.hash(hash, 9f);
 		hash = HashCode.hash(hash, true);
 		hash = HashCode.hash(hash, ArraysUtil.ints(1,2,3,4));
+		hash = HashCode.hash(hash, new NameValue<String, String>("A", "B"));
 
 		int hash2 = hash;
 
@@ -25,6 +26,7 @@ public class HashCodeTest {
 		hash = HashCode.hash(hash, 9f);
 		hash = HashCode.hash(hash, true);
 		hash = HashCode.hash(hash, ArraysUtil.ints(1,2,3,4));
+		hash = HashCode.hash(hash, new NameValue<String, String>("A", "B"));
 
 		assertEquals(hash, hash2);
 	}
