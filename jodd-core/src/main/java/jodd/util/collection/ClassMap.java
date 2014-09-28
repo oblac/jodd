@@ -2,6 +2,8 @@
 
 package jodd.util.collection;
 
+import java.util.Arrays;
+
 /**
  * Storage for holding classes keys and values.
  * It is <b>NOT</b> a <code>Map</code> instance. It is very fast
@@ -146,6 +148,14 @@ public final class ClassMap<V> {
 		size++;
 
 		return null;
+	}
+
+	/**
+	 * Clears the class map.
+	 */
+	public synchronized void clear() {
+		size = 0;
+		Arrays.fill(table, null);
 	}
 
 	/**

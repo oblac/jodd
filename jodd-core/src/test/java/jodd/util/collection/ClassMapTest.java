@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ClassMapTest {
 
@@ -58,5 +59,10 @@ public class ClassMapTest {
 		assertEquals("aaa", classMap.get(List.class));
 		assertEquals("inty", classMap.get(Integer.class));
 		assertEquals("longy", classMap.unsafeGet(Long.class));
+
+		classMap.clear();
+
+		assertEquals(0, classMap.size());
+		assertNull(classMap.get(Integer.class));
 	}
 }
