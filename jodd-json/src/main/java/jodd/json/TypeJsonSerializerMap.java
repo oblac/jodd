@@ -24,13 +24,13 @@ import jodd.json.impl.LongArrayJsonSerializer;
 import jodd.json.impl.MapJsonSerializer;
 import jodd.json.impl.NumberJsonSerializer;
 import jodd.json.impl.ObjectJsonSerializer;
+import jodd.util.collection.ClassMap;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,7 +47,8 @@ public class TypeJsonSerializerMap {
 		}
 	}
 
-	protected HashMap<Class, TypeJsonSerializer> map = new HashMap<Class, TypeJsonSerializer>();
+	protected ClassMap<TypeJsonSerializer> map = new ClassMap<TypeJsonSerializer>();
+	protected ClassMap<TypeJsonSerializer> cache = new ClassMap<TypeJsonSerializer>();
 
 	/**
 	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.
@@ -135,6 +136,9 @@ public class TypeJsonSerializerMap {
 		map.put(char.class, jsonSerializer);
 
 		map.put(Class.class, new ClassJsonSerializer());
+
+		// clear cache
+		cache.clear();
 	}
 
 	/**
@@ -142,6 +146,7 @@ public class TypeJsonSerializerMap {
 	 */
 	public void register(Class type, TypeJsonSerializer typeJsonSerializer) {
 		map.put(type, typeJsonSerializer);
+		cache.clear();
 	}
 
 	/**
@@ -150,7 +155,21 @@ public class TypeJsonSerializerMap {
 	 * Finally, if no serializer is found, object's serializer is returned.
 	 */
 	public TypeJsonSerializer lookup(Class type) {
-		TypeJsonSerializer tjs = map.get(type);
+		TypeJsonSerializer tjs = cache.unsafeGet(type);
+
+		if (tjs != null) {
+			return tjs;
+		}
+
+		tjs = _lookup(type);
+
+		cache.put(type, tjs);
+
+		return tjs;
+	}
+
+	protected TypeJsonSerializer _lookup(Class type) {
+		TypeJsonSerializer tjs = map.unsafeGet(type);
 
 		if (tjs != null) {
 			return tjs;
@@ -161,7 +180,7 @@ public class TypeJsonSerializerMap {
 		// check array
 
 		if (cd.isArray()) {
-			return map.get(Arrays.class);
+			return map.unsafeGet(Arrays.class);
 		}
 
 		// now iterate interfaces
@@ -169,7 +188,7 @@ public class TypeJsonSerializerMap {
 		Class[] interfaces = cd.getAllInterfaces();
 
 		for (Class interfaze : interfaces) {
-			tjs = map.get(interfaze);
+			tjs = map.unsafeGet(interfaze);
 
 			if (tjs != null) {
 				return tjs;
@@ -181,7 +200,7 @@ public class TypeJsonSerializerMap {
 		Class[] superclasses = cd.getAllSuperclasses();
 
 		for (Class clazz : superclasses) {
-			tjs = map.get(clazz);
+			tjs = map.unsafeGet(clazz);
 
 			if (tjs != null) {
 				return tjs;
@@ -190,7 +209,7 @@ public class TypeJsonSerializerMap {
 
 		// nothing found, go with the Object
 
-		return map.get(Object.class);
+		return map.unsafeGet(Object.class);
 	}
 
 }
