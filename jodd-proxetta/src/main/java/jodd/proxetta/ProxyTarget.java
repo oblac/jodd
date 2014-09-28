@@ -2,8 +2,6 @@
 
 package jodd.proxetta;
 
-import java.lang.annotation.Annotation;
-
 /**
  * Marker class for {@link ProxyAdvice proxy} implementations.
  */
@@ -146,14 +144,14 @@ public final class ProxyTarget {
 	 * Inserts targets method annotation value. Inserts <code>null</code>
 	 * if annotation or element is missing.
 	 */
-	public static Object targetMethodAnnotation(Class<? extends Annotation> annotationClass, String element) {
+	public static Object targetMethodAnnotation(String annotationClassName, String element) {
 		throw new ProxettaException();
 	}
 	/**
 	 * Inserts targets class annotation value. Inserts <code>null</code>
 	 * if annotation or element is missing.
 	 */
-	public static Object targetClassAnnotation(Class<? extends Annotation> annotationClass, String element) {
+	public static Object targetClassAnnotation(String annotationClassName, String element) {
 		throw new ProxettaException();
 	}
 

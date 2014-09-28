@@ -178,7 +178,7 @@ public class ProxyTargetReplacement {
 	}
 
 	/**
-	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(Class, String)}.
+	 * Visits replacement code for {@link ProxyTarget#targetMethodAnnotation(String, String)}.
 	 */
 	public static void targetMethodAnnotation(MethodVisitor mv, MethodInfo methodInfo, String[] args) {
 		AnnotationInfo[] anns = methodInfo.getAnnotations();
@@ -189,7 +189,7 @@ public class ProxyTargetReplacement {
 	}
 
 	/**
-	 * Visits replacement code for {@link ProxyTarget#targetClassAnnotation(Class, String)}.
+	 * Visits replacement code for {@link ProxyTarget#targetClassAnnotation(String, String)}.
 	 */
 	public static void targetClassAnnotation(MethodVisitor mv, ClassInfo classInfo, String[] args) {
 		AnnotationInfo[] anns = classInfo.getAnnotations();

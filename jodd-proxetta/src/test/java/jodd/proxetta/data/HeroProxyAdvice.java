@@ -10,43 +10,43 @@ public class HeroProxyAdvice implements ProxyAdvice {
 	public Object execute() throws Exception {
 		String name = "";
 
-		String heroName = (String) targetMethodAnnotation(HeroName.class, "value");
+		String heroName = (String) targetMethodAnnotation(HeroName.class.getName(), "value");
 
 		name += heroName;
 
-		Class heroClass = (Class) targetMethodAnnotation(HeroName.class, "power");
+		Class heroClass = (Class) targetMethodAnnotation(HeroName.class.getName(), "power");
 
 		name += heroClass.getSimpleName();
 
-		Integer secret = (Integer) targetMethodAnnotation(HeroName.class, "secret");
+		Integer secret = (Integer) targetMethodAnnotation(HeroName.class.getName(), "secret");
 
 		name += secret;
 
-		Character middle = (Character) targetMethodAnnotation(HeroName.class, "middle");
+		Character middle = (Character) targetMethodAnnotation(HeroName.class.getName(), "middle");
 
 		name += middle;
 
-		Double opacity = (Double) targetMethodAnnotation(HeroName.class, "opacity");
+		Double opacity = (Double) targetMethodAnnotation(HeroName.class.getName(), "opacity");
 
 		name += opacity;
 
-		String[] helpers = (String[]) targetMethodAnnotation(HeroName.class, "helpers");
+		String[] helpers = (String[]) targetMethodAnnotation(HeroName.class.getName(), "helpers");
 
 		name += helpers[0];
 
-		int[] enemies = (int[]) targetMethodAnnotation(HeroName.class, "enemies");
+		int[] enemies = (int[]) targetMethodAnnotation(HeroName.class.getName(), "enemies");
 
 		name += enemies[1];
 
-		Hero.POWER power = (Hero.POWER) targetMethodAnnotation(HeroName.class, "power2");
+		Hero.POWER power = (Hero.POWER) targetMethodAnnotation(HeroName.class.getName(), "power2");
 
 		name += power;
 
-		Hero.POWER[] subpowers = (Hero.POWER[]) targetMethodAnnotation(HeroName.class, "subpowers");
+		Hero.POWER[] subpowers = (Hero.POWER[]) targetMethodAnnotation(HeroName.class.getName(), "subpowers");
 
 		name += subpowers[0];
 
-		String missing = (String)  targetMethodAnnotation(HeroName.class, "xxxxx");
+		String missing = (String)  targetMethodAnnotation(HeroName.class.getName(), "xxxxx");
 
 		name += missing;
 
