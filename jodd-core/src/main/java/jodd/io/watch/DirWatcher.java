@@ -2,11 +2,13 @@
 
 package jodd.io.watch;
 
+import jodd.io.FileUtil;
 import jodd.mutable.MutableLong;
 import jodd.util.StringPool;
 import jodd.util.Wildcard;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -121,7 +123,11 @@ public class DirWatcher {
 		watchFile = new File(dir, name);
 
 		if (!watchFile.isFile() || !watchFile.exists()) {
-			throw new DirWatcherException("Invalid watch file: " + name);
+			try {
+				FileUtil.touch(watchFile);
+			} catch (IOException ioex) {
+				throw new DirWatcherException("Invalid watch file: " + name, ioex);
+			}
 		}
 
 		watchFileLastAccessTime = watchFile.lastModified();
@@ -208,14 +214,16 @@ public class DirWatcher {
 					deletedFiles.remove(file);
 				}
 
+				long lastModified = file.lastModified();
+
 				if (currentTime == null) {
 					// new file
-					map.put(file, new MutableLong(file.lastModified()));
+					map.put(file, new MutableLong(lastModified));
 					onChange(file, Event.CREATED);
 				}
-				else if (currentTime.longValue() != file.lastModified()) {
+				else if (currentTime.longValue() != lastModified) {
 					// modified file
-					currentTime.setValue(file.lastModified());
+					currentTime.setValue(lastModified);
 					onChange(file, Event.MODIFIED);
 				}
 			}

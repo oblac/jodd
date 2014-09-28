@@ -12,4 +12,8 @@ public class DirWatcherException extends UncheckedException {
 	public DirWatcherException(String message) {
 		super(message);
 	}
+
+	public DirWatcherException(String message, Throwable t) {
+		super(message, t);
+	}
 }
