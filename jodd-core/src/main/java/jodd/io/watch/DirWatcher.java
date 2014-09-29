@@ -33,10 +33,18 @@ public class DirWatcher {
 	protected List<DirWatcherListener> listeners = new ArrayList<DirWatcherListener>();
 	protected String[] patterns;
 
+	/**
+	 * Creates new watcher on specified directory.
+	 * You can set file patterns {@link #monitor(String...) later}.
+	 */
 	public DirWatcher(String dir) {
 		this(dir, null);
 	}
 
+	/**
+	 * Creates new watched on specified directory with given set of
+	 * wildcard patterns for file names.
+	 */
 	public DirWatcher(String dirName, String... patterns) {
 		this.dir = new File(dirName);
 
@@ -69,9 +77,38 @@ public class DirWatcher {
 		}
 	}
 
-	// ---------------------------------------------------------------- accept
+	// ---------------------------------------------------------------- flags
 
 	protected boolean ignoreDotFiles = true;
+	protected boolean startBlank = false;
+
+	/**
+	 * Enables or disables if dot files should be watched.
+	 */
+	public DirWatcher ignoreDotFiles(boolean ignoreDotFiles) {
+		this.ignoreDotFiles = ignoreDotFiles;
+		return this;
+	}
+
+	/**
+	 * Defines if watcher should start blank and consider all present
+	 * files as {@link jodd.io.watch.DirWatcher.Event#CREATED created}.
+	 * By default all existing files will consider as existing ones.
+	 */
+	public DirWatcher startBlank(boolean startBlank) {
+		this.startBlank = startBlank;
+		return this;
+	}
+
+	/**
+	 * Defines patterns to scan.
+	 */
+	public DirWatcher monitor(String... patterns) {
+		this.patterns = patterns;
+		return this;
+	}
+
+	// ---------------------------------------------------------------- accept
 
 	/**
 	 * Accepts if a file is going to be watched.
@@ -96,21 +133,13 @@ public class DirWatcher {
 		return Wildcard.matchOne(fileName, patterns) != -1;
 	}
 
-	/**
-	 * Enables or disables if dot files should be watched.
-	 */
-	public DirWatcher ignoreDotFiles(boolean ignoreDotFiles) {
-		this.ignoreDotFiles = ignoreDotFiles;
-		return this;
-	}
-
 	// ---------------------------------------------------------------- watch file
 
 	protected File watchFile;
 	protected long watchFileLastAccessTime;
 
 	/**
-	 * Enables usage of default watch file.
+	 * Enables usage of default watch file (".watch.ready").
 	 */
 	public DirWatcher useWatchFile() {
 		return useWatchFile(".watch.ready");
@@ -141,17 +170,19 @@ public class DirWatcher {
 	protected Timer timer;
 
 	/**
-	 * Starts the dir watcher.
+	 * Starts the watcher.
 	 */
 	public void start(long pollingInterval) {
 		if (timer == null) {
-			init();
+			if (!startBlank) {
+				init();
+			}
 			timer = new Timer(true);
 			timer.schedule(new WatchTask(), 0, pollingInterval);
 		}
 	}
 	/**
-	 * Stops the dir watcher.
+	 * Stops the watcher.
 	 */
 	public void stop() {
 		if (timer != null) {
