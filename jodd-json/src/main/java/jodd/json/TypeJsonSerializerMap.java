@@ -47,8 +47,8 @@ public class TypeJsonSerializerMap {
 		}
 	}
 
-	protected ClassMap<TypeJsonSerializer> map = new ClassMap<TypeJsonSerializer>();
-	protected ClassMap<TypeJsonSerializer> cache = new ClassMap<TypeJsonSerializer>();
+	protected final ClassMap<TypeJsonSerializer> map = new ClassMap<TypeJsonSerializer>();
+	protected final ClassMap<TypeJsonSerializer> cache = new ClassMap<TypeJsonSerializer>();
 
 	/**
 	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.
@@ -169,47 +169,49 @@ public class TypeJsonSerializerMap {
 	}
 
 	protected TypeJsonSerializer _lookup(Class type) {
-		TypeJsonSerializer tjs = map.unsafeGet(type);
-
-		if (tjs != null) {
-			return tjs;
-		}
-
-		ClassDescriptor cd = ClassIntrospector.lookup(type);
-
-		// check array
-
-		if (cd.isArray()) {
-			return map.unsafeGet(Arrays.class);
-		}
-
-		// now iterate interfaces
-
-		Class[] interfaces = cd.getAllInterfaces();
-
-		for (Class interfaze : interfaces) {
-			tjs = map.unsafeGet(interfaze);
+		synchronized (map) {
+			TypeJsonSerializer tjs = map.unsafeGet(type);
 
 			if (tjs != null) {
 				return tjs;
 			}
-		}
 
-		// now iterate all superclases
+			ClassDescriptor cd = ClassIntrospector.lookup(type);
 
-		Class[] superclasses = cd.getAllSuperclasses();
+			// check array
 
-		for (Class clazz : superclasses) {
-			tjs = map.unsafeGet(clazz);
-
-			if (tjs != null) {
-				return tjs;
+			if (cd.isArray()) {
+				return map.unsafeGet(Arrays.class);
 			}
+
+			// now iterate interfaces
+
+			Class[] interfaces = cd.getAllInterfaces();
+
+			for (Class interfaze : interfaces) {
+				tjs = map.unsafeGet(interfaze);
+
+				if (tjs != null) {
+					return tjs;
+				}
+			}
+
+			// now iterate all superclases
+
+			Class[] superclasses = cd.getAllSuperclasses();
+
+			for (Class clazz : superclasses) {
+				tjs = map.unsafeGet(clazz);
+
+				if (tjs != null) {
+					return tjs;
+				}
+			}
+
+			// nothing found, go with the Object
+
+			return map.unsafeGet(Object.class);
 		}
-
-		// nothing found, go with the Object
-
-		return map.unsafeGet(Object.class);
 	}
 
 }
