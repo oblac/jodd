@@ -457,6 +457,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- monitor
+
+	/**
+	 * Registers {@link jodd.http.HttpProgressListener listener} that will
+	 * monitor upload progress. Be aware that the whole size of the
+	 * request is being monitored, not only the files content.
+	 */
+	public HttpRequest monitor(HttpProgressListener httpProgressListener) {
+		this.httpProgressListener = httpProgressListener;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- send
 
 	protected HttpConnection httpConnection;

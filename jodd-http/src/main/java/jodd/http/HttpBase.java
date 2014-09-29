@@ -658,6 +658,8 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- send
 
+	protected HttpProgressListener httpProgressListener;
+
 	/**
 	 * Returns byte array of request or response.
 	 */
@@ -675,7 +677,31 @@ public abstract class HttpBase<T> {
 	public void sendTo(OutputStream out) throws IOException {
 		byte[] bytes = toByteArray();
 
-		out.write(bytes);
+		if (httpProgressListener == null) {
+			out.write(bytes);
+		}
+		else {
+			int size = bytes.length;
+
+			int callbackSize = httpProgressListener.callbackSize(size);
+			int len = 0;
+
+			httpProgressListener.transferred(0);
+
+			for (int i = 0; i < bytes.length; i++) {
+				out.write(bytes[i]);
+
+				len++;
+				if (len >= callbackSize) {
+					httpProgressListener.transferred(i);
+					len = 0;
+				}
+			}
+
+			if (len != 0) {
+				httpProgressListener.transferred(bytes.length);
+			}
+		}
 
 		out.flush();
 	}

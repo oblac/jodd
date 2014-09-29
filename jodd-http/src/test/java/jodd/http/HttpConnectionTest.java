@@ -3,6 +3,8 @@
 package jodd.http;
 
 import jodd.io.FileUtil;
+import jodd.util.RandomStringUtil;
+import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.io.File;
@@ -61,6 +63,39 @@ public class HttpConnectionTest {
 
 		echoTestServer.stop();
 		file.delete();
+	}
+
+	@Test
+	public void testUploadWithMonitor() throws IOException {
+		EchoTestServer echoTestServer = new EchoTestServer();
+
+		File file = FileUtil.createTempFile();
+		file.deleteOnExit();
+
+		FileUtil.writeString(file, RandomStringUtil.randomAlpha(512));
+
+		final StringBuilder sb = new StringBuilder();
+
+		HttpResponse response = HttpRequest
+				.post("http://localhost:8081/hello")
+				.form("id", "12")
+				.form("file", file)
+				.monitor(new HttpProgressListener() {
+					@Override
+					public void transferred(long len) {
+						sb.append(":" + len);
+					}
+				})
+				.send();
+
+		assertEquals(200, response.statusCode());
+		assertEquals("OK", response.statusPhrase());
+
+		echoTestServer.stop();
+		file.delete();
+
+		assertEquals(":0:9:19", sb.toString().substring(0, 7));
+		assertEquals("959:969:973", StringUtil.substring(sb.toString(), -11, 0));
 	}
 
 }
