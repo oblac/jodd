@@ -125,7 +125,7 @@ class Scanner {
 		if (len == 0) {
 			return emitStrings ? StringPool.EMPTY : EMPTY_CHAR_BUFFER;
 		}
-		return emitStrings ? new String(input, from, to - from) : CharBuffer.wrap(input, from, len);
+		return emitStrings ? new String(input, from, len) : CharBuffer.wrap(input, from, len);
 	}
 
 	protected static CharBuffer EMPTY_CHAR_BUFFER = CharBuffer.wrap(new char[0]);

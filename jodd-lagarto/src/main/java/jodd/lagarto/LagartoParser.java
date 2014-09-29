@@ -1978,7 +1978,7 @@ public class LagartoParser extends Scanner {
 				ndx++;
 
 				if (isEOF()) {
-					emitScript(scriptStartNdx, ndx);
+					emitScript(scriptStartNdx, total);
 					state = DATA_STATE;
 					return;
 				}
