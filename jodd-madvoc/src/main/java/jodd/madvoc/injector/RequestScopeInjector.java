@@ -185,12 +185,12 @@ public class RequestScopeInjector extends BaseScopeInjector
 	}
 
 	/**
-	 * Inject request parameters. Parameters with the same name as one of request attributes
-	 * are simply ignored.
+	 * Inject request parameters.
 	 */
 	protected void injectParameters(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
 		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
+
 		while (paramNames.hasMoreElements()) {
 			String paramName = (String) paramNames.nextElement();
 			if (servletRequest.getAttribute(paramName) != null) {

@@ -157,8 +157,8 @@ public class Target {
 			}
 			throw new MadvocException(ex);
 		} else {
-			if (log.isWarnEnabled()) {
-				log.warn("Injection failed: " + propertyName + ". " + ex.toString());
+			if (log.isDebugEnabled()) {
+				log.debug("Injection failed: " + propertyName + ". " + ex.toString());
 			}
 		}
 	}

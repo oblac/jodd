@@ -45,4 +45,14 @@ public class BookActionTest {
 
 		assertEquals("OldBook: 123:Songs of Distant Earth.", response.bodyText().trim());
 	}
+
+	@Test
+	public void testBookPartial() {
+		HttpResponse response = HttpRequest.put("localhost:8173/bookPartial.hello.html")
+				.query("book.iban", "123123123")
+				.query("book.foo", "not used")
+				.send();
+
+		assertEquals("Hi123123123", response.bodyText().trim());
+	}
 }
