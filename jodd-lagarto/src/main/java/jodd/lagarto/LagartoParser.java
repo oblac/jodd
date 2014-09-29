@@ -1209,7 +1209,7 @@ public class LagartoParser extends Scanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitComment(commentStart, ndx);
+				emitComment(commentStart, total);
 				return;
 			}
 
@@ -1238,7 +1238,7 @@ public class LagartoParser extends Scanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitComment(commentStart, ndx);
+				emitComment(commentStart, total);
 				return;
 			}
 
@@ -1266,7 +1266,7 @@ public class LagartoParser extends Scanner {
 				if (isEOF()) {
 					errorEOF();
 					state = DATA_STATE;
-					emitComment(commentStart, ndx);
+					emitComment(commentStart, total);
 					return;
 				}
 
@@ -1287,7 +1287,7 @@ public class LagartoParser extends Scanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitComment(commentStart, ndx);
+				emitComment(commentStart, total);
 				return;
 			}
 
@@ -1309,7 +1309,7 @@ public class LagartoParser extends Scanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitComment(commentStart, ndx);
+				emitComment(commentStart, total);
 				return;
 			}
 
@@ -1343,7 +1343,7 @@ public class LagartoParser extends Scanner {
 			if (isEOF()) {
 				errorEOF();
 				state = DATA_STATE;
-				emitComment(commentStart, ndx);
+				emitComment(commentStart, total);
 				return;
 			}
 
@@ -2209,7 +2209,7 @@ public class LagartoParser extends Scanner {
 
 					if (isEOF()) {
 						errorEOF();
-						emitScript(scriptStartNdx, ndx);
+						emitScript(scriptStartNdx, total);
 						state = DATA_STATE;
 						return;
 					}
