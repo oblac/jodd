@@ -293,8 +293,8 @@ class BeanUtilUtil {
 	/**
 	 * Extracts type of current property.
 	 */
-	protected Class extractType(BeanProperty bp, boolean declared) {
-		Getter getter = bp.getGetter(declared);
+	protected Class extractType(BeanProperty bp) {
+		Getter getter = bp.getGetter(bp.declared);
 		if (getter != null) {
 			if (bp.index != null) {
 				Class type = getter.getGetterRawComponentType();
