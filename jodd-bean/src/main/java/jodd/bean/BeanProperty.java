@@ -18,7 +18,7 @@ import jodd.introspector.Setter;
  */
 class BeanProperty {
 
-	BeanProperty(Object bean, String propertyName, boolean forced, boolean declared) {
+	BeanProperty(Object bean, String propertyName, boolean declared, boolean forced) {
 		this.introspector = BeanUtil.getBeanUtilBean().getIntrospector();
 		setName(propertyName);
 		setBean(bean);

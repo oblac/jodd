@@ -62,7 +62,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Returns <code>true</code> if simple property exist.
 	 */
 	public boolean hasSimpleProperty(Object bean, String property, boolean declared) {
-		return hasSimpleProperty(new BeanProperty(bean, property, false, declared));
+		return hasSimpleProperty(new BeanProperty(bean, property, declared, false));
 	}
 
 	protected boolean hasSimpleProperty(BeanProperty bp) {
@@ -92,14 +92,14 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Reads simple property.
 	 */
 	public Object getSimpleProperty(Object bean, String property, boolean declared) {
-		return getSimpleProperty(new BeanProperty(bean, property, false, declared));
+		return getSimpleProperty(new BeanProperty(bean, property, declared, false));
 	}
 
 	/**
 	 * Reads simple property forced: when property value doesn't exist, it will be created.
 	 */
 	public Object getSimplePropertyForced(Object bean, String property, boolean declared) {
-		return getSimpleProperty(new BeanProperty(bean, property, true, declared));
+		return getSimpleProperty(new BeanProperty(bean, property, declared, true));
 	}
 
 	protected Object getSimpleProperty(BeanProperty bp) {
@@ -149,7 +149,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Sets simple property.
 	 */
 	public void setSimpleProperty(Object bean, String property, Object value, boolean declared) {
-		setSimpleProperty(new BeanProperty(bean, property, false, declared), value);
+		setSimpleProperty(new BeanProperty(bean, property, declared, false), value);
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Returns <code>true</code> if bean has indexed property.
 	 */
 	public boolean hasIndexProperty(Object bean, String property, boolean declared) {
-		return hasIndexProperty(new BeanProperty(bean, property, false, declared));
+		return hasIndexProperty(new BeanProperty(bean, property, declared, false));
 	}
 
 	protected boolean hasIndexProperty(BeanProperty bp) {
@@ -221,7 +221,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 
 	public Object getIndexProperty(Object bean, String property, boolean declared, boolean forced) {
-		return getIndexProperty(new BeanProperty(bean, property, forced, declared));
+		return getIndexProperty(new BeanProperty(bean, property, declared, forced));
 	}
 
 	/**
@@ -312,7 +312,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	}
 
 	public void setIndexProperty(Object bean, String property, Object value, boolean declared, boolean forced) {
-		setIndexProperty(new BeanProperty(bean, property, forced, declared), value);
+		setIndexProperty(new BeanProperty(bean, property, declared, forced), value);
 	}
 
 	/**
@@ -404,7 +404,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Sets Java Bean property forced.
 	 */
 	public void setPropertyForced(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
+		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
 		resolveNestedProperties(beanProperty);
 		setIndexProperty(beanProperty, value);
 	}
@@ -412,7 +412,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Sets Java Bean property forced, without throwing an exception on non-existing properties.
 	 */
 	public boolean setPropertyForcedSilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
+		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
@@ -426,7 +426,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Sets declared Java Bean property.
 	 */
 	public void setDeclaredProperty(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		resolveNestedProperties(beanProperty);
 		setIndexProperty(beanProperty, value);
 	}
@@ -434,7 +434,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Silently sets declared Java Bean property.
 	 */
 	public boolean setDeclaredPropertySilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
@@ -496,7 +496,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Returns value of declared bean's property.
 	 */
 	public Object getDeclaredProperty(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		resolveNestedProperties(beanProperty);
 		return getIndexProperty(beanProperty);
 	}
@@ -507,7 +507,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * is valid and property value is <code>null</code> or that property name is invalid.
 	 */
 	public Object getDeclaredPropertySilently(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		try {
 			resolveNestedProperties(beanProperty);
 			return getIndexProperty(beanProperty);
@@ -549,7 +549,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Returns <code>true</code> if bean has a declared property.
 	 */
 	public boolean hasDeclaredProperty(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		if (resolveExistingNestedProperties(beanProperty) == false) {
 			return false;
 		}
@@ -566,7 +566,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		if (dotNdx != -1) {
 			name = name.substring(0, dotNdx);
 		}
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		extractIndex(beanProperty);
 		return hasSimpleProperty(beanProperty);
 	}
@@ -589,7 +589,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * Returns property type of declared property.
 	 */
 	public Class getDeclaredPropertyType(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
 		if (resolveExistingNestedProperties(beanProperty) == false) {
 			return null;
 		}
