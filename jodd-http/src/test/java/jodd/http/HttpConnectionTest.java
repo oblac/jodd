@@ -74,7 +74,7 @@ public class HttpConnectionTest {
 		File file = FileUtil.createTempFile();
 		file.deleteOnExit();
 
-		FileUtil.writeString(file, RandomStringUtil.randomAlpha(1024));
+		FileUtil.writeString(file, StringUtil.repeat('A', 1024));
 
 		final StringBuilder sb = new StringBuilder();
 
