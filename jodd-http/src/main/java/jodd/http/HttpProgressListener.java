@@ -14,20 +14,16 @@ public abstract class HttpProgressListener {
 
 	/**
 	 * Returns callback size in bytes. By default it returns
-	 * size of 0.5 percent of a total size. However, the callback
-	 * size is limited between 10 and 512 bytes. Override this
-	 * method for custom callback size.
+	 * size of 1 percent of a total size. If returned size
+	 * is less then 512, it will be rounded to 512.
+	 * This is also the size of the chunk that is sent over network.
 	 */
 	public int callbackSize(int size) {
 		this.size = size;
 
-		int callbackSize = size / 200;
+		int callbackSize = size / 100;
 
-		if (callbackSize < 10) {
-			callbackSize = 10;
-		}
-
-		if (callbackSize > 512) {
+		if (callbackSize < 512) {
 			callbackSize = 512;
 		}
 

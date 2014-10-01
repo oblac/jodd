@@ -2,6 +2,8 @@
 
 package jodd.http;
 
+import jodd.datetime.JDateTime;
+import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
 import jodd.util.RandomStringUtil;
 import jodd.util.StringUtil;
@@ -72,7 +74,7 @@ public class HttpConnectionTest {
 		File file = FileUtil.createTempFile();
 		file.deleteOnExit();
 
-		FileUtil.writeString(file, RandomStringUtil.randomAlpha(512));
+		FileUtil.writeString(file, RandomStringUtil.randomAlpha(1024));
 
 		final StringBuilder sb = new StringBuilder();
 
@@ -94,8 +96,7 @@ public class HttpConnectionTest {
 		echoTestServer.stop();
 		file.delete();
 
-		assertEquals(":0:9:19", sb.toString().substring(0, 7));
-		assertEquals("959:969:973", StringUtil.substring(sb.toString(), -11, 0));
+		assertEquals(":0:512:1024:1486", sb.toString());
 	}
 
 }
