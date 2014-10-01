@@ -17,13 +17,17 @@ public class HttpProgressListenerTest {
 			}
 		};
 
-		assertEquals(10, hpl.callbackSize(0));
-		assertEquals(10, hpl.callbackSize(1000));
-		assertEquals(10, hpl.callbackSize(2000));
-		assertEquals(11, hpl.callbackSize(2200));
-		assertEquals(12, hpl.callbackSize(2400));
-		assertEquals(51, hpl.callbackSize(10240));
-		assertEquals(512, hpl.callbackSize(102400));
-		assertEquals(512, hpl.callbackSize(102400*2));
+		assertEquals(512, hpl.callbackSize(0));
+		assertEquals(512, hpl.callbackSize(1000));
+		assertEquals(512, hpl.callbackSize(51200));
+		assertEquals(512, hpl.callbackSize(51201));
+
+		assertEquals(1024, hpl.callbackSize(102400));
+		assertEquals(1024, hpl.callbackSize(102401));
+		assertEquals(1024, hpl.callbackSize(102449));
+
+		assertEquals(1025, hpl.callbackSize(102450));
+		assertEquals(1025, hpl.callbackSize(102499));
+		assertEquals(1025, hpl.callbackSize(102500));
 	}
 }

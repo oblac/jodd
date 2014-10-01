@@ -21,7 +21,7 @@ public abstract class HttpProgressListener {
 	public int callbackSize(int size) {
 		this.size = size;
 
-		int callbackSize = size / 100;
+		int callbackSize = (size + 50) / 100;
 
 		if (callbackSize < 512) {
 			callbackSize = 512;
