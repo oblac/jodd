@@ -72,7 +72,7 @@ class BeanUtilUtil {
 	/**
 	 * Invokes setter, but first converts type to match the setter type.
 	 */
-	protected Object invokeSetter(Setter setter, Object bean, Object value) {
+	protected Object invokeSetter(Setter setter, BeanProperty bp, Object value) {
 		try {
 			Class type = setter.getSetterRawType();
 
@@ -85,8 +85,11 @@ class BeanUtilUtil {
 				value = convertType(value, type);
 			}
 
-			setter.invokeSetter(bean, value);
+			setter.invokeSetter(bp.bean, value);
 		} catch (Exception ex) {
+			if (bp.silent) {
+				return null;
+			}
 			throw new BeanException("Setter failed: " + setter, ex);
 		}
 		return value;
@@ -108,6 +111,9 @@ class BeanUtilUtil {
 			try {
 				value = ReflectUtil.newInstance(componentType);
 			} catch (Exception ex) {
+				if (bp.silent) {
+					return null;
+				}
 				throw new BeanException("Invalid array element: " + bp.name + '[' + index + ']', bp, ex);
 			}
 			Array.set(array, index, value);
@@ -136,10 +142,11 @@ class BeanUtilUtil {
 
 			Setter setter = bp.getSetter(true);
 			if (setter == null) {
+				// no point to check for bp.silent, throws NPE later
 				throw new BeanException("Setter or field not found: " + bp.name, bp);
 			}
 
-			newArray = invokeSetter(setter, bp.bean, newArray);
+			newArray = invokeSetter(setter, bp, newArray);
 
 			array = newArray;
 		}
@@ -215,6 +222,7 @@ class BeanUtilUtil {
 		try {
 			return Integer.parseInt(indexString);
 		} catch (NumberFormatException nfex) {
+			// no point to use bp.silent, as will throw exception
 			throw new BeanException("Invalid index: " + indexString, bp, nfex);
 		}
 	}
@@ -237,10 +245,13 @@ class BeanUtilUtil {
 		try {
 			newInstance = ReflectUtil.newInstance(type);
 		} catch (Exception ex) {
+			if (bp.silent) {
+				return null;
+			}
 			throw new BeanException("Invalid property: " + bp.name, bp, ex);
 		}
 
-		newInstance = invokeSetter(setter, bp.bean, newInstance);
+		newInstance = invokeSetter(setter, bp, newInstance);
 
 		return newInstance;
 	}

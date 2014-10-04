@@ -1035,8 +1035,12 @@ public class BeanUtilTest {
 			fail();
 		} catch (Exception ex) {
 		}
-		assertFalse(BeanUtil.setPropertySilent(fb, "notexisting", null));
 
+		try {
+			BeanUtil.setPropertySilent(fb, "notexisting", null);
+		} catch (Exception ex) {
+			fail();
+		}
 	}
 
 

@@ -120,6 +120,8 @@ class BeanProperty {
 
 	@Override
 	public String toString() {
-		return fullName + " (" + bean.getClass().getSimpleName() + '#' + name + ", forced=" + forced + ')';
+		return fullName + " (" +
+				(bean != null ? bean.getClass().getSimpleName() : "?") +
+				'#' + name + ", forced=" + forced + ')';
 	}
 }

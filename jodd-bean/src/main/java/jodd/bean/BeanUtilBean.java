@@ -115,6 +115,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 			try {
 				result = getter.invokeGetter(bp.bean);
 			} catch (Exception ex) {
+				if (bp.silent) {
+					return null;
+				}
 				throw new BeanException("Getter failed: " + getter, ex);
 			}
 
@@ -131,6 +134,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 			if (map.containsKey(key) == false) {
 				if (bp.forced == false) {
+					if (bp.silent) {
+						return null;
+					}
 					throw new BeanException("Map key not found: " + bp.name, bp);
 				}
 				Map value = new HashMap();
@@ -142,6 +148,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// failed
+		if (bp.silent) {
+			return null;
+		}
 		throw new BeanException("Simple property not found: " + bp.name, bp);
 	}
 
@@ -162,13 +171,16 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: setter
 		if (setter != null) {
-			invokeSetter(setter, bp.bean, value);
+			invokeSetter(setter, bp, value);
 			return;
 		}
 
 		// try: put("property", value)
 		if (bp.isMap()) {
 			((Map) bp.bean).put(bp.name, value);
+			return;
+		}
+		if (bp.silent) {
 			return;
 		}
 		throw new BeanException("Simple property not found: " + bp.name, bp);
@@ -238,6 +250,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 			return resultBean;	// no index, just simple bean
 		}
 		if (resultBean == null) {
+			if (bp.silent) {
+				return null;
+			}
 			throw new BeanException("Index property is null: " + bp.name, bp);
 		}
 
@@ -271,6 +286,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 				try {
 					value = ReflectUtil.newInstance(listComponentType);
 				} catch (Exception ex) {
+					if (bp.silent) {
+						return null;
+					}
 					throw new BeanException("Invalid list element: " + bp.name + '[' + index + ']', bp, ex);
 				}
 				//noinspection unchecked
@@ -297,6 +315,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 					try {
 						value = ReflectUtil.newInstance(mapComponentType);
 					} catch (Exception ex) {
+						if (bp.silent) {
+							return null;
+						}
 						throw new BeanException("Invalid map element: " + bp.name + '[' + indexString + ']', bp, ex);
 					}
 
@@ -308,6 +329,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// failed
+		if (bp.silent) {
+			return null;
+		}
 		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
 	}
 
@@ -332,6 +356,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		Getter getter = bp.getGetter(bp.declared);
 
 		if (nextBean == null) {
+			if (bp.silent) {
+				return;
+			}
 			throw new BeanException("Index property is null:" + bp.name, bp);
 		}
 
@@ -372,6 +399,9 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		// failed
+		if (bp.silent) {
+			return;
+		}
 		throw new BeanException("Index property is not an array, list or map: " + bp.name, bp);
 	}
 
@@ -389,14 +419,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Sets Java Bean property silently, without throwing an exception on non-existing properties.
 	 */
-	public boolean setPropertySilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, false);
+	public void setPropertySilent(Object bean, String name, Object value) {
+		BeanProperty beanProperty = new BeanProperty(bean, name, false, false, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
-			return true;
 		} catch (Exception ignored) {
-			return false;
 		}
 	}
 
@@ -411,14 +439,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Sets Java Bean property forced, without throwing an exception on non-existing properties.
 	 */
-	public boolean setPropertyForcedSilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, true);
+	public void setPropertyForcedSilent(Object bean, String name, Object value) {
+		BeanProperty beanProperty = new BeanProperty(bean, name, false, true, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
-			return true;
 		} catch (Exception ignored) {
-			return false;
 		}
 	}
 
@@ -433,14 +459,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Silently sets declared Java Bean property.
 	 */
-	public boolean setDeclaredPropertySilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
+	public void setDeclaredPropertySilent(Object bean, String name, Object value) {
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
-			return true;
 		} catch (Exception ignored) {
-			return false;
 		}
 	}
 	/**
@@ -454,14 +478,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Silently sets declared Java Bean property forced.
 	 */
-	public boolean setDeclaredPropertyForcedSilent(Object bean, String name, Object value) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, true, true);
+	public void setDeclaredPropertyForcedSilent(Object bean, String name, Object value) {
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, true, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			setIndexProperty(beanProperty, value);
-			return true;
 		} catch (Exception ignored) {
-			return false;
 		}
 	}
 
@@ -483,7 +505,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * is valid and property value is <code>null</code> or that property name is invalid.
 	 */
 	public Object getPropertySilently(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, false, false);
+		BeanProperty beanProperty = new BeanProperty(bean, name, false, false, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			return getIndexProperty(beanProperty);
@@ -507,7 +529,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * is valid and property value is <code>null</code> or that property name is invalid.
 	 */
 	public Object getDeclaredPropertySilently(Object bean, String name) {
-		BeanProperty beanProperty = new BeanProperty(bean, name, true, false);
+		BeanProperty beanProperty = new BeanProperty(bean, name, true, false, true);
 		try {
 			resolveNestedProperties(beanProperty);
 			return getIndexProperty(beanProperty);

@@ -54,8 +54,8 @@ public class BeanUtil {
 	/**
 	 * Sets Java Bean property silently, without throwing an exception on non-existing properties.
 	 */
-	public static boolean setPropertySilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setPropertySilent(bean, name, value);
+	public static void setPropertySilent(Object bean, String name, Object value) {
+		BEAN_UTIL_BEAN.setPropertySilent(bean, name, value);
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class BeanUtil {
 	/**
 	 * Sets Java Bean property forced, without throwing an exception on non-existing properties.
 	 */
-	public static boolean setPropertyForcedSilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setPropertyForcedSilent(bean, name, value);
+	public static void setPropertyForcedSilent(Object bean, String name, Object value) {
+		BEAN_UTIL_BEAN.setPropertyForcedSilent(bean, name, value);
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class BeanUtil {
 	/**
 	 * Silently sets declared Java Bean property.
 	 */
-	public static boolean setDeclaredPropertySilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setDeclaredPropertySilent(bean, name, value);
+	public static void setDeclaredPropertySilent(Object bean, String name, Object value) {
+		BEAN_UTIL_BEAN.setDeclaredPropertySilent(bean, name, value);
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class BeanUtil {
 	/**
 	 * Silently sets declared Java Bean property forced.
 	 */
-	public static boolean setDeclaredPropertyForcedSilent(Object bean, String name, Object value) {
-		return BEAN_UTIL_BEAN.setDeclaredPropertyForcedSilent(bean, name, value);
+	public static void setDeclaredPropertyForcedSilent(Object bean, String name, Object value) {
+		BEAN_UTIL_BEAN.setDeclaredPropertyForcedSilent(bean, name, value);
 	}
 
 	// ---------------------------------------------------------------- GET
