@@ -47,7 +47,7 @@ public class PreparableInterceptor extends BaseActionInterceptor {
 				return super.getMatchedPropertyName(in, attrName);
 			}
 		};
-		requestInjector.getConfig().setInjectAttributes(false);
+		requestInjector.setInjectAttributes(false);
 	}
 
 

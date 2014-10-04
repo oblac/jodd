@@ -4,7 +4,6 @@ package jodd.madvoc.component;
 
 import jodd.madvoc.RootPackages;
 import jodd.madvoc.filter.ActionFilter;
-import jodd.madvoc.injector.RequestScopeInjector;
 import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.madvoc.interceptor.ServletConfigInterceptor;
 import jodd.madvoc.macro.PathMacros;
@@ -50,7 +49,6 @@ public class MadvocConfig {
 		madvocRootPackageClassName = "MadvocRootPackage";
 		detectDuplicatePathsEnabled = true;
 		preventCaching = true;
-		requestScopeInjectorConfig = new RequestScopeInjector.Config();
 		attributeMoveId = "_m_move_id";
 		pathMacroClass = WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {DOLLAR_LEFT_BRACE, COLON, RIGHT_BRACE};
@@ -299,21 +297,6 @@ public class MadvocConfig {
 		this.preventCaching = preventCaching;
 	}
 
-	// ---------------------------------------------------------------- request
-
-	protected RequestScopeInjector.Config requestScopeInjectorConfig;
-
-	public RequestScopeInjector.Config getRequestScopeInjectorConfig() {
-		return requestScopeInjectorConfig;
-	}
-
-	/**
-	 * Sets {@link jodd.madvoc.injector.RequestScopeInjector request scope injector} configuration.
-	 */
-	public void setRequestScopeInjectorConfig(RequestScopeInjector.Config requestScopeInjectorConfig) {
-		this.requestScopeInjectorConfig = requestScopeInjectorConfig;
-	}
-
 	// ---------------------------------------------------------------- result
 
 	protected String resultPathPrefix;
@@ -484,7 +467,6 @@ public class MadvocConfig {
 				",\n\tfileUploadFactory=" + fileUploadFactory +
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
-				",\n\trequestScopeInjectorConfig=" + requestScopeInjectorConfig +
 				",\n\tinjectionErrorThrowsException=" + injectionErrorThrowsException +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +

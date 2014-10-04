@@ -3,7 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.madvoc.ActionRequest;
-import jodd.madvoc.MadvocException;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
 import jodd.madvoc.component.MadvocConfig;
@@ -32,125 +31,103 @@ public class RequestScopeInjector extends BaseScopeInjector
 	public RequestScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
 		super(ScopeType.REQUEST, madvocConfig, scopeDataResolver);
 		this.encoding = madvocConfig.getEncoding();
-		this.config = madvocConfig.getRequestScopeInjectorConfig().clone();
 		this.attributeMoveId = madvocConfig.getAttributeMoveId();
 	}
 
 	// ---------------------------------------------------------------- configuration
 
 	protected final String encoding;
-	protected final Config config;
 	protected final String attributeMoveId;
 
+	// flags
+
+	protected boolean ignoreEmptyRequestParams;
+	protected boolean treatEmptyParamsAsNull;
+	protected boolean injectAttributes = true;
+	protected boolean injectParameters = true;
+	protected boolean trimParams;
+	protected boolean encodeGetParams;
+	protected boolean ignoreInvalidUploadFiles = true;
+
+	public boolean isIgnoreEmptyRequestParams() {
+		return ignoreEmptyRequestParams;
+	}
 	/**
-	 * Returns request scope configuration.
+	 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
 	 */
-	public Config getConfig() {
-		return config;
+	public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
+		this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
+	}
+
+	public boolean isTreatEmptyParamsAsNull() {
+		return treatEmptyParamsAsNull;
+	}
+	/**
+	 * Specifies if empty parameters will be injected as <code>null</code> value.
+	 */
+	public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
+		this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
+	}
+
+	public boolean isInjectAttributes() {
+		return injectAttributes;
+	}
+	/**
+	 * Specifies if attributes will be injected.
+	 */
+	public void setInjectAttributes(boolean injectAttributes) {
+		this.injectAttributes = injectAttributes;
+	}
+
+	public boolean isInjectParameters() {
+		return injectParameters;
+	}
+	/**
+	 * Specifies if parameters will be injected.
+	 */
+	public void setInjectParameters(boolean injectParameters) {
+		this.injectParameters = injectParameters;
+	}
+
+	public boolean isTrimParams() {
+		return trimParams;
+	}
+	/**
+	 * Specifies if parameters will be trimmed before injection.
+	 */
+	public void setTrimParams(boolean trimParams) {
+		this.trimParams = trimParams;
+	}
+
+	public boolean isEncodeGetParams() {
+		return encodeGetParams;
 	}
 
 	/**
-	 * Request scope configuration.
+	 * Specifies if GET parameters should be encoded. Alternatively, this can be set in container as well.
+	 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
+	 * file communicates the character-encoding choice to the web server,
+	 * and the Tomcat server correctly reads the URL GET parameters correctly.
+	 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
+	 * can be included in the sun-web.xml file.
+	 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
 	 */
-	public static class Config implements Cloneable {
-		protected boolean ignoreEmptyRequestParams;
-		protected boolean treatEmptyParamsAsNull;
-		protected boolean injectAttributes = true;
-		protected boolean injectParameters = true;
-		protected boolean trimParams;
-		protected boolean encodeGetParams;
-		protected boolean ignoreInvalidUploadFiles = true;
+	public void setEncodeGetParams(boolean encodeGetParams) {
+		this.encodeGetParams = encodeGetParams;
+	}
 
-		public boolean isIgnoreEmptyRequestParams() {
-			return ignoreEmptyRequestParams;
-		}
-		/**
-		 * Specifies if empty request parameters will be totally ignored as they were not sent at all.
-		 */
-		public void setIgnoreEmptyRequestParams(boolean ignoreEmptyRequestParams) {
-			this.ignoreEmptyRequestParams = ignoreEmptyRequestParams;
-		}
+	/**
+	 * Returns <code>true</code> if invalid and non-existing upload files are ignored.
+	 */
+	public boolean isIgnoreInvalidUploadFiles() {
+		return ignoreInvalidUploadFiles;
+	}
 
-
-		public boolean isTreatEmptyParamsAsNull() {
-			return treatEmptyParamsAsNull;
-		}
-		/**
-		 * Specifies if empty parameters will be injected as <code>null</code> value.
-		 */
-		public void setTreatEmptyParamsAsNull(boolean treatEmptyParamsAsNull) {
-			this.treatEmptyParamsAsNull = treatEmptyParamsAsNull;
-		}
-
-		public boolean isInjectAttributes() {
-			return injectAttributes;
-		}
-		/**
-		 * Specifies if attributes will be injected.
-		 */
-		public void setInjectAttributes(boolean injectAttributes) {
-			this.injectAttributes = injectAttributes;
-		}
-
-		public boolean isInjectParameters() {
-			return injectParameters;
-		}
-		/**
-		 * Specifies if parameters will be injected.
-		 */
-		public void setInjectParameters(boolean injectParameters) {
-			this.injectParameters = injectParameters;
-		}
-
-		public boolean isTrimParams() {
-			return trimParams;
-		}
-		/**
-		 * Specifies if parameters will be trimmed before injection.
-		 */
-		public void setTrimParams(boolean trimParams) {
-			this.trimParams = trimParams;
-		}
-
-		public boolean isEncodeGetParams() {
-			return encodeGetParams;
-		}
-
-		/**
-		 * Specifies if GET parameters should be encoded. Alternatively, this can be set in container as well.
-		 * Setting URIEncoding="UTF-8" in Tomcat's connector settings within the server.xml
-		 * file communicates the character-encoding choice to the web server,
-		 * and the Tomcat server correctly reads the URL GET parameters correctly.
-		 * On Sun Java System Application Server 8.1, "&lt;parameter-encoding default-charset="UTF-8"/&gt;"
-		 * can be included in the sun-web.xml file.
-		 * See more: http://java.sun.com/developer/technicalArticles/Intl/HTTPCharset/
-		 */
-		public void setEncodeGetParams(boolean encodeGetParams) {
-			this.encodeGetParams = encodeGetParams;
-		}
-
-		/**
-		 * Returns <code>true</code> if invalid and non-existing upload files are ignored.
-		 */
-		public boolean isIgnoreInvalidUploadFiles() {
-			return ignoreInvalidUploadFiles;
-		}
-
-		/**
-		 * Specifies if invalid and non-existing upload files should be <code>null</code>.
-		 */
-		public void setIgnoreInvalidUploadFiles(boolean ignoreInvalidUploadFiles) {
-			this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
-		}
-
-		@Override
-		public Config clone() {
-			try {
-				return (Config) super.clone();
-			} catch (CloneNotSupportedException cnsex) {
-				throw new MadvocException(cnsex);
-			}
-		}
+	/**
+	 * Specifies if invalid and non-existing upload files should be <code>null</code>.
+	 */
+	public void setIgnoreInvalidUploadFiles(boolean ignoreInvalidUploadFiles) {
+		this.ignoreInvalidUploadFiles = ignoreInvalidUploadFiles;
 	}
 
 	// ---------------------------------------------------------------- inject
@@ -188,7 +165,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 	 * Inject request parameters.
 	 */
 	protected void injectParameters(Target[] targets, ScopeData[] injectData, HttpServletRequest servletRequest) {
-		boolean encode = config.encodeGetParams && servletRequest.getMethod().equals("GET");
+		boolean encode = encodeGetParams && servletRequest.getMethod().equals("GET");
 		Enumeration paramNames = servletRequest.getParameterNames();
 
 		while (paramNames.hasMoreElements()) {
@@ -212,10 +189,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 					if (name != null) {
 						String[] paramValues = servletRequest.getParameterValues(paramName);
 						paramValues = ServletUtil.prepareParameters(
-								paramValues,
-								config.trimParams,
-								config.treatEmptyParamsAsNull,
-								config.ignoreEmptyRequestParams);
+								paramValues, trimParams, treatEmptyParamsAsNull, ignoreEmptyRequestParams);
 
 						if (paramValues == null) {
 							continue;
@@ -269,7 +243,7 @@ public class RequestScopeInjector extends BaseScopeInjector
 					if (name != null) {
 						FileUpload[] paramValues = multipartRequest.getFiles(paramName);
 
-						if (config.ignoreInvalidUploadFiles) {
+						if (ignoreInvalidUploadFiles) {
 							for (int j = 0; j < paramValues.length; j++) {
 								FileUpload paramValue = paramValues[j];
 
@@ -326,10 +300,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 		}
 		HttpServletRequest servletRequest = actionRequest.getHttpServletRequest();
 
-		if (config.injectAttributes == true) {
+		if (injectAttributes == true) {
 			injectAttributes(targets, injectData, servletRequest);
 		}
-		if (config.injectParameters == true) {
+		if (injectParameters == true) {
 			injectParameters(targets, injectData, servletRequest);
 			injectUploadedFiles(targets, injectData, servletRequest);
 		}

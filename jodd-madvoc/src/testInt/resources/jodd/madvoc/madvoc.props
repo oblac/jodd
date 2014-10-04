@@ -1,5 +1,5 @@
-madvocConfig.requestScopeInjectorConfig.injectAttributes=true
-madvocConfig.requestScopeInjectorConfig.injectParameters=true
+interceptorManager.requestScopeInjector.injectAttributes=true
+interceptorManager.requestScopeInjector.injectParameters=true
 madvocConfig.defaultExtension=html
 
 madvocConfig.pathMacroClass=jodd.madvoc.macro.RegExpPathMacros
