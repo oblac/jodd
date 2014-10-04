@@ -19,6 +19,10 @@ import jodd.introspector.Setter;
 class BeanProperty {
 
 	BeanProperty(Object bean, String propertyName, boolean declared, boolean forced) {
+		this(bean, propertyName, declared, forced, false);
+	}
+
+	BeanProperty(Object bean, String propertyName, boolean declared, boolean forced, boolean silent) {
 		this.introspector = BeanUtil.getBeanUtilBean().getIntrospector();
 		setName(propertyName);
 		setBean(bean);
@@ -26,6 +30,7 @@ class BeanProperty {
 		this.first = true;
 		this.forced = forced;
 		this.declared = declared;
+		this.silent = silent;
 		this.fullName = bean.getClass().getSimpleName() + '#' + propertyName;
 	}
 
@@ -61,6 +66,7 @@ class BeanProperty {
 
 	final boolean forced;
 	final boolean declared;
+	final boolean silent;
 
 	// ---------------------------------------------------------------- simple properties
 
