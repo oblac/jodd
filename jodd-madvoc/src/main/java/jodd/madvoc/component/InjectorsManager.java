@@ -40,12 +40,12 @@ public class InjectorsManager {
 	@PetiteInitMethod(order = 1, invoke = POST_DEFINE)
 	void createInjectors() {
 		requestScopeInjector = new RequestScopeInjector(madvocConfig, scopeDataResolver);
-		sessionScopeInjector = new SessionScopeInjector(madvocConfig, scopeDataResolver);
-		actionPathMacroInjector = new ActionPathMacroInjector(madvocConfig, scopeDataResolver);
-		madvocContextScopeInjector = new MadvocContextScopeInjector(madvocConfig, scopeDataResolver, madpc);
+		sessionScopeInjector = new SessionScopeInjector(scopeDataResolver);
+		actionPathMacroInjector = new ActionPathMacroInjector(scopeDataResolver);
+		madvocContextScopeInjector = new MadvocContextScopeInjector(scopeDataResolver, madpc);
 		madvocParamsInjector = new MadvocParamsInjector(madvocConfig);
-		applicationScopeInjector = new ApplicationScopeInjector(madvocConfig, scopeDataResolver);
-		servletContextScopeInjector = new ServletContextScopeInjector(madvocConfig, scopeDataResolver);
+		applicationScopeInjector = new ApplicationScopeInjector(scopeDataResolver);
+		servletContextScopeInjector = new ServletContextScopeInjector(scopeDataResolver);
 	}
 
 	// ---------------------------------------------------------------- getter

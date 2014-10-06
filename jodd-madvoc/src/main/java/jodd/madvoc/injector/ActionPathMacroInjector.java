@@ -7,7 +7,6 @@ import jodd.madvoc.ActionConfigSet;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.util.StringUtil;
 
@@ -17,8 +16,9 @@ import jodd.util.StringUtil;
  */
 public class ActionPathMacroInjector extends BaseScopeInjector implements Injector {
 
-	public ActionPathMacroInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.REQUEST, madvocConfig, scopeDataResolver);
+	public ActionPathMacroInjector(ScopeDataResolver scopeDataResolver) {
+		super(ScopeType.REQUEST, scopeDataResolver);
+		silent = true;
 	}
 
 	public void inject(ActionRequest actionRequest) {

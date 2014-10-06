@@ -29,9 +29,10 @@ public class RequestScopeInjector extends BaseScopeInjector
 		implements Injector, Outjector {
 
 	public RequestScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
-		super(ScopeType.REQUEST, madvocConfig, scopeDataResolver);
+		super(ScopeType.REQUEST, scopeDataResolver);
 		this.encoding = madvocConfig.getEncoding();
 		this.attributeMoveId = madvocConfig.getAttributeMoveId();
+		silent = true;
 	}
 
 	// ---------------------------------------------------------------- configuration

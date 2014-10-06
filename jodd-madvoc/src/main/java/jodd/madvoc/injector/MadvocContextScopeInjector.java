@@ -5,7 +5,6 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 import jodd.petite.PetiteContainer;
 
@@ -18,8 +17,8 @@ public class MadvocContextScopeInjector extends BaseScopeInjector
 
 	protected final PetiteContainer madpc;
 
-	public MadvocContextScopeInjector(MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver, PetiteContainer madpc) {
-		super(ScopeType.CONTEXT, madvocConfig, scopeDataResolver);
+	public MadvocContextScopeInjector(ScopeDataResolver scopeDataResolver, PetiteContainer madpc) {
+		super(ScopeType.CONTEXT, scopeDataResolver);
 		this.madpc = madpc;
 	}
 

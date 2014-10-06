@@ -5,7 +5,6 @@ package jodd.madvoc.injector;
 import jodd.madvoc.ActionRequest;
 import jodd.madvoc.ScopeData;
 import jodd.madvoc.ScopeType;
-import jodd.madvoc.component.MadvocConfig;
 import jodd.madvoc.component.ScopeDataResolver;
 
 /**
@@ -15,15 +14,31 @@ public abstract class BaseScopeInjector {
 
 	protected final ScopeDataResolver scopeDataResolver;
 	protected final ScopeType scopeType;
-	protected final MadvocConfig madvocConfig;
 
 	/**
 	 * Creates scope injector for provided {@link jodd.madvoc.ScopeType}.
 	 */
-	protected BaseScopeInjector(ScopeType scopeType, MadvocConfig madvocConfig, ScopeDataResolver scopeDataResolver) {
+	protected BaseScopeInjector(ScopeType scopeType, ScopeDataResolver scopeDataResolver) {
 		this.scopeType = scopeType;
-		this.madvocConfig = madvocConfig;
 		this.scopeDataResolver = scopeDataResolver;
+	}
+
+	// ---------------------------------------------------------------- flags
+
+	protected boolean silent = false;
+
+	/**
+	 * Returns <code>true</code> if injection is silent.
+	 */
+	public boolean isSilent() {
+		return silent;
+	}
+
+	/**
+	 * Defines if injection should throw exceptions or to be silent.
+	 */
+	public void setSilent(boolean silent) {
+		this.silent = silent;
 	}
 
 	// ---------------------------------------------------------------- target
@@ -32,7 +47,7 @@ public abstract class BaseScopeInjector {
 	 * Sets target bean property, optionally creates instance if doesn't exist.
 	 */
 	protected void setTargetProperty(Target target, String name, Object value) {
-		target.writeValue(name, value, madvocConfig.isInjectionErrorThrowsException());
+		target.writeValue(name, value, silent);
 	}
 
 	/**

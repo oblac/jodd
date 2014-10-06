@@ -3,8 +3,6 @@
 package jodd.madvoc.injector;
 
 import jodd.bean.BeanUtil;
-import jodd.log.Logger;
-import jodd.log.LoggerFactory;
 import jodd.madvoc.MadvocException;
 import jodd.typeconverter.TypeConverterManager;
 
@@ -14,8 +12,6 @@ import java.lang.reflect.Constructor;
  * Injection target.
  */
 public class Target {
-
-	private static final Logger log = LoggerFactory.getLogger(Target.class);
 
 	protected final Class type;
 	protected Object value;
@@ -79,7 +75,9 @@ public class Target {
 	// ---------------------------------------------------------------- read
 
 	/**
-	 * Reads value from the target.
+	 * Reads value from the target. If something goes wrong, exception
+	 * is thrown. We assume that outjection is controlled by developer
+	 * and that each reading of a value must be successful operation.
 	 */
 	public Object readValue(String propertyName) {
 		if (type != null) {
@@ -98,20 +96,18 @@ public class Target {
 	// ---------------------------------------------------------------- write
 
 	/**
-	 * Writes value to this target.
+	 * Writes value to this target. Depending on a flag, setting the value can be
+	 * completely silent, when no exception is thrown and with top performances.
+	 * Otherwise, an exception is thrown on a failure.
 	 */
-	public void writeValue(String propertyName, Object propertyValue, boolean throwExceptionOnError) {
+	public void writeValue(String propertyName, Object propertyValue, boolean silent) {
 		if (type != null) {
 			// target type specified, save into target value!
 
 			int dotNdx = propertyName.indexOf('.');
 
 			if (dotNdx == -1) {
-				try {
-					value = TypeConverterManager.convertType(propertyValue, type);
-				} catch (Exception ex) {
-					handleException(propertyName, throwExceptionOnError, ex);
-				}
+				value = TypeConverterManager.convertType(propertyValue, type);
 				return;
 			}
 
@@ -124,13 +120,12 @@ public class Target {
 
 		// inject into target value
 
-		if (BeanUtil.hasDeclaredRootProperty(value, propertyName)) {
-			try {
-				BeanUtil.setDeclaredPropertyForced(value, propertyName, propertyValue);
-			} catch (Exception ex) {
-				handleException(propertyName, throwExceptionOnError, ex);
-			}
+		if (silent) {
+			BeanUtil.setDeclaredPropertyForcedSilent(value, propertyName, propertyValue);
+			return;
 		}
+
+		BeanUtil.setDeclaredPropertyForced(value, propertyName, propertyValue);
 	}
 
 	/**
@@ -147,19 +142,4 @@ public class Target {
 		}
 	}
 
-	/**
-	 * Deals with write exceptions.
-	 */
-	protected void handleException(String propertyName, boolean throwExceptionOnError, Exception ex) {
-		if (throwExceptionOnError) {
-			if (ex instanceof MadvocException) {
-				throw (MadvocException) ex;
-			}
-			throw new MadvocException(ex);
-		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("Injection failed: " + propertyName + ". " + ex.toString());
-			}
-		}
-	}
 }

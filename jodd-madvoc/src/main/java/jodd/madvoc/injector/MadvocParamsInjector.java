@@ -38,7 +38,7 @@ public class MadvocParamsInjector implements ContextInjector<PetiteContainer> {
 
 			String propertyName = param.substring(baseName.length() + 1);
 
-			target.writeValue(propertyName, value, madvocConfig.isInjectionErrorThrowsException());
+			target.writeValue(propertyName, value, false);
 		}
 	}
 

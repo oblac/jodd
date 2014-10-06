@@ -53,7 +53,6 @@ public class MadvocConfig {
 		pathMacroClass = WildcardPathMacros.class;
 		pathMacroSeparators = new String[] {DOLLAR_LEFT_BRACE, COLON, RIGHT_BRACE};
 		resultPathPrefix = null;
-		injectionErrorThrowsException = false;
 		asyncConfig = new AsyncConfig();
 		routesFileName = "madvoc-routes.txt";
 	}
@@ -363,22 +362,6 @@ public class MadvocConfig {
 		this.pathMacroSeparators = pathMacroSeparators;
 	}
 
-	// ---------------------------------------------------------------- injection
-
-	protected boolean injectionErrorThrowsException;
-
-	public boolean isInjectionErrorThrowsException() {
-		return injectionErrorThrowsException;
-	}
-
-	/**
-	 * Defines if injection errors throws exceptions.
-	 * By default the warning will be logged.
-	 */
-	public void setInjectionErrorThrowsException(boolean injectionErrorThrowsException) {
-		this.injectionErrorThrowsException = injectionErrorThrowsException;
-	}
-
 	// ---------------------------------------------------------------- async
 
 	public static class AsyncConfig {
@@ -467,7 +450,6 @@ public class MadvocConfig {
 				",\n\tfileUploadFactory=" + fileUploadFactory +
 				",\n\tpathMacroClass=" + pathMacroClass.getName() +
 				",\n\tpreventCaching=" + preventCaching +
-				",\n\tinjectionErrorThrowsException=" + injectionErrorThrowsException +
 				",\n\trootPackages=" + rootPackages +
 				",\n\tmadvocRootPackageClassName='" + madvocRootPackageClassName + '\'' +
 				",\n\tasyncConfig='" + asyncConfig + '\'' +
