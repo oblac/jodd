@@ -54,8 +54,12 @@ public class UnsafeUtil {
 	 * Returns String characters in most performing way.
 	 * If possible, the inner <code>char[]</code> will be returned.
 	 * If not, <code>toCharArray()</code> will be called.
+	 * Returns <code>null</code> when argument is <code>null</code>.
 	 */
 	public static char[] getChars(String string) {
+		if (string == null) {
+			return null;
+		}
 		if (UNSAFE == null) {
 			return string.toCharArray();
 		}
@@ -86,6 +90,9 @@ public class UnsafeUtil {
 	 * Creates (mutable) string from given char array.
 	 */
 	public static String createString(char[] chars) {
+		if (chars == null) {
+			return null;
+		}
 		if (UNSAFE == null) {
 			return new String(chars);
 		}

@@ -17,6 +17,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 public class JerryMiscTest {
 
@@ -251,6 +252,16 @@ public class JerryMiscTest {
 
 		String newHtml = doc.html();
 		assertEquals("<p>to<br>Jodd <b>rocks</b></p>", newHtml);
+	}
+
+	@Test
+	public void testCrash() {
+		try {
+			String html = null;
+			Jerry.jerry(html);
+			fail();
+		} catch (NullPointerException ignore) {
+		}
 	}
 
 }
