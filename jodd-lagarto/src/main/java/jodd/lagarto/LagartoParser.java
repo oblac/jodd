@@ -2499,6 +2499,7 @@ public class LagartoParser extends Scanner {
 		protected CharSequence version;
 		protected CharSequence encoding;
 		protected CharSequence standalone;
+		protected char attrQuote;
 
 		protected void reset() {
 			xmlAttrCount = 0;
@@ -2605,8 +2606,9 @@ public class LagartoParser extends Scanner {
 						continue;
 					}
 
-					if (c == '\"') {
+					if (c == '\"' || c == '\'') {
 						state = XML_ATTRIBUTE_VALUE;
+						attrQuote = c;
 						return;
 					}
 
@@ -2632,7 +2634,7 @@ public class LagartoParser extends Scanner {
 
 					char c = input[ndx];
 
-					if (c == '\"') {
+					if (c == attrQuote) {
 						CharSequence value = charSequence(xmlAttrStartNdx, ndx);
 
 						switch (xmlAttrCount) {

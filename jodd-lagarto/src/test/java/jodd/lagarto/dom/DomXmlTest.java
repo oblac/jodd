@@ -189,4 +189,20 @@ public class DomXmlTest {
 					"</person>" +
 				"</people_list>", xmlContent);
 	}
+
+	@Test
+	public void testXmlAndSingleQuotes() throws IOException {
+		File file = new File(testDataRoot, "people2.xml");
+		String xmlContent = FileUtil.readString(file);
+
+		LagartoDOMBuilder lagartoDOMBuilder = new LagartoDOMBuilder();
+		lagartoDOMBuilder.enableXmlMode();
+
+		Document xml = lagartoDOMBuilder.parse(xmlContent);
+
+		XmlDeclaration xmlDeclaration = (XmlDeclaration) xml.getChild(0);
+
+		assertEquals("1.0", xmlDeclaration.getVersion());
+		assertEquals("UTF-8", xmlDeclaration.getEncoding());
+	}
 }
