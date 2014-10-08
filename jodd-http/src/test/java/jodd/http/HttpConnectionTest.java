@@ -81,7 +81,7 @@ public class HttpConnectionTest {
 				.form("file", file)
 				.monitor(new HttpProgressListener() {
 					@Override
-					public void transferred(long len) {
+					public void transferred(int len) {
 						sb.append(":" + len);
 					}
 				})
