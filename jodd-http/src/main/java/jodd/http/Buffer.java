@@ -8,6 +8,7 @@ import jodd.util.StringPool;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.LinkedList;
 
@@ -106,6 +107,31 @@ public class Buffer {
 
 				try {
 					StreamUtil.copy(inputStream, writer, StringPool.ISO_8859_1);
+				}
+				finally {
+					StreamUtil.close(inputStream);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Writes content to the output stream.
+	 */
+	public void writeTo(OutputStream out) throws IOException {
+		for (Object o : list) {
+			if (o instanceof StringBuilder) {
+				StringBuilder sb = (StringBuilder) o;
+
+				out.write(sb.toString().getBytes(StringPool.ISO_8859_1));
+			}
+			else if (o instanceof Uploadable) {
+				Uploadable uploadable = (Uploadable) o;
+
+				InputStream inputStream = uploadable.openInputStream();
+
+				try {
+					StreamUtil.copy(inputStream, out);
 				}
 				finally {
 					StreamUtil.close(inputStream);

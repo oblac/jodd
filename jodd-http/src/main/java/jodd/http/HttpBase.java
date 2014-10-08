@@ -18,9 +18,11 @@ import jodd.util.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -657,20 +659,61 @@ public abstract class HttpBase<T> {
 		return buffer;
 	}
 
-	// ---------------------------------------------------------------- send
+	// ---------------------------------------------------------------- buffer
 
-	protected HttpProgressListener httpProgressListener;
+	/**
+	 * Returns string representation of this request or response.
+	 */
+	public String toString() {
+		return toString(true);
+	}
+
+	/**
+	 * Returns full request/response, or just headers.
+	 * Useful for debugging.
+	 */
+	public String toString(boolean fullResponse) {
+		Buffer buffer = buffer(fullResponse);
+
+		StringWriter stringWriter = new StringWriter();
+
+		try {
+			buffer.writeTo(stringWriter);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return stringWriter.toString();
+	}
 
 	/**
 	 * Returns byte array of request or response.
 	 */
 	public byte[] toByteArray() {
+		Buffer buffer = buffer(true);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
+
 		try {
-			return toString().getBytes(StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
+			buffer.writeTo(baos);
 		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return baos.toByteArray();
 	}
+
+	/**
+	 * Creates {@link jodd.http.Buffer buffer} ready to be consumed.
+	 * Buffer can, optionally, contains just headers.
+	 */
+	protected abstract Buffer buffer(boolean full);
+
+	// ---------------------------------------------------------------- send
+
+	protected HttpProgressListener httpProgressListener;
 
 	/**
 	 * Sends request or response to output stream.

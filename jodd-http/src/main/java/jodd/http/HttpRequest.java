@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -618,39 +617,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return httpResponse;
 	}
 
-	// ---------------------------------------------------------------- toString
-
-	/**
-	 * Returns string representation of the HTTP request.
-	 * Important: some initialization is done here as well, before
-	 * resulting string is created.
-	 */
-	public String toString() {
-		return toString(true);
-	}
-
-	/**
-	 * Returns full request or just headers as a string.
-	 * Useful for debugging.
-	 */
-	public String toString(boolean fullRequest) {
-		Buffer buffer = buffer(fullRequest);
-
-		StringWriter stringWriter = new StringWriter();
-
-		try {
-			buffer.writeTo(stringWriter);
-		}
-		catch (IOException ioex) {
-			throw new HttpException(ioex);
-		}
-
-		return stringWriter.toString();
-	}
+	// ---------------------------------------------------------------- buffer
 
 	/**
 	 * Prepares the request buffer.
 	 */
+	@Override
 	protected Buffer buffer(boolean fullRequest) {
 		// INITIALIZATION
 

@@ -85,37 +85,13 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- toString
+	// ---------------------------------------------------------------- buffer
 
-	/**
-	 * String representation of the HTTP response.
-	 */
-	public String toString() {
-		return toString(true);
-	}
-
-	/**
-	 * Returns full response or just headers.
-	 * Useful for debugging.
-	 */
-	public String toString(boolean fullResponse) {
-		Buffer buffer = buffer(fullResponse);
-
-		StringWriter stringWriter = new StringWriter();
-
-		try {
-			buffer.writeTo(stringWriter);
-		}
-		catch (IOException ioex) {
-			throw new HttpException(ioex);
-		}
-
-		return stringWriter.toString();
-	}
 
 	/**
 	 * Creates response {@link jodd.http.Buffer buffer}.
 	 */
+	@Override
 	protected Buffer buffer(boolean fullResponse) {
 		// form
 
