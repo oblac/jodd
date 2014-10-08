@@ -140,4 +140,94 @@ public class Buffer {
 		}
 	}
 
+	/**
+	 * Writes content to the output stream, using progress listener to track the sending progress.
+	 */
+	public void writeTo(OutputStream out, HttpProgressListener progressListener) throws IOException {
+
+		// start
+
+		final int size = size();
+		final int callbackSize = progressListener.callbackSize(size);
+		int count = 0;		// total count
+		int step = 0;		// step is offset in current chunk
+
+		progressListener.transferred(count);
+
+		// loop
+
+		for (Object o : list) {
+			if (o instanceof StringBuilder) {
+				StringBuilder sb = (StringBuilder) o;
+				byte[] bytes = sb.toString().getBytes(StringPool.ISO_8859_1);
+
+				int offset = 0;
+
+				while (offset < bytes.length) {
+					// calc the remaining sending chunk size
+					int chunk = callbackSize - step;
+
+					// check if this chunk size fits the bytes array
+					if (offset + chunk > bytes.length) {
+						chunk = bytes.length - offset;
+					}
+
+					// writes the chunk
+					out.write(bytes, offset, chunk);
+
+					offset += chunk;
+					step += chunk;
+					count += chunk;
+
+					// listener
+					if (step >= callbackSize) {
+						progressListener.transferred(count);
+						step -= callbackSize;
+					}
+				}
+			}
+			else if (o instanceof Uploadable) {
+				Uploadable uploadable = (Uploadable) o;
+
+				InputStream inputStream = uploadable.openInputStream();
+
+				int remaining = uploadable.getSize();
+
+				try {
+					while (remaining > 0) {
+						// calc the remaining sending chunk size
+						int chunk = callbackSize - step;
+
+						// check if this chunk size fits the remaining size
+						if (chunk > remaining) {
+							chunk = remaining;
+						}
+
+						// writes remaining chunk
+						StreamUtil.copy(inputStream, out, remaining);
+
+						remaining -= chunk;
+						step += chunk;
+						count += chunk;
+
+						// listener
+						if (step >= callbackSize) {
+							progressListener.transferred(count);
+							step -= callbackSize;
+						}
+					}
+				}
+				finally {
+					StreamUtil.close(inputStream);
+				}
+			}
+		}
+
+		// end
+
+		if (step != 0) {
+			progressListener.transferred(count);
+		}
+	}
+
 }

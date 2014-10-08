@@ -719,33 +719,13 @@ public abstract class HttpBase<T> {
 	 * Sends request or response to output stream.
 	 */
 	public void sendTo(OutputStream out) throws IOException {
-		byte[] bytes = toByteArray();
+		Buffer buffer = buffer(true);
 
 		if (httpProgressListener == null) {
-			out.write(bytes);
+			buffer.writeTo(out);
 		}
 		else {
-			int size = bytes.length;
-			int callbackSize = httpProgressListener.callbackSize(size);
-
-			httpProgressListener.transferred(0);
-
-			int offset = 0;
-			while (true) {
-				int chunk = callbackSize;
-				if (offset + chunk > size) {
-					chunk = size - offset;
-				}
-
-				out.write(bytes, offset, chunk);
-
-				offset += chunk;
-				httpProgressListener.transferred(offset);
-
-				if (offset == size) {
-					break;
-				}
-			}
+			buffer.writeTo(out, httpProgressListener);
 		}
 
 		out.flush();
