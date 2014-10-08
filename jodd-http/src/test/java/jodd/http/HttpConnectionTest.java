@@ -2,10 +2,7 @@
 
 package jodd.http;
 
-import jodd.datetime.JDateTime;
-import jodd.datetime.JStopWatch;
 import jodd.io.FileUtil;
-import jodd.util.RandomStringUtil;
 import jodd.util.StringUtil;
 import org.junit.Test;
 

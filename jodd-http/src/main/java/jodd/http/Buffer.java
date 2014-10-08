@@ -4,10 +4,10 @@ package jodd.http;
 
 import jodd.http.up.Uploadable;
 import jodd.io.StreamUtil;
+import jodd.util.StringPool;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Writer;
 import java.util.LinkedList;
 
@@ -105,7 +105,7 @@ public class Buffer {
 				InputStream inputStream = uploadable.openInputStream();
 
 				try {
-					StreamUtil.copy(inputStream, writer);
+					StreamUtil.copy(inputStream, writer, StringPool.ISO_8859_1);
 				}
 				finally {
 					StreamUtil.close(inputStream);

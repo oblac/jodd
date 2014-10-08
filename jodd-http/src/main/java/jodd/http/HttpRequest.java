@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -629,11 +630,28 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 	/**
-	 * Returns full request or just headers.
+	 * Returns full request or just headers as a string.
 	 * Useful for debugging.
 	 */
 	public String toString(boolean fullRequest) {
+		Buffer buffer = buffer(fullRequest);
 
+		StringWriter stringWriter = new StringWriter();
+
+		try {
+			buffer.writeTo(stringWriter);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return stringWriter.toString();
+	}
+
+	/**
+	 * Prepares the request buffer.
+	 */
+	protected Buffer buffer(boolean fullRequest) {
 		// INITIALIZATION
 
 		// host port
@@ -644,7 +662,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// form
 
-		String formString = formString();
+		Buffer formBuffer = formBuffer();
 
 		// query string
 
@@ -665,18 +683,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// BUILD OUT
 
-		StringBuilder builder = new StringBuilder();
+		Buffer request = new Buffer();
 
-		builder.append(method)
+		request.append(method)
 			.append(SPACE)
 			.append(path);
 
 		if (query != null && !query.isEmpty()) {
-			builder.append('?');
-			builder.append(queryString);
+			request.append('?');
+			request.append(queryString);
 		}
 
-		builder.append(SPACE)
+		request.append(SPACE)
 			.append(httpVersion)
 			.append(CRLF);
 
@@ -686,24 +704,24 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			String headerName = HttpUtil.prepareHeaderParameterName(key);
 
 			for (String value : values) {
-				builder.append(headerName);
-				builder.append(": ");
-				builder.append(value);
-				builder.append(CRLF);
+				request.append(headerName);
+				request.append(": ");
+				request.append(value);
+				request.append(CRLF);
 			}
 		}
 
 		if (fullRequest) {
-			builder.append(CRLF);
+			request.append(CRLF);
 
 			if (form != null) {
-				builder.append(formString);
+				request.append(formBuffer);
 			} else if (body != null) {
-				builder.append(body);
+				request.append(body);
 			}
 		}
 
-		return builder.toString();
+		return request;
 	}
 
 	// ---------------------------------------------------------------- parse
