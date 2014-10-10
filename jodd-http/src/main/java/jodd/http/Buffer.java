@@ -204,7 +204,7 @@ public class Buffer {
 						}
 
 						// writes remaining chunk
-						StreamUtil.copy(inputStream, out, remaining);
+						StreamUtil.copy(inputStream, out, chunk);
 
 						remaining -= chunk;
 						step += chunk;
