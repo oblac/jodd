@@ -7,7 +7,9 @@ import jodd.io.FileNameUtil;
 import jodd.io.FileUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * File uploadable.
@@ -50,4 +52,11 @@ public class FileUploadable implements Uploadable<File> {
 		return mimeType;
 	}
 
+	public int getSize() {
+		return (int) file.length();
+	}
+
+	public InputStream openInputStream() throws IOException {
+		return new FileInputStream(file);
+	}
 }

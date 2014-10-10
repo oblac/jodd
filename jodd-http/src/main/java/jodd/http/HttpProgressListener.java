@@ -34,6 +34,6 @@ public abstract class HttpProgressListener {
 	 * Callback for every sent {@link #callbackSize(int) chunk}.
 	 * Also called before and after the transfer.
 	 */
-	public abstract void transferred(long len);
+	public abstract void transferred(int len);
 
 }

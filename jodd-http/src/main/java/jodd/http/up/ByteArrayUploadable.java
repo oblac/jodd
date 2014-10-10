@@ -2,6 +2,10 @@
 
 package jodd.http.up;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Uploadable wrapper of <code>byte array</code>.
  */
@@ -39,4 +43,11 @@ public class ByteArrayUploadable implements Uploadable<byte[]> {
 		return mimeType;
 	}
 
+	public int getSize() {
+		return byteArray.length;
+	}
+
+	public InputStream openInputStream() throws IOException {
+		return new ByteArrayInputStream(byteArray);
+	}
 }

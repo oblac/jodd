@@ -11,7 +11,6 @@ import jodd.io.FileNameUtil;
 import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
-import jodd.util.CharUtil;
 import jodd.util.MimeTypes;
 import jodd.util.RandomStringUtil;
 import jodd.util.StringPool;
@@ -19,9 +18,11 @@ import jodd.util.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -571,11 +572,12 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Creates form string and sets few headers.
+	 * Creates form {@link jodd.http.Buffer buffer} and sets few headers.
 	 */
-	protected String formString() {
+	protected Buffer formBuffer() {
+		Buffer buffer = new Buffer();
 		if (form == null || form.isEmpty()) {
-			return StringPool.EMPTY;
+			return buffer;
 		}
 
 		if (!isFormMultipart()) {
@@ -592,18 +594,17 @@ public abstract class HttpBase<T> {
 			contentType("application/x-www-form-urlencoded", null);
 			contentLength(formQueryString.length());
 
-			return formQueryString;
+			buffer.append(formQueryString);
+			return buffer;
 		}
 
 		String boundary = StringUtil.repeat('-', 10) + RandomStringUtil.randomAlphaNumeric(10);
 
-		StringBuilder sb = new StringBuilder();
-
 		for (Map.Entry<String, Object[]> entry : form.entrySet()) {
 
-			sb.append("--");
-			sb.append(boundary);
-			sb.append(CRLF);
+			buffer.append("--");
+			buffer.append(boundary);
+			buffer.append(CRLF);
 
 			String name = entry.getKey();
 			Object[] values = entry.getValue();
@@ -611,9 +612,9 @@ public abstract class HttpBase<T> {
 			for (Object value : values) {
 				if (value instanceof String) {
 					String string = (String) value;
-					sb.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
-					sb.append(CRLF);
-					sb.append(string);
+					buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
+					buffer.append(CRLF);
+					buffer.append(string);
 				}
 				else if (value instanceof Uploadable) {
 					Uploadable uploadable = (Uploadable) value;
@@ -623,85 +624,108 @@ public abstract class HttpBase<T> {
 						fileName = name;
 					}
 
-					sb.append("Content-Disposition: form-data; name=\"").append(name);
-					sb.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
+					buffer.append("Content-Disposition: form-data; name=\"").append(name);
+					buffer.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
 
 					String mimeType = uploadable.getMimeType();
 					if (mimeType == null) {
 						mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
 					}
-					sb.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
+					buffer.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
 
-					sb.append("Content-Transfer-Encoding: binary").append(CRLF);
-					sb.append(CRLF);
+					buffer.append("Content-Transfer-Encoding: binary").append(CRLF);
+					buffer.append(CRLF);
 
-					byte[] bytes = uploadable.getBytes();
-					for (byte b : bytes) {
-						sb.append(CharUtil.toChar(b));
-					}
+					buffer.append(uploadable);
+
+					//byte[] bytes = uploadable.getBytes();
+					//for (byte b : bytes) {
+						//buffer.append(CharUtil.toChar(b));
+					//}
 				} else {
 					// should never happened!
 					throw new HttpException("Unsupported type");
 				}
-				sb.append(CRLF);
+				buffer.append(CRLF);
 			}
 		}
 
-		sb.append("--").append(boundary).append("--");
+		buffer.append("--").append(boundary).append("--");
 
 		// the end
 		contentType("multipart/form-data; boundary=" + boundary);
-		contentLength(sb.length());
+		contentLength(buffer.size());
 
-		return sb.toString();
+		return buffer;
 	}
+
+	// ---------------------------------------------------------------- buffer
+
+	/**
+	 * Returns string representation of this request or response.
+	 */
+	public String toString() {
+		return toString(true);
+	}
+
+	/**
+	 * Returns full request/response, or just headers.
+	 * Useful for debugging.
+	 */
+	public String toString(boolean fullResponse) {
+		Buffer buffer = buffer(fullResponse);
+
+		StringWriter stringWriter = new StringWriter();
+
+		try {
+			buffer.writeTo(stringWriter);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return stringWriter.toString();
+	}
+
+	/**
+	 * Returns byte array of request or response.
+	 */
+	public byte[] toByteArray() {
+		Buffer buffer = buffer(true);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(buffer.size());
+
+		try {
+			buffer.writeTo(baos);
+		}
+		catch (IOException ioex) {
+			throw new HttpException(ioex);
+		}
+
+		return baos.toByteArray();
+	}
+
+	/**
+	 * Creates {@link jodd.http.Buffer buffer} ready to be consumed.
+	 * Buffer can, optionally, contains just headers.
+	 */
+	protected abstract Buffer buffer(boolean full);
 
 	// ---------------------------------------------------------------- send
 
 	protected HttpProgressListener httpProgressListener;
 
 	/**
-	 * Returns byte array of request or response.
-	 */
-	public byte[] toByteArray() {
-		try {
-			return toString().getBytes(StringPool.ISO_8859_1);
-		} catch (UnsupportedEncodingException ignore) {
-			return null;
-		}
-	}
-
-	/**
 	 * Sends request or response to output stream.
 	 */
 	public void sendTo(OutputStream out) throws IOException {
-		byte[] bytes = toByteArray();
+		Buffer buffer = buffer(true);
 
 		if (httpProgressListener == null) {
-			out.write(bytes);
+			buffer.writeTo(out);
 		}
 		else {
-			int size = bytes.length;
-			int callbackSize = httpProgressListener.callbackSize(size);
-
-			httpProgressListener.transferred(0);
-
-			int offset = 0;
-			while (true) {
-				int chunk = callbackSize;
-				if (offset + chunk > size) {
-					chunk = size - offset;
-				}
-
-				out.write(bytes, offset, chunk);
-
-				offset += chunk;
-				httpProgressListener.transferred(offset);
-
-				if (offset == size) {
-					break;
-				}
-			}
+			buffer.writeTo(out, httpProgressListener);
 		}
 
 		out.flush();

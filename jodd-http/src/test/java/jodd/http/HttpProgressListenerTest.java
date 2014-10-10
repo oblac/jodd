@@ -12,7 +12,7 @@ public class HttpProgressListenerTest {
 	public void testHttpProgressListener() {
 		HttpProgressListener hpl = new HttpProgressListener() {
 			@Override
-			public void transferred(long len) {
+			public void transferred(int len) {
 
 			}
 		};

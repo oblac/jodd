@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
 
@@ -84,27 +85,21 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return this;
 	}
 
-	// ---------------------------------------------------------------- toString
+	// ---------------------------------------------------------------- buffer
+
 
 	/**
-	 * String representation of the HTTP response.
+	 * Creates response {@link jodd.http.Buffer buffer}.
 	 */
-	public String toString() {
-		return toString(true);
-	}
-
-	/**
-	 * Returns full response or just headers.
-	 * Useful for debugging.
-	 */
-	public String toString(boolean fullResponse) {
+	@Override
+	protected Buffer buffer(boolean fullResponse) {
 		// form
 
-		String formString = formString();
+		Buffer formBuffer = formBuffer();
 
 		// response
 
-		StringBuilder response = new StringBuilder();
+		Buffer response = new Buffer();
 
 		response.append(httpVersion)
 			.append(SPACE)
@@ -130,13 +125,13 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			response.append(CRLF);
 
 			if (form != null) {
-				response.append(formString);
+				response.append(formBuffer);
 			} else if (body != null) {
 				response.append(body);
 			}
 		}
 
-		return response.toString();
+		return response;
 	}
 
 	// ---------------------------------------------------------------- read from

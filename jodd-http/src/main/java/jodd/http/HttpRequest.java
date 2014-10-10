@@ -617,23 +617,13 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return httpResponse;
 	}
 
-	// ---------------------------------------------------------------- toString
+	// ---------------------------------------------------------------- buffer
 
 	/**
-	 * Returns string representation of the HTTP request.
-	 * Important: some initialization is done here as well, before
-	 * resulting string is created.
+	 * Prepares the request buffer.
 	 */
-	public String toString() {
-		return toString(true);
-	}
-
-	/**
-	 * Returns full request or just headers.
-	 * Useful for debugging.
-	 */
-	public String toString(boolean fullRequest) {
-
+	@Override
+	protected Buffer buffer(boolean fullRequest) {
 		// INITIALIZATION
 
 		// host port
@@ -644,7 +634,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// form
 
-		String formString = formString();
+		Buffer formBuffer = formBuffer();
 
 		// query string
 
@@ -665,18 +655,18 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 		// BUILD OUT
 
-		StringBuilder builder = new StringBuilder();
+		Buffer request = new Buffer();
 
-		builder.append(method)
+		request.append(method)
 			.append(SPACE)
 			.append(path);
 
 		if (query != null && !query.isEmpty()) {
-			builder.append('?');
-			builder.append(queryString);
+			request.append('?');
+			request.append(queryString);
 		}
 
-		builder.append(SPACE)
+		request.append(SPACE)
 			.append(httpVersion)
 			.append(CRLF);
 
@@ -686,24 +676,24 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			String headerName = HttpUtil.prepareHeaderParameterName(key);
 
 			for (String value : values) {
-				builder.append(headerName);
-				builder.append(": ");
-				builder.append(value);
-				builder.append(CRLF);
+				request.append(headerName);
+				request.append(": ");
+				request.append(value);
+				request.append(CRLF);
 			}
 		}
 
 		if (fullRequest) {
-			builder.append(CRLF);
+			request.append(CRLF);
 
 			if (form != null) {
-				builder.append(formString);
+				request.append(formBuffer);
 			} else if (body != null) {
-				builder.append(body);
+				request.append(body);
 			}
 		}
 
-		return builder.toString();
+		return request;
 	}
 
 	// ---------------------------------------------------------------- parse
