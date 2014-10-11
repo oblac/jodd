@@ -59,6 +59,7 @@ public class RawTest {
 		String fileContent = FileUtil.readString(data.getFile());
 
 		fileContent = StringUtil.replace(fileContent, "\n", "\r\n");
+		fileContent = StringUtil.replace(fileContent, "\r\r\n", "\r\n");
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
 
@@ -78,6 +79,7 @@ public class RawTest {
 		String fileContent = FileUtil.readString(data.getFile());
 
 		fileContent = StringUtil.replace(fileContent, "\n", "\r\n");
+		fileContent = StringUtil.replace(fileContent, "\r\r\n", "\r\n");
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
 
