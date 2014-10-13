@@ -61,12 +61,16 @@ public class LagartoParserTest {
 				System.out.println('+' + file.getName());
 
 				String content = FileUtil.readString(file);
+				content = StringUtil.removeChars(content, '\r');
 				String expectedResult = FileUtil.readString(new File(file.getAbsolutePath() + ".txt"));
 
 				String formatted = null;
 				File formattedFile = new File(file.getAbsolutePath() + "-fmt.htm");
 				if (formattedFile.exists()) {
 					formatted = FileUtil.readString(formattedFile);
+				}
+				if (formatted != null) {
+					formatted = StringUtil.removeChars(formatted, '\r');
 				}
 
 				boolean isXml = file.getName().endsWith(".xml");
@@ -77,6 +81,7 @@ public class LagartoParserTest {
 
 				expectedResult = StringUtil.removeChars(expectedResult, '\r');
 				result = StringUtil.removeChars(result, '\r').trim();
+				result2 = StringUtil.removeChars(result2, '\r').trim();
 
 				assertEquals(expectedResult, result);
 
