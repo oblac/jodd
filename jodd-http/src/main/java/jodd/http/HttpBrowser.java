@@ -176,7 +176,6 @@ public class HttpBrowser {
 		if (newCookies != null) {
 			for (String cookieValue : newCookies) {
 				Cookie cookie = new Cookie(cookieValue);
-
 				cookies.put(cookie.getName(), cookie);
 			}
 		}
@@ -193,6 +192,12 @@ public class HttpBrowser {
 
 		if (!cookies.isEmpty()) {
 			for (Cookie cookie: cookies.values()) {
+                
+			    Integer maxAge = cookie.getMaxAge();
+				if (maxAge != null && maxAge.intValue() == 0) {
+				    continue;
+				}
+
 				if (!first) {
 					cookieString.append("; ");
 				}
