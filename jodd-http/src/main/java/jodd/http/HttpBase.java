@@ -34,6 +34,7 @@ import static jodd.util.StringPool.CRLF;
 @SuppressWarnings("unchecked")
 public abstract class HttpBase<T> {
 
+    public static final String HEADER_ACCEPT = "Accept";
 	public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
 	public static final String HEADER_CONTENT_TYPE = "Content-Type";
 	public static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -323,6 +324,21 @@ public abstract class HttpBase<T> {
 		return header(HEADER_CONTENT_ENCODING);
 	}
 
+   /**
+     * Returns "Accept" header.
+     */
+	public String accept() {
+	    return header(HEADER_ACCEPT);
+	}
+
+	/**
+     * Sets "Accept" header.
+     */
+    public T accept(String encodings) {
+        header(HEADER_ACCEPT, encodings, true);
+        return (T) this;
+    }
+	
 	/**
 	 * Returns "Accept-Encoding" header.
 	 */
