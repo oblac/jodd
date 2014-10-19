@@ -189,6 +189,14 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 				.set(destination);
 	}
 	/**
+	 * Builds a PATCH request.
+	 */
+	public static HttpRequest patch(String destination) {
+		return new HttpRequest()
+				.method("PATCH")
+				.set(destination);
+	}
+	/**
 	 * Builds a DELETE request.
 	 */
 	public static HttpRequest delete(String destination) {
