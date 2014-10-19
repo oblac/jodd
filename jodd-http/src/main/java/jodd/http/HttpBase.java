@@ -177,9 +177,9 @@ public abstract class HttpBase<T> {
 	 * Returns {@link jodd.http.HttpValuesMap all headers}. Returned
 	 * instance is the same as one used in request/response object.
 	 */
-	public HttpValuesMap headers() {
-		return headers;
-	}
+//	public HttpValuesMap headers() {
+//		return headers;
+//	}
 
 	// ---------------------------------------------------------------- content type
 
