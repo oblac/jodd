@@ -173,6 +173,14 @@ public abstract class HttpBase<T> {
 		return (T) this;
 	}
 
+	/**
+	 * Returns {@link jodd.http.HttpValuesMap all headers}. Returned
+	 * instance is the same as one used in request/response object.
+	 */
+	public HttpValuesMap headers() {
+		return headers;
+	}
+
 	// ---------------------------------------------------------------- content type
 
 	protected String charset;
