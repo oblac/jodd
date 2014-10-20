@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,6 +27,19 @@ public class RawTest {
 		fileContent = StringUtil.replace(fileContent, "\r\n", "\n");
 
 		HttpResponse response = HttpResponse.readFrom(new ByteArrayInputStream(fileContent.getBytes("UTF-8")));
+
+		Map<String, String[]> headers = response.headers();
+		assertEquals(7, headers.size());
+
+		assertEquals("no-cache", headers.get("pragma")[0]);
+		assertEquals("Sat, 23 Mar 2013 23:34:18 GMT", headers.get("date")[0]);
+		assertEquals("max-age=0, must-revalidate, no-cache, no-store, private, post-check=0, pre-check=0",
+				headers.get("cache-control")[0]);
+		assertEquals("no-cache", headers.get("pragma")[0]);
+		assertEquals("Thu, 01 Jan 1970 00:00:00 GMT", headers.get("expires")[0]);
+		assertEquals("text/html;charset=UTF-8", headers.get("content-type")[0]);
+		assertEquals("close", headers.get("connection")[0]);
+		assertEquals("102", headers.get("content-length")[0]);
 
 		assertEquals("no-cache", response.header("Pragma"));
 		assertEquals("text/html;charset=UTF-8" , response.contentType());

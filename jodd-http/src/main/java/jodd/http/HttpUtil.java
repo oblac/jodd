@@ -19,7 +19,7 @@ public class HttpUtil {
 	/**
 	 * Builds a query string from given query map.
 	 */
-	public static String buildQuery(HttpValuesMap queryMap, String encoding) {
+	public static String buildQuery(HttpValuesMap<Object> queryMap, String encoding) {
 		int queryMapSize = queryMap.size();
 
 		if (queryMapSize == 0) {
@@ -64,9 +64,9 @@ public class HttpUtil {
 	/**
 	 * Parses query from give query string. Values are optionally decoded.
 	 */
-	public static HttpValuesMap parseQuery(String query, boolean decode) {
+	public static HttpValuesMap<Object> parseQuery(String query, boolean decode) {
 
-		HttpValuesMap queryMap = new HttpValuesMap();
+		HttpValuesMap<Object> queryMap = HttpValuesMap.ofObjects();
 
 		int ndx, ndx2 = 0;
 		while (true) {

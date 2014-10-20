@@ -11,30 +11,60 @@ import java.util.LinkedHashMap;
  * It detects duplicate values and does not overwrite them, but
  * store them as an array.
  */
-public class HttpValuesMap extends LinkedHashMap<String, Object[]> {
+public abstract class HttpValuesMap<T> extends LinkedHashMap<String, T[]> {
+
+	/**
+	 * Creates new {@link jodd.http.HttpValuesMap} of strings values.
+	 */
+	public static HttpValuesMap<String> ofStrings() {
+		return new HttpValuesMap<String>() {
+			@Override
+			protected String[] createNewArray() {
+				return new String[1];
+			}
+		};
+	}
+
+	/**
+	 * Creates new {@link jodd.http.HttpValuesMap} of object values.
+	 */
+	public static HttpValuesMap<Object> ofObjects() {
+		return new HttpValuesMap<Object>() {
+			@Override
+			protected Object[] createNewArray() {
+				return new Object[1];
+			}
+		};
+	}
 
 	/**
 	 * Sets parameter value.
 	 */
-	public void set(String key, Object value) {
+	public void set(String key, T value) {
 		remove(key);
 		add(key, value);
 	}
 
 	/**
+	 * Creates new array.
+	 */
+	protected abstract T[] createNewArray();
+
+	/**
 	 * Adds parameter value.
 	 */
-	public void add(String key, Object value) {
+	public void add(String key, T value) {
 		// null values replaces all existing values for this key
 		if (value == null) {
 			put(key, null);
 			return;
 		}
 
-		Object[] values = get(key);
+		T[] values = get(key);
 
 		if (values == null) {
-			values = new Object[] {value};
+			values = createNewArray();
+			values[0] = value;
 		} else {
 			values = ArraysUtil.append(values, value);
 		}
@@ -45,8 +75,8 @@ public class HttpValuesMap extends LinkedHashMap<String, Object[]> {
 	/**
 	 * Returns the first value for given key.
 	 */
-	public Object getFirst(String key) {
-		Object[] value = get(key);
+	public T getFirst(String key) {
+		T[] value = get(key);
 
 		if (value == null) {
 			return null;
@@ -59,7 +89,7 @@ public class HttpValuesMap extends LinkedHashMap<String, Object[]> {
 	 * Returns values as strings array.
 	 */
 	public String[] getStrings(String key) {
-		Object[] values = get(key);
+		T[] values = get(key);
 
 		if (values == null) {
 			return null;
@@ -68,7 +98,7 @@ public class HttpValuesMap extends LinkedHashMap<String, Object[]> {
 		String[] strings = new String[values.length];
 
 		for (int i = 0; i < values.length; i++) {
-			Object value = values[i];
+			T value = values[i];
 
 			strings[i] = value.toString();
 		}

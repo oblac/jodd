@@ -30,7 +30,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected int port = DEFAULT_PORT;
 	protected String method = "GET";
 	protected String path = StringPool.SLASH;
-	protected HttpValuesMap query;
+	protected HttpValuesMap<Object> query;
 
 	// ---------------------------------------------------------------- init
 
@@ -276,7 +276,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			query = HttpUtil.parseQuery(queryString, true);
 		} else {
-			query = new HttpValuesMap();
+			query = HttpValuesMap.ofObjects();
 		}
 
 		this.path = path;

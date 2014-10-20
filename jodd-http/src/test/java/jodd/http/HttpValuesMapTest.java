@@ -11,7 +11,7 @@ public class HttpValuesMapTest {
 
 	@Test
 	public void testMultipleValuesSameType() {
-		HttpValuesMap httpValuesMap = new HttpValuesMap();
+		HttpValuesMap<String> httpValuesMap = HttpValuesMap.ofStrings();
 
 		httpValuesMap.add("one", "1");
 
@@ -39,7 +39,7 @@ public class HttpValuesMapTest {
 
 	@Test
 	public void testMultipleValuesDifferentType() {
-		HttpValuesMap httpValuesMap = new HttpValuesMap();
+		HttpValuesMap<Object> httpValuesMap = HttpValuesMap.ofObjects();
 
 		httpValuesMap.add("one", "1");
 		httpValuesMap.add("one", "2");
@@ -50,7 +50,7 @@ public class HttpValuesMapTest {
 
 	@Test
 	public void testNullValues() {
-		HttpValuesMap httpValuesMap = new HttpValuesMap();
+		HttpValuesMap<String> httpValuesMap = HttpValuesMap.ofStrings();
 
 		httpValuesMap.put("one", null);
 

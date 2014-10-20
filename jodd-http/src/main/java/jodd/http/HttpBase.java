@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -48,10 +49,10 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected HttpValuesMap headers = new HttpValuesMap();
+	protected HttpValuesMap<String> headers = HttpValuesMap.ofStrings();
 
-	protected HttpValuesMap form;	// holds form data (when used)
-	protected String body;			// holds raw body string (always)
+	protected HttpValuesMap<Object> form;	// holds form data (when used)
+	protected String body;					// holds raw body string (always)
 
 	// ---------------------------------------------------------------- properties
 
@@ -174,12 +175,13 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns {@link jodd.http.HttpValuesMap all headers}. Returned
-	 * instance is the same as one used in request/response object.
+	 * Returns unmodifiable map of all headers values. Header names are
+	 * the keys of this map and they are all stored in lower case.
+	 * Header values can be either <code>null</code> or an String array.
 	 */
-//	public HttpValuesMap headers() {
-//		return headers;
-//	}
+	public Map<String, String[]> headers() {
+		return Collections.unmodifiableMap(headers);
+	}
 
 	// ---------------------------------------------------------------- content type
 
@@ -332,20 +334,20 @@ public abstract class HttpBase<T> {
 		return header(HEADER_CONTENT_ENCODING);
 	}
 
-   /**
-     * Returns "Accept" header.
-     */
+	/**
+	 * Returns "Accept" header.
+	 */
 	public String accept() {
-	    return header(HEADER_ACCEPT);
+		return header(HEADER_ACCEPT);
 	}
 
 	/**
-     * Sets "Accept" header.
-     */
-    public T accept(String encodings) {
-        header(HEADER_ACCEPT, encodings, true);
-        return (T) this;
-    }
+	 * Sets "Accept" header.
+	 */
+	public T accept(String encodings) {
+		header(HEADER_ACCEPT, encodings, true);
+		return (T) this;
+	}
 	
 	/**
 	 * Returns "Accept-Encoding" header.
@@ -364,9 +366,12 @@ public abstract class HttpBase<T> {
 
 	// ---------------------------------------------------------------- form
 
+	/**
+	 * Initializes form.
+	 */
 	protected void initForm() {
 		if (form == null) {
-			form = new HttpValuesMap();
+			form = HttpValuesMap.ofObjects();
 		}
 	}
 
@@ -868,7 +873,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = new HttpValuesMap();
+			form = HttpValuesMap.ofObjects();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 
