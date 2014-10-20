@@ -86,12 +86,12 @@ public class BufferTest {
 
 		assertEquals(0, buffer.size());
 		assertEquals(0, buffer.list.size());
-		assertNull(buffer.lastString);
+		assertNull(buffer.last);
 
 		buffer.append("Hey");
 
 		assertEquals(3, buffer.size());
-		assertNotNull(buffer.lastString);
+		assertNotNull(buffer.last);
 
 		buffer.append('!');
 		buffer.append(91);
@@ -103,13 +103,13 @@ public class BufferTest {
 
 		assertEquals(106, buffer.size());
 		assertEquals(2, buffer.list.size());
-		assertNull(buffer.lastString);
+		assertNull(buffer.last);
 
 		buffer.append("x");
 
 		assertEquals(107, buffer.size());
 		assertEquals(3, buffer.list.size());
-		assertNotNull(buffer.lastString);
+		assertNotNull(buffer.last);
 
 		Buffer buffer2 = new Buffer();
 		buffer2.append(new SimpleUploadable(20));
@@ -118,7 +118,7 @@ public class BufferTest {
 
 		assertEquals(127, buffer.size());
 		assertEquals(4, buffer.list.size());
-		assertNull(buffer.lastString);
+		assertNull(buffer.last);
 	}
 
 	@Test

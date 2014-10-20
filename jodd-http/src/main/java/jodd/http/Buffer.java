@@ -5,30 +5,41 @@ package jodd.http;
 import jodd.http.up.Uploadable;
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
+import jodd.util.buffer.FastByteBuffer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.LinkedList;
 
 /**
  * Holds request/response content until it is actually send.
- * File content is <b>not</b> read until it is used.
+ * File content (i.e. {@link jodd.http.up.Uploadable}) is
+ * <b>not</b> read until it is really used.
  */
 public class Buffer {
 
 	protected LinkedList<Object> list = new LinkedList<Object>();
-	protected StringBuilder lastString;
+	protected FastByteBuffer last;
 	protected int size;
 
 	/**
 	 * Appends string content to buffer.
 	 */
 	public Buffer append(String string) {
-		ensureLastString();
-		lastString.append(string);
-		size += string.length();
+		ensureLast();
+
+		try {
+			byte[] bytes = string.getBytes(StringPool.ISO_8859_1);
+
+			last.append(bytes);
+
+			size += bytes.length;
+		} catch (UnsupportedEncodingException ignore) {
+		}
+
 		return this;
 	}
 
@@ -36,12 +47,13 @@ public class Buffer {
 	 * Appends a char.
 	 */
 	public Buffer append(char c) {
-		ensureLastString();
-		lastString.append(c);
-		size ++;
+		append(Character.toString(c));
 		return this;
 	}
 
+	/**
+	 * Appends a number.
+	 */
 	public Buffer append(int number) {
 		append(Integer.toString(number));
 		return this;
@@ -53,7 +65,7 @@ public class Buffer {
 	public Buffer append(Uploadable uploadable) {
 		list.add(uploadable);
 		size += uploadable.getSize();
-		lastString = null;
+		last = null;
 		return this;
 	}
 
@@ -66,7 +78,7 @@ public class Buffer {
 			return buffer;
 		}
 		list.addAll(buffer.list);
-		lastString = buffer.lastString;
+		last = buffer.last;
 		size += buffer.size;
 		return this;
 	}
@@ -79,12 +91,12 @@ public class Buffer {
 	}
 
 	/**
-	 * Ensures that last string builder exist.
+	 * Ensures that last buffer exist.
 	 */
-	private void ensureLastString() {
-		if (lastString == null) {
-			lastString = new StringBuilder();
-			list.add(lastString);
+	private void ensureLast() {
+		if (last == null) {
+			last = new FastByteBuffer();
+			list.add(last);
 		}
 	}
 
@@ -95,10 +107,12 @@ public class Buffer {
 	 */
 	public void writeTo(Writer writer) throws IOException {
 		for (Object o : list) {
-			if (o instanceof StringBuilder) {
-				StringBuilder sb = (StringBuilder) o;
+			if (o instanceof FastByteBuffer) {
+				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
 
-				writer.write(sb.toString());
+				byte[] array = fastByteBuffer.toArray();
+
+				writer.write(new String(array, StringPool.ISO_8859_1));
 			}
 			else if (o instanceof Uploadable) {
 				Uploadable uploadable = (Uploadable) o;
@@ -120,10 +134,10 @@ public class Buffer {
 	 */
 	public void writeTo(OutputStream out) throws IOException {
 		for (Object o : list) {
-			if (o instanceof StringBuilder) {
-				StringBuilder sb = (StringBuilder) o;
+			if (o instanceof FastByteBuffer) {
+				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
 
-				out.write(sb.toString().getBytes(StringPool.ISO_8859_1));
+				out.write(fastByteBuffer.toArray());
 			}
 			else if (o instanceof Uploadable) {
 				Uploadable uploadable = (Uploadable) o;
@@ -157,9 +171,9 @@ public class Buffer {
 		// loop
 
 		for (Object o : list) {
-			if (o instanceof StringBuilder) {
-				StringBuilder sb = (StringBuilder) o;
-				byte[] bytes = sb.toString().getBytes(StringPool.ISO_8859_1);
+			if (o instanceof FastByteBuffer) {
+				FastByteBuffer fastByteBuffer = (FastByteBuffer) o;
+				byte[] bytes = fastByteBuffer.toArray();
 
 				int offset = 0;
 
