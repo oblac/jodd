@@ -164,6 +164,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- static factories
 
+
+	/**
+	 * Builds a CONNECT request.
+	 */
+	public static HttpRequest connect(String destination) {
+		return new HttpRequest()
+				.method("CONNECT")
+				.set(destination);
+	}
 	/**
 	 * Builds a GET request.
 	 */
