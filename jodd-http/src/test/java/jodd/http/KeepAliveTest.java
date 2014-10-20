@@ -60,6 +60,10 @@ public class KeepAliveTest {
 					return new ByteArrayInputStream(RESPONSES[currentResponse].getBytes());
 				}
 
+				public void setTimeout(int milliseconds) {
+					// ignore
+				}
+
 				public void close() {
 				}
 			};

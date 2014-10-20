@@ -3,11 +3,13 @@
 package jodd.http.net;
 
 import jodd.http.HttpConnection;
+import jodd.http.HttpException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Socket-based {@link jodd.http.HttpConnection}.
@@ -33,6 +35,14 @@ public class SocketHttpConnection implements HttpConnection {
 		try {
 			socket.close();
 		} catch (IOException ignore) {
+		}
+	}
+
+	public void setTimeout(int milliseconds) {
+		try {
+			socket.setSoTimeout(milliseconds);
+		} catch (SocketException sex) {
+			throw new HttpException(sex);
 		}
 	}
 

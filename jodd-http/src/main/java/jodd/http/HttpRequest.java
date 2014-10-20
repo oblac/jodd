@@ -486,6 +486,27 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- connection properties
+
+	protected int timeout = -1;
+
+	/**
+	 * Defines connection timeout in milliseconds.
+	 * @see jodd.http.HttpConnection#setTimeout(int)
+	 */
+	public HttpRequest timeout(int milliseconds) {
+		this.timeout = milliseconds;
+		return this;
+	}
+
+	/**
+	 * Returns timeout in milliseconds. Negative value means that
+	 * default value is used.
+	 */
+	public int timeout() {
+		return timeout;
+	}
+
 	// ---------------------------------------------------------------- send
 
 	protected HttpConnection httpConnection;
@@ -605,6 +626,12 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	public HttpResponse send() {
 		if (httpConnection == null) {
 			open();
+		}
+
+		// prepare http connection
+
+		if (timeout != -1) {
+			httpConnection.setTimeout(timeout);
 		}
 
 		// sends data
