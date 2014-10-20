@@ -680,6 +680,7 @@ public abstract class HttpBase<T> {
 		}
 
 		buffer.append("--").append(boundary).append("--");
+		buffer.append(CRLF);
 
 		// the end
 		contentType("multipart/form-data; boundary=" + boundary);
