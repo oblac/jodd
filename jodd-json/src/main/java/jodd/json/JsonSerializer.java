@@ -50,7 +50,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer use(Class type, TypeJsonSerializer typeJsonSerializer) {
 		if (typeSerializersMap == null) {
-			typeSerializersMap = new TypeJsonSerializerMap(false);
+			typeSerializersMap = new TypeJsonSerializerMap(JoddJson.defaultSerializers);
 		}
 
 		typeSerializersMap.register(type, typeJsonSerializer);

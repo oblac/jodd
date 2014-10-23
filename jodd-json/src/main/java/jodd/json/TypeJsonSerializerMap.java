@@ -38,13 +38,21 @@ import java.util.Map;
  */
 public class TypeJsonSerializerMap {
 
+	private final TypeJsonSerializerMap defaultSerializerMap;
+
 	/**
-	 * Creates new serializers map and optionally registers defaults.
+	 * Creates new serializers map and registers defaults.
 	 */
-	public TypeJsonSerializerMap(boolean registerDefaults) {
-		if (registerDefaults) {
-			registerDefaults();
-		}
+	public TypeJsonSerializerMap() {
+		registerDefaults();
+		defaultSerializerMap = null;
+	}
+
+	/**
+	 * Creates new empty serializer map with given defaults map.
+	 */
+	public TypeJsonSerializerMap(TypeJsonSerializerMap defaultSerializerMap) {
+		this.defaultSerializerMap = defaultSerializerMap;
 	}
 
 	protected final ClassMap<TypeJsonSerializer> map = new ClassMap<TypeJsonSerializer>();
@@ -168,9 +176,25 @@ public class TypeJsonSerializerMap {
 		return tjs;
 	}
 
+	/**
+	 * Get type serializer from map. First the current map is used.
+	 * If element is missing, default map will be used, if exist.
+	 */
+	protected TypeJsonSerializer lookupSerializer(Class type) {
+		TypeJsonSerializer tjs = map.unsafeGet(type);
+
+		if (tjs == null) {
+			if (defaultSerializerMap != null) {
+				tjs = defaultSerializerMap.map.unsafeGet(type);
+			}
+		}
+
+		return tjs;
+	}
+
 	protected TypeJsonSerializer _lookup(Class type) {
 		synchronized (map) {
-			TypeJsonSerializer tjs = map.unsafeGet(type);
+			TypeJsonSerializer tjs = lookupSerializer(type);
 
 			if (tjs != null) {
 				return tjs;
@@ -181,7 +205,7 @@ public class TypeJsonSerializerMap {
 			// check array
 
 			if (cd.isArray()) {
-				return map.unsafeGet(Arrays.class);
+				return lookupSerializer(Arrays.class);
 			}
 
 			// now iterate interfaces
@@ -189,7 +213,7 @@ public class TypeJsonSerializerMap {
 			Class[] interfaces = cd.getAllInterfaces();
 
 			for (Class interfaze : interfaces) {
-				tjs = map.unsafeGet(interfaze);
+				tjs = lookupSerializer(interfaze);
 
 				if (tjs != null) {
 					return tjs;
@@ -201,7 +225,7 @@ public class TypeJsonSerializerMap {
 			Class[] superclasses = cd.getAllSuperclasses();
 
 			for (Class clazz : superclasses) {
-				tjs = map.unsafeGet(clazz);
+				tjs = lookupSerializer(clazz);
 
 				if (tjs != null) {
 					return tjs;
@@ -210,7 +234,7 @@ public class TypeJsonSerializerMap {
 
 			// nothing found, go with the Object
 
-			return map.unsafeGet(Object.class);
+			return lookupSerializer(Object.class);
 		}
 	}
 

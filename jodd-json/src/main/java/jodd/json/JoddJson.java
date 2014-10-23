@@ -21,7 +21,7 @@ public class JoddJson {
 	/**
 	 * Default JSON type serializers.
 	 */
-	public static TypeJsonSerializerMap defaultSerializers = new TypeJsonSerializerMap(true);
+	public static TypeJsonSerializerMap defaultSerializers = new TypeJsonSerializerMap();
 
 	/**
 	 * Specifies if 'class' metadata is used. When set, class metadata
