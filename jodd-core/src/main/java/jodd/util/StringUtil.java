@@ -2894,4 +2894,21 @@ public class StringUtil {
 		return sb.toString();
 	}
 
+	// ---------------------------------------------------------------- hex
+
+	/**
+	 * Converts bytes to hex string.
+	 */
+	public static String toHexString(byte[] bytes) {
+		char[] chars = new char[bytes.length * 2];
+
+		int i = 0;
+		for (byte b : bytes) {
+			chars[i++] = CharUtil.int2hex((b & 0xF0) >> 4);
+			chars[i++] = CharUtil.int2hex(b & 0x0F);
+		}
+
+		return new String(chars);
+	}
+
 }

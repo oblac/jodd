@@ -1159,7 +1159,6 @@ public class StringUtilTest {
 		assertEquals("abcdčđž", StringUtil.toLowerCase("abCDČđŽ"));
 		assertEquals("abcdčđž", StringUtil.toLowerCase("abCDČđŽ", Locale.US));
 		assertEquals("*-+", StringUtil.toLowerCase("*-+"));
-
 	}
 
 	@Test
@@ -1169,7 +1168,12 @@ public class StringUtilTest {
 		assertEquals("ABCDČĐŽ", StringUtil.toUpperCase("abCDČđŽ"));
 		assertEquals("ABCDČĐŽ", StringUtil.toUpperCase("abCDČđŽ", Locale.US));
 		assertEquals("*-+", StringUtil.toUpperCase("*-+"));
+	}
 
+	@Test
+	public void testToHexString() {
+		assertEquals("3F", StringUtil.toHexString(new byte[] {0x3F}));
+		assertEquals("CAFEBABE", StringUtil.toHexString(new byte[] {(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE}));
 	}
 
 }
