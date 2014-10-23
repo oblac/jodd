@@ -4,9 +4,11 @@ package jodd.io;
 
 import jodd.core.JoddCore;
 import jodd.util.StringPool;
+import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import jodd.util.URLDecoder;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +25,9 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -1335,6 +1340,69 @@ public class FileUtil {
 		}
 
 		return !fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile());
+	}
+
+	// ---------------------------------------------------------------- digests
+
+	/**
+	 * Calculates digest for a file using provided algorithm.
+	 */
+	public static byte[] digest(final File file, MessageDigest algorithm) throws IOException {
+		algorithm.reset();
+		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		DigestInputStream dis = new DigestInputStream(bis, algorithm);
+
+		int bytesRead;
+		while ((bytesRead = dis.read()) != -1) {
+		}
+
+		return algorithm.digest();
+	}
+
+	/**
+	 * Creates MD5 digest of a file.
+	 */
+	public static String md5(final File file) throws IOException {
+		MessageDigest md5Digest = null;
+		try {
+			md5Digest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException ignore) {
+		}
+
+		byte[] digest = digest(file, md5Digest);
+
+		return StringUtil.toHexString(digest);
+	}
+
+	/**
+	 * Creates SHA-1 digest of a file.
+	 */
+	public static String sha(final File file) throws IOException {
+		MessageDigest md5Digest = null;
+		try {
+			md5Digest = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException ignore) {
+		}
+
+		byte[] digest = digest(file, md5Digest);
+
+		return StringUtil.toHexString(digest);
+	}
+
+	/**
+	 * Creates SHA-256 digest of a file.
+	 */
+	public static String sha256(final File file) throws IOException {
+		MessageDigest md5Digest = null;
+		try {
+			md5Digest = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException ignore) {
+		}
+
+		byte[] digest = digest(file, md5Digest);
+
+		return StringUtil.toHexString(digest);
 	}
 
 }
