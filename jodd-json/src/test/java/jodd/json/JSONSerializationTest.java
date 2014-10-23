@@ -2,6 +2,7 @@
 
 package jodd.json;
 
+import jodd.json.impl.ObjectJsonSerializer;
 import jodd.json.mock.Address;
 import jodd.json.mock.Employee;
 import jodd.json.mock.Friend;
@@ -607,6 +608,58 @@ public class JSONSerializationTest {
 		assertAttribute("height", json);
 		assertAttributeMissing("name", json);
 		assertAttributeMissing("wild", json);
+	}
+
+	public static class Lucy {
+		String name = "Lucy";
+		String address = null;
+
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getAddress() {
+			return address;
+		}
+		public void setAddress(String address) {
+			this.address = address;
+		}
+	}
+
+	@Test
+	public void testSerializeWithCustomBeanSerializer() {
+		JsonSerializer jsonSerializer = new JsonSerializer();
+
+		Lucy lucy = new Lucy();
+		String json = jsonSerializer.serialize(lucy);
+
+		assertAttribute("address", json);
+		assertAttribute("name", json);
+
+		jsonSerializer.use(Object.class, new ObjectJsonSerializer() {
+			public void serializeValue(final JsonContext jsonContext, Object value) {
+				jsonContext.writeOpenObject();
+
+				BeanSerializer beanVisitor = new BeanSerializer(jsonContext, value) {
+					@Override
+					protected void onSerializableProperty(String propertyName, Class propertyType, Object value) {
+						if (value == null) {
+							return;
+						}
+						super.onSerializableProperty(propertyName, propertyType, value);
+					}
+				};
+				beanVisitor.serialize();
+
+				jsonContext.writeCloseObject();
+			}
+		});
+
+		json = jsonSerializer.serialize(lucy);
+
+		assertEquals("{\"name\":\"Lucy\"}", json);
 	}
 
 
