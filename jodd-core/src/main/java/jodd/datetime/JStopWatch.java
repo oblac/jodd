@@ -208,11 +208,12 @@ public class JStopWatch {
 			if (spanTime != totalTime) {
 				sb.append("span:  ").append(formatTimeSpan(spanTime)).append('\n');
 			}
-			sb.append("total: ").append(formatTimeSpan(totalTime));
+			sb.append("\ntotal: ").append(formatTimeSpan(totalTime));
 		}
 		if (laps != null) {
 			if (laps.isEmpty() == false) {
 				sb.append('\n');
+				sb.append("\n\t\t\tlap\t\telapsed\n");
 			}
 			for (int i = 0; i < laps.size(); i++) {
 				long[] longs = laps.get(i);
