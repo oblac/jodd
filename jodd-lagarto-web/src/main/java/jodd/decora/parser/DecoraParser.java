@@ -26,7 +26,9 @@ public class DecoraParser {
 	}
 
 	/**
-	 * Parses decorator and collects {@link jodd.decora.parser.DecoraTag Decora tags} used in template.
+	 * Parses decorator file and collects {@link jodd.decora.parser.DecoraTag Decora tags}
+	 * used in template. Returned Decora tags have start and end index set,
+	 * but their region is not set.
 	 */
 	protected DecoraTag[] parseDecorator(char[] decoraContent) {
 		LagartoParser lagartoParser = new LagartoParser(decoraContent, true);
@@ -38,7 +40,7 @@ public class DecoraParser {
 	}
 
 	/**
-	 * Parses page and extracts Decora regions for replacements.
+	 * Parses target page and extracts Decora regions for replacements.
 	 */
 	protected void parsePage(char[] pageContent, DecoraTag[] decoraTags) {
 		LagartoParser lagartoParser = new LagartoParser(pageContent, true);
@@ -53,6 +55,7 @@ public class DecoraParser {
 		int ndx = 0;
 
 		for (DecoraTag decoraTag : decoraTags) {
+			// [1] just copy content before the Decora tag
 			int decoratorLen = decoraTag.getStartIndex() - ndx;
 			if (decoratorLen <= 0) {
 				continue;
@@ -61,6 +64,7 @@ public class DecoraParser {
 
 			ndx = decoraTag.getEndIndex();
 
+			// [2] now write region at the place of Decora tag
 			int regionLen = decoraTag.getRegionLength();
 
 			if (regionLen == 0) {
@@ -73,19 +77,20 @@ public class DecoraParser {
 
 		}
 
+		// write remaining content
 		out.write(decoratorContent, ndx, decoratorContent.length - ndx);
 	}
 
 	/**
-	 * Write region, but extract all inner regions.
+	 * Writes region to output, but extracts all inner regions.
 	 */
 	protected void writeRegion(Writer out, char[] pageContent, DecoraTag decoraTag, DecoraTag[] decoraTags) throws IOException {
 		int regionStart = decoraTag.getRegionStart();
 		int regionLen = decoraTag.getRegionLength();
 		int regionEnd = regionStart + regionLen;
 
-		for (DecoraTag decoraTag2 : decoraTags) {
-			if (decoraTag == decoraTag2) {
+		for (DecoraTag innerDecoraTag : decoraTags) {
+			if (decoraTag == innerDecoraTag) {
 				continue;
 			}
 
@@ -93,14 +98,15 @@ public class DecoraParser {
 				continue;
 			}
 
-			int regionStart2 = decoraTag2.getRegionStart();
+			if (innerDecoraTag.isInsideOtherTagRegion(decoraTag)) {
+				// write everything from region start to the inner Decora tag
+				out.write(pageContent, regionStart, innerDecoraTag.getRegionTagStart() - regionStart);
 
-			if ((regionStart2 > regionStart) && (regionStart2 < regionEnd)) {
-				out.write(pageContent, regionStart, decoraTag2.getRegionTagStart() - regionStart);
-
-				regionStart = decoraTag2.getRegionTagEnd();
+				regionStart = innerDecoraTag.getRegionTagEnd();
 			}
 		}
+
+		// write remaining content of the region
 		out.write(pageContent, regionStart, regionEnd - regionStart);
 	}
 

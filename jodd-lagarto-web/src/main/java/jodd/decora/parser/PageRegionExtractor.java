@@ -8,7 +8,7 @@ import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 
 /**
- * Region extractor parses page and resolves regions for each decora tag.
+ * Region extractor parses page and resolves regions for each Decora tag.
  */
 public class PageRegionExtractor extends EmptyTagVisitor {
 
@@ -33,7 +33,9 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 		if (tag.getType() == TagType.END) {
 			if (currentRegions > 0) {
 				for (DecoraTag decoraTag : decoraTags) {
-					if (decoraTag.isRegionStarted() && tag.nameEquals(decoraTag.getName())) {
+					if (decoraTag.isRegionStarted() &&
+							(decoraTag.getDeepLevel() == tag.getDeepLevel()) &&
+							tag.nameEquals(decoraTag.getName())) {
 
 						decoraTag.endRegion(tag.getTagPosition(), tag.getTagLength());
 
@@ -53,7 +55,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 
 			if (decoraTag.isRegionUndefined() && decoraTag.isMatchedTag(tag)) {
 
-				decoraTag.startRegion(tag.getTagPosition(), tag.getTagLength());
+				decoraTag.startRegion(tag.getTagPosition(), tag.getTagLength(), tag.getDeepLevel());
 
 				currentRegions++;
 			}
@@ -63,7 +65,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 	@Override
 	public void end() {
 		if (currentRegions != 0) {
-			throw new DecoraException("Some regions are not defined correctly");
+			throw new DecoraException("Invalid regions detected");
 		}
 	}
 }

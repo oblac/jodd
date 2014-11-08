@@ -99,7 +99,11 @@ public class DecoraTag {
 		if (id != null) {
 			CharSequence tagId = tag.getId();
 
-			if (tagId != null && TagUtil.equals(id, tagId) == false) {
+			if (tagId == null) {
+				return false;
+			}
+
+			if (TagUtil.equals(id, tagId) == false) {
 				return false;
 			}
 		}
@@ -113,6 +117,8 @@ public class DecoraTag {
 
 	private int regionTagStart;
 	private int regionTagEnd;
+
+	private int deepLevel;
 
 	/**
 	 * Returns <code>true</code> if region is fully defined.
@@ -143,10 +149,11 @@ public class DecoraTag {
 	/**
 	 * Starts defining region by setting the start index and reset region length to zero.
 	 */
-	public void startRegion(int start, int tagLen) {
+	public void startRegion(int start, int tagLen, int deepLevel) {
 		this.regionStart = start + tagLen;
 		this.regionLength = 0;
 		this.regionTagStart = start;
+		this.deepLevel = deepLevel;
 	}
 
 	/**
@@ -171,6 +178,13 @@ public class DecoraTag {
 		return regionLength;
 	}
 
+	/**
+	 * Returns <code>true</code> if region of this Decora tag
+	 * is inside of region of provided Decora tag.
+	 */
+	public boolean isInsideOtherTagRegion(DecoraTag decoraTag) {
+		return (regionStart > decoraTag.getRegionStart()) && (regionStart < decoraTag.getRegionStart() + decoraTag.getRegionLength());
+	}
 
 	public int getRegionTagStart() {
 		return regionTagStart;
@@ -178,6 +192,10 @@ public class DecoraTag {
 
 	public int getRegionTagEnd() {
 		return regionTagEnd;
+	}
+
+	public int getDeepLevel() {
+		return deepLevel;
 	}
 
 	@Override
