@@ -166,7 +166,11 @@ public abstract class CommonEmail {
 	}
 
 	/**
-	 * Sets message subject with specified encoding to override default platform encoding. Also see {@link javax.mail.internet.MimeMessage#setSubject(String, String)}
+	 * Sets message subject with specified encoding to override default platform encoding.
+	 * If the subject contains non US-ASCII characters, it will be encoded using the specified charset.
+	 * If the subject contains only US-ASCII characters, no encoding is done and it is used as-is.
+	 * The application must ensure that the subject does not contain any line breaks.
+	 * See {@link javax.mail.internet.MimeMessage#setSubject(String, String)}.
 	 */
 	public void setSubject(String subject, String encoding) {
 		this.subject = subject;

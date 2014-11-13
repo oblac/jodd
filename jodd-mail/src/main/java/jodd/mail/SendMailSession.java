@@ -135,7 +135,7 @@ public class SendMailSession {
 
 		// subject & date
 
-		if(email.getSubjectEncoding() != null) {
+		if (email.getSubjectEncoding() != null) {
 			msg.setSubject(email.getSubject(), email.getSubjectEncoding());
 		} else {
 			msg.setSubject(email.getSubject());
