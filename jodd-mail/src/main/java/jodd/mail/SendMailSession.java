@@ -91,7 +91,7 @@ public class SendMailSession {
 	 * Creates new JavaX message from {@link Email email}.
 	 */
 	protected Message createMessage(Email email, Session session) throws MessagingException {
-		Message msg = new MimeMessage(session);
+		MimeMessage msg = new MimeMessage(session);
 
 		msg.setFrom(email.getFrom().toInternetAddress());
 
@@ -134,7 +134,14 @@ public class SendMailSession {
 		}
 
 		// subject & date
-		msg.setSubject(email.getSubject());
+
+		if(email.getSubjectEncoding() != null) {
+			msg.setSubject(email.getSubject(), email.getSubjectEncoding());
+		} else {
+			msg.setSubject(email.getSubject());
+		}
+
+
 		Date date = email.getSentDate();
 		if (date == null) {
 			date = new Date();

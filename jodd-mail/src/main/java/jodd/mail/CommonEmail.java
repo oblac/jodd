@@ -156,6 +156,7 @@ public abstract class CommonEmail {
 	// ---------------------------------------------------------------- subject
 
 	protected String subject;
+	protected String subjectEncoding;
 
 	/**
 	 * Sets message subject.
@@ -163,11 +164,26 @@ public abstract class CommonEmail {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
+	/**
+	 * Sets message subject with specified encoding to override default platform encoding. Also see {@link javax.mail.internet.MimeMessage#setSubject(String, String)}
+	 */
+	public void setSubject(String subject, String encoding) {
+		this.subject = subject;
+		this.subjectEncoding = encoding;
+	}
 	/**
 	 * Returns message subject.
 	 */
 	public String getSubject() {
 		return this.subject;
+	}
+
+	/**
+	 * Returns the message subject encoding.
+	 */
+	public String getSubjectEncoding() {
+		return this.subjectEncoding;
 	}
 
 	// ---------------------------------------------------------------- message

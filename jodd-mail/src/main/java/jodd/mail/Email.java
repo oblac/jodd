@@ -280,6 +280,11 @@ public class Email extends CommonEmail {
 		return this;
 	}
 
+	public Email subject(String subject, String subjectEncoding) {
+		setSubject(subject, subjectEncoding);
+		return this;
+	}
+
 	// ---------------------------------------------------------------- message
 
 	public Email message(String text, String mimeType, String encoding) {
