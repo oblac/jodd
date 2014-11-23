@@ -34,6 +34,10 @@ public class SmtpSslServer extends SmtpServer {
 		super(host, port, username, password);
 	}
 
+	public SmtpSslServer(SmtpSslServerBuilder smtpSslServerBuilder) {
+		super(smtpSslServerBuilder);
+	}
+
 	@Override
 	protected Properties createSessionProperties() {
 		Properties props = super.createSessionProperties();
@@ -44,5 +48,16 @@ public class SmtpSslServer extends SmtpServer {
 		props.setProperty(MAIL_SMTP_SOCKET_FACTORY_FALLBACK, StringPool.FALSE);
 		props.setProperty(MAIL_HOST, host);
 		return props;
+	}
+
+	public SmtpServerBuilder newSmtpSslServer() {
+		return new SmtpSslServerBuilder();
+	}
+
+	public static class SmtpSslServerBuilder extends SmtpServerBuilder {
+		@Override
+		public SmtpServer build() {
+			return new SmtpSslServer(this);
+		}
 	}
 }
