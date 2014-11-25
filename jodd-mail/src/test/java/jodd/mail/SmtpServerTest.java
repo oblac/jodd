@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Properties;
 
+import static jodd.mail.SmtpServer.MAIL_SMTP_FROM;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -30,7 +31,7 @@ public class SmtpServerTest {
         SmtpSslServer smtpServer = SmtpSslServer.create("some.host.com", 587)
                 .authenticateWith("test", "password")
                 .timeout(10)
-                .property("mail.smtp.from", "bounce@jodd.org");
+                .property(MAIL_SMTP_FROM, "bounce@jodd.org");
 
         Properties sessionProperties = smtpServer.createSession().mailSession.getProperties();
 

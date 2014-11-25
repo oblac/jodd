@@ -15,15 +15,16 @@ import static jodd.util.StringPool.TRUE;
  */
 public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider {
 
-	protected static final String MAIL_HOST = "mail.host";
-	protected static final String MAIL_SMTP_HOST = "mail.smtp.host";
-	protected static final String MAIL_SMTP_PORT = "mail.smtp.port";
-	protected static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
-	protected static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
+	public static final String MAIL_HOST = "mail.host";
+	public static final String MAIL_SMTP_HOST = "mail.smtp.host";
+	public static final String MAIL_SMTP_PORT = "mail.smtp.port";
+	public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+	public static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
+	public static final String MAIL_SMTP_FROM = "mail.smtp.from";
 
-	protected static final String MAIL_SMTP_CONNECTIONTIMEOUT ="mail.smtp.connectiontimeout";
-	protected static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
-	protected static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
+	public static final String MAIL_SMTP_CONNECTIONTIMEOUT ="mail.smtp.connectiontimeout";
+	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
+	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
 
 	protected static final String PROTOCOL_SMTP = "smtp";
 

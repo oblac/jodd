@@ -4,7 +4,6 @@ package jodd.mail;
 
 import jodd.util.StringPool;
 
-import javax.mail.Authenticator;
 import java.util.Properties;
 
 /**
@@ -12,10 +11,11 @@ import java.util.Properties;
  */
 public class SmtpSslServer extends SmtpServer<SmtpSslServer> {
 
-	protected static final String MAIL_SMTP_STARTTLS_ENABLE 		= "mail.smtp.starttls.enable";
-	protected static final String MAIL_SMTP_SOCKET_FACTORY_PORT 	= "mail.smtp.socketFactory.port";
-	protected static final String MAIL_SMTP_SOCKET_FACTORY_CLASS 	= "mail.smtp.socketFactory.class";
-	protected static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
+	public static final String MAIL_SMTP_STARTTLS_ENABLE 		= "mail.smtp.starttls.enable";
+	public static final String MAIL_SMTP_SOCKET_FACTORY_PORT 	= "mail.smtp.socketFactory.port";
+	public static final String MAIL_SMTP_SOCKET_FACTORY_CLASS 	= "mail.smtp.socketFactory.class";
+	public static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
+
 	protected static final int DEFAULT_SSL_PORT = 465;
 
 	public static SmtpSslServer create(String host) {
