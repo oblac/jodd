@@ -13,7 +13,7 @@ import static jodd.util.StringPool.TRUE;
 /**
  * Represents simple plain SMTP server for sending emails.
  */
-public class SmtpServer implements SendMailSessionProvider {
+public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider {
 
 	protected static final String MAIL_HOST = "mail.host";
 	protected static final String MAIL_SMTP_HOST = "mail.smtp.host";
@@ -31,56 +31,72 @@ public class SmtpServer implements SendMailSessionProvider {
 
 	protected final String host;
 	protected final int port;
-	protected final Authenticator authenticator;
-	protected final Properties sessionProperties;
-
+	protected Authenticator authenticator;
 	protected int timeout = 0;
+	private Properties additionalProperties;
+
+	// ---------------------------------------------------------------- create
+
+	public static SmtpServer create(String host) {
+		return new SmtpServer(host, DEFAULT_SMTP_PORT);
+	}
+
+	public static SmtpServer create(String host, int port) {
+		return new SmtpServer(host, port);
+	}
 
 	/**
 	 * SMTP server defined with its host and default port.
 	 */
 	public SmtpServer(String host) {
-		this(host, DEFAULT_SMTP_PORT, null);
+		this.host = host;
+		this.port = DEFAULT_SMTP_PORT;
 	}
 	/**
 	 * SMTP server defined with its host and port.
 	 */
 	public SmtpServer(String host, int port) {
-		this(host, port, null);
-	}
-
-	public SmtpServer(String host, Authenticator authenticator) {
-		this(host, DEFAULT_SMTP_PORT, authenticator);
-	}
-
-	public SmtpServer(String host, int port, String username, String password) {
-		this(host, port, new SimpleAuthenticator(username, password));
-	}
-
-	public SmtpServer(String host, String username, String password) {
-		this(host, DEFAULT_SMTP_PORT, new SimpleAuthenticator(username, password));
-	}
-
-	/**
-	 * SMTP server defined with its host and authentication.
-	 */
-	public SmtpServer(String host, int port, Authenticator authenticator) {
 		this.host = host;
 		this.port = port;
-		this.authenticator = authenticator;
-		sessionProperties = createSessionProperties();
 	}
 
-	protected SmtpServer(SmtpServerBuilder smtpServerBuilder) {
-		this.host = smtpServerBuilder.host;
-		this.port = smtpServerBuilder.port;
-		this.authenticator = smtpServerBuilder.authenticator;
-		this.timeout = smtpServerBuilder.timeout;
-		sessionProperties = createSessionProperties(smtpServerBuilder.properties);
+	// ---------------------------------------------------------------- builder
+
+	public T authenticateWith(String username, String password) {
+		this.authenticator = new SimpleAuthenticator(username, password);
+		return (T) this;
+	}
+
+	public T authenticateWith(Authenticator authenticator) {
+		this.authenticator = authenticator;
+		return (T) this;
 	}
 
 	/**
-	 * Prepares mail session properties.
+	 * Defines timeout value in milliseconds for all mail-related operations.
+	 */
+	public T timeout(int timeout) {
+		this.timeout = timeout;
+		return (T) this;
+	}
+
+	public T properties(Properties properties) {
+		this.additionalProperties = properties;
+		return (T) this;
+	}
+
+	public T property(String name, String value) {
+		if (additionalProperties == null) {
+			additionalProperties = new Properties();
+		}
+		this.additionalProperties.put(name, value);
+		return (T) this;
+	}
+
+	// ---------------------------------------------------------------- properties
+
+	/**
+	 * Creates mail session properties.
 	 */
 	protected Properties createSessionProperties() {
 		Properties props = new Properties();
@@ -89,6 +105,7 @@ public class SmtpServer implements SendMailSessionProvider {
 		props.setProperty(MAIL_HOST, host);
 		props.setProperty(MAIL_SMTP_HOST, host);
 		props.setProperty(MAIL_SMTP_PORT, String.valueOf(port));
+
 		if (authenticator != null) {
 			props.setProperty(MAIL_SMTP_AUTH, TRUE);
 		}
@@ -104,27 +121,15 @@ public class SmtpServer implements SendMailSessionProvider {
 	}
 
 	/**
-	 * Adds to or overrides session properties
-	 * @param properties
-	 */
-	protected Properties createSessionProperties(Properties properties) {
-		Properties sessionProperties = createSessionProperties();
-		sessionProperties.putAll(properties);
-		return sessionProperties;
-	}
-
-	/**
-	 * Defines timeout value in milliseconds for all mail-related operations.
-	 */
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public SendMailSession createSession() {
+		Properties sessionProperties = createSessionProperties();
+
+		if (additionalProperties != null) {
+			sessionProperties.putAll(additionalProperties);
+		}
+
 		Session mailSession = Session.getInstance(sessionProperties, authenticator);
 		Transport mailTransport;
 		try {
@@ -165,68 +170,11 @@ public class SmtpServer implements SendMailSessionProvider {
 		return port;
 	}
 
-	public static SmtpServerBuilder newSmtpServer() {
-		return new SmtpServerBuilder();
+	/**
+	 * Returns timeout in milliseconds.
+	 */
+	public int getTimeout() {
+		return timeout;
 	}
 
-	public static class SmtpServerBuilder {
-		private String host;
-		private int port = DEFAULT_SMTP_PORT;
-		private Authenticator authenticator;
-		private Properties properties = new Properties();
-		private int timeout = 0;
-
-		public SmtpServerBuilder host(String host) {
-			this.host = host;
-			return this;
-		}
-
-		/**
-		 * Defines timeout value in milliseconds for all mail-related operations.
-		 */
-		public SmtpServerBuilder timeout(int timeout) {
-			this.timeout = timeout;
-			return this;
-		}
-
-		public SmtpServerBuilder port(int port) {
-			this.port = port;
-			return this;
-		}
-
-		public AuthenticationBuilder authenticateWith() {
-			return new AuthenticationBuilder(this);
-		}
-
-		/**
-		 * Adds to or overrides properties created in {@link SmtpServer#createSessionProperties()}
-		 * @param properties
-		 */
-		public SmtpServerBuilder properties(Properties properties) {
-			this.properties = properties;
-			return this;
-		}
-
-		public SmtpServer build() {
-			return new SmtpServer(this);
-		}
-	}
-
-	public static class AuthenticationBuilder {
-		private final SmtpServerBuilder smtpServerBuilder;
-
-		public AuthenticationBuilder(SmtpServerBuilder smtpServerBuilder) {
-			this.smtpServerBuilder = smtpServerBuilder;
-		}
-
-		public SmtpServerBuilder usernameAndPassword(String username, String password) {
-			this.smtpServerBuilder.authenticator = new SimpleAuthenticator(username, password);
-			return smtpServerBuilder;
-		}
-
-		public SmtpServerBuilder authenticator(Authenticator authenticator) {
-			this.smtpServerBuilder.authenticator = authenticator;
-			return smtpServerBuilder;
-		}
-	}
 }
