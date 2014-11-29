@@ -26,6 +26,9 @@ public class ByteArrayResponseWrapperTest {
 		ByteArrayResponseWrapper wrappedResponse = new ByteArrayResponseWrapper(rw);
 
 		wrappedResponse.getWriter().print("first");
+
+		assertEquals(5, wrappedResponse.getBufferSize());
+
 		byte[] bytes = wrappedResponse.toByteArray();
 		assertEquals("first", new String(bytes));
 

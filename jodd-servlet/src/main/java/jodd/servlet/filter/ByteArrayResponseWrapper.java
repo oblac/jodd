@@ -2,6 +2,7 @@
 
 package jodd.servlet.filter;
 
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -17,26 +18,50 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
 	private final PrintWriter writer;
 	private final FastByteArrayServletOutputStream out;
-	private boolean writerTaken = false;
 
 	public ByteArrayResponseWrapper(HttpServletResponse response) {
 		super(response);
 		out = new FastByteArrayServletOutputStream();
-		writer = new PrintWriter(out);
+
+		// create a PrintWriter-wrapper over the output stream
+		// that is not buffered and is immediately flush-able
+		// so to reflect the changes on out immediately.
+
+		writer = new PrintWriter(new OutputStreamWriter(out) {
+			@Override
+			public void write(int c) throws IOException {
+				super.write(c);
+				super.flush();
+			}
+
+			@Override
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				super.write(cbuf, off, len);
+				super.flush();
+			}
+
+			@Override
+			public void write(String str, int off, int len) throws IOException {
+				super.write(str, off, len);
+				super.flush();
+			}
+		});
 	}
 
+	/**
+	 * Returns the wrapped output stream.
+	 */
 	@Override
 	public ServletOutputStream getOutputStream() throws IOException {
-		if (writerTaken) {
-			writerTaken = false;
-			writer.flush();
-		}
 		return out;
 	}
 
+	/**
+	 * Returns a writer-wrapper that is backed up by the
+	 * wrapped output stream.
+	 */
 	@Override
 	public PrintWriter getWriter() throws IOException {
-		writerTaken = true;
 		return writer;
 	}
 
@@ -45,7 +70,6 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public String toString() {
-		flushBuffer();
 		return out.getByteArrayStream().toString();
 	}
 
@@ -54,16 +78,12 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 		out.reset();
 	}
 
+	/**
+	 * Returns current buffer size.
+	 */
 	@Override
-	public void flushBuffer() {
-		if (writerTaken) {
-			writerTaken = false;
-			writer.flush();
-		}
-		try {
-			super.flushBuffer();
-		} catch (IOException ignore) {
-		}
+	public int getBufferSize() {
+		return out.wrapped.size();
 	}
 
 	// ---------------------------------------------------------------- add-on
@@ -72,7 +92,6 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 * Get the underlying byte array.
 	 */
 	public byte[] toByteArray() {
-		this.flushBuffer();
 		return out.getByteArrayStream().toByteArray();
 	}
 }
