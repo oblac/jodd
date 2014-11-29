@@ -7,6 +7,8 @@ import jodd.lagarto.EmptyTagVisitor;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 
+import java.util.LinkedList;
+
 /**
  * Region extractor parses page and resolves regions for each Decora tag.
  */
@@ -21,9 +23,22 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 	// ---------------------------------------------------------------- interface
 
 	/**
-	 * Number of currently defined regions.
+	 * Region marker for founded, and not yet closed regions.
 	 */
-	protected int currentRegions;
+	public static class RegionMarker {
+		public final CharSequence name;
+		public int innerCount;
+
+		public RegionMarker(CharSequence name) {
+			this.name = name;
+			this.innerCount = 0;
+		}
+	}
+
+	/**
+	 * Decora tags of current regions.
+	 */
+	protected LinkedList<RegionMarker> regionMarkers = new LinkedList<RegionMarker>();
 
 
 	@Override
@@ -31,16 +46,29 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 
 		// detect region end and extract content
 		if (tag.getType() == TagType.END) {
-			if (currentRegions > 0) {
-				for (DecoraTag decoraTag : decoraTags) {
-					if (decoraTag.isRegionStarted() &&
-							(decoraTag.getDeepLevel() == tag.getDeepLevel()) &&
-							tag.nameEquals(decoraTag.getName())) {
 
-						decoraTag.endRegion(tag.getTagPosition(), tag.getTagLength());
+			if (!regionMarkers.isEmpty()) {
 
-						currentRegions--;
+				// first check for inner tags
+				RegionMarker regionMarker = regionMarkers.getLast();
+				if (tag.nameEquals(regionMarker.name)) {
+					regionMarker.innerCount--;
+				}
+
+				if (regionMarker.innerCount <= 0) {
+					// region is closed, find Decora tag
+
+					for (DecoraTag decoraTag : decoraTags) {
+						if (decoraTag.isRegionStarted() && tag.nameEquals(decoraTag.getName())) {
+
+							decoraTag.endRegion(tag.getTagPosition(), tag.getTagLength());
+
+							regionMarkers.removeLast();
+							return;
+						}
 					}
+
+					throw new DecoraException("Region end is not aligned: " + tag.getName());
 				}
 			}
 			return;
@@ -54,18 +82,31 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 		for (DecoraTag decoraTag : decoraTags) {
 
 			if (decoraTag.isRegionUndefined() && decoraTag.isMatchedTag(tag)) {
+				// Decora region detected
 
 				decoraTag.startRegion(tag.getTagPosition(), tag.getTagLength(), tag.getDeepLevel());
 
-				currentRegions++;
+				RegionMarker regionMarker = new RegionMarker(tag.getName());
+				regionMarkers.add(regionMarker);
+
+				break;
+			}
+		}
+
+		// detect inner tags of the same name as the last region
+		if (!regionMarkers.isEmpty()) {
+			RegionMarker regionMarker = regionMarkers.getLast();
+
+			if (tag.nameEquals(regionMarker.name)) {
+				regionMarker.innerCount++;	// increment count
 			}
 		}
 	}
 
 	@Override
 	public void end() {
-		if (currentRegions != 0) {
-			throw new DecoraException("Invalid regions detected");
+		if (!regionMarkers.isEmpty()) {
+			throw new DecoraException("Invalid regions detected: " + regionMarkers.getLast().name);
 		}
 	}
 }
