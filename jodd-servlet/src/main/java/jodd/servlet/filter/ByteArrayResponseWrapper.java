@@ -17,6 +17,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
 	private final PrintWriter writer;
 	private final FastByteArrayServletOutputStream out;
+	private boolean writerTaken = false;
 
 	public ByteArrayResponseWrapper(HttpServletResponse response) {
 		super(response);
@@ -26,11 +27,16 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public ServletOutputStream getOutputStream() throws IOException {
+		if (writerTaken) {
+			writerTaken = false;
+			writer.flush();
+		}
 		return out;
 	}
 
 	@Override
 	public PrintWriter getWriter() throws IOException {
+		writerTaken = true;
 		return writer;
 	}
 
@@ -39,6 +45,7 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 	 */
 	@Override
 	public String toString() {
+		flushBuffer();
 		return out.getByteArrayStream().toString();
 	}
 
@@ -47,12 +54,25 @@ public class ByteArrayResponseWrapper extends HttpServletResponseWrapper {
 		out.reset();
 	}
 
+	@Override
+	public void flushBuffer() {
+		if (writerTaken) {
+			writerTaken = false;
+			writer.flush();
+		}
+		try {
+			super.flushBuffer();
+		} catch (IOException ignore) {
+		}
+	}
+
 	// ---------------------------------------------------------------- add-on
 
 	/**
 	 * Get the underlying byte array.
 	 */
 	public byte[] toByteArray() {
+		this.flushBuffer();
 		return out.getByteArrayStream().toByteArray();
 	}
 }
