@@ -2,6 +2,7 @@
 
 package jodd.servlet.filter;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.servlet.ServletOutputStream;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,12 +47,15 @@ public class CharArrayResponseWrapperTest {
 		when(rw.getOutputStream()).thenReturn(os);
 
 		CharArrayResponseWrapper wrappedResponse = new CharArrayResponseWrapper(rw);
-		ServletOutputStream sos = wrappedResponse.getOutputStream();
+		try {
+			wrappedResponse.getOutputStream();
+			Assert.fail();
+		} catch (IOException ignore) {
+		}
 
-		sos.write(new byte[]{123, 123});
-
-		char[] chars = wrappedResponse.toCharArray();
-		assertNull(chars);
+		//sos.write(new byte[]{123, 123});
+		//char[] chars = wrappedResponse.toCharArray();
+		//assertNull(chars);
 	}
 
 }

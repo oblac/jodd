@@ -2,8 +2,10 @@
 
 package jodd.servlet.filter;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -18,6 +20,7 @@ import jodd.util.StringPool;
 public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 
 	protected FastCharArrayWriter writer;
+	protected FastByteArrayServletOutputStream out;
 	protected PrintWriter printWriter;
 
 	/**
@@ -38,6 +41,11 @@ public class CharArrayResponseWrapper extends HttpServletResponseWrapper {
 			printWriter = new PrintWriter(writer);
 		}
 		return printWriter;
+	}
+
+	@Override
+	public ServletOutputStream getOutputStream() throws IOException {
+		throw new IOException("Using output stream is not supported");
 	}
 
 	/**
