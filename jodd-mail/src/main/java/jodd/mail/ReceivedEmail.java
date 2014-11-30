@@ -28,9 +28,6 @@ import java.util.List;
  */
 public class ReceivedEmail extends CommonEmail {
 
-	public ReceivedEmail() {
-	}
-
 	public ReceivedEmail(Message message) {
 		try {
 			parseMessage(message);
