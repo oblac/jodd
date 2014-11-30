@@ -86,23 +86,17 @@ public class DomTreeTest {
 		Element div3 = new Element(document, "div");
 		html.addChild(div3);
 
-		assertEquals(2, div1.getDeepLevel());
-		assertEquals(2, div2.getDeepLevel());
-		assertEquals(2, div3.getDeepLevel());
-
 		assertEquals(3, html.getChildNodesCount());
 		assertEquals(3, html.getChildElementsCount());
 		assertEquals(3, html.getChildElementsCount("div"));
 
 		assertEquals(div2, html.removeChild(1));
-		assertEquals(0, div2.getDeepLevel());
 
 		assertEquals(2, html.getChildNodesCount());
 		assertEquals(2, html.getChildElementsCount());
 		assertEquals(2, html.getChildElementsCount("div"));
 
 		html.insertAfter(div2, div1);
-		assertEquals(2, div2.getDeepLevel());
 		assertEquals(3, html.getChildNodesCount());
 		assertEquals(3, html.getChildElementsCount());
 		assertEquals(3, html.getChildElementsCount("div"));
@@ -118,7 +112,6 @@ public class DomTreeTest {
 		assertEquals(2, html.getChildElementsCount("div"));
 
 		html.insertBefore(div2, div3);
-		assertEquals(2, div2.getDeepLevel());
 		assertEquals(3, html.getChildNodesCount());
 		assertEquals(3, html.getChildElementsCount());
 		assertEquals(3, html.getChildElementsCount("div"));

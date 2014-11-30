@@ -47,10 +47,6 @@ public abstract class Node implements Cloneable {
 	protected int siblingElementIndex = -1;
 	protected int siblingNameIndex = -1;
 
-	// position information
-
-	protected int deepLevel;
-
 	/**
 	 * Creates new node.
 	 */
@@ -74,7 +70,6 @@ public abstract class Node implements Cloneable {
 	protected <T extends Node> T cloneTo(T dest) {
 //		dest.nodeValue = nodeValue;		// already  in clone implementations!
 		dest.parentNode = parentNode;
-		dest.deepLevel = deepLevel;
 
 		if (attributes != null) {
 			dest.attributes = new ArrayList<Attribute>(attributes.size());
@@ -159,7 +154,6 @@ public abstract class Node implements Cloneable {
 			parentNode.reindexChildren();
 		}
 		parentNode = null;
-		deepLevel = 0;
 	}
 
 	/**
@@ -169,7 +163,6 @@ public abstract class Node implements Cloneable {
 	public void addChild(Node node) {
 		node.detachFromParent();
 		node.parentNode = this;
-		node.deepLevel = deepLevel + 1;
 		initChildNodes(node);
 		childNodes.add(node);
 		reindexChildrenOnAdd(1);
@@ -183,7 +176,6 @@ public abstract class Node implements Cloneable {
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
-			node.deepLevel = deepLevel + 1;
 			initChildNodes(node);
 			childNodes.add(node);
 		}
@@ -196,7 +188,6 @@ public abstract class Node implements Cloneable {
 	public void insertChild(Node node, int index) {
 		node.detachFromParent();
 		node.parentNode = this;
-		node.deepLevel = deepLevel + 1;
 		try {
 			initChildNodes(node);
 			childNodes.add(index, node);
@@ -214,7 +205,6 @@ public abstract class Node implements Cloneable {
 		for (Node node : nodes) {
 			node.detachFromParent();
 			node.parentNode = this;
-			node.deepLevel = deepLevel + 1;
 			try {
 				initChildNodes(node);
 				childNodes.add(index, node);
@@ -1084,14 +1074,6 @@ public abstract class Node implements Cloneable {
 	protected abstract void visitNode(NodeVisitor nodeVisitor);
 
 	// ---------------------------------------------------------------- misc
-
-	/**
-	 * Returns deep level.
-	 */
-	public int getDeepLevel() {
-		return deepLevel;
-	}
-
 
 	/**
 	 * Returns CSS path to this node from document root.
