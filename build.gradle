@@ -8,9 +8,9 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.6.2'
-//version = '3.6.3-SNAPSHOT'
-//version = '3.6.3-BETA1'
+version = '3.6.3'
+//version = '3.6.4-SNAPSHOT'
+//version = '3.6.4-BETA1'
 
 
 // --- properties -------------------------------------------------------------
@@ -507,5 +507,5 @@ gradle.taskGraph.whenReady { taskGraph ->
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.1'
+	gradleVersion = '2.2.1'
 }
