@@ -15,6 +15,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 public @interface JSON2 {
 
+	public boolean strict() default false;
+
 	public String name() default StringPool.EMPTY;
 
 }

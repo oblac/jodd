@@ -48,7 +48,7 @@ public class CustomAnnotationTest {
 
 		String json = new JsonSerializer().setClassMetadataName("class").serialize(location);
 
-		assertEquals("{\"class\":\"jodd.json.mock.LocationAlt\",\"lat\":65,\"lng\":12}", json);
+		assertEquals("{\"lat\":65,\"lng\":12}", json);
 
 		LocationAlt jsonLocation = new JsonParser().setClassMetadataName("class").parse(json, LocationAlt.class);
 

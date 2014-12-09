@@ -4,6 +4,7 @@ package jodd.json.mock;
 
 import jodd.json.JSON2;
 
+@JSON2(strict = true)
 public class LocationAlt {
 
 	@JSON2(name="lng")

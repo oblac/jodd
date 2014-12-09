@@ -83,6 +83,12 @@ public abstract class TypeJsonVisitor {
 
 		currentPath.push(propertyName);
 
+		// change name for properties
+
+		if (propertyType != null) {
+			propertyName = typeData.resolveJsonName(propertyName);
+		}
+
 		// determine if name should be included/excluded
 
 		boolean include = !typeData.strict;
@@ -110,11 +116,6 @@ public abstract class TypeJsonVisitor {
 		if (!include) {
 			currentPath.pop();
 			return;
-		}
-
-		if (propertyType != null) {
-			// change name for properties
-			propertyName = typeData.resolveJsonName(propertyName);
 		}
 
 		onSerializableProperty(propertyName, propertyDescriptor);
