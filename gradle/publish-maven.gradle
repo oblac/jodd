@@ -17,6 +17,7 @@ uploadArchives {
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
 		if (project.hasProperty('JODD_ADMIN')) {
+//			snapshotRepository(url: 'file:///Users/igor/m2')
 			snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
