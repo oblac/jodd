@@ -152,4 +152,12 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	public void setContentLength(int length) {
 	}
 
+	/**
+	 * Servlets v3.1 introduce this method, so we need to have it here
+	 * in case they are used.
+	 * See: https://github.com/oblac/jodd/issues/189
+	 */
+	public void setContentLengthLong(long length) {
+	}
+
 }
