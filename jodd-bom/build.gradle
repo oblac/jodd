@@ -17,18 +17,28 @@ artifacts {
 
 install {
 	repositories.mavenInstaller {
-		pom.whenConfigured {
-			packaging = "pom"
-			withXml {
-				asNode().children().last() + {
-					delegate.dependencyManagement {
-						delegate.dependencies {
-							parent.javaModules().sort { "$it.name" }.each { p ->
-								delegate.dependency {
-									delegate.groupId(p.group)
-									delegate.artifactId(p.name)
-									delegate.version(p.version)
-								}
+		buildBomDependencies(pom)
+	}
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		buildBomDependencies(pom)
+	}
+}
+
+def buildBomDependencies(pom) {
+	pom.whenConfigured {
+		packaging = "pom"
+		withXml {
+			asNode().children().last() + {
+				delegate.dependencyManagement {
+					delegate.dependencies {
+						parent.javaModules().sort { "$it.name" }.each { p ->
+							delegate.dependency {
+								delegate.groupId(p.group)
+								delegate.artifactId(p.name)
+								delegate.version(p.version)
 							}
 						}
 					}
