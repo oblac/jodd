@@ -100,7 +100,7 @@ public class AsmUtil {
 					throw new IllegalArgumentException(INVALID_BASE_TYPE + desc);
 				}
 				break;
-			case 'L': className = className.substring(1, className.length() - 1);
+			case 'L': className = className.substring(1, className.length() - 1); break;
 			case '[':
 				// uses less-known feature of class loaders for loading array types
 				// using bytecode-like signatures.
