@@ -1,7 +1,6 @@
 // Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
 
-package jodd.proxetta;
-
+import jodd.proxetta.ProxyAspect;
 import jodd.proxetta.advice.DelegateAdvice;
 import jodd.proxetta.impl.ProxyProxetta;
 import jodd.proxetta.impl.ProxyProxettaBuilder;
@@ -11,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
-public class GenericsTest {
+public class GenericsInDefaultTest {
 
 	public static class Bar<T> {
 	}
@@ -33,7 +32,7 @@ public class GenericsTest {
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueWrapper() {
+	public void testClassesWithGenericsAsReturnValueWrapperDefault() {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
 			WrapperProxetta proxetta = WrapperProxetta.withAspects(aspect);
@@ -41,12 +40,13 @@ public class GenericsTest {
 			builder.newInstance();
 		}
 		catch (Exception ex) {
+			ex.printStackTrace();
 			fail(ex.toString());
 		}
 	}
 
 	@Test
-	public void testClassesWithGenericsAsReturnValueProxy() {
+	public void testClassesWithGenericsAsReturnValueProxyDefault() {
 		try {
 			ProxyAspect aspect = new ProxyAspect(DelegateAdvice.class);
 			ProxyProxetta proxetta = ProxyProxetta.withAspects(aspect);
