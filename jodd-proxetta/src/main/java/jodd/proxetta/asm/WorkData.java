@@ -3,6 +3,7 @@
 package jodd.proxetta.asm;
 
 import jodd.asm5.ClassVisitor;
+import jodd.util.StringPool;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public final class WorkData {
 	 */
 	public void init(String name, String superName, String suffix, String reqProxyClassName) {
 		int lastSlash = name.lastIndexOf('/');
-		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
+		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
 		this.nextSupername = superName;
 		this.superName = name;

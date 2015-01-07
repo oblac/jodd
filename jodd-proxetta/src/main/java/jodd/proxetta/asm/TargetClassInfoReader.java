@@ -27,6 +27,7 @@ import jodd.util.ClassLoaderUtil;
 import jodd.io.StreamUtil;
 import jodd.asm.EmptyClassVisitor;
 import jodd.asm.EmptyMethodVisitor;
+import jodd.util.StringPool;
 
 /**
  * Reads info from target class.
@@ -116,7 +117,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.thisReference = name;
 		this.superName = superName;
 		this.nextSupername = superName;
-		this.targetPackage = name.substring(0, lastSlash).replace('/', '.');
+		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
 		this.hierarchyLevel = 1;
 
