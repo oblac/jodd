@@ -518,7 +518,10 @@ public class ProxettaAsmUtil {
 				returnType = methodInfo.getReturnTypeName();
 				break;
 			default:
-				returnType = methodInfo.getReturnType().replace('.', '/');
+				String rtname = methodInfo.getReturnTypeName();
+				returnType = rtname.length() == 0 ?
+					AsmUtil.typeToSignature(methodInfo.getReturnType()) :
+					AsmUtil.typedesc2ClassName(rtname);
 				break;
 		}
 
