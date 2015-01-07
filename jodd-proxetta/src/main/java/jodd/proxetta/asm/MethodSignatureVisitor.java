@@ -312,10 +312,16 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 			}
 			returnOpcodeType.value = type;
 
-			returnTypeName.setLength(0);
+			if (returnTypeName.length() == 0) {
+				// only set return type once, first time.
+				// otherwise, if method signature has generic information, the returnTypeName
+				// will be equals to last defined type in the signature, i.e. from the generics.
 
-			if (typeName != null) {
-				returnTypeName.append(typeName);
+				//returnTypeName.setLength(0);
+
+				if (typeName != null) {
+					returnTypeName.append(typeName);
+				}
 			}
 		}
 	}
