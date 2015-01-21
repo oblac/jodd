@@ -64,4 +64,19 @@ public class FormTextTest {
 
 		assertEquals(TEXT_RESULT, response.bodyText().trim());
 	}
+
+	@Test
+	public void testFormTagDuplicateNames() {
+		HttpResponse response = HttpRequest
+				.post("localhost:8173/text3.jsp")
+				.form("cc", "one")
+				.form("cc", "two")
+				.send();
+
+		System.out.println(response.bodyText().trim());
+
+		assertEquals("<input type=\"text\" name=\"cc\" id=\"cc1\" value=\"one\"/>\n" +
+			"<input type=\"text\" name=\"cc\" id=\"cc2\" value=\"two\"/>\n" +
+			"<input type=\"text\" name=\"cc\" id=\"cc3\"/>", response.bodyText().trim());
+	}
 }
