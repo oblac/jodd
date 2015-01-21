@@ -34,11 +34,6 @@ public class FormTagTest {
 		return new FormTag().populateForm(form, foo2);
 	}
 
-	static String form3(String form) {
-		FormTag ft = new FormTag();
-		return ft.populateForm(form, foo);
-	}
-
 	@Test
 	public void testSimple() {
 		assertEquals("", form(""));
@@ -115,6 +110,28 @@ public class FormTagTest {
 		assertEquals(
 				"<form><input type=\"hidden\" name=\"logTime>=\" value=\"*logTime>=*\"></form>",
 				form("<form><input type='hidden' name='logTime>='></form>"));
+	}
+
+	@Test
+	public void testMultipleInputs() {
+		String form =
+			"<input type=\"text\" name=\"cc\" id=\"cc1\"/>\n" +
+			"<input type=\"text\" name=\"cc\" id=\"cc2\" />\n" +
+			"<input type=\"text\" name=\"cc\" id=\"cc3\" />";
+
+		FormTag ft = new FormTag();
+
+		String populatedForm = ft.populateForm(form, new FormFieldResolver() {
+			public Object value(String name) {
+				return new String[] {"a@b.c", "c@d.e", "e@f.g"};
+			}
+		});
+
+		assertEquals(
+				"<input type=\"text\" name=\"cc\" id=\"cc1\" value=\"a@b.c\"/>\n" +
+				"<input type=\"text\" name=\"cc\" id=\"cc2\" value=\"c@d.e\"/>\n" +
+				"<input type=\"text\" name=\"cc\" id=\"cc3\" value=\"e@f.g\"/>",
+			populatedForm);
 	}
 
 }

@@ -5,7 +5,11 @@ package jodd.lagarto.form;
 import jodd.lagarto.Tag;
 import jodd.lagarto.TagType;
 import jodd.lagarto.TagWriter;
+import jodd.mutable.MutableInteger;
 import jodd.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Form processor. Invokes {@link jodd.lagarto.form.FormFieldResolver} on form fields.
@@ -88,29 +92,38 @@ public class FormProcessorVisitor extends TagWriter {
 		if (tagType == null) {
 			return;
 		}
-		CharSequence name = tag.getAttributeValue(NAME);
-		if (name == null) {
+		CharSequence nameSequence = tag.getAttributeValue(NAME);
+		if (nameSequence == null) {
 			return;
 		}
 
-		Object valueObject = resolver.value(name.toString());
+		String name = nameSequence.toString();
+
+		Object valueObject = resolver.value(name);
 		if (valueObject == null) {
 			return;
 		}
 
-		String value = valueObject.toString();
 		String tagTypeName = tagType.toString().toLowerCase();
 
 		if (tagTypeName.equals(TEXT)) {
+			String value = valueToString(name, valueObject);
+
 			tag.setAttribute(VALUE, value);
 		}
 		else if (tagTypeName.equals(HIDDEN)) {
+			String value = valueToString(name, valueObject);
+
 			tag.setAttribute(VALUE, value);
 		}
 		else if (tagTypeName.equals(IMAGE)) {
+			String value = valueToString(name, valueObject);
+
 			tag.setAttribute(VALUE, value);
 		}
 		else if (tagTypeName.equals(PASSWORD)) {
+			String value = valueToString(name, valueObject);
+
 			tag.setAttribute(VALUE, value);
 		}
 		else if (tagTypeName.equals(CHECKBOX)) {
@@ -128,7 +141,7 @@ public class FormProcessorVisitor extends TagWriter {
 						tag.setAttribute(CHECKED, null);
 					}
 				}
-			} else if (tagValue.equals(value)) {
+			} else if (tagValue.equals(valueObject.toString())) {
 				tag.setAttribute(CHECKED, null);
 			}
 		}
@@ -136,11 +149,43 @@ public class FormProcessorVisitor extends TagWriter {
 			CharSequence tagValue = tag.getAttributeValue(VALUE);
 			if (tagValue != null) {
 				tagValue = tagValue.toString();
-				if (tagValue.equals(value)) {
+				if (tagValue.equals(valueObject.toString())) {
 					tag.setAttribute(CHECKED, null);
 				}
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------- convert values to string
+
+	protected Map<String, MutableInteger> valueNameIndexes;
+
+	/**
+	 * Converts value to a string.
+	 */
+	protected String valueToString(String name, Object valueObject) {
+		if (!valueObject.getClass().isArray()) {
+			return valueObject.toString();
+		}
+
+		// array
+		String[] array = (String[]) valueObject;
+
+		if (valueNameIndexes == null) {
+			valueNameIndexes = new HashMap<String, MutableInteger>();
+		}
+
+		MutableInteger index = valueNameIndexes.get(name);
+		if (index == null) {
+			index = new MutableInteger(0);
+			valueNameIndexes.put(name, index);
+		}
+
+		String result = array[index.value];
+
+		index.value++;
+
+		return result;
 	}
 
 	// ---------------------------------------------------------------- select
