@@ -340,7 +340,14 @@ public class ServletUtil {
 			}
 		}
 		else {
-			value = request.getParameter(name);
+			String[] params = request.getParameterValues(name);
+			if (params != null) {
+				if (params.length == 1) {
+					value = params[0];
+				} else {
+					value = params;
+				}
+			}
 		}
 		if (value != null) {
 			return value;

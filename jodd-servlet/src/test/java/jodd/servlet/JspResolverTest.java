@@ -35,6 +35,7 @@ public class JspResolverTest {
 
 		when(servletRequest.getAttribute("name")).thenReturn("value");
 		when(servletRequest.getParameter("name2")).thenReturn("value1");
+		when(servletRequest.getParameterValues("name2")).thenReturn(new String[] {"value1"});
 		when(servletRequest.getSession()).thenReturn(httpSession);
 		when(httpSession.getAttribute("name2")).thenReturn("value2");
 		when(httpSession.getServletContext()).thenReturn(servletContext);
