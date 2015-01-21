@@ -106,23 +106,17 @@ public class FormProcessorVisitor extends TagWriter {
 
 		String tagTypeName = tagType.toString().toLowerCase();
 
-		if (tagTypeName.equals(TEXT)) {
+		if (
+				tagTypeName.equals(TEXT) ||
+				tagTypeName.equals(HIDDEN) ||
+				tagTypeName.equals(IMAGE) ||
+				tagTypeName.equals(PASSWORD)) {
+
 			String value = valueToString(name, valueObject);
 
-			tag.setAttribute(VALUE, value);
-		}
-		else if (tagTypeName.equals(HIDDEN)) {
-			String value = valueToString(name, valueObject);
-
-			tag.setAttribute(VALUE, value);
-		}
-		else if (tagTypeName.equals(IMAGE)) {
-			String value = valueToString(name, valueObject);
-
-			tag.setAttribute(VALUE, value);
-		}
-		else if (tagTypeName.equals(PASSWORD)) {
-			String value = valueToString(name, valueObject);
+			if (value == null) {
+				return;
+			}
 
 			tag.setAttribute(VALUE, value);
 		}
@@ -179,6 +173,10 @@ public class FormProcessorVisitor extends TagWriter {
 		if (index == null) {
 			index = new MutableInteger(0);
 			valueNameIndexes.put(name, index);
+		}
+
+		if (index.value >= array.length) {
+			return null;
 		}
 
 		String result = array[index.value];
