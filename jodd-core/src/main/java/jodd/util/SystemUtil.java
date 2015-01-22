@@ -310,7 +310,9 @@ public class SystemUtil {
 	 * Returns <code>true</code> if host is a general unix.
 	 */
 	public static boolean isHostUnix() {
-		return File.pathSeparator.equals(StringPool.COLON);
+		boolean unixVariant = isHostAix() | isHostLinux() | isHostMac() | isHostSolaris();
+
+		return (!unixVariant && File.pathSeparator.equals(StringPool.COLON));
 	}
 
 	/**
