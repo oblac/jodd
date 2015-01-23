@@ -387,6 +387,12 @@ public abstract class HttpBase<T> {
 		if (value instanceof CharSequence) {
 			return value.toString();
 		}
+		if (value instanceof Number) {
+			return value.toString();
+		}
+		if (value instanceof Boolean) {
+			return value.toString();
+		}
 		if (value instanceof File) {
 			return new FileUploadable((File) value);
 		}
