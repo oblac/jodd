@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -82,6 +83,17 @@ public class HttpRequestTest {
 
 		httpRequest.query("one", Integer.valueOf(3));
 		assertEquals("one=1&one=2&one=3", httpRequest.queryString());
+	}
+
+	@Test
+	public void testFormParamsObjects() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("state", 1);
+
+		HttpRequest httpRequest = new HttpRequest();
+		httpRequest.form(params);
+
+		assertEquals(1, httpRequest.form().size());
 	}
 
 	@Test
