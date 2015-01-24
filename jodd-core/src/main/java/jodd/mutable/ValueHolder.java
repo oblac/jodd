@@ -5,7 +5,7 @@ package jodd.mutable;
 /**
  * Generic mutable value holder for holding objects.
  */
-public class ValueHolder<T> implements IsValue<T>{
+public class ValueHolder<T> implements ValueProvider<T> {
 
 	protected T value;
 
