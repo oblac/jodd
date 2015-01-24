@@ -84,31 +84,27 @@ public class RandomStringUtil {
 	/**
 	 * Use {@code rnd} to create a RandomString
 	 */
-	public static RandomString create(Random rnd)
-	{
+	public static RandomString create(Random rnd) {
 		return new RandomString(rnd);
 	}
 	/**
 	 * Create a RandomString with {@code new Random}
 	 */
-	public static RandomString create()
-	{
+	public static RandomString create() {
 		return new RandomString(new Random());
 	}
 
 	/**
 	 * Generates random strings with a {@link java.util.Random}.
 	 */
-	public static class RandomString
-	{
+	public static class RandomString {
 		protected final Random rnd;
 
-		protected RandomString()
-		{
+		protected RandomString() {
 			this(new Random());
 		}
-		protected RandomString(Random rnd)
-		{
+
+		protected RandomString(Random rnd) {
 			this.rnd = rnd;
 		}
 
