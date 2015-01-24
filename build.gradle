@@ -228,6 +228,7 @@ configure(javaModules()) {
 				docEncoding = 'UTF-8'
 				stylesheetFile = file('src/main/javadoc/jodd.css')
 				source = '1.5'
+				failOnError = false
 			}
 		}
 	}
