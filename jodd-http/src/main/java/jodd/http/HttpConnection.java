@@ -29,7 +29,7 @@ public interface HttpConnection {
 	/**
 	 * Sets the timeout for connections, in milliseconds. With this option set to a non-zero timeout,
 	 * connection will block for only this amount of time. If the timeout expires, an Exception is raised.
-	 * The timeout must be > 0. A timeout of zero is interpreted as an infinite timeout.
+	 * The timeout must be &gt; 0. A timeout of zero is interpreted as an infinite timeout.
 	 */
 	void setTimeout(int milliseconds);
 
