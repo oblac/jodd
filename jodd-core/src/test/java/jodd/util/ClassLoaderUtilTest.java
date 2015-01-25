@@ -6,6 +6,7 @@ import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.findfile.ClassScanner;
 import jodd.mutable.ValueHolder;
+import jodd.mutable.ValueHolderWrapper;
 import jodd.util.cl.DefaultClassLoaderStrategy;
 import jodd.util.cl.ExtendedURLClassLoader;
 import org.junit.Test;
@@ -131,7 +132,7 @@ public class ClassLoaderUtilTest {
 
 		File containerFile = FileUtil.toContainerFile(url);
 
-		final ValueHolder<String> jqueryName = new ValueHolder<String>();
+		final ValueHolder<String> jqueryName = ValueHolderWrapper.create();
 
 		ClassScanner classScanner = new ClassScanner() {
 			@Override

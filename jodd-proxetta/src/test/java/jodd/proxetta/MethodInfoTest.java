@@ -3,6 +3,7 @@
 package jodd.proxetta;
 
 import jodd.mutable.ValueHolder;
+import jodd.mutable.ValueHolderWrapper;
 import jodd.proxetta.data.Foo;
 import jodd.proxetta.data.FooAnn;
 import jodd.proxetta.data.FooProxyAdvice;
@@ -19,7 +20,7 @@ public class MethodInfoTest {
 	@Test
 	public void testMethodInfo() {
 
-		final ValueHolder<MethodInfo> valueHolder = new ValueHolder<MethodInfo>();
+		final ValueHolder<MethodInfo> valueHolder = ValueHolderWrapper.create();
 
 		ProxyAspect proxyAspect = new ProxyAspect(
 				FooProxyAdvice.class,
