@@ -11,10 +11,14 @@ public class ValueHolderTest {
 
 	@Test
 	public void testValueHolder() {
-		ValueHolder<String> str = new ValueHolder<String>();
+		ValueHolder<String> str = ValueHolderWrapper.create();
 		str.setValue("123");
 
 		assertEquals("123", str.getValue());
-		assertFalse(str.isNull());
+
+		str = ValueHolderWrapper.wrap("123");
+		str.setValue("123");
+
+		assertEquals("123", str.getValue());
 	}
 }
