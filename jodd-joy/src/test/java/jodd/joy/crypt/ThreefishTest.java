@@ -3,7 +3,8 @@
 package jodd.joy.crypt;
 
 import jodd.util.MathUtil;
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
+import jodd.util.RandomString;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class ThreefishTest {
 
 		long reps = 10000;
 		while (reps-- > 0) {
-			String s = RandomStringUtil.randomAscii(MathUtil.randomInt(1, 1024));
+			String s = RandomString.getInstance().randomAscii(MathUtil.randomInt(1, 1024));
 			byte[] encrypted = threefish.encryptString(s);
 			String s2 = threefish.decryptString(encrypted);
 			assertEquals(s, s2);

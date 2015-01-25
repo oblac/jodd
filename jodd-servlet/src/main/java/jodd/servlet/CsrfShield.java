@@ -2,7 +2,7 @@
 
 package jodd.servlet;
 
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -70,7 +70,7 @@ public class CsrfShield {
 		String value;
 		boolean unique;
 		do {
-			value = RandomStringUtil.randomAlphaNumeric(32);
+			value = RandomString.getInstance().randomAlphaNumeric(32);
 			assureSize(tokenSet);
 			unique = tokenSet.add(new Token(value, timeToLive));
 		} while (!unique);

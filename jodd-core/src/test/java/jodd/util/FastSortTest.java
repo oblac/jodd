@@ -19,7 +19,7 @@ public class FastSortTest {
 		String[] strings = new String[1024 * 100];
 
 		for (int i = 0, stringsLength = strings.length; i < stringsLength; i++) {
-			strings[i] = RandomStringUtil.randomAlphaNumeric(10 + rnd.nextInt(100));
+			strings[i] = RandomString.getInstance().randomAlphaNumeric(10 + rnd.nextInt(100));
 		}
 
 		String[] expected = strings.clone();
@@ -37,7 +37,7 @@ public class FastSortTest {
 		String[] strings = new String[1024 * 100];
 
 		for (int i = 0, stringsLength = strings.length; i < stringsLength; i++) {
-			strings[i] = RandomStringUtil.randomAlphaNumeric(10 + rnd.nextInt(100));
+			strings[i] = RandomString.getInstance().randomAlphaNumeric(10 + rnd.nextInt(100));
 		}
 
 		String[] expected = strings.clone();

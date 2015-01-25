@@ -12,7 +12,7 @@ import jodd.io.StreamUtil;
 import jodd.upload.FileUpload;
 import jodd.upload.MultipartStreamParser;
 import jodd.util.MimeTypes;
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
 
@@ -633,7 +633,7 @@ public abstract class HttpBase<T> {
 			return buffer;
 		}
 
-		String boundary = StringUtil.repeat('-', 10) + RandomStringUtil.randomAlphaNumeric(10);
+		String boundary = StringUtil.repeat('-', 10) + RandomString.getInstance().randomAlphaNumeric(10);
 
 		for (Map.Entry<String, Object[]> entry : form.entrySet()) {
 

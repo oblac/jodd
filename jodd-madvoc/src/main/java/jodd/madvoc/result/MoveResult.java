@@ -9,7 +9,7 @@ import jodd.madvoc.component.ResultMapper;
 import jodd.madvoc.meta.In;
 import jodd.util.URLCoder;
 import jodd.servlet.DispatcherUtil;
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,7 +35,7 @@ public class MoveResult extends BaseActionResult<String> {
 	 * Returns unique id, random long value.
 	 */
 	protected String generateUniqueId() {
-		return RandomStringUtil.randomAlphaNumeric(32);
+		return RandomString.getInstance().randomAlphaNumeric(32);
 	}
 
 	/**

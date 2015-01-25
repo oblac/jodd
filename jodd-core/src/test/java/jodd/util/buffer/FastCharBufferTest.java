@@ -2,7 +2,7 @@
 
 package jodd.util.buffer;
 
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 import org.junit.Test;
 
 import java.util.Random;
@@ -34,7 +34,7 @@ public class FastCharBufferTest extends FastBufferTestBase {
 
 		int loop = 100;
 		while (loop-- > 0) {
-			String s = RandomStringUtil.randomAlphaNumeric(rnd.nextInt(20));
+			String s = RandomString.getInstance().randomAlphaNumeric(rnd.nextInt(20));
 
 			sb.append(s);
 			fcb.append(s);

@@ -6,7 +6,7 @@ import jodd.Jodd;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.meta.JSON;
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 import jodd.util.StringUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -615,7 +615,7 @@ public class JsonParserTest {
 
 		assertEquals("12\n3", new JsonParser().parse("\"" + "12\\n3" + "\""));
 
-		String big = RandomStringUtil.randomAlpha(510);
+		String big = RandomString.getInstance().randomAlpha(510);
 
 		String jbig = big + "\\n";
 		String rbig = big + "\n";

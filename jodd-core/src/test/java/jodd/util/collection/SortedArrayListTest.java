@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import jodd.util.RandomStringUtil;
+import jodd.util.RandomString;
 
 import org.junit.Test;
 
@@ -83,7 +83,7 @@ public class SortedArrayListTest {
 
 		ArrayList<String> randomList = new ArrayList<String>();
 		for (int i = 0; i < total; i++) {
-			randomList.add(RandomStringUtil.random(20, 'a', 'z'));
+			randomList.add(RandomString.getInstance().random(20, 'a', 'z'));
 		}
 
 		SortedArrayList<String> sortedList = new SortedArrayList<String>(randomList);
