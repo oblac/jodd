@@ -31,7 +31,7 @@ public abstract class SqlType<T> {
 
 	@SuppressWarnings({"unchecked"})
 	protected SqlType() {
-		this.sqlType = ReflectUtil.getGenericSupertype(this.getClass());
+		this.sqlType = ReflectUtil.getGenericSupertype(this.getClass(), 0);
 	}
 
 	/**

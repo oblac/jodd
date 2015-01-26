@@ -37,13 +37,13 @@ public abstract class BaseActionResult<T> implements ActionResult<T> {
 		Class clazz = this.getClass();
 
 		while (clazz.getSuperclass() != BaseActionResult.class) {
-			Class<T> rvt = ReflectUtil.getGenericSupertype(clazz);
+			Class<T> rvt = ReflectUtil.getGenericSupertype(clazz, 0);
 			if (rvt != null) {
 				return rvt;
 			}
 			clazz = clazz.getSuperclass();
 		}
-		return ReflectUtil.getGenericSupertype(clazz);
+		return ReflectUtil.getGenericSupertype(clazz, 0);
 	}
 
 	/**
