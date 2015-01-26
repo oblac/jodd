@@ -858,31 +858,54 @@ public class ReflectUtil {
 	// ---------------------------------------------------------------- generics
 
 	/**
-	 * Returns single component type.
+	 * Returns single component type. Index is used when type consist of many
+	 * components. If negative, index will be calculated from the end of the
+	 * returned array. Returns <code>null</code> if component type
+	 * does not exist or if index is out of bounds.
+	 *
+	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
-	public static Class getComponentType(Type type) {
-			return getComponentType(type, null);
-		}
+	public static Class getComponentType(Type type, int index) {
+		return getComponentType(type, null, index);
+	}
 
 	/**
-	 * Returns single component type.
+	 * Returns single component type for given type and implementation.
+	 * Index is used when type consist of many
+	 * components. If negative, index will be calculated from the end of the
+	 * returned array.  Returns <code>null</code> if component type
+	 * does not exist or if index is out of bounds.
+	 * <p>
+	 *
+	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
 	 */
-	public static Class getComponentType(Type type, Class implClass) {
+	public static Class getComponentType(Type type, Class implClass, int index) {
 		Class[] componentTypes = getComponentTypes(type, implClass);
 		if (componentTypes == null) {
 			return null;
 		}
-		return componentTypes[componentTypes.length - 1];
+
+		if (index < 0) {
+			index += componentTypes.length;
+		}
+
+		if (index >= componentTypes.length) {
+			return null;
+		}
+
+		return componentTypes[index];
 	}
 
+	/**
+	 * @see #getComponentTypes(java.lang.reflect.Type, Class)
+	 */
 	public static Class[] getComponentTypes(Type type) {
 		return getComponentTypes(type, null);
 	}
 
 	/**
-	 * Returns the component types of the given type.
-	 * Returns <code>null</code> if given type does not have a single
-	 * component type. For example the following types all have the
+	 * Returns all component types of the given type.
+	 * For example the following types all have the
 	 * component-type MyClass:
 	 * <ul>
 	 * <li>MyClass[]</li>
@@ -898,7 +921,8 @@ public class ReflectUtil {
 			if (clazz.isArray()) {
 				return new Class[] {clazz.getComponentType()};
 			}
-		} else if (type instanceof ParameterizedType) {
+		}
+		else if (type instanceof ParameterizedType) {
 			ParameterizedType pt = (ParameterizedType) type;
 
 			Type[] generics = pt.getActualTypeArguments();
@@ -913,7 +937,8 @@ public class ReflectUtil {
 				types[i] = getRawType(generics[i], implClass);
 			}
 			return types;
-		} else if (type instanceof GenericArrayType) {
+		}
+		else if (type instanceof GenericArrayType) {
 			GenericArrayType gat = (GenericArrayType) type;
 
 			Class rawType = getRawType(gat.getGenericComponentType(), implClass);
@@ -927,20 +952,21 @@ public class ReflectUtil {
 	}
 
 	/**
+	 * Shortcut for <code>getComponentTypes(type.getGenericSuperclass())</code>.
+	 *
 	 * @see #getComponentTypes(java.lang.reflect.Type)
 	 */
 	public static Class[] getGenericSupertypes(Class type) {
 		return getComponentTypes(type.getGenericSuperclass());
 	}
 
-	public static Class getGenericSupertype(Class type) {
-		Class[] componentTypes = getComponentTypes(type.getGenericSuperclass());
-
-		if (componentTypes == null) {
-			return null;
-		}
-
-		return componentTypes[0];
+	/**
+	 * Shortcut for <code>getComponentType(type.getGenericSuperclass())</code>.
+	 *
+	 * @see #getComponentType(java.lang.reflect.Type, int)
+	 */
+	public static Class getGenericSupertype(Class type, int index) {
+		return getComponentType(type.getGenericSuperclass(), index);
 	}
 
 

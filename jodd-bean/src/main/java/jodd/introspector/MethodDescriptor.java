@@ -49,7 +49,7 @@ public class MethodDescriptor extends Descriptor implements Getter, Setter {
 			Type type = params[i];
 			rawParameterTypes[i] = ReflectUtil.getRawType(type, classDescriptor.getType());
 			if (rawParameterComponentTypes != null) {
-				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType());
+				rawParameterComponentTypes[i] = ReflectUtil.getComponentType(genericParams[i], classDescriptor.getType(), -1);
 			}
 		}
 	}
