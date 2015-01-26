@@ -616,8 +616,7 @@ public class ReflectUtilTest {
 		assertEquals(Long.class, ReflectUtil.getRawType(kiko.getGenericReturnType(), Impl3.class));
 	}
 
-	public static class Base22<K, N extends Number> {
-	}
+	public static class Base22<K, N extends Number> {}
 	public static class Impl11<N extends Number> extends Base22<Long, N> {}
 	public static class Impl22 extends Impl11<Integer> {}
 	public static class Impl33 extends Impl22 {}
@@ -649,6 +648,7 @@ public class ReflectUtilTest {
 		componentTypes = ReflectUtil.getGenericSupertypes(Impl3.class);
 		assertNull(componentTypes);
 	}
+
 	@Test
 	public void testClassGenerics2() {
 		Class[] componentTypes = ReflectUtil.getGenericSupertypes(Base22.class);
@@ -666,6 +666,49 @@ public class ReflectUtilTest {
 		componentTypes = ReflectUtil.getGenericSupertypes(Impl33.class);
 		assertNull(componentTypes);
 	}
+
+	public static interface BaseAna<K, N extends Number> {}
+	public static interface ImplAna<N extends Number> extends BaseAna<Long, N> {}
+	public static interface ImplAna2 extends ImplAna<Integer> {}
+	public static class ImplAna3 implements ImplAna2 {}
+	public static class ImplAna4 extends ImplAna3 {}
+
+	@Test
+	public void testClassGenerics3() {
+		Class[] componentTypes = ReflectUtil.getGenericSupertypes(BaseAna.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna2.class);
+		assertNull(componentTypes);
+
+		componentTypes = ReflectUtil.getGenericSupertypes(ImplAna3.class);
+		assertNull(componentTypes);
+
+		// scan generic interfacase
+
+		Type[] types = ImplAna3.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(ImplAna2.class, types[0]);
+		assertNull(ReflectUtil.getComponentType(types[0], 0));
+
+		types = ImplAna2.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(Integer.class, ReflectUtil.getComponentType(types[0], 0));
+
+		types = ImplAna.class.getGenericInterfaces();
+		assertEquals(1, types.length);
+		assertEquals(Long.class, ReflectUtil.getComponentType(types[0], 0));
+
+		types = BaseAna.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+
+		types = ImplAna4.class.getGenericInterfaces();
+		assertEquals(0, types.length);
+	}
+
 
 	// ---------------------------------------------------------------- type2string
 
