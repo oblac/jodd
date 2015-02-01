@@ -100,7 +100,11 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_PUBLIC, INIT, "()V", null, null);
 		mv.visitCode();
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.SIGNATURE_JAVA_LANG_OBJECT, INIT, "()V");
+		mv.visitMethodInsn(
+			Opcodes.INVOKESPECIAL,
+			AsmUtil.SIGNATURE_JAVA_LANG_OBJECT,
+			INIT, "()V",
+			false);
 		mv.visitInsn(Opcodes.RETURN);
 		mv.visitMaxs(1, 1);
 		mv.visitEnd();
@@ -160,11 +164,23 @@ public class ProxettaWrapperClassBuilder extends ProxettaClassBuilder {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, wd.thisReference, wd.wrapperRef, wd.wrapperType);
 		loadVirtualMethodArguments(mv, msign);
+
 		if (wd.wrapInterface) {
-			mv.visitMethodInsn(INVOKEINTERFACE, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
+			mv.visitMethodInsn(
+				INVOKEINTERFACE,
+				wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+				msign.getMethodName(),
+				msign.getDescription(),
+				true);
 		} else {
-			mv.visitMethodInsn(INVOKEVIRTUAL, wd.wrapperType.substring(1, wd.wrapperType.length() - 1), msign.getMethodName(), msign.getDescription());
+			mv.visitMethodInsn(
+				INVOKEVIRTUAL,
+				wd.wrapperType.substring(1, wd.wrapperType.length() - 1),
+				msign.getMethodName(),
+				msign.getDescription(),
+				false);
 		}
+
 		ProxettaAsmUtil.prepareReturnValue(mv, msign, 0);
 		visitReturn(mv, msign, true);
 		mv.visitMaxs(0, 0);

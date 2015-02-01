@@ -111,7 +111,7 @@ public class WrapperTest {
 			}
 		}));
 
-//		proxetta.setDebugFolder("d:\\");
+		//proxetta.setDebugFolder("/Users/igor");
 
 		// wrapper over INTERFACE
 		// resulting object has ONE interface

@@ -51,11 +51,22 @@ public class ProxettaCtorBuilder extends EmptyMethodVisitor {
 
 		// call super ctor
 		loadSpecialMethodArguments(methodVisitor, msign);
-		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.superReference, msign.getMethodName(), msign.getDescription());
+		methodVisitor.visitMethodInsn(
+			INVOKESPECIAL,
+			wd.superReference,
+			msign.getMethodName(),
+			msign.getDescription(),
+			false);
 
 		// invoke advice ctors
 		methodVisitor.visitVarInsn(ALOAD, 0);
-		methodVisitor.visitMethodInsn(INVOKESPECIAL, wd.thisReference, initMethodName, DESC_VOID);
+
+		methodVisitor.visitMethodInsn(
+			INVOKESPECIAL,
+			wd.thisReference,
+			initMethodName, DESC_VOID,
+			false);
+
 		methodVisitor.visitInsn(RETURN);
 		methodVisitor.visitMaxs(0, 0);
 		methodVisitor.visitEnd();

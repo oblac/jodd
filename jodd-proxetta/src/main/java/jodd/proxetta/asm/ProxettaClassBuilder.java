@@ -159,7 +159,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 			MethodVisitor mv = wd.dest.visitMethod(AsmUtil.ACC_STATIC, CLINIT, DESC_VOID, null, null);
 			mv.visitCode();
 			for (String name : wd.adviceClinits) {
-				mv.visitMethodInsn(INVOKESTATIC, wd.thisReference, name, DESC_VOID);
+				mv.visitMethodInsn(
+					INVOKESTATIC,
+					wd.thisReference,
+					name, DESC_VOID,
+					false);
 			}
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(0, 0);
@@ -177,7 +181,11 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		if (wd.adviceInits != null) {
 			for (String name : wd.adviceInits) {
 				mv.visitVarInsn(ALOAD, 0);
-				mv.visitMethodInsn(INVOKESPECIAL, wd.thisReference, name, DESC_VOID);
+				mv.visitMethodInsn
+					(INVOKESPECIAL,
+						wd.thisReference,
+						name, DESC_VOID,
+						false);
 			}
 		}
 		mv.visitInsn(RETURN);
