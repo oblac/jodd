@@ -837,4 +837,15 @@ public class PropsTest extends BasePropsTest {
 		assertEquals("jodd is Good", props.getValue("user.name"));
 	}
 
+	@Test
+	public void testAdditionalEquals() {
+		String data =
+				"account-dn = cn=accountname,ou=users,o=organization\n";
+
+		Props props = new Props();
+		props.load(data);
+
+		assertEquals("cn=accountname,ou=users,o=organization", props.getValue("account-dn"));
+	}
+
 }
