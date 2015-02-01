@@ -113,10 +113,10 @@ abstract class HistoryMethodAdapter extends MethodAdapter {
 	}
 
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
 		isPrevious = false;
 		traceNext = false;
-		super.visitMethodInsn(opcode, owner, name, desc);
+		super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 	}
 
 	@Override

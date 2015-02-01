@@ -59,7 +59,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 	 * Invoked on INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC, INVOKEINTERFACE or INVOKEDYNAMIC.
 	 */
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
 
 		// replace NEW.<init>
 		if ((newInvokeReplacer != null) && (opcode == INVOKESPECIAL)) {
@@ -67,7 +67,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			owner = newInvokeReplacer.getOwner();
 			name = newInvokeReplacer.getMethodName();
 			desc = changeReturnType(desc, 'L' + exOwner + ';');
-			super.visitMethodInsn(INVOKESTATIC, owner, name, desc);
+			super.visitMethodInsn(INVOKESTATIC, owner, name, desc, isInterface);
 			newInvokeReplacer = null;
 			return;
 		}
@@ -88,7 +88,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 					) {
 				firstSuperCtorInitCalled = true;
 				owner = wd.superReference;
-				super.visitMethodInsn(opcode, owner, name, desc);
+				super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 				return;
 			}
 		}
@@ -205,7 +205,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			}
 
 
-			super.visitMethodInsn(opcode, owner, name, desc);
+			super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 			return;
 		}
 
@@ -250,7 +250,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			super.mv.visitVarInsn(ALOAD, 0);
 		}
 
-		super.visitMethodInsn(INVOKESTATIC, owner, name, desc);
+		super.visitMethodInsn(INVOKESTATIC, owner, name, desc, isInterface);
 	}
 
 	@Override

@@ -172,14 +172,14 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
 							if (opcode == INVOKESTATIC) {
 								if (owner.equals(adviceReference)) {
 									owner = wd.thisReference;
 									name = adviceMethodName(name, aspectIndex);
 								}
 							}
-							super.visitMethodInsn(opcode, owner, name, desc);
+							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
 
 						@Override
@@ -222,7 +222,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
 							if ((state == 1) && (opcode == INVOKESPECIAL)) {
 							    state++;
 								return;
@@ -240,7 +240,7 @@ final class ProxyAspectData {
 									name = adviceMethodName(name, aspectIndex);
 								}
 							}
-							super.visitMethodInsn(opcode, owner, name, desc);
+							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
 
 						@Override
@@ -269,7 +269,7 @@ final class ProxyAspectData {
 						}
 
 						@Override
-						public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+						public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean isInterface) {
 							if ((opcode == INVOKEVIRTUAL) || (opcode == INVOKEINTERFACE)) {
 								if (owner.equals(adviceReference)) {
 									owner = wd.thisReference;
@@ -283,7 +283,7 @@ final class ProxyAspectData {
 									name = adviceMethodName(name, aspectIndex);
 								}
 							}
-							super.visitMethodInsn(opcode, owner, name, desc);
+							super.visitMethodInsn(opcode, owner, name, desc, isInterface);
 						}
 
 						@Override
