@@ -11,7 +11,7 @@ import jodd.asm5.Opcodes;
 public abstract class EmptyAnnotationVisitor extends AnnotationVisitor {
 
 	protected EmptyAnnotationVisitor() {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 	}
 
 }

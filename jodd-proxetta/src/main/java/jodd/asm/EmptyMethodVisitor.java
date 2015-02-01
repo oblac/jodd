@@ -11,7 +11,7 @@ import jodd.asm5.Opcodes;
 public abstract class EmptyMethodVisitor extends MethodVisitor {
 
 	protected EmptyMethodVisitor() {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 	}
 
 }
