@@ -8,7 +8,7 @@ import jodd.asm5.ClassReader;
 import jodd.asm5.AnnotationVisitor;
 import jodd.asm5.signature.SignatureReader;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -76,7 +76,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected String thisReference;
 	protected String nextSupername;
 	protected String[] superClasses;
-	protected int hierarchyLevel;
 	protected AnnotationInfo[] annotations;
 	protected List<AnnotationInfo> classAnnotations;
 	protected boolean isTargetIntreface;
@@ -119,7 +118,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		this.nextSupername = superName;
 		this.targetPackage = lastSlash == -1 ? StringPool.EMPTY : name.substring(0, lastSlash).replace('/', '.');
 		this.targetClassname = name.substring(lastSlash + 1);
-		this.hierarchyLevel = 1;
 
 		this.isTargetIntreface = (access & AsmUtil.ACC_INTERFACE) != 0;
 		if (this.isTargetIntreface) {
@@ -171,12 +169,19 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			classAnnotations = null;
 		}
 
-
 		List<String> superList = new ArrayList<String>();
+
+		Set<String> allInterfaces = new HashSet<String>();
+
+		if (nextInterfaces != null) {
+			allInterfaces.addAll(nextInterfaces);
+		}
+
 		// check all public super methods that are not overridden in superclass
 		while (nextSupername != null) {
 			InputStream inputStream = null;
 			ClassReader cr = null;
+
 			try {
 				inputStream = ClassLoaderUtil.getClassAsStream(nextSupername, classLoader);
 				cr = new ClassReader(inputStream);
@@ -185,36 +190,32 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			} finally {
 				StreamUtil.close(inputStream);
 			}
-			hierarchyLevel++;
+
 			superList.add(nextSupername);
 			superClassReaders.add(cr);	// remember the super class reader
 			cr.accept(new SuperClassVisitor(), 0);
+
+			if (cr.getInterfaces() != null) {
+				Collections.addAll(allInterfaces, cr.getInterfaces());
+			}
 		}
 		superClasses = superList.toArray(new String[superList.size()]);
 
 		// check all interface methods that are not overridden in super-interface
-		if (nextInterfaces != null) {
-			while (!nextInterfaces.isEmpty()) {
-				Iterator<String> iterator = nextInterfaces.iterator();
-				String next = iterator.next();
-				iterator.remove();
-
-				InputStream inputStream = null;
-				ClassReader cr = null;
-				try {
-					inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
-					cr = new ClassReader(inputStream);
-				} catch (IOException ioex) {
-					throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
-				} finally {
-					StreamUtil.close(inputStream);
-				}
-				hierarchyLevel++;
-				superClassReaders.add(cr);				// remember the super class reader
-				cr.accept(new SuperClassVisitor(), 0);
+		for (String next : allInterfaces) {
+			InputStream inputStream = null;
+			ClassReader cr = null;
+			try {
+				inputStream = ClassLoaderUtil.getClassAsStream(next, classLoader);
+				cr = new ClassReader(inputStream);
+			} catch (IOException ioex) {
+				throw new ProxettaException("Unable to inspect super interface: " + next, ioex);
+			} finally {
+				StreamUtil.close(inputStream);
 			}
+			superClassReaders.add(cr);				// remember the super class reader
+			cr.accept(new SuperClassVisitor(), 0);
 		}
-
 	}
 
 
@@ -223,7 +224,6 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	protected MethodSignatureVisitor createMethodSignature(int access, String methodName, String description, String signature, String classname) {
 		MethodSignatureVisitor v = new MethodSignatureVisitor(methodName, access, classname, description, signature, this);
-		v.hierarchyLevel = this.hierarchyLevel;
 		new SignatureReader(signature != null ? signature : description).accept(v);
 		return v;
 	}
@@ -297,9 +297,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			// append inner interfaces
 			if (nextInterfaces != null) {
 				if (interfaces != null) {
-					for (String inter : interfaces) {
-						nextInterfaces.add(inter);
-					}
+					Collections.addAll(nextInterfaces, interfaces);
 				}
 			}
 
