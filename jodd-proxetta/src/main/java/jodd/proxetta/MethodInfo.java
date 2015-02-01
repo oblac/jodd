@@ -117,9 +117,4 @@ public interface MethodInfo {
 	 */
 	ClassInfo getClassInfo();
 
-	/**
-	 * Returns hierarchy level, starting from top class as 1.
-	 */
-	int getHierarchyLevel();
-
 }

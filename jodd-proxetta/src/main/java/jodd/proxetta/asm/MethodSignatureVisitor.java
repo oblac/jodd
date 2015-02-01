@@ -46,7 +46,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	protected String declaredClassName;
 
 	protected ClassInfo targetClassInfo;
-	protected int hierarchyLevel;
 	protected boolean isStatic;
 
 	// ---------------------------------------------------------------- ctors
@@ -254,11 +253,6 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 	public ClassInfo getClassInfo() {
 		return targetClassInfo;
 	}
-
-	public int getHierarchyLevel() {
-		return hierarchyLevel;
-	}
-
 
 	// ---------------------------------------------------------------- utilities
 

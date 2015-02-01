@@ -57,7 +57,6 @@ public class MethodInfoTest {
 		assertEquals("Ljava/lang/String;", mi.getArgumentTypeName(1));
 
 		assertTrue(mi.isTopLevelMethod());
-		assertEquals(1, mi.getHierarchyLevel());
 
 		AnnotationInfo[] anns = mi.getArgumentAnnotations(0);
 

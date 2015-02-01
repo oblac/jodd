@@ -8,6 +8,7 @@ import jodd.proxetta.inv.*;
 import jodd.util.ClassLoaderUtil;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -18,13 +19,13 @@ import static org.junit.Assert.*;
 public class InvReplTest {
 
 	@Test
-	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException {
+	public void testReplacement() throws IllegalAccessException, InstantiationException, NoSuchMethodException, IOException {
 
 		InvokeProxetta proxetta = initProxetta();
 
 		String className = One.class.getCanonicalName();
 		byte klazz[] = proxetta.builder(One.class).create();
-		//FileUtil.writeBytes("d:\\OneClone.class", klazz);
+		//FileUtil.writeBytes("/Users/igor/OneClone.class", klazz);
 
 		FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 //		PrintStream out = System.out;
