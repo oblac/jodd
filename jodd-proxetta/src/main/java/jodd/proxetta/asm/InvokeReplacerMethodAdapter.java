@@ -250,7 +250,7 @@ public class InvokeReplacerMethodAdapter extends HistoryMethodAdapter {
 			super.mv.visitVarInsn(ALOAD, 0);
 		}
 
-		super.visitMethodInsn(INVOKESTATIC, owner, name, desc, isInterface);
+		super.visitMethodInsn(INVOKESTATIC, owner, name, desc, false);
 	}
 
 	@Override
