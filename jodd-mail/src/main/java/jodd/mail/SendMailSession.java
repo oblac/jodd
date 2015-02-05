@@ -58,9 +58,10 @@ public class SendMailSession {
 
 	/**
 	 * Prepares message and sends it.
+	 * Returns Message ID of sent email.
 	 */
-	public void sendMail(Email mail) {
-		Message msg;
+	public String sendMail(Email mail) {
+		MimeMessage msg;
 		try {
 			msg = createMessage(mail, mailSession);
 		} catch (MessagingException mex) {
@@ -68,6 +69,8 @@ public class SendMailSession {
 		}
 		try {
 			mailTransport.sendMessage(msg, msg.getAllRecipients());
+
+			return msg.getMessageID();
 		} catch (MessagingException mex) {
 			throw new MailException("Failed to send email: " + mail, mex);
 		}
@@ -90,7 +93,7 @@ public class SendMailSession {
 	/**
 	 * Creates new JavaX message from {@link Email email}.
 	 */
-	protected Message createMessage(Email email, Session session) throws MessagingException {
+	protected MimeMessage createMessage(Email email, Session session) throws MessagingException {
 		MimeMessage msg = new MimeMessage(session);
 
 		msg.setFrom(email.getFrom().toInternetAddress());
