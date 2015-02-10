@@ -15,6 +15,8 @@ import java.util.Map;
 
 import static jodd.jerry.Jerry.jerry;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JerryTest {
 	protected String testDataRoot;
@@ -566,6 +568,33 @@ public class JerryTest {
 		assertEquals("1", j2.html());
 		assertEquals("12", j2.htmlAll(false));
 		assertEquals("<span>1</span><span>2</span>", j2.htmlAll(true));
+	}
+
+	@Test
+	public void testCamelCaseClassesIssue() {
+		Jerry j = Jerry.jerry("<div id='d'></div>");
+
+		j.$("#d").css("background-color", "red");
+
+		assertEquals("<div id=\"d\" style=\"background-color:red;\"></div>", j.html());
+
+		j.$("#d").css("background-color", "");
+
+		assertEquals("<div id=\"d\" style=\"\"></div>", j.html());
+
+		j.$("#d").addClass("fooBar");
+
+		assertEquals("<div id=\"d\" style=\"\" class=\"fooBar\"></div>", j.html());
+
+		assertTrue(j.$("#d").hasClass("fooBar"));
+		assertFalse(j.$("#d").hasClass("foo-bar"));
+
+		j.$("#d").addClass("foo-bar");
+		assertEquals("<div id=\"d\" style=\"\" class=\"fooBar foo-bar\"></div>", j.html());
+
+		j.$("#d").toggleClass("foo-bar", "fooBar");
+
+		assertEquals("<div id=\"d\" style=\"\" class=\"\"></div>", j.html());
 	}
 
 	// ---------------------------------------------------------------- tools
