@@ -594,6 +594,9 @@ public class Jerry implements Iterable<Jerry> {
 
 	/**
 	 * Sets one or more CSS properties for the set of matched elements.
+	 * By passing an empty value, that property will be removed.
+	 * Note that this is different from jQuery, where this means
+	 * that property will be reset to previous value if existed.
 	 */
 	public Jerry css(String propertyName, String value) {
 		propertyName = StringUtil.fromCamelCase(propertyName, '-');
@@ -601,7 +604,11 @@ public class Jerry implements Iterable<Jerry> {
 		for (Node node : nodes) {
 			String styleAttrValue = node.getAttribute("style");
 			Map<String, String> styles = createPropertiesMap(styleAttrValue, ';', ':');
-			styles.put(propertyName, value);
+			if (value.length() == 0) {
+				styles.remove(propertyName);
+			} else {
+				styles.put(propertyName, value);
+			}
 
 			styleAttrValue = generateAttributeValue(styles, ';', ':');
 			node.setAttribute("style", styleAttrValue);
@@ -620,7 +627,12 @@ public class Jerry implements Iterable<Jerry> {
 			for (int i = 0; i < css.length; i += 2) {
 				String propertyName = css[i];
 				propertyName = StringUtil.fromCamelCase(propertyName, '-');
-				styles.put(propertyName, css[i + 1]);
+				String value = css[i + 1];
+				if (value.length() == 0) {
+					styles.remove(propertyName);
+				} else {
+					styles.put(propertyName, value);
+				}
 			}
 			styleAttrValue = generateAttributeValue(styles, ';', ':');
 			node.setAttribute("style", styleAttrValue);
@@ -637,7 +649,6 @@ public class Jerry implements Iterable<Jerry> {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.add(className) == true) {
 					wasChange = true;
 				}
@@ -658,7 +669,6 @@ public class Jerry implements Iterable<Jerry> {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			for (String className : classNames) {
-				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.contains(className)) {
 					return true;
 				}
@@ -677,7 +687,6 @@ public class Jerry implements Iterable<Jerry> {
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			boolean wasChange = false;
 			for (String className : classNames) {
-				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.remove(className) == true) {
 					wasChange = true;
 				}
@@ -700,7 +709,6 @@ public class Jerry implements Iterable<Jerry> {
 			String attrClass = node.getAttribute("class");
 			Set<String> classes = createPropertiesSet(attrClass, ' ');
 			for (String className : classNames) {
-				className = StringUtil.fromCamelCase(className, '-');
 				if (classes.contains(className) == true) {
 					classes.remove(className);
 				} else {
