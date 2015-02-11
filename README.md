@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/oblac/jodd.png?label=ready&title=Ready)](https://waffle.io/oblac/jodd)
 Jodd
 ====
 
