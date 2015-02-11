@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/oblac/jodd.png?label=ready&title=Ready)](https://waffle.io/oblac/jodd)
 Jodd
 ====
 
@@ -6,6 +5,7 @@ Jodd
 [![Build Status](https://travis-ci.org/oblac/jodd.png)](https://travis-ci.org/oblac/jodd)
 [![Coverage Status](https://coveralls.io/repos/oblac/jodd/badge.png?branch=master)](https://coveralls.io/r/oblac/jodd?branch=master)
 [![Stack Overflow](http://img.shields.io/badge/stack%20overflow-jodd-4183C4.svg)](http://stackoverflow.com/questions/tagged/jodd)
+[![Ready tasks](https://badge.waffle.io/oblac/jodd.png?label=ready&title=Ready)](https://waffle.io/oblac/jodd)
 
 **Jodd** is set of open-source Java tools and micro frameworks; compact, yet powerful.
 
