@@ -413,6 +413,28 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * {@link #port(int) port}, {@link #path(String) path} and {@link #queryString(String) query string}.
 	 */
 	public String url() {
+		StringBuilder url = new StringBuilder();
+
+		url.append(hostUrl());
+
+		if (path != null) {
+			url.append(path);
+		}
+
+		String queryString = queryString();
+
+		if (StringUtil.isNotBlank(queryString)) {
+			url.append('?');
+			url.append(queryString);
+		}
+
+		return url.toString();
+	}
+
+	/**
+	 * Returns just host url, without path and query.
+	 */
+	public String hostUrl() {
 		StringBand url = new StringBand(8);
 
 		if (protocol != null) {
@@ -427,17 +449,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		if (port != DEFAULT_PORT) {
 			url.append(':');
 			url.append(port);
-		}
-
-		if (path != null) {
-			url.append(path);
-		}
-
-		String queryString = queryString();
-
-		if (StringUtil.isNotBlank(queryString)) {
-			url.append('?');
-			url.append(queryString);
 		}
 
 		return url.toString();

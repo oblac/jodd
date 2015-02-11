@@ -261,6 +261,11 @@ public class HttpRequestTest {
 		httpRequest.set("GET http://jodd.org:173/index.html?light=true");
 
 		assertEquals("http://jodd.org:173/index.html?light=true", httpRequest.url());
+		assertEquals("http://jodd.org:173", httpRequest.hostUrl());
+
+		httpRequest = HttpRequest.get("foo.com/");
+
+		assertEquals("http://foo.com", httpRequest.hostUrl());
 	}
 
 }

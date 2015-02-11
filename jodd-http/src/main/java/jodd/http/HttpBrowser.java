@@ -2,6 +2,8 @@
 
 package jodd.http;
 
+import jodd.util.StringPool;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -114,7 +116,7 @@ public class HttpBrowser {
 
 			// 301: moved permanently
 			if (statusCode == 301) {
-				String newPath = httpResponse.header("location");
+				String newPath = location(httpResponse);
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
@@ -122,7 +124,7 @@ public class HttpBrowser {
 
 			// 302: redirect, 303: see other
 			if (statusCode == 302 || statusCode == 303) {
-				String newPath = httpResponse.header("location");
+				String newPath = location(httpResponse);
 
 				httpRequest = HttpRequest.get(newPath);
 				continue;
@@ -130,7 +132,7 @@ public class HttpBrowser {
 
 			// 307: temporary redirect
 			if (statusCode == 307) {
-				String newPath = httpResponse.header("location");
+				String newPath = location(httpResponse);
 
 				String originalMethod = httpRequest.method();
 				httpRequest = new HttpRequest()
@@ -145,6 +147,24 @@ public class HttpBrowser {
 		elapsedTime = System.currentTimeMillis() - elapsedTime;
 
 		return this.httpResponse;
+	}
+
+	/**
+	 * Parse 'location' header to return the next location.
+	 * Specification (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30">rfc2616</a>)
+	 * says that only absolute path must be provided, however, this does not
+	 * happens in the real world. There a <a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">proposal</a>
+	 * that allows server name etc to be omitted.
+	 */
+	protected String location(HttpResponse httpResponse) {
+		String location = httpResponse.header("location");
+
+		if (location.startsWith(StringPool.SLASH)) {
+			HttpRequest httpRequest = httpResponse.getHttpRequest();
+			location = httpRequest.hostUrl() + location;
+		}
+
+		return location;
 	}
 
 	/**
