@@ -6,6 +6,7 @@ import jodd.util.StringPool;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Emulates HTTP Browser and persist cookies between requests.
@@ -16,6 +17,7 @@ public class HttpBrowser {
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
 	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
+	protected HttpValuesMap<String> defaultHeaders = HttpValuesMap.ofStrings();
 	protected boolean keepAlive;
 	protected long elapsedTime;
 
@@ -50,6 +52,13 @@ public class HttpBrowser {
 	 */
 	public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
+	}
+
+	/**
+	 * Adds default header to all requests.
+	 */
+	public void setDefaultHeader(String name, String value) {
+		defaultHeaders.add(name, value);
 	}
 
 	/**
@@ -94,6 +103,7 @@ public class HttpBrowser {
 			HttpResponse previouseResponse = this.httpResponse;
 			this.httpResponse = null;
 
+			addDefaultHeaders(httpRequest);
 			addCookies(httpRequest);
 
 			// send request
@@ -147,6 +157,21 @@ public class HttpBrowser {
 		elapsedTime = System.currentTimeMillis() - elapsedTime;
 
 		return this.httpResponse;
+	}
+
+	/**
+	 * Add default headers to the request. If request already has a header set,
+	 * default header will be ignored.
+	 */
+	protected void addDefaultHeaders(HttpRequest httpRequest) {
+		Set<Map.Entry<String, String[]>> entries = defaultHeaders.entrySet();
+
+		for (Map.Entry<String, String[]> entry : entries) {
+			String name = entry.getKey();
+			if (!httpRequest.headers.containsKey(name)) {
+				httpRequest.headers.put(name, entry.getValue());
+			}
+		}
 	}
 
 	/**
