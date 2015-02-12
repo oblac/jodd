@@ -35,30 +35,34 @@ public class HttpBrowser {
 	/**
 	 * Defines that persistent HTTP connection should be used.
 	 */
-	public void setKeepAlive(boolean keepAlive) {
+	public HttpBrowser setKeepAlive(boolean keepAlive) {
 		this.keepAlive = keepAlive;
+		return this;
 	}
 
 	/**
 	 * Defines proxy for a browser.
 	 */
-	public void setProxyInfo(ProxyInfo proxyInfo) {
+	public HttpBrowser setProxyInfo(ProxyInfo proxyInfo) {
 		httpConnectionProvider.useProxy(proxyInfo);
+		return this;
 	}
 
 	/**
 	 * Defines {@link jodd.http.HttpConnectionProvider} for this browser session.
 	 * Resets the previous proxy definition, if set.
 	 */
-	public void setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
+	public HttpBrowser setHttpConnectionProvider(HttpConnectionProvider httpConnectionProvider) {
 		this.httpConnectionProvider = httpConnectionProvider;
+		return this;
 	}
 
 	/**
 	 * Adds default header to all requests.
 	 */
-	public void setDefaultHeader(String name, String value) {
+	public HttpBrowser setDefaultHeader(String name, String value) {
 		defaultHeaders.add(name, value);
+		return this;
 	}
 
 	/**
