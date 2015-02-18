@@ -8,8 +8,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-//version = '3.6.3'
-version = '3.6.4'
+version = '3.6.5-BETA1'
 
 
 // --- properties -------------------------------------------------------------
