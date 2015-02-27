@@ -1118,24 +1118,10 @@ public class JDateTime implements Comparable, Cloneable, Serializable {
 
 
 	/**
-	 * Length of months. Do not use directly!!!
-	 */
-	private static final int MONTH_LENGTH[] = {0, 31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-	/**
 	 * Returns the length of the specified month in days.
 	 */
-	public int getMonthLength(int m) {
-		if ((m < 1) || (m > 12)) {
-			throw new IllegalArgumentException("Invalid month: " + m);
-		}
-		if (m == 2) {
-			return this.leap ? 29 : 28;
-		}
-		if ((time.year == 1582) && (time.month == 10)) {
-			return 21;
-		}
-		return MONTH_LENGTH[m];
+	public int getMonthLength(int month) {
+		return TimeUtil.getMonthLength(time.year, month, this.leap);
 	}
 
 	/**

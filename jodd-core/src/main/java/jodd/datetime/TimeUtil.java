@@ -54,23 +54,29 @@ public class TimeUtil {
 		return result;
 	}
 
-	private static final int[] MONTH_LENGTH = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	private static final int[] LEAP_MONTH_LENGTH = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	static final int[] MONTH_LENGTH = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 	/**
 	 * Returns the length of the specified month in days. Month is 1 for January
-	 * and 12 for December. It works only for years after 1582.
+	 * and 12 for December.
 	 *
 	 * @return length of the specified month in days
 	 */
-	public static int getMonthLength(int year, int m) {
-		if ((m < 1) || (m > 12)) {
-			return -1;
+	public static int getMonthLength(int year, int month) {
+		return getMonthLength(year, month, isLeapYear(year));
+	}
+
+	static int getMonthLength(int year, int month, boolean leap) {
+		if ((month < 1) || (month > 12)) {
+			throw new IllegalArgumentException("Invalid month: " + month);
 		}
-		if (isLeapYear(year)) {
-			return LEAP_MONTH_LENGTH[m];
+		if (month == 2) {
+			return leap ? 29 : 28;
 		}
-		return MONTH_LENGTH[m];
+		if ((year == 1582) && (month == 10)) {
+			return 21;
+		}
+		return MONTH_LENGTH[month];
 	}
 
 
