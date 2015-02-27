@@ -4,7 +4,6 @@ package jodd.joy.crypt;
 
 import jodd.util.MathUtil;
 import jodd.util.RandomString;
-import jodd.util.RandomString;
 import org.junit.Before;
 import org.junit.Test;
 

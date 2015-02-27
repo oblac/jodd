@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class Base64 {
 
-	private static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+	public static final char[] CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 	private static final int[] INV = new int[256];
 
 	static {

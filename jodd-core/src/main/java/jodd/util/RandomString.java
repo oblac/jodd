@@ -156,4 +156,11 @@ public class RandomString {
 		return randomRanges(count, ALPHA_NUMERIC_RANGE);
 	}
 
+	/**
+	 * Creates random string that contains only Base64 characters.
+	 */
+	public String randomBase64(int count) {
+		return random(count, Base64.CHARS);
+	}
+
 }
