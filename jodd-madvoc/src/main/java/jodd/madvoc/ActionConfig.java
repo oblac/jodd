@@ -197,7 +197,15 @@ public class ActionConfig {
 	 * Returns action string in form 'actionClass#actionMethod'.
 	 */
 	public String getActionString() {
-		return actionClass.getName() + '#' + actionClassMethod.getName();
+		String className = actionClass.getName();
+
+		int ndx = className.indexOf("$$");
+
+		if (ndx != -1) {
+			className = className.substring(0, ndx);
+		}
+
+		return className + '#' + actionClassMethod.getName();
 	}
 
 	@Override

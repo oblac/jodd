@@ -50,6 +50,9 @@ public class TomcatTestServer {
 
 		URL webXmlUrl = TomcatTestServer.class.getResource(webXml);
 		File webXmlFile = FileUtil.toFile(webXmlUrl);
+		if (webXmlFile == null) {
+			throw new Exception("Test resource files can not be found.");
+		}
 		FileUtil.copyFile(webXmlFile, new File(webInfFolder, "web.xml"));
 
 		// jsp
