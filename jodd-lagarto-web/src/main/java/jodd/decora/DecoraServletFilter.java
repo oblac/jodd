@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.CharBuffer;
 
 /**
@@ -135,12 +136,19 @@ public class DecoraServletFilter implements Filter {
 
 		String actionPath = DispatcherUtil.getServletPath(request);
 		String decoratorPath = decoraManager.resolveDecorator(request, actionPath);
+
 		if (decoratorPath != null) {
 			BufferResponseWrapper decoratorWrapper = new BufferResponseWrapper(response, lastModifiedData);
+
 			DispatcherUtil.forward(decoraRequest, decoratorWrapper, decoratorPath);
+
 			char[] decoraContent = decoratorWrapper.getBufferedChars();
 
-			decoraParser.decorate(servletResponse.getWriter(), pageContent, decoraContent);
+			Writer writer = servletResponse.getWriter();
+
+			decoraParser.decorate(writer, pageContent, decoraContent);
+
+			writer.flush();
 
 			decorated = true;
 		}
