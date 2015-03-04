@@ -62,7 +62,7 @@ public abstract class JsonParserBase {
 
 		CtorDescriptor ctorDescriptor = cd.getDefaultCtorDescriptor(true);
 		if (ctorDescriptor == null) {
-			throw new JsonException("Default ctor not found for: " + targetType.getClass().getName());
+			throw new JsonException("Default ctor not found for: " + targetType.getName());
 		}
 
 		try {
