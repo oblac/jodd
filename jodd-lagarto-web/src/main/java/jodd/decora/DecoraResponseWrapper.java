@@ -23,6 +23,10 @@ public class DecoraResponseWrapper extends BufferResponseWrapper {
 		this.request = originalRequest;
 		this.response = originalResponse;
 		this.decoraManager = decoraManager;
+
+		// reset servlet response content length AFTER the chain, since
+		// servlet container may set it and we are changing the content.
+		originalResponse.setContentLength(-1);
 	}
 
 	@Override
