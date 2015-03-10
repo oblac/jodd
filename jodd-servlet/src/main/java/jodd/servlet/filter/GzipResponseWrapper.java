@@ -2,6 +2,8 @@
 
 package jodd.servlet.filter;
 
+import jodd.io.StreamUtil;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -23,6 +25,9 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	public GzipResponseWrapper(HttpServletResponse response) {
 		super(response);
 		origResponse = response;
+
+		// explicitly reset content length, as the size of zipped stream is unknown
+		response.setContentLength(-1);
 	}
 
 	/**
@@ -83,17 +88,8 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 	 * Finishes a response.
 	 */
 	public void finishResponse() {
-		try {
-			if (writer != null) {
-				writer.close();
-			} else {
-				if (stream != null) {
-					stream.close();
-				}
-			}
-		} catch (IOException e) {
-			// ignore
-		}
+		StreamUtil.close(writer);
+		StreamUtil.close(stream);
 	}
 
 	// ---------------------------------------------------------------- ServletResponse
@@ -148,6 +144,9 @@ public class GzipResponseWrapper extends HttpServletResponseWrapper {
 		return(writer);
 	}
 
+	/**
+	 * Ignores set content length on zipped stream.
+	 */
 	@Override
 	public void setContentLength(int length) {
 	}
