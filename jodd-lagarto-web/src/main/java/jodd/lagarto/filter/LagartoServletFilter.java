@@ -56,6 +56,10 @@ public abstract class LagartoServletFilter implements Filter {
 		BufferResponseWrapper wrapper = new BufferResponseWrapper(response);
 		filterChain.doFilter(servletRequest, wrapper);
 
+		// reset servlet response content length AFTER the chain, since
+		// servlet container may set it and we are changing the content.
+		servletResponse.setContentLength(-1);
+
 		char[] content = wrapper.getBufferContentAsChars();
 
 		if ((content != null) && (content.length != 0)) {
