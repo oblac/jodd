@@ -1248,12 +1248,11 @@ public class BeanUtilTest {
 		beanUtilBean.setSimpleProperty(fb, "fooString", "test", false);
 		assertEquals("test", fb.getFooString());
 		assertEquals("test", beanUtilBean.getSimpleProperty(fb, "fooString", false));
-		assertEquals("test", beanUtilBean.getProperty(fb, "*this.fooString"));
+		assertEquals("test", beanUtilBean.getProperty(fb, "fooString"));
 
 		FooBean4 fb4 = new FooBean4();
 		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data[0].bbean.abean.fooProp"));
-		assertEquals("xxx", beanUtilBean.getProperty(fb4, "*this.data.*this[0].*this.bbean.abean.fooProp"));
-		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data[0].bbean.abean.fooProp"));
+		assertEquals("xxx", beanUtilBean.getProperty(fb4, "data.[0].bbean.abean.fooProp"));
 
 
 		assertEquals("foo", beanUtilBean.extractThisReference("foo.aaa"));
@@ -1315,7 +1314,6 @@ public class BeanUtilTest {
 
 		assertEquals("data", props.getProperty("ldap"));
 
-		BeanUtil.setProperty(props, "*this[ldap.auth.enabled]", "data2");
 		BeanUtil.setProperty(props, "[ldap.auth.enabled]", "data2");
 
 		assertEquals("data", props.getProperty("ldap"));
@@ -1329,7 +1327,7 @@ public class BeanUtilTest {
 		BeanUtil.setPropertyForced(map, "[aaa.bbb].fooMap[xxx.ccc]", "zzzz");
 		assertEquals("zzzz", ((FooBean) map.get("aaa.bbb")).getFooMap().get("xxx.ccc"));
 
-		BeanUtil.setPropertyForced(fb, ".fooint", "123");
+		BeanUtil.setPropertyForced(fb, "fooint", "123");
 		assertEquals(123, fb.getFooint());
 
 		try {
@@ -1344,10 +1342,9 @@ public class BeanUtilTest {
 		} catch (Exception ex) {
 		}
 
-		BeanUtil.setPropertyForced(map, ".[aaa.bbb].fooMap..[eee.ccc]", "zzzz");
+		BeanUtil.setPropertyForced(map, "[aaa.bbb].fooMap.[eee.ccc]", "zzzz");
 		// forced works because *this is a map!
-		assertEquals("zzzz", BeanUtil.getProperty(map, ".[aaa.bbb].fooMap..[eee.ccc]"));
-		assertEquals("zzzz", BeanUtil.getProperty(map, "*this.[aaa.bbb].fooMap..[eee.ccc]"));
+		assertEquals("zzzz", BeanUtil.getProperty(map, "[aaa.bbb].fooMap.[eee.ccc]"));
 	}
 
 	@Test
@@ -1409,6 +1406,23 @@ public class BeanUtilTest {
 		assertNotNull(mixBean.getData5());
 		assertEquals(5, mixBean.getData5().size());
 		assertEquals(1, mixBean.getData5().get(0).intValue());
+	}
+
+	@Test
+	public void testMapWithKeyWithADot() {
+		Map innerMap = new HashMap();
+		innerMap.put("zzz.xxx", "hey");
+
+		Map map = new HashMap();
+		map.put("foo.bar", innerMap);
+
+		Object value = BeanUtil.getProperty(map, "[foo.bar]");
+		assertNotNull(value);
+
+		value = BeanUtil.getProperty(map, "[foo.bar].[zzz.xxx]");
+		assertNotNull(value);
+		assertEquals("hey", value.toString());
+
 	}
 
 }

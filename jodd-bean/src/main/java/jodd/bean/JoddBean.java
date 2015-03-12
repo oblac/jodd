@@ -12,11 +12,6 @@ import jodd.introspector.JoddIntrospector;
 public class JoddBean {
 
 	/**
-	 * Name of 'this' references.
-	 */
-	public static String thisRef = "*this";
-
-	/**
 	 * Default {@link Introspector} implementation.
 	 */
 	public static Introspector introspector;

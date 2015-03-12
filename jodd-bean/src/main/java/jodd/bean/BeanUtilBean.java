@@ -105,8 +105,12 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 	protected Object getSimpleProperty(BeanProperty bp) {
 
-		if ((bp.name.length() == 0 && bp.first) || bp.name.equals(JoddBean.thisRef)) {
-			return bp.bean;
+		if (bp.name.length() == 0) {
+			if (bp.indexString != null) {
+				// index string exist, but property name is missing
+				return bp.bean;
+			}
+			throw new BeanException("Invalid property", bp);
 		}
 
 		Getter getter = bp.getGetter(bp.declared);
@@ -242,12 +246,20 @@ public class BeanUtilBean extends BeanUtilUtil {
 	 * If forced, missing bean will be created if possible.
 	 */
 	protected Object getIndexProperty(BeanProperty bp) {
-		String indexString = extractIndex(bp);
+		bp.indexString = extractIndex(bp);
 
+		Object value = _getIndexProperty(bp);
+
+		bp.indexString = null;
+
+		return value;
+	}
+
+	private Object _getIndexProperty(BeanProperty bp) {
 		Object resultBean = getSimpleProperty(bp);
 		Getter getter = bp.getGetter(bp.declared);
 
-		if (indexString == null) {
+		if (bp.indexString == null) {
 			return resultBean;	// no index, just simple bean
 		}
 		if (resultBean == null) {
@@ -259,7 +271,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: property[index]
 		if (resultBean.getClass().isArray() == true) {
-			int index = parseInt(indexString, bp);
+			int index = parseInt(bp.indexString, bp);
 			if (bp.forced == true) {
 				return arrayForcedGet(bp, resultBean, index);
 			} else {
@@ -269,7 +281,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// try: list.get(index)
 		if (resultBean instanceof List) {
-			int index = parseInt(indexString, bp);
+			int index = parseInt(bp.indexString, bp);
 			List list = (List) resultBean;
 			if (bp.forced == false) {
 				return list.get(index);
@@ -301,7 +313,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		// try: map.get('index')
 		if (resultBean instanceof Map) {
 			Map map = (Map) resultBean;
-			Object key = convertIndexToMapKey(getter, indexString);
+			Object key = convertIndexToMapKey(getter, bp.indexString);
 
 			if (bp.forced == false) {
 				return map.get(key);
@@ -319,7 +331,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 						if (bp.silent) {
 							return null;
 						}
-						throw new BeanException("Invalid map element: " + bp.name + '[' + indexString + ']', bp, ex);
+						throw new BeanException("Invalid map element: " + bp.name + '[' + bp.indexString + ']', bp, ex);
 					}
 
 					//noinspection unchecked
@@ -343,11 +355,17 @@ public class BeanUtilBean extends BeanUtilUtil {
 	/**
 	 * Sets indexed or regular properties (no nested!).
 	 */
-	@SuppressWarnings({"unchecked"})
 	protected void setIndexProperty(BeanProperty bp, Object value) {
-		String indexString = extractIndex(bp);
+		bp.indexString = extractIndex(bp);
 
-		if (indexString == null) {
+		_setIndexProperty(bp, value);
+
+		bp.indexString = null;
+	}
+
+	@SuppressWarnings({"unchecked"})
+	private void _setIndexProperty(BeanProperty bp, Object value) {
+		if (bp.indexString == null) {
 			setSimpleProperty(bp, value);
 			return;
 		}
@@ -365,7 +383,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 		// inner bean found
 		if (nextBean.getClass().isArray() == true) {
-			int index = parseInt(indexString, bp);
+			int index = parseInt(bp.indexString, bp);
 			if (bp.forced == true) {
 				arrayForcedSet(bp, nextBean, index, value);
 			} else {
@@ -375,7 +393,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 
 		if (nextBean instanceof List) {
-			int index = parseInt(indexString, bp);
+			int index = parseInt(bp.indexString, bp);
 			Class listComponentType = extractGenericComponentType(getter);
 			if (listComponentType != Object.class) {
 				value = convertType(value, listComponentType);
@@ -389,7 +407,7 @@ public class BeanUtilBean extends BeanUtilUtil {
 		}
 		if (nextBean instanceof Map) {
 			Map map = (Map) nextBean;
-			Object key = convertIndexToMapKey(getter, indexString);
+			Object key = convertIndexToMapKey(getter, bp.indexString);
 
 			Class mapComponentType = extractGenericComponentType(getter);
 			if (mapComponentType != Object.class) {

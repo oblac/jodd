@@ -43,6 +43,7 @@ class BeanProperty {
 	String name;        // property name
 	boolean last;       // is it a last property (when nested)
 	boolean first;		// is it first property (when nested)
+	String indexString;	// indexString for index property
 
 	/**
 	 * Sets current property name.
