@@ -75,7 +75,8 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 				"localFilesEncoding",
 				"notFoundExceptionEnabled",
 				"sortResources",
-				"staplerPath"
+				"staplerPath",
+				"randomDigestChars"
 		);
 
 		if (resetOnStart) {
