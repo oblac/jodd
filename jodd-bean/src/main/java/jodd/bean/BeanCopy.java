@@ -13,6 +13,7 @@ import java.util.Map;
 public class BeanCopy extends BeanVisitor {
 
 	protected Object destination;
+	protected boolean forced;
 	protected boolean declaredTarget;
 
 	// ---------------------------------------------------------------- ctor
@@ -167,6 +168,11 @@ public class BeanCopy extends BeanVisitor {
 		return this;
 	}
 
+	public BeanCopy forced(boolean forced) {
+		this.forced = forced;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- visitor
 
 	/**
@@ -183,11 +189,8 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	@Override
 	protected boolean visitProperty(String name, Object value) {
-		if (declaredTarget) {
-			BeanUtil.setDeclaredPropertySilent(destination, name, value);
-		} else {
-			BeanUtil.setPropertySilent(destination, name, value);
-		}
+
+		BeanUtil.setProperty(destination, name, value, declared, forced, true);
 
 		return true;
 	}
