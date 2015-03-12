@@ -2,6 +2,7 @@
 
 package jodd.bean;
 
+import jodd.exception.ExceptionUtil;
 import jodd.introspector.Getter;
 import jodd.introspector.Setter;
 import jodd.util.ReflectUtil;
@@ -407,6 +408,29 @@ public class BeanUtilBean extends BeanUtilUtil {
 
 
 	// ---------------------------------------------------------------- SET
+
+	/**
+	 * Sets Java Bean property.
+	 * @param bean Java POJO bean or a Map
+	 * @param name property name
+	 * @param value property value
+	 * @param declared consider declared properties as well
+	 * @param forced force creation of missing values
+	 * @param silent silent mode, no exception is thrown
+	 */
+	public void setProperty(Object bean, String name, Object value, boolean declared, boolean forced, boolean silent) {
+		BeanProperty beanProperty = new BeanProperty(bean, name, declared, forced);
+
+		try {
+			resolveNestedProperties(beanProperty);
+			setIndexProperty(beanProperty, value);
+		} catch (Exception ex) {
+			if (!silent) {
+				ExceptionUtil.throwException(ex);
+			}
+		}
+
+	}
 
 	/**
 	 * Sets Java Bean property.

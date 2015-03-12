@@ -47,6 +47,13 @@ public class BeanUtil {
 	/**
 	 * Sets Java Bean property.
 	 */
+	public static void setProperty(Object bean, String name, Object value, boolean declared, boolean forced, boolean silent) {
+		BEAN_UTIL_BEAN.setProperty(bean, name, value, declared, forced, silent);
+	}
+
+	/**
+	 * Sets Java Bean property.
+	 */
 	public static void setProperty(Object bean, String name, Object value) {
 		BEAN_UTIL_BEAN.setProperty(bean, name, value);
 	}
