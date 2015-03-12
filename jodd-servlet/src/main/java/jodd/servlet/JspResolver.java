@@ -108,7 +108,8 @@ public class JspResolver {
 		if (thisRef.equals(name)) {
 			return value;
 		}
-		name = JoddBean.thisRef + name.substring(thisRef.length());
+
+		name = name.substring(thisRef.length() + 1);
 		return BeanUtil.getDeclaredPropertySilently(value, name);
 	}
 
