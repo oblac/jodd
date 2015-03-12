@@ -2,8 +2,12 @@
 
 package jodd.bean;
 
+import java.util.Map;
+
 /**
  * Powerful tool for copying properties from one bean into another.
+ * <code>BeanCopy</code> works with POJO beans, but also with <code>Map</code>.
+ *
  * @see BeanVisitor
  */
 public class BeanCopy extends BeanVisitor {
@@ -13,17 +17,59 @@ public class BeanCopy extends BeanVisitor {
 
 	// ---------------------------------------------------------------- ctor
 
+	/**
+	 * Creates new BeanCopy process between the source and the destination.
+	 * Both source and destination can be a POJO object or a <code>Map</code>.
+	 */
 	public BeanCopy(Object source, Object destination) {
 		this.source = source;
 		this.destination = destination;
 	}
 
+	private BeanCopy(Object source) {
+		this.source = source;
+	}
+
 	/**
-	 * Static factory.
+	 * Simple static factory for <code>BeanCopy</code>.
+	 * @see #BeanCopy(Object, Object)
 	 */
 	public static BeanCopy beans(Object source, Object destination) {
 		return new BeanCopy(source, destination);
 	}
+
+	/**
+	 * Creates <copy>BeanCopy</copy> with given POJO bean as a source.
+	 */
+	public static BeanCopy fromBean(Object source) {
+		return new BeanCopy(source);
+	}
+
+	/**
+	 * Creates <copy>BeanCopy</copy> with given <code>Map</code> as a source.
+	 */
+	public static BeanCopy fromMap(Object source) {
+		return new BeanCopy(source);
+	}
+
+	// ---------------------------------------------------------------- destination
+
+	/**
+	 * Defines destination bean.
+	 */
+	public BeanCopy toBean(Object destination) {
+		this.destination = destination;
+		return this;
+	}
+
+	/**
+	 * Defines destination map.
+	 */
+	public BeanCopy toMap(Map destination) {
+		this.destination = destination;
+		return this;
+	}
+
 
 	// ---------------------------------------------------------------- properties
 

@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -216,6 +217,35 @@ public class BeanCopyTest {
 		assertEquals("213", s);
 		String[] sa = (String[]) BeanUtil.getProperty(dest, "fooStringA");
 		assertNull(sa);
+	}
+
+	@Test
+	public void testCopyProperties() {
+		Properties properties = new Properties();
+
+		properties.put("fooInteger", Integer.valueOf(1));
+		properties.put("fooint", Integer.valueOf(2));
+
+		FooBean fooBean = new FooBean();
+
+		assertEquals(0, fooBean.getFooint());
+
+		// copy to
+
+		BeanCopy.fromMap(properties).toBean(fooBean).copy();
+
+		assertEquals(1, fooBean.getFooInteger().intValue());
+		assertEquals(2, fooBean.getFooint());
+
+
+		// copy back
+
+		properties.clear();
+
+		BeanCopy.fromBean(fooBean).toMap(properties).copy();
+
+		assertEquals(1, properties.get("fooInteger"));
+		assertEquals(2, properties.get("fooint"));
 	}
 
 
