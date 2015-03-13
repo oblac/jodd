@@ -344,13 +344,6 @@ public class Props implements Cloneable {
 	// ---------------------------------------------------------------- extract
 
 	/**
-	 * Extract base props (no profiles).
-	 */
-	public void extractBaseProps(final Map target) {
-		extractProps(target, null);
-	}
-
-	/**
 	 * Extracts props belonging to active profiles.
 	 */
 	public void extractProps(final Map target) {
@@ -366,18 +359,16 @@ public class Props implements Cloneable {
 		data.extract(target, profiles, null);
 	}
 
-	public void extractBaseSubProps(final Map target, final String... wildcardPatterns) {
-		initialize();
-		data.extract(target, null, wildcardPatterns);
-	}
-
+	/**
+	 * Extracts subset of properties that matches given wildcards.
+	 */
 	public void extractSubProps(final Map target, final String... wildcardPatterns) {
 		initialize();
 		data.extract(target, activeProfiles, wildcardPatterns);
 	}
 
 	/**
-	 * Extracts subset of properties.
+	 * Extracts subset of properties that matches given wildcards.
 	 */
 	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
 		initialize();

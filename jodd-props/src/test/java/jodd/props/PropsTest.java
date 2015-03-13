@@ -37,7 +37,7 @@ public class PropsTest extends BasePropsTest {
 		assertNull(p.getValue("non existing"));
 
 		Properties prop = new Properties();
-		p.extractBaseProps(prop);
+		p.extractProps(prop, null);
 		assertEquals("1937{c}", prop.getProperty("year"));
 		assertEquals("49.5", prop.getProperty("doc.weight"));
 		assertEquals("Čađavi Žar utf8", prop.getProperty("comment"));
@@ -80,7 +80,7 @@ public class PropsTest extends BasePropsTest {
 		assertEquals("192.168.1.102", p.getValue("db.url", "deploy"));
 
 		Properties prop = new Properties();
-		p.extractBaseProps(prop);
+		p.extractProps(prop, null);
 		assertEquals("one", prop.getProperty("foo"));
 
 		prop.clear();
