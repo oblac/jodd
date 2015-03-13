@@ -332,8 +332,6 @@ public class Props implements Cloneable {
 		setValue(key, value, null);
 	}
 
-	// ---------------------------------------------------------------- extract
-
 	/**
 	 * Sets value on some profile.
 	 */
@@ -345,6 +343,8 @@ public class Props implements Cloneable {
 		}
 		initialized = false;
 	}
+
+	// ---------------------------------------------------------------- extract
 
 	/**
 	 * Extract base props (no profiles).
