@@ -1,0 +1,99 @@
+# Jodd TODOs
+
+This is a list of long-term TODOs and ideas.
+
+## General Tasks
+
++ add a blog
++ improve documentation and SEO
++ clone myself
+
+Game over?
+
+> "Every once in a while, I take my head out of the clouds and do a reality check."
+
+## Core
+
++ Add smart download in `NetUtil`.
+  This would have some downloading options to tweak download better.
++ Add efficient text searches.
+  Check various algorithms, like BM etc.
++ Check `FileUtil.move`/`copy dir`/`file` variants to be more performant.
+  Try to see which variant is the fastest one. Noticed a slow execution in sitegenerator
++ Add `FileNameUtil.calculateRelativePath`
+
+
+## Lagarto/Jerry
+
++ Think about removing circular dep `Node` <-> `Document`
++ Make `Node` API for adding nodes more user friendly
+
+## Props
+
++ Move extract/sub/inner code in separate class. 
+
+## JSON
+
++ Add factories in `JsonParser` for various types.
+
+
+## Props-plugin
+
++ Add `+=` operator
++ Add `<=` operator
++ Check when categories are listed in values, do not recognize them as categories but test
+  Categories must start on empty or whitespaced line
+
+## Madvoc
+
++ Add Convertes, that convert input text automatically
+  For example, convert `"1,473.00"` into `"1473"`.
++ `MadvocServletFilter`, consume action path, like load static content
++ Check `AnnotatedFieldInterceptor`, how it works
++ More flexible `ActionMethodParser`, i.e. point where action path is build
+  For example, it may choose if extension is "json" or not based on class name.
++ Add `JSONResult(returnCode, jsonString)`
++ Why Decora can not handle the direct output?
+
+## EMail
+
++ Add callback method for `receive()`, so users may control if there is an exception and continue fetching if there is one.
++ Add `UploadFile`, so user can download email attachments directly to e.g. disk instead to memory.
+
+## Cache
+
++ LFU, add optional count reduction
++ LFU & LRU, add optional percentage reduction: eg, delete 25% od cache
++ Add caches on method level, annotation based.
+  Each cache has an id, each one can be evicted, use annotations or manual config
++ Add Madvoc filter for storing caching response for some time
+  Configurable, eg. 1 cache setting per actionString (class#method) or from additional annotation etc.
+
+## JTX
+
++ Add 'Rollback on' feature… that does rollback only on certain exception types.
++ Add Thread timeout in separate class
++ How to explicitly specify TX scope in annotation 
++ Check nested TX, once again
+
+## Proxetta
+
++ Add statistics: number of proxified methods etc.
++ Add unique interface over all 3 proxy types, so they can be combined, if possible.
+
+## DbOom
+
++ `LoadById`, load values into existing instance
++ Add batch update
++ Add matcher for `match()` method
++ Add more matching wildcards for set, update etc. For now you can update only full object, and enable to update non-null parts, too.
++ Make constants  like`COLS_INCLUDE_ALL` to be `enum`.
+
+## Joy
+
++ Localization arguments, {0}, {1}…
++ Don't encode text tags in resource bundles
++ Pager - refactor to be more user friendly when user has to write custom code
++ Jspp with tag body
++ `Jspp.processAll()`. Process all files in target folder, enable debug mode in WebApp.
++ Do we really need JSPP?
