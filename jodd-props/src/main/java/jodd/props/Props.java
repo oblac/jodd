@@ -348,7 +348,7 @@ public class Props implements Cloneable {
 	 */
 	public void extractProps(final Map target) {
 		initialize();
-		data.extract(target, activeProfiles, null);
+		data.extract(target, activeProfiles, null, null);
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class Props implements Cloneable {
 	 */
 	public void extractProps(final Map target, final String... profiles) {
 		initialize();
-		data.extract(target, profiles, null);
+		data.extract(target, profiles, null, null);
 	}
 
 	/**
@@ -364,7 +364,7 @@ public class Props implements Cloneable {
 	 */
 	public void extractSubProps(final Map target, final String... wildcardPatterns) {
 		initialize();
-		data.extract(target, activeProfiles, wildcardPatterns);
+		data.extract(target, activeProfiles, wildcardPatterns, null);
 	}
 
 	/**
@@ -372,7 +372,43 @@ public class Props implements Cloneable {
 	 */
 	public void extractSubProps(final Map target, final String[] profiles, final String[] wildcardPatterns) {
 		initialize();
-		data.extract(target, profiles, wildcardPatterns);
+		data.extract(target, profiles, wildcardPatterns, null);
+	}
+
+	// ---------------------------------------------------------------- childMap
+
+	/**
+	 * Returns inner map from the props with given prefix. Keys in returned map
+	 * will not have the prefix.
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> innerMap(String prefix) {
+		initialize();
+		return data.extract(null, activeProfiles, null, prefix);
+	}
+
+	/**
+	 * Adds child map to the props on given prefix.
+	 */
+	public void addInnerMap(String prefix, Map<?, ?> map) {
+		addInnerMap(prefix, map, null);
+	}
+
+	/**
+	 * Adds child map to the props on given prefix.
+	 */
+	public void addInnerMap(String prefix, Map<?, ?> map, String profile) {
+		if (StringUtil.endsWithChar(prefix, '.') == false) {
+			prefix += StringPool.DOT;
+		}
+
+		for (Map.Entry<?, ?> entry : map.entrySet()) {
+			String key = entry.getKey().toString();
+
+			key = prefix + key;
+
+			setValue(key, entry.getValue().toString(), profile);
+		}
 	}
 
 	// ---------------------------------------------------------------- initialize

@@ -264,15 +264,26 @@ public class PropsData implements Cloneable {
 	// ---------------------------------------------------------------- extract
 
 	/**
-	 * Extract props to target map.
+	 * Extracts props to target map. This is all-in-one method, that does many things at once.
 	 */
-	public void extract(final Map target, final String[] profiles, final String[] wildcardPatterns) {
+	public Map extract(Map target, final String[] profiles, final String[] wildcardPatterns, String prefix) {
+		if (target == null) {
+			target = new HashMap();
+		}
+
+		// make sure prefix ends with a dot
+		if (prefix != null) {
+			if (StringUtil.endsWithChar(prefix, '.') == false) {
+				prefix += StringPool.DOT;
+			}
+		}
+
 		if (profiles != null) {
 			for (String profile : profiles) {
 				while (true) {
 					final Map<String, PropsEntry> map = this.profileProperties.get(profile);
 					if (map != null) {
-						extractMap(target, map, profiles, wildcardPatterns);
+						extractMap(target, map, profiles, wildcardPatterns, prefix);
 					}
 
 					final int ndx = profile.indexOf('.');
@@ -283,13 +294,23 @@ public class PropsData implements Cloneable {
 				}
 			}
 		}
-		extractMap(target, this.baseProperties, profiles, wildcardPatterns);
+
+		extractMap(target, this.baseProperties, profiles, wildcardPatterns, prefix);
+
+		return target;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void extractMap(final Map target, final Map<String, PropsEntry> map, final String[] profiles, final String[] wildcardPatterns) {
+	protected void extractMap(
+			final Map target,
+			final Map<String, PropsEntry> map,
+			final String[] profiles,
+			final String[] wildcardPatterns,
+			final String prefix
+			) {
+
 		for (Map.Entry<String, PropsEntry> entry : map.entrySet()) {
-			final String key = entry.getKey();
+			String key = entry.getKey();
 
 			if (wildcardPatterns != null) {
 				if (Wildcard.matchOne(key, wildcardPatterns) == -1) {
@@ -297,6 +318,15 @@ public class PropsData implements Cloneable {
 				}
 			}
 
+			// shorten the key
+			if (prefix != null) {
+				if (!key.startsWith(prefix)) {
+					continue;
+				}
+				key = key.substring(prefix.length());
+			}
+
+			// only append if target DOES NOT contain the key
 			if (!target.containsKey(key)) {
 				target.put(key, entry.getValue().getValue(profiles));
 			}

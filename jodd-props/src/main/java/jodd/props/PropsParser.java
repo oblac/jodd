@@ -432,7 +432,7 @@ public class PropsParser implements Cloneable {
 
 				String[] wildcards = new String[] {source + ".*"};
 
-				propsData.extract(target, lookupProfiles, wildcards);
+				propsData.extract(target, lookupProfiles, wildcards, null);
 
 				for (Map.Entry<String, Object> entry : target.entrySet()) {
 					String entryKey = entry.getKey();
