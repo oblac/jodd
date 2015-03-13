@@ -168,8 +168,6 @@ public class Props implements Cloneable {
 		data.ignoreMissingMacros = ignoreMissingMacros;
 	}
 
-	// ---------------------------------------------------------------- load
-
 	/**
 	 * Enables multiline values.
 	 */
@@ -184,6 +182,8 @@ public class Props implements Cloneable {
 		initialized = false;
 		parser.parse(data);
 	}
+
+	// ---------------------------------------------------------------- load
 
 	/**
 	 * Loads props from the string.
@@ -275,8 +275,6 @@ public class Props implements Cloneable {
 		load(environmentProperties, prefix);
 	}
 
-	// ---------------------------------------------------------------- props
-
 	/**
 	 * Loads environment properties with given prefix.
 	 * If prefix is <code>null</code> it will not be used.
@@ -285,6 +283,8 @@ public class Props implements Cloneable {
 		final Map<String, String> environmentMap = System.getenv();
 		load(environmentMap, prefix);
 	}
+
+	// ---------------------------------------------------------------- props
 
 	/**
 	 * Counts the total number of properties, including all profiles.
@@ -311,9 +311,6 @@ public class Props implements Cloneable {
 		initialize();
 		return data.lookupValue(key, activeProfiles);
 	}
-
-
-	// ---------------------------------------------------------------- put
 
 	/**
 	 * Returns <code>string</code> value of given profiles. If key is not
@@ -379,9 +376,6 @@ public class Props implements Cloneable {
 		data.extract(target, activeProfiles, wildcardPatterns);
 	}
 
-
-	// ---------------------------------------------------------------- initialize
-
 	/**
 	 * Extracts subset of properties.
 	 */
@@ -389,6 +383,8 @@ public class Props implements Cloneable {
 		initialize();
 		data.extract(target, profiles, wildcardPatterns);
 	}
+
+	// ---------------------------------------------------------------- initialize
 
 	/**
 	 * Initializes props. By default it only resolves active profiles.
