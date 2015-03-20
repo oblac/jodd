@@ -3,9 +3,7 @@
 package jodd.madvoc;
 
 import jodd.madvoc.component.MadvocController;
-import jodd.madvoc.filter.ActionFilter;
 import jodd.madvoc.injector.Target;
-import jodd.madvoc.interceptor.ActionInterceptor;
 import jodd.exception.ExceptionUtil;
 import jodd.madvoc.meta.Out;
 import jodd.madvoc.result.Result;
@@ -33,12 +31,8 @@ public class ActionRequest {
 	protected Result result;
 
 	protected final Target[] targets;
-	protected final int totalInterceptors;
-	protected int interceptorIndex;
-	protected int filterIndex;
-	protected int totalFilters;
-
-	protected int execState;		// execution state
+	protected final ActionWrapper[] executionArray;
+	protected int executionIndex;
 
 	protected Object action;
 	protected Object actionResult;
@@ -159,7 +153,7 @@ public class ActionRequest {
 	 * Creates new action request and initializes it.
 	 */
 	public ActionRequest(
-			MadvocController madvocController,
+		MadvocController madvocController,
 			String actionPath,
 			ActionConfig actionConfig,
 			Object action,
@@ -171,14 +165,62 @@ public class ActionRequest {
 		this.actionConfig = actionConfig;
 		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
-		totalInterceptors = (this.actionConfig.interceptors != null ? this.actionConfig.interceptors.length : 0);
-		interceptorIndex = 0;
-		totalFilters = (this.actionConfig.filters != null ? this.actionConfig.filters.length : 0);
-		filterIndex = 0;
-		execState = 0;
 		this.action = action;
 		this.result = findResult();
 		this.targets = makeTargets();
+
+		this.executionIndex = 0;
+		this.executionArray = createExecutionArray();
+	}
+
+	/**
+	 * Creates execution array that will invoke all filters, actions and results
+	 * in correct order.
+	 */
+	protected ActionWrapper[] createExecutionArray() {
+		int totalInterceptors = (this.actionConfig.interceptors != null ? this.actionConfig.interceptors.length : 0);
+		int totalFilters = (this.actionConfig.filters != null ? this.actionConfig.filters.length : 0);
+
+		ActionWrapper[] executionArray = new ActionWrapper[totalFilters + 1 + totalInterceptors + 1];
+
+		// filters
+
+		int index = 0;
+
+		if (totalFilters > 0) {
+			System.arraycopy(actionConfig.filters, 0, executionArray, index, totalFilters);
+			index += totalFilters;
+		}
+
+		// result is executed AFTER the action AND interceptors
+
+		executionArray[index++] = new BaseActionWrapper() {
+			public Object invoke(ActionRequest actionRequest) throws Exception {
+				Object actionResult = actionRequest.invoke();
+
+				ActionRequest.this.madvocController.render(ActionRequest.this, actionResult);
+
+				return actionResult;
+			}
+		};
+
+		// interceptors
+
+		if (totalInterceptors > 0) {
+			System.arraycopy(actionConfig.interceptors, 0, executionArray, index, totalInterceptors);
+			index += totalInterceptors;
+		}
+
+		// action
+
+		executionArray[index] = new BaseActionWrapper() {
+			public Object invoke(ActionRequest actionRequest) throws Exception {
+				actionResult = invokeActionMethod();
+				return actionResult;
+			}
+		};
+
+		return executionArray;
 	}
 
 	/**
@@ -251,6 +293,7 @@ public class ActionRequest {
 	/**
 	 * Creates action method arguments.
 	 */
+	@SuppressWarnings({"unchecked", "NullArgumentToVariableArgMethod"})
 	protected Object createActionMethodArgument(Class type) {
 		try {
 			if (type.getEnclosingClass() == null || Modifier.isStatic(type.getModifiers())) {
@@ -276,66 +319,7 @@ public class ActionRequest {
 	 * Invokes all interceptors before and after action invocation.
 	 */
 	public Object invoke() throws Exception {
-		if (execState >= 2) {
-			throw new MadvocException("Action already invoked: " + actionConfig.actionPath);
-		}
-
-		if (execState == 0) {
-			// filters
-			if (filterIndex < totalFilters) {
-				ActionFilter filter = actionConfig.filters[filterIndex];
-				filterIndex++;
-				return filter.invoke(this);
-			}
-		}
-
-		execState = 1;
-
-		Object actionResult;
-		try {
-			actionResult = invokeAction();
-		} catch (Exception ex) {
-			interceptorIndex--;
-			throw ex;
-		}
-
-		if (execState == 2) {
-			// all interceptor finished the job, action was invoked
-			if (interceptorIndex > 0) {
-				interceptorIndex--;
-			} else {
-				madvocController.render(this, actionResult);
-				execState = 3;
-			}
-		} else if (execState == 1) {
-			// some interceptor interrupted the flow, action was not invoked
-			if (interceptorIndex > 1) {
-				interceptorIndex--;
-			} else {
-				madvocController.render(this, actionResult);
-				execState = 3;
-			}
-		}
-
-		return actionResult;
-	}
-
-	/**
-	 * Invokes all {@link jodd.madvoc.interceptor.ActionInterceptor action interceptors}
-	 * and the action method, returns action result object.
-	 */
-	protected Object invokeAction() throws Exception {
-		// interceptors
-		if (interceptorIndex < totalInterceptors) {
-			ActionInterceptor interceptor = actionConfig.interceptors[interceptorIndex];
-			interceptorIndex++;
-			return interceptor.invoke(this);
-		}
-
-		// action
-		execState = 2;
-
-		return invokeActionMethod();
+		return executionArray[executionIndex++].invoke(this);
 	}
 
 	/**
