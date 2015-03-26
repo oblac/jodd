@@ -25,6 +25,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	public static final String MAIL_SMTP_CONNECTIONTIMEOUT ="mail.smtp.connectiontimeout";
 	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
 	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
+	public static final String MAIL_DEBUG = "mail.debug";
 
 	protected static final String PROTOCOL_SMTP = "smtp";
 
@@ -34,6 +35,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	protected final int port;
 	protected Authenticator authenticator;
 	protected int timeout = 0;
+	protected boolean debug = false;
 	private Properties additionalProperties;
 
 	// ---------------------------------------------------------------- create
@@ -81,6 +83,14 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 		return (T) this;
 	}
 
+	/**
+	 * Enables debug mode.
+	 */
+	public T debug(boolean debug) {
+		this.debug = true;
+		return (T) this;
+	}
+
 	public T properties(Properties properties) {
 		this.additionalProperties = properties;
 		return (T) this;
@@ -116,6 +126,10 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 			props.put(MAIL_SMTP_CONNECTIONTIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_TIMEOUT, timeoutValue);
 			props.put(MAIL_SMTP_WRITETIMEOUT, timeoutValue);
+		}
+
+		if (debug == true) {
+			props.put(MAIL_DEBUG, "true");
 		}
 
 		return props;
