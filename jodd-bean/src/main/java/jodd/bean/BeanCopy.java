@@ -49,7 +49,7 @@ public class BeanCopy extends BeanVisitor {
 	/**
 	 * Creates <copy>BeanCopy</copy> with given <code>Map</code> as a source.
 	 */
-	public static BeanCopy fromMap(Object source) {
+	public static BeanCopy fromMap(Map source) {
 		return new BeanCopy(source);
 	}
 
