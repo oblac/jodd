@@ -26,6 +26,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	public static final String MAIL_SMTP_TIMEOUT = "mail.smtp.timeout";
 	public static final String MAIL_SMTP_WRITETIMEOUT = "mail.smtp.writetimeout";
 	public static final String MAIL_DEBUG = "mail.debug";
+	public static final String MAIL_MIME_ADDRESS_STRICT = "mail.mime.address.strict";
 
 	protected static final String PROTOCOL_SMTP = "smtp";
 
@@ -36,6 +37,7 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	protected Authenticator authenticator;
 	protected int timeout = 0;
 	protected boolean debug = false;
+	protected boolean strictAddress = true;
 	private Properties additionalProperties;
 
 	// ---------------------------------------------------------------- create
@@ -84,10 +86,19 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 	}
 
 	/**
-	 * Enables debug mode.
+	 * Enables debug mode. By default it is turned off.
 	 */
 	public T debug(boolean debug) {
 		this.debug = true;
+		return (T) this;
+	}
+
+	/**
+	 * Disables the strict address. By default strict mime address checking
+	 * is turned on.
+	 */
+	public T strictAddress(boolean strictAddress) {
+		this.strictAddress = strictAddress;
 		return (T) this;
 	}
 
@@ -130,6 +141,10 @@ public class SmtpServer<T extends SmtpServer> implements SendMailSessionProvider
 
 		if (debug == true) {
 			props.put(MAIL_DEBUG, "true");
+		}
+
+		if (strictAddress == false) {
+			props.put(MAIL_MIME_ADDRESS_STRICT, "false");
 		}
 
 		return props;
