@@ -4,6 +4,9 @@ package jodd.bean;
 
 import java.util.Map;
 
+import static jodd.util.StringPool.LEFT_SQ_BRACKET;
+import static jodd.util.StringPool.RIGHT_SQ_BRACKET;
+
 /**
  * Powerful tool for copying properties from one bean into another.
  * <code>BeanCopy</code> works with POJO beans, but also with <code>Map</code>.
@@ -15,6 +18,7 @@ public class BeanCopy extends BeanVisitor {
 	protected Object destination;
 	protected boolean forced;
 	protected boolean declaredTarget;
+	protected boolean isTargetMap;
 
 	// ---------------------------------------------------------------- ctor
 
@@ -50,7 +54,11 @@ public class BeanCopy extends BeanVisitor {
 	 * Creates <copy>BeanCopy</copy> with given <code>Map</code> as a source.
 	 */
 	public static BeanCopy fromMap(Map source) {
-		return new BeanCopy(source);
+		BeanCopy beanCopy = new BeanCopy(source);
+
+		beanCopy.isSourceMap = true;
+
+		return beanCopy;
 	}
 
 	// ---------------------------------------------------------------- destination
@@ -68,6 +76,9 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	public BeanCopy toMap(Map destination) {
 		this.destination = destination;
+
+		isTargetMap = true;
+
 		return this;
 	}
 
@@ -189,6 +200,9 @@ public class BeanCopy extends BeanVisitor {
 	 */
 	@Override
 	protected boolean visitProperty(String name, Object value) {
+		if (isTargetMap) {
+			name = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
+		}
 
 		BeanUtil.setProperty(destination, name, value, declared, forced, true);
 

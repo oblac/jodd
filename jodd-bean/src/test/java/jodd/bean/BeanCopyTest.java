@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class BeanCopyTest {
@@ -551,6 +552,84 @@ public class BeanCopyTest {
 		assertEquals("cow", map.get("name"));
 		assertEquals("7", map.get("value").toString());
 		assertEquals("100", map.get("nick").toString());
-
 	}
+
+	// ---------------------------------------------------------------- special test
+
+	public static class PropertyBean {
+		public int number;
+		public PropertyBean child;
+	}
+
+	@Test
+	public void testFromMapToBean() throws Exception {
+		Properties propsSource = new Properties();
+
+		propsSource.put("number", 42);
+		propsSource.put("child.number", 43);
+		propsSource.put("nonExistantNumber", 142);
+		propsSource.put("nonExistantChild.number", 143);
+
+		PropertyBean beanDest = new PropertyBean();
+
+		BeanCopy.fromMap(propsSource).toBean(beanDest).forced(true).copy();
+
+		assertThat(beanDest.number, is(42));
+		assertThat(beanDest.child.number, is(43));
+	}
+
+	@Test
+	public void testFromMapToMap() throws Exception {
+		Properties propsSource = new Properties();
+
+		propsSource.put("number", 42);
+		propsSource.put("child.number", 43);
+		propsSource.put("nonExistantNumber", 142);
+		propsSource.put("nonExistantChild.number", 143);
+
+		Properties propsDest = new Properties();
+
+		BeanCopy.fromMap(propsSource).toMap(propsDest).copy();
+
+		assertEquals(propsSource, propsDest);
+	}
+
+	@Test
+	public void testFromBeanToMap() throws Exception {
+		PropertyBean beanSource = new PropertyBean();
+
+		beanSource.number = 42;
+		beanSource.child = new PropertyBean();
+		beanSource.child.number = 43;
+
+		Properties propsDest = new Properties();
+
+		BeanCopy
+			.fromBean(beanSource)
+			.toMap(propsDest)
+			.includeFields(true)
+			.copy();
+
+
+		assertThat(propsDest.size(), is(2));
+		assertThat((Integer) propsDest.get("number"), is(42));
+		assertThat((Integer) BeanUtil.getProperty(propsDest, "child.number"), is(43));
+	}
+
+	@Test
+	public void testFromBeanToBean() throws Exception {
+		PropertyBean beanSource = new PropertyBean();
+
+		beanSource.number = 42;
+		beanSource.child = new PropertyBean();
+		beanSource.child.number = 43;
+
+		PropertyBean beanDest = new PropertyBean();
+
+		BeanCopy.fromBean(beanSource).toBean(beanDest).includeFields(true).copy();
+
+		assertThat(beanDest.number, is(42));
+		assertThat(beanDest.child.number, is(43));
+	}
+
 }

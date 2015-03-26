@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import static jodd.util.StringPool.LEFT_SQ_BRACKET;
+import static jodd.util.StringPool.RIGHT_SQ_BRACKET;
+
 /**
  * Visitor for bean properties. It extracts properties names
  * from the source bean and then visits one by one.
@@ -44,6 +47,10 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 	 * Initial matching mode.
 	 */
 	protected boolean blacklist = true;
+	/**
+	 * Indicates the the source is a Map.
+	 */
+	protected boolean isSourceMap = false;
 
 	// ---------------------------------------------------------------- util
 
@@ -117,10 +124,16 @@ public abstract class BeanVisitor implements InExRuleMatcher<String, String> {
 
 			Object value;
 
+			String propertyName = name;
+
+			if (isSourceMap) {
+				propertyName = LEFT_SQ_BRACKET + name + RIGHT_SQ_BRACKET;
+			}
+
 			if (declared) {
-				value = BeanUtil.getDeclaredProperty(source, name);
+				value = BeanUtil.getDeclaredProperty(source, propertyName);
 			} else {
-				value = BeanUtil.getProperty(source, name);
+				value = BeanUtil.getProperty(source, propertyName);
 			}
 
 			if (value == null && ignoreNullValues) {
