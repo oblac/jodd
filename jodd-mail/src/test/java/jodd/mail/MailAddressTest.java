@@ -52,4 +52,12 @@ public class MailAddressTest {
 		assertEquals("Jenny Doe", mailAddress2.getPersonalName());
 		assertEquals("admin@jodd.com", mailAddress2.getEmail());
 	}
+
+	@Test
+	public void testIssue211() {
+		String testAddress = "Some One<someone@yahoo.com>";
+		MailAddress addr = new MailAddress(testAddress);
+
+		assertEquals("Some One <someone@yahoo.com>", addr.toString());
+	}
 }

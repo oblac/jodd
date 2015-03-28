@@ -54,7 +54,7 @@ public class MailAddress {
 		}
 
 		this.email = address.substring(ndx + 1, address.length() - 1);
-		this.personalName = address.substring(0, ndx - 1).trim();
+		this.personalName = address.substring(0, ndx).trim();
 	}
 
 	/**
