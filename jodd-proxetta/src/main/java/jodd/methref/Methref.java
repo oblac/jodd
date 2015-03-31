@@ -127,6 +127,9 @@ public class Methref<C> {
 			}
 			return name.toString();
 		} catch (Exception ex) {
+			if (ex instanceof MethrefException) {
+				throw ((MethrefException) ex);
+			}
 			throw new MethrefException("Methref field not found", ex);
 		}
 	}
