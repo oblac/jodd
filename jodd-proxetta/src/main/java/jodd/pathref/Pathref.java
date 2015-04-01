@@ -20,6 +20,8 @@ import java.util.WeakHashMap;
 @SuppressWarnings({"UnusedDeclaration"})
 public class Pathref<C> {
 
+	public static final int ALL = -1;
+
 	private static final PathrefProxetta proxetta = new PathrefProxetta();
 	private static final Map<Class, Class> cache = new WeakHashMap<Class, Class>();
 
@@ -137,7 +139,9 @@ public class Pathref<C> {
 			return (T) new ArrayList() {
 				@Override
 				public Object get(int index) {
-					append("[" + index + "]");
+					if (index >= 0) {
+						append("[" + index + "]");
+					}
 					return new Pathref<C>(componentType, Pathref.this).to();
 				}
 			};

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static jodd.pathref.Pathref.ALL;
 import static org.junit.Assert.assertEquals;
 
 public class PathRefTest {
@@ -70,6 +71,16 @@ public class PathRefTest {
 		assertEquals("friends[0].address.street", p.path(p.to().getFriends().get(0).getAddress().getStreet()));
 		assertEquals("bestFriend.bestFriend.bestFriend.friends[123].address.street",
 			p.path(p.to().getBestFriend().getBestFriend().getBestFriend().getFriends().get(123).getAddress().getStreet()));
+	}
+
+	@Test
+	public void testPathAll() {
+		Pathref<User> p = Pathref.on(User.class);
+
+		assertEquals("address", p.path(p.to().getAddress()));
+		assertEquals("address.street", p.path(p.to().getAddress().getStreet()));
+		assertEquals("friends.address.street", p.path(p.to().getFriends().get(ALL).getAddress().getStreet()));
+
 	}
 
 }
