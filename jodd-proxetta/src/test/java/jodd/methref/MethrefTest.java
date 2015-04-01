@@ -62,4 +62,19 @@ public class MethrefTest {
 		m.to().woink();
 		assertEquals("woink", m.ref());
 	}
+
+	@Test
+	public void testParallelAccess() {
+		Methref<Str> methref1 = Methref.on(Str.class);
+
+		String m1 = methref1.ref(methref1.to().boo());
+
+		Methref<Str> methref2 = Methref.on(Str.class);
+
+		String m2 = methref2.ref(methref2.to().foo());
+
+		assertEquals(m1, methref1.ref());
+		assertEquals(m2, methref2.ref());
+
+	}
 }

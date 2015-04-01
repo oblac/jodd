@@ -9,39 +9,42 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Super tool for getting method references in compile-time.
+ * Super tool for getting method references (names) in compile-time.
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public class Methref<C> {
 
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
-	private static final Map<Class, Object> cache = new WeakHashMap<Class, Object>();
+	private static final Map<Class, Class> cache = new WeakHashMap<Class, Class>();
 
 	private final C instance;
 
 	/**
 	 * Creates new proxified instance of target.
-	 * Proxy instances are cached. If given target is also
+	 * Proxy classes are cached. If given target is also
 	 * proxified, it's real target will be used.
 	 */
 	@SuppressWarnings({"unchecked"})
 	public Methref(Class<C> target) {
 		target = ProxettaUtil.getTargetClass(target);
 
-		Object proxy = cache.get(target);
+		Class proxyClass = cache.get(target);
 
-		if (proxy == null) {
-			Class<C> proxifiedTarget = proxetta.defineProxy(target);
+		if (proxyClass == null) {
+			proxyClass = proxetta.defineProxy(target);
 
-			try {
-				proxy = proxifiedTarget.newInstance();
-				cache.put(target, proxy);
-			} catch (Exception ex) {
-				throw new MethrefException(ex);
-			}
+			cache.put(target, proxyClass);
 		}
 
-        this.instance = (C) proxy;
+		C proxy;
+
+		try {
+			proxy = (C) proxyClass.newInstance();
+		} catch (Exception ex) {
+			throw new MethrefException(ex);
+		}
+
+        this.instance = proxy;
 	}
 
 	// ---------------------------------------------------------------- use
