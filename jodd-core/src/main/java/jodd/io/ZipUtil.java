@@ -42,26 +42,32 @@ public class ZipUtil {
 	/**
 	 * Compresses a file into zlib archive.
 	 */
-	public static void zlib(String file) throws IOException {
-		zlib(new File(file));
+	public static File zlib(String file) throws IOException {
+		return zlib(new File(file));
 	}
 
 	/**
 	 * Compresses a file into zlib archive.
 	 */
-	public static void zlib(File file) throws IOException {
+	public static File zlib(File file) throws IOException {
 		if (file.isDirectory() == true) {
 			throw new IOException("Can't zlib folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
 		Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-		DeflaterOutputStream dos = new DeflaterOutputStream(new FileOutputStream(file.getAbsolutePath() + ZLIB_EXT), deflater);
+
+		String zlibFileName = file.getAbsolutePath() + ZLIB_EXT;
+
+		DeflaterOutputStream dos = new DeflaterOutputStream(new FileOutputStream(zlibFileName), deflater);
+
 		try {
 			StreamUtil.copy(fis, dos);
 		} finally {
 			StreamUtil.close(dos);
 			StreamUtil.close(fis);
 		}
+
+		return new File(zlibFileName);
 	}
 
 	// ---------------------------------------------------------------- gzip
@@ -69,38 +75,43 @@ public class ZipUtil {
 	/**
 	 * Compresses a file into gzip archive.
 	 */
-	public static void gzip(String fileName) throws IOException {
-		gzip(new File(fileName));
+	public static File gzip(String fileName) throws IOException {
+		return gzip(new File(fileName));
 	}
 
 	/**
 	 * Compresses a file into gzip archive.
 	 */
-	public static void gzip(File file) throws IOException {
+	public static File gzip(File file) throws IOException {
 		if (file.isDirectory() == true) {
 			throw new IOException("Can't gzip folder");
 		}
 		FileInputStream fis = new FileInputStream(file);
-		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file.getAbsolutePath() + GZIP_EXT));
+
+		String gzipName = file.getAbsolutePath() + GZIP_EXT;
+
+		GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(gzipName));
 		try {
 			StreamUtil.copy(fis, gzos);
 		} finally {
 			StreamUtil.close(gzos);
 			StreamUtil.close(fis);
 		}
+
+		return new File(gzipName);
 	}
 
 	/**
 	 * Decompress gzip archive.
 	 */
-	public static void ungzip(String file) throws IOException {
-		ungzip(new File(file));
+	public static File ungzip(String file) throws IOException {
+		return ungzip(new File(file));
 	}
 
 	/**
 	 * Decompress gzip archive.
 	 */
-	public static void ungzip(File file) throws IOException {
+	public static File ungzip(File file) throws IOException {
 		String outFileName = FileNameUtil.removeExtension(file.getAbsolutePath());
 		File out = new File(outFileName);
 		out.createNewFile();
@@ -113,6 +124,8 @@ public class ZipUtil {
 			StreamUtil.close(fos);
 			StreamUtil.close(gzis);
 		}
+
+		return out;
 	}
 
 	// ---------------------------------------------------------------- zip
@@ -121,14 +134,14 @@ public class ZipUtil {
 	 * Zips a file or a folder.
 	 * @see #zip(java.io.File)
 	 */
-	public static void zip(String file) throws IOException {
-		zip(new File(file));
+	public static File zip(String file) throws IOException {
+		return zip(new File(file));
 	}
 
 	/**
 	 * Zips a file or a folder. If adding a folder, all its content will be added.
 	 */
-	public static void zip(File file) throws IOException {
+	public static File zip(File file) throws IOException {
 		String zipFile = file.getAbsolutePath() + ZIP_EXT;
 
 		ZipOutputStream zos = null;
@@ -138,6 +151,8 @@ public class ZipUtil {
 		} finally {
 			StreamUtil.close(zos);
 		}
+
+		return new File(zipFile);
 	}
 
 	// ---------------------------------------------------------------- unzip
