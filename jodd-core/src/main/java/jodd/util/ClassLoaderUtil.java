@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
+import java.net.URLConnection;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
@@ -454,12 +455,34 @@ public class ClassLoaderUtil {
 
 	/**
 	 * Opens a resource of the specified name for reading.
+	 * @see #getResourceAsStream(String, ClassLoader, boolean)
+	 */
+	public static InputStream getResourceAsStream(String resourceName, boolean useCache) throws IOException {
+		return getResourceAsStream(resourceName, null, useCache);
+	}
+
+	/**
+	 * Opens a resource of the specified name for reading.
 	 * @see #getResourceUrl(String, ClassLoader)
 	 */
 	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
 		URL url = getResourceUrl(resourceName, callingClass);
 		if (url != null) {
 			return url.openStream();
+		}
+		return null;
+	}
+
+	/**
+	 * Opens a resource of the specified name for reading. Controls caching,
+	 * that is important when the same jar is reloaded using custom classloader.
+	 */
+	public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass, boolean useCache) throws IOException {
+		URL url = getResourceUrl(resourceName, callingClass);
+		if (url != null) {
+			URLConnection urlConnection = url.openConnection();
+			urlConnection.setUseCaches(useCache);
+			return urlConnection.getInputStream();
 		}
 		return null;
 	}
