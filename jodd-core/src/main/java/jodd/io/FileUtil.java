@@ -128,6 +128,20 @@ public class FileUtil {
 				path.substring(0, path.lastIndexOf("!/"))));
 	}
 
+	/**
+	 * Returns <code>true</code> if file exists.
+	 */
+	public static boolean isExistingFile(File file) {
+		return file.exists() && file.isFile();
+	}
+
+	/**
+	 * Returns <code>true</code> if folder exists.
+	 */
+	public static boolean isExistingFolder(File folder) {
+		return folder.exists() && folder.isDirectory();
+	}
+
 	// ---------------------------------------------------------------- mkdirs
 
 	/**
