@@ -22,7 +22,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isEnabled(Level level) {
-		return level.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(level);
 	}
 
 	public void log(Level level, String message) {
@@ -30,7 +30,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isTraceEnabled() {
-		return Level.TRACE.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(Level.TRACE);
 	}
 
 	public void trace(String message) {
@@ -38,7 +38,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isDebugEnabled() {
-		return Level.DEBUG.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(Level.DEBUG);
 	}
 
 	public void debug(String message) {
@@ -46,7 +46,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isInfoEnabled() {
-		return Level.INFO.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(Level.INFO);
 	}
 
 	public void info(String message) {
@@ -54,7 +54,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isWarnEnabled() {
-		return Level.WARN.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(Level.WARN);
 	}
 
 	public void warn(String message) {
@@ -66,7 +66,7 @@ public class SimpleLogger implements Logger {
 	}
 
 	public boolean isErrorEnabled() {
-		return Level.ERROR.isEnabledFor(slf.getLevel());
+		return slf.getLevel().isEnabledFor(Level.ERROR);
 	}
 
 	public void error(String message) {
