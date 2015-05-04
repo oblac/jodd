@@ -962,6 +962,9 @@ public class FileUtil {
 	}
 
 	public static byte[] readBytes(File file) throws IOException {
+		return readBytes(file, -1);
+	}
+	public static byte[] readBytes(File file, int fixedLength) throws IOException {
 		if (file.exists() == false) {
 			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
@@ -971,6 +974,10 @@ public class FileUtil {
 		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
 			throw new IOException("File is larger then max array size");
+		}
+
+		if (fixedLength > -1 && fixedLength < len) {
+			len = fixedLength;
 		}
 
 		byte[] bytes = new byte[(int) len];
@@ -1236,6 +1243,22 @@ public class FileUtil {
 	// ---------------------------------------------------------------- misc
 
 	/**
+	 * Checks if the file has extension or not
+	 * @param file
+	 * @return if it's name contains '.' between the first and last character returns <code>true</code> otherwise <code>false</code> 
+	 */
+	public static boolean hasExtension(final File file) {
+		String name = file.getName();
+		int pos = name.indexOf('.');
+
+		if (pos > 0 && pos < name.length()-1) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Check if one file is an ancestor of second one.
 	 *
 	 * @param strict   if <code>false</code> then this method returns <code>true</code> if ancestor
@@ -1442,4 +1465,18 @@ public class FileUtil {
 		return StringUtil.toHexString(digest);
 	}
 
+	/**
+	 * Checks the start of the file for ASCII control characters
+	 */
+	public static boolean isBinary(final File file) throws IOException {
+		byte[] bytes = readBytes(file, 128);
+
+		for (byte b : bytes) {
+			if (b < 32) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
