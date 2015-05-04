@@ -2,6 +2,7 @@ package jodd.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,13 +130,17 @@ public class CommandLine {
 	}
 
 	public int execute(String outputType, String errorType) throws IOException, InterruptedException {
+		return execute(outputType, errorType, System.out, System.out);
+	}
+
+	public int execute(String outputType, String errorType, OutputStream out, OutputStream error) throws IOException, InterruptedException {
 		String[] commandsArray = commands.toArray(new String[commands.size()]);
 
 		Process process = Runtime.getRuntime().exec(commandsArray, null, workingDirectory);
 
-		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), errorType, System.out);
+		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), errorType, error);
 
-		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), outputType, System.out);
+		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), outputType, out);
 
 		int exitCode = process.waitFor();
 
