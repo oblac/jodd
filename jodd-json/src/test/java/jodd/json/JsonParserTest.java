@@ -6,6 +6,7 @@ import jodd.Jodd;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.meta.JSON;
+import jodd.json.model.FooBar;
 import jodd.util.RandomString;
 import jodd.util.StringUtil;
 import org.junit.After;
@@ -736,6 +737,16 @@ public class JsonParserTest {
 		} catch (Exception ex) {
 			fail(ex.toString());
 		}
+	}
+
+	@Test
+	public void testNamesWithDots() {
+		String json = "{\"foo.bar\":123}";
+
+		FooBar fooBar = new JsonParser().parse(json, FooBar.class);
+
+		assertEquals(123, fooBar.getValue().intValue());
+
 	}
 
 }
