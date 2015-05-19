@@ -38,6 +38,8 @@ Game over?
 ## JSON
 
 + Add factories in `JsonParser` for various types.
++ Add JSON parser generator based on JSON scheme - this should give the fastest
+  parser as it is directly related to a scheme. 
 
 
 ## Props-plugin
