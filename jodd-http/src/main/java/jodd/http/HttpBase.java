@@ -800,11 +800,20 @@ public abstract class HttpBase<T> {
 	protected void readBody(BufferedReader reader) {
 		String bodyString = null;
 
+		// first determine if chunked encoding is specified
+		boolean isChunked = false;
+
+		String transferEncoding = header("Transfer-Encoding");
+		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
+			isChunked = true;
+		}
+
+
 		// content length
 		String contentLen = contentLength();
 		int contentLenValue = -1;
 
-		if (contentLen != null) {
+		if (contentLen != null && !isChunked) {
 			contentLenValue = Integer.parseInt(contentLen);
 
 			if (contentLenValue > 0) {
@@ -821,8 +830,7 @@ public abstract class HttpBase<T> {
 		}
 
 		// chunked encoding
-		String transferEncoding = header("Transfer-Encoding");
-		if (transferEncoding != null && transferEncoding.equalsIgnoreCase("chunked")) {
+		if (isChunked) {
 
 			FastCharArrayWriter fastCharArrayWriter = new FastCharArrayWriter();
 			try {
