@@ -49,6 +49,13 @@ public abstract class TestServer {
 		echoServletFile = FileUtil.toFile(echoServletUrl);
 		FileUtil.copyFileToDir(echoServletFile, classes);
 
+		URL redirectServletUrl = TestServer.class.getResource("RedirectServlet.class");
+		File redirectServletFile = FileUtil.toFile(redirectServletUrl);
+		FileUtil.copyFileToDir(redirectServletFile, classes);
+
+		URL targetServletUrl = TestServer.class.getResource("TargetServlet.class");
+		File targetServletFile = FileUtil.toFile(targetServletUrl);
+		FileUtil.copyFileToDir(targetServletFile, classes);
 	}
 
 	public void stop() throws Exception {
