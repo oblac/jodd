@@ -1,3 +1,28 @@
+// Copyright (c) 2003-present, Jodd Team (http://jodd.org)
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+
 package jodd.http;
 
 import java.io.BufferedReader;
@@ -25,49 +50,6 @@ import java.util.TimeZone;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 
-/**
- * A simple, tiny, nicely embeddable HTTP 1.0 (partially 1.1) server in Java
- *
- * <p> NanoHTTPD version 1.25,
- * Copyright &copy; 2001,2005-2012 Jarno Elonen (elonen@iki.fi, http://iki.fi/elonen/)
- * and Copyright &copy; 2010 Konstantinos Togias (info@ktogias.gr, http://ktogias.gr)
- *
- * <p><b>Features + limitations: </b><ul>
- *
- *    <li> Only one Java file </li>
- *    <li> Java 1.1 compatible </li>
- *    <li> Released as open source, Modified BSD licence </li>
- *    <li> No fixed config files, logging, authorization etc. (Implement yourself if you need them.) </li>
- *    <li> Supports parameter parsing of GET and POST methods (+ rudimentary PUT support in 1.25) </li>
- *    <li> Supports both dynamic content and file serving </li>
- *    <li> Supports file upload (since version 1.2, 2010) </li>
- *    <li> Supports partial content (streaming)</li>
- *    <li> Supports ETags</li>
- *    <li> Never caches anything </li>
- *    <li> Doesn't limit bandwidth, request time or simultaneous connections </li>
- *    <li> Default code serves files and shows all HTTP parameters and headers</li>
- *    <li> File server supports directory listing, index.html and index.htm</li>
- *    <li> File server supports partial content (streaming)</li>
- *    <li> File server supports ETags</li>
- *    <li> File server does the 301 redirection trick for directories without '/'</li>
- *    <li> File server supports simple skipping for files (continue download) </li>
- *    <li> File server serves also very long files without memory overhead </li>
- *    <li> Contains a built-in list of most common mime types </li>
- *    <li> All header names are converted lowercase so they don't vary between browsers/clients </li>
- *
- * </ul>
- *
- * <p><b>Ways to use: </b><ul>
- *
- *    <li> Run as a standalone app, serves files and shows requests</li>
- *    <li> Subclass serve() and embed to your own program </li>
- *    <li> Call serveFile() from serve() with your own base directory </li>
- *
- * </ul>
- *
- * See the end of the source file for distribution license
- * (Modified BSD licence)
- */
 public class NanoHTTPD
 {
 	// ==================================================
