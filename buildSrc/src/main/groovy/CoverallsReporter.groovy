@@ -1,5 +1,3 @@
-// Copyright (c) 2003-2014, Jodd Team (jodd.org). All Rights Reserved.
-
 import groovyx.net.http.HTTPBuilder
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.MultipartEntityBuilder
