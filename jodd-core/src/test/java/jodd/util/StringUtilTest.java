@@ -1199,4 +1199,13 @@ public class StringUtilTest {
 		assertEquals("CAFEBABE", StringUtil.toHexString(new byte[] {(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE}));
 	}
 
+	@Test
+	public void testCutBetween() {
+		assertEquals("45", StringUtil.cutBetween("123456", "23", "6"));
+		assertEquals("", StringUtil.cutBetween("123456", "234", "456"));
+		assertEquals("", StringUtil.cutBetween("123456", "2345", "456"));
+		assertNull(StringUtil.cutBetween("123456", "2345", "aa"));
+		assertNull(StringUtil.cutBetween("123456", "bbb", "34"));
+	}
+
 }

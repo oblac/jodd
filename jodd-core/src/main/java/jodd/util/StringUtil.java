@@ -2490,6 +2490,31 @@ public class StringUtil {
 		return string.substring(start, end);
 	}
 
+	/**
+	 * Cuts a string between two other strings. If either of left and right
+	 * is missing, nothing will be cut and <code>null</code> is returned.
+	 * If indexes of left or right strings are wrong, empty string is returned.
+	 */
+	public static String cutBetween(String string, String left, String right) {
+		int leftNdx = string.indexOf(left);
+		if (leftNdx == -1) {
+			return null;
+		}
+
+		int rightNdx = string.indexOf(right);
+		if (rightNdx == -1) {
+			return null;
+		}
+
+		leftNdx += left.length();
+
+		if (leftNdx >= rightNdx) {
+			return StringPool.EMPTY;
+		}
+
+		return string.substring(leftNdx, rightNdx);
+	}
+
 
 	// ---------------------------------------------------------------- escaped
 
