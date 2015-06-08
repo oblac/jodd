@@ -31,13 +31,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
 
 public class EncodingTest {
 
@@ -221,6 +221,32 @@ public class EncodingTest {
 		assertEquals(3, EchoServlet.ref.params.size());
 		assertEquals(value1, EchoServlet.ref.params.get("one"));
 		assertEquals(value2, EchoServlet.ref.params.get("two"));
+	}
+
+	@Test
+	public void testMultipart() {
+		HttpRequest request = HttpRequest.post("http://localhost:8173/echo2");
+		request
+			.formEncoding("UTF-8")		// optional
+			.multipart(true);
+
+		String value1 = "value";
+		String value2 = "валуе";
+
+		request.form("one", value1);
+		request.form("two", value2);
+
+		System.out.println(request);
+
+		HttpResponse httpResponse = request.send();
+
+		assertEquals("multipart/form-data", request.mediaType());
+
+		assertFalse(EchoServlet.ref.get);
+		assertTrue(EchoServlet.ref.post);
+
+		assertEquals(value1, EchoServlet.ref.parts.get("one"));
+		assertEquals(value2, EchoServlet.ref.parts.get("two"));
 	}
 
 }

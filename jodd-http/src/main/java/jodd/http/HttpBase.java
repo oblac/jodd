@@ -639,12 +639,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (!isFormMultipart()) {
-			// determine form encoding
-			String formEncoding = charset;
-
-			if (formEncoding == null) {
-				formEncoding = this.formEncoding;
-			}
+			String formEncoding = resolveFormEncoding();
 
 			// encode
 			String formQueryString = HttpUtil.buildQuery(form, formEncoding);
@@ -672,7 +667,13 @@ public abstract class HttpBase<T> {
 					String string = (String) value;
 					buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
 					buffer.append(CRLF);
-					buffer.append(string);
+
+					String formEncoding = resolveFormEncoding();
+
+					String utf8Stirng = StringUtil.convertCharset(
+						string, formEncoding, StringPool.ISO_8859_1);
+
+					buffer.append(utf8Stirng);
 				}
 				else if (value instanceof Uploadable) {
 					Uploadable uploadable = (Uploadable) value;
@@ -716,6 +717,19 @@ public abstract class HttpBase<T> {
 		contentLength(buffer.size());
 
 		return buffer;
+	}
+
+	/**
+	 * Resolves form encodings.
+	 */
+	protected String resolveFormEncoding() {
+		// determine form encoding
+		String formEncoding = charset;
+
+		if (formEncoding == null) {
+			formEncoding = this.formEncoding;
+		}
+		return formEncoding;
 	}
 
 	// ---------------------------------------------------------------- buffer

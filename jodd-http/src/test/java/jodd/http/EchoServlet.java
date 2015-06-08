@@ -33,9 +33,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +57,7 @@ public class EchoServlet extends HttpServlet {
 		public String body;
 		public Map<String, String> header;
 		public Map<String, String> params;
+		public Map<String, String> parts;
 	}
 
 	@Override
@@ -129,5 +132,26 @@ public class EchoServlet extends HttpServlet {
 
 		return params;
 	}
+
+	protected Map<String, String> copyParts(HttpServletRequest req) {
+     Map<String, String> parts = new HashMap<String, String>();
+
+     String enc = "UTF-8";
+
+     try {
+         Collection<Part> prs = req.getParts();
+
+         for (Part p : prs) {
+             parts.put(p.getName(), new String(StreamUtil.readBytes(p.getInputStream()), enc));
+         }
+     } catch (IOException e) {
+         e.printStackTrace();
+     } catch (ServletException e) {
+         e.printStackTrace();
+     }
+
+     return parts;
+ }
+
 
 }

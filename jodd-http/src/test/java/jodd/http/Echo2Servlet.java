@@ -25,15 +25,18 @@
 
 package jodd.http;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@MultipartConfig
 public class Echo2Servlet extends EchoServlet {
 
 	protected void readAll(HttpServletRequest req) throws IOException {
 		ref.queryString = req.getQueryString();
 		ref.header = copyHeaders(req);
 		ref.params = copyParams(req);
+		ref.parts = copyParts(req);
 	}
 
 }
