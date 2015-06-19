@@ -236,8 +236,6 @@ public class EncodingTest {
 		request.form("one", value1);
 		request.form("two", value2);
 
-		System.out.println(request);
-
 		HttpResponse httpResponse = request.send();
 
 		assertEquals("multipart/form-data", request.mediaType());

@@ -134,24 +134,28 @@ public class EchoServlet extends HttpServlet {
 	}
 
 	protected Map<String, String> copyParts(HttpServletRequest req) {
-     Map<String, String> parts = new HashMap<String, String>();
+		Map<String, String> parts = new HashMap<String, String>();
+		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
+			return parts;
+		}
 
-     String enc = "UTF-8";
+		String enc = "UTF-8";
 
-     try {
-         Collection<Part> prs = req.getParts();
+		try {
+			Collection<Part> prs = req.getParts();
 
-         for (Part p : prs) {
-             parts.put(p.getName(), new String(StreamUtil.readBytes(p.getInputStream()), enc));
-         }
-     } catch (IOException e) {
-         e.printStackTrace();
-     } catch (ServletException e) {
-         e.printStackTrace();
-     }
+			for (Part p : prs) {
+				parts.put(p.getName(), new String(StreamUtil.readBytes(p.getInputStream()), enc));
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (ServletException e) {
+			e.printStackTrace();
+		}
 
-     return parts;
- }
-
+		return parts;
+	}
 
 }
