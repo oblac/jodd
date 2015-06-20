@@ -670,10 +670,10 @@ public abstract class HttpBase<T> {
 
 					String formEncoding = resolveFormEncoding();
 
-					String utf8Stirng = StringUtil.convertCharset(
+					String utf8String = StringUtil.convertCharset(
 						string, formEncoding, StringPool.ISO_8859_1);
 
-					buffer.append(utf8Stirng);
+					buffer.append(utf8String);
 				}
 				else if (value instanceof Uploadable) {
 					Uploadable uploadable = (Uploadable) value;
@@ -681,6 +681,11 @@ public abstract class HttpBase<T> {
 					String fileName = uploadable.getFileName();
 					if (fileName == null) {
 						fileName = name;
+					} else {
+						String formEncoding = resolveFormEncoding();
+
+						fileName = StringUtil.convertCharset(
+							fileName, formEncoding, StringPool.ISO_8859_1);
 					}
 
 					buffer.append("Content-Disposition: form-data; name=\"").append(name);
