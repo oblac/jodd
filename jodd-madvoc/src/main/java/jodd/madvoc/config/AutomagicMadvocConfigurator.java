@@ -122,13 +122,17 @@ public class AutomagicMadvocConfigurator extends ClassFinder implements MadvocCo
 			try {
 				onActionClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Invalid Madvoc action class: " + entryName, cnfex);
+				if (log.isDebugEnabled()) {
+					log.debug("Invalid action skipped: {}" + entryName);
+				}
 			}
 		} else if (entryName.endsWith(resultClassSuffix) == true) {
 			try {
 				onResultClass(entryName);
 			} catch (ClassNotFoundException cnfex) {
-				throw new MadvocException("Invalid Madvoc result class: " + entryName, cnfex);
+				if (log.isDebugEnabled()) {
+					log.debug("Invalid result skipped: {}" + entryName);
+				}
 			}
 		}
 	}
