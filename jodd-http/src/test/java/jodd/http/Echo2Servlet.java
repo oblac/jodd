@@ -37,6 +37,7 @@ public class Echo2Servlet extends EchoServlet {
 		ref.header = copyHeaders(req);
 		ref.params = copyParams(req);
 		ref.parts = copyParts(req);
+		ref.fileNames = copyFileName(req);
 	}
 
 }

@@ -25,7 +25,10 @@
 
 package jodd.http;
 
+import jodd.http.up.ByteArrayUploadable;
 import jodd.io.FileUtil;
+import jodd.util.MimeTypes;
+import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
@@ -85,6 +88,32 @@ public class HttpConnectionTest {
 
 		echoTestServer.stop();
 		file.delete();
+	}
+
+	@Test
+	public void testUploadWithUploadable() throws IOException {
+		EchoTestServer echoTestServer = new EchoTestServer();
+
+		HttpResponse response = HttpRequest
+				.post("http://localhost:8081/hello")
+				.multipart(true)
+				.form("id", "12")
+				.form("file", new ByteArrayUploadable(
+					"upload тест".getBytes(StringPool.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
+				.send();
+
+		assertEquals(200, response.statusCode());
+		assertEquals("OK", response.statusPhrase());
+
+		assertEquals("POST", echoTestServer.method);
+		assertEquals("12", echoTestServer.params.get("id"));
+		File uploadedFile = new File(echoTestServer.files.get("file").toString());
+		assertNotNull(uploadedFile);
+		assertEquals("upload тест", FileUtil.readString(uploadedFile));
+
+		assertEquals("POST /hello", response.body());
+
+		echoTestServer.stop();
 	}
 
 	@Test

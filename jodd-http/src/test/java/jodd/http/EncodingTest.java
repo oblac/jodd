@@ -25,6 +25,8 @@
 
 package jodd.http;
 
+import jodd.http.up.ByteArrayUploadable;
+import jodd.util.MimeTypes;
 import jodd.util.StringPool;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -246,5 +248,24 @@ public class EncodingTest {
 		assertEquals(value1, EchoServlet.ref.parts.get("one"));
 		assertEquals(value2, EchoServlet.ref.parts.get("two"));
 	}
+
+	@Test
+	public void testUploadWithUploadable() throws IOException {
+		HttpResponse response = HttpRequest
+				.post("http://localhost:8173/echo2")
+				.multipart(true)
+				.form("id", "12")
+				.form("file", new ByteArrayUploadable(
+					"upload тест".getBytes(StringPool.UTF_8), "d ст", MimeTypes.MIME_TEXT_PLAIN))
+				.send();
+
+		assertEquals(200, response.statusCode());
+		assertEquals("OK", response.statusPhrase());
+
+		assertEquals("12", Echo2Servlet.ref.params.get("id"));
+		assertEquals("upload тест", Echo2Servlet.ref.parts.get("file"));
+		assertEquals("d ст", Echo2Servlet.ref.fileNames.get("file"));
+	}
+
 
 }

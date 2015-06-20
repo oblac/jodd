@@ -28,6 +28,7 @@ package jodd.http;
 import jodd.io.StreamUtil;
 import jodd.util.StringPool;
 import jodd.util.StringUtil;
+import org.apache.catalina.core.ApplicationPart;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -58,6 +59,7 @@ public class EchoServlet extends HttpServlet {
 		public Map<String, String> header;
 		public Map<String, String> params;
 		public Map<String, String> parts;
+		public Map<String, String> fileNames;
 	}
 
 	@Override
@@ -146,6 +148,32 @@ public class EchoServlet extends HttpServlet {
 
 			for (Part p : prs) {
 				parts.put(p.getName(), new String(StreamUtil.readBytes(p.getInputStream()), enc));
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		catch (ServletException e) {
+			e.printStackTrace();
+		}
+
+		return parts;
+	}
+
+	protected Map<String, String> copyFileName(HttpServletRequest req) {
+		Map<String, String> parts = new HashMap<String, String>();
+		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
+			return parts;
+		}
+
+		try {
+			Collection<Part> prs = req.getParts();
+
+			for (Part p : prs) {
+				if (p instanceof ApplicationPart) {
+					ApplicationPart ap = (ApplicationPart) p;
+					parts.put(p.getName(), ap.getSubmittedFileName());
+				}
 			}
 		}
 		catch (IOException e) {
