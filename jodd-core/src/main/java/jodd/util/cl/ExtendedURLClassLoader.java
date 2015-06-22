@@ -25,7 +25,9 @@
 
 package jodd.util.cl;
 
+import jodd.util.ArraysUtil;
 import jodd.util.SystemUtil;
+import jodd.util.Wildcard;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,25 +39,36 @@ import java.util.List;
 
 /**
  * Class loader that offers two loading strategies: <b>parent-first</b> and <b>parent-last</b>.
- * Extends <code>URLClassLoader</code> (for now:) to provide just minimal set of modifications.
+ * The strategy defines the class loading order between this classloader and parent class loader;
+ * i.e. defines the <i>first</i> class loader to be used for loading classes.
+ * Extends <code>URLClassLoader</code> to provide just minimal set of modifications.
  * <p>
- * When <b>parent-last</b> strategy is used, be aware how you use {@link jodd.util.ClassLoaderUtil} as
- * it is designed to follow <b>parent-first</b> strategy.
+ * Either way, you can specify wildcard rules to force some behavior - like loading some package/class
+ * exclusively with specific loader. There are the following groups:
+ * <ul>
+ *     <li>parent-only - classes will be loaded only with parent classloader.</li>
+ *     <li>loader-only - classes will be loaded only with this loader.</li>
+ *     <li>default - classes will be loaded as specified by strategy (no need to define).</li>
+ * </ul>
+ * <p>
+ * The order of matching is also set by loading strategy. For <b>parent-first</b> strategy,
+ * <b>loader</b> group rules will be checked first. For <b>parent-last</b> strategy,
+ * <b>parent</b> group rules will be checked first.
+ * <p>
+ * By default, the list of <b>parent-only</b> group is populated with
+ * {@link jodd.util.SystemUtil#getJrePackages() JRE packages}.
+ * <p>
+ * When <b>parent-last</b> strategy is used, be aware how you use
+ * {@link jodd.util.ClassLoaderUtil} as it is designed to follow <b>parent-first</b>
+ * strategy. Use with caution as setting <b>parent-last</b> violates the
+ * class loader hierarchy.
  */
 public class ExtendedURLClassLoader extends URLClassLoader {
 
-	protected ClassLoader parentClassLoader;
-	protected String[] systemPackages;
-	protected String[] loaderPackages;
-	protected boolean parentFirst;
-
-	/**
-	 * Creates class loader with <b>parent-first</b> loading strategy.
-	 * This is aligned how java class loaders work.
-	 */
-	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent) {
-		this(classpath, parent, true);
-	}
+	protected final ClassLoader parentClassLoader;
+	protected String[] parentOnlyRules;
+	protected String[] loaderOnlyRules;
+	protected final boolean parentFirst;
 
 	/**
 	 * Creates class loader with given loading strategy.
@@ -66,91 +79,94 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		this.parentFirst = parentFirst;
 
 		if (parent == null) {
-			parent = getSystemClassLoader();
+			throw new IllegalArgumentException("Parent classloader not specified");
 		}
 		parentClassLoader = parent;
 
-		systemPackages = new String[0];
-		loaderPackages = new String[0];
+		parentOnlyRules = new String[0];
+		loaderOnlyRules = new String[0];
 
-		addSystemPackage(SystemUtil.getJrePackages());
-	}
+		String[] corePackages = SystemUtil.getJrePackages();
 
-	// ---------------------------------------------------------------- properties
+		for (int i = 0; i < corePackages.length; i++) {
+			String pck = corePackages[i];
 
-	/**
-	 * Controls whether class lookup is delegated to the parent loader first
-	 * or after this loader. Use with extreme caution as setting this to
-	 * false (i.e. to <b>parent-last</b>) violates the class loader hierarchy.
-	 */
-	public void setParentFirst(boolean parentFirst) {
-		this.parentFirst = parentFirst;
-	}
-
-	/**
-	 * Adds system packages or package roots to the list of packages
-	 * which must be loaded on the parent loader. By default, the list
-	 * is already populated with {@link jodd.util.SystemUtil#getJrePackages() JRE packages}.
-	 */
-	public void addSystemPackage(String... packages) {
-		systemPackages = joinPackages(systemPackages, packages);
-	}
-
-	/**
-	 * Adds loader packages or package roots to the list of packages
-	 * which must be loaded using this loader.
-	 */
-	public void addLoaderPackage(String... packages) {
-		loaderPackages = joinPackages(loaderPackages, packages);
-	}
-
-	/**
-	 * Join packages and appends dot to package names if missing.
-	 */
-	protected String[] joinPackages(String[] dest, String[] src) {
-		int len = dest.length;
-
-		String[] result = new String[len + src.length];
-		System.arraycopy(dest, 0, result, 0, len);
-
-		for (int i = 0; i < src.length; i++) {
-			String pck = src[i];
-			pck += pck.endsWith(".") ? "" : ".";
-
-			result[len + i] = pck;
+			corePackages[i] = pck + ".*";
 		}
+		
+		addParentOnlyRules(corePackages);
+	}
 
-		return result;
+	// ---------------------------------------------------------------- rules
+
+	/**
+	 * Adds parent only rules for classes which must be loaded on the
+	 * parent loader.
+	 */
+	public void addParentOnlyRules(String... packages) {
+		parentOnlyRules = ArraysUtil.join(parentOnlyRules, packages);
+	}
+
+	/**
+	 * Adds loader-only rules for classes which must be loaded using this
+	 * loader.
+	 */
+	public void addLoaderOnlyRules(String... packages) {
+		loaderOnlyRules = ArraysUtil.join(loaderOnlyRules, packages);
 	}
 
 	/**
 	 * Returns <code>true</code> if class or resource name matches
-	 * at least one package root from the list.
+	 * at least one package rule from the list.
 	 */
-	protected boolean isInPackageList(String name, String[] packages) {
-		for (String pck : packages) {
-			if (name.startsWith(pck)) {
+	protected boolean isMatchingRules(String name, String... rules) {
+		for (String rule : rules) {
+			if (Wildcard.equalsOrMatch(name, rule)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/**
-	 * Determines if parent-first strategy should be used.
-	 */
-	protected boolean isParentFirst(String resourceName) {
-		boolean useParentFirst = parentFirst;
+	// ---------------------------------------------------------------- resolver
 
-		if (isInPackageList(resourceName, systemPackages)) {
-			useParentFirst = true;
-		}
-		if (isInPackageList(resourceName, loaderPackages)) {
-			useParentFirst = false;
+	protected static class Loading {
+		public Loading(boolean withParent, boolean withLoader) {
+			this.withParent = withParent;
+			this.withLoader = withLoader;
 		}
 
-		return useParentFirst;
+		protected final boolean withParent;
+		protected final boolean withLoader;
 	}
+
+	/**
+	 * Resolves loading rules.
+	 */
+	protected Loading resolveLoading(boolean parentFirstStrategy, String className) {
+		boolean withParent = true;
+		boolean withLoader = true;
+
+		if (parentFirstStrategy) {
+			if (isMatchingRules(className, loaderOnlyRules)) {
+				withParent = false;
+			}
+			else if (isMatchingRules(className, parentOnlyRules)) {
+				withLoader = false;
+			}
+		}
+		else {
+			if (isMatchingRules(className, parentOnlyRules)) {
+				withLoader = false;
+			}
+			else if (isMatchingRules(className, loaderOnlyRules)) {
+				withParent = false;
+			}
+		}
+
+		return new Loading(withParent, withLoader);
+	}
+
 
 	// ---------------------------------------------------------------- overrides
 
@@ -174,25 +190,43 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		// class not loaded yet
 
-		boolean loadUsingParentFirst = isParentFirst(className);
+		Loading loading = resolveLoading(parentFirst, className);
 
-		if (loadUsingParentFirst) {
-			try {
-				c = parentClassLoader.loadClass(className);
-			} catch (ClassNotFoundException ignore) {
+		if (parentFirst) {
+			// PARENT FIRST
+			if (loading.withParent) {
+				try {
+					c = parentClassLoader.loadClass(className);
+				}
+				catch (ClassNotFoundException ignore) {
+				}
 			}
 
 			if (c == null) {
-				c = findClass(className);
+				if (loading.withLoader) {
+					c = this.findClass(className);
+				}
+				else {
+					throw new ClassNotFoundException("Class not found: " + className);
+				}
 			}
 		} else {
-			try {
-				c = findClass(className);
-			} catch (ClassNotFoundException ignore) {
+			// THIS FIRST
+			if (loading.withLoader) {
+				try {
+					c = this.findClass(className);
+				}
+				catch (ClassNotFoundException ignore) {
+				}
 			}
 
 			if (c == null) {
-				c = parentClassLoader.loadClass(className);
+				if (loading.withParent) {
+					c = parentClassLoader.loadClass(className);
+				}
+				else {
+					throw new ClassNotFoundException("Class not found: " + className);
+				}
 			}
 		}
 
@@ -208,57 +242,71 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	@Override
 	public URL getResource(String resourceName) {
 
-		boolean loadUsingParentFirst = isParentFirst(resourceName);
+		URL url = null;
 
-		URL url;
+		Loading loading = resolveLoading(parentFirst, resourceName);
 
-		if (loadUsingParentFirst) {
-			url = parentClassLoader.getResource(resourceName);
+		if (parentFirst) {
+			// PARENT FIRST
+			if (loading.withParent) {
+				url = parentClassLoader.getResource(resourceName);
+			}
 
 			if (url == null) {
-				url = findResource(resourceName);
+				if (loading.withLoader) {
+					url = this.findResource(resourceName);
+				}
 			}
 		} else {
-			url = findResource(resourceName);
+			// THIS FIRST
+			if (loading.withLoader) {
+				url = this.findResource(resourceName);
+			}
 
 			if (url == null) {
-				url = parentClassLoader.getResource(resourceName);
+				if (loading.withParent) {
+					url = parentClassLoader.getResource(resourceName);
+				}
 			}
 		}
 
 		return url;
 	}
 
-	/**
-	 * Similar to its super method, except local resources are enumerated
-	 * before parent resources.
-	 */
 	@Override
 	public Enumeration<URL> getResources(String resourceName) throws IOException {
 
 		final List<URL> urls = new ArrayList<URL>();
 
-		Enumeration<URL> localUrls = findResources(resourceName);
+		Enumeration<URL> loaderUrls = this.findResources(resourceName);
 		Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);
 
-		boolean loadUsingParentFirst = isParentFirst(resourceName);
+		Loading loading = resolveLoading(parentFirst, resourceName);
 
-		if (loadUsingParentFirst) {
-			while (parentUrls.hasMoreElements()) {
-				urls.add(parentUrls.nextElement());
+		if (parentFirst) {
+			if (loading.withParent) {
+				while (parentUrls.hasMoreElements()) {
+					urls.add(parentUrls.nextElement());
+				}
 			}
-			while (localUrls.hasMoreElements()) {
-				urls.add(localUrls.nextElement());
-			}
-		} else {
-			while (localUrls.hasMoreElements()) {
-				urls.add(localUrls.nextElement());
-			}
-			while (parentUrls.hasMoreElements()) {
-				urls.add(parentUrls.nextElement());
+			if (loading.withLoader) {
+				while (loaderUrls.hasMoreElements()) {
+					urls.add(loaderUrls.nextElement());
+				}
 			}
 		}
-
+		else {
+			if (loading.withLoader) {
+				while (loaderUrls.hasMoreElements()) {
+					urls.add(loaderUrls.nextElement());
+				}
+			}
+			if (loading.withParent) {
+				while (parentUrls.hasMoreElements()) {
+					urls.add(parentUrls.nextElement());
+				}
+			}
+		}
 		return new Enumeration<URL>() {
 			Iterator<URL> iterator = urls.iterator();
 
