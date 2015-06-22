@@ -77,9 +77,6 @@ ext {
 							"org.apache.tomcat.embed:tomcat-embed-logging-log4j:${tomcatVersion}"],
 		jacoco_agent:	"org.jacoco:org.jacoco.agent:${jacocoVersion}:runtime@jar",
 		jacoco_ant:		"org.jacoco:org.jacoco.ant:${jacocoVersion}",
-
-		animal_sniffer: 'org.codehaus.mojo:animal-sniffer-ant-tasks:1.11',
-		java15_signature: 'org.codehaus.mojo.signature:java15:1.0@signature',
 	]
 
 	commonManifest = [
@@ -159,8 +156,8 @@ configure(javaModules()) {
 
 	// compile
 
-	sourceCompatibility = 1.5
-	targetCompatibility = 1.5
+	sourceCompatibility = 1.7
+	targetCompatibility = 1.7
 
 	tasks.withType(JavaCompile) {
 		options.encoding = 'UTF-8'
@@ -250,7 +247,7 @@ configure(javaModules()) {
 				encoding = 'UTF-8'
 				docEncoding = 'UTF-8'
 				stylesheetFile = file('src/main/javadoc/jodd.css')
-				source = '1.5'
+				source = '1.7'
 				failOnError = false
 			}
 		}
@@ -291,45 +288,6 @@ configure(javaModules()) {
 		}
 	}
 
-	// Animal Sniffer
-
-	configurations {
-		animalSniffer
-		javaApiSignature
-	}
-
-	dependencies {
-		animalSniffer(lib.animal_sniffer)
-    	javaApiSignature(lib.java15_signature)
-    }
-
-	// copy the resolved Animal Sniffer signature dependency artifact to a known location and name
-	task copyJavaApiSignature(type: Copy) {
-		from configurations.javaApiSignature
-		into "$buildDir/javaApiSignature/"
-		rename '.*signature', 'javaApi.signature'
-	}
-
-	// prepare the Animal Sniffer signature copy every time (before) we compile
-	compileJava.dependsOn copyJavaApiSignature
-
-	// and then after compilation, run the Animal Sniffer tool
-	compileJava << {
-		print "$buildDir/javaApiSignature/"
-		ant.taskdef(
-				name: 'animalSniffer',
-				classname: 'org.codehaus.mojo.animal_sniffer.ant.CheckSignatureTask',
-				classpath: configurations.animalSniffer.asPath
-		)
-
-		ant.animalSniffer(
-				signature: "$buildDir/javaApiSignature/javaApi.signature",
-				classpath: sourceSets.main.compileClasspath.asPath) {
-			path(path: sourceSets.main.output.classesDir)
-			ignore(className: "java.nio.CharBuffer")
-			ignore(className: "sun.misc.Unsafe")
-		}
-	}
 }
 
 // --- project ----------------------------------------------------------------
@@ -379,7 +337,7 @@ task javadocAll(type: Javadoc) {
 		encoding = 'UTF-8'
 		docEncoding = 'UTF-8'
 		stylesheetFile = file('src/main/javadoc/jodd.css')
-		source = '1.5'
+		source = '1.7'
 	}
 
 	inputs.files(javaBundleModulesSources.allSource + javaBundleModulesSources.compileClasspath)
