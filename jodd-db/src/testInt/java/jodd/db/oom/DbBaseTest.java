@@ -43,6 +43,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class DbBaseTest {
 
 	public static final String DB_NAME = "jodd-test";
+	public static final String DB_IP = "192.168.59.103";
 
 	protected CoreConnectionPool connectionPool;
 	protected DbOomManager dboom;
