@@ -1,0 +1,15 @@
+pgdb:
+  image: postgres:9.4
+  environment:
+    - POSTGRES_DB=jodd-test
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=root!
+  ports:
+     - "5432:5432"
+mydb:
+  image: mysql:5.6
+  environment:
+    - MYSQL_DATABASE=jodd-test
+    - MYSQL_ROOT_PASSWORD=root!
+  ports:
+    - "3306:3306"
