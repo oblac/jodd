@@ -118,7 +118,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	/**
 	 * Clears the map.
 	 */
-	public HttpMultiMap clear() {
+	public HttpMultiMap<V> clear() {
 		for (int i = 0; i < entries.length; i++) {
 			entries[i] = null;
 		}
@@ -174,7 +174,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	public HttpMultiMap setAll(final String name, final Iterable<V> values) {
+	public HttpMultiMap<V> setAll(final String name, final Iterable<V> values) {
 		int h = hash(name);
 		int i = index(h);
 
@@ -186,14 +186,14 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return this;
 	}
 
-	public HttpMultiMap add(final String name, final V value) {
+	public HttpMultiMap<V> add(final String name, final V value) {
 		int h = hash(name);
 		int i = index(h);
 		_add(h, i, name, value);
 		return this;
 	}
 
-	public HttpMultiMap addAll(String name, Iterable<V> values) {
+	public HttpMultiMap<V> addAll(String name, Iterable<V> values) {
 		int h = hash(name);
 		int i = index(h);
 		for (V value : values) {
@@ -229,7 +229,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 
 	// ---------------------------------------------------------------- remove
 
-	public HttpMultiMap remove(final String name) {
+	public HttpMultiMap<V> remove(final String name) {
 		int h = hash(name);
 		int i = index(h);
 		_remove(h, i, name);
