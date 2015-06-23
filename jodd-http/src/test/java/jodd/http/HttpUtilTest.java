@@ -25,6 +25,7 @@
 
 package jodd.http;
 
+import jodd.util.StringPool;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -98,6 +99,25 @@ public class HttpUtilTest {
 		request = HttpRequest.get("https://jodd.org:8443");
 		assertEquals("https", request.protocol());
 		assertEquals(8443, request.port());
+	}
+
+	@Test
+	public void testBuildQuery() {
+		HttpMultiMap<String> map = new HttpMultiMap<>();
+
+		assertEquals("", HttpUtil.buildQuery(map, StringPool.UTF_8));
+
+		map.add("aaa", "one");
+		assertEquals("aaa=one", HttpUtil.buildQuery(map, StringPool.UTF_8));
+
+		map.add("bbb", "two");
+		assertEquals("aaa=one&bbb=two", HttpUtil.buildQuery(map, StringPool.UTF_8));
+
+		map.clear().add("ccc", null);
+		assertEquals("ccc", HttpUtil.buildQuery(map, StringPool.UTF_8));
+
+		map.add("ddd", "four");
+		assertEquals("ccc&ddd=four", HttpUtil.buildQuery(map, StringPool.UTF_8));
 	}
 
 }
