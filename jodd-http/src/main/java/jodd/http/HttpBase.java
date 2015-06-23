@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -72,9 +72,9 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected HttpValuesMap<String> headers = HttpValuesMap.ofStrings();
+	protected HttpMultiMap<String> headers = new HttpMultiMap<>();
 
-	protected HttpValuesMap<Object> form;	// holds form data (when used)
+	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
 
 	// ---------------------------------------------------------------- properties
@@ -103,23 +103,14 @@ public abstract class HttpBase<T> {
 	 * if header doesn't exist.
 	 */
 	public String header(String name) {
-		String key = name.trim().toLowerCase();
-
-		Object value = headers.getFirst(key);
-
-		if (value == null) {
-			return null;
-		}
-		return value.toString();
+		return headers.get(name);
 	}
 
 	/**
 	 * Returns all values for given header name.
 	 */
-	public String[] headers(String name) {
-		String key = name.trim().toLowerCase();
-
-		return headers.getStrings(key);
+	public List<String> headers(String name) {
+		return headers.getAll(name);
 	}
 
 	/**
@@ -198,12 +189,10 @@ public abstract class HttpBase<T> {
 	}
 
 	/**
-	 * Returns unmodifiable map of all headers values. Header names are
-	 * the keys of this map and they are all stored in lower case.
-	 * Header values can be either <code>null</code> or an String array.
+	 * Returns {@link HttpMultiMap} of all headers.
 	 */
-	public Map<String, String[]> headers() {
-		return Collections.unmodifiableMap(headers);
+	public HttpMultiMap<String> headers() {
+		return headers;
 	}
 
 	// ---------------------------------------------------------------- content type
@@ -394,7 +383,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void initForm() {
 		if (form == null) {
-			form = HttpValuesMap.ofObjects();
+			form = new HttpMultiMap<>();
 		}
 	}
 
@@ -436,7 +425,7 @@ public abstract class HttpBase<T> {
 		initForm();
 
 		value = wrapFormValue(value);
-		form.add(name, value);
+		((HttpMultiMap<Object>)form).add(name, value);
 
 		return (T) this;
 	}
@@ -450,9 +439,9 @@ public abstract class HttpBase<T> {
 		value = wrapFormValue(value);
 
 		if (overwrite) {
-			form.set(name, value);
+			((HttpMultiMap<Object>)form).set(name, value);
 		} else {
-			form.add(name, value);
+			((HttpMultiMap<Object>)form).add(name, value);
 		}
 
 		return (T) this;
@@ -490,7 +479,7 @@ public abstract class HttpBase<T> {
 	 * Return map of form parameters.
 	 * Note that all uploadable values are wrapped with {@link jodd.http.up.Uploadable}.
 	 */
-	public Map<String, Object[]> form() {
+	public HttpMultiMap<?> form() {
 		return form;
 	}
 
@@ -615,17 +604,14 @@ public abstract class HttpBase<T> {
 		if (multipart) {
 			return true;
 		}
-		for (Object[] values : form.values()) {
-			if (values == null) {
-				continue;
-			}
 
-			for (Object value : values) {
-				if (value instanceof Uploadable) {
-					return true;
-				}
+		for (Map.Entry<String, ?> entry : form) {
+			Object value = entry.getValue();
+			if (value instanceof Uploadable) {
+				return true;
 			}
 		}
+
 	    return false;
 	}
 
@@ -653,65 +639,63 @@ public abstract class HttpBase<T> {
 
 		String boundary = StringUtil.repeat('-', 10) + RandomString.getInstance().randomAlphaNumeric(10);
 
-		for (Map.Entry<String, Object[]> entry : form.entrySet()) {
+		for (Map.Entry<String, ?> entry : form) {
 
 			buffer.append("--");
 			buffer.append(boundary);
 			buffer.append(CRLF);
 
 			String name = entry.getKey();
-			Object[] values = entry.getValue();
+			Object value = entry.getValue();
 
-			for (Object value : values) {
-				if (value instanceof String) {
-					String string = (String) value;
-					buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
-					buffer.append(CRLF);
+			if (value instanceof String) {
+				String string = (String) value;
+				buffer.append("Content-Disposition: form-data; name=\"").append(name).append('"').append(CRLF);
+				buffer.append(CRLF);
 
+				String formEncoding = resolveFormEncoding();
+
+				String utf8String = StringUtil.convertCharset(
+					string, formEncoding, StringPool.ISO_8859_1);
+
+				buffer.append(utf8String);
+			}
+			else if (value instanceof Uploadable) {
+				Uploadable uploadable = (Uploadable) value;
+
+				String fileName = uploadable.getFileName();
+				if (fileName == null) {
+					fileName = name;
+				} else {
 					String formEncoding = resolveFormEncoding();
 
-					String utf8String = StringUtil.convertCharset(
-						string, formEncoding, StringPool.ISO_8859_1);
-
-					buffer.append(utf8String);
+					fileName = StringUtil.convertCharset(
+						fileName, formEncoding, StringPool.ISO_8859_1);
 				}
-				else if (value instanceof Uploadable) {
-					Uploadable uploadable = (Uploadable) value;
 
-					String fileName = uploadable.getFileName();
-					if (fileName == null) {
-						fileName = name;
-					} else {
-						String formEncoding = resolveFormEncoding();
+				buffer.append("Content-Disposition: form-data; name=\"").append(name);
+				buffer.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
 
-						fileName = StringUtil.convertCharset(
-							fileName, formEncoding, StringPool.ISO_8859_1);
-					}
-
-					buffer.append("Content-Disposition: form-data; name=\"").append(name);
-					buffer.append("\"; filename=\"").append(fileName).append('"').append(CRLF);
-
-					String mimeType = uploadable.getMimeType();
-					if (mimeType == null) {
-						mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
-					}
-					buffer.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
-
-					buffer.append("Content-Transfer-Encoding: binary").append(CRLF);
-					buffer.append(CRLF);
-
-					buffer.append(uploadable);
-
-					//byte[] bytes = uploadable.getBytes();
-					//for (byte b : bytes) {
-						//buffer.append(CharUtil.toChar(b));
-					//}
-				} else {
-					// should never happened!
-					throw new HttpException("Unsupported type");
+				String mimeType = uploadable.getMimeType();
+				if (mimeType == null) {
+					mimeType = MimeTypes.getMimeType(FileNameUtil.getExtension(fileName));
 				}
+				buffer.append(HEADER_CONTENT_TYPE).append(": ").append(mimeType).append(CRLF);
+
+				buffer.append("Content-Transfer-Encoding: binary").append(CRLF);
 				buffer.append(CRLF);
+
+				buffer.append(uploadable);
+
+				//byte[] bytes = uploadable.getBytes();
+				//for (byte b : bytes) {
+					//buffer.append(CharUtil.toChar(b));
+				//}
+			} else {
+				// should never happened!
+				throw new HttpException("Unsupported type");
 			}
+			buffer.append(CRLF);
 		}
 
 		buffer.append("--").append(boundary).append("--");
@@ -930,7 +914,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = HttpValuesMap.ofObjects();
+			form = new HttpMultiMap<>();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 
@@ -945,20 +929,18 @@ public abstract class HttpBase<T> {
 			// string parameters
 			for (String paramName : multipartParser.getParameterNames()) {
 				String[] values = multipartParser.getParameterValues(paramName);
-				if (values.length == 1) {
-					form.add(paramName, values[0]);
-				} else {
-					form.put(paramName, values);
+
+				for (String value : values) {
+					((HttpMultiMap<Object>)form).add(paramName, value);
 				}
 			}
 
 			// file parameters
 			for (String paramName : multipartParser.getFileParameterNames()) {
-				FileUpload[] values = multipartParser.getFiles(paramName);
-				if (values.length == 1) {
-					form.add(paramName, values[0]);
-				} else {
-					form.put(paramName, values);
+				FileUpload[] uploads = multipartParser.getFiles(paramName);
+
+				for (FileUpload upload : uploads) {
+					((HttpMultiMap<Object>)form).add(paramName, upload);
 				}
 			}
 

@@ -42,23 +42,23 @@ public class HttpUtil {
 	/**
 	 * Builds a query string from given query map.
 	 */
-	public static String buildQuery(HttpValuesMap<Object> queryMap, String encoding) {
-		int queryMapSize = queryMap.size();
-
-		if (queryMapSize == 0) {
+	public static String buildQuery(HttpMultiMap<?> queryMap, String encoding) {
+		if (queryMap.isEmpty()) {
 			return StringPool.EMPTY;
 		}
+
+		int queryMapSize = queryMap.size();
 
 		StringBand query = new StringBand(queryMapSize * 4);
 
 		int count = 0;
-		for (Map.Entry<String, Object[]> entry : queryMap.entrySet()) {
+		for (Map.Entry<String, ?> entry : queryMap) {
 			String key = entry.getKey();
-			Object[] values = entry.getValue();
-
 			key = URLCoder.encodeQueryParam(key, encoding);
 
-			if (values == null) {
+			Object value = entry.getValue();
+
+			if (value == null) {
 				if (count != 0) {
 					query.append('&');
 				}
@@ -66,18 +66,16 @@ public class HttpUtil {
 				query.append(key);
 				count++;
 			} else {
-				for (Object value : values) {
-					if (count != 0) {
-						query.append('&');
-					}
-
-					query.append(key);
-					count++;
-					query.append('=');
-
-					String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
-					query.append(valueString);
+				if (count != 0) {
+					query.append('&');
 				}
+
+				query.append(key);
+				count++;
+				query.append('=');
+
+				String valueString = URLCoder.encodeQueryParam(value.toString(), encoding);
+				query.append(valueString);
 			}
 		}
 
@@ -87,9 +85,9 @@ public class HttpUtil {
 	/**
 	 * Parses query from give query string. Values are optionally decoded.
 	 */
-	public static HttpValuesMap<Object> parseQuery(String query, boolean decode) {
+	public static HttpMultiMap<String> parseQuery(String query, boolean decode) {
 
-		HttpValuesMap<Object> queryMap = HttpValuesMap.ofObjects();
+		HttpMultiMap<String> queryMap = new HttpMultiMap<>();
 
 		int ndx, ndx2 = 0;
 		while (true) {

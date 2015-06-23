@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import static jodd.util.StringPool.CRLF;
@@ -130,8 +131,8 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			.append(statusPhrase)
 			.append(CRLF);
 
-		for (String key : headers.keySet()) {
-			String[] values = headers.getStrings(key);
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
 
 			String headerName = HttpUtil.prepareHeaderParameterName(key);
 

@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -53,7 +54,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	protected int port = DEFAULT_PORT;
 	protected String method = "GET";
 	protected String path = StringPool.SLASH;
-	protected HttpValuesMap<Object> query;
+	protected HttpMultiMap<String> query;
 
 	// ---------------------------------------------------------------- init
 
@@ -308,7 +309,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			query = HttpUtil.parseQuery(queryString, true);
 		} else {
-			query = HttpValuesMap.ofObjects();
+			query = new HttpMultiMap<>();
 		}
 
 		this.path = path;
@@ -367,7 +368,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	/**
 	 * Returns backend map of query parameters.
 	 */
-	public Map<String, Object[]> query() {
+	public HttpMultiMap<String> query() {
 		return query;
 	}
 
@@ -748,8 +749,8 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			.append(httpVersion)
 			.append(CRLF);
 
-		for (String key : headers.keySet()) {
-			String[] values = headers.getStrings(key);
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
 
 			String headerName = HttpUtil.prepareHeaderParameterName(key);
 

@@ -57,9 +57,9 @@ public class HttpRequestTest {
 		httpRequest.queryString("one=two");
 		assertEquals("/jodd", httpRequest.path());
 
-		Map<String, Object[]> params = httpRequest.query();
+		HttpMultiMap<String> params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("two", params.get("one")[0]);
+		assertEquals("two", params.get("one"));
 
 		httpRequest.queryString("one");
 		assertEquals("one", httpRequest.queryString());
@@ -71,28 +71,28 @@ public class HttpRequestTest {
 		assertEquals("one=", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("", params.get("one")[0]);
+		assertEquals("", params.get("one"));
 
 		httpRequest.queryString("one=aaa&two=bbb");
 		assertEquals("one=aaa&two=bbb", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(2, params.size());
-		assertEquals("aaa", params.get("one")[0]);
-		assertEquals("bbb", params.get("two")[0]);
+		assertEquals("aaa", params.get("one"));
+		assertEquals("bbb", params.get("two"));
 
 		httpRequest.queryString("one=&two=aaa");
 		assertEquals("one=&two=aaa", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(2, params.size());
-		assertEquals("", params.get("one")[0]);
-		assertEquals("aaa", params.get("two")[0]);
+		assertEquals("", params.get("one"));
+		assertEquals("aaa", params.get("two"));
 
 		httpRequest.clearQueries();
 		httpRequest.queryString("one=Супер");
 		assertEquals("one=%D0%A1%D1%83%D0%BF%D0%B5%D1%80", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("Супер", params.get("one")[0]);
+		assertEquals("Супер", params.get("one"));
 
 		httpRequest.queryString("one=Sуp");
 		assertEquals("one=S%D1%83p", httpRequest.queryString());
@@ -101,8 +101,8 @@ public class HttpRequestTest {
 		assertEquals("one=1&one=2", httpRequest.queryString());
 		params = httpRequest.query();
 		assertEquals(1, params.size());
-		assertEquals("1", params.get("one")[0]);
-		assertEquals("2", params.get("one")[1]);
+		assertEquals("1", params.getAll("one").get(0));
+		assertEquals("2", params.getAll("one").get(1));
 
 		httpRequest.query("one", Integer.valueOf(3));
 		assertEquals("one=1&one=2&one=3", httpRequest.queryString());
@@ -110,7 +110,7 @@ public class HttpRequestTest {
 
 	@Test
 	public void testFormParamsObjects() {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("state", 1);
 
 		HttpRequest httpRequest = new HttpRequest();
@@ -129,7 +129,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -140,7 +140,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -151,7 +151,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(173, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -162,7 +162,7 @@ public class HttpRequestTest {
 		assertEquals("jodd.org", httpRequest.host());
 		assertEquals(80, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -173,7 +173,7 @@ public class HttpRequestTest {
 		assertEquals("localhost", httpRequest.host());
 		assertEquals(80, httpRequest.port());
 		assertEquals("/index.html", httpRequest.path());
-		assertEquals("true", httpRequest.query().get("light")[0]);
+		assertEquals("true", httpRequest.query().get("light"));
 
 
 		httpRequest = new HttpRequest();
@@ -206,8 +206,8 @@ public class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		Map params1 = request.form();
-		Map params2 = request2.form();
+		HttpMultiMap<?> params1 = request.form();
+		HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 	}
@@ -254,7 +254,7 @@ public class HttpRequestTest {
 
 		// read
 		HttpRequest request2 = HttpRequest.readFrom(new ByteArrayInputStream(bytes));
-		Map<String, Object[]> httpParams2 = request2.form();
+		HttpMultiMap<?> httpParams2 = request2.form();
 
 		assertEquals(request.method(), request2.method());
 		assertEquals(request.path(), request2.path());
@@ -264,12 +264,12 @@ public class HttpRequestTest {
 		assertEquals(request.header("Content-Type"), request2.header("content-type"));
 		assertEquals(request.header("Content-Length"), request2.header("content-length"));
 
-		Map params1 = request.form();
-		Map params2 = request2.form();
+		HttpMultiMap<?> params1 = request.form();
+		HttpMultiMap<?> params2 = request2.form();
 		assertEquals(params1.size(), params2.size());
 		assertEquals(params2.get("one"), params2.get("one"));
 
-		FileUpload fu = (FileUpload) httpParams2.get("two")[0];
+		FileUpload fu = (FileUpload) httpParams2.get("two");
 		assertEquals(6, fu.getSize());
 
 		String str = new String(fu.getFileContent());

@@ -27,9 +27,8 @@ package jodd.http;
 
 import jodd.util.StringPool;
 
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Emulates HTTP Browser and persist cookies between requests.
@@ -39,8 +38,8 @@ public class HttpBrowser {
 	protected HttpConnectionProvider httpConnectionProvider;
 	protected HttpRequest httpRequest;
 	protected HttpResponse httpResponse;
-	protected Map<String, Cookie> cookies = new LinkedHashMap<String, Cookie>();
-	protected HttpValuesMap<String> defaultHeaders = HttpValuesMap.ofStrings();
+	protected HttpMultiMap<Cookie> cookies = new HttpMultiMap<>();
+	protected HttpMultiMap<String> defaultHeaders = new HttpMultiMap<>();
 	protected boolean keepAlive;
 	protected long elapsedTime;
 
@@ -191,12 +190,12 @@ public class HttpBrowser {
 	 * default header will be ignored.
 	 */
 	protected void addDefaultHeaders(HttpRequest httpRequest) {
-		Set<Map.Entry<String, String[]>> entries = defaultHeaders.entrySet();
+		List<Map.Entry<String, String>> entries = defaultHeaders.entries();
 
-		for (Map.Entry<String, String[]> entry : entries) {
+		for (Map.Entry<String, String> entry : entries) {
 			String name = entry.getKey();
-			if (!httpRequest.headers.containsKey(name)) {
-				httpRequest.headers.put(name, entry.getValue());
+			if (!httpRequest.headers.contains(name)) {
+				httpRequest.headers.add(name, entry.getValue());
 			}
 		}
 	}
@@ -243,12 +242,12 @@ public class HttpBrowser {
 	 * Reads cookies from response.
 	 */
 	protected void readCookies(HttpResponse httpResponse) {
-		String[] newCookies = httpResponse.headers("set-cookie");
+		List<String> newCookies = httpResponse.headers("set-cookie");
 
 		if (newCookies != null) {
 			for (String cookieValue : newCookies) {
 				Cookie cookie = new Cookie(cookieValue);
-				cookies.put(cookie.getName(), cookie);
+				cookies.add(cookie.getName(), cookie);
 			}
 		}
 	}
@@ -263,8 +262,10 @@ public class HttpBrowser {
 		boolean first = true;
 
 		if (!cookies.isEmpty()) {
-			for (Cookie cookie: cookies.values()) {
-                
+			for (Map.Entry<String, Cookie> cookieEntry : cookies) {
+
+				Cookie cookie = cookieEntry.getValue();
+
 			    Integer maxAge = cookie.getMaxAge();
 				if (maxAge != null && maxAge.intValue() == 0) {
 				    continue;
