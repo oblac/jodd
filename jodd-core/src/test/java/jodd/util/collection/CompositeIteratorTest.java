@@ -39,7 +39,7 @@ public class CompositeIteratorTest {
 
 	@Test
 	public void testNextWithOne() {
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		
 		try {
 			compositeIterator.next();
@@ -132,7 +132,7 @@ public class CompositeIteratorTest {
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		compositeIterator.add(list3.iterator());
@@ -147,11 +147,11 @@ public class CompositeIteratorTest {
 	@Test
 	public void testRemoveWithThree() {
 		List<Integer> list1 = createList(4);
-		List<Integer> list2 = new ArrayList<Integer>();
+		List<Integer> list2 = new ArrayList<>();
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		compositeIterator.add(list3.iterator());
@@ -172,7 +172,7 @@ public class CompositeIteratorTest {
 		List<Integer> list1 = createList(4);
 		List<Integer> list2 = createList(4);
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>();
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>();
 		compositeIterator.add(list1.iterator());
 		compositeIterator.add(list2.iterator());
 		try {
@@ -196,7 +196,7 @@ public class CompositeIteratorTest {
 		it2.next();
 		it3.next();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>(it1, it2, it3);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -223,7 +223,7 @@ public class CompositeIteratorTest {
 		it2.next(); it2.next(); it2.next();
 		it3.next();
 
-		CompositeIterator<Integer> compositeIterator = new CompositeIterator<Integer>(it1, it2, it3);
+		CompositeIterator<Integer> compositeIterator = new CompositeIterator<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -240,7 +240,7 @@ public class CompositeIteratorTest {
 	// ---------------------------------------------------------------- util
 
 	private List<Integer> createList(int count) {
-		List<Integer> list = new ArrayList<Integer>(count);
+		List<Integer> list = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			list.add(Integer.valueOf(i));
 		}

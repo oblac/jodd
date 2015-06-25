@@ -40,8 +40,8 @@ public class Person {
 	private Timestamp firstBaseBallGame;
 	private Address home;
 	private Address work;
-	private List<Phone> phones = new ArrayList<Phone>();
-	private List<String> hobbies = new ArrayList<String>();
+	private List<Phone> phones = new ArrayList<>();
+	private List<String> hobbies = new ArrayList<>();
 
 	public Person() {
 	}

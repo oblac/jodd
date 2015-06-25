@@ -56,7 +56,7 @@ public class InvokeInfo {
 		classShortName = ndx == -1 ? className : className.substring(ndx + 1);
 
 		// arguments
-		List<String> args = new ArrayList<String>();
+		List<String> args = new ArrayList<>();
 		MutableInteger from = new MutableInteger(1);
 		if (description.length() != 0) {
 			while (description.charAt(from.value) != ')') {

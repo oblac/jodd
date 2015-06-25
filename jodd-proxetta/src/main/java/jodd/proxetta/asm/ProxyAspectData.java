@@ -113,7 +113,7 @@ final class ProxyAspectData {
 	 */
 	private ClassReader getCachedAdviceClassReader(Class<? extends ProxyAdvice> advice) {
 		if (adviceClassReaderCache == null) {
-			adviceClassReaderCache = new HashMap<Class<? extends ProxyAdvice>, ClassReader>();
+			adviceClassReaderCache = new HashMap<>();
 		}
 		ClassReader adviceReader = adviceClassReaderCache.get(advice);
 		if (adviceReader == null) {

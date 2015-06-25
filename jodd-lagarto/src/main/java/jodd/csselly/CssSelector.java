@@ -64,7 +64,7 @@ public class CssSelector implements NodeFilter {
 			element = StringPool.STAR;
 		}
 		this.element = unescape(element);
-		this.selectors = new ArrayList<Selector>();
+		this.selectors = new ArrayList<>();
 	}
 
 	/**

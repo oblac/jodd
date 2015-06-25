@@ -57,7 +57,7 @@ public class JsonValueContextTest {
 
 	@Test
 	public void testJsonValueContextList() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		list.add("one");
 		list.add("two");

@@ -52,7 +52,7 @@ public class ProviderResolver {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		MethodDescriptor[] methods = cd.getAllMethodDescriptors();
 
-		List<ProviderDefinition> list = new ArrayList<ProviderDefinition>();
+		List<ProviderDefinition> list = new ArrayList<>();
 
 		for (MethodDescriptor methodDescriptor : methods) {
 			Method method = methodDescriptor.getMethod();

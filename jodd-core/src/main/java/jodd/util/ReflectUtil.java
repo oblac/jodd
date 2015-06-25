@@ -300,7 +300,7 @@ public class ReflectUtil {
 	 * the returned array.
 	 */
 	public static Class[] resolveAllInterfaces(Class type) {
-		Set<Class> bag = new LinkedHashSet<Class>();
+		Set<Class> bag = new LinkedHashSet<>();
 		_resolveAllInterfaces(type, bag);
 
 		return bag.toArray(new Class[bag.size()]);
@@ -335,7 +335,7 @@ public class ReflectUtil {
 	 * class is not included in the list.
 	 */
 	public static Class[] resolveAllSuperclasses(Class type) {
-		List<Class> list = new ArrayList<Class>();
+		List<Class> list = new ArrayList<>();
 
 		while (true) {
 			type = type.getSuperclass();
@@ -366,7 +366,7 @@ public class ReflectUtil {
 	 */
 	public static Method[] getAccessibleMethods(Class clazz, Class limit) {
 		Package topPackage = clazz.getPackage();
-		List<Method> methodList = new ArrayList<Method>();
+		List<Method> methodList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
 		boolean top = true;
 		do {
@@ -435,7 +435,7 @@ public class ReflectUtil {
 
 	public static Field[] getAccessibleFields(Class clazz, Class limit) {
 		Package topPackage = clazz.getPackage();
-		List<Field> fieldList = new ArrayList<Field>();
+		List<Field> fieldList = new ArrayList<>();
 		int topPackageHash = topPackage == null ? 0 : topPackage.hashCode();
 		boolean top = true;
 		do {
@@ -502,7 +502,7 @@ public class ReflectUtil {
 	 * methods are returned.
 	 */
 	public static Method[] getSupportedMethods(Class clazz, Class limit) {
-		ArrayList<Method> supportedMethods = new ArrayList<Method>();
+		ArrayList<Method> supportedMethods = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Method[] methods = c.getDeclaredMethods();
 			for (Method method : methods) {
@@ -527,7 +527,7 @@ public class ReflectUtil {
 	}
 
 	public static Field[] getSupportedFields(Class clazz, Class limit) {
-		ArrayList<Field> supportedFields = new ArrayList<Field>();
+		ArrayList<Field> supportedFields = new ArrayList<>();
 		for (Class c = clazz; c != limit; c = c.getSuperclass()) {
 			Field[] fields = c.getDeclaredFields();
 			for (Field field : fields) {

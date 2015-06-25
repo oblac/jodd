@@ -91,7 +91,7 @@ public final class TypeConverterTestHelper {
 	}
 
 	public static <T> ArrayList<T> listo(T... v) {
-		ArrayList<T> list = new ArrayList<T>(v.length);
+		ArrayList<T> list = new ArrayList<>(v.length);
 
 		for (int i = 0; i < v.length; i++) {
 			list.add(v[i]);
@@ -101,7 +101,7 @@ public final class TypeConverterTestHelper {
 	}
 
 	public static <T> HashSet<T> seto(T... v) {
-		HashSet<T> set = new LinkedHashSet<T>(v.length);
+		HashSet<T> set = new LinkedHashSet<>(v.length);
 
 		for (int i = 0; i < v.length; i++) {
 			set.add(v[i]);

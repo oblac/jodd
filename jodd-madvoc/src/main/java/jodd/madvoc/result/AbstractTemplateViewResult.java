@@ -53,7 +53,7 @@ public abstract class AbstractTemplateViewResult extends BaseActionResult<String
 
 	public AbstractTemplateViewResult(String name) {
 		super(name);
-		targetCache = new HashMap<String, String>(256);
+		targetCache = new HashMap<>(256);
 	}
 
 	@In(scope = ScopeType.CONTEXT)

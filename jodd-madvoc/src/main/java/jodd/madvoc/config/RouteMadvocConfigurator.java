@@ -117,7 +117,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 	protected void parse(String routes) throws Exception {
 		initDefaultWrappers();
 
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 
 		String line = null;
 
@@ -170,7 +170,7 @@ public class RouteMadvocConfigurator extends ManualMadvocConfigurator {
 	protected void initDefaultWrappers() {
 		String defaultWrappers = "";
 
-		variables = new HashMap<String, String>();
+		variables = new HashMap<>();
 
 		Class<? extends ActionInterceptor>[] defaultWebAppInterceptorClasses
 				= madvocConfig.getDefaultInterceptors();

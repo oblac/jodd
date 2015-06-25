@@ -73,7 +73,7 @@ public class MimeTypes {
 			StreamUtil.close(is);
 		}
 
-		MIME_TYPE_MAP = new HashMap<String, String>(mimes.size() * 2);
+		MIME_TYPE_MAP = new HashMap<>(mimes.size() * 2);
 
 		Enumeration keys = mimes.propertyNames();
 		while (keys.hasMoreElements()) {
@@ -135,7 +135,7 @@ public class MimeTypes {
 	 * @param useWildcard if set, mime types are wildcard patterns
 	 */
 	public static String[] findExtensionsByMimeTypes(String mimeType, boolean useWildcard) {
-		ArrayList<String> extensions = new ArrayList<String>();
+		ArrayList<String> extensions = new ArrayList<>();
 
 		mimeType = mimeType.toLowerCase();
 		String[] mimeTypes = StringUtil.splitc(mimeType, ", ");

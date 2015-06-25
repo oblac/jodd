@@ -41,7 +41,7 @@ public class SortedArrayListTest {
 
 	@Test
 	public void testList1() {
-		SortedArrayList<String> list = new SortedArrayList<String>();
+		SortedArrayList<String> list = new SortedArrayList<>();
 
 		list.add("aaa");
 		list.add("bbb");
@@ -80,7 +80,7 @@ public class SortedArrayListTest {
 
 	@Test
 	public void testList2() {
-		SortedArrayList<String> list = new SortedArrayList<String>();
+		SortedArrayList<String> list = new SortedArrayList<>();
 
 		list.add("bbb");
 		list.add("aaa");
@@ -104,12 +104,12 @@ public class SortedArrayListTest {
 	public void testRandom() {
 		int total = 100000;
 
-		ArrayList<String> randomList = new ArrayList<String>();
+		ArrayList<String> randomList = new ArrayList<>();
 		for (int i = 0; i < total; i++) {
 			randomList.add(RandomString.getInstance().random(20, 'a', 'z'));
 		}
 
-		SortedArrayList<String> sortedList = new SortedArrayList<String>(randomList);
+		SortedArrayList<String> sortedList = new SortedArrayList<>(randomList);
 
 		Collections.sort(randomList);
 
@@ -136,7 +136,7 @@ public class SortedArrayListTest {
 				return str2.compareTo(str1);
 			}
 		};
-		SortedArrayList<String> list = new SortedArrayList<String>(comparator);
+		SortedArrayList<String> list = new SortedArrayList<>(comparator);
 		assertNotNull(list.getComparator());
 		list.add("aaa");
 		list.add("bbb");

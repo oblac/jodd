@@ -182,7 +182,7 @@ public class JStopWatch {
 		long lapTime;
 		if (laps == null) {
 			lapTime = lapSpanTime;
-			laps = new ArrayList<long[]>();
+			laps = new ArrayList<>();
 		} else {
 			long[] previous = laps.get(laps.size() - 1);
 			lapTime = lap - previous[2];

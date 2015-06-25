@@ -44,7 +44,7 @@ public class DestroyMethodResolver {
 		Class<?> type = bean.getClass();
 
 		// lookup methods
-		List<DestroyMethodPoint> list = new ArrayList<DestroyMethodPoint>();
+		List<DestroyMethodPoint> list = new ArrayList<>();
 		ClassDescriptor cd = new ClassDescriptor(type, false, false, false, null);
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 

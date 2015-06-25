@@ -51,8 +51,8 @@ public class SessionMonitor implements HttpSessionListener {
 	public SessionMonitor() {
 		if (sessionMonitor == null) {
 			sessionMonitor = this;
-			listeners = new CopyOnWriteArrayList<HttpSessionListener>();
-			sessionMap = new ConcurrentHashMap<String, HttpSession>();
+			listeners = new CopyOnWriteArrayList<>();
+			sessionMap = new ConcurrentHashMap<>();
 		}
 	}
 

@@ -215,7 +215,7 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- message
 
-	protected List<EmailMessage> messages = new ArrayList<EmailMessage>();
+	protected List<EmailMessage> messages = new ArrayList<>();
 
 	/**
 	 * Returns all messages.
@@ -250,7 +250,7 @@ public abstract class CommonEmail {
 	 */
 	public void setHeader(String name, String value) {
 		if (headers == null) {
-			headers = new HashMap<String, String>();
+			headers = new HashMap<>();
 		}
 		headers.put(name, value);
 	}

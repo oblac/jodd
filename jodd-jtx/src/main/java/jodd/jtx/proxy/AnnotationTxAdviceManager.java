@@ -47,7 +47,7 @@ public class AnnotationTxAdviceManager {
 	protected static final String JTXCTX_PATTERN_CLASS = "$class";
 	protected static final String JTXCTX_PATTERN_METHOD = "$method";
 
-	protected final Map<String, JtxTransactionMode> txmap = new HashMap<String, JtxTransactionMode>();
+	protected final Map<String, JtxTransactionMode> txmap = new HashMap<>();
 
 	protected final LeanJtxWorker jtxWorker;
 

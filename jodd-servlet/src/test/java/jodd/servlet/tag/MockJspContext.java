@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MockJspContext extends JspContext {
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 
 	@Override
 	public void setAttribute(String s, Object o) {

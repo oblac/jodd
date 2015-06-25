@@ -65,7 +65,7 @@ public class TextTag extends SimpleTagSupport implements DynamicAttributes {
 		this.defaultOnly = Boolean.parseBoolean(defaultOnly);
 	}
 
-	private List<String[]> params = new ArrayList<String[]>();
+	private List<String[]> params = new ArrayList<>();
 
 	public void setDynamicAttribute(String uri, String localName, Object value) {
 		params.add(new String[] {localName, StringUtil.toSafeString(value)});

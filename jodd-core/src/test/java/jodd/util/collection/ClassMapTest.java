@@ -52,7 +52,7 @@ public class ClassMapTest {
 
 	@Test
 	public void testClassMap() throws IllegalAccessException {
-		ClassMap<String> classMap = new ClassMap<String>(4);
+		ClassMap<String> classMap = new ClassMap<>(4);
 
 		classMap.put(Long.class, "longy");
 		classMap.put(Integer.class, "inty");

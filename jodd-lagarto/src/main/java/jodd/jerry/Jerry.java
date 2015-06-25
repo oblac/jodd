@@ -944,7 +944,7 @@ public class Jerry implements Iterable<Jerry> {
 		for (Node node : form.nodes) {
 			Jerry singleForm = new Jerry(this, node);
 
-			final Map<String, String[]> parameters = new HashMap<String, String[]>();
+			final Map<String, String[]> parameters = new HashMap<>();
 
 			// process all input elements
 
@@ -1043,10 +1043,10 @@ public class Jerry implements Iterable<Jerry> {
 
 	protected Set<String> createPropertiesSet(String attrValue, char propertiesDelimiter) {
 		if (attrValue == null) {
-			return new LinkedHashSet<String>();
+			return new LinkedHashSet<>();
 		}
 		String[] properties = StringUtil.splitc(attrValue, propertiesDelimiter);
-		LinkedHashSet<String> set = new LinkedHashSet<String>(properties.length);
+		LinkedHashSet<String> set = new LinkedHashSet<>(properties.length);
 
 		Collections.addAll(set, properties);
 		return set;
@@ -1068,10 +1068,10 @@ public class Jerry implements Iterable<Jerry> {
 	
 	protected Map<String, String> createPropertiesMap(String attrValue, char propertiesDelimiter, char valueDelimiter) {
 		if (attrValue == null) {
-			return new LinkedHashMap<String, String>();
+			return new LinkedHashMap<>();
 		}
 		String[] properties = StringUtil.splitc(attrValue, propertiesDelimiter);
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>(properties.length);
+		LinkedHashMap<String, String> map = new LinkedHashMap<>(properties.length);
 		for (String property : properties) {
 			int valueDelimiterIndex = property.indexOf(valueDelimiter);
 			if (valueDelimiterIndex != -1) {

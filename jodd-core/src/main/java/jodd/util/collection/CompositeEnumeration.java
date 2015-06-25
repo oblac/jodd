@@ -35,7 +35,7 @@ import java.util.NoSuchElementException;
   */
 public class CompositeEnumeration<T> implements Enumeration<T> {
 
-	protected final List<Enumeration<T>> allEnumerations = new ArrayList<Enumeration<T>>();
+	protected final List<Enumeration<T>> allEnumerations = new ArrayList<>();
 
 	/**
 	 * Creates new composite enumeration.

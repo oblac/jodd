@@ -44,7 +44,7 @@ public class ObjectToMapTest {
 		hill.setHeight("173");
 		hill.setName("JoddHillWood");
 
-		final Map<String, Object> target = new HashMap<String, Object>();
+		final Map<String, Object> target = new HashMap<>();
 
 		JsonContext jsonContext = new JsonSerializer().createJsonContext(null);
 
@@ -64,7 +64,7 @@ public class ObjectToMapTest {
 	public void testConvertPersonToMap() {
 		Person jodder = new DataCreator().createJodder();
 
-		final Map<String, Object> target = new HashMap<String, Object>();
+		final Map<String, Object> target = new HashMap<>();
 
 		JsonContext jsonContext = new JsonSerializer().createJsonContext(null);
 		BeanSerializer beanSerializer = new BeanSerializer(jsonContext, jodder) {
@@ -89,7 +89,7 @@ public class ObjectToMapTest {
 	public void testConvertPersonToMap2() {
 		Person jodder = new DataCreator().createJodder();
 
-		final Map<String, Object> target = new HashMap<String, Object>();
+		final Map<String, Object> target = new HashMap<>();
 
 		JsonContext jsonContext = new JsonSerializer()
 				.include("phones")

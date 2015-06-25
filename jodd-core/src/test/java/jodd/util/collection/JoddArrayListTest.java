@@ -51,7 +51,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases1() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 
 		JoddArrayList<String> jal = (JoddArrayList<String>) jal0.clone();
 		jal.add("1");
@@ -97,7 +97,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases2() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 		addFirst(jal0, 0, 3);
 		assertEquals(3, jal0.size());
 		assertEquals(16, jal0.buffer.length);
@@ -153,7 +153,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases3() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 		add(jal0, 0, 5);
 		assertEquals(5, jal0.size());
 		assertEquals(16, jal0.buffer.length);
@@ -209,7 +209,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases4() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 		jal0.add("0");
 		assertEquals(1, jal0.size());
 		assertEquals(16, jal0.buffer.length);
@@ -265,7 +265,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases5() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 		add(jal0, 0, 2);
 		assertEquals(2, jal0.size());
 		assertEquals(16, jal0.buffer.length);
@@ -322,7 +322,7 @@ public class JoddArrayListTest {
 	 */
 	@Test
 	public void testGrowCases6() {
-		JoddArrayList<String> jal0 = new JoddArrayList<String>();
+		JoddArrayList<String> jal0 = new JoddArrayList<>();
 		addFirst(jal0, 0, 2);
 		assertEquals(2, jal0.size());
 		assertEquals(16, jal0.buffer.length);
@@ -374,7 +374,7 @@ public class JoddArrayListTest {
 	public void testAdd1LeftRight() {
 		// + +
 
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		assertEquals(0, jal.size());
 
 		jal.add("1");
@@ -461,7 +461,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testSimpleAdditionRight() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		assertEquals(0, jal.size());
 		assertTrue(jal.isEmpty());
 		assertFalse(jal.contains("one"));
@@ -516,7 +516,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testSimpleAdditionLeft() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		assertEquals(0, jal.size());
 		assertTrue(jal.isEmpty());
 		assertFalse(jal.contains("one"));
@@ -570,7 +570,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testAddAtIndex() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		assertEquals(0, jal.size());
 		assertTrue(jal.isEmpty());
 		assertFalse(jal.contains("one"));
@@ -654,7 +654,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testAddAll() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		// right
 
@@ -703,7 +703,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void trimToSize() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		jal.addAll("1", "2", "3", "4", "5");
 
@@ -724,7 +724,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRemoveOne() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		jal.addAll("A", "B", "C", "D", "E");
 
 		assertEquals(16, jal.buffer.length);
@@ -813,7 +813,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testCornerCaseRightNormalise() {
-		JoddArrayList<String> jal = new JoddArrayList<String>(80);
+		JoddArrayList<String> jal = new JoddArrayList<>(80);
 
 		add(jal, 0, 60);
 
@@ -849,7 +849,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testCornerCaseLeftNormalise() {
-		JoddArrayList<String> jal = new JoddArrayList<String>(80);
+		JoddArrayList<String> jal = new JoddArrayList<>(80);
 
 		addFirst(jal, 0, 21);
 
@@ -886,7 +886,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRangeExceptions() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		try {
 			jal.get(0);
@@ -904,7 +904,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testEmptyList() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		assertEquals(0, jal.size());
 
@@ -922,7 +922,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testClear() {
-		JoddArrayList<String> jal = new JoddArrayList<String>(80);
+		JoddArrayList<String> jal = new JoddArrayList<>(80);
 		add(jal, 0, 10);
 		addFirst(jal, 20, 30);
 
@@ -943,7 +943,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRemove() {
-		JoddArrayList<String> jal = new JoddArrayList<String>(80);
+		JoddArrayList<String> jal = new JoddArrayList<>(80);
 		add(jal, 0, 10);
 		addFirst(jal, 20, 30);
 
@@ -961,7 +961,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRemoveAll() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		add(jal, 0, 10);
 		addFirst(jal, 20, 30);
 
@@ -970,7 +970,7 @@ public class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(14, jal.pivotIndex);
 
-		JoddArrayList<String> collection = new JoddArrayList<String>();
+		JoddArrayList<String> collection = new JoddArrayList<>();
 		add(collection, 5, 15);
 		addFirst(collection, 25, 35);
 
@@ -989,7 +989,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRetainAll() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 		add(jal, 0, 10);
 		addFirst(jal, 20, 30);
 
@@ -998,7 +998,7 @@ public class JoddArrayListTest {
 		assertEquals(4, jal.start);
 		assertEquals(14, jal.pivotIndex);
 
-		JoddArrayList<String> collection = new JoddArrayList<String>();
+		JoddArrayList<String> collection = new JoddArrayList<>();
 		add(collection, 5, 15);
 		addFirst(collection, 25, 35);
 
@@ -1017,7 +1017,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testIterator() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		add(jal, 0, 2);
 		addFirst(jal, 10, 12);
@@ -1059,7 +1059,7 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testListIterator() {
-		JoddArrayList<String> jal = new JoddArrayList<String>();
+		JoddArrayList<String> jal = new JoddArrayList<>();
 
 		add(jal, 0, 2);
 		addFirst(jal, 10, 12);
@@ -1119,7 +1119,7 @@ public class JoddArrayListTest {
 
 		li = jal.listIterator();
 
-		ArrayList<String> arrayList = new ArrayList<String>();
+		ArrayList<String> arrayList = new ArrayList<>();
 		arrayList.add("<31>");
 		arrayList.add("<30>");
 		arrayList.add("<0>");
@@ -1148,8 +1148,8 @@ public class JoddArrayListTest {
 
 	@Test
 	public void testRandomAccess() {
-		JoddArrayList<Integer> jal = new JoddArrayList<Integer>();
-		ArrayList<Integer> al = new ArrayList<Integer>();
+		JoddArrayList<Integer> jal = new JoddArrayList<>();
+		ArrayList<Integer> al = new ArrayList<>();
 
 		Random rnd = new Random();
 

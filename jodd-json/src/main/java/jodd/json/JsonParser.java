@@ -127,7 +127,7 @@ public class JsonParser extends JsonParserBase {
 			return this;
 		}
 		if (mappings == null) {
-			mappings = new HashMap<Path, Class>();
+			mappings = new HashMap<>();
 		}
 		mappings.put(Path.parse(path), target);
 		return this;
@@ -177,7 +177,7 @@ public class JsonParser extends JsonParserBase {
 	 */
 	public JsonParser use(String path, ValueConverter valueConverter) {
 		if (convs == null) {
-			convs = new HashMap<Path, ValueConverter>();
+			convs = new HashMap<>();
 		}
 		convs.put(Path.parse(path), valueConverter);
 		return this;

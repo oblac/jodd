@@ -135,7 +135,7 @@ public class MultipartRequestWrapper extends HttpServletRequestWrapper {
 		if (mreq == null) {
 			return super.getParameterMap();
 		}
-		Map<String, String[]> map = new HashMap<String, String[]>();
+		Map<String, String[]> map = new HashMap<>();
 		Enumeration enumeration = getParameterNames();
 		while (enumeration.hasMoreElements()) {
 			String name = (String) enumeration.nextElement();

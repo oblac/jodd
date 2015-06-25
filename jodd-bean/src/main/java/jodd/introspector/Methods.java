@@ -61,7 +61,7 @@ public class Methods {
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 
-		HashMap<String, MethodDescriptor[]> map = new HashMap<String, MethodDescriptor[]>(methods.length);
+		HashMap<String, MethodDescriptor[]> map = new HashMap<>(methods.length);
 
 		for (Method method : methods) {
 			String methodName = method.getName();
@@ -139,7 +139,7 @@ public class Methods {
 	 */
 	public MethodDescriptor[] getAllMethodDescriptors() {
 		if (allMethods == null) {
-			List<MethodDescriptor> allMethodsList = new ArrayList<MethodDescriptor>();
+			List<MethodDescriptor> allMethodsList = new ArrayList<>();
 
 			for (MethodDescriptor[] methodDescriptors : methodsMap.values()) {
 				Collections.addAll(allMethodsList, methodDescriptors);

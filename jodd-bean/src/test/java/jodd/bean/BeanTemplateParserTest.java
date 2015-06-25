@@ -64,7 +64,7 @@ public class BeanTemplateParserTest {
 
 	@Test
 	public void testMap() {
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
 		assertEquals("---value1---", beanTemplateParser.parse("---${key1}---", map));
@@ -72,7 +72,7 @@ public class BeanTemplateParserTest {
 
 	@Test
 	public void testMissing() {
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
 		try {
@@ -93,7 +93,7 @@ public class BeanTemplateParserTest {
 
 	@Test
 	public void testInner() {
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 		map.put("key2", "value");
@@ -106,7 +106,7 @@ public class BeanTemplateParserTest {
 	@Test
 	public void testReplaceMissingKey() {
 		BeanTemplateParser btp = new BeanTemplateParser();
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 

@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestContextListener implements ServletRequestListener {
 
-	private static final ThreadLocal<HttpServletRequest> requestHolder = new InheritableThreadLocal<HttpServletRequest>();
+	private static final ThreadLocal<HttpServletRequest> requestHolder = new InheritableThreadLocal<>();
 
 	public void requestInitialized(ServletRequestEvent requestEvent) {
 		HttpServletRequest request = (HttpServletRequest) requestEvent.getServletRequest();

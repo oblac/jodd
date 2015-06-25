@@ -59,7 +59,7 @@ public class HtmlDecoder {
 			StreamUtil.close(is);
 		}
 
-		ENTITY_MAP = new HashMap<String, char[]>(entityReferences.size());
+		ENTITY_MAP = new HashMap<>(entityReferences.size());
 
 		Enumeration keys = entityReferences.propertyNames();
 		while (keys.hasMoreElements()) {

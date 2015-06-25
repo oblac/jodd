@@ -38,7 +38,7 @@ public class TestClass2 {
 	private String name = "testName2";
 	private transient String description = "This is some description that shouldn't be there.";
 
-	private Map<String, TestClass3> mapOfJustice = new HashMap<String, TestClass3>();
+	private Map<String, TestClass3> mapOfJustice = new HashMap<>();
 
 	public String getName() {
 		return name;

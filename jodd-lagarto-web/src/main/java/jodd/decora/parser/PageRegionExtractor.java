@@ -61,7 +61,7 @@ public class PageRegionExtractor extends EmptyTagVisitor {
 	/**
 	 * Decora tags of current regions.
 	 */
-	protected LinkedList<RegionMarker> regionMarkers = new LinkedList<RegionMarker>();
+	protected LinkedList<RegionMarker> regionMarkers = new LinkedList<>();
 
 
 	@Override

@@ -39,7 +39,7 @@ import java.util.HashMap;
  */
 public class DelegateAdviceUtil {
 
-	private static HashMap<Class, Class> advicesMap = new HashMap<Class, Class>();
+	private static HashMap<Class, Class> advicesMap = new HashMap<>();
 
 	/**
 	 * Proxy Proxetta, applied on all public methods of the target class.

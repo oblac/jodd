@@ -77,7 +77,7 @@ public class SessionScope extends ShutdownAwareScope {
 	 */
 	public class SessionBeans implements HttpSessionBindingListener, Serializable {
 
-		protected Map<String, BeanData> beanMap = new HashMap<String, BeanData>();
+		protected Map<String, BeanData> beanMap = new HashMap<>();
 
 		/**
 		 * Returns bean map used in this session.

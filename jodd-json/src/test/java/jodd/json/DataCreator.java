@@ -125,7 +125,7 @@ public class DataCreator {
 	}
 
 	public Map<String, String> createColorMap() {
-		Map<String, String> colors = new HashMap<String, String>();
+		Map<String, String> colors = new HashMap<>();
 
 		colors.put("blue", "#0000ff");
 		colors.put("green", "#00ff00");

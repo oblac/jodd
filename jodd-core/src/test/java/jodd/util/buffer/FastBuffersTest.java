@@ -203,7 +203,7 @@ public class FastBuffersTest {
 
 	@Test
 	public void testIterator() {
-		FastBuffer<String> fb = new FastBuffer<String>();
+		FastBuffer<String> fb = new FastBuffer<>();
 		for (int i = 0; i < 100; i++) {
 			fb.append(String.valueOf(i));
 		}

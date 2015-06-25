@@ -58,7 +58,7 @@ public class UrlTag extends SimpleTagSupport implements DynamicAttributes {
 		this.var = value;
 	}
 
-	private List<String> attrs = new ArrayList<String>();
+	private List<String> attrs = new ArrayList<>();
 	public void setDynamicAttribute(String uri, String localName, Object value) {
 		attrs.add(localName);
 		attrs.add(value == null ? StringPool.EMPTY : value.toString());

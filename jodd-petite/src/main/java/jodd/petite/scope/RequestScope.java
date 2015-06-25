@@ -62,7 +62,7 @@ public class RequestScope implements Scope {
 	 * Creates instance map and stores it in the request.
 	 */
 	protected Map<String, BeanData> createRequestMap(HttpServletRequest servletRequest) {
-		Map<String, BeanData> map = new HashMap<String, BeanData>();
+		Map<String, BeanData> map = new HashMap<>();
 		servletRequest.setAttribute(ATTR_NAME, map);
 		return map;
 	}

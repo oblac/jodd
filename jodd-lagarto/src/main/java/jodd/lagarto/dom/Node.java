@@ -95,7 +95,7 @@ public abstract class Node implements Cloneable {
 		dest.parentNode = parentNode;
 
 		if (attributes != null) {
-			dest.attributes = new ArrayList<Attribute>(attributes.size());
+			dest.attributes = new ArrayList<>(attributes.size());
 			for (int i = 0, attributesSize = attributes.size(); i < attributesSize; i++) {
 				Attribute attr = attributes.get(i);
 				dest.attributes.add(attr.clone());
@@ -103,7 +103,7 @@ public abstract class Node implements Cloneable {
 		}
 
 		if (childNodes != null) {
-			dest.childNodes = new ArrayList<Node>(childNodes.size());
+			dest.childNodes = new ArrayList<>(childNodes.size());
 			for (int i = 0, childNodesSize = childNodes.size(); i < childNodesSize; i++) {
 				Node child = childNodes.get(i);
 				Node childClone = child.clone();
@@ -834,7 +834,7 @@ public abstract class Node implements Cloneable {
 	 */
 	protected void initAttributes() {
 		if (attributes == null) {
-			attributes = new ArrayList<Attribute>(5);
+			attributes = new ArrayList<>(5);
 		}
 	}
 
@@ -844,7 +844,7 @@ public abstract class Node implements Cloneable {
 	 */
 	protected void initChildNodes(Node newNode) {
 		if (childNodes == null) {
-			childNodes = new ArrayList<Node>();
+			childNodes = new ArrayList<>();
 		}
 		if (ownerDocument != null) {
 			if (newNode.ownerDocument != ownerDocument) {

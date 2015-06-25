@@ -42,7 +42,7 @@ public class ThreadLocalScope implements Scope {
 	protected static ThreadLocal<Map<String, BeanData>> context = new ThreadLocal<Map<String, BeanData>>() {
 		@Override
 		protected synchronized Map<String, BeanData> initialValue() {
-			return new HashMap<String, BeanData>();
+			return new HashMap<>();
 		}
 	};
 

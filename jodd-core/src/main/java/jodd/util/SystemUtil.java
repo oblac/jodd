@@ -122,7 +122,7 @@ public class SystemUtil {
 	 * Builds a set of java core packages.
 	 */
 	private static void buildJrePackages() {
-		ArrayList<String> packages = new ArrayList<String>();
+		ArrayList<String> packages = new ArrayList<>();
 
 		switch (javaVersionNumber) {
 			case 18:

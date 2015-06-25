@@ -42,7 +42,7 @@ public class CompositeEnumerationTest {
 
 	@Test
 	public void testNextWithOne() {
-		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>();
+		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>();
 		
 		try {
 			compositeEnumeration.nextElement();
@@ -130,7 +130,7 @@ public class CompositeEnumerationTest {
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>();
+		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>();
 		compositeEnumeration.add(e(list1.iterator()));
 		compositeEnumeration.add(e(list2.iterator()));
 		compositeEnumeration.add(e(list3.iterator()));
@@ -145,11 +145,11 @@ public class CompositeEnumerationTest {
 	@Test
 	public void testRemoveWithThree() {
 		List<Integer> list1 = createList(4);
-		List<Integer> list2 = new ArrayList<Integer>();
+		List<Integer> list2 = new ArrayList<>();
 		List<Integer> list3 = createList(4);
 		int count = list1.size() + list2.size() + list3.size();
 
-		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>();
+		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>();
 		compositeEnumeration.add(e(list1.iterator()));
 		compositeEnumeration.add(e(list2.iterator()));
 		compositeEnumeration.add(e(list3.iterator()));
@@ -174,7 +174,7 @@ public class CompositeEnumerationTest {
 		it2.nextElement();
 		it3.nextElement();
 
-		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>(it1, it2, it3);
+		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -201,7 +201,7 @@ public class CompositeEnumerationTest {
 		it2.nextElement(); it2.nextElement(); it2.nextElement();
 		it3.nextElement();
 
-		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<Integer>(it1, it2, it3);
+		CompositeEnumeration<Integer> compositeEnumeration = new CompositeEnumeration<>(it1, it2, it3);
 
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
@@ -222,7 +222,7 @@ public class CompositeEnumerationTest {
 	}
 
 	private List<Integer> createList(int count) {
-		List<Integer> list = new ArrayList<Integer>(count);
+		List<Integer> list = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			list.add(Integer.valueOf(i));
 		}

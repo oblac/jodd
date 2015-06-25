@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class CompositeIterator<T> implements Iterator<T> {
 
-	protected final List<Iterator<T>> allIterators = new ArrayList<Iterator<T>>();
+	protected final List<Iterator<T>> allIterators = new ArrayList<>();
 
 	/**
 	 * Creates new composite iterator.

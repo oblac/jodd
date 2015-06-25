@@ -229,7 +229,7 @@ public class JSONDeserializerTest {
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
 		Person pedro = creator.createPedro();
-		List<Person> list = new ArrayList<Person>(3);
+		List<Person> list = new ArrayList<>(3);
 		list.add(modesty);
 		list.add(igor);
 		list.add(pedro);
@@ -256,7 +256,7 @@ public class JSONDeserializerTest {
 	public void testGenericTypeDeserialization() {
 		JoddJson.classMetadataName = "class";
 
-		Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(creator.createSuperman(), creator.createLexLuthor());
+		Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
 		String json = new JsonSerializer()
 				.exclude("*.class")
@@ -280,7 +280,7 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testGenericTypeDeserialization2() {
-		Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(creator.createSuperman(), creator.createLexLuthor());
+		Pair<Hero, Villian> archenemies = new Pair<>(creator.createSuperman(), creator.createLexLuthor());
 
 		String json = new JsonSerializer()
 				.serialize(archenemies);
@@ -332,7 +332,7 @@ public class JSONDeserializerTest {
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
 		Person pedro = creator.createPedro();
-		List<Person> list = new ArrayList<Person>(3);
+		List<Person> list = new ArrayList<>(3);
 		list.add(modesty);
 		list.add(igor);
 		list.add(pedro);
@@ -352,7 +352,7 @@ public class JSONDeserializerTest {
 		Person modesty = creator.createModesty();
 		Person igor = creator.createJodder();
 		Person pedro = creator.createPedro();
-		List<Person> list = new ArrayList<Person>(3);
+		List<Person> list = new ArrayList<>(3);
 		list.add(modesty);
 		list.add(igor);
 		list.add(pedro);
@@ -490,7 +490,7 @@ public class JSONDeserializerTest {
 
 	@Test
 	public void testPrimitives() {
-		List<Date> dates = new ArrayList<Date>();
+		List<Date> dates = new ArrayList<>();
 		dates.add(new Date());
 		dates.add(new Date(1970, 1, 12));
 		dates.add(new Date(1986, 3, 21));

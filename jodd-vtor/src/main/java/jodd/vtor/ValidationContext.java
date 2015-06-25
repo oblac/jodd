@@ -50,7 +50,7 @@ public class ValidationContext {
 
 	// ---------------------------------------------------------------- define constraints
 
-	protected final Map<String, List<Check>> map = new HashMap<String, List<Check>>();
+	protected final Map<String, List<Check>> map = new HashMap<>();
 
 	/**
 	 * Adds validation checks.
@@ -59,7 +59,7 @@ public class ValidationContext {
 		String name = check.getName();
 		List<Check> list = map.get(name);
 		if (list == null) {
-			list = new ArrayList<Check>();
+			list = new ArrayList<>();
 			map.put(name, list);
 		}
 		list.add(check);
@@ -77,7 +77,7 @@ public class ValidationContext {
 
 	// ---------------------------------------------------------------- annotation resolver
 
-	private static Map<Class, List<Check>> cache = new HashMap<Class, List<Check>>();
+	private static Map<Class, List<Check>> cache = new HashMap<>();
 
 	/**
 	 * Resolve validation context for provided target class.
@@ -96,7 +96,7 @@ public class ValidationContext {
 	public void addClassChecks(Class target) {
 		List<Check> list = cache.get(target);
 		if (list == null) {
-			list = new ArrayList<Check>();
+			list = new ArrayList<>();
 			ClassDescriptor cd = ClassIntrospector.lookup(target);
 
 			PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();

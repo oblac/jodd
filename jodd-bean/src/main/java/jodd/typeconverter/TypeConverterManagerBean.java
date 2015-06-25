@@ -96,7 +96,7 @@ import java.util.TimeZone;
  */
 public class TypeConverterManagerBean {
 
-	private final HashMap<Class, TypeConverter> converters = new HashMap<Class, TypeConverter>(70);
+	private final HashMap<Class, TypeConverter> converters = new HashMap<>(70);
 
 	// ---------------------------------------------------------------- converter
 
@@ -220,17 +220,17 @@ public class TypeConverterManagerBean {
 			}
 		});
 
-		register(MutableInteger[].class, new ArrayConverter<MutableInteger>(this, MutableInteger.class));
-		register(MutableLong[].class, new ArrayConverter<MutableLong>(this, MutableLong.class));
-		register(MutableByte[].class, new ArrayConverter<MutableByte>(this, MutableByte.class));
-		register(MutableShort[].class, new ArrayConverter<MutableShort>(this, MutableShort.class));
-		register(MutableFloat[].class, new ArrayConverter<MutableFloat>(this, MutableFloat.class));
-		register(MutableDouble[].class, new ArrayConverter<MutableDouble>(this, MutableDouble.class));
+		register(MutableInteger[].class, new ArrayConverter<>(this, MutableInteger.class));
+		register(MutableLong[].class, new ArrayConverter<>(this, MutableLong.class));
+		register(MutableByte[].class, new ArrayConverter<>(this, MutableByte.class));
+		register(MutableShort[].class, new ArrayConverter<>(this, MutableShort.class));
+		register(MutableFloat[].class, new ArrayConverter<>(this, MutableFloat.class));
+		register(MutableDouble[].class, new ArrayConverter<>(this, MutableDouble.class));
 
 		register(BigDecimal.class, new BigDecimalConverter());
 		register(BigInteger.class, new BigIntegerConverter());
-		register(BigDecimal[].class, new ArrayConverter<BigDecimal>(this, BigDecimal.class));
-		register(BigInteger[].class, new ArrayConverter<BigInteger>(this, BigInteger.class));
+		register(BigDecimal[].class, new ArrayConverter<>(this, BigDecimal.class));
+		register(BigInteger[].class, new ArrayConverter<>(this, BigInteger.class));
 
 		register(java.util.Date.class, new DateConverter());
 		register(java.sql.Date.class, new SqlDateConverter());

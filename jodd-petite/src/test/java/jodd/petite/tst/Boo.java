@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class Boo {
 
-	public List<String> orders = new ArrayList<String>();
+	public List<String> orders = new ArrayList<>();
 
 	@PetiteInject
 	private Foo foo;

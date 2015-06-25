@@ -47,7 +47,7 @@ public class Surfer {
 		surfer.skill = null;
 		surfer.split = "half";
 		surfer.pipe = new ByteArrayInputStream("jodd".getBytes());
-		surfer.phones = new ArrayList<Phone>();
+		surfer.phones = new ArrayList<>();
 		surfer.phones.add(new Phone(PhoneNumberType.HOME, "123 456-7894"));
 		return surfer;
 	}

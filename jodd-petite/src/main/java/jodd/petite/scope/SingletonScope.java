@@ -38,7 +38,7 @@ import java.util.HashMap;
  */
 public class SingletonScope implements Scope {
 
-	protected Map<String, BeanData> instances = new HashMap<String, BeanData>();
+	protected Map<String, BeanData> instances = new HashMap<>();
 
 	public Object lookup(String name) {
 		BeanData beanData = instances.get(name);

@@ -348,7 +348,7 @@ public class NodeSelectorTest {
 		List<CssSelector> selectors1 = new CSSelly("body").parse();
 		List<CssSelector> selectors2 = new CSSelly("p").parse();
 
-		List<List<CssSelector>> collection = new ArrayList<List<CssSelector>>();
+		List<List<CssSelector>> collection = new ArrayList<>();
 		collection.add(selectors1);
 		collection.add(selectors2);
 

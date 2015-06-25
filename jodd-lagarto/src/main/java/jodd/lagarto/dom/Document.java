@@ -79,7 +79,7 @@ public class Document extends Node {
 	public void addError(String message) {
 		if (config.collectErrors) {
 			if (errors == null) {
-				errors = new ArrayList<String>();
+				errors = new ArrayList<>();
 			}
 			errors.add(message);
 		}

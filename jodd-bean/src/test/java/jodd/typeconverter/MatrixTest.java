@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 public class MatrixTest {
 
 	private List<Integer> intsList(int... array) {
-		ArrayList<Integer> list = new ArrayList<Integer>();
+		ArrayList<Integer> list = new ArrayList<>();
 		for (int i : array) {
 			list.add(Integer.valueOf(i));
 		}
@@ -46,7 +46,7 @@ public class MatrixTest {
 
 	@Test
 	public void testIntMatrix2() {
-		ArrayList<List<Integer>> matrix = new ArrayList<List<Integer>>();
+		ArrayList<List<Integer>> matrix = new ArrayList<>();
 
 		matrix.add(intsList(1, 2, 3));
 		matrix.add(intsList(9, 8, 7));

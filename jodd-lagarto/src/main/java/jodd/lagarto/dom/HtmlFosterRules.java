@@ -100,9 +100,9 @@ public class HtmlFosterRules {
 
 	// ---------------------------------------------------------------- core
 
-	protected ArrayList<Element> lastTables = new ArrayList<Element>();
-	protected ArrayList<Element> fosterElements = new ArrayList<Element>();
-	protected ArrayList<Text> fosterTexts = new ArrayList<Text>();
+	protected ArrayList<Element> lastTables = new ArrayList<>();
+	protected ArrayList<Element> fosterElements = new ArrayList<>();
+	protected ArrayList<Text> fosterTexts = new ArrayList<>();
 
 	/**
 	 * Fixes foster elements.

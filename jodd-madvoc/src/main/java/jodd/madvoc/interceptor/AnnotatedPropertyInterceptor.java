@@ -68,7 +68,7 @@ public abstract class AnnotatedPropertyInterceptor extends BaseActionInterceptor
 
 	// ---------------------------------------------------------------- cache and lookup
 
-	protected Map<Class<?>, PropertyDescriptor[]> annotatedProperties = new HashMap<Class<?>, PropertyDescriptor[]>();
+	protected Map<Class<?>, PropertyDescriptor[]> annotatedProperties = new HashMap<>();
 	protected static final PropertyDescriptor[] EMPTY = new PropertyDescriptor[0];
 
 	/**
@@ -85,7 +85,7 @@ public abstract class AnnotatedPropertyInterceptor extends BaseActionInterceptor
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
-		List<PropertyDescriptor> list = new ArrayList<PropertyDescriptor>();
+		List<PropertyDescriptor> list = new ArrayList<>();
 
 		for (PropertyDescriptor propertyDescriptor : allProperties) {
 

@@ -41,7 +41,7 @@ public class BinarySearchTest {
 
 	@Before
 	public void setUp() throws Exception {
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		list.add("aaa");    // 0
 		list.add("bbb");
 		list.add("ccc");

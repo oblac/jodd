@@ -266,7 +266,7 @@ public class FindFile<T extends FindFile> {
 				this.files = folder.listFiles();
 
 				if (this.files != null) {
-					FastSort.sort(this.files, new MultiComparator<File>(sortComparators));
+					FastSort.sort(this.files, new MultiComparator<>(sortComparators));
 				}
 
 				this.fileNames = null;
@@ -378,7 +378,7 @@ public class FindFile<T extends FindFile> {
 	 * Creates rule engine.
 	 */
 	protected InExRules createRulesEngine() {
-		return new InExRules<String, String>();
+		return new InExRules<>();
 	}
 
 	/**
@@ -500,7 +500,7 @@ public class FindFile<T extends FindFile> {
 			return;
 		}
 		if (pathList == null) {
-			pathList = new JoddArrayList<File>();
+			pathList = new JoddArrayList<>();
 		}
 
 		pathList.add(path);
@@ -613,11 +613,11 @@ public class FindFile<T extends FindFile> {
 	protected void init() {
 		rules.smartMode();
 
-		todoFiles = new JoddArrayList<FilesIterator>();
-		todoFolders = new JoddArrayList<File>();
+		todoFiles = new JoddArrayList<>();
+		todoFolders = new JoddArrayList<>();
 
 		if (pathList == null) {
-			pathList = new JoddArrayList<File>();
+			pathList = new JoddArrayList<>();
 			return;
 		}
 
@@ -675,7 +675,7 @@ public class FindFile<T extends FindFile> {
 
 	protected void addComparator(Comparator<File> comparator) {
 		if (sortComparators == null) {
-			sortComparators = new ArrayList<Comparator<File>>(4);
+			sortComparators = new ArrayList<>(4);
 		}
 		sortComparators.add(comparator);
 	}
@@ -788,7 +788,7 @@ public class FindFile<T extends FindFile> {
 	public static class FileNameComparator implements Comparator<File> {
 
 		protected final int order;
-		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<String>(true);
+		protected NaturalOrderComparator<String> naturalOrderComparator = new NaturalOrderComparator<>(true);
 
 		public FileNameComparator(boolean ascending) {
 			if (ascending) {

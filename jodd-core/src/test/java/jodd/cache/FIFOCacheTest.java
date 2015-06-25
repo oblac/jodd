@@ -36,7 +36,7 @@ public class FIFOCacheTest {
 
 	@Test
 	public void testCache() {
-		Cache<String, String> cache = new FIFOCache<String, String>(3);
+		Cache<String, String> cache = new FIFOCache<>(3);
 		assertEquals(3, cache.getCacheSize());
 		assertEquals(0, cache.size());
 
@@ -69,7 +69,7 @@ public class FIFOCacheTest {
 
 	@Test
 	public void testCacheTime() {
-		Cache<String, String> cache = new FIFOCache<String, String>(3);
+		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		cache.put("3", "3", 50);
@@ -86,7 +86,7 @@ public class FIFOCacheTest {
 
 	@Test
 	public void testCacheIterator() {
-		Cache<String, String> cache = new FIFOCache<String, String>(3);
+		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		cache.put("3", "3", 50);
@@ -107,7 +107,7 @@ public class FIFOCacheTest {
 
 	@Test
 	public void testCacheTime2() {
-		Cache<String, String> cache = new FIFOCache<String, String>(3, 50);
+		Cache<String, String> cache = new FIFOCache<>(3, 50);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertEquals(2, cache.size());
@@ -122,7 +122,7 @@ public class FIFOCacheTest {
 
 	@Test
 	public void testPrune() {
-		Cache<String, String> cache = new FIFOCache<String, String>(3);
+		Cache<String, String> cache = new FIFOCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		cache.put("3", "3");

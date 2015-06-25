@@ -66,9 +66,9 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	protected final ClassLoader classLoader;
 
 	public TargetClassInfoReader(ClassLoader classLoader) {
-		this.methodSignatures = new HashMap<String, MethodSignatureVisitor>();
-		this.superClassReaders = new ArrayList<ClassReader>();
-		this.allMethodSignatures = new HashSet<String>();
+		this.methodSignatures = new HashMap<>();
+		this.superClassReaders = new ArrayList<>();
+		this.allMethodSignatures = new HashSet<>();
 		this.classLoader = classLoader;
 	}
 
@@ -144,7 +144,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 
 		this.isTargetIntreface = (access & AsmUtil.ACC_INTERFACE) != 0;
 		if (this.isTargetIntreface) {
-			nextInterfaces = new HashSet<String>();
+			nextInterfaces = new HashSet<>();
 			if (interfaces != null) {
 				for (String inter : interfaces) {
 					nextInterfaces.add(inter);
@@ -158,7 +158,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 		AnnotationReader ar = new AnnotationReader(desc, visible);
 		if (classAnnotations == null) {
-			classAnnotations = new ArrayList<AnnotationInfo>();
+			classAnnotations = new ArrayList<>();
 		}
 		classAnnotations.add(ar);
 		return ar;
@@ -192,9 +192,9 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 			classAnnotations = null;
 		}
 
-		List<String> superList = new ArrayList<String>();
+		List<String> superList = new ArrayList<>();
 
-		Set<String> allInterfaces = new HashSet<String>();
+		Set<String> allInterfaces = new HashSet<>();
 
 		if (nextInterfaces != null) {
 			allInterfaces.addAll(nextInterfaces);
@@ -259,7 +259,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 	 */
 	static class MethodAnnotationReader extends EmptyMethodVisitor {
 
-		final List<AnnotationInfo> methodAnns = new ArrayList<AnnotationInfo>();
+		final List<AnnotationInfo> methodAnns = new ArrayList<>();
 		final List<AnnotationInfo>[] methodParamsAnns;
 
 		final MethodSignatureVisitor msign;
@@ -280,7 +280,7 @@ public class TargetClassInfoReader extends EmptyClassVisitor implements ClassInf
 		public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
 			AnnotationReader ar = new AnnotationReader(desc, visible);
 			if (methodParamsAnns[parameter] == null) {
-				methodParamsAnns[parameter] = new ArrayList<AnnotationInfo>();
+				methodParamsAnns[parameter] = new ArrayList<>();
 			}
 
 			methodParamsAnns[parameter].add(ar);

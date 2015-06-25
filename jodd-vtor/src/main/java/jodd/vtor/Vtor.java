@@ -54,7 +54,7 @@ public class Vtor {
 			return;
 		}
 		if (violations == null) {
-			violations = new ArrayList<Violation>();
+			violations = new ArrayList<>();
 		}
 		violations.add(v);
 	}
@@ -147,7 +147,7 @@ public class Vtor {
 			return;
 		}
 		if (this.enabledProfiles == null) {
-			this.enabledProfiles = new HashSet<String>();
+			this.enabledProfiles = new HashSet<>();
 		}
 		this.enabledProfiles.add(profile);
 	}
@@ -160,7 +160,7 @@ public class Vtor {
 			return;
 		}
 		if (this.enabledProfiles == null) {
-			this.enabledProfiles = new HashSet<String>();
+			this.enabledProfiles = new HashSet<>();
 		}
 		for (String profile : enabledProfiles) {
 			this.enabledProfiles.add(profile);

@@ -70,10 +70,10 @@ public class ActionsManager {
 	protected Map<String, String> pathAliases;					// path aliases
 
 	public ActionsManager() {
-		this.map = new HashMap<String, ActionConfigSet>();
-		this.list = new SortedArrayList<ActionConfigSet>(new ActionConfigSetComparator());
-		this.pathAliases = new HashMap<String, String>();
-		this.configs = new HashMap<String, ActionConfig>();
+		this.map = new HashMap<>();
+		this.list = new SortedArrayList<>(new ActionConfigSetComparator());
+		this.pathAliases = new HashMap<>();
+		this.configs = new HashMap<>();
 		this.asyncMode = false;
 	}
 
@@ -99,7 +99,7 @@ public class ActionsManager {
 	 * with and without the macro.
 	 */
 	public List<ActionConfig> getAllActionConfigurations() {
-		List<ActionConfig> all = new ArrayList<ActionConfig>(actionsCount);
+		List<ActionConfig> all = new ArrayList<>(actionsCount);
 
 		for (ActionConfigSet set : map.values()) {
 			all.addAll(set.getActionConfigs());

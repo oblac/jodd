@@ -38,7 +38,7 @@ import java.util.WeakHashMap;
 public class Methref<C> {
 
 	private static final MethrefProxetta proxetta = new MethrefProxetta();
-	private static final Map<Class, Class> cache = new WeakHashMap<Class, Class>();
+	private static final Map<Class, Class> cache = new WeakHashMap<>();
 
 	private final C instance;
 
@@ -76,14 +76,14 @@ public class Methref<C> {
 	 * Static factory, for convenient use.
 	 */
 	public static <T> Methref<T> on(Class<T> target) {
-		return new Methref<T>(target);
+		return new Methref<>(target);
 	}
 
 	/**
 	 * Static factory that immediately returns {@link #to() method picker}.
 	 */
 	public static <T> T onto(Class<T> target) {
-		return new Methref<T>(target).to();
+		return new Methref<>(target).to();
 	}
 
 	/**

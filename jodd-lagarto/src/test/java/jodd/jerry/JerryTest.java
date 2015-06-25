@@ -553,7 +553,7 @@ public class JerryTest {
 
 		Jerry doc = jerry(html);
 
-		final Map<String, String[]> params = new HashMap<String, String[]>();
+		final Map<String, String[]> params = new HashMap<>();
 
 		doc.form("#myform", new JerryFormHandler() {
 			public void onForm(Jerry form, Map<String, String[]> parameters) {

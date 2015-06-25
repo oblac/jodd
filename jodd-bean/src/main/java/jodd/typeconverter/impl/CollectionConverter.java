@@ -94,17 +94,17 @@ public class CollectionConverter<T> implements TypeConverter<Collection<T>> {
 		if (collectionType.isInterface()) {
 			if (collectionType == List.class) {
 				if (length > 0) {
-					return new ArrayList<T>(length);
+					return new ArrayList<>(length);
 				} else {
-					return new ArrayList<T>();
+					return new ArrayList<>();
 				}
 			}
 
 			if (collectionType == Set.class) {
 				if (length > 0) {
-					return new HashSet<T>(length);
+					return new HashSet<>(length);
 				} else {
-					return new HashSet<T>();
+					return new HashSet<>();
 				}
 			}
 

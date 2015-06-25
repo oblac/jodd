@@ -131,7 +131,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 		writeLock.lock();
 
 		try {
-			CacheObject<K,V> co = new CacheObject<K,V>(key, object, timeout);
+			CacheObject<K,V> co = new CacheObject<>(key, object, timeout);
 			if (timeout != 0) {
 				existCustomTimeout = true;
 			}
@@ -197,7 +197,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 	 * {@inheritDoc}
 	 */
 	public Iterator<V> iterator() {
-		return new CacheValuesIterator<V>(this);
+		return new CacheValuesIterator<>(this);
 	}
 
 	// ---------------------------------------------------------------- prune

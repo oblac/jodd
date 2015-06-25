@@ -193,7 +193,7 @@ public class RootPackages {
 	 */
 	public void registerPackageActionPath(String actionPackage, String packageActionPath) {
 		if (packagePaths == null) {
-			packagePaths = new HashMap<String, String>();
+			packagePaths = new HashMap<>();
 		}
 		packagePaths.put(actionPackage, packageActionPath);
 	}

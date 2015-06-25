@@ -77,7 +77,7 @@ public class MultipartStreamParser {
 
 	protected void putFile(String name, FileUpload value) {
 		if (requestFiles == null) {
-			requestFiles = new HashMap<String, FileUpload[]>();
+			requestFiles = new HashMap<>();
 		}
 
 		FileUpload[] fileUploads = requestFiles.get(name);
@@ -93,14 +93,14 @@ public class MultipartStreamParser {
 
 	protected void putParameters(String name, String[] values) {
 		if (requestParameters == null) {
-			requestParameters = new HashMap<String, String[]>();
+			requestParameters = new HashMap<>();
 		}
 		requestParameters.put(name, values);
 	}
 
 	protected void putParameter(String name, String value) {
 		if (requestParameters == null) {
-			requestParameters = new HashMap<String, String[]>();
+			requestParameters = new HashMap<>();
 		}
 		
 		String[] params = requestParameters.get(name);

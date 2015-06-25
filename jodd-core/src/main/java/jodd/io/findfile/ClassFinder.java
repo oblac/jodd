@@ -86,7 +86,7 @@ public abstract class ClassFinder {
 	 * Creates JAR rules. By default, excludes all system jars.
 	 */
 	protected InExRules<String, String> createJarRules() {
-		InExRules<String, String> rulesJars = new InExRules<String, String>(WILDCARD_PATH_RULE_MATCHER);
+		InExRules<String, String> rulesJars = new InExRules<>(WILDCARD_PATH_RULE_MATCHER);
 
 		for (String systemJar : systemJars) {
 			rulesJars.exclude(systemJar);
@@ -141,7 +141,7 @@ public abstract class ClassFinder {
 	protected final InExRules<String, String> rulesEntries = createEntriesRules();
 
 	protected InExRules<String, String> createEntriesRules() {
-		return new InExRules<String, String>(WILDCARD_RULE_MATCHER);
+		return new InExRules<>(WILDCARD_RULE_MATCHER);
 	}
 
 	/**

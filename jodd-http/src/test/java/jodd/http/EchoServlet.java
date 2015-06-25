@@ -106,7 +106,7 @@ public class EchoServlet extends HttpServlet {
 
 	protected Map<String, String> copyHeaders(HttpServletRequest req) {
 		Enumeration enumeration = req.getHeaderNames();
-		Map<String, String> header = new HashMap<String, String>();
+		Map<String, String> header = new HashMap<>();
 
 		while (enumeration.hasMoreElements()) {
 			String name = enumeration.nextElement().toString();
@@ -121,7 +121,7 @@ public class EchoServlet extends HttpServlet {
 		String charset = req.getParameter("enc");
 
 		Enumeration enumeration = req.getParameterNames();
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 
 		while (enumeration.hasMoreElements()) {
 			String name = enumeration.nextElement().toString();
@@ -136,7 +136,7 @@ public class EchoServlet extends HttpServlet {
 	}
 
 	protected Map<String, String> copyParts(HttpServletRequest req) {
-		Map<String, String> parts = new HashMap<String, String>();
+		Map<String, String> parts = new HashMap<>();
 		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
 			return parts;
 		}
@@ -161,7 +161,7 @@ public class EchoServlet extends HttpServlet {
 	}
 
 	protected Map<String, String> copyFileName(HttpServletRequest req) {
-		Map<String, String> parts = new HashMap<String, String>();
+		Map<String, String> parts = new HashMap<>();
 		if (req.getContentType() != null && !req.getContentType().toLowerCase().contains("multipart/form-data")) {
 			return parts;
 		}

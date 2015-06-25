@@ -58,8 +58,8 @@ public class ScopedProxyManager {
 
 	protected ProxyAspect aspect = new ProxyAspect(ScopedProxyAdvice.class, new AllMethodsPointcut());
 
-	protected Map<Class, Class> proxyClasses = new HashMap<Class, Class>();
-	protected Map<String, Object> proxies = new HashMap<String, Object>();
+	protected Map<Class, Class> proxyClasses = new HashMap<>();
+	protected Map<String, Object> proxies = new HashMap<>();
 
 	public ScopedProxyManager() {
 		log.debug("ScopedProxyManager created");

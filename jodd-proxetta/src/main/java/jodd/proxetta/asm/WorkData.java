@@ -105,7 +105,7 @@ public final class WorkData {
 	 */
 	void addAdviceClinitMethod(String name) {
 		if (adviceClinits == null) {
-			adviceClinits = new ArrayList<String>();
+			adviceClinits = new ArrayList<>();
 		}
 		adviceClinits.add(name);
 	}
@@ -119,7 +119,7 @@ public final class WorkData {
 	 */
 	void addAdviceInitMethod(String name) {
 		if (adviceInits == null) {
-			adviceInits = new ArrayList<String>();
+			adviceInits = new ArrayList<>();
 		}
 		adviceInits.add(name);
 	}

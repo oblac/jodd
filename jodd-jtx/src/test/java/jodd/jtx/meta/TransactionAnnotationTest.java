@@ -54,7 +54,7 @@ public class TransactionAnnotationTest {
 
 	@Test
 	public void testTransactionAnnotationOnly() throws NoSuchMethodException {
-		TransactionAnnotation<Transaction> txAnnotation = new TransactionAnnotation<Transaction>(Transaction.class);
+		TransactionAnnotation<Transaction> txAnnotation = new TransactionAnnotation<>(Transaction.class);
 		assertEquals(Transaction.class, txAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello");
@@ -76,7 +76,7 @@ public class TransactionAnnotationTest {
 
 	@Test
 	public void testCustomTransactionAnnotation() throws NoSuchMethodException {
-		TransactionAnnotation<CustomTransaction> txAnnotation = new TransactionAnnotation<CustomTransaction>(CustomTransaction.class);
+		TransactionAnnotation<CustomTransaction> txAnnotation = new TransactionAnnotation<>(CustomTransaction.class);
 		assertEquals(CustomTransaction.class, txAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello3");

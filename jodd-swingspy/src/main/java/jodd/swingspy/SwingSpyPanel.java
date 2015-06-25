@@ -190,7 +190,7 @@ public class SwingSpyPanel extends JPanel {
 				return "<null>";
 			}
 
-			TreeSet<String> treeSet = new TreeSet<String>();
+			TreeSet<String> treeSet = new TreeSet<>();
 
 			Class clazz = bean.getClass();
 			Field[] fields = clazz.getDeclaredFields();

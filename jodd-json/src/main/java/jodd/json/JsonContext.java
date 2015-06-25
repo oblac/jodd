@@ -50,7 +50,7 @@ public class JsonContext extends JsonWriter {
 	public JsonContext(JsonSerializer jsonSerializer, Appendable appendable) {
 		super(appendable);
 		this.jsonSerializer = jsonSerializer;
-		this.bag = new ArrayList<JsonValueContext>();
+		this.bag = new ArrayList<>();
 		this.path = new Path();
 	}
 

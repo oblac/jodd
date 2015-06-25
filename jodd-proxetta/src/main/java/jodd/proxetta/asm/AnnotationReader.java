@@ -52,7 +52,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 	public AnnotationReader(String desc, boolean visible) {
 		this.desc = desc;
 		this.visible = visible;
-		this.elements = new HashMap<String, Object>();
+		this.elements = new HashMap<>();
 		this.className = AsmUtil.typeref2Name(desc);
 	}
 
@@ -100,7 +100,7 @@ public class AnnotationReader extends EmptyAnnotationVisitor implements Annotati
 
 	@Override
 	public AnnotationVisitor visitArray(final String name) {
-		final List<Object> array = new ArrayList<Object>();
+		final List<Object> array = new ArrayList<>();
 		return new EmptyAnnotationVisitor() {
 
 			@Override

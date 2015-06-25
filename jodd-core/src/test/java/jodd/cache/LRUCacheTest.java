@@ -34,7 +34,7 @@ public class LRUCacheTest {
 
 	@Test
 	public void testCache() {
-		Cache<String, String> cache = new LRUCache<String, String>(3);
+		Cache<String, String> cache = new LRUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertFalse(cache.isFull());
@@ -53,7 +53,7 @@ public class LRUCacheTest {
 
 	@Test
 	public void testCache2() {
-		Cache<String, String> cache = new LRUCache<String, String>(3);
+		Cache<String, String> cache = new LRUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		assertFalse(cache.isFull());
@@ -76,7 +76,7 @@ public class LRUCacheTest {
 
 	@Test
 	public void testCacheTime() {
-		Cache<String, String> cache = new LRUCache<String, String>(3);
+		Cache<String, String> cache = new LRUCache<>(3);
 		cache.put("3", "3");
 		cache.put("2", "2");
 		assertNotNull(cache.get("2"));
@@ -91,7 +91,7 @@ public class LRUCacheTest {
 
 	@Test
 	public void testPrune() {
-		Cache<String, String> cache = new LRUCache<String, String>(3);
+		Cache<String, String> cache = new LRUCache<>(3);
 		cache.put("1", "1");
 		cache.put("2", "2");
 		cache.put("3", "3");
@@ -106,7 +106,7 @@ public class LRUCacheTest {
 
 	@Test
 	public void testEndless() {
-		Cache<String, String> cache = new LRUCache<String, String>(0);
+		Cache<String, String> cache = new LRUCache<>(0);
 		assertFalse(cache.isFull());
 		cache.put("1", "1");
 		assertEquals(1, cache.size());

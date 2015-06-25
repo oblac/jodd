@@ -277,8 +277,8 @@ public class ScopeDataResolver {
 
 		PropertyDescriptor[] allProperties = cd.getAllPropertyDescriptors();
 
-		List<ScopeData.In> listIn = new ArrayList<ScopeData.In>(allProperties.length);
-		List<ScopeData.Out> listOut = new ArrayList<ScopeData.Out>(allProperties.length);
+		List<ScopeData.In> listIn = new ArrayList<>(allProperties.length);
+		List<ScopeData.Out> listOut = new ArrayList<>(allProperties.length);
 
 		for (PropertyDescriptor pd : allProperties) {
 			// collect annotations

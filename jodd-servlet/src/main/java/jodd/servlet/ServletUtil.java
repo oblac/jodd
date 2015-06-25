@@ -204,7 +204,7 @@ public class ServletUtil {
 		if (cookies == null) {
 			return null;
 		}
-		ArrayList<Cookie> list = new ArrayList<Cookie>(cookies.length);
+		ArrayList<Cookie> list = new ArrayList<>(cookies.length);
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().equals(cookieName)) {
 				list.add(cookie);

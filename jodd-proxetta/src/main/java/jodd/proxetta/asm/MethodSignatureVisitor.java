@@ -113,7 +113,7 @@ public class MethodSignatureVisitor extends TraceSignatureVisitor implements Met
 		if (argumentsOpcodeType == null) {
 			argumentsOpcodeType = new CharArrayList();
 			argumentsOffset = new IntArrayList();
-			argumentsTypeNames = new ArrayList<String>();
+			argumentsTypeNames = new ArrayList<>();
 
 			argumentsOpcodeType.add('L');
 			argumentsOffset.add(0);

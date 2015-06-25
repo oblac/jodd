@@ -42,7 +42,7 @@ import java.util.ArrayList;
  */
 public class DecoratorTagVisitor extends EmptyTagVisitor {
 
-	protected ArrayList<DecoraTag> decoraTags = new ArrayList<DecoraTag>();
+	protected ArrayList<DecoraTag> decoraTags = new ArrayList<>();
 
 	/**
 	 * Returns an array of founded Decora tags.

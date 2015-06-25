@@ -269,7 +269,7 @@ public class ClassLoaderUtil {
 	 * </ul>
 	 */
 	public static File[] getDefaultClasspath(ClassLoader classLoader) {
-		Set<File> classpaths = new TreeSet<File>();
+		Set<File> classpaths = new TreeSet<>();
 
 		while (classLoader != null) {
 			if (classLoader instanceof URLClassLoader) {

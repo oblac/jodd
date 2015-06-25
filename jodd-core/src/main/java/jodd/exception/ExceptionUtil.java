@@ -61,7 +61,7 @@ public class ExceptionUtil {
 	 */
 	public static StackTraceElement[] getStackTrace(Throwable t, String[] allow, String[] deny) {
 		StackTraceElement[] st = t.getStackTrace();
-		ArrayList<StackTraceElement> result = new ArrayList<StackTraceElement>(st.length);
+		ArrayList<StackTraceElement> result = new ArrayList<>(st.length);
 
 		elementLoop:
 		for (StackTraceElement element : st) {
@@ -95,7 +95,7 @@ public class ExceptionUtil {
 	 * Returns stack trace chain filtered by class names.
 	 */
 	public static StackTraceElement[][] getStackTraceChain(Throwable t, String[] allow, String[] deny) {
-		ArrayList<StackTraceElement[]> result = new ArrayList<StackTraceElement[]>();
+		ArrayList<StackTraceElement[]> result = new ArrayList<>();
 		while (t != null) {
 			StackTraceElement[] stack = getStackTrace(t, allow, deny);
 			result.add(stack);
@@ -113,7 +113,7 @@ public class ExceptionUtil {
 	 * Returns exception chain starting from top up to root cause.
 	 */
 	public static Throwable[] getExceptionChain(Throwable throwable) {
-		ArrayList<Throwable> list = new ArrayList<Throwable>();
+		ArrayList<Throwable> list = new ArrayList<>();
 		list.add(throwable);
 		while ((throwable = throwable.getCause()) != null) {
 			list.add(throwable);

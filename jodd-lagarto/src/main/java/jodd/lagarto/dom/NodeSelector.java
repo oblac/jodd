@@ -61,7 +61,7 @@ public class NodeSelector {
 	 * collection type for results grouping order.
 	 */
 	public List<Node> select(Collection<List<CssSelector>> selectorsCollection) {
-		List<Node> results = new ArrayList<Node>();
+		List<Node> results = new ArrayList<>();
 		for (List<CssSelector> selectors : selectorsCollection) {
 			processSelectors(results, selectors);
 		}
@@ -96,7 +96,7 @@ public class NodeSelector {
 	 * Selects nodes using {@link NodeFilter node filter}.
 	 */
 	public List<Node> select(NodeFilter nodeFilter) {
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		walk(rootNode, nodeFilter, nodes);
 		return nodes;
 	}
@@ -128,20 +128,20 @@ public class NodeSelector {
 	protected List<Node> select(Node rootNode, List<CssSelector> selectors) {
 
 		// start with the root node
-		List<Node> nodes = new ArrayList<Node>();
+		List<Node> nodes = new ArrayList<>();
 		nodes.add(rootNode);
 
 		// iterate all selectors
 		for (CssSelector cssSelector : selectors) {
 
 			// create new set of results for current css selector
-			List<Node> selectedNodes = new ArrayList<Node>();
+			List<Node> selectedNodes = new ArrayList<>();
 			for (Node node : nodes) {
 				walk(node, cssSelector, selectedNodes);
 			}
 
 			// post-processing: filter out the results
-			List<Node> resultNodes = new ArrayList<Node>();
+			List<Node> resultNodes = new ArrayList<>();
 			int index = 0;
 			for (Node node : selectedNodes) {
 				boolean match = filter(selectedNodes, node, cssSelector, index);
@@ -188,7 +188,7 @@ public class NodeSelector {
 
 		switch (combinator) {
 			case DESCENDANT:
-				JoddArrayList<Node> nodes = new JoddArrayList<Node>();
+				JoddArrayList<Node> nodes = new JoddArrayList<>();
 				int childCount = rootNode.getChildNodesCount();
 				for (int i = 0; i < childCount; i++) {
 					nodes.add(rootNode.getChild(i));

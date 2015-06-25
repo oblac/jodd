@@ -76,7 +76,7 @@ public class DbSession {
 		this.connectionProvider = connectionProvider;
 		txActive = false;
 		txMode = dbManager.transactionMode;
-		queries = new HashSet<DbQueryBase>();
+		queries = new HashSet<>();
 	}
 
 

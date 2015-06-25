@@ -78,8 +78,8 @@ public class TypeJsonSerializerMap {
 		this.defaultSerializerMap = defaultSerializerMap;
 	}
 
-	protected final ClassMap<TypeJsonSerializer> map = new ClassMap<TypeJsonSerializer>();
-	protected final ClassMap<TypeJsonSerializer> cache = new ClassMap<TypeJsonSerializer>();
+	protected final ClassMap<TypeJsonSerializer> map = new ClassMap<>();
+	protected final ClassMap<TypeJsonSerializer> cache = new ClassMap<>();
 
 	/**
 	 * Registers default set of {@link jodd.json.TypeJsonSerializer serializers}.

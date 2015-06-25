@@ -40,7 +40,7 @@ public class TimedCache<K, V> extends AbstractCacheMap<K, V> {
 	public TimedCache(long timeout) {
 		this.cacheSize = 0;
 		this.timeout = timeout;
-		cacheMap = new HashMap<K, CacheObject<K,V>>();
+		cacheMap = new HashMap<>();
 	}
 
 	// ---------------------------------------------------------------- prune

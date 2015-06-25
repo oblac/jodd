@@ -44,7 +44,7 @@ public class ProxettaAwareActionsManager extends ActionsManager {
 
 	public ProxettaAwareActionsManager(ProxyProxetta proxetta) {
 		this.proxetta = proxetta;
-		this.proxyActionClasses = new HashMap<Class, Class>();
+		this.proxyActionClasses = new HashMap<>();
 	}
 
 	/**

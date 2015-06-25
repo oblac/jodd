@@ -256,7 +256,7 @@ public class ReceivedEmail extends CommonEmail {
 	 */
 	public void addAttachment(String filename, String mimeType, String contentId, byte[] content) {
 		if (attachments == null) {
-			attachments = new ArrayList<EmailAttachment>();
+			attachments = new ArrayList<>();
 		}
 		EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename, contentId);
 		emailAttachment.setSize(content.length);
@@ -281,7 +281,7 @@ public class ReceivedEmail extends CommonEmail {
 	 */
 	public void addAttachmentMessage(ReceivedEmail receivedEmail) {
 		if (attachedMessages == null) {
-			attachedMessages = new ArrayList<ReceivedEmail>();
+			attachedMessages = new ArrayList<>();
 		}
 		attachedMessages.add(receivedEmail);
 	}

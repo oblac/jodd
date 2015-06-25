@@ -75,7 +75,7 @@ public class CollectionUtil {
 	 * Returns a collection containing all elements of the iterator.
 	 */
 	public static <T> Collection<T> asCollection(final Iterator<? extends T> iterator) {
-		List<T> list = new ArrayList<T>();
+		List<T> list = new ArrayList<>();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}

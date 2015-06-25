@@ -63,7 +63,7 @@ public class Properties {
 		boolean scanAccessible = classDescriptor.isScanAccessible();
 		Class type = classDescriptor.getType();
 
-		HashMap<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+		HashMap<String, PropertyDescriptor> map = new HashMap<>();
 
 		Method[] methods = scanAccessible ? ReflectUtil.getAccessibleMethods(type) : ReflectUtil.getSupportedMethods(type);
 

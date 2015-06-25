@@ -54,14 +54,14 @@ public class JtxTransactionManager {
 	protected boolean ignoreScope;
 	protected Map<Class, JtxResourceManager> resourceManagers;
 
-	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<ArrayList<JtxTransaction>>();
+	protected final ThreadLocal<ArrayList<JtxTransaction>> txStack = new ThreadLocal<>();
 
 	/**
 	 * Creates new transaction manager.
 	 */
 	public JtxTransactionManager() {
 		this.maxResourcesPerTransaction = -1;
-		this.resourceManagers = new HashMap<Class, JtxResourceManager>();
+		this.resourceManagers = new HashMap<>();
 	}
 
 	// ---------------------------------------------------------------- config
@@ -229,7 +229,7 @@ public class JtxTransactionManager {
 		totalTransactions++;
 		ArrayList<JtxTransaction> txList = txStack.get();
 		if (txList == null) {
-			txList = new ArrayList<JtxTransaction>();
+			txList = new ArrayList<>();
 			txStack.set(txList);
 		}
 		txList.add(tx);	// add last

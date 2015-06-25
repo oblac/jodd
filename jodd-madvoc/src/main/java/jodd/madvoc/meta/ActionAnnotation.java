@@ -55,7 +55,7 @@ s	 * Need to override to make java compiler happy.
 	@Override
 	protected ActionAnnotationData<A> createAnnotationData(A annotation) {
 
-		ActionAnnotationData<A> ad = new ActionAnnotationData<A>(annotation);
+		ActionAnnotationData<A> ad = new ActionAnnotationData<>(annotation);
 
 		ad.value = readString(annotation, "value", null);
 

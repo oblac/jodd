@@ -386,7 +386,7 @@ public class PropsParser implements Cloneable {
 		}
 
 		// extract profiles
-		ArrayList<String> keyProfiles = new ArrayList<String>();
+		ArrayList<String> keyProfiles = new ArrayList<>();
 
 		while (true) {
 			ndx = fullKey.indexOf(PROFILE_LEFT);
@@ -425,7 +425,7 @@ public class PropsParser implements Cloneable {
 	 */
 	protected void justAdd(final String key, final String value, final ArrayList<String> keyProfiles, final Operator operator) {
 		if (operator == Operator.COPY) {
-			HashMap<String,Object> target = new HashMap<String, Object>();
+			HashMap<String,Object> target = new HashMap<>();
 
 			String[] profiles = null;
 			if (keyProfiles != null) {

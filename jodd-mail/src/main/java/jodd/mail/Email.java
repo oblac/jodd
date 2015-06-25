@@ -359,7 +359,7 @@ public class Email extends CommonEmail {
 	 */
 	public Email attach(EmailAttachment emailAttachment) {
 		if (attachments == null) {
-			attachments = new ArrayList<EmailAttachment>();
+			attachments = new ArrayList<>();
 		}
 		attachments.add(emailAttachment);
 		return this;

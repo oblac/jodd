@@ -58,22 +58,22 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all beans definitions.
 	 */
-	protected final Map<String, BeanDefinition> beans = new HashMap<String, BeanDefinition>();
+	protected final Map<String, BeanDefinition> beans = new HashMap<>();
 
 	/**
 	 * Map of all bean scopes.
 	 */
-	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<Class<? extends Scope>, Scope>();
+	protected final Map<Class<? extends Scope>, Scope> scopes = new HashMap<>();
 
 	/**
 	 * Map of all providers.
 	 */
-	protected final Map<String, ProviderDefinition> providers = new HashMap<String, ProviderDefinition>();
+	protected final Map<String, ProviderDefinition> providers = new HashMap<>();
 
 	/**
 	 * Map of all bean collections.
 	 */
-	protected final Map<Class, String[]> beanCollections = new HashMap<Class, String[]>();
+	protected final Map<Class, String[]> beanCollections = new HashMap<>();
 
 	/**
 	 * {@link PetiteConfig Petite configuration}.
@@ -304,7 +304,7 @@ public abstract class PetiteBeans {
 	 */
 	public void removeBean(Class type) {
 		// collect bean names
-		Set<String> beanNames = new HashSet<String>();
+		Set<String> beanNames = new HashSet<>();
 
 		for (BeanDefinition def : beans.values()) {
 			if (def.type.equals(type)) {
@@ -343,7 +343,7 @@ public abstract class PetiteBeans {
 			return beanNames;
 		}
 
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 
 		for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
 			BeanDefinition beanDefinition = entry.getValue();

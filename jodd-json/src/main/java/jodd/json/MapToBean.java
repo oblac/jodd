@@ -201,7 +201,7 @@ public class MapToBean {
 		}
 
 		// key is changed too, we need a new map
-		Map<K, V> newMap = new HashMap<K, V>(map.size());
+		Map<K, V> newMap = new HashMap<>(map.size());
 
 		for (Map.Entry<Object, Object> entry : map.entrySet()) {
 			Object key = entry.getKey();

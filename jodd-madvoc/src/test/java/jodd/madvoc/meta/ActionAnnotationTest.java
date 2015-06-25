@@ -60,7 +60,7 @@ public class ActionAnnotationTest {
 
 	@Test
 	public void testActionAnnotationOnly() throws NoSuchMethodException {
-		ActionAnnotation<Action> actionAnnotation = new ActionAnnotation<Action>(Action.class);
+		ActionAnnotation<Action> actionAnnotation = new ActionAnnotation<>(Action.class);
 		assertEquals(Action.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello");
@@ -82,7 +82,7 @@ public class ActionAnnotationTest {
 
 	@Test
 	public void testCustomActionAnnotation() throws NoSuchMethodException {
-		ActionAnnotation<CustomAction> actionAnnotation = new ActionAnnotation<CustomAction>(CustomAction.class);
+		ActionAnnotation<CustomAction> actionAnnotation = new ActionAnnotation<>(CustomAction.class);
 		assertEquals(CustomAction.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello3");
@@ -104,7 +104,7 @@ public class ActionAnnotationTest {
 
 	@Test
 	public void testMiscActionAnnotation() throws NoSuchMethodException {
-		ActionAnnotation<MiscAnnotation> actionAnnotation = new ActionAnnotation<MiscAnnotation>(MiscAnnotation.class);
+		ActionAnnotation<MiscAnnotation> actionAnnotation = new ActionAnnotation<>(MiscAnnotation.class);
 		assertEquals(MiscAnnotation.class, actionAnnotation.getAnnotationClass());
 
 		Method method = this.getClass().getMethod("hello5");

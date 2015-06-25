@@ -35,7 +35,7 @@ import java.util.WeakHashMap;
  */
 public class ClassLoaderLocal<T> {
 
-	private final Map<ClassLoader, T> weakMap = new WeakHashMap<ClassLoader, T>();
+	private final Map<ClassLoader, T> weakMap = new WeakHashMap<>();
 	private T value;
 	private boolean initialized;
 

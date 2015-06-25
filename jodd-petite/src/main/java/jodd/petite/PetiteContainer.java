@@ -423,7 +423,7 @@ public class PetiteContainer extends PetiteBeans {
 	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
-		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		Map<String, Object> acquiredBeans = new HashMap<>();
 		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 	}
 
@@ -445,7 +445,7 @@ public class PetiteContainer extends PetiteBeans {
 	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode);
-		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		Map<String, Object> acquiredBeans = new HashMap<>();
 		Object bean = newBeanInstance(def, acquiredBeans);
 		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 		return (E) bean;
@@ -496,7 +496,7 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
-		Map<String, Object> acquiredBeans = new HashMap<String, Object>();
+		Map<String, Object> acquiredBeans = new HashMap<>();
 		acquiredBeans.put(name, bean);
 		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
 		def.scopeRegister(bean);

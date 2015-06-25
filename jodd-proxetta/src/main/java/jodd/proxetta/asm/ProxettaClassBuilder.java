@@ -312,7 +312,7 @@ public class ProxettaClassBuilder extends EmptyClassVisitor {
 		for (ProxyAspectData aspectData : wd.proxyAspects) {
 			if (aspectData.apply(msign) == true) {
 				if (aspectList == null) {
-					aspectList = new ArrayList<ProxyAspectData>(wd.proxyAspects.length);
+					aspectList = new ArrayList<>(wd.proxyAspects.length);
 				}
 				aspectList.add(aspectData);
 			}

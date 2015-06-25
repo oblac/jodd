@@ -86,6 +86,6 @@ public class SetInjectionPoint<T> {
 	 * but custom implementation can change this setting.
 	 */
 	public Collection<T> createSet(int length) {
-		return new HashSet<T>(length);
+		return new HashSet<>(length);
 	}
 }

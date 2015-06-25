@@ -34,14 +34,14 @@ public class ValueHolderWrapper {
 	 * Creates new empty {@link jodd.mutable.ValueHolder}.
 	 */
 	public static <T> ValueHolder<T> create() {
-		return new ValueHolderImpl<T>(null);
+		return new ValueHolderImpl<>(null);
 	}
 
 	/**
 	 * Wraps existing instance to {@link jodd.mutable.ValueHolder}.
 	 */
 	public static <T> ValueHolder<T> wrap(final T value) {
-		return new ValueHolderImpl<T>(value);
+		return new ValueHolderImpl<>(value);
 	}
 
 	static class ValueHolderImpl<T> implements ValueHolder<T> {

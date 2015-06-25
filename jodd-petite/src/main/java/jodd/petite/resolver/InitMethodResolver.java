@@ -45,7 +45,7 @@ public class InitMethodResolver {
 		Class<?> type = bean.getClass();
 
 		// lookup methods
-		List<InitMethodPoint> list = new ArrayList<InitMethodPoint>();
+		List<InitMethodPoint> list = new ArrayList<>();
 		ClassDescriptor cd = new ClassDescriptor(type, false, false, false, null);
 		MethodDescriptor[] allMethods = cd.getAllMethodDescriptors();
 

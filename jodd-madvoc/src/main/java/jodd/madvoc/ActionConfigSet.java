@@ -65,7 +65,7 @@ public class ActionConfigSet implements Comparable<ActionConfigSet> {
 	 * Returns a new list of all action configs from this set.
 	 */
 	public List<ActionConfig> getActionConfigs() {
-		List<ActionConfig> list = new ArrayList<ActionConfig>(configs.length);
+		List<ActionConfig> list = new ArrayList<>(configs.length);
 		Collections.addAll(list, configs);
 		return list;
 	}

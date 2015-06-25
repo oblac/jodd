@@ -50,7 +50,7 @@ public class HttpServletRequestParamMapTest {
 		when(servletRequest.getParameterValues("a")).thenReturn(new String[] {"1"});
 		when(servletRequest.getParameterValues("b")).thenReturn(new String[] {"2", "22"});
 		when(servletRequest.getParameterNames()).thenReturn(
-				new ArrayEnumeration<String>(new String[]{"a", "b"}));
+			new ArrayEnumeration<>(new String[] {"a", "b"}));
 
 		HttpServletRequestParamMap map = new HttpServletRequestParamMap(servletRequest);
 

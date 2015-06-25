@@ -39,7 +39,7 @@ import java.util.HashMap;
  */
 final class MethodFinder extends EmptyClassVisitor {
 
-	private static final Map<String, String> primitives = new HashMap<String, String>(8);
+	private static final Map<String, String> primitives = new HashMap<>(8);
 
 	private static final String TYPE_INT = "int";
 	private static final String TYPE_BOOLEAN = "boolean";

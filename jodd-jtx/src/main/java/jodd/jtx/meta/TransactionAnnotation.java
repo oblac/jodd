@@ -56,7 +56,7 @@ public class TransactionAnnotation<A extends Annotation> extends AnnotationDataR
 	@Override
 	protected TransactionAnnotationData<A> createAnnotationData(A annotation) {
 
-		TransactionAnnotationData<A> td = new TransactionAnnotationData<A>(annotation);
+		TransactionAnnotationData<A> td = new TransactionAnnotationData<>(annotation);
 
 		td.propagation = (JtxPropagationBehavior) readElement(annotation, "propagation");
 

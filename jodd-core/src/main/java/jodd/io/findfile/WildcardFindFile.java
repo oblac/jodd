@@ -38,7 +38,7 @@ public class WildcardFindFile extends FindFile<WildcardFindFile> {
 
 	@Override
 	protected InExRules createRulesEngine() {
-		return new InExRules<String, String>(InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER);
+		return new InExRules<>(InExRuleMatcher.WILDCARD_PATH_RULE_MATCHER);
 	}
 
 }

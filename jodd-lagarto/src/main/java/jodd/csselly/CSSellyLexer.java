@@ -509,7 +509,7 @@ final class CSSellyLexer {
 		return new String(zzBuffer, startIndex, zzMarkedPos - endIndexOffset - startIndex);
 	}
 
-	ArrayList<CssSelector> selectors = new ArrayList<CssSelector>();
+	ArrayList<CssSelector> selectors = new ArrayList<>();
 	CssSelector cssSelector;
 	String pseudoFnName;
 

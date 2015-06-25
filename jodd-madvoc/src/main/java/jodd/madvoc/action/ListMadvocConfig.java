@@ -83,7 +83,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionInterceptors() {
 		Collection<? extends ActionInterceptor> interceptorValues = interceptorsManager.getAllInterceptors();
-		interceptors = new ArrayList<ActionInterceptor>();
+		interceptors = new ArrayList<>();
 		interceptors.addAll(interceptorValues);
 		Collections.sort(interceptors, new Comparator<ActionInterceptor>() {
 			public int compare(ActionInterceptor a1, ActionInterceptor a2) {
@@ -97,7 +97,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionFilters() {
 		Collection<? extends ActionFilter> filterValues = filtersManager.getAllFilters();
-		filters = new ArrayList<ActionFilter>();
+		filters = new ArrayList<>();
 		filters.addAll(filterValues);
 		Collections.sort(filters, new Comparator<ActionFilter>() {
 			public int compare(ActionFilter a1, ActionFilter a2) {
@@ -111,7 +111,7 @@ public class ListMadvocConfig {
 	 */
 	protected void collectActionResults() {
 		Collection<ActionResult> resultsValues = resultsManager.getAllActionResults();
-		results = new ArrayList<ActionResult>();
+		results = new ArrayList<>();
 		results.addAll(resultsValues);
 		Collections.sort(results, new Comparator<ActionResult>() {
 			public int compare(ActionResult a1, ActionResult a2) {

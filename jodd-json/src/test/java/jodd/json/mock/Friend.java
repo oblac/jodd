@@ -31,18 +31,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Friend {
 
-	private List<String> nicknames = new ArrayList<String>();
+	private List<String> nicknames = new ArrayList<>();
 
 	public Friend(String... nicknames) {
 		setNicknamesAsArray(nicknames);
 	}
 
 	public void setNicknames(List<String> nicknames) {
-		this.nicknames = new CopyOnWriteArrayList<String>(nicknames);
+		this.nicknames = new CopyOnWriteArrayList<>(nicknames);
 	}
 
 	public void setNicknamesAsArray(String[] array) {
-		this.nicknames = new ArrayList<String>();
+		this.nicknames = new ArrayList<>();
 		for (String name : array) {
 			this.nicknames.add(name);
 		}

@@ -84,7 +84,7 @@ public class JtxTransaction {
 		this.txManager = txManager;
 		this.mode = mode;
 		this.scope = scope;
-		this.resources = new HashSet<JtxResource>();
+		this.resources = new HashSet<>();
 		this.deadline = mode.getTransactionTimeout() == DEFAULT_TIMEOUT ?
 				DEFAULT_TIMEOUT :
 				System.currentTimeMillis() + (mode.getTransactionTimeout() * 1000L);
@@ -357,7 +357,7 @@ public class JtxTransaction {
 			}
 			JtxResourceManager<E> resourceManager = txManager.lookupResourceManager(resourceType);
 			resource = resourceManager.beginTransaction(mode, isActive());
-			resources.add(new JtxResource<E>(this, resourceManager, resource));
+			resources.add(new JtxResource<>(this, resourceManager, resource));
 		}
 		return resource;
 	}

@@ -57,7 +57,7 @@ public abstract class ShutdownAwareScope implements Scope {
 			return;
 		}
 		if (destroyableBeans == null) {
-			destroyableBeans = new ArrayList<BeanData>();
+			destroyableBeans = new ArrayList<>();
 		}
 		destroyableBeans.add(beanData);
 	}

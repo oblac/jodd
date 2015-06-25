@@ -60,7 +60,7 @@ public class Fields {
 
 		Field[] fields = scanAccessible ? ReflectUtil.getAccessibleFields(type) : ReflectUtil.getSupportedFields(type);
 
-		HashMap<String, FieldDescriptor> map = new HashMap<String, FieldDescriptor>(fields.length);
+		HashMap<String, FieldDescriptor> map = new HashMap<>(fields.length);
 
 		for (Field field : fields) {
 			String fieldName = field.getName();

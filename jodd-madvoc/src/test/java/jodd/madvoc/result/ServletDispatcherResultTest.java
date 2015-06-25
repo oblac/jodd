@@ -53,7 +53,7 @@ public class ServletDispatcherResultTest {
 		WebApplication webapp = new WebApplication(true);
 		webapp.registerMadvocComponents();
 
-		final List<String> targets = new ArrayList<String>();
+		final List<String> targets = new ArrayList<>();
 
 		ServletDispatcherResult sdr = new ServletDispatcherResult() {
 			@Override

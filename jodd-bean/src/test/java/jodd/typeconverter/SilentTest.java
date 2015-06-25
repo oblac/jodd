@@ -42,8 +42,8 @@ public class SilentTest {
 		protected Data data = new Data();
 		protected Data data2 = null;
 		protected Data[] datas = new Data[] {data, null, data};
-		protected Map<String, Number> map = new HashMap<String, Number>();
-		protected List<Number> numbers = new ArrayList<Number>();
+		protected Map<String, Number> map = new HashMap<>();
+		protected List<Number> numbers = new ArrayList<>();
 
 		private Number wee;
 

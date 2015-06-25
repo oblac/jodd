@@ -493,7 +493,7 @@ public class JSONSerializationTest {
 
 	@Test
 	public void testCopyOnWriteList() {
-		CopyOnWriteArrayList<Person> people = new CopyOnWriteArrayList<Person>();
+		CopyOnWriteArrayList<Person> people = new CopyOnWriteArrayList<>();
 		people.add(jodder);
 		people.add(modesty);
 
@@ -505,7 +505,7 @@ public class JSONSerializationTest {
 
 	@Test
 	public void testAnnotations() {
-		HashMap<String, TestClass3> map = new HashMap<String, TestClass3>();
+		HashMap<String, TestClass3> map = new HashMap<>();
 		map.put("String1", new TestClass3());
 
 		TestClass2 testElement = new TestClass2();

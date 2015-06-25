@@ -41,7 +41,7 @@ public class ArrayIteratorTest {
 	public void testArrayIteration() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
-		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i);
+		ArrayIterator<Integer> ae = new ArrayIterator<>(i);
 		assertTrue(ae.hasNext());
 		assertEquals("1", ae.next().toString());
 		assertEquals("2", ae.next().toString());
@@ -71,7 +71,7 @@ public class ArrayIteratorTest {
 	public void testArrayIterationFrom() {
 		Integer[] i = new Integer[]{1, 2, 3, 4, 5};
 
-		ArrayIterator<Integer> ae = new ArrayIterator<Integer>(i, 2, 2);
+		ArrayIterator<Integer> ae = new ArrayIterator<>(i, 2, 2);
 		assertTrue(ae.hasNext());
 		assertEquals("3", ae.next().toString());
 		assertEquals("4", ae.next().toString());

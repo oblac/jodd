@@ -59,7 +59,7 @@ public abstract class JsonParserBase {
 	 */
 	protected List<Object> newArrayInstance(Class targetType) {
 		if (targetType == null || targetType == List.class || targetType.isArray()) {
-			return new ArrayList<Object>();
+			return new ArrayList<>();
 		}
 
 		try {

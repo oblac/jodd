@@ -134,7 +134,7 @@ public class ArrayConverter<T> implements TypeConverter<T[]> {
 
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
-			List<T> list = new ArrayList<T>();
+			List<T> list = new ArrayList<>();
 
 			for (Object element : iterable) {
 				list.add(convertType(element));

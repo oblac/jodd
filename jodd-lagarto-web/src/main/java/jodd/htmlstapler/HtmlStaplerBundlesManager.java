@@ -114,8 +114,8 @@ public class HtmlStaplerBundlesManager {
 		this.bundleFolder = SystemUtil.getTempDir();
 
 		if (strategy == Strategy.ACTION_MANAGED) {
-			actionBundles = new HashMap<String, String>();
-			mirrors = new HashMap<String, String>();
+			actionBundles = new HashMap<>();
+			mirrors = new HashMap<>();
 		}
 	}
 

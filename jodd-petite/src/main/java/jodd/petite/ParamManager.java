@@ -41,7 +41,7 @@ public class ParamManager {
 	protected final Map<String, Object> params;
 
 	public ParamManager() {
-		params = new HashMap<String, Object>();
+		params = new HashMap<>();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class ParamManager {
 	public String[] resolve(String beanName, boolean resolveReferenceParams) {
 		beanName = beanName + '.';
 
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (Map.Entry<String, Object> entry : params.entrySet()) {
 			String key = entry.getKey();
 			if (key.startsWith(beanName) == false) {

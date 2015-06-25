@@ -87,7 +87,7 @@ public class CsrfShield {
 	public static String prepareCsrfToken(HttpSession session, int timeToLive) {
 		Set<Token> tokenSet = (Set<Token>) session.getAttribute(CSRF_TOKEN_SET);
 		if (tokenSet == null) {
-			tokenSet = new HashSet<Token>();
+			tokenSet = new HashSet<>();
 			session.setAttribute(CSRF_TOKEN_SET, tokenSet);
 		}
 		String value;

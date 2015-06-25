@@ -933,7 +933,7 @@ public class FileUtil {
 		if (file.isFile() == false) {
 			throw new IOException(MSG_NOT_A_FILE + file);
 		}
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 
 		InputStream in = null;
 		try {

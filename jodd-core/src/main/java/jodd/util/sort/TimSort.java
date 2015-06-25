@@ -102,7 +102,7 @@ public class TimSort<T> {
 			return;
 		}
 
-		TimSort<T> ts = new TimSort<T>(a, c);
+		TimSort<T> ts = new TimSort<>(a, c);
 		int minRun = minRunLength(nRemaining);
 		do {
 			// Identify next run

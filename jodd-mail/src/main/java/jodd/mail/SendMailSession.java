@@ -286,7 +286,7 @@ public class SendMailSession {
 			if (emailAttachment.isEmbeddedInto(emailMessage)) {
 
 				if (embeddedAttachments == null) {
-					embeddedAttachments = new ArrayList<EmailAttachment>();
+					embeddedAttachments = new ArrayList<>();
 				}
 
 				embeddedAttachments.add(emailAttachment);

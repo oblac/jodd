@@ -50,7 +50,7 @@ public class JsonAnnotationManager {
 
 	@SuppressWarnings("unchecked")
 	public JsonAnnotationManager() {
-		typeDataMap = new HashMap<Class, TypeData>();
+		typeDataMap = new HashMap<>();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class JsonAnnotationManager {
 		public final String[] realNames;
 
 		public TypeData(List<String> includes, List<String> excludes, boolean strict, String[] jsonNames, String[] realNames) {
-			rules = new InExRules<String, String>();
+			rules = new InExRules<>();
 
 			for (String include : includes) {
 				rules.include(include);
@@ -210,10 +210,10 @@ public class JsonAnnotationManager {
 
 		PropertyDescriptor[] pds = cd.getAllPropertyDescriptors();
 
-		ArrayList<String> includedList = new ArrayList<String>();
-		ArrayList<String> excludedList = new ArrayList<String>();
-		ArrayList<String> jsonNames = new ArrayList<String>();
-		ArrayList<String> realNames = new ArrayList<String>();
+		ArrayList<String> includedList = new ArrayList<>();
+		ArrayList<String> excludedList = new ArrayList<>();
+		ArrayList<String> jsonNames = new ArrayList<>();
+		ArrayList<String> realNames = new ArrayList<>();
 
 		JSONAnnotation jsonAnnotation = new JSONAnnotation(JoddJson.jsonAnnotation);
 

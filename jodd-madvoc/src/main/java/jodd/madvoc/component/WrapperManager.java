@@ -52,7 +52,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	protected MadvocConfig madvocConfig;
 
 	protected WrapperManager() {
-		wrappers = new HashMap<String, T>();
+		wrappers = new HashMap<>();
 	}
 
 	// ---------------------------------------------------------------- container
@@ -63,7 +63,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 	 * Returns all action wrappers.
 	 */
 	protected Set<T> getAll() {
-		Set<T> set = new HashSet<T>(wrappers.size());
+		Set<T> set = new HashSet<>(wrappers.size());
 		set.addAll(wrappers.values());
 		return set;
 	}
@@ -148,7 +148,7 @@ public abstract class WrapperManager<T extends ActionWrapper> {
 		if (actionWrappers == null) {
 			return null;
 		}
-		List<Class<? extends T>> list = new ArrayList<Class<? extends T>>(actionWrappers.length);
+		List<Class<? extends T>> list = new ArrayList<>(actionWrappers.length);
 		list.addAll(Arrays.asList(actionWrappers));
 
 		int i = 0;

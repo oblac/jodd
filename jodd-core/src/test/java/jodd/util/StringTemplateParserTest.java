@@ -38,7 +38,7 @@ public class StringTemplateParserTest {
 	public void testMap() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
 		assertEquals("---value1---", stp.parse("---${key1}---", createMapMacroResolver(map)));
@@ -49,7 +49,7 @@ public class StringTemplateParserTest {
 	public void testMissing() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
 		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
@@ -72,7 +72,7 @@ public class StringTemplateParserTest {
 	public void testInner() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 		map.put("key2", "value");
@@ -88,7 +88,7 @@ public class StringTemplateParserTest {
 	public void testInner2() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("foo", "foo");
 		map.put("boo.foo", "*${foo}*");
 		map.put("zoo", "${boo.${foo}}");
@@ -119,7 +119,7 @@ public class StringTemplateParserTest {
 	public void testReplaceMissingKey() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
@@ -142,7 +142,7 @@ public class StringTemplateParserTest {
 	public void testResolveEscapes() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("fooProp", "abean_value");
 		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
 
@@ -161,7 +161,7 @@ public class StringTemplateParserTest {
 	public void testCustomMacrosEnds() {
 		StringTemplateParser stp = new StringTemplateParser();
 
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		map.put("foo", "bar");
 		map.put("bar", "zap");
 		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);

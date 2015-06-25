@@ -189,7 +189,7 @@ public class FormProcessorVisitor extends TagWriter {
 		String[] array = (String[]) valueObject;
 
 		if (valueNameIndexes == null) {
-			valueNameIndexes = new HashMap<String, MutableInteger>();
+			valueNameIndexes = new HashMap<>();
 		}
 
 		MutableInteger index = valueNameIndexes.get(name);

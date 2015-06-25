@@ -38,7 +38,7 @@ public class Network {
 
 	public Network(String name, Person... peeps) {
 		this.name = name;
-		people = new ArrayList<Person>();
+		people = new ArrayList<>();
 		people.addAll(Arrays.asList(peeps));
 	}
 

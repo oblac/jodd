@@ -44,7 +44,7 @@ import java.util.LinkedList;
  */
 public class Buffer {
 
-	protected LinkedList<Object> list = new LinkedList<Object>();
+	protected LinkedList<Object> list = new LinkedList<>();
 	protected FastByteBuffer last;
 	protected int size;
 

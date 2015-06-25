@@ -53,7 +53,7 @@ public class ServletsMockitoUtil {
 	public static HttpSession createSession(String sessionId) {
 		HttpSession session = mock(HttpSession.class);
 
-		final Map<String, Object> attrs = new HashMap<String, Object>();
+		final Map<String, Object> attrs = new HashMap<>();
 		when(session.getId()).thenReturn(sessionId);
 		doAnswer(new Answer() {
 			public Object answer(InvocationOnMock invocation) throws Throwable {

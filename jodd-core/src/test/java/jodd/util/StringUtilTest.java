@@ -811,7 +811,7 @@ public class StringUtilTest {
 
 		assertEquals("[[1,2],[3,4]]", StringUtil.toPrettyString(new int[][] {{1,2}, {3,4}}));
 
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 		list.add(1);
 		list.add(4);
 

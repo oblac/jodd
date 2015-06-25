@@ -90,7 +90,7 @@ public class CSSelly {
 	 */
 	public static List<List<CssSelector>> parse(String query) {
 		String[] singleQueries = StringUtil.splitc(query, ',');
-		List<List<CssSelector>> selectors = new ArrayList<List<CssSelector>>(singleQueries.length);
+		List<List<CssSelector>> selectors = new ArrayList<>(singleQueries.length);
 
 		for (String singleQuery: singleQueries) {
 			selectors.add(new CSSelly(singleQuery).parse());

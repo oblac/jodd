@@ -76,7 +76,7 @@ public final class PropsEntries {
 
 	private void addProfiles(String profile) {
 		if (propsIterator.profiles == null) {
-			propsIterator.profiles = new ArrayList<String>();
+			propsIterator.profiles = new ArrayList<>();
 		}
 		propsIterator.profiles.add(profile);
 	}
@@ -100,7 +100,7 @@ public final class PropsEntries {
 
 	private void addSection(String section) {
 		if (propsIterator.sections == null) {
-			propsIterator.sections = new ArrayList<String>();
+			propsIterator.sections = new ArrayList<>();
 		}
 		propsIterator.sections.add(section + '.');
 	}
@@ -233,7 +233,7 @@ public final class PropsEntries {
 				}
 				if (skipDuplicatesByPosition) {
 					if (keys == null) {
-						keys = new HashSet<String>();
+						keys = new HashSet<>();
 					}
 					if (keys.add(entry.getKey()) == false) {
 						return false;		// the key was already there

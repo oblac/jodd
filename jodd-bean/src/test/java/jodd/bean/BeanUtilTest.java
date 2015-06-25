@@ -841,10 +841,10 @@ public class BeanUtilTest {
 
 	@Test
 	public void testMap2() {
-		Map<String, String> m = new HashMap<String, String>();
+		Map<String, String> m = new HashMap<>();
 		m.put("dd.dd", "value");
 		m.put("dd", "value2");
-		Map<String, Object> m2 = new HashMap<String, Object>();
+		Map<String, Object> m2 = new HashMap<>();
 		m2.put("map", m);
 		FooBean fb = new FooBean();
 		fb.setFooMap(m);

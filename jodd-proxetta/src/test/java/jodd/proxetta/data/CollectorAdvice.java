@@ -33,7 +33,7 @@ import java.util.List;
 
 public class CollectorAdvice implements ProxyAdvice {
 
-	protected List<String> methods = new ArrayList<String>();
+	protected List<String> methods = new ArrayList<>();
 
 	public Object execute() throws Exception {
 		addMethod(ProxyTarget.targetMethodName());

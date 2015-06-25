@@ -72,13 +72,13 @@ public class BundleAction {
 			newAction = (bundleId == null);
 
 			if (newAction) {
-				sources = new ArrayList<String>();
+				sources = new ArrayList<>();
 			}
 		} else {
 			bundleId = BUNDLE_ID_MARKER + bundleContentType;
 			bundleIdMark = bundleId.toCharArray();
 			newAction = true;
-			sources = new ArrayList<String>();
+			sources = new ArrayList<>();
 		}
 
 		firstScriptTag = true;

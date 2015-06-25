@@ -56,7 +56,7 @@ public class PropertyResolver {
 	public PropertyInjectionPoint[] resolve(Class type, boolean autowire) {
 		// lookup fields
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
-		List<PropertyInjectionPoint> list = new ArrayList<PropertyInjectionPoint>();
+		List<PropertyInjectionPoint> list = new ArrayList<>();
 		PropertyDescriptor[] allPropertyDescriptors = cd.getAllPropertyDescriptors();
 
 		for (PropertyDescriptor propertyDescriptor : allPropertyDescriptors) {

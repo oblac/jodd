@@ -42,7 +42,7 @@ public class ResourceBundleMessageResolver {
 
 	protected Locale fallbackLocale = LocaleUtil.getLocale("en");
 	protected String fallbackBundlename = "messages";
-	protected List<String> defaultBundles = new ArrayList<String>();
+	protected List<String> defaultBundles = new ArrayList<>();
 	protected boolean cacheResourceBundles = true;
 
 	public void addDefaultBundle(String bundleName) {
@@ -176,8 +176,8 @@ public class ResourceBundleMessageResolver {
 
 	// ---------------------------------------------------------------- resource bundles
 
-	protected final Set<String> misses = new HashSet<String>();
-	protected final Map<String, ResourceBundle> notmisses = new HashMap<String, ResourceBundle>();
+	protected final Set<String> misses = new HashSet<>();
+	protected final Map<String, ResourceBundle> notmisses = new HashMap<>();
 
 	/**
 	 * Finds resource bundle by it's name. Missed and founded resource bundles are cached for

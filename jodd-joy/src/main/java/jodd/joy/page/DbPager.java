@@ -140,7 +140,7 @@ public abstract class DbPager {
 		long count = query.executeCount();
 		query.close();
 
-		return new PageData<T>(page, (int) count, pageSize, list);
+		return new PageData<>(page, (int) count, pageSize, list);
 	}
 
 	// ---------------------------------------------------------------- abstract

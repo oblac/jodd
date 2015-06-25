@@ -46,7 +46,7 @@ public class Pathref<C> {
 	public static final int ALL = -1;
 
 	private static final PathrefProxetta proxetta = new PathrefProxetta();
-	private static final Map<Class, Class> cache = new WeakHashMap<Class, Class>();
+	private static final Map<Class, Class> cache = new WeakHashMap<>();
 
 	private final C instance;
 
@@ -122,7 +122,7 @@ public class Pathref<C> {
 	 * Static factory, for convenient use.
 	 */
 	public static <T> Pathref<T> on(Class<T> target) {
-		return new Pathref<T>(target);
+		return new Pathref<>(target);
 	}
 
 	/**
@@ -165,13 +165,13 @@ public class Pathref<C> {
 					if (index >= 0) {
 						append("[" + index + "]");
 					}
-					return new Pathref<C>(componentType, Pathref.this).to();
+					return new Pathref<>(componentType, Pathref.this).to();
 				}
 			};
 		}
 
 		try {
-			return new Pathref<T>(target, this).to();
+			return new Pathref<>(target, this).to();
 		}
 		catch (Exception ex) {
 			return null;

@@ -276,7 +276,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	@Override
 	public Enumeration<URL> getResources(String resourceName) throws IOException {
 
-		final List<URL> urls = new ArrayList<URL>();
+		final List<URL> urls = new ArrayList<>();
 
 		Enumeration<URL> loaderUrls = this.findResources(resourceName);
 		Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);

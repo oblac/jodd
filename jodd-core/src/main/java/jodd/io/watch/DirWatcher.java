@@ -51,9 +51,9 @@ public class DirWatcher {
 	}
 
 	protected final File dir;
-	protected HashMap<File, MutableLong> map = new HashMap<File, MutableLong>();
+	protected HashMap<File, MutableLong> map = new HashMap<>();
 	protected int filesCount;
-	protected List<DirWatcherListener> listeners = new ArrayList<DirWatcherListener>();
+	protected List<DirWatcherListener> listeners = new ArrayList<>();
 	protected String[] patterns;
 
 	/**
@@ -251,7 +251,7 @@ public class DirWatcher {
 
 			// check if there might be a delete file
 			if (filesArray.length < filesCount) {
-				deletedFiles = new HashSet<File>(map.keySet());
+				deletedFiles = new HashSet<>(map.keySet());
 			}
 
 			filesCount = filesArray.length;

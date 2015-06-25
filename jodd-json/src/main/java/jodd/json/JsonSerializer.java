@@ -60,7 +60,7 @@ public class JsonSerializer {
 	 */
 	public JsonSerializer use(String pathString, TypeJsonSerializer typeJsonSerializer) {
 		if (pathSerializersMap == null) {
-			pathSerializersMap = new HashMap<Path, TypeJsonSerializer>();
+			pathSerializersMap = new HashMap<>();
 		}
 
 		pathSerializersMap.put(Path.parse(pathString), typeJsonSerializer);

@@ -85,7 +85,7 @@ public abstract class StringKeyedMapAdapter extends AbstractMap<String, Object> 
 	@Override
 	public Set<Entry<String, Object>> entrySet() {
 		if (entries == null) {
-			entries = new HashSet<Entry<String, Object>>();
+			entries = new HashSet<>();
 			Iterator<String> iterator = getAttributeNames();
 			while (iterator.hasNext()) {
 				final String key = iterator.next();

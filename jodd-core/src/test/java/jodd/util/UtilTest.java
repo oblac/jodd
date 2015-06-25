@@ -76,7 +76,7 @@ public class UtilTest {
 		assertEquals(0, Util.length(StringPool.EMPTY));
 		assertEquals(4, Util.length("abcd"));
 
-		Collection<String> coll = new ArrayList<String>();
+		Collection<String> coll = new ArrayList<>();
 		assertEquals(0, Util.length(coll));
 		coll.add("abcd");
 		coll.add("1234");
@@ -85,7 +85,7 @@ public class UtilTest {
 		Iterator<String> iterator = coll.iterator();
 		assertEquals(2, Util.length(iterator));
 
-		Map<Long, String> map = new HashMap<Long, String>();
+		Map<Long, String> map = new HashMap<>();
 		assertEquals(0, Util.length(map));
 		map.put(1l, "abcd");
 		map.put(2l, "1234");
@@ -93,7 +93,7 @@ public class UtilTest {
 
 		Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
 		assertEquals(5, Util.length(array));
-		ArrayEnumeration<Integer> ae = new ArrayEnumeration<Integer>(array);
+		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
 		assertEquals(5, Util.length(ae));
 	}
 	
@@ -106,7 +106,7 @@ public class UtilTest {
 		assertTrue(Util.containsElement("abcd", "bc"));
 		assertFalse(Util.containsElement("abcd", "xx"));
 
-		Collection<String> coll = new ArrayList<String>();
+		Collection<String> coll = new ArrayList<>();
 		coll.add("abcd");
 		coll.add("1234");
 		assertTrue(Util.containsElement(coll, "abcd"));
@@ -116,7 +116,7 @@ public class UtilTest {
 		assertTrue(Util.containsElement(iterator, "abcd"));
 		assertFalse(Util.containsElement(iterator, "xx"));
 
-		Map<Long, String> map = new HashMap<Long, String>();
+		Map<Long, String> map = new HashMap<>();
 		map.put(1l, "abcd");
 		map.put(2l, "1234");
 		assertTrue(Util.containsElement(map, "abcd"));
@@ -125,7 +125,7 @@ public class UtilTest {
 		Integer[] array = new Integer[] { 1, 2, 3, 4, 5 };
 		assertTrue(Util.containsElement(array, 1));
 		assertFalse(Util.containsElement(array, 10));
-		ArrayEnumeration<Integer> ae = new ArrayEnumeration<Integer>(array);
+		ArrayEnumeration<Integer> ae = new ArrayEnumeration<>(array);
 		assertTrue(Util.containsElement(ae, 1));
 		assertFalse(Util.containsElement(ae, 10));
 	}

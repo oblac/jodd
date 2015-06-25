@@ -334,7 +334,7 @@ public class MixTest {
 
 	@Test
 	public void testListToArray() {
-		List<Long> list = new ArrayList<Long>();
+		List<Long> list = new ArrayList<>();
 		list.add(1L);
 		list.add(9L);
 		list.add(2L);

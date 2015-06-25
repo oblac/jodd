@@ -55,7 +55,7 @@ public class CachingIntrospector implements Introspector {
 	 * constructors.
 	 */
 	public CachingIntrospector(boolean scanAccessible, boolean enhancedProperties, boolean includeFieldsAsProperties, String[] propertyFieldPrefix) {
-		this.cache = new HashMap<Class, ClassDescriptor>();
+		this.cache = new HashMap<>();
 		this.scanAccessible = scanAccessible;
 		this.enhancedProperties = enhancedProperties;
 		this.includeFieldsAsProperties = includeFieldsAsProperties;

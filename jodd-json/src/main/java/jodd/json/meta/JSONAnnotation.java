@@ -53,7 +53,7 @@ public class JSONAnnotation<A extends Annotation> extends AnnotationDataReader<A
 	@Override
 	protected JSONAnnotationData<A> createAnnotationData(A annotation) {
 
-		JSONAnnotationData<A> jad = new JSONAnnotationData<A>(annotation);
+		JSONAnnotationData<A> jad = new JSONAnnotationData<>(annotation);
 
 		jad.name = readString(annotation, "name", null);
 		jad.included = readBoolean(annotation, "include", true);

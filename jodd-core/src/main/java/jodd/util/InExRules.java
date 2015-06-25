@@ -239,7 +239,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 	 */
 	protected void addRule(R rule, boolean include) {
 		if (rules == null) {
-			rules = new ArrayList<Rule<R>>();
+			rules = new ArrayList<>();
 		}
 
 		if (include) {
@@ -248,7 +248,7 @@ public class InExRules<T, R> implements InExRuleMatcher<T, R> {
 			excludesCount++;
 		}
 
-		Rule<R> newRule = new Rule<R>(rule, include);
+		Rule<R> newRule = new Rule<>(rule, include);
 
 		if (rules.contains(newRule)) {
 			return;

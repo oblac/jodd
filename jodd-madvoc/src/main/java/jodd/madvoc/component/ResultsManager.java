@@ -55,9 +55,9 @@ public class ResultsManager {
 	protected MadvocConfig madvocConfig;
 
 	public ResultsManager() {
-		this.stringResults = new HashMap<String, ActionResult>();
-		this.allResults = new HashMap<Class<? extends ActionResult>, ActionResult>();
-		this.typeResults = new HashMap<Class, ActionResult>();
+		this.stringResults = new HashMap<>();
+		this.allResults = new HashMap<>();
+		this.typeResults = new HashMap<>();
 	}
 
 	// ---------------------------------------------------------------- container
@@ -70,7 +70,7 @@ public class ResultsManager {
 	 * Returns all action results.
 	 */
 	public Set<ActionResult> getAllActionResults() {
-		Set<ActionResult> set = new HashSet<ActionResult>(allResults.size());
+		Set<ActionResult> set = new HashSet<>(allResults.size());
 		set.addAll(allResults.values());
 		return set;
 	}
