@@ -68,6 +68,11 @@ public class FileLFUCache {
 			}
 
 			@Override
+			protected boolean isReallyFull(File file) {
+				return isFull();
+			}
+
+			@Override
 			protected void onRemove(File key, byte[] cachedObject) {
 				usedSize -= cachedObject.length;
 			}

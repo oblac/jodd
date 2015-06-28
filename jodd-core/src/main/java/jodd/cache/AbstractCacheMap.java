@@ -135,7 +135,7 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			if (timeout != 0) {
 				existCustomTimeout = true;
 			}
-			if (isFull()) {
+			if (isReallyFull(key)) {
 				pruneCache();
 			}
 			cacheMap.put(key, co);
@@ -230,6 +230,18 @@ public abstract class AbstractCacheMap<K,V> implements Cache<K,V> {
 			return false;
 		}
 		return cacheMap.size() >= cacheSize;
+	}
+
+	protected boolean isReallyFull(K key) {
+		if (cacheSize == 0) {
+			return false;
+		}
+		if (cacheMap.size() >= cacheSize) {
+			return !cacheMap.containsKey(key);
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
