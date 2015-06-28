@@ -139,7 +139,7 @@ public class LFUCacheTest {
 
 		cache.put("4", "4");
 
-		assertNull(cache.get("1"));        // 1 is less frequent and it is out of cache
+		assertNull(cache.get("1"));       // 1 is less frequent and it is out of cache
 		assertNotNull(cache.get("4"));    // 4 is new and it is inside
 
 		cache.get("3");
@@ -155,11 +155,13 @@ public class LFUCacheTest {
 		cache.put("4", "4");
 		cache.get("4");                // situation: 4(1)
 
+		assertEquals(3, cache.size());
+
 		assertNull(cache.get("1"));
 		assertNull(cache.get("2"));
-		assertNull(cache.get("3"));
+		assertNotNull(cache.get("3"));
 		assertNotNull(cache.get("4"));
-		assertNull(cache.get("5"));
+		assertNotNull(cache.get("5"));
 	}
 
 	@Test

@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import java.util.Iterator;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
 public class FIFOCacheTest {
@@ -119,7 +120,6 @@ public class FIFOCacheTest {
 		assertTrue(cache.isEmpty());
 	}
 
-
 	@Test
 	public void testPrune() {
 		Cache<String, String> cache = new FIFOCache<>(3);
@@ -129,6 +129,23 @@ public class FIFOCacheTest {
 
 		assertEquals(1, cache.prune());
 		assertEquals(2, cache.size());
+	}
+
+	@Test
+	public void testOrder() {
+		FIFOCache<String, Integer> fifoCache = new FIFOCache<>(3);
+		fifoCache.put("1", Integer.valueOf(1));
+		fifoCache.put("2", Integer.valueOf(2));
+		fifoCache.put("3", Integer.valueOf(3));
+		fifoCache.put("1", Integer.valueOf(1));
+		fifoCache.put("1", Integer.valueOf(11));
+
+		assertThat(3, equalTo(fifoCache.size()));
+
+		assertThat(11, equalTo(fifoCache.get("1")));
+		assertThat(2, equalTo(fifoCache.get("2")));
+		assertThat(3, equalTo(fifoCache.get("3")));
+
 	}
 
 }
