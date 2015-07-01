@@ -62,6 +62,10 @@ public class BeanSerializer extends TypeJsonVisitor {
 		} else {
 			value = readProperty(source, propertyDescriptor);
 
+			if ((value == null) && jsonContext.isExcludeNulls()) {
+				return;
+			}
+
 			// change name for properties
 
 			propertyName = typeData.resolveJsonName(propertyName);

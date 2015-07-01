@@ -47,6 +47,10 @@ public class MapJsonSerializer extends ValueJsonSerializer<Map<?, ?>> {
 			final Object key = entry.getKey();
 			final Object value = entry.getValue();
 
+			if ((value == null) && jsonContext.isExcludeNulls()) {
+				continue;
+			}
+
 			if (key != null) {
 				currentPath.push(key.toString());
 			} else {

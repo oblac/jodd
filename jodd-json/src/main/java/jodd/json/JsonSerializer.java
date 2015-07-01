@@ -54,6 +54,7 @@ public class JsonSerializer {
 	protected boolean deep = JoddJson.deepSerialization;
 	protected Class[] excludedTypes = null;
 	protected String[] excludedTypeNames = null;
+	protected boolean excludeNulls = false;
 
 	/**
 	 * Defines custom {@link jodd.json.TypeJsonSerializer} for given path.
@@ -187,13 +188,21 @@ public class JsonSerializer {
 		return this;
 	}
 
+	/**
+	 * Excludes <code>null</code> values while serializing.
+	 */
+	public JsonSerializer excludeNulls(boolean excludeNulls) {
+		this.excludeNulls = excludeNulls;
+		return this;
+	}
+
 	// ---------------------------------------------------------------- serialize
 
 	/**
 	 * Serializes object into provided appendable.
 	 */
 	public void serialize(Object source, Appendable target) {
-		JsonContext jsonContext = new JsonContext(this, target);
+		JsonContext jsonContext = new JsonContext(this, target, excludeNulls);
 
 		jsonContext.serialize(source);
 	}
@@ -215,6 +224,6 @@ public class JsonSerializer {
 	 * Creates new JSON context.
 	 */
 	public JsonContext createJsonContext(Appendable appendable) {
-		return new JsonContext(this, appendable);
+		return new JsonContext(this, appendable, excludeNulls);
 	}
 }

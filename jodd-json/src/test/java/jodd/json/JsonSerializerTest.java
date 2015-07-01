@@ -27,6 +27,7 @@ package jodd.json;
 
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
+import jodd.json.model.State;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -512,6 +513,30 @@ public class JsonSerializerTest {
 		String json = new JsonSerializer().serialize(whiteBars);
 
 		assertEquals("[{\"sum\":1}]", json);
+	}
+
+	@Test
+	public void testExcludingNulls() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("one", null);
+
+		String json = new JsonSerializer().serialize(map);
+		assertEquals("{\"one\":null}", json);
+
+		json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{}", json);
+
+		State state = new State();
+		map.put("one", state);
+		json = new JsonSerializer().serialize(map);
+		assertTrue(json.startsWith("{\"one\":"));
+
+		json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{\"one\":{}}", json);
+
+		state.setId(1);
+		json = new JsonSerializer().excludeNulls(true).serialize(map);
+		assertEquals("{\"one\":{\"id\":1}}", json);
 	}
 
 
