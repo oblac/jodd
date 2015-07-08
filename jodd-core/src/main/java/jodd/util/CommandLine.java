@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jodd.io.FileNameUtil;
+import jodd.io.FileUtil;
 import jodd.io.StreamGobbler;
 
 /**
@@ -23,6 +24,7 @@ public class CommandLine {
 	public static final String CMD = "cmd";
 	public static final String OPEN = "open";
 	public static final String SH = "sh";
+	public static final String SHC = "sh -c";
 
 	public static final int OK = 0;
 
@@ -93,25 +95,29 @@ public class CommandLine {
 	 * Resolves system-dependent executor.
 	 */
 	protected void resolveExecutor(String command) {
-		if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
-			commands.add(SH);
+		File commandFile = new File(command);
 
-			if (!SystemUtil.isHostMac()) {
-				commands.add("-c");
+		if (SystemUtil.isHostMac()) {
+			if (isSH(command)) {
+				commands.add(SH);
 			}
+			else if (commandFile.canExecute() && !FileUtil.hasExtension(commandFile)) {
+			}
+			else if (FileUtil.isExistingFile(commandFile)) { // for native application and files with associated applications, open command should be used
+				commands.add(OPEN);
+			}
+			else {
+				commands.add(SHC);
+			}
+		}
+		else if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
+			commands.add(SH);
+			commands.add("-c");
 		}
 		else if (SystemUtil.isHostWindows()) {
 			commands.add(CMD);
 
 			commands.add("/c");
-		}
-		else if (SystemUtil.isHostMac()) {
-			if (isSH(command)) {
-				commands.add(SH);
-			}
-			else { // for native application and files with associated applications, open command should be used
-				commands.add(OPEN);
-			}
 		}
 	}
 
@@ -136,7 +142,14 @@ public class CommandLine {
 	public int execute(String outputType, String errorType, OutputStream out, OutputStream error) throws IOException, InterruptedException {
 		String[] commandsArray = commands.toArray(new String[commands.size()]);
 
-		Process process = Runtime.getRuntime().exec(commandsArray, null, workingDirectory);
+		StringBand commandLine = new StringBand(commandsArray.length * 2);
+
+		for (String command : commandsArray) {
+			commandLine.append(command);
+			commandLine.append(StringPool.SPACE);
+		}
+
+		Process process = Runtime.getRuntime().exec(commandLine.toString().trim(), null, workingDirectory);
 
 		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), errorType, error);
 
