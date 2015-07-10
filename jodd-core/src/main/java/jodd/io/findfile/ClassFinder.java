@@ -102,12 +102,18 @@ public abstract class ClassFinder {
 		return systemJars;
 	}
 
+	/**
+	 * Specify excluded jars.
+	 */
 	public void setExcludedJars(String... excludedJars) {
 		for (String excludedJar : excludedJars) {
-			rulesJars.include(excludedJar);
+			rulesJars.exclude(excludedJar);
 		}
 	}
 
+	/**
+	 * Specify included jars.
+	 */
 	public void setIncludedJars(String... includedJars) {
 		for (String includedJar : includedJars) {
 			rulesJars.include(includedJar);
