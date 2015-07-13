@@ -28,7 +28,7 @@ public class CommandLine {
 
 	public static final int OK = 0;
 
-	protected final List<String> commands = new ArrayList<String>();
+	protected final List<String> commands = new ArrayList<>();
 	protected File workingDirectory;
 
 	// ---------------------------------------------------------------- ctor
@@ -101,7 +101,7 @@ public class CommandLine {
 			if (isSH(command)) {
 				commands.add(SH);
 			}
-			else if (commandFile.canExecute() && !FileUtil.hasExtension(commandFile)) {
+			else if (commandFile.canExecute() && !FileNameUtil.hasExtension(commandFile.getAbsolutePath())) {
 			}
 			else if (FileUtil.isExistingFile(commandFile)) { // for native application and files with associated applications, open command should be used
 				commands.add(OPEN);
