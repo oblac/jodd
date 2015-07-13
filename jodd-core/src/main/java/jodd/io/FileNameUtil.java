@@ -569,6 +569,13 @@ public class FileNameUtil {
 		return (lastSeparator > extensionPos ? -1 : extensionPos);
 	}
 
+	/**
+	 * Returns <code>true</code> if file has extension.
+	 */
+	public static boolean hasExtension(String filename) {
+		return indexOfExtension(filename) != -1;
+	}
+
 	// ---------------------------------------------------------------- get
 
 	/**
