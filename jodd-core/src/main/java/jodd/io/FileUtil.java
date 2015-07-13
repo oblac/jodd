@@ -962,6 +962,9 @@ public class FileUtil {
 	}
 
 	public static byte[] readBytes(File file) throws IOException {
+		return readBytes(file, -1);
+	}
+	public static byte[] readBytes(File file, int fixedLength) throws IOException {
 		if (file.exists() == false) {
 			throw new FileNotFoundException(MSG_NOT_FOUND + file);
 		}
@@ -971,6 +974,10 @@ public class FileUtil {
 		long len = file.length();
 		if (len >= Integer.MAX_VALUE) {
 			throw new IOException("File is larger then max array size");
+		}
+
+		if (fixedLength > -1 && fixedLength < len) {
+			len = fixedLength;
 		}
 
 		byte[] bytes = new byte[(int) len];
@@ -1442,4 +1449,18 @@ public class FileUtil {
 		return StringUtil.toHexString(digest);
 	}
 
+	/**
+	 * Checks the start of the file for ASCII control characters
+	 */
+	public static boolean isBinary(final File file) throws IOException {
+		byte[] bytes = readBytes(file, 128);
+
+		for (byte b : bytes) {
+			if (b < 32) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
