@@ -134,4 +134,15 @@ public class HttpMultiMapTest {
 		assertTrue(hmm.contains("one"));
 	}
 
+	@Test
+	public void testParametersNumber() {
+		HttpMultiMap<String> hmm = new HttpMultiMap<>();
+
+		for (int i = 0; i < 30; i++) {
+			hmm.add(String.valueOf(i), "!" + i);
+		}
+
+		assertEquals(30, hmm.size());
+	}
+
 }

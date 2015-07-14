@@ -42,7 +42,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 	private static final int BUCKET_SIZE = 31;
 
 	@SuppressWarnings("unchecked")
-	private final MapEntry<V>[] entries = new MapEntry[BUCKET_SIZE];
+	private final MapEntry<V>[] entries = new MapEntry[BUCKET_SIZE + 1];
 	private final MapEntry<V> head = new MapEntry<>(-1, null, null);
 
 	public HttpMultiMap() {
