@@ -106,13 +106,15 @@ public class EmailUtil {
 	/**
 	 * Parse EML from content into {@link ReceivedEmail}.
 	 */
-	public static ReceivedEmail parseEML(String emlContent) throws MessagingException {
+	public static ReceivedEmail parseEML(String emlContent, String charset) throws MessagingException {
 		Properties props = System.getProperties();
 		Session session = Session.getDefaultInstance(props, null);
 
-		Message message = null;
+		Message message;
 		try {
-			message = new MimeMessage(session, new ByteArrayInputStream(emlContent.getBytes(StringPool.US_ASCII)));
+			byte[] bytes = emlContent.getBytes(charset);
+
+			message = new MimeMessage(session, new ByteArrayInputStream(bytes));
 		} catch (UnsupportedEncodingException ueex) {
 			throw new MessagingException(ueex.toString());
 		}
