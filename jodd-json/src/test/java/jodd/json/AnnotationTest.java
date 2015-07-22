@@ -26,9 +26,11 @@
 package jodd.json;
 
 import jodd.json.mock.Location;
+import jodd.json.model.App;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AnnotationTest {
 
@@ -64,6 +66,16 @@ public class AnnotationTest {
 
 		assertEquals(location.getLatitude(), jsonLocation.getLatitude());
 		assertEquals(location.getLongitude(), jsonLocation.getLongitude());
+	}
+
+	@Test
+	public void testAnnIncludeOfCollection() {
+		App app = new App();
+
+		String json = new JsonSerializer().serialize(app);
+
+		assertTrue(json.contains("\"apis\":{}"));
+		assertTrue(json.contains("\"name\":\"Hello\""));
 	}
 
 }
