@@ -25,6 +25,7 @@
 
 package jodd.mail;
 
+import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 
@@ -98,7 +99,16 @@ public class EmailUtil {
 		Properties props = System.getProperties();
 		Session session = Session.getDefaultInstance(props, null);
 
-		Message message = new MimeMessage(session, new FileInputStream(emlFile));
+		FileInputStream fileInputStream = new FileInputStream(emlFile);
+
+		Message message;
+
+		try {
+			message = new MimeMessage(session, fileInputStream);
+		}
+		finally {
+			StreamUtil.close(fileInputStream);
+		}
 
 		return new ReceivedEmail(message);
 	}
