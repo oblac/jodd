@@ -92,8 +92,20 @@ public class EMLParser {
 	 * Creates new session with given properties.
 	 */
 	public EMLParser session(Properties properties) {
-		this.session = defaultSession(properties);
+		this.session = createSession(properties);
 		return this;
+	}
+
+	/**
+	 * Uses default session instance with given properties.
+	 */
+	public EMLParser defaultSession(Properties properties) {
+		this.session = getDefaultSession(properties);
+		return this;
+	}
+
+	public EMLParser defaultSession() {
+		return defaultSession(null);
 	}
 
 	/**
@@ -102,7 +114,7 @@ public class EMLParser {
 	 */
 	public EMLParser set(String name, String value) {
 		if (session == null) {
-			session = defaultSession(null);
+			session = createSession(null);
 		}
 		this.session.getProperties().setProperty(name, value);
 		return this;
@@ -114,7 +126,7 @@ public class EMLParser {
 	 */
 	public ReceivedEmail parse() throws MessagingException {
 		if (session == null) {
-			session = defaultSession(null);
+			session = createSession(null);
 		}
 
 		Message message;
@@ -128,14 +140,24 @@ public class EMLParser {
 	}
 
 	/**
-	 * Creates default session with or without custom properties.
+	 * Creates new session with or without custom properties.
 	 */
-	protected Session defaultSession(Properties properties) {
+	protected Session createSession(Properties properties) {
 		if (properties == null) {
 			properties = System.getProperties();
 		}
 
-		return Session.getDefaultInstance(properties, null);
+		return Session.getInstance(properties);
+	}
+	/**
+	 * Creates default session with or without custom properties.
+	 */
+	protected Session getDefaultSession(Properties properties) {
+		if (properties == null) {
+			properties = new Properties();
+		}
+
+		return Session.getDefaultInstance(properties);
 	}
 
 }
