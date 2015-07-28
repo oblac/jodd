@@ -25,20 +25,8 @@
 
 package jodd.mail;
 
-import jodd.io.StreamUtil;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 
 /**
  * Email utilities.
@@ -55,7 +43,8 @@ public class EmailUtil {
 		String mime;
 		if (ndx != -1) {
 			mime = contentType.substring(0, ndx);
-		} else {
+		}
+		else {
 			mime = contentType;
 		}
 		return mime;
@@ -90,46 +79,6 @@ public class EmailUtil {
 			encoding = charset.substring(start, ndx);
 		}
 		return encoding;
-	}
-
-	/**
-	 * Reads EML from a file and parses it into {@link ReceivedEmail}.
-	 */
-	public static ReceivedEmail parseEML(File emlFile) throws FileNotFoundException, MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		FileInputStream fileInputStream = new FileInputStream(emlFile);
-
-		Message message;
-
-		try {
-			message = new MimeMessage(session, fileInputStream);
-		}
-		finally {
-			StreamUtil.close(fileInputStream);
-		}
-
-		return new ReceivedEmail(message);
-	}
-
-	/**
-	 * Parse EML from content into {@link ReceivedEmail}.
-	 */
-	public static ReceivedEmail parseEML(String emlContent, String charset) throws MessagingException {
-		Properties props = System.getProperties();
-		Session session = Session.getDefaultInstance(props, null);
-
-		Message message;
-		try {
-			byte[] bytes = emlContent.getBytes(charset);
-
-			message = new MimeMessage(session, new ByteArrayInputStream(bytes));
-		} catch (UnsupportedEncodingException ueex) {
-			throw new MessagingException(ueex.toString());
-		}
-
-		return new ReceivedEmail(message);
 	}
 
 }
