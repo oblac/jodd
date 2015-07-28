@@ -104,19 +104,6 @@ public class EMLParser {
 		return this;
 	}
 
-
-	/**
-	 * Sets session property. If session is not defined, default
-	 * session will be created.
-	 */
-	public EMLParser set(String name, String value) {
-		if (session == null) {
-			session = createSession(null);
-		}
-		this.session.getProperties().setProperty(name, value);
-		return this;
-	}
-
 	/**
 	 * Parses the EML content. If session is not created, default one
 	 * will be used.
