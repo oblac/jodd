@@ -45,41 +45,12 @@ import java.util.Properties;
  */
 public class EMLParser {
 
-	/**
-	 * Starts EML parsing with provided EML content.
-	 */
-	public static EMLParser loadEML(String emlContent, String charset) throws UnsupportedEncodingException {
-		byte[] bytes = emlContent.getBytes(charset);
-		return loadEML(bytes);
+	public static EMLParser create() {
+		return new EMLParser();
 	}
 
-	/**
-	 * Starts EML parsing with provided EML content, assuming UTF-8 charset.
-	 */
-	public static EMLParser loadEML(String emlContent) throws UnsupportedEncodingException {
-		return loadEML(emlContent, StringPool.UTF_8);
-	}
-
-	/**
-	 * Starts EML parsing with provided EML content.
-	 */
-	public static EMLParser loadEML(byte[] content) {
-		return new EMLParser(new ByteArrayInputStream(content));
-	}
-	/**
-	 * Starts EML parsing with provided EML file.
-	 */
-	public static EMLParser loadEML(File emlFile) throws FileNotFoundException {
-		return new EMLParser(new FileInputStream(emlFile));
-	}
-
-	protected final InputStream emlContentInputStream;
 	protected Session session;
 	protected Properties properties;
-
-	protected EMLParser(InputStream emlContent) {
-		this.emlContentInputStream = emlContent;
-	}
 
 	/**
 	 * Assigns custom session. Any property will be ignored.
@@ -122,10 +93,43 @@ public class EMLParser {
 	}
 
 	/**
+	 * Parses EML with provided EML content.
+	 */
+	public ReceivedEmail parse(String emlContent, String charset) throws UnsupportedEncodingException, MessagingException {
+		byte[] bytes = emlContent.getBytes(charset);
+		return parse(bytes);
+	}
+
+	/**
+	 * Parses EML with provided EML content.
+	 */
+	public ReceivedEmail parse(String emlContent) throws MessagingException {
+		try {
+			return parse(emlContent, StringPool.UTF_8);
+		}
+		catch (UnsupportedEncodingException ignore) {
+			return null;
+		}
+	}
+
+	/**
+	 * Parses EML with provided EML content.
+	 */
+	public ReceivedEmail parse(byte[] content) throws MessagingException {
+		return parse(new ByteArrayInputStream(content));
+	}
+	/**
+	 * Starts EML parsing with provided EML file.
+	 */
+	public ReceivedEmail parse(File emlFile) throws FileNotFoundException, MessagingException {
+		return parse(new FileInputStream(emlFile));
+	}
+
+	/**
 	 * Parses the EML content. If session is not created, default one
 	 * will be used.
 	 */
-	public ReceivedEmail parse() throws MessagingException {
+	protected ReceivedEmail parse(InputStream emlContentInputStream) throws MessagingException {
 		if (session == null) {
 			session = createSession(properties);
 		}

@@ -60,7 +60,7 @@ public class EMLParserTest {
 	public void testParseEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "example.eml");
 
-		ReceivedEmail email = EMLParser.loadEML(emlFile).parse();
+		ReceivedEmail email = EMLParser.create().parse(emlFile);
 
 		assertEquals("Example <from@example.com>", email.getFrom().toString());
 		assertEquals("to@example.com", email.getTo()[0].toString());
@@ -135,7 +135,7 @@ public class EMLParserTest {
 	public void testParseEMLCyrilic() throws FileNotFoundException, MessagingException, UnsupportedEncodingException {
 		File emlFile = new File(testDataRoot, "cyrilic.eml");
 
-		ReceivedEmail email = EMLParser.loadEML(emlFile).parse();
+		ReceivedEmail email = EMLParser.create().parse(emlFile);
 
 		assertEquals("Tijana <tijan@gmail.com>", email.getFrom().toString());
 		assertEquals("testapp1@esolut.ions", email.getTo()[0].toString());
@@ -164,7 +164,7 @@ public class EMLParserTest {
 	public void testSimpleEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "simple.eml");
 
-		ReceivedEmail email = EMLParser.loadEML(emlFile).parse();
+		ReceivedEmail email = EMLParser.create().parse(emlFile);
 
 		assertEquals("sender@emailhost.com", email.getFrom().toString());
 		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
@@ -192,7 +192,7 @@ public class EMLParserTest {
 	public void testSimpleNullEML() throws FileNotFoundException, MessagingException {
 		File emlFile = new File(testDataRoot, "simple-null.eml");
 
-		ReceivedEmail email = EMLParser.loadEML(emlFile).parse();
+		ReceivedEmail email = EMLParser.create().parse(emlFile);
 
 		assertNull(email.getFrom());
 		assertEquals("recipient@emailhost.com", email.getTo()[0].toString());
