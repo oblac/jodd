@@ -97,16 +97,13 @@ public class EMLParser {
 	}
 
 	/**
-	 * Uses default session instance with given properties.
+	 * Uses default session.
 	 */
-	public EMLParser defaultSession(Properties properties) {
-		this.session = getDefaultSession(properties);
+	public EMLParser defaultSession() {
+		this.session = Session.getDefaultInstance(System.getProperties());
 		return this;
 	}
 
-	public EMLParser defaultSession() {
-		return defaultSession(null);
-	}
 
 	/**
 	 * Sets session property. If session is not defined, default
@@ -148,16 +145,6 @@ public class EMLParser {
 		}
 
 		return Session.getInstance(properties);
-	}
-	/**
-	 * Creates default session with or without custom properties.
-	 */
-	protected Session getDefaultSession(Properties properties) {
-		if (properties == null) {
-			properties = new Properties();
-		}
-
-		return Session.getDefaultInstance(properties);
 	}
 
 }
