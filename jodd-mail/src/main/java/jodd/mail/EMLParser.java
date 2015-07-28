@@ -75,13 +75,14 @@ public class EMLParser {
 
 	protected final InputStream emlContentInputStream;
 	protected Session session;
+	protected Properties properties;
 
 	protected EMLParser(InputStream emlContent) {
 		this.emlContentInputStream = emlContent;
 	}
 
 	/**
-	 * Sets the custom session.
+	 * Assigns custom session. Any property will be ignored.
 	 */
 	public EMLParser session(Session session) {
 		this.session = session;
@@ -89,18 +90,34 @@ public class EMLParser {
 	}
 
 	/**
-	 * Creates new session with given properties.
+	 * Uses default session. Any property will be ignored.
 	 */
-	public EMLParser session(Properties properties) {
-		this.session = createSession(properties);
+	public EMLParser defaultSession() {
+		this.session = Session.getDefaultInstance(System.getProperties());
 		return this;
 	}
 
 	/**
-	 * Uses default session.
+	 * Copies properties from given set. If session is already created,
+	 * exception will be thrown.
 	 */
-	public EMLParser defaultSession() {
-		this.session = Session.getDefaultInstance(System.getProperties());
+	public EMLParser set(Properties properties) {
+		initProperties();
+
+		this.properties.putAll(properties);
+
+		return this;
+	}
+
+	/**
+	 * Sets property for the session. If session is already created, exception
+	 * will be thrown.
+	 */
+	public EMLParser set(String name, String value) {
+		initProperties();
+
+		properties.setProperty(name, value);
+
 		return this;
 	}
 
@@ -110,7 +127,7 @@ public class EMLParser {
 	 */
 	public ReceivedEmail parse() throws MessagingException {
 		if (session == null) {
-			session = createSession(null);
+			session = createSession(properties);
 		}
 
 		Message message;
@@ -121,6 +138,16 @@ public class EMLParser {
 		}
 
 		return new ReceivedEmail(message);
+	}
+
+	protected void initProperties() {
+		if (session != null) {
+			throw new MailException("Can't set properties after session is assigned");
+		}
+
+		if (properties == null) {
+			properties = new Properties();
+		}
 	}
 
 	/**
