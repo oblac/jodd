@@ -72,7 +72,7 @@ public abstract class HttpBase<T> {
 	public static final String HTTP_1_1 = "HTTP/1.1";
 
 	protected String httpVersion = HTTP_1_1;
-	protected HttpMultiMap<String> headers = new HttpMultiMap<>();
+	protected HttpMultiMap<String> headers = HttpMultiMap.newCaseInsensitveMap();
 
 	protected HttpMultiMap<?> form;			// holds form data (when used)
 	protected String body;					// holds raw body string (always)
@@ -383,7 +383,7 @@ public abstract class HttpBase<T> {
 	 */
 	protected void initForm() {
 		if (form == null) {
-			form = new HttpMultiMap<>();
+			form = HttpMultiMap.newCaseInsensitveMap();
 		}
 	}
 
@@ -914,7 +914,7 @@ public abstract class HttpBase<T> {
 		}
 
 		if (mediaType.equals("multipart/form-data")) {
-			form = new HttpMultiMap<>();
+			form = HttpMultiMap.newCaseInsensitveMap();
 
 			MultipartStreamParser multipartParser = new MultipartStreamParser();
 

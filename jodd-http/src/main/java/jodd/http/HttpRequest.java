@@ -309,7 +309,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 			query = HttpUtil.parseQuery(queryString, true);
 		} else {
-			query = new HttpMultiMap<>();
+			query = HttpMultiMap.newCaseInsensitveMap();
 		}
 
 		this.path = path;
