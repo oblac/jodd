@@ -136,14 +136,16 @@ public class ReceivedEmail extends CommonEmail {
 
 				email.addMessage(stringContent, mimeType, encoding);
 			}
-		} else if (content instanceof Multipart) {
+		}
+		else if (content instanceof Multipart) {
 			Multipart mp = (Multipart) content;
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part innerPart = mp.getBodyPart(i);
 				processPart(email, innerPart);
 			}
-		} else if (content instanceof InputStream) {
+		}
+		else if (content instanceof InputStream) {
 			String fileName = part.getFileName();
 			String contentId = (part instanceof MimePart) ? ((MimePart)part).getContentID() : null;
 			String mimeType = EmailUtil.extractMimeType(part.getContentType());
@@ -153,10 +155,22 @@ public class ReceivedEmail extends CommonEmail {
 			StreamUtil.copy(is, fbaos);
 
 			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
-		} else if (content instanceof MimeMessage) {
+		}
+		else if (content instanceof MimeMessage) {
 			MimeMessage mimeMessage = (MimeMessage) content;
 
 			addAttachmentMessage(new ReceivedEmail(mimeMessage));
+		}
+		else {
+			String fileName = part.getFileName();
+			String contentId = (part instanceof MimePart) ? ((MimePart) part).getContentID() : null;
+			String mimeType = EmailUtil.extractMimeType(part.getContentType());
+
+			InputStream is = part.getInputStream();
+			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
+			StreamUtil.copy(is, fbaos);
+
+			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
 	}
 

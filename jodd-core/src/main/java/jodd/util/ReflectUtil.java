@@ -656,6 +656,7 @@ public class ReflectUtil {
 	 * String, Character, Boolean or a Number. Immutable instances are cached and not created again.
 	 * Arrays are also created with no elements. Note that this bunch of <code>if</code> blocks
 	 * is faster then using a <code>HashMap</code>.
+	 * todo Add generics if possible
 	 */
 	public static Object newInstance(Class type) throws IllegalAccessException, InstantiationException {
 		if (type.isPrimitive()) {
