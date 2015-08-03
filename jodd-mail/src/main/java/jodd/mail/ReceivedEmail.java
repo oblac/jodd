@@ -169,6 +169,7 @@ public class ReceivedEmail extends CommonEmail {
 			InputStream is = part.getInputStream();
 			FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 			StreamUtil.copy(is, fbaos);
+			StreamUtil.close(is);
 
 			email.addAttachment(fileName, mimeType, contentId, fbaos.toByteArray());
 		}
