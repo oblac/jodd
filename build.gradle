@@ -23,6 +23,10 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+plugins {
+	id "com.jfrog.bintray" version "1.2"
+}
+
 description = '''
 
 	Jodd is an open-source Java utility library and set of micro frameworks.
@@ -33,8 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.6.7-SNAPSHOT'
-
+version = '3.6.7-20150803'
 
 // --- properties -------------------------------------------------------------
 
@@ -98,11 +101,12 @@ ext {
 allprojects {
 	version = rootProject.version
 
-	ext.isSnapshot = version.endsWith("-SNAPSHOT")
+	ext.isSnapshot = version.contains("-");
 	ext.isSubproject = project.parent != null
 
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 }
 
@@ -135,6 +139,8 @@ def javaMobileModules() {
 
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'com.jfrog.bintray'
+apply from: "${gradleScriptDir}/bintray.gradle"
 
 // exclude folders from IDEA project
 idea {
@@ -153,7 +159,17 @@ configure(javaModules()) {
 	apply from: "${gradleScriptDir}/provided.gradle"
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
+	apply plugin: 'com.jfrog.bintray'
+	apply from: "${gradleScriptDir}/bintray.gradle"
+
+
 	group = 'org.jodd'
+
+	// bintray
+
+	configurations {
+		published
+	}
 
 	// compile
 
@@ -222,6 +238,10 @@ configure(javaModules()) {
 		archives jar
 		archives sourcesJar
 		archives javadocJar
+
+		published jar
+		published sourcesJar
+		published javadocJar
 	}
 
 	jar {
@@ -490,5 +510,5 @@ gradle.taskGraph.whenReady { taskGraph ->
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.4'
+	gradleVersion = '2.5'
 }
