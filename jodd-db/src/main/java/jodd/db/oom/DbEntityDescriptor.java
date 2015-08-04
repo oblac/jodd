@@ -31,9 +31,9 @@ import jodd.db.oom.naming.TableNamingStrategy;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
 import jodd.util.StringPool;
-import jodd.util.sort.FastSort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -159,7 +159,7 @@ public class DbEntityDescriptor<E> {
 			throw new DbOomException("No column mappings in entity: " + type);
 		}
 		columnDescriptors = decList.toArray(new DbEntityColumnDescriptor[decList.size()]);
-		FastSort.sort(columnDescriptors);
+		Arrays.sort(columnDescriptors);
 
 		// extract ids from sorted list
 		if (idcount > 0) {

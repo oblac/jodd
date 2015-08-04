@@ -27,7 +27,6 @@ package jodd.io.findfile;
 
 import jodd.io.FileNameUtil;
 import jodd.util.InExRules;
-import jodd.util.sort.FastSort;
 import jodd.util.MultiComparator;
 import jodd.util.NaturalOrderComparator;
 import jodd.util.StringUtil;
@@ -36,6 +35,7 @@ import jodd.util.collection.JoddArrayList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.net.URI;
@@ -266,7 +266,7 @@ public class FindFile<T extends FindFile> {
 				this.files = folder.listFiles();
 
 				if (this.files != null) {
-					FastSort.sort(this.files, new MultiComparator<>(sortComparators));
+					Arrays.sort(this.files, new MultiComparator<>(sortComparators));
 				}
 
 				this.fileNames = null;
