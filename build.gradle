@@ -105,8 +105,8 @@ allprojects {
 	ext.isSubproject = project.parent != null
 
 	repositories {
-		mavenCentral()
 		jcenter()
+		mavenCentral()
 	}
 }
 
