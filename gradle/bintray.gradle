@@ -9,8 +9,8 @@ bintray {
 
     pkg {
         userOrg = 'oblac'
-        repo = 'jodd-maven-repo'
-        name = project.name
+        repo = 'jodd'
+        name = "org.jodd:${project.name}"
         desc = 'Jodd microframeworks and utilities'
         licenses = ['BSD 2-Clause']
         vcsUrl = 'https://github.com/oblac/jodd'
