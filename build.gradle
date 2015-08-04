@@ -507,6 +507,13 @@ gradle.taskGraph.whenReady { taskGraph ->
 	}
 }
 
+task version() {
+	println "-----------------------"
+	println "  Jodd ${version}"
+	if (isSnapshot) println "  [snapshot]"
+	println "-----------------------"
+}
+
 // --- wrapper ----------------------------------------------------------------
 
 task wrapper(type: Wrapper) {
