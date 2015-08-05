@@ -79,6 +79,32 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 		return this;
 	}
 
+	// ---------------------------------------------------------------- cookie
+
+	/**
+	 * Returns list of cookies sent from server.
+	 * If no cookie found, returns an empty array.
+	 */
+	public Cookie[] cookies() {
+		List<String> newCookies = headers("set-cookie");
+
+		if (newCookies == null) {
+			return new Cookie[0];
+		}
+
+		Cookie[] cookies = new Cookie[newCookies.size()];
+
+		for (int i = 0; i < newCookies.size(); i++) {
+			String cookieValue = newCookies.get(i);
+
+			Cookie cookie = new Cookie(cookieValue);
+
+			cookies[i] = cookie;
+		}
+
+		return cookies;
+	}
+
 	// ---------------------------------------------------------------- body
 
 	/**

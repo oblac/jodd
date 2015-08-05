@@ -329,6 +329,42 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	}
 
 
+	// ---------------------------------------------------------------- cookies
+
+	/**
+	 * Sets cookies to the request.
+	 */
+	public HttpRequest cookies(Cookie... cookies) {
+		if (cookies.length == 0) {
+			return this;
+		}
+
+		StringBuilder cookieString = new StringBuilder();
+
+		boolean first = true;
+
+		for (Cookie cookie : cookies) {
+			Integer maxAge = cookie.getMaxAge();
+			if (maxAge != null && maxAge.intValue() == 0) {
+				continue;
+			}
+
+			if (!first) {
+				cookieString.append("; ");
+			}
+
+			first = false;
+			cookieString.append(cookie.getName());
+			cookieString.append('=');
+			cookieString.append(cookie.getValue());
+		}
+
+		header("cookie", cookieString.toString(), true);
+
+		return this;
+	}
+
+
 	// ---------------------------------------------------------------- query
 
 	/**

@@ -31,10 +31,8 @@ import jodd.util.StringUtil;
 import org.apache.catalina.core.ApplicationPart;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -60,6 +58,7 @@ public class EchoServlet extends HttpServlet {
 		public Map<String, String> params;
 		public Map<String, String> parts;
 		public Map<String, String> fileNames;
+		public Cookie[] cookies;
 	}
 
 	@Override
@@ -67,6 +66,14 @@ public class EchoServlet extends HttpServlet {
 		ref.get = true;
 		ref.post = false;
 		readAll(req);
+
+		if (ref.cookies != null) {
+			for (Cookie cookie : ref.cookies) {
+				cookie.setValue(cookie.getValue() + "!");
+				resp.addCookie(cookie);
+			}
+		}
+
 		write(resp, ref.body);
 	}
 
@@ -95,6 +102,7 @@ public class EchoServlet extends HttpServlet {
 		ref.body = readRequestBody(req);
 		ref.queryString = req.getQueryString();
 		ref.header = copyHeaders(req);
+		ref.cookies = req.getCookies();
 	}
 
 	protected String readRequestBody(HttpServletRequest request) throws IOException {

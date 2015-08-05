@@ -27,6 +27,7 @@ package jodd.http;
 
 import jodd.util.StringPool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -239,16 +240,13 @@ public class HttpBrowser {
 	// ---------------------------------------------------------------- cookies
 
 	/**
-	 * Reads cookies from response.
+	 * Reads cookies from response and adds to cookies list.
 	 */
 	protected void readCookies(HttpResponse httpResponse) {
-		List<String> newCookies = httpResponse.headers("set-cookie");
+		Cookie[] newCookies = httpResponse.cookies();
 
-		if (newCookies != null) {
-			for (String cookieValue : newCookies) {
-				Cookie cookie = new Cookie(cookieValue);
-				cookies.add(cookie.getName(), cookie);
-			}
+		for (Cookie cookie : newCookies) {
+			cookies.add(cookie.getName(), cookie);
 		}
 	}
 
@@ -257,30 +255,14 @@ public class HttpBrowser {
 	 */
 	protected void addCookies(HttpRequest httpRequest) {
 		// prepare all cookies
-
-		StringBuilder cookieString = new StringBuilder();
-		boolean first = true;
+		List<Cookie> cookiesList = new ArrayList<>();
 
 		if (!cookies.isEmpty()) {
 			for (Map.Entry<String, Cookie> cookieEntry : cookies) {
-
-				Cookie cookie = cookieEntry.getValue();
-
-			    Integer maxAge = cookie.getMaxAge();
-				if (maxAge != null && maxAge.intValue() == 0) {
-				    continue;
-				}
-
-				if (!first) {
-					cookieString.append("; ");
-				}
-				first = false;
-				cookieString.append(cookie.getName());
-				cookieString.append('=');
-				cookieString.append(cookie.getValue());
+				cookiesList.add(cookieEntry.getValue());
 			}
 
-			httpRequest.header("cookie", cookieString.toString(), true);
+			httpRequest.cookies(cookiesList.toArray(new Cookie[cookiesList.size()]));
 		}
 	}
 }
