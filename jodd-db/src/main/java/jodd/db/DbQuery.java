@@ -782,10 +782,8 @@ s	 */
 		init();
 		try {
 			preparedStatement.setAsciiStream(index, stream, stream.available());
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(index, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(index, sex);
 		}
 	}
 
@@ -796,10 +794,8 @@ s	 */
 			for (int i = 0; i < positions.size(); i++) {
 				preparedStatement.setAsciiStream(positions.get(i), stream, stream.available());
 			}
-		} catch (IOException ioex) {
+		} catch (IOException | SQLException ioex) {
 			throwSetParamError(param, ioex);
-		} catch (SQLException sex) {
-			throwSetParamError(param, sex);
 		}
 	}
 

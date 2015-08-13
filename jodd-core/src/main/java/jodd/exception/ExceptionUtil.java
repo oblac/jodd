@@ -270,9 +270,7 @@ public class ExceptionUtil {
 				ThrowableThrower.throwable = throwable;
 				ThrowableThrower.class.newInstance();
 			}
-		} catch (InstantiationException iex) {
-			throw new RuntimeException(iex);
-		} catch (IllegalAccessException iex) {
+		} catch (InstantiationException | IllegalAccessException iex) {
 			throw new RuntimeException(iex);
 		} finally {
 			ThrowableThrower.throwable = null;
