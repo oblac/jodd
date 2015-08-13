@@ -58,7 +58,11 @@ public abstract class JsonParserBase {
 	 * Later, the list will be converted into the target type.
 	 */
 	protected List<Object> newArrayInstance(Class targetType) {
-		if (targetType == null || targetType == List.class || targetType.isArray()) {
+		if (targetType == null ||
+			targetType == List.class ||
+			targetType.isArray() ||
+			targetType == Object.class) {
+
 			return new ArrayList<>();
 		}
 
