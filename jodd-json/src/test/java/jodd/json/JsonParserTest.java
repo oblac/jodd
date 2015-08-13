@@ -168,6 +168,16 @@ public class JsonParserTest {
 	}
 
 	@Test
+	public void testConversionsToObject() {
+		JsonParser jsonParser = new JsonParser();
+		assertEquals("173", jsonParser.parse("\"173\"", Object.class));
+		assertEquals(123, jsonParser.parse("123", Object.class));
+		assertEquals(true, jsonParser.parse("true", Object.class));
+		assertTrue(jsonParser.parse("[]", Object.class) instanceof List);
+		assertTrue(jsonParser.parse("{}", Object.class) instanceof Map);
+	}
+
+	@Test
 	public void testStringEscapes() {
 		JsonParser jsonParser = new JsonParser();
 
@@ -401,6 +411,18 @@ public class JsonParserTest {
 		}
 	}
 
+	public static class Wildcard {
+		Object value;
+
+		public Object getValue() {
+			return value;
+		}
+
+		public void setValue(Object value) {
+			this.value = value;
+		}
+	}
+
 	@Test
 	public void testSimpleObject() {
 		JsonParser jsonParser = new JsonParser();
@@ -426,6 +448,45 @@ public class JsonParserTest {
 
 		assertNotNull(foo.bar);
 		assertEquals(-23, foo.bar.getAmount().intValue());
+	}
+
+	@Test
+	public void testObjectAttribute() {
+		JsonParser jsonParser = new JsonParser();
+		jsonParser.map(Wildcard.class);
+
+		Wildcard wildcard = jsonParser.parse("{\"value\":1}");
+		assertNotNull(wildcard);
+		assertEquals(1, wildcard.getValue());
+
+		wildcard = jsonParser.parse("{\"value\":\"str\"}");
+		assertNotNull(wildcard);
+		assertEquals("str", wildcard.getValue());
+
+		wildcard = jsonParser.parse("{\"value\":[1,2,3]}");
+		assertNotNull(wildcard);
+		assertTrue(wildcard.getValue() instanceof List);
+		assertArrayEquals(new Object[] {1, 2, 3}, ((List) wildcard.getValue()).toArray());
+
+		wildcard = jsonParser.parse(
+			"{" +
+				"\"value\": {" +
+					"\"key\": \"value\"," +
+					"\"inner\": {" +
+						"\"key\": \"value\"" +
+					"}" +
+				"}" +
+			"}");
+
+		assertNotNull(wildcard);
+		assertTrue(wildcard.getValue() instanceof Map);
+		Map mapValue = (Map) wildcard.getValue();
+		assertEquals(2, mapValue.size());
+		assertEquals("value", mapValue.get("key"));
+		assertTrue(mapValue.get("inner") instanceof Map);
+		Map innerValue = (Map) mapValue.get("inner");
+		assertEquals(1, innerValue.size());
+		assertEquals("value", innerValue.get("key"));
 	}
 
 	// ---------------------------------------------------------------- complex
