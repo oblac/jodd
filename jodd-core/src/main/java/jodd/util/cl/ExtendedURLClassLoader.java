@@ -70,10 +70,17 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	protected String[] loaderOnlyRules;
 	protected final boolean parentFirst;
 
+	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent, boolean parentFirst) {
+		this(classpath, parent, parentFirst, true);
+	}
+
 	/**
 	 * Creates class loader with given loading strategy.
 	 */
-	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent, boolean parentFirst) {
+	public ExtendedURLClassLoader(
+			URL[] classpath, ClassLoader parent,
+			boolean parentFirst, boolean excludeJrePackagesFromLoader) {
+
 		super(classpath, parent);
 
 		this.parentFirst = parentFirst;
@@ -86,15 +93,22 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		parentOnlyRules = new String[0];
 		loaderOnlyRules = new String[0];
 
-		String[] corePackages = SystemUtil.getJrePackages();
+		if (excludeJrePackagesFromLoader) {
+			String[] corePackages = SystemUtil.getJrePackages();
 
-		for (int i = 0; i < corePackages.length; i++) {
-			String pck = corePackages[i];
+			for (int i = 0; i < corePackages.length; i++) {
+				String pck = corePackages[i];
 
-			corePackages[i] = pck + ".*";
+				if (pck.equals("javax")) {
+					// javax is NOT forbidden
+					continue;
+				}
+
+				corePackages[i] = pck + ".*";
+			}
+
+			addParentOnlyRules(corePackages);
 		}
-		
-		addParentOnlyRules(corePackages);
 	}
 
 	// ---------------------------------------------------------------- rules
