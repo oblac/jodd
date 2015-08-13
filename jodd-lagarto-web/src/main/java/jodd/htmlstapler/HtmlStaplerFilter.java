@@ -220,7 +220,13 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 	 */
 	protected void sendBundleFile(HttpServletResponse resp, File bundleFile) throws IOException {
 		OutputStream out = resp.getOutputStream();
-		StreamUtil.copy(new FileInputStream(bundleFile), out);
+		FileInputStream fileInputStream = new FileInputStream(bundleFile);
+		try {
+			StreamUtil.copy(fileInputStream, out);
+		}
+		finally {
+			StreamUtil.close(fileInputStream);
+		}
 	}
 
 }

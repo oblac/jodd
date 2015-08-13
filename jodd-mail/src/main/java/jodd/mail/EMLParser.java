@@ -122,7 +122,13 @@ public class EMLParser {
 	 * Starts EML parsing with provided EML file.
 	 */
 	public ReceivedEmail parse(File emlFile) throws FileNotFoundException, MessagingException {
-		return parse(new FileInputStream(emlFile));
+		FileInputStream fileInputStream = new FileInputStream(emlFile);
+		try {
+			return parse(fileInputStream);
+		}
+		finally {
+			StreamUtil.close(fileInputStream);
+		}
 	}
 
 	/**

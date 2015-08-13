@@ -1397,8 +1397,12 @@ public class FileUtil {
 		BufferedInputStream bis = new BufferedInputStream(fis);
 		DigestInputStream dis = new DigestInputStream(bis, algorithm);
 
-		int bytesRead;
-		while ((bytesRead = dis.read()) != -1) {
+		try {
+			while (dis.read() != -1) {
+			}
+		}
+		finally {
+			StreamUtil.close(fis);
 		}
 
 		return algorithm.digest();
