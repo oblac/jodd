@@ -676,6 +676,14 @@ public class JsonParser extends JsonParserBase {
 	 * Parses arrays, once when open bracket has been consumed.
 	 */
 	protected Object parseArrayContent(Class targetType, Class componentType) {
+		// detect special case
+
+		if (targetType == Object.class) {
+			targetType = List.class;
+		}
+
+		// continue
+
 		targetType = replaceWithMappedTypeForPath(targetType);
 
 		if (componentType == null && targetType != null && targetType.isArray()) {
@@ -737,6 +745,14 @@ public class JsonParser extends JsonParserBase {
 	 * Parses object, once when open bracket has been consumed.
 	 */
 	protected Object parseObjectContent(Class targetType, Class valueKeyType, Class valueType) {
+		// detect special case
+
+		if (targetType == Object.class) {
+			targetType = Map.class;
+		}
+
+		// continue
+
 		targetType = replaceWithMappedTypeForPath(targetType);
 
 		Object target;

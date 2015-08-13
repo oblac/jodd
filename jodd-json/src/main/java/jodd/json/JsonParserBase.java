@@ -60,8 +60,7 @@ public abstract class JsonParserBase {
 	protected List<Object> newArrayInstance(Class targetType) {
 		if (targetType == null ||
 			targetType == List.class ||
-			targetType.isArray() ||
-			targetType == Object.class) {
+			targetType.isArray()) {
 
 			return new ArrayList<>();
 		}
@@ -78,8 +77,7 @@ public abstract class JsonParserBase {
 	 */
 	protected Object newObjectInstance(Class targetType) {
 		if (targetType == null ||
-			targetType == Map.class ||
-			targetType == Object.class) {
+			targetType == Map.class) {
 
 			return new HashMap();
 		}
