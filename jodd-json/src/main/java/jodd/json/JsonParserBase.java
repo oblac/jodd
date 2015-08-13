@@ -77,11 +77,10 @@ public abstract class JsonParserBase {
 	 * Creates new object or a <code>HashMap</code> if type is not specified.
 	 */
 	protected Object newObjectInstance(Class targetType) {
-		if (targetType == null) {
-			return new HashMap();
-		}
+		if (targetType == null ||
+			targetType == Map.class ||
+			targetType == Object.class) {
 
-		if (targetType == Map.class) {
 			return new HashMap();
 		}
 
