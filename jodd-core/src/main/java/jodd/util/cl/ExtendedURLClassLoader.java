@@ -26,6 +26,7 @@
 package jodd.util.cl;
 
 import jodd.util.ArraysUtil;
+import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
 import jodd.util.Wildcard;
 
@@ -69,6 +70,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	protected String[] parentOnlyRules;
 	protected String[] loaderOnlyRules;
 	protected final boolean parentFirst;
+	protected boolean matchResourcesAsPackages = true;
 
 	public ExtendedURLClassLoader(URL[] classpath, ClassLoader parent, boolean parentFirst) {
 		this(classpath, parent, parentFirst, true);
@@ -130,6 +132,15 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	}
 
 	/**
+	 * When set, resources will be matched in the same way as packages.
+	 * If disabled, resources must be matched only with separate rules
+	 * that uses "/".
+	 */
+	public void setMatchResourcesAsPackages(boolean matchResourcesAsPackages) {
+		this.matchResourcesAsPackages = matchResourcesAsPackages;
+	}
+
+	/**
 	 * Returns <code>true</code> if class or resource name matches
 	 * at least one package rule from the list.
 	 */
@@ -185,6 +196,10 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 	 * Resolves resources.
 	 */
 	protected Loading resolveResourceLoading(boolean parentFirstStrategy, String resourceName) {
+		if (matchResourcesAsPackages) {
+			resourceName = StringUtil.replaceChar(resourceName, '/', '.');
+		}
+
 		return resolveLoading(parentFirstStrategy, resourceName);
 	}
 

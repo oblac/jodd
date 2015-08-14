@@ -39,6 +39,7 @@ import java.util.Enumeration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -139,9 +140,17 @@ public class ExtendedURLClassLoaderTest {
 
 		// parent-first, parent-only
 		ecl = new ExtendedURLClassLoader(urls, cl, true);
-		ecl.addParentOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
 		assertNull(res);
+
+		//// dot variant
+		ecl = new ExtendedURLClassLoader(urls, cl, true);
+		ecl.setMatchResourcesAsPackages(false);
+		ecl.addParentOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
+		assertNull(res);
+
 
 		// parent-last
 
@@ -155,9 +164,22 @@ public class ExtendedURLClassLoaderTest {
 
 		// parent-last, parent-only
 		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl.addLoaderOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
+		assertEquals(res, FileUtil.toURL(resourceFile));
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
+		assertNull(res);
+
+		//// dot variant
+		ecl = new ExtendedURLClassLoader(urls, cl, false);
+		ecl.setMatchResourcesAsPackages(false);
 		ecl.addLoaderOnlyRules("pckg/data");
 		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
+		ecl.addParentOnlyRules("pckg.data");
+		res = ecl.getResource("pckg/data");
+		assertNotNull(res);
 		ecl.addParentOnlyRules("pckg/data");
 		res = ecl.getResource("pckg/data");
 		assertNull(res);
