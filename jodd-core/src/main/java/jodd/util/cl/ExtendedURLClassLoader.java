@@ -98,18 +98,14 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		if (excludeJrePackagesFromLoader) {
 			String[] corePackages = SystemUtil.getJrePackages();
 
-			for (int i = 0; i < corePackages.length; i++) {
-				String pck = corePackages[i];
-
-				if (pck.equals("javax")) {
+			for (String corePackage : corePackages) {
+				if (corePackage.equals("javax")) {
 					// javax is NOT forbidden
 					continue;
 				}
 
-				corePackages[i] = pck + ".*";
+				addParentOnlyRules(corePackage + ".*");
 			}
-
-			addParentOnlyRules(corePackages);
 		}
 	}
 
