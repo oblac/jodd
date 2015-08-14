@@ -118,19 +118,22 @@ public class ExtendedURLClassLoaderTest {
 
 	@Test
 	public void testGetResource() throws IOException {
-		File temp = FileUtil.createTempDirectory("jodd", "tmp");
+		File tempRoot = FileUtil.createTempDirectory("jodd", "tmp");
+		File temp = new File(tempRoot, "pckg");
+		FileUtil.mkdir(temp);
+
 		File resourceFile = new File(temp, "data");
 		FileUtil.writeString(resourceFile, "RESOURCE CONTENT");
 		resourceFile.deleteOnExit();
-		URL[] urls = new URL[] {FileUtil.toURL(temp)};
+		URL[] urls = new URL[] {FileUtil.toURL(tempRoot)};
 
 		// parent-first
 
 		ExtendedURLClassLoader ecl = new ExtendedURLClassLoader(urls, cl, true);
-		URL res = ecl.getResource("data");
+		URL res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
-		Enumeration<URL> enums = ecl.getResources("data");
+		Enumeration<URL> enums = ecl.getResources("pckg/data");
 		assertTrue(enums.hasMoreElements());
 		assertEquals(res, enums.nextElement());
 
@@ -143,22 +146,22 @@ public class ExtendedURLClassLoaderTest {
 		// parent-last
 
 		ecl = new ExtendedURLClassLoader(urls, cl, false);
-		res = ecl.getResource("data");
+		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
 
-		enums = ecl.getResources("data");
+		enums = ecl.getResources("pckg/data");
 		assertTrue(enums.hasMoreElements());
 		assertEquals(res, enums.nextElement());
 
 		// parent-last, parent-only
 		ecl = new ExtendedURLClassLoader(urls, cl, false);
-		ecl.addLoaderOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addLoaderOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
 		assertEquals(res, FileUtil.toURL(resourceFile));
-		ecl.addParentOnlyRules("data");
-		res = ecl.getResource("data");
+		ecl.addParentOnlyRules("pckg/data");
+		res = ecl.getResource("pckg/data");
 		assertNull(res);
 
-		FileUtil.deleteDir(temp);
+		FileUtil.deleteDir(tempRoot);
 	}
 }

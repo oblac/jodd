@@ -181,6 +181,13 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		return new Loading(withParent, withLoader);
 	}
 
+	/**
+	 * Resolves resources.
+	 */
+	protected Loading resolveResourceLoading(boolean parentFirstStrategy, String resourceName) {
+		return resolveLoading(parentFirstStrategy, resourceName);
+	}
+
 
 	// ---------------------------------------------------------------- overrides
 
@@ -258,7 +265,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 
 		URL url = null;
 
-		Loading loading = resolveLoading(parentFirst, resourceName);
+		Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			// PARENT FIRST
@@ -295,7 +302,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		Enumeration<URL> loaderUrls = this.findResources(resourceName);
 		Enumeration<URL> parentUrls = parentClassLoader.getResources(resourceName);
 
-		Loading loading = resolveLoading(parentFirst, resourceName);
+		Loading loading = resolveResourceLoading(parentFirst, resourceName);
 
 		if (parentFirst) {
 			if (loading.withParent) {
