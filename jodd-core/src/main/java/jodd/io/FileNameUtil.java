@@ -26,6 +26,7 @@
 package jodd.io;
 
 import jodd.util.StringPool;
+import jodd.util.SystemUtil;
 
 import java.io.File;
 
@@ -973,6 +974,26 @@ public class FileNameUtil {
 			}
 		}
 		return new String[] {prefix, path, baseName, extension};
+	}
+
+	// ---------------------------------------------------------------- home
+
+	/**
+	 * Resolve <code>~</code> in the path.
+	 */
+	public static String resolveHome(String path) {
+		if (path.length() == 1) {
+			if (path.charAt(0) == '~') {
+				return SystemUtil.userHome();
+			}
+			return path;
+		}
+		if (path.length() >= 2) {
+			if ((path.charAt(0) == '~') && (path.charAt(1) == File.separatorChar)) {
+				return SystemUtil.userHome() + path.substring(1);
+			}
+		}
+		return path;
 	}
 
 }

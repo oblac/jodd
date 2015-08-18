@@ -25,6 +25,7 @@
 
 package jodd.io;
 
+import jodd.util.SystemUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -140,5 +141,14 @@ public class FileNameUtilTest {
 		assertTrue(FileNameUtil.hasExtension("/a/b/c.foo"));
 		assertTrue(FileNameUtil.hasExtension("/a/b/c.foo.doo"));
 		assertFalse(FileNameUtil.hasExtension("/a/b/c"));
+	}
+
+	@Test
+	public void testResolveHome() {
+		assertEquals("qwe", FileNameUtil.resolveHome("qwe"));
+		assertEquals("", FileNameUtil.resolveHome(""));
+		assertEquals(SystemUtil.userHome(), FileNameUtil.resolveHome("~"));
+		assertEquals(SystemUtil.userHome() + "/", FileNameUtil.resolveHome("~/"));
+		assertEquals(SystemUtil.userHome() + "/foo", FileNameUtil.resolveHome("~/foo"));
 	}
 }
