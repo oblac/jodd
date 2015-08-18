@@ -88,6 +88,7 @@ public interface StringPool {
 	String SINGLE_QUOTE     = "'";
 	String BACKTICK         = "`";
 	String SPACE            = " ";
+	String TILDA            = "~";
 	String LEFT_SQ_BRACKET  = "[";
 	String RIGHT_SQ_BRACKET = "]";
 	String TRUE             = "true";

@@ -111,7 +111,7 @@ public class HtmlStaplerBundlesManager {
 		this.contextPath = contextPath;
 		this.webRoot = webRoot;
 		this.strategy = strategy;
-		this.bundleFolder = SystemUtil.getTempDir();
+		this.bundleFolder = SystemUtil.tempDir();
 
 		if (strategy == Strategy.ACTION_MANAGED) {
 			actionBundles = new HashMap<>();

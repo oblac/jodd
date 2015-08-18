@@ -184,7 +184,7 @@ public class ClassLoaderUtil {
 	 * Finds <b>tools.jar</b>. Returns <code>null</code> if does not exist.
 	 */
 	public static File findToolsJar() {
-		String tools = new File(SystemUtil.getJavaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
+		String tools = new File(SystemUtil.javaHome()).getAbsolutePath() + File.separatorChar + "lib" + File.separatorChar + "tools.jar";
 		File toolsFile = new File(tools);
 		if (toolsFile.exists()) {
 			return toolsFile;

@@ -111,7 +111,7 @@ public class SystemUtil {
 	/**
 	 * Returns list of packages, build into runtime jars.
 	 */
-	public static String[] getJrePackages() {
+	public static String[] jrePackages() {
 		if (jrePackages == null) {
 			buildJrePackages();
 		}
@@ -174,21 +174,21 @@ public class SystemUtil {
 	/**
 	 * Returns current working folder.
 	 */
-	public static String getUserDir() {
+	public static String userDir() {
 		return System.getProperty(USER_DIR);
 	}
 
 	/**
 	 * Returns current user.
 	 */
-	public static String getUserName() {
+	public static String userName() {
 		return System.getProperty(USER_NAME);
 	}
 
 	/**
 	 * Returns user home folder.
 	 */
-	public static String getUserHome() {
+	public static String userHome() {
 		return System.getProperty(USER_HOME);
 	}
 
@@ -196,14 +196,14 @@ public class SystemUtil {
 	 * Returns current working folder.
 	 * This is <b>NOT</b> a user folder.
 	 */
-	public static String getWorkingFolder() {
+	public static String workingFolder() {
 		return WORKING_FOLDER;
 	}
 
 	/**
 	 * Returns JRE home.
 	 */
-	public static String getJavaJreHome() {
+	public static String javaJreHome() {
 		return System.getProperty(JAVA_HOME);
 	}
 
@@ -211,7 +211,7 @@ public class SystemUtil {
 	 * Returns JAVA_HOME which is not equals to "java.home" property
 	 * since it points to JAVA_HOME/jre folder.
 	 */
-	public static String getJavaHome() {
+	public static String javaHome() {
 		String home = System.getProperty(JAVA_HOME);
 		if (home == null) {
 			return null;
@@ -227,37 +227,37 @@ public class SystemUtil {
 	/**
 	 * Returns system temp dir.
 	 */
-	public static String getTempDir() {
+	public static String tempDir() {
 		return System.getProperty(TEMP_DIR);
 	}
 
 	/**
 	 * Returns OS name.
 	 */
-	public static String getOsName() {
+	public static String osName() {
 		return System.getProperty(OS_NAME);
 	}
 
 	/**
 	 * Returns OS version.
 	 */
-	public static String getOsVersion() {
+	public static String osVersion() {
 		return System.getProperty(OS_VERSION);
 	}
 
 	/**
 	 * Returns Java version string, as specified in system property.
 	 * Returned string contain major version, minor version and revision.
-	 * @see #getJavaSpecificationVersion()
+	 * @see #javaSpecificationVersion()
 	 */
-	public static String getJavaVersion() {
+	public static String javaVersion() {
 		return System.getProperty(JAVA_VERSION);
 	}
 
 	/**
 	 * Retrieves the version of the currently running JVM.
 	 */
-	public static String getJavaSpecificationVersion() {
+	public static String javaSpecificationVersion() {
 		return System.getProperty(JAVA_SPECIFICATION_VERSION);
 	}
 
@@ -266,14 +266,14 @@ public class SystemUtil {
 	 * a number 10x the <code>major.minor</code>, e.g.
 	 * Java1.5 returns <code>15</code>.
 	 */
-	public static int getJavaVersionNumber() {
+	public static int javaVersionNumber() {
 		return javaVersionNumber;
 	}
 
 	/**
 	 * Returns Java vendor.
 	 */
-	public static String getJavaVendor() {
+	public static String javaVendor() {
 		return System.getProperty(JAVA_VENDOR);
 	}
 
@@ -297,21 +297,21 @@ public class SystemUtil {
 	/**
 	 * Returns system class path.
 	 */
-	public static String getClassPath() {
+	public static String systemClassPath() {
 		return System.getProperty(JAVA_CLASSPATH);
 	}
 
 	/**
 	 * Returns path separator.
 	 */
-	public static String getPathSeparator() {
+	public static String pathSeparator() {
 		return System.getProperty(PATH_SEPARATOR);
 	}
 
 	/**
 	 * Returns file encoding.
 	 */
-	public static String getFileEncoding() {
+	public static String fileEncoding() {
 		return System.getProperty(FILE_ENCODING);
 	}
 
@@ -319,14 +319,14 @@ public class SystemUtil {
 	 * Returns <code>true</code> if host is Windows.
 	 */
 	public static boolean isHostWindows() {
-		return getOsName().toUpperCase().startsWith("WINDOWS");
+		return osName().toUpperCase().startsWith("WINDOWS");
 	}
 
 	/**
 	 * Returns <code>true</code> if host is Linux.
 	 */
 	public static boolean isHostLinux() {
-		return getOsName().toUpperCase().startsWith("LINUX");
+		return osName().toUpperCase().startsWith("LINUX");
 	}
 
 	/**
@@ -342,21 +342,21 @@ public class SystemUtil {
 	 * Returns <code>true</code> if host is Mac.
 	 */
 	public static boolean isHostMac() {
-		return getOsName().toUpperCase().startsWith("MAC OS X");
+		return osName().toUpperCase().startsWith("MAC OS X");
 	}
 
 	/**
 	 * Returns <code>true</code> if host is Solaris.
 	 */
 	public static boolean isHostSolaris() {
-		return getOsName().toUpperCase().startsWith("SUNOS");
+		return osName().toUpperCase().startsWith("SUNOS");
 	}
 
 	/**
 	 * Returns <code>true</code> if host is AIX.
 	 */
 	public static boolean isHostAix() {
-		return getOsName().toUpperCase().equals("AIX");
+		return osName().toUpperCase().equals("AIX");
 	}
 
 	/**

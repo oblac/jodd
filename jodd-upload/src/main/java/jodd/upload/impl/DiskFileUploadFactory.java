@@ -43,7 +43,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 	protected int maxFileSize = 102400; 
 
 	public DiskFileUploadFactory() throws IOException {
-		this(SystemUtil.getTempDir());
+		this(SystemUtil.tempDir());
 	}
 
 	public DiskFileUploadFactory(String destFolder) throws IOException {
@@ -59,7 +59,7 @@ public class DiskFileUploadFactory implements FileUploadFactory {
 
 	public DiskFileUploadFactory setUploadDir(String destFolder) throws IOException {
 		if (destFolder == null) {
-			destFolder = SystemUtil.getTempDir();
+			destFolder = SystemUtil.tempDir();
 		}
 		File destination = new File(destFolder);
 		if (destination.exists() == false) {

@@ -221,7 +221,7 @@ public abstract class DefaultAppCore {
 		int ndx = appDir.indexOf("WEB-INF");
 		isWebApplication = (ndx != -1);
 
-		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.getWorkingFolder();
+		appDir = isWebApplication ? appDir.substring(0, ndx) : SystemUtil.workingFolder();
 	}
 
 	// ---------------------------------------------------------------- ready

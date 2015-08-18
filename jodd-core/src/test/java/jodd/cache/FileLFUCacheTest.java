@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FileLFUCacheTest {
 
-	private File tempFolder = new File(SystemUtil.getTempDir());
+	private File tempFolder = new File(SystemUtil.tempDir());
 
 	private File file(String fileName, int size) throws IOException {
 		byte[] bytes = new byte[size];

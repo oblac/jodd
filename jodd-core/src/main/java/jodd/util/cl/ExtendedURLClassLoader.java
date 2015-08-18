@@ -57,7 +57,7 @@ import java.util.List;
  * <b>parent</b> group rules will be checked first.
  * <p>
  * By default, the list of <b>parent-only</b> group is populated with
- * {@link jodd.util.SystemUtil#getJrePackages() JRE packages}.
+ * {@link jodd.util.SystemUtil#jrePackages() JRE packages}.
  * <p>
  * When <b>parent-last</b> strategy is used, be aware how you use
  * {@link jodd.util.ClassLoaderUtil} as it is designed to follow <b>parent-first</b>
@@ -96,7 +96,7 @@ public class ExtendedURLClassLoader extends URLClassLoader {
 		loaderOnlyRules = new String[0];
 
 		if (excludeJrePackagesFromLoader) {
-			String[] corePackages = SystemUtil.getJrePackages();
+			String[] corePackages = SystemUtil.jrePackages();
 
 			for (String corePackage : corePackages) {
 				if (corePackage.equals("javax")) {
