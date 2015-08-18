@@ -369,18 +369,18 @@ public class StringUtilTest {
 		assertEquals("qWERtyuIOp", StringUtil.replace(s, new String[]{"wer", "io"}, new String[]{"WER", "IO"}));
 		assertEquals("qwertyuiop", StringUtil.replace(s, new String[]{"wer1", "io1"}, new String[]{"WER", "IO"}));
 
-		assertEquals("qWERtyuIOP", StringUtil.replace(s, new String[]{"wer", "iop"}, new String[]{"WER", "IOP"}));
-		assertEquals("qWERtyuIOP", StringUtil.replaceIgnoreCase(s, new String[]{"WER", "IOP"}, new String[]{"WER", "IOP"}));
+		assertEquals("qWERtyuIOP", StringUtil.replace(s, new String[] {"wer", "iop"}, new String[] {"WER", "IOP"}));
+		assertEquals("qWERtyuIOP", StringUtil.replaceIgnoreCase(s, new String[] {"WER", "IOP"}, new String[] {"WER", "IOP"}));
 		assertEquals(s, StringUtil.replaceIgnoreCase(s, new String[] {"WER", "IOP"}, new String[] {"WER"}));
-		assertEquals(s, StringUtil.replaceIgnoreCase(s, new String[]{}, new String[]{"WER"}));
+		assertEquals(s, StringUtil.replaceIgnoreCase(s, new String[] {}, new String[] {"WER"}));
 
-		assertEquals("qwertyuiop", StringUtil.replace(s, new String[]{}, new String[]{}));
+		assertEquals("qwertyuiop", StringUtil.replace(s, new String[] {}, new String[] {}));
 
-		assertEquals("qWERtyuiop", StringUtil.replace(s, new String[]{"wer", "we"}, new String[]{"WER", "11"}));
+		assertEquals("qWERtyuiop", StringUtil.replace(s, new String[] {"wer", "we"}, new String[] {"WER", "11"}));
 
-		assertTrue(StringUtil.equals(new String[]{"wer", "io"}, new String[]{"wer", "io"}));
-		assertFalse(StringUtil.equals(new String[]{"wer", "io"}, new String[]{"WER", "IO"}));
-		assertTrue(StringUtil.equalsIgnoreCase(new String[]{"wer", "io"}, new String[]{"WER", "IO"}));
+		assertTrue(StringUtil.equals(new String[] {"wer", "io"}, new String[] {"wer", "io"}));
+		assertFalse(StringUtil.equals(new String[] {"wer", "io"}, new String[] {"WER", "IO"}));
+		assertTrue(StringUtil.equalsIgnoreCase(new String[] {"wer", "io"}, new String[] {"WER", "IO"}));
 
 		assertEquals(1, StringUtil.indexOf(s, new String[]{"wer", "io"})[1]);
 		assertEquals(7, StringUtil.indexOfIgnoreCase(s, new String[]{"wer", "IO"}, 2)[1]);
@@ -728,8 +728,8 @@ public class StringUtilTest {
 		assertEquals(1, StringUtil.indexOfChars(s, "q2"));
 		assertEquals(5, StringUtil.indexOfChars(s, "yq"));
 
-		assertEquals(5, StringUtil.indexOfChars(s, new char[] { 'y', 'q' }));
-		assertEquals(-1, StringUtil.indexOfChars(s, new char[] { 'x', 'o' }));
+		assertEquals(5, StringUtil.indexOfChars(s, new char[] {'y', 'q'}));
+		assertEquals(-1, StringUtil.indexOfChars(s, new char[] {'x', 'o'}));
 	}
 
 	@Test
@@ -739,15 +739,15 @@ public class StringUtilTest {
 		assertFalse(StringUtil.equals(null, "2"));
 		assertTrue(StringUtil.equals((String) null, null));
 
-		assertFalse(StringUtil.equals(new String[]{"abc", "de"}, new String[]{"abc"}));
+		assertFalse(StringUtil.equals(new String[] {"abc", "de"}, new String[] {"abc"}));
 		assertFalse(StringUtil.equalsIgnoreCase(new String[] {"abc", "de"}, new String[] {"ABC"}));
 		assertFalse(StringUtil.equalsIgnoreCase(new String[] {"abc", "de"}, new String[] {"ab", "dE"}));
 
-		assertEquals(2, StringUtil.equalsOne("src", new String[]{"123", null, "src"}));
-		assertEquals(-1, StringUtil.equalsOne("src", new String[]{"123", null, "Src"}));
+		assertEquals(2, StringUtil.equalsOne("src", new String[] {"123", null, "src"}));
+		assertEquals(-1, StringUtil.equalsOne("src", new String[] {"123", null, "Src"}));
 
-		assertEquals(2, StringUtil.equalsOneIgnoreCase("sRc", new String[]{"123", null, "Src"}));
-		assertEquals(-1, StringUtil.equalsOneIgnoreCase("sRc", new String[]{"123", null, "Dsrc"}));
+		assertEquals(2, StringUtil.equalsOneIgnoreCase("sRc", new String[] {"123", null, "Src"}));
+		assertEquals(-1, StringUtil.equalsOneIgnoreCase("sRc", new String[] {"123", null, "Dsrc"}));
 	}
 
 	@Test
@@ -800,7 +800,7 @@ public class StringUtilTest {
 		assertEquals("[1,2]", StringUtil.toPrettyString(new byte[]{1,2}));
 		assertEquals("[1.0,2.0]", StringUtil.toPrettyString(new double[]{1,2}));
 		assertEquals("[1.0,2.0]", StringUtil.toPrettyString(new float[]{1,2}));
-		assertEquals("[true,false]", StringUtil.toPrettyString(new boolean[]{true, false}));
+		assertEquals("[true,false]", StringUtil.toPrettyString(new boolean[] {true, false}));
 
 		try {
 			StringUtil.toPrettyString(new char[]{'a','b'});
@@ -809,7 +809,7 @@ public class StringUtilTest {
 			// ignore
 		}
 
-		assertEquals("[[1,2],[3,4]]", StringUtil.toPrettyString(new int[][] {{1,2}, {3,4}}));
+		assertEquals("[[1,2],[3,4]]", StringUtil.toPrettyString(new int[][] {{1, 2}, {3, 4}}));
 
 		List<Integer> list = new ArrayList<>();
 		list.add(1);
@@ -861,10 +861,10 @@ public class StringUtilTest {
 		assertEquals(0, StringUtil.startsWithOneIgnoreCase("qwe123", new String[]{"Qwe", null, ".", "qwe"}));
 		assertEquals(-1, StringUtil.startsWithOneIgnoreCase("qwe123", new String[]{"we", null, ".", "we"}));
 
-		assertEquals(3, StringUtil.endsWithOne("qwezxc", new String[]{"Zxc", null, ".", "zxc"}));
-		assertEquals(-1, StringUtil.endsWithOne("qwezxc", new String[]{"Zxc", null, ".", "zx"}));
-		assertEquals(0, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[]{"Zxc", null, ".", "zxc"}));
-		assertEquals(-1, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[]{"zx", null, ".", "zx"}));
+		assertEquals(3, StringUtil.endsWithOne("qwezxc", new String[] {"Zxc", null, ".", "zxc"}));
+		assertEquals(-1, StringUtil.endsWithOne("qwezxc", new String[] {"Zxc", null, ".", "zx"}));
+		assertEquals(0, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[] {"Zxc", null, ".", "zxc"}));
+		assertEquals(-1, StringUtil.endsWithOneIgnoreCase("qweZXC", new String[] {"zx", null, ".", "zx"}));
 	}
 
 
@@ -1153,12 +1153,12 @@ public class StringUtilTest {
 		assertArrayEquals(new String[]{"ab", "cd"}, StringUtil.toStringArray(new String[]{"ab", "cd"}));
 
 		assertArrayEquals(new String[]{"1","2"}, StringUtil.toStringArray(new int[]{1,2}));
-		assertArrayEquals(new String[]{"1","2"}, StringUtil.toStringArray(new long[]{1,2}));
-		assertArrayEquals(new String[]{"1","2"}, StringUtil.toStringArray(new short[]{1,2}));
-		assertArrayEquals(new String[]{"1","2"}, StringUtil.toStringArray(new byte[]{1,2}));
-		assertArrayEquals(new String[]{"1.0","2.0"}, StringUtil.toStringArray(new double[]{1,2}));
-		assertArrayEquals(new String[]{"1.0","2.0"}, StringUtil.toStringArray(new float[]{1,2}));
-		assertArrayEquals(new String[]{"true","false"}, StringUtil.toStringArray(new boolean[]{true, false}));
+		assertArrayEquals(new String[] {"1", "2"}, StringUtil.toStringArray(new long[] {1, 2}));
+		assertArrayEquals(new String[] {"1", "2"}, StringUtil.toStringArray(new short[] {1, 2}));
+		assertArrayEquals(new String[] {"1", "2"}, StringUtil.toStringArray(new byte[] {1, 2}));
+		assertArrayEquals(new String[] {"1.0", "2.0"}, StringUtil.toStringArray(new double[] {1, 2}));
+		assertArrayEquals(new String[] {"1.0", "2.0"}, StringUtil.toStringArray(new float[] {1, 2}));
+		assertArrayEquals(new String[] {"true", "false"}, StringUtil.toStringArray(new boolean[] {true, false}));
 		try {
 			StringUtil.toStringArray(new char[]{'a','b'});
 			fail();
@@ -1206,6 +1206,17 @@ public class StringUtilTest {
 		assertEquals("", StringUtil.cutBetween("123456", "2345", "456"));
 		assertNull(StringUtil.cutBetween("123456", "2345", "aa"));
 		assertNull(StringUtil.cutBetween("123456", "bbb", "34"));
+	}
+
+	@Test
+	public void testIsSubstringAt() {
+		assertTrue(StringUtil.isSubstringAt("qwerty", "we", 1));
+		assertTrue(StringUtil.isSubstringAt("qwerty", "qwe", 0));
+		assertTrue(StringUtil.isSubstringAt("qwerty", "qwerty", 0));
+		assertFalse(StringUtil.isSubstringAt("qwerty", "qwerty", 1));
+		assertFalse(StringUtil.isSubstringAt("qwerty", "y", 4));
+		assertTrue(StringUtil.isSubstringAt("qwerty", "y", 5));
+		assertTrue(StringUtil.isSubstringAt("qwerty", "", 5));
 	}
 
 }
