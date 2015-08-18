@@ -291,9 +291,8 @@ public class HashCode {
 			result = hash(result, aObject.hashCode());
 		} else {
 			Object[] objects = (Object[]) aObject;
-			int length = objects.length;
-			for (int idx = 0; idx < length; ++idx) {
-				result = hash(result, objects[idx]);
+			for (Object object : objects) {
+				result = hash(result, object);
 			}
 		}
 		return result;

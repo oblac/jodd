@@ -101,10 +101,10 @@ public class Methods {
 		if (methodDescriptors == null) {
 			return null;
 		}
-		for (int i = 0; i < methodDescriptors.length; i++) {
-			Method m = methodDescriptors[i].getMethod();
+		for (MethodDescriptor methodDescriptor : methodDescriptors) {
+			Method m = methodDescriptor.getMethod();
 			if (ReflectUtil.compareParameters(m.getParameterTypes(), paramTypes) == true) {
-				return methodDescriptors[i];
+				return methodDescriptor;
 			}
 		}
 		return null;

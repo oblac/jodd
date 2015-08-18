@@ -92,8 +92,8 @@ public class Socks4ProxySocketFactory extends SocketFactory {
 
 			InetAddress addr = InetAddress.getByName(host);
 			byte[] byteAddress = addr.getAddress();
-			for (int i = 0; i < byteAddress.length; i++) {
-				buf[index++] = byteAddress[i];
+			for (byte byteAddres : byteAddress) {
+				buf[index++] = byteAddres;
 			}
 
 			if (user != null) {

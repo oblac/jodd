@@ -44,11 +44,7 @@ public class MultiComparator<T> implements Comparator<T> {
 	 * proceeds to the next comparator and so on.
 	 */
 	public int compare(T o1, T o2) {
-		int comparatorsSize = comparators.size();
-
-		for (int i = 0; i < comparatorsSize; i++) {
-			Comparator<T> comparator = comparators.get(i);
-
+		for (Comparator<T> comparator : comparators) {
 			int result = comparator.compare(o1, o2);
 			if (result != 0) {
 				return result;
