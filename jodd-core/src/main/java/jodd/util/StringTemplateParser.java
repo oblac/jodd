@@ -35,6 +35,7 @@ import java.util.Map;
  */
 public class StringTemplateParser {
 
+	public static final String DEFAULT_MACRO_PREFIX = "$";
 	public static final String DEFAULT_MACRO_START = "${";
 	public static final String DEFAULT_MACRO_END = "}";
 
@@ -43,6 +44,7 @@ public class StringTemplateParser {
 	protected boolean replaceMissingKey = true;
 	protected String missingKeyReplacement;
 	protected boolean resolveEscapes = true;
+	protected String macroPrefix = DEFAULT_MACRO_PREFIX;
 	protected String macroStart = DEFAULT_MACRO_START;
 	protected String macroEnd = DEFAULT_MACRO_END;
 	protected char escapeChar = '\\';
@@ -99,6 +101,14 @@ public class StringTemplateParser {
 		this.macroStart = macroStart;
 	}
 
+	public String getMacroPrefix() {
+		return macroPrefix;
+	}
+
+	public void setMacroPrefix(String macroPrefix) {
+		this.macroPrefix = macroPrefix;
+	}
+
 	public String getMacroEnd() {
 		return macroEnd;
 	}
@@ -108,6 +118,13 @@ public class StringTemplateParser {
 	 */
 	public void setMacroEnd(String macroEnd) {
 		this.macroEnd = macroEnd;
+	}
+
+	/**
+	 * Sets the strict format by setting the macro prefix to <code>null</code>.
+	 */
+	public void setStrictFormat() {
+		macroPrefix = null;
 	}
 
 	public char getEscapeChar() {
@@ -145,11 +162,26 @@ public class StringTemplateParser {
 		int i = 0;
 		int len = template.length();
 
+		// strict flag means that start and end tag are not necessary
+		boolean strict;
+
+		if (macroPrefix == null) {
+			// when prefix is not specified, make it equals to macro start
+			// so we can use the same code
+			macroPrefix = macroStart;
+
+			strict = true;
+		}
+		else {
+			strict = false;
+		}
+
+		int prefixLen = macroPrefix.length();
 		int startLen = macroStart.length();
 		int endLen = macroEnd.length();
 
 		while (i < len) {
-			int ndx = template.indexOf(macroStart, i);
+			int ndx = template.indexOf(macroPrefix, i);
 			if (ndx == -1) {
 				result.append(i == 0 ? template : template.substring(i));
 				break;
@@ -173,31 +205,72 @@ public class StringTemplateParser {
 				result.append(template.substring(i, ndx));
 			}
 			if (escape == true) {
-				result.append(macroStart);
-				i = ndx + startLen;
+				result.append(macroPrefix);
+
+				i = ndx + prefixLen;
+
 				continue;
 			}
 
-			// find macros end
-			ndx += startLen;
-			int ndx2 = template.indexOf(macroEnd, ndx);
-			if (ndx2 == -1) {
-				throw new IllegalArgumentException("Invalid template, unclosed macro at: " + (ndx - startLen));
-			}
+			// macro started, detect strict format
 
-			// detect inner macros, there is no escaping
-			int ndx1 = ndx;
-			while (ndx1 < ndx2) {
-				int n = StringUtil.indexOf(template, macroStart, ndx1, ndx2);
-				if (n == -1) {
-					break;
+			boolean strictFormat = strict;
+
+			if (strictFormat == false) {
+				if (StringUtil.isSubstringAt(template, macroStart, ndx)) {
+					strictFormat = true;
 				}
-				ndx1 = n + startLen;
 			}
 
-			String name = template.substring(ndx1, ndx2);
+			int ndx1;
+			int ndx2;
+
+			if (!strictFormat) {
+				// not strict format: $foo
+
+				ndx += prefixLen;
+				ndx1 = ndx;
+				ndx2 = ndx;
+
+				while ((ndx2 < len) && CharUtil.isPropertyNameChar(template.charAt(ndx2))) {
+					ndx2++;
+				}
+
+				if (ndx2 == len) {
+					ndx2--;
+				}
+
+				while ((ndx2 > ndx) && !CharUtil.isAlphaOrDigit(template.charAt(ndx2))) {
+					ndx2--;
+				}
+
+				ndx2++;
+			}
+			else {
+				// strict format: ${foo}
+
+				// find macros end
+				ndx += startLen;
+				ndx2 = template.indexOf(macroEnd, ndx);
+				if (ndx2 == -1) {
+					throw new IllegalArgumentException("Invalid template, unclosed macro at: " + (ndx - startLen));
+				}
+
+				// detect inner macros, there is no escaping
+				ndx1 = ndx;
+				while (ndx1 < ndx2) {
+					int n = StringUtil.indexOf(template, macroStart, ndx1, ndx2);
+					if (n == -1) {
+						break;
+					}
+					ndx1 = n + startLen;
+				}
+			}
+
+			final String name = template.substring(ndx1, ndx2);
 
 			// find value and append
+
 			Object value;
 			if (missingKeyReplacement != null || replaceMissingKey == false) {
 				try {
@@ -228,7 +301,11 @@ public class StringTemplateParser {
 					}
 				}
 				result.append(stringValue);
-				i = ndx2 + endLen;
+
+				i = ndx2;
+				if (strictFormat) {
+					i += endLen;
+				}
 			} else {
 				// inner macro
 				template = template.substring(0, ndx1 - startLen) + value.toString() + template.substring(ndx2 + endLen);

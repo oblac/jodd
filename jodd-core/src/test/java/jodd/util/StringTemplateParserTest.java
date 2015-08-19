@@ -170,11 +170,36 @@ public class StringTemplateParserTest {
 
 		stp.setMacroStart("<%=");
 		stp.setMacroEnd("%>");
+		stp.setMacroPrefix(null);
 
 		assertEquals("...${foo}...bar...", stp.parse("...${foo}...<%=foo%>...", macroResolver));
 
 		assertEquals("z<%=foo%>z", stp.parse("z\\<%=foo%>z", macroResolver));
 		assertEquals("xzapx", stp.parse("x<%=<%=foo%>%>x", macroResolver));
+	}
+
+	@Test
+	public void testNonScript() {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("foo", "bar");
+		map.put("bar", "zap");
+		map.put("inner.man", "jo");
+
+		StringTemplateParser.MacroResolver macroResolver = createMapMacroResolver(map);
+
+		StringTemplateParser stp = new StringTemplateParser();
+		assertEquals("...bar...", stp.parse("...$foo...", macroResolver));
+		assertEquals("xx bar xx", stp.parse("xx $foo xx", macroResolver));
+		assertEquals("bar", stp.parse("$foo", macroResolver));
+
+		assertEquals("jo", stp.parse("$inner.man", macroResolver));
+		assertEquals("jo.", stp.parse("$inner.man.", macroResolver));
+		assertEquals("jo x", stp.parse("$inner.man x", macroResolver));
+		assertEquals("jo bar", stp.parse("$inner.man ${foo}", macroResolver));
+
+		stp.setStrictFormat();
+		assertEquals("$inner.man bar", stp.parse("$inner.man ${foo}", macroResolver));
+
 	}
 
 }
