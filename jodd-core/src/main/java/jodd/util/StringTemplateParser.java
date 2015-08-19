@@ -35,6 +35,13 @@ import java.util.Map;
  */
 public class StringTemplateParser {
 
+	/**
+	 * Static ctor.
+	 */
+	public static StringTemplateParser create() {
+		return new StringTemplateParser();
+	}
+
 	public static final String DEFAULT_MACRO_PREFIX = "$";
 	public static final String DEFAULT_MACRO_START = "${";
 	public static final String DEFAULT_MACRO_END = "}";
@@ -72,8 +79,9 @@ public class StringTemplateParser {
 	 * Specifies replacement for missing keys. If <code>null</code>
 	 * exception will be thrown.
 	 */
-	public void setMissingKeyReplacement(String missingKeyReplacement) {
+	public StringTemplateParser setMissingKeyReplacement(String missingKeyReplacement) {
 		this.missingKeyReplacement = missingKeyReplacement;
+		return this;
 	}
 
 	public boolean isResolveEscapes() {
@@ -86,8 +94,9 @@ public class StringTemplateParser {
 	 * this may be set to <code>false</code> so escaped values
 	 * remains.
 	 */
-	public void setResolveEscapes(boolean resolveEscapes) {
+	public StringTemplateParser setResolveEscapes(boolean resolveEscapes) {
 		this.resolveEscapes = resolveEscapes;
+		return this;
 	}
 
 	public String getMacroStart() {
@@ -97,16 +106,18 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro start string.
 	 */
-	public void setMacroStart(String macroStart) {
+	public StringTemplateParser setMacroStart(String macroStart) {
 		this.macroStart = macroStart;
+		return this;
 	}
 
 	public String getMacroPrefix() {
 		return macroPrefix;
 	}
 
-	public void setMacroPrefix(String macroPrefix) {
+	public StringTemplateParser setMacroPrefix(String macroPrefix) {
 		this.macroPrefix = macroPrefix;
+		return this;
 	}
 
 	public String getMacroEnd() {
@@ -116,15 +127,17 @@ public class StringTemplateParser {
 	/**
 	 * Defines macro end string.
 	 */
-	public void setMacroEnd(String macroEnd) {
+	public StringTemplateParser setMacroEnd(String macroEnd) {
 		this.macroEnd = macroEnd;
+		return this;
 	}
 
 	/**
 	 * Sets the strict format by setting the macro prefix to <code>null</code>.
 	 */
-	public void setStrictFormat() {
+	public StringTemplateParser setStrictFormat() {
 		macroPrefix = null;
+		return this;
 	}
 
 	public char getEscapeChar() {
@@ -134,8 +147,9 @@ public class StringTemplateParser {
 	/**
 	 * Defines escape character.
 	 */
-	public void setEscapeChar(char escapeChar) {
+	public StringTemplateParser setEscapeChar(char escapeChar) {
 		this.escapeChar = escapeChar;
+		return this;
 	}
 
 	public boolean isParseValues() {
@@ -146,8 +160,9 @@ public class StringTemplateParser {
 	 * Defines if macro values has to be parsed, too.
 	 * By default, macro values are returned as they are.
 	 */
-	public void setParseValues(boolean parseValues) {
+	public StringTemplateParser setParseValues(boolean parseValues) {
 		this.parseValues = parseValues;
+		return this;
 	}
 
 
