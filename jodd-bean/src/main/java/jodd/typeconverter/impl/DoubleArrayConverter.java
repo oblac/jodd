@@ -28,8 +28,8 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
-import jodd.util.collection.DoubleArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -108,14 +108,21 @@ public class DoubleArrayConverter implements TypeConverter<double[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			DoubleArrayList doubleArrayList = new DoubleArrayList();
+			ArrayList<Double> doubleArrayList = new ArrayList<>();
 
 			for (Object element : iterable) {
 				double convertedValue = convertType(element);
-				doubleArrayList.add(convertedValue);
-            }
+				doubleArrayList.add(Double.valueOf(convertedValue));
+			}
 
-			return doubleArrayList.toArray();
+			double[] array = new double[doubleArrayList.size()];
+
+			for (int i = 0; i < doubleArrayList.size(); i++) {
+				Double d = doubleArrayList.get(i);
+				array[i] = d.doubleValue();
+			}
+
+			return array;
 		}
 
 		if (value instanceof CharSequence) {

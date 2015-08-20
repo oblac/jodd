@@ -28,8 +28,8 @@ package jodd.typeconverter.impl;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManagerBean;
 import jodd.util.StringUtil;
-import jodd.util.collection.BooleanArrayList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -106,12 +106,21 @@ public class BooleanArrayConverter implements TypeConverter<boolean[]> {
 		if (value instanceof Iterable) {
 			Iterable iterable = (Iterable) value;
 
-			BooleanArrayList booleanArrayList = new BooleanArrayList();
+			ArrayList<Boolean> booleanArrayList = new ArrayList<>();
+
 			for (Object element : iterable) {
 				boolean convertedValue = convertType(element);
-				booleanArrayList.add(convertedValue);
+				booleanArrayList.add(Boolean.valueOf(convertedValue));
             }
-			return booleanArrayList.toArray();
+			
+			boolean[] array = new boolean[booleanArrayList.size()];
+
+			for (int i = 0; i < booleanArrayList.size(); i++) {
+				Boolean b = booleanArrayList.get(i);
+				array[i] = b.booleanValue();
+			}
+			
+			return array;
 		}
 
 		if (value instanceof CharSequence) {
