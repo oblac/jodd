@@ -260,6 +260,14 @@ public class StringTemplateParser {
 				}
 
 				ndx2++;
+
+				if (ndx2 == ndx1 + 1) {
+					// no value, hence no macro
+					result.append(macroPrefix);
+
+					i = ndx1;
+					continue;
+				}
 			}
 			else {
 				// strict format: ${foo}
