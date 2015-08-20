@@ -155,7 +155,7 @@ public class ClassLoaderUtil {
 			} catch (MalformedURLException ignore) {
 			}
 		}
-		return findClass(className, urls, null);
+		return findClass(className, urls, parent);
 	}
 
 	/**
@@ -464,7 +464,11 @@ public class ClassLoaderUtil {
 	 */
 	public static File getResourceFile(String resourceName, ClassLoader classLoader) {
 		try {
-			return new File(getResourceUrl(resourceName, classLoader).toURI());
+			URL resourceUrl = getResourceUrl(resourceName, classLoader);
+			if (resourceUrl == null) {
+				return null;
+			}
+			return new File(resourceUrl.toURI());
 		} catch (URISyntaxException ignore) {
 			return null;
 		}
