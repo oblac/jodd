@@ -46,6 +46,13 @@ import java.util.Map;
  */
 public class JsonParser extends JsonParserBase {
 
+	/**
+	 * Static ctor.
+	 */
+	public static JsonParser create() {
+		return new JsonParser();
+	}
+
 	private static final char[] T_RUE = new char[] {'r', 'u', 'e'};
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};

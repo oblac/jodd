@@ -38,6 +38,13 @@ import java.util.Map;
  */
 public class JsonSerializer {
 
+	/**
+	 * Static ctor.
+	 */
+	public static JsonSerializer create() {
+		return new JsonSerializer();
+	}
+
 	// ---------------------------------------------------------------- config
 
 	protected Map<Path, TypeJsonSerializer> pathSerializersMap;
