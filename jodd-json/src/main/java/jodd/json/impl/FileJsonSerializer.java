@@ -25,15 +25,68 @@
 
 package jodd.json.impl;
 
+import jodd.io.FileUtil;
 import jodd.json.JsonContext;
+import jodd.json.JsonException;
 import jodd.json.TypeJsonSerializer;
+import jodd.util.Base64;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
- * Enum serializer.
+ * File json serializer offers various ways of file to JSON serializations.
  */
-public class EnumJsonSerializer implements TypeJsonSerializer<Enum> {
+public class FileJsonSerializer implements TypeJsonSerializer<File> {
 
-	public void serialize(JsonContext jsonContext, Enum value) {
-		jsonContext.writeString(value.name());
+	public enum Type {
+		/**
+		 * File will be serialized with the full path.
+		 */
+		PATH,
+		/**
+		 * File will be serialized as its name.
+		 */
+		NAME,
+		/**
+		 * File will be serialized with content in Base64 form/
+		 */
+		CONTENT
+	}
+
+	public FileJsonSerializer(Type serializationType) {
+		this.serializationType = serializationType;
+	}
+
+	private final Type serializationType;
+
+
+	@Override
+	public void serialize(JsonContext jsonContext, File file) {
+		switch (serializationType) {
+			case PATH:
+				jsonContext.writeString(file.getAbsolutePath());
+				break;
+			case NAME:
+				jsonContext.writeString(file.getName());
+				break;
+			case CONTENT: {
+					byte[] bytes;
+
+					try {
+						bytes = FileUtil.readBytes(file);
+					}
+					catch (IOException e) {
+						throw new JsonException("Unable to read files content", e);
+					}
+
+					String encoded = Base64.encodeToString(bytes);
+
+					jsonContext.writeString(encoded);
+				}
+				break;
+			default:
+				throw new JsonException("Invalid type");
+		}
 	}
 }

@@ -23,17 +23,28 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json.impl;
+package jodd.json.model;
 
-import jodd.json.JsonContext;
-import jodd.json.TypeJsonSerializer;
+import java.io.File;
 
-/**
- * Enum serializer.
- */
-public class EnumJsonSerializer implements TypeJsonSerializer<Enum> {
+public class FileMan {
 
-	public void serialize(JsonContext jsonContext, Enum value) {
-		jsonContext.writeString(value.name());
+	public String getAnything() {
+		return anything;
 	}
+
+	public void setAnything(String anything) {
+		this.anything = anything;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	private String anything = "some data";
+	private File file;
 }

@@ -27,10 +27,14 @@ package jodd.json;
 
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
+import jodd.json.model.FileMan;
 import jodd.json.model.State;
+import jodd.util.StringUtil;
+import jodd.util.SystemUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -539,5 +543,14 @@ public class JsonSerializerTest {
 		assertEquals("{\"one\":{\"id\":1}}", json);
 	}
 
+	@Test
+	public void testFiles() {
+		FileMan fileMan = new FileMan();
+		File userHome = new File(SystemUtil.userHome());
+		fileMan.setFile(userHome);
 
+		String json = JsonSerializer.create().serialize(fileMan);
+
+		assertTrue(json.contains(StringUtil.replace(SystemUtil.userHome(), "/", "\\/")));
+	}
 }
