@@ -25,6 +25,8 @@
 
 package jodd.bean;
 
+import java.util.Map;
+
 /**
  * Walker over bean properties.
  */
@@ -50,8 +52,24 @@ public class BeanWalker extends BeanVisitorImplBase<BeanWalker> {
 		return new BeanWalker(callback);
 	}
 
+	public void source(Object source) {
+		this.source = source;
+
+		isSourceMap = (source instanceof Map);
+
+		visit();
+	}
+
 	public void bean(Object bean) {
 		this.source = bean;
+
+		visit();
+	}
+
+	public void map(Map map) {
+		this.source = map;
+
+		this.isSourceMap = true;
 
 		visit();
 	}

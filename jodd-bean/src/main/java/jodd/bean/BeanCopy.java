@@ -84,6 +84,17 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 		return beanCopy;
 	}
 
+	/**
+	 * Defines source, detects a map.
+	 */
+	public static BeanCopy from(Object source) {
+		BeanCopy beanCopy = new BeanCopy(source);
+
+		beanCopy.isSourceMap = source instanceof Map;
+
+		return beanCopy;
+	}
+
 	// ---------------------------------------------------------------- destination
 
 	/**
@@ -105,6 +116,16 @@ public class BeanCopy extends BeanVisitorImplBase<BeanCopy> {
 		return this;
 	}
 
+	/**
+	 * Defines destination, detects a map.
+	 */
+	public BeanCopy to(Object destination) {
+		this.destination = destination;
+
+		this.isTargetMap = destination instanceof Map;
+
+		return this;
+	}
 
 	// ---------------------------------------------------------------- properties
 

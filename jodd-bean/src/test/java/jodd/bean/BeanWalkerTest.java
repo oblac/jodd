@@ -30,7 +30,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -63,6 +65,27 @@ public class BeanWalkerTest {
 
 		Collections.sort(names);
 		assertEquals("[fooBoolean, fooByte]", names.toString());
+	}
 
+	@Test
+	public void testBeanWalkingMap() {
+		Map<String, String> map = new HashMap<>();
+
+		map.put("simple", "qwe");
+		map.put("com.plex", "asd");
+
+		final List<String> names = new ArrayList<>();
+
+		BeanWalker beanWalker = BeanWalker.walk(new BeanWalker.BeanWalkerCallback() {
+			@Override
+			public void visitProperty(String name, Object value) {
+				names.add(name);
+			}
+		});
+
+		beanWalker.source(map);
+
+		Collections.sort(names);
+		assertEquals("[com.plex, simple]", names.toString());
 	}
 }
