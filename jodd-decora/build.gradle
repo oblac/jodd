@@ -1,0 +1,12 @@
+ext.moduleName = 'Jodd Decora'
+ext.moduleDescription = 'Jodd Decora: put decoration around your templates'
+
+dependencies {
+	compile project(':jodd-lagarto')
+	compile project(':jodd-log')
+	compile project(':jodd-servlet')
+
+	provided lib.servlet
+
+	testCompile lib.junit
+}

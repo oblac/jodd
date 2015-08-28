@@ -56,6 +56,7 @@ public class Jodd {
 	public static final int CORE 			= ndx++;
 	public static final int BEAN 			= ndx++;
 	public static final int DB 				= ndx++;
+	public static final int DECORA 			= ndx++;
 	public static final int HTTP 			= ndx++;
 	public static final int INTROSPECTOR 	= ndx++;
 	public static final int JSON 			= ndx++;
