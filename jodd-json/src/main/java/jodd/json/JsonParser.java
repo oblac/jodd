@@ -33,6 +33,7 @@ import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -701,7 +702,7 @@ public class JsonParser extends JsonParserBase {
 
 		componentType = replaceWithMappedTypeForPath(componentType);
 
-		List<Object> target = newArrayInstance(targetType);
+		Collection<Object> target = newArrayInstance(targetType);
 
 		boolean koma = false;
 

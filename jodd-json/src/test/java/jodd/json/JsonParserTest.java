@@ -30,6 +30,7 @@ import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 import jodd.json.meta.JSON;
 import jodd.json.model.FooBar;
+import jodd.json.model.HitList;
 import jodd.util.RandomString;
 import jodd.util.StringUtil;
 import org.junit.After;
@@ -831,6 +832,23 @@ public class JsonParserTest {
 
 		assertEquals(123, fooBar.getValue().intValue());
 
+	}
+
+	@Test
+	public void testSets() {
+		String json = "{\"names\":[\"Pig\",\"Joe\"],\"numbers\":[173,22]}";
+
+		HitList hitList = JsonParser.create().parse(json, HitList.class);
+
+		assertNotNull(hitList);
+
+		assertEquals(2, hitList.getNames().size());
+		assertTrue(hitList.getNames().contains("Pig"));
+		assertTrue(hitList.getNames().contains("Joe"));
+
+		assertEquals(2, hitList.getNumbers().size());
+		assertTrue(hitList.getNumbers().contains(Integer.valueOf(173)));
+		assertTrue(hitList.getNumbers().contains(Integer.valueOf(22)));
 	}
 
 }

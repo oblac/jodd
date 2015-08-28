@@ -33,9 +33,12 @@ import jodd.introspector.Setter;
 import jodd.typeconverter.TypeConverterManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Just a base class of {@link jodd.json.JsonParser} that contains
@@ -54,19 +57,24 @@ public abstract class JsonParserBase {
 
 	/**
 	 * Creates new type for JSON array objects.
-	 * It should (?) always return a list, for performance reasons.
-	 * Later, the list will be converted into the target type.
+	 * It returns a collection.
+	 * Later, the collection will be converted into the target type.
 	 */
-	protected List<Object> newArrayInstance(Class targetType) {
+	protected Collection<Object> newArrayInstance(Class targetType) {
 		if (targetType == null ||
 			targetType == List.class ||
+			targetType == Collection.class ||
 			targetType.isArray()) {
 
 			return new ArrayList<>();
 		}
 
+		if (targetType == Set.class) {
+			return new HashSet<>();
+		}
+
 		try {
-			return (List) targetType.newInstance();
+			return (Collection<Object>) targetType.newInstance();
 		} catch (Exception e) {
 			throw new JsonException(e);
 		}
