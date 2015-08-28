@@ -28,6 +28,7 @@ package jodd.json;
 import jodd.json.meta.JSON;
 import jodd.json.meta.JsonAnnotationManager;
 import jodd.json.model.FileMan;
+import jodd.json.model.HitList;
 import jodd.json.model.State;
 import jodd.util.StringUtil;
 import jodd.util.SystemUtil;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -552,5 +554,31 @@ public class JsonSerializerTest {
 		String json = JsonSerializer.create().serialize(fileMan);
 
 		assertTrue(json.contains(StringUtil.replace(SystemUtil.userHome(), "/", "\\/")));
+	}
+
+	@Test
+	public void testSerializeSets() {
+		HitList hitList = new HitList();
+
+		hitList.setNames(new HashSet<String>());
+		hitList.getNames().add("Joe");
+		hitList.getNames().add("Pig");
+
+		hitList.setNumbers(new HashSet<Integer>());
+		hitList.getNumbers().add(173);
+		hitList.getNumbers().add(22);
+
+		String json = JsonSerializer
+			.create()
+			.deep(true)
+			.serialize(hitList);
+
+		assertTrue(json.contains("\"names\""));
+		assertTrue(json.contains("\"numbers\""));
+		assertTrue(json.contains("\"Pig\""));
+		assertTrue(json.contains("\"Joe\""));
+		assertTrue(json.contains("173"));
+		assertTrue(json.contains("22"));
+
 	}
 }
