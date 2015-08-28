@@ -36,7 +36,6 @@ import jodd.json.impl.CalendarJsonSerializer;
 import jodd.json.impl.CharSequenceJsonSerializer;
 import jodd.json.impl.CharacterJsonSerializer;
 import jodd.json.impl.ClassJsonSerializer;
-import jodd.json.impl.CollectionJsonSerializer;
 import jodd.json.impl.DateJsonSerializer;
 import jodd.json.impl.DoubleArrayJsonSerializer;
 import jodd.json.impl.EnumJsonSerializer;
@@ -56,7 +55,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
@@ -166,7 +164,7 @@ public class TypeJsonSerializerMap {
 		map.put(Enum.class, new EnumJsonSerializer());
 		map.put(File.class, new FileJsonSerializer(FileJsonSerializer.Type.PATH));
 
-		map.put(Collection.class, new CollectionJsonSerializer());
+		//map.put(Collection.class, new CollectionJsonSerializer());
 
 		jsonSerializer = new CharacterJsonSerializer();
 
