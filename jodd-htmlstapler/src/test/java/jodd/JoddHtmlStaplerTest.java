@@ -23,7 +23,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-/**
- * Form tag automatically populates form fields.
- */
-package jodd.lagarto.form;
+package jodd;
+
+import org.junit.Test;
+
+import static jodd.Jodd.HTML_STAPLER;
+import static org.junit.Assert.assertTrue;
+
+public class JoddHtmlStaplerTest {
+
+	@Test
+	public void testLoadedModules() {
+		assertTrue(Jodd.isModuleLoaded(HTML_STAPLER));
+	}
+
+}
