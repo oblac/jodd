@@ -39,7 +39,7 @@ import java.util.TreeSet;
  * in case-sensitive way, but, by default, you can read them in case-insensitive
  * way.
  */
-public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
+public class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 
 	private static final int BUCKET_SIZE = 31;
 	private final boolean caseSensitive;
@@ -61,7 +61,7 @@ public final class HttpMultiMap<V> implements Iterable<Map.Entry<String, V>>  {
 		return new HttpMultiMap<>(true);
 	}
 
-	HttpMultiMap(boolean caseSensitive) {
+	protected HttpMultiMap(boolean caseSensitive) {
 		head.before = head.after = head;
 		this.caseSensitive = caseSensitive;
 	}
