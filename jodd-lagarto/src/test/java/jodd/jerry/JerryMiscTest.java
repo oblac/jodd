@@ -287,4 +287,23 @@ public class JerryMiscTest {
 		}
 	}
 
+	@Test
+	public void test233() {
+		String html = "<div><span>name</span>value</div>";
+
+		Jerry $ = Jerry.jerry(html);
+
+		assertEquals("namevalue", $.text());
+
+		assertEquals(1, $.children().size());
+
+		Node div = $.children().get(0);
+
+		assertEquals("div", div.getNodeName());
+
+		assertEquals(2, div.getChildNodesCount());
+
+		assertEquals("value", div.getChild(1).getNodeValue());
+	}
+
 }
