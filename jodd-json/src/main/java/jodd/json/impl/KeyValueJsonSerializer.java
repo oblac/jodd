@@ -27,30 +27,62 @@ package jodd.json.impl;
 
 import jodd.json.JsonContext;
 import jodd.json.Path;
-
-import java.util.Map;
+import jodd.util.StringPool;
 
 /**
- * Map serializer.
+ * Key value JSON serializer.
  */
-public class MapJsonSerializer extends KeyValueJsonSerializer<Map<?, ?>> {
+public abstract class KeyValueJsonSerializer<T> extends ValueJsonSerializer<T> {
 
-	public void serializeValue(JsonContext jsonContext, Map<?, ?> map) {
-		jsonContext.writeOpenObject();
-
-		int count = 0;
-
-		Path currentPath = jsonContext.getPath();
-
-		for (Map.Entry<?, ?> entry : map.entrySet()) {
-			Object key = entry.getKey();
-			Object value = entry.getValue();
-
-			count = serializeKeyValue(jsonContext, currentPath, key, value, count);
+	/**
+	 * Serializes key and a value.
+	 */
+	protected int serializeKeyValue(JsonContext jsonContext, Path currentPath, Object key, Object value, int count) {
+		if ((value == null) && jsonContext.isExcludeNulls()) {
+			return count;
 		}
 
-		jsonContext.writeCloseObject();
+		if (key != null) {
+			currentPath.push(key.toString());
+		} else {
+			currentPath.push(StringPool.NULL);
+		}
+
+		// check if we should include the field
+
+		boolean include = true;
+
+		if (value != null) {
+
+			// + all collections are not serialized by default
+
+			include = jsonContext.matchIgnoredPropertyTypes(value.getClass(), false, include);
+
+			// + path queries: excludes/includes
+
+			include = jsonContext.matchPathToQueries(include);
+		}
+
+		// done
+
+		if (!include) {
+			currentPath.pop();
+			return count;
+		}
+
+		if (key == null) {
+			jsonContext.pushName(null, count > 0);
+		} else {
+			jsonContext.pushName(key.toString(), count > 0);
+		}
+
+		jsonContext.serialize(value);
+
+		if (jsonContext.isNamePopped()) {
+			count++;
+		}
+
+		currentPath.pop();
+		return count;
 	}
-
-
 }
