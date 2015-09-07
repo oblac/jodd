@@ -29,6 +29,7 @@ import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import jodd.util.Wildcard;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -167,15 +168,9 @@ public class ZipUtil {
 	public static File zip(File file) throws IOException {
 		String zipFile = file.getAbsolutePath() + ZIP_EXT;
 
-		ZipOutputStream zos = null;
-		try {
-			zos = createZip(zipFile);
-			addToZip(zos).file(file).recursive().add();
-		} finally {
-			StreamUtil.close(zos);
-		}
-
-		return new File(zipFile);
+		return ZipBuilder.createZipFile(zipFile)
+					.add(file).recursive().save()
+				.toZipFile();
 	}
 
 	// ---------------------------------------------------------------- unzip
@@ -245,99 +240,7 @@ public class ZipUtil {
 	// ---------------------------------------------------------------- zip stream
 
 	/**
-	 * Creates and opens zip output stream of a zip file.
-	 * @see #createZip(java.io.File)
-	 */
-	public static ZipOutputStream createZip(String zipFile) throws FileNotFoundException {
-		return createZip(new File(zipFile));
-	}
-
-	/**
-	 * Creates and opens zip output stream of a zip file. If zip file exist it will be recreated.
-	 */
-	public static ZipOutputStream createZip(File zip) throws FileNotFoundException {
-		return new ZipOutputStream(new FileOutputStream(zip));
-	}
-
-	/**
-	 * Starts a command for adding file entries to the zip.
-	 * @see #addToZip(java.util.zip.ZipOutputStream, java.io.File, String, String, boolean)
-	 */
-	public static AddToZip addToZip(ZipOutputStream zos) {
-		return new AddToZip(zos);
-	}
-
-	/**
-	 * Command: "add to zip".
-	 */
-	public static class AddToZip {
-		private final ZipOutputStream zos;
-		private File file;
-		private String path;
-		private String comment;
-		private boolean recursive = true;
-
-		private AddToZip(ZipOutputStream zos) {
-			this.zos = zos;
-		}
-
-		/**
-		 * Defines file or folder to be added to zip.
-		 */
-		public AddToZip file(File file) {
-			this.file = file;
-			return this;
-		}
-		/**
-		 * Defines file or folder to be added to zip.
-		 */
-		public AddToZip file(String fileName) {
-			this.file = new File(fileName);
-			return this;
-		}
-
-		/**
-		 * Defines file or folder to be added to zip.
-		 */
-		public AddToZip file(String parent, String child) {
-			this.file = new File(parent, child);
-			return this;
-		}
-
-		/**
-		 * Defines optional entry path.
-		 */
-		public AddToZip path(String path) {
-			this.path = path;
-			return this;
-		}
-
-		/**
-		 * Defines optional comment.
-		 */
-		public AddToZip comment(String comment) {
-			this.comment = comment;
-			return this;
-		}
-		/**
-		 * Defines if folders content should be added.
-		 * Ignored for files.
-		 */
-		public AddToZip recursive() {
-			this.recursive = true;
-			return this;
-		}
-		/**
-		 * Invokes the adding command.
-		 */
-		public void add() throws IOException {
-			addToZip(zos, file, path, comment, recursive);
-		}
-	}
-
-	/**
-	 * Adds single entry to ZIP output stream. For user-friendly way of adding entries to zip
-	 * see {@link #addToZip(java.util.zip.ZipOutputStream)}.
+	 * Adds single entry to ZIP output stream.
 	 *
 	 * @param zos zip output stream
 	 * @param file file or folder to add
@@ -408,6 +311,62 @@ public class ZipUtil {
 		}
 
 	}
+
+	/**
+	 * Adds byte content into the zip as a file.
+	 */
+	public static void addToZip(ZipOutputStream zos, byte[] content, String path, String comment) throws IOException {
+		while (path.length() != 0 && path.charAt(0) == '/') {
+			path = path.substring(1);
+		}
+
+		if (StringUtil.endsWithChar(path, '/')) {
+			path = path.substring(0, path.length() - 1);
+		}
+
+		ZipEntry zipEntry = new ZipEntry(path);
+		zipEntry.setTime(System.currentTimeMillis());
+
+		if (comment != null) {
+			zipEntry.setComment(comment);
+		}
+
+		zos.putNextEntry(zipEntry);
+
+		InputStream is = new ByteArrayInputStream(content);
+		try {
+			StreamUtil.copy(is, zos);
+		} finally {
+			StreamUtil.close(is);
+		}
+
+		zos.closeEntry();
+	}
+
+	public static void addFolderToZip(ZipOutputStream zos, String path, String comment) throws IOException {
+		while (path.length() != 0 && path.charAt(0) == '/') {
+			path = path.substring(1);
+		}
+
+		// add folder record
+		if (!StringUtil.endsWithChar(path, '/')) {
+			path += '/';
+		}
+
+		ZipEntry zipEntry = new ZipEntry(path);
+		zipEntry.setTime(System.currentTimeMillis());
+
+		if (comment != null) {
+			zipEntry.setComment(comment);
+		}
+
+		zipEntry.setSize(0);
+		zipEntry.setCrc(0);
+
+		zos.putNextEntry(zipEntry);
+		zos.closeEntry();
+	}
+
 
 	// ---------------------------------------------------------------- close
 

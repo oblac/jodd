@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -131,16 +130,15 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testZipStreams() throws IOException {
+	public void testZipBuilderFile() throws IOException {
 		File zipFile = new File(dataRoot, "test.zip");
 
-		ZipOutputStream zos = ZipUtil.createZip(zipFile);
-
-		ZipUtil.addToZip(zos).file(dataRoot, "sb.data").path("sbdata").comment("This is sb data file").add();
-
-		ZipUtil.addToZip(zos).file(dataRoot, "file").path("folder").comment("This is a folder and all its files").add();
-
-		StreamUtil.close(zos);
+		ZipBuilder.createZipFile(zipFile)
+			.add(new File(dataRoot, "sb.data"))
+				.path("sbdata").comment("This is sb data file").save()
+			.add(new File(dataRoot, "file"))
+				.path("folder").comment("This is a folder and all its files").save()
+			.toZipFile();
 
 		assertTrue(zipFile.exists());
 
@@ -158,6 +156,44 @@ public class ZipUtilTest {
 		// cleanup
 		FileUtil.delete(new File(dataRoot, "sbdata"));
 		FileUtil.deleteDir(new File(dataRoot, "folder"));
+		FileUtil.delete(zipFile);
+	}
+
+	@Test
+	public void testZipBuilderFileMemory() throws IOException {
+		byte[] bytes = ZipBuilder.createZipInMemory()
+			.add(new File(dataRoot, "sb.data"))
+				.path("sbdata").comment("This is sb data file").save()
+			.add(new File(dataRoot, "file"))
+				.path("folder").comment("This is a folder and all its files").save()
+			.add("text")
+				.path("folder/txt").save()
+			.addFolder("folder2")
+			.add("txet")
+				.path("folder2/txt2").save()
+			.toBytes();
+
+		File zipFile = new File(dataRoot, "test.zip");
+		FileUtil.writeBytes(zipFile, bytes);
+
+		assertTrue(zipFile.exists());
+
+		ZipUtil.unzip(zipFile, new File(dataRoot));
+
+		assertTrue(new File(dataRoot, "sbdata").exists());
+		assertTrue(new File(dataRoot, "folder").exists());
+		assertTrue(new File(dataRoot, "folder").isDirectory());
+		assertTrue(new File(dataRoot, "folder2").exists());
+		assertTrue(new File(dataRoot, "folder2").isDirectory());
+		assertTrue(new File(new File(dataRoot, "folder"), "txt").exists());
+		assertEquals("text", FileUtil.readString(new File(new File(dataRoot, "folder"), "txt")));
+		assertTrue(new File(new File(dataRoot, "folder2"), "txt2").exists());
+		assertEquals("txet", FileUtil.readString(new File(new File(dataRoot, "folder2"), "txt2")));
+
+		// cleanup
+		FileUtil.delete(new File(dataRoot, "sbdata"));
+		FileUtil.deleteDir(new File(dataRoot, "folder"));
+		FileUtil.deleteDir(new File(dataRoot, "folder2"));
 		FileUtil.delete(zipFile);
 	}
 
