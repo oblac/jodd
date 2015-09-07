@@ -40,7 +40,8 @@ and some micro frameworks:
 + `jodd-madvoc` - slick MVC framework.
 + `jodd-petite` - pragmatic DI container.
 + `jodd-lagarto` - HTML parser with `Jerry` and `CSSelly`.
-+ `jodd-lagarto-web` - `Lagarto` addon for web: `Decora`, `HtmlStapler` and more.
++ `jodd-decora` - pages decorator.
++ `jodd-htmlstapler` - static page resources handler.
 + `jodd-proxetta` - dynamic proxies and `Paramo`.
 + `jodd-db` - thin database layer and object mapper.
 + `jodd-json` - JSON parser and serializer.
