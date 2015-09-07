@@ -29,6 +29,7 @@ import jodd.bean.data.Abean;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -60,6 +61,17 @@ public class BeanTemplateParserTest {
 
 		assertEquals("abean_valueabean_value", beanTemplateParser.parse("${fooProp}${fooProp}", a));
 		assertEquals("${fooProp}abean_value", beanTemplateParser.parse("\\${fooProp}${fooProp}", a));
+	}
+
+	@Test
+	public void testNoParenthes() {
+		BeanTemplateParser beanTemplateParser = new BeanTemplateParser();
+
+		Map<String, Object> ctx = new HashMap<>();
+		ctx.put("string", 173);
+
+		assertEquals("173", beanTemplateParser.parse("$string", ctx));
+		assertEquals("", beanTemplateParser.parse("$string2", ctx));
 	}
 
 	@Test

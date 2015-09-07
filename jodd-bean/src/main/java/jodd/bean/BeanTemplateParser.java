@@ -53,7 +53,7 @@ public class BeanTemplateParser extends StringTemplateParser {
 	public static MacroResolver createBeanMacroResolver(final Object context) {
 		return new MacroResolver() {
 			public String resolve(String macroName) {
-				Object value = BeanUtil.getDeclaredProperty(context, macroName);
+				Object value = BeanUtil.getDeclaredPropertySilently(context, macroName);
 
 				if (value == null) {
 					return null;
