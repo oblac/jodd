@@ -26,6 +26,7 @@
 package jodd.bean;
 
 import jodd.bean.data.Abean;
+import jodd.util.StringTemplateParser;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -117,17 +118,18 @@ public class BeanTemplateParserTest {
 
 	@Test
 	public void testReplaceMissingKey() {
+		StringTemplateParser stp = new StringTemplateParser();
+
 		BeanTemplateParser btp = new BeanTemplateParser();
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key0", "1");
 		map.put("key1", "2");
 
 		assertEquals(".1.", btp.parse(".${key0}.", map));
-		try {
-			assertEquals(".1.", btp.parse(".${key2}.", map));
-			fail();
-		} catch (BeanException be) {
-		}
+		assertEquals("..", btp.parse(".${key2}.", map));
+
+		assertEquals(".1.", stp.parse(".${key0}.", StringTemplateParser.createMapMacroResolver(map)));
+		assertEquals("..", stp.parse(".${key2}.", StringTemplateParser.createMapMacroResolver(map)));
 
 		btp.setMissingKeyReplacement("x");
 		assertEquals(".x.", btp.parse(".${key2}.", map));
