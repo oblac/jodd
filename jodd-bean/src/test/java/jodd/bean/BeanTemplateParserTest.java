@@ -88,12 +88,7 @@ public class BeanTemplateParserTest {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("key1", "value1");
 
-		try {
-			beanTemplateParser.parse("---${key2}---", map);
-			fail();
-		} catch (BeanException bex) {
-			// ignore
-		}
+		assertEquals("------", beanTemplateParser.parse("---${key2}---", map));
 
 		BeanTemplateParser beanTemplateParser2 = new BeanTemplateParser();
 		beanTemplateParser2.setMissingKeyReplacement("");
