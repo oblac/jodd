@@ -86,8 +86,8 @@ public class TypeConverterManager {
 	/**
 	 * Special conversion to collections, when component type is known.
 	 */
-	public static <T> Collection<T> convertToCollection(Object value, Class<? extends Collection<T>> destinationType, Class componentType) {
-		return TYPE_CONVERTER_MANAGER_BEAN.convertToCollection(value, destinationType, componentType);
+	public static <T> T convertToCollection(Object value, Class<? extends Collection> destinationType, Class<?> componentType) {
+		return (T) TYPE_CONVERTER_MANAGER_BEAN.convertToCollection(value, destinationType, componentType);
 	}
 
 }

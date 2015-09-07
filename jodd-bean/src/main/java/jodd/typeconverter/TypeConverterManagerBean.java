@@ -353,7 +353,7 @@ public class TypeConverterManagerBean {
 	 * when component type is known.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection<T>> destinationType, Class componentType) {
+	public <T> Collection<T> convertToCollection(Object value, Class<? extends Collection> destinationType, Class componentType) {
 		if (value == null) {
 			return null;
 		}
