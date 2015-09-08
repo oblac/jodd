@@ -705,9 +705,13 @@ public class PrintfFormat {
 	 * it will be converted to primitive and formatted as such.
 	 */
 	public String form(Object object) {
+		if (object == null) {
+			return StringPool.NULL;
+		}
+
 		switch (fmt) {
 			case 's' :
-				String s = object == null ? StringPool.NULL : object.toString();
+				String s = object.toString();
 				if (precision >= 0 && precision < s.length()) {
 					s = s.substring(0, precision);
 				}
@@ -736,11 +740,16 @@ public class PrintfFormat {
 			}
 			if (object instanceof Short) {
 				return form(number.shortValue());
-			} else {
+			}
+			else {
 				return form(number.intValue());
 			}
-		} else if (object instanceof Character) {
+		}
+		else if (object instanceof Character) {
 			return form(((Character) object).charValue());
+		}
+		else if (object instanceof Boolean) {
+			return form(((Boolean)object).booleanValue());
 		}
 
 		// throw exception about invalid 'object'-formats
