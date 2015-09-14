@@ -28,6 +28,7 @@ package jodd.json;
 import jodd.introspector.ClassDescriptor;
 import jodd.introspector.ClassIntrospector;
 import jodd.introspector.PropertyDescriptor;
+import jodd.json.meta.JsonAnnotationManager;
 import jodd.util.CharUtil;
 import jodd.util.StringPool;
 import jodd.util.UnsafeUtil;
@@ -58,8 +59,14 @@ public class JsonParser extends JsonParserBase {
 	private static final char[] F_ALSE = new char[] {'a', 'l', 's', 'e'};
 	private static final char[] N_ULL = new char[] {'u', 'l', 'l'};
 
-	private static final String KEYS = "keys";
-	private static final String VALUES = "values";
+	/**
+	 * Map keys.
+	 */
+	public static final String KEYS = "keys";
+	/**
+	 * Array or map values.
+	 */
+	public static final String VALUES = "values";
 
 	protected int ndx = 0;
 	protected char[] input;
@@ -767,6 +774,7 @@ public class JsonParser extends JsonParserBase {
 		boolean isTargetTypeMap = true;
 		boolean isTargetRealTypeMap = true;
 		ClassDescriptor targetTypeClassDescriptor = null;
+		JsonAnnotationManager.TypeData typeData = null;
 
 		if (targetType != null) {
 			targetTypeClassDescriptor = ClassIntrospector.lookup(targetType);
@@ -776,6 +784,8 @@ public class JsonParser extends JsonParserBase {
 			// map usage locally in this method
 
 			isTargetRealTypeMap = targetTypeClassDescriptor.isMap();
+
+			typeData = JoddJson.annotationManager.lookupTypeData(targetType);
 		}
 
 		if (isTargetRealTypeMap) {
@@ -815,6 +825,7 @@ public class JsonParser extends JsonParserBase {
 			koma = false;
 
 			String key = parseString();
+			String keyOriginal = key;
 
 			skipWhiteSpaces();
 
@@ -850,15 +861,18 @@ public class JsonParser extends JsonParserBase {
 
 			if (!isTargetTypeMap) {
 				// *** inject into bean
-				path.push(key);
+					path.push(key);
 
-				value = parseValue(propertyType, keyType, componentType);
+					value = parseValue(propertyType, keyType, componentType);
 
-				path.pop();
+					path.pop();
 
-				if (pd != null) {
-					// only inject values if target property exist
-					injectValueIntoObject(target, pd, value);
+				if (typeData.rules.match(keyOriginal, !typeData.strict)) {
+
+					if (pd != null) {
+						// only inject values if target property exist
+						injectValueIntoObject(target, pd, value);
+					}
 				}
 			}
 			else {
