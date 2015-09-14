@@ -134,8 +134,7 @@ public class JSONDeserializerTest {
 		Person jsonIgor = new JsonParser().parse(json, Person.class);
 
 		assertEquals(2, jsonIgor.getPhones().size());
-		assertEquals(3, jsonIgor.getHobbies().size());
-		assertEquals("run", jsonIgor.getHobbies().get(1));
+		assertEquals(0, jsonIgor.getHobbies().size());
 	}
 
 	@Test

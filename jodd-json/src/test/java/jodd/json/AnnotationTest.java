@@ -27,9 +27,18 @@ package jodd.json;
 
 import jodd.json.mock.Location;
 import jodd.json.model.App;
+import jodd.json.model.User;
+import jodd.json.model.UserHolder;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class AnnotationTest {
@@ -76,6 +85,69 @@ public class AnnotationTest {
 
 		assertTrue(json.contains("\"apis\":{}"));
 		assertTrue(json.contains("\"name\":\"Hello\""));
+	}
+
+	@Test
+	public void testClassInArraySerialize() {
+		User user = new User();
+		user.setId(123);
+		user.setName("joe");
+
+		String json = JsonSerializer.create().serialize(user);
+
+		assertTrue(json.contains("123"));
+		assertTrue(json.contains("userId"));
+		assertFalse(json.contains("joe"));
+		assertFalse(json.contains("name"));
+
+		User[] users = new User[] {user};
+
+		json = JsonSerializer.create().serialize(users);
+
+		assertTrue(json.contains("123"));
+		assertTrue(json.contains("userId"));
+		assertFalse(json.contains("joe"));
+		assertFalse(json.contains("name"));
+
+		List<User> usersList = new ArrayList<>();
+		usersList.add(user);
+
+		json = JsonSerializer.create().serialize(usersList);
+
+		assertTrue(json.contains("123"));
+		assertTrue(json.contains("userId"));
+		assertFalse(json.contains("joe"));
+		assertFalse(json.contains("name"));
+	}
+
+	@Test
+	public void testClassInArrayOrMapParse() {
+		String json = "{\"userId\" : 123, \"name\":\"Joe\"}";
+
+		User user = JsonParser.create().parse(json, User.class);
+
+		assertEquals(123, user.getId());
+		assertNull(user.getName());
+
+		List<User> users = JsonParser.create().map(JsonParser.VALUES, User.class).parse("[" + json + "]");
+
+		assertEquals(1, users.size());
+		user = users.get(0);
+		assertEquals(123, user.getId());
+		assertNull(user.getName());
+
+		Map<String, Object> map = JsonParser.create().map(JsonParser.VALUES, User.class).parse("{ \"user\":" + json + "}");
+
+		assertEquals(1, map.size());
+		user = (User) map.get("user");
+		assertEquals(123, user.getId());
+		assertNull(user.getName());
+
+		UserHolder userHolder = JsonParser.create().parse("{ \"user\":" + json + "}", UserHolder.class);
+		assertNotNull(userHolder);
+		user = userHolder.getUser();
+		assertEquals(123, user.getId());
+		assertNull(user.getName());
 	}
 
 }
