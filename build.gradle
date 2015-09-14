@@ -37,7 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.7.0-20150907'
+version = '3.7.0-20150914'
 
 // --- properties -------------------------------------------------------------
 
@@ -294,7 +294,7 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
