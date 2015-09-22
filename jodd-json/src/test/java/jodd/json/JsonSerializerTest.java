@@ -579,6 +579,20 @@ public class JsonSerializerTest {
 		assertTrue(json.contains("\"Joe\""));
 		assertTrue(json.contains("173"));
 		assertTrue(json.contains("22"));
+	}
 
+	@Test
+	public void testSerializeStringEscapes() {
+		String path = "/foo/bar";
+
+		String json = JsonSerializer
+			.create()
+			.serialize(path);
+
+		assertEquals("\"\\/foo\\/bar\"", json);
+
+		String path2 = JsonParser.create().parse(json);
+
+		assertEquals(path, path2);
 	}
 }
