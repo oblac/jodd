@@ -702,17 +702,20 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 		// prepare http connection
 
 		if (timeout != -1) {
-		  try {
-			  httpConnection.setTimeout(timeout);
-		  } catch(Throwable thex) {  //@wjw_add
-		    try {
-	        httpConnection.close();
-		    } catch(Throwable thex2) {
-		    } finally {
-	        httpConnection = null;
-		    }
-		    throw thex;
-		  }
+			try {
+				httpConnection.setTimeout(timeout);
+			}
+			catch (Throwable thex) {  // @wjw_add
+				try {
+					httpConnection.close();
+				}
+				catch (Throwable ignore) {
+				}
+				finally {
+					httpConnection = null;
+				}
+				throw thex;
+			}
 		}
 
 		// sends data
