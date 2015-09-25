@@ -624,6 +624,39 @@ public class PropsTest extends BasePropsTest {
 	}
 
 	@Test
+	public void testGetProfilesForKey() {
+		Props p = new Props();
+
+		p.load("zorg<prof2>=zero\n" +
+				"foo=one\n" +
+				"bar=two\n" +
+				"[foo<prof1>]\n" +
+				"info=zero\n" +
+				"info2=zero2");
+
+		String[] profiles = p.getProfilesFor("zorg");
+
+		assertEquals(1, profiles.length);
+		assertEquals("prof2", profiles[0]);
+
+		profiles = p.getProfilesFor("zor*");
+
+		assertEquals(1, profiles.length);
+		assertEquals("prof2", profiles[0]);
+
+		profiles = p.getProfilesFor("foo");
+		assertEquals(0, profiles.length);
+
+		profiles = p.getProfilesFor("foo.*");
+		assertEquals(1, profiles.length);
+		assertEquals("prof1", profiles[0]);
+
+		profiles = p.getProfilesFor("foo*");
+		assertEquals(1, profiles.length);
+		assertEquals("prof1", profiles[0]);
+	}
+
+	@Test
 	public void testChangeActiveProfile() {
 		Props p = new Props();
 
