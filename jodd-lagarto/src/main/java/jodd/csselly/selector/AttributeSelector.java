@@ -128,7 +128,7 @@ public class AttributeSelector extends Selector implements NodeFilter {
 
 		String nodeValue = node.getAttribute(name);
 
-		if(nodeValue == null) {
+		if (nodeValue == null) {
 			return false;
 		}
 		
