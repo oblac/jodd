@@ -309,13 +309,12 @@ public class JerryMiscTest {
 	@Test
 	public void testEmptyClassAttribute() {
 		Jerry doc = Jerry.jerry("<div class></div>");
-		Exception ex = null;
+
 		try {
 			doc.find(".foo");
 		} catch(Exception e) {
-			ex = e;
+			fail(e.toString());
 		}
-		assertEquals(null, ex);
 	}
 
 
