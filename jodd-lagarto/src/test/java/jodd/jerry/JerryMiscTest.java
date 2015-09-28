@@ -306,4 +306,17 @@ public class JerryMiscTest {
 		assertEquals("value", div.getChild(1).getNodeValue());
 	}
 
+	@Test
+	public void testEmptyClassAttribute() {
+		Jerry doc = Jerry.jerry("<div class></div>");
+		Exception ex = null;
+		try {
+			doc.find(".foo");
+		} catch(Exception e) {
+			ex = e;
+		}
+		assertEquals(null, ex);
+	}
+
+
 }
