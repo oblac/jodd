@@ -34,6 +34,7 @@ import jodd.bean.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -137,6 +138,21 @@ public class JoinHintResolver {
 						BeanUtil.setDeclaredPropertySilent(value, hintPropertyName, data[i]);
 					}
 				}
+				else {
+					// special case - the property probably contains the collection in the way
+
+					int lastNdx = hintPropertyName.lastIndexOf('.');
+
+					String name = hintPropertyName.substring(0, lastNdx);
+
+					Object target = resolveValueInSpecialCase(value, name);
+
+					if (target != null) {
+						String targetSimpleName = hintPropertyName.substring(lastNdx + 1);
+
+						BeanUtil.setDeclaredPropertyForcedSilent(target, targetSimpleName, data[i]);
+					}
+				}
 
 			} else {
 				result[count] = data[i];
@@ -144,5 +160,21 @@ public class JoinHintResolver {
 			}
 		}
 		return result;
+	}
+
+	protected Object resolveValueInSpecialCase(Object value, String name) {
+		String[] elements = StringUtil.splitc(name, '.');
+
+		for (String element : elements) {
+			value = BeanUtil.getDeclaredPropertySilently(value, element);
+
+			if (value instanceof List) {
+				List list = (List) value;
+
+				value = list.get(list.size() - 1);
+			}
+		}
+
+		return value;
 	}
 }
