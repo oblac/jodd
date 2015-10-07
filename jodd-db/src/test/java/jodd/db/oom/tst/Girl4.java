@@ -28,21 +28,25 @@ package jodd.db.oom.tst;
 import jodd.db.oom.meta.DbColumn;
 import jodd.db.oom.meta.DbTable;
 
-import java.util.List;
+@DbTable("GIRL")
+public class Girl4 {
 
-@DbTable
-public class Room {
-
-	public Room() {
+	public Girl4() {
 	}
-	public Room(long id, String name) {
+
+	public Girl4(long id, long boyId, String name) {
 		this.id = id;
+		this.boyId = boyId;
 		this.name = name;
 	}
 
-	@DbColumn private Long id;
-	@DbColumn private String name;
-	private List<Boy4> boys;
+	@DbColumn
+	private Long id;
+	@DbColumn
+	private Long boyId;
+	@DbColumn
+	private String name;
+	private Boy boy;
 
 	public Long getId() {
 		return id;
@@ -52,12 +56,12 @@ public class Room {
 		this.id = id;
 	}
 
-	public List<Boy4> getBoys() {
-		return boys;
+	public Long getBoyId() {
+		return boyId;
 	}
 
-	public void setBoys(List<Boy4> boys) {
-		this.boys = boys;
+	public void setBoyId(Long boyId) {
+		this.boyId = boyId;
 	}
 
 	public String getName() {
@@ -68,23 +72,11 @@ public class Room {
 		this.name = name;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		Room room = (Room) o;
-
-		return id.equals(room.id);
-
+	public Boy getBoy() {
+		return boy;
 	}
 
-	@Override
-	public int hashCode() {
-		return id.hashCode();
+	public void setBoy(Boy boy) {
+		this.boy = boy;
 	}
 }

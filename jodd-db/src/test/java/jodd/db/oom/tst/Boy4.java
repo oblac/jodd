@@ -26,47 +26,32 @@
 package jodd.db.oom.tst;
 
 import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
 import jodd.db.oom.meta.DbTable;
 
-import java.util.List;
+@DbTable("BOY")
+public class Boy4 {
 
-@DbTable
-public class Room {
-
-	public Room() {
+	public Boy4() {
 	}
-	public Room(long id, String name) {
+
+	public Boy4(int id, int roomId, String name) {
 		this.id = id;
 		this.name = name;
+		this.roomId = roomId;
 	}
 
-	@DbColumn private Long id;
-	@DbColumn private String name;
-	private List<Boy4> boys;
+	@DbId
+	public Integer id;
 
-	public Long getId() {
-		return id;
-	}
+	@DbColumn
+	public String name;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@DbColumn
+	public Integer roomId;
 
-	public List<Boy4> getBoys() {
-		return boys;
-	}
+	public Girl4 girl;
 
-	public void setBoys(List<Boy4> boys) {
-		this.boys = boys;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -77,9 +62,9 @@ public class Room {
 			return false;
 		}
 
-		Room room = (Room) o;
+		Boy4 boy4 = (Boy4) o;
 
-		return id.equals(room.id);
+		return id.equals(boy4.id);
 
 	}
 

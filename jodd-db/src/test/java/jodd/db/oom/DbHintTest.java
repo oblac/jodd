@@ -30,10 +30,8 @@ import jodd.db.DbSession;
 import jodd.db.DbThreadSession;
 import jodd.db.oom.sqlgen.DbEntitySql;
 import jodd.db.oom.sqlgen.ParsedSql;
-import jodd.db.oom.tst.BadBoy;
 import jodd.db.oom.tst.Boy2;
 import jodd.db.oom.tst.Girl;
-import jodd.db.oom.tst.Room;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +39,6 @@ import static jodd.db.oom.sqlgen.DbSqlBuilder.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class DbHintTest extends DbHsqldbTestCase {
 
@@ -166,24 +163,6 @@ public class DbHintTest extends DbHsqldbTestCase {
 
 
 		dbSession.closeSession();
-	}
-
-	@Test
-	public void testHintsList() {
-		Room room = new Room();
-		Girl girl = new Girl();
-		BadBoy badBoy = new BadBoy();
-		Object[] data = new Object[] { room, badBoy, girl };
-
-		JoinHintResolver jhr = new JoinHintResolver();
-		Object[] result = jhr.join(data, "room, room.boys, room.boys[0].girl");
-		assertEquals(1, result.length);
-
-		assertTrue(result[0] instanceof Room);
-		room = (Room) result[0];
-		badBoy = room.getBoys().get(0);
-
-		assertEquals(girl, badBoy.girl);
 	}
 
 }
