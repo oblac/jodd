@@ -33,7 +33,7 @@ import java.nio.ByteBuffer;
 
 /**
  * Simplified netty class.
- * Thanx: Stephane Landelle
+ * Thanx: Stephane Landelle!
  *
  * @see https://github.com/netty/netty/blob/master/common/src/main/java/io/netty/util/internal/PlatformDependent.java
  */
@@ -72,19 +72,6 @@ final class PlatformInternal {
 				Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
 				unsafeField.setAccessible(true);
 				unsafe = (Unsafe) unsafeField.get(null);
-
-				// Ensure the unsafe supports all necessary methods to work around the mistake in the latest OpenJDK.
-				// https://github.com/netty/netty/issues/1061
-				// http://www.mail-archive.com/jdk6-dev@openjdk.java.net/msg00698.html
-				try {
-					if (unsafe != null) {
-						unsafe.getClass().getDeclaredMethod(
-							"copyMemory", Object.class, long.class, Object.class, long.class, long.class);
-					}
-				}
-				catch (NoSuchMethodError | NoSuchMethodException ex) {
-					throw ex;
-				}
 			}
 			catch (Throwable cause) {
 				// Unsafe.copyMemory(Object, long, Object, long, long) unavailable.
