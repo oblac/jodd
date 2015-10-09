@@ -31,7 +31,7 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
 /**
- * Various system utilities.
+ * System utilities.
  */
 public class SystemUtil {
 
@@ -41,31 +41,31 @@ public class SystemUtil {
 	 * Get system property. If key is not available, returns the default value.
 	 */
 	public static String get(final String key, String def) {
-	        if (key.isEmpty()) {
-	            throw new IllegalArgumentException("key must not be empty.");
-	        }
+		if (key.isEmpty()) {
+			throw new IllegalArgumentException("key must not be empty.");
+		}
 
-	        String value = null;
-	        try {
-	            if (System.getSecurityManager() == null) {
-	                value = System.getProperty(key);
-	            } else {
-	                value = AccessController.doPrivileged(new PrivilegedAction<String>() {
-						@Override
-						public String run() {
-							return System.getProperty(key);
-						}
-					});
-	            }
-	        } catch (Exception ignore) {
-	        }
+		String value = null;
+		try {
+			if (System.getSecurityManager() == null) {
+				value = System.getProperty(key);
+			} else {
+				value = AccessController.doPrivileged(new PrivilegedAction<String>() {
+					@Override
+					public String run() {
+						return System.getProperty(key);
+					}
+				});
+			}
+		} catch (Exception ignore) {
+		}
 
-	        if (value == null) {
-	            return def;
-	        }
+		if (value == null) {
+			return def;
+		}
 
-	        return value;
-	    }
+		return value;
+	}
 
 
 	// ---------------------------------------------------------------- unsafe
