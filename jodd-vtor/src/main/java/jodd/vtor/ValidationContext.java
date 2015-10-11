@@ -47,6 +47,7 @@ public class ValidationContext {
 
 	private static final String ANN_SEVERITY = "severity";
 	private static final String ANN_PROFILES = "profiles";
+	private static final String ANN_MESSAGE = "message";
 
 	// ---------------------------------------------------------------- define constraints
 
@@ -188,6 +189,9 @@ public class ValidationContext {
 
 		String[] profiles = (String[]) ReflectUtil.readAnnotationValue(annotation, ANN_PROFILES);
 		destCheck.setProfiles(profiles);
+
+		String message = (String) ReflectUtil.readAnnotationValue(annotation, ANN_MESSAGE);
+		destCheck.setMessage(message);
 	}
 
 }

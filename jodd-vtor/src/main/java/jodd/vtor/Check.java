@@ -35,6 +35,7 @@ public class Check {
 
 	private int severity;
 	private String[] profiles;
+	private String message;
 
 	/**
 	 * Creates new check for provided constraint inside current context. 
@@ -74,5 +75,13 @@ public class Check {
 
 	public void setProfiles(String... profiles) {
 		this.profiles = profiles;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }
