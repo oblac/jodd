@@ -550,7 +550,7 @@ public abstract class PetiteBeans {
 	 * @param providerName provider name
 	 * @param beanName bean name
 	 * @param methodName instance method name
-	 * @param arguments method argument types, may be <code>null</code>
+	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(String providerName, String beanName, String methodName, Class[] arguments) {
 		BeanDefinition beanDefinition = lookupBeanDefinition(beanName);
@@ -579,7 +579,7 @@ public abstract class PetiteBeans {
 	 * @param providerName provider name
 	 * @param type class type
 	 * @param staticMethodName static method name
-	 * @param arguments method argument types, may be <code>null</code>
+	 * @param arguments method argument types
 	 */
 	public void registerPetiteProvider(String providerName, Class type, String staticMethodName, Class[] arguments) {
 		ClassDescriptor cd = ClassIntrospector.lookup(type);
