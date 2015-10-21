@@ -147,6 +147,9 @@ public class BeanDefinition {
 	 * Delegates to {@link jodd.petite.scope.Scope#lookup(String)}. 
 	 */
 	protected Object scopeLookup() {
+		if (scope == null) {
+			throw new PetiteException("Scope not defined");
+		}
 		return scope.lookup(name);
 	}
 
@@ -154,7 +157,9 @@ public class BeanDefinition {
 	 * Delegates to {@link jodd.petite.scope.Scope#register(jodd.petite.BeanDefinition, Object)}.
 	 */
 	protected void scopeRegister(Object object) {
-		scope.register(this, object);
+		if (scope != null) {
+			scope.register(this, object);
+		}
 	}
 
 	/**

@@ -98,7 +98,7 @@ public class PetiteContainer extends PetiteBeans {
 
 		// other ctors
 		if (def.name != null) {
-			acquiredBeans.put(def.name, Void.TYPE);     // puts a dummy marker for cyclic dependency check
+			//acquiredBeans.put(def.name, Void.TYPE);     // puts a dummy marker for cyclic dependency check
 		}
 
 		int paramNo = def.ctor.references.length;
@@ -127,7 +127,7 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		if (def.name != null) {
-			acquiredBeans.put(def.name, bean);
+			//acquiredBeans.put(def.name, bean);
 		}
 		return bean;
 	}
@@ -268,16 +268,20 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-	/**
-	 * Invokes all init methods, if they exist. Also resolves destroy methods.
-	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
+
+	protected void resolveInitAndDestroyMethods(Object bean, BeanDefinition def) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
 		}
 		if (def.destroyMethods == null) {
 			def.destroyMethods = petiteResolvers.resolveDestroyMethodPoint(bean);
 		}
+	}
+
+	/**
+	 * Invokes all init methods, if they exist. Also resolves destroy methods.
+	 */
+	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {
 				continue;
@@ -368,11 +372,12 @@ public class PetiteContainer extends PetiteBeans {
 			if (bean == Void.TYPE) {
 				throw new PetiteException("Cycle dependencies on constructor injection detected!");
 			}
-			return bean;
+			//return bean;
 		}
 
 		// Lookup for registered bean definition.
 		BeanDefinition def = lookupBeanDefinition(name);
+
 		if (def == null) {
 
 			// try provider
@@ -390,8 +395,8 @@ public class PetiteContainer extends PetiteBeans {
 			// Create new bean in the scope
 			bean = newBeanInstance(def, acquiredBeans);
 			wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
-			def.scopeRegister(bean);
 		}
+
 		return bean;
 	}
 
@@ -399,6 +404,8 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires bean, injects parameters and invokes init methods.
 	 */
 	protected void wireBeanInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean, Map<String, Object> acquiredBeans) {
+		resolveInitAndDestroyMethods(bean, def);
+		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
 		wireBean(bean, def, acquiredBeans);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_DEFINE);
@@ -497,9 +504,9 @@ public class PetiteContainer extends PetiteBeans {
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
 		Map<String, Object> acquiredBeans = new HashMap<>();
-		acquiredBeans.put(name, bean);
+		//acquiredBeans.put(name, bean);
 		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
-		def.scopeRegister(bean);
+		//def.scopeRegister(bean);
 	}
 
 	/**
