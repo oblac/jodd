@@ -58,4 +58,9 @@ public @interface Range {
 	 * Severity.
 	 */
 	int severity() default 0;
+
+	/**
+	 * Message.
+	 */
+	String message() default "jodd.vtor.constraint.Range";
 }

@@ -272,7 +272,6 @@ public class TimeUtilTest {
 		assertEquals(0, gts2.compareTo(gts1));
 	}
 
-
 	@Test
 	public void testToCalendar() {
 		assertEquals(Calendar.JANUARY, TimeUtil.toCalendarMonth(JDateTime.JANUARY));
@@ -282,6 +281,19 @@ public class TimeUtilTest {
 		assertEquals(Calendar.TUESDAY, TimeUtil.toCalendarDayOfWeek(JDateTime.TUESDAY));
 		assertEquals(Calendar.SATURDAY, TimeUtil.toCalendarDayOfWeek(JDateTime.SATURDAY));
 		assertEquals(Calendar.SUNDAY, TimeUtil.toCalendarDayOfWeek(JDateTime.SUNDAY));
+	}
+
+	@Test
+	public void testHttpTime() {
+		long millis = System.currentTimeMillis();
+
+		millis = (millis / 1000) * 1000;
+
+		String time = TimeUtil.formatHttpDate(millis);
+
+		long millisBack = TimeUtil.parseHttpTime(time);
+
+		assertEquals(millis, millisBack);
 	}
 
 

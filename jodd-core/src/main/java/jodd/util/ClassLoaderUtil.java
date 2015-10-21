@@ -29,15 +29,17 @@ import jodd.core.JoddCore;
 import jodd.io.FileUtil;
 import jodd.io.StreamUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
@@ -50,6 +52,24 @@ import java.util.jar.Manifest;
 public class ClassLoaderUtil {
 
 	// ---------------------------------------------------------------- default class loader
+
+	/**
+	 * Returns class loader of a class, considering the security manager.
+	 */
+	public static ClassLoader getClassLoader(final Class<?> clazz) {
+		if (System.getSecurityManager() == null) {
+			return clazz.getClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return clazz.getClassLoader();
+				}
+			});
+		}
+	}
+
 
 	/**
 	 * Returns default class loader. By default, it is {@link #getContextClassLoader() threads context class loader}.
@@ -68,21 +88,34 @@ public class ClassLoaderUtil {
 	 * Returns thread context class loader.
 	 */
 	public static ClassLoader getContextClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
-
-	/**
-	 * Sets the thread context class loader.
-	 */
-	public static void setContextClassLoader(ClassLoader classLoader) {
-		Thread.currentThread().setContextClassLoader(classLoader);
+		if (System.getSecurityManager() == null) {
+			return Thread.currentThread().getContextClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return Thread.currentThread().getContextClassLoader();
+				}
+			});
+		}
 	}
 
 	/**
 	 * Returns system class loader.
 	 */
 	public static ClassLoader getSystemClassLoader() {
-		return ClassLoader.getSystemClassLoader();
+		if (System.getSecurityManager() == null) {
+			return ClassLoader.getSystemClassLoader();
+		}
+		else {
+			return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+				@Override
+				public ClassLoader run() {
+					return ClassLoader.getSystemClassLoader();
+				}
+			});
+		}
 	}
 
 	// ---------------------------------------------------------------- add class path

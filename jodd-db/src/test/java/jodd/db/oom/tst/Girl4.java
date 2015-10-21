@@ -23,45 +23,60 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.db.oom.tst;
 
-/**
- * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
- * See: http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/
- *
- * Thanx to Gatling (http://gatling-tool.org)!
- */
-public class UnsafeUtil {
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbTable;
 
-	/**
-	 * Returns String characters in most performing way.
-	 * If possible, the inner <code>char[]</code> will be returned.
-	 * If not, <code>toCharArray()</code> will be called.
-	 * Returns <code>null</code> when argument is <code>null</code>.
-	 */
-	public static char[] getChars(String string) {
-		if (string == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return string.toCharArray();
-		}
+@DbTable("GIRL")
+public class Girl4 {
 
-		return PlatformInternal.unsafeGetChars(string);
+	public Girl4() {
 	}
 
-	/**
-	 * Creates (mutable) string from given char array.
-	 */
-	public static String createString(char[] chars) {
-		if (chars == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return new String(chars);
-		}
-
-		return PlatformInternal.unsafeCreateString(chars);
+	public Girl4(long id, long boyId, String name) {
+		this.id = id;
+		this.boyId = boyId;
+		this.name = name;
 	}
 
+	@DbColumn
+	private Long id;
+	@DbColumn
+	private Long boyId;
+	@DbColumn
+	private String name;
+	private Boy boy;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getBoyId() {
+		return boyId;
+	}
+
+	public void setBoyId(Long boyId) {
+		this.boyId = boyId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boy getBoy() {
+		return boy;
+	}
+
+	public void setBoy(Boy boy) {
+		this.boy = boy;
+	}
 }

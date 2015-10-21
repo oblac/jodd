@@ -23,45 +23,22 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.io;
+
+import jodd.exception.UncheckedException;
+
+import java.io.IOException;
 
 /**
- * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
- * See: http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/
- *
- * Thanx to Gatling (http://gatling-tool.org)!
+ * Unchecked IO exception.
  */
-public class UnsafeUtil {
+public class UncheckedIOException extends UncheckedException {
 
-	/**
-	 * Returns String characters in most performing way.
-	 * If possible, the inner <code>char[]</code> will be returned.
-	 * If not, <code>toCharArray()</code> will be called.
-	 * Returns <code>null</code> when argument is <code>null</code>.
-	 */
-	public static char[] getChars(String string) {
-		if (string == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return string.toCharArray();
-		}
-
-		return PlatformInternal.unsafeGetChars(string);
+	public UncheckedIOException(IOException cause) {
+		super(cause);
 	}
 
-	/**
-	 * Creates (mutable) string from given char array.
-	 */
-	public static String createString(char[] chars) {
-		if (chars == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return new String(chars);
-		}
-
-		return PlatformInternal.unsafeCreateString(chars);
+	public UncheckedIOException(String message, IOException cause) {
+		super(message, cause);
 	}
-
 }

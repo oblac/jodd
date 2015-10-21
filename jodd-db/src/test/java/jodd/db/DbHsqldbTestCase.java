@@ -55,6 +55,12 @@ public abstract class DbHsqldbTestCase {
 		// initial data
 		DbSession session = new DbSession(cp);
 
+		createTables(session);
+
+		session.closeSession();
+	}
+
+	protected void createTables(DbSession session) {
 		executeUpdate(session, "drop table BOY if exists");
 		executeUpdate(session, "drop table GIRL if exists");
 
@@ -76,7 +82,6 @@ public abstract class DbHsqldbTestCase {
 				')';
 
 		executeUpdate(session, sql);
-		session.closeSession();
 	}
 
 	@After

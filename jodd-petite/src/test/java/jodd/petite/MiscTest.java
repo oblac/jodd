@@ -34,7 +34,12 @@ import jodd.petite.tst.Zoo;
 import org.junit.Test;
 
 import static jodd.petite.meta.InitMethodInvocationStrategy.POST_INITIALIZE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class MiscTest {
 
@@ -168,6 +173,18 @@ public class MiscTest {
 		assertEquals(1, boo2.getFoo().hello());
 		assertEquals(1, boo2.getFoo().getCounter());
 		assertEquals("[first, second, third, init, beforeLast, last]", boo.orders.toString());
+	}
+
+	public static class PetiteDemo {
+		static Integer getOne() {
+			return new Integer(123);
+		}
+	}
+
+	@Test
+	public void test243() {
+		PetiteContainer pc = new PetiteContainer();
+		new PetiteRegistry(pc).provider("provider").type(PetiteDemo.class).method("getOne").args().register();
 	}
 
 }

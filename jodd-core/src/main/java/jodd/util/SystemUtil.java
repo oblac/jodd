@@ -26,12 +26,92 @@
 package jodd.util;
 
 import java.io.File;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
 /**
- * Various system utilities.
+ * System utilities.
  */
 public class SystemUtil {
+
+	// ---------------------------------------------------------------- properties
+
+	/**
+	 * Get system property. If key is not available, returns the default value.
+	 */
+	public static String get(final String key, String def) {
+		if (key.isEmpty()) {
+			throw new IllegalArgumentException("key must not be empty.");
+		}
+
+		String value = null;
+		try {
+			if (System.getSecurityManager() == null) {
+				value = System.getProperty(key);
+			} else {
+				value = AccessController.doPrivileged(new PrivilegedAction<String>() {
+					@Override
+					public String run() {
+						return System.getProperty(key);
+					}
+				});
+			}
+		} catch (Exception ignore) {
+		}
+
+		if (value == null) {
+			return def;
+		}
+
+		return value;
+	}
+
+
+	// ---------------------------------------------------------------- unsafe
+
+	private static final boolean HAS_UNSAFE = hasUnsafe0();
+
+	/**
+	 * Returns <code>true</code> if system has the <code>Unsafe</code>.
+	 */
+	public static boolean hasUnsafe() {
+		return HAS_UNSAFE;
+	}
+
+	private static boolean hasUnsafe0() {
+		if (isHostAndroid()) {
+			return false;
+		}
+
+		try {
+			return PlatformInternal.hasUnsafe();
+		}
+		catch (Throwable t) {
+			return false;
+		}
+	}
+
+	// ---------------------------------------------------------------- android
+
+	private static final boolean IS_ANDROID = isAndroid0();
+
+	/**
+	 * Returns <code>true</code> if system is android.
+	 */
+	public static boolean isHostAndroid() {
+		return IS_ANDROID;
+	}
+
+	private static boolean isAndroid0() {
+		try {
+			Class.forName("android.app.Application", false, ClassLoaderUtil.getSystemClassLoader());
+			return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
 
 	// ---------------------------------------------------------------- properties
 

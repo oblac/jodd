@@ -25,12 +25,24 @@
 
 package jodd.db.oom.tst;
 
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbTable;
+
 import java.util.List;
 
+@DbTable
 public class Room {
 
-	private Long id;
-	private List<BadBoy> boys;
+	public Room() {
+	}
+	public Room(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	@DbColumn private Long id;
+	@DbColumn private String name;
+	private List<Boy4> boys;
 
 	public Long getId() {
 		return id;
@@ -40,11 +52,39 @@ public class Room {
 		this.id = id;
 	}
 
-	public List<BadBoy> getBoys() {
+	public List<Boy4> getBoys() {
 		return boys;
 	}
 
-	public void setBoys(List<BadBoy> boys) {
+	public void setBoys(List<Boy4> boys) {
 		this.boys = boys;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Room room = (Room) o;
+
+		return id.equals(room.id);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

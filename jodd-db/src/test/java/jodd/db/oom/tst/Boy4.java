@@ -23,45 +23,53 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.util;
+package jodd.db.oom.tst;
 
-/**
- * Few methods using infamous <code>java.misc.Unsafe</code>, mostly for private use.
- * See: http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/
- *
- * Thanx to Gatling (http://gatling-tool.org)!
- */
-public class UnsafeUtil {
+import jodd.db.oom.meta.DbColumn;
+import jodd.db.oom.meta.DbId;
+import jodd.db.oom.meta.DbTable;
 
-	/**
-	 * Returns String characters in most performing way.
-	 * If possible, the inner <code>char[]</code> will be returned.
-	 * If not, <code>toCharArray()</code> will be called.
-	 * Returns <code>null</code> when argument is <code>null</code>.
-	 */
-	public static char[] getChars(String string) {
-		if (string == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return string.toCharArray();
-		}
+@DbTable("BOY")
+public class Boy4 {
 
-		return PlatformInternal.unsafeGetChars(string);
+	public Boy4() {
 	}
 
-	/**
-	 * Creates (mutable) string from given char array.
-	 */
-	public static String createString(char[] chars) {
-		if (chars == null) {
-			return null;
-		}
-		if (!SystemUtil.hasUnsafe()) {
-			return new String(chars);
-		}
-
-		return PlatformInternal.unsafeCreateString(chars);
+	public Boy4(int id, int roomId, String name) {
+		this.id = id;
+		this.name = name;
+		this.roomId = roomId;
 	}
 
+	@DbId
+	public Integer id;
+
+	@DbColumn
+	public String name;
+
+	@DbColumn
+	public Integer roomId;
+
+	public Girl4 girl;
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Boy4 boy4 = (Boy4) o;
+
+		return id.equals(boy4.id);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
 }
