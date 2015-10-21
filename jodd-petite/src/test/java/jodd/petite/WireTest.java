@@ -51,7 +51,7 @@ public class WireTest {
 		configurator.setIncludedEntries("jodd.petite.*");
 		configurator.setExcludedEntries("jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses");
 		configurator.setExcludedEntries(
-				"jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses", "*Public*", "*Secret*");
+				"jodd.petite.data.*", "jodd.petite.tst3.*", "jodd.petite.tst.Ses", "*Public*", "*Secret*", "*$*");
 		configurator.configure(pc);
 
 		assertEquals(1, pc.getTotalBeans());
@@ -88,7 +88,14 @@ public class WireTest {
 			// zoo class is missing
 		}
 
+
+		// registering missing dependency.
+		// however we need to remove existing bean that requires this dependency
+		// as it has been already initialized.
 		pc.registerPetiteBean(Zoo.class, null, null, null, false);
+		pc.removeBean(Boo.class);
+		pc.registerPetiteBean(Boo.class, null, null, null, false);
+
 		assertEquals(4, pc.getTotalBeans());
 		assertEquals(2, pc.getTotalScopes());
 

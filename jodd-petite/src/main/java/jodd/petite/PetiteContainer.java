@@ -32,8 +32,6 @@ import jodd.petite.scope.Scope;
 import jodd.petite.scope.SingletonScope;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import jodd.typeconverter.Convert;
 import jodd.log.Logger;
@@ -91,14 +89,9 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Creates new bean instance and performs constructor injection.
 	 */
-	protected Object newBeanInstance(BeanDefinition def, Map<String, Object> acquiredBeans) {
+	protected Object newBeanInstance(BeanDefinition def) {
 		if (def.ctor == null) {
 			def.ctor = petiteResolvers.resolveCtorInjectionPoint(def.type);
-		}
-
-		// other ctors
-		if (def.name != null) {
-			acquiredBeans.put(def.name, Void.TYPE);     // puts a dummy marker for cyclic dependency check
 		}
 
 		int paramNo = def.ctor.references.length;
@@ -107,7 +100,7 @@ public class PetiteContainer extends PetiteBeans {
 		// wiring
 		if (def.wiringMode != WiringMode.NONE) {
 			for (int i = 0; i < paramNo; i++) {
-				args[i] = getBean(def.ctor.references[i], acquiredBeans);
+				args[i] = getBean(def.ctor.references[i]);
 				if (args[i] == null) {
 					if ((def.wiringMode == WiringMode.STRICT)) {
 						throw new PetiteException(
@@ -126,9 +119,6 @@ public class PetiteContainer extends PetiteBeans {
 			throw new PetiteException("Failed to create new bean instance '" + def.type.getName() + "' using constructor: " + def.ctor.constructor, ex);
 		}
 
-		if (def.name != null) {
-			acquiredBeans.put(def.name, bean);
-		}
 		return bean;
 	}
 
@@ -136,20 +126,19 @@ public class PetiteContainer extends PetiteBeans {
 	 * Wires beans.
 	 * @param bean target bean
 	 * @param def bean definition
-	 * @param acquiredBeans set of acquired beans
 	 */
-	protected void wireBean(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
+	protected void wireBean(Object bean, BeanDefinition def) {
 		if (def.wiringMode == WiringMode.NONE) {
 			return;
 		}
-		wireProperties(bean, def, acquiredBeans);
-		wireMethods(bean, def, acquiredBeans);
+		wireProperties(bean, def);
+		wireMethods(bean, def);
 	}
 
 	/**
 	 * Wires properties.
 	 */
-	protected void wireProperties(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
+	protected void wireProperties(Object bean, BeanDefinition def) {
 		if (def.properties == null) {
 			def.properties = petiteResolvers.resolvePropertyInjectionPoint(def.type, def.wiringMode == WiringMode.AUTOWIRE);
 		}
@@ -170,7 +159,7 @@ public class PetiteContainer extends PetiteBeans {
 			}
 
 			if (value == null) {
-				value = getBean(refNames, acquiredBeans);
+				value = getBean(refNames);
 			}
 
 			if (value == null) {
@@ -205,7 +194,7 @@ public class PetiteContainer extends PetiteBeans {
 
 			for (String beanName : beanNames) {
 				if (beanName.equals(def.name) == false) {
-					Object value = getBean(beanName, acquiredBeans);
+					Object value = getBean(beanName);
 					beans.add(value);
 				}
 			}
@@ -225,7 +214,7 @@ public class PetiteContainer extends PetiteBeans {
 	/**
 	 * Wires methods.
 	 */
-	protected void wireMethods(Object bean, BeanDefinition def, Map<String, Object> acquiredBeans) {
+	protected void wireMethods(Object bean, BeanDefinition def) {
 		if (def.methods == null) {
 			def.methods = petiteResolvers.resolveMethodInjectionPoint(def.type);
 		}
@@ -247,7 +236,7 @@ public class PetiteContainer extends PetiteBeans {
 				}
 
 				if (value == null) {
-					value = getBean(refName, acquiredBeans);
+					value = getBean(refName);
 				}
 
 				args[i] = value;
@@ -268,16 +257,20 @@ public class PetiteContainer extends PetiteBeans {
 		}
 	}
 
-	/**
-	 * Invokes all init methods, if they exist. Also resolves destroy methods.
-	 */
-	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
+
+	protected void resolveInitAndDestroyMethods(Object bean, BeanDefinition def) {
 		if (def.initMethods == null) {
 			def.initMethods = petiteResolvers.resolveInitMethodPoint(bean);
 		}
 		if (def.destroyMethods == null) {
 			def.destroyMethods = petiteResolvers.resolveDestroyMethodPoint(bean);
 		}
+	}
+
+	/**
+	 * Invokes all init methods, if they exist. Also resolves destroy methods.
+	 */
+	protected void invokeInitMethods(Object bean, BeanDefinition def, InitMethodInvocationStrategy invocationStrategy) {
 		for (InitMethodPoint initMethod : def.initMethods) {
 			if (invocationStrategy != initMethod.invocationStrategy) {
 				continue;
@@ -326,26 +319,14 @@ public class PetiteContainer extends PetiteBeans {
 	}
 
 	/**
-	 * Returns Petite bean instance.
-	 * Petite container will find the bean in corresponding scope and all its dependencies,
-	 * either by constructor or property injection. When using constructor injection, cyclic dependencies
-	 * can not be prevented, but at least they are detected.
-	 *
-	 * @see PetiteContainer#createBean(Class)
-	 */
-	public Object getBean(String name) {
-		return getBean(name, new HashMap<String, Object>());
-	}
-
-	/**
 	 * Returns Petite bean instance named as one of the provided names.
 	 */
-	protected Object getBean(String[] names, Map<String, Object> acquiredBeans) {
+	protected Object getBean(String[] names) {
 		for (String name : names) {
 			if (name == null) {
 				continue;
 			}
-			Object bean = getBean(name, acquiredBeans);
+			Object bean = getBean(name);
 			if (bean != null) {
 				return bean;
 			}
@@ -355,24 +336,17 @@ public class PetiteContainer extends PetiteBeans {
 
 	/**
 	 * Returns Petite bean instance.
+	 * Petite container will find the bean in corresponding scope and all its dependencies,
+	 * either by constructor or property injection. When using constructor injection, cyclic dependencies
+	 * can not be prevented, but at least they are detected.
+	 *
 	 * @see PetiteContainer#createBean(Class)
 	 */
-	protected Object getBean(String name, Map<String, Object> acquiredBeans) {
-
-		// First check if bean is already acquired within this call.
-		// This prevents cyclic dependencies problem. It is expected than single
-		// object tree path contains less elements, therefore, this search is faster
-		// then the next one.
-		Object bean = acquiredBeans.get(name);
-		if (bean != null) {
-			if (bean == Void.TYPE) {
-				throw new PetiteException("Cycle dependencies on constructor injection detected!");
-			}
-			return bean;
-		}
+	public Object getBean(String name) {
 
 		// Lookup for registered bean definition.
 		BeanDefinition def = lookupBeanDefinition(name);
+
 		if (def == null) {
 
 			// try provider
@@ -385,22 +359,26 @@ public class PetiteContainer extends PetiteBeans {
 		}
 
 		// Find the bean in its scope
-		bean = def.scopeLookup();
+		Object bean = def.scopeLookup();
+
 		if (bean == null) {
 			// Create new bean in the scope
-			bean = newBeanInstance(def, acquiredBeans);
-			wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
-			def.scopeRegister(bean);
+			bean = newBeanInstance(def);
+			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 		}
+
 		return bean;
 	}
 
 	/**
 	 * Wires bean, injects parameters and invokes init methods.
+	 * Such a loooong name :)
 	 */
-	protected void wireBeanInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean, Map<String, Object> acquiredBeans) {
+	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean) {
+		resolveInitAndDestroyMethods(bean, def);
+		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
-		wireBean(bean, def, acquiredBeans);
+		wireBean(bean, def);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_DEFINE);
 		injectParams(bean, def);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_INITIALIZE);
@@ -423,8 +401,7 @@ public class PetiteContainer extends PetiteBeans {
 	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
-		Map<String, Object> acquiredBeans = new HashMap<>();
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 	}
 
 	// ---------------------------------------------------------------- create
@@ -445,9 +422,8 @@ public class PetiteContainer extends PetiteBeans {
 	public <E> E createBean(Class<E> type, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode);
-		Map<String, Object> acquiredBeans = new HashMap<>();
-		Object bean = newBeanInstance(def, acquiredBeans);
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
+		Object bean = newBeanInstance(def);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 		return (E) bean;
 	}
 
@@ -496,10 +472,7 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
-		Map<String, Object> acquiredBeans = new HashMap<>();
-		acquiredBeans.put(name, bean);
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean, acquiredBeans);
-		def.scopeRegister(bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 	}
 
 	/**
