@@ -364,7 +364,7 @@ public class PetiteContainer extends PetiteBeans {
 		if (bean == null) {
 			// Create new bean in the scope
 			bean = newBeanInstance(def);
-			wireBeanInjectParamsAndInvokeInitMethods(def, bean);
+			registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 		}
 
 		return bean;
@@ -372,8 +372,9 @@ public class PetiteContainer extends PetiteBeans {
 
 	/**
 	 * Wires bean, injects parameters and invokes init methods.
+	 * Such a loooong name :)
 	 */
-	protected void wireBeanInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean) {
+	protected void registerBeanAndWireAndInjectParamsAndInvokeInitMethods(BeanDefinition def, Object bean) {
 		resolveInitAndDestroyMethods(bean, def);
 		def.scopeRegister(bean);
 		invokeInitMethods(bean, def, InitMethodInvocationStrategy.POST_CONSTRUCT);
@@ -400,7 +401,7 @@ public class PetiteContainer extends PetiteBeans {
 	public void wire(Object bean, WiringMode wiringMode) {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, bean.getClass(), null, wiringMode);
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 	}
 
 	// ---------------------------------------------------------------- create
@@ -422,7 +423,7 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		BeanDefinition def = new BeanDefinition(null, type, null, wiringMode);
 		Object bean = newBeanInstance(def);
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 		return (E) bean;
 	}
 
@@ -471,7 +472,7 @@ public class PetiteContainer extends PetiteBeans {
 		wiringMode = petiteConfig.resolveWiringMode(wiringMode);
 		registerPetiteBean(bean.getClass(), name, SingletonScope.class, wiringMode, false);
 		BeanDefinition def = lookupExistingBeanDefinition(name);
-		wireBeanInjectParamsAndInvokeInitMethods(def, bean);
+		registerBeanAndWireAndInjectParamsAndInvokeInitMethods(def, bean);
 	}
 
 	/**
