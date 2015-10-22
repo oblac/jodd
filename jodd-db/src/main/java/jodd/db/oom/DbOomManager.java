@@ -195,9 +195,14 @@ public class DbOomManager {
 		}
 
 		if (existing != null) {
+			if (ded.getType() == type) {
+				return ded;
+			}
 			throw new DbOomException("Type already registered: " + existing.getType());
 		}
+
 		existing = entityNamesMap.put(ded.getEntityName(), ded);
+
 		if (existing != null) {
 			throw new DbOomException("Name '" + ded.getEntityName() + "' already mapped to an entity: " + existing.getType());
 		}
@@ -206,13 +211,15 @@ public class DbOomManager {
 
 	/**
 	 * Registers entity. {@link #registerType(Class) Registers types} and table names.
-	 * Throw exception is type is already registered.
 	 */
 	public <E> DbEntityDescriptor<E> registerEntity(Class<E> type) {
 		DbEntityDescriptor<E> ded = registerType(type);
 		DbEntityDescriptor existing = tableNamesMap.put(ded.getTableName(), ded);
 
 		if (existing != null) {
+			if (ded.getType() == type) {
+				return ded;
+			}
 			throw new DbOomException("Entity registration failed! Table '" + ded.getTableName() + "' already mapped to an entity: " + existing.getType());
 		}
 		return ded;
