@@ -119,12 +119,15 @@ public abstract class DbBaseTest {
 		System.out.println(dockerHost);
 
 		if (dockerHost != null) {
+			selftCreated = true;
 			return dockerHost;//"192.168.99.100";
 		}
 		else {
 			return "localhost";
 		}
 	}
+
+	static boolean selftCreated = false;
 
 	/**
 	 * MySql.
@@ -137,9 +140,14 @@ public abstract class DbBaseTest {
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
-			// doesn't matter for mysql
-			dboom.getTableNames().setLowercase(true);
-			dboom.getColumnNames().setLowercase(true);
+			if (selftCreated) {
+				dboom.getTableNames().setUppercase(true);
+				dboom.getColumnNames().setUppercase(true);
+			}
+			else {
+				dboom.getTableNames().setLowercase(true);
+				dboom.getColumnNames().setLowercase(true);
+			}
 
 			connectionPool.init();
 

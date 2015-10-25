@@ -2,7 +2,7 @@ pgdb:
   image: postgres:9.4.4
   environment:
     - POSTGRES_DB=jodd-test
-    - POSTGRES_USER=root
+    - POSTGRES_USER=postgres
     - POSTGRES_PASSWORD=root!
     - LC_ALL=C.UTF-8
   ports:
