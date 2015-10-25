@@ -156,7 +156,7 @@ abstract class DbQueryBase {
 	 */
 	protected void saveResultSet(ResultSet rs) {
 		if (resultSets == null) {
-			resultSets = new HashSet<ResultSet>();
+			resultSets = new HashSet<>();
 		}
 		resultSets.add(rs);
 	}
@@ -766,7 +766,7 @@ abstract class DbQueryBase {
 	public <T> List<T> list(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
 
-		List<T> list = new ArrayList<T>();
+		List<T> list = new ArrayList<>();
 
 		try {
 			while (resultSet.next()) {
@@ -810,7 +810,7 @@ abstract class DbQueryBase {
 	public <T> Set<T> listSet(QueryMapper<T> queryMapper) {
 		ResultSet resultSet = execute();
 
-		Set<T> set = new HashSet<T>();
+		Set<T> set = new HashSet<>();
 
 		try {
 			while (resultSet.next()) {

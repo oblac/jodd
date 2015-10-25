@@ -204,8 +204,8 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 		if (minConnections > maxConnections) {
 			minConnections = maxConnections;
 		}
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 		for (int i = 0; i < minConnections; i++) {
 			try {
 				Connection conn = DriverManager.getConnection(url, user, password); 
@@ -363,9 +363,9 @@ public class CoreConnectionPool implements Runnable, ConnectionProvider {
 			log.info("Core connection pool shutdown");
 		}
 		closeConnections(availableConnections);
-		availableConnections = new ArrayList<ConnectionData>(maxConnections);
+		availableConnections = new ArrayList<>(maxConnections);
 		closeConnections(busyConnections);
-		busyConnections = new ArrayList<ConnectionData>(maxConnections);
+		busyConnections = new ArrayList<>(maxConnections);
 	}
 
 	private void closeConnections(ArrayList<ConnectionData> connections) {

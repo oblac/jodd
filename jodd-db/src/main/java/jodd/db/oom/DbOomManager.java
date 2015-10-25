@@ -136,9 +136,9 @@ public class DbOomManager {
 		this.primitiveEntitiesPrefixes = primitiveEntitiesPrefixes;
 	}
 
-	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<Class, DbEntityDescriptor>();
-	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<String, DbEntityDescriptor>();
-	protected Map<String, DbEntityDescriptor> tableNamesMap = new NamedValuesHashMap<DbEntityDescriptor>();
+	protected Map<Class, DbEntityDescriptor> descriptorsMap = new HashMap<>();
+	protected Map<String, DbEntityDescriptor> entityNamesMap = new HashMap<>();
+	protected Map<String, DbEntityDescriptor> tableNamesMap = new NamedValuesHashMap<>();
 
 	/**
 	 * Lookups {@link DbEntityDescriptor} for some type and registers the type if is new.
@@ -253,7 +253,7 @@ public class DbOomManager {
 	 * Creates {@link DbEntityDescriptor}.
 	 */
 	protected <E> DbEntityDescriptor<E> createDbEntityDescriptor(Class<E> type) {
-		return new DbEntityDescriptor<E>(type, schemaName, tableNames, columnNames);
+		return new DbEntityDescriptor<>(type, schemaName, tableNames, columnNames);
 	}
 
 

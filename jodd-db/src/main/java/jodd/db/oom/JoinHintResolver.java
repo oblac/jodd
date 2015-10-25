@@ -59,7 +59,7 @@ public class JoinHintResolver {
 			return data;
 		}
 		// build context
-		Map<String, Object> context = new HashMap<String, Object>(hints.length);
+		Map<String, Object> context = new HashMap<>(hints.length);
 		for (int i = 0; i < hints.length; i++) {
 			hints[i] = hints[i].trim();
 			String hint = hints[i];

@@ -55,8 +55,8 @@ public class DbQueryBuilder {
 
 	public DbQueryBuilder() {
 		queryMap = DbManager.getInstance().getQueryMap();
-		parsedSqlMap = new HashMap<String, ParsedSql>();
-		methodParamNames = new HashMap<String, String[]>();
+		parsedSqlMap = new HashMap<>();
+		methodParamNames = new HashMap<>();
 	}
 
 	/**

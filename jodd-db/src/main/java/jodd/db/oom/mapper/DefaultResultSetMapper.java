@@ -121,7 +121,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 			totalColumns = rsMetaData.getColumnCount();
 
-			this.resultColumns = new HashSet<String>(totalColumns);
+			this.resultColumns = new HashSet<>(totalColumns);
 			columnNames = new String[totalColumns];
 			columnDbSqlTypes = new int[totalColumns];
 			tableNames = new String[totalColumns];
@@ -197,7 +197,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 * {@inheritDoc}
 	 */
 	public Class[] resolveTables() {
-		List<Class> classes = new ArrayList<Class>(tableNames.length);
+		List<Class> classes = new ArrayList<>(tableNames.length);
 		String lastTableName = null;
 		resultColumns.clear();
 
@@ -475,7 +475,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 	 */
 	protected void cacheResultSetEntities(Object[] result) {
 		if (entitiesCache == null) {
-			entitiesCache = new HashMap<Object, Object>();
+			entitiesCache = new HashMap<>();
 		}
 
 		for (int i = 0; i < result.length; i++) {
