@@ -67,7 +67,7 @@ ext {
 		hsqldb:			'org.hsqldb:hsqldb:2.2.9',
 		h2db:			'com.h2database:h2:1.1.111',
 		postgresql:		'org.postgresql:postgresql:9.4-1201-jdbc41',
-		mysql:			'mysql:mysql-connector-java:5.1.35',
+		mysql:			'mysql:mysql-connector-java:5.1.37',
 		winstone:		'net.sourceforge.winstone:winstone:0.9.10',
 		//el_api:		'javax.el:el-api:2.2',
 		el_api:			"org.apache.tomcat:tomcat-jasper:${tomcatVersion}",
@@ -223,6 +223,9 @@ configure(javaModules()) {
 	task testIntegration(type: Test, dependsOn: jar) {
 		group 'verification'
 		description 'Runs the integration tests.'
+		testLogging {
+			showStandardStreams = true
+		}
 
 		testClassesDir = sourceSets.testInt.output.classesDir
 		classpath = sourceSets.testInt.runtimeClasspath

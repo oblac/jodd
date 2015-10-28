@@ -43,7 +43,6 @@ import static org.junit.Assert.assertTrue;
 public abstract class DbBaseTest {
 
 	public static final String DB_NAME = "jodd-test";
-	public static final String DB_IP = "192.168.59.103";
 
 	protected CoreConnectionPool connectionPool;
 	protected DbOomManager dboom;
@@ -112,8 +111,23 @@ public abstract class DbBaseTest {
 
 			connectionPool.close();
 		}
-
 	}
+
+	public static String dbhost() {
+		String dockerHost = System.getenv("DOCKER_HOST");
+
+		System.out.println(dockerHost);
+
+		if (dockerHost != null) {
+			selftCreated = true;
+			return dockerHost;//"192.168.99.100";
+		}
+		else {
+			return "localhost";
+		}
+	}
+
+	static boolean selftCreated = false;
 
 	/**
 	 * MySql.
@@ -122,15 +136,29 @@ public abstract class DbBaseTest {
 
 		public final void initDb() {
 			connectionPool.setDriver("com.mysql.jdbc.Driver");
-			connectionPool.setUrl("jdbc:mysql://localhost:3306/" + DB_NAME);
+			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306");
 			connectionPool.setUser("root");
 			connectionPool.setPassword("root!");
 
-			// doesn't matter for mysql
-			dboom.getTableNames().setLowercase(true);
-			dboom.getColumnNames().setLowercase(true);
-		}
+			if (selftCreated) {
+				dboom.getTableNames().setUppercase(true);
+				dboom.getColumnNames().setUppercase(true);
+			}
+			else {
+				dboom.getTableNames().setLowercase(true);
+				dboom.getColumnNames().setLowercase(true);
+			}
 
+			connectionPool.init();
+
+			DbSession session = new DbSession(connectionPool);
+			DbQuery query = new DbQuery(session, "create database IF NOT EXISTS `jodd-test` CHARACTER SET utf8 COLLATE utf8_general_ci;");
+			query.executeUpdate();
+			session.closeSession();
+
+			connectionPool.close();
+			connectionPool.setUrl("jdbc:mysql://" + dbhost() + ":3306/" + DB_NAME);
+		}
 	}
 
 	/**
@@ -140,7 +168,7 @@ public abstract class DbBaseTest {
 
 		public void initDb() {
 			connectionPool.setDriver("org.postgresql.Driver");
-			connectionPool.setUrl("jdbc:postgresql://localhost/" + DB_NAME);
+			connectionPool.setUrl("jdbc:postgresql://" + dbhost() + "/" + DB_NAME);
 			connectionPool.setUser("postgres");
 			connectionPool.setPassword("root!");
 

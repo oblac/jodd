@@ -30,7 +30,7 @@ package jodd.db;
  */
 public class ThreadDbSessionHolder {
 
-	private static final ThreadLocal<DbSession> DB_SESSION = new ThreadLocal<DbSession>();
+	private static final ThreadLocal<DbSession> DB_SESSION = new ThreadLocal<>();
 
 	/**
 	 * Returns current thread db session.

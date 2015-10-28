@@ -100,7 +100,7 @@ public abstract class TemplateData {
 	 */
 	public void setObjectReference(String name, Object object) {
 		if (objectRefs == null) {
-			objectRefs = new HashMap<String, Object>();
+			objectRefs = new HashMap<>();
 		}
 		objectRefs.put(name, object);
 	}
@@ -181,7 +181,7 @@ public abstract class TemplateData {
 	 */
 	public void registerTableReference(String tableReference, DbEntityDescriptor ded, String tableAlias) {
 		if (tableRefs == null) {
-			tableRefs = new HashMap<String, TableRefData>();
+			tableRefs = new HashMap<>();
 		}
 		TableRefData t = new TableRefData(ded, tableAlias);
 		if (tableRefs.put(tableReference, t) != null) {
@@ -217,14 +217,14 @@ public abstract class TemplateData {
 
 	public void registerColumnDataForTableRef(String tableRef, String tableName) {
 		if (columnData == null) {
-			columnData = new NamedValuesHashMap<ColumnData>();
+			columnData = new NamedValuesHashMap<>();
 		}
 		columnData.put(tableRef, new ColumnData(tableName));
 	}
 
 	public String registerColumnDataForColumnCode(String tableName, String column) {
 		if (columnData == null) {
-			columnData = new NamedValuesHashMap<ColumnData>();
+			columnData = new NamedValuesHashMap<>();
 		}
 		String columnCode = COL_CODE_PREFIX + Integer.toString(columnCount++) + '_';
 		columnData.put(columnCode, new ColumnData(tableName, column));
@@ -250,7 +250,7 @@ public abstract class TemplateData {
 	 */
 	public void addParameter(String name, Object value, DbEntityColumnDescriptor dec) {
 		if (parameters == null) {
-			parameters = new HashMap<String, ParameterValue>();
+			parameters = new HashMap<>();
 		}
 		parameters.put(name, new ParameterValue(value, dec));
 	}
@@ -317,7 +317,7 @@ public abstract class TemplateData {
 	 */
 	public void registerHint(String hint) {
 		if (hints == null) {
-			hints = new ArrayList<String>(hintCount);
+			hints = new ArrayList<>(hintCount);
 		}
 		hints.add(hint);
 	}

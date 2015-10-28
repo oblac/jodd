@@ -282,7 +282,7 @@ public class DbOomQuery extends DbQuery {
 		return iterate(null, autoClose);
 	}
 	protected <T> Iterator<T> iterate(Class[] types, boolean close) {
-		return new DbListIterator<T>(this, types, close);
+		return new DbListIterator<>(this, types, close);
 	}
 
 	// ---------------------------------------------------------------- list
@@ -308,7 +308,7 @@ public class DbOomQuery extends DbQuery {
 	 */
 	@SuppressWarnings({"unchecked"})
 	protected <T> List<T> list(Class[] types, int max, boolean close) {
-		List<T> result = new ArrayList<T>(initialCollectionSize(max));
+		List<T> result = new ArrayList<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -369,7 +369,7 @@ public class DbOomQuery extends DbQuery {
 	}
 	@SuppressWarnings({"unchecked"})
 	protected <T> Set<T> listSet(Class[] types, int max, boolean close) {
-		Set<T> result = new LinkedHashSet<T>(initialCollectionSize(max));
+		Set<T> result = new LinkedHashSet<>(initialCollectionSize(max));
 
 		ResultSetMapper rsm = executeAndBuildResultSetMapper();
 		if (types == null) {
@@ -428,7 +428,7 @@ public class DbOomQuery extends DbQuery {
 		}
 		ResultSetMapper rsm = createResultSetMapper(resultSet);
 
-		Iterator<T> iterator = new DbListIterator<T>(this, types, rsm, false);
+		Iterator<T> iterator = new DbListIterator<>(this, types, rsm, false);
 
 		T result = null;
 

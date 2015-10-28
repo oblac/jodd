@@ -87,7 +87,7 @@ class DbQueryParser {
 
 	private void saveBatchParameter(String name, int size) {
 		if (batchParams == null) {
-			batchParams = new HashMap<String, Integer>();
+			batchParams = new HashMap<>();
 		}
 		batchParams.put(name, Integer.valueOf(size));
 	}
@@ -110,7 +110,7 @@ class DbQueryParser {
 	// ---------------------------------------------------------------- parser
 
 	void parseSql(String sqlString) {
-		namedParameterLocationMap = new HashMap<String, IntArrayList>();
+		namedParameterLocationMap = new HashMap<>();
 		int stringLength = sqlString.length();
 		StringBuilder pureSql = new StringBuilder(stringLength);
 		boolean inQuote = false;
