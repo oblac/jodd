@@ -32,10 +32,12 @@ import jodd.csselly.selector.PseudoFunctionSelector;
 import jodd.lagarto.dom.Element;
 import jodd.lagarto.dom.LagartoDOMBuilder;
 import jodd.lagarto.dom.Node;
+import jodd.lagarto.dom.NodeSelector;
 import jodd.util.StringUtil;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -315,6 +317,23 @@ public class JerryMiscTest {
 		} catch(Exception e) {
 			fail(e.toString());
 		}
+	}
+
+	@Test
+	public void test250() {
+		String html = "<html>\n" +
+			"  <body>\n" +
+			"    <a href=\"/go?to=foobar&index=null\" title=\"Choice 1\">link</a>\n" +
+			"  </body>\n" +
+			"</html>";
+
+		LagartoDOMBuilder domBuilder = new LagartoDOMBuilder();
+		NodeSelector nodeSelector = new NodeSelector(domBuilder.parse(html));
+		List<Node> selectedNodes = nodeSelector.select("a[title='Choice 1']");
+
+		System.out.println();
+
+		assertEquals("/go?to=foobar&index=null", selectedNodes.get(0).getAttribute("href"));
 	}
 
 
