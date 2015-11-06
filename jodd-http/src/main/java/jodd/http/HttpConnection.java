@@ -35,6 +35,12 @@ import java.io.OutputStream;
 public interface HttpConnection {
 
 	/**
+	 * Initializes http connection after socket is created.
+	 * Applies configurations, like {@link #setTimeout(int)}.
+	 */
+	public void init() throws IOException;
+
+	/**
 	 * Returns connection output stream.
 	 */
 	public OutputStream getOutputStream() throws IOException;
