@@ -699,25 +699,6 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			open();
 		}
 
-		// prepare http connection
-
-		if (timeout != -1) {
-			try {
-				httpConnection.setTimeout(timeout);
-			}
-			catch (Throwable thex) {  // @wjw_add
-				try {
-					httpConnection.close();
-				}
-				catch (Throwable ignore) {
-				}
-				finally {
-					httpConnection = null;
-				}
-				throw thex;
-			}
-		}
-
 		// sends data
 		HttpResponse httpResponse;
 		try {
