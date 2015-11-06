@@ -23,63 +23,30 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http.net;
+package jodd.http;
 
-import jodd.http.HttpConnection;
+import jodd.util.StringPool;
+import jodd.util.ThreadUtil;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 
-/**
- * Socket-based {@link jodd.http.HttpConnection}.
- * @see SocketHttpConnectionProvider
- */
-public class SocketHttpConnection implements HttpConnection {
-
-	protected final Socket socket;
-
-	public SocketHttpConnection(Socket socket) {
-		this.socket = socket;
-	}
+public class SlowServlet extends HttpServlet {
 
 	@Override
-	public void init() throws IOException {
-		if (timeout >= 0) {
-			socket.setSoTimeout(timeout);
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ThreadUtil.sleep(5000);
+		write(resp, "OK");
+	}
+
+	protected void write(HttpServletResponse resp, String text) throws IOException {
+		if (text != null) {
+			resp.setContentLength(text.getBytes(StringPool.UTF_8).length);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().write(text);
+			resp.flushBuffer();
 		}
 	}
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		return socket.getOutputStream();
-	}
-
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return socket.getInputStream();
-	}
-
-	@Override
-	public void close() {
-		try {
-			socket.close();
-		} catch (Throwable ignore) {
-		}
-	}
-
-	@Override
-	public void setTimeout(int milliseconds) {
-		this.timeout = milliseconds;
-	}
-
-	/**
-	 * Returns <code>Socket</code> used by this connection.
-	 */
-	public Socket getSocket() {
-		return socket;
-	}
-
-	private int timeout;
 }

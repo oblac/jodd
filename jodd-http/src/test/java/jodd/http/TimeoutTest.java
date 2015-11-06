@@ -23,63 +23,53 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.http.net;
+package jodd.http;
 
-import jodd.http.HttpConnection;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-/**
- * Socket-based {@link jodd.http.HttpConnection}.
- * @see SocketHttpConnectionProvider
- */
-public class SocketHttpConnection implements HttpConnection {
+public class TimeoutTest {
 
-	protected final Socket socket;
+	static TestServer testServer;
 
-	public SocketHttpConnection(Socket socket) {
-		this.socket = socket;
+	@BeforeClass
+	public static void startServer() throws Exception {
+		testServer = new TomcatServer();
+		testServer.start();
 	}
 
-	@Override
-	public void init() throws IOException {
-		if (timeout >= 0) {
-			socket.setSoTimeout(timeout);
-		}
+	@AfterClass
+	public static void stopServer() throws Exception {
+		testServer.stop();
 	}
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		return socket.getOutputStream();
+	@Before
+	public void setUp() {
+		EchoServlet.testinit();
 	}
 
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return socket.getInputStream();
-	}
+	@Test
+	public void testTimeout() {
+		HttpRequest httpRequest = HttpRequest.get("localhost:8173/slow");
+		httpRequest.timeout(1000);
 
-	@Override
-	public void close() {
 		try {
-			socket.close();
-		} catch (Throwable ignore) {
+			httpRequest.send();
+			fail();
 		}
-	}
+		catch(HttpException ignore) {
+		}
 
-	@Override
-	public void setTimeout(int milliseconds) {
-		this.timeout = milliseconds;
-	}
+		httpRequest = HttpRequest.get("localhost:8173/slow");
+		httpRequest.timeout(6000);
 
-	/**
-	 * Returns <code>Socket</code> used by this connection.
-	 */
-	public Socket getSocket() {
-		return socket;
-	}
+		int status = httpRequest.send().statusCode();
 
-	private int timeout;
+		assertEquals(200, status);
+	}
 }

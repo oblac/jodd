@@ -25,61 +25,21 @@
 
 package jodd.http.net;
 
-import jodd.http.HttpConnection;
-
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 
-/**
- * Socket-based {@link jodd.http.HttpConnection}.
- * @see SocketHttpConnectionProvider
- */
-public class SocketHttpConnection implements HttpConnection {
+public class SocketHttpSecureConnection extends SocketHttpConnection {
+	private final SSLSocket sslSocket;
 
-	protected final Socket socket;
-
-	public SocketHttpConnection(Socket socket) {
-		this.socket = socket;
+	public SocketHttpSecureConnection(SSLSocket socket) {
+		super(socket);
+		this.sslSocket = socket;
 	}
 
 	@Override
 	public void init() throws IOException {
-		if (timeout >= 0) {
-			socket.setSoTimeout(timeout);
-		}
-	}
+		super.init();
 
-	@Override
-	public OutputStream getOutputStream() throws IOException {
-		return socket.getOutputStream();
+		sslSocket.startHandshake();
 	}
-
-	@Override
-	public InputStream getInputStream() throws IOException {
-		return socket.getInputStream();
-	}
-
-	@Override
-	public void close() {
-		try {
-			socket.close();
-		} catch (Throwable ignore) {
-		}
-	}
-
-	@Override
-	public void setTimeout(int milliseconds) {
-		this.timeout = milliseconds;
-	}
-
-	/**
-	 * Returns <code>Socket</code> used by this connection.
-	 */
-	public Socket getSocket() {
-		return socket;
-	}
-
-	private int timeout;
 }

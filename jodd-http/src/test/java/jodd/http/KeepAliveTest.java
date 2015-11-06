@@ -75,6 +75,11 @@ public class KeepAliveTest {
 
 		public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
 			return new HttpConnection() {
+				@Override
+				public void init() throws IOException {
+					// ignore
+				}
+
 				public OutputStream getOutputStream() throws IOException {
 					return new ByteArrayOutputStream();
 				}

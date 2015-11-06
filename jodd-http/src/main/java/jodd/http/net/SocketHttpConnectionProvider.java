@@ -25,6 +25,7 @@
 
 package jodd.http.net;
 
+import jodd.http.HttpException;
 import jodd.http.JoddHttp;
 import jodd.http.HttpConnection;
 import jodd.http.HttpConnectionProvider;
@@ -58,19 +59,36 @@ public class SocketHttpConnectionProvider implements HttpConnectionProvider {
 	 * @see #createSocket(String, int)
 	 */
 	public HttpConnection createHttpConnection(HttpRequest httpRequest) throws IOException {
-		Socket socket;
+		SocketHttpConnection httpConnection;
 
-		if (httpRequest.protocol().equalsIgnoreCase("https")) {
+		final boolean https = httpRequest.protocol().equalsIgnoreCase("https");
+
+		if (https) {
 			SSLSocket sslSocket = createSSLSocket(httpRequest.host(), httpRequest.port());
 
-			sslSocket.startHandshake();
-
-			socket = sslSocket;
+			httpConnection = new SocketHttpSecureConnection(sslSocket);
 		} else {
-			socket = createSocket(httpRequest.host(), httpRequest.port());
+			Socket socket = createSocket(httpRequest.host(), httpRequest.port());
+
+			httpConnection = new SocketHttpConnection(socket);
 		}
 
-		return new SocketHttpConnection(socket);
+		// prepare connection config
+
+		httpConnection.setTimeout(httpRequest.timeout());
+
+		try {
+			// additional socket initialization
+
+			httpConnection.init();
+		}
+		catch (Throwable thex) {  			// @wjw_add
+			httpConnection.close();
+
+			throw new HttpException(thex);
+		}
+
+		return httpConnection;
 	}
 
 	/**
