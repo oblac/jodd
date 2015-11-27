@@ -155,6 +155,9 @@ public class FileUtil {
 	 * Returns <code>true</code> if file exists.
 	 */
 	public static boolean isExistingFile(File file) {
+		if (file == null) {
+			return false;
+		}
 		return file.exists() && file.isFile();
 	}
 
@@ -162,6 +165,9 @@ public class FileUtil {
 	 * Returns <code>true</code> if folder exists.
 	 */
 	public static boolean isExistingFolder(File folder) {
+		if (folder == null) {
+			return false;
+		}
 		return folder.exists() && folder.isDirectory();
 	}
 
