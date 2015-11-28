@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class PathsUtil {
+public class PathUtil {
 
 	/**
 	 * Reads path content.
