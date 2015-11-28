@@ -173,7 +173,7 @@ public class GenericDao {
 	 */
 	public <E> E updateProperty(E entity, String name, Object newValue) {
 		query(DbEntitySql.updateColumn(entity, name, newValue)).autoClose().executeUpdate();
-		BeanUtil.setDeclaredProperty(entity, name, newValue);
+		BeanUtil.declared.setProperty(entity, name, newValue);
 		return entity;
 	}
 
@@ -181,7 +181,7 @@ public class GenericDao {
 	 * Updates property in the database by storing the current property value.
 	 */
 	public <E> E updateProperty(E entity, String name) {
-		Object value = BeanUtil.getDeclaredProperty(entity, name);
+		Object value = BeanUtil.declared.getProperty(entity, name);
 		query(DbEntitySql.updateColumn(entity, name, value)).autoClose().executeUpdate();
 		return entity;
 	}

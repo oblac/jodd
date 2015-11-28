@@ -105,7 +105,7 @@ public class MatchChunk extends SqlChunk {
 			}
 			String property = dec.getPropertyName();
 
-			Object value = BeanUtil.getDeclaredPropertySilently(data, property);
+			Object value = BeanUtil.declaredSilent.getProperty(data, property);
 
 			if ((includeColumns == COLS_ONLY_EXISTING) && (value == null)) {
 				continue;

@@ -67,7 +67,7 @@ public class InsertChunk extends SqlChunk {
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
 			String property = dec.getPropertyName();
-			Object value = BeanUtil.getDeclaredProperty(data, property);
+			Object value = BeanUtil.declared.getProperty(data, property);
 			if (value == null) {
 				continue;
 			}

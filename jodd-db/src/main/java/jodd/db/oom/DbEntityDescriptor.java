@@ -280,7 +280,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public Object getIdValue(E object) {
 		String propertyName = getIdPropertyName();
-		return BeanUtil.getDeclaredProperty(object, propertyName);
+		return BeanUtil.declared.getProperty(object, propertyName);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class DbEntityDescriptor<E> {
 	 */
 	public void setIdValue(E object, Object value) {
 		String propertyName = getIdPropertyName();
-		BeanUtil.setDeclaredProperty(object, propertyName, value);
+		BeanUtil.declared.setProperty(object, propertyName, value);
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class UpdateSetChunk extends SqlChunk {
 		int size = 0;
 		for (DbEntityColumnDescriptor dec : decList) {
 			String property = dec.getPropertyName();
-			Object value = BeanUtil.getDeclaredProperty(data, property);
+			Object value = BeanUtil.declared.getProperty(data, property);
 
 			if (includeColumns == COLS_ONLY_EXISTING) {
 				if (DbOomUtil.isEmptyColumnValue(dec, value)) {

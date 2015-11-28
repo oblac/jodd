@@ -427,7 +427,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 										BeanUtil.setDeclaredPropertySilent(result[currentResult], propertyName, value) :
 										BeanUtil.hasDeclaredProperty(result[currentResult], propertyName);
 */
-						Class type = BeanUtil.getDeclaredPropertyType(result[currentResult], propertyName);
+						Class type = BeanUtil.declared.getPropertyType(result[currentResult], propertyName);
 						if (type != null) {
 							// match: entity
 							dec.updateDbSqlType(columnDbSqlType);	// updates column db sql type information for the entity!!!
@@ -436,7 +436,7 @@ public class DefaultResultSetMapper extends BaseResultSetMapper {
 
 							if (value != null) {
 								// inject column value into existing entity
-								BeanUtil.setDeclaredProperty(result[currentResult], propertyName, value);
+								BeanUtil.declared.setProperty(result[currentResult], propertyName, value);
 								resultUsage[currentResult] = true;
 							}
 							colNdx++;
