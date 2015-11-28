@@ -37,7 +37,7 @@ public class PathUtil {
 	/**
 	 * Reads path content.
 	 */
-	public String readString(Path path) throws IOException {
+	public static String readString(Path path) throws IOException {
 		BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
 
 		StringWriter writer = new StringWriter();
