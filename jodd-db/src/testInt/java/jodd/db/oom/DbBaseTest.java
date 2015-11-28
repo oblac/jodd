@@ -120,7 +120,14 @@ public abstract class DbBaseTest {
 
 		if (dockerHost != null) {
 			selftCreated = true;
-			return dockerHost;//"192.168.99.100";
+
+			if (dockerHost.startsWith("tcp://")) {
+				//	tcp://192.168.99.100:2376";
+				dockerHost = dockerHost.substring(6);
+				dockerHost = dockerHost.substring(0, dockerHost.lastIndexOf(':'));
+			}
+
+			return dockerHost;
 		}
 		else {
 			return "localhost";
