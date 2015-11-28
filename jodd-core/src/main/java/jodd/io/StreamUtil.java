@@ -31,6 +31,8 @@ import jodd.core.JoddCore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,74 +49,24 @@ public class StreamUtil {
 	// ---------------------------------------------------------------- silent close
 
 	/**
-	 * Closes an input stream and releases any system resources associated with
-	 * this stream. No exception will be thrown if an I/O error occurs.
+	 * Closes silently the closable object. If it is <code>FLushable</code>, it
+	 * will be flushed first. No exception will be thrown if an I/O error occurs.
 	 */
-	public static void close(InputStream in) {
-		if (in != null) {
+	public static void close(Closeable closeable) {
+		if (closeable != null) {
+			if (closeable instanceof Flushable) {
+				try {
+					((Flushable)closeable).flush();
+				} catch (IOException ignored) {
+				}
+			}
+
 			try {
-				in.close();
-			} catch (IOException ioex) {
-				// ignore
+				closeable.close();
+			} catch (IOException ignored) {
 			}
 		}
 	}
-
-	/**
-	 * Closes an output stream and releases any system resources associated with
-	 * this stream. No exception will be thrown if an I/O error occurs.
-	 */
-	public static void close(OutputStream out) {
-		if (out != null) {
-			try {
-				out.flush();
-			} catch (IOException ioex) {
-				// ignore
-			}
-			try {
-				out.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Closes a character-input stream and releases any system resources
-	 * associated with this stream. No exception will be thrown if an I/O error
-	 * occurs.
-	 */
-	public static void close(Reader in) {
-		if (in != null) {
-			try {
-				in.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-	/**
-	 * Closes a character-output stream and releases any system resources
-	 * associated with this stream. No exception will be thrown if an I/O error
-	 * occurs.
-	 */
-	public static void close(Writer out) {
-		if (out != null) {
-			try {
-				out.flush();
-			} catch (IOException ioex) {
-				// ignore
-			}
-			try {
-				out.close();
-			} catch (IOException ioex) {
-				// ignore
-			}
-		}
-	}
-
-
 
 	// ---------------------------------------------------------------- copy
 
