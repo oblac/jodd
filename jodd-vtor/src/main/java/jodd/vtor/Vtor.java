@@ -88,7 +88,7 @@ public class Vtor {
 	public void validate(ValidationContext ctx, Object target, String targetName) {
 		for (Map.Entry<String, List<Check>> entry : ctx.map.entrySet()) {
 			String name = entry.getKey();
-			Object value = BeanUtil.getDeclaredPropertySilently(target, name);
+			Object value = BeanUtil.declaredSilent.getProperty(target, name);
 			String valueName = targetName != null ? (targetName + '.' + name) : name;		// move up
 			ValidationConstraintContext vcc = new ValidationConstraintContext(this, target, valueName);
 			
