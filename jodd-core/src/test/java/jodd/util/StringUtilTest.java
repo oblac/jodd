@@ -917,11 +917,11 @@ public class StringUtilTest {
 		s = StringUtil.join(new String[0], ".");
 		assertEquals("", s);
 
-		assertNull(StringUtil.join((Object[]) null, "."));
+		assertNull(StringUtil.join(null, "."));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, "."));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, "."));
 
-		assertNull(StringUtil.join((Object[]) null, '.'));
+		assertNull(StringUtil.join(null, '.'));
 		assertEquals(StringPool.EMPTY, StringUtil.join(new Object[] {}, '.'));
 		assertEquals("123", StringUtil.join(new String[] { "123" }, '.'));
 	}

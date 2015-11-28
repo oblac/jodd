@@ -244,7 +244,7 @@ public class NodeSelectorTest {
 
 		nodes = nodeSelector.select("p#text > em:nth-last-child(2n+1)");
 		assertEquals(1, nodes.size());
-		assertEquals("lina", ((Element) nodes.get(0)).getAttribute("id"));
+		assertEquals("lina", (nodes.get(0)).getAttribute("id"));
 
 		nodes = nodeSelector.select("p#text em:nth-last-child(2n+1)");
 		assertEquals(2, nodes.size());

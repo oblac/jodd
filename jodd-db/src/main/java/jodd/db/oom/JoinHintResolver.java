@@ -115,7 +115,7 @@ public class JoinHintResolver {
 					} else if (cd.isArray()) {
 						// add element to array
 						try {
-							Object[] array = (Object[]) BeanUtil.declared.getProperty(value, hintPropertyName);
+							Object[] array = BeanUtil.declared.getProperty(value, hintPropertyName);
 
 							if (array == null) {
 								array = (Object[]) Array.newInstance(hintPropertyType.getComponentType(), 1);

@@ -109,7 +109,7 @@ public class JSONDeserializerTest {
 
 		String json = new JsonSerializer().serialize(map);
 
-		map = (Map) new JsonParser().map("values", Person.class).parse(json);
+		map = new JsonParser().map("values", Person.class).parse(json);
 		Person jsonIgor = (Person) map.get("person");
 
 		assertNotNull(jsonIgor);
