@@ -137,11 +137,11 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 
 				// names partial
 				if (in.name.startsWith(REQUEST_NAME)) {
-					value = BeanUtil.getDeclaredProperty(servletRequest, StringUtil.uncapitalize(in.name.substring(REQUEST_NAME.length())));
+					value = BeanUtil.declared.getProperty(servletRequest, StringUtil.uncapitalize(in.name.substring(REQUEST_NAME.length())));
 				} else if (in.name.startsWith(SESSION_NAME)) {
-					value = BeanUtil.getDeclaredProperty(servletRequest.getSession(), StringUtil.uncapitalize(in.name.substring(SESSION_NAME.length())));
+					value = BeanUtil.declared.getProperty(servletRequest.getSession(), StringUtil.uncapitalize(in.name.substring(SESSION_NAME.length())));
 				} else if (in.name.startsWith(CONTEXT_NAME)) {
-					value = BeanUtil.getDeclaredProperty(servletRequest.getSession().getServletContext(), StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
+					value = BeanUtil.declared.getProperty(servletRequest.getSession().getServletContext(), StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
 				} else
 
 				// csrf
@@ -194,7 +194,7 @@ public class ServletContextScopeInjector extends BaseScopeInjector
 				// names
 				value = new HttpServletContextMap(servletContext);
 			} else if (in.name.startsWith(CONTEXT_NAME)) {
-				value = BeanUtil.getDeclaredProperty(servletContext, StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
+				value = BeanUtil.declared.getProperty(servletContext, StringUtil.uncapitalize(in.name.substring(CONTEXT_NAME.length())));
 			}
 
 			if (value != null) {
