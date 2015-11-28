@@ -115,7 +115,7 @@ public class HtmlStaplerFilter extends SimpleLagartoServletFilter {
 			String value = filterConfig.getInitParameter(parameter);
 
 			if (value != null) {
-				BeanUtil.setDeclaredProperty(target, parameter, value);
+				BeanUtil.declared.setProperty(target, parameter, value);
 			}
 		}
 	}
