@@ -113,27 +113,27 @@ public class SilentTest {
 		Bean bean = new Bean();
 
 		try {
-			BeanUtil.setPropertySilent(bean, "miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "miss", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "miss.miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "miss.miss", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "miss[]", "xxx");
-			BeanUtil.setPropertySilent(bean, "miss[1]", "xxx");
-			BeanUtil.setPropertySilent(bean, "miss[a]", "xxx");
+			BeanUtil.silent.setProperty(bean, "miss[]", "xxx");
+			BeanUtil.silent.setProperty(bean, "miss[1]", "xxx");
+			BeanUtil.silent.setProperty(bean, "miss[a]", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "data.miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "data.miss", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "data[].miss", "xxx");
-			BeanUtil.setPropertySilent(bean, "data[1].miss", "xxx");
-			BeanUtil.setPropertySilent(bean, "data[1]", "xxx");
-			BeanUtil.setPropertySilent(bean, "data[a].miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "data[].miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "data[1].miss", "xxx");
+			BeanUtil.silent.setProperty(bean, "data[1]", "xxx");
+			BeanUtil.silent.setProperty(bean, "data[a].miss", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "data2.value", "xxx");
-			BeanUtil.setPropertySilent(bean, "data2[1].value", "xxx");
+			BeanUtil.silent.setProperty(bean, "data2.value", "xxx");
+			BeanUtil.silent.setProperty(bean, "data2[1].value", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "data3.value", "xxx");
+			BeanUtil.silent.setProperty(bean, "data3.value", "xxx");
 
-			BeanUtil.setPropertySilent(bean, "datas", "xxx");
+			BeanUtil.silent.setProperty(bean, "datas", "xxx");
 
 		}
 		catch (Exception ex) {
@@ -145,13 +145,13 @@ public class SilentTest {
 	public void testGetPropertySilent() {
 		Bean bean = new Bean();
 
-		assertNull(BeanUtil.getPropertySilently(bean, "miss"));
+		assertNull(BeanUtil.silent.getProperty(bean, "miss"));
 
-		assertNull(BeanUtil.getPropertySilently(bean, "datas[1]"));
+		assertNull(BeanUtil.silent.getProperty(bean, "datas[1]"));
 
-		assertNull(BeanUtil.getPropertySilently(bean, "datas[a]"));
+		assertNull(BeanUtil.silent.getProperty(bean, "datas[a]"));
 
-		assertNull(BeanUtil.getPropertySilently(bean.getMap(), "miss"));
+		assertNull(BeanUtil.silent.getProperty(bean.getMap(), "miss"));
 	}
 
 	@Test
@@ -159,13 +159,13 @@ public class SilentTest {
 		Bean bean = new Bean();
 
 		try {
-			BeanUtil.setPropertyForcedSilent(bean, "numbers[1].xxx", "173");
+			BeanUtil.forcedSilent.setProperty(bean, "numbers[1].xxx", "173");
 
-			BeanUtil.setPropertyForcedSilent(bean, "map[aaa].xxx", "173");
+			BeanUtil.forcedSilent.setProperty(bean, "map[aaa].xxx", "173");
 
-			BeanUtil.setDeclaredPropertyForcedSilent(bean, "someNumbers[3].foo", "173");
+			BeanUtil.declaredForcedSilent.setProperty(bean, "someNumbers[3].foo", "173");
 
-			BeanUtil.setDeclaredPropertyForcedSilent(bean, "wee.foo", "173");
+			BeanUtil.declaredForcedSilent.setProperty(bean, "wee.foo", "173");
 
 			//BeanUtil.setDeclaredPropertyForcedSilent(bean, "someNumbers[mmm].foo", "173");	// no fast silent
 			//BeanUtil.setPropertyForcedSilent(bean, "strings[1]", "moo");		// no fast silent

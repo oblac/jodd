@@ -28,10 +28,8 @@ package jodd.bean;
 import jodd.bean.data.LifeBean;
 import jodd.introspector.CachingIntrospector;
 import jodd.introspector.ClassDescriptor;
-import jodd.introspector.Introspector;
 import jodd.introspector.JoddIntrospector;
 import jodd.introspector.PropertyDescriptor;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -42,13 +40,13 @@ public class BeanPrefixTest {
 	public void testFieldPrefix1() {
 		LifeBean lifeBean = new LifeBean();
 
-		String foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
 		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_"});
 
-		foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
@@ -70,13 +68,13 @@ public class BeanPrefixTest {
 	public void testFieldPrefix1withEmpty() {
 		LifeBean lifeBean = new LifeBean();
 
-		String foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		String foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
 		JoddIntrospector.introspector = new CachingIntrospector(true, true, true, new String[] {"_", ""});
 
-		foo = BeanUtil.getProperty(lifeBean, "foo").toString();
+		foo = BeanUtil.pojo.getProperty(lifeBean, "foo").toString();
 
 		assertEquals("foo", foo);
 
@@ -97,18 +95,18 @@ public class BeanPrefixTest {
 
 	@Test
 	public void testFieldPrefix2() {
+		BeanUtilBean beanUtilBean = new BeanUtilBean();
+
 		LifeBean lifeBean = new LifeBean();
 
-		String bar = BeanUtil.getProperty(lifeBean, "bar").toString();
+		String bar = beanUtilBean.getProperty(lifeBean, "bar").toString();
 
 		assertEquals("bar", bar);
 
-		BeanUtil.getBeanUtilBean().setIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
+		beanUtilBean.setIntrospector(new CachingIntrospector(true, true, true, new String[] {"_"}));
 
-		bar = BeanUtil.getProperty(lifeBean, "bar").toString();
+		bar = beanUtilBean.getProperty(lifeBean, "bar").toString();
 
 		assertEquals("_bar", bar);
-
-		BeanUtil.getBeanUtilBean().setIntrospector(JoddIntrospector.introspector);
 	}
 }

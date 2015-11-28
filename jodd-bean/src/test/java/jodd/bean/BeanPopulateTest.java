@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 
 public class BeanPopulateTest {
 
-	public static class Bean {
+/*	public static class Bean {
 		Foo foo;
 	}
 
@@ -114,5 +114,5 @@ public class BeanPopulateTest {
 			assertEquals(200, bean.foo.three_3.get(1).longValue());
 			assertEquals(300, bean.foo.three_3.get(2).longValue());
 		}
-	}
+	}*/
 }

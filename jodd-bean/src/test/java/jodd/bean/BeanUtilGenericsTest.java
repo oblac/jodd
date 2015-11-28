@@ -76,42 +76,42 @@ public class BeanUtilGenericsTest {
 	public void testSetField() {
 		BaseClass base = new BaseClass();
 
-		BeanUtil.setProperty(base, "f1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(base, "f1", Integer.valueOf(173));
 		assertEquals(Integer.valueOf(173), base.f1);
-		assertEquals(Integer.valueOf(173), BeanUtil.getProperty(base, "f1"));
+		assertEquals(Integer.valueOf(173), BeanUtil.pojo.getProperty(base, "f1"));
 		assertEquals(Integer.class, base.f1.getClass());
 
-		BeanUtil.setProperty(base, "f2", "123");
+		BeanUtil.pojo.setProperty(base, "f2", "123");
 		assertEquals("123", base.f2);
-		assertEquals("123", BeanUtil.getProperty(base, "f2"));
+		assertEquals("123", BeanUtil.pojo.getProperty(base, "f2"));
 		assertEquals(String.class, base.f2.getClass());
 
 		// concrete implementation #1
 
 		ConcreteClass impl1 = new ConcreteClass();
 
-		BeanUtil.setProperty(impl1, "f1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(impl1, "f1", Integer.valueOf(173));
 		assertEquals("173", impl1.f1);
-		assertEquals("173", BeanUtil.getProperty(impl1, "f1"));
+		assertEquals("173", BeanUtil.pojo.getProperty(impl1, "f1"));
 		assertEquals(String.class, impl1.f1.getClass());
 
-		BeanUtil.setProperty(impl1, "f2", "123");
+		BeanUtil.pojo.setProperty(impl1, "f2", "123");
 		assertEquals(Integer.valueOf(123), impl1.f2);
-		assertEquals(Integer.valueOf(123), BeanUtil.getProperty(impl1, "f2"));
+		assertEquals(Integer.valueOf(123), BeanUtil.pojo.getProperty(impl1, "f2"));
 		assertEquals(Integer.class, impl1.f2.getClass());
 
 		// concrete implementation #2
 
 		ConcreteClass2 impl2 = new ConcreteClass2();
 
-		BeanUtil.setProperty(impl2, "f1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(impl2, "f1", Integer.valueOf(173));
 		assertEquals("173", impl2.f1);
-		assertEquals("173", BeanUtil.getProperty(impl2, "f1"));
+		assertEquals("173", BeanUtil.pojo.getProperty(impl2, "f1"));
 		assertEquals(String.class, impl2.f1.getClass());
 
-		BeanUtil.setProperty(impl2, "f2", "123");
+		BeanUtil.pojo.setProperty(impl2, "f2", "123");
 		assertEquals(Integer.valueOf(123), impl2.f2);
-		assertEquals(Integer.valueOf(123), BeanUtil.getProperty(impl2, "f2"));
+		assertEquals(Integer.valueOf(123), BeanUtil.pojo.getProperty(impl2, "f2"));
 		assertEquals(Integer.class, impl2.f2.getClass());
 	}
 
@@ -119,42 +119,42 @@ public class BeanUtilGenericsTest {
 	public void testSetProperty() {
 		BaseClass base = new BaseClass();
 
-		BeanUtil.setProperty(base, "foo1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(base, "foo1", Integer.valueOf(173));
 		assertEquals(Integer.valueOf(173), base.getFoo1());
-		assertEquals(Integer.valueOf(173), BeanUtil.getProperty(base, "foo1"));
+		assertEquals(Integer.valueOf(173), BeanUtil.pojo.getProperty(base, "foo1"));
 		assertEquals(Integer.class, base.getFoo1().getClass());
 
-		BeanUtil.setProperty(base, "foo2", "123");
+		BeanUtil.pojo.setProperty(base, "foo2", "123");
 		assertEquals("123", base.getFoo2());
-		assertEquals("123", BeanUtil.getProperty(base, "foo2"));
+		assertEquals("123", BeanUtil.pojo.getProperty(base, "foo2"));
 		assertEquals(String.class, base.getFoo2().getClass());
 
 		// concrete implementation #1
 
 		ConcreteClass impl1 = new ConcreteClass();
 
-		BeanUtil.setProperty(impl1, "foo1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(impl1, "foo1", Integer.valueOf(173));
 		assertEquals("173", impl1.getFoo1());
-		assertEquals("173", BeanUtil.getProperty(impl1, "foo1"));
+		assertEquals("173", BeanUtil.pojo.getProperty(impl1, "foo1"));
 		assertEquals(String.class, impl1.getFoo1().getClass());
 
-		BeanUtil.setProperty(impl1, "foo2", "123");
+		BeanUtil.pojo.setProperty(impl1, "foo2", "123");
 		assertEquals(Integer.valueOf(123), impl1.getFoo2());
-		assertEquals(Integer.valueOf(123), BeanUtil.getProperty(impl1, "foo2"));
+		assertEquals(Integer.valueOf(123), BeanUtil.pojo.getProperty(impl1, "foo2"));
 		assertEquals(Integer.class, impl1.getFoo2().getClass());
 
 		// concrete implementation #2
 
 		ConcreteClass2 impl2 = new ConcreteClass2();
 
-		BeanUtil.setProperty(impl2, "foo1", Integer.valueOf(173));
+		BeanUtil.pojo.setProperty(impl2, "foo1", Integer.valueOf(173));
 		assertEquals("173", impl2.getFoo1());
-		assertEquals("173", BeanUtil.getProperty(impl2, "foo1"));
+		assertEquals("173", BeanUtil.pojo.getProperty(impl2, "foo1"));
 		assertEquals(String.class, impl2.getFoo1().getClass());
 
-		BeanUtil.setProperty(impl2, "f2", "123");
+		BeanUtil.pojo.setProperty(impl2, "f2", "123");
 		assertEquals(Integer.valueOf(123), impl2.getFoo2());
-		assertEquals(Integer.valueOf(123), BeanUtil.getProperty(impl2, "foo2"));
+		assertEquals(Integer.valueOf(123), BeanUtil.pojo.getProperty(impl2, "foo2"));
 		assertEquals(Integer.class, impl2.getFoo2().getClass());
 	}
 
