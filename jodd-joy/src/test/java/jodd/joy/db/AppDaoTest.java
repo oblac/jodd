@@ -43,7 +43,7 @@ public class AppDaoTest extends DbHsqldbTestCase {
 		AppDao appDao = new AppDao();
 		appDao.setKeysGeneratedByDatabase(false);
 		DbIdGenerator didg = new DbIdGenerator();
-		BeanUtil.setDeclaredProperty(appDao, "dbIdGenerator", didg);
+		BeanUtil.declared.setProperty(appDao, "dbIdGenerator", didg);
 
 		// store
 
