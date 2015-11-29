@@ -261,8 +261,16 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public <T> T getIndexProperty(Object bean, String property) {
-		return (T) getIndexProperty(new BeanProperty(this, bean, property));
+	public <T> T getIndexProperty(Object bean, String property, int index) {
+		BeanProperty bp = new BeanProperty(this, bean, property);
+
+		bp.indexString = bp.index = String.valueOf(index);
+
+		Object value = _getIndexProperty(bp);
+
+		bp.indexString = null;
+
+		return (T) value;
 	}
 
 	/**
@@ -373,8 +381,14 @@ public class BeanUtilBean extends BeanUtilUtil implements BeanUtil {
 	}
 
 	@Override
-	public void setIndexProperty(Object bean, String property, Object value) {
-		setIndexProperty(new BeanProperty(this, bean, property), value);
+	public void setIndexProperty(Object bean, String property, int index, Object value) {
+		BeanProperty bp = new BeanProperty(this, bean, property);
+
+		bp.indexString = bp.index = String.valueOf(index);
+
+		_setIndexProperty(bp, value);
+
+		bp.indexString = null;
 	}
 
 	/**

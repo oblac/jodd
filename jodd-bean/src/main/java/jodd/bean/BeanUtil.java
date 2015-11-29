@@ -91,7 +91,10 @@ public interface BeanUtil {
 	 */
 	void setProperty(Object bean, String name, Object value);
 
-	void setIndexProperty(Object bean, String property, Object value);
+	/**
+	 * Sets indexed property.
+	 */
+	void setIndexProperty(Object bean, String property, int index, Object value);
 
 	/**
 	 * Sets simple property.
@@ -111,7 +114,10 @@ public interface BeanUtil {
 	 */
 	<T> T getProperty(Object bean, String name);
 
-	<T> T getIndexProperty(Object bean, String property);
+	/**
+	 * Returns value of indexed property.
+	 */
+	<T> T getIndexProperty(Object bean, String property, int index);
 
 	/**
 	 * Reads simple property.
@@ -149,7 +155,9 @@ public interface BeanUtil {
 
 	// ---------------------------------------------------------------- misc
 
-
+	/**
+	 * Returns the very first name chunk of the property.
+	 */
 	public String extractThisReference(String propertyName);
 
 }

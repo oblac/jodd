@@ -185,7 +185,7 @@ public class BeanUtilTest {
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooStringA[0]"));
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[0]"));
 		try {
-			BeanUtil.forced.getIndexProperty(fb, "fooStringA[0]");
+			BeanUtil.forced.getIndexProperty(fb, "fooStringA", 0);
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
@@ -197,14 +197,14 @@ public class BeanUtilTest {
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooStringA[7]"));
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[7]"));
 		try {
-			BeanUtil.pojo.setIndexProperty(fb, "fooStringA[7]", "xxx");
+			BeanUtil.pojo.setIndexProperty(fb, "fooStringA", 7, "xxx");
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
 		// set forced array property
-		BeanUtil.forced.setIndexProperty(fb, "fooStringA[40]", "zzz");
+		BeanUtil.forced.setIndexProperty(fb, "fooStringA", 40, "zzz");
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooStringA[40]"));
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[40]"));
 		assertEquals(String[].class, BeanUtil.declared.getPropertyType(fb, "fooStringA"));
@@ -215,7 +215,7 @@ public class BeanUtilTest {
 		// set null
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooStringA[43]"));
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[43]"));
-		BeanUtil.forced.setIndexProperty(fb, "fooStringA[43]", null);
+		BeanUtil.forced.setIndexProperty(fb, "fooStringA", 43, null);
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooStringA[43]"));
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[43]"));
 		assertNull(fb.getFooStringA()[43]);
@@ -223,7 +223,7 @@ public class BeanUtilTest {
 
 		// get forced
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooStringA[15]"));
-		assertNotNull(BeanUtil.forced.getIndexProperty(fb, "fooStringA[15]"));
+		assertNotNull(BeanUtil.forced.getIndexProperty(fb, "fooStringA", 15));
 		assertNull(fb.getFooStringA()[0]);
 		assertNotNull(fb.getFooStringA()[15]);
 
@@ -231,7 +231,7 @@ public class BeanUtilTest {
 		// set uninitialized array property
 		fb.setFooStringA(null);
 		assertEquals(String.class, BeanUtil.declared.getPropertyType(fb, "fooStringA[43]"));
-		BeanUtil.forced.setIndexProperty(fb, "fooStringA[7]", "ccc");
+		BeanUtil.forced.setIndexProperty(fb, "fooStringA", 7, "ccc");
 		assertEquals("ccc", fb.getFooStringA()[7]);
 
 
@@ -240,7 +240,7 @@ public class BeanUtilTest {
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooList[1]"));
 		assertEquals(Object.class, BeanUtil.declared.getPropertyType(fb, "fooList[1]"));
 		try {
-			BeanUtil.forced.getIndexProperty(fb, "fooList[1]");
+			BeanUtil.forced.getIndexProperty(fb, "fooList", 1);
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
@@ -249,7 +249,7 @@ public class BeanUtilTest {
 
 		// set list property (non-forced)
 		try {
-			BeanUtil.pojo.setIndexProperty(fb, "fooList[1]", "xxx");
+			BeanUtil.pojo.setIndexProperty(fb, "fooList", 1, "xxx");
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
@@ -257,7 +257,7 @@ public class BeanUtilTest {
 
 		// set forced list property
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooList[40]"));
-		BeanUtil.forced.setIndexProperty(fb, "fooList[40]", "zzz");
+		BeanUtil.forced.setIndexProperty(fb, "fooList", 40, "zzz");
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooList[40]"));
 		assertEquals(Object.class, BeanUtil.declared.getPropertyType(fb, "fooList[40]"));        // method type, not values type
 		assertEquals(Object.class, BeanUtil.declared.getPropertyType(fb, "fooList[39]"));
@@ -267,7 +267,7 @@ public class BeanUtilTest {
 		// set forced unitialized list property
 		fb.setFooList(null);
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooList[1]"));
-		BeanUtil.forced.setIndexProperty(fb, "fooList[1]", "xxx");
+		BeanUtil.forced.setIndexProperty(fb, "fooList", 1, "xxx");
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooList[1]"));
 		assertEquals("xxx", fb.getFooList().get(1));
 		assertEquals(2, fb.getFooList().size());
@@ -276,12 +276,12 @@ public class BeanUtilTest {
 		// read forced non-initialized map property
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooMap[foo]"));
 		assertEquals(Object.class, BeanUtil.declared.getPropertyType(fb, "fooMap[foo]"));
-		assertNull(BeanUtil.forced.getIndexProperty(fb, "fooMap[foo]"));
+		assertNull(BeanUtil.forced.getProperty(fb, "fooMap[foo]"));
 		assertNotNull(fb.getFooMap());
 		// set non-initialized map property
 		fb.setFooMap(null);
 		assertFalse(BeanUtil.declared.hasProperty(fb, "fooMap[foo]"));
-		BeanUtil.forced.setIndexProperty(fb, "fooMap[foo]", "xxx");
+		BeanUtil.forced.setProperty(fb, "fooMap[foo]", "xxx");
 		assertTrue(BeanUtil.declared.hasProperty(fb, "fooMap[foo]"));
 		assertEquals("xxx", fb.getFooMap().get("foo"));
 		assertEquals(1, fb.getFooMap().size());
@@ -294,7 +294,7 @@ public class BeanUtilTest {
 		// read forced non-initialized array property
 		assertNull(fb.getStringA());
 		try {
-			BeanUtil.declaredForced.getIndexProperty(fb, "fooStringA[0]");
+			BeanUtil.declaredForced.getIndexProperty(fb, "fooStringA", 0);
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
@@ -304,18 +304,18 @@ public class BeanUtilTest {
 
 		// set array property (non-forced)
 		try {
-			BeanUtil.declared.setIndexProperty(fb, "fooStringA[7]", "xxx");
+			BeanUtil.declared.setIndexProperty(fb, "fooStringA", 7, "xxx");
 			fail();
 		} catch (ArrayIndexOutOfBoundsException aioobex) {
 			// ignore
 		}
 
 		// set forced array property
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA[40]", "zzz");
+		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA", 40, "zzz");
 		assertEquals("zzz", fb.getStringA()[40]);
 		assertEquals(41, fb.getStringA().length);
 
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA[43]", null);
+		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA", 43, null);
 		assertNull(fb.getStringA()[43]);
 		assertEquals(44, fb.getStringA().length);
 
@@ -323,7 +323,7 @@ public class BeanUtilTest {
 		// set uninitialized array property
 		fb = new FooBeanSlim();
 		assertNull(fb.getStringA());
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA[7]", "ccc");
+		BeanUtil.declaredForced.setIndexProperty(fb, "fooStringA", 7, "ccc");
 		assertNotNull(fb.getStringA());
 		assertEquals("ccc", fb.getStringA()[7]);
 
@@ -331,7 +331,7 @@ public class BeanUtilTest {
 		// read forced non-initialized list property
 		assertNull(fb.getList());
 		try {
-			BeanUtil.declaredForced.getIndexProperty(fb, "fooList[1]");
+			BeanUtil.declaredForced.getIndexProperty(fb, "fooList", 1);
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
@@ -340,31 +340,31 @@ public class BeanUtilTest {
 
 		// set list property (non-forced)
 		try {
-			BeanUtil.declared.setIndexProperty(fb, "fooList[1]", "xxx");
+			BeanUtil.declared.setIndexProperty(fb, "fooList", 1, "xxx");
 			fail();
 		} catch (IndexOutOfBoundsException ioobex) {
 			// ignore
 		}
 
 		// set forced list property
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooList[40]", "zzz");
+		BeanUtil.declaredForced.setIndexProperty(fb, "fooList", 40, "zzz");
 		assertEquals("zzz", fb.getList().get(40));
 		assertEquals(41, fb.getList().size());
 
 		// set forced unitialized list property
 		fb = new FooBeanSlim();
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooList[1]", "xxx");
+		BeanUtil.declaredForced.setIndexProperty(fb, "fooList", 1, "xxx");
 		assertEquals("xxx", fb.getList().get(1));
 
 		// read forced non-initialized map property
 		assertNull(fb.getMap());
-		assertNull(BeanUtil.declaredForced.getIndexProperty(fb, "fooMap[foo]"));
+		assertNull(BeanUtil.declaredForced.getProperty(fb, "fooMap[foo]"));
 		assertNotNull(fb.getMap());
 
 		// set non-initialized map property
 		fb = new FooBeanSlim();
 		assertNull(fb.getMap());
-		BeanUtil.declaredForced.setIndexProperty(fb, "fooMap[foo]", "xxx");
+		BeanUtil.declaredForced.setProperty(fb, "fooMap[foo]", "xxx");
 		assertNotNull(fb.getMap());
 		assertEquals("xxx", fb.getMap().get("foo"));
 	}
