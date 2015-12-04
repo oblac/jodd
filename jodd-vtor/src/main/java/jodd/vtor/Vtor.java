@@ -29,6 +29,7 @@ import jodd.bean.BeanUtil;
 import jodd.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,13 @@ import java.util.Map;
  * Vtor validator.
  */
 public class Vtor {
+
+	/**
+	 * Static constructor for fluent usage.
+	 */
+	public static Vtor create() {
+		return new Vtor();
+	}
 
 	public static final String DEFAULT_PROFILE = "default";
 	public static final String ALL_PROFILES = "*";
@@ -71,21 +79,21 @@ public class Vtor {
 	/**
 	 * Validate object using context from the annotations.
 	 */
-	public void validate(Object target) {
-		validate(ValidationContext.resolveFor(target.getClass()), target);
+	public List<Violation> validate(Object target) {
+		return validate(ValidationContext.resolveFor(target.getClass()), target);
 	}
 
 	/**
 	 * @see #validate(ValidationContext, Object, String)
 	 */
-	public void validate(ValidationContext vctx, Object target) {
-		validate(vctx, target, null);
+	public List<Violation> validate(ValidationContext vctx, Object target) {
+		return validate(vctx, target, null);
 	}
 
 	/**
 	 * Performs validation of provided validation context and appends violations.
 	 */
-	public void validate(ValidationContext ctx, Object target, String targetName) {
+	public List<Violation> validate(ValidationContext ctx, Object target, String targetName) {
 		for (Map.Entry<String, List<Check>> entry : ctx.map.entrySet()) {
 			String name = entry.getKey();
 			Object value = BeanUtil.declaredSilent.getProperty(target, name);
@@ -106,6 +114,8 @@ public class Vtor {
 				}
 			}
 		}
+
+		return getViolations();
 	}
 
 	// ---------------------------------------------------------------- severity
@@ -162,9 +172,7 @@ public class Vtor {
 		if (this.enabledProfiles == null) {
 			this.enabledProfiles = new HashSet<>();
 		}
-		for (String profile : enabledProfiles) {
-			this.enabledProfiles.add(profile);
-		}
+		Collections.addAll(this.enabledProfiles, enabledProfiles);
 	}
 
 	/**
