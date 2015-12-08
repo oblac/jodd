@@ -187,6 +187,15 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 
 	// ---------------------------------------------------------------- static factories
 
+	/**
+	 * Generic request cretor.
+	 */
+	public static HttpRequest create(String method, String destination) {
+		return new HttpRequest()
+				.method(method.toUpperCase())
+				.set(destination);
+	}
+
 
 	/**
 	 * Builds a CONNECT request.
@@ -694,6 +703,10 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * connection will not be closed.
 	 */
 	public HttpResponse send() {
+		return _send();
+	}
+
+	private HttpResponse _send() {
 		if (httpConnection == null) {
 			open();
 		}
