@@ -773,6 +773,32 @@ public abstract class HttpBase<T> {
 	 */
 	protected abstract Buffer buffer(boolean full);
 
+	protected void populateHeaderAndBody(Buffer target, Buffer formBuffer, boolean fullRequest) {
+		for (String key : headers.names()) {
+			List<String> values = headers.getAll(key);
+
+			String headerName = HttpUtil.prepareHeaderParameterName(key);
+
+			for (String value : values) {
+				target.append(headerName);
+				target.append(": ");
+				target.append(value);
+				target.append(CRLF);
+			}
+		}
+
+		if (fullRequest) {
+			target.append(CRLF);
+
+			if (form != null) {
+				target.append(formBuffer);
+			} else if (body != null) {
+				target.append(body);
+			}
+		}
+	}
+
+
 	// ---------------------------------------------------------------- send
 
 	protected HttpProgressListener httpProgressListener;

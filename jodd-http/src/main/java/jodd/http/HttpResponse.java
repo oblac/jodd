@@ -157,28 +157,7 @@ public class HttpResponse extends HttpBase<HttpResponse> {
 			.append(statusPhrase)
 			.append(CRLF);
 
-		for (String key : headers.names()) {
-			List<String> values = headers.getAll(key);
-
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
-
-			for (String value : values) {
-				response.append(headerName);
-				response.append(": ");
-				response.append(value);
-				response.append(CRLF);
-			}
-		}
-
-		if (fullResponse) {
-			response.append(CRLF);
-
-			if (form != null) {
-				response.append(formBuffer);
-			} else if (body != null) {
-				response.append(body);
-			}
-		}
+		populateHeaderAndBody(response, formBuffer, fullResponse);
 
 		return response;
 	}

@@ -36,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 import static jodd.util.StringPool.CRLF;
@@ -779,28 +778,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 			.append(httpVersion)
 			.append(CRLF);
 
-		for (String key : headers.names()) {
-			List<String> values = headers.getAll(key);
-
-			String headerName = HttpUtil.prepareHeaderParameterName(key);
-
-			for (String value : values) {
-				request.append(headerName);
-				request.append(": ");
-				request.append(value);
-				request.append(CRLF);
-			}
-		}
-
-		if (fullRequest) {
-			request.append(CRLF);
-
-			if (form != null) {
-				request.append(formBuffer);
-			} else if (body != null) {
-				request.append(body);
-			}
-		}
+		populateHeaderAndBody(request, formBuffer, fullRequest);
 
 		return request;
 	}
