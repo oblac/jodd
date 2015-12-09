@@ -26,6 +26,7 @@
 package jodd.exception;
 
 import jodd.io.StreamUtil;
+import jodd.util.StringUtil;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
@@ -288,7 +289,7 @@ public class ExceptionUtil {
 	public static String message(Throwable throwable) {
 		String message = throwable.getMessage();
 
-		if (message == null) {
+		if (StringUtil.isBlank(message)) {
 			message = throwable.toString();
 		}
 
