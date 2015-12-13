@@ -25,14 +25,32 @@
 
 package jodd.io;
 
+import jodd.util.StringUtil;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class PathUtil {
+
+	/**
+	 * Resolves subpath in safer way. For some reason, if child starts with
+	 * a separator it gets resolved as a full path, ignoring the base.
+	 * This method acts different.
+	 */
+	public static Path resolve(Path base, String child) {
+		if (StringUtil.startsWithChar(child, File.separatorChar)) {
+			child = child.substring(1);
+		}
+		return base.resolve(child);
+	}
 
 	/**
 	 * Reads path content.
@@ -45,6 +63,25 @@ public class PathUtil {
 		StreamUtil.copy(reader, writer);
 
 		return writer.toString();
+	}
+
+	/**
+	 * Deletes a directory recursively.
+	 */
+	public static void deleteFileTree(Path directory) throws IOException {
+		Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				Files.delete(file);
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				Files.delete(dir);
+				return FileVisitResult.CONTINUE;
+			}
+		});
 	}
 
 }
