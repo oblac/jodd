@@ -52,6 +52,13 @@ public class PathUtil {
 		return base.resolve(child);
 	}
 
+	public static Path resolve(Path path, String... childs) {
+		for (String child : childs) {
+			path = resolve(path, child);
+		}
+		return path;
+	}
+
 	/**
 	 * Reads path content.
 	 */

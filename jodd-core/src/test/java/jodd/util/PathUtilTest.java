@@ -48,5 +48,13 @@ public class PathUtilTest {
 		path = PathUtil.resolve(base, "/ccc");
 		assertEquals("/aaa/bbb/ccc", path.toString());
 
+		path = PathUtil.resolve(base, "ccc", "ddd");
+		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
+
+		path = PathUtil.resolve(base, "/ccc", "ddd/");
+		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
+
+		path = PathUtil.resolve(base, "/ccc/", "/ddd/");
+		assertEquals("/aaa/bbb/ccc/ddd", path.toString());
 	}
 }
