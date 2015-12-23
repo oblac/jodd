@@ -34,5 +34,5 @@ public interface ValueProvider<T> {
     /**
      * Returns value.
      */
-    T getValue();
+    T value();
 }

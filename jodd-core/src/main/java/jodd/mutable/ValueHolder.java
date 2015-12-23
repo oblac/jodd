@@ -33,11 +33,11 @@ public interface ValueHolder<T> extends ValueProvider<T> {
 	/**
 	 * Returns value.
 	 */
-	public T getValue();
+	public T value();
 
 	/**
 	 * Sets new value.
 	 */
-	public void setValue(T value);
+	public void value(T value);
 
 }
