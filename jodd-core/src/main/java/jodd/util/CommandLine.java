@@ -1,9 +1,11 @@
 package jodd.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jodd.io.FileNameUtil;
@@ -11,32 +13,31 @@ import jodd.io.FileUtil;
 import jodd.io.StreamGobbler;
 
 /**
- *
  * Simple tool to easily execute native applications.
  *
  * @author Vilmos Papp
+ * @author Igor Spasić
  */
 public class CommandLine {
 
-	public static final String ERROR_TYPE = "error";
-	public static final String OUTPUT_TYPE = "output";
-
-	public static final String CMD = "cmd";
-	public static final String OPEN = "open";
-	public static final String SH = "sh";
-	public static final String SHC = "sh -c";
+	public static final String ERROR_PREFIX = "err> ";
+	public static final String OUTPUT_PREFIX = "out> ";
 
 	public static final int OK = 0;
 
-	protected final List<String> commands = new ArrayList<>();
+	protected final String command;
+	protected final List<String> args = new ArrayList<>();
 	protected File workingDirectory;
+	protected String outPrefix = OUTPUT_PREFIX;
+	protected String errPrefix = ERROR_PREFIX;
+	protected OutputStream out = System.out;
+	protected OutputStream err = System.err;
+	protected boolean newShell = false;
 
 	// ---------------------------------------------------------------- ctor
 
 	protected CommandLine(String command) {
-		resolveExecutor(command);
-
-		commands.add(command);
+		this.command = command;
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class CommandLine {
 	/**
 	 * Defines working directory.
 	 */
-	public CommandLine setWorkingDirectory(File workDirectory) {
+	public CommandLine workingDirectory(File workDirectory) {
 		this.workingDirectory = workDirectory;
 
 		return this;
@@ -60,7 +61,7 @@ public class CommandLine {
 	/**
 	 * Defines working directory.
 	 */
-	public CommandLine setWorkingDirectory(String workDirectory) {
+	public CommandLine workingDirectory(String workDirectory) {
 		this.workingDirectory = new File(workDirectory);
 
 		return this;
@@ -69,8 +70,8 @@ public class CommandLine {
 	/**
 	 * Adds single argument.
 	 */
-	public CommandLine addArgument(String argument) {
-		commands.add(argument);
+	public CommandLine arg(String argument) {
+		args.add(argument);
 
 		return this;
 	}
@@ -78,89 +79,144 @@ public class CommandLine {
 	/**
 	 * Adds several arguments.
 	 */
-	public CommandLine addArguments(String... arguments) {
+	public CommandLine args(String... arguments) {
 		if (arguments != null && arguments.length > 0) {
-			for (String argument : arguments) {
-				commands.add(argument);
-			}
+			Collections.addAll(args, arguments);
 		}
 
 		return this;
 	}
 
+	/**
+	 * Defines output prefix.
+	 */
+	public CommandLine outPrefix(String prefix) {
+		this.outPrefix = prefix;
+		return this;
+	}
+
+	/**
+	 * Defines error prefix.
+	 */
+	public CommandLine errPrefix(String prefix) {
+		this.errPrefix = prefix;
+		return this;
+	}
+
+	public CommandLine out(OutputStream out) {
+		this.out = out;
+		return this;
+	}
+
+	public CommandLine err(OutputStream err) {
+		this.err = err;
+		return this;
+	}
+
+	public CommandLine newShell(boolean newShell) {
+		this.newShell = newShell;
+		return this;
+	}
 
 	// ---------------------------------------------------------------- executor
 
 	/**
 	 * Resolves system-dependent executor.
 	 */
-	protected void resolveExecutor(String command) {
+	protected String resolveExecutor(String command) {
+		String newCommand = StringPool.EMPTY;
+
 		File commandFile = new File(command);
 
 		if (SystemUtil.isHostMac()) {
 			if (isSH(command)) {
-				commands.add(SH);
+				newCommand += "sh ";
 			}
 			else if (commandFile.canExecute() && !FileNameUtil.hasExtension(commandFile.getAbsolutePath())) {
 			}
 			else if (FileUtil.isExistingFile(commandFile)) { // for native application and files with associated applications, open command should be used
-				commands.add(OPEN);
+				newCommand += "open ";
 			}
 			else {
-				commands.add(SHC);
+				newCommand += "sh -c ";
 			}
 		}
 		else if (SystemUtil.isHostAix() || SystemUtil.isHostLinux() || SystemUtil.isHostSolaris() || SystemUtil.isHostUnix()) {
-			commands.add(SH);
-			commands.add("-c");
+			newCommand += "sh -c ";
 		}
 		else if (SystemUtil.isHostWindows()) {
-			commands.add(CMD);
-
-			commands.add("/c");
+			newCommand += "cmd /c ";
 		}
+
+		return newCommand + command;
 	}
 
 	protected boolean isSH(String command) {
-		return FileNameUtil.getExtension(command).equals(SH);
+		return FileNameUtil.getExtension(command).equals("sh");
 	}
 
 	// ---------------------------------------------------------------- execute
 
-	public int execute() throws IOException, InterruptedException {
-		return execute(OUTPUT_TYPE);
-	}
+	protected String prepareCommand() {
+		String finalCommand = command;
 
-	public int execute(String outputType) throws IOException, InterruptedException {
-		return execute(outputType, ERROR_TYPE);
-	}
+		if (newShell) {
+			finalCommand = resolveExecutor(command);
+		}
 
-	public int execute(String outputType, String errorType) throws IOException, InterruptedException {
-		return execute(outputType, errorType, System.out, System.out);
-	}
+		StringBand commandLine = new StringBand(args.size() * 2 + 2);
 
-	public int execute(String outputType, String errorType, OutputStream out, OutputStream error) throws IOException, InterruptedException {
-		String[] commandsArray = commands.toArray(new String[commands.size()]);
+		commandLine.append(finalCommand);
+		commandLine.append(StringPool.SPACE);
 
-		StringBand commandLine = new StringBand(commandsArray.length * 2);
-
-		for (String command : commandsArray) {
+		for (String command : args) {
 			commandLine.append(command);
 			commandLine.append(StringPool.SPACE);
 		}
 
-		Process process = Runtime.getRuntime().exec(commandLine.toString().trim(), null, workingDirectory);
+		return commandLine.toString().trim();
+	}
 
-		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), errorType, error);
+	public int execute() throws IOException, InterruptedException {
+		String command = prepareCommand();
 
-		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), outputType, out);
+		return execute(command);
+	}
 
-		int exitCode = process.waitFor();
+	/**
+	 * Executes command and returns the String representation of the input and
+	 * the outout. Provided output and error streams are ignored.
+	 */
+	public String execToString() throws IOException, InterruptedException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		out = err = baos;
+
+		String command = prepareCommand();
+
+		baos.write(command.getBytes());
+		baos.write(StringPool.BYTES_NEW_LINE);
+
+		execute(command);
+
+		return baos.toString();
+	}
+
+	private int execute(String command) throws IOException, InterruptedException {
+
+		Process process = Runtime.getRuntime().exec(command, null, workingDirectory);
+
+		StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), out, outPrefix);
+		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), err, errPrefix);
 
 		outputGobbler.start();
-
 		errorGobbler.start();
 
-		return exitCode;
+		int result = process.waitFor();
+
+		outputGobbler.waitFor();
+		errorGobbler.waitFor();
+
+		return result;
 	}
 }
