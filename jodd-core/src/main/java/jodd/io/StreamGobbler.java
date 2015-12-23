@@ -42,24 +42,20 @@ import java.io.PrintWriter;
 public class StreamGobbler extends Thread {
 
 	protected final InputStream is;
-	protected final String type;
+	protected final String prefix;
 	protected final OutputStream os;
-
-	public StreamGobbler(InputStream is, String type) {
-		this(is, type, null);
-	}
 
 	public StreamGobbler(InputStream is) {
 		this(is, null, null);
 	}
 
 	public StreamGobbler(InputStream is, OutputStream output) {
-		this(is, null, output);
+		this(is, output, null);
 	}
 
-	public StreamGobbler(InputStream is, String type, OutputStream output) {
+	public StreamGobbler(InputStream is, OutputStream output, String prefix) {
 		this.is = is;
-		this.type = type;
+		this.prefix = prefix;
 		this.os = output;
 	}
 
@@ -77,8 +73,8 @@ public class StreamGobbler extends Thread {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (pw != null) {
-					if (type != null) {
-						pw.print(type + "> ");
+					if (prefix != null) {
+						pw.print(prefix);
 					}
 					pw.println(line);
 				}
