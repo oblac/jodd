@@ -25,6 +25,8 @@
 
 package jodd.io;
 
+import jodd.util.StringPool;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,11 +43,11 @@ import java.io.PrintStream;
  */
 public class StreamGobbler extends Thread {
 
-	private static final byte[] NEW_LINE = "\n".getBytes();
-
 	protected final InputStream is;
 	protected final String prefix;
 	protected final OutputStream out;
+	protected final Object lock = new Object();
+	protected boolean end = false;
 
 	public StreamGobbler(InputStream is) {
 		this(is, null, null);
@@ -74,7 +76,7 @@ public class StreamGobbler extends Thread {
 						out.write(prefix.getBytes());
 					}
 					out.write(line.getBytes());
-					out.write(NEW_LINE);
+					out.write(StringPool.BYTES_NEW_LINE);
 				}
 			}
 		}
@@ -97,5 +99,26 @@ public class StreamGobbler extends Thread {
 			catch (IOException ignore) {
 			}
 		}
+
+		synchronized (lock) {
+			lock.notifyAll();
+			end = true;
+		}
 	}
+
+	/**
+	 * Waits for gobbler to end.
+	 */
+	public void waitFor() {
+		try {
+			synchronized (lock) {
+				if (!end) {
+					lock.wait();
+				}
+			}
+		}
+		catch (InterruptedException ignore) {
+		}
+	}
+
 }
