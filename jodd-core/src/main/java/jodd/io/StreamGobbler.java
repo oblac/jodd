@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 
 /**
  * Consumes a stream.
@@ -41,9 +41,11 @@ import java.io.PrintWriter;
  */
 public class StreamGobbler extends Thread {
 
+	private static final byte[] NEW_LINE = "\n".getBytes();
+
 	protected final InputStream is;
 	protected final String prefix;
-	protected final OutputStream os;
+	protected final OutputStream out;
 
 	public StreamGobbler(InputStream is) {
 		this(is, null, null);
@@ -56,35 +58,44 @@ public class StreamGobbler extends Thread {
 	public StreamGobbler(InputStream is, OutputStream output, String prefix) {
 		this.is = is;
 		this.prefix = prefix;
-		this.os = output;
+		this.out = output;
 	}
 
 	@Override
 	public void run() {
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+
 		try {
-			PrintWriter pw = null;
-			if (os != null) {
-				pw = new PrintWriter(os);
-			}
-
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (pw != null) {
+				if (out != null) {
 					if (prefix != null) {
-						pw.print(prefix);
+						out.write(prefix.getBytes());
 					}
-					pw.println(line);
+					out.write(line.getBytes());
+					out.write(NEW_LINE);
 				}
-			}
-			if (pw != null) {
-				pw.flush();
 			}
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			if (out != null) {
+				ioe.printStackTrace(new PrintStream(out));
+			}
+		}
+		finally {
+			if (out != null) {
+				try {
+					out.flush();
+				}
+				catch (IOException ignore) {
+				}
+			}
+			try {
+				br.close();
+			}
+			catch (IOException ignore) {
+			}
 		}
 	}
 }
