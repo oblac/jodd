@@ -34,6 +34,7 @@ import jodd.json.JsonContext;
  */
 public class ObjectJsonSerializer extends ValueJsonSerializer<Object> {
 
+	@Override
 	public void serializeValue(final JsonContext jsonContext, Object value) {
 		jsonContext.writeOpenObject();
 

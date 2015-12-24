@@ -48,17 +48,21 @@ public class ArraysJsonSerializer<K> extends ValueJsonSerializer<Object> {
 		return (K) Array.get(array, index);
 	}
 
+	@Override
 	public void serializeValue(JsonContext jsonContext, Object array) {
 		jsonContext.writeOpenArray();
 
 		int length = getLength((K[]) array);
+		int count = 0;
 
 		for (int i = 0; i < length; i++) {
-			if (i > 0) {
+			if (count > 0) {
 				jsonContext.writeComma();
 			}
 
-			jsonContext.serialize(get((K[]) array, i));
+			if (jsonContext.serialize(get((K[]) array, i))) {
+				count++;
+			}
 		}
 
 		jsonContext.writeCloseArray();

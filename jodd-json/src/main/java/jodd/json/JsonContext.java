@@ -161,12 +161,13 @@ public class JsonContext extends JsonWriter {
 
 	/**
 	 * Serializes the object using {@link jodd.json.TypeJsonSerializer type serializer}.
+	 * Returns <code>true</code> if object was written, otherwise returns <code>false</code>.
 	 */
-	public void serialize(Object object) {
+	public boolean serialize(Object object) {
 		if (object == null) {
 			write(NULL);
 
-			return;
+			return true;
 		}
 
 		TypeJsonSerializer typeJsonSerializer = null;
@@ -191,7 +192,7 @@ public class JsonContext extends JsonWriter {
 			typeJsonSerializer = JoddJson.defaultSerializers.lookup(type);
 		}
 
-		typeJsonSerializer.serialize(this, object);
+		return typeJsonSerializer.serialize(this, object);
 	}
 
 	// ---------------------------------------------------------------- matchers
