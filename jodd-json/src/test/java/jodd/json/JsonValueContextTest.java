@@ -115,7 +115,7 @@ public class JsonValueContextTest {
 
 	public static class MyTypeJsonSerializer implements TypeJsonSerializer<String> {
 
-		public void serialize(JsonContext jsonContext, String value) {
+		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
 			String propertyName = jsonValueContext.getPropertyName();
@@ -125,12 +125,14 @@ public class JsonValueContextTest {
 			}
 
 			jsonContext.writeString(value);
+
+			return true;
 		}
 	}
 
 	public static class MyTypeJsonSerializer2 implements TypeJsonSerializer<String> {
 
-		public void serialize(JsonContext jsonContext, String value) {
+		public boolean serialize(JsonContext jsonContext, String value) {
 			JsonValueContext jsonValueContext = jsonContext.peekValueContext();
 
 			if (jsonValueContext.getIndex() == 1) {
@@ -138,6 +140,8 @@ public class JsonValueContextTest {
 			}
 
 			jsonContext.writeString(value);
+
+			return true;
 		}
 	}
 

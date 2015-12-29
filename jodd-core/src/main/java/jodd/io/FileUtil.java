@@ -464,21 +464,22 @@ public class FileUtil {
 
 	// ---------------------------------------------------------------- move file
 
-	public static void moveFile(String src, String dest) throws IOException {
-		moveFile(file(src), file(dest), fileUtilParams);
+	public static File moveFile(String src, String dest) throws IOException {
+		return moveFile(file(src), file(dest), fileUtilParams);
 	}
 
-	public static void moveFile(String src, String dest, FileUtilParams params) throws IOException {
-		moveFile(file(src), file(dest), params);
+	public static File moveFile(String src, String dest, FileUtilParams params) throws IOException {
+		return moveFile(file(src), file(dest), params);
 	}
 
-	public static void moveFile(File src, File dest) throws IOException {
-		moveFile(src, dest, fileUtilParams);
+	public static File moveFile(File src, File dest) throws IOException {
+		return moveFile(src, dest, fileUtilParams);
 	}
 
-	public static void moveFile(File src, File dest, FileUtilParams params) throws IOException {
+	public static File moveFile(File src, File dest, FileUtilParams params) throws IOException {
 		checkFileCopy(src, dest, params);
 		doMoveFile(src, dest, params);
+		return dest;
 	}
 
 	private static void doMoveFile(File src, File dest, FileUtilParams params) throws IOException {
@@ -502,32 +503,33 @@ public class FileUtil {
 	// ---------------------------------------------------------------- move file to dir
 
 
-	public static void moveFileToDir(String src, String destDir) throws IOException {
-		moveFileToDir(file(src), file(destDir), fileUtilParams);
+	public static File moveFileToDir(String src, String destDir) throws IOException {
+		return moveFileToDir(file(src), file(destDir), fileUtilParams);
 	}
-	public static void moveFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
-		moveFileToDir(file(src), file(destDir), params);
+	public static File moveFileToDir(String src, String destDir, FileUtilParams params) throws IOException {
+		return moveFileToDir(file(src), file(destDir), params);
 	}
 
-	public static void moveFileToDir(File src, File destDir) throws IOException {
-		moveFileToDir(src, destDir, fileUtilParams);
+	public static File moveFileToDir(File src, File destDir) throws IOException {
+		return moveFileToDir(src, destDir, fileUtilParams);
 	}
-	public static void moveFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
+	public static File moveFileToDir(File src, File destDir, FileUtilParams params) throws IOException {
 		if (destDir.exists() && destDir.isDirectory() == false) {
 			throw new IOException(MSG_NOT_A_DIRECTORY + destDir);
 		}
-		moveFile(src, file(destDir, src.getName()), params);
+		return moveFile(src, file(destDir, src.getName()), params);
 	}
 
 
 	// ---------------------------------------------------------------- move dir
 
-	public static void moveDir(String srcDir, String destDir) throws IOException {
-		moveDir(file(srcDir), file(destDir));
+	public static File moveDir(String srcDir, String destDir) throws IOException {
+		return moveDir(file(srcDir), file(destDir));
 	}
-	public static void moveDir(File srcDir, File destDir) throws IOException {
+	public static File moveDir(File srcDir, File destDir) throws IOException {
 		checkDirCopy(srcDir, destDir);
 		doMoveDirectory(srcDir, destDir);
+		return destDir;
 	}
 
 	private static void doMoveDirectory(File src, File dest) throws IOException {

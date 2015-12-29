@@ -62,7 +62,7 @@ public class FileJsonSerializer implements TypeJsonSerializer<File> {
 
 
 	@Override
-	public void serialize(JsonContext jsonContext, File file) {
+	public boolean serialize(JsonContext jsonContext, File file) {
 		switch (serializationType) {
 			case PATH:
 				jsonContext.writeString(file.getAbsolutePath());
@@ -88,5 +88,6 @@ public class FileJsonSerializer implements TypeJsonSerializer<File> {
 			default:
 				throw new JsonException("Invalid type");
 		}
+		return true;
 	}
 }

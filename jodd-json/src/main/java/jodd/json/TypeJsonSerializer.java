@@ -32,7 +32,9 @@ public interface TypeJsonSerializer<T> {
 
 	/**
 	 * Serializes a value and writes a JSON content.
+	 * Returns <code>true</code> if content was written.
+	 * Returns <code>false</code> if content for some reason was not written.
 	 */
-	public void serialize(JsonContext jsonContext, T value);
+	public boolean serialize(JsonContext jsonContext, T value);
 
 }
