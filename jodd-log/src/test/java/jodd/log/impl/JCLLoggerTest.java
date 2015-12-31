@@ -25,142 +25,144 @@
 
 package jodd.log.impl;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import jodd.log.Logger.Level;
+import jodd.log.impl.util.LoggerConstants;
 import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
-import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
 
-public class JCLLoggerTest extends LoggerTestBase{
-	
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
+
+public class JCLLoggerTest extends LoggerTestBase {
+
 	private Log log;
-	
+
 	@Before
 	public void setUp() throws Exception {
-		log=mock(Log.class);
-		logger =new JCLLogger(log);
+		log = mock(Log.class);
+		logger = new JCLLogger(log);
 	}
-	
+
 	@Test
-	public void testIsLevelEnabled(){
+	public void testIsLevelEnabled() {
 		super.testIsLevelEnabled();
 	}
-	
+
 	@Test
-	public void testIsEnabled(){
+	public void testIsEnabled() {
 		super.testIsEnabled();
 	}
-	
+
 	@Test
-	public void testGetName(){
+	public void testGetName() {
 		assertEquals(LoggerConstants.LOG, logger.getName());
 	}
-	
+
 	@Test
-	public void testLog(){
+	public void testLog() {
 		//when
-		logger.log(Level.TRACE,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.TRACE, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
 		verify(log).trace(LoggerConstants.SIMPLE_MESSAGE);
-		
+
 		//when
-		logger.log(Level.DEBUG,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.DEBUG, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
 		verify(log).debug(LoggerConstants.SIMPLE_MESSAGE);
-		
+
 		//when
-		logger.log(Level.INFO,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.INFO, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
 		verify(log).info(LoggerConstants.SIMPLE_MESSAGE);
-		
+
 		//when
-		logger.log(Level.WARN,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.WARN, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
 		verify(log).warn(LoggerConstants.SIMPLE_MESSAGE);
-		
+
 		//when
-		logger.log(Level.ERROR,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.ERROR, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
 		verify(log).error(LoggerConstants.SIMPLE_MESSAGE);
 	}
-	
+
 	@Test
-	public void testLevel(){
+	public void testLevel() {
 		//when
 		logger.trace(LoggerConstants.TRACE_MESSAGE);
-		
+
 		//then
 		verify(log).trace(LoggerConstants.TRACE_MESSAGE);
-		
+
 		//when
 		logger.debug(LoggerConstants.DEBUG_MESSAGE);
-		
+
 		//then
 		verify(log).debug(LoggerConstants.DEBUG_MESSAGE);
-		
+
 		//when
 		logger.info(LoggerConstants.INFO_MESSAGE);
-		
+
 		//then
 		verify(log).info(LoggerConstants.INFO_MESSAGE);
-		
+
 		//when
 		logger.warn(LoggerConstants.WARN_MESSAGE);
-		
+
 		//then
 		verify(log).warn(LoggerConstants.WARN_MESSAGE);
-		
+
 		//when
 		logger.error(LoggerConstants.ERROR_MESSAGE);
-		
+
 		//then
 		verify(log).error(LoggerConstants.ERROR_MESSAGE);
 	}
-	
+
 	@Test
-	public void testErrorWithThrowable(){
+	public void testErrorWithThrowable() {
 		//given
-		throwable=mock(Throwable.class);
-			
+		throwable = mock(Throwable.class);
+
 		//when
 		logger.error(LoggerConstants.ERROR_MESSAGE, throwable);
-		
+
 		//then
-		verify(log).error(LoggerConstants.ERROR_MESSAGE,throwable);
+		verify(log).error(LoggerConstants.ERROR_MESSAGE, throwable);
 	}
-	
+
 	@Test
-	public void testWarnWithThrowable(){
+	public void testWarnWithThrowable() {
 		//given
-		throwable=mock(Throwable.class);
-			
+		throwable = mock(Throwable.class);
+
 		//when
 		logger.warn(LoggerConstants.WARN_MESSAGE, throwable);
-		
+
 		//then
-		verify(log).warn(LoggerConstants.WARN_MESSAGE,throwable);
+		verify(log).warn(LoggerConstants.WARN_MESSAGE, throwable);
 	}
-	
+
 	@Test
-	public void testJCLLoggerFactory(){
+	public void testJCLLoggerFactory() {
 		//given
-		loggerFactory=new JCLLoggerFactory();
-		
+		loggerFactory = new JCLLoggerFactory();
+
 		//when
-		logger=(JCLLogger)loggerFactory.getLogger(LoggerConstants.LOGGER);
-		
+		logger = (JCLLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+
 		//then
-		assertThat("Logger must be of type JCLLogger",logger.getClass(), 
-				is(instanceOf(JCLLogger.class.getClass())));
+		assertThat("Logger must be of type JCLLogger", logger.getClass(),
+			is(instanceOf(JCLLogger.class.getClass())));
 	}
 }

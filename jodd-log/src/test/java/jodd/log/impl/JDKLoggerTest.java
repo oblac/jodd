@@ -25,145 +25,146 @@
 
 package jodd.log.impl;
 
+import jodd.log.Logger.Level;
+import jodd.log.impl.util.LoggerConstants;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import org.junit.Before;
-import org.junit.Test;
-import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
 
-public class JDKLoggerTest extends LoggerTestBase{
-	
+public class JDKLoggerTest extends LoggerTestBase {
+
 	private java.util.logging.Logger log;
 
 	@Before
 	public void setUp() throws Exception {
-		log=mock(java.util.logging.Logger.class);
-		logger =new JDKLogger(log);
+		log = mock(java.util.logging.Logger.class);
+		logger = new JDKLogger(log);
 	}
-	
+
 	@Test
-	public void testIsLevelEnabled(){
-		super.testIsLevelEnabled();	
+	public void testIsLevelEnabled() {
+		super.testIsLevelEnabled();
 	}
-	
+
 	@Test
-	public void testGetName(){
+	public void testGetName() {
 		//when
 		logger.getName();
-		
+
 		//then
 		verify(log).getName();
-	}	
-	
+	}
+
 	@Test
-	public void testIsEnabled(){
+	public void testIsEnabled() {
 		super.testIsEnabled();
 	}
-	
+
 	@Test
-	public void testLog(){
+	public void testLog() {
 		//when
-		logger.log(Level.TRACE,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.TRACE, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
-		verify(log).log(java.util.logging.Level.FINER,LoggerConstants.SIMPLE_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.FINER, LoggerConstants.SIMPLE_MESSAGE);
+
 		//when
-		logger.log(Level.DEBUG,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.DEBUG, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
-		verify(log).log(java.util.logging.Level.FINE,LoggerConstants.SIMPLE_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.FINE, LoggerConstants.SIMPLE_MESSAGE);
+
 		//when
-		logger.log(Level.INFO,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.INFO, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
-		verify(log).log(java.util.logging.Level.INFO,LoggerConstants.SIMPLE_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.INFO, LoggerConstants.SIMPLE_MESSAGE);
+
 		//when
-		logger.log(Level.WARN,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.WARN, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
-		verify(log).log(java.util.logging.Level.WARNING,LoggerConstants.SIMPLE_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.WARNING, LoggerConstants.SIMPLE_MESSAGE);
+
 		//when
-		logger.log(Level.ERROR,LoggerConstants.SIMPLE_MESSAGE);
-		
+		logger.log(Level.ERROR, LoggerConstants.SIMPLE_MESSAGE);
+
 		//then
-		verify(log).log(java.util.logging.Level.SEVERE,LoggerConstants.SIMPLE_MESSAGE);
+		verify(log).log(java.util.logging.Level.SEVERE, LoggerConstants.SIMPLE_MESSAGE);
 	}
-	
+
 	@Test
-	public void testLevel(){
+	public void testLevel() {
 		//when
 		logger.trace(LoggerConstants.TRACE_MESSAGE);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.FINER,LoggerConstants.TRACE_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.FINER, LoggerConstants.TRACE_MESSAGE);
+
 		//when
 		logger.debug(LoggerConstants.DEBUG_MESSAGE);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.FINE,LoggerConstants.DEBUG_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.FINE, LoggerConstants.DEBUG_MESSAGE);
+
 		//when
 		logger.info(LoggerConstants.INFO_MESSAGE);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.INFO,LoggerConstants.INFO_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.INFO, LoggerConstants.INFO_MESSAGE);
+
 		//when
 		logger.warn(LoggerConstants.WARN_MESSAGE);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.WARNING,LoggerConstants.WARN_MESSAGE);
-		
+		verify(log).log(java.util.logging.Level.WARNING, LoggerConstants.WARN_MESSAGE);
+
 		//when
 		logger.error(LoggerConstants.ERROR_MESSAGE);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.SEVERE,LoggerConstants.ERROR_MESSAGE);
+		verify(log).log(java.util.logging.Level.SEVERE, LoggerConstants.ERROR_MESSAGE);
 	}
-	
+
 	@Test
-	public void testErrorWithThrowable(){
+	public void testErrorWithThrowable() {
 		//given
-		throwable=mock(Throwable.class);
-			
+		throwable = mock(Throwable.class);
+
 		//when
 		logger.error(LoggerConstants.ERROR_MESSAGE, throwable);
-		
+
 		//then
 		verify(log).log(java.util.logging.Level.SEVERE, LoggerConstants.ERROR_MESSAGE, throwable);
 	}
-	
+
 	@Test
-	public void testWarnWithThrowable(){
+	public void testWarnWithThrowable() {
 		//given
-		throwable=mock(Throwable.class);
-			
+		throwable = mock(Throwable.class);
+
 		//when
 		logger.warn(LoggerConstants.WARN_MESSAGE, throwable);
-		
+
 		//then
-		verify(log).log(java.util.logging.Level.WARNING,LoggerConstants.WARN_MESSAGE,throwable);
+		verify(log).log(java.util.logging.Level.WARNING, LoggerConstants.WARN_MESSAGE, throwable);
 	}
-	
+
 	@Test
-	public void testJDKLoggerFactory(){
+	public void testJDKLoggerFactory() {
 		//given
-		loggerFactory=new JDKLoggerFactory();
-		
+		loggerFactory = new JDKLoggerFactory();
+
 		//when
-		logger=(JDKLogger)loggerFactory.getLogger(LoggerConstants.LOGGER);
-		
+		logger = (JDKLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+
 		//then
-		assertThat("Logger must be of type JDKLogger",logger.getClass(), 
-				is(instanceOf(JDKLogger.class.getClass())));
+		assertThat("Logger must be of type JDKLogger", logger.getClass(),
+			is(instanceOf(JDKLogger.class.getClass())));
 	}
 }

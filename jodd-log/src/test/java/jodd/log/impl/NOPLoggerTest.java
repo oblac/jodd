@@ -25,70 +25,71 @@
 
 package jodd.log.impl;
 
+import jodd.log.Logger.Level;
+import jodd.log.impl.util.LoggerConstants;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import org.junit.Before;
-import org.junit.Test;
-import jodd.log.Logger.Level;
-import jodd.log.impl.util.LoggerConstants;
 
-public class NOPLoggerTest extends LoggerTestBase{
-	
-	private String name="NOPLogger";
+public class NOPLoggerTest extends LoggerTestBase {
+
+	private String name = "NOPLogger";
 
 	@Before
 	public void setUp() throws Exception {
-		logger =new NOPLogger(name);
+		logger = new NOPLogger(name);
 	}
-	
+
 	@Test
-	public void testIsEnabled(){
+	public void testIsEnabled() {
 		assertFalse("Source code implemented in such a way that this method call always returns false"
-				,logger.isEnabled(Level.DEBUG));	
+			, logger.isEnabled(Level.DEBUG));
 	}
-	
+
 	@Test
-	public void testGetName(){
+	public void testGetName() {
 		assertEquals("Name must be equal to NOPLogger", name, logger.getName());
-	}	
-	
+	}
+
 	@Test
-	public void testLog(){
+	public void testLog() {
 		//given
-		throwable=mock(Throwable.class);
-		
+		throwable = mock(Throwable.class);
+
 		//when
 		//The below methods are no op methods in actual implementations.
 		//so we will not be able to verify anything
 		logger.log(Level.DEBUG, name);
-		logger.trace( name);
-		logger.debug( name);
-		logger.info( name);
-		logger.warn( name);
-		logger.warn( name,throwable);
-		logger.error( name);
-		logger.error( name,throwable);
+		logger.trace(name);
+		logger.debug(name);
+		logger.info(name);
+		logger.warn(name);
+		logger.warn(name, throwable);
+		logger.error(name);
+		logger.error(name, throwable);
 	}
-	
+
 	@Test
-	public void testIsLevelEnabled(){
+	public void testIsLevelEnabled() {
 		super.testIsLevelEnabled();
 	}
-	
+
 	@Test
-	public void testJDKLoggerFactory(){
+	public void testJDKLoggerFactory() {
 		//given
-		loggerFactory=new NOPLoggerFactory();
-		
+		loggerFactory = new NOPLoggerFactory();
+
 		//when
-		logger=(NOPLogger)loggerFactory.getLogger(LoggerConstants.LOGGER);
-		
+		logger = (NOPLogger) loggerFactory.getLogger(LoggerConstants.LOGGER);
+
 		//then
-		assertThat("Logger must be of type NOPLogger",logger.getClass(), 
-				is(instanceOf(NOPLogger.class.getClass())));
+		assertThat("Logger must be of type NOPLogger", logger.getClass(),
+			is(instanceOf(NOPLogger.class.getClass())));
 	}
 }
