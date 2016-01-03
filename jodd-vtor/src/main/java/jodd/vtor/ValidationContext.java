@@ -194,4 +194,10 @@ public class ValidationContext {
 		destCheck.setMessage(message);
 	}
 
+	/**
+	 * Clears the cache map
+	 */
+	protected void clearCache() {
+		cache.clear();
+	}
 }
