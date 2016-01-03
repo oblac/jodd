@@ -34,7 +34,7 @@ import java.sql.Connection;
  * <p>
  * Implementations should provide a public default constructor.
  */
-public interface ConnectionProvider {
+public interface ConnectionProvider extends AutoCloseable {
 
 	/**
 	 * Initialize the connection provider. Properties are provided either

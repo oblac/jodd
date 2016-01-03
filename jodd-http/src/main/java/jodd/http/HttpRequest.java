@@ -332,7 +332,7 @@ public class HttpRequest extends HttpBase<HttpRequest> {
 	 * we are forcing usage of multipart request.
 	 */
 	public HttpRequest multipart(boolean multipart) {
-		this.multipart = true;
+		this.multipart = multipart;
 		return this;
 	}
 

@@ -23,29 +23,38 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.json.impl;
+package jodd.log.impl;
 
-import jodd.json.JsonContext;
-import jodd.json.TypeJsonSerializer;
+import static org.junit.Assert.assertFalse;
+import jodd.log.Logger;
+import jodd.log.LoggerFactoryInterface;
+import jodd.log.Logger.Level;
 
-/**
- * Serializes int arrays.
- */
-public class IntArrayJsonSerializer implements TypeJsonSerializer<int[]> {
+public class LoggerTestBase {
+	
+	protected Logger logger;
+	
+	protected Throwable throwable;
+	
+	protected LoggerFactoryInterface loggerFactory;
 
-	@Override
-	public boolean serialize(JsonContext jsonContext, int[] array) {
-		jsonContext.writeOpenArray();
+	protected void testIsLevelEnabled() {
+		// Loggers does not provide any API to enable levels.
+		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
+		assertFalse(logger.isTraceEnabled());
+		assertFalse(logger.isDebugEnabled());
+		assertFalse(logger.isInfoEnabled());
+		assertFalse(logger.isWarnEnabled());
+		assertFalse(logger.isErrorEnabled());
+	}
 
-		for (int i = 0; i < array.length; i++) {
-			if (i > 0) {
-				jsonContext.writeComma();
-			}
-			jsonContext.write(Integer.toString(array[i]));
-		}
-
-		jsonContext.writeCloseArray();
-
-		return true;
+	protected void testIsEnabled() {
+		// Loggers does not provide any API to enable levels.
+		// Instead we need to use log/level(trace/debug etc) API to log information into corresponding level
+		assertFalse(logger.isEnabled(Level.TRACE));
+		assertFalse(logger.isEnabled(Level.DEBUG));
+		assertFalse(logger.isEnabled(Level.INFO));
+		assertFalse(logger.isEnabled(Level.WARN));
+		assertFalse(logger.isEnabled(Level.ERROR));
 	}
 }

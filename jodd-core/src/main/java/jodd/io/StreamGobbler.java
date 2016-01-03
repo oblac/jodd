@@ -25,12 +25,14 @@
 
 package jodd.io;
 
+import jodd.util.StringPool;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 
 /**
  * Consumes a stream.
@@ -42,53 +44,81 @@ import java.io.PrintWriter;
 public class StreamGobbler extends Thread {
 
 	protected final InputStream is;
-	protected final String type;
-	protected final OutputStream os;
-
-	public StreamGobbler(InputStream is, String type) {
-		this(is, type, null);
-	}
+	protected final String prefix;
+	protected final OutputStream out;
+	protected final Object lock = new Object();
+	protected boolean end = false;
 
 	public StreamGobbler(InputStream is) {
 		this(is, null, null);
 	}
 
 	public StreamGobbler(InputStream is, OutputStream output) {
-		this(is, null, output);
+		this(is, output, null);
 	}
 
-	public StreamGobbler(InputStream is, String type, OutputStream output) {
+	public StreamGobbler(InputStream is, OutputStream output, String prefix) {
 		this.is = is;
-		this.type = type;
-		this.os = output;
+		this.prefix = prefix;
+		this.out = output;
 	}
 
 	@Override
 	public void run() {
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+
 		try {
-			PrintWriter pw = null;
-			if (os != null) {
-				pw = new PrintWriter(os);
-			}
-
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (pw != null) {
-					if (type != null) {
-						pw.print(type + "> ");
+				if (out != null) {
+					if (prefix != null) {
+						out.write(prefix.getBytes());
 					}
-					pw.println(line);
+					out.write(line.getBytes());
+					out.write(StringPool.BYTES_NEW_LINE);
 				}
-			}
-			if (pw != null) {
-				pw.flush();
 			}
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			if (out != null) {
+				ioe.printStackTrace(new PrintStream(out));
+			}
+		}
+		finally {
+			if (out != null) {
+				try {
+					out.flush();
+				}
+				catch (IOException ignore) {
+				}
+			}
+			try {
+				br.close();
+			}
+			catch (IOException ignore) {
+			}
+		}
+
+		synchronized (lock) {
+			lock.notifyAll();
+			end = true;
 		}
 	}
+
+	/**
+	 * Waits for gobbler to end.
+	 */
+	public void waitFor() {
+		try {
+			synchronized (lock) {
+				if (!end) {
+					lock.wait();
+				}
+			}
+		}
+		catch (InterruptedException ignore) {
+		}
+	}
+
 }

@@ -35,7 +35,9 @@ import java.util.Date;
  */
 public class DateJsonSerializer implements TypeJsonSerializer<Date> {
 
-	public void serialize(JsonContext jsonContext, Date date) {
+	@Override
+	public boolean serialize(JsonContext jsonContext, Date date) {
 		jsonContext.write(Long.toString(date.getTime()));
+		return true;
 	}
 }

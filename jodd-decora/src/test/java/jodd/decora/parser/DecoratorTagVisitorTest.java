@@ -23,21 +23,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-package jodd.mutable;
+package jodd.decora.parser;
 
-/**
- * Generic mutable value holder for holding objects.
- */
-public interface ValueHolder<T> extends ValueProvider<T> {
+import static org.junit.Assert.fail;
+import static org.powermock.reflect.Whitebox.invokeMethod;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
-	/**
-	 * Returns value.
-	 */
-	public T value();
+import org.junit.Before;
+import org.junit.Test;
 
-	/**
-	 * Sets new value.
-	 */
-	public void value(T value);
+import jodd.decora.DecoraException;
+
+public class DecoratorTagVisitorTest {
+
+	private DecoratorTagVisitor decoraTagVisitor;
+
+	@Before
+	public void setUp() {
+		decoraTagVisitor = new DecoratorTagVisitor();
+	}
+
+	@Test(expected = DecoraException.class)
+	public final void testCheckNestedDecoraTagsDecoraTagNameNotNull() throws Exception {
+		// setup
+		setInternalState(decoraTagVisitor, "decoraTagName", "TEST");
+
+		// when
+		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+
+		// then
+		fail("A DecoraException must have occured because decoraTagName is not null.");
+	}
+
+	@Test
+	public final void testCheckNestedDecoraTagsDecoraTagNameNull() throws Exception {
+		// setup
+		String nullString = null;
+		setInternalState(decoraTagVisitor, "decoraTagName", nullString);
+
+		// when
+		invokeMethod(decoraTagVisitor, "checkNestedDecoraTags");
+
+		// then
+		// DecoraException not expected
+	}
 
 }

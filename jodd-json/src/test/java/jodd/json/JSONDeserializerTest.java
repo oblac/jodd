@@ -375,8 +375,9 @@ public class JSONDeserializerTest {
 
 		String json = new JsonSerializer().use("birthdate", new DateJsonSerializer() {
 			@Override
-			public void serialize(JsonContext jsonContext, Date date) {
+			public boolean serialize(JsonContext jsonContext, Date date) {
 				jsonContext.writeString(df.format(date));
+				return true;
 			}
 		}).serialize(foo);
 
@@ -624,9 +625,10 @@ public class JSONDeserializerTest {
 	}
 
 	public static class SimpleClassnameTransformer implements TypeJsonSerializer {
-		public void serialize(JsonContext jsonContext, Object value) {
+		public boolean serialize(JsonContext jsonContext, Object value) {
 			String name = value.toString() + "***";
 			jsonContext.writeString(name);
+			return true;
 		}
 	}
 

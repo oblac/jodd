@@ -33,7 +33,9 @@ import jodd.json.TypeJsonSerializer;
  */
 public class EnumJsonSerializer implements TypeJsonSerializer<Enum> {
 
-	public void serialize(JsonContext jsonContext, Enum value) {
+	@Override
+	public boolean serialize(JsonContext jsonContext, Enum value) {
 		jsonContext.writeString(value.name());
+		return true;
 	}
 }

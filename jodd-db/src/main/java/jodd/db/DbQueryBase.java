@@ -42,7 +42,7 @@ import java.util.HashSet;
 /**
  * Support for {@link DbQuery} holds all configuration, initialization and the execution code.
  */
-abstract class DbQueryBase {
+abstract class DbQueryBase implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(DbQueryBase.class);
 

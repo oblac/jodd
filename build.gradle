@@ -37,7 +37,7 @@ description = '''
 	simple, but not simpler.
 '''
 
-version = '3.7.0-20151214'
+version = '3.7.0-20151224'
 //version = '3.6.8'
 
 // --- properties -------------------------------------------------------------
@@ -111,10 +111,16 @@ allprojects {
 	}
 }
 
+def javaTestModules() {
+	subprojects.findAll {
+		it.name.equals('jodd-log')	
+	}
+}
+
 def javaModules() {
 	subprojects.findAll {
 		it.name.contains('jodd-') &&
-		!it.name.equals('jodd-bom')
+		!it.name.equals('jodd-bom')			
 	}
 }
 
@@ -298,7 +304,7 @@ configure(javaModules()) {
 
 			systemProperties = System.properties
 
-			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*']
+			List<String> excludes = ['*Test*', '*.?', '*Foo*', '*.data.*', '*.tst*', 'jodd.asm5.*', 'jodd.json.mo*', 'jodd.json.db*']
 
 			jvmArgs "-javaagent:${configurations.jacoco.asPath}=destfile=${project.buildDir.path}/jacoco/${testTask.name}.exec," +
 					"sessionid=HSServ,append=false,excludes=${excludes.join(':')}",
@@ -325,6 +331,8 @@ task buildModules {
 task testAll {
 	group 'Verification'
 	description 'Runs all the tests.'
+
+	//dependsOn javaTestModules().test
 
 	dependsOn javaModules().test
 	dependsOn javaModules().testIntegration
@@ -371,6 +379,9 @@ task testReport(type: TestReport) {
 	description 'Generates tests report.'
 
 	destinationDir = file("$buildDir/reports/tests")
+
+	//reportOn javaTestModules()*.test
+
 	reportOn javaBundleModules()*.test
 	reportOn javaBundleModules()*.testIntegration
 }
