@@ -104,7 +104,7 @@ public class VtorTest extends VtorTestSupport {
         Vtor vtor = new Vtor();
         vtor.useProfile("testProfile");
         assertEquals("size of list with profiles must be 1 when add one profile", vtor.enabledProfiles.size(), 1);
-        assertEquals("first element of enabled profiles must be testProfile when use testProfile", vtor.enabledProfiles.iterator().next(), "testProfile");
+        assertTrue("first element of enabled profiles must be testProfile when use testProfile", new ArrayList<String>(vtor.enabledProfiles).contains("testProfile"));
 
         //when
         vtor.useProfile(null);
@@ -126,9 +126,9 @@ public class VtorTest extends VtorTestSupport {
         Vtor vtor = new Vtor();
         vtor.useProfiles("testProfile1", "testProfile2");
         assertEquals("size of list with profiles must be 2 when add two profile", vtor.enabledProfiles.size(), 2);
-        Iterator<String> resultIterator = vtor.enabledProfiles.iterator();
-        assertEquals("first element must be equal to first added profile", resultIterator.next(), "testProfile1");
-        assertEquals("second element must be equal to second added profile", resultIterator.next(), "testProfile2");
+        ArrayList<String> enabledProfileList = new ArrayList<String>(vtor.enabledProfiles);
+        assertTrue("first element must be equal to first added profile", enabledProfileList.contains("testProfile1"));
+        assertTrue("second element must be equal to second added profile", enabledProfileList.contains("testProfile2"));
 
         //when
         vtor.useProfile(null);
