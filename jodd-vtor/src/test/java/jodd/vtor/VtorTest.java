@@ -128,7 +128,7 @@ public class VtorTest extends VtorTestSupport {
     @Test
     public void testUseProfiles_withNullValue() throws Exception {
         Vtor vtor = new Vtor();
-        vtor.useProfiles((String) null);
+        vtor.useProfiles(null);
         assertNull("list of enabled profiles must be null when add only null profile", vtor.enabledProfiles);
     }
 
