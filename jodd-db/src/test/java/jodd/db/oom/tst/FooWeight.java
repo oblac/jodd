@@ -26,9 +26,9 @@
 package jodd.db.oom.tst;
 
 public enum FooWeight {
-	light(1),
-	medium(10),
-	heavy(77);
+	LIGHT(1),
+	MEDIUM(10),
+	HEAVY(77);
 
 	final int value;
 	FooWeight(int value) {
@@ -37,9 +37,9 @@ public enum FooWeight {
 
 	public static FooWeight valueOf(int value) {
 		switch (value) {
-			case 1: return light;
-			case 10: return medium;
-			case 77: return heavy;
+			case 1: return LIGHT;
+			case 10: return MEDIUM;
+			case 77: return HEAVY;
 		}
 		throw new IllegalArgumentException("Invalid enum value: " + value);
 	}

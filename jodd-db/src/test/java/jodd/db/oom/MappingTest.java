@@ -91,8 +91,8 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals("173", foo.string);
 		assertEquals("7", foo.string2);
 		assertEquals(999, foo.boo.value);
-		assertEquals(FooColor.red, foo.color);
-		assertEquals(FooWeight.light, foo.weight);
+		assertEquals(FooColor.RED, foo.color);
+		assertEquals(FooWeight.LIGHT, foo.weight);
 		assertNotNull(foo.timestamp);
 		assertEquals(109, foo.timestamp.getYear());
 		assertEquals(6, foo.timestamp.getHours());
@@ -116,8 +116,8 @@ public class MappingTest extends DbHsqldbTestCase {
 		foo.string = "371";
 		foo.string2 = "007";
 		foo.boo.value = 213;
-		foo.color = FooColor.yellow;
-		foo.weight = FooWeight.heavy;
+		foo.color = FooColor.YELLOW;
+		foo.weight = FooWeight.HEAVY;
 		foo.number.value = 222;
 		foo.timestamp.setYear(108);
 		foo.decimal = new Double("34.12");
@@ -142,8 +142,8 @@ public class MappingTest extends DbHsqldbTestCase {
 		assertEquals("7", foo.string2);
 		assertEquals(213, foo.boo.value);
 		assertEquals(222, foo.number.value);
-		assertEquals(FooColor.yellow, foo.color);
-		assertEquals(FooWeight.heavy, foo.weight);
+		assertEquals(FooColor.YELLOW, foo.color);
+		assertEquals(FooWeight.HEAVY, foo.weight);
 		assertEquals(108, foo.timestamp.getYear());
 		assertEquals(2010, foo.timestamp2.getYear());
 		assertEquals(20, foo.timestamp2.getHour());
